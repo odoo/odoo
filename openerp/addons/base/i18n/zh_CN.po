@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-30 18:09+0000\n"
-"PO-Revision-Date: 2012-12-02 09:36+0000\n"
+"POT-Creation-Date: 2012-12-03 16:01+0000\n"
+"PO-Revision-Date: 2012-12-04 02:43+0000\n"
 "Last-Translator: ccdos <ccdos@163.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-03 04:35+0000\n"
-"X-Generator: Launchpad (build 16319)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:03+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_check_writing
@@ -296,7 +296,7 @@ msgid "Swaziland"
 msgstr "史瓦济兰"
 
 #. module: base
-#: code:addons/orm.py:4444
+#: code:addons/orm.py:4453
 #, python-format
 msgid "created."
 msgstr "已创建"
@@ -498,7 +498,7 @@ msgid ""
 msgstr "这是一个%(model)s的共享过滤，请在上处或者修改前设置一个新的默认值"
 
 #. module: base
-#: code:addons/orm.py:2639
+#: code:addons/orm.py:2648
 #, python-format
 msgid "Invalid group_by"
 msgstr "无效的 group_by"
@@ -565,7 +565,7 @@ msgid ""
 msgstr "日期、时间格式不正确。请参照您的语言设置中的日期/时间格式输入。"
 
 #. module: base
-#: code:addons/orm.py:4111
+#: code:addons/orm.py:4120
 #, python-format
 msgid ""
 "One of the records you are trying to modify has already been deleted "
@@ -1361,7 +1361,7 @@ msgid "Transitions"
 msgstr "迁移"
 
 #. module: base
-#: code:addons/orm.py:4850
+#: code:addons/orm.py:4859
 #, python-format
 msgid "Record #%d of %s not found, cannot copy!"
 msgstr "记录 #%d %s 无法找到，不能复制！"
@@ -1901,36 +1901,6 @@ msgid "East Timor"
 msgstr "东帝汶"
 
 #. module: base
-#: model:res.company,follow_up_msg:base.main_company
-msgid ""
-"Date : %(date)s\n"
-"\n"
-"Dear %(partner_name)s,\n"
-"\n"
-"Please find in attachment a reminder of all your unpaid invoices, for a "
-"total amount due of:\n"
-"\n"
-"%(followup_amount).2f %(company_currency)s\n"
-"\n"
-"Thanks,\n"
-"--\n"
-"%(user_signature)s\n"
-"%(company_name)s"
-msgstr ""
-"日期 : %(date)s\n"
-"\n"
-"%(partner_name)s,\n"
-"\n"
-"以下是贵公司尚未付款的发票列表，金额总计：\n"
-"\n"
-"%(followup_amount).2f %(company_currency)s\n"
-"\n"
-"提请关注为盼，\n"
-"--\n"
-"%(user_signature)s\n"
-"%(company_name)s"
-
-#. module: base
 #: code:addons/base/module/module.py:388
 #: view:ir.module.module:0
 #, python-format
@@ -2014,7 +1984,7 @@ msgstr "荷兰"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_portal_event
 msgid "Portal Event"
-msgstr "门户活动"
+msgstr "活动门户"
 
 #. module: base
 #: selection:ir.translation,state:0
@@ -2541,7 +2511,7 @@ msgid ""
 msgstr "逗号分隔的视图模式列表，如：'form', 'tree', 'calendar', 等(默认: tree,form)"
 
 #. module: base
-#: code:addons/orm.py:3802
+#: code:addons/orm.py:3811
 #, python-format
 msgid "A document was modified since you last viewed it (%s:%d)"
 msgstr "自您上次查看过以后该单据已被修改(%s:%d)"
@@ -2950,39 +2920,6 @@ msgid "Manager"
 msgstr "经理"
 
 #. module: base
-#: model:ir.module.module,description:base.module_account_followup
-msgid ""
-"\n"
-"Module to automate letters for unpaid invoices, with multi-level recalls.\n"
-"==========================================================================\n"
-"\n"
-"You can define your multiple levels of recall through the menu:\n"
-"---------------------------------------------------------------\n"
-"    **Invoicing** / **Configuration** / **Miscellaneous** / **Follow-ups**\n"
-"\n"
-"Once it is defined, you can automatically print recalls every day through "
-"simply clicking on the menu:\n"
-"-----------------------------------------------------------------------------"
-"-------------------------\n"
-"    **Invoicing** / **Periodical Processing** / **Billing** / **Send follow-"
-"ups**\n"
-"\n"
-"It will generate a PDF with all the letters according to the the different "
-"levels \n"
-"of recall defined. You can define different policies for different "
-"companies. You \n"
-"can also send mail to the customer.\n"
-"\n"
-"Note that if you want to check the follow-up level for a given "
-"partner/account entry, you can do from in the menu:\n"
-"-----------------------------------------------------------------------------"
-"-------------------------------------\n"
-"    **Invoicing** / **Reporting** / **Generic Reporting** / **Partners** / "
-"**Follow-ups Sent**\n"
-"\n"
-msgstr ""
-
-#. module: base
 #: code:addons/base/ir/ir_model.py:718
 #, python-format
 msgid "Sorry, you are not allowed to access this document."
@@ -3164,8 +3101,8 @@ msgid "LinkedIn Integration"
 msgstr ""
 
 #. module: base
-#: code:addons/orm.py:2012
-#: code:addons/orm.py:2023
+#: code:addons/orm.py:2021
+#: code:addons/orm.py:2032
 #, python-format
 msgid "Invalid Object Architecture!"
 msgstr "无效的对象架构！"
@@ -3432,7 +3369,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/orm.py:3830
+#: code:addons/orm.py:3839
 #, python-format
 msgid "Missing document(s)"
 msgstr "目标数据丢失"
@@ -3480,7 +3417,7 @@ msgid "Signal (subflow.*)"
 msgstr "信号（subflow.*）"
 
 #. module: base
-#: code:addons/orm.py:4643
+#: code:addons/orm.py:4652
 #, python-format
 msgid ""
 "Invalid \"order\" specified. A valid \"order\" specification is a comma-"
@@ -3831,11 +3768,6 @@ msgid "Separator Format"
 msgstr "分割符格式"
 
 #. module: base
-#: constraint:res.partner.bank:0
-msgid "The RIB and/or IBAN is not valid"
-msgstr "RIB/IBAN 无效"
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_report_webkit
 msgid "Webkit Report Engine"
 msgstr "Webkit 报表引擎"
@@ -3871,11 +3803,6 @@ msgstr "对于一对多的字段，此字段在目标模型是实现了相反的
 #: view:ir.rule:0
 msgid "Interaction between rules"
 msgstr "规则间的联动"
-
-#. module: base
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr "错误，您不能创建循环引用的会员用户"
 
 #. module: base
 #: field:res.company,rml_footer:0
@@ -3928,7 +3855,7 @@ msgid "If not set, acts as a default value for new resources"
 msgstr "倘若没有设置，则作为新资源的默认值"
 
 #. module: base
-#: code:addons/orm.py:4204
+#: code:addons/orm.py:4213
 #, python-format
 msgid "Recursivity Detected."
 msgstr "检测到循环。"
@@ -3995,8 +3922,8 @@ msgstr "Urdu / اردو"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:731
-#: code:addons/orm.py:3819
-#: code:addons/orm.py:3861
+#: code:addons/orm.py:3828
+#: code:addons/orm.py:3870
 #, python-format
 msgid "Access Denied"
 msgstr "访问被拒绝"
@@ -4007,7 +3934,7 @@ msgid "Company Name"
 msgstr "公司名称"
 
 #. module: base
-#: code:addons/orm.py:2802
+#: code:addons/orm.py:2811
 #, python-format
 msgid ""
 "Invalid value for reference field \"%s.%s\" (last part must be a non-zero "
@@ -4280,19 +4207,12 @@ msgid "Ltd"
 msgstr "有限公司"
 
 #. module: base
-#: constraint:res.currency:0
-msgid ""
-"Error! You cannot define a rounding factor for the company's main currency "
-"that is smaller than the decimal precision of 'Account'."
-msgstr "错误！公司本位币的舍入系数不能定义得小于”科目“的小数位数"
-
-#. module: base
 #: field:res.partner,ean13:0
 msgid "EAN13"
 msgstr "条形码（EAN13）"
 
 #. module: base
-#: code:addons/orm.py:2238
+#: code:addons/orm.py:2247
 #, python-format
 msgid "Invalid Architecture!"
 msgstr "无效的架构！"
@@ -5105,7 +5025,7 @@ msgid "System Configuration Done"
 msgstr "系统设置完成"
 
 #. module: base
-#: code:addons/orm.py:1531
+#: code:addons/orm.py:1540
 #, python-format
 msgid "Error occurred while validating the field(s) %s: %s"
 msgstr "验证字段 %s 时发生错误：%s"
@@ -5175,12 +5095,6 @@ msgstr "可选的 SMTP 验证用户名"
 #: model:ir.model,name:base.model_ir_actions_actions
 msgid "ir.actions.actions"
 msgstr "ir.actions.actions"
-
-#. module: base
-#: constraint:ir.translation:0
-msgid ""
-"The Gengo translation service selected is not supported for this language."
-msgstr "Gengo 翻译服务不支持这种语言"
 
 #. module: base
 #: selection:ir.model.fields,select_level:0
@@ -5465,7 +5379,7 @@ msgid "Decimal Separator"
 msgstr "十进位分割符"
 
 #. module: base
-#: code:addons/orm.py:5236
+#: code:addons/orm.py:5245
 #, python-format
 msgid "Missing required value for the field '%s'."
 msgstr "找不到字段 '%s' 所需的值"
@@ -5949,11 +5863,6 @@ msgstr "标题"
 #, python-format
 msgid "true"
 msgstr "真"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_account_followup
-msgid "Follow-up Management"
-msgstr "催款管理"
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_install
@@ -6531,7 +6440,7 @@ msgid ""
 msgstr "如果在系统中管理到一个员工，用户能管理自己的人力资源资料（休假请求，计工单，... ... ）"
 
 #. module: base
-#: code:addons/orm.py:2238
+#: code:addons/orm.py:2247
 #, python-format
 msgid "There is no view of type '%s' defined for the structure!"
 msgstr "类型 '%s' 没有为该结构定义视图"
@@ -6991,7 +6900,7 @@ msgid "ir.attachment"
 msgstr "ir.attachment"
 
 #. module: base
-#: code:addons/orm.py:4306
+#: code:addons/orm.py:4315
 #, python-format
 msgid ""
 "You cannot perform this operation. New Record Creation is not allowed for "
@@ -7266,9 +7175,9 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: sql_constraint:res.users:0
-msgid "OAuth UID must be unique per provider"
-msgstr "OAuth UID必须是每个提供者（ provider ）唯一的"
+#: selection:res.lang,direction:0
+msgid "Left-to-Right"
+msgstr "从左到右"
 
 #. module: base
 #: field:ir.model.fields,translate:0
@@ -7474,7 +7383,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/orm.py:2012
+#: code:addons/orm.py:2021
 #, python-format
 msgid "Insufficient fields for Calendar View!"
 msgstr "日历视图缺少字段！"
@@ -7563,7 +7472,7 @@ msgstr "子分类"
 #: code:addons/base/res/res_users.py:102
 #: code:addons/custom.py:550
 #: code:addons/orm.py:789
-#: code:addons/orm.py:3920
+#: code:addons/orm.py:3929
 #, python-format
 msgid "Error"
 msgstr "错误"
@@ -8355,6 +8264,11 @@ msgid "Kuwait"
 msgstr "科威特"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_account_followup
+msgid "Payment Follow-up Management"
+msgstr ""
+
+#. module: base
 #: field:workflow.workitem,inst_id:0
 msgid "Instance"
 msgstr "实例"
@@ -8469,6 +8383,49 @@ msgid ""
 "Translation features are unavailable until you install an extra OpenERP "
 "translation."
 msgstr "翻译特性不可用，知道你安装了额外的Openerp翻译语言。"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_nl
+msgid ""
+"\n"
+"This is the module to manage the accounting chart for Netherlands in "
+"OpenERP.\n"
+"============================================================================="
+"\n"
+"\n"
+"Read changelog in file __openerp__.py for version information.\n"
+"Dit is een basismodule om een uitgebreid grootboek- en BTW schema voor\n"
+"Nederlandse bedrijven te installeren in OpenERP versie 7.0.\n"
+"\n"
+"De BTW rekeningen zijn waar nodig gekoppeld om de juiste rapportage te "
+"genereren,\n"
+"denk b.v. aan intracommunautaire verwervingen waarbij u 21% BTW moet "
+"opvoeren,\n"
+"maar tegelijkertijd ook 21% als voorheffing weer mag aftrekken.\n"
+"\n"
+"Na installatie van deze module word de configuratie wizard voor 'Accounting' "
+"aangeroepen.\n"
+"    * U krijgt een lijst met grootboektemplates aangeboden waarin zich ook "
+"het\n"
+"      Nederlandse grootboekschema bevind.\n"
+"\n"
+"    * Als de configuratie wizard start, wordt u gevraagd om de naam van uw "
+"bedrijf\n"
+"      in te voeren, welke grootboekschema te installeren, uit hoeveel "
+"cijfers een\n"
+"      grootboekrekening mag bestaan, het rekeningnummer van uw bank en de "
+"currency\n"
+"      om Journalen te creeren.\n"
+"\n"
+"Let op!! -> De template van het Nederlandse rekeningschema is opgebouwd uit "
+"4\n"
+"cijfers. Dit is het minimale aantal welk u moet invullen, u mag het aantal "
+"verhogen.\n"
+"De extra cijfers worden dan achter het rekeningnummer aangevult met "
+"'nullen'.\n"
+"\n"
+"    "
+msgstr ""
 
 #. module: base
 #: help:ir.rule,global:0
@@ -8681,7 +8638,7 @@ msgstr ""
 "您可以单击“取消”按钮进入用户选项设置。"
 
 #. module: base
-#: code:addons/orm.py:2812
+#: code:addons/orm.py:2821
 #, python-format
 msgid "The value \"%s\" for the field \"%s.%s\" is not in the selection"
 msgstr "值 “%s”   未在字段 \"%s.%s\" 的选择之中"
@@ -8738,7 +8695,7 @@ msgid "Mexico"
 msgstr "墨西哥"
 
 #. module: base
-#: code:addons/orm.py:3862
+#: code:addons/orm.py:3871
 #, python-format
 msgid ""
 "For this kind of document, you may only access records you created "
@@ -8912,8 +8869,8 @@ msgid "Iteration"
 msgstr "反复"
 
 #. module: base
-#: code:addons/orm.py:4204
-#: code:addons/orm.py:4305
+#: code:addons/orm.py:4213
+#: code:addons/orm.py:4314
 #, python-format
 msgid "UserError"
 msgstr "用户错误"
@@ -8941,7 +8898,7 @@ msgstr ""
 "否则设置false。"
 
 #. module: base
-#: code:addons/orm.py:3920
+#: code:addons/orm.py:3929
 #, python-format
 msgid ""
 "Unable to delete this document because it is used as a default property"
@@ -9130,8 +9087,8 @@ msgid "Solomon Islands"
 msgstr "所罗门群岛"
 
 #. module: base
-#: code:addons/orm.py:4110
-#: code:addons/orm.py:4643
+#: code:addons/orm.py:4119
+#: code:addons/orm.py:4652
 #, python-format
 msgid "AccessError"
 msgstr "访问错误"
@@ -9556,7 +9513,7 @@ msgid "Cancel"
 msgstr "取消"
 
 #. module: base
-#: code:addons/orm.py:1500
+#: code:addons/orm.py:1509
 #, python-format
 msgid "Unknown database identifier '%s'"
 msgstr "未知的数据库标识符 '%s'"
@@ -10083,7 +10040,7 @@ msgid "Kind"
 msgstr "类别"
 
 #. module: base
-#: code:addons/orm.py:4605
+#: code:addons/orm.py:4614
 #, python-format
 msgid "This method does not exist anymore"
 msgstr "该方法不存在"
@@ -10282,16 +10239,6 @@ msgid ""
 msgstr "OpenERP 将自动添加几个“0”在“下一个数字”左侧满足填充要求。"
 
 #. module: base
-#: constraint:res.partner.bank:0
-msgid ""
-"\n"
-"Please define BIC/Swift code on bank for bank type IBAN Account to make "
-"valid payments"
-msgstr ""
-"\n"
-"请为 IBAN类型的银行指定 BIC/Swift代码，以便自动付款。"
-
-#. module: base
 #: help:ir.model.constraint,name:0
 msgid "PostgreSQL constraint or foreign key name."
 msgstr "PostgreSQL 约束或者 FK 名称"
@@ -10452,7 +10399,7 @@ msgid "GPL-3 or later version"
 msgstr "GPL-3 或更新版本"
 
 #. module: base
-#: code:addons/orm.py:2024
+#: code:addons/orm.py:2033
 #, python-format
 msgid ""
 "Insufficient fields to generate a Calendar View for %s, missing a date_stop "
@@ -10555,7 +10502,7 @@ msgid "Parent Company"
 msgstr "母公司"
 
 #. module: base
-#: code:addons/orm.py:3831
+#: code:addons/orm.py:3840
 #, python-format
 msgid ""
 "One of the documents you are trying to access has been deleted, please try "
@@ -10812,8 +10759,8 @@ msgid "Problem in configuration `Record Id` in Server Action!"
 msgstr "设置服务器动作的“记录标识符”时出错！"
 
 #. module: base
-#: code:addons/orm.py:2801
-#: code:addons/orm.py:2811
+#: code:addons/orm.py:2810
+#: code:addons/orm.py:2820
 #, python-format
 msgid "ValidateError"
 msgstr "验证错误"
@@ -10898,6 +10845,36 @@ msgid ""
 " - cr: database cursor\n"
 " - uid: current user id\n"
 " - context: current context"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_account_followup
+msgid ""
+"\n"
+"Module to automate letters for unpaid invoices, with multi-level recalls.\n"
+"==========================================================================\n"
+"\n"
+"You can define your multiple levels of recall through the menu:\n"
+"---------------------------------------------------------------\n"
+"    Configuration / Follow-Up Levels\n"
+"    \n"
+"Once it is defined, you can automatically print recalls every day through "
+"simply clicking on the menu:\n"
+"-----------------------------------------------------------------------------"
+"-------------------------\n"
+"    Payment Follow-Up / Send Email and letters\n"
+"\n"
+"It will generate a PDF / send emails / set manual actions according to the "
+"the different levels \n"
+"of recall defined. You can define different policies for different "
+"companies. \n"
+"\n"
+"Note that if you want to check the follow-up level for a given "
+"partner/account entry, you can do from in the menu:\n"
+"-----------------------------------------------------------------------------"
+"-------------------------------------\n"
+"    Reporting / Accounting / **Follow-ups Analysis\n"
+"\n"
 msgstr ""
 
 #. module: base
@@ -11258,6 +11235,11 @@ msgid ""
 msgstr ""
 "\n"
 "模块提供事件变更警告。\n"
+"   ==============================================\n"
+"\n"
+"Warning messages can be displayed for objects like sale order, purchase "
+"order,\n"
+"picking and invoice. The message is triggered by the form's onchange event.\n"
 "    "
 
 #. module: base
@@ -11975,11 +11957,6 @@ msgstr "XSL"
 #, python-format
 msgid "Invalid search criterions"
 msgstr "无效搜索规则"
-
-#. module: base
-#: selection:res.lang,direction:0
-msgid "Left-to-Right"
-msgstr "从左到右"
 
 #. module: base
 #: view:ir.mail_server:0
@@ -13326,49 +13303,6 @@ msgid "Turkish / Türkçe"
 msgstr "土耳其语 / Türkçe"
 
 #. module: base
-#: model:ir.module.module,description:base.module_l10n_nl
-msgid ""
-"\n"
-"This is the module to manage the accounting chart for Netherlands in "
-"OpenERP.\n"
-"============================================================================="
-"\n"
-"\n"
-"Read changelog in file __openerp__.py for version information.\n"
-"Dit is een basismodule om een uitgebreid grootboek- en BTW schema voor\n"
-"Nederlandse bedrijven te installeren in OpenERP versie 5.\n"
-"\n"
-"De BTW rekeningen zijn waar nodig gekoppeld om de juiste rapportage te "
-"genereren,\n"
-"denk b.v. aan intracommunautaire verwervingen waarbij u 19% BTW moet "
-"opvoeren,\n"
-"maar tegelijkertijd ook 19% als voorheffing weer mag aftrekken.\n"
-"\n"
-"Na installatie van deze module word de configuratie wizard voor 'Accounting' "
-"aangeroepen.\n"
-"    * U krijgt een lijst met grootboektemplates aangeboden waarin zich ook "
-"het\n"
-"      Nederlandse grootboekschema bevind.\n"
-"\n"
-"    * Als de configuratie wizard start, wordt u gevraagd om de naam van uw "
-"bedrijf\n"
-"      in te voeren, welke grootboekschema te installeren, uit hoeveel "
-"cijfers een\n"
-"      grootboekrekening mag bestaan, het rekeningnummer van uw bank en de "
-"currency\n"
-"      om Journalen te creeren.\n"
-"\n"
-"Let op!! -> De template van het Nederlandse rekeningschema is opgebouwd uit "
-"4\n"
-"cijfers. Dit is het minimale aantal welk u moet invullen, u mag het aantal "
-"verhogen.\n"
-"De extra cijfers worden dan achter het rekeningnummer aangevult met "
-"'nullen'.\n"
-"\n"
-"    "
-msgstr ""
-
-#. module: base
 #: model:ir.actions.act_window,name:base.action_workflow_activity_form
 #: model:ir.ui.menu,name:base.menu_workflow_activity
 #: field:workflow,activities:0
@@ -13431,12 +13365,6 @@ msgstr "图表"
 #: model:ir.module.module,shortdesc:base.module_l10n_es
 msgid "Spanish - Accounting (PGCE 2008)"
 msgstr ""
-
-#. module: base
-#: constraint:res.partner:0
-#: constraint:res.users:0
-msgid "Error: Invalid ean code"
-msgstr "错误：无效的(EAN)条码"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_no_autopicking
@@ -13554,7 +13482,7 @@ msgstr "用户可访问销售系统中每个人的所有记录。"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event
 msgid "Events Organisation"
-msgstr "事件组织"
+msgstr "活动组织"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_sequence_actions
@@ -13821,7 +13749,7 @@ msgid "Serbian (Cyrillic) / српски"
 msgstr "Serbian (Cyrillic) / српски"
 
 #. module: base
-#: code:addons/orm.py:2640
+#: code:addons/orm.py:2649
 #, python-format
 msgid ""
 "Invalid group_by specification: \"%s\".\n"
@@ -14512,7 +14440,7 @@ msgid "base.module.configuration"
 msgstr "base.module.configuration"
 
 #. module: base
-#: code:addons/orm.py:3820
+#: code:addons/orm.py:3829
 #, python-format
 msgid ""
 "The requested operation cannot be completed due to security restrictions. "
@@ -14541,7 +14469,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/orm.py:5239
+#: code:addons/orm.py:5248
 #, python-format
 msgid ""
 "%s This might be '%s' in the current model, or a field of the same name in "
@@ -16191,6 +16119,34 @@ msgstr "注册"
 
 #~ msgid "Homepage Widgets"
 #~ msgstr "首页控件"
+
+#~ msgid ""
+#~ "Date : %(date)s\n"
+#~ "\n"
+#~ "Dear %(partner_name)s,\n"
+#~ "\n"
+#~ "Please find in attachment a reminder of all your unpaid invoices, for a "
+#~ "total amount due of:\n"
+#~ "\n"
+#~ "%(followup_amount).2f %(company_currency)s\n"
+#~ "\n"
+#~ "Thanks,\n"
+#~ "--\n"
+#~ "%(user_signature)s\n"
+#~ "%(company_name)s"
+#~ msgstr ""
+#~ "日期 : %(date)s\n"
+#~ "\n"
+#~ "%(partner_name)s,\n"
+#~ "\n"
+#~ "以下是贵公司尚未付款的发票列表，金额总计：\n"
+#~ "\n"
+#~ "%(followup_amount).2f %(company_currency)s\n"
+#~ "\n"
+#~ "提请关注为盼，\n"
+#~ "--\n"
+#~ "%(user_signature)s\n"
+#~ "%(company_name)s"
 
 #~ msgid "Domain Setup"
 #~ msgstr "筛选条件设置"
@@ -17942,6 +17898,9 @@ msgstr "注册"
 #~ "button \"Install\" from the form view and then click on \"Start Upgrade\"."
 #~ msgstr "安装新模块可以向当前数据库增加新功能、菜单和报表。要安装新模块，请单击安装按钮。"
 
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr "错误，您不能创建循环引用的会员用户"
+
 #~ msgid ""
 #~ "\n"
 #~ "This module provides some features to improve the layout of the invoices.\n"
@@ -18189,6 +18148,9 @@ msgstr "注册"
 
 #~ msgid "Base Tools"
 #~ msgstr "基本工具"
+
+#~ msgid "The RIB and/or IBAN is not valid"
+#~ msgstr "RIB/IBAN 无效"
 
 #~ msgid "Send an SMS"
 #~ msgstr "发送手机短信"
@@ -19708,6 +19670,14 @@ msgstr "注册"
 
 #~ msgid "Framework for complex import"
 #~ msgstr "复杂导入的框架"
+
+#~ msgid ""
+#~ "\n"
+#~ "Please define BIC/Swift code on bank for bank type IBAN Account to make "
+#~ "valid payments"
+#~ msgstr ""
+#~ "\n"
+#~ "请为 IBAN类型的银行指定 BIC/Swift代码，以便自动付款。"
 
 #~ msgid "Keywords"
 #~ msgstr "关键字"
