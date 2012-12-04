@@ -118,7 +118,6 @@
 }
 .openerp .oe_im_chatview .oe_im_chatview_disconnected {
     display:none;
-    position: absolute;
     z-index: 100;
     width: 100%;
     background: #E8EBEF;
@@ -126,6 +125,11 @@
     font-size: 11px;
     color: #999;
     line-height: 14px;
+    height: 28px;
+    overflow: hidden;
+}
+.openerp .oe_im_chatview.oe_im_chatview_disconnected_status .oe_im_chatview_disconnected {
+    display: block;
 }
 .openerp .oe_im_chatview .oe_im_chatview_header {
     padding: 3px 6px 2px;
@@ -155,6 +159,9 @@
 .openerp .oe_im_chatview .oe_im_chatview_content {
     overflow: auto;
     height: 287px;
+}
+.openerp .oe_im_chatview.oe_im_chatview_disconnected_status .oe_im_chatview_content {
+    height: 249px;
 }
 .openerp .oe_im_chatview .oe_im_chatview_footer {
     position: relative;

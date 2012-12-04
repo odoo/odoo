@@ -308,8 +308,9 @@ openerp.web_im = function(instance) {
         },
         start: function() {
             var change_status = function() {
+                this.$el.toggleClass("oe_im_chatview_disconnected_status", this.user.get("im_status") === false);
                 this.$(".oe_im_chatview_online").toggle(this.user.get("im_status") === true);
-                this.$(".oe_im_chatview_disconnected").toggle(this.user.get("im_status") === false);
+                this._go_bottom();
             };
             this.user.on("change:im_status", this, change_status);
             change_status.call(this);
@@ -358,6 +359,9 @@ openerp.web_im = function(instance) {
             date = date.toString(Date.CultureInfo.formatPatterns.shortDate + " " + Date.CultureInfo.formatPatterns.shortTime);
             this.last_bubble = $(QWeb.render("Conversation.bubble", {"items": items, "user": user, "time": date}));
             $(this.$(".oe_im_chatview_content").children()[0]).append(this.last_bubble);
+            this._go_bottom();
+        },
+        _go_bottom: function() {
             this.$(".oe_im_chatview_content").scrollTop($(this.$(".oe_im_chatview_content").children()[0]).height());
         },
         destroy: function() {
