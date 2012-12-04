@@ -73,7 +73,15 @@ class base_language_export(osv.osv_memory):
         self.write(cr, uid, ids, {'state': 'get',
                                   'data': out,
                                   'name':this.name}, context=context)
-        return True
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'base.language.export',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'res_id': this.id,
+            'views': [(False, 'form')],
+            'target': 'new',
+        }
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

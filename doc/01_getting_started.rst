@@ -10,13 +10,25 @@ Installation from sources
 
 .. _getting_started_installation_source-link:
 
-Source code is hosted on Launchpad_. In order to get the sources, you will need Bazaar_ to pull the source from Launchpad. Bazaar is a version control system that helps you track project history over time and collaborate efficiently. You may have to create an account on Launchpad to be able to collaborate on OpenERP development. Please refer to the Launchpad and Bazaar documentation to install and setup your development environment.
+Source code is hosted on Launchpad_. In order to get the sources, you
+will need Bazaar_ to pull the source from Launchpad. Bazaar is a
+version control system that helps you track project history over time
+and collaborate efficiently. You may have to create an account on
+Launchpad to be able to collaborate on OpenERP development. Please
+refer to the Launchpad and Bazaar documentation to install and setup
+your development environment.
 
-The running example of this section is based on an Ubuntu environment. You may have to adapt the steps according to your system. Once your working environment is ready, prepare a working directory that will contain the sources.  For a ``source`` base directory, type::
+The running example of this section is based on an Ubuntu
+environment. You may have to adapt the steps according to your
+system. Once your working environment is ready, prepare a working
+directory that will contain the sources.  For a ``source`` base
+directory, type::
 
   mkdir source;cd source
 
-OpenERP provides a setup script that automatizes the tasks of creating a shared repository and getting the source code. Get the setup script of OpenERP by typing::
+OpenERP provides a setup script that automatizes the tasks of creating
+a shared repository and getting the source code. Get the setup script
+of OpenERP by typing::
 
   bzr cat -d lp:~openerp-dev/openerp-tools/trunk setup.sh | sh
 
@@ -29,27 +41,30 @@ If you want some help about the available options, please type::
 
   make help
 
-Next step is to initialize the shared repository and download the sources. Get the current trunk version of OpenERP by typing::
+Next step is to initialize the shared repository and download the
+sources. Get the current trunk version of OpenERP by typing::
 
   make init-trunk
 
-This will create the following structure inside your ``source`` directory, and fetch the latest source code from ``trunk``::
+This will create the following structure inside your ``source``
+directory, and fetch the latest source code from ``trunk``::
 
   drwxrwxr-x  3 openerp openerp 4096 2012-04-17 11:10 addons
   drwxrwxr-x  3 openerp openerp 4096 2012-04-17 11:10 misc
   drwxrwxr-x  3 openerp openerp 4096 2012-04-17 11:10 server
   drwxrwxr-x  3 openerp openerp 4096 2012-04-17 11:10 web
 
-Some dependencies are necessary to use OpenERP. Depending on your environment, you might have to install the following packages::
+Some dependencies are necessary to use OpenERP. Depending on your
+environment, you might have to install the following packages::
 
-  sudo apt-get install graphviz ghostscript postgresql-client
- 
-  sudo apt-get install python-dateutil python-feedparser python-gdata
-    python-ldap python-libxslt1 python-lxml python-mako, python-openid
-    python-psycopg2 python-pybabel python-pychart python-pydot
-    python-pyparsing python-reportlab python-simplejson python-tz
-    python-vatnumber python-vobject python-webdav python-werkzeug python-xlwt
-    python-yaml python-imaging python-matplotlib 
+  sudo apt-get install graphviz ghostscript postgresql-client \
+            python-dateutil python-feedparser python-gdata \
+            python-ldap python-libxslt1 python-lxml python-mako \
+            python-openid python-psycopg2 python-pybabel python-pychart \
+            python-pydot python-pyparsing python-reportlab python-simplejson \
+            python-tz python-vatnumber python-vobject python-webdav \
+            python-werkzeug python-xlwt python-yaml python-imaging \
+            python-matplotlib
 
 Next step is to initialize the database. This will create a new openerp role::
 
@@ -59,7 +74,8 @@ Finally, launch the OpenERP server::
 
   make server
 
-Testing your installation can be done on http://localhost:8069/ . You should see the OpenERP main login page.
+Testing your installation can be done on http://localhost:8069/. You
+should see the OpenERP main login page.
 
 .. _Launchpad: https://launchpad.net/
 .. _Bazaar: http://bazaar.canonical.com/en/
@@ -67,11 +83,11 @@ Testing your installation can be done on http://localhost:8069/ . You should see
 Command line options
 ====================
 
+.. program:: openerp-server
+
 Using the command ::
 
   ./openerp-server --help
-
-gives you the available command line options. For OpenERP server at revision 4133, an output example is given in the `Command line options example`_. Here are a few interesting command line options.
 
 General Options
 +++++++++++++++
@@ -117,7 +133,8 @@ Database related options
 Internationalization options
 ++++++++++++++++++++++++++++
 
-Use these options to translate OpenERP to another language.See i18n section of the user manual. Option '-l' is mandatory.::
+Use these options to translate OpenERP to another language.See i18n
+section of the user manual. Option '-l' is mandatory.::
  
   -l LANGUAGE, --language=LANGUAGE
                        specify the language of the translation file. Use it
@@ -134,8 +151,9 @@ Use these options to translate OpenERP to another language.See i18n section of t
 Options from previous versions
 ++++++++++++++++++++++++++++++
 
-Some options were removed in OpenERP version 6. For example, ``price_accuracy`` is now
-configured through the :ref:`decimal_accuracy` screen.
+Some options were removed in OpenERP version 6. For example,
+``price_accuracy`` is now configured through the
+:ref:`decimal_accuracy` screen.
 
 Configuration
 ==============
@@ -147,7 +165,12 @@ Two configuration files are available:
     * one for the client: ``~/.openerprc``
     * one for the server: ``~/.openerp_serverrc``
 
-If they are not found, the server and the client will start with a default configuration. Those files follow the convention used by python's ConfigParser module. Please note that lines beginning with "#" or ";" are comments. The client configuration file is automatically generated upon the first start. The sezrver configuration file can automatically be created using the command ::
+If they are not found, the server and the client will start with a
+default configuration. Those files follow the convention used by
+python's ConfigParser module. Please note that lines beginning with
+"#" or ";" are comments. The client configuration file is
+automatically generated upon the first start. The sezrver
+configuration file can automatically be created using the command ::
 
   ./openerp-server -s or ./openerp-server --save
 
@@ -156,19 +179,20 @@ You can specify alternate configuration files with ::
   -c CONFIG, --config=CONFIG specify alternate config file
 
 Configure addons locations
---------------------------
+++++++++++++++++++++++++++
 
-By default, the only directory of addons known by the server is server/bin/addons. 
-It is possible to add new addons by
+By default, the only directory of addons known by the server is
+server/bin/addons. It is possible to add new addons by
 
- - copying them in server/bin/addons, or creating a symbolic link to each 
-   of them in this directory, or
- - specifying another directory containing addons to the server. The later 
-   can be accomplished either by running the server with the ``--addons-path=`` 
-   option, or by configuring this option in the openerp_serverrc file, 
-   automatically generated under Linux in your home directory by the 
-   server when executed with the ``--save`` option. You can provide several 
-   addons to the ``addons_path`` = option, separating them using commas.
+ - copying them in server/bin/addons, or creating a symbolic link to
+   each of them in this directory, or
+ - specifying another directory containing addons to the server. The
+   later can be accomplished either by running the server with the
+   ``--addons-path=`` option, or by configuring this option in the
+   openerp_serverrc file, automatically generated under Linux in your
+   home directory by the server when executed with the ``--save``
+   option. You can provide several addons to the ``addons_path`` =
+   option, separating them using commas.
 
 Start-up script
 ===============
@@ -176,9 +200,9 @@ Start-up script
 .. versionadded:: 6.1
 
 To run the OpenERP server, the conventional approach is to use the
-`openerp-server` script.  It loads the :ref:`openerp library`, sets a few
-configuration variables corresponding to command-line arguments, and starts to
-listen to incoming connections from clients.
+`openerp-server` script.  It loads the :ref:`openerp library`, sets a
+few configuration variables corresponding to command-line arguments,
+and starts to listen to incoming connections from clients.
 
 Depending on your deployment needs, you can write such a start-up script very
 easily. We also recommend you take a look at an alternative tool called

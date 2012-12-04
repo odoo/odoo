@@ -234,6 +234,8 @@ class html(text):
     _type = 'html'
     _symbol_c = '%s'
     def _symbol_f(x):
+        if x is None or x == False:
+            return None
         return html_sanitize(x)
         
     _symbol_set = (_symbol_c, _symbol_f)
@@ -704,10 +706,7 @@ class many2many(_column):
         if where_c:
             where_c = ' AND ' + where_c
 
-        if offset or self._limit:
-            order_by = ' ORDER BY "%s".%s' %(obj._table, obj._order.split(',')[0])
-        else:
-            order_by = ''
+        order_by = ' ORDER BY "%s".%s' %(obj._table, obj._order.split(',')[0])
 
         limit_str = ''
         if self._limit is not None:

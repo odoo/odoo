@@ -23,7 +23,6 @@ import codecs
 import csv
 import fnmatch
 import inspect
-import itertools
 import locale
 import os
 import openerp.pooler as pooler
@@ -168,18 +167,21 @@ class GettextAlias(object):
         if db_name:
             return sql_db.db_connect(db_name)
 
-    def _get_cr(self, frame):
+    def _get_cr(self, frame, allow_create=True):
         is_new_cr = False
         cr = frame.f_locals.get('cr', frame.f_locals.get('cursor'))
         if not cr:
             s = frame.f_locals.get('self', {})
             cr = getattr(s, 'cr', None)
-        if not cr:
+        if not cr and allow_create:
             db = self._get_db()
             if db:
                 cr = db.cursor()
                 is_new_cr = True
         return cr, is_new_cr
+
+    def _get_uid(self, frame):
+        return frame.f_locals.get('uid') or frame.f_locals.get('user')
 
     def _get_lang(self, frame):
         lang = None
@@ -195,11 +197,21 @@ class GettextAlias(object):
                 ctx = kwargs.get('context')
         if ctx:
             lang = ctx.get('lang')
+        s = frame.f_locals.get('self', {})
         if not lang:
-            s = frame.f_locals.get('self', {})
             c = getattr(s, 'localcontext', None)
             if c:
                 lang = c.get('lang')
+        if not lang:
+            # Last resort: attempt to guess the language of the user
+            # Pitfall: some operations are performed in sudo mode, and we 
+            #          don't know the originial uid, so the language may
+            #          be wrong when the admin language differs.
+            pool = getattr(s, 'pool', None)
+            (cr, dummy) = self._get_cr(frame, allow_create=False)
+            uid = self._get_uid(frame)
+            if pool and cr and uid:
+                lang = pool.get('res.users').context_get(cr, uid)['lang']
         return lang
 
     def __call__(self, source):
@@ -444,12 +456,17 @@ def trans_export(lang, modules, buffer, format, cr):
             for module, type, name, res_id, src, trad, comments in rows:
                 row = grouped_rows.setdefault(src, {})
                 row.setdefault('modules', set()).add(module)
-                if ('translation' not in row) or (not row['translation']):
+                if not row.get('translation') and trad != src:
                     row['translation'] = trad
                 row.setdefault('tnrs', []).append((type, name, res_id))
                 row.setdefault('comments', set()).update(comments)
 
             for src, row in grouped_rows.items():
+                if not lang:
+                    # translation template, so no translation value
+                    row['translation'] = ''
+                elif not row.get('translation'):
+                    row['translation'] = src
                 writer.write(row['modules'], row['tnrs'], src, row['translation'], row['comments'])
 
         elif format == 'tgz':
@@ -485,16 +502,25 @@ def trans_export(lang, modules, buffer, format, cr):
     del translations
 
 def trans_parse_xsl(de):
+    return list(set(trans_parse_xsl_aux(de, False)))
+
+def trans_parse_xsl_aux(de, t):
     res = []
+
     for n in de:
-        if n.get("t"):
-            for m in n:
-                if isinstance(m, SKIPPED_ELEMENT_TYPES) or not m.text:
+        t = t or n.get("t")
+        if t:
+                if isinstance(n, SKIPPED_ELEMENT_TYPES) or n.tag.startswith('{http://www.w3.org/1999/XSL/Transform}'):
                     continue
-                l = m.text.strip().replace('\n',' ')
-                if len(l):
-                    res.append(l.encode("utf8"))
-        res.extend(trans_parse_xsl(n))
+                if n.text:
+                    l = n.text.strip().replace('\n',' ')
+                    if len(l):
+                        res.append(l.encode("utf8"))
+                if n.tail:
+                    l = n.tail.strip().replace('\n',' ')
+                    if len(l):
+                        res.append(l.encode("utf8"))
+        res.extend(trans_parse_xsl_aux(n, t))
     return res
 
 def trans_parse_rml(de):
@@ -512,7 +538,7 @@ def trans_parse_rml(de):
 
 def trans_parse_view(de):
     res = []
-    if de.text and de.text.strip():
+    if not isinstance(de, SKIPPED_ELEMENT_TYPES) and de.text and de.text.strip():
         res.append(de.text.strip().encode("utf8"))
     if de.tail and de.tail.strip():
         res.append(de.tail.strip().encode("utf8"))
@@ -618,7 +644,12 @@ def trans_generate(lang, modules, cr):
     _to_translate = []
     def push_translation(module, type, name, id, source, comments=None):
         tuple = (module, source, name, id, type, comments or [])
-        if source and tuple not in _to_translate:
+        # empty and one-letter terms are ignored, they probably are not meant to be
+        # translated, and would be very hard to translate anyway.
+        if not source or len(source.strip()) <= 1:
+            _logger.debug("Ignoring empty or 1-letter source term: %r", tuple)
+            return
+        if tuple not in _to_translate:
             _to_translate.append(tuple)
 
     def encode(s):
@@ -841,6 +872,8 @@ def trans_generate(lang, modules, cr):
                                                                  keywords=extract_keywords):
                     push_translation(module, trans_type, display_path, lineno,
                                      encode(message), comments + extra_comments)
+            except Exception:
+                _logger.exception("Failed to extract terms from %s", fabsolutepath)
             finally:
                 src_file.close()
 
@@ -856,7 +889,7 @@ def trans_generate(lang, modules, cr):
                 for fname in fnmatch.filter(files, '*.js'):
                     babel_extract_terms(fname, path, root, 'javascript',
                                         extra_comments=[WEB_TRANSLATION_COMMENT],
-                                        extract_keywords={'_t': None})
+                                        extract_keywords={'_t': None, '_lt': None})
             # QWeb template files
             if fnmatch.fnmatch(root, '*/static/src/xml*'):
                 for fname in fnmatch.filter(files, '*.xml'):

@@ -104,7 +104,10 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
         """
         for filename in package.data[kind]:
-            _logger.info("module %s: loading %s", module_name, filename)
+            if kind == 'test':
+                _logger.log(logging.TEST, "module %s: loading %s", module_name, filename)
+            else:
+                _logger.info("module %s: loading %s", module_name, filename)
             _, ext = os.path.splitext(filename)
             pathname = os.path.join(module_name, filename)
             fp = tools.file_open(pathname)
@@ -348,7 +351,8 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             for (model, name) in cr.fetchall():
                 model_obj = pool.get(model)
                 if model_obj and not model_obj.is_transient():
-                    _logger.warning('Model %s (%s) has no access rules!', model, name)
+                    _logger.warning('The model %s has no access rules, consider adding one. E.g. access_%s,access_%s,model_%s,,1,1,1,1',
+                        model, model.replace('.', '_'), model.replace('.', '_'), model.replace('.', '_'))
 
             # Temporary warning while we remove access rights on osv_memory objects, as they have
             # been replaced by owner-only access rights

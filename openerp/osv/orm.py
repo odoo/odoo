@@ -1111,7 +1111,7 @@ class BaseModel(object):
                     if not model_data.search(cr, uid, [('name', '=', n)]):
                         break
                     postfix += 1
-                model_data.create(cr, uid, {
+                model_data.create(cr, SUPERUSER_ID, {
                     'name': n,
                     'model': self._name,
                     'res_id': r['id'],
@@ -1603,7 +1603,7 @@ class BaseModel(object):
                 if fld_def._type == 'many2many':
                     obj = self.pool.get(fld_def._obj)
                     field_value2 = []
-                    for i in range(len(field_value)):
+                    for i in range(len(field_value or [])):
                         if not obj.search(cr, uid, [('id', '=',
                             field_value[i])]):
                             continue
@@ -1612,7 +1612,7 @@ class BaseModel(object):
                 if fld_def._type == 'one2many':
                     obj = self.pool.get(fld_def._obj)
                     field_value2 = []
-                    for i in range(len(field_value)):
+                    for i in range(len(field_value or [])):
                         field_value2.append({})
                         for field2 in field_value[i]:
                             if field2 in obj._columns.keys() and obj._columns[field2]._type == 'many2one':
@@ -1782,7 +1782,7 @@ class BaseModel(object):
                         # TODO: find a way to remove this hack, by allow dynamic domains
                         dom = []
                         if column._domain and not isinstance(column._domain, basestring):
-                            dom = column._domain
+                            dom = list(column._domain)
                         dom += eval(node.get('domain', '[]'), {'uid': user, 'time': time})
                         search_context = dict(context)
                         if column._context and not isinstance(column._context, basestring):
@@ -1838,7 +1838,7 @@ class BaseModel(object):
                 if trans:
                     node.set('string', trans)
 
-            for attr_name in ('confirm', 'sum', 'help', 'placeholder'):
+            for attr_name in ('confirm', 'sum', 'avg', 'help', 'placeholder'):
                 attr_value = node.get(attr_name)
                 if attr_value:
                     trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], attr_value)
@@ -2670,13 +2670,19 @@ class BaseModel(object):
 
         order = orderby or groupby
         data_ids = self.search(cr, uid, [('id', 'in', alldata.keys())], order=order, context=context)
-        # the IDS of records that have groupby field value = False or '' should be sorted too
-        data_ids += filter(lambda x:x not in data_ids, alldata.keys())
-        data = self.read(cr, uid, data_ids, groupby and [groupby] or ['id'], context=context)
-        # restore order of the search as read() uses the default _order (this is only for groups, so the size of data_read shoud be small):
-        data.sort(lambda x,y: cmp(data_ids.index(x['id']), data_ids.index(y['id'])))
+        
+        # the IDs of records that have groupby field value = False or '' should be included too
+        data_ids += set(alldata.keys()).difference(data_ids)
+        
+        if groupby:   
+            data = self.read(cr, uid, data_ids, [groupby], context=context)
+            # restore order of the search as read() uses the default _order (this is only for groups, so the footprint of data should be small):
+            data_dict = dict((d['id'], d[groupby] ) for d in data)
+            result = [{'id': i, groupby: data_dict[i]} for i in data_ids]
+        else:
+            result = [{'id': i} for i in data_ids] 
 
-        for d in data:
+        for d in result:
             if groupby:
                 d['__domain'] = [(groupby, '=', alldata[d['id']][groupby] or False)] + domain
                 if not isinstance(groupby_list, (str, unicode)):
@@ -2697,11 +2703,11 @@ class BaseModel(object):
             del d['id']
 
         if groupby and groupby in self._group_by_full:
-            data = self._read_group_fill_results(cr, uid, domain, groupby, groupby_list,
-                                                 aggregated_fields, data, read_group_order=order,
-                                                 context=context)
+            result = self._read_group_fill_results(cr, uid, domain, groupby, groupby_list,
+                                                   aggregated_fields, result, read_group_order=order,
+                                                   context=context)
 
-        return data
+        return result
 
     def _inherits_join_add(self, current_table, parent_model_name, query):
         """
@@ -3898,7 +3904,7 @@ class BaseModel(object):
         if isinstance(ids, (int, long)):
             ids = [ids]
 
-        result_store = self._store_get_values(cr, uid, ids, None, context)
+        result_store = self._store_get_values(cr, uid, ids, self._all_columns.keys(), context)
 
         self._check_concurrency(cr, ids, context)
 
@@ -4305,11 +4311,16 @@ class BaseModel(object):
                 del vals[self._inherits[table]]
 
             record_id = tocreate[table].pop('id', None)
-
+            
+            # When linking/creating parent records, force context without 'no_store_function' key that
+            # defers stored functions computing, as these won't be computed in batch at the end of create(). 
+            parent_context = dict(context)
+            parent_context.pop('no_store_function', None)
+            
             if record_id is None or not record_id:
-                record_id = self.pool.get(table).create(cr, user, tocreate[table], context=context)
+                record_id = self.pool.get(table).create(cr, user, tocreate[table], context=parent_context)
             else:
-                self.pool.get(table).write(cr, user, [record_id], tocreate[table], context=context)
+                self.pool.get(table).write(cr, user, [record_id], tocreate[table], context=parent_context)
 
             upd0 += ',' + self._inherits[table]
             upd1 += ',%s'
@@ -4722,7 +4733,7 @@ class BaseModel(object):
                 order_direction = order_split[1].strip() if len(order_split) == 2 else ''
                 inner_clause = None
                 if order_field == 'id':
-                    order_by_clause = '"%s"."%s"' % (self._table, order_field)
+                    order_by_elements.append('"%s"."id" %s' % (self._table, order_direction))
                 elif order_field in self._columns:
                     order_column = self._columns[order_field]
                     if order_column._classic_read:
@@ -5198,6 +5209,7 @@ class AbstractModel(BaseModel):
        """
     _auto = False # don't create any database backend for AbstractModels
     _register = False # not visible in ORM registry, meant to be python-inherited only
+    _transient = False
 
 def itemgetter_tuple(items):
     """ Fixes itemgetter inconsistency (useful in some cases) of not returning

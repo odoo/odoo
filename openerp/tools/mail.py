@@ -130,6 +130,9 @@ def html_email_clean(html):
         dest += source[idx:]
         return dest
 
+    if not html:
+        return html
+
     html = ustr(html)
 
     # 1. <br[ /]> -> \n, because otherwise the tree is obfuscated
@@ -355,10 +358,11 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     """
 
     # If not cr, get cr from current thread database
+    local_cr = None
     if not cr:
         db_name = getattr(threading.currentThread(), 'dbname', None)
         if db_name:
-            cr = pooler.get_db_only(db_name).cursor()
+            local_cr = cr = pooler.get_db(db_name).cursor()
         else:
             raise Exception("No database cursor found, please pass one explicitly")
 
@@ -377,7 +381,8 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
         _logger.exception("tools.email_send failed to deliver email")
         return False
     finally:
-        cr.close()
+        if local_cr:
+            cr.close()
     return res
 
 def email_split(text):
