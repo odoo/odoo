@@ -514,7 +514,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         Return the oldest lead found among ids.
 
         :param list ids: list of ids of the leads to inspect
-        :return int id: the id of the oldest of the leads
+        :return object: browse record of the oldest of the leads
         """
         if context is None:
             context = {}
