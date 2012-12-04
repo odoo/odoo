@@ -60,7 +60,6 @@ After installing this module, the Configuration wizard for accounting is launche
     "depends" : [
         "account",
         "base_vat",
-        "base_iban",
         "account_chart",
     ],
     "demo" : [
