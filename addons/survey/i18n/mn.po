@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:54+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2012-05-10 17:49+0000\n"
 "Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:19+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:45+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: survey
 #: view:survey.response.line:0
@@ -37,11 +37,6 @@ msgstr ""
 #: view:survey.question.wiz:0
 msgid "Your Messages"
 msgstr "Таны мэссэж"
-
-#. module: survey
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr "Сонгосон компани энэ хэрэглэгчид зөвшөөрөгдсөн компаниуд дунд алга."
 
 #. module: survey
 #: field:survey.question,comment_valid_type:0
@@ -650,12 +645,6 @@ msgid "Error Message"
 msgstr "Алдааны мэссэж"
 
 #. module: survey
-#: code:addons/survey/survey.py:687
-#, python-format
-msgid "You cannot duplicate the resource!"
-msgstr "Та нөөцийг хуулбарлаж болохгүй!"
-
-#. module: survey
 #: code:addons/survey/wizard/survey_answer.py:126
 #, python-format
 msgid "You cannot answer this survey more than %s times."
@@ -676,11 +665,6 @@ msgstr "Огноо А байх ёстой"
 #: model:ir.model,name:survey.model_survey_print
 msgid "survey.print"
 msgstr "survey.print"
-
-#. module: survey
-#: sql_constraint:res.users:0
-msgid "OAuth UID must be unique per provider"
-msgstr ""
 
 #. module: survey
 #: view:survey:0
@@ -825,11 +809,6 @@ msgstr "#Хариулт"
 #: field:survey.print.answer,without_pagebreak:0
 msgid "Print Without Page Breaks"
 msgstr "Хуудас таслахгүй хэвлэх"
-
-#. module: survey
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr "Ижил нэвтрэх нэртэй хоёр хэрэглэгч байж болохгүй!"
 
 #. module: survey
 #: view:survey:0
@@ -1518,10 +1497,10 @@ msgid "You cannot select same answer more than one time.'"
 msgstr ""
 
 #. module: survey
-#: field:survey.response,date_create:0
-#: field:survey.response.line,date_create:0
-msgid "Create Date"
-msgstr "Үүсгэх огноо"
+#: code:addons/survey/survey.py:687
+#, python-format
+msgid "You cannot duplicate the resource!"
+msgstr "Та нөөцийг хуулбарлаж болохгүй!"
 
 #. module: survey
 #: code:addons/survey/survey.py:525
@@ -1752,9 +1731,10 @@ msgid "Date & Time"
 msgstr "Огноо & Цаг"
 
 #. module: survey
-#: constraint:res.users:0
-msgid "Error: Invalid ean code"
-msgstr ""
+#: field:survey.response,date_create:0
+#: field:survey.response.line,date_create:0
+msgid "Create Date"
+msgstr "Үүсгэх огноо"
 
 #. module: survey
 #: field:survey.question,column_name:0
@@ -2010,6 +1990,9 @@ msgstr "Хуудасны байрлал"
 #~ "Баганын толгойд нэг юмуу түүнээс олон менюны сонголт оруулах шаардлагатай "
 #~ "(зай зөвшөөрөгдөхгүй)"
 
+#~ msgid "The chosen company is not in the allowed companies for this user"
+#~ msgstr "Сонгосон компани энэ хэрэглэгчид зөвшөөрөгдсөн компаниуд дунд алга."
+
 #~ msgid "_Cancel"
 #~ msgstr "_Цуцлах"
 
@@ -2026,6 +2009,9 @@ msgstr "Хуудасны байрлал"
 #~ "хуудсуудаас бүрддэг. Төрөл нь: текст, олон сонголт, гм. Санал асуулгыг "
 #~ "'Санал асуулга засах' товч дээр дараад WYSIWYG байдлаар буюу харагдах "
 #~ "байдлаар нь засч болно."
+
+#~ msgid "You can not have two users with the same login !"
+#~ msgstr "Ижил нэвтрэх нэртэй хоёр хэрэглэгч байж болохгүй!"
 
 #, python-format
 #~ msgid ""

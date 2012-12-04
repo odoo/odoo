@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:54+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2012-11-29 14:10+0000\n"
 "Last-Translator: Numérigraphe <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-30 05:07+0000\n"
-"X-Generator: Launchpad (build 16319)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:43+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: stock_location
 #: help:product.pulled.flow,company_id:0
@@ -69,11 +69,6 @@ msgstr "Flux tirés"
 msgid "Location used by Destination Location to supply"
 msgstr ""
 "Emplacement utilisé pour l'emplacement de destination à approvisionner"
-
-#. module: stock_location
-#: constraint:stock.move:0
-msgid "You must assign a serial number for this product."
-msgstr "Vous devez attribuer un numéro de série pour cet article."
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -162,9 +157,10 @@ msgid "Pulled flows"
 msgstr "Flux tirés"
 
 #. module: stock_location
-#: sql_constraint:product.product:0
-msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
+#: field:product.pulled.flow,company_id:0
+#: field:stock.location.path,company_id:0
+msgid "Company"
+msgstr "Société"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_move
@@ -239,11 +235,6 @@ msgstr ""
 "l'arborescence des emplacements."
 
 #. module: stock_location
-#: constraint:stock.move:0
-msgid "You cannot move products from or to a location of the type view."
-msgstr ""
-
-#. module: stock_location
 #: selection:stock.location.path,auto:0
 msgid "Manual Operation"
 msgstr "Opération manuelle"
@@ -276,11 +267,6 @@ msgstr ""
 msgid "Is the destination location that needs supplying"
 msgstr ""
 "Indique l'emplacement de destination qui a besoin d'être approvisionné"
-
-#. module: stock_location
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product."
-msgstr "Vous tentez d'assigner un lot qui n'appartient pas au même article."
 
 #. module: stock_location
 #: field:stock.location.path,product_id:0
@@ -331,12 +317,6 @@ msgstr ""
 "original %s (#%d)"
 
 #. module: stock_location
-#: field:product.pulled.flow,journal_id:0
-#: field:stock.location.path,journal_id:0
-msgid "Journal"
-msgstr "Journal"
-
-#. module: stock_location
 #: model:ir.model,name:stock_location.model_procurement_order
 msgid "Procurement"
 msgstr "Approvisionnement"
@@ -358,13 +338,6 @@ msgstr "Mouvement automatique"
 #: selection:stock.location.path,picking_type:0
 msgid "Getting Goods"
 msgstr "Bon de réception"
-
-#. module: stock_location
-#: constraint:product.product:0
-msgid ""
-"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
-"\"Internal Reference\" field instead."
-msgstr ""
 
 #. module: stock_location
 #: view:product.product:0
@@ -402,10 +375,10 @@ msgid "Location Paths"
 msgstr "Chemin des emplacements"
 
 #. module: stock_location
-#: field:product.pulled.flow,company_id:0
-#: field:stock.location.path,company_id:0
-msgid "Company"
-msgstr "Société"
+#: field:product.pulled.flow,journal_id:0
+#: field:stock.location.path,journal_id:0
+msgid "Journal"
+msgstr "Journal"
 
 #. module: stock_location
 #: field:product.pulled.flow,cancel_cascade:0
