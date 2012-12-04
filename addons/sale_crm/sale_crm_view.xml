@@ -9,8 +9,8 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="/form/header/button[@name='case_mark_lost']" position="after">
-                        <button states="done" string="Convert to Quote" name="%(action_crm_make_sale)d" type="action" class="oe_highlight"/>
-                        <button states="draft,open,pending" string="Convert to Quote" name="%(action_crm_make_sale)d" type="action"/>
+                        <button states="done" string="Create Quotation" name="%(action_crm_make_sale)d" type="action"/>
+                        <button states="draft,open,pending" string="Convert to Quotation" name="%(action_crm_make_sale)d" type="action" class="oe_highlight"/>
                     </xpath>
                 </data>
             </field>
@@ -43,6 +43,73 @@
                 <xpath expr="//field[@name='user_id']" position="after">
                     <field name="section_id" string="Sales Team"/>
                 </xpath>
+            </field>
+        </record>
+
+        <!-- Update account invoice list view!-->
+        <record model="ir.ui.view" id="account_invoice_tree">
+            <field name="name">Account Invoice</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_tree"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='date_invoice']" position="after">
+                        <field name="section_id" invisible="1"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="account_invoice_groupby_inherit" model="ir.ui.view">
+            <field name="name">account.invoice.groupby</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group/filter[@string='Due Date']" position="after">
+                    <filter string="Sales Team" domain="[]" context="{'group_by':'section_id'}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Update account invoice !-->
+        <record model="ir.ui.view" id="account_invoice_form">
+            <field name="name">Account Invoice</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='user_id']" position="after">
+                        <field name="section_id"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <!-- Update user form !-->
+        <record model="ir.ui.view" id="res_user_form">
+            <field name="name">Users Preferences</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='email']" position="after">
+                        <field name="default_section_id"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <!-- Update Preferences form !-->
+        <record id="view_users_form_preferences" model="ir.ui.view">
+            <field name="name">res.users.preferences.form</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+            <field name="arch" type="xml">
+            <data>
+                    <xpath expr="//field[@name='company_id']" position="after">
+                        <field name="default_section_id"/>
+                    </xpath>
+                </data>
             </field>
         </record>
 

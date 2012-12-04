@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
 "PO-Revision-Date: 2012-05-10 17:19+0000\n"
 "Last-Translator: Jiří Hajda <robie@centrum.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 06:34+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:22+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 "X-Poedit-Language: Czech\n"
 
 #. module: resource
@@ -49,13 +49,9 @@ msgid "Resources Leaves"
 msgstr "Uvolnění zdrojů"
 
 #. module: resource
-#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
-#: view:resource.calendar:0
-#: field:resource.calendar,attendance_ids:0
-#: view:resource.calendar.attendance:0
-#: field:resource.resource,calendar_id:0
-msgid "Working Time"
-msgstr "Pracovní doba"
+#: field:resource.calendar.attendance,dayofweek:0
+msgid "Day of Week"
+msgstr "Den v týdnu"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -72,6 +68,11 @@ msgstr "Seskupit podle..."
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Sunday"
 msgstr "Neděle"
+
+#. module: resource
+#: field:resource.resource,time_efficiency:0
+msgid "Efficiency Factor"
+msgstr "Činitel účinnosti"
 
 #. module: resource
 #: view:resource.resource:0
@@ -97,14 +98,15 @@ msgstr ""
 "Ujistěte se, že pracovní doba byla nastavena se správnými dny v týdnu!"
 
 #. module: resource
-#: field:resource.calendar,manager:0
-msgid "Workgroup Manager"
-msgstr "Vedoucí pracovní skupiny"
+#: code:addons/resource/resource.py:310
+#, python-format
+msgid "%s (copy)"
+msgstr ""
 
 #. module: resource
-#: help:resource.calendar.attendance,hour_from:0
-msgid "Working time will start from"
-msgstr "Pracovní doba začne v"
+#: view:resource.calendar:0
+msgid "Search Working Time"
+msgstr "Hledat pracovní dobu"
 
 #. module: resource
 #: constraint:resource.calendar.leaves:0
@@ -132,24 +134,9 @@ msgid "Friday"
 msgstr "Pátek"
 
 #. module: resource
-#: field:resource.calendar.attendance,dayofweek:0
-msgid "Day of Week"
-msgstr "Den v týdnu"
-
-#. module: resource
-#: help:resource.calendar.attendance,hour_to:0
-msgid "Working time will end at"
-msgstr "Pracovní doba končí v"
-
-#. module: resource
-#: field:resource.calendar.attendance,date_from:0
-msgid "Starting date"
-msgstr "Počáteční den"
-
-#. module: resource
-#: view:resource.calendar:0
-msgid "Search Working Time"
-msgstr "Hledat pracovní dobu"
+#: view:resource.calendar.attendance:0
+msgid "Hours"
+msgstr ""
 
 #. module: resource
 #: view:resource.calendar.leaves:0
@@ -173,9 +160,14 @@ msgid "Search Working Period Leaves"
 msgstr "Hledat uvolnění pracovní doby"
 
 #. module: resource
-#: field:resource.resource,time_efficiency:0
-msgid "Efficiency Factor"
-msgstr "Činitel účinnosti"
+#: field:resource.calendar.attendance,date_from:0
+msgid "Starting Date"
+msgstr ""
+
+#. module: resource
+#: field:resource.calendar,manager:0
+msgid "Workgroup Manager"
+msgstr "Vedoucí pracovní skupiny"
 
 #. module: resource
 #: field:resource.calendar.leaves,date_to:0
@@ -196,7 +188,6 @@ msgid "Resource"
 msgstr "Zdroj"
 
 #. module: resource
-#: view:resource.calendar:0
 #: field:resource.calendar,name:0
 #: field:resource.calendar.attendance,name:0
 #: field:resource.calendar.leaves,name:0
@@ -205,15 +196,30 @@ msgid "Name"
 msgstr "Jméno"
 
 #. module: resource
-#: selection:resource.calendar.attendance,dayofweek:0
-msgid "Wednesday"
-msgstr "Středa"
+#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
+#: view:resource.calendar:0
+#: field:resource.calendar,attendance_ids:0
+#: view:resource.calendar.attendance:0
+#: field:resource.calendar.leaves,calendar_id:0
+#: field:resource.resource,calendar_id:0
+msgid "Working Time"
+msgstr "Pracovní doba"
+
+#. module: resource
+#: help:resource.calendar.attendance,hour_from:0
+msgid "Start and End time of working."
+msgstr ""
 
 #. module: resource
 #: view:resource.calendar.leaves:0
 #: view:resource.resource:0
 msgid "Working Period"
 msgstr "Pracovní období"
+
+#. module: resource
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Wednesday"
+msgstr "Středa"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_resource
@@ -284,17 +290,9 @@ msgid "Work to"
 msgstr "Pracovat po"
 
 #. module: resource
-#: help:resource.resource,time_efficiency:0
-msgid ""
-"This field depict the efficiency of the resource to complete tasks. e.g  "
-"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficency of "
-"200%, then his load will only be 50%."
-msgstr ""
-"Toto pole vykresluje efektivitu zdroje k dokončení úloh. např. zdroj je dán "
-"sám do fáze 5 dnů s 5 úlohách k němu přiřazených, ukáže jako výchozí "
-"zatížení 100% pro tuto fázi, ale pokud dáme efektivitu 200%, pak jeho "
-"zatížení bude pouze 50%."
+#: model:ir.model,name:resource.model_resource_calendar_attendance
+msgid "Work Detail"
+msgstr "Podrobnosti práce"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -302,9 +300,13 @@ msgid "Tuesday"
 msgstr "Úterý"
 
 #. module: resource
-#: field:resource.calendar.leaves,calendar_id:0
-msgid "Working time"
-msgstr "Pracovní doba"
+#: help:resource.resource,time_efficiency:0
+msgid ""
+"This field depict the efficiency of the resource to complete tasks. e.g  "
+"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
+"show a load of 100% for this phase by default, but if we put a efficiency of "
+"200%, then his load will only be 50%."
+msgstr ""
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
@@ -346,20 +348,14 @@ msgid "Human"
 msgstr "Člověk"
 
 #. module: resource
-#: model:ir.model,name:resource.model_resource_calendar_attendance
-msgid "Work Detail"
-msgstr "Podrobnosti práce"
+#: view:resource.calendar.leaves:0
+msgid "Duration"
+msgstr ""
 
 #. module: resource
 #: field:resource.calendar.leaves,date_from:0
 msgid "Start Date"
 msgstr "Počáteční datum"
-
-#. module: resource
-#: code:addons/resource/resource.py:310
-#, python-format
-msgid " (copy)"
-msgstr " (kopie)"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -369,11 +365,38 @@ msgstr "Sobota"
 #~ msgid "Workgroup manager"
 #~ msgstr "Vedoucí pracovní skupiny"
 
+#~ msgid "Working time will start from"
+#~ msgstr "Pracovní doba začne v"
+
 #~ msgid "Day of week"
 #~ msgstr "Den v týdnu"
+
+#~ msgid "Working time will end at"
+#~ msgstr "Pracovní doba končí v"
+
+#~ msgid "Starting date"
+#~ msgstr "Počáteční den"
+
+#~ msgid "Working time"
+#~ msgstr "Pracovní doba"
 
 #~ msgid "General Information"
 #~ msgstr "Obecné informace"
 
 #~ msgid "Efficiency factor"
 #~ msgstr "Činitel účinnosti"
+
+#, python-format
+#~ msgid " (copy)"
+#~ msgstr " (kopie)"
+
+#~ msgid ""
+#~ "This field depict the efficiency of the resource to complete tasks. e.g  "
+#~ "resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
+#~ "show a load of 100% for this phase by default, but if we put a efficency of "
+#~ "200%, then his load will only be 50%."
+#~ msgstr ""
+#~ "Toto pole vykresluje efektivitu zdroje k dokončení úloh. např. zdroj je dán "
+#~ "sám do fáze 5 dnů s 5 úlohách k němu přiřazených, ukáže jako výchozí "
+#~ "zatížení 100% pro tuto fázi, ale pokud dáme efektivitu 200%, pak jeho "
+#~ "zatížení bude pouze 50%."

@@ -6,63 +6,52 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2010-11-23 09:40+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 06:07+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:19+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: sale_crm
-#: field:sale.order,categ_id:0
-msgid "Category"
-msgstr "Kategori"
-
-#. module: sale_crm
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique per Company!"
-msgstr "Orderreferensen måste vara unik per bolag!"
-
-#. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:112
+#: code:addons/sale_crm/wizard/crm_make_sale.py:90
 #, python-format
-msgid "Converted to Sales Quotation(%s)."
-msgstr "Konverterad till offert (%s)."
+msgid "Insufficient Data!"
+msgstr ""
 
 #. module: sale_crm
+#: view:crm.lead:0
 #: view:crm.make.sale:0
 msgid "Convert to Quotation"
 msgstr "Konvertera till offert"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:89
-#, python-format
-msgid "Data Insufficient!"
-msgstr "Data otillräckligt!"
+#: model:ir.model,name:sale_crm.model_account_invoice_report
+msgid "Invoices Statistics"
+msgstr ""
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:89
-#, python-format
-msgid "Customer has no addresses defined!"
-msgstr "Kunden saknar adress!"
+#: field:crm.make.sale,close:0
+msgid "Mark Won"
+msgstr ""
 
 #. module: sale_crm
-#: model:ir.model,name:sale_crm.model_crm_make_sale
-msgid "Make sales"
-msgstr "Skapa försäljning"
-
-#. module: sale_crm
-#: view:crm.make.sale:0
-msgid "_Create"
-msgstr "_Skapa"
+#: field:res.users,default_section_id:0
+msgid "Default Sales Team"
+msgstr ""
 
 #. module: sale_crm
 #: view:sale.order:0
 msgid "My Sales Team(s)"
 msgstr "Mina säljteam"
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_res_users
+msgid "Users"
+msgstr ""
 
 #. module: sale_crm
 #: help:crm.make.sale,close:0
@@ -72,19 +61,16 @@ msgstr ""
 "Kryssa för att stänga affärsmöjligheten efter att ha skapar kundorder."
 
 #. module: sale_crm
-#: view:board.board:0
-msgid "My Opportunities"
-msgstr "Mina affärsmöjligheter"
+#: field:sale.order,categ_ids:0
+msgid "Categories"
+msgstr ""
 
 #. module: sale_crm
-#: view:crm.lead:0
-msgid "Convert to Quote"
-msgstr "Konvertera till offert"
-
-#. module: sale_crm
-#: field:crm.make.sale,shop_id:0
-msgid "Shop"
-msgstr "Butik"
+#: code:addons/sale_crm/wizard/crm_make_sale.py:124
+#: code:addons/sale_crm/wizard/crm_make_sale.py:135
+#, python-format
+msgid "Quotation"
+msgstr "Offert"
 
 #. module: sale_crm
 #: field:crm.make.sale,partner_id:0
@@ -92,32 +78,56 @@ msgid "Customer"
 msgstr "Kund"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:92
+#: view:crm.make.sale:0
+msgid "_Create"
+msgstr "_Skapa"
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_crm_make_sale
+msgid "Make sales"
+msgstr "Skapa försäljning"
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_account_invoice
+msgid "Invoice"
+msgstr ""
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:93
 #, python-format
 msgid "Opportunity: %s"
 msgstr "Affärstillfälle: %s"
 
 #. module: sale_crm
-#: field:crm.make.sale,close:0
-msgid "Close Opportunity"
-msgstr "Stäng affärsmöjlighet"
-
-#. module: sale_crm
-#: view:board.board:0
-msgid "My Planned Revenues by Stage"
-msgstr "Mina förväntade intäkter per steg"
-
-#. module: sale_crm
 #: code:addons/sale_crm/wizard/crm_make_sale.py:110
 #, python-format
-msgid "Opportunity  '%s' is converted to Quotation."
-msgstr "Affärsmöjlighet '%s' har konverterats till en offert."
+msgid "Opportunity has been <b>converted</b> to the quotation <em>%s</em>."
+msgstr ""
 
 #. module: sale_crm
+#: field:crm.make.sale,shop_id:0
+msgid "Shop"
+msgstr "Butik"
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:90
+#, python-format
+msgid "No addresse(s) defined for this customer."
+msgstr ""
+
+#. module: sale_crm
+#: view:account.invoice:0
+#: field:account.invoice,section_id:0
+#: field:account.invoice.report,section_id:0
 #: view:sale.order:0
 #: field:sale.order,section_id:0
 msgid "Sales Team"
 msgstr "Säljteam"
+
+#. module: sale_crm
+#: view:crm.lead:0
+msgid "Create Quotation"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.action_crm_make_sale
@@ -134,6 +144,11 @@ msgstr "Avbryt"
 msgid "Sales Order"
 msgstr "Kundorder"
 
+#. module: sale_crm
+#: view:crm.make.sale:0
+msgid "or"
+msgstr ""
+
 #~ msgid "Create"
 #~ msgstr "Skapa"
 
@@ -149,9 +164,6 @@ msgstr "Kundorder"
 #~ msgid "Opportunity Quotation"
 #~ msgstr "Möjlighetsoffert"
 
-#~ msgid "Quotation"
-#~ msgstr "Offert"
-
 #~ msgid "Opportunity convert into quotation"
 #~ msgstr "Möjlighet konverterad till offert"
 
@@ -163,6 +175,9 @@ msgstr "Kundorder"
 
 #~ msgid "CRM Opportunity"
 #~ msgstr "CFM möjlighet"
+
+#~ msgid "Convert to Quote"
+#~ msgstr "Konvertera till offert"
 
 #~ msgid "Make Case"
 #~ msgstr "Skapa ärende"
@@ -193,3 +208,34 @@ msgstr "Kundorder"
 
 #~ msgid "Sale CRM Stuff"
 #~ msgstr "Sale CRM Stuff"
+
+#~ msgid "Category"
+#~ msgstr "Kategori"
+
+#~ msgid "Order Reference must be unique per Company!"
+#~ msgstr "Orderreferensen måste vara unik per bolag!"
+
+#, python-format
+#~ msgid "Converted to Sales Quotation(%s)."
+#~ msgstr "Konverterad till offert (%s)."
+
+#, python-format
+#~ msgid "Data Insufficient!"
+#~ msgstr "Data otillräckligt!"
+
+#, python-format
+#~ msgid "Customer has no addresses defined!"
+#~ msgstr "Kunden saknar adress!"
+
+#~ msgid "My Opportunities"
+#~ msgstr "Mina affärsmöjligheter"
+
+#~ msgid "Close Opportunity"
+#~ msgstr "Stäng affärsmöjlighet"
+
+#~ msgid "My Planned Revenues by Stage"
+#~ msgstr "Mina förväntade intäkter per steg"
+
+#, python-format
+#~ msgid "Opportunity  '%s' is converted to Quotation."
+#~ msgstr "Affärsmöjlighet '%s' har konverterats till en offert."

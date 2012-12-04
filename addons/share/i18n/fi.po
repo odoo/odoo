@@ -7,15 +7,33 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 01:37+0100\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2011-10-25 12:21+0000\n"
 "Last-Translator: Jussi Mikkola <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 06:34+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:47+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:837
+#, python-format
+msgid "Invitation to collaborate about %s"
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:775
+#, python-format
+msgid ""
+"The share engine has not been able to fetch a record_id for your invitation."
+msgstr ""
+
+#. module: share
+#: view:share.wizard:0
+msgid "Include an Optional Personal Message"
+msgstr ""
 
 #. module: share
 #: field:share.wizard,embed_option_title:0
@@ -28,14 +46,20 @@ msgid "Access granted!"
 msgstr "Pääsy sallittu!"
 
 #. module: share
+#: field:share.wizard,record_name:0
+msgid "Record name"
+msgstr ""
+
+#. module: share
+#: help:share.wizard,message:0
+msgid ""
+"An optional personal message, to be included in the email notification."
+msgstr ""
+
+#. module: share
 #: field:share.wizard,user_type:0
 msgid "Sharing method"
 msgstr "Jakometodi"
-
-#. module: share
-#: view:share.wizard:0
-msgid "Share with these People (one email per line)"
-msgstr ""
 
 #. module: share
 #: field:share.wizard,name:0
@@ -43,9 +67,29 @@ msgid "Share Title"
 msgstr "Jaon otsikko"
 
 #. module: share
+#: code:addons/share/wizard/share_wizard.py:843
+#: code:addons/share/wizard/share_wizard.py:872
+#, python-format
+msgid ""
+"The documents are not attached, you can view them online directly on my "
+"OpenERP server at:\n"
+"    %s\n"
+"\n"
+msgstr ""
+
+#. module: share
 #: model:ir.module.category,name:share.module_category_share
 msgid "Sharing"
 msgstr "Jakaminen"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:838
+#: code:addons/share/wizard/share_wizard.py:870
+#, python-format
+msgid ""
+"Hello,\n"
+"\n"
+msgstr ""
 
 #. module: share
 #: field:share.wizard,share_root_url:0
@@ -53,51 +97,49 @@ msgid "Share Access URL"
 msgstr "Jaon URL"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:782
+#: field:share.wizard,email_1:0
+#: field:share.wizard,email_2:0
+#: field:share.wizard,email_3:0
+msgid "New user email"
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:882
 #, python-format
 msgid "You may use your current login (%s) and password to view them.\n"
 msgstr ""
 "Voit käyttää nykyistä kirjautumista (%s) ja salasanaa nähdäksesi ne.\n"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:601
+#: code:addons/share/wizard/share_wizard.py:616
 #, python-format
 msgid "(Modified)"
 msgstr "(muokattu)"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:769
+#: code:addons/share/wizard/share_wizard.py:660
 #, python-format
-msgid ""
-"The documents are not attached, you can view them online directly on my "
-"OpenERP server at:"
+msgid "You must be a member of the Share/User group to use the share wizard."
 msgstr ""
-"Dokumentteja ei ole liitetty, voit katsoa ne suoraan verkossa OpenERP "
-"palvelimelta:"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:579
+#: code:addons/share/wizard/share_wizard.py:594
 #, python-format
 msgid "Sharing filter created by user %s (%s) for group %s"
 msgstr "Jakosuodatin luotu käyttäjän %s (%s) toimesta ryhmälle %s"
 
 #. module: share
-#: field:share.wizard,embed_url:0 field:share.wizard.result.line,share_url:0
+#: field:share.wizard,embed_url:0
+#: field:share.wizard.result.line,share_url:0
 msgid "Share URL"
 msgstr "Jaon URL"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:776
+#: code:addons/share/wizard/share_wizard.py:844
+#: code:addons/share/wizard/share_wizard.py:876
 #, python-format
 msgid "These are your credentials to access this protected area:\n"
 msgstr "Tässä ovat tunnuksesi suojatulle alueelle:\n"
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:643
-#, python-format
-msgid "You must be a member of the Share/User group to use the share wizard"
-msgstr ""
-"Sinun täytyy olla jäsen Jako/käyttäjät ryhmässä käyttääksesi jako avustajaa"
 
 #. module: share
 #: view:share.wizard:0
@@ -110,10 +152,17 @@ msgid "Share"
 msgstr "Jaa"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:551
+#: code:addons/share/wizard/share_wizard.py:566
 #, python-format
 msgid "(Duplicated for modified sharing permissions)"
 msgstr "(kopioitu muutettuja jako-oikeuksia varten)"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:664
+#, python-format
+msgid ""
+"Please indicate the emails of the persons to share with, one per line."
+msgstr ""
 
 #. module: share
 #: help:share.wizard,domain:0
@@ -121,22 +170,19 @@ msgid "Optional domain for further data filtering"
 msgstr "Vaihtoehtoinen toimialue tarkempaa tietojen suodatusta varten"
 
 #. module: share
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr "Kahdella eri käyttäjällä ei voi olla samaa käyttäjätunnusta!"
-
-#. module: share
-#: model:ir.model,name:share.model_ir_model_access
-msgid "ir.model.access"
-msgstr ""
-
-#. module: share
 #: view:share.wizard:0
 msgid "Next"
 msgstr "Seuraava"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:777
+#: code:addons/share/wizard/share_wizard.py:657
+#, python-format
+msgid "Action and Access Mode are required to create a shared access."
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:845
+#: code:addons/share/wizard/share_wizard.py:877
 #, python-format
 msgid "Username"
 msgstr "Käyttäjätunnus"
@@ -147,21 +193,21 @@ msgid "Sharing Options"
 msgstr "Jakamisen vaihtoehdot"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:765
+#. openerp-web
+#: code:addons/share/static/src/xml/share.xml:9
 #, python-format
-msgid "Hello,"
-msgstr "Hei,"
+msgid "Invite"
+msgstr ""
 
 #. module: share
 #: view:share.wizard:0
-msgid "Close"
-msgstr "Sulje"
+msgid "Embedded code options"
+msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:640
-#, python-format
-msgid "Action and Access Mode are required to create a shared access"
-msgstr "Toiminto ja pääsytapa vaaditaan luodaksesi jaetun pääsyn"
+#: view:share.wizard:0
+msgid "Configuration"
+msgstr ""
 
 #. module: share
 #: view:share.wizard:0
@@ -173,26 +219,13 @@ msgstr ""
 "jakaa."
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:781
-#, python-format
-msgid ""
-"The documents have been automatically added to your current OpenERP "
-"documents.\n"
-msgstr ""
-"Dokumentit on automaattisesti lisätty nykyisiin OpenERP dokumentteihin.\n"
-
-#. module: share
-#: view:share.wizard:0
-msgid "Cancel"
-msgstr "Peruuta"
-
-#. module: share
 #: field:res.groups,share:0
 msgid "Share Group"
 msgstr "Jako ryhmä"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:763
+#: code:addons/share/wizard/share_wizard.py:830
+#: code:addons/share/wizard/share_wizard.py:861
 #, python-format
 msgid "Email required"
 msgstr "Sähköposti vaaditaan"
@@ -207,23 +240,26 @@ msgstr ""
 "asetetaan jaetuille tiedoille."
 
 #. module: share
-#: help:share.wizard,name:0
-msgid "Title for the share (displayed to users as menu and shortcut name)"
+#: view:res.groups:0
+msgid "Non-Share Groups"
 msgstr ""
-"Otsikko jaolle (näytetään käyttäjille valikkona ja pikakuvakkeen nimenä)"
 
 #. module: share
 #: view:share.wizard:0
-msgid "Options"
-msgstr "Valinnat"
+msgid ""
+"An email notification with instructions has been sent to the following "
+"people:"
+msgstr ""
 
 #. module: share
-#: view:res.groups:0
-msgid "Regular groups only (no share groups"
-msgstr "Vain normaalit ryhmät (ei jakoryhmiä)"
+#: code:addons/share/wizard/share_wizard.py:77
+#, python-format
+msgid "Direct link or embed code"
+msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:787
+#: code:addons/share/wizard/share_wizard.py:851
+#: code:addons/share/wizard/share_wizard.py:885
 #, python-format
 msgid ""
 "OpenERP is a powerful and user-friendly suite of Business Applications (CRM, "
@@ -237,9 +273,9 @@ msgid "Action to share"
 msgstr "Jaettava toiminto"
 
 #. module: share
-#: view:share.wizard:0
-msgid "Optional: include a personal message"
-msgstr "Lisävaihtoehto: liitä mukaan henkilökohtainen viesti"
+#: help:share.wizard,record_name:0
+msgid "Name of the shared record, if sharing a precise record"
+msgstr ""
 
 #. module: share
 #: field:res.users,share:0
@@ -247,17 +283,22 @@ msgid "Share User"
 msgstr "Jaettu käyttäjä"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:647
-#, python-format
-msgid "Please indicate the emails of the persons to share with, one per line"
-msgstr ""
-"Ole hyvä ja syötä henkilöiden sähköpostiosoitteet joiden kanssa haluat jakaa "
-"tietoa, yksi osoite riville"
-
-#. module: share
-#: field:share.wizard,embed_code:0 field:share.wizard.result.line,user_id:0
+#: field:share.wizard.result.line,user_id:0
 msgid "unknown"
 msgstr "tuntematon"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:61
+#: code:addons/share/wizard/share_wizard.py:652
+#, python-format
+msgid "Sharing access cannot be created."
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:775
+#, python-format
+msgid "Record id not found"
+msgstr ""
 
 #. module: share
 #: help:res.groups,share:0
@@ -267,18 +308,18 @@ msgstr ""
 "käyttäjien kanssa."
 
 #. module: share
+#: view:res.groups:0
+msgid "Share Groups"
+msgstr ""
+
+#. module: share
 #: help:share.wizard,action_id:0
 msgid ""
 "The action that opens the screen containing the data you wish to share."
 msgstr "Toiminto avaa ruudun joka sisältää tiedot joita haluat jakaa."
 
 #. module: share
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr "Valittu yritys ei ole sallittu tälle käyttäjälle"
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:526
+#: code:addons/share/wizard/share_wizard.py:541
 #, python-format
 msgid "(Copy for sharing)"
 msgstr "(kopioi jaettavaksi)"
@@ -289,16 +330,16 @@ msgid "Newly created"
 msgstr "Uusi luotu"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:616
+#: help:share.wizard,name:0
+msgid "Title for the share (displayed to users as menu and shortcut name)"
+msgstr ""
+"Otsikko jaolle (näytetään käyttäjille valikkona ja pikakuvakkeen nimenä)"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:631
 #, python-format
 msgid "Indirect sharing filter created by user %s (%s) for group %s"
 msgstr "Epäsuora jakosuodin luotu käyttäjän %s (%s) toimesta ryhmälle %s"
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:767
-#, python-format
-msgid "I've shared %s with you!"
-msgstr "Olen jakanut kanssasi %s!"
 
 #. module: share
 #: help:share.wizard,share_root_url:0
@@ -306,9 +347,12 @@ msgid "Main access page for users that are granted shared access"
 msgstr "Pääsivu käyttäjille joille on myönnetty jaettu pääsy"
 
 #. module: share
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr "Ryhmän nimen tulee olla uniikki!"
+#: code:addons/share/wizard/share_wizard.py:206
+#, python-format
+msgid ""
+"You must configure your email address in the user preferences before using "
+"the Share button."
+msgstr ""
 
 #. module: share
 #: model:res.groups,name:share.group_share_user
@@ -316,12 +360,7 @@ msgid "User"
 msgstr "Käyttäjä"
 
 #. module: share
-#: view:res.groups:0
-msgid "Groups"
-msgstr "Ryhmät"
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:636
+#: code:addons/share/wizard/share_wizard.py:653
 #, python-format
 msgid ""
 "Sorry, the current screen and filter you are trying to share are not "
@@ -334,14 +373,20 @@ msgstr ""
 
 #. module: share
 #: view:share.wizard:0
-msgid "Use this Link"
-msgstr ""
+msgid "Use this link"
+msgstr "Käytä tätä linkkiä"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:779
+#: code:addons/share/wizard/share_wizard.py:847
+#: code:addons/share/wizard/share_wizard.py:879
 #, python-format
 msgid "Database"
 msgstr "Tietokanta"
+
+#. module: share
+#: view:share.wizard:0
+msgid "Share with these People (one email per line)"
+msgstr ""
 
 #. module: share
 #: field:share.wizard,domain:0
@@ -349,15 +394,33 @@ msgid "Domain"
 msgstr "Toimialue"
 
 #. module: share
-#: view:share.wizard:0 field:share.wizard,result_line_ids:0
+#: view:res.groups:0
+msgid "{'search_default_no_share':1}"
+msgstr ""
+
+#. module: share
+#: view:share.wizard:0
+#: field:share.wizard,result_line_ids:0
 msgid "Summary"
 msgstr "Yhteenveto"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:493
+#: help:share.wizard,embed_code:0
+msgid ""
+"Embed this code in your documents to provide a link to the shared document."
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:508
 #, python-format
 msgid "Copied access for sharing"
 msgstr "Kopioitu pääsy jakamista varten"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:812
+#, python-format
+msgid "Invitation"
+msgstr ""
 
 #. module: share
 #: model:ir.actions.act_window,name:share.action_share_wizard_step1
@@ -370,11 +433,13 @@ msgid "Or insert the following code where you want to embed your documents"
 msgstr "Tai liitä seuraaava koodi kun haluat upottaa dokumenttisi"
 
 #. module: share
-#: view:share.wizard:0
+#: code:addons/share/wizard/share_wizard.py:881
+#, python-format
 msgid ""
-"An email notification with instructions has been sent to the following "
-"people:"
+"The documents have been automatically added to your current OpenERP "
+"documents.\n"
 msgstr ""
+"Dokumentit on automaattisesti lisätty nykyisiin OpenERP dokumentteihin.\n"
 
 #. module: share
 #: model:ir.model,name:share.model_share_wizard_result_line
@@ -382,9 +447,22 @@ msgid "share.wizard.result.line"
 msgstr ""
 
 #. module: share
+#: field:share.wizard,embed_code:0
+msgid "Code"
+msgstr ""
+
+#. module: share
 #: help:share.wizard,user_type:0
 msgid "Select the type of user(s) you would like to share data with."
 msgstr "Valitse käyttäjien tyyppi joiden kanssa haluat jakaa tietoja."
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:839
+#, python-format
+msgid ""
+"I have shared %s (%s) with you!\n"
+"\n"
+msgstr ""
 
 #. module: share
 #: field:share.wizard,view_type:0
@@ -402,22 +480,9 @@ msgid "Can edit"
 msgstr "Voi muokata"
 
 #. module: share
-#: help:share.wizard,message:0
-msgid ""
-"An optional personal message, to be included in the email notification."
-msgstr ""
-
-#. module: share
-#: model:ir.model,name:share.model_res_users
-msgid "res.users"
-msgstr ""
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:60
-#: code:addons/share/wizard/share_wizard.py:635
-#, python-format
-msgid "Sharing access could not be created"
-msgstr "Jaettua pääsyä ei voida luoda"
+#: view:share.wizard:0
+msgid "Cancel"
+msgstr "Peruuta"
 
 #. module: share
 #: help:res.users,share:0
@@ -436,7 +501,7 @@ msgid "Share Wizard"
 msgstr "Jakovelho"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:740
+#: code:addons/share/wizard/share_wizard.py:788
 #, python-format
 msgid "Shared access created!"
 msgstr "Jaettu pääsy on luotu!"
@@ -450,19 +515,48 @@ msgid ""
 msgstr ""
 
 #. module: share
+#: code:addons/share/wizard/share_wizard.py:848
+#, python-format
+msgid ""
+"The documents have been automatically added to your subscriptions.\n"
+"\n"
+msgstr ""
+
+#. module: share
+#: model:ir.model,name:share.model_res_users
+msgid "Users"
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:871
+#, python-format
+msgid ""
+"I've shared %s with you!\n"
+"\n"
+msgstr ""
+
+#. module: share
 #: model:ir.model,name:share.model_res_groups
 msgid "Access Groups"
 msgstr "Pääsyryhmät"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:778
+#: field:share.wizard,invite:0
+msgid "Invite users to OpenSocial record"
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:846
+#: code:addons/share/wizard/share_wizard.py:878
 #: field:share.wizard.result.line,password:0
 #, python-format
 msgid "Password"
 msgstr "Salasana"
 
 #. module: share
+#: code:addons/share/wizard/share_wizard.py:77
 #: field:share.wizard,new_users:0
+#, python-format
 msgid "Emails"
 msgstr "Sähköpostit"
 
@@ -472,18 +566,13 @@ msgid "Display search view"
 msgstr "Näytä hakunäkymä"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:197
-#, python-format
-msgid "No email address configured"
-msgstr ""
-
-#. module: share
 #: field:share.wizard,message:0
 msgid "Personal Message"
 msgstr "Henkilökohtainen viesti"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:763
+#: code:addons/share/wizard/share_wizard.py:830
+#: code:addons/share/wizard/share_wizard.py:861
 #, python-format
 msgid ""
 "The current user must have an email address configured in User Preferences "
@@ -491,6 +580,12 @@ msgid ""
 msgstr ""
 "Nykyisellä käyttäjällä tulee olle sähköpostiosoite määriteltynä "
 "käyttäjäasetuksissa voidakseen lähettää sähköposteja."
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:205
+#, python-format
+msgid "No email address configured"
+msgstr ""
 
 #. module: share
 #: field:share.wizard.result.line,login:0
@@ -513,11 +608,13 @@ msgid "Sharing: preparation"
 msgstr "Jakaminen: valmistelu"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:198
-#, python-format
-msgid ""
-"You must configure your email address in the user preferences before using "
-"the Share button."
+#: model:ir.model,name:share.model_ir_model_access
+msgid "ir.model.access"
+msgstr ""
+
+#. module: share
+#: view:share.wizard:0
+msgid "or"
 msgstr ""
 
 #. module: share
@@ -525,15 +622,8 @@ msgstr ""
 msgid "Access rights to be granted on the shared documents."
 msgstr "Pääsyoikeudet jotka annetaan jaetuille dokumenteille"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/share/static/src/xml/share.xml:8
-msgid "Link or embed..."
-msgstr "Linkitä tai sisällytä..."
-
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/share/static/src/xml/share.xml:9
-msgid "Share with..."
-msgstr "Jaa henkilöiden kanssa..."
+#~ msgid "The chosen company is not in the allowed companies for this user"
+#~ msgstr "Valittu yritys ei ole sallittu tälle käyttäjälle"
 
 #, python-format
 #~ msgid ""
@@ -545,6 +635,9 @@ msgstr "Jaa henkilöiden kanssa..."
 
 #~ msgid "Who would you want to share this data with?"
 #~ msgstr "Kenen kanssa haluat jakaa nämä tiedot?"
+
+#~ msgid "You can not have two users with the same login !"
+#~ msgstr "Kahdella eri käyttäjällä ei voi olla samaa käyttäjätunnusta!"
 
 #, python-format
 #~ msgid ""
@@ -579,6 +672,9 @@ msgstr "Jaa henkilöiden kanssa..."
 
 #~ msgid "Generic Share Access URL"
 #~ msgstr "Yleinen jaon URL"
+
+#~ msgid "Regular groups only (no share groups"
+#~ msgstr "Vain normaalit ryhmät (ei jakoryhmiä)"
 
 #, python-format
 #~ msgid "Please specify \"share_root_url\" in context"
@@ -624,6 +720,9 @@ msgstr "Jaa henkilöiden kanssa..."
 #~ msgid "Send Email Notification(s)"
 #~ msgstr "Lähetä sähköpostitiedote"
 
+#~ msgid "The name of the group must be unique !"
+#~ msgstr "Ryhmän nimen tulee olla uniikki!"
+
 #~ msgid "Select the desired shared access mode:"
 #~ msgstr "Valitse haluttu jaon tyyppi"
 
@@ -632,6 +731,9 @@ msgstr "Jaa henkilöiden kanssa..."
 
 #~ msgid "Sharing Tools"
 #~ msgstr "Jakotyökalut"
+
+#~ msgid "Groups"
+#~ msgstr "Ryhmät"
 
 #~ msgid "Users to share with"
 #~ msgstr "Käyttäjät joiden kanssa jaetaan"
@@ -668,6 +770,9 @@ msgstr "Jaa henkilöiden kanssa..."
 #~ msgid "Read-only"
 #~ msgstr "Vain luku"
 
+#~ msgid "Close"
+#~ msgstr "Sulje"
+
 #, python-format
 #~ msgid "*usual password*"
 #~ msgstr "*normaali salasana*"
@@ -675,8 +780,24 @@ msgstr "Jaa henkilöiden kanssa..."
 #~ msgid "Share with these people (one e-mail per line)"
 #~ msgstr "Jaa näiden henkilöiden kanssa (yksi sähköposti riviä kohti)"
 
-#~ msgid "Use this link"
-#~ msgstr "Käytä tätä linkkiä"
+#, python-format
+#~ msgid "You must be a member of the Share/User group to use the share wizard"
+#~ msgstr ""
+#~ "Sinun täytyy olla jäsen Jako/käyttäjät ryhmässä käyttääksesi jako avustajaa"
+
+#, python-format
+#~ msgid "Action and Access Mode are required to create a shared access"
+#~ msgstr "Toiminto ja pääsytapa vaaditaan luodaksesi jaetun pääsyn"
+
+#, python-format
+#~ msgid "Hello,"
+#~ msgstr "Hei,"
+
+#~ msgid "Options"
+#~ msgstr "Valinnat"
+
+#~ msgid "Optional: include a personal message"
+#~ msgstr "Lisävaihtoehto: liitä mukaan henkilökohtainen viesti"
 
 #~ msgid ""
 #~ "An optional personal message, to be included in the e-mail notification."
@@ -685,8 +806,15 @@ msgstr "Jaa henkilöiden kanssa..."
 #~ "ilmoitukseen."
 
 #, python-format
+#~ msgid "Sharing access could not be created"
+#~ msgstr "Jaettua pääsyä ei voida luoda"
+
+#, python-format
 #~ msgid "No e-mail address configured"
 #~ msgstr "Sähköpostiosoitetta ei ole konfiguroitu"
+
+#~ msgid "Share with..."
+#~ msgstr "Jaa henkilöiden kanssa..."
 
 #, python-format
 #~ msgid ""
@@ -695,6 +823,27 @@ msgstr "Jaa henkilöiden kanssa..."
 #~ msgstr ""
 #~ "Sinun pitää määritellä sähköpostiosoitteesi käyttäjän asetuksiin ennenkuin "
 #~ "voit käyttää Jaa nappia."
+
+#~ msgid "Link or embed..."
+#~ msgstr "Linkitä tai sisällytä..."
+
+#, python-format
+#~ msgid "I've shared %s with you!"
+#~ msgstr "Olen jakanut kanssasi %s!"
+
+#, python-format
+#~ msgid ""
+#~ "The documents are not attached, you can view them online directly on my "
+#~ "OpenERP server at:"
+#~ msgstr ""
+#~ "Dokumentteja ei ole liitetty, voit katsoa ne suoraan verkossa OpenERP "
+#~ "palvelimelta:"
+
+#, python-format
+#~ msgid "Please indicate the emails of the persons to share with, one per line"
+#~ msgstr ""
+#~ "Ole hyvä ja syötä henkilöiden sähköpostiosoitteet joiden kanssa haluat jakaa "
+#~ "tietoa, yksi osoite riville"
 
 #~ msgid ""
 #~ "An e-mail notification with instructions has been sent to the following "

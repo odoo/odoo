@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-05-10 17:58+0000\n"
 "Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 06:28+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:17+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -22,15 +22,10 @@ msgid "Parent Directory"
 msgstr "Överliggande katalog"
 
 #. module: document
-#: code:addons/document/document_directory.py:276
+#: code:addons/document/document_directory.py:273
 #, python-format
 msgid "Directory name contains special characters!"
 msgstr "Katalognamnet innehåller specialtecken!"
-
-#. module: document
-#: field:document.directory,resource_field:0
-msgid "Name field"
-msgstr "Namnfält"
 
 #. module: document
 #: view:board.board:0
@@ -41,6 +36,11 @@ msgstr "Dokumentpanel"
 #: model:ir.model,name:document.model_process_node
 msgid "Process Node"
 msgstr "Process Node"
+
+#. module: document
+#: sql_constraint:document.directory:0
+msgid "Directory must have a parent or a storage."
+msgstr ""
 
 #. module: document
 #: view:document.directory:0
@@ -79,20 +79,14 @@ msgid "Files"
 msgstr "Files"
 
 #. module: document
-#: view:report.files.partner:0
-msgid "Files per Month"
-msgstr "Filer per månad"
+#: field:document.directory.content.type,mimetype:0
+msgid "Mime Type"
+msgstr "Mime typ"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "March"
 msgstr "Mars"
-
-#. module: document
-#: view:document.configuration:0
-msgid "title"
-msgstr "titel"
 
 #. module: document
 #: field:document.directory.dctx,expr:0
@@ -132,18 +126,13 @@ msgstr ""
 "en hänvisning till den aktuella posten, i dynamiska mappar"
 
 #. module: document
-#: view:report.document.user:0
-msgid "This Year"
-msgstr "Innevarande år"
-
-#. module: document
 #: field:document.storage,path:0
 msgid "Path"
 msgstr "Sökväg"
 
 #. module: document
-#: code:addons/document/document_directory.py:266
-#: code:addons/document/document_directory.py:271
+#: code:addons/document/document_directory.py:263
+#: code:addons/document/document_directory.py:268
 #, python-format
 msgid "Directory name must be unique!"
 msgstr "Directory name must be unique!"
@@ -154,6 +143,7 @@ msgid "Filter on my documents"
 msgstr "Filtrera på mina dokument"
 
 #. module: document
+#: view:ir.attachment:0
 #: field:ir.attachment,index_content:0
 msgid "Indexed Content"
 msgstr "Indexed Content"
@@ -168,13 +158,9 @@ msgstr ""
 "falska enda som har detta som förälder."
 
 #. module: document
-#: model:ir.actions.todo.category,name:document.category_knowledge_mgmt_config
-msgid "Knowledge Management"
-msgstr "Kunskapsförvaltning"
-
-#. module: document
 #: view:document.directory:0
 #: field:document.storage,dir_ids:0
+#: model:ir.actions.act_window,name:document.action_document_directory_form
 #: model:ir.ui.menu,name:document.menu_document_directories
 msgid "Directories"
 msgstr "Kataloger"
@@ -185,8 +171,8 @@ msgid "Files details by Users"
 msgstr "Fildetaljer per användare"
 
 #. module: document
-#: code:addons/document/document_storage.py:573
-#: code:addons/document/document_storage.py:601
+#: code:addons/document/document_storage.py:569
+#: code:addons/document/document_storage.py:597
 #, python-format
 msgid "Error!"
 msgstr "Error!"
@@ -219,14 +205,27 @@ msgstr "Konfiguration av kunskapshanteringsapplikationen"
 #. module: document
 #: view:ir.attachment:0
 #: field:ir.attachment,partner_id:0
-#: field:report.files.partner,partner:0
 msgid "Partner"
 msgstr "Partner"
 
 #. module: document
-#: view:board.board:0
-msgid "Files by Users"
-msgstr "Användarfiler"
+#: model:ir.actions.act_window,name:document.act_res_partner_document
+#: model:ir.actions.act_window,name:document.zoom_directory
+msgid "Related Documents"
+msgstr "Relaterade dokument"
+
+#. module: document
+#: model:ir.actions.act_window,help:document.action_document_file_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to create a new document. \n"
+"          </p><p>\n"
+"            The Documents repository gives you access to all attachments, "
+"such\n"
+"            as mails, project documents, invoices etc.\n"
+"          </p>\n"
+"        "
+msgstr ""
 
 #. module: document
 #: field:process.node,directory_id:0
@@ -234,11 +233,9 @@ msgid "Document directory"
 msgstr "Document directory"
 
 #. module: document
-#: code:addons/document/document.py:220
-#: code:addons/document/document.py:299
-#: code:addons/document/document_directory.py:266
-#: code:addons/document/document_directory.py:271
-#: code:addons/document/document_directory.py:276
+#: code:addons/document/document_directory.py:263
+#: code:addons/document/document_directory.py:268
+#: code:addons/document/document_directory.py:273
 #, python-format
 msgid "ValidateError"
 msgstr "ValidateError"
@@ -250,16 +247,10 @@ msgstr "ir.actions.report.xml"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_file_form
-#: view:ir.attachment:0
 #: model:ir.ui.menu,name:document.menu_document_doc
 #: model:ir.ui.menu,name:document.menu_document_files
 msgid "Documents"
 msgstr "Dokument"
-
-#. module: document
-#: constraint:document.directory:0
-msgid "Error! You can not create recursive Directories."
-msgstr "Error! Du kan inte skapa rekursiva kataloger."
 
 #. module: document
 #: view:document.directory:0
@@ -276,7 +267,6 @@ msgstr "Resursklass"
 #: field:ir.attachment,file_size:0
 #: field:report.document.file,file_size:0
 #: field:report.document.user,file_size:0
-#: field:report.files.partner,file_size:0
 msgid "File Size"
 msgstr "File Size"
 
@@ -287,12 +277,24 @@ msgid "Content Type"
 msgstr "Content Type"
 
 #. module: document
+#: view:ir.attachment:0
+msgid "Modification"
+msgstr ""
+
+#. module: document
 #: view:document.directory:0
 #: field:document.directory,type:0
 #: view:document.storage:0
 #: field:document.storage,type:0
 msgid "Type"
 msgstr "Type"
+
+#. module: document
+#: code:addons/document/document.py:194
+#: code:addons/document/document_directory.py:234
+#, python-format
+msgid "%s (copy)"
+msgstr ""
 
 #. module: document
 #: help:document.directory,ressource_type_id:0
@@ -311,9 +313,14 @@ msgstr ""
 "Use a domain if you want to apply an automatic filter on visible resources."
 
 #. module: document
-#: model:ir.actions.act_window,name:document.action_view_files_by_partner
-msgid "Files Per Partner"
-msgstr "Fil per företag"
+#: constraint:document.directory:0
+msgid "Error! You cannot create recursive directories."
+msgstr ""
+
+#. module: document
+#: field:document.directory,resource_field:0
+msgid "Name field"
+msgstr "Namnfält"
 
 #. module: document
 #: field:document.directory,dctx_ids:0
@@ -338,15 +345,8 @@ msgstr "Report"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "July"
 msgstr "Juli"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.open_board_document_manager
-#: model:ir.ui.menu,name:document.menu_reports_document_manager
-msgid "Document Dashboard"
-msgstr "Infopanel för dokument"
 
 #. module: document
 #: field:document.directory.content.type,code:0
@@ -354,22 +354,12 @@ msgid "Extension"
 msgstr "Extension"
 
 #. module: document
-#: view:ir.attachment:0
-msgid "Created"
-msgstr "Skapad"
-
-#. module: document
 #: field:document.directory,content_ids:0
 msgid "Virtual Files"
 msgstr "Virtual Files"
 
 #. module: document
-#: view:ir.attachment:0
-msgid "Modified"
-msgstr "Ändrad"
-
-#. module: document
-#: code:addons/document/document_storage.py:639
+#: code:addons/document/document_storage.py:635
 #, python-format
 msgid "Error at doc write!"
 msgstr "Fel vid skrivning av dokumentet!"
@@ -412,10 +402,15 @@ msgid "Last Modification User"
 msgstr "Last Modification User"
 
 #. module: document
-#: model:ir.actions.act_window,name:document.act_res_partner_document
-#: model:ir.actions.act_window,name:document.zoom_directory
-msgid "Related Documents"
-msgstr "Relaterade dokument"
+#: model:ir.actions.act_window,name:document.action_view_files_by_user_graph
+#: view:report.document.user:0
+msgid "Files by User"
+msgstr ""
+
+#. module: document
+#: view:ir.attachment:0
+msgid "on"
+msgstr ""
 
 #. module: document
 #: field:document.directory,domain:0
@@ -440,7 +435,6 @@ msgid "All users files"
 msgstr "Alla användarfiler"
 
 #. module: document
-#: view:board.board:0
 #: model:ir.actions.act_window,name:document.action_view_size_month
 #: view:report.document.file:0
 msgid "File Size by Month"
@@ -448,14 +442,8 @@ msgstr "Filstorlek per månad"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "December"
 msgstr "December"
-
-#. module: document
-#: field:document.configuration,config_logo:0
-msgid "Image"
-msgstr "Bild"
 
 #. module: document
 #: selection:document.directory,type:0
@@ -463,9 +451,10 @@ msgid "Static Directory"
 msgstr "Static Directory"
 
 #. module: document
-#: field:document.directory,child_ids:0
-msgid "Children"
-msgstr "Children"
+#: field:report.document.file,month:0
+#: field:report.document.user,month:0
+msgid "Month"
+msgstr "Månad"
 
 #. module: document
 #: view:document.directory:0
@@ -482,13 +471,17 @@ msgstr ""
 "otillgängligt."
 
 #. module: document
+#: field:report.document.user,user:0
+msgid "unknown"
+msgstr ""
+
+#. module: document
 #: view:document.directory:0
 #: field:document.directory,user_id:0
 #: field:document.storage,user_id:0
 #: view:ir.attachment:0
 #: field:ir.attachment,user_id:0
 #: field:report.document.user,user_id:0
-#: field:report.document.wall,user_id:0
 msgid "Owner"
 msgstr "Owner"
 
@@ -510,6 +503,11 @@ msgid "Date Created"
 msgstr "Date Created"
 
 #. module: document
+#: field:document.directory,ressource_id:0
+msgid "Resource ID"
+msgstr "Resource ID"
+
+#. module: document
 #: help:document.directory.content,include_name:0
 msgid ""
 "Check this field if you want that the name of the file to contain the record "
@@ -521,6 +519,17 @@ msgstr ""
 "Om angivet, tvingas katalogen vara en resurs."
 
 #. module: document
+#: model:ir.actions.act_window,name:document.open_board_document_manager
+#: model:ir.ui.menu,name:document.menu_reports_document
+msgid "Knowledge"
+msgstr ""
+
+#. module: document
+#: view:document.storage:0
+msgid "Document Storage"
+msgstr ""
+
+#. module: document
 #: view:document.configuration:0
 #: model:ir.actions.act_window,name:document.action_config_auto_directory
 msgid "Configure Directories"
@@ -530,11 +539,6 @@ msgstr "Konfigurera kataloger"
 #: field:document.directory.content,include_name:0
 msgid "Include Record Name"
 msgstr "Include Record Name"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Attachment"
-msgstr "Attachment"
 
 #. module: document
 #: field:ir.actions.report.xml,model_id:0
@@ -565,10 +569,21 @@ msgstr ""
 "specifik post i förälderklassen."
 
 #. module: document
+#. openerp-web
+#: code:addons/document/static/src/js/document.js:6
+#, python-format
+msgid "Attachment(s)"
+msgstr ""
+
+#. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "August"
 msgstr "Augusti"
+
+#. module: document
+#: view:ir.attachment:0
+msgid "My Document(s)"
+msgstr ""
 
 #. module: document
 #: sql_constraint:document.directory:0
@@ -577,15 +592,8 @@ msgstr "Katalogen kan inte ha sig själv som förälder!"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "June"
 msgstr "Juni"
-
-#. module: document
-#: field:report.document.user,user:0
-#: field:report.document.wall,user:0
-msgid "User"
-msgstr "Användare"
 
 #. module: document
 #: field:document.directory,group_ids:0
@@ -600,12 +608,10 @@ msgstr "Aktiv"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "November"
 msgstr "November"
 
 #. module: document
-#: view:ir.attachment:0
 #: field:ir.attachment,db_datas:0
 msgid "Data"
 msgstr "Data"
@@ -630,7 +636,6 @@ msgstr "Definition"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "October"
 msgstr "Oktober"
 
@@ -646,29 +651,8 @@ msgstr "Database"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "January"
 msgstr "Januari"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Related to"
-msgstr "Relaterad till"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Attached to"
-msgstr "Attached to"
-
-#. module: document
-#: model:ir.ui.menu,name:document.menu_reports_document
-msgid "Dashboard"
-msgstr "Huvudmeny"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.action_view_user_graph
-msgid "Files By Users"
-msgstr "Filer per användare"
 
 #. module: document
 #: field:document.storage,readonly:0
@@ -676,7 +660,8 @@ msgid "Read Only"
 msgstr "Skrivskyddad"
 
 #. module: document
-#: model:ir.actions.act_window,name:document.action_document_directory_form
+#: view:document.directory:0
+#: view:process.node:0
 msgid "Document Directory"
 msgstr "Dokumentkatalog"
 
@@ -686,15 +671,15 @@ msgid "The directory name must be unique !"
 msgstr "Katalognamnet måste vara unikt !"
 
 #. module: document
+#: view:ir.attachment:0
+msgid "Attachments"
+msgstr ""
+
+#. module: document
 #: field:document.directory,create_uid:0
 #: field:document.storage,create_uid:0
 msgid "Creator"
 msgstr "Creator"
-
-#. module: document
-#: field:document.directory.content,sequence:0
-msgid "Sequence"
-msgstr "Sequence"
 
 #. module: document
 #: view:document.configuration:0
@@ -719,7 +704,6 @@ msgstr "Filer per månad"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "September"
 msgstr "September"
 
@@ -729,24 +713,14 @@ msgid "Prefix"
 msgstr "Prefix"
 
 #. module: document
-#: field:report.document.wall,last:0
-msgid "Last Posted Time"
-msgstr "Senast lagrad"
+#: field:document.directory,child_ids:0
+msgid "Children"
+msgstr "Children"
 
 #. module: document
-#: field:report.document.user,datas_fname:0
-msgid "File Name"
-msgstr "Filnamn"
-
-#. module: document
-#: view:document.configuration:0
-msgid "res_config_contents"
-msgstr "res_config_contents"
-
-#. module: document
-#: field:document.directory,ressource_id:0
-msgid "Resource ID"
-msgstr "Resource ID"
+#: view:board.board:0
+msgid "Files by user"
+msgstr ""
 
 #. module: document
 #: selection:document.storage,type:0
@@ -754,22 +728,10 @@ msgid "External file storage"
 msgstr "Extern fillagring"
 
 #. module: document
-#: view:board.board:0
-#: model:ir.actions.act_window,name:document.action_view_wall
-#: view:report.document.wall:0
-msgid "Wall of Shame"
-msgstr "Skamvrån"
-
-#. module: document
 #: help:document.storage,path:0
 msgid "For file storage, the root path of the storage"
 msgstr ""
 "För fillagring, root-katalog för sökvägem i filsystemet förlagringsplatsen"
-
-#. module: document
-#: model:ir.model,name:document.model_report_files_partner
-msgid "Files details by Partners"
-msgstr "Fildetaljer per företag"
 
 #. module: document
 #: field:document.directory.dctx,field:0
@@ -787,28 +749,13 @@ msgid "Parent Model"
 msgstr "Parent Model"
 
 #. module: document
-#: view:report.document.user:0
-msgid "Files by users"
-msgstr "Filer per användare"
-
-#. module: document
-#: field:report.document.file,month:0
-#: field:report.document.user,month:0
-#: field:report.document.wall,month:0
-#: field:report.document.wall,name:0
-#: field:report.files.partner,month:0
-msgid "Month"
-msgstr "Månad"
-
-#. module: document
-#: view:report.document.user:0
-msgid "This Months Files"
-msgstr "Denna månads filer"
-
-#. module: document
-#: model:ir.ui.menu,name:document.menu_reporting
-msgid "Reporting"
-msgstr "Rapportering"
+#: help:document.directory.dctx,field:0
+msgid ""
+"The name of the field. Note that the prefix \"dctx_\" will be prepended to "
+"what is typed here."
+msgstr ""
+"Namnet på fältet. Observera att prefixet \"dctx_\" kommer att föregås till "
+"vad som skrivs här."
 
 #. module: document
 #: field:document.directory,ressource_tree:0
@@ -817,7 +764,6 @@ msgstr "Tree Structure"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "May"
 msgstr "Maj"
 
@@ -825,20 +771,6 @@ msgstr "Maj"
 #: model:ir.actions.act_window,name:document.action_view_all_document_tree1
 msgid "All Users files"
 msgstr "Alla användares filer"
-
-#. module: document
-#: model:ir.model,name:document.model_report_document_wall
-msgid "Users that did not inserted documents since one month"
-msgstr "Användare som inte infört några nya dokument senaste månaden"
-
-#. module: document
-#: model:ir.actions.act_window,help:document.action_document_file_form
-msgid ""
-"The Documents repository gives you access to all attachments, such as mails, "
-"project documents, invoices etc."
-msgstr ""
-"Dokumentarkivet ger dig tillgång till alla bilagor, till exempel e-post, "
-"projektdokument, fakturor etc."
 
 #. module: document
 #: view:document.directory:0
@@ -851,9 +783,9 @@ msgid "ir.attachment"
 msgstr "ir.attachment"
 
 #. module: document
-#: view:board.board:0
-msgid "New Files"
-msgstr "Nya filer"
+#: view:report.document.user:0
+msgid "Users File"
+msgstr ""
 
 #. module: document
 #: view:document.directory:0
@@ -861,24 +793,13 @@ msgid "Static"
 msgstr "Statisk"
 
 #. module: document
-#: view:report.files.partner:0
-msgid "Files By Partner"
-msgstr "Filer per företag"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Indexed Content - experimental"
-msgstr "Indexerat innehåll - experimentellt"
-
-#. module: document
-#: view:report.document.user:0
-msgid "This Month"
-msgstr "Denna månad"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Notes"
-msgstr "Anteckningar"
+#: view:document.directory:0
+msgid ""
+"These groups, however, do NOT apply to children directories, which must "
+"define their own groups."
+msgstr ""
+"Dessa grupper är dock inte tillämpliga på barn kataloger, som måste "
+"definiera sina egna grupper."
 
 #. module: document
 #: model:ir.model,name:document.model_document_configuration
@@ -902,24 +823,8 @@ msgstr ""
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "February"
 msgstr "Februari"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.open_board_document_manager1
-#: model:ir.ui.menu,name:document.menu_reports_document_manager1
-msgid "Statistics by User"
-msgstr "Statistik per användare"
-
-#. module: document
-#: help:document.directory.dctx,field:0
-msgid ""
-"The name of the field. Note that the prefix \"dctx_\" will be prepended to "
-"what is typed here."
-msgstr ""
-"Namnet på fältet. Observera att prefixet \"dctx_\" kommer att föregås till "
-"vad som skrivs här."
 
 #. module: document
 #: field:document.directory,name:0
@@ -944,22 +849,19 @@ msgstr "Om angiven, media är bara läsbart"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "April"
 msgstr "April"
 
 #. module: document
 #: field:report.document.file,nbr:0
 #: field:report.document.user,nbr:0
-#: field:report.files.partner,nbr:0
 msgid "# of Files"
 msgstr "# av filer"
 
 #. module: document
-#: code:addons/document/document.py:209
-#, python-format
-msgid "(copy)"
-msgstr "(kopia)"
+#: view:document.storage:0
+msgid "Search Document Storage"
+msgstr ""
 
 #. module: document
 #: view:document.directory:0
@@ -971,23 +873,16 @@ msgstr ""
 "filer."
 
 #. module: document
-#: view:document.directory:0
-msgid ""
-"These groups, however, do NOT apply to children directories, which must "
-"define their own groups."
+#. openerp-web
+#: code:addons/document/static/src/js/document.js:17
+#, python-format
+msgid "%s (%s)"
 msgstr ""
-"Dessa grupper är dock inte tillämpliga på barn kataloger, som måste "
-"definiera sina egna grupper."
 
 #. module: document
-#: field:document.directory.content.type,mimetype:0
-msgid "Mime Type"
-msgstr "Mime typ"
-
-#. module: document
-#: view:report.document.user:0
-msgid "All Months Files"
-msgstr "Månadens alla filer"
+#: field:document.directory.content,sequence:0
+msgid "Sequence"
+msgstr "Sequence"
 
 #. module: document
 #: field:document.directory.content,name:0
@@ -995,11 +890,9 @@ msgid "Content Name"
 msgstr "Content Name"
 
 #. module: document
-#: code:addons/document/document.py:220
-#: code:addons/document/document.py:299
-#, python-format
-msgid "File name must be unique!"
-msgstr "File name must be unique!"
+#: field:report.document.user,datas_fname:0
+msgid "File Name"
+msgstr "Filnamn"
 
 #. module: document
 #: selection:document.storage,type:0
@@ -1007,9 +900,9 @@ msgid "Internal File storage"
 msgstr "Intern fillagring"
 
 #. module: document
-#: sql_constraint:document.directory:0
-msgid "Directory must have a parent or a storage"
-msgstr "Katalogen måste ha en förälder eller en lagringsplats"
+#: view:document.configuration:0
+msgid "res_config_contents"
+msgstr "res_config_contents"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_directory_tree
@@ -1018,13 +911,7 @@ msgid "Directories' Structure"
 msgstr "Katalogens struktur"
 
 #. module: document
-#: view:report.document.user:0
-msgid "Files by Resource Type"
-msgstr "Filer per resurstyp"
-
-#. module: document
 #: field:report.document.user,name:0
-#: field:report.files.partner,name:0
 msgid "Year"
 msgstr "År"
 
@@ -1037,14 +924,12 @@ msgid "Storage Media"
 msgstr "Lagringsmedia"
 
 #. module: document
-#: view:document.storage:0
-msgid "Search Document storage"
-msgstr "Sök i dokumentlagret"
-
-#. module: document
 #: field:document.directory.content,extension:0
 msgid "Document Type"
 msgstr "Document Type"
+
+#~ msgid "Notes"
+#~ msgstr "Anteckningar"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -1090,6 +975,9 @@ msgstr "Document Type"
 #~ msgid "Browse Files"
 #~ msgstr "Bläddra filer"
 
+#~ msgid "Error! You can not create recursive Directories."
+#~ msgstr "Error! Du kan inte skapa rekursiva kataloger."
+
 #~ msgid "Document Management System."
 #~ msgstr "Document Management System."
 
@@ -1123,6 +1011,9 @@ msgstr "Document Type"
 #~ msgstr ""
 #~ "This wizard will configure the URL of the server of the document management "
 #~ "system."
+
+#~ msgid "Attachment"
+#~ msgstr "Attachment"
 
 #~ msgid "Preview"
 #~ msgstr "Preview"
@@ -1174,8 +1065,15 @@ msgstr "Document Type"
 #~ msgid "Browse Files Using FTP"
 #~ msgstr "Bläddra filer med FTP"
 
+#, python-format
+#~ msgid "File name must be unique!"
+#~ msgstr "File name must be unique!"
+
 #~ msgid "Auto Configure"
 #~ msgstr "Auto Configure"
+
+#~ msgid "This Year"
+#~ msgstr "Innevarande år"
 
 #~ msgid "Sale Order"
 #~ msgstr "Försäljningsorder"
@@ -1183,8 +1081,106 @@ msgstr "Document Type"
 #~ msgid "Project"
 #~ msgstr "Projekt"
 
+#~ msgid "Modified"
+#~ msgstr "Ändrad"
+
+#~ msgid "Created"
+#~ msgstr "Skapad"
+
 #~ msgid "Configuration Progress"
 #~ msgstr "Konfigurationsförlopp"
 
+#~ msgid "Image"
+#~ msgstr "Bild"
+
+#~ msgid "User"
+#~ msgstr "Användare"
+
+#~ msgid "Dashboard"
+#~ msgstr "Huvudmeny"
+
+#~ msgid "Related to"
+#~ msgstr "Relaterad till"
+
+#~ msgid "Wall of Shame"
+#~ msgstr "Skamvrån"
+
 #~ msgid "Product"
 #~ msgstr "Produkt"
+
+#~ msgid "Reporting"
+#~ msgstr "Rapportering"
+
+#~ msgid "This Month"
+#~ msgstr "Denna månad"
+
+#~ msgid "Statistics by User"
+#~ msgstr "Statistik per användare"
+
+#~ msgid "New Files"
+#~ msgstr "Nya filer"
+
+#~ msgid "Files per Month"
+#~ msgstr "Filer per månad"
+
+#~ msgid "title"
+#~ msgstr "titel"
+
+#~ msgid "Files Per Partner"
+#~ msgstr "Fil per företag"
+
+#~ msgid "Document Dashboard"
+#~ msgstr "Infopanel för dokument"
+
+#~ msgid "Files by Users"
+#~ msgstr "Användarfiler"
+
+#~ msgid "Files By Users"
+#~ msgstr "Filer per användare"
+
+#~ msgid "Last Posted Time"
+#~ msgstr "Senast lagrad"
+
+#~ msgid "Files details by Partners"
+#~ msgstr "Fildetaljer per företag"
+
+#~ msgid "Users that did not inserted documents since one month"
+#~ msgstr "Användare som inte infört några nya dokument senaste månaden"
+
+#~ msgid "Files By Partner"
+#~ msgstr "Filer per företag"
+
+#~ msgid "Indexed Content - experimental"
+#~ msgstr "Indexerat innehåll - experimentellt"
+
+#~ msgid "Files by users"
+#~ msgstr "Filer per användare"
+
+#~ msgid ""
+#~ "The Documents repository gives you access to all attachments, such as mails, "
+#~ "project documents, invoices etc."
+#~ msgstr ""
+#~ "Dokumentarkivet ger dig tillgång till alla bilagor, till exempel e-post, "
+#~ "projektdokument, fakturor etc."
+
+#~ msgid "This Months Files"
+#~ msgstr "Denna månads filer"
+
+#~ msgid "Files by Resource Type"
+#~ msgstr "Filer per resurstyp"
+
+#, python-format
+#~ msgid "(copy)"
+#~ msgstr "(kopia)"
+
+#~ msgid "Directory must have a parent or a storage"
+#~ msgstr "Katalogen måste ha en förälder eller en lagringsplats"
+
+#~ msgid "All Months Files"
+#~ msgstr "Månadens alla filer"
+
+#~ msgid "Knowledge Management"
+#~ msgstr "Kunskapsförvaltning"
+
+#~ msgid "Search Document storage"
+#~ msgstr "Sök i dokumentlagret"

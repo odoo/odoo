@@ -1,5 +1,24 @@
 <?xml version="1.0"?>
 <openerp>
+    <data>
+
+        <record id="project.project_project_1" model="project.project">
+            <field name="use_issues" eval="True"/>
+        </record>
+        <record id="project.project_project_2" model="project.project">
+            <field name="use_issues" eval="True"/>
+        </record>
+        <record id="project.project_project_3" model="project.project">
+            <field name="use_issues" eval="True"/>
+        </record>
+        <record id="project.project_project_4" model="project.project">
+            <field name="use_issues" eval="True"/>
+        </record>
+        <record id="project.project_project_5" model="project.project">
+            <field name="use_issues" eval="True"/>
+        </record>
+
+    </data>
     <data noupdate="1">
 
         <!-- Categories -->
@@ -31,7 +50,7 @@
         </record>
 
         <record id="crm_case_programnotgivingproperoutput0" model="project.issue">
-            <field eval="time.strftime('%Y-%m-15  12:50:00')" name="date"/>
+            <field eval="time.strftime('%Y-%m-15 12:50:00')" name="date"/>
             <field name="priority">3</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="partner_id" ref="base.res_partner_1"/>

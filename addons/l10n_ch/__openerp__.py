@@ -102,7 +102,6 @@ TODO :
     ],
     'auto_install': False,
     'installable': True,
-    'certificate': '001103836064567088989',
     'images': ['images/config_chart_l10n_ch.jpeg','images/l10n_ch_chart.jpeg']
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2011-03-16 00:07+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 06:30+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:44+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: document_webdav
 #: field:document.webdav.dir.property,create_date:0
@@ -26,12 +26,12 @@ msgstr "Дата создания"
 #. module: document_webdav
 #: model:ir.ui.menu,name:document_webdav.menu_document_props
 msgid "Documents"
-msgstr ""
+msgstr "Документы"
 
 #. module: document_webdav
-#: constraint:document.directory:0
-msgid "Error! You can not create recursive Directories."
-msgstr "Ошибка! Нельзя создавать вложенные директории."
+#: view:document.webdav.dir.property:0
+msgid "Document property"
+msgstr ""
 
 #. module: document_webdav
 #: view:document.webdav.dir.property:0
@@ -71,7 +71,7 @@ msgstr "Эти свойства будут добавлены к запроса�
 #. module: document_webdav
 #: model:ir.actions.act_window,name:document_webdav.action_file_props_form
 msgid "DAV Properties for Documents"
-msgstr ""
+msgstr "Свойства DAV для документов"
 
 #. module: document_webdav
 #: code:addons/document_webdav/webdav.py:37
@@ -88,27 +88,12 @@ msgstr "Документ"
 #. module: document_webdav
 #: model:ir.ui.menu,name:document_webdav.menu_folder_props
 msgid "Folders"
-msgstr ""
-
-#. module: document_webdav
-#: sql_constraint:document.directory:0
-msgid "Directory cannot be parent of itself!"
-msgstr "Каталог не может быть родительским для самого себя!"
-
-#. module: document_webdav
-#: view:document.directory:0
-msgid "Dynamic context"
-msgstr "Динамический контекст"
+msgstr "Папки"
 
 #. module: document_webdav
 #: view:document.directory:0
 msgid "WebDAV properties"
 msgstr "Настройки WebDAV"
-
-#. module: document_webdav
-#: sql_constraint:document.directory:0
-msgid "The directory name must be unique !"
-msgstr "Имя каталога должно быть уникальным!"
 
 #. module: document_webdav
 #: code:addons/document_webdav/webdav.py:37
@@ -125,7 +110,7 @@ msgstr ""
 #. module: document_webdav
 #: model:ir.actions.act_window,name:document_webdav.action_dir_props_form
 msgid "DAV Properties for Folders"
-msgstr ""
+msgstr "Свойства DAV для папок"
 
 #. module: document_webdav
 #: view:document.directory:0
@@ -181,14 +166,14 @@ msgid "Creator"
 msgstr "Создатель"
 
 #. module: document_webdav
-#: model:ir.ui.menu,name:document_webdav.menu_properties
-msgid "DAV Properties"
+#: view:document.webdav.file.property:0
+msgid "Document Property"
 msgstr ""
 
 #. module: document_webdav
-#: sql_constraint:document.directory:0
-msgid "Directory must have a parent or a storage"
-msgstr "Каталог должен иметь родителя или хранилище"
+#: model:ir.ui.menu,name:document_webdav.menu_properties
+msgid "DAV Properties"
+msgstr "Свойства DAV"
 
 #. module: document_webdav
 #: field:document.webdav.dir.property,do_subst:0
@@ -199,8 +184,23 @@ msgstr "Заменить"
 #~ msgid "DAV properties for documents"
 #~ msgstr "DAV-свойства документа"
 
+#~ msgid "Directory cannot be parent of itself!"
+#~ msgstr "Каталог не может быть родительским для самого себя!"
+
+#~ msgid "The directory name must be unique !"
+#~ msgstr "Имя каталога должно быть уникальным!"
+
+#~ msgid "Dynamic context"
+#~ msgstr "Динамический контекст"
+
+#~ msgid "Directory must have a parent or a storage"
+#~ msgstr "Каталог должен иметь родителя или хранилище"
+
 #~ msgid "WebDAV server for Document Management"
 #~ msgstr "Сервер WebDAV для управления документами"
 
 #~ msgid "DAV properties for folders"
 #~ msgstr "DAV-свойства папок"
+
+#~ msgid "Error! You can not create recursive Directories."
+#~ msgstr "Ошибка! Нельзя создавать вложенные директории."

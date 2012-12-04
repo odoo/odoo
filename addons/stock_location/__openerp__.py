@@ -107,7 +107,6 @@ You can use the demo data as follow:
         'test/stock_location_push_flow.yml',
     ],
     'auto_install': False,
-    'certificate': '0046505115101',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

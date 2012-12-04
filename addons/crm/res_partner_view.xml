@@ -15,46 +15,13 @@
                 </field>
         </record>
 
-        <record id="view_partners_tree_crm2" model="ir.ui.view">
-                <field name="name">view.res.partner.tree.crm.inherited2</field>
-                <field name="model">res.partner</field>
-                <field name="inherit_id" ref="base.view_partner_tree"/>
-                <field eval="18" name="priority"/>
-                <field name="arch" type="xml">
-                    <field name="phone" position="after">
-                        <field name="section_id" completion="1" invisible="context.get('invisible_section', True)"/>
-                    </field>
-                </field>
-        </record>
-
-        <record id="view_partners_form_crm3" model="ir.ui.view">
-                <field name="name">view.res.partner.search.crm.inherited3</field>
-                <field name="model">res.partner</field>
-                <field name="inherit_id" ref="base.view_res_partner_filter"/>
-                <field eval="18" name="priority"/>
-                <field name="arch" type="xml">
-                    <field name="category_id" position="after">
-                        <field name="section_id" completion="1"/>
-                        <field name="section_id" completion="1" widget="selection" context="{'invisible_section': False}"/>
-                    </field>
-                    <xpath expr="//field[@name='user_id']" position="after">
-                        <field name="country_id"/>
-                    </xpath>
-                    <xpath expr="//group[@string='Group By...']" position="after">
-                        <group string="Display">
-                            <filter string="Show Sales Team" context="{'invisible_section': False}"/>
-                        </group>
-                    </xpath>
-                </field>
-        </record>
-
         <!-- open meetings related to given partner -->
         <record id="crm_meeting_partner" model="ir.actions.act_window">
             <field name="name">Meetings</field>
             <field name="src_model">res.partner</field>
             <field name="res_model">crm.meeting</field>
             <field name="view_mode">calendar,tree,form,gantt</field>
-            <field name="context">{'search_default_partner_ids': active_id}</field>
+            <field name="context">{'default_partner_ids': [active_id]}</field>
         </record>
 
         <!-- open opportunities related to given partner -->
@@ -130,11 +97,11 @@
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
                     <button type="action"
-                        string="Schedule a Meeting"
+                        string="Meetings"
                         name="%(base_calendar.action_crm_meeting)d"
                         context="{'search_default_partner_ids': active_id, 'default_partner_ids' : [active_id]}"/>
-                    <button type="action" string="Schedule a Call" 
-                        name="%(crm.crm_case_categ_phone_create_partner)d" 
+                    <button type="action" string="Calls" 
+                        name="%(crm.crm_case_categ_phone_incoming0)d" 
                         context="{'search_default_partner_id': active_id, 'default_duration': 1.0}" />
                     <button type="action" string="Opportunities" attrs="{'invisible': [('customer', '=', False)]}"
                         name="%(crm.crm_case_category_act_oppor11)d" context="{'search_default_partner_id': active_id}"/>

@@ -7,10 +7,9 @@
             <field name="tag">reload</field>
             <field name="params" eval="{'menu_id': ref('base.menu_mrp_root')}"/>
         </record>
-        <record id="todo_open_mrp_menu" model="ir.actions.todo">
+        <record id="base.open_menu" model="ir.actions.todo">
             <field name="action_id" ref="action_client_mrp_menu"/>
-            <field name="type">automatic</field>
-            <field name="sequence">100</field>
+            <field name="state">open</field>
         </record>
     </data>
     <data>
@@ -29,8 +28,8 @@
                         <label for="id" string="Order"/>
                         <div>
                             <div>
-                                <field name="module_mrp_subproduct" class="oe_inline"/>
-                                <label for="module_mrp_subproduct"/>
+                                <field name="module_mrp_byproduct" class="oe_inline"/>
+                                <label for="module_mrp_byproduct"/>
                             </div>
                             <div>
                                 <field name="module_mrp_repair" class="oe_inline"/>
@@ -56,10 +55,6 @@
                              <div>
                                 <field name="module_mrp_operations" class="oe_inline"/>
                                 <label for="module_mrp_operations" />
-                            </div>
-                            <div>
-                                <field name="module_stock_planning" class="oe_inline"/>
-                                <label for="module_stock_planning"/>
                             </div>
                         </div>
                     </group>

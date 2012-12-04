@@ -34,14 +34,13 @@ This module is the base module for other multi-company modules.
     'website': 'http://www.openerp.com/',
     'depends': [
         'base',
-        'sale',
+        'sale_stock',
         'project',
     ],
     'data': ['res_company_view.xml'],
     'demo': ['multi_company_demo.xml'],
     'installable': True,
     'auto_install': False,
-    'certificate' : '001115526094673097933',
     'images': ['images/companies.jpeg','images/default_company_per_object_form.jpeg', 'images/default_company_per_object_list.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

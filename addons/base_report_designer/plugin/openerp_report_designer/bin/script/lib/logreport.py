@@ -39,11 +39,10 @@ def log_detail(self):
     _logger.setLevel(logging.INFO)
 
 class Logger(object):
-    def log_write(self,name,level,msg):
+    def log_write(self, name, level, msg):
         getattr(_logger,level)(msg)
 
     def shutdown(self):
         logging.shutdown()
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

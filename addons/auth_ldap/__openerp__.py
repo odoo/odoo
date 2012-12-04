@@ -107,7 +107,6 @@ authentication if installed at the same time.
     ],
     'auto_install': False,
     'installable': True,
-    'certificate' : '001141446349334700221',
     'external_dependencies' : {
         'python' : ['ldap'],
     }

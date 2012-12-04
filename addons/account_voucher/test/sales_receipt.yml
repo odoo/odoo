@@ -1,7 +1,7 @@
 - 
   Creating a Voucher Receipt for partner Seagate with amount 30000.0
 - 
-  !record {model: account.voucher, id: account_voucher_seagate_0}:
+  !record {model: account.voucher, id: account_voucher_seagate_0, view: view_sale_receipt_form}:
     account_id: account.a_recv
     amount: 30000.0
     company_id: base.main_company
@@ -53,7 +53,6 @@
         'account_id': ref('account.cash'),
         'amount': 30000.0,
         'company_id': ref('base.main_company'),
-        'currency_id': ref('base.EUR'),
         'journal_id': ref('account.bank_journal'),
         'partner_id': ref('base.res_partner_19'),
         'period_id': ref('account.period_8'),

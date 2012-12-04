@@ -41,7 +41,6 @@ Greek accounting chart and localization.
                'l10n_gr_wizard.xml'
     ],
     'installable': True,
-    'certificate': '001146244418929008029',
     'images': ['images/config_chart_l10n_gr.jpeg','images/l10n_gr_chart.jpeg'],
 }
 

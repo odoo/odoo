@@ -19,10 +19,13 @@
 #
 ##############################################################################
 
+import logging
 import time
 
 from osv import osv, fields
 import netsvc
+
+_logger = logging.getLogger(__name__)
 
 class payment_mode(osv.osv):
     _name= 'payment.mode'
@@ -70,9 +73,7 @@ class payment_order(osv.osv):
 
     #dead code
     def get_wizard(self, type):
-        logger = netsvc.Logger()
-        logger.notifyChannel("Warning!", netsvc.LOG_WARNING,
-                "No wizard is found for the payment type '%s'." % type)
+        _logger.warning("No wizard found for the payment type '%s'.", type)
         return None
 
     def _total(self, cursor, user, ids, name, args, context=None):
@@ -95,7 +96,7 @@ class payment_order(osv.osv):
             ('cancel', 'Cancelled'),
             ('open', 'Confirmed'),
             ('done', 'Done')], 'Status', select=True,
-            help='When an order is placed the state is \'Draft\'.\n Once the bank is confirmed the state is set to \'Confirmed\'.\n Then the order is paid the state is \'Done\'.'),
+            help='When an order is placed the status is \'Draft\'.\n Once the bank is confirmed the status is set to \'Confirmed\'.\n Then the order is paid the status is \'Done\'.'),
         'line_ids': fields.one2many('payment.line', 'order_id', 'Payment lines', states={'done': [('readonly', True)]}),
         'total': fields.function(_total, string="Total", type='float'),
         'user_id': fields.many2one('res.users', 'Responsible', required=True, states={'done': [('readonly', True)]}),
@@ -139,7 +140,9 @@ class payment_order(osv.osv):
         wf_service.trg_validate(uid, 'payment.order', ids[0], 'done', cr)
         return True
 
-    def copy(self, cr, uid, id, default={}, context=None):
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
         default.update({
             'state': 'draft',
             'line_ids': [],

@@ -32,15 +32,30 @@ class res_company(osv.osv):
     _columns = {
         'income_currency_exchange_account_id': fields.many2one(
             'account.account',
-            string="Income Currency Rate",
+            string="Gain Exchange Rate Account",
             domain="[('type', '=', 'other')]",),
         'expense_currency_exchange_account_id': fields.many2one(
             'account.account',
-            string="Expense Currency Rate",
+            string="Loss Exchange Rate Account",
             domain="[('type', '=', 'other')]",),
     }
 
 res_company()
+
+class account_config_settings(osv.osv_memory):
+    _inherit = 'account.config.settings'
+    _columns = {
+        'income_currency_exchange_account_id': fields.related(
+            'company_id', 'income_currency_exchange_account_id',
+            type='many2one',
+            relation='account.account',
+            string="Gain Exchange Rate Account"),
+        'expense_currency_exchange_account_id': fields.related(
+            'company_id', 'expense_currency_exchange_account_id',
+            type="many2one",
+            relation='account.account',
+            string="Loss Exchange Rate Account"),
+    }
 
 class account_voucher(osv.osv):
     def _check_paid(self, cr, uid, ids, name, args, context=None):
@@ -252,6 +267,7 @@ class account_voucher(osv.osv):
     _order = "date desc, id desc"
 #    _rec_name = 'number'
     _columns = {
+        'active': fields.boolean('Active', help="By default, reconciliation vouchers made on draft bank statements are set as inactive, which allow to hide the customer/supplier payment while the bank statement isn't confirmed."),
         'type':fields.selection([
             ('sale','Sale'),
             ('purchase','Purchase'),
@@ -278,10 +294,10 @@ class account_voucher(osv.osv):
              ('proforma','Pro-forma'),
              ('posted','Posted')
             ], 'Status', readonly=True, size=32,
-            help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed Voucher. \
-                        \n* The \'Pro-forma\' when voucher is in Pro-forma state,voucher does not have an voucher number. \
-                        \n* The \'Posted\' state is used when user create voucher,a voucher number is generated and voucher entries are created in account \
-                        \n* The \'Cancelled\' state is used when user cancel voucher.'),
+            help=' * The \'Draft\' status is used when a user is encoding a new and unconfirmed Voucher. \
+                        \n* The \'Pro-forma\' when voucher is in Pro-forma status,voucher does not have an voucher number. \
+                        \n* The \'Posted\' status is used when user create voucher,a voucher number is generated and voucher entries are created in account \
+                        \n* The \'Cancelled\' status is used when user cancel voucher.'),
         'amount': fields.float('Total', digits_compute=dp.get_precision('Account'), required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'tax_amount':fields.float('Tax Amount', digits_compute=dp.get_precision('Account'), readonly=True, states={'draft':[('readonly',False)]}),
         'reference': fields.char('Ref #', size=64, readonly=True, states={'draft':[('readonly',False)]}, help="Transaction reference number."),
@@ -313,6 +329,7 @@ class account_voucher(osv.osv):
         'is_multi_currency': fields.boolean('Multi Currency Voucher', help='Fields with internal purpose only that depicts if the voucher is a multi currency one or not'),
     }
     _defaults = {
+        'active': True,
         'period_id': _get_period,
         'partner_id': _get_partner,
         'journal_id':_get_journal,
@@ -366,8 +383,9 @@ class account_voucher(osv.osv):
             total_tax = 0.0
 
             if not tax[0].price_include:
-                for tax_line in tax_pool.compute_all(cr, uid, tax, voucher_amount, 1).get('taxes', []):
-                    total_tax += tax_line.get('amount', 0.0)
+                for line in voucher.line_ids:
+                    for tax_line in tax_pool.compute_all(cr, uid, tax, line.amount, 1).get('taxes', []):
+                        total_tax += tax_line.get('amount', 0.0)
                 total += total_tax
             else:
                 for line in voucher.line_ids:
@@ -398,31 +416,31 @@ class account_voucher(osv.osv):
 
         line_ids = resolve_o2m_operations(cr, uid, line_pool, line_ids, ["amount"], context)
 
+        total_tax = 0.0
         for line in line_ids:
             line_amount = 0.0
             line_amount = line.get('amount',0.0)
+
+            if tax_id:
+                tax = [tax_pool.browse(cr, uid, tax_id, context=context)]
+                if partner_id:
+                    partner = partner_pool.browse(cr, uid, partner_id, context=context) or False
+                    taxes = position_pool.map_tax(cr, uid, partner and partner.property_account_position or False, tax)
+                    tax = tax_pool.browse(cr, uid, taxes, context=context)
+
+                if not tax[0].price_include:
+                    for tax_line in tax_pool.compute_all(cr, uid, tax, line_amount, 1).get('taxes', []):
+                        total_tax += tax_line.get('amount')
+
             voucher_total += line_amount
-
-        total = voucher_total
-        total_tax = 0.0
-        if tax_id:
-            tax = [tax_pool.browse(cr, uid, tax_id, context=context)]
-            if partner_id:
-                partner = partner_pool.browse(cr, uid, partner_id, context=context) or False
-                taxes = position_pool.map_tax(cr, uid, partner and partner.property_account_position or False, tax)
-                tax = tax_pool.browse(cr, uid, taxes, context=context)
-
-            if not tax[0].price_include:
-                for tax_line in tax_pool.compute_all(cr, uid, tax, voucher_total, 1).get('taxes', []):
-                    total_tax += tax_line.get('amount')
-                total += total_tax
+        total = voucher_total + total_tax
 
         res.update({
-            'amount':total or voucher_total,
-            'tax_amount':total_tax
+            'amount': total or voucher_total,
+            'tax_amount': total_tax
         })
         return {
-            'value':res
+            'value': res
         }
 
     def onchange_term_id(self, cr, uid, ids, term_id, amount):
@@ -547,6 +565,19 @@ class account_voucher(osv.osv):
         vals = self.recompute_payment_rate(cr, uid, ids, res, currency_id, date, ttype, journal_id, amount, context=context)
         for key in vals.keys():
             res[key].update(vals[key])
+        #TODO: onchange_partner_id() should not returns [pre_line, line_dr_ids, payment_rate...] for type sale, and not 
+        # [pre_line, line_cr_ids, payment_rate...] for type purchase.
+        # We should definitively split account.voucher object in two and make distinct on_change functions. In the 
+        # meanwhile, bellow lines must be there because the fields aren't present in the view, what crashes if the 
+        # onchange returns a value for them
+        if ttype == 'sale':
+            del(res['value']['line_dr_ids'])
+            del(res['value']['pre_line'])
+            del(res['value']['payment_rate'])
+        elif ttype == 'purchase':
+            del(res['value']['line_cr_ids'])
+            del(res['value']['pre_line'])
+            del(res['value']['payment_rate'])
         return res
 
     def recompute_voucher_lines(self, cr, uid, ids, partner_id, journal_id, price, currency_id, ttype, date, context=None):
@@ -588,7 +619,7 @@ class account_voucher(osv.osv):
 
         #set default values
         default = {
-            'value': {'line_ids': [] ,'line_dr_ids': [] ,'line_cr_ids': [] ,'pre_line': False,},
+            'value': {'line_dr_ids': [] ,'line_cr_ids': [] ,'pre_line': False,},
         }
 
         #drop existing lines
@@ -667,6 +698,7 @@ class account_voucher(osv.osv):
 
         #voucher line creation
         for line in account_move_lines:
+
             if _remove_noise_in_o2m():
                 continue
 
@@ -683,14 +715,14 @@ class account_voucher(osv.osv):
                 'move_line_id':line.id,
                 'account_id':line.account_id.id,
                 'amount_original': amount_original,
-                'amount': (move_line_found == line.id) and min(price, amount_unreconciled) or 0.0,
+                'amount': (move_line_found == line.id) and min(abs(price), amount_unreconciled) or 0.0,
                 'date_original':line.date,
                 'date_due':line.date_maturity,
                 'amount_unreconciled': amount_unreconciled,
                 'currency_id': line_currency_id,
             }
-
-            #split voucher amount by most old first, but only for lines in the same currency
+            #in case a corresponding move_line hasn't been found, we now try to assign the voucher amount
+            #on existing invoices: we split voucher amount by most old first, but only for lines in the same currency
             if not move_line_found:
                 if currency_id == line_currency_id:
                     if line.credit:
@@ -771,8 +803,10 @@ class account_voucher(osv.osv):
         if account_id and account_id.tax_ids:
             tax_id = account_id.tax_ids[0].id
 
-        vals = self.onchange_price(cr, uid, ids, line_ids, tax_id, partner_id, context)
-        vals['value'].update({'tax_id':tax_id,'amount': amount})
+        vals = {'value':{} }
+        if ttype in ('sale', 'purchase'):
+            vals = self.onchange_price(cr, uid, ids, line_ids, tax_id, partner_id, context)
+            vals['value'].update({'tax_id':tax_id,'amount': amount})
         currency_id = False
         if journal.currency:
             currency_id = journal.currency.id
@@ -782,9 +816,16 @@ class account_voucher(osv.osv):
             vals[key].update(res[key])
         return vals
 
+    def button_proforma_voucher(self, cr, uid, ids, context=None):
+        context = context or {}
+        wf_service = netsvc.LocalService("workflow")
+        for vid in ids:
+            wf_service.trg_validate(uid, 'account.voucher', vid, 'proforma_voucher', cr)
+        return {'type': 'ir.actions.act_window_close'}
+
     def proforma_voucher(self, cr, uid, ids, context=None):
         self.action_move_line_create(cr, uid, ids, context=context)
-        return {'type': 'ir.actions.act_window_close'}
+        return True
 
     def action_cancel_draft(self, cr, uid, ids, context=None):
         wf_service = netsvc.LocalService("workflow")
@@ -842,7 +883,7 @@ class account_voucher(osv.osv):
             res['account_id'] = account_id
         return {'value':res}
 
-    def _sel_context(self, cr, uid, voucher_id,context=None):
+    def _sel_context(self, cr, uid, voucher_id, context=None):
         """
         Select the context to use accordingly if it needs to be multicurrency or not.
 
@@ -915,6 +956,9 @@ class account_voucher(osv.osv):
         if voucher_brw.number:
             name = voucher_brw.number
         elif voucher_brw.journal_id.sequence_id:
+            if not voucher_brw.journal_id.sequence_id.active:
+                raise osv.except_osv(_('Configuration Error !'),
+                    _('Please activate the sequence of selected journal !'))
             name = seq_obj.next_by_id(cr, uid, voucher_brw.journal_id.sequence_id.id, context=context)
         else:
             raise osv.except_osv(_('Error!'),
@@ -950,11 +994,11 @@ class account_voucher(osv.osv):
         if amount_residual > 0:
             account_id = line.voucher_id.company_id.expense_currency_exchange_account_id
             if not account_id:
-                raise osv.except_osv(_('Warning!'),_("First you have to configure the 'Income Currency Rate' on the company, then create accounting entry for currency rate difference."))
+                raise osv.except_osv(_('Insufficient Configuration!'),_("You should configure the 'Loss Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
         else:
             account_id = line.voucher_id.company_id.income_currency_exchange_account_id
             if not account_id:
-                raise osv.except_osv(_('Warning!'),_("First you have to configure the 'Expense Currency Rate' on the company, then create accounting entry for currency rate difference."))
+                raise osv.except_osv(_('Insufficient Configuration!'),_("You should configure the 'Gain Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
         # Even if the amount_currency is never filled, we need to pass the foreign currency because otherwise
         # the receivable/payable account may have a secondary currency, which render this field mandatory
         account_currency_id = company_currency <> current_currency and current_currency or False
@@ -1045,7 +1089,10 @@ class account_voucher(osv.osv):
             # if the amount encoded in voucher is equal to the amount unreconciled, we need to compute the
             # currency rate difference
             if line.amount == line.amount_unreconciled:
-                currency_rate_difference = line.move_line_id.amount_residual - amount
+                if not line.move_line_id.amount_residual:
+                    raise osv.except_osv(_('Wrong bank statement line'),_("You have to delete the bank statement line which the payment was reconciled to manually. Please check the payment of the partner %s by the amount of %s.")%(line.voucher_id.partner_id.name, line.voucher_id.amount))
+                sign = voucher_brw.type in ('payment', 'purchase') and -1 or 1
+                currency_rate_difference = sign * (line.move_line_id.amount_residual - amount)
             else:
                 currency_rate_difference = 0.0
             move_line = {
@@ -1174,6 +1221,7 @@ class account_voucher(osv.osv):
                 account_id = voucher_brw.partner_id.property_account_receivable.id
             else:
                 account_id = voucher_brw.partner_id.property_account_payable.id
+            sign = voucher_brw.type == 'payment' and -1 or 1
             move_line = {
                 'name': write_off_name or name,
                 'account_id': account_id,
@@ -1182,7 +1230,7 @@ class account_voucher(osv.osv):
                 'date': voucher_brw.date,
                 'credit': diff > 0 and diff or 0.0,
                 'debit': diff < 0 and -diff or 0.0,
-                'amount_currency': company_currency <> current_currency and voucher_brw.writeoff_amount or False,
+                'amount_currency': company_currency <> current_currency and (sign * -1 * voucher_brw.writeoff_amount) or False,
                 'currency_id': company_currency <> current_currency and current_currency or False,
                 'analytic_account_id': voucher_brw.analytic_id and voucher_brw.analytic_id.id or False,
             }
@@ -1266,7 +1314,9 @@ class account_voucher(osv.osv):
                 self.reconcile_send_note(cr, uid, [voucher.id], context=context)
         return True
 
-    def copy(self, cr, uid, id, default={}, context=None):
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
         default.update({
             'state': 'draft',
             'number': False,
@@ -1293,17 +1343,17 @@ class account_voucher(osv.osv):
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             message = "%s <b>created</b>." % self._document_type[obj.type or False]
-            self.message_append_note(cr, uid, [obj.id], body=message, context=context)
+            self.message_post(cr, uid, [obj.id], body=message, subtype="account_voucher.mt_voucher", context=context)
 
     def post_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             message = "%s '%s' is <b>posted</b>." % (self._document_type[obj.type or False], obj.move_id.name)
-            self.message_append_note(cr, uid, [obj.id], body=message, context=context)
+            self.message_post(cr, uid, [obj.id], body=message, subtype="account_voucher.mt_voucher", context=context)
 
     def reconcile_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             message = "%s <b>reconciled</b>." % self._document_type[obj.type or False]
-            self.message_append_note(cr, uid, [obj.id], body=message, context=context)
+            self.message_post(cr, uid, [obj.id], body=message, subtype="account_voucher.mt_voucher", context=context)
 
 account_voucher()
 
@@ -1378,7 +1428,7 @@ class account_voucher_line(osv.osv):
     }
 
     def onchange_reconcile(self, cr, uid, ids, reconcile, amount, amount_unreconciled, context=None):
-        vals = { 'amount': 0.0}
+        vals = {'amount': 0.0}
         if reconcile:
             vals = { 'amount': amount_unreconciled}
         return {'value': vals}
@@ -1460,6 +1510,15 @@ account_voucher_line()
 class account_bank_statement(osv.osv):
     _inherit = 'account.bank.statement'
 
+    def button_confirm_bank(self, cr, uid, ids, context=None):
+        voucher_obj = self.pool.get('account.voucher')
+        voucher_ids = []
+        for statement in self.browse(cr, uid, ids, context=context):
+            voucher_ids += [line.voucher_id.id for line in statement.line_ids if line.voucher_id]
+        if voucher_ids:
+            voucher_obj.write(cr, uid, voucher_ids, {'active': True}, context=context)
+        return super(account_bank_statement, self).button_confirm_bank(cr, uid, ids, context=context)
+
     def button_cancel(self, cr, uid, ids, context=None):
         voucher_obj = self.pool.get('account.voucher')
         for st in self.browse(cr, uid, ids, context=context):
@@ -1490,10 +1549,29 @@ class account_bank_statement(osv.osv):
             return move_line_obj.write(cr, uid, [x.id for x in v.move_ids], {'statement_id': st_line.statement_id.id}, context=context)
         return super(account_bank_statement, self).create_move_from_st_line(cr, uid, st_line.id, company_currency_id, next_number, context=context)
 
+    def write(self, cr, uid, ids, vals, context=None):
+        # Restrict to modify the journal if we already have some voucher of reconciliation created/generated.
+        # Because the voucher keeps in memory the journal it was created with.
+        for bk_st in self.browse(cr, uid, ids, context=context):
+            if vals.get('journal_id') and bk_st.line_ids:
+                if any([x.voucher_id and True or False for x in bk_st.line_ids]):
+                    raise osv.except_osv(_('Unable to change journal !'), _('You can not change the journal as you already reconciled some statement lines!'))
+        return super(account_bank_statement, self).write(cr, uid, ids, vals, context=context)
+
 account_bank_statement()
 
 class account_bank_statement_line(osv.osv):
     _inherit = 'account.bank.statement.line'
+
+    def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
+        res = super(account_bank_statement_line, self).onchange_partner_id(cr, uid, ids, partner_id, context=context)
+        if 'value' not in res:
+            res['value'] = {}
+        res['value'].update({'voucher_id' : False})
+        return res
+
+    def onchange_amount(self, cr, uid, ids, amount, context=None):
+        return {'value' :  {'voucher_id' : False}}
 
     def _amount_reconciled(self, cursor, user, ids, name, args, context=None):
         if not ids:
@@ -1521,7 +1599,7 @@ class account_bank_statement_line(osv.osv):
     _columns = {
         'amount_reconciled': fields.function(_amount_reconciled,
             string='Amount reconciled', type='float'),
-        'voucher_id': fields.many2one('account.voucher', 'Payment'),
+        'voucher_id': fields.many2one('account.voucher', 'Reconciliation'),
     }
 
     def unlink(self, cr, uid, ids, context=None):

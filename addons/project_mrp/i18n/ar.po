@@ -6,20 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2009-02-03 06:25+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 06:21+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
-
-#. module: project_mrp
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique per Company!"
-msgstr "مرجع الأمر يجب أن يكون فريداً لكل شركة علي حدا!"
+"X-Launchpad-Export-Date: 2012-12-04 05:36+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_procuretasktask0
@@ -27,39 +22,25 @@ msgid "For each product, on type service and on order"
 msgstr "لكل منتج, على نوع الخدمة وعلى النظام"
 
 #. module: project_mrp
-#: model:process.transition,name:project_mrp.process_transition_procuretask0
-msgid "Procurement Task"
-msgstr "مهمة المشتريات"
-
-#. module: project_mrp
-#: model:ir.model,name:project_mrp.model_sale_order
-msgid "Sales Order"
-msgstr "أمر المبيعات"
-
-#. module: project_mrp
-#: field:procurement.order,sale_line_id:0
-msgid "Sale order line"
-msgstr "سطر أمر الشراء"
-
-#. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_createtask0
 msgid "Product type is service, then its creates the task."
 msgstr "علامة المنتج هي خدمة, وهي تنشأ المهمة."
 
 #. module: project_mrp
-#: model:process.transition,note:project_mrp.process_transition_procuretask0
-msgid "if product type is 'service' then it creates the task."
-msgstr "اذا كانت علامة المنتج هي ‘خدمة‘ ثم تنشأ المهمنة."
+#: code:addons/project_mrp/project_procurement.py:93
+#, python-format
+msgid "Task created"
+msgstr ""
 
 #. module: project_mrp
-#: constraint:project.task:0
-msgid "Error ! Task end-date must be greater then task start-date"
-msgstr "خطأ! يجب ان يكون تاريخ انتهاء المهمة اكبر من تاريخ البداية"
+#: model:process.node,note:project_mrp.process_node_mrptask0
+msgid "A task is created to provide the service."
+msgstr "تم انشاء المهمة لتؤدي الخدمة."
 
 #. module: project_mrp
-#: model:process.node,name:project_mrp.process_node_saleordertask0
-msgid "Sale Order Task"
-msgstr "مهمة امر البيع"
+#: field:project.task,sale_line_id:0
+msgid "Sale Order Line"
+msgstr "سطر أمر الشراء"
 
 #. module: project_mrp
 #: model:ir.model,name:project_mrp.model_product_product
@@ -67,9 +48,32 @@ msgid "Product"
 msgstr "المنتج"
 
 #. module: project_mrp
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "خطأ: كود إين غير صالح"
+#: model:process.transition,note:project_mrp.process_transition_procuretask0
+msgid "if product type is 'service' then it creates the task."
+msgstr "اذا كانت علامة المنتج هي ‘خدمة‘ ثم تنشأ المهمنة."
+
+#. module: project_mrp
+#: model:process.transition,name:project_mrp.process_transition_ordertask0
+msgid "Order Task"
+msgstr "اطلب مهمة"
+
+#. module: project_mrp
+#: model:process.transition,name:project_mrp.process_transition_procuretask0
+msgid "Procurement Task"
+msgstr "مهمة المشتريات"
+
+#. module: project_mrp
+#: model:ir.model,name:project_mrp.model_project_task
+#: model:process.node,name:project_mrp.process_node_mrptask0
+#: model:process.node,name:project_mrp.process_node_procuretasktask0
+#: field:procurement.order,task_id:0
+msgid "Task"
+msgstr "مهمة"
+
+#. module: project_mrp
+#: view:product.product:0
+msgid "When you sell this service to a customer,"
+msgstr ""
 
 #. module: project_mrp
 #: field:product.product,project_id:0
@@ -83,32 +87,30 @@ msgid "Procurement"
 msgstr "المشتريات"
 
 #. module: project_mrp
-#: model:ir.model,name:project_mrp.model_project_task
-#: model:process.node,name:project_mrp.process_node_mrptask0
-#: model:process.node,name:project_mrp.process_node_procuretasktask0
-#: field:procurement.order,task_id:0
-msgid "Task"
-msgstr "مهمة"
+#: field:procurement.order,sale_line_id:0
+msgid "Sale order line"
+msgstr "سطر أمر الشراء"
 
 #. module: project_mrp
-#: model:process.node,note:project_mrp.process_node_mrptask0
-msgid "A task is created to provide the service."
-msgstr "تم انشاء المهمة لتؤدي الخدمة."
+#: view:product.product:0
+msgid "False"
+msgstr ""
 
 #. module: project_mrp
-#: model:process.transition,name:project_mrp.process_transition_ordertask0
-msgid "Order Task"
-msgstr "اطلب مهمة"
+#: view:product.product:0
+msgid ""
+"will be \n"
+"                        created to follow up the job to do. This task will "
+"appear\n"
+"                        in the project related to the contract of the sale "
+"order."
+msgstr ""
 
 #. module: project_mrp
-#: constraint:project.task:0
-msgid "Error ! You cannot create recursive tasks."
-msgstr "خطأ ! لا يمكنك انشاء مهام رجعية."
-
-#. module: project_mrp
-#: model:process.transition,name:project_mrp.process_transition_createtask0
-msgid "Create Task"
-msgstr "انشيء مهمة"
+#: code:addons/project_mrp/project_procurement.py:87
+#, python-format
+msgid "Task created."
+msgstr ""
 
 #. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_ordertask0
@@ -116,17 +118,46 @@ msgid "If procurement method is Make to order and supply method is produce"
 msgstr "اذا كانت طريقة الشراء لعمل امر واسلوب العرض هو للانتاج"
 
 #. module: project_mrp
+#: model:process.node,name:project_mrp.process_node_saleordertask0
+msgid "Sale Order Task"
+msgstr "مهمة امر البيع"
+
+#. module: project_mrp
+#: model:process.transition,name:project_mrp.process_transition_createtask0
+msgid "Create Task"
+msgstr "انشيء مهمة"
+
+#. module: project_mrp
+#: model:ir.model,name:project_mrp.model_sale_order
+msgid "Sales Order"
+msgstr "أمر المبيعات"
+
+#. module: project_mrp
+#: view:project.task:0
+msgid "Order Line"
+msgstr ""
+
+#. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_saleordertask0
 msgid "In case you sell services on sale order"
 msgstr "في حالة قيامك ببيع الخدمات على حسب ترتيب البيع"
 
 #. module: project_mrp
-#: field:project.task,sale_line_id:0
-msgid "Sale Order Line"
-msgstr "سطر أمر الشراء"
+#: view:product.product:0
+msgid "a task"
+msgstr ""
+
+#~ msgid "Error ! Task end-date must be greater then task start-date"
+#~ msgstr "خطأ! يجب ان يكون تاريخ انتهاء المهمة اكبر من تاريخ البداية"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "خطأ: كود إين غير صالح"
 
 #~ msgid "Procurement and Project Management integration"
 #~ msgstr "تكامل ادارة المشروع والمشتريات"
+
+#~ msgid "Error ! You cannot create recursive tasks."
+#~ msgstr "خطأ ! لا يمكنك انشاء مهام رجعية."
 
 #~ msgid ""
 #~ "\n"
@@ -171,3 +202,6 @@ msgstr "سطر أمر الشراء"
 #~ "هذا النموذج هو مفيد لتكون قادرة على فاتورة الخدمات على أساس المهام\n"
 #~ "إنشاؤه تلقائيا عن طريق أوامر بيع.\n"
 #~ "\n"
+
+#~ msgid "Order Reference must be unique per Company!"
+#~ msgstr "مرجع الأمر يجب أن يكون فريداً لكل شركة علي حدا!"

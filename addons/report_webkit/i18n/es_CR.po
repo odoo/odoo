@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2012-02-18 22:08+0000\n"
 "Last-Translator: Freddy Gonzalez <freddy.gonzalez.contreras@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 06:41+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:53+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 "Language: es\n"
 
 #. module: report_webkit
@@ -39,7 +39,7 @@ msgid "Ledger  28  431.8 x 279.4 mm"
 msgstr "Libro 28 431,8 x 279,4 mm"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:223
+#: code:addons/report_webkit/webkit_report.py:234
 #, python-format
 msgid "No header defined for this Webkit report!"
 msgstr "¡ Ninguna cabecera definida para este informe de Webkit !"
@@ -73,15 +73,10 @@ msgid "Company"
 msgstr "Compañía"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:100
+#: code:addons/report_webkit/webkit_report.py:235
 #, python-format
-msgid "path to Wkhtmltopdf is not absolute"
-msgstr "La ruta a Wkhtmltopdf no es absoluta"
-
-#. module: report_webkit
-#: view:ir.header_webkit:0
-msgid "Company and Page Setup"
-msgstr "Sociedad y Configuración de página"
+msgid "Please set a header in company settings."
+msgstr ""
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -94,16 +89,6 @@ msgid "B7  21  88 x 125 mm"
 msgstr "B7 21 88 x 125 mm"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:252
-#: code:addons/report_webkit/webkit_report.py:263
-#: code:addons/report_webkit/webkit_report.py:272
-#: code:addons/report_webkit/webkit_report.py:285
-#: code:addons/report_webkit/webkit_report.py:296
-#, python-format
-msgid "Webkit render"
-msgstr "Renderizador del webkit"
-
-#. module: report_webkit
 #: view:res.company:0
 msgid "Headers"
 msgstr "Cabeceras"
@@ -112,24 +97,6 @@ msgstr "Cabeceras"
 #: help:ir.header_img,name:0
 msgid "Name of Image"
 msgstr "Nombre de la imagen"
-
-#. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:94
-#, python-format
-msgid ""
-"Wrong Wkhtmltopdf path set in company'+\n"
-"                                'Given path is not executable or path is "
-"wrong"
-msgstr ""
-"Ruta Wkhtmltopdf errónea en la compañía'+\n"
-"                                'La ruta actual no puede ser ejecutada o la "
-"ruta es errónea"
-
-#. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:167
-#, python-format
-msgid "Webkit raise an error"
-msgstr "Webkit genera un error"
 
 #. module: report_webkit
 #: model:ir.actions.act_window,name:report_webkit.action_header_webkit
@@ -153,38 +120,30 @@ msgid "A4  0   210 x 297 mm, 8.26 x 11.69 inches"
 msgstr "A4 0 210 x 297 mm, 8,26 x 11,69 pulgadas"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:82
-#, python-format
-msgid ""
-"Please install executable on your system'+\n"
-"                             ' (sudo apt-get install wkhtmltopdf) or "
-"download it from here:'+\n"
-"                             ' "
-"http://code.google.com/p/wkhtmltopdf/downloads/list and set the'+\n"
-"                             ' path to the executable on the Company "
-"form.'+\n"
-"                             'Minimal version is 0.9.9"
-msgstr ""
-"Por favor instala el ejecutable en tu sistema'+\n"
-"' (sudo apt-get install wkhtmltopdf) o instálalo desde aquí:'+\n"
-"' http://code.google.com/p/wkhtmltopdf/downloads/list y establece la'+\n"
-"' ruta al ejecutable en el formulario de la Compañía.'+\n"
-"'La versión mínima es 0.9.9"
-
-#. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid "B6  20  125 x 176 mm"
 msgstr "B6 20 125 x 176 mm"
 
 #. module: report_webkit
-#: view:report.webkit.actions:0
-msgid "_Cancel"
-msgstr "_Cancelar"
+#: code:addons/report_webkit/webkit_report.py:177
+#, python-format
+msgid "Webkit error"
+msgstr ""
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid "B2  17  500 x 707 mm"
 msgstr "B2 17 500 x 707 mm"
+
+#. module: report_webkit
+#: code:addons/report_webkit/webkit_report.py:263
+#: code:addons/report_webkit/webkit_report.py:274
+#: code:addons/report_webkit/webkit_report.py:283
+#: code:addons/report_webkit/webkit_report.py:296
+#: code:addons/report_webkit/webkit_report.py:307
+#, python-format
+msgid "Webkit render!"
+msgstr ""
 
 #. module: report_webkit
 #: model:ir.model,name:report_webkit.model_ir_header_img
@@ -197,9 +156,14 @@ msgid "Precise Mode"
 msgstr "Modo Preciso"
 
 #. module: report_webkit
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "¡Error! No puede crear compañías recursivas."
+#: code:addons/report_webkit/webkit_report.py:96
+#, python-format
+msgid ""
+"Please install executable on your system (sudo apt-get install wkhtmltopdf) "
+"or download it from here: "
+"http://code.google.com/p/wkhtmltopdf/downloads/list and set the path in the "
+"ir.config_parameter with the webkit_path key.Minimal version is 0.9.9"
+msgstr ""
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -217,7 +181,7 @@ msgid "Type"
 msgstr "Tipo"
 
 #. module: report_webkit
-#: code:addons/report_webkit/wizard/report_webkit_actions.py:137
+#: code:addons/report_webkit/wizard/report_webkit_actions.py:133
 #, python-format
 msgid "Client Actions Connections"
 msgstr "Conexiones acciones cliente"
@@ -248,11 +212,10 @@ msgid "The header linked to the report"
 msgstr "La cabecera relacionada con el informe"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:81
+#: code:addons/report_webkit/webkit_report.py:95
 #, python-format
-msgid "Wkhtmltopdf library path is not set in company"
+msgid "Wkhtmltopdf library path is not set"
 msgstr ""
-"La ruta hacia la librería Wkhtmltopdf no está definida en la compañía"
 
 #. module: report_webkit
 #: view:ir.actions.report.xml:0
@@ -298,12 +261,6 @@ msgid "Top Margin (mm)"
 msgstr "Margen Superiro (mm)"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:224
-#, python-format
-msgid "Please set a header in company settings"
-msgstr "Por favor, indique la cabecera en la configuración de la compañía"
-
-#. module: report_webkit
 #: view:report.webkit.actions:0
 msgid "_Ok"
 msgstr "_Aceptar"
@@ -338,6 +295,11 @@ msgid "Image"
 msgstr "Imagen"
 
 #. module: report_webkit
+#: view:ir.header_img:0
+msgid "Header Image"
+msgstr ""
+
+#. module: report_webkit
 #: field:res.company,header_webkit:0
 msgid "Available html"
 msgstr "Html disponible"
@@ -362,6 +324,11 @@ msgid "Portrait"
 msgstr "Horizontal"
 
 #. module: report_webkit
+#: view:report.webkit.actions:0
+msgid "or"
+msgstr ""
+
+#. module: report_webkit
 #: selection:ir.header_webkit,orientation:0
 msgid "Landscape"
 msgstr "Apaisado"
@@ -370,6 +337,12 @@ msgstr "Apaisado"
 #: selection:ir.header_webkit,format:0
 msgid "B8  22  62 x 88 mm"
 msgstr "B8 22 62 x 88 mm"
+
+#. module: report_webkit
+#: code:addons/report_webkit/webkit_report.py:178
+#, python-format
+msgid "The command 'wkhtmltopdf' failed with error code = %s. Message: %s"
+msgstr ""
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -385,11 +358,6 @@ msgstr "Añadir botón de imprimir"
 #: selection:ir.header_webkit,format:0
 msgid "A9  13  37 x 52 mm"
 msgstr "A9 13 37 x 52 mm"
-
-#. module: report_webkit
-#: view:ir.header_webkit:0
-msgid "Footer"
-msgstr "Pie de página"
 
 #. module: report_webkit
 #: model:ir.model,name:report_webkit.model_res_company
@@ -415,6 +383,12 @@ msgstr "Abrir acción añadida"
 #: field:ir.header_webkit,margin_right:0
 msgid "Right Margin (mm)"
 msgstr "Margen derecho (mm)"
+
+#. module: report_webkit
+#: code:addons/report_webkit/webkit_report.py:229
+#, python-format
+msgid "Webkit report template not found!"
+msgstr ""
 
 #. module: report_webkit
 #: field:ir.header_webkit,orientation:0
@@ -443,19 +417,14 @@ msgid "Paper size"
 msgstr "Tamaño del papel"
 
 #. module: report_webkit
-#: view:ir.header_webkit:0
-msgid "Header"
-msgstr "Encabezado"
-
-#. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid ":B10    16  31 x 44 mm"
 msgstr ":B10 16 31 x 44 mm"
 
 #. module: report_webkit
-#: view:ir.header_webkit:0
-msgid "CSS Style"
-msgstr "Estilo CSS"
+#: view:report.webkit.actions:0
+msgid "Cancel"
+msgstr ""
 
 #. module: report_webkit
 #: field:ir.header_webkit,css:0
@@ -472,6 +441,12 @@ msgstr "B4 19 250 x 353 mm"
 #: model:ir.ui.menu,name:report_webkit.menu_header_img
 msgid "Webkit Logos"
 msgstr "Logos Webkit"
+
+#. module: report_webkit
+#: code:addons/report_webkit/webkit_report.py:173
+#, python-format
+msgid "No diagnosis message was provided"
+msgstr ""
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -504,11 +479,6 @@ msgid "B0  14  1000 x 1414 mm"
 msgstr "B0 14 1000 x 1414 mm"
 
 #. module: report_webkit
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr "¡El nombre de la compañía debe ser único!"
-
-#. module: report_webkit
 #: field:ir.header_img,name:0
 #: field:ir.header_webkit,name:0
 msgid "Name"
@@ -536,18 +506,12 @@ msgid "Comm10E 25  105 x 241 mm, U.S. Common 10 Envelope"
 msgstr "Comm10E 25 105 x 241 mm, Sobre U.S. Común 10"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:218
-#, python-format
-msgid "Webkit Report template not found !"
-msgstr "¡Plantilla del informe Webkit no encontrada!"
-
-#. module: report_webkit
 #: field:ir.header_webkit,margin_left:0
 msgid "Left Margin (mm)"
 msgstr "Margen izquierdo (mm)"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:218
+#: code:addons/report_webkit/webkit_report.py:229
 #, python-format
 msgid "Error!"
 msgstr "¡Error!"
@@ -566,6 +530,75 @@ msgstr "B9 23 33 x 62 mm"
 #: model:ir.model,name:report_webkit.model_ir_actions_report_xml
 msgid "ir.actions.report.xml"
 msgstr "ir.acciones.informe.xml"
+
+#. module: report_webkit
+#: code:addons/report_webkit/webkit_report.py:175
+#, python-format
+msgid "The following diagnosis message was provided:\n"
+msgstr ""
+
+#. module: report_webkit
+#: view:ir.header_webkit:0
+msgid "HTML Header"
+msgstr ""
+
+#, python-format
+#~ msgid "path to Wkhtmltopdf is not absolute"
+#~ msgstr "La ruta a Wkhtmltopdf no es absoluta"
+
+#, python-format
+#~ msgid "Webkit render"
+#~ msgstr "Renderizador del webkit"
+
+#, python-format
+#~ msgid ""
+#~ "Wrong Wkhtmltopdf path set in company'+\n"
+#~ "                                'Given path is not executable or path is "
+#~ "wrong"
+#~ msgstr ""
+#~ "Ruta Wkhtmltopdf errónea en la compañía'+\n"
+#~ "                                'La ruta actual no puede ser ejecutada o la "
+#~ "ruta es errónea"
+
+#, python-format
+#~ msgid "Webkit raise an error"
+#~ msgstr "Webkit genera un error"
+
+#, python-format
+#~ msgid ""
+#~ "Please install executable on your system'+\n"
+#~ "                             ' (sudo apt-get install wkhtmltopdf) or "
+#~ "download it from here:'+\n"
+#~ "                             ' "
+#~ "http://code.google.com/p/wkhtmltopdf/downloads/list and set the'+\n"
+#~ "                             ' path to the executable on the Company "
+#~ "form.'+\n"
+#~ "                             'Minimal version is 0.9.9"
+#~ msgstr ""
+#~ "Por favor instala el ejecutable en tu sistema'+\n"
+#~ "' (sudo apt-get install wkhtmltopdf) o instálalo desde aquí:'+\n"
+#~ "' http://code.google.com/p/wkhtmltopdf/downloads/list y establece la'+\n"
+#~ "' ruta al ejecutable en el formulario de la Compañía.'+\n"
+#~ "'La versión mínima es 0.9.9"
+
+#~ msgid "_Cancel"
+#~ msgstr "_Cancelar"
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "¡Error! No puede crear compañías recursivas."
+
+#, python-format
+#~ msgid "Wkhtmltopdf library path is not set in company"
+#~ msgstr ""
+#~ "La ruta hacia la librería Wkhtmltopdf no está definida en la compañía"
+
+#, python-format
+#~ msgid "Please set a header in company settings"
+#~ msgstr "Por favor, indique la cabecera en la configuración de la compañía"
+
+#, python-format
+#~ msgid "Webkit Report template not found !"
+#~ msgstr "¡Plantilla del informe Webkit no encontrada!"
 
 #~ msgid "WebKit Header"
 #~ msgstr "Cabecera WebKit"
@@ -668,3 +701,18 @@ msgstr "ir.acciones.informe.xml"
 #~ "Zip para PDF separados\n"
 #~ "Editor WYSIWYG para cliente web\n"
 #~ "                    "
+
+#~ msgid "CSS Style"
+#~ msgstr "Estilo CSS"
+
+#~ msgid "Header"
+#~ msgstr "Encabezado"
+
+#~ msgid "Company and Page Setup"
+#~ msgstr "Sociedad y Configuración de página"
+
+#~ msgid "Footer"
+#~ msgstr "Pie de página"
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "¡El nombre de la compañía debe ser único!"

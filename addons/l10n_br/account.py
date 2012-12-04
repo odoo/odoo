@@ -29,6 +29,7 @@ import decimal_precision as dp
 from tools.misc import currency
 from tools.translate import _
 from tools import config
+from openerp import SUPERUSER_ID
 
 class account_tax_code_template(osv.osv):
 
@@ -53,7 +54,7 @@ class account_tax_template(osv.osv):
     
     def get_precision_tax():
         def change_digit_tax(cr):
-            res = pooler.get_pool(cr.dbname).get('decimal.precision').precision_get(cr, 1, 'Account')
+            res = pooler.get_pool(cr.dbname).get('decimal.precision').precision_get(cr, SUPERUSER_ID, 'Account')
             return (16, res+2)
         return change_digit_tax
     
@@ -91,7 +92,7 @@ class account_tax(osv.osv):
     
     def get_precision_tax():
         def change_digit_tax(cr):
-            res = pooler.get_pool(cr.dbname).get('decimal.precision').precision_get(cr, 1, 'Account')
+            res = pooler.get_pool(cr.dbname).get('decimal.precision').precision_get(cr, SUPERUSER_ID, 'Account')
             return (16, res+2)
         return change_digit_tax
     

@@ -59,7 +59,7 @@ class mail_alias(osv.Model):
 
     def _get_alias_domain(self, cr, uid, ids, name, args, context=None):
         ir_config_parameter = self.pool.get("ir.config_parameter")
-        domain = ir_config_parameter.get_param(cr, uid, "mail.catchall.domain", context=context)   
+        domain = ir_config_parameter.get_param(cr, uid, "mail.catchall.domain", context=context)
         return dict.fromkeys(ids, domain or "")
 
     _columns = {
@@ -86,15 +86,14 @@ class mail_alias(osv.Model):
                                       help="Optional ID of a thread (record) to which all incoming "
                                            "messages will be attached, even if they did not reply to it. "
                                            "If set, this will disable the creation of new records completely."),
-        'alias_domain': fields.function(_get_alias_domain, string="Alias Domain", type='char', size=None),
+        'alias_domain': fields.function(_get_alias_domain, string="Alias domain", type='char', size=None),
     }
 
     _defaults = {
         'alias_defaults': '{}',
         'alias_user_id': lambda self,cr,uid,context: uid,
-        
         # looks better when creating new aliases - even if the field is informative only
-        'alias_domain': lambda self,cr,uid,context: self._get_alias_domain(cr,1,[1],None,None)[1]
+        'alias_domain': lambda self,cr,uid,context: self._get_alias_domain(cr, SUPERUSER_ID,[1],None,None)[1]
     }
 
     _sql_constraints = [
@@ -161,7 +160,7 @@ class mail_alias(osv.Model):
         registry = RegistryManager.get(cr.dbname)
         mail_alias = registry.get('mail.alias')
         child_class_model = registry.get(child_model_name)
-        no_alias_ids = child_class_model.search(cr, SUPERUSER_ID, [('alias_id', '=', False)])
+        no_alias_ids = child_class_model.search(cr, SUPERUSER_ID, [('alias_id', '=', False)], context={'active_test':False})
         # Use read() not browse(), to avoid prefetching uninitialized inherited fields
         for obj_data in child_class_model.read(cr, SUPERUSER_ID, no_alias_ids, [alias_key]):
             alias_vals = {'alias_name': '%s%s' % (alias_prefix, obj_data[alias_key]) }

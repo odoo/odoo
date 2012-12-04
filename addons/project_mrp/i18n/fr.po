@@ -6,26 +6,56 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2011-01-13 19:59+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
+"PO-Revision-Date: 2012-11-29 15:22+0000\n"
+"Last-Translator: Numérigraphe <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 06:21+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
-
-#. module: project_mrp
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique per Company!"
-msgstr "La référence de commande doit être unique par société !"
+"X-Launchpad-Export-Date: 2012-12-04 05:36+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_procuretasktask0
 msgid "For each product, on type service and on order"
-msgstr "Pour chaque produit, de type service et sur commande"
+msgstr "Pour chaque article, de type service et sur commande"
+
+#. module: project_mrp
+#: model:process.transition,note:project_mrp.process_transition_createtask0
+msgid "Product type is service, then its creates the task."
+msgstr "Si le type d'article est\"service\", alors cela crée une tâche."
+
+#. module: project_mrp
+#: code:addons/project_mrp/project_procurement.py:93
+#, python-format
+msgid "Task created"
+msgstr ""
+
+#. module: project_mrp
+#: model:process.node,note:project_mrp.process_node_mrptask0
+msgid "A task is created to provide the service."
+msgstr "Une tâche est créée pour fournir le service."
+
+#. module: project_mrp
+#: field:project.task,sale_line_id:0
+msgid "Sale Order Line"
+msgstr "Ligne de commande client"
+
+#. module: project_mrp
+#: model:ir.model,name:project_mrp.model_product_product
+msgid "Product"
+msgstr "Article"
+
+#. module: project_mrp
+#: model:process.transition,note:project_mrp.process_transition_procuretask0
+msgid "if product type is 'service' then it creates the task."
+msgstr "Si l'article est de type 'service' alors cela crée la tâche."
+
+#. module: project_mrp
+#: model:process.transition,name:project_mrp.process_transition_ordertask0
+msgid "Order Task"
+msgstr "Tâche commandée"
 
 #. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_procuretask0
@@ -33,46 +63,17 @@ msgid "Procurement Task"
 msgstr "Tâche d'approvisionnement"
 
 #. module: project_mrp
-#: model:ir.model,name:project_mrp.model_sale_order
-msgid "Sales Order"
-msgstr "Commande client"
+#: model:ir.model,name:project_mrp.model_project_task
+#: model:process.node,name:project_mrp.process_node_mrptask0
+#: model:process.node,name:project_mrp.process_node_procuretasktask0
+#: field:procurement.order,task_id:0
+msgid "Task"
+msgstr "Tâche"
 
 #. module: project_mrp
-#: field:procurement.order,sale_line_id:0
-msgid "Sale order line"
-msgstr "Ligne de commande client"
-
-#. module: project_mrp
-#: model:process.transition,note:project_mrp.process_transition_createtask0
-msgid "Product type is service, then its creates the task."
-msgstr "Si le type de produit est 'service', alors cela crée une tâche."
-
-#. module: project_mrp
-#: model:process.transition,note:project_mrp.process_transition_procuretask0
-msgid "if product type is 'service' then it creates the task."
-msgstr "Si le produit est de type 'service' alors il crée la tâche."
-
-#. module: project_mrp
-#: constraint:project.task:0
-msgid "Error ! Task end-date must be greater then task start-date"
+#: view:product.product:0
+msgid "When you sell this service to a customer,"
 msgstr ""
-"Erreur ! La date de fin de la tâche doit être postérieure à la date de "
-"démarrage"
-
-#. module: project_mrp
-#: model:process.node,name:project_mrp.process_node_saleordertask0
-msgid "Sale Order Task"
-msgstr "Tâche sur les commandes de ventes"
-
-#. module: project_mrp
-#: model:ir.model,name:project_mrp.model_product_product
-msgid "Product"
-msgstr "Produit"
-
-#. module: project_mrp
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Erreur : code EAN incorrect"
 
 #. module: project_mrp
 #: field:product.product,project_id:0
@@ -86,32 +87,30 @@ msgid "Procurement"
 msgstr "Approvisionnement"
 
 #. module: project_mrp
-#: model:ir.model,name:project_mrp.model_project_task
-#: model:process.node,name:project_mrp.process_node_mrptask0
-#: model:process.node,name:project_mrp.process_node_procuretasktask0
-#: field:procurement.order,task_id:0
-msgid "Task"
-msgstr "Tâche"
+#: field:procurement.order,sale_line_id:0
+msgid "Sale order line"
+msgstr "Ligne de commande client"
 
 #. module: project_mrp
-#: model:process.node,note:project_mrp.process_node_mrptask0
-msgid "A task is created to provide the service."
-msgstr "Une tâche est créée pour fournir le service."
+#: view:product.product:0
+msgid "False"
+msgstr ""
 
 #. module: project_mrp
-#: model:process.transition,name:project_mrp.process_transition_ordertask0
-msgid "Order Task"
-msgstr "Tâche commandée"
+#: view:product.product:0
+msgid ""
+"will be \n"
+"                        created to follow up the job to do. This task will "
+"appear\n"
+"                        in the project related to the contract of the sale "
+"order."
+msgstr ""
 
 #. module: project_mrp
-#: constraint:project.task:0
-msgid "Error ! You cannot create recursive tasks."
-msgstr "Erreur ! Vous ne pouvez pas créer de tâches récursives."
-
-#. module: project_mrp
-#: model:process.transition,name:project_mrp.process_transition_createtask0
-msgid "Create Task"
-msgstr "Crée une tâche"
+#: code:addons/project_mrp/project_procurement.py:87
+#, python-format
+msgid "Task created."
+msgstr ""
 
 #. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_ordertask0
@@ -121,14 +120,34 @@ msgstr ""
 "méthode de fourniture est \"Produire\""
 
 #. module: project_mrp
+#: model:process.node,name:project_mrp.process_node_saleordertask0
+msgid "Sale Order Task"
+msgstr "Tâche sur les commandes de ventes"
+
+#. module: project_mrp
+#: model:process.transition,name:project_mrp.process_transition_createtask0
+msgid "Create Task"
+msgstr "Crée une tâche"
+
+#. module: project_mrp
+#: model:ir.model,name:project_mrp.model_sale_order
+msgid "Sales Order"
+msgstr "Commande client"
+
+#. module: project_mrp
+#: view:project.task:0
+msgid "Order Line"
+msgstr ""
+
+#. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_saleordertask0
 msgid "In case you sell services on sale order"
 msgstr "Dans ce cas vous vendez le service sur les commandes de ventes"
 
 #. module: project_mrp
-#: field:project.task,sale_line_id:0
-msgid "Sale Order Line"
-msgstr "Ligne de commande client"
+#: view:product.product:0
+msgid "a task"
+msgstr ""
 
 #~ msgid "Project Management - MRP and Sale Integration"
 #~ msgstr "Gestion de projet - intégration de MRP et de vente"
@@ -141,8 +160,16 @@ msgstr "Ligne de commande client"
 #~ msgid "Procure Task"
 #~ msgstr "Tâche obtenu"
 
+#~ msgid "Error ! You cannot create recursive tasks."
+#~ msgstr "Erreur ! Vous ne pouvez pas créer de tâches récursives."
+
 #~ msgid "Procurement and Project Management integration"
 #~ msgstr "Intégration de l'approvisionnement avec la gestion de projet"
+
+#~ msgid "Error ! Task end-date must be greater then task start-date"
+#~ msgstr ""
+#~ "Erreur ! La date de fin de la tâche doit être postérieure à la date de "
+#~ "démarrage"
 
 #~ msgid ""
 #~ "\n"
@@ -190,3 +217,9 @@ msgstr "Ligne de commande client"
 #~ "des\n"
 #~ "tâches créées automatiquement via les bons de commande.\n"
 #~ "\n"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Erreur : code EAN incorrect"
+
+#~ msgid "Order Reference must be unique per Company!"
+#~ msgstr "La référence de commande doit être unique par société !"

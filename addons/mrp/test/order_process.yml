@@ -71,7 +71,7 @@
     partner_id = False
     if order.bom_id.routing_id and order.bom_id.routing_id.location_id:
         routing_loc = order.bom_id.routing_id.location_id
-        if routing_loc.usage <> 'internal':
+        if routing_loc.usage != 'internal':
             pick_type = 'out'
         partner_id = routing_loc.partner_id and routing_loc.partner_id.id or False
         routing_loc = routing_loc.id

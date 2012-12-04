@@ -7,19 +7,27 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2011-04-19 10:53+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
+"PO-Revision-Date: 2012-11-24 12:53+0000\n"
+"Last-Translator: Kaare Pettersen <Unknown>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 06:20+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:35+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: account_payment
-#: field:payment.order,date_scheduled:0
-msgid "Scheduled date if fixed"
+#: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a payment order.\n"
+"              </p><p>\n"
+"                A payment order is a payment request from your company to "
+"pay a\n"
+"                supplier invoice or a customer refund.\n"
+"              </p>\n"
+"            "
 msgstr ""
 
 #. module: account_payment
@@ -30,12 +38,12 @@ msgstr "Leverandørs valuta"
 #. module: account_payment
 #: view:payment.order:0
 msgid "Set to draft"
-msgstr ""
+msgstr "Satt Til UTKAST."
 
 #. module: account_payment
 #: help:payment.order,mode:0
 msgid "Select the Payment Mode to be applied."
-msgstr ""
+msgstr "Velg betaling modul som skal brukes."
 
 #. module: account_payment
 #: view:payment.mode:0
@@ -53,15 +61,7 @@ msgstr "Betalingslinjer"
 #: field:payment.line,info_owner:0
 #: view:payment.order:0
 msgid "Owner Account"
-msgstr ""
-
-#. module: account_payment
-#: help:payment.order,state:0
-msgid ""
-"When an order is placed the state is 'Draft'.\n"
-" Once the bank is confirmed the state is set to 'Confirmed'.\n"
-" Then the order is paid the state is 'Done'."
-msgstr ""
+msgstr "Eier Til kontoen"
 
 #. module: account_payment
 #: help:account.invoice,amount_to_pay:0
@@ -69,6 +69,8 @@ msgid ""
 "The amount which should be paid at the current date\n"
 "minus the amount which is already in payment order"
 msgstr ""
+"Det beløp som skal betales på den aktuelle datoen minus beløpet som allerede "
+"er i betaling for."
 
 #. module: account_payment
 #: field:payment.line,company_id:0
@@ -78,30 +80,25 @@ msgid "Company"
 msgstr "Firma"
 
 #. module: account_payment
-#: field:payment.order,date_prefered:0
-msgid "Preferred date"
-msgstr ""
-
-#. module: account_payment
 #: model:res.groups,name:account_payment.group_account_payment
 msgid "Accounting / Payments"
-msgstr ""
+msgstr "Regnskap / betalinger"
 
 #. module: account_payment
 #: selection:payment.line,state:0
 msgid "Free"
-msgstr ""
+msgstr "Gratis"
 
 #. module: account_payment
 #: view:payment.order.create:0
 #: field:payment.order.create,entries:0
 msgid "Entries"
-msgstr ""
+msgstr "Inngang"
 
 #. module: account_payment
 #: report:payment.order:0
 msgid "Used Account"
-msgstr ""
+msgstr "Brukerens Konto."
 
 #. module: account_payment
 #: field:payment.line,ml_maturity_date:0
@@ -110,14 +107,9 @@ msgid "Due Date"
 msgstr "Forfallsdato"
 
 #. module: account_payment
-#: view:account.move.line:0
-msgid "Account Entry Line"
-msgstr ""
-
-#. module: account_payment
 #: view:payment.order.create:0
 msgid "_Add to payment order"
-msgstr ""
+msgstr "_Legg Til betaling for"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_populate_statement
@@ -126,30 +118,40 @@ msgid "Payment Populate statement"
 msgstr ""
 
 #. module: account_payment
+#: code:addons/account_payment/account_invoice.py:43
+#, python-format
+msgid ""
+"You cannot cancel an invoice which has already been imported in a payment "
+"order. Remove it from the following payment order : %s."
+msgstr ""
+
+#. module: account_payment
+#: code:addons/account_payment/account_invoice.py:43
+#: code:addons/account_payment/account_move_line.py:110
+#, python-format
+msgid "Error!"
+msgstr "Feil!"
+
+#. module: account_payment
 #: report:payment.order:0
 #: view:payment.order:0
 msgid "Amount"
 msgstr "Beløp"
 
 #. module: account_payment
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
-msgstr ""
-
-#. module: account_payment
 #: view:payment.order:0
 msgid "Total in Company Currency"
-msgstr ""
+msgstr "Totalt i Selskapets Valuta."
 
 #. module: account_payment
 #: selection:payment.order,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "AVLYST"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree_new
 msgid "New Payment Order"
-msgstr ""
+msgstr "Ny betalings ordre."
 
 #. module: account_payment
 #: report:payment.order:0
@@ -160,30 +162,18 @@ msgstr "Referanse"
 #. module: account_payment
 #: sql_constraint:payment.line:0
 msgid "The payment line name must be unique!"
-msgstr ""
-
-#. module: account_payment
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr ""
+msgstr "Betalingen linjen må være unikt!"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
 msgid "Payment Orders"
-msgstr ""
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid ""
-"The date of your Journal Entry is not in the defined period! You should "
-"change the date or remove this constraint from the journal."
-msgstr ""
+msgstr "Betalings ordre."
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
 msgid "Directly"
-msgstr ""
+msgstr "Direkte"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_line_form
@@ -191,45 +181,52 @@ msgstr ""
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Payment Line"
-msgstr ""
+msgstr "Betalings linje."
 
 #. module: account_payment
 #: view:payment.line:0
 msgid "Amount Total"
+msgstr "Total BELØP."
+
+#. module: account_payment
+#: help:payment.order,state:0
+msgid ""
+"When an order is placed the status is 'Draft'.\n"
+" Once the bank is confirmed the status is set to 'Confirmed'.\n"
+" Then the order is paid the status is 'Done'."
 msgstr ""
 
 #. module: account_payment
 #: view:payment.order:0
 #: selection:payment.order,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "Bekreftet"
 
 #. module: account_payment
 #: help:payment.line,ml_date_created:0
 msgid "Invoice Effective Date"
-msgstr ""
+msgstr "Faktura Ikrafttredelses dato."
 
 #. module: account_payment
 #: report:payment.order:0
 msgid "Execution Type"
-msgstr ""
+msgstr "Gjennomføring av type."
 
 #. module: account_payment
 #: selection:payment.line,state:0
 msgid "Structured"
-msgstr ""
+msgstr "Strukturert."
 
 #. module: account_payment
-#: view:payment.order:0
-#: field:payment.order,state:0
-msgid "State"
-msgstr ""
+#: view:account.bank.statement:0
+msgid "Import Payment Lines"
+msgstr "Import betaling linjer."
 
 #. module: account_payment
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Transaction Information"
-msgstr ""
+msgstr "Transaksjons informasjon."
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_mode_form
@@ -237,18 +234,19 @@ msgstr ""
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_mode_form
 #: view:payment.mode:0
 #: view:payment.order:0
+#: field:payment.order,mode:0
 msgid "Payment Mode"
-msgstr ""
+msgstr "Betaling modus"
 
 #. module: account_payment
 #: field:payment.line,ml_date_created:0
 msgid "Effective Date"
-msgstr ""
+msgstr "Behandlingsdato"
 
 #. module: account_payment
 #: field:payment.line,ml_inv_ref:0
 msgid "Invoice Ref."
-msgstr ""
+msgstr "Faktura ref."
 
 #. module: account_payment
 #: help:payment.order,date_prefered:0
@@ -259,116 +257,97 @@ msgid ""
 msgstr ""
 
 #. module: account_payment
-#: code:addons/account_payment/account_move_line.py:110
-#, python-format
-msgid "Error !"
-msgstr ""
-
-#. module: account_payment
-#: view:account.move.line:0
-msgid "Total debit"
-msgstr ""
-
-#. module: account_payment
-#: field:payment.order,date_done:0
-msgid "Execution date"
-msgstr ""
+#: field:payment.order,date_created:0
+msgid "Creation Date"
+msgstr "Opprettelses dato."
 
 #. module: account_payment
 #: help:payment.mode,journal:0
 msgid "Bank or Cash Journal for the Payment Mode"
-msgstr ""
+msgstr "Bank Eller minibank Journal for betaling Modus."
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
 msgid "Fixed date"
-msgstr ""
+msgstr "Fast dato"
 
 #. module: account_payment
 #: field:payment.line,info_partner:0
 #: view:payment.order:0
 msgid "Destination Account"
-msgstr ""
+msgstr "Mål Konto."
 
 #. module: account_payment
 #: view:payment.line:0
 msgid "Desitination Account"
-msgstr ""
+msgstr "Mål Konto."
 
 #. module: account_payment
 #: view:payment.order:0
 msgid "Search Payment Orders"
-msgstr ""
+msgstr "Søk betalings ordre."
 
 #. module: account_payment
 #: field:payment.line,create_date:0
 msgid "Created"
-msgstr ""
+msgstr "Opprettet"
 
 #. module: account_payment
 #: view:payment.order:0
 msgid "Select Invoices to Pay"
-msgstr ""
+msgstr "Velg fakturaer Som Skal betales."
 
 #. module: account_payment
 #: view:payment.line:0
 msgid "Currency Amount Total"
-msgstr ""
+msgstr "Total valuta beløp."
 
 #. module: account_payment
 #: view:payment.order:0
 msgid "Make Payments"
-msgstr ""
+msgstr "Utfør betalinger."
 
 #. module: account_payment
 #: field:payment.line,state:0
 msgid "Communication Type"
-msgstr ""
+msgstr "Kommuniksjonstype"
 
 #. module: account_payment
 #: field:payment.line,partner_id:0
 #: field:payment.mode,partner_id:0
 #: report:payment.order:0
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: account_payment
 #: field:payment.line,bank_statement_line_id:0
 msgid "Bank statement line"
-msgstr ""
+msgstr "Kontoutskrift linje."
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
 msgid "Due date"
-msgstr ""
+msgstr "Forfallsdato"
 
 #. module: account_payment
 #: field:account.invoice,amount_to_pay:0
 msgid "Amount to be paid"
-msgstr ""
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry forces to provide a secondary "
-"currency. You should remove the secondary currency on the account or select "
-"a multi-currency view on the journal."
-msgstr ""
+msgstr "Beløpet Søm skål betales."
 
 #. module: account_payment
 #: report:payment.order:0
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
 msgid "Yes"
-msgstr ""
+msgstr "Ja"
 
 #. module: account_payment
 #: help:payment.line,info_owner:0
 msgid "Address of the Main Partner"
-msgstr ""
+msgstr "Adressen Til Hoved Partner."
 
 #. module: account_payment
 #: help:payment.line,date:0
@@ -376,88 +355,81 @@ msgid ""
 "If no payment date is specified, the bank will treat this payment line "
 "directly"
 msgstr ""
+"Hvis ingen betaling dato er angitt, vil banken behandle denne betaling "
+"linjen rett."
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_populate_statement
 msgid "Account Payment Populate Statement"
+msgstr "Konto betaling fyller erklæringen."
+
+#. module: account_payment
+#: code:addons/account_payment/account_move_line.py:110
+#, python-format
+msgid "There is no partner defined on the entry line."
 msgstr ""
 
 #. module: account_payment
 #: help:payment.mode,name:0
 msgid "Mode of Payment"
-msgstr ""
+msgstr "Modus for betaling."
 
 #. module: account_payment
 #: report:payment.order:0
 msgid "Value Date"
-msgstr ""
+msgstr "Verdi Dato."
 
 #. module: account_payment
 #: report:payment.order:0
 msgid "Payment Type"
-msgstr ""
+msgstr "Betalingstype"
 
 #. module: account_payment
 #: help:payment.line,amount_currency:0
 msgid "Payment amount in the partner currency"
-msgstr ""
+msgstr "Betalingsbeløp i partner valuta."
 
 #. module: account_payment
 #: view:payment.order:0
 #: selection:payment.order,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Kladd"
+
+#. module: account_payment
+#: view:payment.order:0
+#: field:payment.order,state:0
+msgid "Status"
+msgstr "Status."
 
 #. module: account_payment
 #: help:payment.line,communication2:0
 msgid "The successor message of Communication."
-msgstr ""
-
-#. module: account_payment
-#: code:addons/account_payment/account_move_line.py:110
-#, python-format
-msgid "No partner defined on entry line"
-msgstr ""
+msgstr "Etterfølgerens budskap av kommunikasjon."
 
 #. module: account_payment
 #: help:payment.line,info_partner:0
 msgid "Address of the Ordering Customer."
-msgstr ""
+msgstr "Adressen til Bestilling Kunden."
 
 #. module: account_payment
 #: view:account.payment.populate.statement:0
 msgid "Populate Statement:"
-msgstr ""
-
-#. module: account_payment
-#: view:account.move.line:0
-msgid "Total credit"
-msgstr ""
+msgstr "Fyller erklæringen:"
 
 #. module: account_payment
 #: help:payment.order,date_scheduled:0
 msgid "Select a date if you have chosen Preferred Date to be fixed."
-msgstr ""
-
-#. module: account_payment
-#: field:payment.order,user_id:0
-msgid "User"
-msgstr ""
+msgstr "Velg en dato hvis du har valgt ønsket dato for å bli løst."
 
 #. module: account_payment
 #: field:account.payment.populate.statement,lines:0
 msgid "Payment Lines"
-msgstr ""
+msgstr "Betalings linjer."
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_move_line
 msgid "Journal Items"
-msgstr ""
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "You can not create journal items on an account of type view."
-msgstr ""
+msgstr "Journal Elementer."
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -465,104 +437,99 @@ msgid ""
 "This Entry Line will be referred for the information of the ordering "
 "customer."
 msgstr ""
+"Dette kommandolinje vil bli referert for informasjon om bestilling kunden."
 
 #. module: account_payment
 #: view:payment.order.create:0
 msgid "Search"
-msgstr ""
+msgstr "Søk"
 
 #. module: account_payment
-#: model:ir.actions.report.xml,name:account_payment.payment_order1
-#: model:ir.model,name:account_payment.model_payment_order
-msgid "Payment Order"
-msgstr ""
+#: field:payment.order,user_id:0
+msgid "Responsible"
+msgstr "Ansvarlig."
 
 #. module: account_payment
 #: field:payment.line,date:0
 msgid "Payment Date"
-msgstr ""
+msgstr "Betalingsdato"
 
 #. module: account_payment
 #: report:payment.order:0
 msgid "Total:"
-msgstr ""
+msgstr "Totalt:"
 
 #. module: account_payment
-#: field:payment.order,date_created:0
-msgid "Creation date"
-msgstr ""
+#: field:payment.order,date_done:0
+msgid "Execution Date"
+msgstr "Gjennomføring dato."
 
 #. module: account_payment
 #: view:account.payment.populate.statement:0
 msgid "ADD"
-msgstr ""
+msgstr "Legg Til."
 
 #. module: account_payment
-#: view:account.bank.statement:0
-msgid "Import payment lines"
-msgstr ""
+#: model:ir.actions.act_window,name:account_payment.action_create_payment_order
+msgid "Populate Payment"
+msgstr "Fyller Betaling."
 
 #. module: account_payment
 #: field:account.move.line,amount_to_pay:0
 msgid "Amount to pay"
-msgstr ""
+msgstr "Beløp å betale."
 
 #. module: account_payment
 #: field:payment.line,amount:0
 msgid "Amount in Company Currency"
-msgstr ""
+msgstr "Beløp i Selskap Valuta."
 
 #. module: account_payment
 #: help:payment.line,partner_id:0
 msgid "The Ordering Customer"
-msgstr ""
+msgstr "Bestillings kunde."
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_make_payment
 msgid "Account make payment"
-msgstr ""
+msgstr "Konto gjør betaling."
 
 #. module: account_payment
 #: report:payment.order:0
 msgid "Invoice Ref"
-msgstr ""
-
-#. module: account_payment
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr ""
+msgstr "Faktura referanse."
 
 #. module: account_payment
 #: field:payment.line,name:0
 msgid "Your Reference"
-msgstr ""
+msgstr "Din referanse."
 
 #. module: account_payment
 #: view:payment.order:0
 msgid "Payment order"
-msgstr ""
+msgstr "Betalings ordre."
 
 #. module: account_payment
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "General Information"
-msgstr ""
+msgstr "Generell informasjon"
 
 #. module: account_payment
 #: view:payment.order:0
 #: selection:payment.order,state:0
 msgid "Done"
-msgstr ""
+msgstr "Utført"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "Faktura"
 
 #. module: account_payment
 #: field:payment.line,communication:0
 msgid "Communication"
-msgstr ""
+msgstr "Kommunikasjon"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
@@ -570,96 +537,94 @@ msgstr ""
 #: view:payment.order:0
 #: view:payment.order.create:0
 msgid "Cancel"
-msgstr ""
+msgstr "Avbryt"
 
 #. module: account_payment
 #: field:payment.line,bank_id:0
 msgid "Destination Bank Account"
-msgstr ""
+msgstr "Destinasjon Bank Konto."
 
 #. module: account_payment
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Information"
-msgstr ""
+msgstr "Informasjon"
 
 #. module: account_payment
-#: constraint:account.move.line:0
-msgid "Company must be the same for its related account and period."
-msgstr ""
-
-#. module: account_payment
-#: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
-msgid ""
-"A payment order is a payment request from your company to pay a supplier "
-"invoice or a customer credit note. Here you can register all payment orders "
-"that should be done, keep track of all payment orders and mention the "
-"invoice reference and the partner the payment should be done for."
-msgstr ""
+#: model:ir.actions.report.xml,name:account_payment.payment_order1
+#: model:ir.model,name:account_payment.model_payment_order
+#: view:payment.order:0
+msgid "Payment Order"
+msgstr "Betalings ordre."
 
 #. module: account_payment
 #: help:payment.line,amount:0
 msgid "Payment amount in the company currency"
-msgstr ""
+msgstr "Betalingsbeløp i selskapet valuta."
 
 #. module: account_payment
 #: view:payment.order.create:0
 msgid "Search Payment lines"
-msgstr ""
+msgstr "Søk Betalings linjer."
 
 #. module: account_payment
 #: field:payment.line,amount_currency:0
 msgid "Amount in Partner Currency"
-msgstr ""
+msgstr "Beløp i partnerens valuta."
 
 #. module: account_payment
 #: field:payment.line,communication2:0
 msgid "Communication 2"
-msgstr ""
+msgstr "Kommunikasjon 2."
+
+#. module: account_payment
+#: field:payment.order,date_scheduled:0
+msgid "Scheduled Date"
+msgstr "Planlagt dato."
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
 msgid "Are you sure you want to make payment?"
-msgstr ""
+msgstr "Er du sikker på at du vil foreta betaling?"
 
 #. module: account_payment
 #: view:payment.mode:0
 #: field:payment.mode,journal:0
 msgid "Journal"
-msgstr ""
+msgstr "Journal"
 
 #. module: account_payment
 #: field:payment.mode,bank_id:0
 msgid "Bank account"
-msgstr ""
+msgstr "Bankkonto."
 
 #. module: account_payment
 #: view:payment.order:0
 msgid "Confirm Payments"
-msgstr ""
+msgstr "Bekreft betalinger."
 
 #. module: account_payment
 #: field:payment.line,company_currency:0
 #: report:payment.order:0
 msgid "Company Currency"
-msgstr ""
+msgstr "Firma valuta."
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.menu_main_payment
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Payment"
-msgstr ""
+msgstr "Betaling."
 
 #. module: account_payment
 #: report:payment.order:0
 msgid "Payment Order / Payment"
-msgstr ""
+msgstr "Betaling ordre / Betaling."
 
 #. module: account_payment
 #: field:payment.line,move_line_id:0
 msgid "Entry line"
-msgstr ""
+msgstr "Kommandolinjen"
 
 #. module: account_payment
 #: help:payment.line,communication:0
@@ -667,60 +632,140 @@ msgid ""
 "Used as the message between ordering customer and current company. Depicts "
 "'What do you want to say to the recipient about this order ?'"
 msgstr ""
+"Brukes som meldingen mellom bestillings kunden og nåværende selskap. "
+"Skildrer «Hva vil du si til mottakeren om denne bestillingen?"
 
 #. module: account_payment
 #: field:payment.mode,name:0
 msgid "Name"
-msgstr ""
+msgstr "Navn"
 
 #. module: account_payment
 #: report:payment.order:0
 msgid "Bank Account"
-msgstr ""
+msgstr "Bank konto."
 
 #. module: account_payment
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Entry Information"
-msgstr ""
+msgstr "Oppføring Informasjon."
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_order_create
 msgid "payment.order.create"
-msgstr ""
+msgstr "Betaling.Ordre.Opprett."
 
 #. module: account_payment
 #: field:payment.line,order_id:0
 msgid "Order"
-msgstr ""
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "You can not create journal items on closed account."
-msgstr ""
+msgstr "Ordre"
 
 #. module: account_payment
 #: field:payment.order,total:0
 msgid "Total"
-msgstr ""
+msgstr "Totalt"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_make_payment
 msgid "Make Payment"
-msgstr ""
+msgstr "Lag bestilling."
 
 #. module: account_payment
-#: field:payment.order,mode:0
-msgid "Payment mode"
-msgstr ""
+#: field:payment.order,date_prefered:0
+msgid "Preferred Date"
+msgstr "Foretrukne dato."
 
 #. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_create_payment_order
-msgid "Populate Payment"
-msgstr ""
+#: view:account.payment.make.payment:0
+#: view:account.payment.populate.statement:0
+#: view:payment.order.create:0
+msgid "or"
+msgstr "eller."
 
 #. module: account_payment
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
-msgstr ""
+msgstr "Bankkonto for betaling modus."
+
+#~ msgid "Preferred date"
+#~ msgstr "Ønsket date."
+
+#~ msgid ""
+#~ "When an order is placed the state is 'Draft'.\n"
+#~ " Once the bank is confirmed the state is set to 'Confirmed'.\n"
+#~ " Then the order is paid the state is 'Done'."
+#~ msgstr ""
+#~ "Når en ordre er plassert staten er \"Kladd\".\n"
+#~ "Når banken er bekreftet staten er satt til \"bekreftet\".\n"
+#~ "Da ordren er betalt staten Ferdig."
+
+#~ msgid "Account Entry Line"
+#~ msgstr "Konto kommandolinjen"
+
+#~ msgid "Wrong credit or debit value in accounting entry !"
+#~ msgstr "Feil kredit eller debet beløp i regnskaps oppføringen !"
+
+#~ msgid ""
+#~ "The date of your Journal Entry is not in the defined period! You should "
+#~ "change the date or remove this constraint from the journal."
+#~ msgstr ""
+#~ "Datoen for din bilagsregistrering ikke er i den definerte perioden! Du bør "
+#~ "endre datoen eller fjerne denne begrensningen fra tidsskriftet."
+
+#~ msgid "Invalid BBA Structured Communication !"
+#~ msgstr "Ugyldig BBA Strukturert Kommunikasjon!"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Feil !"
+
+#~ msgid "Execution date"
+#~ msgstr "Iverksettelses datoen."
+
+#~ msgid "Total debit"
+#~ msgstr "Total belastning."
+
+#~ msgid "State"
+#~ msgstr "Stat"
+
+#~ msgid ""
+#~ "The selected account of your Journal Entry forces to provide a secondary "
+#~ "currency. You should remove the secondary currency on the account or select "
+#~ "a multi-currency view on the journal."
+#~ msgstr ""
+#~ "Den valgte kontoen av dine Bilagsregistrering blir tvunget for å gi en "
+#~ "sekundær valuta. Du bør fjerne den sekundære valuta på konto eller velg en "
+#~ "flervaluta syn på tidsskriftet."
+
+#~ msgid "Total credit"
+#~ msgstr "Total kredit"
+
+#, python-format
+#~ msgid "No partner defined on entry line"
+#~ msgstr "Ingen partner definert på kommandolinjen."
+
+#~ msgid "You can not create journal items on an account of type view."
+#~ msgstr "Du kan ikke lage journalregistreringer på konto av typen vis"
+
+#~ msgid "Creation date"
+#~ msgstr "Opprettelsesdato"
+
+#~ msgid "User"
+#~ msgstr "Bruker"
+
+#~ msgid "Invoice Number must be unique per Company!"
+#~ msgstr "Fakturanummer må være unik pr. firma!"
+
+#~ msgid "Import payment lines"
+#~ msgstr "Importer betaling linjer."
+
+#~ msgid "Company must be the same for its related account and period."
+#~ msgstr "Selskapet må være den samme for tilhørende konto og periode"
+
+#~ msgid "You can not create journal items on closed account."
+#~ msgstr "Du kan ikke lage journal elementer på en lukket konto."
+
+#~ msgid "Payment mode"
+#~ msgstr "Betaling modus."

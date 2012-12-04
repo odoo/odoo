@@ -6,20 +6,28 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-02-09 22:36+0000\n"
 "Last-Translator: Ahmet Altınışık <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 06:20+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:35+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: account_payment
-#: field:payment.order,date_scheduled:0
-msgid "Scheduled date if fixed"
-msgstr "Sabitlenmişse Planlanan tarih"
+#: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a payment order.\n"
+"              </p><p>\n"
+"                A payment order is a payment request from your company to "
+"pay a\n"
+"                supplier invoice or a customer refund.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: account_payment
 #: field:payment.line,currency:0
@@ -55,17 +63,6 @@ msgid "Owner Account"
 msgstr "Hesap Sahibi"
 
 #. module: account_payment
-#: help:payment.order,state:0
-msgid ""
-"When an order is placed the state is 'Draft'.\n"
-" Once the bank is confirmed the state is set to 'Confirmed'.\n"
-" Then the order is paid the state is 'Done'."
-msgstr ""
-"Bir emir durumu 'Taslak' olarak belirlenmişse.\n"
-" Banka durumun 'Onaylı' olarak ayarlanmasını onaylamışsa.\n"
-" Sonra emir ödendi ve durum 'Bitti' olur."
-
-#. module: account_payment
 #: help:account.invoice,amount_to_pay:0
 msgid ""
 "The amount which should be paid at the current date\n"
@@ -78,11 +75,6 @@ msgstr "Geçerli tarihte ödenecek tutar hali hazırda ödenmiş tutardan düş�
 #: field:payment.order,company_id:0
 msgid "Company"
 msgstr "Firma"
-
-#. module: account_payment
-#: field:payment.order,date_prefered:0
-msgid "Preferred date"
-msgstr "İstenen Tarih"
 
 #. module: account_payment
 #: model:res.groups,name:account_payment.group_account_payment
@@ -112,11 +104,6 @@ msgid "Due Date"
 msgstr "Vade Tarihi"
 
 #. module: account_payment
-#: view:account.move.line:0
-msgid "Account Entry Line"
-msgstr "Hesap Giriş Satırı"
-
-#. module: account_payment
 #: view:payment.order.create:0
 msgid "_Add to payment order"
 msgstr "_Ödeme emrine ekle"
@@ -128,15 +115,25 @@ msgid "Payment Populate statement"
 msgstr "Ödeme Doldurma cetveli"
 
 #. module: account_payment
+#: code:addons/account_payment/account_invoice.py:43
+#, python-format
+msgid ""
+"You cannot cancel an invoice which has already been imported in a payment "
+"order. Remove it from the following payment order : %s."
+msgstr ""
+
+#. module: account_payment
+#: code:addons/account_payment/account_invoice.py:43
+#: code:addons/account_payment/account_move_line.py:110
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: account_payment
 #: report:payment.order:0
 #: view:payment.order:0
 msgid "Amount"
 msgstr "Miktar"
-
-#. module: account_payment
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
-msgstr "Hesap girişindeki alacak ya da borç değeri hatalı !"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -165,24 +162,10 @@ msgid "The payment line name must be unique!"
 msgstr "Ödeme satırı adı eşsiz olmalı!"
 
 #. module: account_payment
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr "Geçersiz BBA Yapılı İletişim !"
-
-#. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
 msgid "Payment Orders"
 msgstr "Ödeme Emirleri"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid ""
-"The date of your Journal Entry is not in the defined period! You should "
-"change the date or remove this constraint from the journal."
-msgstr ""
-"Günlük Girişinizin tarihi tanımlanan dönem içinde değil! Tarihi "
-"değiştirmelisiniz ya da günlükten bu kıstlamayı kaldırmalısınız."
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -201,6 +184,14 @@ msgstr "Ödeme Satırı"
 #: view:payment.line:0
 msgid "Amount Total"
 msgstr "Toplam Tutar"
+
+#. module: account_payment
+#: help:payment.order,state:0
+msgid ""
+"When an order is placed the status is 'Draft'.\n"
+" Once the bank is confirmed the status is set to 'Confirmed'.\n"
+" Then the order is paid the status is 'Done'."
+msgstr ""
 
 #. module: account_payment
 #: view:payment.order:0
@@ -224,10 +215,9 @@ msgid "Structured"
 msgstr "Yapılandırılmış"
 
 #. module: account_payment
-#: view:payment.order:0
-#: field:payment.order,state:0
-msgid "State"
-msgstr "Durum"
+#: view:account.bank.statement:0
+msgid "Import Payment Lines"
+msgstr ""
 
 #. module: account_payment
 #: view:payment.line:0
@@ -241,6 +231,7 @@ msgstr "İşlem Bilgisi"
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_mode_form
 #: view:payment.mode:0
 #: view:payment.order:0
+#: field:payment.order,mode:0
 msgid "Payment Mode"
 msgstr "Ödeme Biçimi"
 
@@ -266,20 +257,9 @@ msgstr ""
 "Tarihi' yürütmenin planlandığı tarihtir."
 
 #. module: account_payment
-#: code:addons/account_payment/account_move_line.py:110
-#, python-format
-msgid "Error !"
-msgstr "Hata!"
-
-#. module: account_payment
-#: view:account.move.line:0
-msgid "Total debit"
-msgstr "Toplam Borç"
-
-#. module: account_payment
-#: field:payment.order,date_done:0
-msgid "Execution date"
-msgstr "Yürütme tarihi"
+#: field:payment.order,date_created:0
+msgid "Creation Date"
+msgstr ""
 
 #. module: account_payment
 #: help:payment.mode,journal:0
@@ -355,17 +335,6 @@ msgid "Amount to be paid"
 msgstr "Ödenecek tutar"
 
 #. module: account_payment
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry forces to provide a secondary "
-"currency. You should remove the secondary currency on the account or select "
-"a multi-currency view on the journal."
-msgstr ""
-"Günlük Girişlerinize ait seçilmiş hesap ikincil bir para biriminin "
-"sağlanmasına zorluyor. Hesaptan ikincil para birimini kaldırmanız ya da "
-"çoklu-para birimli bir günlük seçmelisiniz."
-
-#. module: account_payment
 #: report:payment.order:0
 msgid "Currency"
 msgstr "Para birimi"
@@ -395,6 +364,12 @@ msgid "Account Payment Populate Statement"
 msgstr "Hesap Ödeme Doldurma Cetveli"
 
 #. module: account_payment
+#: code:addons/account_payment/account_move_line.py:110
+#, python-format
+msgid "There is no partner defined on the entry line."
+msgstr ""
+
+#. module: account_payment
 #: help:payment.mode,name:0
 msgid "Mode of Payment"
 msgstr "Ödeme Biçimi"
@@ -421,15 +396,15 @@ msgid "Draft"
 msgstr "Taslak"
 
 #. module: account_payment
+#: view:payment.order:0
+#: field:payment.order,state:0
+msgid "Status"
+msgstr ""
+
+#. module: account_payment
 #: help:payment.line,communication2:0
 msgid "The successor message of Communication."
 msgstr "İletişim ardış mesajı"
-
-#. module: account_payment
-#: code:addons/account_payment/account_move_line.py:110
-#, python-format
-msgid "No partner defined on entry line"
-msgstr "Bu kalemde paydaş tanımlanmamış"
 
 #. module: account_payment
 #: help:payment.line,info_partner:0
@@ -442,19 +417,9 @@ msgid "Populate Statement:"
 msgstr "Doldurma Cetveli:"
 
 #. module: account_payment
-#: view:account.move.line:0
-msgid "Total credit"
-msgstr "Toplam Alacak"
-
-#. module: account_payment
 #: help:payment.order,date_scheduled:0
 msgid "Select a date if you have chosen Preferred Date to be fixed."
 msgstr "Tercih Edilen Tarihi sabitlemeyi seçtiyseniz bir tarih belirleyin."
-
-#. module: account_payment
-#: field:payment.order,user_id:0
-msgid "User"
-msgstr "Kullanıcı"
 
 #. module: account_payment
 #: field:account.payment.populate.statement,lines:0
@@ -465,11 +430,6 @@ msgstr "Ödeme Kalemleri"
 #: model:ir.model,name:account_payment.model_account_move_line
 msgid "Journal Items"
 msgstr "Yevmiye Kalemleri"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "You can not create journal items on an account of type view."
-msgstr "Görünüm tipindeki hesaplarda yevmiye kaydı oluşturamazsınız."
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -485,10 +445,9 @@ msgid "Search"
 msgstr "Ara"
 
 #. module: account_payment
-#: model:ir.actions.report.xml,name:account_payment.payment_order1
-#: model:ir.model,name:account_payment.model_payment_order
-msgid "Payment Order"
-msgstr "Ödeme Emri"
+#: field:payment.order,user_id:0
+msgid "Responsible"
+msgstr ""
 
 #. module: account_payment
 #: field:payment.line,date:0
@@ -501,9 +460,9 @@ msgid "Total:"
 msgstr "Toplam:"
 
 #. module: account_payment
-#: field:payment.order,date_created:0
-msgid "Creation date"
-msgstr "Oluşturma Tarihi"
+#: field:payment.order,date_done:0
+msgid "Execution Date"
+msgstr ""
 
 #. module: account_payment
 #: view:account.payment.populate.statement:0
@@ -511,9 +470,9 @@ msgid "ADD"
 msgstr "EKLE"
 
 #. module: account_payment
-#: view:account.bank.statement:0
-msgid "Import payment lines"
-msgstr "Ödeme kalemleri içeaktar"
+#: model:ir.actions.act_window,name:account_payment.action_create_payment_order
+msgid "Populate Payment"
+msgstr "Ödeme Doldur"
 
 #. module: account_payment
 #: field:account.move.line,amount_to_pay:0
@@ -539,11 +498,6 @@ msgstr "Hesap ödeme yapar"
 #: report:payment.order:0
 msgid "Invoice Ref"
 msgstr "Fatura Ref."
-
-#. module: account_payment
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr "Fatura Numarası Her Şirkette Tekil Olmalı!"
 
 #. module: account_payment
 #: field:payment.line,name:0
@@ -597,22 +551,11 @@ msgid "Information"
 msgstr "Bilgi"
 
 #. module: account_payment
-#: constraint:account.move.line:0
-msgid "Company must be the same for its related account and period."
-msgstr "İlişkili hesap ve dönem için aynı şirket olmalı."
-
-#. module: account_payment
-#: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
-msgid ""
-"A payment order is a payment request from your company to pay a supplier "
-"invoice or a customer credit note. Here you can register all payment orders "
-"that should be done, keep track of all payment orders and mention the "
-"invoice reference and the partner the payment should be done for."
-msgstr ""
-"Bir ödeme emri, firmanızın bir tedarikçi faturasını ya da müşteri alacak "
-"dekontunu ödeme isteğidir. Burada yapılacak bütün öedeme emirlerini "
-"kaydedebilirsiniz, bütün ödeme emirlerinizi izleyebilir, fatura referansı ve "
-"hangi paydaş ödeme yapılacağını işleyebilirsiniz."
+#: model:ir.actions.report.xml,name:account_payment.payment_order1
+#: model:ir.model,name:account_payment.model_payment_order
+#: view:payment.order:0
+msgid "Payment Order"
+msgstr "Ödeme Emri"
 
 #. module: account_payment
 #: help:payment.line,amount:0
@@ -633,6 +576,11 @@ msgstr "Paydaş Para Biriminde Tutar"
 #: field:payment.line,communication2:0
 msgid "Communication 2"
 msgstr "İletişim 2"
+
+#. module: account_payment
+#: field:payment.order,date_scheduled:0
+msgid "Scheduled Date"
+msgstr ""
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
@@ -714,11 +662,6 @@ msgid "Order"
 msgstr "Emir"
 
 #. module: account_payment
-#: constraint:account.move.line:0
-msgid "You can not create journal items on closed account."
-msgstr "Kapalı bir hesap için yevmiye kayıtları oluşturamazsınız."
-
-#. module: account_payment
 #: field:payment.order,total:0
 msgid "Total"
 msgstr "Toplam"
@@ -730,14 +673,16 @@ msgid "Make Payment"
 msgstr "Ödeme Yap"
 
 #. module: account_payment
-#: field:payment.order,mode:0
-msgid "Payment mode"
-msgstr "Ödeme Biçimi"
+#: field:payment.order,date_prefered:0
+msgid "Preferred Date"
+msgstr ""
 
 #. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_create_payment_order
-msgid "Populate Payment"
-msgstr "Ödeme Doldur"
+#: view:account.payment.make.payment:0
+#: view:account.payment.populate.statement:0
+#: view:payment.order.create:0
+msgid "or"
+msgstr ""
 
 #. module: account_payment
 #: help:payment.mode,bank_id:0
@@ -747,14 +692,29 @@ msgstr "Ödeme Yönetimi için Banka Hesabı"
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Görüntüleme mimarisi için Geçersiz XML"
 
+#~ msgid "State"
+#~ msgstr "Durum"
+
+#~ msgid "Total debit"
+#~ msgstr "Toplam Borç"
+
 #~ msgid "_Cancel"
 #~ msgstr "_iptal"
 
 #~ msgid "Payment Management"
 #~ msgstr "Ödeme Yönetimi"
 
+#~ msgid "Total credit"
+#~ msgstr "Toplam Alacak"
+
+#~ msgid "User"
+#~ msgstr "Kullanıcı"
+
 #~ msgid "Date"
 #~ msgstr "Tarih"
+
+#~ msgid "Creation date"
+#~ msgstr "Oluşturma Tarihi"
 
 #~ msgid "Code"
 #~ msgstr "Kodu"
@@ -774,6 +734,18 @@ msgstr "Ödeme Yönetimi için Banka Hesabı"
 #~ msgid "Payment type"
 #~ msgstr "Ödeme Tipi"
 
+#~ msgid "Payment mode"
+#~ msgstr "Ödeme Biçimi"
+
+#~ msgid ""
+#~ "When an order is placed the state is 'Draft'.\n"
+#~ " Once the bank is confirmed the state is set to 'Confirmed'.\n"
+#~ " Then the order is paid the state is 'Done'."
+#~ msgstr ""
+#~ "Bir emir durumu 'Taslak' olarak belirlenmişse.\n"
+#~ " Banka durumun 'Onaylı' olarak ayarlanmasını onaylamışsa.\n"
+#~ " Sonra emir ödendi ve durum 'Bitti' olur."
+
 #~ msgid ""
 #~ "\n"
 #~ "This module provides :\n"
@@ -787,8 +759,34 @@ msgstr "Ödeme Yönetimi için Banka Hesabı"
 #~ "* a çeşitli otomatik ödemeleri kolaylıkla uygulayan bir temel mekanizma.\n"
 #~ "    "
 
+#~ msgid "Scheduled date if fixed"
+#~ msgstr "Sabitlenmişse Planlanan tarih"
+
+#~ msgid "Preferred date"
+#~ msgstr "İstenen Tarih"
+
 #~ msgid "You can not create move line on closed account."
 #~ msgstr "Kapalı hesaplarda hareket satırı oluşturamazsınız."
+
+#~ msgid "Account Entry Line"
+#~ msgstr "Hesap Giriş Satırı"
+
+#~ msgid "Wrong credit or debit value in accounting entry !"
+#~ msgstr "Hesap girişindeki alacak ya da borç değeri hatalı !"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Hata!"
+
+#~ msgid "Execution date"
+#~ msgstr "Yürütme tarihi"
+
+#, python-format
+#~ msgid "No partner defined on entry line"
+#~ msgstr "Bu kalemde paydaş tanımlanmamış"
+
+#~ msgid "Import payment lines"
+#~ msgstr "Ödeme kalemleri içeaktar"
 
 #~ msgid "Company must be same for its related account and period."
 #~ msgstr "Firma bağlı olduğu hesap ve dönemle aynı olmalıdır."
@@ -798,3 +796,45 @@ msgstr "Ödeme Yönetimi için Banka Hesabı"
 
 #~ msgid "You can not create move line on view account."
 #~ msgstr "Hesap Görünümünde hareket oluşturamazsınız."
+
+#~ msgid ""
+#~ "A payment order is a payment request from your company to pay a supplier "
+#~ "invoice or a customer credit note. Here you can register all payment orders "
+#~ "that should be done, keep track of all payment orders and mention the "
+#~ "invoice reference and the partner the payment should be done for."
+#~ msgstr ""
+#~ "Bir ödeme emri, firmanızın bir tedarikçi faturasını ya da müşteri alacak "
+#~ "dekontunu ödeme isteğidir. Burada yapılacak bütün öedeme emirlerini "
+#~ "kaydedebilirsiniz, bütün ödeme emirlerinizi izleyebilir, fatura referansı ve "
+#~ "hangi paydaş ödeme yapılacağını işleyebilirsiniz."
+
+#~ msgid "Invoice Number must be unique per Company!"
+#~ msgstr "Fatura Numarası Her Şirkette Tekil Olmalı!"
+
+#~ msgid "Invalid BBA Structured Communication !"
+#~ msgstr "Geçersiz BBA Yapılı İletişim !"
+
+#~ msgid "You can not create journal items on an account of type view."
+#~ msgstr "Görünüm tipindeki hesaplarda yevmiye kaydı oluşturamazsınız."
+
+#~ msgid "Company must be the same for its related account and period."
+#~ msgstr "İlişkili hesap ve dönem için aynı şirket olmalı."
+
+#~ msgid "You can not create journal items on closed account."
+#~ msgstr "Kapalı bir hesap için yevmiye kayıtları oluşturamazsınız."
+
+#~ msgid ""
+#~ "The selected account of your Journal Entry forces to provide a secondary "
+#~ "currency. You should remove the secondary currency on the account or select "
+#~ "a multi-currency view on the journal."
+#~ msgstr ""
+#~ "Günlük Girişlerinize ait seçilmiş hesap ikincil bir para biriminin "
+#~ "sağlanmasına zorluyor. Hesaptan ikincil para birimini kaldırmanız ya da "
+#~ "çoklu-para birimli bir günlük seçmelisiniz."
+
+#~ msgid ""
+#~ "The date of your Journal Entry is not in the defined period! You should "
+#~ "change the date or remove this constraint from the journal."
+#~ msgstr ""
+#~ "Günlük Girişinizin tarihi tanımlanan dönem içinde değil! Tarihi "
+#~ "değiştirmelisiniz ya da günlükten bu kıstlamayı kaldırmalısınız."

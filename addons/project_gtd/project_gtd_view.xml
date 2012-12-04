@@ -77,9 +77,7 @@
         <field name="inherit_id" ref="project.view_task_tree2" />
         <field name="arch" type="xml">
             <field name="remaining_hours" position="after">
-                <field string="Timebox" name="timebox_id" invisible=" not context.get('gtd', False)"/>
-                <button name="prev_timebox" type="object" icon="gtk-go-back" string="Previous" states="draft,pending,open" invisible=" not context.get('gtd',False)"/>
-                <button name="next_timebox" type="object" icon="gtk-go-forward" string="Next" states="draft,pending,open" invisible=" not context.get('gtd',False)"/>
+                <field string="Timeframe" name="timebox_id" invisible=" not context.get('gtd', False)"/>
                 <field name="context_id" invisible="not context.get('context_show', False)" widget="selection"/>
                 <button name="do_reopen" states="done,cancelled" string="Reactivate" type="object" icon="gtk-convert" help="For reopening the tasks" invisible="not context.get('set_visible',False)"/>
             </field>
@@ -92,8 +90,8 @@
         <field name="inherit_id" ref="project.view_task_form2" />
         <field name="arch" type="xml">
             <field name="progress" position="after">
-                <field name="context_id" widget="selection" options='{"no_open": true}'/>
-                <field name="timebox_id" widget="selection" options='{"no_open": true}'/>
+                <field name="context_id" widget="selection" options='{"no_open": True}'/>
+                <field name="timebox_id" widget="selection" options='{"no_open": True}'  string="Timeframe"/>
             </field>
         </field>
     </record>
@@ -123,7 +121,7 @@
         <field name="context">{'set_editable':True,'set_visible':True,'gtd':True,'user_invisible':True, "search_default_open": 1}</field>
         <field name="domain">[('user_id','=',uid)]</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form,calendar,gantt,graph,kanban</field>
+        <field name="view_mode">kanban,tree,form,calendar,gantt,graph</field>
     </record>
     <menuitem action="open_gtd_task" id="menu_open_gtd_timebox_tree" parent="project.menu_project_management" sequence="10"/>
 

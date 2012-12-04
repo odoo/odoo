@@ -36,12 +36,12 @@
             <field name="inherit_id" ref="share.share_step2_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='result_line_ids']//field[@name='login']" position="after">
-                    <field name="share_url" groups="portal.group_portal_manager"/>
+                    <field name="share_url" groups="base.group_no_one"/>
                 </xpath>
                 <xpath expr="//field[@name='result_line_ids']" position="after">
                     <newline/>
-                    <group string="Details">
-                        <field name="share_root_url" groups="portal.group_portal_manager"/>
+                    <group string="Details" groups="base.group_no_one">
+                        <field name="share_root_url"/>
                     </group>
                 </xpath>
             </field>

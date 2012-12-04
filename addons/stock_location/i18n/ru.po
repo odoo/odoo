@@ -6,15 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2010-12-09 09:49+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 06:28+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:43+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
+
+#. module: stock_location
+#: help:product.pulled.flow,company_id:0
+msgid "Is used to know to which company the pickings and moves belong."
+msgstr ""
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -40,12 +45,7 @@ msgstr "Исходящие потоки"
 #. module: stock_location
 #: selection:stock.location.path,auto:0
 msgid "Automatic No Step Added"
-msgstr "Шаги не будут добавляться автоматически"
-
-#. module: stock_location
-#: view:product.product:0
-msgid "Parameters"
-msgstr "Параметры"
+msgstr "Автоматически без добавления шагов"
 
 #. module: stock_location
 #: field:product.pulled.flow,location_src_id:0
@@ -66,11 +66,6 @@ msgid "Pulled Flows"
 msgstr "Входящие потоки"
 
 #. module: stock_location
-#: constraint:stock.move:0
-msgid "You must assign a production lot for this product"
-msgstr "Вы должны назначить партию изделий для данной ТМЦ"
-
-#. module: stock_location
 #: help:product.pulled.flow,location_src_id:0
 msgid "Location used by Destination Location to supply"
 msgstr "Место хранения используемое местом назначения для поставки"
@@ -88,6 +83,8 @@ msgid ""
 "Pulled procurement coming from original location %s, pull rule %s, via "
 "original Procurement %s (#%d)"
 msgstr ""
+"Входящее снабжение поступающее из исходного места %s, правило прихода %s, "
+"через исходное снабжение %s (#%d)"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location
@@ -110,6 +107,12 @@ msgid ""
 "move has to be validated by a worker. With 'Automatic No Step Added', the "
 "location is replaced in the original move."
 msgstr ""
+"Это используется для определения путей следования продукта в дереве мест "
+"хранения.\n"
+"Значение 'Автоматическое перемещение' создаст перемещение текущего запаса "
+"после чего будет автоматически подтверждено. 'Ручная операция' - перемещение "
+"должно быть подтверждено работником.'Автоматически без добавления шагов' - "
+"место хранения замещено в исходном перемещении."
 
 #. module: stock_location
 #: view:product.product:0
@@ -147,11 +150,6 @@ msgid "Dispatch Zone"
 msgstr "Зона отгрузки"
 
 #. module: stock_location
-#: model:ir.model,name:stock_location.model_stock_move
-msgid "Stock Move"
-msgstr "Движение запасов"
-
-#. module: stock_location
 #: view:product.product:0
 msgid "Pulled flows"
 msgstr "Входящие потоки"
@@ -163,9 +161,9 @@ msgid "Company"
 msgstr "Компания"
 
 #. module: stock_location
-#: view:product.product:0
-msgid "Logistics Flows"
-msgstr "Логистика потоков"
+#: model:ir.model,name:stock_location.model_stock_move
+msgid "Stock Move"
+msgstr "Движение запасов"
 
 #. module: stock_location
 #: help:stock.move,cancel_cascade:0
@@ -188,6 +186,12 @@ msgstr "Изготовить на заказ"
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Stock"
 msgstr "Изготовить на склад"
+
+#. module: stock_location
+#: code:addons/stock_location/procurement_pull.py:118
+#, python-format
+msgid "Pulled from another location."
+msgstr ""
 
 #. module: stock_location
 #: field:product.pulled.flow,partner_address_id:0
@@ -218,16 +222,9 @@ msgid "Type of Procurement"
 msgstr "Тип снабжения"
 
 #. module: stock_location
-#: help:product.pulled.flow,company_id:0
-msgid "Is used to know to which company belong packings and moves"
-msgstr ""
-"Используется для для того, чтобы знать какой компании принадлежат упаковки и "
-"перемещения"
-
-#. module: stock_location
 #: field:product.pulled.flow,name:0
 msgid "Name"
-msgstr "Имя"
+msgstr "Название"
 
 #. module: stock_location
 #: help:product.product,path_ids:0
@@ -238,11 +235,6 @@ msgstr ""
 "хранения."
 
 #. module: stock_location
-#: constraint:stock.move:0
-msgid "You can not move products from or to a location of the type view."
-msgstr ""
-
-#. module: stock_location
 #: selection:stock.location.path,auto:0
 msgid "Manual Operation"
 msgstr "Ручное управление"
@@ -251,12 +243,7 @@ msgstr "Ручное управление"
 #: model:ir.model,name:stock_location.model_product_product
 #: field:product.pulled.flow,product_id:0
 msgid "Product"
-msgstr "Продукция"
-
-#. module: stock_location
-#: field:product.pulled.flow,procure_method:0
-msgid "Procure Method"
-msgstr "Метод снабжения"
+msgstr "Товар"
 
 #. module: stock_location
 #: field:product.pulled.flow,picking_type:0
@@ -283,13 +270,7 @@ msgstr "Место хранения которое нуждается в пос�
 #. module: stock_location
 #: field:stock.location.path,product_id:0
 msgid "Products"
-msgstr "Продукция"
-
-#. module: stock_location
-#: code:addons/stock_location/procurement_pull.py:118
-#, python-format
-msgid "Pulled from another location via procurement %d"
-msgstr "Взято из другого места хранения по снабжению %d"
+msgstr "Товары"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.stock_location_qualitytest0
@@ -314,6 +295,8 @@ msgid ""
 "Picking for pulled procurement coming from original location %s, pull rule "
 "%s, via original Procurement %s (#%d)"
 msgstr ""
+"Комплектование для входящего снабжения приходящего из исходного места "
+"хранения %s, правило поступления %s, через исходное снабжение %s (#%d)"
 
 #. module: stock_location
 #: field:product.product,path_ids:0
@@ -327,11 +310,8 @@ msgid ""
 "Move for pulled procurement coming from original location %s, pull rule %s, "
 "via original Procurement %s (#%d)"
 msgstr ""
-
-#. module: stock_location
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product"
-msgstr "Вы пытаетесь назначит партию состоящую из другой продукции"
+"Перемещение для входящего снабжения поступающего из исходного места хранения "
+"%s, правило прихода %s, через исходное снабжение %s (#%d)"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_procurement_order
@@ -362,9 +342,9 @@ msgid "Action Type"
 msgstr "Тип действия"
 
 #. module: stock_location
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Ошибка: Неправильный штрих-код"
+#: field:product.pulled.flow,procure_method:0
+msgid "Procure Method"
+msgstr "Метод снабжения"
 
 #. module: stock_location
 #: help:product.pulled.flow,picking_type:0
@@ -389,7 +369,7 @@ msgstr "Операция"
 #. module: stock_location
 #: view:stock.location.path:0
 msgid "Location Paths"
-msgstr "Расположение каталога"
+msgstr "Пути мест хранения"
 
 #. module: stock_location
 #: field:product.pulled.flow,journal_id:0
@@ -407,7 +387,7 @@ msgstr "Отменить каскад"
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "Invoiced"
-msgstr "Счет"
+msgstr "Счет выставлен"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Неправильный XML для просмотра архитектуры!"
@@ -427,5 +407,32 @@ msgstr "Счет"
 #~ msgid "stock.location.path"
 #~ msgstr "расположение патча"
 
+#~ msgid "Parameters"
+#~ msgstr "Параметры"
+
+#~ msgid "Is used to know to which company belong packings and moves"
+#~ msgstr ""
+#~ "Используется для для того, чтобы знать какой компании принадлежат упаковки и "
+#~ "перемещения"
+
+#, python-format
+#~ msgid "Pulled from another location via procurement %d"
+#~ msgstr "Взято из другого места хранения по снабжению %d"
+
 #~ msgid "Warehouse Locations Paths"
 #~ msgstr "Пути мест хранения склада"
+
+#~ msgid "You try to assign a lot which is not from the same product"
+#~ msgstr "Вы пытаетесь назначит партию состоящую из другой продукции"
+
+#~ msgid "You must assign a production lot for this product"
+#~ msgstr "Вы должны назначить партию изделий для данной ТМЦ"
+
+#~ msgid "Logistics Flows"
+#~ msgstr "Логистика потоков"
+
+#~ msgid "You can not move products from or to a location of the type view."
+#~ msgstr "Нельзя переместить ТМЦ в/из место хранения типа вид."
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Ошибка: Неверный штрих-код"

@@ -47,7 +47,6 @@ and categorize your interventions with a channel and a priority level.
     'test': ['test/process/help-desk.yml'],
     'installable': True,
     'auto_install': False,
-    'certificate' : '00830691522781519309',
     'images': ['images/helpdesk_analysis.jpeg','images/helpdesk_categories.jpeg','images/helpdesk_requests.jpeg'],
 }
 

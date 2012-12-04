@@ -12,10 +12,10 @@ openerp.share = function(session) {
         }
         if (view.fields_view.type == 'form') rec_name = view.datarecord.name;
         else rec_name = '';
-        self.rpc('/web/session/eval_domain_and_context', {
+        session.web.pyeval.eval_domains_and_contexts({
             domains: [domain],
             contexts: [view.dataset.context]
-        }, function (result) {
+        }).done(function (result) {
             Share.create({
                 name: action.name,
                 record_name: rec_name,
@@ -24,9 +24,8 @@ openerp.share = function(session) {
                 user_type: user_type || 'embedded',
                 view_type: view.fields_view.type,
                 invite: invite || false,
-            }, function(result) {
-                var share_id = result.result;
-                var step1 = Share.call('go_step_1', [[share_id],], function(result) {
+            }).done(function(share_id) {
+                var step1 = Share.call('go_step_1', [[share_id]]).done(function(result) {
                     var action = result;
                     self.do_action(action);
                 });
@@ -38,7 +37,7 @@ openerp.share = function(session) {
         if (!session.session.share_flag) {
             session.session.share_flag = $.Deferred(function() {
                 var func = new session.web.Model("share.wizard").get_func("has_share");
-                func(session.session.uid).pipe(function(res) {
+                func(session.session.uid).then(function(res) {
                     if(res) {
                         session.session.share_flag.resolve();
                     } else {

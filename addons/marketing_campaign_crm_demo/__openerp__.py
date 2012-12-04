@@ -39,7 +39,6 @@ Creates demo data like leads, campaigns and segments for the module marketing_ca
     'demo': ['marketing_campaign_demo.xml'],
     'installable': True,
     'auto_install': False,
-    'certificate': '001005497972871352957',
     'images': ['images/campaigns.jpeg','images/email_templates.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

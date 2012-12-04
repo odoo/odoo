@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2011-07-13 16:29+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
+"PO-Revision-Date: 2012-11-27 15:45+0000\n"
+"Last-Translator: ccdos <ccdos@163.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 06:41+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:53+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: report_webkit
 #: view:ir.actions.report.xml:0
@@ -38,7 +38,7 @@ msgid "Ledger  28  431.8 x 279.4 mm"
 msgstr "Ledger 28431.8 x 279.4 毫米"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:223
+#: code:addons/report_webkit/webkit_report.py:234
 #, python-format
 msgid "No header defined for this Webkit report!"
 msgstr "这个Webkit报表没定义页头"
@@ -55,7 +55,7 @@ msgid ""
 "                    position as each object is printed on a separate HTML.   "
 "                                                         but memory and disk "
 "usage is wider"
-msgstr ""
+msgstr "这个模式允许 打印在独立的 HTML中每个对象 更精确的定位。但是内存和硬盘空间占用更多。"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -69,15 +69,10 @@ msgid "Company"
 msgstr "公司"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:100
+#: code:addons/report_webkit/webkit_report.py:235
 #, python-format
-msgid "path to Wkhtmltopdf is not absolute"
-msgstr "Wkhtmltopdf的路径不是绝对路径"
-
-#. module: report_webkit
-#: view:ir.header_webkit:0
-msgid "Company and Page Setup"
-msgstr ""
+msgid "Please set a header in company settings."
+msgstr "请在公司设置里设定页眉"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -90,16 +85,6 @@ msgid "B7  21  88 x 125 mm"
 msgstr "B7 21 88 x 125 毫米"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:252
-#: code:addons/report_webkit/webkit_report.py:263
-#: code:addons/report_webkit/webkit_report.py:272
-#: code:addons/report_webkit/webkit_report.py:285
-#: code:addons/report_webkit/webkit_report.py:296
-#, python-format
-msgid "Webkit render"
-msgstr "Webkit渲染"
-
-#. module: report_webkit
 #: view:res.company:0
 msgid "Headers"
 msgstr "头文件"
@@ -110,27 +95,10 @@ msgid "Name of Image"
 msgstr "图片名"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:94
-#, python-format
-msgid ""
-"Wrong Wkhtmltopdf path set in company'+\n"
-"                                'Given path is not executable or path is "
-"wrong"
-msgstr ""
-"Wkhtmltopdf的公司公司路径错误“+\n"
-"                                “给定的路径不是可执行文件或路径是错误的"
-
-#. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:167
-#, python-format
-msgid "Webkit raise an error"
-msgstr "Webkit的出现错误"
-
-#. module: report_webkit
 #: model:ir.actions.act_window,name:report_webkit.action_header_webkit
 #: model:ir.ui.menu,name:report_webkit.menu_header_webkit
 msgid "Webkit Headers/Footers"
-msgstr ""
+msgstr "Webkit 页眉/页脚"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -148,39 +116,30 @@ msgid "A4  0   210 x 297 mm, 8.26 x 11.69 inches"
 msgstr "A4 0 210 x 297 毫米, 8.26 x 11.69 英寸"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:82
-#, python-format
-msgid ""
-"Please install executable on your system'+\n"
-"                             ' (sudo apt-get install wkhtmltopdf) or "
-"download it from here:'+\n"
-"                             ' "
-"http://code.google.com/p/wkhtmltopdf/downloads/list and set the'+\n"
-"                             ' path to the executable on the Company "
-"form.'+\n"
-"                             'Minimal version is 0.9.9"
-msgstr ""
-"请安装此程序到你系统'+\n"
-"                             '(sudo apt-get install wkhtmltopdf) 或者在这里下载：'+\n"
-"                             "
-"'http://code.google.com/p/wkhtmltopdf/downloads/list 在公司界面设置'+\n"
-"                             ‘程序路径。'\n"
-"                             '最低版本是0.9.9"
-
-#. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid "B6  20  125 x 176 mm"
 msgstr "B6 20 125 x 176 毫米"
 
 #. module: report_webkit
-#: view:report.webkit.actions:0
-msgid "_Cancel"
-msgstr "取消(_C)"
+#: code:addons/report_webkit/webkit_report.py:177
+#, python-format
+msgid "Webkit error"
+msgstr "Webkit 错误"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid "B2  17  500 x 707 mm"
 msgstr "B2 17 500 x 707 毫米"
+
+#. module: report_webkit
+#: code:addons/report_webkit/webkit_report.py:263
+#: code:addons/report_webkit/webkit_report.py:274
+#: code:addons/report_webkit/webkit_report.py:283
+#: code:addons/report_webkit/webkit_report.py:296
+#: code:addons/report_webkit/webkit_report.py:307
+#, python-format
+msgid "Webkit render!"
+msgstr "Webkit 渲染！"
 
 #. module: report_webkit
 #: model:ir.model,name:report_webkit.model_ir_header_img
@@ -190,12 +149,21 @@ msgstr "ir.header_img"
 #. module: report_webkit
 #: field:ir.actions.report.xml,precise_mode:0
 msgid "Precise Mode"
-msgstr ""
+msgstr "精确模式"
 
 #. module: report_webkit
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "错误！您不能创建循环的公司。"
+#: code:addons/report_webkit/webkit_report.py:96
+#, python-format
+msgid ""
+"Please install executable on your system (sudo apt-get install wkhtmltopdf) "
+"or download it from here: "
+"http://code.google.com/p/wkhtmltopdf/downloads/list and set the path in the "
+"ir.config_parameter with the webkit_path key.Minimal version is 0.9.9"
+msgstr ""
+"请安装执行文件在你的系统中（sudo apt-get install "
+"wkhtmltopd）或者从这里下载http://code.google.com/p/wkhtmltopdf/downloads/list 并且用 "
+"webkit_path 键值设置路径在  ir.config_parameter。\r\n"
+"最低版本是0.9.9."
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -213,7 +181,7 @@ msgid "Type"
 msgstr "类型"
 
 #. module: report_webkit
-#: code:addons/report_webkit/wizard/report_webkit_actions.py:137
+#: code:addons/report_webkit/wizard/report_webkit_actions.py:133
 #, python-format
 msgid "Client Actions Connections"
 msgstr "客户端操作连接"
@@ -244,10 +212,10 @@ msgid "The header linked to the report"
 msgstr "报表头"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:81
+#: code:addons/report_webkit/webkit_report.py:95
 #, python-format
-msgid "Wkhtmltopdf library path is not set in company"
-msgstr "Wkhtmltopdf库路径没在公司里设置"
+msgid "Wkhtmltopdf library path is not set"
+msgstr "Wkhtmltopdf 库的路径没设置"
 
 #. module: report_webkit
 #: view:ir.actions.report.xml:0
@@ -291,12 +259,6 @@ msgid "Top Margin (mm)"
 msgstr "上边距（毫米）"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:224
-#, python-format
-msgid "Please set a header in company settings"
-msgstr "请在公司设置中设定表头"
-
-#. module: report_webkit
 #: view:report.webkit.actions:0
 msgid "_Ok"
 msgstr "确定(_O)"
@@ -316,7 +278,7 @@ msgstr "B3 18 353 x 500 毫米"
 #. module: report_webkit
 #: field:ir.actions.report.xml,webkit_header:0
 msgid "Webkit Header"
-msgstr ""
+msgstr "Webkit 页眉"
 
 #. module: report_webkit
 #: help:ir.actions.report.xml,webkit_debug:0
@@ -327,6 +289,11 @@ msgstr "启用WebKit引擎调试"
 #: field:ir.header_img,img:0
 msgid "Image"
 msgstr "图片"
+
+#. module: report_webkit
+#: view:ir.header_img:0
+msgid "Header Image"
+msgstr "页眉图像"
 
 #. module: report_webkit
 #: field:res.company,header_webkit:0
@@ -351,6 +318,11 @@ msgid "Portrait"
 msgstr "肖像"
 
 #. module: report_webkit
+#: view:report.webkit.actions:0
+msgid "or"
+msgstr "or"
+
+#. module: report_webkit
 #: selection:ir.header_webkit,orientation:0
 msgid "Landscape"
 msgstr "景观"
@@ -359,6 +331,12 @@ msgstr "景观"
 #: selection:ir.header_webkit,format:0
 msgid "B8  22  62 x 88 mm"
 msgstr "B8 22 62 x 88 毫米"
+
+#. module: report_webkit
+#: code:addons/report_webkit/webkit_report.py:178
+#, python-format
+msgid "The command 'wkhtmltopdf' failed with error code = %s. Message: %s"
+msgstr "命令'wkhtmltopdf'失败，错误代码=%s，  消息: %s"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -374,11 +352,6 @@ msgstr "添加打印按钮"
 #: selection:ir.header_webkit,format:0
 msgid "A9  13  37 x 52 mm"
 msgstr "A9 13 37 x 52 毫米"
-
-#. module: report_webkit
-#: view:ir.header_webkit:0
-msgid "Footer"
-msgstr ""
 
 #. module: report_webkit
 #: model:ir.model,name:report_webkit.model_res_company
@@ -406,6 +379,12 @@ msgid "Right Margin (mm)"
 msgstr "右边距（毫米）"
 
 #. module: report_webkit
+#: code:addons/report_webkit/webkit_report.py:229
+#, python-format
+msgid "Webkit report template not found!"
+msgstr "Webkit 报表模版没找到！"
+
+#. module: report_webkit
 #: field:ir.header_webkit,orientation:0
 msgid "Orientation"
 msgstr "定位"
@@ -416,7 +395,7 @@ msgid ""
 "Full path to the wkhtmltopdf executable file. Version 0.9.9 is required. "
 "Install a static version of the library if you experience missing "
 "header/footers on Linux."
-msgstr ""
+msgstr "wkhtmltopdf 执行文件的全路径，要求版本 0.9.9  。如果你在Linux遇到找不到页眉/页脚，安装一个静态库版本，"
 
 #. module: report_webkit
 #: help:ir.header_webkit,html:0
@@ -429,19 +408,14 @@ msgid "Paper size"
 msgstr "纸张尺寸"
 
 #. module: report_webkit
-#: view:ir.header_webkit:0
-msgid "Header"
-msgstr ""
-
-#. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid ":B10    16  31 x 44 mm"
 msgstr ":B10 16 31 x 44 毫米"
 
 #. module: report_webkit
-#: view:ir.header_webkit:0
-msgid "CSS Style"
-msgstr ""
+#: view:report.webkit.actions:0
+msgid "Cancel"
+msgstr "取消"
 
 #. module: report_webkit
 #: field:ir.header_webkit,css:0
@@ -457,7 +431,13 @@ msgstr "B4 19 250 x 353 毫米"
 #: model:ir.actions.act_window,name:report_webkit.action_header_img
 #: model:ir.ui.menu,name:report_webkit.menu_header_img
 msgid "Webkit Logos"
-msgstr ""
+msgstr "Webkit 标志"
+
+#. module: report_webkit
+#: code:addons/report_webkit/webkit_report.py:173
+#, python-format
+msgid "No diagnosis message was provided"
+msgstr "没有诊断信息提供"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -490,11 +470,6 @@ msgid "B0  14  1000 x 1414 mm"
 msgstr "B0 14 1000 x 1414 毫米"
 
 #. module: report_webkit
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr ""
-
-#. module: report_webkit
 #: field:ir.header_img,name:0
 #: field:ir.header_webkit,name:0
 msgid "Name"
@@ -522,18 +497,12 @@ msgid "Comm10E 25  105 x 241 mm, U.S. Common 10 Envelope"
 msgstr "Comm10E25105 x 241毫米，10个美国普通信封"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:218
-#, python-format
-msgid "Webkit Report template not found !"
-msgstr "找不到Webkit报表模板！"
-
-#. module: report_webkit
 #: field:ir.header_webkit,margin_left:0
 msgid "Left Margin (mm)"
 msgstr "左边距（毫米）"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:218
+#: code:addons/report_webkit/webkit_report.py:229
 #, python-format
 msgid "Error!"
 msgstr "错误！"
@@ -553,8 +522,68 @@ msgstr "B9 23 33 x 62 毫米"
 msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
 
+#. module: report_webkit
+#: code:addons/report_webkit/webkit_report.py:175
+#, python-format
+msgid "The following diagnosis message was provided:\n"
+msgstr "下面的诊断信息被提供\n"
+
+#. module: report_webkit
+#: view:ir.header_webkit:0
+msgid "HTML Header"
+msgstr "HTML 页眉"
+
+#, python-format
+#~ msgid "Webkit raise an error"
+#~ msgstr "Webkit的出现错误"
+
+#, python-format
+#~ msgid ""
+#~ "Wrong Wkhtmltopdf path set in company'+\n"
+#~ "                                'Given path is not executable or path is "
+#~ "wrong"
+#~ msgstr ""
+#~ "Wkhtmltopdf的公司公司路径错误“+\n"
+#~ "                                “给定的路径不是可执行文件或路径是错误的"
+
+#, python-format
+#~ msgid "path to Wkhtmltopdf is not absolute"
+#~ msgstr "Wkhtmltopdf的路径不是绝对路径"
+
+#, python-format
+#~ msgid "Webkit render"
+#~ msgstr "Webkit渲染"
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "错误！您不能创建循环的公司。"
+
+#, python-format
+#~ msgid ""
+#~ "Please install executable on your system'+\n"
+#~ "                             ' (sudo apt-get install wkhtmltopdf) or "
+#~ "download it from here:'+\n"
+#~ "                             ' "
+#~ "http://code.google.com/p/wkhtmltopdf/downloads/list and set the'+\n"
+#~ "                             ' path to the executable on the Company "
+#~ "form.'+\n"
+#~ "                             'Minimal version is 0.9.9"
+#~ msgstr ""
+#~ "请安装此程序到你系统'+\n"
+#~ "                             '(sudo apt-get install wkhtmltopdf) 或者在这里下载：'+\n"
+#~ "                             "
+#~ "'http://code.google.com/p/wkhtmltopdf/downloads/list 在公司界面设置'+\n"
+#~ "                             ‘程序路径。'\n"
+#~ "                             '最低版本是0.9.9"
+
 #~ msgid "Header HTML"
 #~ msgstr "HTML头"
+
+#~ msgid "_Cancel"
+#~ msgstr "取消(_C)"
+
+#, python-format
+#~ msgid "Wkhtmltopdf library path is not set in company"
+#~ msgstr "Wkhtmltopdf库路径没在公司里设置"
 
 #~ msgid ""
 #~ "This module adds a new Report Engine based on WebKit library (wkhtmltopdf) "
@@ -632,6 +661,10 @@ msgstr "ir.actions.report.xml"
 #~ "网络客户端的所见即所得\n"
 #~ "                    "
 
+#, python-format
+#~ msgid "Please set a header in company settings"
+#~ msgstr "请在公司设置中设定表头"
+
 #~ msgid "Content and styling"
 #~ msgstr "内容和样式"
 
@@ -644,8 +677,15 @@ msgstr "ir.actions.report.xml"
 #~ msgid "Webkit Report Engine"
 #~ msgstr "Webkit报表引擎"
 
+#, python-format
+#~ msgid "Webkit Report template not found !"
+#~ msgstr "找不到Webkit报表模板！"
+
 #~ msgid "WebKit Header"
 #~ msgstr "WebKit页头"
 
 #~ msgid "Header IMG"
 #~ msgstr "logo"
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "公司名必须唯一！"

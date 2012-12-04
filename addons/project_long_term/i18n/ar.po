@@ -7,20 +7,38 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2012-01-12 21:12+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 06:39+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:51+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: project_long_term
+#: help:project.phase,constraint_date_end:0
+msgid "force the phase to finish before this date"
+msgstr "افرض المرحلة للنتهاء قبل هذا التاريخ"
+
+#. module: project_long_term
+#: view:project.phase:0
+#: selection:project.phase,state:0
+msgid "In Progress"
+msgstr "قيد التقدم"
+
+#. module: project_long_term
+#: field:account.analytic.account,use_phases:0
 #: model:ir.actions.act_window,name:project_long_term.act_project_phases
+#: view:project.project:0
 msgid "Phases"
 msgstr "المراحل"
+
+#. module: project_long_term
+#: field:project.phase,user_ids:0
+msgid "Assigned Users"
+msgstr ""
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -29,9 +47,116 @@ msgid "Next Phases"
 msgstr "المراحل التالية"
 
 #. module: project_long_term
+#: model:ir.model,name:project_long_term.model_project_user_allocation
+msgid "Phase User Allocation"
+msgstr "تخصيص مرحلة المستخدم"
+
+#. module: project_long_term
 #: view:project.phase:0
 msgid "Project's Tasks"
 msgstr "مهام المشروع"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,help:project_long_term.action_project_compute_phases
+msgid ""
+"To schedule phases of all or a specified project. It then open a gantt "
+"view.\n"
+"               "
+msgstr ""
+
+#. module: project_long_term
+#: field:project.phase,task_ids:0
+msgid "Project Tasks"
+msgstr "مهام المشروع"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.action_project_compute_phases
+#: model:ir.ui.menu,name:project_long_term.menu_compute_phase
+#: view:project.compute.phases:0
+msgid "Schedule Phases"
+msgstr ""
+
+#. module: project_long_term
+#: view:project.phase:0
+#: field:project.phase,state:0
+msgid "Status"
+msgstr ""
+
+#. module: project_long_term
+#: field:project.compute.phases,target_project:0
+msgid "Action"
+msgstr ""
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Start Phase"
+msgstr "مرحلة البدء"
+
+#. module: project_long_term
+#: model:ir.model,name:project_long_term.model_project_task
+msgid "Task"
+msgstr "مهمة"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Draft"
+msgstr "مسودة"
+
+#. module: project_long_term
+#: view:project.compute.phases:0
+#: view:project.compute.tasks:0
+msgid "C_ompute"
+msgstr "حساب"
+
+#. module: project_long_term
+#: view:project.phase:0
+#: selection:project.phase,state:0
+msgid "New"
+msgstr "جديد"
+
+#. module: project_long_term
+#: field:project.phase,product_uom:0
+msgid "Duration Unit of Measure"
+msgstr ""
+
+#. module: project_long_term
+#: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar_leaves
+msgid "Resource Leaves"
+msgstr "متروكات الموارد"
+
+#. module: project_long_term
+#: view:project.phase:0
+#: selection:project.phase,state:0
+msgid "Pending"
+msgstr "معلّق"
+
+#. module: project_long_term
+#: help:project.phase,progress:0
+msgid "Computed based on related tasks"
+msgstr "يحسب اعتماداً على ارتباط المهام"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "In Progress Phases"
+msgstr "مراحل قيد التنفيذ"
+
+#. module: project_long_term
+#: code:addons/project_long_term/project_long_term.py:141
+#, python-format
+msgid "%s (copy)"
+msgstr ""
+
+#. module: project_long_term
+#: code:addons/project_long_term/wizard/project_compute_phases.py:48
+#, python-format
+msgid "Please specify a project to schedule."
+msgstr "يرجى تحديد مشروع لجدولته."
+
+#. module: project_long_term
+#: view:project.compute.phases:0
+#: view:project.compute.tasks:0
+msgid "or"
+msgstr ""
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -40,8 +165,50 @@ msgid "Group By..."
 msgstr "تجميع حسب..."
 
 #. module: project_long_term
-#: field:project.phase,user_ids:0
-msgid "Assigned Users"
+#: view:project.phase:0
+msgid "Remaining Hours"
+msgstr "الساعات المتبقية"
+
+#. module: project_long_term
+#: field:project.phase,constraint_date_start:0
+msgid "Minimum Start Date"
+msgstr "الحد الادني لتاريخ البدء"
+
+#. module: project_long_term
+#: help:project.phase,product_uom:0
+msgid ""
+"Unit of Measure (Unit of Measure) is the unit of measurement for Duration"
+msgstr ""
+
+#. module: project_long_term
+#: help:project.phase,user_ids:0
+msgid ""
+"The resources on the project can be computed automatically by the scheduler."
+msgstr ""
+
+#. module: project_long_term
+#: field:project.phase,sequence:0
+msgid "Sequence"
+msgstr "مسلسل"
+
+#. module: project_long_term
+#: help:account.analytic.account,use_phases:0
+msgid "Check this field if you plan to use phase-based scheduling"
+msgstr ""
+
+#. module: project_long_term
+#: help:project.user.allocation,date_start:0
+msgid "Starting Date"
+msgstr "تاريخ البدء"
+
+#. module: project_long_term
+#: help:project.phase,state:0
+msgid ""
+"If the phase is created the status 'Draft'.\n"
+" If the phase is started, the status becomes 'In Progress'.\n"
+" If review is needed the phase is in 'Pending' status.                       "
+"           \n"
+" If the phase is over, the status is set to 'Done'."
 msgstr ""
 
 #. module: project_long_term
@@ -50,34 +217,36 @@ msgid "Progress"
 msgstr "مستوي التقدم"
 
 #. module: project_long_term
-#: constraint:project.project:0
-msgid "Error! project start-date must be lower then project end-date."
-msgstr "خطأ! يجب ان يكون تاريخ بدء المشروع اقل من تاريخ انتهائه."
+#: model:ir.ui.menu,name:project_long_term.menu_pm_users_project1
+#: model:ir.ui.menu,name:project_long_term.menu_view_resource
+msgid "Resources"
+msgstr "الموارد"
 
 #. module: project_long_term
 #: view:project.phase:0
-msgid "In Progress Phases"
-msgstr ""
+msgid "My Projects"
+msgstr "المشاريع الخاصة بي"
+
+#. module: project_long_term
+#: view:project.project:0
+#: view:project.user.allocation:0
+msgid "Phase"
+msgstr "طور"
+
+#. module: project_long_term
+#: help:project.phase,duration:0
+msgid "By default in days"
+msgstr "بالافتراض في الايام"
+
+#. module: project_long_term
+#: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar
+msgid "Working Time"
+msgstr "ساعات العمل"
 
 #. module: project_long_term
 #: view:project.phase:0
-msgid "Displaying Settings"
+msgid "Pending Phases"
 msgstr ""
-
-#. module: project_long_term
-#: field:project.compute.phases,target_project:0
-msgid "Schedule"
-msgstr "مجدول"
-
-#. module: project_long_term
-#: constraint:project.task:0
-msgid "Error ! You cannot create recursive tasks."
-msgstr "خطأ ! لا يمكنك انشاء مهام رجعية."
-
-#. module: project_long_term
-#: constraint:project.project:0
-msgid "Error! You cannot assign escalation to the same project!"
-msgstr "خطأ! لا يمكنك تعيين التصعيد لنفس المشروع!"
 
 #. module: project_long_term
 #: code:addons/project_long_term/project_long_term.py:126
@@ -86,14 +255,25 @@ msgid "Day"
 msgstr "يوم"
 
 #. module: project_long_term
-#: model:ir.model,name:project_long_term.model_project_user_allocation
-msgid "Phase User Allocation"
+#: view:project.phase:0
+msgid "Related Tasks"
+msgstr "مهام ذات صلة"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Start Month"
 msgstr ""
 
 #. module: project_long_term
-#: model:ir.model,name:project_long_term.model_project_task
-msgid "Task"
-msgstr "مهمة"
+#: field:project.phase,date_end:0
+#: field:project.user.allocation,date_end:0
+msgid "End Date"
+msgstr "تاريخ الإنتهاء"
+
+#. module: project_long_term
+#: model:ir.model,name:project_long_term.model_project_compute_tasks
+msgid "Project Compute Tasks"
+msgstr "مهام حساب المشروع"
 
 #. module: project_long_term
 #: model:ir.actions.act_window,help:project_long_term.act_project_phase
@@ -118,16 +298,18 @@ msgid "Previous Phases"
 msgstr "المراحل السابقة"
 
 #. module: project_long_term
-#: help:project.phase,product_uom:0
-msgid "UoM (Unit of Measure) is the unit of measurement for Duration"
-msgstr "تكون وحدة القياس هي وحدة لقياس الفترة"
+#: view:project.phase:0
+msgid "New Phases"
+msgstr "مراحل جديدة"
 
 #. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
-#: model:ir.ui.menu,name:project_long_term.menu_resouce_allocation
 #: view:project.phase:0
-#: view:project.user.allocation:0
-msgid "Planning of Users"
+msgid "Tasks Details"
+msgstr "تفاصيل المهام"
+
+#. module: project_long_term
+#: field:project.project,phase_count:0
+msgid "Open Phases"
 msgstr ""
 
 #. module: project_long_term
@@ -135,6 +317,17 @@ msgstr ""
 msgid ""
 " It's computed by the scheduler according to the start date and the duration."
 msgstr " تم حسابها بواسطة الجدول طبقًا لتاريخ البداية والفترة"
+
+#. module: project_long_term
+#: constraint:project.phase:0
+msgid "Loops in phases not allowed"
+msgstr "غير مسموح بالحلقات في المراحل"
+
+#. module: project_long_term
+#: view:project.user.allocation:0
+#: field:project.user.allocation,user_id:0
+msgid "User"
+msgstr "مستخدم"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_project
@@ -149,302 +342,11 @@ msgid "Project"
 msgstr "مشروع"
 
 #. module: project_long_term
-#: code:addons/project_long_term/wizard/project_compute_phases.py:48
-#, python-format
-msgid "Error!"
-msgstr "خطأ!"
-
-#. module: project_long_term
-#: selection:project.phase,state:0
-msgid "Cancelled"
-msgstr "ملغي"
-
-#. module: project_long_term
-#: help:project.user.allocation,date_end:0
-msgid "Ending Date"
-msgstr "تاريخ الانتهاء"
-
-#. module: project_long_term
-#: field:project.phase,constraint_date_end:0
-msgid "Deadline"
-msgstr "الموعد النهائي"
-
-#. module: project_long_term
-#: selection:project.compute.phases,target_project:0
-msgid "Compute All My Projects"
-msgstr ""
-
-#. module: project_long_term
 #: view:project.compute.phases:0
 #: view:project.compute.tasks:0
-msgid "_Cancel"
-msgstr "ال_غاء"
-
-#. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:141
-#, python-format
-msgid " (copy)"
-msgstr " (نسخ)"
-
-#. module: project_long_term
-#: view:project.user.allocation:0
-msgid "Project User Allocation"
-msgstr ""
-
-#. module: project_long_term
-#: view:project.phase:0
-#: field:project.phase,state:0
-msgid "State"
-msgstr "الحالة"
-
-#. module: project_long_term
-#: view:project.compute.phases:0
-#: view:project.compute.tasks:0
-msgid "C_ompute"
-msgstr "حساب"
-
-#. module: project_long_term
-#: view:project.phase:0
-#: selection:project.phase,state:0
-msgid "New"
-msgstr "جديد"
-
-#. module: project_long_term
-#: help:project.phase,progress:0
-msgid "Computed based on related tasks"
-msgstr ""
-
-#. module: project_long_term
-#: field:project.phase,product_uom:0
-msgid "Duration UoM"
-msgstr "وحدة قياس الفترة"
-
-#. module: project_long_term
-#: field:project.phase,constraint_date_start:0
-msgid "Minimum Start Date"
-msgstr "الحد الادني لتاريخ البدء"
-
-#. module: project_long_term
-#: model:ir.ui.menu,name:project_long_term.menu_pm_users_project1
-#: model:ir.ui.menu,name:project_long_term.menu_view_resource
-msgid "Resources"
-msgstr "الموارد"
-
-#. module: project_long_term
-#: view:project.phase:0
-msgid "My Projects"
-msgstr "المشاريع الخاصة بي"
-
-#. module: project_long_term
-#: help:project.user.allocation,date_start:0
-msgid "Starting Date"
-msgstr "تاريخ البدء"
-
-#. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.project_phase_task_list
-msgid "Related Tasks"
-msgstr "مهام ذات صلة"
-
-#. module: project_long_term
-#: view:project.phase:0
-msgid "New Phases"
-msgstr ""
-
-#. module: project_long_term
-#: code:addons/project_long_term/wizard/project_compute_phases.py:48
-#, python-format
-msgid "Please specify a project to schedule."
-msgstr ""
-
-#. module: project_long_term
-#: help:project.phase,constraint_date_start:0
-msgid "force the phase to start after this date"
-msgstr "فرض المرحلة للبدء بعد هذا التاريخ"
-
-#. module: project_long_term
-#: field:project.phase,task_ids:0
-msgid "Project Tasks"
-msgstr "مهام المشروع"
-
-#. module: project_long_term
-#: help:project.phase,date_start:0
-msgid ""
-"It's computed by the scheduler according the project date or the end date of "
-"the previous phase."
-msgstr "تم حسابها بواسطة الجدول الزمني طبقًا تاريخ المشروع للمرحلة السابقة."
-
-#. module: project_long_term
-#: view:project.phase:0
-msgid "Month"
-msgstr "شهر"
-
-#. module: project_long_term
-#: constraint:project.phase:0
-msgid "Phase start-date must be lower than phase end-date."
-msgstr "يجب ان يكون تاريخ بدء المرحلة اقل من تاريخ نهاية المرحلة."
-
-#. module: project_long_term
-#: view:project.phase:0
-msgid "Start Month"
-msgstr ""
-
-#. module: project_long_term
-#: field:project.phase,date_start:0
-#: field:project.user.allocation,date_start:0
-msgid "Start Date"
-msgstr "تاريخ البدء"
-
-#. module: project_long_term
-#: help:project.phase,constraint_date_end:0
-msgid "force the phase to finish before this date"
-msgstr "افرض المرحلة للنتهاء قبل هذا التاريخ"
-
-#. module: project_long_term
-#: help:project.phase,user_ids:0
-msgid ""
-"The ressources on the project can be computed automatically by the scheduler"
-msgstr ""
-
-#. module: project_long_term
-#: view:project.phase:0
-msgid "Draft"
-msgstr "مسودة"
-
-#. module: project_long_term
-#: view:project.phase:0
-msgid "Pending Phases"
-msgstr ""
-
-#. module: project_long_term
-#: view:project.phase:0
-#: selection:project.phase,state:0
-msgid "Pending"
-msgstr "معلّق"
-
-#. module: project_long_term
-#: view:project.user.allocation:0
-#: field:project.user.allocation,user_id:0
-msgid "User"
-msgstr "مستخدم"
-
-#. module: project_long_term
-#: model:ir.model,name:project_long_term.model_project_compute_tasks
-msgid "Project Compute Tasks"
-msgstr "مهام حساب المشروع"
-
-#. module: project_long_term
-#: view:project.phase:0
-msgid "Constraints"
-msgstr "القيود"
-
-#. module: project_long_term
-#: help:project.phase,sequence:0
-msgid "Gives the sequence order when displaying a list of phases."
-msgstr "ويعطي امر التسلسل عند عرض قائمة للمراحل."
-
-#. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.act_project_phase
-#: model:ir.actions.act_window,name:project_long_term.act_project_phase_list
-#: model:ir.ui.menu,name:project_long_term.menu_project_phase
-#: model:ir.ui.menu,name:project_long_term.menu_project_phase_list
-#: view:project.phase:0
-#: field:project.project,phase_ids:0
-msgid "Project Phases"
-msgstr "مراحل المشروع"
-
-#. module: project_long_term
-#: view:project.phase:0
-#: selection:project.phase,state:0
-msgid "Done"
-msgstr "تم"
-
-#. module: project_long_term
 #: view:project.phase:0
 msgid "Cancel"
 msgstr "إلغاء"
-
-#. module: project_long_term
-#: view:project.phase:0
-#: selection:project.phase,state:0
-msgid "In Progress"
-msgstr "قيد التقدم"
-
-#. module: project_long_term
-#: view:project.phase:0
-msgid "Remaining Hours"
-msgstr "الساعات المتبقية"
-
-#. module: project_long_term
-#: constraint:project.task:0
-msgid "Error ! Task end-date must be greater then task start-date"
-msgstr "خطأ! يجب ان يكون تاريخ انتهاء المهمة اكبر من تاريخ البداية"
-
-#. module: project_long_term
-#: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar
-msgid "Working Time"
-msgstr "ساعات العمل"
-
-#. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.action_project_compute_phases
-#: model:ir.ui.menu,name:project_long_term.menu_compute_phase
-#: view:project.compute.phases:0
-msgid "Schedule Phases"
-msgstr ""
-
-#. module: project_long_term
-#: view:project.phase:0
-msgid "Start Phase"
-msgstr "مرحلة البدء"
-
-#. module: project_long_term
-#: view:project.phase:0
-msgid "Total Hours"
-msgstr "عدد الساعات الكلية"
-
-#. module: project_long_term
-#: view:project.user.allocation:0
-msgid "Users"
-msgstr "المستخدمون"
-
-#. module: project_long_term
-#: view:project.user.allocation:0
-msgid "Phase"
-msgstr "طور"
-
-#. module: project_long_term
-#: help:project.phase,state:0
-msgid ""
-"If the phase is created the state 'Draft'.\n"
-" If the phase is started, the state becomes 'In Progress'.\n"
-" If review is needed the phase is in 'Pending' state.                        "
-"          \n"
-" If the phase is over, the states is set to 'Done'."
-msgstr ""
-"اذا تم انشاء المرحلة الحالة تكون ‘مشروع‘.\n"
-"اذا بدأت المرحلة, تصبح الحالة ‘في التقدم‘.\n"
-"اذا تم الاحتياج الى المراجعة المرحلة تكون في حالة ‘معلقة‘.\n"
-"اذا زادت المرحلة عن الحد, ستعيين الحالات الى ‘تم‘."
-
-#. module: project_long_term
-#: field:project.phase,date_end:0
-#: field:project.user.allocation,date_end:0
-msgid "End Date"
-msgstr "تاريخ الإنتهاء"
-
-#. module: project_long_term
-#: field:project.phase,name:0
-msgid "Name"
-msgstr "الاسم"
-
-#. module: project_long_term
-#: view:project.phase:0
-msgid "Tasks Details"
-msgstr "تفاصيل المهام"
-
-#. module: project_long_term
-#: field:project.phase,duration:0
-msgid "Duration"
-msgstr "المُدة"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -461,12 +363,24 @@ msgid "Project Phase"
 msgstr "مرحلة المشروع"
 
 #. module: project_long_term
-#: model:ir.actions.act_window,help:project_long_term.action_project_compute_phases
-msgid ""
-"To schedule phases of all or a specified project. It then open a gantt "
-"view.\n"
-"               "
-msgstr ""
+#: model:ir.ui.menu,name:project_long_term.menu_phase_schedule
+msgid "Scheduling"
+msgstr "الجدولة"
+
+#. module: project_long_term
+#: constraint:project.phase:0
+msgid "Phase start-date must be lower than phase end-date."
+msgstr "يجب ان يكون تاريخ بدء المرحلة اقل من تاريخ نهاية المرحلة."
+
+#. module: project_long_term
+#: selection:project.phase,state:0
+msgid "Cancelled"
+msgstr "ملغي"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Total Hours"
+msgstr "عدد الساعات الكلية"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_compute_phases
@@ -474,19 +388,78 @@ msgid "Project Compute Phases"
 msgstr "مراحل حساب المشروع"
 
 #. module: project_long_term
-#: constraint:project.phase:0
-msgid "Loops in phases not allowed"
-msgstr "غير مسموح بالحلقات في المراحل"
+#: field:project.phase,date_start:0
+#: field:project.user.allocation,date_start:0
+msgid "Start Date"
+msgstr "تاريخ البدء"
 
 #. module: project_long_term
-#: field:project.phase,sequence:0
-msgid "Sequence"
-msgstr "مسلسل"
+#: view:project.phase:0
+msgid "Constraints"
+msgstr "القيود"
 
 #. module: project_long_term
-#: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar_leaves
-msgid "Resource Leaves"
-msgstr "متروكات الموارد"
+#: help:project.phase,sequence:0
+msgid "Gives the sequence order when displaying a list of phases."
+msgstr "ويعطي امر التسلسل عند عرض قائمة للمراحل."
+
+#. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.project_phase_task_list
+msgid "Tasks"
+msgstr ""
+
+#. module: project_long_term
+#: help:project.user.allocation,date_end:0
+msgid "Ending Date"
+msgstr "تاريخ الانتهاء"
+
+#. module: project_long_term
+#: code:addons/project_long_term/wizard/project_compute_phases.py:48
+#, python-format
+msgid "Error!"
+msgstr "خطأ!"
+
+#. module: project_long_term
+#: help:project.phase,date_start:0
+msgid ""
+"It's computed by the scheduler according the project date or the end date of "
+"the previous phase."
+msgstr "تم حسابها بواسطة الجدول الزمني طبقًا تاريخ المشروع للمرحلة السابقة."
+
+#. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.act_project_phase
+#: model:ir.actions.act_window,name:project_long_term.act_project_phase_list
+#: model:ir.ui.menu,name:project_long_term.menu_project_phase
+#: model:ir.ui.menu,name:project_long_term.menu_project_phase_list
+#: view:project.phase:0
+#: field:project.project,phase_ids:0
+msgid "Project Phases"
+msgstr "مراحل المشروع"
+
+#. module: project_long_term
+#: help:project.phase,constraint_date_start:0
+msgid "force the phase to start after this date"
+msgstr "فرض المرحلة للبدء بعد هذا التاريخ"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Month"
+msgstr "شهر"
+
+#. module: project_long_term
+#: model:ir.model,name:project_long_term.model_account_analytic_account
+msgid "Analytic Account"
+msgstr ""
+
+#. module: project_long_term
+#: field:project.phase,constraint_date_end:0
+msgid "Deadline"
+msgstr "الموعد النهائي"
+
+#. module: project_long_term
+#: view:project.user.allocation:0
+msgid "Project User Allocation"
+msgstr "تخصيص مشروع للمستخدم"
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.action_project_compute_tasks
@@ -496,23 +469,60 @@ msgid "Schedule Tasks"
 msgstr "مهام الجدول الزمني"
 
 #. module: project_long_term
-#: help:project.phase,duration:0
-msgid "By default in days"
-msgstr "بالافتراض في الايام"
+#: view:project.phase:0
+#: selection:project.phase,state:0
+msgid "Done"
+msgstr "تم"
 
 #. module: project_long_term
-#: view:project.phase:0
+#: selection:project.compute.phases,target_project:0
+msgid "Compute All My Projects"
+msgstr "حساب جميع المشاريع"
+
+#. module: project_long_term
 #: field:project.phase,user_force_ids:0
 msgid "Force Assigned Users"
 msgstr ""
 
 #. module: project_long_term
-#: model:ir.ui.menu,name:project_long_term.menu_phase_schedule
-msgid "Scheduling"
-msgstr "الجدولة"
+#: view:project.phase:0
+#: field:project.phase,duration:0
+msgid "Duration"
+msgstr "المُدة"
+
+#. module: project_long_term
+#: view:project.user.allocation:0
+msgid "Users"
+msgstr "المستخدمون"
+
+#. module: project_long_term
+#: field:project.phase,name:0
+msgid "Name"
+msgstr "الاسم"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
+#: model:ir.ui.menu,name:project_long_term.menu_resouce_allocation
+#: view:project.phase:0
+#: view:project.user.allocation:0
+msgid "Planning of Users"
+msgstr "التخطيط للمستخدمين"
+
+#~ msgid "Schedule"
+#~ msgstr "مجدول"
+
+#~ msgid "_Cancel"
+#~ msgstr "ال_غاء"
+
+#, python-format
+#~ msgid " (copy)"
+#~ msgstr " (نسخ)"
 
 #~ msgid "Availability"
 #~ msgstr "متاح"
+
+#~ msgid "State"
+#~ msgstr "الحالة"
 
 #~ msgid "_Ok"
 #~ msgstr "_موافق"
@@ -538,6 +548,18 @@ msgstr "الجدولة"
 #~ msgid "Message"
 #~ msgstr "رسالة"
 
+#~ msgid "Error ! You cannot create recursive tasks."
+#~ msgstr "خطأ ! لا يمكنك انشاء مهام رجعية."
+
+#~ msgid "Error! project start-date must be lower then project end-date."
+#~ msgstr "خطأ! يجب ان يكون تاريخ بدء المشروع اقل من تاريخ انتهائه."
+
+#~ msgid "Error! You cannot assign escalation to the same project!"
+#~ msgstr "خطأ! لا يمكنك تعيين التصعيد لنفس المشروع!"
+
+#~ msgid "Error ! Task end-date must be greater then task start-date"
+#~ msgstr "خطأ! يجب ان يكون تاريخ انتهاء المهمة اكبر من تاريخ البداية"
+
 #~ msgid "Resource Allocations"
 #~ msgstr "تخصيصات الموارد"
 
@@ -556,6 +578,9 @@ msgstr "الجدولة"
 #~ msgid "Planning"
 #~ msgstr "التخطيط"
 
+#~ msgid "UoM (Unit of Measure) is the unit of measurement for Duration"
+#~ msgstr "تكون وحدة القياس هي وحدة لقياس الفترة"
+
 #~ msgid "Compute Task Scheduling"
 #~ msgstr "حساب الجدول الزمني للمهمة"
 
@@ -564,6 +589,9 @@ msgstr "الجدولة"
 
 #~ msgid "Compute Phase Scheduling"
 #~ msgstr "حساب الجدول الزمني المرحلة"
+
+#~ msgid "Duration UoM"
+#~ msgstr "وحدة قياس الفترة"
 
 #~ msgid ""
 #~ "To schedule phases of all or a specified project. It then open a gantt "
@@ -624,6 +652,18 @@ msgstr "الجدولة"
 #~ "موعد لجدولة الآلي. استخدام التخطيط على المدى الطويل من أجل planify مواردك "
 #~ "البشرية المتاحة، وتحويل المراحل الخاص بك إلى سلسلة من المهام عند بدء العمل "
 #~ "في المشروع."
+
+#~ msgid ""
+#~ "If the phase is created the state 'Draft'.\n"
+#~ " If the phase is started, the state becomes 'In Progress'.\n"
+#~ " If review is needed the phase is in 'Pending' state.                        "
+#~ "          \n"
+#~ " If the phase is over, the states is set to 'Done'."
+#~ msgstr ""
+#~ "اذا تم انشاء المرحلة الحالة تكون ‘مشروع‘.\n"
+#~ "اذا بدأت المرحلة, تصبح الحالة ‘في التقدم‘.\n"
+#~ "اذا تم الاحتياج الى المراجعة المرحلة تكون في حالة ‘معلقة‘.\n"
+#~ "اذا زادت المرحلة عن الحد, ستعيين الحالات الى ‘تم‘."
 
 #~ msgid "Resource Detail"
 #~ msgstr "تفاصيل المصدر"

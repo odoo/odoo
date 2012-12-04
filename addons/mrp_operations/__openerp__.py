@@ -58,6 +58,7 @@ So, that we can compare the theoretic delay and real delay.
     'depends': ['mrp'],
     'data': [
         'security/ir.model.access.csv',
+        'mrp_operation_data.xml',
         'mrp_operations_workflow.xml',
         'mrp_operations_view.xml',
         'mrp_operations_report.xml',
@@ -65,7 +66,7 @@ So, that we can compare the theoretic delay and real delay.
         'process/mrp_operation_process.xml',
         'mrp_operations_workflow_instance.xml'
     ],
-    'demo': ['mrp_operation_data.xml', 
+    'demo': [ 
              'mrp_operations_demo.yml'
     ],
     'test': [ 
@@ -73,6 +74,5 @@ So, that we can compare the theoretic delay and real delay.
     ],
     'installable': True,
     'auto_install': False,
-    'certificate': '0056233813133',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

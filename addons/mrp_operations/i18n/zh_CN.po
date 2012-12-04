@@ -6,19 +6,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-02-14 09:39+0000\n"
-"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
+"PO-Revision-Date: 2012-11-29 09:53+0000\n"
+"Last-Translator: ccdos <ccdos@163.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 06:25+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:40+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
-#: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_action_planning
 #: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_order
 #: view:mrp.production.workcenter.line:0
 #: view:mrp.workorder:0
@@ -26,7 +25,7 @@ msgid "Work Orders"
 msgstr "工票"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:489
+#: code:addons/mrp_operations/mrp_operations.py:527
 #, python-format
 msgid "Operation is already finished!"
 msgstr "工单已完成"
@@ -42,6 +41,13 @@ msgid "mrp_operations.operation.code"
 msgstr "mrp_operations.operation.code"
 
 #. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:246
+#, python-format
+msgid ""
+"Work order has been <b>cancelled</b> for production order <em>%s</em>."
+msgstr "生产订单 <em>%s</em>的工单被 <b>取消</b>。"
+
+#. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 #: view:mrp.workorder:0
 msgid "Group By..."
@@ -53,13 +59,17 @@ msgid "Information from the routing definition."
 msgstr "信息来源于工艺定义"
 
 #. module: mrp_operations
+#: field:mrp.production.workcenter.line,uom:0
+msgid "Unit of Measure"
+msgstr "计量单位"
+
+#. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "March"
 msgstr "3月"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_resource_planning
-#: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_resource_planning
 msgid "Work Centers"
 msgstr "工作中心"
 
@@ -69,11 +79,6 @@ msgstr "工作中心"
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Resume"
 msgstr "重新开始"
-
-#. module: mrp_operations
-#: report:mrp.code.barcode:0
-msgid "("
-msgstr "("
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -89,6 +94,12 @@ msgstr "生产工单"
 #: view:mrp.production:0
 msgid "Set to Draft"
 msgstr "设为草稿"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:238
+#, python-format
+msgid "Work order is <b>pending</b> for production order <em>%s</em>."
+msgstr "生产订单 <em>%s</em>的工单被 <b>挂起</b>。"
 
 #. module: mrp_operations
 #: field:mrp.production,allow_reorder:0
@@ -132,33 +143,16 @@ msgid "Creation of the work order"
 msgstr "新建工票"
 
 #. module: mrp_operations
-#: help:mrp.production.workcenter.line,state:0
-msgid ""
-"* When a work order is created it is set in 'Draft' state.\n"
-"* When user sets work order in start mode that time it will be set in 'In "
-"Progress' state.\n"
-"* When work order is in running mode, during that time if user wants to stop "
-"or to make changes in order then can set in 'Pending' state.\n"
-"* When the user cancels the work order it will be set in 'Canceled' state.\n"
-"* When order is completely processed that time it is set in 'Finished' state."
-msgstr ""
-"新建的工单是“草稿”状态。\n"
-"用户点了开始按钮后设置为“进行中”状态。\n"
-"正在进行的工单如果用户需要暂停或修改订单则设置为“等待”状态。\n"
-"如果用户取消了工单则状态为“已取消”。\n"
-"如工单已完成则设置为“完成“状态。"
-
-#. module: mrp_operations
 #: model:process.transition,note:mrp_operations.process_transition_productionstart0
 msgid "The work orders are created on the basis of the production order."
 msgstr "工票基于生产订单创建"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:134
-#: code:addons/mrp_operations/mrp_operations.py:470
-#: code:addons/mrp_operations/mrp_operations.py:474
-#: code:addons/mrp_operations/mrp_operations.py:486
-#: code:addons/mrp_operations/mrp_operations.py:489
+#: code:addons/mrp_operations/mrp_operations.py:122
+#: code:addons/mrp_operations/mrp_operations.py:508
+#: code:addons/mrp_operations/mrp_operations.py:512
+#: code:addons/mrp_operations/mrp_operations.py:524
+#: code:addons/mrp_operations/mrp_operations.py:527
 #, python-format
 msgid "Error!"
 msgstr "错误！"
@@ -171,13 +165,7 @@ msgid "Cancelled"
 msgstr "已取消"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:486
-#, python-format
-msgid "There is no Operation to be cancelled!"
-msgstr "没有可取消的工单"
-
-#. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:482
+#: code:addons/mrp_operations/mrp_operations.py:520
 #, python-format
 msgid "Operation is Already Cancelled!"
 msgstr "工单已经取消"
@@ -194,7 +182,13 @@ msgid "Stock Move"
 msgstr "库存调拨"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:479
+#: code:addons/mrp_operations/mrp_operations.py:524
+#, python-format
+msgid "No operation to cancel."
+msgstr "没有操作被取消"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:517
 #, python-format
 msgid ""
 "In order to Finish the operation, it must be in the Start or Resume state!"
@@ -206,10 +200,17 @@ msgid "# of Lines"
 msgstr "# 明细"
 
 #. module: mrp_operations
-#: view:mrp.production:0
 #: view:mrp.production.workcenter.line:0
-msgid "Finish Order"
-msgstr "完成工单"
+#: selection:mrp.production.workcenter.line,production_state:0
+#: selection:mrp.production.workcenter.line,state:0
+#: selection:mrp.workorder,state:0
+msgid "Draft"
+msgstr "草稿"
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:0
+msgid "Production Workcenter"
+msgstr "生成工作中心"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_finished:0
@@ -222,22 +223,6 @@ msgstr "结束日期"
 #: selection:mrp.production.workcenter.line,production_state:0
 msgid "In Production"
 msgstr "生产中"
-
-#. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-#: field:mrp.production.workcenter.line,state:0
-#: view:mrp.workorder:0
-#: field:mrp.workorder,state:0
-msgid "State"
-msgstr "状态"
-
-#. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-#: selection:mrp.production.workcenter.line,production_state:0
-#: selection:mrp.production.workcenter.line,state:0
-#: selection:mrp.workorder,state:0
-msgid "Draft"
-msgstr "草稿"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.action_report_mrp_workorder
@@ -253,19 +238,14 @@ msgid ""
 msgstr "每个加工中心有一个工票。有加工的次数或工时数"
 
 #. module: mrp_operations
-#: view:mrp.workorder:0
-msgid "Month -1"
-msgstr "上月"
+#: model:ir.ui.menu,name:mrp_operations.menu_report_mrp_workorders_tree
+msgid "Work Order Analysis"
+msgstr "工票分析"
 
 #. module: mrp_operations
-#: field:mrp.production.workcenter.line,uom:0
-msgid "UOM"
-msgstr "计量单位"
-
-#. module: mrp_operations
-#: constraint:stock.move:0
-msgid "You can not move products from or to a location of the type view."
-msgstr "您不能将产品移动到视图类型的库位。"
+#: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_action_planning
+msgid "Work Orders By Resource"
+msgstr "工单通过资源"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -279,7 +259,7 @@ msgid "Product Qty"
 msgstr "产品数量"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:134
+#: code:addons/mrp_operations/mrp_operations.py:122
 #, python-format
 msgid "Manufacturing order cannot start in state \"%s\"!"
 msgstr "处于”%s“的工单不能开始。"
@@ -295,21 +275,13 @@ msgid "Operation Name"
 msgstr "工单名称"
 
 #. module: mrp_operations
+#: view:mrp.production.workcenter.line:0
+#: field:mrp.production.workcenter.line,state:0
+#: view:mrp.workorder:0
+#: field:mrp.workorder,state:0
 #: field:mrp_operations.operation.code,start_stop:0
 msgid "Status"
 msgstr "状态"
-
-#. module: mrp_operations
-#: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_planning
-msgid ""
-"To manufacture or assemble products, and use raw materials and finished "
-"products you must also handle manufacturing operations. Manufacturing "
-"operations are often called Work Orders. The various operations will have "
-"different impacts on the costs of manufacturing and planning depending on "
-"the available workload."
-msgstr ""
-"对于制造或装配的产品，不止要管理材料的投入和产品的产出，还要管理生产的过程。生产过程一般用工单来管理。不同的过程因工作中心负载不同对成本和工期的影响也不同"
-"。"
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -327,9 +299,35 @@ msgid "Future Work Orders"
 msgstr "未开工工票"
 
 #. module: mrp_operations
-#: view:mrp.workorder:0
-msgid "Work orders during last month"
-msgstr "上个月的工单"
+#: view:mrp.production:0
+msgid "Finish Order"
+msgstr "完成工单"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to start a new work order. \n"
+"          </p><p>\n"
+"            Work Orders is the list of operations to be performed for each\n"
+"            manufacturing order. Once you start the first work order of a\n"
+"            manufacturing order, the manufacturing order is automatically\n"
+"            marked as started. Once you finish the latest operation of a\n"
+"            manufacturing order, the MO is automatically done and the "
+"related\n"
+"            products are produced.\n"
+"          </p>\n"
+"        "
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            单击创建一个新的工单。\n"
+"          </p><p>\n"
+"           工单是每个生产订单要被执行的操作的列表。\n"
+"            一旦你的启动生产订单的第一个工单，生产订单将被自动标记为启动。\n"
+"            一旦你完成了生成订单最后的操作，生成订单被自动完成。\n"
+"            并且相关的产品被制造完成。\n"
+"          </p>\n"
+"        "
 
 #. module: mrp_operations
 #: help:mrp.production.workcenter.line,delay:0
@@ -343,7 +341,6 @@ msgstr "工单已作废"
 
 #. module: mrp_operations
 #: view:mrp.production:0
-#: view:mrp.production.workcenter.line:0
 msgid "Pause Work Order"
 msgstr "暂停工单"
 
@@ -356,6 +353,12 @@ msgstr "9月"
 #: selection:mrp.workorder,month:0
 msgid "December"
 msgstr "12月"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:230
+#, python-format
+msgid "Work order has been <b>done</b> for production order <em>%s</em>."
+msgstr "生产订单 <em>%s</em>的工单被 <b>完成</b>。"
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -379,13 +382,7 @@ msgid "Work Order Report"
 msgstr "工票报表"
 
 #. module: mrp_operations
-#: constraint:mrp.production:0
-msgid "Order quantity cannot be negative or zero!"
-msgstr "订单数量不能是负数或者0！"
-
-#. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_start:0
-#: field:mrp.production.workcenter.line,date_start_date:0
 #: field:mrp_operations.operation,date_start:0
 msgid "Start Date"
 msgstr "开始日期"
@@ -396,9 +393,9 @@ msgid "Waiting Goods"
 msgstr "等待原料"
 
 #. module: mrp_operations
-#: view:mrp.workorder:0
-msgid "Work orders made during current year"
-msgstr "本年的工单"
+#: field:mrp.production.workcenter.line,production_state:0
+msgid "Production Status"
+msgstr "生产状态"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,state:0
@@ -414,14 +411,14 @@ msgid "In Progress"
 msgstr "进行中"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:470
+#: code:addons/mrp_operations/mrp_operations.py:508
 #, python-format
 msgid ""
 "In order to Pause the operation, it must be in the Start or Resume state!"
 msgstr "要暂停工单，必须在开始或重启状态。"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:474
+#: code:addons/mrp_operations/mrp_operations.py:512
 #, python-format
 msgid "In order to Resume the operation, it must be in the Pause state!"
 msgstr "要重启这个工单，必须在暂停状态。"
@@ -464,12 +461,12 @@ msgid "Production Operation Code"
 msgstr "工单编号"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:466
+#: code:addons/mrp_operations/mrp_operations.py:504
 #, python-format
 msgid ""
-"Operation has already started !Youcan either Pause/Finish/Cancel the "
-"operation"
-msgstr "工单已经开始！你可以暂停、结束或取消这张工单。"
+"Operation has already started! You can either Pause/Finish/Cancel the "
+"operation."
+msgstr "操作已经开始！你可以 暂停/完成/取消 这个操作。"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -545,7 +542,6 @@ msgstr "1月"
 
 #. module: mrp_operations
 #: view:mrp.production:0
-#: view:mrp.production.workcenter.line:0
 msgid "Resume Work Order"
 msgstr "重启工单"
 
@@ -555,7 +551,7 @@ msgid "Finish the operation."
 msgstr "结束工单"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:459
+#: code:addons/mrp_operations/mrp_operations.py:497
 #, python-format
 msgid "Operation is not started yet !"
 msgstr "工单还未开始"
@@ -566,15 +562,10 @@ msgid "Information from the production order."
 msgstr "源自生产单的信息"
 
 #. module: mrp_operations
-#: sql_constraint:mrp.production:0
-msgid "Reference must be unique per Company!"
-msgstr "编号必须在公司内唯一！"
-
-#. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:459
-#: code:addons/mrp_operations/mrp_operations.py:466
-#: code:addons/mrp_operations/mrp_operations.py:479
-#: code:addons/mrp_operations/mrp_operations.py:482
+#: code:addons/mrp_operations/mrp_operations.py:497
+#: code:addons/mrp_operations/mrp_operations.py:504
+#: code:addons/mrp_operations/mrp_operations.py:517
+#: code:addons/mrp_operations/mrp_operations.py:520
 #, python-format
 msgid "Sorry!"
 msgstr "抱歉!"
@@ -629,15 +620,28 @@ msgid "Cancel"
 msgstr "取消(&C)"
 
 #. module: mrp_operations
-#: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_form
+#: help:mrp.production.workcenter.line,state:0
 msgid ""
-"Work Orders is the list of operations to be performed for each manufacturing "
-"order. Once you start the first work order of a manufacturing order, the "
-"manufacturing order is automatically marked as started. Once you finish the "
-"latest operation of a manufacturing order, the MO is automatically done and "
-"the related products are produced."
+"* When a work order is created it is set in 'Draft' status.\n"
+"* When user sets work order in start mode that time it will be set in 'In "
+"Progress' status.\n"
+"* When work order is in running mode, during that time if user wants to stop "
+"or to make changes in order then can set in 'Pending' status.\n"
+"* When the user cancels the work order it will be set in 'Canceled' status.\n"
+"* When order is completely processed that time it is set in 'Finished' "
+"status."
 msgstr ""
-"工票列表体现了生产单的加工过程。一旦生产单中的第一个工票开始了，生产单就自动标识为已开始。一旦生产单中的最后一个工票结束了，生产单就会自动标识为已完成。"
+"* 工单被创建时，“草稿“状态。\n"
+"* 从工单被用户进入开始模式后，设为”在进行中“模式。\n"
+"* 当工单是运行模式，在此期间，如果用户要停止或作出改变，可设置为”挂起“状态。\n"
+"* 当用户取消工单，设置为”取消状态“。\n"
+"* 从工单被完成的时候开始，设置为”完成“状态。"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:214
+#, python-format
+msgid "Work order has been <b>created</b> for production order <em>%s</em>."
+msgstr "生产订单 <em>%s</em>的工单被 <b>创建</b>。"
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_startoperation0
@@ -650,14 +654,34 @@ msgid "Information"
 msgstr "信息"
 
 #. module: mrp_operations
+#: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_planning
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to start a new work order.\n"
+"          </p><p>\n"
+"            To manufacture or assemble products, and use raw materials and\n"
+"            finished products you must also handle manufacturing "
+"operations.\n"
+"            Manufacturing operations are often called Work Orders. The "
+"various\n"
+"            operations will have different impacts on the costs of\n"
+"            manufacturing and planning depending on the available workload.\n"
+"          </p>\n"
+"        "
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            单击启动一个新的工单。\n"
+"          </p><p>\n"
+"            要生产或者组装产品，并且使用原料，也必须处理生产操作完成产品。\n"
+"            生产操作经常被叫做 工单。\n"
+"            各种操作对生产成本有不同的影响，计划取决于可用的工作负荷上面。\n"
+"          </p>\n"
+"        "
+
+#. module: mrp_operations
 #: model:ir.actions.report.xml,name:mrp_operations.report_wc_barcode
 msgid "Work Centers Barcode"
 msgstr "工作中心条码"
-
-#. module: mrp_operations
-#: constraint:stock.move:0
-msgid "You must assign a production lot for this product"
-msgstr "必须为此产品赋予一个生产批次"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -719,17 +743,12 @@ msgstr "总小时数"
 msgid ""
 "Check this to be able to move independently all production orders, without "
 "moving dependent ones."
-msgstr "勾上这个勾就不会按工作中心工作时间重排生产单日期。"
+msgstr "选中这里就不会按工作中心工作时间重排生产单日期。"
 
 #. module: mrp_operations
-#: report:mrp.code.barcode:0
-msgid ")"
-msgstr ")"
-
-#. module: mrp_operations
-#: model:ir.ui.menu,name:mrp_operations.menu_report_mrp_workorders_tree
-msgid "Work Order Analysis"
-msgstr "工票分析"
+#: selection:mrp.workorder,month:0
+msgid "May"
+msgstr "5月"
 
 #. module: mrp_operations
 #: view:mrp.production:0
@@ -760,11 +779,6 @@ msgid "February"
 msgstr "2月"
 
 #. module: mrp_operations
-#: view:mrp.workorder:0
-msgid "Work orders made during current month"
-msgstr "本月的工单"
-
-#. module: mrp_operations
 #: model:process.transition,name:mrp_operations.process_transition_startcanceloperation0
 msgid "Operation cancelled"
 msgstr "工单已作废"
@@ -790,8 +804,13 @@ msgid "#Line Orders"
 msgstr "明细"
 
 #. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:222
+#, python-format
+msgid "Work order has been <b>started</b> for production order <em>%s</em>."
+msgstr "生产订单 <em>%s</em>的工单已经 <b>开始</b>。"
+
+#. module: mrp_operations
 #: view:mrp.production:0
-#: view:mrp.production.workcenter.line:0
 msgid "Start Working"
 msgstr "开始工作"
 
@@ -803,19 +822,9 @@ msgid ""
 msgstr "加工结束后，操作者在系统中完成工票以报工"
 
 #. module: mrp_operations
-#: selection:mrp.workorder,month:0
-msgid "May"
-msgstr "5月"
-
-#. module: mrp_operations
 #: model:process.transition,name:mrp_operations.process_transition_workstartoperation0
 msgid "Details of the work order"
 msgstr "工票明细"
-
-#. module: mrp_operations
-#: field:mrp.production.workcenter.line,production_state:0
-msgid "Production State"
-msgstr "生产阶段"
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -827,11 +836,6 @@ msgstr "年"
 #: view:mrp.production.workcenter.line:0
 msgid "Duration"
 msgstr "时长"
-
-#. module: mrp_operations
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product"
-msgstr "你尝试分配一个来自其它产品的批次"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -860,6 +864,9 @@ msgstr "你尝试分配一个来自其它产品的批次"
 
 #~ msgid "Start - Stop Codes"
 #~ msgstr "开始-结束代码"
+
+#~ msgid "UOM"
+#~ msgstr "计量单位"
 
 #~ msgid "From production order, create the workorder"
 #~ msgstr "从生产单创建工单"
@@ -922,6 +929,12 @@ msgstr "你尝试分配一个来自其它产品的批次"
 #~ msgid "Production Order Cannot start in [%s] state"
 #~ msgstr "生产订单无法从 [%s] 状态开始"
 
+#~ msgid "("
+#~ msgstr "("
+
+#~ msgid "State"
+#~ msgstr "状态"
+
 #~ msgid ""
 #~ "* When a work order is created it is set in 'Draft' state.\n"
 #~ "* When user sets work order in start mode that time it will be set in 'In "
@@ -943,8 +956,32 @@ msgstr "你尝试分配一个来自其它产品的批次"
 #~ msgid "Work Center Production start end workflow"
 #~ msgstr "工作中心生产起止工作流"
 
+#~ msgid "You must assign a production lot for this product"
+#~ msgstr "必须为此产品赋予一个生产批次"
+
+#~ msgid ""
+#~ "Work Orders is the list of operations to be performed for each manufacturing "
+#~ "order. Once you start the first work order of a manufacturing order, the "
+#~ "manufacturing order is automatically marked as started. Once you finish the "
+#~ "latest operation of a manufacturing order, the MO is automatically done and "
+#~ "the related products are produced."
+#~ msgstr ""
+#~ "工票列表体现了生产单的加工过程。一旦生产单中的第一个工票开始了，生产单就自动标识为已开始。一旦生产单中的最后一个工票结束了，生产单就会自动标识为已完成。"
+
+#~ msgid ")"
+#~ msgstr ")"
+
 #~ msgid "Order quantity cannot be negative or zero !"
 #~ msgstr "订单数量不能为0或者负数!"
+
+#~ msgid "You try to assign a lot which is not from the same product"
+#~ msgstr "你尝试分配一个来自其它产品的批次"
+
+#~ msgid "Production State"
+#~ msgstr "生产阶段"
+
+#~ msgid "Month -1"
+#~ msgstr "上月"
 
 #, python-format
 #~ msgid "You cannot Pause the Operation other then Start/Resume state !"
@@ -957,6 +994,16 @@ msgstr "你尝试分配一个来自其它产品的批次"
 #, python-format
 #~ msgid "You cannot finish the operation without Starting/Resuming it !"
 #~ msgstr "没有开始或继续的工单不能直接完成"
+
+#~ msgid ""
+#~ "To manufacture or assemble products, and use raw materials and finished "
+#~ "products you must also handle manufacturing operations. Manufacturing "
+#~ "operations are often called Work Orders. The various operations will have "
+#~ "different impacts on the costs of manufacturing and planning depending on "
+#~ "the available workload."
+#~ msgstr ""
+#~ "对于制造或装配的产品，不止要管理材料的投入和产品的产出，还要管理生产的过程。生产过程一般用工单来管理。不同的过程因工作中心负载不同对成本和工期的影响也不同"
+#~ "。"
 
 #, python-format
 #~ msgid ""
@@ -1015,3 +1062,46 @@ msgstr "你尝试分配一个来自其它产品的批次"
 #, python-format
 #~ msgid "Operation is Already Cancelled  !"
 #~ msgstr "工单已作废"
+
+#, python-format
+#~ msgid "There is no Operation to be cancelled!"
+#~ msgstr "没有可取消的工单"
+
+#~ msgid ""
+#~ "* When a work order is created it is set in 'Draft' state.\n"
+#~ "* When user sets work order in start mode that time it will be set in 'In "
+#~ "Progress' state.\n"
+#~ "* When work order is in running mode, during that time if user wants to stop "
+#~ "or to make changes in order then can set in 'Pending' state.\n"
+#~ "* When the user cancels the work order it will be set in 'Canceled' state.\n"
+#~ "* When order is completely processed that time it is set in 'Finished' state."
+#~ msgstr ""
+#~ "新建的工单是“草稿”状态。\n"
+#~ "用户点了开始按钮后设置为“进行中”状态。\n"
+#~ "正在进行的工单如果用户需要暂停或修改订单则设置为“等待”状态。\n"
+#~ "如果用户取消了工单则状态为“已取消”。\n"
+#~ "如工单已完成则设置为“完成“状态。"
+
+#~ msgid "You can not move products from or to a location of the type view."
+#~ msgstr "您不能将产品移动到视图类型的库位。"
+
+#, python-format
+#~ msgid ""
+#~ "Operation has already started !Youcan either Pause/Finish/Cancel the "
+#~ "operation"
+#~ msgstr "工单已经开始！你可以暂停、结束或取消这张工单。"
+
+#~ msgid "Work orders during last month"
+#~ msgstr "上个月的工单"
+
+#~ msgid "Work orders made during current year"
+#~ msgstr "本年的工单"
+
+#~ msgid "Order quantity cannot be negative or zero!"
+#~ msgstr "订单数量不能是负数或者0！"
+
+#~ msgid "Reference must be unique per Company!"
+#~ msgstr "编号必须在公司内唯一！"
+
+#~ msgid "Work orders made during current month"
+#~ msgstr "本月的工单"

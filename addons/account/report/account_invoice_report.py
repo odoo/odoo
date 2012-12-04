@@ -20,6 +20,7 @@
 ##############################################################################
 
 import tools
+import decimal_precision as dp
 from osv import fields,osv
 
 class account_invoice_report(osv.osv):
@@ -27,6 +28,31 @@ class account_invoice_report(osv.osv):
     _description = "Invoices Statistics"
     _auto = False
     _rec_name = 'date'
+
+    def _compute_amounts_in_user_currency(self, cr, uid, ids, field_names, args, context=None):
+        """Compute the amounts in the currency of the user
+        """
+        if context is None:
+            context={}
+        currency_obj = self.pool.get('res.currency')
+        currency_rate_obj = self.pool.get('res.currency.rate')
+        user_currency_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id
+        currency_rate_id = currency_rate_obj.search(cr, uid, [('rate', '=', 1)], limit=1, context=context)[0]
+        base_currency_id = currency_rate_obj.browse(cr, uid, currency_rate_id, context=context).currency_id.id
+        res = {}
+        ctx = context.copy()
+        for item in self.browse(cr, uid, ids, context=context):
+            ctx['date'] = item.date
+            price_total = currency_obj.compute(cr, uid, base_currency_id, user_currency_id, item.price_total, context=ctx)
+            price_average = currency_obj.compute(cr, uid, base_currency_id, user_currency_id, item.price_average, context=ctx)
+            residual = currency_obj.compute(cr, uid, base_currency_id, user_currency_id, item.residual, context=ctx)
+            res[item.id] = {
+                'user_currency_price_total': price_total,
+                'user_currency_price_average': price_average,
+                'user_currency_residual': residual,
+            }
+        return res
+
     _columns = {
         'date': fields.date('Date', readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
@@ -47,7 +73,9 @@ class account_invoice_report(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'user_id': fields.many2one('res.users', 'Salesperson', readonly=True),
         'price_total': fields.float('Total Without Tax', readonly=True),
+        'user_currency_price_total': fields.function(_compute_amounts_in_user_currency, string="Total Without Tax", type='float', digits_compute=dp.get_precision('Account'), multi="_compute_amounts"),
         'price_average': fields.float('Average Price', readonly=True, group_operator="avg"),
+        'user_currency_price_average': fields.function(_compute_amounts_in_user_currency, string="Average Price", type='float', digits_compute=dp.get_precision('Account'), multi="_compute_amounts"),
         'currency_rate': fields.float('Currency Rate', readonly=True),
         'nbr':fields.integer('# of Lines', readonly=True),
         'type': fields.selection([
@@ -63,134 +91,131 @@ class account_invoice_report(osv.osv):
             ('open','Open'),
             ('paid','Done'),
             ('cancel','Cancelled')
-            ], 'Invoice State', readonly=True),
+            ], 'Invoice Status', readonly=True),
         'date_due': fields.date('Due Date', readonly=True),
         'account_id': fields.many2one('account.account', 'Account',readonly=True),
         'account_line_id': fields.many2one('account.account', 'Account Line',readonly=True),
         'partner_bank_id': fields.many2one('res.partner.bank', 'Bank Account',readonly=True),
         'residual': fields.float('Total Residual', readonly=True),
-        'delay_to_pay': fields.float('Avg. Delay To Pay', readonly=True, group_operator="avg"),
-        'due_delay': fields.float('Avg. Due Delay', readonly=True, group_operator="avg"),
+        'user_currency_residual': fields.function(_compute_amounts_in_user_currency, string="Total Residual", type='float', digits_compute=dp.get_precision('Account'), multi="_compute_amounts"),
     }
     _order = 'date desc'
-    def init(self, cr):
-        tools.drop_view_if_exists(cr, 'account_invoice_report')
-        cr.execute("""
-            create or replace view account_invoice_report as (
-                 select min(ail.id) as id,
-                    ai.date_invoice as date,
-                    to_char(ai.date_invoice, 'YYYY') as year,
-                    to_char(ai.date_invoice, 'MM') as month,
-                    to_char(ai.date_invoice, 'YYYY-MM-DD') as day,
-                    ail.product_id,
-                    ai.partner_id as partner_id,
-                    ai.payment_term as payment_term,
-                    ai.period_id as period_id,
-                    (case when u.uom_type not in ('reference') then
-                        (select name from product_uom where uom_type='reference' and active and category_id=u.category_id LIMIT 1)
-                    else
-                        u.name
-                    end) as uom_name,
-                    ai.currency_id as currency_id,
-                    ai.journal_id as journal_id,
-                    ai.fiscal_position as fiscal_position,
-                    ai.user_id as user_id,
-                    ai.company_id as company_id,
-                    count(ail.*) as nbr,
-                    ai.type as type,
-                    ai.state,
-                    pt.categ_id,
-                    ai.date_due as date_due,
-                    ai.account_id as account_id,
-                    ail.account_id as account_line_id,
-                    ai.partner_bank_id as partner_bank_id,
-                    sum(case when ai.type in ('out_refund','in_invoice') then
-                         -ail.quantity / u.factor
-                        else
-                         ail.quantity / u.factor
-                        end) as product_qty,
 
-                    sum(case when ai.type in ('out_refund','in_invoice') then
-                         -ail.price_subtotal
-                        else
-                          ail.price_subtotal
-                        end) / cr.rate as price_total,
+    def _select(self):
+        select_str = """
+            SELECT sub.id, sub.date, sub.year, sub.month, sub.day, sub.product_id, sub.partner_id,
+                sub.payment_term, sub.period_id, sub.uom_name, sub.currency_id, sub.journal_id,
+                sub.fiscal_position, sub.user_id, sub.company_id, sub.nbr, sub.type, sub.state,
+                sub.categ_id, sub.date_due, sub.account_id, sub.account_line_id, sub.partner_bank_id,
+                sub.product_qty, sub.price_total / cr.rate as price_total, sub.price_average /cr.rate as price_average,
+                cr.rate as currency_rate, sub.residual / cr.rate as residual
+        """
+        return select_str
 
-                    (case when ai.type in ('out_refund','in_invoice') then
-                      sum(-ail.price_subtotal)
-                    else
-                      sum(ail.price_subtotal)
-                    end) / (CASE WHEN sum(ail.quantity/u.factor) <> 0
-                       THEN
-                         (case when ai.type in ('out_refund','in_invoice')
-                          then sum(-ail.quantity/u.factor)
-                          else sum(ail.quantity/u.factor) end)
-                       ELSE 1
-                       END)
-                     / cr.rate as price_average,
-
-                    cr.rate as currency_rate,
-                    sum((select extract(epoch from avg(date_trunc('day',aml.date_created)-date_trunc('day',l.create_date)))/(24*60*60)::decimal(16,2)
-                        from account_move_line as aml
-                        left join account_invoice as a ON (a.move_id=aml.move_id)
-                        left join account_invoice_line as l ON (a.id=l.invoice_id)
-                        where a.id=ai.id)) as delay_to_pay,
-                    sum((select extract(epoch from avg(date_trunc('day',a.date_due)-date_trunc('day',a.date_invoice)))/(24*60*60)::decimal(16,2)
-                        from account_move_line as aml
-                        left join account_invoice as a ON (a.move_id=aml.move_id)
-                        left join account_invoice_line as l ON (a.id=l.invoice_id)
-                        where a.id=ai.id)) as due_delay,
-                    (case when ai.type in ('out_refund','in_invoice') then
-                      -ai.residual
-                    else
-                      ai.residual
-                    end)/ (CASE WHEN
-                        (select count(l.id) from account_invoice_line as l
-                         left join account_invoice as a ON (a.id=l.invoice_id)
-                         where a.id=ai.id) <> 0
-                       THEN
-                        (select count(l.id) from account_invoice_line as l
-                         left join account_invoice as a ON (a.id=l.invoice_id)
-                         where a.id=ai.id)
-                       ELSE 1
-                       END) / cr.rate as residual
-                from account_invoice_line as ail
-                left join account_invoice as ai ON (ai.id=ail.invoice_id)
-                left join product_product pr on (pr.id=ail.product_id)
-                left join product_template pt on (pt.id=pr.product_tmpl_id)
-                left join product_uom u on (u.id=ail.uos_id),
-                res_currency_rate cr
-                where cr.id in (select id from res_currency_rate cr2  where (cr2.currency_id = ai.currency_id)
-                and ((ai.date_invoice is not null and cr.name <= ai.date_invoice) or (ai.date_invoice is null and cr.name <= NOW())) limit 1)
-                group by ail.product_id,
-                    ai.date_invoice,
-                    ai.id,
-                    cr.rate,
-                    to_char(ai.date_invoice, 'YYYY'),
-                    to_char(ai.date_invoice, 'MM'),
-                    to_char(ai.date_invoice, 'YYYY-MM-DD'),
-                    ai.partner_id,
-                    ai.payment_term,
-                    ai.period_id,
-                    u.name,
-                    ai.currency_id,
-                    ai.journal_id,
-                    ai.fiscal_position,
-                    ai.user_id,
-                    ai.company_id,
-                    ai.type,
-                    ai.state,
-                    pt.categ_id,
-                    ai.date_due,
-                    ai.account_id,
-                    ail.account_id,
+    def _sub_select(self):
+        select_str = """
+                SELECT min(ail.id) AS id,
+                    ai.date_invoice AS date,
+                    to_char(ai.date_invoice::timestamp with time zone, 'YYYY'::text) AS year,
+                    to_char(ai.date_invoice::timestamp with time zone, 'MM'::text) AS month,
+                    to_char(ai.date_invoice::timestamp with time zone, 'YYYY-MM-DD'::text) AS day,
+                    ail.product_id, ai.partner_id, ai.payment_term, ai.period_id,
+                    CASE
+                     WHEN u.uom_type::text <> 'reference'::text
+                        THEN ( SELECT product_uom.name
+                               FROM product_uom
+                               WHERE product_uom.uom_type::text = 'reference'::text
+                                AND product_uom.active
+                                AND product_uom.category_id = u.category_id LIMIT 1)
+                        ELSE u.name
+                    END AS uom_name,
+                    ai.currency_id, ai.journal_id, ai.fiscal_position, ai.user_id, ai.company_id,
+                    count(ail.*) AS nbr,
+                    ai.type, ai.state, pt.categ_id, ai.date_due, ai.account_id, ail.account_id AS account_line_id,
                     ai.partner_bank_id,
-                    ai.residual,
-                    ai.amount_total,
-                    u.uom_type,
-                    u.category_id
-            )
-        """)
+                    SUM(CASE
+                         WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
+                            THEN (- ail.quantity) / u.factor
+                            ELSE ail.quantity / u.factor
+                        END) AS product_qty,
+                    SUM(CASE
+                         WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
+                            THEN - ail.price_subtotal
+                            ELSE ail.price_subtotal
+                        END) AS price_total,
+                    CASE
+                     WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
+                        THEN SUM(- ail.price_subtotal)
+                        ELSE SUM(ail.price_subtotal)
+                    END / CASE
+                           WHEN SUM(ail.quantity / u.factor) <> 0::numeric
+                               THEN CASE
+                                     WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
+                                        THEN SUM((- ail.quantity) / u.factor)
+                                        ELSE SUM(ail.quantity / u.factor)
+                                    END
+                               ELSE 1::numeric
+                          END AS price_average,
+                    CASE
+                     WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
+                        THEN - ai.residual
+                        ELSE ai.residual
+                    END / CASE
+                           WHEN (( SELECT count(l.id) AS count
+                                   FROM account_invoice_line l
+                                   LEFT JOIN account_invoice a ON a.id = l.invoice_id
+                                   WHERE a.id = ai.id)) <> 0
+                               THEN ( SELECT count(l.id) AS count
+                                      FROM account_invoice_line l
+                                      LEFT JOIN account_invoice a ON a.id = l.invoice_id
+                                      WHERE a.id = ai.id)
+                               ELSE 1::bigint
+                          END::numeric AS residual
+        """
+        return select_str
+
+    def _from(self):
+        from_str = """
+                FROM account_invoice_line ail
+                JOIN account_invoice ai ON ai.id = ail.invoice_id
+                LEFT JOIN product_product pr ON pr.id = ail.product_id
+                left JOIN product_template pt ON pt.id = pr.product_tmpl_id
+                LEFT JOIN product_uom u ON u.id = ail.uos_id
+        """
+        return from_str
+
+    def _group_by(self):
+        group_by_str = """
+                GROUP BY ail.product_id, ai.date_invoice, ai.id,
+                    to_char(ai.date_invoice::timestamp with time zone, 'YYYY'::text),
+                    to_char(ai.date_invoice::timestamp with time zone, 'MM'::text),
+                    to_char(ai.date_invoice::timestamp with time zone, 'YYYY-MM-DD'::text),
+                    ai.partner_id, ai.payment_term, ai.period_id, u.name, ai.currency_id, ai.journal_id,
+                    ai.fiscal_position, ai.user_id, ai.company_id, ai.type, ai.state, pt.categ_id,
+                    ai.date_due, ai.account_id, ail.account_id, ai.partner_bank_id, ai.residual,
+                    ai.amount_total, u.uom_type, u.category_id
+        """
+        return group_by_str
+
+    def init(self, cr):
+        # self._table = account_invoice_report
+        tools.drop_view_if_exists(cr, self._table)
+        cr.execute("""CREATE or REPLACE VIEW %s as (
+            %s
+            FROM (
+                %s %s %s
+            ) AS sub
+            JOIN res_currency_rate cr ON (cr.currency_id = sub.currency_id)
+            WHERE
+                cr.id IN (SELECT id
+                          FROM res_currency_rate cr2
+                          WHERE (cr2.currency_id = sub.currency_id)
+                              AND ((sub.date IS NOT NULL AND cr.name <= sub.date)
+                                    OR (sub.date IS NULL AND cr.name <= NOW()))
+                          ORDER BY name DESC LIMIT 1)
+        )""" % (
+                    self._table, 
+                    self._select(), self._sub_select(), self._from(), self._group_by()))
 
 account_invoice_report()
 

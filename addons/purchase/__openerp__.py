@@ -25,17 +25,23 @@
     'version': '1.1',
     'category': 'Purchase Management',
     'sequence': 19,
-    'summary': 'RfQ, Purchase Orders, Delivery & Invoicing Control',
+    'summary': 'Purchase Orders, Receptions, Supplier Invoices',
     'description': """
-Purchase Management module is for generating a purchase order for purchase of goods from a supplier.
-====================================================================================================
+Manage goods requirement by Purchase Orders easily
+==================================================
 
-A supplier invoice is created for the particular purchase order.
+Purchase management enables you to track your suppliers' price quotations and convert them into purchase orders if necessary.
+OpenERP has several methods of monitoring invoices and tracking the receipt of ordered goods. You can handle partial deliveries in OpenERP, so you can keep track of items that are still to be delivered in your orders, and you can issue reminders automatically.
 
-Dashboard for purchase management that includes:
-------------------------------------------------
-    * Request for Quotations
-    * Monthly Purchases by Category
+OpenERP’s replenishment management rules enable the system to generate draft purchase orders automatically, or you can configure it to run a lean process driven entirely by current production needs.
+
+Dashboard / Reports for Purchase Management will include:
+---------------------------------------------------------
+* Request for Quotations
+* Purchase Orders Waiting Approval 
+* Monthly Purchases by Category
+* Receptions Analysis
+* Purchase Analysis
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
@@ -78,7 +84,6 @@ Dashboard for purchase management that includes:
     ],
     'installable': True,
     'auto_install': False,
-    'certificate': '0057234283549',
     'application': True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

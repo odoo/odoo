@@ -67,7 +67,6 @@ Generic Payroll system.
     'demo': ['hr_payroll_demo.xml'],
     'installable': True,
     'auto_install': False,
-    'certificate' : '001046261404562128861',
     'application': False,
 }
 

@@ -7,26 +7,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2012-01-12 21:17+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 06:36+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:49+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
+
+#. module: project_issue_sheet
+#: code:addons/project_issue_sheet/project_issue_sheet.py:57
+#, python-format
+msgid "The Analytic Account is pending !"
+msgstr ""
 
 #. module: project_issue_sheet
 #: model:ir.model,name:project_issue_sheet.model_account_analytic_line
 msgid "Analytic Line"
 msgstr "خط تحليلي"
-
-#. module: project_issue_sheet
-#: code:addons/project_issue_sheet/project_issue_sheet.py:57
-#, python-format
-msgid "The Analytic Account is in pending !"
-msgstr "الحساب التحليلي معلق !"
 
 #. module: project_issue_sheet
 #: model:ir.model,name:project_issue_sheet.model_project_issue
@@ -37,6 +37,11 @@ msgstr "حالة المشروع"
 #: model:ir.model,name:project_issue_sheet.model_hr_analytic_timesheet
 msgid "Timesheet Line"
 msgstr "خط سجل الدوام"
+
+#. module: project_issue_sheet
+#: view:project.issue:0
+msgid "on_change_project(project_id)"
+msgstr ""
 
 #. module: project_issue_sheet
 #: code:addons/project_issue_sheet/project_issue_sheet.py:57
@@ -62,19 +67,9 @@ msgid "Timesheets"
 msgstr "الجداول الزمنية"
 
 #. module: project_issue_sheet
-#: constraint:hr.analytic.timesheet:0
-msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
-msgstr "لا يمكنك تعديل عملية مؤكدة أو تمت في الجدول الزمني !."
-
-#. module: project_issue_sheet
 #: field:hr.analytic.timesheet,issue_id:0
 msgid "Issue"
 msgstr "حالة"
-
-#. module: project_issue_sheet
-#: constraint:account.analytic.line:0
-msgid "You can not create analytic line on view account."
-msgstr "لا يمكنك إنشاء سطر تحليلي في حساب للعرض."
 
 #~ msgid "Add the Timesheet support for Issue Management in Project Management"
 #~ msgstr "اضف سجل الدوام المؤيد لادارة الحالة في ادارة المشروع"
@@ -92,3 +87,13 @@ msgstr "لا يمكنك إنشاء سطر تحليلي في حساب للعرض.
 #~ "                    تضيف هذه الوحدة سجل الدوام مؤيدًا لادارة للحالة/بق في "
 #~ "المشروع\n"
 #~ "                "
+
+#~ msgid "You can not create analytic line on view account."
+#~ msgstr "لا يمكنك إنشاء سطر تحليلي في حساب للعرض."
+
+#~ msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
+#~ msgstr "لا يمكنك تعديل عملية مؤكدة أو تمت في الجدول الزمني !."
+
+#, python-format
+#~ msgid "The Analytic Account is in pending !"
+#~ msgstr "الحساب التحليلي معلق !"

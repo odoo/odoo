@@ -6,282 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2012-07-16 15:25+0000\n"
 "Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 06:27+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
-
-#. module: hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
-msgid "Time Tracking"
-msgstr "Tidsuppföljning"
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-msgid "Group By..."
-msgstr "Gruppera på..."
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-msgid "Today"
-msgstr "Idag"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "March"
-msgstr "mars"
-
-#. module: hr_attendance
-#: view:hr.sign.in.out.ask:0
-msgid ""
-"You did not sign out the last time. Please enter the date and time you "
-"signed out."
-msgstr ""
-"You did not sign out the last time. Please enter the date and time you "
-"signed out."
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Total period:"
-msgstr "Total period:"
-
-#. module: hr_attendance
-#: field:hr.action.reason,name:0
-msgid "Reason"
-msgstr "Anledning"
-
-#. module: hr_attendance
-#: view:hr.attendance.error:0
-msgid "Print Attendance Report Error"
-msgstr "Skrivut delatagarrapportfel"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:161
-#, python-format
-msgid "The sign-out date must be in the past"
-msgstr "The sign-out date must be in the past"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Date Signed"
-msgstr "Date Signed"
-
-#. module: hr_attendance
-#: model:ir.actions.act_window,help:hr_attendance.open_view_attendance
-msgid ""
-"The Time Tracking functionality aims to manage employee attendances from "
-"Sign in/Sign out actions. You can also link this feature to an attendance "
-"device using OpenERP's web service features."
-msgstr ""
-"Komma-gå-funktionen syftar till att hantera anställdas närvaro från komma/gå-"
-"rapportering. Du kan också knyta denna funktion till olika former av "
-"passagesystem/stämpeklocka genom ett webservice-gränssnitt."
-
-#. module: hr_attendance
-#: view:hr.action.reason:0
-msgid "Attendance reasons"
-msgstr "Attendance reasons"
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-#: field:hr.attendance,day:0
-msgid "Day"
-msgstr "Dag"
-
-#. module: hr_attendance
-#: selection:hr.employee,state:0
-msgid "Present"
-msgstr "Närvarande"
-
-#. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_sign_in_out_ask
-msgid "Ask for Sign In Out"
-msgstr "Be om tillåtelse att gå hem"
-
-#. module: hr_attendance
-#: field:hr.attendance,action_desc:0
-#: model:ir.model,name:hr_attendance.model_hr_action_reason
-msgid "Action Reason"
-msgstr "Åtgärdsorsak"
-
-#. module: hr_attendance
-#: view:hr.sign.in.out:0
-msgid "Ok"
-msgstr "Ok"
-
-#. module: hr_attendance
-#: view:hr.action.reason:0
-msgid "Define attendance reason"
-msgstr "Define attendance reason"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/report/attendance_by_month.py:184
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_month
-#, python-format
-msgid "Attendances By Month"
-msgstr "Närvaro per månad"
-
-#. module: hr_attendance
-#: field:hr.sign.in.out,name:0
-#: field:hr.sign.in.out.ask,name:0
-msgid "Employees name"
-msgstr "Anställds namn"
-
-#. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
-#: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance_reason
-msgid "Attendance Reasons"
-msgstr "Attendance Reasons"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:161
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:167
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:174
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:179
-#, python-format
-msgid "UserError"
-msgstr "UserError"
-
-#. module: hr_attendance
-#: field:hr.attendance.error,end_date:0
-#: field:hr.attendance.week,end_date:0
-msgid "Ending Date"
-msgstr "Slutdatum"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:140
-#, python-format
-msgid "Warning"
-msgstr "Varning"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:174
-#, python-format
-msgid "The Sign-in date must be in the past"
-msgstr "The Sign-in date must be in the past"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:167
-#, python-format
-msgid "A sign-in must be right after a sign-out !"
-msgstr "A sign-in must be right after a sign-out !"
-
-#. module: hr_attendance
-#: field:hr.employee,state:0
-#: model:ir.model,name:hr_attendance.model_hr_attendance
-msgid "Attendance"
-msgstr "Närvarande"
-
-#. module: hr_attendance
-#: field:hr.attendance.error,max_delay:0
-msgid "Max. Delay (Min)"
-msgstr "Max. Delay (Min)"
-
-#. module: hr_attendance
-#: view:hr.attendance.error:0
-#: view:hr.attendance.month:0
-#: view:hr.attendance.week:0
-msgid "Print"
-msgstr "Utskrift"
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-msgid "Hr Attendance Search"
-msgstr "Närvarosökning"
-
-#. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_week
-msgid "Attendances By Week"
-msgstr "Närvaro per vecka"
-
-#. module: hr_attendance
-#: constraint:hr.attendance:0
-msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr ""
-"Fel: Logga in (resp. Logga ut) måste följas av Logga ut (resp. Logga in)"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "July"
-msgstr "juli"
-
-#. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_error
-#: model:ir.actions.report.xml,name:hr_attendance.attendance_error_report
-msgid "Attendance Error Report"
-msgstr "Attendance Error Report"
-
-#. module: hr_attendance
-#: field:hr.attendance.error,init_date:0
-#: field:hr.attendance.week,init_date:0
-msgid "Starting Date"
-msgstr "Startdatum"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Min Delay"
-msgstr "Minsta fördröjning"
-
-#. module: hr_attendance
-#: selection:hr.attendance,action:0
-#: view:hr.employee:0
-msgid "Sign In"
-msgstr "Logga in"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Operation"
-msgstr "Åtgärd"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
-#, python-format
-msgid "No Data Available"
-msgstr "Ingen tillgänglig data"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "September"
-msgstr "september"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "December"
-msgstr "december"
-
-#. module: hr_attendance
-#: field:hr.attendance.month,month:0
-msgid "Month"
-msgstr "Månad"
-
-#. module: hr_attendance
-#: field:hr.action.reason,action_type:0
-msgid "Action Type"
-msgstr "Åtgärdstyp"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid ""
-"(*) A negative delay means that the employee worked more than encoded."
-msgstr ""
-"(*) en negativ försening betyder att den anställde arbetade mer än "
-"registrerat."
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-msgid "My Attendance"
-msgstr "Min närvaro"
-
-#. module: hr_attendance
-#: help:hr.attendance,action_desc:0
-msgid ""
-"Specifies the reason for Signing In/Signing Out in case of extra hours."
-msgstr "Information om orsak till komma/gå vid övertid"
+"X-Launchpad-Export-Date: 2012-12-04 05:42+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_month
@@ -289,136 +22,33 @@ msgid "Print Monthly Attendance Report"
 msgstr "Skriv månatlig närvarorapport"
 
 #. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_sign_in_out
-msgid "Sign In Sign Out"
-msgstr "Komma/gå"
+#: view:hr.attendance:0
+msgid "Hr Attendance Search"
+msgstr "Närvarosökning"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:105
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:129
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:146
-#: view:hr.sign.in.out:0
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_sigh_in_out
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_sigh_in_out
-#, python-format
-msgid "Sign in / Sign out"
-msgstr "Logga in / Logga ut"
-
-#. module: hr_attendance
-#: view:hr.sign.in.out.ask:0
-msgid "hr.sign.out.ask"
-msgstr "hr.sign.out.ask"
-
-#. module: hr_attendance
-#: view:hr.attendance.week:0
-msgid "Print Attendance Report Weekly"
-msgstr "Skriv närvarorapport veckovis"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "August"
-msgstr "augusti"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:179
-#, python-format
-msgid "A sign-out must be right after a sign-in !"
-msgstr "A sign-out must be right after a sign-in !"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "June"
-msgstr "juni"
-
-#. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_attendance_error
-msgid "Print Error Attendance Report"
-msgstr "Skriv avvikelsenärvarorapport"
-
-#. module: hr_attendance
-#: field:hr.attendance,name:0
-msgid "Date"
-msgstr "Datum"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "November"
-msgstr "november"
-
-#. module: hr_attendance
-#: constraint:hr.employee:0
-msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr "Fel! Du kan inte skapa rekursiva hierarkier av anställda."
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "October"
-msgstr "oktober"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "January"
-msgstr "januari"
-
-#. module: hr_attendance
-#: selection:hr.action.reason,action_type:0
-#: view:hr.sign.in.out:0
-#: view:hr.sign.in.out.ask:0
-msgid "Sign in"
-msgstr "Logga in"
-
-#. module: hr_attendance
-#: view:hr.attendance.error:0
-msgid "Analysis Information"
-msgstr "Analysinformation"
-
-#. module: hr_attendance
-#: view:hr.sign.in.out:0
-msgid "Sign-out Entry Must Follow Sign-in."
-msgstr "Sign-out Entry Must Follow Sign-in."
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Attendance Errors"
-msgstr "Närvarofel"
-
-#. module: hr_attendance
-#: field:hr.attendance,action:0
-#: selection:hr.attendance,action:0
-msgid "Action"
-msgstr "Åtgärd"
-
-#. module: hr_attendance
-#: view:hr.sign.in.out:0
-msgid ""
-"If you need your staff to sign in when they arrive at work and sign out "
-"again at the end of the day, OpenERP allows you to manage this with this "
-"tool. If each employee has been linked to a system user, then they can "
-"encode their time with this action button."
+#: field:hr.employee,last_sign:0
+msgid "Last Sign"
 msgstr ""
-"Om du behöver närvarorapportering från personalen, så kan det ske via detta "
-"verkty. Om varje anställd är knuten till ett användarid, så kan närvaron "
-"följas upp med denna knapp."
 
 #. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_attendance_week
-msgid "Print Week Attendance Report"
-msgstr "Skriv ut veckovis närvarorapport"
+#: view:hr.attendance:0
+#: field:hr.employee,state:0
+#: model:ir.model,name:hr_attendance.model_hr_attendance
+msgid "Attendance"
+msgstr "Närvarande"
 
 #. module: hr_attendance
-#: field:hr.sign.in.out,emp_id:0
-#: field:hr.sign.in.out.ask,emp_id:0
-msgid "Empoyee ID"
-msgstr "Antsällningsid"
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/attendance.js:34
+#, python-format
+msgid "Last sign in: %s,<br />%s.<br />Click to sign out."
+msgstr ""
 
 #. module: hr_attendance
-#: view:hr.attendance.error:0
-#: view:hr.attendance.month:0
-#: view:hr.attendance.week:0
-#: view:hr.sign.in.out:0
-#: view:hr.sign.in.out.ask:0
-msgid "Cancel"
-msgstr "Avbryt"
+#: constraint:hr.attendance:0
+msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
+msgstr ""
 
 #. module: hr_attendance
 #: help:hr.action.reason,name:0
@@ -438,9 +68,13 @@ msgid "Print Attendance Report Monthly"
 msgstr "Skriv ut månatlig närvarorapport"
 
 #. module: hr_attendance
+#: code:addons/hr_attendance/report/timesheet.py:122
+#, python-format
+msgid "Attendances by Week"
+msgstr ""
+
+#. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
-#: view:hr.sign.in.out:0
-#: view:hr.sign.in.out.ask:0
 msgid "Sign out"
 msgstr "Logga ut"
 
@@ -451,25 +85,46 @@ msgstr "Fördröjning"
 
 #. module: hr_attendance
 #: view:hr.attendance:0
+msgid "Group By..."
+msgstr "Gruppera på..."
+
+#. module: hr_attendance
+#: selection:hr.attendance.month,month:0
+msgid "October"
+msgstr "oktober"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:154
+#: selection:hr.attendance,action:0
+#: view:hr.employee:0
+#, python-format
+msgid "Sign Out"
+msgstr "Logga ut"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
+#, python-format
+msgid "No records are found for your selection!"
+msgstr ""
+
+#. module: hr_attendance
+#: view:hr.attendance.error:0
+#: view:hr.attendance.month:0
+#: view:hr.attendance.week:0
+msgid "Print"
+msgstr "Utskrift"
+
+#. module: hr_attendance
+#: view:hr.attendance:0
+#: field:hr.attendance,employee_id:0
 #: model:ir.model,name:hr_attendance.model_hr_employee
 msgid "Employee"
 msgstr "Anställd"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:140
-#, python-format
-msgid ""
-"You tried to %s with a date anterior to another event !\n"
-"Try to contact the administrator to correct attendances."
-msgstr ""
-"Du försökte %s med ett datum i konflikt med ett annat evenemang!\n"
-"Kontakta administratören för att korrigera närvaron."
-
-#. module: hr_attendance
-#: view:hr.sign.in.out.ask:0
-#: field:hr.sign.in.out.ask,last_time:0
-msgid "Your last sign out"
-msgstr "Din senaste utloggning"
+#: field:hr.attendance.month,month:0
+msgid "Month"
+msgstr "Månad"
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
@@ -477,44 +132,145 @@ msgid "Date Recorded"
 msgstr "Date Recorded"
 
 #. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:154
+#: selection:hr.attendance,action:0
+#: view:hr.employee:0
+#, python-format
+msgid "Sign In"
+msgstr "Logga in"
+
+#. module: hr_attendance
+#: field:hr.attendance.error,init_date:0
+#: field:hr.attendance.week,init_date:0
+msgid "Starting Date"
+msgstr "Startdatum"
+
+#. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance
 msgid "Attendances"
-msgstr "Attendances"
+msgstr "Närvaro"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
-msgid "May"
-msgstr "maj"
+msgid "March"
+msgstr "mars"
 
 #. module: hr_attendance
-#: view:hr.sign.in.out.ask:0
-msgid "Your last sign in"
-msgstr "Din senaste inloggning"
+#: selection:hr.attendance.month,month:0
+msgid "August"
+msgstr "augusti"
 
 #. module: hr_attendance
-#: selection:hr.attendance,action:0
-#: view:hr.employee:0
-msgid "Sign Out"
-msgstr "Logga ut"
+#: code:addons/hr_attendance/hr_attendance.py:161
+#, python-format
+msgid "Warning"
+msgstr "Varning"
 
 #. module: hr_attendance
-#: model:ir.actions.act_window,help:hr_attendance.action_hr_attendance_sigh_in_out
-msgid ""
-"Sign in / Sign out. In some companies, staff have to sign in when they "
-"arrive at work and sign out again at the end of the day. If each employee "
-"has been linked to a system user, then they can encode their time with this "
-"action button."
+#: help:hr.config.settings,group_hr_attendance:0
+msgid "Allocates attendance group to all users."
 msgstr ""
-"Komma/gå. I vissa företag, måste personalen registrera sig när de anländer "
-"till arbetsplatsen och logga ut igen vid dagens slut. Om varje anställd har "
-"ett användarid i systemet kan de göra detta med denna knapp."
 
 #. module: hr_attendance
-#: field:hr.attendance,employee_id:0
-msgid "Employee's Name"
-msgstr "Anställds namn"
+#: field:hr.employee,attendance_access:0
+msgid "unknown"
+msgstr ""
+
+#. module: hr_attendance
+#: view:hr.attendance:0
+msgid "My Attendance"
+msgstr "Min närvaro"
+
+#. module: hr_attendance
+#: selection:hr.attendance.month,month:0
+msgid "June"
+msgstr "juni"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/report/attendance_by_month.py:193
+#, python-format
+msgid "Attendances by Month"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_week
+msgid "Attendances By Week"
+msgstr "Närvaro per vecka"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_attendance_error
+msgid "Print Error Attendance Report"
+msgstr "Skriv avvikelsenärvarorapport"
+
+#. module: hr_attendance
+#: report:report.hr.timesheet.attendance.error:0
+msgid "Total period:"
+msgstr "Total period:"
+
+#. module: hr_attendance
+#: field:hr.action.reason,name:0
+msgid "Reason"
+msgstr "Anledning"
+
+#. module: hr_attendance
+#: view:hr.attendance.error:0
+msgid "Print Attendance Report Error"
+msgstr "Skrivut delatagarrapportfel"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,help:hr_attendance.open_view_attendance
+msgid ""
+"The Time Tracking functionality aims to manage employee attendances from "
+"Sign in/Sign out actions. You can also link this feature to an attendance "
+"device using OpenERP's web service features."
+msgstr ""
+"Komma-gå-funktionen syftar till att hantera anställdas närvaro från komma/gå-"
+"rapportering. Du kan också knyta denna funktion till olika former av "
+"passagesystem/stämpeklocka genom ett webservice-gränssnitt."
+
+#. module: hr_attendance
+#: view:hr.attendance:0
+msgid "Today"
+msgstr "Idag"
+
+#. module: hr_attendance
+#: report:report.hr.timesheet.attendance.error:0
+msgid "Date Signed"
+msgstr "Date Signed"
+
+#. module: hr_attendance
+#: field:hr.attendance,name:0
+msgid "Date"
+msgstr "Datum"
+
+#. module: hr_attendance
+#: field:hr.config.settings,group_hr_attendance:0
+msgid "Track attendances for all employees"
+msgstr ""
+
+#. module: hr_attendance
+#: selection:hr.attendance.month,month:0
+msgid "July"
+msgstr "juli"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_error
+#: model:ir.actions.report.xml,name:hr_attendance.attendance_error_report
+msgid "Attendance Error Report"
+msgstr "Närvarofelrapport"
+
+#. module: hr_attendance
+#: view:hr.attendance:0
+#: field:hr.attendance,day:0
+msgid "Day"
+msgstr "Dag"
+
+#. module: hr_attendance
+#: selection:hr.employee,state:0
+msgid "Present"
+msgstr "Närvarande"
 
 #. module: hr_attendance
 #: selection:hr.employee,state:0
@@ -527,39 +283,10 @@ msgid "February"
 msgstr "februari"
 
 #. module: hr_attendance
-#: view:hr.attendance:0
-msgid "Employee attendances"
-msgstr "Anställds närvaro"
-
-#. module: hr_attendance
-#: field:hr.sign.in.out,state:0
-msgid "Current state"
-msgstr "Aktuellt tillstånd"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "April"
-msgstr "april"
-
-#. module: hr_attendance
-#: view:hr.attendance.error:0
-msgid "Bellow this delay, the error is considered to be voluntary"
-msgstr "Bellow this delay, the error is considered to be voluntary"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
-#, python-format
-msgid "No records found for your selection!"
-msgstr "No records found for your selection!"
-
-#. module: hr_attendance
-#: view:hr.sign.in.out.ask:0
-msgid ""
-"You did not sign in the last time. Please enter the date and time you signed "
-"in."
-msgstr ""
-"You did not sign in the last time. Please enter the date and time you signed "
-"in."
+#: field:hr.attendance,action_desc:0
+#: model:ir.model,name:hr_attendance.model_hr_action_reason
+msgid "Action Reason"
+msgstr "Åtgärdsorsak"
 
 #. module: hr_attendance
 #: field:hr.attendance.month,year:0
@@ -567,14 +294,190 @@ msgid "Year"
 msgstr "År"
 
 #. module: hr_attendance
-#: view:hr.sign.in.out.ask:0
-msgid "hr.sign.in.out.ask"
-msgstr "hr.sign.in.out.ask"
+#: report:report.hr.timesheet.attendance.error:0
+msgid "Min Delay"
+msgstr "Minsta fördröjning"
+
+#. module: hr_attendance
+#: view:hr.attendance:0
+msgid "Employee attendances"
+msgstr "Anställds närvaro"
+
+#. module: hr_attendance
+#: view:hr.action.reason:0
+msgid "Define attendance reason"
+msgstr "Define attendance reason"
+
+#. module: hr_attendance
+#: selection:hr.action.reason,action_type:0
+msgid "Sign in"
+msgstr "Logga in"
+
+#. module: hr_attendance
+#: view:hr.attendance.error:0
+msgid "Analysis Information"
+msgstr "Analysinformation"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_month
+msgid "Attendances By Month"
+msgstr "Närvaro per månad"
+
+#. module: hr_attendance
+#: selection:hr.attendance.month,month:0
+msgid "January"
+msgstr "januari"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
+#, python-format
+msgid "No Data Available !"
+msgstr ""
+
+#. module: hr_attendance
+#: selection:hr.attendance.month,month:0
+msgid "April"
+msgstr "april"
+
+#. module: hr_attendance
+#: view:hr.attendance.week:0
+msgid "Print Attendance Report Weekly"
+msgstr "Skriv närvarorapport veckovis"
+
+#. module: hr_attendance
+#: report:report.hr.timesheet.attendance.error:0
+msgid "Attendance Errors"
+msgstr "Närvarofel"
+
+#. module: hr_attendance
+#: field:hr.attendance,action:0
+#: selection:hr.attendance,action:0
+msgid "Action"
+msgstr "Åtgärd"
+
+#. module: hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
+msgid "Time Tracking"
+msgstr "Tidrapporter"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
+#: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance_reason
+msgid "Attendance Reasons"
+msgstr "Närvaro Orsaker"
+
+#. module: hr_attendance
+#: selection:hr.attendance.month,month:0
+msgid "November"
+msgstr "november"
+
+#. module: hr_attendance
+#: view:hr.attendance.error:0
+msgid "Bellow this delay, the error is considered to be voluntary"
+msgstr "Bellow this delay, the error is considered to be voluntary"
+
+#. module: hr_attendance
+#: field:hr.attendance.error,max_delay:0
+msgid "Max. Delay (Min)"
+msgstr "Max. Delay (Min)"
+
+#. module: hr_attendance
+#: field:hr.attendance.error,end_date:0
+#: field:hr.attendance.week,end_date:0
+msgid "Ending Date"
+msgstr "Slutdatum"
+
+#. module: hr_attendance
+#: selection:hr.attendance.month,month:0
+msgid "September"
+msgstr "september"
+
+#. module: hr_attendance
+#: view:hr.action.reason:0
+msgid "Attendance reasons"
+msgstr "Närvaro orsaker"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_attendance_week
+msgid "Print Week Attendance Report"
+msgstr "Skriv ut veckovis närvarorapport"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_config_settings
+msgid "hr.config.settings"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/attendance.js:36
+#, python-format
+msgid "Click to Sign In at %s."
+msgstr ""
+
+#. module: hr_attendance
+#: field:hr.action.reason,action_type:0
+msgid "Action Type"
+msgstr "Åtgärdstyp"
+
+#. module: hr_attendance
+#: selection:hr.attendance.month,month:0
+msgid "May"
+msgstr "maj"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:161
+#, python-format
+msgid ""
+"You tried to %s with a date anterior to another event !\n"
+"Try to contact the HR Manager to correct attendances."
+msgstr ""
+
+#. module: hr_attendance
+#: selection:hr.attendance.month,month:0
+msgid "December"
+msgstr "december"
+
+#. module: hr_attendance
+#: view:hr.attendance.error:0
+#: view:hr.attendance.month:0
+#: view:hr.attendance.week:0
+msgid "Cancel"
+msgstr "Avbryt"
+
+#. module: hr_attendance
+#: report:report.hr.timesheet.attendance.error:0
+msgid "Operation"
+msgstr "Åtgärd"
+
+#. module: hr_attendance
+#: report:report.hr.timesheet.attendance.error:0
+msgid ""
+"(*) A negative delay means that the employee worked more than encoded."
+msgstr ""
+"(*) en negativ försening betyder att den anställde arbetade mer än "
+"registrerat."
+
+#. module: hr_attendance
+#: view:hr.attendance.error:0
+#: view:hr.attendance.month:0
+#: view:hr.attendance.week:0
+msgid "or"
+msgstr ""
+
+#. module: hr_attendance
+#: help:hr.attendance,action_desc:0
+msgid ""
+"Specifies the reason for Signing In/Signing Out in case of extra hours."
+msgstr "Information om orsak till komma/gå vid övertid"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
 #~ "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
+
+#~ msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
+#~ msgstr ""
+#~ "Fel: Logga in (resp. Logga ut) måste följas av Logga ut (resp. Logga in)"
 
 #, python-format
 #~ msgid ""
@@ -599,6 +502,13 @@ msgstr "hr.sign.in.out.ask"
 #~ msgid "Print Attendance Error Report"
 #~ msgstr "Print Attendance Error Report"
 
+#~ msgid ""
+#~ "You did not sign out the last time. Please enter the date and time you "
+#~ "signed out."
+#~ msgstr ""
+#~ "You did not sign out the last time. Please enter the date and time you "
+#~ "signed out."
+
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Invalid model name in the action definition."
 
@@ -611,11 +521,19 @@ msgstr "hr.sign.in.out.ask"
 #~ msgid "Action reason"
 #~ msgstr "Action reason"
 
+#, python-format
+#~ msgid "A sign-out must be right after a sign-in !"
+#~ msgstr "A sign-out must be right after a sign-in !"
+
 #~ msgid "Print Timesheet by month"
 #~ msgstr "Print Timesheet by month"
 
 #~ msgid "Attendances Of Employees"
 #~ msgstr "Attendances Of Employees"
+
+#, python-format
+#~ msgid "The sign-out date must be in the past"
+#~ msgstr "The sign-out date must be in the past"
 
 #, python-format
 #~ msgid ""
@@ -625,14 +543,29 @@ msgstr "hr.sign.in.out.ask"
 #~ "You tried to sign out with a date anterior to another event !\n"
 #~ "Try to contact the administrator to correct attendances."
 
+#~ msgid "Ok"
+#~ msgstr "Ok"
+
+#, python-format
+#~ msgid "The Sign-in date must be in the past"
+#~ msgstr "The Sign-in date must be in the past"
+
 #~ msgid "Action's type"
 #~ msgstr "Action's type"
 
 #~ msgid "Print Attendance Report"
 #~ msgstr "Print Attendance Report"
 
+#, python-format
+#~ msgid "UserError"
+#~ msgstr "UserError"
+
 #~ msgid "Select a starting and a end date"
 #~ msgstr "Select a starting and a end date"
+
+#, python-format
+#~ msgid "No records found for your selection!"
+#~ msgstr "No records found for your selection!"
 
 #, python-format
 #~ msgid ""
@@ -651,5 +584,85 @@ msgstr "hr.sign.in.out.ask"
 #~ msgid "This module aims to manage employee's attendances."
 #~ msgstr "This module aims to manage employee's attendances."
 
+#~ msgid ""
+#~ "You did not sign in the last time. Please enter the date and time you signed "
+#~ "in."
+#~ msgstr ""
+#~ "You did not sign in the last time. Please enter the date and time you signed "
+#~ "in."
+
+#, python-format
+#~ msgid "A sign-in must be right after a sign-out !"
+#~ msgstr "A sign-in must be right after a sign-out !"
+
+#~ msgid "Ask for Sign In Out"
+#~ msgstr "Be om tillåtelse att gå hem"
+
+#, python-format
+#~ msgid "No Data Available"
+#~ msgstr "Ingen tillgänglig data"
+
+#, python-format
+#~ msgid "Sign in / Sign out"
+#~ msgstr "Logga in / Logga ut"
+
+#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
+#~ msgstr "Fel! Du kan inte skapa rekursiva hierarkier av anställda."
+
+#~ msgid "Empoyee ID"
+#~ msgstr "Antsällningsid"
+
 #~ msgid "Sign-Out Entry must follow Sign-In."
 #~ msgstr "Utloggning måste följa inloggning"
+
+#~ msgid "Your last sign out"
+#~ msgstr "Din senaste utloggning"
+
+#~ msgid "Your last sign in"
+#~ msgstr "Din senaste inloggning"
+
+#~ msgid "Current state"
+#~ msgstr "Aktuellt tillstånd"
+
+#~ msgid "Employee's Name"
+#~ msgstr "Anställds namn"
+
+#~ msgid "hr.sign.out.ask"
+#~ msgstr "hr.sign.out.ask"
+
+#~ msgid "hr.sign.in.out.ask"
+#~ msgstr "hr.sign.in.out.ask"
+
+#~ msgid "Sign In Sign Out"
+#~ msgstr "Komma/gå"
+
+#~ msgid "Employees name"
+#~ msgstr "Anställds namn"
+
+#~ msgid ""
+#~ "Sign in / Sign out. In some companies, staff have to sign in when they "
+#~ "arrive at work and sign out again at the end of the day. If each employee "
+#~ "has been linked to a system user, then they can encode their time with this "
+#~ "action button."
+#~ msgstr ""
+#~ "Komma/gå. I vissa företag, måste personalen registrera sig när de anländer "
+#~ "till arbetsplatsen och logga ut igen vid dagens slut. Om varje anställd har "
+#~ "ett användarid i systemet kan de göra detta med denna knapp."
+
+#, python-format
+#~ msgid ""
+#~ "You tried to %s with a date anterior to another event !\n"
+#~ "Try to contact the administrator to correct attendances."
+#~ msgstr ""
+#~ "Du försökte %s med ett datum i konflikt med ett annat evenemang!\n"
+#~ "Kontakta administratören för att korrigera närvaron."
+
+#~ msgid ""
+#~ "If you need your staff to sign in when they arrive at work and sign out "
+#~ "again at the end of the day, OpenERP allows you to manage this with this "
+#~ "tool. If each employee has been linked to a system user, then they can "
+#~ "encode their time with this action button."
+#~ msgstr ""
+#~ "Om du behöver närvarorapportering från personalen, så kan det ske via detta "
+#~ "verkty. Om varje anställd är knuten till ett användarid, så kan närvaron "
+#~ "följas upp med denna knapp."

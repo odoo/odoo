@@ -7,50 +7,36 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 01:37+0100\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2012-02-15 12:04+0000\n"
 "Last-Translator: mikel <mikel.martin@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 06:42+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:54+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: edi
-#: sql_constraint:res.currency:0
-msgid "The currency code must be unique per company!"
-msgstr "¡El código de moneda debe ser único por compañía!"
+#. openerp-web
+#: code:addons/edi/static/src/js/edi.js:67
+#, python-format
+msgid "Reason:"
+msgstr ""
 
 #. module: edi
-#: model:ir.model,name:edi.model_res_partner_address
-msgid "Partner Addresses"
-msgstr "Direcciones de empresa"
+#. openerp-web
+#: code:addons/edi/static/src/js/edi.js:60
+#, python-format
+msgid "The document has been successfully imported!"
+msgstr ""
 
 #. module: edi
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr "¡El nombre de la compañía debe ser único!"
-
-#. module: edi
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr "¡Error! No puede crear miembros asociados recursivamente."
-
-#. module: edi
-#: field:edi.document,name:0
-msgid "EDI token"
-msgstr "Token EDI"
-
-#. module: edi
-#: help:edi.document,name:0
-msgid "Unique identifier for retrieving an EDI document."
-msgstr "Identificador único para obtener un documento EDI"
-
-#. module: edi
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "Error! Usted no puede crear empresas recursiva."
+#. openerp-web
+#: code:addons/edi/static/src/js/edi.js:65
+#, python-format
+msgid "Sorry, the document could not be imported."
+msgstr ""
 
 #. module: edi
 #: model:ir.model,name:edi.model_res_company
@@ -58,17 +44,25 @@ msgid "Companies"
 msgstr "Compañías"
 
 #. module: edi
-#: sql_constraint:edi.document:0
-msgid "EDI Tokens must be unique!"
-msgstr "¡Los tokens EDI tiene que ser únicos!"
-
-#. module: edi
 #: model:ir.model,name:edi.model_res_currency
 msgid "Currency"
 msgstr "Moneda"
 
 #. module: edi
-#: code:addons/edi/models/edi.py:153
+#. openerp-web
+#: code:addons/edi/static/src/js/edi.js:71
+#, python-format
+msgid "Document Import Notification"
+msgstr ""
+
+#. module: edi
+#: code:addons/edi/models/edi.py:130
+#, python-format
+msgid "Missing application."
+msgstr ""
+
+#. module: edi
+#: code:addons/edi/models/edi.py:131
 #, python-format
 msgid ""
 "The document you are trying to import requires the OpenERP `%s` application. "
@@ -80,17 +74,7 @@ msgstr ""
 "asistente de configuración."
 
 #. module: edi
-#: help:edi.document,document:0
-msgid "EDI document content"
-msgstr "Contedido del documento EDI"
-
-#. module: edi
-#: model:ir.model,name:edi.model_edi_document
-msgid "EDI Document"
-msgstr "Documento EDI"
-
-#. module: edi
-#: code:addons/edi/models/edi.py:48
+#: code:addons/edi/models/edi.py:47
 #, python-format
 msgid "'%s' is an invalid external ID"
 msgstr "'%s' no es un ID externo válido"
@@ -101,306 +85,231 @@ msgid "Partner"
 msgstr "Empresa"
 
 #. module: edi
-#: code:addons/edi/models/edi.py:152
+#: model:ir.model,name:edi.model_edi_edi
+msgid "EDI Subsystem"
+msgstr ""
+
+#~ msgid "Description"
+#~ msgstr "Descripción"
+
+#~ msgid "The currency code must be unique per company!"
+#~ msgstr "¡El código de moneda debe ser único por compañía!"
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "¡El nombre de la compañía debe ser único!"
+
+#~ msgid "Partner Addresses"
+#~ msgstr "Direcciones de empresa"
+
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr "¡Error! No puede crear miembros asociados recursivamente."
+
+#~ msgid "Unique identifier for retrieving an EDI document."
+#~ msgstr "Identificador único para obtener un documento EDI"
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "Error! Usted no puede crear empresas recursiva."
+
+#~ msgid "OpenERP instance address:"
+#~ msgstr "Dirección de la instancia OpenERP"
+
+#~ msgid "Import this document"
+#~ msgstr "Importar este documento"
+
+#~ msgid "View/Print"
+#~ msgstr "Ver/Imprimir"
+
+#~ msgid "Document"
+#~ msgstr "Documento"
+
+#~ msgid "EDI document content"
+#~ msgstr "Contedido del documento EDI"
+
+#~ msgid "EDI Document"
+#~ msgstr "Documento EDI"
+
+#~ msgid "Import it into an existing OpenERP instance"
+#~ msgstr "Importar a una instancia existente de OpenERP"
+
 #, python-format
-msgid "Missing Application"
-msgstr "Falta aplicación"
+#~ msgid "Missing Application"
+#~ msgstr "Falta aplicación"
 
-#. module: edi
-#: field:edi.document,document:0
-msgid "Document"
-msgstr "Documento"
+#~ msgid "Create my new OpenERP instance"
+#~ msgstr "Crear mi nueva instancia OpenERP"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:23
-msgid "View/Print"
-msgstr "Ver/Imprimir"
+#~ msgid "Import it into a new OpenERP Online instance"
+#~ msgstr "Importar a una instancia nueva de OpenERP"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:28
-msgid "Import this document"
-msgstr "Importar este documento"
+#~ msgid "Import"
+#~ msgstr "Importar"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:33
-msgid "Import it into an existing OpenERP instance"
-msgstr "Importar a una instancia existente de OpenERP"
+#~ msgid "Import into another application"
+#~ msgstr "Importa a otra aplicación"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:36
-msgid "OpenERP instance address:"
-msgstr "Dirección de la instancia OpenERP"
+#~ msgid "JSON"
+#~ msgstr "JSON"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:39
-msgid "Import"
-msgstr "Importar"
+#~ msgid "OpenERP documentation"
+#~ msgstr "Documentación de OpenERP"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:44
-msgid "Import it into a new OpenERP Online instance"
-msgstr "Importar a una instancia nueva de OpenERP"
+#~ msgid "EDI token"
+#~ msgstr "Token EDI"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:47
-msgid "Create my new OpenERP instance"
-msgstr "Crear mi nueva instancia OpenERP"
+#~ msgid ""
+#~ "OpenERP's Electronic Data Interchange documents are based on a generic and "
+#~ "language\n"
+#~ "                            independent"
+#~ msgstr ""
+#~ "Los documentos EDI (Electronic Data Interchange) de OpenERP están basados en "
+#~ "un lenguage genérico\n"
+#~ "                                                                             "
+#~ "                                                                             "
+#~ "     idenpendiente"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:52
-msgid "Import into another application"
-msgstr "Importa a otra aplicación"
+#~ msgid "see is all it takes to use this EDI document in Python"
+#~ msgstr "vea, es todo lo que hace falta para usar documentos EDI en Python"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:54
-msgid ""
-"OpenERP's Electronic Data Interchange documents are based on a generic and "
-"language\n"
-"                            independent"
-msgstr ""
-"Los documentos EDI (Electronic Data Interchange) de OpenERP están basados en "
-"un lenguage genérico\n"
-"                                                                             "
-"                                                                             "
-"     idenpendiente"
+#~ msgid "EDI Tokens must be unique!"
+#~ msgstr "¡Los tokens EDI tiene que ser únicos!"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:56
-msgid "JSON"
-msgstr "JSON"
+#~ msgid "You can download the raw EDI document here:"
+#~ msgstr "Puede descargar el documento EDI original aquí:"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:56
-msgid ""
-"serialization of the document's attribute.\n"
-"                            It is usually very quick and straightforward to "
-"create a small plug-in for your preferred\n"
-"                            application that will be capable of importing "
-"any OpenERP EDI document.\n"
-"                            You can find out more details about how to do "
-"this and what the content of OpenERP EDI documents\n"
-"                            is like in the"
-msgstr ""
+#~ msgid "Download"
+#~ msgstr "Descargar"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:60
-msgid "OpenERP documentation"
-msgstr "Documentación de OpenERP"
+#~ msgid "Powered by"
+#~ msgstr "Powered by"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:61
-msgid "To get started immediately,"
-msgstr "Para comenzar inmediatamente,"
+#~ msgid "To get started immediately,"
+#~ msgstr "Para comenzar inmediatamente,"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:62
-msgid "see is all it takes to use this EDI document in Python"
-msgstr "vea, es todo lo que hace falta para usar documentos EDI en Python"
+#~ msgid "OpenERP"
+#~ msgstr "OpenERP"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:70
-msgid "You can download the raw EDI document here:"
-msgstr "Puede descargar el documento EDI original aquí:"
+#~ msgid "Your Reference"
+#~ msgstr "Su referencia"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:73
-msgid "Download"
-msgstr "Descargar"
+#~ msgid "Date"
+#~ msgstr "Fecha"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:87
-msgid "Powered by"
-msgstr "Powered by"
+#~ msgid "Quantity"
+#~ msgstr "Cantidad"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:87
-msgid "OpenERP"
-msgstr "OpenERP"
+#~ msgid "Product Description"
+#~ msgstr "Descripción del producto"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:34
-msgid "Invoice"
-msgstr "Factura"
+#~ msgid "Unit Price"
+#~ msgstr "Precio unitario"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:37
-msgid "Description"
-msgstr "Descripción"
+#~ msgid "Net Total:"
+#~ msgstr "Base:"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:38
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:41
-msgid "Date"
-msgstr "Fecha"
+#~ msgid "Price"
+#~ msgstr "Precio"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:39
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:40
-msgid "Your Reference"
-msgstr "Su referencia"
+#~ msgid "Taxes:"
+#~ msgstr "Impuestos:"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:50
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:57
-msgid "Product Description"
-msgstr "Descripción del producto"
+#~ msgid "Discount"
+#~ msgstr "Descuento"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:51
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:58
-msgid "Quantity"
-msgstr "Cantidad"
+#~ msgid "Invoice"
+#~ msgstr "Factura"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:52
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:59
-msgid "Unit Price"
-msgstr "Precio unitario"
+#~ msgid "Please transfer"
+#~ msgstr "Por favor, haga la tranferencia"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:53
-msgid "Discount"
-msgstr "Descuento"
+#~ msgid "Total:"
+#~ msgstr "Total:"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:54
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:61
-msgid "Price"
-msgstr "Precio"
+#~ msgid ""
+#~ "You may directly pay this invoice online via Paypal's secure payment gateway:"
+#~ msgstr ""
+#~ "Podrá pagar esta factura, online, a través de la pasarela de pago seguro de "
+#~ "Paypal:"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:72
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:81
-msgid "Net Total:"
-msgstr "Base:"
+#~ msgid "Bank Wire Transfer"
+#~ msgstr "Tranferencia bancaria"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:83
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:92
-msgid "Taxes:"
-msgstr "Impuestos:"
+#~ msgid "Pay Online"
+#~ msgstr "Pago online"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:94
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:103
-msgid "Total:"
-msgstr "Total:"
+#~ msgid "Paypal"
+#~ msgstr "Paypal"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:106
-msgid "Tax"
-msgstr "Impuesto"
+#~ msgid "Amount"
+#~ msgstr "Importe"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:107
-msgid "Base Amount"
-msgstr "Base"
+#~ msgid "Notes:"
+#~ msgstr "Notas:"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:108
-msgid "Amount"
-msgstr "Importe"
+#~ msgid "Tax"
+#~ msgstr "Impuesto"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:121
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:113
-msgid "Notes:"
-msgstr "Notas:"
+#~ msgid "Base Amount"
+#~ msgstr "Base"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:129
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:121
-msgid "Pay Online"
-msgstr "Pago online"
+#~ msgid "Salesman"
+#~ msgstr "Comercial"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:133
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:125
-msgid "Paypal"
-msgstr "Paypal"
+#~ msgid "Order"
+#~ msgstr "Pedido"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:135
-msgid ""
-"You may directly pay this invoice online via Paypal's secure payment gateway:"
-msgstr ""
-"Podrá pagar esta factura, online, a través de la pasarela de pago seguro de "
-"Paypal:"
+#~ msgid "on the transfer:"
+#~ msgstr "En la transferencia:"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:145
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:137
-msgid "Bank Wire Transfer"
-msgstr "Tranferencia bancaria"
+#~ msgid ""
+#~ "(postal address on the invoice header)\n"
+#~ "                     using one of the following bank accounts. Be sure to "
+#~ "mention the invoice\n"
+#~ "                     reference"
+#~ msgstr ""
+#~ "(dirección postal en la cabecera de la factura)\n"
+#~ "                    usando una de las siguiente cuentas. No olvide indicar "
+#~ "la\n"
+#~ "                    referencia o nº de factura"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:147
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:139
-msgid "Please transfer"
-msgstr "Por favor, haga la tranferencia"
+#~ msgid ""
+#~ "(postal address on the order header)\n"
+#~ "                     using one of the following bank accounts. Be sure to "
+#~ "mention the document\n"
+#~ "                     reference"
+#~ msgstr ""
+#~ "(dirección postal en la cabecera de la factura)\n"
+#~ "                    usando una de las siguiente cuentas. No olvide indicar "
+#~ "la\n"
+#~ "                    referencia o nº de factura"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:148
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:140
-msgid "to"
-msgstr "a"
+#~ msgid ""
+#~ "You may directly pay this order online via Paypal's secure payment gateway:"
+#~ msgstr ""
+#~ "Podrá pagar esta factura online, a través de la pasarela de pago seguro de "
+#~ "Paypal:"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:149
-msgid ""
-"(postal address on the invoice header)\n"
-"                     using one of the following bank accounts. Be sure to "
-"mention the invoice\n"
-"                     reference"
-msgstr ""
-"(dirección postal en la cabecera de la factura)\n"
-"                    usando una de las siguiente cuentas. No olvide indicar "
-"la\n"
-"                    referencia o nº de factura"
+#~ msgid "Discount(%)"
+#~ msgstr "Descuento(%)"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:151
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:143
-msgid "on the transfer:"
-msgstr "En la transferencia:"
+#~ msgid "Payment terms"
+#~ msgstr "Condiciones de pago"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:36
-msgid "Order"
-msgstr "Pedido"
+#~ msgid "to"
+#~ msgstr "a"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:42
-msgid "Salesman"
-msgstr "Comercial"
-
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:43
-msgid "Payment terms"
-msgstr "Condiciones de pago"
-
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:60
-msgid "Discount(%)"
-msgstr "Descuento(%)"
-
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:127
-msgid ""
-"You may directly pay this order online via Paypal's secure payment gateway:"
-msgstr ""
-"Podrá pagar esta factura online, a través de la pasarela de pago seguro de "
-"Paypal:"
-
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:141
-msgid ""
-"(postal address on the order header)\n"
-"                     using one of the following bank accounts. Be sure to "
-"mention the document\n"
-"                     reference"
-msgstr ""
-"(dirección postal en la cabecera de la factura)\n"
-"                    usando una de las siguiente cuentas. No olvide indicar "
-"la\n"
-"                    referencia o nº de factura"
+#~ msgid ""
+#~ "serialization of the document's attribute.\n"
+#~ "                            It is usually very quick and straightforward to "
+#~ "create a small plug-in for your preferred\n"
+#~ "                            application that will be capable of importing "
+#~ "any OpenERP EDI document.\n"
+#~ "                            You can find out more details about how to do "
+#~ "this and what the content of OpenERP EDI documents\n"
+#~ "                            is like in the"
+#~ msgstr ""
+#~ "Serialización de los atributos de los documentos.\n"
+#~ "A menudo es rápido y claro crear un pequeño plug-in para la aplicación "
+#~ "preferida correspondiente que sea capaz de importar cualquier documento EDI "
+#~ "de OpenERP.\n"
+#~ "Puede encontrar más detalles acerca de cómo hacer esto y cuál es el "
+#~ "contenido de los documentos EDI de OpenERP en"

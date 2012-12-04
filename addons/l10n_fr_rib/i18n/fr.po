@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.1rc1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:53+0000\n"
 "PO-Revision-Date: 2012-02-09 10:05+0000\n"
 "Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 06:42+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:32+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: l10n_fr_rib
 #: constraint:res.partner.bank:0
@@ -90,9 +90,11 @@ msgid "key"
 msgstr "key"
 
 #. module: l10n_fr_rib
-#: model:res.partner.bank.type.field,name:l10n_fr_rib.rib_rib_acc_number_field
-msgid "rib_acc_number"
-msgstr "rib_acc_number"
+#: code:addons/l10n_fr_rib/bank.py:53
+#: code:addons/l10n_fr_rib/bank.py:58
+#, python-format
+msgid "Error!"
+msgstr ""
 
 #. module: l10n_fr_rib
 #: help:res.partner.bank,key:0
@@ -108,11 +110,9 @@ msgid "Key"
 msgstr "Clé"
 
 #. module: l10n_fr_rib
-#: code:addons/l10n_fr_rib/bank.py:53
-#: code:addons/l10n_fr_rib/bank.py:58
-#, python-format
-msgid "Error"
-msgstr "Error"
+#: model:res.partner.bank.type.field,name:l10n_fr_rib.rib_rib_acc_number_field
+msgid "rib_acc_number"
+msgstr "rib_acc_number"
 
 #. module: l10n_fr_rib
 #: model:res.partner.bank.type,format_layout:l10n_fr_rib.bank_rib
@@ -133,3 +133,7 @@ msgstr "Banque"
 #: model:res.partner.bank.type.field,name:l10n_fr_rib.rib_acc_number_field
 msgid "acc_number"
 msgstr "acc_number"
+
+#, python-format
+#~ msgid "Error"
+#~ msgstr "Error"

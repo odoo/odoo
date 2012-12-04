@@ -7,20 +7,28 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-06-08 02:11+0000\n"
 "Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 06:20+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:35+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: account_payment
-#: field:payment.order,date_scheduled:0
-msgid "Scheduled date if fixed"
-msgstr "固定の予定日"
+#: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a payment order.\n"
+"              </p><p>\n"
+"                A payment order is a payment request from your company to "
+"pay a\n"
+"                supplier invoice or a customer refund.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: account_payment
 #: field:payment.line,currency:0
@@ -56,17 +64,6 @@ msgid "Owner Account"
 msgstr "所有者アカウント"
 
 #. module: account_payment
-#: help:payment.order,state:0
-msgid ""
-"When an order is placed the state is 'Draft'.\n"
-" Once the bank is confirmed the state is set to 'Confirmed'.\n"
-" Then the order is paid the state is 'Done'."
-msgstr ""
-"オーダーがなされた時に状態はドラフトになります。\n"
-"　銀行により確認されると状態は確認済となります。\n"
-"　そしてオーダーの支払がなされると状態は完了となります。"
-
-#. module: account_payment
 #: help:account.invoice,amount_to_pay:0
 msgid ""
 "The amount which should be paid at the current date\n"
@@ -79,11 +76,6 @@ msgstr "現在日付で既に支払オーダーが済んだ金額が減算され
 #: field:payment.order,company_id:0
 msgid "Company"
 msgstr "会社"
-
-#. module: account_payment
-#: field:payment.order,date_prefered:0
-msgid "Preferred date"
-msgstr "希望日"
 
 #. module: account_payment
 #: model:res.groups,name:account_payment.group_account_payment
@@ -113,11 +105,6 @@ msgid "Due Date"
 msgstr "期日"
 
 #. module: account_payment
-#: view:account.move.line:0
-msgid "Account Entry Line"
-msgstr "アカウントエントリー行"
-
-#. module: account_payment
 #: view:payment.order.create:0
 msgid "_Add to payment order"
 msgstr "支払オーダーに追加"
@@ -129,15 +116,25 @@ msgid "Payment Populate statement"
 msgstr "設定済取引明細書による支払"
 
 #. module: account_payment
+#: code:addons/account_payment/account_invoice.py:43
+#, python-format
+msgid ""
+"You cannot cancel an invoice which has already been imported in a payment "
+"order. Remove it from the following payment order : %s."
+msgstr ""
+
+#. module: account_payment
+#: code:addons/account_payment/account_invoice.py:43
+#: code:addons/account_payment/account_move_line.py:110
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: account_payment
 #: report:payment.order:0
 #: view:payment.order:0
 msgid "Amount"
 msgstr "金額"
-
-#. module: account_payment
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
-msgstr "会計エントリーにおいて貸方または借方の値が誤っています。"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -166,22 +163,10 @@ msgid "The payment line name must be unique!"
 msgstr "支払行の名前は固有であるべきです。"
 
 #. module: account_payment
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr "無効なBBA（ブロードバンドアクセス）構造の通信"
-
-#. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
 msgid "Payment Orders"
 msgstr "支払オーダー"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid ""
-"The date of your Journal Entry is not in the defined period! You should "
-"change the date or remove this constraint from the journal."
-msgstr "仕訳帳エントリーの日付が定義された期間ではありません。日付を変更するか仕訳帳からこの制約を削除する必要があります。"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -200,6 +185,14 @@ msgstr "支払行"
 #: view:payment.line:0
 msgid "Amount Total"
 msgstr "合計金額"
+
+#. module: account_payment
+#: help:payment.order,state:0
+msgid ""
+"When an order is placed the status is 'Draft'.\n"
+" Once the bank is confirmed the status is set to 'Confirmed'.\n"
+" Then the order is paid the status is 'Done'."
+msgstr ""
 
 #. module: account_payment
 #: view:payment.order:0
@@ -223,10 +216,9 @@ msgid "Structured"
 msgstr "構造化済"
 
 #. module: account_payment
-#: view:payment.order:0
-#: field:payment.order,state:0
-msgid "State"
-msgstr "状態"
+#: view:account.bank.statement:0
+msgid "Import Payment Lines"
+msgstr ""
 
 #. module: account_payment
 #: view:payment.line:0
@@ -240,6 +232,7 @@ msgstr "取引情報"
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_mode_form
 #: view:payment.mode:0
 #: view:payment.order:0
+#: field:payment.order,mode:0
 msgid "Payment Mode"
 msgstr "支払モード"
 
@@ -263,20 +256,9 @@ msgstr ""
 "支払オーダーのオプション選択：固定は指定した日付を意味します。直接は直ちに実行を意味します。期日は実行のスケジュールされた日付を意味します。"
 
 #. module: account_payment
-#: code:addons/account_payment/account_move_line.py:110
-#, python-format
-msgid "Error !"
-msgstr "エラー"
-
-#. module: account_payment
-#: view:account.move.line:0
-msgid "Total debit"
-msgstr "借方合計"
-
-#. module: account_payment
-#: field:payment.order,date_done:0
-msgid "Execution date"
-msgstr "実行日"
+#: field:payment.order,date_created:0
+msgid "Creation Date"
+msgstr ""
 
 #. module: account_payment
 #: help:payment.mode,journal:0
@@ -352,14 +334,6 @@ msgid "Amount to be paid"
 msgstr "支払われるべき金額"
 
 #. module: account_payment
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry forces to provide a secondary "
-"currency. You should remove the secondary currency on the account or select "
-"a multi-currency view on the journal."
-msgstr "選択した仕訳のアカウントは第２の通貨の入力を要求しています。アカウントの第２通貨を削除するか、仕訳で多通貨ビューを選択して下さい。"
-
-#. module: account_payment
 #: report:payment.order:0
 msgid "Currency"
 msgstr "通貨"
@@ -385,6 +359,12 @@ msgstr "支払日付が指定されない場合、銀行は直接支払行とし
 #: model:ir.model,name:account_payment.model_account_payment_populate_statement
 msgid "Account Payment Populate Statement"
 msgstr "設定済取引明細書によるアカウント支払"
+
+#. module: account_payment
+#: code:addons/account_payment/account_move_line.py:110
+#, python-format
+msgid "There is no partner defined on the entry line."
+msgstr ""
 
 #. module: account_payment
 #: help:payment.mode,name:0
@@ -413,15 +393,15 @@ msgid "Draft"
 msgstr "ドラフト"
 
 #. module: account_payment
+#: view:payment.order:0
+#: field:payment.order,state:0
+msgid "Status"
+msgstr ""
+
+#. module: account_payment
 #: help:payment.line,communication2:0
 msgid "The successor message of Communication."
 msgstr "通信の後続メッセージ"
-
-#. module: account_payment
-#: code:addons/account_payment/account_move_line.py:110
-#, python-format
-msgid "No partner defined on entry line"
-msgstr "エントリー行にパートナが定義されていません。"
 
 #. module: account_payment
 #: help:payment.line,info_partner:0
@@ -434,19 +414,9 @@ msgid "Populate Statement:"
 msgstr "設定済取引明細書"
 
 #. module: account_payment
-#: view:account.move.line:0
-msgid "Total credit"
-msgstr "合計貸方"
-
-#. module: account_payment
 #: help:payment.order,date_scheduled:0
 msgid "Select a date if you have chosen Preferred Date to be fixed."
 msgstr "固定の予定日を選択した場合は、日付を選択して下さい。"
-
-#. module: account_payment
-#: field:payment.order,user_id:0
-msgid "User"
-msgstr "ユーザ"
 
 #. module: account_payment
 #: field:account.payment.populate.statement,lines:0
@@ -457,11 +427,6 @@ msgstr "支払行"
 #: model:ir.model,name:account_payment.model_account_move_line
 msgid "Journal Items"
 msgstr "仕訳帳項目"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "You can not create journal items on an account of type view."
-msgstr "ビュータイプのアカウントでは仕訳帳項目を作ることはできません。"
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -476,10 +441,9 @@ msgid "Search"
 msgstr "検索"
 
 #. module: account_payment
-#: model:ir.actions.report.xml,name:account_payment.payment_order1
-#: model:ir.model,name:account_payment.model_payment_order
-msgid "Payment Order"
-msgstr "支払オーダー"
+#: field:payment.order,user_id:0
+msgid "Responsible"
+msgstr ""
 
 #. module: account_payment
 #: field:payment.line,date:0
@@ -492,9 +456,9 @@ msgid "Total:"
 msgstr "合計："
 
 #. module: account_payment
-#: field:payment.order,date_created:0
-msgid "Creation date"
-msgstr "作成日"
+#: field:payment.order,date_done:0
+msgid "Execution Date"
+msgstr ""
 
 #. module: account_payment
 #: view:account.payment.populate.statement:0
@@ -502,9 +466,9 @@ msgid "ADD"
 msgstr "追加"
 
 #. module: account_payment
-#: view:account.bank.statement:0
-msgid "Import payment lines"
-msgstr "支払行のインポート"
+#: model:ir.actions.act_window,name:account_payment.action_create_payment_order
+msgid "Populate Payment"
+msgstr "設定済支払"
 
 #. module: account_payment
 #: field:account.move.line,amount_to_pay:0
@@ -530,11 +494,6 @@ msgstr "アカウントの支払実行"
 #: report:payment.order:0
 msgid "Invoice Ref"
 msgstr "請求書参照"
-
-#. module: account_payment
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr "請求書番号は会社ごとに固有である必要があります。"
 
 #. module: account_payment
 #: field:payment.line,name:0
@@ -588,20 +547,11 @@ msgid "Information"
 msgstr "情報"
 
 #. module: account_payment
-#: constraint:account.move.line:0
-msgid "Company must be the same for its related account and period."
-msgstr "会社は関連するアカウントと期間は同じでなければなりません。"
-
-#. module: account_payment
-#: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
-msgid ""
-"A payment order is a payment request from your company to pay a supplier "
-"invoice or a customer credit note. Here you can register all payment orders "
-"that should be done, keep track of all payment orders and mention the "
-"invoice reference and the partner the payment should be done for."
-msgstr ""
-"支払オーダーはあなたの会社から仕入先の請求書を支払う支払要求、または顧客の入金済通知書です。ここから、行わねばならない全ての支払オーダーの登録、全ての支払"
-"オーダーの追跡、支払がされるべき請求書参照とパートナへの言及ができます。"
+#: model:ir.actions.report.xml,name:account_payment.payment_order1
+#: model:ir.model,name:account_payment.model_payment_order
+#: view:payment.order:0
+msgid "Payment Order"
+msgstr "支払オーダー"
 
 #. module: account_payment
 #: help:payment.line,amount:0
@@ -622,6 +572,11 @@ msgstr "パートナ通貨での金額"
 #: field:payment.line,communication2:0
 msgid "Communication 2"
 msgstr "通信２"
+
+#. module: account_payment
+#: field:payment.order,date_scheduled:0
+msgid "Scheduled Date"
+msgstr ""
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
@@ -701,11 +656,6 @@ msgid "Order"
 msgstr "オーダー"
 
 #. module: account_payment
-#: constraint:account.move.line:0
-msgid "You can not create journal items on closed account."
-msgstr "閉鎖アカウントには仕訳項目を作ることはできません。"
-
-#. module: account_payment
 #: field:payment.order,total:0
 msgid "Total"
 msgstr "合計"
@@ -717,16 +667,106 @@ msgid "Make Payment"
 msgstr "支払の作成"
 
 #. module: account_payment
-#: field:payment.order,mode:0
-msgid "Payment mode"
-msgstr "支払モード"
+#: field:payment.order,date_prefered:0
+msgid "Preferred Date"
+msgstr ""
 
 #. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_create_payment_order
-msgid "Populate Payment"
-msgstr "設定済支払"
+#: view:account.payment.make.payment:0
+#: view:account.payment.populate.statement:0
+#: view:payment.order.create:0
+msgid "or"
+msgstr ""
 
 #. module: account_payment
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
 msgstr "支払モード用の銀行口座"
+
+#~ msgid "Preferred date"
+#~ msgstr "希望日"
+
+#~ msgid "Account Entry Line"
+#~ msgstr "アカウントエントリー行"
+
+#~ msgid ""
+#~ "The date of your Journal Entry is not in the defined period! You should "
+#~ "change the date or remove this constraint from the journal."
+#~ msgstr "仕訳帳エントリーの日付が定義された期間ではありません。日付を変更するか仕訳帳からこの制約を削除する必要があります。"
+
+#~ msgid "Invalid BBA Structured Communication !"
+#~ msgstr "無効なBBA（ブロードバンドアクセス）構造の通信"
+
+#~ msgid "Wrong credit or debit value in accounting entry !"
+#~ msgstr "会計エントリーにおいて貸方または借方の値が誤っています。"
+
+#~ msgid "State"
+#~ msgstr "状態"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "エラー"
+
+#~ msgid "Execution date"
+#~ msgstr "実行日"
+
+#~ msgid "Total debit"
+#~ msgstr "借方合計"
+
+#~ msgid ""
+#~ "The selected account of your Journal Entry forces to provide a secondary "
+#~ "currency. You should remove the secondary currency on the account or select "
+#~ "a multi-currency view on the journal."
+#~ msgstr "選択した仕訳のアカウントは第２の通貨の入力を要求しています。アカウントの第２通貨を削除するか、仕訳で多通貨ビューを選択して下さい。"
+
+#~ msgid "Scheduled date if fixed"
+#~ msgstr "固定の予定日"
+
+#~ msgid "Total credit"
+#~ msgstr "合計貸方"
+
+#~ msgid "You can not create journal items on an account of type view."
+#~ msgstr "ビュータイプのアカウントでは仕訳帳項目を作ることはできません。"
+
+#, python-format
+#~ msgid "No partner defined on entry line"
+#~ msgstr "エントリー行にパートナが定義されていません。"
+
+#~ msgid "User"
+#~ msgstr "ユーザ"
+
+#~ msgid "Creation date"
+#~ msgstr "作成日"
+
+#~ msgid "Import payment lines"
+#~ msgstr "支払行のインポート"
+
+#~ msgid "Invoice Number must be unique per Company!"
+#~ msgstr "請求書番号は会社ごとに固有である必要があります。"
+
+#~ msgid "Company must be the same for its related account and period."
+#~ msgstr "会社は関連するアカウントと期間は同じでなければなりません。"
+
+#~ msgid ""
+#~ "A payment order is a payment request from your company to pay a supplier "
+#~ "invoice or a customer credit note. Here you can register all payment orders "
+#~ "that should be done, keep track of all payment orders and mention the "
+#~ "invoice reference and the partner the payment should be done for."
+#~ msgstr ""
+#~ "支払オーダーはあなたの会社から仕入先の請求書を支払う支払要求、または顧客の入金済通知書です。ここから、行わねばならない全ての支払オーダーの登録、全ての支払"
+#~ "オーダーの追跡、支払がされるべき請求書参照とパートナへの言及ができます。"
+
+#~ msgid "You can not create journal items on closed account."
+#~ msgstr "閉鎖アカウントには仕訳項目を作ることはできません。"
+
+#~ msgid "Payment mode"
+#~ msgstr "支払モード"
+
+#~ msgid ""
+#~ "When an order is placed the state is 'Draft'.\n"
+#~ " Once the bank is confirmed the state is set to 'Confirmed'.\n"
+#~ " Then the order is paid the state is 'Done'."
+#~ msgstr ""
+#~ "オーダーがなされた時に状態はドラフトになります。\n"
+#~ "　銀行により確認されると状態は確認済となります。\n"
+#~ "　そしてオーダーの支払がなされると状態は完了となります。"

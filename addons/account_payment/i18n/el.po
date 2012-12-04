@@ -7,20 +7,28 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2010-11-15 08:29+0000\n"
 "Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 06:20+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:35+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: account_payment
-#: field:payment.order,date_scheduled:0
-msgid "Scheduled date if fixed"
-msgstr "Προγραμματισμένη ημερομηνία εάν είναι καθορισμένο"
+#: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a payment order.\n"
+"              </p><p>\n"
+"                A payment order is a payment request from your company to "
+"pay a\n"
+"                supplier invoice or a customer refund.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: account_payment
 #: field:payment.line,currency:0
@@ -56,18 +64,6 @@ msgid "Owner Account"
 msgstr "Λογαριασμός Κατόχου"
 
 #. module: account_payment
-#: help:payment.order,state:0
-msgid ""
-"When an order is placed the state is 'Draft'.\n"
-" Once the bank is confirmed the state is set to 'Confirmed'.\n"
-" Then the order is paid the state is 'Done'."
-msgstr ""
-"Όταν η κατάσταση της παραγγελίας είναι «Σχέδιο».\n"
-" Μόλις η τράπεζα επιβεβαιώθεί η κατάσταση  ορίζεται σε «Επικύρωμένο».\n"
-" Στη συνέχεια, η παραγγελία πληρώνεται και η κατάσταση είναι "
-"'Πραγματοποιήθηκε'."
-
-#. module: account_payment
 #: help:account.invoice,amount_to_pay:0
 msgid ""
 "The amount which should be paid at the current date\n"
@@ -82,11 +78,6 @@ msgstr ""
 #: field:payment.order,company_id:0
 msgid "Company"
 msgstr "Εταιρία"
-
-#. module: account_payment
-#: field:payment.order,date_prefered:0
-msgid "Preferred date"
-msgstr "Προτιμώμενη ημερομηνία"
 
 #. module: account_payment
 #: model:res.groups,name:account_payment.group_account_payment
@@ -116,11 +107,6 @@ msgid "Due Date"
 msgstr "Ημερομηνία Λήξης"
 
 #. module: account_payment
-#: view:account.move.line:0
-msgid "Account Entry Line"
-msgstr "Γραμμή Εγγραφής Λογαριασμού"
-
-#. module: account_payment
 #: view:payment.order.create:0
 msgid "_Add to payment order"
 msgstr "_Προσθήκη σε εντολή πληρωμής"
@@ -132,15 +118,25 @@ msgid "Payment Populate statement"
 msgstr ""
 
 #. module: account_payment
+#: code:addons/account_payment/account_invoice.py:43
+#, python-format
+msgid ""
+"You cannot cancel an invoice which has already been imported in a payment "
+"order. Remove it from the following payment order : %s."
+msgstr ""
+
+#. module: account_payment
+#: code:addons/account_payment/account_invoice.py:43
+#: code:addons/account_payment/account_move_line.py:110
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: account_payment
 #: report:payment.order:0
 #: view:payment.order:0
 msgid "Amount"
 msgstr "Ποσό"
-
-#. module: account_payment
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
-msgstr "Λάθος πιστωτική ή χρεωστική τιμή στην καταχώρηση!"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -169,22 +165,10 @@ msgid "The payment line name must be unique!"
 msgstr "Η γραμή πληρωμής θα πρέπει να είναι μοναδική"
 
 #. module: account_payment
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr ""
-
-#. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
 msgid "Payment Orders"
 msgstr "Εντολές Πληρωμής"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid ""
-"The date of your Journal Entry is not in the defined period! You should "
-"change the date or remove this constraint from the journal."
-msgstr ""
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -203,6 +187,14 @@ msgstr "Γραμμή Πληρωμής"
 #: view:payment.line:0
 msgid "Amount Total"
 msgstr "Σύνολο Ποσού"
+
+#. module: account_payment
+#: help:payment.order,state:0
+msgid ""
+"When an order is placed the status is 'Draft'.\n"
+" Once the bank is confirmed the status is set to 'Confirmed'.\n"
+" Then the order is paid the status is 'Done'."
+msgstr ""
 
 #. module: account_payment
 #: view:payment.order:0
@@ -226,10 +218,9 @@ msgid "Structured"
 msgstr "Δομημένο"
 
 #. module: account_payment
-#: view:payment.order:0
-#: field:payment.order,state:0
-msgid "State"
-msgstr "Κατάσταση"
+#: view:account.bank.statement:0
+msgid "Import Payment Lines"
+msgstr ""
 
 #. module: account_payment
 #: view:payment.line:0
@@ -243,6 +234,7 @@ msgstr "Πληροφορίες Συναλλαγής"
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_mode_form
 #: view:payment.mode:0
 #: view:payment.order:0
+#: field:payment.order,mode:0
 msgid "Payment Mode"
 msgstr "Κατάσταση Πληρωμής"
 
@@ -268,20 +260,9 @@ msgstr ""
 "\"Ημερομηνία Λήξης\" σημαίνει την καθορισμένη ημερομηνία εκτέλεσης."
 
 #. module: account_payment
-#: code:addons/account_payment/account_move_line.py:110
-#, python-format
-msgid "Error !"
-msgstr "Σφάλμα!"
-
-#. module: account_payment
-#: view:account.move.line:0
-msgid "Total debit"
-msgstr "Συνολική χρέωση"
-
-#. module: account_payment
-#: field:payment.order,date_done:0
-msgid "Execution date"
-msgstr "Ημερομηνία εκτέλεσης"
+#: field:payment.order,date_created:0
+msgid "Creation Date"
+msgstr ""
 
 #. module: account_payment
 #: help:payment.mode,journal:0
@@ -357,14 +338,6 @@ msgid "Amount to be paid"
 msgstr "Ποσό προς πληρωμή"
 
 #. module: account_payment
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry forces to provide a secondary "
-"currency. You should remove the secondary currency on the account or select "
-"a multi-currency view on the journal."
-msgstr ""
-
-#. module: account_payment
 #: report:payment.order:0
 msgid "Currency"
 msgstr "Νόμισμα"
@@ -394,6 +367,12 @@ msgid "Account Payment Populate Statement"
 msgstr ""
 
 #. module: account_payment
+#: code:addons/account_payment/account_move_line.py:110
+#, python-format
+msgid "There is no partner defined on the entry line."
+msgstr ""
+
+#. module: account_payment
 #: help:payment.mode,name:0
 msgid "Mode of Payment"
 msgstr "Κατάσταση των Πληρωμών"
@@ -420,15 +399,15 @@ msgid "Draft"
 msgstr "Πρόχειρο"
 
 #. module: account_payment
+#: view:payment.order:0
+#: field:payment.order,state:0
+msgid "Status"
+msgstr ""
+
+#. module: account_payment
 #: help:payment.line,communication2:0
 msgid "The successor message of Communication."
 msgstr "Το επόμενο μήνυμα της Επικοινωνίας."
-
-#. module: account_payment
-#: code:addons/account_payment/account_move_line.py:110
-#, python-format
-msgid "No partner defined on entry line"
-msgstr "Κανένας συνεργάτης δεν καθορίστηκε για αυτήν την γραμμή εγγραφής"
 
 #. module: account_payment
 #: help:payment.line,info_partner:0
@@ -441,21 +420,11 @@ msgid "Populate Statement:"
 msgstr ""
 
 #. module: account_payment
-#: view:account.move.line:0
-msgid "Total credit"
-msgstr "Συνολική πίστωση"
-
-#. module: account_payment
 #: help:payment.order,date_scheduled:0
 msgid "Select a date if you have chosen Preferred Date to be fixed."
 msgstr ""
 "Επιλέξτε μιά ημερομηνία εάν έχετε επιλέξει προτιμώμενη ημερομηνία ως "
 "καθορισμένο."
-
-#. module: account_payment
-#: field:payment.order,user_id:0
-msgid "User"
-msgstr "Χρήστης"
 
 #. module: account_payment
 #: field:account.payment.populate.statement,lines:0
@@ -466,11 +435,6 @@ msgstr "Γραμμές Πληρωμής"
 #: model:ir.model,name:account_payment.model_account_move_line
 msgid "Journal Items"
 msgstr "Στοιχεία Ημερολογίου"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "You can not create journal items on an account of type view."
-msgstr ""
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -487,10 +451,9 @@ msgid "Search"
 msgstr "Αναζήτηση"
 
 #. module: account_payment
-#: model:ir.actions.report.xml,name:account_payment.payment_order1
-#: model:ir.model,name:account_payment.model_payment_order
-msgid "Payment Order"
-msgstr "Διάταξη Πληρωμής"
+#: field:payment.order,user_id:0
+msgid "Responsible"
+msgstr ""
 
 #. module: account_payment
 #: field:payment.line,date:0
@@ -503,9 +466,9 @@ msgid "Total:"
 msgstr "Σύνολο:"
 
 #. module: account_payment
-#: field:payment.order,date_created:0
-msgid "Creation date"
-msgstr "Ημερομηνία δημιουργίας"
+#: field:payment.order,date_done:0
+msgid "Execution Date"
+msgstr ""
 
 #. module: account_payment
 #: view:account.payment.populate.statement:0
@@ -513,9 +476,9 @@ msgid "ADD"
 msgstr "ΠΡΟΣΘΗΚΗ"
 
 #. module: account_payment
-#: view:account.bank.statement:0
-msgid "Import payment lines"
-msgstr "Εισαγωγή γραμμών πληρωμής"
+#: model:ir.actions.act_window,name:account_payment.action_create_payment_order
+msgid "Populate Payment"
+msgstr "Συμπλήρωση Πληρωμής"
 
 #. module: account_payment
 #: field:account.move.line,amount_to_pay:0
@@ -541,11 +504,6 @@ msgstr ""
 #: report:payment.order:0
 msgid "Invoice Ref"
 msgstr "Παρ. Τιμολογίου"
-
-#. module: account_payment
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr ""
 
 #. module: account_payment
 #: field:payment.line,name:0
@@ -599,18 +557,11 @@ msgid "Information"
 msgstr "Πληροφορίες"
 
 #. module: account_payment
-#: constraint:account.move.line:0
-msgid "Company must be the same for its related account and period."
-msgstr ""
-
-#. module: account_payment
-#: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
-msgid ""
-"A payment order is a payment request from your company to pay a supplier "
-"invoice or a customer credit note. Here you can register all payment orders "
-"that should be done, keep track of all payment orders and mention the "
-"invoice reference and the partner the payment should be done for."
-msgstr ""
+#: model:ir.actions.report.xml,name:account_payment.payment_order1
+#: model:ir.model,name:account_payment.model_payment_order
+#: view:payment.order:0
+msgid "Payment Order"
+msgstr "Διάταξη Πληρωμής"
 
 #. module: account_payment
 #: help:payment.line,amount:0
@@ -631,6 +582,11 @@ msgstr "Ποσό σε Νόμισμα Συνεργάτη"
 #: field:payment.line,communication2:0
 msgid "Communication 2"
 msgstr "Επικοινωνία 2"
+
+#. module: account_payment
+#: field:payment.order,date_scheduled:0
+msgid "Scheduled Date"
+msgstr ""
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
@@ -713,11 +669,6 @@ msgid "Order"
 msgstr "Εντολή"
 
 #. module: account_payment
-#: constraint:account.move.line:0
-msgid "You can not create journal items on closed account."
-msgstr ""
-
-#. module: account_payment
 #: field:payment.order,total:0
 msgid "Total"
 msgstr "Σύνολο"
@@ -729,25 +680,49 @@ msgid "Make Payment"
 msgstr "Κάνε Πληρωμή"
 
 #. module: account_payment
-#: field:payment.order,mode:0
-msgid "Payment mode"
-msgstr "Κατάσταση πληρωμής"
+#: field:payment.order,date_prefered:0
+msgid "Preferred Date"
+msgstr ""
 
 #. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_create_payment_order
-msgid "Populate Payment"
-msgstr "Συμπλήρωση Πληρωμής"
+#: view:account.payment.make.payment:0
+#: view:account.payment.populate.statement:0
+#: view:payment.order.create:0
+msgid "or"
+msgstr ""
 
 #. module: account_payment
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
 msgstr "Λογαριασμός Τραπέζης για την Κατάσταση Πληρωμής"
 
+#~ msgid "Preferred date"
+#~ msgstr "Προτιμώμενη ημερομηνία"
+
+#~ msgid "Scheduled date if fixed"
+#~ msgstr "Προγραμματισμένη ημερομηνία εάν είναι καθορισμένο"
+
+#~ msgid "Account Entry Line"
+#~ msgstr "Γραμμή Εγγραφής Λογαριασμού"
+
 #~ msgid "Execution date:"
 #~ msgstr "Ημερομηνία εκτέλεσης:"
 
+#~ msgid "State"
+#~ msgstr "Κατάσταση"
+
 #~ msgid "Suitable bank types"
 #~ msgstr "Κατάλληλοι τύποι τράπεζας"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Σφάλμα!"
+
+#~ msgid "Execution date"
+#~ msgstr "Ημερομηνία εκτέλεσης"
+
+#~ msgid "Total debit"
+#~ msgstr "Συνολική χρέωση"
 
 #~ msgid "Payment Management"
 #~ msgstr "Διαχείριση Πληρωμών"
@@ -757,6 +732,16 @@ msgstr "Λογαριασμός Τραπέζης για την Κατάσταση
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Άκυρο XML για την αρχιτεκτονική όψης!"
+
+#, python-format
+#~ msgid "No partner defined on entry line"
+#~ msgstr "Κανένας συνεργάτης δεν καθορίστηκε για αυτήν την γραμμή εγγραφής"
+
+#~ msgid "Total credit"
+#~ msgstr "Συνολική πίστωση"
+
+#~ msgid "Creation date"
+#~ msgstr "Ημερομηνία δημιουργίας"
 
 #~ msgid "Reference:"
 #~ msgstr "Αναφορά:"
@@ -769,6 +754,12 @@ msgstr "Λογαριασμός Τραπέζης για την Κατάσταση
 
 #~ msgid "Populate payment"
 #~ msgstr "Συγκέντρωση πληρωμών"
+
+#~ msgid "User"
+#~ msgstr "Χρήστης"
+
+#~ msgid "Import payment lines"
+#~ msgstr "Εισαγωγή γραμμών πληρωμής"
 
 #~ msgid "Code"
 #~ msgstr "Κώδικας"
@@ -818,8 +809,24 @@ msgstr "Λογαριασμός Τραπέζης για την Κατάσταση
 #~ msgid "Select the Payment Type for the Payment Mode."
 #~ msgstr "Επιλέξτε τον Τύπο Πληρωμής για την Κατάσταση Πληρωμής."
 
+#~ msgid "Payment mode"
+#~ msgstr "Κατάσταση πληρωμής"
+
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Λανθασμένο όνομα μοντέλου στον ορισμό ενέργειας"
+
+#~ msgid ""
+#~ "When an order is placed the state is 'Draft'.\n"
+#~ " Once the bank is confirmed the state is set to 'Confirmed'.\n"
+#~ " Then the order is paid the state is 'Done'."
+#~ msgstr ""
+#~ "Όταν η κατάσταση της παραγγελίας είναι «Σχέδιο».\n"
+#~ " Μόλις η τράπεζα επιβεβαιώθεί η κατάσταση  ορίζεται σε «Επικύρωμένο».\n"
+#~ " Στη συνέχεια, η παραγγελία πληρώνεται και η κατάσταση είναι "
+#~ "'Πραγματοποιήθηκε'."
+
+#~ msgid "Wrong credit or debit value in accounting entry !"
+#~ msgstr "Λάθος πιστωτική ή χρεωστική τιμή στην καταχώρηση!"
 
 #~ msgid ""
 #~ "\n"

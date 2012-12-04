@@ -21,6 +21,8 @@ function openerp_pos_db(instance, module){
             this.category_childs = {};
             this.category_parent    = {};
             this.category_search_string = {};
+            this.packagings_by_id = {};
+            this.packagings_by_product_id = {};
         },
         /* returns the category object from its id. If you pass a list of id as parameters, you get
          * a list of category objects. 
@@ -116,6 +118,10 @@ function openerp_pos_db(instance, module){
             if(product.ean13){
                 str += '|' + product.ean13;
             }
+            var packagings = this.packagings_by_product_id[product.id] || [];
+            for(var i = 0; i < packagings.length; i++){
+                str += '|' + packagings[i].ean;
+            }
             return str + '\n';
         },
         add_products: function(products){
@@ -128,7 +134,7 @@ function openerp_pos_db(instance, module){
             for(var i = 0, len = products.length; i < len; i++){
                 var product = products[i];
                 var search_string = this._product_search_string(product);
-                var categ_id = product.pos_categ_id[0];
+                var categ_id = product.pos_categ_id ? product.pos_categ_id[0] : this.root_category_id;
                 if(!stored_categories[categ_id]){
                     stored_categories[categ_id] = [];
                 }
@@ -158,6 +164,16 @@ function openerp_pos_db(instance, module){
             this.save('products',stored_products);
             this.save('categories',stored_categories);
         },
+        add_packagings: function(packagings){
+            for(var i = 0, len = packagings.length; i < len; i++){
+                var pack = packagings[i];
+                this.packagings_by_id[pack.id] = pack;
+                if(!this.packagings_by_product_id[pack.product_id[0]]){
+                    this.packagings_by_product_id[pack.product_id[0]] = [];
+                }
+                this.packagings_by_product_id[pack.product_id[0]].push(pack);
+            }
+        },
         /* removes all the data from the database. TODO : being able to selectively remove data */
         clear: function(stores){
             for(var i = 0, len = arguments.length; i < len; i++){
@@ -184,6 +200,12 @@ function openerp_pos_db(instance, module){
                     return products[i];
                 }
             }
+            for(var p in this.packagings_by_id){
+                var pack = this.packagings_by_id[p];
+                if( pack.ean === ean13){
+                    return products[pack.product_id[0]];
+                }
+            }
             return undefined;
         },
         get_product_by_category: function(category_id){
@@ -191,8 +213,10 @@ function openerp_pos_db(instance, module){
             var stored_products   = this.load('products',{});
             var product_ids  = stored_categories[category_id];
             var list = [];
-            for(var i = 0, len = Math.min(product_ids.length,this.limit); i < len; i++){
-                list.push(stored_products[product_ids[i]]);
+            if (product_ids) {
+                for (var i = 0, len = Math.min(product_ids.length, this.limit); i < len; i++) {
+                    list.push(stored_products[product_ids[i]]);
+                }
             }
             return list;
         },
@@ -223,9 +247,12 @@ function openerp_pos_db(instance, module){
         },
         remove_order: function(order_id){
             var orders = this.load('orders',[]);
+            console.log('Remove order:',order_id);
+            console.log('Order count:',orders.length);
             orders = _.filter(orders, function(order){
                 return order.id !== order_id;
             });
+            console.log('Order count:',orders.length);
             this.save('orders',orders);
         },
         get_orders: function(){

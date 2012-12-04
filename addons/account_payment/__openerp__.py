@@ -65,6 +65,5 @@ have a new option to import payment orders as bank statement lines.
     ],
     'installable': True,
     'auto_install': False,
-    'certificate': '0061703998541',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

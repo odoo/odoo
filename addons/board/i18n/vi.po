@@ -7,55 +7,58 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2011-05-25 15:06+0000\n"
 "Last-Translator: OpenBMS JSC <Unknown>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 06:24+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:12+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: board
-#: view:res.log.report:0
-msgid "  Year  "
-msgstr "  Năm  "
-
-#. module: board
-#: model:ir.model,name:board.model_board_menu_create
-msgid "Menu Create"
+#: model:ir.actions.act_window,name:board.action_board_create
+#: model:ir.ui.menu,name:board.menu_board_create
+msgid "Create Board"
 msgstr ""
 
 #. module: board
-#: view:board.menu.create:0
-msgid "Menu Information"
+#: view:board.create:0
+msgid "Create"
 msgstr ""
 
 #. module: board
-#: view:res.users:0
-msgid "Latest Connections"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:4
+#, python-format
+msgid "Reset Layout.."
 msgstr ""
 
 #. module: board
-#: view:res.log.report:0
-msgid "Log created in last month"
+#: view:board.create:0
+msgid "Create New Dashboard"
 msgstr ""
 
 #. module: board
-#: view:board.board:0
-#: model:ir.actions.act_window,name:board.open_board_administration_form
-msgid "Administration Dashboard"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:40
+#, python-format
+msgid "Choose dashboard layout"
 msgstr ""
 
 #. module: board
-#: view:res.log.report:0
-msgid "Group By..."
-msgstr "Nhóm theo..."
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:70
+#, python-format
+msgid "Add"
+msgstr ""
 
 #. module: board
-#: view:res.log.report:0
-msgid "Log created in current year"
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:139
+#, python-format
+msgid "Are you sure you want to remove this item ?"
 msgstr ""
 
 #. module: board
@@ -64,288 +67,110 @@ msgid "Board"
 msgstr ""
 
 #. module: board
-#: field:board.menu.create,menu_name:0
-msgid "Menu Name"
-msgstr "Tên trình đơn"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.board_weekly_res_log_report_action
-#: view:res.log.report:0
-msgid "Weekly Global Activity"
-msgstr ""
-
-#. module: board
-#: field:board.board.line,name:0
-msgid "Title"
-msgstr ""
-
-#. module: board
-#: field:res.log.report,nbr:0
-msgid "# of Entries"
-msgstr ""
-
-#. module: board
-#: view:res.log.report:0
-#: field:res.log.report,month:0
-msgid "Month"
-msgstr "Tháng"
-
-#. module: board
-#: view:res.log.report:0
-msgid "Log created in current month"
-msgstr ""
-
-#. module: board
-#: model:ir.actions.act_window,name:board.board_monthly_res_log_report_action
-#: view:res.log.report:0
-msgid "Monthly Activity per Document"
-msgstr ""
-
-#. module: board
 #: view:board.board:0
-msgid "Configuration Overview"
+#: model:ir.actions.act_window,name:board.open_board_my_dash_action
+#: model:ir.ui.menu,name:board.menu_board_my_dash
+msgid "My Dashboard"
 msgstr ""
 
 #. module: board
-#: model:ir.actions.act_window,name:board.action_view_board_list_form
-#: model:ir.ui.menu,name:board.menu_view_board_form
-msgid "Dashboard Definition"
+#: field:board.create,name:0
+msgid "Board Name"
 msgstr ""
 
 #. module: board
-#: selection:res.log.report,month:0
-msgid "March"
-msgstr "Tháng Ba"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "August"
-msgstr "Tháng Tám"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_user_connection_tree
-msgid "User Connections"
+#: model:ir.model,name:board.model_board_create
+msgid "Board Creation"
 msgstr ""
 
 #. module: board
-#: field:res.log.report,creation_date:0
-msgid "Creation Date"
-msgstr "Ngày tạo"
-
-#. module: board
-#: view:res.log.report:0
-msgid "Log Analysis"
-msgstr ""
-
-#. module: board
-#: field:res.log.report,res_model:0
-msgid "Object"
-msgstr ""
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "June"
-msgstr "Tháng Sáu"
-
-#. module: board
-#: field:board.board,line_ids:0
-msgid "Action Views"
-msgstr ""
-
-#. module: board
-#: model:ir.model,name:board.model_res_log_report
-msgid "Log Report"
-msgstr ""
-
-#. module: board
-#: code:addons/board/wizard/board_menu_create.py:46
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:67
 #, python-format
-msgid "Please Insert Dashboard View(s) !"
+msgid "Add to Dashboard"
 msgstr ""
 
 #. module: board
-#: selection:res.log.report,month:0
-msgid "July"
-msgstr "Tháng Bảy"
-
-#. module: board
-#: view:res.log.report:0
-#: field:res.log.report,day:0
-msgid "Day"
-msgstr "Ngày"
-
-#. module: board
-#: view:board.menu.create:0
-msgid "Create Menu For Dashboard"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:28
+#, python-format
+msgid "&nbsp;"
 msgstr ""
 
 #. module: board
-#: selection:res.log.report,month:0
-msgid "February"
-msgstr "Tháng Hai"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "October"
-msgstr "Tháng Mười"
-
-#. module: board
-#: model:ir.model,name:board.model_board_board_line
-msgid "Board Line"
+#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+msgid ""
+"<div class=\"oe_empty_custom_dashboard\">\n"
+"                  <p>\n"
+"                    <b>Your personal dashboard is empty.</b>\n"
+"                  </p><p>\n"
+"                    To add your first report into this dashboard, go to any\n"
+"                    menu, switch to list or graph view, and click <i>'Add "
+"to\n"
+"                    Dashboard'</i> in the extended search options.\n"
+"                  </p><p>\n"
+"                    You can filter and group data before inserting into the\n"
+"                    dashboard using the search options.\n"
+"                  </p>\n"
+"              </div>\n"
+"            "
 msgstr ""
 
 #. module: board
-#: field:board.menu.create,menu_parent_id:0
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:6
+#, python-format
+msgid "Reset"
+msgstr ""
+
+#. module: board
+#: field:board.create,menu_parent_id:0
 msgid "Parent Menu"
 msgstr ""
 
 #. module: board
-#: view:res.log.report:0
-msgid "    Month-1    "
-msgstr "    Tháng-1    "
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "January"
-msgstr "Tháng Giêng"
-
-#. module: board
-#: view:board.board:0
-msgid "Users"
-msgstr ""
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "November"
-msgstr "Tháng Mười Một"
-
-#. module: board
-#: help:board.board.line,sequence:0
-msgid ""
-"Gives the sequence order                         when displaying a list of "
-"board lines."
-msgstr ""
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "April"
-msgstr "Tháng Tư"
-
-#. module: board
-#: view:board.board:0
-#: field:board.board,name:0
-#: field:board.board.line,board_id:0
-#: model:ir.ui.menu,name:board.menu_dasboard
-msgid "Dashboard"
-msgstr "Bảng điều khiển"
-
-#. module: board
-#: code:addons/board/wizard/board_menu_create.py:45
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:8
 #, python-format
-msgid "User Error!"
-msgstr "Lỗi Người sử dụng!"
-
-#. module: board
-#: field:board.board.line,action_id:0
-msgid "Action"
-msgstr "Hành động"
-
-#. module: board
-#: field:board.board.line,position:0
-msgid "Position"
-msgstr "Chức vụ"
-
-#. module: board
-#: view:res.log.report:0
-msgid "Model"
-msgstr "Mô hình"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.board_homepage_action
-msgid "Home Page"
+msgid "Change Layout.."
 msgstr ""
 
 #. module: board
-#: model:ir.actions.act_window,name:board.action_latest_activities_tree
-msgid "Latest Activities"
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:93
+#, python-format
+msgid "Edit Layout"
 msgstr ""
 
 #. module: board
-#: selection:board.board.line,position:0
-msgid "Left"
-msgstr "Trái"
-
-#. module: board
-#: field:board.board,view_id:0
-msgid "Board View"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:10
+#, python-format
+msgid "Change Layout"
 msgstr ""
 
 #. module: board
-#: selection:board.board.line,position:0
-msgid "Right"
-msgstr "Phải"
-
-#. module: board
-#: field:board.board.line,width:0
-msgid "Width"
-msgstr "Chiều rộng"
-
-#. module: board
-#: view:res.log.report:0
-msgid "   Month   "
-msgstr "   Tháng   "
-
-#. module: board
-#: field:board.board.line,sequence:0
-msgid "Sequence"
-msgstr "Trình tự"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "September"
-msgstr "Tháng Chín"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "December"
-msgstr "Tháng Mười Hai"
-
-#. module: board
-#: view:board.board:0
-#: view:board.menu.create:0
-msgid "Create Menu"
-msgstr "Tạo trình đơn"
-
-#. module: board
-#: field:board.board.line,height:0
-msgid "Height"
-msgstr "Chiều cao"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_board_menu_create
-msgid "Create Board Menu"
-msgstr ""
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "May"
-msgstr ""
-
-#. module: board
-#: view:res.log.report:0
-#: field:res.log.report,name:0
-msgid "Year"
-msgstr ""
-
-#. module: board
-#: view:board.menu.create:0
+#: view:board.create:0
 msgid "Cancel"
 msgstr ""
 
 #. module: board
-#: view:board.board:0
-msgid "Dashboard View"
+#: view:board.create:0
+msgid "or"
 msgstr ""
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:69
+#, python-format
+msgid "Title of new dashboard item"
+msgstr ""
+
+#~ msgid "Group By..."
+#~ msgstr "Nhóm theo..."
+
+#~ msgid "  Year  "
+#~ msgstr "  Năm  "
 
 #~ msgid "Author"
 #~ msgstr "Tác giả"
@@ -353,14 +178,99 @@ msgstr ""
 #~ msgid "Note"
 #~ msgstr "Ghi chú"
 
+#, python-format
+#~ msgid "User Error!"
+#~ msgstr "Lỗi Người sử dụng!"
+
 #~ msgid "Note Type"
 #~ msgstr "Loại Ghi chú"
 
+#~ msgid "Month"
+#~ msgstr "Tháng"
+
+#~ msgid "March"
+#~ msgstr "Tháng Ba"
+
+#~ msgid "August"
+#~ msgstr "Tháng Tám"
+
+#~ msgid "July"
+#~ msgstr "Tháng Bảy"
+
+#~ msgid "June"
+#~ msgstr "Tháng Sáu"
+
+#~ msgid "Creation Date"
+#~ msgstr "Ngày tạo"
+
 #~ msgid "Date"
+#~ msgstr "Ngày"
+
+#~ msgid "January"
+#~ msgstr "Tháng Giêng"
+
+#~ msgid "October"
+#~ msgstr "Tháng Mười"
+
+#~ msgid "February"
+#~ msgstr "Tháng Hai"
+
+#~ msgid "Day"
 #~ msgstr "Ngày"
 
 #~ msgid "Extended Filters..."
 #~ msgstr "Các bộ lọc Mở rộng..."
 
+#~ msgid "    Month-1    "
+#~ msgstr "    Tháng-1    "
+
 #~ msgid "Notes"
 #~ msgstr "Các ghi chú"
+
+#~ msgid "November"
+#~ msgstr "Tháng Mười Một"
+
+#~ msgid "Menu Name"
+#~ msgstr "Tên trình đơn"
+
+#~ msgid "Position"
+#~ msgstr "Chức vụ"
+
+#~ msgid "Model"
+#~ msgstr "Mô hình"
+
+#~ msgid "April"
+#~ msgstr "Tháng Tư"
+
+#~ msgid "Action"
+#~ msgstr "Hành động"
+
+#~ msgid "Dashboard"
+#~ msgstr "Bảng điều khiển"
+
+#~ msgid "Height"
+#~ msgstr "Chiều cao"
+
+#~ msgid "Create Menu"
+#~ msgstr "Tạo trình đơn"
+
+#~ msgid "September"
+#~ msgstr "Tháng Chín"
+
+#~ msgid "Sequence"
+#~ msgstr "Trình tự"
+
+#~ msgid "Right"
+#~ msgstr "Phải"
+
+#~ msgid "Left"
+#~ msgstr "Trái"
+
+#~ msgid "Width"
+#~ msgstr "Chiều rộng"
+
+#~ msgid "   Month   "
+#~ msgstr "   Tháng   "
+
+#~ msgid "December"
+#~ msgstr "Tháng Mười Hai"

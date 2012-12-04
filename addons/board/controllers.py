@@ -1,31 +1,17 @@
 # -*- coding: utf-8 -*-
 from xml.etree import ElementTree
 
-try:
-    import openerp.addons.web.common.http as openerpweb
-    from openerp.addons.web.common import nonliterals
-    from openerp.addons.web.controllers.main import load_actions_from_ir_values
-except ImportError:
-    import web.common.http as openerpweb    # noqa
-    from web.common import nonliterals      # noqa
-    from web.controllers.main import load_actions_from_ir_values    # noqa
+import openerp
+from openerp.addons.web.controllers.main import load_actions_from_ir_values
 
-class Board(openerpweb.Controller):
+class Board(openerp.addons.web.http.Controller):
     _cp_path = '/board'
 
-    @openerpweb.jsonrequest
+    @openerp.addons.web.http.jsonrequest
     def add_to_dashboard(self, req, menu_id, action_id, context_to_save, domain, view_mode, name=''):
         # FIXME move this method to board.board model
-        to_eval = nonliterals.CompoundContext(context_to_save)
-        to_eval.session = req.session
-        ctx = dict((k, v) for k, v in to_eval.evaluate().iteritems()
-                   if not k.startswith('search_default_'))
-        ctx['dashboard_merge_domains_contexts'] = False  # TODO: replace this 6.1 workaround by attribute on <action/>
-        domain = nonliterals.CompoundDomain(domain)
-        domain.session = req.session
-        domain = domain.evaluate()
-
-        dashboard_action = load_actions_from_ir_values(req, 'action', 'tree_but_open', [('ir.ui.menu', menu_id)], False)
+        dashboard_action = load_actions_from_ir_values(
+            req, 'action', 'tree_but_open', [('ir.ui.menu', menu_id)], False)
 
         if dashboard_action:
             action = dashboard_action[0][2]
@@ -41,7 +27,7 @@ class Board(openerpweb.Controller):
                             'name': str(action_id),
                             'string': name,
                             'view_mode': view_mode,
-                            'context': str(ctx),
+                            'context': str(context_to_save),
                             'domain': str(domain)
                         })
                         column.insert(0, new_action)
@@ -50,6 +36,6 @@ class Board(openerpweb.Controller):
                             'user_id': req.session._uid,
                             'ref_id': view_id,
                             'arch': arch
-                        }, req.session.eval_context(req.context))
+                        }, req.context)
 
         return False

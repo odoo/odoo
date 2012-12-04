@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2011-01-24 12:33+0000\n"
 "Last-Translator: Magnus Brandt (mba), Aspirix AB <Unknown>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 06:38+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:28+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk.report,delay_close:0
@@ -28,15 +28,21 @@ msgid "# of Cases"
 msgstr "# Ärenden"
 
 #. module: crm_helpdesk
+#: code:addons/crm_helpdesk/crm_helpdesk.py:152
+#, python-format
+msgid "Case has been <b>created</b>."
+msgstr ""
+
+#. module: crm_helpdesk
 #: view:crm.helpdesk:0
 #: view:crm.helpdesk.report:0
 msgid "Group By..."
 msgstr "Gruppera på..."
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Today"
-msgstr "Idag"
+#: help:crm.helpdesk,email_from:0
+msgid "Destination email for email gateway"
+msgstr ""
 
 #. module: crm_helpdesk
 #: selection:crm.helpdesk.report,month:0
@@ -44,9 +50,9 @@ msgid "March"
 msgstr "Mars"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-msgid "Helpdesk requests occurred in current year"
-msgstr "Kundtjänstfrågor under innevarande år"
+#: field:crm.helpdesk,message_unread:0
+msgid "Unread Messages"
+msgstr ""
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,company_id:0
@@ -61,6 +67,11 @@ msgid "Watchers Emails"
 msgstr "Övervakarens e-post"
 
 #. module: crm_helpdesk
+#: view:crm.helpdesk.report:0
+msgid "Salesperson"
+msgstr ""
+
+#. module: crm_helpdesk
 #: selection:crm.helpdesk,priority:0
 #: selection:crm.helpdesk.report,priority:0
 msgid "Highest"
@@ -71,11 +82,6 @@ msgstr "Högsta"
 #: field:crm.helpdesk.report,day:0
 msgid "Day"
 msgstr "Dag"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Add Internal Note"
-msgstr "Lägg till intern notering"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:0
@@ -104,6 +110,11 @@ msgid "Cancelled"
 msgstr "Avbruten"
 
 #. module: crm_helpdesk
+#: help:crm.helpdesk,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr ""
+
+#. module: crm_helpdesk
 #: model:ir.actions.act_window,name:crm_helpdesk.action_report_crm_helpdesk
 #: model:ir.ui.menu,name:crm_helpdesk.menu_report_crm_helpdesks_tree
 msgid "Helpdesk Analysis"
@@ -124,6 +135,13 @@ msgstr "Referens"
 #: field:crm.helpdesk,date_action_next:0
 msgid "Next Action"
 msgstr "Nästa åtgärd"
+
+#. module: crm_helpdesk
+#: help:crm.helpdesk,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -154,19 +172,17 @@ msgid "Section"
 msgstr "Sektion"
 
 #. module: crm_helpdesk
+#: view:crm.helpdesk:0
+#: field:crm.helpdesk,priority:0
 #: view:crm.helpdesk.report:0
-msgid "Helpdesk requests occurred in last month"
-msgstr "Kundtjänstfrågor i innevarande månad"
+#: field:crm.helpdesk.report,priority:0
+msgid "Priority"
+msgstr "Prioritet"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Send New Email"
-msgstr "Skicka nytt e-postmeddelande"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Helpdesk requests during last 7 days"
-msgstr "Kundtjänstfrågor senaste 7 dagarna"
+#: field:crm.helpdesk,message_follower_ids:0
+msgid "Followers"
+msgstr ""
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -204,7 +220,6 @@ msgid "# Mails"
 msgstr "# e-postmeddelanden"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
 #: view:crm.helpdesk.report:0
 msgid "My Sales Team(s)"
 msgstr "Mina säljlag"
@@ -219,13 +234,6 @@ msgstr "Skapad datum"
 #: view:crm.helpdesk:0
 msgid "Reset to Draft"
 msgstr "Återställ till utkast"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-#: selection:crm.helpdesk,state:0
-#: selection:crm.helpdesk.report,state:0
-msgid "Pending"
-msgstr "Väntande"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -256,11 +264,6 @@ msgstr "Nytt kundtjänstärende"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
-msgid "History Information"
-msgstr "Historikinformation"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
 msgid "Dates"
 msgstr "Datum"
 
@@ -270,10 +273,17 @@ msgid "Month of helpdesk requests"
 msgstr "Månad av kuntjänstärenden"
 
 #. module: crm_helpdesk
-#: code:addons/crm_helpdesk/crm_helpdesk.py:101
+#: code:addons/crm_helpdesk/crm_helpdesk.py:109
 #, python-format
 msgid "No Subject"
 msgstr "Ingen rubrik"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:0
+msgid ""
+"Helpdesk requests that are assigned to me or to one of the sale teams I "
+"manage"
+msgstr ""
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:0
@@ -291,19 +301,14 @@ msgid "Year of helpdesk requests"
 msgstr "År för kundtjänstärende"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "References"
-msgstr "Referenser"
-
-#. module: crm_helpdesk
 #: selection:crm.helpdesk.report,month:0
 msgid "September"
 msgstr "September"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Communication"
-msgstr "Kommunikation"
+#: selection:crm.helpdesk.report,month:0
+msgid "December"
+msgstr "December"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:0
@@ -312,24 +317,14 @@ msgid "Month"
 msgstr "Månad"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Escalate"
-msgstr "Eskalera"
-
-#. module: crm_helpdesk
 #: field:crm.helpdesk,write_date:0
 msgid "Update Date"
 msgstr "Uppdateringsdatum"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-msgid "Helpdesk requests occurred in current month"
-msgstr "Kundtjänstärenden i innevarande månad"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-msgid "Salesman"
-msgstr "Säljare"
+#: view:crm.helpdesk:0
+msgid "Query"
+msgstr "Fråga"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,ref2:0
@@ -400,18 +395,18 @@ msgstr "Stängd"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
-msgid "Reply"
-msgstr "Svara"
+#: selection:crm.helpdesk,state:0
+#: selection:crm.helpdesk.report,state:0
+msgid "Pending"
+msgstr "Väntande"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
-msgid "7 Days"
-msgstr "7 dagar"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Communication & History"
-msgstr "Kommunikation & historik"
+#: field:crm.helpdesk,state:0
+#: view:crm.helpdesk.report:0
+#: field:crm.helpdesk.report,state:0
+msgid "Status"
+msgstr ""
 
 #. module: crm_helpdesk
 #: selection:crm.helpdesk.report,month:0
@@ -426,8 +421,8 @@ msgstr "Normal"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
-msgid "Global CC"
-msgstr "Global CC"
+msgid "Escalate"
+msgstr "Eskalera"
 
 #. module: crm_helpdesk
 #: selection:crm.helpdesk.report,month:0
@@ -435,9 +430,37 @@ msgid "June"
 msgstr "Juni"
 
 #. module: crm_helpdesk
+#: field:crm.helpdesk,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: crm_helpdesk
+#: model:ir.actions.act_window,help:crm_helpdesk.crm_case_helpdesk_act111
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new request. \n"
+"              </p><p>\n"
+"                Helpdesk and Support allow you to track your interventions.\n"
+"              </p><p>\n"
+"                Use the OpenERP Issues system to manage your support\n"
+"                activities. Issues can be connected to the email gateway: "
+"new\n"
+"                emails may create issues, each of them automatically gets "
+"the\n"
+"                history of the conversation with the customer.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: crm_helpdesk
 #: field:crm.helpdesk,planned_revenue:0
 msgid "Planned Revenue"
 msgstr "Plannerade intäkter"
+
+#. module: crm_helpdesk
+#: field:crm.helpdesk,message_is_follower:0
+msgid "Is a Follower"
+msgstr ""
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk.report,user_id:0
@@ -465,9 +488,17 @@ msgid "Helpdesk Requests"
 msgstr "Kunstjänstärende"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-msgid "Search"
-msgstr "Sök"
+#: field:crm.helpdesk,message_comment_ids:0
+#: help:crm.helpdesk,message_comment_ids:0
+msgid "Comments and emails"
+msgstr ""
+
+#. module: crm_helpdesk
+#: help:crm.helpdesk,section_id:0
+msgid ""
+"Responsible sales team. Define Responsible user and Email account for mail "
+"gateway."
+msgstr ""
 
 #. module: crm_helpdesk
 #: selection:crm.helpdesk.report,month:0
@@ -480,9 +511,9 @@ msgid "January"
 msgstr "Januari"
 
 #. module: crm_helpdesk
-#: help:crm.helpdesk,email_from:0
-msgid "These people will receive email."
-msgstr "De här personerna kommer att ta emot e-post."
+#: field:crm.helpdesk,message_summary:0
+msgid "Summary"
+msgstr ""
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -492,34 +523,13 @@ msgstr "Datum"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
-msgid "History"
-msgstr "Historik"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-#: field:crm.helpdesk,priority:0
-#: view:crm.helpdesk.report:0
-#: field:crm.helpdesk.report,priority:0
-msgid "Priority"
-msgstr "Prioritet"
-
-#. module: crm_helpdesk
-#: field:crm.helpdesk,partner_address_id:0
-msgid "Partner Contact"
-msgstr "Partner kontakt"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
 msgid "Misc"
 msgstr "Övrigt"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
-#: field:crm.helpdesk,state:0
 #: view:crm.helpdesk.report:0
-#: field:crm.helpdesk.report,state:0
-msgid "State"
-msgstr "Tillstånd"
+msgid "My Company"
+msgstr ""
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -528,27 +538,13 @@ msgstr "Allmänt"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
-msgid "Send Reminder"
-msgstr "Skicka påminnelse"
-
-#. module: crm_helpdesk
-#: help:crm.helpdesk,section_id:0
-msgid ""
-"Sales team to which Case belongs to.                                 Define "
-"Responsible user and Email account for mail gateway."
-msgstr ""
-"Säljlag som ärendet tillhör. Definiera handläggare och e-postkonton för e-"
-"postbrygga."
+msgid "References"
+msgstr "Referenser"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
-msgid "Done"
-msgstr "Klar"
-
-#. module: crm_helpdesk
-#: selection:crm.helpdesk.report,month:0
-msgid "December"
-msgstr "December"
+msgid "Communication"
+msgstr "Kommunikation"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -596,6 +592,11 @@ msgid "Responsible"
 msgstr "Ansvarig"
 
 #. module: crm_helpdesk
+#: view:crm.helpdesk.report:0
+msgid "Search"
+msgstr "Sök"
+
+#. module: crm_helpdesk
 #: field:crm.helpdesk.report,delay_expected:0
 msgid "Overpassed Deadline"
 msgstr "Passerad tidsfrist"
@@ -632,22 +633,6 @@ msgstr ""
 "postmeddelanden skickade och kostnader."
 
 #. module: crm_helpdesk
-#: help:crm.helpdesk,state:0
-msgid ""
-"The state is set to 'Draft', when a case is created.                         "
-"         \n"
-"If the case is in progress the state is set to 'Open'.                       "
-"           \n"
-"When the case is over, the state is set to 'Done'.                           "
-"       \n"
-"If the case needs to be reviewed then the state is set to 'Pending'."
-msgstr ""
-"Status är inställd på \"förslag\" när ett ärende skapas.\n"
-"Om ärendet startas är status  \"Öppen\".\n"
-"När ärendet är färdigställt, är status inställd på \"Klar\".\n"
-"Om ärendet behöver ses över då tillståndet är satt till \"I väntan\"."
-
-#. module: crm_helpdesk
 #: selection:crm.helpdesk.report,month:0
 msgid "February"
 msgstr "Februari"
@@ -659,8 +644,9 @@ msgstr "Namn"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:0
-msgid "Month-1"
-msgstr "Månad-1"
+#: field:crm.helpdesk.report,name:0
+msgid "Year"
+msgstr "År"
 
 #. module: crm_helpdesk
 #: model:ir.ui.menu,name:crm_helpdesk.menu_help_support_main
@@ -678,14 +664,21 @@ msgid "My Case(s)"
 msgstr "Mina ärenden"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Query"
-msgstr "Fråga"
+#: help:crm.helpdesk,state:0
+msgid ""
+"The status is set to 'Draft', when a case is created.                        "
+"          \n"
+"If the case is in progress the status is set to 'Open'.                      "
+"            \n"
+"When the case is over, the status is set to 'Done'.                          "
+"        \n"
+"If the case needs to be reviewed then the status is set to 'Pending'."
+msgstr ""
 
 #. module: crm_helpdesk
-#: field:crm.helpdesk,id:0
-msgid "ID"
-msgstr "ID"
+#: help:crm.helpdesk,message_ids:0
+msgid "Messages and communication history"
+msgstr ""
 
 #. module: crm_helpdesk
 #: model:ir.actions.act_window,help:crm_helpdesk.crm_helpdesk_categ_action
@@ -695,11 +688,6 @@ msgid ""
 msgstr ""
 "Skapa och hantera kundtjänstkategorier för att bättre administrera och "
 "klassificera supportärenden."
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Todays's Helpdesk Requests"
-msgstr "Dagens kuntjänstärenden"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -730,32 +718,23 @@ msgid "Last Action"
 msgstr "Senaste åtgärd"
 
 #. module: crm_helpdesk
-#: model:ir.actions.act_window,help:crm_helpdesk.crm_case_helpdesk_act111
-msgid ""
-"Helpdesk and Support allow you to track your interventions. Select a "
-"customer, add notes and categorize interventions with partners if necessary. "
-"You can also assign a priority level. Use the OpenERP Issues system to "
-"manage your support activities. Issues can be connected to the email "
-"gateway: new emails may create issues, each of them automatically gets the "
-"history of the conversation with the customer."
+#: view:crm.helpdesk:0
+msgid "Assigned to Me or My Sales Team(s)"
 msgstr ""
-"Med kundtjänst och support kan du följa upp dina insatser. Välj en kund, "
-"lägga till anteckningar och kategorisera insatser med företag om det behövs. "
-"Du kan också tilldela en prioritetsnivå. Använd OpenERP-ärendesystem för att "
-"hantera dina stödverksamhet. Ärenden kan anslutas till e-postbryggan: nya e-"
-"postmeddelanden kan skapa ärenden, var och en av dem får automatiskt "
-"historiken med kundkonversationen."
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-#: field:crm.helpdesk.report,name:0
-msgid "Year"
-msgstr "År"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,duration:0
 msgid "Duration"
 msgstr "Varaktighet"
+
+#~ msgid "Add Internal Note"
+#~ msgstr "Lägg till intern notering"
+
+#~ msgid "Today"
+#~ msgstr "Idag"
+
+#~ msgid "Partner Contact"
+#~ msgstr "Partner kontakt"
 
 #~ msgid "   Month   "
 #~ msgstr "   Månad   "
@@ -763,11 +742,23 @@ msgstr "Varaktighet"
 #~ msgid "  Year  "
 #~ msgstr "  År  "
 
+#~ msgid "7 Days"
+#~ msgstr "7 dagar"
+
+#~ msgid "History"
+#~ msgstr "Historik"
+
+#~ msgid "Done"
+#~ msgstr "Klar"
+
 #~ msgid "Attachments"
 #~ msgstr "Bilagor"
 
 #~ msgid "Current"
 #~ msgstr "Nuvarande"
+
+#~ msgid "Reply"
+#~ msgstr "Svara"
 
 #~ msgid "Details"
 #~ msgstr "Detaljer"
@@ -777,3 +768,81 @@ msgstr "Varaktighet"
 
 #~ msgid "    Month-1    "
 #~ msgstr "    Månad-1    "
+
+#~ msgid "These people will receive email."
+#~ msgstr "De här personerna kommer att ta emot e-post."
+
+#~ msgid "Communication & History"
+#~ msgstr "Kommunikation & historik"
+
+#~ msgid "Global CC"
+#~ msgstr "Global CC"
+
+#~ msgid "Send Reminder"
+#~ msgstr "Skicka påminnelse"
+
+#~ msgid "Send New Email"
+#~ msgstr "Skicka nytt e-postmeddelande"
+
+#~ msgid "Salesman"
+#~ msgstr "Säljare"
+
+#~ msgid "State"
+#~ msgstr "Tillstånd"
+
+#~ msgid "Helpdesk requests during last 7 days"
+#~ msgstr "Kundtjänstfrågor senaste 7 dagarna"
+
+#~ msgid "Helpdesk requests occurred in current year"
+#~ msgstr "Kundtjänstfrågor under innevarande år"
+
+#~ msgid "Helpdesk requests occurred in last month"
+#~ msgstr "Kundtjänstfrågor i innevarande månad"
+
+#~ msgid "Helpdesk requests occurred in current month"
+#~ msgstr "Kundtjänstärenden i innevarande månad"
+
+#~ msgid "History Information"
+#~ msgstr "Historikinformation"
+
+#~ msgid ""
+#~ "Sales team to which Case belongs to.                                 Define "
+#~ "Responsible user and Email account for mail gateway."
+#~ msgstr ""
+#~ "Säljlag som ärendet tillhör. Definiera handläggare och e-postkonton för e-"
+#~ "postbrygga."
+
+#~ msgid ""
+#~ "Helpdesk and Support allow you to track your interventions. Select a "
+#~ "customer, add notes and categorize interventions with partners if necessary. "
+#~ "You can also assign a priority level. Use the OpenERP Issues system to "
+#~ "manage your support activities. Issues can be connected to the email "
+#~ "gateway: new emails may create issues, each of them automatically gets the "
+#~ "history of the conversation with the customer."
+#~ msgstr ""
+#~ "Med kundtjänst och support kan du följa upp dina insatser. Välj en kund, "
+#~ "lägga till anteckningar och kategorisera insatser med företag om det behövs. "
+#~ "Du kan också tilldela en prioritetsnivå. Använd OpenERP-ärendesystem för att "
+#~ "hantera dina stödverksamhet. Ärenden kan anslutas till e-postbryggan: nya e-"
+#~ "postmeddelanden kan skapa ärenden, var och en av dem får automatiskt "
+#~ "historiken med kundkonversationen."
+
+#~ msgid "Todays's Helpdesk Requests"
+#~ msgstr "Dagens kuntjänstärenden"
+
+#~ msgid "Month-1"
+#~ msgstr "Månad-1"
+
+#~ msgid ""
+#~ "The state is set to 'Draft', when a case is created.                         "
+#~ "         \n"
+#~ "If the case is in progress the state is set to 'Open'.                       "
+#~ "           \n"
+#~ "When the case is over, the state is set to 'Done'.                           "
+#~ "       \n"
+#~ "If the case needs to be reviewed then the state is set to 'Pending'."
+#~ msgstr ""
+#~ "Status är inställd på \"förslag\" när ett ärende skapas.\n"
+#~ "Om ärendet startas är status  \"Öppen\".\n"
+#~ "När ärendet är färdigställt, är status inställd på \"Klar\".\n"
+#~ "Om ärendet behöver ses över då tillståndet är satt till \"I väntan\"."

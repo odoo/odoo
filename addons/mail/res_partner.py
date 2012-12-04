@@ -19,29 +19,46 @@
 #
 ##############################################################################
 
-from osv import osv
+from osv import osv, fields
 
 class res_partner_mail(osv.Model):
-    """ Inherits partner and adds CRM information in the partner form """
+    """ Update partner to add a field about notification preferences """
     _name = "res.partner"
     _inherit = ['res.partner', 'mail.thread']
+    _mail_flat_thread = False
 
-    def message_search_get_domain(self, cr, uid, ids, context=None):
-        """ Override of message_search_get_domain for partner discussion page.
-            The purpose is to add messages directly sent to the partner. It also
-            adds messages pushed to the related user, if any, using @login.
+    _columns = {
+        'notification_email_send': fields.selection([
+            ('all', 'All feeds'),
+            ('comment', 'Comments and Emails'),
+            ('email', 'Emails only'),
+            ('none', 'Never')
+            ], 'Receive Feeds by Email', required=True,
+            help="Choose in which case you want to receive an email when you "\
+                  "receive new feeds."),
+    }
+
+    _defaults = {
+        'notification_email_send': lambda *args: 'comment'
+    }
+
+    def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification',
+                        subtype=None, parent_id=False, attachments=None, context=None, **kwargs):
+        """ Override related to res.partner. In case of email message, set it as
+            private:
+            - add the target partner in the message partner_ids
+            - set thread_id as None, because this will trigger the 'private'
+                aspect of the message (model=False, res_id=False)
         """
-        initial_domain = super(res_partner_mail, self).message_search_get_domain(cr, uid, ids, context=context)
-        # to avoid models inheriting from res.partner
-        if self._name != 'res.partner':
-            return initial_domain
-        # add message linked to the partner
-        search_domain = ['|'] + initial_domain + ['|', ('partner_id', 'in', ids), ('partner_ids', 'in', ids)]
-        # if partner is linked to a user: find @login
-        res_users_obj = self.pool.get('res.users')
-        user_ids = res_users_obj.search(cr, uid, [('partner_id', 'in', ids)], context=context)
-        for user in res_users_obj.browse(cr, uid, user_ids, context=context):
-            search_domain = ['|'] + search_domain + ['|', ('body_text', 'like', '@%s' % (user.login)), ('body_html', 'like', '@%s' % (user.login))]
-        return search_domain
+        if isinstance(thread_id, (list, tuple)):
+            thread_id = thread_id[0]
+        if type == 'email':
+            partner_ids = kwargs.get('partner_ids', [])
+            if thread_id not in partner_ids:
+                partner_ids.append((4, thread_id))
+            kwargs['partner_ids'] = partner_ids
+            thread_id = False
+        return super(res_partner_mail, self).message_post(cr, uid, thread_id, body=body, subject=subject,
+                type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, **kwargs)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

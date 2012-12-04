@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.1rc1\n"
+"Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
+"PO-Revision-Date: 2012-12-03 16:04+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,13 +16,8 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: sale_order_dates
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique per Company!"
-msgstr ""
-
-#. module: sale_order_dates
-#: help:sale.order,requested_date:0
-msgid "Date on which customer has requested for sales."
+#: view:sale.order:0
+msgid "Dates"
 msgstr ""
 
 #. module: sale_order_dates
@@ -41,6 +36,11 @@ msgid "Date on which picking is created."
 msgstr ""
 
 #. module: sale_order_dates
+#: help:sale.order,requested_date:0
+msgid "Date requested by the customer for the sale."
+msgstr ""
+
+#. module: sale_order_dates
 #: field:sale.order,requested_date:0
 msgid "Requested Date"
 msgstr ""
@@ -52,6 +52,6 @@ msgstr ""
 
 #. module: sale_order_dates
 #: help:sale.order,commitment_date:0
-msgid "Date on which delivery of products is to be made."
+msgid "Committed date for delivery."
 msgstr ""
 

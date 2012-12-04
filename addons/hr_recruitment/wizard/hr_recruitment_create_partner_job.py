@@ -29,7 +29,7 @@ class hr_recruitment_partner_create(osv.osv_memory):
         'close': fields.boolean('Close job request'),
                 }
 
-    def view_init(self, cr , uid , fields_list, context=None):
+    def view_init(self, cr, uid, fields_list, context=None):
         case_obj = self.pool.get('hr.applicant')
         if context is None:
             context = {}

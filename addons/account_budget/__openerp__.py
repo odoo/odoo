@@ -69,6 +69,5 @@ Three reports are available:
     ],
     'installable': True,
     'auto_install': False,
-    'certificate': '0043819694157',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

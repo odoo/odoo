@@ -1,40 +1,63 @@
 openerp.pad = function(instance) {
-
-instance.web.form.FieldPad = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
-    template: 'FieldPad',
-    initialize_content: function() {
-        var self = this;
-        this.$textarea = undefined;
-        this.$el.find('div.oe_etherpad_head').click(function(ev) {
-            self.$el.toggleClass('oe_etherpad_fullscreen').toggleClass('oe_etherpad_normal');
-        });
-    },
-    set_value: function(value_) {
-        this._super(value_);
-        this.render_value();
-    },
-    render_value: function() {
-        var self = this;
-        var value = this.get('value');
-        if(value !== false) {
-            var url = value.split('\n')[0];
-            if (!this.get("effective_readonly")) {
-                var pad_username = this.session.username;
-                var code = '<iframe width="100%" height="100%" frameborder="0" src="'+url+'?showChat=false&userName='+pad_username+'"></iframe>';
-                this.$el.find('div.oe_etherpad_default').html(code);
-            } else {
-                $.get(url+'/export/html').success(function(data) {
-                    self.$el.html('<div class="etherpad_readonly">'+data+'</div>');
-                }).error(function() {
-                    self.$el.text('Unable to load pad');
+    
+    instance.web.form.FieldPad = instance.web.form.AbstractField.extend({
+        template: 'FieldPad',
+        configured: false,
+        content: "",
+        render_value: function() {
+            var self = this;
+            var _super = _.bind(this._super, this);
+            if (this.get("value") === false || this.get("value") === "") {
+                self.view.dataset.call('pad_generate_url',{context:{
+                        model: self.view.model,
+                        field_name: self.name,
+                        object_id: self.view.datarecord.id
+                    }}).done(function(data) {
+                    if(data&&data.url){
+                        self.set({value: data.url});
+                        _super(data.url);
+                        self.renderElement();
+                    }
                 });
+            } else {
+                self.renderElement();
             }
-        }
-    },
-});
+            this._dirty_flag = true;
+        },
+        renderElement: function(){
+            var self  = this;
+            var value = this.get('value');
+            if(!_.str.startsWith(value,'http')){
+                this.configured = false;
+                this.content = "";
+            }else{
+                this.configured = true;
+                if(!this.get('effective_readonly')){
+                    this.content = '<iframe width="100%" height="100%" frameborder="0" src="'+value+'?showChat=false&userName='+this.session.username+'"></iframe>';
+                }else{
+                    this.content = '<div class="oe_pad_loading">... Loading pad ...</div>';
+                    $.get(value+'/export/html').success(function(data){
+                        groups = /\<\s*body\s*\>(.*?)\<\s*\/body\s*\>/.exec(data);
+                        data = (groups || []).length >= 2 ? groups[1] : '';
+                        self.$('.oe_pad_content').html('<div class="oe_pad_readonly"><div>');
+                        self.$('.oe_pad_readonly').html(data);
+                    }).error(function(){
+                        self.$('.oe_pad_content').text('Unable to load pad');
+                    });
+                }
+            }
+            this._super();
+            this.$('.oe_pad_content').html(this.content);
+            this.$('.oe_pad_switch').click(function(){
+                self.$el.toggleClass('oe_pad_fullscreen');
+            });
+            this.on('change:effective_readonly',this,function(){
+                self.renderElement();
+            });
+        },
+    });
 
-instance.web.form.widgets = instance.web.form.widgets.extend({
-    'pad': 'instance.web.form.FieldPad',
-});
-
+    instance.web.form.widgets = instance.web.form.widgets.extend({
+        'pad': 'instance.web.form.FieldPad',
+    });
 };

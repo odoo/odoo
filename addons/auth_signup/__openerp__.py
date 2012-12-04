@@ -31,7 +31,11 @@ Allow users to sign up.
     'website': 'http://www.openerp.com',
     'installable': True,
     'depends': ['base_setup'],
-    'data': ['res_config.xml'],
+    'data': [
+        'auth_signup_data.xml',
+        'res_config.xml',
+        'res_users_view.xml',
+    ],
     'js': ['static/src/js/auth_signup.js'],
     'qweb': ['static/src/xml/auth_signup.xml'],
 }

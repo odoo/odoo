@@ -95,11 +95,11 @@ This is the module to manage the accounting chart for Netherlands in OpenERP.
 
 Read changelog in file __openerp__.py for version information.
 Dit is een basismodule om een uitgebreid grootboek- en BTW schema voor
-Nederlandse bedrijven te installeren in OpenERP versie 5.
+Nederlandse bedrijven te installeren in OpenERP versie 7.0.
 
 De BTW rekeningen zijn waar nodig gekoppeld om de juiste rapportage te genereren,
-denk b.v. aan intracommunautaire verwervingen waarbij u 19% BTW moet opvoeren,
-maar tegelijkertijd ook 19% als voorheffing weer mag aftrekken.
+denk b.v. aan intracommunautaire verwervingen waarbij u 21% BTW moet opvoeren,
+maar tegelijkertijd ook 21% als voorheffing weer mag aftrekken.
 
 Na installatie van deze module word de configuratie wizard voor 'Accounting' aangeroepen.
     * U krijgt een lijst met grootboektemplates aangeboden waarin zich ook het
@@ -123,11 +123,13 @@ De extra cijfers worden dan achter het rekeningnummer aangevult met 'nullen'.
                  'account_chart'
     ],
     'data' : ['account_chart_netherlands.xml',
+              "account_fiscal_position_template.xml",
+              "account_fiscal_position_tax_template.xml",
+              "account_fiscal_position_account_template.xml",
               'l10n_nl_wizard.xml'
     ],
     'demo' : [],
     'installable': True,
-    'certificate': '00976041422960053277',
     'images': ['images/config_chart_l10n_nl.jpeg','images/l10n_nl_chart.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

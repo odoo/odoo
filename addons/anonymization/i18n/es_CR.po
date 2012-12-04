@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-02-15 16:17+0000\n"
 "Last-Translator: Freddy Gonzalez <freddy.gonzalez.contreras@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 06:42+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:31+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 "Language: es\n"
 
 #. module: anonymization
@@ -24,20 +24,30 @@ msgid "ir.model.fields.anonymize.wizard"
 msgstr "ir.model.fields.anonymize.wizard"
 
 #. module: anonymization
+#: model:ir.model,name:anonymization.model_ir_model_fields_anonymization_migration_fix
+msgid "ir.model.fields.anonymization.migration.fix"
+msgstr ""
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization.migration.fix,target_version:0
+msgid "Target Version"
+msgstr ""
+
+#. module: anonymization
+#: selection:ir.model.fields.anonymization.migration.fix,query_type:0
+msgid "sql"
+msgstr ""
+
+#. module: anonymization
 #: field:ir.model.fields.anonymization,field_name:0
 msgid "Field Name"
 msgstr "Nombre de campo"
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization,field_id:0
+#: field:ir.model.fields.anonymization.migration.fix,field_name:0
 msgid "Field"
 msgstr "campo"
-
-#. module: anonymization
-#: field:ir.model.fields.anonymization.history,state:0
-#: field:ir.model.fields.anonymize.wizard,state:0
-msgid "State"
-msgstr "Provincia"
 
 #. module: anonymization
 #: field:ir.model.fields.anonymize.wizard,file_import:0
@@ -48,6 +58,12 @@ msgstr "Importar"
 #: model:ir.model,name:anonymization.model_ir_model_fields_anonymization
 msgid "ir.model.fields.anonymization"
 msgstr "ir.model.fields.anonymization"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization.history,state:0
+#: field:ir.model.fields.anonymize.wizard,state:0
+msgid "Status"
+msgstr ""
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization.history,direction:0
@@ -118,6 +134,11 @@ msgid "Anonymize database"
 msgstr "Hacer anónima la base de datos"
 
 #. module: anonymization
+#: selection:ir.model.fields.anonymization.migration.fix,query_type:0
+msgid "python"
+msgstr ""
+
+#. module: anonymization
 #: view:ir.model.fields.anonymization.history:0
 #: field:ir.model.fields.anonymization.history,field_ids:0
 msgid "Fields"
@@ -130,7 +151,6 @@ msgid "Clear"
 msgstr "A la vista"
 
 #. module: anonymization
-#: view:ir.model.fields.anonymize.wizard:0
 #: field:ir.model.fields.anonymize.wizard,summary:0
 msgid "Summary"
 msgstr "Resumen"
@@ -152,7 +172,6 @@ msgstr "Se ha producido una anomalía"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization,state:0
-#: selection:ir.model.fields.anonymize.wizard,state:0
 msgid "Not Existing"
 msgstr "No existente"
 
@@ -169,9 +188,21 @@ msgid "Anonymization History"
 msgstr "Histórico de hacer anónima"
 
 #. module: anonymization
+#: field:ir.model.fields.anonymization.migration.fix,model_name:0
+msgid "Model"
+msgstr ""
+
+#. module: anonymization
 #: model:ir.model,name:anonymization.model_ir_model_fields_anonymization_history
 msgid "ir.model.fields.anonymization.history"
 msgstr "ir.model.fields.anonymization.history"
+
+#. module: anonymization
+#: help:ir.model.fields.anonymize.wizard,file_import:0
+msgid ""
+"This is the file created by the anonymization process. It should have the "
+"'.pickle' extention."
+msgstr ""
 
 #. module: anonymization
 #: model:ir.actions.act_window,name:anonymization.action_ir_model_fields_anonymize_wizard
@@ -183,6 +214,11 @@ msgstr "Hace anónima la base de datos"
 #: field:ir.model.fields.anonymize.wizard,name:0
 msgid "File Name"
 msgstr "Nombre de archivo"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization.migration.fix,sequence:0
+msgid "Sequence"
+msgstr ""
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,direction:0
@@ -200,6 +236,12 @@ msgid "Done"
 msgstr "Hecho"
 
 #. module: anonymization
+#: field:ir.model.fields.anonymization.migration.fix,query:0
+#: field:ir.model.fields.anonymization.migration.fix,query_type:0
+msgid "Query"
+msgstr ""
+
+#. module: anonymization
 #: view:ir.model.fields.anonymization.history:0
 #: field:ir.model.fields.anonymization.history,msg:0
 #: field:ir.model.fields.anonymize.wizard,msg:0
@@ -207,11 +249,14 @@ msgid "Message"
 msgstr "Mensaje"
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:55
+#: code:addons/anonymization/anonymization.py:65
 #: sql_constraint:ir.model.fields.anonymization:0
 #, python-format
 msgid "You cannot have two fields with the same name on the same object!"
 msgstr "!Usted no puede tener dos campos con el nombre en el objeto igual!"
+
+#~ msgid "State"
+#~ msgstr "Provincia"
 
 #~ msgid "Database anonymization module"
 #~ msgstr "Módulo para hacer anónima la base de datos"

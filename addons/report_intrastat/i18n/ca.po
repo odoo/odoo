@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2010-10-30 14:42+0000\n"
 "Last-Translator: Raimon Esteve (www.zikzakmedia.com) "
 "<resteve@zikzakmedia.com>\n"
@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 06:16+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:29+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
@@ -23,14 +23,9 @@ msgid "Cancelled Invoice"
 msgstr "Factura cancel·lada"
 
 #. module: report_intrastat
-#: sql_constraint:res.country:0
-msgid "The name of the country must be unique !"
-msgstr "El nom del país ha de ser únic!"
-
-#. module: report_intrastat
-#: sql_constraint:res.country:0
-msgid "The code of the country must be unique !"
-msgstr "El codi de país ha de ser únic!"
+#: report:account.invoice.intrastat:0
+msgid "Total (inclu. taxes):"
+msgstr "Total (amb impostos):"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
@@ -48,17 +43,15 @@ msgid "Unit Price"
 msgstr "Preu unitat"
 
 #. module: report_intrastat
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Error: La UdM per defecte i la UdM de compra han d'estar en la mateixa "
-"categoria."
-
-#. module: report_intrastat
 #: selection:report.intrastat,type:0
 msgid "Import"
 msgstr "Importació"
+
+#. module: report_intrastat
+#: report:account.invoice.intrastat:0
+#: field:report.intrastat.code,description:0
+msgid "Description"
+msgstr "Descripció"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
@@ -122,18 +115,8 @@ msgstr "Tel. :"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
-msgid "Quantity"
-msgstr "Quantitat"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
 msgid "Base"
 msgstr "Base"
-
-#. module: report_intrastat
-#: view:report.intrastat:0
-msgid "This Year"
-msgstr "Aquest any"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
@@ -146,27 +129,14 @@ msgid "July"
 msgstr "Juliol"
 
 #. module: report_intrastat
-#: model:ir.model,name:report_intrastat.model_report_intrastat_code
-#: field:product.template,intrastat_id:0
-#: field:report.intrastat,intrastat_id:0
-#: view:report.intrastat.code:0
-msgid "Intrastat code"
-msgstr "Codi Intrastat"
-
-#. module: report_intrastat
-#: view:report.intrastat:0
-msgid "This Month"
-msgstr "Aquest mes"
+#: report:account.invoice.intrastat:0
+msgid "Quantity"
+msgstr "Quantitat"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "Partner Ref."
 msgstr "Ref. empresa"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Total (inclu. taxes):"
-msgstr "Total (amb impostos):"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
@@ -246,10 +216,12 @@ msgid "November"
 msgstr "Novembre"
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-#: field:report.intrastat.code,description:0
-msgid "Description"
-msgstr "Descripció"
+#: model:ir.model,name:report_intrastat.model_report_intrastat_code
+#: field:product.template,intrastat_id:0
+#: field:report.intrastat,intrastat_id:0
+#: view:report.intrastat.code:0
+msgid "Intrastat code"
+msgstr "Codi Intrastat"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
@@ -340,6 +312,7 @@ msgstr "Preu"
 #. module: report_intrastat
 #: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_code_tree
 #: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_code
+#: view:report.intrastat.code:0
 #: field:report.intrastat.code,name:0
 msgid "Intrastat Code"
 msgstr "Codi Intrastat"
@@ -359,6 +332,9 @@ msgstr "Codi Intrastat"
 #~ msgid "All Months"
 #~ msgstr "Tots els mesos"
 
+#~ msgid "This Month"
+#~ msgstr "Aquest mes"
+
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "﻿XML invàlid per a la definició de la vista!"
 
@@ -373,6 +349,21 @@ msgstr "Codi Intrastat"
 
 #~ msgid "Origin"
 #~ msgstr "Origen"
+
+#~ msgid "The code of the country must be unique !"
+#~ msgstr "El codi de país ha de ser únic!"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Error: La UdM per defecte i la UdM de compra han d'estar en la mateixa "
+#~ "categoria."
+
+#~ msgid "This Year"
+#~ msgstr "Aquest any"
+
+#~ msgid "The name of the country must be unique !"
+#~ msgstr "El nom del país ha de ser únic!"
 
 #~ msgid ""
 #~ "\n"

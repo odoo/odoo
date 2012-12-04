@@ -7,25 +7,31 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2010-11-03 08:07+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 06:02+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:13+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: event
 #: view:event.event:0
-msgid "Invoice Information"
-msgstr "Infiormacije Fakture"
+#: view:report.event.registration:0
+msgid "My Events"
+msgstr "Moji Dogadjaji"
 
 #. module: event
-#: view:partner.event.registration:0
-msgid "Event Details"
-msgstr "detalji Dogadjaja"
+#: field:event.registration,nb_register:0
+msgid "Number of Participants"
+msgstr ""
+
+#. module: event
+#: field:event.event,register_attended:0
+msgid "# of Participations"
+msgstr ""
 
 #. module: event
 #: field:event.event,main_speaker_id:0
@@ -45,35 +51,33 @@ msgid "Minimum Registrations"
 msgstr "Registracioni Minimum"
 
 #. module: event
-#: model:ir.model,name:event.model_event_confirm_registration
-msgid "Confirmation for Event Registration"
+#: help:event.event,register_min:0
+msgid ""
+"You can for each event define a minimum registration level. If you do not "
+"enough registrations you are not able to confirm your event. (put 0 to "
+"ignore this rule )"
 msgstr ""
 
 #. module: event
-#: field:event.registration.badge,title:0
-msgid "Title"
-msgstr "Naslov"
+#: code:addons/event/event.py:305
+#, python-format
+msgid "Event has been <b>cancelled</b>."
+msgstr ""
 
 #. module: event
-#: field:event.event,mail_registr:0
-msgid "Registration Email"
-msgstr "Registracio9ni Email"
-
-#. module: event
-#: model:ir.actions.act_window,name:event.action_event_confirm_registration
-msgid "Make Invoices"
-msgstr "Napravi Fakture"
-
-#. module: event
-#: view:event.event:0
-#: view:event.registration:0
+#: field:event.registration,date_open:0
 msgid "Registration Date"
 msgstr "Datum Registracije"
 
 #. module: event
-#: view:partner.event.registration:0
-msgid "_Close"
-msgstr "_Zatvoreno"
+#: help:event.registration,origin:0
+msgid "Name of the sale order which create the registration"
+msgstr ""
+
+#. module: event
+#: field:event.event,type:0
+msgid "Type of Event"
+msgstr ""
 
 #. module: event
 #: model:event.event,name:event.event_0
@@ -81,8 +85,10 @@ msgid "Concert of Bon Jovi"
 msgstr "Bon Jovi Koncert"
 
 #. module: event
-#: view:report.event.registration:0
-msgid "Invoiced Registrations only"
+#: view:event.registration:0
+#: selection:event.registration,state:0
+#: selection:report.event.registration,registration_state:0
+msgid "Attended"
 msgstr ""
 
 #. module: event
@@ -91,20 +97,9 @@ msgid "March"
 msgstr "Mart"
 
 #. module: event
-#: field:event.event,mail_confirm:0
-msgid "Confirmation Email"
-msgstr "Konfirmacioni Email"
-
-#. module: event
-#: field:event.registration,nb_register:0
-msgid "Quantity"
-msgstr "Kolicina"
-
-#. module: event
-#: code:addons/event/wizard/event_make_invoice.py:63
-#, python-format
-msgid "Registration doesn't have any partner to invoice."
-msgstr "Registracija nema ni jednog partnera za fakturisanje"
+#: view:event.registration:0
+msgid "Send Email"
+msgstr ""
 
 #. module: event
 #: field:event.event,company_id:0
@@ -115,56 +110,47 @@ msgid "Company"
 msgstr "Preduzece"
 
 #. module: event
-#: field:event.make.invoice,invoice_date:0
-msgid "Invoice Date"
-msgstr "Datum Fakture"
+#: field:event.event,email_confirmation_id:0
+#: field:event.type,default_email_event:0
+msgid "Event Confirmation Email"
+msgstr ""
 
 #. module: event
-#: help:event.event,pricelist_id:0
-msgid "Pricelist version for current event."
-msgstr "Verzija Cenovnika za dati dogadjaj"
+#: field:event.type,default_registration_max:0
+msgid "Default Maximum Registration"
+msgstr ""
 
 #. module: event
-#: code:addons/event/wizard/partner_event_registration.py:88
+#: help:event.event,message_unread:0
+#: help:event.registration,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr ""
+
+#. module: event
+#: field:event.event,register_avail:0
+msgid "Available Registrations"
+msgstr ""
+
+#. module: event
 #: view:event.registration:0
-#: model:ir.actions.act_window,name:event.action_partner_event_registration
 #: model:ir.model,name:event.model_event_registration
-#: view:partner.event.registration:0
-#, python-format
 msgid "Event Registration"
 msgstr "Registracioni Dogadjaj"
 
 #. module: event
-#: field:event.event,parent_id:0
-msgid "Parent Event"
-msgstr "Roditeljski Dogadjaj"
+#: model:ir.module.category,description:event.module_category_event_management
+msgid "Helps you manage your Events."
+msgstr ""
 
 #. module: event
-#: model:ir.actions.act_window,name:event.action_make_invoices
-msgid "Make Invoice"
-msgstr "Kreiraj račun"
-
-#. module: event
-#: field:event.registration,price_subtotal:0
-msgid "Subtotal"
-msgstr "Subtotal"
+#: view:report.event.registration:0
+msgid "Day"
+msgstr ""
 
 #. module: event
 #: view:report.event.registration:0
 msgid "Event on Registration"
 msgstr "Sogadjaj pri registraciji"
-
-#. module: event
-#: help:event.event,reply_to:0
-msgid "The email address put in the 'Reply-To' of all emails sent by OpenERP"
-msgstr ""
-"Email Adresa stavljena u stavku 'Ogovor za'  za sve emailove poslate od "
-"strane OpenERP-a"
-
-#. module: event
-#: view:event.registration:0
-msgid "Add Internal Note"
-msgstr "Dodaj Internu Belesku"
 
 #. module: event
 #: view:event.event:0
@@ -185,49 +171,63 @@ msgid "Events Analysis"
 msgstr "Analiza Dogadjaja"
 
 #. module: event
+#: help:event.type,default_registration_max:0
+msgid "It will select this default maximum value when you choose this event"
+msgstr ""
+
+#. module: event
+#: view:report.event.registration:0
+#: field:report.event.registration,user_id_registration:0
+msgid "Register"
+msgstr ""
+
+#. module: event
+#: field:event.event,message_ids:0
 #: field:event.registration,message_ids:0
 msgid "Messages"
 msgstr "Poruke"
 
 #. module: event
-#: model:ir.model,name:event.model_event_registration_badge
-msgid "event.registration.badge"
-msgstr "event.registration.badge"
-
-#. module: event
-#: field:event.event,mail_auto_confirm:0
-msgid "Mail Auto Confirm"
-msgstr "Auto potvrdjivanje Email-a"
-
-#. module: event
-#: model:product.template,name:event.event_product_1_product_template
-msgid "Ticket for Opera"
-msgstr "Karta za Operu"
-
-#. module: event
-#: code:addons/event/event.py:125
 #: view:event.event:0
+#: field:event.event,registration_ids:0
+#: model:ir.actions.act_window,name:event.act_event_list_register_event
+#: model:ir.actions.act_window,name:event.action_registration
+#: model:ir.ui.menu,name:event.menu_action_registration
+#: view:res.partner:0
+msgid "Registrations"
+msgstr "Registracije"
+
+#. module: event
+#: code:addons/event/event.py:95
+#: code:addons/event/event.py:108
+#: code:addons/event/event.py:400
 #, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: event
+#: view:event.event:0
 msgid "Confirm Event"
 msgstr "Potvrdi Dogadjaj"
 
 #. module: event
+#: view:board.board:0
+#: model:ir.actions.act_window,name:event.act_event_view
+msgid "Next Events"
+msgstr "Sledeci Dogadjaj"
+
+#. module: event
 #: selection:event.event,state:0
 #: selection:event.registration,state:0
-#: selection:report.event.registration,state:0
+#: selection:report.event.registration,event_state:0
+#: selection:report.event.registration,registration_state:0
 msgid "Cancelled"
 msgstr "Otkazano"
 
 #. module: event
-#: field:event.event,reply_to:0
-msgid "Reply-To"
-msgstr "Odgovor-za"
-
-#. module: event
-#: model:ir.actions.act_window,name:event.open_board_associations_manager
-#: model:ir.ui.menu,name:event.menu_board_associations_manager
-msgid "Event Dashboard"
-msgstr "UpravljackaTabla Dogadjaja"
+#: view:event.event:0
+msgid "ticket"
+msgstr ""
 
 #. module: event
 #: model:event.event,name:event.event_1
@@ -235,59 +235,78 @@ msgid "Opera of Verdi"
 msgstr "Verdijeva Opera"
 
 #. module: event
-#: selection:report.event.registration,month:0
-msgid "July"
-msgstr "Jul"
-
-#. module: event
-#: help:event.event,register_prospect:0
-msgid "Total of Prospect Registrations"
+#: view:report.event.registration:0
+msgid "Display"
 msgstr ""
 
 #. module: event
-#: help:event.event,mail_auto_confirm:0
+#: view:report.event.registration:0
+#: field:report.event.registration,registration_state:0
+msgid "Registration State"
+msgstr ""
+
+#. module: event
+#: view:event.event:0
+msgid "tickets"
+msgstr ""
+
+#. module: event
+#: view:res.partner:0
+msgid "False"
+msgstr ""
+
+#. module: event
+#: model:mail.message.subtype,name:event.mt_event_registration
+msgid "New Registrations"
+msgstr ""
+
+#. module: event
+#: field:event.registration,event_end_date:0
+msgid "Event End Date"
+msgstr ""
+
+#. module: event
+#: help:event.event,message_summary:0
+#: help:event.registration,message_summary:0
 msgid ""
-"Check this box if you want to use automatic confirmation emailing or "
-"reminder."
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
 msgstr ""
 
 #. module: event
-#: field:event.registration,ref:0
-msgid "Reference"
-msgstr "Referenca"
+#: selection:report.event.registration,month:0
+msgid "May"
+msgstr "Maj"
 
 #. module: event
-#: help:event.event,date_end:0
-#: help:partner.event.registration,end_date:0
-msgid "Closing Date of Event"
-msgstr "Datum zatvaranja dogadjaja"
+#: view:report.event.registration:0
+msgid "Registrations in confirmed or done state"
+msgstr ""
 
 #. module: event
-#: view:event.registration:0
-msgid "Emails"
-msgstr "Emailovi"
-
-#. module: event
-#: view:event.registration:0
-msgid "Extra Info"
-msgstr "Dodatne Informacije"
-
-#. module: event
-#: code:addons/event/wizard/event_make_invoice.py:83
+#: code:addons/event/event.py:114
+#: code:addons/event/event.py:116
 #, python-format
-msgid "Customer Invoices"
+msgid "Warning!"
 msgstr ""
 
 #. module: event
-#: selection:event.event,state:0
-#: selection:report.event.registration,state:0
-msgid "Draft"
-msgstr "Priprema"
+#: view:event.event:0
+#: view:event.registration:0
+msgid "Registration"
+msgstr "Registracija"
 
 #. module: event
-#: field:event.type,name:0
-msgid "Event type"
-msgstr "Tip dogadjaja"
+#: view:event.registration:0
+#: field:event.registration,partner_id:0
+#: model:ir.model,name:event.model_res_partner
+msgid "Partner"
+msgstr "Partner"
+
+#. module: event
+#: model:ir.actions.server,name:event.actions_server_event_event_read
+msgid "Event: Mark read"
+msgstr ""
 
 #. module: event
 #: model:ir.model,name:event.model_event_type
@@ -295,11 +314,9 @@ msgid " Event Type "
 msgstr " Tip dogadjaja "
 
 #. module: event
-#: view:event.event:0
 #: view:event.registration:0
 #: field:event.registration,event_id:0
 #: model:ir.model,name:event.model_event_event
-#: field:partner.event.registration,event_id:0
 #: view:report.event.registration:0
 #: field:report.event.registration,event_id:0
 #: view:res.partner:0
@@ -307,68 +324,52 @@ msgid "Event"
 msgstr "Događaj"
 
 #. module: event
-#: view:event.registration:0
-#: field:event.registration,badge_ids:0
-msgid "Badges"
-msgstr "Bedzevi"
-
-#. module: event
 #: view:event.event:0
 #: selection:event.event,state:0
 #: view:event.registration:0
 #: selection:event.registration,state:0
-#: selection:report.event.registration,state:0
+#: selection:report.event.registration,event_state:0
+#: selection:report.event.registration,registration_state:0
 msgid "Confirmed"
 msgstr "Potvrđeno"
 
 #. module: event
-#: view:event.confirm.registration:0
-msgid "Registration Confirmation"
-msgstr "Potvrda Registracije"
-
-#. module: event
-#: view:event.event:0
-msgid "Events in New state"
+#: view:event.registration:0
+msgid "Participant"
 msgstr ""
 
 #. module: event
+#: view:event.registration:0
 #: view:report.event.registration:0
 msgid "Confirm"
 msgstr ""
 
 #. module: event
 #: view:event.event:0
-#: field:event.event,speaker_ids:0
-msgid "Other Speakers"
-msgstr "Ostali Govornici"
+msgid "Organized by"
+msgstr ""
 
 #. module: event
-#: model:ir.model,name:event.model_event_make_invoice
-msgid "Event Make Invoice"
-msgstr "Napravi Fakturu Dogadjaja"
+#: view:event.event:0
+msgid "Register with this event"
+msgstr ""
 
 #. module: event
-#: help:event.registration,nb_register:0
-msgid "Number of Registrations or Tickets"
-msgstr "Broj registracija ili Tiketa"
+#: help:event.type,default_email_registration:0
+msgid ""
+"It will select this default confirmation registration mail value when you "
+"choose this event"
+msgstr ""
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:50
-#: code:addons/event/wizard/event_make_invoice.py:54
-#: code:addons/event/wizard/event_make_invoice.py:58
-#: code:addons/event/wizard/event_make_invoice.py:62
-#, python-format
-msgid "Warning !"
-msgstr "Upozorenje !"
+#: view:event.event:0
+msgid "Only"
+msgstr ""
 
 #. module: event
-#: view:event.registration:0
-msgid "Send New Email"
-msgstr "Posalji Novi Email"
-
-#. module: event
-#: help:event.event,register_min:0
-msgid "Provide Minimum Number of Registrations"
+#: field:event.event,message_follower_ids:0
+#: field:event.registration,message_follower_ids:0
+msgid "Followers"
 msgstr ""
 
 #. module: event
@@ -378,6 +379,13 @@ msgstr "Lokacija"
 
 #. module: event
 #: view:event.event:0
+#: field:event.event,message_unread:0
+#: view:event.registration:0
+#: field:event.registration,message_unread:0
+msgid "Unread Messages"
+msgstr ""
+
+#. module: event
 #: view:event.registration:0
 #: view:report.event.registration:0
 msgid "New"
@@ -385,60 +393,35 @@ msgstr ""
 
 #. module: event
 #: field:event.event,register_current:0
-#: view:report.event.registration:0
 msgid "Confirmed Registrations"
 msgstr "Potvrdjene Registracije"
 
 #. module: event
-#: field:event.event,mail_auto_registr:0
-msgid "Mail Auto Register"
-msgstr "Auto Registracija Mailom"
-
-#. module: event
-#: field:event.event,type:0
-#: field:partner.event.registration,event_type:0
-msgid "Type"
-msgstr "Tip"
-
-#. module: event
-#: field:event.registration,email_from:0
+#: field:event.registration,email:0
 msgid "Email"
 msgstr "Email"
 
 #. module: event
-#: help:event.event,mail_confirm:0
-msgid ""
-"This email will be sent when the event gets confirmed or when someone "
-"subscribes to a confirmed event. This is also the email sent to remind "
-"someone about the event."
+#: code:addons/event/event.py:367
+#, python-format
+msgid "New registration confirmed: %s."
 msgstr ""
-
-#. module: event
-#: field:event.registration,tobe_invoiced:0
-msgid "To be Invoiced"
-msgstr "Da bude Fakturisano"
 
 #. module: event
 #: view:event.event:0
-msgid "My Sales Team(s)"
+msgid "Upcoming"
 msgstr ""
-
-#. module: event
-#: code:addons/event/event.py:398
-#, python-format
-msgid "Error !"
-msgstr "Greska !"
-
-#. module: event
-#: field:event.event,name:0
-#: field:event.registration,name:0
-msgid "Summary"
-msgstr "Sumarno"
 
 #. module: event
 #: field:event.registration,create_date:0
 msgid "Creation Date"
 msgstr "Datum kreiranja"
+
+#. module: event
+#: view:report.event.registration:0
+#: field:report.event.registration,user_id:0
+msgid "Event Responsible"
+msgstr ""
 
 #. module: event
 #: view:event.event:0
@@ -448,26 +431,14 @@ msgid "Cancel Registration"
 msgstr "Otkazi Registraciju"
 
 #. module: event
-#: code:addons/event/event.py:399
-#, python-format
-msgid "Registered partner doesn't have an address to make the invoice."
-msgstr "zahtevani partner nema adresu da bi napravio fakturu"
+#: selection:report.event.registration,month:0
+msgid "July"
+msgstr "Jul"
 
 #. module: event
-#: view:report.event.registration:0
-msgid "Events created in last month"
+#: field:event.event,reply_to:0
+msgid "Reply-To Email"
 msgstr ""
-
-#. module: event
-#: view:report.event.registration:0
-msgid "Events created in current year"
-msgstr ""
-
-#. module: event
-#: help:event.event,type:0
-msgid "Type of Event like Seminar, Exhibition, Conference, Training."
-msgstr ""
-"Tip dogadjaja kao sto su Seminari, Izlozbe, Konferencije, Treninzi..."
 
 #. module: event
 #: view:event.registration:0
@@ -476,43 +447,18 @@ msgstr ""
 
 #. module: event
 #: view:event.event:0
-msgid "Event Organization"
-msgstr "Organizacija Dogadjaja"
-
-#. module: event
-#: view:event.registration:0
-msgid "History Information"
-msgstr "Informacija Istorije"
-
-#. module: event
-#: view:event.registration:0
-msgid "Dates"
-msgstr "Datumi"
-
-#. module: event
-#: view:event.confirm:0
-#: view:event.confirm.registration:0
-msgid "Confirm Anyway"
-msgstr "Sve jedno Potvrdi"
-
-#. module: event
-#: code:addons/event/wizard/event_confirm_registration.py:54
-#, python-format
-msgid "Warning: The Event '%s' has reached its Maximum Limit (%s)."
-msgstr "Upozorenje ! Dogadjaj '%s' je dostigao maksimalni limit (%s)."
-
-#. module: event
-#: view:report.event.registration:0
-msgid "    Month-1    "
+msgid "Starting Date"
 msgstr ""
 
 #. module: event
 #: view:event.event:0
-#: view:event.registration:0
-#: field:event.registration.badge,registration_id:0
-#: model:ir.actions.act_window,name:event.act_event_list_register_event
-msgid "Registration"
-msgstr "Registracija"
+msgid "Event Organization"
+msgstr "Organizacija Dogadjaja"
+
+#. module: event
+#: view:event.confirm:0
+msgid "Confirm Anyway"
+msgstr "Sve jedno Potvrdi"
 
 #. module: event
 #: field:report.event.registration,nbevent:0
@@ -525,16 +471,10 @@ msgid "Speaker who will be giving speech at the event."
 msgstr ""
 
 #. module: event
-#: help:event.event,state:0
-msgid ""
-"If event is created, the state is 'Draft'.If event is confirmed for the "
-"particular dates the state is set to 'Confirmed'. If the event is over, the "
-"state is set to 'Done'.If event is cancelled the state is set to 'Cancelled'."
+#: code:addons/event/event.py:457
+#, python-format
+msgid "Registration has been <b>created</b>."
 msgstr ""
-"Ako je dogadjaj kreiran stanje je postavljeno na ' U Pripremi'. Ako je "
-"dogadjaj potvrdjen za date datume stanje je postavljeno na' Potvrdjeno'. Ako "
-"se dogadjaj zavrsio stanje je postavljeno na ' Zavrseno'. Ako je dogadjaj "
-"otkazan stanje se postavlja na ' Otkazan'."
 
 #. module: event
 #: view:event.event:0
@@ -542,55 +482,41 @@ msgid "Cancel Event"
 msgstr "Otkazi Dogadjaj"
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
-msgid "Contact"
-msgstr "Kontakt"
+#: code:addons/event/event.py:398
+#, python-format
+msgid "State set to Done"
+msgstr ""
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
-#: field:event.registration,partner_id:0
-#: model:ir.model,name:event.model_res_partner
-msgid "Partner"
-msgstr "Partner"
+#: model:ir.actions.server,name:event.actions_server_event_registration_read
+msgid "Event registration : Mark read"
+msgstr ""
 
 #. module: event
-#: view:board.board:0
 #: model:ir.actions.act_window,name:event.act_event_reg
 #: view:report.event.registration:0
 msgid "Events Filling Status"
 msgstr "Status Popunjavanja Dogadjaja"
 
 #. module: event
-#: field:event.make.invoice,grouped:0
-msgid "Group the invoices"
-msgstr "Grupiraj Fakture"
-
-#. module: event
 #: view:event.event:0
-msgid "Mailing"
-msgstr "E-Postanska"
-
-#. module: event
-#: view:report.event.registration:0
-msgid "Events States"
+msgid "Event Category"
 msgstr ""
 
 #. module: event
-#: view:board.board:0
 #: field:event.event,register_prospect:0
 msgid "Unconfirmed Registrations"
 msgstr "Nepotvrdjene Registracije"
 
 #. module: event
-#: field:event.registration,partner_invoice_id:0
-msgid "Partner Invoiced"
-msgstr "Partner Fakturisan"
+#: model:ir.actions.client,name:event.action_client_event_menu
+msgid "Open Event Menu"
+msgstr ""
 
 #. module: event
-#: help:event.event,register_max:0
-msgid "Provide Maximum Number of Registrations"
+#: view:report.event.registration:0
+#: field:report.event.registration,event_state:0
+msgid "Event State"
 msgstr ""
 
 #. module: event
@@ -599,12 +525,7 @@ msgid "Logs"
 msgstr "Logovi"
 
 #. module: event
-#: view:event.event:0
-#: field:event.event,state:0
-#: view:event.registration:0
-#: field:event.registration,state:0
-#: view:report.event.registration:0
-#: field:report.event.registration,state:0
+#: field:event.event,state_id:0
 msgid "State"
 msgstr "Stanje"
 
@@ -619,14 +540,15 @@ msgid "December"
 msgstr "Decembar"
 
 #. module: event
-#: field:event.registration,event_product:0
-msgid "Invoice Name"
-msgstr "Naziv Fakture"
-
-#. module: event
 #: field:report.event.registration,draft_state:0
 msgid " # No of Draft Registrations"
 msgstr " # Br registracija ' U Pripremi'"
+
+#. module: event
+#: field:event.event,email_registration_id:0
+#: field:event.type,default_email_registration:0
+msgid "Registration Confirmation Email"
+msgstr ""
 
 #. module: event
 #: view:report.event.registration:0
@@ -635,9 +557,14 @@ msgid "Month"
 msgstr "Mesec"
 
 #. module: event
+#: field:event.registration,date_closed:0
+msgid "Attended Date"
+msgstr ""
+
+#. module: event
 #: view:event.event:0
-msgid "Event Done"
-msgstr "Dogadjaj Zavrsen"
+msgid "Finish Event"
+msgstr ""
 
 #. module: event
 #: view:event.registration:0
@@ -645,72 +572,106 @@ msgid "Registrations in unconfirmed state"
 msgstr ""
 
 #. module: event
-#: help:event.event,register_current:0
-msgid "Total of Open and Done Registrations"
-msgstr "Ukupno Otvorenih i Zavrsenih Registracija"
-
-#. module: event
-#: field:event.confirm.registration,msg:0
-msgid "Message"
-msgstr "Poruka"
-
-#. module: event
-#: constraint:event.event:0
-msgid "Error ! You cannot create recursive event."
-msgstr "Greska ! Ne mozes Kreirati Rekursivni dogadjaj."
-
-#. module: event
-#: field:event.registration,ref2:0
-msgid "Reference 2"
-msgstr "Referenca 2"
-
-#. module: event
-#: code:addons/event/event.py:361
-#: view:report.event.registration:0
-#, python-format
-msgid "Invoiced"
-msgstr "Fakturisano"
-
-#. module: event
 #: view:event.event:0
-#: view:report.event.registration:0
-msgid "My Events"
-msgstr "Moji Dogadjaji"
-
-#. module: event
-#: view:event.event:0
-msgid "Speakers"
-msgstr "Govornici"
-
-#. module: event
-#: view:event.make.invoice:0
-msgid "Create invoices"
-msgstr "Kreiraj Fakture"
-
-#. module: event
-#: help:event.registration,email_cc:0
-msgid ""
-"These email addresses will be added to the CC field of all inbound and "
-"outbound emails for this record before being sent. Separate multiple email "
-"addresses with a comma"
+msgid "Event Description"
 msgstr ""
-"Ova Email adresa ce biti dodata u CC polje za sbe dolazne i odlazne Emailove "
-"za ovaj zapis pre njegovog slanja. Odvajajte vise email adresa zarezom."
 
 #. module: event
-#: view:event.make.invoice:0
-msgid "Do you really want to create the invoice(s) ?"
-msgstr "Da li stvarno zeli da kreiras ovu/e fakturu/e"
+#: field:event.event,date_begin:0
+msgid "Start Date"
+msgstr "Pocetni Datum"
+
+#. module: event
+#: view:event.confirm:0
+msgid "or"
+msgstr ""
+
+#. module: event
+#: code:addons/event/event.py:315
+#, python-format
+msgid "Event has been <b>done</b>."
+msgstr ""
+
+#. module: event
+#: help:res.partner,speaker:0
+msgid "Check this box if this contact is a speaker."
+msgstr ""
+
+#. module: event
+#: code:addons/event/event.py:116
+#, python-format
+msgid "No Tickets Available!"
+msgstr ""
+
+#. module: event
+#: help:event.event,state:0
+msgid ""
+"If event is created, the status is 'Draft'.If event is confirmed for the "
+"particular dates the status is set to 'Confirmed'. If the event is over, the "
+"status is set to 'Done'.If event is cancelled the status is set to "
+"'Cancelled'."
+msgstr ""
+
+#. module: event
+#: model:ir.actions.act_window,help:event.action_event_view
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"               Click to add a new event.\n"
+"             </p><p>\n"
+"               OpenERP helps you schedule and efficiently organize your "
+"events:\n"
+"               track subscriptions and participations, automate the "
+"confirmation emails,\n"
+"               sell tickets, etc.\n"
+"             </p>\n"
+"           "
+msgstr ""
+
+#. module: event
+#: help:event.event,register_max:0
+msgid ""
+"You can for each event define a maximum registration level. If you have too "
+"much registrations you are not able to confirm your event. (put 0 to ignore "
+"this rule )"
+msgstr ""
+
+#. module: event
+#: code:addons/event/event.py:462
+#, python-format
+msgid "Registration has been set as <b>draft</b>."
+msgstr ""
+
+#. module: event
+#: code:addons/event/event.py:108
+#, python-format
+msgid ""
+"The total of confirmed registration for the event '%s' does not meet the "
+"expected minimum/maximum. Please reconsider those limits before going "
+"further."
+msgstr ""
+
+#. module: event
+#: help:event.event,email_confirmation_id:0
+msgid ""
+"If you set an email template, each participant will receive this email "
+"announcing the confirmation of the event."
+msgstr ""
+
+#. module: event
+#: view:board.board:0
+msgid "Events Filling By Status"
+msgstr ""
+
+#. module: event
+#: selection:report.event.registration,event_state:0
+#: selection:report.event.registration,registration_state:0
+msgid "Draft"
+msgstr "Priprema"
 
 #. module: event
 #: view:event.event:0
-msgid "Beginning Date"
-msgstr "Datum Pocetka"
-
-#. module: event
-#: field:event.registration,date_closed:0
-msgid "Closed"
-msgstr "Zatvoreno"
+msgid "Events in New state"
+msgstr ""
 
 #. module: event
 #: view:report.event.registration:0
@@ -718,28 +679,46 @@ msgid "Events which are in New state"
 msgstr ""
 
 #. module: event
+#: code:addons/event/event.py:404
+#, python-format
+msgid "State set to Cancel"
+msgstr ""
+
+#. module: event
 #: view:event.event:0
 #: model:ir.actions.act_window,name:event.action_event_view
+#: model:ir.actions.act_window,name:event.open_board_associations_manager
+#: model:ir.module.category,name:event.module_category_event_management
+#: model:ir.ui.menu,name:event.event_main_menu
+#: model:ir.ui.menu,name:event.menu_board_associations_manager
 #: model:ir.ui.menu,name:event.menu_event_event
-#: model:ir.ui.menu,name:event.menu_event_event_assiciation
+#: model:ir.ui.menu,name:event.menu_reporting_events
 #: view:res.partner:0
 msgid "Events"
 msgstr "Događaji"
 
 #. module: event
-#: field:partner.event.registration,nb_register:0
-msgid "Number of Registration"
-msgstr "Broj Registracija"
+#: view:event.event:0
+#: field:event.event,state:0
+#: view:event.registration:0
+#: field:event.registration,state:0
+msgid "Status"
+msgstr "Status"
 
 #. module: event
-#: field:event.event,child_ids:0
-msgid "Child Events"
-msgstr "Pod-Dogadjaji"
+#: field:event.event,city:0
+msgid "city"
+msgstr ""
 
 #. module: event
 #: selection:report.event.registration,month:0
 msgid "August"
 msgstr "Avgust"
+
+#. module: event
+#: field:event.event,zip:0
+msgid "zip"
+msgstr ""
 
 #. module: event
 #: field:res.partner,event_ids:0
@@ -748,15 +727,9 @@ msgid "unknown"
 msgstr "nepoznat"
 
 #. module: event
-#: help:event.event,product_id:0
-msgid ""
-"The invoices of this event registration will be created with this Product. "
-"Thus it allows you to set the default label and the accounting info you want "
-"by default on these invoices."
+#: field:event.event,street2:0
+msgid "Street2"
 msgstr ""
-"Fakture ovog dogadjaja ce biti kreirane zajedno sa ovim Produktom. Takodje "
-"ovo ti omogucava da postavis podrazumevane vrednosti i info naloga koje "
-"zelis kao podrazumevane za ovakve fakture."
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -764,19 +737,49 @@ msgid "June"
 msgstr "Juni"
 
 #. module: event
-#: model:product.template,name:event.event_product_0_product_template
-msgid "Ticket for Concert"
-msgstr "Karta za koncert"
+#: help:event.type,default_reply_to:0
+msgid ""
+"The email address of the organizer which is put in the 'Reply-To' of all "
+"emails sent automatically at event or registrations confirmation. You can "
+"also put your email address of your mail gateway if you use one."
+msgstr ""
 
 #. module: event
-#: field:event.registration,write_date:0
-msgid "Write Date"
-msgstr "Upisi Datum"
+#: help:event.event,message_ids:0
+#: help:event.registration,message_ids:0
+msgid "Messages and communication history"
+msgstr ""
 
 #. module: event
-#: view:event.registration:0
-msgid "My Registrations"
-msgstr "Moja Registracija"
+#: field:event.registration,phone:0
+msgid "Phone"
+msgstr ""
+
+#. module: event
+#: model:email.template,body_html:event.confirmation_event
+msgid ""
+"\n"
+"        <p>Hello ${object.name},</p>\n"
+"        <p>The event ${object.event_id.name} that you registered for is "
+"confirmed and will be held from ${object.event_id.date_begin} to "
+"${object.event_id.date_end}.\n"
+"        For any further information please contact our event "
+"department.</p>\n"
+"        <p>Thank you for your participation!</p>\n"
+"        <p>Best regards</p>"
+msgstr ""
+
+#. module: event
+#: field:event.event,message_is_follower:0
+#: field:event.registration,message_is_follower:0
+msgid "Is a Follower"
+msgstr ""
+
+#. module: event
+#: field:event.registration,user_id:0
+#: model:res.groups,name:event.group_event_user
+msgid "User"
+msgstr ""
 
 #. module: event
 #: view:event.confirm:0
@@ -788,19 +791,20 @@ msgstr ""
 "li siguran da zelis da  je potvrdis?"
 
 #. module: event
-#: field:event.registration,active:0
-msgid "Active"
-msgstr "Aktivan"
+#: view:event.event:0
+msgid "(confirmed:"
+msgstr ""
 
 #. module: event
-#: field:event.registration,date:0
-msgid "Start Date"
-msgstr "Pocetni Datum"
+#: view:event.registration:0
+msgid "My Registrations"
+msgstr "Moja Registracija"
 
 #. module: event
-#: selection:report.event.registration,month:0
-msgid "November"
-msgstr "Novembar"
+#: code:addons/event/event.py:310
+#, python-format
+msgid "Event has been set to <b>draft</b>."
+msgstr ""
 
 #. module: event
 #: view:report.event.registration:0
@@ -808,9 +812,12 @@ msgid "Extended Filters..."
 msgstr "Prosireni Filteri"
 
 #. module: event
-#: field:partner.event.registration,start_date:0
-msgid "Start date"
-msgstr "Pocetni Datum"
+#: field:event.event,message_comment_ids:0
+#: help:event.event,message_comment_ids:0
+#: field:event.registration,message_comment_ids:0
+#: help:event.registration,message_comment_ids:0
+msgid "Comments and emails"
+msgstr ""
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -818,25 +825,9 @@ msgid "October"
 msgstr "Oktobar"
 
 #. module: event
-#: field:event.event,language:0
-msgid "Language"
-msgstr "Jezik"
-
-#. module: event
-#: view:event.registration:0
-#: field:event.registration,email_cc:0
-msgid "CC"
-msgstr "CC"
-
-#. module: event
-#: selection:report.event.registration,month:0
-msgid "January"
-msgstr "Januar"
-
-#. module: event
-#: help:event.registration,email_from:0
-msgid "These people will receive email."
-msgstr "Ovi ljudi ce primiti Email"
+#: model:ir.actions.server,name:event.actions_server_event_registration_unread
+msgid "Event registration : Mark unread"
+msgstr ""
 
 #. module: event
 #: view:event.event:0
@@ -844,41 +835,39 @@ msgid "Set To Draft"
 msgstr "Postavi u \"U Pripremi'"
 
 #. module: event
-#: code:addons/event/event.py:499
 #: view:event.event:0
-#: view:event.registration:0
 #: view:res.partner:0
-#, python-format
 msgid "Confirm Registration"
 msgstr "Posalji na Pripremu"
 
 #. module: event
-#: view:event.event:0
-#: view:report.event.registration:0
+#: code:addons/event/event.py:95
+#, python-format
+msgid ""
+"You have already set a registration for this event as 'Attended'. Please "
+"reset it to draft if you want to cancel this event."
+msgstr ""
+
+#. module: event
 #: view:res.partner:0
 msgid "Date"
 msgstr "Datum"
 
 #. module: event
 #: view:event.event:0
-msgid "Registration Email Body"
-msgstr "Sadrzaj Registracionog Emaila"
-
-#. module: event
-#: view:event.event:0
-msgid "Confirmation Email Body"
-msgstr "Potvrda Sadrzaja Emaila"
-
-#. module: event
-#: view:report.event.registration:0
-msgid "Registrations in confirmed or done state"
+msgid "Email Configuration"
 msgstr ""
 
 #. module: event
-#: view:event.registration:0
-#: view:res.partner:0
-msgid "History"
-msgstr "Istorija"
+#: field:event.type,default_registration_min:0
+msgid "Default Minimum Registration"
+msgstr ""
+
+#. module: event
+#: code:addons/event/event.py:368
+#, python-format
+msgid "Registration confirmed."
+msgstr ""
 
 #. module: event
 #: field:event.event,address_id:0
@@ -892,30 +881,16 @@ msgid "Types of Events"
 msgstr "Tipovi Dogadjaja"
 
 #. module: event
-#: field:event.registration,contact_id:0
-msgid "Partner Contact"
-msgstr "Kontakt partnera"
-
-#. module: event
-#: field:event.event,pricelist_id:0
-msgid "Pricelist"
-msgstr "Cenovnik"
-
-#. module: event
-#: code:addons/event/wizard/event_make_invoice.py:59
-#, python-format
-msgid "Event related doesn't have any product defined"
-msgstr "Vezani dogadjaj ne sadrzi ni jedan definisani produkt"
+#: help:event.event,email_registration_id:0
+msgid ""
+"This field contains the template of the mail that will be automatically sent "
+"each time a registration for this event is confirmed."
+msgstr ""
 
 #. module: event
 #: view:event.event:0
-msgid "Auto Confirmation Email"
-msgstr "Auto-Mail za potvrdu"
-
-#. module: event
-#: view:event.registration:0
-msgid "Misc"
-msgstr "Ostalo"
+msgid "Attended the Event"
+msgstr ""
 
 #. module: event
 #: constraint:event.event:0
@@ -925,55 +900,10 @@ msgstr ""
 "Datuma Pocetka"
 
 #. module: event
-#: code:addons/event/event.py:446
-#: selection:event.event,state:0
-#: view:event.make.invoice:0
-#: selection:event.registration,state:0
-#: selection:report.event.registration,state:0
+#: code:addons/event/event.py:400
 #, python-format
-msgid "Done"
-msgstr "Gotovo"
-
-#. module: event
-#: field:event.event,date_begin:0
-msgid "Beginning date"
-msgstr "Datum pocetka"
-
-#. module: event
-#: view:event.registration:0
-#: field:event.registration,invoice_id:0
-msgid "Invoice"
-msgstr "Račun"
-
-#. module: event
-#: view:report.event.registration:0
-#: field:report.event.registration,year:0
-msgid "Year"
-msgstr "Godina"
-
-#. module: event
-#: code:addons/event/event.py:465
-#, python-format
-msgid "Cancel"
-msgstr "Otkaži"
-
-#. module: event
-#: view:event.confirm:0
-#: view:event.confirm.registration:0
-#: view:event.make.invoice:0
-msgid "Close"
-msgstr "Zatvori"
-
-#. module: event
-#: view:event.event:0
-msgid "Event by Registration"
-msgstr "Dogadjaj po registraciji"
-
-#. module: event
-#: code:addons/event/event.py:436
-#, python-format
-msgid "Open"
-msgstr "Otvori"
+msgid "You must wait for the starting day of the event to do this action."
+msgstr ""
 
 #. module: event
 #: field:event.event,user_id:0
@@ -981,32 +911,64 @@ msgid "Responsible User"
 msgstr "Odgovorni Korisnik"
 
 #. module: event
-#: code:addons/event/event.py:561
-#: code:addons/event/event.py:568
+#: selection:event.event,state:0
+#: selection:report.event.registration,event_state:0
+msgid "Done"
+msgstr "Gotovo"
+
+#. module: event
+#: view:report.event.registration:0
+msgid "Show Confirmed Registrations"
+msgstr ""
+
+#. module: event
+#: view:event.confirm:0
+msgid "Cancel"
+msgstr "Otkaži"
+
+#. module: event
+#: field:event.registration,reply_to:0
+msgid "Reply-to Email"
+msgstr ""
+
+#. module: event
+#: code:addons/event/event.py:114
 #, python-format
-msgid "Auto Confirmation: [%s] %s"
-msgstr "Auto potvrdjivanje: [%s] %s"
+msgid "Only %d Seats are Available!"
+msgstr ""
+
+#. module: event
+#: model:email.template,subject:event.confirmation_event
+#: model:email.template,subject:event.confirmation_registration
+msgid "Your registration at ${object.event_id.name}"
+msgstr ""
+
+#. module: event
+#: view:event.registration:0
+msgid "Set To Unconfirmed"
+msgstr ""
+
+#. module: event
+#: view:event.event:0
+#: field:event.event,is_subscribed:0
+msgid "Subscribed"
+msgstr ""
+
+#. module: event
+#: view:event.event:0
+msgid "Unsubscribe"
+msgstr ""
 
 #. module: event
 #: view:event.event:0
 #: view:event.registration:0
-#: field:event.registration,user_id:0
-#: view:report.event.registration:0
-#: field:report.event.registration,user_id:0
 msgid "Responsible"
 msgstr "Odgovoran"
 
 #. module: event
-#: field:event.event,unit_price:0
-#: view:event.registration:0
-#: field:partner.event.registration,unit_price:0
-msgid "Registration Cost"
-msgstr "Registracioni kosta"
-
-#. module: event
-#: field:event.registration,unit_price:0
-msgid "Unit Price"
-msgstr "Jedinična cijena"
+#: view:report.event.registration:0
+msgid "Registration contact"
+msgstr ""
 
 #. module: event
 #: view:report.event.registration:0
@@ -1016,44 +978,28 @@ msgid "Speaker"
 msgstr "Govornik"
 
 #. module: event
-#: model:event.event,name:event.event_2
-msgid "Conference on ERP Buisness"
-msgstr "Konferencija o ERP Biznisu"
-
-#. module: event
-#: view:event.registration:0
-msgid "Reply"
-msgstr "Odgovor"
-
-#. module: event
-#: view:report.event.registration:0
-msgid "Events created in current month"
-msgstr ""
-
-#. module: event
-#: help:event.event,mail_auto_registr:0
-msgid ""
-"Check this box if you want to use automatic emailing for new registration."
-msgstr ""
-
-#. module: event
-#: field:event.event,date_end:0
-#: field:partner.event.registration,end_date:0
-msgid "Closing date"
-msgstr "Datum zatvaranja"
-
-#. module: event
-#: field:event.event,product_id:0
-#: view:report.event.registration:0
-#: field:report.event.registration,product_id:0
-msgid "Product"
-msgstr "Proizvod"
-
-#. module: event
 #: view:event.event:0
+msgid "Upcoming events from today"
+msgstr ""
+
+#. module: event
+#: code:addons/event/event.py:300
+#, python-format
+msgid "Event has been <b>created</b>."
+msgstr ""
+
+#. module: event
+#: model:event.event,name:event.event_2
+msgid "Conference on ERP Business"
+msgstr ""
+
+#. module: event
+#: model:ir.actions.act_window,name:event.act_event_view_registration
+msgid "New Registration"
+msgstr ""
+
+#. module: event
 #: field:event.event,note:0
-#: view:event.registration:0
-#: field:event.registration,description:0
 msgid "Description"
 msgstr "Opis"
 
@@ -1063,14 +1009,15 @@ msgid " # No of Confirmed Registrations"
 msgstr " # Br potvrdjenih Registracija"
 
 #. module: event
-#: model:ir.actions.act_window,name:event.act_register_event_partner
-msgid "Subscribe"
-msgstr "Pretplati se"
+#: field:report.event.registration,name_registration:0
+msgid "Participant / Contact Name"
+msgstr ""
 
 #. module: event
-#: selection:report.event.registration,month:0
-msgid "May"
-msgstr "Maj"
+#: code:addons/event/event.py:320
+#, python-format
+msgid "Event has been <b>confirmed</b>."
+msgstr ""
 
 #. module: event
 #: view:res.partner:0
@@ -1078,60 +1025,35 @@ msgid "Events Registration"
 msgstr "Registracioni Dogadjaj"
 
 #. module: event
-#: help:event.event,mail_registr:0
-msgid "This email will be sent when someone subscribes to the event."
-msgstr "Ovaj ce Email biti poslan kada se neko bude prijavio za dogadjaj"
-
-#. module: event
-#: model:product.template,name:event.event_product_2_product_template
-msgid "Ticket for Conference"
-msgstr "Karta za konferenciju"
-
-#. module: event
-#: model:ir.ui.menu,name:event.menu_event_type_association
-msgid "Events Type"
+#: view:event.event:0
+msgid "No ticket available."
 msgstr ""
 
 #. module: event
-#: field:event.registration.badge,address_id:0
-msgid "Address"
-msgstr "Adrese"
-
-#. module: event
-#: view:board.board:0
-#: model:ir.actions.act_window,name:event.act_event_view
-msgid "Next Events"
-msgstr "Sledeci Dogadjaj"
-
-#. module: event
-#: view:partner.event.registration:0
-msgid "_Subcribe"
-msgstr "_PretplatiSe"
-
-#. module: event
-#: model:ir.model,name:event.model_partner_event_registration
-msgid "  event Registration "
+#: help:event.type,default_registration_min:0
+msgid "It will select this default minimum value when you choose this event"
 msgstr ""
 
 #. module: event
-#: help:event.event,date_begin:0
-#: help:partner.event.registration,start_date:0
-msgid "Beginning Date of Event"
-msgstr "Datum POcetka Dogadjaja"
+#: selection:report.event.registration,month:0
+msgid "January"
+msgstr "Januar"
 
 #. module: event
+#: field:event.event,register_max:0
+#: field:report.event.registration,register_max:0
+msgid "Maximum Registrations"
+msgstr "Maksimum Registracija"
+
+#. module: event
+#: view:event.event:0
+#: selection:event.event,state:0
 #: selection:event.registration,state:0
 msgid "Unconfirmed"
 msgstr "Nepotvrdjen"
 
 #. module: event
-#: code:addons/event/event.py:565
-#, python-format
-msgid "Auto Registration: [%s] %s"
-msgstr "Auto Registracija : [%s] %s"
-
-#. module: event
-#: field:event.registration,date_deadline:0
+#: field:event.event,date_end:0
 msgid "End Date"
 msgstr "Krajnji Datum"
 
@@ -1147,17 +1069,10 @@ msgstr "UpravljackaTabla Asociacija"
 
 #. module: event
 #: view:event.event:0
-#: field:event.registration.badge,name:0
+#: field:event.event,name:0
+#: field:event.registration,name:0
 msgid "Name"
 msgstr "Ime"
-
-#. module: event
-#: field:event.event,section_id:0
-#: field:event.registration,section_id:0
-#: view:report.event.registration:0
-#: field:report.event.registration,section_id:0
-msgid "Sale Team"
-msgstr "Prodajni Tim"
 
 #. module: event
 #: field:event.event,country_id:0
@@ -1165,19 +1080,19 @@ msgid "Country"
 msgstr "Zemlja"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:55
-#, python-format
-msgid "Registration is set as Cannot be invoiced"
-msgstr "REgistracija je postavljena tako da se ne moze fakturisati"
+#: selection:report.event.registration,month:0
+msgid "November"
+msgstr "Novembar"
 
 #. module: event
-#: code:addons/event/event.py:527
-#: view:event.event:0
-#: view:event.registration:0
 #: view:res.partner:0
-#, python-format
 msgid "Close Registration"
 msgstr "Zatvori Registraciju"
+
+#. module: event
+#: field:event.registration,origin:0
+msgid "Source Document"
+msgstr ""
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -1185,10 +1100,10 @@ msgid "April"
 msgstr "April"
 
 #. module: event
-#: help:event.event,unit_price:0
+#: help:event.type,default_email_event:0
 msgid ""
-"This will be the default price used as registration cost when invoicing this "
-"event. Note that you can specify a specific amount for each registration."
+"It will select this default confirmation event mail value when you choose "
+"this event"
 msgstr ""
 
 #. module: event
@@ -1199,19 +1114,17 @@ msgstr ""
 #. module: event
 #: view:event.event:0
 #: view:event.type:0
+#: field:event.type,name:0
 #: view:report.event.registration:0
-#: field:report.event.registration,type:0
+#: field:report.event.registration,event_type:0
 msgid "Event Type"
 msgstr "Vrsta događaja"
 
 #. module: event
-#: view:event.event:0
-#: field:event.event,registration_ids:0
-#: model:ir.actions.act_window,name:event.action_registration
-#: model:ir.ui.menu,name:event.menu_action_registration
-#: model:ir.ui.menu,name:event.menu_action_registration_association
-msgid "Registrations"
-msgstr "Registracije"
+#: field:event.event,message_summary:0
+#: field:event.registration,message_summary:0
+msgid "Summary"
+msgstr "Sumarno"
 
 #. module: event
 #: field:event.registration,id:0
@@ -1219,32 +1132,74 @@ msgid "ID"
 msgstr ""
 
 #. module: event
-#: field:event.event,register_max:0
-#: field:report.event.registration,register_max:0
-msgid "Maximum Registrations"
-msgstr "Maksimum Registracija"
-
-#. module: event
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
+#: field:event.type,default_reply_to:0
+msgid "Default Reply-To"
 msgstr ""
 
 #. module: event
-#: field:report.event.registration,date:0
+#: view:event.event:0
+#: model:ir.actions.act_window,name:event.act_register_event_partner
+msgid "Subscribe"
+msgstr "Pretplati se"
+
+#. module: event
+#: view:event.event:0
+msgid "available."
+msgstr ""
+
+#. module: event
+#: field:event.registration,event_begin_date:0
+#: field:report.event.registration,event_date:0
 msgid "Event Start Date"
 msgstr "Pocetni Datum Dogadjaja"
 
 #. module: event
-#: view:partner.event.registration:0
-msgid "Event For Registration"
-msgstr "Dogadjaj Za Registraciju"
+#: view:report.event.registration:0
+msgid "Participant / Contact"
+msgstr ""
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:51
-#, python-format
-msgid "Invoice cannot be created if the registration is in %s state."
+#: view:event.event:0
+msgid "Current Registrations"
 msgstr ""
-"Faktura ne moze biti kreirana ako je registracija postavljena na %s ."
+
+#. module: event
+#: model:email.template,body_html:event.confirmation_registration
+msgid ""
+"\n"
+"        <p>Hello ${object.name},</p>\n"
+"        <p>We confirm that your registration to the event "
+"${object.event_id.name} has been recorded.\n"
+"        You will automatically receive an email providing you more practical "
+"information (such as the schedule, the agenda...) as soon as the event is "
+"confirmed.</p>\n"
+"        <p>Thank you for your participation!</p>\n"
+"        <p>Best regards</p>"
+msgstr ""
+
+#. module: event
+#: help:event.event,reply_to:0
+msgid ""
+"The email address of the organizer is likely to be put here, with the effect "
+"to be in the 'Reply-To' of the mails sent automatically at event or "
+"registrations confirmation. You can also put the email address of your mail "
+"gateway if you use one."
+msgstr ""
+
+#. module: event
+#: model:ir.actions.server,name:event.actions_server_event_event_unread
+msgid "Event: Mark unread"
+msgstr ""
+
+#. module: event
+#: model:res.groups,name:event.group_event_manager
+msgid "Manager"
+msgstr ""
+
+#. module: event
+#: field:event.event,street:0
+msgid "Street"
+msgstr ""
 
 #. module: event
 #: view:event.confirm:0
@@ -1254,30 +1209,15 @@ msgid "Event Confirmation"
 msgstr "Potvrda Dogadjaja"
 
 #. module: event
-#: view:event.event:0
-msgid "Auto Registration Email"
-msgstr "Auto Registracioni Email"
-
-#. module: event
-#: view:event.registration:0
 #: view:report.event.registration:0
-#: field:report.event.registration,total:0
-msgid "Total"
-msgstr "Ukupno"
+#: field:report.event.registration,year:0
+msgid "Year"
+msgstr "Godina"
 
 #. module: event
 #: field:event.event,speaker_confirmed:0
 msgid "Speaker Confirmed"
 msgstr "Govornik Potvrdjen"
-
-#. module: event
-#: model:ir.actions.act_window,help:event.action_event_view
-msgid ""
-"Event is the low level object used by meeting and others documents that "
-"should be synchronized with mobile devices or calendar applications through "
-"caldav. Most of the users should work in the Calendar menu, and not in the "
-"list of events."
-msgstr ""
 
 #~ msgid "Error ! You cannot create recursive sections."
 #~ msgstr "Greška ! Ne možete stvarati rekurzivne sekcije."
@@ -1285,8 +1225,14 @@ msgstr ""
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Pogrešno ime modela u definiciji akcije."
 
+#~ msgid "Confirmation Email"
+#~ msgstr "Konfirmacioni Email"
+
 #~ msgid "Ending date"
 #~ msgstr "Datum zavrsetka"
+
+#~ msgid "Make Invoice"
+#~ msgstr "Kreiraj račun"
 
 #~ msgid "Draft Registrations"
 #~ msgstr "Registracije u Pripremi"
@@ -1335,8 +1281,29 @@ msgstr ""
 #~ msgid "Invoice Rejected"
 #~ msgstr "Racun Odbijen"
 
+#~ msgid "Ticket for Opera"
+#~ msgstr "Karta za Operu"
+
+#~ msgid "Mail Auto Confirm"
+#~ msgstr "Auto potvrdjivanje Email-a"
+
 #~ msgid "Badge"
 #~ msgstr "Znacka"
+
+#~ msgid "Dates"
+#~ msgstr "Datumi"
+
+#~ msgid "Event type"
+#~ msgstr "Tip dogadjaja"
+
+#~ msgid "Extra Info"
+#~ msgstr "Dodatne Informacije"
+
+#~ msgid "Mail Auto Register"
+#~ msgstr "Auto Registracija Mailom"
+
+#~ msgid "Registration Confirmation"
+#~ msgstr "Potvrda Registracije"
 
 #~ msgid "Events by Categories"
 #~ msgstr "Dogadjaji po Kategorijama"
@@ -1362,6 +1329,9 @@ msgstr ""
 #~ msgid "The event limit is reached. What do you want to do?"
 #~ msgstr "Limit Dogadjaja je postignut. Sta zelis da uradis?"
 
+#~ msgid "To be Invoiced"
+#~ msgstr "Da bude Fakturisano"
+
 #~ msgid "Error: UOS must be in a different category than the UOM"
 #~ msgstr ""
 #~ "Greška: JU (jedinice usluga)  i JM moraju da budu u različitim kategorijama"
@@ -1372,6 +1342,9 @@ msgstr ""
 #~ msgid "Configuration"
 #~ msgstr "Podešavanje"
 
+#~ msgid "Mailing"
+#~ msgstr "E-Postanska"
+
 #~ msgid "Error Messages"
 #~ msgstr "Poruke o greskama"
 
@@ -1380,6 +1353,9 @@ msgstr ""
 
 #~ msgid "Parent Category"
 #~ msgstr "Roditeljska Kategorija"
+
+#~ msgid "Event Done"
+#~ msgstr "Dogadjaj Zavrsen"
 
 #~ msgid "Badge Name"
 #~ msgstr "Naziv Znacke"
@@ -1398,8 +1374,14 @@ msgstr ""
 #~ msgstr ""
 #~ "Greška: Podrazumevana JM i kupljena JM moraju da budu u istoj kategoriji."
 
+#~ msgid "Ticket for Concert"
+#~ msgstr "Karta za koncert"
+
 #~ msgid "Communication history"
 #~ msgstr "Istorija Komunikacija"
+
+#~ msgid "Partner Invoiced"
+#~ msgstr "Partner Fakturisan"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -1415,8 +1397,8 @@ msgstr ""
 #~ msgid "Event Related"
 #~ msgstr "Vezani Dogadjaj"
 
-#~ msgid "Status"
-#~ msgstr "Status"
+#~ msgid "Number of Registration"
+#~ msgstr "Broj Registracija"
 
 #~ msgid "Events by section"
 #~ msgstr "Dogadjaji po Sekciji"
@@ -1424,14 +1406,23 @@ msgstr ""
 #~ msgid "Statistics"
 #~ msgstr "Statistike"
 
+#~ msgid "History"
+#~ msgstr "Istorija"
+
 #~ msgid "General"
 #~ msgstr "Opšte"
 
 #~ msgid "Send Reminder"
 #~ msgstr "Posalji Podsetnik"
 
+#~ msgid "Auto Confirmation Email"
+#~ msgstr "Auto-Mail za potvrdu"
+
 #~ msgid "All Registrations"
 #~ msgstr "Sve Registracije"
+
+#~ msgid "Partner Contact"
+#~ msgstr "Kontakt partnera"
 
 #~ msgid ""
 #~ "Check this box if you want to use the automatic mailing for new registration"
@@ -1439,8 +1430,24 @@ msgstr ""
 #~ "Cekiraj ovu Kucicu ako zelite da koristite automatski mailing pri novoj "
 #~ "registraciji"
 
+#~ msgid "Beginning date"
+#~ msgstr "Datum pocetka"
+
+#~ msgid "Conference on ERP Buisness"
+#~ msgstr "Konferencija o ERP Biznisu"
+
+#~ msgid "Unit Price"
+#~ msgstr "Jedinična cijena"
+
+#, python-format
+#~ msgid "Open"
+#~ msgstr "Otvori"
+
 #~ msgid "Events on registrations"
 #~ msgstr "Dogadjaji pri Registraciji"
+
+#~ msgid "Invoice"
+#~ msgstr "Račun"
 
 #~ msgid "New event"
 #~ msgstr "Novi Dogadjaj"
@@ -1450,6 +1457,9 @@ msgstr ""
 
 #~ msgid "Case"
 #~ msgstr "Slucaj"
+
+#~ msgid "Ticket for Conference"
+#~ msgstr "Karta za konferenciju"
 
 #~ msgid "Badge Partner"
 #~ msgstr "Partner Znacke"
@@ -1466,11 +1476,20 @@ msgstr ""
 #~ "potvrdjeni dogadjaj. Ovo je takodje Email koji ce biti poslat da podseti "
 #~ "nekog o dogadjaju."
 
+#~ msgid "This email will be sent when someone subscribes to the event."
+#~ msgstr "Ovaj ce Email biti poslan kada se neko bude prijavio za dogadjaj"
+
 #~ msgid ""
 #~ "Check this box if you want ot use the automatic confirmation emailing or the "
 #~ "reminder"
 #~ msgstr ""
 #~ "Cekiraj ovu kucicu ako zelis da koristis automatsko slanje E-podsetnika"
+
+#~ msgid "Type"
+#~ msgstr "Tip"
+
+#~ msgid "Product"
+#~ msgstr "Proizvod"
 
 #~ msgid "Events Organisation"
 #~ msgstr "Organizacija Dogadjaja"
@@ -1490,11 +1509,32 @@ msgstr ""
 #~ msgid "Error: Invalid ean code"
 #~ msgstr "Greška: Neispravan EAN kod"
 
+#~ msgid "Auto Registration Email"
+#~ msgstr "Auto Registracioni Email"
+
 #~ msgid "Provide Maximun Number of Registrations"
 #~ msgstr "Daje Maksimalni broj Registracija"
 
+#~ msgid "Invoice Information"
+#~ msgstr "Infiormacije Fakture"
+
+#~ msgid "Registration Email"
+#~ msgstr "Registracio9ni Email"
+
 #~ msgid "Speaker who are giving speech on event."
 #~ msgstr "Govornik koji krece sa govorom pri nekom dogadjaju"
+
+#~ msgid "Make Invoices"
+#~ msgstr "Napravi Fakture"
+
+#~ msgid "Title"
+#~ msgstr "Naslov"
+
+#~ msgid "Event Details"
+#~ msgstr "detalji Dogadjaja"
+
+#~ msgid "_Close"
+#~ msgstr "_Zatvoreno"
 
 #~ msgid ""
 #~ "This will be the default price used as registration cost when invoicing this "
@@ -1508,29 +1548,266 @@ msgstr ""
 #~ msgid "Current Events"
 #~ msgstr "Trenutni Dogadjaji"
 
+#~ msgid "Add Internal Note"
+#~ msgstr "Dodaj Internu Belesku"
+
+#~ msgid "Reply-To"
+#~ msgstr "Odgovor-za"
+
+#~ msgid "Event Dashboard"
+#~ msgstr "UpravljackaTabla Dogadjaja"
+
+#~ msgid "Pricelist"
+#~ msgstr "Cenovnik"
+
+#~ msgid "event.registration.badge"
+#~ msgstr "event.registration.badge"
+
+#~ msgid "Reference"
+#~ msgstr "Referenca"
+
+#~ msgid "Parent Event"
+#~ msgstr "Roditeljski Dogadjaj"
+
+#, python-format
+#~ msgid "Registration doesn't have any partner to invoice."
+#~ msgstr "Registracija nema ni jednog partnera za fakturisanje"
+
+#~ msgid "Pricelist version for current event."
+#~ msgstr "Verzija Cenovnika za dati dogadjaj"
+
+#~ msgid "Invoice Date"
+#~ msgstr "Datum Fakture"
+
 #~ msgid "Last 7 Days"
 #~ msgstr "Poslednjih 7 dana"
+
+#~ msgid "Subtotal"
+#~ msgstr "Subtotal"
+
+#~ msgid "Closing Date of Event"
+#~ msgstr "Datum zatvaranja dogadjaja"
+
+#~ msgid "Emails"
+#~ msgstr "Emailovi"
+
+#~ msgid "Send New Email"
+#~ msgstr "Posalji Novi Email"
+
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "Upozorenje !"
+
+#~ msgid "Number of Registrations or Tickets"
+#~ msgstr "Broj registracija ili Tiketa"
+
+#~ msgid "Event Make Invoice"
+#~ msgstr "Napravi Fakturu Dogadjaja"
+
+#~ msgid "Other Speakers"
+#~ msgstr "Ostali Govornici"
+
+#~ msgid "Misc"
+#~ msgstr "Ostalo"
+
+#~ msgid ""
+#~ "The invoices of this event registration will be created with this Product. "
+#~ "Thus it allows you to set the default label and the accounting info you want "
+#~ "by default on these invoices."
+#~ msgstr ""
+#~ "Fakture ovog dogadjaja ce biti kreirane zajedno sa ovim Produktom. Takodje "
+#~ "ovo ti omogucava da postavis podrazumevane vrednosti i info naloga koje "
+#~ "zelis kao podrazumevane za ovakve fakture."
+
+#~ msgid "Badges"
+#~ msgstr "Bedzevi"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Greska !"
+
+#~ msgid "Reply"
+#~ msgstr "Odgovor"
+
+#, python-format
+#~ msgid "Registered partner doesn't have an address to make the invoice."
+#~ msgstr "zahtevani partner nema adresu da bi napravio fakturu"
+
+#~ msgid "Quantity"
+#~ msgstr "Kolicina"
+
+#, python-format
+#~ msgid "Warning: The Event '%s' has reached its Maximum Limit (%s)."
+#~ msgstr "Upozorenje ! Dogadjaj '%s' je dostigao maksimalni limit (%s)."
+
+#~ msgid "Type of Event like Seminar, Exhibition, Conference, Training."
+#~ msgstr ""
+#~ "Tip dogadjaja kao sto su Seminari, Izlozbe, Konferencije, Treninzi..."
 
 #~ msgid "Total of Prospect Registrati./event/event.py:41:ons"
 #~ msgstr "Ukupno Prospekata Registrati./event/event.py:41:ons"
 
+#~ msgid "History Information"
+#~ msgstr "Informacija Istorije"
+
+#~ msgid ""
+#~ "If event is created, the state is 'Draft'.If event is confirmed for the "
+#~ "particular dates the state is set to 'Confirmed'. If the event is over, the "
+#~ "state is set to 'Done'.If event is cancelled the state is set to 'Cancelled'."
+#~ msgstr ""
+#~ "Ako je dogadjaj kreiran stanje je postavljeno na ' U Pripremi'. Ako je "
+#~ "dogadjaj potvrdjen za date datume stanje je postavljeno na' Potvrdjeno'. Ako "
+#~ "se dogadjaj zavrsio stanje je postavljeno na ' Zavrseno'. Ako je dogadjaj "
+#~ "otkazan stanje se postavlja na ' Otkazan'."
+
+#, python-format
+#~ msgid "Registration is set as Cannot be invoiced"
+#~ msgstr "REgistracija je postavljena tako da se ne moze fakturisati"
+
 #~ msgid "Last 30 Days"
 #~ msgstr "Poslednjih 30 dana"
+
+#~ msgid "Contact"
+#~ msgstr "Kontakt"
+
+#~ msgid "Message"
+#~ msgstr "Poruka"
+
+#~ msgid "Group the invoices"
+#~ msgstr "Grupiraj Fakture"
+
+#~ msgid "Invoice Name"
+#~ msgstr "Naziv Fakture"
+
+#~ msgid "Total of Open and Done Registrations"
+#~ msgstr "Ukupno Otvorenih i Zavrsenih Registracija"
+
+#~ msgid "Error ! You cannot create recursive event."
+#~ msgstr "Greska ! Ne mozes Kreirati Rekursivni dogadjaj."
+
+#~ msgid "Child Events"
+#~ msgstr "Pod-Dogadjaji"
+
+#~ msgid "Write Date"
+#~ msgstr "Upisi Datum"
+
+#~ msgid "Active"
+#~ msgstr "Aktivan"
+
+#~ msgid "Confirmation Email Body"
+#~ msgstr "Potvrda Sadrzaja Emaila"
+
+#~ msgid "Language"
+#~ msgstr "Jezik"
+
+#~ msgid "CC"
+#~ msgstr "CC"
+
+#~ msgid "The email address put in the 'Reply-To' of all emails sent by OpenERP"
+#~ msgstr ""
+#~ "Email Adresa stavljena u stavku 'Ogovor za'  za sve emailove poslate od "
+#~ "strane OpenERP-a"
 
 #~ msgid "Dashboard"
 #~ msgstr "UpravljackaTabla"
 
+#~ msgid "These people will receive email."
+#~ msgstr "Ovi ljudi ce primiti Email"
+
+#, python-format
+#~ msgid "Auto Confirmation: [%s] %s"
+#~ msgstr "Auto potvrdjivanje: [%s] %s"
+
+#~ msgid "Event by Registration"
+#~ msgstr "Dogadjaj po registraciji"
+
+#~ msgid "Close"
+#~ msgstr "Zatvori"
+
 #~ msgid "Last 365 Days"
 #~ msgstr "Poslednjih 365 dana"
 
+#, python-format
+#~ msgid "Event related doesn't have any product defined"
+#~ msgstr "Vezani dogadjaj ne sadrzi ni jedan definisani produkt"
+
 #~ msgid "Attachments"
 #~ msgstr "Dodatak"
+
+#~ msgid "Registration Cost"
+#~ msgstr "Registracioni kosta"
 
 #~ msgid "Current"
 #~ msgstr "Trenutni"
 
 #~ msgid "Details"
 #~ msgstr "detalji"
+
+#~ msgid "Sale Team"
+#~ msgstr "Prodajni Tim"
+
+#~ msgid "Start date"
+#~ msgstr "Pocetni Datum"
+
+#~ msgid "Closing date"
+#~ msgstr "Datum zatvaranja"
+
+#~ msgid "Beginning Date of Event"
+#~ msgstr "Datum POcetka Dogadjaja"
+
+#, python-format
+#~ msgid "Auto Registration: [%s] %s"
+#~ msgstr "Auto Registracija : [%s] %s"
+
+#~ msgid "Address"
+#~ msgstr "Adrese"
+
+#~ msgid "_Subcribe"
+#~ msgstr "_PretplatiSe"
+
+#~ msgid "Event For Registration"
+#~ msgstr "Dogadjaj Za Registraciju"
+
+#~ msgid "Registration Email Body"
+#~ msgstr "Sadrzaj Registracionog Emaila"
+
+#~ msgid "Speakers"
+#~ msgstr "Govornici"
+
+#~ msgid "Create invoices"
+#~ msgstr "Kreiraj Fakture"
+
+#~ msgid ""
+#~ "These email addresses will be added to the CC field of all inbound and "
+#~ "outbound emails for this record before being sent. Separate multiple email "
+#~ "addresses with a comma"
+#~ msgstr ""
+#~ "Ova Email adresa ce biti dodata u CC polje za sbe dolazne i odlazne Emailove "
+#~ "za ovaj zapis pre njegovog slanja. Odvajajte vise email adresa zarezom."
+
+#~ msgid "Do you really want to create the invoice(s) ?"
+#~ msgstr "Da li stvarno zeli da kreiras ovu/e fakturu/e"
+
+#~ msgid "Reference 2"
+#~ msgstr "Referenca 2"
+
+#, python-format
+#~ msgid "Invoiced"
+#~ msgstr "Fakturisano"
+
+#~ msgid "Beginning Date"
+#~ msgstr "Datum Pocetka"
+
+#~ msgid "Closed"
+#~ msgstr "Zatvoreno"
+
+#, python-format
+#~ msgid "Invoice cannot be created if the registration is in %s state."
+#~ msgstr ""
+#~ "Faktura ne moze biti kreirana ako je registracija postavljena na %s ."
+
+#~ msgid "Total"
+#~ msgstr "Ukupno"
 
 #~ msgid "Providee Minimum Number of Registrations"
 #~ msgstr "Daje minimalni broj Registracija"

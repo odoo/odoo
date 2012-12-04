@@ -40,6 +40,5 @@ wizard if the delivery is to be invoiced.
     'test': ['test/stock_invoice_directly.yml'],
     'installable': True,
     'auto_install': False,
-    'certificate': '0081385081261',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

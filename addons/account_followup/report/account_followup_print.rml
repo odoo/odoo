@@ -129,15 +129,10 @@
     <blockTable colWidths="298.0,234.0" style="Tableau2">
       <tr>
         <td>
-          <para style="terp_default_9">[[ repeatIn(adr_get(o,'invoice'),'a' )]]</para>
         </td>
         <td>
           <para style="terp_default_9">[[ o.partner_id.name or '' ]]</para>
-          <para style="terp_default_9">[[ a['street'] or '']]</para>
-          <para style="terp_default_9">[[ a['street2'] or removeParentNode('para') ]]</para>
-          <para style="terp_default_9">[[ a['zip'] or '' ]] [[ a['city'] or '' ]]</para>
-          <para style="terp_default_9">[[( a['state_id'] and a['state_id'][1]) or removeParentNode('para') ]]</para>
-          <para style="terp_default_9">[[( a['country_id'] and a['country_id'][1]) or '']]</para>
+          <para style="terp_default_9">[[ display_address(o.partner_id) or '']]</para>
           <para style="terp_default_9">
             <font color="white"> </font>
           </para>
@@ -199,7 +194,7 @@
             <para style="terp_default_Centre_9">[[ line['date_maturity'] and formatLang(line['date_maturity'], date=True) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line['balance']) ]] [[ line['currency_id'] ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(line['balance'], currency_obj=line['currency_id']) ]]</para>
           </td>
           <td>
             <para style="terp_default_Centre_9">[[ line['blocked'] and 'X' or '' ]]</para>
@@ -217,7 +212,7 @@
           <para style="terp_tblheader_Details_Centre">Total: </para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[formatLang(reduce(lambda x,y: x+y['balance'], cur_lines['line'], 0.00)) ]] [[ line['currency_id'] ]] </para>
+          <para style="terp_default_Right_9">[[formatLang(reduce(lambda x,y: x+y['balance'], cur_lines['line'], 0.00), currency_obj=line['currency_id']) ]] </para>
         </td>
         <td>
           <para style="terp_default_Right_9">

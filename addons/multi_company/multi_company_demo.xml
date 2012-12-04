@@ -52,47 +52,12 @@
 
 <!--                      User                        -->
 
-        <record id="res_users_editor_demo" model="res.users">
-            <field name="password">editor_demo</field>
-            <field name="name">OpenERP Editor</field>
-            <field name="login">editor_demo</field>
-            <field name="company_id" ref="res_company_oerp_editor"/>
-            <field name="company_ids" eval="[(4, ref('res_company_oerp_editor'))]"/>
-            <field name="groups_id" eval="[(6,0,[ref('base.group_user'),ref('base.group_sale_manager'),ref('project.group_project_user'),ref('account.group_account_invoice')])]"/>
+        <record id="base.user_root" model="res.users">
+            <field name="company_ids" eval="[(4, ref('res_company_oerp_editor')),(4, ref('res_company_oerp_us')),(4, ref('res_company_oerp_be'))]"/>
         </record>
-        <record id="res_users_sales_demo_us" model="res.users">
-            <field name="password">sales_demo_us</field>
-            <field name="name">OpenERP Salesman US</field>
-            <field name="login">sales_demo_us</field>
-            <field name="company_id" ref="res_company_oerp_us"/>
-            <field name="company_ids" eval="[(4, ref('res_company_oerp_us'))]"/>
-            <field name="groups_id" eval="[(6,0,[ref('base.group_user'),ref('base.group_sale_manager'),ref('project.group_project_user'),ref('account.group_account_invoice')])]"/>
+        <record id="base.user_demo" model="res.users">
+            <field name="company_ids" eval="[(4, ref('res_company_oerp_us')),(4, ref('res_company_oerp_be')),(4, ref('res_company_odoo'))]"/>
         </record>
-        <record id="res_users_sales_demo_be" model="res.users">
-            <field name="password">sales_demo_be</field>
-            <field name="name">OpenERP Salesman BE</field>
-            <field name="login">sales_demo_be</field>
-            <field name="company_id" ref="res_company_oerp_be"/>
-            <field name="company_ids" eval="[(4, ref('res_company_oerp_be'))]"/>
-            <field name="groups_id" eval="[(6,0,[ref('base.group_user'),ref('base.group_sale_manager'),ref('project.group_project_user'),ref('account.group_account_invoice')])]"/>
-        </record>
-        <record id="res_users_sales_demo_in" model="res.users">
-            <field name="password">sales_demo_in</field>
-            <field name="name">OpenERP Salesman IN</field>
-            <field name="login">sales_demo_in</field>
-            <field name="company_id" ref="res_company_oerp_in"/>
-            <field name="company_ids" eval="[(4, ref('res_company_oerp_in'))]"/>
-            <field name="groups_id" eval="[(6,0,[ref('base.group_user'),ref('base.group_sale_manager'),ref('project.group_project_user'),ref('account.group_account_invoice')])]"/>
-        </record>
-        <record id="res_users_odoo_demo" model="res.users">
-            <field name="password">odoo_demo</field>
-            <field name="name">Odoo</field>
-            <field name="login">odoo_demo</field>
-            <field name="company_id" ref="res_company_odoo"/>
-            <field name="company_ids" eval="[(4, ref('res_company_odoo'))]"/>
-            <field name="groups_id" eval="[(6,0,[ref('base.group_user'),ref('base.group_sale_manager'),ref('project.group_project_user'),ref('account.group_account_invoice')])]"/>
-        </record>
-
 
         <!--
     Resource: product.product
@@ -216,7 +181,7 @@
         </record>
 
         <record id="sale.sale_order_5" model="sale.order">
-        <field name="company_id" ref="res_company_oerp_in"/>
+        <field name="company_id" ref="base.main_company"/>
         </record>
 
 
@@ -226,7 +191,6 @@
             <field name="name">Sales Journal - (OpenERP IN)</field>
             <field name="code">SAJ-OpenERP IN</field>
             <field name="type">sale</field>
-            <field name="view_id" ref="account.account_sp_journal_view"/>
             <field name="sequence_id" ref="account.sequence_sale_journal"/>
             <field model="account.account" name="default_credit_account_id" ref="account.a_sale"/>
             <field model="account.account" name="default_debit_account_id" ref="account.a_sale"/>
@@ -239,7 +203,6 @@
             <field name="name">Sales Credit Note Journal - (OpenERP IN)</field>
             <field name="code">SCNJ-OpenERP IN</field>
             <field name="type">sale_refund</field>
-            <field name="view_id" ref="account.account_sp_refund_journal_view"/>
             <field name="sequence_id" ref="account.sequence_refund_sales_journal"/>
             <field model="account.account" name="default_credit_account_id" ref="account.a_sale"/>
             <field model="account.account" name="default_debit_account_id" ref="account.a_sale"/>
@@ -252,7 +215,6 @@
             <field name="name">Expenses Journal - (OpenERP IN)</field>
             <field name="code">EXJ-OpenERP IN</field>
             <field name="type">purchase</field>
-            <field name="view_id" ref="account.account_sp_journal_view"/>
             <field name="sequence_id" ref="account.sequence_purchase_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="account.a_expense"/>
             <field model="account.account" name="default_credit_account_id" ref="account.a_expense"/>
@@ -265,7 +227,6 @@
             <field name="name">Expenses Credit Notes Journal - (OpenERP IN)</field>
             <field name="code">ECNJ-OpenERP IN</field>
             <field name="type">purchase_refund</field>
-            <field name="view_id" ref="account.account_sp_refund_journal_view"/>
             <field name="sequence_id" ref="account.sequence_refund_purchase_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="account.a_expense"/>
             <field model="account.account" name="default_credit_account_id" ref="account.a_expense"/>
@@ -278,7 +239,6 @@
             <field name="name">Bank Journal - (OpenERP IN)</field>
             <field name="code">BNK-OpenERP IN</field>
             <field name="type">bank</field>
-            <field name="view_id" ref="account.account_journal_bank_view"/>
             <field name="sequence_id" ref="account.sequence_bank_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="account.cash"/>
             <field model="account.account" name="default_credit_account_id" ref="account.cash"/>
@@ -291,7 +251,6 @@
             <field name="name">Checks Journal - (OpenERP IN)</field>
             <field name="code">CHK-OpenERP IN</field>
             <field name="type">bank</field>
-            <field name="view_id" ref="account.account_journal_bank_view"/>
             <field name="sequence_id" ref="account.sequence_check_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="account.cash"/>
             <field model="account.account" name="default_credit_account_id" ref="account.cash"/>
@@ -304,7 +263,6 @@
             <field name="name">Cash Journal - (OpenERP IN)</field>
             <field name="code">CSH-OpenERP IN</field>
             <field name="type">cash</field>
-            <field name="view_id" ref="account.account_journal_bank_view"/>
             <field name="sequence_id" ref="account.sequence_cash_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="account.cash"/>
             <field model="account.account" name="default_credit_account_id" ref="account.cash"/>
@@ -318,7 +276,6 @@
             <field name="name">Sales Journal - (OpenERP US)</field>
             <field name="code">SAJ-OpenERP US</field>
             <field name="type">sale</field>
-            <field name="view_id" ref="account.account_sp_journal_view"/>
             <field name="sequence_id" ref="account.sequence_sale_journal"/>
             <field model="account.account" name="default_credit_account_id" ref="account.a_sale"/>
             <field model="account.account" name="default_debit_account_id" ref="account.a_sale"/>
@@ -331,7 +288,6 @@
             <field name="name">Sales Credit Note Journal - (OpenERP US)</field>
             <field name="code">SCNJ-OpenERP US</field>
             <field name="type">sale_refund</field>
-            <field name="view_id" ref="account.account_sp_refund_journal_view"/>
             <field name="sequence_id" ref="account.sequence_refund_sales_journal"/>
             <field model="account.account" name="default_credit_account_id" ref="account.a_sale"/>
             <field model="account.account" name="default_debit_account_id" ref="account.a_sale"/>
@@ -344,7 +300,6 @@
             <field name="name">Expenses Journal - (OpenERP US)</field>
             <field name="code">EXJ-OpenERP US</field>
             <field name="type">purchase</field>
-            <field name="view_id" ref="account.account_sp_journal_view"/>
             <field name="sequence_id" ref="account.sequence_purchase_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="account.a_expense"/>
             <field model="account.account" name="default_credit_account_id" ref="account.a_expense"/>
@@ -357,7 +312,6 @@
             <field name="name">Expenses Credit Notes Journal - (OpenERP US)</field>
             <field name="code">ECNJ-OpenERP US</field>
             <field name="type">purchase_refund</field>
-            <field name="view_id" ref="account.account_sp_refund_journal_view"/>
             <field name="sequence_id" ref="account.sequence_refund_purchase_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="account.a_expense"/>
             <field model="account.account" name="default_credit_account_id" ref="account.a_expense"/>
@@ -370,7 +324,6 @@
             <field name="name">Bank Journal - (OpenERP US)</field>
             <field name="code">BNK-OpenERP US</field>
             <field name="type">bank</field>
-            <field name="view_id" ref="account.account_journal_bank_view"/>
             <field name="sequence_id" ref="account.sequence_bank_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="account.cash"/>
             <field model="account.account" name="default_credit_account_id" ref="account.cash"/>
@@ -383,7 +336,6 @@
             <field name="name">Checks Journal - (OpenERP US)</field>
             <field name="code">CHK-OpenERP US</field>
             <field name="type">bank</field>
-            <field name="view_id" ref="account.account_journal_bank_view"/>
             <field name="sequence_id" ref="account.sequence_check_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="account.cash"/>
             <field model="account.account" name="default_credit_account_id" ref="account.cash"/>
@@ -396,7 +348,6 @@
             <field name="name">Cash Journal - (OpenERP US)</field>
             <field name="code">CSH-OpenERP US</field>
             <field name="type">cash</field>
-            <field name="view_id" ref="account.account_journal_bank_view"/>
             <field name="sequence_id" ref="account.sequence_cash_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="account.cash"/>
             <field model="account.account" name="default_credit_account_id" ref="account.cash"/>
@@ -411,7 +362,6 @@
             <field name="name">Sales Journal - (OpenERP BE)</field>
             <field name="code">SAJ-OpenERP BE</field>
             <field name="type">sale</field>
-            <field name="view_id" ref="account.account_sp_journal_view"/>
             <field name="sequence_id" ref="account.sequence_sale_journal"/>
             <field model="account.account" name="default_credit_account_id" ref="account.a_sale"/>
             <field model="account.account" name="default_debit_account_id" ref="account.a_sale"/>
@@ -424,7 +374,6 @@
             <field name="name">Sales Credit Note Journal - (OpenERP BE)</field>
             <field name="code">SCNJ-OpenERP BE</field>
             <field name="type">sale_refund</field>
-            <field name="view_id" ref="account.account_sp_refund_journal_view"/>
             <field name="sequence_id" ref="account.sequence_refund_sales_journal"/>
             <field model="account.account" name="default_credit_account_id" ref="account.a_sale"/>
             <field model="account.account" name="default_debit_account_id" ref="account.a_sale"/>
@@ -437,7 +386,6 @@
             <field name="name">Expenses Journal - (OpenERP BE)</field>
             <field name="code">EXJ-OpenERP BE</field>
             <field name="type">purchase</field>
-            <field name="view_id" ref="account.account_sp_journal_view"/>
             <field name="sequence_id" ref="account.sequence_purchase_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="account.a_expense"/>
             <field model="account.account" name="default_credit_account_id" ref="account.a_expense"/>
@@ -450,7 +398,6 @@
             <field name="name">Expenses Credit Notes Journal - (OpenERP BE)</field>
             <field name="code">ECNJ-OpenERP BE</field>
             <field name="type">purchase_refund</field>
-            <field name="view_id" ref="account.account_sp_refund_journal_view"/>
             <field name="sequence_id" ref="account.sequence_refund_purchase_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="account.a_expense"/>
             <field model="account.account" name="default_credit_account_id" ref="account.a_expense"/>
@@ -463,7 +410,6 @@
             <field name="name">Bank Journal - (OpenERP BE)</field>
             <field name="code">BNK-OpenERP BE</field>
             <field name="type">bank</field>
-            <field name="view_id" ref="account.account_journal_bank_view"/>
             <field name="sequence_id" ref="account.sequence_bank_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="account.cash"/>
             <field model="account.account" name="default_credit_account_id" ref="account.cash"/>
@@ -476,7 +422,6 @@
             <field name="name">Checks Journal - (OpenERP BE)</field>
             <field name="code">CHK-OpenERP BE</field>
             <field name="type">bank</field>
-            <field name="view_id" ref="account.account_journal_bank_view"/>
             <field name="sequence_id" ref="account.sequence_check_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="account.cash"/>
             <field model="account.account" name="default_credit_account_id" ref="account.cash"/>
@@ -489,7 +434,6 @@
             <field name="name">Cash Journal - (OpenERP BE)</field>
             <field name="code">CSH-OpenERP BE</field>
             <field name="type">cash</field>
-            <field name="view_id" ref="account.account_journal_bank_view"/>
             <field name="sequence_id" ref="account.sequence_cash_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="account.cash"/>
             <field model="account.account" name="default_credit_account_id" ref="account.cash"/>

@@ -299,10 +299,10 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
 
     def _get_sortby(self, data):
         if self.sortby == 'sort_date':
-            return 'Date'
+            return self._translate('Date')
         elif self.sortby == 'sort_journal_partner':
-            return 'Journal & Partner'
-        return 'Date'
+            return self._translate('Journal & Partner')
+        return self._translate('Date')
 
 report_sxw.report_sxw('report.account.general.ledger', 'account.account', 'addons/account/report/account_general_ledger.rml', parser=general_ledger, header='internal')
 report_sxw.report_sxw('report.account.general.ledger_landscape', 'account.account', 'addons/account/report/account_general_ledger_landscape.rml', parser=general_ledger, header='internal landscape')

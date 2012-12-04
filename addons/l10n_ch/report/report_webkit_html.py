@@ -76,7 +76,7 @@ class l10n_ch_report_webkit_html(report_sxw.rml_parse):
             self._check(ids)
         return super(l10n_ch_report_webkit_html, self).set_context(objects, data, ids, report_type=report_type)
 
-    def police_absolute_path(self, inner_path) :
+    def police_absolute_path(self, inner_path):
         """Will get the ocrb police absolute path"""
         path = addons.get_module_resource(os.path.join('l10n_ch', 'report', inner_path))
         return  path

@@ -27,11 +27,12 @@ class invoice(osv.osv):
 
     def invoice_pay_customer(self, cr, uid, ids, context=None):
         if not ids: return []
+        mod,modid = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account_voucher', 'view_vendor_receipt_dialog_form')
         inv = self.browse(cr, uid, ids[0], context=context)
         return {
             'name':_("Pay Invoice"),
             'view_mode': 'form',
-            'view_id': False,
+            'view_id': modid,
             'view_type': 'form',
             'res_model': 'account.voucher',
             'type': 'ir.actions.act_window',
@@ -41,13 +42,13 @@ class invoice(osv.osv):
             'context': {
                 'default_partner_id': inv.partner_id.id,
                 'default_amount': inv.type in ('out_refund', 'in_refund') and -inv.residual or inv.residual,
-                'default_name':inv.name,
+                'default_number':inv.name,
                 'close_after_process': True,
-                'invoice_type':inv.type,
-                'invoice_id':inv.id,
+                'invoice_type': inv.type,
+                'invoice_id': inv.id,
                 'default_type': inv.type in ('out_invoice','out_refund') and 'receipt' or 'payment',
                 'type': inv.type in ('out_invoice','out_refund') and 'receipt' or 'payment'
-                }
+            }
         }
 
 invoice()

@@ -26,9 +26,13 @@ class res_partner(osv.osv):
     _inherit = 'res.partner'
 
     def _purchase_order_count(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
-        for partner in self.browse(cr, uid, ids, context=context):
-            res[partner.id] = len(partner.purchase_order_ids)
+        res = dict(map(lambda x: (x,0), ids))
+        # this user may not have access to user rights
+        try:
+            for partner in self.browse(cr, uid, ids, context=context):
+                res[partner.id] = len(partner.purchase_order_ids)
+        except:
+            pass
         return res
 
     def copy(self, cr, uid, id, default=None, context=None):

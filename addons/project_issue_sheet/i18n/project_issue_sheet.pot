@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.1rc1\n"
+"Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
+"PO-Revision-Date: 2012-12-03 16:04+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,14 +16,14 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: project_issue_sheet
-#: model:ir.model,name:project_issue_sheet.model_account_analytic_line
-msgid "Analytic Line"
+#: code:addons/project_issue_sheet/project_issue_sheet.py:57
+#, python-format
+msgid "The Analytic Account is pending !"
 msgstr ""
 
 #. module: project_issue_sheet
-#: code:addons/project_issue_sheet/project_issue_sheet.py:57
-#, python-format
-msgid "The Analytic Account is in pending !"
+#: model:ir.model,name:project_issue_sheet.model_account_analytic_line
+msgid "Analytic Line"
 msgstr ""
 
 #. module: project_issue_sheet
@@ -34,6 +34,11 @@ msgstr ""
 #. module: project_issue_sheet
 #: model:ir.model,name:project_issue_sheet.model_hr_analytic_timesheet
 msgid "Timesheet Line"
+msgstr ""
+
+#. module: project_issue_sheet
+#: view:project.issue:0
+msgid "on_change_project(project_id)"
 msgstr ""
 
 #. module: project_issue_sheet
@@ -60,17 +65,7 @@ msgid "Timesheets"
 msgstr ""
 
 #. module: project_issue_sheet
-#: constraint:hr.analytic.timesheet:0
-msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
-msgstr ""
-
-#. module: project_issue_sheet
 #: field:hr.analytic.timesheet,issue_id:0
 msgid "Issue"
-msgstr ""
-
-#. module: project_issue_sheet
-#: constraint:account.analytic.line:0
-msgid "You can not create analytic line on view account."
 msgstr ""
 

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2012-02-08 02:51+0000\n"
 "Last-Translator: kifcaliph <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 05:59+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:10+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -22,9 +22,14 @@ msgid "Order Ref."
 msgstr "مرجع الأمر"
 
 #. module: delivery
-#: model:product.template,name:delivery.delivery_product_product_template
+#: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Delivery by Poste"
 msgstr "التسليم عن طريق هيئة البريد"
+
+#. module: delivery
+#: view:delivery.grid.line:0
+msgid " in Function of "
+msgstr ""
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -36,11 +41,6 @@ msgstr "المقصد"
 #: field:stock.move,weight_net:0
 msgid "Net weight"
 msgstr "الوزن الصافي"
-
-#. module: delivery
-#: view:stock.picking:0
-msgid "Delivery Order"
-msgstr "أمر التسليم"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
@@ -57,8 +57,14 @@ msgstr "شبكات التسليم"
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 #: field:stock.picking,volume:0
+#: field:stock.picking.out,volume:0
 msgid "Volume"
 msgstr "حجم"
+
+#. module: delivery
+#: view:delivery.carrier:0
+msgid "Zip"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
@@ -76,9 +82,30 @@ msgid "Delivery order"
 msgstr "امر تسليم"
 
 #. module: delivery
-#: view:res.partner:0
-msgid "Deliveries Properties"
-msgstr "خصائص التسليمات"
+#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to define a new deliver method. \n"
+"              </p><p>\n"
+"                Each carrier (e.g. UPS) can have several delivery methods "
+"(e.g.\n"
+"                UPS Express, UPS Standard) with a set of pricing rules "
+"attached\n"
+"                to each method.\n"
+"              </p><p>\n"
+"                These methods allows to automaticaly compute the delivery "
+"price\n"
+"                according to your settings; on the sale order (based on the\n"
+"                quotation) or the invoice (based on the delivery orders).\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/delivery.py:221
+#, python-format
+msgid "No line matched this product or order in the chosen delivery grid."
+msgstr ""
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
@@ -96,11 +123,28 @@ msgid "Gives the sequence order when displaying a list of delivery grid."
 msgstr "وتعطي امر المتتابعة عند عرض قائمة شبكة التسليم."
 
 #. module: delivery
-#: view:delivery.carrier:0
 #: view:delivery.grid:0
 #: field:delivery.grid,country_ids:0
 msgid "Countries"
 msgstr "بلدان"
+
+#. module: delivery
+#: model:ir.actions.act_window,help:delivery.action_delivery_grid_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a delivery price list for a specific "
+"region.\n"
+"              </p><p>\n"
+"                The delivery price list allows you to compute the cost and\n"
+"                sales price of the delivery according to the weight of the\n"
+"                products and other criteria. You can define several price "
+"lists\n"
+"                for each delivery method: per country or a zone in a "
+"specific\n"
+"                country defined by a postal code range.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -113,21 +157,14 @@ msgid "Variable Factor"
 msgstr "عامل متغير"
 
 #. module: delivery
-#: model:ir.actions.act_window,help:delivery.action_delivery_grid_form
-msgid ""
-"The delivery price list allows you to compute the cost and sales price of "
-"the delivery according to the weight of the products and other criteria. You "
-"can define several price lists for one delivery method, per country or a "
-"zone in a specific country defined by a postal code range."
-msgstr ""
-"تسمح لك قائمة أسعار التسليم  لحساب التكلفة وسعر البيع للتسليم وفقا لوزن "
-"المنتجات وغيرها من المعايير. يمكنك تحديد عدة قوائم للأسعار لطريقة تسليم "
-"واحدة، في كل بلد أو منطقة في بلد معين محدد من قبل مجموعة اكواد بريدية."
-
-#. module: delivery
 #: field:delivery.carrier,amount:0
 msgid "Amount"
 msgstr "المقدار"
+
+#. module: delivery
+#: view:sale.order:0
+msgid "Add in Quote"
+msgstr ""
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -136,17 +173,13 @@ msgstr "ثابت"
 
 #. module: delivery
 #: field:delivery.carrier,name:0
-#: view:delivery.sale.order:0
-#: field:delivery.sale.order,carrier_id:0
-#: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
-#: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 #: field:res.partner,property_delivery_carrier:0
 #: field:sale.order,carrier_id:0
 msgid "Delivery Method"
 msgstr "طريقة التوصيل"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:213
+#: code:addons/delivery/delivery.py:221
 #, python-format
 msgid "No price available!"
 msgstr ""
@@ -158,11 +191,14 @@ msgstr "حركة مخزن"
 
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
+#: field:stock.picking.out,carrier_tracking_ref:0
 msgid "Carrier Tracking Ref"
 msgstr "مرجع تعقب الناقل"
 
 #. module: delivery
 #: field:stock.picking,weight_net:0
+#: field:stock.picking.in,weight_net:0
+#: field:stock.picking.out,weight_net:0
 msgid "Net Weight"
 msgstr "صافي الوزن"
 
@@ -178,9 +214,10 @@ msgid "Grid definition"
 msgstr "تعريف الشبكة"
 
 #. module: delivery
-#: view:delivery.sale.order:0
-msgid "_Cancel"
-msgstr "ال_غاء"
+#: code:addons/delivery/stock.py:89
+#, python-format
+msgid "Warning!"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid.line,operator:0
@@ -198,16 +235,16 @@ msgid "Sales Order"
 msgstr "أمر المبيعات"
 
 #. module: delivery
-#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form1
-msgid ""
-"Define your delivery methods and their pricing. The delivery costs can be "
-"added on the sale order form or in the invoice, based on the delivery orders."
+#: model:ir.model,name:delivery.model_stock_picking_out
+msgid "Delivery Orders"
 msgstr ""
 
 #. module: delivery
-#: report:sale.shipping:0
-msgid "Lot"
-msgstr "دفعة"
+#: view:sale.order:0
+msgid ""
+"If you don't 'Add in Quote', the exact price will be computed when invoicing "
+"based on delivery order(s)."
+msgstr ""
 
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
@@ -220,12 +257,6 @@ msgid "Delivery Grid"
 msgstr "شبكة التسليم"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:213
-#, python-format
-msgid "No line matched this product or order in the choosed delivery grid."
-msgstr ""
-
-#. module: delivery
 #: report:sale.shipping:0
 msgid "Invoiced to"
 msgstr "الفاتورة لـ"
@@ -236,24 +267,16 @@ msgid "Picking List"
 msgstr "قائمة الالتقاط"
 
 #. module: delivery
-#: field:delivery.carrier,grids_id:0
-msgid "Delivery Grids"
-msgstr "شبكات التسليم"
-
-#. module: delivery
-#: model:ir.model,name:delivery.model_delivery_sale_order
-msgid "Make Delievery"
-msgstr "قم بالتسلم"
-
-#. module: delivery
 #: field:delivery.grid.line,name:0
 msgid "Name"
 msgstr "الاسم"
 
 #. module: delivery
-#: field:delivery.grid,zip_from:0
-msgid "Start Zip"
-msgstr "ابدأ الرمز"
+#: help:delivery.carrier,free_if_more_than:0
+msgid ""
+"If the order is more expensive than a certain amount, the customer can "
+"benefit from a free shipping"
+msgstr ""
 
 #. module: delivery
 #: help:delivery.carrier,amount:0
@@ -263,10 +286,9 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/stock.py:89
-#, python-format
-msgid "Warning"
-msgstr "تحذير"
+#: field:delivery.carrier,free_if_more_than:0
+msgid "Free If Order Total Amount Is More Than"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid.line,grid_id:0
@@ -287,14 +309,9 @@ msgid "To Zip"
 msgstr "إلى الرمز"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:141
+#: code:addons/delivery/delivery.py:147
 #, python-format
 msgid "Default price"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model,name:delivery.model_delivery_define_delivery_steps_wizard
-msgid "delivery.define.delivery.steps.wizard"
 msgstr ""
 
 #. module: delivery
@@ -313,12 +330,8 @@ msgid "Grid Name"
 msgstr "اسم الشبكية"
 
 #. module: delivery
-#: view:stock.move:0
-msgid "Weights"
-msgstr "الأوزان"
-
-#. module: delivery
 #: field:stock.picking,number_of_packages:0
+#: field:stock.picking.out,number_of_packages:0
 msgid "Number of Packages"
 msgstr "عدد العبوات"
 
@@ -328,6 +341,8 @@ msgstr "عدد العبوات"
 #: report:sale.shipping:0
 #: field:stock.move,weight:0
 #: field:stock.picking,weight:0
+#: field:stock.picking.in,weight:0
+#: field:stock.picking.out,weight:0
 msgid "Weight"
 msgstr "الوزن"
 
@@ -345,12 +360,7 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: constraint:stock.move:0
-msgid "You can not move products from or to a location of the type view."
-msgstr "لا يمكنك نقل المنتجات أو المكان من المستعرض."
-
-#. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:70
+#: code:addons/delivery/sale.py:55
 #, python-format
 msgid "No grid available !"
 msgstr "لا يوجد شبكة متاحة !"
@@ -361,21 +371,15 @@ msgid ">="
 msgstr ">="
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:53
-#: code:addons/delivery/wizard/delivery_sale_order.py:73
+#: code:addons/delivery/sale.py:58
 #, python-format
 msgid "Order not in draft state !"
 msgstr "الامر غير موجود في حالة السحب !"
 
 #. module: delivery
-#: view:delivery.define.delivery.steps.wizard:0
-msgid "Choose Your Default Picking Policy"
-msgstr ""
-
-#. module: delivery
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product"
-msgstr "انت تحاول تخصيص الكثير من ما هو دون المنتج نفسه"
+#: report:sale.shipping:0
+msgid "Lot"
+msgstr "دفعة"
 
 #. module: delivery
 #: field:delivery.carrier,active:0
@@ -404,11 +408,6 @@ msgid "Cost Price"
 msgstr "سعر التكلفة"
 
 #. module: delivery
-#: field:delivery.define.delivery.steps.wizard,picking_policy:0
-msgid "Picking Policy"
-msgstr "سياسة الالتقاط"
-
-#. module: delivery
 #: selection:delivery.grid.line,price_type:0
 #: field:delivery.grid.line,type:0
 msgid "Variable"
@@ -418,11 +417,6 @@ msgstr "متغير"
 #: help:res.partner,property_delivery_carrier:0
 msgid "This delivery method will be used when invoicing from picking."
 msgstr "سيستخدم اسلوب التسليم عندما تكون الفاتورة بالإختيار."
-
-#. module: delivery
-#: sql_constraint:stock.picking:0
-msgid "Reference must be unique per Company!"
-msgstr "المرجع يجب أن يكون فريداً لكل شركة علي حدا!"
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
@@ -435,22 +429,9 @@ msgid "Quantity"
 msgstr "كمية"
 
 #. module: delivery
-#: view:delivery.define.delivery.steps.wizard:0
-#: model:ir.actions.act_window,name:delivery.action_define_delivery_steps
-msgid "Setup Your Picking Policy"
-msgstr ""
-
-#. module: delivery
-#: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form1
-msgid "Define Delivery Methods"
-msgstr ""
-
-#. module: delivery
-#: help:delivery.carrier,free_if_more_than:0
-msgid ""
-"If the order is more expensive than a certain amount, the customer can "
-"benefit from a free shipping"
-msgstr ""
+#: field:delivery.grid,zip_from:0
+msgid "Start Zip"
+msgstr "ابدأ الرمز"
 
 #. module: delivery
 #: help:sale.order,carrier_id:0
@@ -459,60 +440,20 @@ msgid ""
 msgstr "اكمل هذا الحقل اذا كنت تخطط لعمل فاتورة  للشحن بناءًا على الإختيار."
 
 #. module: delivery
-#: view:delivery.define.delivery.steps.wizard:0
-msgid "Cancel"
-msgstr "إلغاء"
-
-#. module: delivery
-#: code:addons/delivery/delivery.py:130
+#: code:addons/delivery/delivery.py:136
 #, python-format
 msgid "Free if more than %.2f"
 msgstr ""
 
 #. module: delivery
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique per Company!"
-msgstr "مرجع الأمر يجب أن يكون فريداً لكل شركة علي حدا!"
-
-#. module: delivery
-#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
-msgid ""
-"Define the delivery methods you are using and their pricing in order to "
-"reinvoice the delivery costs when you are doing invoicing based on delivery "
-"orders"
+#: model:ir.model,name:delivery.model_stock_picking_in
+msgid "Incoming Shipments"
 msgstr ""
-
-#. module: delivery
-#: view:res.partner:0
-msgid "Sales & Purchases"
-msgstr "المبيعات و المشتريات"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
 msgid "<="
 msgstr "<="
-
-#. module: delivery
-#: constraint:stock.move:0
-msgid "You must assign a production lot for this product"
-msgstr "يجب تعيين دفعة إنتاج لهذا المنتج"
-
-#. module: delivery
-#: field:delivery.carrier,free_if_more_than:0
-msgid "Free If More Than"
-msgstr ""
-
-#. module: delivery
-#: view:delivery.sale.order:0
-msgid "Create Deliveries"
-msgstr "انشيء عمليات التسليم"
-
-#. module: delivery
-#: view:delivery.carrier:0
-#: view:delivery.grid:0
-#: field:delivery.grid,state_ids:0
-msgid "States"
-msgstr "حالات"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -541,7 +482,7 @@ msgid "Price"
 msgstr "السعر"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:70
+#: code:addons/delivery/sale.py:55
 #, python-format
 msgid "No grid matching for this carrier !"
 msgstr "لا توجد شبكة متوافقة مع هذا الناقل !"
@@ -558,11 +499,6 @@ msgid "Weight * Volume"
 msgstr "الوزن * المقدار"
 
 #. module: delivery
-#: selection:delivery.grid.line,operator:0
-msgid "="
-msgstr "="
-
-#. module: delivery
 #: code:addons/delivery/stock.py:90
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
@@ -571,11 +507,6 @@ msgstr "الناقل %s (id: %d( لا يوجد لديها شبكة تسليم!"
 #. module: delivery
 #: view:delivery.carrier:0
 msgid "Pricing Information"
-msgstr ""
-
-#. module: delivery
-#: selection:delivery.define.delivery.steps.wizard,picking_policy:0
-msgid "Deliver all products at once"
 msgstr ""
 
 #. module: delivery
@@ -589,13 +520,15 @@ msgstr ""
 #: model:ir.model,name:delivery.model_delivery_carrier
 #: report:sale.shipping:0
 #: field:stock.picking,carrier_id:0
+#: field:stock.picking.out,carrier_id:0
 msgid "Carrier"
 msgstr "الناقل"
 
 #. module: delivery
-#: view:delivery.sale.order:0
-msgid "_Apply"
-msgstr "تطبيق"
+#: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
+#: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
+msgid "Delivery Methods"
+msgstr ""
 
 #. module: delivery
 #: field:sale.order,id:0
@@ -603,16 +536,15 @@ msgid "ID"
 msgstr "معرّف"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:53
-#: code:addons/delivery/wizard/delivery_sale_order.py:73
+#: code:addons/delivery/sale.py:58
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr "يُسجل حالة الامر كمسودة ليضاف الى خطوط التسليم."
 
 #. module: delivery
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr "خطأ ! لا يمكنك إنشاء أعضاء مرتبطين و متداخلين."
+#: field:delivery.carrier,grids_id:0
+msgid "Delivery Grids"
+msgstr "شبكات التسليم"
 
 #. module: delivery
 #: field:delivery.grid,sequence:0
@@ -625,20 +557,15 @@ msgid "Sale Price"
 msgstr "سعر البيع"
 
 #. module: delivery
-#: model:ir.actions.act_window,name:delivery.action_delivery_cost
-#: view:sale.order:0
-msgid "Delivery Costs"
-msgstr "تكاليف التسليم"
-
-#. module: delivery
-#: selection:delivery.define.delivery.steps.wizard,picking_policy:0
-msgid "Deliver each product when available"
+#: view:stock.picking.out:0
+msgid "Print Delivery Order"
 msgstr ""
 
 #. module: delivery
-#: view:delivery.define.delivery.steps.wizard:0
-msgid "Apply"
-msgstr "تطبيق"
+#: view:delivery.grid:0
+#: field:delivery.grid,state_ids:0
+msgid "States"
+msgstr "حالات"
 
 #. module: delivery
 #: field:delivery.grid.line,price_type:0
@@ -648,22 +575,62 @@ msgstr "نوع السعر"
 #~ msgid "Order Reference must be unique !"
 #~ msgstr "لا بدّ أن يكون مرجع الأمر فريداً"
 
+#~ msgid "Delivery Order"
+#~ msgstr "أمر التسليم"
+
 #, python-format
 #~ msgid "No price available !"
 #~ msgstr "السعر غير متاح!"
 
+#, python-format
+#~ msgid "Warning"
+#~ msgstr "تحذير"
+
+#~ msgid "_Cancel"
+#~ msgstr "ال_غاء"
+
+#~ msgid "Weights"
+#~ msgstr "الأوزان"
+
 #~ msgid "Error ! You can not create recursive associated members."
 #~ msgstr "خطأ! لا يمكنك إنشاء أعضاء ذوي ارتباطات متداخلة."
+
+#~ msgid "Delivery Costs"
+#~ msgstr "تكاليف التسليم"
+
+#~ msgid "Sales & Purchases"
+#~ msgstr "المبيعات و المشتريات"
+
+#~ msgid "You must assign a production lot for this product"
+#~ msgstr "يجب تعيين دفعة إنتاج لهذا المنتج"
+
+#~ msgid "="
+#~ msgstr "="
+
+#~ msgid "_Apply"
+#~ msgstr "تطبيق"
+
+#~ msgid "Deliveries Properties"
+#~ msgstr "خصائص التسليمات"
 
 #, python-format
 #~ msgid "No line matched this order in the choosed delivery grids !"
 #~ msgstr "لا يوجد خط متوافق مع هذا الامر في شبكات التسليم المختارة !"
+
+#~ msgid "Make Delievery"
+#~ msgstr "قم بالتسلم"
 
 #~ msgid "Carrier Partner"
 #~ msgstr "الشريك الناقل"
 
 #~ msgid "Carriers and deliveries"
 #~ msgstr "الناقلات و التسليمات"
+
+#~ msgid "You try to assign a lot which is not from the same product"
+#~ msgstr "انت تحاول تخصيص الكثير من ما هو دون المنتج نفسه"
+
+#~ msgid "Create Deliveries"
+#~ msgstr "انشيء عمليات التسليم"
 
 #~ msgid ""
 #~ "Allows you to add delivery methods in sale orders and picking.\n"
@@ -687,3 +654,34 @@ msgstr "نوع السعر"
 #~ "قم بإنشاء وإدارة وسائل التسليم التي تحتاجها لأنشطة المبيعات الخاصة بك. يمكن "
 #~ "تعيين كل طريقة تسليم إلى قائمة السعر الذي يحسب على سعر التسليم وفقا للمنتجات "
 #~ "المباعة او المسلمة."
+
+#~ msgid ""
+#~ "The delivery price list allows you to compute the cost and sales price of "
+#~ "the delivery according to the weight of the products and other criteria. You "
+#~ "can define several price lists for one delivery method, per country or a "
+#~ "zone in a specific country defined by a postal code range."
+#~ msgstr ""
+#~ "تسمح لك قائمة أسعار التسليم  لحساب التكلفة وسعر البيع للتسليم وفقا لوزن "
+#~ "المنتجات وغيرها من المعايير. يمكنك تحديد عدة قوائم للأسعار لطريقة تسليم "
+#~ "واحدة، في كل بلد أو منطقة في بلد معين محدد من قبل مجموعة اكواد بريدية."
+
+#~ msgid "Picking Policy"
+#~ msgstr "سياسة الالتقاط"
+
+#~ msgid "Reference must be unique per Company!"
+#~ msgstr "المرجع يجب أن يكون فريداً لكل شركة علي حدا!"
+
+#~ msgid "You can not move products from or to a location of the type view."
+#~ msgstr "لا يمكنك نقل المنتجات أو المكان من المستعرض."
+
+#~ msgid "Order Reference must be unique per Company!"
+#~ msgstr "مرجع الأمر يجب أن يكون فريداً لكل شركة علي حدا!"
+
+#~ msgid "Cancel"
+#~ msgstr "إلغاء"
+
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr "خطأ ! لا يمكنك إنشاء أعضاء مرتبطين و متداخلين."
+
+#~ msgid "Apply"
+#~ msgstr "تطبيق"

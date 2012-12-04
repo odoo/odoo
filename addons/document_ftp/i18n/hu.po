@@ -6,16 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2011-02-03 12:46+0000\n"
-"Last-Translator: NOVOTRADE RENDSZERHÁZ ( novotrade.hu ) "
-"<openerp@novotrade.hu>\n"
+"Last-Translator: Krisztian Eyssen <krisz@eyssen.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 06:40+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:29+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
+
+#. module: document_ftp
+#: view:document.ftp.configuration:0
+msgid "Configure FTP Server"
+msgstr "FTP szerver beállítása"
 
 #. module: document_ftp
 #: model:ir.model,name:document_ftp.model_document_ftp_configuration
@@ -33,19 +37,19 @@ msgid ""
 msgstr ""
 
 #. module: document_ftp
-#: model:ir.actions.url,name:document_ftp.action_document_browse
+#: model:ir.model,name:document_ftp.model_knowledge_config_settings
+msgid "knowledge.config.settings"
+msgstr ""
+
+#. module: document_ftp
+#: model:ir.actions.act_url,name:document_ftp.action_document_browse
 msgid "Browse Files"
 msgstr "Fájlok böngészése"
 
 #. module: document_ftp
-#: field:document.ftp.configuration,config_logo:0
-msgid "Image"
-msgstr "Kép"
-
-#. module: document_ftp
-#: field:document.ftp.configuration,host:0
-msgid "Address"
-msgstr "Cím"
+#: help:knowledge.config.settings,document_ftp_url:0
+msgid "Click the url to browse the documents"
+msgstr ""
 
 #. module: document_ftp
 #: field:document.ftp.browse,url:0
@@ -56,6 +60,11 @@ msgstr "FTP szerver"
 #: model:ir.actions.act_window,name:document_ftp.action_config_auto_directory
 msgid "FTP Server Configuration"
 msgstr "FTP szerver konfiguráció"
+
+#. module: document_ftp
+#: field:knowledge.config.settings,document_ftp_url:0
+msgid "Browse Documents"
+msgstr ""
 
 #. module: document_ftp
 #: view:document.ftp.browse:0
@@ -74,18 +83,13 @@ msgid "Shared Repository (FTP)"
 msgstr ""
 
 #. module: document_ftp
+#: field:document.ftp.configuration,host:0
+msgid "Address"
+msgstr "Cím"
+
+#. module: document_ftp
 #: view:document.ftp.browse:0
-msgid "_Cancel"
-msgstr ""
-
-#. module: document_ftp
-#: view:document.ftp.configuration:0
-msgid "Configure FTP Server"
-msgstr "FTP szerver beállítása"
-
-#. module: document_ftp
-#: view:document.ftp.configuration:0
-msgid "title"
+msgid "Cancel"
 msgstr ""
 
 #. module: document_ftp
@@ -105,6 +109,11 @@ msgstr "Dokumentum böngészése"
 
 #. module: document_ftp
 #: view:document.ftp.browse:0
+msgid "or"
+msgstr ""
+
+#. module: document_ftp
+#: view:document.ftp.browse:0
 msgid "Browse Document"
 msgstr ""
 
@@ -112,6 +121,9 @@ msgstr ""
 #: view:document.ftp.configuration:0
 msgid "res_config_contents"
 msgstr "res_config_contents"
+
+#~ msgid "Image"
+#~ msgstr "Kép"
 
 #~ msgid "Configuration Progress"
 #~ msgstr "Beállítás előrehaladása"

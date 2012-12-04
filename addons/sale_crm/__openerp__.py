@@ -43,12 +43,12 @@ modules.
         'sale_crm_view.xml',
         'process/sale_crm_process.xml',
         'security/sale_crm_security.xml',
-        'security/ir.model.access.csv'
+        'security/ir.model.access.csv',
+        'report/sale_crm_account_invoice_report_view.xml',
     ],
     'demo': [],
     'test': ['test/sale_crm.yml'],
     'installable': True,
     'auto_install': True,
-    'certificate': '0064360130141',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

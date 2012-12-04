@@ -6,16 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2011-02-28 14:01+0000\n"
-"Last-Translator: NOVOTRADE RENDSZERHÁZ ( novotrade.hu ) "
-"<openerp@novotrade.hu>\n"
+"Last-Translator: Krisztian Eyssen <krisz@eyssen.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 06:16+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:29+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
@@ -23,14 +22,9 @@ msgid "Cancelled Invoice"
 msgstr "Törölt számla"
 
 #. module: report_intrastat
-#: sql_constraint:res.country:0
-msgid "The name of the country must be unique !"
-msgstr "Az ország nevének egyedinek kell lennie!"
-
-#. module: report_intrastat
-#: sql_constraint:res.country:0
-msgid "The code of the country must be unique !"
-msgstr "Az országkódnak egyedinek kell lennie!"
+#: report:account.invoice.intrastat:0
+msgid "Total (inclu. taxes):"
+msgstr "Összesen (adókkal):"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
@@ -48,17 +42,15 @@ msgid "Unit Price"
 msgstr "Egységár"
 
 #. module: report_intrastat
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Hiba: Az alapértelmezett mértékegységnek és a beszerzési mértékegységnek "
-"ugyanabba a kategóriába kell tartoznia."
-
-#. module: report_intrastat
 #: selection:report.intrastat,type:0
 msgid "Import"
 msgstr "Importálás"
+
+#. module: report_intrastat
+#: report:account.invoice.intrastat:0
+#: field:report.intrastat.code,description:0
+msgid "Description"
+msgstr "Leírás"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
@@ -122,18 +114,8 @@ msgstr "Tel. :"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
-msgid "Quantity"
-msgstr "Mennyiség"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
 msgid "Base"
 msgstr "Adóalap"
-
-#. module: report_intrastat
-#: view:report.intrastat:0
-msgid "This Year"
-msgstr "Tárgyév"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
@@ -146,27 +128,14 @@ msgid "July"
 msgstr "Július"
 
 #. module: report_intrastat
-#: model:ir.model,name:report_intrastat.model_report_intrastat_code
-#: field:product.template,intrastat_id:0
-#: field:report.intrastat,intrastat_id:0
-#: view:report.intrastat.code:0
-msgid "Intrastat code"
-msgstr "Intrastat kód"
-
-#. module: report_intrastat
-#: view:report.intrastat:0
-msgid "This Month"
-msgstr "Tárgyhó"
+#: report:account.invoice.intrastat:0
+msgid "Quantity"
+msgstr "Mennyiség"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "Partner Ref."
 msgstr "Partner hiv."
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Total (inclu. taxes):"
-msgstr "Összesen (adókkal):"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
@@ -246,10 +215,12 @@ msgid "November"
 msgstr "November"
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-#: field:report.intrastat.code,description:0
-msgid "Description"
-msgstr "Leírás"
+#: model:ir.model,name:report_intrastat.model_report_intrastat_code
+#: field:product.template,intrastat_id:0
+#: field:report.intrastat,intrastat_id:0
+#: view:report.intrastat.code:0
+msgid "Intrastat code"
+msgstr "Intrastat kód"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
@@ -340,9 +311,25 @@ msgstr "Érték"
 #. module: report_intrastat
 #: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_code_tree
 #: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_code
+#: view:report.intrastat.code:0
 #: field:report.intrastat.code,name:0
 msgid "Intrastat Code"
 msgstr "Intrastat kód"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Hiba: Az alapértelmezett mértékegységnek és a beszerzési mértékegységnek "
+#~ "ugyanabba a kategóriába kell tartoznia."
+
+#~ msgid "This Year"
+#~ msgstr "Tárgyév"
+
+#~ msgid "This Month"
+#~ msgstr "Tárgyhó"
+
+#~ msgid "The name of the country must be unique !"
+#~ msgstr "Az ország nevének egyedinek kell lennie!"
 
 #~ msgid ""
 #~ "\n"
@@ -354,6 +341,9 @@ msgstr "Intrastat kód"
 #~ "    Ez a modul az Intrastat jelentéssel bővíti a rendszert.\n"
 #~ "    A modul az Európai Unió országai közötti áruforgalom részletezését adja "
 #~ "meg. "
+
+#~ msgid "The code of the country must be unique !"
+#~ msgstr "Az országkódnak egyedinek kell lennie!"
 
 #~ msgid "Intrastat Reporting - Reporting"
 #~ msgstr "Intrastat jelentés"

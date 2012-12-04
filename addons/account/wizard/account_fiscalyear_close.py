@@ -60,7 +60,7 @@ class account_fiscalyear_close(osv.osv_memory):
             cr.execute('select distinct(company_id) from account_move_line where id in %s',(tuple(ids),))
             if len(cr.fetchall()) > 1:
                 raise osv.except_osv(_('Warning!'), _('The entries to reconcile should belong to the same company.'))
-            r_id = self.pool.get('account.move.reconcile').create(cr, uid, {'type': 'auto'})
+            r_id = self.pool.get('account.move.reconcile').create(cr, uid, {'type': 'auto', 'opening_reconciliation': True})
             cr.execute('update account_move_line set reconcile_id = %s where id in %s',(r_id, tuple(ids),))
             return r_id
 
@@ -107,7 +107,7 @@ class account_fiscalyear_close(osv.osv_memory):
             ('journal_id', '=', new_journal.id), ('period_id', '=', period.id)])
         if move_ids:
             move_line_ids = obj_acc_move_line.search(cr, uid, [('move_id', 'in', move_ids)])
-            obj_acc_move_line._remove_move_reconcile(cr, uid, move_line_ids, context=context)
+            obj_acc_move_line._remove_move_reconcile(cr, uid, move_line_ids, opening_reconciliation=True, context=context)
             obj_acc_move_line.unlink(cr, uid, move_line_ids, context=context)
             obj_acc_move.unlink(cr, uid, move_ids, context=context)
 
@@ -226,7 +226,7 @@ class account_fiscalyear_close(osv.osv_memory):
         for account in obj_acc_account.browse(cr, uid, account_ids, context={'fiscalyear': fy_id}):
             balance_in_currency = 0.0
             if account.currency_id:
-                cr.execute('SELECT sum(amount_currency) as balance_in_currency FROM account_move_line ' \
+                cr.execute('SELECT sum(COALESCE(amount_currency,0.0)) as balance_in_currency FROM account_move_line ' \
                         'WHERE account_id = %s ' \
                             'AND ' + query_line + ' ' \
                             'AND currency_id = %s', (account.id, account.currency_id.id))
