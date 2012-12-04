@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2012-02-15 21:23+0000\n"
 "Last-Translator: Freddy Gonzalez <freddy.gonzalez.contreras@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:24+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:47+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 "Language: es\n"
 
 #. module: email_template
@@ -97,9 +97,9 @@ msgid "Report Filename"
 msgstr "Fichero del informe"
 
 #. module: email_template
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr "¡Error! No puede crear miembros asociados recursivamente."
+#: view:email.template:0
+msgid "Preview"
+msgstr ""
 
 #. module: email_template
 #: field:email.template,reply_to:0
@@ -122,11 +122,6 @@ msgstr "Cuerpo"
 #: code:addons/email_template/email_template.py:218
 #, python-format
 msgid "%s (copy)"
-msgstr ""
-
-#. module: email_template
-#: view:email.template:0
-msgid "Preview"
 msgstr ""
 
 #. module: email_template
@@ -174,12 +169,6 @@ msgstr ""
 "Nombre que se utilizará para el archivo de informe generado (puede contener "
 "marcadores de posición)\n"
 "La extensión puede ser omitido y luego vendrá del tipo de informe."
-
-#. module: email_template
-#: code:addons/email_template/email_template.py:205
-#, python-format
-msgid "Warning"
-msgstr "Aviso"
 
 #. module: email_template
 #: field:email.template,ref_ir_act_window:0
@@ -486,9 +475,10 @@ msgstr ""
 "destino (sub-modelo)."
 
 #. module: email_template
-#: constraint:res.partner:0
-msgid "Error: Invalid ean code"
-msgstr ""
+#: code:addons/email_template/email_template.py:205
+#, python-format
+msgid "Warning"
+msgstr "Aviso"
 
 #. module: email_template
 #: field:email.template,user_signature:0
@@ -1433,6 +1423,9 @@ msgstr "Asunto"
 #~ msgstr ""
 #~ "Copia de carbón a destinatarios  (marcadores de posición se pueden utilizar "
 #~ "aquí)"
+
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr "¡Error! No puede crear miembros asociados recursivamente."
 
 #~ msgid ""
 #~ "Message-ID SMTP header to use in outgoing messages based on this template. "

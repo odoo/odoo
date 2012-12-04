@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-24 02:51+0000\n"
-"PO-Revision-Date: 2012-11-24 02:51+0000\n"
+"POT-Creation-Date: 2012-12-03 16:01+0000\n"
+"PO-Revision-Date: 2012-12-03 16:01+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -129,6 +129,12 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Voucher Statistics"
+msgstr ""
+
+#. module: account_voucher
+#: code:addons/account_voucher/account_voucher.py:1558
+#, python-format
+msgid "You can not change the journal as you already reconciled some statement lines!"
 msgstr ""
 
 #. module: account_voucher
@@ -270,11 +276,6 @@ msgid "Day"
 msgstr ""
 
 #. module: account_voucher
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr ""
-
-#. module: account_voucher
 #: field:account.voucher,tax_id:0
 msgid "Tax"
 msgstr ""
@@ -283,11 +284,6 @@ msgstr ""
 #: code:addons/account_voucher/account_voucher.py:864
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
-
-#. module: account_voucher
-#: constraint:account.bank.statement:0
-msgid "The journal and period chosen have to belong to the same company."
 msgstr ""
 
 #. module: account_voucher
@@ -353,11 +349,6 @@ msgid "Sales Lines"
 msgstr ""
 
 #. module: account_voucher
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr ""
-
-#. module: account_voucher
 #: view:account.voucher:0
 #: field:account.voucher,period_id:0
 msgid "Period"
@@ -384,8 +375,9 @@ msgid "Debit"
 msgstr ""
 
 #. module: account_voucher
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
+#: code:addons/account_voucher/account_voucher.py:1558
+#, python-format
+msgid "Unable to change journal !"
 msgstr ""
 
 #. module: account_voucher
@@ -832,11 +824,6 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Invoices and outstanding transactions"
-msgstr ""
-
-#. module: account_voucher
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
 msgstr ""
 
 #. module: account_voucher

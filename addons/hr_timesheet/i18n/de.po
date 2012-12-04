@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:51+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-11-18 00:40+0000\n"
 "Last-Translator: Felix Schubert <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:06+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:33+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_analytic_cost_revenue
@@ -138,9 +138,9 @@ msgid "Minimum Analytic Amount"
 msgstr "Mindestwert für Analysebuchung"
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-msgid "Total time"
-msgstr "Gesamtdauer"
+#: view:hr.analytical.timesheet.employee:0
+msgid "Monthly Employee Timesheet"
+msgstr "Monatliche Zeiterfassung"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
@@ -221,6 +221,11 @@ msgid "Sun"
 msgstr "So"
 
 #. module: hr_timesheet
+#: xsl:hr.analytical.timesheet:0
+msgid "Sum"
+msgstr "Summe"
+
+#. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Analytic account"
 msgstr "Analytisches Konto"
@@ -250,11 +255,6 @@ msgstr "Druck"
 #. module: hr_timesheet
 #: help:account.analytic.account,use_timesheets:0
 msgid "Check this field if this project manages timesheets"
-msgstr ""
-
-#. module: hr_timesheet
-#: constraint:account.analytic.account:0
-msgid "Error! You cannot create recursive analytic accounts."
 msgstr ""
 
 #. module: hr_timesheet
@@ -354,6 +354,11 @@ msgid "or"
 msgstr ""
 
 #. module: hr_timesheet
+#: xsl:hr.analytical.timesheet:0
+msgid "Timesheet by Employee"
+msgstr "Zeitnachweise je Mitarbeiter"
+
+#. module: hr_timesheet
 #: model:ir.actions.report.xml,name:hr_timesheet.report_user_timesheet
 msgid "Employee timesheet"
 msgstr "Mitarbeiter Zeiterfassung"
@@ -380,6 +385,7 @@ msgid "(Keep empty for current time)"
 msgstr "(Frei lassen für den aktuellen Zeitpunkt)"
 
 #. module: hr_timesheet
+#: field:account.analytic.account,use_timesheets:0
 #: view:hr.employee:0
 msgid "Timesheets"
 msgstr "Zeiterfassung"
@@ -512,11 +518,7 @@ msgid "Cancel"
 msgstr "Abbrechen"
 
 #. module: hr_timesheet
-#: constraint:hr.employee:0
-msgid "Error! You cannot create recursive hierarchy of Employee(s)."
-msgstr ""
-
-#. module: hr_timesheet
+#: xsl:hr.analytical.timesheet_users:0
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_users
 #: model:ir.actions.report.xml,name:hr_timesheet.report_users_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_users
@@ -580,9 +582,9 @@ msgid "May"
 msgstr "Mai"
 
 #. module: hr_timesheet
-#: view:hr.analytical.timesheet.employee:0
-msgid "Monthly Employee Timesheet"
-msgstr "Monatliche Zeiterfassung"
+#: view:hr.analytic.timesheet:0
+msgid "Total time"
+msgstr "Gesamtdauer"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
@@ -622,11 +624,6 @@ msgid "Employees"
 msgstr "Mitarbeiter"
 
 #. module: hr_timesheet
-#: constraint:hr.analytic.timesheet:0
-msgid "You cannot modify an entry in a Confirmed/Done timesheet !"
-msgstr ""
-
-#. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
 #: code:addons/hr_timesheet/report/users_timesheet.py:73
 #: selection:hr.analytical.timesheet.employee,month:0
@@ -652,11 +649,6 @@ msgid "User Error!"
 msgstr ""
 
 #. module: hr_timesheet
-#: field:account.analytic.account,use_timesheets:0
-msgid "Use Timesheets"
-msgstr ""
-
-#. module: hr_timesheet
 #: view:hr.sign.in.project:0
 msgid "Start Working"
 msgstr "Arbeitsbeginn"
@@ -676,6 +668,12 @@ msgstr ""
 #: view:hr.analytic.timesheet:0
 msgid "Accounting"
 msgstr "Finanzbuchhaltung"
+
+#. module: hr_timesheet
+#: xsl:hr.analytical.timesheet:0
+#: xsl:hr.analytical.timesheet_users:0
+msgid "Total"
+msgstr "Betrag gesamt"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
@@ -710,9 +708,6 @@ msgstr "Ändere Projekt /Aufgabe"
 #, python-format
 #~ msgid "ValidateError"
 #~ msgstr "ValidiereFehler"
-
-#~ msgid "Sum"
-#~ msgstr "Summe"
 
 #~ msgid "Hour"
 #~ msgstr "Stunde"
@@ -780,9 +775,6 @@ msgstr "Ändere Projekt /Aufgabe"
 
 #~ msgid "Consultancy - Senior Developer"
 #~ msgstr "Beratung - Senier Entwickler"
-
-#~ msgid "Total"
-#~ msgstr "Betrag gesamt"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Ungültiger Modulname in der Aktionsdefinition."

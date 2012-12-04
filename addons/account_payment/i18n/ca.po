@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2011-08-17 20:38+0000\n"
 "Last-Translator: mgaja (GrupoIsep.com) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:07+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:35+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
@@ -106,11 +106,6 @@ msgid "Due Date"
 msgstr "Data venciment"
 
 #. module: account_payment
-#: view:account.move.line:0
-msgid "Account Entry Line"
-msgstr "Apunt comptable"
-
-#. module: account_payment
 #: view:payment.order.create:0
 msgid "_Add to payment order"
 msgstr "_Afegeix a l'ordre de pagament"
@@ -122,6 +117,15 @@ msgid "Payment Populate statement"
 msgstr "Genera extracte de pagament"
 
 #. module: account_payment
+#: code:addons/account_payment/account_invoice.py:43
+#, python-format
+msgid ""
+"You cannot cancel an invoice which has already been imported in a payment "
+"order. Remove it from the following payment order : %s."
+msgstr ""
+
+#. module: account_payment
+#: code:addons/account_payment/account_invoice.py:43
 #: code:addons/account_payment/account_move_line.py:110
 #, python-format
 msgid "Error!"
@@ -132,11 +136,6 @@ msgstr ""
 #: view:payment.order:0
 msgid "Amount"
 msgstr "Import"
-
-#. module: account_payment
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
-msgstr "Valor del deure o haver erroni en l'assentament comptable!"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -165,22 +164,10 @@ msgid "The payment line name must be unique!"
 msgstr "El nom de la línia de pagament ha de ser únic!"
 
 #. module: account_payment
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr ""
-
-#. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
 msgid "Payment Orders"
 msgstr "Ordres de pagament/cobrament"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid ""
-"The date of your Journal Entry is not in the defined period! You should "
-"change the date or remove this constraint from the journal."
-msgstr ""
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -277,11 +264,6 @@ msgid "Creation Date"
 msgstr ""
 
 #. module: account_payment
-#: view:account.move.line:0
-msgid "Total debit"
-msgstr "Total deure"
-
-#. module: account_payment
 #: help:payment.mode,journal:0
 msgid "Bank or Cash Journal for the Payment Mode"
 msgstr "Diari de banc o caixa per la forma de pagament."
@@ -340,11 +322,6 @@ msgid "Partner"
 msgstr "Empresa"
 
 #. module: account_payment
-#: constraint:account.move.line:0
-msgid "Account and Period must belong to the same company."
-msgstr ""
-
-#. module: account_payment
 #: field:payment.line,bank_statement_line_id:0
 msgid "Bank statement line"
 msgstr "Línia de l'extracte bancari"
@@ -358,14 +335,6 @@ msgstr "Data venciment"
 #: field:account.invoice,amount_to_pay:0
 msgid "Amount to be paid"
 msgstr "Import a pagar"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry forces to provide a secondary "
-"currency. You should remove the secondary currency on the account or select "
-"a multi-currency view on the journal."
-msgstr ""
 
 #. module: account_payment
 #: report:payment.order:0
@@ -450,11 +419,6 @@ msgid "Populate Statement:"
 msgstr "Genera extracte:"
 
 #. module: account_payment
-#: view:account.move.line:0
-msgid "Total credit"
-msgstr "Total haver"
-
-#. module: account_payment
 #: help:payment.order,date_scheduled:0
 msgid "Select a date if you have chosen Preferred Date to be fixed."
 msgstr ""
@@ -537,11 +501,6 @@ msgstr "Compte del pagament a realitzar"
 #: report:payment.order:0
 msgid "Invoice Ref"
 msgstr "Ref. factura"
-
-#. module: account_payment
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr ""
 
 #. module: account_payment
 #: field:payment.line,name:0
@@ -685,11 +644,6 @@ msgid "Name"
 msgstr "Nom"
 
 #. module: account_payment
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on an account of type view."
-msgstr ""
-
-#. module: account_payment
 #: report:payment.order:0
 msgid "Bank Account"
 msgstr "Compte bancari"
@@ -734,11 +688,6 @@ msgid "or"
 msgstr ""
 
 #. module: account_payment
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on closed account."
-msgstr ""
-
-#. module: account_payment
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
 msgstr "Compte bancari per la forma de pagament"
@@ -762,6 +711,9 @@ msgstr "Compte bancari per la forma de pagament"
 #~ msgid "Error !"
 #~ msgstr "Error!"
 
+#~ msgid "Total debit"
+#~ msgstr "Total deure"
+
 #~ msgid "Execution date"
 #~ msgstr "Data execució"
 
@@ -774,6 +726,9 @@ msgstr "Compte bancari per la forma de pagament"
 #, python-format
 #~ msgid "No partner defined on entry line"
 #~ msgstr "No s'ha definit l'empresa en la línia d'entrada"
+
+#~ msgid "Total credit"
+#~ msgstr "Total haver"
 
 #~ msgid "Populate payment"
 #~ msgstr "Propaga el pagament"
@@ -828,6 +783,9 @@ msgstr "Compte bancari per la forma de pagament"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nom de model no vàlid en la definició de l'acció."
+
+#~ msgid "Account Entry Line"
+#~ msgstr "Apunt comptable"
 
 #~ msgid "Import payment lines"
 #~ msgstr "Importa línies de pagament"
@@ -895,3 +853,6 @@ msgstr "Compte bancari per la forma de pagament"
 
 #~ msgid "You can not create move line on view account."
 #~ msgstr "No podeu crear un apunt en un compte de tipus \"Vista\"."
+
+#~ msgid "Wrong credit or debit value in accounting entry !"
+#~ msgstr "Valor del deure o haver erroni en l'assentament comptable!"
