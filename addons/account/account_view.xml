@@ -1553,7 +1553,7 @@
             <field name="name">account.payment.term.line.tree</field>
             <field name="model">account.payment.term.line</field>
             <field name="arch" type="xml">
-                <tree string="Payment Term" editable="bottom">
+                <tree string="Payment Term">
                     <field name="value"/>
                     <field name="value_amount" attrs="{'readonly':[('value','=','balance')]}"/>
                     <field name="days"/>
@@ -1569,7 +1569,7 @@
                     <group>
                         <group string="Amount Computation">
                             <field name="value"/>
-                            <label for="value_amount" string="Amount To Pay"/>
+                            <label for="value_amount" string="Amount To Pay" attrs="{'invisible':[('value','=','balance')]}" />
                             <div>
                                 <field name="value_amount" attrs="{'invisible':[('value','=','balance')]}" class="oe_inline"/>
                                 <label string="%%" class="oe_inline" attrs="{'invisible':['!',('value','=','procent')]}"/>

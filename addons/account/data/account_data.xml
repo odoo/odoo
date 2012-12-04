@@ -18,9 +18,22 @@
         <record id="account_payment_term_line_immediate" model="account.payment.term.line">
             <field name="name">Immediate Payment</field>
             <field name="value">balance</field>
-            <field eval="15" name="days"/>
+            <field eval="0" name="days"/>
             <field eval="0" name="days2"/>
             <field eval="account_payment_term_immediate" name="payment_id"/>
+        </record>
+
+        <record id="account_payment_term_15days" model="account.payment.term">
+            <field name="name">15 Days</field>
+            <field name="note">15 Days</field>
+        </record>
+
+        <record id="account_payment_term_line_15days" model="account.payment.term.line">
+            <field name="name">15 Days</field>
+            <field name="value">balance</field>
+            <field eval="15" name="days"/>
+            <field eval="0" name="days2"/>
+            <field eval="account_payment_term_15days" name="payment_id"/>
         </record>
 
         <record forcecreate="True" id="decimal_payment" model="decimal.precision">
