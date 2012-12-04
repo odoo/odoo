@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:54+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2012-11-02 10:21+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:33+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:54+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
@@ -39,6 +39,12 @@ msgstr "Leveringsopdracht"
 msgid ""
 "Allows you to specify different delivery and invoice addresses on a sale "
 "order."
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.actions.act_window,name:sale_stock.outgoing_picking_list_to_invoice
+#: model:ir.ui.menu,name:sale_stock.menu_action_picking_list_to_invoice
+msgid "Deliveries to Invoice"
 msgstr ""
 
 #. module: sale_stock
@@ -212,11 +218,6 @@ msgstr ""
 "hetzelfde moment als de verwervingsopdracht. Het representeert de toekenning "
 "van onderdelen aan de verkooporder. Er is 1 verzamellijst per "
 "verkooporderregel die ontwikkelt met de beschikbaarheid van onderdelen."
-
-#. module: sale_stock
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "Fout ! U kunt geen recursieve bedrijven maken."
 
 #. module: sale_stock
 #: help:res.company,security_lead:0
@@ -400,11 +401,6 @@ msgid "Properties"
 msgstr "Waarden"
 
 #. module: sale_stock
-#: constraint:stock.move:0
-msgid "You must assign a serial number for this product."
-msgstr "U dient een productie partij toe te wijzen voor dit product."
-
-#. module: sale_stock
 #: field:sale.config.settings,group_mrp_properties:0
 msgid "Product properties on order lines"
 msgstr ""
@@ -416,11 +412,6 @@ msgid ""
 msgstr ""
 "U kunt facturen genereren op basis van verkooporder of op basis van "
 "leveringen."
-
-#. module: sale_stock
-#: constraint:stock.move:0
-msgid "You cannot move products from or to a location of the type view."
-msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
@@ -443,12 +434,6 @@ msgid ""
 "lines.\n"
 "                This installs the modules project_timesheet and project_mrp."
 msgstr ""
-
-#. module: sale_stock
-#: sql_constraint:stock.picking:0
-#: sql_constraint:stock.picking.out:0
-msgid "Reference must be unique per Company!"
-msgstr "Referentie moet uniek zijn per bedrijf!"
 
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_saleprocurement0
@@ -516,11 +501,6 @@ msgid "Number Packages"
 msgstr "Aantal pakketten"
 
 #. module: sale_stock
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique per Company!"
-msgstr "Orderreferentie moet uniek zijn per bedrijf!"
-
-#. module: sale_stock
 #: field:sale.order,shipped:0
 msgid "Delivered"
 msgstr "Geleverd"
@@ -565,11 +545,6 @@ msgid "Incoterm"
 msgstr "Leveringsvoorwaarden"
 
 #. module: sale_stock
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product."
-msgstr ""
-
-#. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:521
 #, python-format
 msgid "Cannot cancel sales order line!"
@@ -594,11 +569,6 @@ msgstr "Lever alle producten tegelijk"
 #: field:sale.order,picking_ids:0
 msgid "Related Picking"
 msgstr "Gekoppelde picking"
-
-#. module: sale_stock
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr "De naam van het bedrijf moet uniek zijn!"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_config_settings
