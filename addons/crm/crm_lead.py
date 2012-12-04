@@ -444,6 +444,25 @@ class crm_lead(base_stage, format_address, osv.osv):
         """
         return self.set_priority(cr, uid, ids, '3')
 
+    def _merge_get_result_type(self, cr, uid, opps, context=None):
+        """
+        Define the type of the result of the merge.  If at least one of the
+        element to merge is an opp, the resulting new element will be an opp.
+        Otherwise it will be a lead.
+
+        We'll directly use a list of browse records instead of a list of ids
+        for performances' sake: it will spare a second browse of the
+        leads/opps.
+
+        :param list opps: list of browse records containing the leads/opps to process
+        :return string type: the type of the final element
+        """
+        for opp in opportunities:
+            if (opp.type == 'opportunity'):
+                return 'opportunity'
+
+        return 'lead'
+
     def _merge_data(self, cr, uid, ids, oldest, fields, context=None):
         """
         Prepare lead/opp data into a dictionary for merging.  Different types
@@ -474,20 +493,6 @@ class crm_lead(base_stage, format_address, osv.osv):
         def _concat_all(attr):
             return ', '.join(filter(lambda x: x, [getattr(opp, attr) or '' for opp in opportunities if hasattr(opp, attr)]))
 
-        def _get_type():
-            """
-            If at least one of the element to merge is an opp, the resulting
-            new element will be an opp.  Otherwise it will be a lead.
-
-            :return string type: the type of the final element
-            """
-            type = 'lead'
-            for opp in opportunities:
-                if (opp.type == 'opportunity'):
-                    return 'opportunity'
-
-            return type
-
         # Process the fields' values
         data = {}
         for field_name in fields:
@@ -505,7 +510,7 @@ class crm_lead(base_stage, format_address, osv.osv):
                 data[field_name] = _get_first_not_null(field_name)  #not lost
 
         # Define the resulting type ('lead' or 'opportunity')
-        data['type'] = _get_type()
+        data['type'] = self._merge_get_result_type(cr, uid, opportunities, context)
 
         return data
 
@@ -556,7 +561,8 @@ class crm_lead(base_stage, format_address, osv.osv):
     def _merge_notification(self, cr, uid, opportunity_id, opportunities, context=None):
         #TOFIX: mail template should be used instead of fix body, subject text
         details = []
-        merge_message = _('Merged opportunities')
+        result_type = self._merge_get_result_type(cr, uid, opportunities, context)
+        merge_message = _('Merged %s') ('leads' if (result_type == 'lead') else 'opportunities')
         subject = [merge_message]
         for opportunity in opportunities:
             subject.append(opportunity.name)
