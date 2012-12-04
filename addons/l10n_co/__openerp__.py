@@ -65,10 +65,10 @@ After installing this module, the Configuration wizard for accounting is launche
     "demo" : [
     ],
     "data" : [
-        "account_tax_code.xml",
-        "account_chart.xml",
-        "account_tax.xml",
-        "l10n_chart_mx_wizard.xml"
+        "data/account_tax_code.xml",
+        "data/account_chart.xml",
+        "data/account_tax.xml",
+        "data/l10n_chart_mx_wizard.xml"
     ],
     "active": False,
     "installable": True,
