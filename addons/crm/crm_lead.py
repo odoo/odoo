@@ -836,8 +836,8 @@ class crm_lead(base_stage, format_address, osv.osv):
         models_data = self.pool.get('ir.model.data')
 
         # Get opportunity views
-        form_view = models_data.get_object_reference(cr, uid, 'crm', 'crm_case_form_view_oppor')
-        tree_view = models_data.get_object_reference(cr, uid, 'crm', 'crm_case_tree_view_oppor')
+        dummy, form_view = models_data.get_object_reference(cr, uid, 'crm', 'crm_case_form_view_oppor')
+        dummy, tree_view = models_data.get_object_reference(cr, uid, 'crm', 'crm_case_tree_view_oppor')
         return {
             'name': _('Opportunity'),
             'view_type': 'form',
@@ -846,8 +846,8 @@ class crm_lead(base_stage, format_address, osv.osv):
             'domain': [('type', '=', 'opportunity')],
             'res_id': int(opportunity_id),
             'view_id': False,
-            'views': [(form_view and form_view[1] or False, 'form'),
-                      (tree_view and tree_view[1] or False, 'tree'),
+            'views': [(form_view or False, 'form'),
+                      (tree_view or False, 'tree'),
                       (False, 'calendar'), (False, 'graph')],
             'type': 'ir.actions.act_window',
         }
@@ -856,8 +856,8 @@ class crm_lead(base_stage, format_address, osv.osv):
         models_data = self.pool.get('ir.model.data')
 
         # Get lead views
-        form_view = models_data.get_object_reference(cr, uid, 'crm', 'crm_case_form_view_leads')
-        tree_view = models_data.get_object_reference(cr, uid, 'crm', 'crm_case_tree_view_leads')
+        dummy, form_view = models_data.get_object_reference(cr, uid, 'crm', 'crm_case_form_view_leads')
+        dummy, tree_view = models_data.get_object_reference(cr, uid, 'crm', 'crm_case_tree_view_leads')
         return {
             'name': _('Lead'),
             'view_type': 'form',
@@ -866,8 +866,8 @@ class crm_lead(base_stage, format_address, osv.osv):
             'domain': [('type', '=', 'lead')],
             'res_id': int(lead_id),
             'view_id': False,
-            'views': [(form_view and form_view[1] or False, 'form'),
-                      (tree_view and tree_view[1] or False, 'tree'),
+            'views': [(form_view or False, 'form'),
+                      (tree_view or False, 'tree'),
                       (False, 'calendar'), (False, 'graph')],
             'type': 'ir.actions.act_window',
         }
