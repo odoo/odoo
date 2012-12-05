@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:01+0000\n"
-"PO-Revision-Date: 2012-12-03 11:15+0000\n"
+"PO-Revision-Date: 2012-12-04 13:28+0000\n"
 "Last-Translator: Quentin THEURET <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 04:55+0000\n"
+"X-Launchpad-Export-Date: 2012-12-05 05:18+0000\n"
 "X-Generator: Launchpad (build 16335)\n"
 
 #. module: base
@@ -26,7 +26,7 @@ msgid ""
 msgstr ""
 "\n"
 "Module pour l'écriture et l'impression de chèques.\n"
-"================================================\n"
+"==================================================\n"
 "    "
 
 #. module: base
@@ -1153,6 +1153,33 @@ msgid ""
 "also possible in order to automatically create a meeting when a holiday "
 "request is accepted by setting up a type of meeting in Leave Type.\n"
 msgstr ""
+"\n"
+"Gère les absences et les demandes de congés\n"
+"=======================================\n"
+"\n"
+"Cette application contrôle la programmation des congés de votre société. Il "
+"permet aux employés de faire des demandes de congés. Ensuite, les managers "
+"peuvent examiner les demandes et les approuver ou les rejeter. De cette "
+"façon, vous pouvez contrôler le planning de l'ensemble des congés de votre "
+"société ou de votre département.\n"
+"\n"
+"Vous pouvez configurer plusieurs sortes d'absences (maladie, congés payés, "
+"congés sans soldes…) et allouer rapidement ces absences à un employé ou un "
+"département en utilisant les demandes de congés. Un employée peut aussi "
+"faire une demande de congés pour plus de jours en ajoutant une allocation. "
+"Cela va augmenter le total des jours disponibles pour ce type de congés (si "
+"la demande est accepté).\n"
+"\n"
+"Vous pouvez suivre les absences de différentes façons grâce aux rapports "
+"suivants : \n"
+"\n"
+"* Résumé des absences\n"
+"* Absences par département\n"
+"* Analyse des absences\n"
+"\n"
+"Une synchronisation avec les agendas internes (Réunions du module CRM) est "
+"aussi possible dans le but de créer automatiquement une réunion quand une "
+"demande de congés est accepté en ajoutant une type de réunion Absence.\n"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -1257,6 +1284,13 @@ msgid ""
 "    * the Tax Code Chart for Luxembourg\n"
 "    * the main taxes used in Luxembourg"
 msgstr ""
+"\n"
+"Ceci est le module de base pour gérer le plan de comptes pour le Luxembourg\n"
+"===========================================================================\n"
+"\n"
+"    * le plan de compte KLUWER\n"
+"    * le plan de codes de taxes pour le Luxembourg\n"
+"    * les taxes principales utilisées au Luxembourg"
 
 #. module: base
 #: model:res.country,name:base.om
@@ -2677,6 +2711,29 @@ msgid ""
 "* Maximal difference between timesheet and attendances\n"
 "    "
 msgstr ""
+"\n"
+"Enregistrer et valider facilement les feuilles de temps et les présences\n"
+"========================================================================\n"
+"\n"
+"Cette application fournie un nouvel écran vous permettant de gérer à la fois "
+"les présences (entrées/sorties) et l'enregistrement du travail (feuille de "
+"temps) par période. Les saisies dans la feuille de temps sont faites par les "
+"employés chaque jour. À la fin de la période définie, les employés valident "
+"leurs feuilles de temps et le responsable doit approuver les saisies de son "
+"équipe. Les périodes sont définis dans le formulaire de la société et vous "
+"pouvez les paramétrer sur une base mensuelle ou hebdomadaire.\n"
+"\n"
+"Le processus complet de la validation des feuilles de temps est :\n"
+"-----------------------------------------------------------------\n"
+"* Feuille en brouillon\n"
+"* Confirmation de la feuille à la fin de la période par les employées\n"
+"* Validation par le responsable du projet\n"
+"\n"
+"La validation peut être paramétrée dans la société :\n"
+"----------------------------------------------------\n"
+"* Durée de la période (jour, semaine, mois)\n"
+"* Différence maximale entre la feuille de temps et les présences\n"
+"    "
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:342
@@ -2932,11 +2989,25 @@ msgid ""
 "    * Date\n"
 "    "
 msgstr ""
+"\n"
+"Définir des valeurs par défaut pour les comptes analytiques.\n"
+"============================================================\n"
+"\n"
+"Permet de sélectionner automatiquement les comptes analytiques selon des "
+"critères :\n"
+"-----------------------------------------------------------------------------"
+"------\n"
+"    * Article\n"
+"    * Partenaire\n"
+"    * Utilisateur\n"
+"    * Société\n"
+"    * Date\n"
+"    "
 
 #. module: base
 #: field:res.company,rml_header1:0
 msgid "Company Slogan"
-msgstr ""
+msgstr "Slogan de la société"
 
 #. module: base
 #: model:res.country,name:base.bb
@@ -2960,7 +3031,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_oauth_signup
 msgid "Signup with OAuth2 Authentication"
-msgstr ""
+msgstr "Se connecter avec l'authentification OAuth2"
 
 #. module: base
 #: selection:ir.model,state:0
@@ -3021,6 +3092,10 @@ msgid ""
 "==================================\n"
 "    "
 msgstr ""
+"\n"
+"États-Unis d'Amérique - Plan comptable.\n"
+"=======================================\n"
+"    "
 
 #. module: base
 #: field:ir.actions.act_url,target:0
@@ -3055,7 +3130,7 @@ msgstr "Nom du raccourci"
 #. module: base
 #: field:res.partner,contact_address:0
 msgid "Complete Address"
-msgstr ""
+msgstr "Adresse complète"
 
 #. module: base
 #: help:ir.actions.act_window,limit:0
@@ -3127,7 +3202,7 @@ msgstr "ID de l’enregistrement"
 #. module: base
 #: view:ir.filters:0
 msgid "My Filters"
-msgstr ""
+msgstr "Mes filtres"
 
 #. module: base
 #: field:ir.actions.server,email:0
@@ -3141,12 +3216,16 @@ msgid ""
 "Module to attach a google document to any model.\n"
 "================================================\n"
 msgstr ""
+"\n"
+"Module pour attacher des documents Google à n'importe quel objet.\n"
+"=================================================================\n"
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:334
 #, python-format
 msgid "Found multiple matches for field '%%(field)s' (%d matches)"
 msgstr ""
+"Plusieurs résultats ont été trouvés pour le champ '%%(field)s' (%d résultats)"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -3180,7 +3259,7 @@ msgstr "Arguments envoyés au client avec la  vue"
 #. module: base
 #: model:ir.module.module,summary:base.module_contacts
 msgid "Contacts, People and Companies"
-msgstr ""
+msgstr "Contacts, personnes et sociétés"
 
 #. module: base
 #: model:res.country,name:base.tt
@@ -3213,7 +3292,7 @@ msgstr "Responsable"
 #: code:addons/base/ir/ir_model.py:718
 #, python-format
 msgid "Sorry, you are not allowed to access this document."
-msgstr ""
+msgstr "Désolé, vous n'êtes pas autorisé à accéder à ce document."
 
 #. module: base
 #: model:res.country,name:base.py
@@ -3329,7 +3408,7 @@ msgstr ""
 #: code:addons/base/ir/ir_fields.py:175
 #, python-format
 msgid "'%s' does not seem to be an integer for field '%%(field)s'"
-msgstr ""
+msgstr "'%s' ne semble pas être un entier pour le champ '%%(field)s'"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_report_designer
@@ -3390,7 +3469,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_linkedin
 msgid "LinkedIn Integration"
-msgstr ""
+msgstr "Intégration avec LinkedIn"
 
 #. module: base
 #: code:addons/orm.py:2021
@@ -3439,6 +3518,8 @@ msgid ""
 "the user will have an access to the sales configuration as well as statistic "
 "reports."
 msgstr ""
+"l'utilisateur aura un accès à la configuration des ventes ainsi qu'aux "
+"rapports statistiques."
 
 #. module: base
 #: model:res.country,name:base.nz
@@ -3585,7 +3666,7 @@ msgstr "Arménie"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_evaluation
 msgid "Periodical Evaluations, Appraisals, Surveys"
-msgstr ""
+msgstr "Évaluations périodiques, appréciations, sondages"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_property_form
@@ -3625,6 +3706,31 @@ msgid ""
 "      payslip interface, but not in the payslip report\n"
 "    "
 msgstr ""
+"\n"
+"Règles pour la paie française.\n"
+"==============================\n"
+"\n"
+"    - Configuration du module hr_payroll pour la localisation française\n"
+"    - Toutes les principales règles de contribution pour la fiche de paie "
+"française, pour les cadres et les non-cadres\n"
+"    - Nouveau rapport des feuilles de paie\n"
+"\n"
+"Reste à faire :\n"
+"---------------\n"
+"    - Intégration avec le module de gestion des congés pour la déduction des "
+"congés et la gestion des indemnités\n"
+"    - Intégration avec le module hr_payroll_account pour la création des "
+"lignes d'écritures \n"
+"      depuis la feuille de paie\n"
+"    - Continuer l'intégration des contributions. Seules les principales "
+"contributions sont \n"
+"      actuellement implémentées.\n"
+"    - Retravailler le rapport sous webkit\n"
+"    - Les lignes de paie avec appears_in_payslip = False doivent apparaître "
+"dans\n"
+"      l'interface des fiches de paie, mais pas dans le rapport des fiches de "
+"paie.\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.se
@@ -3634,7 +3740,7 @@ msgstr "Suède"
 #. module: base
 #: field:ir.actions.report.xml,report_file:0
 msgid "Report File"
-msgstr ""
+msgstr "Fichier de rapport"
 
 #. module: base
 #: selection:ir.actions.act_window.view,view_mode:0
@@ -3667,7 +3773,7 @@ msgstr ""
 #: code:addons/orm.py:3839
 #, python-format
 msgid "Missing document(s)"
-msgstr ""
+msgstr "Document(s) manquant(s)"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner_bank_type
@@ -3682,6 +3788,8 @@ msgid ""
 "For more details about translating OpenERP in your language, please refer to "
 "the"
 msgstr ""
+"Pour plus de détails concernant la traduction d'OpenERP dans votre langue, "
+"veuillez vous référer à"
 
 #. module: base
 #: field:res.partner,image:0
@@ -3807,6 +3915,28 @@ msgid ""
 "database,\n"
 "      but in the servers rootpad like /server/bin/filestore.\n"
 msgstr ""
+"\n"
+"Ceci est un système complet de gestion de documents.\n"
+"=====================================================\n"
+"\n"
+"    * Authentification des utilisateurs\n"
+"    * Indexation des documents ; les fichiers .pptx et .docx ne sont pas "
+"supportés sous Windows.\n"
+"    * Tableau de bord des documents qui inclut :\n"
+"        * Nouveaux fichiers (liste)\n"
+"        * Fichiers par type de ressources (graphique)\n"
+"        * Fichiers par partenaire (graphique)\n"
+"        * Taille des fichiers par mois (graphique)\n"
+"\n"
+"ATTENTION :\n"
+"-----------\n"
+"\n"
+"    - Quand vous installez ce module en production dans une société qui a "
+"déjà des fichiers PDF\n"
+"      enregistrés dans la base de données, ils seront tous perdus.\n"
+"    - Après l'installation de ce module les PDF ne seront plus enregistrés "
+"dans la base de données,\n"
+"      mais à la racine du serveur dans /server/bin/filestore.\n"
 
 #. module: base
 #: help:res.currency,name:0
@@ -3898,7 +4028,7 @@ msgstr "Finlandais / Suomi"
 #. module: base
 #: view:ir.config_parameter:0
 msgid "System Properties"
-msgstr ""
+msgstr "Propriétés système"
 
 #. module: base
 #: field:ir.sequence,prefix:0
@@ -3955,7 +4085,7 @@ msgstr "Personnel"
 #. module: base
 #: field:base.language.export,modules:0
 msgid "Modules To Export"
-msgstr ""
+msgstr "Modules à exporter"
 
 #. module: base
 #: model:res.country,name:base.mt
@@ -3968,6 +4098,8 @@ msgstr "Malte"
 msgid ""
 "Only users with the following access level are currently allowed to do that"
 msgstr ""
+"Seuls les utilisateurs avec les niveaux d'accès suivants sont actuellement "
+"autorisé à faire cela"
 
 #. module: base
 #: field:ir.actions.server,fields_lines:0

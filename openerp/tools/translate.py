@@ -793,26 +793,33 @@ def trans_generate(lang, modules, cr):
     cr.execute(query_models, query_param)
 
     def push_constraint_msg(module, term_type, model, msg):
-        # Check presence of __call__ directly instead of using
-        # callable() because it will be deprecated as of Python 3.0
         if not hasattr(msg, '__call__'):
-            push_translation(module, term_type, model, 0, encode(msg))
+            push_translation(encode(module), term_type, encode(model), 0, encode(msg))
 
+    def push_local_constraints(module, model, cons_type='sql_constraints'):
+        """Climb up the class hierarchy and ignore inherited constraints
+           from other modules"""
+        term_type = 'sql_constraint' if cons_type == 'sql_constraints' else 'constraint'
+        msg_pos = 2 if cons_type == 'sql_constraints' else 1
+        for cls in model.__class__.__mro__:
+            if getattr(cls, '_module', None) != module:
+                continue
+            constraints = getattr(cls, '_local_' + cons_type, [])
+            for constraint in constraints:
+                push_constraint_msg(module, term_type, model._name, constraint[msg_pos])
+            
     for (_, model, module) in cr.fetchall():
-        module = encode(module)
-        model = encode(model)
-
         model_obj = pool.get(model)
 
         if not model_obj:
             _logger.error("Unable to find object %r", model)
             continue
 
-        for constraint in getattr(model_obj, '_constraints', []):
-            push_constraint_msg(module, 'constraint', model, constraint[1])
+        if model_obj._constraints:
+            push_local_constraints(module, model_obj, 'constraints')
 
-        for constraint in getattr(model_obj, '_sql_constraints', []):
-            push_constraint_msg(module, 'sql_constraint', model, constraint[2])
+        if model_obj._sql_constraints:
+            push_local_constraints(module, model_obj, 'sql_constraints')
 
     def get_module_from_path(path, mod_paths=None):
         if not mod_paths:

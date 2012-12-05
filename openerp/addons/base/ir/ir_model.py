@@ -209,6 +209,7 @@ class ir_model(osv.osv):
         else:
             x_name = a._columns.keys()[0]
         x_custom_model._rec_name = x_name
+        a._rec_name = x_name
 
 class ir_model_fields(osv.osv):
     _name = 'ir.model.fields'
