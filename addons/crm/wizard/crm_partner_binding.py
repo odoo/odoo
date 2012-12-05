@@ -104,15 +104,4 @@ class crm_partner_binding(osv.osv_memory):
         partner_id = data.partner_id and data.partner_id.id or False
         return lead.convert_partner(cr, uid, lead_ids, data.action, partner_id, context=context)
 
-    def make_partner(self, cr, uid, ids, context=None):
-        """
-        Make a partner based on action.
-        Only called from form view, so only meant to convert one lead at a time.
-        """
-        if context is None:
-            context = {}
-        lead_id = context.get('active_id', False)
-        partner_ids_map = self._create_partner(cr, uid, ids, context=context)
-        return self.pool.get('res.partner').redirect_partner_form(cr, uid, partner_ids_map.get(lead_id, False), context=context)
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

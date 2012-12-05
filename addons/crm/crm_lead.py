@@ -742,28 +742,38 @@ class crm_lead(base_stage, format_address, osv.osv):
         return partner_id
 
     def _lead_set_partner(self, cr, uid, lead, partner_id, context=None):
+        """
+        Assign a partner to a lead.
+
+        :param object lead: browse record of the lead to process
+        :param int partner_id: identifier of the partner to assign
+        :return bool: True if the partner has properly been assigned
+        """
         res = False
         res_partner = self.pool.get('res.partner')
         if partner_id:
             res_partner.write(cr, uid, partner_id, {'section_id': lead.section_id.id or False})
             contact_id = res_partner.address_get(cr, uid, [partner_id])['default']
-            res = lead.write({'partner_id' : partner_id, }, context=context)
+            res = lead.write({'partner_id': partner_id}, context=context)
             self._lead_set_partner_send_note(cr, uid, [lead.id], context)
         return res
 
     def convert_partner(self, cr, uid, ids, action='create', partner_id=False, context=None):
         """
-        Convert partner based on action.
+        Handle partner assignation during a lead conversion.
         if action is 'create', create new partner with contact and assign lead to new partner_id.
         otherwise assign lead to specified partner_id
+
+        :param list ids: leads/opportunities ids to process
+        :param string action: what has to be done regarding partners (create it, assign an existing one, or nothing)
+        :param int partner_id: partner to assign if any
+        :return dict: dictionary organized as followed: {lead_id: partner_assigned_id}
         """
-        if context is None:
-            context = {}
         partner_ids = {}
         for lead in self.browse(cr, uid, ids, context=context):
-            if action == 'create':
-                if not partner_id:
-                    partner_id = self._create_lead_partner(cr, uid, lead, context)
+            # If the action is set to 'create' and no partner_id is set, create a new one
+            if action == 'create' and not partner_id:
+                partner_id = self._create_lead_partner(cr, uid, lead, context)
             self._lead_set_partner(cr, uid, lead, partner_id, context=context)
             partner_ids[lead.id] = partner_id
         return partner_ids

@@ -11,16 +11,6 @@
   !assert {model: crm.lead, id: crm.crm_case_4, string: Lead state is Open}:
      - state == "open"
 -
-  I fill in a partner binding wizard.
--
-  !record {model: crm.partner.binding, id: crm_partner_binding_id1, context: '{"active_model": "crm.lead", "active_ids": [ref("crm_case_4")]}'}:
--
-  I create a partner from the partner binding wizard.
--
-   !python {model: crm.partner.binding}: |
-     context.update({'active_model': 'crm.lead', 'active_ids': [ref('crm_case_4')], 'active_id': ref('crm_case_4')})
-     self.make_partner(cr, uid ,[ref("crm_partner_binding_id1")], context=context)
--
   I convert lead into opportunity for exiting customer.
 -
   !python {model: crm.lead}: |
