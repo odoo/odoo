@@ -21,6 +21,7 @@
 
 from osv import fields, osv
 from lxml import etree
+from operator import itemgetter
 
 from tools.translate import _
 
@@ -118,12 +119,53 @@ class account_move_line(osv.osv):
 class email_template(osv.osv):
     _inherit = 'email.template'
 
+    def _get_followup_table_html(self, cr, uid, res_id, context = None):
+        #res_id -> res.partner
+        partner = self.pool.get('res.partner').browse(cr, uid, res_id, context=context)
+        followup_table = ''
+        if partner.unreconciled_aml_ids: 
+            company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
+            current_date = fields.date.context_today(cr, uid, context)
+            from report import account_followup_print
+            rml_parse = account_followup_print.report_rappel(cr, uid, "followup_rml_parser")
+            final_res = rml_parse._lines_get_with_partner(partner, company.id)
+            
+            for currency_dict in final_res:
+                currency_symbol = currency_dict.get('line', [{'currency_id': company.currency_id}])[0]['currency_id'].symbol
+                followup_table += '''
+                <table border="2" width=100%%>
+                <tr>
+                    <td>Invoice date</td>
+                    <td>Reference</td>
+                    <td>Due date</td>
+                    <td>Amount (%s)</td>
+                    <td>Lit.</td>
+                </tr>
+                ''' % (currency_symbol)
+                total = 0
+                for aml in currency_dict['line']:
+                    block = aml['blocked'] and 'X' or ' '
+                    total += aml['balance']
+                    strbegin = "<TD>"
+                    strend = "</TD>"
+                    date = aml['date_maturity'] or aml['date']
+                    if date <= current_date and aml['balance'] > 0:
+                        strbegin = "<TD><B>"
+                        strend = "</B></TD>"
+                    followup_table +="<TR>" + strbegin + str(aml['date']) + strend + strbegin + aml['ref'] + strend + strbegin + str(date) + strend + strbegin + str(aml['balance']) + strend + strbegin + block + strend + "</TR>"
+                total = rml_parse.formatLang(total, dp='Account', currency_obj=partner.company_id.currency_id)
+                followup_table += '''<tr> </tr>
+                                </table>
+                                <center>Amount due: %s </center>''' % (total)
+        return followup_table
+
     # Adds current_date to the context.  That way it can be used to put
     # the account move lines in bold that are overdue in the email
     def render_template(self, cr, uid, template, model, res_id, context=None):
         context['current_date'] = fields.date.context_today(cr, uid, context)
+        if model == 'res.partner': # and 'followup' in context.keys() and context['followup']:
+            context['followup_table'] = self._get_followup_table_html(cr, uid, res_id, context=context)
         return super(email_template, self).render_template(cr, uid, template, model, res_id, context=context)
-
 
 class res_partner(osv.osv):
 
@@ -138,7 +180,11 @@ class res_partner(osv.osv):
             root.insert(0, first_node[0])
             res['arch'] = etree.tostring(doc, encoding="utf-8")
         return res
-
+    
+#    def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):
+#        if order and order[0] == '':
+#        pass
+    
     def _get_latest(self, cr, uid, ids, names, arg, context=None, company_id=None):
         res={}
         if company_id == None:
@@ -172,6 +218,7 @@ class res_partner(osv.osv):
         for partner in self.browse(cr, uid, partner_ids, context=context):
             #Check action: check if the action was not empty, if not add
             action_text= ""
+            context['followup'] = True
             if partner.payment_next_action:
                 action_text = (partner.payment_next_action or '') + "\n" + (partner.latest_followup_level_id_without_lit.manual_action_note or '')
             else:
@@ -256,6 +303,95 @@ class res_partner(osv.osv):
         }
 
 
+    def _get_amounts_and_date(self, cr, uid, ids, name, arg, context=None, company_id=None):
+        res = {}
+        if company_id == None:
+            company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
+        else:
+            company = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
+        current_date = fields.date.context_today(cr, uid, context)
+        for partner in self.browse(cr, uid, ids, context=context):
+            res[partner.id] = [0.0, 0.0, False]
+            calc_date = False
+            amount_due = 0.0
+            amount_overdue = 0.0
+            for aml in partner.unreconciled_aml_ids:
+                if (aml.company_id == company):
+                    date_maturity = (not aml.date_maturity) and aml.date or aml.date_maturity
+                    if (not calc_date or calc_date > date_maturity): 
+                        calc_date = date_maturity
+                    amount_due += aml.result
+                    if (date_maturity <= current_date):
+                        amount_overdue += aml.result
+            res[partner.id] = {'payment_amount_due': amount_due, 
+                               'payment_amount_overdue': amount_overdue, 
+                               'payment_earliest_due_date': calc_date}
+        return res
+    
+    
+    def _search_unreconciled(self, cr, uid, obj, name, args, field, context=None):
+        pass
+    
+    def _payment_overdue_search(self, cr, uid, obj, name, args, context=None):
+        company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+        if not args:
+                return []
+        having_values = tuple(map(itemgetter(2), args))
+        where = ' AND '.join(
+            map(lambda x: '(SUM(bal2) %(operator)s %%s)' % {
+                                'operator':x[1]},args))
+        query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
+        cr.execute(('SELECT pid AS partner_id, SUM(bal2) FROM ' \
+                    '(SELECT CASE WHEN bal IS NOT NULL THEN bal ' \
+                    'ELSE 0.0 END AS bal2, p.id as pid ' \
+                    ' FROM ' \
+                    '(SELECT (debit-credit) AS bal, partner_id ' \
+                    'FROM account_move_line l ' \
+                    'WHERE account_id IN ' \
+                            '(SELECT id FROM account_account '\
+                            'WHERE type=\'receivable\' AND active) ' \
+                    'AND date_maturity <= NOW() ' \
+                    'AND l.company_id = %s '
+                    'AND reconcile_id IS NULL ' \
+                    'AND '+query+') AS l ' \
+                    'RIGHT JOIN res_partner p ' \
+                    'ON p.id = partner_id ) AS pl ' \
+                    'GROUP BY pid HAVING ' + where), 
+                     (str(company),) + having_values)
+        res = cr.fetchall()
+        if not res:
+            return [('id','=','0')]
+        return [('id','in',map(itemgetter(0), res))]
+    
+    def _payment_due_search(self, cr, uid, obj, name, args, context=None):
+        company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+        if not args:
+                return []
+        having_values = tuple(map(itemgetter(2), args))
+        where = ' AND '.join(
+            map(lambda x: '(SUM(bal2) %(operator)s %%s)' % {
+                                'operator':x[1]},args))
+        query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
+        cr.execute(('SELECT pid AS partner_id, SUM(bal2) FROM ' \
+                    '(SELECT CASE WHEN bal IS NOT NULL THEN bal ' \
+                    'ELSE 0.0 END AS bal2, p.id as pid FROM ' \
+                    '(SELECT (debit-credit) AS bal, partner_id ' \
+                    'FROM account_move_line l ' \
+                    'WHERE account_id IN ' \
+                            '(SELECT id FROM account_account '\
+                            'WHERE type=\'receivable\' AND active) ' \
+                    'AND reconcile_id IS NULL ' \
+                    'AND company_id = %s'
+                    'AND '+query+') AS l ' \
+                    'RIGHT JOIN res_partner p ' \
+                    'ON p.id = partner_id ) AS pl ' \
+                    'GROUP BY pid HAVING ' + where), (str(company),) + having_values)
+        res = cr.fetchall()
+        if not res:
+            return [('id','=','0')]
+        return [('id','in',map(itemgetter(0), res))]
+        
+        
     _inherit = "res.partner"
     _columns = {
         'payment_responsible_id':fields.many2one('res.users', ondelete='set null', string='Follow-up Responsible', 
@@ -281,7 +417,19 @@ class res_partner(osv.osv):
             help="The maximum follow-up level without taking into account the account move lines with litigation", 
             store=False, 
             multi="latest"),
-        'payment_amount_due':fields.related('credit', type='float', string="Total amount due", readonly=True),
+        'payment_amount_due':fields.function(_get_amounts_and_date, method = True, 
+                                                 type='float', string="Amount due",
+                                                 store = False, multi="amountsdate", 
+                                                 fnct_search=_payment_due_search),
+        'payment_amount_overdue':fields.function(_get_amounts_and_date, method = True, 
+                                                 type='float', string="Amount overdue",
+                                                 store = False, multi="amountsdate", 
+                                                 fnct_search = _payment_overdue_search),
+        'payment_earliest_due_date':fields.function(_get_amounts_and_date, method=True, 
+                                                    type='date',
+                                                    string = "Most overdue date",
+                                                    multi="amountsdate", 
+                                                    ),
         }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
