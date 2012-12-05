@@ -326,11 +326,14 @@ class mail_thread(osv.AbstractModel):
             for f in changed_fields:
                 to = self.browse(cr, uid, ids[0], context)[f]
                 ci = tracked[f]
-                if to is None:
-                    to = "Removed"
                 if ci.column._type == "many2one":
-                    to = to.name
-                    from_ = from_.name
+                    if to:
+                        to = to.name_get()[0][1]
+                    else:
+                        to = "Removed"
+                    if from_:
+                        from_ = from_.name_get()[0][1]
+                    
                     subtype = get_subtype(ci.column._obj,values[f])
                 chg.append((_t(ci), from_, to))
 
