@@ -86,9 +86,9 @@ class crm_partner_binding(osv.osv_memory):
         partner_id = self._find_matching_partner(cr, uid, context=context)
 
         if 'action' in fields:
-            res.update({'action': partner_id and 'exist' or 'create'})
+            res['action'] = partner_id and 'exist' or 'create'
         if 'partner_id' in fields:
-            res.update({'partner_id': partner_id})
+            res['partner_id'] = partner_id
 
         return res
 
