@@ -27,6 +27,7 @@ Miscellaneous tools used by OpenERP.
 """
 
 from functools import wraps
+import cProfile
 import subprocess
 import logging
 import os
@@ -592,16 +593,10 @@ class profile(object):
     def __call__(self, f):
         @wraps(f)
         def wrapper(*args, **kwargs):
-            class profile_wrapper(object):
-                def __init__(self):
-                    self.result = None
-                def __call__(self):
-                    self.result = f(*args, **kwargs)
-            pw = profile_wrapper()
-            import cProfile
-            fname = self.fname or ("%s.cprof" % (f.func_name,))
-            cProfile.runctx('pw()', globals(), locals(), filename=fname)
-            return pw.result
+            profile = cProfile.Profile()
+            result = profile.runcall(f, *args, **kwargs)
+            profile.dump_stats(self.fname or ("%s.cprof" % (f.func_name,)))
+            return result
 
         return wrapper
 
