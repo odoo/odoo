@@ -217,7 +217,7 @@ class account_invoice(osv.osv):
         'date_invoice': fields.date('Invoice Date', readonly=True, states={'draft':[('readonly',False)]}, select=True, help="Keep empty to use the current date"),
         'date_due': fields.date('Due Date', readonly=True, states={'draft':[('readonly',False)]}, select=True,
             help="If you use payment terms, the due date will be computed automatically at the generation "\
-                "of accounting entries. If you keep the payment term and the due date empty, it means direct payment. The payment term may compute several due dates, for example 50% now, 50% in one month."),
+                "of accounting entries. The payment term may compute several due dates, for example 50% now and 50% in one month, but if you want to force a due date, make sure that the payment term is not set on the invoice. If you keep the payment term and the due date empty, it means direct payment."),
         'partner_id': fields.many2one('res.partner', 'Partner', change_default=True, readonly=True, required=True, states={'draft':[('readonly',False)]}),
         'payment_term': fields.many2one('account.payment.term', 'Payment Term',readonly=True, states={'draft':[('readonly',False)]},
             help="If you use payment terms, the due date will be computed automatically at the generation "\
@@ -293,6 +293,18 @@ class account_invoice(osv.osv):
     _sql_constraints = [
         ('number_uniq', 'unique(number, company_id, journal_id, type)', 'Invoice Number must be unique per Company!'),
     ]
+
+    def _find_partner(self, inv):
+        '''
+        Find the partner for which the accounting entries will be created
+        '''
+        #if the chosen partner is not a company and has a parent company, use the parent for the journal entries 
+        #because you want to invoice 'Agrolait, accounting department' but the journal items are for 'Agrolait'
+        part = inv.partner_id
+        if part.parent_id and not part.is_company:
+            part = part.parent_id
+        return part
+
 
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
         journal_obj = self.pool.get('account.journal')
@@ -478,10 +490,11 @@ class account_invoice(osv.osv):
 
             if type in ('out_invoice', 'out_refund'):
                 acc_id = p.property_account_receivable.id
+                partner_payment_term = p.property_payment_term and p.property_payment_term.id or False
             else:
                 acc_id = p.property_account_payable.id
+                partner_payment_term = p.property_supplier_payment_term and p.property_supplier_payment_term.id or False
             fiscal_position = p.property_account_position and p.property_account_position.id or False
-            partner_payment_term = p.property_payment_term and p.property_payment_term.id or False
             if p.bank_ids:
                 bank_id = p.bank_ids[0].id
 
@@ -957,11 +970,7 @@ class account_invoice(osv.osv):
 
             date = inv.date_invoice or time.strftime('%Y-%m-%d')
 
-            #if the chosen partner is not a company and has a parent company, use the parent for the journal entries 
-            #because you want to invoice 'Agrolait, accounting department' but the journal items are for 'Agrolait'
-            part = inv.partner_id
-            if part.parent_id and not part.is_company:
-                part = part.parent_id
+            part = self._find_partner(inv)
 
             line = map(lambda x:(0,0,self.line_get_convert(cr, uid, x, part.id, date, context=ctx)),iml)
 

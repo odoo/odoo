@@ -120,7 +120,7 @@ class account_analytic_account(osv.osv):
     def _get_one_full_name(self, elmt, level=6):
         if level<=0:
             return '...'
-        if elmt.parent_id:
+        if elmt.parent_id and not elmt.type == 'template':
             parent_path = self._get_one_full_name(elmt.parent_id, level-1) + "/"
         else:
             parent_path = ''

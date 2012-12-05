@@ -242,7 +242,7 @@ class sale_order(osv.osv):
         'order_policy': 'manual',
         'state': 'draft',
         'user_id': lambda obj, cr, uid, context: uid,
-        'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'sale.order'),
+        'name': lambda obj, cr, uid, context: '/',
         'invoice_quantity': 'order',
         'partner_invoice_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['invoice'])['invoice'],
         'partner_shipping_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['delivery'])['delivery'],
@@ -321,6 +321,8 @@ class sale_order(osv.osv):
         return {'value': val}
 
     def create(self, cr, uid, vals, context=None):
+        if vals.get('name','/')=='/':
+            vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'sale.order') or '/'
         order =  super(sale_order, self).create(cr, uid, vals, context=context)
         if order:
             self.create_send_note(cr, uid, [order], context=context)
