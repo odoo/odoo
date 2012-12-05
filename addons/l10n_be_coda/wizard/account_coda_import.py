@@ -973,8 +973,7 @@ class account_coda_import(osv.osv_memory):
                     # handling non-transactional records : line['type'] in ['information', 'communication']
 
                     if line['type'] == 'information':
-                        if line['ref_move_detail'] == '0000':
-                            glob_id_stack = [(0, '', 0, '')]  # initialise stack with tuples (glob_lvl_flag, glob_code, glob_id, glob_name)
+                    
 
                         #Check if this line can be deleted. glob_id_stack marked as undefined here
                         line['globalisation_id'] = glob_id_stack[-1][2]
