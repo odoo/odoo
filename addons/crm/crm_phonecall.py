@@ -181,7 +181,7 @@ class crm_phonecall(base_state, osv.osv):
         :param int partner_id: partner to assign if any
         :return dict: dictionary organized as followed: {lead_id: partner_assigned_id}
         """
-        #TODO this is a pure diplucation of the handle_partner_assignation method of crm_lead
+        #TODO this is a duplication of the handle_partner_assignation method of crm_lead
         partner_ids = {}
         for call in self.browse(cr, uid, ids, context=context):
             # If the action is set to 'create' and no partner_id is set, create a new one
