@@ -466,7 +466,7 @@ class account_voucher(osv.osv):
             account_type = 'receivable'
 
         if not context.get('move_line_ids', False):
-            domain = [('state','=','valid'), ('account_id.type', '=', account_type), ('reconcile_id', '=', False), ('partner_id', '=', partner_id), ('journal_id.type', 'not in', ('bank', 'cash'))]
+            domain = [('state','=','valid'), ('account_id.type', '=', account_type), ('reconcile_id', '=', False), ('partner_id', '=', partner_id)]
             ids = move_line_pool.search(cr, uid, domain, context=context)
         else:
             ids = context['move_line_ids']
