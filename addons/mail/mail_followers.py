@@ -74,9 +74,9 @@ class mail_notification(osv.Model):
     }
 
     def init(self, cr):
-        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('mail_notification_partner_id_read_message_id',))
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('mail_notification_partner_id_read_starred_message_id',))
         if not cr.fetchone():
-            cr.execute('CREATE INDEX mail_notification_partner_id_read_message_id ON mail_notification (partner_id, read, message_id)')
+            cr.execute('CREATE INDEX mail_notification_partner_id_read_starred_message_id ON mail_notification (partner_id, read, starred, message_id)')
 
     def create(self, cr, uid, vals, context=None):
         """ Override of create to check that we can not create a notification
