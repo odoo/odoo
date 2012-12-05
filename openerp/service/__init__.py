@@ -133,10 +133,13 @@ def _reexec():
     """reexecute openerp-server process with (nearly) the same arguments"""
     if openerp.tools.osutil.is_running_as_nt_service():
         os.abort()
+    exe = os.path.basename(sys.executable)
     strip_args = ['-d', '-u']
     a = sys.argv[:]
     args = [x for i, x in enumerate(a) if x not in strip_args and a[max(i - 1, 0)] not in strip_args]
-    os.execv(sys.executable, [sys.executable] + args)
+    if not args or args[0] != exe:
+        args.insert(0, exe)
+    os.execv(sys.executable, args)
 
 def restart_server():
     if openerp.multi_process:
