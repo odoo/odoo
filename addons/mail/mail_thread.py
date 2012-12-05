@@ -122,7 +122,7 @@ class mail_thread(osv.AbstractModel):
         return res
 
     def _search_message_unread(self, cr, uid, obj=None, name=None, domain=None, context=None):
-        return [('message_ids.to_read', '=', False)]
+        return [('message_ids.to_read', '=', True)]
 
     def _get_followers(self, cr, uid, ids, name, arg, context=None):
         fol_obj = self.pool.get('mail.followers')
