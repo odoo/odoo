@@ -331,7 +331,7 @@ class mail_thread(osv.AbstractModel):
                         to = to.name_get()[0][1]
                     else:
                         to = "Removed"
-                    if from_:
+                    if isinstance(from_, browse_record):
                         from_ = from_.name_get()[0][1]
                     
                     subtype = get_subtype(ci.column._obj,values[f])
