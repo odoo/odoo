@@ -1396,9 +1396,8 @@ instance.web.View = instance.web.Widget.extend({
  */
 instance.web.fields_view_get = function(args) {
     function postprocess(fvg) {
-        fvg.arch_string = fvg.arch;
-        fvg.arch_doc = $.parseXML(fvg.arch);
-        fvg.arch = instance.web.xml_to_json(fvg.arch_doc, true);
+        var doc = $.parseXML(fvg.arch).documentElement;
+        fvg.arch = instance.web.xml_to_json(doc, (doc.nodeName.toLowerCase() !== 'kanban'));
         if ('id' in fvg.fields) {
             // Special case for id's
             var id_field = fvg.fields['id'];

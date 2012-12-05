@@ -1190,7 +1190,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         }
     },
     get_arch_fragment: function() {
-        var doc = this.fvg.arch_doc.documentElement.cloneNode(true);
+        var doc = $.parseXML(instance.web.json_node_to_xml(this.fvg.arch)).documentElement;
         // IE won't allow custom button@type and will revert it to spec default : 'submit'
         $('button', doc).each(function() {
             $(this).attr('data-button-type', $(this).attr('type')).attr('type', 'button');
