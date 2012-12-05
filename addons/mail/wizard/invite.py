@@ -68,7 +68,7 @@ class invite_wizard(osv.osv_memory):
             # filter partner_ids to get the new followers, to avoid sending email to already following partners
             new_follower_ids = [p.id for p in wizard.partner_ids if p.id not in document.message_follower_ids]
             model_obj.message_subscribe(cr, uid, [wizard.res_id], new_follower_ids, context=context)
-
+            
             # send an email
             if wizard.message:
                 for follower_id in new_follower_ids:
@@ -77,6 +77,8 @@ class invite_wizard(osv.osv_memory):
                         'subject': 'Invitation to follow %s' % document.name_get()[0][1],
                         'body_html': '%s' % wizard.message,
                         'auto_delete': True,
+                        'res_id': False,
+                        'model': None
                         }, context=context)
                     mail_mail.send(cr, uid, [mail_id], recipient_ids=[follower_id], context=context)
         return {'type': 'ir.actions.act_window_close'}
