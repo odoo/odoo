@@ -170,19 +170,23 @@ class crm_phonecall(base_state, osv.osv):
                     'phone': phonecall.partner_phone,
         })
 
-    def convert_partner(self, cr, uid, ids, action='create', partner_id=False, context=None):
+    def handle_partner_assignation(self, cr, uid, ids, action='create', partner_id=False, context=None):
         """
-        This function convert partner based on action.
+        Handle partner assignation during a lead conversion.
         if action is 'create', create new partner with contact and assign lead to new partner_id.
         otherwise assign lead to specified partner_id
+
+        :param list ids: phonecalls ids to process
+        :param string action: what has to be done regarding partners (create it, assign an existing one, or nothing)
+        :param int partner_id: partner to assign if any
+        :return dict: dictionary organized as followed: {lead_id: partner_assigned_id}
         """
-        if context is None:
-            context = {}
+        #TODO this is a pure diplucation of the handle_partner_assignation method of crm_lead
         partner_ids = {}
-        force_partner_id = partner_id
         for call in self.browse(cr, uid, ids, context=context):
-            if action == 'create':
-                partner_id = force_partner_id or self._call_create_partner(cr, uid, call, context=context)
+            # If the action is set to 'create' and no partner_id is set, create a new one
+            if action == 'create' and not partner_id:
+                partner_id = self._call_create_partner(cr, uid, call, context)
                 self._call_create_partner_address(cr, uid, call, partner_id, context=context)
             self._call_set_partner(cr, uid, [call.id], partner_id, context=context)
             partner_ids[call.id] = partner_id

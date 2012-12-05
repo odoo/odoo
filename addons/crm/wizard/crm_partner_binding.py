@@ -102,6 +102,6 @@ class crm_partner_binding(osv.osv_memory):
         lead_ids = context.get('active_ids', [])
         data = self.browse(cr, uid, ids, context=context)[0]
         partner_id = data.partner_id and data.partner_id.id or False
-        return lead.convert_partner(cr, uid, lead_ids, data.action, partner_id, context=context)
+        return lead.handle_partner_assignation(cr, uid, lead_ids, data.action, partner_id, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

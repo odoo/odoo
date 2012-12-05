@@ -754,17 +754,18 @@ class crm_lead(base_stage, format_address, osv.osv):
             self._lead_set_partner_send_note(cr, uid, [lead.id], context)
         return res
 
-    def convert_partner(self, cr, uid, ids, action='create', partner_id=False, context=None):
+    def handle_partner_assignation(self, cr, uid, ids, action='create', partner_id=False, context=None):
         """
         Handle partner assignation during a lead conversion.
         if action is 'create', create new partner with contact and assign lead to new partner_id.
-        otherwise assign lead to specified partner_id
+        otherwise assign lead to the specified partner_id
 
         :param list ids: leads/opportunities ids to process
         :param string action: what has to be done regarding partners (create it, assign an existing one, or nothing)
         :param int partner_id: partner to assign if any
         :return dict: dictionary organized as followed: {lead_id: partner_assigned_id}
         """
+        #TODO this is a pure diplucation of the handle_partner_assignation method of crm_phonecall
         partner_ids = {}
         for lead in self.browse(cr, uid, ids, context=context):
             # If the action is set to 'create' and no partner_id is set, create a new one
