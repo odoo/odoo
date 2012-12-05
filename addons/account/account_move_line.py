@@ -780,7 +780,7 @@ class account_move_line(osv.osv):
             else:
                 currency_id = line.company_id.currency_id
             if line.reconcile_id:
-                raise osv.except_osv(_('Warning!'), _('Already reconciled.'))
+                raise osv.except_osv(_('Warning'), _("Journal Item '%s' (id: %s), Move '%s' is already reconciled!") % (line.name, line.id, line.move_id.name)) 
             if line.reconcile_partial_id:
                 for line2 in line.reconcile_partial_id.line_partial_ids:
                     if not line2.reconcile_id:
