@@ -61,4 +61,4 @@ class ir_needaction_mixin(osv.AbstractModel):
         dom = self._needaction_domain_get(cr, uid, context=context)
         if not dom:
             return 0
-        return self.search(cr, uid, (domain or []) + dom, limit=100, context=context, count=True)
+        return self.search(cr, uid, (domain or []) + dom, limit=100, order='id DESC', context=context)
