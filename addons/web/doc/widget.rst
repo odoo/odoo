@@ -33,6 +33,8 @@ view. It provides a number of services to handle a section of a page:
 
 * Backbone-compatible shortcuts
 
+.. _widget-dom_root:
+
 DOM Root
 --------
 

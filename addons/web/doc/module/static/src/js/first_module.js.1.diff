@@ -1,0 +1,8 @@
+--- web_example/static/src/js/first_module.js
++++ web_example/static/src/js/first_module.js
+@@ -1,2 +1,4 @@
+ // static/src/js/first_module.js
+-console.log("Debug statement: file loaded");
++openerp.web_example = function (instance) {
++    console.log("Module loaded");
++};
