@@ -68,7 +68,7 @@ class test_ir_values(common.TransactionCase):
         # Replace one action binding to set a new name.
 
         ir_values = self.registry('ir.values')
-        ir_values.set(self.cr, self.uid, 'action', 'tree_but_open', 'OnDblClick Action New', ['unexisting_model'], 'ir.actions.act_window,10', isobject=True)
+        ir_values.set(self.cr, self.uid, 'action', 'tree_but_open', 'OnDblClick Action New', ['unexisting_model'], 'ir.actions.act_window,%d' % act_id_1, isobject=True)
 
         # Retrieve the action bindings and check they're correct
 
