@@ -781,8 +781,6 @@ class crm_lead(base_stage, format_address, osv.osv):
         :param int team_id: salesteam to assign
         :return bool
         """
-        if user_ids is None:
-            user_ids = []
         index = 0
 
         for lead_id in ids:
