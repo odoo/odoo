@@ -844,7 +844,7 @@ openerp.mail = function (session) {
             }
             var message_ids = _.map(messages, function (val) { return val.id; });
 
-            this.ds_notification.call('set_message_read', [message_ids, read_value, this.context])
+            this.ds_message.call('set_message_read', [message_ids, read_value, this.context])
                 .then(function () {
                     // apply modification
                     _.each(messages, function (msg) {
@@ -893,7 +893,7 @@ openerp.mail = function (session) {
             var self=this;
             var button = self.$('.oe_star:first');
 
-            this.ds_message.call('favorite_toggle', [[self.id]])
+            this.ds_message.call('set_message_starred', [[self.id], !self.is_favorite])
                 .then(function (star) {
                     self.is_favorite=star;
                     if (self.is_favorite) {
@@ -988,7 +988,7 @@ openerp.mail = function (session) {
             // add message composition form view
             if (!this.compose_message) {
                 this.compose_message = new mail.ThreadComposeMessage(this, this, {
-                    'context': this.options.compose_as_todo && !this.thread_level ? _.extend(this.context, { 'default_favorite_user_ids': [this.session.uid] }) : this.context,
+                    'context': this.options.compose_as_todo && !this.thread_level ? _.extend(this.context, { 'default_starred': true }) : this.context,
                     'options': this.options,
                 });
                 if (!this.thread_level || this.thread_level > this.options.display_indented_thread) {
