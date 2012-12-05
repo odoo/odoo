@@ -63,7 +63,7 @@ class mail_message(osv.Model):
         # protection for `default_type` values leaking from menu action context (e.g. for invoices)
         if context and context.get('default_type') and context.get('default_type') not in self._columns['type'].selection:
             context = dict(context, default_type=None)
-        return super(mail_message, self).default_get(cr, uid, fields, context=context) 
+        return super(mail_message, self).default_get(cr, uid, fields, context=context)
 
     def _shorten_name(self, name):
         if len(name) <= (self._message_record_name_length + 3):
