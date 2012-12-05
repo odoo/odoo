@@ -312,6 +312,12 @@ class hr_evaluation_interview(osv.osv):
     _defaults = {
         'is_evaluation': True,
     }
+    
+    def on_change_review_id(self, cr, uid, ids, user_to_review_id, context=None):
+        if user_to_review_id:
+            return {'domain': {'evaluation_id': [('employee_id.id','=', user_to_review_id)]}}
+        else:
+            return {'domain': {'evaluation_id': []}}
 
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
