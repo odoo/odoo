@@ -23,6 +23,7 @@
 import logging
 import os
 import signal
+import subprocess
 import sys
 import threading
 import time
@@ -34,6 +35,7 @@ import openerp.cron
 import openerp.modules
 import openerp.netsvc
 import openerp.osv
+from openerp.release import nt_service_name
 import openerp.tools
 import openerp.service.wsgi_server
 
@@ -132,7 +134,7 @@ def start_services_workers():
 def _reexec():
     """reexecute openerp-server process with (nearly) the same arguments"""
     if openerp.tools.osutil.is_running_as_nt_service():
-        os.abort()
+        subprocess.call('sc stop {0} && sc start {0}'.format(nt_service_name), shell=True)
     exe = os.path.basename(sys.executable)
     strip_args = ['-d', '-u']
     a = sys.argv[:]
