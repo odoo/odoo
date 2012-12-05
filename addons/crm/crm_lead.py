@@ -150,11 +150,7 @@ class crm_lead(base_stage, format_address, osv.osv):
 
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
         """
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Openday’s IDs
-        @return: difference between current date and log date
-        @param context: A standard dictionary for contextual values
+        :return dict: difference between current date and log date
         """
         cal_obj = self.pool.get('resource.calendar')
         res_obj = self.pool.get('resource.resource')
@@ -822,17 +818,17 @@ class crm_lead(base_stage, format_address, osv.osv):
             if not user_id:
                 user_id = lead.user_id and lead.user_id.id or False
             vals = {
-                    'name' : call_summary,
-                    'opportunity_id' : lead.id,
-                    'user_id' : user_id or False,
-                    'categ_id' : categ_id or False,
-                    'description' : desc or '',
-                    'date' : schedule_time,
-                    'section_id' : section_id or False,
-                    'partner_id': lead.partner_id and lead.partner_id.id or False,
-                    'partner_phone' : phone or lead.phone or (lead.partner_id and lead.partner_id.phone or False),
-                    'partner_mobile' : lead.partner_id and lead.partner_id.mobile or False,
-                    'priority': lead.priority,
+                'name': call_summary,
+                'opportunity_id': lead.id,
+                'user_id': user_id or False,
+                'categ_id': categ_id or False,
+                'description': desc or '',
+                'date': schedule_time,
+                'section_id': section_id or False,
+                'partner_id': lead.partner_id and lead.partner_id.id or False,
+                'partner_phone': phone or lead.phone or (lead.partner_id and lead.partner_id.phone or False),
+                'partner_mobile': lead.partner_id and lead.partner_id.mobile or False,
+                'priority': lead.priority,
             }
             new_id = phonecall.create(cr, uid, vals, context=context)
             phonecall.case_open(cr, uid, [new_id], context=context)
@@ -883,8 +879,9 @@ class crm_lead(base_stage, format_address, osv.osv):
         }
 
     def action_makeMeeting(self, cr, uid, ids, context=None):
-        """ This opens Meeting's calendar view to schedule meeting on current Opportunity
-            @return : Dictionary value for created Meeting view
+        """
+        Open meeting's calendar view to schedule meeting on current opportunity.
+        :return dict: dictionary value for created Meeting view
         """
         opportunity = self.browse(cr, uid, ids[0], context)
         res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'base_calendar', 'action_crm_meeting', context)

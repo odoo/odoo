@@ -246,7 +246,7 @@ class crm_phonecall(base_state, osv.osv):
     def action_make_meeting(self, cr, uid, ids, context=None):
         """
         Open meeting's calendar view to schedule a meeting on current phonecall.
-        @return dict res: dictionary value for created meeting view
+        :return dict: dictionary value for created meeting view
         """
         phonecall = self.browse(cr, uid, ids[0], context)
         res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'base_calendar', 'action_crm_meeting', context)
