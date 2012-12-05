@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:53+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2010-08-03 07:25+0000\n"
 "Last-Translator: Mantavya Gajjar (Open ERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 05:45+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:14+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetoassociate0
@@ -134,11 +134,6 @@ msgid "Non Member"
 msgstr "Non-membri"
 
 #. module: membership
-#: model:product.template,name:membership.membership_2_product_template
-msgid "Basic Membership"
-msgstr "Calitatea de membru de baza"
-
-#. module: membership
 #: view:product.product:0
 msgid "Taxes"
 msgstr ""
@@ -189,11 +184,6 @@ msgstr "Parteneri Furnizor"
 #: field:report.membership,num_invoiced:0
 msgid "# Invoiced"
 msgstr "# Facturat"
-
-#. module: membership
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr "Comunicare Structurata BBA Nevalida !"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_report_membership_tree
@@ -440,13 +430,6 @@ msgid "Category"
 msgstr "Categorie"
 
 #. module: membership
-#: constraint:product.product:0
-msgid ""
-"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
-"\"Internal Reference\" field instead."
-msgstr ""
-
-#. module: membership
 #: view:res.partner:0
 msgid "Contacts"
 msgstr ""
@@ -470,6 +453,11 @@ msgstr "Data de la"
 #: model:process.node,name:membership.process_node_associatedmember0
 msgid "Associated member"
 msgstr "Membru asociat"
+
+#. module: membership
+#: help:membership.membership_line,date:0
+msgid "Date on which member has joined the membership"
+msgstr "Data aderarii membrului"
 
 #. module: membership
 #: field:membership.membership_line,state:0
@@ -526,9 +514,15 @@ msgid "Invoiced Member"
 msgstr "Membru Facturat"
 
 #. module: membership
-#: help:membership.membership_line,date:0
-msgid "Date on which member has joined the membership"
-msgstr "Data aderarii membrului"
+#: field:membership.invoice,product_id:0
+#: field:membership.membership_line,membership_id:0
+#: view:product.product:0
+#: field:product.product,membership:0
+#: view:report.membership:0
+#: view:res.partner:0
+#: field:res.partner,member_lines:0
+msgid "Membership"
+msgstr "Calitatea de membru"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -597,9 +591,9 @@ msgid "The price negotiated by the partner"
 msgstr "Pretul negociat de catre partener"
 
 #. module: membership
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr "Numarul Facturii trebuie sa fie unic per Companie!"
+#: model:product.template,name:membership.membership_2_product_template
+msgid "Basic Membership"
+msgstr "Calitatea de membru de baza"
 
 #. module: membership
 #: view:res.partner:0
@@ -704,17 +698,6 @@ msgid "May"
 msgstr "Mai"
 
 #. module: membership
-#: field:membership.invoice,product_id:0
-#: field:membership.membership_line,membership_id:0
-#: view:product.product:0
-#: field:product.product,membership:0
-#: view:report.membership:0
-#: view:res.partner:0
-#: field:res.partner,member_lines:0
-msgid "Membership"
-msgstr "Calitatea de membru"
-
-#. module: membership
 #: field:res.partner,membership_start:0
 msgid "Membership Start Date"
 msgstr ""
@@ -797,11 +780,6 @@ msgstr "Eroare ! Nu puteti crea membri asociati recursiv."
 #: selection:res.partner,membership_state:0
 msgid "Cancelled Member"
 msgstr "Membru anulat"
-
-#. module: membership
-#: constraint:res.partner:0
-msgid "Error: Invalid ean code"
-msgstr "Eroare: cod ean invalid"
 
 #. module: membership
 #: view:report.membership:0
@@ -997,6 +975,9 @@ msgstr "Venituri efectuate"
 #~ msgid "   Month   "
 #~ msgstr "   Luna   "
 
+#~ msgid "Invalid BBA Structured Communication !"
+#~ msgstr "Comunicare Structurata BBA Nevalida !"
+
 #~ msgid "Events created in current month"
 #~ msgstr "Evenimente create in luna curenta"
 
@@ -1100,6 +1081,9 @@ msgstr "Venituri efectuate"
 #~ msgid "Select if a product is a membership product."
 #~ msgstr "Selectati daca un produs este un produs de membru."
 
+#~ msgid "Invoice Number must be unique per Company!"
+#~ msgstr "Numarul Facturii trebuie sa fie unic per Companie!"
+
 #~ msgid "Sale Description"
 #~ msgstr "Descriere vanzare"
 
@@ -1111,3 +1095,6 @@ msgstr "Venituri efectuate"
 
 #~ msgid "Sale Taxes"
 #~ msgstr "Taxe vanzare"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Eroare: cod ean invalid"

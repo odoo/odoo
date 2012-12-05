@@ -260,6 +260,7 @@ class account_coda_import(osv.osv_memory):
                             line['counterpartyNumber'] = False
                     except:
                         pass
+                    partner_id = None
                     if 'counterpartyNumber' in line and line['counterpartyNumber']:
                         ids = self.pool.get('res.partner.bank').search(cr, uid, [('acc_number', '=', str(line['counterpartyNumber']))])
                         if ids and len(ids) > 0:

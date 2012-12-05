@@ -1106,7 +1106,7 @@
                     <field name="invoice" invisible="1"/>
                     <field name="amount_currency" readonly="True" invisible="not context.get('currency',False)"/>
                     <field name="currency_id" readonly="True" invisible="not context.get('currency',False)" />
-                    <field name="state" />
+                    <field name="state" invisible="1"/>
                     <field name="company_id" invisible="1"/>
                 </tree>
             </field>
@@ -1208,12 +1208,6 @@
                 </p>
             </field>
         </record>
-        <menuitem
-             name="Journal Items to Reconcile"
-             action="action_account_manual_reconcile"
-             id="menu_manual_reconcile_bank"
-             sequence="20"
-             parent="account.menu_finance_bank_and_cash"/>
         <menuitem
              name="Manual Reconciliation"
              action="action_account_manual_reconcile"
@@ -1429,6 +1423,7 @@
             context="{'search_default_journal_id': active_id, 'default_journal_id': active_id}"
             res_model="account.move.line"
             src_model="account.move"/>
+
         <act_window
             domain="[('reconcile_id', '=', active_id)]"
             id="act_account_acount_move_line_reconcile_open"

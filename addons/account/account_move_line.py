@@ -475,7 +475,8 @@ class account_move_line(osv.osv):
             type='many2one', relation='account.invoice', fnct_search=_invoice_search),
         'account_tax_id':fields.many2one('account.tax', 'Tax'),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
-        'company_id': fields.related('account_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
+        'company_id': fields.related('account_id', 'company_id', type='many2one', relation='res.company', 
+                            string='Company', store=True, readonly=True)
     }
 
     def _get_date(self, cr, uid, context=None):
@@ -671,17 +672,24 @@ class account_move_line(osv.osv):
             return {'value':val}
         if not date:
             date = datetime.now().strftime('%Y-%m-%d')
+        jt = False
+        if journal:
+            jt = journal_obj.browse(cr, uid, journal).type
         part = partner_obj.browse(cr, uid, partner_id)
 
-        if part.property_payment_term:
-            res = payment_term_obj.compute(cr, uid, part.property_payment_term.id, 100, date)
+        payment_term_id = False
+        if jt and jt in ('purchase', 'purchase_refund') and part.property_supplier_payment_term:
+            payment_term_id = part.property_supplier_payment_term.id
+        elif jt and part.property_payment_term:
+            payment_term_id = part.property_payment_term.id
+        if payment_term_id:
+            res = payment_term_obj.compute(cr, uid, payment_term_id, 100, date)
             if res:
                 val['date_maturity'] = res[0][0]
         if not account_id:
             id1 = part.property_account_payable.id
             id2 =  part.property_account_receivable.id
-            if journal:
-                jt = journal_obj.browse(cr, uid, journal).type
+            if jt:
                 if jt in ('sale', 'purchase_refund'):
                     val['account_id'] = fiscal_pos_obj.map_account(cr, uid, part and part.property_account_position or False, id2)
                 elif jt in ('purchase', 'sale_refund'):

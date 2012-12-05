@@ -175,6 +175,7 @@ class stock_picking(osv.osv):
                     vals['invoice_id'] = invoices[result[picking.id]].id
                     invoice_line_id = invoice_line_obj.create(cursor, user, vals, context=context)
                     sale_line.write({'invoice_lines': [(4, invoice_line_id)]})
+                    invoice_obj.button_compute(cursor, user, [invoice_created.id], context=context)
         return result
 
 # Redefinition of the new field in order to update the model stock.picking.out in the orm

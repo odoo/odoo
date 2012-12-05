@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-05-10 18:04+0000\n"
 "Last-Translator: Jiří Hajda <robie@centrum.cz>\n"
 "Language-Team: Czech <openerp-i18n-czech@lists.launchpad.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:31+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:53+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 "X-Poedit-Language: Czech\n"
 
 #. module: account_asset
@@ -38,11 +38,6 @@ msgstr "Zbytková hodnota"
 #: field:account.asset.category,account_expense_depreciation_id:0
 msgid "Depr. Expense Account"
 msgstr "Nákladový odpisovací účet"
-
-#. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0
-msgid "Compute Asset"
-msgstr "Spočítat majetek"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -197,11 +192,6 @@ msgid "Depreciation Entry"
 msgstr "Položka odpisu"
 
 #. module: account_asset
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
-msgstr "Chybná hodnota Má dáti nebo Dal v účetním záznamu !"
-
-#. module: account_asset
 #: view:asset.asset.report:0
 #: field:asset.asset.report,nbr:0
 msgid "# of Depreciation Lines"
@@ -229,11 +219,6 @@ msgstr "Konečný datum"
 #: field:account.asset.asset,code:0
 msgid "Reference"
 msgstr "Odkaz"
-
-#. module: account_asset
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr "Neplatná strukturovaná komunikace BBA !"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -323,15 +308,6 @@ msgstr ""
 "Konečný datum: Vybere čas mezi 2 odpisy a datum odpis nemůže jít přes."
 
 #. module: account_asset
-#: constraint:account.move.line:0
-msgid ""
-"The date of your Journal Entry is not in the defined period! You should "
-"change the date or remove this constraint from the journal."
-msgstr ""
-"Datum vašeho záznamu deníku není v určeném období! Měli byste změnit datum "
-"nebo odstranit omezení z deníku."
-
-#. module: account_asset
 #: help:account.asset.history,method_period:0
 msgid "Time in month between two depreciations"
 msgstr "Čas v měsíci mezi dvěma odpočty"
@@ -362,11 +338,6 @@ msgid "Assets in closed state"
 msgstr "Majetek v uzavřeném stavu"
 
 #. module: account_asset
-#: constraint:account.move.line:0
-msgid "Account and Period must belong to the same company."
-msgstr ""
-
-#. module: account_asset
 #: field:account.asset.asset,parent_id:0
 msgid "Parent Asset"
 msgstr "Nadřazený majetek"
@@ -386,16 +357,6 @@ msgstr "Hledat kategorii majetku"
 #: model:ir.model,name:account_asset.model_account_invoice_line
 msgid "Invoice Line"
 msgstr "Řádek faktury"
-
-#. module: account_asset
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry forces to provide a secondary "
-"currency. You should remove the secondary currency on the account or select "
-"a multi-currency view on the journal."
-msgstr ""
-"Vybraný účet vašeho záznamu deníku vynucuje použití druhotné měny. Měli "
-"byste odstranit druhotnou měnu z účtu nebo vybrat více-měny."
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -423,11 +384,6 @@ msgstr "Časová metoda"
 #: view:asset.depreciation.confirmation.wizard:0
 #: view:asset.modify:0
 msgid "or"
-msgstr ""
-
-#. module: account_asset
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on closed account."
 msgstr ""
 
 #. module: account_asset
@@ -569,9 +525,9 @@ msgid "History"
 msgstr "Historie"
 
 #. module: account_asset
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr "Číslo dokladu musí být jedinečné na společnost!"
+#: view:asset.depreciation.confirmation.wizard:0
+msgid "Compute Asset"
+msgstr "Spočítat majetek"
 
 #. module: account_asset
 #: field:asset.depreciation.confirmation.wizard,period_id:0
@@ -717,11 +673,6 @@ msgstr ""
 #: field:account.asset.category,name:0
 msgid "Name"
 msgstr "Název"
-
-#. module: account_asset
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on an account of type view."
-msgstr ""
 
 #. module: account_asset
 #: help:account.asset.category,open_asset:0
@@ -1017,6 +968,12 @@ msgstr "Hierarchie majetku"
 #~ "Tento průvodce zaúčtuje řádky odpisů běžících majetků, které patří k "
 #~ "vybranému období."
 
+#~ msgid "Wrong credit or debit value in accounting entry !"
+#~ msgstr "Chybná hodnota Má dáti nebo Dal v účetním záznamu !"
+
+#~ msgid "Invalid BBA Structured Communication !"
+#~ msgstr "Neplatná strukturovaná komunikace BBA !"
+
 #~ msgid "Sequence of the depreciation"
 #~ msgstr "Pořadí odpočtů"
 
@@ -1043,6 +1000,9 @@ msgstr "Hierarchie majetku"
 
 #~ msgid "Assets purchased in current month"
 #~ msgstr "Majetek zakoupený v tomto měsíci"
+
+#~ msgid "Invoice Number must be unique per Company!"
+#~ msgstr "Číslo dokladu musí být jedinečné na společnost!"
 
 #~ msgid "Accounting information"
 #~ msgstr "Účetní informace"
@@ -1085,8 +1045,23 @@ msgstr "Hierarchie majetku"
 #~ msgid "You can not create journal items on closed account."
 #~ msgstr "Nemůžete vytvořit položky deníku v uzavřeném účtu."
 
+#~ msgid ""
+#~ "The date of your Journal Entry is not in the defined period! You should "
+#~ "change the date or remove this constraint from the journal."
+#~ msgstr ""
+#~ "Datum vašeho záznamu deníku není v určeném období! Měli byste změnit datum "
+#~ "nebo odstranit omezení z deníku."
+
 #~ msgid "You can not create journal items on an account of type view."
 #~ msgstr "Nemůžete vytvořit položky deníku v účtu typu pohled."
 
 #~ msgid "Company must be the same for its related account and period."
 #~ msgstr "Společnost musí být stejná pro své vztažené účty a období."
+
+#~ msgid ""
+#~ "The selected account of your Journal Entry forces to provide a secondary "
+#~ "currency. You should remove the secondary currency on the account or select "
+#~ "a multi-currency view on the journal."
+#~ msgstr ""
+#~ "Vybraný účet vašeho záznamu deníku vynucuje použití druhotné měny. Měli "
+#~ "byste odstranit druhotnou měnu z účtu nebo vybrat více-měny."
