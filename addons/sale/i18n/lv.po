@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2012-12-04 13:01+0000\n"
 "PO-Revision-Date: 2012-11-26 10:59+0000\n"
 "Last-Translator: Normunds (Alistek) <Unknown>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-27 05:50+0000\n"
-"X-Generator: Launchpad (build 16309)\n"
+"X-Launchpad-Export-Date: 2012-12-05 05:48+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: sale
 #: view:board.board:0
@@ -45,7 +45,6 @@ msgstr "Piegādes adrese pasūtījumam."
 #. module: sale
 #: field:sale.advance.payment.inv,qtty:0
 #: report:sale.order:0
-#: field:sale.order.line,product_uom_qty:0
 msgid "Quantity"
 msgstr "Skaits"
 
@@ -57,6 +56,7 @@ msgstr "Diena"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancelorder0
+#: view:sale.order:0
 msgid "Cancel Order"
 msgstr "Atcelt Pasūtījumu"
 
@@ -66,7 +66,7 @@ msgid "Configure Sales Order Logistics"
 msgstr "Konfigurēt Pasūtījuma Loģistiku"
 
 #. module: sale
-#: code:addons/sale/sale.py:638
+#: code:addons/sale/sale.py:606
 #, python-format
 msgid "The quotation '%s' has been converted to a sales order."
 msgstr "Tāmējums \"%s\" tika pārveidots par pasūtījumu."
@@ -98,6 +98,7 @@ msgid "All at Once"
 msgstr "Visu kopā"
 
 #. module: sale
+#: field:sale.order,project_id:0
 #: view:sale.report:0
 #: field:sale.report,analytic_account_id:0
 #: field:sale.shop,project_id:0
@@ -118,7 +119,6 @@ msgid "Procurement Order"
 msgstr "Iepirkuma Pasūtījums"
 
 #. module: sale
-#: model:ir.model,name:sale.model_res_partner
 #: view:sale.report:0
 #: field:sale.report,partner_id:0
 msgid "Partner"
@@ -162,7 +162,9 @@ msgid "Configure Picking Policy for Sales Order"
 msgstr ""
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0 field:sale.order.line,state:0
+#: view:sale.order:0
+#: view:sale.order.line:0
+#: field:sale.order.line,state:0
 #: view:sale.report:0
 msgid "State"
 msgstr "Statuss"
@@ -221,6 +223,12 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/sale.py:1136
+#, python-format
+msgid "No valid pricelist line found !"
+msgstr ""
+
+#. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
 msgid "Sales Make Invoice"
 msgstr "Izrakstīt Rēķinu"
@@ -264,15 +272,21 @@ msgid "Shop Name"
 msgstr "Tirdzniecības Punkta Nosaukums"
 
 #. module: sale
-#: code:addons/sale/sale.py:909
+#: code:addons/sale/sale.py:1017
 #, python-format
 msgid "No Customer Defined !"
 msgstr "Klients nav Definēts!"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_orders_exception
+#: model:ir.actions.act_window,name:sale.action_order_tree2
 msgid "Sales in Exception"
 msgstr "Veiktas Izmaiņas"
+
+#. module: sale
+#: code:addons/sale/sale.py:1145
+#, python-format
+msgid "Configuration Error !"
+msgstr ""
 
 #. module: sale
 #: view:sale.order:0
@@ -300,7 +314,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:1034
+#: code:addons/sale/sale.py:942
 #, python-format
 msgid ""
 "There is no income category account defined in default Properties for "
@@ -318,7 +332,7 @@ msgid "You try to assign a lot which is not from the same product"
 msgstr "Jūs mēģināt piesaistīt lotu no cita produkta"
 
 #. module: sale
-#: code:addons/sale/sale.py:655
+#: code:addons/sale/sale.py:623
 #, python-format
 msgid "invalid mode for test_state"
 msgstr "nepareizs režīms test_state"
@@ -329,7 +343,7 @@ msgid "June"
 msgstr "Jūnijs"
 
 #. module: sale
-#: code:addons/sale/sale.py:617
+#: code:addons/sale/sale.py:587
 #, python-format
 msgid "Could not cancel this sales order !"
 msgstr "Nevar atcelt pasūtījumu!"
@@ -350,8 +364,8 @@ msgid "October"
 msgstr "Oktobris"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_quotations
-#: model:ir.ui.menu,name:sale.menu_sale_quotations
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.action_quotation_for_sale
 #: view:sale.order:0
 #: view:sale.report:0
 msgid "Quotations"
@@ -390,7 +404,9 @@ msgid "Fiscal Position"
 msgstr "Nodokļu Profils"
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0 field:sale.report,product_uom:0
+#: view:sale.order:0
+#: view:sale.order.line:0
+#: field:sale.report,product_uom:0
 msgid "UoM"
 msgstr "Mērv."
 
@@ -400,6 +416,7 @@ msgid "Number Packages"
 msgstr "Iepakojumu Skaits"
 
 #. module: sale
+#: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "In Progress"
 msgstr "Apstrādē"
@@ -412,13 +429,13 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:1079
+#: code:addons/sale/sale.py:974
 #, python-format
 msgid "You must first cancel stock moves attached to this sales order line."
 msgstr "Vispirms jāatceļ saistītie noliktavas grāmatojumi."
 
 #. module: sale
-#: code:addons/sale/sale.py:1147
+#: code:addons/sale/sale.py:1047
 #, python-format
 msgid "(n/a)"
 msgstr "(nav pieejams)"
@@ -444,7 +461,9 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: view:sale.order:0 field:sale.order,note:0 view:sale.order.line:0
+#: view:sale.order:0
+#: field:sale.order,note:0
+#: view:sale.order.line:0
 #: field:sale.order.line,notes:0
 msgid "Notes"
 msgstr "Piezīmes"
@@ -460,7 +479,6 @@ msgid "Enhance your core Sales Application with additional functionalities."
 msgstr ""
 
 #. module: sale
-#: field:sale.order,invoice_exists:0
 #: field:sale.order,invoiced_rate:0
 #: field:sale.order.line,invoiced:0
 msgid "Invoiced"
@@ -507,6 +525,11 @@ msgid "Invoice address :"
 msgstr "Rēķina adrese:"
 
 #. module: sale
+#: field:sale.order.line,product_uom:0
+msgid "Unit of Measure "
+msgstr ""
+
+#. module: sale
 #: model:process.transition,note:sale.process_transition_saleorderprocurement0
 msgid ""
 "For every sales order line, a procurement order is created to supply the "
@@ -548,6 +571,7 @@ msgstr "Atvērt Rēķinu"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
+#: field:stock.move,sale_line_id:0
 msgid "Sales Order Line"
 msgstr "Pasūtījuma Rinda"
 
@@ -567,7 +591,6 @@ msgid "Order N°"
 msgstr "Pasūtījuma Nr."
 
 #. module: sale
-#: view:sale.order:0
 #: field:sale.order,order_line:0
 msgid "Order Lines"
 msgstr "Pasūtījuma sastāvdaļas"
@@ -609,8 +632,9 @@ msgid "My Sales"
 msgstr "Mana Pārdošana"
 
 #. module: sale
-#: code:addons/sale/sale.py:253
-#: code:addons/sale/sale.py:822
+#: code:addons/sale/sale.py:293
+#: code:addons/sale/sale.py:969
+#: code:addons/sale/sale.py:1169
 #, python-format
 msgid "Invalid action !"
 msgstr "Nederīga darbība!"
@@ -635,6 +659,7 @@ msgstr "Pasūtījuma datums"
 
 #. module: sale
 #: view:sale.order.line:0
+#: field:sale.report,shipped:0
 msgid "Shipped"
 msgstr "Piegādāts"
 
@@ -652,6 +677,14 @@ msgstr ""
 #: selection:sale.report,month:0
 msgid "September"
 msgstr "Septembris"
+
+#. module: sale
+#: code:addons/sale/sale.py:1124
+#, python-format
+msgid ""
+"You have to select a pricelist or a customer in the sales form !\n"
+"Please set one before choosing a product."
+msgstr ""
 
 #. module: sale
 #: view:sale.report:0
@@ -675,12 +708,14 @@ msgid "  Year  "
 msgstr "  Gads  "
 
 #. module: sale
+#: field:sale.order,state:0
 #: field:sale.report,state:0
 msgid "Order State"
 msgstr "Pasūtījuma Statuss"
 
 #. module: sale
-#: view:sale.make.invoice:0 view:sale.order.line.make.invoice:0
+#: view:sale.make.invoice:0
+#: view:sale.order.line.make.invoice:0
 msgid "Do you really want to create the invoice(s) ?"
 msgstr "Vai tiešām vēlaties piestādīt rēķinu(-s)?"
 
@@ -690,7 +725,7 @@ msgid "Sales By Month"
 msgstr "Pārdošana Pa Mēnešiem"
 
 #. module: sale
-#: code:addons/sale/sale.py:1078
+#: code:addons/sale/sale.py:973
 #, python-format
 msgid "Could not cancel sales order line!"
 msgstr "Nevar atcelt pasūtījuma rindu!"
@@ -802,12 +837,13 @@ msgid ""
 msgstr "Pasūtītāja vārds un adrese."
 
 #. module: sale
-#: code:addons/sale/sale.py:966
+#: code:addons/sale/sale.py:969
 #, python-format
 msgid "You cannot cancel a sales order line that has already been invoiced !"
 msgstr "Nevar atcelt pasūtījuma rindu, par kuru jau ir piestādīts rēķins!"
 
 #. module: sale
+#: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Qty"
 msgstr "Sk."
@@ -819,9 +855,10 @@ msgstr "Kodi"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancel0
+#: model:process.transition.action,name:sale.process_transition_action_cancel1
+#: model:process.transition.action,name:sale.process_transition_action_cancel2
 #: view:sale.advance.payment.inv:0
 #: view:sale.make.invoice:0
-#: view:sale.order:0
 #: view:sale.order.line:0
 #: view:sale.order.line.make.invoice:0
 msgid "Cancel"
@@ -839,10 +876,9 @@ msgstr "Kļūda"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_invoice0
+#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
 #: model:process.transition.action,name:sale.process_transition_action_createinvoice0
 #: view:sale.advance.payment.inv:0
-#: view:sale.order:0
-#: field:sale.order,order_policy:0
 #: view:sale.order.line:0
 msgid "Create Invoice"
 msgstr "Izveidot Rēķinu"
@@ -879,7 +915,13 @@ msgid "Open Invoice"
 msgstr "Atvērt Rēķinu"
 
 #. module: sale
+#: help:sale.order.line,sequence:0
+msgid "Gives the sequence order when displaying a list of sales order lines."
+msgstr ""
+
+#. module: sale
 #: report:sale.order:0
+#: view:sale.order.line:0
 msgid "Price"
 msgstr "Cena"
 
@@ -1002,6 +1044,12 @@ msgid "Procurement Method"
 msgstr "Sagādes Veids"
 
 #. module: sale
+#: code:addons/sale/sale.py:1126
+#, python-format
+msgid "No Pricelist !"
+msgstr ""
+
+#. module: sale
 #: view:sale.config.picking_policy:0
 #: view:sale.installer:0
 msgid "title"
@@ -1038,6 +1086,7 @@ msgid "Create Procurement Order"
 msgstr "Veidot Piegādes Pasūtījumu"
 
 #. module: sale
+#: view:sale.order:0
 #: field:sale.order,amount_tax:0
 #: field:sale.order.line,tax_id:0
 msgid "Taxes"
@@ -1095,15 +1144,15 @@ msgid "Picking List"
 msgstr "Komplektēšanas Saraksts"
 
 #. module: sale
-#: code:addons/sale/sale.py:412 code:addons/sale/sale.py:503
-#: code:addons/sale/sale.py:632 code:addons/sale/sale.py:1016
-#: code:addons/sale/sale.py:1033
+#: code:addons/sale/sale.py:390
+#: code:addons/sale/sale.py:923
+#: code:addons/sale/sale.py:941
 #, python-format
 msgid "Error !"
 msgstr "Kļūda!"
 
 #. module: sale
-#: code:addons/sale/sale.py:603
+#: code:addons/sale/sale.py:573
 #, python-format
 msgid "Could not cancel sales order !"
 msgstr "Nevar atcelt pasūtījumu!"
@@ -1135,7 +1184,7 @@ msgid "Shipping & Manual Invoice"
 msgstr "Piegāde un Manuāls Rēķins"
 
 #. module: sale
-#: code:addons/sale/sale.py:1051
+#: code:addons/sale/sale.py:1055
 #, python-format
 msgid "Picking Information !"
 msgstr "Informācija par Komplektāciju"
@@ -1163,6 +1212,7 @@ msgstr "Pārbaudīt Grāmatvedim."
 
 #. module: sale
 #: view:sale.report:0
+#: field:sale.report,uom_name:0
 msgid "Reference UoM"
 msgstr "Atsauces Mērv."
 
@@ -1198,13 +1248,13 @@ msgid "Sales Analysis"
 msgstr "Pārdošanu Analīze"
 
 #. module: sale
-#: view:sale.order:0 field:sale.order.line,property_ids:0
+#: field:sale.order.line,property_ids:0
 msgid "Properties"
 msgstr "Parametri"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_quotation0
-#: view:sale.order:0
+#: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "Quotation"
 msgstr "Tāme"
@@ -1226,10 +1276,8 @@ msgstr ""
 "piegādēm."
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.open_board_sales
-#: model:ir.ui.menu,name:sale.menu_dashboard_sales
+#: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
 #: model:process.process,name:sale.process_process_salesprocess0
-#: view:res.partner:0
 #: view:sale.order:0
 #: view:sale.report:0
 msgid "Sales"
@@ -1242,7 +1290,6 @@ msgid "Unit Price"
 msgstr "Vienības cena"
 
 #. module: sale
-#: view:sale.order:0
 #: selection:sale.order,state:0
 #: view:sale.order.line:0
 #: selection:sale.order.line,state:0
@@ -1257,12 +1304,12 @@ msgstr "sale.installer"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_invoice0
-#: view:sale.order:0
+#: model:process.node,name:sale.process_node_invoiceafterdelivery0
 msgid "Invoice"
 msgstr "Rēķins"
 
 #. module: sale
-#: code:addons/sale/sale.py:1171
+#: code:addons/sale/sale.py:1017
 #, python-format
 msgid ""
 "You have to select a customer in the sales form !\n"
@@ -1302,7 +1349,7 @@ msgid "The amount without tax."
 msgstr "Summa bez nodokļiem."
 
 #. module: sale
-#: code:addons/sale/sale.py:604
+#: code:addons/sale/sale.py:574
 #, python-format
 msgid "You must first cancel all picking attached to this sales order."
 msgstr "Vispirms jāatceļ visa komplektācija, kas saistīta ar pasūtījumu."
@@ -1367,14 +1414,10 @@ msgid "Product UoS"
 msgstr "Produkta pārdošanas mērvienība"
 
 #. module: sale
+#: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "Manual In Progress"
 msgstr "Manuāls Progresā"
-
-#. module: sale
-#: field:sale.order.line,product_uom:0
-msgid "Product UoM"
-msgstr "Preces mērv."
 
 #. module: sale
 #: view:sale.order:0
@@ -1387,8 +1430,7 @@ msgid "Order"
 msgstr "Pasūtījums"
 
 #. module: sale
-#: code:addons/sale/sale.py:1017
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:71
+#: code:addons/sale/sale.py:924
 #, python-format
 msgid "There is no income account defined for this product: \"%s\" (id:%d)"
 msgstr "Produktam nav definēts ieņēmumu konts: \"%s\" (id:%d)"
@@ -1408,7 +1450,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:1251
+#: code:addons/sale/sale.py:1116
 #, python-format
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
@@ -1439,7 +1481,7 @@ msgid "Total"
 msgstr "Kopā"
 
 #. module: sale
-#: code:addons/sale/sale.py:413
+#: code:addons/sale/sale.py:391
 #, python-format
 msgid "There is no sales journal defined for this company: \"%s\" (id:%d)"
 msgstr "Uzņēmumam \"%s\" (id:%d) nav definēts tirdzniecības žurnāls"
@@ -1453,7 +1495,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:1165
+#: code:addons/sale/sale.py:1169
 #, python-format
 msgid "Cannot delete a sales order line which is %s !"
 msgstr "Nav iespējams izdzēst tirdzniecības pasūtījuma rindu, kas ir %s!"
@@ -1461,6 +1503,7 @@ msgstr "Nav iespējams izdzēst tirdzniecības pasūtījuma rindu, kas ir %s!"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice
 #: model:ir.actions.act_window,name:sale.action_view_sale_order_line_make_invoice
+#: view:sale.order:0
 msgid "Make Invoices"
 msgstr "Veidot Rēķinus"
 
@@ -1501,6 +1544,14 @@ msgid "Invoice Exception"
 msgstr "Rēķina kļūda"
 
 #. module: sale
+#: code:addons/sale/sale.py:1134
+#, python-format
+msgid ""
+"Couldn't find a pricelist line matching this product and quantity.\n"
+"You have to change either the product, the quantity or the pricelist."
+msgstr ""
+
+#. module: sale
 #: help:sale.order,picking_ids:0
 msgid ""
 "This is a list of picking that has been generated for this sales order."
@@ -1533,6 +1584,7 @@ msgstr "Atcelts"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_shop_form
+#: model:ir.ui.menu,name:sale.menu_action_shop_form
 #: field:sale.order,shop_id:0
 #: view:sale.report:0
 #: field:sale.report,shop_id:0
@@ -1550,7 +1602,7 @@ msgid "Date Confirm"
 msgstr "Apstiprināšanas Datums"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:113
+#: code:addons/sale/wizard/sale_line_invoice.py:111
 #, python-format
 msgid "Warning"
 msgstr "Brīdinājums"
@@ -1562,7 +1614,7 @@ msgid "Sales by Month"
 msgstr "Pārdošana pa Mēnešiem"
 
 #. module: sale
-#: code:addons/sale/sale.py:1045
+#: code:addons/sale/sale.py:1050
 #, python-format
 msgid ""
 "You selected a quantity of %d Units.\n"
@@ -1573,15 +1625,12 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:273
-#: code:addons/sale/sale.py:610
 #: model:ir.model,name:sale.model_sale_order
 #: model:process.node,name:sale.process_node_order0
 #: model:process.node,name:sale.process_node_saleorder0
-#: field:res.partner,sale_order_ids:0
 #: model:res.request.link,name:sale.req_link_sale_order
 #: view:sale.order:0
-#, python-format
+#: field:stock.picking,sale_id:0
 msgid "Sales Order"
 msgstr "Pasūtījums"
 
@@ -1621,12 +1670,12 @@ msgid "Sales by Product's Category in last 90 days"
 msgstr ""
 
 #. module: sale
+#: view:sale.order:0
 #: field:sale.order.line,invoice_lines:0
 msgid "Invoice Lines"
 msgstr "Rēķina pozīcijas"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_line_product_tree
 #: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Sales Order Lines"
@@ -1681,6 +1730,8 @@ msgid "Weight"
 msgstr "Svars"
 
 #. module: sale
+#: view:sale.open.invoice:0
+#: view:sale.order:0
 #: field:sale.order,invoice_ids:0
 msgid "Invoices"
 msgstr "Rēķini"
@@ -1692,6 +1743,7 @@ msgstr "Decembris"
 
 #. module: sale
 #: field:sale.config.picking_policy,config_logo:0
+#: field:sale.installer,config_logo:0
 msgid "Image"
 msgstr "Attēls"
 
@@ -1710,9 +1762,13 @@ msgid "Uninvoiced"
 msgstr "Nav piestādīts rēķins"
 
 #. module: sale
-#: report:sale.order:0 view:sale.order:0 field:sale.order,user_id:0
-#: view:sale.order.line:0 field:sale.order.line,salesman_id:0
-#: view:sale.report:0 field:sale.report,user_id:0
+#: report:sale.order:0
+#: view:sale.order:0
+#: field:sale.order,user_id:0
+#: view:sale.order.line:0
+#: field:sale.order.line,salesman_id:0
+#: view:sale.report:0
+#: field:sale.report,user_id:0
 msgid "Salesman"
 msgstr "Pārdošanas menedžeris"
 
@@ -1727,13 +1783,16 @@ msgid "Untaxed Amount"
 msgstr "Summa bez nodokļiem"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:202
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:163
+#: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
+#: view:sale.advance.payment.inv:0
+#: view:sale.order:0
 #, python-format
 msgid "Advance Invoice"
 msgstr "Priekšapmaksas Rēķins"
 
 #. module: sale
-#: code:addons/sale/sale.py:624
+#: code:addons/sale/sale.py:594
 #, python-format
 msgid "The sales order '%s' has been cancelled."
 msgstr "Pasūtījums \"%s\" ir atcelts."
@@ -1784,6 +1843,8 @@ msgid "Ordered Date"
 msgstr "Pasūtījuma Veikšanas Datums"
 
 #. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_form
+#: model:ir.ui.menu,name:sale.menu_sale_order
 #: view:sale.order:0
 msgid "Sales Orders"
 msgstr "Tirdzniecības Pasūtījumi"
@@ -1815,7 +1876,7 @@ msgid "You invoice has been successfully created!"
 msgstr "Rēķins ir veiksmīgi izveidots!"
 
 #. module: sale
-#: code:addons/sale/sale.py:618
+#: code:addons/sale/sale.py:588
 #, python-format
 msgid "You must first cancel all invoices attached to this sales order."
 msgstr "Vispirms jāatceļ visi rēķini, kas saistīti ar pasūtījumu."
@@ -1831,7 +1892,7 @@ msgid "Configure Your Sales Management Application"
 msgstr "Konfigurēt Tirdzniecības Vadības Moduli"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_orders_in_progress
+#: model:ir.actions.act_window,name:sale.action_order_tree4
 msgid "Sales Order in Progress"
 msgstr "Tirdzniecības pasūtījuma progress"
 
@@ -1875,13 +1936,13 @@ msgid "Confirmed sales order to invoice."
 msgstr "Apstiprinātie pasūtījumi rēķina piestādīšanai."
 
 #. module: sale
-#: code:addons/sale/sale.py:290
+#: code:addons/sale/sale.py:293
 #, python-format
 msgid "Cannot delete Sales Order(s) which are already confirmed !"
 msgstr "Nevar izdzēst jau apstiprināto(-s) Pasūtījumu(-s)!"
 
 #. module: sale
-#: code:addons/sale/sale.py:322
+#: code:addons/sale/sale.py:319
 #, python-format
 msgid "The sales order '%s' has been set in draft state."
 msgstr "Pasūtījums \"%s\" ir atzīmēts kā melnraksts."
@@ -1907,7 +1968,7 @@ msgid "Delivered"
 msgstr "Piegādāts"
 
 #. module: sale
-#: code:addons/sale/sale.py:1115
+#: code:addons/sale/sale.py:1120
 #, python-format
 msgid "Not enough stock !"
 msgstr "Nav pietiekošs skaits noliktavā!"
@@ -2031,6 +2092,7 @@ msgid "Quotation N°"
 msgstr "Cenas piedāvājuma Nr."
 
 #. module: sale
+#: field:sale.order,picked_rate:0
 #: view:sale.report:0
 msgid "Picked"
 msgstr "Pieņemts piegādei"
@@ -2045,3 +2107,6 @@ msgstr "Gads"
 #: selection:sale.config.picking_policy,order_policy:0
 msgid "Invoice Based on Deliveries"
 msgstr "Rēķins pēc Piegādes"
+
+#~ msgid "Product UoM"
+#~ msgstr "Preces mērv."
