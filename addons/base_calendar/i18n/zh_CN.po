@@ -7,26 +7,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-05-10 17:39+0000\n"
-"Last-Translator: 开阖软件     Jeff Wang <jeff@osbzr.com>\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
+"PO-Revision-Date: 2012-11-28 16:50+0000\n"
+"Last-Translator: Joshua Jan(SHINEIT) <popkar77@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:27+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:50+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_related:0
 #: selection:res.alarm,trigger_related:0
 msgid "The event starts"
-msgstr "事件开始时"
+msgstr "活动开始"
 
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "My Events"
-msgstr "我的事件"
+msgstr "我的活动"
 
 #. module: base_calendar
 #: help:calendar.event,exdate:0
@@ -38,16 +38,18 @@ msgid ""
 msgstr "这属性定义循环日程的日期/时间异常列表。"
 
 #. module: base_calendar
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr "用户无权操作所选择公司数据"
+#: selection:calendar.event,rrule_type:0
+#: selection:calendar.todo,rrule_type:0
+#: selection:crm.meeting,rrule_type:0
+msgid "Week(s)"
+msgstr ""
 
 #. module: base_calendar
 #: field:calendar.event,we:0
 #: field:calendar.todo,we:0
 #: field:crm.meeting,we:0
 msgid "Wed"
-msgstr "周三"
+msgstr "星期三"
 
 #. module: base_calendar
 #: selection:calendar.attendee,cutype:0
@@ -64,13 +66,13 @@ msgstr "定期会议"
 #. module: base_calendar
 #: model:crm.meeting.type,name:base_calendar.categ_meet5
 msgid "Feedback Meeting"
-msgstr ""
+msgstr "会议反馈"
 
 #. module: base_calendar
 #: code:addons/base_calendar/crm_meeting.py:117
 #, python-format
 msgid "Meeting <b>completed</b>."
-msgstr ""
+msgstr "会议<b>完成</b>."
 
 #. module: base_calendar
 #: model:ir.actions.act_window,name:base_calendar.action_res_alarm_view
@@ -83,7 +85,7 @@ msgstr "提醒"
 #: selection:calendar.todo,week_list:0
 #: selection:crm.meeting,week_list:0
 msgid "Sunday"
-msgstr "周日"
+msgstr "星期天"
 
 #. module: base_calendar
 #: field:calendar.attendee,role:0
@@ -147,14 +149,14 @@ msgstr "指定类型的邀请"
 #: view:crm.meeting:0
 #: field:crm.meeting,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "未读信息"
 
 #. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
 #: selection:crm.meeting,week_list:0
 msgid "Friday"
-msgstr "周五"
+msgstr "星期五"
 
 #. module: base_calendar
 #: field:calendar.event,allday:0
@@ -182,12 +184,12 @@ msgstr "空闲"
 #. module: base_calendar
 #: help:crm.meeting,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "如果要求你关注新消息，勾选此项"
 
 #. module: base_calendar
 #: help:calendar.attendee,rsvp:0
 msgid "Indicats whether the favor of a reply is requested"
-msgstr "标明是否要求答复赞成"
+msgstr "标明是否要求答复"
 
 #. module: base_calendar
 #: field:calendar.alarm,alarm_id:0
@@ -209,7 +211,7 @@ msgstr "事件"
 #: field:calendar.todo,tu:0
 #: field:crm.meeting,tu:0
 msgid "Tue"
-msgstr "周二"
+msgstr "星期二"
 
 #. module: base_calendar
 #: selection:calendar.event,byday:0
@@ -222,7 +224,7 @@ msgstr "第三个"
 #: selection:calendar.alarm,trigger_related:0
 #: selection:res.alarm,trigger_related:0
 msgid "The event ends"
-msgstr "这事件结束时"
+msgstr "这活动结束时"
 
 #. module: base_calendar
 #: selection:calendar.event,byday:0
@@ -234,12 +236,12 @@ msgstr "最近"
 #. module: base_calendar
 #: help:crm.meeting,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "消息和通信历史"
 
 #. module: base_calendar
 #: field:crm.meeting,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "消息"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_interval:0
@@ -266,7 +268,7 @@ msgstr "主席"
 #. module: base_calendar
 #: view:crm.meeting:0
 msgid "My Meetings"
-msgstr ""
+msgstr "我的会议"
 
 #. module: base_calendar
 #: selection:calendar.alarm,action:0
@@ -303,12 +305,12 @@ msgstr ""
 #. module: base_calendar
 #: field:crm.meeting,name:0
 msgid "Meeting Subject"
-msgstr ""
+msgstr "会议主题"
 
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "End of Recurrence"
-msgstr ""
+msgstr "循环结束"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -329,7 +331,12 @@ msgstr "选择重复会议的日子"
 #: view:crm.meeting:0
 #: model:ir.actions.act_window,name:base_calendar.action_crm_meeting
 msgid "Meetings"
-msgstr ""
+msgstr "会议"
+
+#. module: base_calendar
+#: selection:calendar.attendee,cutype:0
+msgid "Room"
+msgstr "室"
 
 #. module: base_calendar
 #: field:calendar.event,recurrent_id:0
@@ -342,19 +349,19 @@ msgstr "循环日期"
 #: field:calendar.alarm,event_end_date:0
 #: field:calendar.attendee,event_end_date:0
 msgid "Event End Date"
-msgstr "事件结束日期"
+msgstr "活动结束日期"
 
 #. module: base_calendar
 #: selection:calendar.attendee,role:0
 msgid "Optional Participation"
-msgstr "可参与"
+msgstr "可选择参与"
 
 #. module: base_calendar
 #: help:crm.meeting,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "保存复杂的摘要(消息数量,……等)。为了插入到看板视图，这一摘要直接是是HTML格式。"
 
 #. module: base_calendar
 #: code:addons/base_calendar/base_calendar.py:388
@@ -505,14 +512,14 @@ msgid "Email"
 msgstr "电子邮箱"
 
 #. module: base_calendar
-#: selection:calendar.attendee,cutype:0
-msgid "Room"
-msgstr "室"
+#: model:ir.actions.server,name:base_calendar.actions_server_crm_meeting_unread
+msgid "CRM Meeting: Mark unread"
+msgstr ""
 
 #. module: base_calendar
-#: model:ir.actions.server,name:base_calendar.actions_server_crm_meeting_read
-msgid "Mark read"
-msgstr ""
+#: selection:calendar.alarm,state:0
+msgid "Run"
+msgstr "运行中"
 
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_calendar_alarm
@@ -633,16 +640,6 @@ msgid "Public for Employees"
 msgstr "全员可见"
 
 #. module: base_calendar
-#: sql_constraint:res.users:0
-msgid "OAuth UID must be unique per provider"
-msgstr ""
-
-#. module: base_calendar
-#: sql_constraint:ir.model:0
-msgid "Each model must be unique!"
-msgstr "每个模型都必须唯一！"
-
-#. module: base_calendar
 #: view:crm.meeting:0
 msgid "hours"
 msgstr ""
@@ -663,13 +660,6 @@ msgstr "语言"
 #: field:crm.meeting,end_date:0
 msgid "Repeat Until"
 msgstr "重复直到"
-
-#. module: base_calendar
-#: selection:calendar.event,rrule_type:0
-#: selection:calendar.todo,rrule_type:0
-#: selection:crm.meeting,rrule_type:0
-msgid "Week(s)"
-msgstr ""
 
 #. module: base_calendar
 #: view:crm.meeting:0
@@ -1062,6 +1052,11 @@ msgid "Interval"
 msgstr "间隔"
 
 #. module: base_calendar
+#: model:ir.actions.server,name:base_calendar.actions_server_crm_meeting_read
+msgid "CRM Meeting: Mark read"
+msgstr ""
+
+#. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
 #: selection:crm.meeting,week_list:0
@@ -1154,11 +1149,6 @@ msgstr "如果有效字段设为True，它将允许你隐藏提醒信息而不�
 #: field:crm.meeting,end_type:0
 msgid "Recurrence Termination"
 msgstr ""
-
-#. module: base_calendar
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr "你不能同时登录两个用户！"
 
 #. module: base_calendar
 #: view:crm.meeting:0
@@ -1363,12 +1353,6 @@ msgid "Search Meetings"
 msgstr ""
 
 #. module: base_calendar
-#: field:calendar.attendee,availability:0
-#: field:res.users,availability:0
-msgid "Free/Busy"
-msgstr "空闲/忙碌"
-
-#. module: base_calendar
 #: model:ir.model,name:base_calendar.model_crm_meeting_type
 msgid "Meeting Type"
 msgstr ""
@@ -1474,11 +1458,6 @@ msgid "Email addresses not found"
 msgstr ""
 
 #. module: base_calendar
-#: model:ir.actions.server,name:base_calendar.actions_server_crm_meeting_unread
-msgid "Mark unread"
-msgstr ""
-
-#. module: base_calendar
 #: view:calendar.event:0
 msgid "Recurrency period"
 msgstr "循环周期"
@@ -1508,11 +1487,6 @@ msgstr "按天"
 #, python-format
 msgid "First you have to specify the date of the invitation."
 msgstr ""
-
-#. module: base_calendar
-#: selection:calendar.alarm,state:0
-msgid "Run"
-msgstr "运行中"
 
 #. module: base_calendar
 #: field:calendar.alarm,model_id:0
@@ -1605,9 +1579,10 @@ msgid "Second"
 msgstr "第二个"
 
 #. module: base_calendar
-#: constraint:res.users:0
-msgid "Error: Invalid ean code"
-msgstr ""
+#: field:calendar.attendee,availability:0
+#: field:res.users,availability:0
+msgid "Free/Busy"
+msgstr "空闲/忙碌"
 
 #. module: base_calendar
 #: field:calendar.alarm,duration:0
@@ -1820,6 +1795,9 @@ msgstr "第五个"
 #~ msgid "State"
 #~ msgstr "状态"
 
+#~ msgid "You can not have two users with the same login !"
+#~ msgstr "你不能同时登录两个用户！"
+
 #~ msgid "of"
 #~ msgstr "属于"
 
@@ -1941,8 +1919,14 @@ msgstr "第五个"
 #~ msgid "Recurrence termination"
 #~ msgstr "反复终止"
 
+#~ msgid "Each model must be unique!"
+#~ msgstr "每个模型都必须唯一！"
+
 #~ msgid "Invitations To Review"
 #~ msgstr "邀请复核"
 
 #~ msgid "Delegated Invitations"
 #~ msgstr "委派邀请"
+
+#~ msgid "The chosen company is not in the allowed companies for this user"
+#~ msgstr "选择的公司不属于此用户允许访问的公司。"

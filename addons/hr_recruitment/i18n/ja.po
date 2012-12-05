@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-04-22 03:20+0000\n"
 "Last-Translator: Masaki Yamaya <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:24+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:48+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: hr_recruitment
 #: help:hr.applicant,active:0
@@ -352,10 +352,9 @@ msgid "Job Description"
 msgstr "職務内容"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: field:hr.applicant,source_id:0
-msgid "Source"
-msgstr "ソース"
+#: model:ir.actions.server,name:hr_recruitment.actions_server_applicant_read
+msgid "HR Applicant: Mark read"
+msgstr ""
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/hr_recruitment.py:504
@@ -415,11 +414,6 @@ msgid "Good"
 msgstr "良"
 
 #. module: hr_recruitment
-#: model:ir.actions.server,name:hr_recruitment.actions_server_applicant_read
-msgid "Mark read"
-msgstr ""
-
-#. module: hr_recruitment
 #: view:hr.applicant:0
 #: field:hr.applicant,create_date:0
 #: view:hr.recruitment.report:0
@@ -431,6 +425,11 @@ msgstr "作成日"
 #: model:ir.model,name:hr_recruitment.model_hired_employee
 msgid "Create Employee"
 msgstr "従業員を作成"
+
+#. module: hr_recruitment
+#: field:hr.applicant,partner_phone:0
+msgid "Phone"
+msgstr "電話"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -759,9 +758,9 @@ msgid "Degree"
 msgstr "学位"
 
 #. module: hr_recruitment
-#: field:hr.applicant,partner_phone:0
-msgid "Phone"
-msgstr "電話"
+#: model:ir.actions.server,name:hr_recruitment.actions_server_applicant_unread
+msgid "HR Applicant: Mark unread"
+msgstr ""
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -925,6 +924,12 @@ msgstr ""
 #, python-format
 msgid "Applicant has been <b>hired</b> and created as an employee."
 msgstr ""
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+#: field:hr.applicant,source_id:0
+msgid "Source"
+msgstr "ソース"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
@@ -1194,11 +1199,6 @@ msgid "April"
 msgstr "4月"
 
 #. module: hr_recruitment
-#: model:ir.actions.server,name:hr_recruitment.actions_server_applicant_unread
-msgid "Mark unread"
-msgstr ""
-
-#. module: hr_recruitment
 #: view:hr.recruitment.report:0
 msgid "Pending recruitment"
 msgstr "採用保留"
@@ -1227,11 +1227,6 @@ msgstr "部署に特有"
 #: view:hr.recruitment.report:0
 msgid "In progress recruitment"
 msgstr "進行中の採用"
-
-#. module: hr_recruitment
-#: sql_constraint:hr.job:0
-msgid "The name of the job position must be unique per company!"
-msgstr "職位名は会社ごとにユニークでなければいけません。"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.degree,sequence:0
@@ -1462,6 +1457,9 @@ msgstr ""
 
 #~ msgid "Assign To"
 #~ msgstr "割当て"
+
+#~ msgid "The name of the job position must be unique per company!"
+#~ msgstr "職位名は会社ごとにユニークでなければいけません。"
 
 #~ msgid "Job Positions"
 #~ msgstr "職位"

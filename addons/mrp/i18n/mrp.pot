@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-24 02:51+0000\n"
-"PO-Revision-Date: 2012-11-24 02:51+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
+"PO-Revision-Date: 2012-12-03 16:02+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -184,8 +184,8 @@ msgid "For purchased material"
 msgstr ""
 
 #. module: mrp
-#: view:mrp.production:0
-msgid "Total Qty"
+#: field:mrp.config.settings,module_mrp_operations:0
+msgid "Allow detailed planning of work order"
 msgstr ""
 
 #. module: mrp
@@ -291,11 +291,6 @@ msgid "Manage Routings"
 msgstr ""
 
 #. module: mrp
-#: sql_constraint:product.product:0
-msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
-
-#. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce
 msgid "Product Produce"
 msgstr ""
@@ -303,11 +298,6 @@ msgstr ""
 #. module: mrp
 #: constraint:mrp.bom:0
 msgid "Error ! You cannot create recursive BoM."
-msgstr ""
-
-#. module: mrp
-#: constraint:stock.move:0
-msgid "You must assign a serial number for this product."
 msgstr ""
 
 #. module: mrp
@@ -337,7 +327,6 @@ msgstr ""
 
 #. module: mrp
 #: sql_constraint:mrp.production:0
-#: sql_constraint:stock.picking:0
 msgid "Reference must be unique per Company!"
 msgstr ""
 
@@ -458,11 +447,6 @@ msgstr ""
 #. module: mrp
 #: model:process.node,note:mrp.process_node_serviceproduct0
 msgid "Product type is service"
-msgstr ""
-
-#. module: mrp
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
 msgstr ""
 
 #. module: mrp
@@ -621,11 +605,6 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move
 msgid "Stock Move"
-msgstr ""
-
-#. module: mrp
-#: constraint:product.product:0
-msgid "You provided an invalid \"EAN13 Barcode\" reference. You may use the \"Internal Reference\" field instead."
 msgstr ""
 
 #. module: mrp
@@ -1003,17 +982,17 @@ msgid "BOM Name"
 msgstr ""
 
 #. module: mrp
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product."
-msgstr ""
-
-#. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_product_manufacturing_open
 #: model:ir.actions.act_window,name:mrp.mrp_production_action
 #: model:ir.actions.act_window,name:mrp.mrp_production_action_planning
 #: model:ir.ui.menu,name:mrp.menu_mrp_production_action
 #: view:mrp.production:0
 msgid "Manufacturing Orders"
+msgstr ""
+
+#. module: mrp
+#: selection:mrp.production,state:0
+msgid "Awaiting Raw Materials"
 msgstr ""
 
 #. module: mrp
@@ -1822,11 +1801,6 @@ msgid "Manufacturing Efficiency"
 msgstr ""
 
 #. module: mrp
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr ""
-
-#. module: mrp
 #: field:mrp.bom,message_follower_ids:0
 #: field:mrp.production,message_follower_ids:0
 #: field:mrp.production.workcenter.line,message_follower_ids:0
@@ -1884,8 +1858,8 @@ msgid "Type of period"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.config.settings,module_mrp_operations:0
-msgid "Allow detailed planning of work order"
+#: view:mrp.production:0
+msgid "Total Qty"
 msgstr ""
 
 #. module: mrp
@@ -1971,11 +1945,6 @@ msgid "Assignment from stock."
 msgstr ""
 
 #. module: mrp
-#: selection:mrp.production,state:0
-msgid "Waiting Goods"
-msgstr ""
-
-#. module: mrp
 #: code:addons/mrp/report/price.py:139
 #, python-format
 msgid "Cost Price per Unit of Measure"
@@ -2038,11 +2007,6 @@ msgstr ""
 #: field:mrp.production.workcenter.line,message_comment_ids:0
 #: help:mrp.production.workcenter.line,message_comment_ids:0
 msgid "Comments and emails"
-msgstr ""
-
-#. module: mrp
-#: constraint:stock.move:0
-msgid "You cannot move products from or to a location of the type view."
 msgstr ""
 
 #. module: mrp

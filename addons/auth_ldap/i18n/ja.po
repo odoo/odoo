@@ -7,25 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-06-16 22:21+0000\n"
 "Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:30+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
-
-#. module: auth_ldap
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "エラー。再帰的な関係となる会社を作ることはできません。"
-
-#. module: auth_ldap
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr "選択した会社は、このユーザに許された会社ではありません。"
+"X-Launchpad-Export-Date: 2012-12-04 05:53+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: auth_ldap
 #: field:res.company.ldap,user:0
@@ -86,19 +76,9 @@ msgid "User Information"
 msgstr "ユーザー情報"
 
 #. module: auth_ldap
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr "会社名は固有でなければいけません。"
-
-#. module: auth_ldap
 #: field:res.company.ldap,ldap_password:0
 msgid "LDAP password"
 msgstr "LDAPパスワード"
-
-#. module: auth_ldap
-#: sql_constraint:res.users:0
-msgid "OAuth UID must be unique per provider"
-msgstr ""
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company
@@ -146,11 +126,6 @@ msgid "Setup your LDAP Server"
 msgstr "LDAPサーバの設定"
 
 #. module: auth_ldap
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr "同じログインでは２つのユーザを持てません。"
-
-#. module: auth_ldap
 #: view:res.company:0
 #: field:res.company,ldaps:0
 msgid "LDAP Parameters"
@@ -164,21 +139,16 @@ msgid ""
 msgstr "LDAPサーバのユーザアカウントのパスワードはディレクトリへのクエリー使用されます。"
 
 #. module: auth_ldap
-#: constraint:res.users:0
-msgid "Error: Invalid ean code"
-msgstr ""
-
-#. module: auth_ldap
-#: model:ir.model,name:auth_ldap.model_res_users
-msgid "Users"
-msgstr ""
-
-#. module: auth_ldap
 #: help:res.company.ldap,ldap_binddn:0
 msgid ""
 "The user account on the LDAP server that is used to query the directory. "
 "Leave empty to connect anonymously."
 msgstr "LDAPサーバ上のユーザアカウントはディレクトリへのクエリーのために使用されます。匿名接続する場合は空のままにして下さい。"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_users
+msgid "Users"
+msgstr ""
 
 #. module: auth_ldap
 #: field:res.company.ldap,ldap_filter:0

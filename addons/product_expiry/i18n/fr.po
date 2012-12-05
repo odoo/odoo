@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:54+0000\n"
-"PO-Revision-Date: 2012-10-18 13:58+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
+"PO-Revision-Date: 2012-11-29 14:56+0000\n"
 "Last-Translator: Numérigraphe <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:21+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:45+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: product_expiry
 #: model:product.template,name:product_expiry.product_product_from_product_template
@@ -29,7 +29,7 @@ msgstr "Lait de vache"
 #. module: product_expiry
 #: field:product.product,life_time:0
 msgid "Product Life Time"
-msgstr "Durée de vie du produit"
+msgstr "Durée de vie de l'article"
 
 #. module: product_expiry
 #: help:stock.production.lot,removal_date:0
@@ -48,18 +48,12 @@ msgstr ""
 #. module: product_expiry
 #: field:product.product,use_time:0
 msgid "Product Use Time"
-msgstr "Durée d'utilisation du produit"
-
-#. module: product_expiry
-#: sql_constraint:stock.production.lot:0
-msgid ""
-"The combination of Serial Number and internal reference must be unique !"
-msgstr ""
+msgstr "Durée d'utilisation de l'article"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_product_product
 msgid "Product"
-msgstr "Produit"
+msgstr "Article"
 
 #. module: product_expiry
 #: help:product.product,use_time:0
@@ -69,14 +63,9 @@ msgid ""
 msgstr ""
 
 #. module: product_expiry
-#: sql_constraint:product.product:0
-msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
-
-#. module: product_expiry
 #: field:product.product,removal_time:0
 msgid "Product Removal Time"
-msgstr "Durée avant retrait du produit"
+msgstr "Durée avant retrait de l'article"
 
 #. module: product_expiry
 #: help:stock.production.lot,alert_date:0
@@ -101,13 +90,6 @@ msgstr ""
 #: field:stock.production.lot,removal_date:0
 msgid "Removal Date"
 msgstr "Date de retrait"
-
-#. module: product_expiry
-#: constraint:product.product:0
-msgid ""
-"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
-"\"Internal Reference\" field instead."
-msgstr ""
 
 #. module: product_expiry
 #: model:product.template,name:product_expiry.product_product_pain_product_template
@@ -163,7 +145,7 @@ msgstr ""
 #. module: product_expiry
 #: field:product.product,alert_time:0
 msgid "Product Alert Time"
-msgstr "Durée avant alerte sur le produit"
+msgstr "Durée avant alerte sur l'article"
 
 #~ msgid "Product lifetime"
 #~ msgstr "Durée limite de consommation"

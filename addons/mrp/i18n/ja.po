@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:51+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-06-08 02:52+0000\n"
 "Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 05:40+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:09+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -197,9 +197,9 @@ msgid "For purchased material"
 msgstr "仕入済材料"
 
 #. module: mrp
-#: view:mrp.production:0
-msgid "Total Qty"
-msgstr "合計数量"
+#: field:mrp.config.settings,module_mrp_operations:0
+msgid "Allow detailed planning of work order"
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:648
@@ -306,11 +306,6 @@ msgid "Manage Routings"
 msgstr ""
 
 #. module: mrp
-#: sql_constraint:product.product:0
-msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
-
-#. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce
 msgid "Product Produce"
 msgstr "製品生産"
@@ -319,11 +314,6 @@ msgstr "製品生産"
 #: constraint:mrp.bom:0
 msgid "Error ! You cannot create recursive BoM."
 msgstr "エラー。再帰的な部品表を作ることはできません。"
-
-#. module: mrp
-#: constraint:stock.move:0
-msgid "You must assign a serial number for this product."
-msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing_workcenter
@@ -355,7 +345,6 @@ msgstr ""
 
 #. module: mrp
 #: sql_constraint:mrp.production:0
-#: sql_constraint:stock.picking:0
 msgid "Reference must be unique per Company!"
 msgstr "参照は会社ごとに固有でなければいけません。"
 
@@ -497,11 +486,6 @@ msgstr ""
 #: model:process.node,note:mrp.process_node_serviceproduct0
 msgid "Product type is service"
 msgstr "製品タイプはサービスです。"
-
-#. module: mrp
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr "会社名は固有でなければいけません。"
 
 #. module: mrp
 #: help:mrp.workcenter,costs_cycle:0
@@ -670,13 +654,6 @@ msgstr "構成部品の部品表"
 #: model:ir.model,name:mrp.model_stock_move
 msgid "Stock Move"
 msgstr "在庫移動"
-
-#. module: mrp
-#: constraint:product.product:0
-msgid ""
-"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
-"\"Internal Reference\" field instead."
-msgstr ""
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_planning
@@ -1091,11 +1068,6 @@ msgid "BOM Name"
 msgstr "部品表名"
 
 #. module: mrp
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product."
-msgstr ""
-
-#. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_product_manufacturing_open
 #: model:ir.actions.act_window,name:mrp.mrp_production_action
 #: model:ir.actions.act_window,name:mrp.mrp_production_action_planning
@@ -1103,6 +1075,11 @@ msgstr ""
 #: view:mrp.production:0
 msgid "Manufacturing Orders"
 msgstr "製造オーダー"
+
+#. module: mrp
+#: selection:mrp.production,state:0
+msgid "Awaiting Raw Materials"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,position:0
@@ -1966,11 +1943,6 @@ msgid "Manufacturing Efficiency"
 msgstr "製造の効率化"
 
 #. module: mrp
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "エラー。再帰的な関係となる会社を作ることはできません。"
-
-#. module: mrp
 #: field:mrp.bom,message_follower_ids:0
 #: field:mrp.production,message_follower_ids:0
 #: field:mrp.production.workcenter.line,message_follower_ids:0
@@ -2030,9 +2002,9 @@ msgid "Type of period"
 msgstr "期間のタイプ"
 
 #. module: mrp
-#: field:mrp.config.settings,module_mrp_operations:0
-msgid "Allow detailed planning of work order"
-msgstr ""
+#: view:mrp.production:0
+msgid "Total Qty"
+msgstr "合計数量"
 
 #. module: mrp
 #: field:mrp.production.workcenter.line,hour:0
@@ -2122,11 +2094,6 @@ msgid "Assignment from stock."
 msgstr "在庫から割当"
 
 #. module: mrp
-#: selection:mrp.production,state:0
-msgid "Waiting Goods"
-msgstr "待機商品"
-
-#. module: mrp
 #: code:addons/mrp/report/price.py:139
 #, python-format
 msgid "Cost Price per Unit of Measure"
@@ -2189,11 +2156,6 @@ msgstr "部品表参照"
 #: field:mrp.production.workcenter.line,message_comment_ids:0
 #: help:mrp.production.workcenter.line,message_comment_ids:0
 msgid "Comments and emails"
-msgstr ""
-
-#. module: mrp
-#: constraint:stock.move:0
-msgid "You cannot move products from or to a location of the type view."
 msgstr ""
 
 #. module: mrp
@@ -2530,6 +2492,9 @@ msgstr "消費製品"
 #~ msgid "Component Product"
 #~ msgstr "構成部品の製品"
 
+#~ msgid "The company name must be unique !"
+#~ msgstr "会社名は固有でなければいけません。"
+
 #~ msgid "Modification Date"
 #~ msgstr "修正日"
 
@@ -2660,6 +2625,12 @@ msgstr "消費製品"
 
 #~ msgid "Product UoS Qty"
 #~ msgstr "製品販売単位数量"
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "エラー。再帰的な関係となる会社を作ることはできません。"
+
+#~ msgid "Waiting Goods"
+#~ msgstr "待機商品"
 
 #~ msgid "last indice"
 #~ msgstr "最終インデックス"

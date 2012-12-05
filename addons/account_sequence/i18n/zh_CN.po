@@ -7,20 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-02-09 04:00+0000\n"
-"Last-Translator: 开阖软件     Jeff Wang <jeff@osbzr.com>\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
+"PO-Revision-Date: 2012-11-28 07:24+0000\n"
+"Last-Translator: ccdos <ccdos@163.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:31+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on closed account."
-msgstr ""
+"X-Launchpad-Export-Date: 2012-12-04 05:53+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: account_sequence
 #: view:account.sequence.installer:0
@@ -75,13 +70,6 @@ msgid "Company"
 msgstr "公司"
 
 #. module: account_sequence
-#: help:account.journal,internal_sequence_id:0
-msgid ""
-"This sequence will be used to maintain the internal number for the journal "
-"entries related to this journal."
-msgstr "此序列用于当前账簿的所有会计凭证"
-
-#. module: account_sequence
 #: field:account.sequence.installer,padding:0
 msgid "Number padding"
 msgstr "数字填充"
@@ -110,37 +98,9 @@ msgid "Name"
 msgstr "名称"
 
 #. module: account_sequence
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on an account of type view."
-msgstr ""
-
-#. module: account_sequence
-#: constraint:account.journal:0
-msgid ""
-"Configuration error!\n"
-"The currency chosen should be shared by the default accounts too."
-msgstr ""
-
-#. module: account_sequence
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
-msgstr "错误的分录"
-
-#. module: account_sequence
-#: constraint:account.move:0
-msgid ""
-"You cannot create more than one move per period on a centralized journal."
-msgstr ""
-
-#. module: account_sequence
 #: field:account.journal,internal_sequence_id:0
 msgid "Internal Sequence"
 msgstr "内部序列"
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid "Account and Period must belong to the same company."
-msgstr ""
 
 #. module: account_sequence
 #: help:account.sequence.installer,prefix:0
@@ -163,34 +123,16 @@ msgid "title"
 msgstr "标题"
 
 #. module: account_sequence
-#: sql_constraint:account.journal:0
-msgid "The name of the journal must be unique per company !"
-msgstr "每个公司的账簿名称必须唯一！"
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry forces to provide a secondary "
-"currency. You should remove the secondary currency on the account or select "
-"a multi-currency view on the journal."
-msgstr "凭证上的科目要求输入一个外币。你可以在科目设置中去掉这个外币或在凭证簿设置上选择一个支持多币种的输入界面。"
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid ""
-"The date of your Journal Entry is not in the defined period! You should "
-"change the date or remove this constraint from the journal."
-msgstr "凭证日期不在所选期间内！可以修改凭证日期或在凭证簿上去掉这个检查项。"
-
-#. module: account_sequence
 #: field:account.sequence.installer,prefix:0
 msgid "Prefix"
 msgstr "前缀"
 
 #. module: account_sequence
-#: sql_constraint:account.journal:0
-msgid "The code of the journal must be unique per company !"
-msgstr "每个公司的账簿编码必须唯一！"
+#: help:account.journal,internal_sequence_id:0
+msgid ""
+"This sequence will be used to maintain the internal number for the journal "
+"entries related to this journal."
+msgstr "此序列用于当前账簿的所有会计凭证"
 
 #. module: account_sequence
 #: model:ir.model,name:account_sequence.model_account_sequence_installer
@@ -220,12 +162,21 @@ msgstr "你可以自定义安装模块的序列"
 #~ "You cannot create entries on different periods/journals in the same move"
 #~ msgstr "您不能创建凭证的会计期间与账簿不同的分录"
 
+#~ msgid "The name of the journal must be unique per company !"
+#~ msgstr "每个公司的账簿名称必须唯一！"
+
+#~ msgid "The code of the journal must be unique per company !"
+#~ msgstr "每个公司的账簿编码必须唯一！"
+
 #~ msgid ""
 #~ "You cannot create more than one move per period on centralized journal"
 #~ msgstr "您不能在汇总的账簿里创建凭证"
 
 #~ msgid "Company must be same for its related account and period."
 #~ msgstr "公司相关的科目必须和会计期间一致。"
+
+#~ msgid "Wrong credit or debit value in accounting entry !"
+#~ msgstr "错误的分录"
 
 #~ msgid "Image"
 #~ msgstr "图像"
@@ -241,6 +192,17 @@ msgstr "你可以自定义安装模块的序列"
 #~ "\n"
 #~ "    此模块管理会计凭证的序列\n"
 #~ "    "
+
+#~ msgid ""
+#~ "The selected account of your Journal Entry forces to provide a secondary "
+#~ "currency. You should remove the secondary currency on the account or select "
+#~ "a multi-currency view on the journal."
+#~ msgstr "凭证上的科目要求输入一个外币。你可以在科目设置中去掉这个外币或在凭证簿设置上选择一个支持多币种的输入界面。"
+
+#~ msgid ""
+#~ "The date of your Journal Entry is not in the defined period! You should "
+#~ "change the date or remove this constraint from the journal."
+#~ msgstr "凭证日期不在所选期间内！可以修改凭证日期或在凭证簿上去掉这个检查项。"
 
 #~ msgid "You can not create journal items on an account of type view."
 #~ msgstr "凭证上不能使用视图类型的科目"

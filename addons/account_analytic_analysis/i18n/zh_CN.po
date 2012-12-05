@@ -6,20 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-02-09 02:53+0000\n"
-"Last-Translator: 开阖软件     Jeff Wang <jeff@osbzr.com>\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
+"PO-Revision-Date: 2012-11-29 10:29+0000\n"
+"Last-Translator: ccdos <ccdos@163.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:06+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:34+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "No order to invoice, create"
-msgstr ""
+msgstr "没有订单被开票，创建"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -29,12 +29,12 @@ msgstr "分组..."
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "To Invoice"
-msgstr ""
+msgstr "开票"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Remaining"
-msgstr ""
+msgstr "剩余"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -71,7 +71,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "⇒ Invoice"
-msgstr ""
+msgstr "=> 开票"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_invoiced:0
@@ -86,7 +86,7 @@ msgstr "最近的已发票日期"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,fix_price_to_invoice:0
 msgid "Sum of quotations for this contract."
-msgstr ""
+msgstr "合同的报价单汇总"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
@@ -96,7 +96,7 @@ msgstr "这科目的客户发票合计"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,timesheet_ca_invoiced:0
 msgid "Sum of timesheet lines invoiced for this contract."
-msgstr ""
+msgstr "合同已开票的计工单行的汇总"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
@@ -106,12 +106,12 @@ msgstr "计算公式：已开票金额 / 总时数"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contracts not assigned"
-msgstr ""
+msgstr "合同没指定"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Partner"
-msgstr ""
+msgstr "业务伙伴"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -157,7 +157,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Expected"
-msgstr ""
+msgstr "预期"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -170,7 +170,7 @@ msgstr "辅助核算项"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
 msgid "Computed using the formula: Theoretical Revenue - Total Costs"
-msgstr ""
+msgstr "用此公式计算：理论收入 - 总成本"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_invoiced:0
@@ -178,8 +178,18 @@ msgid "Invoiced Time"
 msgstr "已开票的工时"
 
 #. module: account_analytic_analysis
-#: constraint:account.analytic.account:0
-msgid "Error! You cannot create recursive analytic accounts."
+#: field:account.analytic.account,fix_price_to_invoice:0
+#: field:account.analytic.account,remaining_hours:0
+#: field:account.analytic.account,remaining_hours_to_invoice:0
+#: field:account.analytic.account,timesheet_ca_invoiced:0
+msgid "Remaining Time"
+msgstr "剩余时间"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid ""
+"{'required': [('type','=','contract')], 'invisible': [('type','in',['view', "
+"'normal','template'])]}"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -190,7 +200,7 @@ msgstr "实际利润(%)"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours:0
 msgid "Computed using the formula: Maximum Time - Total Worked Time"
-msgstr ""
+msgstr "用下列公式计算：最大工时 - 总工作时间"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_quantity:0
@@ -202,7 +212,7 @@ msgstr "你在这个成本科目上花费的时间总数（数据来自计工单
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Nothing to invoice, create"
-msgstr ""
+msgstr "尚未开票，创建"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.template_of_contract_action
@@ -211,9 +221,14 @@ msgid "Template of Contract"
 msgstr ""
 
 #. module: account_analytic_analysis
+#: model:res.groups,name:account_analytic_analysis.group_template_required
+msgid "Mandatory use of templates in contracts"
+msgstr ""
+
+#. module: account_analytic_analysis
 #: field:account.analytic.account,hours_quantity:0
 msgid "Total Worked Time"
-msgstr ""
+msgstr "总工作时间"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin:0
@@ -233,7 +248,7 @@ msgstr "计算公式为:(实际利润/总成本×100)"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "or view"
-msgstr ""
+msgstr "或 视图"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -250,7 +265,7 @@ msgstr "月"
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_all
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_hr_tree_invoiced_all
 msgid "Time & Materials to Invoice"
-msgstr ""
+msgstr "要开票的工时和材料"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue_all
@@ -261,14 +276,12 @@ msgstr "合同"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Start Date"
-msgstr ""
+msgstr "开始日期"
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,total_cost:0
-msgid ""
-"Total of costs for this account. It includes real costs (from invoices) and "
-"indirect costs, like time spent on timesheets."
-msgstr "这项的成本合计,它包括实际成本(发票)和间接成本,如花费的时间表"
+#: view:account.analytic.account:0
+msgid "Invoiced"
+msgstr "已开票"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -285,13 +298,13 @@ msgstr "需要与客户续签的合同"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Timesheets"
-msgstr ""
+msgstr "计工单"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:452
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:461
 #, python-format
 msgid "Sale Order Lines of %s"
-msgstr ""
+msgstr "销售单行 %s"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -306,7 +319,7 @@ msgstr "超期数量"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Status"
-msgstr ""
+msgstr "状态"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_theorical:0
@@ -327,7 +340,7 @@ msgstr "OpenERP中的合同是指一个被指定了业务伙伴的成本科目�
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_sales_order
 msgid "Sales Orders"
-msgstr ""
+msgstr "销售订单"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_invoice_date:0
@@ -373,8 +386,10 @@ msgid "Contract"
 msgstr "合同"
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Invoiced"
+#: help:sale.config.settings,group_template_required:0
+msgid ""
+"Allows you to set the template field as required when creating an analytic "
+"account or a contract."
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -413,7 +428,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Sale Orders"
-msgstr ""
+msgstr "销售订单"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -423,7 +438,7 @@ msgstr "使用中"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,invoiced_total:0
 msgid "Total Invoiced"
-msgstr ""
+msgstr "已开发票数量"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
@@ -433,7 +448,7 @@ msgstr "计算公式为:最大发票价格 -  已开票金额"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Responsible"
-msgstr ""
+msgstr "负责人"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
@@ -511,7 +526,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.account,fix_price_invoices:0
 msgid "Fixed Price"
-msgstr ""
+msgstr "固定价格"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_date:0
@@ -519,14 +534,31 @@ msgid "Date of the latest work done on this account."
 msgstr "这项目的最近的工作完成日期"
 
 #. module: account_analytic_analysis
+#: model:ir.model,name:account_analytic_analysis.model_sale_config_settings
+msgid "sale.config.settings"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: field:sale.config.settings,group_template_required:0
+msgid "Mandatory use of templates."
+msgstr ""
+
+#. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contracts Having a Partner"
 msgstr ""
 
 #. module: account_analytic_analysis
+#: help:account.analytic.account,total_cost:0
+msgid ""
+"Total of costs for this account. It includes real costs (from invoices) and "
+"indirect costs, like time spent on timesheets."
+msgstr "这项的成本合计,它包括实际成本(发票)和间接成本,如花费的时间表"
+
+#. module: account_analytic_analysis
 #: field:account.analytic.account,est_total:0
 msgid "Total Estimation"
-msgstr ""
+msgstr "总的估值"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_ca:0
@@ -547,22 +579,20 @@ msgid "Total Time"
 msgstr "总时间"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,invoice_on_timesheets:0
-msgid "On Timesheets"
+#: model:res.groups,comment:account_analytic_analysis.group_template_required
+msgid ""
+"the field template of the analytic accounts and contracts will be required."
 msgstr ""
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,fix_price_to_invoice:0
-#: field:account.analytic.account,remaining_hours:0
-#: field:account.analytic.account,remaining_hours_to_invoice:0
-#: field:account.analytic.account,timesheet_ca_invoiced:0
-msgid "Remaining Time"
-msgstr "剩余时间"
+#: field:account.analytic.account,invoice_on_timesheets:0
+msgid "On Timesheets"
+msgstr "在计工单上"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Total"
-msgstr ""
+msgstr "合计"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "在动作定义中输入的对象名称错误"

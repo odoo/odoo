@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-11-27 13:35+0000\n"
 "Last-Translator: Els Van Vossel (Agaplan) <Unknown>\n"
 "Language-Team: Dutch (Belgium) <nl_BE@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-28 04:41+0000\n"
-"X-Generator: Launchpad (build 16309)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:54+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -38,11 +38,6 @@ msgstr "Af te schrijven"
 #: field:account.asset.category,account_expense_depreciation_id:0
 msgid "Depr. Expense Account"
 msgstr "Afschrijvingskosten"
-
-#. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0
-msgid "Compute Asset"
-msgstr "Afschrijving berekenen"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -197,11 +192,6 @@ msgid "Depreciation Entry"
 msgstr "Afschrijvingsboeking"
 
 #. module: account_asset
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
-msgstr "Verkeerde credit– of debetwaarde in de boeking."
-
-#. module: account_asset
 #: view:asset.asset.report:0
 #: field:asset.asset.report,nbr:0
 msgid "# of Depreciation Lines"
@@ -229,11 +219,6 @@ msgstr "Einddatum"
 #: field:account.asset.asset,code:0
 msgid "Reference"
 msgstr "Referentie"
-
-#. module: account_asset
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr "Ongeldige gestructureerde mededeling"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -326,15 +311,6 @@ msgstr ""
 "afschrijvingen."
 
 #. module: account_asset
-#: constraint:account.move.line:0
-msgid ""
-"The date of your Journal Entry is not in the defined period! You should "
-"change the date or remove this constraint from the journal."
-msgstr ""
-"De datum van uw boeking ligt niet in de gedefinieerde periode. Verander de "
-"datum of schakel de optie op het journaal uit."
-
-#. module: account_asset
 #: help:account.asset.history,method_period:0
 msgid "Time in month between two depreciations"
 msgstr "Tijd in maanden tussen twee afschrijvingen"
@@ -365,11 +341,6 @@ msgid "Assets in closed state"
 msgstr "Afschrijvingen in status gesloten"
 
 #. module: account_asset
-#: constraint:account.move.line:0
-msgid "Account and Period must belong to the same company."
-msgstr "De rekening en de periode moeten tot dezelfde firma behoren."
-
-#. module: account_asset
 #: field:account.asset.asset,parent_id:0
 msgid "Parent Asset"
 msgstr "Hoofdinvestering"
@@ -389,17 +360,6 @@ msgstr "Investeringscategorie zoeken"
 #: model:ir.model,name:account_asset.model_account_invoice_line
 msgid "Invoice Line"
 msgstr "Factuurlijn"
-
-#. module: account_asset
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry forces to provide a secondary "
-"currency. You should remove the secondary currency on the account or select "
-"a multi-currency view on the journal."
-msgstr ""
-"De gekozen rekening van uw boeking vereist een secundaire munt. U moet de "
-"secundaire munt van de rekening verwijderen of een multivalutaweergave "
-"kiezen voor het journaal."
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -428,11 +388,6 @@ msgstr "Tijdmethode"
 #: view:asset.modify:0
 msgid "or"
 msgstr "of"
-
-#. module: account_asset
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on closed account."
-msgstr "U kunt geen boekingen doen op een afgesloten rekening."
 
 #. module: account_asset
 #: field:account.asset.asset,note:0
@@ -581,9 +536,9 @@ msgid "History"
 msgstr "Historiek"
 
 #. module: account_asset
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr "Factuurnummer moet uniek zijn per bedrijf"
+#: view:asset.depreciation.confirmation.wizard:0
+msgid "Compute Asset"
+msgstr "Afschrijving berekenen"
 
 #. module: account_asset
 #: field:asset.depreciation.confirmation.wizard,period_id:0
@@ -735,11 +690,6 @@ msgid "Name"
 msgstr "Naam"
 
 #. module: account_asset
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on an account of type view."
-msgstr "U kunt geen boekingen doen op een rekening van het type Weergave."
-
-#. module: account_asset
 #: help:account.asset.category,open_asset:0
 msgid ""
 "Check this if you want to automatically confirm the assets of this category "
@@ -820,6 +770,12 @@ msgstr "Investeringshiërarchie"
 #~ msgstr ""
 #~ "Met deze wizard boekt u de lopende afschrijvingen voor de gekozen periode."
 
+#~ msgid "Wrong credit or debit value in accounting entry !"
+#~ msgstr "Verkeerde credit– of debetwaarde in de boeking."
+
+#~ msgid "Invalid BBA Structured Communication !"
+#~ msgstr "Ongeldige gestructureerde mededeling"
+
 #~ msgid "Sequence of the depreciation"
 #~ msgstr "Nummer van de afschrijving"
 
@@ -844,6 +800,15 @@ msgstr "Investeringshiërarchie"
 #~ msgid "State"
 #~ msgstr "Status"
 
+#~ msgid ""
+#~ "The selected account of your Journal Entry forces to provide a secondary "
+#~ "currency. You should remove the secondary currency on the account or select "
+#~ "a multi-currency view on the journal."
+#~ msgstr ""
+#~ "De gekozen rekening van uw boeking vereist een secundaire munt. U moet de "
+#~ "secundaire munt van de rekening verwijderen of een multivalutaweergave "
+#~ "kiezen voor het journaal."
+
 #~ msgid "Month"
 #~ msgstr "Maand"
 
@@ -852,6 +817,13 @@ msgstr "Investeringshiërarchie"
 
 #~ msgid "Asset durations to modify"
 #~ msgstr "Te wijzigen afschrijvingsduur"
+
+#~ msgid ""
+#~ "The date of your Journal Entry is not in the defined period! You should "
+#~ "change the date or remove this constraint from the journal."
+#~ msgstr ""
+#~ "De datum van uw boeking ligt niet in de gedefinieerde periode. Verander de "
+#~ "datum of schakel de optie op het journaal uit."
 
 #~ msgid "Company must be the same for its related account and period."
 #~ msgstr "De firma moet dezelfde zijn voor de rekening en de periode."
@@ -865,6 +837,9 @@ msgstr "Investeringshiërarchie"
 
 #~ msgid "Close asset"
 #~ msgstr "Investering afsluiten"
+
+#~ msgid "Invoice Number must be unique per Company!"
+#~ msgstr "Factuurnummer moet uniek zijn per bedrijf"
 
 #~ msgid "Accounting information"
 #~ msgstr "Boekhoudinformatie"

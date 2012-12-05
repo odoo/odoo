@@ -13,15 +13,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:51+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-05-10 17:41+0000\n"
 "Last-Translator: Unurjargal <unuruu25@gmail.com>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:13+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:39+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -52,7 +52,6 @@ msgstr "Даатгалын дугаар"
 #: model:ir.actions.act_window,name:hr.open_board_hr
 #: model:ir.ui.menu,name:hr.menu_hr_dashboard
 #: model:ir.ui.menu,name:hr.menu_hr_main
-#: model:ir.ui.menu,name:hr.menu_hr_management
 #: model:ir.ui.menu,name:hr.menu_hr_reporting
 #: model:ir.ui.menu,name:hr.menu_hr_root
 #: model:ir.ui.menu,name:hr.menu_human_resources_configuration
@@ -168,8 +167,9 @@ msgid "Birth"
 msgstr ""
 
 #. module: hr
-#: field:hr.employee,last_login:0
-msgid "Latest Connection"
+#: model:ir.actions.act_window,name:hr.open_view_categ_form
+#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
+msgid "Employee Tags"
 msgstr ""
 
 #. module: hr
@@ -255,12 +255,6 @@ msgstr "Ялгах дугаар"
 #: selection:hr.employee,gender:0
 msgid "Female"
 msgstr "эм"
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_categ_form
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
-msgid "Categories of Employees"
-msgstr ""
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
@@ -370,6 +364,11 @@ msgid "Configuration"
 msgstr "Тохиргоо"
 
 #. module: hr
+#: model:process.node,note:hr.process_node_employee0
+msgid "Employee form and structure"
+msgstr "Ажилтны маягт, бүтэц"
+
+#. module: hr
 #: field:hr.config.settings,module_hr_expense:0
 msgid "Manage employees expenses"
 msgstr ""
@@ -394,11 +393,6 @@ msgstr "Салсан"
 #: field:hr.employee.category,parent_id:0
 msgid "Parent Category"
 msgstr "Харьяалагдах зэрэглэл"
-
-#. module: hr
-#: sql_constraint:res.users:0
-msgid "OAuth UID must be unique per provider"
-msgstr ""
 
 #. module: hr
 #: view:hr.department:0
@@ -522,12 +516,6 @@ msgstr "Тэмдэглэл"
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
 msgid "Employees Structure"
 msgstr "Ажилчдын бүтэц"
-
-#. module: hr
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
-"Энэ хэрэглэгчийн сонгосон компани зөвшөөрөгдсөн компаниуд дунд алга байна."
 
 #. module: hr
 #: view:hr.employee:0
@@ -654,11 +642,6 @@ msgid "Error! You cannot create recursive departments."
 msgstr ""
 
 #. module: hr
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr "Ижил нэвтрэх кодтой хоёр хэрэглэгч байж болохгүй!"
-
-#. module: hr
 #: field:hr.employee,address_id:0
 msgid "Working Address"
 msgstr "Ажлын хаяг"
@@ -679,9 +662,9 @@ msgid "ir.actions.act_window"
 msgstr "ir.actions.act_window"
 
 #. module: hr
-#: model:process.node,note:hr.process_node_employee0
-msgid "Employee form and structure"
-msgstr "Ажилтны маягт, бүтэц"
+#: field:hr.employee,last_login:0
+msgid "Latest Connection"
+msgstr ""
 
 #. module: hr
 #: field:hr.employee,image:0
@@ -782,12 +765,6 @@ msgstr "Гэрийн хаяг"
 #: field:hr.config.settings,module_hr_timesheet:0
 msgid "Manage timesheets"
 msgstr ""
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_categ_tree
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_tree
-msgid "Categories Structure"
-msgstr "Зэрэглэлийн бүтэц"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_payroll_modules
@@ -987,11 +964,6 @@ msgstr ""
 #: field:hr.employee,parent_id:0
 msgid "Manager"
 msgstr "Менежер"
-
-#. module: hr
-#: constraint:res.users:0
-msgid "Error: Invalid ean code"
-msgstr ""
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -1326,6 +1298,10 @@ msgstr ""
 #~ msgid "Current"
 #~ msgstr "Одоогийн"
 
+#~ msgid "The chosen company is not in the allowed companies for this user"
+#~ msgstr ""
+#~ "Энэ хэрэглэгчийн сонгосон компани зөвшөөрөгдсөн компаниуд дунд алга байна."
+
 #~ msgid "Configure"
 #~ msgstr "Тохируулах"
 
@@ -1335,6 +1311,9 @@ msgstr ""
 #~ msgstr ""
 #~ "ХН-н аппликешн баазыг хэдэн ХН-тэй холбоотой функцууд суулган өргөтгөх "
 #~ "боломжтой."
+
+#~ msgid "You can not have two users with the same login !"
+#~ msgstr "Ижил нэвтрэх кодтой хоёр хэрэглэгч байж болохгүй!"
 
 #~ msgid "Configure Your Human Resources Application"
 #~ msgstr "Хүний Нөөцийн Аппликэшныг Тохируулах"

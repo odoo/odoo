@@ -7,21 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:54+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2011-06-08 10:31+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:17+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
-
-#. module: warning
-#: sql_constraint:purchase.order:0
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique per Company!"
-msgstr "Tilausviitteen tulee olla uniikki yrityskohtaisesti!"
+"X-Launchpad-Export-Date: 2012-12-04 05:43+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order_line
@@ -71,21 +65,6 @@ msgid "Warnings"
 msgstr "Varoitukset"
 
 #. module: warning
-#: sql_constraint:product.product:0
-msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
-
-#. module: warning
-#: selection:product.product,purchase_line_warn:0
-#: selection:product.product,sale_line_warn:0
-#: selection:res.partner,invoice_warn:0
-#: selection:res.partner,picking_warn:0
-#: selection:res.partner,purchase_warn:0
-#: selection:res.partner,sale_warn:0
-msgid "Warning"
-msgstr "Varoitus"
-
-#. module: warning
 #: selection:product.product,purchase_line_warn:0
 #: selection:product.product,sale_line_warn:0
 #: selection:res.partner,invoice_warn:0
@@ -96,21 +75,9 @@ msgid "Blocking Message"
 msgstr "Estoviesti"
 
 #. module: warning
-#: field:res.partner,picking_warn:0
-msgid "Stock Picking"
-msgstr "Varatokeräily"
-
-#. module: warning
 #: view:res.partner:0
 msgid "Warning on the Invoice"
 msgstr "Varoitus laskulle"
-
-#. module: warning
-#: constraint:product.product:0
-msgid ""
-"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
-"\"Internal Reference\" field instead."
-msgstr ""
 
 #. module: warning
 #: selection:product.product,purchase_line_warn:0
@@ -139,22 +106,15 @@ msgid "Sale Order"
 msgstr "Myyntitilaus"
 
 #. module: warning
-#: field:res.partner,invoice_warn_msg:0
-msgid "Message for Invoice"
-msgstr "Viesti laskulle"
+#: field:res.partner,picking_warn:0
+msgid "Stock Picking"
+msgstr "Varatokeräily"
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order
 #: field:res.partner,purchase_warn:0
 msgid "Purchase Order"
 msgstr "Ostotilaus"
-
-#. module: warning
-#: sql_constraint:stock.picking:0
-#: sql_constraint:stock.picking.in:0
-#: sql_constraint:stock.picking.out:0
-msgid "Reference must be unique per Company!"
-msgstr "Viitteen tulee olla uniikki yrityskohtaisesti!"
 
 #. module: warning
 #: field:res.partner,sale_warn_msg:0
@@ -195,19 +155,9 @@ msgid "Alert for %s !"
 msgstr "Varoita %s !"
 
 #. module: warning
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr "laskun numeron tulee olla uniikki yrityskohtaisesti!"
-
-#. module: warning
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr "Virhe! Rekursiivisen kumppanin luonti ei ole sallittu."
-
-#. module: warning
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr "Virheellinen BBA rakenteen kommunikointi !"
+#: field:res.partner,invoice_warn_msg:0
+msgid "Message for Invoice"
+msgstr "Viesti laskulle"
 
 #. module: warning
 #: view:res.partner:0
@@ -238,9 +188,14 @@ msgid "Warning on the Sale Order"
 msgstr "Varoitus ostotilaukselle"
 
 #. module: warning
-#: constraint:res.partner:0
-msgid "Error: Invalid ean code"
-msgstr "Virhe: Väärä EAN-koodi"
+#: selection:product.product,purchase_line_warn:0
+#: selection:product.product,sale_line_warn:0
+#: selection:res.partner,invoice_warn:0
+#: selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0
+#: selection:res.partner,sale_warn:0
+msgid "Warning"
+msgstr "Varoitus"
 
 #. module: warning
 #: field:res.partner,picking_warn_msg:0
@@ -272,3 +227,21 @@ msgstr "Myyntitilauksen Rivi"
 
 #~ msgid "Order Reference must be unique !"
 #~ msgstr "Tilauksen viite tulee olla yksilöllinen!"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Virhe: Väärä EAN-koodi"
+
+#~ msgid "Invalid BBA Structured Communication !"
+#~ msgstr "Virheellinen BBA rakenteen kommunikointi !"
+
+#~ msgid "Invoice Number must be unique per Company!"
+#~ msgstr "laskun numeron tulee olla uniikki yrityskohtaisesti!"
+
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr "Virhe! Rekursiivisen kumppanin luonti ei ole sallittu."
+
+#~ msgid "Reference must be unique per Company!"
+#~ msgstr "Viitteen tulee olla uniikki yrityskohtaisesti!"
+
+#~ msgid "Order Reference must be unique per Company!"
+#~ msgstr "Tilausviitteen tulee olla uniikki yrityskohtaisesti!"
