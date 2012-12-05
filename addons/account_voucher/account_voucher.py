@@ -481,6 +481,9 @@ class account_voucher(osv.osv):
             total_credit = currency_pool.compute(cr, uid, currency_id, company_currency, total_credit, context=context_multi_currency)
 
         for line in moves:
+            if line.reconcile_partial_id and line.amount_residual_currency < 0:
+                # skip line that are totally used within partial reconcile
+                continue
             if invoice_id:
                 if line.invoice.id == invoice_id:
                     #if the invoice linked to the voucher line is equal to the invoice_id in context
@@ -504,6 +507,9 @@ class account_voucher(osv.osv):
                 total_credit += line.credit and line.amount_currency or 0.0
                 total_debit += line.debit and line.amount_currency or 0.0
         for line in moves:
+            if line.reconcile_partial_id and line.amount_residual_currency < 0:
+                # skip line that are totally used within partial reconcile
+                continue
             original_amount = line.credit or line.debit or 0.0
             amount_unreconciled = currency_pool.compute(cr, uid, line.currency_id and line.currency_id.id or company_currency, currency_id, abs(line.amount_residual_currency), context=context_multi_currency)
             line_currency_id = line.currency_id and line.currency_id.id or company_currency
