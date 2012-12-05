@@ -561,7 +561,7 @@ def run_unit_tests(module_name):
     for m in ms:
         suite.addTests(unittest2.TestLoader().loadTestsFromModule(m))
     if ms:
-        _logger.info('module %s: executing %s `fast_suite` and/or `checks` sub-modules', module_name, len(ms))
+        _logger.log(logging.TEST, 'module %s: executing %s `fast_suite` and/or `checks` sub-modules', module_name, len(ms))
         # Use a custom stream object to log the test executions.
         class MyStream(object):
             def __init__(self):

@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2011 OpenERP SA (<http://openerp.com>).
+#    Copyright (C) 2010-2012 OpenERP SA (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -62,7 +62,7 @@ class ir_ui_menu(osv.osv):
             modelaccess = self.pool.get('ir.model.access')
             user_groups = set(self.pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['groups_id'])['groups_id'])
             result = []
-            for menu in self.browse(cr, uid, ids, context=context):
+            for menu in self.browse(cr, SUPERUSER_ID, ids, context=context):
                 # this key works because user access rights are all based on user's groups (cfr ir_model_access.check)
                 key = (cr.dbname, menu.id, tuple(user_groups))
                 if key in self._cache:

@@ -3,6 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2010-2012 OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -62,6 +63,7 @@ Maybe you forgot to add those addons in your addons_path configuration."""
             _logger.exception('Failed to load server-wide module `%s`.%s', m, msg)
 
 start_internal_done = False
+main_thread_id = threading.currentThread().ident
 
 def start_internal():
     global start_internal_done
@@ -110,7 +112,7 @@ def stop_services():
     _logger.debug('current thread: %r', me)
     for thread in threading.enumerate():
         _logger.debug('process %r (%r)', thread, thread.isDaemon())
-        if thread != me and not thread.isDaemon():
+        if thread != me and not thread.isDaemon() and thread.ident != main_thread_id:
             while thread.isAlive():
                 _logger.debug('join and sleep')
                 # Need a busyloop here as thread.join() masks signals
