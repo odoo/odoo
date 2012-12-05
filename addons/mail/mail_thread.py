@@ -193,7 +193,7 @@ class mail_thread(osv.AbstractModel):
                 obj='res.partner', string='Followers', multi='_get_followers'),
         'message_ids': fields.one2many('mail.message', 'res_id',
             domain=lambda self: [('model', '=', self._name)],
-            _auto_join=True,
+            auto_join=True,
             string='Messages',
             help="Messages and communication history"),
         'message_unread': fields.function(_get_message_data,

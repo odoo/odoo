@@ -157,7 +157,7 @@ class mail_message(osv.Model):
             store=True, string='Message Record Name',
             help="Name get of the related document."),
         'notification_ids': fields.one2many('mail.notification', 'message_id',
-            string='Notifications', _auto_join=True,
+            string='Notifications', auto_join=True,
             help='Technical field holding the message notifications. Use notified_partner_ids to access notified partners.'),
         'subject': fields.char('Subject'),
         'date': fields.datetime('Date'),
