@@ -73,30 +73,7 @@ class OpenERPServerService(win32serviceutil.ServiceFramework):
 
 def option_handler(opts):
     # configure the service to auto restart on failures...
-    service_name = OpenERPServerService._svc_name
-
-    subprocess.call(['sc', 'failure', service_name, 'reset=', '0', 'actions=', 'restart/0/restart/0/restart/0'])
-
-    # hscm = win32service.OpenSCManager(None, None, win32service.SC_MANAGER_ALL_ACCESS)
-    # try:
-    #     hs = win32serviceutil.SmartOpenService(hscm, service_name, win32service.SERVICE_ALL_ACCESS)
-    #     try:
-    #         service_failure_actions = {
-    #             'ResetPeriod': 0,   # Time in ms after which to reset the failure count to zero.
-    #             'RebootMsg': u'',   # Not using reboot option
-    #             'Command': u'',     # Not using run-command option
-    #             'Actions': [
-    #                 (win32service.SC_ACTION_RESTART, 10),    # action, delay in ms
-    #                 (win32service.SC_ACTION_RESTART, 10),
-    #                 (win32service.SC_ACTION_RESTART, 10),
-    #             ]
-    #         }
-    #         win32service.ChangeServiceConfig2(hs, win32service.SERVICE_CONFIG_FAILURE_ACTIONS, service_failure_actions)
-    #     finally:
-    #         win32service.CloseServiceHandle(hs)
-    # finally:
-    #     win32service.CloseServiceHandle(hscm)
-
+    subprocess.call(['sc', 'failure', meta.nt_service_name, 'reset=', '0', 'actions=', 'restart/0/restart/0/restart/0'])
 
 if __name__ == '__main__':
     # Do with the service whatever option is passed in the command line
