@@ -277,12 +277,22 @@ class crm_lead(base_stage, format_address, osv.osv):
     ]
 
     def create(self, cr, uid, vals, context=None):
+        follower_obj = self.pool.get('mail.followers')
+        subtype_obj = self.pool.get('mail.message.subtype')
         obj_id = super(crm_lead, self).create(cr, uid, vals, context)
         section_id = self.browse(cr, uid, obj_id, context=context).section_id
         if section_id:
+            lead_subtype_ids = subtype_obj.search(cr, uid, ['|', ('res_model', '=', False), ('res_model', '=', 'crm.case.section')], context=context)
+            lead_subtypes = subtype_obj.browse(cr, uid, lead_subtype_ids, context=context)
             followers = [follow.id for follow in section_id.message_follower_ids]
-            self.message_subscribe(cr, uid, [obj_id], followers, context=context)
-        self.create_send_note(cr, uid, [obj_id], context=context)
+            follower_ids = follower_obj.search(cr, uid, [('res_model', '=', 'crm.case.section'), ('res_id', '=', section_id)], context=context)
+            for follower in follower_obj.browse(cr, uid, follower_ids, context=context):
+                if not follower.subtype_ids:
+                    continue
+                salesteam_subtype_names = [salesteam_subtype.name for salesteam_subtype in follower.subtype_ids]
+                lead_subtype_ids = [lead_subtype.id for lead_subtype in lead_subtypes if lead_subtype.name in salesteam_subtype_names]
+                self.message_subscribe(cr, uid, [obj_id], [follower.partner_id.id], subtype_ids=lead_subtype_ids, context=context)
+            self.create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
 
     def onchange_stage_id(self, cr, uid, ids, stage_id, context=None):
@@ -860,7 +870,7 @@ class crm_lead(base_stage, format_address, osv.osv):
     def create_send_note(self, cr, uid, ids, context=None):
         for id in ids:
             message = _("%s has been <b>created</b>.") % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_post(cr, uid, [id], body=message, context=context)
+            self.message_post(cr, uid, [id], body=message, subtype="crm.mt_lead_create", context=context)
         return True
 
     def case_mark_lost_send_note(self, cr, uid, ids, context=None):
