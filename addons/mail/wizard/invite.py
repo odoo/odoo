@@ -74,7 +74,7 @@ class invite_wizard(osv.osv_memory):
                 # the invite wizard should create a private message not related to any object,
                 # we ensure that by removing default res_id and res_model from the context
                 context.pop('default_res_id', False)
-                context.pop('default_res_model', False)
+                context.pop('default_model', False)
                 for follower_id in new_follower_ids:
                     mail_mail = self.pool.get('mail.mail')
                     mail_id = mail_mail.create(cr, uid, {
