@@ -198,7 +198,7 @@ class project(osv.osv):
         
     def _task_count(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, 0)
-        task_ids = self.pool.get('project.task').search(cr, uid, [('project_id', 'in', ids)])
+        task_ids = self.pool.get('project.task').search(cr, uid, [('project_id', 'in', ids), ('state', '!=', 'template')])
         for task in self.pool.get('project.task').browse(cr, uid, task_ids, context):
             res[task.project_id.id] += 1
         return res
@@ -650,13 +650,14 @@ class task(base_stage, osv.osv):
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
         res  = super(task, self).search(cr, user,  args, offset=offset, limit=limit, order=order, context=context, count=count)
+        obj_project = self.pool.get('project.project')
         for domain in args:
             if domain[0] == 'project_id' and (not isinstance(domain[2], str)):
                 ids = isinstance(domain[2], list) and domain[2]
                 # project in template state it's all task has active : false so those task are not search by orm
                 # so here we explicitly added those task ids to search result
-                obj_project = self.pool.get('project.project')
-                project_ids = obj_project.search(cr, user, [('state','=','template'),('id','in',ids)]);
+                
+                project_ids = obj_project.search(cr, user, [('state','!=','template'),('id','in',ids)]);
                 if project_ids:
                     cr.execute('select id from project_task where project_id in %s', (tuple(project_ids),))
                     task_ids = [x[0] for x in cr.fetchall()]
