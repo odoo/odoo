@@ -456,7 +456,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         :param list opps: list of browse records containing the leads/opps to process
         :return string type: the type of the final element
         """
-        for opp in opportunities:
+        for opp in opps:
             if (opp.type == 'opportunity'):
                 return 'opportunity'
 
