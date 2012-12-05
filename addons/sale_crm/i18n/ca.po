@@ -6,24 +6,41 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:54+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2011-08-17 23:05+0000\n"
 "Last-Translator: mgaja (GrupoIsep.com) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 05:50+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:19+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: sale_crm
-#: field:crm.make.sale,partner_id:0
-msgid "Customer"
-msgstr "Client"
+#: code:addons/sale_crm/wizard/crm_make_sale.py:90
+#, python-format
+msgid "Insufficient Data!"
+msgstr ""
 
 #. module: sale_crm
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique per Company!"
+#: view:crm.lead:0
+#: view:crm.make.sale:0
+msgid "Convert to Quotation"
+msgstr "Converteix a pressupost"
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_account_invoice_report
+msgid "Invoices Statistics"
+msgstr ""
+
+#. module: sale_crm
+#: field:crm.make.sale,close:0
+msgid "Mark Won"
+msgstr ""
+
+#. module: sale_crm
+#: field:res.users,default_section_id:0
+msgid "Default Sales Team"
 msgstr ""
 
 #. module: sale_crm
@@ -32,14 +49,9 @@ msgid "My Sales Team(s)"
 msgstr ""
 
 #. module: sale_crm
-#: model:ir.model,name:sale_crm.model_crm_make_sale
-msgid "Make sales"
-msgstr "Crea vendes"
-
-#. module: sale_crm
-#: model:ir.model,name:sale_crm.model_sale_order
-msgid "Sales Order"
-msgstr "Comanda de venda"
+#: model:ir.model,name:sale_crm.model_res_users
+msgid "Users"
+msgstr ""
 
 #. module: sale_crm
 #: help:crm.make.sale,close:0
@@ -50,10 +62,53 @@ msgstr ""
 "comanda de venda."
 
 #. module: sale_crm
+#: field:sale.order,categ_ids:0
+msgid "Categories"
+msgstr ""
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:124
+#: code:addons/sale_crm/wizard/crm_make_sale.py:135
+#, python-format
+msgid "Quotation"
+msgstr "Pressupost"
+
+#. module: sale_crm
+#: field:crm.make.sale,partner_id:0
+msgid "Customer"
+msgstr "Client"
+
+#. module: sale_crm
+#: view:crm.make.sale:0
+msgid "_Create"
+msgstr "_Crea"
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_crm_make_sale
+msgid "Make sales"
+msgstr "Crea vendes"
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_account_invoice
+msgid "Invoice"
+msgstr ""
+
+#. module: sale_crm
 #: code:addons/sale_crm/wizard/crm_make_sale.py:93
 #, python-format
 msgid "Opportunity: %s"
 msgstr "Oportunitat: %s"
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:110
+#, python-format
+msgid "Opportunity has been <b>converted</b> to the quotation <em>%s</em>."
+msgstr ""
+
+#. module: sale_crm
+#: field:crm.make.sale,shop_id:0
+msgid "Shop"
+msgstr "Tenda"
 
 #. module: sale_crm
 #: code:addons/sale_crm/wizard/crm_make_sale.py:90
@@ -62,12 +117,9 @@ msgid "No addresse(s) defined for this customer."
 msgstr ""
 
 #. module: sale_crm
-#: view:crm.lead:0
-#: view:crm.make.sale:0
-msgid "Convert to Quotation"
-msgstr "Converteix a pressupost"
-
-#. module: sale_crm
+#: view:account.invoice:0
+#: field:account.invoice,section_id:0
+#: field:account.invoice.report,section_id:0
 #: view:sale.order:0
 #: field:sale.order,section_id:0
 msgid "Sales Team"
@@ -79,26 +131,9 @@ msgid "Create Quotation"
 msgstr ""
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:110
-#, python-format
-msgid "Opportunity has been <b>converted</b> to the quotation <em>%s</em>."
-msgstr ""
-
-#. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:90
-#, python-format
-msgid "Insufficient Data!"
-msgstr ""
-
-#. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.action_crm_make_sale
 msgid "Make Quotation"
 msgstr "Realitza un pressupost"
-
-#. module: sale_crm
-#: view:crm.make.sale:0
-msgid "_Create"
-msgstr "_Crea"
 
 #. module: sale_crm
 #: view:crm.make.sale:0
@@ -106,30 +141,13 @@ msgid "Cancel"
 msgstr "Cancel·la"
 
 #. module: sale_crm
-#: field:crm.make.sale,shop_id:0
-msgid "Shop"
-msgstr "Tenda"
-
-#. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:124
-#: code:addons/sale_crm/wizard/crm_make_sale.py:135
-#, python-format
-msgid "Quotation"
-msgstr "Pressupost"
+#: model:ir.model,name:sale_crm.model_sale_order
+msgid "Sales Order"
+msgstr "Comanda de venda"
 
 #. module: sale_crm
 #: view:crm.make.sale:0
 msgid "or"
-msgstr ""
-
-#. module: sale_crm
-#: field:sale.order,categ_ids:0
-msgid "Categories"
-msgstr ""
-
-#. module: sale_crm
-#: field:crm.make.sale,close:0
-msgid "Mark Won"
 msgstr ""
 
 #~ msgid "All at once"

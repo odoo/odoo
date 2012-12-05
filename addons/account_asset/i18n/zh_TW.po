@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-08-20 01:50+0000\n"
 "Last-Translator: Eric Huang <eh@cenoq.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:32+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:54+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -38,11 +38,6 @@ msgstr "剩餘價值"
 #: field:account.asset.category,account_expense_depreciation_id:0
 msgid "Depr. Expense Account"
 msgstr "折舊費用科目"
-
-#. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0
-msgid "Compute Asset"
-msgstr "計算資產"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -195,11 +190,6 @@ msgid "Depreciation Entry"
 msgstr "折舊分錄"
 
 #. module: account_asset
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
-msgstr "會計分錄中包含錯誤的借貸數值！"
-
-#. module: account_asset
 #: view:asset.asset.report:0
 #: field:asset.asset.report,nbr:0
 msgid "# of Depreciation Lines"
@@ -227,11 +217,6 @@ msgstr "結束日期"
 #: field:account.asset.asset,code:0
 msgid "Reference"
 msgstr "參考"
-
-#. module: account_asset
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr "BBA傳輸結構有誤！"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -320,13 +305,6 @@ msgstr ""
 "結束日期：選擇2折舊，折舊將無法超越的日期之間的時間。"
 
 #. module: account_asset
-#: constraint:account.move.line:0
-msgid ""
-"The date of your Journal Entry is not in the defined period! You should "
-"change the date or remove this constraint from the journal."
-msgstr "你的帳簿分錄的日期不是在規定的時間內！您應該更改日期或從帳簿中刪除這個限制。"
-
-#. module: account_asset
 #: help:account.asset.history,method_period:0
 msgid "Time in month between two depreciations"
 msgstr "兩個折舊方法中的月份"
@@ -357,11 +335,6 @@ msgid "Assets in closed state"
 msgstr "在封閉狀態的資產"
 
 #. module: account_asset
-#: constraint:account.move.line:0
-msgid "Account and Period must belong to the same company."
-msgstr ""
-
-#. module: account_asset
 #: field:account.asset.asset,parent_id:0
 msgid "Parent Asset"
 msgstr "母公司資產"
@@ -381,14 +354,6 @@ msgstr "搜索資產類別"
 #: model:ir.model,name:account_asset.model_account_invoice_line
 msgid "Invoice Line"
 msgstr "發票明細"
-
-#. module: account_asset
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry forces to provide a secondary "
-"currency. You should remove the secondary currency on the account or select "
-"a multi-currency view on the journal."
-msgstr "分錄上的科目要求輸入一個外幣。你可以在科目設置中去掉這個外幣或在日記帳設置上選擇一個支持多幣別的輸入界面。"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -416,11 +381,6 @@ msgstr "時間的方法"
 #: view:asset.depreciation.confirmation.wizard:0
 #: view:asset.modify:0
 msgid "or"
-msgstr ""
-
-#. module: account_asset
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on closed account."
 msgstr ""
 
 #. module: account_asset
@@ -562,9 +522,9 @@ msgid "History"
 msgstr "歷史記錄"
 
 #. module: account_asset
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr "每家公司的發票號碼必須是唯一的!"
+#: view:asset.depreciation.confirmation.wizard:0
+msgid "Compute Asset"
+msgstr "計算資產"
 
 #. module: account_asset
 #: field:asset.depreciation.confirmation.wizard,period_id:0
@@ -710,11 +670,6 @@ msgid "Name"
 msgstr "名稱"
 
 #. module: account_asset
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on an account of type view."
-msgstr ""
-
-#. module: account_asset
 #: help:account.asset.category,open_asset:0
 msgid ""
 "Check this if you want to automatically confirm the assets of this category "
@@ -792,6 +747,12 @@ msgstr "資產層級"
 #~ "to the selected period."
 #~ msgstr "此精靈將所選擇期間使用中固定資產的資產折舊計算入帳。"
 
+#~ msgid "Wrong credit or debit value in accounting entry !"
+#~ msgstr "會計分錄中包含錯誤的借貸數值！"
+
+#~ msgid "Invalid BBA Structured Communication !"
+#~ msgstr "BBA傳輸結構有誤！"
+
 #~ msgid "Sequence of the depreciation"
 #~ msgstr "序列的折舊"
 
@@ -810,6 +771,12 @@ msgstr "資產層級"
 #~ msgid "State"
 #~ msgstr "狀態"
 
+#~ msgid ""
+#~ "The selected account of your Journal Entry forces to provide a secondary "
+#~ "currency. You should remove the secondary currency on the account or select "
+#~ "a multi-currency view on the journal."
+#~ msgstr "分錄上的科目要求輸入一個外幣。你可以在科目設置中去掉這個外幣或在日記帳設置上選擇一個支持多幣別的輸入界面。"
+
 #~ msgid "Month"
 #~ msgstr "月"
 
@@ -819,6 +786,11 @@ msgstr "資產層級"
 #~ msgid "Asset durations to modify"
 #~ msgstr "資產期間修改"
 
+#~ msgid ""
+#~ "The date of your Journal Entry is not in the defined period! You should "
+#~ "change the date or remove this constraint from the journal."
+#~ msgstr "你的帳簿分錄的日期不是在規定的時間內！您應該更改日期或從帳簿中刪除這個限制。"
+
 #~ msgid "Company must be the same for its related account and period."
 #~ msgstr "科目和期間必須屬於同一個公司"
 
@@ -827,6 +799,9 @@ msgstr "資產層級"
 
 #~ msgid "You can not create journal items on an account of type view."
 #~ msgstr "借貸項不能使用視圖類型的科目"
+
+#~ msgid "Invoice Number must be unique per Company!"
+#~ msgstr "每家公司的發票號碼必須是唯一的!"
 
 #~ msgid "Accounting information"
 #~ msgstr "會計資訊"

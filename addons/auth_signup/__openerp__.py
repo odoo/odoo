@@ -22,8 +22,8 @@
 {
     'name': 'Signup',
     'description': """
-Allow users to sign up.
-=======================
+Allow users to sign up and reset their password
+===============================================
     """,
     'author': 'OpenERP SA',
     'version': '1.0',
@@ -31,7 +31,10 @@ Allow users to sign up.
     'website': 'http://www.openerp.com',
     'installable': True,
     'auto_install': True,
-    'depends': ['base_setup'],
+    'depends': [
+        'base_setup',
+        'email_template',
+    ],
     'data': [
         'auth_signup_data.xml',
         'res_config.xml',

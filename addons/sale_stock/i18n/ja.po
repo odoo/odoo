@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:54+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2012-09-21 14:08+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:33+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:54+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
@@ -40,6 +40,12 @@ msgstr "配達オーダー"
 msgid ""
 "Allows you to specify different delivery and invoice addresses on a sale "
 "order."
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.actions.act_window,name:sale_stock.outgoing_picking_list_to_invoice
+#: model:ir.ui.menu,name:sale_stock.menu_action_picking_list_to_invoice
+msgid "Deliveries to Invoice"
 msgstr ""
 
 #. module: sale_stock
@@ -209,11 +215,6 @@ msgid ""
 msgstr ""
 "受注オーダーが確認されると同時に調達オーダーとしてすぐに、集荷リストフォームが作成されます。これは受注オーダー部品の割り当てを表しています。受注オーダー行"
 "による１つの集荷リストは部品の入手可能性とともに展開します。"
-
-#. module: sale_stock
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "エラー。再帰的な関係となる会社を作ることはできません。"
 
 #. module: sale_stock
 #: help:res.company,security_lead:0
@@ -390,11 +391,6 @@ msgid "Properties"
 msgstr "属性"
 
 #. module: sale_stock
-#: constraint:stock.move:0
-msgid "You must assign a serial number for this product."
-msgstr ""
-
-#. module: sale_stock
 #: field:sale.config.settings,group_mrp_properties:0
 msgid "Product properties on order lines"
 msgstr ""
@@ -404,11 +400,6 @@ msgstr ""
 msgid ""
 "You can generate invoices based on sales orders or based on shippings."
 msgstr "受注オーダー基準、または出荷基準の請求書を生成します。"
-
-#. module: sale_stock
-#: constraint:stock.move:0
-msgid "You cannot move products from or to a location of the type view."
-msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
@@ -431,12 +422,6 @@ msgid ""
 "lines.\n"
 "                This installs the modules project_timesheet and project_mrp."
 msgstr ""
-
-#. module: sale_stock
-#: sql_constraint:stock.picking:0
-#: sql_constraint:stock.picking.out:0
-msgid "Reference must be unique per Company!"
-msgstr "参照は会社ごとに固有でなければいけません。"
 
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_saleprocurement0
@@ -502,11 +487,6 @@ msgid "Number Packages"
 msgstr "パッケージ数"
 
 #. module: sale_stock
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique per Company!"
-msgstr "オーダー参照は、会社ごとに固有でなければなりません。"
-
-#. module: sale_stock
 #: field:sale.order,shipped:0
 msgid "Delivered"
 msgstr "配達済"
@@ -549,11 +529,6 @@ msgid "Incoterm"
 msgstr "インコターム"
 
 #. module: sale_stock
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product."
-msgstr ""
-
-#. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:521
 #, python-format
 msgid "Cannot cancel sales order line!"
@@ -578,11 +553,6 @@ msgstr "全ての製品を一緒に配達"
 #: field:sale.order,picking_ids:0
 msgid "Related Picking"
 msgstr "関連する集荷"
-
-#. module: sale_stock
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr "会社名は固有でなければいけません。"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_config_settings

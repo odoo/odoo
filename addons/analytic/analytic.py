@@ -20,8 +20,10 @@
 ##############################################################################
 
 import time
+from datetime import datetime
 
 from osv import fields, osv
+import tools
 from tools.translate import _
 import decimal_precision as dp
 
@@ -118,7 +120,7 @@ class account_analytic_account(osv.osv):
     def _get_one_full_name(self, elmt, level=6):
         if level<=0:
             return '...'
-        if elmt.parent_id:
+        if elmt.parent_id and not elmt.type == 'template':
             parent_path = self._get_one_full_name(elmt.parent_id, level-1) + "/"
         else:
             parent_path = ''
@@ -199,9 +201,14 @@ class account_analytic_account(osv.osv):
             return {}
         res = {'value':{}}
         template = self.browse(cr, uid, template_id, context=context)
-        res['value']['date_start'] = template.date_start
-        res['value']['date'] = template.date
+        if template.date_start and template.date:
+            from_dt = datetime.strptime(template.date_start, tools.DEFAULT_SERVER_DATE_FORMAT)
+            to_dt = datetime.strptime(template.date, tools.DEFAULT_SERVER_DATE_FORMAT)
+            timedelta = to_dt - from_dt
+            res['value']['date'] = datetime.strftime(datetime.now() + timedelta, tools.DEFAULT_SERVER_DATE_FORMAT)
+        res['value']['date_start'] = fields.date.today()
         res['value']['quantity_max'] = template.quantity_max
+        res['value']['parent_id'] = template.parent_id and template.parent_id.id or False
         res['value']['description'] = template.description
         return res
 

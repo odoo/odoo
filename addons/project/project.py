@@ -49,11 +49,17 @@ class project_task_type(osv.osv):
         'fold': fields.boolean('Hide in views if empty',
                         help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
     }
+    def _get_default_project_id(self, cr, uid, ctx={}):
+        proj = ctx.get('default_project_id', False)
+        if type(proj) is int:
+            return [proj]
+        return proj
     _defaults = {
         'sequence': 1,
         'state': 'open',
         'fold': False,
         'case_default': True,
+        'project_ids': _get_default_project_id
     }
     _order = 'sequence'
 
@@ -532,7 +538,7 @@ def Project():
         # Prevent double project creation when 'use_tasks' is checked!
         context = dict(context, project_creation_in_progress=True)
         mail_alias = self.pool.get('mail.alias')
-        if not vals.get('alias_id'):
+        if not vals.get('alias_id') and vals.get('name', False):
             vals.pop('alias_name', None) # prevent errors during copy()
             alias_id = mail_alias.create_unique_alias(cr, uid,
                           # Using '+' allows using subaddressing for those who don't

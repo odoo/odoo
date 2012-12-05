@@ -237,11 +237,9 @@ openerp.mail = function (session) {
 
         /* Convert date, timerelative and avatar in displayable data. */
         format_data: function () {
-
             //formating and add some fields for render
             if (this._date) {
-                this.date = session.web.format_value(this._date, {type:"datetime"});
-                this.timerelative = $.timeago(this.date);
+                this.timerelative = $.timeago(this._date+"Z");
             } 
             if (this.type == 'email' && (!this.author_id || !this.author_id[0])) {
                 this.avatar = ('/mail/static/src/img/email_icon.png');
@@ -674,8 +672,11 @@ openerp.mail = function (session) {
 
             // read messages
             self.parent_thread.message_fetch(this.domain, this.context, false, function (arg, data) {
-                // insert the message on dom after this message
+                if (self.options.root_thread == self.parent_thread) {
+                    data.reverse();
+                }
                 self.id = false;
+                // insert the message on dom after this message
                 self.parent_thread.switch_new_message( data, self.$el );
                 self.animated_destroy(200);
             });
@@ -1013,8 +1014,6 @@ openerp.mail = function (session) {
                     var bottom = $(window).scrollTop()+$(window).height()+200;
                     if (bottom > pos.top) {
                         val.on_expandable();
-                        // load only one time
-                        val.loading = true;
                     }
                 }
             });
@@ -1397,9 +1396,10 @@ openerp.mail = function (session) {
          *      when the user clic on this compact mode, the composer is open
          *...  @param {Array} [message_ids] List of ids to fetch by the root thread.
          *      When you use this option, the domain is not used for the fetch root.
-         *     @param {String} [no_message] Message to display when there are no message
-         *     @param {Boolean} [show_link_partner] Display partner (authors, followers...) on link or not
-         *     @param {Boolean} [compose_as_todo] The root composer mark automatically the message as todo
+         *...  @param {String} [help] Message to display when there are no message.
+         *...  @param {String} [compose_placeholder] Message to display on the textareaboxes.
+         *...  @param {Boolean} [show_link_partner] Display partner (authors, followers...) on link or not
+         *...  @param {Boolean} [compose_as_todo] The root composer mark automatically the message as todo
          */
         init: function (parent, action) {
             this._super(parent, action);

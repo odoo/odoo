@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-05-16 19:05+0000\n"
 "Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:31+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:53+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -38,11 +38,6 @@ msgstr "残余価値"
 #: field:account.asset.category,account_expense_depreciation_id:0
 msgid "Depr. Expense Account"
 msgstr "減価償却費アカウント"
-
-#. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0
-msgid "Compute Asset"
-msgstr "資産の計算"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -195,11 +190,6 @@ msgid "Depreciation Entry"
 msgstr "減価償却エントリー"
 
 #. module: account_asset
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
-msgstr "会計エントリーにおいて貸方または借方の値が誤っています。"
-
-#. module: account_asset
 #: view:asset.asset.report:0
 #: field:asset.asset.report,nbr:0
 msgid "# of Depreciation Lines"
@@ -227,11 +217,6 @@ msgstr "終了日"
 #: field:account.asset.asset,code:0
 msgid "Reference"
 msgstr "参照"
-
-#. module: account_asset
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr "無効なBBA構造のコミュニケーション"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -320,13 +305,6 @@ msgstr ""
 "終了日：２つの減価償却の間の時間と、減価償却日を超えない日付を選んでください。"
 
 #. module: account_asset
-#: constraint:account.move.line:0
-msgid ""
-"The date of your Journal Entry is not in the defined period! You should "
-"change the date or remove this constraint from the journal."
-msgstr "仕訳帳エントリーの日付が定義された期間ではありません。日付を変更するか仕訳帳からこの制約を削除する必要があります。"
-
-#. module: account_asset
 #: help:account.asset.history,method_period:0
 msgid "Time in month between two depreciations"
 msgstr "２つの減価償却の間の月の時間"
@@ -357,11 +335,6 @@ msgid "Assets in closed state"
 msgstr "閉じた状態の資産"
 
 #. module: account_asset
-#: constraint:account.move.line:0
-msgid "Account and Period must belong to the same company."
-msgstr ""
-
-#. module: account_asset
 #: field:account.asset.asset,parent_id:0
 msgid "Parent Asset"
 msgstr "親資産"
@@ -381,14 +354,6 @@ msgstr "資産分類の検索"
 #: model:ir.model,name:account_asset.model_account_invoice_line
 msgid "Invoice Line"
 msgstr "請求行"
-
-#. module: account_asset
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry forces to provide a secondary "
-"currency. You should remove the secondary currency on the account or select "
-"a multi-currency view on the journal."
-msgstr "選択した仕訳のアカウントは第２の通貨の入力を要求しています。アカウントの第２通貨を削除するか、仕訳で多国通貨ビューを選択して下さい。"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -416,11 +381,6 @@ msgstr "時間法"
 #: view:asset.depreciation.confirmation.wizard:0
 #: view:asset.modify:0
 msgid "or"
-msgstr ""
-
-#. module: account_asset
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on closed account."
 msgstr ""
 
 #. module: account_asset
@@ -562,9 +522,9 @@ msgid "History"
 msgstr "履歴"
 
 #. module: account_asset
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr "請求書番号は会社ごとにユニークでなければいけません。"
+#: view:asset.depreciation.confirmation.wizard:0
+msgid "Compute Asset"
+msgstr "資産の計算"
 
 #. module: account_asset
 #: field:asset.depreciation.confirmation.wizard,period_id:0
@@ -710,11 +670,6 @@ msgid "Name"
 msgstr "名前"
 
 #. module: account_asset
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on an account of type view."
-msgstr ""
-
-#. module: account_asset
 #: help:account.asset.category,open_asset:0
 msgid ""
 "Check this if you want to automatically confirm the assets of this category "
@@ -792,6 +747,12 @@ msgstr "資産の階層"
 #~ "to the selected period."
 #~ msgstr "このウィザードは選択された期間に属する有効な資産の減価償却行を記帳します。"
 
+#~ msgid "Wrong credit or debit value in accounting entry !"
+#~ msgstr "会計エントリーにおいて貸方または借方の値が誤っています。"
+
+#~ msgid "Invalid BBA Structured Communication !"
+#~ msgstr "無効なBBA構造のコミュニケーション"
+
 #~ msgid "Sequence of the depreciation"
 #~ msgstr "減価償却の順序"
 
@@ -834,6 +795,9 @@ msgstr "資産の階層"
 #~ msgid "Close asset"
 #~ msgstr "閉鎖資産"
 
+#~ msgid "Invoice Number must be unique per Company!"
+#~ msgstr "請求書番号は会社ごとにユニークでなければいけません。"
+
 #~ msgid "Accounting information"
 #~ msgstr "会計情報"
 
@@ -859,6 +823,17 @@ msgstr "資産の階層"
 
 #~ msgid "Post Depreciation Lines"
 #~ msgstr "減価償却行を記帳"
+
+#~ msgid ""
+#~ "The date of your Journal Entry is not in the defined period! You should "
+#~ "change the date or remove this constraint from the journal."
+#~ msgstr "仕訳帳エントリーの日付が定義された期間ではありません。日付を変更するか仕訳帳からこの制約を削除する必要があります。"
+
+#~ msgid ""
+#~ "The selected account of your Journal Entry forces to provide a secondary "
+#~ "currency. You should remove the secondary currency on the account or select "
+#~ "a multi-currency view on the journal."
+#~ msgstr "選択した仕訳のアカウントは第２の通貨の入力を要求しています。アカウントの第２通貨を削除するか、仕訳で多国通貨ビューを選択して下さい。"
 
 #~ msgid "You can not create journal items on closed account."
 #~ msgstr "閉じたアカウントには仕訳項目を作ることはできません。"

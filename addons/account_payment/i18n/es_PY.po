@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2011-03-03 00:45+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish (Paraguay) <es_PY@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:07+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:35+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
@@ -107,11 +107,6 @@ msgid "Due Date"
 msgstr "Fecha de Vencimiento"
 
 #. module: account_payment
-#: view:account.move.line:0
-msgid "Account Entry Line"
-msgstr "Línea del asiento contable"
-
-#. module: account_payment
 #: view:payment.order.create:0
 msgid "_Add to payment order"
 msgstr "_Añadir a la orden de pago"
@@ -123,6 +118,15 @@ msgid "Payment Populate statement"
 msgstr "Extracto generar pago"
 
 #. module: account_payment
+#: code:addons/account_payment/account_invoice.py:43
+#, python-format
+msgid ""
+"You cannot cancel an invoice which has already been imported in a payment "
+"order. Remove it from the following payment order : %s."
+msgstr ""
+
+#. module: account_payment
+#: code:addons/account_payment/account_invoice.py:43
 #: code:addons/account_payment/account_move_line.py:110
 #, python-format
 msgid "Error!"
@@ -133,11 +137,6 @@ msgstr ""
 #: view:payment.order:0
 msgid "Amount"
 msgstr "Importe"
-
-#. module: account_payment
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
-msgstr "¡Valor debiot o credito erróneo en el asiento contable!"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -166,22 +165,10 @@ msgid "The payment line name must be unique!"
 msgstr "¡El nombre de la línea de pago debe ser única!"
 
 #. module: account_payment
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr ""
-
-#. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
 msgid "Payment Orders"
 msgstr "Órdenes de pago"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid ""
-"The date of your Journal Entry is not in the defined period! You should "
-"change the date or remove this constraint from the journal."
-msgstr ""
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -278,11 +265,6 @@ msgid "Creation Date"
 msgstr ""
 
 #. module: account_payment
-#: view:account.move.line:0
-msgid "Total debit"
-msgstr "Total Debito"
-
-#. module: account_payment
 #: help:payment.mode,journal:0
 msgid "Bank or Cash Journal for the Payment Mode"
 msgstr "Diario de banco o caja para el modo de pago."
@@ -341,11 +323,6 @@ msgid "Partner"
 msgstr "Empresa"
 
 #. module: account_payment
-#: constraint:account.move.line:0
-msgid "Account and Period must belong to the same company."
-msgstr ""
-
-#. module: account_payment
 #: field:payment.line,bank_statement_line_id:0
 msgid "Bank statement line"
 msgstr "Línea de extracto bancario"
@@ -359,14 +336,6 @@ msgstr "Fecha vencimiento"
 #: field:account.invoice,amount_to_pay:0
 msgid "Amount to be paid"
 msgstr "Importe a pagar"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry forces to provide a secondary "
-"currency. You should remove the secondary currency on the account or select "
-"a multi-currency view on the journal."
-msgstr ""
 
 #. module: account_payment
 #: report:payment.order:0
@@ -449,11 +418,6 @@ msgstr "Dirección del cliente."
 #: view:account.payment.populate.statement:0
 msgid "Populate Statement:"
 msgstr "Generar extracto:"
-
-#. module: account_payment
-#: view:account.move.line:0
-msgid "Total credit"
-msgstr "Total Credito"
 
 #. module: account_payment
 #: help:payment.order,date_scheduled:0
@@ -539,11 +503,6 @@ msgstr "Cuenta para pago"
 #: report:payment.order:0
 msgid "Invoice Ref"
 msgstr "Ref. factura"
-
-#. module: account_payment
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr ""
 
 #. module: account_payment
 #: field:payment.line,name:0
@@ -687,11 +646,6 @@ msgid "Name"
 msgstr "Nombre:"
 
 #. module: account_payment
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on an account of type view."
-msgstr ""
-
-#. module: account_payment
 #: report:payment.order:0
 msgid "Bank Account"
 msgstr "Cuenta Bancaria"
@@ -736,11 +690,6 @@ msgid "or"
 msgstr ""
 
 #. module: account_payment
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on closed account."
-msgstr ""
-
-#. module: account_payment
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
 msgstr "Cuenta bancaria para el forma de pago"
@@ -750,6 +699,12 @@ msgstr "Cuenta bancaria para el forma de pago"
 
 #~ msgid "You can not create move line on closed account."
 #~ msgstr "No puede crear una línea de movimiento en una cuenta cerrada."
+
+#~ msgid "Account Entry Line"
+#~ msgstr "Línea del asiento contable"
+
+#~ msgid "Wrong credit or debit value in accounting entry !"
+#~ msgstr "¡Valor debiot o credito erróneo en el asiento contable!"
 
 #~ msgid "State"
 #~ msgstr "Departamento"
@@ -761,8 +716,14 @@ msgstr "Cuenta bancaria para el forma de pago"
 #~ msgid "Execution date"
 #~ msgstr "Fecha ejecución"
 
+#~ msgid "Total debit"
+#~ msgstr "Total Debito"
+
 #~ msgid "Payment Management"
 #~ msgstr "Gestión de pagos"
+
+#~ msgid "Total credit"
+#~ msgstr "Total Credito"
 
 #, python-format
 #~ msgid "No partner defined on entry line"

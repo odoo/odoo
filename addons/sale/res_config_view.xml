@@ -86,13 +86,13 @@
                         your customer.
                     </p>
                     <group>
-                        <label for="id" string="Contract Feature"/>
+                        <label for="id" string="Contract Features"/>
                         <div>
                             <div>
                                 <field name="module_account_analytic_analysis" on_change="onchange_timesheet(module_account_analytic_analysis)" class="oe_inline"/>
                                 <label for="module_account_analytic_analysis"/>
                             </div>
-                            <div attrs="{'invisible':[('module_account_analytic_analysis','=',False)]}">
+                            <div name="module_analytic_user_function" attrs="{'invisible':[('module_account_analytic_analysis','=',False)]}">
                                 <field name="module_analytic_user_function" class="oe_inline"/>
                                 <label for="module_analytic_user_function"/>
                             </div>
