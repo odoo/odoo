@@ -784,9 +784,6 @@ class product_packaging(osv.osv):
         'height': fields.float('Height', help='The height of the package'),
         'width': fields.float('Width', help='The width of the package'),
         'length': fields.float('Length', help='The length of the package'),
-        'width_uom_id': fields.many2one('product.uom', 'Unit of Measure',readonly="1", required=True, help="Unit of Measure (Unit of Measure) is the unit of measurement for width",),
-        'length_uom_id': fields.many2one('product.uom', 'Unit of Measure', readonly="1",required=True, help="Unit of Measure (Unit of Measure) is the unit of measurement for Length",),
-        'height_uom_id': fields.many2one('product.uom', 'Unit of Measure',readonly="1", required=True, help="Unit of Measure (Unit of Measure) is the unit of measurement for Height",),
     }
 
 
@@ -816,10 +813,6 @@ class product_packaging(osv.osv):
         'rows' : lambda *a : 3,
         'sequence' : lambda *a : 1,
         'ul' : _get_1st_ul,
-        'width_uom_id': lambda self,cr,uid,c: self.pool.get('product.uom').search(cr, uid, [('name', '=', _('cm'))], context=c)[0],
-        'length_uom_id': lambda self,cr,uid,c: self.pool.get('product.uom').search(cr, uid, [('name', '=', _('cm'))], context=c)[0],
-        'height_uom_id': lambda self,cr,uid,c: self.pool.get('product.uom').search(cr, uid, [('name', '=', _('cm'))], context=c)[0]
-        
     }
 
     def checksum(ean):
