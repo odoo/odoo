@@ -237,10 +237,12 @@ class mail_thread(osv.AbstractModel):
         # delete messages and notifications
         msg_ids = msg_obj.search(cr, uid, [('model', '=', self._name), ('res_id', 'in', ids)], context=context)
         msg_obj.unlink(cr, uid, msg_ids, context=context)
+        # delete
+        res = super(mail_thread, self).unlink(cr, uid, ids, context=context)
         # delete followers
         fol_ids = fol_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', ids)], context=context)
-        fol_obj.unlink(cr, uid, fol_ids, context=context)
-        return super(mail_thread, self).unlink(cr, uid, ids, context=context)
+        fol_obj.unlink(cr, SUPERUSER_ID, fol_ids, context=context)
+        return res
 
     def copy(self, cr, uid, id, default=None, context=None):
         default = default or {}
