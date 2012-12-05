@@ -573,7 +573,7 @@ class product_product(osv.osv):
             help="Small-sized image of the product. It is automatically "\
                  "resized as a 64x64px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
-        'seller_info_id': fields.function(_calc_seller, type='many2one', relation="product.supplierinfo", multi="seller_info"),
+        'seller_info_id': fields.function(_calc_seller, type='many2one', relation="product.supplierinfo", string="Seller Info", multi="seller_info"),
         'seller_delay': fields.function(_calc_seller, type='integer', string='Supplier Lead Time', multi="seller_info", help="This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."),
         'seller_qty': fields.function(_calc_seller, type='float', string='Supplier Quantity', multi="seller_info", help="This is minimum quantity to purchase from Main Supplier."),
         'seller_id': fields.function(_calc_seller, type='many2one', relation="res.partner", string='Main Supplier', help="Main Supplier who has highest priority in Supplier List.", multi="seller_info"),
