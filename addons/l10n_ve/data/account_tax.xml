@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-	<record id="tax1sale" model="account.tax.template">
+	<record id="tax0sale" model="account.tax.template">
 		<field name="chart_template_id" ref="ve_chart_template_amd"/>
 		<field name="name">Exento</field>
 		<field name="amount">0.00000</field>
@@ -54,7 +54,7 @@
 		<field name="ref_base_code_id" ref="vat_code_receivable_net"/>
 		<field name="ref_tax_code_id" ref="vat_code_payable"/>
     </record>
-	<record id="tax1sale" model="account.tax.template">
+	<record id="tax0purchase" model="account.tax.template">
 		<field name="chart_template_id" ref="ve_chart_template_amd"/>
 		<field name="name">Exento</field>
 		<field name="amount">0.00000</field>
