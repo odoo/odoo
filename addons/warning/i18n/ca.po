@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:54+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2010-10-30 11:00+0000\n"
 "Last-Translator: Raimon Esteve (www.zikzakmedia.com) "
 "<resteve@zikzakmedia.com>\n"
@@ -14,14 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:17+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
-
-#. module: warning
-#: sql_constraint:purchase.order:0
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique per Company!"
-msgstr ""
+"X-Launchpad-Export-Date: 2012-12-04 05:43+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order_line
@@ -71,21 +65,6 @@ msgid "Warnings"
 msgstr "Avisos"
 
 #. module: warning
-#: sql_constraint:product.product:0
-msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
-
-#. module: warning
-#: selection:product.product,purchase_line_warn:0
-#: selection:product.product,sale_line_warn:0
-#: selection:res.partner,invoice_warn:0
-#: selection:res.partner,picking_warn:0
-#: selection:res.partner,purchase_warn:0
-#: selection:res.partner,sale_warn:0
-msgid "Warning"
-msgstr "Avís"
-
-#. module: warning
 #: selection:product.product,purchase_line_warn:0
 #: selection:product.product,sale_line_warn:0
 #: selection:res.partner,invoice_warn:0
@@ -96,21 +75,9 @@ msgid "Blocking Message"
 msgstr "Missatge de bloqueig"
 
 #. module: warning
-#: field:res.partner,picking_warn:0
-msgid "Stock Picking"
-msgstr "Empaquetat d'estoc"
-
-#. module: warning
 #: view:res.partner:0
 msgid "Warning on the Invoice"
 msgstr "Avís en la factura"
-
-#. module: warning
-#: constraint:product.product:0
-msgid ""
-"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
-"\"Internal Reference\" field instead."
-msgstr ""
 
 #. module: warning
 #: selection:product.product,purchase_line_warn:0
@@ -139,22 +106,15 @@ msgid "Sale Order"
 msgstr "Comanda de venda"
 
 #. module: warning
-#: field:res.partner,invoice_warn_msg:0
-msgid "Message for Invoice"
-msgstr "Missatge per a factura"
+#: field:res.partner,picking_warn:0
+msgid "Stock Picking"
+msgstr "Empaquetat d'estoc"
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order
 #: field:res.partner,purchase_warn:0
 msgid "Purchase Order"
 msgstr "Comanda de compra"
-
-#. module: warning
-#: sql_constraint:stock.picking:0
-#: sql_constraint:stock.picking.in:0
-#: sql_constraint:stock.picking.out:0
-msgid "Reference must be unique per Company!"
-msgstr ""
 
 #. module: warning
 #: field:res.partner,sale_warn_msg:0
@@ -199,19 +159,9 @@ msgid "Alert for %s !"
 msgstr "Alerta per a %s!"
 
 #. module: warning
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr ""
-
-#. module: warning
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr ""
-
-#. module: warning
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr ""
+#: field:res.partner,invoice_warn_msg:0
+msgid "Message for Invoice"
+msgstr "Missatge per a factura"
 
 #. module: warning
 #: view:res.partner:0
@@ -242,9 +192,14 @@ msgid "Warning on the Sale Order"
 msgstr "Avís en la comanda de venda"
 
 #. module: warning
-#: constraint:res.partner:0
-msgid "Error: Invalid ean code"
-msgstr "Error: Codi EAN no vàlid"
+#: selection:product.product,purchase_line_warn:0
+#: selection:product.product,sale_line_warn:0
+#: selection:res.partner,invoice_warn:0
+#: selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0
+#: selection:res.partner,sale_warn:0
+msgid "Warning"
+msgstr "Avís"
 
 #. module: warning
 #: field:res.partner,picking_warn_msg:0
@@ -279,6 +234,9 @@ msgstr "Línia comanda de venda"
 
 #~ msgid "Module for Warnings form onchange Event"
 #~ msgstr "Mòdul per la configuració d'avisos en esdeveniments"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Error: Codi EAN no vàlid"
 
 #~ msgid "Order Reference must be unique !"
 #~ msgstr "La referència de la comanda ha de ser única!"

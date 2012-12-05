@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:51+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2011-05-25 15:26+0000\n"
 "Last-Translator: OpenBMS JSC <Unknown>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:09+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:36+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: hr_timesheet_sheet
 #: field:hr.analytic.timesheet,sheet_id:0
@@ -26,9 +26,9 @@ msgid "Sheet"
 msgstr "Tờ"
 
 #. module: hr_timesheet_sheet
-#: constraint:hr.attendance:0
-msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr ""
+#: model:process.transition,name:hr_timesheet_sheet.process_transition_timesheetdraft0
+msgid "Service"
+msgstr "Dịch vụ"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,quantity:0
@@ -83,11 +83,6 @@ msgstr ""
 #: selection:timesheet.report,month:0
 msgid "March"
 msgstr "Tháng Ba"
-
-#. module: hr_timesheet_sheet
-#: model:process.transition,name:hr_timesheet_sheet.process_transition_timesheetdraft0
-msgid "Service"
-msgstr "Dịch vụ"
 
 #. module: hr_timesheet_sheet
 #: view:timesheet.report:0
@@ -372,11 +367,6 @@ msgid "Timesheet lines"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "Lỗi ! Bạn không thể tạo các công ty đệ quy."
-
-#. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_follower_ids:0
 msgid "Followers"
 msgstr ""
@@ -572,23 +562,8 @@ msgid ""
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#. openerp-web
-#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:61
-#, python-format
-msgid ""
-"By default, you record timesheets on analytic accounts.\n"
-"                        But if an analytic account represents a customer\n"
-"                        contract, you can change the type of the analytic\n"
-"                        account to 'Contract or Project' to setup the "
-"invoicing\n"
-"                        options."
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#. openerp-web
-#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:56
-#, python-format
-msgid "Click to add projects/analytic accounts you worked on."
+#: view:hr.timesheet.current.open:0
+msgid "or"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -908,6 +883,13 @@ msgid "Group by year of date"
 msgstr ""
 
 #. module: hr_timesheet_sheet
+#. openerp-web
+#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:56
+#, python-format
+msgid "Click to add projects, contracts or analytic accounts."
+msgstr ""
+
+#. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_validatedtimesheet0
 msgid "State is 'validated'."
 msgstr ""
@@ -983,8 +965,8 @@ msgid "May"
 msgstr "Tháng Năm"
 
 #. module: hr_timesheet_sheet
-#: model:process.node,note:hr_timesheet_sheet.process_node_workontask0
-msgid "Defines the work summary of task"
+#: field:hr.timesheet.report,journal_id:0
+msgid "Journal"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -1033,11 +1015,6 @@ msgid "February"
 msgstr "Tháng Hai"
 
 #. module: hr_timesheet_sheet
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr ""
-
-#. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.action_hr_timesheet_report_stat_all
 msgid ""
 "<p>\n"
@@ -1048,11 +1025,6 @@ msgid ""
 "                by specific selection criteria thanks to the search tool.\n"
 "              </p>\n"
 "            "
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: constraint:account.analytic.line:0
-msgid "You cannot create analytic line on view account."
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -1132,11 +1104,6 @@ msgid "#Total Attendance"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.current.open:0
-msgid "or"
-msgstr ""
-
-#. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,cost:0
 msgid "Cost"
 msgstr "Giá"
@@ -1180,8 +1147,8 @@ msgid "Total"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: field:hr.timesheet.report,journal_id:0
-msgid "Journal"
+#: model:process.node,note:hr_timesheet_sheet.process_node_workontask0
+msgid "Defines the work summary of task"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -1205,6 +1172,9 @@ msgstr ""
 
 #~ msgid " Month "
 #~ msgstr " Tháng "
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "Lỗi ! Bạn không thể tạo các công ty đệ quy."
 
 #~ msgid "State"
 #~ msgstr "Trạng thái"

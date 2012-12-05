@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-24 02:54+0000\n"
-"PO-Revision-Date: 2012-11-24 02:54+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
+"PO-Revision-Date: 2012-12-03 16:04+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -29,11 +29,6 @@ msgstr ""
 #. module: survey
 #: view:survey.question.wiz:0
 msgid "Your Messages"
-msgstr ""
-
-#. module: survey
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
 
 #. module: survey
@@ -624,12 +619,6 @@ msgid "Error Message"
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/survey.py:687
-#, python-format
-msgid "You cannot duplicate the resource!"
-msgstr ""
-
-#. module: survey
 #: code:addons/survey/wizard/survey_answer.py:126
 #, python-format
 msgid "You cannot answer this survey more than %s times."
@@ -649,11 +638,6 @@ msgstr ""
 #. module: survey
 #: model:ir.model,name:survey.model_survey_print
 msgid "survey.print"
-msgstr ""
-
-#. module: survey
-#: sql_constraint:res.users:0
-msgid "OAuth UID must be unique per provider"
 msgstr ""
 
 #. module: survey
@@ -793,11 +777,6 @@ msgstr ""
 #: field:survey.print,without_pagebreak:0
 #: field:survey.print.answer,without_pagebreak:0
 msgid "Print Without Page Breaks"
-msgstr ""
-
-#. module: survey
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
 msgstr ""
 
 #. module: survey
@@ -1470,9 +1449,9 @@ msgid "You cannot select same answer more than one time.'"
 msgstr ""
 
 #. module: survey
-#: field:survey.response,date_create:0
-#: field:survey.response.line,date_create:0
-msgid "Create Date"
+#: code:addons/survey/survey.py:687
+#, python-format
+msgid "You cannot duplicate the resource!"
 msgstr ""
 
 #. module: survey
@@ -1687,8 +1666,9 @@ msgid "Date & Time"
 msgstr ""
 
 #. module: survey
-#: constraint:res.users:0
-msgid "Error: Invalid ean code"
+#: field:survey.response,date_create:0
+#: field:survey.response.line,date_create:0
+msgid "Create Date"
 msgstr ""
 
 #. module: survey

@@ -1023,8 +1023,10 @@ class stock_picking(osv.osv):
             partner = self.pool.get('res.partner').browse(cr, uid, partner, context=context)
         if inv_type in ('out_invoice', 'out_refund'):
             account_id = partner.property_account_receivable.id
+            payment_term = partner.property_payment_term.id or False
         else:
             account_id = partner.property_account_payable.id
+            payment_term = partner.property_supplier_payment_term.id or False
         comment = self._get_comment_invoice(cr, uid, picking)
         invoice_vals = {
             'name': picking.name,
@@ -1033,7 +1035,7 @@ class stock_picking(osv.osv):
             'account_id': account_id,
             'partner_id': partner.id,
             'comment': comment,
-            'payment_term': partner.property_payment_term and partner.property_payment_term.id or False,
+            'payment_term': payment_term,
             'fiscal_position': partner.property_account_position.id,
             'date_invoice': context.get('date_inv', False),
             'company_id': picking.company_id.id,
