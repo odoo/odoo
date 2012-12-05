@@ -1190,26 +1190,11 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         }
     },
     get_arch_fragment: function() {
-        function removeWhiteSpacesNodes(node) {
-            switch (node.nodeType) {
-                case 3:
-                case 4:
-                    if (node.data.trim() === '') {
-                        node.parentElement.removeChild(node);
-                    }
-                    break;
-                case 1:
-                    for (var i = node.childNodes.length - 1; i >= 0; i--) {
-                        removeWhiteSpacesNodes(node.childNodes[i]);
-                    }
-            }
-        }
         var doc = this.fvg.arch_doc.documentElement.cloneNode(true);
         // IE won't allow custom button@type and will revert it to spec default : 'submit'
         $('button', doc).each(function() {
             $(this).attr('data-button-type', $(this).attr('type')).attr('type', 'button');
         });
-        removeWhiteSpacesNodes(doc);
         return $('<div class="oe_form"/>').append(instance.web.xml_to_str(doc));
     },
     render_to: function($target) {
