@@ -49,20 +49,6 @@
       <field name="target">new</field>
       <field name="view_id" ref="account_coda_import_view"/>
     </record>
-
-    <act_window name="Import CODA File"
-      res_model="account.coda.import"
-      src_model="coda.bank.statement"
-      view_type="form" view_mode="form" target="new"
-      key2="client_action_multi" multi="True"
-      id="wizard_account_coda_import_1"/>
-
-    <act_window name="Import CODA File"
-      res_model="account.coda.import"
-      src_model="account.coda"
-      view_type="form" view_mode="form" target="new"
-      key2="client_action_multi" multi="True"
-      id="wizard_account_coda_import_2"/>
     
   </data> 
 </openerp>
