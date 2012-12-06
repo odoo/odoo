@@ -70,13 +70,9 @@ class report_balancesheet_horizontal(report_sxw.rml_parse, common_report_header)
         return super(report_balancesheet_horizontal, self).set_context(objects, data, new_ids, report_type=report_type)
 
     def sum_dr(self):
-        if self.res_bl['type'] == _('Net Profit'):
-            self.result_sum_dr += self.res_bl['balance']*-1
-        return self.result_sum_dr
+        return self.result_sum_dr + self.res_bl['balance']
 
     def sum_cr(self):
-        if self.res_bl['type'] == _('Net Loss'):
-            self.result_sum_cr += self.res_bl['balance']
         return self.result_sum_cr
 
     def get_pl_balance(self):
@@ -116,18 +112,22 @@ class report_balancesheet_horizontal(report_sxw.rml_parse, common_report_header)
         accounts = account_pool.browse(cr, uid, account_ids, context=ctx)
 
         if not self.res_bl:
+            self.res_bl['code'] = 'net_profit'
             self.res_bl['type'] = _('Net Profit')
             self.res_bl['balance'] = 0.0
 
-        if self.res_bl['type'] == _('Net Profit'):
+        if self.res_bl['code'] == 'net_profit':
+            self.res_bl['code'] = 'net_profit'
             self.res_bl['type'] = _('Net Profit')
         else:
             self.res_bl['type'] = _('Net Loss')
+            self.res_bl['code'] = 'net_loss'
+            self.res_bl['balance'] = -self.res_bl['balance']
         pl_dict  = {
-            'code': self.res_bl['type'],
+            'code': self.res_bl['code'],
             'name': self.res_bl['type'],
             'level': False,
-            'balance':self.res_bl['balance'],
+            'balance': self.res_bl['balance'],
         }
         for typ in types:
             accounts_temp = []
@@ -138,11 +138,11 @@ class report_balancesheet_horizontal(report_sxw.rml_parse, common_report_header)
                         'code': account.code,
                         'name': account.name,
                         'level': account.level,
-                        'balance':account.balance,
+                        'balance': typ == 'liability' and -account.balance or account.balance,
                     }
                     currency = account.currency_id and account.currency_id or account.company_id.currency_id
                     if typ == 'liability' and account.type <> 'view' and (account.debit <> account.credit):
-                        self.result_sum_dr += account.balance
+                        self.result_sum_dr -= account.balance
                     if typ == 'asset' and account.type <> 'view' and (account.debit <> account.credit):
                         self.result_sum_cr += account.balance
                     if data['form']['display_account'] == 'bal_movement':
