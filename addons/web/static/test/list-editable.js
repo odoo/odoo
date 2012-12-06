@@ -183,7 +183,7 @@ openerp.testing.section('list.edition', {
             }
             return [];
         });
-        mock('/web/view/load', function () {
+        mock('demo:fields_view_get', function () {
             return {
                 type: 'tree',
                 fields: {
@@ -191,15 +191,7 @@ openerp.testing.section('list.edition', {
                     b: {type: 'char', string: "B"},
                     c: {type: 'char', string: "C"}
                 },
-                arch: {
-                    tag: 'tree',
-                    attrs: {},
-                    children: [
-                        {tag: 'field', attrs: {name: 'a'}},
-                        {tag: 'field', attrs: {name: 'b'}},
-                        {tag: 'field', attrs: {name: 'c'}}
-                    ]
-                }
+                arch: '<tree><field name="a"/><field name="b"/><field name="c"/></tree>',
             };
         });
     }
@@ -247,7 +239,7 @@ openerp.testing.section('list.edition.events', {
         mock('demo:read', function () {
             return [{ id: 1, a: 'foo', b: 'bar', c: 'baz' }];
         });
-        mock('/web/view/load', function () {
+        mock('demo:fields_view_get', function () {
             return {
                 type: 'tree',
                 fields: {
@@ -255,15 +247,7 @@ openerp.testing.section('list.edition.events', {
                     b: {type: 'char', string: "B"},
                     c: {type: 'char', string: "C"}
                 },
-                arch: {
-                    tag: 'tree',
-                    attrs: {},
-                    children: [
-                        {tag: 'field', attrs: {name: 'a'}},
-                        {tag: 'field', attrs: {name: 'b'}},
-                        {tag: 'field', attrs: {name: 'c'}}
-                    ]
-                }
+                arch: '<tree><field name="a"/><field name="b"/><field name="c"/></tree>',
             };
         });
     }
@@ -320,19 +304,13 @@ openerp.testing.section('list.edition.onwrite', {
     templates: true,
 }, function (test) {
     test('record-to-read', {asserts: 4}, function (instance, $fix, mock) {
-        mock('/web/view/load', function () {
+        mock('demo:fields_view_get', function () {
             return {
                 type: 'tree',
                 fields: {
                     a: {type: 'char', string: "A"}
                 },
-                arch: {
-                    tag: 'tree',
-                    attrs: { on_write: 'on_write', colors: 'red:a == "foo"' },
-                    children: [
-                        {tag: 'field', attrs: {name: 'a'}}
-                    ]
-                }
+                arch: '<tree on_write="on_write" colors="red:a == \'foo\'"><field name="a"/></tree>',
             };
         });
         mock('demo:read', function (args, kwargs) {
