@@ -106,7 +106,7 @@ class hr_timesheet_sheet(osv.osv):
                 self.message_subscribe_users(cr, uid, [sheet.id], user_ids=[sheet.employee_id.user_id.id], context=context)
             wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'hr_timesheet_sheet.sheet', sheet.id, 'cancel', cr)
-            self.cancel_send_note(cr, uid, ids, context=context)
+        self.cancel_send_note(cr, uid, ids, context=context)
         return True
 
     def attendance_action_change(self, cr, uid, ids, context=None):
