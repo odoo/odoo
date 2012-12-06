@@ -369,8 +369,8 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                     stop: function(event, ui) {
                         var stop_index = ui.item.index();
                         if (start_index !== stop_index) {
-                            var $start_column = $('.oe_kanban_groups_records .oe_kanban_column .oe_kanban_column_cards').eq(start_index);
-                            var $stop_column = $('.oe_kanban_groups_records .oe_kanban_column .oe_kanban_column_cards').eq(stop_index);
+                            var $start_column = $('.oe_kanban_groups_records .oe_kanban_column ').eq(start_index);
+                            var $stop_column = $('.oe_kanban_groups_records .oe_kanban_column ').eq(stop_index);
                             var method = (start_index > stop_index) ? 'insertBefore' : 'insertAfter';
                             $start_column[method]($stop_column);
                             var tmp_group = self.groups.splice(start_index, 1)[0];
