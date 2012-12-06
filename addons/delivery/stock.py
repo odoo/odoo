@@ -135,7 +135,7 @@ class stock_picking(osv.osv):
         return result
 
     _defaults = {
-        'weight_uom_id': lambda self,cr,uid,c: self.pool.get('product.uom').search(cr, uid, [('name', '=', _('kg'))], context=c)[0],
+        'weight_uom_id': lambda self,cr,uid,c: self.pool.get('ir.model.data').get_object_reference(cr, uid, 'product', 'product_uom_kgm')[1]
     }
 
 stock_picking()
@@ -177,7 +177,7 @@ class stock_move(osv.osv):
         'weight_uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True,readonly="1",help="Unit of Measure (Unit of Measure) is the unit of measurement for Weight",),
         }
     _defaults = {
-        'weight_uom_id': lambda self,cr,uid,c: self.pool.get('product.uom').search(cr, uid, [('name', '=', _('kg'))], context=c)[0],
+        'weight_uom_id': lambda self,cr,uid,c: self.pool.get('ir.model.data').get_object_reference(cr, uid, 'product', 'product_uom_kgm')[1]
     }
 stock_move()
 
