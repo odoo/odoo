@@ -126,7 +126,11 @@ class account_coda_import(osv.osv_memory):
                     statementLine['transaction_family'] = rmspaces(line[54:56])
                     statementLine['transaction_code'] = rmspaces(line[56:58])
                     statementLine['transaction_category'] = rmspaces(line[58:61])
-                    statementLine['communication'] = rmspaces(line[62:115])
+                    if line[61] == '1':
+                        #Structured communication
+                        statementLine['communication'] = '+++' + line[65:68] + '/' + line[68:72] + '/' + line[72:77] + '+++'
+                    else:
+                        statementLine['communication'] = rmspaces(line[62:115])
                     statementLine['entryDate'] = rmspaces(line[115:121])
                     statementLine['type'] = 'normal'
                     statementLine['globalisation'] = int(line[124])
