@@ -205,33 +205,29 @@ class test_mail_access_rights(test_mail_mockup.TestMailMockups):
         self.mail_group.read(cr, user_raoul_id, self.group_jobs_id)
 
 
-    def test_80_linked_document(self):
+    def test_20_linked_document(self):
         """ Testing follower, mail and document relation. """
-        cr, uid, user_admin = self.cr, self.uid, self.user_admin
-        user_raoul_id, user_raoul =  self.user_raoul_id, self.user_raoul
+        cr = self.cr
+        user_raoul_id, user_raoul, partner_raoul = self.user_raoul_id, self.user_raoul, self.user_raoul.partner_id
+        user_bert_id, user_bert, partner_bert = self.user_bert_id, self.user_bert, self.user_bert.partner_id
 
-        print ""
-        print ""
-        print ""
-        print ""
-
+        name = 'Doc group'
+        name2 = 'Doc group 2'
 
         # Raoul create a document mail_group
-        group_doc_id = self.mail_group.create(cr, user_raoul_id, {'name': 'Doc group'})
+        group_doc_id = self.mail_group.create(cr, user_raoul_id, {'name': name})
         group_doc = self.mail_group.browse(cr, user_raoul_id, group_doc_id)
 
-        print set([user_raoul.partner_id])
-        print set(group_doc.message_follower_ids)
-        
         # Test: raoul is follower of the group he created
-        self.assertEqual(set(group_doc.message_follower_ids), set([user_raoul.partner_id]), 'Group create failed, the creator must follow the document he created.')
+        self.assertEqual(set(group_doc.message_follower_ids), set([partner_raoul]), 'Create failed, the creator must follow the document he created.')
 
+        # Test: raoul modify the group
+        self.mail_group.write(cr, user_raoul_id, [group_doc_id], {'name': name2})
+        self.assertEqual(group_doc.name, name2, 'Write failed, the followers can modify the group.')
 
-        print user_raoul.partner_id
-        print group_doc.message_follower_ids
+        # Test: bert try to modify the group but must raise
+        self.assertRaises(except_orm,
+            self.mail_message.write,
+            cr, user_bert_id, [group_doc_id], {'name': name2})
 
-        print ""
-        print ""
-        print ""
-        print ""
-        raise
+        # todo test unlink
