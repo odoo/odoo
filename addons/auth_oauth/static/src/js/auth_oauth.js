@@ -36,6 +36,9 @@ openerp.auth_oauth = function(instance) {
             ev.preventDefault();
             var index = $(ev.target).data('index');
             var provider = this.oauth_providers[index];
+            return this.do_oauth_sign_in(provider);
+        },
+        do_oauth_sign_in: function(provider) {
             var return_url = _.str.sprintf('%s//%s/auth_oauth/signin', location.protocol, location.host);
             if (instance.session.debug) {
                 return_url += '?debug';

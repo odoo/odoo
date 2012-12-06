@@ -311,7 +311,7 @@ class account_bank_statement(osv.osv):
             'statement_id': st_line.statement_id.id,
             'journal_id': st_line.statement_id.journal_id.id,
             'period_id': st_line.statement_id.period_id.id,
-            'currency_id': cur_id,
+            'currency_id': amount_currency and cur_id,
             'amount_currency': amount_currency,
             'analytic_account_id': analytic_id,
         }

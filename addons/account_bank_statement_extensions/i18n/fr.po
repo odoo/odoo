@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-02-21 13:52+0000\n"
 "Last-Translator: t.o <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:32+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:54+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -60,11 +60,6 @@ msgstr "Annuler les lignes de relevé sélectionnées"
 #: field:account.bank.statement.line,val_date:0
 msgid "Value Date"
 msgstr ""
-
-#. module: account_bank_statement_extensions
-#: constraint:res.partner.bank:0
-msgid "The RIB and/or IBAN is not valid"
-msgstr "Le numéro du RIB et/ou IBAN n'est pas correct."
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -197,17 +192,6 @@ msgid "Confirmed lines cannot be changed anymore."
 msgstr "Les lignes rapprochées ne peuvent plus être modifiées"
 
 #. module: account_bank_statement_extensions
-#: constraint:res.partner.bank:0
-msgid ""
-"\n"
-"Please define BIC/Swift code on bank for bank type IBAN Account to make "
-"valid payments"
-msgstr ""
-"\n"
-"Veuillez définir le code BIC/Swift de la banque pour les types de compte "
-"IBAN afin de générer des paiements valides."
-
-#. module: account_bank_statement_extensions
 #: view:cancel.statement.line:0
 msgid "Are you sure you want to cancel the selected Bank Statement lines ?"
 msgstr ""
@@ -303,13 +287,6 @@ msgid "Code"
 msgstr "Code"
 
 #. module: account_bank_statement_extensions
-#: constraint:account.bank.statement.line:0
-msgid ""
-"The amount of the voucher must be the same amount as the one on the "
-"statement line."
-msgstr ""
-
-#. module: account_bank_statement_extensions
 #: field:account.bank.statement.line,counterparty_name:0
 msgid "Counterparty Name"
 msgstr "Nom de la contrepartie"
@@ -323,11 +300,6 @@ msgstr "Communication"
 #: model:ir.model,name:account_bank_statement_extensions.model_res_partner_bank
 msgid "Bank Accounts"
 msgstr "Comptes bancaires"
-
-#. module: account_bank_statement_extensions
-#: constraint:account.bank.statement:0
-msgid "The journal and period chosen have to belong to the same company."
-msgstr "Le journal et la période doivent appartenir à la même société."
 
 #. module: account_bank_statement_extensions
 #: model:ir.model,name:account_bank_statement_extensions.model_account_bank_statement
@@ -382,6 +354,9 @@ msgstr "Montant total"
 msgid "Globalisation ID"
 msgstr "N° du lot"
 
+#~ msgid "The RIB and/or IBAN is not valid"
+#~ msgstr "Le numéro du RIB et/ou IBAN n'est pas correct."
+
 #~ msgid "State"
 #~ msgstr "État"
 
@@ -390,11 +365,23 @@ msgstr "N° du lot"
 #~ msgstr "Avertissement"
 
 #~ msgid ""
+#~ "\n"
+#~ "Please define BIC/Swift code on bank for bank type IBAN Account to make "
+#~ "valid payments"
+#~ msgstr ""
+#~ "\n"
+#~ "Veuillez définir le code BIC/Swift de la banque pour les types de compte "
+#~ "IBAN afin de générer des paiements valides."
+
+#~ msgid ""
 #~ "The amount of the voucher must be the same amount as the one on the "
 #~ "statement line"
 #~ msgstr ""
 #~ "Le montant du justificatif doit être égal à celui de la ligne le concernant "
 #~ "sur le relevé"
+
+#~ msgid "The journal and period chosen have to belong to the same company."
+#~ msgstr "Le journal et la période doivent appartenir à la même société."
 
 #~ msgid "Valuta Date"
 #~ msgstr "Date de valeur"

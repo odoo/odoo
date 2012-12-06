@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:51+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-06-21 23:39+0000\n"
 "Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 05:43+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:11+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
@@ -42,89 +42,6 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: model:email.template,body_html:purchase.email_template_edi_purchase
-msgid ""
-"\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
-"\n"
-"    <p>Hello${object.partner_id.name and ' ' or ''}${object.partner_id.name "
-"or ''},</p>\n"
-"    \n"
-"    <p>Here is a ${object.state in ('draft', 'sent') and 'request for "
-"quotation' or 'purchase order confirmation'} from ${object.company_id.name}: "
-"</p>\n"
-"    \n"
-"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
-"       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
-"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} "
-"${object.pricelist_id.currency_id.name}</strong><br />\n"
-"       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
-"       % if object.origin:\n"
-"       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
-"       % endif\n"
-"       % if object.partner_ref:\n"
-"       &nbsp;&nbsp;Your reference: ${object.partner_ref}<br />\n"
-"       % endif\n"
-"       % if object.user_id:\n"
-"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.validator.email "
-"or ''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n"
-"       % endif\n"
-"    </p>\n"
-"\n"
-"    <br/>\n"
-"    <p>If you have any question, do not hesitate to contact us.</p>\n"
-"    <p>Thank you!</p>\n"
-"    <br/>\n"
-"    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
-"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
-"background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
-"#FFF;\">\n"
-"            <strong style=\"text-"
-"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
-"    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
-"16px; background-color: #F2F2F2;\">\n"
-"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"        % if object.company_id.street:\n"
-"            ${object.company_id.street}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.street2:\n"
-"            ${object.company_id.street2}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.city or object.company_id.zip:\n"
-"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % "
-"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
-"or ''}<br/>\n"
-"        % endif\n"
-"        </span>\n"
-"        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
-"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
-"0px; padding-left: 0px; \">\n"
-"                Phone:&nbsp; ${object.company_id.phone}\n"
-"            </div>\n"
-"        % endif\n"
-"        % if object.company_id.website:\n"
-"            <div>\n"
-"                Web :&nbsp;<a "
-"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
-"            </div>\n"
-"        %endif\n"
-"        <p></p>\n"
-"    </div>\n"
-"</div>\n"
-"            "
-msgstr ""
-
-#. module: purchase
 #: model:product.pricelist,name:purchase.list0
 msgid "Default Purchase Pricelist"
 msgstr "ドラフト発注価格リスト"
@@ -140,6 +57,11 @@ msgid ""
 "The pricelist sets the currency used for this purchase order. It also "
 "computes the supplier price for the selected products/quantities."
 msgstr "価格リストはこの発注オーダーのために使用される通貨をセットします。また、選択した製品 / 数量の仕入先価格を計算します。"
+
+#. module: purchase
+#: model:ir.actions.server,name:purchase.actions_server_purchase_order_read
+msgid "Purchase: Mark read"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.report:0
@@ -182,16 +104,16 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:956
-#: code:addons/purchase/purchase.py:971
-#: code:addons/purchase/purchase.py:974
+#: code:addons/purchase/purchase.py:973
+#: code:addons/purchase/purchase.py:988
+#: code:addons/purchase/purchase.py:991
 #: code:addons/purchase/wizard/purchase_order_group.py:47
 #, python-format
 msgid "Warning!"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:556
+#: code:addons/purchase/purchase.py:573
 #, python-format
 msgid "You must first cancel all receptions related to this purchase order."
 msgstr "最初に、この発注オーダーに関連する全ての受領をキャンセルすべきです。"
@@ -234,7 +156,7 @@ msgid "Average Price"
 msgstr "平均価格"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:813
+#: code:addons/purchase/purchase.py:830
 #, python-format
 msgid "Invoice <b>paid</b>."
 msgstr ""
@@ -309,15 +231,15 @@ msgid ""
 msgstr "これは、全発注オーダー行の製品のもっとも小さい予定日として計算されます。"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:252
+#: code:addons/purchase/purchase.py:255
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
 msgstr ""
 
 #. module: purchase
-#: model:process.node,note:purchase.process_node_purchaseorder0
-msgid "Confirmed purchase order to invoice"
-msgstr "請求のための確認済発注オーダー"
+#: view:product.product:0
+msgid "When you sell this product, OpenERP will trigger"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
@@ -351,7 +273,7 @@ msgid "Quotation "
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:793
+#: code:addons/purchase/purchase.py:810
 #, python-format
 msgid ""
 "Quotation for <em>%s</em> <b>converted</b> to a Purchase Order of %s %s."
@@ -418,17 +340,12 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: constraint:stock.move:0
-msgid "You must assign a serial number for this product."
-msgstr ""
-
-#. module: purchase
 #: selection:purchase.report,month:0
 msgid "October"
 msgstr "10月"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:820
+#: code:addons/purchase/purchase.py:837
 #, python-format
 msgid "Purchase Order for <em>%s</em> <b>cancelled</b>."
 msgstr ""
@@ -442,12 +359,6 @@ msgstr ""
 #: model:process.transition,note:purchase.process_transition_createpackinglist0
 msgid "A pick list is generated to track the incoming products."
 msgstr "入庫製品を追跡するために集荷リストが作成されます。"
-
-#. module: purchase
-#: sql_constraint:stock.picking:0
-#: sql_constraint:stock.picking.in:0
-msgid "Reference must be unique per Company!"
-msgstr "参照は会社ごとに固有でなければいけません。"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
@@ -470,7 +381,7 @@ msgid "Quantity"
 msgstr "数量"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:802
+#: code:addons/purchase/purchase.py:819
 #, python-format
 msgid "Shipment <em>%s</em> <b>scheduled</b> for %s."
 msgstr ""
@@ -533,7 +444,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:807
+#: code:addons/purchase/purchase.py:824
 #, python-format
 msgid "Draft Invoice of %s %s is <b>waiting for validation</b>."
 msgstr ""
@@ -564,13 +475,6 @@ msgid "Journal"
 msgstr "仕訳帳"
 
 #. module: purchase
-#: constraint:product.template:0
-msgid ""
-"Error: The default Unit of Measure and the purchase Unit of Measure must be "
-"in the same category."
-msgstr ""
-
-#. module: purchase
 #: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.purchase_draft
 msgid "Request for Quotations"
@@ -585,11 +489,6 @@ msgstr "予約"
 #: view:purchase.order:0
 msgid "Purchase orders that include lines not invoiced."
 msgstr "請求なしの行を含む発注オーダー"
-
-#. module: purchase
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr "会社名は固有でなければいけません。"
 
 #. module: purchase
 #: view:product.product:0
@@ -613,11 +512,6 @@ msgstr ""
 #: field:res.company,po_lead:0
 msgid "Purchase Lead Time"
 msgstr "発注リードタイム"
-
-#. module: purchase
-#: constraint:res.partner:0
-msgid "Error: Invalid ean code"
-msgstr ""
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_invoicefrompurchase0
@@ -670,7 +564,7 @@ msgid "Supplier"
 msgstr "仕入先"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:491
+#: code:addons/purchase/purchase.py:508
 #, python-format
 msgid "Define expense account for this company: \"%s\" (id:%d)."
 msgstr ""
@@ -763,8 +657,8 @@ msgid "It indicates that a picking has been done"
 msgstr "それは集荷は行われたことを示しています。"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:548
-#: code:addons/purchase/purchase.py:555
+#: code:addons/purchase/purchase.py:565
+#: code:addons/purchase/purchase.py:572
 #, python-format
 msgid "Unable to cancel this purchase order."
 msgstr ""
@@ -782,10 +676,9 @@ msgid ""
 msgstr "受領分析はチェックの簡易化のため、会社のオーダー受領と仕入先の配達の実績の分析を行うことができます。"
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,warehouse_id:0
-msgid "Warehouse"
-msgstr "倉庫"
+#: view:purchase.order:0
+msgid "Print"
+msgstr "印刷"
 
 #. module: purchase
 #: field:purchase.order,order_line:0
@@ -890,7 +783,7 @@ msgid "Stock Moves"
 msgstr "在庫移動"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1141
+#: code:addons/purchase/purchase.py:1158
 #, python-format
 msgid "Draft Purchase Order created"
 msgstr ""
@@ -899,11 +792,6 @@ msgstr ""
 #: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
 msgid "Product Categories"
 msgstr "製品分類"
-
-#. module: purchase
-#: view:purchase.order:0
-msgid "Send Request for Quotation"
-msgstr ""
 
 #. module: purchase
 #: help:purchase.order,invoiced:0
@@ -1004,11 +892,6 @@ msgid "Qty"
 msgstr "数量"
 
 #. module: purchase
-#: model:res.groups,name:purchase.group_delivery_invoice_address
-msgid "Addresses in Purchase Orders"
-msgstr ""
-
-#. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_approvingcancelpurchaseorder0
 #: model:process.transition.action,name:purchase.process_transition_action_cancelpurchaseorder0
 #: view:purchase.config.settings:0
@@ -1058,7 +941,7 @@ msgid "Date Approved"
 msgstr "承認日"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:789
+#: code:addons/purchase/purchase.py:806
 #, python-format
 msgid "Request for quotation <b>created</b>."
 msgstr ""
@@ -1066,11 +949,6 @@ msgstr ""
 #. module: purchase
 #: view:product.product:0
 msgid "a draft purchase order"
-msgstr ""
-
-#. module: purchase
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product."
 msgstr ""
 
 #. module: purchase
@@ -1097,11 +975,11 @@ msgid ""
 msgstr "この製品のための仕入先がないケースでは、買い手はフォームを手動で埋めて、確認をします。見積依頼は発注オーダー確認済となります。"
 
 #. module: purchase
-#: help:purchase.config.settings,module_purchase_double_validation:0
+#: help:purchase.config.settings,group_purchase_pricelist:0
 msgid ""
-"Provide a double validation mechanism for purchases exceeding minimum "
-"amount.\n"
-"                This installs the module purchase_double_validation."
+"Allows to manage different prices based on rules per category of Supplier.\n"
+"                Example: 10% for retailers, promotion of 5 EUR on this "
+"product, etc."
 msgstr ""
 
 #. module: purchase
@@ -1110,9 +988,14 @@ msgid "Outgoing Mails"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:420
+#: code:addons/purchase/purchase.py:437
 #, python-format
 msgid "You cannot confirm a purchase order without any purchase order line."
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.server,name:purchase.actions_server_purchase_order_unread
+msgid "Purchase: Mark unread"
 msgstr ""
 
 #. module: purchase
@@ -1127,7 +1010,7 @@ msgid "Destination Warehouse"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:956
+#: code:addons/purchase/purchase.py:973
 #, python-format
 msgid ""
 "Selected Unit of Measure does not belong to the same category as the product "
@@ -1146,7 +1029,7 @@ msgid "Manage pricelist per supplier"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:816
+#: code:addons/purchase/purchase.py:833
 #, python-format
 msgid "Purchase Order has been set to <b>draft</b>."
 msgstr ""
@@ -1157,7 +1040,7 @@ msgid "Purchase Dashboard"
 msgstr "発注ダッシュボード"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:549
+#: code:addons/purchase/purchase.py:566
 #, python-format
 msgid "First cancel all receptions related to this purchase order."
 msgstr ""
@@ -1206,11 +1089,6 @@ msgid "Set to Draft"
 msgstr "ドラフトに設定"
 
 #. module: purchase
-#: field:purchase.config.settings,group_purchase_delivery_address:0
-msgid "Allow a different address for incoming products and invoicing"
-msgstr ""
-
-#. module: purchase
 #: view:purchase.order.line:0
 msgid "Notes"
 msgstr "注記"
@@ -1240,7 +1118,7 @@ msgid "Stock Move"
 msgstr "在庫移動"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:252
+#: code:addons/purchase/purchase.py:255
 #, python-format
 msgid "Invalid Action!"
 msgstr ""
@@ -1340,7 +1218,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:307
+#: code:addons/purchase/purchase.py:310
 #, python-format
 msgid "Please create Invoices."
 msgstr ""
@@ -1430,18 +1308,18 @@ msgid "Purchase Order Line Make Invoice"
 msgstr "発注オーダー行は請求書を作成します。"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1116
+#: code:addons/purchase/purchase.py:1133
 #, python-format
 msgid "PO: %s"
 msgstr "発注オーダー：%s"
 
 #. module: purchase
-#: model:process.node,note:purchase.process_node_packinginvoice0
-msgid "Outgoing products to invoice"
-msgstr "請求するための出庫製品"
+#: view:purchase.order:0
+msgid "Send by EMail"
+msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:481
+#: code:addons/purchase/purchase.py:498
 #, python-format
 msgid "Define purchase journal for this company: \"%s\" (id:%d)."
 msgstr ""
@@ -1526,9 +1404,9 @@ msgid "Invoice"
 msgstr "請求書"
 
 #. module: purchase
-#: view:product.product:0
-msgid "When you sell this product, OpenERP will trigger"
-msgstr ""
+#: model:process.node,note:purchase.process_node_purchaseorder0
+msgid "Confirmed purchase order to invoice"
+msgstr "請求のための確認済発注オーダー"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_productrecept0
@@ -1608,7 +1486,7 @@ msgid "Compute product cost price based on average cost"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:337
+#: code:addons/purchase/purchase.py:340
 #: code:addons/purchase/wizard/purchase_line_invoice.py:141
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
 #: view:res.partner:0
@@ -1657,11 +1535,6 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order,invoiced:0
 msgid "Invoice Received"
-msgstr ""
-
-#. module: purchase
-#: model:ir.actions.server,name:purchase.actions_server_purchase_order_unread
-msgid "Mark unread"
 msgstr ""
 
 #. module: purchase
@@ -1723,6 +1596,11 @@ msgstr ""
 #. module: purchase
 #: model:ir.actions.client,name:purchase.action_client_purchase_menu
 msgid "Open Purchase Menu"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_mail_compose_message
+msgid "Email composition wizard"
 msgstr ""
 
 #. module: purchase
@@ -1793,10 +1671,10 @@ msgid "Purchase Order"
 msgstr "発注オーダー"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:307
-#: code:addons/purchase/purchase.py:420
-#: code:addons/purchase/purchase.py:480
-#: code:addons/purchase/purchase.py:491
+#: code:addons/purchase/purchase.py:310
+#: code:addons/purchase/purchase.py:437
+#: code:addons/purchase/purchase.py:497
+#: code:addons/purchase/purchase.py:508
 #: code:addons/purchase/wizard/purchase_line_invoice.py:109
 #, python-format
 msgid "Error!"
@@ -1838,7 +1716,7 @@ msgid "# of Purchase Order"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:810
+#: code:addons/purchase/purchase.py:827
 #, python-format
 msgid "Shipment <b>received</b>."
 msgstr ""
@@ -1851,13 +1729,6 @@ msgstr "TEL："
 #. module: purchase
 #: view:purchase.order:0
 msgid "Resend Purchase Order"
-msgstr ""
-
-#. module: purchase
-#: help:purchase.config.settings,group_purchase_delivery_address:0
-msgid ""
-"Allows you to specify different delivery and invoice addresses on a purchase "
-"order."
 msgstr ""
 
 #. module: purchase
@@ -1882,11 +1753,6 @@ msgstr "確認"
 #: selection:purchase.config.settings,default_invoice_method:0
 msgid "Based on receptions"
 msgstr "受領基準"
-
-#. module: purchase
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "エラー。再帰的な関係となる会社を作ることはできません。"
 
 #. module: purchase
 #: field:purchase.order,partner_ref:0
@@ -1923,11 +1789,6 @@ msgid "Invoice Lines"
 msgstr "請求書行"
 
 #. module: purchase
-#: model:ir.actions.server,name:purchase.actions_server_purchase_order_read
-msgid "Mark read"
-msgstr ""
-
-#. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_purchase_order_report_all
 msgid ""
 "Purchase Analysis allows you to easily check and analyse your company "
@@ -1942,7 +1803,7 @@ msgid "RFQ_${(object.name or '').replace('/','_')}"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:971
+#: code:addons/purchase/purchase.py:988
 #, python-format
 msgid "The selected supplier only sells this product by %s"
 msgstr "選択仕入先は%s によりこの製品のみを売ります。"
@@ -1963,11 +1824,11 @@ msgid "Configuration"
 msgstr "設定"
 
 #. module: purchase
-#: help:purchase.config.settings,group_purchase_pricelist:0
+#: help:purchase.config.settings,module_purchase_double_validation:0
 msgid ""
-"Allows to manage different prices based on rules per category of Supplier.\n"
-"                Example: 10% for retailers, promotion of 5 EUR on this "
-"product, etc."
+"Provide a double validation mechanism for purchases exceeding minimum "
+"amount.\n"
+"                This installs the module purchase_double_validation."
 msgstr ""
 
 #. module: purchase
@@ -1981,6 +1842,11 @@ msgstr "EDIの価格リスト（%s）"
 #: field:purchase.report,product_uom:0
 msgid "Reference Unit of Measure"
 msgstr ""
+
+#. module: purchase
+#: model:process.node,note:purchase.process_node_packinginvoice0
+msgid "Outgoing products to invoice"
+msgstr "請求するための出庫製品"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -2087,11 +1953,6 @@ msgid "January"
 msgstr "1月"
 
 #. module: purchase
-#: constraint:stock.move:0
-msgid "You cannot move products from or to a location of the type view."
-msgstr ""
-
-#. module: purchase
 #: help:purchase.order,invoice_method:0
 msgid ""
 "Based on Purchase Order lines: place individual lines in 'Invoice Control > "
@@ -2129,6 +1990,89 @@ msgid "Invoicing Settings"
 msgstr ""
 
 #. module: purchase
+#: model:email.template,body_html:purchase.email_template_edi_purchase
+msgid ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
+"255, 255); \">\n"
+"\n"
+"    <p>Hello${object.partner_id.name and ' ' or ''}${object.partner_id.name "
+"or ''},</p>\n"
+"    \n"
+"    <p>Here is a ${object.state in ('draft', 'sent') and 'request for "
+"quotation' or 'purchase order confirmation'} from ${object.company_id.name}: "
+"</p>\n"
+"    \n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
+"       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} "
+"${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.partner_ref:\n"
+"       &nbsp;&nbsp;Your reference: ${object.partner_ref}<br />\n"
+"       % endif\n"
+"       % if object.validator:\n"
+"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.validator.email "
+"or ''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    <br/>\n"
+"    <p>If you have any question, do not hesitate to contact us.</p>\n"
+"    <p>Thank you!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#FFF;\">\n"
+"            <strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % "
+"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
+"or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                Phone:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
+msgstr ""
+
+#. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_by_user_all
 msgid "Total Orders by User per month"
 msgstr "ユーザの月別合計オーダー"
@@ -2139,6 +2083,12 @@ msgid "Based on incoming shipments"
 msgstr ""
 
 #. module: purchase
+#: view:purchase.report:0
+#: field:purchase.report,warehouse_id:0
+msgid "Warehouse"
+msgstr "倉庫"
+
+#. module: purchase
 #: help:purchase.order,partner_ref:0
 msgid ""
 "Reference of the sale order or quotation sent by your supplier. It's mainly "
@@ -2147,7 +2097,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:974
+#: code:addons/purchase/purchase.py:991
 #, python-format
 msgid ""
 "The selected supplier has a minimal quantity set to %s %s, you should not "
@@ -2239,11 +2189,6 @@ msgstr ""
 #: model:ir.ui.menu,name:purchase.menu_purchase_pricelist_version_action
 msgid "Pricelist Versions"
 msgstr "価格リストバージョン"
-
-#. module: purchase
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr "エラー：再帰的なメンバーを作ることはできません。"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -2405,12 +2350,12 @@ msgstr "オーダー"
 #~ msgid "Default Invoicing Control Method"
 #~ msgstr "デフォルト請求書制御方法"
 
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "エラー。再帰的な関係となる会社を作ることはできません。"
+
 #, python-format
 #~ msgid "No Partner!"
 #~ msgstr "パートナが指定されていません。"
-
-#~ msgid "Print"
-#~ msgstr "印刷"
 
 #~ msgid "Available"
 #~ msgstr "利用可能"
@@ -2479,6 +2424,9 @@ msgstr "オーダー"
 #~ msgid "Pre-Generate Draft Invoices based on Purchase Orders"
 #~ msgstr "発注オーダー基準のドラフト請求書の事前作成"
 
+#~ msgid "The company name must be unique !"
+#~ msgstr "会社名は固有でなければいけません。"
+
 #~ msgid "Destination Address"
 #~ msgstr "宛先住所"
 
@@ -2517,6 +2465,9 @@ msgstr "オーダー"
 #, python-format
 #~ msgid "Unable to cancel this purchase order!"
 #~ msgstr "この発注オーダーはキャンセルできません。"
+
+#~ msgid "Reference must be unique per Company!"
+#~ msgstr "参照は会社ごとに固有でなければいけません。"
 
 #~ msgid "Dashboard"
 #~ msgstr "ダッシュボード"
@@ -2761,6 +2712,9 @@ msgstr "オーダー"
 #, python-format
 #~ msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
 #~ msgstr "この製品のために定義された費用勘定がありません：%s（ID：%d）"
+
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr "エラー：再帰的なメンバーを作ることはできません。"
 
 #~ msgid "Purchase Management"
 #~ msgstr "発注管理"
