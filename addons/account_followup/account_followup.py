@@ -119,8 +119,13 @@ class account_move_line(osv.osv):
 class email_template(osv.osv):
     _inherit = 'email.template'
 
-    def _get_followup_table_html(self, cr, uid, res_id, context = None):
-        #res_id -> res.partner
+    def _get_followup_table_html(self, cr, uid, res_id, context=None):
+    ''' Build the html tables to be included in emails send to partners, when reminding them their
+        overdue invoices.
+
+        :param res_id: ID of the partner for whom we are building the tables
+        :rtype: string
+    '''
         partner = self.pool.get('res.partner').browse(cr, uid, res_id, context=context)
         followup_table = ''
         if partner.unreconciled_aml_ids: 
@@ -159,12 +164,13 @@ class email_template(osv.osv):
                                 <center>Amount due: %s </center>''' % (total)
         return followup_table
 
-    # Adds current_date to the context.  That way it can be used to put
-    # the account move lines in bold that are overdue in the email
+
     def render_template(self, cr, uid, template, model, res_id, context=None):
-        context['current_date'] = fields.date.context_today(cr, uid, context)
-        if model == 'res.partner': # and 'followup' in context.keys() and context['followup']:
+        if model == 'res.partner' and context.get('followup'):
             context['followup_table'] = self._get_followup_table_html(cr, uid, res_id, context=context)
+            # Adds current_date to the context. That way it can be used to put
+            # the account move lines in bold that are overdue in the email
+            context['current_date'] = fields.date.context_today(cr, uid, context)
         return super(email_template, self).render_template(cr, uid, template, model, res_id, context=context)
 
 class res_partner(osv.osv):
@@ -181,7 +187,6 @@ class res_partner(osv.osv):
             res['arch'] = etree.tostring(doc, encoding="utf-8")
         return res
 
-    
     def _get_latest(self, cr, uid, ids, names, arg, context=None, company_id=None):
         res={}
         if company_id == None:
@@ -215,7 +220,6 @@ class res_partner(osv.osv):
         for partner in self.browse(cr, uid, partner_ids, context=context):
             #Check action: check if the action was not empty, if not add
             action_text= ""
-            context['followup'] = True
             if partner.payment_next_action:
                 action_text = (partner.payment_next_action or '') + "\n" + (partner.latest_followup_level_id_without_lit.manual_action_note or '')
             else:
@@ -253,32 +257,36 @@ class res_partner(osv.osv):
             }
 
     def do_partner_mail(self, cr, uid, partner_ids, context=None):
+        if context is None:
+            context = {}
+        ctx = context.copy()
+        ctx['followup'] = True
         #partner_ids are res.partner ids
         # If not defined by latest follow-up level, it will be the default template if it can find it
         mtp = self.pool.get('email.template')
         unknown_mails = 0
-        for partner in self.browse(cr, uid, partner_ids, context=context):
+        for partner in self.browse(cr, uid, partner_ids, context=ctx):
             if partner.email and partner.email.strip():
                 level = partner.latest_followup_level_id_without_lit
                 if level and level.send_email and level.email_template_id and level.email_template_id.id:
-                    mtp.send_mail(cr, uid, level.email_template_id.id, partner.id, context=context)
+                    mtp.send_mail(cr, uid, level.email_template_id.id, partner.id, context=ctx)
                 else:
                     mail_template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 
                                                     'account_followup', 'email_template_account_followup_default')
-                    mtp.send_mail(cr, uid, mail_template_id[1], partner.id, context=context)
+                    mtp.send_mail(cr, uid, mail_template_id[1], partner.id, context=ctx)
             else:
                 unknown_mails = unknown_mails + 1
                 action_text = _("Email not sent because of email address of partner not filled in")
                 if partner.payment_next_action_date:
-                    payment_action_date = min(fields.date.context_today(cr, uid, context), partner.payment_next_action_date)
+                    payment_action_date = min(fields.date.context_today(cr, uid, ctx), partner.payment_next_action_date)
                 else:
-                    payment_action_date = fields.date.context_today(cr, uid, context)
+                    payment_action_date = fields.date.context_today(cr, uid, ctx)
                 if partner.payment_next_action:
                     payment_next_action = partner.payment_next_action + " \n " + action_text
                 else:
                     payment_next_action = action_text
                 self.write(cr, uid, [partner.id], {'payment_next_action_date': payment_action_date,
-                                                   'payment_next_action': payment_next_action}, context=context)
+                                                   'payment_next_action': payment_next_action}, context=ctx)
         return unknown_mails
 
     def action_done(self, cr, uid, ids, context=None):
@@ -405,17 +413,16 @@ class res_partner(osv.osv):
             return [('id','=','0')]
         return [('id','in',map(itemgetter(0), res))]
         
-        
     _inherit = "res.partner"
     _columns = {
         'payment_responsible_id':fields.many2one('res.users', ondelete='set null', string='Follow-up Responsible', 
-                                                 help="Optionally you can assign a user to this field, which will make him responsible for the action. "), 
+                                                 help="Optionally you can assign a user to this field, which will make him responsible for the action."), 
         'payment_note':fields.text('Customer Payment Promise', help="Payment Note"),
         'payment_next_action':fields.text('Next Action', 
                                     help="This is the next action to be taken.  It will automatically be set when the partner gets a follow-up level that requires a manual action. "), 
         'payment_next_action_date':fields.date('Next Action Date',
                                     help="This is when the manual follow-up is needed. " \
-                                    "The date will be set to the current date when the partner gets a follow-up level that requires a manual action. Can be practical to set manually e.g. to see if he keeps his promises. "), 
+                                    "The date will be set to the current date when the partner gets a follow-up level that requires a manual action. Can be practical to set manually e.g. to see if he keeps his promises."), 
         'unreconciled_aml_ids':fields.one2many('account.move.line', 'partner_id', domain=['&', ('reconcile_id', '=', False), '&', 
                             ('account_id.active','=', True), '&', ('account_id.type', '=', 'receivable'), ('state', '!=', 'draft')]), 
         'latest_followup_date':fields.function(_get_latest, method=True, type='date', string="Latest Follow-up Date", 
@@ -431,18 +438,18 @@ class res_partner(osv.osv):
             help="The maximum follow-up level without taking into account the account move lines with litigation", 
             store=False, 
             multi="latest"),
-        'payment_amount_due':fields.function(_get_amounts_and_date, method = True, 
+        'payment_amount_due':fields.function(_get_amounts_and_date, 
                                                  type='float', string="Amount Due",
-                                                 store = False, multi="amountsdate", 
+                                                 store = False, multi="followup", 
                                                  fnct_search=_payment_due_search),
-        'payment_amount_overdue':fields.function(_get_amounts_and_date, method = True, 
+        'payment_amount_overdue':fields.function(_get_amounts_and_date,
                                                  type='float', string="Amount Overdue",
-                                                 store = False, multi="amountsdate", 
+                                                 store = False, multi="followup", 
                                                  fnct_search = _payment_overdue_search),
-        'payment_earliest_due_date':fields.function(_get_amounts_and_date, method=True, 
+        'payment_earliest_due_date':fields.function(_get_amounts_and_date,
                                                     type='date',
                                                     string = "Worst Due Date",
-                                                    multi="amountsdate",
+                                                    multi="followup",
                                                     fnct_search=_payment_earliest_date_search),
         }
 
