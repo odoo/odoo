@@ -128,8 +128,12 @@ class account_coda_import(osv.osv_memory):
                     statementLine['transaction_category'] = rmspaces(line[58:61])
                     if line[61] == '1':
                         #Structured communication
+                        statementLine['communication_struct'] = True
+                        statementLine['communication_type'] = line[62:65]
                         statementLine['communication'] = '+++' + line[65:68] + '/' + line[68:72] + '/' + line[72:77] + '+++'
                     else:
+                        #Non-structured communication
+                        statementLine['communication_struct'] = False
                         statementLine['communication'] = rmspaces(line[62:115])
                     statementLine['entryDate'] = rmspaces(line[115:121])
                     statementLine['type'] = 'normal'
@@ -156,7 +160,8 @@ class account_coda_import(osv.osv_memory):
                         raise osv.except_osv(_('Error') + 'R2005', _('CODA parsing error on movement data record 2.3, seq nr %s! Please report this issue via your OpenERP support channel.') % line[2:10])
                     if statement['version'] == '1':
                         statement['lines'][-1]['counterpartyNumber'] = rmspaces(line[10:22])
-                        statement['lines'][-1]['counterpartyName'] = rmspaces(line[47:125])
+                        statement['lines'][-1]['counterpartyName'] = rmspaces(line[47:73])
+                        statement['lines'][-1]['counterpartyAddress'] = rmspaces(line[73:125])
                         statement['lines'][-1]['counterpartyCurrency'] = ''
                     else:
                         if line[22] == ' ':
@@ -235,15 +240,76 @@ class account_coda_import(osv.osv_memory):
             statement['id'] = self.pool.get('account.bank.statement').create(cr, uid, data, context=context)
             for line in statement['lines']:
                 if line['type'] == 'normal':
+                    note = []
                     counterparty = []
                     if 'counterpartyName' in line:
                         counterparty.append(line['counterpartyName'])
-                    if 'counterpartyNumber' in line:
+                    try:
+                        if 'counterpartyNumber' in line and int(line['counterpartyNumber']) == 0:
+                            line['counterpartyNumber'] = False
+                    except:
+                        pass
+                    if 'counterpartyNumber' in line and line['counterpartyNumber']:
                         counterparty.append(line['counterpartyNumber'])
                     if len(counterparty) > 0:
                         counterparty = '[' + ' / '.join(counterparty) + ']'
                     else:
                         counterparty = '/'
+                    note.append(_('Counter Party') + ': ' + counterparty)
+
+                    partner = None
+                    partner_id = None
+                    invoice = False
+                    if line['communication_struct'] and 'communication_type' in line and line['communication_type'] == '101':
+                        ids = self.pool.get('account.invoice').search(cr, uid, [('reference', '=', line['communication']), ('reference_type', '=', 'bba')])
+                        if ids:
+                            invoice = self.pool.get('account.invoice').browse(cr, uid, ids[0])
+                            partner = invoice.partner_id
+                            partner_id = partner.id
+                            if invoice.type in ['in_invoice', 'in_refund']:
+                                line['type'] = 'supplier'
+                            else:
+                                line['type'] = 'customer'
+                    if 'counterpartyNumber' in line and line['counterpartyNumber']:
+                        ids = self.pool.get('res.partner.bank').search(cr, uid, [('acc_number', '=', str(line['counterpartyNumber']))])
+                        if ids and len(ids) > 0:
+                            partner = self.pool.get('res.partner.bank').browse(cr, uid, ids[0], context=context).partner_id
+                            partner_id = partner.id
+                            if not invoice:
+                                if partner.customer and line['debit'] == '0':
+                                    line['type'] = 'customer'
+                                elif partner.supplier and line['debit'] == '1':
+                                    line['type'] = 'supplier'
+                                else:
+                                    line['type'] = 'general'
+                                # if line['debit'] == '1':
+                                #     line['account'] = partner.property_account_payable.id
+                                # else:
+                                #     line['account'] = partner.property_account_receivable.id
+                    if partner:
+                        if line['type'] == 'customer':
+                            line['account'] = partner.property_account_receivable.id
+                        elif line['type'] == 'supplier':
+                            line['account'] = partner.property_account_payable.id
+                        else:
+                            if line['debit'] == '1':
+                                line['account'] = partner.property_account_payable.id
+                            else:
+                                line['account'] = partner.property_account_receivable.id
+                    note.append(_('Communication') + ': ' + line['communication'])
+                    if not partner:
+                        line['type'] = 'general'
+                        if line['debit'] == '1':
+                            line['account'] = statement['journal_id'].default_debit_account_id.id
+                        else:
+                            line['account'] = statement['journal_id'].default_credit_account_id.id
+                    note.append(_('Communication') + ': ' + line['communication'])
+                    if 'communication_type' in line:
+                        if line['communication_type'] in communication_types:
+                            line['communication_type'] = communication_types[line['communication_type']]
+                        else:
+                            line['communication_type'] = 'Unknown'
+                        note.append(_('Communication Type') + ': ' + line['communication_type'])
                     if line['transaction_type'] in transaction_types:
                         line['transaction_type'] = transaction_types[line['transaction_type']][1]
                     if line['transaction_category'] in transaction_categories:
@@ -253,45 +319,13 @@ class account_coda_import(osv.osv_memory):
                         line['transaction_family'] = transaction_family[0]
                         if line['transaction_code'] in transaction_family[1]:
                             line['transaction_code'] = transaction_family[1][line['transaction_code']]
-                    note = []
-                    note.append(_('Counter Party') + ': ' + counterparty)
-                    note.append(_('Communication') + ': ' + line['communication'])
                     note.append(_('Transaction type') + ': ' + line['transaction_type'])
                     note.append(_('Transaction family') + ': ' + line['transaction_family'])
                     note.append(_('Transaction code') + ': ' + line['transaction_code'])
                     note.append(_('Transaction category') + ': ' + line['transaction_category'])
 
-                    try:
-                        if 'counterpartyNumber' in line and int(line['counterpartyNumber']) == 0:
-                            line['counterpartyNumber'] = False
-                    except:
-                        pass
-                    partner = None
-                    partner_id = None
-                    if 'counterpartyNumber' in line and line['counterpartyNumber']:
-                        ids = self.pool.get('res.partner.bank').search(cr, uid, [('acc_number', '=', str(line['counterpartyNumber']))])
-                        if ids and len(ids) > 0:
-                            partner = self.pool.get('res.partner.bank').browse(cr, uid, ids[0], context=context).partner_id
-                            partner_id = partner.id
-                    if partner:
-                        if partner.customer:
-                            line['type'] = 'customer'
-                        else:
-                            line['type'] = 'supplier'
-                        if line['debit'] == '1':
-                            line['account'] = partner.property_account_payable.id
-                        else:
-                            line['account'] = partner.property_account_receivable.id
-                    else:
-                        line['type'] = 'general'
-                        if line['debit'] == '1':
-                            line['account'] = statement['journal_id'].default_debit_account_id.id
-                        else:
-                            line['account'] = statement['journal_id'].default_credit_account_id.id
-                            
-
                     data = {
-                        'name': line['communication'],
+                        'name': counterparty + '\n' + line['communication'],
                         'note':  "\n".join(note),
                         'date': line['entryDate'],
                         'amount': line['amount'],
@@ -750,6 +784,42 @@ transaction_categories = {
     "429": "Foreign Stock Exchange tax",
     "430": "Recovery of foreign tax",
     "431": "Delivery of a copy",
+}
+
+communication_types = {
+    "001": "Data concerning the counterparty",
+    "002": "Communication of the bank",
+    "003": "RBP data",
+    "004": "Counterparty’s banker",
+    "005": "Data concerning the correspondent",
+    "006": "Information concerning the detail amount",
+    "007": "Information concerning the detail cash",
+    "008": "Identification of the de ultimate beneficiary/creditor (SEPA SCT/SDD)",
+    "009": "Identification of the de ultimate ordering customer/debtor (SEPA SCT/SDD)",
+    "010": "Information pertaining to sale or purchase of securities",
+    "011": "Information pertaining to coupons",
+    "100": "(SEPA) payment with a structured format communication applying the ISO standard 11649: Structured creditor reference to remittan",
+    "101": "Credit transfer or cash payment with structured format communication",
+    "102": "Credit transfer or cash payment with reconstituted structured format communication",
+    "103": "number (e.g. of the cheque, of the card, etc.)",
+    "104": "Equivalent in EUR",
+    "105": "original amount of the transaction",
+    "106": "Method of calculation (VAT, withholding tax on income, commission, etc.)",
+    "107": "Direct debit – DOM’80",
+    "108": "Closing",
+    "111": "POS credit – Globalisation",
+    "112": "ATM payment (usually Eurocheque card)",
+    "113": "ATM/POS debit",
+    "114": "POS credit - individual transaction",
+    "115": "Terminal cash deposit",
+    "120": "Correction of a transaction",
+    "121": "Commercial bills",
+    "122": "Bills - calculation of interest",
+    "123": "Fees and commissions",
+    "124": "Number of the credit card",
+    "125": "Credit",
+    "126": "Term investments",
+    "127": "European direct debit (SEPA)",
 }
 
 
