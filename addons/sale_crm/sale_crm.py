@@ -30,9 +30,13 @@ class sale_order(osv.osv):
     }
 
     def create(self, cr, uid, vals, context=None):
+        order =  super(sale_order, self).create(cr, uid, vals, context=context)
+        self._subscribe_salesteam_followers_to_order(cr, uid, order, context=context)
+        return order
+
+    def _subscribe_salesteam_followers_to_order(self, cr, uid, order, context=None):
         follower_obj = self.pool.get('mail.followers')
         subtype_obj = self.pool.get('mail.message.subtype')
-        order =  super(sale_order, self).create(cr, uid, vals, context=context)
         section_id = self.browse(cr, uid, order, context=context).section_id
         if section_id:
             followers = [follow.id for follow in section_id.message_follower_ids]
@@ -46,14 +50,13 @@ class sale_order(osv.osv):
                 salesteam_subtype_names = [salesteam_subtype.name for salesteam_subtype in follower.subtype_ids]
                 order_subtype_ids = [order_subtype.id for order_subtype in order_subtypes if order_subtype.name in salesteam_subtype_names]
                 self.message_subscribe(cr, uid, [order], [follower.partner_id.id], subtype_ids=order_subtype_ids, context=context)
-        return order
 
     def write(self, cr, uid, ids, vals, context=None):
+        res = super(sale_order, self).write(cr, uid, ids, vals, context=context)
         if vals.get('section_id'):
-            section_id = self.pool.get('crm.case.section').browse(cr, uid, vals.get('section_id'), context=context)
-            if section_id:
-                vals['message_follower_ids'] = [(4, follower.id) for follower in section_id.message_follower_ids]
-        return super(sale_order, self).write(cr, uid, ids, vals, context=context)
+            for id in ids:
+                self._subscribe_salesteam_followers_to_order(cr, uid, id, context=context)
+        return res
 
 sale_order()
 

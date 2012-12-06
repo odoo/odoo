@@ -277,14 +277,19 @@ class crm_lead(base_stage, format_address, osv.osv):
     ]
 
     def create(self, cr, uid, vals, context=None):
+        obj_id = super(crm_lead, self).create(cr, uid, vals, context)
+        self._subscribe_salesteam_followers_to_lead(cr, uid, obj_id, context=context)
+        self.create_send_note(cr, uid, [obj_id], context=context)
+        return obj_id
+
+    def _subscribe_salesteam_followers_to_lead(self, cr, uid, obj_id, context=None):
         follower_obj = self.pool.get('mail.followers')
         subtype_obj = self.pool.get('mail.message.subtype')
-        obj_id = super(crm_lead, self).create(cr, uid, vals, context)
         section_id = self.browse(cr, uid, obj_id, context=context).section_id
         if section_id:
+            followers = [follow.id for follow in section_id.message_follower_ids]
             lead_subtype_ids = subtype_obj.search(cr, uid, ['|', ('res_model', '=', False), ('res_model', '=', self._name)], context=context)
             lead_subtypes = subtype_obj.browse(cr, uid, lead_subtype_ids, context=context)
-            followers = [follow.id for follow in section_id.message_follower_ids]
             follower_ids = follower_obj.search(cr, uid, [('res_model', '=', 'crm.case.section'), ('res_id', '=', section_id)], context=context)
             for follower in follower_obj.browse(cr, uid, follower_ids, context=context):
                 if not follower.subtype_ids:
@@ -292,8 +297,6 @@ class crm_lead(base_stage, format_address, osv.osv):
                 salesteam_subtype_names = [salesteam_subtype.name for salesteam_subtype in follower.subtype_ids]
                 lead_subtype_ids = [lead_subtype.id for lead_subtype in lead_subtypes if lead_subtype.name in salesteam_subtype_names]
                 self.message_subscribe(cr, uid, [obj_id], [follower.partner_id.id], subtype_ids=lead_subtype_ids, context=context)
-            self.create_send_note(cr, uid, [obj_id], context=context)
-        return obj_id
 
     def onchange_stage_id(self, cr, uid, ids, stage_id, context=None):
         if not stage_id:
@@ -798,12 +801,11 @@ class crm_lead(base_stage, format_address, osv.osv):
             stage = self.pool.get('crm.case.stage').browse(cr, uid, vals['stage_id'], context=context)
             if stage.on_change:
                 vals['probability'] = stage.probability
+        res = super(crm_lead,self).write(cr, uid, ids, vals, context)
         if vals.get('section_id'):
-            section_id = self.pool.get('crm.case.section').browse(cr, uid, vals.get('section_id'), context=context)
-            if section_id:
-                vals.setdefault('message_follower_ids', [])
-                vals['message_follower_ids'] += [(4, follower.id) for follower in section_id.message_follower_ids]
-        return super(crm_lead,self).write(cr, uid, ids, vals, context)
+            for id in ids:
+                self._subscribe_salesteam_followers_to_lead(cr, uid, id, context=context)
+        return res
 
     # ----------------------------------------
     # Mail Gateway
