@@ -34,13 +34,14 @@
                     <button class="oe_post">Post</button>
                     <t t-call="mail.compose_message.add_attachment"/>
                     <!--<a class="oe_cancel oe_e">X</a>-->
-                    <button class="oe_full"><span class='oe_e'>&amp;ograve</span></button>
+                    <button class="oe_full" title="Open the full mail composer"><span class='oe_e'>&amp;ograve</span></button>
                 </div>
             </div>
         </div>
         <div t-if="widget.show_compact_message and !widget.show_composer" t-attf-class="oe_msg oe_msg_composer_compact #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''}">
-            <textarea t-if="!widget.options.view_mailbox" class="field_text oe_compact" placeholder="Write to the followers of this docmuent..."/>
-            <textarea t-if="widget.options.view_mailbox" class="field_text oe_compact" placeholder="Write to my followers..."/>
+            <textarea t-if="widget.options.compose_placeholder" class="field_text oe_compact" t-att-placeholder="widget.options.compose_placeholder"/>
+            <textarea t-if="!widget.options.compose_placeholder and !widget.options.view_mailbox" class="field_text oe_compact" placeholder="Write to the followers of this document..."/>
+            <textarea t-if="!widget.options.compose_placeholder and widget.options.view_mailbox" class="field_text oe_compact" placeholder="Share with my followers..."/>
         </div>
         <span t-if="!(widget.show_compact_message and !widget.show_composer) and !widget.show_composer" class="oe_placeholder_compose"></span>
     </t>
@@ -74,9 +75,11 @@
         <t t-foreach='widget.attachment_ids' t-as='attachment'>
             <t t-if="attachment.filetype !== 'webimage'">
                 <div t-attf-class="oe_attachment #{attachment.upload ? 'oe_uploading' : ''}">
-                    <a t-att-href='attachment.url'><img t-att-src="'/mail/static/src/img/mimetypes/' + attachment.filetype + '.png'"></img></a>
+                    <a t-att-href='attachment.url'>
+                        <img t-att-src="'/mail/static/src/img/mimetypes/' + attachment.filetype + '.png'"></img>
+                        <div class='oe_name'><t t-raw='attachment.name' /></div>
+                    </a>
                     <div class='oe_delete oe_e' title="Delete this attachment" t-attf-data-id="{attachment.id}">[</div>
-                    <div class='oe_name'><t t-raw='attachment.name' /></div>
                     <div class='oe_progress_bar'>
                         uploading
                     </div>
@@ -84,9 +87,11 @@
             </t>
             <t t-if="attachment.filetype === 'webimage'">
                 <div t-attf-class="oe_attachment oe_preview #{attachment.upload ? 'oe_uploading' : ''}">
-                    <a t-att-href='attachment.url'><img t-att-src="widget.attachments_resize_image(attachment.id, [100,100])"></img></a>
+                    <a t-att-href='attachment.url'>
+                        <img t-att-src="widget.attachments_resize_image(attachment.id, [100,80])"></img>
+                        <div class='oe_name'><t t-raw='attachment.name' /></div>
+                    </a>
                     <div class='oe_delete oe_e'>[</div>
-                    <div class='oe_name'><t t-raw='attachment.name' /></div>
                     <div class='oe_progress_bar'>
                         uploading
                     </div>
@@ -101,10 +106,20 @@
     <t t-name="mail.thread.list_recipients">
         <div class="oe_mail_list_recipients">
             To:
-            <span t-if="!widget.is_private" class="oe_all_follower">Followers <t t-raw="' of ' + (widget.parent_thread.parent_message.record_name ? '&quot;' + widget.parent_thread.parent_message.record_name + '&quot;' : 'this document')"/></span>
+            <t t-if="!widget.is_private">
+                <span class="oe_all_follower">
+                    Followers of
+                    <t t-if="widget.parent_thread.parent_message.record_name" t-raw="'&quot;' + widget.parent_thread.parent_message.record_name + '&quot;'"/>
+                    <t t-if="!widget.parent_thread.parent_message.record_name">this document</t>
+                </span>
+            </t>
             <t t-if="!widget.is_private and widget.partner_ids.length"> and </t>
             <t t-set="inc" t-value="0"/>
-            <t t-if="widget.partner_ids.length" t-foreach="widget.partner_ids" t-as="partner"><span t-attf-class="oe_partner_follower #{inc>=3?'oe_hidden':''}"><t t-if="inc" t-raw="', '"/><a t-attf-href="#model=res.partner&amp;id=#{partner[0]}"><t t-raw="partner[1]"/></a></span><t t-set="inc" t-value="inc+1"/>
+            <t t-if="widget.partner_ids.length" t-foreach="widget.partner_ids" t-as="partner">
+                <span t-attf-class="oe_partner_follower #{inc>=3?'oe_hidden':''}"><t t-if="inc" t-raw="', '"/>
+                    <a t-if="widget.options.show_link_partner" t-attf-href="#model=res.partner&amp;id=#{partner[0]}"><t t-raw="partner[1]"/></a>
+                    <t t-if="!widget.options.show_link_partner" t-raw="partner[1]"/>
+                </span><t t-set="inc" t-value="inc+1"/>
             </t>
             <t t-if="widget.partner_ids.length>=3">
                 <span class="oe_more">, <a><t t-raw="widget.partner_ids.length-3"/> others...</a></span>
@@ -129,13 +144,19 @@
                 <td colspan="2">
                     <h2 class="oe_view_title">
                         <span class="oe_view_title_text">
-                            Email box
+                            <t t-raw="widget.action.name"/>
                         </span>
                     </h2>
+                    <t t-if="widget.action.params.header_description">
+                        <br/>
+                        <span class="oe_view_subtitle_text">
+                            <t t-raw="widget.action.params.header_description"/>
+                        </span>
+                    </t>
                 </td>
                 <td><div class="oe_view_manager_view_search" t-opentag="true"/></td>
             </tr>
-            <tr class="oe_header_row" t-if="widget.action.params.view_inbox" >
+            <tr class="oe_header_row" t-if="widget.action.params.view_inbox and widget.action.params.show_compose_message" >
                 <td colspan="2">
                     <button type="button" class="oe_write_full oe_highlight">
                         Compose a new message
@@ -177,14 +198,15 @@
         <div t-attf-class="oe_msg #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''} oe_msg_#{widget.type}">
 
             <div class='oe_msg_left'>
-                <a t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}" t-att-title="widget.author_id[1]">
+                <a t-if="widget.options.show_link_partner" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}" t-att-title="widget.author_id[1]">
                     <img class="oe_msg_icon" t-att-src="widget.avatar"/>
                 </a>
+                <img t-if="!widget.options.show_link_partner" class="oe_msg_icon" t-att-src="widget.avatar"/>
             </div>
 
             <div class="oe_msg_center">
                 <div class='oe_msg_icons'>
-                    <span class='oe_read' t-if="widget.options.show_read"><a title="Done" class="oe_e">X</a></span>
+                    <span class='oe_read' t-if="widget.options.show_read"><a title="Done" class="oe_e">W</a></span>
                     <span class='oe_unread' t-if="widget.is_favorite and widget.options.show_unread"><a title="Set back to Todo" class="oe_e">v</a></span>
                     <span class='oe_unread' t-if="!widget.is_favorite and widget.options.show_unread"><a title="Set back to Inbox" class="oe_e">v</a></span>
                     <span class='oe_reply' t-if="widget.options.show_reply_button"><a title="Reply" class="oe_e">(</a></span>
@@ -192,13 +214,11 @@
                 </div>
                 <!-- message itself -->
                 <div class="oe_msg_content">
-                    <h1 t-if="widget.subject and !widget.thread_level" class="oe_msg_title">
-                        <t t-raw="widget.subject"/>
+                    <h1 t-if="(widget.show_record_name or widget.subject) and !widget.thread_level" class="oe_msg_title">
+                        <a t-if="widget.show_record_name" class="oe_mail_action_model" t-attf-href="#model=#{widget.model}&amp;id=#{widget.res_id}"><t t-raw="widget.record_name"/></a>
+                        <t t-if="widget.subject" t-raw="widget.subject"/>
                     </h1>
                     <div class="oe_msg_body">
-                        <t t-if="widget.show_record_name">
-                            <a class="oe_mail_action_model" t-attf-href="#model=#{widget.model}&amp;id=#{widget.res_id}"><t t-raw="widget.record_name"/></a>
-                        </t>
                         <t t-raw="widget.body"/>
                     </div>
                 </div>
@@ -206,16 +226,10 @@
                     <t t-if="widget.attachment_ids.length > 0">
                         <div class="oe_msg_attachment_list"></div>
                     </t>
-                    <a t-if="widget.author_id" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}"><t t-raw="widget.author_id[1]"/></a> 
+                    <a t-if="widget.author_id and widget.options.show_link_partner" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}"><t t-raw="widget.author_id[1]"/></a>
+                    <span t-if="widget.author_id and !widget.options.show_link_partner"><t t-raw="widget.author_id[1]"/></span>
                     <span class='oe_subtle'>•</span>
                     <span t-att-title="widget.date"><t t-raw="widget.timerelative"/></span>
-                    <t t-if='widget.attachment_ids.length > 0'>
-                        <span class='oe_subtle'>•</span>
-                        <a class="oe_view_attachments">
-                            <t t-if="widget.attachment_ids.length == 1">1 Attachment</t>
-                            <t t-if="widget.attachment_ids.length > 1"><t t-raw="widget.attachment_ids.length"/> Attachments</t>
-                        </a>
-                    </t>
                     <span class='oe_subtle'>•</span>
                     <t t-call="mail.thread.message.vote"/>
                 </div>

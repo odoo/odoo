@@ -7,15 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2012-06-30 02:46+0000\n"
 "Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:20+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:43+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
+
+#. module: stock_location
+#: help:product.pulled.flow,company_id:0
+msgid "Is used to know to which company the pickings and moves belong."
+msgstr ""
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -44,11 +49,6 @@ msgid "Automatic No Step Added"
 msgstr "自動段階追加なし"
 
 #. module: stock_location
-#: view:product.product:0
-msgid "Parameters"
-msgstr "パラメータ"
-
-#. module: stock_location
 #: field:product.pulled.flow,location_src_id:0
 #: field:stock.location.path,location_from_id:0
 msgid "Source Location"
@@ -64,11 +64,6 @@ msgstr "プル型フロー製品"
 #: field:product.product,flow_pull_ids:0
 msgid "Pulled Flows"
 msgstr "プル型フロー"
-
-#. module: stock_location
-#: constraint:stock.move:0
-msgid "You must assign a production lot for this product"
-msgstr "この製品に製造ロットを割り当てる必要があります。"
 
 #. module: stock_location
 #: help:product.pulled.flow,location_src_id:0
@@ -150,11 +145,6 @@ msgid "Dispatch Zone"
 msgstr "割当ゾーン"
 
 #. module: stock_location
-#: model:ir.model,name:stock_location.model_stock_move
-msgid "Stock Move"
-msgstr "在庫移動"
-
-#. module: stock_location
 #: view:product.product:0
 msgid "Pulled flows"
 msgstr "プル型フロー"
@@ -166,9 +156,9 @@ msgid "Company"
 msgstr "会社"
 
 #. module: stock_location
-#: view:product.product:0
-msgid "Logistics Flows"
-msgstr "物流フロー"
+#: model:ir.model,name:stock_location.model_stock_move
+msgid "Stock Move"
+msgstr "在庫移動"
 
 #. module: stock_location
 #: help:stock.move,cancel_cascade:0
@@ -189,6 +179,12 @@ msgstr "オーダーの作成"
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Stock"
 msgstr "在庫の作成"
+
+#. module: stock_location
+#: code:addons/stock_location/procurement_pull.py:118
+#, python-format
+msgid "Pulled from another location."
+msgstr ""
 
 #. module: stock_location
 #: field:product.pulled.flow,partner_address_id:0
@@ -217,11 +213,6 @@ msgid "Type of Procurement"
 msgstr "調達のタイプ"
 
 #. module: stock_location
-#: help:product.pulled.flow,company_id:0
-msgid "Is used to know to which company belong packings and moves"
-msgstr "これはどの会社に梱包と移動が属していたかを知るために使用されます。"
-
-#. module: stock_location
 #: field:product.pulled.flow,name:0
 msgid "Name"
 msgstr "名称"
@@ -233,11 +224,6 @@ msgid ""
 msgstr "これらの規則は全体の場所のツリーの中の製品の正しいパスを設定します。"
 
 #. module: stock_location
-#: constraint:stock.move:0
-msgid "You can not move products from or to a location of the type view."
-msgstr "タイプビューの場所から、あるいは場所へは製品を動かすことはできません。"
-
-#. module: stock_location
 #: selection:stock.location.path,auto:0
 msgid "Manual Operation"
 msgstr "手動操作"
@@ -247,11 +233,6 @@ msgstr "手動操作"
 #: field:product.pulled.flow,product_id:0
 msgid "Product"
 msgstr "製品"
-
-#. module: stock_location
-#: field:product.pulled.flow,procure_method:0
-msgid "Procure Method"
-msgstr "調達方法"
 
 #. module: stock_location
 #: field:product.pulled.flow,picking_type:0
@@ -276,12 +257,6 @@ msgstr "供給を必要とする宛先の場所です。"
 #: field:stock.location.path,product_id:0
 msgid "Products"
 msgstr "製品"
-
-#. module: stock_location
-#: code:addons/stock_location/procurement_pull.py:118
-#, python-format
-msgid "Pulled from another location via procurement %d"
-msgstr "調達 %d によって他の場所から引き出されました。"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.stock_location_qualitytest0
@@ -321,11 +296,6 @@ msgid ""
 msgstr "オリジナルの場所 %s から来るプル型調達のための移動、プルのルール %s、オリジナルの調達  %s（番号 %d）"
 
 #. module: stock_location
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product"
-msgstr "違う製品のロットを割り当てることはできません。"
-
-#. module: stock_location
 #: model:ir.model,name:stock_location.model_procurement_order
 msgid "Procurement"
 msgstr "調達"
@@ -354,9 +324,9 @@ msgid "Action Type"
 msgstr "アクションタイプ"
 
 #. module: stock_location
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "エラー：無効な商品識別番号です。"
+#: field:product.pulled.flow,procure_method:0
+msgid "Procure Method"
+msgstr "調達方法"
 
 #. module: stock_location
 #: help:product.pulled.flow,picking_type:0
@@ -398,3 +368,28 @@ msgstr "連続をキャンセル"
 #: selection:stock.location.path,invoice_state:0
 msgid "Invoiced"
 msgstr "請求済"
+
+#~ msgid "You must assign a production lot for this product"
+#~ msgstr "この製品に製造ロットを割り当てる必要があります。"
+
+#~ msgid "Parameters"
+#~ msgstr "パラメータ"
+
+#~ msgid "Logistics Flows"
+#~ msgstr "物流フロー"
+
+#~ msgid "You can not move products from or to a location of the type view."
+#~ msgstr "タイプビューの場所から、あるいは場所へは製品を動かすことはできません。"
+
+#~ msgid "Is used to know to which company belong packings and moves"
+#~ msgstr "これはどの会社に梱包と移動が属していたかを知るために使用されます。"
+
+#, python-format
+#~ msgid "Pulled from another location via procurement %d"
+#~ msgstr "調達 %d によって他の場所から引き出されました。"
+
+#~ msgid "You try to assign a lot which is not from the same product"
+#~ msgstr "違う製品のロットを割り当てることはできません。"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "エラー：無効な商品識別番号です。"

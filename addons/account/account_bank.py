@@ -45,12 +45,12 @@ class bank(osv.osv):
 
     def _prepare_name_get(self, cr, uid, bank_dicts, context=None):
         """Add ability to have %(currency_name)s in the format_layout of res.partner.bank.type"""
-        currency_ids = list(set(data['currency_id'][0] for data in bank_dicts if data['currency_id']))
+        currency_ids = list(set(data['currency_id'][0] for data in bank_dicts if data.get('currency_id')))
         currencies = self.pool.get('res.currency').browse(cr, uid, currency_ids, context=context)
         currency_name = dict((currency.id, currency.name) for currency in currencies)
 
         for data in bank_dicts:
-            data['currency_name'] = data['currency_id'] and currency_name[data['currency_id'][0]] or ''
+            data['currency_name'] = data.get('currency_id') and currency_name[data['currency_id'][0]] or ''
         return super(bank, self)._prepare_name_get(cr, uid, bank_dicts, context=context)
 
     def post_write(self, cr, uid, ids, context=None):
@@ -89,11 +89,6 @@ class bank(osv.osv):
                 }
                 acc_bank_id  = obj_acc.create(cr,uid,acc,context=context)
 
-                # Get the journal view id
-                data_id = obj_data.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_journal_bank_view')])
-                data = obj_data.browse(cr, uid, data_id[0], context=context)
-                view_id_cash = data.res_id
-
                 jour_obj = self.pool.get('account.journal')
                 new_code = 1
                 while True:
@@ -112,7 +107,6 @@ class bank(osv.osv):
                     'analytic_journal_id': False,
                     'default_credit_account_id': acc_bank_id,
                     'default_debit_account_id': acc_bank_id,
-                    'view_id': view_id_cash
                 }
                 journal_id = jour_obj.create(cr, uid, vals_journal, context=context)
 

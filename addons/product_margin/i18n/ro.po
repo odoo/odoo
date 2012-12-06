@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2010-09-29 09:34+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:20+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:42+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: product_margin
 #: view:product.product:0
@@ -33,17 +33,10 @@ msgid "From"
 msgstr "De la"
 
 #. module: product_margin
-#: help:product.product,sale_expected:0
+#: help:product.product,total_cost:0
 msgid ""
-"Sum of Multification of Sale Catalog price and quantity of Customer Invoices"
+"Sum of Multiplication of Invoice price and quantity of Supplier Invoices "
 msgstr ""
-"Suma Inmultirii pretului din Catalogul de Vanzare si cantitatea de Facturi "
-"ale Clientului"
-
-#. module: product_margin
-#: help:product.product,total_margin:0
-msgid "Turnorder - Standard price"
-msgstr "Comanda - Pretul standard"
 
 #. module: product_margin
 #: field:product.margin,to_date:0
@@ -54,6 +47,11 @@ msgstr "Catre"
 #: field:product.product,date_to:0
 msgid "To Date"
 msgstr "La zi"
+
+#. module: product_margin
+#: help:product.product,total_margin:0
+msgid "Turnover - Standard price"
+msgstr ""
 
 #. module: product_margin
 #: field:product.product,date_from:0
@@ -109,12 +107,6 @@ msgid "Sum of Quantity in Supplier Invoices"
 msgstr "Suma Cantitatii in Facturile furnizorului"
 
 #. module: product_margin
-#: help:product.product,normal_cost:0
-msgid "Sum of Multification of Cost price and quantity of Supplier Invoices"
-msgstr ""
-"Suma Inmultirii Pretului de cost si cantitatea Facturilor Furnizorului"
-
-#. module: product_margin
 #: help:product.product,expected_margin:0
 msgid "Expected Sale - Normal Cost"
 msgstr "Vanzari estimate - Costuri normale"
@@ -132,6 +124,11 @@ msgid "Total Cost"
 msgstr "Cost total"
 
 #. module: product_margin
+#: help:product.product,normal_cost:0
+msgid "Sum of Multiplication of Cost price and quantity of Supplier Invoices"
+msgstr ""
+
+#. module: product_margin
 #: field:product.product,expected_margin:0
 msgid "Expected Margin"
 msgstr "Marja estimata"
@@ -142,28 +139,20 @@ msgid "#Purchased"
 msgstr "#Achizitionat"
 
 #. module: product_margin
-#: help:product.product,turnover:0
-msgid ""
-"Sum of Multification of Invoice price and quantity of Customer Invoices"
-msgstr ""
-"Suma Inmultirii Pretului de pe factura si cantitatea Facturilor Clientului"
-
-#. module: product_margin
 #: help:product.product,expected_margin_rate:0
 msgid "Expected margin * 100 / Expected Sale"
 msgstr "Marja estimata * 100 / Vanzari estimate"
 
 #. module: product_margin
 #: help:product.product,sale_avg_price:0
-msgid "Avg. Price in Customer Invoices)"
-msgstr "Pretul mediu in Facturile Clientului"
+msgid "Avg. Price in Customer Invoices."
+msgstr ""
 
 #. module: product_margin
-#: help:product.product,total_cost:0
+#: help:product.product,sale_expected:0
 msgid ""
-"Sum of Multification of Invoice price and quantity of Supplier Invoices "
+"Sum of Multiplication of Sale Catalog price and quantity of Customer Invoices"
 msgstr ""
-"Suma Inmultirii Pretului de pe factura si cantitatea Facturilor Furnizorului "
 
 #. module: product_margin
 #: field:product.margin,invoice_state:0
@@ -186,6 +175,12 @@ msgstr "Marja totala"
 #: field:product.product,sales_gap:0
 msgid "Sales Gap"
 msgstr "Deficit vanzari"
+
+#. module: product_margin
+#: help:product.product,turnover:0
+msgid ""
+"Sum of Multiplication of Invoice price and quantity of Customer Invoices"
+msgstr ""
 
 #. module: product_margin
 #: field:product.product,normal_cost:0
@@ -243,11 +238,6 @@ msgid "General Information"
 msgstr "Informatii generale"
 
 #. module: product_margin
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Eroare: Cod ean invalid"
-
-#. module: product_margin
 #: field:product.product,purchase_gap:0
 msgid "Purchase Gap"
 msgstr "Deficit achizitii"
@@ -278,6 +268,11 @@ msgid "Sum of Quantity in Customer Invoices"
 msgstr "Suma Cantitatii in Facturile Clientului"
 
 #. module: product_margin
+#: view:product.margin:0
+msgid "or"
+msgstr ""
+
+#. module: product_margin
 #: model:ir.model,name:product_margin.model_product_margin
 msgid "Product Margin"
 msgstr "Marja produs"
@@ -301,3 +296,32 @@ msgstr "Marja produs"
 #~ "lansarea\n"
 #~ "acestui raport are mai multe optiuni pentru a vă ajuta să obtineti datele de "
 #~ "care aveti nevoie.\n"
+
+#~ msgid "Avg. Price in Customer Invoices)"
+#~ msgstr "Pretul mediu in Facturile Clientului"
+
+#~ msgid ""
+#~ "Sum of Multification of Sale Catalog price and quantity of Customer Invoices"
+#~ msgstr ""
+#~ "Suma Inmultirii pretului din Catalogul de Vanzare si cantitatea de Facturi "
+#~ "ale Clientului"
+
+#~ msgid "Turnorder - Standard price"
+#~ msgstr "Comanda - Pretul standard"
+
+#~ msgid "Sum of Multification of Cost price and quantity of Supplier Invoices"
+#~ msgstr ""
+#~ "Suma Inmultirii Pretului de cost si cantitatea Facturilor Furnizorului"
+
+#~ msgid ""
+#~ "Sum of Multification of Invoice price and quantity of Supplier Invoices "
+#~ msgstr ""
+#~ "Suma Inmultirii Pretului de pe factura si cantitatea Facturilor Furnizorului "
+
+#~ msgid ""
+#~ "Sum of Multification of Invoice price and quantity of Customer Invoices"
+#~ msgstr ""
+#~ "Suma Inmultirii Pretului de pe factura si cantitatea Facturilor Clientului"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Eroare: Cod ean invalid"

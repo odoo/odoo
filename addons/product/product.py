@@ -100,6 +100,23 @@ class product_uom(osv.osv):
     def _factor_inv_write(self, cursor, user, id, name, value, arg, context=None):
         return self.write(cursor, user, id, {'factor': self._compute_factor_inv(value)}, context=context)
 
+    def name_create(self, cr, uid, name, context=None):
+        """ The UoM category and factor are required, so we'll have to add temporary values
+            for imported UoMs """
+        uom_categ = self.pool.get('product.uom.categ')
+        # look for the category based on the english name, i.e. no context on purpose!
+        # TODO: should find a way to have it translated but not created until actually used
+        categ_misc = 'Unsorted/Imported Units'
+        categ_id = uom_categ.search(cr, uid, [('name', '=', categ_misc)])
+        if categ_id:
+            categ_id = categ_id[0]
+        else:
+            categ_id, _ = uom_categ.name_create(cr, uid, categ_misc)
+        uom_id = self.create(cr, uid, {self._rec_name: name,
+                                       'category_id': categ_id,
+                                       'factor': 1})
+        return self.name_get(cr, uid, [uom_id], context=context)[0]
+
     def create(self, cr, uid, data, context=None):
         if 'factor_inv' in data:
             if data['factor_inv'] <> 1:
@@ -529,7 +546,7 @@ class product_product(osv.osv):
         'default_code' : fields.char('Internal Reference', size=64, select=True),
         'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it."),
         'variants': fields.char('Variants', size=64),
-        'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete="cascade"),
+        'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete="cascade", select=True),
         'ean13': fields.char('EAN13 Barcode', size=13, help="International Article Number used for product identification."),
         'packaging' : fields.one2many('product.packaging', 'product_id', 'Logistical Units', help="Gives the different ways to package the same product. This has no impact on the picking order and is mainly used if you use the EDI module."),
         'price_extra': fields.float('Variant Price Extra', digits_compute=dp.get_precision('Product Price')),

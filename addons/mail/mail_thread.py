@@ -79,7 +79,7 @@ class mail_thread(osv.AbstractModel):
         # search for unread messages, directly in SQL to improve performances
         cr.execute("""  SELECT m.res_id FROM mail_message m
                         RIGHT JOIN mail_notification n
-                        ON (n.message_id = m.id AND n.partner_id = %s AND n.read = False)
+                        ON (n.message_id = m.id AND n.partner_id = %s AND (n.read = False or n.read IS NULL))
                         WHERE m.model = %s AND m.res_id in %s""",
                     (user_pid, self._name, tuple(ids),))
         msg_ids = [result[0] for result in cr.fetchall()]
@@ -341,7 +341,7 @@ class mail_thread(osv.AbstractModel):
             message = self.pool.get('mail.message').browse(cr, uid, message_ids[0], context=context)
             _logger.debug('Routing mail with Message-Id %s: direct reply to a private message: %s, custom_values: %s, uid: %s',
                             message_id, message.id, custom_values, uid)
-            return [(False, 0, custom_values, uid)]
+            return [(message.model, message.res_id, custom_values, uid)]
 
         # 2. Look for a matching mail.alias entry
         # Delivered-To is a safe bet in most modern MTAs, but we have to fallback on To + Cc values
@@ -767,13 +767,19 @@ class mail_thread(osv.AbstractModel):
         # 3. Post-processing
         # HACK TDE FIXME: Chatter: attachments linked to the document (not done JS-side), load the message
         if attachment_ids:
+            # TDE FIXME (?): when posting a private message, we use mail.thread as a model
+            # However, attaching doc to mail.thread is not possible, mail.thread does not have any table
+            model = self._name
+            if model == 'mail.thread':
+                model = False
             filtered_attachment_ids = ir_attachment.search(cr, SUPERUSER_ID, [
                 ('res_model', '=', 'mail.compose.message'),
                 ('res_id', '=', 0),
                 ('create_uid', '=', uid),
                 ('id', 'in', attachment_ids)], context=context)
             if filtered_attachment_ids:
-                ir_attachment.write(cr, SUPERUSER_ID, attachment_ids, {'res_model': self._name, 'res_id': thread_id}, context=context)
+                if thread_id and model:
+                    ir_attachment.write(cr, SUPERUSER_ID, attachment_ids, {'res_model': model, 'res_id': thread_id}, context=context)
                 mail_message.write(cr, SUPERUSER_ID, [new_message_id], {'attachment_ids': [(6, 0, [pid for pid in attachment_ids])]}, context=context)
 
         return new_message_id
@@ -796,11 +802,12 @@ class mail_thread(osv.AbstractModel):
 
     def message_subscribe(self, cr, uid, ids, partner_ids, subtype_ids=None, context=None):
         """ Add partners to the records followers. """
-        self.write(cr, uid, ids, {'message_follower_ids': [(4, pid) for pid in partner_ids]}, context=context)
+        self.check_access_rights(cr, uid, 'read')
+        self.write(cr, SUPERUSER_ID, ids, {'message_follower_ids': [(4, pid) for pid in partner_ids]}, context=context)
         # if subtypes are not specified (and not set to a void list), fetch default ones
         if subtype_ids is None:
             subtype_obj = self.pool.get('mail.message.subtype')
-            subtype_ids = subtype_obj.search(cr, uid, [('default', '=', True), '|', ('res_model', '=', self._name), ('res_model', '=', False)], context=context)
+            subtype_ids = subtype_obj.search(cr, SUPERUSER_ID, [('default', '=', True), '|', ('res_model', '=', self._name), ('res_model', '=', False)], context=context)
         # update the subscriptions
         fol_obj = self.pool.get('mail.followers')
         fol_ids = fol_obj.search(cr, SUPERUSER_ID, [('res_model', '=', self._name), ('res_id', 'in', ids), ('partner_id', 'in', partner_ids)], context=context)
@@ -817,7 +824,8 @@ class mail_thread(osv.AbstractModel):
 
     def message_unsubscribe(self, cr, uid, ids, partner_ids, context=None):
         """ Remove partners from the records followers. """
-        return self.write(cr, uid, ids, {'message_follower_ids': [(3, pid) for pid in partner_ids]}, context=context)
+        self.check_access_rights(cr, uid, 'read')
+        return self.write(cr, SUPERUSER_ID, ids, {'message_follower_ids': [(3, pid) for pid in partner_ids]}, context=context)
 
     #------------------------------------------------------
     # Thread state

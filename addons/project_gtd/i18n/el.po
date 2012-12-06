@@ -5,15 +5,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 01:37+0100\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2011-02-08 19:49+0000\n"
 "Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:15+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:37+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
 "X-Poedit-SourceCharset: utf-8\n"
@@ -59,9 +59,10 @@ msgid "Pending Tasks"
 msgstr ""
 
 #. module: project_gtd
-#: view:project.task:0
-msgid "Next"
-msgstr "Επόμενη"
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
+#, python-format
+msgid "No timebox child of this one !"
+msgstr ""
 
 #. module: project_gtd
 #: model:ir.actions.act_window,help:project_gtd.open_gtd_timebox_tree
@@ -75,6 +76,11 @@ msgstr ""
 #: model:project.gtd.timebox,name:project_gtd.timebox_daily
 msgid "Today"
 msgstr "Σήμερα"
+
+#. module: project_gtd
+#: view:project.task:0
+msgid "Timeframe"
+msgstr ""
 
 #. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_lt
@@ -92,8 +98,9 @@ msgid "Pending"
 msgstr ""
 
 #. module: project_gtd
-#: view:project.gtd.timebox:0 field:project.gtd.timebox,name:0
-#: view:project.task:0 field:project.task,timebox_id:0
+#: view:project.gtd.timebox:0
+#: field:project.gtd.timebox,name:0
+#: field:project.task,timebox_id:0
 msgid "Timebox"
 msgstr "Χρονοπλαίσιο"
 
@@ -103,12 +110,6 @@ msgid "Set to Timebox"
 msgstr "Ορισμός ως Χρονοπλαίσιο"
 
 #. module: project_gtd
-#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
-#, python-format
-msgid "Error !"
-msgstr "Σφάλμα !"
-
-#. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_task
 #: model:ir.ui.menu,name:project_gtd.menu_open_gtd_timebox_tree
 #: view:project.task:0
@@ -116,19 +117,9 @@ msgid "My Tasks"
 msgstr ""
 
 #. module: project_gtd
-#: constraint:project.task:0
-msgid "Error ! You cannot create recursive tasks."
-msgstr "Λάθος! Δεν μπορείς να δημιουργήσεις επαναλαμβανόμενες εργασίες"
-
-#. module: project_gtd
-#: model:project.gtd.timebox,name:project_gtd.timebox_weekly
-msgid "This Week"
-msgstr "Αυτή την εβδομάδα"
-
-#. module: project_gtd
-#: view:project.timebox.fill.plan:0
-msgid "_Cancel"
-msgstr "_Άκυρο"
+#: help:project.task,context_id:0
+msgid "The context place where user has to treat task"
+msgstr ""
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.action_project_gtd_empty
@@ -142,9 +133,9 @@ msgid "Tasks having no timebox assigned yet"
 msgstr ""
 
 #. module: project_gtd
-#: constraint:project.task:0
-msgid "Error ! Task end-date must be greater then task start-date"
-msgstr ""
+#: model:project.gtd.timebox,name:project_gtd.timebox_weekly
+msgid "This Week"
+msgstr "Αυτή την εβδομάδα"
 
 #. module: project_gtd
 #: field:project.gtd.timebox,icon:0
@@ -199,6 +190,12 @@ msgid "project.gtd.timebox"
 msgstr "project.gtd.timebox"
 
 #. module: project_gtd
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_timebox_tree
 #: model:ir.ui.menu,name:project_gtd.menu_open_gtd_time_timeboxes
 #: view:project.gtd.timebox:0
@@ -212,21 +209,21 @@ msgstr ""
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_gtd_context
-#: view:project.gtd.context:0 field:project.gtd.context,name:0
+#: view:project.gtd.context:0
+#: field:project.gtd.context,name:0
 #: field:project.task,context_id:0
 msgid "Context"
 msgstr "Περιβάλλον"
 
 #. module: project_gtd
-#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
-#, python-format
-msgid "No timebox child of this one !"
-msgstr ""
+#: field:project.timebox.fill.plan,task_ids:0
+msgid "Tasks selection"
+msgstr "Επιλογή εργασιών"
 
 #. module: project_gtd
-#: view:project.timebox.empty:0
-msgid "_Ok"
-msgstr "_Εντάξει"
+#: view:project.task:0
+msgid "Display"
+msgstr ""
 
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_office
@@ -234,7 +231,8 @@ msgid "Office"
 msgstr "Γραφείο"
 
 #. module: project_gtd
-#: field:project.gtd.context,sequence:0 field:project.gtd.timebox,sequence:0
+#: field:project.gtd.context,sequence:0
+#: field:project.gtd.timebox,sequence:0
 msgid "Sequence"
 msgstr "Ιεράρχηση"
 
@@ -259,11 +257,6 @@ msgid "Timebox Definition"
 msgstr "Ορισμός Χρονοπλαισίου"
 
 #. module: project_gtd
-#: field:project.timebox.fill.plan,task_ids:0
-msgid "Tasks selection"
-msgstr "Επιλογή εργασιών"
-
-#. module: project_gtd
 #: view:project.task:0
 msgid "Inbox"
 msgstr "Εισερχόμενα"
@@ -274,9 +267,9 @@ msgid "Get from Timebox"
 msgstr "Φέρε από Χρονοπλαίσιο"
 
 #. module: project_gtd
-#: help:project.task,context_id:0
-msgid "The context place where user has to treat task"
-msgstr ""
+#: view:project.timebox.fill.plan:0
+msgid "Cancel"
+msgstr "Ακύρωση"
 
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_home
@@ -297,9 +290,9 @@ msgid "For reopening the tasks"
 msgstr ""
 
 #. module: project_gtd
-#: view:project.task:0
-msgid "Previous"
-msgstr "Προηγούμενη"
+#: view:project.timebox.fill.plan:0
+msgid "or"
+msgstr ""
 
 #~ msgid "Visible Columns"
 #~ msgstr "Ορατές Στήλες"
@@ -412,9 +405,6 @@ msgstr "Προηγούμενη"
 #~ msgid "Deadline"
 #~ msgstr "Προθεσμία"
 
-#~ msgid "Cancel"
-#~ msgstr "Ακύρωση"
-
 #~ msgid "Date Start"
 #~ msgstr "Ημερ/νία Εκκίνησης"
 
@@ -424,8 +414,27 @@ msgstr "Προηγούμενη"
 #~ msgid "Weekly"
 #~ msgstr "Εβδομαδιαία"
 
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Σφάλμα !"
+
 #~ msgid "Planned"
 #~ msgstr "Προγραμματίστηκε"
 
+#~ msgid "Error ! You cannot create recursive tasks."
+#~ msgstr "Λάθος! Δεν μπορείς να δημιουργήσεις επαναλαμβανόμενες εργασίες"
+
+#~ msgid "_Cancel"
+#~ msgstr "_Άκυρο"
+
 #~ msgid "This Month"
 #~ msgstr "Αυτόν τον μήνα"
+
+#~ msgid "Previous"
+#~ msgstr "Προηγούμενη"
+
+#~ msgid "Next"
+#~ msgstr "Επόμενη"
+
+#~ msgid "_Ok"
+#~ msgstr "_Εντάξει"

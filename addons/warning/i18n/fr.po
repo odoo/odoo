@@ -6,27 +6,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2012-02-08 09:17+0000\n"
-"Last-Translator: gde (OpenERP) <Unknown>\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
+"PO-Revision-Date: 2012-12-01 08:33+0000\n"
+"Last-Translator: Quentin THEURET <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:21+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
-
-#. module: warning
-#: sql_constraint:purchase.order:0
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique per Company!"
-msgstr "La référence de commande doit être unique par société!"
+"X-Launchpad-Export-Date: 2012-12-04 05:43+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order_line
 #: field:product.product,purchase_line_warn:0
 msgid "Purchase Order Line"
 msgstr "Ligne de bon de commande"
+
+#. module: warning
+#: model:ir.model,name:warning.model_stock_picking_in
+msgid "Incoming Shipments"
+msgstr "Réceptions"
 
 #. module: warning
 #: field:product.product,sale_line_warn_msg:0
@@ -51,12 +50,12 @@ msgstr "Ligne de commande client"
 #. module: warning
 #: view:product.product:0
 msgid "Warning when Purchasing this Product"
-msgstr "Avertissement lors d'un Achat de ce Produit"
+msgstr "Avertissement lors d'un achat de cet article"
 
 #. module: warning
 #: model:ir.model,name:warning.model_product_product
 msgid "Product"
-msgstr "Produit"
+msgstr "Article"
 
 #. module: warning
 #: view:product.product:0
@@ -71,23 +70,8 @@ msgstr "Avertissements"
 #: selection:res.partner,picking_warn:0
 #: selection:res.partner,purchase_warn:0
 #: selection:res.partner,sale_warn:0
-msgid "Warning"
-msgstr "Avertissement"
-
-#. module: warning
-#: selection:product.product,purchase_line_warn:0
-#: selection:product.product,sale_line_warn:0
-#: selection:res.partner,invoice_warn:0
-#: selection:res.partner,picking_warn:0
-#: selection:res.partner,purchase_warn:0
-#: selection:res.partner,sale_warn:0
 msgid "Blocking Message"
 msgstr "Message Bloquant"
-
-#. module: warning
-#: field:res.partner,picking_warn:0
-msgid "Stock Picking"
-msgstr "Colisage"
 
 #. module: warning
 #: view:res.partner:0
@@ -113,7 +97,7 @@ msgstr "Facture"
 #. module: warning
 #: view:product.product:0
 msgid "Warning when Selling this Product"
-msgstr "Avertissement lors de la Vente de ce Produit"
+msgstr "Avertissement lorsque vous vendez cet article"
 
 #. module: warning
 #: field:res.partner,sale_warn:0
@@ -121,20 +105,15 @@ msgid "Sale Order"
 msgstr "Commande Client"
 
 #. module: warning
-#: field:res.partner,invoice_warn_msg:0
-msgid "Message for Invoice"
-msgstr "Message pour Facture"
+#: field:res.partner,picking_warn:0
+msgid "Stock Picking"
+msgstr "Colisage"
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order
 #: field:res.partner,purchase_warn:0
 msgid "Purchase Order"
 msgstr "Commande fournisseur"
-
-#. module: warning
-#: sql_constraint:stock.picking:0
-msgid "Reference must be unique per Company!"
-msgstr "La référence doit être unique par société !"
 
 #. module: warning
 #: field:res.partner,sale_warn_msg:0
@@ -168,29 +147,20 @@ msgstr ""
 #. module: warning
 #: code:addons/warning/warning.py:67
 #: code:addons/warning/warning.py:96
-#: code:addons/warning/warning.py:132
-#: code:addons/warning/warning.py:163
-#: code:addons/warning/warning.py:213
-#: code:addons/warning/warning.py:246
+#: code:addons/warning/warning.py:130
+#: code:addons/warning/warning.py:161
+#: code:addons/warning/warning.py:191
+#: code:addons/warning/warning.py:217
+#: code:addons/warning/warning.py:265
+#: code:addons/warning/warning.py:298
 #, python-format
 msgid "Alert for %s !"
 msgstr "Alerte pour %s !"
 
 #. module: warning
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr "Le numéro de facture doit être unique par société !"
-
-#. module: warning
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr ""
-"Erreur ! Vous ne pouvez créer des membres associés de manière récursive."
-
-#. module: warning
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr "Structure de communication BBA incorrecte !"
+#: field:res.partner,invoice_warn_msg:0
+msgid "Message for Invoice"
+msgstr "Message pour Facture"
 
 #. module: warning
 #: view:res.partner:0
@@ -205,10 +175,12 @@ msgstr "Avertissement sur les commandes d'achat"
 #. module: warning
 #: code:addons/warning/warning.py:68
 #: code:addons/warning/warning.py:97
-#: code:addons/warning/warning.py:134
-#: code:addons/warning/warning.py:164
-#: code:addons/warning/warning.py:214
-#: code:addons/warning/warning.py:247
+#: code:addons/warning/warning.py:132
+#: code:addons/warning/warning.py:162
+#: code:addons/warning/warning.py:192
+#: code:addons/warning/warning.py:218
+#: code:addons/warning/warning.py:266
+#: code:addons/warning/warning.py:299
 #, python-format
 msgid "Warning for %s"
 msgstr "Avertissement pour %s"
@@ -219,9 +191,14 @@ msgid "Warning on the Sale Order"
 msgstr "Avertissement sur les Commandes de Ventes"
 
 #. module: warning
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Erreur: Code EAN invalide"
+#: selection:product.product,purchase_line_warn:0
+#: selection:product.product,sale_line_warn:0
+#: selection:res.partner,invoice_warn:0
+#: selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0
+#: selection:res.partner,sale_warn:0
+msgid "Warning"
+msgstr "Avertissement"
 
 #. module: warning
 #: field:res.partner,picking_warn_msg:0
@@ -237,6 +214,11 @@ msgstr "Partenaire"
 #: model:ir.model,name:warning.model_sale_order
 msgid "Sales Order"
 msgstr "Commande de vente"
+
+#. module: warning
+#: model:ir.model,name:warning.model_stock_picking_out
+msgid "Delivery Orders"
+msgstr "Livraisons"
 
 #. module: warning
 #: model:ir.model,name:warning.model_sale_order_line
@@ -260,5 +242,24 @@ msgstr "Ligne de commande de vente"
 #~ msgstr ""
 #~ "Erreur ! Vous ne pouvez pas créer des membres associés de manière récursive."
 
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Erreur: Code EAN invalide"
+
 #~ msgid "Order Reference must be unique !"
 #~ msgstr "La référence de la commande doit être unique !"
+
+#~ msgid "Reference must be unique per Company!"
+#~ msgstr "La référence doit être unique par société !"
+
+#~ msgid "Invoice Number must be unique per Company!"
+#~ msgstr "Le numéro de facture doit être unique par société !"
+
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr ""
+#~ "Erreur ! Vous ne pouvez créer des membres associés de manière récursive."
+
+#~ msgid "Invalid BBA Structured Communication !"
+#~ msgstr "Structure de communication BBA incorrecte !"
+
+#~ msgid "Order Reference must be unique per Company!"
+#~ msgstr "La référence de commande doit être unique par société!"

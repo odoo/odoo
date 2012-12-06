@@ -5,7 +5,6 @@
             <field name="name">Journal de frais</field>
             <field name="code">EXPF</field>
             <field name="type">purchase</field>
-            <field name="view_id" ref="account.account_journal_view"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="update_posted" eval="True" />
             <field name="entry_posted" eval="True" />
@@ -15,7 +14,6 @@
             <field name="name">Banque CHF</field>
             <field name="code">BCHF</field>
             <field name="type">bank</field>
-            <field name="view_id" ref="account.account_journal_bank_view"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="update_posted" eval="True" />
             <field name="entry_posted" eval="True" />
@@ -26,7 +24,6 @@
             <field name="name">Banque EUR</field>
             <field name="code">BEUR</field>
             <field name="type">bank</field>
-            <field name="view_id" ref="account.account_journal_bank_view"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="update_posted" eval="True" />
             <field name="entry_posted" eval="True" />
@@ -37,7 +34,6 @@
             <field name="name">Caisse</field>
             <field name="code">CAI</field>
             <field name="type">cash</field>
-            <field name="view_id" ref="account.account_journal_bank_view"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="update_posted" eval="True" />
             <field name="entry_posted" eval="True" />
@@ -47,7 +43,6 @@
             <field name="name">Opérations Diverses</field>
             <field name="code">OD</field>
             <field name="type">general</field>
-            <field name="view_id" ref="account.account_journal_bank_view"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="update_posted" eval="True" />
             <field name="entry_posted" eval="True" />
@@ -58,7 +53,6 @@
             <field name="code">JO</field>
             <field name="type">situation</field>
             <field name="centralisation">True</field>
-            <field name="view_id" ref="account.account_journal_view"/>
             <field name="update_posted" eval="True" />
         </record>
         

@@ -81,7 +81,7 @@ class mail_compose_message(osv.TransientModel):
         elif composition_mode == 'comment' and model and res_id:
             vals = self.get_record_data(cr, uid, model, res_id, context=context)
         elif composition_mode == 'mass_mail' and model and active_ids:
-            vals = {'model': model, 'res_id': res_id,  'content_subtype': 'html'}
+            vals = {'model': model, 'res_id': res_id}
         else:
             vals = {'model': model, 'res_id': res_id}
         if composition_mode:
@@ -106,16 +106,10 @@ class mail_compose_message(osv.TransientModel):
             'mail_compose_message_ir_attachments_rel',
             'wizard_id', 'attachment_id', 'Attachments'),
         'filter_id': fields.many2one('ir.filters', 'Filters'),
-        'body_text': fields.text('Plain-text Contents'),
-        'content_subtype': fields.char('Message content subtype', size=32, readonly=1,
-            help="Type of message, usually 'html' or 'plain', used to select "\
-                  "plain-text or rich-text contents accordingly"),
     }
 
     _defaults = {
         'composition_mode': 'comment',
-        'content_subtype': lambda self, cr, uid, ctx={}: 'html',
-        'body_text': lambda self, cr, uid, ctx={}: False,
         'body': lambda self, cr, uid, ctx={}: '',
         'subject': lambda self, cr, uid, ctx={}: False,
         'partner_ids': lambda self, cr, uid, ctx={}: [],
@@ -172,31 +166,8 @@ class mail_compose_message(osv.TransientModel):
             'parent_id': message_data.id,
             'subject': reply_subject,
             'partner_ids': partner_ids,
-            'content_subtype': 'html',
         }
         return result
-
-    def toggle_content_subtype(self, cr, uid, ids, context=None):
-        """ toggle content_subtype: calls onchange_formatting to emulate an
-            on_change, then writes the value to update the form. """
-        for record in self.browse(cr, uid, ids, context=context):
-            content_st_new_value = 'plain' if record.content_subtype == 'html' else 'html'
-            onchange_res = self.onchange_content_subtype(cr, uid, ids, content_st_new_value, record.model, record.res_id, context=context)
-            self.write(cr, uid, [record.id], onchange_res['value'], context=context)
-        return True
-
-    def onchange_content_subtype(self, cr, uid, ids, value, model, res_id, context=None):
-        """ This onchange allows to have some specific behavior when switching
-            between text or html mode. This method can be overridden.
-            :param values: 'plain' or 'html'
-        """
-        return {'value': {'content_subtype': value}}
-
-    def dummy(self, cr, uid, ids, context=None):
-        """ TDE: defined to have buttons that do basically nothing. It is
-            currently impossible to have buttons that do nothing special
-            in views (if type not specified, considered as 'object'). """
-        return True
 
     #------------------------------------------------------
     # Wizard validation and send
@@ -218,8 +189,8 @@ class mail_compose_message(osv.TransientModel):
             for res_id in res_ids:
                 # default values, according to the wizard options
                 post_values = {
-                    'subject': wizard.subject if wizard.content_subtype == 'html' else False,
-                    'body': wizard.body if wizard.content_subtype == 'html' else '<pre>%s</pre>' % tools.ustr(wizard.body_text),
+                    'subject': wizard.subject,
+                    'body': wizard.body,
                     'parent_id': wizard.parent_id and wizard.parent_id.id,
                     'partner_ids': [(4, partner.id) for partner in wizard.partner_ids],
                     'attachments': [(attach.datas_fname or attach.name, base64.b64decode(attach.datas)) for attach in wizard.attachment_ids],

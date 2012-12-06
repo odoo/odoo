@@ -42,7 +42,8 @@
             <field name="params" eval="&quot;{
                 'domain': [('partner_ids.user_ids', 'in', [uid])],
                 'view_mailbox': True,
-                'read_action': 'read', }&quot;"/>
+                'read_action': 'read',
+                'show_compose_message': False }&quot;"/>
             <field name="help" type="html">
                 <p>
                     <b>No private message.</b>
@@ -64,10 +65,11 @@
             <field name="params" eval="&quot;{
                 'domain': [('favorite_user_ids', 'in', [uid])],
                 'view_mailbox': True,
-                'read_action': 'read', }&quot;"/>
+                'read_action': 'read',
+                'compose_as_todo': True }&quot;"/>
             <field name="help" type="html">
                 <p>
-                    <b>No todo!</b>
+                    <b>No todo.</b>
                 </p><p>
                     When you process messages in your inbox, you can mark some
                     as <i>todo</i>. From this menu, you can process all your todo.
@@ -80,33 +82,15 @@
             <field name="tag">mail.wall</field>
             <field name="context">{
               'default_model': 'res.users', 
-              'default_res_id': uid, 
-              'search_default_message_read': True
-            }</field>
-            <field name="params" eval="&quot;{
-                'domain': [('notification_ids.partner_id.user_ids', 'in', [uid])],
-                'view_mailbox': True,
-                'read_action': 'unread', }&quot;"/>
-            <field name="help" type="html">
-                <p>
-                    No message found.
-                </p>
-            </field>
-        </record>
-
-        <record id="action_mail_sent_feeds" model="ir.actions.client">
-            <field name="name">Sent</field>
-            <field name="tag">mail.wall</field>
-            <field name="context">{
-              'default_model': 'res.users', 
               'default_res_id': uid
             }</field>
             <field name="params" eval="&quot;{
-                'domain': [('author_id.user_ids', 'in', [uid])],
-                'view_mailbox': True, }&quot;"/>
+                'domain': ['|', ('notification_ids.partner_id.user_ids', 'in', [uid]), ('author_id.user_ids', 'in', [uid])],
+                'view_mailbox': True,
+                'show_compose_message': False }&quot;"/>
             <field name="help" type="html">
                 <p>
-                    <b>No message sent yet.</b>
+                    No message found and no message sent yet.
                 </p><p>
                     Click on the top-right icon to compose a message. This
                     message will be sent by email if it's an internal contact.
@@ -148,12 +132,6 @@
           <field name="name">Archives</field>
           <field name="sequence" eval="16"/>
           <field name="action" ref="action_mail_archives_feeds"/>
-          <field name="parent_id" ref="mail.mail_feeds"/>
-        </record>
-        <record id="mail_sentfeeds" model="ir.ui.menu">
-          <field name="name">Sent</field>
-          <field name="sequence" eval="18"/>
-          <field name="action" ref="action_mail_sent_feeds"/>
           <field name="parent_id" ref="mail.mail_feeds"/>
         </record>
     </data>

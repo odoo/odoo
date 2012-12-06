@@ -134,7 +134,7 @@ function openerp_pos_db(instance, module){
             for(var i = 0, len = products.length; i < len; i++){
                 var product = products[i];
                 var search_string = this._product_search_string(product);
-                var categ_id = product.pos_categ_id[0];
+                var categ_id = product.pos_categ_id ? product.pos_categ_id[0] : this.root_category_id;
                 if(!stored_categories[categ_id]){
                     stored_categories[categ_id] = [];
                 }
@@ -213,8 +213,10 @@ function openerp_pos_db(instance, module){
             var stored_products   = this.load('products',{});
             var product_ids  = stored_categories[category_id];
             var list = [];
-            for(var i = 0, len = Math.min(product_ids.length,this.limit); i < len; i++){
-                list.push(stored_products[product_ids[i]]);
+            if (product_ids) {
+                for (var i = 0, len = Math.min(product_ids.length, this.limit); i < len; i++) {
+                    list.push(stored_products[product_ids[i]]);
+                }
             }
             return list;
         },

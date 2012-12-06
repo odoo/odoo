@@ -60,14 +60,13 @@
                                     or view
                                 </span>
 
-                                <span attrs="{'invisible': [('fix_price_to_invoice','&lt;&gt;',0.0)]}" class="oe_grey">
+                                <span attrs="{'invisible': ['|',('fix_price_to_invoice','&lt;&gt;',0.0 ),('partner_id','=',False)]}" class="oe_grey">
                                     No order to invoice, create
-                                </span>
                                 <button name="%(action_sales_order)d" string="Sale Orders"
                                     type="action"
                                     class="oe_link"
                                     context="{'default_partner_id': [partner_id], 'search_default_partner_id': [partner_id],'search_default_project_id': [active_id],'default_project_id': [active_id]}"
-                                    />
+                                    /></span>
                             </td>
                         </tr><tr>
                             <td class="oe_timesheet_grey">
@@ -144,6 +143,18 @@
                 <field name="date" position="before">
                     <field name="last_invoice_date"/>
                     <field name="toinvoice_total"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_account_analytic_account_template_required" model="ir.ui.view">
+            <field name="name">account.analytic.account.form.template.required</field>
+            <field name="model">account.analytic.account</field>
+            <field name="groups_id" eval="[(6, 0, [ref('group_template_required')])]"/>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+            <field name="arch" type="xml">
+                <field name="template_id" position="attributes">
+                    <attribute name="attrs">{'required': [('type','=','contract')], 'invisible': [('type','in',['view', 'normal','template'])]}</attribute>
                 </field>
             </field>
         </record>

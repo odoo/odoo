@@ -7,40 +7,82 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2011-03-22 00:30+0000\n"
-"Last-Translator: Emerson <Unknown>\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
+"PO-Revision-Date: 2012-12-04 22:27+0000\n"
+"Last-Translator: Cristiano Korndörfer <codigo.aberto@dorfer.com.br>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:27+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-12-05 05:20+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:837
+#, python-format
+msgid "Invitation to collaborate about %s"
+msgstr "Convite para colaboração sobre %s"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:775
+#, python-format
+msgid ""
+"The share engine has not been able to fetch a record_id for your invitation."
+msgstr ""
+"O mecanismo de compartilhamento não conseguiu obter um record_id para seu "
+"convite."
+
+#. module: share
+#: view:share.wizard:0
+msgid "Include an Optional Personal Message"
+msgstr "Incluir uma Mensagem Pessoal Opcional"
 
 #. module: share
 #: field:share.wizard,embed_option_title:0
 msgid "Display title"
-msgstr ""
+msgstr "Titulo para Exibição"
 
 #. module: share
 #: view:share.wizard:0
 msgid "Access granted!"
+msgstr "Acesso Permitido!"
+
+#. module: share
+#: field:share.wizard,record_name:0
+msgid "Record name"
+msgstr "Nome do registro"
+
+#. module: share
+#: help:share.wizard,message:0
+msgid ""
+"An optional personal message, to be included in the email notification."
 msgstr ""
+"Uma mensagem pessoal opcional, que será incluída na notificação por e-mail."
 
 #. module: share
 #: field:share.wizard,user_type:0
 msgid "Sharing method"
-msgstr ""
-
-#. module: share
-#: view:share.wizard:0
-msgid "Share with these People (one email per line)"
-msgstr ""
+msgstr "Método de compatilhamento"
 
 #. module: share
 #: field:share.wizard,name:0
 msgid "Share Title"
+msgstr "Título do compartilhamento"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:843
+#: code:addons/share/wizard/share_wizard.py:872
+#, python-format
+msgid ""
+"The documents are not attached, you can view them online directly on my "
+"OpenERP server at:\n"
+"    %s\n"
+"\n"
 msgstr ""
+"Os documentos não estão anexados, você pode vê-los online diretamente em meu "
+"servidor OpenERP em:\n"
+"    %s\n"
+"\n"
 
 #. module: share
 #: model:ir.module.category,name:share.module_category_share
@@ -48,52 +90,68 @@ msgid "Sharing"
 msgstr "Compartilhamento"
 
 #. module: share
-#: field:share.wizard,share_root_url:0
-msgid "Share Access URL"
+#: code:addons/share/wizard/share_wizard.py:838
+#: code:addons/share/wizard/share_wizard.py:870
+#, python-format
+msgid ""
+"Hello,\n"
+"\n"
 msgstr ""
+"Olá,\n"
+"\n"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:782
+#: field:share.wizard,share_root_url:0
+msgid "Share Access URL"
+msgstr "URL para Acesso ao Compartilhamento"
+
+#. module: share
+#: field:share.wizard,email_1:0
+#: field:share.wizard,email_2:0
+#: field:share.wizard,email_3:0
+msgid "New user email"
+msgstr "E-mail para novo usuário"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:882
 #, python-format
 msgid "You may use your current login (%s) and password to view them.\n"
 msgstr ""
+"Você pode utilizar o seu nome de usuário e senha atuais (%s) para vê-los.\n"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:601
+#: code:addons/share/wizard/share_wizard.py:616
 #, python-format
 msgid "(Modified)"
-msgstr ""
+msgstr "(Modificado)"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:769
+#: code:addons/share/wizard/share_wizard.py:660
 #, python-format
-msgid ""
-"The documents are not attached, you can view them online directly on my "
-"OpenERP server at:"
+msgid "You must be a member of the Share/User group to use the share wizard."
 msgstr ""
+"Você precisa ser membro do grupo de Compartilhamento/Usuário para utilizar o "
+"assistente de compartilhamento."
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:579
+#: code:addons/share/wizard/share_wizard.py:594
 #, python-format
 msgid "Sharing filter created by user %s (%s) for group %s"
 msgstr ""
+"Filtro de compartilhamento criado pelo usuário %s (%s) para o grupo %s"
 
 #. module: share
-#: field:share.wizard,embed_url:0 field:share.wizard.result.line,share_url:0
+#: field:share.wizard,embed_url:0
+#: field:share.wizard.result.line,share_url:0
 msgid "Share URL"
 msgstr "URL de Compartilhamento"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:776
+#: code:addons/share/wizard/share_wizard.py:844
+#: code:addons/share/wizard/share_wizard.py:876
 #, python-format
 msgid "These are your credentials to access this protected area:\n"
-msgstr ""
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:643
-#, python-format
-msgid "You must be a member of the Share/User group to use the share wizard"
-msgstr ""
+msgstr "Estas são suas credenciais para acessar esta área protegida:\n"
 
 #. module: share
 #: view:share.wizard:0
@@ -106,25 +164,23 @@ msgid "Share"
 msgstr "Compartilhamento"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:551
+#: code:addons/share/wizard/share_wizard.py:566
 #, python-format
 msgid "(Duplicated for modified sharing permissions)"
+msgstr "(Duplicado para permissões de compartilhamento modificadas)"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:664
+#, python-format
+msgid ""
+"Please indicate the emails of the persons to share with, one per line."
 msgstr ""
+"Indique os e-mails das pessoas com quem deseja compartilhar, uma por linha."
 
 #. module: share
 #: help:share.wizard,domain:0
 msgid "Optional domain for further data filtering"
-msgstr ""
-
-#. module: share
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr "Você não pode ter dois usuários com o mesmo login !"
-
-#. module: share
-#: model:ir.model,name:share.model_ir_model_access
-msgid "ir.model.access"
-msgstr ""
+msgstr "Domínio adicional para filtragem de dados"
 
 #. module: share
 #: view:share.wizard:0
@@ -132,7 +188,14 @@ msgid "Next"
 msgstr "Próximo"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:777
+#: code:addons/share/wizard/share_wizard.py:657
+#, python-format
+msgid "Action and Access Mode are required to create a shared access."
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:845
+#: code:addons/share/wizard/share_wizard.py:877
 #, python-format
 msgid "Username"
 msgstr "Nome de usuário"
@@ -140,24 +203,24 @@ msgstr "Nome de usuário"
 #. module: share
 #: view:share.wizard:0
 msgid "Sharing Options"
-msgstr ""
+msgstr "Opções de Compartilhamento"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:765
+#. openerp-web
+#: code:addons/share/static/src/xml/share.xml:9
 #, python-format
-msgid "Hello,"
-msgstr ""
+msgid "Invite"
+msgstr "Convidar"
 
 #. module: share
 #: view:share.wizard:0
-msgid "Close"
-msgstr "Fechar"
+msgid "Embedded code options"
+msgstr "Opções de código embutido"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:640
-#, python-format
-msgid "Action and Access Mode are required to create a shared access"
-msgstr ""
+#: view:share.wizard:0
+msgid "Configuration"
+msgstr "Configuração"
 
 #. module: share
 #: view:share.wizard:0
@@ -165,19 +228,7 @@ msgid ""
 "Please select the action that opens the screen containing the data you want "
 "to share."
 msgstr ""
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:781
-#, python-format
-msgid ""
-"The documents have been automatically added to your current OpenERP "
-"documents.\n"
-msgstr ""
-
-#. module: share
-#: view:share.wizard:0
-msgid "Cancel"
-msgstr "Cancelar"
+"Escolha a ação que abre a janela contendo os dados que deseja compartilhar."
 
 #. module: share
 #: field:res.groups,share:0
@@ -185,10 +236,11 @@ msgid "Share Group"
 msgstr "Grupo de Compartilhamento"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:763
+#: code:addons/share/wizard/share_wizard.py:830
+#: code:addons/share/wizard/share_wizard.py:861
 #, python-format
 msgid "Email required"
-msgstr "Email obrigatório"
+msgstr "E-mail obrigatório"
 
 #. module: share
 #: view:share.wizard:0
@@ -196,24 +248,32 @@ msgid ""
 "Optionally, you may specify an additional domain restriction that will be "
 "applied to the shared data."
 msgstr ""
-
-#. module: share
-#: help:share.wizard,name:0
-msgid "Title for the share (displayed to users as menu and shortcut name)"
-msgstr ""
-
-#. module: share
-#: view:share.wizard:0
-msgid "Options"
-msgstr ""
+"Opcionalmente, você pode especificar uma restrição de domínio adicional que "
+"será aplicada aos dados compartilhados."
 
 #. module: share
 #: view:res.groups:0
-msgid "Regular groups only (no share groups"
-msgstr ""
+msgid "Non-Share Groups"
+msgstr "Grupos que não Compartilham"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:787
+#: view:share.wizard:0
+msgid ""
+"An email notification with instructions has been sent to the following "
+"people:"
+msgstr ""
+"Um e-mail de notificação com instruções foi enviado para as seguintes "
+"pessoas:"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:77
+#, python-format
+msgid "Direct link or embed code"
+msgstr "Link direto ou código embutido"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:851
+#: code:addons/share/wizard/share_wizard.py:885
 #, python-format
 msgid ""
 "OpenERP is a powerful and user-friendly suite of Business Applications (CRM, "
@@ -227,8 +287,8 @@ msgid "Action to share"
 msgstr "Ação para compartilhar"
 
 #. module: share
-#: view:share.wizard:0
-msgid "Optional: include a personal message"
+#: help:share.wizard,record_name:0
+msgid "Name of the shared record, if sharing a precise record"
 msgstr ""
 
 #. module: share
@@ -237,19 +297,31 @@ msgid "Share User"
 msgstr "Usuário de Compartilhamento"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:647
+#: field:share.wizard.result.line,user_id:0
+msgid "unknown"
+msgstr "desconhecido"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:61
+#: code:addons/share/wizard/share_wizard.py:652
 #, python-format
-msgid "Please indicate the emails of the persons to share with, one per line"
+msgid "Sharing access cannot be created."
 msgstr ""
 
 #. module: share
-#: field:share.wizard,embed_code:0 field:share.wizard.result.line,user_id:0
-msgid "unknown"
+#: code:addons/share/wizard/share_wizard.py:775
+#, python-format
+msgid "Record id not found"
 msgstr ""
 
 #. module: share
 #: help:res.groups,share:0
 msgid "Group created to set access rights for sharing data with some users."
+msgstr ""
+
+#. module: share
+#: view:res.groups:0
+msgid "Share Groups"
 msgstr ""
 
 #. module: share
@@ -259,13 +331,7 @@ msgid ""
 msgstr ""
 
 #. module: share
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
-"A empresa escolhida não está entre as empresas habilitadas para este usuário"
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:526
+#: code:addons/share/wizard/share_wizard.py:541
 #, python-format
 msgid "(Copy for sharing)"
 msgstr "(Cópia para compartilhamento)"
@@ -276,15 +342,14 @@ msgid "Newly created"
 msgstr "Criado"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:616
-#, python-format
-msgid "Indirect sharing filter created by user %s (%s) for group %s"
+#: help:share.wizard,name:0
+msgid "Title for the share (displayed to users as menu and shortcut name)"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:767
+#: code:addons/share/wizard/share_wizard.py:631
 #, python-format
-msgid "I've shared %s with you!"
+msgid "Indirect sharing filter created by user %s (%s) for group %s"
 msgstr ""
 
 #. module: share
@@ -293,9 +358,12 @@ msgid "Main access page for users that are granted shared access"
 msgstr ""
 
 #. module: share
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr "O nome do grupo deve ser único!"
+#: code:addons/share/wizard/share_wizard.py:206
+#, python-format
+msgid ""
+"You must configure your email address in the user preferences before using "
+"the Share button."
+msgstr ""
 
 #. module: share
 #: model:res.groups,name:share.group_share_user
@@ -303,12 +371,7 @@ msgid "User"
 msgstr ""
 
 #. module: share
-#: view:res.groups:0
-msgid "Groups"
-msgstr "Grupos"
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:636
+#: code:addons/share/wizard/share_wizard.py:653
 #, python-format
 msgid ""
 "Sorry, the current screen and filter you are trying to share are not "
@@ -318,14 +381,20 @@ msgstr ""
 
 #. module: share
 #: view:share.wizard:0
-msgid "Use this Link"
+msgid "Use this link"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:779
+#: code:addons/share/wizard/share_wizard.py:847
+#: code:addons/share/wizard/share_wizard.py:879
 #, python-format
 msgid "Database"
 msgstr "Base de Dados"
+
+#. module: share
+#: view:share.wizard:0
+msgid "Share with these People (one email per line)"
+msgstr ""
 
 #. module: share
 #: field:share.wizard,domain:0
@@ -333,15 +402,33 @@ msgid "Domain"
 msgstr "Domínio"
 
 #. module: share
-#: view:share.wizard:0 field:share.wizard,result_line_ids:0
+#: view:res.groups:0
+msgid "{'search_default_no_share':1}"
+msgstr ""
+
+#. module: share
+#: view:share.wizard:0
+#: field:share.wizard,result_line_ids:0
 msgid "Summary"
 msgstr "Resumo"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:493
+#: help:share.wizard,embed_code:0
+msgid ""
+"Embed this code in your documents to provide a link to the shared document."
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:508
 #, python-format
 msgid "Copied access for sharing"
 msgstr "Copiado o acesso para o compartilhamento"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:812
+#, python-format
+msgid "Invitation"
+msgstr ""
 
 #. module: share
 #: model:ir.actions.act_window,name:share.action_share_wizard_step1
@@ -354,10 +441,11 @@ msgid "Or insert the following code where you want to embed your documents"
 msgstr ""
 
 #. module: share
-#: view:share.wizard:0
+#: code:addons/share/wizard/share_wizard.py:881
+#, python-format
 msgid ""
-"An email notification with instructions has been sent to the following "
-"people:"
+"The documents have been automatically added to your current OpenERP "
+"documents.\n"
 msgstr ""
 
 #. module: share
@@ -366,11 +454,24 @@ msgid "share.wizard.result.line"
 msgstr "share.wizard.result.line"
 
 #. module: share
+#: field:share.wizard,embed_code:0
+msgid "Code"
+msgstr ""
+
+#. module: share
 #: help:share.wizard,user_type:0
 msgid "Select the type of user(s) you would like to share data with."
 msgstr ""
 "Selecione o(s) tipo(s) de usuário(s) com os quais você gostaria de "
 "compartilhar dados."
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:839
+#, python-format
+msgid ""
+"I have shared %s (%s) with you!\n"
+"\n"
+msgstr ""
 
 #. module: share
 #: field:share.wizard,view_type:0
@@ -388,22 +489,9 @@ msgid "Can edit"
 msgstr ""
 
 #. module: share
-#: help:share.wizard,message:0
-msgid ""
-"An optional personal message, to be included in the email notification."
-msgstr ""
-
-#. module: share
-#: model:ir.model,name:share.model_res_users
-msgid "res.users"
-msgstr "res.users"
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:60
-#: code:addons/share/wizard/share_wizard.py:635
-#, python-format
-msgid "Sharing access could not be created"
-msgstr ""
+#: view:share.wizard:0
+msgid "Cancel"
+msgstr "Cancelar"
 
 #. module: share
 #: help:res.users,share:0
@@ -420,7 +508,7 @@ msgid "Share Wizard"
 msgstr "Assistente de Compartilhamento"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:740
+#: code:addons/share/wizard/share_wizard.py:788
 #, python-format
 msgid "Shared access created!"
 msgstr ""
@@ -434,19 +522,48 @@ msgid ""
 msgstr ""
 
 #. module: share
+#: code:addons/share/wizard/share_wizard.py:848
+#, python-format
+msgid ""
+"The documents have been automatically added to your subscriptions.\n"
+"\n"
+msgstr ""
+
+#. module: share
+#: model:ir.model,name:share.model_res_users
+msgid "Users"
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:871
+#, python-format
+msgid ""
+"I've shared %s with you!\n"
+"\n"
+msgstr ""
+
+#. module: share
 #: model:ir.model,name:share.model_res_groups
 msgid "Access Groups"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:778
+#: field:share.wizard,invite:0
+msgid "Invite users to OpenSocial record"
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:846
+#: code:addons/share/wizard/share_wizard.py:878
 #: field:share.wizard.result.line,password:0
 #, python-format
 msgid "Password"
 msgstr "Senha"
 
 #. module: share
+#: code:addons/share/wizard/share_wizard.py:77
 #: field:share.wizard,new_users:0
+#, python-format
 msgid "Emails"
 msgstr ""
 
@@ -456,18 +573,13 @@ msgid "Display search view"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:197
-#, python-format
-msgid "No email address configured"
-msgstr ""
-
-#. module: share
 #: field:share.wizard,message:0
 msgid "Personal Message"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:763
+#: code:addons/share/wizard/share_wizard.py:830
+#: code:addons/share/wizard/share_wizard.py:861
 #, python-format
 msgid ""
 "The current user must have an email address configured in User Preferences "
@@ -475,6 +587,12 @@ msgid ""
 msgstr ""
 "O usuário atual deve ter um endereço de email configurado nas Preferências "
 "de Usuário para poder enviar emails."
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:205
+#, python-format
+msgid "No email address configured"
+msgstr ""
 
 #. module: share
 #: field:share.wizard.result.line,login:0
@@ -497,11 +615,13 @@ msgid "Sharing: preparation"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:198
-#, python-format
-msgid ""
-"You must configure your email address in the user preferences before using "
-"the Share button."
+#: model:ir.model,name:share.model_ir_model_access
+msgid "ir.model.access"
+msgstr ""
+
+#. module: share
+#: view:share.wizard:0
+msgid "or"
 msgstr ""
 
 #. module: share
@@ -509,15 +629,11 @@ msgstr ""
 msgid "Access rights to be granted on the shared documents."
 msgstr ""
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/share/static/src/xml/share.xml:8
-msgid "Link or embed..."
-msgstr ""
+#~ msgid "You can not have two users with the same login !"
+#~ msgstr "Você não pode ter dois usuários com o mesmo login !"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/share/static/src/xml/share.xml:9
-msgid "Share with..."
-msgstr ""
+#~ msgid "res.users"
+#~ msgstr "res.users"
 
 #~ msgid "Share wizard: step 2"
 #~ msgstr "Assistente de compartilhamento: passo 2"
@@ -552,11 +668,17 @@ msgstr ""
 #~ msgid "User already exists"
 #~ msgstr "O usuário já existe"
 
+#~ msgid "The name of the group must be unique !"
+#~ msgstr "O nome do grupo deve ser único!"
+
 #~ msgid "New users (emails required)"
 #~ msgstr "Novos usuários (emails obrigatório)"
 
 #~ msgid "Select the desired shared access mode:"
 #~ msgstr "Selecione o modo de acesso desejado para o compartilhamento:"
+
+#~ msgid "Groups"
+#~ msgstr "Grupos"
 
 #~ msgid "Users to share with"
 #~ msgstr "Usuários para compartilhar"
@@ -579,6 +701,10 @@ msgstr ""
 #~ msgstr ""
 #~ "Para acessar, você pode ir à seguinte URL:\n"
 #~ "    %s"
+
+#~ msgid "The chosen company is not in the allowed companies for this user"
+#~ msgstr ""
+#~ "A empresa escolhida não está entre as empresas habilitadas para este usuário"
 
 #~ msgid "Existing External Users"
 #~ msgstr "Usuários Externos Existentes"
@@ -606,3 +732,6 @@ msgstr ""
 
 #~ msgid "Read-only"
 #~ msgstr "Somente leitura"
+
+#~ msgid "Close"
+#~ msgstr "Fechar"

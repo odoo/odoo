@@ -103,6 +103,6 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             return True
         return data['form']['amount_currency']
 
-report_sxw.report_sxw('report.account.central.journal', 'account.journal.period', 'addons/account/report/account_central_journal.rml', parser=journal_print, header='internal')
+report_sxw.report_sxw('report.account.central.journal', 'account.journal.period', 'addons/account/report/account_central_journal.rml', parser=journal_print, header='external')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
