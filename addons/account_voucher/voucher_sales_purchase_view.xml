@@ -50,7 +50,7 @@
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','receipt'), ('partner_id','=',partner_id)]</field>
-            <field name="context">{'type':'receipt', 'partner_id': partner_id, 'default_reference':reference}</field>
+            <field name="context">{'default_type':'receipt', 'type':'receipt', 'partner_id': partner_id, 'default_reference':reference}</field>
             <field name="view_id" ref="view_vendor_receipt_form"/>
             <field name="target">current</field>
         </record>
@@ -64,7 +64,7 @@
                     <button name="proforma_voucher" string="Validate" states="draft" class="oe_highlight"/>
                     <button name="%(act_pay_voucher)d" context="{'narration':narration, 'title':'Customer Payment', 'type':'receipt', 'partner_id':partner_id, 'reference':reference, 'amount':amount}" type="action" string="Pay" attrs="{'invisible':['|',('pay_now','=','pay_now'),'|',('state','=','draft'), ('paid','=',True)]}" class="oe_highlight"/>
                     <button name="cancel_voucher" string="Cancel" states="draft,proforma" />
-                    <button name="cancel_voucher" string="Cancel" type="object" states="posted" confirm="Are you sure to confirm this record ?"/>
+                    <button name="cancel_voucher" string="Cancel" type="object" states="posted" confirm="Are you sure you want to cancel this receipt?"/>
                     <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
                 </header>
@@ -89,7 +89,7 @@
                         <page string="Sales Information">
                             <field name="line_cr_ids" on_change="onchange_price(line_cr_ids, tax_id, partner_id)" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}">
                                 <tree string="Sales Lines" editable="bottom">
-                                    <field name="account_id" domain="[('user_type.report_type','=','income'),('type','!=','view')]" widget="selection" groups="account.group_account_user"/>
+                                    <field name="account_id" domain="[('user_type.report_type','=','income'),('type','!=','view')]" widget="selection"/>
                                     <field name="name"/>
                                     <field name="amount" sum="Total"/>
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
@@ -101,7 +101,7 @@
                                     <field name="tax_id" 
                                         on_change="onchange_price(line_cr_ids, tax_id, partner_id)"
                                         widget="selection" nolabel="1"
-					placeholder="Select tax..."
+					placeholder="Tax"
                                         domain="[('type_tax_use','in',('sale','all')), ('parent_id', '=', False)]"/>
                                     <field name="tax_amount" nolabel="1"/>
                                     <div class="oe_subtotal_footer_separator">
@@ -147,8 +147,8 @@
                     </notebook>
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_ids" widget="mail_thread"/>
                         <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
                     </div>
                 </form>
             </field>
@@ -209,7 +209,7 @@
                     <button name="proforma_voucher" string="Validate" states="draft" class="oe_highlight"/>
                     <button name="%(act_pay_bills)d" context="{'narration':narration, 'title':'Bill Payment', 'type':'payment', 'partner_id': partner_id, 'reference':reference}" type="action" string="Pay Bill" attrs="{'invisible':['|',('pay_now','=','pay_now'),'|',('state','=','draft'), ('paid','=',True)]}" class="oe_highlight"/>
                     <button name="cancel_voucher" string="Cancel" states="draft,proforma" />
-                    <button name="cancel_voucher" string="Cancel" type="object" states="posted" confirm="Are you sure to confirm this record ?"/>
+                    <button name="cancel_voucher" string="Cancel" type="object" states="posted" confirm="Are you sure you want to cancel this receipt?"/>
                     <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
                 </header>
@@ -243,7 +243,7 @@
                         <page string="Bill Information">
                             <field name="line_dr_ids" on_change="onchange_price(line_dr_ids, tax_id, partner_id)" context="{'journal_id':journal_id,'partner_id':partner_id}">
                                 <tree string="Expense Lines" editable="bottom">
-                                    <field name="account_id" widget="selection" domain="[('user_type.report_type','=','expense'), ('type','!=','view')]" groups="account.group_account_user"/>
+                                    <field name="account_id" widget="selection" domain="[('user_type.report_type','=','expense'), ('type','!=','view')]"/>
                                     <field name="name"/>
                                     <field name="amount"/>
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
@@ -264,7 +264,7 @@
                                     <field name="tax_id" 
                                         on_change="onchange_price(line_dr_ids, tax_id, partner_id)"
                                         widget="selection" nolabel="1"
-					placeholder="Select tax..."
+					placeholder="Tax"
 
                                         domain="[('type_tax_use','in',('purchase','all')), ('parent_id', '=', False)]"
                                         />
@@ -303,8 +303,8 @@
                     </notebook>
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_ids" widget="mail_thread"/>
                         <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
                     </div>
                 </form>
             </field>

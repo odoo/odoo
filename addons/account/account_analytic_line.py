@@ -39,7 +39,6 @@ class account_analytic_line(osv.osv):
     }
 
     _defaults = {
-        'date': fields.date.context_today,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=c),
     }
     _order = 'date desc'
@@ -108,7 +107,7 @@ class account_analytic_line(osv.osv):
         if journal_id:
             journal = analytic_journal_obj.browse(cr, uid, journal_id, context=context)
             if journal.type == 'sale':
-                product_price_type_ids = product_price_type_obj.search(cr, uid, [('field','=','list_price')], context)
+                product_price_type_ids = product_price_type_obj.search(cr, uid, [('field','=','list_price')], context=context)
                 if product_price_type_ids:
                     pricetype = product_price_type_obj.browse(cr, uid, product_price_type_ids, context=context)[0]
         # Take the company currency as the reference one

@@ -7,19 +7,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 01:37+0100\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-01-12 21:17+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-19 05:33+0000\n"
-"X-Generator: Launchpad (build 16165)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:49+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: project_issue
-#: view:project.issue.report:0
-msgid "Previous Month"
+#: model:project.category,name:project_issue.project_issue_category_03
+msgid "Deadly bug"
+msgstr ""
+
+#. module: project_issue
+#: help:project.config.settings,fetchmail_issue:0
+msgid ""
+"Allows you to configure your incoming mail server, and create issues from "
+"incoming emails."
 msgstr ""
 
 #. module: project_issue
@@ -28,7 +35,8 @@ msgid "Avg. Delay to Open"
 msgstr "متوسط. تأخر الفتح"
 
 #. module: project_issue
-#: view:project.issue:0 view:project.issue.report:0
+#: view:project.issue:0
+#: view:project.issue.report:0
 msgid "Group By..."
 msgstr "تجميع حسب..."
 
@@ -36,11 +44,6 @@ msgstr "تجميع حسب..."
 #: field:project.issue,working_hours_open:0
 msgid "Working Hours to Open the Issue"
 msgstr "ساعات العمل لفتح الحالة"
-
-#. module: project_issue
-#: constraint:project.project:0
-msgid "Error! project start-date must be lower then project end-date."
-msgstr "خطأ! يجب ان يكون تاريخ بدء المشروع اقل من تاريخ انتهائه."
 
 #. module: project_issue
 #: field:project.issue,date_open:0
@@ -63,16 +66,21 @@ msgid "Progress (%)"
 msgstr "نسبة التقدم (%)"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:406
-#, python-format
-msgid "Warning !"
-msgstr "تحذير !"
+#: view:project.issue:0
+#: field:project.issue,message_unread:0
+msgid "Unread Messages"
+msgstr ""
 
 #. module: project_issue
-#: field:project.issue,company_id:0 view:project.issue.report:0
-#: field:project.issue.report,company_id:0
-msgid "Company"
-msgstr "شركة"
+#: code:addons/project_issue/project_issue.py:560
+#, python-format
+msgid "<b>escalated</b>."
+msgstr ""
+
+#. module: project_issue
+#: model:ir.actions.server,name:project_issue.actions_server_project_issue_unread
+msgid "Issue: Mark unread"
+msgstr ""
 
 #. module: project_issue
 #: field:project.issue,email_cc:0
@@ -80,14 +88,14 @@ msgid "Watchers Emails"
 msgstr "مراقبو رسائل البريد الالكتروني"
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "Today's features"
+#: help:project.issue,message_unread:0
+msgid "If checked new messages require your attention."
 msgstr ""
 
 #. module: project_issue
-#: model:ir.model,name:project_issue.model_project_issue_version
-msgid "project.issue.version"
-msgstr "المشروع.الحالة.نسخة"
+#: help:account.analytic.account,use_issues:0
+msgid "Check this field if this project manages issues"
+msgstr ""
 
 #. module: project_issue
 #: field:project.issue,day_open:0
@@ -95,7 +103,7 @@ msgid "Days to Open"
 msgstr "الأيام للفتح"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:406
+#: code:addons/project_issue/project_issue.py:472
 #, python-format
 msgid ""
 "You cannot escalate this issue.\n"
@@ -119,7 +127,8 @@ msgid "Difference in days between last action and current date"
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue.report:0 field:project.issue.report,day:0
+#: view:project.issue.report:0
+#: field:project.issue.report,day:0
 msgid "Day"
 msgstr "يوم"
 
@@ -129,20 +138,11 @@ msgid "Days since creation date"
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "Add Internal Note"
-msgstr "أضف ملاحظة داخلية"
-
-#. module: project_issue
-#: field:project.issue,task_id:0 view:project.issue.report:0
+#: field:project.issue,task_id:0
+#: view:project.issue.report:0
 #: field:project.issue.report,task_id:0
 msgid "Task"
 msgstr "مهمة"
-
-#. module: project_issue
-#: view:board.board:0
-msgid "Issues By Stage"
-msgstr "الحالات بالمرحلة"
 
 #. module: project_issue
 #: field:project.issue,message_ids:0
@@ -156,24 +156,36 @@ msgstr ""
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_project
-#: view:project.issue:0 field:project.issue,project_id:0
-#: view:project.issue.report:0 field:project.issue.report,project_id:0
+#: view:project.issue:0
+#: field:project.issue,project_id:0
+#: view:project.issue.report:0
+#: field:project.issue.report,project_id:0
 msgid "Project"
 msgstr "مشروع"
 
 #. module: project_issue
-#: model:ir.actions.act_window,name:project_issue.action_view_my_open_project_issue_tree
-msgid "My Open Project issues"
-msgstr "حالات فتح المشروع الخاص بي"
+#: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to report a new issue.\n"
+"          </p><p>\n"
+"            The OpenERP issues tacker allows you to efficiantly manage "
+"things\n"
+"            like internal requests, software development bugs, customer\n"
+"            complaints, project troubles, material breakdowns, etc.\n"
+"          </p>\n"
+"        "
+msgstr ""
 
 #. module: project_issue
-#: selection:project.issue,state:0 selection:project.issue.report,state:0
+#: selection:project.issue,state:0
+#: selection:project.issue.report,state:0
 msgid "Cancelled"
 msgstr "ملغي"
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "Change to Next Stage"
+#: field:project.issue,description:0
+msgid "Private Note"
 msgstr ""
 
 #. module: project_issue
@@ -189,12 +201,12 @@ msgstr "بحث تعقب الحالة"
 #. module: project_issue
 #: field:project.issue,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "الألوان"
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "Issue / Partner"
-msgstr ""
+#: help:project.issue,progress:0
+msgid "Computed as: Time Spent / Total Time."
+msgstr "حسابها كالتالي: الوقت المستغرق / الوقت الإجمالي."
 
 #. module: project_issue
 #: field:project.issue.report,working_hours_open:0
@@ -202,9 +214,16 @@ msgid "Avg. Working Hours to Open"
 msgstr "متوسط ساعات العمل للفتح"
 
 #. module: project_issue
-#: field:project.issue,date_action_next:0
-msgid "Next Action"
-msgstr "الإجراء التالي"
+#: model:ir.model,name:project_issue.model_account_analytic_account
+msgid "Analytic Account"
+msgstr ""
+
+#. module: project_issue
+#: help:project.issue,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
 
 #. module: project_issue
 #: help:project.project,project_escalation_id:0
@@ -234,14 +253,8 @@ msgstr ""
 
 #. module: project_issue
 #: view:project.issue:0
-msgid "Change Color"
+msgid "Edit..."
 msgstr ""
-
-#. module: project_issue
-#: code:addons/project_issue/project_issue.py:482
-#, python-format
-msgid " (copy)"
-msgstr " (نسخ)"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -249,20 +262,9 @@ msgid "Responsible"
 msgstr "مسؤول"
 
 #. module: project_issue
-#: selection:project.issue,priority:0
-#: selection:project.issue.report,priority:0
-msgid "Low"
-msgstr "منخفض"
-
-#. module: project_issue
 #: view:project.issue:0
 msgid "Statistics"
 msgstr "إحصائيات"
-
-#. module: project_issue
-#: view:project.issue:0
-msgid "Convert To Task"
-msgstr "حولها الى مهمة"
 
 #. module: project_issue
 #: model:crm.case.categ,name:project_issue.bug_categ
@@ -270,39 +272,38 @@ msgid "Maintenance"
 msgstr "الصيانة"
 
 #. module: project_issue
-#: model:ir.actions.act_window,name:project_issue.action_project_issue_report
-#: model:ir.ui.menu,name:project_issue.menu_project_issue_report_tree
-#: view:project.issue.report:0
-msgid "Issues Analysis"
-msgstr "تحليل الحالات"
+#: code:addons/project_issue/project_issue.py:547
+#, python-format
+msgid "Project issue <b>converted</b> to task."
+msgstr ""
 
 #. module: project_issue
 #: view:project.issue:0
-msgid "Next"
-msgstr "التالي"
-
-#. module: project_issue
-#: view:project.issue:0 field:project.issue,priority:0
-#: view:project.issue.report:0 field:project.issue.report,priority:0
+#: field:project.issue,priority:0
+#: view:project.issue.report:0
+#: field:project.issue.report,priority:0
 msgid "Priority"
 msgstr "أولوية"
 
 #. module: project_issue
 #: view:project.issue:0
-msgid "Send New Email"
-msgstr "إرسال رسالة جديدة"
-
-#. module: project_issue
-#: view:project.issue:0 field:project.issue,version_id:0
-#: view:project.issue.report:0 field:project.issue.report,version_id:0
+#: field:project.issue,version_id:0
+#: view:project.issue.report:0
+#: field:project.issue.report,version_id:0
 msgid "Version"
 msgstr "النسخة"
 
 #. module: project_issue
-#: view:project.issue:0 selection:project.issue,state:0
+#: field:project.issue,message_follower_ids:0
+msgid "Followers"
+msgstr ""
+
+#. module: project_issue
+#: view:project.issue:0
+#: selection:project.issue,state:0
 #: view:project.issue.report:0
 msgid "New"
-msgstr ""
+msgstr "جديد"
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.project_issue_categ_action
@@ -315,7 +316,8 @@ msgid "Email"
 msgstr "بريد إلكتروني"
 
 #. module: project_issue
-#: field:project.issue,channel_id:0 field:project.issue.report,channel_id:0
+#: field:project.issue,channel_id:0
+#: field:project.issue.report,channel_id:0
 msgid "Channel"
 msgstr "القناة"
 
@@ -326,12 +328,19 @@ msgid "Lowest"
 msgstr "أدنى"
 
 #. module: project_issue
+#: code:addons/project_issue/project_issue.py:358
+#, python-format
+msgid "%s (copy)"
+msgstr ""
+
+#. module: project_issue
 #: view:project.issue:0
 msgid "Unassigned Issues"
 msgstr ""
 
 #. module: project_issue
-#: field:project.issue,create_date:0 view:project.issue.report:0
+#: field:project.issue,create_date:0
+#: view:project.issue.report:0
 #: field:project.issue.report,creation_date:0
 msgid "Creation Date"
 msgstr "تاريخ الإنشاء"
@@ -348,23 +357,18 @@ msgid "To Do Issues"
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "Reset to Draft"
-msgstr "إعادة التعيين لمسودة"
+#: model:ir.model,name:project_issue.model_project_issue_version
+msgid "project.issue.version"
+msgstr "المشروع.الحالة.نسخة"
+
+#. module: project_issue
+#: field:project.config.settings,fetchmail_issue:0
+msgid "Create issues from an incoming email account "
+msgstr ""
 
 #. module: project_issue
 #: view:project.issue:0
-msgid "Today"
-msgstr "اليوم"
-
-#. module: project_issue
-#: model:ir.actions.act_window,name:project_issue.open_board_project_issue
-#: model:ir.ui.menu,name:project_issue.menu_deshboard_project_issue
-msgid "Project Issue Dashboard"
-msgstr "لوحة التخكم لحالة المشروع"
-
-#. module: project_issue
-#: view:project.issue:0 selection:project.issue,state:0
+#: selection:project.issue,state:0
 #: view:project.issue.report:0
 msgid "Done"
 msgstr "تم"
@@ -380,31 +384,25 @@ msgid "Categories"
 msgstr "الفئات"
 
 #. module: project_issue
-#: view:project.issue:0 view:project.issue.report:0
-#: field:project.issue.report,type_id:0
+#: view:project.issue:0
+#: field:project.issue,stage_id:0
+#: view:project.issue.report:0
+#: field:project.issue.report,stage_id:0
 msgid "Stage"
 msgstr "مرحلة"
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "History Information"
-msgstr "معلومات المحفوظات"
-
-#. module: project_issue
-#: model:ir.actions.act_window,name:project_issue.action_view_current_project_issue_tree
-#: model:ir.actions.act_window,name:project_issue.action_view_pending_project_issue_tree
-msgid "Project issues"
-msgstr "حالات المشروع"
-
-#. module: project_issue
-#: view:project.issue:0
-msgid "Communication & History"
-msgstr "الاتصالات والسجلات"
-
-#. module: project_issue
+#: model:ir.actions.act_window,name:project_issue.action_project_issue_report
+#: model:ir.ui.menu,name:project_issue.menu_project_issue_report_tree
 #: view:project.issue.report:0
-msgid "My Open Project Issue"
-msgstr "حالة فتح المشروع الخاص بي"
+msgid "Issues Analysis"
+msgstr "تحليل الحالات"
+
+#. module: project_issue
+#: code:addons/project_issue/project_issue.py:493
+#, python-format
+msgid "No Subject"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.action_view_my_project_issue_tree
@@ -413,38 +411,25 @@ msgstr "حالات المشروع الخاص بي"
 
 #. module: project_issue
 #: view:project.issue:0
+#: field:project.issue,partner_id:0
+#: view:project.issue.report:0
+#: field:project.issue.report,partner_id:0
 msgid "Contact"
 msgstr "جهة الاتصال"
 
 #. module: project_issue
-#: view:project.issue:0 field:project.issue,partner_id:0
-#: view:project.issue.report:0 field:project.issue.report,partner_id:0
-msgid "Partner"
-msgstr "شريك"
-
-#. module: project_issue
-#: view:board.board:0
-msgid "My Issues"
-msgstr "الحالات الخاصة بي"
+#: code:addons/project_issue/project_issue.py:551
+#, python-format
+msgid "Project issue <b>created</b>."
+msgstr ""
 
 #. module: project_issue
 #: view:project.issue:0
-msgid "Change to Previous Stage"
+msgid "Delete"
 msgstr ""
 
 #. module: project_issue
-#: model:ir.actions.act_window,help:project_issue.project_issue_version_action
-msgid ""
-"You can use the issues tracker in OpenERP to handle bugs in the software "
-"development project, to handle claims in after-sales services, etc. Define "
-"here the different versions of your products on which you can work on issues."
-msgstr ""
-"يمكنك استخدام متعقب المسائل في OpenERP للتعامل مع بق في مشروع تطوير البرمجة, "
-"للتعامل مع المطالبات في خدمات مابعد البيع, الخ. حدد هنا الاصدارات المختلفة "
-"لمنتجاتك على ما يمكنك عمله في القضية."
-
-#. module: project_issue
-#: code:addons/project_issue/project_issue.py:330
+#: code:addons/project_issue/project_issue.py:341
 #, python-format
 msgid "Tasks"
 msgstr "مهام"
@@ -455,9 +440,9 @@ msgid "# of Issues"
 msgstr "# للحالة"
 
 #. module: project_issue
-#: selection:project.issue.report,month:0
-msgid "September"
-msgstr "سبتمبر"
+#: model:ir.actions.server,name:project_issue.actions_server_project_issue_read
+msgid "Issue: Mark read"
+msgstr ""
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -465,26 +450,24 @@ msgid "December"
 msgstr "ديسمبر"
 
 #. module: project_issue
+#: field:project.issue,categ_ids:0
+msgid "Tags"
+msgstr ""
+
+#. module: project_issue
 #: view:project.issue:0
 msgid "Issue Tracker Tree"
 msgstr "شجرة تعقب الحالة"
 
 #. module: project_issue
-#: view:project.issue:0 view:project.issue.report:0
-#: field:project.issue.report,month:0
-msgid "Month"
-msgstr "شهر"
+#: model:project.category,name:project_issue.project_issue_category_01
+msgid "Little problem"
+msgstr ""
 
 #. module: project_issue
-#: model:ir.model,name:project_issue.model_project_issue_report
-msgid "project.issue.report"
-msgstr "مشروع.حالة.تقرير"
-
-#. module: project_issue
-#: code:addons/project_issue/project_issue.py:408 view:project.issue:0
-#, python-format
-msgid "Escalate"
-msgstr "تصعيد"
+#: view:project.project:0
+msgid "creates"
+msgstr ""
 
 #. module: project_issue
 #: model:crm.case.categ,name:project_issue.feature_request_categ
@@ -498,34 +481,40 @@ msgstr "تاريخ التحديث"
 
 #. module: project_issue
 #: view:project.issue:0
-msgid "Open Features"
+msgid "Project:"
 msgstr ""
 
 #. module: project_issue
 #: view:project.issue:0
-msgid "Previous"
-msgstr "السابق"
+msgid "Open Features"
+msgstr ""
 
 #. module: project_issue
-#: view:project.issue:0 field:project.issue,categ_id:0
-#: view:project.issue.report:0 field:project.issue.report,categ_id:0
+#: field:project.issue,date_action_next:0
+msgid "Next Action"
+msgstr "الإجراء التالي"
+
+#. module: project_issue
+#: field:project.issue,company_id:0
+#: view:project.issue.report:0
+#: field:project.issue.report,company_id:0
+msgid "Company"
+msgstr "شركة"
+
+#. module: project_issue
+#: view:project.issue:0
 msgid "Category"
 msgstr "فئة"
 
 #. module: project_issue
 #: field:project.issue,user_email:0
 msgid "User Email"
-msgstr ""
+msgstr "البريد الإلكتروني للمستخدم"
 
 #. module: project_issue
 #: view:project.issue.report:0
 msgid "#Number of Project Issues"
 msgstr "# عدد حالات المشروع"
-
-#. module: project_issue
-#: view:project.issue:0
-msgid "Reset to New"
-msgstr ""
 
 #. module: project_issue
 #: help:project.issue,channel_id:0
@@ -549,19 +538,16 @@ msgid "Draft"
 msgstr "مسودة"
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "Contact Information"
-msgstr ""
+#: selection:project.issue,priority:0
+#: selection:project.issue.report,priority:0
+msgid "Low"
+msgstr "منخفض"
 
 #. module: project_issue
-#: field:project.issue,date_closed:0 selection:project.issue.report,state:0
+#: field:project.issue,date_closed:0
+#: selection:project.issue.report,state:0
 msgid "Closed"
 msgstr "مغلق"
-
-#. module: project_issue
-#: view:project.issue:0
-msgid "Reply"
-msgstr "رد"
 
 #. module: project_issue
 #: field:project.issue.report,delay_close:0
@@ -569,13 +555,16 @@ msgid "Avg. Delay to Close"
 msgstr "متوسط تأخر الغلق"
 
 #. module: project_issue
-#: view:project.issue:0 selection:project.issue,state:0
-#: view:project.issue.report:0 selection:project.issue.report,state:0
+#: selection:project.issue,state:0
+#: view:project.issue.report:0
+#: selection:project.issue.report,state:0
 msgid "Pending"
 msgstr "معلّق"
 
 #. module: project_issue
 #: view:project.issue:0
+#: field:project.issue,state:0
+#: field:project.issue.report,state:0
 msgid "Status"
 msgstr "الحالة"
 
@@ -583,11 +572,6 @@ msgstr "الحالة"
 #: view:project.issue.report:0
 msgid "#Project Issues"
 msgstr "# حالات المشروع"
-
-#. module: project_issue
-#: view:board.board:0
-msgid "Current Issues"
-msgstr "الحالات الجارية"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -601,19 +585,24 @@ msgid "Normal"
 msgstr "عادي"
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "Global CC"
-msgstr "CC العالمية"
+#: field:project.project,issue_count:0
+msgid "unknown"
+msgstr ""
 
 #. module: project_issue
-#: view:project.issue:0 view:project.issue.report:0
-msgid "To Do"
-msgstr "في انتظار التنفيذ"
+#: view:project.issue:0
+msgid "Category:"
+msgstr ""
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
 msgid "June"
 msgstr "يونيو"
+
+#. module: project_issue
+#: help:project.issue,message_ids:0
+msgid "Messages and communication history"
+msgstr ""
 
 #. module: project_issue
 #: view:project.issue:0
@@ -626,7 +615,23 @@ msgid "Days to Close"
 msgstr "الأيام للغلق"
 
 #. module: project_issue
-#: field:project.issue,active:0 field:project.issue.version,active:0
+#: field:project.issue,message_is_follower:0
+msgid "Is a Follower"
+msgstr ""
+
+#. module: project_issue
+#: help:project.issue,state:0
+msgid ""
+"The status is set to 'Draft', when a case is created.                      "
+"If the case is in progress the status is set to 'Open'.                      "
+"When the case is over, the status is set to 'Done'.                      If "
+"the case needs to be reviewed then the status is                       set "
+"to 'Pending'."
+msgstr ""
+
+#. module: project_issue
+#: field:project.issue,active:0
+#: field:project.issue.version,active:0
 msgid "Active"
 msgstr "نشط"
 
@@ -634,6 +639,18 @@ msgstr "نشط"
 #: selection:project.issue.report,month:0
 msgid "November"
 msgstr "نوفمبر"
+
+#. module: project_issue
+#: code:addons/project_issue/project_issue.py:472
+#, python-format
+msgid "Warning!"
+msgstr ""
+
+#. module: project_issue
+#: field:project.issue,message_comment_ids:0
+#: help:project.issue,message_comment_ids:0
+msgid "Comments and emails"
+msgstr ""
 
 #. module: project_issue
 #: view:project.issue.report:0
@@ -644,16 +661,6 @@ msgstr "بحث"
 #: selection:project.issue.report,month:0
 msgid "October"
 msgstr "أكتوبر"
-
-#. module: project_issue
-#: view:board.board:0
-msgid "Issues Dashboard"
-msgstr ""
-
-#. module: project_issue
-#: view:project.issue:0 field:project.issue,type_id:0
-msgid "Stages"
-msgstr ""
 
 #. module: project_issue
 #: help:project.issue,days_since_creation:0
@@ -676,56 +683,36 @@ msgid "These people will receive email."
 msgstr "هؤلاء سيصلهم بريد إلكتروني."
 
 #. module: project_issue
-#: view:board.board:0
-msgid "Issues By State"
-msgstr "الحالات بالبيان"
+#: field:project.issue,message_summary:0
+msgid "Summary"
+msgstr ""
 
 #. module: project_issue
-#: view:project.issue:0 field:project.issue,date:0
+#: field:project.issue,date:0
 msgid "Date"
 msgstr "تاريخ"
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "History"
-msgstr "محفوظات"
-
-#. module: project_issue
-#: field:project.issue,user_id:0 view:project.issue.report:0
+#: field:project.issue,user_id:0
+#: view:project.issue.report:0
 #: field:project.issue.report,user_id:0
 msgid "Assigned to"
 msgstr "مكلف إلى"
 
 #. module: project_issue
-#: field:project.project,reply_to:0
-msgid "Reply-To Email Address"
-msgstr "قم بالرد لعنوان البريد الالكتروني"
-
-#. module: project_issue
-#: field:project.issue,partner_address_id:0
-msgid "Partner Contact"
-msgstr "جهة الاتصال بالشريك"
-
-#. module: project_issue
-#: view:project.issue:0
-msgid "Issue Tracker Form"
-msgstr "نموذج تعقب الحالة"
-
-#. module: project_issue
-#: view:project.issue:0 field:project.issue,state:0
-#: view:project.issue.report:0 field:project.issue.report,state:0
-msgid "State"
-msgstr "الحالة"
-
-#. module: project_issue
-#: view:project.issue:0
-msgid "General"
-msgstr "عام"
+#: view:project.config.settings:0
+msgid "Configure"
+msgstr ""
 
 #. module: project_issue
 #: view:project.issue:0
 msgid "Current Features"
 msgstr ""
+
+#. module: project_issue
+#: selection:project.issue.report,month:0
+msgid "September"
+msgstr "سبتمبر"
 
 #. module: project_issue
 #: view:project.issue.version:0
@@ -743,21 +730,18 @@ msgid "Cancel"
 msgstr "إلغاء"
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "Close"
-msgstr "إغلاق"
-
-#. module: project_issue
-#: view:project.issue:0 selection:project.issue.report,state:0
+#: selection:project.issue.report,state:0
 msgid "Open"
 msgstr "فتح"
 
 #. module: project_issue
+#: field:account.analytic.account,use_issues:0
 #: model:ir.actions.act_window,name:project_issue.act_project_project_2_project_issue_all
 #: model:ir.actions.act_window,name:project_issue.project_issue_categ_act0
 #: model:ir.ui.menu,name:project_issue.menu_project_confi
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_track
 #: view:project.issue:0
+#: view:project.project:0
 msgid "Issues"
 msgstr "الإصدارات"
 
@@ -767,8 +751,12 @@ msgid "In Progress"
 msgstr "قيد التقدم"
 
 #. module: project_issue
-#: model:ir.actions.act_window,name:project_issue.action_project_issue_graph_stage
-#: model:ir.actions.act_window,name:project_issue.action_project_issue_graph_state
+#: view:project.issue:0
+#: view:project.issue.report:0
+msgid "To Do"
+msgstr "في انتظار التنفيذ"
+
+#. module: project_issue
 #: model:ir.model,name:project_issue.model_project_issue
 #: view:project.issue.report:0
 msgid "Project Issue"
@@ -777,35 +765,44 @@ msgstr "حالة المشروع"
 #. module: project_issue
 #: view:project.issue:0
 msgid "Creation Month"
+msgstr "إنشاء شهر"
+
+#. module: project_issue
+#: code:addons/project_issue/project_issue.py:557
+#, python-format
+msgid "<b>escalated</b> to <em>'%s'</em>."
 msgstr ""
 
 #. module: project_issue
-#: help:project.issue,progress:0
-msgid "Computed as: Time Spent / Total Time."
-msgstr "حسابها كالتالي: الوقت المستغرق / الوقت الإجمالي."
+#: view:project.issue.report:0
+#: field:project.issue.report,section_id:0
+msgid "Sale Team"
+msgstr "فريق المبيعات"
 
 #. module: project_issue
-#: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
-msgid ""
-"Issues such as system bugs, customer complaints, and material breakdowns are "
-"collected here. You can define the stages assigned when solving the project "
-"issue (analysis, development, done). With the mailgateway module, issues can "
-"be integrated through an email address (example: support@mycompany.com)"
-msgstr ""
-"يتم جمع مسائل مثل نظام البق، شكاوى العملاء، وأعطال المواد هنا. يمكنك تحديد "
-"مراحل التعيين عندما تحل قضية المشروع (تحليل وتطوير والقيام به). مع وحدة "
-"بوابة البريد، يمكن دمج القضايا من خلال عنوان بريد إلكتروني (على سبيل المثال: "
-"support@mycompany.com)"
+#: view:project.issue:0
+#: view:project.issue.report:0
+#: field:project.issue.report,month:0
+msgid "Month"
+msgstr "شهر"
 
 #. module: project_issue
-#: view:board.board:0 view:project.issue:0
-msgid "Pending Issues"
-msgstr "حالات معلقة"
-
-#. module: project_issue
+#: view:project.issue:0
 #: field:project.issue,name:0
+#: view:project.project:0
 msgid "Issue"
 msgstr "حالة"
+
+#. module: project_issue
+#: code:addons/project_issue/project_issue.py:540
+#, python-format
+msgid "Stage changed to <b>%s</b>."
+msgstr ""
+
+#. module: project_issue
+#: model:project.category,name:project_issue.project_issue_category_02
+msgid "PBCK"
+msgstr ""
 
 #. module: project_issue
 #: view:project.issue:0
@@ -813,7 +810,7 @@ msgid "Feature Tracker Search"
 msgstr "اظهر بحث التعقب"
 
 #. module: project_issue
-#: view:project.issue:0 field:project.issue,description:0
+#: view:project.issue:0
 msgid "Description"
 msgstr "وصف"
 
@@ -828,25 +825,15 @@ msgid "May"
 msgstr "مايو"
 
 #. module: project_issue
-#: view:project.issue.report:0 field:project.issue.report,email:0
-msgid "# Emails"
-msgstr "عدد الرسائل"
+#: model:ir.model,name:project_issue.model_project_config_settings
+msgid "project.config.settings"
+msgstr ""
 
 #. module: project_issue
-#: help:project.issue,state:0
-msgid ""
-"The state is set to 'Draft', when a case is created.                         "
-"         \n"
-"If the case is in progress the state is set to 'Open'.                       "
-"           \n"
-"When the case is over, the state is set to 'Done'.                           "
-"       \n"
-"If the case needs to be reviewed then the state is set to 'Pending'."
-msgstr ""
-"تم تعيين الحالة الى ‘سحب‘, عند انشاء الحالة.\n"
-"اذا كانت الحالة في وضع التقدم ستعين الحالة الى ‘فتح‘.\n"
-"عدما تكون الحالة فوق الحد, ستعين الحالة الى ‘تم‘.\n"
-"اذا كانت الحالة تحتاج الى المراجعة ستعين الحالة الى ‘معلق‘."
+#: view:project.issue.report:0
+#: field:project.issue.report,email:0
+msgid "# Emails"
+msgstr "عدد الرسائل"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -854,25 +841,27 @@ msgid "February"
 msgstr "فبراير"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:70
-#, python-format
-msgid "Issue '%s' has been opened."
-msgstr "تم فتح الحالة ‘%s‘."
-
-#. module: project_issue
 #: view:project.issue:0
 msgid "Feature description"
 msgstr "إظهر الوصف"
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "Edit"
-msgstr ""
-
-#. module: project_issue
 #: field:project.project,project_escalation_id:0
 msgid "Project Escalation"
 msgstr "تصعيد المشروع"
+
+#. module: project_issue
+#: model:ir.actions.act_window,help:project_issue.project_issue_version_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a new version.\n"
+"              </p><p>\n"
+"                Define here the different versions of your products on "
+"which\n"
+"                you can work on issues.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: project_issue
 #: help:project.issue,section_id:0
@@ -884,20 +873,24 @@ msgstr ""
 "الالكلتروني لبوابة البريد."
 
 #. module: project_issue
-#: view:project.issue.report:0
-msgid "Month-1"
-msgstr "شهر-1"
+#: view:board.board:0
+msgid "My Issues"
+msgstr "الحالات الخاصة بي"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:85
-#, python-format
-msgid "Issue '%s' has been closed."
-msgstr "تم غلق الحالة ‘%s‘."
+#: help:project.issue.report,delay_open:0
+msgid "Number of Days to open the project issue."
+msgstr ""
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
 msgid "April"
 msgstr "أبريل"
+
+#. module: project_issue
+#: view:project.issue:0
+msgid "⇒ Escalate"
+msgstr ""
 
 #. module: project_issue
 #: view:project.issue:0
@@ -915,26 +908,14 @@ msgid "ID"
 msgstr "معرّف"
 
 #. module: project_issue
-#: view:project.issue.report:0
-msgid "Current Year"
-msgstr ""
-
-#. module: project_issue
-#: code:addons/project_issue/project_issue.py:415
-#, python-format
-msgid "No Title"
-msgstr "لا يوجد عنوان"
+#: model:ir.model,name:project_issue.model_project_issue_report
+msgid "project.issue.report"
+msgstr "مشروع.حالة.تقرير"
 
 #. module: project_issue
 #: help:project.issue.report,delay_close:0
-#: help:project.issue.report,delay_open:0
 msgid "Number of Days to close the project issue"
 msgstr "عدد الايام لغلق مسألة المشروع"
-
-#. module: project_issue
-#: view:project.issue.report:0 field:project.issue.report,section_id:0
-msgid "Sale Team"
-msgstr "فريق المبيعات"
 
 #. module: project_issue
 #: field:project.issue.report,working_hours_close:0
@@ -958,7 +939,8 @@ msgid "Last Action"
 msgstr "آخر إجراء"
 
 #. module: project_issue
-#: view:project.issue.report:0 field:project.issue.report,name:0
+#: view:project.issue.report:0
+#: field:project.issue.report,name:0
 msgid "Year"
 msgstr "سنة"
 
@@ -967,25 +949,64 @@ msgstr "سنة"
 msgid "Duration"
 msgstr "المُدة"
 
-#. module: project_issue
-#: view:board.board:0
-msgid "My Open Issues by Creation Date"
-msgstr "حالات الفتح الخاصة بي بتاريخ الانشاء"
+#~ msgid "Add Internal Note"
+#~ msgstr "أضف ملاحظة داخلية"
 
 #~ msgid "Date Closed"
 #~ msgstr "تاريخ الإغلاق"
 
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "تحذير !"
+
 #~ msgid "Mobile"
 #~ msgstr "الجوال"
+
+#~ msgid "Previous"
+#~ msgstr "السابق"
+
+#, python-format
+#~ msgid " (copy)"
+#~ msgstr " (نسخ)"
+
+#~ msgid "Partner"
+#~ msgstr "شريك"
+
+#~ msgid "Send New Email"
+#~ msgstr "إرسال رسالة جديدة"
+
+#~ msgid "Next"
+#~ msgstr "التالي"
+
+#~ msgid "Today"
+#~ msgstr "اليوم"
 
 #~ msgid "Phone"
 #~ msgstr "هاتف"
 
+#~ msgid "Reset to Draft"
+#~ msgstr "إعادة التعيين لمسودة"
+
+#~ msgid "History Information"
+#~ msgstr "معلومات المحفوظات"
+
+#~ msgid "Escalate"
+#~ msgstr "تصعيد"
+
 #~ msgid "Extended Filters..."
 #~ msgstr "مرشحات مفصلة..."
 
+#~ msgid "State"
+#~ msgstr "الحالة"
+
 #~ msgid "Attachments"
 #~ msgstr "مرفقات"
+
+#~ msgid "History"
+#~ msgstr "محفوظات"
+
+#~ msgid "Partner Contact"
+#~ msgstr "جهة الاتصال بالشريك"
 
 #~ msgid "Resolution"
 #~ msgstr "القرار"
@@ -993,17 +1014,45 @@ msgstr "حالات الفتح الخاصة بي بتاريخ الانشاء"
 #~ msgid "Communication"
 #~ msgstr "التواصل"
 
+#~ msgid "General"
+#~ msgstr "عام"
+
+#~ msgid "Close"
+#~ msgstr "إغلاق"
+
 #~ msgid "Details"
 #~ msgstr "تفاصيل"
+
+#~ msgid "Reply"
+#~ msgstr "رد"
 
 #~ msgid "Current"
 #~ msgstr "الحالي"
 
+#, python-format
+#~ msgid "No Title"
+#~ msgstr "لا يوجد عنوان"
+
+#~ msgid "Error! project start-date must be lower then project end-date."
+#~ msgstr "خطأ! يجب ان يكون تاريخ بدء المشروع اقل من تاريخ انتهائه."
+
+#~ msgid "Pending Issues"
+#~ msgstr "حالات معلقة"
+
 #~ msgid "Issue Management in Project Management"
 #~ msgstr "ادارة الحالة في ادارة المشروع"
 
+#~ msgid "My Open Project issues"
+#~ msgstr "حالات فتح المشروع الخاص بي"
+
+#~ msgid "Convert To Task"
+#~ msgstr "حولها الى مهمة"
+
 #~ msgid "My Board"
 #~ msgstr "لجنتي"
+
+#~ msgid "Communication & History"
+#~ msgstr "الاتصالات والسجلات"
 
 #~ msgid "This is the current user to whom the related task have been assigned"
 #~ msgstr "يكون هذا المستخدم الحالي الذي تم تعيين المهمة ذات الصلة له"
@@ -1017,14 +1066,26 @@ msgstr "حالات الفتح الخاصة بي بتاريخ الانشاء"
 #~ "        تعطي هذه الوحدة ادارة الحالات/بق في المشروع\n"
 #~ "    "
 
+#~ msgid "Global CC"
+#~ msgstr "CC العالمية"
+
 #~ msgid "Employee's Name"
 #~ msgstr "اسم الموظف"
+
+#~ msgid "Issues By Stage"
+#~ msgstr "الحالات بالمرحلة"
+
+#~ msgid "Project Issue Dashboard"
+#~ msgstr "لوحة التخكم لحالة المشروع"
 
 #~ msgid "Close Working hours"
 #~ msgstr "اغلق ساعات العمل"
 
 #~ msgid "Open Working Hours"
 #~ msgstr "افتح ساعات العمل"
+
+#~ msgid "Project issues"
+#~ msgstr "حالات المشروع"
 
 #~ msgid ""
 #~ "The channels represent the different communication modes available with the "
@@ -1034,5 +1095,95 @@ msgstr "حالات الفتح الخاصة بي بتاريخ الانشاء"
 #~ "تمثل القنوات وسائط الاتصال المختلفة المتاحة مع العميل. مع كل فرصة تجارية, "
 #~ "يمكنك توضيح القناة التي هي مصدر لهذه الفرصة."
 
+#~ msgid "My Open Project Issue"
+#~ msgstr "حالة فتح المشروع الخاص بي"
+
+#~ msgid "Current Issues"
+#~ msgstr "الحالات الجارية"
+
+#~ msgid "Issues By State"
+#~ msgstr "الحالات بالبيان"
+
+#~ msgid "Reply-To Email Address"
+#~ msgstr "قم بالرد لعنوان البريد الالكتروني"
+
+#~ msgid "Issue Tracker Form"
+#~ msgstr "نموذج تعقب الحالة"
+
+#, python-format
+#~ msgid "Issue '%s' has been opened."
+#~ msgstr "تم فتح الحالة ‘%s‘."
+
 #~ msgid "Sale Team    "
 #~ msgstr "فريق البيع    "
+
+#, python-format
+#~ msgid "Issue '%s' has been closed."
+#~ msgstr "تم غلق الحالة ‘%s‘."
+
+#~ msgid "Month-1"
+#~ msgstr "شهر-1"
+
+#~ msgid "My Open Issues by Creation Date"
+#~ msgstr "حالات الفتح الخاصة بي بتاريخ الانشاء"
+
+#~ msgid ""
+#~ "Issues such as system bugs, customer complaints, and material breakdowns are "
+#~ "collected here. You can define the stages assigned when solving the project "
+#~ "issue (analysis, development, done). With the mailgateway module, issues can "
+#~ "be integrated through an email address (example: support@mycompany.com)"
+#~ msgstr ""
+#~ "يتم جمع مسائل مثل نظام البق، شكاوى العملاء، وأعطال المواد هنا. يمكنك تحديد "
+#~ "مراحل التعيين عندما تحل قضية المشروع (تحليل وتطوير والقيام به). مع وحدة "
+#~ "بوابة البريد، يمكن دمج القضايا من خلال عنوان بريد إلكتروني (على سبيل المثال: "
+#~ "support@mycompany.com)"
+
+#~ msgid ""
+#~ "The state is set to 'Draft', when a case is created.                         "
+#~ "         \n"
+#~ "If the case is in progress the state is set to 'Open'.                       "
+#~ "           \n"
+#~ "When the case is over, the state is set to 'Done'.                           "
+#~ "       \n"
+#~ "If the case needs to be reviewed then the state is set to 'Pending'."
+#~ msgstr ""
+#~ "تم تعيين الحالة الى ‘سحب‘, عند انشاء الحالة.\n"
+#~ "اذا كانت الحالة في وضع التقدم ستعين الحالة الى ‘فتح‘.\n"
+#~ "عدما تكون الحالة فوق الحد, ستعين الحالة الى ‘تم‘.\n"
+#~ "اذا كانت الحالة تحتاج الى المراجعة ستعين الحالة الى ‘معلق‘."
+
+#~ msgid ""
+#~ "You can use the issues tracker in OpenERP to handle bugs in the software "
+#~ "development project, to handle claims in after-sales services, etc. Define "
+#~ "here the different versions of your products on which you can work on issues."
+#~ msgstr ""
+#~ "يمكنك استخدام متعقب المسائل في OpenERP للتعامل مع بق في مشروع تطوير البرمجة, "
+#~ "للتعامل مع المطالبات في خدمات مابعد البيع, الخ. حدد هنا الاصدارات المختلفة "
+#~ "لمنتجاتك على ما يمكنك عمله في القضية."
+
+#~ msgid "Change Color"
+#~ msgstr "تغيير اللون"
+
+#~ msgid "Previous Month"
+#~ msgstr "الشهر السابق"
+
+#~ msgid "Change to Next Stage"
+#~ msgstr "التغير للمرحلة القادمة"
+
+#~ msgid "Reset to New"
+#~ msgstr "إعادة الوضع الى جديد"
+
+#~ msgid "Change to Previous Stage"
+#~ msgstr "التغيير للمرحلة السابقة"
+
+#~ msgid "Contact Information"
+#~ msgstr "معلومات الاتصال"
+
+#~ msgid "Stages"
+#~ msgstr "مراحل"
+
+#~ msgid "Edit"
+#~ msgstr "تحرير"
+
+#~ msgid "Current Year"
+#~ msgstr "العام الحالي"

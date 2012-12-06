@@ -6,20 +6,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2012-05-10 17:55+0000\n"
 "Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-19 05:21+0000\n"
-"X-Generator: Launchpad (build 16165)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:40+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
 msgid "Questions List"
 msgstr "Lista de Intrebari"
+
+#. module: crm_profiling
+#: view:crm_profiling.question:0
+#: field:crm_profiling.question,answers_ids:0
+msgid "Avalaible Answers"
+msgstr "Răspunsuri disponibile"
 
 #. module: crm_profiling
 #: model:ir.actions.act_window,help:crm_profiling.open_questionnaires
@@ -115,11 +121,6 @@ msgid "Use a questionnaire"
 msgstr "Foloseste un chestionar"
 
 #. module: crm_profiling
-#: view:open.questionnaire:0
-msgid "_Cancel"
-msgstr "_Anuleaza"
-
-#. module: crm_profiling
 #: field:open.questionnaire,question_ans_ids:0
 msgid "Question / Answers"
 msgstr "Intrebare / Raspunsuri"
@@ -143,25 +144,14 @@ msgstr ""
 "de segmentare. Daca nu este bifata, criteriile de sub ea vor fi ignorate"
 
 #. module: crm_profiling
-#: constraint:crm.segmentation:0
-msgid "Error ! You can not create recursive profiles."
-msgstr "Eroare! Nu puteţi crea profile recursive."
-
-#. module: crm_profiling
 #: field:crm.segmentation,profiling_active:0
 msgid "Use The Profiling Rules"
 msgstr "Foloseste regulile de profil"
 
 #. module: crm_profiling
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr "Eroare ! Nu puteti crea membri asociati recursiv."
-
-#. module: crm_profiling
-#: view:crm_profiling.question:0
-#: field:crm_profiling.question,answers_ids:0
-msgid "Avalaible Answers"
-msgstr "Răspunsuri disponibile"
+#: constraint:crm.segmentation:0
+msgid "Error ! You cannot create recursive profiles."
+msgstr ""
 
 #. module: crm_profiling
 #: field:crm.segmentation,answer_yes:0
@@ -206,6 +196,14 @@ msgstr "Chestionar"
 #: view:open.questionnaire:0
 msgid "Save Data"
 msgstr "Salveaza datele"
+
+#. module: crm_profiling
+#: view:open.questionnaire:0
+msgid "or"
+msgstr ""
+
+#~ msgid "Error ! You can not create recursive profiles."
+#~ msgstr "Eroare! Nu puteţi crea profile recursive."
 
 #~ msgid "Using a questionnaire"
 #~ msgstr "Folosirea unui chestionar"
@@ -253,5 +251,11 @@ msgstr "Salveaza datele"
 #~ "moment ce este același care a fost redenumit.\n"
 #~ "    "
 
+#~ msgid "_Cancel"
+#~ msgstr "_Anuleaza"
+
 #~ msgid "Avalaible answers"
 #~ msgstr "Raspunsuri disponibile"
+
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr "Eroare ! Nu puteti crea membri asociati recursiv."

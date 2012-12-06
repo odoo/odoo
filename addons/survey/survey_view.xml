@@ -2,7 +2,7 @@
 <openerp>
     <data>
         <!-- Top menu item -->
-        <menuitem name="Tools" id="base.menu_tools" sequence="160"/>
+        <menuitem name="Tools" id="base.menu_tools" sequence="120"/>
 
         <menuitem name="Surveys" id="menu_surveys" parent="base.menu_tools" sequence="2" groups="base.group_tool_user,base.group_tool_manager,base.group_survey_user"/>
         
@@ -31,8 +31,8 @@
                         <button name="test_survey" states="open,draft,close,cancel" string="Test Survey" type="object" icon="gtk-new" context="{'survey_id': active_id}" attrs="{'invisible':[('id','=',0)]}"/>
                         <button name="fill_survey" states="open" string="Answer Survey" type="object" icon="gtk-execute" context="{'survey_id': active_id}" attrs="{'invisible':[('state','!=','open')]}"/>
                         <button name="action_print_survey" states="open,draft,close,cancel" string="Print Answer" type="object"/>
-                        <button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel"
-                            string="Edit Survey" type="action" context="{'active':True,'edit' : True,'survey_id': active_id}"/>
+                        <button name="edit_survey" states="open,draft,close,cancel"
+                            string="Edit Survey" type="object" context="{'active':True,'edit' : True,'survey_id': active_id}"/>
 
                     </div>
                     <div class="oe_title">

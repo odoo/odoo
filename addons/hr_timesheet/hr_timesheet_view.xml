@@ -6,12 +6,12 @@
             <field name="name">hr.analytic.timesheet.tree</field>
             <field name="model">hr.analytic.timesheet</field>
             <field name="arch" type="xml">
-                <tree editable="bottom" string="Timesheet Lines">
+                <tree editable="top" string="Timesheet Activities">
                     <field name="date" on_change="on_change_date(date)"/>
-                    <field name="user_id" on_change="on_change_user_id(user_id)" required="1"/>
+                    <field name="user_id" on_change="on_change_user_id(user_id)" required="1" options='{"no_open": True}'/>
                     <field name="journal_id" invisible="1"/>
                     <field name="name"/>
-                    <field domain="[('type','=','normal'),('use_timesheets','=',1)]" name="account_id" context="{'default_use_timesheets': 1}"/>
+                    <field domain="[('type','=','normal'),('use_timesheets','=',1)]" name="account_id" context="{'default_use_timesheets': 1, 'default_type': 'contract'}"/>
                     <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" required="1" domain="[('type','=','service')]" invisible="1"/>
                     <field name="unit_amount" string="Duration" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" sum="Total time" widget="float_time"/>
                     <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" invisible="1"/>
@@ -24,7 +24,7 @@
             <field name="name">hr.analytic.timesheet.form</field>
             <field name="model">hr.analytic.timesheet</field>
             <field name="arch" type="xml">
-                <form string="Timesheet Lines" version="7.0">
+                <form string="Timesheet Activities" version="7.0">
                     <sheet>
                     <group>
                         <group>
@@ -85,6 +85,23 @@
             <field name="src_model">account.analytic.account</field>
             <field name="view_mode">tree,form</field>
             <field name="view_type">form</field>
+            <field name="help" type="html">
+              <p>
+                No activity yet on this contract.
+              </p><p>
+                In OpenERP, contracts and projects are implemented using
+                analytic account. So, you can track costs and revenues to analyse
+                your margins easily.
+              </p><p>
+                Costs will be created automatically when you register supplier
+                invoices, expenses or timesheets.
+              </p><p>
+                Revenues will be created automatically when you create customer
+                invoices. Customer invoices can be created based on sale orders
+                (fixed price invoices), on timesheets (based on the work done) or
+                on expenses (e.g. reinvoicing of travel costs).
+              </p>
+            </field>
         </record>
 
  
@@ -107,7 +124,7 @@
         </record>
 
         <record id="act_hr_timesheet_line_evry1_all_form" model="ir.actions.act_window">
-            <field name="name">Timesheet Lines</field>
+            <field name="name">Timesheet Activities</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.analytic.timesheet</field>
             <field name="view_type">form</field>
@@ -116,12 +133,12 @@
             <field name="search_view_id" ref="hr_timesheet_line_search"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to record your timesheets.
+                Click to record activities.
               </p><p>
                 You can register and track your workings hours by project every
                 day. Every time spent on a project will become a cost in the
-                analytic accounting and can be re-invoiced to customers if
-                required.
+                analytic accounting/contract and can be re-invoiced to
+                customers if required.
               </p>
             </field>
         </record>

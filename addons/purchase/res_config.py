@@ -43,14 +43,10 @@ class purchase_config_settings(osv.osv_memory):
         'group_costing_method':fields.boolean("Compute product cost price based on average cost",
             implied_group='product.group_costing_method',
             help="""Allows you to compute product cost price based on average cost."""),
-        'group_purchase_delivery_address': fields.boolean("Allow a different address for incoming products and invoicings",
-            implied_group='purchase.group_delivery_invoice_address',
-            help="Allows you to specify different delivery and invoice addresses on a purchase order."),
         'module_warning': fields.boolean("Alerts by products or supplier",
-            help="""Allow to configure warnings on products and trigger them when a user wants to purchase a given product or a given supplier.
-            Example: Product: this product is deprecated, do not purchase more than 5.
-                    Supplier: don't forget to ask for an express delivery."""),
-
+            help="""Allow to configure notification on products and trigger them when a user wants to purchase a given product or a given supplier.
+Example: Product: this product is deprecated, do not purchase more than 5.
+                Supplier: don't forget to ask for an express delivery."""),
         'module_purchase_double_validation': fields.boolean("Force two levels of approvals",
             help="""Provide a double validation mechanism for purchases exceeding minimum amount.
                 This installs the module purchase_double_validation."""),

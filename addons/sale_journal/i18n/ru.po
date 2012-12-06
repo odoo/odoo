@@ -6,20 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2011-01-20 08:56+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-19 05:16+0000\n"
-"X-Generator: Launchpad (build 16165)\n"
-
-#. module: sale_journal
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique per Company!"
-msgstr "Ссылка на заказ должны быть уникальной для каждой компании!"
+"X-Launchpad-Export-Date: 2012-12-04 05:35+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,note:0
@@ -34,21 +29,23 @@ msgstr "Способ выставления счета"
 #. module: sale_journal
 #: help:res.partner,property_invoice_type:0
 msgid ""
-"This invoicing type will be used, by default, for invoicing the current "
-"partner."
+"This invoicing type will be used, by default, to invoice the current partner."
 msgstr ""
-"Этот способ выставления счета будет использоваться по умолчанию при "
-"выставлении счета этому партнеру."
-
-#. module: sale_journal
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr "Ошибка! Вы не можете создавать рекурсивные ссылки на участников."
 
 #. module: sale_journal
 #: view:res.partner:0
 msgid "Sales & Purchases"
 msgstr "Продажи и закупки"
+
+#. module: sale_journal
+#: view:res.partner:0
+msgid "Invoicing"
+msgstr "Выставление счета"
+
+#. module: sale_journal
+#: model:ir.model,name:sale_journal.model_stock_picking_in
+msgid "Incoming Shipments"
+msgstr ""
 
 #. module: sale_journal
 #: help:sale_journal.invoice.type,active:0
@@ -68,6 +65,11 @@ msgstr "Примечания"
 #: field:sale_journal.invoice.type,invoicing_method:0
 msgid "Invoicing method"
 msgstr "Метод выставления счета"
+
+#. module: sale_journal
+#: model:ir.model,name:sale_journal.model_stock_picking
+msgid "Picking List"
+msgstr "Комплектовочный лист"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
@@ -99,15 +101,21 @@ msgstr ""
 "т.д."
 
 #. module: sale_journal
-#: sql_constraint:stock.picking:0
-msgid "Reference must be unique per Company!"
-msgstr "Ссылка должна быть уникальна для каждой компании!"
+#: help:sale.order,invoice_type_id:0
+msgid "Generate invoice based on the selected option."
+msgstr ""
 
 #. module: sale_journal
+#: view:sale.order:0
 #: field:sale.order,invoice_type_id:0
 #: view:sale_journal.invoice.type:0
 #: field:sale_journal.invoice.type,name:0
+#: view:stock.picking:0
 #: field:stock.picking,invoice_type_id:0
+#: view:stock.picking.in:0
+#: field:stock.picking.in,invoice_type_id:0
+#: view:stock.picking.out:0
+#: field:stock.picking.out,invoice_type_id:0
 msgid "Invoice Type"
 msgstr "Тип счета"
 
@@ -127,14 +135,9 @@ msgid "Sales Order"
 msgstr "Заказ продаж"
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking
-msgid "Picking List"
-msgstr "Комплектовочный лист"
-
-#. module: sale_journal
-#: view:res.partner:0
-msgid "Invoicing"
-msgstr "Выставление счета"
+#: model:ir.model,name:sale_journal.model_stock_picking_out
+msgid "Delivery Orders"
+msgstr ""
 
 #~ msgid "Monthly sales"
 #~ msgstr "Продажи в месяце"
@@ -377,3 +380,19 @@ msgstr "Выставление счета"
 #~ "\n"
 #~ "    По журналам предоставляются статистические данные.\n"
 #~ "    "
+
+#~ msgid "Reference must be unique per Company!"
+#~ msgstr "Ссылка должна быть уникальна для каждой компании!"
+
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr "Ошибка! Вы не можете создавать рекурсивные ссылки на участников."
+
+#~ msgid "Order Reference must be unique per Company!"
+#~ msgstr "Ссылка на заказ должны быть уникальной для каждой компании!"
+
+#~ msgid ""
+#~ "This invoicing type will be used, by default, for invoicing the current "
+#~ "partner."
+#~ msgstr ""
+#~ "Этот способ выставления счета будет использоваться по умолчанию при "
+#~ "выставлении счета этому партнеру."

@@ -29,6 +29,7 @@
                             <group>
                                 <field name="subject"/>
                                 <field name="author_id"/>
+                                <field name="email_from"/>
                                 <field name="date"/>
                                 <field name="type"/>
                                 <field name="subtype_id"/>
@@ -38,6 +39,7 @@
                                 <field name="res_id"/>
                                 <field name="parent_id"/>
                                 <field name="partner_ids" widget="many2many_tags"/>
+                                <field name="notified_partner_ids" widget="many2many_tags"/>
                             </group>
                         </group>
                         <field name="body"/>
@@ -57,9 +59,13 @@
                     <field name="type"/>
                     <field name="author_id"/>
                     <field name="partner_ids"/>
+                    <filter string="Read"
+                            name="message_read" help="Show messages to read"
+                            domain="[('to_read', '=', False)]"/>
                     <filter string="Unread"
                             name="message_unread" help="Show messages to read"
                             domain="[('to_read', '=', True)]"/>
+                    <separator/>
                     <filter string="Comments"
                             name="comments" help="Comments"
                             domain="[('type', '=', 'comment')]"/>
@@ -69,6 +75,10 @@
                     <filter string="Emails"
                             name="emails" help="Emails"
                             domain="[('type', '=', 'email')]"/>
+                    <separator/>
+                    <filter string="Has attachments"
+                            name="attachments"
+                            domain="[('attachment_ids', '!=', False)]"/>
                 </search>
             </field>
         </record>
@@ -79,7 +89,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_message_search"/>
-            <field name="context">{'search_default_to_read_message':True}</field>
         </record>
         
         <!-- Add menu entry in Settings/Email -->

@@ -37,12 +37,11 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 callbacks[i](params);
             }
 
-            this.connection.rpc('/pos/'+name, params || {}).then(function(result){
-                        ret.resolve(result);
-                    },
-                    function(error){
-                        ret.reject(error);
-                    });
+            this.connection.rpc('/pos/' + name, params || {}).done(function(result) {
+                ret.resolve(result);
+            }).fail(function(error) {
+                ret.reject(error);
+            });
             return ret;
         },
 
@@ -80,10 +79,11 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         //the client is starting to weight
         weighting_start: function(){
             if(!this.weighting){
-                this.weight = 0;
                 this.weighting = true;
-                this.bypass_proxy = false;
-                return this.message('weighting_start');
+                if(!this.bypass_proxy){
+                    this.weight = 0;
+                    return this.message('weighting_start');
+                }
             }
         },
 
@@ -96,7 +96,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 return this.weight;
             }else{
                 this.message('weighting_read_kg',{})
-                    .then(function(weight){
+                    .done(function(weight){
                         if(self.weighting && !self.bypass_proxy){
                             self.weight = weight;
                         }
@@ -105,18 +105,25 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             }
         },
 
-        // sets a custom weight, ignoring the proxy returned value until the next weighting_end 
+        // sets a custom weight, ignoring the proxy returned value. 
         debug_set_weight: function(kg){
             this.bypass_proxy = true;
             this.weight = kg;
         },
 
+        // resets the custom weight and re-enable listening to the proxy for weight values
+        debug_reset_weight: function(){
+            this.bypass_proxy = false;
+            this.weight = 0;
+        },
+
         // the client has finished weighting products
         weighting_end: function(){
-            this.weight = 0;
-            this.weighting = false;
-            this.bypass_proxy = false;
-            return this.message('weighting_end');
+            if(!this.bypass_proxy){
+                this.weight = 0;
+                this.weighting = false;
+                this.message('weighting_end');
+            }
         },
 
         // the pos asks the client to pay 'price' units
@@ -195,7 +202,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
          *     {
          *          quantity:           (number) the number of items, or the weight, 
          *          unit_name:          (string) the name of the item's unit (kg, dozen, ...)
-         *          list_price:         (number) the price of one unit of the item before discount
+         *          price:              (number) the price of one unit of the item before discount
          *          discount:           (number) the discount on the product in % [0,100] 
          *          product_name:       (string) the name of the product
          *          price_with_tax:     (number) the price paid for this orderline, tax included
@@ -431,13 +438,13 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             // The barcode readers acts as a keyboard, we catch all keyup events and try to find a 
             // barcode sequence in the typed keys, then act accordingly.
             $('body').delegate('','keyup', function (e){
-
+                console.log('keyup:'+String.fromCharCode(e.keyCode)+' '+e.keyCode,e);
                 //We only care about numbers
-                if (!isNaN(Number(String.fromCharCode(e.keyCode)))) {
+                if (e.keyCode >= 48 && e.keyCode < 58){
 
                     // The barcode reader sends keystrokes with a specific interval.
                     // We look if the typed keys fit in the interval. 
-                    if (codeNumbers.length==0) {
+                    if (codeNumbers.length === 0) {
                         timeStamp = new Date().getTime();
                     } else {
                         if (lastTimeStamp + 30 < new Date().getTime()) {
@@ -448,7 +455,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                     }
                     codeNumbers.push(e.keyCode - 48);
                     lastTimeStamp = new Date().getTime();
-                    if (codeNumbers.length == 13) {
+                    if (codeNumbers.length === 13) {
                         //We have found what seems to be a valid codebar
                         self.on_ean(codeNumbers.join(''));
                         codeNumbers = [];

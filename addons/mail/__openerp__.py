@@ -65,7 +65,10 @@ Main Features
         'mail_alias_view.xml',
         'res_users_view.xml',
     ],
-    'demo': ['data/mail_demo.xml'],
+    'demo': [
+        'data/mail_demo.xml',
+        'data/mail_group_demo_data.xml',
+    ],
     'installable': True,
     'auto_install': False,
     'application': True,
@@ -84,12 +87,12 @@ Main Features
     'css': [
         'static/src/css/mail.css',
         'static/src/css/mail_group.css',
-        'static/src/css/mail_compose_message.css',
     ],
     'js': [
         'static/lib/jquery.expander/jquery.expander.js',
         'static/src/js/mail.js',
         'static/src/js/mail_followers.js',
+        'static/src/js/many2many_tags_email.js',
     ],
     'qweb': [
         'static/src/xml/mail.xml',

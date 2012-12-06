@@ -60,9 +60,6 @@ class stock_fill_inventory(osv.osv_memory):
 
         if context.get('active_id', False):
             stock = self.pool.get('stock.inventory').browse(cr, uid, context.get('active_id', False))
-
-            if stock.state == 'done':
-                raise osv.except_osv(_('Warning!'), _('Stock Inventory is already Validated.'))
         return True
 
     def fill_inventory(self, cr, uid, ids, context=None):
@@ -79,8 +76,6 @@ class stock_fill_inventory(osv.osv_memory):
 
         inventory_line_obj = self.pool.get('stock.inventory.line')
         location_obj = self.pool.get('stock.location')
-        product_obj = self.pool.get('product.product')
-        stock_location_obj = self.pool.get('stock.location')
         move_obj = self.pool.get('stock.move')
         uom_obj = self.pool.get('product.uom')
         if ids and len(ids):
@@ -126,18 +121,20 @@ class stock_fill_inventory(osv.osv_memory):
                 res[location] = datas
 
         if not flag:
-            raise osv.except_osv(_('Warning!'), _('No product in this location.'))
+            raise osv.except_osv(_('Warning!'), _('No product in this location. Please select a location in the product form.'))
 
         for stock_move in res.values():
             for stock_move_details in stock_move.values():
                 stock_move_details.update({'inventory_id': context['active_ids'][0]})
                 domain = []
+                for field, value in stock_move_details.items():
+                    if field == 'product_qty' and fill_inventory.set_stock_zero:
+                         domain.append((field, 'in', [value,'0']))
+                         continue
+                    domain.append((field, '=', value))
 
                 if fill_inventory.set_stock_zero:
                     stock_move_details.update({'product_qty': 0})
-
-                for field, value in stock_move_details.items():
-                    domain.append((field, '=', value))
 
                 line_ids = inventory_line_obj.search(cr, uid, domain, context=context)
 

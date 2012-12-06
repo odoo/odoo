@@ -317,7 +317,7 @@ class Partner(osv.osv):
     _columns = {
         'associate_member': fields.many2one('res.partner', 'Associate Member',help="A member with whom you want to associate your membership.It will consider the membership state of the associated member."),
         'member_lines': fields.one2many('membership.membership_line', 'partner', 'Membership'),
-        'free_member': fields.boolean('Free Member', help = "Select if you want to give membership free of cost."),
+        'free_member': fields.boolean('Free Member', help = "Select if you want to give free membership."),
         'membership_amount': fields.float(
                     'Membership Amount', digits=(16, 2),
                     help = 'The price negotiated by the partner'),
@@ -330,12 +330,12 @@ class Partner(osv.osv):
                         'membership.membership_line': (_get_partner_id, ['state'], 10),
                         'res.partner': (_get_partners, ['free_member', 'membership_state', 'associate_member'], 10)
                     }, help="""It indicates the membership state.
-                    -Non Member: A member who has not applied for any membership.
+                    -Non Member: A partner who has not applied for any membership.
                     -Cancelled Member: A member who has cancelled his membership.
                     -Old Member: A member whose membership date has expired.
                     -Waiting Member: A member who has applied for the membership and whose invoice is going to be created.
                     -Invoiced Member: A member whose invoice has been created.
-                    -Paid Member: A member who has paid the membership amount."""),
+                    -Paying member: A member who has paid the membership fee."""),
         'membership_start': fields.function(
                     _membership_date, multi = 'membeship_start',
                     string = 'Membership Start Date', type = 'date',
@@ -466,11 +466,12 @@ class Product(osv.osv):
     '''Product'''
     _inherit = 'product.product'
     _columns = {
-        'membership': fields.boolean('Membership', help='Select if a product is a membership product.'),
+        'membership': fields.boolean('Membership', help='Check if the product is eligible for membership.'),
         'membership_date_from': fields.date('Date from', help='Date from which membership becomes active.'),
         'membership_date_to': fields.date('Date to', help='Date until which membership remains active.'),
     }
 
+    _sql_constraints = [('membership_date_greater','check(membership_date_to >= membership_date_from)','Error ! Ending Date cannot be set before Beginning Date.')]
     _defaults = {
         'membership': False,
     }
@@ -482,16 +483,16 @@ class Invoice(osv.osv):
     '''Invoice'''
     _inherit = 'account.invoice'
 
-    def action_cancel(self, cr, uid, ids, *args):
+    def action_cancel(self, cr, uid, ids, context=None):
         '''Create a 'date_cancel' on the membership_line object'''
         member_line_obj = self.pool.get('membership.membership_line')
         today = time.strftime('%Y-%m-%d')
-        for invoice in self.browse(cr, uid, ids):
+        for invoice in self.browse(cr, uid, ids, context=context):
             mlines = member_line_obj.search(cr, uid,
                     [('account_invoice_line', 'in',
                         [l.id for l in invoice.invoice_line])])
             member_line_obj.write(cr, uid, mlines, {'date_cancel': today})
-        return super(Invoice, self).action_cancel(cr, uid, ids)
+        return super(Invoice, self).action_cancel(cr, uid, ids, context=context)
 
 Invoice()
 

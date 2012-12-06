@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
 "PO-Revision-Date: 2009-02-03 06:26+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-19 05:04+0000\n"
-"X-Generator: Launchpad (build 16165)\n"
+"X-Launchpad-Export-Date: 2012-11-25 05:39+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: subscription
 #: field:subscription.subscription,doc_source:0
@@ -26,11 +26,6 @@ msgstr "Document sursa"
 #: field:subscription.document,model:0
 msgid "Object"
 msgstr "Obiect"
-
-#. module: subscription
-#: view:subscription.subscription:0
-msgid "This Week"
-msgstr "Saptamana aceasta"
 
 #. module: subscription
 #: view:subscription.subscription:0
@@ -46,12 +41,6 @@ msgstr "Prima data"
 #: field:subscription.document.fields,field:0
 msgid "Field"
 msgstr "Camp"
-
-#. module: subscription
-#: view:subscription.subscription:0
-#: field:subscription.subscription,state:0
-msgid "State"
-msgstr "Stare"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_subscription_history
@@ -75,14 +64,15 @@ msgstr "Saptamani"
 
 #. module: subscription
 #: view:subscription.subscription:0
-msgid "Today"
-msgstr "Astazi"
+#: field:subscription.subscription,state:0
+msgid "Status"
+msgstr ""
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:136
-#, python-format
-msgid "Error !"
-msgstr "Eroare !"
+#: model:ir.ui.menu,name:subscription.config_recuuring_event
+#: model:ir.ui.menu,name:subscription.next_id_45
+msgid "Recurring Events"
+msgstr "Evenimente Recurente"
 
 #. module: subscription
 #: model:ir.actions.act_window,name:subscription.action_subscription_form
@@ -182,10 +172,10 @@ msgid "Days"
 msgstr "Zile"
 
 #. module: subscription
-#: field:subscription.document,active:0
-#: field:subscription.subscription,active:0
-msgid "Active"
-msgstr "Activ(a)"
+#: code:addons/subscription/subscription.py:136
+#, python-format
+msgid "Error!"
+msgstr ""
 
 #. module: subscription
 #: field:subscription.subscription,cron_id:0
@@ -194,6 +184,7 @@ msgstr "Cron Loc de muncă"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_subscription
+#: view:subscription.subscription:0
 #: field:subscription.subscription.history,subscription_id:0
 msgid "Subscription"
 msgstr "Abonament"
@@ -208,12 +199,6 @@ msgstr "Partener"
 #: help:subscription.subscription,cron_id:0
 msgid "Scheduler which runs on subscription"
 msgstr "Programator care functioneaza pe baza abonamentului"
-
-#. module: subscription
-#: model:ir.ui.menu,name:subscription.config_recuuring_event
-#: model:ir.ui.menu,name:subscription.next_id_45
-msgid "Recurring Events"
-msgstr "Evenimente Recurente"
 
 #. module: subscription
 #: view:subscription.subscription:0
@@ -289,7 +274,6 @@ msgid "Subscription Document Fields"
 msgstr "Campuri Document Abonament"
 
 #. module: subscription
-#: view:subscription.subscription:0
 #: selection:subscription.subscription,state:0
 msgid "Done"
 msgstr "Efectuat"
@@ -315,6 +299,19 @@ msgstr "Valoarea Implicita"
 msgid "Documents created"
 msgstr "Documente create"
 
+#. module: subscription
+#: field:subscription.document,active:0
+#: field:subscription.subscription,active:0
+msgid "Active"
+msgstr "Activ(a)"
+
+#~ msgid "State"
+#~ msgstr "Stare"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Eroare !"
+
 #~ msgid ""
 #~ "Module allows to create new documents and add subscription on that document."
 #~ msgstr ""
@@ -337,3 +334,9 @@ msgstr "Documente create"
 
 #~ msgid "Invoice"
 #~ msgstr "Factură"
+
+#~ msgid "This Week"
+#~ msgstr "Saptamana aceasta"
+
+#~ msgid "Today"
+#~ msgstr "Astazi"

@@ -30,8 +30,6 @@
                 <!-- <field name="reconciled"  sum="# Reconciled"/> -->
                 <field name="user_currency_price_total" sum="Total Without Tax"/>
                 <field name="user_currency_residual"  sum="Total Residual" invisible="context.get('residual_invisible',False)"/>
-                <field name="due_delay"  sum="Avg. Due Delay" invisible="context.get('residual_invisible',False)"/>
-                <field name="delay_to_pay"  sum="Avg. Delay To Pay" invisible="context.get('residual_invisible',False)"/>
             </tree>
         </field>
     </record>
@@ -42,7 +40,7 @@
          <field name="arch" type="xml">
              <graph string="Invoices Analysis" type="bar">
                  <field name="product_id"/>
-                 <field name="user_currency_price_total"/>
+                 <field name="price_total"/>
              </graph>
          </field>
     </record>
@@ -93,7 +91,7 @@
         <field name="view_mode">tree,graph</field>
         <field name="context">{'search_default_period':1,'search_default_current':1, 'search_default_year': 1, 'search_default_category_product':1, 'search_default_customer':1, 'group_by':[], 'group_by_no_leaf':1,}</field>
         <field name="search_view_id" ref="view_account_invoice_report_search"/>
-        <field name="help">From this report, you can have an overview of the amount invoiced to your customer as well as payment delays. The tool search can also be used to personalise your Invoices reports and so, match this analysis to your needs.</field>
+        <field name="help">From this report, you can have an overview of the amount invoiced to your customer. The tool search can also be used to personalise your Invoices reports and so, match this analysis to your needs.</field>
 
     </record>
 

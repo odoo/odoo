@@ -86,7 +86,6 @@ Dashboard for CRM will include:
         'crm_lead_menu.xml',
 
         'crm_meeting_menu.xml',
-        'crm_meeting_shortcut_data.xml',
 
         'crm_phonecall_view.xml',
         'crm_phonecall_menu.xml',
@@ -100,7 +99,6 @@ Dashboard for CRM will include:
         'board_crm_view.xml',
 
         'res_config_view.xml',
-
     ],
     'demo': [
         'crm_demo.xml',

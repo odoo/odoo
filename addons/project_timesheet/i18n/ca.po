@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2010-10-30 13:49+0000\n"
 "Last-Translator: Raimon Esteve (www.zikzakmedia.com) "
 "<resteve@zikzakmedia.com>\n"
@@ -14,59 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-19 05:20+0000\n"
-"X-Generator: Launchpad (build 16165)\n"
-
-#. module: project_timesheet
-#: model:ir.actions.act_window,help:project_timesheet.action_project_timesheet_bill_task
-msgid ""
-"You will find here all works made on tasks that you can invoice.\n"
-"In order to invoice the time spent on a project, you must define the\n"
-"pricelist and the field 'Invoice Task Work' on the tab 'Billing' of\n"
-"the project form."
-msgstr ""
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:55
-#, python-format
-msgid "No employee defined for user \"%s\". You must create one."
-msgstr "No s'ha definit un empleat per a l'usuario \"%s\". Heu de crear un."
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:63
-#, python-format
-msgid ""
-"No journal defined on the related employee.\n"
-"Fill in the timesheet tab of the employee form."
-msgstr ""
-"﻿No s'ha definit cap diari per a l'empleat relacionat.\n"
-"Introduïu-lo a la pestanya d'horaris del formulari de l'empleat."
-
-#. module: project_timesheet
-#: model:process.node,name:project_timesheet.process_node_timesheettask0
-msgid "Timesheet task"
-msgstr "Tasca de la fulla de serveis"
-
-#. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Group by year of date"
-msgstr ""
-
-#. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Task Hours in current month"
-msgstr ""
-
-#. module: project_timesheet
-#: constraint:project.task:0
-msgid "Error ! Task end-date must be greater then task start-date"
-msgstr ""
-"Error ! La data final de la tasca ha de ser major que la data d'inici"
-
-#. module: project_timesheet
-#: field:project.task.work,hr_analytic_timesheet_id:0
-msgid "Related Timeline Id"
-msgstr "Id relacionat amb el temps"
+"X-Launchpad-Export-Date: 2012-12-04 05:39+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -74,16 +23,38 @@ msgid "Tasks by User"
 msgstr "Tasques per usuari"
 
 #. module: project_timesheet
+#: view:report.timesheet.task.user:0
+msgid "Group by year of date"
+msgstr ""
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "June"
+msgstr "Juny"
+
+#. module: project_timesheet
+#: field:project.task.work,hr_analytic_timesheet_id:0
+msgid "Related Timeline Id"
+msgstr "Id relacionat amb el temps"
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:266
+#, python-format
+msgid ""
+"You cannot delete a partner which is assigned to project, but you can "
+"uncheck the active box."
+msgstr ""
+
+#. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_task_work
 msgid "Project Task Work"
 msgstr "Treball tasca projecte"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:231
+#: code:addons/project_timesheet/project_timesheet.py:294
 #, python-format
 msgid ""
-"You cannot delete a partner which is assigned to project, we suggest you to "
-"uncheck the active box!"
+"You cannot select a Analytic Account which is in Close or Cancelled state."
 msgstr ""
 
 #. module: project_timesheet
@@ -102,9 +73,11 @@ msgid "October"
 msgstr "Octubre"
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Timesheet/Task hours Report Per Month"
-msgstr "Report per mes d'hores de tasques/fulles d'assistència"
+#: code:addons/project_timesheet/project_timesheet.py:68
+#: view:project.project:0
+#, python-format
+msgid "Timesheets"
+msgstr ""
 
 #. module: project_timesheet
 #: view:project.project:0
@@ -114,8 +87,18 @@ msgstr ""
 #. module: project_timesheet
 #: model:ir.actions.act_window,help:project_timesheet.action_account_analytic_overdue
 msgid ""
-"You will find here the contracts related to your customer projects in order "
-"to track the invoicing progress."
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a customer contract.\n"
+"              </p><p>\n"
+"                You will find here the contracts related to your customer\n"
+"                projects in order to track the invoicing progress.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: project_timesheet
+#: view:account.analytic.line:0
+msgid "Analytic Account/Project"
 msgstr ""
 
 #. module: project_timesheet
@@ -124,26 +107,17 @@ msgid "Analytic account/project"
 msgstr "Projecte/Compte analític"
 
 #. module: project_timesheet
-#: field:report.timesheet.task.user,task_hrs:0
-msgid "Task Hours"
-msgstr "Hores de tasca"
-
-#. module: project_timesheet
-#: view:report.timesheet.task.user:0
-#: field:report.timesheet.task.user,year:0
-msgid "Year"
-msgstr "Any"
-
-#. module: project_timesheet
-#: constraint:project.project:0
-msgid "Error! project start-date must be lower then project end-date."
-msgstr ""
-"Avís! La data d'inici del projecte ha de ser anterior a la data final del "
-"projecte."
-
-#. module: project_timesheet
 #: model:ir.actions.act_window,name:project_timesheet.action_account_analytic_overdue
 msgid "Customer Projects"
+msgstr ""
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:89
+#, python-format
+msgid ""
+"Please define product and product category property account on the related "
+"employee.\n"
+"Fill in the HR Settings tab of the employee form."
 msgstr ""
 
 #. module: project_timesheet
@@ -172,20 +146,17 @@ msgid "May"
 msgstr "Maig"
 
 #. module: project_timesheet
-#: constraint:project.task:0
-msgid "Error ! You cannot create recursive tasks."
-msgstr "Error! No podeu crear tasques recursives."
-
-#. module: project_timesheet
-#: model:ir.ui.menu,name:project_timesheet.menu_project_working_hours
-msgid "Timesheet Lines"
+#: code:addons/project_timesheet/project_timesheet.py:93
+#, python-format
+msgid ""
+"Please define journal on the related employee.\n"
+"Fill in the timesheet tab of the employee form."
 msgstr ""
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:231
-#, python-format
-msgid "Invalid action !"
-msgstr "Acció no vàlida!"
+#: model:ir.ui.menu,name:project_timesheet.menu_hr_timesheet_sign_in
+msgid "Sign in / Sign out by project"
+msgstr "Registra entrada/sortida per projecte"
 
 #. module: project_timesheet
 #: view:project.project:0
@@ -198,9 +169,9 @@ msgid "Contracts to Renew"
 msgstr ""
 
 #. module: project_timesheet
-#: model:ir.ui.menu,name:project_timesheet.menu_hr_timesheet_sign_in
-msgid "Sign in / Sign out by project"
-msgstr "Registra entrada/sortida per projecte"
+#: view:project.project:0
+msgid "Hours"
+msgstr ""
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -213,6 +184,7 @@ msgid "Task"
 msgstr "Tasca"
 
 #. module: project_timesheet
+#: model:ir.actions.act_window,name:project_timesheet.action_project_timesheet_bill_task
 #: model:ir.ui.menu,name:project_timesheet.menu_project_billing_line
 msgid "Invoice Tasks Work"
 msgstr "Factura treball de les tasques"
@@ -224,11 +196,7 @@ msgid "User"
 msgstr "Usuari/a"
 
 #. module: project_timesheet
-#: constraint:project.project:0
-msgid "Error! You cannot assign escalation to the same project!"
-msgstr "Error! No podeu assignar un escalat al mateix projecte."
-
-#. module: project_timesheet
+#: view:report.timesheet.task.user:0
 #: field:report.timesheet.task.user,name:0
 msgid "Date"
 msgstr "Data"
@@ -244,19 +212,9 @@ msgid "Complete Your Timesheet."
 msgstr "Empleneu la seva fulla de serveis."
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Task Hours in current year"
-msgstr ""
-
-#. module: project_timesheet
-#: view:project.project:0
-msgid "Customer"
-msgstr "Client"
-
-#. module: project_timesheet
-#: model:process.node,note:project_timesheet.process_node_taskwork0
-msgid "Work on task"
-msgstr "Treballa en tasca"
+#: field:report.timesheet.task.user,task_hrs:0
+msgid "Task Hours"
+msgstr "Hores de tasca"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
@@ -264,14 +222,21 @@ msgid "February"
 msgstr "Febrer"
 
 #. module: project_timesheet
-#: model:ir.actions.act_window,name:project_timesheet.action_project_timesheet_bill_task
-msgid "Bill Tasks Works"
-msgstr "Factura els treballs de les tasques"
+#: model:ir.actions.act_window,help:project_timesheet.action_project_timesheet_bill_task
+msgid ""
+"<p>\n"
+"                You will find here timesheets and purchases you did for "
+"contracts that can be reinvoiced to the customer.\n"
+"                If you want to record new jobs to invoice, you should use "
+"the timesheet menu instead.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: project_timesheet
-#: field:report.timesheet.task.user,timesheet_hrs:0
-msgid "Timesheet Hours"
-msgstr "Hores de la fulla de serveis"
+#: model:process.node,name:project_timesheet.process_node_timesheettask0
+msgid "Timesheet task"
+msgstr "Tasca de la fulla de serveis"
 
 #. module: project_timesheet
 #: model:process.transition,name:project_timesheet.process_transition_taskencoding0
@@ -299,11 +264,6 @@ msgid "November"
 msgstr "Novembre"
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Task hours of last month"
-msgstr ""
-
-#. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "March"
 msgstr "Març"
@@ -319,9 +279,9 @@ msgid "April"
 msgstr "Abril"
 
 #. module: project_timesheet
-#: view:project.project:0
-msgid "Invoicing Data"
-msgstr "Dades de facturació"
+#: model:ir.model,name:project_timesheet.model_report_timesheet_task_user
+msgid "report.timesheet.task.user"
+msgstr "informe.fullhores.tasca.usuari"
 
 #. module: project_timesheet
 #: model:process.transition,note:project_timesheet.process_transition_taskencoding0
@@ -329,31 +289,32 @@ msgid "Encode how much time u spent on your task"
 msgstr "Codifica el temps utilitzat en la seva tasca"
 
 #. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:85
+#, python-format
+msgid "Please define employee for user \"%s\". You must create one."
+msgstr ""
+
+#. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_res_partner
 msgid "Partner"
 msgstr "Empresa"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:247
+#: code:addons/project_timesheet/project_timesheet.py:294
 #, python-format
 msgid "Invalid Analytic Account !"
 msgstr ""
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:59
-#, python-format
-msgid ""
-"No product defined on the related employee.\n"
-"Fill in the timesheet tab of the employee form."
-msgstr ""
-"﻿No s'ha definit cap producte per a l'empleat relacionat.\n"
-"Introduïu-lo a la pestanya d'horaris del formulari de l'empleat."
+#: view:report.timesheet.task.user:0
+msgid "Timesheet/Task hours Report Per Month"
+msgstr "Report per mes d'hores de tasques/fulles d'assistència"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:54
-#: code:addons/project_timesheet/project_timesheet.py:58
-#: code:addons/project_timesheet/project_timesheet.py:62
-#: code:addons/project_timesheet/project_timesheet.py:69
+#: code:addons/project_timesheet/project_timesheet.py:84
+#: code:addons/project_timesheet/project_timesheet.py:88
+#: code:addons/project_timesheet/project_timesheet.py:92
+#: code:addons/project_timesheet/project_timesheet.py:99
 #, python-format
 msgid "Bad Configuration !"
 msgstr "﻿Configuració errònia!"
@@ -364,21 +325,33 @@ msgid "Invoicing"
 msgstr "Facturació"
 
 #. module: project_timesheet
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr ""
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:247
+#: code:addons/project_timesheet/project_timesheet.py:100
 #, python-format
 msgid ""
-"You cannot select a Analytic Account which is in Close or Cancelled state"
+"Please define product and product category property account on the related "
+"employee.\n"
+"Fill in the timesheet tab of the employee form."
 msgstr ""
 
 #. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:60
+#, python-format
+msgid ""
+"<p>Timesheets on this project may be invoiced to %s, according to the terms "
+"defined in the contract.</p>"
+msgstr ""
+
+#. module: project_timesheet
+#: model:process.node,note:project_timesheet.process_node_taskwork0
+msgid "Work on task"
+msgstr "Treballa en tasca"
+
+#. module: project_timesheet
+#: model:ir.actions.act_window,name:project_timesheet.action_report_timesheet_task_user
+#: model:ir.ui.menu,name:project_timesheet.menu_timesheet_task_user
 #: view:report.timesheet.task.user:0
-msgid " Month-1 "
-msgstr " Mes-1 "
+msgid "Task Hours Per Month"
+msgstr "Hores de tasca per mes"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
@@ -396,14 +369,10 @@ msgid "After task is completed, Create its invoice."
 msgstr "Després que la tasca estigui completada, crea la seva factura."
 
 #. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "June"
-msgstr "Juny"
-
-#. module: project_timesheet
-#: model:ir.model,name:project_timesheet.model_report_timesheet_task_user
-msgid "report.timesheet.task.user"
-msgstr "informe.fullhores.tasca.usuari"
+#: code:addons/project_timesheet/project_timesheet.py:266
+#, python-format
+msgid "Invalid Action!"
+msgstr ""
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -412,43 +381,44 @@ msgid "Month"
 msgstr "Mes"
 
 #. module: project_timesheet
-#: model:ir.ui.menu,name:project_timesheet.menu_act_project_management_timesheet_sheet_form
-msgid "My Timesheet"
-msgstr "El meu full d'assistència"
-
-#. module: project_timesheet
-#: constraint:account.analytic.line:0
-msgid "You can not create analytic line on view account."
-msgstr ""
-
-#. module: project_timesheet
-#: view:project.project:0
-msgid "Invoice Task Work"
-msgstr "Factura treball de la tascta"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:70
+#: code:addons/project_timesheet/project_timesheet.py:57
 #, python-format
 msgid ""
-"No product and product category property account defined on the related "
-"employee.\n"
-"Fill in the timesheet tab of the employee form."
+"<p class=\"oe_view_nocontent_create\">Record your timesheets for the project "
+"'%s'.</p>"
 msgstr ""
-"No s'ha definit un producte i una propietat de compte en la categoria de "
-"producte per a l'empleat relacionat.\n"
-"Ompliu la pestanya part d'hores del formulari de l'empleat."
 
 #. module: project_timesheet
-#: model:ir.actions.act_window,name:project_timesheet.action_report_timesheet_task_user
-#: model:ir.ui.menu,name:project_timesheet.menu_timesheet_task_user
+#: field:report.timesheet.task.user,timesheet_hrs:0
+msgid "Timesheet Hours"
+msgstr "Hores de la fulla de serveis"
+
+#. module: project_timesheet
 #: view:report.timesheet.task.user:0
-msgid "Task Hours Per Month"
-msgstr "Hores de tasca per mes"
+#: field:report.timesheet.task.user,year:0
+msgid "Year"
+msgstr "Any"
 
 #. module: project_timesheet
 #: model:process.transition,name:project_timesheet.process_transition_filltimesheet0
 msgid "Fill Timesheet"
 msgstr "Emplena fulla de serveis"
+
+#, python-format
+#~ msgid ""
+#~ "No journal defined on the related employee.\n"
+#~ "Fill in the timesheet tab of the employee form."
+#~ msgstr ""
+#~ "﻿No s'ha definit cap diari per a l'empleat relacionat.\n"
+#~ "Introduïu-lo a la pestanya d'horaris del formulari de l'empleat."
+
+#, python-format
+#~ msgid ""
+#~ "No product defined on the related employee.\n"
+#~ "Fill in the timesheet tab of the employee form."
+#~ msgstr ""
+#~ "﻿No s'ha definit cap producte per a l'empleat relacionat.\n"
+#~ "Introduïu-lo a la pestanya d'horaris del formulari de l'empleat."
 
 #, python-format
 #~ msgid "No employee defined for this user. You must create one."
@@ -458,8 +428,27 @@ msgstr "Emplena fulla de serveis"
 #~ msgstr "Horaris pels projectes"
 
 #, python-format
+#~ msgid ""
+#~ "No product and product category property account defined on the related "
+#~ "employee.\n"
+#~ "Fill in the timesheet tab of the employee form."
+#~ msgstr ""
+#~ "No s'ha definit un producte i una propietat de compte en la categoria de "
+#~ "producte per a l'empleat relacionat.\n"
+#~ "Ompliu la pestanya part d'hores del formulari de l'empleat."
+
+#, python-format
+#~ msgid "No employee defined for user \"%s\". You must create one."
+#~ msgstr "No s'ha definit un empleat per a l'usuario \"%s\". Heu de crear un."
+
+#, python-format
 #~ msgid "Cannot delete Partner which is Assigned to project  !"
 #~ msgstr "No podeu eliminar una empresa ja assignada a un projecte!"
+
+#~ msgid "Error! project start-date must be lower then project end-date."
+#~ msgstr ""
+#~ "Avís! La data d'inici del projecte ha de ser anterior a la data final del "
+#~ "projecte."
 
 #~ msgid " Year "
 #~ msgstr " Any "
@@ -467,11 +456,33 @@ msgstr "Emplena fulla de serveis"
 #~ msgid "Invoiceable"
 #~ msgstr "Facturable"
 
+#, python-format
+#~ msgid "Invalid action !"
+#~ msgstr "Acció no vàlida!"
+
+#~ msgid "Bill Tasks Works"
+#~ msgstr "Factura els treballs de les tasques"
+
+#~ msgid "Customer"
+#~ msgstr "Client"
+
+#~ msgid "Invoicing Data"
+#~ msgstr "Dades de facturació"
+
+#~ msgid " Month-1 "
+#~ msgstr " Mes-1 "
+
 #~ msgid " Month "
 #~ msgstr " Mes "
 
+#~ msgid "Invoice Task Work"
+#~ msgstr "Factura treball de la tascta"
+
 #~ msgid "Error ! You can not create recursive associated members."
 #~ msgstr "Error! No podeu crear membres associats recursivament."
+
+#~ msgid "Error ! You cannot create recursive tasks."
+#~ msgstr "Error! No podeu crear tasques recursives."
 
 #~ msgid ""
 #~ "\n"
@@ -490,6 +501,9 @@ msgstr "Emplena fulla de serveis"
 #~ "\n"
 #~ "    "
 
+#~ msgid "Error! You cannot assign escalation to the same project!"
+#~ msgstr "Error! No podeu assignar un escalat al mateix projecte."
+
 #~ msgid ""
 #~ "This lists show you every task work you can invoice to the customer. Select "
 #~ "the lines in order to generate the invoices automatically."
@@ -499,3 +513,10 @@ msgstr "Emplena fulla de serveis"
 
 #~ msgid "Working Hours"
 #~ msgstr "Hores de treball"
+
+#~ msgid "My Timesheet"
+#~ msgstr "El meu full d'assistència"
+
+#~ msgid "Error ! Task end-date must be greater then task start-date"
+#~ msgstr ""
+#~ "Error ! La data final de la tasca ha de ser major que la data d'inici"

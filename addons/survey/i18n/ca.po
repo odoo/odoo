@@ -7,24 +7,23 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2012-05-10 18:25+0000\n"
 "Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: Catalan <ca@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 06:30+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:44+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: survey
-#: view:survey.print:0
-#: view:survey.print.answer:0
-msgid "Print Option"
-msgstr "Opcions d'impressió"
+#: view:survey.response.line:0
+msgid "Single Textboxes"
+msgstr "Camp de text únic"
 
 #. module: survey
-#: code:addons/survey/survey.py:417
+#: code:addons/survey/survey.py:473
 #, python-format
 msgid ""
 "Minimum Required Answer you                                     entered is "
@@ -46,15 +45,9 @@ msgid "Text Validation"
 msgstr "Validació del text"
 
 #. module: survey
-#: code:addons/survey/survey.py:429
-#, python-format
-msgid ""
-"Maximum Required Answer you                                     entered for "
-"your maximum is greater than the number of answer.                           "
-"           Please use a number that is smaller than %d."
+#: view:survey:0
+msgid "Answers:"
 msgstr ""
-"El nombre de respostes necessàries màxim que heu introduït per al màxim és "
-"major que el nombre de respostes. Utilitzeu un nombre menor que %d."
 
 #. module: survey
 #: view:survey:0
@@ -63,14 +56,17 @@ msgid "Invited User"
 msgstr "Usuari invitat"
 
 #. module: survey
+#: model:survey.type,name:survey.survey_type1
+msgid "Human Resources"
+msgstr ""
+
+#. module: survey
 #: selection:survey.answer,type:0
 msgid "Character"
 msgstr "Caràcter"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_form1
-#: model:ir.ui.menu,name:survey.menu_print_survey_form
-#: model:ir.ui.menu,name:survey.menu_reporting
 #: model:ir.ui.menu,name:survey.menu_survey_form
 #: model:ir.ui.menu,name:survey.menu_surveys
 msgid "Surveys"
@@ -120,19 +116,13 @@ msgid "History Lines"
 msgstr "Línies històric"
 
 #. module: survey
-#: code:addons/survey/survey.py:443
-#, python-format
-msgid ""
-"You must enter one or more menu                                 choices in "
-"column heading (white spaces not allowed)"
-msgstr ""
-"Heu d'introduir una o més opcions de menú en la capçalera de columna (no es "
-"permeten espais en blanc)"
-
-#. module: survey
-#: field:survey.question.column.heading,in_visible_menu_choice:0
-msgid "Is Menu Choice Invisible??"
-msgstr "L'opció de menú és invisible?"
+#: view:survey:0
+#: view:survey.page:0
+#: view:survey.question:0
+#: field:survey.question,descriptive_text:0
+#: selection:survey.question,type:0
+msgid "Descriptive Text"
+msgstr "Text descriptiu"
 
 #. module: survey
 #: field:survey.send.invitation,mail:0
@@ -187,7 +177,7 @@ msgid "Add Comment Field"
 msgstr "Camp per agregar comentari"
 
 #. module: survey
-#: code:addons/survey/survey.py:396
+#: code:addons/survey/survey.py:452
 #, python-format
 msgid ""
 "#Required Answer you entered                                     is greater "
@@ -213,9 +203,15 @@ msgid "survey.name.wiz"
 msgstr "enquesta.nom.assist"
 
 #. module: survey
-#: model:ir.actions.act_window,name:survey.action_survey_question_form
-msgid "Survey Questions"
-msgstr "Preguntes de l'enquesta"
+#: code:addons/survey/survey.py:485
+#, python-format
+msgid ""
+"Maximum Required Answer you                                     entered for "
+"your maximum is greater than the number of answer.                           "
+"           Please use a number that is smaller than %d."
+msgstr ""
+"El nombre de respostes necessàries màxim que heu introduït per al màxim és "
+"major que el nombre de respostes. Utilitzeu un nombre menor que %d."
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -223,7 +219,13 @@ msgid "Matrix of Choices (Only One Answers Per Row)"
 msgstr "Matriu de selecció (solament una resposta per fila)"
 
 #. module: survey
-#: code:addons/survey/survey.py:470
+#: view:survey.send.invitation:0
+#: field:survey.send.invitation,send_mail_existing:0
+msgid "Send Reminder for Existing User"
+msgstr "Envia recordatori per a usuari existent"
+
+#. module: survey
+#: code:addons/survey/survey.py:527
 #, python-format
 msgid ""
 "Maximum Required Answer you entered for your maximum is greater than the "
@@ -233,7 +235,6 @@ msgstr ""
 "és major que el número de respostes. Utilitzeu un número menor que %d."
 
 #. module: survey
-#: model:ir.actions.act_window,name:survey.action_view_survey_question_message
 #: model:ir.model,name:survey.model_survey_question
 #: view:survey:0
 #: view:survey.page:0
@@ -264,11 +265,6 @@ msgid "Page Title"
 msgstr "Títol de la pàgina"
 
 #. module: survey
-#: model:ir.ui.menu,name:survey.menu_define_survey
-msgid "Define Surveys"
-msgstr "Defineix enquestes"
-
-#. module: survey
 #: model:ir.model,name:survey.model_survey_history
 msgid "Survey History"
 msgstr "Històric enquestes"
@@ -297,15 +293,10 @@ msgid " Column heading"
 msgstr " Capçalera columna"
 
 #. module: survey
-#: model:ir.ui.menu,name:survey.menu_run_survey_form
-msgid "Answer a Survey"
-msgstr "Respon una enquesta"
-
-#. module: survey
-#: code:addons/survey/wizard/survey_answer.py:87
+#: code:addons/survey/wizard/survey_send_invitation.py:74
 #, python-format
-msgid "Error!"
-msgstr "Error!"
+msgid "The following surveys are not in open state: %s"
+msgstr ""
 
 #. module: survey
 #: field:survey,tot_comp_survey:0
@@ -325,7 +316,6 @@ msgstr "Estadístiques enquestes"
 
 #. module: survey
 #: selection:survey,state:0
-#: view:survey.request:0
 #: selection:survey.request,state:0
 msgid "Cancelled"
 msgstr "Cancel·lada"
@@ -336,57 +326,18 @@ msgid "Rating Scale"
 msgstr "Escala de qualificació"
 
 #. module: survey
+#: code:addons/survey/survey.py:154
+#: code:addons/survey/survey.py:189
+#, python-format
+msgid ""
+"This survey has no question defined. Please define the questions and answers "
+"first."
+msgstr ""
+
+#. module: survey
 #: field:survey.question,comment_field_type:0
 msgid "Comment Field Type"
 msgstr "Camp tipus comentari"
-
-#. module: survey
-#: code:addons/survey/survey.py:370
-#: code:addons/survey/survey.py:382
-#: code:addons/survey/survey.py:396
-#: code:addons/survey/survey.py:401
-#: code:addons/survey/survey.py:411
-#: code:addons/survey/survey.py:417
-#: code:addons/survey/survey.py:423
-#: code:addons/survey/survey.py:429
-#: code:addons/survey/survey.py:433
-#: code:addons/survey/survey.py:439
-#: code:addons/survey/survey.py:443
-#: code:addons/survey/survey.py:453
-#: code:addons/survey/survey.py:457
-#: code:addons/survey/survey.py:462
-#: code:addons/survey/survey.py:468
-#: code:addons/survey/survey.py:470
-#: code:addons/survey/survey.py:472
-#: code:addons/survey/survey.py:477
-#: code:addons/survey/survey.py:479
-#: code:addons/survey/survey.py:630
-#: code:addons/survey/wizard/survey_answer.py:119
-#: code:addons/survey/wizard/survey_answer.py:126
-#: code:addons/survey/wizard/survey_answer.py:686
-#: code:addons/survey/wizard/survey_answer.py:725
-#: code:addons/survey/wizard/survey_answer.py:745
-#: code:addons/survey/wizard/survey_answer.py:774
-#: code:addons/survey/wizard/survey_answer.py:779
-#: code:addons/survey/wizard/survey_answer.py:787
-#: code:addons/survey/wizard/survey_answer.py:798
-#: code:addons/survey/wizard/survey_answer.py:807
-#: code:addons/survey/wizard/survey_answer.py:812
-#: code:addons/survey/wizard/survey_answer.py:886
-#: code:addons/survey/wizard/survey_answer.py:922
-#: code:addons/survey/wizard/survey_answer.py:940
-#: code:addons/survey/wizard/survey_answer.py:968
-#: code:addons/survey/wizard/survey_answer.py:971
-#: code:addons/survey/wizard/survey_answer.py:974
-#: code:addons/survey/wizard/survey_answer.py:986
-#: code:addons/survey/wizard/survey_answer.py:993
-#: code:addons/survey/wizard/survey_answer.py:996
-#: code:addons/survey/wizard/survey_selection.py:80
-#: code:addons/survey/wizard/survey_selection.py:83
-#: code:addons/survey/wizard/survey_send_invitation.py:74
-#, python-format
-msgid "Warning !"
-msgstr "Avís!"
 
 #. module: survey
 #: selection:survey.question,comment_field_type:0
@@ -394,10 +345,20 @@ msgid "Single Line Of Text"
 msgstr "Única línia de text"
 
 #. module: survey
-#: view:survey.send.invitation:0
-#: field:survey.send.invitation,send_mail_existing:0
-msgid "Send Reminder for Existing User"
-msgstr "Envia recordatori per a usuari existent"
+#: field:survey,date_open:0
+msgid "Survey Open Date"
+msgstr "Data d'obertura de l'enquesta"
+
+#. module: survey
+#: code:addons/survey/wizard/survey_answer.py:801
+#, python-format
+msgid "You cannot select the same answer more than one time."
+msgstr ""
+
+#. module: survey
+#: field:survey,color:0
+msgid "Color Index"
+msgstr ""
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -410,14 +371,24 @@ msgid "Edit Survey"
 msgstr "Edita enquesta"
 
 #. module: survey
-#: view:survey.response.line:0
-msgid "Survey Answer Line"
-msgstr "Línia de resposta enquesta"
+#: code:addons/survey/wizard/survey_answer.py:767
+#: code:addons/survey/wizard/survey_answer.py:962
+#, python-format
+msgid "Please enter an integer value."
+msgstr ""
 
 #. module: survey
 #: field:survey.question.column.heading,menu_choice:0
 msgid "Menu Choice"
 msgstr "Menú Selecció"
+
+#. module: survey
+#: code:addons/survey/survey.py:495
+#, python-format
+msgid ""
+"You must enter one or more menu choices                                 in "
+"column heading."
+msgstr ""
 
 #. module: survey
 #: selection:survey.question,required_type:0
@@ -426,17 +397,36 @@ msgstr "Com a màxim"
 
 #. module: survey
 #: view:survey:0
+#: view:survey.request:0
 msgid "My Survey(s)"
 msgstr ""
 
 #. module: survey
-#: field:survey.question,is_validation_require:0
-msgid "Validate Text"
-msgstr "Valida text"
+#: view:survey.response.line:0
+msgid "Survey Answer Line"
+msgstr "Línia de resposta enquesta"
 
 #. module: survey
-#: view:survey.send.invitation:0
-msgid "_Cancel"
+#: code:addons/survey/wizard/survey_send_invitation.py:75
+#, python-format
+msgid ""
+"\n"
+"Hello %%(name)s, \n"
+"\n"
+"\n"
+"Would you please spent some of your time to fill-in our survey: \n"
+"%s\n"
+"\n"
+"You can access this survey with the following parameters:\n"
+" URL: %s\n"
+" Your login ID: %%(login)s\n"
+"\n"
+" Your password: %%(passwd)s\n"
+"\n"
+"\n"
+"\n"
+"\n"
+"Thanks,"
 msgstr ""
 
 #. module: survey
@@ -445,11 +435,9 @@ msgid "Text"
 msgstr "Text"
 
 #. module: survey
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
+#: view:survey:0
+msgid "Edit..."
 msgstr ""
-"La companyia seleccionada no està en les companyies permeses per aquest "
-"usuari"
 
 #. module: survey
 #: selection:survey.print,paper_size:0
@@ -486,9 +474,10 @@ msgid "survey.tbl.column.heading"
 msgstr "enquesta.tbl.columna.capçalera"
 
 #. module: survey
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr "No podeu tenir dos usuaris amb el mateix identificador!"
+#: view:survey.send.invitation:0
+#: field:survey.send.invitation,send_mail:0
+msgid "Send Mail for New User"
+msgstr "Envia mail per a nou usuari"
 
 #. module: survey
 #: field:survey.send.invitation,mail_from:0
@@ -502,6 +491,12 @@ msgid "Don't Validate Comment Text."
 msgstr "No valideu el text del comentari"
 
 #. module: survey
+#: code:addons/survey/survey.py:534
+#, python-format
+msgid "You must enter one or more menu choices in column heading."
+msgstr ""
+
+#. module: survey
 #: selection:survey.question,comment_valid_type:0
 #: selection:survey.question,validation_type:0
 msgid "Must Be A Whole Number"
@@ -509,7 +504,7 @@ msgstr "Ha de ser un número enter"
 
 #. module: survey
 #: field:survey.answer,question_id:0
-#: field:survey.page,question_ids:0
+#: view:survey.question:0
 #: field:survey.question,question:0
 #: field:survey.question.column.heading,question_id:0
 #: field:survey.response.line,question_id:0
@@ -527,40 +522,17 @@ msgid "Number"
 msgstr "Número"
 
 #. module: survey
-#: code:addons/survey/survey.py:439
-#, python-format
-msgid ""
-"You must enter one or more menu choices                                 in "
-"column heading"
-msgstr ""
-"Heu d'introduir una o més opcions de menú, en l'encapçalat de la columna"
-
-#. module: survey
-#: model:ir.actions.act_window,help:survey.action_survey_form1
-msgid ""
-"You can create survey for different purposes: recruitment interviews, "
-"employee's periodical evaluations, marketing campaigns, etc. A survey is "
-"made of pages containing questions of several types: text, multiple choices, "
-"etc. You can edit survey manually or click on the 'Edit Survey' for a "
-"WYSIWYG interface."
-msgstr ""
-"Podeu crear enquestes per a diferents propòsits: entrevistes de selecció de "
-"personal, avaluacions periòdiques dels treballadors, campanyes de "
-"màrqueting, etc. Una enquesta es compon de pàgines que contenen preguntes de "
-"diversos tipus: text, opcions múltiples, etc. Podeu editar l'enquesta "
-"manualment o fent clic en \"Edita enquesta” per a una interfície WYSIWYG."
-
-#. module: survey
-#: view:survey:0
-#: view:survey.request:0
-#: field:survey.request,state:0
-msgid "State"
-msgstr "Estat"
-
-#. module: survey
 #: view:survey.request:0
 msgid "Evaluation Plan Phase"
 msgstr "Fase del pla d'avaluació"
+
+#. module: survey
+#: code:addons/survey/wizard/survey_send_invitation.py:188
+#: code:addons/survey/wizard/survey_send_invitation.py:199
+#: code:addons/survey/wizard/survey_send_invitation.py:202
+#, python-format
+msgid "Unknown"
+msgstr ""
 
 #. module: survey
 #: view:survey:0
@@ -594,13 +566,16 @@ msgstr "Tipus"
 
 #. module: survey
 #: selection:survey.answer,type:0
+#: field:survey.request,email:0
 msgid "Email"
 msgstr "Correu electrònic"
 
 #. module: survey
-#: model:ir.ui.menu,name:survey.menu_answer_surveys
-msgid "Answer Surveys"
-msgstr "Respon enquestes"
+#: code:addons/survey/survey.py:98
+#: code:addons/survey/survey.py:261
+#, python-format
+msgid "%s (copy)"
+msgstr ""
 
 #. module: survey
 #: selection:survey.response,state:0
@@ -618,26 +593,20 @@ msgid "Select Partner"
 msgstr "Selecciona empresa"
 
 #. module: survey
-#: field:survey.question,type:0
-msgid "Question Type"
-msgstr "Tipus de pregunta"
+#: code:addons/survey/survey.py:529
+#, python-format
+msgid "Maximum Required Answer is greater than Minimum Required Answer."
+msgstr ""
 
 #. module: survey
-#: code:addons/survey/wizard/survey_answer.py:126
-#, python-format
-msgid "You can not answer this survey more than %s times"
-msgstr "No podeu respondre l'enquesta més de '%s' vegades"
+#: model:ir.ui.menu,name:survey.menu_reporting
+msgid "Reporting"
+msgstr ""
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.act_survey_answer
 msgid "Answers"
 msgstr "Respostes"
-
-#. module: survey
-#: code:addons/survey/wizard/survey_answer.py:119
-#, python-format
-msgid "You can not answer because the survey is not open"
-msgstr "No podeu respondre perquè l'enquesta no està oberta"
 
 #. module: survey
 #: selection:survey.response,response_type:0
@@ -657,13 +626,14 @@ msgid "Page Nr"
 msgstr "Pàgina núm"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
-#: field:survey.question,descriptive_text:0
-#: selection:survey.question,type:0
-msgid "Descriptive Text"
-msgstr "Text descriptiu"
+#: model:ir.ui.menu,name:survey.menu_print_survey_form
+msgid "Print Surveys"
+msgstr ""
+
+#. module: survey
+#: field:survey.question.column.heading,in_visible_menu_choice:0
+msgid "Is Menu Choice Invisible??"
+msgstr "L'opció de menú és invisible?"
 
 #. module: survey
 #: field:survey.question,minimum_req_ans:0
@@ -671,26 +641,15 @@ msgid "Minimum Required Answer"
 msgstr "Resposta mínima necessària"
 
 #. module: survey
-#: code:addons/survey/survey.py:479
-#, python-format
-msgid ""
-"You must enter one or more menu choices in column heading (white spaces not "
-"allowed)"
-msgstr ""
-"Heu d'introduir una o més opcions de menú en l'encapçalat de la columna "
-"(espais en blanc no estan permesos)"
-
-#. module: survey
 #: field:survey.question,req_error_msg:0
 msgid "Error Message"
 msgstr "Missatge d'error"
 
 #. module: survey
-#: code:addons/survey/survey.py:477
+#: code:addons/survey/wizard/survey_answer.py:126
 #, python-format
-msgid "You must enter one or more menu choices in column heading"
+msgid "You cannot answer this survey more than %s times."
 msgstr ""
-"Heu d'introduir una o més opcions de menú en l'encapçalat de la columna"
 
 #. module: survey
 #: field:survey.request,date_deadline:0
@@ -709,6 +668,13 @@ msgid "survey.print"
 msgstr "enquesta.imprimeix"
 
 #. module: survey
+#: view:survey:0
+#: view:survey.page:0
+#: field:survey.question,page_id:0
+msgid "Survey Page"
+msgstr "Pàgina de l'enquesta"
+
+#. module: survey
 #: view:survey.question.column.heading:0
 #: field:survey.question.column.heading,title:0
 msgid "Column Heading"
@@ -720,24 +686,11 @@ msgid "Require Answer to Question"
 msgstr "Resposta obligatòria per a la pregunta"
 
 #. module: survey
+#: model:ir.actions.act_window,name:survey.act_survey_request
 #: model:ir.actions.act_window,name:survey.action_survey_request_tree
 #: model:ir.ui.menu,name:survey.menu_survey_type_form1
 msgid "Survey Requests"
 msgstr "Sol·licituds d'enquestes"
-
-#. module: survey
-#: code:addons/survey/survey.py:370
-#: code:addons/survey/survey.py:457
-#, python-format
-msgid "You must enter one or more column heading."
-msgstr "Heu d'introduir una o més capçaleres de columna."
-
-#. module: survey
-#: code:addons/survey/wizard/survey_answer.py:745
-#: code:addons/survey/wizard/survey_answer.py:940
-#, python-format
-msgid "Please enter an integer value"
-msgstr "Introduïu un valor numèric enter"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_browse_answer
@@ -750,7 +703,7 @@ msgid "Paragraph of Text"
 msgstr "Paràgraf de text"
 
 #. module: survey
-#: code:addons/survey/survey.py:423
+#: code:addons/survey/survey.py:479
 #, python-format
 msgid ""
 "Maximum Required Answer you                                     entered for "
@@ -776,14 +729,15 @@ msgid "Options"
 msgstr "Opcions"
 
 #. module: survey
-#: view:survey.send.invitation.log:0
-msgid "_Ok"
+#: code:addons/survey/survey.py:438
+#, python-format
+msgid "You must enter one or more Answers for question \"%s\" of page %s."
 msgstr ""
 
 #. module: survey
-#: model:ir.ui.menu,name:survey.menu_browse_survey_response
-msgid "Browse Answers"
-msgstr "Cerca respostes"
+#: view:survey:0
+msgid "Delete"
+msgstr ""
 
 #. module: survey
 #: field:survey.response.answer,comment_field:0
@@ -836,6 +790,7 @@ msgstr "Usuari responsable de l'enquesta."
 
 #. module: survey
 #: field:survey,page_ids:0
+#: view:survey.page:0
 #: view:survey.question:0
 #: field:survey.response.line,page_id:0
 msgid "Page"
@@ -867,18 +822,9 @@ msgstr ""
 "d'error"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_selection.py:83
-#, python-format
-msgid ""
-"You can not give more response. Please contact the author of this survey for "
-"further assistance."
-msgstr ""
-"No podeu donar més respostes. Poseu-vos en contacte amb l'autor d'aquesta "
-"enquesta per obtenir més ajuda."
-
-#. module: survey
 #: model:ir.actions.act_window,name:survey.act_survey_page_question
 #: model:ir.actions.act_window,name:survey.act_survey_question
+#: field:survey.page,question_ids:0
 msgid "Questions"
 msgstr "Preguntes"
 
@@ -888,6 +834,15 @@ msgid "Set to one if  you require only one Answer per user"
 msgstr "Estableix a un si només requereix una resposta per usuari."
 
 #. module: survey
+#: code:addons/survey/survey.py:426
+#: code:addons/survey/survey.py:514
+#, python-format
+msgid ""
+"You must enter one or more column headings for question \"%s\" of page %s."
+msgstr ""
+
+#. module: survey
+#: model:ir.model,name:survey.model_res_users
 #: field:survey,users:0
 msgid "Users"
 msgstr "Usuaris/es"
@@ -898,10 +853,12 @@ msgid "Message"
 msgstr "Missatge"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.request:0
-msgid "MY"
-msgstr "EL MEU"
+#: code:addons/survey/survey.py:499
+#, python-format
+msgid ""
+"You must enter one or more menu                                 choices in "
+"column heading (white spaces not allowed)."
+msgstr ""
 
 #. module: survey
 #: field:survey.question,maximum_req_ans:0
@@ -914,10 +871,10 @@ msgid "Page Number"
 msgstr "Número de pàgina"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_answer.py:87
-#, python-format
-msgid "Cannot locate survey for the question wizard!"
-msgstr "No es pot localitzar l'enquesta per a l'assistent de preguntes!"
+#: view:survey.print:0
+#: view:survey.print.answer:0
+msgid "Print Option"
+msgstr "Opcions d'impressió"
 
 #. module: survey
 #: view:survey:0
@@ -946,14 +903,25 @@ msgstr ""
 "Mostra aquest missatge d'error quan les seleccions no totalitzin correctament"
 
 #. module: survey
+#: model:ir.actions.act_window,help:survey.action_survey_form1
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new survey. \n"
+"              </p><p>\n"
+"                You can create survey for different purposes: recruitment\n"
+"                interviews, employee's periodical evaluations, marketing\n"
+"                campaigns, etc.\n"
+"              </p><p>\n"
+"                A survey is made of pages containing questions\n"
+"                of several types: text, multiple choices, etc.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: survey
 #: field:survey,date_close:0
 msgid "Survey Close Date"
 msgstr "Data de tancament de l'enquesta"
-
-#. module: survey
-#: field:survey,date_open:0
-msgid "Survey Open Date"
-msgstr "Data d'obertura de l'enquesta"
 
 #. module: survey
 #: field:survey.question.column.heading,in_visible_rating_weight:0
@@ -961,18 +929,15 @@ msgid "Is Rating Scale Invisible ??"
 msgstr "L'escala de qualificació és invisible?"
 
 #. module: survey
+#: field:survey.question,is_validation_require:0
+msgid "Validate Text"
+msgstr "Valida text"
+
+#. module: survey
 #: view:survey.browse.answer:0
 #: view:survey.name.wiz:0
 msgid "Start"
 msgstr "Inicia"
-
-#. module: survey
-#: code:addons/survey/survey.py:472
-#, python-format
-msgid "Maximum Required Answer is greater than Minimum Required Answer"
-msgstr ""
-"El número màxim de respostes obligatòries és major que el mínim de respostes "
-"obligatòries."
 
 #. module: survey
 #: field:survey.question,comment_maximum_no:0
@@ -1039,12 +1004,23 @@ msgid "Store Answer"
 msgstr "Desa resposta"
 
 #. module: survey
+#: code:addons/survey/wizard/survey_selection.py:83
+#, python-format
+msgid ""
+"You cannot give more responses. Please contact the author of this survey for "
+"further assistance."
+msgstr ""
+
+#. module: survey
 #: selection:survey.question,type:0
 msgid "Date and Time"
 msgstr "Data i hora"
 
 #. module: survey
+#: view:survey:0
 #: field:survey,state:0
+#: view:survey.request:0
+#: field:survey.request,state:0
 #: field:survey.response,state:0
 #: field:survey.response.line,state:0
 msgid "Status"
@@ -1056,14 +1032,14 @@ msgid "Print Survey"
 msgstr "Imprimeix enquesta"
 
 #. module: survey
-#: field:survey,send_response:0
-msgid "E-mail Notification on Answer"
-msgstr "Email de notificació sobre la resposta"
-
-#. module: survey
 #: field:survey.response.answer,value_choice:0
 msgid "Value Choice"
 msgstr "Valor de la selecció"
+
+#. module: survey
+#: field:survey.response,response_type:0
+msgid "Answer Type"
+msgstr "Tipus de resposta"
 
 #. module: survey
 #: view:survey:0
@@ -1095,7 +1071,6 @@ msgstr "Nº de columnes"
 
 #. module: survey
 #: view:survey:0
-#: view:survey.name.wiz:0
 msgid "Survey Details"
 msgstr "Detalls de l'enquesta"
 
@@ -1105,14 +1080,16 @@ msgid "Multiple Textboxes With Different Type"
 msgstr "Camps de text múltiples amb tipus diferent"
 
 #. module: survey
-#: view:survey.question.column.heading:0
-msgid "Menu Choices (each choice on separate lines)"
-msgstr "Opcions de menú (cada opció en línies separades)"
+#: view:survey:0
+#: view:survey.page:0
+#: view:survey.question:0
+msgid "Required Answer"
+msgstr "Resposta obligatòria"
 
 #. module: survey
-#: field:survey.response,response_type:0
-msgid "Answer Type"
-msgstr "Tipus de resposta"
+#: model:survey.type,name:survey.survey_type2
+msgid "Customer Feeback"
+msgstr ""
 
 #. module: survey
 #: view:survey:0
@@ -1145,9 +1122,9 @@ msgid "Date"
 msgstr "Data"
 
 #. module: survey
-#: view:survey:0
-msgid "All New Survey"
-msgstr ""
+#: selection:survey.answer,type:0
+msgid "Integer"
+msgstr "Número enter"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_send_invitation
@@ -1173,6 +1150,14 @@ msgid "Skiped"
 msgstr "Omès"
 
 #. module: survey
+#: code:addons/survey/survey.py:536
+#, python-format
+msgid ""
+"You must enter one or more menu choices in column heading (white spaces not "
+"allowed)."
+msgstr ""
+
+#. module: survey
 #: field:survey.print,paper_size:0
 #: field:survey.print.answer,paper_size:0
 msgid "Paper Size"
@@ -1185,15 +1170,20 @@ msgid "Column"
 msgstr "Columna"
 
 #. module: survey
+#: model:ir.ui.menu,name:survey.menu_browse_survey_response
+msgid "Browse Answers"
+msgstr "Cerca respostes"
+
+#. module: survey
 #: model:ir.model,name:survey.model_survey_response_line
 msgid "Survey Response Line"
 msgstr "Línia de resposta d'enquesta"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_selection.py:80
+#: code:addons/survey/survey.py:171
 #, python-format
-msgid "You can not give response for this survey more than %s times"
-msgstr "No podeu respondre l'enquesta més de %s vegades"
+msgid "This survey has no pages defined. Please define pages first."
+msgstr ""
 
 #. module: survey
 #: model:ir.actions.report.xml,name:survey.report_survey_form
@@ -1222,9 +1212,9 @@ msgid "Is Rating Scale Invisible?"
 msgstr "L'escala de qualificació és invisible?"
 
 #. module: survey
-#: selection:survey.answer,type:0
-msgid "Integer"
-msgstr "Número enter"
+#: view:survey:0
+msgid "All New Survey"
+msgstr ""
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1271,9 +1261,9 @@ msgid "Seq"
 msgstr "Seq"
 
 #. module: survey
-#: field:survey.request,email:0
-msgid "E-mail"
-msgstr "Correu electrònic"
+#: view:survey.question.column.heading:0
+msgid "Menu Choices (each choice on separate lines)"
+msgstr "Opcions de menú (cada opció en línies separades)"
 
 #. module: survey
 #: field:survey.question,comment_minimum_no:0
@@ -1298,11 +1288,6 @@ msgid "Field Label"
 msgstr "Etiqueta del camp"
 
 #. module: survey
-#: view:survey:0
-msgid "Other"
-msgstr "Altre"
-
-#. module: survey
 #: view:survey.request:0
 #: selection:survey.request,state:0
 msgid "Done"
@@ -1325,6 +1310,8 @@ msgstr "Permetre una sola resposta per columna (classificació forçada)"
 #: view:survey.print:0
 #: view:survey.print.answer:0
 #: view:survey.print.statistics:0
+#: view:survey.request:0
+#: view:survey.send.invitation:0
 msgid "Cancel"
 msgstr "Canceŀla"
 
@@ -1346,12 +1333,18 @@ msgid "Open"
 msgstr "Obre"
 
 #. module: survey
+#: code:addons/survey/survey.py:510
+#, python-format
+msgid "You must enter one or more answers for question \"%s\" of page %s ."
+msgstr ""
+
+#. module: survey
 #: field:survey,tot_start_survey:0
 msgid "Total Started Survey"
 msgstr "Total d'enquestes començades"
 
 #. module: survey
-#: code:addons/survey/survey.py:462
+#: code:addons/survey/survey.py:519
 #, python-format
 msgid ""
 "#Required Answer you entered is greater than the number of answer. Please "
@@ -1391,11 +1384,6 @@ msgid "Give Survey Answer"
 msgstr "Respon enquesta"
 
 #. module: survey
-#: model:ir.model,name:survey.model_res_users
-msgid "res.users"
-msgstr "res.usuaris"
-
-#. module: survey
 #: help:survey.browse.answer,response_id:0
 msgid ""
 "If this field is empty, all answers of the selected survey will be print."
@@ -1409,7 +1397,12 @@ msgid "Answered"
 msgstr "Respost"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_answer.py:425
+#: field:survey,send_response:0
+msgid "Email Notification on Answer"
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/wizard/survey_answer.py:446
 #, python-format
 msgid "Complete Survey Answer"
 msgstr "Enquesta completada"
@@ -1436,10 +1429,10 @@ msgid "Send Invitation"
 msgstr "Envia invitació"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_answer.py:779
+#: code:addons/survey/wizard/survey_selection.py:80
 #, python-format
-msgid "You cannot select the same answer more than one time"
-msgstr "No podeu seleccionar la mateixa resposta més d'una vegada"
+msgid "You cannot give response for this survey more than %s times."
+msgstr ""
 
 #. module: survey
 #: view:survey.question:0
@@ -1447,17 +1440,16 @@ msgid "Search Question"
 msgstr "Cerca pregunta"
 
 #. module: survey
-#: field:survey,title:0
-msgid "Survey Title"
-msgstr "Títol de l'enquesta"
-
-#. module: survey
 #: selection:survey.question,type:0
 msgid "Single Textbox"
 msgstr "Camp de text únic"
 
 #. module: survey
-#: view:survey:0
+#: model:ir.actions.act_window,name:survey.action_survey_question_form
+msgid "Survey Questions"
+msgstr "Preguntes de l'enquesta"
+
+#. module: survey
 #: field:survey,note:0
 #: field:survey.name.wiz,note:0
 #: view:survey.page:0
@@ -1465,11 +1457,6 @@ msgstr "Camp de text únic"
 #: view:survey.response.line:0
 msgid "Description"
 msgstr "Descripció"
-
-#. module: survey
-#: view:survey.name.wiz:0
-msgid "Select Survey"
-msgstr "Selecciona enquesta"
 
 #. module: survey
 #: selection:survey.question,required_type:0
@@ -1489,27 +1476,37 @@ msgid "Portrait(Vertical)"
 msgstr "Retrat (Vertical)"
 
 #. module: survey
+#: code:addons/survey/wizard/survey_send_invitation.py:70
+#: code:addons/survey/wizard/survey_send_invitation.py:71
+#, python-format
+msgid "Invitation for %s"
+msgstr ""
+
+#. module: survey
 #: selection:survey.question,comment_valid_type:0
 #: selection:survey.question,validation_type:0
 msgid "Must Be Specific Length"
 msgstr "Ha de ser de longitud específica"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: field:survey.question,page_id:0
-msgid "Survey Page"
-msgstr "Pàgina de l'enquesta"
+#: model:survey.type,name:survey.survey_type3
+msgid "Supplier Selection"
+msgstr ""
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
-msgid "Required Answer"
-msgstr "Resposta obligatòria"
+#: code:addons/survey/wizard/survey_answer.py:993
+#, python-format
+msgid "You cannot select same answer more than one time.'"
+msgstr ""
 
 #. module: survey
-#: code:addons/survey/survey.py:468
+#: code:addons/survey/survey.py:687
+#, python-format
+msgid "You cannot duplicate the resource!"
+msgstr "No podeu duplicar el recurs!"
+
+#. module: survey
+#: code:addons/survey/survey.py:525
 #, python-format
 msgid ""
 "Minimum Required Answer you entered is greater than the number of answer. "
@@ -1517,12 +1514,6 @@ msgid ""
 msgstr ""
 "El mínim de respostes obligatòries que heu introduït és major que el número "
 "de respostes. Introduïu un número menor de %d."
-
-#. module: survey
-#: code:addons/survey/survey.py:453
-#, python-format
-msgid "You must enter one or more answer."
-msgstr "Heu de donar una o més respostes."
 
 #. module: survey
 #: view:survey:0
@@ -1536,11 +1527,6 @@ msgid "Survey Answers"
 msgstr "Respostes de l'enquesta"
 
 #. module: survey
-#: view:survey.browse.answer:0
-msgid "Select Survey and Related Answer"
-msgstr "Seleccioneu enquesta i resposta relacionada"
-
-#. module: survey
 #: model:ir.ui.menu,name:survey.menu_print_survey_answer
 msgid "Surveys Answers"
 msgstr "Respostes de l'enquesta"
@@ -1551,7 +1537,7 @@ msgid "Pages"
 msgstr "Pàgines"
 
 #. module: survey
-#: code:addons/survey/survey.py:401
+#: code:addons/survey/survey.py:457
 #, python-format
 msgid ""
 "#Required Answer you entered is                                     greater "
@@ -1560,12 +1546,6 @@ msgid ""
 msgstr ""
 "El número de respostes obligatòries que heu introduït és major que el número "
 "de respostes. Utilitzeu un número menor que %d."
-
-#. module: survey
-#: code:addons/survey/wizard/survey_answer.py:971
-#, python-format
-msgid "You cannot select same answer more than one time'"
-msgstr "No podeu seleccionar la mateixa resposta més d'una vegada"
 
 #. module: survey
 #: selection:survey.print,paper_size:0
@@ -1584,6 +1564,16 @@ msgid "#Questions"
 msgstr "Núm preguntes"
 
 #. module: survey
+#: field:survey.question,numeric_required_sum:0
+msgid "Sum of all choices"
+msgstr "Suma de totes les eleccions"
+
+#. module: survey
+#: view:survey.request:0
+msgid "Request"
+msgstr ""
+
+#. module: survey
 #: model:ir.model,name:survey.model_survey_response
 msgid "survey.response"
 msgstr "enquesta.resposta"
@@ -1597,19 +1587,58 @@ msgid "Error message"
 msgstr "Missatge d'error"
 
 #. module: survey
-#: view:survey.send.invitation:0
-#: field:survey.send.invitation,send_mail:0
-msgid "Send Mail for New User"
-msgstr "Envia mail per a nou usuari"
-
-#. module: survey
-#: code:addons/survey/survey.py:382
+#: code:addons/survey/survey.py:154
+#: code:addons/survey/survey.py:171
+#: code:addons/survey/survey.py:189
+#: code:addons/survey/survey.py:426
+#: code:addons/survey/survey.py:438
+#: code:addons/survey/survey.py:452
+#: code:addons/survey/survey.py:457
+#: code:addons/survey/survey.py:467
+#: code:addons/survey/survey.py:473
+#: code:addons/survey/survey.py:479
+#: code:addons/survey/survey.py:485
+#: code:addons/survey/survey.py:489
+#: code:addons/survey/survey.py:495
+#: code:addons/survey/survey.py:499
+#: code:addons/survey/survey.py:510
+#: code:addons/survey/survey.py:514
+#: code:addons/survey/survey.py:519
+#: code:addons/survey/survey.py:525
+#: code:addons/survey/survey.py:527
+#: code:addons/survey/survey.py:529
+#: code:addons/survey/survey.py:534
+#: code:addons/survey/survey.py:536
+#: code:addons/survey/survey.py:687
+#: code:addons/survey/wizard/survey_answer.py:119
+#: code:addons/survey/wizard/survey_answer.py:126
+#: code:addons/survey/wizard/survey_answer.py:708
+#: code:addons/survey/wizard/survey_answer.py:747
+#: code:addons/survey/wizard/survey_answer.py:767
+#: code:addons/survey/wizard/survey_answer.py:796
+#: code:addons/survey/wizard/survey_answer.py:801
+#: code:addons/survey/wizard/survey_answer.py:809
+#: code:addons/survey/wizard/survey_answer.py:820
+#: code:addons/survey/wizard/survey_answer.py:829
+#: code:addons/survey/wizard/survey_answer.py:834
+#: code:addons/survey/wizard/survey_answer.py:908
+#: code:addons/survey/wizard/survey_answer.py:944
+#: code:addons/survey/wizard/survey_answer.py:962
+#: code:addons/survey/wizard/survey_answer.py:990
+#: code:addons/survey/wizard/survey_answer.py:993
+#: code:addons/survey/wizard/survey_answer.py:996
+#: code:addons/survey/wizard/survey_answer.py:1008
+#: code:addons/survey/wizard/survey_answer.py:1015
+#: code:addons/survey/wizard/survey_answer.py:1018
+#: code:addons/survey/wizard/survey_selection.py:80
+#: code:addons/survey/wizard/survey_selection.py:83
+#: code:addons/survey/wizard/survey_send_invitation.py:74
 #, python-format
-msgid "You must enter one or more Answer."
-msgstr "Heu d'introduir una o més respostes"
+msgid "Warning!"
+msgstr ""
 
 #. module: survey
-#: code:addons/survey/survey.py:411
+#: code:addons/survey/survey.py:467
 #, python-format
 msgid ""
 "Minimum Required Answer                                     you entered is "
@@ -1630,7 +1659,7 @@ msgid "ID"
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/survey.py:433
+#: code:addons/survey/survey.py:489
 #, python-format
 msgid ""
 "Maximum Required Answer is greater                                     than "
@@ -1681,15 +1710,19 @@ msgid "Float"
 msgstr "Float"
 
 #. module: survey
-#: view:survey.response.line:0
-msgid "Single Textboxes"
-msgstr "Camp de text únic"
+#: view:survey.browse.answer:0
+#: view:survey.name.wiz:0
+#: view:survey.print:0
+#: view:survey.print.answer:0
+#: view:survey.print.statistics:0
+#: view:survey.send.invitation:0
+msgid "or"
+msgstr ""
 
 #. module: survey
-#: code:addons/survey/wizard/survey_send_invitation.py:74
-#, python-format
-msgid "%sSurvey is not in open state"
-msgstr "enquesta %s no està en estat obert"
+#: field:survey,title:0
+msgid "Survey Title"
+msgstr "Títol de l'enquesta"
 
 #. module: survey
 #: field:survey.question.column.heading,rating_weight:0
@@ -1721,9 +1754,9 @@ msgid "Survey Pages"
 msgstr "Pàgines de l'enquesta"
 
 #. module: survey
-#: field:survey.question,numeric_required_sum:0
-msgid "Sum of all choices"
-msgstr "Suma de totes les eleccions"
+#: field:survey.question,type:0
+msgid "Question Type"
+msgstr "Tipus de pregunta"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1732,10 +1765,10 @@ msgid "Table"
 msgstr "Taula"
 
 #. module: survey
-#: code:addons/survey/survey.py:630
+#: code:addons/survey/wizard/survey_answer.py:119
 #, python-format
-msgid "You cannot duplicate the resource!"
-msgstr "No podeu duplicar el recurs!"
+msgid "You cannot answer because the survey is not open."
+msgstr ""
 
 #. module: survey
 #: field:survey.question,comment_minimum_date:0
@@ -1756,20 +1789,135 @@ msgstr "Posició de la pàgina"
 #~ msgid "Set to draft"
 #~ msgstr "Canvia a esborrany"
 
+#, python-format
+#~ msgid ""
+#~ "You must enter one or more menu                                 choices in "
+#~ "column heading (white spaces not allowed)"
+#~ msgstr ""
+#~ "Heu d'introduir una o més opcions de menú en la capçalera de columna (no es "
+#~ "permeten espais en blanc)"
+
+#~ msgid "Define Surveys"
+#~ msgstr "Defineix enquestes"
+
+#, python-format
+#~ msgid "Error!"
+#~ msgstr "Error!"
+
+#~ msgid "Answer a Survey"
+#~ msgstr "Respon una enquesta"
+
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "Avís!"
+
 #~ msgid "Send reminder for existing user"
 #~ msgstr "Envia recordatori per a usuari existent"
 
 #~ msgid "Send"
 #~ msgstr "Envia"
 
+#~ msgid "Answer Surveys"
+#~ msgstr "Respon enquestes"
+
+#~ msgid "State"
+#~ msgstr "Estat"
+
+#, python-format
+#~ msgid "You can not answer because the survey is not open"
+#~ msgstr "No podeu respondre perquè l'enquesta no està oberta"
+
+#, python-format
+#~ msgid "You must enter one or more menu choices in column heading"
+#~ msgstr ""
+#~ "Heu d'introduir una o més opcions de menú en l'encapçalat de la columna"
+
+#, python-format
+#~ msgid "Please enter an integer value"
+#~ msgstr "Introduïu un valor numèric enter"
+
 #~ msgid "Watting Answer"
 #~ msgstr "Esperant resposta"
+
+#, python-format
+#~ msgid "You must enter one or more column heading."
+#~ msgstr "Heu d'introduir una o més capçaleres de columna."
+
+#~ msgid "MY"
+#~ msgstr "EL MEU"
+
+#, python-format
+#~ msgid ""
+#~ "You can not give more response. Please contact the author of this survey for "
+#~ "further assistance."
+#~ msgstr ""
+#~ "No podeu donar més respostes. Poseu-vos en contacte amb l'autor d'aquesta "
+#~ "enquesta per obtenir més ajuda."
+
+#~ msgid "E-mail Notification on Answer"
+#~ msgstr "Email de notificació sobre la resposta"
+
+#~ msgid "E-mail"
+#~ msgstr "Correu electrònic"
+
+#~ msgid "Other"
+#~ msgstr "Altre"
+
+#~ msgid "res.users"
+#~ msgstr "res.usuaris"
 
 #~ msgid "Current"
 #~ msgstr "Actiu"
 
+#~ msgid "Select Survey"
+#~ msgstr "Selecciona enquesta"
+
+#, python-format
+#~ msgid "You cannot select same answer more than one time'"
+#~ msgstr "No podeu seleccionar la mateixa resposta més d'una vegada"
+
 #~ msgid "Select Survey and related answer"
 #~ msgstr "Seleccioneu enquesta i resposta relacionada"
+
+#, python-format
+#~ msgid "You must enter one or more answer."
+#~ msgstr "Heu de donar una o més respostes."
+
+#, python-format
+#~ msgid "You must enter one or more Answer."
+#~ msgstr "Heu d'introduir una o més respostes"
+
+#~ msgid "The chosen company is not in the allowed companies for this user"
+#~ msgstr ""
+#~ "La companyia seleccionada no està en les companyies permeses per aquest "
+#~ "usuari"
+
+#~ msgid "You can not have two users with the same login !"
+#~ msgstr "No podeu tenir dos usuaris amb el mateix identificador!"
+
+#~ msgid ""
+#~ "You can create survey for different purposes: recruitment interviews, "
+#~ "employee's periodical evaluations, marketing campaigns, etc. A survey is "
+#~ "made of pages containing questions of several types: text, multiple choices, "
+#~ "etc. You can edit survey manually or click on the 'Edit Survey' for a "
+#~ "WYSIWYG interface."
+#~ msgstr ""
+#~ "Podeu crear enquestes per a diferents propòsits: entrevistes de selecció de "
+#~ "personal, avaluacions periòdiques dels treballadors, campanyes de "
+#~ "màrqueting, etc. Una enquesta es compon de pàgines que contenen preguntes de "
+#~ "diversos tipus: text, opcions múltiples, etc. Podeu editar l'enquesta "
+#~ "manualment o fent clic en \"Edita enquesta” per a una interfície WYSIWYG."
+
+#, python-format
+#~ msgid ""
+#~ "You must enter one or more menu choices                                 in "
+#~ "column heading"
+#~ msgstr ""
+#~ "Heu d'introduir una o més opcions de menú, en l'encapçalat de la columna"
+
+#, python-format
+#~ msgid "You can not answer this survey more than %s times"
+#~ msgstr "No podeu respondre l'enquesta més de '%s' vegades"
 
 #~ msgid ""
 #~ "\n"
@@ -1794,8 +1942,38 @@ msgstr "Posició de la pàgina"
 #~ "correus electrònics amb el nom d'usuari i la contrasenya.\n"
 #~ "    "
 
+#, python-format
+#~ msgid ""
+#~ "You must enter one or more menu choices in column heading (white spaces not "
+#~ "allowed)"
+#~ msgstr ""
+#~ "Heu d'introduir una o més opcions de menú en l'encapçalat de la columna "
+#~ "(espais en blanc no estan permesos)"
+
+#, python-format
+#~ msgid "Maximum Required Answer is greater than Minimum Required Answer"
+#~ msgstr ""
+#~ "El número màxim de respostes obligatòries és major que el mínim de respostes "
+#~ "obligatòries."
+
+#, python-format
+#~ msgid "You can not give response for this survey more than %s times"
+#~ msgstr "No podeu respondre l'enquesta més de %s vegades"
+
+#, python-format
+#~ msgid "You cannot select the same answer more than one time"
+#~ msgstr "No podeu seleccionar la mateixa resposta més d'una vegada"
+
 #~ msgid "Survey Module"
 #~ msgstr "Mòdul d'enquestes"
 
 #~ msgid "Send mail for new user"
 #~ msgstr "Envia mail per a nou usuari"
+
+#, python-format
+#~ msgid "%sSurvey is not in open state"
+#~ msgstr "enquesta %s no està en estat obert"
+
+#, python-format
+#~ msgid "Cannot locate survey for the question wizard!"
+#~ msgstr "No es pot localitzar l'enquesta per a l'assistent de preguntes!"

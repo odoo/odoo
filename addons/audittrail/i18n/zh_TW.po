@@ -6,18 +6,23 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-08-30 13:46+0000\n"
 "Last-Translator: Eric Huang <eh@cenoq.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-19 05:22+0000\n"
-"X-Generator: Launchpad (build 16165)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:14+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: audittrail
-#: code:addons/audittrail/audittrail.py:75
+#: view:audittrail.log:0
+msgid "Old Value Text : "
+msgstr "舊值內容： "
+
+#. module: audittrail
+#: code:addons/audittrail/audittrail.py:76
 #, python-format
 msgid "WARNING: audittrail is not part of the pool"
 msgstr "警告：稽核追蹤不屬於此池"
@@ -34,13 +39,12 @@ msgid "Subscribed"
 msgstr "已訂閱"
 
 #. module: audittrail
-#: sql_constraint:audittrail.rule:0
-msgid ""
-"There is already a rule defined on this object\n"
-" You cannot define another: please edit the existing one."
+#: code:addons/audittrail/audittrail.py:260
+#: code:addons/audittrail/audittrail.py:347
+#: code:addons/audittrail/audittrail.py:408
+#, python-format
+msgid "'%s' Model does not exist..."
 msgstr ""
-"該對象已經定義了稽核規則。\n"
-"您不能再次定義，請直接編輯現有的稽核規則。"
 
 #. module: audittrail
 #: view:audittrail.rule:0
@@ -48,14 +52,21 @@ msgid "Subscribed Rule"
 msgstr "已訂閱規則"
 
 #. module: audittrail
+#: view:audittrail.rule:0
 #: model:ir.model,name:audittrail.model_audittrail_rule
 msgid "Audittrail Rule"
 msgstr "稽核追蹤規則"
 
 #. module: audittrail
+#: view:audittrail.rule:0
+#: field:audittrail.rule,state:0
+msgid "Status"
+msgstr ""
+
+#. module: audittrail
 #: view:audittrail.view.log:0
 #: model:ir.actions.act_window,name:audittrail.action_audittrail_log_tree
-#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_log_tree
+#: model:ir.ui.menu,name:audittrail.menu_audit_logs
 msgid "Audit Logs"
 msgstr "稽核日誌"
 
@@ -64,12 +75,6 @@ msgstr "稽核日誌"
 #: view:audittrail.rule:0
 msgid "Group By..."
 msgstr "分類方式..."
-
-#. module: audittrail
-#: view:audittrail.rule:0
-#: field:audittrail.rule,state:0
-msgid "State"
-msgstr "狀態"
 
 #. module: audittrail
 #: view:audittrail.rule:0
@@ -198,9 +203,9 @@ msgid ""
 msgstr "如果您要追蹤此對象所有記錄的變更請選擇此項。"
 
 #. module: audittrail
-#: field:audittrail.rule,log_create:0
-msgid "Log Creates"
-msgstr "建立日誌"
+#: view:audittrail.rule:0
+msgid "AuditTrail Rules"
+msgstr "稽核追蹤規則"
 
 #. module: audittrail
 #: help:audittrail.rule,object_id:0
@@ -208,9 +213,9 @@ msgid "Select object for which you want to generate log."
 msgstr "選擇您要生成稽核日誌的對象"
 
 #. module: audittrail
-#: view:audittrail.log:0
-msgid "Old Value Text : "
-msgstr "舊值內容： "
+#: model:ir.ui.menu,name:audittrail.menu_audit
+msgid "Audit"
+msgstr ""
 
 #. module: audittrail
 #: field:audittrail.rule,log_workflow:0
@@ -223,7 +228,7 @@ msgid "Log Reads"
 msgstr "記錄讀操作"
 
 #. module: audittrail
-#: code:addons/audittrail/audittrail.py:76
+#: code:addons/audittrail/audittrail.py:77
 #, python-format
 msgid "Change audittrail depends -- Setting rule as DRAFT"
 msgstr "修改檢查稽核依賴 - 設定規則為草稿"
@@ -239,9 +244,9 @@ msgid "Fields"
 msgstr "欄位列表"
 
 #. module: audittrail
-#: view:audittrail.rule:0
-msgid "AuditTrail Rules"
-msgstr "稽核追蹤規則"
+#: field:audittrail.rule,log_create:0
+msgid "Log Creates"
+msgstr "建立日誌"
 
 #. module: audittrail
 #: help:audittrail.rule,log_unlink:0
@@ -272,9 +277,24 @@ msgid "UnSubscribe"
 msgstr "取消訂閱"
 
 #. module: audittrail
+#: sql_constraint:audittrail.rule:0
+msgid ""
+"There is already a rule defined on this object\n"
+" You cannot define another: please edit the existing one."
+msgstr ""
+"該對象已經定義了稽核規則。\n"
+"您不能再次定義，請直接編輯現有的稽核規則。"
+
+#. module: audittrail
 #: field:audittrail.rule,log_unlink:0
 msgid "Log Deletes"
 msgstr "記錄刪除操作"
+
+#. module: audittrail
+#: view:audittrail.log:0
+#: view:audittrail.rule:0
+msgid "Model"
+msgstr ""
 
 #. module: audittrail
 #: field:audittrail.log.line,field_description:0
@@ -312,6 +332,12 @@ msgid "New Value"
 msgstr "新值"
 
 #. module: audittrail
+#: code:addons/audittrail/audittrail.py:223
+#, python-format
+msgid "'%s' field does not exist in '%s' model"
+msgstr ""
+
+#. module: audittrail
 #: view:audittrail.log:0
 msgid "AuditTrail Logs"
 msgstr "稽核追蹤日誌"
@@ -322,6 +348,7 @@ msgid "Draft  Rule"
 msgstr "草稿規則"
 
 #. module: audittrail
+#: view:audittrail.log:0
 #: model:ir.model,name:audittrail.model_audittrail_log
 msgid "Audittrail Log"
 msgstr "稽核追蹤日誌"
@@ -358,6 +385,11 @@ msgid "Log Line"
 msgstr "日誌明細"
 
 #. module: audittrail
+#: view:audittrail.view.log:0
+msgid "or"
+msgstr ""
+
+#. module: audittrail
 #: field:audittrail.rule,log_action:0
 msgid "Log Action"
 msgstr "記錄動作"
@@ -368,3 +400,6 @@ msgid ""
 "Select this if you want to keep track of creation on any record of the "
 "object of this rule"
 msgstr "如果你想追蹤此對象所有記錄的建立請選擇此項"
+
+#~ msgid "State"
+#~ msgstr "狀態"

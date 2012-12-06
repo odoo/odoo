@@ -336,7 +336,7 @@ class calendar_attendee(osv.osv):
                     ('non-participant', 'For information Purpose')], 'Role', \
                     help='Participation role for the calendar user'),
         'state': fields.selection([('needs-action', 'Needs Action'),
-                        ('tentative', 'Tentative'),
+                        ('tentative', 'Uncertain'),
                         ('declined', 'Declined'),
                         ('accepted', 'Accepted'),
                         ('delegated', 'Delegated')], 'Status', readonly=True, \
@@ -384,9 +384,26 @@ property or property parameter."),
         'cutype': 'individual',
     }
 
+
     def copy(self, cr, uid, id, default=None, context=None):
         raise osv.except_osv(_('Warning!'), _('You cannot duplicate a calendar attendee.'))
-
+    
+    def onchange_partner_id(self, cr, uid, ids, partner_id,context=None):
+        """
+        Make entry on email and availbility on change of partner_id field.
+        @param cr: the current row, from the database cursor
+        @param uid: the current user's ID for security checks
+        @param ids: list of calendar attendee's IDs
+        @param partner_id: changed value of partner id
+        @param context: a standard dictionary for contextual values
+        @return: dictionary of values which put value in email and availability fields
+        """
+        
+        if not partner_id:
+            return {'value': {'email': ''}}
+        partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+        return {'value': {'email': partner.email}}
+    
     def get_ics_file(self, cr, uid, event_obj, context=None):
         """
         Returns iCalendar file for the event invitation.
@@ -559,7 +576,8 @@ property or property parameter."),
         for vals in self.browse(cr, uid, ids, context=context):
             if vals.ref and vals.ref.user_id:
                 mod_obj = self.pool.get(vals.ref._name)
-                defaults = {'user_id': vals.user_id.id, 'organizer_id': vals.ref.user_id.id}
+                res=mod_obj.read(cr,uid,[vals.ref.id],['duration','class'],context)
+                defaults = {'user_id': vals.user_id.id, 'organizer_id': vals.ref.user_id.id,'duration':res[0]['duration'],'class':res[0]['class']}
                 mod_obj.copy(cr, uid, vals.ref.id, default=defaults, context=context)
             self.write(cr, uid, vals.id, {'state': 'accepted'}, context)
 
@@ -1012,7 +1030,7 @@ class calendar_event(osv.osv):
                                                 'Show Time as', states={'done': [('readonly', True)]}),
         'base_calendar_url': fields.char('Caldav URL', size=264),
         'state': fields.selection([
-            ('tentative', 'Tentative'),
+            ('tentative', 'Uncertain'),
             ('cancelled', 'Cancelled'),
             ('confirmed', 'Confirmed'),
             ], 'Status', readonly=True),
@@ -1151,7 +1169,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             context = {}
 
         result = []
-        for data in super(calendar_event, self).read(cr, uid, select, context=context):
+        for data in super(calendar_event, self).read(cr, uid, select, ['rrule', 'exdate', 'exrule', 'date'], context=context):
             if not data['rrule']:
                 result.append(data['id'])
                 continue

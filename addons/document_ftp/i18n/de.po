@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2011-01-12 20:23+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -15,8 +15,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-19 05:35+0000\n"
-"X-Generator: Launchpad (build 16165)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:29+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
+
+#. module: document_ftp
+#: view:document.ftp.configuration:0
+msgid "Configure FTP Server"
+msgstr "Konfigurieren FTP Server"
 
 #. module: document_ftp
 #: model:ir.model,name:document_ftp.model_document_ftp_configuration
@@ -40,19 +45,19 @@ msgstr ""
 "vom Server selbst."
 
 #. module: document_ftp
-#: model:ir.actions.url,name:document_ftp.action_document_browse
+#: model:ir.model,name:document_ftp.model_knowledge_config_settings
+msgid "knowledge.config.settings"
+msgstr ""
+
+#. module: document_ftp
+#: model:ir.actions.act_url,name:document_ftp.action_document_browse
 msgid "Browse Files"
 msgstr "Dateien durchsuchen"
 
 #. module: document_ftp
-#: field:document.ftp.configuration,config_logo:0
-msgid "Image"
-msgstr "Bild"
-
-#. module: document_ftp
-#: field:document.ftp.configuration,host:0
-msgid "Address"
-msgstr "Adresse"
+#: help:knowledge.config.settings,document_ftp_url:0
+msgid "Click the url to browse the documents"
+msgstr ""
 
 #. module: document_ftp
 #: field:document.ftp.browse,url:0
@@ -63,6 +68,11 @@ msgstr "FTP Server"
 #: model:ir.actions.act_window,name:document_ftp.action_config_auto_directory
 msgid "FTP Server Configuration"
 msgstr "Konfiguration FTP Server"
+
+#. module: document_ftp
+#: field:knowledge.config.settings,document_ftp_url:0
+msgid "Browse Documents"
+msgstr ""
 
 #. module: document_ftp
 #: view:document.ftp.browse:0
@@ -82,19 +92,14 @@ msgid "Shared Repository (FTP)"
 msgstr "Gemeinsames Verzeichnis (FTP)"
 
 #. module: document_ftp
+#: field:document.ftp.configuration,host:0
+msgid "Address"
+msgstr "Adresse"
+
+#. module: document_ftp
 #: view:document.ftp.browse:0
-msgid "_Cancel"
-msgstr "Abbrechen"
-
-#. module: document_ftp
-#: view:document.ftp.configuration:0
-msgid "Configure FTP Server"
-msgstr "Konfigurieren FTP Server"
-
-#. module: document_ftp
-#: view:document.ftp.configuration:0
-msgid "title"
-msgstr "Bezeichnung"
+msgid "Cancel"
+msgstr ""
 
 #. module: document_ftp
 #: model:ir.model,name:document_ftp.model_document_ftp_browse
@@ -113,6 +118,11 @@ msgstr "Suche Dokument"
 
 #. module: document_ftp
 #: view:document.ftp.browse:0
+msgid "or"
+msgstr ""
+
+#. module: document_ftp
+#: view:document.ftp.browse:0
 msgid "Browse Document"
 msgstr "Suche Dokument"
 
@@ -121,8 +131,17 @@ msgstr "Suche Dokument"
 msgid "res_config_contents"
 msgstr "res_config_contents"
 
+#~ msgid "_Cancel"
+#~ msgstr "Abbrechen"
+
 #~ msgid "Configuration Progress"
 #~ msgstr "Abfolge Konfiguration"
+
+#~ msgid "Image"
+#~ msgstr "Bild"
+
+#~ msgid "title"
+#~ msgstr "Bezeichnung"
 
 #~ msgid ""
 #~ "This is a support FTP Interface with document management system.\n"

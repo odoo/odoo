@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-05-10 17:20+0000\n"
 "Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-19 05:24+0000\n"
-"X-Generator: Launchpad (build 16165)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:17+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -23,15 +23,10 @@ msgid "Parent Directory"
 msgstr "Roditeljski Direktorijum"
 
 #. module: document
-#: code:addons/document/document_directory.py:276
+#: code:addons/document/document_directory.py:273
 #, python-format
 msgid "Directory name contains special characters!"
 msgstr "Ime Direktorijuma sadrzi specijalne karaktere!"
-
-#. module: document
-#: field:document.directory,resource_field:0
-msgid "Name field"
-msgstr "Ime Polja"
 
 #. module: document
 #: view:board.board:0
@@ -42,6 +37,11 @@ msgstr "Tabla Dokumenata"
 #: model:ir.model,name:document.model_process_node
 msgid "Process Node"
 msgstr "Procesni Cvor"
+
+#. module: document
+#: sql_constraint:document.directory:0
+msgid "Directory must have a parent or a storage."
+msgstr ""
 
 #. module: document
 #: view:document.directory:0
@@ -80,20 +80,14 @@ msgid "Files"
 msgstr "Fajlovi"
 
 #. module: document
-#: view:report.files.partner:0
-msgid "Files per Month"
-msgstr "Fajlova za Mesec"
+#: field:document.directory.content.type,mimetype:0
+msgid "Mime Type"
+msgstr "Mime Tip"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "March"
 msgstr "Mart"
-
-#. module: document
-#: view:document.configuration:0
-msgid "title"
-msgstr ""
 
 #. module: document
 #: field:document.directory.dctx,expr:0
@@ -133,18 +127,13 @@ msgstr ""
 "reference za dati zapis, u dinamickim folderima."
 
 #. module: document
-#: view:report.document.user:0
-msgid "This Year"
-msgstr "Ove Godine"
-
-#. module: document
 #: field:document.storage,path:0
 msgid "Path"
 msgstr "Putanja"
 
 #. module: document
-#: code:addons/document/document_directory.py:266
-#: code:addons/document/document_directory.py:271
+#: code:addons/document/document_directory.py:263
+#: code:addons/document/document_directory.py:268
 #, python-format
 msgid "Directory name must be unique!"
 msgstr "IMe Direktorijuma mora biti jedinstveno!"
@@ -155,6 +144,7 @@ msgid "Filter on my documents"
 msgstr ""
 
 #. module: document
+#: view:ir.attachment:0
 #: field:ir.attachment,index_content:0
 msgid "Indexed Content"
 msgstr "Indeksirani sadržaj"
@@ -170,13 +160,9 @@ msgstr ""
 "locirani."
 
 #. module: document
-#: model:ir.actions.todo.category,name:document.category_knowledge_mgmt_config
-msgid "Knowledge Management"
-msgstr ""
-
-#. module: document
 #: view:document.directory:0
 #: field:document.storage,dir_ids:0
+#: model:ir.actions.act_window,name:document.action_document_directory_form
 #: model:ir.ui.menu,name:document.menu_document_directories
 msgid "Directories"
 msgstr "Direktorijumi"
@@ -187,8 +173,8 @@ msgid "Files details by Users"
 msgstr "Detalji fajlova po Korisnicima"
 
 #. module: document
-#: code:addons/document/document_storage.py:573
-#: code:addons/document/document_storage.py:601
+#: code:addons/document/document_storage.py:569
+#: code:addons/document/document_storage.py:597
 #, python-format
 msgid "Error!"
 msgstr "Greska!"
@@ -221,14 +207,27 @@ msgstr ""
 #. module: document
 #: view:ir.attachment:0
 #: field:ir.attachment,partner_id:0
-#: field:report.files.partner,partner:0
 msgid "Partner"
 msgstr "Partner"
 
 #. module: document
-#: view:board.board:0
-msgid "Files by Users"
-msgstr "Fajlovi po Korisnicima"
+#: model:ir.actions.act_window,name:document.act_res_partner_document
+#: model:ir.actions.act_window,name:document.zoom_directory
+msgid "Related Documents"
+msgstr "Povezani Dokumenti"
+
+#. module: document
+#: model:ir.actions.act_window,help:document.action_document_file_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to create a new document. \n"
+"          </p><p>\n"
+"            The Documents repository gives you access to all attachments, "
+"such\n"
+"            as mails, project documents, invoices etc.\n"
+"          </p>\n"
+"        "
+msgstr ""
 
 #. module: document
 #: field:process.node,directory_id:0
@@ -236,11 +235,9 @@ msgid "Document directory"
 msgstr "Direktorijum dokumenta"
 
 #. module: document
-#: code:addons/document/document.py:220
-#: code:addons/document/document.py:299
-#: code:addons/document/document_directory.py:266
-#: code:addons/document/document_directory.py:271
-#: code:addons/document/document_directory.py:276
+#: code:addons/document/document_directory.py:263
+#: code:addons/document/document_directory.py:268
+#: code:addons/document/document_directory.py:273
 #, python-format
 msgid "ValidateError"
 msgstr "PotvrdiGresku"
@@ -252,16 +249,10 @@ msgstr "Copy text \t ir.actions.report.xml"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_file_form
-#: view:ir.attachment:0
 #: model:ir.ui.menu,name:document.menu_document_doc
 #: model:ir.ui.menu,name:document.menu_document_files
 msgid "Documents"
 msgstr "Dokumenti"
-
-#. module: document
-#: constraint:document.directory:0
-msgid "Error! You can not create recursive Directories."
-msgstr "Greška! Ne možete kreirati rekurzivne direktorijume."
 
 #. module: document
 #: view:document.directory:0
@@ -278,7 +269,6 @@ msgstr "Model Resursa"
 #: field:ir.attachment,file_size:0
 #: field:report.document.file,file_size:0
 #: field:report.document.user,file_size:0
-#: field:report.files.partner,file_size:0
 msgid "File Size"
 msgstr "Veličina Datoteke"
 
@@ -289,12 +279,24 @@ msgid "Content Type"
 msgstr "Tip Sadrzaja"
 
 #. module: document
+#: view:ir.attachment:0
+msgid "Modification"
+msgstr ""
+
+#. module: document
 #: view:document.directory:0
 #: field:document.directory,type:0
 #: view:document.storage:0
 #: field:document.storage,type:0
 msgid "Type"
 msgstr "Tip"
+
+#. module: document
+#: code:addons/document/document.py:194
+#: code:addons/document/document_directory.py:234
+#, python-format
+msgid "%s (copy)"
+msgstr ""
 
 #. module: document
 #: help:document.directory,ressource_type_id:0
@@ -314,9 +316,14 @@ msgstr ""
 "resursima"
 
 #. module: document
-#: model:ir.actions.act_window,name:document.action_view_files_by_partner
-msgid "Files Per Partner"
-msgstr "Fajlovi po Partneru"
+#: constraint:document.directory:0
+msgid "Error! You cannot create recursive directories."
+msgstr ""
+
+#. module: document
+#: field:document.directory,resource_field:0
+msgid "Name field"
+msgstr "Ime Polja"
 
 #. module: document
 #: field:document.directory,dctx_ids:0
@@ -341,15 +348,8 @@ msgstr "Izveštaj"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "July"
 msgstr "Juli"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.open_board_document_manager
-#: model:ir.ui.menu,name:document.menu_reports_document_manager
-msgid "Document Dashboard"
-msgstr "UpravljackaTabla Dokumenata"
 
 #. module: document
 #: field:document.directory.content.type,code:0
@@ -357,22 +357,12 @@ msgid "Extension"
 msgstr "Ekstenzija"
 
 #. module: document
-#: view:ir.attachment:0
-msgid "Created"
-msgstr "kreirano"
-
-#. module: document
 #: field:document.directory,content_ids:0
 msgid "Virtual Files"
 msgstr "Virtualne datoteke"
 
 #. module: document
-#: view:ir.attachment:0
-msgid "Modified"
-msgstr "Prepravljano"
-
-#. module: document
-#: code:addons/document/document_storage.py:639
+#: code:addons/document/document_storage.py:635
 #, python-format
 msgid "Error at doc write!"
 msgstr "Greska pri pisanju dokumenta!"
@@ -413,10 +403,15 @@ msgid "Last Modification User"
 msgstr "Korisnik poslednje promene"
 
 #. module: document
-#: model:ir.actions.act_window,name:document.act_res_partner_document
-#: model:ir.actions.act_window,name:document.zoom_directory
-msgid "Related Documents"
-msgstr "Povezani Dokumenti"
+#: model:ir.actions.act_window,name:document.action_view_files_by_user_graph
+#: view:report.document.user:0
+msgid "Files by User"
+msgstr ""
+
+#. module: document
+#: view:ir.attachment:0
+msgid "on"
+msgstr ""
 
 #. module: document
 #: field:document.directory,domain:0
@@ -441,7 +436,6 @@ msgid "All users files"
 msgstr "Svi KOrisnicki fajlovi"
 
 #. module: document
-#: view:board.board:0
 #: model:ir.actions.act_window,name:document.action_view_size_month
 #: view:report.document.file:0
 msgid "File Size by Month"
@@ -449,14 +443,8 @@ msgstr "Veličina fajlova po Mesecu"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "December"
 msgstr "Decembar"
-
-#. module: document
-#: field:document.configuration,config_logo:0
-msgid "Image"
-msgstr "Slika"
 
 #. module: document
 #: selection:document.directory,type:0
@@ -464,9 +452,10 @@ msgid "Static Directory"
 msgstr "Statički Direktorijum"
 
 #. module: document
-#: field:document.directory,child_ids:0
-msgid "Children"
-msgstr "Podređeni"
+#: field:report.document.file,month:0
+#: field:report.document.user,month:0
+msgid "Month"
+msgstr "Mesec"
 
 #. module: document
 #: view:document.directory:0
@@ -482,13 +471,17 @@ msgstr ""
 "dostupan."
 
 #. module: document
+#: field:report.document.user,user:0
+msgid "unknown"
+msgstr ""
+
+#. module: document
 #: view:document.directory:0
 #: field:document.directory,user_id:0
 #: field:document.storage,user_id:0
 #: view:ir.attachment:0
 #: field:ir.attachment,user_id:0
 #: field:report.document.user,user_id:0
-#: field:report.document.wall,user_id:0
 msgid "Owner"
 msgstr "Vlasnik"
 
@@ -510,6 +503,11 @@ msgid "Date Created"
 msgstr "Datum kreiranja"
 
 #. module: document
+#: field:document.directory,ressource_id:0
+msgid "Resource ID"
+msgstr "Šifra resursa"
+
+#. module: document
 #: help:document.directory.content,include_name:0
 msgid ""
 "Check this field if you want that the name of the file to contain the record "
@@ -518,6 +516,17 @@ msgid ""
 msgstr ""
 "Cekiraj ovo polje ukoliko zelis da ime polja sadrzi ime zapisa.\n"
 "Ako ga postavis cekiranim, direktorijum ce postati jedan resurs."
+
+#. module: document
+#: model:ir.actions.act_window,name:document.open_board_document_manager
+#: model:ir.ui.menu,name:document.menu_reports_document
+msgid "Knowledge"
+msgstr ""
+
+#. module: document
+#: view:document.storage:0
+msgid "Document Storage"
+msgstr ""
 
 #. module: document
 #: view:document.configuration:0
@@ -529,11 +538,6 @@ msgstr ""
 #: field:document.directory.content,include_name:0
 msgid "Include Record Name"
 msgstr "Uključi naziv zapisa"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Attachment"
-msgstr "Dodatak"
 
 #. module: document
 #: field:ir.actions.report.xml,model_id:0
@@ -562,10 +566,21 @@ msgid ""
 msgstr ""
 
 #. module: document
+#. openerp-web
+#: code:addons/document/static/src/js/document.js:6
+#, python-format
+msgid "Attachment(s)"
+msgstr ""
+
+#. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "August"
 msgstr "Avgust"
+
+#. module: document
+#: view:ir.attachment:0
+msgid "My Document(s)"
+msgstr ""
 
 #. module: document
 #: sql_constraint:document.directory:0
@@ -574,15 +589,8 @@ msgstr ""
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "June"
 msgstr "Juni"
-
-#. module: document
-#: field:report.document.user,user:0
-#: field:report.document.wall,user:0
-msgid "User"
-msgstr "Korisnik"
 
 #. module: document
 #: field:document.directory,group_ids:0
@@ -597,12 +605,10 @@ msgstr "Aktivan"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "November"
 msgstr "Novembar"
 
 #. module: document
-#: view:ir.attachment:0
 #: field:ir.attachment,db_datas:0
 msgid "Data"
 msgstr "Podaci"
@@ -623,7 +629,6 @@ msgstr "Definicija"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "October"
 msgstr "Oktobar"
 
@@ -639,29 +644,8 @@ msgstr "Baza Podataka"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "January"
 msgstr "Januar"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Related to"
-msgstr "Vezano za"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Attached to"
-msgstr "Pridruženo"
-
-#. module: document
-#: model:ir.ui.menu,name:document.menu_reports_document
-msgid "Dashboard"
-msgstr "UpravljackaTabla"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.action_view_user_graph
-msgid "Files By Users"
-msgstr "Fajlovi po Korisnicima"
 
 #. module: document
 #: field:document.storage,readonly:0
@@ -669,7 +653,8 @@ msgid "Read Only"
 msgstr "samo za Citanje"
 
 #. module: document
-#: model:ir.actions.act_window,name:document.action_document_directory_form
+#: view:document.directory:0
+#: view:process.node:0
 msgid "Document Directory"
 msgstr ""
 
@@ -679,15 +664,15 @@ msgid "The directory name must be unique !"
 msgstr ""
 
 #. module: document
+#: view:ir.attachment:0
+msgid "Attachments"
+msgstr ""
+
+#. module: document
 #: field:document.directory,create_uid:0
 #: field:document.storage,create_uid:0
 msgid "Creator"
 msgstr "Kreator"
-
-#. module: document
-#: field:document.directory.content,sequence:0
-msgid "Sequence"
-msgstr "Sekvenca"
 
 #. module: document
 #: view:document.configuration:0
@@ -707,7 +692,6 @@ msgstr "Fajlovi po Mesecu"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "September"
 msgstr "Septembar"
 
@@ -717,24 +701,14 @@ msgid "Prefix"
 msgstr "Prefiks"
 
 #. module: document
-#: field:report.document.wall,last:0
-msgid "Last Posted Time"
-msgstr "Zadnje postavljeno Vrijeme"
+#: field:document.directory,child_ids:0
+msgid "Children"
+msgstr "Podređeni"
 
 #. module: document
-#: field:report.document.user,datas_fname:0
-msgid "File Name"
-msgstr "Ime fajla"
-
-#. module: document
-#: view:document.configuration:0
-msgid "res_config_contents"
+#: view:board.board:0
+msgid "Files by user"
 msgstr ""
-
-#. module: document
-#: field:document.directory,ressource_id:0
-msgid "Resource ID"
-msgstr "Šifra resursa"
 
 #. module: document
 #: selection:document.storage,type:0
@@ -742,21 +716,9 @@ msgid "External file storage"
 msgstr "Spoljnje skladiste fajlova"
 
 #. module: document
-#: view:board.board:0
-#: model:ir.actions.act_window,name:document.action_view_wall
-#: view:report.document.wall:0
-msgid "Wall of Shame"
-msgstr "Zid Srama"
-
-#. module: document
 #: help:document.storage,path:0
 msgid "For file storage, the root path of the storage"
 msgstr "Za skladiste fajlova, osnovna putanja do istog"
-
-#. module: document
-#: model:ir.model,name:document.model_report_files_partner
-msgid "Files details by Partners"
-msgstr "Detalji Fajlova po Partneru"
 
 #. module: document
 #: field:document.directory.dctx,field:0
@@ -774,28 +736,13 @@ msgid "Parent Model"
 msgstr "Roditeljski Model"
 
 #. module: document
-#: view:report.document.user:0
-msgid "Files by users"
-msgstr "Fajlovi po Korisniku"
-
-#. module: document
-#: field:report.document.file,month:0
-#: field:report.document.user,month:0
-#: field:report.document.wall,month:0
-#: field:report.document.wall,name:0
-#: field:report.files.partner,month:0
-msgid "Month"
-msgstr "Mesec"
-
-#. module: document
-#: view:report.document.user:0
-msgid "This Months Files"
+#: help:document.directory.dctx,field:0
+msgid ""
+"The name of the field. Note that the prefix \"dctx_\" will be prepended to "
+"what is typed here."
 msgstr ""
-
-#. module: document
-#: model:ir.ui.menu,name:document.menu_reporting
-msgid "Reporting"
-msgstr "Izveštavanje"
+"Ime Polja, Upamtite da ce se prefiks \" dctx_\"  dodati na ono sto je ovde "
+"napisano."
 
 #. module: document
 #: field:document.directory,ressource_tree:0
@@ -804,7 +751,6 @@ msgstr "Struktura Stabla"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "May"
 msgstr "Maj"
 
@@ -812,18 +758,6 @@ msgstr "Maj"
 #: model:ir.actions.act_window,name:document.action_view_all_document_tree1
 msgid "All Users files"
 msgstr "Svi Korisnikovi fajlovi"
-
-#. module: document
-#: model:ir.model,name:document.model_report_document_wall
-msgid "Users that did not inserted documents since one month"
-msgstr "Korisnici koji jedan celi mjesec nisu unijeli Dokument"
-
-#. module: document
-#: model:ir.actions.act_window,help:document.action_document_file_form
-msgid ""
-"The Documents repository gives you access to all attachments, such as mails, "
-"project documents, invoices etc."
-msgstr ""
 
 #. module: document
 #: view:document.directory:0
@@ -837,9 +771,9 @@ msgid "ir.attachment"
 msgstr "Copy text \t ir.attachment"
 
 #. module: document
-#: view:board.board:0
-msgid "New Files"
-msgstr "Novi Fajlovi"
+#: view:report.document.user:0
+msgid "Users File"
+msgstr ""
 
 #. module: document
 #: view:document.directory:0
@@ -847,24 +781,13 @@ msgid "Static"
 msgstr "Staticki"
 
 #. module: document
-#: view:report.files.partner:0
-msgid "Files By Partner"
-msgstr "Fajlovi po Partneru"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Indexed Content - experimental"
+#: view:document.directory:0
+msgid ""
+"These groups, however, do NOT apply to children directories, which must "
+"define their own groups."
 msgstr ""
-
-#. module: document
-#: view:report.document.user:0
-msgid "This Month"
-msgstr "Ovog meseca"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Notes"
-msgstr "Napomene"
+"kako god, Ove grupe, NE apliciraju za pod direktorijume, koji moraju "
+"definisati svoje sopstvene grupe."
 
 #. module: document
 #: model:ir.model,name:document.model_document_configuration
@@ -888,24 +811,8 @@ msgstr ""
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "February"
 msgstr "Februar"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.open_board_document_manager1
-#: model:ir.ui.menu,name:document.menu_reports_document_manager1
-msgid "Statistics by User"
-msgstr "Statistika po korisniku"
-
-#. module: document
-#: help:document.directory.dctx,field:0
-msgid ""
-"The name of the field. Note that the prefix \"dctx_\" will be prepended to "
-"what is typed here."
-msgstr ""
-"Ime Polja, Upamtite da ce se prefiks \" dctx_\"  dodati na ono sto je ovde "
-"napisano."
 
 #. module: document
 #: field:document.directory,name:0
@@ -930,21 +837,18 @@ msgstr "Ako je postavljeno, Medijum je dostupan samo za citanje"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "April"
 msgstr "April"
 
 #. module: document
 #: field:report.document.file,nbr:0
 #: field:report.document.user,nbr:0
-#: field:report.files.partner,nbr:0
 msgid "# of Files"
 msgstr "# Fajlova"
 
 #. module: document
-#: code:addons/document/document.py:209
-#, python-format
-msgid "(copy)"
+#: view:document.storage:0
+msgid "Search Document Storage"
 msgstr ""
 
 #. module: document
@@ -957,23 +861,16 @@ msgstr ""
 "fajlovima."
 
 #. module: document
-#: view:document.directory:0
-msgid ""
-"These groups, however, do NOT apply to children directories, which must "
-"define their own groups."
+#. openerp-web
+#: code:addons/document/static/src/js/document.js:17
+#, python-format
+msgid "%s (%s)"
 msgstr ""
-"kako god, Ove grupe, NE apliciraju za pod direktorijume, koji moraju "
-"definisati svoje sopstvene grupe."
 
 #. module: document
-#: field:document.directory.content.type,mimetype:0
-msgid "Mime Type"
-msgstr "Mime Tip"
-
-#. module: document
-#: view:report.document.user:0
-msgid "All Months Files"
-msgstr ""
+#: field:document.directory.content,sequence:0
+msgid "Sequence"
+msgstr "Sekvenca"
 
 #. module: document
 #: field:document.directory.content,name:0
@@ -981,11 +878,9 @@ msgid "Content Name"
 msgstr "Naziv sadržaja"
 
 #. module: document
-#: code:addons/document/document.py:220
-#: code:addons/document/document.py:299
-#, python-format
-msgid "File name must be unique!"
-msgstr "Ime Polja mora biti jedinstveno!"
+#: field:report.document.user,datas_fname:0
+msgid "File Name"
+msgstr "Ime fajla"
 
 #. module: document
 #: selection:document.storage,type:0
@@ -993,8 +888,8 @@ msgid "Internal File storage"
 msgstr "Interno skladiste Fajlova"
 
 #. module: document
-#: sql_constraint:document.directory:0
-msgid "Directory must have a parent or a storage"
+#: view:document.configuration:0
+msgid "res_config_contents"
 msgstr ""
 
 #. module: document
@@ -1004,13 +899,7 @@ msgid "Directories' Structure"
 msgstr "Struktura Direktorijuma"
 
 #. module: document
-#: view:report.document.user:0
-msgid "Files by Resource Type"
-msgstr "Fajlovi po Tipu Izvora"
-
-#. module: document
 #: field:report.document.user,name:0
-#: field:report.files.partner,name:0
 msgid "Year"
 msgstr "Godina"
 
@@ -1021,11 +910,6 @@ msgstr "Godina"
 #: model:ir.ui.menu,name:document.menu_document_storage_media
 msgid "Storage Media"
 msgstr "Medijum za Skladistenje"
-
-#. module: document
-#: view:document.storage:0
-msgid "Search Document storage"
-msgstr "Pretrazi skladiste Dokumenata"
 
 #. module: document
 #: field:document.directory.content,extension:0
@@ -1042,6 +926,9 @@ msgstr "Tip Dokumenta"
 
 #~ msgid "Preview"
 #~ msgstr "Pregled"
+
+#~ msgid "Error! You can not create recursive Directories."
+#~ msgstr "Greška! Ne možete kreirati rekurzivne direktorijume."
 
 #~ msgid "Document Configuration"
 #~ msgstr "Podesavanja Dokumenta"
@@ -1060,6 +947,9 @@ msgstr "Tip Dokumenta"
 
 #~ msgid "Document Management System."
 #~ msgstr "Sistem za Upravljanje Dokumentima"
+
+#~ msgid "Attachment"
+#~ msgstr "Dodatak"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Pogrešno ime modela u definiciji akcije."
@@ -1102,6 +992,9 @@ msgstr "Tip Dokumenta"
 #~ msgstr ""
 #~ "Ovdje upišite adresu servera ili IP adresu. Ostavite localhost ako ne znate "
 #~ "šta da napisete."
+
+#~ msgid "Notes"
+#~ msgstr "Napomene"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Nevažeći XML za pregled arhitekture"
@@ -1170,8 +1063,47 @@ msgstr "Tip Dokumenta"
 #~ msgid "Browse Files"
 #~ msgstr "Pretraži Fajlove"
 
+#~ msgid "Files by users"
+#~ msgstr "Fajlovi po Korisniku"
+
+#~ msgid "Wall of Shame"
+#~ msgstr "Zid Srama"
+
+#~ msgid "Files details by Partners"
+#~ msgstr "Detalji Fajlova po Partneru"
+
+#~ msgid "Users that did not inserted documents since one month"
+#~ msgstr "Korisnici koji jedan celi mjesec nisu unijeli Dokument"
+
+#~ msgid "Files By Partner"
+#~ msgstr "Fajlovi po Partneru"
+
+#~ msgid "This Month"
+#~ msgstr "Ovog meseca"
+
+#~ msgid "User"
+#~ msgstr "Korisnik"
+
+#~ msgid "Files per Month"
+#~ msgstr "Fajlova za Mesec"
+
+#~ msgid "Reporting"
+#~ msgstr "Izveštavanje"
+
+#~ msgid "Files By Users"
+#~ msgstr "Fajlovi po Korisnicima"
+
+#~ msgid "Files by Resource Type"
+#~ msgstr "Fajlovi po Tipu Izvora"
+
+#~ msgid "Last Posted Time"
+#~ msgstr "Zadnje postavljeno Vrijeme"
+
 #~ msgid "Auto Directory Configuration"
 #~ msgstr "Auto Podesavanje Direktorijuma"
+
+#~ msgid "This Year"
+#~ msgstr "Ove Godine"
 
 #~ msgid "Sale Order"
 #~ msgstr "Zahtev Prodaje"
@@ -1181,6 +1113,21 @@ msgstr "Tip Dokumenta"
 
 #~ msgid "Auto directory configuration for Products."
 #~ msgstr "Auto Podesavanje Direktorijuma za Proizvode"
+
+#~ msgid "Files by Users"
+#~ msgstr "Fajlovi po Korisnicima"
+
+#~ msgid "Files Per Partner"
+#~ msgstr "Fajlovi po Partneru"
+
+#~ msgid "Document Dashboard"
+#~ msgstr "UpravljackaTabla Dokumenata"
+
+#~ msgid "Modified"
+#~ msgstr "Prepravljano"
+
+#~ msgid "Created"
+#~ msgstr "kreirano"
 
 #~ msgid "Files by Partner"
 #~ msgstr "Fajlovi po Partneru"
@@ -1222,8 +1169,17 @@ msgstr "Tip Dokumenta"
 #~ msgid "Configuration Progress"
 #~ msgstr "Napredak Podesavanja"
 
+#~ msgid "Image"
+#~ msgstr "Slika"
+
+#~ msgid "Related to"
+#~ msgstr "Vezano za"
+
 #~ msgid "Auto directory configuration for Projects."
 #~ msgstr "Auto POdesavanje Direktorijuma za Projekte."
+
+#~ msgid "Dashboard"
+#~ msgstr "UpravljackaTabla"
 
 #~ msgid "Product"
 #~ msgstr "Proizvod"
@@ -1232,3 +1188,16 @@ msgstr "Tip Dokumenta"
 #~ "Auto directory configuration for Sale Orders and Quotation with report."
 #~ msgstr ""
 #~ "Auto Podesavanje Direktorijuma za Zahteve Prodaje i upite sa Izvestajima."
+
+#~ msgid "Statistics by User"
+#~ msgstr "Statistika po korisniku"
+
+#~ msgid "New Files"
+#~ msgstr "Novi Fajlovi"
+
+#, python-format
+#~ msgid "File name must be unique!"
+#~ msgstr "Ime Polja mora biti jedinstveno!"
+
+#~ msgid "Search Document storage"
+#~ msgstr "Pretrazi skladiste Dokumenata"

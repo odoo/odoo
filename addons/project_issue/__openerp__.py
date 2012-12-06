@@ -24,7 +24,7 @@
     'name': 'Issue Tracker',
     'version': '1.0',
     'category': 'Project Management',
-    'sequence': 22,
+    'sequence': 9,
     'summary': 'Support, Bug Tracker, Helpdesk',
     'description': """
 Track Issues/Bugs Management for Projects
@@ -61,7 +61,6 @@ It allows the manager to quickly check the issues, assign them and decide on the
     'installable': True,
     'auto_install': False,
     'application': True,
-    'js': ['static/src/js/project_issue.js'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

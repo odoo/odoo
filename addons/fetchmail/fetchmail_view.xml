@@ -24,9 +24,9 @@
             <field name="arch" type="xml">
                 <form string="Incoming Mail Server" version="7.0">
                     <header attrs="{'invisible' : [('type', '=', 'local')]}">
-                        <button string="Test &amp; Confirm" type="object" name="button_confirm_login" states="draft" icon="gtk-apply"/>
-                        <button string="Fetch Now" type="object" name="fetch_mail" states="done" icon="gtk-network"/>
-                        <button string="Reset Confirmation" type="object" name="set_draft" icon="gtk-convert" states="done"/>
+                        <button string="Test &amp; Confirm" type="object" name="button_confirm_login" states="draft"/>
+                        <button string="Fetch Now" type="object" name="fetch_mail" states="done"/>
+                        <button string="Reset Confirmation" type="object" name="set_draft" states="done"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
@@ -117,7 +117,7 @@
       <act_window
             context="{'search_default_server_id': active_id, 'default_fetchmail_server_id': active_id}"
             id="act_server_history" name="Messages" domain="[('email_from', '!=', False), ('fetchmail_server_id', '=', active_id)]"
-            res_model="mail.message" src_model="fetchmail.server"/>
+            res_model="mail.mail" src_model="fetchmail.server"/>
 
     </data>
 </openerp>

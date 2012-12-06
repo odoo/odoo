@@ -64,22 +64,22 @@ class hr_expense_expense(osv.osv):
     _description = "Expense"
     _order = "id desc"
     _columns = {
-        'name': fields.char('Description', size=128, required=True),
+        'name': fields.char('Description', size=128, required=True, readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'id': fields.integer('Sheet ID', readonly=True),
-        'date': fields.date('Date', select=True),
+        'date': fields.date('Date', select=True, readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'journal_id': fields.many2one('account.journal', 'Force Journal', help = "The journal used when the expense is done."),
-        'employee_id': fields.many2one('hr.employee', "Employee", required=True),
+        'employee_id': fields.many2one('hr.employee', "Employee", required=True, readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'user_id': fields.many2one('res.users', 'User', required=True),
-        'date_confirm': fields.date('Confirmation Date', select=True, help = "Date of the confirmation of the sheet expense. It's filled when the button Confirm is pressed."),
-        'date_valid': fields.date('Validation Date', select=True, help = "Date of the acceptation of the sheet expense. It's filled when the button Accept is pressed."),
-        'user_valid': fields.many2one('res.users', 'Validation User'),
+        'date_confirm': fields.date('Confirmation Date', select=True, help="Date of the confirmation of the sheet expense. It's filled when the button Confirm is pressed."),
+        'date_valid': fields.date('Validation Date', select=True, help="Date of the acceptation of the sheet expense. It's filled when the button Accept is pressed."),
+        'user_valid': fields.many2one('res.users', 'Validation By', readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'account_move_id': fields.many2one('account.move', 'Ledger Posting'),
         'line_ids': fields.one2many('hr.expense.line', 'expense_id', 'Expense Lines', readonly=True, states={'draft':[('readonly',False)]} ),
         'note': fields.text('Note'),
         'amount': fields.function(_amount, string='Total Amount', digits_compute= dp.get_precision('Account')),
         'voucher_id': fields.many2one('account.voucher', "Employee's Receipt"),
-        'currency_id': fields.many2one('res.currency', 'Currency', required=True),
-        'department_id':fields.many2one('hr.department','Department'),
+        'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
+        'department_id':fields.many2one('hr.department','Department', readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'state': fields.selection([
             ('draft', 'New'),
@@ -99,6 +99,12 @@ class hr_expense_expense(osv.osv):
         'user_id': lambda cr, uid, id, c={}: id,
         'currency_id': _get_currency,
     }
+
+    def unlink(self, cr, uid, ids, context=None):
+        for rec in self.browse(cr, uid, ids, context=context):
+            if rec.state != 'draft':
+                raise osv.except_osv(_('Warning!'),_('You can only delete draft expenses!'))
+        return super(hr_expense_expense, self).unlink(cr, uid, ids, context)
 
     def onchange_currency_id(self, cr, uid, ids, currency_id=False, company_id=False, context=None):
         res =  {'value': {'journal_id': False}}
@@ -189,7 +195,7 @@ class hr_expense_expense(osv.osv):
                 raise osv.except_osv(_('Error!'), _('The employee must have a home address.'))
             acc = exp.employee_id.address_home_id.property_account_payable.id
             voucher = {
-                'name': exp.name,
+                'name': exp.name or '/',
                 'reference': sequence_obj.get(cr, uid, 'hr.expense.invoice'),
                 'account_id': acc,
                 'type': 'purchase',
@@ -233,18 +239,8 @@ hr_expense_expense()
 class product_product(osv.osv):
     _inherit = "product.product"
     _columns = {
-        'hr_expense_ok': fields.boolean('Can be Expensed', help="Determines if the product can be visible in the list of product within a selection from an HR expense sheet line."),
+        'hr_expense_ok': fields.boolean('Can be Expensed', help="Specify if the product can be selected in an HR expense line."),
     }
-
-    def on_change_hr_expense_ok(self, cr, uid, id, hr_expense_ok):
-
-        if not hr_expense_ok:
-            return {}
-        data_obj = self.pool.get('ir.model.data')
-        cat_id = data_obj._get_id(cr, uid, 'hr_expense', 'cat_expense')
-        categ_id = data_obj.browse(cr, uid, cat_id).res_id
-        res = {'value' : {'type':'service','sale_ok' :False,'categ_id':categ_id }}
-        return res
 
 product_product()
 

@@ -15,20 +15,6 @@
                 </field>
         </record>
 
-        <record id="view_partners_form_crm3" model="ir.ui.view">
-                <field name="name">view.res.partner.search.crm.inherited3</field>
-                <field name="model">res.partner</field>
-                <field name="inherit_id" ref="base.view_res_partner_filter"/>
-                <field eval="18" name="priority"/>
-                <field name="arch" type="xml">
-                    <xpath expr="//group[@string='Group By...']" position="after">
-                        <group string="Display">
-                            <filter string="Show Sales Team" context="{'invisible_section': False}"/>
-                        </group>
-                    </xpath>
-                </field>
-        </record>
-
         <!-- open meetings related to given partner -->
         <record id="crm_meeting_partner" model="ir.actions.act_window">
             <field name="name">Meetings</field>
@@ -115,7 +101,7 @@
                         name="%(base_calendar.action_crm_meeting)d"
                         context="{'search_default_partner_ids': active_id, 'default_partner_ids' : [active_id]}"/>
                     <button type="action" string="Calls" 
-                        name="%(crm.crm_case_categ_phone_create_partner)d" 
+                        name="%(crm.crm_case_categ_phone_incoming0)d" 
                         context="{'search_default_partner_id': active_id, 'default_duration': 1.0}" />
                     <button type="action" string="Opportunities" attrs="{'invisible': [('customer', '=', False)]}"
                         name="%(crm.crm_case_category_act_oppor11)d" context="{'search_default_partner_id': active_id}"/>

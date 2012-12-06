@@ -61,7 +61,7 @@ class account_bank_statement(osv.osv):
         return res
 
     def _get_period(self, cr, uid, context=None):
-        periods = self.pool.get('account.period').find(cr, uid)
+        periods = self.pool.get('account.period').find(cr, uid,context=context)
         if periods:
             return periods[0]
         return False
@@ -311,7 +311,7 @@ class account_bank_statement(osv.osv):
             'statement_id': st_line.statement_id.id,
             'journal_id': st_line.statement_id.journal_id.id,
             'period_id': st_line.statement_id.period_id.id,
-            'currency_id': cur_id,
+            'currency_id': amount_currency and cur_id,
             'amount_currency': amount_currency,
             'analytic_account_id': analytic_id,
         }
@@ -485,6 +485,19 @@ class account_bank_statement(osv.osv):
         default = default.copy()
         default['move_line_ids'] = []
         return super(account_bank_statement, self).copy(cr, uid, id, default, context=context)
+
+    def button_journal_entries(self, cr, uid, ids, context=None):
+      ctx = (context or {}).copy()
+      ctx['journal_id'] = self.browse(cr, uid, ids[0], context=context).journal_id.id
+      return {
+        'view_type':'form',
+        'view_mode':'tree',
+        'res_model':'account.move.line',
+        'view_id':False,
+        'type':'ir.actions.act_window',
+        'domain':[('statement_id','in',ids)],
+        'context':ctx,
+      }
 
 account_bank_statement()
 

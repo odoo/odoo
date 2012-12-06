@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-05-10 18:16+0000\n"
 "Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-19 05:24+0000\n"
-"X-Generator: Launchpad (build 16165)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:17+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -23,15 +23,10 @@ msgid "Parent Directory"
 msgstr "Visrmape"
 
 #. module: document
-#: code:addons/document/document_directory.py:276
+#: code:addons/document/document_directory.py:273
 #, python-format
 msgid "Directory name contains special characters!"
 msgstr "Mapes nosaukumā ir speciālie simboli!"
-
-#. module: document
-#: field:document.directory,resource_field:0
-msgid "Name field"
-msgstr "Nosaukuma lauks"
 
 #. module: document
 #: view:board.board:0
@@ -42,6 +37,11 @@ msgstr "Dokumentu instrumentu panelis"
 #: model:ir.model,name:document.model_process_node
 msgid "Process Node"
 msgstr "Procesa mezgls"
+
+#. module: document
+#: sql_constraint:document.directory:0
+msgid "Directory must have a parent or a storage."
+msgstr ""
 
 #. module: document
 #: view:document.directory:0
@@ -78,20 +78,14 @@ msgid "Files"
 msgstr "Faili"
 
 #. module: document
-#: view:report.files.partner:0
-msgid "Files per Month"
-msgstr "Faili mēnesī"
+#: field:document.directory.content.type,mimetype:0
+msgid "Mime Type"
+msgstr "MIME tips"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "March"
 msgstr "Marts"
-
-#. module: document
-#: view:document.configuration:0
-msgid "title"
-msgstr "virsraksts"
 
 #. module: document
 #: field:document.directory.dctx,expr:0
@@ -128,18 +122,13 @@ msgid ""
 msgstr ""
 
 #. module: document
-#: view:report.document.user:0
-msgid "This Year"
-msgstr "Šajā gadā"
-
-#. module: document
 #: field:document.storage,path:0
 msgid "Path"
 msgstr "Ceļš"
 
 #. module: document
-#: code:addons/document/document_directory.py:266
-#: code:addons/document/document_directory.py:271
+#: code:addons/document/document_directory.py:263
+#: code:addons/document/document_directory.py:268
 #, python-format
 msgid "Directory name must be unique!"
 msgstr "Mapes nosaukumam jābūt unikālam!"
@@ -150,6 +139,7 @@ msgid "Filter on my documents"
 msgstr ""
 
 #. module: document
+#: view:ir.attachment:0
 #: field:ir.attachment,index_content:0
 msgid "Indexed Content"
 msgstr "Indeksēts saturs"
@@ -162,13 +152,9 @@ msgid ""
 msgstr ""
 
 #. module: document
-#: model:ir.actions.todo.category,name:document.category_knowledge_mgmt_config
-msgid "Knowledge Management"
-msgstr ""
-
-#. module: document
 #: view:document.directory:0
 #: field:document.storage,dir_ids:0
+#: model:ir.actions.act_window,name:document.action_document_directory_form
 #: model:ir.ui.menu,name:document.menu_document_directories
 msgid "Directories"
 msgstr "Mapes"
@@ -179,8 +165,8 @@ msgid "Files details by Users"
 msgstr "Failu info pēc lietotājiem"
 
 #. module: document
-#: code:addons/document/document_storage.py:573
-#: code:addons/document/document_storage.py:601
+#: code:addons/document/document_storage.py:569
+#: code:addons/document/document_storage.py:597
 #, python-format
 msgid "Error!"
 msgstr "Kļūda!"
@@ -213,14 +199,27 @@ msgstr "Zināšanu sistēmas konfigurācija"
 #. module: document
 #: view:ir.attachment:0
 #: field:ir.attachment,partner_id:0
-#: field:report.files.partner,partner:0
 msgid "Partner"
 msgstr "Partneris"
 
 #. module: document
-#: view:board.board:0
-msgid "Files by Users"
-msgstr "Faili pēc lietotājiem"
+#: model:ir.actions.act_window,name:document.act_res_partner_document
+#: model:ir.actions.act_window,name:document.zoom_directory
+msgid "Related Documents"
+msgstr "Saistītie dokumenti"
+
+#. module: document
+#: model:ir.actions.act_window,help:document.action_document_file_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to create a new document. \n"
+"          </p><p>\n"
+"            The Documents repository gives you access to all attachments, "
+"such\n"
+"            as mails, project documents, invoices etc.\n"
+"          </p>\n"
+"        "
+msgstr ""
 
 #. module: document
 #: field:process.node,directory_id:0
@@ -228,11 +227,9 @@ msgid "Document directory"
 msgstr "Dokumentu mape"
 
 #. module: document
-#: code:addons/document/document.py:220
-#: code:addons/document/document.py:299
-#: code:addons/document/document_directory.py:266
-#: code:addons/document/document_directory.py:271
-#: code:addons/document/document_directory.py:276
+#: code:addons/document/document_directory.py:263
+#: code:addons/document/document_directory.py:268
+#: code:addons/document/document_directory.py:273
 #, python-format
 msgid "ValidateError"
 msgstr "Validācijas Kļūda"
@@ -244,16 +241,10 @@ msgstr "ir.actions.report.xml"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_file_form
-#: view:ir.attachment:0
 #: model:ir.ui.menu,name:document.menu_document_doc
 #: model:ir.ui.menu,name:document.menu_document_files
 msgid "Documents"
 msgstr "Dokumenti"
-
-#. module: document
-#: constraint:document.directory:0
-msgid "Error! You can not create recursive Directories."
-msgstr "Kļūda! Nevar veidot rekursīvas mapes."
 
 #. module: document
 #: view:document.directory:0
@@ -270,7 +261,6 @@ msgstr "Resursa modelis"
 #: field:ir.attachment,file_size:0
 #: field:report.document.file,file_size:0
 #: field:report.document.user,file_size:0
-#: field:report.files.partner,file_size:0
 msgid "File Size"
 msgstr "Faila izmērs"
 
@@ -281,12 +271,24 @@ msgid "Content Type"
 msgstr "Satura tips"
 
 #. module: document
+#: view:ir.attachment:0
+msgid "Modification"
+msgstr ""
+
+#. module: document
 #: view:document.directory:0
 #: field:document.directory,type:0
 #: view:document.storage:0
 #: field:document.storage,type:0
 msgid "Type"
 msgstr "Tips"
+
+#. module: document
+#: code:addons/document/document.py:194
+#: code:addons/document/document_directory.py:234
+#, python-format
+msgid "%s (copy)"
+msgstr ""
 
 #. module: document
 #: help:document.directory,ressource_type_id:0
@@ -304,9 +306,14 @@ msgid ""
 msgstr ""
 
 #. module: document
-#: model:ir.actions.act_window,name:document.action_view_files_by_partner
-msgid "Files Per Partner"
-msgstr "Faili katram partnerim"
+#: constraint:document.directory:0
+msgid "Error! You cannot create recursive directories."
+msgstr ""
+
+#. module: document
+#: field:document.directory,resource_field:0
+msgid "Name field"
+msgstr "Nosaukuma lauks"
 
 #. module: document
 #: field:document.directory,dctx_ids:0
@@ -331,15 +338,8 @@ msgstr "Atskaite"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "July"
 msgstr "Jūlijs"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.open_board_document_manager
-#: model:ir.ui.menu,name:document.menu_reports_document_manager
-msgid "Document Dashboard"
-msgstr "Dokumentu instrumentu panelis"
 
 #. module: document
 #: field:document.directory.content.type,code:0
@@ -347,22 +347,12 @@ msgid "Extension"
 msgstr "Paplašinājums"
 
 #. module: document
-#: view:ir.attachment:0
-msgid "Created"
-msgstr "Izveidota"
-
-#. module: document
 #: field:document.directory,content_ids:0
 msgid "Virtual Files"
 msgstr "Virtuāli faili"
 
 #. module: document
-#: view:ir.attachment:0
-msgid "Modified"
-msgstr "Mainīts"
-
-#. module: document
-#: code:addons/document/document_storage.py:639
+#: code:addons/document/document_storage.py:635
 #, python-format
 msgid "Error at doc write!"
 msgstr "Klūda rakstot dokumentu!"
@@ -403,10 +393,15 @@ msgid "Last Modification User"
 msgstr "Pēdējo izmaiņu lietotājs"
 
 #. module: document
-#: model:ir.actions.act_window,name:document.act_res_partner_document
-#: model:ir.actions.act_window,name:document.zoom_directory
-msgid "Related Documents"
-msgstr "Saistītie dokumenti"
+#: model:ir.actions.act_window,name:document.action_view_files_by_user_graph
+#: view:report.document.user:0
+msgid "Files by User"
+msgstr ""
+
+#. module: document
+#: view:ir.attachment:0
+msgid "on"
+msgstr ""
 
 #. module: document
 #: field:document.directory,domain:0
@@ -431,7 +426,6 @@ msgid "All users files"
 msgstr "Visu lietotāju faili"
 
 #. module: document
-#: view:board.board:0
 #: model:ir.actions.act_window,name:document.action_view_size_month
 #: view:report.document.file:0
 msgid "File Size by Month"
@@ -439,14 +433,8 @@ msgstr "Faila izmērs pēc mēneša"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "December"
 msgstr "Decembris"
-
-#. module: document
-#: field:document.configuration,config_logo:0
-msgid "Image"
-msgstr "Attēls"
 
 #. module: document
 #: selection:document.directory,type:0
@@ -454,9 +442,10 @@ msgid "Static Directory"
 msgstr "Statiska mape"
 
 #. module: document
-#: field:document.directory,child_ids:0
-msgid "Children"
-msgstr "Bērni"
+#: field:report.document.file,month:0
+#: field:report.document.user,month:0
+msgid "Month"
+msgstr "Mēnesis"
 
 #. module: document
 #: view:document.directory:0
@@ -470,13 +459,17 @@ msgid ""
 msgstr ""
 
 #. module: document
+#: field:report.document.user,user:0
+msgid "unknown"
+msgstr ""
+
+#. module: document
 #: view:document.directory:0
 #: field:document.directory,user_id:0
 #: field:document.storage,user_id:0
 #: view:ir.attachment:0
 #: field:ir.attachment,user_id:0
 #: field:report.document.user,user_id:0
-#: field:report.document.wall,user_id:0
 msgid "Owner"
 msgstr "Īpašnieks"
 
@@ -498,11 +491,27 @@ msgid "Date Created"
 msgstr "Izveides datums"
 
 #. module: document
+#: field:document.directory,ressource_id:0
+msgid "Resource ID"
+msgstr "Resursa ID"
+
+#. module: document
 #: help:document.directory.content,include_name:0
 msgid ""
 "Check this field if you want that the name of the file to contain the record "
 "name.\n"
 "If set, the directory will have to be a resource one."
+msgstr ""
+
+#. module: document
+#: model:ir.actions.act_window,name:document.open_board_document_manager
+#: model:ir.ui.menu,name:document.menu_reports_document
+msgid "Knowledge"
+msgstr ""
+
+#. module: document
+#: view:document.storage:0
+msgid "Document Storage"
 msgstr ""
 
 #. module: document
@@ -515,11 +524,6 @@ msgstr ""
 #: field:document.directory.content,include_name:0
 msgid "Include Record Name"
 msgstr "Iekļaut ieraksta nosaukumu"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Attachment"
-msgstr "Piesaistne"
 
 #. module: document
 #: field:ir.actions.report.xml,model_id:0
@@ -546,10 +550,21 @@ msgid ""
 msgstr ""
 
 #. module: document
+#. openerp-web
+#: code:addons/document/static/src/js/document.js:6
+#, python-format
+msgid "Attachment(s)"
+msgstr ""
+
+#. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "August"
 msgstr "Augusts"
+
+#. module: document
+#: view:ir.attachment:0
+msgid "My Document(s)"
+msgstr ""
 
 #. module: document
 #: sql_constraint:document.directory:0
@@ -558,15 +573,8 @@ msgstr "Mape nevar būt virsmape pati sev!"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "June"
 msgstr "Jūnijs"
-
-#. module: document
-#: field:report.document.user,user:0
-#: field:report.document.wall,user:0
-msgid "User"
-msgstr "Lietotājs"
 
 #. module: document
 #: field:document.directory,group_ids:0
@@ -581,12 +589,10 @@ msgstr "Aktīvs"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "November"
 msgstr "Novembris"
 
 #. module: document
-#: view:ir.attachment:0
 #: field:ir.attachment,db_datas:0
 msgid "Data"
 msgstr "Dati"
@@ -607,7 +613,6 @@ msgstr "Definīcija"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "October"
 msgstr "Oktobris"
 
@@ -623,29 +628,8 @@ msgstr "Datubāze"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "January"
 msgstr "Janvāris"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Related to"
-msgstr "Saistīts ar"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Attached to"
-msgstr "Pievienots"
-
-#. module: document
-#: model:ir.ui.menu,name:document.menu_reports_document
-msgid "Dashboard"
-msgstr "Instrumentu panelis"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.action_view_user_graph
-msgid "Files By Users"
-msgstr "Faili pēc lietotājiem"
 
 #. module: document
 #: field:document.storage,readonly:0
@@ -653,7 +637,8 @@ msgid "Read Only"
 msgstr "Tikai lasāms"
 
 #. module: document
-#: model:ir.actions.act_window,name:document.action_document_directory_form
+#: view:document.directory:0
+#: view:process.node:0
 msgid "Document Directory"
 msgstr ""
 
@@ -663,15 +648,15 @@ msgid "The directory name must be unique !"
 msgstr "Mapes nosaukumam jābūt unikālam!"
 
 #. module: document
+#: view:ir.attachment:0
+msgid "Attachments"
+msgstr ""
+
+#. module: document
 #: field:document.directory,create_uid:0
 #: field:document.storage,create_uid:0
 msgid "Creator"
 msgstr "Autors"
-
-#. module: document
-#: field:document.directory.content,sequence:0
-msgid "Sequence"
-msgstr "Secība"
 
 #. module: document
 #: view:document.configuration:0
@@ -691,7 +676,6 @@ msgstr "Faili pēc mēneša"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "September"
 msgstr "Septembris"
 
@@ -701,24 +685,14 @@ msgid "Prefix"
 msgstr "Prefiks"
 
 #. module: document
-#: field:report.document.wall,last:0
-msgid "Last Posted Time"
-msgstr "Pēdēja ieraksta laiks"
+#: field:document.directory,child_ids:0
+msgid "Children"
+msgstr "Bērni"
 
 #. module: document
-#: field:report.document.user,datas_fname:0
-msgid "File Name"
-msgstr "Faila nosaukums"
-
-#. module: document
-#: view:document.configuration:0
-msgid "res_config_contents"
-msgstr "res_config_contents"
-
-#. module: document
-#: field:document.directory,ressource_id:0
-msgid "Resource ID"
-msgstr "Resursa ID"
+#: view:board.board:0
+msgid "Files by user"
+msgstr ""
 
 #. module: document
 #: selection:document.storage,type:0
@@ -726,21 +700,9 @@ msgid "External file storage"
 msgstr "Ārēja failu glabātuve"
 
 #. module: document
-#: view:board.board:0
-#: model:ir.actions.act_window,name:document.action_view_wall
-#: view:report.document.wall:0
-msgid "Wall of Shame"
-msgstr "Kauna dēlis"
-
-#. module: document
 #: help:document.storage,path:0
 msgid "For file storage, the root path of the storage"
 msgstr "Failu glabāšanai - glabātuves saknes ceļs"
-
-#. module: document
-#: model:ir.model,name:document.model_report_files_partner
-msgid "Files details by Partners"
-msgstr "Failu info pēc partneriem"
 
 #. module: document
 #: field:document.directory.dctx,field:0
@@ -758,28 +720,13 @@ msgid "Parent Model"
 msgstr "Virsmodelis"
 
 #. module: document
-#: view:report.document.user:0
-msgid "Files by users"
-msgstr "Faili pēc lietotājiem"
-
-#. module: document
-#: field:report.document.file,month:0
-#: field:report.document.user,month:0
-#: field:report.document.wall,month:0
-#: field:report.document.wall,name:0
-#: field:report.files.partner,month:0
-msgid "Month"
-msgstr "Mēnesis"
-
-#. module: document
-#: view:report.document.user:0
-msgid "This Months Files"
+#: help:document.directory.dctx,field:0
+msgid ""
+"The name of the field. Note that the prefix \"dctx_\" will be prepended to "
+"what is typed here."
 msgstr ""
-
-#. module: document
-#: model:ir.ui.menu,name:document.menu_reporting
-msgid "Reporting"
-msgstr "Atskaites"
+"Lauka nosaukums. Ievērojiet, ka tam kas ir uzrakstīts šeit tiks pievienots "
+"prefikss \"dctx_\"."
 
 #. module: document
 #: field:document.directory,ressource_tree:0
@@ -788,7 +735,6 @@ msgstr "Koka struktūra"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "May"
 msgstr "Maijs"
 
@@ -796,20 +742,6 @@ msgstr "Maijs"
 #: model:ir.actions.act_window,name:document.action_view_all_document_tree1
 msgid "All Users files"
 msgstr "Visu lietotāju faili"
-
-#. module: document
-#: model:ir.model,name:document.model_report_document_wall
-msgid "Users that did not inserted documents since one month"
-msgstr "Lietotāji, kas nav pievienojuši dokumentus pēdēja mēneša laikā"
-
-#. module: document
-#: model:ir.actions.act_window,help:document.action_document_file_form
-msgid ""
-"The Documents repository gives you access to all attachments, such as mails, "
-"project documents, invoices etc."
-msgstr ""
-"Šis dokumentu repozitorijs dod jums piekļuvi visā piesaistnēm, piem., e-"
-"pastiem, projektu dokumentiem, rēķiniem utt."
 
 #. module: document
 #: view:document.directory:0
@@ -822,9 +754,9 @@ msgid "ir.attachment"
 msgstr "ir.attachment"
 
 #. module: document
-#: view:board.board:0
-msgid "New Files"
-msgstr "Jauni faili"
+#: view:report.document.user:0
+msgid "Users File"
+msgstr ""
 
 #. module: document
 #: view:document.directory:0
@@ -832,24 +764,11 @@ msgid "Static"
 msgstr "Statisks"
 
 #. module: document
-#: view:report.files.partner:0
-msgid "Files By Partner"
-msgstr "Faili pēc partnera"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Indexed Content - experimental"
+#: view:document.directory:0
+msgid ""
+"These groups, however, do NOT apply to children directories, which must "
+"define their own groups."
 msgstr ""
-
-#. module: document
-#: view:report.document.user:0
-msgid "This Month"
-msgstr "Šajā mēnesī"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Notes"
-msgstr "Piezīmes"
 
 #. module: document
 #: model:ir.model,name:document.model_document_configuration
@@ -868,24 +787,8 @@ msgstr ""
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "February"
 msgstr "Februāris"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.open_board_document_manager1
-#: model:ir.ui.menu,name:document.menu_reports_document_manager1
-msgid "Statistics by User"
-msgstr "Statistika pēc lietotāja"
-
-#. module: document
-#: help:document.directory.dctx,field:0
-msgid ""
-"The name of the field. Note that the prefix \"dctx_\" will be prepended to "
-"what is typed here."
-msgstr ""
-"Lauka nosaukums. Ievērojiet, ka tam kas ir uzrakstīts šeit tiks pievienots "
-"prefikss \"dctx_\"."
 
 #. module: document
 #: field:document.directory,name:0
@@ -910,21 +813,18 @@ msgstr "Ja iestatīts, mēdijs ir tikai lasīšanai"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "April"
 msgstr "Aprīlis"
 
 #. module: document
 #: field:report.document.file,nbr:0
 #: field:report.document.user,nbr:0
-#: field:report.files.partner,nbr:0
 msgid "# of Files"
 msgstr "Failu skaits"
 
 #. module: document
-#: code:addons/document/document.py:209
-#, python-format
-msgid "(copy)"
+#: view:document.storage:0
+msgid "Search Document Storage"
 msgstr ""
 
 #. module: document
@@ -936,21 +836,16 @@ msgstr ""
 "Tikai šo grupu dalībniekiem būs pieeja pie šīs mapes un failiem tajā."
 
 #. module: document
-#: view:document.directory:0
-msgid ""
-"These groups, however, do NOT apply to children directories, which must "
-"define their own groups."
+#. openerp-web
+#: code:addons/document/static/src/js/document.js:17
+#, python-format
+msgid "%s (%s)"
 msgstr ""
 
 #. module: document
-#: field:document.directory.content.type,mimetype:0
-msgid "Mime Type"
-msgstr "MIME tips"
-
-#. module: document
-#: view:report.document.user:0
-msgid "All Months Files"
-msgstr ""
+#: field:document.directory.content,sequence:0
+msgid "Sequence"
+msgstr "Secība"
 
 #. module: document
 #: field:document.directory.content,name:0
@@ -958,11 +853,9 @@ msgid "Content Name"
 msgstr "Satura nosaukums"
 
 #. module: document
-#: code:addons/document/document.py:220
-#: code:addons/document/document.py:299
-#, python-format
-msgid "File name must be unique!"
-msgstr "Faila nosaukumam jābūt unikālam!"
+#: field:report.document.user,datas_fname:0
+msgid "File Name"
+msgstr "Faila nosaukums"
 
 #. module: document
 #: selection:document.storage,type:0
@@ -970,9 +863,9 @@ msgid "Internal File storage"
 msgstr "Iekšēja failu glabātuve"
 
 #. module: document
-#: sql_constraint:document.directory:0
-msgid "Directory must have a parent or a storage"
-msgstr "Mapei jābūt virsmapei vai glabātuvei"
+#: view:document.configuration:0
+msgid "res_config_contents"
+msgstr "res_config_contents"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_directory_tree
@@ -981,13 +874,7 @@ msgid "Directories' Structure"
 msgstr "Mapju struktūra"
 
 #. module: document
-#: view:report.document.user:0
-msgid "Files by Resource Type"
-msgstr "Faili pēc resursu tipa"
-
-#. module: document
 #: field:report.document.user,name:0
-#: field:report.files.partner,name:0
 msgid "Year"
 msgstr ""
 
@@ -1000,20 +887,48 @@ msgid "Storage Media"
 msgstr ""
 
 #. module: document
-#: view:document.storage:0
-msgid "Search Document storage"
-msgstr ""
-
-#. module: document
 #: field:document.directory.content,extension:0
 msgid "Document Type"
 msgstr ""
 
+#~ msgid "Files per Month"
+#~ msgstr "Faili mēnesī"
+
+#~ msgid "title"
+#~ msgstr "virsraksts"
+
+#~ msgid "This Year"
+#~ msgstr "Šajā gadā"
+
 #~ msgid "Project"
 #~ msgstr "Projekts"
 
+#~ msgid "Error! You can not create recursive Directories."
+#~ msgstr "Kļūda! Nevar veidot rekursīvas mapes."
+
+#~ msgid "Document Dashboard"
+#~ msgstr "Dokumentu instrumentu panelis"
+
+#~ msgid "Created"
+#~ msgstr "Izveidota"
+
+#~ msgid "Modified"
+#~ msgstr "Mainīts"
+
 #~ msgid "Configuration Progress"
 #~ msgstr "Konfigurācijas Progress"
+
+#~ msgid "Image"
+#~ msgstr "Attēls"
+
+#~ msgid "Attachment"
+#~ msgstr "Piesaistne"
+
+#~ msgid "User"
+#~ msgstr "Lietotājs"
+
+#~ msgid "Dashboard"
+#~ msgstr "Instrumentu panelis"
 
 #~ msgid "Attached To"
 #~ msgstr "Pievienots"
@@ -1021,11 +936,42 @@ msgstr ""
 #~ msgid "Product"
 #~ msgstr "Produkts"
 
+#~ msgid "Reporting"
+#~ msgstr "Atskaites"
+
+#~ msgid "This Month"
+#~ msgstr "Šajā mēnesī"
+
+#~ msgid "Notes"
+#~ msgstr "Piezīmes"
+
+#~ msgid "New Files"
+#~ msgstr "Jauni faili"
+
+#~ msgid "Statistics by User"
+#~ msgstr "Statistika pēc lietotāja"
+
+#, python-format
+#~ msgid "File name must be unique!"
+#~ msgstr "Faila nosaukumam jābūt unikālam!"
+
+#~ msgid "Directory must have a parent or a storage"
+#~ msgstr "Mapei jābūt virsmapei vai glabātuvei"
+
+#~ msgid "Files by Resource Type"
+#~ msgstr "Faili pēc resursu tipa"
+
 #~ msgid "Auto directory configuration for Products."
 #~ msgstr "Automātiska mapju konfigurācija pēc produktiem."
 
 #~ msgid "Sale Order"
 #~ msgstr "Kl. pasūtījums"
+
+#~ msgid "Files by Users"
+#~ msgstr "Faili pēc lietotājiem"
+
+#~ msgid "Files Per Partner"
+#~ msgstr "Faili katram partnerim"
 
 #~ msgid "Files by Partner"
 #~ msgstr "Faili pēc partnera"
@@ -1036,14 +982,45 @@ msgstr ""
 #~ msgid "Auto Configure Directory"
 #~ msgstr "Automātiski konfigurēt mapi"
 
+#~ msgid "Files By Users"
+#~ msgstr "Faili pēc lietotājiem"
+
+#~ msgid "Related to"
+#~ msgstr "Saistīts ar"
+
 #~ msgid "Auto directory configuration for Projects."
 #~ msgstr "Automātiska mapju konfigurācija projektiem."
 
 #~ msgid "Choose the following Resouces to auto directory configuration."
 #~ msgstr "Izvēlēties šādus resursus automātiskai mapju konfigurācijai."
 
+#~ msgid "Last Posted Time"
+#~ msgstr "Pēdēja ieraksta laiks"
+
+#~ msgid "Wall of Shame"
+#~ msgstr "Kauna dēlis"
+
 #~ msgid "Integrated Document Management System"
 #~ msgstr "Integrēta dokumentu vadības sistēma"
+
+#~ msgid "Users that did not inserted documents since one month"
+#~ msgstr "Lietotāji, kas nav pievienojuši dokumentus pēdēja mēneša laikā"
+
+#~ msgid "Files details by Partners"
+#~ msgstr "Failu info pēc partneriem"
+
+#~ msgid "Files By Partner"
+#~ msgstr "Faili pēc partnera"
+
+#~ msgid "Files by users"
+#~ msgstr "Faili pēc lietotājiem"
+
+#~ msgid ""
+#~ "The Documents repository gives you access to all attachments, such as mails, "
+#~ "project documents, invoices etc."
+#~ msgstr ""
+#~ "Šis dokumentu repozitorijs dod jums piekļuvi visā piesaistnēm, piem., e-"
+#~ "pastiem, projektu dokumentiem, rēķiniem utt."
 
 #~ msgid "Auto Directory Configuration"
 #~ msgstr "Automātiska mapes konfigurācija"

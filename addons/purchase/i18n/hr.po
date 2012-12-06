@@ -6,15 +6,537 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 01:37+0100\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-01-30 20:08+0000\n"
 "Last-Translator: Goran Kliska <gkliska@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-19 05:07+0000\n"
-"X-Generator: Launchpad (build 16165)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:12+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
+
+#. module: purchase
+#: model:res.groups,name:purchase.group_analytic_accounting
+msgid "Analytic Accounting for Purchases"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_account_config_settings
+msgid "account.config.settings"
+msgstr ""
+
+#. module: purchase
+#: view:board.board:0
+msgid "Monthly Purchases by Category"
+msgstr "Nabave po mjesecima i grupi"
+
+#. module: purchase
+#: help:purchase.config.settings,module_warning:0
+msgid ""
+"Allow to configure notification on products and trigger them when a user "
+"wants to purchase a given product or a given supplier.\n"
+"Example: Product: this product is deprecated, do not purchase more than 5.\n"
+"                Supplier: don't forget to ask for an express delivery."
+msgstr ""
+
+#. module: purchase
+#: model:product.pricelist,name:purchase.list0
+msgid "Default Purchase Pricelist"
+msgstr "Uobičajeni cjenik nabave"
+
+#. module: purchase
+#: report:purchase.order:0
+msgid "Tel :"
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,pricelist_id:0
+msgid ""
+"The pricelist sets the currency used for this purchase order. It also "
+"computes the supplier price for the selected products/quantities."
+msgstr ""
+"Cjenik određuje valutu za ovu narudžbu. Ujedno računa i cijenu dobavljača za "
+"odabrane proizvode/količine."
+
+#. module: purchase
+#: model:ir.actions.server,name:purchase.actions_server_purchase_order_read
+msgid "Purchase: Mark read"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.report:0
+#: field:purchase.report,day:0
+msgid "Day"
+msgstr "Dan"
+
+#. module: purchase
+#: view:purchase.report:0
+msgid "Order of Day"
+msgstr "narudžebe dana"
+
+#. module: purchase
+#: help:purchase.order,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_procurement_management_inventory
+#: model:process.node,name:purchase.process_node_packinglist0
+#: model:process.node,name:purchase.process_node_productrecept0
+msgid "Incoming Products"
+msgstr "Ulaz proizvoda"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Reference"
+msgstr "Vezna oznaka"
+
+#. module: purchase
+#: field:purchase.order.line,account_analytic_id:0
+msgid "Analytic Account"
+msgstr "Konto analitike"
+
+#. module: purchase
+#: help:purchase.order,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:973
+#: code:addons/purchase/purchase.py:988
+#: code:addons/purchase/purchase.py:991
+#: code:addons/purchase/wizard/purchase_order_group.py:47
+#, python-format
+msgid "Warning!"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:573
+#, python-format
+msgid "You must first cancel all receptions related to this purchase order."
+msgstr "Postoje neotkazane primke vezane na ovaj nalog."
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_res_partner
+#: field:purchase.order.line,partner_id:0
+msgid "Partner"
+msgstr "Partner"
+
+#. module: purchase
+#: field:purchase.report,negociation:0
+msgid "Purchase-Standard Price"
+msgstr "Uobičajena nabavna cijena"
+
+#. module: purchase
+#: report:purchase.order:0
+#: field:purchase.report,validator:0
+msgid "Validated By"
+msgstr "Potvrđeno od strane"
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.action_picking_tree4_picking_to_invoice
+msgid ""
+"<p>\n"
+"                Here you can track all the product receptions of purchase\n"
+"                orders where the invoicing is \"Based on Incoming "
+"Shipments\",\n"
+"                and for which you have not received a supplier invoice yet.\n"
+"                You can generate a supplier invoice based on those "
+"receptions.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: purchase
+#: view:purchase.report:0
+#: field:purchase.report,price_average:0
+msgid "Average Price"
+msgstr "Prosječna cijena"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:830
+#, python-format
+msgid "Invoice <b>paid</b>."
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Purchase order which are in the exception state"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_view_purchase_order_group
+msgid "Merge Purchase orders"
+msgstr "Spoji naloge za nabavu"
+
+#. module: purchase
+#: view:purchase.report:0
+#: field:purchase.report,price_total:0
+msgid "Total Price"
+msgstr "Ukupna cijena"
+
+#. module: purchase
+#: view:purchase.order:0
+#: field:purchase.order,minimum_planned_date:0
+#: report:purchase.quotation:0
+#: field:purchase.report,expected_date:0
+msgid "Expected Date"
+msgstr "Očekivani datum"
+
+#. module: purchase
+#: report:purchase.order:0
+msgid "Shipping address :"
+msgstr "Shipping address :"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Confirm Order"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.config.settings,module_warning:0
+msgid "Alerts by products or supplier"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,name:0
+#: view:purchase.order.line:0
+#: field:purchase.order.line,order_id:0
+msgid "Order Reference"
+msgstr "Broj naloga"
+
+#. module: purchase
+#: view:purchase.config.settings:0
+msgid "Invoicing Process"
+msgstr ""
+
+#. module: purchase
+#: model:process.transition,name:purchase.process_transition_approvingpurchaseorder0
+msgid "Approbation"
+msgstr "Approbation"
+
+#. module: purchase
+#: help:purchase.config.settings,group_uom:0
+msgid ""
+"Allows you to select and maintain different units of measure for products."
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,minimum_planned_date:0
+msgid ""
+"This is computed as the minimum scheduled date of all purchase order lines' "
+"products."
+msgstr ""
+"This is computed as the minimum scheduled date of all purchase order lines' "
+"products."
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:255
+#, python-format
+msgid "In order to delete a purchase order, you must cancel it first."
+msgstr ""
+
+#. module: purchase
+#: view:product.product:0
+msgid "When you sell this product, OpenERP will trigger"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Approved purchase orders"
+msgstr "Potvrđeni nalozi"
+
+#. module: purchase
+#: model:email.template,subject:purchase.email_template_edi_purchase
+msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
+msgstr "${object.company_id.name} Narudžba (Ref ${object.name or 'n/a' })"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Total Untaxed amount"
+msgstr "Uk. osnovica"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
+msgid "Unit of Measure Categories"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.report:0
+#: field:purchase.report,category_id:0
+msgid "Category"
+msgstr "Grupa"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Quotation "
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:810
+#, python-format
+msgid ""
+"Quotation for <em>%s</em> <b>converted</b> to a Purchase Order of %s %s."
+msgstr ""
+
+#. module: purchase
+#: model:process.transition,note:purchase.process_transition_purchaseinvoice0
+msgid ""
+"A purchase order generates a supplier invoice, as soon as it is confirmed by "
+"the buyer. Depending on the Invoicing control of the purchase order, the "
+"invoice is based on received or on ordered quantities."
+msgstr ""
+"Nalog za nabavu kreira ulazni račun u trenutku potvrde. Račun nastaje "
+"temeljem naloga ili primki ovisno o \"Kontrola računa\" na nalogu."
+
+#. module: purchase
+#: view:purchase.order:0
+#: field:purchase.order,state:0
+#: view:purchase.order.line:0
+#: field:purchase.order.line,state:0
+#: view:purchase.report:0
+msgid "Status"
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.report,month:0
+msgid "August"
+msgstr "Kolovoz"
+
+#. module: purchase
+#: view:product.product:0
+msgid "to"
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.report,month:0
+msgid "June"
+msgstr "Lipanj"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_purchase_report
+msgid "Purchases Orders"
+msgstr "Nalozi za nabavu"
+
+#. module: purchase
+#: help:account.config.settings,group_analytic_account_for_purchases:0
+#: help:purchase.config.settings,group_analytic_account_for_purchases:0
+msgid "Allows you to specify an analytic account on purchase orders."
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.action_invoice_pending
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to create a draft invoice.\n"
+"          </p><p>\n"
+"            Use this menu to control the invoices to be received from your\n"
+"            supplier. OpenERP generates draft invoices from your purchase\n"
+"            orders or receptions, according to your settings.\n"
+"          </p><p>\n"
+"            Once you receive a supplier invoice, you can match it with the\n"
+"            draft invoice and validate it.\n"
+"          </p>\n"
+"        "
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.report,month:0
+msgid "October"
+msgstr "Listopad"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:837
+#, python-format
+msgid "Purchase Order for <em>%s</em> <b>cancelled</b>."
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,message_summary:0
+msgid "Summary"
+msgstr ""
+
+#. module: purchase
+#: model:process.transition,note:purchase.process_transition_createpackinglist0
+msgid "A pick list is generated to track the incoming products."
+msgstr "A pick list is generated to track the incoming products."
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.purchase_rfq
+#: model:ir.ui.menu,name:purchase.menu_purchase_rfq
+#: view:purchase.order:0
+#: view:purchase.report:0
+msgid "Quotations"
+msgstr "Ponude"
+
+#. module: purchase
+#: view:purchase.order.line_invoice:0
+msgid "Do you want to generate the supplier invoices?"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order.line,product_qty:0
+#: view:purchase.report:0
+#: field:purchase.report,quantity:0
+msgid "Quantity"
+msgstr "Količina"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:819
+#, python-format
+msgid "Shipment <em>%s</em> <b>scheduled</b> for %s."
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,fiscal_position:0
+msgid "Fiscal Position"
+msgstr "Fiskalna pozicija"
+
+#. module: purchase
+#: field:purchase.config.settings,default_invoice_method:0
+msgid "Default invoicing control method"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_stock_picking_in
+#: model:ir.ui.menu,name:purchase.menu_action_picking_tree4
+#: view:purchase.order:0
+msgid "Incoming Shipments"
+msgstr "Primke"
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    Click here to record a supplier invoice.\n"
+"                </p><p>\n"
+"                    Supplier invoices can be pre-generated based on "
+"purchase\n"
+"                    orders or receptions. This allows you to control "
+"invoices\n"
+"                    you receive from your supplier according to the draft\n"
+"                    document in OpenERP.\n"
+"                </p>\n"
+"            "
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:0
+#: view:purchase.order.line:0
+msgid "Search Purchase Order"
+msgstr "Traži naloge za nabavu"
+
+#. module: purchase
+#: report:purchase.order:0
+msgid "Date Req."
+msgstr "Datum Zah."
+
+#. module: purchase
+#: view:purchase.order:0
+#: view:purchase.order.line:0
+msgid "Purchase Order Lines"
+msgstr "Stavke naloga za nabavu"
+
+#. module: purchase
+#: help:purchase.order,dest_address_id:0
+msgid ""
+"Put an address if you want to deliver directly from the supplier to the "
+"customer. Otherwise, keep empty to deliver to your own company."
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:824
+#, python-format
+msgid "Draft Invoice of %s %s is <b>waiting for validation</b>."
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.purchase_line_form_action2
+msgid ""
+"<p>\n"
+"                Here you can track all the lines of purchase orders where "
+"the\n"
+"                invoicing is \"Based on Purchase Order Lines\", and for "
+"which you\n"
+"                have not received a supplier invoice yet. You can generate "
+"a\n"
+"                draft supplier invoice based on the lines from this list.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order.line,date_planned:0
+msgid "Scheduled Date"
+msgstr "Planirani datum"
+
+#. module: purchase
+#: field:purchase.order,journal_id:0
+msgid "Journal"
+msgstr "Dnevnik"
+
+#. module: purchase
+#: view:board.board:0
+#: model:ir.actions.act_window,name:purchase.purchase_draft
+msgid "Request for Quotations"
+msgstr "Zahtjev za ponudom"
+
+#. module: purchase
+#: field:purchase.order.line,move_ids:0
+msgid "Reservation"
+msgstr "Reservation"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Purchase orders that include lines not invoiced."
+msgstr ""
+
+#. module: purchase
+#: view:product.product:0
+#: field:product.template,purchase_ok:0
+msgid "Can be Purchased"
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
+msgid "Incoming  Products"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.config.settings:0
+#: view:purchase.order.group:0
+#: view:purchase.order.line_invoice:0
+msgid "or"
+msgstr ""
+
+#. module: purchase
+#: field:res.company,po_lead:0
+msgid "Purchase Lead Time"
+msgstr "Vodeće vrijeme nabave"
+
+#. module: purchase
+#: model:process.transition,note:purchase.process_transition_invoicefrompurchase0
+msgid ""
+"The invoice is created automatically if the Invoice control of the purchase "
+"order is 'On order'. The invoice can also be generated manually by the "
+"accountant (Invoice control = Manual)."
+msgstr ""
+"Ako je 'Fakturiranje' na nalogu postavljeno na 'Temeljem naloga', račun će "
+"se automatski generirati. Račun može izraditi i knjigovođa upisom računa i "
+"stavki kada je 'Fakturiranje' postavljeno na 'Ručno'."
+
+#. module: purchase
+#: view:purchase.config.settings:0
+msgid "Apply"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,amount_untaxed:0
+msgid "Untaxed Amount"
+msgstr "Osnovica"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -26,112 +548,34 @@ msgstr ""
 "becomes a confirmed Purchase Order."
 
 #. module: purchase
-#: model:process.node,note:purchase.process_node_productrecept0
-msgid "Incoming products to control"
-msgstr "Proizvodi koji dolaze na ulaznu kontrolu"
-
-#. module: purchase
-#: field:purchase.order,invoiced:0
-msgid "Invoiced & Paid"
-msgstr "Fakturirano i plaćeno"
-
-#. module: purchase
-#: field:purchase.order,location_id:0 view:purchase.report:0
-#: field:purchase.report,location_id:0
-msgid "Destination"
-msgstr "Odredište"
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:236
-#, python-format
-msgid "In order to delete a purchase order, it must be cancelled first!"
-msgstr "Samo otkazani nalozi se mogu brisati!"
-
-#. module: purchase
-#: help:purchase.report,date:0
-msgid "Date on which this document has been created"
-msgstr "Datum  kreiranja ovog dokumenta"
-
-#. module: purchase
-#: view:purchase.order:0 view:purchase.order.line:0 view:purchase.report:0
-#: view:stock.picking:0
-msgid "Group By..."
-msgstr "Grupiraj po..."
-
-#. module: purchase
-#: field:purchase.order,create_uid:0 view:purchase.report:0
-#: field:purchase.report,user_id:0
-msgid "Responsible"
-msgstr "Odgovoran"
-
-#. module: purchase
-#: model:ir.actions.act_window,help:purchase.purchase_rfq
-msgid ""
-"You can create a request for quotation when you want to buy products to a "
-"supplier but the purchase is not confirmed yet. Use also this menu to review "
-"requests for quotation created automatically based on your logistic rules "
-"(minimum stock, MTO, etc). You can convert the request for quotation into a "
-"purchase order once the order is confirmed. If you use the extended "
-"interface (from user's preferences), you can select the way to control your "
-"supplier invoices: based on the order, based on the receptions or manual "
-"encoding."
+#: view:purchase.order:0
+msgid "Customer Address"
 msgstr ""
-"Zahtjev za ponudom možete kreirati i prije nego što je nalog za nabavu "
-"potvrđen.\n"
-"Ovdje će se naći i zahtjevi za ponudom koje program automatski kreira "
-"temeljem postavke logističkih pravila (minimalne količine, JIT, ...). "
-"Zahtjev za ponudom možete pretvoriti u Nalog za nabavu. Postave na nalogu za "
-"nabavu kontroliraju kreiranje ulaznog računa temeljem naloga ili primki."
+
+#. module: purchase
+#: selection:purchase.order,state:0
+msgid "RFQ Sent"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
-msgid "Approved purchase order"
-msgstr "Potvrđeni nalozi nabave"
+msgid "Not Invoiced"
+msgstr "Nefakturirano"
 
 #. module: purchase
-#: view:purchase.order:0 field:purchase.order,partner_id:0
-#: view:purchase.order.line:0 view:purchase.report:0
+#: view:purchase.order:0
+#: field:purchase.order,partner_id:0
+#: view:purchase.order.line:0
+#: view:purchase.report:0
 #: field:purchase.report,partner_id:0
 msgid "Supplier"
 msgstr "Dobavljač"
 
 #. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
-#: model:ir.ui.menu,name:purchase.menu_purchase_config_pricelist
-msgid "Pricelists"
-msgstr "Cjenici"
-
-#. module: purchase
-#: view:stock.picking:0
-msgid "To Invoice"
-msgstr "Za fakturiranje"
-
-#. module: purchase
-#: view:purchase.order.line_invoice:0
-msgid "Do you want to generate the supplier invoices?"
-msgstr ""
-
-#. module: purchase
-#: model:ir.actions.act_window,help:purchase.purchase_form_action
-msgid ""
-"Use this menu to search within your purchase orders by references, supplier, "
-"products, etc. For each purchase order, you can track the products received, "
-"and control the supplier invoices."
-msgstr ""
-"Nalozi za nabavu po brojevima, dobavljačima, proizvodima, .... \n"
-"Za svaki nalog nabave možete pratiti primljene proizvode i kontrolirati "
-"izradu ulaznih računa."
-
-#. module: purchase
-#: code:addons/purchase/wizard/purchase_line_invoice.py:145
+#: code:addons/purchase/purchase.py:508
 #, python-format
-msgid "Supplier Invoices"
-msgstr "Ulazni računi"
-
-#. module: purchase
-#: view:purchase.report:0
-msgid "Purchase Orders Statistics"
-msgstr "Statistika naloga za nabavu"
+msgid "Define expense account for this company: \"%s\" (id:%d)."
+msgstr ""
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_packinginvoice0
@@ -140,42 +584,516 @@ msgid "From a Pick list"
 msgstr "Sa popisa odabira"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:735
-#, python-format
-msgid "No Pricelist !"
-msgstr "Nema cjenika!"
-
-#. module: purchase
-#: model:ir.model,name:purchase.model_purchase_config_wizard
-msgid "purchase.config.wizard"
-msgstr ""
-
-#. module: purchase
-#: view:board.board:0 model:ir.actions.act_window,name:purchase.purchase_draft
-msgid "Request for Quotations"
-msgstr "Zahtjev za ponudom"
-
-#. module: purchase
-#: selection:purchase.config.wizard,default_method:0
-msgid "Based on Receptions"
-msgstr "Prema primakama"
-
-#. module: purchase
-#: field:purchase.order,company_id:0 field:purchase.order.line,company_id:0
-#: view:purchase.report:0 field:purchase.report,company_id:0
-msgid "Company"
-msgstr "Organizacija"
-
-#. module: purchase
-#: help:res.company,po_lead:0
-msgid "This is the leads/security time for each purchase order."
-msgstr "Ovo je vodeće/rezervno vrijeme za svaki nabavni nalog."
-
-#. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_monthly_categ_graph
 #: view:purchase.report:0
 msgid "Monthly Purchase by Category"
 msgstr "Mjesečne nabave po grupama"
+
+#. module: purchase
+#: field:purchase.order.line,price_subtotal:0
+msgid "Subtotal"
+msgstr "Podzbroj"
+
+#. module: purchase
+#: field:purchase.order,shipped:0
+#: field:purchase.order,shipped_rate:0
+msgid "Received"
+msgstr "Received"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Purchase order which are in draft state"
+msgstr ""
+
+#. module: purchase
+#: view:product.product:0
+msgid "Suppliers"
+msgstr ""
+
+#. module: purchase
+#: view:product.product:0
+msgid "To Purchase"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.purchase_form_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a quotation that will be converted into a "
+"purchase order. \n"
+"              </p><p>\n"
+"                Use this menu to search within your purchase orders by\n"
+"                references, supplier, products, etc. For each purchase "
+"order,\n"
+"                you can track the related discussion with the supplier, "
+"control\n"
+"                the products received and control the supplier invoices.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order.line:0
+msgid "Invoices and Receptions"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.report:0
+#: field:purchase.report,nbr:0
+msgid "# of Lines"
+msgstr "# linija"
+
+#. module: purchase
+#: code:addons/purchase/wizard/purchase_line_invoice.py:110
+#, python-format
+msgid "Define expense account for this product: \"%s\" (id:%d)."
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "(update)"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Calendar View"
+msgstr "Calendar View"
+
+#. module: purchase
+#: help:purchase.order,shipped:0
+msgid "It indicates that a picking has been done"
+msgstr "Označava da je izvršen prijem proizvoda"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:565
+#: code:addons/purchase/purchase.py:572
+#, python-format
+msgid "Unable to cancel this purchase order."
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_procurement_management_invoice
+msgid "Invoice Control"
+msgstr "Kontrola računa"
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.action_stock_move_report_po
+msgid ""
+"Reception Analysis allows you to easily check and analyse your company order "
+"receptions and the performance of your supplier's deliveries."
+msgstr ""
+"Reception Analysis allows you to easily check and analyse your company order "
+"receptions and the performance of your supplier's deliveries."
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Print"
+msgstr "Ispis"
+
+#. module: purchase
+#: field:purchase.order,order_line:0
+msgid "Order Lines"
+msgstr "Stavke naloga"
+
+#. module: purchase
+#: help:purchase.order,name:0
+msgid ""
+"Unique number of the purchase order, computed automatically when the "
+"purchase order is created."
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_config_pricelist
+msgid "Pricelists"
+msgstr "Cjenici"
+
+#. module: purchase
+#: model:product.pricelist.type,name:purchase.pricelist_type_purchase
+#: field:res.partner,property_product_pricelist_purchase:0
+msgid "Purchase Pricelist"
+msgstr "Cjenik nabave"
+
+#. module: purchase
+#: report:purchase.order:0
+msgid "Total :"
+msgstr "Ukupno :"
+
+#. module: purchase
+#: field:purchase.order,pricelist_id:0
+#: field:purchase.report,pricelist_id:0
+msgid "Pricelist"
+msgstr "Pricelist"
+
+#. module: purchase
+#: selection:purchase.order,state:0
+msgid "Draft PO"
+msgstr ""
+
+#. module: purchase
+#: model:process.node,name:purchase.process_node_draftpurchaseorder0
+#: model:process.node,name:purchase.process_node_draftpurchaseorder1
+msgid "RFQ"
+msgstr "ZZP (RFQ)"
+
+#. module: purchase
+#: report:purchase.order:0
+#: view:purchase.order:0
+#: field:purchase.order,date_order:0
+#: field:purchase.order.line,date_order:0
+#: field:purchase.report,date:0
+msgid "Order Date"
+msgstr "Datum naloga"
+
+#. module: purchase
+#: field:purchase.config.settings,group_uom:0
+msgid "Manage different units of measure for products"
+msgstr ""
+
+#. module: purchase
+#: model:process.node,name:purchase.process_node_invoiceafterpacking0
+#: model:process.node,name:purchase.process_node_invoicecontrol0
+msgid "Draft Invoice"
+msgstr "Nacrt računa"
+
+#. module: purchase
+#: help:purchase.order,amount_tax:0
+msgid "The tax amount"
+msgstr "Iznos poreza"
+
+#. module: purchase
+#: selection:purchase.report,month:0
+msgid "September"
+msgstr "Rujan"
+
+#. module: purchase
+#: selection:purchase.report,state:0
+msgid "Waiting Supplier Ack"
+msgstr "Waiting Supplier Ack"
+
+#. module: purchase
+#: report:purchase.quotation:0
+msgid "Request for Quotation :"
+msgstr "Zahtjev za ponudom"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_picking_tree4_picking_to_invoice
+#: model:ir.ui.menu,name:purchase.menu_action_picking_tree4_picking_to_invoice
+msgid "On Incoming Shipments"
+msgstr ""
+
+#. module: purchase
+#: report:purchase.order:0
+msgid "Taxes :"
+msgstr "Taxes :"
+
+#. module: purchase
+#: view:purchase.order.line:0
+msgid "Stock Moves"
+msgstr "Skladišni prijenosi"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:1158
+#, python-format
+msgid "Draft Purchase Order created"
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
+msgid "Product Categories"
+msgstr "Grupe proizvoda"
+
+#. module: purchase
+#: help:purchase.order,invoiced:0
+msgid "It indicates that an invoice has been paid"
+msgstr "Označava da je račun plaćen"
+
+#. module: purchase
+#: field:purchase.order,notes:0
+msgid "Terms and Conditions"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,currency_id:0
+msgid "unknown"
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,date_order:0
+msgid "Date on which this document has been created."
+msgstr "Datum kreiranja ovog dokumenta."
+
+#. module: purchase
+#: field:purchase.order,message_is_follower:0
+msgid "Is a Follower"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_purchase_order_report_graph
+#: view:purchase.report:0
+msgid "Total Qty and Amount by month"
+msgstr "Uk. količina i iznos po mjesecima"
+
+#. module: purchase
+#: view:purchase.report:0
+msgid "Extended Filters..."
+msgstr "Prošireni filtri..."
+
+#. module: purchase
+#: code:addons/purchase/wizard/purchase_order_group.py:48
+#, python-format
+msgid "Please select multiple order to merge in the list view."
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Exception"
+msgstr "Exception"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_partner_cat
+msgid "Address Book"
+msgstr "Adresar"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_res_company
+msgid "Companies"
+msgstr "Organizacije"
+
+#. module: purchase
+#: view:purchase.order.group:0
+msgid "Are you sure you want to merge these orders?"
+msgstr ""
+
+#. module: purchase
+#: field:account.config.settings,module_purchase_analytic_plans:0
+msgid "Use multiple analytic accounts on orders"
+msgstr ""
+
+#. module: purchase
+#: view:product.product:0
+msgid "will be created in order to subcontract the job"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
+#: model:ir.actions.act_window,name:purchase.open_board_purchase
+#: model:ir.ui.menu,name:purchase.menu_board_purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_config
+#: view:res.partner:0
+msgid "Purchases"
+msgstr "Nabava"
+
+#. module: purchase
+#: view:purchase.report:0
+#: field:purchase.report,delay:0
+msgid "Days to Validate"
+msgstr "Dana do potvrde"
+
+#. module: purchase
+#: view:purchase.config.settings:0
+msgid "Supplier Features"
+msgstr ""
+
+#. module: purchase
+#: report:purchase.order:0
+#: report:purchase.quotation:0
+msgid "Qty"
+msgstr "Kol."
+
+#. module: purchase
+#: model:process.transition.action,name:purchase.process_transition_action_approvingcancelpurchaseorder0
+#: model:process.transition.action,name:purchase.process_transition_action_cancelpurchaseorder0
+#: view:purchase.config.settings:0
+#: view:purchase.order:0
+#: view:purchase.order.group:0
+#: view:purchase.order.line_invoice:0
+msgid "Cancel"
+msgstr "Odustani"
+
+#. module: purchase
+#: field:purchase.order,message_comment_ids:0
+#: help:purchase.order,message_comment_ids:0
+msgid "Comments and emails"
+msgstr ""
+
+#. module: purchase
+#: sql_constraint:purchase.order:0
+msgid "Order Reference must be unique per Company!"
+msgstr "Poveznica narudžbe mora biti jedinstvena za organizaciju!"
+
+#. module: purchase
+#: model:process.transition,name:purchase.process_transition_purchaseinvoice0
+msgid "From a purchase order"
+msgstr "Iz naloga za nabavu"
+
+#. module: purchase
+#: model:ir.actions.report.xml,name:purchase.report_purchase_quotation
+#: selection:purchase.report,state:0
+msgid "Request for Quotation"
+msgstr "Zahtjev za ponudom"
+
+#. module: purchase
+#: view:purchase.report:0
+msgid "Order of Month"
+msgstr "Nalozi mjeseca"
+
+#. module: purchase
+#: report:purchase.order:0
+#: field:purchase.order.line,price_unit:0
+msgid "Unit Price"
+msgstr "Jedinična cijena"
+
+#. module: purchase
+#: field:purchase.order,date_approve:0
+#: field:purchase.report,date_approve:0
+msgid "Date Approved"
+msgstr "Datum odobrenja"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:806
+#, python-format
+msgid "Request for quotation <b>created</b>."
+msgstr ""
+
+#. module: purchase
+#: view:product.product:0
+msgid "a draft purchase order"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.report:0
+msgid "Order of Year"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
+msgid "RFQs and Purchases"
+msgstr ""
+
+#. module: purchase
+#: field:account.config.settings,group_analytic_account_for_purchases:0
+#: field:purchase.config.settings,group_analytic_account_for_purchases:0
+msgid "Analytic accounting for purchases"
+msgstr ""
+
+#. module: purchase
+#: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder1
+msgid ""
+"In case there is no supplier for this product, the buyer can fill the form "
+"manually and confirm it. The RFQ becomes a confirmed Purchase Order."
+msgstr ""
+"In case there is no supplier for this product, the buyer can fill the form "
+"manually and confirm it. The RFQ becomes a confirmed Purchase Order."
+
+#. module: purchase
+#: help:purchase.config.settings,group_purchase_pricelist:0
+msgid ""
+"Allows to manage different prices based on rules per category of Supplier.\n"
+"                Example: 10% for retailers, promotion of 5 EUR on this "
+"product, etc."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_mail_mail
+msgid "Outgoing Mails"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:437
+#, python-format
+msgid "You cannot confirm a purchase order without any purchase order line."
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.server,name:purchase.actions_server_purchase_order_unread
+msgid "Purchase: Mark unread"
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,message_ids:0
+msgid "Messages and communication history"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,warehouse_id:0
+#: field:stock.picking.in,warehouse_id:0
+msgid "Destination Warehouse"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:973
+#, python-format
+msgid ""
+"Selected Unit of Measure does not belong to the same category as the product "
+"Unit of Measure."
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_unit_measure_purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
+msgid "Units of Measure"
+msgstr "Jedinice mjere"
+
+#. module: purchase
+#: field:purchase.config.settings,group_purchase_pricelist:0
+msgid "Manage pricelist per supplier"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:833
+#, python-format
+msgid "Purchase Order has been set to <b>draft</b>."
+msgstr ""
+
+#. module: purchase
+#: view:board.board:0
+msgid "Purchase Dashboard"
+msgstr "Upravljačka ploča nabave"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:566
+#, python-format
+msgid "First cancel all receptions related to this purchase order."
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Approve Order"
+msgstr ""
+
+#. module: purchase
+#: help:purchase.report,date:0
+msgid "Date on which this document has been created"
+msgstr "Datum  kreiranja ovog dokumenta"
+
+#. module: purchase
+#: view:purchase.order:0
+#: view:purchase.order.line:0
+#: view:purchase.report:0
+msgid "Group By..."
+msgstr "Grupiraj po..."
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Approved purchase order"
+msgstr "Potvrđeni nalozi nabave"
+
+#. module: purchase
+#: view:purchase.report:0
+msgid "Purchase Orders Statistics"
+msgstr "Statistika naloga za nabavu"
+
+#. module: purchase
+#: view:purchase.order:0
+#: field:purchase.order,message_unread:0
+msgid "Unread Messages"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order.line_invoice:0
+msgid "Select an Open Sale Order"
+msgstr "Odaberite otvoreni prodajni nalog"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -183,25 +1101,535 @@ msgid "Set to Draft"
 msgstr "Postavi na nacrt"
 
 #. module: purchase
-#: selection:purchase.order,state:0 selection:purchase.report,state:0
+#: view:purchase.order.line:0
+msgid "Notes"
+msgstr "Bilješke"
+
+#. module: purchase
+#: field:purchase.config.settings,module_purchase_requisition:0
+msgid "Manage purchase requisitions"
+msgstr ""
+
+#. module: purchase
+#: report:purchase.order:0
+#: field:purchase.order,amount_tax:0
+#: field:purchase.order.line,taxes_id:0
+msgid "Taxes"
+msgstr "Porezi"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_procurement_management_product
+#: model:ir.ui.menu,name:purchase.menu_procurement_partner_contact_form
+#: model:ir.ui.menu,name:purchase.menu_product_in_config_purchase
+msgid "Products"
+msgstr "Proizvodi"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_stock_move
+msgid "Stock Move"
+msgstr "Skladišni prijenosi"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:255
+#, python-format
+msgid "Invalid Action!"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,validator:0
+#: view:purchase.report:0
+msgid "Validated by"
+msgstr "Potvrdio"
+
+#. module: purchase
+#: view:purchase.report:0
+#: field:purchase.report,price_standard:0
+msgid "Products Value"
+msgstr "Products Value"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Purchase orders which are in exception state"
+msgstr "Nalozi u stanju iznimke."
+
+#. module: purchase
+#: model:process.node,note:purchase.process_node_draftpurchaseorder0
+#: model:process.node,note:purchase.process_node_draftpurchaseorder1
+msgid "Request for Quotations."
+msgstr "Zahtjev za ponudom"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Source"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_stock_picking
+#: field:purchase.order,picking_ids:0
+msgid "Picking List"
+msgstr "Skladišni dokument"
+
+#. module: purchase
+#: report:purchase.quotation:0
+msgid "Fax:"
+msgstr "Fax:"
+
+#. module: purchase
+#: help:purchase.order,invoice_ids:0
+msgid "Invoices generated for a purchase order"
+msgstr "Kreirani računi za nalog nabave"
+
+#. module: purchase
+#: selection:purchase.config.settings,default_invoice_method:0
+msgid "Pre-generate draft invoices based on purchase orders"
+msgstr ""
+
+#. module: purchase
+#: help:product.template,purchase_ok:0
+msgid "Specify if the product can be selected in a purchase order line."
+msgstr ""
+
+#. module: purchase
+#: model:process.transition,note:purchase.process_transition_invoicefrompackinglist0
+msgid ""
+"The invoice is created automatically if the Invoice control of the purchase "
+"order is 'On picking'. The invoice can also be generated manually by the "
+"accountant (Invoice control = Manual)."
+msgstr ""
+"Prema polju \"Kontrola računa\" račun će se generirati automatski ako je "
+"\"Kontrola računa\" postavljena na \"Iz primki\" .Račun se može i ručno "
+"upisati ako je \"Kontrola računa\" postavljena na \"Ručno\"."
+
+#. module: purchase
+#: report:purchase.quotation:0
+msgid "Regards,"
+msgstr "Regards,"
+
+#. module: purchase
+#: selection:purchase.report,month:0
+msgid "July"
+msgstr "Srpanj"
+
+#. module: purchase
+#: model:process.node,name:purchase.process_node_packinginvoice0
+msgid "Outgoing Products"
+msgstr "Proizvodi za isporuku"
+
+#. module: purchase
+#: view:product.product:0
+msgid ""
+"to buy the required quantities to the supplier.\n"
+"                        The delivery order will be ready after having "
+"received the\n"
+"                        products."
+msgstr ""
+
+#. module: purchase
+#: view:product.product:0
+msgid ""
+"a draft\n"
+"                        purchase order"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:310
+#, python-format
+msgid "Please create Invoices."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_procurement_order
+msgid "Procurement"
+msgstr "Procurement"
+
+#. module: purchase
+#: selection:purchase.order,state:0
+#: selection:purchase.report,state:0
+msgid "Shipping Exception"
+msgstr "Shipping Exception"
+
+#. module: purchase
+#: selection:purchase.report,month:0
+msgid "March"
+msgstr "Ožujak"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Receive Invoice"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Receive Products"
+msgstr "Prihvat proizvoda"
+
+#. module: purchase
+#: view:purchase.report:0
+#: field:purchase.report,month:0
+msgid "Month"
+msgstr "Mjesec"
+
+#. module: purchase
+#: help:res.company,po_lead:0
+msgid "This is the leads/security time for each purchase order."
+msgstr "Ovo je vodeće/rezervno vrijeme za svaki nabavni nalog."
+
+#. module: purchase
+#: model:process.node,note:purchase.process_node_invoiceafterpacking0
+#: model:process.node,note:purchase.process_node_invoicecontrol0
+msgid "To be reviewed by the accountant."
+msgstr "Potrebna revizija knjigovođe."
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_purchase_config_settings
+msgid "purchase.config.settings"
+msgstr ""
+
+#. module: purchase
+#: model:process.node,note:purchase.process_node_approvepurchaseorder0
+#: model:process.node,note:purchase.process_node_confirmpurchaseorder0
+msgid "State of the Purchase Order."
+msgstr "Stanje naloga za nabavu"
+
+#. module: purchase
+#: field:purchase.order.line,product_uom:0
+msgid "Product Unit of Measure"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.purchase_pricelist_version_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a pricelist version.\n"
+"              </p><p>\n"
+"                There can be more than one version of a pricelist, each of\n"
+"                these must be valid during a certain period of time. Some\n"
+"                examples of versions: Main Prices, 2010, 2011, Summer "
+"Sales,\n"
+"                etc.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_view_purchase_line_invoice
+msgid "Create invoices"
+msgstr "Kreiraj račune"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_purchase_order_line_invoice
+msgid "Purchase Order Line Make Invoice"
+msgstr "Kreiraj račun iz stavki naloga za nabavu"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:1133
+#, python-format
+msgid "PO: %s"
+msgstr "NN: %s"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Send by EMail"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:498
+#, python-format
+msgid "Define purchase journal for this company: \"%s\" (id:%d)."
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Purchase Order "
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order.line:0
+msgid "Manual Invoices"
+msgstr "Ručni računi"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_purchase_configuration
+#: view:purchase.config.settings:0
+msgid "Configure Purchases"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Untaxed"
+msgstr ""
+
+#. module: purchase
+#: model:process.transition,name:purchase.process_transition_createpackinglist0
+msgid "Pick list generated"
+msgstr "Pick list generated"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.purchase_line_form_action2
+#: model:ir.ui.menu,name:purchase.menu_purchase_line_order_draft
+msgid "On Purchase Order Lines"
+msgstr ""
+
+#. module: purchase
+#: report:purchase.quotation:0
+msgid "TVA:"
+msgstr "TVA:"
+
+#. module: purchase
+#: help:purchase.order,picking_ids:0
+msgid ""
+"This is the list of incoming shipments that have been generated for this "
+"purchase order."
+msgstr ""
+
+#. module: purchase
+#: field:purchase.config.settings,module_purchase_double_validation:0
+msgid "Force two levels of approvals"
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase_type
+msgid "Price Types"
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,date_approve:0
+msgid "Date on which purchase order has been approved"
+msgstr "Datum potvrde naloga za nabavu (narudžbenice)."
+
+#. module: purchase
+#: model:process.node,name:purchase.process_node_approvepurchaseorder0
+#: view:purchase.order:0
+#: selection:purchase.report,state:0
+msgid "Approved"
+msgstr "Odobreno"
+
+#. module: purchase
+#: selection:purchase.order,state:0
+#: selection:purchase.order.line,state:0
+#: selection:purchase.report,state:0
+msgid "Done"
+msgstr "Izvršeno"
+
+#. module: purchase
+#: model:process.transition,name:purchase.process_transition_invoicefrompackinglist0
+#: model:process.transition,name:purchase.process_transition_invoicefrompurchase0
+msgid "Invoice"
+msgstr "Račun"
+
+#. module: purchase
+#: model:process.node,note:purchase.process_node_purchaseorder0
+msgid "Confirmed purchase order to invoice"
+msgstr "Potvrđeni nalozi nabave u račun"
+
+#. module: purchase
+#: model:process.node,note:purchase.process_node_productrecept0
+msgid "Incoming products to control"
+msgstr "Proizvodi koji dolaze na ulaznu kontrolu"
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.purchase_rfq
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a request for quotation.\n"
+"              </p><p>\n"
+"                The quotation contains the history of the "
+"discussion/negociation\n"
+"                you had with your supplier. Once confirmed, a request for\n"
+"                quotation is converted into a purchase order.\n"
+"              </p><p>\n"
+"                Most propositions of purchase orders are created "
+"automatically\n"
+"                by OpenERP based on inventory needs.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: purchase
+#: model:process.transition,note:purchase.process_transition_approvingpurchaseorder0
+msgid "The supplier approves the Purchase Order."
+msgstr "Dobavljač odobrava narudžbenicu."
+
+#. module: purchase
+#: code:addons/purchase/wizard/purchase_order_group.py:80
+#: model:ir.actions.act_window,name:purchase.purchase_form_action
+#: model:ir.ui.menu,name:purchase.menu_purchase_form_action
+#: view:purchase.order:0
+#: view:purchase.report:0
+#: view:res.partner:0
+#, python-format
+msgid "Purchase Orders"
+msgstr "Nalozi za nabavu"
+
+#. module: purchase
+#: field:purchase.order,origin:0
+msgid "Source Document"
+msgstr "Izvorni dokument"
+
+#. module: purchase
+#: view:purchase.order.group:0
+msgid "Merge orders"
+msgstr "Spoji naloge"
+
+#. module: purchase
+#: field:purchase.config.settings,module_purchase_analytic_plans:0
+msgid "Use multiple analytic accounts on purchase orders"
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_procurement_management
+#: model:process.process,name:purchase.process_process_purchaseprocess0
+msgid "Purchase"
+msgstr "Nabava"
+
+#. module: purchase
+#: field:purchase.order,create_uid:0
+#: view:purchase.report:0
+#: field:purchase.report,user_id:0
+msgid "Responsible"
+msgstr "Odgovoran"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Manually Corrected"
+msgstr "Ručno ispravljeno"
+
+#. module: purchase
+#: field:purchase.config.settings,group_costing_method:0
+msgid "Compute product cost price based on average cost"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:340
+#: code:addons/purchase/wizard/purchase_line_invoice.py:141
+#: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
+#: view:res.partner:0
+#, python-format
+msgid "Supplier Invoices"
+msgstr "Ulazni računi"
+
+#. module: purchase
+#: field:purchase.order,product_id:0
+#: view:purchase.order.line:0
+#: field:purchase.order.line,product_id:0
+#: view:purchase.report:0
+#: field:purchase.report,product_id:0
+msgid "Product"
+msgstr "Proizvod"
+
+#. module: purchase
+#: model:process.transition,name:purchase.process_transition_confirmingpurchaseorder0
+#: model:process.transition,name:purchase.process_transition_confirmingpurchaseorder1
+msgid "Confirmation"
+msgstr "Confirmation"
+
+#. module: purchase
+#: report:purchase.order:0
+msgid "TIN :"
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_by_category_purchase_form
+msgid "Products by Category"
+msgstr "Proizvodi po kategorijama"
+
+#. module: purchase
+#: help:purchase.order.line,state:0
+msgid ""
+" * The 'Draft' status is set automatically when purchase order in draft "
+"status.                                        \n"
+"* The 'Confirmed' status is set automatically as confirm when purchase order "
+"in confirm status.                                        \n"
+"* The 'Done' status is set automatically when purchase order is set as done. "
+"                                       \n"
+"* The 'Cancelled' status is set automatically when user cancel purchase "
+"order."
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,invoiced:0
+msgid "Invoice Received"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,invoice_method:0
+msgid "Invoicing Control"
+msgstr "Kontrola računa"
+
+#. module: purchase
+#: model:process.transition.action,name:purchase.process_transition_action_approvingpurchaseorder0
+msgid "Approve"
+msgstr "Odobri"
+
+#. module: purchase
+#: view:purchase.report:0
+msgid "Reference UOM"
+msgstr "Referentna JM"
+
+#. module: purchase
+#: selection:purchase.report,month:0
+msgid "May"
+msgstr "Svibanj"
+
+#. module: purchase
+#: model:res.groups,name:purchase.group_purchase_manager
+msgid "Manager"
+msgstr "Voditelj"
+
+#. module: purchase
+#: selection:purchase.order,invoice_method:0
+msgid "Based on Purchase Order lines"
+msgstr "Prema stavkama naloga za nabavu"
+
+#. module: purchase
+#: field:purchase.order,amount_total:0
+msgid "Total"
+msgstr "Ukupno"
+
+#. module: purchase
+#: help:account.config.settings,module_purchase_analytic_plans:0
+#: help:purchase.config.settings,module_purchase_analytic_plans:0
+msgid ""
+"Allows the user to maintain several analysis plans. These let you split "
+"lines on a purchase order between several accounts and analytic plans.\n"
+"                This installs the module purchase_analytic_plans."
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,location_id:0
+#: view:purchase.report:0
+#: field:purchase.report,location_id:0
+msgid "Destination"
+msgstr "Odredište"
+
+#. module: purchase
+#: field:purchase.order,dest_address_id:0
+msgid "Customer Address (Direct Delivery)"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.client,name:purchase.action_client_purchase_menu
+msgid "Open Purchase Menu"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_mail_compose_message
+msgid "Email composition wizard"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,company_id:0
+#: field:purchase.order.line,company_id:0
+#: view:purchase.report:0
+#: field:purchase.report,company_id:0
+msgid "Company"
+msgstr "Organizacija"
+
+#. module: purchase
+#: selection:purchase.order,state:0
+#: selection:purchase.report,state:0
 msgid "Invoice Exception"
 msgstr "Iznimka računa"
-
-#. module: purchase
-#: model:product.pricelist,name:purchase.list0
-msgid "Default Purchase Pricelist"
-msgstr "Uobičajeni cjenik nabave"
-
-#. module: purchase
-#: help:purchase.order,dest_address_id:0
-msgid ""
-"Put an address if you want to deliver directly from the supplier to the "
-"customer.In this case, it will remove the warehouse link and set the "
-"customer location."
-msgstr ""
-"Put an address if you want to deliver directly from the supplier to the "
-"customer.In this case, it will remove the warehouse link and set the "
-"customer location."
 
 #. module: purchase
 #: help:res.partner,property_product_pricelist_purchase:0
@@ -218,34 +1646,14 @@ msgid "Fax :"
 msgstr "Fax :"
 
 #. module: purchase
-#: view:purchase.order:0
-msgid "To Approve"
-msgstr "Za odobriti"
-
-#. module: purchase
-#: view:res.partner:0
-msgid "Purchase Properties"
-msgstr "Svojstva nabave"
-
-#. module: purchase
 #: model:ir.model,name:purchase.model_stock_partial_picking
 msgid "Partial Picking Processing Wizard"
 msgstr "Parcijalno zaprimanje"
 
 #. module: purchase
-#: view:purchase.order.line:0
-msgid "History"
-msgstr "Povijest"
-
-#. module: purchase
-#: view:purchase.order:0
-msgid "Approve Purchase"
-msgstr "Odobri nabavu"
-
-#. module: purchase
-#: view:purchase.report:0 field:purchase.report,day:0
-msgid "Day"
-msgstr "Dan"
+#: model:product.pricelist.version,name:purchase.ver0
+msgid "Default Purchase Pricelist Version"
+msgstr "Verzija uobičajenog cjenika nabave"
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
@@ -253,62 +1661,40 @@ msgid "Based on generated draft invoice"
 msgstr "Prema generiranim nacrtima ul. računa"
 
 #. module: purchase
-#: view:purchase.report:0
-msgid "Order of Day"
-msgstr "narudžebe dana"
+#: model:ir.actions.act_window,name:purchase.action_stock_move_report_po
+#: model:ir.ui.menu,name:purchase.menu_action_stock_move_report_po
+msgid "Receptions Analysis"
+msgstr "Analiza primki"
 
 #. module: purchase
-#: view:board.board:0
-msgid "Monthly Purchases by Category"
-msgstr "Nabave po mjesecima i grupi"
-
-#. module: purchase
-#: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
-msgid "Purchases"
-msgstr "Nabava"
-
-#. module: purchase
-#: view:purchase.order:0
-msgid "Purchase order which are in draft state"
+#: field:purchase.order,message_ids:0
+msgid "Messages"
 msgstr ""
-
-#. module: purchase
-#: view:purchase.order:0
-msgid "Origin"
-msgstr "Izvor"
-
-#. module: purchase
-#: view:purchase.order:0 field:purchase.order,notes:0
-#: view:purchase.order.line:0 field:purchase.order.line,notes:0
-msgid "Notes"
-msgstr "Bilješke"
-
-#. module: purchase
-#: selection:purchase.report,month:0
-msgid "September"
-msgstr "Rujan"
-
-#. module: purchase
-#: report:purchase.order:0 field:purchase.order,amount_tax:0
-#: view:purchase.order.line:0 field:purchase.order.line,taxes_id:0
-msgid "Taxes"
-msgstr "Porezi"
 
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.report_purchase_order
 #: model:ir.model,name:purchase.model_purchase_order
 #: model:process.node,name:purchase.process_node_purchaseorder0
-#: field:procurement.order,purchase_id:0 view:purchase.order:0
+#: field:procurement.order,purchase_id:0
+#: view:purchase.config.settings:0
+#: view:purchase.order:0
+#: selection:purchase.order,state:0
+#: field:res.partner,purchase_order_ids:0
 #: model:res.request.link,name:purchase.req_link_purchase_order
 #: field:stock.picking,purchase_id:0
+#: field:stock.picking.in,purchase_id:0
 msgid "Purchase Order"
 msgstr "Nalog za nabavu"
 
 #. module: purchase
-#: field:purchase.order,name:0 view:purchase.order.line:0
-#: field:purchase.order.line,order_id:0
-msgid "Order Reference"
-msgstr "Broj naloga"
+#: code:addons/purchase/purchase.py:310
+#: code:addons/purchase/purchase.py:437
+#: code:addons/purchase/purchase.py:497
+#: code:addons/purchase/purchase.py:508
+#: code:addons/purchase/wizard/purchase_line_invoice.py:109
+#, python-format
+msgid "Error!"
+msgstr ""
 
 #. module: purchase
 #: report:purchase.order:0
@@ -316,17 +1702,15 @@ msgid "Net Total :"
 msgstr "Net Total :"
 
 #. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_procurement_management_product
-#: model:ir.ui.menu,name:purchase.menu_procurement_partner_contact_form
-#: model:ir.ui.menu,name:purchase.menu_product_in_config_purchase
-msgid "Products"
-msgstr "Proizvodi"
-
-#. module: purchase
-#: model:ir.actions.act_window,name:purchase.action_purchase_order_report_graph
-#: view:purchase.report:0
-msgid "Total Qty and Amount by month"
-msgstr "Uk. količina i iznos po mjesecima"
+#: help:purchase.order,state:0
+msgid ""
+"The status of the purchase order or the quotation request. A quotation is a "
+"purchase order in a 'Draft' status. Then the order has to be confirmed by "
+"the user, the status switch to 'Confirmed'. Then the supplier must confirm "
+"the order to change the status to 'Approved'. When the purchase order is "
+"paid and received, the status becomes 'Done'. If a cancel action occurs in "
+"the invoice or in the reception of goods, the status becomes in exception."
+msgstr ""
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_packinginvoice0
@@ -338,117 +1722,32 @@ msgstr ""
 "račun se kreira na temelju primljenih ili naručenih količina."
 
 #. module: purchase
-#: selection:purchase.order,state:0 selection:purchase.order.line,state:0
+#: selection:purchase.order,state:0
+#: selection:purchase.order.line,state:0
 #: selection:purchase.report,state:0
 msgid "Cancelled"
 msgstr "Otkazani"
 
 #. module: purchase
-#: view:purchase.order:0
-msgid "Convert to Purchase Order"
-msgstr "U nalog za nabavu"
-
-#. module: purchase
-#: field:purchase.order,pricelist_id:0 field:purchase.report,pricelist_id:0
-msgid "Pricelist"
-msgstr "Pricelist"
-
-#. module: purchase
-#: selection:purchase.order,state:0 selection:purchase.report,state:0
-msgid "Shipping Exception"
-msgstr "Shipping Exception"
-
-#. module: purchase
-#: field:purchase.order.line,invoice_lines:0
-msgid "Invoice Lines"
-msgstr "Stavke računa"
-
-#. module: purchase
-#: model:process.node,name:purchase.process_node_packinglist0
-#: model:process.node,name:purchase.process_node_productrecept0
-msgid "Incoming Products"
-msgstr "Ulaz proizvoda"
-
-#. module: purchase
-#: model:process.node,name:purchase.process_node_packinginvoice0
-msgid "Outgoing Products"
-msgstr "Proizvodi za isporuku"
-
-#. module: purchase
-#: view:purchase.order:0
-msgid "Manually Corrected"
-msgstr "Ručno ispravljeno"
-
-#. module: purchase
-#: view:purchase.order:0
-msgid "Reference"
-msgstr "Vezna oznaka"
-
-#. module: purchase
-#: model:ir.model,name:purchase.model_stock_move
-msgid "Stock Move"
-msgstr "Skladišni prijenosi"
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:419
-#, python-format
-msgid "You must first cancel all invoices related to this purchase order."
+#: field:res.partner,purchase_order_count:0
+msgid "# of Purchase Order"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.report,dest_address_id:0
-msgid "Dest. Address Contact Name"
-msgstr "Ime kontakta na odredištu"
-
-#. module: purchase
-#: report:purchase.order:0
-msgid "TVA :"
-msgstr "TVA :"
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:326
+#: code:addons/purchase/purchase.py:827
 #, python-format
-msgid "Purchase order '%s' has been set in draft state."
+msgid "Shipment <b>received</b>."
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order.line,account_analytic_id:0
-msgid "Analytic Account"
-msgstr "Konto analitike"
+#: report:purchase.quotation:0
+msgid "Tel.:"
+msgstr "Tel.:"
 
 #. module: purchase
-#: view:purchase.report:0 field:purchase.report,nbr:0
-msgid "# of Lines"
-msgstr "# linija"
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:754 code:addons/purchase/purchase.py:769
-#: code:addons/purchase/purchase.py:772
-#: code:addons/purchase/wizard/purchase_order_group.py:47
-#, python-format
-msgid "Warning"
-msgstr "Upozoranje"
-
-#. module: purchase
-#: field:purchase.order,validator:0 view:purchase.report:0
-msgid "Validated by"
-msgstr "Potvrdio"
-
-#. module: purchase
-#: view:purchase.report:0
-msgid "Order in last month"
-msgstr "Nalozi - prošli mjesec"
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:412
-#, python-format
-msgid "You must first cancel all receptions related to this purchase order."
-msgstr "Postoje neotkazane primke vezane na ovaj nalog."
-
-#. module: purchase
-#: selection:purchase.order.line,state:0
-msgid "Draft"
-msgstr "Nacrt"
+#: view:purchase.order:0
+msgid "Resend Purchase Order"
+msgstr ""
 
 #. module: purchase
 #: report:purchase.order:0
@@ -456,45 +1755,11 @@ msgid "Net Price"
 msgstr "Net Cijena"
 
 #. module: purchase
+#: model:ir.model,name:purchase.model_purchase_order_line
 #: view:purchase.order.line:0
-msgid "Order Line"
-msgstr "Stavka naloga"
-
-#. module: purchase
-#: help:purchase.order,shipped:0
-msgid "It indicates that a picking has been done"
-msgstr "Označava da je izvršen prijem proizvoda"
-
-#. module: purchase
-#: view:purchase.order:0
-msgid "Purchase orders which are in exception state"
-msgstr "Nalozi u stanju iznimke."
-
-#. module: purchase
-#: report:purchase.order:0 field:purchase.report,validator:0
-msgid "Validated By"
-msgstr "Potvrđeno od strane"
-
-#. module: purchase
-#: model:process.node,name:purchase.process_node_confirmpurchaseorder0
-#: selection:purchase.order.line,state:0
-msgid "Confirmed"
-msgstr "Potvrđeno"
-
-#. module: purchase
-#: view:purchase.report:0 field:purchase.report,price_average:0
-msgid "Average Price"
-msgstr "Prosječna cijena"
-
-#. module: purchase
-#: view:stock.picking:0
-msgid "Incoming Shipments already processed"
-msgstr ""
-
-#. module: purchase
-#: report:purchase.order:0
-msgid "Total :"
-msgstr "Ukupno :"
+#: field:stock.move,purchase_line_id:0
+msgid "Purchase Order Line"
+msgstr "Stavka naloga nabave"
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_confirmpurchaseorder0
@@ -503,16 +1768,9 @@ msgid "Confirm"
 msgstr "Potvrdi"
 
 #. module: purchase
-#: model:ir.actions.act_window,name:purchase.action_picking_tree4_picking_to_invoice
-#: model:ir.ui.menu,name:purchase.menu_action_picking_tree4_picking_to_invoice
-#: selection:purchase.order,invoice_method:0
+#: selection:purchase.config.settings,default_invoice_method:0
 msgid "Based on receptions"
 msgstr "Prema primkama"
-
-#. module: purchase
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "Pogreška! Ne možete kreirati rekurzivne organizacije."
 
 #. module: purchase
 #: field:purchase.order,partner_ref:0
@@ -530,138 +1788,25 @@ msgstr ""
 "nabave, račun se izrađuje na temelju primljenih ili naručenih količina."
 
 #. module: purchase
-#: model:ir.actions.act_window,help:purchase.purchase_line_form_action2
+#: field:purchase.order,message_follower_ids:0
+msgid "Followers"
+msgstr ""
+
+#. module: purchase
+#: help:purchase.config.settings,module_purchase_requisition:0
 msgid ""
-"If you set the Invoicing Control on a purchase order as \"Based on Purchase "
-"Order lines\", you can track here all the purchase order lines for which you "
-"have not yet received the supplier invoice. Once you are ready to receive a "
-"supplier invoice, you can generate a draft supplier invoice based on the "
-"lines from this menu."
+"Purchase Requisitions are used when you want to request quotations from "
+"several suppliers for a given set of products.\n"
+"            You can configure per product if you directly do a Request for "
+"Quotation\n"
+"            to one supplier or if you want a purchase requisition to "
+"negotiate with several suppliers."
 msgstr ""
 
 #. module: purchase
-#: view:purchase.order:0
-msgid "Purchase order which are in the exception state"
-msgstr ""
-
-#. module: purchase
-#: model:ir.actions.act_window,help:purchase.action_stock_move_report_po
-msgid ""
-"Reception Analysis allows you to easily check and analyse your company order "
-"receptions and the performance of your supplier's deliveries."
-msgstr ""
-"Reception Analysis allows you to easily check and analyse your company order "
-"receptions and the performance of your supplier's deliveries."
-
-#. module: purchase
-#: report:purchase.quotation:0
-msgid "Tel.:"
-msgstr "Tel.:"
-
-#. module: purchase
-#: model:ir.model,name:purchase.model_stock_picking
-#: field:purchase.order,picking_ids:0
-msgid "Picking List"
-msgstr "Skladišni dokument"
-
-#. module: purchase
-#: view:purchase.order:0
-msgid "Print"
-msgstr "Ispis"
-
-#. module: purchase
-#: model:ir.actions.act_window,name:purchase.action_view_purchase_order_group
-msgid "Merge Purchase orders"
-msgstr "Spoji naloge za nabavu"
-
-#. module: purchase
-#: field:purchase.order,order_line:0
-msgid "Order Lines"
-msgstr "Stavke naloga"
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:737
-#, python-format
-msgid "No Partner!"
-msgstr "Nema partnera!"
-
-#. module: purchase
-#: report:purchase.quotation:0
-msgid "Fax:"
-msgstr "Fax:"
-
-#. module: purchase
-#: view:purchase.report:0 field:purchase.report,price_total:0
-msgid "Total Price"
-msgstr "Ukupna cijena"
-
-#. module: purchase
-#: model:ir.actions.act_window,name:purchase.action_import_create_supplier_installer
-msgid "Create or Import Suppliers"
-msgstr "Kreiraj ili uvezi dobavljače"
-
-#. module: purchase
-#: view:stock.picking:0
-msgid "Available"
-msgstr "Dostupno"
-
-#. module: purchase
-#: field:purchase.report,partner_address_id:0
-msgid "Address Contact Name"
-msgstr "Address Contact Name"
-
-#. module: purchase
-#: report:purchase.order:0
-msgid "Shipping address :"
-msgstr "Shipping address :"
-
-#. module: purchase
-#: help:purchase.order,invoice_ids:0
-msgid "Invoices generated for a purchase order"
-msgstr "Kreirani računi za nalog nabave"
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:285 code:addons/purchase/purchase.py:348
-#: code:addons/purchase/purchase.py:359
-#: code:addons/purchase/wizard/purchase_line_invoice.py:111
-#, python-format
-msgid "Error !"
-msgstr "Greška !"
-
-#. module: purchase
-#: constraint:stock.move:0
-msgid "You can not move products from or to a location of the type view."
-msgstr ""
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:737
-#, python-format
-msgid ""
-"You have to select a partner in the purchase form !\n"
-"Please set one partner before choosing a product."
-msgstr ""
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:349
-#, python-format
-msgid "There is no purchase journal defined for this company: \"%s\" (id:%d)"
-msgstr ""
-
-#. module: purchase
-#: model:process.transition,note:purchase.process_transition_invoicefrompackinglist0
-msgid ""
-"The invoice is created automatically if the Invoice control of the purchase "
-"order is 'On picking'. The invoice can also be generated manually by the "
-"accountant (Invoice control = Manual)."
-msgstr ""
-"Prema polju \"Kontrola računa\" račun će se generirati automatski ako je "
-"\"Kontrola računa\" postavljena na \"Iz primki\" .Račun se može i ručno "
-"upisati ako je \"Kontrola računa\" postavljena na \"Ručno\"."
-
-#. module: purchase
-#: report:purchase.order:0
-msgid "Purchase Order Confirmation N°"
-msgstr "Potvrda naloga za nabavu br."
+#: field:purchase.order.line,invoice_lines:0
+msgid "Invoice Lines"
+msgstr "Stavke računa"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_purchase_order_report_all
@@ -675,26 +1820,15 @@ msgstr ""
 "negotiation performance, the delivery performance of your suppliers, etc."
 
 #. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_configuration_misc
-msgid "Miscellaneous"
-msgstr "Ostalo"
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:769
-#, python-format
-msgid "The selected supplier only sells this product by %s"
+#: model:email.template,report_name:purchase.email_template_edi_purchase
+msgid "RFQ_${(object.name or '').replace('/','_')}"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.report:0
-msgid "Reference UOM"
-msgstr "Referentna JM"
-
-#. module: purchase
-#: field:purchase.order.line,product_qty:0 view:purchase.report:0
-#: field:purchase.report,quantity:0
-msgid "Quantity"
-msgstr "Količina"
+#: code:addons/purchase/purchase.py:988
+#, python-format
+msgid "The selected supplier only sells this product by %s"
+msgstr ""
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_invoicefrompurchaseorder0
@@ -702,170 +1836,54 @@ msgid "Create invoice"
 msgstr "Kreiraj račun"
 
 #. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_purchase_unit_measure_purchase
-#: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
-msgid "Units of Measure"
-msgstr "Jedinice mjere"
-
-#. module: purchase
 #: field:purchase.order.line,move_dest_id:0
 msgid "Reservation Destination"
 msgstr "Reservation Destination"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:236
-#, python-format
-msgid "Invalid action !"
-msgstr "Pogrešna akcija!"
-
-#. module: purchase
-#: field:purchase.order,fiscal_position:0
-msgid "Fiscal Position"
-msgstr "Fiskalna pozicija"
-
-#. module: purchase
-#: selection:purchase.report,month:0
-msgid "July"
-msgstr "Srpanj"
-
-#. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config_purchase
-#: view:res.company:0
 msgid "Configuration"
 msgstr "Postava"
 
 #. module: purchase
-#: view:purchase.order:0
-msgid "Total amount"
-msgstr "Ukupni iznos"
-
-#. module: purchase
-#: model:ir.actions.act_window,name:purchase.act_purchase_order_2_stock_picking
-msgid "Receptions"
-msgstr "Primke"
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:285
-#, python-format
-msgid "You cannot confirm a purchase order without any lines."
-msgstr ""
-
-#. module: purchase
-#: model:ir.actions.act_window,help:purchase.action_invoice_pending
+#: help:purchase.config.settings,module_purchase_double_validation:0
 msgid ""
-"Use this menu to control the invoices to be received from your supplier. "
-"OpenERP pregenerates draft invoices from your purchase orders or receptions, "
-"according to your settings. Once you receive a supplier invoice, you can "
-"match it with the draft invoice and validate it."
+"Provide a double validation mechanism for purchases exceeding minimum "
+"amount.\n"
+"                This installs the module purchase_double_validation."
 msgstr ""
-"Ovdje kontrolirate ulazne račune koje očekujete od dobavljača. OpenERP "
-"automatski kreira nacrte ulaznih računa iz naloga za nabavu i/ili primki. "
-"Kada primite originalni ulazni račun od dobavljača usporedite ga s nacrtom i "
-"potvrdite ga."
 
 #. module: purchase
-#: model:process.node,name:purchase.process_node_draftpurchaseorder0
-#: model:process.node,name:purchase.process_node_draftpurchaseorder1
-msgid "RFQ"
-msgstr "ZZP (RFQ)"
-
-#. module: purchase
-#: code:addons/purchase/edi/purchase_order.py:139
+#: code:addons/purchase/edi/purchase_order.py:132
 #, python-format
 msgid "EDI Pricelist (%s)"
 msgstr "EDI Cjenik (%s)"
 
 #. module: purchase
-#: selection:purchase.order,state:0
-msgid "Waiting Approval"
-msgstr "Waiting Approval"
-
-#. module: purchase
-#: selection:purchase.report,month:0
-msgid "January"
-msgstr "Siječanj"
-
-#. module: purchase
-#: model:ir.actions.server,name:purchase.ir_actions_server_edi_purchase
-msgid "Auto-email confirmed purchase orders"
-msgstr "Auto-email potvrđene naloge nabave"
-
-#. module: purchase
-#: model:process.transition,name:purchase.process_transition_approvingpurchaseorder0
-msgid "Approbation"
-msgstr "Approbation"
-
-#. module: purchase
-#: report:purchase.order:0 view:purchase.order:0
-#: field:purchase.order,date_order:0 field:purchase.order.line,date_order:0
-#: field:purchase.report,date:0 view:stock.picking:0
-msgid "Order Date"
-msgstr "Datum naloga"
-
-#. module: purchase
-#: constraint:stock.move:0
-msgid "You must assign a production lot for this product"
-msgstr "Morate pridijeliti lot proizvodnje ovom proizvodu"
-
-#. module: purchase
-#: model:ir.model,name:purchase.model_res_partner
-#: field:purchase.order.line,partner_id:0 view:stock.picking:0
-msgid "Partner"
-msgstr "Partner"
-
-#. module: purchase
-#: model:process.node,name:purchase.process_node_invoiceafterpacking0
-#: model:process.node,name:purchase.process_node_invoicecontrol0
-msgid "Draft Invoice"
-msgstr "Nacrt računa"
-
-#. module: purchase
-#: report:purchase.order:0 report:purchase.quotation:0
-msgid "Qty"
-msgstr "Kol."
-
-#. module: purchase
 #: view:purchase.report:0
-msgid "Month-1"
-msgstr "Mjesec-1"
-
-#. module: purchase
-#: help:purchase.order,minimum_planned_date:0
-msgid ""
-"This is computed as the minimum scheduled date of all purchase order lines' "
-"products."
+#: field:purchase.report,product_uom:0
+msgid "Reference Unit of Measure"
 msgstr ""
-"This is computed as the minimum scheduled date of all purchase order lines' "
-"products."
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_purchase_order_group
-msgid "Purchase Order Merge"
-msgstr "Spajanje naloga za nabavu"
+#: model:process.node,note:purchase.process_node_packinginvoice0
+msgid "Outgoing products to invoice"
+msgstr "Nefakturirani izlaz"
 
 #. module: purchase
 #: view:purchase.report:0
-msgid "Order in  current month"
-msgstr "Nalozi ovaj mjesec"
-
-#. module: purchase
-#: view:purchase.report:0 field:purchase.report,delay_pass:0
+#: field:purchase.report,delay_pass:0
 msgid "Days to Deliver"
 msgstr "Dana za isporuku"
 
 #. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
-#: model:ir.ui.menu,name:purchase.menu_procurement_management_inventory
-msgid "Receive Products"
-msgstr "Prihvat proizvoda"
+#: selection:purchase.report,month:0
+msgid "April"
+msgstr "Travanj"
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_procurement_order
-msgid "Procurement"
-msgstr "Procurement"
-
-#. module: purchase
-#: view:purchase.order:0 field:purchase.order,invoice_ids:0
+#: view:purchase.order:0
+#: field:purchase.order,invoice_ids:0
 msgid "Invoices"
 msgstr "Računi"
 
@@ -875,148 +1893,9 @@ msgid "December"
 msgstr "Prosinac"
 
 #. module: purchase
-#: field:purchase.config.wizard,config_logo:0
-msgid "Image"
-msgstr "Slika"
-
-#. module: purchase
 #: view:purchase.report:0
 msgid "Total Orders Lines by User per month"
 msgstr "Ukupan broj redaka naloga korisnika po mjesecu."
-
-#. module: purchase
-#: view:purchase.order:0
-msgid "Approved purchase orders"
-msgstr "Potvrđeni nalozi"
-
-#. module: purchase
-#: view:purchase.report:0 field:purchase.report,month:0
-msgid "Month"
-msgstr "Mjesec"
-
-#. module: purchase
-#: model:email.template,subject:purchase.email_template_edi_purchase
-msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
-msgstr "${object.company_id.name} Narudžba (Ref ${object.name or 'n/a' })"
-
-#. module: purchase
-#: report:purchase.quotation:0
-msgid "Request for Quotation :"
-msgstr "Zahtjev za ponudom"
-
-#. module: purchase
-#: model:ir.actions.act_window,name:purchase.purchase_waiting
-msgid "Purchase Order Waiting Approval"
-msgstr "Nalozi za nabavu koje čekaju potvrdu"
-
-#. module: purchase
-#: view:purchase.order:0
-msgid "Total Untaxed amount"
-msgstr "Uk. osnovica"
-
-#. module: purchase
-#: model:res.groups,name:purchase.group_purchase_user
-msgid "User"
-msgstr "Korisnik"
-
-#. module: purchase
-#: field:purchase.order,shipped:0 field:purchase.order,shipped_rate:0
-msgid "Received"
-msgstr "Received"
-
-#. module: purchase
-#: model:process.node,note:purchase.process_node_packinglist0
-msgid "List of ordered products."
-msgstr "List of ordered products."
-
-#. module: purchase
-#: help:purchase.order,picking_ids:0
-msgid ""
-"This is the list of picking list that have been generated for this purchase"
-msgstr "Ovo je popis primki nastalih ovom nabavom"
-
-#. module: purchase
-#: view:stock.picking:0
-msgid "Is a Back Order"
-msgstr "Zaostala narudžba"
-
-#. module: purchase
-#: model:process.node,note:purchase.process_node_invoiceafterpacking0
-#: model:process.node,note:purchase.process_node_invoicecontrol0
-msgid "To be reviewed by the accountant."
-msgstr "Potrebna revizija knjigovođe."
-
-#. module: purchase
-#: help:purchase.order,amount_total:0
-msgid "The total amount"
-msgstr "Ukupan iznos"
-
-#. module: purchase
-#: report:purchase.order:0
-msgid "Taxes :"
-msgstr "Taxes :"
-
-#. module: purchase
-#: field:purchase.order,invoiced_rate:0 field:purchase.order.line,invoiced:0
-msgid "Invoiced"
-msgstr "Fakturirano"
-
-#. module: purchase
-#: view:purchase.report:0 field:purchase.report,category_id:0
-msgid "Category"
-msgstr "Grupa"
-
-#. module: purchase
-#: model:process.node,note:purchase.process_node_approvepurchaseorder0
-#: model:process.node,note:purchase.process_node_confirmpurchaseorder0
-msgid "State of the Purchase Order."
-msgstr "Stanje naloga za nabavu"
-
-#. module: purchase
-#: field:purchase.order,dest_address_id:0
-msgid "Destination Address"
-msgstr "Adresa isporuke"
-
-#. module: purchase
-#: field:purchase.report,state:0
-msgid "Order State"
-msgstr "Stanje naloga"
-
-#. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
-msgid "Product Categories"
-msgstr "Grupe proizvoda"
-
-#. module: purchase
-#: selection:purchase.config.wizard,default_method:0
-msgid "Pre-Generate Draft Invoices based on Purchase Orders"
-msgstr ""
-
-#. module: purchase
-#: model:ir.actions.act_window,name:purchase.action_view_purchase_line_invoice
-msgid "Create invoices"
-msgstr "Kreiraj račune"
-
-#. module: purchase
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr "Naziv organizacije mora biti jedinstven!"
-
-#. module: purchase
-#: model:ir.model,name:purchase.model_purchase_order_line
-#: view:purchase.order.line:0 field:stock.move,purchase_line_id:0
-msgid "Purchase Order Line"
-msgstr "Stavka naloga nabave"
-
-#. module: purchase
-#: view:purchase.order:0
-msgid "Calendar View"
-msgstr "Calendar View"
-
-#. module: purchase
-#: selection:purchase.config.wizard,default_method:0
-msgid "Based on Purchase Order Lines"
-msgstr "Prema stavkama naloga za nabavu"
 
 #. module: purchase
 #: help:purchase.order,amount_untaxed:0
@@ -1024,104 +1903,56 @@ msgid "The amount without tax"
 msgstr "Iznos osnovice."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:754
-#, python-format
-msgid "Selected UOM does not belong to the same category as the product UOM"
+#: model:process.node,note:purchase.process_node_packinglist0
+msgid "List of ordered products."
+msgstr "List of ordered products."
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Incoming Shipments & Invoices"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:907
-#, python-format
-msgid "PO: %s"
-msgstr "NN: %s"
+#: selection:purchase.order,state:0
+msgid "Waiting Approval"
+msgstr "Waiting Approval"
 
 #. module: purchase
-#: model:process.transition,note:purchase.process_transition_purchaseinvoice0
-msgid ""
-"A purchase order generates a supplier invoice, as soon as it is confirmed by "
-"the buyer. Depending on the Invoicing control of the purchase order, the "
-"invoice is based on received or on ordered quantities."
-msgstr ""
-"Nalog za nabavu kreira ulazni račun u trenutku potvrde. Račun nastaje "
-"temeljem naloga ili primki ovisno o \"Kontrola računa\" na nalogu."
+#: help:purchase.order,amount_total:0
+msgid "The total amount"
+msgstr "Ukupan iznos"
 
 #. module: purchase
-#: field:purchase.order,amount_untaxed:0
-msgid "Untaxed Amount"
-msgstr "Osnovica"
+#: field:purchase.order,invoiced_rate:0
+#: field:purchase.order.line,invoiced:0
+msgid "Invoiced"
+msgstr "Fakturirano"
 
 #. module: purchase
-#: help:purchase.order,invoiced:0
-msgid "It indicates that an invoice has been paid"
-msgstr "Označava da je račun plaćen"
+#: model:process.node,name:purchase.process_node_confirmpurchaseorder0
+#: selection:purchase.order.line,state:0
+msgid "Confirmed"
+msgstr "Potvrđeno"
 
 #. module: purchase
-#: model:process.node,note:purchase.process_node_packinginvoice0
-msgid "Outgoing products to invoice"
-msgstr "Nefakturirani izlaz"
+#: selection:purchase.order.line,state:0
+msgid "Draft"
+msgstr "Nacrt"
 
 #. module: purchase
-#: selection:purchase.report,month:0
-msgid "August"
-msgstr "Kolovoz"
-
-#. module: purchase
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product"
-msgstr "Pokušavate pridružiti lot koji nije iz istog proizvoda"
-
-#. module: purchase
-#: help:purchase.order,date_order:0
-msgid "Date on which this document has been created."
-msgstr "Datum kreiranja ovog dokumenta."
-
-#. module: purchase
-#: view:res.partner:0
-msgid "Sales & Purchases"
-msgstr "Prodaja i nabava"
-
-#. module: purchase
-#: selection:purchase.report,month:0
-msgid "June"
-msgstr "Lipanj"
-
-#. module: purchase
-#: model:process.transition,note:purchase.process_transition_invoicefrompurchase0
-msgid ""
-"The invoice is created automatically if the Invoice control of the purchase "
-"order is 'On order'. The invoice can also be generated manually by the "
-"accountant (Invoice control = Manual)."
-msgstr ""
-"Ako je 'Fakturiranje' na nalogu postavljeno na 'Temeljem naloga', račun će "
-"se automatski generirati. Račun može izraditi i knjigovođa upisom računa i "
-"stavki kada je 'Fakturiranje' postavljeno na 'Ručno'."
+#: model:ir.model,name:purchase.model_purchase_order_group
+msgid "Purchase Order Merge"
+msgstr "Spajanje naloga za nabavu"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_email_templates
-#: model:ir.ui.menu,name:purchase.menu_email_templates
 msgid "Email Templates"
 msgstr "Email predlošci"
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_purchase_report
-msgid "Purchases Orders"
-msgstr "Nalozi za nabavu"
-
-#. module: purchase
-#: view:purchase.order.line:0
-msgid "Manual Invoices"
-msgstr "Ručni računi"
-
-#. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_procurement_management_invoice
-#: view:purchase.order:0
-msgid "Invoice Control"
-msgstr "Kontrola računa"
-
-#. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
-msgid "UoM Categories"
-msgstr ""
+#: model:res.groups,name:purchase.group_purchase_user
+msgid "User"
+msgstr "Korisnik"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -1129,324 +1960,9 @@ msgid "November"
 msgstr "Studeni"
 
 #. module: purchase
-#: view:purchase.report:0
-msgid "Extended Filters..."
-msgstr "Prošireni filtri..."
-
-#. module: purchase
-#: view:purchase.config.wizard:0
-msgid "Invoicing Control on Purchases"
+#: help:purchase.config.settings,group_costing_method:0
+msgid "Allows you to compute product cost price based on average cost."
 msgstr ""
-
-#. module: purchase
-#: code:addons/purchase/wizard/purchase_order_group.py:48
-#, python-format
-msgid "Please select multiple order to merge in the list view."
-msgstr ""
-
-#. module: purchase
-#: model:ir.actions.act_window,help:purchase.action_import_create_supplier_installer
-msgid ""
-"Create or Import Suppliers and their contacts manually from this form or you "
-"can import your existing partners by CSV spreadsheet from \"Import Data\" "
-"wizard"
-msgstr ""
-
-#. module: purchase
-#: model:process.transition,name:purchase.process_transition_createpackinglist0
-msgid "Pick list generated"
-msgstr "Pick list generated"
-
-#. module: purchase
-#: view:purchase.order:0
-msgid "Exception"
-msgstr "Exception"
-
-#. module: purchase
-#: selection:purchase.report,month:0
-msgid "October"
-msgstr "Listopad"
-
-#. module: purchase
-#: view:purchase.order:0
-msgid "Compute"
-msgstr "Izračunaj"
-
-#. module: purchase
-#: view:stock.picking:0
-msgid "Incoming Shipments Available"
-msgstr ""
-
-#. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_purchase_partner_cat
-msgid "Address Book"
-msgstr "Adresar"
-
-#. module: purchase
-#: model:ir.model,name:purchase.model_res_company
-msgid "Companies"
-msgstr "Organizacije"
-
-#. module: purchase
-#: view:purchase.order:0
-msgid "Cancel Purchase Order"
-msgstr "Otkaži nalog za nabavu"
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:411 code:addons/purchase/purchase.py:418
-#, python-format
-msgid "Unable to cancel this purchase order!"
-msgstr ""
-
-#. module: purchase
-#: model:process.transition,note:purchase.process_transition_createpackinglist0
-msgid "A pick list is generated to track the incoming products."
-msgstr "A pick list is generated to track the incoming products."
-
-#. module: purchase
-#: help:purchase.order,pricelist_id:0
-msgid ""
-"The pricelist sets the currency used for this purchase order. It also "
-"computes the supplier price for the selected products/quantities."
-msgstr ""
-"Cjenik određuje valutu za ovu narudžbu. Ujedno računa i cijenu dobavljača za "
-"odabrane proizvode/količine."
-
-#. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_purchase_deshboard
-msgid "Dashboard"
-msgstr "Kokpit"
-
-#. module: purchase
-#: sql_constraint:stock.picking:0
-msgid "Reference must be unique per Company!"
-msgstr "Vezna oznaka je već korištena."
-
-#. module: purchase
-#: view:purchase.report:0 field:purchase.report,price_standard:0
-msgid "Products Value"
-msgstr "Products Value"
-
-#. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_partner_categories_in_form
-msgid "Partner Categories"
-msgstr "Kategorije partnera"
-
-#. module: purchase
-#: help:purchase.order,amount_tax:0
-msgid "The tax amount"
-msgstr "Iznos poreza"
-
-#. module: purchase
-#: view:purchase.order:0 view:purchase.report:0
-msgid "Quotations"
-msgstr "Ponude"
-
-#. module: purchase
-#: help:purchase.order,invoice_method:0
-msgid ""
-"Based on Purchase Order lines: place individual lines in 'Invoice Control > "
-"Based on P.O. lines' from where you can selectively create an invoice.\n"
-"Based on generated invoice: create a draft invoice you can validate later.\n"
-"Based on receptions: let you create an invoice when receptions are validated."
-msgstr ""
-
-#. module: purchase
-#: model:ir.actions.act_window,name:purchase.action_supplier_address_form
-msgid "Addresses"
-msgstr "Adrese"
-
-#. module: purchase
-#: model:ir.actions.act_window,name:purchase.purchase_rfq
-#: model:ir.ui.menu,name:purchase.menu_purchase_rfq
-msgid "Requests for Quotation"
-msgstr "Zahtjevi za ponudom"
-
-#. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_product_by_category_purchase_form
-msgid "Products by Category"
-msgstr "Proizvodi po kategorijama"
-
-#. module: purchase
-#: view:purchase.report:0 field:purchase.report,delay:0
-msgid "Days to Validate"
-msgstr "Dana do potvrde"
-
-#. module: purchase
-#: help:purchase.order,origin:0
-msgid "Reference of the document that generated this purchase order request."
-msgstr "Izvorni dokument koji je generirao ovaj zahtjev za nabavu."
-
-#. module: purchase
-#: view:purchase.order:0
-msgid "Purchase orders which are not approved yet."
-msgstr "Neodobreni nalozi."
-
-#. module: purchase
-#: help:purchase.order,state:0
-msgid ""
-"The state of the purchase order or the quotation request. A quotation is a "
-"purchase order in a 'Draft' state. Then the order has to be confirmed by the "
-"user, the state switch to 'Confirmed'. Then the supplier must confirm the "
-"order to change the state to 'Approved'. When the purchase order is paid and "
-"received, the state becomes 'Done'. If a cancel action occurs in the invoice "
-"or in the reception of goods, the state becomes in exception."
-msgstr ""
-"Stanje naloga za nabavu ili zahtjeva za ponudom. Ponuda je nalog za nabavu u "
-"stanju 'Nacrt'. Nalog zatim treba uskladiti s ponudom dobavljača i "
-"potvrditi. Potvrda naloga je prihvaćanje ponude dobavljača, odnosno slanje "
-"narudžbenice dobavljaču. Nakon toga dobavljač potvrđuje narudžbenicu i nalog "
-"prelazi u stanje 'Odobren'. Kad je nalog za nabavu plaćen i zaprimljen, "
-"stanje postaje 'Izvršen'. Ako se dogodi otkazivanje tijekom izrade računa "
-"ili kod zaprimanja robe stanje postaje 'Iznimka'."
-
-#. module: purchase
-#: field:purchase.order.line,price_subtotal:0
-msgid "Subtotal"
-msgstr "Podzbroj"
-
-#. module: purchase
-#: field:purchase.order,warehouse_id:0 view:purchase.report:0
-#: field:purchase.report,warehouse_id:0
-msgid "Warehouse"
-msgstr "Skladište"
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:289
-#, python-format
-msgid "Purchase order '%s' is confirmed."
-msgstr "Nalog za nabavu '%s' je potvrđen."
-
-#. module: purchase
-#: help:purchase.order,date_approve:0
-msgid "Date on which purchase order has been approved"
-msgstr "Datum potvrde naloga za nabavu (narudžbenice)."
-
-#. module: purchase
-#: view:purchase.order:0 field:purchase.order,state:0
-#: view:purchase.order.line:0 field:purchase.order.line,state:0
-#: view:purchase.report:0 view:stock.picking:0
-msgid "State"
-msgstr "Stanje"
-
-#. module: purchase
-#: model:process.node,name:purchase.process_node_approvepurchaseorder0
-#: view:purchase.order:0 selection:purchase.order,state:0
-#: selection:purchase.report,state:0
-msgid "Approved"
-msgstr "Odobreno"
-
-#. module: purchase
-#: view:purchase.order.line:0
-msgid "General Information"
-msgstr "Opći podaci"
-
-#. module: purchase
-#: view:purchase.order:0
-msgid "Not Invoiced"
-msgstr "Nefakturirano"
-
-#. module: purchase
-#: report:purchase.order:0 field:purchase.order.line,price_unit:0
-msgid "Unit Price"
-msgstr "Jedinična cijena"
-
-#. module: purchase
-#: view:purchase.order:0 selection:purchase.order,state:0
-#: selection:purchase.order.line,state:0 selection:purchase.report,state:0
-#: view:stock.picking:0
-msgid "Done"
-msgstr "Izvršeno"
-
-#. module: purchase
-#: report:purchase.order:0
-msgid "Request for Quotation N°"
-msgstr "Zahtjev za ponudom br."
-
-#. module: purchase
-#: model:process.transition,name:purchase.process_transition_invoicefrompackinglist0
-#: model:process.transition,name:purchase.process_transition_invoicefrompurchase0
-msgid "Invoice"
-msgstr "Račun"
-
-#. module: purchase
-#: model:process.node,note:purchase.process_node_purchaseorder0
-msgid "Confirmed purchase order to invoice"
-msgstr "Potvrđeni nalozi nabave u račun"
-
-#. module: purchase
-#: model:process.transition.action,name:purchase.process_transition_action_approvingcancelpurchaseorder0
-#: model:process.transition.action,name:purchase.process_transition_action_cancelpurchaseorder0
-#: view:purchase.order:0 view:purchase.order.group:0
-#: view:purchase.order.line_invoice:0
-msgid "Cancel"
-msgstr "Odustani"
-
-#. module: purchase
-#: view:purchase.order:0 view:purchase.order.line:0
-msgid "Purchase Order Lines"
-msgstr "Stavke naloga za nabavu"
-
-#. module: purchase
-#: model:process.transition,note:purchase.process_transition_approvingpurchaseorder0
-msgid "The supplier approves the Purchase Order."
-msgstr "Dobavljač odobrava narudžbenicu."
-
-#. module: purchase
-#: code:addons/purchase/wizard/purchase_order_group.py:80
-#: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
-#: model:ir.actions.act_window,name:purchase.purchase_form_action
-#: model:ir.ui.menu,name:purchase.menu_purchase_form_action
-#: view:purchase.report:0
-#, python-format
-msgid "Purchase Orders"
-msgstr "Nalozi za nabavu"
-
-#. module: purchase
-#: sql_constraint:purchase.order:0
-msgid "Order Reference must be unique per Company!"
-msgstr "Poveznica narudžbe mora biti jedinstvena za organizaciju!"
-
-#. module: purchase
-#: field:purchase.order,origin:0
-msgid "Source Document"
-msgstr "Izvorni dokument"
-
-#. module: purchase
-#: view:purchase.order.group:0
-msgid "Merge orders"
-msgstr "Spoji naloge"
-
-#. module: purchase
-#: model:ir.model,name:purchase.model_purchase_order_line_invoice
-msgid "Purchase Order Line Make Invoice"
-msgstr "Kreiraj račun iz stavki naloga za nabavu"
-
-#. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_action_picking_tree4
-msgid "Incoming Shipments"
-msgstr "Primke"
-
-#. module: purchase
-#: model:ir.actions.act_window,name:purchase.action_purchase_order_by_user_all
-msgid "Total Orders by User per month"
-msgstr "Ukupno naloga po korisniku i mjesecu"
-
-#. module: purchase
-#: model:ir.actions.report.xml,name:purchase.report_purchase_quotation
-#: selection:purchase.order,state:0 selection:purchase.report,state:0
-msgid "Request for Quotation"
-msgstr "Zahtjev za ponudom"
-
-#. module: purchase
-#: report:purchase.order:0
-msgid "Tél. :"
-msgstr "Tél. :"
-
-#. module: purchase
-#: view:purchase.report:0
-msgid "Order of Month"
-msgstr "Nalozi mjeseca"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1454,48 +1970,156 @@ msgid "Our Order Reference"
 msgstr "Naša oznaka naloga"
 
 #. module: purchase
-#: view:purchase.order:0 view:purchase.order.line:0
-msgid "Search Purchase Order"
-msgstr "Traži naloge za nabavu"
+#: selection:purchase.report,month:0
+msgid "January"
+msgstr "Siječanj"
 
 #. module: purchase
-#: model:ir.actions.act_window,name:purchase.action_purchase_config
-msgid "Set the Default Invoicing Control Method"
+#: help:purchase.order,invoice_method:0
+msgid ""
+"Based on Purchase Order lines: place individual lines in 'Invoice Control > "
+"Based on P.O. lines' from where you can selectively create an invoice.\n"
+"Based on generated invoice: create a draft invoice you can validate later.\n"
+"Bases on incoming shipments: let you create an invoice when receptions are "
+"validated."
 msgstr ""
 
 #. module: purchase
-#: model:process.node,note:purchase.process_node_draftpurchaseorder0
-#: model:process.node,note:purchase.process_node_draftpurchaseorder1
-msgid "Request for Quotations."
-msgstr "Zahtjev za ponudom"
+#: help:purchase.order,origin:0
+msgid ""
+"Reference of the document that generated this purchase order request; a sale "
+"order or an internal procurement request."
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_partner_categories_in_form
+msgid "Partner Categories"
+msgstr "Kategorije partnera"
+
+#. module: purchase
+#: field:purchase.report,state:0
+msgid "Order Status"
+msgstr ""
 
 #. module: purchase
 #: report:purchase.order:0
-msgid "Date Req."
-msgstr "Datum Zah."
+msgid "Request for Quotation N°"
+msgstr "Zahtjev za ponudom br."
 
 #. module: purchase
-#: field:purchase.order,date_approve:0 field:purchase.report,date_approve:0
-msgid "Date Approved"
-msgstr "Datum odobrenja"
-
-#. module: purchase
-#: selection:purchase.report,state:0
-msgid "Waiting Supplier Ack"
-msgstr "Waiting Supplier Ack"
-
-#. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_procurement_management_pending_invoice
-msgid "Based on draft invoices"
+#: view:purchase.config.settings:0
+msgid "Invoicing Settings"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.order:0
-msgid "Delivery & Invoicing"
-msgstr "Dostava i fakturiranje"
+#: model:email.template,body_html:purchase.email_template_edi_purchase
+msgid ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
+"255, 255); \">\n"
+"\n"
+"    <p>Hello${object.partner_id.name and ' ' or ''}${object.partner_id.name "
+"or ''},</p>\n"
+"    \n"
+"    <p>Here is a ${object.state in ('draft', 'sent') and 'request for "
+"quotation' or 'purchase order confirmation'} from ${object.company_id.name}: "
+"</p>\n"
+"    \n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
+"       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} "
+"${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.partner_ref:\n"
+"       &nbsp;&nbsp;Your reference: ${object.partner_ref}<br />\n"
+"       % endif\n"
+"       % if object.validator:\n"
+"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.validator.email "
+"or ''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    <br/>\n"
+"    <p>If you have any question, do not hesitate to contact us.</p>\n"
+"    <p>Thank you!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#FFF;\">\n"
+"            <strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % "
+"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
+"or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                Phone:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
+msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:772
+#: model:ir.actions.act_window,name:purchase.action_purchase_order_by_user_all
+msgid "Total Orders by User per month"
+msgstr "Ukupno naloga po korisniku i mjesecu"
+
+#. module: purchase
+#: selection:purchase.order,invoice_method:0
+msgid "Based on incoming shipments"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.report:0
+#: field:purchase.report,warehouse_id:0
+msgid "Warehouse"
+msgstr "Skladište"
+
+#. module: purchase
+#: help:purchase.order,partner_ref:0
+msgid ""
+"Reference of the sale order or quotation sent by your supplier. It's mainly "
+"used to do the matching when you receive the products as this reference is "
+"usually written on the delivery order sent by your supplier."
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:991
 #, python-format
 msgid ""
 "The selected supplier has a minimal quantity set to %s %s, you should not "
@@ -1503,33 +2127,11 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order.line,date_planned:0
-msgid "Scheduled Date"
-msgstr "Planirani datum"
-
-#. module: purchase
-#: field:purchase.order,product_id:0 view:purchase.order.line:0
-#: field:purchase.order.line,product_id:0 view:purchase.report:0
-#: field:purchase.report,product_id:0
-msgid "Product"
-msgstr "Proizvod"
-
-#. module: purchase
-#: model:process.transition,name:purchase.process_transition_confirmingpurchaseorder0
-#: model:process.transition,name:purchase.process_transition_confirmingpurchaseorder1
-msgid "Confirmation"
-msgstr "Confirmation"
-
-#. module: purchase
-#: report:purchase.order:0 field:purchase.order.line,name:0
+#: report:purchase.order:0
+#: field:purchase.order.line,name:0
 #: report:purchase.quotation:0
 msgid "Description"
 msgstr "Opis"
-
-#. module: purchase
-#: view:purchase.report:0
-msgid "Order of Year"
-msgstr ""
 
 #. module: purchase
 #: report:purchase.quotation:0
@@ -1537,107 +2139,15 @@ msgid "Expected Delivery address:"
 msgstr "Expected Delivery address:"
 
 #. module: purchase
-#: view:stock.picking:0
-msgid "Journal"
-msgstr "Dnevnik"
-
-#. module: purchase
-#: model:ir.actions.act_window,name:purchase.action_stock_move_report_po
-#: model:ir.ui.menu,name:purchase.menu_action_stock_move_report_po
-msgid "Receptions Analysis"
-msgstr "Analiza primki"
-
-#. module: purchase
-#: field:res.company,po_lead:0
-msgid "Purchase Lead Time"
-msgstr "Vodeće vrijeme nabave"
-
-#. module: purchase
-#: model:ir.actions.act_window,help:purchase.action_supplier_address_form
-msgid ""
-"Access your supplier records and maintain a good relationship with your "
-"suppliers. You can track all your interactions with them through the History "
-"tab: emails, orders, meetings, etc."
-msgstr ""
-"Access your supplier records and maintain a good relationship with your "
-"suppliers. You can track all your interactions with them through the History "
-"tab: emails, orders, meetings, etc."
-
-#. module: purchase
-#: view:purchase.order:0
-msgid "Delivery"
-msgstr "Dostava"
-
-#. module: purchase
-#: view:purchase.order:0
-msgid "Purchase orders which are in done state."
-msgstr "Izvršeni nalozi"
-
-#. module: purchase
-#: field:purchase.order.line,product_uom:0
-msgid "Product UOM"
-msgstr "JM proizvoda"
-
-#. module: purchase
-#: report:purchase.quotation:0
-msgid "Regards,"
-msgstr "Regards,"
-
-#. module: purchase
-#: selection:purchase.order,state:0 selection:purchase.report,state:0
-msgid "Waiting"
-msgstr "Waiting"
-
-#. module: purchase
-#: field:purchase.order,partner_address_id:0
-msgid "Address"
-msgstr "Adresa"
-
-#. module: purchase
-#: field:purchase.report,product_uom:0
-msgid "Reference UoM"
-msgstr "Referentna JM"
-
-#. module: purchase
-#: field:purchase.order.line,move_ids:0
-msgid "Reservation"
-msgstr "Reservation"
-
-#. module: purchase
-#: view:purchase.order:0
-msgid "Purchase orders that include lines not invoiced."
-msgstr ""
-
-#. module: purchase
-#: view:purchase.order:0
-msgid "Untaxed amount"
-msgstr "Iznos bez poreza"
-
-#. module: purchase
-#: view:stock.picking:0
-msgid "Picking to Invoice"
-msgstr ""
-
-#. module: purchase
-#: view:purchase.config.wizard:0
-msgid ""
-"This tool will help you to select the method you want to use to control "
-"supplier invoices."
-msgstr ""
-
-#. module: purchase
-#: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder1
-msgid ""
-"In case there is no supplier for this product, the buyer can fill the form "
-"manually and confirm it. The RFQ becomes a confirmed Purchase Order."
-msgstr ""
-"In case there is no supplier for this product, the buyer can fill the form "
-"manually and confirm it. The RFQ becomes a confirmed Purchase Order."
-
-#. module: purchase
 #: selection:purchase.report,month:0
 msgid "February"
 msgstr "Veljača"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_invoice_pending
+#: model:ir.ui.menu,name:purchase.menu_procurement_management_pending_invoice
+msgid "On Draft Invoices"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
@@ -1651,39 +2161,19 @@ msgid "Your Order Reference"
 msgstr "Referenca naloga"
 
 #. module: purchase
-#: view:purchase.order:0 field:purchase.order,minimum_planned_date:0
-#: report:purchase.quotation:0 field:purchase.report,expected_date:0
-#: view:stock.picking:0
-msgid "Expected Date"
-msgstr "Očekivani datum"
-
-#. module: purchase
-#: report:purchase.quotation:0
-msgid "TVA:"
-msgstr "TVA:"
-
-#. module: purchase
-#: model:ir.actions.act_window,help:purchase.action_picking_tree4_picking_to_invoice
-msgid ""
-"If you set the Invoicing Control on a purchase order as \"Based on "
-"receptions\", you can track here all the product receptions and create "
-"invoices for those receptions."
-msgstr ""
+#: report:purchase.order:0
+msgid "Purchase Order Confirmation N°"
+msgstr "Potvrda naloga za nabavu br."
 
 #. module: purchase
 #: view:purchase.order:0
-msgid "Purchase Control"
-msgstr "Kontrola nabave"
+msgid "Total amount"
+msgstr "Ukupni iznos"
 
 #. module: purchase
-#: selection:purchase.report,month:0
-msgid "March"
-msgstr "Ožujak"
-
-#. module: purchase
-#: selection:purchase.report,month:0
-msgid "April"
-msgstr "Travanj"
+#: model:ir.model,name:purchase.model_product_template
+msgid "Product Template"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order.group:0
@@ -1712,221 +2202,15 @@ msgstr ""
 " "
 
 #. module: purchase
-#: field:purchase.report,negociation:0
-msgid "Purchase-Standard Price"
-msgstr "Uobičajena nabavna cijena"
-
-#. module: purchase
-#: field:purchase.config.wizard,default_method:0
-msgid "Default Invoicing Control Method"
+#: view:product.product:0
+msgid "When you sell this service to a customer,"
 msgstr ""
 
 #. module: purchase
-#: model:product.pricelist.type,name:purchase.pricelist_type_purchase
-#: field:res.partner,property_product_pricelist_purchase:0
-msgid "Purchase Pricelist"
-msgstr "Cjenik nabave"
-
-#. module: purchase
-#: field:purchase.order,invoice_method:0
-msgid "Invoicing Control"
-msgstr "Kontrola računa"
-
-#. module: purchase
-#: view:stock.picking:0
-msgid "Back Orders"
-msgstr "Zaostali nalozi"
-
-#. module: purchase
-#: model:process.transition.action,name:purchase.process_transition_action_approvingpurchaseorder0
-msgid "Approve"
-msgstr "Odobri"
-
-#. module: purchase
-#: model:product.pricelist.version,name:purchase.ver0
-msgid "Default Purchase Pricelist Version"
-msgstr "Verzija uobičajenog cjenika nabave"
-
-#. module: purchase
-#: view:purchase.order.line:0
-msgid "Invoicing"
-msgstr "Fakturiranje"
-
-#. module: purchase
-#: help:purchase.order.line,state:0
-msgid ""
-" * The 'Draft' state is set automatically when purchase order in draft "
-"state.                                        \n"
-"* The 'Confirmed' state is set automatically as confirm when purchase order "
-"in confirm state.                                        \n"
-"* The 'Done' state is set automatically when purchase order is set as done.  "
-"                                      \n"
-"* The 'Cancelled' state is set automatically when user cancel purchase order."
-msgstr ""
-" * The 'Draft' state is set automatically when purchase order in draft "
-"state.                                        \n"
-"* The 'Confirmed' state is set automatically as confirm when purchase order "
-"in confirm state.                                        \n"
-"* The 'Done' state is set automatically when purchase order is set as done.  "
-"                                      \n"
-"* The 'Cancelled' state is set automatically when user cancel purchase order."
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:426
-#, python-format
-msgid "Purchase order '%s' is cancelled."
-msgstr "Nalog za nabavu '%s' je otkazan."
-
-#. module: purchase
-#: field:purchase.order,amount_total:0
-msgid "Total"
-msgstr "Ukupno"
-
-#. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_product_pricelist_action_purhase
+#: model:ir.actions.act_window,name:purchase.purchase_pricelist_version_action
+#: model:ir.ui.menu,name:purchase.menu_purchase_pricelist_version_action
 msgid "Pricelist Versions"
 msgstr "Verzije cjenika"
-
-#. module: purchase
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr ""
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:359
-#: code:addons/purchase/wizard/purchase_line_invoice.py:112
-#, python-format
-msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
-msgstr "Nije definiran konto troška za proizvod: \"%s\" (id:%d)"
-
-#. module: purchase
-#: view:purchase.order.group:0
-msgid "Are you sure you want to merge these orders?"
-msgstr ""
-
-#. module: purchase
-#: model:process.transition,name:purchase.process_transition_purchaseinvoice0
-msgid "From a purchase order"
-msgstr "Iz naloga za nabavu"
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:735
-#, python-format
-msgid ""
-"You have to select a pricelist or a supplier in the purchase form !\n"
-"Please set one before choosing a product."
-msgstr ""
-"Prije upisa proizvoda morate upisati cjenik ili dobavljača u zaglavlju "
-"naloga za nabavu."
-
-#. module: purchase
-#: model:email.template,body:purchase.email_template_edi_purchase
-msgid ""
-"\n"
-"Hello${object.partner_address_id.name and ' ' or "
-"''}${object.partner_address_id.name or ''},\n"
-"\n"
-"Here is a purchase order confirmation from ${object.company_id.name}:\n"
-"       | Order number: *${object.name}*\n"
-"       | Order total: *${object.amount_total} "
-"${object.pricelist_id.currency_id.name}*\n"
-"       | Order date: ${object.date_order}\n"
-"       % if object.origin:\n"
-"       | Order reference: ${object.origin}\n"
-"       % endif\n"
-"       % if object.partner_ref:\n"
-"       | Your reference: ${object.partner_ref}<br />\n"
-"       % endif\n"
-"       | Your contact: ${object.validator.name} "
-"${object.validator.user_email and '<%s>'%(object.validator.user_email) or "
-"''}\n"
-"\n"
-"You can view the order confirmation and download it using the following "
-"link:\n"
-"    ${ctx.get('edi_web_url_view') or 'n/a'}\n"
-"\n"
-"If you have any question, do not hesitate to contact us.\n"
-"\n"
-"Thank you!\n"
-"\n"
-"\n"
-"--\n"
-"${object.validator.name} ${object.validator.user_email and "
-"'<%s>'%(object.validator.user_email) or ''}\n"
-"${object.company_id.name}\n"
-"% if object.company_id.street:\n"
-"${object.company_id.street or ''}\n"
-"% endif\n"
-"% if object.company_id.street2:\n"
-"${object.company_id.street2}\n"
-"% endif\n"
-"% if object.company_id.city or object.company_id.zip:\n"
-"${object.company_id.zip or ''} ${object.company_id.city or ''}\n"
-"% endif\n"
-"% if object.company_id.country_id:\n"
-"${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) "
-"or ''} ${object.company_id.country_id.name or ''}\n"
-"% endif\n"
-"% if object.company_id.phone:\n"
-"Phone: ${object.company_id.phone}\n"
-"% endif\n"
-"% if object.company_id.website:\n"
-"${object.company_id.website or ''}\n"
-"% endif\n"
-"            "
-msgstr ""
-"\n"
-"Poštovani ${object.partner_address_id.name and ' ' or "
-"''}${object.partner_address_id.name or ''},\n"
-"\n"
-"Ovo je potvrda narudžbe od ${object.company_id.name}:\n"
-"       | narudžba broj: *${object.name}*\n"
-"       | Order total: *${object.amount_total} "
-"${object.pricelist_id.currency_id.name}*\n"
-"       | Order date: ${object.date_order}\n"
-"       % if object.origin:\n"
-"       | Order reference: ${object.origin}\n"
-"       % endif\n"
-"       % if object.partner_ref:\n"
-"       | Your reference: ${object.partner_ref}<br />\n"
-"       % endif\n"
-"       | Your contact: ${object.validator.name} "
-"${object.validator.user_email and '<%s>'%(object.validator.user_email) or "
-"''}\n"
-"\n"
-"You can view the order confirmation and download it using the following "
-"link:\n"
-"    ${ctx.get('edi_web_url_view') or 'n/a'}\n"
-"\n"
-"If you have any question, do not hesitate to contact us.\n"
-"\n"
-"Thank you!\n"
-"\n"
-"\n"
-"--\n"
-"${object.validator.name} ${object.validator.user_email and "
-"'<%s>'%(object.validator.user_email) or ''}\n"
-"${object.company_id.name}\n"
-"% if object.company_id.street:\n"
-"${object.company_id.street or ''}\n"
-"% endif\n"
-"% if object.company_id.street2:\n"
-"${object.company_id.street2}\n"
-"% endif\n"
-"% if object.company_id.city or object.company_id.zip:\n"
-"${object.company_id.zip or ''} ${object.company_id.city or ''}\n"
-"% endif\n"
-"% if object.company_id.country_id:\n"
-"${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) "
-"or ''} ${object.company_id.country_id.name or ''}\n"
-"% endif\n"
-"% if object.company_id.phone:\n"
-"Phone: ${object.company_id.phone}\n"
-"% endif\n"
-"% if object.company_id.website:\n"
-"${object.company_id.website or ''}\n"
-"% endif\n"
-"            "
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1934,78 +2218,39 @@ msgid "Purchase orders which are in draft state"
 msgstr "Nalozi u stanju 'Nacrt'"
 
 #. module: purchase
-#: selection:purchase.report,month:0
-msgid "May"
-msgstr "Svibanj"
-
-#. module: purchase
-#: model:res.groups,name:purchase.group_purchase_manager
-msgid "Manager"
-msgstr "Voditelj"
-
-#. module: purchase
-#: view:purchase.config.wizard:0
-msgid "res_config_contents"
-msgstr ""
-
-#. module: purchase
 #: view:purchase.report:0
-msgid "Order in current year"
-msgstr "Nalozi ove godine"
-
-#. module: purchase
-#: model:process.process,name:purchase.process_process_purchaseprocess0
-msgid "Purchase"
-msgstr "Nabava"
-
-#. module: purchase
-#: view:purchase.report:0 field:purchase.report,name:0
+#: field:purchase.report,name:0
 msgid "Year"
 msgstr "Godina"
 
 #. module: purchase
-#: model:ir.actions.act_window,name:purchase.purchase_line_form_action2
-#: model:ir.ui.menu,name:purchase.menu_purchase_line_order_draft
-#: selection:purchase.order,invoice_method:0
-msgid "Based on Purchase Order lines"
-msgstr "Prema stavkama naloga za nabavu"
+#: selection:purchase.config.settings,default_invoice_method:0
+msgid "Based on purchase order lines"
+msgstr ""
 
 #. module: purchase
-#: model:ir.actions.todo.category,name:purchase.category_purchase_config
-#: model:ir.ui.menu,name:purchase.menu_procurement_management
-msgid "Purchase Management"
-msgstr "Upravljanje nabavom"
-
-#. module: purchase
-#: view:purchase.order.line:0
-msgid "Stock Moves"
-msgstr "Skladišni prijenosi"
-
-#. module: purchase
-#: view:purchase.order.line_invoice:0
-msgid "Select an Open Sale Order"
-msgstr "Odaberite otvoreni prodajni nalog"
+#: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    This supplier has no purchase order. Click to create a "
+"new RfQ.\n"
+"                </p><p>\n"
+"                    The request for quotation is the first step of the "
+"purchases flow. Once\n"
+"                    converted into a purchase order, you will be able to "
+"control the reception\n"
+"                    of the products and the supplier invoice.\n"
+"                </p>\n"
+"            "
+msgstr ""
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "Orders"
 msgstr "Orders"
 
-#. module: purchase
-#: help:purchase.order,name:0
-msgid ""
-"unique number of the purchase order,computed automatically when the purchase "
-"order is created"
-msgstr ""
-"jedinstveni broj naloga za prodaju, automatski postavljen u trenutku "
-"kreiranja"
-
-#. module: purchase
-#: view:board.board:0
-#: model:ir.actions.act_window,name:purchase.open_board_purchase
-#: model:ir.ui.menu,name:purchase.menu_board_purchase
-msgid "Purchase Dashboard"
-msgstr "Upravljačka ploča nabave"
+#~ msgid "Invoiced & Paid"
+#~ msgstr "Fakturirano i plaćeno"
 
 #, python-format
 #~ msgid "You can not confirm purchase order without Purchase Order Lines."
@@ -2018,39 +2263,454 @@ msgstr "Upravljačka ploča nabave"
 #~ msgstr ""
 #~ "Zadana jedinica mjere mora biti u istoj kategoriji kao nabavna jedinica mjere"
 
+#~ msgid ""
+#~ "You can create a request for quotation when you want to buy products to a "
+#~ "supplier but the purchase is not confirmed yet. Use also this menu to review "
+#~ "requests for quotation created automatically based on your logistic rules "
+#~ "(minimum stock, MTO, etc). You can convert the request for quotation into a "
+#~ "purchase order once the order is confirmed. If you use the extended "
+#~ "interface (from user's preferences), you can select the way to control your "
+#~ "supplier invoices: based on the order, based on the receptions or manual "
+#~ "encoding."
+#~ msgstr ""
+#~ "Zahtjev za ponudom možete kreirati i prije nego što je nalog za nabavu "
+#~ "potvrđen.\n"
+#~ "Ovdje će se naći i zahtjevi za ponudom koje program automatski kreira "
+#~ "temeljem postavke logističkih pravila (minimalne količine, JIT, ...). "
+#~ "Zahtjev za ponudom možete pretvoriti u Nalog za nabavu. Postave na nalogu za "
+#~ "nabavu kontroliraju kreiranje ulaznog računa temeljem naloga ili primki."
+
 #~ msgid "Do you want to generate the supplier invoices ?"
 #~ msgstr "Želite li kreirati ulazni račun?"
+
+#~ msgid ""
+#~ "Use this menu to search within your purchase orders by references, supplier, "
+#~ "products, etc. For each purchase order, you can track the products received, "
+#~ "and control the supplier invoices."
+#~ msgstr ""
+#~ "Nalozi za nabavu po brojevima, dobavljačima, proizvodima, .... \n"
+#~ "Za svaki nalog nabave možete pratiti primljene proizvode i kontrolirati "
+#~ "izradu ulaznih računa."
 
 #~ msgid "Current purchases"
 #~ msgstr "Aktualne nabave"
 
+#~ msgid ""
+#~ "Put an address if you want to deliver directly from the supplier to the "
+#~ "customer.In this case, it will remove the warehouse link and set the "
+#~ "customer location."
+#~ msgstr ""
+#~ "Put an address if you want to deliver directly from the supplier to the "
+#~ "customer.In this case, it will remove the warehouse link and set the "
+#~ "customer location."
+
+#~ msgid "To Approve"
+#~ msgstr "Za odobriti"
+
+#~ msgid "Approve Purchase"
+#~ msgstr "Odobri nabavu"
+
+#~ msgid "Reference UoM"
+#~ msgstr "Referentna JM"
+
+#~ msgid "Origin"
+#~ msgstr "Izvor"
+
 #~ msgid "Negotiation by Supplier"
 #~ msgstr "Negotiation by Supplier"
+
+#~ msgid "Convert to Purchase Order"
+#~ msgstr "U nalog za nabavu"
+
+#~ msgid "Dest. Address Contact Name"
+#~ msgstr "Ime kontakta na odredištu"
+
+#~ msgid "TVA :"
+#~ msgstr "TVA :"
+
+#~ msgid "Order Line"
+#~ msgstr "Stavka naloga"
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "Pogreška! Ne možete kreirati rekurzivne organizacije."
+
+#~ msgid "Address Contact Name"
+#~ msgstr "Address Contact Name"
 
 #~ msgid "Purchase by supplier"
 #~ msgstr "Nabave po dobavljaču"
 
+#~ msgid "Receptions"
+#~ msgstr "Primke"
+
+#~ msgid ""
+#~ "Use this menu to control the invoices to be received from your supplier. "
+#~ "OpenERP pregenerates draft invoices from your purchase orders or receptions, "
+#~ "according to your settings. Once you receive a supplier invoice, you can "
+#~ "match it with the draft invoice and validate it."
+#~ msgstr ""
+#~ "Ovdje kontrolirate ulazne račune koje očekujete od dobavljača. OpenERP "
+#~ "automatski kreira nacrte ulaznih računa iz naloga za nabavu i/ili primki. "
+#~ "Kada primite originalni ulazni račun od dobavljača usporedite ga s nacrtom i "
+#~ "potvrdite ga."
+
 #~ msgid "My Board"
 #~ msgstr "Moja ploča"
+
+#~ msgid "Image"
+#~ msgstr "Slika"
+
+#~ msgid "Purchase Order Waiting Approval"
+#~ msgstr "Nalozi za nabavu koje čekaju potvrdu"
+
+#~ msgid ""
+#~ "This is the list of picking list that have been generated for this purchase"
+#~ msgstr "Ovo je popis primki nastalih ovom nabavom"
+
+#~ msgid "Destination Address"
+#~ msgstr "Adresa isporuke"
+
+#~ msgid "Order State"
+#~ msgstr "Stanje naloga"
+
+#~ msgid "Purchase Properties"
+#~ msgstr "Svojstva nabave"
 
 #~ msgid "Qty. per product"
 #~ msgstr "Kol. po proizvodu"
 
+#~ msgid "You try to assign a lot which is not from the same product"
+#~ msgstr "Pokušavate pridružiti lot koji nije iz istog proizvoda"
+
+#~ msgid "Sales & Purchases"
+#~ msgstr "Prodaja i nabava"
+
+#~ msgid "Compute"
+#~ msgstr "Izračunaj"
+
+#~ msgid "Cancel Purchase Order"
+#~ msgstr "Otkaži nalog za nabavu"
+
+#~ msgid "You must assign a production lot for this product"
+#~ msgstr "Morate pridijeliti lot proizvodnje ovom proizvodu"
+
+#~ msgid "Dashboard"
+#~ msgstr "Kokpit"
+
 #~ msgid "Purchase order per month"
 #~ msgstr "Nalozi nabave po mjesecima"
+
+#~ msgid "History"
+#~ msgstr "Povijest"
+
+#~ msgid "Reference of the document that generated this purchase order request."
+#~ msgstr "Izvorni dokument koji je generirao ovaj zahtjev za nabavu."
+
+#~ msgid ""
+#~ "The state of the purchase order or the quotation request. A quotation is a "
+#~ "purchase order in a 'Draft' state. Then the order has to be confirmed by the "
+#~ "user, the state switch to 'Confirmed'. Then the supplier must confirm the "
+#~ "order to change the state to 'Approved'. When the purchase order is paid and "
+#~ "received, the state becomes 'Done'. If a cancel action occurs in the invoice "
+#~ "or in the reception of goods, the state becomes in exception."
+#~ msgstr ""
+#~ "Stanje naloga za nabavu ili zahtjeva za ponudom. Ponuda je nalog za nabavu u "
+#~ "stanju 'Nacrt'. Nalog zatim treba uskladiti s ponudom dobavljača i "
+#~ "potvrditi. Potvrda naloga je prihvaćanje ponude dobavljača, odnosno slanje "
+#~ "narudžbenice dobavljaču. Nakon toga dobavljač potvrđuje narudžbenicu i nalog "
+#~ "prelazi u stanje 'Odobren'. Kad je nalog za nabavu plaćen i zaprimljen, "
+#~ "stanje postaje 'Izvršen'. Ako se dogodi otkazivanje tijekom izrade računa "
+#~ "ili kod zaprimanja robe stanje postaje 'Iznimka'."
+
+#~ msgid "Requests for Quotation"
+#~ msgstr "Zahtjevi za ponudom"
+
+#~ msgid "State"
+#~ msgstr "Stanje"
+
+#~ msgid "General Information"
+#~ msgstr "Opći podaci"
+
+#~ msgid "Tél. :"
+#~ msgstr "Tél. :"
 
 #~ msgid "Units of Measure Categories"
 #~ msgstr "Kategorije jedinica mjere"
 
+#~ msgid "Delivery & Invoicing"
+#~ msgstr "Dostava i fakturiranje"
+
+#~ msgid ""
+#~ "Access your supplier records and maintain a good relationship with your "
+#~ "suppliers. You can track all your interactions with them through the History "
+#~ "tab: emails, orders, meetings, etc."
+#~ msgstr ""
+#~ "Access your supplier records and maintain a good relationship with your "
+#~ "suppliers. You can track all your interactions with them through the History "
+#~ "tab: emails, orders, meetings, etc."
+
+#~ msgid "Delivery"
+#~ msgstr "Dostava"
+
+#~ msgid "Product UOM"
+#~ msgstr "JM proizvoda"
+
+#~ msgid "Waiting"
+#~ msgstr "Waiting"
+
+#~ msgid "Address"
+#~ msgstr "Adresa"
+
+#~ msgid "Untaxed amount"
+#~ msgstr "Iznos bez poreza"
+
 #~ msgid "Total price by product by state"
 #~ msgstr "Ukupna cijena po proizvodu po stanju"
 
+#~ msgid "Purchase Control"
+#~ msgstr "Kontrola nabave"
+
+#~ msgid "Invoicing"
+#~ msgstr "Fakturiranje"
+
+#~ msgid ""
+#~ " * The 'Draft' state is set automatically when purchase order in draft "
+#~ "state.                                        \n"
+#~ "* The 'Confirmed' state is set automatically as confirm when purchase order "
+#~ "in confirm state.                                        \n"
+#~ "* The 'Done' state is set automatically when purchase order is set as done.  "
+#~ "                                      \n"
+#~ "* The 'Cancelled' state is set automatically when user cancel purchase order."
+#~ msgstr ""
+#~ " * The 'Draft' state is set automatically when purchase order in draft "
+#~ "state.                                        \n"
+#~ "* The 'Confirmed' state is set automatically as confirm when purchase order "
+#~ "in confirm state.                                        \n"
+#~ "* The 'Done' state is set automatically when purchase order is set as done.  "
+#~ "                                      \n"
+#~ "* The 'Cancelled' state is set automatically when user cancel purchase order."
+
+#~ msgid "Addresses"
+#~ msgstr "Adrese"
+
 #~ msgid "Are you sure you want to merge these orders ?"
 #~ msgstr "Are you sure you want to merge these orders ?"
+
+#~ msgid "Purchase Management"
+#~ msgstr "Upravljanje nabavom"
+
+#~ msgid ""
+#~ "unique number of the purchase order,computed automatically when the purchase "
+#~ "order is created"
+#~ msgstr ""
+#~ "jedinstveni broj naloga za prodaju, automatski postavljen u trenutku "
+#~ "kreiranja"
+
+#~ msgid "Based on Receptions"
+#~ msgstr "Prema primakama"
+
+#, python-format
+#~ msgid "No Pricelist !"
+#~ msgstr "Nema cjenika!"
+
+#~ msgid "To Invoice"
+#~ msgstr "Za fakturiranje"
+
+#, python-format
+#~ msgid "In order to delete a purchase order, it must be cancelled first!"
+#~ msgstr "Samo otkazani nalozi se mogu brisati!"
+
+#, python-format
+#~ msgid "Warning"
+#~ msgstr "Upozoranje"
+
+#, python-format
+#~ msgid "Purchase order '%s' is confirmed."
+#~ msgstr "Nalog za nabavu '%s' je potvrđen."
+
+#, python-format
+#~ msgid "Purchase order '%s' is cancelled."
+#~ msgstr "Nalog za nabavu '%s' je otkazan."
+
+#~ msgid ""
+#~ "\n"
+#~ "Hello${object.partner_address_id.name and ' ' or "
+#~ "''}${object.partner_address_id.name or ''},\n"
+#~ "\n"
+#~ "Here is a purchase order confirmation from ${object.company_id.name}:\n"
+#~ "       | Order number: *${object.name}*\n"
+#~ "       | Order total: *${object.amount_total} "
+#~ "${object.pricelist_id.currency_id.name}*\n"
+#~ "       | Order date: ${object.date_order}\n"
+#~ "       % if object.origin:\n"
+#~ "       | Order reference: ${object.origin}\n"
+#~ "       % endif\n"
+#~ "       % if object.partner_ref:\n"
+#~ "       | Your reference: ${object.partner_ref}<br />\n"
+#~ "       % endif\n"
+#~ "       | Your contact: ${object.validator.name} "
+#~ "${object.validator.user_email and '<%s>'%(object.validator.user_email) or "
+#~ "''}\n"
+#~ "\n"
+#~ "You can view the order confirmation and download it using the following "
+#~ "link:\n"
+#~ "    ${ctx.get('edi_web_url_view') or 'n/a'}\n"
+#~ "\n"
+#~ "If you have any question, do not hesitate to contact us.\n"
+#~ "\n"
+#~ "Thank you!\n"
+#~ "\n"
+#~ "\n"
+#~ "--\n"
+#~ "${object.validator.name} ${object.validator.user_email and "
+#~ "'<%s>'%(object.validator.user_email) or ''}\n"
+#~ "${object.company_id.name}\n"
+#~ "% if object.company_id.street:\n"
+#~ "${object.company_id.street or ''}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.street2:\n"
+#~ "${object.company_id.street2}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.city or object.company_id.zip:\n"
+#~ "${object.company_id.zip or ''} ${object.company_id.city or ''}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.country_id:\n"
+#~ "${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) "
+#~ "or ''} ${object.company_id.country_id.name or ''}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.phone:\n"
+#~ "Phone: ${object.company_id.phone}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.website:\n"
+#~ "${object.company_id.website or ''}\n"
+#~ "% endif\n"
+#~ "            "
+#~ msgstr ""
+#~ "\n"
+#~ "Poštovani ${object.partner_address_id.name and ' ' or "
+#~ "''}${object.partner_address_id.name or ''},\n"
+#~ "\n"
+#~ "Ovo je potvrda narudžbe od ${object.company_id.name}:\n"
+#~ "       | narudžba broj: *${object.name}*\n"
+#~ "       | Order total: *${object.amount_total} "
+#~ "${object.pricelist_id.currency_id.name}*\n"
+#~ "       | Order date: ${object.date_order}\n"
+#~ "       % if object.origin:\n"
+#~ "       | Order reference: ${object.origin}\n"
+#~ "       % endif\n"
+#~ "       % if object.partner_ref:\n"
+#~ "       | Your reference: ${object.partner_ref}<br />\n"
+#~ "       % endif\n"
+#~ "       | Your contact: ${object.validator.name} "
+#~ "${object.validator.user_email and '<%s>'%(object.validator.user_email) or "
+#~ "''}\n"
+#~ "\n"
+#~ "You can view the order confirmation and download it using the following "
+#~ "link:\n"
+#~ "    ${ctx.get('edi_web_url_view') or 'n/a'}\n"
+#~ "\n"
+#~ "If you have any question, do not hesitate to contact us.\n"
+#~ "\n"
+#~ "Thank you!\n"
+#~ "\n"
+#~ "\n"
+#~ "--\n"
+#~ "${object.validator.name} ${object.validator.user_email and "
+#~ "'<%s>'%(object.validator.user_email) or ''}\n"
+#~ "${object.company_id.name}\n"
+#~ "% if object.company_id.street:\n"
+#~ "${object.company_id.street or ''}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.street2:\n"
+#~ "${object.company_id.street2}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.city or object.company_id.zip:\n"
+#~ "${object.company_id.zip or ''} ${object.company_id.city or ''}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.country_id:\n"
+#~ "${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) "
+#~ "or ''} ${object.company_id.country_id.name or ''}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.phone:\n"
+#~ "Phone: ${object.company_id.phone}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.website:\n"
+#~ "${object.company_id.website or ''}\n"
+#~ "% endif\n"
+#~ "            "
+
+#, python-format
+#~ msgid ""
+#~ "You have to select a pricelist or a supplier in the purchase form !\n"
+#~ "Please set one before choosing a product."
+#~ msgstr ""
+#~ "Prije upisa proizvoda morate upisati cjenik ili dobavljača u zaglavlju "
+#~ "naloga za nabavu."
+
+#, python-format
+#~ msgid "No Partner!"
+#~ msgstr "Nema partnera!"
 
 #, python-format
 #~ msgid "Wrong Product UOM !"
 #~ msgstr "Pogrešna jedinica mjere!"
 
+#~ msgid "Order in last month"
+#~ msgstr "Nalozi - prošli mjesec"
+
+#~ msgid "Available"
+#~ msgstr "Dostupno"
+
+#, python-format
+#~ msgid "Invalid action !"
+#~ msgstr "Pogrešna akcija!"
+
+#~ msgid "Miscellaneous"
+#~ msgstr "Ostalo"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Greška !"
+
+#~ msgid "Create or Import Suppliers"
+#~ msgstr "Kreiraj ili uvezi dobavljače"
+
+#~ msgid "Is a Back Order"
+#~ msgstr "Zaostala narudžba"
+
+#~ msgid "Auto-email confirmed purchase orders"
+#~ msgstr "Auto-email potvrđene naloge nabave"
+
+#~ msgid "Month-1"
+#~ msgstr "Mjesec-1"
+
+#~ msgid "Order in  current month"
+#~ msgstr "Nalozi ovaj mjesec"
+
+#~ msgid "Based on Purchase Order Lines"
+#~ msgstr "Prema stavkama naloga za nabavu"
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "Naziv organizacije mora biti jedinstven!"
+
+#~ msgid "Reference must be unique per Company!"
+#~ msgstr "Vezna oznaka je već korištena."
+
+#~ msgid "Purchase orders which are not approved yet."
+#~ msgstr "Neodobreni nalozi."
+
 #~ msgid "Not invoiced"
 #~ msgstr "Nefakturirani"
+
+#~ msgid "Purchase orders which are in done state."
+#~ msgstr "Izvršeni nalozi"
+
+#~ msgid "Back Orders"
+#~ msgstr "Zaostali nalozi"
+
+#~ msgid "Order in current year"
+#~ msgstr "Nalozi ove godine"
+
+#, python-format
+#~ msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
+#~ msgstr "Nije definiran konto troška za proizvod: \"%s\" (id:%d)"

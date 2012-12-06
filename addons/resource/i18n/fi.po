@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
 "PO-Revision-Date: 2012-05-10 17:59+0000\n"
 "Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-19 05:30+0000\n"
-"X-Generator: Launchpad (build 16165)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:22+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: resource
 #: help:resource.calendar.leaves,resource_id:0
@@ -48,13 +48,9 @@ msgid "Resources Leaves"
 msgstr "Resurssin vapaat"
 
 #. module: resource
-#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
-#: view:resource.calendar:0
-#: field:resource.calendar,attendance_ids:0
-#: view:resource.calendar.attendance:0
-#: field:resource.resource,calendar_id:0
-msgid "Working Time"
-msgstr "Työaika"
+#: field:resource.calendar.attendance,dayofweek:0
+msgid "Day of Week"
+msgstr "Viikonpäivä"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -71,6 +67,11 @@ msgstr "Ryhmittely.."
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Sunday"
 msgstr "Sunnuntai"
+
+#. module: resource
+#: field:resource.resource,time_efficiency:0
+msgid "Efficiency Factor"
+msgstr "Tehokkuuskerroin"
 
 #. module: resource
 #: view:resource.resource:0
@@ -95,14 +96,15 @@ msgid "Make sure the Working time has been configured with proper week days!"
 msgstr "Varmista että työaika on määritelty oikeille työpäiville!"
 
 #. module: resource
-#: field:resource.calendar,manager:0
-msgid "Workgroup Manager"
-msgstr "Työryhmän johtaja"
+#: code:addons/resource/resource.py:310
+#, python-format
+msgid "%s (copy)"
+msgstr ""
 
 #. module: resource
-#: help:resource.calendar.attendance,hour_from:0
-msgid "Working time will start from"
-msgstr "Työaika alkaa"
+#: view:resource.calendar:0
+msgid "Search Working Time"
+msgstr "Hae työaikaa"
 
 #. module: resource
 #: constraint:resource.calendar.leaves:0
@@ -129,24 +131,9 @@ msgid "Friday"
 msgstr "Perjantai"
 
 #. module: resource
-#: field:resource.calendar.attendance,dayofweek:0
-msgid "Day of Week"
-msgstr "Viikonpäivä"
-
-#. module: resource
-#: help:resource.calendar.attendance,hour_to:0
-msgid "Working time will end at"
-msgstr "Työaika loppuu"
-
-#. module: resource
-#: field:resource.calendar.attendance,date_from:0
-msgid "Starting date"
-msgstr "Aloituspäivämäärä"
-
-#. module: resource
-#: view:resource.calendar:0
-msgid "Search Working Time"
-msgstr "Hae työaikaa"
+#: view:resource.calendar.attendance:0
+msgid "Hours"
+msgstr ""
 
 #. module: resource
 #: view:resource.calendar.leaves:0
@@ -170,9 +157,14 @@ msgid "Search Working Period Leaves"
 msgstr "Hae työjakson lomia"
 
 #. module: resource
-#: field:resource.resource,time_efficiency:0
-msgid "Efficiency Factor"
-msgstr "Tehokkuuskerroin"
+#: field:resource.calendar.attendance,date_from:0
+msgid "Starting Date"
+msgstr ""
+
+#. module: resource
+#: field:resource.calendar,manager:0
+msgid "Workgroup Manager"
+msgstr "Työryhmän johtaja"
 
 #. module: resource
 #: field:resource.calendar.leaves,date_to:0
@@ -193,7 +185,6 @@ msgid "Resource"
 msgstr "Resurssi"
 
 #. module: resource
-#: view:resource.calendar:0
 #: field:resource.calendar,name:0
 #: field:resource.calendar.attendance,name:0
 #: field:resource.calendar.leaves,name:0
@@ -202,15 +193,30 @@ msgid "Name"
 msgstr "Nimi"
 
 #. module: resource
-#: selection:resource.calendar.attendance,dayofweek:0
-msgid "Wednesday"
-msgstr "Keskiviikko"
+#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
+#: view:resource.calendar:0
+#: field:resource.calendar,attendance_ids:0
+#: view:resource.calendar.attendance:0
+#: field:resource.calendar.leaves,calendar_id:0
+#: field:resource.resource,calendar_id:0
+msgid "Working Time"
+msgstr "Työaika"
+
+#. module: resource
+#: help:resource.calendar.attendance,hour_from:0
+msgid "Start and End time of working."
+msgstr ""
 
 #. module: resource
 #: view:resource.calendar.leaves:0
 #: view:resource.resource:0
 msgid "Working Period"
 msgstr "Työjakso"
+
+#. module: resource
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Wednesday"
+msgstr "Keskiviikko"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_resource
@@ -281,13 +287,9 @@ msgid "Work to"
 msgstr "Työaika päättyy"
 
 #. module: resource
-#: help:resource.resource,time_efficiency:0
-msgid ""
-"This field depict the efficiency of the resource to complete tasks. e.g  "
-"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficency of "
-"200%, then his load will only be 50%."
-msgstr ""
+#: model:ir.model,name:resource.model_resource_calendar_attendance
+msgid "Work Detail"
+msgstr "Työn yksityiskohdat"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -295,9 +297,13 @@ msgid "Tuesday"
 msgstr "Tiistai"
 
 #. module: resource
-#: field:resource.calendar.leaves,calendar_id:0
-msgid "Working time"
-msgstr "Työaika"
+#: help:resource.resource,time_efficiency:0
+msgid ""
+"This field depict the efficiency of the resource to complete tasks. e.g  "
+"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
+"show a load of 100% for this phase by default, but if we put a efficiency of "
+"200%, then his load will only be 50%."
+msgstr ""
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
@@ -339,9 +345,9 @@ msgid "Human"
 msgstr "Ihminen"
 
 #. module: resource
-#: model:ir.model,name:resource.model_resource_calendar_attendance
-msgid "Work Detail"
-msgstr "Työn yksityiskohdat"
+#: view:resource.calendar.leaves:0
+msgid "Duration"
+msgstr ""
 
 #. module: resource
 #: field:resource.calendar.leaves,date_from:0
@@ -349,15 +355,12 @@ msgid "Start Date"
 msgstr "Alkupäivä"
 
 #. module: resource
-#: code:addons/resource/resource.py:310
-#, python-format
-msgid " (copy)"
-msgstr " (kopio)"
-
-#. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Saturday"
 msgstr "Lauantai"
+
+#~ msgid "Working time will start from"
+#~ msgstr "Työaika alkaa"
 
 #~ msgid "Day of week"
 #~ msgstr "Viikonpäivä"
@@ -365,8 +368,21 @@ msgstr "Lauantai"
 #~ msgid "Workgroup manager"
 #~ msgstr "Työryhmän johtaja"
 
+#~ msgid "Starting date"
+#~ msgstr "Aloituspäivämäärä"
+
+#~ msgid "Working time will end at"
+#~ msgstr "Työaika loppuu"
+
+#~ msgid "Working time"
+#~ msgstr "Työaika"
+
 #~ msgid "General Information"
 #~ msgstr "Yleiset tiedot"
+
+#, python-format
+#~ msgid " (copy)"
+#~ msgstr " (kopio)"
 
 #~ msgid "Efficiency factor"
 #~ msgstr "Tehokkuuskerroin"

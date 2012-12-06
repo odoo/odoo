@@ -14,7 +14,7 @@ class ImportController(openerp.addons.web.http.Controller):
             'file': file.read(),
             'file_name': file.filename,
             'file_type': file.content_type,
-        }, req.session.eval_context(req.context))
+        }, req.context)
 
         return 'window.top.%s(%s)' % (
             jsonp, simplejson.dumps({'result': written}))

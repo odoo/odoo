@@ -17,10 +17,12 @@
 
     <record id="stock.property_stock_account_input_categ" model="ir.property">
         <field eval="'account.account,'+str(ref('chart2141_en'))" model="account.account" name="value"/>
+        <field eval="'product.category,'+str(ref('product.product_category_all'))" model="product.category" name="res_id"/>
     </record>
 
     <record id="stock.property_stock_account_output_categ" model="ir.property">
         <field eval="'account.account,'+str(ref('chart1145_en'))" model="account.account" name="value"/>
+        <field eval="'product.category,'+str(ref('product.product_category_all'))" model="product.category" name="res_id"/>
     </record>
 
     <record id="property_stock_valuation_account_id_en" model="ir.property">
@@ -28,6 +30,7 @@
         <field name="fields_id" search="[('model','=','product.category'),('name','=','property_stock_valuation_account_id')]"/>
         <field name="company_id" ref="base.main_company"/>
         <field eval="'account.account,'+str(ref('chart1141_en'))" model="account.account" name="value"/>
+        <field eval="'product.category,'+str(ref('product.product_category_all'))" model="product.category" name="res_id"/>
     </record>
 
     </data>

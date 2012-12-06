@@ -12,7 +12,7 @@
                         <field name="member_price"/>
                     </group>
                     <footer>
-                        <button string="Join" name="membership_invoice" type="object" class="oe_highlight"  />
+                        <button string="Invoice Membership" name="membership_invoice" type="object" class="oe_highlight"  />
                         or
                         <button string="Cancel" class="oe_link" special="cancel" />
                     </footer>
@@ -32,7 +32,7 @@
         <act_window name="Invoice Membership"
             res_model="membership.invoice"
             src_model="res.partner"
-            multi="False"
+            multi="True"
             key2="client_action_multi"
             view_mode="form"
             id="action_membership_invoice_view"/>

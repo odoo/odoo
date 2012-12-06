@@ -10,25 +10,28 @@
                     <form position="attributes">
                         <attribute name="string">Install Thunderbird Plug-In</attribute>
                     </form>
-                    <xpath expr="//footer" position="replace"/>
+                    <xpath expr="//footer" position="replace">
+                       <footer>
+                            <button string="Close" class="oe_link" special="cancel" />
+                       </footer>
+                    </xpath>
                     <xpath expr="//separator[@string='title']" position="after">
                         <group>
                             <field name="thunderbird" invisible="1"/>
                             <field name="plugin_name" invisible="1"/>
                             <field name="plugin_file" filename="plugin_name" widget="url"/>
-                            <field name="pdf_file" widget="url"/>
                         </group>
                         <separator string="Installation and Configuration Steps"/>
-                        <p>Thunderbird plugin installation:</p>
-                        <ul>
-                            <li>1. Save the Thunderbird plug-in.</li>
-                            <li>2. From the Thunderbird menubar: Tools ­> Add-ons -> Screwdriver/Wrench Icon -> Install add-on from file...</li>
-                            <li>3. Select the plug-in (the file named openerp_plugin.xpi).</li>
-                            <li>4. Click "Install Now".</li>
-                            <li>5. Restart Thunderbird.</li>
-                            <li>6. From the Thunderbird menubar: OpenERP -> Configuration.</li>
-                            <li>7. Configure your openerp server.</li>
-                        </ul>
+                        <p>Thunderbird plug-in installation:</p>
+                        <ol>
+                            <li> Save the Thunderbird plug-in.</li>
+                            <li> From the Thunderbird menubar: Tools ­> Add-ons -> Screwdriver/Wrench Icon -> Install add-on from file...</li>
+                            <li> Select the plug-in (the file named openerp_plugin.xpi).</li>
+                            <li> Click "Install Now".</li>
+                            <li> Restart Thunderbird.</li>
+                            <li> From the Thunderbird menubar: OpenERP -> Configuration.</li>
+                            <li> Configure your openerp server.</li>
+                        </ol>
                     </xpath>
                     <separator string="title" position="attributes">
                         <attribute name="string"></attribute>
@@ -57,7 +60,7 @@
                     <div>
                         <field name="module_plugin_thunderbird" class="oe_inline"/>
                         <label for="module_plugin_thunderbird"/>
-                        <button name="%(action_thunderbird_installer)d" type="action" string="Download and install the plugin" icon="gtk-execute"
+                        <button name="%(action_thunderbird_installer)d" type="action" string="Download and install the plug-in" icon="gtk-execute"
                             attrs="{'invisible': [('module_plugin_thunderbird','=',False)]}" class="oe_link"/>
                     </div>
                 </div>

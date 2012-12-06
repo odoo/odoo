@@ -14,8 +14,8 @@
                     <field name="partner_id"/>
                 </field>
                 <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]" position="inside">
-                    <a t-if="record.use_timesheets.raw_value"
-                        name="open_timesheets" type="object"><field name="hours_quantity"/> Timesheets</a>
+                    <a t-if="record.use_timesheets.raw_value" style="margin-right: 10px"
+                        name="open_timesheets" type="object"><field name="hours_quantity"/> Hours</a>
                 </xpath>
             </field>
         </record>
@@ -86,11 +86,9 @@
             <field name="context">{'search_default_to_invoice': 1}</field>
             <field name="view_id" ref="view_account_analytic_line_tree_inherit_account_id"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to add a work to invoice.
-              </p><p>
-                You will find here all works made on tasks that you can
-                invoice.
+              <p>
+                You will find here timesheets and purchases you did for contracts that can be reinvoiced to the customer.
+                If you want to record new jobs to invoice, you should use the timesheet menu instead.
               </p>
             </field>
         </record>
@@ -100,7 +98,8 @@
             sequence="5" groups="base.group_hr_attendance" />
 
         <menuitem id="menu_project_billing" name="Invoicing"
-                  parent="base.menu_main_pm" sequence="5"/>
+                  parent="base.menu_main_pm" sequence="5"
+                  groups="project.group_project_manager"/>
         <menuitem id="menu_project_billing_line" name="Invoice Tasks Work"
             parent="menu_project_billing" action="action_project_timesheet_bill_task"/>
 

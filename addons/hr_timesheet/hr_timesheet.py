@@ -154,7 +154,7 @@ class hr_analytic_timesheet(osv.osv):
         'date': lambda self, cr, uid, ctx: ctx.get('date', fields.date.context_today(self,cr,uid,context=ctx)),
         'user_id': lambda obj, cr, uid, ctx: ctx.get('user_id', uid),
     }
-    def on_change_account_id(self, cr, uid, ids, account_id):
+    def on_change_account_id(self, cr, uid, ids, account_id, context=None):
         return {'value':{}}
 
     def on_change_date(self, cr, uid, ids, date):
@@ -190,24 +190,19 @@ class hr_analytic_timesheet(osv.osv):
             'journal_id': self._getAnalyticJournal(cr, uid, context),
         }}
 
-hr_analytic_timesheet()
-
 class account_analytic_account(osv.osv):
 
     _inherit = 'account.analytic.account'
     _description = 'Analytic Account'
-    
     _columns = {
         'use_timesheets': fields.boolean('Timesheets', help="Check this field if this project manages timesheets"),
     }
-    
+
     def on_change_template(self, cr, uid, ids, template_id, context=None):
         res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, context=context)
         if template_id and 'value' in res:
             template = self.browse(cr, uid, template_id, context=context)
             res['value']['use_timesheets'] = template.use_timesheets
         return res
-
-account_analytic_account()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

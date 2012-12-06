@@ -7,34 +7,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-02-13 09:23+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
+"PO-Revision-Date: 2012-12-01 16:19+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-19 05:37+0000\n"
-"X-Generator: Launchpad (build 16165)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:53+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: account_sequence
 #: view:account.sequence.installer:0
 #: model:ir.actions.act_window,name:account_sequence.action_account_seq_installer
 msgid "Account Sequence Application Configuration"
 msgstr "Boeking volgnummer applicatie configuratie"
-
-#. module: account_sequence
-#: constraint:account.move:0
-msgid ""
-"You can not create more than one move per period on centralized journal"
-msgstr ""
-"Het is niet mogelijk meer dan één mutatie per periode te maken op een "
-"algemeen dagboek"
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid "Company must be the same for its related account and period."
-msgstr "Bedrijf moet gelijk zijn voor de gerelateerde rekening en periode."
 
 #. module: account_sequence
 #: help:account.move,internal_sequence_number:0
@@ -83,15 +70,6 @@ msgid "Company"
 msgstr "Bedrijf"
 
 #. module: account_sequence
-#: help:account.journal,internal_sequence_id:0
-msgid ""
-"This sequence will be used to maintain the internal number for the journal "
-"entries related to this journal."
-msgstr ""
-"Dit volgnummer wordt gebruikt voor de interne nummering van journaalposten "
-"in dit dagboek."
-
-#. module: account_sequence
 #: field:account.sequence.installer,padding:0
 msgid "Number padding"
 msgstr "Nummer verspringing"
@@ -108,13 +86,6 @@ msgid "Internal Number"
 msgstr "Intern Nummer"
 
 #. module: account_sequence
-#: constraint:account.move.line:0
-msgid "You can not create journal items on an account of type view."
-msgstr ""
-"Het is niet mogelijk om journaal boekingen te doen op een rekening van het "
-"type 'aanzicht'"
-
-#. module: account_sequence
 #: help:account.sequence.installer,padding:0
 msgid ""
 "OpenERP will automatically adds some '0' on the left of the 'Next Number' to "
@@ -127,26 +98,6 @@ msgstr ""
 #: field:account.sequence.installer,name:0
 msgid "Name"
 msgstr "Naam"
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid "You can not create journal items on closed account."
-msgstr ""
-"Het is niet mogelijk een journaal boeking te doen op een afgesloten rekening."
-
-#. module: account_sequence
-#: constraint:account.journal:0
-msgid ""
-"Configuration error! The currency chosen should be shared by the default "
-"accounts too."
-msgstr ""
-"Configuratiefout! De gekozen valuta moet hetzelfde zijn als dat van de "
-"standaard grootboekrekeningen."
-
-#. module: account_sequence
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
-msgstr "Verkeerde debet of credit waarde in boekingsregel!"
 
 #. module: account_sequence
 #: field:account.journal,internal_sequence_id:0
@@ -169,39 +120,9 @@ msgid "Suffix"
 msgstr "Achtervoegsel"
 
 #. module: account_sequence
-#: field:account.sequence.installer,config_logo:0
-msgid "Image"
-msgstr "Afbeelding"
-
-#. module: account_sequence
 #: view:account.sequence.installer:0
 msgid "title"
 msgstr "titel"
-
-#. module: account_sequence
-#: sql_constraint:account.journal:0
-msgid "The name of the journal must be unique per company !"
-msgstr "De naam van het dagboek moet uniek zijn per bedrijf !"
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry forces to provide a secondary "
-"currency. You should remove the secondary currency on the account or select "
-"a multi-currency view on the journal."
-msgstr ""
-"De geselecteerde rekening van uw journalboeking vraagt om een tweede valuta. "
-"U moet de tweede valuta op de rekening verwijderen of selecteer een multi-"
-"valuta overzicht van de boeking."
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid ""
-"The date of your Journal Entry is not in the defined period! You should "
-"change the date or remove this constraint from the journal."
-msgstr ""
-"De datum van uw dagboek boeking is niet in de gedefinieerde periode! U moet "
-"de datum aanpassen of deze beperking van het dagboek verwijderen."
 
 #. module: account_sequence
 #: field:account.sequence.installer,prefix:0
@@ -209,9 +130,13 @@ msgid "Prefix"
 msgstr "Voorvoegsel"
 
 #. module: account_sequence
-#: sql_constraint:account.journal:0
-msgid "The code of the journal must be unique per company !"
-msgstr "De code van het dagboek moet uniek zijn per bedrijf !"
+#: help:account.journal,internal_sequence_id:0
+msgid ""
+"This sequence will be used to maintain the internal number for the journal "
+"entries related to this journal."
+msgstr ""
+"Dit volgnummer wordt gebruikt voor de interne nummering van journaalposten "
+"in dit dagboek."
 
 #. module: account_sequence
 #: model:ir.model,name:account_sequence.model_account_sequence_installer
@@ -255,11 +180,64 @@ msgstr ""
 #~ msgid "You can not create move line on closed account."
 #~ msgstr "U kunt geen boekingsregel creëren op een gesloten rekening"
 
+#~ msgid "Wrong credit or debit value in accounting entry !"
+#~ msgstr "Verkeerde debet of credit waarde in boekingsregel!"
+
+#~ msgid "Image"
+#~ msgstr "Afbeelding"
+
 #~ msgid "You can not create move line on view account."
 #~ msgstr "U kunt geen boekingsregel creëren op een zichtrekening"
+
+#~ msgid "The name of the journal must be unique per company !"
+#~ msgstr "De naam van het dagboek moet uniek zijn per bedrijf !"
+
+#~ msgid "The code of the journal must be unique per company !"
+#~ msgstr "De code van het dagboek moet uniek zijn per bedrijf !"
 
 #~ msgid ""
 #~ "You cannot create more than one move per period on centralized journal"
 #~ msgstr ""
 #~ "Je mag niet meer dan een verschuiving per periode maken op een "
 #~ "gecentraliseerd dagboek"
+
+#~ msgid ""
+#~ "The selected account of your Journal Entry forces to provide a secondary "
+#~ "currency. You should remove the secondary currency on the account or select "
+#~ "a multi-currency view on the journal."
+#~ msgstr ""
+#~ "De geselecteerde rekening van uw journalboeking vraagt om een tweede valuta. "
+#~ "U moet de tweede valuta op de rekening verwijderen of selecteer een multi-"
+#~ "valuta overzicht van de boeking."
+
+#~ msgid ""
+#~ "The date of your Journal Entry is not in the defined period! You should "
+#~ "change the date or remove this constraint from the journal."
+#~ msgstr ""
+#~ "De datum van uw dagboek boeking is niet in de gedefinieerde periode! U moet "
+#~ "de datum aanpassen of deze beperking van het dagboek verwijderen."
+
+#~ msgid "You can not create journal items on an account of type view."
+#~ msgstr ""
+#~ "Het is niet mogelijk om journaal boekingen te doen op een rekening van het "
+#~ "type 'aanzicht'"
+
+#~ msgid "You can not create journal items on closed account."
+#~ msgstr ""
+#~ "Het is niet mogelijk een journaal boeking te doen op een afgesloten rekening."
+
+#~ msgid "Company must be the same for its related account and period."
+#~ msgstr "Bedrijf moet gelijk zijn voor de gerelateerde rekening en periode."
+
+#~ msgid ""
+#~ "Configuration error! The currency chosen should be shared by the default "
+#~ "accounts too."
+#~ msgstr ""
+#~ "Configuratiefout! De gekozen valuta moet hetzelfde zijn als dat van de "
+#~ "standaard grootboekrekeningen."
+
+#~ msgid ""
+#~ "You can not create more than one move per period on centralized journal"
+#~ msgstr ""
+#~ "Het is niet mogelijk meer dan één mutatie per periode te maken op een "
+#~ "algemeen dagboek"

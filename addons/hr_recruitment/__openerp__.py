@@ -24,7 +24,7 @@
     'name': 'Recruitment Process',
     'version': '1.0',
     'category': 'Human Resources',
-    'sequence': 24,
+    'sequence': 25,
     'summary': 'Jobs, Recruitment, Applications, Job Interviews',
     'description': """
 Manage job positions and the recruitment process
@@ -60,7 +60,6 @@ You can define the different phases of interviews and easily rate the applicant 
         'hr_recruitment_data.xml'
     ],
     'demo': ['hr_recruitment_demo.yml'],
-    'js': ['static/src/js/hr_recruitment.js'],
     'test': ['test/recruitment_process.yml'],
     'installable': True,
     'auto_install': False,

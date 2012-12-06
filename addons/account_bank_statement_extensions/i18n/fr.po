@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-02-21 13:52+0000\n"
 "Last-Translator: t.o <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-19 05:38+0000\n"
-"X-Generator: Launchpad (build 16165)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:54+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -57,19 +57,14 @@ msgid "Cancel selected statement lines"
 msgstr "Annuler les lignes de relevé sélectionnées"
 
 #. module: account_bank_statement_extensions
-#: constraint:res.partner.bank:0
-msgid "The RIB and/or IBAN is not valid"
-msgstr "Le numéro du RIB et/ou IBAN n'est pas correct."
+#: field:account.bank.statement.line,val_date:0
+msgid "Value Date"
+msgstr ""
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
 msgid "Group By..."
 msgstr "Regrouper par..."
-
-#. module: account_bank_statement_extensions
-#: field:account.bank.statement.line,state:0
-msgid "State"
-msgstr "État"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -107,19 +102,32 @@ msgid "Batch Payment Info"
 msgstr "Information sur les paiements en lot"
 
 #. module: account_bank_statement_extensions
+#: field:account.bank.statement.line,state:0
+msgid "Status"
+msgstr ""
+
+#. module: account_bank_statement_extensions
+#: code:addons/account_bank_statement_extensions/account_bank_statement.py:129
+#, python-format
+msgid ""
+"Delete operation not allowed.             Please go to the associated bank "
+"statement in order to delete and/or modify bank statement line."
+msgstr ""
+
+#. module: account_bank_statement_extensions
+#: view:confirm.statement.line:0
+msgid "or"
+msgstr ""
+
+#. module: account_bank_statement_extensions
 #: view:confirm.statement.line:0
 msgid "Confirm Lines"
 msgstr "Confirmer les lignes"
 
 #. module: account_bank_statement_extensions
-#: code:addons/account_bank_statement_extensions/account_bank_statement.py:130
-#, python-format
-msgid ""
-"Delete operation not allowed !             Please go to the associated bank "
-"statement in order to delete and/or modify this bank statement line"
-msgstr ""
-"Suppression interdite ! Pour supprimer et / ou modifier cette ligne de  "
-"relevé vous devez vous rendre sur le relevé bancaire correspondant."
+#: view:account.bank.statement.line.global:0
+msgid "Transactions"
+msgstr "Transactions"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line.global,type:0
@@ -128,7 +136,6 @@ msgstr "Type"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
-#: field:account.bank.statement.line,journal_id:0
 #: report:bank.statement.balance.report:0
 msgid "Journal"
 msgstr "Journal"
@@ -152,17 +159,6 @@ msgstr "Annuler les lignes de relevé sélectionnées"
 #: field:account.bank.statement.line,counterparty_number:0
 msgid "Counterparty Number"
 msgstr "N° contrepartie"
-
-#. module: account_bank_statement_extensions
-#: view:account.bank.statement.line.global:0
-msgid "Transactions"
-msgstr "Transactions"
-
-#. module: account_bank_statement_extensions
-#: code:addons/account_bank_statement_extensions/account_bank_statement.py:130
-#, python-format
-msgid "Warning"
-msgstr "Avertissement"
 
 #. module: account_bank_statement_extensions
 #: report:bank.statement.balance.report:0
@@ -196,27 +192,6 @@ msgid "Confirmed lines cannot be changed anymore."
 msgstr "Les lignes rapprochées ne peuvent plus être modifiées"
 
 #. module: account_bank_statement_extensions
-#: constraint:res.partner.bank:0
-msgid ""
-"\n"
-"Please define BIC/Swift code on bank for bank type IBAN Account to make "
-"valid payments"
-msgstr ""
-"\n"
-"Veuillez définir le code BIC/Swift de la banque pour les types de compte "
-"IBAN afin de générer des paiements valides."
-
-#. module: account_bank_statement_extensions
-#: field:account.bank.statement.line,val_date:0
-msgid "Valuta Date"
-msgstr "Date de valeur"
-
-#. module: account_bank_statement_extensions
-#: model:ir.actions.act_window,help:account_bank_statement_extensions.action_confirm_statement_line
-msgid "Confirm selected statement lines."
-msgstr "Rapprocher les lignes du relevé sélectionnées"
-
-#. module: account_bank_statement_extensions
 #: view:cancel.statement.line:0
 msgid "Are you sure you want to cancel the selected Bank Statement lines ?"
 msgstr ""
@@ -241,6 +216,11 @@ msgstr "Notes"
 #: selection:account.bank.statement.line.global,type:0
 msgid "Manual"
 msgstr "Manuel"
+
+#. module: account_bank_statement_extensions
+#: view:account.bank.statement.line:0
+msgid "Bank Transaction"
+msgstr ""
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -277,15 +257,6 @@ msgstr "Codes fils"
 msgid "Are you sure you want to confirm the selected Bank Statement lines ?"
 msgstr ""
 "Êtes vous sûr de vouloir confirmer les lignes de relevé sélectionnées ?"
-
-#. module: account_bank_statement_extensions
-#: constraint:account.bank.statement.line:0
-msgid ""
-"The amount of the voucher must be the same amount as the one on the "
-"statement line"
-msgstr ""
-"Le montant du justificatif doit être égal à celui de la ligne le concernant "
-"sur le relevé"
 
 #. module: account_bank_statement_extensions
 #: help:account.bank.statement.line,globalisation_id:0
@@ -331,11 +302,6 @@ msgid "Bank Accounts"
 msgstr "Comptes bancaires"
 
 #. module: account_bank_statement_extensions
-#: constraint:account.bank.statement:0
-msgid "The journal and period chosen have to belong to the same company."
-msgstr "Le journal et la période doivent appartenir à la même société."
-
-#. module: account_bank_statement_extensions
 #: model:ir.model,name:account_bank_statement_extensions.model_account_bank_statement
 msgid "Bank Statement"
 msgstr "Relevé bancaire"
@@ -358,12 +324,17 @@ msgid "Bank Statement Lines"
 msgstr "Lignes de relevé bancaire"
 
 #. module: account_bank_statement_extensions
+#: code:addons/account_bank_statement_extensions/account_bank_statement.py:129
+#, python-format
+msgid "Warning!"
+msgstr ""
+
+#. module: account_bank_statement_extensions
 #: view:account.bank.statement.line.global:0
 msgid "Child Batch Payments"
 msgstr "Sous-lot de réglement"
 
 #. module: account_bank_statement_extensions
-#: view:cancel.statement.line:0
 #: view:confirm.statement.line:0
 msgid "Cancel"
 msgstr "Annuler"
@@ -382,3 +353,46 @@ msgstr "Montant total"
 #: field:account.bank.statement.line,globalisation_id:0
 msgid "Globalisation ID"
 msgstr "N° du lot"
+
+#~ msgid "The RIB and/or IBAN is not valid"
+#~ msgstr "Le numéro du RIB et/ou IBAN n'est pas correct."
+
+#~ msgid "State"
+#~ msgstr "État"
+
+#, python-format
+#~ msgid "Warning"
+#~ msgstr "Avertissement"
+
+#~ msgid ""
+#~ "\n"
+#~ "Please define BIC/Swift code on bank for bank type IBAN Account to make "
+#~ "valid payments"
+#~ msgstr ""
+#~ "\n"
+#~ "Veuillez définir le code BIC/Swift de la banque pour les types de compte "
+#~ "IBAN afin de générer des paiements valides."
+
+#~ msgid ""
+#~ "The amount of the voucher must be the same amount as the one on the "
+#~ "statement line"
+#~ msgstr ""
+#~ "Le montant du justificatif doit être égal à celui de la ligne le concernant "
+#~ "sur le relevé"
+
+#~ msgid "The journal and period chosen have to belong to the same company."
+#~ msgstr "Le journal et la période doivent appartenir à la même société."
+
+#~ msgid "Valuta Date"
+#~ msgstr "Date de valeur"
+
+#~ msgid "Confirm selected statement lines."
+#~ msgstr "Rapprocher les lignes du relevé sélectionnées"
+
+#, python-format
+#~ msgid ""
+#~ "Delete operation not allowed !             Please go to the associated bank "
+#~ "statement in order to delete and/or modify this bank statement line"
+#~ msgstr ""
+#~ "Suppression interdite ! Pour supprimer et / ou modifier cette ligne de  "
+#~ "relevé vous devez vous rendre sur le relevé bancaire correspondant."

@@ -6,26 +6,32 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2011-11-25 10:45+0000\n"
 "Last-Translator: Jiří Hajda <robie@centrum.cz>\n"
 "Language-Team: Czech  <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-19 05:08+0000\n"
-"X-Generator: Launchpad (build 16165)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:13+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 "X-Poedit-Language: Czech\n"
 
 #. module: event
 #: view:event.event:0
-msgid "Invoice Information"
-msgstr "Informace faktury"
+#: view:report.event.registration:0
+msgid "My Events"
+msgstr "Moje události"
 
 #. module: event
-#: view:partner.event.registration:0
-msgid "Event Details"
-msgstr "Podrobnosti události"
+#: field:event.registration,nb_register:0
+msgid "Number of Participants"
+msgstr ""
+
+#. module: event
+#: field:event.event,register_attended:0
+msgid "# of Participations"
+msgstr ""
 
 #. module: event
 #: field:event.event,main_speaker_id:0
@@ -45,35 +51,33 @@ msgid "Minimum Registrations"
 msgstr "Minimální registrace"
 
 #. module: event
-#: model:ir.model,name:event.model_event_confirm_registration
-msgid "Confirmation for Event Registration"
-msgstr "Potvrzení pro registraci události"
+#: help:event.event,register_min:0
+msgid ""
+"You can for each event define a minimum registration level. If you do not "
+"enough registrations you are not able to confirm your event. (put 0 to "
+"ignore this rule )"
+msgstr ""
 
 #. module: event
-#: field:event.registration.badge,title:0
-msgid "Title"
-msgstr "Název"
+#: code:addons/event/event.py:305
+#, python-format
+msgid "Event has been <b>cancelled</b>."
+msgstr ""
 
 #. module: event
-#: field:event.event,mail_registr:0
-msgid "Registration Email"
-msgstr "Registrační email"
-
-#. module: event
-#: model:ir.actions.act_window,name:event.action_event_confirm_registration
-msgid "Make Invoices"
-msgstr "Vytvoření faktůr"
-
-#. module: event
-#: view:event.event:0
-#: view:event.registration:0
+#: field:event.registration,date_open:0
 msgid "Registration Date"
 msgstr "Datum registrace"
 
 #. module: event
-#: view:partner.event.registration:0
-msgid "_Close"
-msgstr "_Zavřít"
+#: help:event.registration,origin:0
+msgid "Name of the sale order which create the registration"
+msgstr ""
+
+#. module: event
+#: field:event.event,type:0
+msgid "Type of Event"
+msgstr ""
 
 #. module: event
 #: model:event.event,name:event.event_0
@@ -81,8 +85,10 @@ msgid "Concert of Bon Jovi"
 msgstr "Koncert Bon Jovi"
 
 #. module: event
-#: view:report.event.registration:0
-msgid "Invoiced Registrations only"
+#: view:event.registration:0
+#: selection:event.registration,state:0
+#: selection:report.event.registration,registration_state:0
+msgid "Attended"
 msgstr ""
 
 #. module: event
@@ -91,20 +97,9 @@ msgid "March"
 msgstr "Březen"
 
 #. module: event
-#: field:event.event,mail_confirm:0
-msgid "Confirmation Email"
-msgstr "Potvrzovací e-mail"
-
-#. module: event
-#: field:event.registration,nb_register:0
-msgid "Quantity"
-msgstr "Množství"
-
-#. module: event
-#: code:addons/event/wizard/event_make_invoice.py:63
-#, python-format
-msgid "Registration doesn't have any partner to invoice."
-msgstr "Registrace nemá žádného partnera k fakturaci."
+#: view:event.registration:0
+msgid "Send Email"
+msgstr ""
 
 #. module: event
 #: field:event.event,company_id:0
@@ -115,56 +110,47 @@ msgid "Company"
 msgstr "Společnost"
 
 #. module: event
-#: field:event.make.invoice,invoice_date:0
-msgid "Invoice Date"
-msgstr "Datum faktury"
+#: field:event.event,email_confirmation_id:0
+#: field:event.type,default_email_event:0
+msgid "Event Confirmation Email"
+msgstr ""
 
 #. module: event
-#: help:event.event,pricelist_id:0
-msgid "Pricelist version for current event."
-msgstr "Verze ceníku pro aktuální událost."
+#: field:event.type,default_registration_max:0
+msgid "Default Maximum Registration"
+msgstr ""
 
 #. module: event
-#: code:addons/event/wizard/partner_event_registration.py:88
+#: help:event.event,message_unread:0
+#: help:event.registration,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr ""
+
+#. module: event
+#: field:event.event,register_avail:0
+msgid "Available Registrations"
+msgstr ""
+
+#. module: event
 #: view:event.registration:0
-#: model:ir.actions.act_window,name:event.action_partner_event_registration
 #: model:ir.model,name:event.model_event_registration
-#: view:partner.event.registration:0
-#, python-format
 msgid "Event Registration"
 msgstr "Registrace události"
 
 #. module: event
-#: field:event.event,parent_id:0
-msgid "Parent Event"
-msgstr "Nadřazená událost"
+#: model:ir.module.category,description:event.module_category_event_management
+msgid "Helps you manage your Events."
+msgstr ""
 
 #. module: event
-#: model:ir.actions.act_window,name:event.action_make_invoices
-msgid "Make Invoice"
-msgstr "Fakturovat"
-
-#. module: event
-#: field:event.registration,price_subtotal:0
-msgid "Subtotal"
-msgstr "Mezivýsledek"
+#: view:report.event.registration:0
+msgid "Day"
+msgstr ""
 
 #. module: event
 #: view:report.event.registration:0
 msgid "Event on Registration"
 msgstr "Události při registraci"
-
-#. module: event
-#: help:event.event,reply_to:0
-msgid "The email address put in the 'Reply-To' of all emails sent by OpenERP"
-msgstr ""
-"Tato emailová adresa vložená v 'Odpovědět komu' všech emailů poslaných z "
-"OpenERP"
-
-#. module: event
-#: view:event.registration:0
-msgid "Add Internal Note"
-msgstr "Přidat vnitřní poznámku"
 
 #. module: event
 #: view:event.event:0
@@ -185,49 +171,63 @@ msgid "Events Analysis"
 msgstr "Analýza události"
 
 #. module: event
+#: help:event.type,default_registration_max:0
+msgid "It will select this default maximum value when you choose this event"
+msgstr ""
+
+#. module: event
+#: view:report.event.registration:0
+#: field:report.event.registration,user_id_registration:0
+msgid "Register"
+msgstr ""
+
+#. module: event
+#: field:event.event,message_ids:0
 #: field:event.registration,message_ids:0
 msgid "Messages"
 msgstr "Zprávy"
 
 #. module: event
-#: model:ir.model,name:event.model_event_registration_badge
-msgid "event.registration.badge"
-msgstr "event.registration.badge"
-
-#. module: event
-#: field:event.event,mail_auto_confirm:0
-msgid "Mail Auto Confirm"
-msgstr "Automatické potvrzení poštou"
-
-#. module: event
-#: model:product.template,name:event.event_product_1_product_template
-msgid "Ticket for Opera"
-msgstr "Lístek pro Operu"
-
-#. module: event
-#: code:addons/event/event.py:125
 #: view:event.event:0
+#: field:event.event,registration_ids:0
+#: model:ir.actions.act_window,name:event.act_event_list_register_event
+#: model:ir.actions.act_window,name:event.action_registration
+#: model:ir.ui.menu,name:event.menu_action_registration
+#: view:res.partner:0
+msgid "Registrations"
+msgstr "Registrace"
+
+#. module: event
+#: code:addons/event/event.py:95
+#: code:addons/event/event.py:108
+#: code:addons/event/event.py:400
 #, python-format
+msgid "Error!"
+msgstr "Chyba!"
+
+#. module: event
+#: view:event.event:0
 msgid "Confirm Event"
 msgstr "Potvrdit událost"
 
 #. module: event
+#: view:board.board:0
+#: model:ir.actions.act_window,name:event.act_event_view
+msgid "Next Events"
+msgstr "Další události"
+
+#. module: event
 #: selection:event.event,state:0
 #: selection:event.registration,state:0
-#: selection:report.event.registration,state:0
+#: selection:report.event.registration,event_state:0
+#: selection:report.event.registration,registration_state:0
 msgid "Cancelled"
 msgstr "Zrušeno"
 
 #. module: event
-#: field:event.event,reply_to:0
-msgid "Reply-To"
-msgstr "Odpovědět"
-
-#. module: event
-#: model:ir.actions.act_window,name:event.open_board_associations_manager
-#: model:ir.ui.menu,name:event.menu_board_associations_manager
-msgid "Event Dashboard"
-msgstr "Nástěnka události"
+#: view:event.event:0
+msgid "ticket"
+msgstr ""
 
 #. module: event
 #: model:event.event,name:event.event_1
@@ -235,59 +235,78 @@ msgid "Opera of Verdi"
 msgstr "Verdiho opera"
 
 #. module: event
-#: selection:report.event.registration,month:0
-msgid "July"
-msgstr "Červenec"
-
-#. module: event
-#: help:event.event,register_prospect:0
-msgid "Total of Prospect Registrations"
+#: view:report.event.registration:0
+msgid "Display"
 msgstr ""
 
 #. module: event
-#: help:event.event,mail_auto_confirm:0
+#: view:report.event.registration:0
+#: field:report.event.registration,registration_state:0
+msgid "Registration State"
+msgstr ""
+
+#. module: event
+#: view:event.event:0
+msgid "tickets"
+msgstr ""
+
+#. module: event
+#: view:res.partner:0
+msgid "False"
+msgstr ""
+
+#. module: event
+#: model:mail.message.subtype,name:event.mt_event_registration
+msgid "New Registrations"
+msgstr ""
+
+#. module: event
+#: field:event.registration,event_end_date:0
+msgid "Event End Date"
+msgstr ""
+
+#. module: event
+#: help:event.event,message_summary:0
+#: help:event.registration,message_summary:0
 msgid ""
-"Check this box if you want to use automatic confirmation emailing or "
-"reminder."
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
 msgstr ""
 
 #. module: event
-#: field:event.registration,ref:0
-msgid "Reference"
-msgstr "Odkaz"
+#: selection:report.event.registration,month:0
+msgid "May"
+msgstr "Květen"
 
 #. module: event
-#: help:event.event,date_end:0
-#: help:partner.event.registration,end_date:0
-msgid "Closing Date of Event"
-msgstr "Datum ukončení události"
+#: view:report.event.registration:0
+msgid "Registrations in confirmed or done state"
+msgstr ""
 
 #. module: event
-#: view:event.registration:0
-msgid "Emails"
-msgstr "Emaily"
-
-#. module: event
-#: view:event.registration:0
-msgid "Extra Info"
-msgstr "Další informace"
-
-#. module: event
-#: code:addons/event/wizard/event_make_invoice.py:83
+#: code:addons/event/event.py:114
+#: code:addons/event/event.py:116
 #, python-format
-msgid "Customer Invoices"
-msgstr "Faktury zákazníků"
+msgid "Warning!"
+msgstr ""
 
 #. module: event
-#: selection:event.event,state:0
-#: selection:report.event.registration,state:0
-msgid "Draft"
-msgstr "Koncept"
+#: view:event.event:0
+#: view:event.registration:0
+msgid "Registration"
+msgstr "Registrace"
 
 #. module: event
-#: field:event.type,name:0
-msgid "Event type"
-msgstr "Typ události"
+#: view:event.registration:0
+#: field:event.registration,partner_id:0
+#: model:ir.model,name:event.model_res_partner
+msgid "Partner"
+msgstr "Partner"
+
+#. module: event
+#: model:ir.actions.server,name:event.actions_server_event_event_read
+msgid "Event: Mark read"
+msgstr ""
 
 #. module: event
 #: model:ir.model,name:event.model_event_type
@@ -295,11 +314,9 @@ msgid " Event Type "
 msgstr " Typ události "
 
 #. module: event
-#: view:event.event:0
 #: view:event.registration:0
 #: field:event.registration,event_id:0
 #: model:ir.model,name:event.model_event_event
-#: field:partner.event.registration,event_id:0
 #: view:report.event.registration:0
 #: field:report.event.registration,event_id:0
 #: view:res.partner:0
@@ -307,68 +324,52 @@ msgid "Event"
 msgstr "Událost"
 
 #. module: event
-#: view:event.registration:0
-#: field:event.registration,badge_ids:0
-msgid "Badges"
-msgstr "Vyznamenání"
-
-#. module: event
 #: view:event.event:0
 #: selection:event.event,state:0
 #: view:event.registration:0
 #: selection:event.registration,state:0
-#: selection:report.event.registration,state:0
+#: selection:report.event.registration,event_state:0
+#: selection:report.event.registration,registration_state:0
 msgid "Confirmed"
 msgstr "Potvrzeno"
 
 #. module: event
-#: view:event.confirm.registration:0
-msgid "Registration Confirmation"
-msgstr "Potvrzení registrace"
-
-#. module: event
-#: view:event.event:0
-msgid "Events in New state"
+#: view:event.registration:0
+msgid "Participant"
 msgstr ""
 
 #. module: event
+#: view:event.registration:0
 #: view:report.event.registration:0
 msgid "Confirm"
 msgstr ""
 
 #. module: event
 #: view:event.event:0
-#: field:event.event,speaker_ids:0
-msgid "Other Speakers"
-msgstr "Další řečníci"
+msgid "Organized by"
+msgstr ""
 
 #. module: event
-#: model:ir.model,name:event.model_event_make_invoice
-msgid "Event Make Invoice"
-msgstr "Událost vytváří fakturu"
+#: view:event.event:0
+msgid "Register with this event"
+msgstr ""
 
 #. module: event
-#: help:event.registration,nb_register:0
-msgid "Number of Registrations or Tickets"
-msgstr "Počet registrací nebo lístků"
+#: help:event.type,default_email_registration:0
+msgid ""
+"It will select this default confirmation registration mail value when you "
+"choose this event"
+msgstr ""
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:50
-#: code:addons/event/wizard/event_make_invoice.py:54
-#: code:addons/event/wizard/event_make_invoice.py:58
-#: code:addons/event/wizard/event_make_invoice.py:62
-#, python-format
-msgid "Warning !"
-msgstr "Varování !"
+#: view:event.event:0
+msgid "Only"
+msgstr ""
 
 #. module: event
-#: view:event.registration:0
-msgid "Send New Email"
-msgstr "Poslat nový email"
-
-#. module: event
-#: help:event.event,register_min:0
-msgid "Provide Minimum Number of Registrations"
+#: field:event.event,message_follower_ids:0
+#: field:event.registration,message_follower_ids:0
+msgid "Followers"
 msgstr ""
 
 #. module: event
@@ -378,6 +379,13 @@ msgstr "Umístění"
 
 #. module: event
 #: view:event.event:0
+#: field:event.event,message_unread:0
+#: view:event.registration:0
+#: field:event.registration,message_unread:0
+msgid "Unread Messages"
+msgstr ""
+
+#. module: event
 #: view:event.registration:0
 #: view:report.event.registration:0
 msgid "New"
@@ -385,60 +393,35 @@ msgstr ""
 
 #. module: event
 #: field:event.event,register_current:0
-#: view:report.event.registration:0
 msgid "Confirmed Registrations"
 msgstr "Potvrzené registrace"
 
 #. module: event
-#: field:event.event,mail_auto_registr:0
-msgid "Mail Auto Register"
-msgstr "Automatická registrace poštou"
-
-#. module: event
-#: field:event.event,type:0
-#: field:partner.event.registration,event_type:0
-msgid "Type"
-msgstr "Typ"
-
-#. module: event
-#: field:event.registration,email_from:0
+#: field:event.registration,email:0
 msgid "Email"
 msgstr "Email"
 
 #. module: event
-#: help:event.event,mail_confirm:0
-msgid ""
-"This email will be sent when the event gets confirmed or when someone "
-"subscribes to a confirmed event. This is also the email sent to remind "
-"someone about the event."
+#: code:addons/event/event.py:367
+#, python-format
+msgid "New registration confirmed: %s."
 msgstr ""
-
-#. module: event
-#: field:event.registration,tobe_invoiced:0
-msgid "To be Invoiced"
-msgstr "K fakturaci"
 
 #. module: event
 #: view:event.event:0
-msgid "My Sales Team(s)"
+msgid "Upcoming"
 msgstr ""
-
-#. module: event
-#: code:addons/event/event.py:398
-#, python-format
-msgid "Error !"
-msgstr "Chyba !"
-
-#. module: event
-#: field:event.event,name:0
-#: field:event.registration,name:0
-msgid "Summary"
-msgstr "Souhrn"
 
 #. module: event
 #: field:event.registration,create_date:0
 msgid "Creation Date"
 msgstr "Datum vytvoření"
+
+#. module: event
+#: view:report.event.registration:0
+#: field:report.event.registration,user_id:0
+msgid "Event Responsible"
+msgstr ""
 
 #. module: event
 #: view:event.event:0
@@ -448,25 +431,14 @@ msgid "Cancel Registration"
 msgstr "Zrušit registraci"
 
 #. module: event
-#: code:addons/event/event.py:399
-#, python-format
-msgid "Registered partner doesn't have an address to make the invoice."
-msgstr "Registrovaný partner nemá adresu k fakturaci."
+#: selection:report.event.registration,month:0
+msgid "July"
+msgstr "Červenec"
 
 #. module: event
-#: view:report.event.registration:0
-msgid "Events created in last month"
+#: field:event.event,reply_to:0
+msgid "Reply-To Email"
 msgstr ""
-
-#. module: event
-#: view:report.event.registration:0
-msgid "Events created in current year"
-msgstr ""
-
-#. module: event
-#: help:event.event,type:0
-msgid "Type of Event like Seminar, Exhibition, Conference, Training."
-msgstr "Typ události jako seminář, výstava, konference, kurz."
 
 #. module: event
 #: view:event.registration:0
@@ -475,43 +447,18 @@ msgstr ""
 
 #. module: event
 #: view:event.event:0
-msgid "Event Organization"
-msgstr "Organizace události"
-
-#. module: event
-#: view:event.registration:0
-msgid "History Information"
-msgstr "Informace historie"
-
-#. module: event
-#: view:event.registration:0
-msgid "Dates"
-msgstr "Data"
-
-#. module: event
-#: view:event.confirm:0
-#: view:event.confirm.registration:0
-msgid "Confirm Anyway"
-msgstr "Přesto potvrdit"
-
-#. module: event
-#: code:addons/event/wizard/event_confirm_registration.py:54
-#, python-format
-msgid "Warning: The Event '%s' has reached its Maximum Limit (%s)."
-msgstr "Varování: Událost '%s' dosáhla svého maximálního limitu (%s)."
-
-#. module: event
-#: view:report.event.registration:0
-msgid "    Month-1    "
+msgid "Starting Date"
 msgstr ""
 
 #. module: event
 #: view:event.event:0
-#: view:event.registration:0
-#: field:event.registration.badge,registration_id:0
-#: model:ir.actions.act_window,name:event.act_event_list_register_event
-msgid "Registration"
-msgstr "Registrace"
+msgid "Event Organization"
+msgstr "Organizace události"
+
+#. module: event
+#: view:event.confirm:0
+msgid "Confirm Anyway"
+msgstr "Přesto potvrdit"
 
 #. module: event
 #: field:report.event.registration,nbevent:0
@@ -524,16 +471,10 @@ msgid "Speaker who will be giving speech at the event."
 msgstr ""
 
 #. module: event
-#: help:event.event,state:0
-msgid ""
-"If event is created, the state is 'Draft'.If event is confirmed for the "
-"particular dates the state is set to 'Confirmed'. If the event is over, the "
-"state is set to 'Done'.If event is cancelled the state is set to 'Cancelled'."
+#: code:addons/event/event.py:457
+#, python-format
+msgid "Registration has been <b>created</b>."
 msgstr ""
-"Pokud je událost vytvořena, stav je 'Koncept'. Pokud je událost potvrzena "
-"pro určitá data, stav je nastaven na 'Potvrzené'. Pokud je po události, stav "
-"je nastaven na 'Dokončeno'. Pokud je událost zrušena, stav je nastaven na "
-"'Zrušeno'."
 
 #. module: event
 #: view:event.event:0
@@ -541,55 +482,41 @@ msgid "Cancel Event"
 msgstr "Zrušit událost"
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
-msgid "Contact"
-msgstr "Kontaktní"
+#: code:addons/event/event.py:398
+#, python-format
+msgid "State set to Done"
+msgstr ""
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
-#: field:event.registration,partner_id:0
-#: model:ir.model,name:event.model_res_partner
-msgid "Partner"
-msgstr "Partner"
+#: model:ir.actions.server,name:event.actions_server_event_registration_read
+msgid "Event registration : Mark read"
+msgstr ""
 
 #. module: event
-#: view:board.board:0
 #: model:ir.actions.act_window,name:event.act_event_reg
 #: view:report.event.registration:0
 msgid "Events Filling Status"
 msgstr "Stav naplnění události"
 
 #. module: event
-#: field:event.make.invoice,grouped:0
-msgid "Group the invoices"
-msgstr "Seskupit faktury"
-
-#. module: event
 #: view:event.event:0
-msgid "Mailing"
-msgstr "Odesílání"
-
-#. module: event
-#: view:report.event.registration:0
-msgid "Events States"
+msgid "Event Category"
 msgstr ""
 
 #. module: event
-#: view:board.board:0
 #: field:event.event,register_prospect:0
 msgid "Unconfirmed Registrations"
 msgstr "Nepotvrzené registrace"
 
 #. module: event
-#: field:event.registration,partner_invoice_id:0
-msgid "Partner Invoiced"
-msgstr "Fakturováno partnerovi"
+#: model:ir.actions.client,name:event.action_client_event_menu
+msgid "Open Event Menu"
+msgstr ""
 
 #. module: event
-#: help:event.event,register_max:0
-msgid "Provide Maximum Number of Registrations"
+#: view:report.event.registration:0
+#: field:report.event.registration,event_state:0
+msgid "Event State"
 msgstr ""
 
 #. module: event
@@ -598,12 +525,7 @@ msgid "Logs"
 msgstr "Záznamy"
 
 #. module: event
-#: view:event.event:0
-#: field:event.event,state:0
-#: view:event.registration:0
-#: field:event.registration,state:0
-#: view:report.event.registration:0
-#: field:report.event.registration,state:0
+#: field:event.event,state_id:0
 msgid "State"
 msgstr "Stav"
 
@@ -618,14 +540,15 @@ msgid "December"
 msgstr "Prosinec"
 
 #. module: event
-#: field:event.registration,event_product:0
-msgid "Invoice Name"
-msgstr "Jméno faktury"
-
-#. module: event
 #: field:report.event.registration,draft_state:0
 msgid " # No of Draft Registrations"
 msgstr " # Počet konceptů registrací"
+
+#. module: event
+#: field:event.event,email_registration_id:0
+#: field:event.type,default_email_registration:0
+msgid "Registration Confirmation Email"
+msgstr ""
 
 #. module: event
 #: view:report.event.registration:0
@@ -634,9 +557,14 @@ msgid "Month"
 msgstr "Měsíc"
 
 #. module: event
+#: field:event.registration,date_closed:0
+msgid "Attended Date"
+msgstr ""
+
+#. module: event
 #: view:event.event:0
-msgid "Event Done"
-msgstr "Událost hotova"
+msgid "Finish Event"
+msgstr ""
 
 #. module: event
 #: view:event.registration:0
@@ -644,73 +572,106 @@ msgid "Registrations in unconfirmed state"
 msgstr ""
 
 #. module: event
-#: help:event.event,register_current:0
-msgid "Total of Open and Done Registrations"
-msgstr "Celkem otevřených a dokončených registrací"
-
-#. module: event
-#: field:event.confirm.registration,msg:0
-msgid "Message"
-msgstr "Zpráva"
-
-#. module: event
-#: constraint:event.event:0
-msgid "Error ! You cannot create recursive event."
-msgstr "Chyba ! Nemůžete vytvořit rekurzivní událost."
-
-#. module: event
-#: field:event.registration,ref2:0
-msgid "Reference 2"
-msgstr "Odkaz 2"
-
-#. module: event
-#: code:addons/event/event.py:361
-#: view:report.event.registration:0
-#, python-format
-msgid "Invoiced"
-msgstr "Fakturováno"
-
-#. module: event
 #: view:event.event:0
-#: view:report.event.registration:0
-msgid "My Events"
-msgstr "Moje události"
-
-#. module: event
-#: view:event.event:0
-msgid "Speakers"
-msgstr "Řečníci"
-
-#. module: event
-#: view:event.make.invoice:0
-msgid "Create invoices"
-msgstr "Vytvořit faktury"
-
-#. module: event
-#: help:event.registration,email_cc:0
-msgid ""
-"These email addresses will be added to the CC field of all inbound and "
-"outbound emails for this record before being sent. Separate multiple email "
-"addresses with a comma"
+msgid "Event Description"
 msgstr ""
-"Tyto emailové adresy budou přidány do pole CC všech příchozích a odchozích "
-"emailů pro tento záznam před odesláním. Oddělte více emailových adres pomocí "
-"čárky"
 
 #. module: event
-#: view:event.make.invoice:0
-msgid "Do you really want to create the invoice(s) ?"
-msgstr "Opravdu chcete vytvořit fakturu(y) ?"
+#: field:event.event,date_begin:0
+msgid "Start Date"
+msgstr "Počáteční datum"
+
+#. module: event
+#: view:event.confirm:0
+msgid "or"
+msgstr ""
+
+#. module: event
+#: code:addons/event/event.py:315
+#, python-format
+msgid "Event has been <b>done</b>."
+msgstr ""
+
+#. module: event
+#: help:res.partner,speaker:0
+msgid "Check this box if this contact is a speaker."
+msgstr ""
+
+#. module: event
+#: code:addons/event/event.py:116
+#, python-format
+msgid "No Tickets Available!"
+msgstr ""
+
+#. module: event
+#: help:event.event,state:0
+msgid ""
+"If event is created, the status is 'Draft'.If event is confirmed for the "
+"particular dates the status is set to 'Confirmed'. If the event is over, the "
+"status is set to 'Done'.If event is cancelled the status is set to "
+"'Cancelled'."
+msgstr ""
+
+#. module: event
+#: model:ir.actions.act_window,help:event.action_event_view
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"               Click to add a new event.\n"
+"             </p><p>\n"
+"               OpenERP helps you schedule and efficiently organize your "
+"events:\n"
+"               track subscriptions and participations, automate the "
+"confirmation emails,\n"
+"               sell tickets, etc.\n"
+"             </p>\n"
+"           "
+msgstr ""
+
+#. module: event
+#: help:event.event,register_max:0
+msgid ""
+"You can for each event define a maximum registration level. If you have too "
+"much registrations you are not able to confirm your event. (put 0 to ignore "
+"this rule )"
+msgstr ""
+
+#. module: event
+#: code:addons/event/event.py:462
+#, python-format
+msgid "Registration has been set as <b>draft</b>."
+msgstr ""
+
+#. module: event
+#: code:addons/event/event.py:108
+#, python-format
+msgid ""
+"The total of confirmed registration for the event '%s' does not meet the "
+"expected minimum/maximum. Please reconsider those limits before going "
+"further."
+msgstr ""
+
+#. module: event
+#: help:event.event,email_confirmation_id:0
+msgid ""
+"If you set an email template, each participant will receive this email "
+"announcing the confirmation of the event."
+msgstr ""
+
+#. module: event
+#: view:board.board:0
+msgid "Events Filling By Status"
+msgstr ""
+
+#. module: event
+#: selection:report.event.registration,event_state:0
+#: selection:report.event.registration,registration_state:0
+msgid "Draft"
+msgstr "Koncept"
 
 #. module: event
 #: view:event.event:0
-msgid "Beginning Date"
-msgstr "Datum zahájení"
-
-#. module: event
-#: field:event.registration,date_closed:0
-msgid "Closed"
-msgstr "Uzavřeno"
+msgid "Events in New state"
+msgstr ""
 
 #. module: event
 #: view:report.event.registration:0
@@ -718,28 +679,46 @@ msgid "Events which are in New state"
 msgstr ""
 
 #. module: event
+#: code:addons/event/event.py:404
+#, python-format
+msgid "State set to Cancel"
+msgstr ""
+
+#. module: event
 #: view:event.event:0
 #: model:ir.actions.act_window,name:event.action_event_view
+#: model:ir.actions.act_window,name:event.open_board_associations_manager
+#: model:ir.module.category,name:event.module_category_event_management
+#: model:ir.ui.menu,name:event.event_main_menu
+#: model:ir.ui.menu,name:event.menu_board_associations_manager
 #: model:ir.ui.menu,name:event.menu_event_event
-#: model:ir.ui.menu,name:event.menu_event_event_assiciation
+#: model:ir.ui.menu,name:event.menu_reporting_events
 #: view:res.partner:0
 msgid "Events"
 msgstr "Události"
 
 #. module: event
-#: field:partner.event.registration,nb_register:0
-msgid "Number of Registration"
-msgstr "Počet registrací"
+#: view:event.event:0
+#: field:event.event,state:0
+#: view:event.registration:0
+#: field:event.registration,state:0
+msgid "Status"
+msgstr "Status"
 
 #. module: event
-#: field:event.event,child_ids:0
-msgid "Child Events"
-msgstr "Podřízené události"
+#: field:event.event,city:0
+msgid "city"
+msgstr ""
 
 #. module: event
 #: selection:report.event.registration,month:0
 msgid "August"
 msgstr "Srpen"
+
+#. module: event
+#: field:event.event,zip:0
+msgid "zip"
+msgstr ""
 
 #. module: event
 #: field:res.partner,event_ids:0
@@ -748,15 +727,9 @@ msgid "unknown"
 msgstr "neznámé"
 
 #. module: event
-#: help:event.event,product_id:0
-msgid ""
-"The invoices of this event registration will be created with this Product. "
-"Thus it allows you to set the default label and the accounting info you want "
-"by default on these invoices."
+#: field:event.event,street2:0
+msgid "Street2"
 msgstr ""
-"Faktury této registrace události budou vytvořeny pro tento výrobek. A tak "
-"vám umožní nastavit výchozí titulek a účetní informace, které chcete jako "
-"výchozí na těchto fakturách."
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -764,19 +737,49 @@ msgid "June"
 msgstr "Červen"
 
 #. module: event
-#: model:product.template,name:event.event_product_0_product_template
-msgid "Ticket for Concert"
-msgstr "Lístek na koncert"
+#: help:event.type,default_reply_to:0
+msgid ""
+"The email address of the organizer which is put in the 'Reply-To' of all "
+"emails sent automatically at event or registrations confirmation. You can "
+"also put your email address of your mail gateway if you use one."
+msgstr ""
 
 #. module: event
-#: field:event.registration,write_date:0
-msgid "Write Date"
-msgstr "Zapsat datum"
+#: help:event.event,message_ids:0
+#: help:event.registration,message_ids:0
+msgid "Messages and communication history"
+msgstr ""
 
 #. module: event
-#: view:event.registration:0
-msgid "My Registrations"
-msgstr "Moje registrace"
+#: field:event.registration,phone:0
+msgid "Phone"
+msgstr ""
+
+#. module: event
+#: model:email.template,body_html:event.confirmation_event
+msgid ""
+"\n"
+"        <p>Hello ${object.name},</p>\n"
+"        <p>The event ${object.event_id.name} that you registered for is "
+"confirmed and will be held from ${object.event_id.date_begin} to "
+"${object.event_id.date_end}.\n"
+"        For any further information please contact our event "
+"department.</p>\n"
+"        <p>Thank you for your participation!</p>\n"
+"        <p>Best regards</p>"
+msgstr ""
+
+#. module: event
+#: field:event.event,message_is_follower:0
+#: field:event.registration,message_is_follower:0
+msgid "Is a Follower"
+msgstr ""
+
+#. module: event
+#: field:event.registration,user_id:0
+#: model:res.groups,name:event.group_event_user
+msgid "User"
+msgstr ""
 
 #. module: event
 #: view:event.confirm:0
@@ -788,19 +791,20 @@ msgstr ""
 "Opravdu ji chcete potvrdit?"
 
 #. module: event
-#: field:event.registration,active:0
-msgid "Active"
-msgstr "Aktivní"
+#: view:event.event:0
+msgid "(confirmed:"
+msgstr ""
 
 #. module: event
-#: field:event.registration,date:0
-msgid "Start Date"
-msgstr "Počáteční datum"
+#: view:event.registration:0
+msgid "My Registrations"
+msgstr "Moje registrace"
 
 #. module: event
-#: selection:report.event.registration,month:0
-msgid "November"
-msgstr "Listopad"
+#: code:addons/event/event.py:310
+#, python-format
+msgid "Event has been set to <b>draft</b>."
+msgstr ""
 
 #. module: event
 #: view:report.event.registration:0
@@ -808,9 +812,12 @@ msgid "Extended Filters..."
 msgstr "Rozšířené filtry..."
 
 #. module: event
-#: field:partner.event.registration,start_date:0
-msgid "Start date"
-msgstr "Počáteční datum"
+#: field:event.event,message_comment_ids:0
+#: help:event.event,message_comment_ids:0
+#: field:event.registration,message_comment_ids:0
+#: help:event.registration,message_comment_ids:0
+msgid "Comments and emails"
+msgstr ""
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -818,25 +825,9 @@ msgid "October"
 msgstr "Říjen"
 
 #. module: event
-#: field:event.event,language:0
-msgid "Language"
-msgstr "Jazyk"
-
-#. module: event
-#: view:event.registration:0
-#: field:event.registration,email_cc:0
-msgid "CC"
-msgstr "CC"
-
-#. module: event
-#: selection:report.event.registration,month:0
-msgid "January"
-msgstr "Leden"
-
-#. module: event
-#: help:event.registration,email_from:0
-msgid "These people will receive email."
-msgstr "Tito lidé obdrží email."
+#: model:ir.actions.server,name:event.actions_server_event_registration_unread
+msgid "Event registration : Mark unread"
+msgstr ""
 
 #. module: event
 #: view:event.event:0
@@ -844,41 +835,39 @@ msgid "Set To Draft"
 msgstr "Nastavit na koncept"
 
 #. module: event
-#: code:addons/event/event.py:499
 #: view:event.event:0
-#: view:event.registration:0
 #: view:res.partner:0
-#, python-format
 msgid "Confirm Registration"
 msgstr "Potvrdit registraci"
 
 #. module: event
-#: view:event.event:0
-#: view:report.event.registration:0
+#: code:addons/event/event.py:95
+#, python-format
+msgid ""
+"You have already set a registration for this event as 'Attended'. Please "
+"reset it to draft if you want to cancel this event."
+msgstr ""
+
+#. module: event
 #: view:res.partner:0
 msgid "Date"
 msgstr "Datum"
 
 #. module: event
 #: view:event.event:0
-msgid "Registration Email Body"
-msgstr "Tělo registračního emailu"
-
-#. module: event
-#: view:event.event:0
-msgid "Confirmation Email Body"
-msgstr "Tělo potvrzovacího emailu"
-
-#. module: event
-#: view:report.event.registration:0
-msgid "Registrations in confirmed or done state"
+msgid "Email Configuration"
 msgstr ""
 
 #. module: event
-#: view:event.registration:0
-#: view:res.partner:0
-msgid "History"
-msgstr "Historie"
+#: field:event.type,default_registration_min:0
+msgid "Default Minimum Registration"
+msgstr ""
+
+#. module: event
+#: code:addons/event/event.py:368
+#, python-format
+msgid "Registration confirmed."
+msgstr ""
 
 #. module: event
 #: field:event.event,address_id:0
@@ -892,30 +881,16 @@ msgid "Types of Events"
 msgstr "Typy událostí"
 
 #. module: event
-#: field:event.registration,contact_id:0
-msgid "Partner Contact"
-msgstr "Kontakt partnera"
-
-#. module: event
-#: field:event.event,pricelist_id:0
-msgid "Pricelist"
-msgstr "Ceník"
-
-#. module: event
-#: code:addons/event/wizard/event_make_invoice.py:59
-#, python-format
-msgid "Event related doesn't have any product defined"
-msgstr "Vztažená událost nemá určen žádný výrobek"
+#: help:event.event,email_registration_id:0
+msgid ""
+"This field contains the template of the mail that will be automatically sent "
+"each time a registration for this event is confirmed."
+msgstr ""
 
 #. module: event
 #: view:event.event:0
-msgid "Auto Confirmation Email"
-msgstr "Automatický potvrzovací email"
-
-#. module: event
-#: view:event.registration:0
-msgid "Misc"
-msgstr "Různé"
+msgid "Attended the Event"
+msgstr ""
 
 #. module: event
 #: constraint:event.event:0
@@ -923,55 +898,10 @@ msgid "Error ! Closing Date cannot be set before Beginning Date."
 msgstr "Chyba ! Datum uzavření nemůže být nastaven přes datum zahájení."
 
 #. module: event
-#: code:addons/event/event.py:446
-#: selection:event.event,state:0
-#: view:event.make.invoice:0
-#: selection:event.registration,state:0
-#: selection:report.event.registration,state:0
+#: code:addons/event/event.py:400
 #, python-format
-msgid "Done"
-msgstr "Dokončeno"
-
-#. module: event
-#: field:event.event,date_begin:0
-msgid "Beginning date"
-msgstr "Datum zahájení"
-
-#. module: event
-#: view:event.registration:0
-#: field:event.registration,invoice_id:0
-msgid "Invoice"
-msgstr "Faktura"
-
-#. module: event
-#: view:report.event.registration:0
-#: field:report.event.registration,year:0
-msgid "Year"
-msgstr "Rok"
-
-#. module: event
-#: code:addons/event/event.py:465
-#, python-format
-msgid "Cancel"
-msgstr "Zrušit"
-
-#. module: event
-#: view:event.confirm:0
-#: view:event.confirm.registration:0
-#: view:event.make.invoice:0
-msgid "Close"
-msgstr "Uzavřít"
-
-#. module: event
-#: view:event.event:0
-msgid "Event by Registration"
-msgstr "Událost podle registrace"
-
-#. module: event
-#: code:addons/event/event.py:436
-#, python-format
-msgid "Open"
-msgstr "Otevřít"
+msgid "You must wait for the starting day of the event to do this action."
+msgstr ""
 
 #. module: event
 #: field:event.event,user_id:0
@@ -979,32 +909,64 @@ msgid "Responsible User"
 msgstr "Odpovědný uživatel"
 
 #. module: event
-#: code:addons/event/event.py:561
-#: code:addons/event/event.py:568
+#: selection:event.event,state:0
+#: selection:report.event.registration,event_state:0
+msgid "Done"
+msgstr "Dokončeno"
+
+#. module: event
+#: view:report.event.registration:0
+msgid "Show Confirmed Registrations"
+msgstr ""
+
+#. module: event
+#: view:event.confirm:0
+msgid "Cancel"
+msgstr "Zrušit"
+
+#. module: event
+#: field:event.registration,reply_to:0
+msgid "Reply-to Email"
+msgstr ""
+
+#. module: event
+#: code:addons/event/event.py:114
 #, python-format
-msgid "Auto Confirmation: [%s] %s"
-msgstr "Automatické potvrzení: [%s] %s"
+msgid "Only %d Seats are Available!"
+msgstr ""
+
+#. module: event
+#: model:email.template,subject:event.confirmation_event
+#: model:email.template,subject:event.confirmation_registration
+msgid "Your registration at ${object.event_id.name}"
+msgstr ""
+
+#. module: event
+#: view:event.registration:0
+msgid "Set To Unconfirmed"
+msgstr ""
+
+#. module: event
+#: view:event.event:0
+#: field:event.event,is_subscribed:0
+msgid "Subscribed"
+msgstr ""
+
+#. module: event
+#: view:event.event:0
+msgid "Unsubscribe"
+msgstr ""
 
 #. module: event
 #: view:event.event:0
 #: view:event.registration:0
-#: field:event.registration,user_id:0
-#: view:report.event.registration:0
-#: field:report.event.registration,user_id:0
 msgid "Responsible"
 msgstr "Odpovědný"
 
 #. module: event
-#: field:event.event,unit_price:0
-#: view:event.registration:0
-#: field:partner.event.registration,unit_price:0
-msgid "Registration Cost"
-msgstr "Cena registrace"
-
-#. module: event
-#: field:event.registration,unit_price:0
-msgid "Unit Price"
-msgstr "Cena za kus"
+#: view:report.event.registration:0
+msgid "Registration contact"
+msgstr ""
 
 #. module: event
 #: view:report.event.registration:0
@@ -1014,44 +976,28 @@ msgid "Speaker"
 msgstr "Řečník"
 
 #. module: event
-#: model:event.event,name:event.event_2
-msgid "Conference on ERP Buisness"
-msgstr "Konference o ERP podnikání"
-
-#. module: event
-#: view:event.registration:0
-msgid "Reply"
-msgstr "Odpovědět"
-
-#. module: event
-#: view:report.event.registration:0
-msgid "Events created in current month"
-msgstr ""
-
-#. module: event
-#: help:event.event,mail_auto_registr:0
-msgid ""
-"Check this box if you want to use automatic emailing for new registration."
-msgstr ""
-
-#. module: event
-#: field:event.event,date_end:0
-#: field:partner.event.registration,end_date:0
-msgid "Closing date"
-msgstr "Datum uzavření"
-
-#. module: event
-#: field:event.event,product_id:0
-#: view:report.event.registration:0
-#: field:report.event.registration,product_id:0
-msgid "Product"
-msgstr "Výrobek"
-
-#. module: event
 #: view:event.event:0
+msgid "Upcoming events from today"
+msgstr ""
+
+#. module: event
+#: code:addons/event/event.py:300
+#, python-format
+msgid "Event has been <b>created</b>."
+msgstr ""
+
+#. module: event
+#: model:event.event,name:event.event_2
+msgid "Conference on ERP Business"
+msgstr ""
+
+#. module: event
+#: model:ir.actions.act_window,name:event.act_event_view_registration
+msgid "New Registration"
+msgstr ""
+
+#. module: event
 #: field:event.event,note:0
-#: view:event.registration:0
-#: field:event.registration,description:0
 msgid "Description"
 msgstr "Popis"
 
@@ -1061,14 +1007,15 @@ msgid " # No of Confirmed Registrations"
 msgstr " # Počet potvrzených registrací"
 
 #. module: event
-#: model:ir.actions.act_window,name:event.act_register_event_partner
-msgid "Subscribe"
-msgstr "Upsat se"
+#: field:report.event.registration,name_registration:0
+msgid "Participant / Contact Name"
+msgstr ""
 
 #. module: event
-#: selection:report.event.registration,month:0
-msgid "May"
-msgstr "Květen"
+#: code:addons/event/event.py:320
+#, python-format
+msgid "Event has been <b>confirmed</b>."
+msgstr ""
 
 #. module: event
 #: view:res.partner:0
@@ -1076,60 +1023,35 @@ msgid "Events Registration"
 msgstr "Registrace událostí"
 
 #. module: event
-#: help:event.event,mail_registr:0
-msgid "This email will be sent when someone subscribes to the event."
-msgstr "Email bude odeslán, když se někdo upíše k události."
-
-#. module: event
-#: model:product.template,name:event.event_product_2_product_template
-msgid "Ticket for Conference"
-msgstr "Lístek pro konferenci"
-
-#. module: event
-#: model:ir.ui.menu,name:event.menu_event_type_association
-msgid "Events Type"
+#: view:event.event:0
+msgid "No ticket available."
 msgstr ""
 
 #. module: event
-#: field:event.registration.badge,address_id:0
-msgid "Address"
-msgstr "Adresa"
+#: help:event.type,default_registration_min:0
+msgid "It will select this default minimum value when you choose this event"
+msgstr ""
 
 #. module: event
-#: view:board.board:0
-#: model:ir.actions.act_window,name:event.act_event_view
-msgid "Next Events"
-msgstr "Další události"
+#: selection:report.event.registration,month:0
+msgid "January"
+msgstr "Leden"
 
 #. module: event
-#: view:partner.event.registration:0
-msgid "_Subcribe"
-msgstr "_Upsat se"
+#: field:event.event,register_max:0
+#: field:report.event.registration,register_max:0
+msgid "Maximum Registrations"
+msgstr "Nejvíce registrací"
 
 #. module: event
-#: model:ir.model,name:event.model_partner_event_registration
-msgid "  event Registration "
-msgstr "  registrace události "
-
-#. module: event
-#: help:event.event,date_begin:0
-#: help:partner.event.registration,start_date:0
-msgid "Beginning Date of Event"
-msgstr "Datum zahájení události"
-
-#. module: event
+#: view:event.event:0
+#: selection:event.event,state:0
 #: selection:event.registration,state:0
 msgid "Unconfirmed"
 msgstr "Nepotvrzené"
 
 #. module: event
-#: code:addons/event/event.py:565
-#, python-format
-msgid "Auto Registration: [%s] %s"
-msgstr "Automatická registrace: [%s] %s"
-
-#. module: event
-#: field:event.registration,date_deadline:0
+#: field:event.event,date_end:0
 msgid "End Date"
 msgstr "Datum ukončení"
 
@@ -1145,17 +1067,10 @@ msgstr "Nástěnka asociací"
 
 #. module: event
 #: view:event.event:0
-#: field:event.registration.badge,name:0
+#: field:event.event,name:0
+#: field:event.registration,name:0
 msgid "Name"
 msgstr "Jméno"
-
-#. module: event
-#: field:event.event,section_id:0
-#: field:event.registration,section_id:0
-#: view:report.event.registration:0
-#: field:report.event.registration,section_id:0
-msgid "Sale Team"
-msgstr "Prodejní tým"
 
 #. module: event
 #: field:event.event,country_id:0
@@ -1163,19 +1078,19 @@ msgid "Country"
 msgstr "Země"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:55
-#, python-format
-msgid "Registration is set as Cannot be invoiced"
-msgstr "Registrace je nastavena jako Nelze fakturovat"
+#: selection:report.event.registration,month:0
+msgid "November"
+msgstr "Listopad"
 
 #. module: event
-#: code:addons/event/event.py:527
-#: view:event.event:0
-#: view:event.registration:0
 #: view:res.partner:0
-#, python-format
 msgid "Close Registration"
 msgstr "Uzavřít registrace"
+
+#. module: event
+#: field:event.registration,origin:0
+msgid "Source Document"
+msgstr ""
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -1183,10 +1098,10 @@ msgid "April"
 msgstr "Duben"
 
 #. module: event
-#: help:event.event,unit_price:0
+#: help:event.type,default_email_event:0
 msgid ""
-"This will be the default price used as registration cost when invoicing this "
-"event. Note that you can specify a specific amount for each registration."
+"It will select this default confirmation event mail value when you choose "
+"this event"
 msgstr ""
 
 #. module: event
@@ -1197,19 +1112,17 @@ msgstr ""
 #. module: event
 #: view:event.event:0
 #: view:event.type:0
+#: field:event.type,name:0
 #: view:report.event.registration:0
-#: field:report.event.registration,type:0
+#: field:report.event.registration,event_type:0
 msgid "Event Type"
 msgstr "Typ události"
 
 #. module: event
-#: view:event.event:0
-#: field:event.event,registration_ids:0
-#: model:ir.actions.act_window,name:event.action_registration
-#: model:ir.ui.menu,name:event.menu_action_registration
-#: model:ir.ui.menu,name:event.menu_action_registration_association
-msgid "Registrations"
-msgstr "Registrace"
+#: field:event.event,message_summary:0
+#: field:event.registration,message_summary:0
+msgid "Summary"
+msgstr "Souhrn"
 
 #. module: event
 #: field:event.registration,id:0
@@ -1217,31 +1130,74 @@ msgid "ID"
 msgstr ""
 
 #. module: event
-#: field:event.event,register_max:0
-#: field:report.event.registration,register_max:0
-msgid "Maximum Registrations"
-msgstr "Nejvíce registrací"
-
-#. module: event
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
+#: field:event.type,default_reply_to:0
+msgid "Default Reply-To"
 msgstr ""
 
 #. module: event
-#: field:report.event.registration,date:0
+#: view:event.event:0
+#: model:ir.actions.act_window,name:event.act_register_event_partner
+msgid "Subscribe"
+msgstr "Upsat se"
+
+#. module: event
+#: view:event.event:0
+msgid "available."
+msgstr ""
+
+#. module: event
+#: field:event.registration,event_begin_date:0
+#: field:report.event.registration,event_date:0
 msgid "Event Start Date"
 msgstr "Datum zahájení události"
 
 #. module: event
-#: view:partner.event.registration:0
-msgid "Event For Registration"
-msgstr "Událost pro registraci"
+#: view:report.event.registration:0
+msgid "Participant / Contact"
+msgstr ""
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:51
-#, python-format
-msgid "Invoice cannot be created if the registration is in %s state."
-msgstr "Pokud je registrace ve stavu %s, nemůže být vytvořena faktura."
+#: view:event.event:0
+msgid "Current Registrations"
+msgstr ""
+
+#. module: event
+#: model:email.template,body_html:event.confirmation_registration
+msgid ""
+"\n"
+"        <p>Hello ${object.name},</p>\n"
+"        <p>We confirm that your registration to the event "
+"${object.event_id.name} has been recorded.\n"
+"        You will automatically receive an email providing you more practical "
+"information (such as the schedule, the agenda...) as soon as the event is "
+"confirmed.</p>\n"
+"        <p>Thank you for your participation!</p>\n"
+"        <p>Best regards</p>"
+msgstr ""
+
+#. module: event
+#: help:event.event,reply_to:0
+msgid ""
+"The email address of the organizer is likely to be put here, with the effect "
+"to be in the 'Reply-To' of the mails sent automatically at event or "
+"registrations confirmation. You can also put the email address of your mail "
+"gateway if you use one."
+msgstr ""
+
+#. module: event
+#: model:ir.actions.server,name:event.actions_server_event_event_unread
+msgid "Event: Mark unread"
+msgstr ""
+
+#. module: event
+#: model:res.groups,name:event.group_event_manager
+msgid "Manager"
+msgstr ""
+
+#. module: event
+#: field:event.event,street:0
+msgid "Street"
+msgstr ""
 
 #. module: event
 #: view:event.confirm:0
@@ -1251,34 +1207,15 @@ msgid "Event Confirmation"
 msgstr "Portvrzení události"
 
 #. module: event
-#: view:event.event:0
-msgid "Auto Registration Email"
-msgstr "Email automatické registrace"
-
-#. module: event
-#: view:event.registration:0
 #: view:report.event.registration:0
-#: field:report.event.registration,total:0
-msgid "Total"
-msgstr "Celkem"
+#: field:report.event.registration,year:0
+msgid "Year"
+msgstr "Rok"
 
 #. module: event
 #: field:event.event,speaker_confirmed:0
 msgid "Speaker Confirmed"
 msgstr "Řečník potvrzen"
-
-#. module: event
-#: model:ir.actions.act_window,help:event.action_event_view
-msgid ""
-"Event is the low level object used by meeting and others documents that "
-"should be synchronized with mobile devices or calendar applications through "
-"caldav. Most of the users should work in the Calendar menu, and not in the "
-"list of events."
-msgstr ""
-"Událost je nízkoúrovňový objekt použitý pro setkání a jiné dokumenty, které "
-"by měly být synchronizovány s mobilními zařízeními nebo kalendářových "
-"aplikací přes caldav. Většina uživatelů by měla pracovat s nabídkou "
-"Kalendáře a ne v seznamu událostí."
 
 #~ msgid "Configuration"
 #~ msgstr "Konfigurace"
@@ -1286,12 +1223,17 @@ msgstr ""
 #~ msgid "Ok"
 #~ msgstr "OK"
 
+#~ msgid "Registration Email"
+#~ msgstr "Registrační email"
+
 #~ msgid "Ending date"
 #~ msgstr "Datum ukončení"
 
-#, python-format
-#~ msgid "Error!"
-#~ msgstr "Chyba!"
+#~ msgid "Extra Info"
+#~ msgstr "Další informace"
+
+#~ msgid "Ticket for Opera"
+#~ msgstr "Lístek pro Operu"
 
 #~ msgid "All Events"
 #~ msgstr "Všechny události"
@@ -1304,6 +1246,9 @@ msgstr ""
 
 #~ msgid "Parent Category"
 #~ msgstr "Mateřská kategorie"
+
+#~ msgid "Event Done"
+#~ msgstr "Událost hotova"
 
 #~ msgid "Canceled"
 #~ msgstr "Ukončeno"
@@ -1319,14 +1264,14 @@ msgstr ""
 #~ msgstr ""
 #~ "Jméno objektu musí začínat znakem x_ a nesmí obsahovat žádný speciální znak!"
 
-#~ msgid "Status"
-#~ msgstr "Status"
-
 #~ msgid "All Registrations"
 #~ msgstr "Všechny registrace"
 
 #~ msgid "General"
 #~ msgstr "Všeobecné"
+
+#~ msgid "Partner Contact"
+#~ msgstr "Kontakt partnera"
 
 #~ msgid "New event"
 #~ msgstr "Nová událost"
@@ -1340,6 +1285,12 @@ msgstr ""
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Špatný název modelu v definici akce"
 
+#~ msgid "Confirmation Email"
+#~ msgstr "Potvrzovací e-mail"
+
+#~ msgid "Event type"
+#~ msgstr "Typ události"
+
 #~ msgid "Reporting"
 #~ msgstr "Hlášení"
 
@@ -1349,14 +1300,36 @@ msgstr ""
 #~ msgid "References"
 #~ msgstr "Reference"
 
+#, python-format
+#~ msgid "Open"
+#~ msgstr "Otevřít"
+
 #~ msgid "Events by section"
 #~ msgstr "Události dle sekce"
+
+#~ msgid "Invoice Information"
+#~ msgstr "Informace faktury"
 
 #~ msgid "Provide Maximun Number of Registrations"
 #~ msgstr "Poskytuje maximální počet registrací"
 
+#~ msgid "Event Details"
+#~ msgstr "Podrobnosti události"
+
+#~ msgid "Confirmation for Event Registration"
+#~ msgstr "Potvrzení pro registraci události"
+
+#~ msgid "Title"
+#~ msgstr "Název"
+
+#~ msgid "Make Invoices"
+#~ msgstr "Vytvoření faktůr"
+
 #~ msgid "Speaker who are giving speech on event."
 #~ msgstr "Řečník, který promlouvá na událostí"
+
+#~ msgid "_Close"
+#~ msgstr "_Zavřít"
 
 #~ msgid ""
 #~ "This will be the default price used as registration cost when invoicing this "
@@ -1367,11 +1340,118 @@ msgstr ""
 #~ "fakturována. Berte na vědomí, že pokud chcete, můžete určit pro každou "
 #~ "registraci jinou částku"
 
+#, python-format
+#~ msgid "Registration doesn't have any partner to invoice."
+#~ msgstr "Registrace nemá žádného partnera k fakturaci."
+
+#~ msgid "Invoice Date"
+#~ msgstr "Datum faktury"
+
 #~ msgid "Last 7 Days"
 #~ msgstr "Posledních 7 dní"
 
+#~ msgid "Parent Event"
+#~ msgstr "Nadřazená událost"
+
+#~ msgid "Make Invoice"
+#~ msgstr "Fakturovat"
+
+#~ msgid "Subtotal"
+#~ msgstr "Mezivýsledek"
+
 #~ msgid "Current Events"
 #~ msgstr "Aktuální události"
+
+#~ msgid "Add Internal Note"
+#~ msgstr "Přidat vnitřní poznámku"
+
+#~ msgid "Mail Auto Confirm"
+#~ msgstr "Automatické potvrzení poštou"
+
+#~ msgid "Reply-To"
+#~ msgstr "Odpovědět"
+
+#~ msgid "Pricelist"
+#~ msgstr "Ceník"
+
+#~ msgid "event.registration.badge"
+#~ msgstr "event.registration.badge"
+
+#~ msgid "Reference"
+#~ msgstr "Odkaz"
+
+#~ msgid "Closing Date of Event"
+#~ msgstr "Datum ukončení události"
+
+#~ msgid "Emails"
+#~ msgstr "Emaily"
+
+#, python-format
+#~ msgid "Customer Invoices"
+#~ msgstr "Faktury zákazníků"
+
+#~ msgid "Badges"
+#~ msgstr "Vyznamenání"
+
+#~ msgid "Registration Confirmation"
+#~ msgstr "Potvrzení registrace"
+
+#~ msgid "Pricelist version for current event."
+#~ msgstr "Verze ceníku pro aktuální událost."
+
+#~ msgid ""
+#~ "The invoices of this event registration will be created with this Product. "
+#~ "Thus it allows you to set the default label and the accounting info you want "
+#~ "by default on these invoices."
+#~ msgstr ""
+#~ "Faktury této registrace události budou vytvořeny pro tento výrobek. A tak "
+#~ "vám umožní nastavit výchozí titulek a účetní informace, které chcete jako "
+#~ "výchozí na těchto fakturách."
+
+#~ msgid "Misc"
+#~ msgstr "Různé"
+
+#~ msgid "Other Speakers"
+#~ msgstr "Další řečníci"
+
+#~ msgid "Event Make Invoice"
+#~ msgstr "Událost vytváří fakturu"
+
+#~ msgid "Number of Registrations or Tickets"
+#~ msgstr "Počet registrací nebo lístků"
+
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "Varování !"
+
+#~ msgid "Send New Email"
+#~ msgstr "Poslat nový email"
+
+#~ msgid "Reply"
+#~ msgstr "Odpovědět"
+
+#~ msgid "Mail Auto Register"
+#~ msgstr "Automatická registrace poštou"
+
+#~ msgid "Type"
+#~ msgstr "Typ"
+
+#~ msgid "To be Invoiced"
+#~ msgstr "K fakturaci"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Chyba !"
+
+#, python-format
+#~ msgid "Registered partner doesn't have an address to make the invoice."
+#~ msgstr "Registrovaný partner nemá adresu k fakturaci."
+
+#~ msgid "Quantity"
+#~ msgstr "Množství"
+
+#~ msgid "Type of Event like Seminar, Exhibition, Conference, Training."
+#~ msgstr "Typ události jako seminář, výstava, konference, kurz."
 
 #~ msgid ""
 #~ "This email will be sent when the event gets confimed or when someone "
@@ -1385,8 +1465,46 @@ msgstr ""
 #~ msgid "Total of Prospect Registrati./event/event.py:41:ons"
 #~ msgstr "Celkem očekávaných registrací"
 
+#~ msgid "History Information"
+#~ msgstr "Informace historie"
+
+#~ msgid "Dates"
+#~ msgstr "Data"
+
+#, python-format
+#~ msgid "Warning: The Event '%s' has reached its Maximum Limit (%s)."
+#~ msgstr "Varování: Událost '%s' dosáhla svého maximálního limitu (%s)."
+
+#~ msgid ""
+#~ "If event is created, the state is 'Draft'.If event is confirmed for the "
+#~ "particular dates the state is set to 'Confirmed'. If the event is over, the "
+#~ "state is set to 'Done'.If event is cancelled the state is set to 'Cancelled'."
+#~ msgstr ""
+#~ "Pokud je událost vytvořena, stav je 'Koncept'. Pokud je událost potvrzena "
+#~ "pro určitá data, stav je nastaven na 'Potvrzené'. Pokud je po události, stav "
+#~ "je nastaven na 'Dokončeno'. Pokud je událost zrušena, stav je nastaven na "
+#~ "'Zrušeno'."
+
+#~ msgid "Contact"
+#~ msgstr "Kontaktní"
+
 #~ msgid "Last 30 Days"
 #~ msgstr "Posledních 30 dní"
+
+#~ msgid "Group the invoices"
+#~ msgstr "Seskupit faktury"
+
+#~ msgid "Mailing"
+#~ msgstr "Odesílání"
+
+#~ msgid "Ticket for Concert"
+#~ msgstr "Lístek na koncert"
+
+#~ msgid "Partner Invoiced"
+#~ msgstr "Fakturováno partnerovi"
+
+#~ msgid "Invoice Name"
+#~ msgstr "Jméno faktury"
 
 #~ msgid ""
 #~ "Organization and management of Event.\n"
@@ -1421,8 +1539,51 @@ msgstr ""
 #~ "událost nebo na kategorii události v:\n"
 #~ "                Události / Vykazování\n"
 
+#~ msgid "Message"
+#~ msgstr "Zpráva"
+
+#~ msgid "Error ! You cannot create recursive event."
+#~ msgstr "Chyba ! Nemůžete vytvořit rekurzivní událost."
+
+#~ msgid "Reference 2"
+#~ msgstr "Odkaz 2"
+
+#, python-format
+#~ msgid "Invoiced"
+#~ msgstr "Fakturováno"
+
+#~ msgid "Speakers"
+#~ msgstr "Řečníci"
+
+#~ msgid "Create invoices"
+#~ msgstr "Vytvořit faktury"
+
+#~ msgid ""
+#~ "These email addresses will be added to the CC field of all inbound and "
+#~ "outbound emails for this record before being sent. Separate multiple email "
+#~ "addresses with a comma"
+#~ msgstr ""
+#~ "Tyto emailové adresy budou přidány do pole CC všech příchozích a odchozích "
+#~ "emailů pro tento záznam před odesláním. Oddělte více emailových adres pomocí "
+#~ "čárky"
+
 #~ msgid "Error ! You can not create recursive associated members."
 #~ msgstr "Chyba ! Nemůžete vytvořit rekurzivní asociované členy."
+
+#~ msgid "Do you really want to create the invoice(s) ?"
+#~ msgstr "Opravdu chcete vytvořit fakturu(y) ?"
+
+#~ msgid "Beginning Date"
+#~ msgstr "Datum zahájení"
+
+#~ msgid "Closed"
+#~ msgstr "Uzavřeno"
+
+#~ msgid "Number of Registration"
+#~ msgstr "Počet registrací"
+
+#~ msgid "Child Events"
+#~ msgstr "Podřízené události"
 
 #~ msgid ""
 #~ "Check this box if you want to use the automatic mailing for new registration"
@@ -1430,20 +1591,115 @@ msgstr ""
 #~ "Zaškrtněte toto políčko, pokud chcete použít automatickou poštu pro nové "
 #~ "registrace"
 
+#~ msgid "Write Date"
+#~ msgstr "Zapsat datum"
+
+#~ msgid "Active"
+#~ msgstr "Aktivní"
+
+#~ msgid "The email address put in the 'Reply-To' of all emails sent by OpenERP"
+#~ msgstr ""
+#~ "Tato emailová adresa vložená v 'Odpovědět komu' všech emailů poslaných z "
+#~ "OpenERP"
+
+#~ msgid "Total of Open and Done Registrations"
+#~ msgstr "Celkem otevřených a dokončených registrací"
+
+#~ msgid "Language"
+#~ msgstr "Jazyk"
+
+#~ msgid "CC"
+#~ msgstr "CC"
+
+#~ msgid "These people will receive email."
+#~ msgstr "Tito lidé obdrží email."
+
 #~ msgid "Dashboard"
 #~ msgstr "Nástěnka"
+
+#~ msgid "Confirmation Email Body"
+#~ msgstr "Tělo potvrzovacího emailu"
+
+#~ msgid "History"
+#~ msgstr "Historie"
 
 #~ msgid "Attachments"
 #~ msgstr "Přílohy"
 
+#, python-format
+#~ msgid "Event related doesn't have any product defined"
+#~ msgstr "Vztažená událost nemá určen žádný výrobek"
+
+#~ msgid "Auto Confirmation Email"
+#~ msgstr "Automatický potvrzovací email"
+
 #~ msgid "Last 365 Days"
 #~ msgstr "Posledních 365 dní"
+
+#~ msgid "Beginning date"
+#~ msgstr "Datum zahájení"
+
+#~ msgid "Invoice"
+#~ msgstr "Faktura"
+
+#~ msgid "Close"
+#~ msgstr "Uzavřít"
+
+#~ msgid "Event by Registration"
+#~ msgstr "Událost podle registrace"
+
+#, python-format
+#~ msgid "Auto Confirmation: [%s] %s"
+#~ msgstr "Automatické potvrzení: [%s] %s"
+
+#~ msgid "Registration Cost"
+#~ msgstr "Cena registrace"
 
 #~ msgid "Current"
 #~ msgstr "Aktuální"
 
+#~ msgid "Unit Price"
+#~ msgstr "Cena za kus"
+
 #~ msgid "Details"
 #~ msgstr "Podrobnosti"
+
+#~ msgid "Conference on ERP Buisness"
+#~ msgstr "Konference o ERP podnikání"
+
+#~ msgid "Sale Team"
+#~ msgstr "Prodejní tým"
+
+#~ msgid "Start date"
+#~ msgstr "Počáteční datum"
+
+#~ msgid "Closing date"
+#~ msgstr "Datum uzavření"
+
+#~ msgid "Product"
+#~ msgstr "Výrobek"
+
+#~ msgid "This email will be sent when someone subscribes to the event."
+#~ msgstr "Email bude odeslán, když se někdo upíše k události."
+
+#~ msgid "Ticket for Conference"
+#~ msgstr "Lístek pro konferenci"
+
+#~ msgid "Address"
+#~ msgstr "Adresa"
+
+#~ msgid "_Subcribe"
+#~ msgstr "_Upsat se"
+
+#~ msgid "  event Registration "
+#~ msgstr "  registrace události "
+
+#~ msgid "Beginning Date of Event"
+#~ msgstr "Datum zahájení události"
+
+#, python-format
+#~ msgid "Auto Registration: [%s] %s"
+#~ msgstr "Automatická registrace: [%s] %s"
 
 #~ msgid ""
 #~ "Check this box if you want ot use the automatic confirmation emailing or the "
@@ -1452,5 +1708,39 @@ msgstr ""
 #~ "Zaškrtněte toto políčko, pokud chcete použít automatické potvrzování "
 #~ "registrací nebo připomínání"
 
+#, python-format
+#~ msgid "Registration is set as Cannot be invoiced"
+#~ msgstr "Registrace je nastavena jako Nelze fakturovat"
+
+#~ msgid "Registration Email Body"
+#~ msgstr "Tělo registračního emailu"
+
+#~ msgid "Event For Registration"
+#~ msgstr "Událost pro registraci"
+
+#, python-format
+#~ msgid "Invoice cannot be created if the registration is in %s state."
+#~ msgstr "Pokud je registrace ve stavu %s, nemůže být vytvořena faktura."
+
+#~ msgid "Auto Registration Email"
+#~ msgstr "Email automatické registrace"
+
+#~ msgid "Total"
+#~ msgstr "Celkem"
+
 #~ msgid "Providee Minimum Number of Registrations"
 #~ msgstr "Poskytuje minimální počet registrací"
+
+#~ msgid ""
+#~ "Event is the low level object used by meeting and others documents that "
+#~ "should be synchronized with mobile devices or calendar applications through "
+#~ "caldav. Most of the users should work in the Calendar menu, and not in the "
+#~ "list of events."
+#~ msgstr ""
+#~ "Událost je nízkoúrovňový objekt použitý pro setkání a jiné dokumenty, které "
+#~ "by měly být synchronizovány s mobilními zařízeními nebo kalendářových "
+#~ "aplikací přes caldav. Většina uživatelů by měla pracovat s nabídkou "
+#~ "Kalendáře a ne v seznamu událostí."
+
+#~ msgid "Event Dashboard"
+#~ msgstr "Nástěnka události"

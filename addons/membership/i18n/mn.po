@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2010-08-14 08:44+0000\n"
 "Last-Translator: ub121 <ubs121@gmail.com>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-19 05:09+0000\n"
-"X-Generator: Launchpad (build 16165)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:14+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetoassociate0
@@ -33,6 +33,11 @@ msgstr "Гишүүнчлэх процесс"
 #: selection:res.partner,membership_state:0
 msgid "Paid Member"
 msgstr "Төлсөн гишүүн"
+
+#. module: membership
+#: view:report.membership:0
+msgid "This will display waiting, invoiced and total pending columns"
+msgstr "Энэ нь хүлээгдэж буй нэхэмжилсэн багануудыг харуулна."
 
 #. module: membership
 #: view:report.membership:0
@@ -78,6 +83,14 @@ msgid "Company"
 msgstr "Компани"
 
 #. module: membership
+#: selection:membership.membership_line,state:0
+#: selection:report.membership,membership_state:0
+#: field:res.partner,free_member:0
+#: selection:res.partner,membership_state:0
+msgid "Free Member"
+msgstr "Чөлөөт гишүүн"
+
+#. module: membership
 #: view:res.partner:0
 msgid "Ending Date Of Membership"
 msgstr "Гишүүнчлэлийн дуусах огноо"
@@ -86,6 +99,18 @@ msgstr "Гишүүнчлэлийн дуусах огноо"
 #: field:product.product,membership_date_to:0
 msgid "Date to"
 msgstr "Хүртэл огноо"
+
+#. module: membership
+#: field:res.partner,membership_stop:0
+msgid "Membership End Date"
+msgstr ""
+
+#. module: membership
+#: view:report.membership:0
+#: field:report.membership,user_id:0
+#: view:res.partner:0
+msgid "Salesperson"
+msgstr ""
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_waitingtoinvoice0
@@ -110,9 +135,9 @@ msgid "Non Member"
 msgstr "Гишүүн бус"
 
 #. module: membership
-#: model:product.template,name:membership.membership_2_product_template
-msgid "Basic Membership"
-msgstr "Энгийн гишүүнчлэл"
+#: view:product.product:0
+msgid "Taxes"
+msgstr ""
 
 #. module: membership
 #: view:res.partner:0
@@ -120,9 +145,11 @@ msgid "All Members"
 msgstr "Бүх гишүүд"
 
 #. module: membership
-#: field:res.partner,membership_stop:0
-msgid "Stop membership date"
-msgstr "Гишүүнчлэлийг зогсоох огноо"
+#: code:addons/membership/membership.py:410
+#: code:addons/membership/membership.py:413
+#, python-format
+msgid "Error!"
+msgstr ""
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_producttomember0
@@ -130,24 +157,14 @@ msgid "Product to member"
 msgstr "Гишүүнд бараа"
 
 #. module: membership
-#: view:res.partner:0
-msgid "Join Membership"
-msgstr "Гишүүнчлэлийн холбоо"
-
-#. module: membership
-#: field:res.partner,associate_member:0
-msgid "Associate member"
-msgstr "Гишүүнийг холбох"
+#: model:product.template,name:membership.membership_1_product_template
+msgid "Silver Membership"
+msgstr "Мөнгөн гишүүнчлэл"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_associatedmember0
 msgid "Member is associated."
 msgstr "Гишүүн холбогдсон"
-
-#. module: membership
-#: view:report.membership:0
-msgid "   Month   "
-msgstr "   Сар   "
 
 #. module: membership
 #: field:report.membership,tot_pending:0
@@ -168,11 +185,6 @@ msgstr "Нийлүүлэгч Харилцагчид"
 #: field:report.membership,num_invoiced:0
 msgid "# Invoiced"
 msgstr "# нэхэмжлэгдсэн"
-
-#. module: membership
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr ""
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_report_membership_tree
@@ -213,11 +225,6 @@ msgid "Customer Partners"
 msgstr "Захиалагч Харилцагчид"
 
 #. module: membership
-#: view:res.partner:0
-msgid "Partners"
-msgstr "Харилцагч"
-
-#. module: membership
 #: field:membership.membership_line,date_from:0
 msgid "From"
 msgstr "Эхлэх"
@@ -228,41 +235,9 @@ msgid "Error, this membership product is out of date"
 msgstr "Алдаа, энэ бараа хугацаа хэтэрсэн байна"
 
 #. module: membership
-#: help:res.partner,membership_state:0
-msgid ""
-"It indicates the membership state.\n"
-"                    -Non Member: A member who has not applied for any "
-"membership.\n"
-"                    -Cancelled Member: A member who has cancelled his "
-"membership.\n"
-"                    -Old Member: A member whose membership date has "
-"expired.\n"
-"                    -Waiting Member: A member who has applied for the "
-"membership and whose invoice is going to be created.\n"
-"                    -Invoiced Member: A member whose invoice has been "
-"created.\n"
-"                    -Paid Member: A member who has paid the membership "
-"amount."
-msgstr ""
-"Энэ гишүүнчлэлийн төлөвийг илтгэдэг.\n"
-"\n"
-"-Гишүүн биш: Гишүүнчлэлд өргөдөл гаргаагүй гишүүн.\n"
-"-Цуцлагдсан гишүүн: Гишүүнчлэлээ цуцалсан гишүүн.\n"
-"-Хуучин гишүүн: Гишүүнчлэлийн хугацаа дууссан гишүүн.\n"
-"-Хүлээж буй гишүүн: Гишүүнчлэлийн өргөдлөө гаргасан нэхэмжлэл нь үүсэх гэж "
-"байгаа гишүүн.\n"
-"-Нэхэмжлэгдсэн гишүүн: Нэхэмжлэл нь үүссэн гишүүн.\n"
-"-Төлсөн гишүүн: Гишүүнчлэлийн төлбөрөө төлсөн гишүүн."
-
-#. module: membership
 #: model:process.transition.action,name:membership.process_transition_action_create0
 msgid "Create"
 msgstr "Үүсгэх"
-
-#. module: membership
-#: view:product.product:0
-msgid "Membership products"
-msgstr "Гишүүнчлэлийн бараа"
 
 #. module: membership
 #: model:ir.model,name:membership.model_membership_membership_line
@@ -271,26 +246,13 @@ msgstr "Гишүүний мөр"
 
 #. module: membership
 #: help:report.membership,date_from:0
-#: field:res.partner,membership_start:0
 msgid "Start membership date"
 msgstr "Гишүүнчлэл эхлэх огноо"
 
 #. module: membership
-#: view:report.membership:0
-msgid "Events created in current month"
-msgstr "Энэ сард үүсгэгдсэн үйл явдал"
-
-#. module: membership
-#: view:report.membership:0
-msgid "This will display waiting, invoiced and total pending columns"
-msgstr "Энэ нь хүлээгдэж буй нэхэмжилсэн багануудыг харуулна."
-
-#. module: membership
-#: code:addons/membership/membership.py:410
-#: code:addons/membership/membership.py:413
-#, python-format
-msgid "Error !"
-msgstr "Алдаа !"
+#: field:res.partner,membership_cancel:0
+msgid "Cancel Membership Date"
+msgstr ""
 
 #. module: membership
 #: model:process.node,name:membership.process_node_paidmember0
@@ -298,28 +260,14 @@ msgid "Paid member"
 msgstr "Төлсөн гишүүн"
 
 #. module: membership
-#: view:report.membership:0
-msgid "    Month-1    "
-msgstr "    Сар-1    "
-
-#. module: membership
-#: view:report.membership:0
-msgid "Events created in last month"
-msgstr "Сүүлийн сард үүсгэгдсэн үйл явдал"
-
-#. module: membership
 #: field:report.membership,num_waiting:0
 msgid "# Waiting"
 msgstr "# Хүлээж буй"
 
 #. module: membership
-#: view:report.membership:0
-msgid "Events created in current year"
-msgstr "Энэ жил үүсгэгдсэн үйл явдал"
-
-#. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members
 #: model:ir.ui.menu,name:membership.menu_members
+#: model:ir.ui.menu,name:membership.menu_membership
 #: view:res.partner:0
 msgid "Members"
 msgstr "Гишүүд"
@@ -354,7 +302,7 @@ msgstr ""
 "гишүүнчлэлийг тооцож үзнэ."
 
 #. module: membership
-#: field:membership.membership_line,membership_id:0
+#: view:product.product:0
 #: view:report.membership:0
 #: field:report.membership,membership_id:0
 msgid "Membership Product"
@@ -371,30 +319,25 @@ msgid "Invoiced member may be Associated member."
 msgstr "Нэхэмжилсэн гишүүд нь Холбогдсон гишүүд байж болно."
 
 #. module: membership
-#: view:membership.invoice:0
-msgid "Join"
-msgstr "Холбогдох"
-
-#. module: membership
 #: help:product.product,membership_date_to:0
 #: help:res.partner,membership_stop:0
 msgid "Date until which membership remains active."
 msgstr "Гишүүнчлэл идэвхтэй байх эцсийн хугацаа."
 
 #. module: membership
-#: field:res.partner,membership_cancel:0
-msgid "Cancel membership date"
-msgstr "Гишүүнчлэлийг цуцласан огноо"
+#: view:product.product:0
+msgid "Membership products"
+msgstr "Гишүүнчлэлийн бараа"
+
+#. module: membership
+#: field:res.partner,membership_state:0
+msgid "Current Membership Status"
+msgstr ""
 
 #. module: membership
 #: field:membership.membership_line,date:0
 msgid "Join Date"
 msgstr "Холбогдсон огноо"
-
-#. module: membership
-#: help:res.partner,free_member:0
-msgid "Select if you want to give membership free of cost."
-msgstr "Гишүүнчлэлийг үнэгүй олгохоор бол сонгоно уу."
 
 #. module: membership
 #: model:process.node,name:membership.process_node_setassociation0
@@ -417,11 +360,6 @@ msgid "Membership invoice paid."
 msgstr "Гишүүнчлэлийн нэхэмжлэл төлөгдсөн."
 
 #. module: membership
-#: model:ir.model,name:membership.model_product_template
-msgid "Product Template"
-msgstr "Барааны үлгэр"
-
-#. module: membership
 #: selection:report.membership,month:0
 msgid "September"
 msgstr "9-р сар"
@@ -435,33 +373,6 @@ msgstr "12-р сар"
 #: model:ir.model,name:membership.model_account_invoice_line
 msgid "Invoice Line"
 msgstr "Нэхэмжлэлийн мөр"
-
-#. module: membership
-#: help:membership.membership_line,state:0
-msgid ""
-"It indicates the membership state.\n"
-"                        -Non Member: A member who has not applied for any "
-"membership.\n"
-"                        -Cancelled Member: A member who has cancelled his "
-"membership.\n"
-"                        -Old Member: A member whose membership date has "
-"expired.\n"
-"                        -Waiting Member: A member who has applied for the "
-"membership and whose invoice is going to be created.\n"
-"                        -Invoiced Member: A member whose invoice has been "
-"created.\n"
-"                        -Paid Member: A member who has paid the membership "
-"amount."
-msgstr ""
-"Энэ гишүүнчлэлийн төлөвийг илтгэдэг.\n"
-"\n"
-"-Гишүүн биш: Гишүүнчлэлд өргөдөл гаргаагүй гишүүн.\n"
-"-Цуцлагдсан гишүүн: Гишүүнчлэлээ цуцалсан гишүүн.\n"
-"-Хуучин гишүүн: Гишүүнчлэлийн хугацаа дууссан гишүүн.\n"
-"-Хүлээж буй гишүүн: Гишүүнчлэлийн өргөдлөө гаргасан нэхэмжлэл нь үүсэх гэж "
-"байгаа гишүүн.\n"
-"-Нэхэмжлэгдсэн гишүүн: Нэхэмжлэл нь үүссэн гишүүн.\n"
-"-Төлсөн гишүүн: Гишүүнчлэлийн төлбөрөө төлсөн гишүүн."
 
 #. module: membership
 #: view:report.membership:0
@@ -481,13 +392,14 @@ msgid "Partner is a free Member."
 msgstr "Харилцагч нь төлбөргүй гишүүн."
 
 #. module: membership
-#: model:product.pricelist,name:membership.list1m
-msgid "Member Sale Pricelist"
-msgstr "Гишүүний Хөнгөлөлтийн Үнийн жагсаалт"
+#: view:res.partner:0
+msgid "Buy Membership"
+msgstr ""
 
 #. module: membership
 #: field:report.membership,associate_member_id:0
 #: view:res.partner:0
+#: field:res.partner,associate_member:0
 msgid "Associate Member"
 msgstr "Гишүүнийг холбох"
 
@@ -509,13 +421,6 @@ msgid "Membership Invoice"
 msgstr "Гишүүнчлэлийн нэхэмжлэл"
 
 #. module: membership
-#: view:report.membership:0
-#: field:report.membership,user_id:0
-#: view:res.partner:0
-msgid "Salesman"
-msgstr "Борлуулагч"
-
-#. module: membership
 #: model:process.node,note:membership.process_node_membershipproduct0
 msgid "Define membership product."
 msgstr "Гишүүнчлэлийн барааг тодорхойл"
@@ -526,23 +431,9 @@ msgid "Category"
 msgstr "Ангилал"
 
 #. module: membership
-#: selection:membership.membership_line,state:0
-#: selection:report.membership,membership_state:0
-#: selection:res.partner,membership_state:0
-msgid "Free Member"
-msgstr "Чөлөөт гишүүн"
-
-#. module: membership
-#: model:product.pricelist.version,name:membership.ver1m
-msgid "Member Sale Pricelist Version"
-msgstr "Гишүүний хөнгөлөлтийн үнийн жагсаалтын хувилбар"
-
-#. module: membership
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
+#: view:res.partner:0
+msgid "Contacts"
 msgstr ""
-"Алдаа: Үндсэн нэгж худалдан авах нэгж хоёул нэг ангилалд хамаарах ёстой."
 
 #. module: membership
 #: view:report.membership:0
@@ -565,9 +456,14 @@ msgid "Associated member"
 msgstr "Холбогдсон гишүүн"
 
 #. module: membership
-#: view:product.product:0
-msgid "Accounting Info"
-msgstr "Санхүүгийн мэдээлэл"
+#: help:membership.membership_line,date:0
+msgid "Date on which member has joined the membership"
+msgstr "Гишүүнийн гишүүнчлэлээр холбогдсон огноо"
+
+#. module: membership
+#: field:membership.membership_line,state:0
+msgid "Membership Status"
+msgstr ""
 
 #. module: membership
 #: help:report.membership,date_to:0
@@ -578,6 +474,11 @@ msgstr "Гишүүнчлэл дуусах огноо"
 #: view:res.partner:0
 msgid "Customers"
 msgstr "Захиалагчид"
+
+#. module: membership
+#: view:membership.invoice:0
+msgid "or"
+msgstr ""
 
 #. module: membership
 #: selection:report.membership,month:0
@@ -592,20 +493,19 @@ msgid "Membership Products"
 msgstr "Гишүүнчлэлийн бараанууд"
 
 #. module: membership
+#: sql_constraint:product.product:0
+msgid "Error ! Ending Date cannot be set before Beginning Date."
+msgstr ""
+
+#. module: membership
 #: selection:report.membership,month:0
 msgid "June"
 msgstr "6-р сар"
 
 #. module: membership
-#: model:ir.ui.menu,name:membership.menu_membership
-#: field:membership.invoice,product_id:0
-#: view:product.product:0
-#: field:product.product,membership:0
-#: view:report.membership:0
-#: view:res.partner:0
-#: field:res.partner,member_lines:0
-msgid "Membership"
-msgstr "Гишүүнчлэл"
+#: help:product.product,membership:0
+msgid "Check if the product is eligible for membership."
+msgstr ""
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -615,9 +515,15 @@ msgid "Invoiced Member"
 msgstr "Нэхэмжлэгдсэн гишүүн"
 
 #. module: membership
-#: help:membership.membership_line,date:0
-msgid "Date on which member has joined the membership"
-msgstr "Гишүүнийн гишүүнчлэлээр холбогдсон огноо"
+#: field:membership.invoice,product_id:0
+#: field:membership.membership_line,membership_id:0
+#: view:product.product:0
+#: field:product.product,membership:0
+#: view:report.membership:0
+#: view:res.partner:0
+#: field:res.partner,member_lines:0
+msgid "Membership"
+msgstr "Гишүүнчлэл"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -643,24 +549,26 @@ msgid "November"
 msgstr "11-р сар"
 
 #. module: membership
-#: help:product.product,membership:0
-msgid "Select if a product is a membership product."
-msgstr "Хэрэв бараа нь гишүүнчлэл бараа бол сонгоно"
-
-#. module: membership
-#: field:membership.membership_line,state:0
-msgid "Membership State"
-msgstr "Гишүүнчлэлийн төлөв"
-
-#. module: membership
 #: selection:report.membership,month:0
 msgid "October"
 msgstr "10-р сар"
 
 #. module: membership
-#: view:product.product:0
-msgid "Sale Description"
-msgstr "Борлуулалтын тайлбар"
+#: help:res.partner,membership_state:0
+msgid ""
+"It indicates the membership state.\n"
+"                    -Non Member: A partner who has not applied for any "
+"membership.\n"
+"                    -Cancelled Member: A member who has cancelled his "
+"membership.\n"
+"                    -Old Member: A member whose membership date has "
+"expired.\n"
+"                    -Waiting Member: A member who has applied for the "
+"membership and whose invoice is going to be created.\n"
+"                    -Invoiced Member: A member whose invoice has been "
+"created.\n"
+"                    -Paying member: A member who has paid the membership fee."
+msgstr ""
 
 #. module: membership
 #: selection:report.membership,month:0
@@ -673,14 +581,10 @@ msgid "Membership Partners"
 msgstr "Гишүүнчлэлийн Харилцагчид"
 
 #. module: membership
+#: field:membership.membership_line,member_price:0
 #: view:product.product:0
 msgid "Membership Fee"
 msgstr "Үнэгүй Гишүүнчлэл"
-
-#. module: membership
-#: field:res.partner,membership_amount:0
-msgid "Membership amount"
-msgstr "Гишүүнчлэлийн дүн"
 
 #. module: membership
 #: help:res.partner,membership_amount:0
@@ -688,9 +592,9 @@ msgid "The price negotiated by the partner"
 msgstr "Үнийг харилагчтай тохиролцдог"
 
 #. module: membership
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr "Компаний хэмжээнд нэхэмжлэлийн дугаар үл давхцах ёстой!"
+#: model:product.template,name:membership.membership_2_product_template
+msgid "Basic Membership"
+msgstr "Энгийн гишүүнчлэл"
 
 #. module: membership
 #: view:res.partner:0
@@ -712,14 +616,26 @@ msgstr "Хэнд"
 #. module: membership
 #: view:report.membership:0
 #: field:report.membership,membership_state:0
-#: field:res.partner,membership_state:0
 msgid "Current Membership State"
 msgstr "Одоогийн Гишүүнчлэлийн Төлөв"
 
 #. module: membership
-#: view:product.product:0
-msgid "General"
-msgstr "Ерөнхий"
+#: help:membership.membership_line,state:0
+msgid ""
+"It indicates the membership status.\n"
+"                        -Non Member: A member who has not applied for any "
+"membership.\n"
+"                        -Cancelled Member: A member who has cancelled his "
+"membership.\n"
+"                        -Old Member: A member whose membership date has "
+"expired.\n"
+"                        -Waiting Member: A member who has applied for the "
+"membership and whose invoice is going to be created.\n"
+"                        -Invoiced Member: A member whose invoice has been "
+"created.\n"
+"                        -Paid Member: A member who has paid the membership "
+"amount."
+msgstr ""
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_waitingtoinvoice0
@@ -739,8 +655,8 @@ msgstr "Нэхэмжлэл"
 
 #. module: membership
 #: view:membership.invoice:0
-msgid "Close"
-msgstr "Хаах"
+msgid "Cancel"
+msgstr "Цуцлах"
 
 #. module: membership
 #: view:res.partner:0
@@ -758,27 +674,19 @@ msgid "Account Invoice line"
 msgstr "Санхүүгийн Нэхэмжлэлийн Мөр"
 
 #. module: membership
-#: view:product.product:0
-msgid "Categorization"
-msgstr "Ангилал"
-
-#. module: membership
 #: model:process.node,note:membership.process_node_waitingmember0
 msgid "Draft invoice for membership."
 msgstr "Гишүүнчлэлийн ноорог нэхэмжлэл"
 
 #. module: membership
 #: field:membership.invoice,member_price:0
-#: field:membership.membership_line,member_price:0
-#: model:product.price.type,name:membership.product_price_type_memberprice
-#: field:product.template,member_price:0
 msgid "Member Price"
 msgstr "Гишүүний үнэ"
 
 #. module: membership
 #: view:product.product:0
-msgid "Purchase Description"
-msgstr "Худалдан авалтын тайлбар, тэмдэглэл"
+msgid "Membership Duration"
+msgstr ""
 
 #. module: membership
 #: model:ir.model,name:membership.model_product_product
@@ -786,29 +694,24 @@ msgid "Product"
 msgstr "Бараа"
 
 #. module: membership
-#: view:product.product:0
-msgid "Description"
-msgstr "Тайлбар"
-
-#. module: membership
-#: field:res.partner,free_member:0
-msgid "Free member"
-msgstr "Чөлөөт гишүүн"
-
-#. module: membership
 #: selection:report.membership,month:0
 msgid "May"
 msgstr "5-р сар"
 
 #. module: membership
-#: model:product.template,name:membership.membership_1_product_template
-msgid "Silver Membership"
-msgstr "Мөнгөн гишүүнчлэл"
+#: field:res.partner,membership_start:0
+msgid "Membership Start Date"
+msgstr ""
 
 #. module: membership
-#: view:product.product:0
-msgid "Sale Taxes"
-msgstr "Борлуулалтын татвар"
+#: help:res.partner,free_member:0
+msgid "Select if you want to give free membership."
+msgstr ""
+
+#. module: membership
+#: field:res.partner,membership_amount:0
+msgid "Membership Amount"
+msgstr ""
 
 #. module: membership
 #: field:report.membership,date_to:0
@@ -853,6 +756,7 @@ msgstr "Хүлээж байгаа гишүүн"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_invoice_view
+#: view:membership.invoice:0
 msgid "Invoice Membership"
 msgstr "Гишүүнчлэлийн нэхэмжлэл"
 
@@ -879,11 +783,6 @@ msgid "Cancelled Member"
 msgstr "Цуцлагдсан гишүүн"
 
 #. module: membership
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Алдаа: Буруу зураасан код"
-
-#. module: membership
 #: view:report.membership:0
 #: field:report.membership,year:0
 msgid "Year"
@@ -905,6 +804,9 @@ msgstr "Орлого хийгдсэн"
 
 #~ msgid "Error ! You can not create recursive accounts."
 #~ msgstr "Алдаа! Та цикл хэлбэрийн данс үүсгэх боломжгүй."
+
+#~ msgid "Partners"
+#~ msgstr "Харилцагч"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Дэлгэцийн XML алдаатай!"
@@ -942,6 +844,11 @@ msgstr "Орлого хийгдсэн"
 #~ msgid "Membership Product - 2"
 #~ msgstr "Гишүүнчлэлийн бараа - 2"
 
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Алдаа: Үндсэн нэгж худалдан авах нэгж хоёул нэг ангилалд хамаарах ёстой."
+
 #~ msgid "Specify if this product is a membership product"
 #~ msgstr "Энэ бараа гишүүнчлэлийн бараа эсэхийг заана"
 
@@ -960,14 +867,14 @@ msgstr "Орлого хийгдсэн"
 #~ msgid "Old members"
 #~ msgstr "Хуучин гишүүд"
 
+#~ msgid "Membership amount"
+#~ msgstr "Гишүүнчлэлийн дүн"
+
 #~ msgid "Paid members"
 #~ msgstr "Төлсөн гишүүд"
 
 #~ msgid "Future members"
 #~ msgstr "Ирээдүйн гишүүд"
-
-#~ msgid "Cancel"
-#~ msgstr "Цуцлах"
 
 #~ msgid "Canceled Member"
 #~ msgstr "Цуцлагдсан гишүүн"
@@ -980,3 +887,141 @@ msgstr "Орлого хийгдсэн"
 
 #~ msgid "Current members"
 #~ msgstr "Одоогийн гишүүд"
+
+#~ msgid "Free member"
+#~ msgstr "Чөлөөт гишүүн"
+
+#~ msgid "Stop membership date"
+#~ msgstr "Гишүүнчлэлийг зогсоох огноо"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Алдаа: Буруу зураасан код"
+
+#~ msgid "   Month   "
+#~ msgstr "   Сар   "
+
+#~ msgid "Join Membership"
+#~ msgstr "Гишүүнчлэлийн холбоо"
+
+#~ msgid "Associate member"
+#~ msgstr "Гишүүнийг холбох"
+
+#~ msgid "Events created in current month"
+#~ msgstr "Энэ сард үүсгэгдсэн үйл явдал"
+
+#~ msgid "    Month-1    "
+#~ msgstr "    Сар-1    "
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Алдаа !"
+
+#~ msgid ""
+#~ "It indicates the membership state.\n"
+#~ "                    -Non Member: A member who has not applied for any "
+#~ "membership.\n"
+#~ "                    -Cancelled Member: A member who has cancelled his "
+#~ "membership.\n"
+#~ "                    -Old Member: A member whose membership date has "
+#~ "expired.\n"
+#~ "                    -Waiting Member: A member who has applied for the "
+#~ "membership and whose invoice is going to be created.\n"
+#~ "                    -Invoiced Member: A member whose invoice has been "
+#~ "created.\n"
+#~ "                    -Paid Member: A member who has paid the membership "
+#~ "amount."
+#~ msgstr ""
+#~ "Энэ гишүүнчлэлийн төлөвийг илтгэдэг.\n"
+#~ "\n"
+#~ "-Гишүүн биш: Гишүүнчлэлд өргөдөл гаргаагүй гишүүн.\n"
+#~ "-Цуцлагдсан гишүүн: Гишүүнчлэлээ цуцалсан гишүүн.\n"
+#~ "-Хуучин гишүүн: Гишүүнчлэлийн хугацаа дууссан гишүүн.\n"
+#~ "-Хүлээж буй гишүүн: Гишүүнчлэлийн өргөдлөө гаргасан нэхэмжлэл нь үүсэх гэж "
+#~ "байгаа гишүүн.\n"
+#~ "-Нэхэмжлэгдсэн гишүүн: Нэхэмжлэл нь үүссэн гишүүн.\n"
+#~ "-Төлсөн гишүүн: Гишүүнчлэлийн төлбөрөө төлсөн гишүүн."
+
+#~ msgid "Events created in current year"
+#~ msgstr "Энэ жил үүсгэгдсэн үйл явдал"
+
+#~ msgid "Events created in last month"
+#~ msgstr "Сүүлийн сард үүсгэгдсэн үйл явдал"
+
+#~ msgid "Cancel membership date"
+#~ msgstr "Гишүүнчлэлийг цуцласан огноо"
+
+#~ msgid "Product Template"
+#~ msgstr "Барааны үлгэр"
+
+#~ msgid "Join"
+#~ msgstr "Холбогдох"
+
+#~ msgid "Select if you want to give membership free of cost."
+#~ msgstr "Гишүүнчлэлийг үнэгүй олгохоор бол сонгоно уу."
+
+#~ msgid "Member Sale Pricelist"
+#~ msgstr "Гишүүний Хөнгөлөлтийн Үнийн жагсаалт"
+
+#~ msgid ""
+#~ "It indicates the membership state.\n"
+#~ "                        -Non Member: A member who has not applied for any "
+#~ "membership.\n"
+#~ "                        -Cancelled Member: A member who has cancelled his "
+#~ "membership.\n"
+#~ "                        -Old Member: A member whose membership date has "
+#~ "expired.\n"
+#~ "                        -Waiting Member: A member who has applied for the "
+#~ "membership and whose invoice is going to be created.\n"
+#~ "                        -Invoiced Member: A member whose invoice has been "
+#~ "created.\n"
+#~ "                        -Paid Member: A member who has paid the membership "
+#~ "amount."
+#~ msgstr ""
+#~ "Энэ гишүүнчлэлийн төлөвийг илтгэдэг.\n"
+#~ "\n"
+#~ "-Гишүүн биш: Гишүүнчлэлд өргөдөл гаргаагүй гишүүн.\n"
+#~ "-Цуцлагдсан гишүүн: Гишүүнчлэлээ цуцалсан гишүүн.\n"
+#~ "-Хуучин гишүүн: Гишүүнчлэлийн хугацаа дууссан гишүүн.\n"
+#~ "-Хүлээж буй гишүүн: Гишүүнчлэлийн өргөдлөө гаргасан нэхэмжлэл нь үүсэх гэж "
+#~ "байгаа гишүүн.\n"
+#~ "-Нэхэмжлэгдсэн гишүүн: Нэхэмжлэл нь үүссэн гишүүн.\n"
+#~ "-Төлсөн гишүүн: Гишүүнчлэлийн төлбөрөө төлсөн гишүүн."
+
+#~ msgid "Member Sale Pricelist Version"
+#~ msgstr "Гишүүний хөнгөлөлтийн үнийн жагсаалтын хувилбар"
+
+#~ msgid "Salesman"
+#~ msgstr "Борлуулагч"
+
+#~ msgid "Accounting Info"
+#~ msgstr "Санхүүгийн мэдээлэл"
+
+#~ msgid "Invoice Number must be unique per Company!"
+#~ msgstr "Компаний хэмжээнд нэхэмжлэлийн дугаар үл давхцах ёстой!"
+
+#~ msgid "Select if a product is a membership product."
+#~ msgstr "Хэрэв бараа нь гишүүнчлэл бараа бол сонгоно"
+
+#~ msgid "Membership State"
+#~ msgstr "Гишүүнчлэлийн төлөв"
+
+#~ msgid "Sale Description"
+#~ msgstr "Борлуулалтын тайлбар"
+
+#~ msgid "Categorization"
+#~ msgstr "Ангилал"
+
+#~ msgid "Purchase Description"
+#~ msgstr "Худалдан авалтын тайлбар, тэмдэглэл"
+
+#~ msgid "Close"
+#~ msgstr "Хаах"
+
+#~ msgid "General"
+#~ msgstr "Ерөнхий"
+
+#~ msgid "Description"
+#~ msgstr "Тайлбар"
+
+#~ msgid "Sale Taxes"
+#~ msgstr "Борлуулалтын татвар"

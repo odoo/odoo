@@ -37,13 +37,14 @@ modules.
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': ['images/crm_statistics_dashboard.jpeg', 'images/opportunity_to_quote.jpeg'],
-    'depends': ['sale_stock', 'crm'],
+    'depends': ['sale', 'crm'],
     'data': [
         'wizard/crm_make_sale_view.xml',
         'sale_crm_view.xml',
         'process/sale_crm_process.xml',
         'security/sale_crm_security.xml',
-        'security/ir.model.access.csv'
+        'security/ir.model.access.csv',
+        'report/sale_crm_account_invoice_report_view.xml',
     ],
     'demo': [],
     'test': ['test/sale_crm.yml'],

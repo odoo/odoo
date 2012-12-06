@@ -9,8 +9,8 @@
             <field name="arch" type="xml">
                 <xpath expr='//separator[@name="description"]' position='before'>
                     <group string="Invoice on Timesheets Options" name="invoice_on_timesheets" col="4">
-                        <field name="pricelist_id" />
-                        <field name="to_invoice" widget="selection"/>
+                        <field name="pricelist_id" groups="product.group_sale_pricelist"/>
+                        <field name="to_invoice"/>
                     </group>
                  </xpath>
                 <xpath expr="//field[@name='use_timesheets']" position="replace">
@@ -19,10 +19,10 @@
                 <xpath expr="/form/sheet" position='before'>
                     <header>
                         <button name="set_pending" string="Pending" type="object" states="open" />
-                        <button name="set_close" string="Close" type="object" states="open,pending" />
+                        <button name="set_close" string="Contract Finished" type="object" states="open,pending" />
                         <button name="set_open" string="Re-open project" type="object" states="pending,close" />
                         <button name="set_open" string="Re-open project" type="object" states="cancelled,draft"/>
-                        <button name="set_cancel" string="Cancel" type="object" states="open,pending"/>
+                        <button name="set_cancel" string="Cancel Contract" type="object" states="open,pending"/>
                         <field name="state" readonly="1" widget="statusbar"
                             statusbar_visible="open,pending,close" statusbar_colors='{"pending":"red", "template":"blue"}'/>
                     </header>
@@ -91,6 +91,20 @@
             </field>
         </record>
 
+        <record id="view_hr_timesheet_line_search_to_invoice" model="ir.ui.view">
+            <field name="name">hr.analytic.timesheet.search.to_invoice</field>
+            <field name="model">hr.analytic.timesheet</field>
+            <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='account_id']" position="after">
+                    <separator/>
+                    <filter name="to_invoice" string="To Invoice" context="{'to_invoice': 1}" domain="[('invoice_id','=',False), ('to_invoice','&lt;&gt;',False)]" icon="terp-dolar"/>
+                    <filter name="invoiced" string="Invoiced" domain="[('invoice_id','!=',False), ('to_invoice','&lt;&gt;',False)]" icon="terp-dolar"/> 
+                </xpath>
+            </field>
+        </record>
+
+
         <record id="view_account_analytic_line_tree_inherit" model="ir.ui.view">
             <field name="name">account.analytic.line.tree.to_invoice</field>
             <field name="model">account.analytic.line</field>
@@ -112,31 +126,6 @@
                 </field>
             </field>
         </record>
-
-        <!-- Menus -->
-        <record id="action_hr_analytic_timesheet_open_tree" model="ir.actions.act_window">
-            <field name="name">Invoice Tasks Work</field>
-            <field name="res_model">account.analytic.line</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[]</field>
-            <field name="context">{'search_default_to_invoice': 1}</field>
-            <field name="search_view_id" ref="account.view_account_analytic_line_filter"/>            
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to add some tasks work to be invoiced.
-              </p><p>
-                This list shows every task you can invoice to the customer.
-                Select the lines and invoice from the '<i>more...</i>' contextual
-                menu to generate invoices automatically.
-              </p>
-            </field>
-        </record>
-        <menuitem
-            action="action_hr_analytic_timesheet_open_tree"
-            id="menu_hr_analytic_timesheet_tree"
-            parent="account.menu_finance_periodical_processing_billing"
-            sequence="1"/>
 
         <record id="view_hr_timesheet_invoice_factor_search" model="ir.ui.view">
             <field name="name">hr_timesheet_invoice.factor.search</field>

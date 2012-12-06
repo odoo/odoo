@@ -59,18 +59,18 @@
 
               <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_global_click_edit oe_semantic_html_override oe_kanban_card #{record.group_fancy==1 ? 'oe_kanban_card_fancy' : ''}">
                 <div class="oe_dropdown_kanban">
-                  <span>
-                    <a name="onclick_note_is_done" type="object" t-if="record.open.raw_value" class="oe_e">W</a>
-                    <a name="onclick_note_not_done" type="object" t-if="!record.open.raw_value" class="oe_e">W</a>
-                  </span>
 
                   <!-- dropdown menu -->
-                  <div class="oe_dropdown_toggle">
+                  <span class="oe_dropdown_toggle">
                     <span class="oe_e">í</span>
                     <ul class="oe_dropdown_menu">
                       <li><a type="delete">Delete</a></li>
                       <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                     </ul>
+                  </span>
+                  <div style="display: inline">
+                    <a name="onclick_note_is_done" type="object" t-if="record.open.raw_value" class="oe_e">W</a>
+                    <a name="onclick_note_not_done" type="object" t-if="!record.open.raw_value" class="oe_e">W</a>
                   </div>
                 </div>
                 <!-- kanban note -->
@@ -117,10 +117,10 @@
                     <field name="tag_ids" widget="many2many_tags" class="oe_inline" placeholder="Tags"/>
                     <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" clickable="1"/>
                 </header>
-                <field name="memo" widget="html"/><!-- editor_width="100%%" editor_height="60%%" -->
+                <field name="memo" widget="html" class="oe_memo" editor_height="450px" />
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
-                    <field class="oe_chatter" name="message_ids" widget="mail_thread"/>
+                    <field name="message_ids" widget="mail_thread"/>
                 </div>
             </form>
         </field>
@@ -134,7 +134,7 @@
         <search string="Notes">
           <field name="memo" string="Note"/>
           <field name="tag_ids"/>
-          <filter name="open_true" string="Active" domain="['|',('open', '=', True),('date_done','=',time.strftime('%%Y-%%m-%%d'))]"/>
+          <filter name="open_true" string="Active" domain="[('open', '=', True)]"/>
           <filter name="open_false" string="Archive" domain="[('open', '=', False)]"/>
           <group expand="0" string="Group By...">
             <filter icon="terp-stock_symbol-selection" string="Stage" help="By sticky note Category" context="{'group_by':'stage_id'}"/>
@@ -176,6 +176,20 @@
       <field name="view_mode">kanban,tree,form</field>
       <field name="search_view_id" ref="view_note_note_filter"/>
       <field name="context">{'search_default_open_true':True}</field>
+      <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to add a personal note.
+          </p><p>
+            Use notes to organize personal tasks or notes. All
+            notes are private; no one else will be able to see them. However
+            you can share some notes with other people by inviting followers
+            on the note. (Useful for meeting minutes, especially if
+            you activate the pad feature for collaborative writings).
+          </p><p>
+            You can customize how you process your notes/tasks by adding,
+            removing or modifying columns.
+          </p>
+        </field>
     </record>
 
     <menuitem name="Notes" id="menu_note_notes" parent="mail.mail_my_stuff" sequence="20" action="note.action_note_note"/>

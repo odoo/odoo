@@ -78,7 +78,7 @@ class sale_advance_payment_inv(osv.osv_memory):
         result = []
         for sale in sale_obj.browse(cr, uid, sale_ids, context=context):
             val = inv_line_obj.product_id_change(cr, uid, [], wizard.product_id.id,
-                    uom=False, partner_id=sale.partner_id.id, fposition_id=sale.fiscal_position.id)
+                    uom_id=False, partner_id=sale.partner_id.id, fposition_id=sale.fiscal_position.id)
             res = val['value']
 
             # determine and check income account
@@ -123,6 +123,7 @@ class sale_advance_payment_inv(osv.osv_memory):
             # create the invoice
             inv_line_values = {
                 'name': res.get('name'),
+                'origin': sale.name,
                 'account_id': res['account_id'],
                 'price_unit': inv_amount,
                 'quantity': wizard.qtty or 1.0,
@@ -138,7 +139,7 @@ class sale_advance_payment_inv(osv.osv_memory):
                 'type': 'out_invoice',
                 'reference': False,
                 'account_id': sale.partner_id.property_account_receivable.id,
-                'partner_id': sale.partner_id.id,
+                'partner_id': sale.partner_invoice_id.id,
                 'invoice_line': [(0, 0, inv_line_values)],
                 'currency_id': sale.pricelist_id.currency_id.id,
                 'comment': '',

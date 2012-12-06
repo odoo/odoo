@@ -34,16 +34,11 @@
                    <button name="action_invoice_create" states="2binvoiced" string="Make Invoice" class="oe_highlight"/>
                    <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice"/>
                    <button name="invoice_corrected" states="invoice_except" string="Invoice Corrected"/>
-                   <button name="action_cancel" states="confirmed,2binvoiced,ready,under_repair" string="Cancel Repair" type="object" attrs="{'invisible':[('invoice_method','!=','none')]}"/>
-                   <button name="action_cancel" states="invoice_except" string="Cancel Repair" type="object" attrs="{'invisible':[('invoice_method','!=','none')]}"/>
+                   <button name="action_cancel" string="Cancel Repair" type="object" attrs="{'invisible':['|',('invoice_method','!=','none'), ('state', 'not in',('confirmed','2binvoiced','ready','under_repair', 'invoice_except'))]}"/>
                    <button name="cancel" states="draft" string="Cancel Repair"/>
                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
                </header>
                <sheet string="Repairs order">
-                    <label for="product_id" class="oe_edit_only"/>
-                    <h1>
-                    </h1>
-                    <label for="name" class="oe_edit_only"/>
                     <h1>
                         Repair Order <field name="name" class="oe_inline"/>
                     </h1>
@@ -51,9 +46,9 @@
                         <group>
                             <field name="product_id" on_change="onchange_product_id(product_id)" domain="[('type','!=','service')]"/>
                             <field name="partner_id" on_change="onchange_partner_id(partner_id,address_id)" attrs="{'required':[('invoice_method','!=','none')]}"/>
-                            <field name="address_id"  attrs="{'readonly':[('deliver_bool','=', False)]}" groups="sale.group_delivery_invoice_address"/>
+                            <field name="address_id" groups="sale.group_delivery_invoice_address"/>
                             <field name="move_id" on_change="onchange_move_id(product_id, move_id)" context="{'default_product_id':product_id}"/>
-                            <field name="location_id" attrs="{'readonly':[('deliver_bool','=', False)], 'required':[('deliver_bool','=', True)]}" groups="stock.group_locations"/>
+                            <field name="location_id" attrs="{'required':[('deliver_bool','=', True)]}" groups="stock.group_locations"/>
                             <field name="prodlot_id" on_change="onchange_lot_id(prodlot_id,product_id)" groups="stock.group_production_lot" string="Serial Number"/>
                         </group>
                         <group>
@@ -114,9 +109,13 @@
                         <group class="oe_subtotal_footer oe_right">
                             <field name="amount_untaxed" sum="Untaxed amount"/>
                             <field name="amount_tax"/>
-                            <field name="amount_total" sum="Total amount" class="oe_subtotal_footer_separator"/>
+                            <div class="oe_subtotal_footer_separator oe_inline">
+                                <label for="amount_total" />
+                                <button name="button_dummy"
+                                    states="draft" string="(update)" type="object" class="oe_edit_only oe_link"/>
+                            </div>
+                            <field name="amount_total" nolabel="1" sum="Total amount" class="oe_subtotal_footer_separator"/>
                         </group>
-                        <button name="button_dummy" states="draft" string="Compute" type="object" icon="terp-stock_format-scientific"/>
                         <div class="oe_clear"/>
                     </page>
                     <page string="Invoicing">
@@ -178,7 +177,7 @@
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             </group>
                             <group>
-                                <field name="location_dest_id" attrs="{'readonly':[('deliver_bool','=', False)], 'required':[('deliver_bool','=', True)]}" groups="stock.group_locations"/>
+                                <field name="location_dest_id" attrs="{'required':[('deliver_bool','=', True)]}" groups="stock.group_locations"/>
                             </group>
                         </group>
                     </page>
@@ -189,8 +188,8 @@
                 </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_ids" widget="mail_thread"/>
                     <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
                 </div>
             </form>
         </field>

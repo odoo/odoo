@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2010-11-03 07:58+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-19 05:26+0000\n"
-"X-Generator: Launchpad (build 16165)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:44+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: document_webdav
 #: field:document.webdav.dir.property,create_date:0
@@ -29,9 +29,9 @@ msgid "Documents"
 msgstr ""
 
 #. module: document_webdav
-#: constraint:document.directory:0
-msgid "Error! You can not create recursive Directories."
-msgstr "Greska ! Ne mozes kreirati rekursivne Direktorijume."
+#: view:document.webdav.dir.property:0
+msgid "Document property"
+msgstr ""
 
 #. module: document_webdav
 #: view:document.webdav.dir.property:0
@@ -91,24 +91,9 @@ msgid "Folders"
 msgstr ""
 
 #. module: document_webdav
-#: sql_constraint:document.directory:0
-msgid "Directory cannot be parent of itself!"
-msgstr ""
-
-#. module: document_webdav
-#: view:document.directory:0
-msgid "Dynamic context"
-msgstr "Dinamicki Kontekst"
-
-#. module: document_webdav
 #: view:document.directory:0
 msgid "WebDAV properties"
 msgstr "WebDAV Svojstva"
-
-#. module: document_webdav
-#: sql_constraint:document.directory:0
-msgid "The directory name must be unique !"
-msgstr ""
 
 #. module: document_webdav
 #: code:addons/document_webdav/webdav.py:37
@@ -178,13 +163,13 @@ msgid "Creator"
 msgstr ""
 
 #. module: document_webdav
-#: model:ir.ui.menu,name:document_webdav.menu_properties
-msgid "DAV Properties"
+#: view:document.webdav.file.property:0
+msgid "Document Property"
 msgstr ""
 
 #. module: document_webdav
-#: sql_constraint:document.directory:0
-msgid "Directory must have a parent or a storage"
+#: model:ir.ui.menu,name:document_webdav.menu_properties
+msgid "DAV Properties"
 msgstr ""
 
 #. module: document_webdav
@@ -193,8 +178,14 @@ msgstr ""
 msgid "Substitute"
 msgstr "Zamena"
 
+#~ msgid "Error! You can not create recursive Directories."
+#~ msgstr "Greska ! Ne mozes kreirati rekursivne Direktorijume."
+
 #~ msgid "WebDAV server for Document Management"
 #~ msgstr "WebDAV server za Upravljanje Dokumentima"
+
+#~ msgid "Dynamic context"
+#~ msgstr "Dinamicki Kontekst"
 
 #~ msgid "DAV properties for folders"
 #~ msgstr "DAV svojstva za foldere"

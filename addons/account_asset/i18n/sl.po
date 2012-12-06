@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 01:37+0100\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-06-09 10:25+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-19 05:38+0000\n"
-"X-Generator: Launchpad (build 16165)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:54+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -24,7 +24,8 @@ msgstr ""
 
 #. module: account_asset
 #: field:account.asset.category,method_end:0
-#: field:account.asset.history,method_end:0 field:asset.modify,method_end:0
+#: field:account.asset.history,method_end:0
+#: field:asset.modify,method_end:0
 msgid "Ending date"
 msgstr "Datum zaključka"
 
@@ -39,11 +40,6 @@ msgid "Depr. Expense Account"
 msgstr ""
 
 #. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0
-msgid "Compute Asset"
-msgstr ""
-
-#. module: account_asset
 #: view:asset.asset.report:0
 msgid "Group By..."
 msgstr "Združeno po..."
@@ -54,29 +50,34 @@ msgid "Gross Amount"
 msgstr ""
 
 #. module: account_asset
-#: view:account.asset.asset:0 field:account.asset.asset,name:0
+#: view:account.asset.asset:0
 #: field:account.asset.depreciation.line,asset_id:0
-#: field:account.asset.history,asset_id:0 field:account.move.line,asset_id:0
-#: view:asset.asset.report:0 field:asset.asset.report,asset_id:0
+#: field:account.asset.history,asset_id:0
+#: field:account.move.line,asset_id:0
+#: view:asset.asset.report:0
+#: field:asset.asset.report,asset_id:0
 #: model:ir.model,name:account_asset.model_account_asset_asset
 msgid "Asset"
 msgstr "Premoženje"
 
 #. module: account_asset
-#: help:account.asset.asset,prorata:0 help:account.asset.category,prorata:0
+#: help:account.asset.asset,prorata:0
+#: help:account.asset.category,prorata:0
 msgid ""
 "Indicates that the first depreciation entry for this asset have to be done "
 "from the purchase date instead of the first January"
 msgstr ""
 
 #. module: account_asset
-#: field:account.asset.history,name:0
-msgid "History name"
-msgstr "Naziv"
+#: selection:account.asset.asset,method:0
+#: selection:account.asset.category,method:0
+msgid "Linear"
+msgstr "Linearno"
 
 #. module: account_asset
 #: field:account.asset.asset,company_id:0
-#: field:account.asset.category,company_id:0 view:asset.asset.report:0
+#: field:account.asset.category,company_id:0
+#: view:asset.asset.report:0
 #: field:asset.asset.report,company_id:0
 msgid "Company"
 msgstr "Podjetje"
@@ -87,7 +88,8 @@ msgid "Modify"
 msgstr "Spremeni"
 
 #. module: account_asset
-#: selection:account.asset.asset,state:0 view:asset.asset.report:0
+#: selection:account.asset.asset,state:0
+#: view:asset.asset.report:0
 #: selection:asset.asset.report,state:0
 msgid "Running"
 msgstr "Se izvaja"
@@ -123,13 +125,7 @@ msgid "Asset Categories"
 msgstr ""
 
 #. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0
-msgid ""
-"This wizard will post the depreciation lines of running assets that belong "
-"to the selected period."
-msgstr ""
-
-#. module: account_asset
+#: view:account.asset.asset:0
 #: field:account.asset.asset,account_move_line_ids:0
 #: field:account.move.line,entry_ids:0
 #: model:ir.actions.act_window,name:account_asset.act_entries_open
@@ -149,13 +145,14 @@ msgstr ""
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,depreciation_date:0
-#: view:asset.asset.report:0 field:asset.asset.report,depreciation_date:0
+#: view:asset.asset.report:0
+#: field:asset.asset.report,depreciation_date:0
 msgid "Depreciation Date"
 msgstr ""
 
 #. module: account_asset
-#: field:account.asset.category,account_asset_id:0
-msgid "Asset Account"
+#: constraint:account.asset.asset:0
+msgid "Error ! You cannot create recursive assets."
 msgstr ""
 
 #. module: account_asset
@@ -164,7 +161,8 @@ msgid "Posted Amount"
 msgstr ""
 
 #. module: account_asset
-#: view:account.asset.asset:0 view:asset.asset.report:0
+#: view:account.asset.asset:0
+#: view:asset.asset.report:0
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_form
 #: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_form
 #: model:ir.ui.menu,name:account_asset.menu_finance_assets
@@ -178,8 +176,11 @@ msgid "Depreciation Account"
 msgstr "Konto amortizacije"
 
 #. module: account_asset
-#: view:account.asset.asset:0 view:account.asset.category:0
-#: view:account.asset.history:0 view:asset.modify:0 field:asset.modify,note:0
+#: view:account.asset.asset:0
+#: view:account.asset.category:0
+#: view:account.asset.history:0
+#: view:asset.modify:0
+#: field:asset.modify,note:0
 msgid "Notes"
 msgstr "Opombe"
 
@@ -189,13 +190,14 @@ msgid "Depreciation Entry"
 msgstr ""
 
 #. module: account_asset
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
+#: view:asset.asset.report:0
+#: field:asset.asset.report,nbr:0
+msgid "# of Depreciation Lines"
 msgstr ""
 
 #. module: account_asset
-#: view:asset.asset.report:0 field:asset.asset.report,nbr:0
-msgid "# of Depreciation Lines"
+#: field:account.asset.asset,method_period:0
+msgid "Number of Months in a Period"
 msgstr ""
 
 #. module: account_asset
@@ -217,11 +219,6 @@ msgid "Reference"
 msgstr "Referenca"
 
 #. module: account_asset
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr ""
-
-#. module: account_asset
 #: view:account.asset.asset:0
 msgid "Account Asset"
 msgstr ""
@@ -233,12 +230,6 @@ msgid "Compute Assets"
 msgstr ""
 
 #. module: account_asset
-#: field:account.asset.depreciation.line,sequence:0
-msgid "Sequence of the depreciation"
-msgstr ""
-
-#. module: account_asset
-#: field:account.asset.asset,method_period:0
 #: field:account.asset.category,method_period:0
 #: field:account.asset.history,method_period:0
 #: field:asset.modify,method_period:0
@@ -246,7 +237,8 @@ msgid "Period Length"
 msgstr ""
 
 #. module: account_asset
-#: selection:account.asset.asset,state:0 view:asset.asset.report:0
+#: selection:account.asset.asset,state:0
+#: view:asset.asset.report:0
 #: selection:asset.asset.report,state:0
 msgid "Draft"
 msgstr "Osnutek"
@@ -262,8 +254,18 @@ msgid "Calculates Depreciation within specified interval"
 msgstr ""
 
 #. module: account_asset
+#: field:account.asset.asset,active:0
+msgid "Active"
+msgstr "Aktivno"
+
+#. module: account_asset
 #: view:account.asset.asset:0
 msgid "Change Duration"
+msgstr ""
+
+#. module: account_asset
+#: view:account.asset.category:0
+msgid "Analytic Information"
 msgstr ""
 
 #. module: account_asset
@@ -272,7 +274,8 @@ msgid "Analytic account"
 msgstr "Analitični konto"
 
 #. module: account_asset
-#: field:account.asset.asset,method:0 field:account.asset.category,method:0
+#: field:account.asset.asset,method:0
+#: field:account.asset.category,method:0
 msgid "Computation Method"
 msgstr ""
 
@@ -299,24 +302,9 @@ msgid ""
 msgstr ""
 
 #. module: account_asset
-#: field:account.asset.asset,purchase_value:0
-msgid "Gross value "
-msgstr "Bruto "
-
-#. module: account_asset
-#: constraint:account.asset.asset:0
-msgid "Error ! You can not create recursive assets."
-msgstr ""
-
-#. module: account_asset
 #: help:account.asset.history,method_period:0
 msgid "Time in month between two depreciations"
 msgstr ""
-
-#. module: account_asset
-#: view:asset.asset.report:0 field:asset.asset.report,name:0
-msgid "Year"
-msgstr "Leto"
 
 #. module: account_asset
 #: view:asset.modify:0
@@ -326,33 +314,16 @@ msgid "Modify Asset"
 msgstr ""
 
 #. module: account_asset
-#: view:account.asset.asset:0
-msgid "Other Information"
-msgstr ""
-
-#. module: account_asset
 #: field:account.asset.asset,salvage_value:0
 msgid "Salvage Value"
 msgstr ""
 
 #. module: account_asset
-#: field:account.invoice.line,asset_category_id:0 view:asset.asset.report:0
+#: field:account.asset.asset,category_id:0
+#: view:account.asset.category:0
+#: field:account.invoice.line,asset_category_id:0
+#: view:asset.asset.report:0
 msgid "Asset Category"
-msgstr ""
-
-#. module: account_asset
-#: view:account.asset.asset:0
-msgid "Set to Close"
-msgstr ""
-
-#. module: account_asset
-#: model:ir.actions.wizard,name:account_asset.wizard_asset_compute
-msgid "Compute assets"
-msgstr ""
-
-#. module: account_asset
-#: model:ir.actions.wizard,name:account_asset.wizard_asset_modify
-msgid "Modify asset"
 msgstr ""
 
 #. module: account_asset
@@ -372,32 +343,14 @@ msgid "Asset history"
 msgstr ""
 
 #. module: account_asset
-#: view:asset.asset.report:0
-msgid "Assets purchased in current year"
+#: view:account.asset.category:0
+msgid "Search Asset Category"
 msgstr ""
-
-#. module: account_asset
-#: field:account.asset.asset,state:0 field:asset.asset.report,state:0
-msgid "State"
-msgstr "Status"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_invoice_line
 msgid "Invoice Line"
 msgstr "Postavka računa"
-
-#. module: account_asset
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry forces to provide a secondary "
-"currency. You should remove the secondary currency on the account or select "
-"a multi-currency view on the journal."
-msgstr ""
-
-#. module: account_asset
-#: view:asset.asset.report:0
-msgid "Month"
-msgstr "Mesec"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -422,30 +375,21 @@ msgid "Time Method"
 msgstr ""
 
 #. module: account_asset
-#: view:account.asset.category:0
-msgid "Analytic Information"
-msgstr ""
-
-#. module: account_asset
+#: view:asset.depreciation.confirmation.wizard:0
 #: view:asset.modify:0
-msgid "Asset Durations to Modify"
+msgid "or"
 msgstr ""
 
 #. module: account_asset
-#: constraint:account.move.line:0
-msgid ""
-"The date of your Journal Entry is not in the defined period! You should "
-"change the date or remove this constraint from the journal."
-msgstr ""
-
-#. module: account_asset
-#: field:account.asset.asset,note:0 field:account.asset.category,note:0
+#: field:account.asset.asset,note:0
+#: field:account.asset.category,note:0
 #: field:account.asset.history,note:0
 msgid "Note"
 msgstr "Opomba"
 
 #. module: account_asset
-#: help:account.asset.asset,method:0 help:account.asset.category,method:0
+#: help:account.asset.asset,method:0
+#: help:account.asset.category,method:0
 msgid ""
 "Choose the method to use to compute the amount of depreciation lines.\n"
 "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
@@ -475,24 +419,30 @@ msgid "Closed"
 msgstr "Zaprto"
 
 #. module: account_asset
+#: help:account.asset.asset,state:0
+msgid ""
+"When an asset is created, the status is 'Draft'.\n"
+"If the asset is confirmed, the status goes in 'Running' and the depreciation "
+"lines can be posted in the accounting.\n"
+"You can manually close an asset when the depreciation is over. If the last "
+"line of depreciation is posted, the asset automatically goes in that status."
+msgstr ""
+
+#. module: account_asset
+#: field:account.asset.asset,state:0
+#: field:asset.asset.report,state:0
+msgid "Status"
+msgstr ""
+
+#. module: account_asset
 #: field:account.asset.asset,partner_id:0
 #: field:asset.asset.report,partner_id:0
 msgid "Partner"
 msgstr "Poslovni partner"
 
 #. module: account_asset
-#: view:asset.asset.report:0 field:asset.asset.report,depreciation_value:0
-msgid "Amount of Depreciation Lines"
-msgstr ""
-
-#. module: account_asset
 #: view:asset.asset.report:0
 msgid "Posted depreciation lines"
-msgstr ""
-
-#. module: account_asset
-#: constraint:account.move.line:0
-msgid "Company must be the same for its related account and period."
 msgstr ""
 
 #. module: account_asset
@@ -517,28 +467,24 @@ msgstr "Datum"
 
 #. module: account_asset
 #: view:asset.asset.report:0
-msgid "Assets purchased in current month"
-msgstr ""
-
-#. module: account_asset
-#: constraint:account.move.line:0
-msgid "You can not create journal items on an account of type view."
-msgstr ""
-
-#. module: account_asset
-#: view:asset.asset.report:0
 msgid "Extended Filters..."
 msgstr "Razširjeni filtri..."
 
 #. module: account_asset
-#: view:account.asset.asset:0 view:asset.depreciation.confirmation.wizard:0
+#: view:account.asset.asset:0
+#: view:asset.depreciation.confirmation.wizard:0
 msgid "Compute"
 msgstr "Izračunaj"
 
 #. module: account_asset
-#: view:account.asset.category:0
-msgid "Search Asset Category"
+#: view:account.asset.history:0
+msgid "Asset History"
 msgstr ""
+
+#. module: account_asset
+#: field:asset.asset.report,name:0
+msgid "Year"
+msgstr "Leto"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_asset_depreciation_confirmation_wizard
@@ -546,13 +492,8 @@ msgid "asset.depreciation.confirmation.wizard"
 msgstr ""
 
 #. module: account_asset
-#: field:account.asset.asset,active:0
-msgid "Active"
-msgstr "Aktivno"
-
-#. module: account_asset
-#: model:ir.actions.wizard,name:account_asset.wizard_asset_close
-msgid "Close asset"
+#: field:account.asset.category,account_asset_id:0
+msgid "Asset Account"
 msgstr ""
 
 #. module: account_asset
@@ -566,14 +507,15 @@ msgid "Depreciation Name"
 msgstr ""
 
 #. module: account_asset
-#: view:account.asset.asset:0 field:account.asset.asset,history_ids:0
+#: view:account.asset.asset:0
+#: field:account.asset.asset,history_ids:0
 msgid "History"
 msgstr "Zgodovina"
 
 #. module: account_asset
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr "Številka računa se ne sme ponoviti!"
+#: view:asset.depreciation.confirmation.wizard:0
+msgid "Compute Asset"
+msgstr ""
 
 #. module: account_asset
 #: field:asset.depreciation.confirmation.wizard,period_id:0
@@ -586,13 +528,9 @@ msgid "General"
 msgstr "Splošno"
 
 #. module: account_asset
-#: field:account.asset.asset,prorata:0 field:account.asset.category,prorata:0
+#: field:account.asset.asset,prorata:0
+#: field:account.asset.category,prorata:0
 msgid "Prorata Temporis"
-msgstr ""
-
-#. module: account_asset
-#: view:account.asset.category:0
-msgid "Accounting Information"
 msgstr ""
 
 #. module: account_asset
@@ -601,27 +539,35 @@ msgid "Invoice"
 msgstr "Račun"
 
 #. module: account_asset
-#: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_form_normal
-msgid "Review Asset Categories"
+#: view:account.asset.asset:0
+msgid "Set to Close"
 msgstr ""
 
 #. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0 view:asset.modify:0
+#: view:asset.depreciation.confirmation.wizard:0
+#: view:asset.modify:0
 msgid "Cancel"
 msgstr "Preklic"
 
 #. module: account_asset
-#: selection:account.asset.asset,state:0 selection:asset.asset.report,state:0
+#: selection:account.asset.asset,state:0
+#: selection:asset.asset.report,state:0
 msgid "Close"
 msgstr "Zapri"
 
 #. module: account_asset
-#: view:account.asset.asset:0 view:account.asset.category:0
+#: view:account.asset.category:0
 msgid "Depreciation Method"
 msgstr ""
 
 #. module: account_asset
-#: field:account.asset.asset,purchase_date:0 view:asset.asset.report:0
+#: view:asset.modify:0
+msgid "Asset Durations to Modify"
+msgstr ""
+
+#. module: account_asset
+#: field:account.asset.asset,purchase_date:0
+#: view:asset.asset.report:0
 #: field:asset.asset.report,purchase_date:0
 msgid "Purchase Date"
 msgstr "Datum nakupa"
@@ -650,13 +596,17 @@ msgid "Amount to Depreciate"
 msgstr ""
 
 #. module: account_asset
+#: field:account.asset.asset,name:0
+msgid "Asset Name"
+msgstr ""
+
+#. module: account_asset
 #: field:account.asset.category,open_asset:0
 msgid "Skip Draft State"
 msgstr ""
 
 #. module: account_asset
-#: view:account.asset.asset:0 view:account.asset.category:0
-#: view:account.asset.history:0
+#: view:account.asset.category:0
 msgid "Depreciation Dates"
 msgstr ""
 
@@ -671,24 +621,38 @@ msgid "Journal"
 msgstr "Dnevnik"
 
 #. module: account_asset
+#: field:account.asset.history,name:0
+msgid "History name"
+msgstr "Naziv"
+
+#. module: account_asset
 #: field:account.asset.depreciation.line,depreciated_value:0
 msgid "Amount Already Depreciated"
 msgstr ""
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,move_check:0
-#: view:asset.asset.report:0 field:asset.asset.report,move_check:0
+#: view:asset.asset.report:0
+#: field:asset.asset.report,move_check:0
 msgid "Posted"
 msgstr "Knjiženo"
 
 #. module: account_asset
-#: help:account.asset.asset,state:0
+#: model:ir.actions.act_window,help:account_asset.action_asset_asset_report
 msgid ""
-"When an asset is created, the state is 'Draft'.\n"
-"If the asset is confirmed, the state goes in 'Running' and the depreciation "
-"lines can be posted in the accounting.\n"
-"You can manually close an asset when the depreciation is over. If the last "
-"line of depreciation is posted, the asset automatically goes in that state."
+"<p>\n"
+"            From this report, you can have an overview on all depreciation. "
+"The\n"
+"            tool search can also be used to personalise your Assets reports "
+"and\n"
+"            so, match this analysis to your needs;\n"
+"          </p>\n"
+"        "
+msgstr ""
+
+#. module: account_asset
+#: field:account.asset.asset,purchase_value:0
+msgid "Gross Value"
 msgstr ""
 
 #. module: account_asset
@@ -709,23 +673,12 @@ msgid "Set to Draft"
 msgstr "Nastavi kot osnutek"
 
 #. module: account_asset
-#: selection:account.asset.asset,method:0
-#: selection:account.asset.category,method:0
-msgid "Linear"
-msgstr "Linearno"
-
-#. module: account_asset
-#: view:asset.asset.report:0
-msgid "Month-1"
-msgstr "Mesec-1"
-
-#. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_depreciation_line
 msgid "Asset depreciation line"
 msgstr ""
 
 #. module: account_asset
-#: field:account.asset.asset,category_id:0 view:account.asset.category:0
+#: view:account.asset.category:0
 #: field:asset.asset.report,asset_category_id:0
 #: model:ir.model,name:account_asset.model_account_asset_category
 msgid "Asset category"
@@ -733,7 +686,8 @@ msgstr ""
 
 #. module: account_asset
 #: view:asset.asset.report:0
-msgid "Assets purchased in last month"
+#: field:asset.asset.report,depreciation_value:0
+msgid "Amount of Depreciation Lines"
 msgstr ""
 
 #. module: account_asset
@@ -743,16 +697,8 @@ msgid "Created Asset Moves"
 msgstr ""
 
 #. module: account_asset
-#: constraint:account.move.line:0
-msgid "You can not create journal items on closed account."
-msgstr "Konto je zaprt."
-
-#. module: account_asset
-#: model:ir.actions.act_window,help:account_asset.action_asset_asset_report
-msgid ""
-"From this report, you can have an overview on all depreciation. The tool "
-"search can also be used to personalise your Assets reports and so, match "
-"this analysis to your needs;"
+#: field:account.asset.depreciation.line,sequence:0
+msgid "Sequence"
 msgstr ""
 
 #. module: account_asset
@@ -777,11 +723,6 @@ msgid "Create Move"
 msgstr ""
 
 #. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0
-msgid "Post Depreciation Lines"
-msgstr ""
-
-#. module: account_asset
 #: view:account.asset.asset:0
 msgid "Confirm Asset"
 msgstr ""
@@ -791,3 +732,21 @@ msgstr ""
 #: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_tree
 msgid "Asset Hierarchy"
 msgstr ""
+
+#~ msgid "Gross value "
+#~ msgstr "Bruto "
+
+#~ msgid "Month"
+#~ msgstr "Mesec"
+
+#~ msgid "State"
+#~ msgstr "Status"
+
+#~ msgid "Invoice Number must be unique per Company!"
+#~ msgstr "Številka računa se ne sme ponoviti!"
+
+#~ msgid "Month-1"
+#~ msgstr "Mesec-1"
+
+#~ msgid "You can not create journal items on closed account."
+#~ msgstr "Konto je zaprt."

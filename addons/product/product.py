@@ -100,6 +100,23 @@ class product_uom(osv.osv):
     def _factor_inv_write(self, cursor, user, id, name, value, arg, context=None):
         return self.write(cursor, user, id, {'factor': self._compute_factor_inv(value)}, context=context)
 
+    def name_create(self, cr, uid, name, context=None):
+        """ The UoM category and factor are required, so we'll have to add temporary values
+            for imported UoMs """
+        uom_categ = self.pool.get('product.uom.categ')
+        # look for the category based on the english name, i.e. no context on purpose!
+        # TODO: should find a way to have it translated but not created until actually used
+        categ_misc = 'Unsorted/Imported Units'
+        categ_id = uom_categ.search(cr, uid, [('name', '=', categ_misc)])
+        if categ_id:
+            categ_id = categ_id[0]
+        else:
+            categ_id, _ = uom_categ.name_create(cr, uid, categ_misc)
+        uom_id = self.create(cr, uid, {self._rec_name: name,
+                                       'category_id': categ_id,
+                                       'factor': 1})
+        return self.name_get(cr, uid, [uom_id], context=context)[0]
+
     def create(self, cr, uid, data, context=None):
         if 'factor_inv' in data:
             if data['factor_inv'] <> 1:
@@ -111,9 +128,9 @@ class product_uom(osv.osv):
     _columns = {
         'name': fields.char('Unit of Measure', size=64, required=True, translate=True),
         'category_id': fields.many2one('product.uom.categ', 'Category', required=True, ondelete='cascade',
-            help="Quantity conversions may happen automatically between Units of Measure in the same category, according to their respective ratios."),
+            help="Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."),
         'factor': fields.float('Ratio', required=True,digits=(12, 12),
-            help='How many times this Unit of Measure is smaller than the reference Unit of Measure in this category:\n'\
+            help='How much bigger or smaller this unit is compared to the reference Unit of Measure for this category:\n'\
                     '1 * (reference unit) = ratio * (this unit)'),
         'factor_inv': fields.function(_factor_inv, digits=(12,12),
             fnct_inv=_factor_inv_write,
@@ -233,7 +250,7 @@ class product_category(osv.osv):
         'parent_id': fields.many2one('product.category','Parent Category', select=True, ondelete='cascade'),
         'child_id': fields.one2many('product.category', 'parent_id', string='Child Categories'),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of product categories."),
-        'type': fields.selection([('view','View'), ('normal','Normal')], 'Category Type'),
+        'type': fields.selection([('view','View'), ('normal','Normal')], 'Category Type', help="A category of the view type is a virtual category that can be used as the parent of another category to create a hierarchical structure."),
         'parent_left': fields.integer('Left Parent', select=1),
         'parent_right': fields.integer('Right Parent', select=1),
     }
@@ -276,34 +293,34 @@ class product_template(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=128, required=True, translate=True, select=True),
-        'product_manager': fields.many2one('res.users','Product Manager',help="Responsible for product."),
+        'product_manager': fields.many2one('res.users','Product Manager'),
         'description': fields.text('Description',translate=True),
         'description_purchase': fields.text('Purchase Description',translate=True),
         'description_sale': fields.text('Sale Description',translate=True),
         'type': fields.selection([('consu', 'Consumable'),('service','Service')], 'Product Type', required=True, help="Consumable are product where you don't manage stock, a service is a non-material product provided by a company or an individual."),
-        'produce_delay': fields.float('Manufacturing Lead Time', help="Average delay in days to produce this product. This is only for the production order and, if it is a multi-level bill of material, it's only for the level of this product. Different lead times will be summed for all levels and purchase orders."),
+        'produce_delay': fields.float('Manufacturing Lead Time', help="Average delay in days to produce this product. In the case of multi-level BOM, the manufacturing lead times of the components will be added."),
         'rental': fields.boolean('Can be Rent'),
         'categ_id': fields.many2one('product.category','Category', required=True, change_default=True, domain="[('type','=','normal')]" ,help="Select category for the current product"),
-        'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Product Price'), help="Base price for computing the customer price. Sometimes called the catalog price."),
-        'standard_price': fields.float('Cost', digits_compute=dp.get_precision('Product Price'), help="Product's cost for accounting stock valuation. It is the base price for the supplier price.", groups="base.group_user"),
+        'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Product Price'), help="Base price to compute the customer price. Sometimes called the catalog price."),
+        'standard_price': fields.float('Cost', digits_compute=dp.get_precision('Product Price'), help="Cost price of the product used for standard stock valuation in accounting and used as a base price on purchase orders.", groups="base.group_user"),
         'volume': fields.float('Volume', help="The volume in m3."),
         'weight': fields.float('Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The gross weight in Kg."),
         'weight_net': fields.float('Net Weight', digits_compute=dp.get_precision('Stock Weight'), help="The net weight in Kg."),
         'cost_method': fields.selection([('standard','Standard Price'), ('average','Average Price')], 'Costing Method', required=True,
-            help="Standard Price: the cost price is fixed and recomputed periodically (usually at the end of the year), Average Price: the cost price is recomputed at each reception of products."),
+            help="Standard Price: The cost price is manually updated at the end of a specific period (usually every year). \nAverage Price: The cost price is recomputed at each incoming shipment."),
         'warranty': fields.float('Warranty'),
-        'sale_ok': fields.boolean('Can be Sold', help="Determines if the product can be visible in the list of product within a selection from a sale order line."),
+        'sale_ok': fields.boolean('Can be Sold', help="Specify if the product can be selected in a sales order line."),
         'state': fields.selection([('',''),
             ('draft', 'In Development'),
             ('sellable','Normal'),
             ('end','End of Lifecycle'),
-            ('obsolete','Obsolete')], 'Status', help="Tells the user if he can use the product or not."),
+            ('obsolete','Obsolete')], 'Status'),
         'uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True, help="Default Unit of Measure used for all stock operation."),
         'uom_po_id': fields.many2one('product.uom', 'Purchase Unit of Measure', required=True, help="Default Unit of Measure used for purchase orders. It must be in the same category than the default unit of measure."),
         'uos_id' : fields.many2one('product.uom', 'Unit of Sale',
-            help='Used by companies that manage two units of measure: invoicing and inventory management. For example, in food industries, you will manage a stock of ham but invoice in Kg. Keep empty to use the default Unit of Measure.'),
+            help='Sepcify a unit of measure here if invoicing is made in another unit of measure than inventory. Keep empty to use the default unit of measure.'),
         'uos_coeff': fields.float('Unit of Measure -> UOS Coeff', digits_compute= dp.get_precision('Product UoS'),
-            help='Coefficient to convert Unit of Measure to UOS\n'
+            help='Coefficient to convert default Unit of Measure to Unit of Sale\n'
             ' uos = uom * coeff'),
         'mes_type': fields.selection((('fixed', 'Fixed'), ('variable', 'Variable')), 'Measure Type'),
         'seller_ids': fields.one2many('product.supplierinfo', 'product_id', 'Partners'),
@@ -527,10 +544,10 @@ class product_product(osv.osv):
         'code': fields.function(_product_code, type='char', string='Internal Reference'),
         'partner_ref' : fields.function(_product_partner_ref, type='char', string='Customer ref'),
         'default_code' : fields.char('Internal Reference', size=64, select=True),
-        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the product without removing it."),
+        'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it."),
         'variants': fields.char('Variants', size=64),
-        'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete="cascade"),
-        'ean13': fields.char('EAN13 Barcode', size=13, help="The numbers encoded in EAN-13 bar codes are product identification numbers."),
+        'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete="cascade", select=True),
+        'ean13': fields.char('EAN13 Barcode', size=13, help="International Article Number used for product identification."),
         'packaging' : fields.one2many('product.packaging', 'product_id', 'Logistical Units', help="Gives the different ways to package the same product. This has no impact on the picking order and is mainly used if you use the EDI module."),
         'price_extra': fields.float('Variant Price Extra', digits_compute=dp.get_precision('Product Price')),
         'price_margin': fields.float('Variant Price Margin', digits_compute=dp.get_precision('Product Price')),
@@ -657,9 +674,9 @@ class product_product(osv.osv):
                 # Performing a quick memory merge of ids in Python will give much better performance
                 ids = set()
                 ids.update(self.search(cr, user, args + [('default_code',operator,name)], limit=limit, context=context))
-                if len(ids) < limit:
+                if not limit or len(ids) < limit:
                     # we may underrun the limit because of dupes in the results, that's fine
-                    ids.update(self.search(cr, user, args + [('name',operator,name)], limit=(limit-len(ids)), context=context))
+                    ids.update(self.search(cr, user, args + [('name',operator,name)], limit=(limit and (limit-len(ids)) or False) , context=context))
                 ids = list(ids)
             if not ids:
                 ptrn = re.compile('(\[(.*?)\])')
@@ -763,8 +780,7 @@ class product_packaging(osv.osv):
             help="The code of the transport unit."),
         'weight': fields.float('Total Package Weight',
             help='The weight of a full package, pallet or box.'),
-        'weight_ul': fields.float('Empty Package Weight',
-            help='The weight of the empty UL'),
+        'weight_ul': fields.float('Empty Package Weight'),
         'height': fields.float('Height', help='The height of the package'),
         'width': fields.float('Width', help='The width of the package'),
         'length': fields.float('Length', help='The length of the package'),

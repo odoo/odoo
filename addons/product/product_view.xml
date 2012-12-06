@@ -96,7 +96,7 @@
                                         <field name="price_extra" groups="product.group_product_variant"/>
                                     </group>
                                 </group>
-                                <field name="description" placeholder="describe the product's characteristics for internal use..."/>
+                                <field name="description" placeholder="describe the product characteristics..."/>
                             </page>
                             <page string="Procurements" groups="base.group_user">
                                 <group name="procurement">
@@ -166,8 +166,8 @@
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_ids" widget="mail_thread"/>
                         <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
                     </div>
                 </form>
             </field>
@@ -318,16 +318,10 @@
                             </h1>
                         </div>
                         <group>
-                            <group>
+                            <group name="parent" col="4">
                                 <field name="parent_id"/>
-                            </group>
-                            <group>
                                 <field name="type"/>
                             </group>
-                        </group>
-                        <group name="basic">
-                            <group name="account_property" string="Account Properties"/>
-                            <group name="account_stock_property" string="Account Stock Properties"/>
                         </group>
                     </sheet>
                 </form>

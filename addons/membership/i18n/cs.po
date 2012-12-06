@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2011-11-25 12:33+0000\n"
 "Last-Translator: Jiří Hajda <robie@centrum.cz>\n"
 "Language-Team: Czech <openerp-i18n-czech@lists.launchpad.net >\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-19 05:09+0000\n"
-"X-Generator: Launchpad (build 16165)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:13+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 "X-Poedit-Language: Czech\n"
 
 #. module: membership
@@ -33,6 +33,11 @@ msgstr "Proces členství"
 #: selection:res.partner,membership_state:0
 msgid "Paid Member"
 msgstr "Zaplacený člen"
+
+#. module: membership
+#: view:report.membership:0
+msgid "This will display waiting, invoiced and total pending columns"
+msgstr ""
 
 #. module: membership
 #: view:report.membership:0
@@ -78,6 +83,14 @@ msgid "Company"
 msgstr "Společnost"
 
 #. module: membership
+#: selection:membership.membership_line,state:0
+#: selection:report.membership,membership_state:0
+#: field:res.partner,free_member:0
+#: selection:res.partner,membership_state:0
+msgid "Free Member"
+msgstr "Volný člen"
+
+#. module: membership
 #: view:res.partner:0
 msgid "Ending Date Of Membership"
 msgstr ""
@@ -86,6 +99,18 @@ msgstr ""
 #: field:product.product,membership_date_to:0
 msgid "Date to"
 msgstr "Datum do"
+
+#. module: membership
+#: field:res.partner,membership_stop:0
+msgid "Membership End Date"
+msgstr ""
+
+#. module: membership
+#: view:report.membership:0
+#: field:report.membership,user_id:0
+#: view:res.partner:0
+msgid "Salesperson"
+msgstr ""
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_waitingtoinvoice0
@@ -110,9 +135,9 @@ msgid "Non Member"
 msgstr "Nečlen"
 
 #. module: membership
-#: model:product.template,name:membership.membership_2_product_template
-msgid "Basic Membership"
-msgstr "Základní členství"
+#: view:product.product:0
+msgid "Taxes"
+msgstr ""
 
 #. module: membership
 #: view:res.partner:0
@@ -120,9 +145,11 @@ msgid "All Members"
 msgstr "Všichni členové"
 
 #. module: membership
-#: field:res.partner,membership_stop:0
-msgid "Stop membership date"
-msgstr "Datum pozastavení členství"
+#: code:addons/membership/membership.py:410
+#: code:addons/membership/membership.py:413
+#, python-format
+msgid "Error!"
+msgstr ""
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_producttomember0
@@ -130,24 +157,14 @@ msgid "Product to member"
 msgstr "Výrobek pro člena"
 
 #. module: membership
-#: view:res.partner:0
-msgid "Join Membership"
-msgstr "Připojit členství"
-
-#. module: membership
-#: field:res.partner,associate_member:0
-msgid "Associate member"
-msgstr "Přidružený člen"
+#: model:product.template,name:membership.membership_1_product_template
+msgid "Silver Membership"
+msgstr "Stříbrné členství"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_associatedmember0
 msgid "Member is associated."
 msgstr "Člen je přidružený."
-
-#. module: membership
-#: view:report.membership:0
-msgid "   Month   "
-msgstr ""
 
 #. module: membership
 #: field:report.membership,tot_pending:0
@@ -168,11 +185,6 @@ msgstr ""
 #: field:report.membership,num_invoiced:0
 msgid "# Invoiced"
 msgstr "# Fakturováno"
-
-#. module: membership
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr ""
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_report_membership_tree
@@ -213,11 +225,6 @@ msgid "Customer Partners"
 msgstr ""
 
 #. module: membership
-#: view:res.partner:0
-msgid "Partners"
-msgstr "Partneři"
-
-#. module: membership
 #: field:membership.membership_line,date_from:0
 msgid "From"
 msgstr "Od"
@@ -228,41 +235,9 @@ msgid "Error, this membership product is out of date"
 msgstr "Chyba, tento výrobek členství je zastaralý"
 
 #. module: membership
-#: help:res.partner,membership_state:0
-msgid ""
-"It indicates the membership state.\n"
-"                    -Non Member: A member who has not applied for any "
-"membership.\n"
-"                    -Cancelled Member: A member who has cancelled his "
-"membership.\n"
-"                    -Old Member: A member whose membership date has "
-"expired.\n"
-"                    -Waiting Member: A member who has applied for the "
-"membership and whose invoice is going to be created.\n"
-"                    -Invoiced Member: A member whose invoice has been "
-"created.\n"
-"                    -Paid Member: A member who has paid the membership "
-"amount."
-msgstr ""
-"Označuje stav členství.\n"
-"                    -Nečlen: Člen, který nepožádál o žádné členství.\n"
-"                    -Zrušené členství: Člen, který má zrušené své členství.\n"
-"                    -Starý člen: Člen, kterému vypršelo členství.\n"
-"                    -Čekající člen: Člen, který požádal o členství, a "
-"kterému bude vytvořena faktura.\n"
-"                    -Fakturovaný člen: Člen, kterému byla vytvořena "
-"faktura.\n"
-"                    -Placený člen: Člen, který zaplatil částku za členství."
-
-#. module: membership
 #: model:process.transition.action,name:membership.process_transition_action_create0
 msgid "Create"
 msgstr "Vytvořit"
-
-#. module: membership
-#: view:product.product:0
-msgid "Membership products"
-msgstr "Výrobky členství"
 
 #. module: membership
 #: model:ir.model,name:membership.model_membership_membership_line
@@ -271,26 +246,13 @@ msgstr "Řádek člena"
 
 #. module: membership
 #: help:report.membership,date_from:0
-#: field:res.partner,membership_start:0
 msgid "Start membership date"
 msgstr "Počáteční datum členství"
 
 #. module: membership
-#: view:report.membership:0
-msgid "Events created in current month"
+#: field:res.partner,membership_cancel:0
+msgid "Cancel Membership Date"
 msgstr ""
-
-#. module: membership
-#: view:report.membership:0
-msgid "This will display waiting, invoiced and total pending columns"
-msgstr ""
-
-#. module: membership
-#: code:addons/membership/membership.py:410
-#: code:addons/membership/membership.py:413
-#, python-format
-msgid "Error !"
-msgstr "Chyba !"
 
 #. module: membership
 #: model:process.node,name:membership.process_node_paidmember0
@@ -298,28 +260,14 @@ msgid "Paid member"
 msgstr "Zaplacený člen"
 
 #. module: membership
-#: view:report.membership:0
-msgid "    Month-1    "
-msgstr ""
-
-#. module: membership
-#: view:report.membership:0
-msgid "Events created in last month"
-msgstr ""
-
-#. module: membership
 #: field:report.membership,num_waiting:0
 msgid "# Waiting"
 msgstr "# Čekající"
 
 #. module: membership
-#: view:report.membership:0
-msgid "Events created in current year"
-msgstr ""
-
-#. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members
 #: model:ir.ui.menu,name:membership.menu_members
+#: model:ir.ui.menu,name:membership.menu_membership
 #: view:res.partner:0
 msgid "Members"
 msgstr "Členové"
@@ -354,7 +302,7 @@ msgstr ""
 "asociovaného člena."
 
 #. module: membership
-#: field:membership.membership_line,membership_id:0
+#: view:product.product:0
 #: view:report.membership:0
 #: field:report.membership,membership_id:0
 msgid "Membership Product"
@@ -371,30 +319,25 @@ msgid "Invoiced member may be Associated member."
 msgstr "Fakturovaný člen může být přidružený člen."
 
 #. module: membership
-#: view:membership.invoice:0
-msgid "Join"
-msgstr "Připojit"
-
-#. module: membership
 #: help:product.product,membership_date_to:0
 #: help:res.partner,membership_stop:0
 msgid "Date until which membership remains active."
 msgstr "Datum, do kterého členství zůstává aktivní."
 
 #. module: membership
-#: field:res.partner,membership_cancel:0
-msgid "Cancel membership date"
-msgstr "Datum zrušení členství"
+#: view:product.product:0
+msgid "Membership products"
+msgstr "Výrobky členství"
+
+#. module: membership
+#: field:res.partner,membership_state:0
+msgid "Current Membership Status"
+msgstr ""
 
 #. module: membership
 #: field:membership.membership_line,date:0
 msgid "Join Date"
 msgstr "Datum připojení"
-
-#. module: membership
-#: help:res.partner,free_member:0
-msgid "Select if you want to give membership free of cost."
-msgstr "Vyberte, pokud chcete dát členovi cenu zdarma."
 
 #. module: membership
 #: model:process.node,name:membership.process_node_setassociation0
@@ -417,11 +360,6 @@ msgid "Membership invoice paid."
 msgstr "Faktura členství zaplacena."
 
 #. module: membership
-#: model:ir.model,name:membership.model_product_template
-msgid "Product Template"
-msgstr "Šablona výrobku"
-
-#. module: membership
 #: selection:report.membership,month:0
 msgid "September"
 msgstr "Září"
@@ -435,35 +373,6 @@ msgstr "Prosinec"
 #: model:ir.model,name:membership.model_account_invoice_line
 msgid "Invoice Line"
 msgstr "Řádek faktury"
-
-#. module: membership
-#: help:membership.membership_line,state:0
-msgid ""
-"It indicates the membership state.\n"
-"                        -Non Member: A member who has not applied for any "
-"membership.\n"
-"                        -Cancelled Member: A member who has cancelled his "
-"membership.\n"
-"                        -Old Member: A member whose membership date has "
-"expired.\n"
-"                        -Waiting Member: A member who has applied for the "
-"membership and whose invoice is going to be created.\n"
-"                        -Invoiced Member: A member whose invoice has been "
-"created.\n"
-"                        -Paid Member: A member who has paid the membership "
-"amount."
-msgstr ""
-"Označuje stav členství.\n"
-"                       -Nečlen: Člen, který nepožádál o žádné členství.\n"
-"                       -Zrušené členství: Člen, který má zrušené své "
-"členství.\n"
-"                       -Starý člen: Člen, kterému vypršelo členství.\n"
-"                       -Čekající člen: Člen, který požádal o členství, a "
-"kterému bude vytvořena faktura.\n"
-"                       -Fakturovaný člen: Člen, kterému byla vytvořena "
-"faktura.\n"
-"                       -Placený člen: Člen, který zaplatil částku za "
-"členství."
 
 #. module: membership
 #: view:report.membership:0
@@ -483,13 +392,14 @@ msgid "Partner is a free Member."
 msgstr "Partner je volný člen."
 
 #. module: membership
-#: model:product.pricelist,name:membership.list1m
-msgid "Member Sale Pricelist"
-msgstr "Prodejní ceník člena"
+#: view:res.partner:0
+msgid "Buy Membership"
+msgstr ""
 
 #. module: membership
 #: field:report.membership,associate_member_id:0
 #: view:res.partner:0
+#: field:res.partner,associate_member:0
 msgid "Associate Member"
 msgstr "Přiřadit člena"
 
@@ -511,13 +421,6 @@ msgid "Membership Invoice"
 msgstr "Členská faktura"
 
 #. module: membership
-#: view:report.membership:0
-#: field:report.membership,user_id:0
-#: view:res.partner:0
-msgid "Salesman"
-msgstr "Obchodník"
-
-#. module: membership
 #: model:process.node,note:membership.process_node_membershipproduct0
 msgid "Define membership product."
 msgstr "Určit výrobek členství."
@@ -528,22 +431,9 @@ msgid "Category"
 msgstr "Kategorie"
 
 #. module: membership
-#: selection:membership.membership_line,state:0
-#: selection:report.membership,membership_state:0
-#: selection:res.partner,membership_state:0
-msgid "Free Member"
-msgstr "Volný člen"
-
-#. module: membership
-#: model:product.pricelist.version,name:membership.ver1m
-msgid "Member Sale Pricelist Version"
-msgstr "Verze prodejního ceníku člena"
-
-#. module: membership
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr "Chyba: Výchozí MJ a nákupní MJ musí být ve stejné kategorii."
+#: view:res.partner:0
+msgid "Contacts"
+msgstr ""
 
 #. module: membership
 #: view:report.membership:0
@@ -566,9 +456,14 @@ msgid "Associated member"
 msgstr "Přiřazený člen"
 
 #. module: membership
-#: view:product.product:0
-msgid "Accounting Info"
-msgstr "Účetní informace"
+#: help:membership.membership_line,date:0
+msgid "Date on which member has joined the membership"
+msgstr "Datum, kdy se člen připojil k členství"
+
+#. module: membership
+#: field:membership.membership_line,state:0
+msgid "Membership Status"
+msgstr ""
 
 #. module: membership
 #: help:report.membership,date_to:0
@@ -579,6 +474,11 @@ msgstr "Datum ukončení členství"
 #: view:res.partner:0
 msgid "Customers"
 msgstr "Zákazníci"
+
+#. module: membership
+#: view:membership.invoice:0
+msgid "or"
+msgstr ""
 
 #. module: membership
 #: selection:report.membership,month:0
@@ -593,20 +493,19 @@ msgid "Membership Products"
 msgstr "Výrobky členství"
 
 #. module: membership
+#: sql_constraint:product.product:0
+msgid "Error ! Ending Date cannot be set before Beginning Date."
+msgstr ""
+
+#. module: membership
 #: selection:report.membership,month:0
 msgid "June"
 msgstr "Červen"
 
 #. module: membership
-#: model:ir.ui.menu,name:membership.menu_membership
-#: field:membership.invoice,product_id:0
-#: view:product.product:0
-#: field:product.product,membership:0
-#: view:report.membership:0
-#: view:res.partner:0
-#: field:res.partner,member_lines:0
-msgid "Membership"
-msgstr "Členství"
+#: help:product.product,membership:0
+msgid "Check if the product is eligible for membership."
+msgstr ""
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -616,9 +515,15 @@ msgid "Invoiced Member"
 msgstr "Fakturovaný člen"
 
 #. module: membership
-#: help:membership.membership_line,date:0
-msgid "Date on which member has joined the membership"
-msgstr "Datum, kdy se člen připojil k členství"
+#: field:membership.invoice,product_id:0
+#: field:membership.membership_line,membership_id:0
+#: view:product.product:0
+#: field:product.product,membership:0
+#: view:report.membership:0
+#: view:res.partner:0
+#: field:res.partner,member_lines:0
+msgid "Membership"
+msgstr "Členství"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -644,24 +549,26 @@ msgid "November"
 msgstr "Listopad"
 
 #. module: membership
-#: help:product.product,membership:0
-msgid "Select if a product is a membership product."
-msgstr "Vyberte, pokud výrobek je výrobek členství."
-
-#. module: membership
-#: field:membership.membership_line,state:0
-msgid "Membership State"
-msgstr "Stav členství"
-
-#. module: membership
 #: selection:report.membership,month:0
 msgid "October"
 msgstr "Říjen"
 
 #. module: membership
-#: view:product.product:0
-msgid "Sale Description"
-msgstr "Popis prodeje"
+#: help:res.partner,membership_state:0
+msgid ""
+"It indicates the membership state.\n"
+"                    -Non Member: A partner who has not applied for any "
+"membership.\n"
+"                    -Cancelled Member: A member who has cancelled his "
+"membership.\n"
+"                    -Old Member: A member whose membership date has "
+"expired.\n"
+"                    -Waiting Member: A member who has applied for the "
+"membership and whose invoice is going to be created.\n"
+"                    -Invoiced Member: A member whose invoice has been "
+"created.\n"
+"                    -Paying member: A member who has paid the membership fee."
+msgstr ""
 
 #. module: membership
 #: selection:report.membership,month:0
@@ -674,14 +581,10 @@ msgid "Membership Partners"
 msgstr ""
 
 #. module: membership
+#: field:membership.membership_line,member_price:0
 #: view:product.product:0
 msgid "Membership Fee"
 msgstr "Členský poplatek"
-
-#. module: membership
-#: field:res.partner,membership_amount:0
-msgid "Membership amount"
-msgstr "Částka členství"
 
 #. module: membership
 #: help:res.partner,membership_amount:0
@@ -689,9 +592,9 @@ msgid "The price negotiated by the partner"
 msgstr "Cena vyjednaná partnerem"
 
 #. module: membership
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr ""
+#: model:product.template,name:membership.membership_2_product_template
+msgid "Basic Membership"
+msgstr "Základní členství"
 
 #. module: membership
 #: view:res.partner:0
@@ -713,14 +616,26 @@ msgstr "Do"
 #. module: membership
 #: view:report.membership:0
 #: field:report.membership,membership_state:0
-#: field:res.partner,membership_state:0
 msgid "Current Membership State"
 msgstr "Aktuální stav členství"
 
 #. module: membership
-#: view:product.product:0
-msgid "General"
-msgstr "Obecný"
+#: help:membership.membership_line,state:0
+msgid ""
+"It indicates the membership status.\n"
+"                        -Non Member: A member who has not applied for any "
+"membership.\n"
+"                        -Cancelled Member: A member who has cancelled his "
+"membership.\n"
+"                        -Old Member: A member whose membership date has "
+"expired.\n"
+"                        -Waiting Member: A member who has applied for the "
+"membership and whose invoice is going to be created.\n"
+"                        -Invoiced Member: A member whose invoice has been "
+"created.\n"
+"                        -Paid Member: A member who has paid the membership "
+"amount."
+msgstr ""
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_waitingtoinvoice0
@@ -740,8 +655,8 @@ msgstr "Faktura"
 
 #. module: membership
 #: view:membership.invoice:0
-msgid "Close"
-msgstr "Uzavřít"
+msgid "Cancel"
+msgstr ""
 
 #. module: membership
 #: view:res.partner:0
@@ -759,27 +674,19 @@ msgid "Account Invoice line"
 msgstr "Účetní řádek faktury"
 
 #. module: membership
-#: view:product.product:0
-msgid "Categorization"
-msgstr "Členění"
-
-#. module: membership
 #: model:process.node,note:membership.process_node_waitingmember0
 msgid "Draft invoice for membership."
 msgstr "Koncept faktury pro členství."
 
 #. module: membership
 #: field:membership.invoice,member_price:0
-#: field:membership.membership_line,member_price:0
-#: model:product.price.type,name:membership.product_price_type_memberprice
-#: field:product.template,member_price:0
 msgid "Member Price"
 msgstr "Cena člena"
 
 #. module: membership
 #: view:product.product:0
-msgid "Purchase Description"
-msgstr "Popis nákupu"
+msgid "Membership Duration"
+msgstr ""
 
 #. module: membership
 #: model:ir.model,name:membership.model_product_product
@@ -787,29 +694,24 @@ msgid "Product"
 msgstr "Výrobek"
 
 #. module: membership
-#: view:product.product:0
-msgid "Description"
-msgstr "Popis"
-
-#. module: membership
-#: field:res.partner,free_member:0
-msgid "Free member"
-msgstr "Volný člen"
-
-#. module: membership
 #: selection:report.membership,month:0
 msgid "May"
 msgstr "Květen"
 
 #. module: membership
-#: model:product.template,name:membership.membership_1_product_template
-msgid "Silver Membership"
-msgstr "Stříbrné členství"
+#: field:res.partner,membership_start:0
+msgid "Membership Start Date"
+msgstr ""
 
 #. module: membership
-#: view:product.product:0
-msgid "Sale Taxes"
-msgstr "Prodejní daně"
+#: help:res.partner,free_member:0
+msgid "Select if you want to give free membership."
+msgstr ""
+
+#. module: membership
+#: field:res.partner,membership_amount:0
+msgid "Membership Amount"
+msgstr ""
 
 #. module: membership
 #: field:report.membership,date_to:0
@@ -854,6 +756,7 @@ msgstr "Čekající člen"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_invoice_view
+#: view:membership.invoice:0
 msgid "Invoice Membership"
 msgstr ""
 
@@ -880,11 +783,6 @@ msgid "Cancelled Member"
 msgstr "Zrušený člen"
 
 #. module: membership
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Chyba: Neplatný kód ean"
-
-#. module: membership
 #: view:report.membership:0
 #: field:report.membership,year:0
 msgid "Year"
@@ -895,6 +793,9 @@ msgstr "Rok"
 msgid "Revenue Done"
 msgstr "Příjem proveden"
 
+#~ msgid "Partners"
+#~ msgstr "Partneři"
+
 #~ msgid "Configuration"
 #~ msgstr "Konfigurace"
 
@@ -903,6 +804,53 @@ msgstr "Příjem proveden"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Neplatné jméno modelu v definici akce."
+
+#~ msgid "Stop membership date"
+#~ msgstr "Datum pozastavení členství"
+
+#~ msgid "Join Membership"
+#~ msgstr "Připojit členství"
+
+#~ msgid "Associate member"
+#~ msgstr "Přidružený člen"
+
+#~ msgid ""
+#~ "It indicates the membership state.\n"
+#~ "                    -Non Member: A member who has not applied for any "
+#~ "membership.\n"
+#~ "                    -Cancelled Member: A member who has cancelled his "
+#~ "membership.\n"
+#~ "                    -Old Member: A member whose membership date has "
+#~ "expired.\n"
+#~ "                    -Waiting Member: A member who has applied for the "
+#~ "membership and whose invoice is going to be created.\n"
+#~ "                    -Invoiced Member: A member whose invoice has been "
+#~ "created.\n"
+#~ "                    -Paid Member: A member who has paid the membership "
+#~ "amount."
+#~ msgstr ""
+#~ "Označuje stav členství.\n"
+#~ "                    -Nečlen: Člen, který nepožádál o žádné členství.\n"
+#~ "                    -Zrušené členství: Člen, který má zrušené své členství.\n"
+#~ "                    -Starý člen: Člen, kterému vypršelo členství.\n"
+#~ "                    -Čekající člen: Člen, který požádal o členství, a "
+#~ "kterému bude vytvořena faktura.\n"
+#~ "                    -Fakturovaný člen: Člen, kterému byla vytvořena "
+#~ "faktura.\n"
+#~ "                    -Placený člen: Člen, který zaplatil částku za členství."
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Chyba !"
+
+#~ msgid "Join"
+#~ msgstr "Připojit"
+
+#~ msgid "Select if you want to give membership free of cost."
+#~ msgstr "Vyberte, pokud chcete dát členovi cenu zdarma."
+
+#~ msgid "Product Template"
+#~ msgstr "Šablona výrobku"
 
 #~ msgid ""
 #~ "\n"
@@ -931,14 +879,96 @@ msgstr "Příjem proveden"
 #~ "fakturovat a odesílat návrhy pro obnovení členství.\n"
 #~ "    "
 
+#~ msgid ""
+#~ "It indicates the membership state.\n"
+#~ "                        -Non Member: A member who has not applied for any "
+#~ "membership.\n"
+#~ "                        -Cancelled Member: A member who has cancelled his "
+#~ "membership.\n"
+#~ "                        -Old Member: A member whose membership date has "
+#~ "expired.\n"
+#~ "                        -Waiting Member: A member who has applied for the "
+#~ "membership and whose invoice is going to be created.\n"
+#~ "                        -Invoiced Member: A member whose invoice has been "
+#~ "created.\n"
+#~ "                        -Paid Member: A member who has paid the membership "
+#~ "amount."
+#~ msgstr ""
+#~ "Označuje stav členství.\n"
+#~ "                       -Nečlen: Člen, který nepožádál o žádné členství.\n"
+#~ "                       -Zrušené členství: Člen, který má zrušené své "
+#~ "členství.\n"
+#~ "                       -Starý člen: Člen, kterému vypršelo členství.\n"
+#~ "                       -Čekající člen: Člen, který požádal o členství, a "
+#~ "kterému bude vytvořena faktura.\n"
+#~ "                       -Fakturovaný člen: Člen, kterému byla vytvořena "
+#~ "faktura.\n"
+#~ "                       -Placený člen: Člen, který zaplatil částku za "
+#~ "členství."
+
+#~ msgid "Member Sale Pricelist"
+#~ msgstr "Prodejní ceník člena"
+
+#~ msgid "Salesman"
+#~ msgstr "Obchodník"
+
+#~ msgid "Member Sale Pricelist Version"
+#~ msgstr "Verze prodejního ceníku člena"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr "Chyba: Výchozí MJ a nákupní MJ musí být ve stejné kategorii."
+
 #~ msgid "Error ! You can not create recursive associated members."
 #~ msgstr "Chyba ! Nemůžete vytvořit rekurzivní asociované členy."
+
+#~ msgid "Accounting Info"
+#~ msgstr "Účetní informace"
+
+#~ msgid "Cancel membership date"
+#~ msgstr "Datum zrušení členství"
 
 #~ msgid "Extended Filters..."
 #~ msgstr "Rozšířené filtry..."
 
+#~ msgid "Membership State"
+#~ msgstr "Stav členství"
+
+#~ msgid "Sale Description"
+#~ msgstr "Popis prodeje"
+
+#~ msgid "Membership amount"
+#~ msgstr "Částka členství"
+
+#~ msgid "Select if a product is a membership product."
+#~ msgstr "Vyberte, pokud výrobek je výrobek členství."
+
 #~ msgid "Last 365 Days"
 #~ msgstr "Posledních 365 dní"
 
+#~ msgid "General"
+#~ msgstr "Obecný"
+
 #~ msgid "Last 30 Days"
 #~ msgstr "Posledních 30 dní"
+
+#~ msgid "Close"
+#~ msgstr "Uzavřít"
+
+#~ msgid "Categorization"
+#~ msgstr "Členění"
+
+#~ msgid "Purchase Description"
+#~ msgstr "Popis nákupu"
+
+#~ msgid "Description"
+#~ msgstr "Popis"
+
+#~ msgid "Free member"
+#~ msgstr "Volný člen"
+
+#~ msgid "Sale Taxes"
+#~ msgstr "Prodejní daně"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Chyba: Neplatný kód ean"

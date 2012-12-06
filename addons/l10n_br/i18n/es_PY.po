@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-23 09:56+0000\n"
+"POT-Creation-Date: 2012-11-24 02:53+0000\n"
 "PO-Revision-Date: 2011-03-21 16:15+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish (Paraguay) <es_PY@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-19 05:37+0000\n"
-"X-Generator: Launchpad (build 16165)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:31+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: l10n_br
 #: field:account.tax,tax_discount:0
@@ -31,6 +31,11 @@ msgstr ""
 #: model:ir.ui.menu,name:l10n_br.menu_action_l10n_br_cst
 #: view:l10n_br_account.cst:0
 msgid "Tax Situation Code"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.type,name:l10n_br.despesa
+msgid "Despesas"
 msgstr ""
 
 #. module: l10n_br
@@ -69,8 +74,10 @@ msgid "Description"
 msgstr ""
 
 #. module: l10n_br
-#: model:account.account.type,name:l10n_br.despesa
-msgid "Despesas"
+#: constraint:account.tax.code:0
+msgid ""
+"Error!\n"
+"You cannot create recursive accounts."
 msgstr ""
 
 #. module: l10n_br
@@ -89,11 +96,6 @@ msgstr ""
 #: field:account.tax,base_reduction:0
 #: field:account.tax.template,base_reduction:0
 msgid "Redution"
-msgstr ""
-
-#. module: l10n_br
-#: constraint:account.tax.code.template:0
-msgid "Error ! You can not create recursive Tax Codes."
 msgstr ""
 
 #. module: l10n_br
@@ -145,6 +147,13 @@ msgstr ""
 "plan de cuentas desde una plantilla de plan."
 
 #. module: l10n_br
+#: constraint:account.tax.code.template:0
+msgid ""
+"Error!\n"
+"You cannot create recursive Tax Codes."
+msgstr ""
+
+#. module: l10n_br
 #: help:account.tax,tax_discount:0
 #: help:account.tax.code,tax_discount:0
 #: help:account.tax.code.template,tax_discount:0
@@ -167,11 +176,6 @@ msgstr ""
 #: field:l10n_br_account.cst,code:0
 #: field:l10n_br_account.cst.template,code:0
 msgid "Code"
-msgstr ""
-
-#. module: l10n_br
-#: constraint:account.tax.code:0
-msgid "Error ! You can not create recursive accounts."
 msgstr ""
 
 #. module: l10n_br

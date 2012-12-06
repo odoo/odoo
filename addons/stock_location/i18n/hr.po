@@ -6,15 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2011-12-08 17:51+0000\n"
 "Last-Translator: Tomislav Bosnjakovic <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-19 05:24+0000\n"
-"X-Generator: Launchpad (build 16165)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:43+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
+
+#. module: stock_location
+#: help:product.pulled.flow,company_id:0
+msgid "Is used to know to which company the pickings and moves belong."
+msgstr ""
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -43,11 +48,6 @@ msgid "Automatic No Step Added"
 msgstr "Automatski se ne dodaje korak"
 
 #. module: stock_location
-#: view:product.product:0
-msgid "Parameters"
-msgstr "Parametri"
-
-#. module: stock_location
 #: field:product.pulled.flow,location_src_id:0
 #: field:stock.location.path,location_from_id:0
 msgid "Source Location"
@@ -63,11 +63,6 @@ msgstr "Allow you to cancel moves related to the product pull flow"
 #: field:product.product,flow_pull_ids:0
 msgid "Pulled Flows"
 msgstr "Pulled Flows"
-
-#. module: stock_location
-#: constraint:stock.move:0
-msgid "You must assign a production lot for this product"
-msgstr "Morate pridijeliti lot proizvodnje ovom proizvodu"
 
 #. module: stock_location
 #: help:product.pulled.flow,location_src_id:0
@@ -152,11 +147,6 @@ msgid "Dispatch Zone"
 msgstr "Dispečerska zona"
 
 #. module: stock_location
-#: model:ir.model,name:stock_location.model_stock_move
-msgid "Stock Move"
-msgstr "Skladišni prijenosi"
-
-#. module: stock_location
 #: view:product.product:0
 msgid "Pulled flows"
 msgstr "Pulled flows"
@@ -168,9 +158,9 @@ msgid "Company"
 msgstr "Organizacija"
 
 #. module: stock_location
-#: view:product.product:0
-msgid "Logistics Flows"
-msgstr "Logistički tokovi"
+#: model:ir.model,name:stock_location.model_stock_move
+msgid "Stock Move"
+msgstr "Skladišni prijenosi"
 
 #. module: stock_location
 #: help:stock.move,cancel_cascade:0
@@ -191,6 +181,12 @@ msgstr "Po narudžbi (MTO)"
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Stock"
 msgstr "Sa skladišta (MTS)"
+
+#. module: stock_location
+#: code:addons/stock_location/procurement_pull.py:118
+#, python-format
+msgid "Pulled from another location."
+msgstr ""
 
 #. module: stock_location
 #: field:product.pulled.flow,partner_address_id:0
@@ -219,11 +215,6 @@ msgid "Type of Procurement"
 msgstr "Vrsta nabave"
 
 #. module: stock_location
-#: help:product.pulled.flow,company_id:0
-msgid "Is used to know to which company belong packings and moves"
-msgstr "Is used to know to which company belong packings and moves"
-
-#. module: stock_location
 #: field:product.pulled.flow,name:0
 msgid "Name"
 msgstr "Naziv"
@@ -237,11 +228,6 @@ msgstr ""
 "stablu"
 
 #. module: stock_location
-#: constraint:stock.move:0
-msgid "You can not move products from or to a location of the type view."
-msgstr ""
-
-#. module: stock_location
 #: selection:stock.location.path,auto:0
 msgid "Manual Operation"
 msgstr "Ručna operacija"
@@ -251,11 +237,6 @@ msgstr "Ručna operacija"
 #: field:product.pulled.flow,product_id:0
 msgid "Product"
 msgstr "Proizvod"
-
-#. module: stock_location
-#: field:product.pulled.flow,procure_method:0
-msgid "Procure Method"
-msgstr "Procure Method"
 
 #. module: stock_location
 #: field:product.pulled.flow,picking_type:0
@@ -283,12 +264,6 @@ msgstr "To je odredišna lokacija koja treba nabavu"
 #: field:stock.location.path,product_id:0
 msgid "Products"
 msgstr "Proizvodi"
-
-#. module: stock_location
-#: code:addons/stock_location/procurement_pull.py:118
-#, python-format
-msgid "Pulled from another location via procurement %d"
-msgstr ""
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.stock_location_qualitytest0
@@ -328,11 +303,6 @@ msgid ""
 msgstr ""
 
 #. module: stock_location
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product"
-msgstr "Pokušavate pridružiti lot koji nije iz istog proizvoda"
-
-#. module: stock_location
 #: model:ir.model,name:stock_location.model_procurement_order
 msgid "Procurement"
 msgstr "Procurement"
@@ -361,9 +331,9 @@ msgid "Action Type"
 msgstr "Vrsta akcije"
 
 #. module: stock_location
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Greška: Neispravan barkod!"
+#: field:product.pulled.flow,procure_method:0
+msgid "Procure Method"
+msgstr "Procure Method"
 
 #. module: stock_location
 #: help:product.pulled.flow,picking_type:0
@@ -424,3 +394,21 @@ msgstr "Fakturirano"
 
 #~ msgid "Stock Location Paths"
 #~ msgstr "Putovi između lokacija zaliha"
+
+#~ msgid "Parameters"
+#~ msgstr "Parametri"
+
+#~ msgid "You must assign a production lot for this product"
+#~ msgstr "Morate pridijeliti lot proizvodnje ovom proizvodu"
+
+#~ msgid "Logistics Flows"
+#~ msgstr "Logistički tokovi"
+
+#~ msgid "Is used to know to which company belong packings and moves"
+#~ msgstr "Is used to know to which company belong packings and moves"
+
+#~ msgid "You try to assign a lot which is not from the same product"
+#~ msgstr "Pokušavate pridružiti lot koji nije iz istog proizvoda"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Greška: Neispravan barkod!"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-05-10 18:06+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -15,8 +15,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-19 05:38+0000\n"
-"X-Generator: Launchpad (build 16165)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:54+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: account_check_writing
 #: selection:res.company,check_layout:0
@@ -24,23 +24,7 @@ msgid "Check on Top"
 msgstr "Ausgabe Oben"
 
 #. module: account_check_writing
-#: model:ir.actions.act_window,help:account_check_writing.action_write_check
-msgid ""
-"The check payment form allows you to track the payment you do to your "
-"suppliers specially by check. When you select a supplier, the payment method "
-"and an amount for the payment, OpenERP will propose to reconcile your "
-"payment with the open supplier invoices or bills.You can print the check"
-msgstr ""
-"Dieses Formular ermöglicht die Eingabe von Scheck Zahlungen an Lieferanten. "
-"Bei Auswahl eines Lieferanten, der Eingabe von Zahlungsmethode und Betrag "
-"schlägt OpenERP den entsprechenden Ausgleich von offenen Eingangsrechnungen "
-"vor. Sie können ausserdem auch das Scheckformular ausdrucken."
-
-#. module: account_check_writing
 #: view:account.voucher:0
-#: model:ir.actions.report.xml,name:account_check_writing.account_print_check_bottom
-#: model:ir.actions.report.xml,name:account_check_writing.account_print_check_middle
-#: model:ir.actions.report.xml,name:account_check_writing.account_print_check_top
 msgid "Print Check"
 msgstr "Druckausgabe Scheck"
 
@@ -64,11 +48,6 @@ msgstr ""
 #: selection:res.company,check_layout:0
 msgid "Check on bottom"
 msgstr "Ausgabe Unten"
-
-#. module: account_check_writing
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "Fehler! Sie können keine rekursiven Unternehmen erzeugen."
 
 #. module: account_check_writing
 #: help:account.journal,allow_check_writing:0
@@ -113,9 +92,21 @@ msgid "Original Amount"
 msgstr "Ursprünglicher Betrag"
 
 #. module: account_check_writing
-#: view:res.company:0
-msgid "Configuration"
-msgstr "Konfiguration"
+#: model:ir.actions.act_window,help:account_check_writing.action_write_check
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new check. \n"
+"              </p><p>\n"
+"                The check payment form allows you to track the payment you "
+"do\n"
+"                to your suppliers using checks. When you select a supplier, "
+"the\n"
+"                payment method and an amount for the payment, OpenERP will\n"
+"                propose to reconcile your payment with the open supplier\n"
+"                invoices or bills.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: account_check_writing
 #: field:account.voucher,allow_check:0
@@ -135,9 +126,9 @@ msgid "Use Preprinted Check"
 msgstr "Benutze Vordruck"
 
 #. module: account_check_writing
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr "Der Unternehmensname muss eindeutig sein!"
+#: model:ir.actions.report.xml,name:account_check_writing.account_print_check_bottom
+msgid "Print Check (Bottom)"
+msgstr ""
 
 #. module: account_check_writing
 #: report:account.print.check.bottom:0
@@ -147,29 +138,25 @@ msgid "Due Date"
 msgstr "Fälligkeit"
 
 #. module: account_check_writing
+#: model:ir.actions.report.xml,name:account_check_writing.account_print_check_middle
+msgid "Print Check (Middle)"
+msgstr ""
+
+#. module: account_check_writing
 #: model:ir.model,name:account_check_writing.model_res_company
 msgid "Companies"
 msgstr "Unternehmen"
-
-#. module: account_check_writing
-#: view:res.company:0
-msgid "Default Check Layout"
-msgstr "Standard Scheckvorgabe"
-
-#. module: account_check_writing
-#: constraint:account.journal:0
-msgid ""
-"Configuration error! The currency chosen should be shared by the default "
-"accounts too."
-msgstr ""
-"Konfigurationsfehler! Die gewählte Währung muss auch bei den Standardkonten "
-"verwendet werden"
 
 #. module: account_check_writing
 #: report:account.print.check.bottom:0
 #: report:account.print.check.middle:0
 msgid "Balance Due"
 msgstr "Saldenausgleich"
+
+#. module: account_check_writing
+#: model:ir.actions.report.xml,name:account_check_writing.account_print_check_top
+msgid "Print Check (Top)"
+msgstr ""
 
 #. module: account_check_writing
 #: report:account.print.check.bottom:0
@@ -182,18 +169,6 @@ msgstr "Scheck Zahlbetrag"
 #: model:ir.model,name:account_check_writing.model_account_voucher
 msgid "Accounting Voucher"
 msgstr "Buchung Zahlungsbelege"
-
-#. module: account_check_writing
-#: sql_constraint:account.journal:0
-msgid "The name of the journal must be unique per company !"
-msgstr "Die Journalbezeichnung sollte pro Unternehmen eindeutig sein."
-
-#. module: account_check_writing
-#: sql_constraint:account.journal:0
-msgid "The code of the journal must be unique per company !"
-msgstr ""
-"Die Journalkurzbezeichnung sollte innerhalb eines Unternehmens eindeutig "
-"sein !"
 
 #. module: account_check_writing
 #: field:account.voucher,amount_in_word:0
@@ -210,5 +185,40 @@ msgstr "Offener Saldo"
 msgid "Choose Check layout"
 msgstr "Auswahl Scheckgestaltung"
 
+#~ msgid ""
+#~ "The check payment form allows you to track the payment you do to your "
+#~ "suppliers specially by check. When you select a supplier, the payment method "
+#~ "and an amount for the payment, OpenERP will propose to reconcile your "
+#~ "payment with the open supplier invoices or bills.You can print the check"
+#~ msgstr ""
+#~ "Dieses Formular ermöglicht die Eingabe von Scheck Zahlungen an Lieferanten. "
+#~ "Bei Auswahl eines Lieferanten, der Eingabe von Zahlungsmethode und Betrag "
+#~ "schlägt OpenERP den entsprechenden Ausgleich von offenen Eingangsrechnungen "
+#~ "vor. Sie können ausserdem auch das Scheckformular ausdrucken."
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "Fehler! Sie können keine rekursiven Unternehmen erzeugen."
+
+#~ msgid "Configuration"
+#~ msgstr "Konfiguration"
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "Der Unternehmensname muss eindeutig sein!"
+
+#~ msgid "The code of the journal must be unique per company !"
+#~ msgstr ""
+#~ "Die Journalkurzbezeichnung sollte innerhalb eines Unternehmens eindeutig "
+#~ "sein !"
+
 #~ msgid "Default Check layout"
 #~ msgstr "Standard Scheckvorgabe"
+
+#~ msgid ""
+#~ "Configuration error! The currency chosen should be shared by the default "
+#~ "accounts too."
+#~ msgstr ""
+#~ "Konfigurationsfehler! Die gewählte Währung muss auch bei den Standardkonten "
+#~ "verwendet werden"
+
+#~ msgid "The name of the journal must be unique per company !"
+#~ msgstr "Die Journalbezeichnung sollte pro Unternehmen eindeutig sein."

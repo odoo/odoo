@@ -7,20 +7,27 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-02-14 10:06+0000\n"
-"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
+"PO-Revision-Date: 2012-11-30 08:57+0000\n"
+"Last-Translator: mrshelly <Unknown>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-19 05:33+0000\n"
-"X-Generator: Launchpad (build 16165)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:49+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: project_issue
-#: view:project.issue.report:0
-msgid "Previous Month"
-msgstr "上月"
+#: model:project.category,name:project_issue.project_issue_category_03
+msgid "Deadly bug"
+msgstr ""
+
+#. module: project_issue
+#: help:project.config.settings,fetchmail_issue:0
+msgid ""
+"Allows you to configure your incoming mail server, and create issues from "
+"incoming emails."
+msgstr "允许直接从邮件收件服务器收到的邮件创建相关问题."
 
 #. module: project_issue
 #: field:project.issue.report,delay_open:0
@@ -28,7 +35,8 @@ msgid "Avg. Delay to Open"
 msgstr "距开始处理"
 
 #. module: project_issue
-#: view:project.issue:0 view:project.issue.report:0
+#: view:project.issue:0
+#: view:project.issue.report:0
 msgid "Group By..."
 msgstr "分组..."
 
@@ -36,11 +44,6 @@ msgstr "分组..."
 #: field:project.issue,working_hours_open:0
 msgid "Working Hours to Open the Issue"
 msgstr "据开始处理小时数"
-
-#. module: project_issue
-#: constraint:project.project:0
-msgid "Error! project start-date must be lower then project end-date."
-msgstr "错误！项目的开始日期必须小于项目的结束日期"
 
 #. module: project_issue
 #: field:project.issue,date_open:0
@@ -63,16 +66,21 @@ msgid "Progress (%)"
 msgstr "进度（％）"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:406
-#, python-format
-msgid "Warning !"
-msgstr "警告！"
+#: view:project.issue:0
+#: field:project.issue,message_unread:0
+msgid "Unread Messages"
+msgstr "未读消息"
 
 #. module: project_issue
-#: field:project.issue,company_id:0 view:project.issue.report:0
-#: field:project.issue.report,company_id:0
-msgid "Company"
-msgstr "公司"
+#: code:addons/project_issue/project_issue.py:560
+#, python-format
+msgid "<b>escalated</b>."
+msgstr ""
+
+#. module: project_issue
+#: model:ir.actions.server,name:project_issue.actions_server_project_issue_unread
+msgid "Issue: Mark unread"
+msgstr ""
 
 #. module: project_issue
 #: field:project.issue,email_cc:0
@@ -80,14 +88,14 @@ msgid "Watchers Emails"
 msgstr "关注者的电子邮件"
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "Today's features"
-msgstr "今日要完成的特性"
+#: help:project.issue,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "如果要求你关注新消息，勾选此项"
 
 #. module: project_issue
-#: model:ir.model,name:project_issue.model_project_issue_version
-msgid "project.issue.version"
-msgstr "project.issue.version"
+#: help:account.analytic.account,use_issues:0
+msgid "Check this field if this project manages issues"
+msgstr ""
 
 #. module: project_issue
 #: field:project.issue,day_open:0
@@ -95,7 +103,7 @@ msgid "Days to Open"
 msgstr "距开始日期"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:406
+#: code:addons/project_issue/project_issue.py:472
 #, python-format
 msgid ""
 "You cannot escalate this issue.\n"
@@ -121,7 +129,8 @@ msgid "Difference in days between last action and current date"
 msgstr "执行上个动作的日期到今天的天数"
 
 #. module: project_issue
-#: view:project.issue.report:0 field:project.issue.report,day:0
+#: view:project.issue.report:0
+#: field:project.issue.report,day:0
 msgid "Day"
 msgstr "天"
 
@@ -131,20 +140,11 @@ msgid "Days since creation date"
 msgstr "从创建以来的天数"
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "Add Internal Note"
-msgstr "添加内部备注"
-
-#. module: project_issue
-#: field:project.issue,task_id:0 view:project.issue.report:0
+#: field:project.issue,task_id:0
+#: view:project.issue.report:0
 #: field:project.issue.report,task_id:0
 msgid "Task"
 msgstr "任务"
-
-#. module: project_issue
-#: view:board.board:0
-msgid "Issues By Stage"
-msgstr "按阶段查看问题"
 
 #. module: project_issue
 #: field:project.issue,message_ids:0
@@ -158,25 +158,37 @@ msgstr "上个动作后的天数"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_project
-#: view:project.issue:0 field:project.issue,project_id:0
-#: view:project.issue.report:0 field:project.issue.report,project_id:0
+#: view:project.issue:0
+#: field:project.issue,project_id:0
+#: view:project.issue.report:0
+#: field:project.issue.report,project_id:0
 msgid "Project"
 msgstr "项目"
 
 #. module: project_issue
-#: model:ir.actions.act_window,name:project_issue.action_view_my_open_project_issue_tree
-msgid "My Open Project issues"
-msgstr "我的未处理问题"
+#: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to report a new issue.\n"
+"          </p><p>\n"
+"            The OpenERP issues tacker allows you to efficiantly manage "
+"things\n"
+"            like internal requests, software development bugs, customer\n"
+"            complaints, project troubles, material breakdowns, etc.\n"
+"          </p>\n"
+"        "
+msgstr ""
 
 #. module: project_issue
-#: selection:project.issue,state:0 selection:project.issue.report,state:0
+#: selection:project.issue,state:0
+#: selection:project.issue.report,state:0
 msgid "Cancelled"
 msgstr "已取消"
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "Change to Next Stage"
-msgstr "更改为下一个阶段"
+#: field:project.issue,description:0
+msgid "Private Note"
+msgstr ""
 
 #. module: project_issue
 #: field:project.issue.report,date_closed:0
@@ -194,9 +206,9 @@ msgid "Color Index"
 msgstr "颜色索引"
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "Issue / Partner"
-msgstr "问题 / 业务伙伴"
+#: help:project.issue,progress:0
+msgid "Computed as: Time Spent / Total Time."
+msgstr "计算方式：花费时间 / 总时间"
 
 #. module: project_issue
 #: field:project.issue.report,working_hours_open:0
@@ -204,9 +216,16 @@ msgid "Avg. Working Hours to Open"
 msgstr "距开始日期小时数"
 
 #. module: project_issue
-#: field:project.issue,date_action_next:0
-msgid "Next Action"
-msgstr "下一动作"
+#: model:ir.model,name:project_issue.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "辅助核算项"
+
+#. module: project_issue
+#: help:project.issue,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
 
 #. module: project_issue
 #: help:project.project,project_escalation_id:0
@@ -231,14 +250,8 @@ msgstr "缺陷报表用于分析你的支持或售后服务的数量。报表自
 
 #. module: project_issue
 #: view:project.issue:0
-msgid "Change Color"
-msgstr "更改颜色"
-
-#. module: project_issue
-#: code:addons/project_issue/project_issue.py:482
-#, python-format
-msgid " (copy)"
-msgstr " (copy)"
+msgid "Edit..."
+msgstr ""
 
 #. module: project_issue
 #: view:project.issue:0
@@ -246,20 +259,9 @@ msgid "Responsible"
 msgstr "负责人"
 
 #. module: project_issue
-#: selection:project.issue,priority:0
-#: selection:project.issue.report,priority:0
-msgid "Low"
-msgstr "最低"
-
-#. module: project_issue
 #: view:project.issue:0
 msgid "Statistics"
 msgstr "统计信息"
-
-#. module: project_issue
-#: view:project.issue:0
-msgid "Convert To Task"
-msgstr "转为任务"
 
 #. module: project_issue
 #: model:crm.case.categ,name:project_issue.bug_categ
@@ -267,36 +269,35 @@ msgid "Maintenance"
 msgstr "维护"
 
 #. module: project_issue
-#: model:ir.actions.act_window,name:project_issue.action_project_issue_report
-#: model:ir.ui.menu,name:project_issue.menu_project_issue_report_tree
-#: view:project.issue.report:0
-msgid "Issues Analysis"
-msgstr "问题分析"
+#: code:addons/project_issue/project_issue.py:547
+#, python-format
+msgid "Project issue <b>converted</b> to task."
+msgstr ""
 
 #. module: project_issue
 #: view:project.issue:0
-msgid "Next"
-msgstr "下一个"
-
-#. module: project_issue
-#: view:project.issue:0 field:project.issue,priority:0
-#: view:project.issue.report:0 field:project.issue.report,priority:0
+#: field:project.issue,priority:0
+#: view:project.issue.report:0
+#: field:project.issue.report,priority:0
 msgid "Priority"
 msgstr "优先级"
 
 #. module: project_issue
 #: view:project.issue:0
-msgid "Send New Email"
-msgstr "发送新电子邮件"
-
-#. module: project_issue
-#: view:project.issue:0 field:project.issue,version_id:0
-#: view:project.issue.report:0 field:project.issue.report,version_id:0
+#: field:project.issue,version_id:0
+#: view:project.issue.report:0
+#: field:project.issue.report,version_id:0
 msgid "Version"
 msgstr "版本"
 
 #. module: project_issue
-#: view:project.issue:0 selection:project.issue,state:0
+#: field:project.issue,message_follower_ids:0
+msgid "Followers"
+msgstr "关注者"
+
+#. module: project_issue
+#: view:project.issue:0
+#: selection:project.issue,state:0
 #: view:project.issue.report:0
 msgid "New"
 msgstr "新建"
@@ -309,10 +310,11 @@ msgstr "问题分类"
 #. module: project_issue
 #: field:project.issue,email_from:0
 msgid "Email"
-msgstr "电子邮件"
+msgstr "Email"
 
 #. module: project_issue
-#: field:project.issue,channel_id:0 field:project.issue.report,channel_id:0
+#: field:project.issue,channel_id:0
+#: field:project.issue.report,channel_id:0
 msgid "Channel"
 msgstr "渠道"
 
@@ -323,12 +325,19 @@ msgid "Lowest"
 msgstr "最低"
 
 #. module: project_issue
+#: code:addons/project_issue/project_issue.py:358
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (副本)"
+
+#. module: project_issue
 #: view:project.issue:0
 msgid "Unassigned Issues"
 msgstr "未指定负责人的问题"
 
 #. module: project_issue
-#: field:project.issue,create_date:0 view:project.issue.report:0
+#: field:project.issue,create_date:0
+#: view:project.issue.report:0
 #: field:project.issue.report,creation_date:0
 msgid "Creation Date"
 msgstr "创建日期"
@@ -345,23 +354,18 @@ msgid "To Do Issues"
 msgstr "待处理问题"
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "Reset to Draft"
-msgstr "重置为草稿"
+#: model:ir.model,name:project_issue.model_project_issue_version
+msgid "project.issue.version"
+msgstr "project.issue.version"
+
+#. module: project_issue
+#: field:project.config.settings,fetchmail_issue:0
+msgid "Create issues from an incoming email account "
+msgstr ""
 
 #. module: project_issue
 #: view:project.issue:0
-msgid "Today"
-msgstr "今天"
-
-#. module: project_issue
-#: model:ir.actions.act_window,name:project_issue.open_board_project_issue
-#: model:ir.ui.menu,name:project_issue.menu_deshboard_project_issue
-msgid "Project Issue Dashboard"
-msgstr "项目问题仪表盘"
-
-#. module: project_issue
-#: view:project.issue:0 selection:project.issue,state:0
+#: selection:project.issue,state:0
 #: view:project.issue.report:0
 msgid "Done"
 msgstr "已完成"
@@ -374,34 +378,28 @@ msgstr "七月"
 #. module: project_issue
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_category_act
 msgid "Categories"
-msgstr "类别"
+msgstr "分类"
 
 #. module: project_issue
-#: view:project.issue:0 view:project.issue.report:0
-#: field:project.issue.report,type_id:0
+#: view:project.issue:0
+#: field:project.issue,stage_id:0
+#: view:project.issue.report:0
+#: field:project.issue.report,stage_id:0
 msgid "Stage"
 msgstr "阶段"
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "History Information"
-msgstr "历史信息"
-
-#. module: project_issue
-#: model:ir.actions.act_window,name:project_issue.action_view_current_project_issue_tree
-#: model:ir.actions.act_window,name:project_issue.action_view_pending_project_issue_tree
-msgid "Project issues"
-msgstr "项目问题"
-
-#. module: project_issue
-#: view:project.issue:0
-msgid "Communication & History"
-msgstr "沟通与历史记录"
-
-#. module: project_issue
+#: model:ir.actions.act_window,name:project_issue.action_project_issue_report
+#: model:ir.ui.menu,name:project_issue.menu_project_issue_report_tree
 #: view:project.issue.report:0
-msgid "My Open Project Issue"
-msgstr "我的未处理问题"
+msgid "Issues Analysis"
+msgstr "问题分析"
+
+#. module: project_issue
+#: code:addons/project_issue/project_issue.py:493
+#, python-format
+msgid "No Subject"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.action_view_my_project_issue_tree
@@ -410,35 +408,25 @@ msgstr "我的项目问题"
 
 #. module: project_issue
 #: view:project.issue:0
+#: field:project.issue,partner_id:0
+#: view:project.issue.report:0
+#: field:project.issue.report,partner_id:0
 msgid "Contact"
 msgstr "联系方式"
 
 #. module: project_issue
-#: view:project.issue:0 field:project.issue,partner_id:0
-#: view:project.issue.report:0 field:project.issue.report,partner_id:0
-msgid "Partner"
-msgstr "业务伙伴"
-
-#. module: project_issue
-#: view:board.board:0
-msgid "My Issues"
-msgstr "我的问题"
+#: code:addons/project_issue/project_issue.py:551
+#, python-format
+msgid "Project issue <b>created</b>."
+msgstr ""
 
 #. module: project_issue
 #: view:project.issue:0
-msgid "Change to Previous Stage"
-msgstr "更改为上一阶段"
+msgid "Delete"
+msgstr ""
 
 #. module: project_issue
-#: model:ir.actions.act_window,help:project_issue.project_issue_version_action
-msgid ""
-"You can use the issues tracker in OpenERP to handle bugs in the software "
-"development project, to handle claims in after-sales services, etc. Define "
-"here the different versions of your products on which you can work on issues."
-msgstr "可以用缺陷跟踪来管理软件开发中的Bug或售后的产品缺陷等。这里输入您管理缺陷的产品的不同版本。"
-
-#. module: project_issue
-#: code:addons/project_issue/project_issue.py:330
+#: code:addons/project_issue/project_issue.py:341
 #, python-format
 msgid "Tasks"
 msgstr "任务"
@@ -449,9 +437,9 @@ msgid "# of Issues"
 msgstr "问题编号"
 
 #. module: project_issue
-#: selection:project.issue.report,month:0
-msgid "September"
-msgstr "九月"
+#: model:ir.actions.server,name:project_issue.actions_server_project_issue_read
+msgid "Issue: Mark read"
+msgstr ""
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -459,26 +447,24 @@ msgid "December"
 msgstr "十二月"
 
 #. module: project_issue
+#: field:project.issue,categ_ids:0
+msgid "Tags"
+msgstr "标签"
+
+#. module: project_issue
 #: view:project.issue:0
 msgid "Issue Tracker Tree"
 msgstr "缺陷列表"
 
 #. module: project_issue
-#: view:project.issue:0 view:project.issue.report:0
-#: field:project.issue.report,month:0
-msgid "Month"
-msgstr "月份"
+#: model:project.category,name:project_issue.project_issue_category_01
+msgid "Little problem"
+msgstr "小问题"
 
 #. module: project_issue
-#: model:ir.model,name:project_issue.model_project_issue_report
-msgid "project.issue.report"
-msgstr "project.issue.report"
-
-#. module: project_issue
-#: code:addons/project_issue/project_issue.py:408 view:project.issue:0
-#, python-format
-msgid "Escalate"
-msgstr "提升"
+#: view:project.project:0
+msgid "creates"
+msgstr ""
 
 #. module: project_issue
 #: model:crm.case.categ,name:project_issue.feature_request_categ
@@ -492,17 +478,28 @@ msgstr "更新日期"
 
 #. module: project_issue
 #: view:project.issue:0
+msgid "Project:"
+msgstr "项目:"
+
+#. module: project_issue
+#: view:project.issue:0
 msgid "Open Features"
 msgstr "其他功能"
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "Previous"
-msgstr "上一个"
+#: field:project.issue,date_action_next:0
+msgid "Next Action"
+msgstr "下一动作"
 
 #. module: project_issue
-#: view:project.issue:0 field:project.issue,categ_id:0
-#: view:project.issue.report:0 field:project.issue.report,categ_id:0
+#: field:project.issue,company_id:0
+#: view:project.issue.report:0
+#: field:project.issue.report,company_id:0
+msgid "Company"
+msgstr "公司"
+
+#. module: project_issue
+#: view:project.issue:0
 msgid "Category"
 msgstr "类别"
 
@@ -515,11 +512,6 @@ msgstr "用户电子邮件"
 #: view:project.issue.report:0
 msgid "#Number of Project Issues"
 msgstr "缺陷编号"
-
-#. module: project_issue
-#: view:project.issue:0
-msgid "Reset to New"
-msgstr "重置为新问题"
 
 #. module: project_issue
 #: help:project.issue,channel_id:0
@@ -540,19 +532,16 @@ msgid "Draft"
 msgstr "草稿"
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "Contact Information"
-msgstr "联系信息"
+#: selection:project.issue,priority:0
+#: selection:project.issue.report,priority:0
+msgid "Low"
+msgstr "低"
 
 #. module: project_issue
-#: field:project.issue,date_closed:0 selection:project.issue.report,state:0
+#: field:project.issue,date_closed:0
+#: selection:project.issue.report,state:0
 msgid "Closed"
 msgstr "已结束"
-
-#. module: project_issue
-#: view:project.issue:0
-msgid "Reply"
-msgstr "回复"
 
 #. module: project_issue
 #: field:project.issue.report,delay_close:0
@@ -560,13 +549,16 @@ msgid "Avg. Delay to Close"
 msgstr "平均耗用天数"
 
 #. module: project_issue
-#: view:project.issue:0 selection:project.issue,state:0
-#: view:project.issue.report:0 selection:project.issue.report,state:0
+#: selection:project.issue,state:0
+#: view:project.issue.report:0
+#: selection:project.issue.report,state:0
 msgid "Pending"
-msgstr "等待中"
+msgstr "待处理"
 
 #. module: project_issue
 #: view:project.issue:0
+#: field:project.issue,state:0
+#: field:project.issue.report,state:0
 msgid "Status"
 msgstr "状态"
 
@@ -574,11 +566,6 @@ msgstr "状态"
 #: view:project.issue.report:0
 msgid "#Project Issues"
 msgstr "缺陷编号"
-
-#. module: project_issue
-#: view:board.board:0
-msgid "Current Issues"
-msgstr "当前问题"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -589,22 +576,27 @@ msgstr "八月"
 #: selection:project.issue,priority:0
 #: selection:project.issue.report,priority:0
 msgid "Normal"
-msgstr "一般"
+msgstr "普通"
+
+#. module: project_issue
+#: field:project.project,issue_count:0
+msgid "unknown"
+msgstr ""
 
 #. module: project_issue
 #: view:project.issue:0
-msgid "Global CC"
-msgstr "完整抄送"
-
-#. module: project_issue
-#: view:project.issue:0 view:project.issue.report:0
-msgid "To Do"
-msgstr "待办"
+msgid "Category:"
+msgstr "分类:"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
 msgid "June"
 msgstr "六月"
+
+#. module: project_issue
+#: help:project.issue,message_ids:0
+msgid "Messages and communication history"
+msgstr ""
 
 #. module: project_issue
 #: view:project.issue:0
@@ -617,7 +609,23 @@ msgid "Days to Close"
 msgstr "剩余天数"
 
 #. module: project_issue
-#: field:project.issue,active:0 field:project.issue.version,active:0
+#: field:project.issue,message_is_follower:0
+msgid "Is a Follower"
+msgstr "是一个关注者"
+
+#. module: project_issue
+#: help:project.issue,state:0
+msgid ""
+"The status is set to 'Draft', when a case is created.                      "
+"If the case is in progress the status is set to 'Open'.                      "
+"When the case is over, the status is set to 'Done'.                      If "
+"the case needs to be reviewed then the status is                       set "
+"to 'Pending'."
+msgstr ""
+
+#. module: project_issue
+#: field:project.issue,active:0
+#: field:project.issue.version,active:0
 msgid "Active"
 msgstr "生效"
 
@@ -625,6 +633,18 @@ msgstr "生效"
 #: selection:project.issue.report,month:0
 msgid "November"
 msgstr "十一月"
+
+#. module: project_issue
+#: code:addons/project_issue/project_issue.py:472
+#, python-format
+msgid "Warning!"
+msgstr "警告!"
+
+#. module: project_issue
+#: field:project.issue,message_comment_ids:0
+#: help:project.issue,message_comment_ids:0
+msgid "Comments and emails"
+msgstr "评论和电子邮件"
 
 #. module: project_issue
 #: view:project.issue.report:0
@@ -635,16 +655,6 @@ msgstr "搜索"
 #: selection:project.issue.report,month:0
 msgid "October"
 msgstr "十月"
-
-#. module: project_issue
-#: view:board.board:0
-msgid "Issues Dashboard"
-msgstr "问题追踪仪表盘"
-
-#. module: project_issue
-#: view:project.issue:0 field:project.issue,type_id:0
-msgid "Stages"
-msgstr "阶段"
 
 #. module: project_issue
 #: help:project.issue,days_since_creation:0
@@ -667,56 +677,36 @@ msgid "These people will receive email."
 msgstr "这些人将收到电子邮件。"
 
 #. module: project_issue
-#: view:board.board:0
-msgid "Issues By State"
-msgstr "按状态分类问题"
+#: field:project.issue,message_summary:0
+msgid "Summary"
+msgstr "摘要"
 
 #. module: project_issue
-#: view:project.issue:0 field:project.issue,date:0
+#: field:project.issue,date:0
 msgid "Date"
 msgstr "日期"
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "History"
-msgstr "历史记录"
-
-#. module: project_issue
-#: field:project.issue,user_id:0 view:project.issue.report:0
+#: field:project.issue,user_id:0
+#: view:project.issue.report:0
 #: field:project.issue.report,user_id:0
 msgid "Assigned to"
 msgstr "指派到"
 
 #. module: project_issue
-#: field:project.project,reply_to:0
-msgid "Reply-To Email Address"
-msgstr "回复给邮件地址"
-
-#. module: project_issue
-#: field:project.issue,partner_address_id:0
-msgid "Partner Contact"
-msgstr "业务伙伴联系人"
-
-#. module: project_issue
-#: view:project.issue:0
-msgid "Issue Tracker Form"
-msgstr "问题跟踪表单"
-
-#. module: project_issue
-#: view:project.issue:0 field:project.issue,state:0
-#: view:project.issue.report:0 field:project.issue.report,state:0
-msgid "State"
-msgstr "状态"
-
-#. module: project_issue
-#: view:project.issue:0
-msgid "General"
-msgstr "一般"
+#: view:project.config.settings:0
+msgid "Configure"
+msgstr "设置"
 
 #. module: project_issue
 #: view:project.issue:0
 msgid "Current Features"
 msgstr "当前功能"
+
+#. module: project_issue
+#: selection:project.issue.report,month:0
+msgid "September"
+msgstr "九月"
 
 #. module: project_issue
 #: view:project.issue.version:0
@@ -731,24 +721,21 @@ msgstr "版本号"
 #. module: project_issue
 #: view:project.issue:0
 msgid "Cancel"
-msgstr "取消(&C)"
+msgstr "取消"
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "Close"
-msgstr "结束"
-
-#. module: project_issue
-#: view:project.issue:0 selection:project.issue.report,state:0
+#: selection:project.issue.report,state:0
 msgid "Open"
 msgstr "待办"
 
 #. module: project_issue
+#: field:account.analytic.account,use_issues:0
 #: model:ir.actions.act_window,name:project_issue.act_project_project_2_project_issue_all
 #: model:ir.actions.act_window,name:project_issue.project_issue_categ_act0
 #: model:ir.ui.menu,name:project_issue.menu_project_confi
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_track
 #: view:project.issue:0
+#: view:project.project:0
 msgid "Issues"
 msgstr "问题"
 
@@ -758,8 +745,12 @@ msgid "In Progress"
 msgstr "进行中"
 
 #. module: project_issue
-#: model:ir.actions.act_window,name:project_issue.action_project_issue_graph_stage
-#: model:ir.actions.act_window,name:project_issue.action_project_issue_graph_state
+#: view:project.issue:0
+#: view:project.issue.report:0
+msgid "To Do"
+msgstr "待办"
+
+#. module: project_issue
 #: model:ir.model,name:project_issue.model_project_issue
 #: view:project.issue.report:0
 msgid "Project Issue"
@@ -771,30 +762,41 @@ msgid "Creation Month"
 msgstr "创建月份"
 
 #. module: project_issue
-#: help:project.issue,progress:0
-msgid "Computed as: Time Spent / Total Time."
-msgstr "计算方式：花费时间 / 总时间"
-
-#. module: project_issue
-#: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
-msgid ""
-"Issues such as system bugs, customer complaints, and material breakdowns are "
-"collected here. You can define the stages assigned when solving the project "
-"issue (analysis, development, done). With the mailgateway module, issues can "
-"be integrated through an email address (example: support@mycompany.com)"
+#: code:addons/project_issue/project_issue.py:557
+#, python-format
+msgid "<b>escalated</b> to <em>'%s'</em>."
 msgstr ""
-"缺陷（如系统故障、客户投诉、材料破损）在这里搜集。可以输入缺陷处理的阶段（分析原因、正在处理、已完成）。安装了mailgateway模块后，缺陷管理可以与"
-"特定邮件集成（如：support@mycompany.com）"
 
 #. module: project_issue
-#: view:board.board:0 view:project.issue:0
-msgid "Pending Issues"
-msgstr "未决问题"
+#: view:project.issue.report:0
+#: field:project.issue.report,section_id:0
+msgid "Sale Team"
+msgstr "销售团队"
 
 #. module: project_issue
+#: view:project.issue:0
+#: view:project.issue.report:0
+#: field:project.issue.report,month:0
+msgid "Month"
+msgstr "月份"
+
+#. module: project_issue
+#: view:project.issue:0
 #: field:project.issue,name:0
+#: view:project.project:0
 msgid "Issue"
 msgstr "问题"
+
+#. module: project_issue
+#: code:addons/project_issue/project_issue.py:540
+#, python-format
+msgid "Stage changed to <b>%s</b>."
+msgstr "阶段已改为<b>%s</b>"
+
+#. module: project_issue
+#: model:project.category,name:project_issue.project_issue_category_02
+msgid "PBCK"
+msgstr ""
 
 #. module: project_issue
 #: view:project.issue:0
@@ -802,7 +804,7 @@ msgid "Feature Tracker Search"
 msgstr "缺陷列表"
 
 #. module: project_issue
-#: view:project.issue:0 field:project.issue,description:0
+#: view:project.issue:0
 msgid "Description"
 msgstr "描述"
 
@@ -817,25 +819,15 @@ msgid "May"
 msgstr "五月"
 
 #. module: project_issue
-#: view:project.issue.report:0 field:project.issue.report,email:0
-msgid "# Emails"
-msgstr "电子邮件"
+#: model:ir.model,name:project_issue.model_project_config_settings
+msgid "project.config.settings"
+msgstr ""
 
 #. module: project_issue
-#: help:project.issue,state:0
-msgid ""
-"The state is set to 'Draft', when a case is created.                         "
-"         \n"
-"If the case is in progress the state is set to 'Open'.                       "
-"           \n"
-"When the case is over, the state is set to 'Done'.                           "
-"       \n"
-"If the case needs to be reviewed then the state is set to 'Pending'."
-msgstr ""
-"当一个业务创建时状态设为'草稿'\n"
-"如果业务正在处理状态设为'开启'\n"
-"当业务结束状态设为'完成'\n"
-"如果业务需要审查状态设为'待定'"
+#: view:project.issue.report:0
+#: field:project.issue.report,email:0
+msgid "# Emails"
+msgstr "电子邮件"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -843,25 +835,27 @@ msgid "February"
 msgstr "二月"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:70
-#, python-format
-msgid "Issue '%s' has been opened."
-msgstr "问题“%s”已打开。"
-
-#. module: project_issue
 #: view:project.issue:0
 msgid "Feature description"
 msgstr "功能描述"
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "Edit"
-msgstr "编辑"
-
-#. module: project_issue
 #: field:project.project,project_escalation_id:0
 msgid "Project Escalation"
 msgstr "提升"
+
+#. module: project_issue
+#: model:ir.actions.act_window,help:project_issue.project_issue_version_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a new version.\n"
+"              </p><p>\n"
+"                Define here the different versions of your products on "
+"which\n"
+"                you can work on issues.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: project_issue
 #: help:project.issue,section_id:0
@@ -871,20 +865,24 @@ msgid ""
 msgstr "这个业务所属的销售团队。输入团队负责人和邮箱。"
 
 #. module: project_issue
-#: view:project.issue.report:0
-msgid "Month-1"
-msgstr "上月"
+#: view:board.board:0
+msgid "My Issues"
+msgstr "我的问题"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:85
-#, python-format
-msgid "Issue '%s' has been closed."
-msgstr "问题“%s”已关闭。"
+#: help:project.issue.report,delay_open:0
+msgid "Number of Days to open the project issue."
+msgstr ""
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
 msgid "April"
 msgstr "四月"
+
+#. module: project_issue
+#: view:project.issue:0
+msgid "⇒ Escalate"
+msgstr ""
 
 #. module: project_issue
 #: view:project.issue:0
@@ -902,26 +900,14 @@ msgid "ID"
 msgstr "ID"
 
 #. module: project_issue
-#: view:project.issue.report:0
-msgid "Current Year"
-msgstr "本年"
-
-#. module: project_issue
-#: code:addons/project_issue/project_issue.py:415
-#, python-format
-msgid "No Title"
-msgstr "无标题"
+#: model:ir.model,name:project_issue.model_project_issue_report
+msgid "project.issue.report"
+msgstr "project.issue.report"
 
 #. module: project_issue
 #: help:project.issue.report,delay_close:0
-#: help:project.issue.report,delay_open:0
 msgid "Number of Days to close the project issue"
 msgstr "剩余天数"
-
-#. module: project_issue
-#: view:project.issue.report:0 field:project.issue.report,section_id:0
-msgid "Sale Team"
-msgstr "销售团队"
 
 #. module: project_issue
 #: field:project.issue.report,working_hours_close:0
@@ -945,7 +931,8 @@ msgid "Last Action"
 msgstr "最近动作"
 
 #. module: project_issue
-#: view:project.issue.report:0 field:project.issue.report,name:0
+#: view:project.issue.report:0
+#: field:project.issue.report,name:0
 msgid "Year"
 msgstr "年"
 
@@ -954,31 +941,64 @@ msgstr "年"
 msgid "Duration"
 msgstr "时长"
 
-#. module: project_issue
-#: view:board.board:0
-msgid "My Open Issues by Creation Date"
-msgstr "我的未处理问题（按创建日期）"
+#~ msgid "Error! project start-date must be lower then project end-date."
+#~ msgstr "错误！项目的开始日期必须小于项目的结束日期"
 
 #~ msgid "Close Working hours"
 #~ msgstr "距处理结束小时数"
 
+#~ msgid "Add Internal Note"
+#~ msgstr "添加内部备注"
+
 #~ msgid "Date Closed"
 #~ msgstr "结束日期"
+
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "警告！"
 
 #~ msgid "Mobile"
 #~ msgstr "手机"
 
+#~ msgid "Previous"
+#~ msgstr "上一个"
+
+#, python-format
+#~ msgid " (copy)"
+#~ msgstr " (copy)"
+
+#~ msgid "Partner"
+#~ msgstr "业务伙伴"
+
+#~ msgid "Convert To Task"
+#~ msgstr "转为任务"
+
+#~ msgid "Send New Email"
+#~ msgstr "发送新电子邮件"
+
 #~ msgid "Issue Management in Project Management"
 #~ msgstr "项目管理中的缺陷管理"
+
+#~ msgid "Next"
+#~ msgstr "下一个"
 
 #~ msgid "Open Working Hours"
 #~ msgstr "距开始处理小时数"
 
+#~ msgid "Today"
+#~ msgstr "今天"
+
 #~ msgid "Phone"
 #~ msgstr "电话"
 
+#~ msgid "Reset to Draft"
+#~ msgstr "重置为草稿"
+
 #~ msgid "My Board"
 #~ msgstr "我的控制台"
+
+#~ msgid "History Information"
+#~ msgstr "历史信息"
 
 #~ msgid ""
 #~ "The channels represent the different communication modes available with the "
@@ -990,6 +1010,15 @@ msgstr "我的未处理问题（按创建日期）"
 #~ msgstr "这是这个任务现在的负责人"
 
 #~ msgid ""
+#~ "You can use the issues tracker in OpenERP to handle bugs in the software "
+#~ "development project, to handle claims in after-sales services, etc. Define "
+#~ "here the different versions of your products on which you can work on issues."
+#~ msgstr "可以用缺陷跟踪来管理软件开发中的Bug或售后的产品缺陷等。这里输入您管理缺陷的产品的不同版本。"
+
+#~ msgid "Escalate"
+#~ msgstr "提升"
+
+#~ msgid ""
 #~ "\n"
 #~ "        This module provide Issues/Bugs Management in Project\n"
 #~ "    "
@@ -998,11 +1027,26 @@ msgstr "我的未处理问题（按创建日期）"
 #~ "        这个模块在项目管理中增加了缺陷管理\n"
 #~ "    "
 
+#~ msgid "Global CC"
+#~ msgstr "完整抄送"
+
 #~ msgid "Extended Filters..."
 #~ msgstr "增加筛选条件"
 
+#~ msgid "State"
+#~ msgstr "状态"
+
 #~ msgid "Attachments"
 #~ msgstr "附件"
+
+#~ msgid "Reply-To Email Address"
+#~ msgstr "回复给邮件地址"
+
+#~ msgid "History"
+#~ msgstr "历史记录"
+
+#~ msgid "Partner Contact"
+#~ msgstr "业务伙伴联系人"
 
 #~ msgid "Resolution"
 #~ msgstr "解决方案"
@@ -1010,8 +1054,26 @@ msgstr "我的未处理问题（按创建日期）"
 #~ msgid "Communication"
 #~ msgstr "沟通"
 
+#~ msgid "General"
+#~ msgstr "一般"
+
+#~ msgid "Close"
+#~ msgstr "结束"
+
 #~ msgid "Details"
 #~ msgstr "详细信息"
+
+#~ msgid "Reply"
+#~ msgstr "回复"
+
+#~ msgid ""
+#~ "Issues such as system bugs, customer complaints, and material breakdowns are "
+#~ "collected here. You can define the stages assigned when solving the project "
+#~ "issue (analysis, development, done). With the mailgateway module, issues can "
+#~ "be integrated through an email address (example: support@mycompany.com)"
+#~ msgstr ""
+#~ "缺陷（如系统故障、客户投诉、材料破损）在这里搜集。可以输入缺陷处理的阶段（分析原因、正在处理、已完成）。安装了mailgateway模块后，缺陷管理可以与"
+#~ "特定邮件集成（如：support@mycompany.com）"
 
 #~ msgid "Current"
 #~ msgstr "当前的"
@@ -1019,5 +1081,103 @@ msgstr "我的未处理问题（按创建日期）"
 #~ msgid "Sale Team    "
 #~ msgstr "销售团队    "
 
+#~ msgid ""
+#~ "The state is set to 'Draft', when a case is created.                         "
+#~ "         \n"
+#~ "If the case is in progress the state is set to 'Open'.                       "
+#~ "           \n"
+#~ "When the case is over, the state is set to 'Done'.                           "
+#~ "       \n"
+#~ "If the case needs to be reviewed then the state is set to 'Pending'."
+#~ msgstr ""
+#~ "当一个业务创建时状态设为'草稿'\n"
+#~ "如果业务正在处理状态设为'开启'\n"
+#~ "当业务结束状态设为'完成'\n"
+#~ "如果业务需要审查状态设为'待定'"
+
 #~ msgid "Employee's Name"
 #~ msgstr "员工姓名"
+
+#~ msgid "Month-1"
+#~ msgstr "上月"
+
+#, python-format
+#~ msgid "No Title"
+#~ msgstr "无标题"
+
+#~ msgid "Change Color"
+#~ msgstr "更改颜色"
+
+#~ msgid "Issue / Partner"
+#~ msgstr "问题 / 业务伙伴"
+
+#~ msgid "Today's features"
+#~ msgstr "今日要完成的特性"
+
+#~ msgid "Previous Month"
+#~ msgstr "上月"
+
+#~ msgid "Change to Next Stage"
+#~ msgstr "更改为下一个阶段"
+
+#~ msgid "Reset to New"
+#~ msgstr "重置为新问题"
+
+#~ msgid "Change to Previous Stage"
+#~ msgstr "更改为上一阶段"
+
+#~ msgid "Contact Information"
+#~ msgstr "联系信息"
+
+#~ msgid "Stages"
+#~ msgstr "阶段"
+
+#~ msgid "Issues Dashboard"
+#~ msgstr "问题追踪仪表盘"
+
+#~ msgid "Edit"
+#~ msgstr "编辑"
+
+#~ msgid "Issues By Stage"
+#~ msgstr "按阶段查看问题"
+
+#~ msgid "Project issues"
+#~ msgstr "项目问题"
+
+#~ msgid "My Open Project issues"
+#~ msgstr "我的未处理问题"
+
+#~ msgid "Project Issue Dashboard"
+#~ msgstr "项目问题仪表盘"
+
+#~ msgid "My Open Project Issue"
+#~ msgstr "我的未处理问题"
+
+#~ msgid "Current Issues"
+#~ msgstr "当前问题"
+
+#~ msgid "Issues By State"
+#~ msgstr "按状态分类问题"
+
+#~ msgid "Pending Issues"
+#~ msgstr "未决问题"
+
+#~ msgid "Issue Tracker Form"
+#~ msgstr "问题跟踪表单"
+
+#, python-format
+#~ msgid "Issue '%s' has been opened."
+#~ msgstr "问题“%s”已打开。"
+
+#, python-format
+#~ msgid "Issue '%s' has been closed."
+#~ msgstr "问题“%s”已关闭。"
+
+#~ msgid "My Open Issues by Creation Date"
+#~ msgstr "我的未处理问题（按创建日期）"
+
+#~ msgid "Communication & History"
+#~ msgstr "沟通与历史记录"
+
+#~ msgid "Current Year"
+#~ msgstr "本年"

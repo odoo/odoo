@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2010-12-11 22:47+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-19 05:26+0000\n"
-"X-Generator: Launchpad (build 16165)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:44+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: document_webdav
 #: field:document.webdav.dir.property,create_date:0
@@ -29,9 +29,9 @@ msgid "Documents"
 msgstr "Documentos"
 
 #. module: document_webdav
-#: constraint:document.directory:0
-msgid "Error! You can not create recursive Directories."
-msgstr "Erro! Não é possível criar Pastas recursivas."
+#: view:document.webdav.dir.property:0
+msgid "Document property"
+msgstr ""
 
 #. module: document_webdav
 #: view:document.webdav.dir.property:0
@@ -91,24 +91,9 @@ msgid "Folders"
 msgstr "Pastas"
 
 #. module: document_webdav
-#: sql_constraint:document.directory:0
-msgid "Directory cannot be parent of itself!"
-msgstr "Uma pasta não pode ser ascendente de sí própria"
-
-#. module: document_webdav
-#: view:document.directory:0
-msgid "Dynamic context"
-msgstr "Contexto dinâmico"
-
-#. module: document_webdav
 #: view:document.directory:0
 msgid "WebDAV properties"
 msgstr "WebDAV propriedades"
-
-#. module: document_webdav
-#: sql_constraint:document.directory:0
-msgid "The directory name must be unique !"
-msgstr "O nome da pasta tem de ser único !"
 
 #. module: document_webdav
 #: code:addons/document_webdav/webdav.py:37
@@ -181,14 +166,14 @@ msgid "Creator"
 msgstr "Criador"
 
 #. module: document_webdav
+#: view:document.webdav.file.property:0
+msgid "Document Property"
+msgstr ""
+
+#. module: document_webdav
 #: model:ir.ui.menu,name:document_webdav.menu_properties
 msgid "DAV Properties"
 msgstr "Propriedades DAV"
-
-#. module: document_webdav
-#: sql_constraint:document.directory:0
-msgid "Directory must have a parent or a storage"
-msgstr "A pasta tem de ter um ascendente ou um armazenamento"
 
 #. module: document_webdav
 #: field:document.webdav.dir.property,do_subst:0
@@ -199,8 +184,23 @@ msgstr "Substituir"
 #~ msgid "DAV properties for documents"
 #~ msgstr "DAV propriedades de documentos"
 
+#~ msgid "Directory cannot be parent of itself!"
+#~ msgstr "Uma pasta não pode ser ascendente de sí própria"
+
+#~ msgid "Dynamic context"
+#~ msgstr "Contexto dinâmico"
+
+#~ msgid "The directory name must be unique !"
+#~ msgstr "O nome da pasta tem de ser único !"
+
 #~ msgid "DAV properties for folders"
 #~ msgstr "DAV propriedades de pastas"
 
 #~ msgid "WebDAV server for Document Management"
 #~ msgstr "WebDAV servidor para Gestão de Documentos"
+
+#~ msgid "Directory must have a parent or a storage"
+#~ msgstr "A pasta tem de ter um ascendente ou um armazenamento"
+
+#~ msgid "Error! You can not create recursive Directories."
+#~ msgstr "Erro! Não é possível criar Pastas recursivas."

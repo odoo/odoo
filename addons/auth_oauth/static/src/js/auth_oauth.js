@@ -12,7 +12,7 @@ openerp.auth_oauth = function(instance) {
             } else if(this.params.oauth_error === 2) {
                 this.do_warn("Authentication error","");
             }
-            return d.then(this.do_oauth_load).fail(function() {
+            return d.done(this.do_oauth_load).fail(function() {
                 self.do_oauth_load([]);
             });
         },
@@ -23,7 +23,7 @@ openerp.auth_oauth = function(instance) {
         do_oauth_load: function() {
             var db = this.$("form [name=db]").val();
             if (db) {
-                this.rpc("/auth_oauth/list_providers", { dbname: db }).then(this.on_oauth_loaded);
+                this.rpc("/auth_oauth/list_providers", { dbname: db }).done(this.on_oauth_loaded);
             }
         },
         on_oauth_loaded: function(result) {
@@ -35,35 +35,32 @@ openerp.auth_oauth = function(instance) {
         on_oauth_sign_in: function(ev) {
             ev.preventDefault();
             var index = $(ev.target).data('index');
-            var p = this.oauth_providers[index];
-            var ret = location.protocol+"//"+location.host+"/";
-            var dbname = self.$("form [name=db]").val();
-            var state_object = {
-                d: dbname,
-                p: p.id
-            };
-            var state = JSON.stringify(state_object);
+            var provider = this.oauth_providers[index];
+            return this.do_oauth_sign_in(provider);
+        },
+        do_oauth_sign_in: function(provider) {
+            var return_url = _.str.sprintf('%s//%s/auth_oauth/signin', location.protocol, location.host);
+            if (instance.session.debug) {
+                return_url += '?debug';
+            }
+            var state = this._oauth_state(provider);
             var params = {
                 response_type: 'token',
-                client_id: p.client_id,
-                redirect_uri: ret,
-                scope: p.scope,
-                state: state,
+                client_id: provider.client_id,
+                redirect_uri: return_url,
+                scope: provider.scope,
+                state: JSON.stringify(state),
             };
-            var url = p.auth_endpoint + '?' + $.param(params);
+            var url = provider.auth_endpoint + '?' + $.param(params);
             window.location = url;
         },
-    });
-
-    instance.web.WebClient = instance.web.WebClient.extend({
-        start: function() {
-            this._super.apply(this, arguments);
-            var params = $.deparam(window.location.hash.substring(1));
-            // alert(JSON.stringify(params));
-            if (params.hasOwnProperty('access_token')) {
-                var url = "/auth_oauth/signin" + '?' + $.param(params);
-                window.location = url;
-            }
+        _oauth_state: function(provider) {
+            // return the state object sent back with the redirected uri
+            var dbname = this.$("form [name=db]").val();
+            return {
+                d: dbname,
+                p: provider.id,
+            };
         },
     });
 

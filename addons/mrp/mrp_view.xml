@@ -6,7 +6,7 @@
         <menuitem name="Manufacturing"
             id="base.menu_mrp_root"
             groups="group_mrp_user,group_mrp_manager"
-            sequence="60"/>
+            sequence="80"/>
 
         <menuitem name="Manufacturing"
             id="menu_mrp_manufacturing"
@@ -347,7 +347,7 @@
                 <form string="Bill of Material" version="7.0">
                     <group>
                         <group>
-                            <field name="product_id" on_change="onchange_product_id(product_id, name, context)" class="oe_inline"/>
+                            <field name="product_id" on_change="onchange_product_id(product_id, name, context)" context="{'default_supply_method':'produce'}" class="oe_inline"/>
                             <label for="product_qty" string="Quantity"/>
                             <div>
                                 <field name="product_qty" class="oe_inline"/>
@@ -366,7 +366,7 @@
                             </div>
                         </group>
                         <group>
-                            <field name="name" class="oe_inline"/>
+                            <field name="name" groups="base.group_no_one"/>
                             <field name="code" string="Reference"/>
                             <field name="type"/>
                             <p colspan="2" class="oe_grey" attrs="{'invisible': [('type','=','normal')]}">
@@ -380,7 +380,7 @@
                         <page string="Components">
                             <field name="bom_lines" widget="one2many_list">
                                 <tree string="Components" editable="bottom">
-                                    <field name="product_id" on_change="onchange_product_id(product_id, name)"/>
+                                    <field name="product_id" context="{'default_supply_method':'produce'}" on_change="onchange_product_id(product_id, name)"/>
                                     <field name="product_qty"/>
                                     <field name="product_uom" on_change="onchange_uom(product_id, product_uom)" groups="product.group_uom"/>
                                     <field name="name" invisible="1"/>
@@ -409,8 +409,8 @@
                         </page>
                     </notebook>
                     <div class="oe_chatter">
-                         <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
                          <field name="message_follower_ids" widget="mail_followers"/>
+                         <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
                     </div>
                 </form>
             </field>
@@ -442,11 +442,11 @@
             <field name="arch" type="xml">
                 <tree string="Bill of Materials" colors="blue:method">
                     <field name="sequence" invisible="1"/>
-                    <field name="name"/>
-                    <field name="code"/>
+                    <field name="name" invisible="1"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom" groups="product.group_uom"/>
+                    <field name="code"/>
                     <field name="type"/>
                     <field name="method"/>
                     <field name="routing_id" groups="mrp.group_mrp_routings"/>
@@ -462,9 +462,9 @@
             <field name="arch" type="xml">
                 <tree string="BoM Structure" colors="blue:method">
                     <field name="sequence" invisible="1"/>
-                    <field name="name" string="Component Name"/>
+                    <field name="name" groups="base.group_no_one"/>
                     <field name="code"/>
-                    <field name="product_id" string="Component Product"/>
+                    <field name="product_id"/>
                     <field name="bom_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom" groups="product.group_uom"/>
@@ -507,7 +507,7 @@
               <p class="oe_view_nocontent_create">
                 Click to add a component to a bill of material.
               </p><p>
-                Bills of materials components are components and sub-products
+                Bills of materials components are components and by-products
                 used to create master bills of materials.  Use this menu to
                 search in which BoM a specific component is used.
               </p>
@@ -606,7 +606,7 @@
             <field name="model">mrp.production</field>
             <field name="arch" type="xml">
                 <graph string="Manufacturing Orders" type="bar">
-                    <field name="date_planned_date"/>
+                    <field name="date_planned"/>
                     <field name="hour_total" operator="+"/>
                     <field name="cycle_total" operator="+"/>
                 </graph>
@@ -620,10 +620,10 @@
                 <form string="Manufacturing Orders" version="7.0">
                 <header>
                     <button name="button_confirm" states="draft" string="Confirm Production" class="oe_highlight"/>
-                    <button name="button_produce" states="ready" string="Start Production" class="oe_highlight"/>
-                    <button name="%(act_mrp_product_produce)d" states="in_production" string="Produce" type="action" class="oe_highlight"/>
-                    <button name="force_production" states="confirmed" string="Force Reservation" type="object" class="oe_highlight"/>
+                    <button name="%(act_mrp_product_produce)d" states="confirmed,ready,in_production" string="Produce" type="action" class="oe_highlight"/>
+                    <button name="force_production" states="confirmed" string="Force Reservation" type="object"/>
                     <button name="force_production" states="picking_except" string="Force Reservation" type="object"/>
+                    <button name="button_produce" states="confirmed,ready" string="Mark as Started"/>
                     <button name="button_recreate" states="picking_except" string="Recreate Picking"/>
                     <button name="button_cancel" states="draft,ready,in_production,picking_except" string="Cancel"/>
                     <button name="action_cancel" type="object" states="confirmed" string="Cancel"/>
@@ -751,7 +751,7 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Work Orders">
+                        <page string="Work Orders" groups="mrp.group_mrp_routings">
                             <button name="action_compute" states="draft"
                                 string="Compute Data" type="object"
                                 icon="terp-stock_format-scientific"/>
@@ -797,8 +797,8 @@
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_ids" widget="mail_thread"/>
                     <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
                 </div>
                 </form>
             </field>
