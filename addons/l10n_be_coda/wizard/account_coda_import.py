@@ -262,25 +262,39 @@ class account_coda_import(osv.osv_memory):
                             line['counterpartyNumber'] = False
                     except:
                         pass
+                    partner = None
                     partner_id = None
                     if 'counterpartyNumber' in line and line['counterpartyNumber']:
                         ids = self.pool.get('res.partner.bank').search(cr, uid, [('acc_number', '=', str(line['counterpartyNumber']))])
                         if ids and len(ids) > 0:
-                            partner_id = self.pool.get('res.partner.bank').browse(cr, uid, ids[0], context=context).partner_id.id
+                            partner = self.pool.get('res.partner.bank').browse(cr, uid, ids[0], context=context).partner_id
+                            partner_id = partner.id
+                    if partner:
+                        if partner.customer:
+                            line['type'] = 'customer'
                         else:
-                            partner_id = None
+                            line['type'] = 'supplier'
+                        if line['debit'] == '1':
+                            line['account'] = partner.property_account_payable.id
+                        else:
+                            line['account'] = partner.property_account_receivable.id
+                    else:
+                        line['type'] = 'general'
+                        if line['debit'] == '1':
+                            line['account'] = statement['journal_id'].default_debit_account_id.id
+                        else:
+                            line['account'] = statement['journal_id'].default_credit_account_id.id
+                            
 
                     data = {
                         'name': line['communication'],
                         'note':  "\n".join(note),
                         'date': line['entryDate'],
                         'amount': line['amount'],
-                        #  'type': '',
+                        'type': line['type'],
                         'partner_id': partner_id,
-                        'account_id': 1,  # TODO
+                        'account_id': line['account'],
                         'statement_id': statement['id'],
-                        #  'analytic_account_id': '',
-                        #  'move_ids': '',
                         'ref': line['ref'],
                         'sequence': line['sequence'],
                     }
