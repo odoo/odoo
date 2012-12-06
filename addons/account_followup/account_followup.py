@@ -75,7 +75,7 @@ class followup_line(osv.osv):
 
 Exception made if there was a mistake of ours, it seems that the following amount stays unpaid. Please, take appropriate measures in order to carry out this payment in the next 8 days.
 
-Would your payment have been carried out after this mail was sent, please ignore this message. Do not hesitate to contact our accounting department at (+32).10.68.94.39.
+Would your payment have been carried out after this mail was sent, please ignore this message. Do not hesitate to contact our accounting department.
 
 Best Regards,
 """,
@@ -180,10 +180,7 @@ class res_partner(osv.osv):
             root.insert(0, first_node[0])
             res['arch'] = etree.tostring(doc, encoding="utf-8")
         return res
-    
-#    def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):
-#        if order and order[0] == '':
-#        pass
+
     
     def _get_latest(self, cr, uid, ids, names, arg, context=None, company_id=None):
         res={}
@@ -328,10 +325,6 @@ class res_partner(osv.osv):
                                'payment_earliest_due_date': calc_date}
         return res
     
-    
-    def _search_unreconciled(self, cr, uid, obj, name, args, field, context=None):
-        pass
-    
     def _payment_overdue_search(self, cr, uid, obj, name, args, context=None):
         company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         if not args:
@@ -343,8 +336,7 @@ class res_partner(osv.osv):
         query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
         cr.execute(('SELECT pid AS partner_id, SUM(bal2) FROM ' \
                     '(SELECT CASE WHEN bal IS NOT NULL THEN bal ' \
-                    'ELSE 0.0 END AS bal2, p.id as pid ' \
-                    ' FROM ' \
+                    'ELSE 0.0 END AS bal2, p.id as pid FROM ' \
                     '(SELECT (debit-credit) AS bal, partner_id ' \
                     'FROM account_move_line l ' \
                     'WHERE account_id IN ' \
@@ -417,19 +409,18 @@ class res_partner(osv.osv):
     _inherit = "res.partner"
     _columns = {
         'payment_responsible_id':fields.many2one('res.users', ondelete='set null', string='Follow-up Responsible', 
-                                                 help="Responsible for making sure the action happens. "), 
+                                                 help="Optionally you can assign a user to this field, which will make him responsible for the action. "), 
         'payment_note':fields.text('Customer Payment Promise', help="Payment Note"),
         'payment_next_action':fields.text('Next Action', 
                                     help="This is the next action to be taken.  It will automatically be set when the partner gets a follow-up level that requires a manual action. "), 
         'payment_next_action_date':fields.date('Next Action Date',
                                     help="This is when the manual follow-up is needed. " \
-                                    "The date will be set to the current date when the partner gets a follow-up level that requires a manual action. Can be practical to set manually e.g. to follow up his payment. "), 
+                                    "The date will be set to the current date when the partner gets a follow-up level that requires a manual action. Can be practical to set manually e.g. to see if he keeps his promises. "), 
         'unreconciled_aml_ids':fields.one2many('account.move.line', 'partner_id', domain=['&', ('reconcile_id', '=', False), '&', 
                             ('account_id.active','=', True), '&', ('account_id.type', '=', 'receivable'), ('state', '!=', 'draft')]), 
         'latest_followup_date':fields.function(_get_latest, method=True, type='date', string="Latest Follow-up Date", 
                             help="Latest date that the follow-up level of the partner was changed", 
-                            store=False, 
-                            multi="latest"), 
+                            store=False, multi="latest"), 
         'latest_followup_level_id':fields.function(_get_latest, method=True, 
             type='many2one', relation='account_followup.followup.line', string="Latest Follow-up Level", 
             help="The maximum follow-up level", 

@@ -26,20 +26,15 @@ contact our accounting department.
     </p>
 <br/>
 Best Regards,
-
+<br/>
    <br/>
 ${user.name | h}
 
 <br/>
 <br/>
 
-<%
-    from openerp.addons.account_followup.report import account_followup_print
-    rml_parse = account_followup_print.report_rappel(object._cr, user.id, "followup_rml_parser")
-    followup_table = rml_parse.get_unreconciled_table(object, user.company_id, ctx)
-%>
 
-${followup_table | h}
+${ctx['followup_table']}
 
     <br/>
 
@@ -75,18 +70,13 @@ Details of due payments is printed below.
 Best Regards,
     
 <br/>
+<br/>
 ${user.name | h}
     
 <br/>
 <br/>
 
-<%
-    from openerp.addons.account_followup.report import account_followup_print
-    rml_parse = account_followup_print.report_rappel(object._cr, user.id, "followup_rml_parser")
-    followup_table = rml_parse.get_unreconciled_table(object, user.company_id, ctx)
-%>
-
-${followup_table | h}
+${ctx['followup_table']}
 
     <br/>
 
@@ -116,18 +106,13 @@ In case of any queries concerning this matter, do not hesitate to contact our ac
 <br/>
 Best Regards,
 <br/>
+<br/>
 ${user.name | h}
 <br/>
 <br/>
 
 
-<%
-    from openerp.addons.account_followup.report import account_followup_print
-    rml_parse = account_followup_print.report_rappel(object._cr, user.id, "followup_rml_parser")
-    followup_table = rml_parse.get_unreconciled_table(object, user.company_id, ctx)
-%>
-
-${object.followup_table(object, user) | h}
+${ctx['followup_table']}
 
     <br/>
 
@@ -157,20 +142,13 @@ contact our accounting department.
     </p>
 <br/>
 Best Regards,
-</br>
-</br>
+<br/>
 <br/>
 ${user.name | h}
 <br/>
 <br/>
 
-<%
-    from openerp.addons.account_followup.report import account_followup_print
-    rml_parse = account_followup_print.report_rappel(object._cr, user.id, "followup_rml_parser")
-    followup_table = rml_parse.get_unreconciled_table(object, user.company_id, ctx)
-%>
-
-${followup_table | h}
+${ctx['followup_table']}
 
 <br/>
 </div>

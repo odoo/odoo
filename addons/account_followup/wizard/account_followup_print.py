@@ -198,7 +198,12 @@ class account_followup_print(osv.osv_memory):
         ids = self.pool.get('res.partner').search(cr, uid, ['&', ('credit', '<=', 0.0), '&', ('id', 'not in', partner_list_ids), '|', 
                                                              ('payment_responsible_id', '!=', False), 
                                                              ('payment_next_action_date', '!=', False)], context=context)
-        self.pool.get('res.partner').action_done(cr, uid, ids, context=context)
+        parts = self.pool.get('res.partner').browse(cr, uid, ids, context=context)
+        newids = []
+        for part in parts: 
+            if not part.unreconciled_aml_ids: 
+                newids.append(part.id)
+        self.pool.get('res.partner').action_done(cr, uid, newids, context=context)
         return len(ids)
 
     def do_process(self, cr, uid, ids, context=None):

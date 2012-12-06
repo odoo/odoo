@@ -76,9 +76,11 @@
                         To remind customers of paying their invoices, you can
                         define different actions depending on how severely
                         overdue the customer is. These actions are bundled
-                        into folow-up levels that are triggered when the due
-                        date of the most overdue invoice has passed a certain
-                        number of days.
+                        into follow-up levels that are triggered when the due
+                        date of an invoice has passed a certain
+                        number of days. If there are other overdue invoices for the 
+                        same customer, the actions of the most 
+                        overdue invoice will be executed. 
                     </p>
                     <field name="followup_line"/>
                 </form>
@@ -167,7 +169,7 @@
                 </tree>
             </field>
         </record>
-<!--
+
         <record id="view_move_line_form" model="ir.ui.view">
             <field name="name">account.move.line.form.followup</field>
             <field name="model">account.move.line</field>
@@ -178,6 +180,6 @@
                     <field name="followup_date"/>
                 </field>
             </field>
-        </record>-->
+        </record>
     </data>
 </openerp>
