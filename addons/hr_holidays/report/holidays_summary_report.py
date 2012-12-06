@@ -24,7 +24,7 @@ import time
 
 from openerp.osv import fields, osv
 from openerp.report.interface import report_rml
-from report.interface import toxml
+from openerp.report.interface import toxml
 
 from openerp import pooler
 import time

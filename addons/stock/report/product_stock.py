@@ -22,7 +22,7 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-import osv
+from openerp import osv
 import time
 from openerp.report.interface import report_int
 from openerp.report.render import render

@@ -21,7 +21,7 @@
 
 from openerp import pooler
 from openerp.report.interface import report_rml
-from report.interface import toxml
+from openerp.report.interface import toxml
 
 #FIXME: we should use toxml
 

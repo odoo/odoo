@@ -6,11 +6,11 @@ import urllib
 import urllib2
 
 from openerp import pooler
-import release
+from openerp import release
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval
-from tools.config import config
+from openerp.tools.config import config
 from openerp.tools import misc
 
 _logger = logging.getLogger(__name__)

@@ -23,7 +23,7 @@
 from openerp import pooler
 from openerp.tools.safe_eval import safe_eval
 
-from tools.misc import ustr
+from openerp.tools.misc import ustr
 import errno
 # import os
 import time

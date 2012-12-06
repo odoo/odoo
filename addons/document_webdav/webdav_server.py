@@ -37,7 +37,7 @@
 import logging
 from openerp import netsvc
 from dav_fs import openerp_dav_handler
-from tools.config import config
+from openerp.tools.config import config
 from DAV.WebDAVServer import DAVRequestHandler
 from service import http_server
 from service.websrv_lib import FixSendError, HttpOptions

@@ -28,7 +28,7 @@ from openerp import netsvc
 from openerp import pooler
 from openerp.tools.translate import _
 import decimal_precision as dp
-from osv.orm import browse_record, browse_null
+from openerp.osv.orm import browse_record, browse_null
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
 
 class purchase_order(osv.osv):

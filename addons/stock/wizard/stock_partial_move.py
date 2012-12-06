@@ -20,7 +20,7 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
-from tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 import time
 
 class stock_partial_move_line(osv.osv_memory):

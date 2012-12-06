@@ -45,11 +45,11 @@ from mako import exceptions
 from openerp import netsvc
 from openerp import pooler
 from report_helper import WebKitHelper
-from report.report_sxw import *
+from openerp.report.report_sxw import *
 from openerp import addons
 from openerp import tools
 from openerp.tools.translate import _
-from osv.osv import except_osv
+from openerp.osv.osv import except_osv
 
 _logger = logging.getLogger(__name__)
 

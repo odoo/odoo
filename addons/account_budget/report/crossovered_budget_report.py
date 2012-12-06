@@ -25,7 +25,7 @@ import datetime
 from openerp import pooler
 from openerp.report import report_sxw
 import operator
-import osv
+from openerp import osv
 
 class budget_report(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):

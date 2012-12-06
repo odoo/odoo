@@ -29,7 +29,7 @@ import logging
 import shutil
 from StringIO import StringIO
 import psycopg2
-from tools.misc import ustr
+from openerp.tools.misc import ustr
 from openerp.tools.translate import _
 from openerp.osv.orm import except_orm
 import random

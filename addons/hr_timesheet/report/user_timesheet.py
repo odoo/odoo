@@ -22,7 +22,7 @@
 import datetime
 
 from openerp.report.interface import report_rml
-from report.interface import toxml
+from openerp.report.interface import toxml
 from openerp.tools.translate import _
 import time
 from openerp import pooler

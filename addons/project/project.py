@@ -24,7 +24,7 @@ from lxml import etree
 import time
 
 from openerp import SUPERUSER_ID
-from openep import tools
+from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 

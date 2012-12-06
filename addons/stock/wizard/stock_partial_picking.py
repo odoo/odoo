@@ -22,8 +22,8 @@
 import time
 from lxml import etree
 from openerp.osv import fields, osv
-from tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
-from tools.float_utils import float_compare
+from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools.float_utils import float_compare
 import decimal_precision as dp
 from openerp.tools.translate import _
 

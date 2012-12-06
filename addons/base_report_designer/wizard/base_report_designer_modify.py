@@ -21,7 +21,7 @@
 ##############################################################################
 import time
 from openerp import wizard
-import osv
+from openerp import osv
 from openerp import pooler
 import urllib
 import base64

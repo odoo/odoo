@@ -33,7 +33,7 @@ except ImportError:
     vatnumber = None
 
 from openerp.osv import fields, osv
-from tools.misc import ustr
+from openerp.tools.misc import ustr
 from openerp.tools.translate import _
 
 _ref_vat = {
