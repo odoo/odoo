@@ -37,7 +37,7 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
         this.options = _.extend({}, this.defaults, options || {});
 
         _.bindAll(this, 'color_for');
-        this.on('view_loaded', self, self.load_tree);
+        this.on('view_loaded', this, this.load_tree);
     },
 
     /**
