@@ -610,7 +610,7 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         this.$has_been_started.resolve();
         var add_btn = this.$el.find('.oe_kanban_add');
         add_btn.tipsy({delayIn: 500, delayOut: 1000});
-        this.$records.click(function (ev) {
+        this.$records.find(".oe_kanban_column_cards").click(function (ev) {
             if (ev.target == ev.currentTarget) {
                 if (!self.state.folded) {
                     add_btn.effect('bounce', {distance: 18, times: 5}, 250);                    
