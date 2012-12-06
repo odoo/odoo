@@ -9,6 +9,7 @@ var QWeb = instance.web.qweb,
 instance.web.views.add('diagram', 'instance.web.DiagramView');
 instance.web.DiagramView = instance.web.View.extend({
     display_name: _lt('Diagram'),
+    view_type: 'diagram',
     searchable: false,
     init: function(parent, dataset, view_id, options) {
         var self = this;
@@ -24,12 +25,6 @@ instance.web.DiagramView = instance.web.View.extend({
         this.on('view_loaded', self, self.load_diagram);
         this.on('pager_action_executed', self, self.pager_action_trigger);
     },
-    start: function() {
-        var self = this;
-        return this.rpc("/web_diagram/diagram/load", {"model": this.model, "view_id": this.view_id}).done(function(r) {
-            self.load_diagram(r);
-        });
-    },
 
     toTitleCase: function(str) {
         return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
@@ -41,7 +36,7 @@ instance.web.DiagramView = instance.web.View.extend({
             this.id = this.ids[self.dataset.index || 0];
         }
 
-        this.fields_view = result.fields_view,
+        this.fields_view = result,
         this.view_id = this.fields_view.view_id,
         this.fields = this.fields_view.fields,
         this.nodes = this.fields_view.arch.children[0],

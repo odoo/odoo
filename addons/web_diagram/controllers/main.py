@@ -4,11 +4,6 @@ class DiagramView(openerp.addons.web.controllers.main.View):
     _cp_path = "/web_diagram/diagram"
 
     @openerp.addons.web.http.jsonrequest
-    def load(self, req, model, view_id):
-        fields_view = self.fields_view_get(req, model, view_id, 'diagram')
-        return {'fields_view': fields_view}
-
-    @openerp.addons.web.http.jsonrequest
     def get_diagram_info(self, req, id, model, node, connector,
                          src_node, des_node, label, **kw):
 
