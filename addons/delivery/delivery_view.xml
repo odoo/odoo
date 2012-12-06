@@ -243,17 +243,12 @@
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
                 <field name="company_id" position="before">
-                   <label for="weight" string="Weight"/>
+                    <label for="weight" string="Weight"/>
                     <div>
                         <field name="weight" class="oe_inline"/>
                         <field name="weight_uom_id" nolabel="1" class="oe_inline"/>
                     </div>
-                     <label for="weight_net" string="Net Weight"/>
-                    <div>
-                         <field name="weight_net"  groups="base.group_no_one" class="oe_inline"/>
-                         <field name="weight_net_uom_id" nolabel="1" class="oe_inline"/>
-                     </div>
-                       
+                     <field name="weight_net"  groups="base.group_no_one" class="oe_inline"/>
                 </field>
             </field>
         </record>
@@ -293,11 +288,7 @@
                         <field name="weight" class="oe_inline"/>
                         <field name="weight_uom_id" nolabel="1" class="oe_inline"/>
                     </div>
-                    <label for="weight_net" string="Net Weight"/>
-                    <div>
-                        <field name="weight_net" groups="base.group_no_one" class="oe_inline"/>
-                        <field name="weight_net_uom_id" nolabel="1" class="oe_inline"/>
-                    </div>
+                    <field name="weight_net" groups="base.group_no_one" class="oe_inline"/>
                 </xpath>
             </field>
         </record>

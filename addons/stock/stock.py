@@ -1606,7 +1606,7 @@ class stock_move(osv.osv):
 
     _name = "stock.move"
     _description = "Stock Move"
-    _order = 'id desc, picking_id'
+    _order = 'date_expected desc, id'
     _log_create = False
 
     def action_partial_move(self, cr, uid, ids, context=None):
