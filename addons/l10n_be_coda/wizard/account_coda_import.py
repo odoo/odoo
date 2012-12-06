@@ -135,7 +135,7 @@ class account_coda_import(osv.osv_memory):
                         #Non-structured communication
                         statementLine['communication_struct'] = False
                         statementLine['communication'] = rmspaces(line[62:115])
-                    statementLine['entryDate'] = rmspaces(line[115:121])
+                    statementLine['entryDate'] = time.strftime(tools.DEFAULT_SERVER_DATE_FORMAT, time.strptime(rmspaces(line[115:121]), '%d%m%y'))
                     statementLine['type'] = 'normal'
                     statementLine['globalisation'] = int(line[124])
                     if len(statement['globalisation_stack']) > 0 and statementLine['communication'] != '':
