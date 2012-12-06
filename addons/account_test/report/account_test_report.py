@@ -22,10 +22,7 @@
 
 import datetime
 import time
-import re
 from report import report_sxw
-from itertools import groupby
-from operator import itemgetter
 from tools.translate import _
 #
 # Use period and Journal for selection or resources
@@ -40,37 +37,34 @@ class report_assert_account(report_sxw.rml_parse):
         })
 
     def execute_code(self, code_exec):
-        def group(lst, col):
-            return dict((k, [v for v in itr]) for k, itr in groupby(sorted(lst, key=lambda x: x[col]), itemgetter(col)))
-
         def reconciled_inv():
-            reconciled_inv_ids = self.pool.get('account.invoice').search(self.cr, self.uid, [('reconciled','=',True)])
-            return reconciled_inv_ids
-
-        def get_parent(acc_id):
-            acc_an_id = self.pool.get('account.analytic.account').browse(self.cr, self.uid, acc_id).parent_id
-            while acc_an_id.parent_id:
-                acc_an_id = acc_an_id.parent_id
-            return acc_an_id.id
+            """
+            returns the list of invoices that are set as reconciled = True
+            """
+            return self.pool.get('account.invoice').search(self.cr, self.uid, [('reconciled','=',True)])
 
         def order_columns(item, cols=None):
+            """
+            This function is used to display a dictionary as a string, with its columns in the order chosen.
+
+            :param item: dict
+            :param cols: list of field names
+            :returns: a list of tuples (fieldname: value) in a similar way that would dict.items() do except that the
+                returned values are following the order given by cols
+            :rtype: [(key, value)]
+            """
             if cols is None:
                 cols = item.keys()
             return [(col, item.get(col)) for col in cols if col in item.keys()]
 
         localdict = {
             'cr': self.cr,
-            '_': _,
-            'reconciled_inv' : reconciled_inv,
-            'group' : group,
-            'get_parent' : get_parent,
-            'now': datetime.datetime.now(),
-            'result': None,
-            'column_order': None,
+            'uid': self.uid,
+            'reconciled_inv': reconciled_inv, #specific function used in different tests
+            'result': None, #used to store the result of the test
+            'column_order': None, #used to choose the display order of columns (in case you are returning a list of dict)
         }
-
         exec code_exec in localdict
-
         result = localdict['result']
         column_order = localdict.get('column_order', None)
 
@@ -79,12 +73,12 @@ class report_assert_account(report_sxw.rml_parse):
         if not result:
             result = [_('The test was passed successfully')]
         else:
-            def _format(a):
-                if isinstance(a, dict):
-                    return ', '.join(["%s: %s" % (tup[0], tup[1]) for tup in order_columns(a, column_order)])
+            def _format(item):
+                if isinstance(item, dict):
+                    return ', '.join(["%s: %s" % (tup[0], tup[1]) for tup in order_columns(item, column_order)])
                 else:
-                    return a
-            result = [_format(rec) for rec in result]
+                    return item
+            result = [_(_format(rec)) for rec in result]
 
         return result
 
