@@ -24,6 +24,7 @@ from lxml import etree
 from operator import itemgetter
 
 from tools.translate import _
+from report import account_followup_print
 
 
 class followup(osv.osv):
@@ -120,21 +121,21 @@ class email_template(osv.osv):
     _inherit = 'email.template'
 
     def _get_followup_table_html(self, cr, uid, res_id, context=None):
-    ''' Build the html tables to be included in emails send to partners, when reminding them their
+        ''' 
+        Build the html tables to be included in emails send to partners, when reminding them their
         overdue invoices.
 
         :param res_id: ID of the partner for whom we are building the tables
         :rtype: string
-    '''
+        '''
         partner = self.pool.get('res.partner').browse(cr, uid, res_id, context=context)
         followup_table = ''
         if partner.unreconciled_aml_ids: 
             company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
             current_date = fields.date.context_today(cr, uid, context)
-            from report import account_followup_print
             rml_parse = account_followup_print.report_rappel(cr, uid, "followup_rml_parser")
             final_res = rml_parse._lines_get_with_partner(partner, company.id)
-            
+
             for currency_dict in final_res:
                 currency = currency_dict.get('line', [{'currency_id': company.currency_id}])[0]['currency_id']
                 followup_table += '''
@@ -308,35 +309,30 @@ class res_partner(osv.osv):
         }
 
 
-    def _get_amounts_and_date(self, cr, uid, ids, name, arg, context=None, company_id=None):
+    def _get_amounts_and_date(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        if company_id == None:
-            company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
-        else:
-            company = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
+        company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
         current_date = fields.date.context_today(cr, uid, context)
         for partner in self.browse(cr, uid, ids, context=context):
-            res[partner.id] = [0.0, 0.0, False]
-            calc_date = False
-            amount_due = 0.0
-            amount_overdue = 0.0
+            worst_due_date = False
+            amount_due = amount_overdue = 0.0
             for aml in partner.unreconciled_aml_ids:
                 if (aml.company_id == company):
-                    date_maturity = (not aml.date_maturity) and aml.date or aml.date_maturity
-                    if (not calc_date or calc_date > date_maturity): 
-                        calc_date = date_maturity
+                    date_maturity = aml.date_maturity or aml.date
+                    if not worst_due_date or worst_due_date < date_maturity:
+                        worst_due_date = date_maturity
                     amount_due += aml.result
                     if (date_maturity <= current_date):
                         amount_overdue += aml.result
             res[partner.id] = {'payment_amount_due': amount_due, 
                                'payment_amount_overdue': amount_overdue, 
-                               'payment_earliest_due_date': calc_date}
+                               'payment_earliest_due_date': worst_due_date}
         return res
-    
+
     def _payment_overdue_search(self, cr, uid, obj, name, args, context=None):
-        company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         if not args:
-                return []
+            return []
+        company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         having_values = tuple(map(itemgetter(2), args))
         where = ' AND '.join(
             map(lambda x: '(SUM(bal2) %(operator)s %%s)' % {
@@ -362,7 +358,7 @@ class res_partner(osv.osv):
         if not res:
             return [('id','=','0')]
         return [('id','in',map(itemgetter(0), res))]
-    
+
     def _payment_earliest_date_search(self, cr, uid, obj, name, args, context=None):
         if not args:
             return []
