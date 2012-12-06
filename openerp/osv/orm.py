@@ -916,7 +916,16 @@ class BaseModel(object):
                     else:
                         new.extend(cls.__dict__.get(s, []))
                     nattr[s] = new
+
+                # Keep links to non-inherited constraints, e.g. useful when exporting translations
+                nattr['_local_constraints'] = cls.__dict__.get('_constraints', [])
+                nattr['_local_sql_constraints'] = cls.__dict__.get('_sql_constraints', [])
+
                 cls = type(name, (cls, parent_class), dict(nattr, _register=False))
+        else:
+            cls._local_constraints = getattr(cls, '_constraints', [])
+            cls._local_sql_constraints = getattr(cls, '_sql_constraints', [])
+
         if not getattr(cls, '_original_module', None):
             cls._original_module = cls._module
         obj = object.__new__(cls)
@@ -1111,7 +1120,7 @@ class BaseModel(object):
                     if not model_data.search(cr, uid, [('name', '=', n)]):
                         break
                     postfix += 1
-                model_data.create(cr, uid, {
+                model_data.create(cr, SUPERUSER_ID, {
                     'name': n,
                     'model': self._name,
                     'res_id': r['id'],
@@ -1515,6 +1524,8 @@ class BaseModel(object):
         error_msgs = []
         for constraint in self._constraints:
             fun, msg, fields = constraint
+            # We don't pass around the context here: validation code
+            # must always yield the same results.
             if not fun(self, cr, uid, ids):
                 # Check presence of __call__ directly instead of using
                 # callable() because it will be deprecated as of Python 3.0
@@ -1838,7 +1849,7 @@ class BaseModel(object):
                 if trans:
                     node.set('string', trans)
 
-            for attr_name in ('confirm', 'sum', 'help', 'placeholder'):
+            for attr_name in ('confirm', 'sum', 'avg', 'help', 'placeholder'):
                 attr_value = node.get(attr_name)
                 if attr_value:
                     trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], attr_value)
@@ -2670,13 +2681,19 @@ class BaseModel(object):
 
         order = orderby or groupby
         data_ids = self.search(cr, uid, [('id', 'in', alldata.keys())], order=order, context=context)
-        # the IDS of records that have groupby field value = False or '' should be sorted too
-        data_ids += filter(lambda x:x not in data_ids, alldata.keys())
-        data = self.read(cr, uid, data_ids, groupby and [groupby] or ['id'], context=context)
-        # restore order of the search as read() uses the default _order (this is only for groups, so the size of data_read shoud be small):
-        data.sort(lambda x,y: cmp(data_ids.index(x['id']), data_ids.index(y['id'])))
+        
+        # the IDs of records that have groupby field value = False or '' should be included too
+        data_ids += set(alldata.keys()).difference(data_ids)
+        
+        if groupby:   
+            data = self.read(cr, uid, data_ids, [groupby], context=context)
+            # restore order of the search as read() uses the default _order (this is only for groups, so the footprint of data should be small):
+            data_dict = dict((d['id'], d[groupby] ) for d in data)
+            result = [{'id': i, groupby: data_dict[i]} for i in data_ids]
+        else:
+            result = [{'id': i} for i in data_ids] 
 
-        for d in data:
+        for d in result:
             if groupby:
                 d['__domain'] = [(groupby, '=', alldata[d['id']][groupby] or False)] + domain
                 if not isinstance(groupby_list, (str, unicode)):
@@ -2697,11 +2714,11 @@ class BaseModel(object):
             del d['id']
 
         if groupby and groupby in self._group_by_full:
-            data = self._read_group_fill_results(cr, uid, domain, groupby, groupby_list,
-                                                 aggregated_fields, data, read_group_order=order,
-                                                 context=context)
+            result = self._read_group_fill_results(cr, uid, domain, groupby, groupby_list,
+                                                   aggregated_fields, result, read_group_order=order,
+                                                   context=context)
 
-        return data
+        return result
 
     def _inherits_join_add(self, current_table, parent_model_name, query):
         """
@@ -3898,7 +3915,7 @@ class BaseModel(object):
         if isinstance(ids, (int, long)):
             ids = [ids]
 
-        result_store = self._store_get_values(cr, uid, ids, None, context)
+        result_store = self._store_get_values(cr, uid, ids, self._all_columns.keys(), context)
 
         self._check_concurrency(cr, ids, context)
 
@@ -4305,11 +4322,16 @@ class BaseModel(object):
                 del vals[self._inherits[table]]
 
             record_id = tocreate[table].pop('id', None)
-
+            
+            # When linking/creating parent records, force context without 'no_store_function' key that
+            # defers stored functions computing, as these won't be computed in batch at the end of create(). 
+            parent_context = dict(context)
+            parent_context.pop('no_store_function', None)
+            
             if record_id is None or not record_id:
-                record_id = self.pool.get(table).create(cr, user, tocreate[table], context=context)
+                record_id = self.pool.get(table).create(cr, user, tocreate[table], context=parent_context)
             else:
-                self.pool.get(table).write(cr, user, [record_id], tocreate[table], context=context)
+                self.pool.get(table).write(cr, user, [record_id], tocreate[table], context=parent_context)
 
             upd0 += ',' + self._inherits[table]
             upd1 += ',%s'
@@ -5198,6 +5220,7 @@ class AbstractModel(BaseModel):
        """
     _auto = False # don't create any database backend for AbstractModels
     _register = False # not visible in ORM registry, meant to be python-inherited only
+    _transient = False
 
 def itemgetter_tuple(items):
     """ Fixes itemgetter inconsistency (useful in some cases) of not returning
