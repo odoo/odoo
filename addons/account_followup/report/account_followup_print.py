@@ -23,10 +23,10 @@ import time
 
 import pooler
 from report import report_sxw
-from osv import fields
 
 class report_rappel(report_sxw.rml_parse):
     _name = "account_followup.report.rappel"
+
     def __init__(self, cr, uid, name, context=None):
         super(report_rappel, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
