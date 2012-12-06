@@ -329,31 +329,33 @@ class res_partner(osv.osv):
                                'payment_earliest_due_date': worst_due_date}
         return res
 
+    def _get_followup_overdue_query(self, cr, uid, args, overdue_only=False, context=None):
+        company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+        having_where_clause = ' AND '.join(map(lambda x: '(SUM(bal2) %s %%s)' % (x[1]), args))
+        having_values = [x[2] for x in args]
+        query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
+        overdue_only_str = overdue_only and 'AND date_maturity <= NOW()' or ''
+        return ('''SELECT pid AS partner_id, SUM(bal2) FROM
+                    (SELECT CASE WHEN bal IS NOT NULL THEN bal
+                    ELSE 0.0 END AS bal2, p.id as pid FROM
+                    (SELECT (debit-credit) AS bal, partner_id
+                    FROM account_move_line l
+                    WHERE account_id IN
+                            (SELECT id FROM account_account
+                            WHERE type=\'receivable\' AND active)
+                    ''' + overdue_only_str + '''
+                    AND reconcile_id IS NULL
+                    AND company_id = %s
+                    AND ''' + query + ''') AS l
+                    RIGHT JOIN res_partner p
+                    ON p.id = partner_id ) AS pl
+                    GROUP BY pid HAVING ''' + having_where_clause, [company_id] + having_values)
+
     def _payment_overdue_search(self, cr, uid, obj, name, args, context=None):
         if not args:
             return []
-        company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
-        having_values = tuple(map(itemgetter(2), args))
-        where = ' AND '.join(
-            map(lambda x: '(SUM(bal2) %(operator)s %%s)' % {
-                                'operator':x[1]},args))
-        query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
-        cr.execute(('SELECT pid AS partner_id, SUM(bal2) FROM ' \
-                    '(SELECT CASE WHEN bal IS NOT NULL THEN bal ' \
-                    'ELSE 0.0 END AS bal2, p.id as pid FROM ' \
-                    '(SELECT (debit-credit) AS bal, partner_id ' \
-                    'FROM account_move_line l ' \
-                    'WHERE account_id IN ' \
-                            '(SELECT id FROM account_account '\
-                            'WHERE type=\'receivable\' AND active) ' \
-                    'AND date_maturity <= NOW() ' \
-                    'AND l.company_id = %s '
-                    'AND reconcile_id IS NULL ' \
-                    'AND '+query+') AS l ' \
-                    'RIGHT JOIN res_partner p ' \
-                    'ON p.id = partner_id ) AS pl ' \
-                    'GROUP BY pid HAVING ' + where), 
-                     (str(company),) + having_values)
+        query, query_args = self._get_followup_overdue_query(cr, uid, args, overdue_only=True, context=context)
+        cr.execute(query, query_args)
         res = cr.fetchall()
         if not res:
             return [('id','=','0')]
@@ -362,52 +364,34 @@ class res_partner(osv.osv):
     def _payment_earliest_date_search(self, cr, uid, obj, name, args, context=None):
         if not args:
             return []
-        having_values = tuple(map(itemgetter(2), args))
-        where = ' AND '.join(
-            map(lambda x: '(MIN(l.date_maturity) %(operator)s %%s)' % {
-                                'operator':x[1]},args))
+        company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+        having_where_clause = ' AND '.join(map(lambda x: '(MIN(l.date_maturity) %s %%s)' % (x[1]), args))
+        having_values = [x[2] for x in args]
         query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
-        cr.execute(('SELECT partner_id FROM account_move_line l '\
+        cr.execute('SELECT partner_id FROM account_move_line l '\
                     'WHERE account_id IN '\
                         '(SELECT id FROM account_account '\
                         'WHERE type=\'receivable\' AND active) '\
+                    'AND l.company_id = %s '
                     'AND reconcile_id IS NULL '\
                     'AND '+query+' '\
                     'AND partner_id IS NOT NULL '\
-                    'GROUP BY partner_id HAVING '+where),
-                     having_values)
+                    'GROUP BY partner_id HAVING '+ having_where_clause,
+                     [company_id] + having_values)
         res = cr.fetchall()
         if not res:
             return [('id','=','0')]
-        return [('id','in',map(itemgetter(0), res))]
+        return [('id','in', [x[0] for x in res])]
 
     def _payment_due_search(self, cr, uid, obj, name, args, context=None):
-        company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         if not args:
-                return []
-        having_values = tuple(map(itemgetter(2), args))
-        where = ' AND '.join(
-            map(lambda x: '(SUM(bal2) %(operator)s %%s)' % {
-                                'operator':x[1]},args))
-        query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
-        cr.execute(('SELECT pid AS partner_id, SUM(bal2) FROM ' \
-                    '(SELECT CASE WHEN bal IS NOT NULL THEN bal ' \
-                    'ELSE 0.0 END AS bal2, p.id as pid FROM ' \
-                    '(SELECT (debit-credit) AS bal, partner_id ' \
-                    'FROM account_move_line l ' \
-                    'WHERE account_id IN ' \
-                            '(SELECT id FROM account_account '\
-                            'WHERE type=\'receivable\' AND active) ' \
-                    'AND reconcile_id IS NULL ' \
-                    'AND company_id = %s'
-                    'AND '+query+') AS l ' \
-                    'RIGHT JOIN res_partner p ' \
-                    'ON p.id = partner_id ) AS pl ' \
-                    'GROUP BY pid HAVING ' + where), (str(company),) + having_values)
+            return []
+        query, query_args = self._get_followup_overdue_query(cr, uid, args, overdue_only=False, context=context)
+        cr.execute(query, query_args)
         res = cr.fetchall()
         if not res:
             return [('id','=','0')]
-        return [('id','in',map(itemgetter(0), res))]
+        return [('id','in', [x[0] for x in res])]
 
     _inherit = "res.partner"
     _columns = {
