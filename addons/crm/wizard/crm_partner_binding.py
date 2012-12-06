@@ -46,7 +46,8 @@ class crm_partner_binding(osv.osv_memory):
         """
         Try to find a matching partner regarding the active model data, like
         the customer's name, email, phone number, etc.
-        @return partner_id if any, False otherwise
+
+        :return int partner_id if any, False otherwise
         """
         if context is None:
             context = {}
@@ -55,30 +56,33 @@ class crm_partner_binding(osv.osv_memory):
 
         # The active model has to be a lead or a phonecall
         if (context.get('active_model') == 'crm.lead') and context.get('active_id'):
-            lead_obj = self.pool.get('crm.lead')
-            lead = lead_obj.browse(cr, uid, context.get('active_id'), context=context)
+            active_model = self.pool.get('crm.lead').browse(cr, uid, context.get('active_id'), context=context)
+        elif (context.get('active_model') == 'crm.phonecall') and context.get('active_id'):
+            active_model = self.pool.get('crm.phonecall').browse(cr, uid, context.get('active_id'), context=context)
+
+        # Find the best matching partner for the active model
+        if (active_model):
+            partner_obj = self.pool.get('res.partner')
+
             # A partner is set already
-            if lead.partner_id:
-                partner_id = lead.partner_id.id
+            if active_model.partner_id:
+                partner_id = active_model.partner_id.id
             # Search through the existing partners based on the lead's email
-            elif lead.email_from:
-                partner_ids = partner_obj.search(cr, uid, [('email', '=', lead.email_from)], context=context)
+            elif active_model.email_from:
+                partner_ids = partner_obj.search(cr, uid, [('email', '=', active_model.email_from)], context=context)
                 if partner_ids:
                     partner_id = partner_ids[0]
             # Search through the existing partners based on the lead's partner or contact name
-            elif lead.partner_name:
-                partner_ids = partner_obj.search(cr, uid, [('name', 'ilike', '%'+lead.partner_name+'%')], context=context)
+            elif active_model.partner_name:
+                partner_ids = partner_obj.search(cr, uid, [('name', 'ilike', '%'+active_model.partner_name+'%')], context=context)
                 if partner_ids:
                     partner_id = partner_ids[0]
-            elif lead.contact_name:
+            elif active_model.contact_name:
                 partner_ids = partner_obj.search(cr, uid, [
-                        ('name', 'ilike', '%'+lead.contact_name+'%')], context=context)
+                        ('name', 'ilike', '%'+active_model.contact_name+'%')], context=context)
                 if partner_ids:
                     partner_id = partner_ids[0]
-        elif (context.get('active_model') == 'crm.phonecall') and context.get('active_id'):
-            phonecall_obj = self.pool.get('crm.phonecall')
-            phonecall = phonecall_obj.browse(cr, uid, context.get('active_id'), context=context)
-            #do stuff
+
         return partner_id
 
     def default_get(self, cr, uid, fields, context=None):
@@ -95,7 +99,11 @@ class crm_partner_binding(osv.osv_memory):
     def _create_partner(self, cr, uid, ids, context=None):
         """
         Create partner based on action.
+        :return dict: dictionary organized as followed: {lead_id: partner_assigned_id}
         """
+        #TODO this method in only called by crm_lead2opportunity_partner
+        #wizard and would probably diserve to be refactored or at least
+        #moved to a better place
         if context is None:
             context = {}
         lead = self.pool.get('crm.lead')
