@@ -356,6 +356,7 @@ class project(osv.osv):
 
         context['active_test'] = False
         default['state'] = 'open'
+        default['line_ids'] = []
         default['tasks'] = []
         default.pop('alias_name', None)
         default.pop('alias_id', None)

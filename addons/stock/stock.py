@@ -1144,6 +1144,9 @@ class stock_picking(osv.osv):
             for move_line in picking.move_lines:
                 if move_line.state == 'cancel':
                     continue
+                if move_line.scrapped:
+                    # do no invoice scrapped products
+                    continue
                 vals = self._prepare_invoice_line(cr, uid, group, picking, move_line,
                                 invoice_id, invoice_vals, context=context)
                 if vals:
@@ -2873,7 +2876,7 @@ class stock_inventory(osv.osv):
             move_ids = []
             for line in inv.inventory_line_id:
                 pid = line.product_id.id
-                product_context.update(uom=line.product_uom.id, date=inv.date, prodlot_id=line.prod_lot_id.id)
+                product_context.update(uom=line.product_uom.id, to_date=inv.date, date=inv.date, prodlot_id=line.prod_lot_id.id)
                 amount = location_obj._product_get(cr, uid, line.location_id.id, [pid], product_context)[pid]
                 change = line.product_qty - amount
                 lot_id = line.prod_lot_id.id
