@@ -33,7 +33,7 @@ openerp.auth_anonymous = function(instance) {
                 am.do_action({
                     type:'ir.actions.client',
                     tag:'login',
-                    target: 'new',
+                    target: 'current',
                     params: {
                         login_successful: function() {
                             am.do_action("reload");

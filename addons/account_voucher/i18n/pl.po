@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:51+0000\n"
+"POT-Creation-Date: 2012-12-03 16:01+0000\n"
 "PO-Revision-Date: 2011-01-02 09:30+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:15+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:41+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: account_voucher
 #: field:account.bank.statement.line,voucher_id:0
@@ -136,6 +136,14 @@ msgstr ""
 #: view:account.voucher:0
 msgid "Voucher Statistics"
 msgstr "Statystyka poleceń"
+
+#. module: account_voucher
+#: code:addons/account_voucher/account_voucher.py:1558
+#, python-format
+msgid ""
+"You can not change the journal as you already reconciled some statement "
+"lines!"
+msgstr ""
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -281,11 +289,6 @@ msgid "Day"
 msgstr "Dzień"
 
 #. module: account_voucher
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr "Niedozwolona komunikacja strukturalna BBA !"
-
-#. module: account_voucher
 #: field:account.voucher,tax_id:0
 msgid "Tax"
 msgstr "Podatek"
@@ -295,11 +298,6 @@ msgstr "Podatek"
 #, python-format
 msgid "Invalid Action!"
 msgstr ""
-
-#. module: account_voucher
-#: constraint:account.bank.statement:0
-msgid "The journal and period chosen have to belong to the same company."
-msgstr "Dziennik i okres muszą należeć do tej samej firmy."
 
 #. module: account_voucher
 #: field:account.voucher,comment:0
@@ -369,11 +367,6 @@ msgid "Sales Lines"
 msgstr "Pozycje sprzedaży"
 
 #. module: account_voucher
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "Błąd! Nie możesz tworzyć firm rekurencyjnych."
-
-#. module: account_voucher
 #: view:account.voucher:0
 #: field:account.voucher,period_id:0
 msgid "Period"
@@ -400,9 +393,10 @@ msgid "Debit"
 msgstr "Winien"
 
 #. module: account_voucher
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr "Nazwa firmy musi być unikalna !"
+#: code:addons/account_voucher/account_voucher.py:1558
+#, python-format
+msgid "Unable to change journal !"
+msgstr ""
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -870,11 +864,6 @@ msgstr "Zaksięguj"
 #: view:account.voucher:0
 msgid "Invoices and outstanding transactions"
 msgstr "Faktury i pozostałe transakcje"
-
-#. module: account_voucher
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr "Numer faktury musi być unikalny w firmie!"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -1475,12 +1464,24 @@ msgstr ""
 #~ msgid "Unreconciliation transactions"
 #~ msgstr "Kasowanie uzgodnień"
 
+#~ msgid "Invalid BBA Structured Communication !"
+#~ msgstr "Niedozwolona komunikacja strukturalna BBA !"
+
+#~ msgid "The journal and period chosen have to belong to the same company."
+#~ msgstr "Dziennik i okres muszą należeć do tej samej firmy."
+
 #, python-format
 #~ msgid "Warning"
 #~ msgstr "Ostrzeżenie"
 
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "Błąd! Nie możesz tworzyć firm rekurencyjnych."
+
 #~ msgid "current month"
 #~ msgstr "bieżący miesiąc"
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "Nazwa firmy musi być unikalna !"
 
 #~ msgid "Salesman"
 #~ msgstr "Sprzedawca"
@@ -1489,6 +1490,9 @@ msgstr ""
 #~ "The amount of the voucher must be the same amount as the one on the "
 #~ "statement line"
 #~ msgstr "Kwota płatności musi być taka sama jak kwota pozycji wyciągu."
+
+#~ msgid "Invoice Number must be unique per Company!"
+#~ msgstr "Numer faktury musi być unikalny w firmie!"
 
 #~ msgid ""
 #~ "From this report, you can have an overview of the amount invoiced to your "
