@@ -18,7 +18,7 @@
                     <field name="payment_responsible_id"/>
                     <field name="payment_earliest_due_date"/>
                     <field name="payment_amount_overdue"/>
-                    <field name="payment_amount_due"/>
+                    <field name="payment_amount_due" />
                 </tree>
             </field>
         </record>
@@ -53,7 +53,7 @@
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('credit', '>', 0.0)]</field> 
+            <field name="domain">[('payment_amount_due', '>', 0.0)]</field> 
             <field name="context">{'Followupfirst':True, 'search_default_todo': True} </field>
             <field name="search_view_id" ref="customer_followup_search_view"/>
         </record>
@@ -70,7 +70,7 @@
                             <button name="do_button_print" type="object" string="Print Overdue Payments" groups="account.group_account_user" 
                                 help="Print overdue payments report independent of follow-up line" attrs="{'invisible':[('credit', '&lt;=', 0.0)]}" />
                             <button name="do_partner_mail" type="object" string="Send Overdue Email" groups="account.group_account_user"
-                                help="If not specified by the latest follow-up level, it will send from the default follow-up of overdue invoices template" attrs="{'invisible':[('credit', '&lt;=', 0.0)]}"/>
+                                help="If not specified by the latest follow-up level, it will send from the default email template" attrs="{'invisible':[('credit', '&lt;=', 0.0)]}"/>
                         </div>
                         <p attrs="{'invisible':[('latest_followup_date','=', False)]}">
                             The <field name="latest_followup_date"  class = "oe_inline"/>, the latest payment follow-up
@@ -89,24 +89,22 @@
                             </div>
                         </group>
                         <label for="payment_note" class="oe_edit_only"/>
-                        <field name="payment_note" placeholder="Comments of the user: he promised to 50%% before 15th of May, balance before 1st of July."/>
+                        <field name="payment_note" placeholder="He said the problem was temporary and promised to pay 50%% before 15th of May, balance before 1st of July."/>
                         <p class="oe_grey">
                             Below is the history of the transactions of this
-                            customer. You can set an invoice in litigation in
-                            order to not include it in the next payment
-                            follow-ups.
+                            customer. You can check "No Follow-up" in
+                            order to exclude it from the next follow-up actions.
                         </p>
                         <field name="unreconciled_aml_ids">
                             <tree string="Account Move line" editable="bottom" create="false" delete="false" colors="red:(not date_maturity or date_maturity&lt;=current_date) and result&gt;0">
                                 <field name="date" readonly="True"/>
-                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="company_id" readonly="True" groups="base.group_multi_company" />
                                 <field name="move_id" readonly="True"/>
-                                <field name="blocked" string="Litigation"/>
+                                <field name="blocked"/>
                                 <field name="date_maturity" readonly="True"/>
                                 <field name="reconcile_partial_id" readonly="True"/>
                                 <field name="result" readonly="True"/>
                                 <field name="followup_line_id" invisible='1'/>
-                                
                             </tree>
                         </field>
                         <group class="oe_subtotal_footer oe_right">

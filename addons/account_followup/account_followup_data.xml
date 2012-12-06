@@ -5,7 +5,7 @@
     <data noupdate="1">
 <!--Mail template level 0-->
 		 <record id="email_template_account_followup_level0" model="email.template">
-            <field name="name">Follow-up of overdue invoices level 0</field>
+            <field name="name">First polite payment follow-up reminder email</field>
             <field name="email_from">${user.email or '' | h}</field>
             <field name="subject">${user.company_id.name | h} Payment Reminder</field>
             <field name="email_to">${object.email | h}</field>
@@ -51,7 +51,7 @@ ${followup_table | h}
 
 		<!--Mail template level 1 -->
 		 <record id="email_template_account_followup_level1" model="email.template">
-            <field name="name">Follow-up of overdue invoices level 1</field>
+            <field name="name">A bit urging second payment follow-up reminder email</field>
             <field name="email_from">${user.email or '' | h}</field>
             <field name="subject">${user.company_id.name | h} Payment Reminder</field>
             <field name="email_to">${object.email | h}</field>
@@ -95,7 +95,7 @@ ${followup_table | h}
         </record>
         <!--Email template -->
         <record id="email_template_account_followup_level2" model="email.template">
-            <field name="name">Follow-up of overdue invoices level 2</field>
+            <field name="name">Urging payment follow-up reminder email</field>
             <field name="email_from">${user.email or '' | h}</field>
             <field name="subject">${user.company_id.name | h} Payment Reminder</field>
             <field name="email_to">${object.email | h}</field>
@@ -138,7 +138,7 @@ ${object.followup_table(object, user) | h}
         <!-- Default follow up message -->
         
 		 <record id="email_template_account_followup_default" model="email.template">
-            <field name="name">Default follow-up of overdue invoices</field>
+            <field name="name">Default payment follow-up reminder e-mail</field>
             <field name="email_from">${user.email or '' | h}</field>
             <field name="subject">${user.company_id.name | h} Payment Reminder</field>
             <field name="email_to">${object.email | h}</field>

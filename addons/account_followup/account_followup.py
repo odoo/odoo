@@ -277,7 +277,7 @@ class res_partner(osv.osv):
                 else:
                     payment_action_date = fields.date.context_today(cr, uid, context)
                 if partner.payment_next_action:
-                    payment_next_action = partner.payment_next_action + " + " + action_text
+                    payment_next_action = partner.payment_next_action + " \n " + action_text
                 else:
                     payment_next_action = action_text
                 self.write(cr, uid, [partner.id], {'payment_next_action_date': payment_action_date,
@@ -363,6 +363,28 @@ class res_partner(osv.osv):
             return [('id','=','0')]
         return [('id','in',map(itemgetter(0), res))]
     
+    def _payment_earliest_date_search(self, cr, uid, obj, name, args, context=None):
+        if not args:
+            return []
+        having_values = tuple(map(itemgetter(2), args))
+        where = ' AND '.join(
+            map(lambda x: '(MIN(l.date_maturity) %(operator)s %%s)' % {
+                                'operator':x[1]},args))
+        query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
+        cr.execute(('SELECT partner_id FROM account_move_line l '\
+                    'WHERE account_id IN '\
+                        '(SELECT id FROM account_account '\
+                        'WHERE type=\'receivable\' AND active) '\
+                    'AND reconcile_id IS NULL '\
+                    'AND '+query+' '\
+                    'AND partner_id IS NOT NULL '\
+                    'GROUP BY partner_id HAVING '+where),
+                     having_values)
+        res = cr.fetchall()
+        if not res:
+            return [('id','=','0')]
+        return [('id','in',map(itemgetter(0), res))]
+
     def _payment_due_search(self, cr, uid, obj, name, args, context=None):
         company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         if not args:
@@ -395,12 +417,13 @@ class res_partner(osv.osv):
     _inherit = "res.partner"
     _columns = {
         'payment_responsible_id':fields.many2one('res.users', ondelete='set null', string='Follow-up Responsible', 
-                                                 help="Responsible for making sure the action happens."), 
+                                                 help="Responsible for making sure the action happens. "), 
         'payment_note':fields.text('Customer Payment Promise', help="Payment Note"),
-        'payment_next_action':fields.text('Next Action',
-                                    help="This is the next action to be taken by the user.  It will automatically be set when the action fields are empty and the partner gets a follow-up level that requires a manual action. "), 
+        'payment_next_action':fields.text('Next Action', 
+                                    help="This is the next action to be taken.  It will automatically be set when the partner gets a follow-up level that requires a manual action. "), 
         'payment_next_action_date':fields.date('Next Action Date',
-                                    help="This is when further follow-up is needed.  The date will have been set to the current date if the action fields are empty and the partner gets a follow-up level that requires a manual action. "), 
+                                    help="This is when the manual follow-up is needed. " \
+                                    "The date will be set to the current date when the partner gets a follow-up level that requires a manual action. Can be practical to set manually e.g. to follow up his payment. "), 
         'unreconciled_aml_ids':fields.one2many('account.move.line', 'partner_id', domain=['&', ('reconcile_id', '=', False), '&', 
                             ('account_id.active','=', True), '&', ('account_id.type', '=', 'receivable'), ('state', '!=', 'draft')]), 
         'latest_followup_date':fields.function(_get_latest, method=True, type='date', string="Latest Follow-up Date", 
@@ -418,18 +441,18 @@ class res_partner(osv.osv):
             store=False, 
             multi="latest"),
         'payment_amount_due':fields.function(_get_amounts_and_date, method = True, 
-                                                 type='float', string="Amount due",
+                                                 type='float', string="Amount Due",
                                                  store = False, multi="amountsdate", 
                                                  fnct_search=_payment_due_search),
         'payment_amount_overdue':fields.function(_get_amounts_and_date, method = True, 
-                                                 type='float', string="Amount overdue",
+                                                 type='float', string="Amount Overdue",
                                                  store = False, multi="amountsdate", 
                                                  fnct_search = _payment_overdue_search),
         'payment_earliest_due_date':fields.function(_get_amounts_and_date, method=True, 
                                                     type='date',
-                                                    string = "Most overdue date",
-                                                    multi="amountsdate", 
-                                                    ),
+                                                    string = "Worst Due Date",
+                                                    multi="amountsdate",
+                                                    fnct_search=_payment_earliest_date_search),
         }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

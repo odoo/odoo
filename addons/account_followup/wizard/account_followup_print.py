@@ -152,7 +152,7 @@ class account_followup_print(osv.osv_memory):
             if partner.max_followup_id.manual_action:
                 partner_obj.do_partner_manual_action(cr, uid, [partner.partner_id.id], context=context)
                 nbmanuals = nbmanuals + 1
-                key = partner.partner_id.payment_responsible_id.name or _("Nobody")
+                key = partner.partner_id.payment_responsible_id.name or _("Anybody")
                 if not key in manuals.keys():
                     manuals[key]= 1
                 else:
@@ -195,18 +195,10 @@ class account_followup_print(osv.osv_memory):
         # Partnerlist is list to exclude
         # Will clear the actions of partners that have no due payments anymore
         partner_list_ids = [partner.partner_id.id for partner in self.pool.get('account_followup.stat.by.partner').browse(cr, uid, partner_list, context=context)]
-        ids = self.pool.get('res.partner').search(cr, uid, ['&', ('id', 'not in', partner_list_ids), '|', 
+        ids = self.pool.get('res.partner').search(cr, uid, ['&', ('credit', '<=', 0.0), '&', ('id', 'not in', partner_list_ids), '|', 
                                                              ('payment_responsible_id', '!=', False), 
                                                              ('payment_next_action_date', '!=', False)], context=context)
-        partners = self.pool.get('res.partner').browse(cr, uid, ids, context=context)
-        newids = []
-        for part in partners:
-            credit = 0
-            for aml in part.unreconciled_aml_ids: 
-                credit +=aml.result
-            if credit <= 0: 
-                newids.append(part.id)
-        self.pool.get('res.partner').action_done(cr, uid, newids, context=context)
+        self.pool.get('res.partner').action_done(cr, uid, ids, context=context)
         return len(ids)
 
     def do_process(self, cr, uid, ids, context=None):
