@@ -282,10 +282,6 @@ class account_coda_import(osv.osv_memory):
                                     line['type'] = 'supplier'
                                 else:
                                     line['type'] = 'general'
-                                # if line['debit'] == '1':
-                                #     line['account'] = partner.property_account_payable.id
-                                # else:
-                                #     line['account'] = partner.property_account_receivable.id
                     if partner:
                         if line['type'] == 'customer':
                             line['account'] = partner.property_account_receivable.id
