@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2010 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2012 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -73,8 +73,9 @@ def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None):
             os.write(fd, res_data)
             os.close(fd)
 
-            fp = Popen(['pdftotext', '-enc', 'UTF-8', '-nopgbrk', rfname, '-'], shell=False, stdout=PIPE).stdout
-            res_text = tools.ustr(fp.read())
+            proc = Popen(['pdftotext', '-enc', 'UTF-8', '-nopgbrk', rfname, '-'], shell=False, stdout=PIPE)
+            stdout, stderr = proc.communicate()
+            res_text = tools.ustr(stdout)
             os.unlink(rfname)
         except Exception:
             _logger.debug("Unable to parse PDF report: install pdftotext to perform automated tests.")
