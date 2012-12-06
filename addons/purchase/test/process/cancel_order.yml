@@ -8,7 +8,7 @@
   I check the "Approved" status  after confirmed RFQ.
 -
   !assert {model: purchase.order, id: purchase_order_5}:
-    - state == 'approved'
+    - state == 'confirmed'
 -
   First I cancel  receptions related to this order if order shipped.
 -

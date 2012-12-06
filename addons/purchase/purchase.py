@@ -389,6 +389,15 @@ class purchase_order(osv.osv):
         self.write(cr, uid, ids, {'state': 'approved', 'date_approve': fields.date.context_today(self,cr,uid,context=context)})
         return True
 
+    def print_confirm(self,cr,uid,ids,context=None):
+        print "Confirmed"
+
+    def print_double(self,cr,uid,ids,context=None):
+        print "double Approval"
+
+    def print_router(self,cr,uid,ids,context=None):
+        print "Routed"
+
     def wkf_send_rfq(self, cr, uid, ids, context=None):
         '''
         This function opens a window to compose an email, with the edi purchase template message loaded by default
