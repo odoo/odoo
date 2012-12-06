@@ -564,6 +564,7 @@ class mail_message(osv.Model):
                 - uid have write access on the related document if model, res_id, OR
                 - otherwise: raise
             - write: if
+                - author_id == pid, uid is the author, OR
                 - uid has write access on the related document if model, res_id
                 - Otherwise: raise
             - unlink: if
@@ -586,7 +587,7 @@ class mail_message(osv.Model):
                 model_record_ids.setdefault(rmod, dict()).setdefault(rid, set()).add(id)
 
         # Author condition, for read and create (private message) -> could become an ir.rule, but not till we do not have a many2one variable field
-        if operation == 'read':
+        if operation == 'read' or operation == 'write':
             author_ids = [mid for mid, message in message_values.iteritems()
                 if message.get('author_id') and message.get('author_id') == partner_id]
         elif operation == 'create':
