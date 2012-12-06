@@ -269,27 +269,22 @@ class account_coda_import(osv.osv_memory):
                             invoice = self.pool.get('account.invoice').browse(cr, uid, ids[0])
                             partner = invoice.partner_id
                             partner_id = partner.id
-                            # voucher_vals = {
-                            #     'type': line['type'] == 'supplier' and 'payment' or 'receipt',
-                            #     'name': line_name,
-                            #     'partner_id': line['partner_id'],
-                            #     'journal_id': statement['journal_id'],
-                            #     'account_id': journal.default_credit_account_id.id,
-                            #     'company_id': journal.company_id.id,
-                            #     'currency_id': journal.company_id.currency_id.id,
-                            #     'date': line['entry_date'],
-                            #     'amount': abs(line['amount']),
-                            #     'period_id': statement['period_id'],
-                            # }
-                            context = {'line_type': line['type'], 'default_type': line['amount'] < 0 and 'payment' or 'receipt', 'type': line['amount'] < 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': statement['journal_id'].id, 'default_amount': abs(line['amount']), 'default_reference': line['ref'], 'default_date': line['entryDate'], 'default_name': line['name'], 'default_active': False}
+                            context = {
+                                'default_partner_id': partner_id,
+                                'default_amount': abs(line['amount']),
+                                'default_number': invoice.name,
+                                'close_after_process': True,
+                                'invoice_type': invoice.type,
+                                'invoice_id': invoice.id,
+                                'default_type': invoice.type in ['out_invoice', 'out_refund'] and 'receipt' or 'payment',
+                                'type': invoice.type in ['out_invoice', 'out_refund'] and 'receipt' or 'payment'
+                            }
                             if invoice.type in ['in_invoice', 'in_refund'] and line['debit'] == '1':
                                 line['type'] = 'supplier'
-                                print 'Supplier'
-                                print self.pool.get('account.voucher').create(cr, uid, {'account_id': partner.property_account_payable.id}, context=context)
+                                line['voucher_id'] = self.pool.get('account.voucher').create(cr, uid, {'account_id': partner.property_account_payable.id, 'journal_id': statement['journal_id'].id}, context=context)
                             elif invoice.type in ['out_invoice'] and line['debit'] == '0':
                                 line['type'] = 'customer'
-                                print 'Customer'
-                                print self.pool.get('account.voucher').create(cr, uid, {'account_id': partner.property_account_receivable.id}, context=context)
+                                line['voucher_id'] = self.pool.get('account.voucher').create(cr, uid, {'account_id': partner.property_account_receivable.id, 'journal_id': statement['journal_id'].id}, context=context)
                             else:
                                 line['type'] = 'general'
                     if 'counterpartyNumber' in line and line['counterpartyNumber']:
@@ -340,7 +335,8 @@ class account_coda_import(osv.osv_memory):
                     note.append(_('Transaction family') + ': ' + line['transaction_family'])
                     note.append(_('Transaction code') + ': ' + line['transaction_code'])
                     note.append(_('Transaction category') + ': ' + line['transaction_category'])
-
+                    if 'voucher_id' not in line:
+                        line['voucher_id'] = None
                     data = {
                         'name': line['name'],
                         'note':  "\n".join(note),
@@ -352,6 +348,7 @@ class account_coda_import(osv.osv_memory):
                         'statement_id': statement['id'],
                         'ref': line['ref'],
                         'sequence': line['sequence'],
+                        'voucher_id': line['voucher_id'],
                     }
                     self.pool.get('account.bank.statement.line').create(cr, uid, data, context=context)
 
