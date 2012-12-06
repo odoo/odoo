@@ -145,7 +145,7 @@
                             domain="[('object_id.model', '=', 'crm.phonecall')]"/>
                         <field name="partner_mobile"/>
                         <field name="priority"/>
-                        <field name="opportunity_id"/>
+                        <field name="opportunity_id" on_change="on_change_opportunity(opportunity_id)"/>
                     </group>
                     <field name="description" placeholder="Description..."/>
                 </sheet>
@@ -176,7 +176,7 @@
                     invisible="1"/>
                 <field name="state" invisible="1"/>
                 <field name="create_date" invisible="1"/>
-                <field name="opportunity_id" invisible="1"/>
+                <field name="opportunity_id" invisible="1" on_change="on_change_opportunity(opportunity_id)"/>
                 <button string="Schedule Other Call"
                     icon="terp-call-start"
                     name="%(phonecall_to_phonecall_act)d"
