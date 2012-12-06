@@ -21,7 +21,6 @@
 
 from osv import fields, osv
 from lxml import etree
-from operator import itemgetter
 
 from tools.translate import _
 
@@ -330,6 +329,19 @@ class res_partner(osv.osv):
         return res
 
     def _get_followup_overdue_query(self, cr, uid, args, overdue_only=False, context=None):
+        '''
+        This function is used to build the query and arguments to use when making a search on functional fields
+            * payment_amount_due
+            * payment_amount_overdue
+        Basically, the query is exactly the same except that for overdue there is an extra clause in the WHERE.
+
+        :param args: arguments given to the search in the usual domain notation (list of tuples)
+        :param overdue_only: option to add the extra argument to filter on overdue accounting entries or not
+        :returns: a tuple with
+            * the query to execute as first element
+            * the arguments for the execution of this query
+        :rtype: (string, [])
+        '''
         company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         having_where_clause = ' AND '.join(map(lambda x: '(SUM(bal2) %s %%s)' % (x[1]), args))
         having_values = [x[2] for x in args]
@@ -359,7 +371,7 @@ class res_partner(osv.osv):
         res = cr.fetchall()
         if not res:
             return [('id','=','0')]
-        return [('id','in',map(itemgetter(0), res))]
+        return [('id','in', [x[0] for x in res])]
 
     def _payment_earliest_date_search(self, cr, uid, obj, name, args, context=None):
         if not args:
