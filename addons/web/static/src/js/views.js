@@ -758,12 +758,6 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
             dataset.index = 0;
         }
         this.dataset = dataset;
-
-        // setup storage for session-wise menu hiding
-        if (this.session.hidden_menutips) {
-            return;
-        }
-        this.session.hidden_menutips = {};
     },
     /**
      * Initializes the ViewManagerAction: sets up the searchview (if the
