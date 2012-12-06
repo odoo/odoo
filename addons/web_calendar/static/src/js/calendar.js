@@ -88,7 +88,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         this.fields =  this.fields_view.fields;
 
         if (!this.date_start) {
-            throw new Error("Calendar view has not defined 'date_start' attribute.");
+            throw new Error(_t("Calendar view has not defined 'date_start' attribute."));
         }
 
         //* Calendar Fields *
@@ -96,7 +96,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
 
         if (this.date_delay) {
             if (this.fields[this.date_delay].type != 'float') {
-                throw new Error("Calendar view has a 'date_delay' type != float");
+                throw new Error(_t("Calendar view has a 'date_delay' type != float"));
             }
             this.calendar_fields.date_delay = {'name': this.date_delay, 'kind': this.fields[this.date_delay].type};
         }

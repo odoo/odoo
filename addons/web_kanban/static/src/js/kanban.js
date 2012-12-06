@@ -190,6 +190,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             views: [[false, 'form']],
             type: 'ir.actions.act_window',
             target: "new",
+            context: self.dataset.get_context(),
             flags: {
                 action_buttons: true,
             }
@@ -323,7 +324,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             $columns.sortable({
                 handle : '.oe_kanban_draghandle',
                 start: function(event, ui) {
-                    self.currently_dragging.index = ui.item.index();
+                    self.currently_dragging.index = ui.item.parent().children('.oe_kanban_record').index(ui.item);
                     self.currently_dragging.group = ui.item.parents('.oe_kanban_column:first').data('widget');
                     ui.item.find('*').on('click.prevent', function(ev) {
                         return false;
@@ -334,7 +335,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 stop: function(event, ui) {
                     var record = ui.item.data('widget');
                     var old_index = self.currently_dragging.index;
-                    var new_index = ui.item.index();
+                    var new_index = ui.item.parent().children('.oe_kanban_record').index(ui.item);
                     var old_group = self.currently_dragging.group;
                     var new_group = ui.item.parents('.oe_kanban_column:first').data('widget');
                     if (!(old_group.title === new_group.title && old_group.value === new_group.value && old_index == new_index)) {
@@ -409,7 +410,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 new_group.do_save_sequences();
             }).fail(function(error, evt) {
                 evt.preventDefault();
-                alert("An error has occured while moving the record to this group.");
+                alert(_t("An error has occured while moving the record to this group."));
                 self.do_reload(); // TODO: use draggable + sortable in order to cancel the dragging when the rcp fails
             });
         }
@@ -642,14 +643,14 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
     },
     do_show_more: function(evt) {
         var self = this;
+        var ids = self.view.dataset.ids.splice(0);
         return this.dataset.read_slice(this.view.fields_keys.concat(['__last_update']), {
             'limit': self.view.limit,
             'offset': self.dataset_offset += self.view.limit
         }).then(function(records) {
-            records.forEach(function(r) {
-                self.view.dataset.ids.push(r.id);
-            });
+            self.view.dataset.ids = ids.concat(self.view.dataset.ids);
             self.do_add_records(records);
+            self.compute_cards_auto_height();
             return records;
         });
     },
@@ -1071,8 +1072,10 @@ instance.web_kanban.QuickCreate = instance.web.Widget.extend({
      */
     quick_add: function () {
         var self = this;
+        var val = this.$input.val();
+        if (/^\s*$/.test(val)) { return; }
         this._dataset.call(
-            'name_create', [self.$input.val() || false, new instance.web.CompoundContext(
+            'name_create', [val, new instance.web.CompoundContext(
                     this._dataset.get_context(), this._context)])
             .then(function(record) {
                 self.$input.val("");

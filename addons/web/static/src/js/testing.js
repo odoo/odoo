@@ -2,7 +2,8 @@
 openerp.testing = {};
 (function (testing) {
     var dependencies = {
-        corelib: [],
+        pyeval: [],
+        corelib: ['pyeval'],
         coresetup: ['corelib'],
         data: ['corelib', 'coresetup'],
         dates: [],
@@ -262,13 +263,16 @@ openerp.testing = {};
                     ++di;
                 }
 
-                instance = openerp.init("fuck your shit, don't load anything you cunt");
+                instance = openerp.init(null);
                 _(d).chain()
                     .reverse()
                     .uniq()
                     .each(function (module) {
                         openerp.web[module](instance);
                     });
+            }
+            if (instance.session) {
+                instance.session.uid = 42;
             }
             if (_.isNumber(opts.asserts)) {
                 expect(opts.asserts);

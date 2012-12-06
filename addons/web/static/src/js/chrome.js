@@ -24,7 +24,7 @@ instance.web.Notification =  instance.web.Widget.extend({
         if (sticky) {
             opts.expires = false;
         }
-        this.$el.notify('create', {
+        return this.$el.notify('create', {
             title: title,
             text: text
         }, opts);
@@ -35,7 +35,7 @@ instance.web.Notification =  instance.web.Widget.extend({
         if (sticky) {
             opts.expires = false;
         }
-        this.$el.notify('create', 'oe_notification_alert', {
+        return this.$el.notify('create', 'oe_notification_alert', {
             title: title,
             text: text
         }, opts);
@@ -289,7 +289,7 @@ instance.web.CrashManager = instance.web.Class.extend({
 });
 
 instance.web.Loading = instance.web.Widget.extend({
-    template: 'Loading',
+    template: _t("Loading"),
     init: function(parent) {
         this._super(parent);
         this.count = 0;
@@ -390,11 +390,11 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
         self.$el.find("form[name=restore_db_form]").validate({ submitHandler: self.do_restore });
         self.$el.find("form[name=change_pwd_form]").validate({
             messages: {
-                old_pwd: "Please enter your previous password",
-                new_pwd: "Please enter your new password",
+                old_pwd: _t("Please enter your previous password"),
+                new_pwd: _t("Please enter your new password"),
                 confirm_pwd: {
-                    required: "Please confirm your new password",
-                    equalTo: "The confirmation does not match the password"
+                    required: _t("Please confirm your new password"),
+                    equalTo: _t("The confirmation does not match the password")
                 }
             },
             submitHandler: self.do_change_password
@@ -478,7 +478,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
                 self.display_error(result);
                 return;
             }
-            self.do_notify("Duplicating database", "The database has been duplicated.");
+            self.do_notify(_t("Duplicating database"), _t("The database has been duplicated."));
             self.start();
         });
     },
@@ -488,7 +488,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
             fields = $form.serializeArray(),
             $db_list = $form.find('[name=drop_db]'),
             db = $db_list.val();
-        if (!db || !confirm("Do you really want to delete the database: " + db + " ?")) {
+        if (!db || !confirm(_.str.sprintf(_t("Do you really want to delete the database: %s ?"), db))) {
             return;
         }
         self.rpc("/web/database/drop", {'fields': fields}).done(function(result) {
@@ -496,7 +496,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
                 self.display_error(result);
                 return;
             }
-            self.do_notify("Dropping database", "The database '" + db + "' has been dropped");
+            self.do_notify(_t("Dropping database"), _.str.sprintf(_t("The database %s has been dropped"), db));
             self.start();
         });
     },
@@ -511,7 +511,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
             error: function(error){
                if(error){
                   self.display_error({
-                        title: 'Backup Database',
+                        title: _t("Backup Database"),
                         error: 'AccessDenied'
                   });
                }
@@ -534,13 +534,13 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
 
                 if (body.indexOf('403 Forbidden') !== -1) {
                     self.display_error({
-                        title: 'Access Denied',
-                        error: 'Incorrect super-administrator password'
+                        title: _t("Access Denied"),
+                        error: _t("Incorrect super-administrator password")
                     });
                 } else {
                     self.display_error({
-                        title: 'Restore Database',
-                        error: 'Could not restore the database'
+                        title: _t("Restore Database"),
+                        error: _t("Could not restore the database")
                     });
                 }
             },
@@ -560,7 +560,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
                 return;
             }
             self.unblockUI();
-            self.do_notify("Changed Password", "Password has been changed successfully");
+            self.do_notify(_t("Changed Password"), _t("Password has been changed successfully"));
         });
     },
     do_exit: function () {
@@ -642,7 +642,7 @@ instance.web.Login =  instance.web.Widget.extend({
         }
         var db = this.$("form [name=db]").val();
         if (!db) {
-            this.do_warn("Login", "No database selected !");
+            this.do_warn(_t("Login"), _t("No database selected !"));
             return false;
         }
         var login = this.$("form input[name=login]").val();
@@ -678,7 +678,7 @@ instance.web.Login =  instance.web.Widget.extend({
             self.trigger('login_successful');
         }, function () {
             self.$(".oe_login_pane").fadeIn("fast", function() {
-                self.show_error("Invalid username or password");
+                self.show_error(_t("Invalid username or password"));
             });
         });
     },
@@ -765,7 +765,7 @@ instance.web.ChangePassword =  instance.web.Widget.extend({
     template: "ChangePassword",
     start: function() {
         var self = this;
-        this.getParent().dialog_title = "Change Password";
+        this.getParent().dialog_title = _t("Change Password");
         var $button = self.$el.find('.oe_form_button');
         $button.appendTo(this.getParent().$buttons);
         $button.eq(2).click(function(){
@@ -822,7 +822,7 @@ instance.web.Menu =  instance.web.Widget.extend({
         this.renderElement();
         this.limit_entries();
         // Hide toplevel item if there is only one
-        var $toplevel = this.$("li")
+        var $toplevel = this.$("li");
         if($toplevel.length == 1) {
             $toplevel.hide();
         }
@@ -1106,7 +1106,6 @@ instance.web.WebClient = instance.web.Client.extend({
     start: function() {
         var self = this;
         return $.when(this._super()).then(function() {
-            self.$(".oe_logo").attr("href", $.param.fragment("" + window.location, "", 2).slice(0, -1));
             if (jQuery.param !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined) {
                 $("body").addClass("kitten-mode-activated");
                 if ($.blockUI) {
@@ -1163,6 +1162,36 @@ instance.web.WebClient = instance.web.Client.extend({
         self.user_menu.do_update();
         self.bind_hashchange();
         self.set_title();
+        self.check_timezone();
+    },
+    check_timezone: function() {
+        var self = this;
+        return new instance.web.Model('res.users').call('read', [[this.session.uid], ['tz_offset']]).then(function(result) {
+            var user_offset = result[0]['tz_offset'];
+            var offset = -(new Date().getTimezoneOffset());
+            // _.str.sprintf()'s zero front padding is buggy with signed decimals, so doing it manually
+            var browser_offset = (offset < 0) ? "-" : "+";
+            browser_offset += _.str.sprintf("%02d", Math.abs(offset / 60));
+            browser_offset += _.str.sprintf("%02d", Math.abs(offset % 60));
+            if (browser_offset !== user_offset) {
+                var $icon = $(QWeb.render('WebClient.timezone_systray'));
+                $icon.on('click', function() {
+                    var notification = self.do_warn(_t("Timezone mismatch"), QWeb.render('WebClient.timezone_notification', {
+                        user_timezone: instance.session.user_context.tz || 'UTC',
+                        user_offset: user_offset,
+                        browser_offset: browser_offset,
+                    }), true);
+                    notification.element.find('.oe_webclient_timezone_notification').on('click', function() {
+                        notification.close();
+                    }).find('a').on('click', function() {
+                        notification.close();
+                        self.user_menu.on_menu_settings();
+                        return false;
+                    });
+                });
+                $icon.appendTo(self.$('.oe_systray'));
+            }
+        });
     },
     destroy_content: function() {
         _.each(_.clone(this.getChildren()), function(el) {
@@ -1179,11 +1208,11 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     do_notify: function() {
         var n = this.notification;
-        n.notify.apply(n, arguments);
+        return n.notify.apply(n, arguments);
     },
     do_warn: function() {
         var n = this.notification;
-        n.warn.apply(n, arguments);
+        return n.warn.apply(n, arguments);
     },
     on_logout: function() {
         var self = this;
@@ -1240,11 +1269,12 @@ instance.web.WebClient = instance.web.Client.extend({
         var self = this;
         return this.rpc("/web/action/load", { action_id: options.action_id })
             .then(function (result) {
-                var action = result;
                 if (options.needaction) {
-                    action.context.search_default_message_unread = true;
+                    result.context = new instance.web.CompoundContext(
+                        result.context,
+                        {search_default_message_unread: true});
                 }
-                return $.when(self.action_manager.do_action(action, {
+                return $.when(self.action_manager.do_action(result, {
                     clear_breadcrumbs: true,
                     action_menu_id: self.menu.current_menu,
                 })).fail(function() {

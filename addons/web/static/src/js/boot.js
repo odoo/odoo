@@ -22,7 +22,7 @@
          * @param {Array|String} modules list of modules to initialize
          */
         init: function(modules) {
-            if (modules === "fuck your shit, don't load anything you cunt") {
+            if (modules === null) {
                 modules = [];
             } else {
                 modules = _.union(['web'], modules || []);
@@ -53,7 +53,7 @@
  * OpenERP Web web module split
  *---------------------------------------------------------*/
 openerp.web = function(session) {
-    var files = ["corelib","coresetup","dates","formats","chrome","data","views","search","list","form","list_editable","web_mobile","view_tree","data_export","data_import"];
+    var files = ["pyeval", "corelib","coresetup","dates","formats","chrome","data","views","search","list","form","list_editable","web_mobile","view_tree","data_export","data_import"];
     for(var i=0; i<files.length; i++) {
         if(openerp.web[files[i]]) {
             openerp.web[files[i]](session);

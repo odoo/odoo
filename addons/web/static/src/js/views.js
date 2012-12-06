@@ -256,7 +256,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
             on_close: function() {},
             action_menu_id: null,
         });
-        if (_.isString(action) && instance.web.client_actions.contains(action)) {
+        if (action === false) {
+            action = { type: 'ir.actions.act_window_close' };
+        } else if (_.isString(action) && instance.web.client_actions.contains(action)) {
             var action_client = { type: "ir.actions.client", tag: action, params: {} };
             return this.do_action(action_client, options);
         } else if (_.isNumber(action) || _.isString(action)) {
@@ -265,6 +267,17 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 return self.do_action(result, options);
             });
         }
+
+        // Ensure context & domain are evaluated and can be manipulated/used
+        if (action.context) {
+            action.context = instance.web.pyeval.eval(
+                'context', action.context);
+        }
+        if (action.domain) {
+            action.domain = instance.web.pyeval.eval(
+                'domain', action.domain, action.context || {});
+        }
+
         if (!action.type) {
             console.error("No type for action", action);
             return $.Deferred().reject();
@@ -382,6 +395,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             options.on_close();
         }
         this.dialog_stop();
+        return $.when();
     },
     ir_actions_server: function (action, options) {
         var self = this;
@@ -395,29 +409,36 @@ instance.web.ActionManager = instance.web.Widget.extend({
     ir_actions_report_xml: function(action, options) {
         var self = this;
         instance.web.blockUI();
-        self.rpc("/web/session/eval_domain_and_context", {
+        return instance.web.pyeval.eval_domains_and_contexts({
             contexts: [action.context],
             domains: []
-        }).done(function(res) {
+        }).then(function(res) {
             action = _.clone(action);
             action.context = res.context;
             var c = instance.webclient.crashmanager;
-            self.session.get_file({
-                url: '/web/report',
-                data: {action: JSON.stringify(action)},
-                complete: instance.web.unblockUI,
-                success: function(){
-                    if (!self.dialog) {
-                        options.on_close();
+            return $.Deferred(function (d) {
+                self.session.get_file({
+                    url: '/web/report',
+                    data: {action: JSON.stringify(action)},
+                    complete: instance.web.unblockUI,
+                    success: function(){
+                        if (!self.dialog) {
+                            options.on_close();
+                        }
+                        self.dialog_stop();
+                        d.resolve();
+                    },
+                    error: function () {
+                        c.rpc_error.apply(c, arguments);
+                        d.reject();
                     }
-                    self.dialog_stop();
-                },
-                error: c.rpc_error.bind(c)
-            })
+                })
+            });
         });
     },
     ir_actions_act_url: function (action) {
         window.open(action.url, action.target === 'self' ? '_self' : '_blank');
+        return $.when();
     },
 });
 
@@ -666,7 +687,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         var self = this,
             controller = this.views[this.active_view].controller,
             action_context = this.action.context || {};
-        this.rpc('/web/session/eval_domain_and_context', {
+        instance.web.pyeval.eval_domains_and_contexts({
             domains: [this.action.domain || []].concat(domains || []),
             contexts: [action_context].concat(contexts || []),
             group_by_seq: groupbys || []
@@ -737,12 +758,6 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
             dataset.index = 0;
         }
         this.dataset = dataset;
-
-        // setup storage for session-wise menu hiding
-        if (this.session.hidden_menutips) {
-            return;
-        }
-        this.session.hidden_menutips = {};
     },
     /**
      * Initializes the ViewManagerAction: sets up the searchview (if the
@@ -786,7 +801,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                 break;
             case 'tests':
                 this.do_action({
-                    name: "JS Tests",
+                    name: _t("JS Tests"),
                     target: 'new',
                     type : 'ir.actions.act_url',
                     url: '/web/tests?mod=*'
@@ -814,7 +829,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                 break;
             case 'translate':
                 this.do_action({
-                    name: "Technical Translation",
+                    name: _t("Technical Translation"),
                     res_model : 'ir.translation',
                     domain : [['type', '!=', 'object'], '|', ['name', '=', this.dataset.model], ['name', 'ilike', this.dataset.model + ',']],
                     views: [[false, 'list'], [false, 'form']],
@@ -880,7 +895,11 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                             nested: true,
                         }
                     };
-                    this.session.get_file({ url: '/web/report', data: {action: JSON.stringify(action)}, complete: instance.web.unblockUI });
+                    this.session.get_file({
+                        url: '/web/report',
+                        data: {action: JSON.stringify(action)},
+                        complete: instance.web.unblockUI
+                    });
                 }
                 break;
             default:
@@ -1069,14 +1088,17 @@ instance.web.Sidebar = instance.web.Widget.extend({
                 active_id: ids[0],
                 active_ids: ids,
                 active_model: self.getParent().dataset.model
-            };
+            }; 
+            var c = instance.web.pyeval.eval('context',
+                new instance.web.CompoundContext(
+                    sidebar_eval_context, active_ids_context));
             self.rpc("/web/action/load", {
                 action_id: item.action.id,
-                context: active_ids_context,
-                eval_context: new instance.web.CompoundContext(sidebar_eval_context, active_ids_context),
+                context: c
             }).done(function(result) {
-                console.log(result.context);
-                result.context = new instance.web.CompoundContext(result.context || {}, active_ids_context);
+                result.context = new instance.web.CompoundContext(
+                    result.context || {}, active_ids_context)
+                        .set_eval_context(c);
                 result.flags = result.flags || {};
                 result.flags.new_window = true;
                 self.do_action(result, {
@@ -1137,7 +1159,6 @@ instance.web.Sidebar = instance.web.Widget.extend({
         }
     },
     on_attachment_delete: function(e) {
-        var self = this;
         e.preventDefault();
         e.stopPropagation();
         var self = this;
@@ -1182,7 +1203,8 @@ instance.web.View = instance.web.Widget.extend({
                 "view_id": this.view_id,
                 "view_type": this.view_type,
                 toolbar: !!this.options.$sidebar,
-                context: this.dataset.get_context(context)
+                context: instance.web.pyeval.eval(
+                    'context', this.dataset.get_context(context))
             });
         }
         return view_loaded.then(function(r) {
@@ -1226,8 +1248,7 @@ instance.web.View = instance.web.Widget.extend({
         };
         var context = new instance.web.CompoundContext(dataset.get_context(), action_data.context || {});
 
-        var handler = function (r) {
-            var action = r;
+        var handler = function (action) {
             if (action && action.constructor == Object) {
                 var ncontext = new instance.web.CompoundContext(context);
                 if (record_id) {
@@ -1238,18 +1259,10 @@ instance.web.View = instance.web.Widget.extend({
                     });
                 }
                 ncontext.add(action.context || {});
-                return self.rpc('/web/session/eval_domain_and_context', {
-                    contexts: [ncontext],
-                    domains: []
-                }).then(function (results) {
-                    action.context = results.context;
-                    /* niv: previously we were overriding once more with action_data.context,
-                     * I assumed this was not a correct behavior and removed it
-                     */
-                    return self.do_action(action, {
-                        on_close: result_handler,
-                    });
-                }, null);
+                action.context = ncontext;
+                return self.do_action(action, {
+                    on_close: result_handler,
+                });
             } else {
                 self.do_action({"type":"ir.actions.act_window_close"});
                 return result_handler();
@@ -1271,11 +1284,15 @@ instance.web.View = instance.web.Widget.extend({
                 }
             }
             args.push(context);
-            return dataset.call_button(action_data.name, args).done(handler);
+            return dataset.call_button(action_data.name, args).then(handler);
         } else if (action_data.type=="action") {
-            return this.rpc('/web/action/load', { action_id: action_data.name, context: context, do_not_eval: true}).done(handler);
+            return this.rpc('/web/action/load', {
+                action_id: action_data.name,
+                context: instance.web.pyeval.eval('context', context),
+                do_not_eval: true
+            }).then(handler);
         } else  {
-            return dataset.exec_workflow(record_id, action_data.name).done(handler);
+            return dataset.exec_workflow(record_id, action_data.name).then(handler);
         }
     },
     /**
@@ -1395,7 +1412,7 @@ instance.web.json_node_to_xml = function(node, human_readable, indent) {
         return sindent + node;
     } else if (typeof(node.tag) !== 'string' || !node.children instanceof Array || !node.attrs instanceof Object) {
         throw new Error(
-            _.str.sprintf("Node [%s] is not a JSONified XML node",
+            _.str.sprintf(_t("Node [%s] is not a JSONified XML node"),
                           JSON.stringify(node)));
     }
     for (var attr in node.attrs) {
@@ -1429,7 +1446,7 @@ instance.web.xml_to_str = function(node) {
     } else if (window.ActiveXObject) {
         return node.xml;
     } else {
-        throw new Error("Could not serialize XML");
+        throw new Error(_t("Could not serialize XML"));
     }
 };
 instance.web.str_to_xml = function(s) {
@@ -1437,7 +1454,7 @@ instance.web.str_to_xml = function(s) {
         var dp = new DOMParser();
         var r = dp.parseFromString(s, "text/xml");
         if (r.body && r.body.firstChild && r.body.firstChild.nodeName == 'parsererror') {
-            throw new Error("Could not parse string to xml");
+            throw new Error(_t("Could not parse string to xml"));
         }
         return r;
     }
@@ -1445,7 +1462,7 @@ instance.web.str_to_xml = function(s) {
     try {
         xDoc = new ActiveXObject("MSXML2.DOMDocument");
     } catch (e) {
-        throw new Error("Could not find a DOM Parser: " + e.message);
+        throw new Error(_.str.sprintf( _t("Could not find a DOM Parser: %s"), e.message));
     }
     xDoc.async = false;
     xDoc.preserveWhiteSpace = true;

@@ -1,5 +1,6 @@
 
 openerp.web.dates = function(instance) {
+var _t = instance.web._t;
 
 /**
  * Converts a string to a Date javascript object using OpenERP's
@@ -18,11 +19,11 @@ instance.web.str_to_datetime = function(str) {
     var regex = /^(\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d)(?:\.\d+)?$/;
     var res = regex.exec(str);
     if ( !res ) {
-        throw new Error("'" + str + "' is not a valid datetime");
+        throw new Error(_.str.sprintf(_t("'%s' is not a valid datetime"), str));
     }
     var obj = Date.parseExact(res[1] + " UTC", 'yyyy-MM-dd HH:mm:ss zzz');
     if (! obj) {
-        throw new Error("'" + str + "' is not a valid datetime");
+        throw new Error(_.str.sprintf(_t("'%s' is not a valid datetime"), str));
     }
     return obj;
 };
@@ -45,11 +46,11 @@ instance.web.str_to_date = function(str) {
     var regex = /^\d\d\d\d-\d\d-\d\d$/;
     var res = regex.exec(str);
     if ( !res ) {
-        throw new Error("'" + str + "' is not a valid date");
+        throw new Error(_.str.sprintf(_t("'%s' is not a valid date"), str));
     }
     var obj = Date.parseExact(str, 'yyyy-MM-dd');
     if (! obj) {
-        throw new Error("'" + str + "' is not a valid date");
+        throw new Error(_.str.sprintf(_t("'%s' is not a valid date"), str));
     }
     return obj;
 };
@@ -72,11 +73,11 @@ instance.web.str_to_time = function(str) {
     var regex = /^(\d\d:\d\d:\d\d)(?:\.\d+)?$/;
     var res = regex.exec(str);
     if ( !res ) {
-        throw new Error("'" + str + "' is not a valid time");
+        throw new Error(_.str.sprintf(_t("'%s' is not a valid time"), str));
     }
     var obj = Date.parseExact("1970-01-01 " + res[1], 'yyyy-MM-dd HH:mm:ss');
     if (! obj) {
-        throw new Error("'" + str + "' is not a valid time");
+        throw new Error(_.str.sprintf(_t("'%s' is not a valid time"), str));
     }
     return obj;
 };
