@@ -258,6 +258,7 @@ class account_coda_import(osv.osv_memory):
 
                     if 'counterpartyAddress' in line and line['counterpartyAddress'] != '':
                         note.append(_('Counter Party Address') + ': ' + line['counterpartyAddress'])
+                    line['name'] = "\n".join(filter(None, [line['counterpartyName'], line['communication']]))
 
                     partner = None
                     partner_id = None
@@ -268,10 +269,29 @@ class account_coda_import(osv.osv_memory):
                             invoice = self.pool.get('account.invoice').browse(cr, uid, ids[0])
                             partner = invoice.partner_id
                             partner_id = partner.id
-                            if invoice.type in ['in_invoice', 'in_refund']:
+                            # voucher_vals = {
+                            #     'type': line['type'] == 'supplier' and 'payment' or 'receipt',
+                            #     'name': line_name,
+                            #     'partner_id': line['partner_id'],
+                            #     'journal_id': statement['journal_id'],
+                            #     'account_id': journal.default_credit_account_id.id,
+                            #     'company_id': journal.company_id.id,
+                            #     'currency_id': journal.company_id.currency_id.id,
+                            #     'date': line['entry_date'],
+                            #     'amount': abs(line['amount']),
+                            #     'period_id': statement['period_id'],
+                            # }
+                            context = {'line_type': line['type'], 'default_type': line['amount'] < 0 and 'payment' or 'receipt', 'type': line['amount'] < 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': statement['journal_id'].id, 'default_amount': abs(line['amount']), 'default_reference': line['ref'], 'default_date': line['entryDate'], 'default_name': line['name'], 'default_active': False}
+                            if invoice.type in ['in_invoice', 'in_refund'] and line['debit'] == '1':
                                 line['type'] = 'supplier'
-                            else:
+                                print 'Supplier'
+                                print self.pool.get('account.voucher').create(cr, uid, {'account_id': partner.property_account_payable.id}, context=context)
+                            elif invoice.type in ['out_invoice'] and line['debit'] == '0':
                                 line['type'] = 'customer'
+                                print 'Customer'
+                                print self.pool.get('account.voucher').create(cr, uid, {'account_id': partner.property_account_receivable.id}, context=context)
+                            else:
+                                line['type'] = 'general'
                     if 'counterpartyNumber' in line and line['counterpartyNumber']:
                         ids = self.pool.get('res.partner.bank').search(cr, uid, [('acc_number', '=', str(line['counterpartyNumber']))])
                         if ids and len(ids) > 0:
@@ -322,7 +342,7 @@ class account_coda_import(osv.osv_memory):
                     note.append(_('Transaction category') + ': ' + line['transaction_category'])
 
                     data = {
-                        'name': "\n".join(filter(None, [line['counterpartyName'], line['communication']])),
+                        'name': line['name'],
                         'note':  "\n".join(note),
                         'date': line['entryDate'],
                         'amount': line['amount'],
