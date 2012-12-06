@@ -241,21 +241,23 @@ class account_coda_import(osv.osv_memory):
             for line in statement['lines']:
                 if line['type'] == 'normal':
                     note = []
-                    counterparty = []
-                    if 'counterpartyName' in line:
-                        counterparty.append(line['counterpartyName'])
-                    try:
-                        if 'counterpartyNumber' in line and int(line['counterpartyNumber']) == 0:
-                            line['counterpartyNumber'] = False
-                    except:
-                        pass
-                    if 'counterpartyNumber' in line and line['counterpartyNumber']:
-                        counterparty.append(line['counterpartyNumber'])
-                    if len(counterparty) > 0:
-                        counterparty = '[' + ' / '.join(counterparty) + ']'
+                    if 'counterpartyName' in line and line['counterpartyName'] != '':
+                        note.append(_('Counter Party') + ': ' + line['counterpartyName'])
                     else:
-                        counterparty = '/'
-                    note.append(_('Counter Party') + ': ' + counterparty)
+                        line['counterpartyName'] = False
+                    if 'counterpartyNumber' in line and line['counterpartyNumber'] != '':
+                        try:
+                            if int(line['counterpartyNumber']) == 0:
+                                line['counterpartyNumber'] = False
+                        except:
+                            pass
+                        if line['counterpartyNumber']:
+                            note.append(_('Counter Party Account') + ': ' + line['counterpartyNumber'])
+                    else:
+                        line['counterpartyNumber'] = False
+
+                    if 'counterpartyAddress' in line and line['counterpartyAddress'] != '':
+                        note.append(_('Counter Party Address') + ': ' + line['counterpartyAddress'])
 
                     partner = None
                     partner_id = None
@@ -292,7 +294,6 @@ class account_coda_import(osv.osv_memory):
                                 line['account'] = partner.property_account_payable.id
                             else:
                                 line['account'] = partner.property_account_receivable.id
-                    note.append(_('Communication') + ': ' + line['communication'])
                     if not partner:
                         line['type'] = 'general'
                         if line['debit'] == '1':
@@ -321,7 +322,7 @@ class account_coda_import(osv.osv_memory):
                     note.append(_('Transaction category') + ': ' + line['transaction_category'])
 
                     data = {
-                        'name': counterparty + '\n' + line['communication'],
+                        'name': "\n".join(filter(None, [line['counterpartyName'], line['communication']])),
                         'note':  "\n".join(note),
                         'date': line['entryDate'],
                         'amount': line['amount'],
