@@ -122,6 +122,10 @@ class mail_group(osv.Model):
         #ir.ui.menu (for which normal users do not have creation rights)
         self.check_access_rights(cr, uid, 'create')
         mail_group_id = super(mail_group, self).create(cr, SUPERUSER_ID, vals, context=context)
+        if uid != SUPERUSER_ID:
+            # creator is the first follower
+            user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
+            self.write(cr, SUPERUSER_ID, [mail_group_id], {'message_follower_ids': [(6, 0, [user_pid])]}, context=context)
 
         # Create client action for this group and link the menu to it
         ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'action_mail_group_feeds')

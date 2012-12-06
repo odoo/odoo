@@ -51,6 +51,8 @@ class test_mail_access_rights(test_mail_mockup.TestMailMockups):
         self.partner_bert_id = self.user_bert.partner_id.id
         self.user_raoul = self.res_users.browse(cr, uid, self.user_raoul_id)
         self.partner_raoul_id = self.user_raoul.partner_id.id
+        self.user_admin = self.res_users.browse(cr, uid, uid)
+        self.partner_admin_id = self.user_admin.partner_id.id
 
     @mute_logger('openerp.addons.base.ir.ir_model','openerp.osv.orm')
     def test_00_mail_message_search_access_rights(self):
@@ -201,3 +203,35 @@ class test_mail_access_rights(test_mail_mockup.TestMailMockups):
         self.mail_group.read(cr, user_raoul_id, self.group_pigs_id)
         # Do: Bert read Jobs, ok because group_public_id = employee
         self.mail_group.read(cr, user_raoul_id, self.group_jobs_id)
+
+
+    def test_80_linked_document(self):
+        """ Testing follower, mail and document relation. """
+        cr, uid, user_admin = self.cr, self.uid, self.user_admin
+        user_raoul_id, user_raoul =  self.user_raoul_id, self.user_raoul
+
+        print ""
+        print ""
+        print ""
+        print ""
+
+
+        # Raoul create a document mail_group
+        group_doc_id = self.mail_group.create(cr, user_raoul_id, {'name': 'Doc group'})
+        group_doc = self.mail_group.browse(cr, user_raoul_id, group_doc_id)
+
+        print set([user_raoul.partner_id])
+        print set(group_doc.message_follower_ids)
+        
+        # Test: raoul is follower of the group he created
+        self.assertEqual(set(group_doc.message_follower_ids), set([user_raoul.partner_id]), 'Group create failed, the creator must follow the document he created.')
+
+
+        print user_raoul.partner_id
+        print group_doc.message_follower_ids
+
+        print ""
+        print ""
+        print ""
+        print ""
+        raise
