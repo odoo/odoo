@@ -126,9 +126,10 @@ class test_expression(common.TransactionCase):
         # Get test columns
         partner_state_id_col = partner_obj._columns.get('state_id')  # many2one on res.partner to res.country.state
         partner_parent_id_col = partner_obj._columns.get('parent_id')  # many2one on res.partner to res.partner
+        state_country_id_col = state_obj._columns.get('country_id')  # many2one on res.country.state on res.country
         partner_child_ids_col = partner_obj._columns.get('child_ids')  # one2many on res.partner to res.partner
         partner_bank_ids_col = partner_obj._columns.get('bank_ids')  # one2many on res.partner to res.partner.bank
-        state_country_id_col = state_obj._columns.get('country_id')  # many2one on res.country.state on res.country
+        category_id_col = partner_obj._columns.get('category_id')  # many2many on res.partner to res.partner.category
 
         # Get the first bank account type to be able to create a res.partner.bank
         bank_type = bank_obj._bank_type_get(cr, uid)[0]
@@ -145,6 +146,14 @@ class test_expression(common.TransactionCase):
         b_aa = bank_obj.create(cr, uid, {'name': '__bank_test_a', 'state': bank_type[0], 'partner_id': p_aa, 'acc_number': '1234'})
         b_ab = bank_obj.create(cr, uid, {'name': '__bank_test_b', 'state': bank_type[0], 'partner_id': p_ab, 'acc_number': '5678'})
         b_ba = bank_obj.create(cr, uid, {'name': '__bank_test_b', 'state': bank_type[0], 'partner_id': p_ba, 'acc_number': '9876'})
+
+        # ----------------------------------------
+        # Test1: basics about the attribute
+        # ----------------------------------------
+
+        category_id_col._auto_join = True
+        self.assertRaises(NotImplementedError, partner_obj.search, cr, uid, [('category_id.name', '=', 'foo')])
+        category_id_col._auto_join = False
 
         # ----------------------------------------
         # Test1: one2many

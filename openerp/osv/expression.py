@@ -800,8 +800,7 @@ class expression(object):
                 leafs_to_stack.append(self.create_substitution_leaf(leaf, (field_path[1], operator, right), relational_table))
 
             elif len(field_path) > 1 and field._auto_join:
-                assert False, \
-                    '_auto_join attribute on something else than a many2one or one2many is currently not supported'
+                raise NotImplementedError('_auto_join attribute not supported on many2many field %s' % (left))
 
             elif len(field_path) > 1 and field._type == 'many2one':
                 right_ids = relational_table.search(cr, uid, [(field_path[1], operator, right)], context=context)
