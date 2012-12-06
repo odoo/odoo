@@ -24,8 +24,6 @@ from lxml import etree
 from operator import itemgetter
 
 from tools.translate import _
-from report import account_followup_print
-
 
 class followup(osv.osv):
     _name = 'account_followup.followup'
@@ -128,6 +126,8 @@ class email_template(osv.osv):
         :param res_id: ID of the partner for whom we are building the tables
         :rtype: string
         '''
+        from report import account_followup_print
+
         partner = self.pool.get('res.partner').browse(cr, uid, res_id, context=context)
         followup_table = ''
         if partner.unreconciled_aml_ids: 
@@ -408,7 +408,7 @@ class res_partner(osv.osv):
         if not res:
             return [('id','=','0')]
         return [('id','in',map(itemgetter(0), res))]
-        
+
     _inherit = "res.partner"
     _columns = {
         'payment_responsible_id':fields.many2one('res.users', ondelete='set null', string='Follow-up Responsible', 
