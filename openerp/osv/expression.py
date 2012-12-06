@@ -137,6 +137,7 @@ import logging
 import traceback
 
 import openerp.modules
+from openerp.osv import fields
 from openerp.osv.orm import MAGIC_COLUMNS
 import openerp.tools as tools
 
@@ -814,12 +815,13 @@ class expression(object):
                 leaf.leaf = ('id', 'in', table_ids)
                 leafs_to_stack.append(leaf)
 
-            # ----------------------------------------
+            # -------------------------------------------------
             # FUNCTION FIELD
-            # -> not stored, get the result of fnct_search
-            # ----------------------------------------
+            # -> not stored: error if no _fnct_search, otherwise handle the result domain
+            # -> stored: management done in the remaining of parsing
+            # -------------------------------------------------
 
-            elif field._properties and not field.store and not field._fnct_search:
+            elif isinstance(field, fields.function) and not field.store and not field._fnct_search:
                 # this is a function field that is not stored
                 # the function field doesn't provide a search function and doesn't store
                 # values in the database, so we must ignore it : we generate a dummy leaf
@@ -833,7 +835,7 @@ class expression(object):
                     _logger.debug(''.join(traceback.format_stack()))
                 leafs_to_stack.append(leaf)
 
-            elif field._properties and not field.store:
+            elif isinstance(field, fields.function) and not field.store:
                 # this is a function field that is not stored
                 fct_domain = field.search(cr, uid, working_table, left, [leaf.leaf], context=context)
                 if not fct_domain:
