@@ -20,8 +20,8 @@
 ##############################################################################
 
 import time
-from osv import fields,osv
-from tools.translate import _
+from openerp.osv import fields,osv
+from openerp.tools.translate import _
 import decimal_precision as dp
 
 class delivery_carrier(osv.osv):

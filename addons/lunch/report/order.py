@@ -20,8 +20,8 @@
 ##############################################################################
 
 import time
-from report import report_sxw
-from osv import osv
+from openerp.report import report_sxw
+from openerp.osv import osv
 
 
 class order(report_sxw.rml_parse):

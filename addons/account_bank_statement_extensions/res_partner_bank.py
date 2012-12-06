@@ -20,7 +20,7 @@
 #
 ##############################################################################
 
-from osv import osv
+from openerp.osv import osv
 
 class res_partner_bank(osv.osv):
     _inherit = 'res.partner.bank'

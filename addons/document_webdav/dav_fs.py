@@ -18,14 +18,14 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import pooler
+from openerp import pooler
 import sql_db
 
 import os
 import time
 import errno
 
-import netsvc
+from openerp import netsvc
 import urlparse
 
 from DAV.constants import COLLECTION  #, OBJECT
@@ -35,7 +35,7 @@ import urllib
 
 from DAV.davcmd import copyone, copytree, moveone, movetree, delone, deltree
 from cache import memoize
-from tools import misc
+from openerp.tools import misc
 
 from webdav import mk_lock_response
 

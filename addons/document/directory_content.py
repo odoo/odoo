@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 
-import netsvc
+from openerp import netsvc
 # import os
 import nodes
 # import StringIO

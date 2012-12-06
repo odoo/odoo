@@ -19,10 +19,10 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 from lxml import etree
 
-from tools.translate import _
+from openerp.tools.translate import _
 
 
 class followup(osv.osv):

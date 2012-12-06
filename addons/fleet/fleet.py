@@ -19,12 +19,12 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 import time
 import datetime
-import tools
-from osv.orm import except_orm
-from tools.translate import _
+from openerp import tools
+from openerp.osv.orm import except_orm
+from openerp.tools.translate import _
 from dateutil.relativedelta import relativedelta
 
 def str_to_datetime(strdate):

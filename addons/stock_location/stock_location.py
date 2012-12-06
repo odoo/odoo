@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields,osv
+from openerp.osv import fields,osv
 
 class stock_location_path(osv.osv):
     _name = "stock.location.path"

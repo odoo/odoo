@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-import tools
+from openerp.osv import fields, osv
+from openerp import tools
 import decimal_precision as dp
 
 STATE = [

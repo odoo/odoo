@@ -26,11 +26,11 @@ from operator import itemgetter
 
 from lxml import etree
 
-import netsvc
-from osv import fields, osv, orm
-from tools.translate import _
+from openerp import netsvc
+from openerp.osv import fields, osv, orm
+from openerp.tools.translate import _
 import decimal_precision as dp
-import tools
+from openerp import tools
 
 class account_move_line(osv.osv):
     _name = "account.move.line"

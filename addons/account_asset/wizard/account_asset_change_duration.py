@@ -21,7 +21,7 @@
 import time
 from lxml import etree
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 
 class asset_modify(osv.osv_memory):
     _name = 'asset.modify'

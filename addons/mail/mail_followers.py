@@ -20,9 +20,9 @@
 ##############################################################################
 
 from openerp import SUPERUSER_ID
-from osv import osv
-from osv import fields
-import tools
+from openerp.osv import osv
+from openerp.osv import fields
+from openerp import tools
 
 
 class mail_followers(osv.Model):

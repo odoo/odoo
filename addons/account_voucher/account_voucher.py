@@ -22,10 +22,10 @@
 import time
 from lxml import etree
 
-import netsvc
-from osv import osv, fields
+from openerp import netsvc
+from openerp.osv import fields, osv
 import decimal_precision as dp
-from tools.translate import _
+from openerp.tools.translate import _
 
 class res_company(osv.osv):
     _inherit = "res.company"

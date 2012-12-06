@@ -29,7 +29,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 
 class ResCompany(osv.osv):
     """Override company to add Header object link a company can have many header and logos"""

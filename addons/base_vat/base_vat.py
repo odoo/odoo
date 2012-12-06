@@ -32,9 +32,9 @@ except ImportError:
                                           "Install it to support more countries, for example with `easy_install vatnumber`.")
     vatnumber = None
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 from tools.misc import ustr
-from tools.translate import _
+from openerp.tools.translate import _
 
 _ref_vat = {
     'at': 'ATU12345675',

@@ -18,8 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import tools
-from osv import fields,osv
+from openerp import tools
+from openerp.osv import fields,osv
 from .. import hr_recruitment
 from decimal_precision import decimal_precision as dp
 

@@ -22,8 +22,8 @@
 #
 ##############################################################################
 
-from report import report_sxw
-from tools import amount_to_text_en
+from openerp.report import report_sxw
+from openerp.tools import amount_to_text_en
 
 class payslip_details_report(report_sxw.rml_parse):
 

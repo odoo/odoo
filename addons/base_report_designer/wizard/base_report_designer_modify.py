@@ -20,14 +20,14 @@
 #
 ##############################################################################
 import time
-import wizard
+from openerp import wizard
 import osv
-import pooler
+from openerp import pooler
 import urllib
 import base64
-import tools
-from tools.translate import _
-from osv import osv, fields
+from openerp import tools
+from openerp.tools.translate import _
+from openerp.osv import fields, osv
 
 class base_report_sxw(osv.osv_memory):
     """Base Report sxw """

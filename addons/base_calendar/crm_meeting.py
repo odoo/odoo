@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-from osv import osv, fields
-import tools
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp import tools
+from openerp.tools.translate import _
 
 import base_calendar
 from base_status.base_state import base_state

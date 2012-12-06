@@ -29,8 +29,8 @@
 #
 ##############################################################################
 
-from osv import osv, fields
-import netsvc
+from openerp.osv import fields, osv
+from openerp import netsvc
 from webkit_report import WebKitParser
 from report.report_sxw import rml_parse
 

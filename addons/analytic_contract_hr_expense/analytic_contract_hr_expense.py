@@ -19,10 +19,10 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 from osv.orm import intersect, except_orm
 import tools.sql
-from tools.translate import _
+from openerp.tools.translate import _
 from decimal_precision import decimal_precision as dp
 
 

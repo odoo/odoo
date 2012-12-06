@@ -19,12 +19,12 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 from osv.osv import object_proxy
-from tools.translate import _
-import pooler
+from openerp.tools.translate import _
+from openerp import pooler
 import time
-import tools
+from openerp import tools
 from openerp import SUPERUSER_ID
 
 class audittrail_rule(osv.osv):

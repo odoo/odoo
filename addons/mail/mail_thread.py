@@ -25,14 +25,14 @@ import email
 import logging
 import pytz
 import time
-import tools
+from openerp import tools
 import xmlrpclib
 
 from email.message import Message
 from mail_message import decode
 from openerp import SUPERUSER_ID
-from osv import osv, fields
-from tools.safe_eval import safe_eval as eval
+from openerp.osv import fields, osv
+from openerp.tools.safe_eval import safe_eval as eval
 
 _logger = logging.getLogger(__name__)
 

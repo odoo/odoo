@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 import decimal_precision as dp
 
 class membership_invoice(osv.osv_memory):

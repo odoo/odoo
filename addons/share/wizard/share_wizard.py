@@ -27,11 +27,11 @@ from openerp import SUPERUSER_ID
 
 import simplejson
 
-import tools
-from osv import osv, fields
-from osv import expression
-from tools.translate import _
-from tools.safe_eval import safe_eval
+from openerp import tools
+from openerp.osv import fields, osv
+from openerp.osv import expression
+from openerp.tools.translate import _
+from openerp.tools.safe_eval import safe_eval
 import openerp
 _logger = logging.getLogger(__name__)
 

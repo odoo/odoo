@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 from tools.sql import drop_view_if_exists
 from decimal_precision import decimal_precision as dp
 

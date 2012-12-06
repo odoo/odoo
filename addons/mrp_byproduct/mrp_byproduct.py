@@ -19,10 +19,10 @@
 #
 ##############################################################################
 
-from osv import fields
-from osv import osv
+from openerp.osv import fields
+from openerp.osv import osv
 import decimal_precision as dp
-from tools.translate import _
+from openerp.tools.translate import _
 
 class mrp_subproduct(osv.osv):
     _name = 'mrp.subproduct'

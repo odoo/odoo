@@ -23,13 +23,13 @@ from datetime import datetime, timedelta, date
 from dateutil import parser
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
-from osv import fields, osv
-from service import web_services
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp.service import web_services
+from openerp.tools.translate import _
 import pytz
 import re
 import time
-import tools
+from openerp import tools
 
 months = {
     1: "January", 2: "February", 3: "March", 4: "April", \

@@ -19,10 +19,10 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 import decimal_precision as dp
-from tools.translate import _
-import tools
+from openerp.tools.translate import _
+from openerp import tools
 
 class stock_change_product_qty(osv.osv_memory):
     _name = "stock.change.product.qty"

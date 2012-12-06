@@ -19,11 +19,11 @@
 #
 ##############################################################################
 
-from osv import fields,osv
-import netsvc
+from openerp.osv import fields,osv
+from openerp import netsvc
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from tools.translate import _
+from openerp.tools.translate import _
 import decimal_precision as dp
 
 class mrp_repair(osv.osv):

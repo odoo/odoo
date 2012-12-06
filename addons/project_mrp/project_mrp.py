@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-import netsvc
+from openerp.osv import fields, osv
+from openerp import netsvc
 
 class project_task(osv.osv):
     _name = "project.task"

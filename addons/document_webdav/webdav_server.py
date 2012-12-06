@@ -35,7 +35,7 @@
 
 
 import logging
-import netsvc
+from openerp import netsvc
 from dav_fs import openerp_dav_handler
 from tools.config import config
 from DAV.WebDAVServer import DAVRequestHandler
@@ -47,7 +47,7 @@ import urllib
 import re
 import time
 from string import atoi
-import addons
+from openerp import addons
 from DAV.utils import IfParser, TagList
 from DAV.errors import DAV_Error, DAV_Forbidden, DAV_NotFound
 from DAV.propfind import PROPFIND

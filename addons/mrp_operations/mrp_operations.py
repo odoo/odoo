@@ -19,12 +19,12 @@
 #
 ##############################################################################
 
-from osv import fields
-from osv import osv
-import netsvc
+from openerp.osv import fields
+from openerp.osv import osv
+from openerp import netsvc
 import time
 from datetime import datetime
-from tools.translate import _
+from openerp.tools.translate import _
 
 #----------------------------------------------------------
 # Work Centers

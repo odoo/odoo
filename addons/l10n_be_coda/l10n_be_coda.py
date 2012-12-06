@@ -20,9 +20,9 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 import decimal_precision as dp
-from tools.translate import _
+from openerp.tools.translate import _
 
 class coda_bank_account(osv.osv):
     _name= 'coda.bank.account'

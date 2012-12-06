@@ -20,13 +20,13 @@
 ##############################################################################
 
 from datetime import datetime
-from osv import osv, fields
+from openerp.osv import fields, osv
 import decimal_precision as dp
-from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
-from tools.translate import _
-import netsvc
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
+from openerp.tools.translate import _
+from openerp import netsvc
 import time
-import tools
+from openerp import tools
 
 
 #----------------------------------------------------------

@@ -20,7 +20,7 @@
 ##############################################################################
 
 from openerp.osv import osv
-from edi import EDIMixin
+from openerp.addons.edi import EDIMixin
 
 INVOICE_LINE_EDI_STRUCT = {
     'name': True,

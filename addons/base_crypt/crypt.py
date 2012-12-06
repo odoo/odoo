@@ -38,9 +38,9 @@
 
 from random import seed, sample
 from string import ascii_letters, digits
-from osv import fields,osv
-import pooler
-from tools.translate import _
+from openerp.osv import fields,osv
+from openerp import pooler
+from openerp.tools.translate import _
 from service import security
 import logging
 

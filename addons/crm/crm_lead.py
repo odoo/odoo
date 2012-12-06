@@ -22,11 +22,11 @@
 from base_status.base_stage import base_stage
 import crm
 from datetime import datetime
-from osv import fields, osv
+from openerp.osv import fields, osv
 import time
-import tools
-from tools.translate import _
-from tools import html2plaintext
+from openerp import tools
+from openerp.tools.translate import _
+from openerp.tools import html2plaintext
 
 from base.res.res_partner import format_address
 

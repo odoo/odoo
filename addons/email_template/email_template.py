@@ -23,11 +23,11 @@
 import base64
 import logging
 
-import netsvc
-from osv import osv
-from osv import fields
-import tools
-from tools.translate import _
+from openerp import netsvc
+from openerp.osv import osv
+from openerp.osv import fields
+from openerp import tools
+from openerp.tools.translate import _
 from urllib import quote as quote
 _logger = logging.getLogger(__name__)
 

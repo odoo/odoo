@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 from tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 import time
 

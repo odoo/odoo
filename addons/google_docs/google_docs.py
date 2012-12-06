@@ -18,9 +18,9 @@
 #
 ##############################################################################
 from datetime import datetime
-from tools import DEFAULT_SERVER_DATETIME_FORMAT
-from osv import osv, fields
-from tools.translate import _
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 try:
     import gdata.docs.data
     import gdata.docs.client

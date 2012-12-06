@@ -26,8 +26,8 @@ from xml.dom.minicompat import StringTypes
 
 import urlparse
 import urllib
-from osv import osv
-from tools.translate import _
+from openerp.osv import osv
+from openerp.tools.translate import _
 
 try:
     from DAV import utils
@@ -36,7 +36,7 @@ try:
 except ImportError:
     raise osv.except_osv(_('PyWebDAV Import Error!'), _('Please install PyWebDAV from http://code.google.com/p/pywebdav/downloads/detail?name=PyWebDAV-0.9.4.tar.gz&can=2&q=/'))
 
-import tools
+from openerp import tools
 
 class Text2(xml.dom.minidom.Text):
     def writexml(self, writer, indent="", addindent="", newl=""):

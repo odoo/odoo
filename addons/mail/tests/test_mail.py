@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-import tools
+from openerp import tools
 
 from openerp.addons.mail.tests import test_mail_mockup
 from openerp.tools.mail import html_sanitize

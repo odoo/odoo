@@ -29,20 +29,20 @@ from mako.lookup import TemplateLookup
 from mako import exceptions
 
 
-from report import report_sxw
+from openerp.report import report_sxw
 from report_webkit import webkit_report
 from report_webkit import report_helper
 
-from osv import osv
+from openerp.osv import osv
 from osv.osv import except_osv
 
-from tools import mod10r
-from tools.translate import _
+from openerp.tools import mod10r
+from openerp.tools.translate import _
 from tools.config import config
 
-import wizard
-import addons
-import pooler
+from openerp import wizard
+from openerp import addons
+from openerp import pooler
 
 
 

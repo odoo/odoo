@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-from osv import osv, fields
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class crm_phonecall2opportunity(osv.osv_memory):
     """ Converts Phonecall to Opportunity"""

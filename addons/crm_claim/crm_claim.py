@@ -22,11 +22,11 @@
 from base_status.base_stage import base_stage
 import binascii
 from crm import crm
-from osv import fields, osv
+from openerp.osv import fields, osv
 import time
-import tools
-from tools.translate import _
-from tools import html2plaintext
+from openerp import tools
+from openerp.tools.translate import _
+from openerp.tools import html2plaintext
 
 CRM_CLAIM_PENDING_STATES = (
     crm.AVAILABLE_STATES[2][0], # Cancelled

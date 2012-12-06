@@ -21,12 +21,12 @@
 
 import base64
 import re
-import tools
+from openerp import tools
 
-from osv import osv
-from osv import fields
-from tools.safe_eval import safe_eval as eval
-from tools.translate import _
+from openerp.osv import osv
+from openerp.osv import fields
+from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools.translate import _
 
 # main mako-like expression pattern
 EXPRESSION_PATTERN = re.compile('(\$\{.+?\})')

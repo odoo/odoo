@@ -18,9 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import tools
-from osv import  osv
-import addons
+from openerp import tools
+from openerp.osv import osv
+from openerp import addons
 import os
 
 class WizardMultiChartsAccounts(osv.osv_memory):

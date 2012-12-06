@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-from osv import osv,fields
-from tools.translate import _
+from openerp.osv import osv,fields
+from openerp.tools.translate import _
 from tools.amount_to_text_en import amount_to_text
 from lxml import etree
 

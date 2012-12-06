@@ -23,7 +23,7 @@ import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 import decimal_precision as dp
 
 class account_asset_category(osv.osv):

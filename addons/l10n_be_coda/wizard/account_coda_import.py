@@ -22,8 +22,8 @@
 
 import time
 import base64
-from osv import fields,osv
-from tools.translate import _
+from openerp.osv import fields,osv
+from openerp.tools.translate import _
 import logging
 import re
 from traceback import format_exception

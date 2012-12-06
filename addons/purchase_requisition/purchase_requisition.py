@@ -22,10 +22,10 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import time
-import netsvc
+from openerp import netsvc
 
-from osv import fields,osv
-from tools.translate import _
+from openerp.osv import fields,osv
+from openerp.tools.translate import _
 import decimal_precision as dp
 
 class purchase_requisition(osv.osv):

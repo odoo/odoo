@@ -20,7 +20,7 @@
 ##############################################################################
 
 import logging
-import tools
+from openerp import tools
 
 from email.header import decode_header
 from openerp import SUPERUSER_ID

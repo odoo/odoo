@@ -19,16 +19,17 @@
 #
 ##############################################################################
 
-import time
-from lxml import etree
 from datetime import datetime, date
+from lxml import etree
+import time
 
-import tools
-from base_status.base_stage import base_stage
-from osv import fields, osv
-from openerp.addons.resource.faces import task as Task
-from tools.translate import _
 from openerp import SUPERUSER_ID
+from openep import tools
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+
+from openerp.addons.base_status.base_stage import base_stage
+from openerp.addons.resource.faces import task as Task
 
 _TASK_STATE = [('draft', 'New'),('open', 'In Progress'),('pending', 'Pending'), ('done', 'Done'), ('cancelled', 'Cancelled')]
 

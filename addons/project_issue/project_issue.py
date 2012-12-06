@@ -22,12 +22,12 @@
 from base_status.base_stage import base_stage
 from crm import crm
 from datetime import datetime
-from osv import fields,osv
-from tools.translate import _
+from openerp.osv import fields,osv
+from openerp.tools.translate import _
 import binascii
 import time
-import tools
-from tools import html2plaintext
+from openerp import tools
+from openerp.tools import html2plaintext
 
 class project_issue_version(osv.osv):
     _name = "project.issue.version"

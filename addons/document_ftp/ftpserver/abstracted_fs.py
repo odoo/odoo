@@ -9,12 +9,12 @@ import errno
 import glob
 import fnmatch
 
-import pooler
-import netsvc
+from openerp import pooler
+from openerp import netsvc
 import sql_db
 
 from service import security
-from osv import osv
+from openerp.osv import osv
 from document.nodes import get_node_context
 
 def _get_month_name(month):

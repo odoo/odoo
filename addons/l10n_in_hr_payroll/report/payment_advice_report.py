@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-import tools
-from osv import fields, osv
+from openerp import tools
+from openerp.osv import fields, osv
 
 class payment_advice_report(osv.osv):
     _name = "payment.advice.report"

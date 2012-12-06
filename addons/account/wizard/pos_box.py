@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-from osv import osv, fields
+from openerp.osv import fields, osv
 import decimal_precision as dp
-from tools.translate import _
+from openerp.tools.translate import _
 
 class CashBox(osv.osv_memory):
     _register = False
