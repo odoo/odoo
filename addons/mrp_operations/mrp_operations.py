@@ -26,7 +26,6 @@ import time
 from datetime import datetime
 from tools.translate import _
 from datetime import timedelta
-from dateutil.relativedelta import relativedelta
 
 #----------------------------------------------------------
 # Work Centers
@@ -72,14 +71,13 @@ class mrp_production_workcenter_line(osv.osv):
                     res[op.id] = op.date_planned
         return res
     
- #   def onchange_get_date_end(self, cr, uid, ids, workcenter_id, date_planned, cycle, hour, context=None):
-    def onchange_get_date_end(self, cr, uid, ids, workcenter_id, date_planned, cycle, hour, context=None):
+    def onchange_get_date_end(self, cr, uid, ids, date_planned, cycle, hour):
         res = {'value':{}}
-        yo = cycle * hour
-        if date_planned and isinstance(date_planned, str):
+        cycle_per_hour = timedelta(hours=(cycle * hour))
+        if date_planned :
             date_planned = datetime.strptime(date_planned, "%Y-%m-%d %H:%M:%S")
-        date_planned_end = date_planned + timedelta(hours=yo)
-        res['value'] = {'date_planned_end': date_planned_end.strftime("%Y-%m-%d %H:%M:%S")}
+            date_planned_end = date_planned + cycle_per_hour
+            res['value'] = {'date_planned_end': date_planned_end.strftime("%Y-%m-%d %H:%M:%S")}
         return res
 
 #    def onchange_get_date_end(self, cr, uid, ids, date_planned, cycle, hour, context=None):
