@@ -25,6 +25,8 @@ import netsvc
 import time
 from datetime import datetime
 from tools.translate import _
+from datetime import timedelta
+from dateutil.relativedelta import relativedelta
 
 #----------------------------------------------------------
 # Work Centers
@@ -70,20 +72,37 @@ class mrp_production_workcenter_line(osv.osv):
                     res[op.id] = op.date_planned
         return res
     
+ #   def onchange_get_date_end(self, cr, uid, ids, workcenter_id, date_planned, cycle, hour, context=None):
     def onchange_get_date_end(self, cr, uid, ids, workcenter_id, date_planned, cycle, hour, context=None):
-        work_ids = self.search(cr,uid,[('workcenter_id','=',workcenter_id)],context=context)
-        ops = self.browse(cr, uid, work_ids, context=context)
-        date_and_hours_by_cal = [(op.date_planned, op.hour, op.workcenter_id.calendar_id.id) for op in ops if op.date_planned]
-        intervals = self.pool.get('resource.calendar').interval_get_multi(cr, uid, date_and_hours_by_cal)
-        res = False
-        for op in ops:
-            if date_planned:
-                i = intervals.get((op.date_planned,op.hour, op.workcenter_id.calendar_id.id))
-                if i:
-                    res= i[-1][1].strftime('%Y-%m-%d %H:%M:%S')
-                else:
-                    res = op.date_planned
-        return {'value':{'date_planned_end': res}}
+        res = {'value':{}}
+        yo = cycle * hour
+        if date_planned and isinstance(date_planned, str):
+            date_planned = datetime.strptime(date_planned, "%Y-%m-%d %H:%M:%S")
+        date_planned_end = date_planned + timedelta(hours=yo)
+        res['value'] = {'date_planned_end': date_planned_end.strftime("%Y-%m-%d %H:%M:%S")}
+        return res
+
+#    def onchange_get_date_end(self, cr, uid, ids, date_planned, cycle, hour, context=None):
+#        #work_ids = self.search(cr,uid,[('workcenter_id','=',workcenter_id)],context=context)
+# #       ops = self.browse(cr, uid, work_ids, context=context)
+# #       date_and_hours_by_cal = [(op.date_planned, op.hour, op.workcenter_id.calendar_id.id) for op in ops if op.date_planned]
+#   #     intervals = self.pool.get('resource.calendar').interval_get_multi(cr, uid, date_and_hours_by_cal)
+#        print ">>>>>>>>>>>>>>>>", type(cycle * hour), (cycle * hour) 
+#        a = (cycle*hour)
+#        (datetime.now() + relativedelta(months=+1)).strftime("%Y-%m-%d %H:%M:%S")
+#        print ">>>>>>>>>date planed>>>>", type(date_planned), date_planned 
+#        date_planned_end = datetime(date_planned) + relativedelta(hours=a)
+#        print "date_planned>>end>>>>.", date_planned_end
+#        res = False
+#  #      for op in ops:
+#    #        if date_planned:
+#      #          i = intervals.get((op.date_planned,op.hour, op.workcenter_id.calendar_id.id))
+#        #        if i:
+#          #          res= i[-1][1].strftime('%Y-%m-%d %H:%M:%S')
+#        #        else:
+#          #          res = op.date_planned
+#        print "ressssssss", res
+#        return {'value':{'date_planned_end': res}}
 
     def onchange_production_id(self, cr, uid, ids, production_id, context=None):
         products = self.pool.get('mrp.production').browse(cr, uid, production_id, context=None)
