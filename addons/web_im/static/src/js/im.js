@@ -81,7 +81,7 @@ openerp.web_im = function(instance) {
             });
         },
         unload: function() {
-            return new instance.web.Model("res.users").call("im_disconnect", [], {context: new instance.web.CompoundContext()});
+            return new instance.web.Model("im.user").call("im_disconnect", [], {context: new instance.web.CompoundContext()});
         },
         destroy: function() {
             $(window).off("unload", this.unload_event_handler);
@@ -98,12 +98,11 @@ openerp.web_im = function(instance) {
             this.set("current_search", this.$(".oe_im_searchbox").val());
         },
         search_changed: function(e) {
-            var users = new instance.web.Model("res.users");
+            var users = new instance.web.Model("im.user");
             var self = this;
-            return this.user_search_dm.add(users.query(["name", "im_status"])
-                    .filter([["name", "ilike", this.get("current_search")]])
-                    .filter([["id", "<>", instance.session.uid]])
-                    .limit(USERS_LIMIT).all()).then(function(result) {
+            return this.user_search_dm.add(users.call("search_users", 
+                        [[["name", "ilike", this.get("current_search")], ["id", "<>", instance.session.uid]],
+                        ["name"], USERS_LIMIT], {context:new instance.web.CompoundContext()})).then(function(result) {
                 self.add_to_user_cache(result);
                 self.$(".oe_im_input").val("");
                 var old_users = self.users;
@@ -129,7 +128,7 @@ openerp.web_im = function(instance) {
             if (_.size(no_cache) === 0)
                 return $.when();
             else
-                return new instance.web.Model("res.users").call("read", [_.values(no_cache), ["name", "im_status"]],
+                return new instance.web.Model("im.user").call("read_users", [_.values(no_cache), ["name"]],
                         {context: new instance.web.CompoundContext()}).then(function(users) {
                     self.add_to_user_cache(users);
                 });

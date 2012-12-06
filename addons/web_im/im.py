@@ -128,7 +128,7 @@ class ImportController(openerp.addons.web.http.Controller):
     def poll(self, req, last=None, users_watch=None):
         if not openerp.tools.config.options["gevent"]:
             raise Exception("Not usable in a server not running gevent")
-        req.session.model('res.users').im_connect(context=req.context)
+        req.session.model('im.user').im_connect(context=req.context)
         num = 0
         while True:
             res = req.session.model('im.message').get_messages(last, users_watch, req.context)
@@ -156,11 +156,12 @@ class im_message(osv.osv):
         users_watch = users_watch or []
 
         # complex stuff to determine the last message to show
-        users = self.pool.get("res.users")
-        c_user = users.browse(cr, uid, uid, context=context)
+        users = self.pool.get("im.user")
+        my_id = users.get_by_user_ids(cr, uid, [uid], context=context)[0]["id"]
+        c_user = users.browse(cr, uid, my_id, context=context)
         if last:
             if c_user.im_last_received < last:
-                users.write(cr, openerp.SUPERUSER_ID, uid, {'im_last_received': last}, context=context)
+                users.write(cr, openerp.SUPERUSER_ID, my_id, {'im_last_received': last}, context=context)
         else:
             last = c_user.im_last_received or -1
 
@@ -168,7 +169,11 @@ class im_message(osv.osv):
         res = self.read(cr, uid, res, ["id", "message", "from", "date"], context=context)
         if len(res) > 0:
             last = res[-1]["id"]
-        users_status = users.read(cr, uid, users_watch, ["im_status"], context=context)
+        users_watch = users.get_by_user_ids(cr, uid, users_watch, context=context)
+        users_status = users.read(cr, uid, [x["id"] for x in users_watch], ["im_status", "user"], context=context)
+        for x in users_status:
+            x["id"] = x["user"][0]
+            del x["user"]
         return {"res": res, "last": last, "dbname": cr.dbname, "users_status": users_status}
 
     def post(self, cr, uid, message, to_user_id, context=None):
@@ -181,8 +186,8 @@ class im_message(osv.osv):
     def activated(self, cr, uid, context=None):
         return not not openerp.tools.config.options["gevent"]
 
-class res_user(osv.osv):
-    _inherit = "res.users"
+class im_user(osv.osv):
+    _name = "im.user"
 
     def _im_status(self, cr, uid, ids, something, something_else, context=None):
         res = {}
@@ -194,6 +199,24 @@ class res_user(osv.osv):
             res[obj["id"]] = obj["im_last_status"] and (last_update + delta) > current
         return res
 
+    def search_users(self, cr, uid, domain, fields, limit, context=None):
+        found = self.pool.get('res.users').search(cr, uid, domain, limit=limit, context=context)
+        return self.read_users(cr, uid, found, fields, context)
+
+    def read_users(self, cr, uid, ids, fields, context=None):
+        users = self.pool.get('res.users').read(cr, uid, ids, fields, context=context)
+        statuses = self.get_by_user_ids(cr, uid, ids, context=context)
+        statuses = self.read(cr, uid, [x["id"] for x in statuses], context = context)
+        by_id = {}
+        for x in statuses:
+            by_id[x["user"][0]] = x
+        res = []
+        for x in users:
+            d = by_id[x["id"]]
+            d.update(x)
+            res.append(d)
+        return res
+
     def im_connect(self, cr, uid, context=None):
         return self._im_change_status(cr, uid, True, context)
 
@@ -201,8 +224,10 @@ class res_user(osv.osv):
         return self._im_change_status(cr, uid, False, context)
 
     def _im_change_status(self, cr, uid, new_one, context=None):
-        current_status = self.read(cr, openerp.SUPERUSER_ID, uid, ["im_status"], context=None)["im_status"]
-        self.write(cr, openerp.SUPERUSER_ID, uid, {"im_last_status": new_one, 
+        ids = self.get_by_user_ids(cr, uid, [uid], context=context)
+        id = ids[0]["id"]
+        current_status = self.read(cr, openerp.SUPERUSER_ID, id, ["im_status"], context=None)["im_status"]
+        self.write(cr, openerp.SUPERUSER_ID, id, {"im_last_status": new_one, 
             "im_last_status_update": datetime.datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
         cr.commit()
         if current_status != new_one:
@@ -210,7 +235,24 @@ class res_user(osv.osv):
             cr.commit()
         return True
 
+    def get_by_user_ids(self, cr, uid, ids, context=None):
+        users = self.search(cr, uid, [["user", "in", ids]], context=None)
+        records = self.read(cr, openerp.SUPERUSER_ID, users, ["user"], context=None)
+        inside = {}
+        for i in records:
+            inside[i["user"][0]] = True
+        not_inside = {}
+        for i in ids:
+            if not (i in inside):
+                not_inside[i] = True
+        for to_create in not_inside.keys():
+            created = self.create(cr, openerp.SUPERUSER_ID, {"user": to_create}, context=context)
+            records.append({"id": created, "user": [to_create, ""]})
+        return records
+
+
     _columns = {
+        'user': fields.many2one("res.users", string="User", select=True),
         'im_last_received': fields.integer(string="Instant Messaging Last Received Message"),
         'im_last_status': fields.boolean(strint="Instant Messaging Last Status"),
         'im_last_status_update': fields.datetime(string="Instant Messaging Last Status Update"),
