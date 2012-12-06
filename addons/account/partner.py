@@ -220,9 +220,16 @@ class res_partner(osv.osv):
             'account.payment.term',
             type='many2one',
             relation='account.payment.term',
-            string ='Payment Term',
+            string ='Customer Payment Term',
             view_load=True,
-            help="This payment term will be used instead of the default one for the current partner"),
+            help="This payment term will be used instead of the default one for sale orders and customer invoices"),
+        'property_supplier_payment_term': fields.property(
+            'account.payment.term',
+             type='many2one',
+             relation='account.payment.term',
+             string ='Supplier Payment Term',
+             view_load=True,
+             help="This payment term will be used instead of the default one for purchase orders and supplier invoices"),
         'ref_companies': fields.one2many('res.company', 'partner_id',
             'Companies that refers to partner'),
         'last_reconciliation_date': fields.datetime('Latest Reconciliation Date', help='Date on which the partner accounting entries were fully reconciled last time. It differs from the date of the last reconciliation made for this partner, as here we depict the fact that nothing more was to be reconciled at this date. This can be achieved in 2 ways: either the last debit/credit entry was reconciled, either the user pressed the button "Fully Reconciled" in the manual reconciliation process')

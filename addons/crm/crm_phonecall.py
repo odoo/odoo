@@ -157,6 +157,18 @@ class crm_phonecall(base_state, osv.osv):
         })
         return partner_id
 
+    def on_change_opportunity(self, cr, uid, ids, opportunity_id, context=None):
+        values = {}
+        if opportunity_id:
+            opportunity = self.pool.get('crm.lead').browse(cr, uid, opportunity_id, context=context)
+            values = {
+                'section_id' : opportunity.section_id and opportunity.section_id.id or False,
+                'partner_phone' : opportunity.phone,
+                'partner_mobile' : opportunity.mobile,
+                'partner_id' : opportunity.partner_id and opportunity.partner_id.id or False,
+            }
+        return {'value' : values}
+
     def _call_set_partner(self, cr, uid, ids, partner_id, context=None):
         write_res = self.write(cr, uid, ids, {'partner_id' : partner_id}, context=context)
         self._call_set_partner_send_note(cr, uid, ids, context)
