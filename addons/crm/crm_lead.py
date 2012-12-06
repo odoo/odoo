@@ -767,10 +767,12 @@ class crm_lead(base_stage, format_address, osv.osv):
         """
         #TODO this is a duplication of the handle_partner_assignation method of crm_phonecall
         partner_ids = {}
+        # If a partner_id is given, force this partner for all elements
+        force_partner_id = partner_id
         for lead in self.browse(cr, uid, ids, context=context):
             # If the action is set to 'create' and no partner_id is set, create a new one
-            if action == 'create' and not partner_id:
-                partner_id = self._create_lead_partner(cr, uid, lead, context)
+            if action == 'create':
+                partner_id = force_partner_id or self._create_lead_partner(cr, uid, lead, context)
             self._lead_set_partner(cr, uid, lead, partner_id, context=context)
             partner_ids[lead.id] = partner_id
         return partner_ids
