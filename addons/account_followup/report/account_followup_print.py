@@ -81,42 +81,6 @@ class report_rappel(report_sxw.rml_parse):
                 final_res.append({'line': line_cur[cur]['line']})
         return final_res
 
-    def get_unreconciled_table(self, partner, company, context = None):
-        final_res = self._lines_get_with_partner(partner, company.id)
-        followup_table = ''
-        for currency_dict in final_res:
-            currency = currency_dict.get('line', [{'currency_id': company.currency_id}])[0]['currency_id']
-            followup_table += '''
-            <table border="2" width=100%%>
-            <tr>
-                <td>Invoice date</td>
-                <td>Reference</td>
-                <td>Due date</td>
-                <td>Amount (%s)</td>
-                <td>Lit.</td>
-            </tr>
-            ''' % (currency.symbol)
-            total = 0
-            ctx = context
-            for aml in currency_dict['line']:
-                block = aml['blocked'] and 'X' or ' '
-                total += aml['balance']
-                strbegin = "<TD>"
-                strend = "</TD>"
-                date = aml['date_maturity'] or aml['date']
-                if date <= ctx['current_date'] and aml['balance'] > 0:
-                    strbegin = "<TD><B>"
-                    strend = "</B></TD>"
-                followup_table +="<TR>" + strbegin + str(aml['date']) + strend + strbegin + \
-                                aml['ref'] + strend + strbegin + str(date) + strend + strbegin + \
-                                str(aml['balance']) + strend + strbegin + block + strend + "</TR>"
-            total = self.formatLang(total, dp='Account', currency_obj=currency)
-            followup_table += '''<tr> </tr>
-                            </table>
-                            <center>Amount due: %s </center>''' % (total)
-        return followup_table
-    
-    
     def _get_text(self, stat_line, followup_id, context=None):
         if context is None:
             context = {}

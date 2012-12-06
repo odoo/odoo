@@ -131,7 +131,7 @@ class email_template(osv.osv):
             final_res = rml_parse._lines_get_with_partner(partner, company.id)
             
             for currency_dict in final_res:
-                currency_symbol = currency_dict.get('line', [{'currency_id': company.currency_id}])[0]['currency_id'].symbol
+                currency = currency_dict.get('line', [{'currency_id': company.currency_id}])[0]['currency_id']
                 followup_table += '''
                 <table border="2" width=100%%>
                 <tr>
@@ -141,7 +141,7 @@ class email_template(osv.osv):
                     <td>Amount (%s)</td>
                     <td>Lit.</td>
                 </tr>
-                ''' % (currency_symbol)
+                ''' % (currency.symbol)
                 total = 0
                 for aml in currency_dict['line']:
                     block = aml['blocked'] and 'X' or ' '
@@ -153,7 +153,7 @@ class email_template(osv.osv):
                         strbegin = "<TD><B>"
                         strend = "</B></TD>"
                     followup_table +="<TR>" + strbegin + str(aml['date']) + strend + strbegin + aml['ref'] + strend + strbegin + str(date) + strend + strbegin + str(aml['balance']) + strend + strbegin + block + strend + "</TR>"
-                total = rml_parse.formatLang(total, dp='Account', currency_obj=partner.company_id.currency_id)
+                total = rml_parse.formatLang(total, dp='Account', currency_obj=currency)
                 followup_table += '''<tr> </tr>
                                 </table>
                                 <center>Amount due: %s </center>''' % (total)
