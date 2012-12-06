@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:51+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2010-08-02 15:06+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Albanian <sq@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 05:34+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:04+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: project
 #: view:project.project:0
@@ -83,7 +83,7 @@ msgid "Start Task"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:962
+#: code:addons/project/project.py:960
 #, python-format
 msgid "Warning !"
 msgstr ""
@@ -133,8 +133,8 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:434
-#: code:addons/project/project.py:1416
+#: code:addons/project/project.py:440
+#: code:addons/project/project.py:1414
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -192,11 +192,6 @@ msgstr ""
 #. module: project
 #: model:res.groups,name:project.group_delegate_task
 msgid "Task Delegation"
-msgstr ""
-
-#. module: project
-#: constraint:account.analytic.account:0
-msgid "Error! You cannot create recursive analytic accounts."
 msgstr ""
 
 #. module: project
@@ -267,7 +262,7 @@ msgid "Project Task Delegate"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:551
+#: code:addons/project/project.py:557
 #, python-format
 msgid "Project has been <b>created</b>."
 msgstr ""
@@ -315,7 +310,7 @@ msgid "August"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:1305
+#: code:addons/project/project.py:1303
 #, python-format
 msgid "Task has been <b>delegated</b> to <em>%s</em>."
 msgstr ""
@@ -387,7 +382,7 @@ msgid "Assigned to"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:1059
+#: code:addons/project/project.py:1057
 #, python-format
 msgid "Delegated User should be specified"
 msgstr ""
@@ -424,7 +419,7 @@ msgid "Re-evaluate Task"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:1294
+#: code:addons/project/project.py:1292
 #, python-format
 msgid "Stage changed to <b>%s</b>."
 msgstr ""
@@ -437,11 +432,6 @@ msgstr ""
 #. module: project
 #: field:project.config.settings,module_pad:0
 msgid "Use integrated collaborative note pads on task"
-msgstr ""
-
-#. module: project
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
 msgstr ""
 
 #. module: project
@@ -465,8 +455,8 @@ msgid "Delegation"
 msgstr ""
 
 #. module: project
-#: constraint:res.partner:0
-msgid "Error: Invalid ean code"
+#: field:project.task,create_date:0
+msgid "Create Date"
 msgstr ""
 
 #. module: project
@@ -835,10 +825,8 @@ msgid "Is a Follower"
 msgstr ""
 
 #. module: project
-#: field:project.task.history,date:0
-#: field:project.task.history.cumulative,date:0
-#: field:project.task.work,date:0
-msgid "Date"
+#: field:project.task,work_ids:0
+msgid "Work done"
 msgstr ""
 
 #. module: project
@@ -867,8 +855,10 @@ msgid "Companies"
 msgstr ""
 
 #. module: project
-#: field:project.task,work_ids:0
-msgid "Work done"
+#: field:project.task.history,date:0
+#: field:project.task.history.cumulative,date:0
+#: field:project.task.work,date:0
+msgid "Date"
 msgstr ""
 
 #. module: project
@@ -894,7 +884,7 @@ msgid "10"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:560
+#: code:addons/project/project.py:566
 #, python-format
 msgid "Project has been <b>canceled</b>."
 msgstr ""
@@ -918,9 +908,14 @@ msgid "Cancel"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:563
+#: code:addons/project/project.py:569
 #, python-format
 msgid "Project has been <b>closed</b>."
+msgstr ""
+
+#. module: project
+#: model:ir.actions.server,name:project.actions_server_project_task_read
+msgid "Task: Mark read"
 msgstr ""
 
 #. module: project
@@ -1028,13 +1023,13 @@ msgid "Work summary"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:557
+#: code:addons/project/project.py:563
 #, python-format
 msgid "Project is now <b>pending</b>."
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:554
+#: code:addons/project/project.py:560
 #, python-format
 msgid "Project has been <b>opened</b>."
 msgstr ""
@@ -1092,6 +1087,11 @@ msgid "Parent Tasks"
 msgstr ""
 
 #. module: project
+#: model:ir.actions.server,name:project.actions_server_project_read
+msgid "Project: Mark read"
+msgstr ""
+
+#. module: project
 #: model:process.node,name:project.process_node_opentask0
 msgid "Open task"
 msgstr ""
@@ -1139,7 +1139,7 @@ msgid "Done by"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:174
+#: code:addons/project/project.py:180
 #, python-format
 msgid "Invalid Action!"
 msgstr ""
@@ -1171,6 +1171,11 @@ msgstr ""
 #. module: project
 #: field:project.project,doc_count:0
 msgid "Number of documents attached"
+msgstr ""
+
+#. module: project
+#: model:ir.actions.server,name:project.actions_server_project_task_unread
+msgid "Task: Mark unread"
 msgstr ""
 
 #. module: project
@@ -1213,9 +1218,9 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:358
-#: code:addons/project/project.py:379
-#: code:addons/project/project.py:727
+#: code:addons/project/project.py:364
+#: code:addons/project/project.py:385
+#: code:addons/project/project.py:728
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -1404,7 +1409,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:213
+#: code:addons/project/project.py:219
 #, python-format
 msgid "Attachments"
 msgstr ""
@@ -1424,7 +1429,7 @@ msgid "Done"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:175
+#: code:addons/project/project.py:181
 #, python-format
 msgid ""
 "You cannot delete a project containing tasks. You can either delete all the "
@@ -1521,12 +1526,6 @@ msgid "Hours Spent"
 msgstr ""
 
 #. module: project
-#: model:ir.actions.server,name:project.actions_server_project_task_unread
-#: model:ir.actions.server,name:project.actions_server_project_unread
-msgid "Mark unread"
-msgstr ""
-
-#. module: project
 #: help:project.config.settings,module_pad:0
 msgid ""
 "Lets the company customize which Pad installation should be used to link to "
@@ -1546,7 +1545,7 @@ msgid "Overpassed Tasks"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:962
+#: code:addons/project/project.py:960
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1591,11 +1590,6 @@ msgid "Deadlines"
 msgstr ""
 
 #. module: project
-#: field:project.task,create_date:0
-msgid "Create Date"
-msgstr ""
-
-#. module: project
 #: code:addons/project/wizard/project_task_delegate.py:69
 #: code:addons/project/wizard/project_task_delegate.py:70
 #: code:addons/project/wizard/project_task_delegate.py:77
@@ -1605,7 +1599,7 @@ msgid "CHECK: "
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:434
+#: code:addons/project/project.py:440
 #, python-format
 msgid "You must assign members on the project '%s' !"
 msgstr ""
@@ -1662,11 +1656,6 @@ msgstr ""
 #. module: project
 #: model:process.node,note:project.process_node_drafttask0
 msgid "Define the Requirements and Set Planned Hours."
-msgstr ""
-
-#. module: project
-#: constraint:project.project:0
-msgid "Error! You cannot assign escalation to the same project!"
 msgstr ""
 
 #. module: project
@@ -1739,11 +1728,6 @@ msgid "Documents"
 msgstr ""
 
 #. module: project
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr ""
-
-#. module: project
 #: view:report.project.task.user:0
 #: field:report.project.task.user,no_of_days:0
 msgid "# of Days"
@@ -1783,12 +1767,6 @@ msgstr ""
 #. module: project
 #: view:report.project.task.user:0
 msgid "OverPass delay"
-msgstr ""
-
-#. module: project
-#: model:ir.actions.server,name:project.actions_server_project_read
-#: model:ir.actions.server,name:project.actions_server_project_task_read
-msgid "Mark read"
 msgstr ""
 
 #. module: project
@@ -1843,7 +1821,7 @@ msgid "Starting Date"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:400
+#: code:addons/project/project.py:406
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_projects
 #: view:project.project:0
@@ -1877,7 +1855,7 @@ msgid "Project Tasks"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:1298
+#: code:addons/project/project.py:1296
 #, python-format
 msgid "Task has been <b>created</b>."
 msgstr ""
@@ -1949,7 +1927,7 @@ msgid "Kanban State"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:1301
+#: code:addons/project/project.py:1299
 #, python-format
 msgid "Task has been set as <b>draft</b>."
 msgstr ""
@@ -2020,6 +1998,11 @@ msgid "January"
 msgstr ""
 
 #. module: project
+#: model:ir.actions.server,name:project.actions_server_project_unread
+msgid "Project: Mark unread"
+msgstr ""
+
+#. module: project
 #: field:project.task.delegate,prefix:0
 msgid "Your Task Title"
 msgstr ""
@@ -2030,7 +2013,7 @@ msgid "Reevaluation Task"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:1416
+#: code:addons/project/project.py:1414
 #, python-format
 msgid "Please delete the project linked with this account first."
 msgstr ""
@@ -2126,11 +2109,6 @@ msgstr ""
 #: view:board.board:0
 #: field:project.project,task_count:0
 msgid "Open Tasks"
-msgstr ""
-
-#. module: project
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
 msgstr ""
 
 #. module: project

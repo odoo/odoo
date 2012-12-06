@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-04 14:41+0000\n"
 "PO-Revision-Date: 2012-12-02 20:32+0000\n"
 "Last-Translator: Kaare Pettersen <Unknown>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-03 04:36+0000\n"
-"X-Generator: Launchpad (build 16319)\n"
+"X-Launchpad-Export-Date: 2012-12-05 05:20+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_uninvited:0
@@ -24,10 +24,15 @@ msgstr "Tillate eksterne brukere å registrere seg."
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:15
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:16
 #, python-format
 msgid "Confirm Password"
 msgstr "Bekreft passord."
+
+#. module: auth_signup
+#: help:base.config.settings,auth_signup_uninvited:0
+msgid "If unchecked, only invited users may sign up."
+msgstr ""
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_base_config_settings
@@ -35,15 +40,39 @@ msgid "base.config.settings"
 msgstr "Base.Konfigurasjon.Innstillinger."
 
 #. module: auth_signup
+#: code:addons/auth_signup/res_users.py:248
+#, python-format
+msgid "Cannot send email: user has no email address."
+msgstr ""
+
+#. module: auth_signup
+#. openerp-web
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:25
+#, python-format
+msgid "Reset password"
+msgstr ""
+
+#. module: auth_signup
 #: field:base.config.settings,auth_signup_template_user_id:0
 msgid "Template user for new users created through signup"
 msgstr ""
 
 #. module: auth_signup
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
+#: model:email.template,subject:auth_signup.reset_password_email
+msgid "Password reset"
 msgstr ""
-"Det valgte firmaet er ikke i listen over tillatte firmaer for denne brukeren."
+
+#. module: auth_signup
+#. openerp-web
+#: code:addons/auth_signup/static/src/js/auth_signup.js:120
+#, python-format
+msgid "Please enter a password and confirm it."
+msgstr ""
+
+#. module: auth_signup
+#: view:res.users:0
+msgid "Send an email to the user to (re)set their password."
+msgstr ""
 
 #. module: auth_signup
 #. openerp-web
@@ -63,6 +92,26 @@ msgid "Status"
 msgstr "Status."
 
 #. module: auth_signup
+#: model:email.template,body_html:auth_signup.reset_password_email
+msgid ""
+"\n"
+"<p>A password reset was requested for the OpenERP account linked to this "
+"email.</p>\n"
+"\n"
+"<p>You may change your password by following <a "
+"href=\"${object.signup_url}\">this link</a>.</p>\n"
+"\n"
+"<p>Note: If you do not expect this, you can safely ignore this email.</p>"
+msgstr ""
+
+#. module: auth_signup
+#. openerp-web
+#: code:addons/auth_signup/static/src/js/auth_signup.js:114
+#, python-format
+msgid "Please enter a name."
+msgstr ""
+
+#. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
 msgid "Users"
 msgstr "Brukere"
@@ -74,10 +123,10 @@ msgstr "Regitrer deg URL."
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:20
+#: code:addons/auth_signup/static/src/js/auth_signup.js:117
 #, python-format
-msgid "Sign in"
-msgstr "Logg inn."
+msgid "Please enter a username."
+msgstr ""
 
 #. module: auth_signup
 #: selection:res.users,state:0
@@ -85,32 +134,34 @@ msgid "Active"
 msgstr "Aktiv."
 
 #. module: auth_signup
-#: help:base.config.settings,auth_signup_uninvited:0
-msgid "If unchecked, only invited users may sign up"
-msgstr ""
-
-#. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:11
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:12
 #, python-format
 msgid "Username"
 msgstr "Brukernavn."
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:7
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:8
 #, python-format
 msgid "Name"
 msgstr "Navn."
 
 #. module: auth_signup
-#: sql_constraint:res.users:0
-msgid "OAuth UID must be unique per provider"
+#. openerp-web
+#: code:addons/auth_signup/static/src/js/auth_signup.js:160
+#, python-format
+msgid "Please enter a username or email address."
 msgstr ""
 
 #. module: auth_signup
+#: selection:res.users,state:0
+msgid "Resetting Password"
+msgstr "Tilbakestill Passord."
+
+#. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:12
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:13
 #, python-format
 msgid "Username (Email)"
 msgstr "Brukernavn (E-post)"
@@ -121,8 +172,13 @@ msgid "Signup Expiration"
 msgstr "Registrerings utløpsdato."
 
 #. module: auth_signup
+#: help:base.config.settings,auth_signup_reset_password:0
+msgid "This allows users to trigger a password reset from the Login page."
+msgstr ""
+
+#. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:19
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:21
 #, python-format
 msgid "Log in"
 msgstr "Logg inn."
@@ -133,19 +189,49 @@ msgid "Signup Token is Valid"
 msgstr ""
 
 #. module: auth_signup
-#: selection:res.users,state:0
-msgid "Resetting Password"
-msgstr "Tilbakestill Passord."
+#. openerp-web
+#: code:addons/auth_signup/static/src/js/auth_signup.js:111
+#: code:addons/auth_signup/static/src/js/auth_signup.js:114
+#: code:addons/auth_signup/static/src/js/auth_signup.js:117
+#: code:addons/auth_signup/static/src/js/auth_signup.js:120
+#: code:addons/auth_signup/static/src/js/auth_signup.js:123
+#: code:addons/auth_signup/static/src/js/auth_signup.js:157
+#: code:addons/auth_signup/static/src/js/auth_signup.js:160
+#, python-format
+msgid "Login"
+msgstr ""
 
 #. module: auth_signup
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr "Feil! Du kan ikke opprette rekursive tilknyttede medlemmer."
+#. openerp-web
+#: code:addons/auth_signup/static/src/js/auth_signup.js:94
+#, python-format
+msgid "Invalid signup token"
+msgstr ""
 
 #. module: auth_signup
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr "Du kan ikke ha to brukere med samme login!"
+#. openerp-web
+#: code:addons/auth_signup/static/src/js/auth_signup.js:123
+#, python-format
+msgid "Passwords do not match; please retype them."
+msgstr ""
+
+#. module: auth_signup
+#. openerp-web
+#: code:addons/auth_signup/static/src/js/auth_signup.js:111
+#: code:addons/auth_signup/static/src/js/auth_signup.js:157
+#, python-format
+msgid "No database selected !"
+msgstr ""
+
+#. module: auth_signup
+#: view:res.users:0
+msgid "Reset Password"
+msgstr ""
+
+#. module: auth_signup
+#: field:base.config.settings,auth_signup_reset_password:0
+msgid "Enable password reset from Login page"
+msgstr ""
 
 #. module: auth_signup
 #. openerp-web
@@ -155,10 +241,11 @@ msgid "Back to Login"
 msgstr "Tilbake til innlogging."
 
 #. module: auth_signup
-#: constraint:res.partner:0
-#: constraint:res.users:0
-msgid "Error: Invalid ean code"
-msgstr "Feil: Ugyldig ean kode."
+#. openerp-web
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:22
+#, python-format
+msgid "Sign up"
+msgstr ""
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:54+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2010-09-29 09:58+0000\n"
 "Last-Translator: ub121 <ubs121@gmail.com>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:16+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:43+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: stock_location
 #: help:product.pulled.flow,company_id:0
@@ -70,11 +70,6 @@ msgstr "Татсан урсгалууд"
 #: help:product.pulled.flow,location_src_id:0
 msgid "Location used by Destination Location to supply"
 msgstr "Нийлүүлэхэд хүрэх байрлалаар ашигалагддаг байрлал"
-
-#. module: stock_location
-#: constraint:stock.move:0
-msgid "You must assign a serial number for this product."
-msgstr ""
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -160,9 +155,10 @@ msgid "Pulled flows"
 msgstr "Татагдсан урсгалууд"
 
 #. module: stock_location
-#: sql_constraint:product.product:0
-msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
+#: field:product.pulled.flow,company_id:0
+#: field:stock.location.path,company_id:0
+msgid "Company"
+msgstr "Компани"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_move
@@ -237,11 +233,6 @@ msgstr ""
 "Эдгээр дүрмүүд нь барааны зөв замыг бүх байршлуудын түвшинд тодорхойлно."
 
 #. module: stock_location
-#: constraint:stock.move:0
-msgid "You cannot move products from or to a location of the type view."
-msgstr ""
-
-#. module: stock_location
 #: selection:stock.location.path,auto:0
 msgid "Manual Operation"
 msgstr "Гар ажиллагаа"
@@ -273,11 +264,6 @@ msgstr ""
 #: help:product.pulled.flow,location_id:0
 msgid "Is the destination location that needs supplying"
 msgstr "Нийлүүлэлт шаардлагатай хүрэх байрлал"
-
-#. module: stock_location
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product."
-msgstr ""
 
 #. module: stock_location
 #: field:stock.location.path,product_id:0
@@ -326,12 +312,6 @@ msgstr ""
 "нь %s, оригиналь татан авалт нь %s (#%d)"
 
 #. module: stock_location
-#: field:product.pulled.flow,journal_id:0
-#: field:stock.location.path,journal_id:0
-msgid "Journal"
-msgstr "Журнал"
-
-#. module: stock_location
 #: model:ir.model,name:stock_location.model_procurement_order
 msgid "Procurement"
 msgstr "Татан авалт"
@@ -353,13 +333,6 @@ msgstr "Автомат хөдөлгөөн"
 #: selection:stock.location.path,picking_type:0
 msgid "Getting Goods"
 msgstr "Барааг авах"
-
-#. module: stock_location
-#: constraint:product.product:0
-msgid ""
-"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
-"\"Internal Reference\" field instead."
-msgstr ""
 
 #. module: stock_location
 #: view:product.product:0
@@ -397,10 +370,10 @@ msgid "Location Paths"
 msgstr "Байршлын замууд"
 
 #. module: stock_location
-#: field:product.pulled.flow,company_id:0
-#: field:stock.location.path,company_id:0
-msgid "Company"
-msgstr "Компани"
+#: field:product.pulled.flow,journal_id:0
+#: field:stock.location.path,journal_id:0
+msgid "Journal"
+msgstr "Журнал"
 
 #. module: stock_location
 #: field:product.pulled.flow,cancel_cascade:0

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
+"PO-Revision-Date: 2012-12-03 16:03+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -31,8 +31,8 @@ msgid "Choose an event and it will automatically create a registration for this 
 msgstr ""
 
 #. module: event_sale
-#: sql_constraint:product.product:0
-msgid "Error ! Ending Date cannot be set before Beginning Date."
+#: field:product.product,event_type_id:0
+msgid "Type of Event"
 msgstr ""
 
 #. module: event_sale
@@ -46,8 +46,8 @@ msgid "Filter the list of event on this category only, in the sale order lines"
 msgstr ""
 
 #. module: event_sale
-#: constraint:product.product:0
-msgid "You provided an invalid \"EAN13 Barcode\" reference. You may use the \"Internal Reference\" field instead."
+#: field:sale.order.line,event_ok:0
+msgid "event_ok"
 msgstr ""
 
 #. module: event_sale
@@ -57,18 +57,8 @@ msgid "The registration %s has been created from the Sale Order %s."
 msgstr ""
 
 #. module: event_sale
-#: field:sale.order.line,event_ok:0
-msgid "event_ok"
-msgstr ""
-
-#. module: event_sale
 #: field:product.product,event_ok:0
 msgid "Event Subscription"
-msgstr ""
-
-#. module: event_sale
-#: field:product.product,event_type_id:0
-msgid "Type of Event"
 msgstr ""
 
 #. module: event_sale

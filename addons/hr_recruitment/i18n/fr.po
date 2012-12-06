@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2011-01-18 16:43+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:24+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:48+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: hr_recruitment
 #: help:hr.applicant,active:0
@@ -355,10 +355,9 @@ msgid "Job Description"
 msgstr "Description du poste"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: field:hr.applicant,source_id:0
-msgid "Source"
-msgstr "Origine"
+#: model:ir.actions.server,name:hr_recruitment.actions_server_applicant_read
+msgid "HR Applicant: Mark read"
+msgstr ""
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/hr_recruitment.py:504
@@ -418,11 +417,6 @@ msgid "Good"
 msgstr "Bon"
 
 #. module: hr_recruitment
-#: model:ir.actions.server,name:hr_recruitment.actions_server_applicant_read
-msgid "Mark read"
-msgstr ""
-
-#. module: hr_recruitment
 #: view:hr.applicant:0
 #: field:hr.applicant,create_date:0
 #: view:hr.recruitment.report:0
@@ -434,6 +428,11 @@ msgstr "Date de création"
 #: model:ir.model,name:hr_recruitment.model_hired_employee
 msgid "Create Employee"
 msgstr "Créer un employé"
+
+#. module: hr_recruitment
+#: field:hr.applicant,partner_phone:0
+msgid "Phone"
+msgstr "Téléphone"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -765,9 +764,9 @@ msgid "Degree"
 msgstr "Niveau d'étude"
 
 #. module: hr_recruitment
-#: field:hr.applicant,partner_phone:0
-msgid "Phone"
-msgstr "Téléphone"
+#: model:ir.actions.server,name:hr_recruitment.actions_server_applicant_unread
+msgid "HR Applicant: Mark unread"
+msgstr ""
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -934,6 +933,12 @@ msgstr ""
 #, python-format
 msgid "Applicant has been <b>hired</b> and created as an employee."
 msgstr ""
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+#: field:hr.applicant,source_id:0
+msgid "Source"
+msgstr "Origine"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
@@ -1203,11 +1208,6 @@ msgid "April"
 msgstr "Avril"
 
 #. module: hr_recruitment
-#: model:ir.actions.server,name:hr_recruitment.actions_server_applicant_unread
-msgid "Mark unread"
-msgstr ""
-
-#. module: hr_recruitment
 #: view:hr.recruitment.report:0
 msgid "Pending recruitment"
 msgstr "Recrutements en attente"
@@ -1236,11 +1236,6 @@ msgstr "Spécifique à un département"
 #: view:hr.recruitment.report:0
 msgid "In progress recruitment"
 msgstr "Recrutements en cours"
-
-#. module: hr_recruitment
-#: sql_constraint:hr.job:0
-msgid "The name of the job position must be unique per company!"
-msgstr "Le nom de la poste doit être unique par entreprise!"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.degree,sequence:0
@@ -1545,6 +1540,9 @@ msgstr ""
 
 #~ msgid "Recruitment during last month"
 #~ msgstr "Recrutements réalisés le mois dernier"
+
+#~ msgid "The name of the job position must be unique per company!"
+#~ msgstr "Le nom de la poste doit être unique par entreprise!"
 
 #~ msgid "Job Positions"
 #~ msgstr "Postes"

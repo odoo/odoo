@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:53+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2012-02-13 08:14+0000\n"
 "Last-Translator: 开阖软件     Jeff Wang <jeff@osbzr.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:27+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:51+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -184,6 +184,11 @@ msgstr "重置"
 #: help:marketing.campaign,object_id:0
 msgid "Choose the resource on which you want this campaign to be run"
 msgstr "选择此营销活动需要的资源"
+
+#. module: marketing_campaign
+#: model:ir.actions.client,name:marketing_campaign.action_client_marketing_menu
+msgid "Open Marketing Menu"
+msgstr ""
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,sync_last_date:0
@@ -923,12 +928,6 @@ msgstr ""
 "段，例如文本字段、整数、下拉列表或简单的关系字段。"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:0
-#: field:campaign.analysis,total_cost:0
-msgid "Cost"
-msgstr "成本"
-
-#. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:529
 #, python-format
 msgid "After %(interval_nbr)d %(interval_type)s"
@@ -1059,11 +1058,6 @@ msgid "Only records created after last sync"
 msgstr "最近一次同步后创建的新记录"
 
 #. module: marketing_campaign
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr "错误，您不能创建循环引用的会员用户"
-
-#. module: marketing_campaign
 #: field:marketing.campaign.activity,variable_cost:0
 msgid "Variable Cost"
 msgstr "可变成本"
@@ -1074,9 +1068,10 @@ msgid "Welcome to the OpenERP Partner Channel!"
 msgstr ""
 
 #. module: marketing_campaign
-#: constraint:res.partner:0
-msgid "Error: Invalid ean code"
-msgstr ""
+#: view:campaign.analysis:0
+#: field:campaign.analysis,total_cost:0
+msgid "Cost"
+msgstr "成本"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -1262,6 +1257,9 @@ msgstr "年"
 
 #~ msgid "Hello, We are happy to announce that you become our Gold Partner."
 #~ msgstr "您好，我们很高兴地通知您成为我们的金牌合作伙伴。"
+
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr "错误，您不能创建循环引用的会员用户"
 
 #~ msgid "Hello, We are very happy to send Welcome message."
 #~ msgstr "您好，这是一封欢迎邮件。"

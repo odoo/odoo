@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-11-27 23:22+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
+"PO-Revision-Date: 2012-12-04 05:45+0000\n"
 "Last-Translator: OscarAlca <oscarolar@hotmail.com>\n"
 "Language-Team: Spanish (Mexico) <es_MX@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-29 05:14+0000\n"
-"X-Generator: Launchpad (build 16319)\n"
+"X-Launchpad-Export-Date: 2012-12-05 05:20+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -205,9 +205,21 @@ msgid "Invoiced Time"
 msgstr "Tiempo facturado"
 
 #. module: account_analytic_analysis
-#: constraint:account.analytic.account:0
-msgid "Error! You cannot create recursive analytic accounts."
-msgstr "Error! No es posible crear cuentas analíticas recursivas."
+#: field:account.analytic.account,fix_price_to_invoice:0
+#: field:account.analytic.account,remaining_hours:0
+#: field:account.analytic.account,remaining_hours_to_invoice:0
+#: field:account.analytic.account,timesheet_ca_invoiced:0
+msgid "Remaining Time"
+msgstr "Tiempo restante"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid ""
+"{'required': [('type','=','contract')], 'invisible': [('type','in',['view', "
+"'normal','template'])]}"
+msgstr ""
+"{'required': [('type','=','contract')], 'invisible': [('type','in',['view', "
+"'normal','template'])]}"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin_rate:0
@@ -239,6 +251,11 @@ msgstr "Nada por facturar"
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_template_of_contract_action
 msgid "Template of Contract"
 msgstr "Plantilla de contrato"
+
+#. module: account_analytic_analysis
+#: model:res.groups,name:account_analytic_analysis.group_template_required
+msgid "Mandatory use of templates in contracts"
+msgstr "Uso obligatorio de plantillas en contratos"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_quantity:0
@@ -294,13 +311,9 @@ msgid "Start Date"
 msgstr "Fecha inicial"
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,total_cost:0
-msgid ""
-"Total of costs for this account. It includes real costs (from invoices) and "
-"indirect costs, like time spent on timesheets."
-msgstr ""
-"Costos totales para esta cuenta. Incluye costos reales (desde facturas) y "
-"costos indirectos, como el tiempo empleado en hojas de trabajo (horarios)."
+#: view:account.analytic.account:0
+msgid "Invoiced"
+msgstr "Facturado"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -322,7 +335,7 @@ msgid "Timesheets"
 msgstr "Hojas de trabajo"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:452
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:461
 #, python-format
 msgid "Sale Order Lines of %s"
 msgstr "Lineas de venta para %s"
@@ -421,9 +434,13 @@ msgid "Contract"
 msgstr "Contrato"
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Invoiced"
-msgstr "Facturado"
+#: help:sale.config.settings,group_template_required:0
+msgid ""
+"Allows you to set the template field as required when creating an analytic "
+"account or a contract."
+msgstr ""
+"Le permite configurar el campo plantilla como se requiera cuando se crea una "
+"cuenta analítica o contrato."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_invoiced:0
@@ -593,9 +610,28 @@ msgid "Date of the latest work done on this account."
 msgstr "Fecha del último trabajo realizado en esta cuenta."
 
 #. module: account_analytic_analysis
+#: model:ir.model,name:account_analytic_analysis.model_sale_config_settings
+msgid "sale.config.settings"
+msgstr "Configuración de venta"
+
+#. module: account_analytic_analysis
+#: field:sale.config.settings,group_template_required:0
+msgid "Mandatory use of templates."
+msgstr "Uso obligatorio de plantillas"
+
+#. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contracts Having a Partner"
 msgstr "Contratos que tiene una empresa"
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,total_cost:0
+msgid ""
+"Total of costs for this account. It includes real costs (from invoices) and "
+"indirect costs, like time spent on timesheets."
+msgstr ""
+"Costos totales para esta cuenta. Incluye costos reales (desde facturas) y "
+"costos indirectos, como el tiempo empleado en hojas de trabajo (horarios)."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,est_total:0
@@ -623,17 +659,16 @@ msgid "Total Time"
 msgstr "Tiempo Total"
 
 #. module: account_analytic_analysis
+#: model:res.groups,comment:account_analytic_analysis.group_template_required
+msgid ""
+"the field template of the analytic accounts and contracts will be required."
+msgstr ""
+"El campo plantilla de las cuentas analíticas y contratos será requerido"
+
+#. module: account_analytic_analysis
 #: field:account.analytic.account,invoice_on_timesheets:0
 msgid "On Timesheets"
 msgstr "En hojas de trabajo"
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,fix_price_to_invoice:0
-#: field:account.analytic.account,remaining_hours:0
-#: field:account.analytic.account,remaining_hours_to_invoice:0
-#: field:account.analytic.account,timesheet_ca_invoiced:0
-msgid "Remaining Time"
-msgstr "Tiempo restante"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0

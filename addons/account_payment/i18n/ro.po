@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2011-04-26 18:16+0000\n"
 "Last-Translator: filsys <office@filsystem.ro>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:07+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:35+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
@@ -106,11 +106,6 @@ msgid "Due Date"
 msgstr "Data scadentei"
 
 #. module: account_payment
-#: view:account.move.line:0
-msgid "Account Entry Line"
-msgstr "Linie inregistrare contabila"
-
-#. module: account_payment
 #: view:payment.order.create:0
 msgid "_Add to payment order"
 msgstr "_Adauga la ordinul de plata"
@@ -122,6 +117,15 @@ msgid "Payment Populate statement"
 msgstr "Plata Completare extras"
 
 #. module: account_payment
+#: code:addons/account_payment/account_invoice.py:43
+#, python-format
+msgid ""
+"You cannot cancel an invoice which has already been imported in a payment "
+"order. Remove it from the following payment order : %s."
+msgstr ""
+
+#. module: account_payment
+#: code:addons/account_payment/account_invoice.py:43
 #: code:addons/account_payment/account_move_line.py:110
 #, python-format
 msgid "Error!"
@@ -132,12 +136,6 @@ msgstr ""
 #: view:payment.order:0
 msgid "Amount"
 msgstr "Suma"
-
-#. module: account_payment
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
-msgstr ""
-"Valoare gresita a creditului sau debitului in inregistrarea contabila !"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -166,24 +164,10 @@ msgid "The payment line name must be unique!"
 msgstr "Numele liniei platii trebuie sa fie unic!"
 
 #. module: account_payment
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr "Comunicare Structurata BBA Invalida !"
-
-#. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
 msgid "Payment Orders"
 msgstr "Ordine de plata"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid ""
-"The date of your Journal Entry is not in the defined period! You should "
-"change the date or remove this constraint from the journal."
-msgstr ""
-"Data Inregistrarii in Jurnal nu se afla in perioada definita! Ar trebui sa "
-"schimbati data sau sa eliminati aceasta restrictie din jurnal."
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -280,11 +264,6 @@ msgid "Creation Date"
 msgstr ""
 
 #. module: account_payment
-#: view:account.move.line:0
-msgid "Total debit"
-msgstr "Debit total"
-
-#. module: account_payment
 #: help:payment.mode,journal:0
 msgid "Bank or Cash Journal for the Payment Mode"
 msgstr "Jurnal Bancar sau de Numerar pentru Modalitatea de plata"
@@ -343,11 +322,6 @@ msgid "Partner"
 msgstr "Partener"
 
 #. module: account_payment
-#: constraint:account.move.line:0
-msgid "Account and Period must belong to the same company."
-msgstr ""
-
-#. module: account_payment
 #: field:payment.line,bank_statement_line_id:0
 msgid "Bank statement line"
 msgstr "Linie extras de cont"
@@ -361,17 +335,6 @@ msgstr "Data scadenta"
 #: field:account.invoice,amount_to_pay:0
 msgid "Amount to be paid"
 msgstr "Suma care va fi platita"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry forces to provide a secondary "
-"currency. You should remove the secondary currency on the account or select "
-"a multi-currency view on the journal."
-msgstr ""
-"Contul selectat din Inregistrarea in Jurnal solicita furnizarea unei monede "
-"secundare. Ar trebui sa stergeti moneda secundara din cont sau sa selectati "
-"o vizualizare multi-moneda in jurnal."
 
 #. module: account_payment
 #: report:payment.order:0
@@ -456,11 +419,6 @@ msgid "Populate Statement:"
 msgstr "Completare extras:"
 
 #. module: account_payment
-#: view:account.move.line:0
-msgid "Total credit"
-msgstr "Credit total"
-
-#. module: account_payment
 #: help:payment.order,date_scheduled:0
 msgid "Select a date if you have chosen Preferred Date to be fixed."
 msgstr "Selectati o data daca ati ales data preferata"
@@ -543,11 +501,6 @@ msgstr "Contul in care se face plata"
 #: report:payment.order:0
 msgid "Invoice Ref"
 msgstr "Ref. factura"
-
-#. module: account_payment
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr "Numarul Facturii trebuie sa fie unic per Companie!"
 
 #. module: account_payment
 #: field:payment.line,name:0
@@ -692,11 +645,6 @@ msgid "Name"
 msgstr "Nume"
 
 #. module: account_payment
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on an account of type view."
-msgstr ""
-
-#. module: account_payment
 #: report:payment.order:0
 msgid "Bank Account"
 msgstr "Cont bancar"
@@ -741,14 +689,12 @@ msgid "or"
 msgstr ""
 
 #. module: account_payment
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on closed account."
-msgstr ""
-
-#. module: account_payment
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
 msgstr "Contul bancar pentru Modalitatea de plata"
+
+#~ msgid "Account Entry Line"
+#~ msgstr "Linie inregistrare contabila"
 
 #~ msgid "Scheduled date if fixed"
 #~ msgstr "Data programata, daca este stabilita"
@@ -889,6 +835,35 @@ msgstr "Contul bancar pentru Modalitatea de plata"
 #~ msgid "Preferred date"
 #~ msgstr "Data preferata"
 
+#~ msgid ""
+#~ "The date of your Journal Entry is not in the defined period! You should "
+#~ "change the date or remove this constraint from the journal."
+#~ msgstr ""
+#~ "Data Inregistrarii in Jurnal nu se afla in perioada definita! Ar trebui sa "
+#~ "schimbati data sau sa eliminati aceasta restrictie din jurnal."
+
+#~ msgid "Invalid BBA Structured Communication !"
+#~ msgstr "Comunicare Structurata BBA Invalida !"
+
+#~ msgid "Wrong credit or debit value in accounting entry !"
+#~ msgstr ""
+#~ "Valoare gresita a creditului sau debitului in inregistrarea contabila !"
+
+#~ msgid "Total debit"
+#~ msgstr "Debit total"
+
+#~ msgid ""
+#~ "The selected account of your Journal Entry forces to provide a secondary "
+#~ "currency. You should remove the secondary currency on the account or select "
+#~ "a multi-currency view on the journal."
+#~ msgstr ""
+#~ "Contul selectat din Inregistrarea in Jurnal solicita furnizarea unei monede "
+#~ "secundare. Ar trebui sa stergeti moneda secundara din cont sau sa selectati "
+#~ "o vizualizare multi-moneda in jurnal."
+
+#~ msgid "Total credit"
+#~ msgstr "Credit total"
+
 #~ msgid "You can not create journal items on an account of type view."
 #~ msgstr ""
 #~ "Nu puteti crea elemente ale jurnalului intr-un cont de tipul vizualizare."
@@ -899,6 +874,9 @@ msgstr "Contul bancar pentru Modalitatea de plata"
 
 #~ msgid "Creation date"
 #~ msgstr "Data crearii"
+
+#~ msgid "Invoice Number must be unique per Company!"
+#~ msgstr "Numarul Facturii trebuie sa fie unic per Companie!"
 
 #~ msgid "Company must be the same for its related account and period."
 #~ msgstr "Compania trebuie sa fie aceeasi pentru contul si perioada asociata."
