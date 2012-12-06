@@ -2680,13 +2680,10 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
     init: function(field_manager, node) {
         var self = this;
         this._super(field_manager, node);
-        this.values = _.clone(this.field.selection);
-        _.each(this.values, function(v, i) {
-            if (v[0] === false && v[1] === '') {
-                self.values.splice(i, 1);
-            }
-        });
-        this.values.unshift([false, '']);
+        this.values = _(this.field.selection).chain()
+            .reject(function (v) { return v[0] === false && v[1] === ''; })
+            .unshift([false, ''])
+            .value();
     },
     initialize_content: function() {
         // Flag indicating whether we're in an event chain containing a change
