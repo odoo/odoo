@@ -39,7 +39,7 @@
         <field name="key2">client_action_multi</field>
     </record>
 
-    <!--  Phonecall Categories Form View  -->
+    <!-- Phonecall Categories Form View  -->
     <record id="crm_phonecall_categ_action" model="ir.actions.act_window">
         <field name="name">Phonecall Categories</field>
         <field name="res_model">crm.case.categ</field>
@@ -60,7 +60,7 @@
     <menuitem action="crm_phonecall_categ_action" name="Categories"
         id="menu_crm_case_phonecall-act" parent="menu_crm_config_phonecall" groups="base.group_no_one"/>
 
-    <!--  Phonecalls Tree View -->
+    <!-- Phonecalls Tree View -->
     <record model="ir.ui.view" id="crm_case_phone_tree_view">
         <field name="name">CRM - Phone Calls Tree</field>
         <field name="model">crm.phonecall</field>
@@ -70,13 +70,14 @@
                 <field name="name"/>
                 <field name="partner_id"/>
                 <button string="Meeting"
-                    states="open,pending" icon="gtk-redo"
-                     name="action_make_meeting" type="object"/>
+                    states="open,pending"
+                    name="action_make_meeting"
+                    type="object"/>
                 <button string="Convert to Opportunity"
+                    type="object"
                     name="action_button_convert2opportunity"
                     states="open,pending"
-                    icon="gtk-index"
-                    type="object" attrs="{'invisible':[('opportunity_id','!=',False)]}"/>
+                    attrs="{'invisible':[('opportunity_id','!=',False)]}"/>
                 <field name="partner_phone"/>
                 <field name="user_id"/>
                 <field name="categ_id" invisible="1"/>
@@ -113,8 +114,8 @@
                 <sheet string="Phone Call">
                     <div class="oe_right">
                         <button string="Convert to Opportunity"
+                            type="object"
                             name="action_button_convert2opportunity"
-                            type="action"
                             attrs="{'invisible':[ '|', ('opportunity_id','!=',False), ('state', 'not in', ('open', 'done'))]}"/>
                         <button string="Schedule Other Call"
                                 name="%(phonecall_to_phonecall_act)d"
