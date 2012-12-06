@@ -213,7 +213,6 @@ class crm_phonecall(base_state, osv.osv):
         }
         return value
 
-
     def convert_opportunity(self, cr, uid, ids, opportunity_summary=False, partner_id=False, planned_revenue=0.0, probability=0.0, context=None):
         partner = self.pool.get('res.partner')
         opportunity = self.pool.get('crm.lead')
@@ -266,6 +265,19 @@ class crm_phonecall(base_state, osv.osv):
         }
         return res
 
+    def action_button_convert2opportunity(self, cr, uid, ids, context=None):
+        """
+        Convert a phonecall into an opp and then redirect to the opp view.
+
+        :param list ids: list of calls ids to convert (typically contains a single id)
+        :return dict: containing view information
+        """
+        if len(ids) != 1:
+            raise osv.except_osv(_('Warning!'),_('It\'s only possible to convert one phonecall at a time.'))
+
+        opportunity_dict = self.convert_opportunity(cr, uid, ids, context=context)
+        return self.pool.get('crm.lead').redirect_opportunity_view(cr, uid, opportunity_dict[ids[0]], context)
+
     # ----------------------------------------
     # OpenChatter
     # ----------------------------------------
@@ -294,10 +306,5 @@ class crm_phonecall(base_state, osv.osv):
 
     def _call_set_partner_send_note(self, cr, uid, ids, context=None):
         return self.message_post(cr, uid, ids, body=_("Partner has been <b>created</b>."), context=context)
-
-    def action_button_convert2opportunity(self, cr, uid, ids, context=None):
-        #TODO
-        assert len(ids) == 1, 'This option should only be used for a single id at a time.'
-        return {}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
