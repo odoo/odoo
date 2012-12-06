@@ -54,7 +54,7 @@ def close_socket(sock):
         # of the other side (or something), see
         # http://bugs.python.org/issue4397
         # note: stdlib fixed test, not behavior
-        if e.errno != errno.ENOTCONN or platform.system() != 'Darwin':
+        if e.errno != errno.ENOTCONN or platform.system() not in ['Darwin', 'Windows']:
             raise
     sock.close()
 
