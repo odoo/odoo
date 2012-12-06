@@ -19,6 +19,6 @@
 #
 ##############################################################################
 
-import account_check
+import account_check_batch_printing
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
