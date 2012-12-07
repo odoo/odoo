@@ -22,6 +22,7 @@
 import time
 from lxml import etree
 import decimal_precision as dp
+from datetime import datetime
 
 import netsvc
 import pooler
@@ -289,6 +290,7 @@ class account_invoice(osv.osv):
         'internal_number': False,
         'user_id': lambda s, cr, u, c: u,
         'sent': False,
+        'date_invoice': lambda *a:datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     }
     _sql_constraints = [
         ('number_uniq', 'unique(number, company_id, journal_id, type)', 'Invoice Number must be unique per Company!'),
