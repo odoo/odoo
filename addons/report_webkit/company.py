@@ -29,9 +29,9 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 
-class ResCompany(osv.osv):
+class res_company(osv.osv):
     """Override company to add Header object link a company can have many header and logos"""
 
     _inherit = "res.company"
@@ -50,10 +50,6 @@ class ResCompany(osv.osv):
                                                     'html_id',
                                                     'Available html',
                                                 ),
-                'lib_path' : fields.char('Webkit Executable Path (Deprecated)', size=264,
-                                         help="This option is now deprecated in favor of autodetection of webkit location",
-                                         invisible=1),
     }
-ResCompany()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
