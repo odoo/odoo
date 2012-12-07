@@ -403,54 +403,44 @@ class resource_resource(osv.osv):
         # start time and an end time.  We will convert these to UTC for time
         # calculation purposes.
 
-        # We need to get this into a dict
-        # which will be in the following format:
-        #   {   'day':  [(time(9,0), time(17,0)), ...], ... }
-        wktime_utc = {}
+        # We need to get this into a dict which will be in the following format:
+        #   {0: [(time(9, 0), time(17, 0)), ...], ...}
+        wktime_utc = dict((day, []) for day in range(0, 7))
 
         # NOTE: This may break with regards to DST!
         for (day, start, end) in wktime_local:
             # Convert start time to UTC
             start_dt_local = datetime.combine(date.today(), start.replace(tzinfo=tz))
             start_dt_utc = start_dt_local.astimezone(pytz.utc)
-            start_dt_day = (day + (start_dt_utc.date() - start_dt_local.date()).days) % 7
+            start_day = (day + (start_dt_utc.date() - start_dt_local.date()).days) % 7
 
             # Convert end time to UTC
             end_dt_local = datetime.combine(date.today(), end.replace(tzinfo=tz))
             end_dt_utc = end_dt_local.astimezone(pytz.utc)
-            end_dt_day = (day + (end_dt_utc.date() - end_dt_local.date()).days) % 7
+            end_day = (day + (end_dt_utc.date() - end_dt_local.date()).days) % 7
 
             # Are start and end still on the same day?
-            if start_dt_day == end_dt_day:
-                day_name = week_days[start_dt_day]
-                if day_name not in wktime_utc:
-                    wktime_utc[day_name] = []
-                wktime_utc[day_name].append((start_dt_utc.time(), end_dt_utc.time()))
+            if start_day == end_day:
+                wktime_utc[start_day].append((start_dt_utc.time(), end_dt_utc.time()))
             else:
-                day_start_name = week_days[start_dt_day]
-                if day_start_name not in wktime_utc:
-                    wktime_utc[day_start_name] = []
-                # We go until midnight that day
-                wktime_utc[day_start_name].append((start_dt_utc.time(), time(0,0)))
+                # We go until midnight on the start day
+                wktime_utc[start_day].append((start_dt_utc.time(), time(0, 0)))
+                # Then resume from midnight on the end day
+                wktime_utc[end_day].append((time(0, 0), end_dt_utc.time()))
 
-                day_end_name = week_days[end_dt_day]
-                if day_end_name not in wktime_utc:
-                    wktime_utc[day_end_name] = []
-                # Then resume from midnight that day
-                wktime_utc[day_end_name].append((time(0,0), end_dt_utc.time()))
-
-        # Now having gotten a list of times together, generate the final output
+        # Now having gotten a list of times together, generate the final output:
+        #   [('mon', '08:00-12:00', '13:00-17:00', ...), ...]
         wktime_cal = []
-        for day, times in wktime_utc.iteritems():
-            # Sort the times
-            times.sort()
-            wktime = ['{0}-{1}'.format(s.strftime('%H:%M'), e.strftime('%H:%M')) for (s, e) in times]
-            wktime.insert(0, day)
+        for day, day_name in enumerate(week_days):
+            # retrieve the times and sort them
+            times = sorted(wktime_utc[day])
+            wktime = [day_name]
+            if times:
+                for s, e in times:
+                    wktime.append('{0}-{1}'.format(s.strftime('%H:%M'), e.strftime('%H:%M')))
+            else:
+                wktime.append(None)
             wktime_cal.append(tuple(wktime))
-        # Finally, add in non-working days
-        for day in week_days:
-            if day not in wktime_utc:
-                wktime_cal.append((day, None))
 
         return wktime_cal
 
