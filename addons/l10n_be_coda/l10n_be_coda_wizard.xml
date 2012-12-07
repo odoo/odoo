@@ -8,15 +8,15 @@
       <field name="priority">1</field>
       <field name="arch" type="xml">
         <form string="Import CODA File" version="7.0">
-            <header>
-                <button name="coda_parsing" string="_Import" type="object" class="oe_highlight"/>
-                or
-                <button string="Cancel" class="oe_link" special="cancel"/>
-            </header>
             <group col="2">
                 <field name="coda_data" filename="coda_fname"/>
                 <field name="coda_fname"/>
             </group>
+            <footer>
+                <button name="coda_parsing" string="_Import" type="object" class="oe_highlight"/>
+                or
+                <button string="Cancel" class="oe_link" special="cancel"/>
+            </footer>
         </form>
       </field>
     </record>

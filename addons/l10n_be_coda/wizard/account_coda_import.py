@@ -246,9 +246,9 @@ class account_coda_import(osv.osv_memory):
                         line['transaction_family'] = transaction_family[0]
                         if line['transaction_code'] in transaction_family[1]:
                             line['transaction_code'] = transaction_family[1][line['transaction_code']]
-                    statement['coda_note'] = "\n".join([statement['coda_note'], line['type'].title() + ' #' + str(line['sequence']), 'Date: ' + str(line['entryDate']), 'Ref: ' + str(line['ref']), 'Communication: ' + line['communication'], '\n'])
+                    statement['coda_note'] = "\n".join([statement['coda_note'], line['type'].title() + ' with Ref. ' + str(line['ref']), 'Date: ' + str(line['entryDate']), 'Communication: ' + line['communication'], ''])
                 elif line['type'] == 'communication':
-                    statement['coda_note'] = "\n".join([statement['coda_note'], line['type'].title() + ' #' + str(line['sequence']), 'Ref: ' + str(line['ref']), 'Communication: ' + line['communication'], '\n'])
+                    statement['coda_note'] = "\n".join([statement['coda_note'], line['type'].title() + ' with Ref. ' + str(line['ref']), 'Ref: ', 'Communication: ' + line['communication'], ''])
                 elif line['type'] == 'normal':
                     note = []
                     if 'counterpartyName' in line and line['counterpartyName'] != '':
@@ -385,7 +385,7 @@ class account_coda_import(osv.osv_memory):
                 self.pool.get('account.bank.statement').write(cr, uid, [statement['id']], {'coda_note': statement['coda_note']}, context=context)
         return {
             'view_type': 'form',
-            'view_mode': 'tree',
+            'view_mode': 'tree,form',
             'res_model': 'account.bank.statement',
             'view_id': False,
             'context': context,
