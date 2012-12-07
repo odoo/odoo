@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:51+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-07-10 00:39+0000\n"
 "Last-Translator: Tomomi Mengelberg <tomomi.mengelberg@aquasys.co.jp>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 05:35+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:04+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: project
 #: view:project.project:0
@@ -83,7 +83,7 @@ msgid "Start Task"
 msgstr "タスク開始"
 
 #. module: project
-#: code:addons/project/project.py:962
+#: code:addons/project/project.py:960
 #, python-format
 msgid "Warning !"
 msgstr "警告"
@@ -133,8 +133,8 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:434
-#: code:addons/project/project.py:1416
+#: code:addons/project/project.py:440
+#: code:addons/project/project.py:1414
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -194,11 +194,6 @@ msgstr "検証タスクタイトル"
 #. module: project
 #: model:res.groups,name:project.group_delegate_task
 msgid "Task Delegation"
-msgstr ""
-
-#. module: project
-#: constraint:account.analytic.account:0
-msgid "Error! You cannot create recursive analytic accounts."
 msgstr ""
 
 #. module: project
@@ -269,7 +264,7 @@ msgid "Project Task Delegate"
 msgstr "プロジェクトタスクの委任"
 
 #. module: project
-#: code:addons/project/project.py:551
+#: code:addons/project/project.py:557
 #, python-format
 msgid "Project has been <b>created</b>."
 msgstr ""
@@ -317,7 +312,7 @@ msgid "August"
 msgstr "8月"
 
 #. module: project
-#: code:addons/project/project.py:1305
+#: code:addons/project/project.py:1303
 #, python-format
 msgid "Task has been <b>delegated</b> to <em>%s</em>."
 msgstr ""
@@ -391,7 +386,7 @@ msgid "Assigned to"
 msgstr "割当先"
 
 #. module: project
-#: code:addons/project/project.py:1059
+#: code:addons/project/project.py:1057
 #, python-format
 msgid "Delegated User should be specified"
 msgstr "委任したユーザを指定する必要があります。"
@@ -428,7 +423,7 @@ msgid "Re-evaluate Task"
 msgstr "再評価タスク"
 
 #. module: project
-#: code:addons/project/project.py:1294
+#: code:addons/project/project.py:1292
 #, python-format
 msgid "Stage changed to <b>%s</b>."
 msgstr ""
@@ -442,11 +437,6 @@ msgstr ""
 #: field:project.config.settings,module_pad:0
 msgid "Use integrated collaborative note pads on task"
 msgstr ""
-
-#. module: project
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr "会社名は固有でなければいけません。"
 
 #. module: project
 #: model:process.node,note:project.process_node_opentask0
@@ -469,9 +459,9 @@ msgid "Delegation"
 msgstr ""
 
 #. module: project
-#: constraint:res.partner:0
-msgid "Error: Invalid ean code"
-msgstr ""
+#: field:project.task,create_date:0
+msgid "Create Date"
+msgstr "作成日"
 
 #. module: project
 #: view:res.partner:0
@@ -839,11 +829,9 @@ msgid "Is a Follower"
 msgstr ""
 
 #. module: project
-#: field:project.task.history,date:0
-#: field:project.task.history.cumulative,date:0
-#: field:project.task.work,date:0
-msgid "Date"
-msgstr "日付"
+#: field:project.task,work_ids:0
+msgid "Work done"
+msgstr "行う作業"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -871,9 +859,11 @@ msgid "Companies"
 msgstr "会社"
 
 #. module: project
-#: field:project.task,work_ids:0
-msgid "Work done"
-msgstr "行う作業"
+#: field:project.task.history,date:0
+#: field:project.task.history.cumulative,date:0
+#: field:project.task.work,date:0
+msgid "Date"
+msgstr "日付"
 
 #. module: project
 #: help:project.config.settings,module_project_issue:0
@@ -898,7 +888,7 @@ msgid "10"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:560
+#: code:addons/project/project.py:566
 #, python-format
 msgid "Project has been <b>canceled</b>."
 msgstr ""
@@ -924,9 +914,14 @@ msgid "Cancel"
 msgstr "キャンセル"
 
 #. module: project
-#: code:addons/project/project.py:563
+#: code:addons/project/project.py:569
 #, python-format
 msgid "Project has been <b>closed</b>."
+msgstr ""
+
+#. module: project
+#: model:ir.actions.server,name:project.actions_server_project_task_read
+msgid "Task: Mark read"
 msgstr ""
 
 #. module: project
@@ -1034,13 +1029,13 @@ msgid "Work summary"
 msgstr "作業の概要"
 
 #. module: project
-#: code:addons/project/project.py:557
+#: code:addons/project/project.py:563
 #, python-format
 msgid "Project is now <b>pending</b>."
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:554
+#: code:addons/project/project.py:560
 #, python-format
 msgid "Project has been <b>opened</b>."
 msgstr ""
@@ -1098,6 +1093,11 @@ msgid "Parent Tasks"
 msgstr "親タスク"
 
 #. module: project
+#: model:ir.actions.server,name:project.actions_server_project_read
+msgid "Project: Mark read"
+msgstr ""
+
+#. module: project
 #: model:process.node,name:project.process_node_opentask0
 msgid "Open task"
 msgstr "タスクを開く"
@@ -1145,7 +1145,7 @@ msgid "Done by"
 msgstr "実施者"
 
 #. module: project
-#: code:addons/project/project.py:174
+#: code:addons/project/project.py:180
 #, python-format
 msgid "Invalid Action!"
 msgstr ""
@@ -1177,6 +1177,11 @@ msgstr "タスク数"
 #. module: project
 #: field:project.project,doc_count:0
 msgid "Number of documents attached"
+msgstr ""
+
+#. module: project
+#: model:ir.actions.server,name:project.actions_server_project_task_unread
+msgid "Task: Mark unread"
 msgstr ""
 
 #. module: project
@@ -1219,9 +1224,9 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr "計算式：消費時間 + 残り時間"
 
 #. module: project
-#: code:addons/project/project.py:358
-#: code:addons/project/project.py:379
-#: code:addons/project/project.py:727
+#: code:addons/project/project.py:364
+#: code:addons/project/project.py:385
+#: code:addons/project/project.py:728
 #, python-format
 msgid "%s (copy)"
 msgstr "%s（コピー）"
@@ -1410,7 +1415,7 @@ msgid ""
 msgstr "タスクを行う予想時間。タスクがドラフト状態の時に通常はプロジェクトマネジャによりセットされます。"
 
 #. module: project
-#: code:addons/project/project.py:213
+#: code:addons/project/project.py:219
 #, python-format
 msgid "Attachments"
 msgstr ""
@@ -1430,7 +1435,7 @@ msgid "Done"
 msgstr "完了"
 
 #. module: project
-#: code:addons/project/project.py:175
+#: code:addons/project/project.py:181
 #, python-format
 msgid ""
 "You cannot delete a project containing tasks. You can either delete all the "
@@ -1529,12 +1534,6 @@ msgid "Hours Spent"
 msgstr "消費時間数"
 
 #. module: project
-#: model:ir.actions.server,name:project.actions_server_project_task_unread
-#: model:ir.actions.server,name:project.actions_server_project_unread
-msgid "Mark unread"
-msgstr ""
-
-#. module: project
 #: help:project.config.settings,module_pad:0
 msgid ""
 "Lets the company customize which Pad installation should be used to link to "
@@ -1554,7 +1553,7 @@ msgid "Overpassed Tasks"
 msgstr "期限超過タスク"
 
 #. module: project
-#: code:addons/project/project.py:962
+#: code:addons/project/project.py:960
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1601,11 +1600,6 @@ msgid "Deadlines"
 msgstr "締切"
 
 #. module: project
-#: field:project.task,create_date:0
-msgid "Create Date"
-msgstr "作成日"
-
-#. module: project
 #: code:addons/project/wizard/project_task_delegate.py:69
 #: code:addons/project/wizard/project_task_delegate.py:70
 #: code:addons/project/wizard/project_task_delegate.py:77
@@ -1615,7 +1609,7 @@ msgid "CHECK: "
 msgstr "確認： "
 
 #. module: project
-#: code:addons/project/project.py:434
+#: code:addons/project/project.py:440
 #, python-format
 msgid "You must assign members on the project '%s' !"
 msgstr "プロジェクト %s にメンバーを割り当てる必要があります。"
@@ -1673,11 +1667,6 @@ msgstr ""
 #: model:process.node,note:project.process_node_drafttask0
 msgid "Define the Requirements and Set Planned Hours."
 msgstr "要求を定義し計画時間数をセットします。"
-
-#. module: project
-#: constraint:project.project:0
-msgid "Error! You cannot assign escalation to the same project!"
-msgstr "エラー。同じプロジェクトに拡大の割当はできません。"
 
 #. module: project
 #: field:project.project,message_ids:0
@@ -1749,11 +1738,6 @@ msgid "Documents"
 msgstr ""
 
 #. module: project
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "エラー。再帰的な関係となる会社を作ることはできません。"
-
-#. module: project
 #: view:report.project.task.user:0
 #: field:report.project.task.user,no_of_days:0
 msgid "# of Days"
@@ -1794,12 +1778,6 @@ msgstr "有効時間数"
 #: view:report.project.task.user:0
 msgid "OverPass delay"
 msgstr "期限超過遅延"
-
-#. module: project
-#: model:ir.actions.server,name:project.actions_server_project_read
-#: model:ir.actions.server,name:project.actions_server_project_task_read
-msgid "Mark read"
-msgstr ""
 
 #. module: project
 #: view:project.task.delegate:0
@@ -1853,7 +1831,7 @@ msgid "Starting Date"
 msgstr "開始日"
 
 #. module: project
-#: code:addons/project/project.py:400
+#: code:addons/project/project.py:406
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_projects
 #: view:project.project:0
@@ -1887,7 +1865,7 @@ msgid "Project Tasks"
 msgstr "プロジェクトのタスク"
 
 #. module: project
-#: code:addons/project/project.py:1298
+#: code:addons/project/project.py:1296
 #, python-format
 msgid "Task has been <b>created</b>."
 msgstr ""
@@ -1959,7 +1937,7 @@ msgid "Kanban State"
 msgstr "かんばん状態"
 
 #. module: project
-#: code:addons/project/project.py:1301
+#: code:addons/project/project.py:1299
 #, python-format
 msgid "Task has been set as <b>draft</b>."
 msgstr ""
@@ -2030,6 +2008,11 @@ msgid "January"
 msgstr "1月"
 
 #. module: project
+#: model:ir.actions.server,name:project.actions_server_project_unread
+msgid "Project: Mark unread"
+msgstr ""
+
+#. module: project
 #: field:project.task.delegate,prefix:0
 msgid "Your Task Title"
 msgstr "タスクタイトル"
@@ -2040,7 +2023,7 @@ msgid "Reevaluation Task"
 msgstr "再評価タスク"
 
 #. module: project
-#: code:addons/project/project.py:1416
+#: code:addons/project/project.py:1414
 #, python-format
 msgid "Please delete the project linked with this account first."
 msgstr "最初にこのアカウントにリンクしているプロジェクトを削除して下さい。"
@@ -2138,11 +2121,6 @@ msgstr ""
 #: field:project.project,task_count:0
 msgid "Open Tasks"
 msgstr ""
-
-#. module: project
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr "エラー：再帰的なメンバーを作ることはできません。"
 
 #. module: project
 #: field:project.project,priority:0
@@ -2247,6 +2225,9 @@ msgstr "タスク工程"
 
 #~ msgid "Next"
 #~ msgstr "次へ"
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "エラー。再帰的な関係となる会社を作ることはできません。"
 
 #~ msgid "Date Stop: %(date)s"
 #~ msgstr "停止日：%(date)s"
@@ -2468,6 +2449,9 @@ msgstr "タスク工程"
 #~ msgid "My Delegated Tasks"
 #~ msgstr "私の委任タスク"
 
+#~ msgid "The company name must be unique !"
+#~ msgstr "会社名は固有でなければいけません。"
+
 #~ msgid "Project tasks"
 #~ msgstr "プロジェクトのタスク"
 
@@ -2497,6 +2481,9 @@ msgstr "タスク工程"
 #~ "Footer added at the beginning of the email for the warning message sent to "
 #~ "the customer when a task is closed."
 #~ msgstr "タスクが閉じられるときに顧客に送信される警告メッセージのためのEメールの先頭にフッターを追加しました。"
+
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr "エラー：再帰的なメンバーを作ることはできません。"
 
 #, python-format
 #~ msgid "Task '%s' closed"
@@ -2528,6 +2515,9 @@ msgstr "タスク工程"
 #, python-format
 #~ msgid "Send Email after close task"
 #~ msgstr "タスクを閉じた後にEメールを送信"
+
+#~ msgid "Error! You cannot assign escalation to the same project!"
+#~ msgstr "エラー。同じプロジェクトに拡大の割当はできません。"
 
 #~ msgid "My Remaining Hours by Project"
 #~ msgstr "プロジェクト別の私の残り時間数"

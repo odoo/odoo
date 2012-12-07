@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:53+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2010-08-03 07:22+0000\n"
 "Last-Translator: Mantavya Gajjar (Open ERP) <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 05:45+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:13+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetoassociate0
@@ -135,11 +135,6 @@ msgid "Non Member"
 msgstr "Ei Jäsen"
 
 #. module: membership
-#: model:product.template,name:membership.membership_2_product_template
-msgid "Basic Membership"
-msgstr ""
-
-#. module: membership
 #: view:product.product:0
 msgid "Taxes"
 msgstr ""
@@ -189,11 +184,6 @@ msgstr ""
 #. module: membership
 #: field:report.membership,num_invoiced:0
 msgid "# Invoiced"
-msgstr ""
-
-#. module: membership
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
 msgstr ""
 
 #. module: membership
@@ -439,13 +429,6 @@ msgid "Category"
 msgstr ""
 
 #. module: membership
-#: constraint:product.product:0
-msgid ""
-"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
-"\"Internal Reference\" field instead."
-msgstr ""
-
-#. module: membership
 #: view:res.partner:0
 msgid "Contacts"
 msgstr ""
@@ -469,6 +452,11 @@ msgstr ""
 #: model:process.node,name:membership.process_node_associatedmember0
 msgid "Associated member"
 msgstr "Liitetty jäsen"
+
+#. module: membership
+#: help:membership.membership_line,date:0
+msgid "Date on which member has joined the membership"
+msgstr ""
 
 #. module: membership
 #: field:membership.membership_line,state:0
@@ -525,9 +513,15 @@ msgid "Invoiced Member"
 msgstr "Laskutettu Jäsen"
 
 #. module: membership
-#: help:membership.membership_line,date:0
-msgid "Date on which member has joined the membership"
-msgstr ""
+#: field:membership.invoice,product_id:0
+#: field:membership.membership_line,membership_id:0
+#: view:product.product:0
+#: field:product.product,membership:0
+#: view:report.membership:0
+#: view:res.partner:0
+#: field:res.partner,member_lines:0
+msgid "Membership"
+msgstr "Jäsenyys"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -596,8 +590,8 @@ msgid "The price negotiated by the partner"
 msgstr ""
 
 #. module: membership
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
+#: model:product.template,name:membership.membership_2_product_template
+msgid "Basic Membership"
 msgstr ""
 
 #. module: membership
@@ -703,17 +697,6 @@ msgid "May"
 msgstr ""
 
 #. module: membership
-#: field:membership.invoice,product_id:0
-#: field:membership.membership_line,membership_id:0
-#: view:product.product:0
-#: field:product.product,membership:0
-#: view:report.membership:0
-#: view:res.partner:0
-#: field:res.partner,member_lines:0
-msgid "Membership"
-msgstr "Jäsenyys"
-
-#. module: membership
 #: field:res.partner,membership_start:0
 msgid "Membership Start Date"
 msgstr ""
@@ -796,11 +779,6 @@ msgstr ""
 #: selection:res.partner,membership_state:0
 msgid "Cancelled Member"
 msgstr ""
-
-#. module: membership
-#: constraint:res.partner:0
-msgid "Error: Invalid ean code"
-msgstr "Virhe: Virheellinen EAN-koodi"
 
 #. module: membership
 #: view:report.membership:0
@@ -926,3 +904,6 @@ msgstr ""
 
 #~ msgid "Paid"
 #~ msgstr "Maksettu"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Virhe: Virheellinen EAN-koodi"

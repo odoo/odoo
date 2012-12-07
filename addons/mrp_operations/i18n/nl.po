@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:53+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2012-11-25 21:16+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-26 04:42+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:40+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
@@ -378,11 +378,6 @@ msgid "Work Order Report"
 msgstr "Werkopdracht rapprot"
 
 #. module: mrp_operations
-#: constraint:mrp.production:0
-msgid "Order quantity cannot be negative or zero!"
-msgstr "Order hoeveelheid mag niet negatief of nul zijn!"
-
-#. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_start:0
 #: field:mrp_operations.operation,date_start:0
 msgid "Start Date"
@@ -534,11 +529,6 @@ msgid "November"
 msgstr "November"
 
 #. module: mrp_operations
-#: constraint:stock.move:0
-msgid "You must assign a serial number for this product."
-msgstr "U dient een productie partij toe te wijzen voor dit product."
-
-#. module: mrp_operations
 #: view:mrp.workorder:0
 msgid "Search"
 msgstr "Zoeken"
@@ -552,13 +542,6 @@ msgstr "Oktober"
 #: selection:mrp.workorder,month:0
 msgid "January"
 msgstr "January"
-
-#. module: mrp_operations
-#: constraint:stock.move:0
-msgid "You cannot move products from or to a location of the type view."
-msgstr ""
-"Het is niet mogelijk om producten te verplaatsen naar een locatie van het "
-"type 'weergave'"
 
 #. module: mrp_operations
 #: view:mrp.production:0
@@ -580,11 +563,6 @@ msgstr "Bewerking is nog niet gestart!"
 #: model:process.node,note:mrp_operations.process_node_productionorder0
 msgid "Information from the production order."
 msgstr "Informatie van de productieorder"
-
-#. module: mrp_operations
-#: sql_constraint:mrp.production:0
-msgid "Reference must be unique per Company!"
-msgstr "Referentie moet uniek zijn per bedrijf!"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:497
@@ -743,12 +721,6 @@ msgstr "Datum gepland"
 #: field:mrp.workorder,product_id:0
 msgid "Product"
 msgstr "Product"
-
-#. module: mrp_operations
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product."
-msgstr ""
-"U probeert een partij toe te wijzen wat niet van hetzelfde product is."
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -1110,11 +1082,17 @@ msgstr "Tijdsduur"
 #~ msgid "Work orders during last month"
 #~ msgstr "Werkuren gedurende laatste maand"
 
+#~ msgid "Order quantity cannot be negative or zero!"
+#~ msgstr "Order hoeveelheid mag niet negatief of nul zijn!"
+
 #~ msgid "Work orders made during current year"
 #~ msgstr "Werkorders gemaakt tijdens huidige jaar"
 
 #~ msgid "Work orders made during current month"
 #~ msgstr "Werkorders gemaakt in huidige maand"
+
+#~ msgid "Reference must be unique per Company!"
+#~ msgstr "Referentie moet uniek zijn per bedrijf!"
 
 #~ msgid ""
 #~ "* When a work order is created it is set in 'Draft' state.\n"

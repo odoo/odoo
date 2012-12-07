@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:54+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2011-03-21 09:34+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Bulgarian <bg@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:25+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:48+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_sched
@@ -203,13 +203,6 @@ msgid "Invalid Action!"
 msgstr ""
 
 #. module: procurement
-#: constraint:product.product:0
-msgid ""
-"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
-"\"Internal Reference\" field instead."
-msgstr ""
-
-#. module: procurement
 #: help:procurement.order,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
@@ -294,9 +287,9 @@ msgid "Procurement Orders to Process"
 msgstr ""
 
 #. module: procurement
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "Грешка! НЕ може да създавате рекурсивни фирми"
+#: model:ir.model,name:procurement.model_stock_warehouse_orderpoint
+msgid "Minimum Inventory Rule"
+msgstr ""
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:395
@@ -428,11 +421,6 @@ msgid ""
 "                order proposition, manufacturing order, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
-
-#. module: procurement
-#: field:stock.warehouse.orderpoint,qty_multiple:0
-msgid "Qty Multiple"
 msgstr ""
 
 #. module: procurement
@@ -631,11 +619,6 @@ msgid "Normal"
 msgstr "Нормален"
 
 #. module: procurement
-#: sql_constraint:product.product:0
-msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
-
-#. module: procurement
 #: help:product.template,supply_method:0
 msgid ""
 "Manufacture: When procuring the product, a manufacturing order or a task "
@@ -684,11 +667,6 @@ msgid "Comments and emails"
 msgstr ""
 
 #. module: procurement
-#: constraint:stock.move:0
-msgid "You must assign a serial number for this product."
-msgstr ""
-
-#. module: procurement
 #: field:procurement.order,date_planned:0
 msgid "Scheduled date"
 msgstr ""
@@ -717,13 +695,8 @@ msgid "Automatic Order Point"
 msgstr ""
 
 #. module: procurement
-#: model:ir.model,name:procurement.model_stock_warehouse_orderpoint
-msgid "Minimum Inventory Rule"
-msgstr ""
-
-#. module: procurement
-#: constraint:stock.move:0
-msgid "You cannot move products from or to a location of the type view."
+#: field:stock.warehouse.orderpoint,qty_multiple:0
+msgid "Qty Multiple"
 msgstr ""
 
 #. module: procurement
@@ -760,11 +733,6 @@ msgstr ""
 #. module: procurement
 #: selection:stock.warehouse.orderpoint,logic:0
 msgid "Order to Max"
-msgstr ""
-
-#. module: procurement
-#: sql_constraint:stock.picking:0
-msgid "Reference must be unique per Company!"
 msgstr ""
 
 #. module: procurement
@@ -927,11 +895,6 @@ msgid "Product"
 msgstr "Продукт"
 
 #. module: procurement
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product."
-msgstr ""
-
-#. module: procurement
 #: view:procurement.order:0
 msgid "Temporary"
 msgstr "Временно"
@@ -946,13 +909,6 @@ msgstr "Описание"
 #: selection:procurement.order,priority:0
 msgid "Urgent"
 msgstr "Спешност"
-
-#. module: procurement
-#: constraint:product.template:0
-msgid ""
-"Error: The default Unit of Measure and the purchase Unit of Measure must be "
-"in the same category."
-msgstr ""
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -994,11 +950,6 @@ msgstr ""
 #. module: procurement
 #: view:procurement.order:0
 msgid "Temporary Procurement Exceptions"
-msgstr ""
-
-#. module: procurement
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
 msgstr ""
 
 #. module: procurement
@@ -1128,6 +1079,9 @@ msgstr ""
 
 #~ msgid "State"
 #~ msgstr "Състояние"
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "Грешка! НЕ може да създавате рекурсивни фирми"
 
 #~ msgid "Product & Location"
 #~ msgstr "Продукт и местонахождение"
