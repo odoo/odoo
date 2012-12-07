@@ -89,10 +89,10 @@ class account_coda_import(osv.osv_memory):
                         raise osv.except_osv(_('Error') + 'R1002', _('Foreign bank accounts with IBAN structure are not supported '))
                     else:  # Something else, not supported
                         raise osv.except_osv(_('Error') + 'R1003', _('Unsupported bank account structure '))
-                ids = self.pool.get('res.partner.bank').search(cr, uid, [('acc_number', '=', statement['acc_number'])])
+                bank_ids = self.pool.get('res.partner.bank').search(cr, uid, [('acc_number', '=', statement['acc_number'])])
                 not_found_except = osv.except_osv(_('Error') + 'R1004', _("No matching CODA Bank Account Configuration record found. Please check if the 'Bank Account Number' and 'Currency' fields of your configuration record match with '%s' and '%s'.") % (statement['acc_number'], statement['currency']))
-                if ids and len(ids) > 0:
-                    bank_accs = self.pool.get('res.partner.bank').browse(cr, uid, ids)
+                if bank_ids and len(bank_ids) > 0:
+                    bank_accs = self.pool.get('res.partner.bank').browse(cr, uid, bank_ids)
                     for bank_acc in bank_accs:
                         statement['journal_id'] = bank_acc.journal_id
                         if (statement['journal_id'].currency and statement['journal_id'].currency.name != statement['currency']) and (not statement['journal_id'].currency and statement['journal_id'].company_id.currency_id.name != statement['currency']):
@@ -246,9 +246,9 @@ class account_coda_import(osv.osv_memory):
                         line['transaction_family'] = transaction_family[0]
                         if line['transaction_code'] in transaction_family[1]:
                             line['transaction_code'] = transaction_family[1][line['transaction_code']]
-                    statement['coda_note'] = "\n".join([statement['coda_note'], line['type'].title() + ' #' + str(line['sequence']), 'Date: ' + str(line['entryDate']), 'Ref: ' + str(line['ref']), 'Communication: ' + line['communication'],'\n'])
+                    statement['coda_note'] = "\n".join([statement['coda_note'], line['type'].title() + ' #' + str(line['sequence']), 'Date: ' + str(line['entryDate']), 'Ref: ' + str(line['ref']), 'Communication: ' + line['communication'], '\n'])
                 elif line['type'] == 'communication':
-                    statement['coda_note'] = "\n".join([statement['coda_note'], line['type'].title() + ' #' + str(line['sequence']), 'Ref: ' + str(line['ref']), 'Communication: ' + line['communication'],'\n'])
+                    statement['coda_note'] = "\n".join([statement['coda_note'], line['type'].title() + ' #' + str(line['sequence']), 'Ref: ' + str(line['ref']), 'Communication: ' + line['communication'], '\n'])
                 elif line['type'] == 'normal':
                     note = []
                     if 'counterpartyName' in line and line['counterpartyName'] != '':
@@ -383,6 +383,14 @@ class account_coda_import(osv.osv_memory):
                     self.pool.get('account.bank.statement.line').create(cr, uid, data, context=context)
             if statement['coda_note'] != '':
                 self.pool.get('account.bank.statement').write(cr, uid, [statement['id']], {'coda_note': statement['coda_note']}, context=context)
+        return {
+            'view_type': 'form',
+            'view_mode': 'tree',
+            'res_model': 'account.bank.statement',
+            'view_id': False,
+            'context': context,
+            'type': 'ir.actions.act_window',
+        }
 account_coda_import()
 
 transaction_types = {
