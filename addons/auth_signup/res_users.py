@@ -246,16 +246,16 @@ class res_users(osv.Model):
         for user in self.browse(cr, uid, ids, context):
             if not user.email:
                 raise osv.except_osv(_("Cannot send email: user has no email address."), user.name)
-            msg_id = None
-            msg_id = self.pool.get('email.template').send_mail(cr, uid, template.id, user.id, context=context)
-            if not msg_id:
-                 raise osv.except_osv(_("The email to reset the password has not been sent. Configure the outgoing server and retry resetting the password"), "")
+            mail_server = self.pool.get('ir.mail_server').search(cr, uid, [], order='sequence', limit=1) or None
+            if not mail_server:
+                raise osv.except_osv(_("The email to reset the password has not been sent. Configure the outgoing server and retry resetting the password"), "")
             else :
-                 warning = {
+                 self.pool.get('email.template').send_mail(cr, uid, template.id, user.id, context=context)
+                 message = {
                      'title': _("Reset Password"),
                      'message': _("An email has been sent to %s, the user will be able to change his password using the link provided in the email. The old password is still valid until the user changes his password.")% user.email
                  }
-                 return {'warning':warning}
+                 return {'message': message}
 
         return True
 
@@ -263,6 +263,4 @@ class res_users(osv.Model):
         # overridden to automatically invite user to sign up
         user_id = super(res_users, self).create(cr, uid, values, context=context)
         user = self.browse(cr, uid, user_id, context=context)
-        if context and context.get('reset_password') and user.email:
-            user.action_reset_password()
         return user_id
