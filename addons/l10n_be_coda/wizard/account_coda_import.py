@@ -188,8 +188,6 @@ class account_coda_import(osv.osv_memory):
                     infoLine['transaction_code'] = rmspaces(line[34:36])
                     infoLine['transaction_category'] = rmspaces(line[36:39])
                     infoLine['communication'] = rmspaces(line[40:113])
-                    infoLine['amount'] = 0.0
-                    infoLine['type'] = 'information'
                     statement['lines'].append(infoLine)
                 elif line[1] == '2':
                     if infoLine['ref'] != rmspaces(line[2:10]):
@@ -205,8 +203,6 @@ class account_coda_import(osv.osv_memory):
                     comm_line['sequence'] = len(statement['lines']) + 1
                     comm_line['ref'] = rmspaces(line[2:10])
                     comm_line['communication'] = rmspaces(line[32:112])
-                    comm_line['amount'] = 0.0
-                    comm_line['type'] = 'communication'
                     statement['lines'].append(comm_line)
             elif line[0] == '8':
                 # new balance record
@@ -229,6 +225,7 @@ class account_coda_import(osv.osv_memory):
                 if not statement['balance_end_real']:
                     statement['balance_end_real'] = statement['balance_start'] + statement['balancePlus'] - statement['balanceMin']
         for i, statement in enumerate(statements):
+            statement['coda_note'] = ''
             data = {
                 'name': '[' + statement['date'] + ']' + statement['description'],
                 'date': statement['date'],
@@ -239,7 +236,20 @@ class account_coda_import(osv.osv_memory):
             }
             statement['id'] = self.pool.get('account.bank.statement').create(cr, uid, data, context=context)
             for line in statement['lines']:
-                if line['type'] == 'normal':
+                if line['type'] == 'information':
+                    if line['transaction_type'] in transaction_types:
+                        line['transaction_type'] = transaction_types[line['transaction_type']][1]
+                    if line['transaction_category'] in transaction_categories:
+                        line['transaction_category'] = transaction_categories[line['transaction_category']]
+                    if line['transaction_family'] in transaction_codes:
+                        transaction_family = transaction_codes[line['transaction_family']]
+                        line['transaction_family'] = transaction_family[0]
+                        if line['transaction_code'] in transaction_family[1]:
+                            line['transaction_code'] = transaction_family[1][line['transaction_code']]
+                    statement['coda_note'] = "\n".join([statement['coda_note'], line['type'].title() + ' #' + str(line['sequence']), 'Date: ' + str(line['entryDate']), 'Ref: ' + str(line['ref']), 'Communication: ' + line['communication'],'\n'])
+                elif line['type'] == 'communication':
+                    statement['coda_note'] = "\n".join([statement['coda_note'], line['type'].title() + ' #' + str(line['sequence']), 'Ref: ' + str(line['ref']), 'Communication: ' + line['communication'],'\n'])
+                elif line['type'] == 'normal':
                     note = []
                     if 'counterpartyName' in line and line['counterpartyName'] != '':
                         note.append(_('Counter Party') + ': ' + line['counterpartyName'])
@@ -259,7 +269,6 @@ class account_coda_import(osv.osv_memory):
                     if 'counterpartyAddress' in line and line['counterpartyAddress'] != '':
                         note.append(_('Counter Party Address') + ': ' + line['counterpartyAddress'])
                     line['name'] = "\n".join(filter(None, [line['counterpartyName'], line['communication']]))
-
                     partner = None
                     partner_id = None
                     invoice = False
@@ -342,8 +351,6 @@ class account_coda_import(osv.osv_memory):
                     if 'communication_type' in line:
                         if line['communication_type'] in communication_types:
                             line['communication_type'] = communication_types[line['communication_type']]
-                        else:
-                            line['communication_type'] = 'Unknown'
                         note.append(_('Communication Type') + ': ' + line['communication_type'])
                     if line['transaction_type'] in transaction_types:
                         line['transaction_type'] = transaction_types[line['transaction_type']][1]
@@ -374,7 +381,8 @@ class account_coda_import(osv.osv_memory):
                         'voucher_id': line['voucher_id'],
                     }
                     self.pool.get('account.bank.statement.line').create(cr, uid, data, context=context)
-
+            if statement['coda_note'] != '':
+                self.pool.get('account.bank.statement').write(cr, uid, [statement['id']], {'coda_note': statement['coda_note']}, context=context)
 account_coda_import()
 
 transaction_types = {
