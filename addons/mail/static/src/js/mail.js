@@ -422,9 +422,7 @@ openerp.mail = function (session) {
         on_attachment_loaded: function (event, result) {
 
             if (result.erorr || !result.id ) {
-                var error_title = result.error.split('\n')[0];
-                var error_content = result.error.replace(/^.*\n/, '');
-                this.do_warn(error_title, error_content);
+                this.do_warn( session.web.qweb.render('mail.error_upload'), result.error);
                 this.attachment_ids = _.filter(this.attachment_ids, function (val) { return !val.upload; });
             } else {
                 for (var i in this.attachment_ids) {
