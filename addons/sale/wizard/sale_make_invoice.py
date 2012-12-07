@@ -32,7 +32,7 @@ class sale_make_invoice(osv.osv_memory):
     }
     _defaults = {
         'grouped': False,
-        'invoice_date': lambda *a:datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        'invoice_date': lambda *a:datetime.now().strftime('%Y-%m-%d')
     }
 
     def view_init(self, cr, uid, fields_list, context=None):

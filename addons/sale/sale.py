@@ -489,7 +489,7 @@ class sale_order(osv.osv):
         # If date was specified, use it as date invoiced, usefull when invoices are generated this month and put the
         # last day of the last month as invoice date
         if date_inv:
-            context['date_inv'] = date_inv
+            context['date_invoice'] = date_inv
         for o in self.browse(cr, uid, ids, context=context):
             currency_id = o.pricelist_id.currency_id.id
             if (o.partner_id.id in partner_currency) and (partner_currency[o.partner_id.id] <> currency_id):
