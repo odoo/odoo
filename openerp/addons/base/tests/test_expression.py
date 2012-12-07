@@ -432,7 +432,6 @@ class test_expression(common.TransactionCase):
         partner_state_id_col._auto_join = False
         partner_parent_id_col._auto_join = False
         state_country_id_col._auto_join = False
-        BaseModel._where_calc = self._base_model_where_calc
 
 if __name__ == '__main__':
     unittest2.main()

@@ -28,8 +28,8 @@ class QueryTestCase(unittest.TestCase):
         query = Query()
         query.tables.extend(['"product_product"','"product_template"'])
         query.where_clause.append("product_product.template_id = product_template.id")
-        query.join(("product_template", "product_category", "categ_id", "id"), outer=False) # add normal join
-        query.join(("product_product", "res_user", "user_id", "id"), outer=True) # outer join
+        query.add_join(("product_template", "product_category", "categ_id", "id"), outer=False) # add normal join
+        query.add_join(("product_product", "res_user", "user_id", "id"), outer=True) # outer join
         self.assertEquals(query.get_sql()[0].strip(),
             """"product_product" LEFT JOIN "res_user" ON ("product_product"."user_id" = "res_user"."id"),"product_template" JOIN "product_category" ON ("product_template"."categ_id" = "product_category"."id") """.strip())
         self.assertEquals(query.get_sql()[1].strip(), """product_product.template_id = product_template.id""".strip())
@@ -38,8 +38,8 @@ class QueryTestCase(unittest.TestCase):
         query = Query()
         query.tables.extend(['"product_product"','"product_template"'])
         query.where_clause.append("product_product.template_id = product_template.id")
-        query.join(("product_template", "product_category", "categ_id", "id"), outer=False) # add normal join
-        query.join(("product_category", "res_user", "user_id", "id"), outer=True) # CHAINED outer join
+        query.add_join(("product_template", "product_category", "categ_id", "id"), outer=False) # add normal join
+        query.add_join(("product_category", "res_user", "user_id", "id"), outer=True) # CHAINED outer join
         self.assertEquals(query.get_sql()[0].strip(),
             """"product_product","product_template" JOIN "product_category" ON ("product_template"."categ_id" = "product_category"."id") LEFT JOIN "res_user" ON ("product_category"."user_id" = "res_user"."id")""".strip())
         self.assertEquals(query.get_sql()[1].strip(), """product_product.template_id = product_template.id""".strip())
@@ -48,8 +48,8 @@ class QueryTestCase(unittest.TestCase):
         query = Query()
         query.tables.extend(['"product_product"','"product_template"'])
         query.where_clause.append("product_product.template_id = product_template.id")
-        query.join(("product_template", "product_category", "categ_id", "id"), outer=False) # add normal join
-        query.join(("product_category", "res_user", "user_id", "id"), outer=True) # CHAINED outer join
+        query.add_join(("product_template", "product_category", "categ_id", "id"), outer=False) # add normal join
+        query.add_join(("product_category", "res_user", "user_id", "id"), outer=True) # CHAINED outer join
         query.tables.append('"account.account"')
         query.where_clause.append("product_category.expense_account_id = account_account.id") # additional implicit join
         self.assertEquals(query.get_sql()[0].strip(),

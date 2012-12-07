@@ -319,16 +319,18 @@ def _quote(to_quote):
     return to_quote
 
 
-def generate_table_alias(src_model, joined_tables=[]):
+def generate_table_alias(src_table_alias, joined_tables=[]):
     """ Generate a standard table alias name. An alias is generated as following:
-        - the base is the source model table name
+        - the base is the source table name (that can already be an alias)
         - then, each joined table is added in the alias using a 'link field name'
           that is used to render unique aliases for a given path
+        - returns a tuple composed of the alias, and the full table alias to be
+          added in a from condition
         Examples:
-        - src_model=res.users, join_tables=[]:
-            alias = '"res_users"'
-        - src_model=res.users, join_tables=[(res.partner, 'parent_id')]
-            alias = '"res_partner" as "res_users__parent_id"'
+        - src_table_alias='res_users', join_tables=[]:
+            alias = ('res_users','"res_users"')
+        - src_model='res_users', join_tables=[(res.partner, 'parent_id')]
+            alias = ('res_users__parent_id', '"res_partner" as "res_users__parent_id"')
 
         :param model src_model: model source of the alias
         :param list join_tables: list of tuples
@@ -336,12 +338,12 @@ def generate_table_alias(src_model, joined_tables=[]):
 
         :return tuple: (table alias, alias statement for from clause with quotes added)
     """
-    alias = src_model._table
+    alias = src_table_alias
     if not joined_tables:
         return ('%s' % alias, '%s' % _quote(alias))
     for link in joined_tables:
         alias += '__' + link[1]
-    return ('%s' % alias, '%s as %s' % (_quote(joined_tables[-1][0]._table), _quote(alias)))
+    return ('%s' % alias, '%s as %s' % (_quote(joined_tables[-1][0]), _quote(alias)))
 
 
 def normalize_leaf(element):
@@ -499,8 +501,8 @@ class ExtendedLeaf(object):
     # --------------------------------------------------
 
     def generate_alias(self):
-        links = [(context[1], context[4]) for context in self.context_stack]
-        alias, alias_statement = generate_table_alias(self._tables[0], links)
+        links = [(context[1]._table, context[4]) for context in self.context_stack]
+        alias, alias_statement = generate_table_alias(self._tables[0]._table, links)
         return alias
 
     def add_join_context(self, table, lhs_col, table_col, link):

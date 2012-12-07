@@ -2,16 +2,17 @@ import unittest2
 
 import openerp.tests.common as common
 
-class test_expression(common.TransactionCase):
 
-    def test_search_order(self):
+class test_search(common.TransactionCase):
+
+    def test_00_search_order(self):
 
         registry, cr, uid = self.registry, self.cr, self.uid
 
-	# Create 6 partners with a given name, and a given creation order to
-	# ensure the order of their ID. Some are set as unactive to verify they
-	# are by default excluded from the searches and to provide a second
-	# `order` argument.
+        # Create 6 partners with a given name, and a given creation order to
+        # ensure the order of their ID. Some are set as unactive to verify they
+        # are by default excluded from the searches and to provide a second
+        # `order` argument.
 
         partners = registry('res.partner')
         c = partners.create(cr, uid, {'name': 'test_search_order_C'})
@@ -23,9 +24,9 @@ class test_expression(common.TransactionCase):
 
         # The tests.
 
-	# The basic searches should exclude records that have active = False.
-	# The order of the returned ids should be given by the `order`
-	# parameter of search().
+        # The basic searches should exclude records that have active = False.
+        # The order of the returned ids should be given by the `order`
+        # parameter of search().
 
         name_asc = partners.search(cr, uid, [('name', 'like', 'test_search_order%')], order="name asc")
         self.assertEqual([a, ab, b, c], name_asc, "Search with 'NAME ASC' order failed.")
@@ -36,9 +37,9 @@ class test_expression(common.TransactionCase):
         id_desc = partners.search(cr, uid, [('name', 'like', 'test_search_order%')], order="id desc")
         self.assertEqual([ab, b, a, c], id_desc, "Search with 'ID DESC' order failed.")
 
-	# The inactive records shouldn't be excluded as soon as a condition on
-	# that field is present in the domain. The `order` parameter of
-	# search() should support any legal coma-separated values.
+        # The inactive records shouldn't be excluded as soon as a condition on
+        # that field is present in the domain. The `order` parameter of
+        # search() should support any legal coma-separated values.
 
         active_asc_id_asc = partners.search(cr, uid, [('name', 'like', 'test_search_order%'), '|', ('active', '=', True), ('active', '=', False)], order="active asc, id asc")
         self.assertEqual([d, e, c, a, b, ab], active_asc_id_asc, "Search with 'ACTIVE ASC, ID ASC' order failed.")
@@ -57,4 +58,28 @@ class test_expression(common.TransactionCase):
         id_desc_active_desc = partners.search(cr, uid, [('name', 'like', 'test_search_order%'), '|', ('active', '=', True), ('active', '=', False)], order="id desc, active desc")
         self.assertEqual([e, ab, b, a, d, c], id_desc_active_desc, "Search with 'ID DESC, ACTIVE DESC' order failed.")
 
+    def test_10_m2order(self):
+        registry, cr, uid = self.registry, self.cr, self.uid
+        users_obj = registry('res.users')
 
+        # Find Employee group
+        group_employee_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'base', 'group_user')
+        group_employee_id = group_employee_ref and group_employee_ref[1] or False
+
+        search_user = users_obj.create(cr, uid, {'name': '__search', 'login': '__search', 'groups_id': [(6, 0, [group_employee_id])]})
+        a = users_obj.create(cr, uid, {'name': '__test_A', 'login': '__z_test_A'})
+        b = users_obj.create(cr, uid, {'name': '__test_B', 'login': '__a_test_B'})
+
+        # Do: search on res.users, order on a field on res.partner, then res.users
+        print '\n\n'
+        user_ids = users_obj.search(cr, search_user, [], order='name asc, login desc')
+        self.assertTrue(set([search_user, a, b]).issubset(set(user_ids)), 'cacaprout')
+
+        # DO: order on a many2one
+        print '\n\n'
+        user_ids = users_obj.search(cr, search_user, [], order='state_id asc, country_id desc, name asc, login desc')
+        print user_ids[0:25]
+        # self.assertTrue(set([search_user, a, b]).issubset(set(user_ids)), 'cacaprout')
+
+if __name__ == '__main__':
+    unittest2.main()
