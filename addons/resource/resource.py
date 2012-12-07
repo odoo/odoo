@@ -275,14 +275,10 @@ class resource_calendar_attendance(osv.osv):
     }
 resource_calendar_attendance()
 
-def convert_timeformat(time_string):
-    split_list = str(time_string).split('.')
-    hour_part = split_list[0]
-    mins_part = split_list[1]
-    round_mins = int(round(float(mins_part) * 60,-2))
-    return time(int(hour_part), round_mins)
-    #converted_string = hour_part + ':' + str(round_mins)[0:2]
-    #return converted_string
+def float_time(hours):
+    """ convert a number of hours (float) into a datetime.time """
+    minutes = int(round(hours * 60))
+    return time(minutes / 60, minutes % 60)
 
 class resource_resource(osv.osv):
     _name = "resource.resource"
@@ -406,8 +402,8 @@ class resource_resource(osv.osv):
                     day = int(week['dayofweek'])
                 else:
                     raise osv.except_osv(_('Configuration Error!'),_('Make sure the Working time has been configured with proper week days!'))
-                hour_from = convert_timeformat(week['hour_from'])
-                hour_to = convert_timeformat(week['hour_to'])
+                hour_from = float_time(week['hour_from'])
+                hour_to = float_time(week['hour_to'])
                 wktime_local.append((day, hour_from, hour_to))
 
         # We now have working hours _in local time_.  Non-working days are an
