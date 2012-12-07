@@ -2,8 +2,10 @@
 <openerp>
 <data>
 
-    <record model="workflow.transition" id="procurement.trans_confirm_confirm_wait">
-        <field name="signal" eval="False"/>
+    <record model="workflow.transition" id="trans_confirm_to_confirm_wait">
+        <field name="act_from" ref="procurement.act_confirm"/>
+        <field name="act_to" ref="procurement.act_confirm_wait"/>
+        <field name="condition">not test_cancel()</field>
     </record>
 
 </data>

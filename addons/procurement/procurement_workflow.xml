@@ -31,6 +31,12 @@
             <field name="name">confirm_wait</field>
             <field name="kind">function</field>
             <field name="action">write({'state':'exception'})</field>
+            <field name="join_mode">AND</field>
+        </record>
+        <record id="act_confirm_temp" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_procurement"/>
+            <field name="name">confirm_temp</field>
+            <field name="slip_mode">OR</field>
         </record>
         <record id="act_confirm_mts" model="workflow.activity">
             <field name="wkf_id" ref="wkf_procurement"/>
@@ -39,6 +45,16 @@
         <record id="act_confirm_mto" model="workflow.activity">
             <field name="wkf_id" ref="wkf_procurement"/>
             <field name="name">confirm_mto</field>
+        </record>
+        <record id="act_buy" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_procurement"/>
+            <field name="name">buy</field>
+            <field name="split_mode">OR</field>
+        </record>
+        <record id="act_buy_end" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_procurement"/>
+            <field name="name">buy_end</field>
+            <field name="join_mode">AND</field>
         </record>
         <record id="act_make_to_stock" model="workflow.activity">
             <field name="wkf_id" ref="wkf_procurement"/>
@@ -106,9 +122,13 @@
         </record>
         <record id="trans_confirm_confirm_wait" model="workflow.transition">
             <field name="act_from" ref="act_confirm"/>
-            <field name="act_to" ref="act_confirm_wait"/>
+            <field name="act_to" ref="act_confirm_temp"/>
             <field name="signal">button_check</field>
             <field name="condition">not test_cancel()</field>
+        </record>
+        <record id="trans_confirm_temp_confirm_wait" model="workflow.transition">
+            <field name="act_from" ref="act_confirm_temp"/>
+            <field name="act_to" ref="act_confirm_wait"/>
         </record>
         <record id="trans_confirm_wait_confirm_mto" model="workflow.transition">
             <field name="act_from" ref="act_confirm_wait"/>
@@ -142,8 +162,16 @@
         </record>
         <record id="trans_confirm_mto_purchase" model="workflow.transition">
             <field name="act_from" ref="act_confirm_mto"/>
-            <field name="act_to" ref="act_make_done"/>
+            <field name="act_to" ref="act_buy"/>
             <field name="condition">check_buy()</field>
+        </record>
+        <record id="trans_buy_buy_end" model="workflow.transition">
+            <field name="act_from" ref="act_buy"/>
+            <field name="act_to" ref="act_buy_end"/>
+        </record>
+        <record id="trans_buy_done" model="workflow.transition">
+            <field name="act_from" ref="act_buy_end"/>
+            <field name="act_to" ref="act_make_done"/>
         </record>
         <record id="trans_confirm_mto_confirm" model="workflow.transition">
             <field name="act_from" ref="act_confirm_mto"/>
