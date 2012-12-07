@@ -5143,9 +5143,10 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
 
         // TODO : activate send on wizard and form
 
-        if (result.erorr || !result.id ) {
+        if (result.error || !result.id ) {
 
-            this.do_warn(result.title, result.erorr);
+            console.log(result.error);
+            this.do_warn(result.error.split('---')[0], result.error.split('---')[1]);
             files = _.filter(files, function (val) { return !val.upload; });
             
         } else {

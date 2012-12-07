@@ -1349,7 +1349,7 @@ class Binary(openerpweb.Controller):
                 'id':  attachment_id
             }
         except Exception,e:
-            args = {'erorr':e.faultCode.split('--')[1],'title':e.faultCode.split('--')[0]}
+            args = {'error':e.faultCode }
         return out % (simplejson.dumps(callback), simplejson.dumps(args))
 
 class Action(openerpweb.Controller):

@@ -1033,6 +1033,11 @@ instance.web.Sidebar = instance.web.Widget.extend({
         this.$('.oe_form_dropdown_section').each(function() {
             $(this).toggle(!!$(this).find('li').length);
         });
+
+        self.$("[title]").tipsy({
+            'html': true,
+            'delayIn': 500,
+        })
     },
     /**
      * For each item added to the section:
@@ -1120,7 +1125,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
         var self = this;
         this.dataset = dataset;
         this.model_id = model_id;
-        if (args && args[0]["erorr"]) {
+        if (args && args[0]["error"]) {
              instance.web.dialog($('<div>'),{
                     modal: true,
                     title: "OpenERP " + _.str.capitalize(args[0]["title"]),
@@ -1129,7 +1134,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
                         click: function(){
                             $(this).dialog("close");
                     }}]
-              }).html(args[0]["erorr"]);
+              }).html(args[0]["error"]);
         }
         if (!model_id) {
             this.on_attachments_loaded([]);
@@ -1144,13 +1149,10 @@ instance.web.Sidebar = instance.web.Widget.extend({
         var items = [];
         var prefix = this.session.url('/web/binary/saveas', {model: 'ir.attachment', field: 'datas', filename_field: 'name'});
         _.each(attachments,function(a) {
-            a.label = a.name.length > 25 ? a.name.substr(0,25) + '...' : a.name;
+            a.label = a.name;
             if(a.type === "binary") {
                 a.url = prefix  + '&id=' + a.id + '&t=' + (new Date().getTime());
             }
-            a.title =   _t("Attachment :") + '\n   ' + a.name + '\n' + 
-                        (a.create_uid && a.create_uid[0] ? _t("Created by :") + '\n   ' + a.create_uid[1] + ' ' + instance.web.format_value(a.create_date, {type:"datetime"}) : '') + 
-                        (a.create_uid && a.write_uid && a.create_uid[0] != a.write_uid[0] ? '\n' + _t("Modified by :") + '\n   ' + a.write_uid[1] + ' ' + instance.web.format_value(a.write_date, {type:"datetime"}) : '');
         });
         self.items['files'] = attachments;
         self.redraw();
