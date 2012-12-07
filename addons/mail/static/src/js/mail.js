@@ -29,8 +29,8 @@ openerp.mail = function (session) {
         },
 
         /* Get the url of an attachment {'id': id} */
-        get_attachment_url: function (session, attachment) {
-            return session.url('/web/binary/saveas', {model: 'ir.attachment', field: 'datas', filename_field: 'datas_fname', id: attachment['id']});
+        get_attachment_url: function (session, id_message, id_attachment) {
+            return session.url('/web/binary/mail', {'id_message': id_message, 'id_attachment': id_attachment});
         },
 
         /**
@@ -258,7 +258,7 @@ openerp.mail = function (session) {
             for (var l in this.attachment_ids) {
                 var attach = this.attachment_ids[l];
                 if (!attach.formating) {
-                    attach.url = mail.ChatterUtils.get_attachment_url(this.session, attach);
+                    attach.url = mail.ChatterUtils.get_attachment_url(this.session, this.id, attach.id);
                     attach.filetype = mail.ChatterUtils.filetype(attach.filename);
                     attach.name = mail.ChatterUtils.breakword(attach.name || attach.filename);
                     attach.formating = true;
@@ -431,7 +431,7 @@ openerp.mail = function (session) {
                             'id': result.id,
                             'name': result.name,
                             'filename': result.filename,
-                            'url': mail.ChatterUtils.get_attachment_url(this.session, result)
+                            'url': mail.ChatterUtils.get_attachment_url(this.session, this.id, result.id)
                         };
                     }
                 }
