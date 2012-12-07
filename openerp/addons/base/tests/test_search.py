@@ -58,7 +58,7 @@ class test_search(common.TransactionCase):
         id_desc_active_desc = partners.search(cr, uid, [('name', 'like', 'test_search_order%'), '|', ('active', '=', True), ('active', '=', False)], order="id desc, active desc")
         self.assertEqual([e, ab, b, a, d, c], id_desc_active_desc, "Search with 'ID DESC, ACTIVE DESC' order failed.")
 
-    def test_10_m2order(self):
+    def test_10_unherits_m2order(self):
         registry, cr, uid = self.registry, self.cr, self.uid
         users_obj = registry('res.users')
 
@@ -66,20 +66,35 @@ class test_search(common.TransactionCase):
         group_employee_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'base', 'group_user')
         group_employee_id = group_employee_ref and group_employee_ref[1] or False
 
+        # Get country/state data
+        country_us_id = registry('res.country').search(cr, uid, [('code', 'like', 'US')])[0]
+        state_ids = registry('res.country.state').search(cr, uid, [('country_id', '=', country_us_id)], limit=2)
+        country_be_id = registry('res.country').search(cr, uid, [('code', 'like', 'BE')])[0]
+
+        # Create test users
         search_user = users_obj.create(cr, uid, {'name': '__search', 'login': '__search', 'groups_id': [(6, 0, [group_employee_id])]})
-        a = users_obj.create(cr, uid, {'name': '__test_A', 'login': '__z_test_A'})
-        b = users_obj.create(cr, uid, {'name': '__test_B', 'login': '__a_test_B'})
+        a = users_obj.create(cr, uid, {'name': '__test_A', 'login': '__test_A', 'country_id': country_be_id, 'state_id': country_be_id})
+        b = users_obj.create(cr, uid, {'name': '__test_B', 'login': '__a_test_B', 'country_id': country_us_id, 'state_id': state_ids[1]})
+        c = users_obj.create(cr, uid, {'name': '__test_B', 'login': '__z_test_B', 'country_id': country_us_id, 'state_id': state_ids[0]})
 
-        # Do: search on res.users, order on a field on res.partner, then res.users
-        print '\n\n'
+        # Do: search on res.users, order on a field on res.partner to try inherits'd fields, then res.users
         user_ids = users_obj.search(cr, search_user, [], order='name asc, login desc')
-        self.assertTrue(set([search_user, a, b]).issubset(set(user_ids)), 'cacaprout')
+        expected_ids = [search_user, a, c, b]
+        test_user_ids = filter(lambda x: x in expected_ids, user_ids)
+        self.assertEqual(test_user_ids, expected_ids, 'search on res_users did not provide expected ids or expected order')
 
-        # DO: order on a many2one
-        print '\n\n'
+        # Do: order on many2one and inherits'd fields
         user_ids = users_obj.search(cr, search_user, [], order='state_id asc, country_id desc, name asc, login desc')
-        print user_ids[0:25]
-        # self.assertTrue(set([search_user, a, b]).issubset(set(user_ids)), 'cacaprout')
+        expected_ids = [c, b, a, search_user]
+        test_user_ids = filter(lambda x: x in expected_ids, user_ids)
+        self.assertEqual(test_user_ids, expected_ids, 'search on res_users did not provide expected ids or expected order')
+
+        # Do: order on many2one and inherits'd fields
+        user_ids = users_obj.search(cr, search_user, [], order='country_id desc, state_id desc, name asc, login desc')
+        expected_ids = [search_user, b, c, a]
+        test_user_ids = filter(lambda x: x in expected_ids, user_ids)
+        self.assertEqual(test_user_ids, expected_ids, 'search on res_users did not provide expected ids or expected order')
+
 
 if __name__ == '__main__':
     unittest2.main()
