@@ -58,6 +58,8 @@ def check_ssl():
     except:
         return False
 
+DEFAULT_LOG_HANDLER = [':INFO']
+
 class configmanager(object):
     def __init__(self, fname=None):
         # Options not exposed on the command line. Command line options will be added
@@ -179,7 +181,7 @@ class configmanager(object):
         group.add_option("--logfile", dest="logfile", help="file where the server log will be stored")
         group.add_option("--no-logrotate", dest="logrotate", action="store_false", my_default=True, help="do not rotate the logfile")
         group.add_option("--syslog", action="store_true", dest="syslog", my_default=False, help="Send the log to the syslog server")
-        group.add_option('--log-handler', action="append", default=[':INFO'], my_default=[':INFO'], metavar="PREFIX:LEVEL", help='setup a handler at LEVEL for a given PREFIX. An empty PREFIX indicates the root logger. This option can be repeated. Example: "openerp.orm:DEBUG" or "werkzeug:CRITICAL" (default: ":INFO")')
+        group.add_option('--log-handler', action="append", default=DEFAULT_LOG_HANDLER, my_default=DEFAULT_LOG_HANDLER, metavar="PREFIX:LEVEL", help='setup a handler at LEVEL for a given PREFIX. An empty PREFIX indicates the root logger. This option can be repeated. Example: "openerp.orm:DEBUG" or "werkzeug:CRITICAL" (default: ":INFO")')
         group.add_option('--log-request', action="append_const", dest="log_handler", const="openerp.netsvc.rpc.request:DEBUG", help='shortcut for --log-handler=openerp.netsvc.rpc.request:DEBUG')
         group.add_option('--log-response', action="append_const", dest="log_handler", const="openerp.netsvc.rpc.response:DEBUG", help='shortcut for --log-handler=openerp.netsvc.rpc.response:DEBUG')
         group.add_option('--log-web', action="append_const", dest="log_handler", const="openerp.addons.web.http:DEBUG", help='shortcut for --log-handler=openerp.addons.web.http:DEBUG')
@@ -299,8 +301,9 @@ class configmanager(object):
         # Copy all optparse options (i.e. MyOption) into self.options.
         for group in parser.option_groups:
             for option in group.option_list:
-                self.options[option.dest] = option.my_default
-                self.casts[option.dest] = option
+                if option.dest not in self.options:
+                    self.options[option.dest] = option.my_default
+                    self.casts[option.dest] = option
 
         self.parse_config(None, False)
 
@@ -384,12 +387,17 @@ class configmanager(object):
                 ]
 
         for arg in keys:
-            # Copy the command-line argument...
-            if getattr(opt, arg):
+            # Copy the command-line argument (except the special case for log_handler, due to
+            # action=append requiring a real default, so we cannot use the my_default workaround)
+            if getattr(opt, arg) and getattr(opt, arg) != DEFAULT_LOG_HANDLER:
                 self.options[arg] = getattr(opt, arg)
             # ... or keep, but cast, the config file value.
             elif isinstance(self.options[arg], basestring) and self.casts[arg].type in optparse.Option.TYPE_CHECKER:
                 self.options[arg] = optparse.Option.TYPE_CHECKER[self.casts[arg].type](self.casts[arg], arg, self.options[arg])
+
+
+        if isinstance(self.options['log_handler'], basestring):
+            self.options['log_handler'] = self.options['log_handler'].split(',')
 
         # if defined but None take the configfile value
         keys = [
@@ -613,6 +621,9 @@ class configmanager(object):
 
     def __setitem__(self, key, value):
         self.options[key] = value
+        if key in self.options and isinstance(self.options[key], basestring) and \
+                key in self.casts and self.casts[key].type in optparse.Option.TYPE_CHECKER:
+            self.options[key] = optparse.Option.TYPE_CHECKER[self.casts[key].type](self.casts[key], key, self.options[key])
 
     def __getitem__(self, key):
         return self.options[key]

@@ -87,19 +87,15 @@ class Graph(dict):
             for k, v in additional_data[package.name].items():
                 setattr(package, k, v)
 
-    def add_module(self, cr, module, force_demo=False):
-        self.add_modules(cr, [module], force_demo)
+    def add_module(self, cr, module, force=None):
+        self.add_modules(cr, [module], force)
 
-    def add_modules(self, cr, module_list, force_demo=False):
+    def add_modules(self, cr, module_list, force=None):
+        if force is None:
+            force = []
         packages = []
         len_graph = len(self)
         for module in module_list:
-            if force_demo:
-                cr.execute("""
-                    UPDATE ir_module_module
-                    SET demo='t'
-                    WHERE name = %s""",
-                    (module,))
             # This will raise an exception if no/unreadable descriptor file.
             # NOTE The call to load_information_from_description_file is already
             # done by db.initialize, so it is possible to not do it again here.
@@ -125,6 +121,9 @@ class Graph(dict):
                 current.remove(package)
                 node = self.add_node(package, info)
                 node.data = info
+                for kind in ('init', 'demo', 'update'):
+                    if package in tools.config[kind] or 'all' in tools.config[kind] or kind in force:
+                        setattr(node, kind, True)
             else:
                 later.add(package)
                 packages.append((package, info))
@@ -186,11 +185,18 @@ class Node(Singleton):
         node.depth = self.depth + 1
         if node not in self.children:
             self.children.append(node)
+        for attr in ('init', 'update', 'demo'):
+            if hasattr(self, attr):
+                setattr(node, attr, True)
         self.children.sort(lambda x, y: cmp(x.name, y.name))
         return node
 
     def __setattr__(self, name, value):
         super(Singleton, self).__setattr__(name, value)
+        if name in ('init', 'update', 'demo'):
+            tools.config[name][self.name] = 1
+            for child in self.children:
+                setattr(child, name, value)
         if name == 'depth':
             for child in self.children:
                 setattr(child, name, value + 1)

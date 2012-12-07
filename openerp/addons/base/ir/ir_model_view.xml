@@ -44,7 +44,7 @@
                                             <field name="selection" attrs="{'required': [('ttype','in',['selection','reference'])], 'readonly': [('ttype','not in',['selection','reference'])]}"/>
                                             <field name="size" attrs="{'required': [('ttype','in',['char','reference'])], 'readonly': [('ttype','not in',['char','reference'])]}"/>
                                             <field name="domain" attrs="{'readonly': [('relation','=','')]}"/>
-                                            <field name="serialization_field_id" attrs="{'readonly': [('state','=','base')]}" domain="[('ttype','=','serialized'), ('model_id', '=', model_id)]"/>
+                                            <field name="serialization_field_id" attrs="{'readonly': [('state','=','base')]}" domain="[('ttype','=','serialized'), ('model_id', '=', parent.model)]"/>
                                         </group>
                                         <group>
                                             <field name="required"/>
