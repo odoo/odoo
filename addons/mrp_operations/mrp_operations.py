@@ -167,7 +167,6 @@ class mrp_production_workcenter_line(osv.osv):
                 if prod.production_id.workcenter_lines:
                     dstart = min(vals['date_planned'], prod.production_id.workcenter_lines[0]['date_planned'])
                     prod_obj.write(cr, uid, [prod.production_id.id], {'date_start':dstart}, context=context, mini=False)
-        print "result>??????", result
         return result
 
     def action_draft(self, cr, uid, ids, context=None):
