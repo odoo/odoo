@@ -309,6 +309,10 @@ class res_partner(osv.osv):
 
 
     def _get_amounts_and_date(self, cr, uid, ids, name, arg, context=None):
+        '''
+        Function that computes values for the followup functional fields. Note that 'payment_amount_due'
+        is similar to 'credit' field on res.partner except it filters on user's company.
+        '''
         res = {}
         company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
         current_date = fields.date.context_today(cr, uid, context)

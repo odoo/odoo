@@ -67,9 +67,9 @@
                     <page string="Payment Follow-up" groups="account.group_account_invoice" name="followup_tab">
                         <div class="oe_right oe_button_box" name="followup_button">
                             <button name="do_button_print" type="object" string="Print Overdue Payments" groups="account.group_account_user" 
-                                help="Print overdue payments report independent of follow-up line" attrs="{'invisible':[('credit', '&lt;=', 0.0)]}" />
+                                help="Print overdue payments report independent of follow-up line" attrs="{'invisible':[('payment_amount_due', '&lt;=', 0.0)]}" />
                             <button name="do_partner_mail" type="object" string="Send Overdue Email" groups="account.group_account_user"
-                                help="If not specified by the latest follow-up level, it will send from the default email template" attrs="{'invisible':[('credit', '&lt;=', 0.0)]}"/>
+                                help="If not specified by the latest follow-up level, it will send from the default email template" attrs="{'invisible':[('payment_amount_due', '&lt;=', 0.0)]}"/>
                         </div>
                         <p attrs="{'invisible':[('latest_followup_date','=', False)]}">
                             The <field name="latest_followup_date"  class = "oe_inline"/>, the latest payment follow-up
