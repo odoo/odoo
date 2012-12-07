@@ -422,12 +422,11 @@ openerp.mail = function (session) {
         on_attachment_loaded: function (event, result) {
 
             if (result.erorr || !result.id ) {
-
-                this.do_warn(result.title, result.erorr);
+                var error_title = result.error.split('\n')[0];
+                var error_content = result.error.replace(/^.*\n/, '');
+                this.do_warn(error_title, error_content);
                 this.attachment_ids = _.filter(this.attachment_ids, function (val) { return !val.upload; });
-                
             } else {
-
                 for (var i in this.attachment_ids) {
                     if (this.attachment_ids[i].filename == result.filename && this.attachment_ids[i].upload) {
                         this.attachment_ids[i]={
@@ -438,10 +437,8 @@ openerp.mail = function (session) {
                         };
                     }
                 }
-
             }
             this.display_attachments();
-
             var $input = this.$('input.oe_form_binary_file');
             $input.after($input.clone(true)).remove();
             this.$(".oe_attachment_file").show();
