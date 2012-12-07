@@ -249,7 +249,7 @@ class ir_ui_menu(osv.osv):
         icon_image = False
         if icon_path:
             try:
-                icon_file = tools.file_open(icon_path, 'rb')
+                icon_file = tools.file_open(icon_path,'rb')
                 icon_image = base64.encodestring(icon_file.read())
             finally:
                 icon_file.close()
@@ -265,22 +265,17 @@ class ir_ui_menu(osv.osv):
 
         return res
 
-    def get_needaction_data(self, cr, uid, ids, field_names, args, context=None):
-        """ Return for each menu entry of ids :
-            - if it uses the needaction mechanism (needaction_enabled)
-            - the needaction counter of the related action, taking into account
-              the action domain
-        """
+    def _get_needaction(self, cr, uid, ids, field_names, args, context=None):
         res = {}
         for menu in self.browse(cr, uid, ids, context=context):
             res[menu.id] = {
                 'needaction_enabled': False,
                 'needaction_counter': False,
             }
-            if menu.action and menu.action.type in ('ir.actions.act_window', 'ir.actions.client') and menu.action.res_model:
+            if menu.action and menu.action.type in ('ir.actions.act_window','ir.actions.client') and menu.action.res_model:
                 obj = self.pool.get(menu.action.res_model)
                 if obj and obj._needaction:
-                    if menu.action.type == 'ir.actions.act_window':
+                    if menu.action.type=='ir.actions.act_window':
                         dom = menu.action.domain and eval(menu.action.domain, {'uid': uid}) or []
                     else:
                         dom = eval(menu.action.params_store or '{}', {'uid': uid}).get('domain')
@@ -291,7 +286,7 @@ class ir_ui_menu(osv.osv):
     _columns = {
         'name': fields.char('Menu', size=64, required=True, translate=True),
         'sequence': fields.integer('Sequence'),
-        'child_id': fields.one2many('ir.ui.menu', 'parent_id', 'Child IDs'),
+        'child_id' : fields.one2many('ir.ui.menu', 'parent_id','Child IDs'),
         'parent_id': fields.many2one('ir.ui.menu', 'Parent Menu', select=True),
         'groups_id': fields.many2many('res.groups', 'ir_ui_menu_group_rel',
             'menu_id', 'gid', 'Groups', help="If you have groups, the visibility of this menu will be based on these groups. "\
@@ -301,18 +296,11 @@ class ir_ui_menu(osv.osv):
         'icon': fields.selection(tools.icons, 'Icon', size=64),
         'icon_pict': fields.function(_get_icon_pict, type='char', size=32),
         'web_icon': fields.char('Web Icon File', size=128),
-        'web_icon_hover': fields.char('Web Icon File (hover)', size=128),
+        'web_icon_hover':fields.char('Web Icon File (hover)', size=128),
         'web_icon_data': fields.function(_get_image_icon, string='Web Icon Image', type='binary', readonly=True, store=True, multi='icon'),
-        'web_icon_hover_data': fields.function(_get_image_icon, string='Web Icon Image (hover)', type='binary', readonly=True, store=True, multi='icon'),
-        'needaction_enabled': fields.function(get_needaction_data,
-            type='boolean', multi='get_needaction_data',
-            store=True,
-            string='Target model uses the need action mechanism',
-            help='If the menu entry action is an act_window action, and if this action is related to a model that uses the need_action mechanism, this field is set to true. Otherwise, it is false.'),
-        'needaction_counter': fields.function(get_needaction_data,
-            type='integer', multi='get_needaction_data',
-            string='Number of actions the user has to perform',
-            help='If the target model uses the need action mechanism, this field gives the number of actions the current user has to perform.'),
+        'web_icon_hover_data':fields.function(_get_image_icon, string='Web Icon Image (hover)', type='binary', readonly=True, store=True, multi='icon'),
+        'needaction_enabled': fields.function(_get_needaction, string='Target model uses the need action mechanism', store=True, type='boolean', help='If the menu entry action is an act_window action, and if this action is related to a model that uses the need_action mechanism, this field is set to true. Otherwise, it is false.', multi='_get_needaction'),
+        'needaction_counter': fields.function(_get_needaction, string='Number of actions the user has to perform', type='integer', help='If the target model uses the need action mechanism, this field gives the number of actions the current user has to perform.', multi='_get_needaction'),
         'action': fields.function(_action, fnct_inv=_action_inv,
             type='reference', string='Action',
             selection=[
