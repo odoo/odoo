@@ -10,7 +10,7 @@ openerp.testing = {};
         formats: ['coresetup', 'dates'],
         chrome: ['corelib', 'coresetup'],
         views: ['corelib', 'coresetup', 'data', 'chrome'],
-        search: ['data', 'coresetup', 'formats'],
+        search: ['views', 'formats'],
         list: ['views', 'data'],
         form: ['data', 'views', 'list', 'formats'],
         list_editable: ['list', 'form', 'data'],
@@ -263,7 +263,7 @@ openerp.testing = {};
                     ++di;
                 }
 
-                instance = openerp.init("fuck your shit, don't load anything you cunt");
+                instance = openerp.init(null);
                 _(d).chain()
                     .reverse()
                     .uniq()

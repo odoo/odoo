@@ -822,7 +822,7 @@ instance.web.Menu =  instance.web.Widget.extend({
         this.renderElement();
         this.limit_entries();
         // Hide toplevel item if there is only one
-        var $toplevel = this.$("li")
+        var $toplevel = this.$("li");
         if($toplevel.length == 1) {
             $toplevel.hide();
         }
@@ -1106,7 +1106,6 @@ instance.web.WebClient = instance.web.Client.extend({
     start: function() {
         var self = this;
         return $.when(this._super()).then(function() {
-            self.$(".oe_logo").attr("href", $.param.fragment("" + window.location, "", 2).slice(0, -1));
             if (jQuery.param !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined) {
                 $("body").addClass("kitten-mode-activated");
                 if ($.blockUI) {
@@ -1167,26 +1166,32 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     check_timezone: function() {
         var self = this;
-        var user_offset = instance.session.user_context.tz_offset;
-        var offset = -(new Date().getTimezoneOffset());
-        // _.str.sprintf()'s zero front padding is buggy with signed decimals, so doing it manually
-        var browser_offset = (offset < 0) ? "-" : "+";
-        browser_offset += _.str.sprintf("%02d", Math.abs(offset / 60));
-        browser_offset += _.str.sprintf("%02d", Math.abs(offset % 60));
-        if (browser_offset !== user_offset) {
-            var notification = this.do_warn(_t("Timezone"), QWeb.render('WebClient.timezone_notification', {
-                user_timezone: instance.session.user_context.tz || 'UTC',
-                user_offset: user_offset,
-                browser_offset: browser_offset,
-            }), true);
-            notification.element.find('.oe_webclient_timezone_notification').on('click', function() {
-                notification.close();
-            }).find('a').on('click', function() {
-                notification.close();
-                self.user_menu.on_menu_settings();
-                return false;
-            });
-        }
+        return new instance.web.Model('res.users').call('read', [[this.session.uid], ['tz_offset']]).then(function(result) {
+            var user_offset = result[0]['tz_offset'];
+            var offset = -(new Date().getTimezoneOffset());
+            // _.str.sprintf()'s zero front padding is buggy with signed decimals, so doing it manually
+            var browser_offset = (offset < 0) ? "-" : "+";
+            browser_offset += _.str.sprintf("%02d", Math.abs(offset / 60));
+            browser_offset += _.str.sprintf("%02d", Math.abs(offset % 60));
+            if (browser_offset !== user_offset) {
+                var $icon = $(QWeb.render('WebClient.timezone_systray'));
+                $icon.on('click', function() {
+                    var notification = self.do_warn(_t("Timezone mismatch"), QWeb.render('WebClient.timezone_notification', {
+                        user_timezone: instance.session.user_context.tz || 'UTC',
+                        user_offset: user_offset,
+                        browser_offset: browser_offset,
+                    }), true);
+                    notification.element.find('.oe_webclient_timezone_notification').on('click', function() {
+                        notification.close();
+                    }).find('a').on('click', function() {
+                        notification.close();
+                        self.user_menu.on_menu_settings();
+                        return false;
+                    });
+                });
+                $icon.appendTo(self.$('.oe_systray'));
+            }
+        });
     },
     destroy_content: function() {
         _.each(_.clone(this.getChildren()), function(el) {

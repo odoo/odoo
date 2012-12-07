@@ -152,25 +152,14 @@ var makeSearchView = function (instance, dummy_widget_attributes, defaults) {
     instance.dummy = {};
     instance.dummy.DummyWidget = instance.web.search.Field.extend(
         dummy_widget_attributes || {});
-    if (!('/web/view/load' in instance.session.responses)) {
-        instance.session.responses['/web/view/load'] = function () {
+    if (!('dummy.model:fields_view_get' in instance.session.responses)) {
+        instance.session.responses['dummy.model:fields_view_get'] = function () {
             return {
                 type: 'search',
                 fields: {
                     dummy: {type: 'char', string: "Dummy"}
                 },
-                arch: {
-                    tag: 'search',
-                    attrs: {},
-                    children: [{
-                        tag: 'field',
-                        attrs: {
-                            name: 'dummy',
-                            widget: 'dummy'
-                        },
-                        children: []
-                    }]
-                }
+                arch: '<search><field name="dummy" widget="dummy"/></search>'
             };
         };
     }
@@ -183,7 +172,7 @@ var makeSearchView = function (instance, dummy_widget_attributes, defaults) {
         };
     };
 
-    var dataset = {model: 'dummy.model', get_context: function () { return {}; }};
+    var dataset = new instance.web.DataSet(null, 'dummy.model');
     var view = new instance.web.SearchView(null, dataset, false, defaults);
     var self = this;
     view.on('invalid_search', self, function () {
@@ -926,31 +915,16 @@ openerp.testing.section('filters', {
     rpc: 'mock',
     templates: true,
     setup: function (instance, $s, mock) {
-        mock('/web/view/load', function () {
+        mock('dummy.model:fields_view_get', function () {
             // view with a single group of filters
             return {
                 type: 'search',
                 fields: {},
-                arch: {
-                    tag: 'search',
-                    attrs: {},
-                    children: [{
-                        tag: 'filter',
-                        attrs: { string: "Foo1", domain: [ ['foo', '=', '1'] ] },
-                        children: []
-                    }, {
-                        tag: 'filter',
-                        attrs: {
-                            name: 'foo2',
-                            string: "Foo2",
-                            domain: [ ['foo', '=', '2'] ] },
-                        children: []
-                    }, {
-                        tag: 'filter',
-                        attrs: { string: "Foo3", domain: [ ['foo', '=', '3'] ] },
-                        children: []
-                    }]
-                }
+                arch: '<search>' +
+                        '<filter string="Foo1" domain="[ [\'foo\', \'=\', \'1\'] ]"/>' +
+                        '<filter name="foo2" string="Foo2" domain="[ [\'foo\', \'=\', \'2\'] ]"/>' +
+                        '<filter string="Foo3" domain="[ [\'foo\', \'=\', \'3\'] ]"/>' +
+                        '</search>',
             };
         });
     }

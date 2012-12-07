@@ -969,6 +969,9 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
         if (_.isString(url)) {
             url = { url: url };
         }
+        _.defaults(params, {
+            context: this.user_context || {}
+        });
         // Construct a JSON-RPC2 request, method is currently unused
         if (this.debug)
             params.debug = 1;

@@ -1189,36 +1189,19 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             });
         }
     },
-    view_arch_to_dom_node: function(arch) {
-        // Historic mess for views arch
-        //
-        // server:
-        //      -> got xml as string
-        //      -> parse to xml and manipulate domains and contexts
-        //      -> convert to json
-        //  client:
-        //      -> got view as json
-        //      -> convert back to xml as string
-        //      -> parse it as xml doc (manipulate button@type for IE)
-        //      -> convert back to string
-        //      -> parse it as dom element with jquery
-        //      -> for each widget, convert node to json
-        //
-        // Wow !!!
-        var xml = instance.web.json_node_to_xml(arch);
-
-        var doc = $.parseXML('<div class="oe_form">' + xml + '</div>');
+    get_arch_fragment: function() {
+        var doc = $.parseXML(instance.web.json_node_to_xml(this.fvg.arch)).documentElement;
+        // IE won't allow custom button@type and will revert it to spec default : 'submit'
         $('button', doc).each(function() {
             $(this).attr('data-button-type', $(this).attr('type')).attr('type', 'button');
         });
-        xml = instance.web.xml_to_str(doc);
-        return $(xml);
+        return $('<div class="oe_form"/>').append(instance.web.xml_to_str(doc));
     },
     render_to: function($target) {
         var self = this;
         this.$target = $target;
 
-        this.$form = this.view_arch_to_dom_node(this.fvg.arch);
+        this.$form = this.get_arch_fragment();
 
         this.process_version();
 
@@ -2680,13 +2663,10 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
     init: function(field_manager, node) {
         var self = this;
         this._super(field_manager, node);
-        this.values = _.clone(this.field.selection);
-        _.each(this.values, function(v, i) {
-            if (v[0] === false && v[1] === '') {
-                self.values.splice(i, 1);
-            }
-        });
-        this.values.unshift([false, '']);
+        this.values = _(this.field.selection).chain()
+            .reject(function (v) { return v[0] === false && v[1] === ''; })
+            .unshift([false, ''])
+            .value();
     },
     initialize_content: function() {
         // Flag indicating whether we're in an event chain containing a change
@@ -5271,6 +5251,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
 
 instance.web.form.FieldMonetary = instance.web.form.FieldFloat.extend({
     template: "FieldMonetary",
+    widget_class: 'oe_form_field_float oe_form_field_monetary',
     init: function() {
         this._super.apply(this, arguments);
         this.set({"currency": false});

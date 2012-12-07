@@ -1,0 +1,15 @@
+--- web_example/static/src/js/first_module.js
++++ web_example/static/src/js/first_module.js
+@@ -1,11 +1,7 @@
+ // static/src/js/first_module.js
+ openerp.web_example = function (instance) {
+     instance.web.client_actions.add('example.action', 'instance.web_example.Action');
+     instance.web_example.Action = instance.web.Widget.extend({
++        template: 'web_example.action'
+-        className: 'oe_web_example',
+-        start: function () {
+-            this.$el.text("Hello, world!");
+-            return this._super();
+-        }
+     });
+ };

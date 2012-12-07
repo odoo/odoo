@@ -436,7 +436,7 @@
         </tr>
         <tr>
             <td class="oe_leftbar" valign="top">
-                <a class="oe_logo" href="#"><img t-att-src='_s + "/web/static/src/img/logo.png"'/></a>
+                <a class="oe_logo" t-attf-href="/?ts=#{Date.now()}"><img t-att-src='_s + "/web/static/src/img/logo.png"'/></a>
                 <div class="oe_secondary_menus_container"/>
                 <div class="oe_footer">
                     Powered by <a href="http://www.openerp.com" target="_blank"><span>OpenERP</span></a>
@@ -460,6 +460,11 @@
         </dl>
 
         <p><a href="#">Click here to change your user's timezone.</a></p>
+    </div>
+</t>
+<t t-name="WebClient.timezone_systray">
+    <div class="oe_topbar_item oe_timezone_systray" title="Timezone mismatch">
+        <span class="ui-icon ui-state-error ui-icon-alert"/>
     </div>
 </t>
 
@@ -1065,7 +1070,10 @@
             t-att-autofocus="widget.node.attrs.autofocus"
             t-att-id="widget.id_for_label">
                 <t t-foreach="widget.values" t-as="option">
-                    <option><t t-esc="widget.node.attrs.placeholder" t-if="option[0] == false and widget.node.attrs.placeholder"/><t t-esc="option[1]" t-if="option[0] != false"/></option>
+                    <option>
+                        <t t-esc="widget.node.attrs.placeholder" t-if="option[0] === false and widget.node.attrs.placeholder"/>
+                        <t t-esc="option[1]" t-if="option[0] !== false"/>
+                    </option>
                 </t>
         </select>
     </span>
