@@ -51,33 +51,52 @@ class stock_move(osv.osv):
 stock_move()
 
 class mrp_production_workcenter_line(osv.osv):
+    
+    def _calculate_end_date(self, cr, uid, ids, date_planned, cycle, hour, calendar_id):
+            print "\n >>>>>>>>>>>>>>>> in calculation end date :::::::::"
+            if not date_planned:
+                return False
+            cycle_per_hour = timedelta(hours=(cycle * hour))
+            date_planned = datetime.strptime(date_planned, "%Y-%m-%d %H:%M:%S")
+            print "\n >>>>> date planned ::::",date_planned
+            date_and_hours_by_cal = [(date_planned, cycle, hour, calendar_id)]
+            print "\n >>>>>>> date and hours by cal :::::::",date_and_hours_by_cal
+#            intervals = self.pool.get('resource.calendar').interval_get_multi(cr, uid, date_and_hours_by_cal)
+#            if intervals:
+#                i = intervals.get(date_planned, cycle, hour, calendar_id)
+#                res = i[-1][1].strftime('%Y-%m-%d %H:%M:%S')
+#            else:
+            res = date_planned + cycle_per_hour
+            print "\n >>>>>>>>>>>>>>>> res ::::::::::::::::::::::",res
+            return res
+
 
     def _get_date_end(self, cr, uid, ids, field_name, arg, context=None):
         """ Finds ending date.
         @return: Dictionary of values.
         """
         ops = self.browse(cr, uid, ids, context=context)
-        date_and_hours_by_cal = [(op.date_planned, op.hour, op.workcenter_id.calendar_id.id) for op in ops if op.date_planned]
-        intervals = self.pool.get('resource.calendar').interval_get_multi(cr, uid, date_and_hours_by_cal)
-
         res = {}
         for op in ops:
-            res[op.id] = False
-            if op.date_planned:
-                i = intervals.get((op.date_planned, op.hour, op.workcenter_id.calendar_id.id))
-                if i:
-                    res[op.id] = i[-1][1].strftime('%Y-%m-%d %H:%M:%S')
-                else:
-                    res[op.id] = op.date_planned
+            res[op.id] = self._calculate_end_date(cr, uid, ids, op.date_planned, op.cycle, op.hour, op.workcenter_id.calendar_id.id)
         return res
-    
+
     def onchange_get_date_end(self, cr, uid, ids, date_planned, cycle, hour):
         res = {'value':{}}
-        cycle_per_hour = timedelta(hours=(cycle * hour))
+        calendar_id = {}
+        print "\n >>>>>>>>>>>>>>>> onchange get date end call::::::::::::::::date_planned::::",date_planned
+#        cycle_per_hour = timedelta(hours=(cycle * hour))
+        ops = self.browse(cr, uid, ids, context=None)
+        for op in ops:
+            calendar_id = op.workcenter_id.calendar_id.id
+#            res[op.id] = self._calculate_end_date(cr, uid, op.date_planned, op.cycle, op.hour, op.workcenter_id.calendar_id.id)
         if date_planned and isinstance(date_planned, str):
-            date_planned = datetime.strptime(date_planned, "%Y-%m-%d %H:%M:%S")
-            date_planned_end = date_planned + cycle_per_hour
-            res['value'] = {'date_planned_end': date_planned_end.strftime("%Y-%m-%d %H:%M:%S")}
+#            date_planned = datetime.strptime(date_planned, "%Y-%m-%d %H:%M:%S")
+#            date_planned_end = date_planned + cycle_per_hour
+#            res['value'] = {'date_planned_end': date_planned_end.strftime("%Y-%m-%d %H:%M:%S")}
+            print "\n :::::::::::: calling calculation fun ::::::"
+            end_date = self._calculate_end_date(cr, uid, ids, date_planned, cycle,  hour, calendar_id)
+            res['value'] = {'date_planned_end':  end_date.strftime("%Y-%m-%d %H:%M:%S")}
         return res
 
     def onchange_production_id(self, cr, uid, ids, production_id, context=None):
@@ -161,6 +180,7 @@ class mrp_production_workcenter_line(osv.osv):
                 if prod.production_id.workcenter_lines:
                     dstart = min(vals['date_planned'], prod.production_id.workcenter_lines[0]['date_planned'])
                     prod_obj.write(cr, uid, [prod.production_id.id], {'date_start':dstart}, context=context, mini=False)
+        print "result>??????", result
         return result
 
     def action_draft(self, cr, uid, ids, context=None):
