@@ -1115,20 +1115,12 @@ instance.web.Sidebar = instance.web.Widget.extend({
             });
         });
     },
-    do_attachement_update: function(dataset, model_id,args) {
+    do_attachement_update: function(dataset, model_id, args) {
         var self = this;
         this.dataset = dataset;
         this.model_id = model_id;
-        if (args && args[0]["error"]) {
-             instance.web.dialog($('<div>'),{
-                    modal: true,
-                    title: "OpenERP " + _.str.capitalize(args[0]["title"]),
-                    buttons: [{
-                        text: _t("Ok"),
-                        click: function(){
-                            $(this).dialog("close");
-                    }}]
-              }).html(args[0]["error"]);
+        if (args && args[0].error) {
+            this.do_warn( instance.web.qweb.render('message_error_uploading'), args[0].error);
         }
         if (!model_id) {
             this.on_attachments_loaded([]);

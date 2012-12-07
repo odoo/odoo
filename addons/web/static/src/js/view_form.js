@@ -5124,13 +5124,9 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
         // TODO : activate send on wizard and form
 
         if (result.error || !result.id ) {
-
-            console.log(result.error);
-            this.do_warn(result.error.split('---')[0], result.error.split('---')[1]);
+            this.do_warn( instance.web.qweb.render('message_error_uploading'), result.error);
             files = _.filter(files, function (val) { return !val.upload; });
-            
         } else {
-
             for(var i in files){
                 if(files[i].filename == result.filename && files[i].upload) {
                     files[i] = {
@@ -5141,7 +5137,6 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
                     };
                 }
             }
-
         }
 
         this.set({'value': files});
