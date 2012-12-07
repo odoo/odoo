@@ -269,24 +269,47 @@ class account_coda_import(osv.osv_memory):
                             invoice = self.pool.get('account.invoice').browse(cr, uid, ids[0])
                             partner = invoice.partner_id
                             partner_id = partner.id
-                            context = {
-                                'default_partner_id': partner_id,
-                                'default_amount': abs(line['amount']),
-                                'default_number': invoice.name,
-                                'close_after_process': True,
-                                'invoice_type': invoice.type,
-                                'invoice_id': invoice.id,
-                                'default_type': invoice.type in ['out_invoice', 'out_refund'] and 'receipt' or 'payment',
-                                'type': invoice.type in ['out_invoice', 'out_refund'] and 'receipt' or 'payment'
-                            }
+
                             if invoice.type in ['in_invoice', 'in_refund'] and line['debit'] == '1':
                                 line['type'] = 'supplier'
-                                line['voucher_id'] = self.pool.get('account.voucher').create(cr, uid, {'account_id': partner.property_account_payable.id, 'journal_id': statement['journal_id'].id}, context=context)
-                            elif invoice.type in ['out_invoice'] and line['debit'] == '0':
+                            elif invoice.type in ['out_invoice', 'out_refund'] and line['debit'] == '0':
                                 line['type'] = 'customer'
-                                line['voucher_id'] = self.pool.get('account.voucher').create(cr, uid, {'account_id': partner.property_account_receivable.id, 'journal_id': statement['journal_id'].id}, context=context)
                             else:
                                 line['type'] = 'general'
+                            line['reconcile'] = False
+                            if invoice.type in ['in_invoice', 'out_invoice']:
+                                iml_ids = self.pool.get('account.move.line').search(cr, uid, [('move_id', '=', invoice.move_id.id), ('reconcile_id', '=', False), ('account_id.reconcile', '=', True)])
+                            if iml_ids:
+                                line['reconcile'] = iml_ids[0]
+                            if line['reconcile']:
+                                voucher_vals = {
+                                    'type': line['type'] == 'supplier' and 'payment' or 'receipt',
+                                    'name': line['name'],
+                                    'partner_id': partner_id,
+                                    'journal_id': statement['journal_id'].id,
+                                    'account_id': statement['journal_id'].default_credit_account_id.id,
+                                    'company_id': statement['journal_id'].company_id.id,
+                                    'currency_id': statement['journal_id'].company_id.currency_id.id,
+                                    'date': line['entryDate'],
+                                    'amount': abs(line['amount']),
+                                    'period_id': statement['period_id'],
+                                    'invoice_id': invoice.id,
+                                }
+                                context['invoice_id'] = invoice.id
+                                voucher_vals.update(self.pool.get('account.voucher').onchange_partner_id(cr, uid, [],
+                                    partner_id=partner_id,
+                                    journal_id=statement['journal_id'].id,
+                                    amount=abs(line['amount']),
+                                    currency_id=statement['journal_id'].company_id.currency_id.id,
+                                    ttype=line['type'] == 'supplier' and 'payment' or 'receipt',
+                                    date=line['transactionDate'],
+                                    context=context
+                                )['value'])
+                                line_drs = []
+                                for line_dr in voucher_vals['line_dr_ids']:
+                                    line_drs.append((0, 0, line_dr))
+                                voucher_vals['line_dr_ids'] = line_drs
+                                line['voucher_id'] = self.pool.get('account.voucher').create(cr, uid, voucher_vals, context=context)
                     if 'counterpartyNumber' in line and line['counterpartyNumber']:
                         ids = self.pool.get('res.partner.bank').search(cr, uid, [('acc_number', '=', str(line['counterpartyNumber']))])
                         if ids and len(ids) > 0:
