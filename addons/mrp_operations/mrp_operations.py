@@ -52,14 +52,13 @@ stock_move()
 
 class mrp_production_workcenter_line(osv.osv):
 
-    def _calculate_end_date(self, cr, uid, ids, date_planned, cycle, hour, workcenter_id, context=None):
+    def _calculate_end_date(self, cr, uid, date_planned, hour, calendar_id, context=None):
         if not date_planned:
             return False
-        ops = self.browse(cr, uid, ids, context=context)
-        date_and_hours_by_cal =[ (date_planned, hour, workcenter_id)]
+        date_and_hours_by_cal =[ (date_planned, hour, calendar_id)]
         intervals = self.pool.get('resource.calendar').interval_get_multi(cr, uid, date_and_hours_by_cal)
         if intervals:
-            i = intervals.get((date_planned, hour, workcenter_id))
+            i = intervals.get((date_planned, hour, calendar_id))
             if i:
                 res = i[-1][1].strftime('%Y-%m-%d %H:%M:%S')
             else:
@@ -75,21 +74,16 @@ class mrp_production_workcenter_line(osv.osv):
         for op in ops:
             res[op.id] = False
             if op.date_planned:
-                res[op.id] = self._calculate_end_date(cr, uid, ids, op.date_planned, op.cycle, op.hour, op.workcenter_id.calendar_id.id)
+                res[op.id] = self._calculate_end_date(cr, uid, op.date_planned, op.hour, op.workcenter_id.calendar_id.id)
             else:
                 res[op.id] = op.date_planned
         return res
 
-    def onchange_get_date_end(self, cr, uid, ids, workcenter_id, context=None):
-        res = {'value':{}}
-        work_ids = self.search(cr,uid,[('workcenter_id','=',workcenter_id)],context=context)
-        ops = self.browse(cr, uid, work_ids, context=context)
-        for op in ops:
-            res['date_planned_end'] = False
-            if op.date_planned:
-                res['date_planned_end'] = self._calculate_end_date(cr, uid, ids, op.date_planned, op.cycle, op.hour, op.workcenter_id.calendar_id.id)
-            else:
-                res['date_planned_end'] = op.date_planned
+    def onchange_date_planned(self, cr, uid, ids, date_planned, hour, workcenter_id, context=None):
+        res = {}
+        if workcenter_id:
+            workcenter = self.pool.get("mrp.workcenter").browse(cr, uid, workcenter_id, context=context)
+            res['date_planned_end'] = self._calculate_end_date(cr, uid, date_planned, hour, workcenter.calendar_id.id)
         return {'value': res}
 
     def onchange_production_id(self, cr, uid, ids, production_id, context=None):
