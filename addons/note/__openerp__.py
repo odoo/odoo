@@ -57,6 +57,9 @@ Notes can be found in the 'Home' menu.
     'css': [
         'static/src/css/note.css',
     ],
+    'js': [
+        'static/src/js/note.js',
+    ],
     'installable': True,
     'application': True,
     'auto_install': False,
