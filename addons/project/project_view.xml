@@ -19,43 +19,6 @@
             <field name="context">{'search_default_project_id': [active_id], 'default_project_id': active_id}</field>
         </record>
 
-        <!-- Project Read/Unread actions -->
-        <record id="actions_server_project_unread" model="ir.actions.server">
-            <field name="name">Project: Mark unread</field>
-            <field name="condition">True</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="model_project_project"/>
-            <field name="state">code</field>
-            <field name="code">self.message_mark_as_unread(cr, uid, context.get('active_ids'), context=context)</field>
-        </record>
-        <record id="action_project_unread" model="ir.values">
-            <field name="name">action_project_unread</field>
-            <field name="action_id" ref="actions_server_project_unread"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_project_unread'))"/>
-            <field name="key">action</field>
-            <field name="model_id" ref="model_project_project"/>
-            <field name="model">project.project</field>
-            <field name="key2">client_action_multi</field>
-        </record>
-
-        <record id="actions_server_project_read" model="ir.actions.server">
-            <field name="name">Project: Mark read</field>
-            <field name="condition">True</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="model_project_project"/>
-            <field name="state">code</field>
-            <field name="code">self.message_mark_as_read(cr, uid, context.get('active_ids'), context=context)</field>
-        </record>
-        <record id="action_project_read" model="ir.values">
-            <field name="name">action_project_read</field>
-            <field name="action_id" ref="actions_server_project_read"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_project_read'))"/>
-            <field name="key">action</field>
-            <field name="model_id" ref="model_project_project"/>
-            <field name="model">project.project</field>
-            <field name="key2">client_action_multi</field>
-        </record>
-
         <!-- Project -->
         <record id="edit_project" model="ir.ui.view">
             <field name="name">project.project.form</field>
@@ -341,43 +304,6 @@
         </record>
 
         <!-- Task -->
-
-        <!-- Task Read/Unread actions -->
-        <record id="actions_server_project_task_unread" model="ir.actions.server">
-            <field name="name">Task: Mark unread</field>
-            <field name="condition">True</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="model_project_task"/>
-            <field name="state">code</field>
-            <field name="code">self.message_mark_as_unread(cr, uid, context.get('active_ids'), context=context)</field>
-        </record>
-        <record id="action_project_task_unread" model="ir.values">
-            <field name="name">action_project_task_unread</field>
-            <field name="action_id" ref="actions_server_project_task_unread"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_project_task_unread'))"/>
-            <field name="key">action</field>
-            <field name="model_id" ref="model_project_task"/>
-            <field name="model">project.task</field>
-            <field name="key2">client_action_multi</field>
-        </record>
-
-        <record id="actions_server_project_task_read" model="ir.actions.server">
-            <field name="name">Task: Mark read</field>
-            <field name="condition">True</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="model_project_task"/>
-            <field name="state">code</field>
-            <field name="code">self.message_mark_as_read(cr, uid, context.get('active_ids'), context=context)</field>
-        </record>
-        <record id="action_project_task_read" model="ir.values">
-            <field name="name">action_project_task_read</field>
-            <field name="action_id" ref="actions_server_project_task_read"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_project_task_read'))"/>
-            <field name="key">action</field>
-            <field name="model_id" ref="model_project_task"/>
-            <field name="model">project.task</field>
-            <field name="key2">client_action_multi</field>
-        </record>
 
         <record id="view_task_form2" model="ir.ui.view">
             <field name="name">project.task.form</field>
