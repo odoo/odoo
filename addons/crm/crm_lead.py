@@ -686,10 +686,10 @@ class crm_lead(base_stage, format_address, osv.osv):
         if context is None:
             context = {}
         partner_ids = {}
+        force_partner_id = partner_id
         for lead in self.browse(cr, uid, ids, context=context):
             if action == 'create':
-                if not partner_id:
-                    partner_id = self._create_lead_partner(cr, uid, lead, context)
+                partner_id = force_partner_id or self._create_lead_partner(cr, uid, lead, context)
             self._lead_set_partner(cr, uid, lead, partner_id, context=context)
             partner_ids[lead.id] = partner_id
         return partner_ids
@@ -700,9 +700,9 @@ class crm_lead(base_stage, format_address, osv.osv):
             value = {}
             if team_id:
                 value['section_id'] = team_id
-            if index < len(user_ids):
+            if user_ids:
                 value['user_id'] = user_ids[index]
-                index += 1
+                index = (index + 1) % len(user_ids)
             if value:
                 self.write(cr, uid, [lead_id], value, context=context)
         return True
