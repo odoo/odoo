@@ -375,11 +375,22 @@ instance.board.AddToDashboard = instance.web.search.Input.extend({
         var domain = new instance.web.CompoundDomain(getParent.dataset.get_domain() || []);
         _.each(data.contexts, context.add, context);
         _.each(data.domains, domain.add, domain);
+
+        var c = instance.web.pyeval.eval('context', context);
+        for(var k in c) {
+            if (c.hasOwnProperty(k) && /^search_default_/.test(k)) {
+                delete c[k];
+            }
+        }
+        // TODO: replace this 6.1 workaround by attribute on <action/>
+        c.dashboard_merge_domains_contexts = false;
+        var d = instance.web.pyeval.eval('domain', domain);
+
         this.rpc('/board/add_to_dashboard', {
             menu_id: this.$el.find("select").val(),
             action_id: view_parent.action.id,
-            context_to_save: context,
-            domain: domain,
+            context_to_save: c,
+            domain: d,
             view_mode: view_parent.active_view,
             name: this.$el.find("input").val()
         }).done(function(r) {

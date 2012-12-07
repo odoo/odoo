@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2011-01-18 13:05+0000\n"
-"Last-Translator: Aline (OpenERP) <Unknown>\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
+"PO-Revision-Date: 2012-11-29 14:54+0000\n"
+"Last-Translator: Numérigraphe <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 05:42+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:11+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML non valide pour l'architecture de la vue !"
@@ -275,11 +275,6 @@ msgid "Picking List"
 msgstr "Liste de colisage"
 
 #. module: delivery
-#: field:delivery.carrier,grids_id:0
-msgid "Delivery Grids"
-msgstr "Grilles de Livraison"
-
-#. module: delivery
 #: field:delivery.grid.line,name:0
 msgid "Name"
 msgstr "Nom"
@@ -416,7 +411,7 @@ msgstr "Date d'expédition"
 #. module: delivery
 #: field:delivery.carrier,product_id:0
 msgid "Delivery Product"
-msgstr "Produit de livraison"
+msgstr "Article de livraison"
 
 #. module: delivery
 #: view:delivery.grid.line:0
@@ -424,19 +419,9 @@ msgid "Condition"
 msgstr "Condition"
 
 #. module: delivery
-#: constraint:stock.move:0
-msgid "You must assign a serial number for this product."
-msgstr ""
-
-#. module: delivery
 #: field:delivery.grid.line,standard_price:0
 msgid "Cost Price"
 msgstr "Prix de revient"
-
-#. module: delivery
-#: constraint:stock.move:0
-msgid "You cannot move products from or to a location of the type view."
-msgstr ""
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -450,13 +435,6 @@ msgid "This delivery method will be used when invoicing from picking."
 msgstr ""
 "Cette méthode de livraison sera utilisée lorsqu'on facturera sur base du "
 "colisage."
-
-#. module: delivery
-#: sql_constraint:stock.picking:0
-#: sql_constraint:stock.picking.in:0
-#: sql_constraint:stock.picking.out:0
-msgid "Reference must be unique per Company!"
-msgstr "La référence doit être unique par société !"
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
@@ -488,11 +466,6 @@ msgid "Free if more than %.2f"
 msgstr "Gratuit si plus de %.2f"
 
 #. module: delivery
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique per Company!"
-msgstr "La référence de commande doit être unique par société !"
-
-#. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking_in
 msgid "Incoming Shipments"
 msgstr ""
@@ -501,11 +474,6 @@ msgstr ""
 #: selection:delivery.grid.line,operator:0
 msgid "<="
 msgstr "<="
-
-#. module: delivery
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product."
-msgstr ""
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -597,10 +565,9 @@ msgstr ""
 "livraison"
 
 #. module: delivery
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr ""
-"Erreur ! Vous ne pouvez pas créer des membres associés de manière récursive."
+#: field:delivery.carrier,grids_id:0
+msgid "Delivery Grids"
+msgstr "Grilles de Livraison"
 
 #. module: delivery
 #: field:delivery.grid,sequence:0
@@ -622,11 +589,6 @@ msgstr ""
 #: field:delivery.grid,state_ids:0
 msgid "States"
 msgstr "États"
-
-#. module: delivery
-#: constraint:res.partner:0
-msgid "Error: Invalid ean code"
-msgstr "Erreur: code EAN invalide"
 
 #. module: delivery
 #: field:delivery.grid.line,price_type:0
@@ -654,6 +616,9 @@ msgstr "Type de prix"
 
 #~ msgid "Notes"
 #~ msgstr "Notes"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Erreur: code EAN invalide"
 
 #~ msgid "Cancel"
 #~ msgstr "Annuler"
@@ -842,6 +807,9 @@ msgstr "Type de prix"
 #~ msgid "Deliver all products at once"
 #~ msgstr "Livraison de tous les produits en une fois"
 
+#~ msgid "Order Reference must be unique per Company!"
+#~ msgstr "La référence de commande doit être unique par société !"
+
 #~ msgid "Picking Policy"
 #~ msgstr "Politique de livraison"
 
@@ -855,3 +823,10 @@ msgstr "Type de prix"
 
 #~ msgid "Apply"
 #~ msgstr "Appliquer"
+
+#~ msgid "Reference must be unique per Company!"
+#~ msgstr "La référence doit être unique par société !"
+
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr ""
+#~ "Erreur ! Vous ne pouvez pas créer des membres associés de manière récursive."

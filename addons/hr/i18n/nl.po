@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:51+0000\n"
-"PO-Revision-Date: 2012-09-03 17:10+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
+"PO-Revision-Date: 2012-11-29 15:03+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:12+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:39+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -24,7 +24,7 @@ msgstr "OpenERP gebruiker"
 #. module: hr
 #: field:hr.config.settings,module_hr_timesheet_sheet:0
 msgid "Allow timesheets validation by managers"
-msgstr ""
+msgstr "Urenstaaat controle door managers"
 
 #. module: hr
 #: field:hr.job,requirements:0
@@ -45,7 +45,6 @@ msgstr "Verzekeringsnummer"
 #: model:ir.actions.act_window,name:hr.open_board_hr
 #: model:ir.ui.menu,name:hr.menu_hr_dashboard
 #: model:ir.ui.menu,name:hr.menu_hr_main
-#: model:ir.ui.menu,name:hr.menu_hr_management
 #: model:ir.ui.menu,name:hr.menu_hr_reporting
 #: model:ir.ui.menu,name:hr.menu_hr_root
 #: model:ir.ui.menu,name:hr.menu_human_resources_configuration
@@ -59,11 +58,14 @@ msgid ""
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
 msgstr ""
+"Foto van gemiddeld formaat van de werknemer. Deze afbeelding wordt, in "
+"verhouding, geschaald naar 128x128px. Gebruik dit veld in de formulier "
+"weergave of sommige kanban weergaven."
 
 #. module: hr
 #: view:hr.config.settings:0
 msgid "Time Tracking"
-msgstr ""
+msgstr "Tijdregistratie"
 
 #. module: hr
 #: view:hr.employee:0
@@ -84,7 +86,7 @@ msgstr "Huidige aantal werknemers welke deze functie bekleden ."
 #. module: hr
 #: field:hr.config.settings,module_hr_evaluation:0
 msgid "Organize employees periodic evaluation"
-msgstr ""
+msgstr "Organiseer periodieke werknemer beoordelingen"
 
 #. module: hr
 #: view:hr.department:0
@@ -106,11 +108,13 @@ msgid ""
 "This field holds the image used as photo for the employee, limited to "
 "1024x1024px."
 msgstr ""
+"Dit veld bevat de afbeelding, welke wordt gebruikt als foto voor de "
+"werknemer. Maximale grootte 1024x1024px."
 
 #. module: hr
 #: help:hr.config.settings,module_hr_holidays:0
 msgid "This installs the module hr_holidays."
-msgstr ""
+msgstr "Dit installeert de module hr_holidays."
 
 #. module: hr
 #: view:hr.job:0
@@ -125,7 +129,7 @@ msgstr "Wordt geworven"
 #. module: hr
 #: field:hr.job,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Ongelezen berichten"
 
 #. module: hr
 #: field:hr.department,company_id:0
@@ -143,32 +147,33 @@ msgstr "Werving verwacht"
 #. module: hr
 #: field:res.users,employee_ids:0
 msgid "Related employees"
-msgstr ""
+msgstr "Betreffende werknemers"
 
 #. module: hr
 #: constraint:hr.employee.category:0
 msgid "Error! You cannot create recursive Categories."
-msgstr ""
+msgstr "Fout! het is niet toegestaan om recursieve categorieën te maken."
 
 #. module: hr
 #: help:hr.config.settings,module_hr_recruitment:0
 msgid "This installs the module hr_recruitment."
-msgstr ""
+msgstr "Dit installeert de module hr_recruitment."
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Birth"
-msgstr ""
+msgstr "Geboortedatum"
 
 #. module: hr
-#: field:hr.employee,last_login:0
-msgid "Latest Connection"
+#: model:ir.actions.act_window,name:hr.open_view_categ_form
+#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
+msgid "Employee Tags"
 msgstr ""
 
 #. module: hr
 #: view:hr.job:0
 msgid "Launch Recruitement"
-msgstr ""
+msgstr "Start werving en selectie"
 
 #. module: hr
 #: model:process.transition,name:hr.process_transition_employeeuser0
@@ -193,22 +198,22 @@ msgstr "Getrouwd"
 #. module: hr
 #: field:hr.job,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Berichten"
 
 #. module: hr
 #: view:hr.config.settings:0
 msgid "Talent Management"
-msgstr ""
+msgstr "Kwaliteiten beheer"
 
 #. module: hr
 #: help:hr.config.settings,module_hr_timesheet_sheet:0
 msgid "This installs the module hr_timesheet_sheet."
-msgstr ""
+msgstr "Dit installeert de module hr_timesheet_sheet."
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Mobile:"
-msgstr ""
+msgstr "Mobiel:"
 
 #. module: hr
 #: view:hr.employee:0
@@ -218,7 +223,7 @@ msgstr "Baan"
 #. module: hr
 #: help:hr.job,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
 
 #. module: hr
 #: field:hr.employee,color:0
@@ -237,7 +242,7 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,image_medium:0
 msgid "Medium-sized photo"
-msgstr ""
+msgstr "Foto van gemiddelde grootte"
 
 #. module: hr
 #: field:hr.employee,identification_id:0
@@ -248,12 +253,6 @@ msgstr "Identificatienr."
 #: selection:hr.employee,gender:0
 msgid "Female"
 msgstr "Vrouw"
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_categ_form
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
-msgid "Categories of Employees"
-msgstr ""
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
@@ -284,7 +283,7 @@ msgstr "Locatie kantoor"
 #. module: hr
 #: field:hr.job,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Volgers"
 
 #. module: hr
 #: view:hr.employee:0
@@ -305,6 +304,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is "
 "required."
 msgstr ""
+"Kleinen foto van de werknemer. Deze foto wordt automatisch, in verhouding, "
+"geschaald naar 64x64px. Gebruik dit veld, overal waar een kleine afbeelding "
+"nodig is."
 
 #. module: hr
 #: field:hr.employee,birthday:0
@@ -319,7 +321,7 @@ msgstr "Verwachte aantal te werven nieuwe werknemers."
 #. module: hr
 #: model:ir.actions.client,name:hr.action_client_hr_menu
 msgid "Open HR Menu"
-msgstr ""
+msgstr "Personeelsbeheer menu openen"
 
 #. module: hr
 #: help:hr.job,message_summary:0
@@ -327,6 +329,9 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Bevat de samenvatting van de chatter (aantal berichten,...). Deze "
+"samenvatting is direct in html formaat om zo in de kanban weergave te worden "
+"ingevoegd."
 
 #. module: hr
 #: help:hr.config.settings,module_account_analytic_analysis:0
@@ -334,11 +339,13 @@ msgid ""
 "This installs the module account_analytic_analysis, which will install sales "
 "management too."
 msgstr ""
+"Dit installeert de module  account_analytic_analysis, welke tevens de "
+"verkoopbeheer modules zal installeren."
 
 #. module: hr
 #: view:board.board:0
 msgid "Human Resources Dashboard"
-msgstr "Personeel dashboard"
+msgstr "Personeelsbeheer dashboard"
 
 #. module: hr
 #: view:hr.employee:0
@@ -350,7 +357,7 @@ msgstr "Functie"
 #. module: hr
 #: field:hr.job,no_of_employee:0
 msgid "Current Number of Employees"
-msgstr ""
+msgstr "Huidig aantal werknemers"
 
 #. module: hr
 #: field:hr.department,member_ids:0
@@ -363,9 +370,14 @@ msgid "Configuration"
 msgstr "Instellingen"
 
 #. module: hr
+#: model:process.node,note:hr.process_node_employee0
+msgid "Employee form and structure"
+msgstr "Werknemerformulier en structuur"
+
+#. module: hr
 #: field:hr.config.settings,module_hr_expense:0
 msgid "Manage employees expenses"
-msgstr ""
+msgstr "Beheers werknemers declaraties"
 
 #. module: hr
 #: help:hr.job,expected_employees:0
@@ -376,7 +388,7 @@ msgstr "Verwachte aantal werknemers voor deze functie na de nieuwe werving."
 #. module: hr
 #: view:hr.employee:0
 msgid "Tel:"
-msgstr ""
+msgstr "Tel:"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -387,11 +399,6 @@ msgstr "Gescheiden"
 #: field:hr.employee.category,parent_id:0
 msgid "Parent Category"
 msgstr "Bovenliggende categorie"
-
-#. module: hr
-#: sql_constraint:res.users:0
-msgid "OAuth UID must be unique per provider"
-msgstr ""
 
 #. module: hr
 #: view:hr.department:0
@@ -439,26 +446,30 @@ msgid ""
 "$('.oe_employee_picture').load(function() { if($(this).width() > "
 "$(this).height()) { $(this).addClass('oe_employee_picture_wide') } });"
 msgstr ""
+"$('.oe_employee_picture').load(function() { if($(this).width() > "
+"$(this).height()) { $(this).addClass('oe_employee_picture_wide') } });"
 
 #. module: hr
 #: help:hr.config.settings,module_hr_evaluation:0
 msgid "This installs the module hr_evaluation."
-msgstr ""
+msgstr "Dit installeert de module  hr_evaluation."
 
 #. module: hr
 #: constraint:hr.employee:0
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr ""
+"Fout! Het is niet toegestaan om een recursieve werknemer hiërarchie aan te "
+"maken."
 
 #. module: hr
 #: help:hr.config.settings,module_hr_attendance:0
 msgid "This installs the module hr_attendance."
-msgstr ""
+msgstr "Dit installeert de module  hr_attendance."
 
 #. module: hr
 #: field:hr.employee,image_small:0
 msgid "Smal-sized photo"
-msgstr ""
+msgstr "Kleine foto"
 
 #. module: hr
 #: view:hr.employee.category:0
@@ -469,12 +480,12 @@ msgstr "Categorie werknemer"
 #. module: hr
 #: field:hr.employee,category_ids:0
 msgid "Tags"
-msgstr ""
+msgstr "Labels"
 
 #. module: hr
 #: help:hr.config.settings,module_hr_contract:0
 msgid "This installs the module hr_contract."
-msgstr ""
+msgstr "Dit installeert de module hr_contact."
 
 #. module: hr
 #: view:hr.employee:0
@@ -484,7 +495,7 @@ msgstr "Gekoppelde gebruiker"
 #. module: hr
 #: view:hr.config.settings:0
 msgid "or"
-msgstr ""
+msgstr "of"
 
 #. module: hr
 #: field:hr.employee.category,name:0
@@ -494,12 +505,12 @@ msgstr "Categorie"
 #. module: hr
 #: view:hr.job:0
 msgid "Stop Recruitment"
-msgstr ""
+msgstr "Werving en selectie stoppen"
 
 #. module: hr
 #: field:hr.config.settings,module_hr_attendance:0
 msgid "Install attendances feature"
-msgstr ""
+msgstr "Installeer aanwezigheids opties"
 
 #. module: hr
 #: help:hr.employee,bank_account_id:0
@@ -517,11 +528,6 @@ msgid "Employees Structure"
 msgstr "Organigram"
 
 #. module: hr
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr "Het gekozen bedrijf is geen toegestaan bedrijf voor deze gebruiker"
-
-#. module: hr
 #: view:hr.employee:0
 msgid "Contact Information"
 msgstr "Contactgegevens"
@@ -529,7 +535,7 @@ msgstr "Contactgegevens"
 #. module: hr
 #: field:hr.config.settings,module_hr_holidays:0
 msgid "Manage holidays, leaves and allocation requests"
-msgstr ""
+msgstr "Beheer vakanties, verlof en wijs aanvragen toe."
 
 #. module: hr
 #: field:hr.department,child_ids:0
@@ -556,12 +562,12 @@ msgstr "Arbeidsovereenkomst"
 #. module: hr
 #: view:hr.config.settings:0
 msgid "Contracts"
-msgstr ""
+msgstr "Contracten"
 
 #. module: hr
 #: help:hr.job,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Berichten en communicatie historie"
 
 #. module: hr
 #: field:hr.employee,ssnid:0
@@ -571,12 +577,12 @@ msgstr "BSN nummer"
 #. module: hr
 #: field:hr.job,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Is een volger"
 
 #. module: hr
 #: field:hr.config.settings,module_hr_recruitment:0
 msgid "Manage the recruitment process"
-msgstr ""
+msgstr "Beheers het werving en selectie proces"
 
 #. module: hr
 #: view:hr.employee:0
@@ -586,17 +592,17 @@ msgstr "Actief"
 #. module: hr
 #: view:hr.config.settings:0
 msgid "Human Resources Management"
-msgstr ""
+msgstr "Personeelsbeheer"
 
 #. module: hr
 #: view:hr.config.settings:0
 msgid "Install your country's payroll"
-msgstr ""
+msgstr "Installeer uw land specifieke salarisadministratie"
 
 #. module: hr
 #: field:hr.employee,bank_account_id:0
 msgid "Bank Account Number"
-msgstr "Nummer bankrekening"
+msgstr "Bankrekeningnummer"
 
 #. module: hr
 #: view:hr.department:0
@@ -606,7 +612,7 @@ msgstr "Bedrijven"
 #. module: hr
 #: field:hr.job,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Samenvatting"
 
 #. module: hr
 #: model:process.transition,note:hr.process_transition_contactofemployee0
@@ -635,22 +641,17 @@ msgstr ""
 #. module: hr
 #: view:hr.employee:0
 msgid "HR Settings"
-msgstr ""
+msgstr "Personeelsbeheer instellingen"
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Citizenship & Other Info"
-msgstr ""
+msgstr "Nationaliteit & andere informatie"
 
 #. module: hr
 #: constraint:hr.department:0
 msgid "Error! You cannot create recursive departments."
-msgstr ""
-
-#. module: hr
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr "U kunt niet twee gebruikers hebben met dezelfde gebruikersnaam !"
+msgstr "Fout! het is niet toegestaan recursieve afdelingen aan te maken."
 
 #. module: hr
 #: field:hr.employee,address_id:0
@@ -660,7 +661,7 @@ msgstr "Werkadres"
 #. module: hr
 #: view:hr.employee:0
 msgid "Public Information"
-msgstr ""
+msgstr "Publieke informatie"
 
 #. module: hr
 #: field:hr.employee,marital:0
@@ -673,9 +674,9 @@ msgid "ir.actions.act_window"
 msgstr "ir.actions.act_window"
 
 #. module: hr
-#: model:process.node,note:hr.process_node_employee0
-msgid "Employee form and structure"
-msgstr "Werknemerformulier en structuur"
+#: field:hr.employee,last_login:0
+msgid "Latest Connection"
+msgstr "Laatste verbinding"
 
 #. module: hr
 #: field:hr.employee,image:0
@@ -685,7 +686,7 @@ msgstr "Foto"
 #. module: hr
 #: view:hr.config.settings:0
 msgid "Cancel"
-msgstr ""
+msgstr "Annuleren"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
@@ -704,13 +705,13 @@ msgstr ""
 #. module: hr
 #: help:hr.config.settings,module_hr_timesheet:0
 msgid "This installs the module hr_timesheet."
-msgstr ""
+msgstr "Dit installeert de module hr_timesheet."
 
 #. module: hr
 #: field:hr.job,message_comment_ids:0
 #: help:hr.job,message_comment_ids:0
 msgid "Comments and emails"
-msgstr ""
+msgstr "Opmerkingen en e-mails."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.view_department_form_installer
@@ -749,13 +750,15 @@ msgstr "Mobiel nummer werk"
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Recruitement in Progress"
-msgstr ""
+msgstr "Werving en selectie in behandeling"
 
 #. module: hr
 #: field:hr.config.settings,module_account_analytic_analysis:0
 msgid ""
 "Allow invoicing based on timesheets (the sale application will be installed)"
 msgstr ""
+"Sta facturering op basis van urenstaten (de verkoopbeheer  module wordt "
+"geinstalleerd)"
 
 #. module: hr
 #: view:hr.employee.category:0
@@ -775,13 +778,7 @@ msgstr "Privé-adres"
 #. module: hr
 #: field:hr.config.settings,module_hr_timesheet:0
 msgid "Manage timesheets"
-msgstr ""
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_categ_tree
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_tree
-msgid "Categories Structure"
-msgstr "Categoriestructuur"
+msgstr "Urenstaten beheren"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_payroll_modules
@@ -806,7 +803,7 @@ msgstr "Is vervuld"
 #. module: hr
 #: help:hr.config.settings,module_hr_payroll:0
 msgid "This installs the module hr_payroll."
-msgstr ""
+msgstr "Dit installeert de module hr_payroll."
 
 #. module: hr
 #: field:hr.config.settings,module_hr_contract:0
@@ -826,7 +823,7 @@ msgstr "Nationaliteit"
 #. module: hr
 #: view:hr.config.settings:0
 msgid "Additional Features"
-msgstr ""
+msgstr "Extra opties"
 
 #. module: hr
 #: field:hr.employee,notes:0
@@ -879,23 +876,23 @@ msgstr "Naam afdeling"
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting_timesheet
 msgid "Reports"
-msgstr ""
+msgstr "Rapportages"
 
 #. module: hr
 #: field:hr.config.settings,module_hr_payroll:0
 msgid "Manage payroll"
-msgstr ""
+msgstr "Loonadministratie"
 
 #. module: hr
 #: view:hr.config.settings:0
 #: model:ir.actions.act_window,name:hr.action_human_resources_configuration
 msgid "Configure Human Resources"
-msgstr ""
+msgstr "Personeelsbeheer instellen"
 
 #. module: hr
 #: selection:hr.job,state:0
 msgid "No Recruitment"
-msgstr ""
+msgstr "Geen werving en selectie"
 
 #. module: hr
 #: help:hr.employee,ssnid:0
@@ -915,7 +912,7 @@ msgstr "Login"
 #. module: hr
 #: field:hr.job,expected_employees:0
 msgid "Total Forecasted Employees"
-msgstr ""
+msgstr "Totaal aantal verwachte werknmers"
 
 #. module: hr
 #: help:hr.job,state:0
@@ -927,7 +924,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
 msgid "Users"
-msgstr ""
+msgstr "Gebruikers"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
@@ -968,12 +965,12 @@ msgstr "De naam van de functie  moet uniek zijn per bedrijf!"
 #. module: hr
 #: help:hr.config.settings,module_hr_expense:0
 msgid "This installs the module hr_expense."
-msgstr ""
+msgstr "Dit installeert de module hr_expense."
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_config_settings
 msgid "hr.config.settings"
-msgstr ""
+msgstr "hr.config.settings"
 
 #. module: hr
 #: field:hr.department,manager_id:0
@@ -981,11 +978,6 @@ msgstr ""
 #: field:hr.employee,parent_id:0
 msgid "Manager"
 msgstr "Manager"
-
-#. module: hr
-#: constraint:res.users:0
-msgid "Error: Invalid ean code"
-msgstr ""
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -1000,7 +992,7 @@ msgstr "Ondergeschikten"
 #. module: hr
 #: view:hr.config.settings:0
 msgid "Apply"
-msgstr ""
+msgstr "Toepassen"
 
 #~ msgid "Error! You can not create recursive departments."
 #~ msgstr "Fout! U kunt geen recursieve afdelingen aanmaken."
@@ -1277,6 +1269,12 @@ msgstr ""
 
 #~ msgid "Generic Payroll system Integrated with Accountings."
 #~ msgstr "Algemeen loonlijst systeem met geïntegreerde boekhouding."
+
+#~ msgid "The chosen company is not in the allowed companies for this user"
+#~ msgstr "Het gekozen bedrijf is geen toegestaan bedrijf voor deze gebruiker"
+
+#~ msgid "You can not have two users with the same login !"
+#~ msgstr "U kunt niet twee gebruikers hebben met dezelfde gebruikersnaam !"
 
 #~ msgid ""
 #~ "\n"

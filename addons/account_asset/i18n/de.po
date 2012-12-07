@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-05-10 17:36+0000\n"
-"Last-Translator: Ferdinand-camptocamp <Unknown>\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
+"PO-Revision-Date: 2012-12-06 23:48+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:31+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-07 04:36+0000\n"
+"X-Generator: Launchpad (build 16341)\n"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -38,11 +39,6 @@ msgstr "Rest Buchwert"
 #: field:account.asset.category,account_expense_depreciation_id:0
 msgid "Depr. Expense Account"
 msgstr "Abschreibung Aufwandskonto"
-
-#. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0
-msgid "Compute Asset"
-msgstr "Berechne Anlagen"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -161,7 +157,7 @@ msgstr "Abschreibungs Datum"
 #. module: account_asset
 #: constraint:account.asset.asset:0
 msgid "Error ! You cannot create recursive assets."
-msgstr ""
+msgstr "Fehler ! Sie können keine rekursiven Anlagengegenstände definieren."
 
 #. module: account_asset
 #: field:asset.asset.report,posted_value:0
@@ -198,11 +194,6 @@ msgid "Depreciation Entry"
 msgstr "Abschreibungsbuchung"
 
 #. module: account_asset
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
-msgstr "Falscher Debit oder Kreditwert im Buchungseintrag!"
-
-#. module: account_asset
 #: view:asset.asset.report:0
 #: field:asset.asset.report,nbr:0
 msgid "# of Depreciation Lines"
@@ -211,7 +202,7 @@ msgstr "# der Abschreibungsbuchungen"
 #. module: account_asset
 #: field:account.asset.asset,method_period:0
 msgid "Number of Months in a Period"
-msgstr ""
+msgstr "Anzahl Monate in Perioden"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -230,11 +221,6 @@ msgstr "Enddatum"
 #: field:account.asset.asset,code:0
 msgid "Reference"
 msgstr "Referenz"
-
-#. module: account_asset
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr "ungültige BBA Kommunikations Stuktur"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -328,15 +314,6 @@ msgstr ""
 "dem keine Abschreibungen mehr berechnet werden."
 
 #. module: account_asset
-#: constraint:account.move.line:0
-msgid ""
-"The date of your Journal Entry is not in the defined period! You should "
-"change the date or remove this constraint from the journal."
-msgstr ""
-"The date of your Journal Entry is not in the defined period! You should "
-"change the date or remove this constraint from the journal."
-
-#. module: account_asset
 #: help:account.asset.history,method_period:0
 msgid "Time in month between two depreciations"
 msgstr "Zeit in Monaten zwischen 2 Abschreibungen"
@@ -367,11 +344,6 @@ msgid "Assets in closed state"
 msgstr "abgeschlossene Anlagen"
 
 #. module: account_asset
-#: constraint:account.move.line:0
-msgid "Account and Period must belong to the same company."
-msgstr ""
-
-#. module: account_asset
 #: field:account.asset.asset,parent_id:0
 msgid "Parent Asset"
 msgstr "Übergeordnete Anlage"
@@ -391,17 +363,6 @@ msgstr "Suche Anlagen Kategorie"
 #: model:ir.model,name:account_asset.model_account_invoice_line
 msgid "Invoice Line"
 msgstr "Rechnungsposition"
-
-#. module: account_asset
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry forces to provide a secondary "
-"currency. You should remove the secondary currency on the account or select "
-"a multi-currency view on the journal."
-msgstr ""
-"The selected account of your Journal Entry forces to provide a secondary "
-"currency. You should remove the secondary currency on the account or select "
-"a multi-currency view on the journal."
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -429,12 +390,7 @@ msgstr "Zeit Methode"
 #: view:asset.depreciation.confirmation.wizard:0
 #: view:asset.modify:0
 msgid "or"
-msgstr ""
-
-#. module: account_asset
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on closed account."
-msgstr ""
+msgstr "oder"
 
 #. module: account_asset
 #: field:account.asset.asset,note:0
@@ -491,12 +447,17 @@ msgid ""
 "You can manually close an asset when the depreciation is over. If the last "
 "line of depreciation is posted, the asset automatically goes in that status."
 msgstr ""
+"Wenn eine Anlage angelegt wird, ist der Status \"Entwurf\". Nach Bestätigung "
+"der Anlage wird dies aktiv und Abschreibungen können verbucht werden. Sie "
+"können die Anlage automatisch schließen, wenn die Abschreibungen vorbei "
+"sind.  Nach Verbuchung der letzen Abschreibung wird die Anlage automatisch "
+"geschlossen."
 
 #. module: account_asset
 #: field:account.asset.asset,state:0
 #: field:asset.asset.report,state:0
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: account_asset
 #: field:account.asset.asset,partner_id:0
@@ -543,7 +504,7 @@ msgstr "Berechnen"
 #. module: account_asset
 #: view:account.asset.history:0
 msgid "Asset History"
-msgstr ""
+msgstr "Historie Anlagegegüter"
 
 #. module: account_asset
 #: field:asset.asset.report,name:0
@@ -577,9 +538,9 @@ msgid "History"
 msgstr "Verlauf"
 
 #. module: account_asset
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr "Die Rechnungsnummer muss je Firma eindeutig sein"
+#: view:asset.depreciation.confirmation.wizard:0
+msgid "Compute Asset"
+msgstr "Berechne Anlagen"
 
 #. module: account_asset
 #: field:asset.depreciation.confirmation.wizard,period_id:0
@@ -664,7 +625,7 @@ msgstr "Abzuschreibender Betrag"
 #. module: account_asset
 #: field:account.asset.asset,name:0
 msgid "Asset Name"
-msgstr ""
+msgstr "Anlagegut Bezeichnung"
 
 #. module: account_asset
 #: field:account.asset.category,open_asset:0
@@ -715,21 +676,21 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"Über diesen Report erhalten Sie einen Überblick über alle Abschreibungen. "
+"Die Suche kann auch zur \n"
+"individuellen und persönlichen Auswertung über das Anlagevermögen benutzt "
+"werden.\n"
+"        "
 
 #. module: account_asset
 #: field:account.asset.asset,purchase_value:0
 msgid "Gross Value"
-msgstr ""
+msgstr "Brutto Erlös"
 
 #. module: account_asset
 #: field:account.asset.category,name:0
 msgid "Name"
 msgstr "Bezeichnung"
-
-#. module: account_asset
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on an account of type view."
-msgstr ""
 
 #. module: account_asset
 #: help:account.asset.category,open_asset:0
@@ -1011,6 +972,12 @@ msgstr "Anlangenhierarchie"
 #~ "Dieser Assistent erzeugt Abschreibungsbuchungen  bestehender Anlagen für die "
 #~ "gewählte Periode"
 
+#~ msgid "Invalid BBA Structured Communication !"
+#~ msgstr "ungültige BBA Kommunikations Stuktur"
+
+#~ msgid "Wrong credit or debit value in accounting entry !"
+#~ msgstr "Falscher Debit oder Kreditwert im Buchungseintrag!"
+
 #~ msgid "Sequence of the depreciation"
 #~ msgstr "Sequenz der Abschreibung"
 
@@ -1037,6 +1004,9 @@ msgstr "Anlangenhierarchie"
 
 #~ msgid "Assets purchased in current month"
 #~ msgstr "Anlagenkäufe des aktuellen Monats"
+
+#~ msgid "Invoice Number must be unique per Company!"
+#~ msgstr "Die Rechnungsnummer muss je Firma eindeutig sein"
 
 #~ msgid "Accounting information"
 #~ msgstr "Buchhaltung Information"
@@ -1082,5 +1052,21 @@ msgstr "Anlangenhierarchie"
 #~ msgid "You can not create journal items on closed account."
 #~ msgstr "You can not create journal items on closed account."
 
+#~ msgid ""
+#~ "The date of your Journal Entry is not in the defined period! You should "
+#~ "change the date or remove this constraint from the journal."
+#~ msgstr ""
+#~ "The date of your Journal Entry is not in the defined period! You should "
+#~ "change the date or remove this constraint from the journal."
+
 #~ msgid "Company must be the same for its related account and period."
 #~ msgstr "Company must be the same for its related account and period."
+
+#~ msgid ""
+#~ "The selected account of your Journal Entry forces to provide a secondary "
+#~ "currency. You should remove the secondary currency on the account or select "
+#~ "a multi-currency view on the journal."
+#~ msgstr ""
+#~ "The selected account of your Journal Entry forces to provide a secondary "
+#~ "currency. You should remove the secondary currency on the account or select "
+#~ "a multi-currency view on the journal."

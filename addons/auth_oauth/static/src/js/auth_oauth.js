@@ -35,26 +35,32 @@ openerp.auth_oauth = function(instance) {
         on_oauth_sign_in: function(ev) {
             ev.preventDefault();
             var index = $(ev.target).data('index');
-            var p = this.oauth_providers[index];
-            var ret = _.str.sprintf('%s//%s/auth_oauth/signin', location.protocol, location.host);
+            var provider = this.oauth_providers[index];
+            return this.do_oauth_sign_in(provider);
+        },
+        do_oauth_sign_in: function(provider) {
+            var return_url = _.str.sprintf('%s//%s/auth_oauth/signin', location.protocol, location.host);
             if (instance.session.debug) {
-                ret += '?debug';
+                return_url += '?debug';
             }
-            var dbname = self.$("form [name=db]").val();
-            var state_object = {
-                d: dbname,
-                p: p.id
-            };
-            var state = JSON.stringify(state_object);
+            var state = this._oauth_state(provider);
             var params = {
                 response_type: 'token',
-                client_id: p.client_id,
-                redirect_uri: ret,
-                scope: p.scope,
-                state: state,
+                client_id: provider.client_id,
+                redirect_uri: return_url,
+                scope: provider.scope,
+                state: JSON.stringify(state),
             };
-            var url = p.auth_endpoint + '?' + $.param(params);
+            var url = provider.auth_endpoint + '?' + $.param(params);
             window.location = url;
+        },
+        _oauth_state: function(provider) {
+            // return the state object sent back with the redirected uri
+            var dbname = this.$("form [name=db]").val();
+            return {
+                d: dbname,
+                p: provider.id,
+            };
         },
     });
 

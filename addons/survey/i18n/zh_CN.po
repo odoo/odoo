@@ -7,15 +7,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:54+0000\n"
-"PO-Revision-Date: 2012-05-10 17:18+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
+"PO-Revision-Date: 2012-11-28 14:29+0000\n"
+"Last-Translator: ccdos <ccdos@163.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:19+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:45+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
+
+#. module: survey
+#: view:survey.question.column.heading:0
+#: field:survey.question.column.heading,title:0
+msgid "Column Heading"
+msgstr "列首"
 
 #. module: survey
 #: view:survey.response.line:0
@@ -37,11 +43,6 @@ msgid "Your Messages"
 msgstr "你的消息"
 
 #. module: survey
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr "选择的公司不属于此用户允许访问的公司。"
-
-#. module: survey
 #: field:survey.question,comment_valid_type:0
 #: field:survey.question,validation_type:0
 msgid "Text Validation"
@@ -50,7 +51,7 @@ msgstr "文本验证"
 #. module: survey
 #: view:survey:0
 msgid "Answers:"
-msgstr ""
+msgstr "回答："
 
 #. module: survey
 #: view:survey:0
@@ -61,7 +62,7 @@ msgstr "受邀用户"
 #. module: survey
 #: model:survey.type,name:survey.survey_type1
 msgid "Human Resources"
-msgstr ""
+msgstr "人力资源"
 
 #. module: survey
 #: selection:survey.answer,type:0
@@ -293,7 +294,7 @@ msgstr " 列头"
 #: code:addons/survey/wizard/survey_send_invitation.py:74
 #, python-format
 msgid "The following surveys are not in open state: %s"
-msgstr ""
+msgstr "下列调查不在开放状态：%s"
 
 #. module: survey
 #: field:survey,tot_comp_survey:0
@@ -328,7 +329,7 @@ msgstr "rating scale"
 msgid ""
 "This survey has no question defined. Please define the questions and answers "
 "first."
-msgstr ""
+msgstr "这些调查没有定义提问。请首先定义提问和答案。"
 
 #. module: survey
 #: field:survey.question,comment_field_type:0
@@ -354,7 +355,7 @@ msgstr ""
 #. module: survey
 #: field:survey,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "颜色索引"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -371,7 +372,7 @@ msgstr "编辑问卷"
 #: code:addons/survey/wizard/survey_answer.py:962
 #, python-format
 msgid "Please enter an integer value."
-msgstr ""
+msgstr "请输入一个整型值"
 
 #. module: survey
 #: field:survey.question.column.heading,menu_choice:0
@@ -384,7 +385,7 @@ msgstr "菜单选项"
 msgid ""
 "You must enter one or more menu choices                                 in "
 "column heading."
-msgstr ""
+msgstr "你必须在列首输入一个或多个菜单选项"
 
 #. module: survey
 #: selection:survey.question,required_type:0
@@ -433,7 +434,7 @@ msgstr "文本"
 #. module: survey
 #: view:survey:0
 msgid "Edit..."
-msgstr ""
+msgstr "编辑..."
 
 #. module: survey
 #: selection:survey.print,paper_size:0
@@ -490,7 +491,7 @@ msgstr "未验证注释内容"
 #: code:addons/survey/survey.py:534
 #, python-format
 msgid "You must enter one or more menu choices in column heading."
-msgstr ""
+msgstr "你必须在列首输入一个或者多个菜单选择"
 
 #. module: survey
 #: selection:survey.question,comment_valid_type:0
@@ -528,7 +529,7 @@ msgstr "评估计划阶段"
 #: code:addons/survey/wizard/survey_send_invitation.py:202
 #, python-format
 msgid "Unknown"
-msgstr ""
+msgstr "未知"
 
 #. module: survey
 #: view:survey:0
@@ -547,7 +548,7 @@ msgstr "打印"
 #. module: survey
 #: view:survey:0
 msgid "New"
-msgstr ""
+msgstr "新建"
 
 #. module: survey
 #: field:survey.question,make_comment_field:0
@@ -571,7 +572,7 @@ msgstr "电子邮箱"
 #: code:addons/survey/survey.py:261
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (副本)"
 
 #. module: survey
 #: selection:survey.response,state:0
@@ -597,7 +598,7 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.menu,name:survey.menu_reporting
 msgid "Reporting"
-msgstr ""
+msgstr "报告"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.act_survey_answer
@@ -624,7 +625,7 @@ msgstr "页码"
 #. module: survey
 #: model:ir.ui.menu,name:survey.menu_print_survey_form
 msgid "Print Surveys"
-msgstr ""
+msgstr "打印调查表"
 
 #. module: survey
 #: field:survey.question.column.heading,in_visible_menu_choice:0
@@ -642,16 +643,10 @@ msgid "Error Message"
 msgstr "错误消息"
 
 #. module: survey
-#: code:addons/survey/survey.py:687
-#, python-format
-msgid "You cannot duplicate the resource!"
-msgstr "无法复制资源！"
-
-#. module: survey
 #: code:addons/survey/wizard/survey_answer.py:126
 #, python-format
 msgid "You cannot answer this survey more than %s times."
-msgstr ""
+msgstr "你不能回答这个调查超过 %s 次。"
 
 #. module: survey
 #: field:survey.request,date_deadline:0
@@ -670,11 +665,6 @@ msgid "survey.print"
 msgstr "survey.print"
 
 #. module: survey
-#: sql_constraint:res.users:0
-msgid "OAuth UID must be unique per provider"
-msgstr ""
-
-#. module: survey
 #: view:survey:0
 #: view:survey.page:0
 #: field:survey.question,page_id:0
@@ -682,15 +672,9 @@ msgid "Survey Page"
 msgstr "问卷页面"
 
 #. module: survey
-#: view:survey.question.column.heading:0
-#: field:survey.question.column.heading,title:0
-msgid "Column Heading"
-msgstr "列头"
-
-#. module: survey
 #: field:survey.question,is_require_answer:0
 msgid "Require Answer to Question"
-msgstr "需要答案"
+msgstr "需要回答的问题"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.act_survey_request
@@ -736,12 +720,12 @@ msgstr "选项"
 #: code:addons/survey/survey.py:438
 #, python-format
 msgid "You must enter one or more Answers for question \"%s\" of page %s."
-msgstr ""
+msgstr "你必须为提问 \"%s\" 输入一个或者多个答案（ %s页）。"
 
 #. module: survey
 #: view:survey:0
 msgid "Delete"
-msgstr ""
+msgstr "删除"
 
 #. module: survey
 #: field:survey.response.answer,comment_field:0
@@ -785,7 +769,7 @@ msgstr "手工"
 #. module: survey
 #: view:survey.send.invitation:0
 msgid "_Send"
-msgstr ""
+msgstr "发送(_S)"
 
 #. module: survey
 #: help:survey,responsible_id:0
@@ -817,11 +801,6 @@ msgid "Print Without Page Breaks"
 msgstr "不分页符打印"
 
 #. module: survey
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr "不能有用户名相同的两个用户"
-
-#. module: survey
 #: view:survey:0
 #: view:survey.page:0
 #: view:survey.question:0
@@ -846,7 +825,7 @@ msgstr "如果你需要每个用户只提供一份答案，把它设为1"
 #, python-format
 msgid ""
 "You must enter one or more column headings for question \"%s\" of page %s."
-msgstr ""
+msgstr "你必须为提问 \"%s\" 输入一个或者多个列首（ %s页）。"
 
 #. module: survey
 #: model:ir.model,name:survey.model_res_users
@@ -865,7 +844,7 @@ msgstr "消息"
 msgid ""
 "You must enter one or more menu                                 choices in "
 "column heading (white spaces not allowed)."
-msgstr ""
+msgstr "你必须在列首 输入一个或者多个菜单选择（不允许空白）。"
 
 #. module: survey
 #: field:survey.question,maximum_req_ans:0
@@ -1161,7 +1140,7 @@ msgstr "忽略"
 msgid ""
 "You must enter one or more menu choices in column heading (white spaces not "
 "allowed)."
-msgstr ""
+msgstr "你必须在列首 输入一个或者多个菜单选择（不允许空白）。"
 
 #. module: survey
 #: field:survey.print,paper_size:0
@@ -1401,7 +1380,7 @@ msgstr "已答复"
 #. module: survey
 #: field:survey,send_response:0
 msgid "Email Notification on Answer"
-msgstr ""
+msgstr "Email提醒"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_answer.py:446
@@ -1434,7 +1413,7 @@ msgstr "发送邀请"
 #: code:addons/survey/wizard/survey_selection.py:80
 #, python-format
 msgid "You cannot give response for this survey more than %s times."
-msgstr ""
+msgstr "你不能为回答这个调查多于 %s次。"
 
 #. module: survey
 #: view:survey.question:0
@@ -1482,7 +1461,7 @@ msgstr "纵向打印（纵向）"
 #: code:addons/survey/wizard/survey_send_invitation.py:71
 #, python-format
 msgid "Invitation for %s"
-msgstr ""
+msgstr "邀请 %s"
 
 #. module: survey
 #: selection:survey.question,comment_valid_type:0
@@ -1493,19 +1472,19 @@ msgstr "必须为指定的长度"
 #. module: survey
 #: model:survey.type,name:survey.survey_type3
 msgid "Supplier Selection"
-msgstr ""
+msgstr "选择供应商"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_answer.py:993
 #, python-format
 msgid "You cannot select same answer more than one time.'"
-msgstr ""
+msgstr "你不能选择相同的答案多余1次"
 
 #. module: survey
-#: field:survey.response,date_create:0
-#: field:survey.response.line,date_create:0
-msgid "Create Date"
-msgstr "创建日期"
+#: code:addons/survey/survey.py:687
+#, python-format
+msgid "You cannot duplicate the resource!"
+msgstr "无法复制资源！"
 
 #. module: survey
 #: code:addons/survey/survey.py:525
@@ -1518,7 +1497,7 @@ msgstr "你输入的最少需要的答复大于答复总数。请用小于%d的�
 #. module: survey
 #: view:survey:0
 msgid "All Open Survey"
-msgstr ""
+msgstr "所有开放的调查"
 
 #. module: survey
 #: model:ir.actions.report.xml,name:survey.survey_browse_response
@@ -1569,7 +1548,7 @@ msgstr "所有选择总数"
 #. module: survey
 #: view:survey.request:0
 msgid "Request"
-msgstr ""
+msgstr "请求"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_response
@@ -1633,7 +1612,7 @@ msgstr "错误消息"
 #: code:addons/survey/wizard/survey_send_invitation.py:74
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "警告！"
 
 #. module: survey
 #: code:addons/survey/survey.py:467
@@ -1652,7 +1631,7 @@ msgstr "菜单选项"
 #. module: survey
 #: field:survey,id:0
 msgid "ID"
-msgstr ""
+msgstr "编号"
 
 #. module: survey
 #: code:addons/survey/survey.py:489
@@ -1711,7 +1690,7 @@ msgstr "浮点数"
 #: view:survey.print.statistics:0
 #: view:survey.send.invitation:0
 msgid "or"
-msgstr ""
+msgstr "or"
 
 #. module: survey
 #: field:survey,title:0
@@ -1729,9 +1708,10 @@ msgid "Date & Time"
 msgstr "日期和时间"
 
 #. module: survey
-#: constraint:res.users:0
-msgid "Error: Invalid ean code"
-msgstr ""
+#: field:survey.response,date_create:0
+#: field:survey.response.line,date_create:0
+msgid "Create Date"
+msgstr "创建日期"
 
 #. module: survey
 #: field:survey.question,column_name:0
@@ -1761,7 +1741,7 @@ msgstr "表格(Table)"
 #: code:addons/survey/wizard/survey_answer.py:119
 #, python-format
 msgid "You cannot answer because the survey is not open."
-msgstr ""
+msgstr "你不能回答，因为调查还没开放。"
 
 #. module: survey
 #: field:survey.question,comment_minimum_date:0
@@ -1834,6 +1814,12 @@ msgstr "页面位置"
 
 #~ msgid "Answer a Survey"
 #~ msgstr "答复调查"
+
+#~ msgid "You can not have two users with the same login !"
+#~ msgstr "不能有用户名相同的两个用户"
+
+#~ msgid "The chosen company is not in the allowed companies for this user"
+#~ msgstr "选择的公司不属于此用户允许访问的公司。"
 
 #~ msgid "State"
 #~ msgstr "状态"

@@ -189,7 +189,8 @@ class purchase_order(osv.osv):
         'shipped_rate': fields.function(_shipped_rate, string='Received', type='float'),
         'invoiced': fields.function(_invoiced, string='Invoice Received', type='boolean', help="It indicates that an invoice has been paid"),
         'invoiced_rate': fields.function(_invoiced_rate, string='Invoiced', type='float'),
-        'invoice_method': fields.selection([('manual','Based on Purchase Order lines'),('order','Based on generated draft invoice'),('picking','Based on incoming shipments')], 'Invoicing Control', required=True,states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]},
+        'invoice_method': fields.selection([('manual','Based on Purchase Order lines'),('order','Based on generated draft invoice'),('picking','Based on incoming shipments')], 'Invoicing Control', required=True,
+            readonly=True, states={'draft':[('readonly',False)], 'sent':[('readonly',False)]},
             help="Based on Purchase Order lines: place individual lines in 'Invoice Control > Based on P.O. lines' from where you can selectively create an invoice.\n" \
                 "Based on generated invoice: create a draft invoice you can validate later.\n" \
                 "Bases on incoming shipments: let you create an invoice when receptions are validated."
@@ -212,6 +213,7 @@ class purchase_order(osv.osv):
                 'purchase.order.line': (_get_order, None, 10),
             }, multi="sums",help="The total amount"),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
+        'payment_term_id': fields.many2one('account.payment.term', 'Payment Term'),
         'product_id': fields.related('order_line','product_id', type='many2one', relation='product.product', string='Product'),
         'create_uid':  fields.many2one('res.users', 'Responsible'),
         'company_id': fields.many2one('res.company','Company',required=True,select=1, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}),
@@ -288,12 +290,17 @@ class purchase_order(osv.osv):
     def onchange_partner_id(self, cr, uid, ids, partner_id):
         partner = self.pool.get('res.partner')
         if not partner_id:
-            return {'value':{'fiscal_position': False}}
+            return {'value': {
+                'fiscal_position': False,
+                'payment_term_id': False,
+                }}
         supplier_address = partner.address_get(cr, uid, [partner_id], ['default'])
         supplier = partner.browse(cr, uid, partner_id)
-        pricelist = supplier.property_product_pricelist_purchase.id
-        fiscal_position = supplier.property_account_position and supplier.property_account_position.id or False
-        return {'value':{'pricelist_id': pricelist, 'fiscal_position': fiscal_position}}
+        return {'value': {
+            'pricelist_id': supplier.property_product_pricelist_purchase.id,
+            'fiscal_position': supplier.property_account_position and supplier.property_account_position.id or False,
+            'payment_term_id': supplier.property_supplier_payment_term.id or False,
+            }}
 
     def invoice_open(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')
@@ -414,6 +421,20 @@ class purchase_order(osv.osv):
             'context': ctx,
         }
 
+    def print_quotation(self, cr, uid, ids, context=None):
+        '''
+        This function prints the request for quotation and mark it as sent, so that we can see more easily the next step of the workflow
+        '''
+        assert len(ids) == 1, 'This option should only be used for a single id at a time'
+        wf_service = netsvc.LocalService("workflow")
+        wf_service.trg_validate(uid, 'purchase.order', ids[0], 'send_rfq', cr)
+        datas = {
+                 'model': 'purchase.order',
+                 'ids': ids,
+                 'form': self.read(cr, uid, ids[0], context=context),
+        }
+        return {'type': 'ir.actions.report.xml', 'report_name': 'purchase.quotation', 'datas': datas, 'nodestroy': True}
+
     #TODO: implement messages system
     def wkf_confirm_order(self, cr, uid, ids, context=None):
         todo = []
@@ -513,8 +534,8 @@ class purchase_order(osv.osv):
                 'journal_id': len(journal_ids) and journal_ids[0] or False,
                 'invoice_line': [(6, 0, inv_lines)],
                 'origin': order.name,
-                'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id,
-                'payment_term': order.partner_id.property_payment_term and order.partner_id.property_payment_term.id or False,
+                'fiscal_position': order.fiscal_position.id or False,
+                'payment_term': order.payment_term_id.id or False,
                 'company_id': order.company_id.id,
             }
             inv_id = inv_obj.create(cr, uid, inv_data, context=context)
@@ -1125,7 +1146,8 @@ class procurement_order(osv.osv):
                 'pricelist_id': pricelist_id,
                 'date_order': purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 'company_id': procurement.company_id.id,
-                'fiscal_position': partner.property_account_position and partner.property_account_position.id or False
+                'fiscal_position': partner.property_account_position and partner.property_account_position.id or False,
+                'payment_term_id': partner.property_supplier_payment_term.id or False,
             }
             res[procurement.id] = self.create_procurement_purchase_order(cr, uid, procurement, po_vals, line_vals, context=new_context)
             self.write(cr, uid, [procurement.id], {'state': 'running', 'purchase_id': res[procurement.id]})
@@ -1168,5 +1190,14 @@ class product_template(osv.osv):
     }
 
 product_template()
+
+class mail_compose_message(osv.osv):
+    _inherit = 'mail.compose.message'
+    def send_mail(self, cr, uid, ids, context=None):
+        context = context or {}
+        if context.get('default_model') == 'purchase.order' and context.get('default_res_id'):
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_validate(uid, 'purchase.order', context['default_res_id'], 'send_rfq', cr)
+        return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

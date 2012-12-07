@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:51+0000\n"
+"POT-Creation-Date: 2012-12-03 16:01+0000\n"
 "PO-Revision-Date: 2012-08-28 02:30+0000\n"
 "Last-Translator: Eric Huang <eh@cenoq.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:15+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:41+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: account_voucher
 #: field:account.bank.statement.line,voucher_id:0
@@ -135,6 +135,14 @@ msgstr ""
 #: view:account.voucher:0
 msgid "Voucher Statistics"
 msgstr "換領券統計"
+
+#. module: account_voucher
+#: code:addons/account_voucher/account_voucher.py:1558
+#, python-format
+msgid ""
+"You can not change the journal as you already reconciled some statement "
+"lines!"
+msgstr ""
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -279,11 +287,6 @@ msgid "Day"
 msgstr "日"
 
 #. module: account_voucher
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr "BBA傳輸結構有誤！"
-
-#. module: account_voucher
 #: field:account.voucher,tax_id:0
 msgid "Tax"
 msgstr "稅"
@@ -293,11 +296,6 @@ msgstr "稅"
 #, python-format
 msgid "Invalid Action!"
 msgstr ""
-
-#. module: account_voucher
-#: constraint:account.bank.statement:0
-msgid "The journal and period chosen have to belong to the same company."
-msgstr "所選的憑證簿和期間必須屬於相同公司。"
 
 #. module: account_voucher
 #: field:account.voucher,comment:0
@@ -367,11 +365,6 @@ msgid "Sales Lines"
 msgstr "銷售明細"
 
 #. module: account_voucher
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "錯誤！您不能建立遞歸公司."
-
-#. module: account_voucher
 #: view:account.voucher:0
 #: field:account.voucher,period_id:0
 msgid "Period"
@@ -398,9 +391,10 @@ msgid "Debit"
 msgstr "借方"
 
 #. module: account_voucher
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr "公司名稱必須唯一！"
+#: code:addons/account_voucher/account_voucher.py:1558
+#, python-format
+msgid "Unable to change journal !"
+msgstr ""
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -863,11 +857,6 @@ msgstr "過帳"
 #: view:account.voucher:0
 msgid "Invoices and outstanding transactions"
 msgstr "發票及未完成交易"
-
-#. module: account_voucher
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr "發票號必須在公司範圍內唯一"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -1348,15 +1337,27 @@ msgstr ""
 #~ "invoices or sales receipts."
 #~ msgstr "銷售付款使你能夠輸入你的客戶付過來的款。輸入付款過程中你要輸入客戶、付款方式和金額。系統會自動提示你要和哪張發票或收據對賬。"
 
+#~ msgid "Invalid BBA Structured Communication !"
+#~ msgstr "BBA傳輸結構有誤！"
+
+#~ msgid "The journal and period chosen have to belong to the same company."
+#~ msgstr "所選的憑證簿和期間必須屬於相同公司。"
+
 #, python-format
 #~ msgid "Warning"
 #~ msgstr "警告"
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "錯誤！您不能建立遞歸公司."
 
 #~ msgid "current month"
 #~ msgstr "本月"
 
 #~ msgid "State"
 #~ msgstr "狀態"
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "公司名稱必須唯一！"
 
 #~ msgid "Want to remove accounting entries too ?"
 #~ msgstr "要刪除會計憑證嗎?"
@@ -1406,6 +1407,9 @@ msgstr ""
 
 #~ msgid "Expense Currency Rate"
 #~ msgstr "費用外幣匯率"
+
+#~ msgid "Invoice Number must be unique per Company!"
+#~ msgstr "發票號必須在公司範圍內唯一"
 
 #~ msgid ""
 #~ " * The 'Draft' state is used when a user is encoding a new and unconfirmed "

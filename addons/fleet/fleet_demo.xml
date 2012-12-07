@@ -28,7 +28,7 @@
           <field name="color">Black</field>
           <field name="location">Grand-Rosiere</field>
           <field name="doors">5</field>
-          <field name="driver" ref="base.res_partner_address_18" />
+          <field name="driver_id" ref="base.res_partner_address_18" />
           <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
           <field name="state" ref="vehicle_state_active"/>
           <field name="odometer_unit">kilometers</field>
@@ -43,7 +43,7 @@
           <field name="color">Red</field>
           <field name="location">Grand-Rosiere</field>
           <field name="doors">5</field>
-          <field name="driver" ref="base.res_partner_address_19" />
+          <field name="driver_id" ref="base.res_partner_address_19" />
           <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
           <field name="state" ref="vehicle_state_inactive"/>
           <field name="odometer_unit">kilometers</field>
@@ -58,7 +58,7 @@
           <field name="color">Titanium Grey</field>
           <field name="location">Grand-Rosiere</field>
           <field name="doors">3</field>
-          <field name="driver" ref="base.res_partner_address_17" />
+          <field name="driver_id" ref="base.res_partner_address_17" />
           <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
           <field name="state" ref="vehicle_state_active"/>
           <field name="odometer_unit">kilometers</field>
@@ -73,7 +73,7 @@
           <field name="color">White</field>
           <field name="location">Grand-Rosiere</field>
           <field name="doors">3</field>
-          <field name="driver" ref="base.res_partner_address_16" />
+          <field name="driver_id" ref="base.res_partner_address_16" />
           <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
           <field name="state" ref="vehicle_state_active"/>
           <field name="odometer_unit">kilometers</field>
@@ -88,7 +88,7 @@
           <field name="color">Brown</field>
           <field name="location">Grand-Rosiere</field>
           <field name="doors">5</field>
-          <field name="driver" ref="base.res_partner_address_15" />
+          <field name="driver_id" ref="base.res_partner_address_15" />
           <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
           <field name="state" ref="vehicle_state_active"/>
           <field name="odometer_unit">kilometers</field>
@@ -637,7 +637,7 @@
       <record id="log_service_1" model="fleet.vehicle.log.services" >
         <field name="vehicle_id" ref="vehicle_2" />
         <field name="amount">650</field>
-        <field name="cost_subtype" ref="type_service_service_8"/>
+        <field name="cost_subtype_id" ref="type_service_service_8"/>
         <field name="date">2012-09-02</field>
         <field name="purchaser_id" ref="base.res_partner_address_18" />
         <field name="inv_ref">4586</field>
@@ -648,7 +648,7 @@
       <record id="services_cost_11" model="fleet.vehicle.cost" >
         <field name="vehicle_id" ref="vehicle_2" />
         <field name="amount">50</field>
-        <field name="cost_subtype" ref="type_service_7"/>
+        <field name="cost_subtype_id" ref="type_service_7"/>
         <field name="date">2012-09-02</field>
         <field name="parent_id" ref="log_service_1_fleet_vehicle_cost" />
       </record>
@@ -656,7 +656,7 @@
       <record id="services_cost_12" model="fleet.vehicle.cost" >
         <field name="vehicle_id" ref="vehicle_2" />
         <field name="amount">25</field>
-        <field name="cost_subtype" ref="type_service_8"/>
+        <field name="cost_subtype_id" ref="type_service_8"/>
         <field name="date">2012-09-02</field>
         <field name="parent_id" ref="log_service_1_fleet_vehicle_cost" />
       </record>
@@ -664,7 +664,7 @@
       <record id="services_cost_13" model="fleet.vehicle.cost" >
         <field name="vehicle_id" ref="vehicle_2" />
         <field name="amount">100</field>
-        <field name="cost_subtype" ref="type_service_9"/>
+        <field name="cost_subtype_id" ref="type_service_9"/>
         <field name="date">2012-09-02</field>
         <field name="parent_id" ref="log_service_1_fleet_vehicle_cost" />
       </record>
@@ -672,7 +672,7 @@
       <record id="log_service_2" model="fleet.vehicle.log.services" >
         <field name="vehicle_id" ref="vehicle_2" />
         <field name="amount">350</field>
-        <field name="cost_subtype" ref="type_service_service_8"/>
+        <field name="cost_subtype_id" ref="type_service_service_8"/>
         <field name="date">2012-11-02</field>
         <field name="purchaser_id" ref="base.res_partner_address_18" />
         <field name="inv_ref">4814</field>
@@ -683,7 +683,7 @@
       <record id="services_cost_21" model="fleet.vehicle.cost" >
         <field name="vehicle_id" ref="vehicle_2" />
         <field name="amount">100</field>
-        <field name="cost_subtype" ref="type_service_10"/>
+        <field name="cost_subtype_id" ref="type_service_10"/>
         <field name="date">2012-11-02</field>
         <field name="parent_id" ref="log_service_2_fleet_vehicle_cost" />
       </record>
@@ -691,7 +691,7 @@
       <record id="services_cost_22" model="fleet.vehicle.cost" >
         <field name="vehicle_id" ref="vehicle_2" />
         <field name="amount">150</field>
-        <field name="cost_subtype" ref="type_service_11"/>
+        <field name="cost_subtype_id" ref="type_service_11"/>
         <field name="date">2012-11-02</field>
         <field name="parent_id" ref="log_service_2_fleet_vehicle_cost" />
       </record>
@@ -699,7 +699,7 @@
       <record id="services_cost_23" model="fleet.vehicle.cost" >
         <field name="vehicle_id" ref="vehicle_2" />
         <field name="amount">100</field>
-        <field name="cost_subtype" ref="type_service_12"/>
+        <field name="cost_subtype_id" ref="type_service_12"/>
         <field name="date">2012-11-02</field>
         <field name="parent_id" ref="log_service_2_fleet_vehicle_cost" />
       </record>
@@ -707,7 +707,7 @@
       <record id="log_service_3" model="fleet.vehicle.log.services" >
         <field name="vehicle_id" ref="vehicle_1" />
         <field name="amount">513</field>
-        <field name="cost_subtype" ref="type_service_service_8"/>
+        <field name="cost_subtype_id" ref="type_service_service_8"/>
         <field name="date">2012-10-15</field>
         <field name="purchaser_id" ref="base.res_partner_address_18" />
         <field name="inv_ref">124</field>
@@ -718,7 +718,7 @@
       <record id="log_service_4" model="fleet.vehicle.log.services" >
         <field name="vehicle_id" ref="vehicle_3" />
         <field name="amount">412</field>
-        <field name="cost_subtype" ref="type_service_service_8"/>
+        <field name="cost_subtype_id" ref="type_service_service_8"/>
         <field name="date">2012-10-08</field>
         <field name="purchaser_id" ref="base.res_partner_address_18" />
         <field name="inv_ref">20984</field>
@@ -729,7 +729,7 @@
       <record id="log_service_5" model="fleet.vehicle.log.services" >
         <field name="vehicle_id" ref="vehicle_4" />
         <field name="amount">275</field>
-        <field name="cost_subtype" ref="type_service_service_8"/>
+        <field name="cost_subtype_id" ref="type_service_service_8"/>
         <field name="date">2012-09-25</field>
         <field name="purchaser_id" ref="base.res_partner_address_18" />
         <field name="inv_ref">241</field>
@@ -740,7 +740,7 @@
       <record id="log_service_6" model="fleet.vehicle.log.services" >
         <field name="vehicle_id" ref="vehicle_5" />
         <field name="amount">302</field>
-        <field name="cost_subtype" ref="type_service_service_8"/>
+        <field name="cost_subtype_id" ref="type_service_service_8"/>
         <field name="date">2012-09-15</field>
         <field name="purchaser_id" ref="base.res_partner_address_18" />
         <field name="inv_ref">22513</field>
@@ -753,7 +753,7 @@
         <field name="amount">0</field>
         <field name="cost_generated">20</field>
         <field name="cost_frequency">daily</field>
-        <field name="cost_subtype" ref="type_contract_leasing"/>
+        <field name="cost_subtype_id" ref="type_contract_leasing"/>
         <field name="date" eval="time.strftime('%Y-01-01')" />
         <field name="start_date" eval="time.strftime('%Y-01-01')" />
         <field name="expiration_date" eval="(DateTime.now() + timedelta(5)).strftime('%Y-%m-%d')" />
@@ -765,7 +765,7 @@
       <record id="contract_cost_11" model="fleet.vehicle.cost" >
         <field name="vehicle_id" ref="vehicle_2" />
         <field name="amount">50</field>
-        <field name="cost_subtype" ref="type_service_service_2"/>
+        <field name="cost_subtype_id" ref="type_service_service_2"/>
         <field name="date">2012-01-01</field>
         <field name="parent_id" ref="log_contract_1_fleet_vehicle_cost" />
       </record>
@@ -773,7 +773,7 @@
       <record id="contract_cost_12" model="fleet.vehicle.cost" >
         <field name="vehicle_id" ref="vehicle_2" />
         <field name="amount">25</field>
-        <field name="cost_subtype" ref="type_service_service_3"/>
+        <field name="cost_subtype_id" ref="type_service_service_3"/>
         <field name="date">2012-01-01</field>
         <field name="parent_id" ref="log_contract_1_fleet_vehicle_cost" />
       </record>
@@ -781,7 +781,7 @@
       <record id="contract_cost_13" model="fleet.vehicle.cost" >
         <field name="vehicle_id" ref="vehicle_2" />
         <field name="amount">100</field>
-        <field name="cost_subtype" ref="type_contract_omnium"/>
+        <field name="cost_subtype_id" ref="type_contract_omnium"/>
         <field name="date">2012-01-01</field>
         <field name="parent_id" ref="log_contract_1_fleet_vehicle_cost" />
       </record>
@@ -791,7 +791,7 @@
         <field name="amount">0</field>
         <field name="cost_generated">150</field>
         <field name="cost_frequency">weekly</field>
-        <field name="cost_subtype" ref="type_contract_leasing"/>
+        <field name="cost_subtype_id" ref="type_contract_leasing"/>
         <field name="date" eval="time.strftime('%Y-01-01')" />
         <field name="start_date" eval="time.strftime('%Y-01-01')" />
         <field name="expiration_date" eval="(DateTime.now() + timedelta(-1)).strftime('%Y-%m-%d')" />
@@ -803,7 +803,7 @@
       <record id="contract_cost_21" model="fleet.vehicle.cost" >
         <field name="vehicle_id" ref="vehicle_1" />
         <field name="amount">50</field>
-        <field name="cost_subtype" ref="type_service_service_2"/>
+        <field name="cost_subtype_id" ref="type_service_service_2"/>
         <field name="date">2012-01-01</field>
         <field name="parent_id" ref="log_contract_2_fleet_vehicle_cost" />
       </record>
@@ -811,7 +811,7 @@
       <record id="contract_cost_22" model="fleet.vehicle.cost" >
         <field name="vehicle_id" ref="vehicle_1" />
         <field name="amount">25</field>
-        <field name="cost_subtype" ref="type_service_service_3"/>
+        <field name="cost_subtype_id" ref="type_service_service_3"/>
         <field name="date">2012-01-01</field>
         <field name="parent_id" ref="log_contract_2_fleet_vehicle_cost" />
       </record>
@@ -819,7 +819,7 @@
       <record id="contract_cost_23" model="fleet.vehicle.cost" >
         <field name="vehicle_id" ref="vehicle_1" />
         <field name="amount">100</field>
-        <field name="cost_subtype" ref="type_contract_omnium"/>
+        <field name="cost_subtype_id" ref="type_contract_omnium"/>
         <field name="date">2012-01-01</field>
         <field name="parent_id" ref="log_contract_2_fleet_vehicle_cost" />
       </record>
@@ -829,7 +829,7 @@
         <field name="amount">0</field>
         <field name="cost_generated">400</field>
         <field name="cost_frequency">monthly</field>
-        <field name="cost_subtype" ref="type_contract_leasing"/>
+        <field name="cost_subtype_id" ref="type_contract_leasing"/>
         <field name="date" eval="time.strftime('%Y-01-01')"/>
         <field name="start_date" eval="time.strftime('%Y-01-01')" />
         <field name="expiration_date" eval="time.strftime('%Y-12-31')" />
@@ -841,7 +841,7 @@
       <record id="contract_cost_31" model="fleet.vehicle.cost" >
         <field name="vehicle_id" ref="vehicle_3" />
         <field name="amount">50</field>
-        <field name="cost_subtype" ref="type_service_service_2"/>
+        <field name="cost_subtype_id" ref="type_service_service_2"/>
         <field name="date">2012-01-01</field>
         <field name="parent_id" ref="log_contract_3_fleet_vehicle_cost" />
       </record>
@@ -849,7 +849,7 @@
       <record id="contract_cost_32" model="fleet.vehicle.cost" >
         <field name="vehicle_id" ref="vehicle_3" />
         <field name="amount">25</field>
-        <field name="cost_subtype" ref="type_service_service_3"/>
+        <field name="cost_subtype_id" ref="type_service_service_3"/>
         <field name="date">2012-01-01</field>
         <field name="parent_id" ref="log_contract_3_fleet_vehicle_cost" />
       </record>
@@ -857,7 +857,7 @@
       <record id="contract_cost_33" model="fleet.vehicle.cost" >
         <field name="vehicle_id" ref="vehicle_3" />
         <field name="amount">100</field>
-        <field name="cost_subtype" ref="type_contract_omnium"/>
+        <field name="cost_subtype_id" ref="type_contract_omnium"/>
         <field name="date">2012-01-01</field>
         <field name="parent_id" ref="log_contract_3_fleet_vehicle_cost" />
       </record>
@@ -867,7 +867,7 @@
         <field name="amount">0</field>
         <field name="cost_generated">4000</field>
         <field name="cost_frequency">yearly</field>
-        <field name="cost_subtype" ref="type_contract_leasing"/>
+        <field name="cost_subtype_id" ref="type_contract_leasing"/>
         <field name="date" eval="time.strftime('%Y-01-01')" />
         <field name="start_date" eval="time.strftime('%Y-01-01')" />
         <field name="expiration_date" eval="time.strftime('%Y-12-31')" />
@@ -879,7 +879,7 @@
       <record id="contract_cost_41" model="fleet.vehicle.cost" >
         <field name="vehicle_id" ref="vehicle_4" />
         <field name="amount">50</field>
-        <field name="cost_subtype" ref="type_service_service_2"/>
+        <field name="cost_subtype_id" ref="type_service_service_2"/>
         <field name="date">2012-01-01</field>
         <field name="parent_id" ref="log_contract_4_fleet_vehicle_cost" />
       </record>
@@ -887,7 +887,7 @@
       <record id="contract_cost_42" model="fleet.vehicle.cost" >
         <field name="vehicle_id" ref="vehicle_4" />
         <field name="amount">25</field>
-        <field name="cost_subtype" ref="type_service_service_3"/>
+        <field name="cost_subtype_id" ref="type_service_service_3"/>
         <field name="date">2012-01-01</field>
         <field name="parent_id" ref="log_contract_4_fleet_vehicle_cost" />
       </record>
@@ -895,7 +895,7 @@
       <record id="contract_cost_43" model="fleet.vehicle.cost" >
         <field name="vehicle_id" ref="vehicle_4" />
         <field name="amount">100</field>
-        <field name="cost_subtype" ref="type_contract_omnium"/>
+        <field name="cost_subtype_id" ref="type_contract_omnium"/>
         <field name="date">2012-01-01</field>
         <field name="parent_id" ref="log_contract_4_fleet_vehicle_cost" />
       </record>
@@ -905,7 +905,7 @@
         <field name="amount">17000</field>
         <field name="cost_generated">0</field>
         <field name="cost_frequency">no</field>
-        <field name="cost_subtype" ref="type_contract_leasing"/>
+        <field name="cost_subtype_id" ref="type_contract_leasing"/>
         <field name="date" eval="time.strftime('2012-01-01')" />
         <field name="start_date" eval="time.strftime('2012-01-01')" />
         <field name="expiration_date" eval="time.strftime('2016-12-31')" />
@@ -917,7 +917,7 @@
       <record id="contract_cost_51" model="fleet.vehicle.cost" >
         <field name="vehicle_id" ref="vehicle_5" />
         <field name="amount">50</field>
-        <field name="cost_subtype" ref="type_service_service_2"/>
+        <field name="cost_subtype_id" ref="type_service_service_2"/>
         <field name="date">2012-01-01</field>
         <field name="parent_id" ref="log_contract_5_fleet_vehicle_cost" />
       </record>
@@ -925,7 +925,7 @@
       <record id="contract_cost_52" model="fleet.vehicle.cost" >
         <field name="vehicle_id" ref="vehicle_5" />
         <field name="amount">25</field>
-        <field name="cost_subtype" ref="type_service_service_3"/>
+        <field name="cost_subtype_id" ref="type_service_service_3"/>
         <field name="date">2012-01-01</field>
         <field name="parent_id" ref="log_contract_5_fleet_vehicle_cost" />
       </record>
@@ -933,7 +933,7 @@
       <record id="contract_cost_53" model="fleet.vehicle.cost" >
         <field name="vehicle_id" ref="vehicle_5" />
         <field name="amount">100</field>
-        <field name="cost_subtype" ref="type_contract_omnium"/>
+        <field name="cost_subtype_id" ref="type_contract_omnium"/>
         <field name="date">2012-01-01</field>
         <field name="parent_id" ref="log_contract_5_fleet_vehicle_cost" />
       </record>
