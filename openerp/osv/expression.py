@@ -343,6 +343,7 @@ def generate_table_alias(src_table_alias, joined_tables=[]):
         return ('%s' % alias, '%s' % _quote(alias))
     for link in joined_tables:
         alias += '__' + link[1]
+    assert len(alias) < 64, 'Table alias name %s is longer than the 64 characters size accepted by default in postgresql.' % (alias)
     return ('%s' % alias, '%s as %s' % (_quote(joined_tables[-1][0]), _quote(alias)))
 
 
