@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time, date
 import math
 from faces import *
 from osv import fields, osv
@@ -28,6 +28,7 @@ from tools.translate import _
 from itertools import groupby
 from operator import itemgetter
 
+import pytz
 
 class resource_calendar(osv.osv):
     _name = "resource.calendar"
@@ -274,13 +275,10 @@ class resource_calendar_attendance(osv.osv):
     }
 resource_calendar_attendance()
 
-def convert_timeformat(time_string):
-    split_list = str(time_string).split('.')
-    hour_part = split_list[0]
-    mins_part = split_list[1]
-    round_mins = int(round(float(mins_part) * 60,-2))
-    converted_string = hour_part + ':' + str(round_mins)[0:2]
-    return converted_string
+def float_time(hours):
+    """ convert a number of hours (float) into a datetime.time """
+    minutes = int(round(hours * 60))
+    return time(minutes / 60, minutes % 60)
 
 class resource_resource(osv.osv):
     _name = "resource.resource"
@@ -366,51 +364,84 @@ class resource_resource(osv.osv):
         Change the format of working calendar from 'Openerp' format to bring it into 'Faces' format.
         @param calendar_id : working calendar of the project
         """
+        tz = pytz.utc
+        if context and ('tz' in context):
+            tz = pytz.timezone(context['tz'])
+
+        wktime_local = None
+        week_days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
         if not calendar_id:
-            # Calendar is not specified: working days: 24/7
-            return [('fri', '8:0-12:0','13:0-17:0'), ('thu', '8:0-12:0','13:0-17:0'), ('wed', '8:0-12:0','13:0-17:0'),
-                   ('mon', '8:0-12:0','13:0-17:0'), ('tue', '8:0-12:0','13:0-17:0')]
-        resource_attendance_pool = self.pool.get('resource.calendar.attendance')
-        time_range = "8:00-8:00"
-        non_working = ""
-        week_days = {"0": "mon", "1": "tue", "2": "wed","3": "thu", "4": "fri", "5": "sat", "6": "sun"}
-        wk_days = {}
-        wk_time = {}
-        wktime_list = []
+            # Calendar is not specified: working days: some sane default
+            wktime_local = [
+                (0, time( 8, 0), time(12, 0)),
+                (0, time(13, 0), time(17, 0)),
+                (1, time( 8, 0), time(12, 0)),
+                (1, time(13, 0), time(17, 0)),
+                (2, time( 8, 0), time(12, 0)),
+                (2, time(13, 0), time(17, 0)),
+                (3, time( 8, 0), time(12, 0)),
+                (3, time(13, 0), time(17, 0)),
+                (4, time( 8, 0), time(12, 0)),
+                (4, time(13, 0), time(17, 0)),
+            ]
+        else:
+            resource_attendance_pool = self.pool.get('resource.calendar.attendance')
+            week_ids = resource_attendance_pool.search(cr, uid, [('calendar_id', '=', calendar_id)], context=context)
+            weeks = resource_attendance_pool.read(cr, uid, week_ids, ['dayofweek', 'hour_from', 'hour_to'], context=context)
+            # Convert time formats into appropriate format required
+            # and create lists inside wktime_local.
+            wktime_local = []
+            for week in weeks:
+                day = int(week['dayofweek'])
+                assert day in xrange(7)
+                hour_from = float_time(week['hour_from'])
+                hour_to = float_time(week['hour_to'])
+                wktime_local.append((day, hour_from, hour_to))
+
+        # We now have working hours _in local time_.  Non-working days are an
+        # empty list, while working days are a list of tuples, consisting of a
+        # start time and an end time.  We will convert these to UTC for time
+        # calculation purposes.
+
+        # We need to get this into a dict which will be in the following format:
+        #   {0: [(time(9, 0), time(17, 0)), ...], ...}
+        wktime_utc = dict((day, []) for day in range(0, 7))
+
+        # NOTE: This may break with regards to DST!
+        for (day, start, end) in wktime_local:
+            # Convert start time to UTC
+            start_dt_local = datetime.combine(date.today(), start.replace(tzinfo=tz))
+            start_dt_utc = start_dt_local.astimezone(pytz.utc)
+            start_day = (day + (start_dt_utc.date() - start_dt_local.date()).days) % 7
+
+            # Convert end time to UTC
+            end_dt_local = datetime.combine(date.today(), end.replace(tzinfo=tz))
+            end_dt_utc = end_dt_local.astimezone(pytz.utc)
+            end_day = (day + (end_dt_utc.date() - end_dt_local.date()).days) % 7
+
+            # Are start and end still on the same day?
+            if start_day == end_day:
+                wktime_utc[start_day].append((start_dt_utc.time(), end_dt_utc.time()))
+            else:
+                # We go until midnight on the start day
+                wktime_utc[start_day].append((start_dt_utc.time(), time(0, 0)))
+                # Then resume from midnight on the end day
+                wktime_utc[end_day].append((time(0, 0), end_dt_utc.time()))
+
+        # Now having gotten a list of times together, generate the final output:
+        #   [('mon', '08:00-12:00', '13:00-17:00', ...), ...]
         wktime_cal = []
-        week_ids = resource_attendance_pool.search(cr, uid, [('calendar_id', '=', calendar_id)], context=context)
-        weeks = resource_attendance_pool.read(cr, uid, week_ids, ['dayofweek', 'hour_from', 'hour_to'], context=context)
-        # Convert time formats into appropriate format required
-        # and create a list like [('mon', '8:00-12:00'), ('mon', '13:00-18:00')]
-        for week in weeks:
-            res_str = ""
-            day = None
-            if week_days.get(week['dayofweek'],False):
-                day = week_days[week['dayofweek']]
-                wk_days[week['dayofweek']] = week_days[week['dayofweek']]
+        for day, day_name in enumerate(week_days):
+            # retrieve the times and sort them
+            times = sorted(wktime_utc[day])
+            wktime = [day_name]
+            if times:
+                for s, e in times:
+                    wktime.append('{0}-{1}'.format(s.strftime('%H:%M'), e.strftime('%H:%M')))
             else:
-                raise osv.except_osv(_('Configuration Error!'),_('Make sure the Working time has been configured with proper week days!'))
-            hour_from_str = convert_timeformat(week['hour_from'])
-            hour_to_str = convert_timeformat(week['hour_to'])
-            res_str = hour_from_str + '-' + hour_to_str
-            wktime_list.append((day, res_str))
-        # Convert into format like [('mon', '8:00-12:00', '13:00-18:00')]
-        for item in wktime_list:
-            if wk_time.has_key(item[0]):
-                wk_time[item[0]].append(item[1])
-            else:
-                wk_time[item[0]] = [item[0]]
-                wk_time[item[0]].append(item[1])
-        for k,v in wk_time.items():
-            wktime_cal.append(tuple(v))
-        # Add for the non-working days like: [('sat, sun', '8:00-8:00')]
-        for k, v in wk_days.items():
-            if week_days.has_key(k):
-                week_days.pop(k)
-        for v in week_days.itervalues():
-            non_working += v + ','
-        if non_working:
-            wktime_cal.append((non_working[:-1], time_range))
+                wktime.append(None)
+            wktime_cal.append(tuple(wktime))
+
         return wktime_cal
 
 resource_resource()

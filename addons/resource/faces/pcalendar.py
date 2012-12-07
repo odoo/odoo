@@ -893,9 +893,14 @@ class Calendar(object):
     #@-node:_build_mapping
     #@+node:_recalc_working_time
     def _recalc_working_time(self):
+        def time_diff(times):
+            diff = times[1] - times[0]
+            if diff <= 0:           # happens when times span across midnight
+                diff += 24*60
+            return diff
         def slot_sum_time(day):
             slots = self.working_times.get(day, DEFAULT_WORKING_DAYS[day])
-            return sum(map(lambda slot: slot[1] - slot[0], slots))
+            return sum(map(time_diff, slots))
 
         self.day_times = map(slot_sum_time, range(0, 7))
         self.week_time = sum(self.day_times)
