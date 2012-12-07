@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2011-01-18 16:47+0000\n"
 "Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
 "<maxime.chambreuil@savoirfairelinux.com>\n"
@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 05:44+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:13+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: event
 #: view:event.event:0
@@ -274,6 +274,11 @@ msgid ""
 msgstr ""
 
 #. module: event
+#: selection:report.event.registration,month:0
+msgid "May"
+msgstr "Mai"
+
+#. module: event
 #: view:report.event.registration:0
 msgid "Registrations in confirmed or done state"
 msgstr "Inscriptions en statut confirmé ou terminé"
@@ -299,8 +304,8 @@ msgid "Partner"
 msgstr "Partenaire"
 
 #. module: event
-#: help:event.type,default_registration_min:0
-msgid "It will select this default minimum value when you choose this event"
+#: model:ir.actions.server,name:event.actions_server_event_event_read
+msgid "Event: Mark read"
 msgstr ""
 
 #. module: event
@@ -403,12 +408,6 @@ msgid "New registration confirmed: %s."
 msgstr ""
 
 #. module: event
-#: model:ir.actions.server,name:event.actions_server_event_event_read
-#: model:ir.actions.server,name:event.actions_server_event_registration_read
-msgid "Mark read"
-msgstr ""
-
-#. module: event
 #: view:event.event:0
 msgid "Upcoming"
 msgstr ""
@@ -489,6 +488,11 @@ msgid "State set to Done"
 msgstr ""
 
 #. module: event
+#: model:ir.actions.server,name:event.actions_server_event_registration_read
+msgid "Event registration : Mark read"
+msgstr ""
+
+#. module: event
 #: model:ir.actions.act_window,name:event.act_event_reg
 #: view:report.event.registration:0
 msgid "Events Filling Status"
@@ -560,12 +564,6 @@ msgstr ""
 #. module: event
 #: view:event.event:0
 msgid "Finish Event"
-msgstr ""
-
-#. module: event
-#: model:ir.actions.server,name:event.actions_server_event_event_unread
-#: model:ir.actions.server,name:event.actions_server_event_registration_unread
-msgid "Mark unread"
 msgstr ""
 
 #. module: event
@@ -827,9 +825,9 @@ msgid "October"
 msgstr "Octobre"
 
 #. module: event
-#: selection:report.event.registration,month:0
-msgid "January"
-msgstr "Janvier"
+#: model:ir.actions.server,name:event.actions_server_event_registration_unread
+msgid "Event registration : Mark unread"
+msgstr ""
 
 #. module: event
 #: view:event.event:0
@@ -1031,14 +1029,14 @@ msgid "No ticket available."
 msgstr ""
 
 #. module: event
-#: field:event.event,street:0
-msgid "Street"
+#: help:event.type,default_registration_min:0
+msgid "It will select this default minimum value when you choose this event"
 msgstr ""
 
 #. module: event
-#: view:event.event:0
-msgid "available."
-msgstr ""
+#: selection:report.event.registration,month:0
+msgid "January"
+msgstr "Janvier"
 
 #. module: event
 #: field:event.event,register_max:0
@@ -1144,10 +1142,9 @@ msgid "Subscribe"
 msgstr "S'inscrire"
 
 #. module: event
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
+#: view:event.event:0
+msgid "available."
 msgstr ""
-"Erreur ! Vous ne pouvez pas créer des membres associés de manière récursive."
 
 #. module: event
 #: field:event.registration,event_begin_date:0
@@ -1189,9 +1186,9 @@ msgid ""
 msgstr ""
 
 #. module: event
-#: selection:report.event.registration,month:0
-msgid "May"
-msgstr "Mai"
+#: model:ir.actions.server,name:event.actions_server_event_event_unread
+msgid "Event: Mark unread"
+msgstr ""
 
 #. module: event
 #: model:res.groups,name:event.group_event_manager
@@ -1199,9 +1196,9 @@ msgid "Manager"
 msgstr ""
 
 #. module: event
-#: constraint:res.partner:0
-msgid "Error: Invalid ean code"
-msgstr "Erreur: code EAN invalide"
+#: field:event.event,street:0
+msgid "Street"
+msgstr ""
 
 #. module: event
 #: view:event.confirm:0
@@ -1263,6 +1260,9 @@ msgstr "Orateur confirmé"
 
 #~ msgid "Product"
 #~ msgstr "Produit"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Erreur: code EAN invalide"
 
 #~ msgid "Registration Confirmation"
 #~ msgstr "Confirmation d'inscription"
@@ -1798,6 +1798,10 @@ msgstr "Orateur confirmé"
 
 #~ msgid "Provide Maximum Number of Registrations"
 #~ msgstr "Fournir le nombre maximum d'inscriptions"
+
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr ""
+#~ "Erreur ! Vous ne pouvez pas créer des membres associés de manière récursive."
 
 #~ msgid "Invoiced Registrations only"
 #~ msgstr "Inscriptions facturées seulement"

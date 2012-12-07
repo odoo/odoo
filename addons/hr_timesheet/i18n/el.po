@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:51+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2010-08-03 06:50+0000\n"
 "Last-Translator: Mantavya Gajjar (Open ERP) <Unknown>\n"
 "Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:06+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:33+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
 "X-Poedit-SourceCharset: utf-8\n"
@@ -136,9 +136,9 @@ msgid "Minimum Analytic Amount"
 msgstr "Ελάχιστος Αναλυτικός Λογαριασμός"
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-msgid "Total time"
-msgstr "Σύνολο Χρόνου"
+#: view:hr.analytical.timesheet.employee:0
+msgid "Monthly Employee Timesheet"
+msgstr ""
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
@@ -219,6 +219,11 @@ msgid "Sun"
 msgstr "Κυρ"
 
 #. module: hr_timesheet
+#: xsl:hr.analytical.timesheet:0
+msgid "Sum"
+msgstr "Άθροισμα"
+
+#. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Analytic account"
 msgstr ""
@@ -248,11 +253,6 @@ msgstr "Εκτύπωση"
 #. module: hr_timesheet
 #: help:account.analytic.account,use_timesheets:0
 msgid "Check this field if this project manages timesheets"
-msgstr ""
-
-#. module: hr_timesheet
-#: constraint:account.analytic.account:0
-msgid "Error! You cannot create recursive analytic accounts."
 msgstr ""
 
 #. module: hr_timesheet
@@ -350,6 +350,11 @@ msgid "or"
 msgstr ""
 
 #. module: hr_timesheet
+#: xsl:hr.analytical.timesheet:0
+msgid "Timesheet by Employee"
+msgstr ""
+
+#. module: hr_timesheet
 #: model:ir.actions.report.xml,name:hr_timesheet.report_user_timesheet
 msgid "Employee timesheet"
 msgstr "Φύλλο Xρόνου Eργασίας Υπαλλήλου"
@@ -376,6 +381,7 @@ msgid "(Keep empty for current time)"
 msgstr "(Μη συμπληρώσετε το πεδίο αυτό)"
 
 #. module: hr_timesheet
+#: field:account.analytic.account,use_timesheets:0
 #: view:hr.employee:0
 msgid "Timesheets"
 msgstr "Φύλλα Xρόνου Eργασίας"
@@ -505,11 +511,7 @@ msgid "Cancel"
 msgstr "Ακύρωση"
 
 #. module: hr_timesheet
-#: constraint:hr.employee:0
-msgid "Error! You cannot create recursive hierarchy of Employee(s)."
-msgstr ""
-
-#. module: hr_timesheet
+#: xsl:hr.analytical.timesheet_users:0
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_users
 #: model:ir.actions.report.xml,name:hr_timesheet.report_users_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_users
@@ -568,9 +570,9 @@ msgid "May"
 msgstr "Μάιος"
 
 #. module: hr_timesheet
-#: view:hr.analytical.timesheet.employee:0
-msgid "Monthly Employee Timesheet"
-msgstr ""
+#: view:hr.analytic.timesheet:0
+msgid "Total time"
+msgstr "Σύνολο Χρόνου"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
@@ -610,11 +612,6 @@ msgid "Employees"
 msgstr ""
 
 #. module: hr_timesheet
-#: constraint:hr.analytic.timesheet:0
-msgid "You cannot modify an entry in a Confirmed/Done timesheet !"
-msgstr ""
-
-#. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
 #: code:addons/hr_timesheet/report/users_timesheet.py:73
 #: selection:hr.analytical.timesheet.employee,month:0
@@ -640,11 +637,6 @@ msgid "User Error!"
 msgstr ""
 
 #. module: hr_timesheet
-#: field:account.analytic.account,use_timesheets:0
-msgid "Use Timesheets"
-msgstr ""
-
-#. module: hr_timesheet
 #: view:hr.sign.in.project:0
 msgid "Start Working"
 msgstr "Έναρξη Εργασίας"
@@ -664,6 +656,12 @@ msgstr ""
 #: view:hr.analytic.timesheet:0
 msgid "Accounting"
 msgstr ""
+
+#. module: hr_timesheet
+#: xsl:hr.analytical.timesheet:0
+#: xsl:hr.analytical.timesheet_users:0
+msgid "Total"
+msgstr "Σύνολο"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
@@ -706,9 +704,6 @@ msgstr "Αλλαγή Εργασίας"
 #, python-format
 #~ msgid "ValidateError"
 #~ msgstr "ValidateError"
-
-#~ msgid "Sum"
-#~ msgstr "Άθροισμα"
 
 #~ msgid "Consultancy - Senior Developer"
 #~ msgstr "Consultancy - Senior Developer"
@@ -805,9 +800,6 @@ msgstr "Αλλαγή Εργασίας"
 
 #~ msgid "Stats by user"
 #~ msgstr "Στατιστικά ανά Χρήστη"
-
-#~ msgid "Total"
-#~ msgstr "Σύνολο"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Λανθασμένο όνομα μοντέλου στην δήλωση ενέργειας"

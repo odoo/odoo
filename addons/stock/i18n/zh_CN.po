@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:51+0000\n"
-"PO-Revision-Date: 2012-11-26 08:33+0000\n"
-"Last-Translator: ccdos <ccdos@163.com>\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
+"PO-Revision-Date: 2012-11-29 06:23+0000\n"
+"Last-Translator: mrshelly <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-27 05:23+0000\n"
-"X-Generator: Launchpad (build 16309)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:08+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -32,6 +32,8 @@ msgid ""
 "Shirts, for the same \"Linux T-Shirt\", you may have variants on  sizes or "
 "colors; S, M, L, XL, XXL."
 msgstr ""
+"允许管理产品可变属性. 以T恤为例. 同样的 \"Linux T恤\",可以有尺寸和颜色的区分;  S(小号), M(中号), L(大号), "
+"XL(特大号), XXL(超大号)."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split_lines
@@ -83,7 +85,7 @@ msgstr "向前追溯"
 #: code:addons/stock/stock.py:1448
 #, python-format
 msgid "Products have been <b>delivered</b>."
-msgstr ""
+msgstr "产品已<b>送货</db>."
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -125,7 +127,7 @@ msgstr "产品调拨"
 #: code:addons/stock/stock.py:2650
 #, python-format
 msgid "Please provide proper quantity."
-msgstr ""
+msgstr "输入数量不正确"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_inventory_control
@@ -209,7 +211,7 @@ msgstr "库存账簿"
 #: code:addons/stock/stock.py:1449
 #, python-format
 msgid "Products have been <b>received</b>."
-msgstr ""
+msgstr "产品已<b>收货</b>."
 
 #. module: stock
 #: view:report.stock.move:0
@@ -575,6 +577,14 @@ msgid "Location & Warehouse"
 msgstr "库位和仓库"
 
 #. module: stock
+#: code:addons/stock/stock.py:1848
+#, python-format
+msgid ""
+"Quantities, Units of Measure, Products and Locations cannot be modified on "
+"stock moves that have already been processed (except by the Administrator)."
+msgstr ""
+
+#. module: stock
 #: help:report.stock.move,type:0
 #: help:stock.picking,type:0
 #: help:stock.picking.in,type:0
@@ -811,11 +821,6 @@ msgid "Analyse Current Inventory"
 msgstr ""
 
 #. module: stock
-#: sql_constraint:product.product:0
-msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
-
-#. module: stock
 #: code:addons/stock/stock.py:1202
 #, python-format
 msgid "You cannot remove the picking which is in %s state!"
@@ -847,11 +852,6 @@ msgstr ""
 #: field:product.template,property_stock_procurement:0
 msgid "Procurement Location"
 msgstr "需求库位"
-
-#. module: stock
-#: report:stock.picking.list:0
-msgid "Recipient"
-msgstr "接收者"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_tree
@@ -891,14 +891,6 @@ msgstr ""
 #: field:stock.picking.out,message_summary:0
 msgid "Summary"
 msgstr ""
-
-#. module: stock
-#: help:stock.location,chained_picking_type:0
-msgid ""
-"Shipping Type of the Picking List that will contain the chained move (leave "
-"empty to automatically detect the type based on the source and destination "
-"locations)."
-msgstr "分拣单的运送类型将包含连锁调拨(为空根据源和目标库位自动检测)"
 
 #. module: stock
 #: view:product.category:0
@@ -1025,11 +1017,6 @@ msgid "Change Product Quantity"
 msgstr "更改产品数量"
 
 #. module: stock
-#: model:ir.model,name:stock.model_stock_inventory_merge
-msgid "Merge Inventory"
-msgstr "合并盘点"
-
-#. module: stock
 #: code:addons/stock/product.py:459
 #, python-format
 msgid "Future P&L"
@@ -1064,11 +1051,6 @@ msgstr ""
 #, python-format
 msgid "Please define journal on the product category: \"%s\" (id: %d)"
 msgstr ""
-
-#. module: stock
-#: report:stock.picking.list:0
-msgid "Expected Shipping Date"
-msgstr "预计运送日期"
 
 #. module: stock
 #: view:stock.move:0
@@ -1121,13 +1103,6 @@ msgid "is scheduled %s."
 msgstr "已计划安排 %s"
 
 #. module: stock
-#: constraint:product.template:0
-msgid ""
-"Error: The default Unit of Measure and the purchase Unit of Measure must be "
-"in the same category."
-msgstr ""
-
-#. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_invoice_onshipping
 msgid "Create Draft Invoices"
 msgstr ""
@@ -1145,13 +1120,6 @@ msgstr "如果您需要在成品库位生产请留空.如在固定地点生产�
 #. module: stock
 #: selection:stock.picking.in,state:0
 msgid "Ready to Receive"
-msgstr ""
-
-#. module: stock
-#: constraint:product.product:0
-msgid ""
-"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
-"\"Internal Reference\" field instead."
 msgstr ""
 
 #. module: stock
@@ -1239,11 +1207,6 @@ msgid "Stock Valuation Account"
 msgstr "库存核算科目"
 
 #. module: stock
-#: constraint:res.partner:0
-msgid "Error: Invalid ean code"
-msgstr "错误：无效的(EAN)条码"
-
-#. module: stock
 #: view:stock.config.settings:0
 msgid "Apply"
 msgstr ""
@@ -1265,25 +1228,9 @@ msgid "Please define journal on the product category: \"%s\" (id: %d)."
 msgstr ""
 
 #. module: stock
-#: model:res.company,follow_up_msg:stock.res_company_1
-#: model:res.company,follow_up_msg:stock.res_company_2
-msgid ""
-"\n"
-"Date: %(date)s\n"
-"\n"
-"Dear %(partner_name)s,\n"
-"\n"
-"Please find in attachment a reminder of all your unpaid invoices, for a "
-"total amount due of:\n"
-"\n"
-"%(followup_amount).2f %(company_currency)s\n"
-"\n"
-"Thanks,\n"
-"--\n"
-"%(user_signature)s\n"
-"%(company_name)s\n"
-"        "
-msgstr ""
+#: field:report.stock.lines.date,date:0
+msgid "Latest Inventory Date"
+msgstr "最近盘点日期"
 
 #. module: stock
 #: help:stock.location,usage:0
@@ -2101,9 +2048,10 @@ msgid "_Deliver"
 msgstr ""
 
 #. module: stock
-#: view:stock.location:0
-msgid "Customer Locations"
-msgstr "客户库位"
+#: code:addons/stock/wizard/stock_inventory_merge.py:64
+#, python-format
+msgid "Merging is only allowed on draft inventories."
+msgstr "只允许合并草搞状态的盘点"
 
 #. module: stock
 #: help:stock.picking.out,state:0
@@ -2194,13 +2142,9 @@ msgid "Return Shipment"
 msgstr ""
 
 #. module: stock
-#: model:ir.model,name:stock.model_stock_inventory
-#: selection:report.stock.inventory,location_type:0
-#: field:stock.inventory.line,inventory_id:0
-#: report:stock.inventory.move:0
-#: selection:stock.location,usage:0
-msgid "Inventory"
-msgstr "盘点"
+#: model:ir.model,name:stock.model_stock_inventory_merge
+msgid "Merge Inventory"
+msgstr "合并盘点"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_stock_fill_inventory
@@ -2363,10 +2307,9 @@ msgid "Logistical shipping unit: pallet, box, pack ..."
 msgstr "物流货运单位：托盘、箱、包等"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_inventory_merge.py:64
-#, python-format
-msgid "Merging is only allowed on draft inventories."
-msgstr "只允许合并草搞状态的盘点"
+#: view:stock.location:0
+msgid "Customer Locations"
+msgstr "客户库位"
 
 #. module: stock
 #: code:addons/stock/stock.py:2520
@@ -2476,11 +2419,6 @@ msgid ""
 msgstr "调拨日期: 安排的日期直到调拨完成的日期，这日期是调拨实际处理完成的日期."
 
 #. module: stock
-#: field:report.stock.lines.date,date:0
-msgid "Latest Inventory Date"
-msgstr "最近盘点日期"
-
-#. module: stock
 #: view:report.stock.inventory:0
 #: view:report.stock.move:0
 #: view:stock.inventory:0
@@ -2556,11 +2494,6 @@ msgstr ""
 msgid ""
 "Current quantity of products with this Serial Number available in company "
 "warehouses"
-msgstr ""
-
-#. module: stock
-#: view:stock.move:0
-msgid "Tracability"
 msgstr ""
 
 #. module: stock
@@ -3166,6 +3099,7 @@ msgstr "联系地址："
 #: field:stock.move.split.lines,prodlot_id:0
 #: field:stock.partial.move.line,prodlot_id:0
 #: field:stock.partial.picking.line,prodlot_id:0
+#: report:stock.picking.list:0
 #: view:stock.production.lot:0
 #: field:stock.production.lot,name:0
 #: field:stock.production.lot.revision,lot_id:0
@@ -3447,14 +3381,6 @@ msgstr "负责人"
 #. module: stock
 #: view:stock.move:0
 msgid "Process Entirely"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/stock.py:1848
-#, python-format
-msgid ""
-"Quantities, Unit of Measures, Products and Locations cannot be modified on "
-"stock moves that have already been processed (except by the Administrator)."
 msgstr ""
 
 #. module: stock
@@ -4720,6 +4646,11 @@ msgid "Delays"
 msgstr ""
 
 #. module: stock
+#: report:stock.picking.list:0
+msgid "Schedule Date"
+msgstr ""
+
+#. module: stock
 #: field:stock.location.product,to_date:0
 msgid "To"
 msgstr "到"
@@ -4931,9 +4862,21 @@ msgid ""
 msgstr "默认情况下，包装参考sscc标准。（序列号+1位校验码）"
 
 #. module: stock
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr "错误，您不能创建循环引用的会员用户"
+#: model:ir.model,name:stock.model_stock_inventory
+#: selection:report.stock.inventory,location_type:0
+#: field:stock.inventory.line,inventory_id:0
+#: report:stock.inventory.move:0
+#: selection:stock.location,usage:0
+msgid "Inventory"
+msgstr "盘点"
+
+#. module: stock
+#: help:stock.location,chained_picking_type:0
+msgid ""
+"Shipping Type of the Picking List that will contain the chained move (leave "
+"empty to automatically detect the type based on the source and destination "
+"locations)."
+msgstr "分拣单的运送类型将包含连锁调拨(为空根据源和目标库位自动检测)"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_partial_picking.py:191
@@ -4943,11 +4886,6 @@ msgid ""
 "would let a quantity of \"%s %s\" to ship and only roundings of \"%s %s\" is "
 "accepted by the uom."
 msgstr ""
-
-#. module: stock
-#: constraint:product.category:0
-msgid "Error ! You cannot create recursive categories."
-msgstr "错误！您不能创建循环的类别。"
 
 #. module: stock
 #: help:stock.move,move_dest_id:0
@@ -5176,6 +5114,9 @@ msgstr ""
 
 #~ msgid "STOCK_EXECUTE"
 #~ msgstr "STOCK_EXECUTE"
+
+#~ msgid "Expected Shipping Date"
+#~ msgstr "预计运送日期"
 
 #~ msgid "terp-stock"
 #~ msgstr "terp-stock"
@@ -5872,6 +5813,9 @@ msgstr ""
 #~ msgid "Address of partner"
 #~ msgstr "业务伙伴地址"
 
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "错误：无效的(EAN)条码"
+
 #~ msgid "Not Available"
 #~ msgstr "不可用"
 
@@ -5988,6 +5932,9 @@ msgstr ""
 
 #~ msgid "Split lines"
 #~ msgstr "拆分明细"
+
+#~ msgid "Recipient"
+#~ msgstr "接收者"
 
 #, python-format
 #~ msgid "Delivery Information"
@@ -6616,6 +6563,12 @@ msgstr ""
 
 #~ msgid "Convenient Store"
 #~ msgstr "便利店"
+
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr "错误，您不能创建循环引用的会员用户"
+
+#~ msgid "Error ! You cannot create recursive categories."
+#~ msgstr "错误！您不能创建循环的类别。"
 
 #, python-format
 #~ msgid ""

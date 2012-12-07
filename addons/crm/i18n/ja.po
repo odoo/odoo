@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:51+0000\n"
+"POT-Creation-Date: 2012-12-03 16:01+0000\n"
 "PO-Revision-Date: 2012-07-09 05:13+0000\n"
 "Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 05:48+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:17+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -52,7 +52,7 @@ msgid "Action"
 msgstr "アクション"
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:280
+#: code:addons/crm/crm_phonecall.py:282
 #, python-format
 msgid ""
 "Phonecall linked to the opportunity <em>%s</em> has been <b>created</b> and "
@@ -66,13 +66,18 @@ msgid "Manage Fund Raising"
 msgstr ""
 
 #. module: crm
+#: view:crm.lead2opportunity.partner.mass:0
+msgid "Convert to Opportunities"
+msgstr ""
+
+#. module: crm
 #: view:crm.lead.report:0
 #: field:crm.phonecall.report,delay_close:0
 msgid "Delay to close"
 msgstr "締めを延期する"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:884
+#: code:addons/crm/crm_lead.py:888
 #, python-format
 msgid "Lead has been <b>converted to an opportunity</b>."
 msgstr ""
@@ -170,7 +175,7 @@ msgid ""
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:548
+#: code:addons/crm/crm_lead.py:552
 #: code:addons/crm/wizard/crm_lead_to_partner.py:47
 #, python-format
 msgid "Warning!"
@@ -198,12 +203,7 @@ msgid "Schedule Other Call"
 msgstr "他の電話をスケジュール"
 
 #. module: crm
-#: view:crm.lead:0
-msgid "% success rate"
-msgstr ""
-
-#. module: crm
-#: code:addons/crm/crm_phonecall.py:197
+#: code:addons/crm/crm_phonecall.py:199
 #: view:crm.phonecall:0
 #, python-format
 msgid "Phone Call"
@@ -213,17 +213,6 @@ msgstr "通話"
 #: field:crm.lead,opt_out:0
 msgid "Opt-Out"
 msgstr "オプトアウト"
-
-#. module: crm
-#: model:ir.actions.act_window,help:crm.action_report_crm_lead
-msgid ""
-"Leads Analysis allows you to check different CRM related information. Check "
-"for treatment delays, number of responses given and emails sent. You can "
-"sort out your leads analysis by different groups to get accurate grained "
-"analysis."
-msgstr ""
-"リード分析は異なるCRMの関連情報を確認することができます。取り扱いの遅延、与えられた回答の番号、送信されたEメールをチェックします。正確な粒度の分析を得"
-"るために、異なったグループによるリード分析を並べ変えることができます。"
 
 #. module: crm
 #: field:crm.case.stage,fold:0
@@ -258,7 +247,7 @@ msgid "Leads Analysis"
 msgstr "リード分析"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:874
+#: code:addons/crm/crm_lead.py:878
 #, python-format
 msgid "<b>%s a call</b> for the <em>%s</em>."
 msgstr ""
@@ -299,7 +288,7 @@ msgid "Prospect Partner"
 msgstr "予想パートナ"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:807
+#: code:addons/crm/crm_lead.py:811
 #, python-format
 msgid "No Subject"
 msgstr "無題"
@@ -358,11 +347,6 @@ msgstr "案件を閉じるための日数"
 #: model:process.node,note:crm.process_node_opportunities0
 msgid "When a real project/opportunity is detected"
 msgstr "実プロジェクト / 商談が見つかった時に"
-
-#. module: crm
-#: constraint:crm.segmentation:0
-msgid "Error ! You cannot create recursive profiles."
-msgstr ""
 
 #. module: crm
 #: field:res.partner,opportunity_ids:0
@@ -531,16 +515,16 @@ msgid "Planned Revenue"
 msgstr "計画売上高"
 
 #. module: crm
+#: model:ir.actions.server,name:crm.actions_server_crm_phonecall_read
+msgid "CRM Phonecall: Mark read"
+msgstr ""
+
+#. module: crm
 #: selection:crm.lead.report,creation_month:0
 #: selection:crm.lead.report,deadline_month:0
 #: selection:crm.phonecall.report,month:0
 msgid "October"
 msgstr "10月"
-
-#. module: crm
-#: constraint:crm.meeting:0
-msgid "Error ! End date cannot be set before start date."
-msgstr ""
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -578,6 +562,11 @@ msgstr "案件分類"
 #: field:crm.lead,partner_address_name:0
 msgid "Partner Contact Name"
 msgstr "パートナの担当者名"
+
+#. module: crm
+#: model:ir.actions.server,name:crm.actions_server_crm_phonecall_unread
+msgid "CRM Phonecall: Mark unread"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.server,subject:crm.action_email_reminder_lead
@@ -662,9 +651,9 @@ msgid "Partner Segmentation"
 msgstr "パートナの分類"
 
 #. module: crm
-#: view:crm.lead2opportunity.partner.mass:0
-msgid "Convert to Opportunities"
-msgstr ""
+#: help:crm.phonecall,duration:0
+msgid "Duration in Minutes"
+msgstr "分による期間"
 
 #. module: crm
 #: field:crm.lead.report,probable_revenue:0
@@ -682,14 +671,14 @@ msgid "The name of the segmentation."
 msgstr "分類の名前"
 
 #. module: crm
-#: field:crm.case.stage,probability:0
-msgid "Probability (%)"
-msgstr "確率（%）"
+#: model:ir.filters,name:crm.filter_usa_lead
+msgid "Leads from USA"
+msgstr ""
 
 #. module: crm
-#: field:crm.lead,company_currency:0
-msgid "Company Currency"
-msgstr "会社の通貨"
+#: sql_constraint:crm.lead:0
+msgid "The probability of closing the deal should be between 0% and 100%!"
+msgstr ""
 
 #. module: crm
 #: view:crm.lead:0
@@ -702,13 +691,13 @@ msgid "Statistics Dashboard"
 msgstr "統計ダッシュボード"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:849
+#: code:addons/crm/crm_lead.py:853
 #, python-format
 msgid "Stage changed to <b>%s</b>."
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:751
+#: code:addons/crm/crm_lead.py:755
 #: model:crm.case.stage,name:crm.stage_lead2
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:0
@@ -785,7 +774,7 @@ msgid "Exclusive"
 msgstr "排他"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:508
+#: code:addons/crm/crm_lead.py:512
 #, python-format
 msgid "From %s : %s"
 msgstr "%s から：%s"
@@ -809,10 +798,10 @@ msgid "or"
 msgstr ""
 
 #. module: crm
-#: constraint:res.partner:0
-#: constraint:res.users:0
-msgid "Error: Invalid ean code"
-msgstr ""
+#: field:crm.lead.report,create_date:0
+#: field:crm.phonecall.report,create_date:0
+msgid "Create Date"
+msgstr "作成日"
 
 #. module: crm
 #: field:crm.lead,ref2:0
@@ -848,9 +837,9 @@ msgid "Requirements"
 msgstr "必要事項"
 
 #. module: crm
-#: field:crm.lead,zip:0
-msgid "Zip"
-msgstr "郵便番号"
+#: view:crm.phonecall2opportunity:0
+msgid "Convert To Opportunity "
+msgstr "商談に変換 "
 
 #. module: crm
 #: view:crm.phonecall:0
@@ -895,14 +884,19 @@ msgid "Mark Won"
 msgstr "受注とマーク"
 
 #. module: crm
-#: selection:crm.segmentation.line,expr_name:0
-msgid "Purchase Amount"
-msgstr "仕入高"
+#: field:crm.case.stage,probability:0
+msgid "Probability (%)"
+msgstr "確率（%）"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Mark Lost"
 msgstr "失注とマーク"
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_draft_lead
+msgid "Draft Leads"
+msgstr ""
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
@@ -939,7 +933,7 @@ msgid "Mobile"
 msgstr "携帯電話"
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:268
+#: code:addons/crm/crm_phonecall.py:270
 #, python-format
 msgid "Phonecall has been <b>reset and set as open</b>."
 msgstr ""
@@ -1003,7 +997,6 @@ msgstr "新規リード"
 
 #. module: crm
 #: view:crm.lead:0
-#: view:res.partner:0
 msgid "Show Sales Team"
 msgstr "営業チームを表示"
 
@@ -1067,10 +1060,15 @@ msgid "Creation Date"
 msgstr "作成日"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:858
+#: code:addons/crm/crm_lead.py:862
 #, python-format
 msgid "%s has been <b>created</b>."
 msgstr ""
+
+#. module: crm
+#: selection:crm.segmentation.line,expr_name:0
+msgid "Purchase Amount"
+msgstr "仕入高"
 
 #. module: crm
 #: view:crm.phonecall.report:0
@@ -1136,7 +1134,7 @@ msgid "í"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:863
+#: code:addons/crm/crm_lead.py:867
 #, python-format
 msgid "Opportunity has been <b>lost</b>."
 msgstr ""
@@ -1182,9 +1180,9 @@ msgid "Opening Date"
 msgstr "開始日"
 
 #. module: crm
-#: help:crm.phonecall,duration:0
-msgid "Duration in Minutes"
-msgstr "分による期間"
+#: field:crm.lead,company_currency:0
+msgid "Currency"
+msgstr ""
 
 #. module: crm
 #: field:crm.case.channel,name:0
@@ -1266,11 +1264,9 @@ msgid ""
 msgstr ""
 
 #. module: crm
-#: field:crm.case.section,message_is_follower:0
-#: field:crm.lead,message_is_follower:0
-#: field:crm.phonecall,message_is_follower:0
-msgid "Is a Follower"
-msgstr ""
+#: model:ir.model,name:crm.model_crm_partner2opportunity
+msgid "Partner To Opportunity"
+msgstr "パートナから商談へ"
 
 #. module: crm
 #: field:crm.opportunity2phonecall,date:0
@@ -1281,9 +1277,11 @@ msgid "Date"
 msgstr "日付"
 
 #. module: crm
-#: model:ir.model,name:crm.model_crm_partner2opportunity
-msgid "Partner To Opportunity"
-msgstr "パートナから商談へ"
+#: field:crm.case.section,message_is_follower:0
+#: field:crm.lead,message_is_follower:0
+#: field:crm.phonecall,message_is_follower:0
+msgid "Is a Follower"
+msgstr ""
 
 #. module: crm
 #: model:crm.case.section,name:crm.crm_case_section_4
@@ -1342,7 +1340,7 @@ msgid "Lead Description"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:487
+#: code:addons/crm/crm_lead.py:491
 #, python-format
 msgid "Merged opportunities"
 msgstr "統合された商談"
@@ -1471,12 +1469,6 @@ msgid "Log a call"
 msgstr "通話のログ"
 
 #. module: crm
-#: field:crm.lead.report,create_date:0
-#: field:crm.phonecall.report,create_date:0
-msgid "Create Date"
-msgstr "作成日"
-
-#. module: crm
 #: selection:crm.segmentation.line,expr_name:0
 msgid "Sale Amount"
 msgstr "販売金額"
@@ -1548,7 +1540,7 @@ msgid "Convert to prospect to business partner"
 msgstr "ビジネスパートナとして見込み客に変換"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:867
+#: code:addons/crm/crm_lead.py:871
 #, python-format
 msgid "Opportunity has been <b>won</b>."
 msgstr ""
@@ -1621,6 +1613,11 @@ msgid "Assign opportunities to"
 msgstr ""
 
 #. module: crm
+#: field:crm.lead,zip:0
+msgid "Zip"
+msgstr "郵便番号"
+
+#. module: crm
 #: model:crm.case.categ,name:crm.categ_phone1
 msgid "Inbound"
 msgstr "受信"
@@ -1631,7 +1628,7 @@ msgid "Month of call"
 msgstr "通話の月"
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:287
+#: code:addons/crm/crm_phonecall.py:289
 #, python-format
 msgid "Partner has been <b>created</b>."
 msgstr ""
@@ -1639,6 +1636,14 @@ msgstr ""
 #. module: crm
 #: field:sale.config.settings,module_crm_claim:0
 msgid "Manage Customer Claims"
+msgstr ""
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.action_report_crm_lead
+msgid ""
+"Leads Analysis allows you to check different CRM related information like "
+"the treatment delays or number of leads per state. You can sort out your "
+"leads analysis by different groups to get accurate grained analysis."
 msgstr ""
 
 #. module: crm
@@ -1688,7 +1693,6 @@ msgstr "返信先"
 
 #. module: crm
 #: view:crm.lead:0
-#: view:res.partner:0
 msgid "Display"
 msgstr ""
 
@@ -1703,9 +1707,9 @@ msgid "Prospect is converting to business partner"
 msgstr "見込みはビジネスパートナに変換されています。"
 
 #. module: crm
-#: view:crm.phonecall2opportunity:0
-msgid "Convert To Opportunity"
-msgstr "商談に変換"
+#: model:ir.actions.server,name:crm.actions_server_crm_lead_unread
+msgid "CRM Lead: Mark unread"
+msgstr ""
 
 #. module: crm
 #: view:crm.case.channel:0
@@ -1897,7 +1901,7 @@ msgid "Leads/Opportunities which are in New state"
 msgstr "新規状態にあるリード / 商談"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:879
+#: code:addons/crm/crm_lead.py:883
 #, python-format
 msgid "%s <b>partner</b> is now set to <em>%s</em>."
 msgstr ""
@@ -1914,7 +1918,7 @@ msgid "Probability"
 msgstr "確信度"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:548
+#: code:addons/crm/crm_lead.py:552
 #, python-format
 msgid "Please select more than one opportunity from the list view."
 msgstr "リストビューから１つ以上の商談を選択して下さい。"
@@ -1946,8 +1950,19 @@ msgid "Merge with existing opportunities"
 msgstr ""
 
 #. module: crm
-#: model:ir.filters,name:crm.filter_draft_lead
-msgid "Filter on leads which are draft."
+#: model:ir.actions.act_window,help:crm.crm_case_category_act_oppor11
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"              Click to create a new opportunity.\n"
+"            </p><p>\n"
+"              OpenERP helps you keep track of your sales pipeline to follow\n"
+"              up potential sales and better forecast your future revenues.\n"
+"            </p><p>\n"
+"              You will be able to plan meetings and phone calls from\n"
+"              opportunities, convert them into quotations, attach related\n"
+"              documents, track all discussions, and much more.\n"
+"            </p>\n"
+"          "
 msgstr ""
 
 #. module: crm
@@ -1973,11 +1988,6 @@ msgstr ""
 #: field:crm.phonecall2phonecall,note:0
 msgid "Note"
 msgstr "注記"
-
-#. module: crm
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr "選択した会社は、このユーザに許された会社ではありません。"
 
 #. module: crm
 #: selection:crm.lead,priority:0
@@ -2175,7 +2185,7 @@ msgid "Product"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:282
+#: code:addons/crm/crm_phonecall.py:284
 #, python-format
 msgid "Phonecall has been <b>created and opened</b>."
 msgstr ""
@@ -2208,11 +2218,6 @@ msgid "Unassigned Opportunities"
 msgstr "未割当の商談"
 
 #. module: crm
-#: view:crm.lead.report:0
-msgid "# of Emails"
-msgstr "Eメール数"
-
-#. module: crm
 #: view:crm.lead:0
 msgid "Search Leads"
 msgstr "リードの検索"
@@ -2223,12 +2228,6 @@ msgstr "リードの検索"
 #: field:crm.phonecall.report,delay_open:0
 msgid "Delay to open"
 msgstr "開始を延期する"
-
-#. module: crm
-#: model:ir.actions.server,name:crm.actions_server_crm_lead_unread
-#: model:ir.actions.server,name:crm.actions_server_crm_phonecall_unread
-msgid "Mark unread"
-msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_categ_phone_outgoing0
@@ -2349,9 +2348,9 @@ msgid "Company"
 msgstr "会社"
 
 #. module: crm
-#: field:crm.segmentation.line,operator:0
-msgid "Mandatory / Optional"
-msgstr "必須 / オプション"
+#: view:base.action.rule:0
+msgid "Conditions on Communication History"
+msgstr ""
 
 #. module: crm
 #: view:crm.lead:0
@@ -2447,11 +2446,6 @@ msgid "Related Status"
 msgstr ""
 
 #. module: crm
-#: view:crm.lead.report:0
-msgid "# Mails"
-msgstr "メールの数"
-
-#. module: crm
 #: field:crm.phonecall,name:0
 msgid "Call Summary"
 msgstr "通話の概要"
@@ -2460,11 +2454,6 @@ msgstr "通話の概要"
 #: field:crm.segmentation.line,expr_operator:0
 msgid "Operator"
 msgstr "演算子"
-
-#. module: crm
-#: model:ir.model,name:crm.model_crm_phonecall2phonecall
-msgid "Phonecall To Phonecall"
-msgstr "通話から通話へ"
 
 #. module: crm
 #: view:crm.lead:0
@@ -2569,11 +2558,6 @@ msgid "Email Campaign - Products"
 msgstr ""
 
 #. module: crm
-#: model:ir.filters,name:crm.filter_usa_lead
-msgid "Filter on leads which come from USA."
-msgstr ""
-
-#. module: crm
 #: field:base.action.rule,act_categ_id:0
 msgid "Set Category to"
 msgstr "分類の設定先"
@@ -2604,11 +2588,6 @@ msgstr "新規見込み客との最初の接触"
 #. module: crm
 #: view:res.partner:0
 msgid "Calls"
-msgstr ""
-
-#. module: crm
-#: sql_constraint:res.users:0
-msgid "OAuth UID must be unique per provider"
 msgstr ""
 
 #. module: crm
@@ -2884,9 +2863,14 @@ msgid "Planned Revenues"
 msgstr "計画売上高"
 
 #. module: crm
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr "エラーです。再帰的な関係となる会員を作ることはできません。"
+#: model:ir.actions.server,name:crm.actions_server_crm_lead_read
+msgid "CRM Lead: Mark read"
+msgstr ""
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_phonecall2phonecall
+msgid "Phonecall To Phonecall"
+msgstr "通話から通話へ"
 
 #. module: crm
 #: help:crm.lead.report,deadline_year:0
@@ -2897,11 +2881,6 @@ msgstr "見込完了年"
 #: model:ir.model,name:crm.model_crm_case_stage
 msgid "Stage of case"
 msgstr "案件の段階"
-
-#. module: crm
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr "同じログインでは２つのユーザを持てません。"
 
 #. module: crm
 #: selection:crm.opportunity2phonecall,action:0
@@ -3029,9 +3008,9 @@ msgid "New Opportunities"
 msgstr "新規商談"
 
 #. module: crm
-#: field:crm.lead.report,email:0
-msgid "# Emails"
-msgstr "Eメールの数"
+#: field:crm.segmentation.line,operator:0
+msgid "Mandatory / Optional"
+msgstr "必須 / オプション"
 
 #. module: crm
 #: field:crm.lead,street:0
@@ -3136,17 +3115,6 @@ msgid "Phone calls by user and section"
 msgstr "ユーザとセクション別通話"
 
 #. module: crm
-#: model:ir.actions.server,name:crm.actions_server_crm_lead_read
-#: model:ir.actions.server,name:crm.actions_server_crm_phonecall_read
-msgid "Mark read"
-msgstr ""
-
-#. module: crm
-#: view:base.action.rule:0
-msgid "Conditions on Communication History"
-msgstr ""
-
-#. module: crm
 #: code:addons/crm/crm_meeting.py:55
 #, python-format
 msgid ""
@@ -3163,22 +3131,6 @@ msgstr "見込完了"
 #: field:crm.case.stage,sequence:0
 msgid "Sequence"
 msgstr "順序"
-
-#. module: crm
-#: model:ir.actions.act_window,help:crm.crm_case_category_act_oppor11
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"              Click to create a new opportunity.\n"
-"            </p><p>\n"
-"              OpenERP helps you keep track of your sales pipeline to follow\n"
-"              up potential sales and better forecast your future revenues.\n"
-"            </p><p>\n"
-"              You will be able to plan meetings and phone calls from\n"
-"              opportunities, convert them into quotations, attach related\n"
-"              documents, track all discussions, and much more.\n"
-"            </p>\n"
-"          "
-msgstr ""
 
 #. module: crm
 #: field:crm.segmentation.line,expr_name:0
@@ -3296,6 +3248,9 @@ msgstr ""
 #~ msgid "Schedule a Call"
 #~ msgstr "通話予定"
 
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr "エラーです。再帰的な関係となる会員を作ることはできません。"
+
 #~ msgid "Visibility"
 #~ msgstr "表示"
 
@@ -3336,6 +3291,9 @@ msgstr ""
 #~ msgid "Phonecalls during last 7 days"
 #~ msgstr "過去7日間の通話"
 
+#~ msgid "Company Currency"
+#~ msgstr "会社の通貨"
+
 #~ msgid "Monthly"
 #~ msgstr "月次"
 
@@ -3348,6 +3306,15 @@ msgstr ""
 
 #~ msgid "Send New Email"
 #~ msgstr "新規Eメール送信"
+
+#~ msgid ""
+#~ "Leads Analysis allows you to check different CRM related information. Check "
+#~ "for treatment delays, number of responses given and emails sent. You can "
+#~ "sort out your leads analysis by different groups to get accurate grained "
+#~ "analysis."
+#~ msgstr ""
+#~ "リード分析は異なるCRMの関連情報を確認することができます。取り扱いの遅延、与えられた回答の番号、送信されたEメールをチェックします。正確な粒度の分析を得"
+#~ "るために、異なったグループによるリード分析を並べ変えることができます。"
 
 #~ msgid "Recurrence termination"
 #~ msgstr "定期の終了"
@@ -3679,9 +3646,6 @@ msgstr ""
 #~ msgid "Lead '%s' has been converted to an opportunity."
 #~ msgstr "リード %s は商談に変換されました。"
 
-#~ msgid "Convert To Opportunity "
-#~ msgstr "商談に変換 "
-
 #~ msgid ""
 #~ "Stages will allow salesmen to easily track how a specific opportunity is "
 #~ "positioned in the sales cycle. In order to efficiently manage your sales "
@@ -3732,6 +3696,9 @@ msgstr ""
 
 #~ msgid "Convert opportunities"
 #~ msgstr "商談の変換"
+
+#~ msgid "Convert To Opportunity"
+#~ msgstr "商談に変換"
 
 #~ msgid "Merge Opportunities"
 #~ msgstr "商談の統合"
@@ -3860,6 +3827,9 @@ msgstr ""
 #~ msgid "Internal Meeting"
 #~ msgstr "内部ミーティング"
 
+#~ msgid "The chosen company is not in the allowed companies for this user"
+#~ msgstr "選択した会社は、このユーザに許された会社ではありません。"
+
 #~ msgid "Customer Meeting"
 #~ msgstr "顧客ミーティング"
 
@@ -3915,6 +3885,9 @@ msgstr ""
 #~ "The computation is made on all events that occured during this interval, the "
 #~ "past X periods."
 #~ msgstr "計算はこの期間と過去x期間の中で発生した全てのイベントで行われます。"
+
+#~ msgid "# of Emails"
+#~ msgstr "Eメール数"
 
 #~ msgid "Set New State To"
 #~ msgstr "新規状態の設定先"
@@ -4042,6 +4015,9 @@ msgstr ""
 #~ msgid "CRM Dashboard"
 #~ msgstr "CRMダッシュボード"
 
+#~ msgid "# Mails"
+#~ msgstr "メールの数"
+
 #~ msgid ""
 #~ "Define sales teams to structure your sales organization and assign users to "
 #~ "each team. You should also define the sales stage to each team. As an "
@@ -4126,6 +4102,9 @@ msgstr ""
 #~ msgid "Error ! You can not create recursive profiles."
 #~ msgstr "エラー。再帰的なプロファイルの作成はできません。"
 
+#~ msgid "You can not have two users with the same login !"
+#~ msgstr "同じログインでは２つのユーザを持てません。"
+
 #, python-format
 #~ msgid "Error"
 #~ msgstr "エラー"
@@ -4190,3 +4169,6 @@ msgstr ""
 #~ "案件が進行中になると、状態は開くにセットされます。\n"
 #~ "案件が終了すると、状態は完了にセットされます。\n"
 #~ "案件のレビューが必要な場合、状態は保留中にセットされます。"
+
+#~ msgid "# Emails"
+#~ msgstr "Eメールの数"

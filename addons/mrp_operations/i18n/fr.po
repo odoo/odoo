@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:53+0000\n"
-"PO-Revision-Date: 2011-01-13 02:59+0000\n"
-"Last-Translator: Quentin THEURET <Unknown>\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
+"PO-Revision-Date: 2012-11-29 14:28+0000\n"
+"Last-Translator: TeMPO <openerp@tempo-consulting.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:13+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:40+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
@@ -46,6 +46,7 @@ msgstr "mrp_operations.operation.code"
 msgid ""
 "Work order has been <b>cancelled</b> for production order <em>%s</em>."
 msgstr ""
+"L'ordre de travail de l'ordre de fabrication <em>%s</em> a été <b>annulé</b>."
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -83,12 +84,12 @@ msgstr "Résumer"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Product to Produce"
-msgstr "Produit à fabriquer"
+msgstr "Article à produire"
 
 #. module: mrp_operations
 #: view:mrp_operations.operation:0
 msgid "Production Operation"
-msgstr "Opération de Production"
+msgstr "Opération de production"
 
 #. module: mrp_operations
 #: view:mrp.production:0
@@ -100,6 +101,7 @@ msgstr ""
 #, python-format
 msgid "Work order is <b>pending</b> for production order <em>%s</em>."
 msgstr ""
+"L'ordre de travail de l'ordre de fabrication <em>%s</em> est en attente."
 
 #. module: mrp_operations
 #: field:mrp.production,allow_reorder:0
@@ -130,7 +132,7 @@ msgstr ""
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_productionorder0
 msgid "Production Order"
-msgstr "Ordre de Production"
+msgstr "Ordre de fabrication"
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
@@ -145,7 +147,7 @@ msgstr "Création de l'ordre de travail"
 #. module: mrp_operations
 #: model:process.transition,note:mrp_operations.process_transition_productionstart0
 msgid "The work orders are created on the basis of the production order."
-msgstr "Les ordres de travail sont créés à partir de l'ordre de fabrication"
+msgstr "Les ordres de travail sont créés à partir de l'ordre de fabrication."
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:122
@@ -210,7 +212,7 @@ msgstr "Brouillon"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Production Workcenter"
-msgstr ""
+msgstr "Poste de charge"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_finished:0
@@ -258,7 +260,7 @@ msgstr "Date planifiée"
 #: view:mrp.workorder:0
 #: field:mrp.workorder,product_qty:0
 msgid "Product Qty"
-msgstr "Qté de produit"
+msgstr "Qté d'articles"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:122
@@ -352,6 +354,8 @@ msgstr "Décembre"
 #, python-format
 msgid "Work order has been <b>done</b> for production order <em>%s</em>."
 msgstr ""
+"L'ordre de travail est <b>terminé</b> pour l'ordre de fabrication "
+"<em>%s</em>."
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -375,11 +379,6 @@ msgid "Work Order Report"
 msgstr "Rapport des ordres de travail"
 
 #. module: mrp_operations
-#: constraint:mrp.production:0
-msgid "Order quantity cannot be negative or zero!"
-msgstr ""
-
-#. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_start:0
 #: field:mrp_operations.operation,date_start:0
 msgid "Start Date"
@@ -388,7 +387,7 @@ msgstr "Date de Début"
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
 msgid "Waiting Goods"
-msgstr "Produits en attente"
+msgstr "En attente de marchandises"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,production_state:0
@@ -458,7 +457,7 @@ msgstr "En attente"
 #. module: mrp_operations
 #: view:mrp_operations.operation.code:0
 msgid "Production Operation Code"
-msgstr "Code d'Opération de Production"
+msgstr "Code d'opération de production"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:504
@@ -481,7 +480,7 @@ msgstr "Démarré"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Production started late"
-msgstr ""
+msgstr "Production démarrée en retard"
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -526,11 +525,6 @@ msgid "November"
 msgstr "Novembre"
 
 #. module: mrp_operations
-#: constraint:stock.move:0
-msgid "You must assign a serial number for this product."
-msgstr ""
-
-#. module: mrp_operations
 #: view:mrp.workorder:0
 msgid "Search"
 msgstr "Rechercher"
@@ -544,11 +538,6 @@ msgstr "Octobre"
 #: selection:mrp.workorder,month:0
 msgid "January"
 msgstr "Janvier"
-
-#. module: mrp_operations
-#: constraint:stock.move:0
-msgid "You cannot move products from or to a location of the type view."
-msgstr ""
 
 #. module: mrp_operations
 #: view:mrp.production:0
@@ -570,11 +559,6 @@ msgstr "L'Opération n'est pas encore commencée !"
 #: model:process.node,note:mrp_operations.process_node_productionorder0
 msgid "Information from the production order."
 msgstr "Information concernant l'ordre de fabrication."
-
-#. module: mrp_operations
-#: sql_constraint:mrp.production:0
-msgid "Reference must be unique per Company!"
-msgstr ""
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:497
@@ -652,6 +636,7 @@ msgstr ""
 #, python-format
 msgid "Work order has been <b>created</b> for production order <em>%s</em>."
 msgstr ""
+"L'ordre de travail a été <b>crée</b> pour l'ordre de fabrication <em>%s</em>."
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_startoperation0
@@ -701,7 +686,7 @@ msgstr "Délai"
 #: field:mrp.workorder,production_id:0
 #: field:mrp_operations.operation,production_id:0
 msgid "Production"
-msgstr "Production"
+msgstr "Fabrication"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -732,12 +717,7 @@ msgstr "Date planifiée"
 #: view:mrp.workorder:0
 #: field:mrp.workorder,product_id:0
 msgid "Product"
-msgstr "Produit"
-
-#. module: mrp_operations
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product."
-msgstr ""
+msgstr "Article"
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -817,6 +797,8 @@ msgstr "Nb. de ligne d'ordre"
 #, python-format
 msgid "Work order has been <b>started</b> for production order <em>%s</em>."
 msgstr ""
+"L'ordre de travail a été <b>démarré</b> pour l'ordre de fabrication "
+"<em>%s</em>."
 
 #. module: mrp_operations
 #: view:mrp.production:0

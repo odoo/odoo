@@ -1151,7 +1151,7 @@
                     <field name="date" groups="base.group_no_one"/>
                     <field name="date_expected"/>
                     <field name="state"/>
-                    <button name="action_done" states="confirmed,assigned" string="Process" type="object" icon="gtk-go-forward"/>
+                    <button name="action_done" states="confirmed,assigned" string="Process" type="object" icon="gtk-go-forward" help="Done"/>
                 </tree>
             </field>
         </record>
@@ -1433,6 +1433,9 @@
                     <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
+                    <field name="location_id" invisible="1"/>
+                    <field name="location_dest_id" invisible="1"/>
+                    <field name="create_date" invisible="1"/>
                     <button name="%(stock.move_scrap)d"
                         string="Scrap Products" type="action"
                         icon="gtk-convert" context="{'scrap': True}"
@@ -1458,7 +1461,7 @@
                         states="assigned" class="oe_highlight"/>
                     <button name="action_done" states="draft,assigned,confirmed"
                         icon="gtk-go-forward" type="object"
-                        class="oe_highlight"/>
+                        class="oe_highlight" help="Done"/>
                 </tree>
             </field>
         </record>

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:51+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-05-10 18:10+0000\n"
 "Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 05:37+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:06+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -583,6 +583,14 @@ msgid "Location & Warehouse"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/stock.py:1848
+#, python-format
+msgid ""
+"Quantities, Units of Measure, Products and Locations cannot be modified on "
+"stock moves that have already been processed (except by the Administrator)."
+msgstr ""
+
+#. module: stock
 #: help:report.stock.move,type:0
 #: help:stock.picking,type:0
 #: help:stock.picking.in,type:0
@@ -813,11 +821,6 @@ msgid "Analyse Current Inventory"
 msgstr ""
 
 #. module: stock
-#: sql_constraint:product.product:0
-msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
-
-#. module: stock
 #: code:addons/stock/stock.py:1202
 #, python-format
 msgid "You cannot remove the picking which is in %s state!"
@@ -849,11 +852,6 @@ msgstr ""
 #: field:product.template,property_stock_procurement:0
 msgid "Procurement Location"
 msgstr "Hankinnan paikka"
-
-#. module: stock
-#: report:stock.picking.list:0
-msgid "Recipient"
-msgstr "Vastaanottaja"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_tree
@@ -895,17 +893,6 @@ msgstr ""
 #: field:stock.picking.out,message_summary:0
 msgid "Summary"
 msgstr ""
-
-#. module: stock
-#: help:stock.location,chained_picking_type:0
-msgid ""
-"Shipping Type of the Picking List that will contain the chained move (leave "
-"empty to automatically detect the type based on the source and destination "
-"locations)."
-msgstr ""
-"Keräilylistan toimitustyyppi joka sisältää ketjutetun siirron (jätä "
-"tyhjäksi, niin tyyppi valitaan automaattisesti lähde ja kohdepaikkojen "
-"mukaan)"
 
 #. module: stock
 #: view:product.category:0
@@ -1032,11 +1019,6 @@ msgid "Change Product Quantity"
 msgstr "Muuta tuotteen määrää"
 
 #. module: stock
-#: model:ir.model,name:stock.model_stock_inventory_merge
-msgid "Merge Inventory"
-msgstr "Yhdistä varastot"
-
-#. module: stock
 #: code:addons/stock/product.py:459
 #, python-format
 msgid "Future P&L"
@@ -1071,11 +1053,6 @@ msgstr ""
 #, python-format
 msgid "Please define journal on the product category: \"%s\" (id: %d)"
 msgstr ""
-
-#. module: stock
-#: report:stock.picking.list:0
-msgid "Expected Shipping Date"
-msgstr "Odotettu toimituspäivä"
 
 #. module: stock
 #: view:stock.move:0
@@ -1128,13 +1105,6 @@ msgid "is scheduled %s."
 msgstr "on aikataulutettu %s."
 
 #. module: stock
-#: constraint:product.template:0
-msgid ""
-"Error: The default Unit of Measure and the purchase Unit of Measure must be "
-"in the same category."
-msgstr ""
-
-#. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_invoice_onshipping
 msgid "Create Draft Invoices"
 msgstr ""
@@ -1155,13 +1125,6 @@ msgstr ""
 #. module: stock
 #: selection:stock.picking.in,state:0
 msgid "Ready to Receive"
-msgstr ""
-
-#. module: stock
-#: constraint:product.product:0
-msgid ""
-"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
-"\"Internal Reference\" field instead."
 msgstr ""
 
 #. module: stock
@@ -1251,11 +1214,6 @@ msgid "Stock Valuation Account"
 msgstr "Varaston arvostustili"
 
 #. module: stock
-#: constraint:res.partner:0
-msgid "Error: Invalid ean code"
-msgstr "Virhe: Väärä EAN-koodi"
-
-#. module: stock
 #: view:stock.config.settings:0
 msgid "Apply"
 msgstr ""
@@ -1277,25 +1235,9 @@ msgid "Please define journal on the product category: \"%s\" (id: %d)."
 msgstr ""
 
 #. module: stock
-#: model:res.company,follow_up_msg:stock.res_company_1
-#: model:res.company,follow_up_msg:stock.res_company_2
-msgid ""
-"\n"
-"Date: %(date)s\n"
-"\n"
-"Dear %(partner_name)s,\n"
-"\n"
-"Please find in attachment a reminder of all your unpaid invoices, for a "
-"total amount due of:\n"
-"\n"
-"%(followup_amount).2f %(company_currency)s\n"
-"\n"
-"Thanks,\n"
-"--\n"
-"%(user_signature)s\n"
-"%(company_name)s\n"
-"        "
-msgstr ""
+#: field:report.stock.lines.date,date:0
+msgid "Latest Inventory Date"
+msgstr "Viimeisin inventointipäivä"
 
 #. module: stock
 #: help:stock.location,usage:0
@@ -2107,9 +2049,10 @@ msgid "_Deliver"
 msgstr ""
 
 #. module: stock
-#: view:stock.location:0
-msgid "Customer Locations"
-msgstr "Asiakkaiden sijainnit"
+#: code:addons/stock/wizard/stock_inventory_merge.py:64
+#, python-format
+msgid "Merging is only allowed on draft inventories."
+msgstr "Yhdistäminen on sallittu vain luonnosinventoinneille."
 
 #. module: stock
 #: help:stock.picking.out,state:0
@@ -2200,13 +2143,9 @@ msgid "Return Shipment"
 msgstr ""
 
 #. module: stock
-#: model:ir.model,name:stock.model_stock_inventory
-#: selection:report.stock.inventory,location_type:0
-#: field:stock.inventory.line,inventory_id:0
-#: report:stock.inventory.move:0
-#: selection:stock.location,usage:0
-msgid "Inventory"
-msgstr "Inventaario"
+#: model:ir.model,name:stock.model_stock_inventory_merge
+msgid "Merge Inventory"
+msgstr "Yhdistä varastot"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_stock_fill_inventory
@@ -2373,10 +2312,9 @@ msgid "Logistical shipping unit: pallet, box, pack ..."
 msgstr "Logistinen lähetysyksikkö: lava, laatikko, pakkaus ..."
 
 #. module: stock
-#: code:addons/stock/wizard/stock_inventory_merge.py:64
-#, python-format
-msgid "Merging is only allowed on draft inventories."
-msgstr "Yhdistäminen on sallittu vain luonnosinventoinneille."
+#: view:stock.location:0
+msgid "Customer Locations"
+msgstr "Asiakkaiden sijainnit"
 
 #. module: stock
 #: code:addons/stock/stock.py:2520
@@ -2490,11 +2428,6 @@ msgstr ""
 "siirtopäivä."
 
 #. module: stock
-#: field:report.stock.lines.date,date:0
-msgid "Latest Inventory Date"
-msgstr "Viimeisin inventointipäivä"
-
-#. module: stock
 #: view:report.stock.inventory:0
 #: view:report.stock.move:0
 #: view:stock.inventory:0
@@ -2570,11 +2503,6 @@ msgstr ""
 msgid ""
 "Current quantity of products with this Serial Number available in company "
 "warehouses"
-msgstr ""
-
-#. module: stock
-#: view:stock.move:0
-msgid "Tracability"
 msgstr ""
 
 #. module: stock
@@ -3180,6 +3108,7 @@ msgstr "Kontaktiosoite:"
 #: field:stock.move.split.lines,prodlot_id:0
 #: field:stock.partial.move.line,prodlot_id:0
 #: field:stock.partial.picking.line,prodlot_id:0
+#: report:stock.picking.list:0
 #: view:stock.production.lot:0
 #: field:stock.production.lot,name:0
 #: field:stock.production.lot.revision,lot_id:0
@@ -3464,14 +3393,6 @@ msgstr "Vastuuhenkilö"
 #. module: stock
 #: view:stock.move:0
 msgid "Process Entirely"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/stock.py:1848
-#, python-format
-msgid ""
-"Quantities, Unit of Measures, Products and Locations cannot be modified on "
-"stock moves that have already been processed (except by the Administrator)."
 msgstr ""
 
 #. module: stock
@@ -4727,6 +4648,11 @@ msgid "Delays"
 msgstr ""
 
 #. module: stock
+#: report:stock.picking.list:0
+msgid "Schedule Date"
+msgstr ""
+
+#. module: stock
 #: field:stock.location.product,to_date:0
 msgid "To"
 msgstr "päättyen"
@@ -4938,9 +4864,24 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr "Virhe! Rekursiivisen kumppanin luonti ei ole sallittu."
+#: model:ir.model,name:stock.model_stock_inventory
+#: selection:report.stock.inventory,location_type:0
+#: field:stock.inventory.line,inventory_id:0
+#: report:stock.inventory.move:0
+#: selection:stock.location,usage:0
+msgid "Inventory"
+msgstr "Inventaario"
+
+#. module: stock
+#: help:stock.location,chained_picking_type:0
+msgid ""
+"Shipping Type of the Picking List that will contain the chained move (leave "
+"empty to automatically detect the type based on the source and destination "
+"locations)."
+msgstr ""
+"Keräilylistan toimitustyyppi joka sisältää ketjutetun siirron (jätä "
+"tyhjäksi, niin tyyppi valitaan automaattisesti lähde ja kohdepaikkojen "
+"mukaan)"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_partial_picking.py:191
@@ -4950,11 +4891,6 @@ msgid ""
 "would let a quantity of \"%s %s\" to ship and only roundings of \"%s %s\" is "
 "accepted by the uom."
 msgstr ""
-
-#. module: stock
-#: constraint:product.category:0
-msgid "Error ! You cannot create recursive categories."
-msgstr "Virhe! Et voi luoda rekursiivisia kategoroita."
 
 #. module: stock
 #: help:stock.move,move_dest_id:0
@@ -5125,6 +5061,9 @@ msgstr ""
 #~ msgid "terp-graph"
 #~ msgstr "terp-graph"
 
+#~ msgid "Recipient"
+#~ msgstr "Vastaanottaja"
+
 #~ msgid "Production Lots"
 #~ msgstr "Tuotantoerät"
 
@@ -5225,6 +5164,9 @@ msgstr ""
 
 #~ msgid "STOCK_PASTE"
 #~ msgstr "STOCK_PASTE"
+
+#~ msgid "Expected Shipping Date"
+#~ msgstr "Odotettu toimituspäivä"
 
 #~ msgid ""
 #~ "Tracking lot is the code that will be put on the logistical unit/pallet"
@@ -6085,6 +6027,9 @@ msgstr ""
 #~ msgid "Month-1"
 #~ msgstr "Kuukausi -1"
 
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Virhe: Väärä EAN-koodi"
+
 #~ msgid "Inventory Properties"
 #~ msgstr "Varaston ominaisuudet"
 
@@ -6512,8 +6457,14 @@ msgstr ""
 #~ msgid "Processing Error"
 #~ msgstr "Prosessointivirhe"
 
+#~ msgid "Error ! You cannot create recursive categories."
+#~ msgstr "Virhe! Et voi luoda rekursiivisia kategoroita."
+
 #, python-format
 #~ msgid ""
 #~ "Production lot quantity %d of %s is larger than available quantity (%d) !"
 #~ msgstr ""
 #~ "Tuote-erän määrä %d %s on suurempi kuin saatavilla oleva määrä (%d) !"
+
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr "Virhe! Rekursiivisen kumppanin luonti ei ole sallittu."
