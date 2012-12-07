@@ -547,7 +547,7 @@ openerp.mail = function (session) {
         /* return true if all file are complete else return false and make an alert */
         do_check_attachment_upload: function () {
             if (_.find(this.attachment_ids, function (file) {return file.upload;})) {
-                this.do_warn(session.web._t('Attachment error :'), session.web._t('Please, wait while the file is uploading.'));
+                this.do_warn(session.web.qweb.render('mail.error_upload'), session.web.qweb.render('mail.error_upload_please_wait'));
                 return false;
             } else {
                 return true;
