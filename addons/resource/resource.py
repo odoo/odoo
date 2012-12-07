@@ -373,35 +373,27 @@ class resource_resource(osv.osv):
         if not calendar_id:
             # Calendar is not specified: working days: some sane default
             wktime_local = [
-                (0,     time(8,0),     time(12,0)),
-                (0,     time(13,0),    time(17,0)),
-                (1,     time(8,0),     time(12,0)),
-                (1,     time(13,0),    time(17,0)),
-                (2,     time(8,0),     time(12,0)),
-                (2,     time(13,0),    time(17,0)),
-                (3,     time(8,0),     time(12,0)),
-                (3,     time(13,0),    time(17,0)),
-                (4,     time(8,0),     time(12,0)),
-                (4,     time(13,0),    time(17,0)),
+                (0, time( 8, 0), time(12, 0)),
+                (0, time(13, 0), time(17, 0)),
+                (1, time( 8, 0), time(12, 0)),
+                (1, time(13, 0), time(17, 0)),
+                (2, time( 8, 0), time(12, 0)),
+                (2, time(13, 0), time(17, 0)),
+                (3, time( 8, 0), time(12, 0)),
+                (3, time(13, 0), time(17, 0)),
+                (4, time( 8, 0), time(12, 0)),
+                (4, time(13, 0), time(17, 0)),
             ]
-            #return [('fri', '8:0-12:0','13:0-17:0'), ('thu', '8:0-12:0','13:0-17:0'), ('wed', '8:0-12:0','13:0-17:0'), 
-            #       ('mon', '8:0-12:0','13:0-17:0'), ('tue', '8:0-12:0','13:0-17:0')]
         else:
             resource_attendance_pool = self.pool.get('resource.calendar.attendance')
-            non_working = ""
-            wktime_local = []
-
             week_ids = resource_attendance_pool.search(cr, uid, [('calendar_id', '=', calendar_id)], context=context)
             weeks = resource_attendance_pool.read(cr, uid, week_ids, ['dayofweek', 'hour_from', 'hour_to'], context=context)
             # Convert time formats into appropriate format required
             # and create lists inside wktime_local.
+            wktime_local = []
             for week in weeks:
-                res_str = ""
-                day = None
-                if week['dayofweek']:
-                    day = int(week['dayofweek'])
-                else:
-                    raise osv.except_osv(_('Configuration Error!'),_('Make sure the Working time has been configured with proper week days!'))
+                day = int(week['dayofweek'])
+                assert day in xrange(7)
                 hour_from = float_time(week['hour_from'])
                 hour_to = float_time(week['hour_to'])
                 wktime_local.append((day, hour_from, hour_to))
