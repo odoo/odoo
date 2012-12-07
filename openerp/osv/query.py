@@ -53,9 +53,6 @@ class Query(object):
         # holds the list of tables joined using default JOIN.
         # the table names are stored double-quoted (backwards compatibility)
         self.tables = tables or []
-        # holds a mapping of table aliases:
-        #   self._table_alias_mapping = {'alias_1': 'table_name'}
-        self._table_alias_mapping = {}
 
         # holds the list of WHERE clause elements, to be joined with
         # 'AND' when generating the final query
@@ -79,29 +76,19 @@ class Query(object):
         #                                 LEFT JOIN "table_c" ON ("table_a"."table_a_col2" = "table_c"."table_c_col")
         self.joins = joins or {}
 
-    def _add_table_alias(self, table_alias):
-        pass
-
     def _get_table_aliases(self):
-        aliases = []
-        for table in self.tables:
-            if len(table.split(' as ')) > 1:
-                aliases.append(table.split(' as ')[1].replace('"', ''))
-            else:
-                aliases.append(table.replace('"', ''))
-        # print '--', aliases
-        return aliases
+        from openerp.osv.expression import get_alias_from_query
+        return [get_alias_from_query(from_statement)[1] for from_statement in self.tables]
 
     def _get_alias_mapping(self):
+        from openerp.osv.expression import get_alias_from_query
         mapping = {}
-        aliases = self._get_table_aliases()
-        for alias in aliases:
-            for table in self.tables:
-                if '"%s"' % (alias) in table:
-                    mapping.setdefault(alias, table)
+        for table in self.tables:
+            alias, statement = get_alias_from_query(table)
+            mapping[statement] = table
         return mapping
 
-    def add_new_join(self, connection, implicit=True, outer=False):
+    def add_join(self, connection, implicit=True, outer=False):
         """ Join a destination table to the current table.
 
             :param implicit: False if the join is an explicit join. This allows
@@ -127,115 +114,41 @@ class Query(object):
         """
         from openerp.osv.expression import generate_table_alias
         (lhs, table, lhs_col, col, link) = connection
-        alias, alias_statement = generate_table_alias(lhs._table, [(table._table, link)])
+        alias, alias_statement = generate_table_alias(lhs, [(table, link)])
 
         if implicit:
-            print '\t\t... Query: trying to add %s in %s (received %s)' % (alias_statement, self.tables, connection)
             if alias_statement not in self.tables:
                 self.tables.append(alias_statement)
-                condition = '("%s"."%s" = "%s"."%s")' % (lhs._table, lhs_col, alias, col)
-                print '\t\t... added %s' % (condition)
+                condition = '("%s"."%s" = "%s"."%s")' % (lhs, lhs_col, alias, col)
+                # print '\t\t... Query: added %s in %s (received %s)' % (alias_statement, self.tables, connection)
                 self.where_clause.append(condition)
-            return alias
+            else:
+                # print '\t\t... Query: not added %s in %s (received %s)' % (alias_statement, self.tables, connection)
+                # already joined
+                pass
+            return alias, alias_statement
         else:
-            (lhs, table, lhs_col, col) = connection
-            lhs = _quote(lhs)
-            table = _quote(table)
-            print connection
-            aliases = []
-            for table in self.tables:
-                if len(table.split(' as ')) > 1:
-                    aliases.append(table.split(' as ')[1])
-                else:
-                    aliases.append(table)
-            print '--', aliases
-            aliases = [table.split(' as ') for table in self.tables]
-            assert lhs in self.aliases, "Left-hand-side table %s must already be part of the query tables %s!" % (lhs, str(self.tables))
-            if table in self.tables:
+            aliases = self._get_table_aliases()
+            assert lhs in aliases, "Left-hand-side table %s must already be part of the query tables %s!" % (lhs, str(self.tables))
+            if alias_statement in self.tables:
                 # already joined, must ignore (promotion to outer and multiple joins not supported yet)
+                # print '\t\t... Query: not added %s in %s (received %s)' % (alias_statement, self.tables, connection)
                 pass
             else:
                 # add JOIN
-                self.tables.append(table)
-                self.joins.setdefault(lhs, []).append((table, lhs_col, col, outer and 'LEFT JOIN' or 'JOIN'))
-            return self
-
-    def add_implicit_join(self, connection):
-        """ Adds an implicit join. This means that left-hand table is added to the
-            Query.tables (adding a table in the from clause), and that a join
-            condition is added in Query.where_clause.
-
-            Implicit joins use expression.generate_table_alias to generate the
-            alias the the joined table.
-
-            :param connection: a tuple``(lhs, table, lhs_col, col, link)`` Please
-                refer to expression.py for more details about joins.
-        """
-        from openerp.osv.expression import generate_table_alias
-        (lhs, table, lhs_col, col, link) = connection
-        alias, alias_statement = generate_table_alias(lhs._table, [(table._table, link)])
-        print '\t\t... Query: trying to add %s in %s (received %s)' % (alias_statement, self.tables, connection)
-        if alias_statement not in self.tables:
-            self.tables.append(alias_statement)
-            condition = '("%s"."%s" = "%s"."%s")' % (lhs._table, lhs_col, alias, col)
-            print '\t\t... added %s' % (condition)
-            self.where_clause.append(condition)
-        return alias
-
-    def add_join(self, connection, outer=False):
-        """Adds the JOIN specified in ``connection``.
-
-        :param connection: a tuple ``(lhs, table, lhs_col, col)``.
-                           The join corresponds to the SQL equivalent of::
-
-                               (lhs.lhs_col = table.col)
-
-                           Note that all connection elements are strings.
-
-        :param outer: True if a LEFT OUTER JOIN should be used, if possible
-                      (no promotion to OUTER JOIN is supported in case the JOIN
-                      was already present in the query, as for the moment
-                      implicit INNER JOINs are only connected from NON-NULL
-                      columns so it would not be correct (e.g. for
-                      ``_inherits`` or when a domain criterion explicitly
-                      adds filtering)
-        """
-        from openerp.osv.expression import generate_table_alias
-        (lhs, table, lhs_col, col) = connection
-        # lhs = _quote(lhs)
-        # table = _quote(table)
-        print '\t\t... Query.add_join(): adding connection %s' % str(connection)
-
-        aliases = self._get_table_aliases()
-
-        assert lhs in aliases, "Left-hand-side table %s must already be part of the query tables %s!" % (lhs, str(self.tables))
-
-        rhs, rhs_statement = generate_table_alias(lhs, [(connection[1], connection[2])])
-        print rhs, rhs_statement
-
-        if rhs_statement in self.tables:
-            # already joined, must ignore (promotion to outer and multiple joins not supported yet)
-            pass
-        else:
-            # add JOIN
-            self.tables.append(rhs_statement)
-            self.joins.setdefault(lhs, []).append((rhs, lhs_col, col, outer and 'LEFT JOIN' or 'JOIN'))
-        return rhs
+                self.tables.append(alias_statement)
+                self.joins.setdefault(lhs, []).append((alias, lhs_col, col, outer and 'LEFT JOIN' or 'JOIN'))
+            return alias, alias_statement
 
     def get_sql(self):
-        """Returns (query_from, query_where, query_params)"""
+        """ Returns (query_from, query_where, query_params). """
+        from openerp.osv.expression import get_alias_from_query
         query_from = ''
         tables_to_process = list(self.tables)
-
         alias_mapping = self._get_alias_mapping()
-
-        # print 'tables_to_process %s' % (tables_to_process)
-        # print 'self.joins %s' % (self.joins)
-        # print 'alias_mapping %s' % (alias_mapping)
 
         def add_joins_for_table(table, query_from):
             for (dest_table, lhs_col, col, join) in self.joins.get(table, []):
-                # print dest_table
                 tables_to_process.remove(alias_mapping[dest_table])
                 query_from += ' %s %s ON ("%s"."%s" = "%s"."%s")' % \
                     (join, alias_mapping[dest_table], table, lhs_col, dest_table, col)
@@ -244,8 +157,9 @@ class Query(object):
 
         for table in tables_to_process:
             query_from += table
-            if _get_alias_from_statement(table) in self.joins:
-                query_from = add_joins_for_table(_get_alias_from_statement(table), query_from)
+            table_alias = get_alias_from_query(table)[1]
+            if table_alias in self.joins:
+                query_from = add_joins_for_table(table_alias, query_from)
             query_from += ','
         query_from = query_from[:-1]  # drop last comma
         return (query_from, " AND ".join(self.where_clause), self.where_clause_params)

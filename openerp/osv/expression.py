@@ -346,6 +346,20 @@ def generate_table_alias(src_table_alias, joined_tables=[]):
     return ('%s' % alias, '%s as %s' % (_quote(joined_tables[-1][0]), _quote(alias)))
 
 
+def get_alias_from_query(from_query):
+    """ :param string from_query: is something like :
+        - '"res_partner"' OR
+        - '"res_partner" as "res_users__partner_id"''
+        :param tuple result: (unquoted table name, unquoted alias)
+            i.e. (res_partners, res_partner) OR (res_partner, res_users__partner_id)
+    """
+    from_splitted = from_query.split(' as ')
+    if len(from_splitted) > 1:
+        return (from_splitted[0].replace('"', ''), from_splitted[1].replace('"', ''))
+    else:
+        return (from_splitted[0].replace('"', ''), from_splitted[0].replace('"', ''))
+
+
 def normalize_leaf(element):
     """ Change a term's operator to some canonical form, simplifying later
         processing. """

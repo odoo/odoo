@@ -2728,14 +2728,8 @@ class BaseModel(object):
         """
         inherits_field = current_model._inherits[parent_model_name]
         parent_model = self.pool.get(parent_model_name)
-        parent_alias = query.add_implicit_join((current_model, parent_model, inherits_field, 'id', inherits_field))
+        parent_alias, parent_alias_statement = query.add_join((current_model._table, parent_model._table, inherits_field, 'id', inherits_field), implicit=True)
         return parent_alias
-        # table_alias = expression.generate_table_alias(current_model, [(parent_model, inherits_field)])
-        # print '\t... _inherits_join_add trying to add %s in %s' % (table_alias, query.tables)
-        # # query.add_table(table_alias)
-        # if table_alias not in query.tables:
-        #     query.tables.append(table_alias)
-        #     query.where_clause.append('("%s".%s = %s.id)' % (current_model._table, inherits_field, table_alias))
 
     def _inherits_join_calc(self, field, query):
         """
@@ -2746,7 +2740,6 @@ class BaseModel(object):
         :param query: query object on which the JOIN should be added
         :return: qualified name of field, to be used in SELECT clause
         """
-        print '\t--> _inherits_join_calc'
         current_table = self
         parent_alias = current_table._table
         while field in current_table._inherit_fields and not field in current_table._columns:
@@ -4667,15 +4660,12 @@ class BaseModel(object):
                 :param model child_object: model object, base of the rule application
             """
             if added_clause:
-                print '--> _apply_ir_rules.apply_rule,', added_clause, added_params, added_tables, parent_model, child_object
                 if parent_model and child_object:
-                    print '\t... calling inherits-Join_add with parent_model %s, child_object %s' % (parent_model, child_object)
                     # as inherited rules are being applied, we need to add the missing JOIN
                     # to reach the parent table (if it was not JOINed yet in the query)
                     parent_alias = child_object._inherits_join_add(child_object, parent_model, query)
                     # inherited rules are applied on the external table -> need to get the alias and replace
                     parent_table = self.pool.get(parent_model)._table
-                    print parent_table, parent_alias
                     added_clause = [clause.replace('"%s"' % parent_table, '"%s"' % parent_alias) for clause in added_clause]
                     # not sure of myself here (in the ORM, this statment is quite cool)
                     new_tables = []
@@ -4686,11 +4676,9 @@ class BaseModel(object):
                             new_table = table.replace('"%s"' % parent_table, '"%s"' % parent_alias)
                         new_tables.append(new_table)
                     added_tables = new_tables
-                print '\t... adding tables %s, clause %s (params %s)' % (added_tables, added_clause, added_params)
                 query.where_clause += added_clause
                 query.where_clause_params += added_params
                 for table in added_tables:
-                    print '\t... adding table %s in %s' % (table, query.tables)
                     if table not in query.tables:
                         query.tables.append(table)
                 return True
@@ -4715,7 +4703,6 @@ class BaseModel(object):
 
         :return: the qualified field name to use in an ORDER BY clause to sort by ``order_field``
         """
-        print '_generate_m2o_order_by'
         if order_field not in self._columns and order_field in self._inherit_fields:
             # also add missing joins for reaching the table containing the m2o field
             qualified_field = self._inherits_join_calc(order_field, query)
@@ -4747,7 +4734,7 @@ class BaseModel(object):
         # Join the dest m2o table if it's not joined yet. We use [LEFT] OUTER join here
         # as we don't want to exclude results that have NULL values for the m2o
         src_table, src_field = qualified_field.replace('"', '').split('.', 1)
-        dst_alias = query.add_join((src_table, dest_model._table, src_field, 'id'), outer=True)
+        dst_alias, dst_alias_statement = query.add_join((src_table, dest_model._table, src_field, 'id', src_field), implicit=False, outer=True)
         qualify = lambda field: '"%s"."%s"' % (dst_alias, field)
         return map(qualify, m2o_order) if isinstance(m2o_order, list) else qualify(m2o_order)
 
@@ -4769,7 +4756,6 @@ class BaseModel(object):
             return order_list
         order_by_clause = ','.join(_split_order(self._order, self._table))
         if order_spec:
-            print '-->_generate_order_by beginning'
             order_by_elements = []
             self._check_qorder(order_spec)
             for order_part in order_spec.split(','):
@@ -4804,7 +4790,6 @@ class BaseModel(object):
                         order_by_elements.append("%s %s" % (inner_clause, order_direction))
             if order_by_elements:
                 order_by_clause = ",".join(order_by_elements)
-            print '-->_generate_order_by ending'
 
         return order_by_clause and (' ORDER BY %s ' % order_by_clause) or ''
 
