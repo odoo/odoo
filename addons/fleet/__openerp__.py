@@ -52,7 +52,7 @@ Main Features
         'fleet_data.xml',
         'fleet_board_view.xml',
     ],
-    'update_xml' : ['security/ir.model.access.csv'],
+    'update_xml' : ['security/fleet_security.xml','security/ir.model.access.csv'],
 
     'demo': ['fleet_cars.xml','fleet_demo.xml'],
 
