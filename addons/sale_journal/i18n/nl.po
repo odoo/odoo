@@ -6,20 +6,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:54+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2012-11-25 19:06+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-26 04:42+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:35+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: sale_journal
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique per Company!"
-msgstr "Orderreferentie moet uniek zijn per bedrijf!"
+#: field:sale_journal.invoice.type,note:0
+msgid "Note"
+msgstr "Notitie"
+
+#. module: sale_journal
+#: field:res.partner,property_invoice_type:0
+msgid "Invoicing Type"
+msgstr "Factuur soort"
 
 #. module: sale_journal
 #: help:res.partner,property_invoice_type:0
@@ -35,35 +40,6 @@ msgid "Sales & Purchases"
 msgstr "Verkopen & inkopen"
 
 #. module: sale_journal
-#: view:sale.order:0
-#: field:sale.order,invoice_type_id:0
-#: view:sale_journal.invoice.type:0
-#: field:sale_journal.invoice.type,name:0
-#: view:stock.picking:0
-#: field:stock.picking,invoice_type_id:0
-#: view:stock.picking.in:0
-#: field:stock.picking.in,invoice_type_id:0
-#: view:stock.picking.out:0
-#: field:stock.picking.out,invoice_type_id:0
-msgid "Invoice Type"
-msgstr "Factuursoort"
-
-#. module: sale_journal
-#: field:sale_journal.invoice.type,note:0
-msgid "Note"
-msgstr "Notitie"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Grouped"
-msgstr "Gegroepeerd"
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking
-msgid "Picking List"
-msgstr "Verzamellijst"
-
-#. module: sale_journal
 #: view:res.partner:0
 msgid "Invoicing"
 msgstr "Facturatie"
@@ -72,21 +48,6 @@ msgstr "Facturatie"
 #: model:ir.model,name:sale_journal.model_stock_picking_in
 msgid "Incoming Shipments"
 msgstr "Inkomende leveringen"
-
-#. module: sale_journal
-#: help:sale.order,invoice_type_id:0
-msgid "Generate invoice based on the selected option."
-msgstr "Genereer facturen gebaseerd op de geselecteerde optie."
-
-#. module: sale_journal
-#: field:sale_journal.invoice.type,invoicing_method:0
-msgid "Invoicing method"
-msgstr "Facturatie-methode"
-
-#. module: sale_journal
-#: field:sale_journal.invoice.type,active:0
-msgid "Active"
-msgstr "Actief"
 
 #. module: sale_journal
 #: help:sale_journal.invoice.type,active:0
@@ -103,9 +64,31 @@ msgid "Notes"
 msgstr "Notities"
 
 #. module: sale_journal
+#: field:sale_journal.invoice.type,invoicing_method:0
+msgid "Invoicing method"
+msgstr "Facturatie-methode"
+
+#. module: sale_journal
+#: model:ir.model,name:sale_journal.model_stock_picking
+msgid "Picking List"
+msgstr "Verzamellijst"
+
+#. module: sale_journal
+#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
+#: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
+msgid "Invoice Types"
+msgstr "Factuursoorten"
+
+#. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
 msgid "Non grouped"
 msgstr "Niet gegroepeerd"
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Grouped"
+msgstr "Gegroepeerd"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
@@ -120,34 +103,28 @@ msgstr ""
 "maandelijks, etc."
 
 #. module: sale_journal
-#: sql_constraint:stock.picking:0
-#: sql_constraint:stock.picking.in:0
-#: sql_constraint:stock.picking.out:0
-msgid "Reference must be unique per Company!"
-msgstr "Referentie moet uniek zijn per bedrijf!"
+#: help:sale.order,invoice_type_id:0
+msgid "Generate invoice based on the selected option."
+msgstr "Genereer facturen gebaseerd op de geselecteerde optie."
 
 #. module: sale_journal
-#: field:res.partner,property_invoice_type:0
-msgid "Invoicing Type"
-msgstr "Factuur soort"
+#: view:sale.order:0
+#: field:sale.order,invoice_type_id:0
+#: view:sale_journal.invoice.type:0
+#: field:sale_journal.invoice.type,name:0
+#: view:stock.picking:0
+#: field:stock.picking,invoice_type_id:0
+#: view:stock.picking.in:0
+#: field:stock.picking.in,invoice_type_id:0
+#: view:stock.picking.out:0
+#: field:stock.picking.out,invoice_type_id:0
+msgid "Invoice Type"
+msgstr "Factuursoort"
 
 #. module: sale_journal
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr ""
-"Fout! Het is niet mogelijk om recursieve geassocieerde leden te maken"
-
-#. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
-#: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
-msgid "Invoice Types"
-msgstr "Factuursoorten"
-
-#. module: sale_journal
-#: constraint:res.partner:0
-msgid "Error: Invalid ean code"
-msgstr "Fout: Ongeldige EAN-code"
+#: field:sale_journal.invoice.type,active:0
+msgid "Active"
+msgstr "Actief"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_res_partner
@@ -483,3 +460,13 @@ msgstr "Uitgaande leveringen"
 #~ msgstr ""
 #~ "Deze factuurmethode wordt standaard gebruikt bij het factureren van deze "
 #~ "relatie."
+
+#~ msgid "Reference must be unique per Company!"
+#~ msgstr "Referentie moet uniek zijn per bedrijf!"
+
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr ""
+#~ "Fout! Het is niet mogelijk om recursieve geassocieerde leden te maken"
+
+#~ msgid "Order Reference must be unique per Company!"
+#~ msgstr "Orderreferentie moet uniek zijn per bedrijf!"

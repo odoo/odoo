@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:51+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-07-09 05:11+0000\n"
 "Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:26+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:49+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_03
@@ -46,11 +46,6 @@ msgid "Working Hours to Open the Issue"
 msgstr "問題を開くための作業時間数"
 
 #. module: project_issue
-#: constraint:project.project:0
-msgid "Error! project start-date must be lower then project end-date."
-msgstr "エラー。プロジェクトの開始日はプロジェクトの終了日より前である必要があります。"
-
-#. module: project_issue
 #: field:project.issue,date_open:0
 msgid "Opened"
 msgstr "開始済"
@@ -77,9 +72,14 @@ msgid "Unread Messages"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:562
+#: code:addons/project_issue/project_issue.py:560
 #, python-format
 msgid "<b>escalated</b>."
+msgstr ""
+
+#. module: project_issue
+#: model:ir.actions.server,name:project_issue.actions_server_project_issue_unread
+msgid "Issue: Mark unread"
 msgstr ""
 
 #. module: project_issue
@@ -103,7 +103,7 @@ msgid "Days to Open"
 msgstr "開始日"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:474
+#: code:addons/project_issue/project_issue.py:472
 #, python-format
 msgid ""
 "You cannot escalate this issue.\n"
@@ -186,6 +186,11 @@ msgid "Cancelled"
 msgstr "キャンセル済"
 
 #. module: project_issue
+#: field:project.issue,description:0
+msgid "Private Note"
+msgstr ""
+
+#. module: project_issue
 #: field:project.issue.report,date_closed:0
 msgid "Date of Closing"
 msgstr "終了日"
@@ -266,7 +271,7 @@ msgid "Maintenance"
 msgstr "メンテナンス"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:549
+#: code:addons/project_issue/project_issue.py:547
 #, python-format
 msgid "Project issue <b>converted</b> to task."
 msgstr ""
@@ -328,11 +333,6 @@ msgid "%s (copy)"
 msgstr ""
 
 #. module: project_issue
-#: model:ir.actions.server,name:project_issue.actions_server_project_issue_read
-msgid "Mark read"
-msgstr ""
-
-#. module: project_issue
 #: view:project.issue:0
 msgid "Unassigned Issues"
 msgstr "未割当の問題"
@@ -343,11 +343,6 @@ msgstr "未割当の問題"
 #: field:project.issue.report,creation_date:0
 msgid "Creation Date"
 msgstr "作成日"
-
-#. module: project_issue
-#: constraint:account.analytic.account:0
-msgid "Error! You cannot create recursive analytic accounts."
-msgstr ""
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.project_issue_version_action
@@ -403,7 +398,7 @@ msgid "Issues Analysis"
 msgstr "問題分析"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:495
+#: code:addons/project_issue/project_issue.py:493
 #, python-format
 msgid "No Subject"
 msgstr ""
@@ -422,7 +417,7 @@ msgid "Contact"
 msgstr "連絡先"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:553
+#: code:addons/project_issue/project_issue.py:551
 #, python-format
 msgid "Project issue <b>created</b>."
 msgstr ""
@@ -444,9 +439,9 @@ msgid "# of Issues"
 msgstr "問題の数"
 
 #. module: project_issue
-#: selection:project.issue.report,month:0
-msgid "September"
-msgstr "9月"
+#: model:ir.actions.server,name:project_issue.actions_server_project_issue_read
+msgid "Issue: Mark read"
+msgstr ""
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -586,11 +581,6 @@ msgid "Normal"
 msgstr "通常"
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "Escalate"
-msgstr "拡大"
-
-#. module: project_issue
 #: field:project.project,issue_count:0
 msgid "unknown"
 msgstr ""
@@ -647,7 +637,7 @@ msgid "November"
 msgstr "11月"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:474
+#: code:addons/project_issue/project_issue.py:472
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -716,6 +706,11 @@ msgid "Current Features"
 msgstr "現在の機能"
 
 #. module: project_issue
+#: selection:project.issue.report,month:0
+msgid "September"
+msgstr "9月"
+
+#. module: project_issue
 #: view:project.issue.version:0
 msgid "Issue Version"
 msgstr "問題のバージョン"
@@ -769,7 +764,7 @@ msgid "Creation Month"
 msgstr "作成月"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:559
+#: code:addons/project_issue/project_issue.py:557
 #, python-format
 msgid "<b>escalated</b> to <em>'%s'</em>."
 msgstr ""
@@ -795,7 +790,7 @@ msgid "Issue"
 msgstr "問題"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:542
+#: code:addons/project_issue/project_issue.py:540
 #, python-format
 msgid "Stage changed to <b>%s</b>."
 msgstr ""
@@ -812,7 +807,6 @@ msgstr "機能トラッカーの検索"
 
 #. module: project_issue
 #: view:project.issue:0
-#: field:project.issue,description:0
 msgid "Description"
 msgstr "説明"
 
@@ -888,8 +882,8 @@ msgid "April"
 msgstr "4月"
 
 #. module: project_issue
-#: model:ir.actions.server,name:project_issue.actions_server_project_issue_unread
-msgid "Mark unread"
+#: view:project.issue:0
+msgid "⇒ Escalate"
 msgstr ""
 
 #. module: project_issue
@@ -956,6 +950,9 @@ msgstr "期間"
 #~ msgid "Previous Month"
 #~ msgstr "前月"
 
+#~ msgid "Error! project start-date must be lower then project end-date."
+#~ msgstr "エラー。プロジェクトの開始日はプロジェクトの終了日より前である必要があります。"
+
 #~ msgid "Change to Next Stage"
 #~ msgstr "次の工程へ変更"
 
@@ -1018,6 +1015,9 @@ msgstr "期間"
 
 #~ msgid "Previous"
 #~ msgstr "前へ"
+
+#~ msgid "Escalate"
+#~ msgstr "拡大"
 
 #~ msgid "Reset to New"
 #~ msgstr "新規に再設定"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:53+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2010-10-30 13:19+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 05:44+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:13+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetoassociate0
@@ -135,11 +135,6 @@ msgid "Non Member"
 msgstr "No soci"
 
 #. module: membership
-#: model:product.template,name:membership.membership_2_product_template
-msgid "Basic Membership"
-msgstr "Soci bàsic"
-
-#. module: membership
 #: view:product.product:0
 msgid "Taxes"
 msgstr ""
@@ -190,11 +185,6 @@ msgstr ""
 #: field:report.membership,num_invoiced:0
 msgid "# Invoiced"
 msgstr "Núm. facturats"
-
-#. module: membership
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr ""
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_report_membership_tree
@@ -442,13 +432,6 @@ msgid "Category"
 msgstr "Categoria"
 
 #. module: membership
-#: constraint:product.product:0
-msgid ""
-"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
-"\"Internal Reference\" field instead."
-msgstr ""
-
-#. module: membership
 #: view:res.partner:0
 msgid "Contacts"
 msgstr ""
@@ -472,6 +455,11 @@ msgstr "Data des de"
 #: model:process.node,name:membership.process_node_associatedmember0
 msgid "Associated member"
 msgstr "Soci beneficiari"
+
+#. module: membership
+#: help:membership.membership_line,date:0
+msgid "Date on which member has joined the membership"
+msgstr "Data en la qual el membre s'ha convertit en soci."
 
 #. module: membership
 #: field:membership.membership_line,state:0
@@ -528,9 +516,15 @@ msgid "Invoiced Member"
 msgstr "Soci facturat"
 
 #. module: membership
-#: help:membership.membership_line,date:0
-msgid "Date on which member has joined the membership"
-msgstr "Data en la qual el membre s'ha convertit en soci."
+#: field:membership.invoice,product_id:0
+#: field:membership.membership_line,membership_id:0
+#: view:product.product:0
+#: field:product.product,membership:0
+#: view:report.membership:0
+#: view:res.partner:0
+#: field:res.partner,member_lines:0
+msgid "Membership"
+msgstr "Soci"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -599,9 +593,9 @@ msgid "The price negotiated by the partner"
 msgstr "El preu negociat per l'empresa"
 
 #. module: membership
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr ""
+#: model:product.template,name:membership.membership_2_product_template
+msgid "Basic Membership"
+msgstr "Soci bàsic"
 
 #. module: membership
 #: view:res.partner:0
@@ -706,17 +700,6 @@ msgid "May"
 msgstr "Maig"
 
 #. module: membership
-#: field:membership.invoice,product_id:0
-#: field:membership.membership_line,membership_id:0
-#: view:product.product:0
-#: field:product.product,membership:0
-#: view:report.membership:0
-#: view:res.partner:0
-#: field:res.partner,member_lines:0
-msgid "Membership"
-msgstr "Soci"
-
-#. module: membership
 #: field:res.partner,membership_start:0
 msgid "Membership Start Date"
 msgstr ""
@@ -799,11 +782,6 @@ msgstr ""
 #: selection:res.partner,membership_state:0
 msgid "Cancelled Member"
 msgstr "Membre cancel·lat"
-
-#. module: membership
-#: constraint:res.partner:0
-msgid "Error: Invalid ean code"
-msgstr "Error: Codi EAN erroni"
 
 #. module: membership
 #: view:report.membership:0
@@ -932,6 +910,9 @@ msgstr "Ingrés realitzat"
 
 #~ msgid "New Membership by Years"
 #~ msgstr "Nous socis per anys"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Error: Codi EAN erroni"
 
 #~ msgid "Current membership state"
 #~ msgstr "Estat actual del soci"
