@@ -58,7 +58,7 @@ class test_search(common.TransactionCase):
         id_desc_active_desc = partners.search(cr, uid, [('name', 'like', 'test_search_order%'), '|', ('active', '=', True), ('active', '=', False)], order="id desc, active desc")
         self.assertEqual([e, ab, b, a, d, c], id_desc_active_desc, "Search with 'ID DESC, ACTIVE DESC' order failed.")
 
-    def test_10_unherits_m2order(self):
+    def test_10_inherits_m2order(self):
         registry, cr, uid = self.registry, self.cr, self.uid
         users_obj = registry('res.users')
 
@@ -94,6 +94,15 @@ class test_search(common.TransactionCase):
         expected_ids = [search_user, b, c, a]
         test_user_ids = filter(lambda x: x in expected_ids, user_ids)
         self.assertEqual(test_user_ids, expected_ids, 'search on res_users did not provide expected ids or expected order')
+
+        # Do: order on many2one, but not by specifying in order parameter of search, but by overriding _order of res_users
+        old_order = users_obj._order
+        users_obj._order = 'country_id desc, name asc, login desc'
+        user_ids = users_obj.search(cr, search_user, [])
+        expected_ids = [search_user, c, b, a]
+        test_user_ids = filter(lambda x: x in expected_ids, user_ids)
+        self.assertEqual(test_user_ids, expected_ids, 'search on res_users did not provide expected ids or expected order')
+        users_obj._order = old_order
 
 
 if __name__ == '__main__':
