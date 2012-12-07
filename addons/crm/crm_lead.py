@@ -291,6 +291,7 @@ class crm_lead(base_stage, format_address, osv.osv):
             lead_subtype_ids = subtype_obj.search(cr, uid, ['|', ('res_model', '=', False), ('res_model', '=', self._name)], context=context)
             lead_subtypes = subtype_obj.browse(cr, uid, lead_subtype_ids, context=context)
             follower_ids = follower_obj.search(cr, uid, [('res_model', '=', 'crm.case.section'), ('res_id', '=', section_id)], context=context)
+            self.write(cr, uid, obj_id, {'message_follower_ids': [(6, 0, followers)]}, context=context)
             for follower in follower_obj.browse(cr, uid, follower_ids, context=context):
                 if not follower.subtype_ids:
                     continue

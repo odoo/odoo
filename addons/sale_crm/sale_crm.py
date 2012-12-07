@@ -44,6 +44,7 @@ class sale_order(osv.osv):
             order_subtypes = subtype_obj.browse(cr, uid, order_subtype_ids, context=context)
             followers = [follow.id for follow in section_id.message_follower_ids]
             follower_ids = follower_obj.search(cr, uid, [('res_model', '=', 'crm.case.section'), ('res_id', '=', section_id)], context=context)
+            self.write(cr, uid, order, {'message_follower_ids': [(6, 0, followers)]}, context=context)
             for follower in follower_obj.browse(cr, uid, follower_ids, context=context):
                 if not follower.subtype_ids:
                     continue
