@@ -2741,7 +2741,7 @@ class BaseModel(object):
         :return: qualified name of field, to be used in SELECT clause
         """
         current_table = self
-        parent_alias = current_table._table
+        parent_alias = '"%s"' % current_table._table
         while field in current_table._inherit_fields and not field in current_table._columns:
             parent_model_name = current_table._inherit_fields[field][0]
             parent_table = self.pool.get(parent_model_name)
@@ -4667,14 +4667,15 @@ class BaseModel(object):
                     # inherited rules are applied on the external table -> need to get the alias and replace
                     parent_table = self.pool.get(parent_model)._table
                     added_clause = [clause.replace('"%s"' % parent_table, '"%s"' % parent_alias) for clause in added_clause]
-                    # not sure of myself here (in the ORM, this statment is quite cool)
+                    # change references to parent_table to parent_alias, because we now use the alias to refer to the table
                     new_tables = []
                     for table in added_tables:
+                        # table is just a table name -> switch to the full alias
                         if table == '"%s"' % (parent_table):
-                            new_table = '"%s" as "%s"' % (parent_table, parent_alias)
+                            new_tables.append('"%s" as "%s"' % (parent_table, parent_alias))
+                        # table is already a full statement -> replace reference to the table to its alias, is correct with the way aliases are generated
                         else:
-                            new_table = table.replace('"%s"' % parent_table, '"%s"' % parent_alias)
-                        new_tables.append(new_table)
+                            new_tables.append(table.replace('"%s"' % parent_table, '"%s"' % parent_alias))
                     added_tables = new_tables
                 query.where_clause += added_clause
                 query.where_clause_params += added_params

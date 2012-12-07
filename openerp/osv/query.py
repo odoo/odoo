@@ -28,14 +28,6 @@ def _quote(to_quote):
     return to_quote
 
 
-def _get_alias_from_statement(string):
-    if len(string.split(' as ')) > 1:
-        alias = string.split(' as ')[1].replace('"', '')
-    else:
-        alias = string.replace('"', '')
-    return alias
-
-
 class Query(object):
     """
      Dumb implementation of a Query object, using 3 string lists so far
