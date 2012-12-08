@@ -537,7 +537,7 @@ class crm_lead(base_stage, format_address, osv.osv):
             if field_info is None:
                 continue
             field = field_info.column
-            value = None
+            value = ''
 
             if field._type == 'selection':
                 if hasattr(field.selection, '__call__'):
@@ -548,12 +548,16 @@ class crm_lead(base_stage, format_address, osv.osv):
             elif field._type == 'many2one':
                 if lead[field_name]:
                     value = lead[field_name].name_get()[0][1]
+            elif field._type == 'many2many':
+                if lead[field_name]:
+                    for val in lead[field_name]:
+                        field_value = val.name_get()[0][1]
+                        value += field_value + ","
             else:
                 value = lead[field_name]
 
             body.append("%s: %s" % (field.string, value or ''))
-
-        return "\n".join(body + ['---'])
+        return "<br/>".join(body + ['<br/>'])
 
     def _merge_notify(self, cr, uid, opportunity_id, opportunities, context=None):
         """
