@@ -75,8 +75,8 @@ class account_payment_term(osv.osv):
         amount = value
         result = []
         obj_precision = self.pool.get('decimal.precision')
+        prec = obj_precision.precision_get(cr, uid, 'Account')
         for line in pt.line_ids:
-            prec = obj_precision.precision_get(cr, uid, 'Account')
             if line.value == 'fixed':
                 amt = round(line.value_amount, prec)
             elif line.value == 'procent':
@@ -92,19 +92,20 @@ class account_payment_term(osv.osv):
                     next_date += relativedelta(day=line.days2, months=1)
                 result.append( (next_date.strftime('%Y-%m-%d'), amt) )
                 amount -= amt
-        return result
 
-account_payment_term()
+        amount = reduce(lambda x,y: x+y[1], result, 0.0)
+        dist = round(value-amount, prec)
+        if dist:
+            result.append( (time.strftime('%Y-%m-%d'), dist) )
+        return result
 
 class account_payment_term_line(osv.osv):
     _name = "account.payment.term.line"
     _description = "Payment Term Line"
     _columns = {
-        'name': fields.char('Line Name', size=32, required=True),
-        'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the payment term lines from the lowest sequences to the higher ones"),
         'value': fields.selection([('procent', 'Percent'),
                                    ('balance', 'Balance'),
-                                   ('fixed', 'Fixed Amount')], 'Valuation',
+                                   ('fixed', 'Fixed Amount')], 'Computation',
                                    required=True, help="""Select here the kind of valuation related to this payment term line. Note that you should have your last line with the type 'Balance' to ensure that the whole amount will be treated."""),
 
         'value_amount': fields.float('Amount To Pay', digits_compute=dp.get_precision('Payment Term'), help="For percent enter a ratio between 0-1."),
@@ -115,10 +116,10 @@ class account_payment_term_line(osv.osv):
     }
     _defaults = {
         'value': 'balance',
-        'sequence': 5,
+        'days': 30,
         'days2': 0,
     }
-    _order = "sequence"
+    _order = "value desc,days"
 
     def _check_percent(self, cr, uid, ids, context=None):
         obj = self.browse(cr, uid, ids[0], context=context)

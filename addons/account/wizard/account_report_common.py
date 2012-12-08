@@ -24,6 +24,7 @@ from lxml import etree
 
 from osv import fields, osv
 from tools.translate import _
+from openerp.osv.orm import setup_modifiers
 
 class account_common_report(osv.osv_memory):
     _name = "account.common.report"
@@ -67,16 +68,16 @@ class account_common_report(osv.osv_memory):
         (_check_company_id, 'The fiscalyear, periods or chart of account chosen have to belong to the same company.', ['chart_account_id','fiscalyear_id','period_from','period_to']),
     ]
 
-
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if context is None:context = {}
         res = super(account_common_report, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
-        if context.get('active_model', False) == 'account.account' and view_id:
+        if context.get('active_model', False) == 'account.account':
             doc = etree.XML(res['arch'])
             nodes = doc.xpath("//field[@name='chart_account_id']")
             for node in nodes:
                 node.set('readonly', '1')
                 node.set('help', 'If you print the report from Account list/form view it will not consider Charts of account')
+                setup_modifiers(node, res['fields']['chart_account_id'])
             res['arch'] = etree.tostring(doc)
         return res
 
@@ -121,8 +122,8 @@ class account_common_report(osv.osv_memory):
         now = time.strftime('%Y-%m-%d')
         company_id = False
         ids = context.get('active_ids', [])
-        if ids:
-            company_id = self.browse(cr, uid, ids[0], context=context).company_id.id
+        if ids and context.get('active_model') == 'account.account':
+            company_id = self.pool.get('account.account').browse(cr, uid, ids[0], context=context).company_id.id
         fiscalyears = self.pool.get('account.fiscalyear').search(cr, uid, [('date_start', '<', now), ('date_stop', '>', now), ('company_id', '=', company_id)], limit=1)
         return fiscalyears and fiscalyears[0] or False
 
