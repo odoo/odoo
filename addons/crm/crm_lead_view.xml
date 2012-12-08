@@ -116,8 +116,11 @@
                     <group>
                         <group>
                             <field name="partner_name" string="Company Name"/>
+                            <!-- Preload all the partner's information -->
                             <field name="partner_id" string="Customer"
-                                on_change="on_change_partner(partner_id)" options='{"create_name_field": "name"}'/>
+                                on_change="on_change_partner(partner_id)"
+                                options='{"create_name_field": "name"}'
+                                context="{'default_name': contact_name, 'default_street': street, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_function': function, 'default_phone': phone, 'default_mobile': mobile, 'default_fax': fax, 'default_email': email_from, 'default_user_id': user_id, 'default_section_id': section_id}"/>
                             <label for="street" string="Address"/>
                             <div>
                                 <field name="street" placeholder="Street..."/>
@@ -133,7 +136,7 @@
                         <group>
                             <label for="contact_name"/>
                             <div>
-                                <field name="contact_name" class="oe_inline"/>,
+                                <field name="contact_name" class="oe_inline"/><span attrs="{'invisible': [('title', '=', '')]}">, </span>
                                 <field name="title" placeholder="Title" domain="[('domain', '=', 'contact')]" class="oe_inline" options='{"no_open": True}'/>
                             </div>
                             <field name="email_from" widget="email"/>
@@ -205,7 +208,6 @@
                 </graph>
             </field>
         </record>
-
 
         <!-- CRM Lead Tree View -->
         <record model="ir.ui.view" id="crm_case_tree_view_leads">
