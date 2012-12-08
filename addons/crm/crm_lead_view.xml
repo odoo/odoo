@@ -297,7 +297,7 @@
                                     <div class="oe_kanban_bottom_right">
                                         <a t-if="record.priority.raw_value == 1" type="object" name="set_normal_priority" class="oe_e oe_star_on">7</a>
                                         <a t-if="record.priority.raw_value != 1" type="object" name="set_high_priority" class="oe_e oe_star_off">7</a>
-                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar" t-if="record.user_id.value"/>
                                     </div>
                                     <div class="oe_kanban_footer_left">
                                         <t t-raw="record.message_summary.raw_value"/>
@@ -424,6 +424,7 @@
                             <group>
                                 <field name="categ_ids"
                                     string="Categories" widget="many2many_tags"
+                                    context = "{'object_name': 'crm.lead'}"
                                     domain="[('object_id.model', '=', 'crm.lead')]"/>
 
                             </group>
@@ -532,7 +533,7 @@
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
                 <search string="Search Opportunities">
-                    <field name="name" string="Opportunity / Customer"
+                    <field name="name" string="Opportunity"
                         filter_domain="['|','|','|',('partner_id','ilike',self),('partner_name','ilike',self),('email_from','ilike',self),('name', 'ilike', self)]"/>
                     <field name="categ_ids" string="Category" filter_domain="[('categ_ids','ilike', self)]"/>
                     <filter icon="terp-mail-message-new" string="Unread Messages" help="Unread messages" name="message_unread" domain="[('message_unread','=',True)]"/>
@@ -560,7 +561,7 @@
                         <filter string="Exp.Closing" icon="terp-go-month" help="Expected Closing" domain="[]" context="{'group_by':'date_deadline'}"/>
                     </group>
                     <group string="Display">
-                        <filter string="Show Sales Team" icon="terp-personal+" context="{'invisible_section': False}" domain="[]" help="Show Sales Team"/>
+                        <filter string="Show Sales Team" context="{'invisible_section': False}" domain="[]" help="Show Sales Team"/>
                     </group>
                 </search>
             </field>
