@@ -2,42 +2,6 @@
 <openerp>
     <data>
 
-        <!-- Read/Unread actions -->
-        <record id="actions_server_crm_lead_unread" model="ir.actions.server">
-            <field name="name">CRM Lead: Mark unread</field>
-            <field name="condition">True</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="model_crm_lead"/>
-            <field name="state">code</field>
-            <field name="code">self.message_mark_as_unread(cr, uid, context.get('active_ids'), context=context)</field>
-        </record>
-        <record id="action_crm_lead_unread" model="ir.values">
-            <field name="name">action_crm_lead_unread</field>
-            <field name="action_id" ref="actions_server_crm_lead_unread"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_crm_lead_unread'))"/>
-            <field name="key">action</field>
-            <field name="model_id" ref="model_crm_lead"/>
-            <field name="model">crm.lead</field>
-            <field name="key2">client_action_multi</field>
-        </record>
-
-        <record id="actions_server_crm_lead_read" model="ir.actions.server">
-            <field name="name">CRM Lead: Mark read</field>
-            <field name="condition">True</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="model_crm_lead"/>
-            <field name="state">code</field>
-            <field name="code">self.message_mark_as_read(cr, uid, context.get('active_ids'), context=context)</field>
-        </record>
-        <record id="action_crm_lead_read" model="ir.values">
-            <field name="name">action_crm_lead_read</field>
-            <field name="action_id" ref="actions_server_crm_lead_read"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_crm_lead_read'))"/>
-            <field name="key">action</field>
-            <field name="model_id" ref="model_crm_lead"/>
-            <field name="model">crm.lead</field>
-            <field name="key2">client_action_multi</field>
-        </record>
 
         <!--
             CRM CASE STAGE

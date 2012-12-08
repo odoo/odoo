@@ -456,7 +456,7 @@ class account_move_line(osv.osv):
                                 store = {
                                     'account.move': (_get_move_lines, ['period_id'], 20)
                                 }),
-        'blocked': fields.boolean('Litigation', help="You can check this box to mark this journal item as a litigation with the associated partner"),
+        'blocked': fields.boolean('No Follow-up', help="You can check this box to mark this journal item as a litigation with the associated partner"),
         'partner_id': fields.many2one('res.partner', 'Partner', select=1, ondelete='restrict'),
         'date_maturity': fields.date('Due date', select=True ,help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line."),
         'date': fields.related('move_id','date', string='Effective date', type='date', required=True, select=True,
@@ -856,7 +856,12 @@ class account_move_line(osv.osv):
         if r[0][1] != None:
             raise osv.except_osv(_('Error!'), _('Some entries are already reconciled.'))
 
-        if (not currency_obj.is_zero(cr, uid, account.company_id.currency_id, writeoff)) or \
+        if context.get('fy_closing'):
+            # We don't want to generate any write-off when being called from the
+            # wizard used to close a fiscal year (and it doesn't give us any
+            # writeoff_acc_id).
+            pass
+        elif (not currency_obj.is_zero(cr, uid, account.company_id.currency_id, writeoff)) or \
            (account.currency_id and (not currency_obj.is_zero(cr, uid, account.currency_id, currency))):
             if not writeoff_acc_id:
                 raise osv.except_osv(_('Warning!'), _('You have to provide an account for the write off/exchange difference entry.'))

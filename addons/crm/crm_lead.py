@@ -799,7 +799,7 @@ class crm_lead(base_stage, format_address, osv.osv):
             if user_ids:
                 value['user_id'] = user_ids[index]
                 # Cycle through user_ids
-                index = index+1 if (index < len(user_ids)-1) else 0
+                index = (index + 1) % len(user_ids)
             if value:
                 self.write(cr, uid, [lead_id], value, context=context)
         return True

@@ -804,7 +804,7 @@
             <field name="arch" type="xml">
                 <search string="Internal Picking List">
                     <field name="name" string="Internal Picking List" filter_domain="['|',('name','ilike', self),('origin','ilike',self)]"/>
-                    <filter icon="terp-check" string="Ready" domain="[('state','=','assigned')]" help="Assigned Internal Moves"/>
+                    <filter icon="terp-check" name="available" string="Ready" domain="[('state','=','assigned')]" help="Assigned Internal Moves"/>
                     <filter icon="terp-camera_test" name="confirmed" string="Waiting" domain="[('state','=','confirmed')]" help="Confirmed Internal Moves"/>
                     <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Pickings already processed"/>
                     <field name="partner_id"/>
