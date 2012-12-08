@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-06 21:42+0000\n"
+"PO-Revision-Date: 2012-12-07 22:37+0000\n"
 "Last-Translator: Sergio Corato <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-07 04:35+0000\n"
+"X-Launchpad-Export-Date: 2012-12-08 04:59+0000\n"
 "X-Generator: Launchpad (build 16341)\n"
 
 #. module: account
@@ -3156,7 +3156,7 @@ msgstr "Movimento contabile di riconciliazione (storno)"
 #: field:account.move.line,account_tax_id:0
 #: view:account.tax:0
 msgid "Tax"
-msgstr "Tassa"
+msgstr "Imposta"
 
 #. module: account
 #: view:account.analytic.account:0
@@ -8012,7 +8012,7 @@ msgstr "Raggruppare per anno data fattura"
 #. module: account
 #: field:account.config.settings,purchase_tax_rate:0
 msgid "Purchase tax (%)"
-msgstr ""
+msgstr "Imposta sugli acquisti (%)"
 
 #. module: account
 #: help:res.partner,credit:0
@@ -8359,6 +8359,8 @@ msgid ""
 "This date will be used as the invoice date for credit note and period will "
 "be chosen accordingly!"
 msgstr ""
+"Questa data sarà usata come data fattura per la nota di credito e il periodo "
+"sarà scelto di conseguenza!"
 
 #. module: account
 #: view:product.template:0
@@ -8372,6 +8374,8 @@ msgid ""
 "You have to set a code for the bank account defined on the selected chart of "
 "accounts."
 msgstr ""
+"E' necessario selezionare un codice per il conto bancario definito sul piano "
+"dei conti selezionato."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_manual_reconcile
@@ -8797,6 +8801,7 @@ msgstr "Bilancio Analitico Invertito -"
 msgid ""
 "Is this reconciliation produced by the opening of a new fiscal year ?."
 msgstr ""
+"La riconciliazione è prodotto dall'apertura di un nuovo anno fiscale ?."
 
 #. module: account
 #: view:account.analytic.line:0
@@ -8901,7 +8906,7 @@ msgstr "Sezionale Note di Credito Fornitori"
 #: code:addons/account/account.py:1292
 #, python-format
 msgid "Please define a sequence on the journal."
-msgstr ""
+msgstr "E' necessario definire una sequenza per il sezionale."
 
 #. module: account
 #: help:account.tax.template,amount:0
@@ -8930,6 +8935,9 @@ msgid ""
 "recalls.\n"
 "                This installs the module account_followup."
 msgstr ""
+"Consente di automatizzare le lettere per le fatture non pagate, non richiami "
+"multi-livello.\n"
+"                Installa il modulo account_followup."
 
 #. module: account
 #: field:account.automatic.reconcile,period_id:0
@@ -8974,12 +8982,12 @@ msgstr "Totale imponibile"
 #: code:addons/account/wizard/account_report_common.py:153
 #, python-format
 msgid "Select a starting and an ending period."
-msgstr ""
+msgstr "Selezionare un periodo iniziale e uno finale."
 
 #. module: account
 #: field:account.config.settings,sale_sequence_next:0
 msgid "Next invoice number"
-msgstr ""
+msgstr "Numero di fattura successivo"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_generic_reporting
@@ -9128,7 +9136,7 @@ msgstr "Import automatico dei movimenti bancari"
 #: code:addons/account/account_invoice.py:370
 #, python-format
 msgid "Unknown Error!"
-msgstr ""
+msgstr "Errore Sconosciuto!"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_bank_reconcile
@@ -9138,7 +9146,7 @@ msgstr "Riconciliazione movimenti bancari"
 #. module: account
 #: view:account.config.settings:0
 msgid "Apply"
-msgstr ""
+msgstr "Conferma"
 
 #. module: account
 #: field:account.financial.report,account_type_ids:0
@@ -9154,6 +9162,8 @@ msgid ""
 "You cannot use this general account in this journal, check the tab 'Entry "
 "Controls' on the related journal."
 msgstr ""
+"Non è possibile usare questo conto generale in questo sezionale, controllare "
+"la sezione 'Voci di controllo' nel relativo sezionale."
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -9366,6 +9376,8 @@ msgstr "Il codice del conto deve essere unico per ogni azienda!"
 #: help:product.template,property_account_expense:0
 msgid "This account will be used to value outgoing stock using cost price."
 msgstr ""
+"Questo conto sarà utilizzato per valutare le merci in uscita utilizzando il "
+"prezzo di costo."
 
 #. module: account
 #: view:account.invoice:0
@@ -9403,7 +9415,7 @@ msgstr "Conti consentiti (vuoto per non effettuare nessun controllo)"
 #. module: account
 #: field:account.config.settings,sale_tax_rate:0
 msgid "Sales tax (%)"
-msgstr ""
+msgstr "Imposta sulle vendite (%)"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_account_tree2
@@ -9469,6 +9481,8 @@ msgid ""
 "This allows you to check writing and printing.\n"
 "                This installs the module account_check_writing."
 msgstr ""
+"Permette di verificare la scrittura e la stampa.\n"
+"                Installa il modulo account_check_writing."
 
 #. module: account
 #: model:res.groups,name:account.group_account_invoice
@@ -9546,6 +9560,9 @@ msgid ""
 "created. If you leave that field empty, it will use the same journal as the "
 "current invoice."
 msgstr ""
+"E' possibile selezionare qui il sezionale da utilizzare per le note di "
+"credito che saranno create. Se questa casella viene lasciata vuota, verrà "
+"utilizzato lo stesso sezionale della fattura corrente."
 
 #. module: account
 #: help:account.bank.statement.line,sequence:0
@@ -9578,7 +9595,7 @@ msgstr "Modello errato !"
 #: view:account.tax.code.template:0
 #: view:account.tax.template:0
 msgid "Tax Template"
-msgstr ""
+msgstr "Modello Imposta"
 
 #. module: account
 #: field:account.invoice.refund,period:0
@@ -9598,6 +9615,10 @@ msgid ""
 "some non legal fields or you must unreconcile first.\n"
 "%s."
 msgstr ""
+"Non è possibile fare questa modifica su una registrazione riconciliata. E' "
+"possibile cambiare solo alcuni campi non fiscali, altrimenti è necessario "
+"prima annullare la riconciliazione.\n"
+"%s."
 
 #. module: account
 #: help:account.financial.report,sign:0
@@ -9644,7 +9665,7 @@ msgstr "Le Bozze di fatture sono marcate, convalidate e stampate."
 #: field:account.bank.statement,message_is_follower:0
 #: field:account.invoice,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "E' un Follower"
 
 #. module: account
 #: view:account.move:0
