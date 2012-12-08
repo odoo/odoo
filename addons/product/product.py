@@ -323,7 +323,7 @@ class product_template(osv.osv):
             help='Coefficient to convert default Unit of Measure to Unit of Sale\n'
             ' uos = uom * coeff'),
         'mes_type': fields.selection((('fixed', 'Fixed'), ('variable', 'Variable')), 'Measure Type'),
-        'seller_ids': fields.one2many('product.supplierinfo', 'product_id', 'Partners'),
+        'seller_ids': fields.one2many('product.supplierinfo', 'product_id', 'Supplier'),
         'company_id': fields.many2one('res.company', 'Company', select=1),
     }
 
