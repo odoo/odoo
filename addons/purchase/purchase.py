@@ -994,7 +994,7 @@ class purchase_order_line(osv.osv):
         if not date_order:
             date_order = fields.date.context_today(self,cr,uid,context=context)
 
-        qty = qty or 1.0
+
         supplierinfo = False
         for supplier in product.seller_ids:
             if partner_id and (supplier.name.id == partner_id):
@@ -1002,13 +1002,15 @@ class purchase_order_line(osv.osv):
                 if supplierinfo.product_uom.id != uom_id:
                     res['warning'] = {'title': _('Warning!'), 'message': _('The selected supplier only sells this product by %s') % supplierinfo.product_uom.name }
                 min_qty = product_uom._compute_qty(cr, uid, supplierinfo.product_uom.id, supplierinfo.min_qty, to_uom_id=uom_id)
-                if qty < min_qty: # If the supplier quantity is greater than entered from user, set minimal.
-                    res['warning'] = {'title': _('Warning!'), 'message': _('The selected supplier has a minimal quantity set to %s %s, you should not purchase less.') % (supplierinfo.min_qty, supplierinfo.product_uom.name)}
+                if (qty or 0.0) < min_qty: # If the supplier quantity is greater than entered from user, set minimal.
+                    if qty:
+                        res['warning'] = {'title': _('Warning!'), 'message': _('The selected supplier has a minimal quantity set to %s %s, you should not purchase less.') % (supplierinfo.min_qty, supplierinfo.product_uom.name)}
                     qty = min_qty
-
         dt = self._get_date_planned(cr, uid, supplierinfo, date_order, context=context).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-
-        res['value'].update({'date_planned': date_planned or dt, 'product_qty': qty})
+        qty = qty or 1.0
+        res['value'].update({'date_planned': date_planned or dt})
+        if qty:
+            res['value'].update({'product_qty': qty})
 
         # - determine price_unit and taxes_id
         if pricelist_id:
