@@ -597,8 +597,10 @@ class objects_proxy(netsvc.ExportService):
             raise NameError("Method not available %s" % method)
         security.check(db,uid,passwd)
         assert openerp.osv.osv.service, "The object_proxy class must be started with start_object_proxy."
+        openerp.modules.registry.RegistryManager.check_registry_signaling(db)
         fn = getattr(openerp.osv.osv.service, method)
         res = fn(db, uid, *params)
+        openerp.modules.registry.RegistryManager.signal_caches_change(db)
         return res
 
 
@@ -680,8 +682,10 @@ class report_spool(netsvc.ExportService):
         if method not in ['report', 'report_get', 'render_report']:
             raise KeyError("Method not supported %s" % method)
         security.check(db,uid,passwd)
+        openerp.modules.registry.RegistryManager.check_registry_signaling(db)
         fn = getattr(self, 'exp_' + method)
         res = fn(db, uid, *params)
+        openerp.modules.registry.RegistryManager.signal_caches_change(db)
         return res
 
     def exp_render_report(self, db, uid, object, ids, datas=None, context=None):
