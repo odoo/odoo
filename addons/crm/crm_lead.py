@@ -562,7 +562,10 @@ class crm_lead(base_stage, format_address, osv.osv):
         #TOFIX: mail template should be used instead of fix body, subject text
         details = []
         result_type = self._merge_get_result_type(cr, uid, opportunities, context)
-        merge_message = _('Merged %s') % ('leads' if (result_type == 'lead') else 'opportunities')
+        if result_type == 'lead':
+            merge_message = _('Merged leads')
+        else:
+            merge_message = _('Merged opportunities')
         subject = [merge_message]
         for opportunity in opportunities:
             subject.append(opportunity.name)
