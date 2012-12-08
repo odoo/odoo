@@ -318,6 +318,10 @@ class account_coda_import(osv.osv_memory):
                                 for line_dr in voucher_vals['line_dr_ids']:
                                     line_drs.append((0, 0, line_dr))
                                 voucher_vals['line_dr_ids'] = line_drs
+                                line_crs = []
+                                for line_cr in voucher_vals['line_cr_ids']:
+                                    line_crs.append((0, 0, line_cr))
+                                voucher_vals['line_cr_ids'] = line_crs
                                 line['voucher_id'] = self.pool.get('account.voucher').create(cr, uid, voucher_vals, context=context)
                     if 'counterpartyNumber' in line and line['counterpartyNumber']:
                         ids = self.pool.get('res.partner.bank').search(cr, uid, [('acc_number', '=', str(line['counterpartyNumber']))])
