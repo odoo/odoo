@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2012-11-25 13:01+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-26 04:42+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:49+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: crm_claim
 #: help:crm.claim.stage,fold:0
@@ -225,9 +225,9 @@ msgid "Partner"
 msgstr "Relatie"
 
 #. module: crm_claim
-#: view:crm.claim.report:0
-msgid "Month of claim"
-msgstr "Maand van de klacht"
+#: view:crm.claim:0
+msgid "Follow Up"
+msgstr "Opvolging"
 
 #. module: crm_claim
 #: selection:crm.claim,type_action:0
@@ -856,20 +856,15 @@ msgid "# Emails"
 msgstr "# Emails"
 
 #. module: crm_claim
-#: field:crm.claim.report,create_date:0
-msgid "Create Date"
-msgstr "Aanmaakdatum"
-
-#. module: crm_claim
 #: code:addons/crm_claim/crm_claim.py:253
 #, python-format
 msgid "Stage changed to <b>%s</b>."
 msgstr "Fase veranderd in <b>%s</b>."
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "Follow Up"
-msgstr "Opvolging"
+#: view:crm.claim.report:0
+msgid "Month of claim"
+msgstr "Maand van de klacht"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -913,12 +908,6 @@ msgid "Messages and communication history"
 msgstr "Berichten en communicatie historie"
 
 #. module: crm_claim
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr ""
-"Fout! Het is niet mogelijk om recursieve geassocieerde leden te maken"
-
-#. module: crm_claim
 #: field:sale.config.settings,fetchmail_claim:0
 msgid "Create claims from incoming mails"
 msgstr "Maak een klacht van een inkomende mail"
@@ -946,9 +935,9 @@ msgid "Sales Team"
 msgstr "Verkoopteam"
 
 #. module: crm_claim
-#: constraint:res.partner:0
-msgid "Error: Invalid ean code"
-msgstr "Fout: Ongeldige EAN-code"
+#: field:crm.claim.report,create_date:0
+msgid "Create Date"
+msgstr "Aanmaakdatum"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -1079,9 +1068,6 @@ msgstr "Gewijgerde fases zijn specifieke fases voor de status gereed."
 #~ msgid "Actions Defined"
 #~ msgstr "Vastgestelde acties"
 
-#~ msgid "Actions Done"
-#~ msgstr "Afgewerkte akties"
-
 #~ msgid "Month-1"
 #~ msgstr "Maand-1"
 
@@ -1097,6 +1083,10 @@ msgstr "Gewijgerde fases zijn specifieke fases voor de status gereed."
 
 #~ msgid "Claims created in current month"
 #~ msgstr "Klachten aangemaakt in huidige maand"
+
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr ""
+#~ "Fout! Het is niet mogelijk om recursieve geassocieerde leden te maken"
 
 #~ msgid ""
 #~ "You can create claim stages to categorize the status of every claim entered "
@@ -1127,3 +1117,6 @@ msgstr "Gewijgerde fases zijn specifieke fases voor de status gereed."
 #~ "            \n"
 #~ "Als het dossier moet worden nagekeken, wordt de status op 'In afwachting' "
 #~ "gezet."
+
+#~ msgid "Actions Done"
+#~ msgstr "Afgewerkte acties"

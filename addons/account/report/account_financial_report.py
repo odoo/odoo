@@ -56,7 +56,7 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
         for report in self.pool.get('account.financial.report').browse(self.cr, self.uid, ids2, context=data['form']['used_context']):
             vals = {
                 'name': report.name,
-                'balance': report.balance,
+                'balance': report.balance * report.sign,
                 'type': 'report',
                 'level': bool(report.style_overwrite) and report.style_overwrite or report.level,
                 'account_type': report.type =='sum' and 'view' or False, #used to underline the financial report balances

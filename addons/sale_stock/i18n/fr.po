@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:54+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2012-11-29 15:02+0000\n"
 "Last-Translator: Numérigraphe <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-30 05:08+0000\n"
-"X-Generator: Launchpad (build 16319)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:54+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
@@ -39,6 +39,12 @@ msgstr "Bon de livraison"
 msgid ""
 "Allows you to specify different delivery and invoice addresses on a sale "
 "order."
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.actions.act_window,name:sale_stock.outgoing_picking_list_to_invoice
+#: model:ir.ui.menu,name:sale_stock.menu_action_picking_list_to_invoice
+msgid "Deliveries to Invoice"
 msgstr ""
 
 #. module: sale_stock
@@ -208,11 +214,6 @@ msgstr ""
 "est confirmé, en même temps que l'ordre d’approvisionnement. Cela représente "
 "l'attribution d'une partie du bon de commande. Il y a 1 liste de préparation "
 "par ligne de vente qui évolue avec la disponibilité des parties."
-
-#. module: sale_stock
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "Erreur ! Vous ne pouvez pas créer de sociétés récursives."
 
 #. module: sale_stock
 #: help:res.company,security_lead:0
@@ -397,11 +398,6 @@ msgid "Properties"
 msgstr "Propriétés"
 
 #. module: sale_stock
-#: constraint:stock.move:0
-msgid "You must assign a serial number for this product."
-msgstr "Vous devez attribuer un numéro de série pour cet article."
-
-#. module: sale_stock
 #: field:sale.config.settings,group_mrp_properties:0
 msgid "Product properties on order lines"
 msgstr ""
@@ -413,13 +409,6 @@ msgid ""
 msgstr ""
 "Vous pouvez créer des factures basées sur les commandes de vente ou les "
 "expéditions."
-
-#. module: sale_stock
-#: constraint:stock.move:0
-msgid "You cannot move products from or to a location of the type view."
-msgstr ""
-"Il  est impossible de déplacer des articles depuis ou vers un emplacement de "
-"type \"vue\"."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
@@ -442,12 +431,6 @@ msgid ""
 "lines.\n"
 "                This installs the modules project_timesheet and project_mrp."
 msgstr ""
-
-#. module: sale_stock
-#: sql_constraint:stock.picking:0
-#: sql_constraint:stock.picking.out:0
-msgid "Reference must be unique per Company!"
-msgstr "La référence doit être unique par société !"
 
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_saleprocurement0
@@ -515,11 +498,6 @@ msgid "Number Packages"
 msgstr "Nombre de colis"
 
 #. module: sale_stock
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique per Company!"
-msgstr "La référence de commande doit être unique par société!"
-
-#. module: sale_stock
 #: field:sale.order,shipped:0
 msgid "Delivered"
 msgstr "Livré"
@@ -564,11 +542,6 @@ msgid "Incoterm"
 msgstr "Incoterm"
 
 #. module: sale_stock
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product."
-msgstr "Vous tentez d'assigner un lot qui n'appartient pas au même article."
-
-#. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:521
 #, python-format
 msgid "Cannot cancel sales order line!"
@@ -593,11 +566,6 @@ msgstr "Livre tous les articles en une fois"
 #: field:sale.order,picking_ids:0
 msgid "Related Picking"
 msgstr "Bon de livraison lié"
-
-#. module: sale_stock
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr "Le nom de la société doit être unique !"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_config_settings

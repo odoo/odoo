@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:54+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2011-01-16 11:31+0000\n"
 "Last-Translator: Emerson <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:25+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:49+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_sched
@@ -210,13 +210,6 @@ msgid "Invalid Action!"
 msgstr ""
 
 #. module: procurement
-#: constraint:product.product:0
-msgid ""
-"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
-"\"Internal Reference\" field instead."
-msgstr ""
-
-#. module: procurement
 #: help:procurement.order,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
@@ -303,9 +296,9 @@ msgid "Procurement Orders to Process"
 msgstr "Pedidos de Aquisição para Processar"
 
 #. module: procurement
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "Erro! Você não pode criar empresas recursivas."
+#: model:ir.model,name:procurement.model_stock_warehouse_orderpoint
+msgid "Minimum Inventory Rule"
+msgstr "Regra de Estoque Mínimo"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:395
@@ -438,11 +431,6 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
-
-#. module: procurement
-#: field:stock.warehouse.orderpoint,qty_multiple:0
-msgid "Qty Multiple"
-msgstr "Múltiplo de Qtd"
 
 #. module: procurement
 #: help:procurement.order,procure_method:0
@@ -644,11 +632,6 @@ msgid "Normal"
 msgstr "Normal"
 
 #. module: procurement
-#: sql_constraint:product.product:0
-msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
-
-#. module: procurement
 #: help:product.template,supply_method:0
 msgid ""
 "Manufacture: When procuring the product, a manufacturing order or a task "
@@ -697,11 +680,6 @@ msgid "Comments and emails"
 msgstr ""
 
 #. module: procurement
-#: constraint:stock.move:0
-msgid "You must assign a serial number for this product."
-msgstr ""
-
-#. module: procurement
 #: field:procurement.order,date_planned:0
 msgid "Scheduled date"
 msgstr "Data agendada"
@@ -730,14 +708,9 @@ msgid "Automatic Order Point"
 msgstr "Ponto de Pedido (PP) Automático"
 
 #. module: procurement
-#: model:ir.model,name:procurement.model_stock_warehouse_orderpoint
-msgid "Minimum Inventory Rule"
-msgstr "Regra de Estoque Mínimo"
-
-#. module: procurement
-#: constraint:stock.move:0
-msgid "You cannot move products from or to a location of the type view."
-msgstr ""
+#: field:stock.warehouse.orderpoint,qty_multiple:0
+msgid "Qty Multiple"
+msgstr "Múltiplo de Qtd"
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,qty_multiple:0
@@ -774,11 +747,6 @@ msgstr "O Multiplicador de Qtde deve ser maior que 0 (zero)."
 #: selection:stock.warehouse.orderpoint,logic:0
 msgid "Order to Max"
 msgstr "Pedir o Máximo"
-
-#. module: procurement
-#: sql_constraint:stock.picking:0
-msgid "Reference must be unique per Company!"
-msgstr "A referência deve ser única por empresa!"
 
 #. module: procurement
 #: field:procurement.order,date_close:0
@@ -940,11 +908,6 @@ msgid "Product"
 msgstr "Produto"
 
 #. module: procurement
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product."
-msgstr ""
-
-#. module: procurement
 #: view:procurement.order:0
 msgid "Temporary"
 msgstr "Temporário"
@@ -959,13 +922,6 @@ msgstr "Descrição"
 #: selection:procurement.order,priority:0
 msgid "Urgent"
 msgstr "Urgente"
-
-#. module: procurement
-#: constraint:product.template:0
-msgid ""
-"Error: The default Unit of Measure and the purchase Unit of Measure must be "
-"in the same category."
-msgstr ""
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -1008,11 +964,6 @@ msgstr ""
 #: view:procurement.order:0
 msgid "Temporary Procurement Exceptions"
 msgstr "Exceções Temporárias de Aquisições"
-
-#. module: procurement
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr "O nome da empresa deve ser exclusivo!"
 
 #. module: procurement
 #: field:mrp.property,name:0
@@ -1346,6 +1297,9 @@ msgstr ""
 #~ "uma aquisição para trazer o estoque virtual para a quantidade especificada "
 #~ "como Quantidade máx."
 
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "Erro! Você não pode criar empresas recursivas."
+
 #~ msgid "State"
 #~ msgstr "Situação"
 
@@ -1388,6 +1342,9 @@ msgstr ""
 #~ msgid "No minimum orderpoint rule defined."
 #~ msgstr "Sem regra de ordem de aquisição mínima definida."
 
+#~ msgid "Reference must be unique per Company!"
+#~ msgstr "A referência deve ser única por empresa!"
+
 #, python-format
 #~ msgid "Cannot delete Procurement Order(s) which are in %s state!"
 #~ msgstr ""
@@ -1399,6 +1356,9 @@ msgstr ""
 #~ msgstr ""
 #~ "Este assistente irá planejar a aquisição deste produto. A aquisição poderá "
 #~ "gerar tarefas, pedidos de produção ou pedidos de compra."
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "O nome da empresa deve ser exclusivo!"
 
 #~ msgid "Error: Invalid ean code"
 #~ msgstr "Erro: Código EAN inválido"

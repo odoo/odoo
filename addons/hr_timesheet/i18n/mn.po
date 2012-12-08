@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:51+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-05-10 17:58+0000\n"
 "Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:06+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:33+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_analytic_cost_revenue
@@ -136,9 +136,9 @@ msgid "Minimum Analytic Amount"
 msgstr "Хамгийн бага аналитик дүн"
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-msgid "Total time"
-msgstr "Нийт цаг"
+#: view:hr.analytical.timesheet.employee:0
+msgid "Monthly Employee Timesheet"
+msgstr "Ажилтны сарын цаг бүртгэл"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
@@ -219,6 +219,11 @@ msgid "Sun"
 msgstr "Ням"
 
 #. module: hr_timesheet
+#: xsl:hr.analytical.timesheet:0
+msgid "Sum"
+msgstr "Нийлбэр"
+
+#. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Analytic account"
 msgstr "Шинжилгээний данс"
@@ -248,11 +253,6 @@ msgstr "Хэвлэх"
 #. module: hr_timesheet
 #: help:account.analytic.account,use_timesheets:0
 msgid "Check this field if this project manages timesheets"
-msgstr ""
-
-#. module: hr_timesheet
-#: constraint:account.analytic.account:0
-msgid "Error! You cannot create recursive analytic accounts."
 msgstr ""
 
 #. module: hr_timesheet
@@ -350,6 +350,11 @@ msgid "or"
 msgstr ""
 
 #. module: hr_timesheet
+#: xsl:hr.analytical.timesheet:0
+msgid "Timesheet by Employee"
+msgstr ""
+
+#. module: hr_timesheet
 #: model:ir.actions.report.xml,name:hr_timesheet.report_user_timesheet
 msgid "Employee timesheet"
 msgstr "Ажилтны цаг бүртгэл"
@@ -376,6 +381,7 @@ msgid "(Keep empty for current time)"
 msgstr "(Өнөөдрийн энэ цаг бол хоосон үлдээ)"
 
 #. module: hr_timesheet
+#: field:account.analytic.account,use_timesheets:0
 #: view:hr.employee:0
 msgid "Timesheets"
 msgstr "Цаг бүртгэл"
@@ -508,11 +514,7 @@ msgid "Cancel"
 msgstr "Цуцлах"
 
 #. module: hr_timesheet
-#: constraint:hr.employee:0
-msgid "Error! You cannot create recursive hierarchy of Employee(s)."
-msgstr ""
-
-#. module: hr_timesheet
+#: xsl:hr.analytical.timesheet_users:0
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_users
 #: model:ir.actions.report.xml,name:hr_timesheet.report_users_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_users
@@ -575,9 +577,9 @@ msgid "May"
 msgstr "5 сар"
 
 #. module: hr_timesheet
-#: view:hr.analytical.timesheet.employee:0
-msgid "Monthly Employee Timesheet"
-msgstr "Ажилтны сарын цаг бүртгэл"
+#: view:hr.analytic.timesheet:0
+msgid "Total time"
+msgstr "Нийт цаг"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
@@ -617,11 +619,6 @@ msgid "Employees"
 msgstr "Ажилтнууд"
 
 #. module: hr_timesheet
-#: constraint:hr.analytic.timesheet:0
-msgid "You cannot modify an entry in a Confirmed/Done timesheet !"
-msgstr ""
-
-#. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
 #: code:addons/hr_timesheet/report/users_timesheet.py:73
 #: selection:hr.analytical.timesheet.employee,month:0
@@ -647,11 +644,6 @@ msgid "User Error!"
 msgstr ""
 
 #. module: hr_timesheet
-#: field:account.analytic.account,use_timesheets:0
-msgid "Use Timesheets"
-msgstr ""
-
-#. module: hr_timesheet
 #: view:hr.sign.in.project:0
 msgid "Start Working"
 msgstr "Ажиллаж эхлэх"
@@ -673,6 +665,12 @@ msgid "Accounting"
 msgstr "Санхүүгийн бүртгэл"
 
 #. module: hr_timesheet
+#: xsl:hr.analytical.timesheet:0
+#: xsl:hr.analytical.timesheet_users:0
+msgid "Total"
+msgstr "Нийт"
+
+#. module: hr_timesheet
 #: view:hr.sign.out.project:0
 msgid "Change Work"
 msgstr "Ажлыг өөрчлөх"
@@ -682,9 +680,6 @@ msgstr "Ажлыг өөрчлөх"
 
 #~ msgid "Day"
 #~ msgstr "Өдөр"
-
-#~ msgid "Total"
-#~ msgstr "Нийт"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Дэлгэцийн үйлдэл дэх моделийн нэр алдаатай байна."
@@ -841,9 +836,6 @@ msgstr "Ажлыг өөрчлөх"
 
 #~ msgid "Timesheet line"
 #~ msgstr "Цаг бүртгэлийн мөр"
-
-#~ msgid "Sum"
-#~ msgstr "Нийлбэр"
 
 #~ msgid "My Working Hours of The Day"
 #~ msgstr "Миний өдрийн ажлын цаг"

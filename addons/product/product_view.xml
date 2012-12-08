@@ -124,7 +124,7 @@
                                     </group>
                                 </group>
                             </page>
-                            <page string="Sales" attrs="{'readonly':[('sale_ok','=',0)]}">
+                            <page string="Sales" attrs="{'invisible':[('sale_ok','=',False)]}">
                                 <group name="sale">
                                     <group string="Sale Conditions">
                                         <label for="warranty"/>
