@@ -13,7 +13,6 @@ class WebSuite(QUnitSuite):
                 # al: i dont understand why both are needed, db_password is the
                 # password for postgres and should not appear here of that i'm
                 # sure
-                supadmin=tools.config['admin_passwd'] or 'admin',
                 #
                 # But runbot provides it with this wrong key so i let it here
                 # until it's fixed

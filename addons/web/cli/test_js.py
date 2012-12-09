@@ -22,7 +22,7 @@ class TestJs(openerp.cli.Command):
         config = openerp.tools.config
         config.parse_config(args)
         # needed until runbot is fixed
-        config['db_password'] = tools.config['admin_passwd']
+        config['db_password'] = config['admin_passwd']
 
         # run js tests
         openerp.netsvc.init_alternative_logger()
