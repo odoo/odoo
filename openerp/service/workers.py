@@ -189,8 +189,7 @@ class Multicorn(object):
         for pid in self.workers.keys():
             self.worker_kill(pid, signal.SIGTERM)
         self.socket.close()
-        import __main__
-        __main__.quit_signals_received = 1
+        openerp.cli.server.quit_signals_received = 1
 
     def run(self):
         self.start()
