@@ -346,9 +346,11 @@ class WorkerBaseWSGIServer(werkzeug.serving.BaseWSGIServer):
 class WorkerCron(Worker):
     """ Cron workers """
     def sleep(self):
-        time.sleep(60)
+        interval = 60 + self.pid % 10 # chorus effect
+        time.sleep(interval)
 
     def process_work(self):
+        _logger.debug("WorkerCron (%s) polling for jobs", self.pid)
         if config['db_name']:
             db_names = config['db_name'].split(',')
         else:
