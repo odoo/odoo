@@ -24,10 +24,11 @@ import logging
 import threading
 import time
 
+import cron
 import netrpc_server
 import web_services
+import web_services
 
-import openerp.cron
 import openerp.modules
 import openerp.netsvc
 import openerp.osv
@@ -83,8 +84,7 @@ def start_services():
     netrpc_server.init_servers()
 
     # Start the main cron thread.
-    if openerp.conf.max_cron_threads:
-        openerp.cron.start_master_thread()
+    cron.start_master_thread()
 
     # Start the top-level servers threads (normally HTTP, HTTPS, and NETRPC).
     openerp.netsvc.Server.startAll()
@@ -95,8 +95,6 @@ def start_services():
 def stop_services():
     """ Stop all services. """
     # stop scheduling new jobs; we will have to wait for the jobs to complete below
-    openerp.cron.cancel_all()
-
     openerp.netsvc.Server.quitAll()
     openerp.service.wsgi_server.stop_server()
     _logger.info("Initiating shutdown")

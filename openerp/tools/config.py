@@ -269,7 +269,7 @@ class configmanager(object):
                               "osv_memory tables. This is a decimal value expressed in hours, "
                               "and the default is 1 hour.",
                          type="float")
-        group.add_option("--max-cron-threads", dest="max_cron_threads", my_default=4,
+        group.add_option("--max-cron-threads", dest="max_cron_threads", my_default=2,
                          help="Maximum number of threads processing concurrently cron jobs.",
                          type="int")
         group.add_option("--unaccent", dest="unaccent", my_default=False, action="store_true",
@@ -478,8 +478,6 @@ class configmanager(object):
 
         if opt.save:
             self.save()
-
-        openerp.conf.max_cron_threads = self.options['max_cron_threads']
 
         openerp.conf.addons_paths = self.options['addons_path'].split(',')
         if opt.server_wide_modules:
