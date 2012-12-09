@@ -363,6 +363,9 @@ class WorkerCron(Worker):
                 acquired = base.ir.ir_cron.ir_cron._acquire_job(db_name)
                 if not acquired:
                     break
+            # dont keep cursors in multi database mode
+            if len(db_names) > 1:
+                sql_db.close_db(db_name)
         # TODO Each job should be considered as one request instead of each db
         self.request_count += 1
 
