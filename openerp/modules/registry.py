@@ -28,7 +28,6 @@ import threading
 
 import openerp.sql_db
 import openerp.osv.orm
-import openerp.cron
 import openerp.tools
 import openerp.modules.db
 import openerp.tools.config
@@ -57,6 +56,9 @@ class Registry(object):
 
         self.db_name = db_name
         self.db = openerp.sql_db.db_connect(db_name)
+
+        # In monoprocess cron jobs flag (pooljobs)
+        self.cron = False
 
         # Inter-process signaling (used only when openerp.multi_process is True):
         # The `base_registry_signaling` sequence indicates the whole registry
@@ -124,7 +126,7 @@ class Registry(object):
         monitor the ir.cron model for future jobs. See openerp.cron for
         details.
         """
-        openerp.cron.schedule_wakeup(openerp.cron.WAKE_UP_NOW, self.db.dbname)
+        self.cron = True
 
     def clear_caches(self):
         """ Clear the caches
