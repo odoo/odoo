@@ -63,7 +63,7 @@ def start_service():
     for i in range(openerp.tools.config['max_cron_threads']):
         def target():
             cron_runner(i)
-        t = threading.Thread(target=target, name="openerp.service.cron.cron_runner%d" % i)
+        t = threading.Thread(target=target, name="openerp.service.cron.cron%d" % i)
         t.setDaemon(True)
         t.start()
         _logger.debug("cron%d started!" % i)
