@@ -24,10 +24,11 @@ import logging
 import threading
 import time
 
+import cron
 import netrpc_server
 import web_services
+import web_services
 
-import openerp.cron
 import openerp.modules
 import openerp.netsvc
 import openerp.osv
@@ -83,8 +84,7 @@ def start_services():
     netrpc_server.init_servers()
 
     # Start the main cron thread.
-    if openerp.conf.max_cron_threads:
-        openerp.cron.start_master_thread()
+    cron.start_master_thread()
 
     # Start the WSGI server.
     openerp.service.wsgi_server.start_server()
