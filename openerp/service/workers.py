@@ -16,6 +16,10 @@ import sys
 import time
 
 import werkzeug.serving
+try:
+    from setproctitle import setproctitle
+except ImportError:
+    setproctitle = lambda x: None
 
 import openerp
 import openerp.tools.config as config
@@ -274,6 +278,7 @@ class Worker(object):
 
     def start(self):
         self.pid = os.getpid()
+        setproctitle('openerp: %s %s' % (self.__class__.__name__, self.pid))
         _logger.info("Worker %s (%s) alive", self.__class__.__name__, self.pid)
         # Reseed the random number generator
         random.seed()
@@ -365,7 +370,7 @@ class WorkerCron(Worker):
                     break
             # dont keep cursors in multi database mode
             if len(db_names) > 1:
-                sql_db.close_db(db_name)
+                openerp.sql_db.close_db(db_name)
         # TODO Each job should be considered as one request instead of each db
         self.request_count += 1
 
