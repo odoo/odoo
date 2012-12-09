@@ -50,9 +50,9 @@ def abort_response(dummy_1, description, dummy_2, details):
     raise openerp.osv.osv.except_osv(description, details)
 
 class Service(object):
-    """ Base class for *Local* services
-
-        Functionality here is trusted, no authentication.
+    """ Base class for Local services
+    Functionality here is trusted, no authentication.
+    Workflow engine and reports subclass this.
     """
     _services = {}
     def __init__(self, name):

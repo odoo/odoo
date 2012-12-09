@@ -254,9 +254,12 @@ class TinySocketServerThread(threading.Thread,Server):
 
 netrpcd = None
 
-def init_servers():
+def start_service():
     global netrpcd
     if tools.config.get('netrpc', False):
         netrpcd = TinySocketServerThread(tools.config.get('netrpc_interface', ''), int(tools.config.get('netrpc_port', 8070)))
+
+def stop_service():
+    Server.quitAll()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

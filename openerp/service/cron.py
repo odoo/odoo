@@ -52,7 +52,7 @@ def cron_runner(number):
                 if not acquired:
                     break
 
-def start_master_thread():
+def start_service():
     """ Start the above runner function in a daemon thread.
 
     The thread is a typical daemon thread: it will never quit and must be
@@ -67,5 +67,8 @@ def start_master_thread():
         t.setDaemon(True)
         t.start()
         _logger.debug("cron%d started!" % i)
+
+def stop_service():
+    pass
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
