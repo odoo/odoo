@@ -253,7 +253,6 @@ class RegistryManager(object):
             if db_name in cls.registries:
                 cls.registries[db_name].clear_caches()
                 del cls.registries[db_name]
-                openerp.cron.cancel(db_name)
 
     @classmethod
     def delete_all(cls):
