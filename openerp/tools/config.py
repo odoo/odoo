@@ -271,7 +271,7 @@ class configmanager(object):
                               "and the default is 1 hour.",
                          type="float")
         group.add_option("--max-cron-threads", dest="max_cron_threads", my_default=2,
-                         help="Maximum number of threads processing concurrently cron jobs.",
+                         help="Maximum number of threads processing concurrently cron jobs (default 2).",
                          type="int")
         group.add_option("--unaccent", dest="unaccent", my_default=False, action="store_true",
                          help="Use the unaccent function provided by the database when available.")
@@ -283,19 +283,19 @@ class configmanager(object):
                          help="Specify the number of workers, 0 disable prefork mode.",
                          type="int")
         group.add_option("--limit-memory-soft", dest="limit_memory_soft", my_default=640 * 1024 * 1024,
-                         help="Maximum allowed virtual memory per worker, when reached the worker be reset after the current request.",
+                         help="Maximum allowed virtual memory per worker, when reached the worker be reset after the current request (default 640M).",
                          type="int")
         group.add_option("--limit-memory-hard", dest="limit_memory_hard", my_default=768 * 1024 * 1024,
-                         help="Maximum allowed virtual memory per worker, when reached, any memory allocation will fail.",
+                         help="Maximum allowed virtual memory per worker, when reached, any memory allocation will fail (default 768M).",
                          type="int")
         group.add_option("--limit-time-cpu", dest="limit_time_cpu", my_default=60,
-                         help="Maximum allowed CPU time per request.",
+                         help="Maximum allowed CPU time per request (default 60).",
                          type="int")
-        group.add_option("--limit-time-real", dest="limit_time_real", my_default=60,
-                         help="Maximum allowed Real time per request. ",
+        group.add_option("--limit-time-real", dest="limit_time_real", my_default=120,
+                         help="Maximum allowed Real time per request (default 120).",
                          type="int")
         group.add_option("--limit-request", dest="limit_request", my_default=8192,
-                         help="Maximum number of request to be processed per worker.",
+                         help="Maximum number of request to be processed per worker (default 8192).",
                          type="int")
         parser.add_option_group(group)
 
