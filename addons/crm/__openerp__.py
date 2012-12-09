@@ -28,7 +28,7 @@
     'summary': 'Leads, Opportunities, Phone Calls',
     'description': """
 The generic OpenERP Customer Relationship Management
-=====================================================
+====================================================
 
 This application enables a group of people to intelligently and efficiently manage leads, opportunities, meetings and phone calls.
 
