@@ -10,7 +10,10 @@ class WebSuite(QUnitSuite):
             '/web/tests',
             'mod=*&source={db}&supadmin={supadmin}&password={password}'.format(
                 db=tools.config['db_name'],
-                supadmin=tools.config['db_password'] or 'admin',
+                # al: i dont understand why both are needed, db_password is the
+                # password for postgres and should not appear here of that i'm
+                # sure
+                supadmin=tools.config['admin_passwd'] or 'admin',
                 password=tools.config['admin_passwd'] or 'admin'),
             ''
         ])
