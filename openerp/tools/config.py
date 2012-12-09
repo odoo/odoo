@@ -146,8 +146,9 @@ class configmanager(object):
                          help="specify the TCP IP address for the NETRPC protocol")
         group.add_option("--netrpc-port", dest="netrpc_port", my_default=8070,
                          help="specify the TCP port for the NETRPC protocol", type="int")
-        group.add_option("--no-netrpc", dest="netrpc", action="store_false", my_default=True,
-                         help="disable the NETRPC protocol")
+        # Needed a few day for runbot and saas
+        group.add_option("--no-netrpc", dest="netrpc", action="store_false", my_default=False, help="disable the NETRPC protocol")
+        group.add_option("--netrpc", dest="netrpc", action="store_true", my_default=False, help="enable the NETRPC protocol")
         parser.add_option_group(group)
 
         # WEB

@@ -52,7 +52,7 @@ def cron_runner(number):
                 if not acquired:
                     break
 
-def start_master_thread():
+def start_service():
     """ Start the above runner function in a daemon thread.
 
     The thread is a typical daemon thread: it will never quit and must be
@@ -63,9 +63,12 @@ def start_master_thread():
     for i in range(openerp.tools.config['max_cron_threads']):
         def target():
             cron_runner(i)
-        t = threading.Thread(target=target, name="openerp.service.cron.cron_runner%d" % i)
+        t = threading.Thread(target=target, name="openerp.service.cron.cron%d" % i)
         t.setDaemon(True)
         t.start()
         _logger.debug("cron%d started!" % i)
+
+def stop_service():
+    pass
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -240,15 +240,7 @@ class RegistryManager(object):
 
     @classmethod
     def delete(cls, db_name):
-        """Delete the registry linked to a given database.
-
-        This also cleans the associated caches. For good measure this also
-        cancels the associated cron job. But please note that the cron job can
-        be running and take some time before ending, and that you should not
-        remove a registry if it can still be used by some thread. So it might
-        be necessary to call yourself openerp.cron.Agent.cancel(db_name) and
-        and join (i.e. wait for) the thread.
-        """
+        """Delete the registry linked to a given database.  """
         with cls.registries_lock:
             if db_name in cls.registries:
                 cls.registries[db_name].clear_caches()
