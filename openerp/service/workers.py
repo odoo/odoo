@@ -134,7 +134,7 @@ class Multicorn(object):
     def process_spawn(self):
         while len(self.workers_http) < self.population:
             self.worker_spawn(WorkerHTTP, self.workers_http)
-        while len(self.workers_cron) < 1: # config option ?
+        while len(self.workers_cron) < config['max_cron_threads']:
             self.worker_spawn(WorkerCron, self.workers_cron)
 
     def sleep(self):
@@ -354,8 +354,11 @@ class WorkerCron(Worker):
             db_names = openerp.netsvc.ExportService._services['db'].exp_list(True)
         for db_name in db_names:
             while True:
+                # acquired = openerp.addons.base.ir.ir_cron.ir_cron._acquire_job(db_name)
+                # TODO why isnt openerp.addons.base defined ?
+                import base
+                acquired = base.ir.ir_cron.ir_cron._acquire_job(db_name)
                 # TODO Each job should be considered as one request in multiprocessing
-                acquired = openerp.addons.base.ir.ir_cron.ir_cron._acquire_job(db_name)
                 if not acquired:
                     break
         self.request_count += 1
