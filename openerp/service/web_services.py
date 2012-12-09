@@ -159,6 +159,7 @@ class db(netsvc.ExportService):
 
     def exp_duplicate_database(self, db_original_name, db_name):
         _logger.info('Duplicate database `%s` to `%s`.', db_original_name, db_name)
+        sql_db.close_db(db_original_name)
         db = sql_db.db_connect('postgres')
         cr = db.cursor()
         try:
