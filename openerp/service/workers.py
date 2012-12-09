@@ -251,7 +251,7 @@ class Worker(object):
         # Reset the worker if it consumes too much memory (e.g. caused by a memory leak).
         rss, vms = psutil.Process(os.getpid()).get_memory_info()
         if vms > config['limit_memory_soft']:
-            _logger.info('Virtual memory consumption too high, rebooting the worker.')
+            _logger.info('Worker (%d) virtual memory limit (%s) reached.', self.pid, vms)
             self.alive = False # Commit suicide after the request.
 
         # VMS and RLIMIT_AS are the same thing: virtual memory, a.k.a. address space
@@ -262,7 +262,8 @@ class Worker(object):
         r = resource.getrusage(resource.RUSAGE_SELF)
         cpu_time = r.ru_utime + r.ru_stime
         def time_expired(n, stack):
-            _logger.info('CPU time limit exceeded.')
+            _logger.info('Worker (%d) CPU time limit (%s) reached.', config['limit_time_cpu'])
+            # We dont suicide in such case
             raise Exception('CPU time limit exceeded.')
         signal.signal(signal.SIGXCPU, time_expired)
         soft, hard = resource.getrlimit(resource.RLIMIT_CPU)
@@ -358,9 +359,9 @@ class WorkerCron(Worker):
                 # TODO why isnt openerp.addons.base defined ?
                 import base
                 acquired = base.ir.ir_cron.ir_cron._acquire_job(db_name)
-                # TODO Each job should be considered as one request in multiprocessing
                 if not acquired:
                     break
+        # TODO Each job should be considered as one request instead of each db
         self.request_count += 1
 
     def start(self):
