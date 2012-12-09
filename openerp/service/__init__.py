@@ -79,15 +79,12 @@ def start_services():
     """ Start all services including http, netrpc and cron """
     start_internal()
 
-    # Initialize the HTTP stack.
+    # Initialize the NETRPC server.
     netrpc_server.init_servers()
 
     # Start the main cron thread.
     if openerp.conf.max_cron_threads:
         openerp.cron.start_master_thread()
-
-    # Start the top-level servers threads (normally HTTP, HTTPS, and NETRPC).
-    openerp.netsvc.Server.startAll()
 
     # Start the WSGI server.
     openerp.service.wsgi_server.start_server()
@@ -97,7 +94,7 @@ def stop_services():
     # stop scheduling new jobs; we will have to wait for the jobs to complete below
     openerp.cron.cancel_all()
 
-    openerp.netsvc.Server.quitAll()
+    netrpc_server.Server.quitAll()
     openerp.service.wsgi_server.stop_server()
     _logger.info("Initiating shutdown")
     _logger.info("Hit CTRL-C again or send a second signal to force the shutdown.")
