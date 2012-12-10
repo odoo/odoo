@@ -362,6 +362,7 @@ class account_coda_import(osv.osv_memory):
                         'ref': line['ref'],
                         'sequence': line['sequence'],
                         'voucher_id': line['voucher_id'],
+                        'coda_account_number': line['counterpartyNumber'],
                     }
                     self.pool.get('account.bank.statement.line').create(cr, uid, data, context=context)
             if statement['coda_note'] != '':
