@@ -20,17 +20,17 @@
 ##############################################################################
 
 import datetime
-import math
-import openerp
-from osv import osv, fields
-from openerp import SUPERUSER_ID
-import re
-import tools
-from tools.translate import _
 import logging
-import pooler
-import pytz
 from lxml import etree
+import math
+import pytz
+import re
+
+import openerp
+from openerp import SUPERUSER_ID
+from openerp import pooler, tools
+from openerp.osv import osv, fields
+from openerp.tools.translate import _
 
 class format_address(object):
     def fields_view_get_address(self, cr, uid, arch, context={}):

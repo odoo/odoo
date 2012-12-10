@@ -19,10 +19,11 @@
 #
 ##############################################################################
 
-from osv import osv,fields
-from osv.orm import except_orm
 import pickle
-from tools.translate import _
+
+from openerp.osv import osv, fields
+from openerp.osv.orm import except_orm
+from openerp.tools.translate import _
 
 EXCLUDED_FIELDS = set((
     'report_sxw_content', 'report_rml_content', 'report_sxw', 'report_rml',

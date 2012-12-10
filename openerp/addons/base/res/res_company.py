@@ -19,14 +19,14 @@
 #
 ##############################################################################
 
-from osv import osv
-from osv import fields
 import os
-import tools
+
 import openerp
 from openerp import SUPERUSER_ID
-from tools.translate import _
-from tools.safe_eval import safe_eval as eval
+from openerp import tools
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+from openerp.tools.safe_eval import safe_eval as eval
 
 class multi_company_default(osv.osv):
     """

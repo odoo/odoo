@@ -20,11 +20,11 @@
 ##############################################################################
 
 import logging
-import time, os
-
-import netsvc
-import report,pooler,tools
+import time
 from operator import itemgetter
+import os
+
+from openerp import netsvc, pooler, report, tools
 
 _logger = logging.getLogger(__name__)
 

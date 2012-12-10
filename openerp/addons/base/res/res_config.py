@@ -18,14 +18,14 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import logging
 from operator import attrgetter, itemgetter
 
-from osv import osv, fields
-from tools.translate import _
-import netsvc
-from tools import ustr
-import pooler
+from openerp import netsvc, pooler
+from openerp.osv import osv, fields
+from openerp.tools import ustr
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 

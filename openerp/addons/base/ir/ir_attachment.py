@@ -21,9 +21,9 @@
 
 import itertools
 
-from osv import fields,osv
-from osv.orm import except_orm
-import tools
+from openerp import tools
+from openerp.osv import fields,osv
+from openerp.osv.orm import except_orm
 
 class ir_attachment(osv.osv):
     def check(self, cr, uid, ids, mode, context=None, values=None):

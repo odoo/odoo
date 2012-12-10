@@ -31,8 +31,7 @@ import re
 import smtplib
 import threading
 
-from osv import osv
-from osv import fields
+from openerp.osv import osv, fields
 from openerp.tools.translate import _
 from openerp.tools import html2text
 import openerp.tools as tools

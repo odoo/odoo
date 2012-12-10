@@ -22,17 +22,16 @@
 import logging
 import os
 import re
-import time
-import tools
-
-import netsvc
-from osv import fields,osv
-from report.report_sxw import report_sxw, report_rml
-from tools.config import config
-from tools.safe_eval import safe_eval as eval
-from tools.translate import _
 from socket import gethostname
+import time
+
 from openerp import SUPERUSER_ID
+from openerp import netsvc, tools
+from openerp.osv import fields, osv
+from openerp.report.report_sxw import report_sxw, report_rml
+from openerp.tools.config import config
+from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 

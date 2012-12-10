@@ -25,17 +25,16 @@ from functools import partial
 import logging
 from lxml import etree
 from lxml.builder import E
-import netsvc
-from openerp import SUPERUSER_ID
-import openerp
-import openerp.exceptions
-from osv import fields,osv
-from osv.orm import browse_record
-import pooler
 import random
-from service import security
-import tools
-from tools.translate import _
+
+import openerp
+from openerp import SUPERUSER_ID
+from openerp import netsvc, pooler, tools
+import openerp.exceptions
+from openerp.osv import fields,osv
+from openerp.osv.orm import browse_record
+from openerp.service import security
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
