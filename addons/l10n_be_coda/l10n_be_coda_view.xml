@@ -2,7 +2,7 @@
 <openerp>
     <data>
     	<record id="view_bank_statement_coda_form" model="ir.ui.view">
-            <field name="name">account.bank.statement.form</field>
+            <field name="name">account.bank.statement.coda.form</field>
             <field name="model">account.bank.statement</field>
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
@@ -11,6 +11,18 @@
                     	<field name="coda_note"/>
                 	</page>
                 </page>
+            </field>
+        </record>
+        <record id="view_res_bank_coda_form" model="ir.ui.view">
+            <field name="name">res.partner.bank.coda.form</field>
+            <field name="model">res.partner.bank</field>
+            <field name="inherit_id" ref="account.view_partner_bank_form_inherit"/>
+            <field name="arch" type="xml">
+            	<group name="accounting" position="after">
+            		<group string="CODA Configuration" name="coda_bank_configuration">
+                    	<field name="balance_start_enforce"/>
+                	</group>
+                </group>
             </field>
         </record>
     	<record id="view_bank_statement_line_coda_form" model="ir.ui.view">
