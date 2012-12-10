@@ -346,8 +346,8 @@ class account_coda_import(osv.osv_memory):
                             line['account'] = statement['journal_id'].default_debit_account_id.id
                         else:
                             line['account'] = statement['journal_id'].default_credit_account_id.id
-
-                    note.append(_('Communication') + ': ' + line['communication'])
+                    if 'communication' in line and line['communication'] != '':
+                        note.append(_('Communication') + ': ' + line['communication'])
                     if 'voucher_id' not in line:
                         line['voucher_id'] = None
                     data = {
