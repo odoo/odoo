@@ -16,8 +16,15 @@ openerp.testing.section('eval.types', {
         strictEqual(
             py.eval("time.strftime('%Y-%m-%d %H:%M:%S')", context),
             _.str.sprintf('%04d-%02d-%02d %02d:%02d:%02d',
-                d.getFullYear(), d.getMonth() + 1, d.getDate(),
-                d.getHours(), d.getMinutes(), d.getSeconds()));
+                d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate(),
+                d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds()));
+    });
+    test('context_today', function (instance) {
+        var d = new Date();
+        var context = instance.web.pyeval.context();
+        strictEqual(
+            py.eval("context_today().strftime('%Y-%m-%d')", context),
+            String(_.str.sprintf('%04d-%02d-%02d', d.getFullYear(), d.getMonth() + 1, d.getDate())));
     });
     // Port from pypy/lib_pypy/test_datetime.py
     var makeEq = function (instance, c2) {
@@ -475,11 +482,11 @@ openerp.testing.section('eval.edc.nonliterals', {
         });
     });
     test('date', {asserts: 1}, function (instance) {
-        var d = "[('state','!=','cancel'),('opening_date','>',datetime.date.today().strftime('%Y-%m-%d'))]";
+        var d = "[('state','!=','cancel'),('opening_date','>',context_today().strftime('%Y-%m-%d'))]";
         return instance.edc([d]).then(function (result) {
             var d = new Date();
             var today = _.str.sprintf("%04d-%02d-%02d",
-                d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
+                d.getFullYear(), d.getMonth() + 1, d.getDate());
             deepEqual(result.domain, [
                 ['state', '!=', 'cancel'],
                 ['opening_date', '>', today]
@@ -487,14 +494,14 @@ openerp.testing.section('eval.edc.nonliterals', {
         });
     });
     test('delta', {asserts: 1}, function (instance) {
-        var d = "[('type','=','in'),('day','<=', time.strftime('%Y-%m-%d')),('day','>',(datetime.date.today()-datetime.timedelta(days=15)).strftime('%Y-%m-%d'))]";
+        var d = "[('type','=','in'),('day','<=', time.strftime('%Y-%m-%d')),('day','>',(context_today()-datetime.timedelta(days=15)).strftime('%Y-%m-%d'))]";
         return instance.edc([d]).then(function (result) {
             var d = new Date();
             var today = _.str.sprintf("%04d-%02d-%02d",
-                d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
+                d.getFullYear(), d.getMonth() + 1, d.getDate());
             d.setDate(d.getDate() - 15);
             var ago_15_d = _.str.sprintf("%04d-%02d-%02d",
-                d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
+                d.getFullYear(), d.getMonth() + 1, d.getDate());
             deepEqual(result.domain, [
                 ['type', '=', 'in'],
                 ['day', '<=', today],

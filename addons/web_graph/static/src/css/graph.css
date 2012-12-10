@@ -42,7 +42,7 @@
     position: relative;
     display: block;
     padding: 2px 4px 2px 20px;
-    line-height: 14px;
+    line-height: 12px;
     color: #4c4c4c;
     text-decoration: none;
 }
@@ -59,10 +59,12 @@
 .openerp .open .graph-dropdown {
     display: block;
 }
-.graph-menu {
-    padding: 3px;
+
+.openerp .graph-menu {
+    padding: 0;
+    margin: 0;
 }
-.graph-menu .active:before {
+.openerp .graph-menu .active:before {
     content: "W";
     font-family: "entypoRegular" !important;
     font-size: 24px;
@@ -72,7 +74,7 @@
     left: 4px;
     top: -2px;
 }
-.graph-menu li {
-    padding: 2px;
-    margin-left: 10px;
+.openerp .graph-menu li {
+    padding: 0;
+    list-style-type: none;
 }

@@ -800,10 +800,18 @@ instance.web.client_actions.add("change_password", "instance.web.ChangePassword"
 instance.web.Menu =  instance.web.Widget.extend({
     template: 'Menu',
     init: function() {
+        var self = this;
         this._super.apply(this, arguments);
         this.has_been_loaded = $.Deferred();
         this.maximum_visible_links = 'auto'; // # of menu to show. 0 = do not crop, 'auto' = algo
         this.data = {data:{children:[]}};
+        this.on("menu_loaded", this, function (e) {
+            // launch the fetch of needaction counters, asynchronous
+            this.rpc("/web/menu/load_needaction", {menu_ids: false}).done(function(r) {
+                self.on_needaction_loaded(r);
+            });
+        });
+        
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -823,7 +831,7 @@ instance.web.Menu =  instance.web.Widget.extend({
         this.renderElement();
         this.limit_entries();
         // Hide toplevel item if there is only one
-        var $toplevel = this.$("li")
+        var $toplevel = this.$("li");
         if($toplevel.length == 1) {
             $toplevel.hide();
         }
@@ -836,6 +844,17 @@ instance.web.Menu =  instance.web.Widget.extend({
         }
         this.trigger('menu_loaded', data);
         this.has_been_loaded.resolve();
+    },
+    on_needaction_loaded: function(data) {
+        var self = this;
+        this.needaction_data = data;
+        _.each(this.needaction_data.data, function (item, menu_id) {
+            var $item = self.$secondary_menus.find('a[data-menu="' + menu_id + '"]');
+            $item.remove('oe_menu_counter');
+            if (item.needaction_counter && item.needaction_counter > 0) {
+                $item.append(QWeb.render("Menu.needaction_counter", { widget : item }));
+            }
+        });
     },
     limit_entries: function() {
         var maximum_visible_links = this.maximum_visible_links;
@@ -1107,7 +1126,6 @@ instance.web.WebClient = instance.web.Client.extend({
     start: function() {
         var self = this;
         return $.when(this._super()).then(function() {
-            self.$(".oe_logo").attr("href", $.param.fragment("" + window.location, "", 2).slice(0, -1));
             if (jQuery.param !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined) {
                 $("body").addClass("kitten-mode-activated");
                 if ($.blockUI) {
@@ -1168,26 +1186,32 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     check_timezone: function() {
         var self = this;
-        var user_offset = instance.session.user_context.tz_offset;
-        var offset = -(new Date().getTimezoneOffset());
-        // _.str.sprintf()'s zero front padding is buggy with signed decimals, so doing it manually
-        var browser_offset = (offset < 0) ? "-" : "+";
-        browser_offset += _.str.sprintf("%02d", Math.abs(offset / 60));
-        browser_offset += _.str.sprintf("%02d", Math.abs(offset % 60));
-        if (browser_offset !== user_offset) {
-            var notification = this.do_warn(_t("Timezone"), QWeb.render('WebClient.timezone_notification', {
-                user_timezone: instance.session.user_context.tz || 'UTC',
-                user_offset: user_offset,
-                browser_offset: browser_offset,
-            }), true);
-            notification.element.find('.oe_webclient_timezone_notification').on('click', function() {
-                notification.close();
-            }).find('a').on('click', function() {
-                notification.close();
-                self.user_menu.on_menu_settings();
-                return false;
-            });
-        }
+        return new instance.web.Model('res.users').call('read', [[this.session.uid], ['tz_offset']]).then(function(result) {
+            var user_offset = result[0]['tz_offset'];
+            var offset = -(new Date().getTimezoneOffset());
+            // _.str.sprintf()'s zero front padding is buggy with signed decimals, so doing it manually
+            var browser_offset = (offset < 0) ? "-" : "+";
+            browser_offset += _.str.sprintf("%02d", Math.abs(offset / 60));
+            browser_offset += _.str.sprintf("%02d", Math.abs(offset % 60));
+            if (browser_offset !== user_offset) {
+                var $icon = $(QWeb.render('WebClient.timezone_systray'));
+                $icon.on('click', function() {
+                    var notification = self.do_warn(_t("Timezone mismatch"), QWeb.render('WebClient.timezone_notification', {
+                        user_timezone: instance.session.user_context.tz || 'UTC',
+                        user_offset: user_offset,
+                        browser_offset: browser_offset,
+                    }), true);
+                    notification.element.find('.oe_webclient_timezone_notification').on('click', function() {
+                        notification.close();
+                    }).find('a').on('click', function() {
+                        notification.close();
+                        self.user_menu.on_menu_settings();
+                        return false;
+                    });
+                });
+                $icon.appendTo(self.$('.oe_systray'));
+            }
+        });
     },
     destroy_content: function() {
         _.each(_.clone(this.getChildren()), function(el) {

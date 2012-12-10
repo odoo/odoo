@@ -228,6 +228,7 @@ QWeb2.Engine = (function() {
                     }
                     if (name) {
                         this.templates[name] = node;
+                        this.compiled_templates[name] = null;
                     } else if (extend) {
                         delete(this.compiled_templates[extend]);
                         if (this.extend_templates[extend]) {

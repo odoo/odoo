@@ -922,6 +922,10 @@ class Menu(openerpweb.Controller):
         return {'data': self.do_load(req)}
 
     @openerpweb.jsonrequest
+    def load_needaction(self, req, menu_ids):
+        return {'data': self.do_load_needaction(req, menu_ids)}
+
+    @openerpweb.jsonrequest
     def get_user_roots(self, req):
         return self.do_get_user_roots(req)
 
@@ -959,7 +963,7 @@ class Menu(openerpweb.Controller):
         Menus = req.session.model('ir.ui.menu')
 
         fields = ['name', 'sequence', 'parent_id', 'action',
-                  'needaction_enabled', 'needaction_counter']
+                  'needaction_enabled']
         menu_roots = Menus.read(self.do_get_user_roots(req), fields, req.context)
         menu_root = {
             'id': False,
@@ -995,6 +999,20 @@ class Menu(openerpweb.Controller):
                 key=operator.itemgetter('sequence'))
 
         return menu_root
+
+    def do_load_needaction(self, req, menu_ids=False):
+        """ Loads needaction counters for all or some specific menu ids.
+
+            :return: needaction data
+            :rtype: dict(menu_id: {'needaction_enabled': boolean, 'needaction_counter': int})
+        """
+        Menus = req.session.model('ir.ui.menu')
+
+        if menu_ids == False:
+            menu_ids = Menus.search([('needaction_enabled', '=', True)], context=req.context)
+
+        menu_needaction_data = Menus.get_needaction_data(menu_ids, req.context)
+        return menu_needaction_data
 
     @openerpweb.jsonrequest
     def action(self, req, menu_id):
@@ -1119,41 +1137,6 @@ class DataSet(openerpweb.Controller):
 class View(openerpweb.Controller):
     _cp_path = "/web/view"
 
-    def fields_view_get(self, req, model, view_id, view_type,
-                        transform=True, toolbar=False, submenu=False):
-        Model = req.session.model(model)
-        fvg = Model.fields_view_get(view_id, view_type, req.context, toolbar, submenu)
-        # todo fme?: check that we should pass the evaluated context here
-        self.process_view(req.session, fvg, req.context, transform, (view_type == 'kanban'))
-        return fvg
-
-    def process_view(self, session, fvg, context, transform, preserve_whitespaces=False):
-        # depending on how it feels, xmlrpclib.ServerProxy can translate
-        # XML-RPC strings to ``str`` or ``unicode``. ElementTree does not
-        # enjoy unicode strings which can not be trivially converted to
-        # strings, and it blows up during parsing.
-
-        # So ensure we fix this retardation by converting view xml back to
-        # bit strings.
-        if isinstance(fvg['arch'], unicode):
-            arch = fvg['arch'].encode('utf-8')
-        else:
-            arch = fvg['arch']
-        fvg['arch_string'] = arch
-
-        fvg['arch'] = xml2json_from_elementtree(
-            ElementTree.fromstring(arch), preserve_whitespaces)
-
-        if 'id' in fvg['fields']:
-            # Special case for id's
-            id_field = fvg['fields']['id']
-            id_field['original_type'] = id_field['type']
-            id_field['type'] = 'id'
-
-        for field in fvg['fields'].itervalues():
-            for view in field.get("views", {}).itervalues():
-                self.process_view(session, view, None, transform)
-
     @openerpweb.jsonrequest
     def add_custom(self, req, view_id, arch):
         CustomView = req.session.model('ir.ui.view.custom')
@@ -1176,10 +1159,6 @@ class View(openerpweb.Controller):
                 CustomView.unlink([vcustom[0]], req.context)
             return {'result': True}
         return {'result': False}
-
-    @openerpweb.jsonrequest
-    def load(self, req, model, view_id, view_type, toolbar=False):
-        return self.fields_view_get(req, model, view_id, view_type, toolbar=toolbar)
 
 class TreeView(View):
     _cp_path = "/web/treeview"
