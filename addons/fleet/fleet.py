@@ -468,10 +468,13 @@ class fleet_vehicle_log_fuel(osv.Model):
     def on_change_vehicle(self, cr, uid, ids, vehicle_id, context=None):
         if not vehicle_id:
             return {}
-        odometer_unit = self.pool.get('fleet.vehicle').browse(cr, uid, vehicle_id, context=context).odometer_unit
+        vehicle = self.pool.get('fleet.vehicle').browse(cr, uid, vehicle_id, context=context)
+        odometer_unit = vehicle.odometer_unit
+        driver = vehicle.driver_id.id
         return {
             'value': {
                 'odometer_unit': odometer_unit,
+                'purchaser_id': driver,
             }
         }
 
@@ -546,7 +549,6 @@ class fleet_vehicle_log_fuel(osv.Model):
         'cost_amount': fields.related('cost_id', 'amount', string='Amount', type='float', store=True), #we need to keep this field as a related with store=True because the graph view doesn't support (1) to address fields from inherited table and (2) fields that aren't stored in database
     }
     _defaults = {
-        'purchaser_id': lambda self, cr, uid, ctx: uid,
         'date': fields.date.context_today,
         'cost_subtype_id': _get_default_service_type,
         'cost_type': 'fuel',
@@ -558,10 +560,13 @@ class fleet_vehicle_log_services(osv.Model):
     def on_change_vehicle(self, cr, uid, ids, vehicle_id, context=None):
         if not vehicle_id:
             return {}
-        odometer_unit = self.pool.get('fleet.vehicle').browse(cr, uid, vehicle_id, context=context).odometer_unit
+        vehicle = self.pool.get('fleet.vehicle').browse(cr, uid, vehicle_id, context=context)
+        odometer_unit = vehicle.odometer_unit
+        driver = vehicle.driver_id.id
         return {
             'value': {
                 'odometer_unit': odometer_unit,
+                'purchaser_id': driver,
             }
         }
 
@@ -583,7 +588,6 @@ class fleet_vehicle_log_services(osv.Model):
         'notes': fields.text('Notes'),
     }
     _defaults = {
-        'purchaser_id': lambda self, cr, uid, ctx: uid,
         'date': fields.date.context_today,
         'cost_subtype_id': _get_default_service_type,
         'cost_type': 'services'
