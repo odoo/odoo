@@ -28,12 +28,6 @@ from openerp.osv import osv, orm, fields
 from openerp.tools import html_email_clean
 from openerp.tools.translate import _
 
-# import for downloading attachments
-import werkzeug.wrappers
-import werkzeug.exceptions
-import base64
-import urllib2
-
 _logger = logging.getLogger(__name__)
 
 try:
