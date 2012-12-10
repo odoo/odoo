@@ -57,18 +57,17 @@ class Controller(openerp.addons.web.http.Controller):
     def signup(self, req, dbname, token, name, login, password):
         """ sign up a user (new or existing)"""
         values = {'name': name, 'login': login, 'password': password}
-        return self._signup_with_values(req, dbname, token, values)
+        try:
+            self._signup_with_values(req, dbname, token, values)
+        except SignupError, e:
+            return {'error': openerp.tools.exception_to_unicode(e)}
+        return {}
 
     def _signup_with_values(self, req, dbname, token, values):
         registry = RegistryManager.get(dbname)
         with registry.cursor() as cr:
             res_users = registry.get('res.users')
-            try:
-                res_users.signup(cr, openerp.SUPERUSER_ID, values, token)
-            except SignupError, e:
-                return {'error': openerp.tools.exception_to_unicode(e)}
-            cr.commit()
-        return {}
+            res_users.signup(cr, openerp.SUPERUSER_ID, values, token)
 
     @openerp.addons.web.http.httprequest
     def reset_password(self, req, dbname, login):

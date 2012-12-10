@@ -9,7 +9,7 @@
             <field name="model">account.voucher</field>
             <field name="inherit_id" ref="account_voucher.view_vendor_payment_form" />
             <field name="arch" type="xml">
-                <field name="journal_id" position="after">
+                <field name="amount" position="after">
                     <newline/>
                     <field name="allow_check" invisible="1"/>
                     <field name="amount_in_word" attrs="{'invisible':[('allow_check','!=',1)]}" nolabel="1" colspan="6"/>
