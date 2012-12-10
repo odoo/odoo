@@ -67,8 +67,12 @@ class crm_meeting(base_state, osv.Model):
     }
 
     def message_get_subscription_data(self, cr, uid, ids, context=None):
-        real_ids = [base_calendar.base_calendar_id2real_id(virtual_id) for virtual_id in ids]
-        return super(crm_meeting, self).message_get_subscription_data(cr, uid, real_ids, context=context)
+        res = {}
+        for virtual_id in ids:
+            real_id = base_calendar.base_calendar_id2real_id(virtual_id)
+            result = super(crm_meeting, self).message_get_subscription_data(cr, uid, [real_id], context=context)
+            res[virtual_id] = result[real_id]
+        return res
 
     def copy(self, cr, uid, id, default=None, context=None):
         default = default or {}
@@ -119,41 +123,39 @@ class crm_meeting(base_state, osv.Model):
 
     def case_close_send_note(self, cr, uid, ids, context=None):
         return self.message_post(cr, uid, ids, body=_("Meeting <b>completed</b>."), context=context)
-    
+
+    def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification',
+                        subtype=None, parent_id=False, attachments=None, context=None, **kwargs):
+        cal_event_pool = self.pool.get('calendar.event')
+        if isinstance(thread_id, str):
+            thread_id = cal_event_pool.remove_virtual_id(thread_id)
+        return super(crm_meeting, self).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, **kwargs)
+
 class mail_message(osv.osv):
     _inherit = "mail.message"
-    
+
     def search(self, cr, uid, args, offset=0, limit=0, order=None, context=None, count=False):
-         cal_event_pool = self.pool.get('calendar.event')
-         for arg in args:
-             if arg[0] == "res_id":
-                 if isinstance(arg[2], (str)):
-                     args[1][2] = cal_event_pool.remove_virtual_id(arg[2])
-         res = super(mail_message, self).search(cr, uid, args, offset, limit, order, context, count=False)
-         if count:
-             return len(res)
-         elif limit:
-             return res[offset:offset+limit]
-         else:
-             return res
-        
-mail_message()
+        '''
+        convert the search on real ids in the case it was asked on virtual ids, then call super()
+        '''
+        cal_event_pool = self.pool.get('calendar.event')
+        for index in range(len(args)):
+            if args[index][0] == "res_id":
+                if isinstance(args[index][2], (str)):
+                    args[index][2] = cal_event_pool.remove_virtual_id(args[index][2])
+        return super(mail_message, self).search(cr, uid, args, offset, limit, order, context, count=False)
 
 class ir_attachment(osv.osv):
     _inherit = "ir.attachment"
 
     def search(self, cr, uid, args, offset=0, limit=0, order=None, context=None, count=False):
-         cal_event_pool = self.pool.get('calendar.event')
-         for arg in args:
-             if arg[0] == "res_id":
-                 if isinstance(arg[2], (str)):
-                     args[1][2] = cal_event_pool.remove_virtual_id(arg[2])
-         res = super(ir_attachment, self).search(cr, uid, args, offset, limit, order, context, count=False)
-         if count:
-             return len(res)
-         elif limit:
-             return res[offset:offset+limit]
-         else:
-             return res
-            
-    
+        '''
+        convert the search on real ids in the case it was asked on virtual ids, then call super()
+        '''
+        cal_event_pool = self.pool.get('calendar.event')
+        for index in range(len(args)):
+            if args[index][0] == "res_id":
+                if isinstance(args[index][2], (str)):
+                    args[index][2] = cal_event_pool.remove_virtual_id(args[index][2])
+        return super(ir_attachment, self).search(cr, uid, args, offset, limit, order, context, count=False)
+
