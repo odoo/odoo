@@ -165,7 +165,7 @@
                 </header>
                 <sheet>
                     <label for="employee_id" class="oe_edit_only"/>
-                    <h1><field name="employee_id" attrs="{'readonly': [('state', '=', 'done')]}" on_change="onchange_employee_id(employee_id)" class="oe_inline"/>, <field name="date" class="oe_inline"/></h1>
+                    <h1><field name="employee_id" attrs="{'readonly': [('state', '=', 'done')]}" on_change="onchange_employee_id(employee_id)" class="oe_inline"/>, <field name="date" class="oe_inline" attrs="{'readonly': [('state', '=', 'done')]}"/></h1>
                     <label for="plan_id" class="oe_edit_only"/>
                     <h2><field name="plan_id" attrs="{'readonly': [('state', '=', 'done')]}"/></h2>
                     <group>
