@@ -67,14 +67,9 @@ class crm_meeting(base_state, osv.Model):
     }
 
     def message_get_subscription_data(self, cr, uid, ids, context=None):
-        res = {}
-        for virtual_id in ids:
-            real_id = base_calendar.base_calendar_id2real_id(virtual_id)
-            result = super(crm_meeting, self).message_get_subscription_data(cr, uid, [real_id], context=context)
-            res[virtual_id] = result[real_id]
-        return res
+        real_ids = [base_calendar.base_calendar_id2real_id(virtual_id) for virtual_id in ids]
+        return super(crm_meeting, self).message_get_subscription_data(cr, uid, real_ids, context=context)
 
-    
     def copy(self, cr, uid, id, default=None, context=None):
         default = default or {}
         default['attendee_ids'] = False
