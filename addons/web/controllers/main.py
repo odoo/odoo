@@ -524,19 +524,9 @@ html_template = """<!DOCTYPE html>
         <!--[if lte IE 8]>
         <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
         <script>
-            var test = function() {
-                CFInstall.check({
-                    mode: "overlay"
-                });
-            };
-            if (window.localStorage && false) {
-                if (! localStorage.getItem("hasShownGFramePopup")) {
-                    test();
-                    localStorage.setItem("hasShownGFramePopup", true);
-                }
-            } else {
-                test();
-            }
+            CFInstall.check({
+                mode: "overlay"
+            });
         </script>
         <![endif]-->
     </body>
