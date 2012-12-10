@@ -63,12 +63,14 @@ class mail_notification(osv.Model):
         'partner_id': fields.many2one('res.partner', string='Contact',
                         ondelete='cascade', required=True, select=1),
         'read': fields.boolean('Read', select=1),
+        'date': fields.date('Date'),
         'message_id': fields.many2one('mail.message', string='Message',
                         ondelete='cascade', required=True, select=1),
     }
 
     _defaults = {
         'read': False,
+        'date': lambda *a: fields.datetime.now(),
     }
 
     def init(self, cr):
