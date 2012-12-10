@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Business Applications
-#    Copyright (c) 2011 OpenERP S.A. <http://openerp.com>
+#    Copyright (c) 2011-2012 OpenERP S.A. <http://openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv, orm
+from openerp.osv import osv
 from edi import EDIMixin
 
 INVOICE_LINE_EDI_STRUCT = {
@@ -30,7 +30,6 @@ INVOICE_LINE_EDI_STRUCT = {
     'price_unit': True,
     'quantity': True,
     'discount': True,
-    'note': True,
 
     # fields used for web preview only - discarded on import
     'price_subtotal': True,
@@ -75,7 +74,7 @@ class account_invoice(osv.osv, EDIMixin):
         """Exports a supplier or customer invoice"""
         edi_struct = dict(edi_struct or INVOICE_EDI_STRUCT)
         res_company = self.pool.get('res.company')
-        res_partner_address = self.pool.get('res.partner.address')
+        res_partner = self.pool.get('res.partner')
         edi_doc_list = []
         for invoice in records:
             # generate the main report
@@ -84,8 +83,7 @@ class account_invoice(osv.osv, EDIMixin):
             edi_doc.update({
                     'company_address': res_company.edi_export_address(cr, uid, invoice.company_id, context=context),
                     'company_paypal_account': invoice.company_id.paypal_account,
-                    'partner_address': res_partner_address.edi_export(cr, uid, [invoice.address_invoice_id], context=context)[0],
-
+                    'partner_address': res_partner.edi_export(cr, uid, [invoice.partner_id], context=context)[0],
                     'currency': self.pool.get('res.currency').edi_export(cr, uid, [invoice.currency_id], context=context)[0],
                     'partner_ref': invoice.reference or False,
             })
@@ -102,8 +100,8 @@ class account_invoice(osv.osv, EDIMixin):
         return tax_account
 
     def _edi_invoice_account(self, cr, uid, partner_id, invoice_type, context=None):
-        partner_pool = self.pool.get('res.partner')
-        partner = partner_pool.browse(cr, uid, partner_id, context=context)
+        res_partner = self.pool.get('res.partner')
+        partner = res_partner.browse(cr, uid, partner_id, context=context)
         if invoice_type in ('out_invoice', 'out_refund'):
             invoice_account = partner.property_account_receivable
         else:
@@ -125,35 +123,32 @@ class account_invoice(osv.osv, EDIMixin):
         #       the desired company among the user's allowed companies
 
         self._edi_requires_attributes(('company_id','company_address','type'), edi_document)
-        res_partner_address = self.pool.get('res.partner.address')
         res_partner = self.pool.get('res.partner')
 
-        # imported company = new partner
-        src_company_id, src_company_name = edi_document.pop('company_id')
-        partner_id = self.edi_import_relation(cr, uid, 'res.partner', src_company_name,
-                                              src_company_id, context=context)
-        invoice_type = edi_document['type']
-        partner_value = {}
-        if invoice_type in ('out_invoice', 'out_refund'):
-            partner_value.update({'customer': True})
-        if invoice_type in ('in_invoice', 'in_refund'):
-            partner_value.update({'supplier': True})
-        res_partner.write(cr, uid, [partner_id], partner_value, context=context)
+        xid, company_name = edi_document.pop('company_id')
+        # Retrofit address info into a unified partner info (changed in v7 - used to keep them separate)
+        company_address_edi = edi_document.pop('company_address')
+        company_address_edi['name'] = company_name
+        company_address_edi['is_company'] = True
+        company_address_edi['__import_model'] = 'res.partner'
+        company_address_edi['__id'] = xid  # override address ID, as of v7 they should be the same anyway
+        if company_address_edi.get('logo'):
+            company_address_edi['image'] = company_address_edi.pop('logo')
 
-        # imported company_address = new partner address
-        address_info = edi_document.pop('company_address')
-        address_info['partner_id'] = (src_company_id, src_company_name)
-        address_info['type'] = 'invoice'
-        address_id = res_partner_address.edi_import(cr, uid, address_info, context=context)
+        invoice_type = edi_document['type']
+        if invoice_type.startswith('out_'):
+            company_address_edi['customer'] = True
+        else:
+            company_address_edi['supplier'] = True
+        partner_id = res_partner.edi_import(cr, uid, company_address_edi, context=context)
 
         # modify edi_document to refer to new partner
-        partner_address = res_partner_address.browse(cr, uid, address_id, context=context)
-        edi_document['partner_id'] = (src_company_id, src_company_name)
-        edi_document.pop('partner_address', False) # ignored
-        edi_document['address_invoice_id'] = self.edi_m2o(cr, uid, partner_address, context=context)
+        partner = res_partner.browse(cr, uid, partner_id, context=context)
+        partner_edi_m2o = self.edi_m2o(cr, uid, partner, context=context)
+        edi_document['partner_id'] = partner_edi_m2o
+        edi_document.pop('partner_address', None) # ignored, that's supposed to be our own address!
 
         return partner_id
-
 
     def edi_import(self, cr, uid, edi_document, context=None):
         """ During import, invoices will import the company that is provided in the invoice as
@@ -193,7 +188,7 @@ class account_invoice(osv.osv, EDIMixin):
         invoice_type = invoice_type.startswith('in_') and invoice_type.replace('in_','out_') or invoice_type.replace('out_','in_')
         edi_document['type'] = invoice_type
 
-        #import company as a new partner
+        # import company as a new partner
         partner_id = self._edi_import_company(cr, uid, edi_document, context=context)
 
         # Set Account

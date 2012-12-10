@@ -6,18 +6,23 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2011-04-01 17:50+0000\n"
 "Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:48+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:43+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
 "X-Poedit-SourceCharset: utf-8\n"
+
+#. module: stock_location
+#: help:product.pulled.flow,company_id:0
+msgid "Is used to know to which company the pickings and moves belong."
+msgstr ""
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -46,11 +51,6 @@ msgid "Automatic No Step Added"
 msgstr "Βήμα Αυτόματης Αρίιθμησης προστέθηκε"
 
 #. module: stock_location
-#: view:product.product:0
-msgid "Parameters"
-msgstr "Παράμετροι"
-
-#. module: stock_location
 #: field:product.pulled.flow,location_src_id:0
 #: field:stock.location.path,location_from_id:0
 msgid "Source Location"
@@ -65,11 +65,6 @@ msgstr ""
 #: model:ir.model,name:stock_location.model_product_pulled_flow
 #: field:product.product,flow_pull_ids:0
 msgid "Pulled Flows"
-msgstr ""
-
-#. module: stock_location
-#: constraint:stock.move:0
-msgid "You must assign a production lot for this product"
 msgstr ""
 
 #. module: stock_location
@@ -156,11 +151,6 @@ msgid "Dispatch Zone"
 msgstr ""
 
 #. module: stock_location
-#: model:ir.model,name:stock_location.model_stock_move
-msgid "Stock Move"
-msgstr "Κίνηση Αποθέματος"
-
-#. module: stock_location
 #: view:product.product:0
 msgid "Pulled flows"
 msgstr ""
@@ -172,9 +162,9 @@ msgid "Company"
 msgstr "Εταιρεία"
 
 #. module: stock_location
-#: view:product.product:0
-msgid "Logistics Flows"
-msgstr "Ροές Εφοδιαστικής"
+#: model:ir.model,name:stock_location.model_stock_move
+msgid "Stock Move"
+msgstr "Κίνηση Αποθέματος"
 
 #. module: stock_location
 #: help:stock.move,cancel_cascade:0
@@ -195,6 +185,12 @@ msgstr "Προς Παραγγελία"
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Stock"
 msgstr "Προς Αποθήκευση"
+
+#. module: stock_location
+#: code:addons/stock_location/procurement_pull.py:118
+#, python-format
+msgid "Pulled from another location."
+msgstr ""
 
 #. module: stock_location
 #: field:product.pulled.flow,partner_address_id:0
@@ -223,11 +219,6 @@ msgid "Type of Procurement"
 msgstr "Τύπος Προμήθειας"
 
 #. module: stock_location
-#: help:product.pulled.flow,company_id:0
-msgid "Is used to know to which company belong packings and moves"
-msgstr ""
-
-#. module: stock_location
 #: field:product.pulled.flow,name:0
 msgid "Name"
 msgstr "Όνομα"
@@ -241,11 +232,6 @@ msgstr ""
 "Τοποθεσίες"
 
 #. module: stock_location
-#: constraint:stock.move:0
-msgid "You can not move products from or to a location of the type view."
-msgstr ""
-
-#. module: stock_location
 #: selection:stock.location.path,auto:0
 msgid "Manual Operation"
 msgstr "Μη Αυτοματοποιημένη Διαδικασία"
@@ -255,11 +241,6 @@ msgstr "Μη Αυτοματοποιημένη Διαδικασία"
 #: field:product.pulled.flow,product_id:0
 msgid "Product"
 msgstr "Προϊόν"
-
-#. module: stock_location
-#: field:product.pulled.flow,procure_method:0
-msgid "Procure Method"
-msgstr "Μέθοδος Προμήθειας"
 
 #. module: stock_location
 #: field:product.pulled.flow,picking_type:0
@@ -287,12 +268,6 @@ msgstr ""
 #: field:stock.location.path,product_id:0
 msgid "Products"
 msgstr "Προϊόντα"
-
-#. module: stock_location
-#: code:addons/stock_location/procurement_pull.py:118
-#, python-format
-msgid "Pulled from another location via procurement %d"
-msgstr ""
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.stock_location_qualitytest0
@@ -332,12 +307,6 @@ msgid ""
 msgstr ""
 
 #. module: stock_location
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product"
-msgstr ""
-"Προσπαθείτε να αντιστοιχίσετε μια παρτίδα που δεν είναι από το ίδιο προϊόν"
-
-#. module: stock_location
 #: model:ir.model,name:stock_location.model_procurement_order
 msgid "Procurement"
 msgstr "Προμήθεια"
@@ -366,9 +335,9 @@ msgid "Action Type"
 msgstr "Τύπος Ενέργειας"
 
 #. module: stock_location
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Σφάλμα: Λανθασμένος κωδικός ΕΑΝ"
+#: field:product.pulled.flow,procure_method:0
+msgid "Procure Method"
+msgstr "Μέθοδος Προμήθειας"
 
 #. module: stock_location
 #: help:product.pulled.flow,picking_type:0
@@ -429,5 +398,18 @@ msgstr "Τιμολογημένο"
 #~ msgid "Procurement & Locations"
 #~ msgstr "Προμήθειες και Τοποθεσίες"
 
+#~ msgid "Parameters"
+#~ msgstr "Παράμετροι"
+
+#~ msgid "Logistics Flows"
+#~ msgstr "Ροές Εφοδιαστικής"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Σφάλμα: Λανθασμένος κωδικός ΕΑΝ"
+
 #~ msgid "Warehouse Locations Paths"
 #~ msgstr "Τοποθεσία Αποθήκης"
+
+#~ msgid "You try to assign a lot which is not from the same product"
+#~ msgstr ""
+#~ "Προσπαθείτε να αντιστοιχίσετε μια παρτίδα που δεν είναι από το ίδιο προϊόν"

@@ -65,7 +65,7 @@ class Prop2xml(object):
 
     def createText2Node(self, data):
         if not isinstance(data, StringTypes):
-            raise TypeError, "node contents must be a string"
+            raise TypeError, "Node contents must be a string."
         t = Text2()
         t.data = data
         t.ownerDocument = self.doc
@@ -236,7 +236,7 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
     return re
 
 
-def mk_propname_response(self,uri,propnames,doc):
+def mk_propname_response(self, uri, propnames, doc):
     """ make a new <prop> result element for a PROPNAME request
 
     This will simply format the propnames list.

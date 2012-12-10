@@ -5,7 +5,7 @@
 
 <!--model de code de taxe -->
   <record model="account.tax.code.template" id="vat_ma_tax_root">
-		<field name="name">tax</field>
+        <field name="name">tax</field>
 </record>
 
 
@@ -737,13 +737,13 @@
 
 
 <!-- account chart  -->
-	<record id="l10n_kzc_temp_chart" model="account.chart.template">
-	    <field name="name">compta Kazacube</field>
-	    <field name="account_root_id" ref="pcg_0"/>
-	    <field name="tax_code_root_id" ref="vat_ma_tax_root"/>
-	    <field name="bank_account_view_id" ref="pcg_514"/>
-	    
-	</record>
+    <record id="l10n_kzc_temp_chart" model="account.chart.template">
+        <field name="name">compta Kazacube</field>
+        <field name="account_root_id" ref="pcg_0"/>
+        <field name="tax_code_root_id" ref="vat_ma_tax_root"/>
+        <field name="bank_account_view_id" ref="pcg_514"/>
+        
+    </record>
 
   <record model="account.tax.template" id="tva_exo">
     <field name="name">Exonere de TVA</field>

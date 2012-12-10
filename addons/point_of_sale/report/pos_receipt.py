@@ -34,7 +34,7 @@ class order(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(order, self).__init__(cr, uid, name, context=context)
 
-        user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, uid)
+        user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, uid, context=context)
         partner = user.company_id.partner_id
 
         self.localcontext.update({
@@ -42,7 +42,7 @@ class order(report_sxw.rml_parse):
             'disc': self.discount,
             'net': self.netamount,
             'get_journal_amt': self._get_journal_amt,
-            'address': partner.address and partner.address[0] or False,
+            'address': partner or False,
             'titlize': titlize
         })
 

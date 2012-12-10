@@ -67,8 +67,8 @@ class product_pulled_flow(osv.osv):
         'journal_id': fields.many2one('stock.journal','Journal'),
         'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procure Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the procurement request."),
         'type_proc': fields.selection([('produce','Produce'),('buy','Buy'),('move','Move')], 'Type of Procurement', required=True),
-        'company_id': fields.many2one('res.company', 'Company', help="Is used to know to which company belong packings and moves"),
-        'partner_address_id': fields.many2one('res.partner.address', 'Partner Address'),
+        'company_id': fields.many2one('res.company', 'Company', help="Is used to know to which company the pickings and moves belong."),
+        'partner_address_id': fields.many2one('res.partner', 'Partner Address'),
         'picking_type': fields.selection([('out','Sending Goods'),('in','Getting Goods'),('internal','Internal')], 'Shipping Type', required=True, select=True, help="Depending on the company, choose whatever you want to receive or send products"),
         'product_id':fields.many2one('product.product','Product'),
         'invoice_state': fields.selection([
@@ -109,6 +109,11 @@ class stock_move(osv.osv):
                 self.action_cancel(cr, uid, [m.move_dest_id.id], context=context)
         res = super(stock_move,self).action_cancel(cr,uid,ids,context)
         return res
+
+    def _prepare_chained_picking(self, cr, uid, picking_name, picking, picking_type, moves_todo, context=None):
+        res = super(stock_move, self)._prepare_chained_picking(cr, uid, picking_name, picking, picking_type, moves_todo, context=context)
+        res.update({'invoice_state': moves_todo[0][1][6] or 'none'})
+        return res
 stock_move()
 
 class stock_location(osv.osv):
@@ -117,7 +122,7 @@ class stock_location(osv.osv):
         if product:
             for path in product.path_ids:
                 if path.location_from_id.id == location.id:
-                    return path.location_dest_id, path.auto, path.delay, path.journal_id and path.journal_id.id or False, path.company_id and path.company_id.id or False, path.picking_type
+                    return path.location_dest_id, path.auto, path.delay, path.journal_id and path.journal_id.id or False, path.company_id and path.company_id.id or False, path.picking_type, path.invoice_state
         return super(stock_location, self).chained_location_get(cr, uid, location, partner, product, context)
 stock_location()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -4,19 +4,17 @@
         <record id="account_partner_reconcile_view" model="ir.ui.view">
             <field name="name">Partner Reconcilation Process</field>
             <field name="model">account.partner.reconcile.process</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Partner Reconciliation">
-                    <field name="progress" widget="progressbar" colspan="4"/>
-                    <field name="today_reconciled"/>
-                    <field name="to_reconcile"/>
-                    <newline/>
-                    <field name="next_partner_id" colspan="4"/>
-                    <newline/>
-                    <group colspan="4" col="4">
-                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                        <button name="next_partner" icon="terp-gtk-jump-to-ltr" type="object" string="Go to next partner" />
+                <form string="Partner Reconciliation" version="7.0">
+                    <group col="4">
+                        <field name="next_partner_id"/>
+                        <field name="progress" widget="progressbar" colspan="4"/>
+                        <field name="today_reconciled"/>
+                        <field name="to_reconcile"/>
                     </group>
+                    <footer>
+                        <button name="next_partner" icon="terp-gtk-jump-to-ltr" type="object" string="Go to Next Partner" class="oe_highlight"  />
+                    </footer>
                </form>
             </field>
         </record>
@@ -40,5 +38,5 @@
             <field name="model">account.move.line</field>
         </record>
 
-	</data>
+    </data>
 </openerp>

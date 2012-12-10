@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-01-07 21:56+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"PO-Revision-Date: 2012-12-01 18:20+0000\n"
+"Last-Translator: gehad shaat <gehad.shaath@gmail.com>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:58+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-12-02 04:38+0000\n"
+"X-Generator: Launchpad (build 16319)\n"
 
 #. module: fetchmail
 #: selection:fetchmail.server,state:0
@@ -25,17 +25,17 @@ msgstr "مؤكد"
 #. module: fetchmail
 #: field:fetchmail.server,server:0
 msgid "Server Name"
-msgstr ""
+msgstr "اسم الخادم"
 
 #. module: fetchmail
 #: field:fetchmail.server,script:0
 msgid "Script"
-msgstr ""
+msgstr "سكربت"
 
 #. module: fetchmail
 #: help:fetchmail.server,priority:0
 msgid "Defines the order of processing, lower values mean higher priority"
-msgstr ""
+msgstr "تحديد ترتيب  العملية, القيم الأقل تعني الأولية"
 
 #. module: fetchmail
 #: help:fetchmail.server,is_ssl:0
@@ -43,11 +43,18 @@ msgid ""
 "Connections are encrypted with SSL/TLS through a dedicated port (default: "
 "IMAPS=993, POP3S=995)"
 msgstr ""
+"الإتصالات مشفرة بـ SSL/TLS من خلال منفذ مخصص (افتراضياً: IMPAS=993 "
+",POP35=995 )"
 
 #. module: fetchmail
 #: field:fetchmail.server,attach:0
 msgid "Keep Attachments"
-msgstr ""
+msgstr "حفظ الملحقات"
+
+#. module: fetchmail
+#: field:fetchmail.server,is_ssl:0
+msgid "SSL/TLS"
+msgstr "نظام التشفير SSL/TLS"
 
 #. module: fetchmail
 #: help:fetchmail.server,original:0
@@ -56,16 +63,8 @@ msgid ""
 "attached to each processed message. This will usually double the size of "
 "your message database."
 msgstr ""
-
-#. module: fetchmail
-#: field:fetchmail.server,priority:0
-msgid "Server Priority"
-msgstr "أولوية  الخادم"
-
-#. module: fetchmail
-#: field:fetchmail.server,state:0
-msgid "State"
-msgstr "الحالة"
+"إذا كان ينبغي أن تحتفظ بنسخة من كل رسالة إلكترونية كمرجع ملحق لكل عملية "
+"إرسال. هذه عادة تضاعف حجم قاعدة بيانات الرسائل"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
@@ -75,18 +74,18 @@ msgstr "بروتوكول POP"
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Fetch Now"
-msgstr ""
+msgstr "جلب الآن"
 
 #. module: fetchmail
 #: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
 #: model:ir.ui.menu,name:fetchmail.menu_action_fetchmail_server_tree
 msgid "Incoming Mail Servers"
-msgstr ""
+msgstr "خادم الرسائل المستقبلة"
 
 #. module: fetchmail
-#: field:fetchmail.server,port:0
-msgid "Port"
-msgstr "منفذ"
+#: view:fetchmail.server:0
+msgid "Server type IMAP."
+msgstr "نوع الخادم آي أم آه بي"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
@@ -96,12 +95,12 @@ msgstr "خادم POP/IMAP"
 #. module: fetchmail
 #: selection:fetchmail.server,type:0
 msgid "Local Server"
-msgstr ""
+msgstr "الخادم المحلي"
 
 #. module: fetchmail
-#: field:fetchmail.server,user:0
-msgid "Username"
-msgstr ""
+#: field:fetchmail.server,state:0
+msgid "Status"
+msgstr "الحالة"
 
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_fetchmail_server
@@ -111,7 +110,7 @@ msgstr "خادم POP/IMAP"
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Reset Confirmation"
-msgstr ""
+msgstr "إعادة تأكيد"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
@@ -119,14 +118,14 @@ msgid "SSL"
 msgstr "بروتوكول SSL"
 
 #. module: fetchmail
-#: model:ir.model,name:fetchmail.model_mail_message
-msgid "Email Message"
+#: model:ir.model,name:fetchmail.model_fetchmail_config_settings
+msgid "fetchmail.config.settings"
 msgstr ""
 
 #. module: fetchmail
 #: field:fetchmail.server,date:0
 msgid "Last Fetch Date"
-msgstr ""
+msgstr "تاريخ الجلب الأخير"
 
 #. module: fetchmail
 #: help:fetchmail.server,action_id:0
@@ -134,6 +133,8 @@ msgid ""
 "Optional custom server action to trigger for each incoming mail, on the "
 "record that was created or updated by this mail"
 msgstr ""
+"اختياري عمل خادم مخصص لتحريك كل البريد الوارد، على السجل التي تم إنشاؤها أو "
+"تحديثها بواسطة هذا البريد"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
@@ -143,42 +144,39 @@ msgstr "عدد الرسائل"
 #. module: fetchmail
 #: field:fetchmail.server,original:0
 msgid "Keep Original"
-msgstr ""
+msgstr "حفظ بالأصل"
 
 #. module: fetchmail
-#: code:addons/fetchmail/fetchmail.py:155
-#, python-format
-msgid ""
-"Here is what we got instead:\n"
-" %s"
-msgstr ""
+#: view:fetchmail.server:0
+msgid "Advanced Options"
+msgstr "خيارات متقدمة"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 #: field:fetchmail.server,configuration:0
 msgid "Configuration"
-msgstr ""
+msgstr "إعدادات"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Incoming Mail Server"
-msgstr ""
+msgstr "خادم الرسائل الواردة"
 
 #. module: fetchmail
 #: code:addons/fetchmail/fetchmail.py:155
 #, python-format
 msgid "Connection test failed!"
-msgstr ""
+msgstr "فشلت محاولة الاتصال!"
+
+#. module: fetchmail
+#: field:fetchmail.server,user:0
+msgid "Username"
+msgstr "اسم المستخدم"
 
 #. module: fetchmail
 #: help:fetchmail.server,server:0
 msgid "Hostname or IP of the mail server"
-msgstr ""
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Server type IMAP."
-msgstr ""
+msgstr "اسم الجهاز أو رقم الآي بي لخادم البريد"
 
 #. module: fetchmail
 #: field:fetchmail.server,name:0
@@ -186,24 +184,27 @@ msgid "Name"
 msgstr "الاسم"
 
 #. module: fetchmail
-#: field:fetchmail.server,is_ssl:0
-msgid "SSL/TLS"
+#: code:addons/fetchmail/fetchmail.py:155
+#, python-format
+msgid ""
+"Here is what we got instead:\n"
+" %s."
 msgstr ""
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Test & Confirm"
-msgstr ""
+msgstr "اختبار وتأكيد"
 
 #. module: fetchmail
 #: field:fetchmail.server,action_id:0
 msgid "Server Action"
-msgstr ""
+msgstr "إجراء الخادم"
 
 #. module: fetchmail
-#: field:mail.message,fetchmail_server_id:0
+#: field:mail.mail,fetchmail_server_id:0
 msgid "Inbound Mail Server"
-msgstr ""
+msgstr "خادم البريد الوارد"
 
 #. module: fetchmail
 #: field:fetchmail.server,message_ids:0
@@ -214,7 +215,7 @@ msgstr "رسائل"
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Search Incoming Mail Servers"
-msgstr ""
+msgstr "البحث عن سيرفرات البريد الوارد"
 
 #. module: fetchmail
 #: field:fetchmail.server,active:0
@@ -227,11 +228,18 @@ msgid ""
 "Whether attachments should be downloaded. If not enabled, incoming emails "
 "will be stripped of any attachments before being processed"
 msgstr ""
+"الملحقات يجب أن يتم تحميلها. إذا لم يتم التمكين، الرسائل المستقبلة سوف يتم "
+"تجريدها من الملحقات قبل معالجتها"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Advanced options"
-msgstr ""
+#: model:ir.model,name:fetchmail.model_mail_mail
+msgid "Outgoing Mails"
+msgstr "رسائل البريد الصادر"
+
+#. module: fetchmail
+#: field:fetchmail.server,priority:0
+msgid "Server Priority"
+msgstr "أولوية  الخادم"
 
 #. module: fetchmail
 #: selection:fetchmail.server,type:0
@@ -246,7 +254,7 @@ msgstr "بروتوكول IMAP"
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Server type POP."
-msgstr ""
+msgstr "نوع الخادم بي او بي POP"
 
 #. module: fetchmail
 #: field:fetchmail.server,password:0
@@ -256,7 +264,7 @@ msgstr "كلمة المرور"
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Actions to Perform on Incoming Mails"
-msgstr ""
+msgstr "إجراءات لتنفيذها على الرسائل الالكترونية الواردة"
 
 #. module: fetchmail
 #: field:fetchmail.server,type:0
@@ -276,12 +284,12 @@ msgstr "معلومات الخادم"
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "If SSL required."
-msgstr ""
+msgstr "إذا SSL المطلوبة."
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Advanced"
-msgstr ""
+msgstr "متقدم"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
@@ -295,11 +303,14 @@ msgid ""
 "document type. This will create new documents for new conversations, or "
 "attach follow-up emails to the existing conversations (documents)."
 msgstr ""
+"معالجة كل الرسائل الواردة كجزء من المحادثة مع المطابة مع نوع المستند. هذا "
+"سوف ينشأ مستندات لمحادثات جديدة، أو إرفاق  رسائل بريد المتابعة الإلكتروني "
+"إلى المحادثات الحالية (مستندات)"
 
 #. module: fetchmail
 #: field:fetchmail.server,object_id:0
 msgid "Create a New Record"
-msgstr ""
+msgstr "إنشاء سجل جديد"
 
 #. module: fetchmail
 #: selection:fetchmail.server,state:0
@@ -312,9 +323,9 @@ msgid "POP Server"
 msgstr "خادم POP"
 
 #. module: fetchmail
-#: view:mail.message:0
-msgid "Mail Server"
-msgstr "خادم البريد"
+#: field:fetchmail.server,port:0
+msgid "Port"
+msgstr "منفذ"
 
 #~ msgid "Confirm"
 #~ msgstr "تأكيد"
@@ -324,6 +335,9 @@ msgstr "خادم البريد"
 
 #~ msgid "Type"
 #~ msgstr "نوع"
+
+#~ msgid "State"
+#~ msgstr "الحالة"
 
 #~ msgid "User"
 #~ msgstr "المستخدم"
@@ -364,6 +378,9 @@ msgstr "خادم البريد"
 #~ msgid "Process Parameter"
 #~ msgstr "متغير العملية"
 
+#~ msgid "Mail Server"
+#~ msgstr "خادم البريد"
+
 #~ msgid "Email Server Action"
 #~ msgstr "إجراءات خادم البريد الإلكتروني"
 
@@ -403,3 +420,41 @@ msgstr "خادم البريد"
 #~ "server."
 #~ msgstr ""
 #~ "عملية خدمة البريد الإلكتروني. سيعمل وقتما يصل البريد الإلكتروني من الخدمة."
+
+#~ msgid ""
+#~ "Fetchmail: \n"
+#~ "    * Fetch email from Pop / IMAP server\n"
+#~ "    * Support SSL\n"
+#~ "    * Integrated with all Modules\n"
+#~ "    * Automatic Email Receive\n"
+#~ "    * Email based Records (Add, Update)\n"
+#~ "    "
+#~ msgstr ""
+#~ "جلب البريد الإلكتروني:\n"
+#~ "* جلب البريد الإلكتروني من خادم POP / IMAP \n"
+#~ "* دعم SSL\n"
+#~ "* متكاملة مع جميع الوحدات\n"
+#~ "* تلقي البريد تلقائيًا\n"
+#~ "* السجلات القائمة على البريد الإلكتروني (إضافة، تحديث)\n"
+#~ "    "
+
+#~ msgid ""
+#~ "OpenObject Model. Generates a record of this model.\n"
+#~ "Select Object with message_new attrbutes."
+#~ msgstr ""
+#~ "نموذج OpenObject . تنشأ تسجيل لهذا النموذج.\n"
+#~ "حدد المشروع برسالة_سمات جديدة."
+
+#~ msgid "Advanced options"
+#~ msgstr "خيارات متقدّمة"
+
+#~ msgid "Email Message"
+#~ msgstr "رسالة بريد إلكتروني"
+
+#, python-format
+#~ msgid ""
+#~ "Here is what we got instead:\n"
+#~ " %s"
+#~ msgstr ""
+#~ "هنا ما توصلنا إليه بدلاً عن:\n"
+#~ "%s"

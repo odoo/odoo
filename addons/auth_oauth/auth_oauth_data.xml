@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+        <record id="provider_openerp" model="auth.oauth.provider">
+            <field name="name">OpenERP.com Accounts</field>
+            <field name="auth_endpoint">https://accounts.openerp.com/oauth2/auth</field>
+            <field name="scope">userinfo</field>
+            <field name="validation_endpoint">https://accounts.openerp.com/oauth2/tokeninfo</field>
+            <field name="data_endpoint"></field>
+            <field name="css_class">zocial openerp</field>
+            <field name="body">Log in with OpenERP.com</field>
+            <field name="enabled" eval="True"/>
+        </record>
+        <record id="provider_facebook" model="auth.oauth.provider">
+            <field name="name">Facebook Graph</field>
+            <field name="auth_endpoint">https://www.facebook.com/dialog/oauth</field>
+            <field name="scope"></field>
+            <field name="validation_endpoint">https://graph.facebook.com/me/permissions</field>
+            <field name="data_endpoint"></field>
+            <field name="css_class">zocial facebook</field>
+            <field name="body">Log in with facebook</field>
+        </record>
+        <record id="provider_google" model="auth.oauth.provider">
+            <field name="name">Google OAuth2</field>
+            <field name="auth_endpoint">https://accounts.google.com/o/oauth2/auth</field>
+            <field name="scope">https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile</field>
+            <field name="validation_endpoint">https://www.googleapis.com/oauth2/v1/tokeninfo</field>
+            <field name="data_endpoint">https://www.googleapis.com/oauth2/v1/userinfo</field>
+            <field name="css_class">zocial google</field>
+            <field name="body">Log in with google</field>
+        </record>
+        <!--
+        <record id="provider_twitter" model="auth.oauth.provider">
+            <field name="name">Twitter OAuth</field>
+            <field name="auth_endpoint">https://api.twitter.com/oauth/request_token</field>
+            <field name="scope"></field>
+            <field name="validation_endpoint">https://api.twitter.com/oauth/authorize</field>
+            <field name="data_endpoint"></field>
+            <field name="css_class">zocial twitter</field>
+            <field name="body">Sign in with twitter</field>
+        </record>
+        -->
+    </data>
+</openerp>

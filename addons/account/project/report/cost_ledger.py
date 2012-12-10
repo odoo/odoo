@@ -75,10 +75,10 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
         return res
 
     def _account_sum_debit(self, account, date1, date2):
-        return self._sum_debit(self, [account], date1, date2)
+        return self._sum_debit([account], date1, date2)
 
     def _account_sum_credit(self, account, date1, date2):
-        return self._sum_credit(self, [account], date1, date2)
+        return self._sum_credit([account], date1, date2)
 
     def _account_sum_balance(self, account, date1, date2):
         debit = self._account_sum_debit(account, date1, date2)

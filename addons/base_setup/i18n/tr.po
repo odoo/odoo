@@ -6,20 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-01-23 21:47+0000\n"
 "Last-Translator: Ahmet Altınışık <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:16+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-11-25 05:52+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: base_setup
-#: field:user.preferences.config,menu_tips:0
-msgid "Display Tips"
-msgstr "İpuçlarını Göster"
+#: view:sale.config.settings:0
+msgid "Emails Integration"
+msgstr ""
 
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
@@ -27,14 +27,33 @@ msgid "Guest"
 msgstr "Misafir"
 
 #. module: base_setup
-#: model:ir.model,name:base_setup.model_product_installer
-msgid "product.installer"
-msgstr "product.installer"
+#: view:sale.config.settings:0
+msgid "Contacts"
+msgstr ""
 
 #. module: base_setup
-#: selection:product.installer,customers:0
-msgid "Create"
-msgstr "Oluştur"
+#: model:ir.model,name:base_setup.model_base_config_settings
+msgid "base.config.settings"
+msgstr ""
+
+#. module: base_setup
+#: field:base.config.settings,module_auth_oauth:0
+msgid ""
+"Use external authentication providers, sign in with google, facebook, ..."
+msgstr ""
+
+#. module: base_setup
+#: view:sale.config.settings:0
+msgid ""
+"OpenERP allows to automatically create leads (or others documents)\n"
+"                            from incoming emails. You can automatically "
+"synchronize emails with OpenERP\n"
+"                            using regular POP/IMAP accounts, using a direct "
+"email integration script for your\n"
+"                            email server, or by manually pushing emails to "
+"OpenERP using specific\n"
+"                            plugins for your preferred email application."
+msgstr ""
 
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
@@ -42,23 +61,26 @@ msgid "Member"
 msgstr "Üye"
 
 #. module: base_setup
-#: field:migrade.application.installer.modules,sync_google_contact:0
-msgid "Sync Google Contact"
-msgstr "Google Kişilerle Senkronize Et"
-
-#. module: base_setup
-#: help:user.preferences.config,context_tz:0
-msgid ""
-"Set default for new user's timezone, used to perform timezone conversions "
-"between the server and the client."
+#: view:base.config.settings:0
+msgid "Portal access"
 msgstr ""
-"Yeni kullanıcıların öntanımlı saat dilimini belirleyin. Sunucu ve istemci "
-"arasında saat çevirimleri için kullanılır."
 
 #. module: base_setup
-#: selection:product.installer,customers:0
-msgid "Import"
-msgstr "İçe Aktar"
+#: view:base.config.settings:0
+msgid "Authentication"
+msgstr ""
+
+#. module: base_setup
+#: view:sale.config.settings:0
+msgid "Quotations and Sales Orders"
+msgstr ""
+
+#. module: base_setup
+#: view:base.config.settings:0
+#: model:ir.actions.act_window,name:base_setup.action_general_configuration
+#: model:ir.ui.menu,name:base_setup.menu_general_configuration
+msgid "General Settings"
+msgstr ""
 
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
@@ -66,30 +88,14 @@ msgid "Donor"
 msgstr "Verici"
 
 #. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_base_setup_company
-msgid "Set Company Header and Footer"
-msgstr "Şirket Başlık ve Altbilgilerini Ayarla"
-
-#. module: base_setup
-#: model:ir.actions.act_window,help:base_setup.action_base_setup_company
-msgid ""
-"Fill in your company data (address, logo, bank accounts) so that it's "
-"printed on your reports. You can click on the button 'Preview Header' in "
-"order to check the header/footer of PDF documents."
+#: view:base.config.settings:0
+msgid "Email"
 msgstr ""
-"Raporlarınızda gösterilmesi için şirket bilgilerinizi doldurun (adres, logo, "
-"banka hesapları). 'Anteti Görüntüle' butonuna tıklayarak antet bilgilerinizi "
-"PDF olarak görüntüleyebilirsiniz."
 
 #. module: base_setup
-#: field:product.installer,customers:0
-msgid "Customers"
-msgstr "Müşteriler"
-
-#. module: base_setup
-#: selection:user.preferences.config,view:0
-msgid "Extended"
-msgstr "Detaylı"
+#: field:sale.config.settings,module_crm:0
+msgid "CRM"
+msgstr ""
 
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
@@ -97,61 +103,59 @@ msgid "Patient"
 msgstr "Hasta"
 
 #. module: base_setup
-#: model:ir.actions.act_window,help:base_setup.action_import_create_installer
-msgid ""
-"Create or Import Customers  and their contacts manually from this form or "
-"you can import your existing partners by CSV spreadsheet from \"Import "
-"Data\" wizard"
+#: field:base.config.settings,module_base_import:0
+msgid "Allow users to import data from CSV files"
 msgstr ""
-"Bu formu kullanarak müşterileri ve ilgili kişileri oluşturabilir ya da içeri "
-"aktarabilirsiniz."
 
 #. module: base_setup
-#: view:user.preferences.config:0
-msgid "Define Users's Preferences"
-msgstr "Kullanıcı Seçeneklerini Tanımlayın"
-
-#. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_user_preferences_config_form
-msgid "Define default users preferences"
-msgstr "Öntanımlı Kullanıcı Seçeneklerini Tanımlayın"
-
-#. module: base_setup
-#: help:migrade.application.installer.modules,import_saleforce:0
-msgid "For Import Saleforce"
-msgstr "Saleforce'dan aktarım için"
-
-#. module: base_setup
-#: help:migrade.application.installer.modules,quickbooks_ippids:0
-msgid "For Quickbooks Ippids"
-msgstr "Quickbooks lppidleri için"
-
-#. module: base_setup
-#: help:user.preferences.config,view:0
-msgid ""
-"If you use OpenERP for the first time we strongly advise you to select the "
-"simplified interface, which has less features but is easier. You can always "
-"switch later from the user preferences."
+#: field:base.config.settings,module_multi_company:0
+msgid "Manage multiple companies"
 msgstr ""
-"OpenERP yi ilk defa kullanıyorsanız basit arayüzü kullanmanızı öneririz. "
-"Daha az seçenek sunar ama daha basittir. Dilediğiniz her zaman kullanıcı "
-"seçeneklerinden detaylı arayüze geçebilirsiniz."
+
+#. module: base_setup
+#: help:base.config.settings,module_portal:0
+msgid "Give access your customers and suppliers to their documents."
+msgstr ""
+
+#. module: base_setup
+#: view:sale.config.settings:0
+msgid "On Mail Client"
+msgstr ""
+
+#. module: base_setup
+#: field:sale.config.settings,module_web_linkedin:0
+msgid "Get contacts automatically from linkedIn"
+msgstr ""
+
+#. module: base_setup
+#: field:sale.config.settings,module_plugin_thunderbird:0
+msgid "Enable Thunderbird plug-in"
+msgstr ""
 
 #. module: base_setup
 #: view:base.setup.terminology:0
-#: view:user.preferences.config:0
 msgid "res_config_contents"
 msgstr "res_config_contents"
 
 #. module: base_setup
-#: field:user.preferences.config,view:0
-msgid "Interface"
-msgstr "Arayüz"
+#: view:sale.config.settings:0
+msgid "Customer Features"
+msgstr ""
 
 #. module: base_setup
-#: model:ir.model,name:base_setup.model_migrade_application_installer_modules
-msgid "migrade.application.installer.modules"
-msgstr "migrade.application.installer.modules"
+#: view:base.config.settings:0
+msgid "Import / Export"
+msgstr ""
+
+#. module: base_setup
+#: view:sale.config.settings:0
+msgid "Sale Features"
+msgstr ""
+
+#. module: base_setup
+#: field:sale.config.settings,module_plugin_outlook:0
+msgid "Enable Outlook plug-in"
+msgstr ""
 
 #. module: base_setup
 #: view:base.setup.terminology:0
@@ -168,35 +172,41 @@ msgid "Tenant"
 msgstr "Kiracı"
 
 #. module: base_setup
+#: help:base.config.settings,module_share:0
+msgid "Share or embbed any screen of openerp."
+msgstr ""
+
+#. module: base_setup
 #: selection:base.setup.terminology,partner:0
 msgid "Customer"
 msgstr "Müşteri"
 
 #. module: base_setup
-#: field:user.preferences.config,context_lang:0
-msgid "Language"
-msgstr "Dil"
+#: help:sale.config.settings,module_web_linkedin:0
+msgid ""
+"When you create a new contact (person or company), you will be able to load "
+"all the data from LinkedIn (photos, address, etc)."
+msgstr ""
 
 #. module: base_setup
-#: help:user.preferences.config,context_lang:0
+#: help:base.config.settings,module_multi_company:0
 msgid ""
-"Sets default language for the all user interface, when UI translations are "
-"available. If you want to Add new Language, you can add it from 'Load an "
-"Official Translation' wizard  from 'Administration' menu."
+"Work in multi-company environments, with appropriate security access between "
+"companies.\n"
+"                This installs the module multi_company."
 msgstr ""
-"Tüm kullanıcı arayüzü için öntanımlı dil seçilir. Eğer yeni bir dil eklemek "
-"isterseniz 'Ayarlar' menüsünden ekleyebilirsiniz."
 
 #. module: base_setup
-#: view:user.preferences.config:0
+#: view:base.config.settings:0
 msgid ""
-"This will set the default preferences for new users and update all existing "
-"ones. Afterwards, users are free to change those values on their own user "
-"preference form."
+"You will find more options in your company details: address for the header "
+"and footer, overdue payments texts, etc."
 msgstr ""
-"Bu form kayıtlı ve yeni kullanıcılar için öntanımlı seçenekleri "
-"belirlemenizi sağlar. Kullanıcılar daha sonra bu değerleri kendi istekleri "
-"doğrultusunda değiştirebilirler."
+
+#. module: base_setup
+#: model:ir.model,name:base_setup.model_sale_config_settings
+msgid "sale.config.settings"
+msgstr ""
 
 #. module: base_setup
 #: field:base.setup.terminology,partner:0
@@ -204,9 +214,9 @@ msgid "How do you call a Customer"
 msgstr "Müşterilerinize ne isim veriyorsunuz ?"
 
 #. module: base_setup
-#: field:migrade.application.installer.modules,quickbooks_ippids:0
-msgid "Quickbooks Ippids"
-msgstr "Quickbooks Ippidleri"
+#: model:ir.model,name:base_setup.model_base_setup_terminology
+msgid "base.setup.terminology"
+msgstr "base.setup.terminology"
 
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
@@ -214,75 +224,21 @@ msgid "Client"
 msgstr "Müşteri"
 
 #. module: base_setup
-#: field:migrade.application.installer.modules,import_saleforce:0
-msgid "Import Saleforce"
-msgstr "Saleforce'dan Aktar"
-
-#. module: base_setup
-#: field:user.preferences.config,context_tz:0
-msgid "Timezone"
-msgstr "Saat Dilimi"
-
-#. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
-msgid "Use another word to say \"Customer\""
-msgstr "\"Müşteri\" yerine başka bir söz seçin"
-
-#. module: base_setup
-#: model:ir.model,name:base_setup.model_base_setup_terminology
-msgid "base.setup.terminology"
-msgstr "base.setup.terminology"
-
-#. module: base_setup
-#: help:user.preferences.config,menu_tips:0
-msgid ""
-"Check out this box if you want to always display tips on each menu action"
+#: help:base.config.settings,module_auth_anonymous:0
+msgid "Enable the public part of openerp, openerp becomes a public website."
 msgstr ""
-"Eğer her menü eyleminde ipuçlarını göstermek istiyorsanız bu kutucuğu "
-"işaretleyin."
 
 #. module: base_setup
-#: field:base.setup.terminology,config_logo:0
-#: field:migrade.application.installer.modules,config_logo:0
-#: field:product.installer,config_logo:0
-#: field:user.preferences.config,config_logo:0
-msgid "Image"
-msgstr "Resim"
-
-#. module: base_setup
-#: model:ir.model,name:base_setup.model_user_preferences_config
-msgid "user.preferences.config"
-msgstr "user.preferences.config"
-
-#. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_config_access_other_user
-msgid "Create Additional Users"
-msgstr "Ek kullanıcılar Oluştur"
-
-#. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_import_create_installer
-msgid "Create or Import Customers"
-msgstr "Müşterileri Oluştur ya da İçeri Aktar"
-
-#. module: base_setup
-#: field:migrade.application.installer.modules,import_sugarcrm:0
-msgid "Import Sugarcrm"
-msgstr "SugarCRM'den Aktar"
-
-#. module: base_setup
-#: help:product.installer,customers:0
-msgid "Import or create customers"
-msgstr "Müşterileri oluştur ya da içeri aktar"
-
-#. module: base_setup
-#: selection:user.preferences.config,view:0
-msgid "Simplified"
-msgstr "Sadeleşmiş"
-
-#. module: base_setup
-#: help:migrade.application.installer.modules,import_sugarcrm:0
-msgid "For Import Sugarcrm"
-msgstr "SugarCRM'den almak için"
+#: help:sale.config.settings,module_plugin_thunderbird:0
+msgid ""
+"The plugin allows you archive email and its attachments to the selected\n"
+"                OpenERP objects. You can select a partner, or a lead and\n"
+"                attach the selected mail as a .eml file in\n"
+"                the attachment of a selected record. You can create "
+"documents for CRM Lead,\n"
+"                Partner from the selected emails.\n"
+"                This installs the module plugin_thunderbird."
+msgstr ""
 
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
@@ -290,14 +246,85 @@ msgid "Partner"
 msgstr "Cari"
 
 #. module: base_setup
+#: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
+msgid "Use another word to say \"Customer\""
+msgstr "\"Müşteri\" yerine başka bir söz seçin"
+
+#. module: base_setup
+#: model:ir.actions.act_window,name:base_setup.action_sale_config
+#: view:sale.config.settings:0
+msgid "Configure Sales"
+msgstr ""
+
+#. module: base_setup
+#: help:sale.config.settings,module_plugin_outlook:0
+msgid ""
+"The Outlook plugin allows you to select an object that you would like to "
+"add\n"
+"                to your email and its attachments from MS Outlook. You can "
+"select a partner,\n"
+"                or a lead object and archive a selected\n"
+"                email into an OpenERP mail message with attachments.\n"
+"                This installs the module plugin_outlook."
+msgstr ""
+
+#. module: base_setup
+#: view:base.config.settings:0
+msgid "Options"
+msgstr ""
+
+#. module: base_setup
+#: field:base.config.settings,module_portal:0
+msgid "Activate the customer/supplier portal"
+msgstr ""
+
+#. module: base_setup
+#: field:base.config.settings,module_share:0
+msgid "Allow documents sharing"
+msgstr ""
+
+#. module: base_setup
+#: field:base.config.settings,module_auth_anonymous:0
+msgid "Activate the public portal"
+msgstr ""
+
+#. module: base_setup
+#: view:base.config.settings:0
+msgid "Configure outgoing email servers"
+msgstr ""
+
+#. module: base_setup
+#: view:sale.config.settings:0
+msgid "Social Network Integration"
+msgstr ""
+
+#. module: base_setup
+#: view:base.config.settings:0
+#: view:sale.config.settings:0
+msgid "Cancel"
+msgstr "İptal"
+
+#. module: base_setup
+#: view:base.config.settings:0
+#: view:sale.config.settings:0
+msgid "Apply"
+msgstr ""
+
+#. module: base_setup
 #: view:base.setup.terminology:0
 msgid "Specify Your Terminology"
 msgstr "Terminolojinizi Belirleyin"
 
 #. module: base_setup
-#: help:migrade.application.installer.modules,sync_google_contact:0
-msgid "For Sync Google Contact"
-msgstr "Google Kişilerden Senkronize et"
+#: view:base.config.settings:0
+#: view:sale.config.settings:0
+msgid "or"
+msgstr ""
+
+#. module: base_setup
+#: view:base.config.settings:0
+msgid "Configure your company data"
+msgstr ""
 
 #~ msgid "State"
 #~ msgstr "Eyalet"
@@ -349,9 +376,6 @@ msgstr "Google Kişilerden Senkronize et"
 
 #~ msgid "Use Directly"
 #~ msgstr "Doğrudan Kullan"
-
-#~ msgid "Cancel"
-#~ msgstr "İptal"
 
 #~ msgid "Logo"
 #~ msgstr "Logo"
@@ -498,6 +522,9 @@ msgstr "Google Kişilerden Senkronize et"
 
 #~ msgid "Information about your new database"
 #~ msgstr "Yeni Veritabanınız hakkında bilgi"
+
+#~ msgid "Image"
+#~ msgstr "Resim"
 
 #~ msgid "New Database"
 #~ msgstr "Yeni Veritabanı"
@@ -680,3 +707,137 @@ msgstr "Google Kişilerden Senkronize et"
 
 #~ msgid "Install"
 #~ msgstr "Kur"
+
+#~ msgid "Display Tips"
+#~ msgstr "İpuçlarını Göster"
+
+#~ msgid "Create"
+#~ msgstr "Oluştur"
+
+#~ msgid "product.installer"
+#~ msgstr "product.installer"
+
+#~ msgid "Set Company Header and Footer"
+#~ msgstr "Şirket Başlık ve Altbilgilerini Ayarla"
+
+#~ msgid "Sync Google Contact"
+#~ msgstr "Google Kişilerle Senkronize Et"
+
+#~ msgid "Import"
+#~ msgstr "İçe Aktar"
+
+#~ msgid "For Quickbooks Ippids"
+#~ msgstr "Quickbooks lppidleri için"
+
+#~ msgid "Define Users's Preferences"
+#~ msgstr "Kullanıcı Seçeneklerini Tanımlayın"
+
+#~ msgid "For Import Saleforce"
+#~ msgstr "Saleforce'dan aktarım için"
+
+#~ msgid "Define default users preferences"
+#~ msgstr "Öntanımlı Kullanıcı Seçeneklerini Tanımlayın"
+
+#~ msgid ""
+#~ "If you use OpenERP for the first time we strongly advise you to select the "
+#~ "simplified interface, which has less features but is easier. You can always "
+#~ "switch later from the user preferences."
+#~ msgstr ""
+#~ "OpenERP yi ilk defa kullanıyorsanız basit arayüzü kullanmanızı öneririz. "
+#~ "Daha az seçenek sunar ama daha basittir. Dilediğiniz her zaman kullanıcı "
+#~ "seçeneklerinden detaylı arayüze geçebilirsiniz."
+
+#~ msgid "Extended"
+#~ msgstr "Detaylı"
+
+#~ msgid ""
+#~ "Fill in your company data (address, logo, bank accounts) so that it's "
+#~ "printed on your reports. You can click on the button 'Preview Header' in "
+#~ "order to check the header/footer of PDF documents."
+#~ msgstr ""
+#~ "Raporlarınızda gösterilmesi için şirket bilgilerinizi doldurun (adres, logo, "
+#~ "banka hesapları). 'Anteti Görüntüle' butonuna tıklayarak antet bilgilerinizi "
+#~ "PDF olarak görüntüleyebilirsiniz."
+
+#~ msgid "Customers"
+#~ msgstr "Müşteriler"
+
+#~ msgid "migrade.application.installer.modules"
+#~ msgstr "migrade.application.installer.modules"
+
+#~ msgid "Interface"
+#~ msgstr "Arayüz"
+
+#~ msgid "Language"
+#~ msgstr "Dil"
+
+#~ msgid ""
+#~ "Sets default language for the all user interface, when UI translations are "
+#~ "available. If you want to Add new Language, you can add it from 'Load an "
+#~ "Official Translation' wizard  from 'Administration' menu."
+#~ msgstr ""
+#~ "Tüm kullanıcı arayüzü için öntanımlı dil seçilir. Eğer yeni bir dil eklemek "
+#~ "isterseniz 'Ayarlar' menüsünden ekleyebilirsiniz."
+
+#~ msgid "Quickbooks Ippids"
+#~ msgstr "Quickbooks Ippidleri"
+
+#~ msgid "Create Additional Users"
+#~ msgstr "Ek kullanıcılar Oluştur"
+
+#~ msgid "user.preferences.config"
+#~ msgstr "user.preferences.config"
+
+#~ msgid ""
+#~ "Check out this box if you want to always display tips on each menu action"
+#~ msgstr ""
+#~ "Eğer her menü eyleminde ipuçlarını göstermek istiyorsanız bu kutucuğu "
+#~ "işaretleyin."
+
+#~ msgid "Import Sugarcrm"
+#~ msgstr "SugarCRM'den Aktar"
+
+#~ msgid "Create or Import Customers"
+#~ msgstr "Müşterileri Oluştur ya da İçeri Aktar"
+
+#~ msgid "Timezone"
+#~ msgstr "Saat Dilimi"
+
+#~ msgid "Import Saleforce"
+#~ msgstr "Saleforce'dan Aktar"
+
+#~ msgid "For Import Sugarcrm"
+#~ msgstr "SugarCRM'den almak için"
+
+#~ msgid "Simplified"
+#~ msgstr "Sadeleşmiş"
+
+#~ msgid "For Sync Google Contact"
+#~ msgstr "Google Kişilerden Senkronize et"
+
+#~ msgid ""
+#~ "Create or Import Customers  and their contacts manually from this form or "
+#~ "you can import your existing partners by CSV spreadsheet from \"Import "
+#~ "Data\" wizard"
+#~ msgstr ""
+#~ "Bu formu kullanarak müşterileri ve ilgili kişileri oluşturabilir ya da içeri "
+#~ "aktarabilirsiniz."
+
+#~ msgid ""
+#~ "This will set the default preferences for new users and update all existing "
+#~ "ones. Afterwards, users are free to change those values on their own user "
+#~ "preference form."
+#~ msgstr ""
+#~ "Bu form kayıtlı ve yeni kullanıcılar için öntanımlı seçenekleri "
+#~ "belirlemenizi sağlar. Kullanıcılar daha sonra bu değerleri kendi istekleri "
+#~ "doğrultusunda değiştirebilirler."
+
+#~ msgid ""
+#~ "Set default for new user's timezone, used to perform timezone conversions "
+#~ "between the server and the client."
+#~ msgstr ""
+#~ "Yeni kullanıcıların öntanımlı saat dilimini belirleyin. Sunucu ve istemci "
+#~ "arasında saat çevirimleri için kullanılır."
+
+#~ msgid "Import or create customers"
+#~ msgstr "Müşterileri oluştur ya da içeri aktar"

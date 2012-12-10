@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-    	<record id="partner_bank_1" model="res.partner.bank">
+        <record id="partner_bank_1" model="res.partner.bank">
             <field name="name">Reserve Bank</field>
             <field name="acc_number">00987654321</field>
-            <field name="partner_id" ref="base.res_partner_agrolait"></field>
+            <field name="partner_id" ref="base.res_partner_2"></field>
             <field name="state">bank</field>
             <field name="bank" ref="base.res_bank_1"/>
         </record>
-    	<record id="payment_mode_1" model="payment.mode">
+        <record id="payment_mode_1" model="payment.mode">
             <field name="name">Direct Payment</field>
             <field name="journal" ref="account.bank_journal"/>
             <field name="bank_id" ref="account_payment.partner_bank_1"/>

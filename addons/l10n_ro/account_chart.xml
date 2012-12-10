@@ -2,68 +2,68 @@
 <openerp>
 <data noupdate="1">
 
-	<!-- Account Types -->
-	
-	    <record model="account.account.type" id="account_type_receivable" >
-	      <field name="name">Receivable</field>
-	      <field name="code">receivable</field>
-	      <field name="close_method">unreconciled</field>
-	    </record>
+    <!-- Account Types -->
+    
+        <record model="account.account.type" id="account_type_receivable" >
+          <field name="name">Receivable</field>
+          <field name="code">receivable</field>
+          <field name="close_method">unreconciled</field>
+        </record>
 
-	   <record model="account.account.type" id="account_type_stocks" >
-	      <field name="name">Stocks</field>
-	      <field name="code">stocks</field>
-	      <field name="close_method">balance</field>
-	    </record>
+       <record model="account.account.type" id="account_type_stocks" >
+          <field name="name">Stocks</field>
+          <field name="code">stocks</field>
+          <field name="close_method">balance</field>
+        </record>
 
-	    <record model="account.account.type" id="account_type_payable" >
-	      <field name="name">Payable</field>
-	      <field name="code">payable</field>
-	      <field name="close_method">unreconciled</field>
-	    </record>
+        <record model="account.account.type" id="account_type_payable" >
+          <field name="name">Payable</field>
+          <field name="code">payable</field>
+          <field name="close_method">unreconciled</field>
+        </record>
 
-	    <record model="account.account.type" id="account_type_view">
-	      <field name="name">View</field>
-	      <field name="code">view</field>
-	      <field name="close_method">none</field>
-	    </record>
+        <record model="account.account.type" id="account_type_view">
+          <field name="name">View</field>
+          <field name="code">view</field>
+          <field name="close_method">none</field>
+        </record>
 
-	    <record model="account.account.type" id="account_type_income" >
-	      <field name="name">Income</field>
-	      <field name="code">income</field>
-	      <field name="close_method">none</field>
-	    </record>
+        <record model="account.account.type" id="account_type_income" >
+          <field name="name">Income</field>
+          <field name="code">income</field>
+          <field name="close_method">none</field>
+        </record>
 
-	    <record model="account.account.type" id="account_type_expense">
-	      <field name="name">Expense</field>
-	      <field name="code">expense</field>
-	      <field name="close_method">none</field>
-	    </record>
+        <record model="account.account.type" id="account_type_expense">
+          <field name="name">Expense</field>
+          <field name="code">expense</field>
+          <field name="close_method">none</field>
+        </record>
 
-	    <record model="account.account.type" id="account_type_tax">
-	      <field name="name">Tax</field>
-	      <field name="code">tax</field>
-	      <field name="close_method">unreconciled</field>
-	    </record>
+        <record model="account.account.type" id="account_type_tax">
+          <field name="name">Tax</field>
+          <field name="code">tax</field>
+          <field name="close_method">unreconciled</field>
+        </record>
 
-	    <record model="account.account.type" id="account_type_cash">
-	      <field name="name">Cash</field>
-	      <field name="code">cash</field>
-	      <field name="close_method">balance</field>
-	    </record>
+        <record model="account.account.type" id="account_type_cash">
+          <field name="name">Cash</field>
+          <field name="code">cash</field>
+          <field name="close_method">balance</field>
+        </record>
 
-	    <record model="account.account.type" id="account_type_asset">
-	      <field name="name">Asset</field>
-	      <field name="code">asset</field>
-	      <field name="close_method">balance</field>
-	    </record>
+        <record model="account.account.type" id="account_type_asset">
+          <field name="name">Asset</field>
+          <field name="code">asset</field>
+          <field name="close_method">balance</field>
+        </record>
 
-	    <record model="account.account.type" id="account_type_equity"> <!-- de capital -->
-	      <field name="name">Equity</field>
-	      <field name="code">equity</field>
-	      <field name="report_type">liability</field>
-	      <field name="close_method">balance</field>
-	    </record>
+        <record model="account.account.type" id="account_type_equity"> <!-- de capital -->
+          <field name="name">Equity</field>
+          <field name="code">equity</field>
+          <field name="report_type">liability</field>
+          <field name="close_method">balance</field>
+        </record>
 
             <record model="account.account.type" id="account_type_liability"> <!-- datorii -->
               <field name="name">Liability</field>
@@ -96,8 +96,8 @@
               <field name="code">commitment</field>
               <field name="close_method">balance</field>
             </record>
-	    
-	<!-- Account Templates -->
+        
+    <!-- Account Templates -->
 
     <record id="pcg_0" model="account.account.template">
       <field name="name">Plan de conturi general</field>
@@ -4385,18 +4385,18 @@
       <field name="user_type" ref="account_type_special"/>
       <field name="parent_id" ref="pcg_89"/>
     </record>
-	
-		<!-- Chart template -->
-		<record id="romania_chart_template" model="account.chart.template">
-		<field name="name">Romania - Chart of Accounts</field>
-		<field name="account_root_id" ref="pcg_0"/>
-		<field name="tax_code_root_id" ref="vat_code_tax"/>
-		<field name="bank_account_view_id" ref="ro_pcg_cash"/>
-		<field name="property_account_receivable" ref="ro_pcg_recv"/> <!-- 4111 -->
-	        <field name="property_account_payable" ref="ro_pcg_pay"/> <!-- 4011 -->
-	       	<field name="property_account_expense_categ" ref="ro_pcg_expense"/> <!-- 607 --> 
-        	<field name="property_account_income_categ" ref="ro_pcg_sale"/> <!-- 707 -->
-		    
-		</record>
+    
+        <!-- Chart template -->
+        <record id="romania_chart_template" model="account.chart.template">
+        <field name="name">Romania - Chart of Accounts</field>
+        <field name="account_root_id" ref="pcg_0"/>
+        <field name="tax_code_root_id" ref="vat_code_tax"/>
+        <field name="bank_account_view_id" ref="ro_pcg_cash"/>
+        <field name="property_account_receivable" ref="ro_pcg_recv"/> <!-- 4111 -->
+            <field name="property_account_payable" ref="ro_pcg_pay"/> <!-- 4011 -->
+               <field name="property_account_expense_categ" ref="ro_pcg_expense"/> <!-- 607 --> 
+            <field name="property_account_income_categ" ref="ro_pcg_sale"/> <!-- 707 -->
+            
+        </record>
 </data>
 </openerp>

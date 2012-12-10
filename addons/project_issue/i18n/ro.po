@@ -7,19 +7,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 01:37+0100\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-01-13 21:38+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 07:02+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:49+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: project_issue
-#: view:project.issue.report:0
-msgid "Previous Month"
+#: model:project.category,name:project_issue.project_issue_category_03
+msgid "Deadly bug"
+msgstr ""
+
+#. module: project_issue
+#: help:project.config.settings,fetchmail_issue:0
+msgid ""
+"Allows you to configure your incoming mail server, and create issues from "
+"incoming emails."
 msgstr ""
 
 #. module: project_issue
@@ -28,9 +35,10 @@ msgid "Avg. Delay to Open"
 msgstr "Intarzierea medie la deschidere"
 
 #. module: project_issue
-#: view:project.issue:0 view:project.issue.report:0
+#: view:project.issue:0
+#: view:project.issue.report:0
 msgid "Group By..."
-msgstr "Grupează după..."
+msgstr "Grupati dupa..."
 
 #. module: project_issue
 #: field:project.issue,working_hours_open:0
@@ -38,16 +46,9 @@ msgid "Working Hours to Open the Issue"
 msgstr "Program de lucru pentru a deschide problema"
 
 #. module: project_issue
-#: constraint:project.project:0
-msgid "Error! project start-date must be lower then project end-date."
-msgstr ""
-"Eroare! data de inceput a proiectului trebuie să fie mai mică decat data de "
-"sfarsit a proiectului."
-
-#. module: project_issue
 #: field:project.issue,date_open:0
 msgid "Opened"
-msgstr "Deschis"
+msgstr "Deschis(a)"
 
 #. module: project_issue
 #: field:project.issue.report,opening_date:0
@@ -62,19 +63,24 @@ msgstr "Martie"
 #. module: project_issue
 #: field:project.issue,progress:0
 msgid "Progress (%)"
-msgstr "Progress (%)"
+msgstr "Progres (%)"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:406
+#: view:project.issue:0
+#: field:project.issue,message_unread:0
+msgid "Unread Messages"
+msgstr ""
+
+#. module: project_issue
+#: code:addons/project_issue/project_issue.py:560
 #, python-format
-msgid "Warning !"
-msgstr "Avertizare !"
+msgid "<b>escalated</b>."
+msgstr ""
 
 #. module: project_issue
-#: field:project.issue,company_id:0 view:project.issue.report:0
-#: field:project.issue.report,company_id:0
-msgid "Company"
-msgstr "Companie"
+#: model:ir.actions.server,name:project_issue.actions_server_project_issue_unread
+msgid "Issue: Mark unread"
+msgstr ""
 
 #. module: project_issue
 #: field:project.issue,email_cc:0
@@ -82,71 +88,63 @@ msgid "Watchers Emails"
 msgstr "Email-uri supraveghetori"
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "Today's features"
+#: help:project.issue,message_unread:0
+msgid "If checked new messages require your attention."
 msgstr ""
 
 #. module: project_issue
-#: model:ir.model,name:project_issue.model_project_issue_version
-msgid "project.issue.version"
-msgstr "project.issue.version (proiect.problemă.versiune)"
+#: help:account.analytic.account,use_issues:0
+msgid "Check this field if this project manages issues"
+msgstr ""
 
 #. module: project_issue
 #: field:project.issue,day_open:0
 msgid "Days to Open"
-msgstr "Zile pană la deschidere"
+msgstr "Zile pana la deschidere"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:406
+#: code:addons/project_issue/project_issue.py:472
 #, python-format
 msgid ""
 "You cannot escalate this issue.\n"
 "The relevant Project has not configured the Escalation Project!"
 msgstr ""
-"Nu puteti intensifica această problemă.\n"
-"Proiectul relevant nu a configurat Proiectul de Intensificare!"
+"Nu puteti avansa aceasta problema.\n"
+"Proiectul relevant nu a configurat Proiectul de Avansare!"
 
 #. module: project_issue
 #: constraint:project.project:0
 msgid "Error! You cannot assign escalation to the same project!"
-msgstr "Eroare! Nu puteti atribui o intensificare aceluiasi proiect!"
+msgstr "Eroare! Nu puteti atribui o avansare aceluiasi proiect!"
 
 #. module: project_issue
 #: selection:project.issue,priority:0
 #: selection:project.issue.report,priority:0
 msgid "Highest"
-msgstr "Cel mai ridicat (cea mai ridicată)"
+msgstr "Cel mai ridicat (cea mai ridicata)"
 
 #. module: project_issue
 #: help:project.issue,inactivity_days:0
 msgid "Difference in days between last action and current date"
-msgstr ""
+msgstr "Diferenta in zile dintre ultima actiune si data curenta"
 
 #. module: project_issue
-#: view:project.issue.report:0 field:project.issue.report,day:0
+#: view:project.issue.report:0
+#: field:project.issue.report,day:0
 msgid "Day"
 msgstr "Zi"
 
 #. module: project_issue
 #: field:project.issue,days_since_creation:0
 msgid "Days since creation date"
-msgstr ""
+msgstr "Zile de la data crearii"
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "Add Internal Note"
-msgstr "Adaugă notă internă"
-
-#. module: project_issue
-#: field:project.issue,task_id:0 view:project.issue.report:0
+#: field:project.issue,task_id:0
+#: view:project.issue.report:0
 #: field:project.issue.report,task_id:0
 msgid "Task"
-msgstr "Sarcină"
-
-#. module: project_issue
-#: view:board.board:0
-msgid "Issues By Stage"
-msgstr "Probleme in functie de Stadiu"
+msgstr "Sarcina"
 
 #. module: project_issue
 #: field:project.issue,message_ids:0
@@ -156,59 +154,78 @@ msgstr "Mesaje"
 #. module: project_issue
 #: field:project.issue,inactivity_days:0
 msgid "Days since last action"
-msgstr ""
+msgstr "Zile de la ultima actiune"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_project
-#: view:project.issue:0 field:project.issue,project_id:0
-#: view:project.issue.report:0 field:project.issue.report,project_id:0
+#: view:project.issue:0
+#: field:project.issue,project_id:0
+#: view:project.issue.report:0
+#: field:project.issue.report,project_id:0
 msgid "Project"
 msgstr "Proiect"
 
 #. module: project_issue
-#: model:ir.actions.act_window,name:project_issue.action_view_my_open_project_issue_tree
-msgid "My Open Project issues"
-msgstr "Probleme ale Proiectului meu deschis"
+#: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to report a new issue.\n"
+"          </p><p>\n"
+"            The OpenERP issues tacker allows you to efficiantly manage "
+"things\n"
+"            like internal requests, software development bugs, customer\n"
+"            complaints, project troubles, material breakdowns, etc.\n"
+"          </p>\n"
+"        "
+msgstr ""
 
 #. module: project_issue
-#: selection:project.issue,state:0 selection:project.issue.report,state:0
+#: selection:project.issue,state:0
+#: selection:project.issue.report,state:0
 msgid "Cancelled"
-msgstr "Anulat(ă)"
+msgstr "Anulat(a)"
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "Change to Next Stage"
+#: field:project.issue,description:0
+msgid "Private Note"
 msgstr ""
 
 #. module: project_issue
 #: field:project.issue.report,date_closed:0
 msgid "Date of Closing"
-msgstr "Data inchiderii"
+msgstr "Data Inchiderii"
 
 #. module: project_issue
 #: view:project.issue:0
 msgid "Issue Tracker Search"
-msgstr "Caută Programul care găseste problemele"
+msgstr "Cautati Programul care tine evidenta problemelor"
 
 #. module: project_issue
 #: field:project.issue,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "Index Culori"
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "Issue / Partner"
-msgstr ""
+#: help:project.issue,progress:0
+msgid "Computed as: Time Spent / Total Time."
+msgstr "Calculat in felul urmator: Timpul petrecut / Timpul total."
 
 #. module: project_issue
 #: field:project.issue.report,working_hours_open:0
 msgid "Avg. Working Hours to Open"
-msgstr "De deschis program de lucru mediu"
+msgstr "Media orelor de lucru pentru a deschide"
 
 #. module: project_issue
-#: field:project.issue,date_action_next:0
-msgid "Next Action"
-msgstr "Următoarea acţiune"
+#: model:ir.model,name:project_issue.model_account_analytic_account
+msgid "Analytic Account"
+msgstr ""
+
+#. module: project_issue
+#: help:project.issue,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
 
 #. module: project_issue
 #: help:project.project,project_escalation_id:0
@@ -216,13 +233,13 @@ msgid ""
 "If any issue is escalated from the current Project, it will be listed under "
 "the project selected here."
 msgstr ""
-"Dacă oricare problemă apărută se intensifică, aceasta va fi listată sub "
-"proiectul selectat aici."
+"Daca oricare problema este avansata din Proiectul curent, aceasta va fi "
+"listata sub proiectul selectat aici."
 
 #. module: project_issue
 #: view:project.issue:0
 msgid "Extra Info"
-msgstr "Informaţii suplimentare"
+msgstr "Informatii suplimentare"
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.action_project_issue_report
@@ -232,22 +249,16 @@ msgid ""
 "analyse the time required to open or close an issue, the number of email to "
 "exchange and the time spent on average by issues."
 msgstr ""
-"Acest raport referitor la problemele proiectului vă permite să analizati "
-"calitatea asistentei tehnice sau a serviciilor de după vanzare. Puteti tine "
-"evidenta problemelor după vechime. Puteti analiza timpul necesar deschiderii "
-"sau inchiderii unei probleme, numărul de email-uri schimbate si timpul "
+"Acest raport referitor la problemele proiectului va permite sa analizati "
+"calitatea asistentei tehnice sau a serviciilor de dupa vanzare. Puteti tine "
+"evidenta problemelor dupa vechime. Puteti analiza timpul necesar deschiderii "
+"sau inchiderii unei probleme, numarul de email-uri schimbate si timpul "
 "petrecut in medie cu problemele."
 
 #. module: project_issue
 #: view:project.issue:0
-msgid "Change Color"
+msgid "Edit..."
 msgstr ""
-
-#. module: project_issue
-#: code:addons/project_issue/project_issue.py:482
-#, python-format
-msgid " (copy)"
-msgstr " (copie)"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -255,73 +266,62 @@ msgid "Responsible"
 msgstr "Responsabil"
 
 #. module: project_issue
-#: selection:project.issue,priority:0
-#: selection:project.issue.report,priority:0
-msgid "Low"
-msgstr "Scăzut(ă)"
-
-#. module: project_issue
 #: view:project.issue:0
 msgid "Statistics"
-msgstr "Statistică"
-
-#. module: project_issue
-#: view:project.issue:0
-msgid "Convert To Task"
-msgstr "Transformă in sarcină"
+msgstr "Statistica"
 
 #. module: project_issue
 #: model:crm.case.categ,name:project_issue.bug_categ
 msgid "Maintenance"
-msgstr "Mentenanţă"
+msgstr "Mentenanta"
 
 #. module: project_issue
-#: model:ir.actions.act_window,name:project_issue.action_project_issue_report
-#: model:ir.ui.menu,name:project_issue.menu_project_issue_report_tree
-#: view:project.issue.report:0
-msgid "Issues Analysis"
-msgstr "Analiză Probleme"
+#: code:addons/project_issue/project_issue.py:547
+#, python-format
+msgid "Project issue <b>converted</b> to task."
+msgstr ""
 
 #. module: project_issue
 #: view:project.issue:0
-msgid "Next"
-msgstr "Următorul(următoarea)"
-
-#. module: project_issue
-#: view:project.issue:0 field:project.issue,priority:0
-#: view:project.issue.report:0 field:project.issue.report,priority:0
+#: field:project.issue,priority:0
+#: view:project.issue.report:0
+#: field:project.issue.report,priority:0
 msgid "Priority"
 msgstr "Prioritate"
 
 #. module: project_issue
 #: view:project.issue:0
-msgid "Send New Email"
-msgstr "Trimite un e-mail nou"
-
-#. module: project_issue
-#: view:project.issue:0 field:project.issue,version_id:0
-#: view:project.issue.report:0 field:project.issue.report,version_id:0
+#: field:project.issue,version_id:0
+#: view:project.issue.report:0
+#: field:project.issue.report,version_id:0
 msgid "Version"
 msgstr "Versiune"
 
 #. module: project_issue
-#: view:project.issue:0 selection:project.issue,state:0
+#: field:project.issue,message_follower_ids:0
+msgid "Followers"
+msgstr ""
+
+#. module: project_issue
+#: view:project.issue:0
+#: selection:project.issue,state:0
 #: view:project.issue.report:0
 msgid "New"
-msgstr ""
+msgstr "Nou(a)"
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.project_issue_categ_action
 msgid "Issue Categories"
-msgstr "Categorii probleme"
+msgstr "Categorii de probleme"
 
 #. module: project_issue
 #: field:project.issue,email_from:0
 msgid "Email"
-msgstr "Email"
+msgstr "E-Mail"
 
 #. module: project_issue
-#: field:project.issue,channel_id:0 field:project.issue.report,channel_id:0
+#: field:project.issue,channel_id:0
+#: field:project.issue.report,channel_id:0
 msgid "Channel"
 msgstr "Canal"
 
@@ -329,18 +329,25 @@ msgstr "Canal"
 #: selection:project.issue,priority:0
 #: selection:project.issue.report,priority:0
 msgid "Lowest"
-msgstr "Cel(cea) mai scăzut(ă)"
+msgstr "Cel mai scazut (cea mai scazuta)"
+
+#. module: project_issue
+#: code:addons/project_issue/project_issue.py:358
+#, python-format
+msgid "%s (copy)"
+msgstr ""
 
 #. module: project_issue
 #: view:project.issue:0
 msgid "Unassigned Issues"
-msgstr ""
+msgstr "Probleme nealocate"
 
 #. module: project_issue
-#: field:project.issue,create_date:0 view:project.issue.report:0
+#: field:project.issue,create_date:0
+#: view:project.issue.report:0
 #: field:project.issue.report,creation_date:0
 msgid "Creation Date"
-msgstr "Data creării"
+msgstr "Data crearii"
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.project_issue_version_action
@@ -351,26 +358,21 @@ msgstr "Versiuni"
 #. module: project_issue
 #: view:project.issue:0
 msgid "To Do Issues"
+msgstr "Probleme de rezolvat"
+
+#. module: project_issue
+#: model:ir.model,name:project_issue.model_project_issue_version
+msgid "project.issue.version"
+msgstr "versiune.editie.proiect"
+
+#. module: project_issue
+#: field:project.config.settings,fetchmail_issue:0
+msgid "Create issues from an incoming email account "
 msgstr ""
 
 #. module: project_issue
 #: view:project.issue:0
-msgid "Reset to Draft"
-msgstr "Resetează ca ciornă"
-
-#. module: project_issue
-#: view:project.issue:0
-msgid "Today"
-msgstr "Astăzi"
-
-#. module: project_issue
-#: model:ir.actions.act_window,name:project_issue.open_board_project_issue
-#: model:ir.ui.menu,name:project_issue.menu_deshboard_project_issue
-msgid "Project Issue Dashboard"
-msgstr "Tablou de bord Probleme Proiect"
-
-#. module: project_issue
-#: view:project.issue:0 selection:project.issue,state:0
+#: selection:project.issue,state:0
 #: view:project.issue.report:0
 msgid "Done"
 msgstr "Efectuat"
@@ -386,72 +388,52 @@ msgid "Categories"
 msgstr "Categorii"
 
 #. module: project_issue
-#: view:project.issue:0 view:project.issue.report:0
-#: field:project.issue.report,type_id:0
-msgid "Stage"
-msgstr "Etapă"
-
-#. module: project_issue
 #: view:project.issue:0
-msgid "History Information"
-msgstr "Informatii istoric"
-
-#. module: project_issue
-#: model:ir.actions.act_window,name:project_issue.action_view_current_project_issue_tree
-#: model:ir.actions.act_window,name:project_issue.action_view_pending_project_issue_tree
-msgid "Project issues"
-msgstr "Probleme proiect"
-
-#. module: project_issue
-#: view:project.issue:0
-msgid "Communication & History"
-msgstr "Comunicare & Istoric"
-
-#. module: project_issue
+#: field:project.issue,stage_id:0
 #: view:project.issue.report:0
-msgid "My Open Project Issue"
-msgstr "Problema Proiectului meu deschis"
+#: field:project.issue.report,stage_id:0
+msgid "Stage"
+msgstr "Etapa"
+
+#. module: project_issue
+#: model:ir.actions.act_window,name:project_issue.action_project_issue_report
+#: model:ir.ui.menu,name:project_issue.menu_project_issue_report_tree
+#: view:project.issue.report:0
+msgid "Issues Analysis"
+msgstr "Analiza Probleme"
+
+#. module: project_issue
+#: code:addons/project_issue/project_issue.py:493
+#, python-format
+msgid "No Subject"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.action_view_my_project_issue_tree
 msgid "My Project Issues"
-msgstr "Problemele proiectului meu"
+msgstr "Problemele Proiectului meu"
 
 #. module: project_issue
 #: view:project.issue:0
+#: field:project.issue,partner_id:0
+#: view:project.issue.report:0
+#: field:project.issue.report,partner_id:0
 msgid "Contact"
 msgstr "Contact"
 
 #. module: project_issue
-#: view:project.issue:0 field:project.issue,partner_id:0
-#: view:project.issue.report:0 field:project.issue.report,partner_id:0
-msgid "Partner"
-msgstr "Partener"
-
-#. module: project_issue
-#: view:board.board:0
-msgid "My Issues"
-msgstr "Problemele mele"
+#: code:addons/project_issue/project_issue.py:551
+#, python-format
+msgid "Project issue <b>created</b>."
+msgstr ""
 
 #. module: project_issue
 #: view:project.issue:0
-msgid "Change to Previous Stage"
+msgid "Delete"
 msgstr ""
 
 #. module: project_issue
-#: model:ir.actions.act_window,help:project_issue.project_issue_version_action
-msgid ""
-"You can use the issues tracker in OpenERP to handle bugs in the software "
-"development project, to handle claims in after-sales services, etc. Define "
-"here the different versions of your products on which you can work on issues."
-msgstr ""
-"Puteti folosi programul care găseste problemele in OpenERP pentru a gestiona "
-"erorile din proiectul de dezvoltare al softului, pentru a gestiona "
-"solicitări de servicii după vanzare, etc. Aici definiti diferitele versiuni "
-"ale produselor dumneavoastră, unde puteti lucra la probleme."
-
-#. module: project_issue
-#: code:addons/project_issue/project_issue.py:330
+#: code:addons/project_issue/project_issue.py:341
 #, python-format
 msgid "Tasks"
 msgstr "Sarcini"
@@ -462,9 +444,9 @@ msgid "# of Issues"
 msgstr "# de probleme"
 
 #. module: project_issue
-#: selection:project.issue.report,month:0
-msgid "September"
-msgstr "Septembrie"
+#: model:ir.actions.server,name:project_issue.actions_server_project_issue_read
+msgid "Issue: Mark read"
+msgstr ""
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -472,72 +454,76 @@ msgid "December"
 msgstr "Decembrie"
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "Issue Tracker Tree"
-msgstr "Arbore Program de urmărire probleme"
-
-#. module: project_issue
-#: view:project.issue:0 view:project.issue.report:0
-#: field:project.issue.report,month:0
-msgid "Month"
-msgstr "Luna"
-
-#. module: project_issue
-#: model:ir.model,name:project_issue.model_project_issue_report
-msgid "project.issue.report"
-msgstr "project.issue.report (raport.problemă.raport)"
-
-#. module: project_issue
-#: code:addons/project_issue/project_issue.py:408 view:project.issue:0
-#, python-format
-msgid "Escalate"
-msgstr "Intensificare"
-
-#. module: project_issue
-#: model:crm.case.categ,name:project_issue.feature_request_categ
-msgid "Feature Requests"
-msgstr "Solicitări caracteristică"
-
-#. module: project_issue
-#: field:project.issue,write_date:0
-msgid "Update Date"
-msgstr "Data actualizării"
-
-#. module: project_issue
-#: view:project.issue:0
-msgid "Open Features"
+#: field:project.issue,categ_ids:0
+msgid "Tags"
 msgstr ""
 
 #. module: project_issue
 #: view:project.issue:0
-msgid "Previous"
-msgstr "Anterior"
+msgid "Issue Tracker Tree"
+msgstr "Arbore Program de urmarire probleme"
 
 #. module: project_issue
-#: view:project.issue:0 field:project.issue,categ_id:0
-#: view:project.issue.report:0 field:project.issue.report,categ_id:0
+#: model:project.category,name:project_issue.project_issue_category_01
+msgid "Little problem"
+msgstr ""
+
+#. module: project_issue
+#: view:project.project:0
+msgid "creates"
+msgstr ""
+
+#. module: project_issue
+#: model:crm.case.categ,name:project_issue.feature_request_categ
+msgid "Feature Requests"
+msgstr "Caracteristica solicitari"
+
+#. module: project_issue
+#: field:project.issue,write_date:0
+msgid "Update Date"
+msgstr "Data actualizarii"
+
+#. module: project_issue
+#: view:project.issue:0
+msgid "Project:"
+msgstr ""
+
+#. module: project_issue
+#: view:project.issue:0
+msgid "Open Features"
+msgstr "Caracteristici Open"
+
+#. module: project_issue
+#: field:project.issue,date_action_next:0
+msgid "Next Action"
+msgstr "Urmatoarea actiune"
+
+#. module: project_issue
+#: field:project.issue,company_id:0
+#: view:project.issue.report:0
+#: field:project.issue.report,company_id:0
+msgid "Company"
+msgstr "Companie"
+
+#. module: project_issue
+#: view:project.issue:0
 msgid "Category"
 msgstr "Categorie"
 
 #. module: project_issue
 #: field:project.issue,user_email:0
 msgid "User Email"
-msgstr ""
+msgstr "E-mail utilizator"
 
 #. module: project_issue
 #: view:project.issue.report:0
 msgid "#Number of Project Issues"
-msgstr "# Număr Probleme Proiect"
-
-#. module: project_issue
-#: view:project.issue:0
-msgid "Reset to New"
-msgstr ""
+msgstr "# Numar Probleme Proiect"
 
 #. module: project_issue
 #: help:project.issue,channel_id:0
 msgid "Communication channel."
-msgstr ""
+msgstr "Canal de comunicare"
 
 #. module: project_issue
 #: help:project.issue,email_cc:0
@@ -546,29 +532,26 @@ msgid ""
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
 msgstr ""
-"Aceste adrese de email vor fi adăugate in campul CC al tuturor email-urilor "
-"primite si trimise pentru această inregistrare inainte de a fi trimise. "
-"Despărtiti adresele de mail multiple cu o virgulă"
+"Aceste adrese de email vor fi adaugate in campul CC al tuturor email-urilor "
+"primite si trimise pentru aceasta inregistrare inainte de a fi trimise. "
+"Despartiti adresele de mail multiple cu o virgula"
 
 #. module: project_issue
 #: selection:project.issue.report,state:0
 msgid "Draft"
-msgstr "Ciornă"
+msgstr "Ciorna"
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "Contact Information"
-msgstr ""
+#: selection:project.issue,priority:0
+#: selection:project.issue.report,priority:0
+msgid "Low"
+msgstr "Scazut(a)"
 
 #. module: project_issue
-#: field:project.issue,date_closed:0 selection:project.issue.report,state:0
+#: field:project.issue,date_closed:0
+#: selection:project.issue.report,state:0
 msgid "Closed"
-msgstr "Închis"
-
-#. module: project_issue
-#: view:project.issue:0
-msgid "Reply"
-msgstr "Răspunde"
+msgstr "Inchis"
 
 #. module: project_issue
 #: field:project.issue.report,delay_close:0
@@ -576,13 +559,16 @@ msgid "Avg. Delay to Close"
 msgstr "Intarzierea medie la inchidere"
 
 #. module: project_issue
-#: view:project.issue:0 selection:project.issue,state:0
-#: view:project.issue.report:0 selection:project.issue.report,state:0
+#: selection:project.issue,state:0
+#: view:project.issue.report:0
+#: selection:project.issue.report,state:0
 msgid "Pending"
-msgstr "În așteptare"
+msgstr "In asteptare"
 
 #. module: project_issue
 #: view:project.issue:0
+#: field:project.issue,state:0
+#: field:project.issue.report,state:0
 msgid "Status"
 msgstr "Stare"
 
@@ -590,11 +576,6 @@ msgstr "Stare"
 #: view:project.issue.report:0
 msgid "#Project Issues"
 msgstr "#Probleme Proiect"
-
-#. module: project_issue
-#: view:board.board:0
-msgid "Current Issues"
-msgstr "Problemele curente"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -608,14 +589,14 @@ msgid "Normal"
 msgstr "Normal"
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "Global CC"
-msgstr "CC global"
+#: field:project.project,issue_count:0
+msgid "unknown"
+msgstr ""
 
 #. module: project_issue
-#: view:project.issue:0 view:project.issue.report:0
-msgid "To Do"
-msgstr "De efectuat"
+#: view:project.issue:0
+msgid "Category:"
+msgstr ""
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -623,9 +604,14 @@ msgid "June"
 msgstr "Iunie"
 
 #. module: project_issue
+#: help:project.issue,message_ids:0
+msgid "Messages and communication history"
+msgstr ""
+
+#. module: project_issue
 #: view:project.issue:0
 msgid "New Issues"
-msgstr ""
+msgstr "Probleme Noi"
 
 #. module: project_issue
 #: field:project.issue,day_close:0
@@ -633,9 +619,25 @@ msgid "Days to Close"
 msgstr "Zile pana la inchidere"
 
 #. module: project_issue
-#: field:project.issue,active:0 field:project.issue.version,active:0
+#: field:project.issue,message_is_follower:0
+msgid "Is a Follower"
+msgstr ""
+
+#. module: project_issue
+#: help:project.issue,state:0
+msgid ""
+"The status is set to 'Draft', when a case is created.                      "
+"If the case is in progress the status is set to 'Open'.                      "
+"When the case is over, the status is set to 'Done'.                      If "
+"the case needs to be reviewed then the status is                       set "
+"to 'Pending'."
+msgstr ""
+
+#. module: project_issue
+#: field:project.issue,active:0
+#: field:project.issue.version,active:0
 msgid "Active"
-msgstr "Activ(ă)"
+msgstr "Activ(a)"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -643,9 +645,21 @@ msgid "November"
 msgstr "Noiembrie"
 
 #. module: project_issue
+#: code:addons/project_issue/project_issue.py:472
+#, python-format
+msgid "Warning!"
+msgstr ""
+
+#. module: project_issue
+#: field:project.issue,message_comment_ids:0
+#: help:project.issue,message_comment_ids:0
+msgid "Comments and emails"
+msgstr ""
+
+#. module: project_issue
 #: view:project.issue.report:0
 msgid "Search"
-msgstr "Caută"
+msgstr "Cautati"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -653,19 +667,9 @@ msgid "October"
 msgstr "Octombrie"
 
 #. module: project_issue
-#: view:board.board:0
-msgid "Issues Dashboard"
-msgstr ""
-
-#. module: project_issue
-#: view:project.issue:0 field:project.issue,type_id:0
-msgid "Stages"
-msgstr ""
-
-#. module: project_issue
 #: help:project.issue,days_since_creation:0
 msgid "Difference in days between creation date and current date"
-msgstr ""
+msgstr "Direfenta in zile dintre data crearii si data curenta"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -675,7 +679,7 @@ msgstr "Ianuarie"
 #. module: project_issue
 #: view:project.issue:0
 msgid "Feature Tracker Tree"
-msgstr "Caracteristică Arbore Program de urmărire probleme"
+msgstr "Caracteristica Arbore Program de urmarire probleme"
 
 #. module: project_issue
 #: help:project.issue,email_from:0
@@ -683,152 +687,141 @@ msgid "These people will receive email."
 msgstr "Aceste persoane vor primi e-mail."
 
 #. module: project_issue
-#: view:board.board:0
-msgid "Issues By State"
-msgstr "Probleme după Stare"
+#: field:project.issue,message_summary:0
+msgid "Summary"
+msgstr ""
 
 #. module: project_issue
-#: view:project.issue:0 field:project.issue,date:0
+#: field:project.issue,date:0
 msgid "Date"
 msgstr "Data"
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "History"
-msgstr "Istoric"
-
-#. module: project_issue
-#: field:project.issue,user_id:0 view:project.issue.report:0
+#: field:project.issue,user_id:0
+#: view:project.issue.report:0
 #: field:project.issue.report,user_id:0
 msgid "Assigned to"
 msgstr "Atribuit lui"
 
 #. module: project_issue
-#: field:project.project,reply_to:0
-msgid "Reply-To Email Address"
-msgstr "Adresă de e-mail de răspuns"
-
-#. module: project_issue
-#: field:project.issue,partner_address_id:0
-msgid "Partner Contact"
-msgstr "Contact Partener"
-
-#. module: project_issue
-#: view:project.issue:0
-msgid "Issue Tracker Form"
-msgstr "Formular de urmărire problemă"
-
-#. module: project_issue
-#: view:project.issue:0 field:project.issue,state:0
-#: view:project.issue.report:0 field:project.issue.report,state:0
-msgid "State"
-msgstr "Stare"
-
-#. module: project_issue
-#: view:project.issue:0
-msgid "General"
-msgstr "General"
+#: view:project.config.settings:0
+msgid "Configure"
+msgstr ""
 
 #. module: project_issue
 #: view:project.issue:0
 msgid "Current Features"
-msgstr ""
+msgstr "Caracteristici curente"
+
+#. module: project_issue
+#: selection:project.issue.report,month:0
+msgid "September"
+msgstr "Septembrie"
 
 #. module: project_issue
 #: view:project.issue.version:0
 msgid "Issue Version"
-msgstr "Versiune Problemă"
+msgstr "Versiune Problema"
 
 #. module: project_issue
 #: field:project.issue.version,name:0
 msgid "Version Number"
-msgstr "Numărul versiunii"
+msgstr "Numarul versiunii"
 
 #. module: project_issue
 #: view:project.issue:0
 msgid "Cancel"
-msgstr "Anulează"
+msgstr "Anulati"
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "Close"
-msgstr "Închide"
-
-#. module: project_issue
-#: view:project.issue:0 selection:project.issue.report,state:0
+#: selection:project.issue.report,state:0
 msgid "Open"
-msgstr "Deschide"
+msgstr "Deschideti"
 
 #. module: project_issue
+#: field:account.analytic.account,use_issues:0
 #: model:ir.actions.act_window,name:project_issue.act_project_project_2_project_issue_all
 #: model:ir.actions.act_window,name:project_issue.project_issue_categ_act0
 #: model:ir.ui.menu,name:project_issue.menu_project_confi
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_track
 #: view:project.issue:0
+#: view:project.project:0
 msgid "Issues"
 msgstr "Probleme"
 
 #. module: project_issue
 #: selection:project.issue,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "In curs de desfasurare"
 
 #. module: project_issue
-#: model:ir.actions.act_window,name:project_issue.action_project_issue_graph_stage
-#: model:ir.actions.act_window,name:project_issue.action_project_issue_graph_state
+#: view:project.issue:0
+#: view:project.issue.report:0
+msgid "To Do"
+msgstr "De efectuat"
+
+#. module: project_issue
 #: model:ir.model,name:project_issue.model_project_issue
 #: view:project.issue.report:0
 msgid "Project Issue"
-msgstr "Problemă Proiect"
+msgstr "Problema Proiect"
 
 #. module: project_issue
 #: view:project.issue:0
 msgid "Creation Month"
+msgstr "Luna crearii"
+
+#. module: project_issue
+#: code:addons/project_issue/project_issue.py:557
+#, python-format
+msgid "<b>escalated</b> to <em>'%s'</em>."
 msgstr ""
 
 #. module: project_issue
-#: help:project.issue,progress:0
-msgid "Computed as: Time Spent / Total Time."
-msgstr "Calculat in felul următor: Timpul petrecut / Timpul total"
+#: view:project.issue.report:0
+#: field:project.issue.report,section_id:0
+msgid "Sale Team"
+msgstr "Echipa de vanzari"
 
 #. module: project_issue
-#: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
-msgid ""
-"Issues such as system bugs, customer complaints, and material breakdowns are "
-"collected here. You can define the stages assigned when solving the project "
-"issue (analysis, development, done). With the mailgateway module, issues can "
-"be integrated through an email address (example: support@mycompany.com)"
-msgstr ""
-"Problemele precum erorile de sistem, reclamatiile clientilor si avariile "
-"materiale sunt adunate aici. Puteti defini etapele atribuite rezolvării "
-"problemelor de proiect (analiză, dezvoltare, efectuat). Cu modulul "
-"mailgateway, problemele pot fi integrate printr-o adresă de email (de "
-"exemplu: support@mycompany.com)"
+#: view:project.issue:0
+#: view:project.issue.report:0
+#: field:project.issue.report,month:0
+msgid "Month"
+msgstr "Luna"
 
 #. module: project_issue
-#: view:board.board:0 view:project.issue:0
-msgid "Pending Issues"
-msgstr "Probleme in asteptare"
-
-#. module: project_issue
+#: view:project.issue:0
 #: field:project.issue,name:0
+#: view:project.project:0
 msgid "Issue"
-msgstr "Problemă"
+msgstr "Problema"
+
+#. module: project_issue
+#: code:addons/project_issue/project_issue.py:540
+#, python-format
+msgid "Stage changed to <b>%s</b>."
+msgstr ""
+
+#. module: project_issue
+#: model:project.category,name:project_issue.project_issue_category_02
+msgid "PBCK"
+msgstr ""
 
 #. module: project_issue
 #: view:project.issue:0
 msgid "Feature Tracker Search"
-msgstr "Caută Caracteristica Program de urmărire"
+msgstr "Cautati Caracteristica Program de urmarire"
 
 #. module: project_issue
-#: view:project.issue:0 field:project.issue,description:0
+#: view:project.issue:0
 msgid "Description"
 msgstr "Descriere"
 
 #. module: project_issue
 #: field:project.issue,section_id:0
 msgid "Sales Team"
-msgstr "Echipa de vânzări"
+msgstr "Echipa de vanzari"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -836,29 +829,15 @@ msgid "May"
 msgstr "Mai"
 
 #. module: project_issue
-#: view:project.issue.report:0 field:project.issue.report,email:0
-msgid "# Emails"
-msgstr "# Email-uri"
+#: model:ir.model,name:project_issue.model_project_config_settings
+msgid "project.config.settings"
+msgstr ""
 
 #. module: project_issue
-#: help:project.issue,state:0
-msgid ""
-"The state is set to 'Draft', when a case is created.                         "
-"         \n"
-"If the case is in progress the state is set to 'Open'.                       "
-"           \n"
-"When the case is over, the state is set to 'Done'.                           "
-"       \n"
-"If the case needs to be reviewed then the state is set to 'Pending'."
-msgstr ""
-"Starea este setată pe 'Ciornă', atunci cand este creat un caz.               "
-"                   \n"
-"Dacă cazul este in desfăsurare, starea este setată pe 'Deschis'.             "
-"                     \n"
-"Atunci cand cazul este incheiat, starea este setată pe 'Efectuat'.           "
-"                       \n"
-"In cazul in care cazul trebuie revăzut, atunci starea este setată pe 'In "
-"asteptare'."
+#: view:project.issue.report:0
+#: field:project.issue.report,email:0
+msgid "# Emails"
+msgstr "# Email-uri"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -866,25 +845,27 @@ msgid "February"
 msgstr "Februarie"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:70
-#, python-format
-msgid "Issue '%s' has been opened."
-msgstr "Problema '%s' a fost deschisă."
-
-#. module: project_issue
 #: view:project.issue:0
 msgid "Feature description"
-msgstr "Descriere caracteristică"
-
-#. module: project_issue
-#: view:project.issue:0
-msgid "Edit"
-msgstr ""
+msgstr "Descrierea caracteristicii"
 
 #. module: project_issue
 #: field:project.project,project_escalation_id:0
 msgid "Project Escalation"
-msgstr "Intensificare proiect"
+msgstr "Avansare Proiect"
+
+#. module: project_issue
+#: model:ir.actions.act_window,help:project_issue.project_issue_version_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a new version.\n"
+"              </p><p>\n"
+"                Define here the different versions of your products on "
+"which\n"
+"                you can work on issues.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: project_issue
 #: help:project.issue,section_id:0
@@ -892,19 +873,18 @@ msgid ""
 "Sales team to which Case belongs to.                             Define "
 "Responsible user and Email account for mail gateway."
 msgstr ""
-"Echipa de vanzări căreia ii apartine cazul. Defineste Utilizatorul "
+"Echipa de vanzari careia ii apartine cazul. Definiti Utilizatorul "
 "responsabil si Contul de e-mail pentru mail gateway."
 
 #. module: project_issue
-#: view:project.issue.report:0
-msgid "Month-1"
-msgstr "Luna-1"
+#: view:board.board:0
+msgid "My Issues"
+msgstr "Problemele mele"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:85
-#, python-format
-msgid "Issue '%s' has been closed."
-msgstr "Problema '%s' a fost inchisă."
+#: help:project.issue.report,delay_open:0
+msgid "Number of Days to open the project issue."
+msgstr ""
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -913,13 +893,18 @@ msgstr "Aprilie"
 
 #. module: project_issue
 #: view:project.issue:0
+msgid "⇒ Escalate"
+msgstr ""
+
+#. module: project_issue
+#: view:project.issue:0
 msgid "References"
-msgstr "Referințe"
+msgstr "Referinte"
 
 #. module: project_issue
 #: field:project.issue,working_hours_close:0
 msgid "Working Hours to Close the Issue"
-msgstr "Orele de lucru pentru rezolvarea problemei"
+msgstr "Orele de lucru pentru inchiderea problemei"
 
 #. module: project_issue
 #: field:project.issue,id:0
@@ -927,50 +912,39 @@ msgid "ID"
 msgstr "ID"
 
 #. module: project_issue
-#: view:project.issue.report:0
-msgid "Current Year"
-msgstr ""
-
-#. module: project_issue
-#: code:addons/project_issue/project_issue.py:415
-#, python-format
-msgid "No Title"
-msgstr "Nici un Titlu"
+#: model:ir.model,name:project_issue.model_project_issue_report
+msgid "project.issue.report"
+msgstr "raport.problema.proiect"
 
 #. module: project_issue
 #: help:project.issue.report,delay_close:0
-#: help:project.issue.report,delay_open:0
 msgid "Number of Days to close the project issue"
-msgstr "Numărul de Zile pană la inchiderea problemei proiectului"
-
-#. module: project_issue
-#: view:project.issue.report:0 field:project.issue.report,section_id:0
-msgid "Sale Team"
-msgstr "Echipa de vanzări"
+msgstr "Numarul de Zile pana la inchiderea problemei proiectului"
 
 #. module: project_issue
 #: field:project.issue.report,working_hours_close:0
 msgid "Avg. Working Hours to Close"
-msgstr "Ore de lucru medii pana la inchidere"
+msgstr "Media orelor de lucru pana la inchidere"
 
 #. module: project_issue
 #: selection:project.issue,priority:0
 #: selection:project.issue.report,priority:0
 msgid "High"
-msgstr "Ridicat(ă)"
+msgstr "Ridicat(a)"
 
 #. module: project_issue
 #: field:project.issue,date_deadline:0
 msgid "Deadline"
-msgstr "Data scadentă"
+msgstr "Termen limita"
 
 #. module: project_issue
 #: field:project.issue,date_action_last:0
 msgid "Last Action"
-msgstr "Ultima acțiune"
+msgstr "Ultima actiune"
 
 #. module: project_issue
-#: view:project.issue.report:0 field:project.issue.report,name:0
+#: view:project.issue.report:0
+#: field:project.issue.report,name:0
 msgid "Year"
 msgstr "An"
 
@@ -979,19 +953,28 @@ msgstr "An"
 msgid "Duration"
 msgstr "Durata"
 
-#. module: project_issue
-#: view:board.board:0
-msgid "My Open Issues by Creation Date"
-msgstr "Probleme deschise după data creării"
-
 #~ msgid "Close Working hours"
 #~ msgstr "Terminare Program de lucru"
 
 #~ msgid "Date Closed"
 #~ msgstr "Dată închidere"
 
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "Avertizare !"
+
 #~ msgid "Mobile"
 #~ msgstr "Mobil"
+
+#, python-format
+#~ msgid " (copy)"
+#~ msgstr " (copie)"
+
+#~ msgid "Partner"
+#~ msgstr "Partener"
+
+#~ msgid "Pending Issues"
+#~ msgstr "Probleme in asteptare"
 
 #~ msgid "Issue Management in Project Management"
 #~ msgstr "Managementul Problemei in Managementul Proiectului"
@@ -999,11 +982,20 @@ msgstr "Probleme deschise după data creării"
 #~ msgid "Open Working Hours"
 #~ msgstr "Deschide Program de lucru"
 
+#~ msgid "Project Issue Dashboard"
+#~ msgstr "Tablou de bord Probleme Proiect"
+
 #~ msgid "Phone"
 #~ msgstr "Telefon"
 
 #~ msgid "My Board"
 #~ msgstr "Panoul meu"
+
+#~ msgid "Project issues"
+#~ msgstr "Probleme proiect"
+
+#~ msgid "Communication & History"
+#~ msgstr "Comunicare & Istoric"
 
 #~ msgid ""
 #~ "The channels represent the different communication modes available with the "
@@ -1028,17 +1020,32 @@ msgstr "Probleme deschise după data creării"
 #~ "Proiect\n"
 #~ "    "
 
+#~ msgid "Current Issues"
+#~ msgstr "Problemele curente"
+
+#~ msgid "Global CC"
+#~ msgstr "CC global"
+
 #~ msgid "Extended Filters..."
 #~ msgstr "Filtre extinse..."
 
+#~ msgid "State"
+#~ msgstr "Stare"
+
 #~ msgid "Attachments"
 #~ msgstr "Atașamente"
+
+#~ msgid "History"
+#~ msgstr "Istoric"
 
 #~ msgid "Resolution"
 #~ msgstr "Rezoluție"
 
 #~ msgid "Communication"
 #~ msgstr "Comunicare"
+
+#~ msgid "General"
+#~ msgstr "General"
 
 #~ msgid "Details"
 #~ msgstr "Detalii"
@@ -1051,3 +1058,156 @@ msgstr "Probleme deschise după data creării"
 
 #~ msgid "Employee's Name"
 #~ msgstr "Numele angajatului"
+
+#~ msgid "Month-1"
+#~ msgstr "Luna-1"
+
+#, python-format
+#~ msgid "No Title"
+#~ msgstr "Nici un Titlu"
+
+#~ msgid "Issue / Partner"
+#~ msgstr "Problema / Partener"
+
+#~ msgid "Current Year"
+#~ msgstr "Anul Curent"
+
+#~ msgid "Stages"
+#~ msgstr "Etape"
+
+#~ msgid "Previous Month"
+#~ msgstr "Luna anterioara"
+
+#~ msgid "Error! project start-date must be lower then project end-date."
+#~ msgstr ""
+#~ "Eroare! data de inceput a proiectului trebuie sa fie mai mica decat data de "
+#~ "sfarsit a proiectului."
+
+#~ msgid "Today's features"
+#~ msgstr "Caracteristicile de astazi"
+
+#~ msgid "Issue Tracker Form"
+#~ msgstr "Formular de urmarire Problema"
+
+#~ msgid "Issues By State"
+#~ msgstr "Probleme dupa Stare"
+
+#~ msgid ""
+#~ "Issues such as system bugs, customer complaints, and material breakdowns are "
+#~ "collected here. You can define the stages assigned when solving the project "
+#~ "issue (analysis, development, done). With the mailgateway module, issues can "
+#~ "be integrated through an email address (example: support@mycompany.com)"
+#~ msgstr ""
+#~ "Problemele precum erorile de sistem, reclamatiile clientilor si avariile "
+#~ "materiale sunt adunate aici. Puteti defini etapele atribuite rezolvarii "
+#~ "problemelor de proiect (analiza, dezvoltare, efectuat). Cu modulul "
+#~ "mailgateway, problemele pot fi integrate printr-o adresa de email (de "
+#~ "exemplu: support@mycompany.com)"
+
+#, python-format
+#~ msgid "Issue '%s' has been opened."
+#~ msgstr "Problema '%s' a fost deschisa."
+
+#, python-format
+#~ msgid "Issue '%s' has been closed."
+#~ msgstr "Problema '%s' a fost inchisa."
+
+#~ msgid "Issues By Stage"
+#~ msgstr "Probleme dupa Etapa"
+
+#~ msgid "Add Internal Note"
+#~ msgstr "Adaugati Nota Interna"
+
+#~ msgid "Change to Next Stage"
+#~ msgstr "Treceti la Etapa Urmatoare"
+
+#~ msgid "Change Color"
+#~ msgstr "Schimbati culoarea"
+
+#~ msgid "Next"
+#~ msgstr "Urmatorul (urmatoarea)"
+
+#~ msgid "Send New Email"
+#~ msgstr "Trimiteti un e-mail nou"
+
+#~ msgid "Convert To Task"
+#~ msgstr "Transforma in sarcina"
+
+#~ msgid "History Information"
+#~ msgstr "Istoric Informatii"
+
+#~ msgid "Today"
+#~ msgstr "Astazi"
+
+#~ msgid "Reset to Draft"
+#~ msgstr "Resetare ca Ciorna"
+
+#~ msgid "My Open Project Issue"
+#~ msgstr "Problema Proiectului meu Open"
+
+#~ msgid "My Open Project issues"
+#~ msgstr "Problemele Proiectului meu Open"
+
+#~ msgid "My Open Issues by Creation Date"
+#~ msgstr "Problemele mele Open dupa Data crearii"
+
+#~ msgid ""
+#~ "The state is set to 'Draft', when a case is created.                         "
+#~ "         \n"
+#~ "If the case is in progress the state is set to 'Open'.                       "
+#~ "           \n"
+#~ "When the case is over, the state is set to 'Done'.                           "
+#~ "       \n"
+#~ "If the case needs to be reviewed then the state is set to 'Pending'."
+#~ msgstr ""
+#~ "Starea este setata pe 'Ciorna', atunci cand este creat un caz.               "
+#~ "                   \n"
+#~ "In eventualitatea in care cazul este in desfasurare, starea este setata pe "
+#~ "'Deschis'.                                  \n"
+#~ "Atunci cand cazul este incheiat, starea este setata pe 'Efectuat'.           "
+#~ "                       \n"
+#~ "In eventualitatea in care cazul trebuie revazut, atunci starea este setata "
+#~ "pe 'In asteptare'."
+
+#~ msgid "Change to Previous Stage"
+#~ msgstr "Treceti la Etapa Anterioara"
+
+#~ msgid ""
+#~ "You can use the issues tracker in OpenERP to handle bugs in the software "
+#~ "development project, to handle claims in after-sales services, etc. Define "
+#~ "here the different versions of your products on which you can work on issues."
+#~ msgstr ""
+#~ "Puteti folosi programul care gaseste problemele in OpenERP pentru a gestiona "
+#~ "erorile din proiectul de dezvoltare al softului, pentru a gestiona "
+#~ "solicitari de servicii dupa vanzare, etc. Aici definiti diferitele versiuni "
+#~ "ale produselor dumneavoastra, unde puteti lucra la probleme."
+
+#~ msgid "Previous"
+#~ msgstr "Precedent(a)"
+
+#~ msgid "Escalate"
+#~ msgstr "Promovati"
+
+#~ msgid "Reset to New"
+#~ msgstr "Resetati pe Nou(a)"
+
+#~ msgid "Reply"
+#~ msgstr "Raspundeti"
+
+#~ msgid "Contact Information"
+#~ msgstr "Informatii de contact"
+
+#~ msgid "Issues Dashboard"
+#~ msgstr "Panou de bord Probleme"
+
+#~ msgid "Reply-To Email Address"
+#~ msgstr "Raspundeti la adresa de e-mail"
+
+#~ msgid "Partner Contact"
+#~ msgstr "Contact partener"
+
+#~ msgid "Close"
+#~ msgstr "Inchideti"
+
+#~ msgid "Edit"
+#~ msgstr "Editati"

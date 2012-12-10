@@ -2,9 +2,11 @@
 <data>
     <record model="res.groups" id="group_compta_user">
         <field name="name">grcompta</field>
+        <field name="users" eval="[(4, ref('base.user_root'))]"/>
     </record>
     <record model="res.groups" id="group_compta_admin">
         <field name="name">grcomptaadmin</field>
+        <field name="users" eval="[(4, ref('base.user_root'))]"/>
     </record>
     <menuitem name="Administration" groups="admin,grcomptaadmin" icon="terp-stock" id="menu_admin_compta"/>
 </data>

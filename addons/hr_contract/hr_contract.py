@@ -44,7 +44,7 @@ class hr_employee(osv.osv):
         'place_of_birth': fields.char('Place of Birth', size=30),
         'children': fields.integer('Number of Children'),
         'vehicle': fields.char('Company Vehicle', size=64),
-        'vehicle_distance': fields.integer('Home-Work Distance', help="In kilometers"),
+        'vehicle_distance': fields.integer('Home-Work Dist.', help="In kilometers"),
         'contract_ids': fields.one2many('hr.contract', 'employee_id', 'Contracts'),
         'contract_id':fields.function(_get_latest_contract, string='Contract', type='many2one', relation="hr.contract", help='Latest contract of the employee'),
     }
@@ -97,7 +97,7 @@ class hr_contract(osv.osv):
         return True
 
     _constraints = [
-        (_check_dates, 'Error! contract start-date must be lower then contract end-date.', ['date_start', 'date_end'])
+        (_check_dates, 'Error! Contract start-date must be less than contract end-date.', ['date_start', 'date_end'])
     ]
 hr_contract()
 

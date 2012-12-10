@@ -24,15 +24,18 @@ from lxml import etree
 
 from osv import fields, osv
 from tools.translate import _
+from openerp.osv.orm import setup_modifiers
 
 class account_common_report(osv.osv_memory):
     _name = "account.common.report"
     _description = "Account Common Report"
 
     def onchange_chart_id(self, cr, uid, ids, chart_account_id=False, context=None):
+        res = {}
         if chart_account_id:
             company_id = self.pool.get('account.account').browse(cr, uid, chart_account_id, context=context).company_id.id
-        return {'value': {'company_id': company_id}}
+            res['value'] = {'company_id': company_id}
+        return res
 
     _columns = {
         'chart_account_id': fields.many2one('account.account', 'Chart of Account', help='Select Charts of Accounts', required=True, domain = [('parent_id','=',False)]),
@@ -65,15 +68,16 @@ class account_common_report(osv.osv_memory):
         (_check_company_id, 'The fiscalyear, periods or chart of account chosen have to belong to the same company.', ['chart_account_id','fiscalyear_id','period_from','period_to']),
     ]
 
-
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        if context is None:context = {}
         res = super(account_common_report, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
-        if context.get('active_model', False) == 'account.account' and view_id:
+        if context.get('active_model', False) == 'account.account':
             doc = etree.XML(res['arch'])
             nodes = doc.xpath("//field[@name='chart_account_id']")
             for node in nodes:
                 node.set('readonly', '1')
                 node.set('help', 'If you print the report from Account list/form view it will not consider Charts of account')
+                setup_modifiers(node, res['fields']['chart_account_id'])
             res['arch'] = etree.tostring(doc)
         return res
 
@@ -110,12 +114,17 @@ class account_common_report(osv.osv_memory):
         return res
 
     def _get_account(self, cr, uid, context=None):
-        accounts = self.pool.get('account.account').search(cr, uid, [('parent_id', '=', False)], limit=1)
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        accounts = self.pool.get('account.account').search(cr, uid, [('parent_id', '=', False), ('company_id', '=', user.company_id.id)], limit=1)
         return accounts and accounts[0] or False
 
     def _get_fiscalyear(self, cr, uid, context=None):
         now = time.strftime('%Y-%m-%d')
-        fiscalyears = self.pool.get('account.fiscalyear').search(cr, uid, [('date_start', '<', now), ('date_stop', '>', now)], limit=1 )
+        company_id = False
+        ids = context.get('active_ids', [])
+        if ids and context.get('active_model') == 'account.account':
+            company_id = self.pool.get('account.account').browse(cr, uid, ids[0], context=context).company_id.id
+        fiscalyears = self.pool.get('account.fiscalyear').search(cr, uid, [('date_start', '<', now), ('date_stop', '>', now), ('company_id', '=', company_id)], limit=1)
         return fiscalyears and fiscalyears[0] or False
 
     def _get_all_journal(self, cr, uid, context=None):
@@ -142,13 +151,13 @@ class account_common_report(osv.osv_memory):
             result['date_to'] = data['form']['date_to']
         elif data['form']['filter'] == 'filter_period':
             if not data['form']['period_from'] or not data['form']['period_to']:
-                raise osv.except_osv(_('Error'),_('Select a starting and an ending period'))
+                raise osv.except_osv(_('Error!'),_('Select a starting and an ending period.'))
             result['period_from'] = data['form']['period_from']
             result['period_to'] = data['form']['period_to']
         return result
 
     def _print_report(self, cr, uid, ids, data, context=None):
-        raise (_('Error'), _('not implemented'))
+        raise (_('Error!'), _('Not implemented.'))
 
     def check_report(self, cr, uid, ids, context=None):
         if context is None:

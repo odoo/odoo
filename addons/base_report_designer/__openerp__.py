@@ -24,24 +24,20 @@
     'name': 'OpenOffice Report Designer',
     'version': '0.1',
     'category': 'Reporting',
-    'complexity': "normal",
     'description': """
 This module is used along with OpenERP OpenOffice Plugin.
 =========================================================
 
-This module adds wizards to Import/Export .sxw report that
-you can modify in OpenOffice. Once you have modified it you can
-upload the report using the same wizard.
+This module adds wizards to Import/Export .sxw report that you can modify in OpenOffice. 
+Once you have modified it you can upload the report using the same wizard.
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
-    'init_xml': ['wizard/base_report_design_view.xml'],
-    'update_xml': ['base_report_designer_installer.xml'],
-    'demo_xml': [],
+    'data': ['wizard/base_report_design_view.xml' , 'base_report_designer_installer.xml'],
+    'demo': [],
     'installable': True,
     'auto_install': False,
-    'certificate': '0056379010493',
     'images': ['images/base_report_designer1.jpeg','images/base_report_designer2.jpeg',],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -5,7 +5,6 @@
         <record id="accounting_report_view" model="ir.ui.view">
             <field name="name">Accounting Report</field>
             <field name="model">accounting.report</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="account.account_common_report_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='target_move']" position="after">
@@ -15,15 +14,19 @@
                 </xpath>
                 <xpath expr="//notebook/page[@string='Filters']" position="after">
                     <page string="Comparison" attrs="{'invisible': [('enable_filter','=',False)]}">
-                        <field name="label_filter" attrs="{'required': [('enable_filter', '=', True)]}"/>
-                        <field name="fiscalyear_id_cmp"/><newline/>
-                        <field name="filter_cmp"/>
-                        <separator string="Dates" colspan="4"/>
-                        <field name="date_from_cmp" attrs="{'readonly':[('filter_cmp', '!=', 'filter_date')], 'required':[('filter_cmp', '=', 'filter_date')]}" colspan="4"/>
-                        <field name="date_to_cmp" attrs="{'readonly':[('filter_cmp', '!=', 'filter_date')], 'required':[('filter_cmp', '=', 'filter_date')]}"  colspan="4"/>
-                        <separator string="Periods" colspan="4"/>
-                        <field name="period_from_cmp" domain="[('fiscalyear_id', '=', fiscalyear_id_cmp)]" attrs="{'readonly':[('filter_cmp','!=','filter_period')], 'required':[('filter_cmp', '=', 'filter_period')]}" colspan="4"/>
-                        <field name="period_to_cmp" domain="[('fiscalyear_id', '=', fiscalyear_id_cmp)]" attrs="{'readonly':[('filter_cmp','!=','filter_period')], 'required':[('filter_cmp', '=', 'filter_period')]}" colspan="4"/>
+                        <group>
+                            <field name="label_filter" attrs="{'required': [('enable_filter', '=', True)]}"/>
+                            <field name="fiscalyear_id_cmp"/><newline/>
+                            <field name="filter_cmp"/>
+                        </group>
+                        <group string="Dates" attrs="{'invisible':[('filter_cmp', '!=', 'filter_date')]}">
+                            <field name="date_from_cmp" attrs="{'required':[('filter_cmp', '=', 'filter_date')]}"/>
+                            <field name="date_to_cmp" attrs="{'required':[('filter_cmp', '=', 'filter_date')]}"/>
+                        </group>
+                        <group string="Periods" attrs="{'invisible':[('filter_cmp', '!=', 'filter_period')]}">
+                            <field name="period_from_cmp" domain="[('fiscalyear_id', '=', fiscalyear_id_cmp)]" attrs="{'required':[('filter_cmp', '=', 'filter_period')]}"/>
+                            <field name="period_to_cmp" domain="[('fiscalyear_id', '=', fiscalyear_id_cmp)]" attrs="{'required':[('filter_cmp', '=', 'filter_period')]}"/>
+                        </group>
                    </page>
                 </xpath>
                 <xpath expr="//notebook/page[@string='Journals']" position="replace">
@@ -53,7 +56,7 @@
              <field name="view_mode">form</field>
              <field name="view_id" ref="accounting_report_view"/>
              <field name="target">new</field>
-             <field name="context"></field>
+             <field name="context">{}</field>
              <field name="context" eval="{'default_account_report_id':ref('account.account_financial_report_profitandloss0')}"/>
         </record>
         <menuitem icon="STOCK_PRINT" name="Profit And Loss" action="action_account_report_pl" id="menu_account_report_pl" parent="final_accounting_reports"/>

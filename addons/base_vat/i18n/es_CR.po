@@ -6,19 +6,24 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2012-02-15 17:43+0000\n"
-"Last-Translator: Freddy Gonzalez <freddy.gonzalez@clearcorp.co.cr>\n"
+"Last-Translator: Freddy Gonzalez <freddy.gonzalez.contreras@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-16 05:05+0000\n"
-"X-Generator: Launchpad (build 14781)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:19+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 "Language: \n"
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:141
+#: view:res.partner:0
+msgid "Check Validity"
+msgstr ""
+
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:147
 #, python-format
 msgid ""
 "This VAT number does not seem to be valid.\n"
@@ -26,16 +31,6 @@ msgid ""
 msgstr ""
 "Este número de IVA no parece ser válida.\n"
 "Nota: el formato es%s esperado"
-
-#. module: base_vat
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr "¡El nombre de la compañía debe ser único!"
-
-#. module: base_vat
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr "¡Error! No puede crear miembros asociados recursivamente."
 
 #. module: base_vat
 #: field:res.company,vat_check_vies:0
@@ -48,9 +43,10 @@ msgid "Companies"
 msgstr "Compañias"
 
 #. module: base_vat
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "¡Error! No puede crear compañías recursivas."
+#: code:addons/base_vat/base_vat.py:111
+#, python-format
+msgid "Error!"
+msgstr ""
 
 #. module: base_vat
 #: help:res.partner,vat_subjected:0
@@ -131,3 +127,12 @@ msgstr "Sujeto a IVA"
 #~ "    la validación del CIF/NIF asignado a las empresas de los países "
 #~ "europeos.\n"
 #~ "    "
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "¡Error! No puede crear compañías recursivas."
+
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr "¡Error! No puede crear miembros asociados recursivamente."
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "¡El nombre de la compañía debe ser único!"

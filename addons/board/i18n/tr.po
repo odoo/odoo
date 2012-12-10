@@ -6,56 +6,59 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-01-23 23:39+0000\n"
 "Last-Translator: Ahmet Altınışık <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:41+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:12+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: board
-#: view:res.log.report:0
-msgid "  Year  "
-msgstr "  Yıl  "
+#: model:ir.actions.act_window,name:board.action_board_create
+#: model:ir.ui.menu,name:board.menu_board_create
+msgid "Create Board"
+msgstr ""
 
 #. module: board
-#: model:ir.model,name:board.model_board_menu_create
-msgid "Menu Create"
-msgstr "Menü Oluştur"
+#: view:board.create:0
+msgid "Create"
+msgstr ""
 
 #. module: board
-#: view:board.menu.create:0
-msgid "Menu Information"
-msgstr "Menü Bilgileri"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:4
+#, python-format
+msgid "Reset Layout.."
+msgstr ""
 
 #. module: board
-#: view:res.users:0
-msgid "Latest Connections"
-msgstr "Son Bağlantılar"
+#: view:board.create:0
+msgid "Create New Dashboard"
+msgstr ""
 
 #. module: board
-#: view:res.log.report:0
-msgid "Log created in last month"
-msgstr "Geçen Ay oluşturulan günlükler"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:40
+#, python-format
+msgid "Choose dashboard layout"
+msgstr ""
 
 #. module: board
-#: view:board.board:0
-#: model:ir.actions.act_window,name:board.open_board_administration_form
-msgid "Administration Dashboard"
-msgstr "Yönetim Paneli"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:70
+#, python-format
+msgid "Add"
+msgstr ""
 
 #. module: board
-#: view:res.log.report:0
-msgid "Group By..."
-msgstr "Grupla..."
-
-#. module: board
-#: view:res.log.report:0
-msgid "Log created in current year"
-msgstr "Bu yıl oluşturulan günlükler"
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:139
+#, python-format
+msgid "Are you sure you want to remove this item ?"
+msgstr ""
 
 #. module: board
 #: model:ir.model,name:board.model_board_board
@@ -63,294 +66,113 @@ msgid "Board"
 msgstr "Pano"
 
 #. module: board
-#: field:board.menu.create,menu_name:0
-msgid "Menu Name"
-msgstr "Menü İsmi"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.board_weekly_res_log_report_action
-#: view:res.log.report:0
-msgid "Weekly Global Activity"
-msgstr "Haftalık Genel Etkinlik"
-
-#. module: board
-#: field:board.board.line,name:0
-msgid "Title"
-msgstr "Unvan"
-
-#. module: board
-#: field:res.log.report,nbr:0
-msgid "# of Entries"
-msgstr "Kayıt Sayısı"
-
-#. module: board
-#: view:res.log.report:0
-#: field:res.log.report,month:0
-msgid "Month"
-msgstr "Ay"
-
-#. module: board
-#: view:res.log.report:0
-msgid "Log created in current month"
-msgstr "Bu ay oluşturulan günlükler"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.board_monthly_res_log_report_action
-#: view:res.log.report:0
-msgid "Monthly Activity per Document"
-msgstr "Belge Başına aylık faaliyet"
-
-#. module: board
 #: view:board.board:0
-msgid "Configuration Overview"
-msgstr "Yapılandırma Genel Bakışı"
+#: model:ir.actions.act_window,name:board.open_board_my_dash_action
+#: model:ir.ui.menu,name:board.menu_board_my_dash
+msgid "My Dashboard"
+msgstr ""
 
 #. module: board
-#: model:ir.actions.act_window,name:board.action_view_board_list_form
-#: model:ir.ui.menu,name:board.menu_view_board_form
-msgid "Dashboard Definition"
-msgstr "Kontrol Paneli Tanımı"
+#: field:board.create,name:0
+msgid "Board Name"
+msgstr ""
 
 #. module: board
-#: selection:res.log.report,month:0
-msgid "March"
-msgstr "Mart"
+#: model:ir.model,name:board.model_board_create
+msgid "Board Creation"
+msgstr ""
 
 #. module: board
-#: selection:res.log.report,month:0
-msgid "August"
-msgstr "Ağustos"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_user_connection_tree
-msgid "User Connections"
-msgstr "Kullanıcı Bağlantıları"
-
-#. module: board
-#: field:res.log.report,creation_date:0
-msgid "Creation Date"
-msgstr "Oluşturulma Tarihi"
-
-#. module: board
-#: view:res.log.report:0
-msgid "Log Analysis"
-msgstr "Log Analizi"
-
-#. module: board
-#: field:res.log.report,res_model:0
-msgid "Object"
-msgstr "Nesne"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "June"
-msgstr "Haziran"
-
-#. module: board
-#: field:board.board,line_ids:0
-msgid "Action Views"
-msgstr "Hareket Ekranları"
-
-#. module: board
-#: model:ir.model,name:board.model_res_log_report
-msgid "Log Report"
-msgstr "Günlük Raporu"
-
-#. module: board
-#: code:addons/board/wizard/board_menu_create.py:46
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:67
 #, python-format
-msgid "Please Insert Dashboard View(s) !"
-msgstr "Lütfen Kontrol Paneli Görünümü(leri) ekleyin !"
+msgid "Add to Dashboard"
+msgstr ""
 
 #. module: board
-#: selection:res.log.report,month:0
-msgid "July"
-msgstr "Temmuz"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:28
+#, python-format
+msgid "&nbsp;"
+msgstr ""
 
 #. module: board
-#: view:res.log.report:0
-#: field:res.log.report,day:0
-msgid "Day"
-msgstr "Gün"
+#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+msgid ""
+"<div class=\"oe_empty_custom_dashboard\">\n"
+"                  <p>\n"
+"                    <b>Your personal dashboard is empty.</b>\n"
+"                  </p><p>\n"
+"                    To add your first report into this dashboard, go to any\n"
+"                    menu, switch to list or graph view, and click <i>'Add "
+"to\n"
+"                    Dashboard'</i> in the extended search options.\n"
+"                  </p><p>\n"
+"                    You can filter and group data before inserting into the\n"
+"                    dashboard using the search options.\n"
+"                  </p>\n"
+"              </div>\n"
+"            "
+msgstr ""
 
 #. module: board
-#: view:board.menu.create:0
-msgid "Create Menu For Dashboard"
-msgstr "Kontrol Paneli için Menü Oluştur"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:6
+#, python-format
+msgid "Reset"
+msgstr ""
 
 #. module: board
-#: selection:res.log.report,month:0
-msgid "February"
-msgstr "Şubat"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "October"
-msgstr "Ekim"
-
-#. module: board
-#: model:ir.model,name:board.model_board_board_line
-msgid "Board Line"
-msgstr "Pano Satırı"
-
-#. module: board
-#: field:board.menu.create,menu_parent_id:0
+#: field:board.create,menu_parent_id:0
 msgid "Parent Menu"
 msgstr "Ana Menü"
 
 #. module: board
-#: view:res.log.report:0
-msgid "    Month-1    "
-msgstr "    Ay-1    "
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "January"
-msgstr "Ocak"
-
-#. module: board
-#: view:board.board:0
-msgid "Users"
-msgstr "Kullanıcılar"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "November"
-msgstr "Kasım"
-
-#. module: board
-#: help:board.board.line,sequence:0
-msgid ""
-"Gives the sequence order                         when displaying a list of "
-"board lines."
-msgstr "Pano satırları gösterilirken diziliş sırasını belirler."
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "April"
-msgstr "Nisan"
-
-#. module: board
-#: view:board.board:0
-#: field:board.board,name:0
-#: field:board.board.line,board_id:0
-#: model:ir.ui.menu,name:board.menu_dasboard
-msgid "Dashboard"
-msgstr "Kontrol paneli"
-
-#. module: board
-#: code:addons/board/wizard/board_menu_create.py:45
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:8
 #, python-format
-msgid "User Error!"
-msgstr "Kullanıcı Hatası!"
+msgid "Change Layout.."
+msgstr ""
 
 #. module: board
-#: field:board.board.line,action_id:0
-msgid "Action"
-msgstr "Hareket"
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:93
+#, python-format
+msgid "Edit Layout"
+msgstr ""
 
 #. module: board
-#: field:board.board.line,position:0
-msgid "Position"
-msgstr "Konum"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:10
+#, python-format
+msgid "Change Layout"
+msgstr ""
 
 #. module: board
-#: view:res.log.report:0
-msgid "Model"
-msgstr "Model"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.board_homepage_action
-msgid "Home Page"
-msgstr "Ana Sayfa"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_latest_activities_tree
-msgid "Latest Activities"
-msgstr "Son Etkinlikler"
-
-#. module: board
-#: selection:board.board.line,position:0
-msgid "Left"
-msgstr "Sol"
-
-#. module: board
-#: field:board.board,view_id:0
-msgid "Board View"
-msgstr "Pano Görünümü"
-
-#. module: board
-#: selection:board.board.line,position:0
-msgid "Right"
-msgstr "Sağ"
-
-#. module: board
-#: field:board.board.line,width:0
-msgid "Width"
-msgstr "En"
-
-#. module: board
-#: view:res.log.report:0
-msgid "   Month   "
-msgstr "   Ay   "
-
-#. module: board
-#: field:board.board.line,sequence:0
-msgid "Sequence"
-msgstr "Sıra"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "September"
-msgstr "Eylül"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "December"
-msgstr "Aralık"
-
-#. module: board
-#: view:board.board:0
-#: view:board.menu.create:0
-msgid "Create Menu"
-msgstr "Menü Oluştur"
-
-#. module: board
-#: field:board.board.line,height:0
-msgid "Height"
-msgstr "Yükseklik"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_board_menu_create
-msgid "Create Board Menu"
-msgstr "Menü Paneli Oluştur"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "May"
-msgstr "Mayıs"
-
-#. module: board
-#: view:res.log.report:0
-#: field:res.log.report,name:0
-msgid "Year"
-msgstr "Yıl"
-
-#. module: board
-#: view:board.menu.create:0
+#: view:board.create:0
 msgid "Cancel"
 msgstr "Vazgeç"
 
 #. module: board
-#: view:board.board:0
-msgid "Dashboard View"
-msgstr "Kontrol Paneli Görünümü"
+#: view:board.create:0
+msgid "or"
+msgstr ""
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:69
+#, python-format
+msgid "Title of new dashboard item"
+msgstr ""
 
 #~ msgid "Author"
 #~ msgstr "Yazar"
 
 #~ msgid "Note"
 #~ msgstr "Not"
+
+#~ msgid "Menu Information"
+#~ msgstr "Menü Bilgileri"
 
 #~ msgid "Date"
 #~ msgstr "Tarih"
@@ -367,8 +189,23 @@ msgstr "Kontrol Paneli Görünümü"
 #~ msgid "Notes"
 #~ msgstr "Notlar"
 
+#~ msgid "Menu Name"
+#~ msgstr "Menü İsmi"
+
 #~ msgid "Note type"
 #~ msgstr "Not tipi"
+
+#~ msgid "Left"
+#~ msgstr "Sol"
+
+#~ msgid "Board View"
+#~ msgstr "Pano Görünümü"
+
+#~ msgid "Right"
+#~ msgstr "Sağ"
+
+#~ msgid "Sequence"
+#~ msgstr "Sıra"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "İşlem tanımlamasında geçersiz model adı."
@@ -383,20 +220,186 @@ msgstr "Kontrol Paneli Görünümü"
 #~ msgid "Dashboard main module"
 #~ msgstr "Kontrol Paneli Ana Modülü"
 
+#~ msgid "Dashboard Definition"
+#~ msgstr "Kontrol Paneli Tanımı"
+
+#~ msgid "Create Menu For Dashboard"
+#~ msgstr "Kontrol Paneli için Menü Oluştur"
+
 #~ msgid "Base module for all dashboards."
 #~ msgstr "Tüm Kontrol Panelleri için Temel Modül"
 
 #~ msgid "Open Dashboard"
 #~ msgstr "Kontrol Panelini Aç"
 
+#~ msgid "Create Menu"
+#~ msgstr "Menü Oluştur"
+
 #~ msgid "Dashboards"
 #~ msgstr "Kontrol Panelleri"
+
+#~ msgid "Height"
+#~ msgstr "Yükseklik"
 
 #~ msgid "Subject"
 #~ msgstr "Konu"
 
+#~ msgid "  Year  "
+#~ msgstr "  Yıl  "
+
+#, python-format
+#~ msgid "User Error!"
+#~ msgstr "Kullanıcı Hatası!"
+
+#~ msgid "Menu Create"
+#~ msgstr "Menü Oluştur"
+
+#~ msgid "Group By..."
+#~ msgstr "Grupla..."
+
+#~ msgid "Latest Connections"
+#~ msgstr "Son Bağlantılar"
+
+#~ msgid "Weekly Global Activity"
+#~ msgstr "Haftalık Genel Etkinlik"
+
+#~ msgid "Month"
+#~ msgstr "Ay"
+
+#~ msgid "March"
+#~ msgstr "Mart"
+
+#~ msgid "Title"
+#~ msgstr "Unvan"
+
+#~ msgid "Log Report"
+#~ msgstr "Günlük Raporu"
+
+#~ msgid "Creation Date"
+#~ msgstr "Oluşturulma Tarihi"
+
+#~ msgid "June"
+#~ msgstr "Haziran"
+
 #~ msgid "Publish a note"
 #~ msgstr "Bir not yayınla"
 
+#~ msgid "August"
+#~ msgstr "Ağustos"
+
+#~ msgid "User Connections"
+#~ msgstr "Kullanıcı Bağlantıları"
+
+#~ msgid "February"
+#~ msgstr "Şubat"
+
+#~ msgid "Day"
+#~ msgstr "Gün"
+
 #~ msgid "Extended Filters..."
 #~ msgstr "Genişletilmiş Süzgeçler..."
+
+#~ msgid "July"
+#~ msgstr "Temmuz"
+
+#~ msgid "October"
+#~ msgstr "Ekim"
+
+#~ msgid "    Month-1    "
+#~ msgstr "    Ay-1    "
+
+#~ msgid "January"
+#~ msgstr "Ocak"
+
+#~ msgid "November"
+#~ msgstr "Kasım"
+
+#~ msgid "April"
+#~ msgstr "Nisan"
+
+#~ msgid ""
+#~ "Gives the sequence order                         when displaying a list of "
+#~ "board lines."
+#~ msgstr "Pano satırları gösterilirken diziliş sırasını belirler."
+
+#~ msgid "Position"
+#~ msgstr "Konum"
+
+#~ msgid "Model"
+#~ msgstr "Model"
+
+#~ msgid "Dashboard"
+#~ msgstr "Kontrol paneli"
+
+#~ msgid "September"
+#~ msgstr "Eylül"
+
+#~ msgid "Latest Activities"
+#~ msgstr "Son Etkinlikler"
+
+#~ msgid "Width"
+#~ msgstr "En"
+
+#~ msgid "   Month   "
+#~ msgstr "   Ay   "
+
+#~ msgid "December"
+#~ msgstr "Aralık"
+
+#~ msgid "Create Board Menu"
+#~ msgstr "Menü Paneli Oluştur"
+
+#~ msgid "Dashboard View"
+#~ msgstr "Kontrol Paneli Görünümü"
+
+#, python-format
+#~ msgid "Please Insert Dashboard View(s) !"
+#~ msgstr "Lütfen Kontrol Paneli Görünümü(leri) ekleyin !"
+
+#~ msgid "Year"
+#~ msgstr "Yıl"
+
+#~ msgid "May"
+#~ msgstr "Mayıs"
+
+#~ msgid "Object"
+#~ msgstr "Nesne"
+
+#~ msgid "Board Line"
+#~ msgstr "Pano Satırı"
+
+#~ msgid "Log Analysis"
+#~ msgstr "Log Analizi"
+
+#~ msgid "# of Entries"
+#~ msgstr "Kayıt Sayısı"
+
+#~ msgid "Monthly Activity per Document"
+#~ msgstr "Belge Başına aylık faaliyet"
+
+#~ msgid "Administration Dashboard"
+#~ msgstr "Yönetim Paneli"
+
+#~ msgid "Action"
+#~ msgstr "Hareket"
+
+#~ msgid "Action Views"
+#~ msgstr "Hareket Ekranları"
+
+#~ msgid "Log created in current month"
+#~ msgstr "Bu ay oluşturulan günlükler"
+
+#~ msgid "Configuration Overview"
+#~ msgstr "Yapılandırma Genel Bakışı"
+
+#~ msgid "Log created in last month"
+#~ msgstr "Geçen Ay oluşturulan günlükler"
+
+#~ msgid "Log created in current year"
+#~ msgstr "Bu yıl oluşturulan günlükler"
+
+#~ msgid "Home Page"
+#~ msgstr "Ana Sayfa"
+
+#~ msgid "Users"
+#~ msgstr "Kullanıcılar"

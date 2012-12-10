@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 01:37+0100\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2011-01-13 06:41+0000\n"
 "Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:39+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:37+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: project_gtd
 #: view:project.task:0
@@ -57,9 +57,10 @@ msgid "Pending Tasks"
 msgstr ""
 
 #. module: project_gtd
-#: view:project.task:0
-msgid "Next"
-msgstr "Prossimo"
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
+#, python-format
+msgid "No timebox child of this one !"
+msgstr ""
 
 #. module: project_gtd
 #: model:ir.actions.act_window,help:project_gtd.open_gtd_timebox_tree
@@ -73,6 +74,11 @@ msgstr ""
 #: model:project.gtd.timebox,name:project_gtd.timebox_daily
 msgid "Today"
 msgstr "Oggi"
+
+#. module: project_gtd
+#: view:project.task:0
+msgid "Timeframe"
+msgstr ""
 
 #. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_lt
@@ -90,8 +96,9 @@ msgid "Pending"
 msgstr ""
 
 #. module: project_gtd
-#: view:project.gtd.timebox:0 field:project.gtd.timebox,name:0
-#: view:project.task:0 field:project.task,timebox_id:0
+#: view:project.gtd.timebox:0
+#: field:project.gtd.timebox,name:0
+#: field:project.task,timebox_id:0
 msgid "Timebox"
 msgstr "Timebox"
 
@@ -101,12 +108,6 @@ msgid "Set to Timebox"
 msgstr "Imposta a Timebox"
 
 #. module: project_gtd
-#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
-#, python-format
-msgid "Error !"
-msgstr "Errore!"
-
-#. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_task
 #: model:ir.ui.menu,name:project_gtd.menu_open_gtd_timebox_tree
 #: view:project.task:0
@@ -114,19 +115,9 @@ msgid "My Tasks"
 msgstr ""
 
 #. module: project_gtd
-#: constraint:project.task:0
-msgid "Error ! You cannot create recursive tasks."
-msgstr "Errore ! Non è possibile creare attività ricorsive."
-
-#. module: project_gtd
-#: model:project.gtd.timebox,name:project_gtd.timebox_weekly
-msgid "This Week"
-msgstr "Questa settimana"
-
-#. module: project_gtd
-#: view:project.timebox.fill.plan:0
-msgid "_Cancel"
-msgstr "_Annulla"
+#: help:project.task,context_id:0
+msgid "The context place where user has to treat task"
+msgstr ""
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.action_project_gtd_empty
@@ -140,9 +131,9 @@ msgid "Tasks having no timebox assigned yet"
 msgstr ""
 
 #. module: project_gtd
-#: constraint:project.task:0
-msgid "Error ! Task end-date must be greater then task start-date"
-msgstr ""
+#: model:project.gtd.timebox,name:project_gtd.timebox_weekly
+msgid "This Week"
+msgstr "Questa settimana"
 
 #. module: project_gtd
 #: field:project.gtd.timebox,icon:0
@@ -197,6 +188,12 @@ msgid "project.gtd.timebox"
 msgstr "project.gtd.timebox"
 
 #. module: project_gtd
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_timebox_tree
 #: model:ir.ui.menu,name:project_gtd.menu_open_gtd_time_timeboxes
 #: view:project.gtd.timebox:0
@@ -210,21 +207,21 @@ msgstr ""
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_gtd_context
-#: view:project.gtd.context:0 field:project.gtd.context,name:0
+#: view:project.gtd.context:0
+#: field:project.gtd.context,name:0
 #: field:project.task,context_id:0
 msgid "Context"
 msgstr "Contesto"
 
 #. module: project_gtd
-#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
-#, python-format
-msgid "No timebox child of this one !"
-msgstr ""
+#: field:project.timebox.fill.plan,task_ids:0
+msgid "Tasks selection"
+msgstr "Selezione Attività"
 
 #. module: project_gtd
-#: view:project.timebox.empty:0
-msgid "_Ok"
-msgstr "_Ok"
+#: view:project.task:0
+msgid "Display"
+msgstr ""
 
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_office
@@ -232,7 +229,8 @@ msgid "Office"
 msgstr "Ufficio"
 
 #. module: project_gtd
-#: field:project.gtd.context,sequence:0 field:project.gtd.timebox,sequence:0
+#: field:project.gtd.context,sequence:0
+#: field:project.gtd.timebox,sequence:0
 msgid "Sequence"
 msgstr "Sequenza"
 
@@ -258,11 +256,6 @@ msgid "Timebox Definition"
 msgstr "Definizione Timebox"
 
 #. module: project_gtd
-#: field:project.timebox.fill.plan,task_ids:0
-msgid "Tasks selection"
-msgstr "Selezione Attività"
-
-#. module: project_gtd
 #: view:project.task:0
 msgid "Inbox"
 msgstr "Posta in arrivo"
@@ -273,9 +266,9 @@ msgid "Get from Timebox"
 msgstr "Recupera da Timebox"
 
 #. module: project_gtd
-#: help:project.task,context_id:0
-msgid "The context place where user has to treat task"
-msgstr ""
+#: view:project.timebox.fill.plan:0
+msgid "Cancel"
+msgstr "Annulla"
 
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_home
@@ -296,9 +289,9 @@ msgid "For reopening the tasks"
 msgstr ""
 
 #. module: project_gtd
-#: view:project.task:0
-msgid "Previous"
-msgstr "Precedente"
+#: view:project.timebox.fill.plan:0
+msgid "or"
+msgstr ""
 
 #~ msgid "Visible Columns"
 #~ msgstr "Colonne visibili"
@@ -396,9 +389,6 @@ msgstr "Precedente"
 #~ msgid "Deadline"
 #~ msgstr "Scadenza"
 
-#~ msgid "Cancel"
-#~ msgstr "Annulla"
-
 #~ msgid "Date Start"
 #~ msgstr "Data Inizio"
 
@@ -408,8 +398,24 @@ msgstr "Precedente"
 #~ msgid "Weekly"
 #~ msgstr "Settimanale"
 
+#~ msgid "Error ! You cannot create recursive tasks."
+#~ msgstr "Errore ! Non è possibile creare attività ricorsive."
+
+#~ msgid "_Cancel"
+#~ msgstr "_Annulla"
+
 #~ msgid "This Month"
 #~ msgstr "Questo mese"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Errore!"
+
+#~ msgid "Next"
+#~ msgstr "Prossimo"
+
+#~ msgid "_Ok"
+#~ msgstr "_Ok"
 
 #, python-format
 #~ msgid "Getting Things Done"
@@ -421,6 +427,9 @@ msgstr "Precedente"
 #, python-format
 #~ msgid "GTD"
 #~ msgstr "GTD (get things done)"
+
+#~ msgid "Previous"
+#~ msgstr "Precedente"
 
 #~ msgid ""
 #~ "\n"

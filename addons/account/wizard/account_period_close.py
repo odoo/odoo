@@ -48,14 +48,11 @@ class account_period_close(osv.osv_memory):
                 for id in context['active_ids']:
                     account_move_ids = account_move_obj.search(cr, uid, [('period_id', '=', id), ('state', '=', "draft")], context=context)
                     if account_move_ids:
-                        raise osv.except_osv(_('Invalid action !'), _('In order to close a period, you must first post related journal entries.'))
+                        raise osv.except_osv(_('Invalid Action!'), _('In order to close a period, you must first post related journal entries.'))
 
                     cr.execute('update account_journal_period set state=%s where period_id=%s', (mode, id))
                     cr.execute('update account_period set state=%s where id=%s', (mode, id))
 
-                    # Log message for Period
-                    for period_id, name in period_pool.name_get(cr, uid, [id]):
-                        period_pool.log(cr, uid, period_id, "Period '%s' is closed, no more modification allowed for this period." % (name))
         return {'type': 'ir.actions.act_window_close'}
 
 account_period_close()

@@ -7,15 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2011-01-13 04:49+0000\n"
-"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"PO-Revision-Date: 2012-11-24 21:49+0000\n"
+"Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 07:06+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:29+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
+
+#. module: document_ftp
+#: view:document.ftp.configuration:0
+msgid "Configure FTP Server"
+msgstr "FTP Server configureren"
 
 #. module: document_ftp
 #: model:ir.model,name:document_ftp.model_document_ftp_configuration
@@ -38,19 +43,19 @@ msgstr ""
 "toegang vanaf de server machine zelf."
 
 #. module: document_ftp
-#: model:ir.actions.url,name:document_ftp.action_document_browse
+#: model:ir.model,name:document_ftp.model_knowledge_config_settings
+msgid "knowledge.config.settings"
+msgstr "knowledge.config.settings"
+
+#. module: document_ftp
+#: model:ir.actions.act_url,name:document_ftp.action_document_browse
 msgid "Browse Files"
 msgstr "Bestanden bladeren"
 
 #. module: document_ftp
-#: field:document.ftp.configuration,config_logo:0
-msgid "Image"
-msgstr "Afbeelding"
-
-#. module: document_ftp
-#: field:document.ftp.configuration,host:0
-msgid "Address"
-msgstr "Adres"
+#: help:knowledge.config.settings,document_ftp_url:0
+msgid "Click the url to browse the documents"
+msgstr "Klik op de url om door de documenten te bladeren"
 
 #. module: document_ftp
 #: field:document.ftp.browse,url:0
@@ -61,6 +66,11 @@ msgstr "FTP server"
 #: model:ir.actions.act_window,name:document_ftp.action_config_auto_directory
 msgid "FTP Server Configuration"
 msgstr "FTP server configuratie"
+
+#. module: document_ftp
+#: field:knowledge.config.settings,document_ftp_url:0
+msgid "Browse Documents"
+msgstr "Blader door documenten"
 
 #. module: document_ftp
 #: view:document.ftp.browse:0
@@ -81,19 +91,14 @@ msgid "Shared Repository (FTP)"
 msgstr "Gedeelde repository (FTP)"
 
 #. module: document_ftp
+#: field:document.ftp.configuration,host:0
+msgid "Address"
+msgstr "Adres"
+
+#. module: document_ftp
 #: view:document.ftp.browse:0
-msgid "_Cancel"
-msgstr "_Annuleren"
-
-#. module: document_ftp
-#: view:document.ftp.configuration:0
-msgid "Configure FTP Server"
-msgstr "FTP Server configureren"
-
-#. module: document_ftp
-#: view:document.ftp.configuration:0
-msgid "title"
-msgstr "titel"
+msgid "Cancel"
+msgstr "Annuleren"
 
 #. module: document_ftp
 #: model:ir.model,name:document_ftp.model_document_ftp_browse
@@ -112,6 +117,11 @@ msgstr "Document bladeren"
 
 #. module: document_ftp
 #: view:document.ftp.browse:0
+msgid "or"
+msgstr "of"
+
+#. module: document_ftp
+#: view:document.ftp.browse:0
 msgid "Browse Document"
 msgstr "Document bladeren"
 
@@ -120,8 +130,17 @@ msgstr "Document bladeren"
 msgid "res_config_contents"
 msgstr "res_config_contents"
 
+#~ msgid "title"
+#~ msgstr "titel"
+
+#~ msgid "Image"
+#~ msgstr "Afbeelding"
+
 #~ msgid "Configuration Progress"
 #~ msgstr "Configuratie voortgang"
+
+#~ msgid "_Cancel"
+#~ msgstr "_Annuleren"
 
 #~ msgid ""
 #~ "This is a support FTP Interface with document management system.\n"

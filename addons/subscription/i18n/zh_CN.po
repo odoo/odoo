@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2010-03-20 10:31+0000\n"
-"Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
+"PO-Revision-Date: 2012-11-27 14:20+0000\n"
+"Last-Translator: ccdos <ccdos@163.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:01+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-11-28 04:40+0000\n"
+"X-Generator: Launchpad (build 16309)\n"
 
 #. module: subscription
 #: field:subscription.subscription,doc_source:0
@@ -26,11 +26,6 @@ msgstr "源文档"
 #: field:subscription.document,model:0
 msgid "Object"
 msgstr "对象"
-
-#. module: subscription
-#: view:subscription.subscription:0
-msgid "This Week"
-msgstr "这周"
 
 #. module: subscription
 #: view:subscription.subscription:0
@@ -46,12 +41,6 @@ msgstr "首次日期"
 #: field:subscription.document.fields,field:0
 msgid "Field"
 msgstr "字段"
-
-#. module: subscription
-#: view:subscription.subscription:0
-#: field:subscription.subscription,state:0
-msgid "State"
-msgstr "状态"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_subscription_history
@@ -75,14 +64,15 @@ msgstr "周"
 
 #. module: subscription
 #: view:subscription.subscription:0
-msgid "Today"
-msgstr "今天"
+#: field:subscription.subscription,state:0
+msgid "Status"
+msgstr "状态"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:136
-#, python-format
-msgid "Error !"
-msgstr "错误！"
+#: model:ir.ui.menu,name:subscription.config_recuuring_event
+#: model:ir.ui.menu,name:subscription.next_id_45
+msgid "Recurring Events"
+msgstr "反复出现的事件"
 
 #. module: subscription
 #: model:ir.actions.act_window,name:subscription.action_subscription_form
@@ -155,7 +145,7 @@ msgstr "名称"
 #: code:addons/subscription/subscription.py:136
 #, python-format
 msgid "You cannot delete an active subscription !"
-msgstr ""
+msgstr "你不能删除一个活动的订阅"
 
 #. module: subscription
 #: field:subscription.document,field_ids:0
@@ -180,10 +170,10 @@ msgid "Days"
 msgstr "日"
 
 #. module: subscription
-#: field:subscription.document,active:0
-#: field:subscription.subscription,active:0
-msgid "Active"
-msgstr "有效"
+#: code:addons/subscription/subscription.py:136
+#, python-format
+msgid "Error!"
+msgstr "错误!"
 
 #. module: subscription
 #: field:subscription.subscription,cron_id:0
@@ -192,6 +182,7 @@ msgstr "定时作业"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_subscription
+#: view:subscription.subscription:0
 #: field:subscription.subscription.history,subscription_id:0
 msgid "Subscription"
 msgstr "订阅"
@@ -206,12 +197,6 @@ msgstr "业务伙伴"
 #: help:subscription.subscription,cron_id:0
 msgid "Scheduler which runs on subscription"
 msgstr "调度运行订阅"
-
-#. module: subscription
-#: model:ir.ui.menu,name:subscription.config_recuuring_event
-#: model:ir.ui.menu,name:subscription.next_id_45
-msgid "Recurring Events"
-msgstr "反复出现的事件"
 
 #. module: subscription
 #: view:subscription.subscription:0
@@ -282,7 +267,6 @@ msgid "Subscription Document Fields"
 msgstr "订阅文档字段"
 
 #. module: subscription
-#: view:subscription.subscription:0
 #: selection:subscription.subscription,state:0
 msgid "Done"
 msgstr "完成"
@@ -306,8 +290,11 @@ msgstr "默认值"
 msgid "Documents created"
 msgstr "文档已建立"
 
-#~ msgid "Status"
-#~ msgstr "状态"
+#. module: subscription
+#: field:subscription.document,active:0
+#: field:subscription.subscription,active:0
+msgid "Active"
+msgstr "有效"
 
 #~ msgid "Sale Order"
 #~ msgstr "销售订单"
@@ -339,6 +326,19 @@ msgstr "文档已建立"
 
 #~ msgid "All Subscriptions"
 #~ msgstr "所有预订"
+
+#~ msgid "State"
+#~ msgstr "状态"
+
+#~ msgid "This Week"
+#~ msgstr "这周"
+
+#~ msgid "Today"
+#~ msgstr "今天"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "错误！"
 
 #~ msgid ""
 #~ "Module allows to create new documents and add subscription on that document."

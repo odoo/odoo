@@ -5,14 +5,9 @@
         <record id="account_report_general_ledger_view" model="ir.ui.view">
             <field name="name">General Ledger</field>
             <field name="model">account.report.general.ledger</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="account_common_report_view" />
             <field name="arch" type="xml">
             <data>
-            <xpath expr="/form/label[@string='']" position="replace">
-                <separator string="General Ledger" colspan="4"/>
-                <label nolabel="1" colspan="4" string="This report allows you to print or generate a pdf of your general ledger with details of all your account journals"/>
-            </xpath>
             <xpath expr="//field[@name='target_move']" position="after">
                 <field name="display_account"/>
                 <field name="sortby"/>
@@ -30,7 +25,6 @@
         <record id="account_report_general_ledger_view_inherit" model="ir.ui.view">
             <field name="name">General Ledger</field>
             <field name="model">account.report.general.ledger</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="account_report_general_ledger_view" />
             <field name="arch" type="xml">
                <field name="fiscalyear_id" position="replace">

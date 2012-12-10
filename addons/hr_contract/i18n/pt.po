@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2010-12-16 06:43+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:38+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:37+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: hr_contract
 #: field:hr.contract,wage:0
@@ -24,37 +24,17 @@ msgstr "Salário"
 #. module: hr_contract
 #: view:hr.contract:0
 msgid "Information"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Trial Period"
-msgstr "Período experimental"
+msgstr "Informação"
 
 #. module: hr_contract
 #: field:hr.contract,trial_date_start:0
 msgid "Trial Start Date"
-msgstr "Início período experimental"
-
-#. module: hr_contract
-#: view:hr.employee:0
-msgid "Medical Examination"
-msgstr "Exame médico"
+msgstr "Data de Início do Período experimental"
 
 #. module: hr_contract
 #: field:hr.employee,vehicle:0
 msgid "Company Vehicle"
 msgstr "Veículo da empresa"
-
-#. module: hr_contract
-#: view:hr.employee:0
-msgid "Miscellaneous"
-msgstr "Diversos"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Current"
-msgstr "Atual"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -65,11 +45,6 @@ msgstr "Agrupar por..."
 #: field:hr.contract,department_id:0
 msgid "Department"
 msgstr "Departamento"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Overpassed"
-msgstr "Caducado"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -85,16 +60,7 @@ msgstr "Procurar contrato"
 
 #. module: hr_contract
 #: view:hr.contract:0
-msgid "Contracts in progress"
-msgstr ""
-
-#. module: hr_contract
-#: field:hr.employee,vehicle_distance:0
-msgid "Home-Work Distance"
-msgstr "Distância entre casa e o trabalho"
-
-#. module: hr_contract
-#: view:hr.contract:0
+#: view:hr.employee:0
 #: field:hr.employee,contract_ids:0
 #: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract
@@ -103,14 +69,9 @@ msgid "Contracts"
 msgstr "Contratos"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Personal Info"
-msgstr "Informação pessoal"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Contracts whose end date already passed"
-msgstr ""
+#: field:hr.employee,children:0
+msgid "Number of Children"
+msgstr "Número de Filhos"
 
 #. module: hr_contract
 #: help:hr.employee,contract_id:0
@@ -123,25 +84,14 @@ msgid "Job"
 msgstr "Cargo"
 
 #. module: hr_contract
-#: view:hr.contract:0
 #: field:hr.contract,advantages:0
 msgid "Advantages"
 msgstr "Vantagens"
 
 #. module: hr_contract
 #: view:hr.contract:0
-msgid "Valid for"
-msgstr "Válido por"
-
-#. module: hr_contract
-#: view:hr.contract:0
 msgid "Work Permit"
 msgstr "Licença de trabalho"
-
-#. module: hr_contract
-#: field:hr.employee,children:0
-msgid "Number of Children"
-msgstr "Número de filhos"
 
 #. module: hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract_type
@@ -150,24 +100,24 @@ msgid "Contract Types"
 msgstr "Tipos de contrato"
 
 #. module: hr_contract
-#: constraint:hr.employee:0
-msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr "Erro! Não pode criar hierarquias de funcionários recursivamente."
+#: view:hr.employee:0
+msgid "Medical Exam"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.contract,date_end:0
 msgid "End Date"
-msgstr "Data de fim"
+msgstr "Data Final"
 
 #. module: hr_contract
 #: help:hr.contract,wage:0
 msgid "Basic Salary of the employee"
-msgstr ""
+msgstr "Salário Base do Funcionário"
 
 #. module: hr_contract
 #: field:hr.contract,name:0
 msgid "Contract Reference"
-msgstr "Ref.ª Contrato"
+msgstr "Referência Contrato"
 
 #. module: hr_contract
 #: help:hr.employee,vehicle_distance:0
@@ -183,10 +133,11 @@ msgstr "Notas"
 #. module: hr_contract
 #: field:hr.contract,permit_no:0
 msgid "Work Permit No"
-msgstr ""
+msgstr "Licença de trabalho nº"
 
 #. module: hr_contract
 #: view:hr.contract:0
+#: view:hr.employee:0
 #: field:hr.employee,contract_id:0
 #: model:ir.model,name:hr_contract.model_hr_contract
 #: model:ir.ui.menu,name:hr_contract.next_id_56
@@ -209,19 +160,19 @@ msgid "Working Schedule"
 msgstr "Horário de trabalho"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Job Info"
-msgstr "Informações sobre o cargo"
-
-#. module: hr_contract
-#: field:hr.contract,visa_expire:0
-msgid "Visa Expire Date"
+#: view:hr.contract:0
+msgid "Salary and Advantages"
 msgstr ""
 
 #. module: hr_contract
 #: field:hr.contract,job_id:0
 msgid "Job Title"
 msgstr "Título do Cargo"
+
+#. module: hr_contract
+#: constraint:hr.contract:0
+msgid "Error! Contract start-date must be less than contract end-date."
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.employee,manager:0
@@ -231,27 +182,37 @@ msgstr "É gerente"
 #. module: hr_contract
 #: field:hr.contract,date_start:0
 msgid "Start Date"
-msgstr "Data de início"
-
-#. module: hr_contract
-#: constraint:hr.contract:0
-msgid "Error! contract start-date must be lower then contract end-date."
-msgstr "Erro! Data de início do contrato deve ser anterior à data de fim."
+msgstr "Data Inicial"
 
 #. module: hr_contract
 #: field:hr.contract,visa_no:0
 msgid "Visa No"
+msgstr "Número de visto"
+
+#. module: hr_contract
+#: field:hr.employee,vehicle_distance:0
+msgid "Home-Work Dist."
 msgstr ""
 
 #. module: hr_contract
 #: field:hr.employee,place_of_birth:0
 msgid "Place of Birth"
-msgstr "Local de nascimento"
+msgstr "Local de Nascimento"
+
+#. module: hr_contract
+#: view:hr.contract:0
+msgid "Trial Period Duration"
+msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract:0
 msgid "Duration"
 msgstr "Duração"
+
+#. module: hr_contract
+#: field:hr.contract,visa_expire:0
+msgid "Visa Expire Date"
+msgstr "Data de expiração do visto"
 
 #. module: hr_contract
 #: field:hr.employee,medic_exam:0
@@ -261,7 +222,7 @@ msgstr "Data do exame médico"
 #. module: hr_contract
 #: field:hr.contract,trial_date_end:0
 msgid "Trial End Date"
-msgstr "Fim do período experimental"
+msgstr "Data de fim Período experimental"
 
 #. module: hr_contract
 #: view:hr.contract.type:0
@@ -286,9 +247,6 @@ msgstr "Procurar o tipo de contrato"
 #~ msgid "Type"
 #~ msgstr "Tipo"
 
-#~ msgid "Period Name"
-#~ msgstr "Nome do período"
-
 #~ msgid "Medical examination date"
 #~ msgstr "Data do exame médico"
 
@@ -297,9 +255,6 @@ msgstr "Procurar o tipo de contrato"
 
 #~ msgid "Manager"
 #~ msgstr "Gestor"
-
-#~ msgid "Wage period"
-#~ msgstr "Período salarial"
 
 #~ msgid "Hourly cost computation"
 #~ msgstr "Processamento do custo por hora"
@@ -334,6 +289,9 @@ msgstr "Procurar o tipo de contrato"
 #~ msgid "Wage Type"
 #~ msgstr "Tipo de Salário"
 
+#~ msgid "Period Name"
+#~ msgstr "Nome do Período"
+
 #~ msgid "Employee Marital Status"
 #~ msgstr "Estado Civil do Funcinário"
 
@@ -361,11 +319,27 @@ msgstr "Procurar o tipo de contrato"
 #~ msgid "Marital Status"
 #~ msgstr "Estado Civil"
 
+#~ msgid "Wage period"
+#~ msgstr "Período Salarial"
+
+#~ msgid ""
+#~ "This field is used by the timesheet system to compute the price of an hour "
+#~ "of work wased on the contract of the employee"
+#~ msgstr ""
+#~ "Este campo é utilizado pelo sistema de horário para calcular o preço de uma "
+#~ "hora de trabalho baseado no contrato do funcionário"
+
 #~ msgid "Status Description"
 #~ msgstr "Descrição do Estado"
 
 #~ msgid "Contract Duration"
 #~ msgstr "Duração do Contrato"
+
+#~ msgid "Miscellaneous"
+#~ msgstr "Diversos"
+
+#~ msgid "Medical Examination"
+#~ msgstr "Exame médico"
 
 #~ msgid "Passport"
 #~ msgstr "Passaporte"
@@ -379,26 +353,26 @@ msgstr "Procurar o tipo de contrato"
 #~ msgid "Period"
 #~ msgstr "Período"
 
-#~ msgid "Basic"
-#~ msgstr "Base"
+#~ msgid "Personal Info"
+#~ msgstr "Informação pessoal"
+
+#~ msgid "Home-Work Distance"
+#~ msgstr "Distância entre casa e o trabalho"
 
 #~ msgid "Allowances"
 #~ msgstr "Abonos"
 
-#~ msgid ""
-#~ "Error ! You cannot select a department for which the employee is the manager."
-#~ msgstr ""
-#~ "Erro ! Não pode seleccionar um departamento cujo gestor é o funcionário."
+#~ msgid "Current"
+#~ msgstr "Atual"
 
-#~ msgid ""
-#~ "This field is used by the timesheet system to compute the price of an hour "
-#~ "of work wased on the contract of the employee"
-#~ msgstr ""
-#~ "Este campo é utilizado pelas folhas de trabalho para calcular o preço de uma "
-#~ "hora de trabalho cok base no contrato do funcionário"
+#~ msgid "Trial Period"
+#~ msgstr "Período experimental"
 
-#~ msgid "Main Data"
-#~ msgstr "Dados principais"
+#~ msgid "Overpassed"
+#~ msgstr "Superada"
+
+#~ msgid "Basic"
+#~ msgstr "Básico"
 
 #~ msgid ""
 #~ "\n"
@@ -410,13 +384,40 @@ msgstr "Procurar o tipo de contrato"
 #~ "    "
 #~ msgstr ""
 #~ "\n"
-#~ "    Agregar todos os dados para a gestão de contratos:\n"
-#~ "    * Estado civil\n"
-#~ "    * Número de segurança social\n"
-#~ "    * Local e data de nascimento\n"
-#~ "    * etc.\n"
-#~ "    É possível associar vários contratos ao mesmo funcionário.\n"
+#~ "    Adicionar todas as informações no formulário funcionário para gerir "
+#~ "contratos:\n"
+#~ "    * Estado civil,\n"
+#~ "    * Número segurança,\n"
+#~ "    * Local nascimento, data nascimento, ...\n"
+#~ "    Pode atribuir vários contratos por funcionário.\n"
 #~ "    "
 
+#~ msgid "Valid for"
+#~ msgstr "Valido para"
+
+#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
+#~ msgstr "Erro ! Não pode criar uma Hierarquia recursiva de Funcionários."
+
+#~ msgid ""
+#~ "Error ! You cannot select a department for which the employee is the manager."
+#~ msgstr ""
+#~ "Erro ! Não pode seleccionar um departamento cujo funcionário é o gestor."
+
 #~ msgid "Search Wage Period"
-#~ msgstr "Procurar período de pagamento de salários"
+#~ msgstr "Pesquisar período de salário"
+
+#~ msgid "Job Info"
+#~ msgstr "Informação de cargo"
+
+#~ msgid "Error! contract start-date must be lower then contract end-date."
+#~ msgstr ""
+#~ "Erro! A data do começo do contrato deve ser anterior há do fim do contrato."
+
+#~ msgid "Main Data"
+#~ msgstr "Data principal"
+
+#~ msgid "Contracts whose end date already passed"
+#~ msgstr "Contratos onde a data limite foi ultrapassada"
+
+#~ msgid "Contracts in progress"
+#~ msgstr "Contratos em progresso"

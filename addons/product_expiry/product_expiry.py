@@ -45,12 +45,13 @@ class stock_production_lot(osv.osv):
 
     _columns = {
         'life_date': fields.datetime('End of Life Date',
-            help='The date on which the lot may become dangerous and should not be consumed.'),
+            help='This is the date on which the goods with this Serial Number may become dangerous and must not be consumed.'),
         'use_date': fields.datetime('Best before Date',
-            help='The date on which the lot starts deteriorating without becoming dangerous.'),
+            help='This is the date on which the goods with this Serial Number start deteriorating, without being dangerous yet.'),
         'removal_date': fields.datetime('Removal Date',
-            help='The date on which the lot should be removed.'),
-        'alert_date': fields.datetime('Alert Date', help="The date on which an alert should be notified about the production lot."),
+            help='This is the date on which the goods with this Serial Number should be removed from the stock.'),
+        'alert_date': fields.datetime('Alert Date',
+            help="This is the date on which an alert should be notified about the goods with this Serial Number."),
     }
     # Assign dates according to products data
     def create(self, cr, uid, vals, context=None):
@@ -78,12 +79,13 @@ class product_product(osv.osv):
     _inherit = 'product.product'
     _columns = {
         'life_time': fields.integer('Product Life Time',
-            help='The number of days before a production lot may become dangerous and should not be consumed.'),
+            help='When a new a Serial Number is issued, this is the number of days before the goods may become dangerous and must not be consumed.'),
         'use_time': fields.integer('Product Use Time',
-            help='The number of days before a production lot starts deteriorating without becoming dangerous.'),
+            help='When a new a Serial Number is issued, this is the number of days before the goods starts deteriorating, without being dangerous yet.'),
         'removal_time': fields.integer('Product Removal Time',
-            help='The number of days before a production lot should be removed.'),
-        'alert_time': fields.integer('Product Alert Time', help="The number of days after which an alert should be notified about the production lot."),
+            help='When a new a Serial Number is issued, this is the number of days before the goods should be removed from the stock.'),
+        'alert_time': fields.integer('Product Alert Time',
+            help='When a new a Serial Number is issued, this is the number of days before an alert should be notified.'),
     }
 product_product()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

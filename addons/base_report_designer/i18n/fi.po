@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2010-08-03 03:44+0000\n"
-"Last-Translator: Mantavya Gajjar (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"PO-Revision-Date: 2012-05-10 18:04+0000\n"
+"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:35+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:08+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: base_report_designer
 #: model:ir.model,name:base_report_designer.model_base_report_sxw
@@ -37,7 +37,7 @@ msgstr ""
 "OpenOffice Writerissä"
 
 #. module: base_report_designer
-#: view:base.report.file.sxw:0
+#: view:base.report.sxw:0
 msgid "Upload the modified report"
 msgstr "Lähetä muokattu raportti"
 
@@ -52,14 +52,9 @@ msgid "base_report_designer.installer"
 msgstr ""
 
 #. module: base_report_designer
-#: view:base_report_designer.installer:0
-msgid "_Close"
-msgstr "_Sulje"
-
-#. module: base_report_designer
-#: view:base.report.rml.save:0
-msgid "The RML report"
-msgstr "RML raportti"
+#: model:ir.model,name:base_report_designer.model_base_report_rml_save
+msgid "base.report.rml.save"
+msgstr ""
 
 #. module: base_report_designer
 #: view:base_report_designer.installer:0
@@ -78,9 +73,9 @@ msgid "Report"
 msgstr "Raportti"
 
 #. module: base_report_designer
-#: model:ir.model,name:base_report_designer.model_base_report_rml_save
-msgid "base.report.rml.save"
-msgstr ""
+#: view:base.report.rml.save:0
+msgid "The RML Report"
+msgstr "RML raportti"
 
 #. module: base_report_designer
 #: model:ir.ui.menu,name:base_report_designer.menu_action_report_designer_wizard
@@ -158,11 +153,6 @@ msgstr ""
 "Kun se on muutettu, imuroi se takaisin OpenERP:iin käyttämällä tätä velhoa."
 
 #. module: base_report_designer
-#: field:base_report_designer.installer,config_logo:0
-msgid "Image"
-msgstr "Kuva"
-
-#. module: base_report_designer
 #: model:ir.actions.act_window,name:base_report_designer.action_view_base_report_sxw
 msgid "Base Report sxw"
 msgstr ""
@@ -183,12 +173,14 @@ msgid "OpenERP Report Designer Installation"
 msgstr "OpenERP raporttisuunnittelun asennus"
 
 #. module: base_report_designer
-#: view:base.report.file.sxw:0
-#: view:base.report.rml.save:0
 #: view:base.report.sxw:0
-#: view:base_report_designer.installer:0
 msgid "Cancel"
 msgstr "Peruuta"
+
+#. module: base_report_designer
+#: view:base.report.sxw:0
+msgid "or"
+msgstr ""
 
 #. module: base_report_designer
 #: model:ir.model,name:base_report_designer.model_ir_actions_report_xml
@@ -254,8 +246,17 @@ msgstr "Valitse raporttisi"
 #~ "Kun muokkaukset on tehty, uudelleenlähetä se OpenERP:iin käyttämällä tätä "
 #~ "ohjattua toimintoa."
 
+#~ msgid "The RML report"
+#~ msgstr "RML raportti"
+
 #~ msgid "Configuration Progress"
 #~ msgstr "Konfiguraation eteneminen"
 
 #~ msgid "Skip"
 #~ msgstr "Ohita"
+
+#~ msgid "Image"
+#~ msgstr "Kuva"
+
+#~ msgid "_Close"
+#~ msgstr "_Sulje"

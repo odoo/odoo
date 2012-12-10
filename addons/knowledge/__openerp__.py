@@ -21,13 +21,12 @@
 
 
 {
-    "name" : "Document Management System",
-    "version" : "1.0",
-    "depends" : ["base","base_setup"],
-    "author" : "OpenERP SA",
+    'name' : 'Knowledge Management System',
+    'version' : '1.0',
+    'depends' : ['base','base_setup'],
+    'author' : 'OpenERP SA',
     'category': 'Hidden/Dependency',
-    'complexity': "easy",
-    "description": """
+    'description': """
 Installer for knowledge-based Hidden.
 =====================================
 
@@ -35,16 +34,15 @@ Makes the Knowledge Application Configuration available from where you can insta
 document and Wiki based Hidden.
     """,
     'website': 'http://www.openerp.com',
-    'init_xml': [],
-    'update_xml': [
+    'data': [
         'security/knowledge_security.xml',
         'security/ir.model.access.csv',
         'knowledge_view.xml',
+        'res_config_view.xml',
     ],
-    'demo_xml': ['knowledge_demo.xml'],
+    'demo': ['knowledge_demo.xml'],
     'installable': True,
     'auto_install': False,
-    'certificate' : '001278773815843749581',
     'images': ['images/1_config_knowledge.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

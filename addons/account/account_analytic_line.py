@@ -27,19 +27,18 @@ class account_analytic_line(osv.osv):
     _inherit = 'account.analytic.line'
     _description = 'Analytic Line'
     _columns = {
-        'product_uom_id': fields.many2one('product.uom', 'UoM'),
+        'product_uom_id': fields.many2one('product.uom', 'Unit of Measure'),
         'product_id': fields.many2one('product.product', 'Product'),
         'general_account_id': fields.many2one('account.account', 'General Account', required=True, ondelete='restrict'),
         'move_id': fields.many2one('account.move.line', 'Move Line', ondelete='cascade', select=True),
         'journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal', required=True, ondelete='restrict', select=True),
         'code': fields.char('Code', size=8),
         'ref': fields.char('Ref.', size=64),
-        'currency_id': fields.related('move_id', 'currency_id', type='many2one', relation='res.currency', string='Account currency', store=True, help="The related account currency if not equal to the company one.", readonly=True),
-        'amount_currency': fields.related('move_id', 'amount_currency', type='float', string='Amount currency', store=True, help="The amount expressed in the related account currency if not equal to the company one.", readonly=True),
+        'currency_id': fields.related('move_id', 'currency_id', type='many2one', relation='res.currency', string='Account Currency', store=True, help="The related account currency if not equal to the company one.", readonly=True),
+        'amount_currency': fields.related('move_id', 'amount_currency', type='float', string='Amount Currency', store=True, help="The amount expressed in the related account currency if not equal to the company one.", readonly=True),
     }
 
     _defaults = {
-        'date': fields.date.context_today,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=c),
     }
     _order = 'date desc'
@@ -87,18 +86,18 @@ class account_analytic_line(osv.osv):
             if not a:
                 a = prod.categ_id.property_account_expense_categ.id
             if not a:
-                raise osv.except_osv(_('Error !'),
+                raise osv.except_osv(_('Error!'),
                         _('There is no expense account defined ' \
-                                'for this product: "%s" (id:%d)') % \
+                                'for this product: "%s" (id:%d).') % \
                                 (prod.name, prod.id,))
         else:
             a = prod.product_tmpl_id.property_account_income.id
             if not a:
                 a = prod.categ_id.property_account_income_categ.id
             if not a:
-                raise osv.except_osv(_('Error !'),
+                raise osv.except_osv(_('Error!'),
                         _('There is no income account defined ' \
-                                'for this product: "%s" (id:%d)') % \
+                                'for this product: "%s" (id:%d).') % \
                                 (prod.name, prod_id,))
 
         flag = False
@@ -108,7 +107,7 @@ class account_analytic_line(osv.osv):
         if journal_id:
             journal = analytic_journal_obj.browse(cr, uid, journal_id, context=context)
             if journal.type == 'sale':
-                product_price_type_ids = product_price_type_obj.search(cr, uid, [('field','=','list_price')], context)
+                product_price_type_ids = product_price_type_obj.search(cr, uid, [('field','=','list_price')], context=context)
                 if product_price_type_ids:
                     pricetype = product_price_type_obj.browse(cr, uid, product_price_type_ids, context=context)[0]
         # Take the company currency as the reference one

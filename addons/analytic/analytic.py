@@ -20,13 +20,16 @@
 ##############################################################################
 
 import time
+from datetime import datetime
 
 from osv import fields, osv
+import tools
 from tools.translate import _
 import decimal_precision as dp
 
 class account_analytic_account(osv.osv):
     _name = 'account.analytic.account'
+    _inherit = ['mail.thread']
     _description = 'Analytic Account'
 
     def _compute_level_tree(self, cr, uid, ids, child_ids, res, field_names, context=None):
@@ -96,22 +99,32 @@ class account_analytic_account(osv.osv):
         return self._compute_level_tree(cr, uid, ids, child_ids, res, fields, context)
 
     def name_get(self, cr, uid, ids, context=None):
-        if not ids:
-            return []
         res = []
-        for account in self.browse(cr, uid, ids, context=context):
-            data = []
-            acc = account
-            while acc:
-                data.insert(0, acc.name)
-                acc = acc.parent_id
-            data = ' / '.join(data)
-            res.append((account.id, data))
+        if not ids:
+            return res
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        for id in ids:
+            elmt = self.browse(cr, uid, id, context=context)
+            res.append((id, self._get_one_full_name(elmt)))
         return res
 
-    def _complete_name_calc(self, cr, uid, ids, prop, unknow_none, unknow_dict):
-        res = self.name_get(cr, uid, ids)
-        return dict(res)
+    def _get_full_name(self, cr, uid, ids, name=None, args=None, context=None):
+        if context == None:
+            context = {}
+        res = {}
+        for elmt in self.browse(cr, uid, ids, context=context):
+            res[elmt.id] = self._get_one_full_name(elmt)
+        return res
+
+    def _get_one_full_name(self, elmt, level=6):
+        if level<=0:
+            return '...'
+        if elmt.parent_id and not elmt.type == 'template':
+            parent_path = self._get_one_full_name(elmt.parent_id, level-1) + "/"
+        else:
+            parent_path = ''
+        return parent_path + elmt.name
 
     def _child_compute(self, cr, uid, ids, name, arg, context=None):
         result = {}
@@ -132,13 +145,14 @@ class account_analytic_account(osv.osv):
         return accounts
 
     def _set_company_currency(self, cr, uid, ids, name, value, arg, context=None):
-        if type(ids) != type([]):
+        if isinstance(ids, (int, long)):
             ids=[ids]
         for account in self.browse(cr, uid, ids, context=context):
             if account.company_id:
                 if account.company_id.currency_id.id != value:
-                    raise osv.except_osv(_('Error !'), _("If you set a company, the currency selected has to be the same as it's currency. \nYou can remove the company belonging, and thus change the currency, only on analytic account of type 'view'. This can be really usefull for consolidation purposes of several companies charts with different currencies, for example."))
-        return cr.execute("""update account_analytic_account set currency_id=%s where id=%s""", (value, account.id, ))
+                    raise osv.except_osv(_('Error!'), _("If you set a company, the currency selected has to be the same as it's currency. \nYou can remove the company belonging, and thus change the currency, only on analytic account of type 'view'. This can be really usefull for consolidation purposes of several companies charts with different currencies, for example."))
+        if value:
+            return cr.execute("""update account_analytic_account set currency_id=%s where id=%s""", (value, account.id, ))
 
     def _currency(self, cr, uid, ids, field_name, arg, context=None):
         result = {}
@@ -150,10 +164,15 @@ class account_analytic_account(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char('Account Name', size=128, required=True),
-        'complete_name': fields.function(_complete_name_calc, type='char', string='Full Account Name'),
-        'code': fields.char('Code/Reference', size=24, select=True),
-        'type': fields.selection([('view','View'), ('normal','Normal')], 'Account Type', help='If you select the View Type, it means you won\'t allow to create journal entries using that account.'),
+        'name': fields.char('Account/Contract Name', size=128, required=True),
+        'complete_name': fields.function(_get_full_name, type='char', string='Full Account Name'),
+        'code': fields.char('Reference', size=24, select=True),
+        'type': fields.selection([('view','Analytic View'), ('normal','Analytic Account'),('contract','Contract or Project'),('template','Template of Contract')], 'Type of Account', required=True,
+                                 help="If you select the View Type, it means you won\'t allow to create journal entries using that account.\n"\
+                                  "The type 'Analytic account' stands for usual accounts that you only want to use in accounting.\n"\
+                                  "If you select Contract or Project, it offers you the possibility to manage the validity and the invoicing options for this account.\n"\
+                                  "The special type 'Template of Contract' allows you to define a template with default data that you can reuse easily."),
+        'template_id': fields.many2one('account.analytic.account', 'Template of Contract'),
         'description': fields.text('Description'),
         'parent_id': fields.many2one('account.analytic.account', 'Parent Analytic Account', select=2),
         'child_ids': fields.one2many('account.analytic.account', 'parent_id', 'Child Accounts'),
@@ -163,25 +182,45 @@ class account_analytic_account(osv.osv):
         'debit': fields.function(_debit_credit_bal_qtty, type='float', string='Debit', multi='debit_credit_bal_qtty', digits_compute=dp.get_precision('Account')),
         'credit': fields.function(_debit_credit_bal_qtty, type='float', string='Credit', multi='debit_credit_bal_qtty', digits_compute=dp.get_precision('Account')),
         'quantity': fields.function(_debit_credit_bal_qtty, type='float', string='Quantity', multi='debit_credit_bal_qtty'),
-        'quantity_max': fields.float('Maximum Time', help='Sets the higher limit of time to work on the contract.'),
-        'partner_id': fields.many2one('res.partner', 'Partner'),
-        'contact_id': fields.many2one('res.partner.address', 'Contact'),
-        'user_id': fields.many2one('res.users', 'Account Manager'),
-        'date_start': fields.date('Date Start'),
+        'quantity_max': fields.float('Prepaid Service Units', help='Sets the higher limit of time to work on the contract, based on the timesheet. (for instance, number of hours in a limited support contract.)'),
+        'partner_id': fields.many2one('res.partner', 'Customer'),
+        'user_id': fields.many2one('res.users', 'Project Manager'),
+        'manager_id': fields.many2one('res.users', 'Account Manager'),
+        'date_start': fields.date('Start Date'),
         'date': fields.date('Date End', select=True),
         'company_id': fields.many2one('res.company', 'Company', required=False), #not required because we want to allow different companies to use the same chart of account, except for leaf accounts.
-        'state': fields.selection([('template', 'Template'),('draft','New'),('open','Open'), ('pending','Pending'),('cancelled', 'Cancelled'),('close','Closed')], 'State', required=True,
-                                  help='* When an account is created its in \'Draft\' state.\
-                                  \n* If any associated partner is there, it can be in \'Open\' state.\
-                                  \n* If any pending balance is there it can be in \'Pending\'. \
-                                  \n* And finally when all the transactions are over, it can be in \'Close\' state. \
-                                  \n* The project can be in either if the states \'Template\' and \'Running\'.\n If it is template then we can make projects based on the template projects. If its in \'Running\' state it is a normal project.\
-                                 \n If it is to be reviewed then the state is \'Pending\'.\n When the project is completed the state is set to \'Done\'.'),
-        'currency_id': fields.function(_currency, fnct_inv=_set_company_currency,
+        'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','To Renew'),('close','Closed')], 'Status', required=True,),
+        'currency_id': fields.function(_currency, fnct_inv=_set_company_currency, #the currency_id field is readonly except if it's a view account and if there is no company
             store = {
                 'res.company': (_get_analytic_account, ['currency_id'], 10),
             }, string='Currency', type='many2one', relation='res.currency'),
     }
+
+    def on_change_template(self, cr, uid, ids, template_id, context=None):
+        if not template_id:
+            return {}
+        res = {'value':{}}
+        template = self.browse(cr, uid, template_id, context=context)
+        if template.date_start and template.date:
+            from_dt = datetime.strptime(template.date_start, tools.DEFAULT_SERVER_DATE_FORMAT)
+            to_dt = datetime.strptime(template.date, tools.DEFAULT_SERVER_DATE_FORMAT)
+            timedelta = to_dt - from_dt
+            res['value']['date'] = datetime.strftime(datetime.now() + timedelta, tools.DEFAULT_SERVER_DATE_FORMAT)
+        res['value']['date_start'] = fields.date.today()
+        res['value']['quantity_max'] = template.quantity_max
+        res['value']['parent_id'] = template.parent_id and template.parent_id.id or False
+        res['value']['description'] = template.description
+        return res
+
+    def on_change_partner_id(self, cr, uid, ids,partner_id, name, context={}):
+        res={}
+        if partner_id:
+            partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+            if partner.user_id:
+                res['manager_id'] = partner.user_id.id
+            if not name:
+                res['name'] = _('Contract: ') + partner.name
+        return {'value': res}
 
     def _default_company(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
@@ -196,10 +235,10 @@ class account_analytic_account(osv.osv):
     _defaults = {
         'type': 'normal',
         'company_id': _default_company,
+        'code' : lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'account.analytic.account'),
         'state': 'open',
         'user_id': lambda self, cr, uid, ctx: uid,
         'partner_id': lambda self, cr, uid, ctx: ctx.get('partner_id', False),
-        'contact_id': lambda self, cr, uid, ctx: ctx.get('contact_id', False),
         'date_start': lambda *a: time.strftime('%Y-%m-%d'),
         'currency_id': _get_default_currency,
     }
@@ -209,21 +248,18 @@ class account_analytic_account(osv.osv):
 
     _order = 'name asc'
     _constraints = [
-        (check_recursion, 'Error! You can not create recursive analytic accounts.', ['parent_id']),
+        (check_recursion, 'Error! You cannot create recursive analytic accounts.', ['parent_id']),
     ]
 
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
-        default['code'] = False
-        default['line_ids'] = []
+        analytic = self.browse(cr, uid, id, context=context)
+        default.update(
+            code=False,
+            line_ids=[],
+            name=_("%s (copy)") % (analytic['name']))
         return super(account_analytic_account, self).copy(cr, uid, id, default, context=context)
-
-    def on_change_partner_id(self, cr, uid, id, partner_id, context={}):
-        if not partner_id:
-            return {'value': {'contact_id': False}}
-        addr = self.pool.get('res.partner').address_get(cr, uid, [partner_id], ['invoice'])
-        return {'value': {'contact_id': addr.get('invoice', False)}}
 
     def on_change_company(self, cr, uid, id, company_id):
         if not company_id:
@@ -244,40 +280,47 @@ class account_analytic_account(osv.osv):
             res['value']['partner_id'] = partner
         return res
 
-    def onchange_partner_id(self, cr, uid, ids, partner, context=None):
-        partner_obj = self.pool.get('res.partner')
-        if not partner:
-            return {'value':{'contact_id': False}}
-        address = partner_obj.address_get(cr, uid, [partner], ['contact'])
-        return {'value':{'contact_id': address['contact']}}
-
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args=[]
         if context is None:
             context={}
         if context.get('current_model') == 'project.project':
-            cr.execute("select analytic_account_id from project_project")
-            project_ids = [x[0] for x in cr.fetchall()]
+            project_obj = self.pool.get("account.analytic.account")
+            project_ids = project_obj.search(cr, uid, args)
             return self.name_get(cr, uid, project_ids, context=context)
         if name:
-            account = self.search(cr, uid, [('code', '=', name)] + args, limit=limit, context=context)
-            if not account:
+            account_ids = self.search(cr, uid, [('code', '=', name)] + args, limit=limit, context=context)
+            if not account_ids:
                 names=map(lambda i : i.strip(),name.split('/'))
                 for i in range(len(names)):
                     dom=[('name', operator, names[i])]
                     if i>0:
-                        dom+=[('id','child_of',account)]
-                    account = self.search(cr, uid, dom, limit=limit, context=context)
-                newacc = account
+                        dom+=[('id','child_of',account_ids)]
+                    account_ids = self.search(cr, uid, dom, limit=limit, context=context)
+                newacc = account_ids
                 while newacc:
                     newacc = self.search(cr, uid, [('parent_id', 'in', newacc)], limit=limit, context=context)
-                    account += newacc
+                    account_ids += newacc
                 if args:
-                    account = self.search(cr, uid, [('id', 'in', account)] + args, limit=limit, context=context)
+                    account_ids = self.search(cr, uid, [('id', 'in', account_ids)] + args, limit=limit, context=context)
         else:
-            account = self.search(cr, uid, args, limit=limit, context=context)
-        return self.name_get(cr, uid, account, context=context)
+            account_ids = self.search(cr, uid, args, limit=limit, context=context)
+        return self.name_get(cr, uid, account_ids, context=context)
+
+    def create(self, cr, uid, vals, context=None):
+        contract =  super(account_analytic_account, self).create(cr, uid, vals, context=context)
+        if contract:
+            self.create_send_note(cr, uid, [contract], context=context)
+        return contract
+
+    def create_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            message = _("Contract <b>created</b>.")
+            if obj.partner_id:
+                message = _("Contract for <em>%s</em> has been <b>created</b>.") % (obj.partner_id.name,)
+            self.message_post(cr, uid, [obj.id], body=message,
+                subtype="analytic.mt_account_status", context=context)
 
 account_analytic_account()
 
@@ -291,29 +334,36 @@ class account_analytic_line(osv.osv):
         'date': fields.date('Date', required=True, select=True),
         'amount': fields.float('Amount', required=True, help='Calculated by multiplying the quantity and the price given in the Product\'s cost price. Always expressed in the company main currency.', digits_compute=dp.get_precision('Account')),
         'unit_amount': fields.float('Quantity', help='Specifies the amount of quantity to count.'),
-        'account_id': fields.many2one('account.analytic.account', 'Analytic Account', required=True, ondelete='cascade', select=True, domain=[('type','<>','view')]),
+        'account_id': fields.many2one('account.analytic.account', 'Analytic Account', required=True, ondelete='restrict', select=True, domain=[('type','<>','view')]),
         'user_id': fields.many2one('res.users', 'User'),
         'company_id': fields.related('account_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
 
     }
+
+    def _get_default_date(self, cr, uid, context=None):
+        return fields.date.context_today(self, cr, uid, context=context)
+
+    def __get_default_date(self, cr, uid, context=None):
+        return self._get_default_date(cr, uid, context=context)
+
     _defaults = {
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
+        'date': __get_default_date,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=c),
         'amount': 0.00
     }
 
     _order = 'date desc'
-    
+
     def _check_no_view(self, cr, uid, ids, context=None):
         analytic_lines = self.browse(cr, uid, ids, context=context)
         for line in analytic_lines:
             if line.account_id.type == 'view':
                 return False
         return True
-    
+
     _constraints = [
-        (_check_no_view, 'You can not create analytic line on view account.', ['account_id']),
-    ]    
+        (_check_no_view, 'You cannot create analytic line on view account.', ['account_id']),
+    ]
 
 account_analytic_line()
 

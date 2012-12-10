@@ -7,30 +7,44 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2010-12-29 13:04+0000\n"
 "Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:47+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:42+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
+
+#. module: analytic_user_function
+#: model:ir.model,name:analytic_user_function.model_account_analytic_line
+msgid "Analytic Line"
+msgstr ""
+
+#. module: analytic_user_function
+#: view:account.analytic.account:0
+msgid "Invoice Price Rate per User"
+msgstr ""
 
 #. module: analytic_user_function
 #: field:analytic.user.funct.grid,product_id:0
-msgid "Product"
-msgstr "Προϊόν"
+msgid "Service"
+msgstr ""
 
 #. module: analytic_user_function
 #: model:ir.model,name:analytic_user_function.model_analytic_user_funct_grid
-msgid "Relation table between users and products on a analytic account"
+msgid "Price per User"
 msgstr ""
-"Πίνακας Σχέσεων μεταξύ χρηστών και προϊόντων στον αναλυτικό λογαριασμό"
 
 #. module: analytic_user_function
-#: constraint:hr.analytic.timesheet:0
-msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
+#: field:analytic.user.funct.grid,price:0
+msgid "Price"
+msgstr ""
+
+#. module: analytic_user_function
+#: help:analytic.user.funct.grid,price:0
+msgid "Price per hour for this user."
 msgstr ""
 
 #. module: analytic_user_function
@@ -40,35 +54,44 @@ msgid "Analytic Account"
 msgstr "Αναλυτική Λογαριασμού"
 
 #. module: analytic_user_function
-#: view:account.analytic.account:0
+#: code:addons/analytic_user_function/analytic_user_function.py:106
+#: code:addons/analytic_user_function/analytic_user_function.py:135
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: analytic_user_function
+#: view:analytic.user.funct.grid:0
+msgid "Invoicing Data"
+msgstr ""
+
+#. module: analytic_user_function
 #: field:account.analytic.account,user_product_ids:0
 msgid "Users/Products Rel."
 msgstr "Χρήστες/σχ. Προϊόντα"
 
 #. module: analytic_user_function
-#: field:analytic.user.funct.grid,user_id:0
-msgid "User"
-msgstr "Χρήστης"
+#: view:account.analytic.account:0
+msgid ""
+"Define a specific service (e.g. Senior Consultant)\n"
+"                            and price for some users to use these data "
+"instead\n"
+"                            of the default values when invoicing the "
+"customer."
+msgstr ""
 
 #. module: analytic_user_function
-#: code:addons/analytic_user_function/analytic_user_function.py:96
-#: code:addons/analytic_user_function/analytic_user_function.py:131
+#: field:analytic.user.funct.grid,uom_id:0
+msgid "Unit of Measure"
+msgstr ""
+
+#. module: analytic_user_function
+#: code:addons/analytic_user_function/analytic_user_function.py:107
+#: code:addons/analytic_user_function/analytic_user_function.py:136
 #, python-format
 msgid "There is no expense account define for this product: \"%s\" (id:%d)"
 msgstr ""
 "Δεν έχει οριστεί λογαριασμός εξόδων για αυτό το προϊόν: \"%s\" (id:%d)"
-
-#. module: analytic_user_function
-#: code:addons/analytic_user_function/analytic_user_function.py:95
-#: code:addons/analytic_user_function/analytic_user_function.py:130
-#, python-format
-msgid "Error !"
-msgstr "Σφάλμα!"
-
-#. module: analytic_user_function
-#: constraint:account.analytic.account:0
-msgid "Error! You can not create recursive analytic accounts."
-msgstr ""
 
 #. module: analytic_user_function
 #: model:ir.model,name:analytic_user_function.model_hr_analytic_timesheet
@@ -76,12 +99,32 @@ msgid "Timesheet Line"
 msgstr "Γραμμή Φύλλου Xρόνου Eργασίας"
 
 #. module: analytic_user_function
-#: view:analytic.user.funct.grid:0
-msgid "User's Product for this Analytic Account"
-msgstr "Τα Προϊόντα του Χρήστη για αυτόν τον Αναλυτικό Λογαριασμό"
+#: view:account.analytic.account:0
+msgid ""
+"OpenERP will recursively search on parent accounts\n"
+"                            to check if specific conditions are defined for "
+"a\n"
+"                            specific user. This allows to set invoicing\n"
+"                            conditions for a group of contracts."
+msgstr ""
+
+#. module: analytic_user_function
+#: field:analytic.user.funct.grid,user_id:0
+msgid "User"
+msgstr "Χρήστης"
+
+#~ msgid "Relation table between users and products on a analytic account"
+#~ msgstr ""
+#~ "Πίνακας Σχέσεων μεταξύ χρηστών και προϊόντων στον αναλυτικό λογαριασμό"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Άκυρο XML για Αρχιτεκτονική Όψης!"
+
+#~ msgid "Product"
+#~ msgstr "Προϊόν"
+
+#~ msgid "User's Product for this Analytic Account"
+#~ msgstr "Τα Προϊόντα του Χρήστη για αυτόν τον Αναλυτικό Λογαριασμό"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -91,3 +134,7 @@ msgstr "Τα Προϊόντα του Χρήστη για αυτόν τον Αν�
 
 #~ msgid "Analytic User Function"
 #~ msgstr "Αναλυτική Λειτουργία Χρήστη"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Σφάλμα!"

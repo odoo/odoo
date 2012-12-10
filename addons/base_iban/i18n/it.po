@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2011-01-13 03:14+0000\n"
-"Last-Translator: lollo_Ge <Unknown>\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
+"PO-Revision-Date: 2012-12-03 20:06+0000\n"
+"Last-Translator: Davide Corio - agilebg.com <davide.corio@agilebg.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:01+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:09+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: base_iban
 #: constraint:res.partner.bank:0
@@ -23,22 +23,25 @@ msgid ""
 "Please define BIC/Swift code on bank for bank type IBAN Account to make "
 "valid payments"
 msgstr ""
+"\n"
+"Definire il codice BIC/Swift sul conto IBAN al fine di emettere pagamenti "
+"validi."
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:139
+#: code:addons/base_iban/base_iban.py:141
 #, python-format
 msgid "This IBAN does not pass the validation check, please verify it"
-msgstr ""
+msgstr "Questo IBAN non ha passato la validazione, si prega di verificare"
 
 #. module: base_iban
 #: model:res.partner.bank.type,format_layout:base_iban.bank_iban
 msgid "%(bank_name)s: IBAN %(acc_number)s - BIC %(bank_bic)s"
-msgstr ""
+msgstr "%(bank_name)s: IBAN %(acc_number)s - BIC %(bank_bic)s"
 
 #. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_swift_field
 msgid "bank_bic"
-msgstr ""
+msgstr "bank_bic"
 
 #. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_zip_field
@@ -61,12 +64,12 @@ msgid "country_id"
 msgstr "country_id"
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:136
+#: code:addons/base_iban/base_iban.py:138
 #, python-format
 msgid ""
 "The IBAN does not seem to be correct. You should have entered something like "
 "this %s"
-msgstr ""
+msgstr "L'IBAN non sembra essere corretto. Dovrebbe essere simile a %s"
 
 #. module: base_iban
 #: field:res.partner.bank,iban:0
@@ -74,20 +77,15 @@ msgid "IBAN"
 msgstr "IBAN"
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:140
+#: code:addons/base_iban/base_iban.py:142
 #, python-format
 msgid "The IBAN is invalid, it should begin with the country code"
-msgstr ""
+msgstr "L'IBAN non è valido, dovrebbe includere il codice nazione"
 
 #. module: base_iban
 #: model:res.partner.bank.type,name:base_iban.bank_iban
 msgid "IBAN Account"
 msgstr "Codice di conto IBAN"
-
-#. module: base_iban
-#: constraint:res.partner.bank:0
-msgid "The RIB and/or IBAN is not valid"
-msgstr ""
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML non valido per Visualizzazione Architettura!"

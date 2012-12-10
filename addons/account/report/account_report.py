@@ -48,6 +48,7 @@ class report_account_receivable(osv.osv):
     _order = 'name desc'
 
     def init(self, cr):
+        tools.drop_view_if_exists(cr, 'report_account_receivable')
         cr.execute("""
             create or replace view report_account_receivable as (
                 select
@@ -91,6 +92,7 @@ class report_aged_receivable(osv.osv):
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         """ To call the init() method timely
         """
+        if context is None:context = {}
         if not self.called:
             self.init(cr, user)
         self.called = True # To make sure that init doesn't get called multiple times
@@ -175,13 +177,14 @@ class report_invoice_created(osv.osv):
             ('open','Open'),
             ('paid','Done'),
             ('cancel','Cancelled')
-        ],'State', readonly=True),
+        ],'Status', readonly=True),
         'origin': fields.char('Source Document', size=64, readonly=True, help="Reference of the document that generated this invoice report."),
         'create_date': fields.datetime('Create Date', readonly=True)
     }
     _order = 'create_date'
 
     def init(self, cr):
+        tools.drop_view_if_exists(cr, 'report_invoice_created')
         cr.execute("""create or replace view report_invoice_created as (
             select
                inv.id as id, inv.name as name, inv.type as type,

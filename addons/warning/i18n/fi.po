@@ -7,27 +7,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2011-06-08 10:31+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:49+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
-
-#. module: warning
-#: sql_constraint:purchase.order:0
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique per Company!"
-msgstr ""
+"X-Launchpad-Export-Date: 2012-12-04 05:43+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order_line
 #: field:product.product,purchase_line_warn:0
 msgid "Purchase Order Line"
 msgstr "Ostotilauksen rivi"
+
+#. module: warning
+#: model:ir.model,name:warning.model_stock_picking_in
+msgid "Incoming Shipments"
+msgstr ""
 
 #. module: warning
 #: field:product.product,sale_line_warn_msg:0
@@ -72,23 +71,8 @@ msgstr "Varoitukset"
 #: selection:res.partner,picking_warn:0
 #: selection:res.partner,purchase_warn:0
 #: selection:res.partner,sale_warn:0
-msgid "Warning"
-msgstr "Varoitus"
-
-#. module: warning
-#: selection:product.product,purchase_line_warn:0
-#: selection:product.product,sale_line_warn:0
-#: selection:res.partner,invoice_warn:0
-#: selection:res.partner,picking_warn:0
-#: selection:res.partner,purchase_warn:0
-#: selection:res.partner,sale_warn:0
 msgid "Blocking Message"
 msgstr "Estoviesti"
-
-#. module: warning
-#: field:res.partner,picking_warn:0
-msgid "Stock Picking"
-msgstr "Varatokeräily"
 
 #. module: warning
 #: view:res.partner:0
@@ -122,20 +106,15 @@ msgid "Sale Order"
 msgstr "Myyntitilaus"
 
 #. module: warning
-#: field:res.partner,invoice_warn_msg:0
-msgid "Message for Invoice"
-msgstr "Viesti laskulle"
+#: field:res.partner,picking_warn:0
+msgid "Stock Picking"
+msgstr "Varatokeräily"
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order
 #: field:res.partner,purchase_warn:0
 msgid "Purchase Order"
 msgstr "Ostotilaus"
-
-#. module: warning
-#: sql_constraint:stock.picking:0
-msgid "Reference must be unique per Company!"
-msgstr ""
 
 #. module: warning
 #: field:res.partner,sale_warn_msg:0
@@ -165,28 +144,20 @@ msgstr ""
 #. module: warning
 #: code:addons/warning/warning.py:67
 #: code:addons/warning/warning.py:96
-#: code:addons/warning/warning.py:132
-#: code:addons/warning/warning.py:163
-#: code:addons/warning/warning.py:213
-#: code:addons/warning/warning.py:246
+#: code:addons/warning/warning.py:130
+#: code:addons/warning/warning.py:161
+#: code:addons/warning/warning.py:191
+#: code:addons/warning/warning.py:217
+#: code:addons/warning/warning.py:265
+#: code:addons/warning/warning.py:298
 #, python-format
 msgid "Alert for %s !"
 msgstr "Varoita %s !"
 
 #. module: warning
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr ""
-
-#. module: warning
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr ""
-
-#. module: warning
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr ""
+#: field:res.partner,invoice_warn_msg:0
+msgid "Message for Invoice"
+msgstr "Viesti laskulle"
 
 #. module: warning
 #: view:res.partner:0
@@ -201,10 +172,12 @@ msgstr "Varoitus ostotilaukselle"
 #. module: warning
 #: code:addons/warning/warning.py:68
 #: code:addons/warning/warning.py:97
-#: code:addons/warning/warning.py:134
-#: code:addons/warning/warning.py:164
-#: code:addons/warning/warning.py:214
-#: code:addons/warning/warning.py:247
+#: code:addons/warning/warning.py:132
+#: code:addons/warning/warning.py:162
+#: code:addons/warning/warning.py:192
+#: code:addons/warning/warning.py:218
+#: code:addons/warning/warning.py:266
+#: code:addons/warning/warning.py:299
 #, python-format
 msgid "Warning for %s"
 msgstr "Varoitus %s"
@@ -215,9 +188,14 @@ msgid "Warning on the Sale Order"
 msgstr "Varoitus ostotilaukselle"
 
 #. module: warning
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Virhe: Väärä EAN-koodi"
+#: selection:product.product,purchase_line_warn:0
+#: selection:product.product,sale_line_warn:0
+#: selection:res.partner,invoice_warn:0
+#: selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0
+#: selection:res.partner,sale_warn:0
+msgid "Warning"
+msgstr "Varoitus"
 
 #. module: warning
 #: field:res.partner,picking_warn_msg:0
@@ -235,6 +213,11 @@ msgid "Sales Order"
 msgstr "Myyntitilaus"
 
 #. module: warning
+#: model:ir.model,name:warning.model_stock_picking_out
+msgid "Delivery Orders"
+msgstr ""
+
+#. module: warning
 #: model:ir.model,name:warning.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "Myyntitilauksen Rivi"
@@ -244,3 +227,21 @@ msgstr "Myyntitilauksen Rivi"
 
 #~ msgid "Order Reference must be unique !"
 #~ msgstr "Tilauksen viite tulee olla yksilöllinen!"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Virhe: Väärä EAN-koodi"
+
+#~ msgid "Invalid BBA Structured Communication !"
+#~ msgstr "Virheellinen BBA rakenteen kommunikointi !"
+
+#~ msgid "Invoice Number must be unique per Company!"
+#~ msgstr "laskun numeron tulee olla uniikki yrityskohtaisesti!"
+
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr "Virhe! Rekursiivisen kumppanin luonti ei ole sallittu."
+
+#~ msgid "Reference must be unique per Company!"
+#~ msgstr "Viitteen tulee olla uniikki yrityskohtaisesti!"
+
+#~ msgid "Order Reference must be unique per Company!"
+#~ msgstr "Tilausviitteen tulee olla uniikki yrityskohtaisesti!"

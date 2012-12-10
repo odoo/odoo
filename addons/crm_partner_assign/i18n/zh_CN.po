@@ -7,30 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2012-02-17 05:34+0000\n"
-"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
+"Last-Translator: 开阖软件     Jeff Wang <jeff@osbzr.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-18 04:59+0000\n"
-"X-Generator: Launchpad (build 14814)\n"
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,send_to:0
-msgid "Send to"
-msgstr "发送到"
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,subtype:0
-msgid "Message type"
-msgstr "内容类型"
-
-#. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,auto_delete:0
-msgid "Permanently delete emails after sending"
-msgstr "电子邮件发送后永久删除"
+"X-Launchpad-Export-Date: 2012-12-04 05:52+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,delay_close:0
@@ -38,14 +23,21 @@ msgid "Delay to Close"
 msgstr "延迟关闭"
 
 #. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,email_to:0
-msgid "Message recipients"
-msgstr "收件人"
+#: field:crm.lead.forward.to.partner,author_id:0
+msgid "Author"
+msgstr ""
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,planned_revenue:0
 msgid "Planned Revenue"
 msgstr "计划收入"
+
+#. module: crm_partner_assign
+#: help:crm.lead.forward.to.partner,type:0
+msgid ""
+"Message type: email for email message, notification for system message, "
+"comment for other messages such as user replies"
+msgstr ""
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,nbr:0
@@ -59,9 +51,9 @@ msgid "Group By..."
 msgstr "分组..."
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,template_id:0
-msgid "Template"
-msgstr "模版"
+#: help:crm.lead.forward.to.partner,body:0
+msgid "Automatically sanitized HTML contents"
+msgstr ""
 
 #. module: crm_partner_assign
 #: view:crm.lead:0
@@ -74,19 +66,21 @@ msgid "Geo Localize"
 msgstr "geolocalization定位"
 
 #. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,body_text:0
-msgid "Plain-text version of the message"
-msgstr "内容的纯文本版本"
-
-#. module: crm_partner_assign
 #: view:crm.lead.forward.to.partner:0
 msgid "Body"
 msgstr "正文"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "March"
-msgstr "3月"
+#: help:crm.lead.forward.to.partner,email_from:0
+msgid ""
+"Email address of the sender. This field is set when no matching partner is "
+"found for incoming emails."
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.partner.report.assign:0
+msgid "Date Partnership"
+msgstr ""
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,type:0
@@ -99,12 +93,7 @@ msgid "Delay to close"
 msgstr "延迟关闭"
 
 #. module: crm_partner_assign
-#: view:crm.partner.report.assign:0
-msgid "#Partner"
-msgstr "业务伙伴编号"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,history:0
+#: selection:crm.lead.forward.to.partner,history_mode:0
 msgid "Whole Story"
 msgstr "完整的情况"
 
@@ -115,12 +104,9 @@ msgid "Company"
 msgstr "公司"
 
 #. module: crm_partner_assign
-#: code:addons/crm_partner_assign/partner_geo_assign.py:37
-#, python-format
-msgid ""
-"Could not contact geolocation servers, please make sure you have a working "
-"internet connection (%s)"
-msgstr "无法连接到服务器，请确保你的连接 (%s) 正常。"
+#: field:crm.lead.forward.to.partner,notification_ids:0
+msgid "Notifications"
+msgstr ""
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,date_assign:0
@@ -128,14 +114,16 @@ msgid "Partner Date"
 msgstr "业务伙伴日期"
 
 #. module: crm_partner_assign
+#: view:crm.lead.report.assign:0
+#: view:crm.partner.report.assign:0
+#: view:res.partner:0
+msgid "Salesperson"
+msgstr ""
+
+#. module: crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
 msgid "Highest"
 msgstr "最高"
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,body_text:0
-msgid "Text contents"
-msgstr "文本内容"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
@@ -149,7 +137,17 @@ msgid "Message unique identifier"
 msgstr "消息唯一编号"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,history:0
+#: field:res.partner,date_review_next:0
+msgid "Next Partner Review"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.forward.to.partner,favorite_user_ids:0
+msgid "Favorite"
+msgstr ""
+
+#. module: crm_partner_assign
+#: selection:crm.lead.forward.to.partner,history_mode:0
 msgid "Latest email"
 msgstr "最近的邮件"
 
@@ -160,13 +158,6 @@ msgid "Geo Latitude"
 msgstr "geolocalization纬度"
 
 #. module: crm_partner_assign
-#: view:crm.lead.forward.to.partner:0
-msgid ""
-"Add here all attachments of the current document you want to include in the "
-"Email."
-msgstr "在这里添加你在邮件里要加入的当前单据附件。"
-
-#. module: crm_partner_assign
 #: selection:crm.lead.report.assign,state:0
 msgid "Cancelled"
 msgstr "已取消"
@@ -175,6 +166,16 @@ msgstr "已取消"
 #: view:crm.lead:0
 msgid "Geo Assignation"
 msgstr "指派的geolocalization"
+
+#. module: crm_partner_assign
+#: model:ir.model,name:crm_partner_assign.model_crm_lead_forward_to_partner
+msgid "Email composition wizard"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.partner.report.assign,turnover:0
+msgid "Turnover"
+msgstr ""
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,date_closed:0
@@ -189,28 +190,20 @@ msgid ""
 msgstr "为线索指定一个业务伙伴的概率（0表示没指派）"
 
 #. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,body_html:0
-msgid "Rich-text/HTML version of the message"
-msgstr "内容的富文本/HTML版本"
+#: view:res.partner:0
+msgid "Partner Activation"
+msgstr ""
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,auto_delete:0
-msgid "Auto Delete"
-msgstr "自动删除"
+#: selection:crm.lead.forward.to.partner,type:0
+msgid "System notification"
+msgstr ""
 
 #. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,email_bcc:0
-msgid "Blind carbon copy message recipients"
-msgstr "密送"
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,partner_id:0
-#: selection:crm.lead.forward.to.partner,send_to:0
-#: view:crm.lead.report.assign:0
-#: field:crm.lead.report.assign,partner_assigned_id:0
-#: model:ir.model,name:crm_partner_assign.model_res_partner
-msgid "Partner"
-msgstr "业务伙伴"
+#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:77
+#, python-format
+msgid "Lead forward"
+msgstr ""
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,probability:0
@@ -236,7 +229,6 @@ msgstr "来自"
 #. module: crm_partner_assign
 #: model:ir.actions.act_window,name:crm_partner_assign.res_partner_grade_action
 #: model:ir.ui.menu,name:crm_partner_assign.menu_res_partner_grade_action
-#: field:res.partner,grade_id:0
 #: view:res.partner.grade:0
 msgid "Partner Grade"
 msgstr "业务伙伴级别"
@@ -264,10 +256,16 @@ msgid "Priority"
 msgstr "优先级"
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-#: field:crm.lead.report.assign,state:0
-msgid "State"
-msgstr "状态"
+#: help:crm.lead.forward.to.partner,author_id:0
+msgid ""
+"Author of the message. If not set, email_from may hold an email address that "
+"did not match any partner."
+msgstr ""
+
+#. module: crm_partner_assign
+#: help:crm.lead.forward.to.partner,favorite_user_ids:0
+msgid "Users that set this message in their favorites"
+msgstr ""
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,delay_expected:0
@@ -275,14 +273,20 @@ msgid "Overpassed Deadline"
 msgstr "超过截止日期"
 
 #. module: crm_partner_assign
+#: field:crm.lead.forward.to.partner,type:0
 #: field:crm.lead.report.assign,type:0
 msgid "Type"
 msgstr "类型"
 
 #. module: crm_partner_assign
-#: view:crm.partner.report.assign:0
-msgid "Name"
-msgstr "名称"
+#: selection:crm.lead.forward.to.partner,type:0
+msgid "Email"
+msgstr ""
+
+#. module: crm_partner_assign
+#: help:crm.lead,partner_assigned_id:0
+msgid "Partner this case has been forwarded/assigned to."
+msgstr "这业务的业务伙伴已跟进/已指定"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
@@ -290,11 +294,14 @@ msgid "Lowest"
 msgstr "最低"
 
 #. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,subtype:0
-msgid ""
-"Type of message, usually 'html' or 'plain', used to select plaintext or rich "
-"text contents accordingly"
-msgstr "内容类型，一般是“html”或“纯文本”，用于对应地选择纯文本或富文本"
+#: view:crm.partner.report.assign:0
+msgid "Date Invoice"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.forward.to.partner,template_id:0
+msgid "Template"
+msgstr "模版"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
@@ -312,14 +319,24 @@ msgid "Creation Date"
 msgstr "创建日期"
 
 #. module: crm_partner_assign
+#: model:ir.model,name:crm_partner_assign.model_res_partner_activation
+msgid "res.partner.activation"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.forward.to.partner,parent_id:0
+msgid "Parent Message"
+msgstr ""
+
+#. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,res_id:0
 msgid "Related Document ID"
 msgstr "相关单据编号"
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-msgid "7 Days"
-msgstr "7天"
+#: selection:crm.lead.report.assign,state:0
+msgid "Pending"
+msgstr "待处理"
 
 #. module: crm_partner_assign
 #: view:crm.lead:0
@@ -337,18 +354,29 @@ msgid "July"
 msgstr "7月"
 
 #. module: crm_partner_assign
+#: view:crm.partner.report.assign:0
+msgid "Date Review"
+msgstr ""
+
+#. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
 #: field:crm.lead.report.assign,stage_id:0
 msgid "Stage"
 msgstr "阶段"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,model:0
-msgid "Related Document model"
-msgstr "相关单据模型"
+#: view:crm.lead.report.assign:0
+#: field:crm.lead.report.assign,state:0
+msgid "Status"
+msgstr ""
 
 #. module: crm_partner_assign
-#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:192
+#: field:crm.lead.forward.to.partner,to_read:0
+msgid "To read"
+msgstr ""
+
+#. module: crm_partner_assign
+#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:77
 #, python-format
 msgid "Fwd"
 msgstr "转发"
@@ -365,30 +393,25 @@ msgid "Opportunities Assignment Analysis"
 msgstr "商机指定分析"
 
 #. module: crm_partner_assign
+#: view:crm.lead.forward.to.partner:0
 #: view:res.partner:0
 msgid "Cancel"
 msgstr "取消"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,history:0
+#: field:crm.lead.forward.to.partner,history_mode:0
 msgid "Send history"
 msgstr "发送日志"
 
 #. module: crm_partner_assign
-#: view:crm.lead.forward.to.partner:0
-msgid "Contact"
-msgstr "联系方式"
-
-#. module: crm_partner_assign
-#: view:crm.lead.forward.to.partner:0
 #: view:res.partner:0
 msgid "Close"
 msgstr "结束"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,use_template:0
-msgid "Use Template"
-msgstr "使用模版"
+#: selection:crm.lead.report.assign,month:0
+msgid "March"
+msgstr "3月"
 
 #. module: crm_partner_assign
 #: model:ir.actions.act_window,name:crm_partner_assign.action_report_crm_opportunity_assign
@@ -402,14 +425,25 @@ msgid "Number of Days to close the case"
 msgstr "到期天数"
 
 #. module: crm_partner_assign
+#: help:crm.lead.forward.to.partner,notified_partner_ids:0
+msgid ""
+"Partners that have a notification pushing this message in their mailboxes"
+msgstr ""
+
+#. module: crm_partner_assign
+#: selection:crm.lead.forward.to.partner,type:0
+msgid "Comment"
+msgstr ""
+
+#. module: crm_partner_assign
 #: field:res.partner,partner_weight:0
 msgid "Weight"
 msgstr "重要性"
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-msgid "Delay to open"
-msgstr "延迟开启"
+#: selection:crm.lead.report.assign,month:0
+msgid "April"
+msgstr "4月"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
@@ -425,6 +459,11 @@ msgid "December"
 msgstr "12月"
 
 #. module: crm_partner_assign
+#: help:crm.lead.forward.to.partner,vote_user_ids:0
+msgid "Users that voted for this message"
+msgstr ""
+
+#. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
 #: field:crm.lead.report.assign,month:0
 msgid "Month"
@@ -436,21 +475,35 @@ msgid "Opening Date"
 msgstr "开启日期"
 
 #. module: crm_partner_assign
+#: field:crm.lead.forward.to.partner,child_ids:0
+msgid "Child Messages"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.partner.report.assign,date_review:0
+#: field:res.partner,date_review:0
+msgid "Latest Partner Review"
+msgstr ""
+
+#. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,subject:0
 msgid "Subject"
 msgstr "主题"
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-#: view:crm.partner.report.assign:0
-msgid "Salesman"
-msgstr "业务员"
+#: view:crm.lead.forward.to.partner:0
+msgid "or"
+msgstr ""
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-#: field:crm.lead.report.assign,categ_id:0
-msgid "Category"
-msgstr "分类"
+#: field:crm.lead.forward.to.partner,body:0
+msgid "Contents"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.forward.to.partner,vote_user_ids:0
+msgid "Votes"
+msgstr ""
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
@@ -458,14 +511,15 @@ msgid "#Opportunities"
 msgstr "#商机"
 
 #. module: crm_partner_assign
-#: view:crm.lead:0
-msgid "Team"
-msgstr "团队"
+#: field:crm.partner.report.assign,date_partnership:0
+#: field:res.partner,date_partnership:0
+msgid "Partnership Date"
+msgstr ""
 
 #. module: crm_partner_assign
 #: view:crm.lead:0
-msgid "Referred Partner"
-msgstr "推荐的业务伙伴"
+msgid "Team"
+msgstr "团队"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,state:0
@@ -510,6 +564,11 @@ msgid "August"
 msgstr "8月"
 
 #. module: crm_partner_assign
+#: help:crm.lead.forward.to.partner,record_name:0
+msgid "Name get of the related document."
+msgstr ""
+
+#. module: crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
 msgid "Normal"
 msgstr "普通"
@@ -535,8 +594,6 @@ msgid "Delay to Open"
 msgstr "延迟开启"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,send_to:0
-#: field:crm.lead.forward.to.partner,user_id:0
 #: field:crm.lead.report.assign,user_id:0
 #: field:crm.partner.report.assign,user_id:0
 msgid "User"
@@ -589,9 +646,9 @@ msgid "January"
 msgstr "1月"
 
 #. module: crm_partner_assign
-#: help:crm.lead,partner_assigned_id:0
-msgid "Partner this case has been forwarded/assigned to."
-msgstr "这业务的业务伙伴已跟进/已指定"
+#: view:crm.lead.forward.to.partner:0
+msgid "Send Mail"
+msgstr "发送邮件"
 
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,date:0
@@ -599,14 +656,19 @@ msgid "Date"
 msgstr "日期"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,body_html:0
-msgid "Rich-text contents"
-msgstr "富文本内容"
-
-#. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
 msgid "Planned Revenues"
 msgstr "计划收入"
+
+#. module: crm_partner_assign
+#: view:res.partner:0
+msgid "Partner Review"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.partner.report.assign,period_id:0
+msgid "Invoice Period"
+msgstr ""
 
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_res_partner_grade
@@ -625,24 +687,28 @@ msgid "Attachments"
 msgstr "附件"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,email_cc:0
-msgid "Cc"
-msgstr "抄送"
+#: field:crm.lead.forward.to.partner,record_name:0
+msgid "Message Record Name"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:res.partner.activation,sequence:0
+#: field:res.partner.grade,sequence:0
+msgid "Sequence"
+msgstr "序列"
+
+#. module: crm_partner_assign
+#: code:addons/crm_partner_assign/partner_geo_assign.py:37
+#, python-format
+msgid ""
+"Cannot contact geolocation servers. Please make sure that your internet "
+"connection is up and running (%s)."
+msgstr ""
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,month:0
 msgid "September"
 msgstr "9月"
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,references:0
-msgid "References"
-msgstr "关联"
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-msgid "Last 30 Days"
-msgstr "最近30天"
 
 #. module: crm_partner_assign
 #: field:res.partner.grade,name:0
@@ -661,16 +727,9 @@ msgid "Open"
 msgstr "开启"
 
 #. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,email_cc:0
-msgid "Carbon copy message recipients"
-msgstr "抄送"
-
-#. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,headers:0
-msgid ""
-"Full message headers, e.g. SMTP session headers (usually available on "
-"inbound messages only)"
-msgstr "完整的邮件头，例如：SMTP会话头（一般只用在接收的邮件）"
+#: field:crm.lead.forward.to.partner,subtype_id:0
+msgid "Subtype"
+msgstr ""
 
 #. module: crm_partner_assign
 #: field:res.partner,date_localization:0
@@ -683,21 +742,14 @@ msgid "Current"
 msgstr "当前的"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,email_to:0
-msgid "To"
-msgstr "到"
+#: model:ir.model,name:crm_partner_assign.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr ""
 
 #. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,email_from:0
-msgid ""
-"Message sender, taken from user preferences. If empty, this is not a mail "
-"but a message."
-msgstr "邮件发件人，来自用户的个人设置。如果为空，不发邮件而是发内部消息。"
-
-#. module: crm_partner_assign
-#: field:crm.partner.report.assign,nbr:0
-msgid "# of Partner"
-msgstr "业务伙伴编号"
+#: field:crm.lead.forward.to.partner,notified_partner_ids:0
+msgid "Notified partners"
+msgstr ""
 
 #. module: crm_partner_assign
 #: view:crm.lead.forward.to.partner:0
@@ -706,9 +758,10 @@ msgid "Forward to Partner"
 msgstr "跟进的业务伙伴"
 
 #. module: crm_partner_assign
-#: field:crm.partner.report.assign,name:0
-msgid "Partner name"
-msgstr "业务伙伴名称"
+#: field:crm.lead.report.assign,section_id:0
+#: field:crm.partner.report.assign,section_id:0
+msgid "Sales Team"
+msgstr "销售团队"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,month:0
@@ -721,29 +774,29 @@ msgid "Probable Revenue"
 msgstr "可能收入"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,reply_to:0
-msgid "Reply-To"
-msgstr "回复到"
+#: view:crm.partner.report.assign:0
+#: field:crm.partner.report.assign,activation:0
+#: view:res.partner:0
+#: field:res.partner,activation:0
+#: view:res.partner.activation:0
+msgid "Activation"
+msgstr ""
 
 #. module: crm_partner_assign
+#: view:crm.lead:0
 #: field:crm.lead,partner_assigned_id:0
 msgid "Assigned Partner"
 msgstr "指定的业务伙伴"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,address_id:0
-msgid "Address"
-msgstr "地址"
+#: field:res.partner,grade_id:0
+msgid "Partner Level"
+msgstr ""
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,type:0
 msgid "Opportunity"
 msgstr "商机"
-
-#. module: crm_partner_assign
-#: view:crm.lead.forward.to.partner:0
-msgid "Send Mail"
-msgstr "发送邮件"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,partner_id:0
@@ -756,9 +809,15 @@ msgid "February"
 msgstr "2月"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,send_to:0
-msgid "Email Address"
-msgstr "电子邮件地址"
+#: field:res.partner.activation,name:0
+msgid "Name"
+msgstr "名称"
+
+#. module: crm_partner_assign
+#: model:ir.actions.act_window,name:crm_partner_assign.res_partner_activation_act
+#: model:ir.ui.menu,name:crm_partner_assign.res_partner_activation_config_mi
+msgid "Partner Activations"
+msgstr ""
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
@@ -769,9 +828,10 @@ msgid "Country"
 msgstr "国家"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,headers:0
-msgid "Message headers"
-msgstr "邮件头"
+#: view:crm.lead.report.assign:0
+#: field:crm.lead.report.assign,year:0
+msgid "Year"
+msgstr "年"
 
 #. module: crm_partner_assign
 #: view:res.partner:0
@@ -779,19 +839,14 @@ msgid "Convert to Opportunity"
 msgstr "转换为商机"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,email_bcc:0
-msgid "Bcc"
-msgstr "密送"
-
-#. module: crm_partner_assign
 #: view:crm.lead:0
 msgid "Geo Assign"
 msgstr "指定geolocalization"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "April"
-msgstr "4月"
+#: view:crm.lead.report.assign:0
+msgid "Delay to open"
+msgstr "延迟开启"
 
 #. module: crm_partner_assign
 #: model:ir.actions.act_window,name:crm_partner_assign.action_report_crm_partner_assign
@@ -800,14 +855,11 @@ msgid "Partnership Analysis"
 msgstr "业务伙伴分析"
 
 #. module: crm_partner_assign
-#: model:ir.model,name:crm_partner_assign.model_crm_lead
-msgid "crm.lead"
-msgstr "crm.lead"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,state:0
-msgid "Pending"
-msgstr "待处理"
+#: help:crm.lead.forward.to.partner,notification_ids:0
+msgid ""
+"Technical field holding the message notifications. Use notified_partner_ids "
+"to access notified partners."
+msgstr ""
 
 #. module: crm_partner_assign
 #: view:crm.partner.report.assign:0
@@ -820,24 +872,24 @@ msgid "CRM Lead Report"
 msgstr "客户关系管理 线索报表"
 
 #. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,references:0
-msgid "Message references, such as identifiers of previous messages"
-msgstr "邮件引用，例如前一个邮件的ID"
+#: field:crm.lead.forward.to.partner,composition_mode:0
+msgid "Composition mode"
+msgstr ""
 
 #. module: crm_partner_assign
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr "错误，您不能创建循环引用的会员用户"
+#: field:crm.lead.forward.to.partner,model:0
+msgid "Related Document Model"
+msgstr ""
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,history:0
+#: selection:crm.lead.forward.to.partner,history_mode:0
 msgid "Case Information"
 msgstr "业务信息"
 
 #. module: crm_partner_assign
-#: field:res.partner.grade,sequence:0
-msgid "Sequence"
-msgstr "序列"
+#: help:crm.lead.forward.to.partner,to_read:0
+msgid "Functional field to search for messages the current user has to read"
+msgstr ""
 
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_partner_report_assign
@@ -845,20 +897,19 @@ msgid "CRM Partner Report"
 msgstr "CRM业务伙伴报表"
 
 #. module: crm_partner_assign
-#: model:ir.model,name:crm_partner_assign.model_crm_lead_forward_to_partner
-msgid "E-mail composition wizard"
-msgstr "邮件合并向导"
-
-#. module: crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
 msgid "High"
 msgstr "高"
 
 #. module: crm_partner_assign
-#: field:crm.lead.report.assign,section_id:0
-#: field:crm.partner.report.assign,section_id:0
-msgid "Sales Team"
-msgstr "销售团队"
+#: field:crm.lead.forward.to.partner,partner_ids:0
+msgid "Additional contacts"
+msgstr ""
+
+#. module: crm_partner_assign
+#: help:crm.lead.forward.to.partner,parent_id:0
+msgid "Initial thread message."
+msgstr ""
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,create_date:0
@@ -872,14 +923,21 @@ msgstr "过滤器"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
-#: field:crm.lead.report.assign,year:0
-msgid "Year"
-msgstr "年"
+#: field:crm.lead.report.assign,partner_assigned_id:0
+#: view:crm.partner.report.assign:0
+#: field:crm.partner.report.assign,partner_id:0
+#: model:ir.model,name:crm_partner_assign.model_res_partner
+msgid "Partner"
+msgstr "业务伙伴"
 
-#. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,reply_to:0
-msgid "Preferred response address for the message"
-msgstr "本邮件推荐的回复地址"
+#~ msgid "Send to"
+#~ msgstr "发送到"
+
+#, python-format
+#~ msgid ""
+#~ "Could not contact geolocation servers, please make sure you have a working "
+#~ "internet connection (%s)"
+#~ msgstr "无法连接到服务器，请确保你的连接 (%s) 正常。"
 
 #~ msgid ""
 #~ "These addresses will receive a copy of this email. To modify the permanent "
@@ -900,11 +958,20 @@ msgstr "本邮件推荐的回复地址"
 #~ msgid "HTML formatting?"
 #~ msgstr "HTML格式?"
 
+#~ msgid "7 Days"
+#~ msgstr "7天"
+
 #~ msgid "Select this if you want to send email with HTML formatting."
 #~ msgstr "如果你想发送HTML格式的邮件，选此"
 
+#~ msgid "Contact"
+#~ msgstr "联系方式"
+
 #~ msgid "Reply To"
 #~ msgstr "回复"
+
+#~ msgid "Salesman"
+#~ msgstr "业务员"
 
 #~ msgid "Partner Geo-Localisation"
 #~ msgstr "业务伙伴geolocalization定位"
@@ -921,14 +988,130 @@ msgstr "本邮件推荐的回复地址"
 #~ msgid "Send new email"
 #~ msgstr "发送新的邮件"
 
+#~ msgid "To"
+#~ msgstr "到"
+
+#~ msgid "Address"
+#~ msgstr "地址"
+
+#~ msgid "Email Address"
+#~ msgstr "电子邮件地址"
+
 #~ msgid "Set New State To"
 #~ msgstr "设定新状态"
 
 #~ msgid "Message Body"
 #~ msgstr "消息正文"
 
+#~ msgid "crm.lead"
+#~ msgstr "crm.lead"
+
 #~ msgid "Reply-to of the Sales team defined on this case"
 #~ msgstr "这业务定义的“回复到”的销售团队"
 
+#~ msgid "State"
+#~ msgstr "状态"
+
+#~ msgid "Category"
+#~ msgstr "分类"
+
 #~ msgid "Error ! You can not create recursive associated members."
 #~ msgstr "错误！您不能创建递归的商会会员。"
+
+#~ msgid "Last 30 Days"
+#~ msgstr "最近30天"
+
+#~ msgid "Permanently delete emails after sending"
+#~ msgstr "电子邮件发送后永久删除"
+
+#~ msgid "Message type"
+#~ msgstr "内容类型"
+
+#~ msgid "Message recipients"
+#~ msgstr "收件人"
+
+#~ msgid "Text contents"
+#~ msgstr "文本内容"
+
+#~ msgid "Plain-text version of the message"
+#~ msgstr "内容的纯文本版本"
+
+#~ msgid ""
+#~ "Add here all attachments of the current document you want to include in the "
+#~ "Email."
+#~ msgstr "在这里添加你在邮件里要加入的当前单据附件。"
+
+#~ msgid "#Partner"
+#~ msgstr "业务伙伴编号"
+
+#~ msgid "Use Template"
+#~ msgstr "使用模版"
+
+#~ msgid "Related Document model"
+#~ msgstr "相关单据模型"
+
+#~ msgid ""
+#~ "Type of message, usually 'html' or 'plain', used to select plaintext or rich "
+#~ "text contents accordingly"
+#~ msgstr "内容类型，一般是“html”或“纯文本”，用于对应地选择纯文本或富文本"
+
+#~ msgid "Rich-text/HTML version of the message"
+#~ msgstr "内容的富文本/HTML版本"
+
+#~ msgid "Auto Delete"
+#~ msgstr "自动删除"
+
+#~ msgid "Blind carbon copy message recipients"
+#~ msgstr "密送"
+
+#~ msgid "Referred Partner"
+#~ msgstr "推荐的业务伙伴"
+
+#~ msgid "Cc"
+#~ msgstr "抄送"
+
+#~ msgid "References"
+#~ msgstr "关联"
+
+#~ msgid "Rich-text contents"
+#~ msgstr "富文本内容"
+
+#~ msgid "# of Partner"
+#~ msgstr "业务伙伴编号"
+
+#~ msgid "Partner name"
+#~ msgstr "业务伙伴名称"
+
+#~ msgid "Message headers"
+#~ msgstr "邮件头"
+
+#~ msgid "Bcc"
+#~ msgstr "密送"
+
+#~ msgid "Reply-To"
+#~ msgstr "回复到"
+
+#~ msgid "Carbon copy message recipients"
+#~ msgstr "抄送"
+
+#~ msgid ""
+#~ "Full message headers, e.g. SMTP session headers (usually available on "
+#~ "inbound messages only)"
+#~ msgstr "完整的邮件头，例如：SMTP会话头（一般只用在接收的邮件）"
+
+#~ msgid ""
+#~ "Message sender, taken from user preferences. If empty, this is not a mail "
+#~ "but a message."
+#~ msgstr "邮件发件人，来自用户的个人设置。如果为空，不发邮件而是发内部消息。"
+
+#~ msgid "Message references, such as identifiers of previous messages"
+#~ msgstr "邮件引用，例如前一个邮件的ID"
+
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr "错误，您不能创建循环引用的会员用户"
+
+#~ msgid "Preferred response address for the message"
+#~ msgstr "本邮件推荐的回复地址"
+
+#~ msgid "E-mail composition wizard"
+#~ msgstr "邮件合并向导"

@@ -6,7 +6,7 @@ access_purchase_order_line_manager,purchase.order.line manager,model_purchase_or
 access_stock_location_purchase_user,stock.location,stock.model_stock_location,group_purchase_user,1,0,0,0
 access_stock_warehouse_purchase_user,stock.warehouse,stock.model_stock_warehouse,group_purchase_user,1,0,0,0
 access_stock_picking_purchase_user,stock.picking,stock.model_stock_picking,group_purchase_user,1,1,1,1
-access_stock_move_purchase_user,stock.move,stock.model_stock_move,group_purchase_user,1,0,0,0
+access_stock_move_purchase_user,stock.move,stock.model_stock_move,group_purchase_user,1,1,1,0
 access_purchase_order_stock_worker,purchase.order,model_purchase_order,stock.group_stock_user,1,0,0,0
 access_purchase_order_line_stock_worker,purchase.order.line,model_purchase_order_line,stock.group_stock_user,1,0,0,0
 access_account_tax_purchase_user,account.tax,account.model_account_tax,group_purchase_user,1,0,0,0
@@ -19,7 +19,7 @@ access_stock_picking_purchase_user_manager,stock.picking,stock.model_stock_picki
 access_stock_move_purchase_user_manager,stock.move,stock.model_stock_move,group_purchase_manager,1,1,1,1
 access_account_tax_purchase_user_manager,account.tax,account.model_account_tax,group_purchase_manager,1,0,0,0
 access_product_product_purchase_user,product.product.purchase.user,product.model_product_product,group_purchase_user,1,0,0,0
-access_product_product_purchase_manager,product.product.purchase.manager,product.model_product_product,group_purchase_manager,1,0,0,0
+access_product_product_purchase_manager,product.product purchase_manager,product.model_product_product,purchase.group_purchase_manager,1,1,1,1
 access_product_template_purchase_user,product.template purchase_user,product.model_product_template,group_purchase_user,1,0,0,0
 access_product_template_purchase_manager,product.template purchase_manager,product.model_product_template,group_purchase_manager,1,0,0,0
 access_account_invoice_purchase,account_invoice purchase,account.model_account_invoice,group_purchase_user,1,1,1,1
@@ -30,7 +30,6 @@ access_account_invoice_tax_purchase,account_invoice.tax purchase,account.model_a
 access_account_fiscal_position_purchase_user,account.fiscal.position purchase,account.model_account_fiscal_position,group_purchase_user,1,0,0,0
 access_account_sequence_fiscalyear_purchase_user,account.sequence.fiscalyear purchase,account.model_account_sequence_fiscalyear,group_purchase_user,1,1,1,1
 access_res_partner_purchase_user,res.partner purchase,base.model_res_partner,group_purchase_user,1,0,0,0
-access_res_partner_address_purchase_user,res.partner.address purchase,base.model_res_partner_address,group_purchase_user,1,0,0,0
 access_account_journal_period,account.journal.period,account.model_account_journal_period,group_purchase_user,1,1,1,0
 access_account_journal,account.journal,account.model_account_journal,group_purchase_user,1,0,0,0
 access_account_journal_manager,account.journal,account.model_account_journal,group_purchase_manager,1,0,0,0
@@ -50,7 +49,6 @@ access_product_uom_purchase_manager,product.uom purchase_manager,product.model_p
 access_product_ul_purchase_manager,product.ul purchase_manager,product.model_product_ul,purchase.group_purchase_manager,1,1,1,1
 access_product_category_purchase_manager,product.category purchase_manager,product.model_product_category,purchase.group_purchase_manager,1,1,1,1
 access_product_template_purchase_manager,product.template purchase_manager,product.model_product_template,purchase.group_purchase_manager,1,1,1,1
-access_product_product_purchase_manager,product.product purchase_manager,product.model_product_product,purchase.group_purchase_manager,1,1,1,1
 access_product_packaging_purchase_manager,product.packaging purchase_manager,product.model_product_packaging,purchase.group_purchase_manager,1,1,1,1
 access_product_supplierinfo_purchase_manager,product.supplierinfo purchase_manager,product.model_product_supplierinfo,purchase.group_purchase_manager,1,1,1,1
 access_pricelist_partnerinfo_purchase_manager,pricelist.partnerinfo purchase_manager,product.model_pricelist_partnerinfo,purchase.group_purchase_manager,1,1,1,1
@@ -65,3 +63,5 @@ access_account_account_purchase_manager,account.account purchase manager,account
 access_account_journal_purchase_manager,account.journal purchase manager,account.model_account_journal,purchase.group_purchase_manager,1,0,0,0
 access_stock_tracking_purchase_user,stock.tracking purchase.user,stock.model_stock_tracking,purchase.group_purchase_user,1,1,1,0
 access_stock_location_purchase_manager,stock.location purchase manager,stock.model_stock_location,purchase.group_purchase_manager,1,0,0,0
+access_stock_warehouse_orderpoint_manager,stock.warehouse.orderpoint,procurement.model_stock_warehouse_orderpoint,purchase.group_purchase_manager,1,0,0,0
+access_stock_warehouse_orderpoint_manager,stock.warehouse.orderpoint,procurement.model_stock_warehouse_orderpoint,group_purchase_user,1,0,0,0

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.1rc1\n"
+"Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
+"PO-Revision-Date: 2012-11-24 02:54+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -42,12 +42,8 @@ msgid "Resources Leaves"
 msgstr ""
 
 #. module: resource
-#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
-#: view:resource.calendar:0
-#: field:resource.calendar,attendance_ids:0
-#: view:resource.calendar.attendance:0
-#: field:resource.resource,calendar_id:0
-msgid "Working Time"
+#: field:resource.calendar.attendance,dayofweek:0
+msgid "Day of Week"
 msgstr ""
 
 #. module: resource
@@ -64,6 +60,11 @@ msgstr ""
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Sunday"
+msgstr ""
+
+#. module: resource
+#: field:resource.resource,time_efficiency:0
+msgid "Efficiency Factor"
 msgstr ""
 
 #. module: resource
@@ -89,13 +90,14 @@ msgid "Make sure the Working time has been configured with proper week days!"
 msgstr ""
 
 #. module: resource
-#: field:resource.calendar,manager:0
-msgid "Workgroup manager"
+#: code:addons/resource/resource.py:310
+#, python-format
+msgid "%s (copy)"
 msgstr ""
 
 #. module: resource
-#: help:resource.calendar.attendance,hour_from:0
-msgid "Working time will start from"
+#: view:resource.calendar:0
+msgid "Search Working Time"
 msgstr ""
 
 #. module: resource
@@ -123,23 +125,8 @@ msgid "Friday"
 msgstr ""
 
 #. module: resource
-#: field:resource.calendar.attendance,dayofweek:0
-msgid "Day of week"
-msgstr ""
-
-#. module: resource
-#: help:resource.calendar.attendance,hour_to:0
-msgid "Working time will end at"
-msgstr ""
-
-#. module: resource
-#: field:resource.calendar.attendance,date_from:0
-msgid "Starting date"
-msgstr ""
-
-#. module: resource
-#: view:resource.calendar:0
-msgid "Search Working Time"
+#: view:resource.calendar.attendance:0
+msgid "Hours"
 msgstr ""
 
 #. module: resource
@@ -164,8 +151,13 @@ msgid "Search Working Period Leaves"
 msgstr ""
 
 #. module: resource
-#: field:resource.resource,time_efficiency:0
-msgid "Efficiency factor"
+#: field:resource.calendar.attendance,date_from:0
+msgid "Starting Date"
+msgstr ""
+
+#. module: resource
+#: field:resource.calendar,manager:0
+msgid "Workgroup Manager"
 msgstr ""
 
 #. module: resource
@@ -187,7 +179,6 @@ msgid "Resource"
 msgstr ""
 
 #. module: resource
-#: view:resource.calendar:0
 #: field:resource.calendar,name:0
 #: field:resource.calendar.attendance,name:0
 #: field:resource.calendar.leaves,name:0
@@ -196,14 +187,29 @@ msgid "Name"
 msgstr ""
 
 #. module: resource
-#: selection:resource.calendar.attendance,dayofweek:0
-msgid "Wednesday"
+#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
+#: view:resource.calendar:0
+#: field:resource.calendar,attendance_ids:0
+#: view:resource.calendar.attendance:0
+#: field:resource.calendar.leaves,calendar_id:0
+#: field:resource.resource,calendar_id:0
+msgid "Working Time"
+msgstr ""
+
+#. module: resource
+#: help:resource.calendar.attendance,hour_from:0
+msgid "Start and End time of working."
 msgstr ""
 
 #. module: resource
 #: view:resource.calendar.leaves:0
 #: view:resource.resource:0
 msgid "Working Period"
+msgstr ""
+
+#. module: resource
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Wednesday"
 msgstr ""
 
 #. module: resource
@@ -267,8 +273,8 @@ msgid "Work to"
 msgstr ""
 
 #. module: resource
-#: help:resource.resource,time_efficiency:0
-msgid "This field depict the efficiency of the resource to complete tasks. e.g  resource put alone on a phase of 5 days with 5 tasks assigned to him, will show a load of 100% for this phase by default, but if we put a efficency of 200%, then his load will only be 50%."
+#: model:ir.model,name:resource.model_resource_calendar_attendance
+msgid "Work Detail"
 msgstr ""
 
 #. module: resource
@@ -277,8 +283,8 @@ msgid "Tuesday"
 msgstr ""
 
 #. module: resource
-#: field:resource.calendar.leaves,calendar_id:0
-msgid "Working time"
+#: help:resource.resource,time_efficiency:0
+msgid "This field depict the efficiency of the resource to complete tasks. e.g  resource put alone on a phase of 5 days with 5 tasks assigned to him, will show a load of 100% for this phase by default, but if we put a efficiency of 200%, then his load will only be 50%."
 msgstr ""
 
 #. module: resource
@@ -315,19 +321,13 @@ msgid "Human"
 msgstr ""
 
 #. module: resource
-#: model:ir.model,name:resource.model_resource_calendar_attendance
-msgid "Work Detail"
+#: view:resource.calendar.leaves:0
+msgid "Duration"
 msgstr ""
 
 #. module: resource
 #: field:resource.calendar.leaves,date_from:0
 msgid "Start Date"
-msgstr ""
-
-#. module: resource
-#: code:addons/resource/resource.py:310
-#, python-format
-msgid " (copy)"
 msgstr ""
 
 #. module: resource

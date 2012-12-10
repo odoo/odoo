@@ -51,16 +51,16 @@ class account_fiscalyear_close(osv.osv_memory):
         """
         def _reconcile_fy_closing(cr, uid, ids, context=None):
             """
-            This private function manually do the reconciliation on the account_move_line given as `ids´, and directly 
+            This private function manually do the reconciliation on the account_move_line given as `ids´, and directly
             through psql. It's necessary to do it this way because the usual `reconcile()´ function on account.move.line
-            object is really resource greedy (not supposed to work on reconciliation between thousands of records) and 
+            object is really resource greedy (not supposed to work on reconciliation between thousands of records) and
             it does a lot of different computation that are useless in this particular case.
             """
             #check that the reconcilation concern journal entries from only one company
             cr.execute('select distinct(company_id) from account_move_line where id in %s',(tuple(ids),))
             if len(cr.fetchall()) > 1:
-                raise osv.except_osv(_('Warning !'), _('The entries to reconcile should belong to the same company'))
-            r_id = self.pool.get('account.move.reconcile').create(cr, uid, {'type': 'auto'})
+                raise osv.except_osv(_('Warning!'), _('The entries to reconcile should belong to the same company.'))
+            r_id = self.pool.get('account.move.reconcile').create(cr, uid, {'type': 'auto', 'opening_reconciliation': True})
             cr.execute('update account_move_line set reconcile_id = %s where id in %s',(r_id, tuple(ids),))
             return r_id
 
@@ -85,7 +85,7 @@ class account_fiscalyear_close(osv.osv_memory):
         fy2_period_set = ','.join(map(lambda id: str(id[0]), cr.fetchall()))
 
         if not fy_period_set or not fy2_period_set:
-            raise osv.except_osv(_('UserError'), _('The periods to generate opening entries were not found'))
+            raise osv.except_osv(_('User Error!'), _('The periods to generate opening entries cannot be found.'))
 
         period = obj_acc_period.browse(cr, uid, data[0].period_id.id, context=context)
         new_fyear = obj_acc_fiscalyear.browse(cr, uid, data[0].fy2_id.id, context=context)
@@ -96,18 +96,18 @@ class account_fiscalyear_close(osv.osv_memory):
         company_id = new_journal.company_id.id
 
         if not new_journal.default_credit_account_id or not new_journal.default_debit_account_id:
-            raise osv.except_osv(_('UserError'),
-                    _('The journal must have default credit and debit account'))
+            raise osv.except_osv(_('User Error!'),
+                    _('The journal must have default credit and debit account.'))
         if (not new_journal.centralisation) or new_journal.entry_posted:
-            raise osv.except_osv(_('UserError'),
-                    _('The journal must have centralised counterpart without the Skipping draft state option checked!'))
+            raise osv.except_osv(_('User Error!'),
+                    _('The journal must have centralized counterpart without the Skipping draft state option checked.'))
 
         #delete existing move and move lines if any
         move_ids = obj_acc_move.search(cr, uid, [
             ('journal_id', '=', new_journal.id), ('period_id', '=', period.id)])
         if move_ids:
             move_line_ids = obj_acc_move_line.search(cr, uid, [('move_id', 'in', move_ids)])
-            obj_acc_move_line._remove_move_reconcile(cr, uid, move_line_ids, context=context)
+            obj_acc_move_line._remove_move_reconcile(cr, uid, move_line_ids, opening_reconciliation=True, context=context)
             obj_acc_move_line.unlink(cr, uid, move_line_ids, context=context)
             obj_acc_move.unlink(cr, uid, move_ids, context=context)
 
@@ -226,7 +226,7 @@ class account_fiscalyear_close(osv.osv_memory):
         for account in obj_acc_account.browse(cr, uid, account_ids, context={'fiscalyear': fy_id}):
             balance_in_currency = 0.0
             if account.currency_id:
-                cr.execute('SELECT sum(amount_currency) as balance_in_currency FROM account_move_line ' \
+                cr.execute('SELECT sum(COALESCE(amount_currency,0.0)) as balance_in_currency FROM account_move_line ' \
                         'WHERE account_id = %s ' \
                             'AND ' + query_line + ' ' \
                             'AND currency_id = %s', (account.id, account.currency_id.id))
