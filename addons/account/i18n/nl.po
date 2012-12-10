@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-01 16:00+0000\n"
-"Last-Translator: Thomas Pot (Open2bizz) <Unknown>\n"
+"PO-Revision-Date: 2012-12-09 19:02+0000\n"
+"Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:21+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-10 04:38+0000\n"
+"X-Generator: Launchpad (build 16341)\n"
 
 #, python-format
 #~ msgid "Integrity Error !"
@@ -30,13 +30,13 @@ msgstr "Betaling (administratief)"
 msgid ""
 "An account fiscal position could be defined only once time on same accounts."
 msgstr ""
-"Een fiscale positie kan maar één keer worden gedefinieerd voro dezelfde "
+"Een fiscale positie kan maar één keer worden gedefinieerd voor dezelfde "
 "rekening."
 
 #. module: account
 #: view:account.unreconcile:0
 msgid "Unreconciliate Transactions"
-msgstr "Afletteren transactief ongedaan maken"
+msgstr "Afletteren transacties ongedaan maken"
 
 #. module: account
 #: help:account.tax.code,sequence:0
@@ -502,7 +502,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_move_line_quickadd.xml:8
 #, python-format
 msgid "Period :"
-msgstr ""
+msgstr "Periode:"
 
 #. module: account
 #: field:account.account.template,chart_template_id:0
@@ -974,6 +974,8 @@ msgid ""
 "Print Report with the currency column if the currency differs from the "
 "company currency."
 msgstr ""
+"Print de rapportage met de valuta kolom als de valuta afwijkt van de "
+"bedrijfsvaluta"
 
 #. module: account
 #: report:account.analytic.account.quantity_cost_ledger:0
@@ -1077,6 +1079,8 @@ msgid ""
 "You cannot validate this journal entry because account \"%s\" does not "
 "belong to chart of accounts \"%s\"."
 msgstr ""
+"U kunt deze journaalpost niet valideren omdat rekening \"%s\" niet tot het "
+"rekeningschema \"%s\" behoort."
 
 #. module: account
 #: view:validate.account.move:0
@@ -1094,7 +1098,7 @@ msgstr "Totaalbedrag"
 #. module: account
 #: help:account.invoice,supplier_invoice_number:0
 msgid "The reference of this invoice as provided by the supplier."
-msgstr ""
+msgstr "De referentie van deze factuur zoals opgegeven door de leverancier"
 
 #. module: account
 #: selection:account.account,type:0
@@ -1270,6 +1274,8 @@ msgstr "Crediteer "
 #: help:account.config.settings,company_footer:0
 msgid "Bank accounts as printed in the footer of each printed document"
 msgstr ""
+"Rekeninginformatie die afgedrukt wordt in de voettekst van ieder afgedrukt "
+"document"
 
 #. module: account
 #: view:account.tax:0
@@ -1496,7 +1502,7 @@ msgstr "Niveau"
 #: code:addons/account/wizard/account_change_currency.py:38
 #, python-format
 msgid "You can only change currency for Draft Invoice."
-msgstr ""
+msgstr "U kunt alleen de valuta wijzigen van een voorlopige factuur"
 
 #. module: account
 #: report:account.invoice:0
@@ -1617,7 +1623,7 @@ msgstr "Debiteuren"
 #: code:addons/account/account.py:767
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (kopie)"
 
 #. module: account
 #: selection:account.balance.report,display_account:0
@@ -2125,7 +2131,7 @@ msgstr "Klant ref:"
 #: help:account.tax.template,ref_tax_code_id:0
 #: help:account.tax.template,tax_code_id:0
 msgid "Use this code for the tax declaration."
-msgstr ""
+msgstr "Gebruik deze code voor de belastingaangifte"
 
 #. module: account
 #: help:account.period,special:0
@@ -2292,6 +2298,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik om een bankafschrift te registreren.\n"
+"              </p><p>\n"
+"                Een bankafschrift is een samenvatting van alle financiele "
+"transacties\n"
+"                van een bankrekening gedurende een bepaalde periode.\n"
+"                U ontvangt deze periodieke van uw bank.\n"
+"              </p><p>\n"
+"                Met OpenERP kunt u de bankafschriften direct afletteren\n"
+"                met de gerelateerde in- en verkoopfacturen.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: field:account.config.settings,currency_id:0
@@ -2381,7 +2399,7 @@ msgstr "Afsluiten boekjaar"
 #: code:addons/account/static/src/xml/account_move_line_quickadd.xml:14
 #, python-format
 msgid "Journal :"
-msgstr ""
+msgstr "Dagboek:"
 
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
@@ -7290,7 +7308,7 @@ msgstr "Behoud het balans +/- teken"
 #: model:ir.actions.report.xml,name:account.account_vat_declaration
 #: model:ir.ui.menu,name:account.menu_account_vat_declaration
 msgid "Taxes Report"
-msgstr "Belastingen rapport"
+msgstr "BTW aangifte"
 
 #. module: account
 #: selection:account.journal.period,state:0
@@ -10658,7 +10676,7 @@ msgstr "Vervaldatum"
 #: field:cash.box.in,name:0
 #: field:cash.box.out,name:0
 msgid "Reason"
-msgstr ""
+msgstr "Reden"
 
 #. module: account
 #: selection:account.partner.ledger,filter:0
@@ -10839,7 +10857,7 @@ msgstr "Debiteuren"
 #: code:addons/account/account_move_line.py:776
 #, python-format
 msgid "Already reconciled."
-msgstr ""
+msgstr "Al afgeletterd"
 
 #. module: account
 #: selection:account.model.line,date_maturity:0
@@ -11138,7 +11156,7 @@ msgstr "Rechts bovenliggende"
 #: code:addons/account/static/src/js/account_move_reconciliation.js:80
 #, python-format
 msgid "Never"
-msgstr ""
+msgstr "Nooit"
 
 #. module: account
 #: model:ir.model,name:account.model_account_addtmpl_wizard
@@ -11159,7 +11177,7 @@ msgstr "Relaties"
 #. module: account
 #: field:account.account,note:0
 msgid "Internal Notes"
-msgstr ""
+msgstr "Interne notities"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscalyear
@@ -11192,7 +11210,7 @@ msgstr "Administratiemodel"
 #: code:addons/account/account_cash_statement.py:292
 #, python-format
 msgid "Loss"
-msgstr ""
+msgstr "Verlies"
 
 #. module: account
 #: selection:account.entries.report,month:0

@@ -80,8 +80,11 @@ class account_invoice(osv.osv):
 
     def _reconciled(self, cr, uid, ids, name, args, context=None):
         res = {}
-        for id in ids:
-            res[id] = self.test_paid(cr, uid, [id])
+        wf_service = netsvc.LocalService("workflow")
+        for inv in self.browse(cr, uid, ids, context=context):
+            res[inv.id] = self.test_paid(cr, uid, [inv.id])
+            if not res[inv.id] and inv.state == 'paid':
+                wf_service.trg_validate(uid, 'account.invoice', inv.id, 'open_test', cr)
         return res
 
     def _get_reference_type(self, cr, uid, context=None):
@@ -1159,7 +1162,7 @@ class account_invoice(osv.osv):
         return map(lambda x: (0,0,x), lines)
 
     def refund(self, cr, uid, ids, date=None, period_id=None, description=None, journal_id=None):
-        invoices = self.read(cr, uid, ids, ['name', 'type', 'number', 'reference', 'comment', 'date_due', 'partner_id', 'partner_contact', 'partner_insite', 'partner_ref', 'payment_term', 'account_id', 'currency_id', 'invoice_line', 'tax_line', 'journal_id', 'company_id'])
+        invoices = self.read(cr, uid, ids, ['name', 'type', 'number', 'reference', 'comment', 'date_due', 'partner_id', 'partner_contact', 'partner_insite', 'partner_ref', 'payment_term', 'account_id', 'currency_id', 'invoice_line', 'tax_line', 'journal_id', 'company_id', 'user_id', 'fiscal_position'])
         obj_invoice_line = self.pool.get('account.invoice.line')
         obj_invoice_tax = self.pool.get('account.invoice.tax')
         obj_journal = self.pool.get('account.journal')
@@ -1208,7 +1211,8 @@ class account_invoice(osv.osv):
                 })
             # take the id part of the tuple returned for many2one fields
             for field in ('partner_id', 'company_id',
-                    'account_id', 'currency_id', 'payment_term', 'journal_id'):
+                    'account_id', 'currency_id', 'payment_term', 'journal_id',
+                    'user_id', 'fiscal_position'):
                 invoice[field] = invoice[field] and invoice[field][0]
             # create the new invoice
             new_ids.append(self.create(cr, uid, invoice))

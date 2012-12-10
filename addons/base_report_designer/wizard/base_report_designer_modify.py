@@ -19,15 +19,14 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import time
-from openerp import wizard
-from openerp import osv
-from openerp import pooler
-import urllib
+
 import base64
-from openerp import tools
-from openerp.tools.translate import _
+import time
+import urllib
+
+from openerp import osv, pooler, tools
 from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class base_report_sxw(osv.osv_memory):
     """Base Report sxw """

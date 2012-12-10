@@ -224,6 +224,8 @@ class share_wizard(osv.TransientModel):
            for the password field, so they can receive it by email.
            Returns the ids of the created users, and the ids of the
            ignored, existing ones."""
+        if context is None:
+            context = {}
         user_obj = self.pool.get('res.users')
         current_user = user_obj.browse(cr, UID_ROOT, uid, context=context)
         # modify context to disable shortcuts when creating share users
@@ -257,7 +259,8 @@ class share_wizard(osv.TransientModel):
                         'email': new_user,
                         'groups_id': [(6,0,[group_id])],
                         'share': True,
-                        'company_id': current_user.company_id.id
+                        'company_id': current_user.company_id.id,
+                        'company_ids': [(6, 0, [current_user.company_id.id])],
                 }, context)
                 new_line = { 'user_id': user_id,
                              'password': new_pass,
@@ -274,7 +277,8 @@ class share_wizard(osv.TransientModel):
                 'name': new_login,
                 'groups_id': [(6,0,[group_id])],
                 'share': True,
-                'company_id': current_user.company_id.id
+                'company_id': current_user.company_id.id,
+                'company_ids': [(6, 0, [current_user.company_id.id])],
             }, context)
             new_line = { 'user_id': user_id,
                          'password': new_pass,
