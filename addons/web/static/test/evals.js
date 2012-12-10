@@ -4,30 +4,34 @@ openerp.testing.section('eval.types', {
         instance.session.uid = 42;
     }
 }, function (test) {
-    var check_datetime = function(expr, date_func) {
-        // evaluate expr between two calls to new Date(), and check that
-        // the result is between the transformed dates
-        var d0 = new Date;
+    var makeTimeCheck = function (instance) {
         var context = instance.web.pyeval.context();
-        var result = py.eval(expr, context);
-        var d1 = new Date;
-        ok(date_func(d0) <= result && result <= date_func(d1));
+        return function (expr, func, message) {
+            // evaluate expr between two calls to new Date(), and check that
+            // the result is between the transformed dates
+            var d0 = new Date;
+            var result = py.eval(expr, context);
+            var d1 = new Date;
+            ok(func(d0) <= result && result <= func(d1), message);
+        };
     };
     test('strftime', function (instance) {
-        check_datetime("time.strftime('%Y')", function(d) {
+        var check = makeTimeCheck(instance);
+        check("time.strftime('%Y')", function(d) {
             return String(d.getFullYear());
         });
-        check_datetime("time.strftime('%Y')+'-01-30'", function(d) {
+        check("time.strftime('%Y')+'-01-30'", function(d) {
             return String(d.getFullYear()) + '-01-30';
         });
-        check_datetime("time.strftime('%Y-%m-%d %H:%M:%S')", function(d) {
+        check("time.strftime('%Y-%m-%d %H:%M:%S')", function(d) {
             return _.str.sprintf('%04d-%02d-%02d %02d:%02d:%02d',
                 d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate(),
                 d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds());
         });
     });
     test('context_today', function (instance) {
-        check_datetime("context_today().strftime('%Y-%m-%d')", function(d) {
+        var check = makeTimeCheck(instance);
+        check("context_today().strftime('%Y-%m-%d')", function(d) {
             return String(_.str.sprintf('%04d-%02d-%02d',
                 d.getFullYear(), d.getMonth() + 1, d.getDate()));
         });
