@@ -131,7 +131,6 @@ class wizard_user(osv.osv_memory):
         return id
 
     def action_apply(self, cr, uid, ids, context=None):
-        res_users = self.pool.get('res.users')
         for wizard_user in self.browse(cr, SUPERUSER_ID, ids, context):
             portal = wizard_user.wizard_id.portal_id
             user = self._retrieve_user(cr, SUPERUSER_ID, wizard_user, context)

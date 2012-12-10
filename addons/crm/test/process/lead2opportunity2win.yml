@@ -1,25 +1,15 @@
 -
-  In order to test convert customer lead into opportunity,
+  In order to test the conversion of a lead into a opportunity,
 -
-  I open customer lead.
+  I open a lead.
 -
    !python {model: crm.lead}: |
      self.case_open(cr, uid, [ref("crm_case_4")])
 -
-  I check lead state is "Open".
+  I check if the lead state is "Open".
 -
-  !assert {model: crm.lead, id: crm.crm_case_4, string: Lead in open state}:
+  !assert {model: crm.lead, id: crm.crm_case_4, string: Lead state is Open}:
      - state == "open"
--
-  I fill in a lead2partner wizard.
--
-  !record {model: crm.lead2partner, id: crm_lead2partner_id1, context: '{"active_model": "crm.lead", "active_ids": [ref("crm_case_4")]}'}:
--
-  I create a partner from the lead2partner wizard.
--
-   !python {model: crm.lead2partner}: |
-     context.update({'active_model': 'crm.lead', 'active_ids': [ref('crm_case_4')], 'active_id': ref('crm_case_4')})
-     self.make_partner(cr, uid ,[ref("crm_lead2partner_id1")], context=context)
 -
   I convert lead into opportunity for exiting customer.
 -
@@ -76,7 +66,7 @@
 -
   !python {model: crm.lead2opportunity.partner.mass}: |
     context.update({'active_model': 'crm.lead', 'active_ids': [ref("crm_case_11"), ref("crm_case_2")], 'active_id': ref("crm_case_11")})
-    id = self.create(cr, uid, {'user_ids': [ref('base.user_root')], 'section_id': ref('crm.section_sales_department')}, context=context)
+    id = self.create(cr, uid, {'user_ids': [(6, 0, [ref('base.user_root')])], 'section_id': ref('crm.section_sales_department')}, context=context)
     self.mass_convert(cr, uid, [id], context=context)
 -
   Now I check first lead converted on opportunity.
