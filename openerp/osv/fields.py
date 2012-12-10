@@ -167,7 +167,7 @@ class boolean(_column):
             _logger.debug(
                 "required=True is deprecated: making a boolean field"
                 " `required` has no effect, as NULL values are "
-                "automatically turned into False.")
+                "automatically turned into False. args: %r",args)
 
 class integer(_column):
     _type = 'integer'
