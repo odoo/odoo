@@ -434,8 +434,9 @@ def get_modules():
             return name
 
         def is_really_module(name):
-            name = opj(dir, name)
-            return os.path.isdir(name) or zipfile.is_zipfile(name)
+            manifest_name = opj(dir, name, '__openerp__.py')
+            zipfile_name = opj(dir, name)
+            return os.path.isfile(manifest_name) or zipfile.is_zipfile(zipfile_name)
         return map(clean, filter(is_really_module, os.listdir(dir)))
 
     plist = []
