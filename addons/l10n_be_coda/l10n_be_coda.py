@@ -27,14 +27,14 @@ class account_bank_statement(osv.osv):
     _inherit = 'account.bank.statement'
     _columns = {
         'coda_note': fields.text('CODA Notes'),
-	}
+    }
 
 
 class res_bank(osv.osv):
     _inherit = 'res.partner.bank'
     _columns = {
-    	'balance_start_enforce': fields.boolean('Prevent invalid Opening Balances',
-            help="Do not process Statements with an Opening Balance that doesn't match the previous Closing Balance."),
+        'balance_start_enforce': fields.boolean('Prevent invalid Opening Balances',
+        help="Do not process Statements with an Opening Balance that doesn't match the previous Closing Balance."),
     }
 
 account_bank_statement()

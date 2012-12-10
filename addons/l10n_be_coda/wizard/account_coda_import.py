@@ -228,16 +228,25 @@ class account_coda_import(osv.osv_memory):
                 if not statement['balance_end_real']:
                     statement['balance_end_real'] = statement['balance_start'] + statement['balancePlus'] - statement['balanceMin']
         for i, statement in enumerate(statements):
+            statement['coda_note'] = ''
             balance_start_check_date = (len(statement['lines']) > 0 and statement['lines'][0]['entryDate']) or statement['date']
             cr.execute('SELECT balance_end_real \
                 FROM account_bank_statement \
                 WHERE journal_id = %s and date <= %s \
                 ORDER BY date DESC,id DESC LIMIT 1', (statement['journal_id'].id, balance_start_check_date))
-            print statement['bank_account'].balance_start_enforce
             res = cr.fetchone()
             balance_start_check = res and res[0]
-            print balance_start_check
-            statement['coda_note'] = ''
+            if balance_start_check == None:
+                if statement['journal_id'].default_debit_account_id and (statement['journal_id'].default_credit_account_id == statement['journal_id'].default_debit_account_id):
+                    balance_start_check = statement['journal_id'].default_debit_account_id.balance
+                else:
+                    raise osv.except_osv(_('Error'), _("Configuration Error in journal %s!\nPlease verify the Default Debit and Credit Account settings.") % statement['journal_id'].name)
+            if balance_start_check != statement['balance_start']:
+                balance_start_enforce_err = _("The CODA Statement %s Starting Balance (%.2f) does not correspond with the previous Closing Balance (%.2f) in journal %s!") % (statement['description'] + ' #' + statement['paperSeqNumber'], statement['balance_start'], balance_start_check, statement['journal_id'].name)
+                if statement['bank_account'].balance_start_enforce:
+                    raise osv.except_osv(_('Error'), balance_start_enforce_err)
+                else:
+                    statement['coda_note'] = balance_start_enforce_err
             data = {
                 'name': '[' + statement['date'] + ']' + statement['description'],
                 'date': statement['date'],
