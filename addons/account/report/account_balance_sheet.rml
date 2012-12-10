@@ -254,7 +254,7 @@
       </tr>
       <tr>
         <td>
-          <para style="terp_default_9"><font face="Times-Roman">[[ repeatIn(get_lines_another('liability'), 'a') ]]</font>[[ a['code'] ]]<font>[[ (a['level']&lt;4 or a['code'] in ['net_profit', 'net_loss']) and ( setTag('para','para',{'style':'terp_default_Bold_9'})) or removeParentNode('font') ]] </font></para>
+          <para style="terp_default_9"><font face="Times-Roman">[[ repeatIn(get_lines_another('liability'), 'a') ]]</font>[[ a['code'] in ['net_profit', 'net_loss'] and a['name'] or a['code'] ]]<font>[[ (a['level']&lt;4 or a['code'] in ['net_profit', 'net_loss']) and ( setTag('para','para',{'style':'terp_default_Bold_9'})) or removeParentNode('font') ]] </font></para>
         </td>
         <td>
           <para style="terp_default_9"><font color="white">[[  '. '*(a['level']-1) ]]</font><font>[[ (a['level']&lt;4 or a['code'] in ['net_profit', 'net_loss']) and ( setTag('para','para',{'style':'terp_default_Bold_9'})) or removeParentNode('font')  ]][[ a['name'] ]]</font></para>
