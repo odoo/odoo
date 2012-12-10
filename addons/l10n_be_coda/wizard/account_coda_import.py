@@ -112,7 +112,6 @@ class account_coda_import(osv.osv_memory):
                 if line[1] == '1':
                     #New statement line
                     statementLine = {}
-                    statementLine['type'] = 'general'
                     statementLine['ref'] = rmspaces(line[2:10])
                     statementLine['ref_move'] = rmspaces(line[2:6])
                     statementLine['ref_move_detail'] = rmspaces(line[6:10])
@@ -275,6 +274,7 @@ class account_coda_import(osv.osv_memory):
                     if 'counterpartyAddress' in line and line['counterpartyAddress'] != '':
                         note.append(_('Counter Party Address') + ': ' + line['counterpartyAddress'])
                     line['name'] = "\n".join(filter(None, [line['counterpartyName'], line['communication']]))
+                    line['transaction_type'] = 'general'
                     partner = None
                     partner_id = None
                     invoice = False
@@ -284,13 +284,11 @@ class account_coda_import(osv.osv_memory):
                             invoice = self.pool.get('account.invoice').browse(cr, uid, ids[0])
                             partner = invoice.partner_id
                             partner_id = partner.id
-
                             if invoice.type in ['in_invoice', 'in_refund'] and line['debit'] == '1':
-                                line['type'] = 'supplier'
+                                line['transaction_type'] = 'supplier'
                             elif invoice.type in ['out_invoice', 'out_refund'] and line['debit'] == '0':
-                                line['type'] = 'customer'
-                            else:
-                                line['type'] = 'general'
+                                line['transaction_type'] = 'customer'
+                            line['account'] = invoice.account_id.id
                             line['reconcile'] = False
                             if invoice.type in ['in_invoice', 'out_invoice']:
                                 iml_ids = self.pool.get('account.move.line').search(cr, uid, [('move_id', '=', invoice.move_id.id), ('reconcile_id', '=', False), ('account_id.reconcile', '=', True)])
@@ -298,7 +296,7 @@ class account_coda_import(osv.osv_memory):
                                 line['reconcile'] = iml_ids[0]
                             if line['reconcile']:
                                 voucher_vals = {
-                                    'type': line['type'] == 'supplier' and 'payment' or 'receipt',
+                                    'type': line['transaction_type'] == 'supplier' and 'payment' or 'receipt',
                                     'name': line['name'],
                                     'partner_id': partner_id,
                                     'journal_id': statement['journal_id'].id,
@@ -316,7 +314,7 @@ class account_coda_import(osv.osv_memory):
                                     journal_id=statement['journal_id'].id,
                                     amount=abs(line['amount']),
                                     currency_id=statement['journal_id'].company_id.currency_id.id,
-                                    ttype=line['type'] == 'supplier' and 'payment' or 'receipt',
+                                    ttype=line['transaction_type'] == 'supplier' and 'payment' or 'receipt',
                                     date=line['transactionDate'],
                                     context=context
                                 )['value'])
@@ -335,28 +333,20 @@ class account_coda_import(osv.osv_memory):
                             partner = self.pool.get('res.partner.bank').browse(cr, uid, ids[0], context=context).partner_id
                             partner_id = partner.id
                             if not invoice:
-                                if partner.customer and line['debit'] == '0':
-                                    line['type'] = 'customer'
-                                elif partner.supplier and line['debit'] == '1':
-                                    line['type'] = 'supplier'
-                                else:
-                                    line['type'] = 'general'
-                    if partner:
-                        if line['type'] == 'customer':
-                            line['account'] = partner.property_account_receivable.id
-                        elif line['type'] == 'supplier':
-                            line['account'] = partner.property_account_payable.id
-                        else:
-                            if line['debit'] == '1':
-                                line['account'] = partner.property_account_payable.id
-                            else:
-                                line['account'] = partner.property_account_receivable.id
-                    if not partner:
-                        line['type'] = 'general'
+                                if line['debit'] == '0':
+                                    line['account'] = partner.property_account_receivable.id
+                                    if partner.customer:
+                                        line['transaction_type'] = 'customer'
+                                elif line['debit'] == '1':
+                                    line['account'] = partner.property_account_payable.id
+                                    if partner.supplier:
+                                        line['transaction_type'] = 'supplier'
+                    if not partner and not invoice:
                         if line['debit'] == '1':
                             line['account'] = statement['journal_id'].default_debit_account_id.id
                         else:
                             line['account'] = statement['journal_id'].default_credit_account_id.id
+
                     note.append(_('Communication') + ': ' + line['communication'])
                     if 'voucher_id' not in line:
                         line['voucher_id'] = None
@@ -365,7 +355,7 @@ class account_coda_import(osv.osv_memory):
                         'note':  "\n".join(note),
                         'date': line['entryDate'],
                         'amount': line['amount'],
-                        'type': line['type'],
+                        'type': line['transaction_type'],
                         'partner_id': partner_id,
                         'account_id': line['account'],
                         'statement_id': statement['id'],
