@@ -799,10 +799,18 @@ instance.web.client_actions.add("change_password", "instance.web.ChangePassword"
 instance.web.Menu =  instance.web.Widget.extend({
     template: 'Menu',
     init: function() {
+        var self = this;
         this._super.apply(this, arguments);
         this.has_been_loaded = $.Deferred();
         this.maximum_visible_links = 'auto'; // # of menu to show. 0 = do not crop, 'auto' = algo
         this.data = {data:{children:[]}};
+        this.on("menu_loaded", this, function (e) {
+            // launch the fetch of needaction counters, asynchronous
+            this.rpc("/web/menu/load_needaction", {menu_ids: false}).done(function(r) {
+                self.on_needaction_loaded(r);
+            });
+        });
+        
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -835,6 +843,17 @@ instance.web.Menu =  instance.web.Widget.extend({
         }
         this.trigger('menu_loaded', data);
         this.has_been_loaded.resolve();
+    },
+    on_needaction_loaded: function(data) {
+        var self = this;
+        this.needaction_data = data;
+        _.each(this.needaction_data.data, function (item, menu_id) {
+            var $item = self.$secondary_menus.find('a[data-menu="' + menu_id + '"]');
+            $item.remove('oe_menu_counter');
+            if (item.needaction_counter && item.needaction_counter > 0) {
+                $item.append(QWeb.render("Menu.needaction_counter", { widget : item }));
+            }
+        });
     },
     limit_entries: function() {
         var maximum_visible_links = this.maximum_visible_links;

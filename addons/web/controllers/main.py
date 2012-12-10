@@ -924,6 +924,10 @@ class Menu(openerpweb.Controller):
         return {'data': self.do_load(req)}
 
     @openerpweb.jsonrequest
+    def load_needaction(self, req, menu_ids):
+        return {'data': self.do_load_needaction(req, menu_ids)}
+
+    @openerpweb.jsonrequest
     def get_user_roots(self, req):
         return self.do_get_user_roots(req)
 
@@ -961,7 +965,7 @@ class Menu(openerpweb.Controller):
         Menus = req.session.model('ir.ui.menu')
 
         fields = ['name', 'sequence', 'parent_id', 'action',
-                  'needaction_enabled', 'needaction_counter']
+                  'needaction_enabled']
         menu_roots = Menus.read(self.do_get_user_roots(req), fields, req.context)
         menu_root = {
             'id': False,
@@ -997,6 +1001,20 @@ class Menu(openerpweb.Controller):
                 key=operator.itemgetter('sequence'))
 
         return menu_root
+
+    def do_load_needaction(self, req, menu_ids=False):
+        """ Loads needaction counters for all or some specific menu ids.
+
+            :return: needaction data
+            :rtype: dict(menu_id: {'needaction_enabled': boolean, 'needaction_counter': int})
+        """
+        Menus = req.session.model('ir.ui.menu')
+
+        if menu_ids == False:
+            menu_ids = Menus.search([('needaction_enabled', '=', True)], context=req.context)
+
+        menu_needaction_data = Menus.get_needaction_data(menu_ids, req.context)
+        return menu_needaction_data
 
     @openerpweb.jsonrequest
     def action(self, req, menu_id):
