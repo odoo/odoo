@@ -949,13 +949,13 @@ class calendar_event(osv.osv):
 
     def unlink_events(self, cr, uid, ids, context=None):
         """
-        This function deletes event which are linked with the event with recurrent_uid
+        This function deletes event which are linked with the event with recurrent_id
                 (Removes the events which refers to the same UID value)
         """
         if context is None:
             context = {}
         for event_id in ids:
-            cr.execute("select id from %s where recurrent_uid=%%s" % (self._table), (event_id,))
+            cr.execute("select id from %s where recurrent_id=%%s" % (self._table), (event_id,))
             r_ids = map(lambda x: x[0], cr.fetchall())
             self.unlink(cr, uid, r_ids, context=context)
         return True
@@ -1033,7 +1033,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         'alarm_id': fields.many2one('res.alarm', 'Reminder', states={'done': [('readonly', True)]},
                         help="Set an alarm at this time, before the event occurs" ),
         'base_calendar_alarm_id': fields.many2one('calendar.alarm', 'Alarm'),
-        'recurrent_uid': fields.integer('Recurrent ID'),
+        'recurrent_id': fields.integer('Recurrent ID'),
         'recurrent_id_date': fields.datetime('Recurrent ID date'),
         'vtimezone': fields.selection(_tz_get, size=64, string='Timezone'),
         'user_id': fields.many2one('res.users', 'Responsible', states={'done': [('readonly', True)]}),
@@ -1391,7 +1391,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             if data.get('rrule'):
                 data.update(
                     vals,
-                    recurrent_uid=real_event_id,
+                    recurrent_id=real_event_id,
                     recurrent_id_date=data.get('date'),
                     rrule_type=False,
                     rrule='',
