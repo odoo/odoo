@@ -201,13 +201,13 @@ class mail_message(osv.Model):
 
     def download_attachment(self, cr, uid, id_message, attachment_id, context=None):
         """ Return the content of linked attachments. """
-        message  = self.read(cr, uid, [id_message], ['attachment_ids'], context=context)[0]
-        if message and message.get('attachment_ids') and attachment_id in message.get('attachment_ids'):
-            attachment = self.pool.get('ir.attachment').read(cr, SUPERUSER_ID, [attachment_id], ['id', 'datas_fname', 'datas'], context=context)[0]
-            if attachment['datas_fname'] and attachment['datas']:
+        message = self.browse(cr, uid, id_message, context=context)
+        if attachment_id in [attachment.id for attachment in message.attachment_ids]:
+            attachment = self.pool.get('ir.attachment').browse(cr, SUPERUSER_ID, attachment_id, context=context)
+            if attachment.datas and attachment.datas_fname:
                 return {
-                    'base64': attachment['datas'],
-                    'filename': attachment['datas_fname'],
+                    'base64': attachment.datas,
+                    'filename': attachment.datas_fname,
                 }
         return False
 
@@ -497,15 +497,6 @@ class mail_message(osv.Model):
         self._message_read_add_expandables(cr, uid, message_list, message_tree, parent_tree,
             thread_level=thread_level, message_unload_ids=message_unload_ids, domain=domain, parent_id=parent_id, context=context)
         return message_list
-
-    # TDE Note: do we need this ?
-    # def user_free_attachment(self, cr, uid, context=None):
-    #     attachment = self.pool.get('ir.attachment')
-    #     attachment_list = []
-    #     attachment_ids = attachment.search(cr, uid, [('res_model', '=', 'mail.message'), ('create_uid', '=', uid)])
-    #     if len(attachment_ids):
-    #         attachment_list = [{'id': attach.id, 'name': attach.name, 'date': attach.create_date} for attach in attachment.browse(cr, uid, attachment_ids, context=context)]
-    #     return attachment_list
 
     #------------------------------------------------------
     # mail_message internals
