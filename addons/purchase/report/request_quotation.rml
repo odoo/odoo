@@ -32,7 +32,6 @@
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,-1" stop="0,-1"/>
     </blockTableStyle>
     <initialize>
       <paraStyle name="all" alignment="justify"/>
@@ -147,11 +146,6 @@
           </td>
           <td>
             <para style="terp_default_Right_9">[[ (order_line.product_uom and order_line.product_uom.name) or '' ]]</para>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <para style="terp_default_8_italic">[[ format(order_line.notes or removeParentNode('tr')) ]]</para>
           </td>
         </tr>
       </blockTable>

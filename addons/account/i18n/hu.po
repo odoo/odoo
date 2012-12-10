@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-11-23 10:35+0000\n"
 "Last-Translator: Juhász Krisztián <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 05:55+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:22+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -78,15 +78,16 @@ msgid "Import from invoice or payment"
 msgstr "Importálás számlából vagy pénzügyi rendezésből"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1153
-#: code:addons/account/account_move_line.py:1236
-#: code:addons/account/account_move_line.py:1303
+#: code:addons/account/account_move_line.py:1048
+#: code:addons/account/account_move_line.py:1131
+#: code:addons/account/account_move_line.py:1198
 #, python-format
 msgid "Bad Account!"
 msgstr ""
 
 #. module: account
 #: view:account.move:0
+#: view:account.move.line:0
 msgid "Total Debit"
 msgstr "Tartozik összesen"
 
@@ -109,6 +110,7 @@ msgstr ""
 #. module: account
 #. openerp-web
 #: view:account.automatic.reconcile:0
+#: field:account.move.line,reconcile:0
 #: field:account.move.line,reconcile_id:0
 #: view:account.move.line.reconcile:0
 #: view:account.move.line.reconcile.writeoff:0
@@ -124,28 +126,10 @@ msgstr "Párosítás"
 #: field:account.move,ref:0
 #: field:account.move.line,ref:0
 #: field:account.subscription,ref:0
+#: xsl:account.transfer:0
 #: field:cash.box.in,ref:0
 msgid "Reference"
 msgstr "Hivatkozás"
-
-#. module: account
-#: model:ir.actions.act_window,help:account.action_account_journal_view
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to specify lists of columns to display for a type of "
-"journal.\n"
-"              </p><p>\n"
-"                Journal views determine the way you can record entries in\n"
-"                your journal. Select the fields you want to appear in a "
-"journal\n"
-"                and determine the sequence in which they will appear.\n"
-"              </p><p>\n"
-"                On the journal definition form, you can select the view you\n"
-"                want to use to display journal items related to this "
-"journal.\n"
-"              </p>\n"
-"            "
-msgstr ""
 
 #. module: account
 #: help:account.payment.term,active:0
@@ -157,20 +141,18 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/account.py:640
-#: code:addons/account/account.py:653
-#: code:addons/account/account.py:656
-#: code:addons/account/account.py:675
-#: code:addons/account/account.py:807
-#: code:addons/account/account.py:1101
+#: code:addons/account/account.py:685
+#: code:addons/account/account.py:780
+#: code:addons/account/account.py:1043
 #: code:addons/account/account_invoice.py:776
 #: code:addons/account/account_invoice.py:779
 #: code:addons/account/account_invoice.py:782
-#: code:addons/account/account_invoice.py:1510
+#: code:addons/account/account_invoice.py:1519
 #: code:addons/account/account_move_line.py:98
-#: code:addons/account/account_move_line.py:753
-#: code:addons/account/account_move_line.py:762
-#: code:addons/account/account_move_line.py:806
-#: code:addons/account/account_move_line.py:841
+#: code:addons/account/account_move_line.py:767
+#: code:addons/account/account_move_line.py:776
+#: code:addons/account/account_move_line.py:820
+#: code:addons/account/account_move_line.py:855
 #: code:addons/account/wizard/account_fiscalyear_close.py:62
 #: code:addons/account/wizard/account_invoice_state.py:44
 #: code:addons/account/wizard/account_invoice_state.py:68
@@ -182,7 +164,7 @@ msgid "Warning!"
 msgstr "Figyelem!"
 
 #. module: account
-#: code:addons/account/account.py:3179
+#: code:addons/account/account.py:3139
 #, python-format
 msgid "Miscellaneous Journal"
 msgstr ""
@@ -203,7 +185,7 @@ msgid "Account Source"
 msgstr "Eredeti főkönyvi számla"
 
 #. module: account
-#: model:ir.actions.act_window,help:account.action_account_period_form
+#: model:ir.actions.act_window,help:account.action_account_period
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to add a fiscal period.\n"
@@ -223,12 +205,6 @@ msgstr "Az elmúlt 15 napban készített számlák"
 #: field:accounting.report,label_filter:0
 msgid "Column Label"
 msgstr ""
-
-#. module: account
-#: code:addons/account/wizard/account_move_journal.py:96
-#, python-format
-msgid "Journal: %s"
-msgstr "Napló: %s"
 
 #. module: account
 #: help:account.config.settings,code_digits:0
@@ -259,11 +235,6 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_action_account_tax_template_form
 msgid "Tax Templates"
 msgstr "Adósablonok"
-
-#. module: account
-#: help:account.move.line,move_id:0
-msgid "The move of this entry line."
-msgstr "A tételsor bizonylatszáma."
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax
@@ -313,8 +284,6 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_use_model_create_entry
-#: model:ir.actions.act_window,name:account.action_view_account_use_model
-#: model:ir.ui.menu,name:account.menu_action_manual_recurring
 msgid "Manual Recurring"
 msgstr "Ismétlődő tételek manuális készítése"
 
@@ -327,11 +296,6 @@ msgstr "Leírás engedélyezése"
 #: view:account.analytic.chart:0
 msgid "Select the Period for Analysis"
 msgstr "Elemzési időszak kiválasztása"
-
-#. module: account
-#: view:account.move.line:0
-msgid "St."
-msgstr "Áll."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree3
@@ -348,11 +312,6 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
-
-#. module: account
-#: field:account.journal.column,field:0
-msgid "Field Name"
-msgstr "Mezőnév"
 
 #. module: account
 #: help:account.installer,charts:0
@@ -418,17 +377,6 @@ msgid "Allows you to use the analytic accounting."
 msgstr ""
 
 #. module: account
-#: model:ir.actions.act_window,help:account.action_account_moves_bank
-msgid ""
-"This view is used by accountants in order to record entries massively in "
-"OpenERP. Journal items are created by OpenERP if you use Bank Statements, "
-"Cash Registers, or Customer/Supplier payments."
-msgstr ""
-"Ez a menüpont tömeges adatrögzítésre szolgál. A rendszer automatikusan "
-"létrehozza a könyvelési tételeket, amikor a bankkivonat vagy a pénztár "
-"berögzítésre és jóváhagyásra kerül."
-
-#. module: account
 #: view:account.invoice:0
 #: field:account.invoice,user_id:0
 #: view:account.invoice.report:0
@@ -480,6 +428,7 @@ msgstr "Alapértelmezett tartozik főkönyvi számla"
 
 #. module: account
 #: view:account.move:0
+#: view:account.move.line:0
 msgid "Total Credit"
 msgstr "Követel összesen"
 
@@ -492,6 +441,13 @@ msgid ""
 "                This installs the module account_asset. If you do not check "
 "this box, you will be able to do invoicing & payments,\n"
 "                but not accounting (Journal Items, Chart of Accounts, ...)"
+msgstr ""
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_move_line_quickadd.xml:8
+#, python-format
+msgid "Period :"
 msgstr ""
 
 #. module: account
@@ -560,13 +516,11 @@ msgstr ""
 #: field:account.move.bank.reconcile,journal_id:0
 #: view:account.move.line:0
 #: field:account.move.line,journal_id:0
-#: code:addons/account/wizard/account_move_journal.py:118
 #: view:analytic.entries.report:0
 #: field:analytic.entries.report,journal_id:0
 #: model:ir.actions.report.xml,name:account.account_journal
 #: model:ir.model,name:account.model_account_journal
 #: field:validate.account.move,journal_id:0
-#, python-format
 msgid "Journal"
 msgstr "Napló"
 
@@ -607,11 +561,6 @@ msgstr "Ebben a naplóban használt számla"
 #: help:accounting.report,chart_account_id:0
 msgid "Select Charts of Accounts"
 msgstr "Számlatükör kiválasztása"
-
-#. module: account
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr "A vállalkozás nevének egyedinek kell lennie !"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_refund
@@ -727,14 +676,9 @@ msgid "Profit Account"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:1249
+#: code:addons/account/account_move_line.py:1144
 #, python-format
 msgid "No period found or more than one period found for the given date."
-msgstr ""
-
-#. module: account
-#: model:account.journal.view,name:account.account_journal_bank_view_multi
-msgid "Bank/Cash Journal (Multi-Currency) View"
 msgstr ""
 
 #. module: account
@@ -743,16 +687,13 @@ msgid "Report of the Sales by Account Type"
 msgstr "Számlatípusonkénti értékesítési kimutatás"
 
 #. module: account
-#: model:ir.actions.act_window,help:account.action_account_manual_reconcile
-msgid ""
-"<p>\n"
-"                    No journal items found.\n"
-"                </p>\n"
-"            "
-msgstr ""
+#: code:addons/account/account.py:3143
+#, python-format
+msgid "SAJ"
+msgstr "SAJ"
 
 #. module: account
-#: code:addons/account/account.py:1606
+#: code:addons/account/account.py:1546
 #, python-format
 msgid "Cannot create move with currency different from .."
 msgstr ""
@@ -893,6 +834,7 @@ msgstr ""
 #: view:account.journal:0
 #: field:account.journal,type:0
 #: field:account.move.reconcile,type:0
+#: xsl:account.transfer:0
 #: field:report.invoice.created,type:0
 msgid "Type"
 msgstr "Típus"
@@ -921,7 +863,7 @@ msgid "Supplier Invoices And Refunds"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:833
+#: code:addons/account/account_move_line.py:847
 #, python-format
 msgid "Entry is already reconciled."
 msgstr ""
@@ -996,6 +938,24 @@ msgstr ""
 "Ha bejelölt, az új számlatükör alapértelmezésként nem fogja tartalmazni ezt."
 
 #. module: account
+#: model:ir.actions.act_window,help:account.action_account_manual_reconcile
+msgid ""
+"<p>\n"
+"                    No journal items found.\n"
+"                </p>\n"
+"            "
+msgstr ""
+
+#. module: account
+#: code:addons/account/account.py:1632
+#, python-format
+msgid ""
+"You cannot unreconcile journal items if they has been generated by the       "
+"                                                  opening/closing fiscal "
+"year process."
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_subscription_form_new
 msgid "New Subscription"
 msgstr "Új előjegyzés"
@@ -1009,12 +969,6 @@ msgstr "Számítás"
 #: field:account.journal.cashbox.line,pieces:0
 msgid "Values"
 msgstr "Címlet"
-
-#. module: account
-#: view:account.invoice.report:0
-#: field:account.invoice.report,delay_to_pay:0
-msgid "Avg. Delay To Pay"
-msgstr "Átlagos fizetési késedelem"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_chart
@@ -1039,7 +993,7 @@ msgid "Purchase journal"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1374
+#: code:addons/account/account.py:1316
 #, python-format
 msgid ""
 "You cannot validate this journal entry because account \"%s\" does not "
@@ -1152,11 +1106,11 @@ msgid "Features"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:2323
+#: code:addons/account/account.py:2293
 #: code:addons/account/account_bank_statement.py:423
 #: code:addons/account/account_invoice.py:73
 #: code:addons/account/account_invoice.py:732
-#: code:addons/account/account_move_line.py:174
+#: code:addons/account/account_move_line.py:195
 #, python-format
 msgid "No Analytic Journal !"
 msgstr "Nincs gyűjtőnapló!"
@@ -1197,9 +1151,11 @@ msgid "Opening With Last Closing Balance"
 msgstr ""
 
 #. module: account
-#: view:account.state.open:0
-msgid "Are you sure you want to open this invoice ?"
-msgstr "Biztos benne, hogy meg akarja nyitni ezt a számlát?"
+#: help:account.tax.code,notprintable:0
+msgid ""
+"Check this box if you don't want any tax related to this tax code to appear "
+"on invoices"
+msgstr ""
 
 #. module: account
 #: field:report.account.receivable,name:0
@@ -1210,14 +1166,6 @@ msgstr "Hét"
 #: field:account.report.general.ledger,landscape:0
 msgid "Landscape Mode"
 msgstr "Fekvő nézet"
-
-#. module: account
-#: code:addons/account/account.py:656
-#, python-format
-msgid ""
-"You cannot change the type of account from '%s' to '%s' type as it contains "
-"journal items!"
-msgstr ""
 
 #. module: account
 #: help:account.fiscalyear.close,fy_id:0
@@ -1286,7 +1234,7 @@ msgstr ""
 #. module: account
 #: model:account.account.type,name:account.data_account_type_bank
 #: selection:account.bank.accounts.wizard,account_type:0
-#: code:addons/account/account.py:3064
+#: code:addons/account/account.py:3034
 #, python-format
 msgid "Bank"
 msgstr "Bank"
@@ -1336,6 +1284,13 @@ msgid "Tax Code Templates"
 msgstr "Adógyűjtő sablonok"
 
 #. module: account
+#: constraint:account.move.line:0
+msgid ""
+"The amount expressed in the secondary currency must be positif when journal "
+"item are debit and negatif when journal item are credit."
+msgstr ""
+
+#. module: account
 #: view:account.invoice.cancel:0
 msgid "Cancel Invoices"
 msgstr "Számlák érvénytelenítése"
@@ -1375,11 +1330,9 @@ msgid "Situation"
 msgstr "Helyzet"
 
 #. module: account
-#: help:account.tax,account_paid_id:0
-msgid ""
-"Set the account that will be set by default on invoice tax lines for "
-"refunds. Leave empty to use the expense account."
-msgstr ""
+#: help:account.move.line,move_id:0
+msgid "The move of this entry line."
+msgstr "A tételsor bizonylatszáma."
 
 #. module: account
 #: field:account.move.line.reconcile,trans_nbr:0
@@ -1410,11 +1363,6 @@ msgstr "Egyéb"
 #: view:account.subscription:0
 msgid "Draft Subscription"
 msgstr ""
-
-#. module: account
-#: view:res.partner:0
-msgid "History"
-msgstr "Előzmények"
 
 #. module: account
 #: view:account.account:0
@@ -1568,10 +1516,13 @@ msgid "Invoice Status"
 msgstr ""
 
 #. module: account
-#: view:account.invoice.report:0
-#: field:account.invoice.report,product_qty:0
-msgid "Qty"
-msgstr "Menny."
+#: view:account.bank.statement:0
+#: model:ir.model,name:account.model_account_bank_statement
+#: model:process.node,name:account.process_node_accountingstatemententries0
+#: model:process.node,name:account.process_node_bankstatement0
+#: model:process.node,name:account.process_node_supplierbankstatement0
+msgid "Bank Statement"
+msgstr "Bankkivonat"
 
 #. module: account
 #: field:res.partner,property_account_receivable:0
@@ -1579,9 +1530,12 @@ msgid "Account Receivable"
 msgstr "Vevő számla"
 
 #. module: account
-#: model:ir.actions.report.xml,name:account.account_central_journal
-msgid "Central Journal"
-msgstr "Központi napló"
+#: code:addons/account/account.py:611
+#: code:addons/account/account.py:766
+#: code:addons/account/account.py:767
+#, python-format
+msgid "%s (copy)"
+msgstr ""
 
 #. module: account
 #: selection:account.balance.report,display_account:0
@@ -1592,7 +1546,7 @@ msgid "With balance is not equal to 0"
 msgstr "Nem 0 egyenlegűek"
 
 #. module: account
-#: code:addons/account/account.py:1500
+#: code:addons/account/account.py:1440
 #, python-format
 msgid ""
 "There is no default debit account defined \n"
@@ -1720,11 +1674,6 @@ msgstr "ÁFA pozíció sablon"
 #: view:account.subscription:0
 msgid "Recurring"
 msgstr "Ismétlődő"
-
-#. module: account
-#: field:account.journal.view,columns_id:0
-msgid "Columns"
-msgstr "Oszlopok"
 
 #. module: account
 #: field:account.journal,groups_id:0
@@ -1885,7 +1834,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:836
+#: code:addons/account/account_move_line.py:850
 #, python-format
 msgid "Some entries are already reconciled."
 msgstr ""
@@ -2022,11 +1971,6 @@ msgid "Cancel Fiscal Year Opening Entries"
 msgstr ""
 
 #. module: account
-#: model:account.journal.view,name:account.account_journal_bank_view
-msgid "Bank/Cash Journal View"
-msgstr ""
-
-#. module: account
 #: report:account.journal.period.print.sale.purchase:0
 #: view:account.tax.template:0
 msgid "Tax Declaration"
@@ -2080,12 +2024,6 @@ msgstr "Minden partner"
 #: view:account.analytic.chart:0
 msgid "Analytic Account Charts"
 msgstr "Gyűjtőkód lista"
-
-#. module: account
-#: view:account.analytic.line:0
-#: view:analytic.entries.report:0
-msgid "My Entries"
-msgstr "Tételeim"
 
 #. module: account
 #: report:account.overdue:0
@@ -2147,20 +2085,21 @@ msgstr ""
 #: code:addons/account/account.py:430
 #: code:addons/account/account.py:633
 #: code:addons/account/account.py:635
-#: code:addons/account/account.py:987
-#: code:addons/account/account.py:1076
-#: code:addons/account/account.py:1114
-#: code:addons/account/account.py:1116
-#: code:addons/account/account.py:1155
-#: code:addons/account/account.py:1336
-#: code:addons/account/account.py:1350
-#: code:addons/account/account.py:1373
-#: code:addons/account/account.py:1380
-#: code:addons/account/account.py:1602
-#: code:addons/account/account.py:1606
-#: code:addons/account/account.py:2335
-#: code:addons/account/account.py:2650
-#: code:addons/account/account.py:3437
+#: code:addons/account/account.py:929
+#: code:addons/account/account.py:1018
+#: code:addons/account/account.py:1056
+#: code:addons/account/account.py:1058
+#: code:addons/account/account.py:1097
+#: code:addons/account/account.py:1278
+#: code:addons/account/account.py:1292
+#: code:addons/account/account.py:1315
+#: code:addons/account/account.py:1322
+#: code:addons/account/account.py:1542
+#: code:addons/account/account.py:1546
+#: code:addons/account/account.py:1632
+#: code:addons/account/account.py:2305
+#: code:addons/account/account.py:2620
+#: code:addons/account/account.py:3392
 #: code:addons/account/account_analytic_line.py:89
 #: code:addons/account/account_analytic_line.py:98
 #: code:addons/account/account_bank_statement.py:367
@@ -2170,14 +2109,14 @@ msgstr ""
 #: code:addons/account/account_cash_statement.py:300
 #: code:addons/account/account_invoice.py:855
 #: code:addons/account/account_invoice.py:889
-#: code:addons/account/account_invoice.py:1084
-#: code:addons/account/account_move_line.py:592
-#: code:addons/account/account_move_line.py:810
-#: code:addons/account/account_move_line.py:833
-#: code:addons/account/account_move_line.py:836
-#: code:addons/account/account_move_line.py:1214
-#: code:addons/account/account_move_line.py:1216
-#: code:addons/account/account_move_line.py:1249
+#: code:addons/account/account_invoice.py:1090
+#: code:addons/account/account_move_line.py:578
+#: code:addons/account/account_move_line.py:824
+#: code:addons/account/account_move_line.py:847
+#: code:addons/account/account_move_line.py:850
+#: code:addons/account/account_move_line.py:1109
+#: code:addons/account/account_move_line.py:1111
+#: code:addons/account/account_move_line.py:1144
 #: code:addons/account/report/common_report_header.py:92
 #: code:addons/account/wizard/account_change_currency.py:38
 #: code:addons/account/wizard/account_change_currency.py:59
@@ -2234,7 +2173,7 @@ msgid "period close"
 msgstr "Időszak zárása"
 
 #. module: account
-#: code:addons/account/account.py:1101
+#: code:addons/account/account.py:1043
 #, python-format
 msgid ""
 "This journal already contains items for this period, therefore you cannot "
@@ -2295,11 +2234,6 @@ msgid "Treasury Analysis"
 msgstr "Pénzeszközök elemzése"
 
 #. module: account
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "Hiba! Nem hozhat létre rekurzív vállalatokat."
-
-#. module: account
 #: model:ir.actions.report.xml,name:account.account_journal_sale_purchase
 msgid "Sale/Purchase Journal"
 msgstr ""
@@ -2340,6 +2274,14 @@ msgid "Product Category"
 msgstr "Termék kategória"
 
 #. module: account
+#: code:addons/account/account.py:655
+#, python-format
+msgid ""
+"You cannot change the type of account to '%s' type as it contains journal "
+"items!"
+msgstr ""
+
+#. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
 msgid "Account Aged Trial balance Report"
 msgstr "Korosított folyószámla kivonat"
@@ -2350,10 +2292,11 @@ msgid "Close Fiscal Year"
 msgstr ""
 
 #. module: account
-#: model:process.node,note:account.process_node_reconciliation0
-#: model:process.node,note:account.process_node_supplierreconciliation0
-msgid "Comparison between accounting and payment entries"
-msgstr "Könyvelési és fizetési tételek közötti összehasonlítás"
+#. openerp-web
+#: code:addons/account/static/src/xml/account_move_line_quickadd.xml:14
+#, python-format
+msgid "Journal :"
+msgstr ""
 
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
@@ -2473,6 +2416,12 @@ msgid "Fiscalyear"
 msgstr "Üzleti év"
 
 #. module: account
+#: code:addons/account/wizard/account_move_bank_reconcile.py:53
+#, python-format
+msgid "Standard Encoding"
+msgstr "Szabályos rögzítés"
+
+#. module: account
 #: view:account.journal.select:0
 #: view:project.account.analytic.line:0
 msgid "Open Entries"
@@ -2516,6 +2465,12 @@ msgstr "Tárgyév"
 #: view:account.tax.chart:0
 msgid "Account tax charts"
 msgstr "Adókivonatok"
+
+#. module: account
+#: model:account.payment.term,name:account.account_payment_term_net
+#: model:account.payment.term,note:account.account_payment_term_net
+msgid "30 Net Days"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account_cash_statement.py:256
@@ -2580,10 +2535,10 @@ msgid "Description"
 msgstr "Leírás"
 
 #. module: account
-#: code:addons/account/account.py:3186
-#, python-format
-msgid "ECNJ"
-msgstr "ECNJ"
+#: field:account.tax,price_include:0
+#: field:account.tax.template,price_include:0
+msgid "Tax Included in Price"
+msgstr "Ár tartalmazza az adót"
 
 #. module: account
 #: view:account.subscription:0
@@ -2597,11 +2552,6 @@ msgstr "Futó"
 #: field:product.template,property_account_income:0
 msgid "Income Account"
 msgstr "Árbevétel főkönyvi számla"
-
-#. module: account
-#: constraint:res.partner.bank:0
-msgid "The RIB and/or IBAN is not valid"
-msgstr ""
 
 #. module: account
 #: help:account.config.settings,default_sale_tax:0
@@ -2690,6 +2640,14 @@ msgid "Keep empty for all open fiscal year"
 msgstr "Hagyja üresen, ha minden nyitott évre akarja listázni"
 
 #. module: account
+#: code:addons/account/account.py:652
+#, python-format
+msgid ""
+"You cannot change the type of account from 'Closed' to any other type as it "
+"contains journal items!"
+msgstr ""
+
+#. module: account
 #: field:account.invoice.report,account_line_id:0
 msgid "Account Line"
 msgstr ""
@@ -2700,15 +2658,20 @@ msgid "Create an Account Based on this Template"
 msgstr "A sablon alapján főkönyvi számla létrehozása"
 
 #. module: account
+#: code:addons/account/account_invoice.py:889
+#, python-format
+msgid ""
+"Cannot create the invoice.\n"
+"The related payment term is probably misconfigured as it gives a computed "
+"amount greater than the total invoiced amount. In order to avoid rounding "
+"issues, the latest line of your payment term must be of type 'balance'."
+msgstr ""
+
+#. module: account
 #: view:account.move:0
 #: model:ir.model,name:account.model_account_move
 msgid "Account Entry"
 msgstr "Könyvelési tétel"
-
-#. module: account
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr ""
 
 #. module: account
 #: field:account.sequence.fiscalyear,sequence_main_id:0
@@ -2742,7 +2705,7 @@ msgid "Fiscal Positions"
 msgstr "ÁFA pozíciók"
 
 #. module: account
-#: code:addons/account/account_move_line.py:592
+#: code:addons/account/account_move_line.py:578
 #, python-format
 msgid "You cannot create journal items on a closed account %s %s."
 msgstr ""
@@ -2765,9 +2728,7 @@ msgstr "Szűrők"
 #: selection:account.invoice,state:0
 #: selection:account.invoice.report,state:0
 #: selection:account.period,state:0
-#: code:addons/account/wizard/account_move_journal.py:105
 #: selection:report.invoice.created,state:0
-#, python-format
 msgid "Open"
 msgstr "Nyitott"
 
@@ -2859,7 +2820,7 @@ msgid "Account Model Entries"
 msgstr "Modelltételek"
 
 #. module: account
-#: code:addons/account/account.py:3184
+#: code:addons/account/account.py:3144
 #, python-format
 msgid "EXJ"
 msgstr "EXJ"
@@ -2982,7 +2943,7 @@ msgid "Accounts"
 msgstr "Főkönyvi számlák"
 
 #. module: account
-#: code:addons/account/account.py:3515
+#: code:addons/account/account.py:3468
 #: code:addons/account/account_bank_statement.py:404
 #: code:addons/account/account_invoice.py:367
 #: code:addons/account/account_invoice.py:473
@@ -2990,7 +2951,7 @@ msgstr "Főkönyvi számlák"
 #: code:addons/account/account_invoice.py:585
 #: code:addons/account/account_invoice.py:593
 #: code:addons/account/account_invoice.py:615
-#: code:addons/account/wizard/account_move_journal.py:63
+#: code:addons/account/account_move_line.py:535
 #, python-format
 msgid "Configuration Error!"
 msgstr "Beállítási hiba!"
@@ -3065,6 +3026,12 @@ msgid "Wrong credit or debit value in model, they must be positive!"
 msgstr ""
 
 #. module: account
+#: model:process.node,note:account.process_node_reconciliation0
+#: model:process.node,note:account.process_node_supplierreconciliation0
+msgid "Comparison between accounting and payment entries"
+msgstr "Könyvelési és fizetési tételek közötti összehasonlítás"
+
+#. module: account
 #: model:ir.ui.menu,name:account.menu_automatic_reconcile
 msgid "Automatic Reconciliation"
 msgstr "Automatikus párosítás"
@@ -3081,7 +3048,7 @@ msgid "Refund Base Code"
 msgstr "Adóalapgyűjtő kód (jóváíró szlák)"
 
 #. module: account
-#: model:ir.actions.act_window,help:account.action_account_fiscalyear_form
+#: model:ir.actions.act_window,help:account.action_account_fiscalyear
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to start a new fiscal year.\n"
@@ -3143,13 +3110,6 @@ msgid "Account and Period must belong to the same company."
 msgstr ""
 
 #. module: account
-#: constraint:res.currency:0
-msgid ""
-"Error! You cannot define a rounding factor for the company's main currency "
-"that is smaller than the decimal precision of 'Account'."
-msgstr ""
-
-#. module: account
 #: field:account.invoice.line,discount:0
 msgid "Discount (%)"
 msgstr "Engedmény (%)"
@@ -3189,7 +3149,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1114
+#: code:addons/account/account.py:1056
 #, python-format
 msgid "You should choose the periods that belong to the same company."
 msgstr ""
@@ -3202,7 +3162,7 @@ msgid "Sales by Account"
 msgstr "Főkönyvi számlánkénti értékesítés"
 
 #. module: account
-#: code:addons/account/account.py:1471
+#: code:addons/account/account.py:1406
 #, python-format
 msgid "You cannot delete a posted journal entry \"%s\"."
 msgstr ""
@@ -3218,15 +3178,15 @@ msgid "Sale journal"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:2323
+#: code:addons/account/account.py:2293
 #: code:addons/account/account_invoice.py:732
-#: code:addons/account/account_move_line.py:174
+#: code:addons/account/account_move_line.py:195
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
 msgstr "A(z) '%s' naplóhoz meg kell határoznia egy gyűjtőnaplót!"
 
 #. module: account
-#: code:addons/account/account.py:807
+#: code:addons/account/account.py:780
 #, python-format
 msgid ""
 "This journal already contains items, therefore you cannot modify its company "
@@ -3304,11 +3264,6 @@ msgid "Line 2:"
 msgstr "2. sor:"
 
 #. module: account
-#: field:account.journal.column,required:0
-msgid "Required"
-msgstr "Kötelezõ"
-
-#. module: account
 #: field:wizard.multi.charts.accounts,only_one_chart_template:0
 msgid "Only One Chart Template Available"
 msgstr ""
@@ -3353,7 +3308,7 @@ msgid "Default Sale Tax"
 msgstr "Alapértelmezett fizetendő ÁFA"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1067
+#: code:addons/account/account_invoice.py:1072
 #, python-format
 msgid "Invoice  '%s' is validated."
 msgstr "'%s' számla jóváhagyásra került."
@@ -3489,7 +3444,7 @@ msgstr ""
 "csökkenéseit. A növekedéseknél mindig a napi árfolyamot használja a rendszer."
 
 #. module: account
-#: code:addons/account/account.py:2650
+#: code:addons/account/account.py:2620
 #, python-format
 msgid "There is no parent code for the template account."
 msgstr ""
@@ -3552,8 +3507,8 @@ msgid "View"
 msgstr "Gyűjtő"
 
 #. module: account
-#: code:addons/account/account.py:3432
-#: code:addons/account/account_bank.py:100
+#: code:addons/account/account.py:3387
+#: code:addons/account/account_bank.py:95
 #, python-format
 msgid "BNK"
 msgstr "BNK"
@@ -3574,11 +3529,6 @@ msgid "Electronic File"
 msgstr "Elektronikus file"
 
 #. module: account
-#: constraint:res.partner:0
-msgid "Error: Invalid ean code"
-msgstr ""
-
-#. module: account
 #: field:account.config.settings,has_chart_of_accounts:0
 msgid "Company has a chart of accounts"
 msgstr ""
@@ -3594,15 +3544,10 @@ msgid "Account Partner Ledger"
 msgstr "Folyószámla karton"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1321
+#: code:addons/account/account_invoice.py:1330
 #, python-format
 msgid "%s <b>created</b>."
 msgstr ""
-
-#. module: account
-#: help:account.journal.column,sequence:0
-msgid "Gives the sequence order to journal column."
-msgstr "Meghatározza a naplóoszlopok sorrendjét."
 
 #. module: account
 #: view:account.period:0
@@ -3742,7 +3687,7 @@ msgid "  Value amount: 0.02"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:971
+#: code:addons/account/account_invoice.py:976
 #, python-format
 msgid ""
 "You cannot create an invoice on a centralized journal. Uncheck the "
@@ -3757,7 +3702,7 @@ msgid "Starting Balance"
 msgstr "Nyitó egyenleg"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1424
+#: code:addons/account/account_invoice.py:1433
 #, python-format
 msgid "No Partner Defined !"
 msgstr "Nem adott meg partnert!"
@@ -3776,6 +3721,13 @@ msgid "Opening Subtotal"
 msgstr ""
 
 #. module: account
+#: constraint:account.move.line:0
+msgid ""
+"You cannot create journal items with a secondary currency without recording "
+"both 'currency' and 'amount currency' field."
+msgstr ""
+
+#. module: account
 #: field:account.financial.report,display_detail:0
 msgid "Display details"
 msgstr ""
@@ -3784,11 +3736,6 @@ msgstr ""
 #: report:account.overdue:0
 msgid "VAT:"
 msgstr "ÁFA:"
-
-#. module: account
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr ""
 
 #. module: account
 #: help:account.analytic.line,amount_currency:0
@@ -3807,7 +3754,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/wizard/account_move_journal.py:63
+#: code:addons/account/account_move_line.py:535
 #, python-format
 msgid ""
 "Cannot find any account journal of %s type for this company.\n"
@@ -3957,7 +3904,7 @@ msgid "Period Length (days)"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1380
+#: code:addons/account/account.py:1322
 #, python-format
 msgid ""
 "You cannot modify a posted entry of this journal.\n"
@@ -3981,7 +3928,7 @@ msgid "Category of Product"
 msgstr "Termék katerógia"
 
 #. module: account
-#: code:addons/account/account.py:987
+#: code:addons/account/account.py:929
 #, python-format
 msgid ""
 "There is no fiscal year defined for this date.\n"
@@ -4008,11 +3955,6 @@ msgstr "Adógyűjtő összege"
 #. module: account
 #: view:account.move.line:0
 msgid "Unreconciled Journal Items"
-msgstr ""
-
-#. module: account
-#: sql_constraint:res.currency:0
-msgid "The currency code must be unique per company!"
 msgstr ""
 
 #. module: account
@@ -4098,6 +4040,7 @@ msgstr ""
 #: field:account.subscription.line,date:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
+#: xsl:account.transfer:0
 #: selection:account.vat.declaration,filter:0
 #: selection:accounting.report,filter:0
 #: selection:accounting.report,filter_cmp:0
@@ -4122,7 +4065,7 @@ msgid "Chart of Accounts Template"
 msgstr "Számlatükör sablon"
 
 #. module: account
-#: code:addons/account/account.py:2335
+#: code:addons/account/account.py:2305
 #, python-format
 msgid ""
 "Maturity date of entry line generated by model line '%s' of model '%s' is "
@@ -4173,11 +4116,9 @@ msgid "Pro-forma Invoices"
 msgstr ""
 
 #. module: account
-#: constraint:account.bank.statement.line:0
-msgid ""
-"The amount of the voucher must be the same amount as the one on the "
-"statement line."
-msgstr ""
+#: view:res.partner:0
+msgid "History"
+msgstr "Előzmények"
 
 #. module: account
 #: help:account.tax,applicable_type:0
@@ -4208,13 +4149,10 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: view:account.bank.statement:0
-#: model:ir.model,name:account.model_account_bank_statement
-#: model:process.node,name:account.process_node_accountingstatemententries0
-#: model:process.node,name:account.process_node_bankstatement0
-#: model:process.node,name:account.process_node_supplierbankstatement0
-msgid "Bank Statement"
-msgstr "Bankkivonat"
+#: view:account.invoice.report:0
+#: field:account.invoice.report,product_qty:0
+msgid "Qty"
+msgstr "Menny."
 
 #. module: account
 #: field:account.move.line,blocked:0
@@ -4330,10 +4268,9 @@ msgid "Modify: create credit note, reconcile and create a new draft invoice"
 msgstr ""
 
 #. module: account
-#: code:addons/account/wizard/account_move_bank_reconcile.py:53
-#, python-format
-msgid "Standard Encoding"
-msgstr "Szabályos rögzítés"
+#: xsl:account.transfer:0
+msgid "Partner ID"
+msgstr ""
 
 #. module: account
 #: help:account.bank.statement,message_ids:0
@@ -4374,8 +4311,8 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:1153
-#: code:addons/account/account_move_line.py:1236
+#: code:addons/account/account_move_line.py:1048
+#: code:addons/account/account_move_line.py:1131
 #, python-format
 msgid "You cannot use an inactive account."
 msgstr ""
@@ -4530,11 +4467,6 @@ msgid "30 Days End of Month"
 msgstr "30 nap, hó vége"
 
 #. module: account
-#: model:account.journal.view,name:account.account_sp_refund_journal_view
-msgid "Sale/Purchase Refund Journal View"
-msgstr ""
-
-#. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_balance
 #: model:ir.actions.report.xml,name:account.account_analytic_account_balance
 msgid "Analytic Balance"
@@ -4651,12 +4583,6 @@ msgid "Close CashBox"
 msgstr "Pénzkazetta zárása"
 
 #. module: account
-#: view:account.invoice.report:0
-#: field:account.invoice.report,due_delay:0
-msgid "Avg. Due Delay"
-msgstr "Álagos fizetési határidő"
-
-#. module: account
 #: constraint:account.tax.code.template:0
 msgid ""
 "Error!\n"
@@ -4680,6 +4606,12 @@ msgstr ""
 #: field:report.account_type.sales,month:0
 msgid "Month"
 msgstr "Hónap"
+
+#. module: account
+#: code:addons/account/account.py:667
+#, python-format
+msgid "You cannot change the code of account which contains journal items!"
+msgstr ""
 
 #. module: account
 #: field:account.config.settings,purchase_sequence_prefix:0
@@ -4708,14 +4640,9 @@ msgid "Paypal Account"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:889
-#, python-format
-msgid ""
-"Cannot create the invoice.\n"
-"The related payment term is probably misconfigured as it gives a computed "
-"amount greater than the total invoiced amount. In order to avoid rounding "
-"issues, the latest line of your payment term must be of type 'balance'."
-msgstr ""
+#: view:account.entries.report:0
+msgid "Acc.Type"
+msgstr "Számlatípus"
 
 #. module: account
 #: field:account.account.template,note:0
@@ -4751,7 +4678,7 @@ msgid "Account Base Code"
 msgstr "Adóalapgyűjtő kód"
 
 #. module: account
-#: code:addons/account/account_move_line.py:841
+#: code:addons/account/account_move_line.py:855
 #, python-format
 msgid ""
 "You have to provide an account for the write off/exchange difference entry."
@@ -4772,7 +4699,6 @@ msgstr ""
 #: selection:account.common.partner.report,target_move:0
 #: selection:account.common.report,target_move:0
 #: selection:account.general.journal,target_move:0
-#: selection:account.move.journal,target_move:0
 #: selection:account.partner.balance,target_move:0
 #: selection:account.partner.ledger,target_move:0
 #: selection:account.print.journal,target_move:0
@@ -4796,6 +4722,11 @@ msgid "Check if you want to display Accounts with 0 balance too."
 msgstr "Jelölje be, ha a 0 egyenlegű számlákat is meg akarja jeleníteni!"
 
 #. module: account
+#: field:account.move.reconcile,opening_reconciliation:0
+msgid "Opening Entries Reconciliation"
+msgstr ""
+
+#. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_move_reconciliation.xml:24
 #, python-format
@@ -4806,11 +4737,6 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_finance_periodical_processing
 msgid "Periodical Processing"
 msgstr "Időszaki feldolgozás"
-
-#. module: account
-#: field:account.journal,view_id:0
-msgid "Display Mode"
-msgstr "Nézet"
 
 #. module: account
 #: selection:account.move.line,state:0
@@ -4841,7 +4767,7 @@ msgid "Account chart"
 msgstr "Számlatükör"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1313
+#: code:addons/account/account_invoice.py:1322
 #, python-format
 msgid "Supplier invoice"
 msgstr "Szállítói számla"
@@ -4979,10 +4905,10 @@ msgid "Based On"
 msgstr "Alapján"
 
 #. module: account
-#: field:account.tax,price_include:0
-#: field:account.tax.template,price_include:0
-msgid "Tax Included in Price"
-msgstr "Ár tartalmazza az adót"
+#: code:addons/account/account.py:3146
+#, python-format
+msgid "ECNJ"
+msgstr "ECNJ"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_cost_ledger_journal_report
@@ -4991,7 +4917,6 @@ msgstr "Gyűjtőkód karton"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_model_form
-#: model:ir.ui.menu,name:account.menu_action_model_form
 msgid "Recurring Models"
 msgstr "Ismétlődő modellek"
 
@@ -4999,6 +4924,11 @@ msgstr "Ismétlődő modellek"
 #: view:account.tax:0
 msgid "Children/Sub Taxes"
 msgstr ""
+
+#. module: account
+#: xsl:account.transfer:0
+msgid "Change"
+msgstr "Átváltás"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -5056,7 +4986,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:3377
+#: code:addons/account/account.py:3336
 #, python-format
 msgid "Purchase Tax %.2f%%"
 msgstr ""
@@ -5130,7 +5060,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:3187
+#: code:addons/account/account.py:3147
 #, python-format
 msgid "MISC"
 msgstr ""
@@ -5168,17 +5098,6 @@ msgstr ""
 #: selection:account.bank.accounts.wizard,account_type:0
 msgid "Check"
 msgstr "Csekk"
-
-#. module: account
-#: code:addons/account/account.py:3183
-#, python-format
-msgid "SAJ"
-msgstr "SAJ"
-
-#. module: account
-#: constraint:account.analytic.line:0
-msgid "You cannot create analytic line on view account."
-msgstr ""
 
 #. module: account
 #: view:account.aged.trial.balance:0
@@ -5287,7 +5206,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:947
+#: code:addons/account/account.py:889
 #, python-format
 msgid "Opening Period"
 msgstr ""
@@ -5370,9 +5289,10 @@ msgid "Balance by Type of Account"
 msgstr "Számlatípusonkénti egyenleg"
 
 #. module: account
-#: view:account.fiscalyear.close:0
-msgid "Generate Fiscal Year Opening Entries"
-msgstr "Üzleti év nyitó tételeinek előállítása"
+#: code:addons/account/account_cash_statement.py:301
+#, python-format
+msgid "There is no %s Account on the journal %s."
+msgstr ""
 
 #. module: account
 #: model:res.groups,name:account.group_account_user
@@ -5395,6 +5315,11 @@ msgstr ""
 #: field:account.journal,group_invoice_lines:0
 msgid "Group Invoice Lines"
 msgstr "Számlasorok összevonása"
+
+#. module: account
+#: view:account.automatic.reconcile:0
+msgid "Close"
+msgstr "Zárás"
 
 #. module: account
 #: field:account.bank.statement.line,move_ids:0
@@ -5445,7 +5370,7 @@ msgid "Child Tax Accounts"
 msgstr "Alárendelt adószámlák"
 
 #. module: account
-#: code:addons/account/account.py:1076
+#: code:addons/account/account.py:1018
 #, python-format
 msgid ""
 "There is no period defined for this date: %s.\n"
@@ -5482,7 +5407,6 @@ msgstr "Gyűjtőkód kivonat -"
 #: report:account.general.ledger_landscape:0
 #: report:account.journal.period.print:0
 #: report:account.journal.period.print.sale.purchase:0
-#: field:account.move.journal,target_move:0
 #: report:account.partner.balance:0
 #: field:account.partner.balance,target_move:0
 #: field:account.partner.ledger,target_move:0
@@ -5497,9 +5421,10 @@ msgid "Target Moves"
 msgstr "Figyelembe vett tételek"
 
 #. module: account
-#: model:account.payment.term,name:account.account_payment_term_net
-#: model:account.payment.term,note:account.account_payment_term_net
-msgid "30 Net Days"
+#: code:addons/account/account.py:1411
+#, python-format
+msgid ""
+"Move cannot be deleted if linked to an invoice. (Invoice: %s - Move ID:%s)"
 msgstr ""
 
 #. module: account
@@ -5546,7 +5471,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:1326
+#: code:addons/account/account_invoice.py:1335
 #, python-format
 msgid "%s <b>paid</b>."
 msgstr ""
@@ -5557,11 +5482,6 @@ msgstr ""
 #: model:ir.model,name:account.model_account_financial_report
 msgid "Account Report"
 msgstr ""
-
-#. module: account
-#: field:account.journal.column,name:0
-msgid "Column Name"
-msgstr "Oszlopnév"
 
 #. module: account
 #: field:account.entries.report,year:0
@@ -5592,7 +5512,7 @@ msgid "Internal Name"
 msgstr "Belső név"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1278
+#: code:addons/account/account_move_line.py:1173
 #, python-format
 msgid ""
 "Cannot create an automatic sequence for this piece.\n"
@@ -5609,29 +5529,6 @@ msgstr ""
 #: selection:account.subscription,period_type:0
 msgid "month"
 msgstr "Hónap"
-
-#. module: account
-#: code:addons/account/wizard/account_change_currency.py:59
-#, python-format
-msgid "New currency is not configured properly."
-msgstr ""
-
-#. module: account
-#: model:ir.actions.act_window,help:account.action_account_moves_all_a
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to register a new journal item.\n"
-"              </p><p>\n"
-"                This view can be used by accountants in order to quickly "
-"record\n"
-"                entries in OpenERP. If you want to record a supplier "
-"invoice,\n"
-"                start by recording the line of the expense account. OpenERP\n"
-"                will propose to you automatically the Tax related to this\n"
-"                account and the counterpart \"Account Payable\".\n"
-"              </p>\n"
-"            "
-msgstr ""
 
 #. module: account
 #: view:account.move.line:0
@@ -5672,7 +5569,6 @@ msgstr "Főkönyvi kimutatások"
 #. module: account
 #: field:account.move,line_id:0
 #: view:analytic.entries.report:0
-#: model:ir.actions.act_window,name:account.act_account_acount_move_line_open
 #: model:ir.actions.act_window,name:account.action_move_line_form
 msgid "Entries"
 msgstr "Tételek"
@@ -5721,6 +5617,7 @@ msgstr "Automatikus párosítás"
 #: view:account.move.line:0
 #: field:account.tax,amount:0
 #: field:account.tax.template,amount:0
+#: xsl:account.transfer:0
 #: view:analytic.entries.report:0
 #: field:analytic.entries.report,amount:0
 #: field:cash.box.in,amount:0
@@ -5817,7 +5714,7 @@ msgid "Recompute taxes and total"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1155
+#: code:addons/account/account.py:1097
 #, python-format
 msgid "You cannot modify/delete a journal with entries for this period."
 msgstr ""
@@ -5848,7 +5745,7 @@ msgid "Amount Computation"
 msgstr "Összeg kiszámítása"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1200
+#: code:addons/account/account_move_line.py:1095
 #, python-format
 msgid "You can not add/modify entries in a closed period %s of journal %s."
 msgstr ""
@@ -5917,7 +5814,7 @@ msgstr "Adógyűjtők"
 #. module: account
 #: selection:account.invoice,type:0
 #: selection:account.invoice.report,type:0
-#: code:addons/account/account_invoice.py:1314
+#: code:addons/account/account_invoice.py:1323
 #: selection:report.invoice.created,type:0
 #, python-format
 msgid "Customer Refund"
@@ -6027,12 +5924,6 @@ msgid "Customer Invoices And Refunds"
 msgstr ""
 
 #. module: account
-#: code:addons/account/wizard/account_move_journal.py:161
-#, python-format
-msgid "This period is already closed."
-msgstr ""
-
-#. module: account
 #: field:account.analytic.line,amount_currency:0
 #: field:account.entries.report,amount_currency:0
 #: field:account.model.line,amount_currency:0
@@ -6044,11 +5935,6 @@ msgstr "Devizaösszeg"
 #: selection:res.company,tax_calculation_rounding_method:0
 msgid "Round per Line"
 msgstr ""
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_view_move_line
-msgid "Lines to reconcile"
-msgstr "Párosítandó sorok"
 
 #. module: account
 #: report:account.analytic.account.balance:0
@@ -6160,7 +6046,7 @@ msgid "Fixed Amount"
 msgstr "Fix összeg"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1151
+#: code:addons/account/account_move_line.py:1046
 #, python-format
 msgid "You cannot change the tax, you should remove and recreate lines."
 msgstr ""
@@ -6175,11 +6061,6 @@ msgstr "Automatikus párosítás"
 #: view:account.move.line:0
 msgid "Journal Item"
 msgstr "Könyvelési tételsor"
-
-#. module: account
-#: model:ir.model,name:account.model_account_move_journal
-msgid "Move journal"
-msgstr "Könyvelési tétel"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscalyear_close
@@ -6217,19 +6098,14 @@ msgid "Child Accounts"
 msgstr "Alárendelt számlák"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1212
+#: code:addons/account/account_move_line.py:1107
 #, python-format
 msgid "Move name (id): %s (%s)"
 msgstr ""
 
 #. module: account
-#: view:account.move.journal:0
-msgid "Standard Entries"
-msgstr "Standard tételek"
-
-#. module: account
 #: view:account.move.line.reconcile:0
-#: code:addons/account/account_move_line.py:856
+#: code:addons/account/account_move_line.py:870
 #, python-format
 msgid "Write-Off"
 msgstr "Különbözet leírása"
@@ -6395,7 +6271,7 @@ msgid "Filter by"
 msgstr "Szűrés"
 
 #. module: account
-#: code:addons/account/account.py:2311
+#: code:addons/account/account.py:2281
 #, python-format
 msgid "You have a wrong expression \"%(...)s\" in your model !"
 msgstr ""
@@ -6446,12 +6322,6 @@ msgstr "Napok száma"
 #: view:account.financial.report:0
 msgid "Report"
 msgstr ""
-
-#. module: account
-#: code:addons/account/wizard/account_move_journal.py:103
-#, python-format
-msgid "Period: %s"
-msgstr "Időszak: %s"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
@@ -6584,7 +6454,12 @@ msgid "Analytic Line"
 msgstr "Gyűjtőkód tétel"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1084
+#: model:ir.ui.menu,name:account.menu_action_model_form
+msgid "Models"
+msgstr ""
+
+#. module: account
+#: code:addons/account/account_invoice.py:1090
 #, python-format
 msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
@@ -6791,7 +6666,7 @@ msgid "Current"
 msgstr "Folyamatban lévő"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1296
+#: code:addons/account/account_invoice.py:1305
 #, python-format
 msgid "Invoice '%s' is paid partially: %s%s of %s%s (%s%s remaining)."
 msgstr ""
@@ -6840,7 +6715,7 @@ msgid "Power"
 msgstr "Max. tételszám"
 
 #. module: account
-#: code:addons/account/account.py:3437
+#: code:addons/account/account.py:3392
 #, python-format
 msgid "Cannot generate an unused journal code."
 msgstr ""
@@ -6911,16 +6786,16 @@ msgstr ""
 "rendelkező adók esetében. Ebben az esetben az értékelési sorrend lényeges."
 
 #. module: account
-#: code:addons/account/account.py:1470
-#: code:addons/account/account.py:1499
-#: code:addons/account/account.py:1506
-#: code:addons/account/account_invoice.py:970
-#: code:addons/account/account_move_line.py:1102
+#: code:addons/account/account.py:1405
+#: code:addons/account/account.py:1410
+#: code:addons/account/account.py:1439
+#: code:addons/account/account.py:1446
+#: code:addons/account/account_invoice.py:975
+#: code:addons/account/account_move_line.py:995
 #: code:addons/account/wizard/account_automatic_reconcile.py:148
 #: code:addons/account/wizard/account_fiscalyear_close.py:88
 #: code:addons/account/wizard/account_fiscalyear_close.py:99
 #: code:addons/account/wizard/account_fiscalyear_close.py:102
-#: code:addons/account/wizard/account_move_journal.py:161
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:56
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:58
 #, python-format
@@ -6988,7 +6863,7 @@ msgid "Optional create"
 msgstr "Választható létrehozás"
 
 #. module: account
-#: code:addons/account/account.py:675
+#: code:addons/account/account.py:685
 #, python-format
 msgid ""
 "You cannot change the owner company of an account that already contains "
@@ -6999,7 +6874,7 @@ msgstr ""
 #: report:account.invoice:0
 #: selection:account.invoice,type:0
 #: selection:account.invoice.report,type:0
-#: code:addons/account/account_invoice.py:1315
+#: code:addons/account/account_invoice.py:1324
 #: selection:report.invoice.created,type:0
 #, python-format
 msgid "Supplier Refund"
@@ -7037,11 +6912,6 @@ msgstr "Központosítás"
 #: view:analytic.entries.report:0
 msgid "Group By..."
 msgstr "Csoportosítás"
-
-#. module: account
-#: field:account.journal.column,readonly:0
-msgid "Readonly"
-msgstr "Csak olvasható"
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -7141,7 +7011,7 @@ msgstr "Gyűjtőkód tétel statisztika"
 
 #. module: account
 #: code:addons/account/account_analytic_line.py:142
-#: code:addons/account/account_move_line.py:932
+#: code:addons/account/account_move_line.py:946
 #, python-format
 msgid "Entries: "
 msgstr "Tételek: "
@@ -7152,7 +7022,14 @@ msgid "Currency of the related account journal."
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:1312
+#: constraint:account.move.line:0
+msgid ""
+"You cannot provide a secondary currency if it is the same than the company "
+"one."
+msgstr ""
+
+#. module: account
+#: code:addons/account/account_invoice.py:1321
 #, python-format
 msgid "Customer invoice"
 msgstr ""
@@ -7171,13 +7048,11 @@ msgstr "Az állapot: tervezet."
 
 #. module: account
 #: view:account.move.line:0
-#: code:addons/account/account_move_line.py:1041
-#, python-format
 msgid "Total debit"
 msgstr "Tartozik összesen"
 
 #. module: account
-#: code:addons/account/account_move_line.py:811
+#: code:addons/account/account_move_line.py:825
 #, python-format
 msgid "Entry \"%s\" is not valid !"
 msgstr "A(z) \"%s\" tétel nem érvényes!"
@@ -7250,7 +7125,7 @@ msgid "You cannot remove an account that contains journal items."
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:1200
+#: code:addons/account/account_move_line.py:1095
 #, python-format
 msgid "Error !"
 msgstr "Hiba!"
@@ -7365,7 +7240,6 @@ msgstr "Igen"
 #: selection:account.common.partner.report,target_move:0
 #: selection:account.common.report,target_move:0
 #: selection:account.general.journal,target_move:0
-#: selection:account.move.journal,target_move:0
 #: selection:account.partner.balance,target_move:0
 #: selection:account.partner.ledger,target_move:0
 #: selection:account.print.journal,target_move:0
@@ -7377,6 +7251,11 @@ msgstr "Igen"
 #, python-format
 msgid "All Entries"
 msgstr "Minden tétel"
+
+#. module: account
+#: constraint:account.move.reconcile:0
+msgid "You can only reconcile journal items with the same partner."
+msgstr ""
 
 #. module: account
 #: view:account.journal.select:0
@@ -7449,14 +7328,6 @@ msgid "Account tax chart"
 msgstr "Adókivonat"
 
 #. module: account
-#: constraint:res.partner.bank:0
-msgid ""
-"\n"
-"Please define BIC/Swift code on bank for bank type IBAN Account to make "
-"valid payments"
-msgstr ""
-
-#. module: account
 #: report:account.analytic.account.cost_ledger:0
 #: report:account.analytic.account.quantity_cost_ledger:0
 #: report:account.central.journal:0
@@ -7476,7 +7347,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:2281
+#: code:addons/account/account.py:2251
 #, python-format
 msgid ""
 "You can specify year, month and date in the name of the model using the "
@@ -7542,12 +7413,6 @@ msgid "Sales"
 msgstr "Értékesítés"
 
 #. module: account
-#: view:account.journal.column:0
-#: model:ir.model,name:account.model_account_journal_column
-msgid "Journal Column"
-msgstr "Naplóoszlop"
-
-#. module: account
 #: selection:account.invoice.report,state:0
 #: selection:account.journal.period,state:0
 #: selection:account.subscription,state:0
@@ -7556,7 +7421,7 @@ msgid "Done"
 msgstr "Kész"
 
 #. module: account
-#: code:addons/account/account.py:1336
+#: code:addons/account/account.py:1278
 #, python-format
 msgid ""
 "You cannot validate a non-balanced entry.\n"
@@ -7670,22 +7535,14 @@ msgid "Are you sure you want to open Journal Entries?"
 msgstr "Biztos benne, hogy meg akarja nyitni a könyvelési tételeket?"
 
 #. module: account
-#: help:account.tax.code,notprintable:0
-msgid ""
-"Check this box if you don't want any tax related to this tax code to appear "
-"on invoices"
-msgstr ""
+#: view:account.state.open:0
+msgid "Are you sure you want to open this invoice ?"
+msgstr "Biztos benne, hogy meg akarja nyitni ezt a számlát?"
 
 #. module: account
 #: field:account.chart.template,property_account_expense_opening:0
 msgid "Opening Entries Expense Account"
 msgstr ""
-
-#. module: account
-#: code:addons/account/account_move_line.py:999
-#, python-format
-msgid "Accounting Entries"
-msgstr "Könyvelési tételek"
 
 #. module: account
 #: view:account.invoice:0
@@ -7857,7 +7714,7 @@ msgstr "Kimutatások"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_move_reconciliation.js:89
+#: code:addons/account/static/src/js/account_move_reconciliation.js:90
 #, python-format
 msgid "Warning"
 msgstr "Figyelem"
@@ -7921,20 +7778,7 @@ msgid "Use model"
 msgstr "Modell használata"
 
 #. module: account
-#: model:ir.actions.act_window,help:account.action_account_moves_purchase
-msgid ""
-"This view is used by accountants in order to record entries massively in "
-"OpenERP. If you want to record a supplier invoice, start by recording the "
-"line of the expense account, OpenERP will propose to you automatically the "
-"Tax related to this account and the counter-part \"Account Payable\"."
-msgstr ""
-"Ez a menüpont tömeges adatrögzítésre szolgál. Ha egy bejövő számlát akar "
-"rögzíteni, kezdje az adatbevitelt a beszerzés főkönyvi számlával, a rendszer "
-"automatikusan felajánlja az ehhez kapcsolt ÁFA számlát és a szállító "
-"ellenszámlát."
-
-#. module: account
-#: code:addons/account/account.py:1507
+#: code:addons/account/account.py:1447
 #, python-format
 msgid ""
 "There is no default credit account defined \n"
@@ -7985,7 +7829,7 @@ msgid "Root/View"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:3188
+#: code:addons/account/account.py:3148
 #, python-format
 msgid "OPEJ"
 msgstr ""
@@ -8054,7 +7898,7 @@ msgid "Maturity Date"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:3175
+#: code:addons/account/account.py:3135
 #, python-format
 msgid "Sales Journal"
 msgstr "Kimenő számla napló"
@@ -8065,7 +7909,7 @@ msgid "Invoice Tax"
 msgstr "Adó"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1278
+#: code:addons/account/account_move_line.py:1173
 #, python-format
 msgid "No piece number !"
 msgstr "Nem adott meg darabszámot!"
@@ -8104,7 +7948,7 @@ msgid "Sales Properties"
 msgstr "Értékesítés könyvelési beállítások"
 
 #. module: account
-#: code:addons/account/account.py:3515
+#: code:addons/account/account.py:3468
 #, python-format
 msgid ""
 "You have to set a code for the bank account defined on the selected chart of "
@@ -8129,7 +7973,7 @@ msgstr "Záró dátum"
 
 #. module: account
 #: selection:account.move.line,centralisation:0
-#: code:addons/account/account.py:1557
+#: code:addons/account/account.py:1497
 #, python-format
 msgid "Currency Adjustment"
 msgstr ""
@@ -8224,7 +8068,7 @@ msgstr ""
 #: selection:account.bank.accounts.wizard,account_type:0
 #: selection:account.entries.report,type:0
 #: selection:account.journal,type:0
-#: code:addons/account/account.py:3064
+#: code:addons/account/account.py:3034
 #, python-format
 msgid "Cash"
 msgstr "Pénztár"
@@ -8245,7 +8089,6 @@ msgstr "Számlák átutalása"
 #: field:account.financial.report,sequence:0
 #: field:account.invoice.line,sequence:0
 #: field:account.invoice.tax,sequence:0
-#: field:account.journal.column,sequence:0
 #: field:account.model.line,sequence:0
 #: field:account.payment.term.line,sequence:0
 #: field:account.sequence.fiscalyear,sequence_id:0
@@ -8261,13 +8104,8 @@ msgid "Paypal account"
 msgstr ""
 
 #. module: account
-#: constraint:product.category:0
-msgid "Error ! You cannot create recursive categories."
-msgstr ""
-
-#. module: account
-#: help:account.model.line,quantity:0
-msgid "The optional quantity on entries."
+#: selection:account.print.journal,sort_selection:0
+msgid "Journal Entry Number"
 msgstr ""
 
 #. module: account
@@ -8316,7 +8154,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_move_reconciliation.js:88
+#: code:addons/account/static/src/js/account_move_reconciliation.js:89
 #, python-format
 msgid "You must choose at least one record."
 msgstr ""
@@ -8390,10 +8228,18 @@ msgid "Partner Ledger"
 msgstr "Folyószámla karton"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1331
+#: code:addons/account/account_invoice.py:1340
 #, python-format
 msgid "%s <b>cancelled</b>."
 msgstr ""
+
+#. module: account
+#: code:addons/account/account.py:652
+#: code:addons/account/account.py:655
+#: code:addons/account/account.py:667
+#, python-format
+msgid "Warning !"
+msgstr "Figyelem!"
 
 #. module: account
 #: help:account.bank.statement,message_unread:0
@@ -8518,6 +8364,12 @@ msgid "Inverted Analytic Balance -"
 msgstr "Fordított gyűjtőkód kivonat -"
 
 #. module: account
+#: help:account.move.reconcile,opening_reconciliation:0
+msgid ""
+"Is this reconciliation produced by the opening of a new fiscal year ?."
+msgstr ""
+
+#. module: account
 #: view:account.analytic.line:0
 #: model:ir.actions.act_window,name:account.action_account_analytic_line_form
 msgid "Analytic Entries"
@@ -8529,7 +8381,7 @@ msgid "Associated Partner"
 msgstr "Társult partner"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1424
+#: code:addons/account/account_invoice.py:1433
 #, python-format
 msgid "You must first select a partner !"
 msgstr "Először partnert kell választani!"
@@ -8611,13 +8463,13 @@ msgstr ""
 "adó kiszámításánál."
 
 #. module: account
-#: code:addons/account/account.py:3178
+#: code:addons/account/account.py:3138
 #, python-format
 msgid "Purchase Refund Journal"
 msgstr "Bejövő jóváíró számla napló"
 
 #. module: account
-#: code:addons/account/account.py:1350
+#: code:addons/account/account.py:1292
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr ""
@@ -8671,9 +8523,7 @@ msgstr ""
 #: field:account.subscription,period_nbr:0
 #: field:account.tax.chart,period_id:0
 #: field:account.treasury.report,period_id:0
-#: code:addons/account/wizard/account_move_journal.py:118
 #: field:validate.account.move,period_id:0
-#, python-format
 msgid "Period"
 msgstr "Időszak"
 
@@ -8758,13 +8608,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: constraint:product.template:0
-msgid ""
-"Error: The default Unit of Measure and the purchase Unit of Measure must be "
-"in the same category."
-msgstr ""
-
-#. module: account
 #: report:account.invoice:0
 msgid "Tel. :"
 msgstr "Tel. :"
@@ -8845,15 +8688,9 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: help:account.move.line,currency_id:0
-msgid "The optional other currency if it is a multi-currency entry."
-msgstr "Szabadon választott más pénznem, ha a tétel devizás."
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_account_journal_view
-#: model:ir.ui.menu,name:account.menu_action_account_journal_view
-msgid "Journal Views"
-msgstr "Naplónézetek"
+#: model:process.transition,name:account.process_transition_filestatement0
+msgid "Automatic import of the bank sta"
+msgstr "Bankkivonat automatikus importálása"
 
 #. module: account
 #: code:addons/account/account_invoice.py:370
@@ -8879,7 +8716,7 @@ msgid "Account Types"
 msgstr "Főkönyvi számlatípusok"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1303
+#: code:addons/account/account_move_line.py:1198
 #, python-format
 msgid ""
 "You cannot use this general account in this journal, check the tab 'Entry "
@@ -8981,7 +8818,7 @@ msgid "The partner account used for this invoice."
 msgstr "Vevő/szállító főkönyvi számla"
 
 #. module: account
-#: code:addons/account/account.py:3374
+#: code:addons/account/account.py:3333
 #, python-format
 msgid "Tax %.2f%%"
 msgstr ""
@@ -8999,7 +8836,7 @@ msgid "Payment Term Line"
 msgstr "Fizetési feltétel sor"
 
 #. module: account
-#: code:addons/account/account.py:3176
+#: code:addons/account/account.py:3136
 #, python-format
 msgid "Purchase Journal"
 msgstr "Bejövő számla napló"
@@ -9107,6 +8944,7 @@ msgstr "Tartozik összeg"
 #: view:account.analytic.inverted.balance:0
 #: view:account.analytic.journal.report:0
 #: view:account.common.report:0
+#: view:account.invoice:0
 msgid "Print"
 msgstr "Nyomtatás"
 
@@ -9126,9 +8964,11 @@ msgid "Sales tax (%)"
 msgstr ""
 
 #. module: account
-#: model:ir.model,name:account.model_account_fiscal_position_account_template
-msgid "Template Account Fiscal Mapping"
-msgstr "Sablon főkönyvi számla ÁFA pozíció leképezés"
+#: model:ir.actions.act_window,name:account.action_account_analytic_account_tree2
+#: model:ir.actions.act_window,name:account.action_account_analytic_chart
+#: model:ir.ui.menu,name:account.menu_action_analytic_account_tree2
+msgid "Chart of Analytic Accounts"
+msgstr "Gyűjtőkód lista"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_subscription_form
@@ -9222,7 +9062,7 @@ msgstr ""
 "Szabadon választott más pénznemben kifejezett összeg, ha a tétel devizás."
 
 #. module: account
-#: code:addons/account/account_move_line.py:1103
+#: code:addons/account/account_move_line.py:996
 #, python-format
 msgid "The account move (%s) for centralisation has been confirmed."
 msgstr ""
@@ -9283,7 +9123,7 @@ msgid "Reconciled entries"
 msgstr "Párosított tételek"
 
 #. module: account
-#: code:addons/account/account.py:2311
+#: code:addons/account/account.py:2281
 #, python-format
 msgid "Wrong model !"
 msgstr ""
@@ -9305,7 +9145,7 @@ msgid "Print Account Partner Balance"
 msgstr "Folyószámla kivonat nyomtatása"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1216
+#: code:addons/account/account_move_line.py:1111
 #, python-format
 msgid ""
 "You cannot do this modification on a reconciled entry. You can just change "
@@ -9339,7 +9179,7 @@ msgstr "Ismeretlen"
 
 #. module: account
 #: field:account.fiscalyear.close,journal_id:0
-#: code:addons/account/account.py:3180
+#: code:addons/account/account.py:3140
 #, python-format
 msgid "Opening Entries Journal"
 msgstr "Nyitó tételek naplója"
@@ -9448,7 +9288,7 @@ msgid "Unit of Currency"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:3177
+#: code:addons/account/account.py:3137
 #, python-format
 msgid "Sales Refund Journal"
 msgstr "Kimenő jóváíró számla napló"
@@ -9533,7 +9373,7 @@ msgid "Display Detail"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:3185
+#: code:addons/account/account.py:3145
 #, python-format
 msgid "SCNJ"
 msgstr "SCNJ"
@@ -9548,18 +9388,10 @@ msgstr ""
 "számlatervezeteket."
 
 #. module: account
-#: help:account.journal,view_id:0
-msgid ""
-"Gives the view used when writing or browsing entries in this journal. The "
-"view tells OpenERP which fields should be visible, required or readonly and "
-"in which order. You can create your own view for a faster encoding in each "
-"journal."
-msgstr ""
-"Megadja a rögzítésnél és a megtekintésnél alkalmazott nézetet. A nézet "
-"határozza meg, hogy mely mezőknek kell láthatóaknak lenni, melyeket kell "
-"kötelezően megadni rögzítésnél, melyek a csak olvasható mezők, és milyen "
-"sorrendben kell megjelenniük. Ön a gyorsabb adatrögzítés érdekében minden "
-"naplóban létrehozhatja saját nézetét."
+#: view:account.analytic.line:0
+#: view:analytic.entries.report:0
+msgid "My Entries"
+msgstr "Tételeim"
 
 #. module: account
 #: help:account.invoice,state:0
@@ -9624,12 +9456,9 @@ msgid "Start Period"
 msgstr "Kezdő időszak"
 
 #. module: account
-#: code:addons/account/account.py:611
-#: code:addons/account/account.py:793
-#: code:addons/account/account.py:794
-#, python-format
-msgid "%s (copy)"
-msgstr ""
+#: model:ir.actions.report.xml,name:account.account_central_journal
+msgid "Central Journal"
+msgstr "Központi napló"
 
 #. module: account
 #: field:account.aged.trial.balance,direction_selection:0
@@ -9647,18 +9476,7 @@ msgid "Ask Refund"
 msgstr ""
 
 #. module: account
-#: field:account.journal.column,view_id:0
-#: view:account.journal.view:0
-#: field:account.journal.view,name:0
-#: model:account.journal.view,name:account.account_journal_view
-#: model:ir.model,name:account.model_account_journal_view
-msgid "Journal View"
-msgstr "Naplónézet"
-
-#. module: account
 #: view:account.move.line:0
-#: code:addons/account/account_move_line.py:1044
-#, python-format
 msgid "Total credit"
 msgstr "Követel összesen"
 
@@ -9714,14 +9532,19 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: xsl:account.transfer:0
+msgid "Document"
+msgstr "Dokumentum"
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_tree
 #: model:ir.ui.menu,name:account.menu_bank_statement_tree
 msgid "Bank Statements"
 msgstr "Bankkivonatok"
 
 #. module: account
-#: code:addons/account/account_move_line.py:753
-#: code:addons/account/account_move_line.py:806
+#: code:addons/account/account_move_line.py:767
+#: code:addons/account/account_move_line.py:820
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries."
 msgstr ""
@@ -9783,29 +9606,14 @@ msgid "Legend"
 msgstr "Magyarázat"
 
 #. module: account
-#: model:ir.actions.act_window,help:account.action_account_moves_sale
-msgid ""
-"This view is used by accountants in order to record entries massively in "
-"OpenERP. If you want to record a customer invoice, select the journal and "
-"the period in the search toolbar. Then, start by recording the entry line of "
-"the income account. OpenERP will propose to you automatically the Tax "
-"related to this account and the counter-part \"Account receivable\"."
-msgstr ""
-"Ez a menüpont tömeges adatrögzítésre szolgál. Ha egy kimenő számlát akar "
-"rögzíteni, válassza ki a naplót és az időszakot, aztán kezdje az "
-"adatbevitelt a bevétel főkönyvi számlával. A rendszer automatikusan "
-"felajánlja az ehhez kapcsolt ÁFA számlát és a vevő ellenszámlát."
-
-#. module: account
 #: model:process.transition,note:account.process_transition_entriesreconcile0
 msgid "Accounting entries are the first input of the reconciliation."
 msgstr "A könyvelési tételek a párosítás első bemenetei."
 
 #. module: account
-#: code:addons/account/account_cash_statement.py:301
-#, python-format
-msgid "There is no %s Account on the journal %s."
-msgstr ""
+#: view:account.fiscalyear.close:0
+msgid "Generate Fiscal Year Opening Entries"
+msgstr "Üzleti év nyitó tételeinek előállítása"
 
 #. module: account
 #: report:account.third_party_ledger:0
@@ -9831,6 +9639,7 @@ msgstr "Kézi tétel"
 #: report:account.journal.period.print:0
 #: report:account.journal.period.print.sale.purchase:0
 #: view:account.move:0
+#: view:account.move.line:0
 #: field:analytic.entries.report,move_id:0
 msgid "Move"
 msgstr "Bizonylat száma"
@@ -9869,6 +9678,13 @@ msgstr ""
 #. module: account
 #: report:account.overdue:0
 msgid "There is nothing due with this customer."
+msgstr ""
+
+#. module: account
+#: help:account.tax,account_paid_id:0
+msgid ""
+"Set the account that will be set by default on invoice tax lines for "
+"refunds. Leave empty to use the expense account."
 msgstr ""
 
 #. module: account
@@ -9933,7 +9749,7 @@ msgid "Balance :"
 msgstr "Egyenleg :"
 
 #. module: account
-#: code:addons/account/account.py:1602
+#: code:addons/account/account.py:1542
 #, python-format
 msgid "Cannot create moves for different companies."
 msgstr ""
@@ -10020,7 +9836,7 @@ msgid "Due date"
 msgstr "Fizetési határidő"
 
 #. module: account
-#: code:addons/account/account.py:1519
+#: code:addons/account/account.py:1459
 #, python-format
 msgid " Centralisation"
 msgstr ""
@@ -10181,24 +9997,14 @@ msgstr "Kód/Dátum"
 #: view:account.bank.statement:0
 #: view:account.move:0
 #: view:account.move.line:0
-#: code:addons/account/wizard/account_move_journal.py:149
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_move_line
 #: model:ir.actions.act_window,name:account.act_account_move_to_account_move_line_open
 #: model:ir.actions.act_window,name:account.act_account_partner_account_move
 #: model:ir.actions.act_window,name:account.action_account_moves_all_a
-#: model:ir.actions.act_window,name:account.action_account_moves_bank
-#: model:ir.actions.act_window,name:account.action_account_moves_purchase
-#: model:ir.actions.act_window,name:account.action_account_moves_sale
-#: model:ir.actions.act_window,name:account.action_move_line_search
 #: model:ir.actions.act_window,name:account.action_move_line_select
-#: model:ir.actions.act_window,name:account.action_move_line_tree1
 #: model:ir.actions.act_window,name:account.action_tax_code_line_open
 #: model:ir.model,name:account.model_account_move_line
 #: model:ir.ui.menu,name:account.menu_action_account_moves_all
-#: model:ir.ui.menu,name:account.menu_action_account_moves_bank
-#: model:ir.ui.menu,name:account.menu_eaction_account_moves_purchase
-#: model:ir.ui.menu,name:account.menu_eaction_account_moves_sale
-#, python-format
 msgid "Journal Items"
 msgstr "Könyvelési tételsorok"
 
@@ -10208,7 +10014,7 @@ msgid "Comparison"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:1214
+#: code:addons/account/account_move_line.py:1109
 #, python-format
 msgid ""
 "You cannot do this modification on a confirmed entry. You can just change "
@@ -10297,7 +10103,7 @@ msgid "Journal Entry Model"
 msgstr "Kontírozási modell"
 
 #. module: account
-#: code:addons/account/account.py:1116
+#: code:addons/account/account.py:1058
 #, python-format
 msgid "Start period should precede then end period."
 msgstr ""
@@ -10348,8 +10154,8 @@ msgstr "Nettó érték"
 #: view:accounting.report:0
 #: selection:accounting.report,filter:0
 #: selection:accounting.report,filter_cmp:0
-#: model:ir.actions.act_window,name:account.action_account_period_form
-#: model:ir.ui.menu,name:account.menu_action_account_period_form
+#: model:ir.actions.act_window,name:account.action_account_period
+#: model:ir.ui.menu,name:account.menu_action_account_period
 #: model:ir.ui.menu,name:account.next_id_23
 msgid "Periods"
 msgstr "Időszakok"
@@ -10401,11 +10207,6 @@ msgstr "Bal szülő"
 #: selection:account.financial.report,style_overwrite:0
 msgid "Title 2 (bold)"
 msgstr ""
-
-#. module: account
-#: view:account.entries.report:0
-msgid "Acc.Type"
-msgstr "Számlatípus"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree2
@@ -10587,12 +10388,6 @@ msgid "Total"
 msgstr "Összesen"
 
 #. module: account
-#: code:addons/account/wizard/account_move_journal.py:98
-#, python-format
-msgid "Journal: All"
-msgstr "Napló: mindegyik"
-
-#. module: account
 #: code:addons/account/wizard/account_invoice_refund.py:109
 #, python-format
 msgid "Cannot %s draft/proforma/cancel invoice."
@@ -10721,7 +10516,7 @@ msgid "Empty Accounts ? "
 msgstr "Üres számlák ? "
 
 #. module: account
-#: code:addons/account/account_move_line.py:1151
+#: code:addons/account/account_move_line.py:1046
 #, python-format
 msgid "Unable to change tax!"
 msgstr ""
@@ -10747,20 +10542,17 @@ msgid "The code of the journal must be unique per company !"
 msgstr "A napló kódjának egyedinek kell lennie!"
 
 #. module: account
-#: view:account.partner.reconcile.process:0
-msgid "Go to Next Partner"
-msgstr "A következő partnerre lép"
-
-#. module: account
 #: model:ir.actions.act_window,help:account.action_account_invoice_report_all
 msgid ""
 "From this report, you can have an overview of the amount invoiced to your "
-"customer as well as payment delays. The tool search can also be used to "
-"personalise your Invoices reports and so, match this analysis to your needs."
+"customer. The tool search can also be used to personalise your Invoices "
+"reports and so, match this analysis to your needs."
 msgstr ""
-"Ebből a kimutatásból áttekintést nyerhet a vevőknek kiszámlázott összegekről "
-"és a fizetési késedelmekről. A kereső eszköz használatával személyre "
-"szabhatja és az igényeihez igazíthatja a kimutatást."
+
+#. module: account
+#: view:account.partner.reconcile.process:0
+msgid "Go to Next Partner"
+msgstr "A következő partnerre lép"
 
 #. module: account
 #: view:account.automatic.reconcile:0
@@ -10834,8 +10626,8 @@ msgid "Invoice Lines"
 msgstr "Számlasorok"
 
 #. module: account
-#: selection:account.print.journal,sort_selection:0
-msgid "Journal Entry Number"
+#: help:account.model.line,quantity:0
+msgid "The optional quantity on entries."
 msgstr ""
 
 #. module: account
@@ -10844,20 +10636,12 @@ msgid "Reconciled transactions"
 msgstr "Párosított tranzakciók"
 
 #. module: account
-#: code:addons/account/account.py:653
-#, python-format
-msgid ""
-"You cannot change the type of account from 'Closed' to any other type which "
-"contains journal items!"
-msgstr ""
-
-#. module: account
 #: model:ir.model,name:account.model_report_account_receivable
 msgid "Receivable accounts"
 msgstr "Vevő számlák"
 
 #. module: account
-#: code:addons/account/account_move_line.py:762
+#: code:addons/account/account_move_line.py:776
 #, python-format
 msgid "Already reconciled."
 msgstr ""
@@ -10942,9 +10726,9 @@ msgid "Applicability"
 msgstr "Alkalmazhatóság"
 
 #. module: account
-#: model:process.transition,name:account.process_transition_filestatement0
-msgid "Automatic import of the bank sta"
-msgstr "Bankkivonat automatikus importálása"
+#: help:account.move.line,currency_id:0
+msgid "The optional other currency if it is a multi-currency entry."
+msgstr "Szabadon választott más pénznem, ha a tétel devizás."
 
 #. module: account
 #: model:process.transition,note:account.process_transition_invoiceimport0
@@ -10984,7 +10768,7 @@ msgid "Entries Sorted by"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:1511
+#: code:addons/account/account_invoice.py:1520
 #, python-format
 msgid ""
 "The selected unit of measure is not compatible with the unit of measure of "
@@ -11022,6 +10806,23 @@ msgstr ""
 #: selection:report.account_type.sales,month:0
 msgid "November"
 msgstr "November"
+
+#. module: account
+#: model:ir.actions.act_window,help:account.action_account_moves_all_a
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Select the period and the journal you want to fill.\n"
+"              </p><p>\n"
+"                This view can be used by accountants in order to quickly "
+"record\n"
+"                entries in OpenERP. If you want to record a supplier "
+"invoice,\n"
+"                start by recording the line of the expense account. OpenERP\n"
+"                will propose to you automatically the Tax related to this\n"
+"                account and the counterpart \"Account Payable\".\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: account
 #: help:account.invoice.line,account_id:0
@@ -11063,7 +10864,6 @@ msgid "Total Receivable"
 msgstr "Összes vevőkövetelés"
 
 #. module: account
-#: view:account.account.template:0
 #: view:account.move.line:0
 msgid "General Information"
 msgstr "Általános információ"
@@ -11104,8 +10904,9 @@ msgid "As soon as the reconciliation is done, the invoice can be paid."
 msgstr "Amint a párosítás elkészül, a számla rendezettnek minősül."
 
 #. module: account
-#: model:account.journal.view,name:account.account_sp_journal_view
-msgid "Sale/Purchase Journal View"
+#: code:addons/account/wizard/account_change_currency.py:59
+#, python-format
+msgid "New currency is not configured properly."
 msgstr ""
 
 #. module: account
@@ -11131,8 +10932,8 @@ msgstr "Jobb szülő"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_move_reconciliation.js:73
-#: code:addons/account/static/src/js/account_move_reconciliation.js:79
+#: code:addons/account/static/src/js/account_move_reconciliation.js:74
+#: code:addons/account/static/src/js/account_move_reconciliation.js:80
 #, python-format
 msgid "Never"
 msgstr ""
@@ -11159,9 +10960,9 @@ msgid "Internal Notes"
 msgstr ""
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_account_fiscalyear_form
+#: model:ir.actions.act_window,name:account.action_account_fiscalyear
 #: view:ir.sequence:0
-#: model:ir.ui.menu,name:account.menu_action_account_fiscalyear_form
+#: model:ir.ui.menu,name:account.menu_action_account_fiscalyear
 msgid "Fiscal Years"
 msgstr "Üzleti év"
 
@@ -11257,11 +11058,9 @@ msgid "Usually 1 or -1."
 msgstr "Általában 1 vagy -1."
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_account_analytic_account_tree2
-#: model:ir.actions.act_window,name:account.action_account_analytic_chart
-#: model:ir.ui.menu,name:account.menu_action_analytic_account_tree2
-msgid "Chart of Analytic Accounts"
-msgstr "Gyűjtőkód lista"
+#: model:ir.model,name:account.model_account_fiscal_position_account_template
+msgid "Template Account Fiscal Mapping"
+msgstr "Sablon főkönyvi számla ÁFA pozíció leképezés"
 
 #. module: account
 #: field:account.chart.template,property_account_expense:0
@@ -11349,6 +11148,9 @@ msgstr ""
 #~ msgid "Bank Reconciliation"
 #~ msgstr "Bank egyeztetés"
 
+#~ msgid "Required"
+#~ msgstr "Kötelezõ"
+
 #~ msgid "Printing Date :"
 #~ msgstr "Nyomtatás dátuma :"
 
@@ -11372,9 +11174,6 @@ msgstr ""
 
 #~ msgid "-"
 #~ msgstr "-"
-
-#~ msgid "Document"
-#~ msgstr "Dokumentum"
 
 #~ msgid "Import invoice"
 #~ msgstr "Számlaimport"
@@ -11471,6 +11270,9 @@ msgstr ""
 #~ msgid "("
 #~ msgstr "("
 
+#~ msgid "Columns"
+#~ msgstr "Oszlopok"
+
 #~ msgid "."
 #~ msgstr "."
 
@@ -11533,6 +11335,9 @@ msgstr ""
 
 #~ msgid "Generic Reports"
 #~ msgstr "Általános kimutatások"
+
+#~ msgid "Readonly"
+#~ msgstr "Csak olvasható"
 
 #~ msgid "By Date and Period"
 #~ msgstr "Dátum és időszak"
@@ -11745,6 +11550,9 @@ msgstr ""
 #~ msgid "Due date Computation"
 #~ msgstr "Fizetési határidő kiszámítása"
 
+#~ msgid "Avg. Delay To Pay"
+#~ msgstr "Átlagos fizetési késedelem"
+
 #~ msgid "Reserve and Profit/Loss Account"
 #~ msgstr "Mérleg szerinti eredmény számla"
 
@@ -11956,8 +11764,20 @@ msgstr ""
 #~ "Kimutatás nyomtatása pénznem oszloppal, ha a pénznem eltér a vállalat "
 #~ "pénznemétől"
 
+#~ msgid ""
+#~ "From this report, you can have an overview of the amount invoiced to your "
+#~ "customer as well as payment delays. The tool search can also be used to "
+#~ "personalise your Invoices reports and so, match this analysis to your needs."
+#~ msgstr ""
+#~ "Ebből a kimutatásból áttekintést nyerhet a vevőknek kiszámlázott összegekről "
+#~ "és a fizetési késedelmekről. A kereső eszköz használatával személyre "
+#~ "szabhatja és az igényeihez igazíthatja a kimutatást."
+
 #~ msgid "Net Loss"
 #~ msgstr "Veszteség"
+
+#~ msgid "Avg. Due Delay"
+#~ msgstr "Álagos fizetési határidő"
 
 #, python-format
 #~ msgid "Global taxes defined, but are not in invoice lines !"
@@ -11971,6 +11791,9 @@ msgstr ""
 
 #~ msgid "Default taxes"
 #~ msgstr "Alapértelmezett adók"
+
+#~ msgid "Display Mode"
+#~ msgstr "Nézet"
 
 #~ msgid "  day of the month: 0"
 #~ msgstr "  a hónap napja: 0"
@@ -11989,9 +11812,6 @@ msgstr ""
 
 #~ msgid "Analytic Account Statistics"
 #~ msgstr "Gyűjtőkód statisztika"
-
-#~ msgid "Change"
-#~ msgstr "Átváltás"
 
 #~ msgid "Closing balance based on cashBox"
 #~ msgstr "Záró egyenleg a pénzkazetta alapján"
@@ -12038,9 +11858,6 @@ msgstr ""
 #~ msgid "5"
 #~ msgstr "5"
 
-#~ msgid "Close"
-#~ msgstr "Zárás"
-
 #, python-format
 #~ msgid "Start period should be smaller then End period"
 #~ msgstr "A kezdő időszaknak korábbinak kell lenni a záró időszaknál."
@@ -12051,6 +11868,9 @@ msgstr ""
 #~ msgid ""
 #~ "This report gives you an overview of the situation of your general journals"
 #~ msgstr "Ez a kimutatás az általános naplók állapotáról ad áttekintést"
+
+#~ msgid "Column Name"
+#~ msgstr "Oszlopnév"
 
 #~ msgid "Opening Cashbox"
 #~ msgstr "Pénzkazetta nyitó egyenleg"
@@ -12131,6 +11951,10 @@ msgstr ""
 
 #~ msgid "  365 Days  "
 #~ msgstr "  365 nap  "
+
+#, python-format
+#~ msgid "Period: %s"
+#~ msgstr "Időszak: %s"
 
 #, python-format
 #~ msgid "not implemented"
@@ -12216,6 +12040,10 @@ msgstr ""
 #~ "A számlasorban megadott főkönyvi számla nincs a számlatükörben. Kérem, hozza "
 #~ "létre!"
 
+#, python-format
+#~ msgid "Accounting Entries"
+#~ msgstr "Könyvelési tételek"
+
 #~ msgid "Closing Cashbox"
 #~ msgstr "Pénzkazetta záró egyenleg"
 
@@ -12288,6 +12116,9 @@ msgstr ""
 #~ msgid "Compute Code for Taxes included prices"
 #~ msgstr "Számítási kód (ha az ár tartalmazza az adót)"
 
+#~ msgid "Journal Views"
+#~ msgstr "Naplónézetek"
+
 #~ msgid "CashBox Balance"
 #~ msgstr "Pénzkazetta egyenlege"
 
@@ -12323,6 +12154,9 @@ msgstr ""
 
 #~ msgid "Followups Management"
 #~ msgstr "Fizetési emlékeztetők kezelése"
+
+#~ msgid "Journal View"
+#~ msgstr "Naplónézet"
 
 #, python-format
 #~ msgid "Current currency is not confirured properly !"
@@ -12419,6 +12253,10 @@ msgstr ""
 #~ msgid "The date of your Journal Entry is not in the defined period!"
 #~ msgstr "A könyvelési tétel dátuma nincs a meghatározott időszakban."
 
+#, python-format
+#~ msgid "Journal: %s"
+#~ msgstr "Napló: %s"
+
 #~ msgid ""
 #~ "The default Chart of Accounts is matching your country selection. If no "
 #~ "certified Chart of Accounts exists for your specified country, a generic one "
@@ -12473,6 +12311,9 @@ msgstr ""
 #~ msgid "Configure Your Accounting Chart"
 #~ msgstr "Számlatükör beállítása"
 
+#~ msgid "Lines to reconcile"
+#~ msgstr "Párosítandó sorok"
+
 #~ msgid "Generate Your Accounting Chart from a Chart Template"
 #~ msgstr "Számlatükör előállítása sablon számlatükörből"
 
@@ -12523,6 +12364,22 @@ msgstr ""
 #~ "Itt határozhatja meg az üzleti évet. Az üzleti év az az időtartam, amelyről "
 #~ "a beszámolót kell készíteni. Időtartama általában 12 hónap. Magyarországon "
 #~ "az üzleti év időtartama általában megegyezik a naptári évvel."
+
+#~ msgid ""
+#~ "Gives the view used when writing or browsing entries in this journal. The "
+#~ "view tells OpenERP which fields should be visible, required or readonly and "
+#~ "in which order. You can create your own view for a faster encoding in each "
+#~ "journal."
+#~ msgstr ""
+#~ "Megadja a rögzítésnél és a megtekintésnél alkalmazott nézetet. A nézet "
+#~ "határozza meg, hogy mely mezőknek kell láthatóaknak lenni, melyeket kell "
+#~ "kötelezően megadni rögzítésnél, melyek a csak olvasható mezők, és milyen "
+#~ "sorrendben kell megjelenniük. Ön a gyorsabb adatrögzítés érdekében minden "
+#~ "naplóban létrehozhatja saját nézetét."
+
+#, python-format
+#~ msgid "Journal: All"
+#~ msgstr "Napló: mindegyik"
 
 #~ msgid "JNRL"
 #~ msgstr "Napló"
@@ -12853,6 +12710,9 @@ msgstr ""
 #~ msgstr ""
 #~ "\"%s\" (kód:%d) termékre nem határoztak meg árbevétel főkönyvi számlát."
 
+#~ msgid "Field Name"
+#~ msgstr "Mezőnév"
+
 #~ msgid "closing balance entered by the cashbox verifier"
 #~ msgstr "Ellenőrzéshez megadott záró egyenleg"
 
@@ -12871,6 +12731,9 @@ msgstr ""
 #, python-format
 #~ msgid "You cannot deactivate an account that contains account moves."
 #~ msgstr "Nem tehet inaktívvá olyan főkönyvi számlát, amelyre már könyveltek."
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "Hiba! Nem hozhat létre rekurzív vállalatokat."
 
 #, python-format
 #~ msgid ""
@@ -12916,6 +12779,12 @@ msgstr ""
 #~ msgid "Reverse Compute Code"
 #~ msgstr "Fordított számítási kód"
 
+#~ msgid "Move journal"
+#~ msgstr "Könyvelési tétel"
+
+#~ msgid "St."
+#~ msgstr "Áll."
+
 #~ msgid "Tax Declaration: Credit Notes"
 #~ msgstr "Adóbevallás: jóváíró számlák"
 
@@ -12950,6 +12819,9 @@ msgstr ""
 #~ msgid ""
 #~ "Selected Entry Lines does not have any account move enties in draft state"
 #~ msgstr "A kiválasztott tételek között nincs tervezet állapotú"
+
+#~ msgid "Journal Column"
+#~ msgstr "Naplóoszlop"
 
 #~ msgid ""
 #~ "Here you can customize an existing journal view or create a new view. "
@@ -13008,6 +12880,18 @@ msgstr ""
 #~ msgstr ""
 #~ "Nem stornózhat egy számlát, amelyre részleges kifizetés történt. Vissza kell "
 #~ "vonnia a pénzügyi rendezés párosítását."
+
+#~ msgid ""
+#~ "This view is used by accountants in order to record entries massively in "
+#~ "OpenERP. If you want to record a customer invoice, select the journal and "
+#~ "the period in the search toolbar. Then, start by recording the entry line of "
+#~ "the income account. OpenERP will propose to you automatically the Tax "
+#~ "related to this account and the counter-part \"Account receivable\"."
+#~ msgstr ""
+#~ "Ez a menüpont tömeges adatrögzítésre szolgál. Ha egy kimenő számlát akar "
+#~ "rögzíteni, válassza ki a naplót és az időszakot, aztán kezdje az "
+#~ "adatbevitelt a bevétel főkönyvi számlával. A rendszer automatikusan "
+#~ "felajánlja az ehhez kapcsolt ÁFA számlát és a vevő ellenszámlát."
 
 #~ msgid ""
 #~ "Here you can define a financial period, an interval of time in your "
@@ -13071,6 +12955,15 @@ msgstr ""
 #~ msgid "Invoice '%s' is paid partially: %s%s of %s%s (%s%s remaining)"
 #~ msgstr ""
 #~ "'%s' számla részlegesen kiegyenlítésre került: %s%s %s%s-ből (%s%s maradt)"
+
+#~ msgid ""
+#~ "This view is used by accountants in order to record entries massively in "
+#~ "OpenERP. Journal items are created by OpenERP if you use Bank Statements, "
+#~ "Cash Registers, or Customer/Supplier payments."
+#~ msgstr ""
+#~ "Ez a menüpont tömeges adatrögzítésre szolgál. A rendszer automatikusan "
+#~ "létrehozza a könyvelési tételeket, amikor a bankkivonat vagy a pénztár "
+#~ "berögzítésre és jóváhagyásra kerül."
 
 #~ msgid ""
 #~ "Chart of Taxes is a tree view reflecting the structure of the Tax Cases (or "
@@ -13174,6 +13067,9 @@ msgstr ""
 
 #~ msgid "Customer Credit"
 #~ msgstr "Vevőkövetelés"
+
+#~ msgid "Gives the sequence order to journal column."
+#~ msgstr "Meghatározza a naplóoszlopok sorrendjét."
 
 #, python-format
 #~ msgid ""
@@ -13418,10 +13314,6 @@ msgstr ""
 #~ "    "
 
 #, python-format
-#~ msgid "Warning !"
-#~ msgstr "Figyelem!"
-
-#, python-format
 #~ msgid "Invoice '%s' is paid."
 #~ msgstr "'%s' számla kiegyenlítésre került."
 
@@ -13531,6 +13423,17 @@ msgstr ""
 #~ "\"%s\" (kód: %d) termékre nem állítottak be beszerzés főkönyvi számlát"
 
 #~ msgid ""
+#~ "This view is used by accountants in order to record entries massively in "
+#~ "OpenERP. If you want to record a supplier invoice, start by recording the "
+#~ "line of the expense account, OpenERP will propose to you automatically the "
+#~ "Tax related to this account and the counter-part \"Account Payable\"."
+#~ msgstr ""
+#~ "Ez a menüpont tömeges adatrögzítésre szolgál. Ha egy bejövő számlát akar "
+#~ "rögzíteni, kezdje az adatbevitelt a beszerzés főkönyvi számlával, a rendszer "
+#~ "automatikusan felajánlja az ehhez kapcsolt ÁFA számlát és a szállító "
+#~ "ellenszámlát."
+
+#~ msgid ""
 #~ "Display your company chart of accounts per fiscal year and filter by period. "
 #~ "Have a complete tree view of all journal items per account code by clicking "
 #~ "on an account."
@@ -13572,3 +13475,6 @@ msgstr ""
 
 #~ msgid "last month"
 #~ msgstr "előző hónap"
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "A vállalkozás nevének egyedinek kell lennie !"

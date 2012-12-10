@@ -106,10 +106,10 @@ class base_report(report_sxw.rml_parse):
                             value=line["debit"]-line["credit"]
                         elif(type == "D"):
                             value=line["debit"]-line["credit"]
-                            if(value<0.001): value=0.0
+                            if(abs(value)<0.001): value=0.0
                         elif(type == "C"):
                             value=line["credit"]-line["debit"]
-                            if(value<0.001): value=0.0
+                            if(abs(value)<0.001): value=0.0
                         if(operator == '+'):
                             sum += value
                         else:

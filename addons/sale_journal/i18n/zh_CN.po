@@ -6,20 +6,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:54+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2012-11-27 14:24+0000\n"
 "Last-Translator: ccdos <ccdos@163.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-28 04:41+0000\n"
-"X-Generator: Launchpad (build 16309)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:35+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: sale_journal
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique per Company!"
-msgstr "订单号必须在一个公司范围内唯一"
+#: field:sale_journal.invoice.type,note:0
+msgid "Note"
+msgstr "备注"
+
+#. module: sale_journal
+#: field:res.partner,property_invoice_type:0
+msgid "Invoicing Type"
+msgstr "开票类型"
 
 #. module: sale_journal
 #: help:res.partner,property_invoice_type:0
@@ -31,6 +36,68 @@ msgstr "这种开票类型已经被使用，默认开票给当前的合作伙伴
 #: view:res.partner:0
 msgid "Sales & Purchases"
 msgstr "销售&采购"
+
+#. module: sale_journal
+#: view:res.partner:0
+msgid "Invoicing"
+msgstr "开发票"
+
+#. module: sale_journal
+#: model:ir.model,name:sale_journal.model_stock_picking_in
+msgid "Incoming Shipments"
+msgstr "入库"
+
+#. module: sale_journal
+#: help:sale_journal.invoice.type,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the invoice "
+"type without removing it."
+msgstr "如果设置active为False，你可以隐藏发票类型，不用删除它。"
+
+#. module: sale_journal
+#: view:sale_journal.invoice.type:0
+msgid "Notes"
+msgstr "备注"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,invoicing_method:0
+msgid "Invoicing method"
+msgstr "开票方式"
+
+#. module: sale_journal
+#: model:ir.model,name:sale_journal.model_stock_picking
+msgid "Picking List"
+msgstr "装箱单"
+
+#. module: sale_journal
+#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
+#: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
+msgid "Invoice Types"
+msgstr "发票类型"
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Non grouped"
+msgstr "没分组"
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Grouped"
+msgstr "已分组"
+
+#. module: sale_journal
+#: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
+msgid ""
+"Invoice types are used for partners, sales orders and delivery orders. You "
+"can create a specific invoicing journal to group your invoicing according to "
+"your customer's needs: daily, each Wednesday, monthly, etc."
+msgstr "发票类型对业务伙伴，销售订单和发货订单是有用的。你可以根据用户的需要生成专门的发票账簿来对你的发票进行分组：每天，每周三，每周，每月等。"
+
+#. module: sale_journal
+#: help:sale.order,invoice_type_id:0
+msgid "Generate invoice based on the selected option."
+msgstr "基于选择的选项生成发票。"
 
 #. module: sale_journal
 #: view:sale.order:0
@@ -47,98 +114,9 @@ msgid "Invoice Type"
 msgstr "发票类型"
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,note:0
-msgid "Note"
-msgstr "备注"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Grouped"
-msgstr "已分组"
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking
-msgid "Picking List"
-msgstr "装箱单"
-
-#. module: sale_journal
-#: view:res.partner:0
-msgid "Invoicing"
-msgstr "开发票"
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking_in
-msgid "Incoming Shipments"
-msgstr "入库"
-
-#. module: sale_journal
-#: help:sale.order,invoice_type_id:0
-msgid "Generate invoice based on the selected option."
-msgstr "基于选择的选项生成发票。"
-
-#. module: sale_journal
-#: field:sale_journal.invoice.type,invoicing_method:0
-msgid "Invoicing method"
-msgstr "开票方式"
-
-#. module: sale_journal
 #: field:sale_journal.invoice.type,active:0
 msgid "Active"
 msgstr "有效"
-
-#. module: sale_journal
-#: help:sale_journal.invoice.type,active:0
-msgid ""
-"If the active field is set to False, it will allow you to hide the invoice "
-"type without removing it."
-msgstr "如果设置active为False，你可以隐藏发票类型，不用删除它。"
-
-#. module: sale_journal
-#: view:sale_journal.invoice.type:0
-msgid "Notes"
-msgstr "备注"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Non grouped"
-msgstr "没分组"
-
-#. module: sale_journal
-#: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
-msgid ""
-"Invoice types are used for partners, sales orders and delivery orders. You "
-"can create a specific invoicing journal to group your invoicing according to "
-"your customer's needs: daily, each Wednesday, monthly, etc."
-msgstr "发票类型对业务伙伴，销售订单和发货订单是有用的。你可以根据用户的需要生成专门的发票账簿来对你的发票进行分组：每天，每周三，每周，每月等。"
-
-#. module: sale_journal
-#: sql_constraint:stock.picking:0
-#: sql_constraint:stock.picking.in:0
-#: sql_constraint:stock.picking.out:0
-msgid "Reference must be unique per Company!"
-msgstr "编号必须在公司内唯一！"
-
-#. module: sale_journal
-#: field:res.partner,property_invoice_type:0
-msgid "Invoicing Type"
-msgstr "开票类型"
-
-#. module: sale_journal
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr "错误，您不能创建循环引用的会员用户"
-
-#. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
-#: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
-msgid "Invoice Types"
-msgstr "发票类型"
-
-#. module: sale_journal
-#: constraint:res.partner:0
-msgid "Error: Invalid ean code"
-msgstr "错误：无效的(EAN)条码"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_res_partner
@@ -461,3 +439,12 @@ msgstr "送货单"
 
 #~ msgid "Managing sales and deliveries by journal"
 #~ msgstr "管理销售和送货的账簿"
+
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr "错误，您不能创建循环引用的会员用户"
+
+#~ msgid "Reference must be unique per Company!"
+#~ msgstr "编号必须在公司内唯一！"
+
+#~ msgid "Order Reference must be unique per Company!"
+#~ msgstr "订单号必须在一个公司范围内唯一"

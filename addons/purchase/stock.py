@@ -60,6 +60,13 @@ class stock_picking(osv.osv):
         invoice_vals = super(stock_picking, self)._prepare_invoice(cr, uid, picking, partner, inv_type, journal_id, context=context)
         if picking.purchase_id:
             invoice_vals['fiscal_position'] = picking.purchase_id.fiscal_position.id
+            invoice_vals['payment_term'] = picking.purchase_id.payment_term_id.id
+            # Fill the date_due on the invoice, for usability purposes.
+            # Note that when an invoice with a payment term is validated, the
+            # date_due is always recomputed from the invoice date and the payment
+            # term.
+            if picking.purchase_id.payment_term_id and context.get('date_inv'):
+                invoice_vals['date_due'] = self.pool.get('account.invoice').onchange_payment_term_date_invoice(cr, uid, [], picking.purchase_id.payment_term_id.id, context.get('date_inv'))['value'].get('date_due')
         return invoice_vals
 
     def get_currency_id(self, cursor, user, picking):

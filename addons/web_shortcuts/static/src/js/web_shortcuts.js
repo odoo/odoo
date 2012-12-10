@@ -33,7 +33,7 @@ instance.web_shortcuts.Shortcuts = instance.web.Widget.extend({
         this.on('display', this, this.display);
         this.on('remove', this, this.remove);
         this.on('click', this, this.click);
-        this.dataset = new instance.web.DataSet(this, 'ir.ui.view_sc');
+        this.model = new instance.web.Model('ir.ui.view_sc');
     },
     start: function() {
         var self = this;
@@ -46,7 +46,11 @@ instance.web_shortcuts.Shortcuts = instance.web.Widget.extend({
     load: function() {
         var self = this;
         this.$el.find('.oe_systray_shortcuts_items').empty();
-        return this.rpc('/web/shortcuts/list', {}).done(function(shortcuts) {
+        return this.model.call('get_sc', [
+            instance.session.uid,
+            'ir.ui.menu',
+            instance.web.pyeval.eval('context', {})
+        ]).done(function(shortcuts) {
             _.each(shortcuts, function(sc) {
                 self.trigger('display', sc);
             });
@@ -54,7 +58,7 @@ instance.web_shortcuts.Shortcuts = instance.web.Widget.extend({
     },
     add: function (sc) {
         var self = this;
-        this.dataset.create(sc).then(function(out){
+        this.model.call('create', [sc]).then(function(out){
             self.trigger('load');
         });
     },
@@ -69,7 +73,7 @@ instance.web_shortcuts.Shortcuts = instance.web.Widget.extend({
         var $shortcut = this.$el.find('.oe_systray_shortcuts_items li a[data-id=' + menu_id + ']');
         var shortcut_id = $shortcut.data('shortcut-id');
         $shortcut.remove();
-        this.dataset.unlink([shortcut_id]);
+        this.model.call('unlink', [shortcut_id]);
     },
     click: function($link) {
         var self = this,
@@ -122,20 +126,23 @@ instance.web.ViewManagerAction.include({
             $shortcut_toggle.hide();
             return;
         }
-        $shortcut_toggle.toggleClass('oe_shortcuts_remove', shortcuts_menu.has(self.session.active_id));
-        $shortcut_toggle.unbind("click").click(function() {
-            if ($shortcut_toggle.hasClass("oe_shortcuts_remove")) {
-                shortcuts_menu.trigger('remove', self.session.active_id);
-            } else {
-                shortcuts_menu.trigger('add', {
-                    'user_id': self.session.uid,
-                    'res_id': self.session.active_id,
-                    'resource': 'ir.ui.menu',
-                    'name': self.action.name
-                });
-            }
-            $shortcut_toggle.toggleClass("oe_shortcuts_remove");
-        });
+        // Anonymous users don't have user_menu
+        if (shortcuts_menu) {
+            $shortcut_toggle.toggleClass('oe_shortcuts_remove', shortcuts_menu.has(self.session.active_id));
+            $shortcut_toggle.unbind("click").click(function() {
+                if ($shortcut_toggle.hasClass("oe_shortcuts_remove")) {
+                    shortcuts_menu.trigger('remove', self.session.active_id);
+                } else {
+                    shortcuts_menu.trigger('add', {
+                        'user_id': self.session.uid,
+                        'res_id': self.session.active_id,
+                        'resource': 'ir.ui.menu',
+                        'name': self.action.name
+                    });
+                }
+                $shortcut_toggle.toggleClass("oe_shortcuts_remove");
+            });
+        }
     }
 });
 

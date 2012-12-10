@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:53+0000\n"
-"PO-Revision-Date: 2012-05-10 17:18+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
+"POT-Creation-Date: 2012-12-03 10:25+0000\n"
+"PO-Revision-Date: 2012-11-29 14:41+0000\n"
+"Last-Translator: Numérigraphe <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:18+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:43+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,move_id:0
@@ -75,7 +75,7 @@ msgstr ""
 #: code:addons/mrp_repair/mrp_repair.py:440
 #, python-format
 msgid "No product defined on Fees!"
-msgstr "Aucun produit défini avec des frais !"
+msgstr "Aucun article défini avec des frais !"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -250,6 +250,11 @@ msgstr "Informations Supplémentaires"
 #, python-format
 msgid "Warning!"
 msgstr "Avertissement !"
+
+#. module: mrp_repair
+#: view:mrp.repair:0
+msgid "(update)"
+msgstr ""
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -451,7 +456,7 @@ msgstr "Facturée"
 #: field:mrp.repair.fee,product_uom:0
 #: field:mrp.repair.line,product_uom:0
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Unité de mesure d'article"
 
 #. module: mrp_repair
 #: view:mrp.repair.make_invoice:0
@@ -537,7 +542,7 @@ msgstr "inconnue"
 #: field:mrp.repair,product_id:0
 #: report:repair.order:0
 msgid "Product to Repair"
-msgstr "Produit à Réparer"
+msgstr "Article à réparer"
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
@@ -578,11 +583,6 @@ msgid "Comments and emails"
 msgstr ""
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Compute"
-msgstr "Calculer"
-
-#. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:585
 #, python-format
 msgid "Draft Invoice of %s %s <b>waiting for validation</b>."
@@ -608,7 +608,7 @@ msgstr "Terminer la Réparation"
 #: code:addons/mrp_repair/mrp_repair.py:447
 #, python-format
 msgid "No account defined for product \"%s\"."
-msgstr "Pas de compte défini pour le produit \"%s\"."
+msgstr "Pas de compte défini pour l'article \"%s\"."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -626,7 +626,7 @@ msgstr "Quantité"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Product Information"
-msgstr ""
+msgstr "Information de l'article"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
@@ -732,7 +732,7 @@ msgstr "Lignes d'Opérations"
 #: field:mrp.repair.fee,product_id:0
 #: field:mrp.repair.line,product_id:0
 msgid "Product"
-msgstr "Produit"
+msgstr "Article"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -950,6 +950,9 @@ msgstr "Pas de partenaire !"
 #~ msgstr ""
 #~ "Cette opération annulera le processus de réparation, mais n'annulera pas la "
 #~ "facture. Voulez vous continuer ?"
+
+#~ msgid "Compute"
+#~ msgstr "Calculer"
 
 #~ msgid "Repairs Order"
 #~ msgstr "Commande de Réparations"

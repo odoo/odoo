@@ -7,66 +7,41 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-02-17 03:29+0000\n"
-"Last-Translator: 开阖软件     Jeff Wang <jeff@osbzr.com>\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
+"PO-Revision-Date: 2012-11-28 07:46+0000\n"
+"Last-Translator: ccdos <ccdos@163.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:32+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:54+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: edi
 #. openerp-web
 #: code:addons/edi/static/src/js/edi.js:67
 #, python-format
 msgid "Reason:"
-msgstr ""
+msgstr "原因："
 
 #. module: edi
 #. openerp-web
 #: code:addons/edi/static/src/js/edi.js:60
 #, python-format
 msgid "The document has been successfully imported!"
-msgstr ""
-
-#. module: edi
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr "公司名称必须唯一！"
-
-#. module: edi
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr "错误，您不能创建循环引用的会员用户"
+msgstr "这个单据已经被成功导入！"
 
 #. module: edi
 #. openerp-web
 #: code:addons/edi/static/src/js/edi.js:65
 #, python-format
 msgid "Sorry, the document could not be imported."
-msgstr ""
-
-#. module: edi
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "错误！您不能创建循环的公司。"
+msgstr "对不起，这个单据不能导入！"
 
 #. module: edi
 #: model:ir.model,name:edi.model_res_company
 msgid "Companies"
 msgstr "公司"
-
-#. module: edi
-#: constraint:res.partner:0
-msgid "Error: Invalid ean code"
-msgstr ""
-
-#. module: edi
-#: sql_constraint:res.currency:0
-msgid "The currency code must be unique per company!"
-msgstr "每个公司的货币代码必须唯一"
 
 #. module: edi
 #: model:ir.model,name:edi.model_res_currency
@@ -78,13 +53,13 @@ msgstr "货币"
 #: code:addons/edi/static/src/js/edi.js:71
 #, python-format
 msgid "Document Import Notification"
-msgstr ""
+msgstr "单据导入通知"
 
 #. module: edi
 #: code:addons/edi/models/edi.py:130
 #, python-format
 msgid "Missing application."
-msgstr ""
+msgstr "找不到的应用。"
 
 #. module: edi
 #: code:addons/edi/models/edi.py:131
@@ -107,16 +82,15 @@ msgid "Partner"
 msgstr "业务伙伴"
 
 #. module: edi
-#: constraint:res.currency:0
-msgid ""
-"Error! You cannot define a rounding factor for the company's main currency "
-"that is smaller than the decimal precision of 'Account'."
-msgstr ""
-
-#. module: edi
 #: model:ir.model,name:edi.model_edi_edi
 msgid "EDI Subsystem"
-msgstr ""
+msgstr "EDI 子系统"
+
+#~ msgid "The currency code must be unique per company!"
+#~ msgstr "每个公司的货币代码必须唯一"
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "公司名称必须唯一！"
 
 #~ msgid "Partner Addresses"
 #~ msgstr "业务伙伴地址"
@@ -124,11 +98,17 @@ msgstr ""
 #~ msgid "EDI token"
 #~ msgstr "EDI令牌"
 
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr "错误，您不能创建循环引用的会员用户"
+
 #~ msgid "EDI Tokens must be unique!"
 #~ msgstr "EDI令牌必须唯一"
 
 #~ msgid "Unique identifier for retrieving an EDI document."
 #~ msgstr "接收EDI文件的唯一标识符"
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "错误！您不能创建循环的公司。"
 
 #~ msgid "Import it into an existing OpenERP instance"
 #~ msgstr "导入已存在的OpenERP实例"

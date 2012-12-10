@@ -19,43 +19,6 @@
             <field name="context">{'search_default_project_id': [active_id], 'default_project_id': active_id}</field>
         </record>
 
-        <!-- Project Read/Unread actions -->
-        <record id="actions_server_project_unread" model="ir.actions.server">
-            <field name="name">Mark unread</field>
-            <field name="condition">True</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="model_project_project"/>
-            <field name="state">code</field>
-            <field name="code">self.message_mark_as_unread(cr, uid, context.get('active_ids'), context=context)</field>
-        </record>
-        <record id="action_project_unread" model="ir.values">
-            <field name="name">action_project_unread</field>
-            <field name="action_id" ref="actions_server_project_unread"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_project_unread'))"/>
-            <field name="key">action</field>
-            <field name="model_id" ref="model_project_project"/>
-            <field name="model">project.project</field>
-            <field name="key2">client_action_multi</field>
-        </record>
-
-        <record id="actions_server_project_read" model="ir.actions.server">
-            <field name="name">Mark read</field>
-            <field name="condition">True</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="model_project_project"/>
-            <field name="state">code</field>
-            <field name="code">self.message_mark_as_read(cr, uid, context.get('active_ids'), context=context)</field>
-        </record>
-        <record id="action_project_read" model="ir.values">
-            <field name="name">action_project_read</field>
-            <field name="action_id" ref="actions_server_project_read"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_project_read'))"/>
-            <field name="key">action</field>
-            <field name="model_id" ref="model_project_project"/>
-            <field name="model">project.project</field>
-            <field name="key2">client_action_multi</field>
-        </record>
-
         <!-- Project -->
         <record id="edit_project" model="ir.ui.view">
             <field name="name">project.project.form</field>
@@ -63,14 +26,14 @@
             <field name="arch" type="xml">
                 <form string="Project" version="7.0">
                 <header>
-                    <button name="set_open" string="Re-open project" type="object" states="pending" class="oe_highlight"/>
-                    <button name="set_done" string="Close Project" type="object" states="open,pending"/>
-                    <button name="set_open" string="Re-open project" type="object" states="cancelled,close"/>
-                    <button name="set_pending" string="Pending" type="object" states="open"/>
-                    <button name="set_template" string="Set as Template" type="object" states="open"/>
-                    <button string="New Project Based on Template" name="duplicate_template"  type="object" states="template" context="{'parent_id':parent_id}" class="oe_highlight"/>
-                    <button name="reset_project" string="Reset as Project" type="object" states="template" class="oe_highlight"/>
-                    <button name="set_cancel" string="Cancel" type="object" states="open,pending"/>
+                    <button name="set_open" string="Re-open project" type="object" states="pending" class="oe_highlight" groups="base.group_user"/>
+                    <button name="set_done" string="Close Project" type="object" states="open,pending" groups="base.group_user"/>
+                    <button name="set_open" string="Re-open project" type="object" states="cancelled,close" groups="base.group_user"/>
+                    <button name="set_pending" string="Pending" type="object" states="open" groups="base.group_user"/>
+                    <button name="set_template" string="Set as Template" type="object" states="open" groups="base.group_user"/>
+                    <button string="New Project Based on Template" name="duplicate_template"  type="object" states="template" context="{'parent_id':parent_id}" class="oe_highlight" groups="base.group_user"/>
+                    <button name="reset_project" string="Reset as Project" type="object" states="template" class="oe_highlight" groups="base.group_user"/>
+                    <button name="set_cancel" string="Cancel" type="object" states="open,pending" groups="base.group_user"/>
                     <field name="state" widget="statusbar" statusbar_visible="open,close" statusbar_colors='{"pending":"blue"}' readonly="1"/>
                 </header>
                 <sheet string="Project">
@@ -85,7 +48,7 @@
                             <label for="use_tasks"/>
                         </div>
                     </div>
-                    <div class="oe_right oe_button_box" name="buttons">
+                    <div class="oe_right oe_button_box" name="buttons" groups="base.group_user">
                         <button name="%(act_project_project_2_project_task_all)d" string="Tasks"
                             type="action" attrs="{'invisible':[('use_tasks','=', 0)]}"/>
                         <button name="attachment_tree_view" string="Documents" type="object"/>
@@ -152,7 +115,7 @@
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers" help="Follow this project to automatically follow all related tasks and issues."/>
+                    <field name="message_follower_ids" widget="mail_followers" help="Follow this project to automatically follow all related tasks and issues." groups="base.group_user"/>
                     <field name="message_ids" widget="mail_thread"/>
                 </div>
                 </form>
@@ -227,7 +190,7 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_global_click">
-                                <div class="oe_dropdown_toggle oe_dropdown_kanban">
+                                <div class="oe_dropdown_toggle oe_dropdown_kanban" groups="base.group_user">
                                     <span class="oe_e">í</span>
                                     <ul class="oe_dropdown_menu">
                                         <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Project Settings</a></li></t>
@@ -287,7 +250,7 @@
             <field name="view_mode">kanban,tree,form,gantt</field>
             <field name="view_id" ref="view_project_kanban"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
-            <field name="context">{}</field>
+            <field name="context">{'search_default_Current': 1}</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                   Click to start a new project.
@@ -341,43 +304,6 @@
         </record>
 
         <!-- Task -->
-
-        <!-- Task Read/Unread actions -->
-        <record id="actions_server_project_task_unread" model="ir.actions.server">
-            <field name="name">Mark unread</field>
-            <field name="condition">True</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="model_project_task"/>
-            <field name="state">code</field>
-            <field name="code">self.message_mark_as_unread(cr, uid, context.get('active_ids'), context=context)</field>
-        </record>
-        <record id="action_project_task_unread" model="ir.values">
-            <field name="name">action_project_task_unread</field>
-            <field name="action_id" ref="actions_server_project_task_unread"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_project_task_unread'))"/>
-            <field name="key">action</field>
-            <field name="model_id" ref="model_project_task"/>
-            <field name="model">project.task</field>
-            <field name="key2">client_action_multi</field>
-        </record>
-
-        <record id="actions_server_project_task_read" model="ir.actions.server">
-            <field name="name">Mark read</field>
-            <field name="condition">True</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="model_project_task"/>
-            <field name="state">code</field>
-            <field name="code">self.message_mark_as_read(cr, uid, context.get('active_ids'), context=context)</field>
-        </record>
-        <record id="action_project_task_read" model="ir.values">
-            <field name="name">action_project_task_read</field>
-            <field name="action_id" ref="actions_server_project_task_read"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_project_task_read'))"/>
-            <field name="key">action</field>
-            <field name="model_id" ref="model_project_task"/>
-            <field name="model">project.task</field>
-            <field name="key2">client_action_multi</field>
-        </record>
 
         <record id="view_task_form2" model="ir.ui.view">
             <field name="name">project.task.form</field>
@@ -474,7 +400,7 @@
                     </notebook>
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
                         <field name="message_ids" widget="mail_thread"/>
                     </div>
                 </form>
@@ -488,7 +414,7 @@
             <field name="arch" type="xml">
                 <kanban default_group_by="stage_id" >
                     <field name="color"/>
-                    <field name="priority" groups="base.group_user"/>
+                    <field name="priority"/>
                     <field name="stage_id"/>
                     <field name="user_id"/>
                     <field name="user_email"/>
@@ -504,7 +430,7 @@
                     <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
-                            <div class="oe_dropdown_toggle oe_dropdown_kanban">
+                            <div class="oe_dropdown_toggle oe_dropdown_kanban" groups="base.group_user">
                                 <span class="oe_e">í</span>
                                 <ul class="oe_dropdown_menu">
                                     <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit...</a></li></t>
@@ -526,17 +452,19 @@
                                 <div><b><field name="name"/></b></div>
                                 <div>
                                     <field name="project_id"/><br/>
-                                    <t t-esc="kanban_text_ellipsis(record.description.value, 160)"/><br t-if="record.description.value"/>
+                                    <div class="oe_ellipsis"><t t-raw="record.description.value"/></div>
                                     <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
                                     <span t-attf-class="#{red || ''}"><i><field name="date_deadline"/></i></span>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
-                                    <a t-if="record.kanban_state.raw_value === 'normal'" type="object" string="In Progress" name="set_kanban_state_done" class="oe_kanban_status"> </a>
-                                    <a t-if="record.kanban_state.raw_value === 'done'" type="object" string="Ready for next stage" name="set_kanban_state_blocked" class="oe_kanban_status oe_kanban_status_green"> </a>
-                                    <a t-if="record.kanban_state.raw_value === 'blocked'" type="object" string="Blocked" name="set_kanban_state_normal" class="oe_kanban_status oe_kanban_status_red"> </a>
-                                    <a t-if="record.priority.raw_value == 2" type="object" string="Important" name="set_very_high_priority" class="oe_e oe_star_on">7</a>
-                                    <a t-if="record.priority.raw_value == 1 or record.priority.raw_value == 3 or record.priority.raw_value == 4" type="object" string="Normal" name="set_normal_priority" class="oe_e oe_star_off">7</a>
-                                    <a t-if="record.priority.raw_value == 0" type="object" string="Very Important" name="set_high_priority" class="oe_e oe_star_very_high_priority">7</a>
+                                    <div groups="base.group_user">
+                                        <a t-if="record.kanban_state.raw_value === 'normal'" type="object" string="In Progress" name="set_kanban_state_done" class="oe_kanban_status"> </a>
+                                        <a t-if="record.kanban_state.raw_value === 'done'" type="object" string="Ready for next stage" name="set_kanban_state_blocked" class="oe_kanban_status oe_kanban_status_green"> </a>
+                                        <a t-if="record.kanban_state.raw_value === 'blocked'" type="object" string="Blocked" name="set_kanban_state_normal" class="oe_kanban_status oe_kanban_status_red"> </a>
+                                        <a t-if="record.priority.raw_value == 2" type="object" string="Important" name="set_very_high_priority" class="oe_e oe_star_on">7</a>
+                                        <a t-if="record.priority.raw_value == 1 or record.priority.raw_value == 3 or record.priority.raw_value == 4" type="object" string="Normal" name="set_normal_priority" class="oe_e oe_star_off">7</a>
+                                        <a t-if="record.priority.raw_value == 0" type="object" string="Very Important" name="set_high_priority" class="oe_e oe_star_very_high_priority">7</a>
+                                    </div>
                                     <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
                                 </div>
                                 <div class="oe_kanban_footer_left">
@@ -546,11 +474,7 @@
                                     </span>
                                 </div>
                                 <div class="oe_kanban_footer_left" style="margin-top:5px;">
-                                    <div class="oe_left oe_tags">
-                                        <t t-foreach="record.categ_ids.raw_value" t-as="categ_id">
-                                            <span class="oe_tag" t-att-data-categ_id="categ_id"></span>
-                                        </t>
-                                    </div>
+                                    <field name="categ_ids"/>
                                 </div>
                             </div>
                             <div class="oe_clear"></div>
