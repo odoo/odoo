@@ -16,6 +16,11 @@ XML-based templating language, similar to `Genshi
   OpenERP Web (and it's possible to use :class:`~instance.web.Widget`
   without relying on the QWeb integration).
 
+The rationale behind using QWeb instead of a more popular template syntax is
+that its extension mechanism is very similar to the openerp view inheritance
+mechanism. Like openerp views a QWeb template is an xml tree and therefore
+xpath or dom manipulations are easy to performs on it.
+
 Here's an example demonstrating most of the basic QWeb features:
 
 .. code-block:: xml
