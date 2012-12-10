@@ -364,14 +364,13 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                     scroll: false,
                     start: function(event, ui) {
                         start_index = ui.item.index();
-                        self.$('.oe_kanban_quick_create').css({ visibility: 'hidden' });
-                        self.$('.oe_kanban_record').css({ visibility: 'hidden' });
+                        self.$('.oe_kanban_record, .oe_kanban_quick_create').css({ visibility: 'hidden' });
                     },
                     stop: function(event, ui) {
                         var stop_index = ui.item.index();
                         if (start_index !== stop_index) {
-                            var $start_column = $('.oe_kanban_groups_records .oe_kanban_column ').eq(start_index);
-                            var $stop_column = $('.oe_kanban_groups_records .oe_kanban_column ').eq(stop_index);
+                            var $start_column = $('.oe_kanban_groups_records .oe_kanban_column').eq(start_index);
+                            var $stop_column = $('.oe_kanban_groups_records .oe_kanban_column').eq(stop_index);
                             var method = (start_index > stop_index) ? 'insertBefore' : 'insertAfter';
                             $start_column[method]($stop_column);
                             var tmp_group = self.groups.splice(start_index, 1)[0];
@@ -383,8 +382,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                                 }
                             });
                         }
-                        self.$('.oe_kanban_quick_create').css({ visibility: 'visible' });
-                        self.$('.oe_kanban_record').css({ visibility: 'visible' });
+                        self.$('.oe_kanban_record, .oe_kanban_quick_create').css({ visibility: 'visible' });
                     }
                 });
             }
