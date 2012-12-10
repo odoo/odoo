@@ -6,7 +6,6 @@
             <field name="model">hr.holidays</field>
             <field name="arch" type="xml">
                 <search string="Search Leave">
-                    <field name="date_from" filter_domain="[('date_from', '>=', self)]"/>
                     <field name="name"/>
                     <separator/>
                     <filter icon="terp-check" domain="[('state','=','draft')]" string="To Confirm"/>
