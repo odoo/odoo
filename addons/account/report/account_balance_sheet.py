@@ -117,7 +117,6 @@ class report_balancesheet_horizontal(report_sxw.rml_parse, common_report_header)
             self.res_bl['balance'] = 0.0
 
         if self.res_bl['code'] == 'net_profit':
-            self.res_bl['code'] = 'net_profit'
             self.res_bl['type'] = _('Net Profit')
         else:
             self.res_bl['type'] = _('Net Loss')
