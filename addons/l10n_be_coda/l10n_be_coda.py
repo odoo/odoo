@@ -29,14 +29,6 @@ class account_bank_statement(osv.osv):
         'coda_note': fields.text('CODA Notes'),
     }
 
-
-class res_bank(osv.osv):
-    _inherit = 'res.partner.bank'
-    _columns = {
-        'balance_start_enforce': fields.boolean('Prevent invalid Opening Balances',
-        help="Do not process Statements with an Opening Balance that doesn't match the previous Closing Balance."),
-    }
-
 account_bank_statement()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
