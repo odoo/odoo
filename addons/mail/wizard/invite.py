@@ -74,6 +74,8 @@ class invite_wizard(osv.osv_memory):
                 for follower_id in new_follower_ids:
                     mail_mail = self.pool.get('mail.mail')
                     mail_id = mail_mail.create(cr, uid, {
+                        'model': wizard.res_model,
+                        'res_id': wizard.res_id,
                         'subject': 'Invitation to follow %s' % document.name_get()[0][1],
                         'body_html': '%s' % wizard.message,
                         'auto_delete': True,
