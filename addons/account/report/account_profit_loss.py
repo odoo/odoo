@@ -71,18 +71,18 @@ class report_pl_account_horizontal(report_sxw.rml_parse, common_report_header):
         return self.res_pl
 
     def sum_dr(self):
-        if self.res_pl['type'] == _('Net Profit'):
+        if self.res_pl['code'] == 'net_profit':
             self.result_sum_dr += self.res_pl['balance']
         return self.result_sum_dr
 
     def sum_cr(self):
-        if self.res_pl['type'] == _('Net Loss'):
+        if self.res_pl['code'] == 'net_loss':
             self.result_sum_cr += self.res_pl['balance']
         return self.result_sum_cr
 
     def _get_trans(self, source):
         return _(source)
-    
+
     def get_data(self, data):
         cr, uid = self.cr, self.uid
         db_pool = pooler.get_pool(self.cr.dbname)
@@ -104,6 +104,7 @@ class report_pl_account_horizontal(report_sxw.rml_parse, common_report_header):
         elif data['form']['filter'] == 'filter_date':
             ctx['date_from'] = data['form'].get('date_from', False)
             ctx['date_to'] =  data['form'].get('date_to', False)
+        ctx['state'] = data['form'].get('target_move', 'all')
 
         cal_list = {}
         account_id = data['form'].get('chart_account_id', False)
@@ -116,9 +117,9 @@ class report_pl_account_horizontal(report_sxw.rml_parse, common_report_header):
                 if (account.user_type.report_type) and (account.user_type.report_type == typ):
                     currency = account.currency_id and account.currency_id or account.company_id.currency_id
                     if typ == 'expense' and account.type <> 'view' and (account.debit <> account.credit):
-                        self.result_sum_dr += abs(account.debit - account.credit)
+                        self.result_sum_dr += account.debit - account.credit
                     if typ == 'income' and account.type <> 'view' and (account.debit <> account.credit):
-                        self.result_sum_cr += abs(account.debit - account.credit)
+                        self.result_sum_cr += account.credit - account.debit
                     if data['form']['display_account'] == 'bal_movement':
                         if (not currency_pool.is_zero(self.cr, self.uid, currency, account.credit)) or (not currency_pool.is_zero(self.cr, self.uid, currency, account.debit)) or (not currency_pool.is_zero(self.cr, self.uid, currency, account.balance)):
                             accounts_temp.append(account)
@@ -128,9 +129,11 @@ class report_pl_account_horizontal(report_sxw.rml_parse, common_report_header):
                     else:
                         accounts_temp.append(account)
             if self.result_sum_dr > self.result_sum_cr:
+                self.res_pl['code'] = 'net_loss'
                 self.res_pl['type'] = _('Net Loss')
                 self.res_pl['balance'] = (self.result_sum_dr - self.result_sum_cr)
             else:
+                self.res_pl['code'] = 'net_profit'
                 self.res_pl['type'] = _('Net Profit')
                 self.res_pl['balance'] = (self.result_sum_cr - self.result_sum_dr)
             self.result[typ] = accounts_temp
