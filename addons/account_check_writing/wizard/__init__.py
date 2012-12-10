@@ -1,9 +1,8 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#
-#    Copyright (c) 2011 Noviat nv/sa (www.noviat.be). All rights reserved.
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -20,15 +19,6 @@
 #
 ##############################################################################
 
-from osv import osv, fields
-
-
-class account_bank_statement(osv.osv):
-    _inherit = 'account.bank.statement'
-    _columns = {
-        'coda_note': fields.text('CODA Notes'),
-	}
-
-account_bank_statement()
+import account_check_batch_printing
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
