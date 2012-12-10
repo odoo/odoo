@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2012-05-10 17:41+0000\n"
 "Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:27+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:50+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_related:0
@@ -40,10 +40,11 @@ msgstr ""
 "элементов календаря."
 
 #. module: base_calendar
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
+#: selection:calendar.event,rrule_type:0
+#: selection:calendar.todo,rrule_type:0
+#: selection:crm.meeting,rrule_type:0
+msgid "Week(s)"
 msgstr ""
-"Выбранная организация отсутствует в списке разрешённых для этого пользователя"
 
 #. module: base_calendar
 #: field:calendar.event,we:0
@@ -335,6 +336,11 @@ msgid "Meetings"
 msgstr ""
 
 #. module: base_calendar
+#: selection:calendar.attendee,cutype:0
+msgid "Room"
+msgstr "Комната"
+
+#. module: base_calendar
 #: field:calendar.event,recurrent_id:0
 #: field:calendar.todo,recurrent_id:0
 #: field:crm.meeting,recurrent_id:0
@@ -510,14 +516,14 @@ msgid "Email"
 msgstr "Эл. почта"
 
 #. module: base_calendar
-#: selection:calendar.attendee,cutype:0
-msgid "Room"
-msgstr "Комната"
+#: model:ir.actions.server,name:base_calendar.actions_server_crm_meeting_unread
+msgid "CRM Meeting: Mark unread"
+msgstr ""
 
 #. module: base_calendar
-#: model:ir.actions.server,name:base_calendar.actions_server_crm_meeting_read
-msgid "Mark read"
-msgstr ""
+#: selection:calendar.alarm,state:0
+msgid "Run"
+msgstr "Выполняется"
 
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_calendar_alarm
@@ -638,16 +644,6 @@ msgid "Public for Employees"
 msgstr "Общий для работников"
 
 #. module: base_calendar
-#: sql_constraint:res.users:0
-msgid "OAuth UID must be unique per provider"
-msgstr ""
-
-#. module: base_calendar
-#: sql_constraint:ir.model:0
-msgid "Each model must be unique!"
-msgstr "Каждая модель должна быть уникальной"
-
-#. module: base_calendar
 #: view:crm.meeting:0
 msgid "hours"
 msgstr ""
@@ -668,13 +664,6 @@ msgstr "Язык"
 #: field:crm.meeting,end_date:0
 msgid "Repeat Until"
 msgstr "Повторять до"
-
-#. module: base_calendar
-#: selection:calendar.event,rrule_type:0
-#: selection:calendar.todo,rrule_type:0
-#: selection:crm.meeting,rrule_type:0
-msgid "Week(s)"
-msgstr ""
 
 #. module: base_calendar
 #: view:crm.meeting:0
@@ -1068,6 +1057,11 @@ msgid "Interval"
 msgstr "Интервал"
 
 #. module: base_calendar
+#: model:ir.actions.server,name:base_calendar.actions_server_crm_meeting_read
+msgid "CRM Meeting: Mark read"
+msgstr ""
+
+#. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
 #: selection:crm.meeting,week_list:0
@@ -1164,11 +1158,6 @@ msgstr ""
 #: field:crm.meeting,end_type:0
 msgid "Recurrence Termination"
 msgstr ""
-
-#. module: base_calendar
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr "Не может быть двух пользователей с одинаковым именем пользователя!"
 
 #. module: base_calendar
 #: view:crm.meeting:0
@@ -1377,12 +1366,6 @@ msgid "Search Meetings"
 msgstr ""
 
 #. module: base_calendar
-#: field:calendar.attendee,availability:0
-#: field:res.users,availability:0
-msgid "Free/Busy"
-msgstr "Свободен/Занят"
-
-#. module: base_calendar
 #: model:ir.model,name:base_calendar.model_crm_meeting_type
 msgid "Meeting Type"
 msgstr ""
@@ -1490,11 +1473,6 @@ msgid "Email addresses not found"
 msgstr ""
 
 #. module: base_calendar
-#: model:ir.actions.server,name:base_calendar.actions_server_crm_meeting_unread
-msgid "Mark unread"
-msgstr ""
-
-#. module: base_calendar
 #: view:calendar.event:0
 msgid "Recurrency period"
 msgstr "Период повторения"
@@ -1524,11 +1502,6 @@ msgstr "По дню"
 #, python-format
 msgid "First you have to specify the date of the invitation."
 msgstr ""
-
-#. module: base_calendar
-#: selection:calendar.alarm,state:0
-msgid "Run"
-msgstr "Выполняется"
 
 #. module: base_calendar
 #: field:calendar.alarm,model_id:0
@@ -1621,9 +1594,10 @@ msgid "Second"
 msgstr "Второй"
 
 #. module: base_calendar
-#: constraint:res.users:0
-msgid "Error: Invalid ean code"
-msgstr ""
+#: field:calendar.attendee,availability:0
+#: field:res.users,availability:0
+msgid "Free/Busy"
+msgstr "Свободен/Занят"
 
 #. module: base_calendar
 #: field:calendar.alarm,duration:0
@@ -1664,6 +1638,10 @@ msgstr ""
 #: selection:crm.meeting,byday:0
 msgid "Fifth"
 msgstr "Пятый"
+
+#~ msgid "The chosen company is not in the allowed companies for this user"
+#~ msgstr ""
+#~ "Выбранная организация отсутствует в списке разрешённых для этого пользователя"
 
 #~ msgid "Hourly"
 #~ msgstr "Ежечасно"
@@ -1858,6 +1836,9 @@ msgstr "Пятый"
 #~ msgid "State"
 #~ msgstr "Состояние"
 
+#~ msgid "You can not have two users with the same login !"
+#~ msgstr "Не может быть двух пользователей с одинаковым именем пользователя!"
+
 #~ msgid "of"
 #~ msgstr "из"
 
@@ -1949,6 +1930,9 @@ msgstr "Пятый"
 #, python-format
 #~ msgid "Count cannot be negative"
 #~ msgstr "Количество не может быть отрицательным"
+
+#~ msgid "Each model must be unique!"
+#~ msgstr "Каждая модель должна быть уникальной"
 
 #, python-format
 #~ msgid "Group by date not supported, use the calendar view instead"

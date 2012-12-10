@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:51+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-05-10 18:02+0000\n"
 "Last-Translator: Borja López Soilán (NeoPolus) <borjalopezsoilan@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 05:38+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:07+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #~ msgid "Stock Management"
 #~ msgstr "Gestión de inventario"
@@ -591,6 +591,14 @@ msgid "Location & Warehouse"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/stock.py:1848
+#, python-format
+msgid ""
+"Quantities, Units of Measure, Products and Locations cannot be modified on "
+"stock moves that have already been processed (except by the Administrator)."
+msgstr ""
+
+#. module: stock
 #: help:report.stock.move,type:0
 #: help:stock.picking,type:0
 #: help:stock.picking.in,type:0
@@ -822,11 +830,6 @@ msgid "Analyse Current Inventory"
 msgstr ""
 
 #. module: stock
-#: sql_constraint:product.product:0
-msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
-
-#. module: stock
 #: code:addons/stock/stock.py:1202
 #, python-format
 msgid "You cannot remove the picking which is in %s state!"
@@ -858,11 +861,6 @@ msgstr ""
 #: field:product.template,property_stock_procurement:0
 msgid "Procurement Location"
 msgstr "Ubicación de abastecimiento"
-
-#. module: stock
-#: report:stock.picking.list:0
-msgid "Recipient"
-msgstr "Destinatario"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_tree
@@ -905,17 +903,6 @@ msgstr ""
 #: field:stock.picking.out,message_summary:0
 msgid "Summary"
 msgstr ""
-
-#. module: stock
-#: help:stock.location,chained_picking_type:0
-msgid ""
-"Shipping Type of the Picking List that will contain the chained move (leave "
-"empty to automatically detect the type based on the source and destination "
-"locations)."
-msgstr ""
-"Tipo de envío del albarán que va a contener el movimiento encadenado (dejar "
-"vacío para detectar automáticamente el tipo basado en las ubicaciones de "
-"origen y destino)."
 
 #. module: stock
 #: view:product.category:0
@@ -1042,11 +1029,6 @@ msgid "Change Product Quantity"
 msgstr "Cambiar cantidad producto"
 
 #. module: stock
-#: model:ir.model,name:stock.model_stock_inventory_merge
-msgid "Merge Inventory"
-msgstr "Fusionar inventario"
-
-#. module: stock
 #: code:addons/stock/product.py:459
 #, python-format
 msgid "Future P&L"
@@ -1081,11 +1063,6 @@ msgstr ""
 #, python-format
 msgid "Please define journal on the product category: \"%s\" (id: %d)"
 msgstr ""
-
-#. module: stock
-#: report:stock.picking.list:0
-msgid "Expected Shipping Date"
-msgstr "Fecha de envío prevista"
 
 #. module: stock
 #: view:stock.move:0
@@ -1138,13 +1115,6 @@ msgid "is scheduled %s."
 msgstr "está planificado %s"
 
 #. module: stock
-#: constraint:product.template:0
-msgid ""
-"Error: The default Unit of Measure and the purchase Unit of Measure must be "
-"in the same category."
-msgstr ""
-
-#. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_invoice_onshipping
 msgid "Create Draft Invoices"
 msgstr ""
@@ -1165,13 +1135,6 @@ msgstr ""
 #. module: stock
 #: selection:stock.picking.in,state:0
 msgid "Ready to Receive"
-msgstr ""
-
-#. module: stock
-#: constraint:product.product:0
-msgid ""
-"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
-"\"Internal Reference\" field instead."
 msgstr ""
 
 #. module: stock
@@ -1261,11 +1224,6 @@ msgid "Stock Valuation Account"
 msgstr "Cuenta de valoración de existencias"
 
 #. module: stock
-#: constraint:res.partner:0
-msgid "Error: Invalid ean code"
-msgstr "Error: Código EAN no válido"
-
-#. module: stock
 #: view:stock.config.settings:0
 msgid "Apply"
 msgstr ""
@@ -1287,25 +1245,9 @@ msgid "Please define journal on the product category: \"%s\" (id: %d)."
 msgstr ""
 
 #. module: stock
-#: model:res.company,follow_up_msg:stock.res_company_1
-#: model:res.company,follow_up_msg:stock.res_company_2
-msgid ""
-"\n"
-"Date: %(date)s\n"
-"\n"
-"Dear %(partner_name)s,\n"
-"\n"
-"Please find in attachment a reminder of all your unpaid invoices, for a "
-"total amount due of:\n"
-"\n"
-"%(followup_amount).2f %(company_currency)s\n"
-"\n"
-"Thanks,\n"
-"--\n"
-"%(user_signature)s\n"
-"%(company_name)s\n"
-"        "
-msgstr ""
+#: field:report.stock.lines.date,date:0
+msgid "Latest Inventory Date"
+msgstr "Fecha último inventario"
 
 #. module: stock
 #: help:stock.location,usage:0
@@ -2165,9 +2107,10 @@ msgid "_Deliver"
 msgstr ""
 
 #. module: stock
-#: view:stock.location:0
-msgid "Customer Locations"
-msgstr "Ubicaciones de cliente"
+#: code:addons/stock/wizard/stock_inventory_merge.py:64
+#, python-format
+msgid "Merging is only allowed on draft inventories."
+msgstr "La fusión sólo es permitida en inventarios borrador."
 
 #. module: stock
 #: help:stock.picking.out,state:0
@@ -2258,13 +2201,9 @@ msgid "Return Shipment"
 msgstr ""
 
 #. module: stock
-#: model:ir.model,name:stock.model_stock_inventory
-#: selection:report.stock.inventory,location_type:0
-#: field:stock.inventory.line,inventory_id:0
-#: report:stock.inventory.move:0
-#: selection:stock.location,usage:0
-msgid "Inventory"
-msgstr "Inventario"
+#: model:ir.model,name:stock.model_stock_inventory_merge
+msgid "Merge Inventory"
+msgstr "Fusionar inventario"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_stock_fill_inventory
@@ -2436,10 +2375,9 @@ msgid "Logistical shipping unit: pallet, box, pack ..."
 msgstr "Unidad de envío logística: Palet, caja, paquete, ..."
 
 #. module: stock
-#: code:addons/stock/wizard/stock_inventory_merge.py:64
-#, python-format
-msgid "Merging is only allowed on draft inventories."
-msgstr "La fusión sólo es permitida en inventarios borrador."
+#: view:stock.location:0
+msgid "Customer Locations"
+msgstr "Ubicaciones de cliente"
 
 #. module: stock
 #: code:addons/stock/stock.py:2520
@@ -2555,11 +2493,6 @@ msgstr ""
 "realizado, después fecha real en que el movimiento ha sido procesado."
 
 #. module: stock
-#: field:report.stock.lines.date,date:0
-msgid "Latest Inventory Date"
-msgstr "Fecha último inventario"
-
-#. module: stock
 #: view:report.stock.inventory:0
 #: view:report.stock.move:0
 #: view:stock.inventory:0
@@ -2635,11 +2568,6 @@ msgstr ""
 msgid ""
 "Current quantity of products with this Serial Number available in company "
 "warehouses"
-msgstr ""
-
-#. module: stock
-#: view:stock.move:0
-msgid "Tracability"
 msgstr ""
 
 #. module: stock
@@ -3260,6 +3188,7 @@ msgstr "Dirección de contacto :"
 #: field:stock.move.split.lines,prodlot_id:0
 #: field:stock.partial.move.line,prodlot_id:0
 #: field:stock.partial.picking.line,prodlot_id:0
+#: report:stock.picking.list:0
 #: view:stock.production.lot:0
 #: field:stock.production.lot,name:0
 #: field:stock.production.lot.revision,lot_id:0
@@ -3547,14 +3476,6 @@ msgstr "Responsable"
 #. module: stock
 #: view:stock.move:0
 msgid "Process Entirely"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/stock.py:1848
-#, python-format
-msgid ""
-"Quantities, Unit of Measures, Products and Locations cannot be modified on "
-"stock moves that have already been processed (except by the Administrator)."
 msgstr ""
 
 #. module: stock
@@ -4851,6 +4772,11 @@ msgid "Delays"
 msgstr ""
 
 #. module: stock
+#: report:stock.picking.list:0
+msgid "Schedule Date"
+msgstr ""
+
+#. module: stock
 #: field:stock.location.product,to_date:0
 msgid "To"
 msgstr "Hasta"
@@ -5064,9 +4990,24 @@ msgstr ""
 "sscc (nº de serie + 1 dígito de control)."
 
 #. module: stock
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr "¡Error! No puede crear miembros asociados recursivamente."
+#: model:ir.model,name:stock.model_stock_inventory
+#: selection:report.stock.inventory,location_type:0
+#: field:stock.inventory.line,inventory_id:0
+#: report:stock.inventory.move:0
+#: selection:stock.location,usage:0
+msgid "Inventory"
+msgstr "Inventario"
+
+#. module: stock
+#: help:stock.location,chained_picking_type:0
+msgid ""
+"Shipping Type of the Picking List that will contain the chained move (leave "
+"empty to automatically detect the type based on the source and destination "
+"locations)."
+msgstr ""
+"Tipo de envío del albarán que va a contener el movimiento encadenado (dejar "
+"vacío para detectar automáticamente el tipo basado en las ubicaciones de "
+"origen y destino)."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_partial_picking.py:191
@@ -5079,11 +5020,6 @@ msgstr ""
 "El redondeo de la UdM inicial no permite enviar \"%s %s\" porque dejaría una "
 "cantidad de \"%s %s\" para enviar y solo redondeos de \"%s %s\" son "
 "aceptados por la UdM"
-
-#. module: stock
-#: constraint:product.category:0
-msgid "Error ! You cannot create recursive categories."
-msgstr "¡Error! No puede crear categorías recursivas."
 
 #. module: stock
 #: help:stock.move,move_dest_id:0
@@ -5241,6 +5177,9 @@ msgstr ""
 #~ msgid "Production Lots"
 #~ msgstr "Lotes de producción"
 
+#~ msgid "Recipient"
+#~ msgstr "Destinatario"
+
 #~ msgid "Track line"
 #~ msgstr "Línea de seguimiento"
 
@@ -5337,6 +5276,9 @@ msgstr ""
 
 #~ msgid "STOCK_DIALOG_QUESTION"
 #~ msgstr "STOCK_DIALOG_QUESTION"
+
+#~ msgid "Expected Shipping Date"
+#~ msgstr "Fecha de envío prevista"
 
 #~ msgid "Tracking/Serial"
 #~ msgstr "Seguimiento/Número de serie"
@@ -6455,6 +6397,9 @@ msgstr ""
 #~ msgid "No Invoices were created"
 #~ msgstr "No se han creado facturas"
 
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Error: Código EAN no válido"
+
 #~ msgid "This operation will cancel the shipment. Do you want to continue?"
 #~ msgstr "Esta operación cancelará el envío. ¿Desea continuar?"
 
@@ -6995,6 +6940,12 @@ msgstr ""
 
 #~ msgid "Convenient Store"
 #~ msgstr "Tienda de conveniencia"
+
+#~ msgid "Error ! You cannot create recursive categories."
+#~ msgstr "¡Error! No puede crear categorías recursivas."
+
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr "¡Error! No puede crear miembros asociados recursivamente."
 
 #~ msgid ""
 #~ "The Incoming Shipments is the list of all orders you will receive from your "

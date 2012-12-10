@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2012-05-10 17:51+0000\n"
 "Last-Translator: Xoan Sampaiño <xoansampainho@gmail.com>\n"
 "Language-Team: Galician <gl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:26+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:50+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_related:0
@@ -40,10 +40,11 @@ msgstr ""
 "calendario recorrente."
 
 #. module: base_calendar
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
+#: selection:calendar.event,rrule_type:0
+#: selection:calendar.todo,rrule_type:0
+#: selection:crm.meeting,rrule_type:0
+msgid "Week(s)"
 msgstr ""
-"A compañía seleccionada non é unha compañía admitida para este usuario"
 
 #. module: base_calendar
 #: field:calendar.event,we:0
@@ -335,6 +336,11 @@ msgid "Meetings"
 msgstr ""
 
 #. module: base_calendar
+#: selection:calendar.attendee,cutype:0
+msgid "Room"
+msgstr "Cuarto"
+
+#. module: base_calendar
 #: field:calendar.event,recurrent_id:0
 #: field:calendar.todo,recurrent_id:0
 #: field:crm.meeting,recurrent_id:0
@@ -510,14 +516,14 @@ msgid "Email"
 msgstr "E-mail"
 
 #. module: base_calendar
-#: selection:calendar.attendee,cutype:0
-msgid "Room"
-msgstr "Cuarto"
+#: model:ir.actions.server,name:base_calendar.actions_server_crm_meeting_unread
+msgid "CRM Meeting: Mark unread"
+msgstr ""
 
 #. module: base_calendar
-#: model:ir.actions.server,name:base_calendar.actions_server_crm_meeting_read
-msgid "Mark read"
-msgstr ""
+#: selection:calendar.alarm,state:0
+msgid "Run"
+msgstr "Executar"
 
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_calendar_alarm
@@ -638,16 +644,6 @@ msgid "Public for Employees"
 msgstr ""
 
 #. module: base_calendar
-#: sql_constraint:res.users:0
-msgid "OAuth UID must be unique per provider"
-msgstr ""
-
-#. module: base_calendar
-#: sql_constraint:ir.model:0
-msgid "Each model must be unique!"
-msgstr ""
-
-#. module: base_calendar
 #: view:crm.meeting:0
 msgid "hours"
 msgstr ""
@@ -668,13 +664,6 @@ msgstr "Lingua"
 #: field:crm.meeting,end_date:0
 msgid "Repeat Until"
 msgstr "Repetir ata"
-
-#. module: base_calendar
-#: selection:calendar.event,rrule_type:0
-#: selection:calendar.todo,rrule_type:0
-#: selection:crm.meeting,rrule_type:0
-msgid "Week(s)"
-msgstr ""
 
 #. module: base_calendar
 #: view:crm.meeting:0
@@ -1069,6 +1058,11 @@ msgid "Interval"
 msgstr "Intervalo"
 
 #. module: base_calendar
+#: model:ir.actions.server,name:base_calendar.actions_server_crm_meeting_read
+msgid "CRM Meeting: Mark read"
+msgstr ""
+
+#. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
 #: selection:crm.meeting,week_list:0
@@ -1165,11 +1159,6 @@ msgstr ""
 #: field:crm.meeting,end_type:0
 msgid "Recurrence Termination"
 msgstr ""
-
-#. module: base_calendar
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr "Non pode ter dous usuarios co mesmo login!"
 
 #. module: base_calendar
 #: view:crm.meeting:0
@@ -1380,12 +1369,6 @@ msgid "Search Meetings"
 msgstr ""
 
 #. module: base_calendar
-#: field:calendar.attendee,availability:0
-#: field:res.users,availability:0
-msgid "Free/Busy"
-msgstr "Libre/Ocupado"
-
-#. module: base_calendar
 #: model:ir.model,name:base_calendar.model_crm_meeting_type
 msgid "Meeting Type"
 msgstr ""
@@ -1494,11 +1477,6 @@ msgid "Email addresses not found"
 msgstr ""
 
 #. module: base_calendar
-#: model:ir.actions.server,name:base_calendar.actions_server_crm_meeting_unread
-msgid "Mark unread"
-msgstr ""
-
-#. module: base_calendar
 #: view:calendar.event:0
 msgid "Recurrency period"
 msgstr "Período de recorrencia"
@@ -1528,11 +1506,6 @@ msgstr "Por día"
 #, python-format
 msgid "First you have to specify the date of the invitation."
 msgstr ""
-
-#. module: base_calendar
-#: selection:calendar.alarm,state:0
-msgid "Run"
-msgstr "Executar"
 
 #. module: base_calendar
 #: field:calendar.alarm,model_id:0
@@ -1625,9 +1598,10 @@ msgid "Second"
 msgstr "Segundo"
 
 #. module: base_calendar
-#: constraint:res.users:0
-msgid "Error: Invalid ean code"
-msgstr ""
+#: field:calendar.attendee,availability:0
+#: field:res.users,availability:0
+msgid "Free/Busy"
+msgstr "Libre/Ocupado"
 
 #. module: base_calendar
 #: field:calendar.alarm,duration:0
@@ -1667,6 +1641,10 @@ msgstr ""
 #: selection:crm.meeting,byday:0
 msgid "Fifth"
 msgstr "Quinto"
+
+#~ msgid "The chosen company is not in the allowed companies for this user"
+#~ msgstr ""
+#~ "A compañía seleccionada non é unha compañía admitida para este usuario"
 
 #~ msgid "Hourly"
 #~ msgstr "Cada hora"
@@ -1863,6 +1841,9 @@ msgstr "Quinto"
 
 #~ msgid "State"
 #~ msgstr "Estado"
+
+#~ msgid "You can not have two users with the same login !"
+#~ msgstr "Non pode ter dous usuarios co mesmo login!"
 
 #~ msgid "Repeat every"
 #~ msgstr "Repetir cada"

@@ -176,18 +176,21 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
             action = result,
             view_mode = action_attrs.view_mode;
 
-        if (action_attrs.context && action_attrs.context['dashboard_merge_domains_contexts'] === false) {
+        // evaluate action_attrs context and domain
+        action_attrs.context = instance.web.pyeval.eval(
+            'context', action_attrs.context || {});
+        action_attrs.domain = instance.web.pyeval.eval(
+            'domain', action_attrs.domain || [], action_attrs.context);
+        if (action_attrs.context['dashboard_merge_domains_contexts'] === false) {
             // TODO: replace this 6.1 workaround by attribute on <action/>
             action.context = action_attrs.context || {};
             action.domain = action_attrs.domain || [];
         } else {
-            if (action_attrs.context) {
-                action.context = _.extend((action.context || {}), action_attrs.context);
-            }
-            if (action_attrs.domain) {
-                action.domain = action.domain || [];
-                action.domain.unshift.apply(action.domain, action_attrs.domain);
-            }
+            action.context = instance.web.pyeval.eval(
+                'contexts', [action.context || {}, action_attrs.context]);
+            action.domain = instance.web.pyeval.eval(
+                'domains', [action_attrs.domain, action.domain || []],
+                action.context)
         }
 
         var action_orig = _.extend({ flags : {} }, action);
@@ -375,11 +378,22 @@ instance.board.AddToDashboard = instance.web.search.Input.extend({
         var domain = new instance.web.CompoundDomain(getParent.dataset.get_domain() || []);
         _.each(data.contexts, context.add, context);
         _.each(data.domains, domain.add, domain);
+
+        var c = instance.web.pyeval.eval('context', context);
+        for(var k in c) {
+            if (c.hasOwnProperty(k) && /^search_default_/.test(k)) {
+                delete c[k];
+            }
+        }
+        // TODO: replace this 6.1 workaround by attribute on <action/>
+        c.dashboard_merge_domains_contexts = false;
+        var d = instance.web.pyeval.eval('domain', domain);
+
         this.rpc('/board/add_to_dashboard', {
             menu_id: this.$el.find("select").val(),
             action_id: view_parent.action.id,
-            context_to_save: context,
-            domain: domain,
+            context_to_save: c,
+            domain: d,
             view_mode: view_parent.active_view,
             name: this.$el.find("input").val()
         }).done(function(r) {

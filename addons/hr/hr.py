@@ -116,7 +116,6 @@ class hr_job(osv.osv):
             help="By default 'In position', set it to 'In Recruitment' if recruitment process is going on for this job position."),
     }
     _defaults = {
-        'expected_employees': 1,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr.job', context=c),
         'state': 'open',
     }
@@ -222,15 +221,10 @@ class hr_employee(osv.osv):
         return employee_id
 
     def unlink(self, cr, uid, ids, context=None):
-        resource_obj = self.pool.get('resource.resource')
         resource_ids = []
         for employee in self.browse(cr, uid, ids, context=context):
-            resource = employee.resource_id
-            if resource:
-                resource_ids.append(resource.id)
-        if resource_ids:
-            resource_obj.unlink(cr, uid, resource_ids, context=context)
-        return super(hr_employee, self).unlink(cr, uid, ids, context=context)
+            resource_ids.append(employee.resource_id.id)
+        return self.pool.get('resource.resource').unlink(cr, uid, resource_ids, context=context)
 
     def onchange_address_id(self, cr, uid, ids, address, context=None):
         if address:
