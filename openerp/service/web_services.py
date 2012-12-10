@@ -165,6 +165,7 @@ class db(netsvc.ExportService):
 
     def exp_duplicate_database(self, db_original_name, db_name):
         _logger.info('Duplicate database `%s` to `%s`.', db_original_name, db_name)
+        sql_db.close_db(db_original_name)
         db = sql_db.db_connect('postgres')
         cr = db.cursor()
         try:
@@ -603,67 +604,12 @@ class objects_proxy(netsvc.ExportService):
             raise NameError("Method not available %s" % method)
         security.check(db,uid,passwd)
         assert openerp.osv.osv.service, "The object_proxy class must be started with start_object_proxy."
+        openerp.modules.registry.RegistryManager.check_registry_signaling(db)
         fn = getattr(openerp.osv.osv.service, method)
         res = fn(db, uid, *params)
+        openerp.modules.registry.RegistryManager.signal_caches_change(db)
         return res
 
-
-#
-# Wizard ID: 1
-#    - None = end of wizard
-#
-# Wizard Type: 'form'
-#    - form
-#    - print
-#
-# Wizard datas: {}
-# TODO: change local request to OSE request/reply pattern
-#
-class wizard(netsvc.ExportService):
-    def __init__(self, name='wizard'):
-        netsvc.ExportService.__init__(self,name)
-        self.id = 0
-        self.wiz_datas = {}
-        self.wiz_name = {}
-        self.wiz_uid = {}
-
-    def dispatch(self, method, params):
-        (db, uid, passwd ) = params[0:3]
-        threading.current_thread().uid = uid
-        params = params[3:]
-        if method not in ['execute','create']:
-            raise KeyError("Method not supported %s" % method)
-        security.check(db,uid,passwd)
-        fn = getattr(self, 'exp_'+method)
-        res = fn(db, uid, *params)
-        return res
-
-    def _execute(self, db, uid, wiz_id, datas, action, context):
-        self.wiz_datas[wiz_id].update(datas)
-        wiz = netsvc.LocalService('wizard.'+self.wiz_name[wiz_id])
-        return wiz.execute(db, uid, self.wiz_datas[wiz_id], action, context)
-
-    def exp_create(self, db, uid, wiz_name, datas=None):
-        if not datas:
-            datas={}
-#FIXME: this is not thread-safe
-        self.id += 1
-        self.wiz_datas[self.id] = {}
-        self.wiz_name[self.id] = wiz_name
-        self.wiz_uid[self.id] = uid
-        return self.id
-
-    def exp_execute(self, db, uid, wiz_id, datas, action='init', context=None):
-        if not context:
-            context={}
-
-        if wiz_id in self.wiz_uid:
-            if self.wiz_uid[wiz_id] == uid:
-                return self._execute(db, uid, wiz_id, datas, action, context)
-            else:
-                raise openerp.exceptions.AccessDenied()
-        else:
-            raise openerp.exceptions.Warning('Wizard not found.')
 
 #
 # TODO: set a maximum report number per user to avoid DOS attacks
@@ -686,8 +632,10 @@ class report_spool(netsvc.ExportService):
         if method not in ['report', 'report_get', 'render_report']:
             raise KeyError("Method not supported %s" % method)
         security.check(db,uid,passwd)
+        openerp.modules.registry.RegistryManager.check_registry_signaling(db)
         fn = getattr(self, 'exp_' + method)
         res = fn(db, uid, *params)
+        openerp.modules.registry.RegistryManager.signal_caches_change(db)
         return res
 
     def exp_render_report(self, db, uid, object, ids, datas=None, context=None):
@@ -799,13 +747,11 @@ class report_spool(netsvc.ExportService):
             raise Exception, 'ReportNotFound'
 
 
-def start_web_services():
+def start_service():
     db()
     common()
     objects_proxy()
-    wizard()
     report_spool()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

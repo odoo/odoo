@@ -916,7 +916,16 @@ class BaseModel(object):
                     else:
                         new.extend(cls.__dict__.get(s, []))
                     nattr[s] = new
+
+                # Keep links to non-inherited constraints, e.g. useful when exporting translations
+                nattr['_local_constraints'] = cls.__dict__.get('_constraints', [])
+                nattr['_local_sql_constraints'] = cls.__dict__.get('_sql_constraints', [])
+
                 cls = type(name, (cls, parent_class), dict(nattr, _register=False))
+        else:
+            cls._local_constraints = getattr(cls, '_constraints', [])
+            cls._local_sql_constraints = getattr(cls, '_sql_constraints', [])
+
         if not getattr(cls, '_original_module', None):
             cls._original_module = cls._module
         obj = object.__new__(cls)
@@ -1515,6 +1524,8 @@ class BaseModel(object):
         error_msgs = []
         for constraint in self._constraints:
             fun, msg, fields = constraint
+            # We don't pass around the context here: validation code
+            # must always yield the same results.
             if not fun(self, cr, uid, ids):
                 # Check presence of __call__ directly instead of using
                 # callable() because it will be deprecated as of Python 3.0
@@ -2498,6 +2509,7 @@ class BaseModel(object):
         try:
             getattr(self, '_ormcache')
             self._ormcache = {}
+            self.pool._any_cache_cleared = True
         except AttributeError:
             pass
 
@@ -3223,7 +3235,7 @@ class BaseModel(object):
 
 
     def _create_table(self, cr):
-        cr.execute('CREATE TABLE "%s" (id SERIAL NOT NULL, PRIMARY KEY(id)) WITHOUT OIDS' % (self._table,))
+        cr.execute('CREATE TABLE "%s" (id SERIAL NOT NULL, PRIMARY KEY(id))' % (self._table,))
         cr.execute(("COMMENT ON TABLE \"%s\" IS %%s" % self._table), (self._description,))
         _schema.debug("Table '%s': created", self._table)
 
@@ -3307,7 +3319,7 @@ class BaseModel(object):
                 raise except_orm('Programming Error', ('Many2Many destination model does not exist: `%s`') % (f._obj,))
             dest_model = self.pool.get(f._obj)
             ref = dest_model._table
-            cr.execute('CREATE TABLE "%s" ("%s" INTEGER NOT NULL, "%s" INTEGER NOT NULL, UNIQUE("%s","%s")) WITH OIDS' % (m2m_tbl, col1, col2, col1, col2))
+            cr.execute('CREATE TABLE "%s" ("%s" INTEGER NOT NULL, "%s" INTEGER NOT NULL, UNIQUE("%s","%s"))' % (m2m_tbl, col1, col2, col1, col2))
             # create foreign key references with ondelete=cascade, unless the targets are SQL views
             cr.execute("SELECT relkind FROM pg_class WHERE relkind IN ('v') AND relname=%s", (ref,))
             if not cr.fetchall():
