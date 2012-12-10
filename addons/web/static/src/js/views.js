@@ -1206,6 +1206,7 @@ instance.web.View = instance.web.Widget.extend({
             });
         }
         return view_loaded.then(function(r) {
+            self.fields_view = r;
             self.trigger('view_loaded', r);
             // add css classes that reflect the (absence of) access rights
             self.$el.addClass('oe_view')
