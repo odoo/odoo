@@ -2227,7 +2227,9 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.we
         this.setupFocus(this.$('input'));
     },
     store_dom_value: function () {
-        if (!this.get('effective_readonly') && this.is_syntax_valid()) {
+        if (!this.get('effective_readonly')
+                && this.$('input').length
+                && this.is_syntax_valid()) {
             this.internal_set_value(
                 this.parse_value(
                     this.$('input').val()));
@@ -2547,7 +2549,7 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
         return this._super();
     },
     store_dom_value: function () {
-        if (!this.get('effective_readonly')) {
+        if (!this.get('effective_readonly') && this.$('input').length) {
             this.internal_set_value(
                 instance.web.parse_value(
                     this.$textarea.val(),
@@ -2720,7 +2722,7 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
         return this._super();
     },
     store_dom_value: function () {
-        if (!this.get('effective_readonly')) {
+        if (!this.get('effective_readonly') && this.$('input').length) {
             this.internal_set_value(
                 this.values[this.$('select')[0].selectedIndex][0]);
         }
