@@ -360,9 +360,9 @@
                                 <label string="-" attrs="{'invisible':[('product_uos','=',False)]}" class="oe_inline"/>
                                 <field name="product_uos" class="oe_inline"/>
                             </div>
+                            <label for="routing_id" class="oe_inline" groups="mrp.group_mrp_routings"/>
                             <div groups="mrp.group_mrp_routings">
-                                <label for="routing_id" class="oe_edit_only"/>
-                                <h2><field name="routing_id" class="oe_inline"/></h2>
+                            	<field name="routing_id" class="oe_inline"/>
                             </div>
                         </group>
                         <group>
@@ -623,7 +623,7 @@
                     <button name="%(act_mrp_product_produce)d" states="confirmed,ready,in_production" string="Produce" type="action" class="oe_highlight"/>
                     <button name="force_production" states="confirmed" string="Force Reservation" type="object"/>
                     <button name="force_production" states="picking_except" string="Force Reservation" type="object"/>
-                    <button name="button_produce" states="confirmed,ready" string="Mark as Started"/>
+                    <button name="button_produce" states="ready" string="Mark as Started"/>
                     <button name="button_recreate" states="picking_except" string="Recreate Picking"/>
                     <button name="button_cancel" states="draft,ready,in_production,picking_except" string="Cancel"/>
                     <button name="action_cancel" type="object" states="confirmed" string="Cancel"/>
@@ -687,7 +687,7 @@
                                                    groups="stock.group_production_lot"/>
                                             <button name="%(stock.move_scrap)d"
                                                 string="Scrap Products" type="action"
-                                                icon="gtk-convert" context="{'scrap': True}"
+                                                icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
                                                 states="draft,waiting,confirmed,assigned"/>
                                         </tree>
                                     </field>
@@ -704,7 +704,7 @@
                                            <button
                                                name="%(stock.move_scrap)d"
                                                string="Scrap Products" type="action"
-                                               icon="gtk-convert"
+                                               icon="terp-gtk-jump-to-ltr"
                                                states="done,cancel"/>
                                        </tree>
                                     </field>
@@ -726,7 +726,7 @@
                                                 icon="gtk-justify-fill"/>
                                             <button name="%(stock.move_scrap)d"
                                                 string="Scrap Products" type="action"
-                                                icon="gtk-convert" context="{'scrap': True}"
+                                                icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
                                                 states="draft,waiting,confirmed,assigned"/>
                                         </tree>
                                     </field>
@@ -744,7 +744,7 @@
                                             <button name="%(stock.track_line)d"
                                                  string="Split in Serial Numbers" type="action" icon="gtk-justify-fill" states="done,cancel"/>
                                             <button name="%(stock.move_scrap)d"
-                                                string="Scrap Products" type="action" icon="gtk-convert"
+                                                string="Scrap Products" type="action" icon="terp-gtk-jump-to-ltr"
                                                 states="done,cancel"/>
                                         </tree>
                                     </field>

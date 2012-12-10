@@ -33,13 +33,13 @@
         -->
         <record id="product_uom_unit" model="product.uom">
             <field name="category_id" ref="product_uom_categ_unit"/>
-            <field name="name">Unit</field>
+            <field name="name">Unit(s)</field>
             <field name="factor" eval="1.0"/>
             <field name="rounding" eval="1.0"/>
         </record>
        <record id="product_uom_dozen" model="product.uom">
             <field name="category_id" ref="product.product_uom_categ_unit"/>
-            <field name="name">Dozen</field>
+            <field name="name">Dozen(s)</field>
             <field name="factor_inv" eval="12"/>
             <field name="uom_type">bigger</field>
         </record>
@@ -55,13 +55,13 @@
             <field name="uom_type">smaller</field>
         </record>
         <record id="product_uom_hour" model="product.uom">
-            <field name="name">Hour</field>
+            <field name="name">Hour(s)</field>
             <field eval="uom_categ_wtime" name="category_id"/>
             <field name="factor" eval="8.0"/>
             <field name="uom_type">smaller</field>
         </record>
         <record id="product_uom_day" model="product.uom">
-            <field name="name">Day</field>
+            <field name="name">Day(s)</field>
             <field eval="uom_categ_wtime" name="category_id"/>
             <field name="factor" eval="1.0"/>
         </record>
@@ -91,7 +91,7 @@
             <field name="uom_type">smaller</field>
         </record>
         <record id="product_uom_litre" model="product.uom">
-            <field name="name">Litre</field>
+            <field name="name">Liter(s)</field>
             <field name="category_id" ref="product_uom_categ_vol"/>
             <field name="factor">1.0</field>
         </record>

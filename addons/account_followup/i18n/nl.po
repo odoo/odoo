@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-04 17:33+0000\n"
-"Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
+"PO-Revision-Date: 2012-12-09 18:16+0000\n"
+"Last-Translator: Harjan Talen <harjantalen@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-05 05:19+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-10 04:37+0000\n"
+"X-Generator: Launchpad (build 16341)\n"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
@@ -287,7 +287,7 @@ msgstr "Ik ben verantwoordelijk"
 #. module: account_followup
 #: sql_constraint:account_followup.followup:0
 msgid "Only one follow-up per company is allowed"
-msgstr ""
+msgstr "Per bedrijf is één betalingsherinnering mogelijk"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line4
@@ -310,6 +310,21 @@ msgid ""
 "Best Regards,\n"
 "            "
 msgstr ""
+"\n"
+"Geachte %(partner_name)s,\n"
+"\n"
+"Ondanks herhaaldelijk verzoek is onze vordering nog niet voldaan.\n"
+"\n"
+"Wanneer de volledige betaling niet binnen 8 dagen wordt voldaan zijn wij "
+"genoodzaakt verdere stappen te ondernemen zonder vermelding vooraf.\n"
+"\n"
+"Wij gaan er vanuit dat dit echter niet noodzakelijk zal zijn. Onderstaand "
+"een overzicht van de openstaande posten.\n"
+"\n"
+"Wanneer u vragen op opmerkingen hierover heeft dan horen wij dat graag.\n"
+"\n"
+"Met vriendelijke groet,\n"
+"            "
 
 #. module: account_followup
 #: help:account_followup.followup.line,send_letter:0
@@ -496,17 +511,17 @@ msgstr "Afgedrukt bericht"
 #. module: account_followup
 #: field:res.partner,latest_followup_level_id_without_lit:0
 msgid "Latest Follow-up Level without litigation"
-msgstr ""
+msgstr "Laatste herinnering voor het incasso-traject."
 
 #. module: account_followup
 #: view:res.partner:0
 msgid "Partners with Credits"
-msgstr ""
+msgstr "Relaties met openstaande facturen"
 
 #. module: account_followup
 #: help:account_followup.followup.line,send_email:0
 msgid "When processing, it will send an email"
-msgstr ""
+msgstr "Bij verwerking wordt een e-mail verzonden"
 
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
@@ -517,6 +532,7 @@ msgstr "Relatie voor betalingsherinnering"
 #: view:res.partner:0
 msgid "Print overdue payments report independent of follow-up line"
 msgstr ""
+"Druk overzicht openstaande posten af ongeacht status betalingsherinneringen."
 
 #. module: account_followup
 #: field:account_followup.followup.line,followup_id:0
@@ -614,7 +630,7 @@ msgstr "Geblokkeerd"
 #. module: account_followup
 #: sql_constraint:account_followup.followup.line:0
 msgid "Days of the follow-up levels must be different"
-msgstr ""
+msgstr "De dagen van de herinnerings-niveau's moeten van elkaar verschillen"
 
 #. module: account_followup
 #: view:res.partner:0
@@ -703,7 +719,7 @@ msgstr "onbekend"
 #: code:addons/account_followup/account_followup.py:245
 #, python-format
 msgid "Printed overdue payments report"
-msgstr ""
+msgstr "Druk het rapport achterstallige betalingen af"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_email_template
