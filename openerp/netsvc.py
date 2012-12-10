@@ -20,6 +20,9 @@
 #
 ##############################################################################
 
+#.apidoc title: Common Services: netsvc
+#.apidoc module-mods: member-order: bysource
+
 import errno
 import logging
 import logging.handlers
@@ -41,9 +44,23 @@ import openerp
 _logger = logging.getLogger(__name__)
 
 
+def close_socket(sock):
+    """ Closes a socket instance cleanly
 
-#.apidoc title: Common Services: netsvc
-#.apidoc module-mods: member-order: bysource
+    :param sock: the network socket to close
+    :type sock: socket.socket
+    """
+    try:
+        sock.shutdown(socket.SHUT_RDWR)
+    except socket.error, e:
+        # On OSX, socket shutdowns both sides if any side closes it
+        # causing an error 57 'Socket is not connected' on shutdown
+        # of the other side (or something), see
+        # http://bugs.python.org/issue4397
+        # note: stdlib fixed test, not behavior
+        if e.errno != errno.ENOTCONN or platform.system() not in ['Darwin', 'Windows']:
+            raise
+    sock.close()
 
 def abort_response(dummy_1, description, dummy_2, details):
     # TODO Replace except_{osv,orm} with these directly.
