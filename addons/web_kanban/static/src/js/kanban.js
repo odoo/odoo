@@ -364,6 +364,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                     scroll: false,
                     start: function(event, ui) {
                         start_index = ui.item.index();
+                        self.$('.oe_kanban_quick_create').css({ visibility: 'hidden' });
                         self.$('.oe_kanban_record').css({ visibility: 'hidden' });
                     },
                     stop: function(event, ui) {
@@ -382,6 +383,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                                 }
                             });
                         }
+                        self.$('.oe_kanban_quick_create').css({ visibility: 'visible' });
                         self.$('.oe_kanban_record').css({ visibility: 'visible' });
                     }
                 });
