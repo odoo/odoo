@@ -537,7 +537,7 @@ class Root(object):
         """
         statics = {}
         for addons_path in openerp.modules.module.ad_paths:
-            for module in os.listdir(addons_path):
+            for module in sorted(os.listdir(addons_path)):
                 if module not in addons_module:
                     manifest_path = os.path.join(addons_path, module, '__openerp__.py')
                     path_static = os.path.join(addons_path, module, 'static')
