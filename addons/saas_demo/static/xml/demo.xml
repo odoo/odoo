@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="demo_template" xml:space="preserve">
+    <!-- add a string with a red bar on top -->
+    <t t-extend="WebClient">
+        <t t-jquery="table.oe_webclient" t-operation="prepend">
+            <tr>
+                <td colspan="2" class="demo_subscribe_bar">
+                    <span>
+                        This is a shared demo version.  
+                    </span>
+                </td>
+            </tr>
+        </t>
+    </t>
+    
+    <!-- clear user menu -->
+    <t t-extend="UserMenu">
+        <t t-jquery="span" t-operation="replace"></t>
+    </t>
+
+    <t t-extend="WebClient">
+        <t t-jquery="a.oe_logo" t-operation="replace">
+            <a class='oe_logo' href='https://www.v7.openerp.com/'>
+                <img src='web/static/src/img/logo.png'></img>
+            </a>
+        </t>
+    </t>
+    
+</templates>

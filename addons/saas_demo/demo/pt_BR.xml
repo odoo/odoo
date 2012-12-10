@@ -1,0 +1,1283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <!-- install language pt_BR -->
+        <record model="base.language.install" id="language_installer_br">
+            <field name="lang">pt_BR</field>
+        </record>
+        <function model="base.language.install" name="lang_install"
+            eval="[ref('language_installer_br')], {}"/>
+
+        <!-- Demo Partner -->
+        <record id="partner_demo_br" model="res.partner">
+            <field name="name">João Gómez</field> <!-- trad -->
+            <field name="company_id" ref="base.main_company"/>
+            <field name="customer" eval="False"/>
+            <field name="email">j.gómez@example.com</field> <!-- trad -->
+            <field name="tz">Europe/Lisbon</field>
+            <field name="notification_email_send">none</field>
+        </record>
+
+        <!-- Demo User"-->
+        <!-- WARNING : The Translation must be loaded -->
+        <record model="res.users" id="user_demo_br">
+            <field name="name">João Gómez</field> <!-- trad -->
+            <field name="login">demo_pt_BR</field> <!-- trad -->
+            <field name="password">demo</field> <!-- trad -->
+            <field name="signature">--
+Sr Gómez
+            </field>
+            <field name="groups_id" eval="[
+                (4, ref('base.group_sale_manager')),
+                (4, ref('fleet.group_fleet_user')),
+                (4, ref('account.group_account_user')),
+                (4, ref('mrp.group_mrp_user')),
+                (4, ref('project.group_project_user')),
+                (4, ref('purchase.group_purchase_user')),
+                (4, ref('stock.group_stock_user')),
+                (4, ref('lunch.group_lunch_user')),
+                (4, ref('point_of_sale.group_pos_user')),
+                (4, ref('base.group_tool_user')),
+                ]"/>
+            <field name="lang">pt_BR</field> <!-- change -->
+            <field name="partner_id" ref="partner_demo_br"/> <!-- change -->
+            <field name="company_id" ref="base.main_company"/>
+            <field name="tz">Europe/Lisbon</field>
+            <field name="ean13">0420100000005</field>
+            <field name="image">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
+            </field>
+        </record>
+
+        <!-- POINT OF SALE -->
+        <record id="pos_config_demo_br" model="pos.config">
+            <field name="name">João Gómez</field>
+            <field name="journal_ids" eval="[(6, 0, [ref('account.cash_journal'), ref('account.bank_journal')])]" />
+        </record>
+        <record id="pos_session_demo_br" model="pos.session">
+            <field name="user_id" ref="user_demo_br"/>
+            <field name="config_id" ref="pos_config_demo_br"/>
+        </record>
+        <record model="res.users" id="user_demo_br">
+            <field name="pos_config" ref="pos_config_demo_br"/>
+        </record>
+
+        <!-- PROJECT -->
+        <record id="project.project_project_1" model="project.project">
+            <field name="members" eval="[(4,ref('user_demo_br'))]"/>
+        </record>
+        <record id="project.project_project_2" model="project.project">
+            <field name="members" eval="[(4,ref('user_demo_br'))]"/>
+        </record>
+        <record id="project.project_project_3" model="project.project">
+            <field name="members" eval="[(4,ref('user_demo_br'))]"/>
+        </record>
+        <record id="project.project_project_4" model="project.project">
+            <field name="members" eval="[(4,ref('user_demo_br'))]"/>
+        </record>
+        <record id="project.project_project_5" model="project.project">
+            <field name="members" eval="[(4,ref('user_demo_br'))]"/>
+        </record>
+
+        <!-- HUMAN RESOURCES-->
+        <record id="hr.employee_demo_br" model="hr.employee">
+            <field name="name">João Gómez</field>
+            <field name="user_id" ref="user_demo_br"/>
+            <field name="calendar_id" ref="resource.timesheet_group1"/>
+            <field name="category_ids" eval="[(6, 0, [ref('hr.employee_category_4')])]"/>
+            <field name="product_id" ref="product.product_product_consultant"/>
+            <field name="journal_id" ref="hr_timesheet.analytic_journal"/>
+            <field name="work_location">Lisbon</field>
+            <field name="work_email">j.gómez@example.com</field>
+            <field name="image">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
+            </field>
+        </record>
+
+        <!-- MAIL -->
+        <record id="mail.msg_discus3" model="mail.message">
+            <field name="partner_ids" eval="[(4, ref('partner_demo_br'))]"/>
+        </record>
+        <record id="mail.msg_discus4" model="mail.message">
+            <field name="partner_ids" eval="[(4, ref('partner_demo_br'))]"/>
+        </record>
+        <record id="mail.msg_discus5" model="mail.message">
+            <field name="partner_ids" eval="[(4, ref('partner_demo_br'))]"/>
+        </record>
+        <record id="mail.msg_discus6" model="mail.message">
+            <field name="partner_ids" eval="[(4, ref('partner_demo_br'))]"/>
+        </record>
+
+        <record id="mail_notification_demo_br_discuss3" model="mail.notification">
+            <field name="message_id" ref="mail.msg_discus3"/>
+            <field name="partner_id" ref="partner_demo_br"/>
+        </record>
+        <record id="mail_notification_demo_br_discuss3_1" model="mail.notification">
+            <field name="message_id" ref="mail.msg_discus3_1"/>
+            <field name="partner_id" ref="partner_demo_br"/>
+        </record>
+        <record id="mail_notification_demo_br_discuss4" model="mail.notification">
+            <field name="message_id" ref="mail.msg_discus4"/>
+            <field name="partner_id" ref="partner_demo_br"/>
+        </record>
+        <record id="mail_notification_demo_br_discuss5" model="mail.notification">
+            <field name="message_id" ref="mail.msg_discus5"/>
+            <field name="partner_id" ref="partner_demo_br"/>
+        </record>
+        <record id="mail_notification_demo_br_discuss6" model="mail.notification">
+            <field name="message_id" ref="mail.msg_discus6"/>
+            <field name="partner_id" ref="partner_demo_br"/>
+        </record>
+
+        <record id="mail_notification_demo_br_mail" model="mail.notification">
+            <field name="message_id" ref="mail.module_install_notification"/>
+            <field name="partner_id" ref="partner_demo_br"/>
+        </record>
+
+        <!-- NOTE -->
+        <record id="note.note_1" model="note.note">
+            <field name="stage_id" model="note.stage" search="[('sequence','=',1),('user_id','=', user_demo_br)]"/>
+        </record>
+
+        <record id="note.note_2" model="note.note">
+            <field name="stage_id" model="note.stage" search="[('sequence','=',1),('user_id','=', user_demo_br)]"/>
+        </record>
+
+        <record id="note.note_5" model="note.note">
+            <field name="stage_id" model="note.stage" search="[('sequence','=',2),('user_id','=', user_demo_br)]"/>
+        </record>
+
+        <record id="note.note_9" model="note.note">
+            <field name="stage_id" model="note.stage" search="[('sequence','=',2),('user_id','=', user_demo_br)]"/>
+        </record>
+
+        <record id="note.note_12" model="note.note">
+            <field name="stage_id" model="note.stage" search="[('sequence','=',4),('user_id','=', user_demo_br)]"/>
+        </record>
+
+        <record id="note_demo_br_1" model="mail.followers">
+            <field name="res_model">note.note</field>
+            <field name="res_id" ref="note.note_1"/>
+            <field name="partner_id" ref="partner_demo_br"/>
+        </record>
+
+        <record id="note_demo_br_2" model="mail.followers">
+            <field name="res_model">note.note</field>
+            <field name="res_id" ref="note.note_2"/>
+            <field name="partner_id" ref="partner_demo_br"/>
+        </record>
+
+        <record id="note_demo_br_5" model="mail.followers">
+            <field name="res_model">note.note</field>
+            <field name="res_id" ref="note.note_5"/>
+            <field name="partner_id" ref="partner_demo_br"/>
+        </record>
+
+        <record id="note_demo_br_9" model="mail.followers">
+            <field name="res_model">note.note</field>
+            <field name="res_id" ref="note.note_9"/>
+            <field name="partner_id" ref="partner_demo_br"/>
+        </record>
+
+        <record id="note_demo_br_12" model="mail.followers">
+            <field name="res_model">note.note</field>
+            <field name="res_id" ref="note.note_12"/>
+            <field name="partner_id" ref="partner_demo_br"/>
+        </record>
+
+        <!-- LUNCH -->
+        <record model="lunch.order" id="order_1_br">
+            <field name="user_id" ref="user_demo_br"/>
+            <field name="date" eval="time.strftime('2012-10-23')"/>
+            <field name="order_line_ids" eval="[]"/>
+            <field name="state">new</field>
+        </record>
+
+        <record model="lunch.order" id="order_2_br">
+            <field name="user_id" ref="user_demo_br"/>
+            <field name="date" eval="time.strftime('2012-10-22')"/>
+            <field name="order_line_ids" eval="[]"/>
+            <field name="state">confirmed</field>
+        </record>
+
+        <record model="lunch.order" id="order_3_br">
+            <field name="user_id" ref="user_demo_br"/>
+            <field name="date" eval="time.strftime('2012-10-24')"/>
+            <field name="order_line_ids" eval="[]"/>
+            <field name="state">partially</field>
+        </record>
+
+        <record model="lunch.order.line" id="order_line_1_br">
+            <field name="user_id" ref="user_demo_br"/>
+            <field name="product_id" ref="lunch.product_Bolognese"/>
+            <field name="date" eval="time.strftime('2012-10-23')"/>
+            <field name="state">new</field>
+            <field name="supplier" ref="lunch.partner_pizza_inn"/>
+            <field name="note">+Queijo emmental</field>
+            <field name="order_id" ref="order_1_br"/>
+        </record>
+
+        <record model="lunch.order.line" id="order_line_2_br">
+            <field name="user_id" ref="user_demo_br"/>
+            <field name="product_id" ref="lunch.product_italiana"/>
+            <field name="date" eval="time.strftime('2012-10-22')"/>
+            <field name="state">confirmed</field>
+            <field name="supplier" ref="lunch.partner_pizza_inn"/>
+            <field name="note">+cogumelos</field>
+            <field name="order_id" ref="order_2_br"/>
+        </record>
+
+        <record model="lunch.order.line" id="order_line_3_br">
+            <field name="user_id" ref="user_demo_br"/>
+            <field name="product_id" ref="lunch.product_gouda"/>
+            <field name="date" eval="time.strftime('2012-10-24')"/>
+            <field name="state">cancelled</field>
+            <field name="supplier" ref="lunch.partner_coin_gourmand"/>
+            <field name="note">+Alface +Tomates +Pepinos</field>
+            <field name="order_id" ref="order_3_br"/>
+        </record>
+
+        <record model="lunch.order.line" id="order_line_4_br">
+            <field name="user_id" ref="user_demo_br"/>
+            <field name="product_id" ref="lunch.product_chicken_curry"/>
+            <field name="date" eval="time.strftime('2012-10-24')"/>
+            <field name="state">confirmed</field>
+            <field name="supplier" ref="lunch.partner_coin_gourmand"/>
+            <field name="note">+Alface +Tomates +Ovos</field>
+            <field name="order_id" ref="order_3_br"/>
+        </record>
+    
+        <record model="lunch.cashmove" id="cashmove_1_br">
+            <field name="user_id" ref="user_demo_br"/>
+            <field name="date" eval="time.strftime('2012-10-23')"/>
+            <field name="description">Pizza Italiana</field>
+            <field name="amount">-7.40</field>
+            <field name="order_id" ref="order_line_2_br"/>
+            <field name="state">order</field>
+        </record>
+
+        <record model="lunch.cashmove" id="cashmove_2_br">
+            <field name="user_id" ref="user_demo_br"/>
+            <field name="date" eval="time.strftime('2012-10-24')"/>
+            <field name="description">Chicken curry</field>
+            <field name="amount">-2.60</field>
+            <field name="order_id" ref="order_line_3_br"/>
+            <field name="state">order</field>
+        </record>
+
+        <record model="lunch.cashmove" id="cashmove_3_br">
+            <field name="user_id" ref="user_demo_br"/>
+            <field name="date" eval="time.strftime('2012-10-24')"/>
+            <field name="description">Pagamento: 5 tickets de refeição (6 €)</field>
+            <field name="amount">30</field>
+            <field name="state">payment</field>
+        </record>
+
+        <!-- FLEET -->
+        <record id="vehicle_1_br" model="fleet.vehicle">
+          <field name="license_plate">1-ACK-205</field>
+          <field name="vin_sn">5454541</field>
+          <field name="model_id" ref="fleet.model_astra"/>
+          <field name="color">Black</field>
+          <field name="location">Grand-Rosiere</field>
+          <field name="doors">5</field>
+          <field name="driver_id" ref="partner_demo_br" />
+          <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
+          <field name="state" ref="fleet.vehicle_state_active"/>
+          <field name="odometer_unit">kilometers</field>
+          <field name="car_value">20000</field>
+          <field eval="[(6,0,[ref('fleet.vehicle_tag_leasing'),ref('fleet.vehicle_tag_break'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
+      </record>
+
+      <record id="log_odometer_1_br" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1_br" />
+          <field name="date">2012-01-01</field>
+          <field name="value">0</field>
+      </record>
+
+       <record id="log_fuel_1_br" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="partner_demo_br" />
+          <field name="vehicle_id" ref="vehicle_1_br" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-01-01</field>
+          <field name="liter">40</field>
+          <field name="price_per_liter">1.3</field>
+          <field name="amount">52</field>
+          <field name="inv_ref">67458</field>
+          <field name="odometer_id" ref="log_odometer_1_br" />
+          <field name="notes">First refueling</field>
+      </record>
+
+      <record id="log_odometer_2_br" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1_br" />
+          <field name="date">2012-02-11</field>
+          <field name="value">658</field>
+      </record>
+
+      <record id="log_fuel_2_br" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="partner_demo_br" />
+          <field name="vehicle_id" ref="vehicle_1_br" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-02-11</field>
+          <field name="liter">50</field>
+          <field name="price_per_liter">1.3</field>
+          <field name="amount">65</field>
+          <field name="inv_ref">455812</field>
+          <field name="odometer_id" ref="log_odometer_2_br" />
+          <field name="notes">Second refueling of the car</field>
+      </record>
+
+      <record id="log_odometer_3_br" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1_br" />
+          <field name="date">2012-03-23</field>
+          <field name="value">1360</field>
+      </record>
+
+       <record id="log_fuel_3_br" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="partner_demo_br" />
+          <field name="vehicle_id" ref="vehicle_1_br" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-03-23</field>
+          <field name="liter">45</field>
+          <field name="price_per_liter">1.32</field>
+          <field name="amount">59.4</field>
+          <field name="inv_ref">45199877</field>
+          <field name="odometer_id" ref="log_odometer_3_br" />
+          <field name="notes">Some notes ...</field>
+      </record>
+
+      <record id="log_odometer_4_br" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1_br" />
+          <field name="date">2012-04-5</field>
+          <field name="value">2044</field>
+      </record>
+
+      <record id="log_fuel_4_br" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="partner_demo_br" />
+          <field name="vehicle_id" ref="vehicle_1_br" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-04-5</field>
+          <field name="liter">55</field>
+          <field name="price_per_liter">1.32</field>
+          <field name="amount">72.6</field>
+          <field name="inv_ref">654</field>
+          <field name="odometer_id" ref="log_odometer_4_br" />
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_5_br" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1_br" />
+          <field name="date">2012-04-25</field>
+          <field name="value">2756</field>
+      </record>
+
+      <record id="log_fuel_5_br" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="partner_demo_br" />
+          <field name="vehicle_id" ref="vehicle_1_br" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-04-25</field>
+          <field name="liter">40</field>
+          <field name="price_per_liter">1.35</field>
+          <field name="amount">54</field>
+          <field name="inv_ref">55488</field>
+          <field name="odometer_id" ref="log_odometer_5_br" />
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_6_br" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1_br" />
+          <field name="date">2012-05-15</field>
+          <field name="value">3410</field>
+      </record>
+
+      <record id="log_fuel_6_br" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="partner_demo_br" />
+          <field name="vehicle_id" ref="vehicle_1_br" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-05-15</field>
+          <field name="liter">55.8</field>
+          <field name="price_per_liter">1.35</field>
+          <field name="amount">75.33</field>
+          <field name="inv_ref">4952</field>
+          <field name="odometer_id" ref="log_odometer_6_br" />
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_7_br" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1_br" />
+          <field name="date">2012-06-11</field>
+          <field name="value">3750</field>
+      </record>
+
+      <record id="log_fuel_7_br" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="partner_demo_br" />
+          <field name="vehicle_id" ref="vehicle_1_br" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-06-11</field>
+          <field name="liter">55.8</field>
+          <field name="price_per_liter">1.35</field>
+          <field name="amount">75.33</field>
+          <field name="inv_ref">4952</field>
+          <field name="odometer_id" ref="log_odometer_7_br" />
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_8_br" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1_br" />
+          <field name="date">2012-07-02</field>
+          <field name="value">4115</field>
+      </record>
+
+      <record id="log_fuel_8_br" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="partner_demo_br" />
+          <field name="vehicle_id" ref="vehicle_1_br" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-07-02</field>
+          <field name="liter">47.8</field>
+          <field name="price_per_liter">1.35</field>
+          <field name="amount">64.53</field>
+          <field name="inv_ref">15151</field>
+          <field name="odometer_id" ref="log_odometer_8_br" />
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_9_br" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1_br" />
+          <field name="date">2012-07-28</field>
+          <field name="value">4750</field>
+      </record>
+
+      <record id="log_fuel_9_br" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="partner_demo_br" />
+          <field name="vehicle_id" ref="vehicle_1_br" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-07-28</field>
+          <field name="liter">25</field>
+          <field name="price_per_liter">1.35</field>
+          <field name="amount">33.75</field>
+          <field name="inv_ref">874195</field>
+          <field name="odometer_id" ref="log_odometer_9_br" />
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_10_br" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1_br" />
+          <field name="date">2012-08-17</field>
+          <field name="value">5171</field>
+      </record>
+
+       <record id="log_fuel_10_br" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="partner_demo_br" />
+          <field name="vehicle_id" ref="vehicle_1_br" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-08-17</field>
+          <field name="liter">51.2</field>
+          <field name="price_per_liter">1.35</field>
+          <field name="amount">69.12</field>
+          <field name="inv_ref">4431</field>
+          <field name="odometer_id" ref="log_odometer_10_br" />
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_11_br" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1_br" />
+          <field name="date">2012-09-11</field>
+          <field name="value">5873</field>
+      </record>
+
+      <record id="log_fuel_11_br" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="partner_demo_br" />
+          <field name="vehicle_id" ref="vehicle_1_br" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-09-11</field>
+          <field name="liter">45.36</field>
+          <field name="price_per_liter">1.35</field>
+          <field name="amount">61.236</field>
+          <field name="inv_ref">11234</field>
+          <field name="odometer_id" ref="log_odometer_11_br" />
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_12_br" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1_br" />
+          <field name="date">2012-10-06</field>
+          <field name="value">6571</field>
+      </record>
+
+      <record id="log_fuel_12_br" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="partner_demo_br" />
+          <field name="vehicle_id" ref="vehicle_1_br" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-10-06</field>
+          <field name="liter">53.4</field>
+          <field name="price_per_liter">1.37</field>
+          <field name="amount">73.158</field>
+          <field name="inv_ref">798846</field>
+          <field name="odometer_id" ref="log_odometer_12_br" />
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_13_br" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1_br" />
+          <field name="date">2012-11-02</field>
+          <field name="value">7954</field>
+      </record>
+
+      <record id="log_fuel_13_br" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="partner_demo_br" />
+          <field name="vehicle_id" ref="vehicle_1_br" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-11-02</field>
+          <field name="liter">48.5</field>
+          <field name="price_per_liter">1.37</field>
+          <field name="amount">66.445</field>
+          <field name="inv_ref">7954</field>
+          <field name="odometer_id" ref="log_odometer_13_br" />
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_14_br" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1_br" />
+          <field name="date">2012-12-02</field>
+          <field name="value">7981</field>
+      </record>
+
+      <record id="log_fuel_14_br" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="partner_demo_br" />
+          <field name="vehicle_id" ref="vehicle_1_br" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-12-02</field>
+          <field name="liter">35</field>
+          <field name="price_per_liter">1.4</field>
+          <field name="amount">49</field>
+          <field name="inv_ref">545</field>
+          <field name="odometer_id" ref="log_odometer_14_br" />
+          <field name="notes">Some notes</field>
+      </record>
+
+       <record id="log_odometer_29_br" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1_br" />
+          <field name="date">2012-10-01</field>
+          <field name="value">1000</field>
+      </record>
+
+      <record id="log_service_3_br" model="fleet.vehicle.log.services" >
+        <field name="vehicle_id" ref="vehicle_1_br" />
+        <field name="amount">513</field>
+        <field name="cost_subtype_id" ref="fleet.type_service_service_8"/>
+        <field name="date">2012-10-15</field>
+        <field name="purchaser_id" ref="partner_demo_br" />
+        <field name="inv_ref">124</field>
+        <field name="vendor_id" ref="base.res_partner_13" />
+        <field name="notes">Maintenance</field>
+      </record>
+
+      <record id="log_contract_2_br" model="fleet.vehicle.log.contract" >
+        <field name="vehicle_id" ref="vehicle_1_br" />
+        <field name="amount">0</field>
+        <field name="cost_generated">150</field>
+        <field name="cost_frequency">weekly</field>
+        <field name="cost_subtype_id" ref="fleet.type_contract_leasing"/>
+        <field name="date" eval="time.strftime('%Y-01-01')" />
+        <field name="start_date" eval="time.strftime('%Y-01-01')" />
+        <field name="expiration_date" eval="(DateTime.now() + timedelta(-1)).strftime('%Y-%m-%d')" />
+        <field name="purchaser_id" ref="partner_demo_br" />
+        <field name="insurer_id" ref="base.res_partner_13" />
+        <field name="notes">Weekly leasing contract</field>
+      </record>
+
+      <record id="contract_cost_21_br" model="fleet.vehicle.cost" >
+        <field name="vehicle_id" ref="vehicle_1_br" />
+        <field name="amount">50</field>
+        <field name="cost_subtype_id" ref="fleet.type_service_service_2"/>
+        <field name="date">2012-01-01</field>
+        <field name="parent_id" ref="fleet.log_contract_2_fleet_vehicle_cost" />
+      </record>
+
+      <record id="contract_cost_22_br" model="fleet.vehicle.cost" >
+        <field name="vehicle_id" ref="vehicle_1_br" />
+        <field name="amount">25</field>
+        <field name="cost_subtype_id" ref="fleet.type_service_service_3"/>
+        <field name="date">2012-01-01</field>
+        <field name="parent_id" ref="fleet.log_contract_2_fleet_vehicle_cost" />
+      </record>
+
+      <record id="contract_cost_23_br" model="fleet.vehicle.cost" >
+        <field name="vehicle_id" ref="vehicle_1_br" />
+        <field name="amount">100</field>
+        <field name="cost_subtype_id" ref="fleet.type_contract_omnium"/>
+        <field name="date">2012-01-01</field>
+        <field name="parent_id" ref="fleet.log_contract_2_fleet_vehicle_cost" />
+      </record>
+    </data>
+</openerp>
