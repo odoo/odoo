@@ -436,7 +436,8 @@
         </tr>
         <tr>
             <td class="oe_leftbar" valign="top">
-                <a class="oe_logo" t-attf-href="/?ts=#{Date.now()}"><img t-att-src='_s + "/web/static/src/img/logo.png"'/></a>
+                <t t-set="debug" t-value="__debug__ ? '&amp;debug' : ''"/>
+                <a class="oe_logo" t-attf-href="/?ts=#{Date.now()}#{debug}"><img t-att-src='_s + "/web/static/src/img/logo.png"'/></a>
                 <div class="oe_secondary_menus_container"/>
                 <div class="oe_footer">
                     Powered by <a href="http://www.openerp.com" target="_blank"><span>OpenERP</span></a>
