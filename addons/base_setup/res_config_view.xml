@@ -105,7 +105,8 @@
                             </div>
                         </group>
                     </div>
-                    <div name="customer feature">
+                    <div name="customer feature" attrs="{'invisible': [('module_sale','=',False)]}">
+                        <field name="module_sale" invisible="1"/>
                         <separator string="Quotations and Sales Orders"/>
                         <group name="Customer">
                             <label for="id" string="Customer Features"/>

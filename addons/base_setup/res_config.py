@@ -60,6 +60,7 @@ class sale_config_settings(osv.osv_memory):
         'module_web_linkedin': fields.boolean('Get contacts automatically from linkedIn',
             help="""When you create a new contact (person or company), you will be able to load all the data from LinkedIn (photos, address, etc)."""),
         'module_crm': fields.boolean('CRM'),
+        'module_sale' : fields.boolean('SALE'),
         'module_plugin_thunderbird': fields.boolean('Enable Thunderbird plug-in',
             help="""The plugin allows you archive email and its attachments to the selected
                 OpenERP objects. You can select a partner, or a lead and
