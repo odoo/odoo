@@ -121,6 +121,7 @@ setuptools.setup(
           'pyyaml',
           'reportlab', # windows binary pypi.python.org/pypi/reportlab
           'simplejson',
+          'unittest2',
           'vatnumber',
           'vobject',
           'werkzeug',
