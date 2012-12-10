@@ -94,9 +94,12 @@ class account_coda_import(osv.osv_memory):
                 if bank_ids and len(bank_ids) > 0:
                     bank_accs = self.pool.get('res.partner.bank').browse(cr, uid, bank_ids)
                     for bank_acc in bank_accs:
-                        statement['journal_id'] = bank_acc.journal_id
-                        if (statement['journal_id'].currency and statement['journal_id'].currency.name != statement['currency']) and (not statement['journal_id'].currency and statement['journal_id'].company_id.currency_id.name != statement['currency']):
+                        if (bank_acc.journal_id.currency and bank_acc.journal_id.currency.name != statement['currency']) and (not bank_acc.journal_id.currency and bank_acc.journal_id.company_id.currency_id.name != statement['currency']):
                             raise not_found_except
+                        else:
+                            statement['journal_id'] = bank_acc.journal_id
+                            statement['bank_account'] = bank_acc
+                            break
                 else:
                     raise not_found_except
                 statement['description'] = rmspaces(line[90:125])
@@ -225,6 +228,15 @@ class account_coda_import(osv.osv_memory):
                 if not statement['balance_end_real']:
                     statement['balance_end_real'] = statement['balance_start'] + statement['balancePlus'] - statement['balanceMin']
         for i, statement in enumerate(statements):
+            balance_start_check_date = (len(statement['lines']) > 0 and statement['lines'][0]['entryDate']) or statement['date']
+            cr.execute('SELECT balance_end_real \
+                FROM account_bank_statement \
+                WHERE journal_id = %s and date <= %s \
+                ORDER BY date DESC,id DESC LIMIT 1', (statement['journal_id'].id, balance_start_check_date))
+            print statement['bank_account'].balance_start_enforce
+            res = cr.fetchone()
+            balance_start_check = res and res[0]
+            print balance_start_check
             statement['coda_note'] = ''
             data = {
                 'name': '[' + statement['date'] + ']' + statement['description'],
