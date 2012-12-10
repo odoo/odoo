@@ -75,7 +75,7 @@
         <t t-foreach='widget.attachment_ids' t-as='attachment'>
             <t t-if="attachment.filetype !== 'webimage'">
                 <div t-attf-class="oe_attachment #{attachment.upload ? 'oe_uploading' : ''}">
-                    <a t-att-href='attachment.url'>
+                    <a t-att-href='attachment.url' target="_blank">
                         <img t-att-src="'/mail/static/src/img/mimetypes/' + attachment.filetype + '.png'"></img>
                         <div class='oe_name'><t t-raw='attachment.name' /></div>
                     </a>
@@ -87,7 +87,7 @@
             </t>
             <t t-if="attachment.filetype === 'webimage'">
                 <div t-attf-class="oe_attachment oe_preview #{attachment.upload ? 'oe_uploading' : ''}">
-                    <a t-att-href='attachment.url'>
+                    <a t-att-href='attachment.url' target="_blank">
                         <img t-att-src="widget.attachments_resize_image(attachment.id, [100,80])"></img>
                         <div class='oe_name'><t t-raw='attachment.name' /></div>
                     </a>

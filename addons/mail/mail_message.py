@@ -28,6 +28,12 @@ from openerp.osv import osv, orm, fields
 from openerp.tools import html_email_clean
 from openerp.tools.translate import _
 
+# import for downloading attachments
+import werkzeug.wrappers
+import werkzeug.exceptions
+import base64
+import urllib2
+
 _logger = logging.getLogger(__name__)
 
 try:
@@ -118,16 +124,6 @@ class mail_message(osv.Model):
             res.append((message.id, self._shorten_name(name.lstrip(' :'))))
         return res
 
-    def _download_attachment(self, cr, uid, ids, name, arg, context=None):
-        """ Return the content of linked attachments. """
-        result = dict.fromkeys(ids, [])
-        ir_attachment_obj = self.pool.get('ir.attachment')
-        for message in self.read(cr, uid, ids, ['attachment_ids'], context=context):
-            if message.get('attachment_ids'):
-                result[message['id']] = ir_attachment_obj.read(cr, SUPERUSER_ID, list(message.get('attachment_ids')), ['id', 'datas_fname', 'datas', 'type'], context=context)
-        
-        return result
-
     _columns = {
         'type': fields.selection([
                         ('email', 'Email'),
@@ -147,7 +143,6 @@ class mail_message(osv.Model):
             help='Partners that have a notification pushing this message in their mailboxes'),
         'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel',
             'message_id', 'attachment_id', 'Attachments'),
-        'download_attachment_ids':fields.function(_download_attachment, string='Attachments content'),
         'parent_id': fields.many2one('mail.message', 'Parent Message', select=True,
             ondelete='set null', help="Initial thread message."),
         'child_ids': fields.one2many('mail.message', 'parent_id', 'Child Messages'),
@@ -205,6 +200,22 @@ class mail_message(osv.Model):
             else:
                 self.write(cr, SUPERUSER_ID, message.get('id'), {'vote_user_ids': [(3, uid)]}, context=context)
         return new_has_voted or False
+
+    #------------------------------------------------------
+    # download an attachment
+    #------------------------------------------------------
+
+    def download_attachment(self, cr, uid, id_message, attachment_id, context=None):
+        """ Return the content of linked attachments. """
+        message  = self.read(cr, uid, [id_message], ['attachment_ids'], context=context)[0]
+        if message and message.get('attachment_ids') and attachment_id in message.get('attachment_ids'):
+            attachment = self.pool.get('ir.attachment').read(cr, SUPERUSER_ID, [attachment_id], ['id', 'datas_fname', 'datas'], context=context)[0]
+            if attachment['datas_fname'] and attachment['datas']:
+                return {
+                    'base64': attachment['datas'],
+                    'filename': attachment['datas_fname'],
+                }
+        return False
 
     #------------------------------------------------------
     # Favorite

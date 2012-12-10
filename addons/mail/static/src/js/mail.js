@@ -29,8 +29,13 @@ openerp.mail = function (session) {
         },
 
         /* Get the url of an attachment {'id': id} */
-        get_attachment_url: function (session, id_message, id_attachment) {
-            return session.url('/web/binary/mail', {'id_message': id_message, 'id_attachment': id_attachment});
+        get_attachment_url: function (session, message_id, attachment_id) {
+            return session.url('/web/binary/download_attachment', {
+                'model': 'mail.message',
+                'id': message_id,
+                'method': 'download_attachment',
+                'attachment_id': attachment_id
+            });
         },
 
         /**
