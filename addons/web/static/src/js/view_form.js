@@ -194,7 +194,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             }
             this.sidebar.add_items('other', _.compact([
                 self.is_action_enabled('delete') && { label: _t('Delete'), callback: self.on_button_delete },
-                self.is_action_enabled('create') && { label: _t('Duplicate'), callback: self.on_button_duplicate },
+                self.is_action_enabled('create') && { label: _t('Duplicate'), callback: self.on_button_duplicate }
             ]));
         }
 
@@ -2216,19 +2216,26 @@ instance.web.form.ReinitializeFieldMixin =  _.extend({}, instance.web.form.Reini
 instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
     template: 'FieldChar',
     widget_class: 'oe_form_field_char',
+    events: {
+        'change input': 'store_dom_value',
+    },
     init: function (field_manager, node) {
         this._super(field_manager, node);
         this.password = this.node.attrs.password === 'True' || this.node.attrs.password === '1';
     },
     initialize_content: function() {
-        var self = this;
-        var $input = this.$el.find('input');
-        $input.change(function() {
-            if(self.is_syntax_valid()){
-                self.internal_set_value(self.parse_value($input.val()));
-            }
-        });
-        this.setupFocus($input);
+        this.setupFocus(this.$('input'));
+    },
+    store_dom_value: function () {
+        if (!this.get('effective_readonly') && this.is_syntax_valid()) {
+            this.internal_set_value(
+                this.parse_value(
+                    this.$('input').val()));
+        }
+    },
+    commit_value: function () {
+        this.store_dom_value();
+        return this._super();
     },
     render_value: function() {
         var show_value = this.format_value(this.get('value'), '');
@@ -2244,7 +2251,7 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.we
     is_syntax_valid: function() {
         if (!this.get("effective_readonly") && this.$("input").size() > 0) {
             try {
-                var value_ = this.parse_value(this.$el.find('input').val(), '');
+                this.parse_value(this.$('input').val(), '');
                 return true;
             } catch(e) {
                 return false;
@@ -2363,6 +2370,9 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
     template: "web.datepicker",
     jqueryui_object: 'datetimepicker',
     type_of_date: "datetime",
+    events: {
+        'change .oe_datepicker_master': 'change_datetime',
+    },
     init: function(parent) {
         this._super(parent);
         this.name = parent.name;
@@ -2371,9 +2381,6 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
         var self = this;
         this.$input = this.$el.find('input.oe_datepicker_master');
         this.$input_picker = this.$el.find('input.oe_datepicker_container');
-        this.$input.change(function(){
-            self.change_datetime();
-        });
         
         this.picker({
             onClose: this.on_picker_select,
@@ -2447,7 +2454,10 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
             this.set_value_from_ui_();
             this.trigger("datetime_changed");
         }
-    }
+    },
+    commit_value: function () {
+        this.change_datetime();
+    },
 });
 
 instance.web.DateWidget = instance.web.DateTimeWidget.extend({
@@ -2512,6 +2522,14 @@ instance.web.form.FieldDate = instance.web.form.FieldDatetime.extend({
 
 instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
     template: 'FieldText',
+    events: {
+        'keyup': function (e) {
+            if (e.which === $.ui.keyCode.ENTER) {
+                e.stopPropagation();
+            }
+        },
+        'change textarea': 'store_dom_value',
+    },
     init: function (field_manager, node) {
         this._super(field_manager, node);
     },
@@ -2519,19 +2537,22 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
         var self = this;
         this.$textarea = this.$el.find('textarea');
         this.default_height = this.$textarea.css('height');
-        if (!this.get("effective_readonly")) {
-            this.$textarea.change(_.bind(function() {
-                self.internal_set_value(instance.web.parse_value(self.$textarea.val(), self));
-            }, this));
-        } else {
+        if (this.get("effective_readonly")) {
             this.$textarea.attr('disabled', 'disabled');
         }
-        this.$el.keyup(function (e) {
-            if (e.which === $.ui.keyCode.ENTER) {
-                e.stopPropagation();
-            }
-        });
         this.setupFocus(this.$textarea);
+    },
+    commit_value: function () {
+        this.store_dom_value();
+        return this._super();
+    },
+    store_dom_value: function () {
+        if (!this.get('effective_readonly')) {
+            this.internal_set_value(
+                instance.web.parse_value(
+                    this.$textarea.val(),
+                    this));
+        }
     },
     render_value: function() {
         $(window).resize();
@@ -2545,7 +2566,7 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
     is_syntax_valid: function() {
         if (!this.get("effective_readonly") && this.$textarea) {
             try {
-                var value_ = instance.web.parse_value(this.$textarea.val(), this, '');
+                instance.web.parse_value(this.$textarea.val(), this, '');
                 return true;
             } catch(e) {
                 return false;
@@ -2660,6 +2681,9 @@ instance.web.form.FieldProgressBar = instance.web.form.AbstractField.extend({
 
 instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
     template: 'FieldSelection',
+    events: {
+        'change select': 'store_dom_value',
+    },
     init: function(field_manager, node) {
         var self = this;
         this._super(field_manager, node);
@@ -2682,9 +2706,6 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
         //   row
         var ischanging = false;
         var $select = this.$el.find('select')
-            .change(_.bind(function() {
-                this.internal_set_value(this.values[this.$el.find('select')[0].selectedIndex][0]);
-            }, this))
             .change(function () { ischanging = true; })
             .click(function () { ischanging = false; })
             .keyup(function (e) {
@@ -2693,6 +2714,16 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
                 ischanging = false;
             });
         this.setupFocus($select);
+    },
+    commit_value: function () {
+        this.store_dom_value();
+        return this._super();
+    },
+    store_dom_value: function () {
+        if (!this.get('effective_readonly')) {
+            this.internal_set_value(
+                this.values[this.$('select')[0].selectedIndex][0]);
+        }
     },
     set_value: function(value_) {
         value_ = value_ === null ? false : value_;
