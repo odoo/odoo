@@ -4,7 +4,7 @@
 
     <record model="workflow.transition" id="trans_confirm_to_confirm_wait">
         <field name="act_from" ref="procurement.act_confirm"/>
-        <field name="act_to" ref="procurement.act_confirm_wait"/>
+        <field name="act_to" ref="procurement.act_confirm_temp"/>
         <field name="condition">not test_cancel()</field>
     </record>
 

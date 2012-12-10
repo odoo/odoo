@@ -143,9 +143,9 @@
         </record>
         
         <record id="trans_conf_conf_wait" model="workflow.transition">
-            <field name="act_from" ref="procurement.act_confirm_temp"/>
-            <field name="act_to" ref="procurement.act_confirm_wait"/>
-            <field name="condition">not get_phantom_bom_id()</field>
+            <field name="act_from" ref="procurement.act_confirm"/>
+            <field name="act_to" ref="procurement.act_confirm_temp"/>
+            <field name="condition">not test_cancel() and not get_phantom_bom_id()</field>
         </record>
         
     </data>
