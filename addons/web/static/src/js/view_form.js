@@ -2910,6 +2910,15 @@ instance.web.form.M2ODialog = instance.web.Dialog.extend({
 
 instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instance.web.form.CompletionFieldMixin, instance.web.form.ReinitializeFieldMixin, {
     template: "FieldMany2One",
+    events: {
+        'keydown input': function (e) {
+            switch (e.which) {
+            case $.ui.keyCode.UP:
+            case $.ui.keyCode.DOWN:
+                e.stopPropagation();
+            }
+        }
+    },
     init: function(field_manager, node) {
         this._super(field_manager, node);
         instance.web.form.CompletionFieldMixin.init.call(this);
