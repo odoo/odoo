@@ -1121,41 +1121,6 @@ class DataSet(openerpweb.Controller):
 class View(openerpweb.Controller):
     _cp_path = "/web/view"
 
-    def fields_view_get(self, req, model, view_id, view_type,
-                        transform=True, toolbar=False, submenu=False):
-        Model = req.session.model(model)
-        fvg = Model.fields_view_get(view_id, view_type, req.context, toolbar, submenu)
-        # todo fme?: check that we should pass the evaluated context here
-        self.process_view(req.session, fvg, req.context, transform, (view_type == 'kanban'))
-        return fvg
-
-    def process_view(self, session, fvg, context, transform, preserve_whitespaces=False):
-        # depending on how it feels, xmlrpclib.ServerProxy can translate
-        # XML-RPC strings to ``str`` or ``unicode``. ElementTree does not
-        # enjoy unicode strings which can not be trivially converted to
-        # strings, and it blows up during parsing.
-
-        # So ensure we fix this retardation by converting view xml back to
-        # bit strings.
-        if isinstance(fvg['arch'], unicode):
-            arch = fvg['arch'].encode('utf-8')
-        else:
-            arch = fvg['arch']
-        fvg['arch_string'] = arch
-
-        fvg['arch'] = xml2json_from_elementtree(
-            ElementTree.fromstring(arch), preserve_whitespaces)
-
-        if 'id' in fvg['fields']:
-            # Special case for id's
-            id_field = fvg['fields']['id']
-            id_field['original_type'] = id_field['type']
-            id_field['type'] = 'id'
-
-        for field in fvg['fields'].itervalues():
-            for view in field.get("views", {}).itervalues():
-                self.process_view(session, view, None, transform)
-
     @openerpweb.jsonrequest
     def add_custom(self, req, view_id, arch):
         CustomView = req.session.model('ir.ui.view.custom')
@@ -1178,10 +1143,6 @@ class View(openerpweb.Controller):
                 CustomView.unlink([vcustom[0]], req.context)
             return {'result': True}
         return {'result': False}
-
-    @openerpweb.jsonrequest
-    def load(self, req, model, view_id, view_type, toolbar=False):
-        return self.fields_view_get(req, model, view_id, view_type, toolbar=toolbar)
 
 class TreeView(View):
     _cp_path = "/web/treeview"

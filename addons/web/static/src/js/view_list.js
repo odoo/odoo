@@ -952,12 +952,18 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                       field = $target.closest('td').data('field'),
                        $row = $target.closest('tr'),
                   record_id = self.row_id($row);
+                
+                if ($target.attr('disabled')) {
+                    return;
+                }
+                $target.attr('disabled', 'disabled');
 
                 // note: $.data converts data to number if it's composed only
                 // of digits, nice when storing actual numbers, not nice when
                 // storing strings composed only of digits. Force the action
                 // name to be a string
                 $(self).trigger('action', [field.toString(), record_id, function (id) {
+                    $target.removeAttr('disabled');
                     return self.reload_record(self.records.get(id));
                 }]);
             })
