@@ -11,18 +11,19 @@ Contents:
 .. toctree::
     :maxdepth: 1
 
-    presentation
+    module
+    widget
+
     async
+    rpc
+    qweb
+    client_action
 
     testing
 
-    widget
-    qweb
-    rpc
-    client_action
-    form_view
     search_view
     list_view
+    form_view
 
     changelog-7.0
 

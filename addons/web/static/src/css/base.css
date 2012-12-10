@@ -652,7 +652,7 @@
   cursor: pointer;
 }
 .openerp .oe_dropdown_toggle {
-  color: #4C4C4C;
+  color: #4c4c4c;
   font-weight: normal;
 }
 .openerp .oe_dropdown_hover:hover .oe_dropdown_menu, .openerp .oe_dropdown_menu.oe_opened {
@@ -794,6 +794,20 @@
 }
 .openerp .oe_notification {
   z-index: 1050;
+}
+.openerp .oe_webclient_timezone_notification a {
+  color: white;
+  text-decoration: underline;
+}
+.openerp .oe_webclient_timezone_notification p {
+  margin-top: 1em;
+}
+.openerp .oe_webclient_timezone_notification dt {
+  font-weight: bold;
+}
+.openerp .oe_timezone_systray span {
+  margin-top: 1px;
+  background-color: #f6cf3b;
 }
 .openerp .oe_login {
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAKUlEQVQIHWO8e/fufwYsgAUkJigoiCIF5DMyoYggcUiXgNnBiGQKmAkARpcEQeriln4AAAAASUVORK5CYII=);
@@ -2249,6 +2263,7 @@
 .openerp .oe_form .oe_form_field_url button img {
   vertical-align: top;
 }
+.openerp .oe_form .oe_form_field_monetary,
 .openerp .oe_form .oe_form_field_date,
 .openerp .oe_form .oe_form_field_datetime {
   white-space: nowrap;

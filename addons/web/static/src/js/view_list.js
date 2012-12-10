@@ -600,6 +600,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         this.dataset.index = _(this.dataset.ids).indexOf(ids[0]);
         if (this.sidebar) {
+            this.options.$sidebar.show();
             this.sidebar.$el.show();
         }
 
@@ -922,6 +923,18 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
         }, this);
 
         this.$current = $('<tbody>')
+            .delegate('input[readonly=readonly]', 'click', function (e) {
+                /*
+                    Against all logic and sense, as of right now @readonly
+                    apparently does nothing on checkbox and radio inputs, so
+                    the trick of using @readonly to have, well, readonly
+                    checkboxes (which still let clicks go through) does not
+                    work out of the box. We *still* need to preventDefault()
+                    on the event, otherwise the checkbox's state *will* toggle
+                    on click
+                 */
+                e.preventDefault();
+            })
             .delegate('th.oe_list_record_selector', 'click', function (e) {
                 e.stopPropagation();
                 var selection = self.get_selection();
@@ -939,12 +952,18 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                       field = $target.closest('td').data('field'),
                        $row = $target.closest('tr'),
                   record_id = self.row_id($row);
+                
+                if ($target.attr('disabled')) {
+                    return;
+                }
+                $target.attr('disabled', 'disabled');
 
                 // note: $.data converts data to number if it's composed only
                 // of digits, nice when storing actual numbers, not nice when
                 // storing strings composed only of digits. Force the action
                 // name to be a string
                 $(self).trigger('action', [field.toString(), record_id, function (id) {
+                    $target.removeAttr('disabled');
                     return self.reload_record(self.records.get(id));
                 }]);
             })

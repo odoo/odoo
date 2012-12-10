@@ -161,6 +161,28 @@ Object Protocol
     :returns: ``Number``
     :raises: ``TypeError`` if the object doesn't have a length
 
+.. function:: py.PY_getItem(o, key)
+
+    Returns the element of ``o`` corresponding to the object
+    ``key``. This is equivalent to ``o[key]``.
+
+    :param o: :class:`py.object`
+    :param key: :class:`py.object`
+    :returns: :class:`py.object`
+    :raises: ``TypeError`` if ``o`` does not support the operation, if
+             ``key`` or the return value is not a :class:`py.object`
+
+.. function:: py.PY_setItem(o, key, v)
+
+    Maps the object ``key`` to the value ``v`` in ``o``. Equivalent to
+    ``o[key] = v``.
+
+    :param o: :class:`py.object`
+    :param key: :class:`py.object`
+    :param v: :class:`py.object`
+    :raises: ``TypeError`` if ``o`` does not support the operation, or
+             if ``key`` or ``v`` are not :class:`py.object`
+
 Number Protocol
 ---------------
 
