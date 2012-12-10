@@ -2,6 +2,8 @@ import logging
 import sys
 
 import openerp
+from openerp import tools
+from openerp.modules import module
 
 _logger = logging.getLogger(__name__)
 
@@ -32,8 +34,25 @@ import server
 
 def main():
     args = sys.argv[1:]
+
+    # The only shared option is '--addons-path=' needed to discover additional
+    # commands from modules
+    if len(args) > 1 and args[0].startswith('--addons-path=') and not args[1].startswith("-"):
+        tools.config.parse_config([args[0]])
+        args = args[1:]
+
+    # Default legacy command
     command = "server"
+
+    # Subcommand discovery
     if len(args) and not args[0].startswith("-"):
+        for m in module.get_modules():
+            m = 'openerp.addons.' + m
+            __import__(m)
+            #try:
+            #except Exception, e:
+            #    raise
+            #    print e
         command = args[0]
         args = args[1:]
 

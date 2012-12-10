@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2011 OpenERP SA (<http://openerp.com>).
+#    Copyright (C) 2010-2012 OpenERP SA (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -43,7 +43,7 @@ class ir_ui_menu(osv.osv):
 
     def __init__(self, *args, **kwargs):
         self.cache_lock = threading.RLock()
-        self.clear_cache()
+        self._cache = {}
         r = super(ir_ui_menu, self).__init__(*args, **kwargs)
         self.pool.get('ir.model.access').register_cache_clearing_method(self._name, 'clear_cache')
         return r
@@ -51,6 +51,10 @@ class ir_ui_menu(osv.osv):
     def clear_cache(self):
         with self.cache_lock:
             # radical but this doesn't frequently happen
+            if self._cache:
+                # Normally this is done by openerp.tools.ormcache
+                # but since we do not use it, set it by ourself.
+                self.pool._any_cache_cleared = True
             self._cache = {}
 
     def _filter_visible_menus(self, cr, uid, ids, context=None):
@@ -62,7 +66,7 @@ class ir_ui_menu(osv.osv):
             modelaccess = self.pool.get('ir.model.access')
             user_groups = set(self.pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['groups_id'])['groups_id'])
             result = []
-            for menu in self.browse(cr, uid, ids, context=context):
+            for menu in self.browse(cr, SUPERUSER_ID, ids, context=context):
                 # this key works because user access rights are all based on user's groups (cfr ir_model_access.check)
                 key = (cr.dbname, menu.id, tuple(user_groups))
                 if key in self._cache:

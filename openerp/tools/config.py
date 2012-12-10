@@ -58,6 +58,8 @@ def check_ssl():
     except:
         return False
 
+DEFAULT_LOG_HANDLER = [':INFO']
+
 class configmanager(object):
     def __init__(self, fname=None):
         # Options not exposed on the command line. Command line options will be added
@@ -144,8 +146,9 @@ class configmanager(object):
                          help="specify the TCP IP address for the NETRPC protocol")
         group.add_option("--netrpc-port", dest="netrpc_port", my_default=8070,
                          help="specify the TCP port for the NETRPC protocol", type="int")
-        group.add_option("--no-netrpc", dest="netrpc", action="store_false", my_default=True,
-                         help="disable the NETRPC protocol")
+        # Needed a few day for runbot and saas
+        group.add_option("--no-netrpc", dest="netrpc", action="store_false", my_default=False, help="disable the NETRPC protocol")
+        group.add_option("--netrpc", dest="netrpc", action="store_true", my_default=False, help="enable the NETRPC protocol")
         parser.add_option_group(group)
 
         # WEB
@@ -179,7 +182,7 @@ class configmanager(object):
         group.add_option("--logfile", dest="logfile", help="file where the server log will be stored")
         group.add_option("--no-logrotate", dest="logrotate", action="store_false", my_default=True, help="do not rotate the logfile")
         group.add_option("--syslog", action="store_true", dest="syslog", my_default=False, help="Send the log to the syslog server")
-        group.add_option('--log-handler', action="append", default=[':INFO'], my_default=[':INFO'], metavar="PREFIX:LEVEL", help='setup a handler at LEVEL for a given PREFIX. An empty PREFIX indicates the root logger. This option can be repeated. Example: "openerp.orm:DEBUG" or "werkzeug:CRITICAL" (default: ":INFO")')
+        group.add_option('--log-handler', action="append", default=DEFAULT_LOG_HANDLER, my_default=DEFAULT_LOG_HANDLER, metavar="PREFIX:LEVEL", help='setup a handler at LEVEL for a given PREFIX. An empty PREFIX indicates the root logger. This option can be repeated. Example: "openerp.orm:DEBUG" or "werkzeug:CRITICAL" (default: ":INFO")')
         group.add_option('--log-request', action="append_const", dest="log_handler", const="openerp.netsvc.rpc.request:DEBUG", help='shortcut for --log-handler=openerp.netsvc.rpc.request:DEBUG')
         group.add_option('--log-response', action="append_const", dest="log_handler", const="openerp.netsvc.rpc.response:DEBUG", help='shortcut for --log-handler=openerp.netsvc.rpc.response:DEBUG')
         group.add_option('--log-web', action="append_const", dest="log_handler", const="openerp.addons.web.http:DEBUG", help='shortcut for --log-handler=openerp.addons.web.http:DEBUG')
@@ -267,8 +270,8 @@ class configmanager(object):
                               "osv_memory tables. This is a decimal value expressed in hours, "
                               "and the default is 1 hour.",
                          type="float")
-        group.add_option("--max-cron-threads", dest="max_cron_threads", my_default=4,
-                         help="Maximum number of threads processing concurrently cron jobs.",
+        group.add_option("--max-cron-threads", dest="max_cron_threads", my_default=2,
+                         help="Maximum number of threads processing concurrently cron jobs (default 2).",
                          type="int")
         group.add_option("--unaccent", dest="unaccent", my_default=False, action="store_true",
                          help="Use the unaccent function provided by the database when available.")
@@ -280,27 +283,28 @@ class configmanager(object):
                          help="Specify the number of workers, 0 disable prefork mode.",
                          type="int")
         group.add_option("--limit-memory-soft", dest="limit_memory_soft", my_default=640 * 1024 * 1024,
-                         help="Maximum allowed virtual memory per worker, when reached the worker be reset after the current request.",
+                         help="Maximum allowed virtual memory per worker, when reached the worker be reset after the current request (default 640M).",
                          type="int")
         group.add_option("--limit-memory-hard", dest="limit_memory_hard", my_default=768 * 1024 * 1024,
-                         help="Maximum allowed virtual memory per worker, when reached, any memory allocation will fail.",
+                         help="Maximum allowed virtual memory per worker, when reached, any memory allocation will fail (default 768M).",
                          type="int")
         group.add_option("--limit-time-cpu", dest="limit_time_cpu", my_default=60,
-                         help="Maximum allowed CPU time per request.",
+                         help="Maximum allowed CPU time per request (default 60).",
                          type="int")
-        group.add_option("--limit-time-real", dest="limit_time_real", my_default=60,
-                         help="Maximum allowed Real time per request. ",
+        group.add_option("--limit-time-real", dest="limit_time_real", my_default=120,
+                         help="Maximum allowed Real time per request (default 120).",
                          type="int")
         group.add_option("--limit-request", dest="limit_request", my_default=8192,
-                         help="Maximum number of request to be processed per worker.",
+                         help="Maximum number of request to be processed per worker (default 8192).",
                          type="int")
         parser.add_option_group(group)
 
         # Copy all optparse options (i.e. MyOption) into self.options.
         for group in parser.option_groups:
             for option in group.option_list:
-                self.options[option.dest] = option.my_default
-                self.casts[option.dest] = option
+                if option.dest not in self.options:
+                    self.options[option.dest] = option.my_default
+                    self.casts[option.dest] = option
 
         self.parse_config(None, False)
 
@@ -384,12 +388,17 @@ class configmanager(object):
                 ]
 
         for arg in keys:
-            # Copy the command-line argument...
-            if getattr(opt, arg):
+            # Copy the command-line argument (except the special case for log_handler, due to
+            # action=append requiring a real default, so we cannot use the my_default workaround)
+            if getattr(opt, arg) and getattr(opt, arg) != DEFAULT_LOG_HANDLER:
                 self.options[arg] = getattr(opt, arg)
             # ... or keep, but cast, the config file value.
             elif isinstance(self.options[arg], basestring) and self.casts[arg].type in optparse.Option.TYPE_CHECKER:
                 self.options[arg] = optparse.Option.TYPE_CHECKER[self.casts[arg].type](self.casts[arg], arg, self.options[arg])
+
+
+        if isinstance(self.options['log_handler'], basestring):
+            self.options['log_handler'] = self.options['log_handler'].split(',')
 
         # if defined but None take the configfile value
         keys = [
@@ -470,8 +479,6 @@ class configmanager(object):
 
         if opt.save:
             self.save()
-
-        openerp.conf.max_cron_threads = self.options['max_cron_threads']
 
         openerp.conf.addons_paths = self.options['addons_path'].split(',')
         if opt.server_wide_modules:
@@ -613,6 +620,9 @@ class configmanager(object):
 
     def __setitem__(self, key, value):
         self.options[key] = value
+        if key in self.options and isinstance(self.options[key], basestring) and \
+                key in self.casts and self.casts[key].type in optparse.Option.TYPE_CHECKER:
+            self.options[key] = optparse.Option.TYPE_CHECKER[self.casts[key].type](self.casts[key], key, self.options[key])
 
     def __getitem__(self, key):
         return self.options[key]

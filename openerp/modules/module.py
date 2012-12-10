@@ -433,8 +433,9 @@ def get_modules():
             return name
 
         def is_really_module(name):
-            name = opj(dir, name)
-            return os.path.isdir(name) or zipfile.is_zipfile(name)
+            manifest_name = opj(dir, name, '__openerp__.py')
+            zipfile_name = opj(dir, name)
+            return os.path.isfile(manifest_name) or zipfile.is_zipfile(zipfile_name)
         return map(clean, filter(is_really_module, os.listdir(dir)))
 
     plist = []
@@ -553,7 +554,7 @@ def run_unit_tests(module_name):
     for m in ms:
         suite.addTests(unittest2.TestLoader().loadTestsFromModule(m))
     if ms:
-        _logger.info('module %s: executing %s `fast_suite` and/or `checks` sub-modules', module_name, len(ms))
+        _logger.log(logging.TEST, 'module %s: executing %s `fast_suite` and/or `checks` sub-modules', module_name, len(ms))
         # Use a custom stream object to log the test executions.
         class MyStream(object):
             def __init__(self):
