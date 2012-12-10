@@ -1,47 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>
-
-		<record id="l10n_hr_chart_template_rrif" model="account.chart.template">
-			<field name="name">RRIF-ov računski plan za poduzetnike</field>
-			<field name="code_digits">0</field>
-
-			<field name="account_root_id" ref="kp_rrif" />
-			<field name="tax_code_root_id" ref="pdv_code_porezi"/>
-			<field name="bank_account_view_id"           model="account.account.template" ref="kp_rrif1000"/>
-
-			<field name="property_account_receivable"    model="account.account.template" search="[('code', '=', u'1200')]"/>
-			<field name="property_account_payable"       model="account.account.template" search="[('code', '=', u'2200')]"/>
-
-			<field name="property_account_expense_categ" model="account.account.template" search="[('code', '=', u'4199')]"/>
-			<field name="property_account_income_categ"  model="account.account.template" search="[('code', '=', u'7500')]"/>
-
-            <!--  we want to use accounts from prod.category !!! 
-			<field name="bank_account_view_id"           model="account.account.template" search="[('code', '=', u'10000')]"/>
-	        'property_account_expense': fields.many2one('account.account.template','Expense Account on Product Template'),
-	        'property_account_income': fields.many2one('account.account.template','Income Account on Product Template'),
-			<field name="property_account_expense"  model="account.account.template" search="[('code', '=', u'750000')]"/>
-			<field name="property_account_income"  model="account.account.template" search="[('code', '=', u'750000')]"/>
-            -->
-
-            <!-- Nije mi ovo baš jasno :(  
-	        'property_reserve_and_surplus_account': fields.many2one('account.account.template', 'Reserve and Profit/Loss Account', domain=[('type', '=', 'payable')], help='This Account is used for transferring Profit/Loss(If It is Profit: Amount will be added, Loss: Amount will be deducted.), Which is calculated from Profilt & Loss Report'),
-			<field name="property_reserve_and_surplus_account"  model="account.account.template" search="[('code', '=', u'80400')]"/>
-            -->
-			<field name="property_reserve_and_surplus_account"  model="account.account.template" search="[('code', '=', u'8910')]"/>
-
-		</record>
-
-
-		<record id="config_call_account_template_hr_rrif" model="ir.actions.todo">
-	        <field name="name">Generate Chart of Accounts from a Chart Template</field>
-            <field name="note">Generiranje kontnog plana iz predloška. Asistent će pitati za tvrtku, predložak kontnog plana, broj znamenki šifre konta, bankovne račune, valute i kreirati novi kontni plan za odabranu tvrtku.
-                  Isti čarobnjak se može pokrenuti i naknadno iz izbornika Računovodstvo/Postava/Financijsko računovodstvo/Postava nove tvrtke - podružnice</field>
-	        <field name="action_id" ref="account.action_wizard_multi_chart"/>
-	        <field name="type">automatic</field>
-            <field name="category_id" ref="account.category_accounting_configuration"/>
-    	</record>
-
+    <data noupdate="1">
+        <record id="account.action_wizard_multi_chart_todo" model="ir.actions.todo">
+            <field name="state">open</field>
+        </record>
     </data>
 </openerp>
-

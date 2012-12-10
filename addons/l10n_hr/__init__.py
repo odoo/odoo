@@ -4,9 +4,9 @@
 #    OpenERP, Open Source Management Solution
 #    Module: l10n_hr
 #    Author: Goran Kliska
-#    mail:   gkliskaATgmail.com
+#    mail:   goran.kliska(AT)slobodni-programi.hr
 #    Copyright (C) 2011- Slobodni programi d.o.o., Zagreb
-#    Contributions: 
+#    Contributions:
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as

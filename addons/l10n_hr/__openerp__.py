@@ -4,10 +4,10 @@
 #    OpenERP, Open Source Management Solution
 #    Module: l10n_hr
 #    Author: Goran Kliska
-#    mail:   gkliskaATgmail.com
+#    mail:   goran.kliska(AT)slobodni-programi.hr
 #    Copyright: Slobodni programi d.o.o., Zagreb
-#    Contributions: 
-#              Tomislav Bošnjaković, Storm Computers d.o.o. : 
+#    Contributions:
+#              Tomislav Bošnjaković, Storm Computers d.o.o. :
 #                 - account types
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -25,8 +25,8 @@
 ##############################################################################
 
 {
-    "name" : "Croatia - RRIF's 2012 chat of accounts",
-    "description" : """
+    "name": "Croatia - RRIF 2012 COA",
+    "description": """
 Croatian localisation.
 ======================
 
@@ -34,8 +34,8 @@ Author: Goran Kliska, Slobodni programi d.o.o., Zagreb
         http://www.slobodni-programi.hr
 
 Contributions:
-    Infokom d.o.o.
-    Storm Computers d.o.o.
+  Tomislav Bošnjaković, Storm Computers: tipovi konta
+  Ivan Vađić, Slobodni programi: tipovi konta
 
 Description:
 
@@ -45,39 +45,35 @@ RRIF-ov računski plan za poduzetnike za 2012.
 Vrste konta
 Kontni plan prema RRIF-u, dorađen u smislu kraćenja naziva i dodavanja analitika
 Porezne grupe prema poreznoj prijavi
-Porezi PDV-a
-Ostali porezi (samo češće korišteni) povezani s kontima kontnog plana
+Porezi PDV obrasca
+Ostali porezi 
+Osnovne fiskalne pozicije
 
 Izvori podataka:
  http://www.rrif.hr/dok/preuzimanje/rrif-rp2011.rar
  http://www.rrif.hr/dok/preuzimanje/rrif-rp2012.rar
 
-
-
 """,
-    "version" : "2012.1",
-    "author" : "OpenERP Croatian Community",
-    "category" : 'Localization/Account Charts',
-    "website": "https://code.launchpad.net/openobject-croatia" ,
+    "version": "12.2",
+    "author": "OpenERP Croatian Community",
+    "category": 'Localization/Account Charts',
+    "website": "https://code.launchpad.net/openobject-croatia",
 
     'depends': [
                 'account',
-                'base_vat',
-                'base_iban',
                 'account_chart',
-#               'account_coda',
                 ],
-    'init_xml': [],
-    'update_xml': [
+    'data': [
                 'data/account.account.type.csv',
                 'data/account.tax.code.template.csv',
                 'data/account.account.template.csv',
+                'l10n_hr_chart_template.xml',
                 'l10n_hr_wizard.xml',
                 'data/account.tax.template.csv',
-                'data/fiscal_position.xml',
-                   ],
-    "demo_xml" : [],
-    'test' : [],
+                'data/fiscal_position_template.xml',
+            ],
+    "demo": [],
+    'test': [],
     "active": False,
     "installable": True,
 }
