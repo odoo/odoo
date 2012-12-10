@@ -75,7 +75,7 @@
             <sheet string="Work Orders">
                 <group col="4">
                     <field colspan="2" name="name"/>
-                    <field name="workcenter_id" on_change="onchange_date_planned(date_planned, hour, workcenter_id, context)"/>
+                    <field name="workcenter_id"/>
                     <field name="production_id" on_change="onchange_production_id(production_id)"/>
                     <field name="production_state"/>
                     <field name="sequence"/>
@@ -84,13 +84,13 @@
                 <page string="Information">
                     <group>
                         <group string="Planned Date">
-                            <field name="date_planned" on_change="onchange_date_planned(date_planned, hour, workcenter_id, context)"/>
+                            <field name="date_planned"/>
                             <field name="date_planned_end"/>
                         </group>
 
                         <group string="Duration">
                             <field name="cycle"/>
-                            <field name="hour" widget="float_time" on_change="onchange_date_planned(date_planned, hour, workcenter_id, context)"/>
+                            <field name="hour" widget="float_time"/>
                         </group>
                         <group string="Actual Production Date" >
                             <field name="date_start" readonly="1"/>
