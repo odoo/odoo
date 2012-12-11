@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:44+0000\n"
-"PO-Revision-Date: 2012-12-02 19:58+0000\n"
+"PO-Revision-Date: 2012-12-10 11:19+0000\n"
 "Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <openerp-hungarian-team@lists.launchpad.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-03 04:49+0000\n"
-"X-Generator: Launchpad (build 16319)\n"
+"X-Launchpad-Export-Date: 2012-12-11 05:17+0000\n"
+"X-Generator: Launchpad (build 16356)\n"
 
 #. module: base
 #: model:res.country,name:base.sh
@@ -249,7 +249,7 @@ msgid "Swaziland"
 msgstr "Szváziföld"
 
 #. module: base
-#: code:addons/orm.py:4444
+#: code:addons/orm.py:4453
 #, python-format
 msgid "created."
 msgstr "létrehozva."
@@ -358,6 +358,12 @@ msgid ""
 "  - tree_but_open\n"
 "For defaults, an optional condition"
 msgstr ""
+"A műveletekhez, egy a lehetséges végrehajtási egységegból: \n"
+"  - client_action_multi ; kliens_művelet_többszörös\n"
+"  - client_print_multi ; kliens_nyomtatás_többszörös\n"
+"  - client_action_relate ; kliens_művelet_összefüggő\n"
+"  - tree_but_open ; faszerkezet_de_nyitott\n"
+"Alap esetben, egy szabadon választható feltétel"
 
 #. module: base
 #: sql_constraint:res.lang:0
@@ -399,7 +405,7 @@ msgid "Extra"
 msgstr "Extra"
 
 #. module: base
-#: code:addons/orm.py:2639
+#: code:addons/orm.py:2648
 #, python-format
 msgid "Invalid group_by"
 msgstr "Invalid group_by"
@@ -480,7 +486,7 @@ msgstr ""
 "képernyőn látható."
 
 #. module: base
-#: code:addons/orm.py:4111
+#: code:addons/orm.py:4120
 #, python-format
 msgid ""
 "One of the records you are trying to modify has already been deleted "
@@ -492,7 +498,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pad_project
 msgid "Specifications on PADs"
-msgstr ""
+msgstr "PAD (hordozható alkalmazás laírás) specifikáció"
 
 #. module: base
 #: help:ir.filters,user_id:0
@@ -1083,6 +1089,12 @@ msgid ""
 "If Value type is selected, the value will be used directly without "
 "evaluation."
 msgstr ""
+"Kifejezés ami egy értékes leírást tartalmaz. \n"
+"Ha egy forma típus ki lett választva, akkor ez a mező egy Python kifejezés "
+"lehet, ami ugyanazt az értéket használhatja mint a szerver  művelet feltétel "
+"mezeje.\n"
+"Ha érték típus választott, az érték lesz használva mindenféle kiértékelés "
+"nélkül."
 
 #. module: base
 #: model:res.country,name:base.ad
@@ -1193,7 +1205,7 @@ msgid "Transitions"
 msgstr "Átmenetek"
 
 #. module: base
-#: code:addons/orm.py:4850
+#: code:addons/orm.py:4859
 #, python-format
 msgid "Record #%d of %s not found, cannot copy!"
 msgstr "Record #%d of %s not found, cannot copy!"
@@ -1223,6 +1235,21 @@ msgid ""
 "At the end of the month, the planning manager can also check if the encoded "
 "timesheets are respecting the planned time on each analytic account.\n"
 msgstr ""
+"Kövesse nyomon a terveit\n"
+"Ez a modul segít a tervei szervezésében.\n"
+"===============================================\n"
+"\n"
+"Ez a modul a számlavezetés elemzésen alapul és teljesen integrált\n"
+"* az időkimutatás kódolással\n"
+"* az ünnepnapok szervezésével\n"
+"* a tervek szervezésével\n"
+"\n"
+"Így, minden osztály vezető tudhatja, ha a csoportból valakinek még nincs "
+"munkaidő kiosztva a kiadott terven bellül (a már  érvényesített szakaszokat "
+"figyelembe véve) vagy ha még feladatot kell kódolnia.\n"
+"\n"
+"A hónap végén, a terv irányítója ellenőrizni tudja, hogy az egyes elemző "
+"kimutatásokon a tervezett idő egyezik-e a kódolási időkimutatásokkal.\n"
 
 #. module: base
 #: selection:ir.property,type:0
@@ -2641,7 +2668,7 @@ msgstr ""
 "'űrlap', 'fa', 'naptár', etc. (Alapértelmezett: fa, űrlap)"
 
 #. module: base
-#: code:addons/orm.py:3802
+#: code:addons/orm.py:3811
 #, python-format
 msgid "A document was modified since you last viewed it (%s:%d)"
 msgstr "A document was modified since you last viewed it (%s:%d)"
@@ -2692,6 +2719,18 @@ msgid ""
 "and categorize your interventions with a channel and a priority level.\n"
 "    "
 msgstr ""
+"\n"
+"Hibabejelentés kezelése.\n"
+"====================\n"
+"\n"
+"Mint a követelések felvitele és feldolgozása, Hibabejelentés és támogatás jó "
+"eszközök a\n"
+"beavatkozás nyomon követésére. Ez a menü legjobban a szóbeli kommunikációhoz "
+"alkalmazkodik,\n"
+"ami nem szükségszerűen kapcsolódik egy követeléshez. Válasszon ki egy "
+"ügyfelet, adjon hozzá megjegyzést\n"
+"és kategorizálja a beavatkozást egy csatornával és egy prioritási szinttel.\n"
+"    "
 
 #. module: base
 #: sql_constraint:ir.ui.view_sc:0
@@ -2712,6 +2751,17 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Modul az erőforrás kezeléshez.\n"
+"===============================\n"
+"\n"
+"Az erőforrás kifejezhet valamit amit ütemezni lehet\n"
+"(a fejlesztő egy munkán vagy munka állomásokat gyártási megrendeléseken).\n"
+"Ez a modul kezeli az erőforrás naptárat ami minden erőforással kapcsolatot "
+"tart.\n"
+"Kezeli az összes erőforrás al kapcsolatait /ágakat, leveleket/.\n"
+"\n"
+"    "
 
 #. module: base
 #: view:ir.rule:0
@@ -2938,6 +2988,31 @@ msgid ""
 "performing those tasks.\n"
 "    "
 msgstr ""
+"\n"
+"Ez a modul beilleszti a tennivalók elvégzése fogalom /Getting Things Done/ "
+"módszertant.\n"
+"============================================================================="
+"======\n"
+"\n"
+"Ez a modul beilleszt egy egyszerű személyes feladatokon alapuló elvégzési "
+"listát. A beruházáshoz\n"
+"ad egy szerkeszthető elvégzési listát leegyszerüsítve a legszükségesebb "
+"területekre.\n"
+"\n"
+"Az elvégzési lista a tennivalók elvégzése GTD módszertanon alapszik. Ez a "
+"világon széles körben elterjedt módszertant\n"
+"a személyes idő beosztás kezelés hatékonyságának növelésére használják.\n"
+"\n"
+"Tennivalók elvégzése /Getting Things Done/ (a GTD mint elterjedt rövidítés) "
+"egy működés kezelési eljárás\n"
+"amit David Allen hozott létre, és az ilyen című könyvében le is írt.\n"
+"\n"
+"GTD azon az alapelven nyugszik, hogy az embernek a tennivalóit a "
+"gondolatiból ki kell mozgatni és azokat pontossan \n"
+"fel kell jegyezni. Így, a tudat megszabadul a még elvégzendő dolgokra való "
+"visszemlékezés munkájától, és koncentrálni tud\n"
+"az aktuális most kialakuló munkavégzésekre.\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.tt
@@ -3052,8 +3127,8 @@ msgid "Client Logs"
 msgstr "Ügyfél naplók"
 
 #. module: base
-#: code:addons/orm.py:2012
-#: code:addons/orm.py:2023
+#: code:addons/orm.py:2021
+#: code:addons/orm.py:2032
 #, python-format
 msgid "Invalid Object Architecture!"
 msgstr "Invalid Object Architecture!"
@@ -3447,7 +3522,7 @@ msgid "Administration Dashboard"
 msgstr "Adminisztrátori Dashboard/Műszerfal"
 
 #. module: base
-#: code:addons/orm.py:4643
+#: code:addons/orm.py:4652
 #, python-format
 msgid ""
 "Invalid \"order\" specified. A valid \"order\" specification is a comma-"
@@ -4111,7 +4186,7 @@ msgstr ""
 "Ha nincs beállítva, alapértelmezett értékként szolgál az új erőforrásoknak"
 
 #. module: base
-#: code:addons/orm.py:4204
+#: code:addons/orm.py:4213
 #, python-format
 msgid "Recursivity Detected."
 msgstr "Recursivity Detected."
@@ -4182,7 +4257,7 @@ msgid "Company Name"
 msgstr "Cég neve"
 
 #. module: base
-#: code:addons/orm.py:2802
+#: code:addons/orm.py:2811
 #, python-format
 msgid ""
 "Invalid value for reference field \"%s.%s\" (last part must be a non-zero "
@@ -4459,7 +4534,7 @@ msgstr ""
 "=========================\n"
 "\n"
 "Ez a modul az admin felhasználónak megad minden hozzáférést\n"
-"a könyvelési tulajdonságokhoz mint jelentések részletei\n"
+"a könyvelési tulajdonságokhoz mint napló jelentések részletei\n"
 "és számlatükör.\n"
 "\n"
 "Számvitel vezetői és felhasználói jogosultságokat oszthat\n"
@@ -4524,7 +4599,7 @@ msgid "EAN13"
 msgstr "EAN13"
 
 #. module: base
-#: code:addons/orm.py:2238
+#: code:addons/orm.py:2247
 #, python-format
 msgid "Invalid Architecture!"
 msgstr "Érvénytelen felépítés!"
@@ -5354,7 +5429,7 @@ msgid "System Configuration Done"
 msgstr "Rendszer konfigurálása kész"
 
 #. module: base
-#: code:addons/orm.py:1531
+#: code:addons/orm.py:1540
 #, python-format
 msgid "Error occurred while validating the field(s) %s: %s"
 msgstr "Hiba a mező(k) ellenőrzése során %s: %s"
@@ -5867,6 +5942,11 @@ msgid ""
 "    those assets. And it allows to create Move's of the depreciation lines.\n"
 "    "
 msgstr ""
+"Pénzügyi és könyvelési tárgyi eszköz kezelés.\n"
+"    Ez a modul kezeli a vállalkozás vagy az egyén tulajdonában lévő tárgyi "
+"eszközöket. Nyomon követi ezeknek a tárgyi eszközöknek az értékcsökkenéseit. "
+"Megenged mozgás létrehozását az értékcsökkenés sorai közt.\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.bv
@@ -5929,6 +6009,40 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Ez a Belga könyvelés alap modulja az OpenERB-hez\n"
+"\n"
+"This is the base module to manage the accounting chart for Belgium in "
+"OpenERP.\n"
+"============================================================================="
+"=\n"
+"\n"
+"After installing this module, the Configuration wizard for accounting is "
+"launched.\n"
+"    * We have the account templates which can be helpful to generate Charts "
+"of Accounts.\n"
+"    * On that particular wizard, you will be asked to pass the name of the "
+"company, the chart template to follow, the no. of digits to generate, the "
+"code for your account and bank account, currency to create journals.\n"
+"\n"
+"Thus, the pure copy of Chart Template is generated.\n"
+"\n"
+"Wizards provided by this module:\n"
+"    * Partner VAT Intra: Enlist the partners with their related VAT and "
+"invoiced amounts.Prepares an XML file format.\n"
+"            Path to access : Accounting/Reporting//Legal Statements/Belgium "
+"Statements/Partner VAT Listing\n"
+"    * Periodical VAT Declaration: Prepares an XML file for Vat Declaration "
+"of the Main company of the User currently Logged in.\n"
+"            Path to access : Accounting/Reporting/Legal Statements/Belgium "
+"Statements/Periodical VAT Declaration\n"
+"    * Annual Listing Of VAT-Subjected Customers: Prepares an XML file for "
+"Vat Declaration of the Main company of the User currently Logged in.Based on "
+"Fiscal year\n"
+"            Path to access : Accounting/Reporting/Legal Statements/Belgium "
+"Statements/Annual Listing Of VAT-Subjected Customers\n"
+"\n"
+"    "
 
 #. module: base
 #: view:ir.model.fields:0
@@ -5961,7 +6075,7 @@ msgstr "Zambia"
 #. module: base
 #: view:ir.actions.todo:0
 msgid "Launch Configuration Wizard"
-msgstr ""
+msgstr "Beállítás varázsló indítása"
 
 #. module: base
 #: help:res.partner,user_id:0
@@ -6353,7 +6467,7 @@ msgstr "Teszt"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_kanban
 msgid "Base Kanban"
-msgstr ""
+msgstr "Kanban módszer bázisa"
 
 #. module: base
 #: view:ir.actions.act_window:0
@@ -6492,7 +6606,7 @@ msgstr "Tartomány érték"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_module_quality
 msgid "Analyse Module Quality"
-msgstr ""
+msgstr "Modul minőség elemzés"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -6516,6 +6630,8 @@ msgid ""
 "How many times the method is called,\n"
 "a negative number indicates no limit."
 msgstr ""
+"Hányszor lett az eljárás meghívva,\n"
+"a negatív szám azt jelöli,, hogy nincs határ."
 
 #. module: base
 #: field:res.partner.bank.type.field,bank_type_id:0
@@ -6531,7 +6647,7 @@ msgstr "A csoport neve nem kezdődhet \"-\"-al."
 #. module: base
 #: view:ir.module.module:0
 msgid "Apps"
-msgstr ""
+msgstr "Alkalmazások"
 
 #. module: base
 #: view:ir.ui.view_sc:0
@@ -6649,7 +6765,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_diagram
 msgid "OpenERP Web Diagram"
-msgstr ""
+msgstr "OpenERP Web grafikon"
 
 #. module: base
 #: view:res.partner.bank:0
@@ -6688,11 +6804,19 @@ msgid ""
 "The user can also publish notes.\n"
 "    "
 msgstr ""
+"\n"
+"A felhasználók létrehozhatnak egyéni dashboard/műszerfalat.\n"
+"========================================\n"
+"\n"
+"Ez a modul adminisztrátori Dashboard/Műszerfalat is létrehoz.\n"
+"\n"
+"A felhasználók meglyegyzéseket is közzétehetnek.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_scrum
 msgid "Methodology: SCRUM"
-msgstr ""
+msgstr "Módszertan: SCRUM"
 
 #. module: base
 #: view:ir.attachment:0
@@ -6713,7 +6837,7 @@ msgstr "Hivatalos fordítás betöltése"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_cancel
 msgid "Cancel Journal Entries"
-msgstr ""
+msgstr "Napló jelentés bevitel érvénytelenítése"
 
 #. module: base
 #: view:ir.actions.server:0
@@ -7077,7 +7201,7 @@ msgid "Time Format"
 msgstr "Idő Formátum"
 
 #. module: base
-#: code:addons/orm.py:2238
+#: code:addons/orm.py:2247
 #, python-format
 msgid "There is no view of type '%s' defined for the structure!"
 msgstr "There is no view of type '%s' defined for the structure!"
@@ -7273,7 +7397,7 @@ msgid "ir.attachment"
 msgstr "ir.attachment"
 
 #. module: base
-#: code:addons/orm.py:4306
+#: code:addons/orm.py:4315
 #, python-format
 msgid ""
 "You cannot perform this operation. New Record Creation is not allowed for "
@@ -7454,7 +7578,7 @@ msgstr ""
 #. module: base
 #: field:ir.actions.client,params:0
 msgid "Supplementary arguments"
-msgstr ""
+msgstr "Kiegészítő jellemzők"
 
 #. module: base
 #: field:res.users,view:0
@@ -7736,7 +7860,7 @@ msgstr ""
 "vagy a Felhasználói menüben), hogy megváltoztasd a jelszavadat."
 
 #. module: base
-#: code:addons/orm.py:2012
+#: code:addons/orm.py:2021
 #, python-format
 msgid "Insufficient fields for Calendar View!"
 msgstr "Naptár nézethez nem elégségesek a mezők!"
@@ -8466,6 +8590,13 @@ msgid ""
 "actions(Sign in/Sign out) performed by them.\n"
 "       "
 msgstr ""
+"\n"
+"Ez a modul a munkaerő részvételének nyilvántartására szolgál.\n"
+"==================================================\n"
+"\n"
+"A részvételeket tartja sorban a felhasználói cselekvés cselekvés alapján "
+"(Belépés / Kilépés).\n"
+"       "
 
 #. module: base
 #: field:ir.module.module,maintainer:0
@@ -8969,7 +9100,7 @@ msgstr ""
 #. module: base
 #: field:ir.module.category,visible:0
 msgid "Visible"
-msgstr ""
+msgstr "Látható"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_ui_view_custom
@@ -9039,7 +9170,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/orm.py:2812
+#: code:addons/orm.py:2821
 #, python-format
 msgid "The value \"%s\" for the field \"%s.%s\" is not in the selection"
 msgstr ""
@@ -9393,8 +9524,8 @@ msgid "bank_bic"
 msgstr ""
 
 #. module: base
-#: code:addons/orm.py:4204
-#: code:addons/orm.py:4305
+#: code:addons/orm.py:4213
+#: code:addons/orm.py:4314
 #, python-format
 msgid "UserError"
 msgstr "UserError"
@@ -9420,7 +9551,7 @@ msgid "United Arab Emirates"
 msgstr "Egyesült Arab Emirátusok"
 
 #. module: base
-#: code:addons/orm.py:3920
+#: code:addons/orm.py:3929
 #, python-format
 msgid ""
 "Unable to delete this document because it is used as a default property"
@@ -9759,8 +9890,8 @@ msgid "Solomon Islands"
 msgstr "Salamon-szigetek"
 
 #. module: base
-#: code:addons/orm.py:4110
-#: code:addons/orm.py:4643
+#: code:addons/orm.py:4119
+#: code:addons/orm.py:4652
 #, python-format
 msgid "AccessError"
 msgstr "Hozzáférési hiba"
@@ -10834,7 +10965,7 @@ msgid "Kind"
 msgstr "Fajta"
 
 #. module: base
-#: code:addons/orm.py:4605
+#: code:addons/orm.py:4614
 #, python-format
 msgid "This method does not exist anymore"
 msgstr "This method does not exist anymore"
@@ -11676,8 +11807,8 @@ msgid "Problem in configuration `Record Id` in Server Action!"
 msgstr "Probléma a 'Rekord Azonosító' beállításánál a Szerver müveletben!"
 
 #. module: base
-#: code:addons/orm.py:2801
-#: code:addons/orm.py:2811
+#: code:addons/orm.py:2810
+#: code:addons/orm.py:2820
 #, python-format
 msgid "ValidateError"
 msgstr "ValidateError"
@@ -12343,7 +12474,7 @@ msgstr "Következő végrehajtás dátuma"
 #. module: base
 #: field:ir.sequence,padding:0
 msgid "Number Padding"
-msgstr ""
+msgstr "Számok szerkesztése - padding"
 
 #. module: base
 #: help:multi_company.default,field_id:0
@@ -14485,7 +14616,7 @@ msgstr ""
 #: code:addons/base/res/res_users.py:102
 #: code:addons/custom.py:550
 #: code:addons/orm.py:789
-#: code:addons/orm.py:3920
+#: code:addons/orm.py:3929
 #, python-format
 msgid "Error"
 msgstr "Hiba"
@@ -14748,7 +14879,7 @@ msgid "Serbian (Cyrillic) / српски"
 msgstr "Szerb (cirill) / српски"
 
 #. module: base
-#: code:addons/orm.py:2640
+#: code:addons/orm.py:2649
 #, python-format
 msgid ""
 "Invalid group_by specification: \"%s\".\n"
@@ -15172,7 +15303,7 @@ msgstr "Beütemezett frissítések alkalmazása."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_journal
 msgid "Invoicing Journals"
-msgstr ""
+msgstr "Napló jelentések számlázása"
 
 #. module: base
 #: selection:base.language.install,lang:0
