@@ -19,7 +19,7 @@
             <field name="res_model">report.stock.move</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
-            <field name="domain">[('type','=','in'),('day','&lt;=', time.strftime('%Y-%m-%d')),('day','&gt;',(context_today().today()-datetime.timedelta(days=15)).strftime('%Y-%m-%d'))]</field>
+            <field name="domain">[('type','=','in'),('day','&lt;=', time.strftime('%Y-%m-%d')),('day','&gt;',(context_today()-datetime.timedelta(days=15)).strftime('%Y-%m-%d'))]</field>
             <field name="view_id" ref="view_stock_graph_board"></field>
             <field name="context">{'search_default_in':1}</field>
          </record>
@@ -28,7 +28,7 @@
             <field name="res_model">report.stock.move</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
-            <field name="domain">[('type','=','out'),('day','&lt;=', time.strftime('%Y-%m-%d')),('day','&gt;',(context_today().today()-datetime.timedelta(days=15)).strftime('%Y-%m-%d'))]</field>
+            <field name="domain">[('type','=','out'),('day','&lt;=', time.strftime('%Y-%m-%d')),('day','&gt;',(context_today()-datetime.timedelta(days=15)).strftime('%Y-%m-%d'))]</field>
             <field name="view_id" ref="view_stock_graph_board"></field>
             <field name="context">{'search_default_out':1}</field>
          </record>

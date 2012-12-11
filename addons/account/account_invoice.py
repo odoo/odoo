@@ -458,7 +458,6 @@ class account_invoice(osv.osv):
 
     def onchange_partner_id(self, cr, uid, ids, type, partner_id,\
             date_invoice=False, payment_term=False, partner_bank_id=False, company_id=False):
-        invoice_addr_id = False
         partner_payment_term = False
         acc_id = False
         bank_id = False
@@ -468,8 +467,6 @@ class account_invoice(osv.osv):
         if partner_id:
 
             opt.insert(0, ('id', partner_id))
-            res = self.pool.get('res.partner').address_get(cr, uid, [partner_id], ['invoice'])
-            invoice_addr_id = res['invoice']
             p = self.pool.get('res.partner').browse(cr, uid, partner_id)
             if company_id:
                 if (p.property_account_receivable.company_id and (p.property_account_receivable.company_id.id != company_id)) and (p.property_account_payable.company_id and (p.property_account_payable.company_id.id != company_id)):
@@ -1436,7 +1433,7 @@ class account_invoice_line(osv.osv):
             res['arch'] = etree.tostring(doc)
         return res
 
-    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, currency_id=False, context=None, company_id=None):
+    def product_id_change(self, cr, uid, ids, product, uom_id, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, currency_id=False, context=None, company_id=None):
         if context is None:
             context = {}
         company_id = company_id if company_id != None else context.get('company_id',False)
@@ -1482,14 +1479,11 @@ class account_invoice_line(osv.osv):
             result.update({'price_unit': res.list_price, 'invoice_line_tax_id': tax_id})
         result['name'] = res.partner_ref
 
-        domain = {}
-        result['uos_id'] = res.uom_id.id or uom or False
+        result['uos_id'] = uom_id or res.uom_id.id
         if res.description:
             result['name'] += '\n'+res.description
-        if result['uos_id']:
-            res2 = res.uom_id.category_id.id
-            if res2:
-                domain = {'uos_id':[('category_id','=',res2 )]}
+
+        domain = {'uos_id':[('category_id','=',res.uom_id.category_id.id)]}
 
         res_final = {'value':result, 'domain':domain}
 
@@ -1505,10 +1499,10 @@ class account_invoice_line(osv.osv):
             new_price = res_final['value']['price_unit'] * currency.rate
             res_final['value']['price_unit'] = new_price
 
-        if uom:
-            uom = self.pool.get('product.uom').browse(cr, uid, uom, context=context)
-            if res.uom_id.category_id.id == uom.category_id.id:
-                new_price = res_final['value']['price_unit'] * uom.factor_inv
+        if result['uos_id'] != res.uom_id.id:
+            selected_uom = self.pool.get('product.uom_id').browse(cr, uid, result['uos_id'], context=context)
+            if res.uom_id.category_id.id == selected_uom.category_id.id:
+                new_price = res_final['value']['price_unit'] * uom_id.factor_inv
                 res_final['value']['price_unit'] = new_price
         return res_final
 
@@ -1520,8 +1514,6 @@ class account_invoice_line(osv.osv):
         context.update({'company_id': company_id})
         warning = {}
         res = self.product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, currency_id, context=context)
-        if 'uos_id' in res['value']:
-            del res['value']['uos_id']
         if not uom:
             res['value']['price_unit'] = 0.0
         if product and uom:

@@ -7,14 +7,15 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-05-10 18:07+0000\n"
-"Last-Translator: Ferdinand-camptocamp <Unknown>\n"
+"PO-Revision-Date: 2012-12-10 22:12+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:17+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-11 04:48+0000\n"
+"X-Generator: Launchpad (build 16356)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -40,7 +41,7 @@ msgstr "Prozessknoten"
 #. module: document
 #: sql_constraint:document.directory:0
 msgid "Directory must have a parent or a storage."
-msgstr ""
+msgstr "Verzeichnis sollte entweder Oberverzeichnis oder Speicher haben"
 
 #. module: document
 #: view:document.directory:0
@@ -227,6 +228,13 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Klicken Sie zur Erstellung eines neuen Dokuments. \n"
+"          </p><p>\n"
+"            Das Dokumenten Repository ermöglicht Zugriff auf alle Anhänge, "
+"EMails, \n"
+"            Projektbelege, Rechnungen etc.          </p>\n"
+"        "
 
 #. module: document
 #: field:process.node,directory_id:0
@@ -280,7 +288,7 @@ msgstr "Berichtsinhalt"
 #. module: document
 #: view:ir.attachment:0
 msgid "Modification"
-msgstr ""
+msgstr "Modifikation"
 
 #. module: document
 #: view:document.directory:0
@@ -295,7 +303,7 @@ msgstr "Typ"
 #: code:addons/document/document_directory.py:234
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (copy)"
 
 #. module: document
 #: help:document.directory,ressource_type_id:0
@@ -317,7 +325,7 @@ msgstr ""
 #. module: document
 #: constraint:document.directory:0
 msgid "Error! You cannot create recursive directories."
-msgstr ""
+msgstr "Fehler ! Sie können keine rekursiven Verzeichnisse zulassen"
 
 #. module: document
 #: field:document.directory,resource_field:0
@@ -407,12 +415,12 @@ msgstr "Letzte Änderung"
 #: model:ir.actions.act_window,name:document.action_view_files_by_user_graph
 #: view:report.document.user:0
 msgid "Files by User"
-msgstr ""
+msgstr "Dateien nach Benutzer"
 
 #. module: document
 #: view:ir.attachment:0
 msgid "on"
-msgstr ""
+msgstr "am"
 
 #. module: document
 #: field:document.directory,domain:0
@@ -476,7 +484,7 @@ msgstr ""
 #. module: document
 #: field:report.document.user,user:0
 msgid "unknown"
-msgstr ""
+msgstr "unbekannt"
 
 #. module: document
 #: view:document.directory:0
@@ -525,12 +533,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:document.open_board_document_manager
 #: model:ir.ui.menu,name:document.menu_reports_document
 msgid "Knowledge"
-msgstr ""
+msgstr "Knowledge"
 
 #. module: document
 #: view:document.storage:0
 msgid "Document Storage"
-msgstr ""
+msgstr "Dokumenten Speicher"
 
 #. module: document
 #: view:document.configuration:0
@@ -576,7 +584,7 @@ msgstr ""
 #: code:addons/document/static/src/js/document.js:6
 #, python-format
 msgid "Attachment(s)"
-msgstr ""
+msgstr "Anhänge"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -586,7 +594,7 @@ msgstr "August"
 #. module: document
 #: view:ir.attachment:0
 msgid "My Document(s)"
-msgstr ""
+msgstr "Meine Dokumente"
 
 #. module: document
 #: sql_constraint:document.directory:0
@@ -676,7 +684,7 @@ msgstr "Das Verzeichnis muss eindeutig sein"
 #. module: document
 #: view:ir.attachment:0
 msgid "Attachments"
-msgstr ""
+msgstr "Anhänge"
 
 #. module: document
 #: field:document.directory,create_uid:0
@@ -723,7 +731,7 @@ msgstr "Kindelemente"
 #. module: document
 #: view:board.board:0
 msgid "Files by user"
-msgstr ""
+msgstr "Dateien nach Benutzer"
 
 #. module: document
 #: selection:document.storage,type:0
@@ -789,7 +797,7 @@ msgstr "ir.attachment"
 #. module: document
 #: view:report.document.user:0
 msgid "Users File"
-msgstr ""
+msgstr "Benutzer Datei"
 
 #. module: document
 #: view:document.directory:0
@@ -866,7 +874,7 @@ msgstr "# Dokumente"
 #. module: document
 #: view:document.storage:0
 msgid "Search Document Storage"
-msgstr ""
+msgstr "Suche Dokumentenspeicher"
 
 #. module: document
 #: view:document.directory:0
@@ -882,7 +890,7 @@ msgstr ""
 #: code:addons/document/static/src/js/document.js:17
 #, python-format
 msgid "%s (%s)"
-msgstr ""
+msgstr "%s (%s)"
 
 #. module: document
 #: field:document.directory.content,sequence:0

@@ -243,7 +243,7 @@ class stock_location(osv.osv):
         elif location.chained_location_type == 'fixed':
             result = location.chained_location_id
         if result:
-            return result, location.chained_auto_packing, location.chained_delay, location.chained_journal_id and location.chained_journal_id.id or False, location.chained_company_id and location.chained_company_id.id or False, location.chained_picking_type
+            return result, location.chained_auto_packing, location.chained_delay, location.chained_journal_id and location.chained_journal_id.id or False, location.chained_company_id and location.chained_company_id.id or False, location.chained_picking_type, False
         return result
 
     def picking_type_get(self, cr, uid, from_location, to_location, context=None):
@@ -2131,7 +2131,7 @@ class stock_move(osv.osv):
                     self.pool.get('stock.picking').write(cr, uid, [picking.id], {'name': old_pick_name, 'type': old_ptype}, context=context)
             else:
                 pickid = False
-            for move, (loc, dummy, delay, dummy, company_id, ptype) in todo:
+            for move, (loc, dummy, delay, dummy, company_id, ptype, invoice_state) in todo:
                 new_id = move_obj.copy(cr, uid, move.id, {
                     'location_id': move.location_dest_id.id,
                     'location_dest_id': loc.id,
@@ -2140,7 +2140,7 @@ class stock_move(osv.osv):
                     'state': 'waiting',
                     'company_id': company_id or res_obj._company_default_get(cr, uid, 'stock.company', context=context)  ,
                     'move_history_ids': [],
-                    'date': (datetime.strptime(move.date, '%Y-%m-%d %H:%M:%S') + relativedelta(days=delay or 0)).strftime('%Y-%m-%d'),
+                    'date_expected': (datetime.strptime(move.date, '%Y-%m-%d %H:%M:%S') + relativedelta(days=delay or 0)).strftime('%Y-%m-%d'),
                     'move_history_ids2': []}
                 )
                 move_obj.write(cr, uid, [move.id], {
