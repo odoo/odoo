@@ -28,11 +28,13 @@ except ImportError:
     xlwt = None
 
 import openerp
+import openerp.modules.registry
 from openerp.tools.translate import _
 
 from .. import http
 openerpweb = http
 
+_logger = logging.getLogger(__name__)
 #----------------------------------------------------------
 # OpenERP Web helpers
 #----------------------------------------------------------
@@ -169,7 +171,6 @@ def module_installed_bypass_session(dbname):
     loadable = openerpweb.addons_manifest.keys()
     modules = {}
     try:
-        import openerp.modules.registry
         registry = openerp.modules.registry.RegistryManager.get(dbname)
         with registry.cursor() as cr:
             m = registry.get('ir.module.module')
@@ -1202,9 +1203,10 @@ class Binary(openerpweb.Controller):
         except:
             pass
         return req.make_response(image_data, headers)
-    def placeholder(self, req):
+
+    def placeholder(self, req, image='placeholder.png'):
         addons_path = openerpweb.addons_manifest['web']['addons_path']
-        return open(os.path.join(addons_path, 'web', 'static', 'src', 'img', 'placeholder.png'), 'rb').read()
+        return open(os.path.join(addons_path, 'web', 'static', 'src', 'img', image), 'rb').read()
 
     @openerpweb.httprequest
     def saveas(self, req, model, field, id=None, filename_field=None, **kw):
@@ -1311,6 +1313,37 @@ class Binary(openerpweb.Controller):
         except Exception,e:
             args = {'erorr':e.faultCode.split('--')[1],'title':e.faultCode.split('--')[0]}
         return out % (simplejson.dumps(callback), simplejson.dumps(args))
+
+    @openerpweb.httprequest
+    def company_logo(self, req, dbname=None):
+        # TODO add etag
+        uid = None
+        _logger.debug('session db = %r', req.session._db)
+        _logger.debug('session uid = %r', req.session._uid)
+        _logger.debug('param dbname = %r', dbname)
+        if req.session._db:
+            dbname = req.session._db
+            uid = req.session._uid
+        elif dbname is None:
+            dbname = db_monodb(req)
+
+        if uid is None:
+            uid = openerp.SUPERUSER_ID
+
+        _logger.debug('dbname = %r', dbname)
+        if not dbname:
+            image_data = self.placeholder(req, 'logo.png')
+        else:
+            registry = openerp.modules.registry.RegistryManager.get(dbname)
+            with registry.cursor() as cr:
+                user = registry.get('res.users').browse(cr, uid, uid)
+                image_data = user.company_id.logo_web.decode('base64')
+
+        headers = [
+            ('Content-Type', 'image/png'),
+            ('Content-Length', len(image_data)),
+        ]
+        return req.make_response(image_data, headers)
 
 class Action(openerpweb.Controller):
     _cp_path = "/web/action"
