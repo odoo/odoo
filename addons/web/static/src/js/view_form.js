@@ -2275,7 +2275,7 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.we
         return this.get('value') === '' || this._super();
     },
     focus: function() {
-        this.$('input:first').focus();
+        this.$('input:first')[0].focus();
     },
     set_dimensions: function (height, width) {
         this._super(height, width);
@@ -2510,7 +2510,7 @@ instance.web.form.FieldDatetime = instance.web.form.AbstractField.extend(instanc
     },
     focus: function() {
         if (this.datewidget && this.datewidget.$input) {
-            this.datewidget.$input.focus();
+            this.datewidget.$input[0].focus();
         }
     },
     set_dimensions: function (height, width) {
@@ -2584,7 +2584,7 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
         return this.get('value') === '' || this._super();
     },
     focus: function($el) {
-        this.$textarea.focus();
+        this.$textarea[0].focus();
     },
     set_dimensions: function (height, width) {
         this._super(height, width);
@@ -2665,7 +2665,7 @@ instance.web.form.FieldBoolean = instance.web.form.AbstractField.extend({
         this.$checkbox[0].checked = this.get('value');
     },
     focus: function() {
-        this.$checkbox.focus();
+        this.$checkbox[0].focus();
     }
 });
 
@@ -2751,7 +2751,7 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
         }
     },
     focus: function() {
-        this.$el.find('select:first').focus();
+        this.$('select:first')[0].focus();
     },
     set_dimensions: function (height, width) {
         this._super(height, width);
@@ -3237,7 +3237,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
     },
     focus: function () {
         if (!this.get('effective_readonly')) {
-            this.$input.focus();
+            this.$input[0].focus();
         }
     },
     _quick_create: function() {
@@ -4087,6 +4087,9 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
     add_id: function(id) {
         this.set({'value': _.uniq(this.get('value').concat([id]))});
     },
+    focus: function () {
+        this.$text[0].focus();
+    },
 });
 
 /**
@@ -4423,7 +4426,7 @@ instance.web.form.Many2ManyQuickCreate = instance.web.Widget.extend({
         });
     },
     focus: function() {
-        this.$text.focus();
+        this.$text[0].focus();
     },
     add_id: function(id) {
         var self = this;
