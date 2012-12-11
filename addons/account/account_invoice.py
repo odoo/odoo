@@ -1356,15 +1356,16 @@ class account_invoice_line(osv.osv):
             context.update({'lang': part.lang})
         result = {}
         res = self.pool.get('product.product').browse(cr, uid, product, context=context)
-
         if type in ('out_invoice','out_refund'):
-            a = res.product_tmpl_id.property_account_income.id
-            if not a:
-                a = res.categ_id.property_account_income_categ.id
+                a = res.product_tmpl_id.property_account_income.id
+                if not a:
+                    a = res.categ_id.property_account_income_categ.id
         else:
-            a = res.product_tmpl_id.property_account_expense.id
-            if not a:
-                a = res.categ_id.property_account_expense_categ.id
+                a = res.product_tmpl_id.property_account_expense.id
+                if not a:
+                    a = res.categ_id.property_account_expense_categ.id
+        if context.get('account_id',False):
+             a = context.get('account_id')
         a = fpos_obj.map_account(cr, uid, fpos, a)
         if a:
             result['account_id'] = a
@@ -1500,8 +1501,9 @@ class account_invoice_line(osv.osv):
             taxes = account.tax_ids
             unique_tax_ids = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes)
         else:
+            ctx = {'account_id': account_id}
             product_change_result = self.product_id_change(cr, uid, ids, product_id, False, type=inv_type,
-                partner_id=partner_id, fposition_id=fposition_id,
+                partner_id=partner_id, fposition_id=fposition_id,context=ctx,
                 company_id=account.company_id.id)
             if product_change_result and 'value' in product_change_result and 'invoice_line_tax_id' in product_change_result['value']:
                 unique_tax_ids = product_change_result['value']['invoice_line_tax_id']
