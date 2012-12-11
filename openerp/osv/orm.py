@@ -865,10 +865,6 @@ class BaseModel(object):
                 parent_names = [parent_names]
             else:
                 name = cls._name
-            # for res.parnter.address compatiblity, should be remove in v7
-            if 'res.partner.address' in parent_names:
-                parent_names.pop(parent_names.index('res.partner.address'))
-                parent_names.append('res.partner')
             if not name:
                 raise TypeError('_name is mandatory in case of multiple inheritance')
 
