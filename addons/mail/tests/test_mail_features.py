@@ -422,6 +422,10 @@ class test_mail(TestMailBase):
             self.assertEqual(attach.res_id, self.group_pigs_id, 'mail.message attachment res_id incorrect')
             self.assertIn((attach.name, attach.datas.decode('base64')), _attachments,
                 'mail.message attachment name / data incorrect')
+        # Test: download attachments
+        for attach in message2.attachment_ids:
+            dl_attach = self.mail_message.download_attachment(cr, user_raoul.id, id_message=message2.id, attachment_id=attach.id)
+            self.assertIn((dl_attach['filename'], dl_attach['base64'].decode('base64')), _attachments, 'mail.message download_attachment is incorrect')
 
         # 2. Dédé has been notified -> should also have been notified of the parent message
         message1.refresh()
