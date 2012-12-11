@@ -89,8 +89,8 @@
             restrictions more convenient.
         -->
         <record id="group_anonymous" model="res.groups">
-            <field name="name">Anonymous Group</field>
-            <field name="users" eval="[(4,ref('anonymous_user'))]"/>
+            <field name="name">Anonymous</field>
+            <field name="users" eval="[(4, ref('anonymous_user'))]"/>
         </record>
 
         <record id="paypal_acquirer" model="portal.payment.acquirer">

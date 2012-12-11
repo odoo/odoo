@@ -10,5 +10,7 @@ Allow anonymous to Access Portal.
     'website': 'http://www.openerp.com',
     'installable': True,
     'depends': ['portal', 'auth_anonymous'],
-    'data': ['portal_anonymous.xml'],
+    'data': [
+        'security/ir.model.access.csv',
+    ],
 }
