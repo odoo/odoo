@@ -237,11 +237,9 @@ openerp.mail = function (session) {
 
         /* Convert date, timerelative and avatar in displayable data. */
         format_data: function () {
-
             //formating and add some fields for render
             if (this._date) {
-                this.date = session.web.format_value(this._date, {type:"datetime"});
-                this.timerelative = $.timeago(this.date);
+                this.timerelative = $.timeago(this._date+"Z");
             } 
             if (this.type == 'email' && (!this.author_id || !this.author_id[0])) {
                 this.avatar = ('/mail/static/src/img/email_icon.png');
@@ -674,8 +672,11 @@ openerp.mail = function (session) {
 
             // read messages
             self.parent_thread.message_fetch(this.domain, this.context, false, function (arg, data) {
-                // insert the message on dom after this message
+                if (self.options.root_thread == self.parent_thread) {
+                    data.reverse();
+                }
                 self.id = false;
+                // insert the message on dom after this message
                 self.parent_thread.switch_new_message( data, self.$el );
                 self.animated_destroy(200);
             });
@@ -846,7 +847,7 @@ openerp.mail = function (session) {
             }
             var message_ids = _.map(messages, function (val) { return val.id; });
 
-            this.ds_notification.call('set_message_read', [message_ids, read_value, this.context])
+            this.ds_message.call('set_message_read', [message_ids, read_value, this.context])
                 .then(function () {
                     // apply modification
                     _.each(messages, function (msg) {
@@ -895,7 +896,7 @@ openerp.mail = function (session) {
             var self=this;
             var button = self.$('.oe_star:first');
 
-            this.ds_message.call('favorite_toggle', [[self.id]])
+            this.ds_message.call('set_message_starred', [[self.id], !self.is_favorite])
                 .then(function (star) {
                     self.is_favorite=star;
                     if (self.is_favorite) {
@@ -990,7 +991,7 @@ openerp.mail = function (session) {
             // add message composition form view
             if (!this.compose_message) {
                 this.compose_message = new mail.ThreadComposeMessage(this, this, {
-                    'context': this.options.compose_as_todo && !this.thread_level ? _.extend(this.context, { 'default_favorite_user_ids': [this.session.uid] }) : this.context,
+                    'context': this.options.compose_as_todo && !this.thread_level ? _.extend(this.context, { 'default_starred': true }) : this.context,
                     'options': this.options,
                 });
                 if (!this.thread_level || this.thread_level > this.options.display_indented_thread) {
@@ -1013,8 +1014,6 @@ openerp.mail = function (session) {
                     var bottom = $(window).scrollTop()+$(window).height()+200;
                     if (bottom > pos.top) {
                         val.on_expandable();
-                        // load only one time
-                        val.loading = true;
                     }
                 }
             });

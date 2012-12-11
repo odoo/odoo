@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-24 02:51+0000\n"
-"PO-Revision-Date: 2012-11-24 02:51+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
+"PO-Revision-Date: 2012-12-03 16:02+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -42,11 +42,6 @@ msgid "Working Hours to Open the Issue"
 msgstr ""
 
 #. module: project_issue
-#: constraint:project.project:0
-msgid "Error! project start-date must be lower then project end-date."
-msgstr ""
-
-#. module: project_issue
 #: field:project.issue,date_open:0
 msgid "Opened"
 msgstr ""
@@ -73,9 +68,14 @@ msgid "Unread Messages"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:562
+#: code:addons/project_issue/project_issue.py:560
 #, python-format
 msgid "<b>escalated</b>."
+msgstr ""
+
+#. module: project_issue
+#: model:ir.actions.server,name:project_issue.actions_server_project_issue_unread
+msgid "Issue: Mark unread"
 msgstr ""
 
 #. module: project_issue
@@ -99,7 +99,7 @@ msgid "Days to Open"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:474
+#: code:addons/project_issue/project_issue.py:472
 #, python-format
 msgid "You cannot escalate this issue.\n"
 "The relevant Project has not configured the Escalation Project!"
@@ -177,6 +177,11 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: project_issue
+#: field:project.issue,description:0
+msgid "Private Note"
+msgstr ""
+
+#. module: project_issue
 #: field:project.issue.report,date_closed:0
 msgid "Date of Closing"
 msgstr ""
@@ -247,7 +252,7 @@ msgid "Maintenance"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:549
+#: code:addons/project_issue/project_issue.py:547
 #, python-format
 msgid "Project issue <b>converted</b> to task."
 msgstr ""
@@ -309,11 +314,6 @@ msgid "%s (copy)"
 msgstr ""
 
 #. module: project_issue
-#: model:ir.actions.server,name:project_issue.actions_server_project_issue_read
-msgid "Mark read"
-msgstr ""
-
-#. module: project_issue
 #: view:project.issue:0
 msgid "Unassigned Issues"
 msgstr ""
@@ -323,11 +323,6 @@ msgstr ""
 #: view:project.issue.report:0
 #: field:project.issue.report,creation_date:0
 msgid "Creation Date"
-msgstr ""
-
-#. module: project_issue
-#: constraint:account.analytic.account:0
-msgid "Error! You cannot create recursive analytic accounts."
 msgstr ""
 
 #. module: project_issue
@@ -384,7 +379,7 @@ msgid "Issues Analysis"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:495
+#: code:addons/project_issue/project_issue.py:493
 #, python-format
 msgid "No Subject"
 msgstr ""
@@ -403,7 +398,7 @@ msgid "Contact"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:553
+#: code:addons/project_issue/project_issue.py:551
 #, python-format
 msgid "Project issue <b>created</b>."
 msgstr ""
@@ -425,8 +420,8 @@ msgid "# of Issues"
 msgstr ""
 
 #. module: project_issue
-#: selection:project.issue.report,month:0
-msgid "September"
+#: model:ir.actions.server,name:project_issue.actions_server_project_issue_read
+msgid "Issue: Mark read"
 msgstr ""
 
 #. module: project_issue
@@ -564,11 +559,6 @@ msgid "Normal"
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "Escalate"
-msgstr ""
-
-#. module: project_issue
 #: field:project.project,issue_count:0
 msgid "unknown"
 msgstr ""
@@ -620,7 +610,7 @@ msgid "November"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:474
+#: code:addons/project_issue/project_issue.py:472
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -689,6 +679,11 @@ msgid "Current Features"
 msgstr ""
 
 #. module: project_issue
+#: selection:project.issue.report,month:0
+msgid "September"
+msgstr ""
+
+#. module: project_issue
 #: view:project.issue.version:0
 msgid "Issue Version"
 msgstr ""
@@ -742,7 +737,7 @@ msgid "Creation Month"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:559
+#: code:addons/project_issue/project_issue.py:557
 #, python-format
 msgid "<b>escalated</b> to <em>'%s'</em>."
 msgstr ""
@@ -768,7 +763,7 @@ msgid "Issue"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:542
+#: code:addons/project_issue/project_issue.py:540
 #, python-format
 msgid "Stage changed to <b>%s</b>."
 msgstr ""
@@ -785,7 +780,6 @@ msgstr ""
 
 #. module: project_issue
 #: view:project.issue:0
-#: field:project.issue,description:0
 msgid "Description"
 msgstr ""
 
@@ -857,8 +851,8 @@ msgid "April"
 msgstr ""
 
 #. module: project_issue
-#: model:ir.actions.server,name:project_issue.actions_server_project_issue_unread
-msgid "Mark unread"
+#: view:project.issue:0
+msgid "⇒ Escalate"
 msgstr ""
 
 #. module: project_issue

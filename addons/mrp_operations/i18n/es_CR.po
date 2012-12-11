@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-24 02:53+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2012-02-17 20:43+0000\n"
 "Last-Translator: Freddy Gonzalez <freddy.gonzalez.contreras@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:13+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:40+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 "Language: \n"
 
 #. module: mrp_operations
@@ -380,11 +380,6 @@ msgid "Work Order Report"
 msgstr "Informe orden de trabajo"
 
 #. module: mrp_operations
-#: constraint:mrp.production:0
-msgid "Order quantity cannot be negative or zero!"
-msgstr "¡La cantidad de la orden no puede ser negativa o cero!"
-
-#. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_start:0
 #: field:mrp_operations.operation,date_start:0
 msgid "Start Date"
@@ -534,11 +529,6 @@ msgid "November"
 msgstr "Noviembre"
 
 #. module: mrp_operations
-#: constraint:stock.move:0
-msgid "You must assign a serial number for this product."
-msgstr ""
-
-#. module: mrp_operations
 #: view:mrp.workorder:0
 msgid "Search"
 msgstr "Buscar"
@@ -552,11 +542,6 @@ msgstr "Octubre"
 #: selection:mrp.workorder,month:0
 msgid "January"
 msgstr "Enero"
-
-#. module: mrp_operations
-#: constraint:stock.move:0
-msgid "You cannot move products from or to a location of the type view."
-msgstr ""
 
 #. module: mrp_operations
 #: view:mrp.production:0
@@ -578,11 +563,6 @@ msgstr "¡La operación todavía no se ha iniciado!"
 #: model:process.node,note:mrp_operations.process_node_productionorder0
 msgid "Information from the production order."
 msgstr "Inforamción de la orden de fabricación"
-
-#. module: mrp_operations
-#: sql_constraint:mrp.production:0
-msgid "Reference must be unique per Company!"
-msgstr "Referencia debe ser única por compañía!"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:497
@@ -741,11 +721,6 @@ msgstr "Fecha programada"
 #: field:mrp.workorder,product_id:0
 msgid "Product"
 msgstr "Producto"
-
-#. module: mrp_operations
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product."
-msgstr ""
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -1181,8 +1156,14 @@ msgstr "Duración"
 #~ msgid "Work orders during last month"
 #~ msgstr "Órdenes de trabajo durante último mes"
 
+#~ msgid "Order quantity cannot be negative or zero!"
+#~ msgstr "¡La cantidad de la orden no puede ser negativa o cero!"
+
 #~ msgid "Work orders made during current year"
 #~ msgstr "Órdenes de trabajo realizadas durrante el año en curso"
+
+#~ msgid "Reference must be unique per Company!"
+#~ msgstr "Referencia debe ser única por compañía!"
 
 #~ msgid "Work orders made during current month"
 #~ msgstr "Órdenes de trabajo realizadas durante el mes en curso"

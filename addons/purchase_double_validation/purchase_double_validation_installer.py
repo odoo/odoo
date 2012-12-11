@@ -34,16 +34,16 @@ class purchase_config_settings(osv.osv_memory):
 
     def get_default_limit_amount(self, cr, uid, fields, context=None):
         ir_model_data = self.pool.get('ir.model.data')
-        transition = ir_model_data.get_object(cr, uid, 'purchase_double_validation', 'trans_waiting_confirmed')
+        transition = ir_model_data.get_object(cr, uid, 'purchase_double_validation', 'trans_confirmed_double_lt')
         field, value = transition.condition.split('<', 1)
         return {'limit_amount': int(value)}
 
     def set_limit_amount(self, cr, uid, ids, context=None):
         ir_model_data = self.pool.get('ir.model.data')
         config = self.browse(cr, uid, ids[0], context)
-        waiting = ir_model_data.get_object(cr, uid, 'purchase', 'trans_confirmed_router')
+        waiting = ir_model_data.get_object(cr, uid, 'purchase_double_validation', 'trans_confirmed_double_gt')
         waiting.write({'condition': 'amount_total >= %s' % config.limit_amount})
-        confirm = ir_model_data.get_object(cr, uid, 'purchase_double_validation', 'trans_waiting_confirmed')
+        confirm = ir_model_data.get_object(cr, uid, 'purchase_double_validation', 'trans_confirmed_double_lt')
         confirm.write({'condition': 'amount_total < %s' % config.limit_amount})
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

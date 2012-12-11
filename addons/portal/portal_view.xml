@@ -57,9 +57,8 @@
             }</field>
             <field name="params" eval="&quot;{
                 'domain': [
-                  ('notification_ids.partner_id.user_ids', 'in', [uid]),
                   ('to_read', '=', True),
-                  ('favorite_user_ids', 'not in', [uid])
+                  ('starred', '=', False),
                 ],
                 'show_compose_message': False,
                 'show_link': False,

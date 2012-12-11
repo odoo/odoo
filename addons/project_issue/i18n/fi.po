@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:51+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2011-07-19 08:32+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:26+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:49+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_03
@@ -46,11 +46,6 @@ msgid "Working Hours to Open the Issue"
 msgstr "Työtunnit tapauksen avaamiseen"
 
 #. module: project_issue
-#: constraint:project.project:0
-msgid "Error! project start-date must be lower then project end-date."
-msgstr "Virhe: projektin alkupäivä tulee olla aikaisempi kuin loppupäivä."
-
-#. module: project_issue
 #: field:project.issue,date_open:0
 msgid "Opened"
 msgstr "Avattu"
@@ -77,9 +72,14 @@ msgid "Unread Messages"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:562
+#: code:addons/project_issue/project_issue.py:560
 #, python-format
 msgid "<b>escalated</b>."
+msgstr ""
+
+#. module: project_issue
+#: model:ir.actions.server,name:project_issue.actions_server_project_issue_unread
+msgid "Issue: Mark unread"
 msgstr ""
 
 #. module: project_issue
@@ -103,7 +103,7 @@ msgid "Days to Open"
 msgstr "Päiviä avaamiseen"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:474
+#: code:addons/project_issue/project_issue.py:472
 #, python-format
 msgid ""
 "You cannot escalate this issue.\n"
@@ -186,6 +186,11 @@ msgid "Cancelled"
 msgstr "Peruttu"
 
 #. module: project_issue
+#: field:project.issue,description:0
+msgid "Private Note"
+msgstr ""
+
+#. module: project_issue
 #: field:project.issue.report,date_closed:0
 msgid "Date of Closing"
 msgstr "Sulkemispäivä"
@@ -266,7 +271,7 @@ msgid "Maintenance"
 msgstr "Ylläpito"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:549
+#: code:addons/project_issue/project_issue.py:547
 #, python-format
 msgid "Project issue <b>converted</b> to task."
 msgstr ""
@@ -328,11 +333,6 @@ msgid "%s (copy)"
 msgstr ""
 
 #. module: project_issue
-#: model:ir.actions.server,name:project_issue.actions_server_project_issue_read
-msgid "Mark read"
-msgstr ""
-
-#. module: project_issue
 #: view:project.issue:0
 msgid "Unassigned Issues"
 msgstr "Kytkemättömät tapaukset"
@@ -343,11 +343,6 @@ msgstr "Kytkemättömät tapaukset"
 #: field:project.issue.report,creation_date:0
 msgid "Creation Date"
 msgstr "Luontipäivämäärä"
-
-#. module: project_issue
-#: constraint:account.analytic.account:0
-msgid "Error! You cannot create recursive analytic accounts."
-msgstr ""
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.project_issue_version_action
@@ -403,7 +398,7 @@ msgid "Issues Analysis"
 msgstr "Tapausten analyysit"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:495
+#: code:addons/project_issue/project_issue.py:493
 #, python-format
 msgid "No Subject"
 msgstr ""
@@ -422,7 +417,7 @@ msgid "Contact"
 msgstr "Yhteyshenkilö"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:553
+#: code:addons/project_issue/project_issue.py:551
 #, python-format
 msgid "Project issue <b>created</b>."
 msgstr ""
@@ -444,9 +439,9 @@ msgid "# of Issues"
 msgstr "Tapausten lukumäärä"
 
 #. module: project_issue
-#: selection:project.issue.report,month:0
-msgid "September"
-msgstr "Syyskuu"
+#: model:ir.actions.server,name:project_issue.actions_server_project_issue_read
+msgid "Issue: Mark read"
+msgstr ""
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -589,11 +584,6 @@ msgid "Normal"
 msgstr "Normaali"
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "Escalate"
-msgstr "Eskaloi"
-
-#. module: project_issue
 #: field:project.project,issue_count:0
 msgid "unknown"
 msgstr ""
@@ -650,7 +640,7 @@ msgid "November"
 msgstr "Marraskuu"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:474
+#: code:addons/project_issue/project_issue.py:472
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -719,6 +709,11 @@ msgid "Current Features"
 msgstr "Nykyiset päätapahtumat"
 
 #. module: project_issue
+#: selection:project.issue.report,month:0
+msgid "September"
+msgstr "Syyskuu"
+
+#. module: project_issue
 #: view:project.issue.version:0
 msgid "Issue Version"
 msgstr "Tapauksen versio"
@@ -772,7 +767,7 @@ msgid "Creation Month"
 msgstr "Luontikuukausi"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:559
+#: code:addons/project_issue/project_issue.py:557
 #, python-format
 msgid "<b>escalated</b> to <em>'%s'</em>."
 msgstr ""
@@ -798,7 +793,7 @@ msgid "Issue"
 msgstr "Tapaus"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:542
+#: code:addons/project_issue/project_issue.py:540
 #, python-format
 msgid "Stage changed to <b>%s</b>."
 msgstr ""
@@ -815,7 +810,6 @@ msgstr "Ominaisuusseurannan haku"
 
 #. module: project_issue
 #: view:project.issue:0
-#: field:project.issue,description:0
 msgid "Description"
 msgstr "Kuvaus"
 
@@ -893,8 +887,8 @@ msgid "April"
 msgstr "Huhtikuu"
 
 #. module: project_issue
-#: model:ir.actions.server,name:project_issue.actions_server_project_issue_unread
-msgid "Mark unread"
+#: view:project.issue:0
+msgid "⇒ Escalate"
 msgstr ""
 
 #. module: project_issue
@@ -953,6 +947,9 @@ msgstr "Vuosi"
 #: field:project.issue,duration:0
 msgid "Duration"
 msgstr "Kesto"
+
+#~ msgid "Error! project start-date must be lower then project end-date."
+#~ msgstr "Virhe: projektin alkupäivä tulee olla aikaisempi kuin loppupäivä."
 
 #~ msgid "Issues By Stage"
 #~ msgstr "Tapaukset tilakoodeittain"
@@ -1039,6 +1036,9 @@ msgstr "Kesto"
 
 #~ msgid "This is the current user to whom the related task have been assigned"
 #~ msgstr "Tämä on nykyinen käyttäjä jolle liittyvä tehtävä on määritelty"
+
+#~ msgid "Escalate"
+#~ msgstr "Eskaloi"
 
 #~ msgid "Current Issues"
 #~ msgstr "Nykyiset tapaukset"

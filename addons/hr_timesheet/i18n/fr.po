@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:51+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-05-10 17:43+0000\n"
 "Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:06+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:33+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #~ msgid "Error: UOS must be in a different category than the UOM"
 #~ msgstr "Erreur : l'UdV doit appartenir à une autre catégorie que l'UdM"
@@ -140,9 +140,9 @@ msgid "Minimum Analytic Amount"
 msgstr "Montant analytique minimum"
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-msgid "Total time"
-msgstr "Temps total"
+#: view:hr.analytical.timesheet.employee:0
+msgid "Monthly Employee Timesheet"
+msgstr "Feuille de temps mensuelle de l'employé"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
@@ -223,6 +223,11 @@ msgid "Sun"
 msgstr "Dim."
 
 #. module: hr_timesheet
+#: xsl:hr.analytical.timesheet:0
+msgid "Sum"
+msgstr "Somme"
+
+#. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Analytic account"
 msgstr "Compte Analytique"
@@ -252,11 +257,6 @@ msgstr "Imprimer"
 #. module: hr_timesheet
 #: help:account.analytic.account,use_timesheets:0
 msgid "Check this field if this project manages timesheets"
-msgstr ""
-
-#. module: hr_timesheet
-#: constraint:account.analytic.account:0
-msgid "Error! You cannot create recursive analytic accounts."
 msgstr ""
 
 #. module: hr_timesheet
@@ -355,6 +355,11 @@ msgid "or"
 msgstr ""
 
 #. module: hr_timesheet
+#: xsl:hr.analytical.timesheet:0
+msgid "Timesheet by Employee"
+msgstr "Feuille de temps par employé"
+
+#. module: hr_timesheet
 #: model:ir.actions.report.xml,name:hr_timesheet.report_user_timesheet
 msgid "Employee timesheet"
 msgstr "Feuille de présence de l'employé"
@@ -381,6 +386,7 @@ msgid "(Keep empty for current time)"
 msgstr "(Garder vide pour la date courante)"
 
 #. module: hr_timesheet
+#: field:account.analytic.account,use_timesheets:0
 #: view:hr.employee:0
 msgid "Timesheets"
 msgstr "Feuilles de temps"
@@ -514,11 +520,7 @@ msgid "Cancel"
 msgstr "Annuler"
 
 #. module: hr_timesheet
-#: constraint:hr.employee:0
-msgid "Error! You cannot create recursive hierarchy of Employee(s)."
-msgstr ""
-
-#. module: hr_timesheet
+#: xsl:hr.analytical.timesheet_users:0
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_users
 #: model:ir.actions.report.xml,name:hr_timesheet.report_users_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_users
@@ -581,9 +583,9 @@ msgid "May"
 msgstr "mai"
 
 #. module: hr_timesheet
-#: view:hr.analytical.timesheet.employee:0
-msgid "Monthly Employee Timesheet"
-msgstr "Feuille de temps mensuelle de l'employé"
+#: view:hr.analytic.timesheet:0
+msgid "Total time"
+msgstr "Temps total"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
@@ -623,11 +625,6 @@ msgid "Employees"
 msgstr "Employés"
 
 #. module: hr_timesheet
-#: constraint:hr.analytic.timesheet:0
-msgid "You cannot modify an entry in a Confirmed/Done timesheet !"
-msgstr ""
-
-#. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
 #: code:addons/hr_timesheet/report/users_timesheet.py:73
 #: selection:hr.analytical.timesheet.employee,month:0
@@ -653,11 +650,6 @@ msgid "User Error!"
 msgstr ""
 
 #. module: hr_timesheet
-#: field:account.analytic.account,use_timesheets:0
-msgid "Use Timesheets"
-msgstr ""
-
-#. module: hr_timesheet
 #: view:hr.sign.in.project:0
 msgid "Start Working"
 msgstr "Commencer le travail"
@@ -679,6 +671,12 @@ msgid "Accounting"
 msgstr "Comptabilité"
 
 #. module: hr_timesheet
+#: xsl:hr.analytical.timesheet:0
+#: xsl:hr.analytical.timesheet_users:0
+msgid "Total"
+msgstr "Total"
+
+#. module: hr_timesheet
 #: view:hr.sign.out.project:0
 msgid "Change Work"
 msgstr "Changer de travail"
@@ -698,9 +696,6 @@ msgstr "Changer de travail"
 #, python-format
 #~ msgid "ValidateError"
 #~ msgstr "Erreur de Validation"
-
-#~ msgid "Sum"
-#~ msgstr "Somme"
 
 #~ msgid "Hour"
 #~ msgstr "Heure"
@@ -770,9 +765,6 @@ msgstr "Changer de travail"
 
 #~ msgid "Stats by user"
 #~ msgstr "Statistiques par utilisateur"
-
-#~ msgid "Total"
-#~ msgstr "Total"
 
 #, python-format
 #~ msgid "No employee defined for your user !"
