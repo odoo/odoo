@@ -5062,7 +5062,7 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
         this._super( ids );
     },
     get_value: function() {
-        return _.map(this.get('value'), function (value) { return commands.link_to( value.id ); });
+        return _.map(this.get('value'), function (value) { return commands.link_to( isNaN(value) ? value.id : value ); });
     },
     get_file_url: function (attachment) {
         return this.session.url('/web/binary/saveas', {model: 'ir.attachment', field: 'datas', filename_field: 'datas_fname', id: attachment['id']});
