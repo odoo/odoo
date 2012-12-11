@@ -20,7 +20,23 @@
                         </div>
                         <notebook>
                             <page string="Vendors">
-                                <field name="vendors" widget="many2many_kanban"/>
+                                <field name="vendors" widget="many2many_kanban">
+                                    <kanban quick_create="false" create="true">
+                                        <field name="name"/>
+                                        <templates>
+                                            <t t-name="kanban-box">
+                                                <div style="position: relative">
+                                                    <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
+                                                    <div class="oe_module_vignette">
+                                                        <div class="oe_module_desc">
+                                                            <field name="name"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                        </templates>
+                                    </kanban>
+                                </field>
                             </page>
                         </notebook>
                     </sheet>
@@ -38,11 +54,25 @@
             </field>
         </record>
 
+        <record model='ir.ui.view' id='fleet_vehicle_model_search'>
+            <field name="name">fleet.vehicle.model.search</field>
+            <field name="model">fleet.vehicle.model</field>
+            <field name="arch" type="xml">
+                <search string="Vehicles costs" >
+                    <field name="brand_id" />
+                    <group expand="1" string="Group By...">
+                        <filter name="groupby_brand" context="{'group_by' : 'brand_id'}" string="Brand"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <record model='ir.actions.act_window' id='fleet_vehicle_model_act'>
             <field name="name">Vehicle Model</field>
             <field name="res_model">fleet.vehicle.model</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="context">{"search_default_groupby_brand" : True,}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a new model.

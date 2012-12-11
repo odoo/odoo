@@ -8,11 +8,13 @@
         <record id="group_fleet_user" model="res.groups">
             <field name="name">User</field>
             <field name="category_id" ref="module_fleet_category"/>
+            <field name="users" eval="[(4, ref('base.user_demo'))]"/>
         </record>
         <record id="group_fleet_manager" model="res.groups">
             <field name="name">Manager</field>
             <field name="implied_ids" eval="[(4, ref('group_fleet_user'))]"/>
             <field name="category_id" ref="module_fleet_category"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
         </record>
         <record id="fleet_user_contract_visibility" model="ir.rule">
             <field name="name">User can only see his/her contracts</field>

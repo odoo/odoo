@@ -55,7 +55,7 @@ class mail_message(osv.Model):
 
     _message_read_limit = 30
     _message_read_fields = ['id', 'parent_id', 'model', 'res_id', 'body', 'subject', 'date', 'to_read', 'email_from',
-        'type', 'vote_user_ids', 'attachment_ids', 'author_id', 'partner_ids', 'record_name', 'favorite_user_ids']
+        'type', 'vote_user_ids', 'attachment_ids', 'author_id', 'partner_ids', 'record_name']
     _message_record_name_length = 18
     _message_read_more_limit = 1024
 
@@ -63,7 +63,7 @@ class mail_message(osv.Model):
         # protection for `default_type` values leaking from menu action context (e.g. for invoices)
         if context and context.get('default_type') and context.get('default_type') not in self._columns['type'].selection:
             context = dict(context, default_type=None)
-        return super(mail_message, self).default_get(cr, uid, fields, context=context) 
+        return super(mail_message, self).default_get(cr, uid, fields, context=context)
 
     def _shorten_name(self, name):
         if len(name) <= (self._message_record_name_length + 3):
@@ -98,15 +98,26 @@ class mail_message(osv.Model):
     def _search_to_read(self, cr, uid, obj, name, domain, context=None):
         """ Search for messages to read by the current user. Condition is
             inversed because we search unread message on a read column. """
-        if domain[0][2]:
-            read_cond = "(read = False OR read IS NULL)"
-        else:
-            read_cond = "read = True"
+        return ['&', ('notification_ids.partner_id.user_ids', 'in', [uid]), ('notification_ids.read', '=', not domain[0][2])]
+
+    def _get_starred(self, cr, uid, ids, name, arg, context=None):
+        """ Compute if the message is unread by the current user. """
+        res = dict((id, False) for id in ids)
         partner_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
-        cr.execute("SELECT message_id FROM mail_notification "\
-                        "WHERE partner_id = %%s AND %s" % read_cond,
-                    (partner_id,))
-        return [('id', 'in', [r[0] for r in cr.fetchall()])]
+        notif_obj = self.pool.get('mail.notification')
+        notif_ids = notif_obj.search(cr, uid, [
+            ('partner_id', 'in', [partner_id]),
+            ('message_id', 'in', ids),
+            ('starred', '=', True),
+        ], context=context)
+        for notif in notif_obj.browse(cr, uid, notif_ids, context=context):
+            res[notif.message_id.id] = True
+        return res
+
+    def _search_starred(self, cr, uid, obj, name, domain, context=None):
+        """ Search for messages to read by the current user. Condition is
+            inversed because we search unread message on a read column. """
+        return ['&', ('notification_ids.partner_id.user_ids', 'in', [uid]), ('notification_ids.starred', '=', domain[0][2])]
 
     def name_get(self, cr, uid, ids, context=None):
         # name_get may receive int id instead of an id list
@@ -146,7 +157,7 @@ class mail_message(osv.Model):
             store=True, string='Message Record Name',
             help="Name get of the related document."),
         'notification_ids': fields.one2many('mail.notification', 'message_id',
-            string='Notifications',
+            string='Notifications', auto_join=True,
             help='Technical field holding the message notifications. Use notified_partner_ids to access notified partners.'),
         'subject': fields.char('Subject'),
         'date': fields.datetime('Date'),
@@ -154,21 +165,19 @@ class mail_message(osv.Model):
         'body': fields.html('Contents', help='Automatically sanitized HTML contents'),
         'to_read': fields.function(_get_to_read, fnct_search=_search_to_read,
             type='boolean', string='To read',
-            help='Functional field to search for messages the current user has to read'),
+            help='Current user has an unread notification linked to this message'),
+        'starred': fields.function(_get_starred, fnct_search=_search_starred,
+            type='boolean', string='Starred',
+            help='Current user has a starred notification linked to this message'),
         'subtype_id': fields.many2one('mail.message.subtype', 'Subtype',
             ondelete='set null', select=1,),
         'vote_user_ids': fields.many2many('res.users', 'mail_vote',
             'message_id', 'user_id', string='Votes',
             help='Users that voted for this message'),
-        'favorite_user_ids': fields.many2many('res.users', 'mail_favorite',
-            'message_id', 'user_id', string='Favorite',
-            help='Users that set this message in their favorites'),
     }
 
     def _needaction_domain_get(self, cr, uid, context=None):
-        if self._needaction:
-            return [('to_read', '=', True)]
-        return []
+        return [('to_read', '=', True)]
 
     def _get_default_author(self, cr, uid, context=None):
         return self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
@@ -196,27 +205,62 @@ class mail_message(osv.Model):
         return new_has_voted or False
 
     #------------------------------------------------------
-    # Favorite
+    # Notification API
     #------------------------------------------------------
 
-    def favorite_toggle(self, cr, uid, ids, context=None):
-        ''' Toggles favorite. Performed using read to avoid access rights issues.
-            Done as SUPERUSER_ID because uid may star a message he cannot modify. '''
-        for message in self.read(cr, uid, ids, ['favorite_user_ids'], context=context):
-            new_is_favorite = not (uid in message.get('favorite_user_ids'))
-            if new_is_favorite:
-                self.write(cr, SUPERUSER_ID, message.get('id'), {'favorite_user_ids': [(4, uid)]}, context=context)
-                # when setting a favorite, set the related notification as unread, or create an unread notification if not existing
-                notification_obj = self.pool.get('mail.notification')
-                pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=None)['partner_id'][0]
-                notif_id = notification_obj.search(cr, SUPERUSER_ID, [('message_id', '=', message.get('id')), ('partner_id', '=', pid)], context=context)
-                if notif_id:
-                    notification_obj.write(cr, SUPERUSER_ID, notif_id, {'read': False}, context=context)
-                else:
-                    notification_obj.create(cr, SUPERUSER_ID, {'message_id': message.get('id'), 'partner_id': pid, 'read': False}, context=context)
-            else:
-                self.write(cr, SUPERUSER_ID, message.get('id'), {'favorite_user_ids': [(3, uid)]}, context=context)
-        return new_is_favorite or False
+    def set_message_read(self, cr, uid, msg_ids, read, context=None):
+        """ Set messages as (un)read. Technically, the notifications related
+            to uid are set to (un)read. If for some msg_ids there are missing
+            notifications (i.e. due to load more or thread parent fetching),
+            they are created.
+
+            :param bool read: set notification as (un)read
+        """
+        notification_obj = self.pool.get('mail.notification')
+        user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
+        notif_ids = notification_obj.search(cr, uid, [
+            ('partner_id', '=', user_pid),
+            ('message_id', 'in', msg_ids)
+            ], context=context)
+
+        # all message have notifications: already set them as (un)read
+        if len(notif_ids) == len(msg_ids):
+            return notification_obj.write(cr, uid, notif_ids, {'read': read}, context=context)
+
+        # some messages do not have notifications: find which one, create notification, update read status
+        notified_msg_ids = [notification.message_id.id for notification in notification_obj.browse(cr, uid, notif_ids, context=context)]
+        to_create_msg_ids = list(set(msg_ids) - set(notified_msg_ids))
+        for msg_id in to_create_msg_ids:
+            notification_obj.create(cr, uid, {'partner_id': user_pid, 'read': read, 'message_id': msg_id}, context=context)
+        return notification_obj.write(cr, uid, notif_ids, {'read': read}, context=context)
+
+    def set_message_starred(self, cr, uid, msg_ids, starred, context=None):
+        """ Set messages as (un)starred. Technically, the notifications related
+            to uid are set to (un)starred. If for some msg_ids there are missing
+            notifications (i.e. due to load more or thread parent fetching),
+            they are created.
+
+            :param bool starred: set notification as (un)starred
+        """
+        notification_obj = self.pool.get('mail.notification')
+        user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
+        notif_ids = notification_obj.search(cr, uid, [
+            ('partner_id', '=', user_pid),
+            ('message_id', 'in', msg_ids)
+            ], context=context)
+
+        # all message have notifications: already set them as (un)starred
+        if len(notif_ids) == len(msg_ids):
+            notification_obj.write(cr, uid, notif_ids, {'starred': starred}, context=context)
+            return starred
+
+        # some messages do not have notifications: find which one, create notification, update starred status
+        notified_msg_ids = [notification.message_id.id for notification in notification_obj.browse(cr, uid, notif_ids, context=context)]
+        to_create_msg_ids = list(set(msg_ids) - set(notified_msg_ids))
+        for msg_id in to_create_msg_ids:
+            notification_obj.create(cr, uid, {'partner_id': user_pid, 'starred': starred, 'message_id': msg_id}, context=context)
+        notification_obj.write(cr, uid, notif_ids, {'starred': starred}, context=context)
+        return starred
 
     #------------------------------------------------------
     # Message loading for web interface
@@ -291,7 +335,6 @@ class mail_message(osv.Model):
         # votes and favorites: res.users ids, no prefetching should be done
         vote_nb = len(message.vote_user_ids)
         has_voted = uid in [user.id for user in message.vote_user_ids]
-        is_favorite = uid in [user.id for user in message.favorite_user_ids]
 
         return {'id': message.id,
                 'type': message.type,
@@ -309,7 +352,7 @@ class mail_message(osv.Model):
                 'partner_ids': [],
                 'vote_nb': vote_nb,
                 'has_voted': has_voted,
-                'is_favorite': is_favorite,
+                'is_favorite': message.starred,
                 'attachment_ids': [],
             }
 
@@ -482,15 +525,6 @@ class mail_message(osv.Model):
             thread_level=thread_level, message_unload_ids=message_unload_ids, domain=domain, parent_id=parent_id, context=context)
         return message_list
 
-    # TDE Note: do we need this ?
-    # def user_free_attachment(self, cr, uid, context=None):
-    #     attachment = self.pool.get('ir.attachment')
-    #     attachment_list = []
-    #     attachment_ids = attachment.search(cr, uid, [('res_model', '=', 'mail.message'), ('create_uid', '=', uid)])
-    #     if len(attachment_ids):
-    #         attachment_list = [{'id': attach.id, 'name': attach.name, 'date': attach.create_date} for attach in attachment.browse(cr, uid, attachment_ids, context=context)]
-    #     return attachment_list
-
     #------------------------------------------------------
     # mail_message internals
     #------------------------------------------------------
@@ -648,12 +682,23 @@ class mail_message(osv.Model):
                             (self._description, operation))
 
     def create(self, cr, uid, values, context=None):
+        if context is None:
+            context = {}
+        default_starred = context.pop('default_starred', False)
         if not values.get('message_id') and values.get('res_id') and values.get('model'):
             values['message_id'] = tools.generate_tracking_message_id('%(res_id)s-%(model)s' % values)
         elif not values.get('message_id'):
             values['message_id'] = tools.generate_tracking_message_id('private')
         newid = super(mail_message, self).create(cr, uid, values, context)
         self._notify(cr, SUPERUSER_ID, newid, context=context)
+        # TDE FIXME: handle default_starred. Why not setting an inv on starred ?
+        # Because starred will call set_message_starred, that looks for notifications.
+        # When creating a new mail_message, it will create a notification to a message
+        # that does not exist, leading to an error (key not existing). Also this
+        # this means unread notifications will be created, yet we can not assure
+        # this is what we want.
+        if default_starred:
+            self.set_message_starred(cr, uid, [newid], True, context=context)
         return newid
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
