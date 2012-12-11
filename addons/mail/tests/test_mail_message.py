@@ -65,6 +65,26 @@ class test_mail_access_rights(TestMailBase):
         self.mail_group.read(cr, user_raoul_id, [self.group_priv_id])
 
     @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.osv.orm')
+    def test_05_mail_thread_delete(self):
+        """ Testing follower, mail and document relation. """
+        cr, uid = self.cr, self.uid
+
+        # Raoul create a document mail_group
+        group_doc_id = self.mail_group.create(cr, self.user_raoul_id, {'name': 'Doc group'})
+
+        # Test: Raoul can modify the group
+        self.mail_group.write(cr, self.user_raoul_id, [group_doc_id], {'name': 'Doc group 2'})
+        # Test: Bert cannot modify the group
+        self.assertRaises(except_orm, self.mail_group.write,
+            cr, self.user_bert_id, [group_doc_id], {'name': 'Doc group 3'})
+        # Test: Bert cannot unlink the group
+        self.assertRaises(except_orm,
+            self.mail_group.unlink,
+            cr, self.user_bert_id, [group_doc_id])
+        # Test: Raoul can unlink the group
+        self.mail_group.unlink(cr, self.user_raoul_id, [group_doc_id])
+
+    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.osv.orm')
     def test_10_mail_message_search_access_rights(self):
         """ Test mail_message search override about access rights. """
         cr, uid, group_pigs_id = self.cr, self.uid, self.group_pigs_id
