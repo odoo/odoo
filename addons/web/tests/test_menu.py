@@ -36,7 +36,7 @@ class LoadTest(unittest2.TestCase):
         self.MockMenus.search.return_value = []
         self.MockMenus.read.return_value = []
 
-        root = self.menu.do_load(self.request)
+        root = self.menu.load(self.request)
 
         self.MockMenus.search.assert_called_with(
             [], 0, False, False, self.request.context)
@@ -57,7 +57,7 @@ class LoadTest(unittest2.TestCase):
             {'id': 2, 'sequence': 3, 'parent_id': False},
         ]
 
-        root = self.menu.do_load(self.request)
+        root = self.menu.load(self.request)
 
         self.MockMenus.read.assert_called_with(
             [1, 2, 3], ['name', 'sequence', 'parent_id',
@@ -90,7 +90,7 @@ class LoadTest(unittest2.TestCase):
                 {'id': 4, 'sequence': 2, 'parent_id': [2, '']},
             ])
 
-        root = self.menu.do_load(self.request)
+        root = self.menu.load(self.request)
 
         self.assertEqual(
             root['children'],

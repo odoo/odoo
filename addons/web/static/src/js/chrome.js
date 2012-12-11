@@ -826,7 +826,7 @@ instance.web.Menu =  instance.web.Widget.extend({
     },
     menu_loaded: function(data) {
         var self = this;
-        this.data = data;
+        this.data = {data: data};
         this.renderElement();
         this.limit_entries();
         // Hide toplevel item if there is only one
@@ -847,7 +847,7 @@ instance.web.Menu =  instance.web.Widget.extend({
     on_needaction_loaded: function(data) {
         var self = this;
         this.needaction_data = data;
-        _.each(this.needaction_data.data, function (item, menu_id) {
+        _.each(this.needaction_data, function (item, menu_id) {
             var $item = self.$secondary_menus.find('a[data-menu="' + menu_id + '"]');
             $item.remove('oe_menu_counter');
             if (item.needaction_counter && item.needaction_counter > 0) {

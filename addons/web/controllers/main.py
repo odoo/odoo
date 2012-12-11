@@ -523,11 +523,7 @@ html_template = """<!DOCTYPE html>
     <body>
         <!--[if lte IE 8]>
         <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
-        <script>
-            CFInstall.check({
-                mode: "overlay"
-            });
-        </script>
+        <script>CFInstall.check({mode: "overlay"});</script>
         <![endif]-->
     </body>
 </html>
@@ -910,18 +906,7 @@ class Menu(openerpweb.Controller):
     _cp_path = "/web/menu"
 
     @openerpweb.jsonrequest
-    def load(self, req):
-        return {'data': self.do_load(req)}
-
-    @openerpweb.jsonrequest
-    def load_needaction(self, req, menu_ids):
-        return {'data': self.do_load_needaction(req, menu_ids)}
-
-    @openerpweb.jsonrequest
     def get_user_roots(self, req):
-        return self.do_get_user_roots(req)
-
-    def do_get_user_roots(self, req):
         """ Return all root menu ids visible for the session user.
 
         :param req: A request object, with an OpenERP session attribute
@@ -944,7 +929,8 @@ class Menu(openerpweb.Controller):
 
         return Menus.search(menu_domain, 0, False, False, req.context)
 
-    def do_load(self, req):
+    @openerpweb.jsonrequest
+    def load(self, req):
         """ Loads all menu items (all applications and their sub-menus).
 
         :param req: A request object, with an OpenERP session attribute
@@ -956,7 +942,7 @@ class Menu(openerpweb.Controller):
 
         fields = ['name', 'sequence', 'parent_id', 'action',
                   'needaction_enabled']
-        menu_roots = Menus.read(self.do_get_user_roots(req), fields, req.context)
+        menu_roots = Menus.read(self.get_user_roots(req), fields, req.context)
         menu_root = {
             'id': False,
             'name': 'root',
@@ -992,7 +978,8 @@ class Menu(openerpweb.Controller):
 
         return menu_root
 
-    def do_load_needaction(self, req, menu_ids=False):
+    @openerpweb.jsonrequest
+    def load_needaction(self, req, menu_ids=False):
         """ Loads needaction counters for all or some specific menu ids.
 
             :return: needaction data
@@ -1008,6 +995,7 @@ class Menu(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def action(self, req, menu_id):
+        # still used by web_shortcut
         actions = load_actions_from_ir_values(req,'action', 'tree_but_open',
                                              [('ir.ui.menu', menu_id)], False)
         return {"action": actions}
