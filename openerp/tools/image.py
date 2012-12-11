@@ -36,6 +36,7 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
         filled with transparent background. The image will not be stretched if
         smaller than the expected size.
         Steps of the resizing:
+        - Compute width and height if not specified.
         - if avoid_if_small: if both image sizes are smaller than the requested
           sizes, the original image is returned. This is used to avoid adding
           transparent content around images that we do not want to alter but
@@ -46,14 +47,14 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
           function. Aspect ratios are preserved when using it. Note that if the
           source image is smaller than the expected size, it will not be
           extended, but filled to match the size.
-        - create a transparent background that will hold the final
-          image.
-        - past the thumbnail on the transparent background and center
-          it.
+        - create a transparent background that will hold the final image.
+        - paste the thumbnail on the transparent background and center it.
 
         :param base64_source: base64-encoded version of the source
             image; if False, returns False
-        :param size: tuple(height, width)
+        :param size: 2-tuple(width, height). A None value for any of width or
+            height mean an automatically computed value based respectivelly
+            on height or width of the source image.
         :param encoding: the output encoding
         :param filetype: the output filetype
         :param avoid_if_small: do not resize if image height and width
@@ -61,8 +62,19 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
     """
     if not base64_source:
         return False
+    if size == (None, None):
+        return base64_source
+
     image_stream = io.BytesIO(base64_source.decode(encoding))
     image = Image.open(image_stream)
+
+    asked_width, asked_height = size
+    if asked_width is None:
+        asked_width = int(image.size[0] * (float(asked_height) / image.size[1]))
+    if asked_height is None:
+        asked_height = int(image.size[1] * (float(asked_width) / image.size[0]))
+    size = asked_width, asked_height
+
     # check image size: do not create a thumbnail if avoiding smaller images
     if avoid_if_small and image.size[0] <= size[0] and image.size[1] <= size[1]:
         return base64_source
