@@ -795,7 +795,7 @@ class test_mail(test_mail_mockup.TestMailMockups):
         # Test: msg has Bert as voter
         self.assertEqual(set(msg.vote_user_ids), set([user_raoul]), 'mail_message vote: after unvoting, Bert should be in the voter')
 
-    def test_70_message_favorite(self):
+    def test_70_message_star(self):
         """ Tests for favorites. """
         cr, uid, user_admin, user_raoul, group_pigs = self.cr, self.uid, self.user_admin, self.user_raoul, self.group_pigs
         # Data: post a message on Pigs
@@ -803,20 +803,21 @@ class test_mail(test_mail_mockup.TestMailMockups):
         msg = self.mail_message.browse(cr, uid, msg_id)
 
         # Do: Admin stars msg
-        self.mail_message.favorite_toggle(cr, uid, [msg.id])
+        self.mail_message.set_message_starred(cr, uid, [msg.id], True)
         msg.refresh()
         # Test: msg starred by Admin
-        self.assertEqual(set(msg.favorite_user_ids), set([user_admin]), 'mail_message favorite: after starring, Admin should be in favorite_user_ids')
+        self.assertTrue(msg.starred, 'mail_message starred failed')
         # Do: Bert stars msg
-        self.mail_message.favorite_toggle(cr, user_raoul.id, [msg.id])
+        self.mail_message.set_message_starred(cr, user_raoul.id, [msg.id], True)
         msg.refresh()
         # Test: msg starred by Admin and Raoul
-        self.assertEqual(set(msg.favorite_user_ids), set([user_admin, user_raoul]), 'mail_message favorite: after starring, Admin and Raoul should be in favorite_user_ids')
+        # self.assertTrue(msg.starred, set([user_admin, user_raoul]), 'mail_message favorite: after starring, Admin and Raoul should be in favorite_user_ids')
         # Do: Admin unvote for msg
-        self.mail_message.favorite_toggle(cr, uid, [msg.id])
+        self.mail_message.set_message_starred(cr, uid, [msg.id], False)
         msg.refresh()
         # Test: msg starred by Raoul
-        self.assertEqual(set(msg.favorite_user_ids), set([user_raoul]), 'mail_message favorite: after unstarring, Raoul should be in favorite_user_ids')
+        self.assertFalse(msg.starred, 'mail_message starred failed')
+        # self.assertEqual(set(msg.favorite_user_ids), set([user_raoul]), 'mail_message favorite: after unstarring, Raoul should be in favorite_user_ids')
         
     def test_80_track_field(self):
         """ Test designed for tracking field. """
