@@ -8,15 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-07-28 14:07+0000\n"
-"Last-Translator: Fábio Martinelli - http://zupy.com.br "
-"<webmaster@guaru.net>\n"
+"PO-Revision-Date: 2012-12-10 13:04+0000\n"
+"Last-Translator: Projetaty Soluções OpenSource <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:54+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-11 04:49+0000\n"
+"X-Generator: Launchpad (build 16356)\n"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -156,7 +155,7 @@ msgstr "Data de Depreciação"
 #. module: account_asset
 #: constraint:account.asset.asset:0
 msgid "Error ! You cannot create recursive assets."
-msgstr ""
+msgstr "Erro! Você não pode criar ativos recursivos."
 
 #. module: account_asset
 #: field:asset.asset.report,posted_value:0
@@ -201,7 +200,7 @@ msgstr "# Linhas de Depreciação"
 #. module: account_asset
 #: field:account.asset.asset,method_period:0
 msgid "Number of Months in a Period"
-msgstr ""
+msgstr "Número de Meses no Período"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -387,7 +386,7 @@ msgstr "Método tempo"
 #: view:asset.depreciation.confirmation.wizard:0
 #: view:asset.modify:0
 msgid "or"
-msgstr ""
+msgstr "ou"
 
 #. module: account_asset
 #: field:account.asset.asset,note:0
@@ -444,12 +443,18 @@ msgid ""
 "You can manually close an asset when the depreciation is over. If the last "
 "line of depreciation is posted, the asset automatically goes in that status."
 msgstr ""
+"Quando um ativo é criado, seu status é 'Rascunho'.\n"
+"Se este ativo for confirmado, seu status será mudado para em 'Administração' "
+"e as entradas de depreciação podem ser postadas em contabilidade.\n"
+"Você pode fechar um ativo manualmente quando a depreciação estiver "
+"concluída. Se a última entrada de depreciação é postada, o ativo "
+"automaticamente irá para este status (fechado)."
 
 #. module: account_asset
 #: field:account.asset.asset,state:0
 #: field:asset.asset.report,state:0
 msgid "Status"
-msgstr ""
+msgstr "Situação"
 
 #. module: account_asset
 #: field:account.asset.asset,partner_id:0
@@ -496,7 +501,7 @@ msgstr "Calcular"
 #. module: account_asset
 #: view:account.asset.history:0
 msgid "Asset History"
-msgstr ""
+msgstr "Histórico de Ativo"
 
 #. module: account_asset
 #: field:asset.asset.report,name:0
@@ -617,7 +622,7 @@ msgstr "Valor a Depreciar"
 #. module: account_asset
 #: field:account.asset.asset,name:0
 msgid "Asset Name"
-msgstr ""
+msgstr "Nome do Ativo"
 
 #. module: account_asset
 #: field:account.asset.category,open_asset:0
@@ -668,11 +673,17 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"A partir deste relatório, vc pode ter uma visão geral sobre toda "
+"precisiação.\n"
+"A ferramenta 'pesquisa' pode também ser utilizada para personalizar seus "
+"relatórios de Ativos e\n"
+"desta forma, fazer com que a análise corresponda à suas necessidades.\n"
+"        "
 
 #. module: account_asset
 #: field:account.asset.asset,purchase_value:0
 msgid "Gross Value"
-msgstr ""
+msgstr "Valor Bruto"
 
 #. module: account_asset
 #: field:account.asset.category,name:0
@@ -720,7 +731,7 @@ msgstr "Movimentação de Bens"
 #. module: account_asset
 #: field:account.asset.depreciation.line,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Sequência"
 
 #. module: account_asset
 #: help:account.asset.category,method_period:0
