@@ -23,9 +23,8 @@ from osv import osv, fields
 import tools
 from tools.translate import _
 
-import base_calendar
+from base_calendar import get_real_ids, base_calendar_id2real_id
 from base_status.base_state import base_state
-
 #
 # crm.meeting is defined here so that it may be used by modules other than crm,
 # without forcing the installation of crm.
@@ -69,7 +68,7 @@ class crm_meeting(base_state, osv.Model):
     def message_get_subscription_data(self, cr, uid, ids, context=None):
         res = {}
         for virtual_id in ids:
-            real_id = base_calendar.base_calendar_id2real_id(virtual_id)
+            real_id = base_calendar_id2real_id(virtual_id)
             result = super(crm_meeting, self).message_get_subscription_data(cr, uid, [real_id], context=context)
             res[virtual_id] = result[real_id]
         return res
@@ -128,7 +127,7 @@ class crm_meeting(base_state, osv.Model):
                         subtype=None, parent_id=False, attachments=None, context=None, **kwargs):
         cal_event_pool = self.pool.get('calendar.event')
         if isinstance(thread_id, str):
-            thread_id = cal_event_pool.remove_virtual_id(thread_id)
+            thread_id = get_real_ids(thread_id)
         return super(crm_meeting, self).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, **kwargs)
 
 class mail_message(osv.osv):
@@ -138,11 +137,9 @@ class mail_message(osv.osv):
         '''
         convert the search on real ids in the case it was asked on virtual ids, then call super()
         '''
-        cal_event_pool = self.pool.get('calendar.event')
         for index in range(len(args)):
-            if args[index][0] == "res_id":
-                if isinstance(args[index][2], (str)):
-                    args[index][2] = cal_event_pool.remove_virtual_id(args[index][2])
+            if args[index][0] == "res_id" and isinstance(args[index][2], (str)):
+                args[index][2] = get_real_ids(args[index][2])
         return super(mail_message, self).search(cr, uid, args, offset, limit, order, context, count=False)
 
 class ir_attachment(osv.osv):
@@ -152,10 +149,27 @@ class ir_attachment(osv.osv):
         '''
         convert the search on real ids in the case it was asked on virtual ids, then call super()
         '''
-        cal_event_pool = self.pool.get('calendar.event')
         for index in range(len(args)):
-            if args[index][0] == "res_id":
-                if isinstance(args[index][2], (str)):
-                    args[index][2] = cal_event_pool.remove_virtual_id(args[index][2])
+            if args[index][0] == "res_id" and isinstance(args[index][2], (str)):
+                args[index][2] = get_real_ids(args[index][2])
         return super(ir_attachment, self).search(cr, uid, args, offset, limit, order, context, count=False)
 
+    def write(self, cr, uid, ids, vals, context=None):
+        '''
+        when posting an attachment (new or not), convert the virtual ids in real ids.
+        '''
+        if isinstance(vals.get('res_id'), str):
+            vals['res_id'] = get_real_ids(vals.get('res_id'))
+        return super(ir_attachment, self).write(cr, uid, ids, vals, context)
+
+class invite_wizard(osv.osv_memory):
+    _inherit = 'mail.wizard.invite'
+
+    def default_get(self, cr, uid, fields, context=None):
+        '''
+        in case someone clicked on 'invite others' wizard in the followers widget, transform virtual ids in real ids
+        '''
+        result = super(invite_wizard, self).default_get(cr, uid, fields, context=context)
+        if 'res_id' in result:
+            result['res_id'] = get_real_ids(result['res_id'])
+        return result
