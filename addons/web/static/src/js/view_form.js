@@ -2549,7 +2549,7 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
         return this._super();
     },
     store_dom_value: function () {
-        if (!this.get('effective_readonly') && this.$('input').length) {
+        if (!this.get('effective_readonly') && this.$('textarea').length) {
             this.internal_set_value(
                 instance.web.parse_value(
                     this.$textarea.val(),
