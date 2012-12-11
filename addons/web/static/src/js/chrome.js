@@ -565,8 +565,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
     },
     do_exit: function () {
         this.$el.remove();
-        instance.webclient.toggle_bars(false);
-        this.do_action('login');
+        instance.webclient.show_login();
     }
 });
 instance.web.client_actions.add("database_manager", "instance.web.DatabaseManager");
