@@ -7,15 +7,15 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-08 10:58+0000\n"
+"PO-Revision-Date: 2012-12-10 23:02+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-09 04:39+0000\n"
-"X-Generator: Launchpad (build 16341)\n"
+"X-Launchpad-Export-Date: 2012-12-11 04:47+0000\n"
+"X-Generator: Launchpad (build 16356)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -236,9 +236,9 @@ msgid ""
 "invoice) to create analytic entries, OpenERP will look for a matching "
 "journal of the same type."
 msgstr ""
-"Definiert die Art des analytischen Journals. Wenn ein Beleg (z. B. eine "
-"Rechnung), zusätzlich zu den Finanzbuchungen, weitere analytische Buchungen "
-"erzeugen soll, prüft OpenERP ob ein analytischer Bericht der gleichen Art "
+"Definieren Sie den Kostenstellentyp. Wenn durch einen Beleg (z.B. eine "
+"Rechnung) zusätzlich zu den Finanzbuchungen auch Kostenstellen gebucht "
+"werden sollen, prüft OpenERP ob ein Kostenstellen Journal der gleichen Art "
 "(z.B. Verkauf) vorliegt."
 
 #. module: account
@@ -248,14 +248,14 @@ msgid ""
 "lines for invoices. Leave empty if you don't want to use an analytic account "
 "on the invoice tax lines by default."
 msgstr ""
-"Wählen Sie das analytische Konto, dass bei der Steuerbuchung von Rechnungen  "
-"als Voreinstellung verwendet werden soll."
+"Wählen Sie die Kostenstelle, die bei der Steuerbuchung von Rechnungen als "
+"Voreinstellung verwendet werden soll."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_template_form
 #: model:ir.ui.menu,name:account.menu_action_account_tax_template_form
 msgid "Tax Templates"
-msgstr "-Vorlagen für Steuerkonten"
+msgstr "Umsatzsteuer Vorlagen"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax
@@ -322,7 +322,7 @@ msgstr "Erlaube Abschreibung"
 #. module: account
 #: view:account.analytic.chart:0
 msgid "Select the Period for Analysis"
-msgstr "Periode zur Analyse auswählen"
+msgstr "Auswahl Periode"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree3
@@ -396,7 +396,7 @@ msgstr "Multiwährungsfunktion aktivieren"
 #: code:addons/account/account_invoice.py:73
 #, python-format
 msgid "You must define an analytic journal of type '%s'!"
-msgstr "Sie müssen eine Analysebericht vom Typ '%s' definieren!"
+msgstr "Sie müssen ein Kostenstellen Journal vom Typ '%s' definieren!"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -466,13 +466,13 @@ msgstr "Währung bei Erfassung des Kontoauszugs"
 #. module: account
 #: field:account.journal,default_debit_account_id:0
 msgid "Default Debit Account"
-msgstr "Standard Debitorenkonto"
+msgstr "Standard Sollkonto"
 
 #. module: account
 #: view:account.move:0
 #: view:account.move.line:0
 msgid "Total Credit"
-msgstr "Habensumme"
+msgstr "Summe Haben"
 
 #. module: account
 #: help:account.config.settings,module_account_asset:0
@@ -541,7 +541,7 @@ msgstr "In alternativer Währung dargestellter Betrag"
 #. module: account
 #: view:account.journal:0
 msgid "Available Coins"
-msgstr "Vorhandene Geldmünzen"
+msgstr "Verfügbare Münzen"
 
 #. module: account
 #: field:accounting.report,enable_filter:0
@@ -632,7 +632,7 @@ msgstr "Limit"
 #. module: account
 #: field:account.automatic.reconcile,unreconciled:0
 msgid "Not reconciled transactions"
-msgstr "Unausgeglichener Geschäftsvorgang"
+msgstr "Nicht ausgeglichene Posten"
 
 #. module: account
 #: report:account.general.ledger:0
@@ -645,7 +645,7 @@ msgstr "Gegenbuchung"
 #: field:account.fiscal.position,tax_ids:0
 #: field:account.fiscal.position.template,tax_ids:0
 msgid "Tax Mapping"
-msgstr "Steuerzuordnung"
+msgstr "Steuer Zuordnung"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscalyear_close_state
@@ -689,7 +689,7 @@ msgstr ""
 #. module: account
 #: field:ir.sequence,fiscal_ids:0
 msgid "Sequences"
-msgstr "Sequenzen"
+msgstr "Nummernfolge"
 
 #. module: account
 #: field:account.financial.report,account_report_id:0
@@ -711,7 +711,7 @@ msgstr ""
 #: view:account.fiscal.position:0
 #: view:account.fiscal.position.template:0
 msgid "Taxes Mapping"
-msgstr "Steuerzuordnung"
+msgstr "Steuern Zuordnung"
 
 #. module: account
 #: report:account.central.journal:0
@@ -745,7 +745,7 @@ msgstr "Keine oder meherere Perioden für dieses Datum gefunden."
 #. module: account
 #: model:ir.model,name:account.model_report_account_type_sales
 msgid "Report of the Sales by Account Type"
-msgstr "Verkaufsauswertung nach Kontentyp"
+msgstr "Auswertung Verkauf nach Kontentyp"
 
 #. module: account
 #: code:addons/account/account.py:3143
@@ -880,7 +880,7 @@ msgstr "Finanzkonten"
 #: model:ir.model,name:account.model_project_account_analytic_line
 #, python-format
 msgid "Analytic Entries by line"
-msgstr "Analytische Buchungsbelege"
+msgstr "Kostenstellen Buchungen"
 
 #. module: account
 #: field:account.invoice.refund,filter_refund:0
@@ -916,7 +916,7 @@ msgid ""
 "Click on compute button."
 msgstr ""
 "Steuern fehlen!\n"
-"Drücken Sie auf den \"Berechne\" Knopf"
+"Drücken Sie auf den \"aktualisieren\" Knopf"
 
 #. module: account
 #: model:ir.model,name:account.model_account_subscription_line
@@ -955,7 +955,7 @@ msgstr "14 Tage 2%, Rest 30 Tage zum Ende des Monats"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_journal_report
 msgid "Account Analytic Journal"
-msgstr "Analytisches Journal"
+msgstr "Kostenstellen Journal"
 
 #. module: account
 #: view:account.invoice:0

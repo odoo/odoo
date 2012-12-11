@@ -548,7 +548,8 @@ def Project():
                           model_name=vals.get('alias_model', 'project.task'),
                           context=context)
             vals['alias_id'] = alias_id
-        vals['type'] = 'contract'
+        if vals.get('type', False) not in ('template','contract'):
+            vals['type'] = 'contract'
         project_id = super(project, self).create(cr, uid, vals, context)
         mail_alias.write(cr, uid, [vals['alias_id']], {'alias_defaults': {'project_id': project_id} }, context)
         self.create_send_note(cr, uid, [project_id], context=context)
@@ -1377,6 +1378,7 @@ class account_analytic_account(osv.osv):
             project_values = {
                 'name': vals.get('name'),
                 'analytic_account_id': analytic_account_id,
+                'type': vals.get('type','contract'),
             }
             return project_pool.create(cr, uid, project_values, context=context)
         return False
@@ -1395,6 +1397,7 @@ class account_analytic_account(osv.osv):
         for account in self.browse(cr, uid, ids, context=context):
             if not name:
                 vals['name'] = account.name
+            vals['type'] = account.type
             self.project_create(cr, uid, account.id, vals, context=context)
         return super(account_analytic_account, self).write(cr, uid, ids, vals, context=context)
 
