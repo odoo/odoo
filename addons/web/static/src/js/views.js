@@ -1027,6 +1027,11 @@ instance.web.Sidebar = instance.web.Widget.extend({
         this.$('.oe_form_dropdown_section').each(function() {
             $(this).toggle(!!$(this).find('li').length);
         });
+
+        self.$("[title]").tipsy({
+            'html': true,
+            'delayIn': 500,
+        })
     },
     /**
      * For each item added to the section:
@@ -1110,27 +1115,19 @@ instance.web.Sidebar = instance.web.Widget.extend({
             });
         });
     },
-    do_attachement_update: function(dataset, model_id,args) {
+    do_attachement_update: function(dataset, model_id, args) {
         var self = this;
         this.dataset = dataset;
         this.model_id = model_id;
-        if (args && args[0]["erorr"]) {
-             instance.web.dialog($('<div>'),{
-                    modal: true,
-                    title: "OpenERP " + _.str.capitalize(args[0]["title"]),
-                    buttons: [{
-                        text: _t("Ok"),
-                        click: function(){
-                            $(this).dialog("close");
-                    }}]
-              }).html(args[0]["erorr"]);
+        if (args && args[0].error) {
+            this.do_warn( instance.web.qweb.render('message_error_uploading'), args[0].error);
         }
         if (!model_id) {
             this.on_attachments_loaded([]);
         } else {
             var dom = [ ['res_model', '=', dataset.model], ['res_id', '=', model_id], ['type', 'in', ['binary', 'url']] ];
             var ds = new instance.web.DataSetSearch(this, 'ir.attachment', dataset.get_context(), dom);
-            ds.read_slice(['name', 'url', 'type'], {}).done(this.on_attachments_loaded);
+            ds.read_slice(['name', 'url', 'type', 'create_uid', 'create_date', 'write_uid', 'write_date'], {}).done(this.on_attachments_loaded);
         }
     },
     on_attachments_loaded: function(attachments) {

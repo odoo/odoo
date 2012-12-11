@@ -5159,6 +5159,8 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
         }
     },
     on_file_loaded: function (event, result) {
+        var files = this.get('value');
+
         // unblock UI
         if(this.node.attrs.blockui>0) {
             instance.web.unblockUI();
@@ -5166,15 +5168,19 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
 
         // TODO : activate send on wizard and form
 
-        var files = this.get('value');
-        for(var i in files){
-            if(files[i].filename == result.filename && files[i].upload) {
-                files[i] = {
-                    'id': result.id,
-                    'name': result.name,
-                    'filename': result.filename,
-                    'url': this.get_file_url(result)
-                };
+        if (result.error || !result.id ) {
+            this.do_warn( _t('Uploading error'), result.error);
+            files = _.filter(files, function (val) { return !val.upload; });
+        } else {
+            for(var i in files){
+                if(files[i].filename == result.filename && files[i].upload) {
+                    files[i] = {
+                        'id': result.id,
+                        'name': result.name,
+                        'filename': result.filename,
+                        'url': this.get_file_url(result)
+                    };
+                }
             }
         }
 
