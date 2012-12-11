@@ -20,7 +20,23 @@
                         </div>
                         <notebook>
                             <page string="Vendors">
-                                <field name="vendors" widget="many2many_kanban"/>
+                                <field name="vendors" widget="many2many_kanban">
+                                    <kanban quick_create="false" create="true">
+                                        <field name="name"/>
+                                        <templates>
+                                            <t t-name="kanban-box">
+                                                <div style="position: relative">
+                                                    <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
+                                                    <div class="oe_module_vignette">
+                                                        <div class="oe_module_desc">
+                                                            <field name="name"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                        </templates>
+                                    </kanban>
+                                </field>
                             </page>
                         </notebook>
                     </sheet>
