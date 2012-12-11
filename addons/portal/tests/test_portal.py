@@ -19,27 +19,16 @@
 #
 ##############################################################################
 
-from openerp.addons.mail.tests import test_mail_mockup
+from openerp.addons.mail.tests.test_mail_base import TestMailBase
 from openerp.osv.orm import except_orm
 from openerp.tools.misc import mute_logger
 
 
-class test_portal(test_mail_mockup.TestMailMockups):
+class test_portal(TestMailBase):
 
     def setUp(self):
         super(test_portal, self).setUp()
         cr, uid = self.cr, self.uid
-        self.ir_model = self.registry('ir.model')
-        self.mail_group = self.registry('mail.group')
-        self.mail_mail = self.registry('mail.mail')
-        self.mail_message = self.registry('mail.message')
-        self.mail_invite = self.registry('mail.wizard.invite')
-        self.res_users = self.registry('res.users')
-        self.res_partner = self.registry('res.partner')
-
-        # create a 'pigs' group that will be used through the various tests
-        self.group_pigs_id = self.mail_group.create(self.cr, self.uid,
-            {'name': 'Pigs', 'description': 'Fans of Pigs, unite !'})
 
         # Find Portal group
         group_portal = self.registry('ir.model.data').get_object(cr, uid, 'portal', 'group_portal')
@@ -82,34 +71,28 @@ class test_portal(test_mail_mockup.TestMailMockups):
 
     def test_50_mail_invite(self):
         cr, uid = self.cr, self.uid
-        user_admin = self.res_users.browse(cr, uid, uid)
+        mail_invite = self.registry('mail.wizard.invite')
         base_url = self.registry('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='')
-        # 0 - Admin
-        partner_admin_id = user_admin.partner_id.id
-        # 1 - Bert Tartopoils, with email, should receive emails for comments and emails
-        partner_bert_id = self.res_partner.create(cr, uid, {'name': 'Bert Tartopoils', 'email': 'b@b'})
-
-        # ----------------------------------------
-        # CASE: invite Bert to follow Pigs
-        # ----------------------------------------
+        # Carine Poilvache, with email, should receive emails for comments and emails
+        partner_carine_id = self.res_partner.create(cr, uid, {'name': 'Carine Poilvache', 'email': 'c@c'})
 
         # Do: create a mail_wizard_invite, validate it
         self._init_mock_build_email()
         context = {'default_res_model': 'mail.group', 'default_res_id': self.group_pigs_id}
-        mail_invite_id = self.mail_invite.create(cr, uid, {'partner_ids': [(4, partner_bert_id)]}, context)
-        self.mail_invite.add_followers(cr, uid, [mail_invite_id])
+        mail_invite_id = mail_invite.create(cr, uid, {'partner_ids': [(4, partner_carine_id)]}, context)
+        mail_invite.add_followers(cr, uid, [mail_invite_id])
 
         # Test: Pigs followers should contain Admin and Bert
         group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
         follower_ids = [follower.id for follower in group_pigs.message_follower_ids]
-        self.assertEqual(set(follower_ids), set([partner_admin_id, partner_bert_id]), 'Pigs followers after invite is incorrect')
+        self.assertEqual(set(follower_ids), set([self.partner_admin_id, partner_carine_id]), 'Pigs followers after invite is incorrect')
 
         # Test: partner must have been prepared for signup
-        partner_bert = self.res_partner.browse(cr, uid, partner_bert_id)
-        self.assertTrue(partner_bert.signup_valid, 'partner has not been prepared for signup')
-        self.assertTrue(base_url in partner_bert.signup_url, 'signup url is incorrect')
-        self.assertTrue(cr.dbname in partner_bert.signup_url, 'signup url is incorrect')
-        self.assertTrue(partner_bert.signup_token in partner_bert.signup_url, 'signup url is incorrect')
+        partner_carine = self.res_partner.browse(cr, uid, partner_carine_id)
+        self.assertTrue(partner_carine.signup_valid, 'partner has not been prepared for signup')
+        self.assertTrue(base_url in partner_carine.signup_url, 'signup url is incorrect')
+        self.assertTrue(cr.dbname in partner_carine.signup_url, 'signup url is incorrect')
+        self.assertTrue(partner_carine.signup_token in partner_carine.signup_url, 'signup url is incorrect')
 
         # Test: (pretend to) send email and check subject, body
         self.assertEqual(len(self._build_email_kwargs_list), 1, 'sent email number incorrect, should be only for Bert')
@@ -118,5 +101,5 @@ class test_portal(test_mail_mockup.TestMailMockups):
                              'subject of invitation email is incorrect')
             self.assertTrue('You have been invited to follow Pigs' in sent_email.get('body'),
                             'body of invitation email is incorrect')
-            self.assertTrue(partner_bert.signup_url in sent_email.get('body'),
+            self.assertTrue(partner_carine.signup_url in sent_email.get('body'),
                             'body of invitation email does not contain signup url')

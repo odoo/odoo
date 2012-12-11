@@ -19,41 +19,53 @@
 #
 ##############################################################################
 
-from openerp.addons.mail.tests import test_mail_mockup
+from openerp.addons.mail.tests.test_mail_base import TestMailBase
 from openerp.osv.orm import except_orm
 from openerp.tools import mute_logger
 
 
-class test_mail_access_rights(test_mail_mockup.TestMailMockups):
+class test_mail_access_rights(TestMailBase):
 
     def setUp(self):
         super(test_mail_access_rights, self).setUp()
         cr, uid = self.cr, self.uid
-        self.mail_group = self.registry('mail.group')
-        self.mail_message = self.registry('mail.message')
-        self.mail_notification = self.registry('mail.notification')
-        self.res_users = self.registry('res.users')
-        self.res_groups = self.registry('res.groups')
-        self.res_partner = self.registry('res.partner')
 
-        # create a 'pigs' group that will be used through the various tests
-        self.group_pigs_id = self.mail_group.create(self.cr, self.uid,
-            {'name': 'Pigs', 'description': 'Fans of Pigs, unite !'})
+        # Test mail.group: public to provide access to everyone
+        self.group_jobs_id = self.mail_group.create(cr, uid, {'name': 'Jobs', 'public': 'public'})
+        # Test mail.group: private to restrict access
+        self.group_priv_id = self.mail_group.create(cr, uid, {'name': 'Private', 'public': 'private'})
 
-        # Find Employee group
-        group_employee_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'base', 'group_user')
-        self.group_employee_id = group_employee_ref and group_employee_ref[1] or False
+    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.osv.orm')
+    def test_00_mail_group_access_rights(self):
+        """ Test mail_group access rights """
+        cr, uid, user_bert_id, user_raoul_id = self.cr, self.uid, self.user_bert_id, self.user_raoul_id
 
-        # Create Bert (without groups) and Raoul( employee)
-        self.user_bert_id = self.res_users.create(cr, uid, {'name': 'Bert Tartopoils', 'login': 'bert', 'groups_id': [(6, 0, [])]})
-        self.user_raoul_id = self.res_users.create(cr, uid, {'name': 'Raoul Grosbedon', 'login': 'raoul', 'groups_id': [(6, 0, [self.group_employee_id])]})
-        self.user_bert = self.res_users.browse(cr, uid, self.user_bert_id)
-        self.partner_bert_id = self.user_bert.partner_id.id
-        self.user_raoul = self.res_users.browse(cr, uid, self.user_raoul_id)
-        self.partner_raoul_id = self.user_raoul.partner_id.id
+        # Do: Bert reads Jobs -> ok, public
+        self.mail_group.read(cr, user_bert_id, [self.group_jobs_id])
+        # Do: Bert read Pigs -> ko, restricted to employees
+        self.assertRaises(except_orm, self.mail_group.read,
+            cr, user_bert_id, [self.group_pigs_id])
+        # Do: Raoul read Pigs -> ok, belong to employees
+        self.mail_group.read(cr, user_raoul_id, [self.group_pigs_id])
 
-    @mute_logger('openerp.addons.base.ir.ir_model','openerp.osv.orm')
-    def test_00_mail_message_search_access_rights(self):
+        # Do: Bert creates a group -> ko, no access rights
+        self.assertRaises(except_orm, self.mail_group.create,
+            cr, user_bert_id, {'name': 'Test'})
+        # Do: Raoul creates a restricted group -> ok
+        new_group_id = self.mail_group.create(cr, user_raoul_id, {'name': 'Test'})
+        # Do: Bert added in followers, read -> ok, in followers
+        self.mail_group.message_subscribe_users(cr, uid, [new_group_id], [user_bert_id])
+        self.mail_group.read(cr, user_bert_id, [new_group_id])
+
+        # Do: Raoul reads Priv -> ko, private
+        self.assertRaises(except_orm, self.mail_group.read,
+            cr, user_raoul_id, [self.group_priv_id])
+        # Do: Raoul added in follower, read -> ok, in followers
+        self.mail_group.message_subscribe_users(cr, uid, [self.group_priv_id], [user_raoul_id])
+        self.mail_group.read(cr, user_raoul_id, [self.group_priv_id])
+
+    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.osv.orm')
+    def test_10_mail_message_search_access_rights(self):
         """ Test mail_message search override about access rights. """
         cr, uid, group_pigs_id = self.cr, self.uid, self.group_pigs_id
         partner_bert_id, partner_raoul_id = self.partner_bert_id, self.partner_raoul_id
@@ -86,19 +98,18 @@ class test_mail_access_rights(test_mail_mockup.TestMailMockups):
         msg_ids = self.mail_message.search(cr, uid, [('subject', 'like', '_Test')])
         self.assertEqual(set([msg_id1, msg_id2, msg_id3, msg_id4, msg_id5, msg_id6, msg_id7, msg_id8]), set(msg_ids), 'mail_message search failed')
 
-    #@mute_logger('openerp.addons.base.ir.ir_model','openerp.osv.orm')
-    def test_05_mail_message_read_access_rights(self):
-        """ Test basic mail_message read access rights. """
+    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.osv.orm')
+    def test_15_mail_message_check_access_rule(self):
+        """ Test mail_message check_access_rule. """
         cr, uid = self.cr, self.uid
         partner_bert_id, partner_raoul_id = self.partner_bert_id, self.partner_raoul_id
         user_bert_id, user_raoul_id = self.user_bert_id, self.user_raoul_id
 
         # Prepare groups: Pigs (employee), Jobs (public)
         self.mail_group.message_post(cr, uid, self.group_pigs_id, body='Message')
-        self.group_jobs_id = self.mail_group.create(cr, uid, {'name': 'Jobs', 'public': 'public'})
 
         # ----------------------------------------
-        # CASE1: Bert, basic mail.message read access
+        # CASE1: read
         # ----------------------------------------
 
         # Do: create a new mail.message
@@ -134,10 +145,126 @@ class test_mail_access_rights(test_mail_mockup.TestMailMockups):
         self.assertRaises(except_orm, self.mail_message.read,
             cr, user_bert_id, message_id)
 
+        # ----------------------------------------
+        # CASE2: create
+        # ----------------------------------------
 
-    @mute_logger('openerp.addons.base.ir.ir_model','openerp.osv.orm')
-    def test_10_mail_flow_access_rights(self):
-        """ Test a Chatter-looks alike flow. """
+        # Do: Bert creates a message on Pigs -> crash, no write access on related document
+        self.assertRaises(except_orm, self.mail_message.create,
+            cr, user_bert_id, {'model': 'mail.group', 'res_id': self.group_pigs_id, 'body': 'Test'})
+        # Do: Bert create a message on Jobs -> ko, no write access to related document
+        self.assertRaises(except_orm, self.mail_message.create,
+            cr, user_bert_id, {'model': 'mail.group', 'res_id': self.group_jobs_id, 'body': 'Test'})
+        # Do: Raoul creates a message on Jobs -> ok, write access to the related document
+        self.mail_message.create(cr, user_raoul_id, {'model': 'mail.group', 'res_id': self.group_jobs_id, 'body': 'Test'})
+        # Do: Bert create a private message -> ok
+        self.mail_message.create(cr, user_bert_id, {'body': 'Test'})
+
+    def test_20_message_set_star(self):
+        """ Tests for starring messages and its related access rights """
+        cr, uid = self.cr, self.uid
+        # Data: post a message on Pigs
+        msg_id = self.group_pigs.message_post(body='My Body', subject='1')
+        msg = self.mail_message.browse(cr, uid, msg_id)
+        msg_raoul = self.mail_message.browse(cr, self.user_raoul_id, msg_id)
+
+        # Do: Admin stars msg
+        self.mail_message.set_message_starred(cr, uid, [msg.id], True)
+        msg.refresh()
+        # Test: notification exists
+        notif_ids = self.mail_notification.search(cr, uid, [('partner_id', '=', self.partner_admin_id), ('message_id', '=', msg.id)])
+        self.assertEqual(len(notif_ids), 1, 'mail_message set_message_starred: more than one notification created')
+        # Test: notification starred
+        notif = self.mail_notification.browse(cr, uid, notif_ids[0])
+        self.assertTrue(notif.starred, 'mail_notification starred failed')
+        self.assertTrue(msg.starred, 'mail_message starred failed')
+
+        # Do: Raoul stars msg
+        self.mail_message.set_message_starred(cr, self.user_raoul_id, [msg.id], True)
+        msg_raoul.refresh()
+        # Test: notification exists
+        notif_ids = self.mail_notification.search(cr, uid, [('partner_id', '=', self.partner_raoul_id), ('message_id', '=', msg.id)])
+        self.assertEqual(len(notif_ids), 1, 'mail_message set_message_starred: more than one notification created')
+        # Test: notification starred
+        notif = self.mail_notification.browse(cr, uid, notif_ids[0])
+        self.assertTrue(notif.starred, 'mail_notification starred failed')
+        self.assertTrue(msg_raoul.starred, 'mail_message starred failed')
+
+        # Do: Admin unstars msg
+        self.mail_message.set_message_starred(cr, uid, [msg.id], False)
+        msg.refresh()
+        msg_raoul.refresh()
+        # Test: msg unstarred for Admin, starred for Raoul
+        self.assertFalse(msg.starred, 'mail_message starred failed')
+        self.assertTrue(msg_raoul.starred, 'mail_message starred failed')
+
+    def test_30_message_set_read(self):
+        """ Tests for reading messages and its related access rights """
+        cr, uid = self.cr, self.uid
+        # Data: post a message on Pigs
+        msg_id = self.group_pigs.message_post(body='My Body', subject='1')
+        msg = self.mail_message.browse(cr, uid, msg_id)
+        msg_raoul = self.mail_message.browse(cr, self.user_raoul_id, msg_id)
+
+        # Do: Admin reads msg
+        self.mail_message.set_message_read(cr, uid, [msg.id], True)
+        msg.refresh()
+        # Test: notification exists
+        notif_ids = self.mail_notification.search(cr, uid, [('partner_id', '=', self.partner_admin_id), ('message_id', '=', msg.id)])
+        self.assertEqual(len(notif_ids), 1, 'mail_message set_message_read: more than one notification created')
+        # Test: notification read
+        notif = self.mail_notification.browse(cr, uid, notif_ids[0])
+        self.assertTrue(notif.read, 'mail_notification read failed')
+        self.assertFalse(msg.to_read, 'mail_message read failed')
+
+        # Do: Raoul reads msg
+        self.mail_message.set_message_read(cr, self.user_raoul_id, [msg.id], True)
+        msg_raoul.refresh()
+        # Test: notification exists
+        notif_ids = self.mail_notification.search(cr, uid, [('partner_id', '=', self.partner_raoul_id), ('message_id', '=', msg.id)])
+        self.assertEqual(len(notif_ids), 1, 'mail_message set_message_read: more than one notification created')
+        # Test: notification read
+        notif = self.mail_notification.browse(cr, uid, notif_ids[0])
+        self.assertTrue(notif.read, 'mail_notification starred failed')
+        self.assertFalse(msg_raoul.to_read, 'mail_message starred failed')
+
+        # Do: Admin unreads msg
+        self.mail_message.set_message_read(cr, uid, [msg.id], False)
+        msg.refresh()
+        msg_raoul.refresh()
+        # Test: msg unread for Admin, read for Raoul
+        self.assertTrue(msg.to_read, 'mail_message read failed')
+        self.assertFalse(msg_raoul.to_read, 'mail_message read failed')
+
+    def test_40_message_vote(self):
+        """ Test designed for the vote/unvote feature. """
+        cr, uid = self.cr, self.uid
+        # Data: post a message on Pigs
+        msg_id = self.group_pigs.message_post(body='My Body', subject='1')
+        msg = self.mail_message.browse(cr, uid, msg_id)
+        msg_raoul = self.mail_message.browse(cr, self.user_raoul_id, msg_id)
+
+        # Do: Admin vote for msg
+        self.mail_message.vote_toggle(cr, uid, [msg.id])
+        msg.refresh()
+        # Test: msg has Admin as voter
+        self.assertEqual(set(msg.vote_user_ids), set([self.user_admin]), 'mail_message vote: after voting, Admin should be in the voter')
+        # Do: Bert vote for msg
+        self.mail_message.vote_toggle(cr, self.user_raoul_id, [msg.id])
+        msg_raoul.refresh()
+        # Test: msg has Admin and Bert as voters
+        self.assertEqual(set(msg_raoul.vote_user_ids), set([self.user_admin, self.user_raoul]), 'mail_message vote: after voting, Admin and Bert should be in the voters')
+        # Do: Admin unvote for msg
+        self.mail_message.vote_toggle(cr, uid, [msg.id])
+        msg.refresh()
+        msg_raoul.refresh()
+        # Test: msg has Bert as voter
+        self.assertEqual(set(msg.vote_user_ids), set([self.user_raoul]), 'mail_message vote: after unvoting, Bert should be in the voter')
+        self.assertEqual(set(msg_raoul.vote_user_ids), set([self.user_raoul]), 'mail_message vote: after unvoting, Bert should be in the voter')
+
+    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.osv.orm')
+    def test_50_mail_flow_access_rights(self):
+        """ Test a Chatter-looks alike flow to test access rights """
         cr, uid = self.cr, self.uid
         mail_compose = self.registry('mail.compose.message')
         partner_bert_id, partner_raoul_id = self.partner_bert_id, self.partner_raoul_id
