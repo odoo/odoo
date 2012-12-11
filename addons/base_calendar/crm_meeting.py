@@ -140,7 +140,7 @@ class mail_message(osv.osv):
         for index in range(len(args)):
             if args[index][0] == "res_id" and isinstance(args[index][2], (str)):
                 args[index][2] = get_real_ids(args[index][2])
-        return super(mail_message, self).search(cr, uid, args, offset, limit, order, context, count=False)
+        return super(mail_message, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
 
 class ir_attachment(osv.osv):
     _inherit = "ir.attachment"
@@ -152,7 +152,7 @@ class ir_attachment(osv.osv):
         for index in range(len(args)):
             if args[index][0] == "res_id" and isinstance(args[index][2], (str)):
                 args[index][2] = get_real_ids(args[index][2])
-        return super(ir_attachment, self).search(cr, uid, args, offset, limit, order, context, count=False)
+        return super(ir_attachment, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
 
     def write(self, cr, uid, ids, vals, context=None):
         '''
@@ -160,7 +160,7 @@ class ir_attachment(osv.osv):
         '''
         if isinstance(vals.get('res_id'), str):
             vals['res_id'] = get_real_ids(vals.get('res_id'))
-        return super(ir_attachment, self).write(cr, uid, ids, vals, context)
+        return super(ir_attachment, self).write(cr, uid, ids, vals, context=context)
 
 class invite_wizard(osv.osv_memory):
     _inherit = 'mail.wizard.invite'
