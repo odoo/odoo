@@ -63,7 +63,7 @@ class mail_mail(osv.Model):
     }
 
     def _get_default_from(self, cr, uid, context=None):
-        this = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        this = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
         if this.alias_domain:
             return '%s@%s' % (this.alias_name, this.alias_domain)
         elif this.email:
@@ -205,7 +205,7 @@ class mail_mail(osv.Model):
                 # specific behavior to customize the send email for notified partners
                 email_list = []
                 if recipient_ids:
-                    for partner in self.pool.get('res.partner').browse(cr, uid, recipient_ids, context=context):
+                    for partner in self.pool.get('res.partner').browse(cr, SUPERUSER_ID, recipient_ids, context=context):
                         email_list.append(self.send_get_email_dict(cr, uid, mail, partner=partner, context=context))
                 else:
                     email_list.append(self.send_get_email_dict(cr, uid, mail, context=context))

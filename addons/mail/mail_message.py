@@ -598,6 +598,7 @@ class mail_message(osv.Model):
                 - uid have write access on the related document if model, res_id, OR
                 - otherwise: raise
             - write: if
+                - author_id == pid, uid is the author, OR
                 - uid has write access on the related document if model, res_id
                 - Otherwise: raise
             - unlink: if
@@ -620,7 +621,7 @@ class mail_message(osv.Model):
                 model_record_ids.setdefault(rmod, dict()).setdefault(rid, set()).add(id)
 
         # Author condition, for read and create (private message) -> could become an ir.rule, but not till we do not have a many2one variable field
-        if operation == 'read':
+        if operation == 'read' or operation == 'write':
             author_ids = [mid for mid, message in message_values.iteritems()
                 if message.get('author_id') and message.get('author_id') == partner_id]
         elif operation == 'create':
@@ -690,7 +691,7 @@ class mail_message(osv.Model):
         elif not values.get('message_id'):
             values['message_id'] = tools.generate_tracking_message_id('private')
         newid = super(mail_message, self).create(cr, uid, values, context)
-        self._notify(cr, SUPERUSER_ID, newid, context=context)
+        self._notify(cr, uid, newid, context=context)
         # TDE FIXME: handle default_starred. Why not setting an inv on starred ?
         # Because starred will call set_message_starred, that looks for notifications.
         # When creating a new mail_message, it will create a notification to a message
@@ -808,6 +809,7 @@ class mail_message(osv.Model):
         """ Add the related record followers to the destination partner_ids if is not a private message.
             Call mail_notification.notify to manage the email sending
         """
+        notification_obj = self.pool.get('mail.notification')
         message = self.browse(cr, uid, newid, context=context)
 
         partners_to_notify = set([])
@@ -820,12 +822,12 @@ class mail_message(osv.Model):
         # all followers of the mail.message document have to be added as partners and notified
         if message.model and message.res_id:
             fol_obj = self.pool.get("mail.followers")
-            fol_ids = fol_obj.search(cr, uid, [
+            fol_ids = fol_obj.search(cr, SUPERUSER_ID, [
                 ('res_model', '=', message.model),
                 ('res_id', '=', message.res_id),
                 ('subtype_ids', 'in', message.subtype_id.id)
                 ], context=context)
-            partners_to_notify |= set(fo.partner_id for fo in fol_obj.browse(cr, uid, fol_ids, context=context))
+            partners_to_notify |= set(fo.partner_id for fo in fol_obj.browse(cr, SUPERUSER_ID, fol_ids, context=context))
         # remove me from notified partners, unless the message is written on my own wall
         if message.author_id and message.model == "res.partner" and message.res_id == message.author_id.id:
             partners_to_notify |= set([message.author_id])
@@ -835,7 +837,6 @@ class mail_message(osv.Model):
         if partners_to_notify:
             self.write(cr, SUPERUSER_ID, [newid], {'notified_partner_ids': [(4, p.id) for p in partners_to_notify]}, context=context)
 
-        notification_obj = self.pool.get('mail.notification')
         notification_obj._notify(cr, uid, newid, context=context)
 
         # An error appear when a user receive a notify to a message without notify to his parent message.
@@ -851,7 +852,6 @@ class mail_message(osv.Model):
                         'partner_id': partner.id,
                         'read': True,
                     }, context=context)
-
 
     #------------------------------------------------------
     # Tools
