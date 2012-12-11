@@ -30,7 +30,7 @@ Mr Doe
                 (4, ref('stock.group_stock_user')),
                 (4, ref('lunch.group_lunch_user')),
                 (4, ref('point_of_sale.group_pos_user')),
-                (4, ref('base.group_tool_user')),
+                (4, ref('base.group_hr_user')),
                 ]"/>
             <field name="lang">en_US</field> <!-- change -->
             <field name="partner_id" ref="partner_demo_en"/> <!-- change -->
@@ -816,6 +816,81 @@ RguGWPjJG8TjCQC+eekuogFfj0X1A8PEDvDQc29y3k0PdTFLC8prN9mkHljekQdqkEAIEq0rcR03
 25bV26wikcjERCIxdxCqvQjkbVWipdXCdV2SrYNMjYPy3ZT/D6kH8UQt7pUiAAAAAElFTkSuQmCC
             </field>
         </record>
+
+        <!-- SALE -->
+        <record id="sale_order_1_demo_en" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_15"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="shop_id" ref="sale.sale_shop_1"/>
+            <field name="user_id" ref="user_demo_en"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="order_policy">manual</field>
+        </record>
+        <record id="sale_order_line_1_demo_en" model="sale.order.line">
+            <field name="order_id" ref="sale_order_1_demo_en"/>
+            <field name="name">Laptop Customized</field>
+            <field name="product_id" ref="product.product_product_27"/>
+            <field name="product_uom_qty">2</field>
+            <field name="product_uos_qty">2</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">3645.00</field>
+        </record>
+        <record id="sale_order_line_2_demo_en" model="sale.order.line">
+            <field name="order_id" ref="sale_order_1_demo_en"/>
+            <field name="name">Mouse, Wireless</field>
+            <field name="product_id" ref="product.product_product_12"/>
+            <field name="product_uom_qty">2</field>
+            <field name="product_uos_qty">2</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">12.50</field>
+        </record>
+
+        <record id="sale_order_2_demo_en" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_11"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_20"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_20"/>
+            <field name="user_id" ref="user_demo_en"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="order_policy">manual</field>
+        </record>
+        <record id="sale_order_line_3_demo_en" model="sale.order.line">
+            <field name="order_id" ref="sale_order_2_demo_en"/>
+            <field name="name">Laptop E5023</field>
+            <field name="product_id" ref="product.product_product_25"/>
+            <field name="product_uom_qty">5</field>
+            <field name="product_uos_qty">5</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">2950.00</field>
+        </record>
+        <record id="sale_order_line_4_demo_en" model="sale.order.line">
+            <field name="order_id" ref="sale_order_2_demo_en"/>
+            <field name="name">GrapWorks Software</field>
+            <field name="product_id" ref="product.product_product_44"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uos_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">173.00</field>
+        </record>
+        <record id="sale_order_line_5_demo_en" model="sale.order.line">
+            <field name="order_id" ref="sale_order_2_demo_en"/>
+            <field name="name">Datacard</field>
+            <field name="product_id" ref="product.product_product_46"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uos_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">40.00</field>
+        </record>
+        <record id="sale_order_line_6_demo_en" model="sale.order.line">
+            <field name="order_id" ref="sale_order_2_demo_en"/>
+            <field name="name">USB Adapter</field>
+            <field name="product_id" ref="product.product_product_48"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uos_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">18.00</field>
+        </record>
+
 
         <!-- POINT OF SALE -->
         <record id="pos_config_demo_en" model="pos.config">
@@ -1637,6 +1712,39 @@ RguGWPjJG8TjCQC+eekuogFfj0X1A8PEDvDQc29y3k0PdTFLC8prN9mkHljekQdqkEAIEq0rcR03
             </field>
         </record>
 
+        <!-- HR Holidays -->
+        <record model="hr.holidays" id="hr_holidays_1_demo_en">
+          <field name="name">Doctor Appointment</field>
+          <field name="holiday_status_id" ref="hr_holidays.holiday_status_sl"/>
+          <field eval="time.strftime('%Y-%m-20')" name="date_enom"/>
+          <field eval="time.strftime('%Y-%m-22')" name="date_to"/>
+          <field name="type">remove</field>
+          <field name="state">draft</field>
+          <field name="number_of_days_temp">3</field>
+          <field name="employee_id" ref="hr.employee_demo_en"/>
+        </record>
+
+        <record model="hr.holidays" id="hr_holidays_2_demo_en">
+          <field name="name">Summer Vacation</field>
+          <field name="holiday_status_id" ref="hr_holidays.holiday_status_unpaid"/>
+          <field eval="time.strftime('%Y-%m-23')" name="date_enom"/>
+          <field eval="time.strftime('%Y-%m-25')" name="date_to"/>
+          <field name="type">add</field>
+          <field name="state">draft</field>
+          <field name="number_of_days_temp">7</field>
+          <field name="employee_id" ref="hr.employee_demo_en"/>
+        </record>
+
+        <record model="hr.holidays" id="hr_holidays_3_demo_en">
+          <field name="name">International Tour</field>
+          <field name="holiday_status_id" ref="hr_holidays.holiday_status_comp"/>
+          <field eval="time.strftime('%Y-%m-26')" name="date_enom"/>
+          <field eval="time.strftime('%Y-%m-28')" name="date_to"/>
+          <field name="type">add</field>
+          <field name="number_of_days_temp">7</field>
+          <field name="employee_id" ref="hr.employee_demo_en"/>
+        </record>
+
         <!-- MAIL -->
         <record id="mail.msg_discus3" model="mail.message">
             <field name="partner_ids" eval="[(4, ref('partner_demo_en'))]"/>
@@ -2120,7 +2228,7 @@ RguGWPjJG8TjCQC+eekuogFfj0X1A8PEDvDQc29y3k0PdTFLC8prN9mkHljekQdqkEAIEq0rcR03
         <field name="vehicle_id" ref="vehicle_1_en" />
         <field name="amount">0</field>
         <field name="cost_generated">150</field>
-        <field name="cost_frequency">weekly</field>
+        <field name="cost_enequency">weekly</field>
         <field name="cost_subtype_id" ref="fleet.type_contract_leasing"/>
         <field name="date" eval="time.strftime('%Y-01-01')" />
         <field name="start_date" eval="time.strftime('%Y-01-01')" />
