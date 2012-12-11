@@ -302,10 +302,10 @@ class Worker(object):
                 self.multi.pipe_ping(self.watchdog_pipe)
                 self.sleep()
                 self.process_work()
-            _logger.info("Worker (%s) exiting...",self.pid)
+            _logger.info("Worker (%s) exiting. request_count: %s.", self.pid, self.request_count)
             self.stop()
         except Exception,e:
-            _logger.exception("Worker (%s) Exception occured, exiting..."%self.pid)
+            _logger.exception("Worker (%s) Exception occured, exiting..." % self.pid)
             # should we use 3 to abort everything ?
             sys.exit(1)
 
