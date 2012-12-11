@@ -5124,7 +5124,7 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
         // TODO : activate send on wizard and form
 
         if (result.error || !result.id ) {
-            this.do_warn( instance.web.qweb.render('message_error_uploading'), result.error);
+            this.do_warn( _t('Uploading error'), result.error);
             files = _.filter(files, function (val) { return !val.upload; });
         } else {
             for(var i in files){
