@@ -146,6 +146,11 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
     cr.execute("select (now() at time zone 'UTC')::timestamp")
     dt_before_load = cr.fetchone()[0]
 
+    pool.fields_by_model = {'whatever': {}}
+    cr.execute('SELECT * FROM ir_model_fields WHERE state=%s', ('manual',))
+    for field in cr.dictfetchall():
+        pool.fields_by_model.setdefault(field['model'], []).append(field)
+
     # register, instantiate and initialize models for each modules
     for index, package in enumerate(graph):
         module_name = package.name
@@ -159,6 +164,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         load_openerp_module(package.name)
 
         models = pool.load(cr, package)
+
         loaded_modules.append(package.name)
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
             init_module_models(cr, package.name, models)
@@ -220,6 +226,8 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                     delattr(package, kind)
 
         cr.commit()
+
+    pool.fields_by_model = {}
     
     cr.commit()
 
@@ -239,7 +247,7 @@ def _check_module_names(cr, module_names):
             incorrect_names = mod_names.difference([x['name'] for x in cr.dictfetchall()])
             _logger.warning('invalid module names, ignored: %s', ", ".join(incorrect_names))
 
-def load_marked_modules(cr, graph, states, force, progressdict, report, loaded_modules):
+def load_marked_modules(cr, graph, states, force, progressdict, report, loaded_modules, perform_checks):
     """Loads modules marked with ``states``, adding them to ``graph`` and
        ``loaded_modules`` and returns a list of installed/upgraded modules."""
     processed_modules = []
@@ -248,7 +256,7 @@ def load_marked_modules(cr, graph, states, force, progressdict, report, loaded_m
         module_list = [name for (name,) in cr.fetchall() if name not in graph]
         graph.add_modules(cr, module_list, force)
         _logger.debug('Updating graph with %d more modules', len(module_list))
-        loaded, processed = load_module_graph(cr, graph, progressdict, report=report, skip_modules=loaded_modules)
+        loaded, processed = load_module_graph(cr, graph, progressdict, report=report, skip_modules=loaded_modules, perform_checks=perform_checks)
         processed_modules.extend(processed)
         loaded_modules.extend(loaded)
         if not processed: break
@@ -293,7 +301,8 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         # processed_modules: for cleanup step after install
         # loaded_modules: to avoid double loading
         report = pool._assertion_report
-        loaded_modules, processed_modules = load_module_graph(cr, graph, status, perform_checks=(not update_module), report=report)
+        print update_module
+        loaded_modules, processed_modules = load_module_graph(cr, graph, status, perform_checks=update_module, report=report)
 
         if tools.config['load_language']:
             for lang in tools.config['load_language'].split(','):
@@ -333,11 +342,11 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         #            be dropped in STEP 6 later, before restarting the loading
         #            process.
         states_to_load = ['installed', 'to upgrade', 'to remove']
-        processed = load_marked_modules(cr, graph, states_to_load, force, status, report, loaded_modules)
+        processed = load_marked_modules(cr, graph, states_to_load, force, status, report, loaded_modules, update_module)
         processed_modules.extend(processed)
         if update_module:
             states_to_load = ['to install']
-            processed = load_marked_modules(cr, graph, states_to_load, force, status, report, loaded_modules)
+            processed = load_marked_modules(cr, graph, states_to_load, force, status, report, loaded_modules, update_module)
             processed_modules.extend(processed)
 
         # load custom models

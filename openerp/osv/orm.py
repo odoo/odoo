@@ -1018,10 +1018,14 @@ class BaseModel(object):
 
         # Load manual fields
 
-        cr.execute("SELECT id FROM ir_model_fields WHERE name=%s AND model=%s", ('state', 'ir.model.fields'))
-        if cr.fetchone():
-            cr.execute('SELECT * FROM ir_model_fields WHERE model=%s AND state=%s', (self._name, 'manual'))
-            for field in cr.dictfetchall():
+        #cr.execute("SELECT id FROM ir_model_fields WHERE name=%s AND model=%s", ('state', 'ir.model.fields'))
+        if True: #cr.fetchone():
+            if self.pool.fields_by_model:
+                fields__ = self.pool.fields_by_model.get(self._name, [])
+            else:
+                cr.execute('SELECT * FROM ir_model_fields WHERE model=%s AND state=%s', (self._name, 'manual'))
+                fields__ = cr.dictfetchall()
+            for field in fields__:
                 if field['name'] in self._columns:
                     continue
                 attrs = {
@@ -3628,15 +3632,16 @@ class BaseModel(object):
         else:
             res = map(lambda x: {'id': x}, ids)
 
-        for f in fields_pre:
-            if f == self.CONCURRENCY_CHECK_FIELD:
-                continue
-            if self._columns[f].translate:
-                ids = [x['id'] for x in res]
-                #TODO: optimize out of this loop
-                res_trans = self.pool.get('ir.translation')._get_ids(cr, user, self._name+','+f, 'model', context.get('lang', False) or 'en_US', ids)
-                for r in res:
-                    r[f] = res_trans.get(r['id'], False) or r[f]
+        if context.get('lang'):
+            for f in fields_pre:
+                if f == self.CONCURRENCY_CHECK_FIELD:
+                    continue
+                if self._columns[f].translate:
+                    ids = [x['id'] for x in res]
+                    #TODO: optimize out of this loop
+                    res_trans = self.pool.get('ir.translation')._get_ids(cr, user, self._name+','+f, 'model', context['lang'], ids)
+                    for r in res:
+                        r[f] = res_trans.get(r['id'], False) or r[f]
 
         for table in self._inherits:
             col = self._inherits[table]
