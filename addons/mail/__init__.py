@@ -35,5 +35,6 @@ import wizard
 import res_config
 import mail_group_menu
 import update
+import controllers
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
