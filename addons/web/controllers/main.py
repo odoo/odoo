@@ -1318,9 +1318,6 @@ class Binary(openerpweb.Controller):
     def company_logo(self, req, dbname=None):
         # TODO add etag
         uid = None
-        _logger.debug('session db = %r', req.session._db)
-        _logger.debug('session uid = %r', req.session._uid)
-        _logger.debug('param dbname = %r', dbname)
         if req.session._db:
             dbname = req.session._db
             uid = req.session._uid
@@ -1330,7 +1327,6 @@ class Binary(openerpweb.Controller):
         if uid is None:
             uid = openerp.SUPERUSER_ID
 
-        _logger.debug('dbname = %r', dbname)
         if not dbname:
             image_data = self.placeholder(req, 'logo.png')
         else:
