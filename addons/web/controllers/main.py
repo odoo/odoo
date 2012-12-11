@@ -1246,6 +1246,7 @@ class Binary(openerpweb.Controller):
         jdata = simplejson.loads(data)
         model = jdata['model']
         field = jdata['field']
+        data = jdata['data']
         id = jdata.get('id', None)
         filename_field = jdata.get('filename_field', None)
         context = jdata.get('context', {})
@@ -1254,7 +1255,9 @@ class Binary(openerpweb.Controller):
         fields = [field]
         if filename_field:
             fields.append(filename_field)
-        if id:
+        if data:
+            res = { field: data }
+        elif id:
             res = Model.read([int(id)], fields, context)[0]
         else:
             res = Model.default_get(fields, context)

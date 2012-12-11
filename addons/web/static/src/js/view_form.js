@@ -1694,6 +1694,10 @@ instance.web.form.compute_domain = function(expr, fields) {
     return _.all(stack, _.identity);
 };
 
+instance.web.form.is_bin_size = function(v) {
+    return /^\d+(\.\d*)? \w+$/.test(v);
+};
+
 /**
  * Must be applied over an class already possessing the PropertiesMixin.
  *
@@ -4867,11 +4871,6 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
         if (!value) {
             this.do_warn(_t("Save As..."), _t("The field is empty, there's nothing to save !"));
             ev.stopPropagation();
-        } else if (this._dirty_flag) {
-            var link = this.$('.oe_form_binary_file_save_data')[0];
-            link.download = this.filename || "download.bin"; // Works on only on Google Chrome
-            //link.target = '_blank';
-            link.href = "data:application/octet-stream;base64," + value;
         } else {
             instance.web.blockUI();
             var c = instance.webclient.crashmanager;
@@ -4882,6 +4881,7 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
                     id: (this.view.datarecord.id || ''),
                     field: this.name,
                     filename_field: (this.node.attrs.filename || ''),
+                    data: instance.web.form.is_bin_size(value) ? null : value,
                     context: this.view.dataset.get_context()
                 })},
                 complete: instance.web.unblockUI,
@@ -4961,7 +4961,7 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
     render_value: function() {
         var self = this;
         var url;
-        if (this.get('value') && ! /^\d+(\.\d*)? \w+$/.test(this.get('value'))) {
+        if (this.get('value') && !instance.web.form.is_bin_size(this.get('value'))) {
             url = 'data:image/png;base64,' + this.get('value');
         } else if (this.get('value')) {
             var id = JSON.stringify(this.view.datarecord.id || null);
