@@ -5021,6 +5021,8 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
         if(this.field.type != "many2many" || this.field.relation != 'ir.attachment') {
             throw _.str.sprintf(_t("The type of the field '%s' must be a many2many field with a relation to 'ir.attachment' model."), this.field.string);
         }
+        this.data = {};
+        this.set_value([]);
         this.ds_file = new instance.web.DataSetSearch(this, 'ir.attachment');
         this.fileupload_id = _.uniqueId('oe_fileupload_temp');
         $(window).on(this.fileupload_id, _.bind(this.on_file_loaded, this));
@@ -5031,72 +5033,63 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
     },
     set_value: function(value_) {
         var value_ = value_ || [];
-        var self = this;
         var ids = [];
-        _.each(value_, function(command) {
-            if (isNaN(command) && command.id == undefined) {
-                switch (command[0]) {
-                    case commands.CREATE:
-                        ids = ids.concat(command[2]);
-                        return;
-                    case commands.REPLACE_WITH:
-                        ids = ids.concat(command[2]);
-                        return;
-                    case commands.UPDATE:
-                        ids = ids.concat(command[2]);
-                        return;
-                    case commands.LINK_TO:
-                        ids = ids.concat(command[1]);
-                        return;
-                    case commands.DELETE:
-                        ids = _.filter(ids, function (id) { return id != command[1];});
-                        return;
-                    case commands.DELETE_ALL:
-                        ids = [];
-                        return;
+        if(value_ instanceof Array) {
+            _.each(value_, function(command) {
+                if (command instanceof Array) {
+                    switch (command[0]) {
+                        case commands.CREATE:
+                            ids = ids.concat(command[2]);
+                            return;
+                        case commands.REPLACE_WITH:
+                            ids = ids.concat(command[2]);
+                            return;
+                        case commands.UPDATE:
+                            ids = ids.concat(command[2]);
+                            return;
+                        case commands.LINK_TO:
+                            ids = ids.concat(command[1]);
+                            return;
+                        case commands.DELETE:
+                            ids = _.filter(ids, function (id) { return id != command[1];});
+                            return;
+                        case commands.DELETE_ALL:
+                            ids = [];
+                            return;
+                    }
+                } else if (typeof command == 'number') {
+                    ids.push(command);
                 }
-            } else {
-                ids.push(command);
-            }
-        });
+            });
+        }
         this._super( ids );
     },
     get_value: function() {
-        return _.map(this.get('value'), function (value) { return commands.link_to( isNaN(value) ? value.id : value ); });
+        return _.map(this.get('value'), function (id) { return commands.link_to( id ); });
     },
     get_file_url: function (attachment) {
         return this.session.url('/web/binary/saveas', {model: 'ir.attachment', field: 'datas', filename_field: 'datas_fname', id: attachment['id']});
     },
     read_name_values : function () {
         var self = this;
-        // select the list of id for a get_name
-        var values = [];
-        _.each(this.get('value'), function (val) {
-            if (typeof val != 'object') {
-                values.push(val);
-            }
-        });
+        // don't reset know values
+        var _value = _.filter(this.get('value'), function (id) { return typeof self.data[id] == 'undefined'; } );
         // send request for get_name
-        if (values.length) {
-            return this.ds_file.call('read', [values, ['id', 'name', 'datas_fname']]).done(function (datas) {
+        if (_value.length) {
+            return this.ds_file.call('read', [_value, ['id', 'name', 'datas_fname']]).done(function (datas) {
                 _.each(datas, function (data) {
                     data.no_unlink = true;
                     data.url = self.session.url('/web/binary/saveas', {model: 'ir.attachment', field: 'datas', filename_field: 'datas_fname', id: data.id});
-                    
-                    _.each(self.get('value'), function (val, key) {
-                        if(val == data.id) {
-                            self.get('value')[key] = data;
-                        }
-                    });
+                    self.data[data.id] = data;
                 });
             });
         } else {
-            return $.when(this.get('value'));
+            return $.when();
         }
     },
     render_value: function () {
         var self = this;
-        this.read_name_values().then(function (datas) {
+        this.read_name_values().then(function () {
 
             var render = $(instance.web.qweb.render('FieldBinaryFileUploader.files', {'widget': self}));
             render.on('click', '.oe_delete', _.bind(self.on_file_delete, self));
@@ -5114,12 +5107,16 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
         var self = this;
         var $target = $(event.target);
         if ($target.val() !== '') {
-
             var filename = $target.val().replace(/.*[\\\/]/,'');
-
-            // if the files is currently uploded, don't send again
-            if( !isNaN(_.find(this.get('value'), function (file) { return (file.filename || file.name) == filename && file.upload; } )) ) {
+            // don't uplode more of one file in same time
+            if (self.data[0] && self.data[0].upload ) {
                 return false;
+            }
+            for (var id in this.get('value')) {
+                // if the files exits, delete the file before upload (if it's a new file)
+                if (self.data[id] && (self.data[id].filename || self.data[id].name) == filename && !self.data[id].no_unlink ) {
+                    self.ds_file.unlink([id]);
+                }
             }
 
             // block UI or not
@@ -5127,32 +5124,19 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
                 instance.web.blockUI();
             }
 
-            // if the files exits for this answer, delete the file before upload
-            var files = _.filter(this.get('value'), function (file) {
-                if((file.filename || file.name) == filename) {
-                    self.ds_file.unlink([file.id]);
-                    return false;
-                } else {
-                    return true;
-                }
-            });
-
             // TODO : unactivate send on wizard and form
 
             // submit file
             this.$('form.oe_form_binary_form').submit();
             this.$(".oe_fileupload").hide();
-
-            // add file on result
-            files.push({
+            // add file on data result
+            this.data[0] = {
                 'id': 0,
                 'name': filename,
                 'filename': filename,
                 'url': '',
                 'upload': true
-            });
-
-            this.set({'value': files});
+            };
         }
     },
     on_file_loaded: function (event, result) {
@@ -5161,35 +5145,39 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
             instance.web.unblockUI();
         }
 
-        // TODO : activate send on wizard and form
-
-        var files = this.get('value');
-        for(var i in files){
-            if(files[i].filename == result.filename && files[i].upload) {
-                files[i] = {
+        if (result.error || !result.id ) {
+            this.do_warn( instance.web.qweb.render('message_error_uploading'), result.error);
+            delete this.data[0];
+        } else {
+            if (this.data[0] && this.data[0].filename == result.filename && this.data[0].upload) {
+                delete this.data[0];
+                this.data[result.id] = {
+                    'id': result.id,
+                    'name': result.name,
+                    'filename': result.filename,
+                    'url': this.get_file_url(result)
+                };
+            } else {
+                this.data[result.id] = {
                     'id': result.id,
                     'name': result.name,
                     'filename': result.filename,
                     'url': this.get_file_url(result)
                 };
             }
+            var values = this.get('value');
+            values.push(result.id);
+            this.set({'value': values});
         }
-
-        this.set({'value': files});
         this.render_value()
     },
     on_file_delete: function (event) {
         event.stopPropagation();
         var file_id=$(event.target).data("id");
         if (file_id) {
-            var files=[];
-            for(var i in this.get('value')){
-                if(file_id != this.get('value')[i].id){
-                    files.push(this.get('value')[i]);
-                }
-                else if(!this.get('value')[i].no_unlink) {
-                    this.ds_file.unlink([file_id]);
-                }
+            var files = _.filter(this.get('value'), function (id) {return id != file_id;});
+            if(!this.data[file_id].no_unlink) {
+                this.ds_file.unlink([file_id]);
             }
             this.set({'value': files});
         }
