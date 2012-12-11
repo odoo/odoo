@@ -9,13 +9,13 @@
             <field name="arch" type="xml">
                 <tree toolbar="1" colors="red:state=='pending';grey:state in ('cancelled','close');blue:type=='view'" string="Analytic Accounts">
                     <field name="complete_name"/>
+                    <field name="partner_id"/>
                     <field name="code"/>
                     <field name="date"/>
                     <field name="date_start" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                     <field name="manager_id" invisible="1"/>
                     <field name="parent_id" invisible="1"/>
-                    <field name="partner_id" invisible="1"/>
                     <field name="state" invisible="1"/>
                     <field name="type" invisible="1"/>
                     <field name="company_id" groups="base.group_multi_company"/>
