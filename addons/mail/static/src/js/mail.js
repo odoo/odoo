@@ -30,7 +30,7 @@ openerp.mail = function (session) {
 
         /* Get the url of an attachment {'id': id} */
         get_attachment_url: function (session, message_id, attachment_id) {
-            return session.url('/web/binary/download_attachment', {
+            return session.url('/mail/download_attachment', {
                 'model': 'mail.message',
                 'id': message_id,
                 'method': 'download_attachment',
