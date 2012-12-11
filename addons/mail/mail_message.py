@@ -841,6 +841,9 @@ class mail_message(osv.Model):
         # An error appear when a user receive a notify to a message without notify to his parent message.
         # Add a notification with read = true to the parented message if there are no notification
         if message.parent_id:
+            # all notified_partner_ids of the mail.message have to be notified for the parented messages
+            if message.notified_partner_ids:
+                partners_to_notify |= set(message.notified_partner_ids)
             partners_to_parent_notify = set(partners_to_notify) - set(message.parent_id.notified_partner_ids)
             for partner in partners_to_parent_notify:
                 notification_obj.create(cr, uid, {

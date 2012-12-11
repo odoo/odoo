@@ -427,6 +427,38 @@ class test_mail(test_mail_mockup.TestMailMockups):
         message = self.mail_message.browse(cr, uid, msg_id3)
         self.assertEqual(message.parent_id.id, msg_id, 'message_post did not flatten the thread structure')
 
+    def test_22_message_post_notification(self):
+        """ Tests designed for message_post. """
+        cr, uid, user_admin, group_pigs = self.cr, self.uid, self.user_admin, self.group_pigs
+        self.res_users.write(cr, uid, [uid], {'signature': 'Admin', 'email': 'a@a'})
+        # 1 - Bert Tartopoils, without email, should receive emails for every message
+        p_b_id = self.res_partner.create(cr, uid, {'name': 'Bert Tartopoils', 'email': 'b@b', 'notification_email_send': 'all'})
+        # 2 - Dédé Grosbedon, without email, should receive emails for every message
+        p_c_id = self.res_partner.create(cr, uid, {'name': 'Dédé Grosbedon', 'email': 'c@c','notification_email_send': 'all'})
+        # Data: comment subtype for mail.message creation
+        ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'mail', 'mt_comment')
+        subtype_id = ref and ref[1] or False
+
+        msg_id1 = self.mail_message.create(cr, uid, {'body': 'Test', 'subtype_id': subtype_id})
+        msg_id2 = self.mail_message.create(cr, uid, {'body': 'Test', 'subtype_id': subtype_id, 'parent_id': msg_id1 })
+        msg_id3 = self.mail_message.create(cr, uid, {'body': 'Test', 'subtype_id': subtype_id, 'parent_id': msg_id1, 'partner_ids': [(4, p_b_id)] , 'notified_partner_ids': [(4, p_c_id)] })
+
+        test_pids = set([p_b_id, p_c_id])
+
+        # Test: p_b_id is notified for the current message
+        message = self.mail_message.browse(cr, uid, msg_id3)
+        message_pids = set([partner.id for partner in message.notified_partner_ids] + [partner.id for partner in message.partner_ids])
+        self.assertEqual(test_pids, message_pids, 'mail.message : the partner is not notified for his message')
+        # Test: p_b_id is not notified for the others messages of this thread
+        message = self.mail_message.browse(cr, uid, msg_id2)
+        message_pids = set([partner.id for partner in message.notified_partner_ids] + [partner.id for partner in message.partner_ids])
+        self.assertFalse(message_pids, 'mail.message the partner is notified for an other message')
+        # Test: p_b_id is notified for the parented message
+        message = self.mail_message.browse(cr, uid, msg_id1)
+        message_pids = set([partner.id for partner in message.notified_partner_ids] + [partner.id for partner in message.partner_ids])
+
+        self.assertEqual(test_pids, message_pids, 'mail.message the partner is not notified for the parented message')
+
     def test_25_message_compose_wizard(self):
         """ Tests designed for the mail.compose.message wizard. """
         cr, uid, user_admin, group_pigs = self.cr, self.uid, self.user_admin, self.group_pigs

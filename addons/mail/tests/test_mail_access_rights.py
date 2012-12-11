@@ -86,7 +86,7 @@ class test_mail_access_rights(test_mail_mockup.TestMailMockups):
         msg_ids = self.mail_message.search(cr, uid, [('subject', 'like', '_Test')])
         self.assertEqual(set([msg_id1, msg_id2, msg_id3, msg_id4, msg_id5, msg_id6, msg_id7, msg_id8]), set(msg_ids), 'mail_message search failed')
 
-    @mute_logger('openerp.addons.base.ir.ir_model','openerp.osv.orm')
+    #@mute_logger('openerp.addons.base.ir.ir_model','openerp.osv.orm')
     def test_05_mail_message_read_access_rights(self):
         """ Test basic mail_message read access rights. """
         cr, uid = self.cr, self.uid
@@ -133,6 +133,7 @@ class test_mail_access_rights(test_mail_mockup.TestMailMockups):
         # Test: Bert reads the message, crash because not notification/not in doc followers/not read on doc
         self.assertRaises(except_orm, self.mail_message.read,
             cr, user_bert_id, message_id)
+
 
     @mute_logger('openerp.addons.base.ir.ir_model','openerp.osv.orm')
     def test_10_mail_flow_access_rights(self):
