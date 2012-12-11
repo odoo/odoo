@@ -2722,7 +2722,7 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
         return this._super();
     },
     store_dom_value: function () {
-        if (!this.get('effective_readonly') && this.$('input').length) {
+        if (!this.get('effective_readonly') && this.$('select').length) {
             this.internal_set_value(
                 this.values[this.$('select')[0].selectedIndex][0]);
         }
