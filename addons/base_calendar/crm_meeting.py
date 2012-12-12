@@ -142,6 +142,12 @@ class mail_message(osv.osv):
                 args[index][2] = get_real_ids(args[index][2])
         return super(mail_message, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
 
+    def _find_allowed_model_wise(self, cr, uid, doc_model, doc_dict, context=None):
+        if doc_model == 'crm.meeting':
+            for virtual_id in self.pool.get(doc_model).get_recurrent_ids(cr, uid, doc_dict.keys(), [], context=context):
+                doc_dict.setdefault(virtual_id, doc_dict[get_real_ids(virtual_id)])
+        return super(mail_message, self)._find_allowed_model_wise(cr, uid, doc_model, doc_dict, context=context)
+
 class ir_attachment(osv.osv):
     _inherit = "ir.attachment"
 

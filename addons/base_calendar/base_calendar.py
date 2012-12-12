@@ -30,6 +30,7 @@ import pytz
 import re
 import time
 import tools
+from openerp import SUPERUSER_ID
 
 months = {
     1: "January", 2: "February", 3: "March", 4: "April", \
@@ -1001,12 +1002,15 @@ class calendar_event(osv.osv):
         if not isinstance(ids, list):
             ids = [ids]
 
-        for data in self.read(cr, uid, ids, ['id','byday','recurrency', 'month_list','end_date', 'rrule_type', 'select1', 'interval', 'count', 'end_type', 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su', 'exrule', 'day', 'week_list' ], context=context):
-            event = data['id']
+        for id in ids:
+            #read these fields as SUPERUSER because if the record is private a normal search could return False and raise an error
+            data = self.read(cr, SUPERUSER_ID, id, ['interval', 'count'], context=context)
             if data.get('interval', 0) < 0:
                 raise osv.except_osv(_('Warning!'), _('Interval cannot be negative.'))
             if data.get('count', 0) <= 0:
                 raise osv.except_osv(_('Warning!'), _('Count cannot be negative or 0.'))
+            data = self.read(cr, uid, id, ['id','byday','recurrency', 'month_list','end_date', 'rrule_type', 'select1', 'interval', 'count', 'end_type', 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su', 'exrule', 'day', 'week_list' ], context=context)
+            event = data['id']
             if data['recurrency']:
                 result[event] = self.compute_rule_string(data)
             else:
@@ -1339,40 +1343,32 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         return data
 
     def search(self, cr, uid, args, offset=0, limit=0, order=None, context=None, count=False):
-        context = context or {}
-        args_without_date = []
-        filter_date = []
+        if context is None:
+            context = {}
+        new_args = []
 
         for arg in args:
-            if arg[0] == "id":
-                new_id = self.remove_virtual_id(arg[2])
+            new_arg = arg
+            if arg[0] in ('date', unicode('date'), 'date_deadline', unicode('date_deadline')):
+                if context.get('virtual_id', True):
+                    new_args += ['|','&',('recurrency','=',1),('recurrent_id_date', arg[1], arg[2])]
+            elif arg[0] == "id":
+                new_id = get_real_ids(arg[2])
                 new_arg = (arg[0], arg[1], new_id)
-                args_without_date.append(new_arg)
-            elif arg[0] not in ('date', unicode('date'), 'date_deadline', unicode('date_deadline')):
-                args_without_date.append(arg)
-            else:
-                if context.get('virtual_id', True):
-                    args_without_date.append('|')
-                args_without_date.append(arg)
-                if context.get('virtual_id', True):
-                    args_without_date.append(('recurrency','=',1))
-                filter_date.append(arg)
+            new_args.append(new_arg)
 
-        res = super(calendar_event, self).search(cr, uid, args_without_date, \
-                                 0, 0, order, context, count=False)
+        #offset, limit and count must be treated separately as we may need to deal with virtual ids
+        res = super(calendar_event, self).search(cr, uid, new_args, offset=0, limit=0, order=order, context=context, count=False)
         if context.get('virtual_id', True):
-            res = self.get_recurrent_ids(cr, uid, res, args, limit, context=context)
-
+            res = self.get_recurrent_ids(cr, uid, res, new_args, limit, context=context)
         if count:
             return len(res)
         elif limit:
             return res[offset:offset+limit]
-        else:
-            return res
+        return res
 
     def _get_data(self, cr, uid, id, context=None):
-        res = self.read(cr, uid, [id],['date', 'date_deadline'])
-        return res[0]
+        return self.read(cr, uid, id,['date', 'date_deadline'])
 
     def need_to_update(self, event_id, vals):
         split_id = str(event_id).split("-")
