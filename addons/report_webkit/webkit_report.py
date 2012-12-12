@@ -106,7 +106,6 @@ class WebKitParser(report_sxw):
             webkit_header = report_xml.webkit_header
         tmp_dir = tempfile.gettempdir()
         out_filename = tempfile.mktemp(suffix=".pdf", prefix="webkit.tmp.")
-        files = []
         file_to_del = [out_filename]
         if comm_path:
             command = [comm_path]
@@ -220,7 +219,7 @@ class WebKitParser(report_sxw):
         template =  False
 
         if report_xml.report_file :
-            path = addons.get_module_resource(report_xml.report_file)
+            path = addons.get_module_resource(*report_xml.report_file.split(os.path.sep))
             if os.path.exists(path) :
                 template = file(path).read()
         if not template and report_xml.report_webkit_data :
@@ -242,8 +241,6 @@ class WebKitParser(report_sxw):
         css = report_xml.webkit_header.css
         if not css :
             css = ''
-        user = self.pool.get('res.users').browse(cursor, uid, uid)
-        company= user.company_id
 
         #default_filters=['unicode', 'entity'] can be used to set global filter
         body_mako_tpl = mako_template(template)
@@ -257,7 +254,7 @@ class WebKitParser(report_sxw):
                                                 _=self.translate_call,
                                                 **self.parser_instance.localcontext)
                     htmls.append(html)
-                except Exception, e:
+                except Exception:
                     msg = exceptions.text_error_template().render()
                     _logger.error(msg)
                     raise except_osv(_('Webkit render!'), msg)
@@ -268,7 +265,7 @@ class WebKitParser(report_sxw):
                                             _=self.translate_call,
                                             **self.parser_instance.localcontext)
                 htmls.append(html)
-            except Exception, e:
+            except Exception:
                 msg = exceptions.text_error_template().render()
                 _logger.error(msg)
                 raise except_osv(_('Webkit render!'), msg)
@@ -279,7 +276,7 @@ class WebKitParser(report_sxw):
                                         _=self.translate_call,
                                         _debug=False,
                                         **self.parser_instance.localcontext)
-        except Exception, e:
+        except Exception:
             raise except_osv(_('Webkit render!'),
                 exceptions.text_error_template().render())
         foot = False
@@ -301,7 +298,7 @@ class WebKitParser(report_sxw):
                                            _debug=tools.ustr("\n".join(htmls)),
                                            _=self.translate_call,
                                            **self.parser_instance.localcontext)
-            except Exception, e:
+            except Exception:
                 msg = exceptions.text_error_template().render()
                 _logger.error(msg)
                 raise except_osv(_('Webkit render!'), msg)
@@ -327,8 +324,8 @@ class WebKitParser(report_sxw):
             report_xml.report_rml = None
             report_xml.report_rml_content = None
             report_xml.report_sxw_content_data = None
-            report_rml.report_sxw_content = None
-            report_rml.report_sxw = None
+            report_xml.report_sxw_content = None
+            report_xml.report_sxw = None
         else:
             return super(WebKitParser, self).create(cursor, uid, ids, data, context)
         if report_xml.report_type != 'webkit' :

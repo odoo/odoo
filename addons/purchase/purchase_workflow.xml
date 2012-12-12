@@ -22,6 +22,7 @@
         <record id="act_confirmed" model="workflow.activity">
             <field name="wkf_id" ref="purchase_order"/>
             <field name="name">confirmed</field>
+            <field name="split_mode">OR</field>
             <field name="kind">function</field>
             <field name="action">wkf_confirm_order()</field>
         </record>
@@ -49,6 +50,7 @@
             <field name="name">router</field>
             <field name="split_mode">OR</field>
             <field name="kind">function</field>
+            <field name="join_mode">AND</field>
             <field name="action">wkf_approve_order()</field>
         </record>
         <record id="act_invoice" model="workflow.activity">

@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-06 02:14+0000\n"
+"PO-Revision-Date: 2012-12-12 03:07+0000\n"
 "Last-Translator: jerryzhang <jerry.zhangzhe@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-07 04:36+0000\n"
-"X-Generator: Launchpad (build 16341)\n"
+"X-Launchpad-Export-Date: 2012-12-12 04:40+0000\n"
+"X-Generator: Launchpad (build 16361)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -62,7 +62,7 @@ msgstr "分配模式"
 #. module: hr_holidays
 #: field:hr.employee,leave_date_from:0
 msgid "From Date"
-msgstr ""
+msgstr "起始日期"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -74,7 +74,7 @@ msgstr "部门"
 #: model:ir.actions.act_window,name:hr_holidays.request_approve_allocation
 #: model:ir.ui.menu,name:hr_holidays.menu_request_approve_allocation
 msgid "Allocation Requests to Approve"
-msgstr ""
+msgstr "准假审核"
 
 #. module: hr_holidays
 #: help:hr.holidays,category_id:0
@@ -126,7 +126,7 @@ msgstr "浅青色"
 #. module: hr_holidays
 #: constraint:hr.holidays:0
 msgid "You can not have 2 leaves that overlaps on same day!"
-msgstr ""
+msgstr "在同一天内不允许存在两次时间重叠的请假申请"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -165,13 +165,13 @@ msgstr "拒绝"
 #: code:addons/hr_holidays/hr_holidays.py:434
 #, python-format
 msgid "Request <b>submitted</b>, waiting for validation by the manager."
-msgstr ""
+msgstr "申请<b>已提交</b>，等待经理确认。"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:439
 #, python-format
 msgid "Request <b>approved</b>, waiting second validation."
-msgstr ""
+msgstr "申请<b>已通过审核</b>，等待二次确认。"
 
 #. module: hr_holidays
 #: view:hr.employee:0
@@ -298,7 +298,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
 msgid "Legal Leaves 2012"
-msgstr ""
+msgstr "年假（2012）"
 
 #. module: hr_holidays
 #: selection:hr.holidays.summary.dept,holiday_type:0
@@ -381,7 +381,7 @@ msgstr "准假类型"
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.actions_server_holidays_unread
 msgid "Holidays: Mark unread"
-msgstr ""
+msgstr "假期：设置为未读"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -405,6 +405,10 @@ msgid ""
 "   \n"
 "The status is 'Approved', when holiday request is approved by manager."
 msgstr ""
+"请假申请建立后，状态被设置为“待提交”。            \n"
+"用户提交请假申请后，状态变为“待审核”。            \n"
+"如果请假申请被经理拒绝，则状态变为“被拒绝”。            \n"
+"如果请假申通过经理审核，则状态变为“已审核”。"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -436,7 +440,7 @@ msgstr "查找准假类型"
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.actions_server_holidays_read
 msgid "Holidays: Mark read"
-msgstr ""
+msgstr "假期：设置为已读"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
@@ -475,6 +479,11 @@ msgid ""
 "             </p>\n"
 "           "
 msgstr ""
+"<p>\n"
+"               你可以分配剩余的法定假日给每一个员工，Openerp\n"
+"               会自动建立并审核分配申请。\n"
+"             </p>\n"
+"           "
 
 #. module: hr_holidays
 #: help:hr.holidays.status,categ_id:0
@@ -527,7 +536,7 @@ msgstr "开始日期"
 msgid ""
 "There are not enough %s allocated for employee %s; please create an "
 "allocation request for this leave type."
-msgstr ""
+msgstr "没有足够的%s分配给员工%s；请为这种假期类型创建一个新的分配申请。"
 
 #. module: hr_holidays
 #: view:hr.holidays.summary.dept:0
@@ -582,7 +591,7 @@ msgstr ""
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
 msgid "The number of days must be greater than 0."
-msgstr ""
+msgstr "天数必须大于0."
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -607,7 +616,7 @@ msgstr "为职员分配假期"
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_view_holiday_status
 msgid "Leaves Types"
-msgstr ""
+msgstr "请假类型"
 
 #. module: hr_holidays
 #: field:hr.holidays,meeting_id:0

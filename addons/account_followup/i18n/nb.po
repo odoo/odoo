@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-04 10:32+0000\n"
+"PO-Revision-Date: 2012-12-10 15:35+0000\n"
 "Last-Translator: Kaare Pettersen <Unknown>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-05 05:19+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-11 04:46+0000\n"
+"X-Generator: Launchpad (build 16356)\n"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
@@ -26,7 +26,7 @@ msgstr "Manuell handling."
 #. module: account_followup
 #: help:res.partner,latest_followup_level_id:0
 msgid "The maximum follow-up level"
-msgstr ""
+msgstr "Maksimal oppfølging nivå."
 
 #. module: account_followup
 #: view:res.partner:0
@@ -193,7 +193,7 @@ msgstr ""
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "days overdue, do the following actions:"
-msgstr ""
+msgstr "dager etter forfall, gjør følgende handlinger:"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
@@ -315,7 +315,7 @@ msgstr ""
 #. module: account_followup
 #: help:account_followup.followup.line,send_letter:0
 msgid "When processing, it will print a letter"
-msgstr ""
+msgstr "Ved behandling, vil den skrive ut et brev."
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -392,7 +392,7 @@ msgstr "Betaling oppfølgninger."
 #. module: account_followup
 #: field:account_followup.followup.line,delay:0
 msgid "Due Days"
-msgstr ""
+msgstr "Grunn dager."
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:155
@@ -415,7 +415,7 @@ msgstr "Siste oppfølging"
 #: model:ir.actions.act_window,name:account_followup.action_account_manual_reconcile_receivable
 #: model:ir.ui.menu,name:account_followup.menu_manual_reconcile_followup
 msgid "Reconcile Invoices & Payments"
-msgstr ""
+msgstr "Forsone Fakturaer og betalinger."
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.account_followup_s
@@ -435,7 +435,7 @@ msgstr "Send e-post Bekreftelse."
 #. module: account_followup
 #: view:res.partner:0
 msgid "Print Overdue Payments"
-msgstr ""
+msgstr "Skriv ut forsinket betaling."
 
 #. module: account_followup
 #: field:account_followup.stat.by.partner,date_followup:0
@@ -496,7 +496,7 @@ msgstr "Utskrevet Beskjed"
 #. module: account_followup
 #: field:res.partner,latest_followup_level_id_without_lit:0
 msgid "Latest Follow-up Level without litigation"
-msgstr ""
+msgstr "Siste Oppfølging nivå uten søksmål."
 
 #. module: account_followup
 #: view:res.partner:0
@@ -517,6 +517,7 @@ msgstr "Partner til Påminnelse"
 #: view:res.partner:0
 msgid "Print overdue payments report independent of follow-up line"
 msgstr ""
+"Skriv ut forsinket betaling rapporterer uavhengig av oppfølging linje."
 
 #. module: account_followup
 #: field:account_followup.followup.line,followup_id:0
@@ -546,7 +547,7 @@ msgstr ""
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_sending_results
 msgid "Results from the sending of the different letters and emails"
-msgstr ""
+msgstr "Resultater fra sending av forskjellige bokstaver og e-poster."
 
 #. module: account_followup
 #: constraint:account_followup.followup.line:0
@@ -591,7 +592,7 @@ msgstr "Søk oppfølging."
 #. module: account_followup
 #: view:res.partner:0
 msgid "Account Move line"
-msgstr ""
+msgstr "Konto Flytt linjen."
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:240
@@ -701,7 +702,7 @@ msgstr "Ukjent."
 #: code:addons/account_followup/account_followup.py:245
 #, python-format
 msgid "Printed overdue payments report"
-msgstr ""
+msgstr "Skrevet ut forfalte betalings rapporter."
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_email_template
@@ -714,6 +715,8 @@ msgid ""
 "When processing, it will set the manual action to be taken for that "
 "customer. "
 msgstr ""
+"Ved behandling, vil det sette den manuelle tiltak som bør iverksettes for "
+"den kunden. "
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:171
@@ -878,6 +881,8 @@ msgid ""
 "The maximum follow-up level without taking into account the account move "
 "lines with litigation"
 msgstr ""
+"Maksimal oppfølging nivå uten å ta hensyn til kontoens flytte linjene med "
+"søksmål."
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -1097,7 +1102,7 @@ msgstr "Beskrivelse"
 #: model:email.template,subject:account_followup.email_template_account_followup_level1
 #: model:email.template,subject:account_followup.email_template_account_followup_level2
 msgid "${user.company_id.name} Payment Follow-up"
-msgstr ""
+msgstr "$ {Bruker.Firma_ID.navn} Betaling Oppfølging"
 
 #. module: account_followup
 #: view:account_followup.sending.results:0
@@ -1125,6 +1130,8 @@ msgid ""
 "If not specified by the latest follow-up level, it will send from the "
 "default follow-up of overdue invoices template"
 msgstr ""
+"Hvis det ikke spesifisert av den siste oppfølging nivåen, vil den sende fra "
+"standard oppfølging av forfalte fakturaer maler."
 
 #. module: account_followup
 #: model:ir.actions.act_window,help:account_followup.action_account_manual_reconcile_receivable
@@ -1152,7 +1159,7 @@ msgstr "Oppfølging linjer."
 #. module: account_followup
 #: field:account_followup.followup.line,manual_action_responsible_id:0
 msgid "Assign a Responsible"
-msgstr ""
+msgstr "Tildele en ansvarlig."
 
 #. module: account_followup
 #: view:account_followup.print:0
@@ -1160,6 +1167,8 @@ msgid ""
 "This action will send follow-up emails, print the letters and\n"
 "                        set the manual actions per customers."
 msgstr ""
+"Denne handlingen vil sende oppfølging e-postmeldinger, skriv ut brevene og\n"
+"sett en manuell handling per. kunder."
 
 #. module: account_followup
 #: help:account_followup.print,partner_lang:0
