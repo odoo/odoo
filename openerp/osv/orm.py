@@ -3262,8 +3262,8 @@ class BaseModel(object):
         elif not self._columns['parent_right'].select:
             _logger.error('parent_right column on object %s must be indexed! Add select=1 to the field definition)',
                           self._table)
-        if self._columns[self._parent_name].ondelete != 'cascade':
-            _logger.error("The column %s on object %s must be set as ondelete='cascade'",
+        if self._columns[self._parent_name].ondelete not in ('cascade', 'restrict'):
+            _logger.error("The column %s on object %s must be set as ondelete='cascade' or 'restrict'",
                           self._parent_name, self._name)
 
         cr.commit()
@@ -3445,8 +3445,8 @@ class BaseModel(object):
                 _logger.info('Missing many2one field definition for _inherits reference "%s" in "%s", using default one.', field_name, self._name)
                 self._columns[field_name] = fields.many2one(table, string="Automatically created field to link to parent %s" % table,
                                                              required=True, ondelete="cascade")
-            elif not self._columns[field_name].required or self._columns[field_name].ondelete.lower() != "cascade":
-                _logger.warning('Field definition for _inherits reference "%s" in "%s" must be marked as "required" with ondelete="cascade", forcing it.', field_name, self._name)
+            elif not self._columns[field_name].required or self._columns[field_name].ondelete.lower() not in ("cascade", "restrict"):
+                _logger.warning('Field definition for _inherits reference "%s" in "%s" must be marked as "required" with ondelete="cascade" or "restrict", forcing it to required + cascade.', field_name, self._name)
                 self._columns[field_name].required = True
                 self._columns[field_name].ondelete = "cascade"
 
