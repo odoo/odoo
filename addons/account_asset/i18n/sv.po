@@ -7,23 +7,24 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-08-10 06:42+0000\n"
-"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
+"PO-Revision-Date: 2012-12-06 10:53+0000\n"
+"Last-Translator: Mikael Akerberg <mikael.akerberg@dermanord.se>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:28+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-12-07 04:57+0000\n"
+"X-Generator: Launchpad (build 16341)\n"
 
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Assets in draft and open states"
-msgstr "Inventarier i preleminär eller öppen status"
+msgstr "Tillgångar i preleminär eller öppen status"
 
 #. module: account_asset
 #: field:account.asset.category,method_end:0
-#: field:account.asset.history,method_end:0 field:asset.modify,method_end:0
+#: field:account.asset.history,method_end:0
+#: field:asset.modify,method_end:0
 msgid "Ending date"
 msgstr "Slutdatum"
 
@@ -53,16 +54,19 @@ msgid "Gross Amount"
 msgstr "Bruttobelopp"
 
 #. module: account_asset
-#: view:account.asset.asset:0 field:account.asset.asset,name:0
+#: view:account.asset.asset:0
 #: field:account.asset.depreciation.line,asset_id:0
-#: field:account.asset.history,asset_id:0 field:account.move.line,asset_id:0
-#: view:asset.asset.report:0 field:asset.asset.report,asset_id:0
+#: field:account.asset.history,asset_id:0
+#: field:account.move.line,asset_id:0
+#: view:asset.asset.report:0
+#: field:asset.asset.report,asset_id:0
 #: model:ir.model,name:account_asset.model_account_asset_asset
 msgid "Asset"
 msgstr "Tillgång"
 
 #. module: account_asset
-#: help:account.asset.asset,prorata:0 help:account.asset.category,prorata:0
+#: help:account.asset.asset,prorata:0
+#: help:account.asset.category,prorata:0
 msgid ""
 "Indicates that the first depreciation entry for this asset have to be done "
 "from the purchase date instead of the first January"
@@ -77,7 +81,8 @@ msgstr "Historienamn"
 
 #. module: account_asset
 #: field:account.asset.asset,company_id:0
-#: field:account.asset.category,company_id:0 view:asset.asset.report:0
+#: field:account.asset.category,company_id:0
+#: view:asset.asset.report:0
 #: field:asset.asset.report,company_id:0
 msgid "Company"
 msgstr "Bolag"
@@ -88,7 +93,8 @@ msgid "Modify"
 msgstr "Ändra"
 
 #. module: account_asset
-#: selection:account.asset.asset,state:0 view:asset.asset.report:0
+#: selection:account.asset.asset,state:0
+#: view:asset.asset.report:0
 #: selection:asset.asset.report,state:0
 msgid "Running"
 msgstr "Kör"
@@ -129,10 +135,11 @@ msgid ""
 "This wizard will post the depreciation lines of running assets that belong "
 "to the selected period."
 msgstr ""
-"Denna guide vill lagra avskrivningsrader för aktuella inventarier som "
-"tillhör vald period."
+"Denna guide skapar avskrivningsrader för aktuella tillgångar som tillhör "
+"vald period."
 
 #. module: account_asset
+#: view:account.asset.asset:0
 #: field:account.asset.asset,account_move_line_ids:0
 #: field:account.move.line,entry_ids:0
 #: model:ir.actions.act_window,name:account_asset.act_entries_open
@@ -152,7 +159,8 @@ msgstr "Belopp som enligt plan inte kan avskrivas"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,depreciation_date:0
-#: view:asset.asset.report:0 field:asset.asset.report,depreciation_date:0
+#: view:asset.asset.report:0
+#: field:asset.asset.report,depreciation_date:0
 msgid "Depreciation Date"
 msgstr "Avskrivningsdatutm"
 
@@ -167,13 +175,14 @@ msgid "Posted Amount"
 msgstr "Bokfört belopp"
 
 #. module: account_asset
-#: view:account.asset.asset:0 view:asset.asset.report:0
+#: view:account.asset.asset:0
+#: view:asset.asset.report:0
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_form
 #: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_form
 #: model:ir.ui.menu,name:account_asset.menu_finance_assets
 #: model:ir.ui.menu,name:account_asset.menu_finance_config_assets
 msgid "Assets"
-msgstr "Inventarier"
+msgstr "Tillgångar"
 
 #. module: account_asset
 #: field:account.asset.category,account_depreciation_id:0
@@ -181,8 +190,11 @@ msgid "Depreciation Account"
 msgstr "Avskrivningskonto"
 
 #. module: account_asset
-#: view:account.asset.asset:0 view:account.asset.category:0
-#: view:account.asset.history:0 view:asset.modify:0 field:asset.modify,note:0
+#: view:account.asset.asset:0
+#: view:account.asset.category:0
+#: view:account.asset.history:0
+#: view:asset.modify:0
+#: field:asset.modify,note:0
 msgid "Notes"
 msgstr "Anteckningar"
 
@@ -197,14 +209,15 @@ msgid "Wrong credit or debit value in accounting entry !"
 msgstr "Fel kredit- eller debetvärde i bokföringstransaktionerna."
 
 #. module: account_asset
-#: view:asset.asset.report:0 field:asset.asset.report,nbr:0
+#: view:asset.asset.report:0
+#: field:asset.asset.report,nbr:0
 msgid "# of Depreciation Lines"
 msgstr "# avskrivningsrader"
 
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Assets in draft state"
-msgstr "Inventarier i preleminär status"
+msgstr "Tillgångar i preleminär status"
 
 #. module: account_asset
 #: field:account.asset.asset,method_end:0
@@ -241,7 +254,6 @@ msgid "Sequence of the depreciation"
 msgstr "Avskrivningsordningsföljd"
 
 #. module: account_asset
-#: field:account.asset.asset,method_period:0
 #: field:account.asset.category,method_period:0
 #: field:account.asset.history,method_period:0
 #: field:asset.modify,method_period:0
@@ -249,7 +261,8 @@ msgid "Period Length"
 msgstr "Periodlängd"
 
 #. module: account_asset
-#: selection:account.asset.asset,state:0 view:asset.asset.report:0
+#: selection:account.asset.asset,state:0
+#: view:asset.asset.report:0
 #: selection:asset.asset.report,state:0
 msgid "Draft"
 msgstr "Preliminär"
@@ -275,7 +288,8 @@ msgid "Analytic account"
 msgstr "Objektkonto"
 
 #. module: account_asset
-#: field:account.asset.asset,method:0 field:account.asset.category,method:0
+#: field:account.asset.asset,method:0
+#: field:account.asset.category,method:0
 msgid "Computation Method"
 msgstr "Beräkningsmetod"
 
@@ -316,7 +330,7 @@ msgstr "Brutto värde "
 #. module: account_asset
 #: constraint:account.asset.asset:0
 msgid "Error ! You can not create recursive assets."
-msgstr "Fel! Du kan inte skapa inventarier rekursivt."
+msgstr "Fel! Du kan inte skapa tillgångar rekursivt."
 
 #. module: account_asset
 #: help:account.asset.history,method_period:0
@@ -324,7 +338,7 @@ msgid "Time in month between two depreciations"
 msgstr "Tid i månader mellan två avskrivningar"
 
 #. module: account_asset
-#: view:asset.asset.report:0 field:asset.asset.report,name:0
+#: field:asset.asset.report,name:0
 msgid "Year"
 msgstr "År"
 
@@ -346,7 +360,10 @@ msgid "Salvage Value"
 msgstr "Restvärde"
 
 #. module: account_asset
-#: field:account.invoice.line,asset_category_id:0 view:asset.asset.report:0
+#: field:account.asset.asset,category_id:0
+#: view:account.asset.category:0
+#: field:account.invoice.line,asset_category_id:0
+#: view:asset.asset.report:0
 msgid "Asset Category"
 msgstr "Tillgångskategori"
 
@@ -368,7 +385,7 @@ msgstr "Ändra tillgång"
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Assets in closed state"
-msgstr "Inventarier i status \"stängd\""
+msgstr "Tillgångar i status \"stängd\""
 
 #. module: account_asset
 #: field:account.asset.asset,parent_id:0
@@ -384,7 +401,7 @@ msgstr "Tillgångshistorik"
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Assets purchased in current year"
-msgstr "Inventarier införskaffade innehvarande år"
+msgstr "Tillgångar införskaffade innehvarande år"
 
 #. module: account_asset
 #: field:account.asset.asset,state:0 field:asset.asset.report,state:0
@@ -453,13 +470,15 @@ msgstr ""
 "datum eller ta bort denna begränsning från journalen."
 
 #. module: account_asset
-#: field:account.asset.asset,note:0 field:account.asset.category,note:0
+#: field:account.asset.asset,note:0
+#: field:account.asset.category,note:0
 #: field:account.asset.history,note:0
 msgid "Note"
 msgstr "Anteckning"
 
 #. module: account_asset
-#: help:account.asset.asset,method:0 help:account.asset.category,method:0
+#: help:account.asset.asset,method:0
+#: help:account.asset.category,method:0
 msgid ""
 "Choose the method to use to compute the amount of depreciation lines.\n"
 "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
@@ -489,7 +508,7 @@ msgstr ""
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Assets in running state"
-msgstr "Aktiva inventarier"
+msgstr "Aktiva tillgångar"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -503,7 +522,8 @@ msgid "Partner"
 msgstr "Företag"
 
 #. module: account_asset
-#: view:asset.asset.report:0 field:asset.asset.report,depreciation_value:0
+#: view:asset.asset.report:0
+#: field:asset.asset.report,depreciation_value:0
 msgid "Amount of Depreciation Lines"
 msgstr "Antal avskrivningsrader"
 
@@ -520,7 +540,7 @@ msgstr "Bolaget måste överenstämma för alla konton och perioder."
 #. module: account_asset
 #: field:account.asset.asset,child_ids:0
 msgid "Children Assets"
-msgstr "Underinventarier"
+msgstr "Underliggande tillgångar"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -540,7 +560,7 @@ msgstr "Datum"
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Assets purchased in current month"
-msgstr "Inventarier som anskaffats innevarande månad"
+msgstr "Anskaffade tillgångar för innevarande månad"
 
 #. module: account_asset
 #: constraint:account.move.line:0
@@ -553,7 +573,8 @@ msgid "Extended Filters..."
 msgstr "Utökade filter..."
 
 #. module: account_asset
-#: view:account.asset.asset:0 view:asset.depreciation.confirmation.wizard:0
+#: view:account.asset.asset:0
+#: view:asset.depreciation.confirmation.wizard:0
 msgid "Compute"
 msgstr "Beräkna"
 
@@ -588,7 +609,8 @@ msgid "Depreciation Name"
 msgstr "Avskrivningsnamn"
 
 #. module: account_asset
-#: view:account.asset.asset:0 field:account.asset.asset,history_ids:0
+#: view:account.asset.asset:0
+#: field:account.asset.asset,history_ids:0
 msgid "History"
 msgstr "Historik"
 
@@ -608,7 +630,8 @@ msgid "General"
 msgstr "Allmän"
 
 #. module: account_asset
-#: field:account.asset.asset,prorata:0 field:account.asset.category,prorata:0
+#: field:account.asset.asset,prorata:0
+#: field:account.asset.category,prorata:0
 msgid "Prorata Temporis"
 msgstr "Prorata Temporis"
 
@@ -628,22 +651,25 @@ msgid "Review Asset Categories"
 msgstr "Granska tillgångskategorierna"
 
 #. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0 view:asset.modify:0
+#: view:asset.depreciation.confirmation.wizard:0
+#: view:asset.modify:0
 msgid "Cancel"
 msgstr "Avbryt"
 
 #. module: account_asset
-#: selection:account.asset.asset,state:0 selection:asset.asset.report,state:0
+#: selection:account.asset.asset,state:0
+#: selection:asset.asset.report,state:0
 msgid "Close"
 msgstr "Stäng"
 
 #. module: account_asset
-#: view:account.asset.asset:0 view:account.asset.category:0
+#: view:account.asset.category:0
 msgid "Depreciation Method"
 msgstr "Avskrivningsmetod"
 
 #. module: account_asset
-#: field:account.asset.asset,purchase_date:0 view:asset.asset.report:0
+#: field:account.asset.asset,purchase_date:0
+#: view:asset.asset.report:0
 #: field:asset.asset.report,purchase_date:0
 msgid "Purchase Date"
 msgstr "Inköpsdatum"
@@ -660,8 +686,8 @@ msgid ""
 "Choose the period for which you want to automatically post the depreciation "
 "lines of running assets"
 msgstr ""
-"Välj period för vilken du vill automatiskt bokföra avskrivningsrader för "
-"aktuella inventarier"
+"Välj period där du automatiskt vill bokföra avskrivningsrader för aktuella "
+"tillgångar."
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -679,8 +705,7 @@ msgid "Skip Draft State"
 msgstr "Hoppa över preleminär status"
 
 #. module: account_asset
-#: view:account.asset.asset:0 view:account.asset.category:0
-#: view:account.asset.history:0
+#: view:account.asset.category:0
 msgid "Depreciation Dates"
 msgstr "Avskrivningsdatum"
 
@@ -701,7 +726,8 @@ msgstr "Andel redan avskrivet"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,move_check:0
-#: view:asset.asset.report:0 field:asset.asset.report,move_check:0
+#: view:asset.asset.report:0
+#: field:asset.asset.report,move_check:0
 msgid "Posted"
 msgstr "Sparad"
 
@@ -731,8 +757,8 @@ msgid ""
 "Check this if you want to automatically confirm the assets of this category "
 "when created by invoices."
 msgstr ""
-"Kryssa denna ruta om du automatiskt vill bekräfta inventarier i denna "
-"kategori när det skapas via leverantörsfakturor."
+"Kryssa i denna ruta om du automatiskt vill bekräfta tillgångar i denna "
+"kategori när de skapas via leverantörsfakturor."
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -756,7 +782,7 @@ msgid "Asset depreciation line"
 msgstr "Tillgångsavskrivningsrad"
 
 #. module: account_asset
-#: field:account.asset.asset,category_id:0 view:account.asset.category:0
+#: view:account.asset.category:0
 #: field:asset.asset.report,asset_category_id:0
 #: model:ir.model,name:account_asset.model_account_asset_category
 msgid "Asset category"
@@ -765,7 +791,7 @@ msgstr "Tillgångskategori"
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Assets purchased in last month"
-msgstr "Inventarier inköpta under senaste månaden"
+msgstr "Tillgångar inköpta under senaste månaden"
 
 #. module: account_asset
 #: code:addons/account_asset/wizard/wizard_asset_compute.py:49
