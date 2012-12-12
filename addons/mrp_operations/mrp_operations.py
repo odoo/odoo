@@ -71,6 +71,17 @@ class mrp_production_workcenter_line(osv.osv):
                     res[op.id] = op.date_planned
         return res
 
+    def onchange_production_id(self, cr, uid, ids, production_id, context=None):
+        if not production_id:
+            return {}
+        production = self.pool.get('mrp.production').browse(cr, uid, production_id, context=None)
+        result = {
+            'product': production.product_id.id,
+            'qty': production.product_qty,
+            'uom': production.product_uom.id,
+        }
+        return {'value': result}
+
     _inherit = 'mrp.production.workcenter.line'
     _order = "sequence, date_planned"
 
@@ -97,8 +108,9 @@ class mrp_production_workcenter_line(osv.osv):
     }
 
     _defaults = {
-        'state': lambda *a: 'draft',
-        'delay': lambda *a: 0.0
+        'state': 'draft',
+        'delay': 0.0,
+        'production_state': 'draft'
     }
 
     def modify_production_order_state(self, cr, uid, ids, action):
