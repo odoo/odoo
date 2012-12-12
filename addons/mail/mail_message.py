@@ -305,8 +305,7 @@ class mail_message(osv.Model):
                 attachment_ids |= set([attachment.id for attachment in message.attachment_ids])
 
         # Filter author_ids uid can see
-        # partner_ids = self.pool.get('res.partner').search(cr, uid, [('id', 'in', partner_ids)], context=context)
-        partners = res_partner_obj.name_get(cr, uid, list(partner_ids), context=context)
+        partners = res_partner_obj.name_get(cr, SUPERUSER_ID, list(partner_ids), context=context)
         partner_tree = dict((partner[0], partner) for partner in partners)
 
         # 2. Attachments
