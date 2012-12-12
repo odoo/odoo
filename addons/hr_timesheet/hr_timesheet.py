@@ -136,10 +136,10 @@ class hr_analytic_timesheet(osv.osv):
         emp_obj = self.pool.get('hr.employee')
         if context is None:
             context = {}
-        if not context.get('employee_id'):
-            emp_id = emp_obj.search(cr, uid, [('user_id','=',context.get('user_id') or uid)], limit=1, context=context)
-        else:
+        if context.get('employee_id'):
             emp_id = [context.get('employee_id')]
+        else:
+            emp_id = emp_obj.search(cr, uid, [('user_id','=',context.get('user_id') or uid)], limit=1, context=context)
         if not emp_id:
             raise osv.except_osv(_('Warning!'), _('Please create an employee for this user, using the menu: Human Resources > Employees.'))
         emp = emp_obj.browse(cr, uid, emp_id[0], context=context)
