@@ -505,26 +505,28 @@ class mail_message(osv.Model):
 
         # fetch parent if threaded, sort messages
         for message in self.browse(cr, uid, ids, context=context):
-            message_id = message.id
-            if message_id in message_tree:
-                continue
-            message_tree[message_id] = message
-
-            # find parent_id
-            if thread_level == 0:
-                tree_parent_id = parent_id
-            else:
-                tree_parent_id = message_id
-                parent = message
-                while parent.parent_id and parent.parent_id.id != parent_id:
-                    parent = parent.parent_id
-                    tree_parent_id = parent.id
-                if not parent.id in message_tree:
-                    message_tree[parent.id] = parent
-            # newest messages first
-            parent_tree.setdefault(tree_parent_id, [])
-            if tree_parent_id != message_id:
-                parent_tree[tree_parent_id].append(self._message_read_dict(cr, uid, message_tree[message_id], parent_id=tree_parent_id, context=context))
+            notified_partner_id = [user.id for user in message.notified_partner_ids]
+            if not parent_id or notified_partner_id:
+                message_id = message.id
+                if message_id in message_tree:
+                    continue
+                message_tree[message_id] = message
+    
+                # find parent_id
+                if thread_level == 0:
+                    tree_parent_id = parent_id
+                else:
+                    tree_parent_id = message_id
+                    parent = message
+                    while parent.parent_id and parent.parent_id.id != parent_id:
+                        parent = parent.parent_id
+                        tree_parent_id = parent.id
+                    if not parent.id in message_tree:
+                        message_tree[parent.id] = parent
+                # newest messages first
+                parent_tree.setdefault(tree_parent_id, [])
+                if tree_parent_id != message_id:
+                    parent_tree[tree_parent_id].append(self._message_read_dict(cr, uid, message_tree[message_id], parent_id=tree_parent_id, context=context))
 
         if thread_level:
             for key, message_id_list in parent_tree.iteritems():

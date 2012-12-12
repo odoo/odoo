@@ -555,6 +555,8 @@ class test_mail(test_mail_mockup.TestMailMockups):
         msg_id8 = self.group_pigs.message_post(body='2-1-1', subtype='mt_comment', parent_id=msg_id4)
         msg_id9 = self.group_pigs.message_post(body='1-1-1', subtype='mt_comment', parent_id=msg_id3)
         msg_id10 = self.group_pigs.message_post(body='2-1-1', subtype='mt_comment', parent_id=msg_id4)
+        child_msg_id = [msg_id3, msg_id4,msg_id5,msg_id6,msg_id7,msg_id8,msg_id9,msg_id10]
+        self.mail_message.write(cr, uid, child_msg_id, {'notified_partner_ids': [(6, 0, [user_admin.id])]})
         msg_ids = [msg_id10, msg_id9, msg_id8, msg_id7, msg_id6, msg_id5, msg_id4, msg_id3, msg_id2, msg_id1, msg_id0]
         ordered_msg_ids = [msg_id2, msg_id4, msg_id6, msg_id8, msg_id10, msg_id1, msg_id3, msg_id5, msg_id7, msg_id9, msg_id0]
 
