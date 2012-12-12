@@ -11,9 +11,8 @@
             }</field>
             <field name="params" eval="&quot;{
                 'domain': [
-                  ('notification_ids.partner_id.user_ids', 'in', [uid]),
                   ('to_read', '=', True),
-                  ('favorite_user_ids', 'not in', [uid])
+                  ('starred', '=', False),
                 ],
                 'view_mailbox': True,
                 'view_inbox': True,
@@ -40,7 +39,9 @@
               'search_default_message_unread': True
             }</field>
             <field name="params" eval="&quot;{
-                'domain': [('partner_ids.user_ids', 'in', [uid])],
+                'domain': [
+                    ('partner_ids.user_ids', 'in', [uid])
+                ],
                 'view_mailbox': True,
                 'read_action': 'read',
                 'show_compose_message': False }&quot;"/>
@@ -63,7 +64,9 @@
               'search_default_message_unread': True
             }</field>
             <field name="params" eval="&quot;{
-                'domain': [('favorite_user_ids', 'in', [uid])],
+                'domain': [
+                    ('starred', '=', True),
+                ],
                 'view_mailbox': True,
                 'read_action': 'read',
                 'compose_as_todo': True }&quot;"/>
@@ -85,7 +88,11 @@
               'default_res_id': uid
             }</field>
             <field name="params" eval="&quot;{
-                'domain': ['|', ('notification_ids.partner_id.user_ids', 'in', [uid]), ('author_id.user_ids', 'in', [uid])],
+                'domain': [
+                    '|',
+                    ('notification_ids.partner_id.user_ids', 'in', [uid]),
+                    ('author_id.user_ids', 'in', [uid]),
+                ],
                 'view_mailbox': True,
                 'show_compose_message': False }&quot;"/>
             <field name="help" type="html">

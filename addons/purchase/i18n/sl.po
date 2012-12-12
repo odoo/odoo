@@ -7,19 +7,19 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2010-12-16 05:34+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2012-12-10 14:20+0000\n"
+"Last-Translator: Vida Potočnik <vida.potocnik@mentis.si>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:12+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-11 04:46+0000\n"
+"X-Generator: Launchpad (build 16356)\n"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
 msgid "Analytic Accounting for Purchases"
-msgstr ""
+msgstr "Analitičen konto nabave"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_config_settings
@@ -29,7 +29,7 @@ msgstr ""
 #. module: purchase
 #: view:board.board:0
 msgid "Monthly Purchases by Category"
-msgstr ""
+msgstr "Mesečne nabave po skupini"
 
 #. module: purchase
 #: help:purchase.config.settings,module_warning:0
@@ -48,7 +48,7 @@ msgstr "Privzeti nabavni cenik"
 #. module: purchase
 #: report:purchase.order:0
 msgid "Tel :"
-msgstr ""
+msgstr "Tel  :"
 
 #. module: purchase
 #: help:purchase.order,pricelist_id:0
@@ -62,7 +62,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.actions.server,name:purchase.actions_server_purchase_order_read
 msgid "Purchase: Mark read"
-msgstr ""
+msgstr "Nabava: Označi  kot prebrano"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -73,7 +73,7 @@ msgstr "Dan"
 #. module: purchase
 #: view:purchase.report:0
 msgid "Order of Day"
-msgstr ""
+msgstr "Dnevna naročila"
 
 #. module: purchase
 #: help:purchase.order,message_unread:0
@@ -117,7 +117,7 @@ msgstr ""
 #: code:addons/purchase/purchase.py:573
 #, python-format
 msgid "You must first cancel all receptions related to this purchase order."
-msgstr ""
+msgstr "Najprej morate preklicati vse prevzeme, vezane na ta nabavni nalog."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
@@ -165,7 +165,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:0
 msgid "Purchase order which are in the exception state"
-msgstr ""
+msgstr "Nabavni nalogi s statusom \"izjeme\""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_view_purchase_order_group
@@ -194,7 +194,7 @@ msgstr "Naslov za odpremo:"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Confirm Order"
-msgstr ""
+msgstr "Potrdi naročilo"
 
 #. module: purchase
 #: field:purchase.config.settings,module_warning:0
@@ -236,7 +236,7 @@ msgstr ""
 #: code:addons/purchase/purchase.py:255
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
-msgstr ""
+msgstr "Če želite izbrisati nabavni nalog, ga morate najprej preklicati."
 
 #. module: purchase
 #: view:product.product:0
@@ -246,12 +246,12 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:0
 msgid "Approved purchase orders"
-msgstr ""
+msgstr "Potrjeni nabavni nalogi"
 
 #. module: purchase
 #: model:email.template,subject:purchase.email_template_edi_purchase
 msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name} Naročilo (Ref ${object.name or 'n/a' })"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -261,7 +261,7 @@ msgstr "Skupaj brez davka"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
 msgid "Unit of Measure Categories"
-msgstr ""
+msgstr "Skupine enot mere"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -279,7 +279,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Quotation for <em>%s</em> <b>converted</b> to a Purchase Order of %s %s."
-msgstr ""
+msgstr "Ponudba za <em>%s</em> <b>spremenjena</b> v nabavni nalog %s %s."
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_purchaseinvoice0
@@ -296,7 +296,7 @@ msgstr ""
 #: field:purchase.order.line,state:0
 #: view:purchase.report:0
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -322,7 +322,7 @@ msgstr "Naročila"
 #: help:account.config.settings,group_analytic_account_for_purchases:0
 #: help:purchase.config.settings,group_analytic_account_for_purchases:0
 msgid "Allows you to specify an analytic account on purchase orders."
-msgstr ""
+msgstr "Omogoča določitev analitičnega konta na nabavnem nalogu."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
@@ -349,7 +349,7 @@ msgstr "Oktober"
 #: code:addons/purchase/purchase.py:837
 #, python-format
 msgid "Purchase Order for <em>%s</em> <b>cancelled</b>."
-msgstr ""
+msgstr "Nabavni nalog za <em>%s</em> <b>preklican</b>."
 
 #. module: purchase
 #: field:purchase.order,message_summary:0
@@ -372,7 +372,7 @@ msgstr "Ponudbe"
 #. module: purchase
 #: view:purchase.order.line_invoice:0
 msgid "Do you want to generate the supplier invoices?"
-msgstr ""
+msgstr "Želite ustvariti prejete račune?"
 
 #. module: purchase
 #: field:purchase.order.line,product_qty:0
@@ -448,7 +448,7 @@ msgstr ""
 #: code:addons/purchase/purchase.py:824
 #, python-format
 msgid "Draft Invoice of %s %s is <b>waiting for validation</b>."
-msgstr ""
+msgstr "Osnutek računa %s %s čaka na potrditev</b>."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_line_form_action2
@@ -500,7 +500,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
 msgid "Incoming  Products"
-msgstr ""
+msgstr "Naročeni produkti"
 
 #. module: purchase
 #: view:purchase.config.settings:0
@@ -547,7 +547,7 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "RFQ Sent"
-msgstr ""
+msgstr "Zahteva za ponudbo poslana"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -595,7 +595,7 @@ msgstr "Prejeto"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Purchase order which are in draft state"
-msgstr ""
+msgstr "Osnutki nabavnih nalogov"
 
 #. module: purchase
 #: view:product.product:0
@@ -661,7 +661,7 @@ msgstr "Pokaže da je bilo izbiranje končano"
 #: code:addons/purchase/purchase.py:572
 #, python-format
 msgid "Unable to cancel this purchase order."
-msgstr ""
+msgstr "Tega nabavnega naloga ni mogoče preklicati."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_invoice
@@ -693,6 +693,8 @@ msgid ""
 "Unique number of the purchase order, computed automatically when the "
 "purchase order is created."
 msgstr ""
+"Enolična številka nabavnega naloga. ki se izračuna samodejno ob njegovem "
+"kreiranju."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
@@ -720,13 +722,13 @@ msgstr "Cenik"
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "Draft PO"
-msgstr ""
+msgstr "Osnutek nabavnega naloga"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_draftpurchaseorder0
 #: model:process.node,name:purchase.process_node_draftpurchaseorder1
 msgid "RFQ"
-msgstr ""
+msgstr "Zahteva za ponudbo"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -788,7 +790,7 @@ msgstr ""
 #: code:addons/purchase/purchase.py:1158
 #, python-format
 msgid "Draft Purchase Order created"
-msgstr ""
+msgstr "Osnutek nabavnega naloga je kreiran"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
@@ -855,7 +857,7 @@ msgstr "Podjetja"
 #. module: purchase
 #: view:purchase.order.group:0
 msgid "Are you sure you want to merge these orders?"
-msgstr ""
+msgstr "Ali res želite združiti te nabavne naloge?"
 
 #. module: purchase
 #: field:account.config.settings,module_purchase_analytic_plans:0
@@ -946,12 +948,12 @@ msgstr "Odobreno dne"
 #: code:addons/purchase/purchase.py:806
 #, python-format
 msgid "Request for quotation <b>created</b>."
-msgstr ""
+msgstr "Zahteva za ponudbo <b>kreirana</b>."
 
 #. module: purchase
 #: view:product.product:0
 msgid "a draft purchase order"
-msgstr ""
+msgstr "osnutek nabavnega naloga"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -1011,7 +1013,7 @@ msgstr ""
 #: field:purchase.order,warehouse_id:0
 #: field:stock.picking.in,warehouse_id:0
 msgid "Destination Warehouse"
-msgstr ""
+msgstr "Ciljno skladišče"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:973
@@ -1019,7 +1021,7 @@ msgstr ""
 msgid ""
 "Selected Unit of Measure does not belong to the same category as the product "
 "Unit of Measure."
-msgstr ""
+msgstr "Izbrana enota mere ne pripada isti skupini kot enota mere produkta."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_unit_measure_purchase
@@ -1047,7 +1049,7 @@ msgstr "Nadzorna plošča za nakup"
 #: code:addons/purchase/purchase.py:566
 #, python-format
 msgid "First cancel all receptions related to this purchase order."
-msgstr ""
+msgstr "Najprej prekličite vse prevzeme, vezane na ta nabavni nalog."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1069,7 +1071,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:0
 msgid "Approved purchase order"
-msgstr ""
+msgstr "Potrjeni nabavni nalogi"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -1142,7 +1144,7 @@ msgstr "Vrednost artiklov"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Purchase orders which are in exception state"
-msgstr ""
+msgstr "Nabavni nalogi s satusom \"izjeme\""
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_draftpurchaseorder0
@@ -1248,7 +1250,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:0
 msgid "Receive Invoice"
-msgstr ""
+msgstr "Prejeti račun"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1286,7 +1288,7 @@ msgstr "Stanje naročila"
 #. module: purchase
 #: field:purchase.order.line,product_uom:0
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Enota mere produkta"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_pricelist_version_action
@@ -1317,12 +1319,12 @@ msgstr "Naročilo naj naredi račun"
 #: code:addons/purchase/purchase.py:1133
 #, python-format
 msgid "PO: %s"
-msgstr ""
+msgstr "Nabavni nalog: %s"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Send by EMail"
-msgstr ""
+msgstr "Pošlji po e-pošti"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:498
@@ -1571,7 +1573,7 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "Based on Purchase Order lines"
-msgstr ""
+msgstr "Na osnovi pozicij nabavnega naloga"
 
 #. module: purchase
 #: field:purchase.order,amount_total:0
@@ -1597,12 +1599,12 @@ msgstr "Cilj"
 #. module: purchase
 #: field:purchase.order,dest_address_id:0
 msgid "Customer Address (Direct Delivery)"
-msgstr ""
+msgstr "Naslov kupca (neposredna dostava)"
 
 #. module: purchase
 #: model:ir.actions.client,name:purchase.action_client_purchase_menu
 msgid "Open Purchase Menu"
-msgstr ""
+msgstr "Odpri meni nabave"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_mail_compose_message
@@ -1650,7 +1652,7 @@ msgstr "Različica cenika privzetih naročil"
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "Based on generated draft invoice"
-msgstr ""
+msgstr "Na osnovi kreiranega osnutka  računa"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_stock_move_report_po
@@ -2151,7 +2153,7 @@ msgstr "Sklic vašega naročila"
 #. module: purchase
 #: report:purchase.order:0
 msgid "Purchase Order Confirmation N°"
-msgstr ""
+msgstr "Potrditev nabavnega naloga št."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -2203,7 +2205,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:0
 msgid "Purchase orders which are in draft state"
-msgstr ""
+msgstr "Osnutki naročil"
 
 #. module: purchase
 #: view:purchase.report:0

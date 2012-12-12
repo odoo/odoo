@@ -8,7 +8,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('invoice_id','=',False)]</field>
-            <field name="context">{'search_default_to_invoice': 1}</field>
+            <field name="context">{'search_default_to_invoice': 1, 'search_default_sales': 1}</field>
             <field name="search_view_id" ref="account.view_account_analytic_line_filter"/>
             <field name="help" type="html">
               <p>
@@ -30,22 +30,21 @@
                     <field name="date"/>
                     <filter icon="terp-camera_test" name="open" string="Open" domain="[('state','in',('open','draft'))]" help="Contracts in progress"/>
                     <filter icon="terp-gtk-media-pause" name="pending" string="Pending" domain="[('state','=','pending')]" help="Pending contracts to renew with your customer"/>
-                    <separator/>
                     <filter icon="terp-go-today" string="To Renew" domain="['|', '&amp;', ('date', '!=', False), ('date', '&lt;=', time.strftime('%%Y-%%m-%%d')), ('is_overdue_quantity', '=', True)]" name="renew"
                         help="The contracts to be renewed because the deadline is passed or the working hours are higher than the allocated hours" />
                     <separator/>
-                    <filter string="Contracts Having a Partner" help="A contract in OpenERP is an analytic account having a partner set on it." name="has_partner" domain="[('partner_id', '!=', False)]" icon="terp-partner" />
+                    <filter string="Customer Contracts" help="A contract in OpenERP is an analytic account having a partner set on it." name="has_partner" domain="[('partner_id', '!=', False)]" icon="terp-partner" />
                     <separator/>
-                    <filter string="Contracts not assigned" help="Contracts that are not assigned to an account manager." domain="[('user_id', '=', False)]" icon="terp-personal-" />
+                    <filter string="Contracts not assigned" help="Contracts that are not assigned to an account manager." domain="[('manager_id', '=', False)]" icon="terp-personal-" />
                     <field name="partner_id"/>
-                    <field name="user_id"/>
+                    <field name="manager_id"/>
                     <group expand="0" string="Group By...">
-                        <filter string="Status" icon="terp-personal" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Parent" icon="terp-folder-orange" domain="[]" context="{'group_by':'parent_id'}"/>
-                        <filter string="Start Date" icon="terp-go-month" domain="[]" context="{'group_by' : 'date_start'}" />
-                        <filter string="End Date" icon="terp-go-month" domain="[]" context="{'group_by' : 'date'}" />
+                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Account Manager" domain="[]" context="{'group_by':'manager_id'}"/>
+                        <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Parent" domain="[]" context="{'group_by':'parent_id'}"/>
+                        <filter string="Start Date" domain="[]" context="{'group_by' : 'date_start'}" />
+                        <filter string="End Date" domain="[]" context="{'group_by' : 'date'}" />
                     </group>
                 </search>
             </field>
@@ -57,7 +56,7 @@
             <field name="res_model">account.analytic.account</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_user_id':uid, 'search_default_draft':1, 'search_default_pending':1, 'search_default_open':1, 'search_default_renew':1}</field>
+            <field name="context">{'search_default_manager_id':uid, 'search_default_pending':1, 'search_default_renew':1}</field>
             <field name="domain">[('type','=','contract')]</field>
             <field name="search_view_id" ref="view_account_analytic_account_overdue_search"/>
             <field name="help" type="html">
@@ -81,7 +80,7 @@
             <field name="res_model">account.analytic.account</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'default_type':'contract', 'search_default_open':1, 'search_default_pending':1}</field>
+            <field name="context">{'default_type':'contract', 'search_default_open':1, 'search_default_pending':1, 'default_manager_id':uid}</field>
             <field name="domain">[('type','=','contract')]</field>
             <field name="search_view_id" ref="view_account_analytic_account_overdue_search"/>
             <field name="help" type="html">
