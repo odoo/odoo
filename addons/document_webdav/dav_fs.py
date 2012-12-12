@@ -27,13 +27,19 @@ import errno
 
 import netsvc
 import urlparse
+try:
+    from pywebdav.lib.constants import COLLECTION  # , OBJECT
+    from pywebdav.lib.errors import DAV_Error, DAV_Forbidden, DAV_NotFound
+    from pywebdav.lib.iface import dav_interface
+    from pywebdav.lib.davcmd import copyone, copytree, moveone, movetree, delone, deltree
+except ImportError:
+    from DAV.constants import COLLECTION  #, OBJECT
+    from DAV.errors import DAV_Error, DAV_Forbidden, DAV_NotFound
+    from DAV.iface import dav_interface
+    from DAV.davcmd import copyone, copytree, moveone, movetree, delone, deltree
 
-from DAV.constants import COLLECTION  #, OBJECT
-from DAV.errors import DAV_Error, DAV_Forbidden, DAV_NotFound
-from DAV.iface import dav_interface
 import urllib
 
-from DAV.davcmd import copyone, copytree, moveone, movetree, delone, deltree
 from cache import memoize
 from tools import misc
 
