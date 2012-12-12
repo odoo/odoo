@@ -338,14 +338,14 @@ class test_mail_access_rights(TestMailBase):
         for partner in raoul_jobs.message_follower_ids:
             trigger_read = partner.name
 
-        # Do: Bert comments Jobs, ok because he is now in the followers
+        # Do: Raoul comments Jobs, ok
         self.mail_group.message_post(cr, user_raoul_id, self.group_jobs_id, body='I love Pigs')
-        # Do: Bert create a mail.compose.message record on Jobs, because he uses the wizard
+        # Do: Raoul create a mail.compose.message record on Jobs, because he uses the wizard
         compose_id = mail_compose.create(cr, user_raoul_id,
             {'subject': 'Subject', 'body': 'Body text', 'partner_ids': []},
             {'default_composition_mode': 'comment', 'default_model': 'mail.group', 'default_res_id': self.group_jobs_id})
         mail_compose.send_mail(cr, user_raoul_id, [compose_id])
-        # Do: Bert replies to a Jobs message using the composer
+        # Do: Raoul replies to a Jobs message using the composer
         compose_id = mail_compose.create(cr, user_raoul_id,
             {'subject': 'Subject', 'body': 'Body text'},
             {'default_composition_mode': 'reply', 'default_parent_id': pigs_msg_id})
