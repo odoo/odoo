@@ -36,7 +36,7 @@ class account_analytic_account(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         res = super(account_analytic_account, self).write(cr, uid, ids, vals, context=context)
-        if vals.get('partner_id'):
+        if vals.get('manager_id'):
             self._subscribe_salesteam_followers_to_contract(cr, uid, ids, context)
         return res 
 
@@ -44,12 +44,12 @@ class account_analytic_account(osv.osv):
         follower_obj = self.pool.get('mail.followers')
         subtype_obj = self.pool.get('mail.message.subtype')
         record = self.browse(cr, uid, obj_id, context=context)[0]
-        if record.partner_id:
-            if record.partner_id.section_id:
-                followers = [follow.id for follow in record.partner_id.section_id.message_follower_ids]
+        if record.manager_id:
+            if record.manager_id.default_section_id:
+                followers = [follow.id for follow in record.manager_id.default_section_id.message_follower_ids]
                 contract_subtype_ids = subtype_obj.search(cr, uid, ['|', ('res_model', '=', False), ('res_model', '=', self._name)], context=context)
                 contract_subtypes = subtype_obj.browse(cr, uid, contract_subtype_ids, context=context)
-                follower_ids = follower_obj.search(cr, uid, [('res_model', '=', 'crm.case.section'), ('res_id', '=', record.partner_id.section_id.id)], context=context)
+                follower_ids = follower_obj.search(cr, uid, [('res_model', '=', 'crm.case.section'), ('res_id', '=', record.manager_id.default_section_id.id)], context=context)
                 self.write(cr, uid, obj_id, {'message_follower_ids': [(6, 0, followers)]}, context=context)
                 for follower in follower_obj.browse(cr, uid, follower_ids, context=context):
                     if not follower.subtype_ids:
