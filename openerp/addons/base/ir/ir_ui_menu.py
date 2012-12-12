@@ -66,7 +66,7 @@ class ir_ui_menu(osv.osv):
             modelaccess = self.pool.get('ir.model.access')
             user_groups = set(self.pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['groups_id'])['groups_id'])
             result = []
-            for menu in self.browse(cr, SUPERUSER_ID, ids, context=context):
+            for menu in self.browse(cr, uid, ids, context=context):
                 # this key works because user access rights are all based on user's groups (cfr ir_model_access.check)
                 key = (cr.dbname, menu.id, tuple(user_groups))
                 if key in self._cache:
