@@ -1357,7 +1357,15 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                 new_arg = (arg[0], arg[1], new_id)
             new_args.append(new_arg)
 
-        return super(calendar_event, self).search(cr, uid, new_args, offset=offset, limit=limit, order=order, context=context, count=count)
+        #offset, limit and count must be treated separately as we may need to deal with virtual ids
+        res = super(calendar_event, self).search(cr, uid, new_args, offset=0, limit=0, order=order, context=context, count=False)
+        if context.get('virtual_id', True):
+            res = self.get_recurrent_ids(cr, uid, res, new_args, limit, context=context)
+        if count:
+            return len(res)
+        elif limit:
+            return res[offset:offset+limit]
+        return res
 
     def _get_data(self, cr, uid, id, context=None):
         return self.read(cr, uid, id,['date', 'date_deadline'])
