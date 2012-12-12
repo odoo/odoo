@@ -205,6 +205,22 @@ class mail_message(osv.Model):
         return new_has_voted or False
 
     #------------------------------------------------------
+    # download an attachment
+    #------------------------------------------------------
+
+    def download_attachment(self, cr, uid, id_message, attachment_id, context=None):
+        """ Return the content of linked attachments. """
+        message = self.browse(cr, uid, id_message, context=context)
+        if attachment_id in [attachment.id for attachment in message.attachment_ids]:
+            attachment = self.pool.get('ir.attachment').browse(cr, SUPERUSER_ID, attachment_id, context=context)
+            if attachment.datas and attachment.datas_fname:
+                return {
+                    'base64': attachment.datas,
+                    'filename': attachment.datas_fname,
+                }
+        return False
+
+    #------------------------------------------------------
     # Notification API
     #------------------------------------------------------
 
@@ -294,7 +310,7 @@ class mail_message(osv.Model):
         partner_tree = dict((partner[0], partner) for partner in partners)
 
         # 2. Attachments
-        attachments = ir_attachment_obj.read(cr, uid, list(attachment_ids), ['id', 'datas_fname'], context=context)
+        attachments = ir_attachment_obj.read(cr, SUPERUSER_ID, list(attachment_ids), ['id', 'datas_fname'], context=context)
         attachments_tree = dict((attachment['id'], {'id': attachment['id'], 'filename': attachment['datas_fname']}) for attachment in attachments)
 
         # 3. Update message dictionaries
