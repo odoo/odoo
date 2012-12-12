@@ -803,11 +803,13 @@ instance.web.Menu =  instance.web.Widget.extend({
         this.has_been_loaded = $.Deferred();
         this.maximum_visible_links = 'auto'; // # of menu to show. 0 = do not crop, 'auto' = algo
         this.data = {data:{children:[]}};
-        this.on("menu_loaded", this, function (e) {
+        this.on("menu_loaded", this, function (menu_data) {
             // launch the fetch of needaction counters, asynchronous
-            this.rpc("/web/menu/load_needaction", {menu_ids: false}).done(function(r) {
-                self.on_needaction_loaded(r);
-            });
+            if (!_.isEmpty(menu_data.all_menu_ids)) {
+                this.rpc("/web/menu/load_needaction", {menu_ids: menu_data.all_menu_ids}).done(function(r) {
+                    self.on_needaction_loaded(r);
+                });
+            }
         });
         
     },

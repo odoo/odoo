@@ -39,11 +39,10 @@ class LoadTest(unittest2.TestCase):
         root = self.menu.load(self.request)
 
         self.MockMenus.search.assert_called_with(
-            [], 0, False, False, self.request.context)
-        self.MockMenus.read.assert_called_with(
-            [], ['name', 'sequence', 'parent_id',
-                 'action', 'needaction_enabled'],
+            [('parent_id','=', False)], 0, False, False,
             self.request.context)
+
+        self.assertEqual(root['all_menu_ids'], [])
 
         self.assertListEqual(
             root['children'],
@@ -59,10 +58,16 @@ class LoadTest(unittest2.TestCase):
 
         root = self.menu.load(self.request)
 
+        self.MockMenus.search.assert_called_with(
+            [('id','child_of', [1, 2, 3])], 0, False, False,
+            self.request.context)
+
         self.MockMenus.read.assert_called_with(
             [1, 2, 3], ['name', 'sequence', 'parent_id',
-                        'action', 'needaction_enabled'],
+                        'action'],
             self.request.context)
+
+        self.assertEqual(root['all_menu_ids'], [1, 2, 3])
 
         self.assertEqual(
             root['children'],
@@ -91,6 +96,12 @@ class LoadTest(unittest2.TestCase):
             ])
 
         root = self.menu.load(self.request)
+
+        self.MockMenus.search.assert_called_with(
+            [('id','child_of', [1])], 0, False, False,
+            self.request.context)
+
+        self.assertEqual(root['all_menu_ids'], [1, 2, 3, 4])
 
         self.assertEqual(
             root['children'],
