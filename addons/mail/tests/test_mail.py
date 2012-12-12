@@ -421,6 +421,10 @@ class test_mail(test_mail_mockup.TestMailMockups):
             self.assertEqual(attach.res_id, self.group_pigs_id, 'mail.message attachment res_id incorrect')
             self.assertIn((attach.name, attach.datas.decode('base64')), _attachments,
                 'mail.message attachment name / data incorrect')
+        # Test: download attachments
+        for attach in message.attachment_ids:
+            dl_attach = self.mail_message.download_attachment(cr, uid, id_message=message.id, attachment_id=attach.id)
+            self.assertIn(( dl_attach['filename'], dl_attach['base64'].decode('base64') ), _attachments, 'mail.message download_attachment is incorrect')
 
         # 3. Reply to the last message, check that its parent will be the first message
         msg_id3 = self.mail_group.message_post(cr, uid, self.group_pigs_id, body='Test', parent_id=msg_id2)
