@@ -228,7 +228,7 @@ class mail_thread(osv.AbstractModel):
         # delete
         res = super(mail_thread, self).unlink(cr, uid, ids, context=context)
         # delete followers
-        fol_ids = fol_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', ids)], context=context)
+        fol_ids = fol_obj.search(cr, SUPERUSER_ID, [('res_model', '=', self._name), ('res_id', 'in', ids)], context=context)
         fol_obj.unlink(cr, SUPERUSER_ID, fol_ids, context=context)
         return res
 
