@@ -12,5 +12,6 @@ Allow anonymous to Access Portal.
     'depends': ['portal', 'auth_anonymous'],
     'data': [
         'security/ir.model.access.csv',
+        'portal_anonymous_data.xml',
     ],
 }
