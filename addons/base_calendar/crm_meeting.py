@@ -138,7 +138,7 @@ class mail_message(osv.osv):
         convert the search on real ids in the case it was asked on virtual ids, then call super()
         '''
         for index in range(len(args)):
-            if args[index][0] == "res_id" and isinstance(args[index][2], (str)):
+            if args[index][0] == "res_id" and isinstance(args[index][2], str):
                 args[index][2] = get_real_ids(args[index][2])
         return super(mail_message, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
 
@@ -150,7 +150,7 @@ class ir_attachment(osv.osv):
         convert the search on real ids in the case it was asked on virtual ids, then call super()
         '''
         for index in range(len(args)):
-            if args[index][0] == "res_id" and isinstance(args[index][2], (str)):
+            if args[index][0] == "res_id" and isinstance(args[index][2], str):
                 args[index][2] = get_real_ids(args[index][2])
         return super(ir_attachment, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
 
