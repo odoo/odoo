@@ -35,41 +35,68 @@ class test_portal(TestMailBase):
         self.group_portal_id = group_portal.id
 
         # Create Chell (portal user)
-        self.user_chell_id = self.res_users.create(cr, uid, {'name': 'Chell Gladys', 'login': 'chell', 'groups_id': [(6, 0, [self.group_portal_id])]})
-        user_chell = self.res_users.browse(cr, uid, self.user_chell_id)
-        self.partner_chell_id = user_chell.partner_id.id
+        self.user_chell_id = self.res_users.create(cr, uid, {'name': 'Chell Gladys', 'login': 'chell', 'email': 'chell@gladys.portal', 'groups_id': [(6, 0, [self.group_portal_id])]})
+        self.user_chell = self.res_users.browse(cr, uid, self.user_chell_id)
+        self.partner_chell_id = self.user_chell.partner_id.id
+
+        # Create a PigsPortal group
+        self.group_port_id = self.mail_group.create(cr, uid, {'name': 'PigsPortal', 'public': 'groups', 'group_public_id': self.group_portal_id})
 
         # Set an email address for the user running the tests, used as Sender for outgoing mails
         self.res_users.write(cr, uid, uid, {'email': 'test@localhost'})
 
-    @mute_logger('openerp.addons.base.ir.ir_model')
-    def test_00_access_rights(self):
+    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.osv.orm')
+    def test_00_mail_access_rights(self):
         """ Test basic mail_message and mail_group access rights for portal users. """
         cr, uid = self.cr, self.uid
+        mail_compose = self.registry('mail.compose.message')
 
-        # Prepare group: Pigs (portal)
-        self.mail_group.message_post(cr, uid, self.group_pigs_id, body='Message')
-        self.mail_group.write(cr, uid, [self.group_pigs_id], {'name': 'Jobs', 'public': 'groups', 'group_public_id': self.group_portal_id})
+        # Prepare group: Pigs and PigsPortal
+        pigs_msg_id = self.mail_group.message_post(cr, uid, self.group_pigs_id, body='Message')
+        port_msg_id = self.mail_group.message_post(cr, uid, self.group_port_id, body='Message')
 
-        # ----------------------------------------
-        # CASE1: Chell will use the Chatter
-        # ----------------------------------------
-
-        # Do: Chell reads Pigs messages, ok because restricted to portal group
-        message_ids = self.mail_group.read(cr, self.user_chell_id, self.group_pigs_id, ['message_ids'])['message_ids']
-        self.mail_message.read(cr, self.user_chell_id, message_ids)
+        # Do: Chell browses Pigs -> ko, employee group
+        chell_pigs = self.mail_group.browse(cr, self.user_chell_id, self.group_pigs_id)
+        with self.assertRaises(except_orm):
+            trigger_read = chell_pigs.name
 
         # Do: Chell posts a message on Pigs, crash because can not write on group or is not in the followers
         with self.assertRaises(except_orm):
             self.mail_group.message_post(cr, self.user_chell_id, self.group_pigs_id, body='Message')
 
-        # Do: Chell is added to Pigs followers
-        self.mail_group.message_subscribe(cr, uid, [self.group_pigs_id], [self.partner_chell_id])
+        # Do: Chell is added into Pigs followers and browse it -> ok for messages, ko for partners (no read permission)
+        self.mail_group.message_subscribe_users(cr, uid, [self.group_pigs_id], [self.user_chell_id])
+        chell_pigs = self.mail_group.browse(cr, self.user_chell_id, self.group_pigs_id)
+        trigger_read = chell_pigs.name
+        for message in chell_pigs.message_ids:
+            trigger_read = message.subject
+        for partner in chell_pigs.message_follower_ids:
+            with self.assertRaises(except_orm):
+                trigger_read = partner.name
 
-        # Test: Chell posts a message on Pigs, ok because in the followers
-        self.mail_group.message_post(cr, self.user_chell_id, self.group_pigs_id, body='Message')
+        # Do: Chell comments Pigs, ok because he is now in the followers
+        self.mail_group.message_post(cr, self.user_chell_id, self.group_pigs_id, body='I love Pigs')
+        # Do: Chell creates a mail.compose.message record on Pigs, because he uses the wizard
+        compose_id = mail_compose.create(cr, self.user_chell_id,
+            {'subject': 'Subject', 'body': 'Body text', 'partner_ids': []},
+            {'default_composition_mode': 'comment', 'default_model': 'mail.group', 'default_res_id': self.group_pigs_id})
+        mail_compose.send_mail(cr, self.user_chell_id, [compose_id])
+        # Do: Chell replies to a Pigs message using the composer
+        compose_id = mail_compose.create(cr, self.user_chell_id,
+            {'subject': 'Subject', 'body': 'Body text'},
+            {'default_composition_mode': 'reply', 'default_parent_id': pigs_msg_id})
+        mail_compose.send_mail(cr, self.user_chell_id, [compose_id])
 
-    def test_50_mail_invite(self):
+        # Do: Chell browses PigsPortal -> ok because groups security, ko for partners (no read permission)
+        chell_port = self.mail_group.browse(cr, self.user_chell_id, self.group_port_id)
+        trigger_read = chell_port.name
+        for message in chell_port.message_ids:
+            trigger_read = message.subject
+        for partner in chell_port.message_follower_ids:
+            with self.assertRaises(except_orm):
+                trigger_read = partner.name
+
+    def test_10_mail_invite(self):
         cr, uid = self.cr, self.uid
         mail_invite = self.registry('mail.wizard.invite')
         base_url = self.registry('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='')

@@ -14,7 +14,7 @@
                         <field name="parent_id" invisible="1"/>
                         <!-- visible wizard -->
                         <label for="partner_ids" string="Recipients"/>
-                        <div>
+                        <div groups="base.group_user">
                             <span attrs="{'invisible':['|', ('model', '=', False), ('composition_mode', '!=', 'mass_mail')]}">
                                 Followers of selected items and
                             </span>

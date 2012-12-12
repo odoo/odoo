@@ -213,8 +213,11 @@ class mail_thread(osv.AbstractModel):
 
     def create(self, cr, uid, vals, context=None):
         """ Override to subscribe the current user. """
+        if context is None:
+            context = {}
         thread_id = super(mail_thread, self).create(cr, uid, vals, context=context)
-        self.message_subscribe_users(cr, uid, [thread_id], [uid], context=context)
+        if not context.get('mail_nosubscribe'):
+            self.message_subscribe_users(cr, uid, [thread_id], [uid], context=context)
         return thread_id
 
     def unlink(self, cr, uid, ids, context=None):
