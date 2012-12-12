@@ -95,6 +95,7 @@ $sheet-padding: 16px
     background: -moz-linear-gradient(135deg, $endColor, $startColor)
     background: -o-linear-gradient(135deg, $startColor, $endColor)
     background: -webkit-gradient(linear, left top, right bottom, from($startColor), to($endColor))
+    background: -ms-linear-gradient(top, $startColor, $endColor) /* IE10 */
 
 @mixin transform($transform)
     -webkit-transform: $transform
@@ -157,6 +158,9 @@ $sheet-padding: 16px
         color: $tag-border !important
         font-style: italic !important
     \::-webkit-input-placeholder
+        color: $tag-border !important
+        font-style: italic !important
+    \:-ms-input-placeholder
         color: $tag-border !important
         font-style: italic !important
     //}}}
@@ -1074,11 +1078,12 @@ $sheet-padding: 16px
         > div
             height: 100%
         .oe_breadcrumb_item:not(:last-child)
-            display: inline-block
             max-width: 7em
             white-space: nowrap
-            overflow: hidden
             text-overflow: ellipsis
+        .oe_breadcrumb_title > *
+            display: inline-block
+            overflow: hidden
     // }}}
     // ViewManager common {{{
     .oe_view_manager
@@ -1088,6 +1093,7 @@ $sheet-padding: 16px
             height: inherit
 
         table.oe_view_manager_header
+            border-collapse: separate
             width: 100%
             table-layout: fixed
             .oe_header_row
@@ -2414,6 +2420,63 @@ div.ui-widget-overlay
 
 .ui-corner-all
     @include radius(3px)
+// }}}
+
+// Internet Explorer 9+ specifics {{{
+.openerp_ie
+    input[type='checkbox']
+        border: none
+        background: none
+        box-shadow: none
+    .oe_logo
+        img
+            border: none
+    .oe_header_row
+        button.oe_highlight
+            padding-top: 0
+            padding-bottom: 0
+    .oe_view_manager_buttons
+        button.oe_write_full
+            padding-top: 0
+            padding-bottom: 0
+        button.oe_highlight
+            padding-top: 0
+            padding-bottom: 0
+        button .oe_form_button_edit
+            padding-top: 0
+            padding-bottom: 0
+        button .oe_form_button_create
+            padding-top: 0
+            padding-bottom: 0
+    .oe_kanban_image
+        border: none
+    .oe_msg_icon
+        border: none
+    .oe_form
+        header
+            ul
+                height: 29px
+    .oe_attach
+        filter: none
+    .oe_link
+        filter: none
+
+    .oe_kanban_show_more
+        clear: both
+        text-align: center
+    &.oe_kanban_grouped .oe_kanban_show_more .oe_button
+        width: 100%
+        padding: 3px 12px
+
+    .oe_form_buttons button
+        padding-top: 0
+        padding-bottom: 0
+    .oe_sidebar button
+        padding-top: 0
+        padding-bottom: 0
+
+    .oe_form_field.oe_tags
+        float: left
 // }}}
 
 // @media print {{{
