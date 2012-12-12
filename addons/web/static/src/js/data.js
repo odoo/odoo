@@ -61,8 +61,10 @@ instance.web.Query = instance.web.Class.extend({
         return instance.session.rpc('/web/dataset/search_read', {
             model: this._model.name,
             fields: this._fields || false,
-            domain: this._model.domain(this._filter),
-            context: this._model.context(this._context),
+            domain: instance.web.pyeval.eval('domains',
+                    [this._model.domain(this._filter)]),
+            context: instance.web.pyeval.eval('contexts',
+                    [this._model.context(this._context)]),
             offset: this._offset,
             limit: this._limit,
             sort: instance.web.serialize_sort(this._order_by)
@@ -121,9 +123,8 @@ instance.web.Query = instance.web.Class.extend({
 
         var self = this;
 
-        // FIXME: when pyeval is merged
-        var ctx = instance.session.test_eval_contexts(
-                [this._model.context(this._context)]);
+        var ctx = instance.web.pyeval.eval(
+            'context', this._model.context(this._context));
         return this._model.call('read_group', {
             groupby: grouping,
             fields: _.uniq(grouping.concat(this._fields || [])),
@@ -278,9 +279,10 @@ instance.web.Model = instance.web.Class.extend({
      * @param {String} method name of the method to call
      * @param {Array} [args] positional arguments
      * @param {Object} [kwargs] keyword arguments
+     * @param {Object} [options] additional options for the rpc() method
      * @returns {jQuery.Deferred<>} call result
      */
-    call: function (method, args, kwargs) {
+    call: function (method, args, kwargs, options) {
         args = args || [];
         kwargs = kwargs || {};
         if (!_.isArray(args)) {
@@ -288,19 +290,20 @@ instance.web.Model = instance.web.Class.extend({
             kwargs = args;
             args = [];
         }
+        instance.web.pyeval.ensure_evaluated(args, kwargs);
         var debug = instance.session.debug ? '/'+this.name+':'+method : '';
         return instance.session.rpc('/web/dataset/call_kw' + debug, {
             model: this.name,
             method: method,
             args: args,
             kwargs: kwargs
-        });
+        }, options);
     },
     /**
      * Fetches a Query instance bound to this model, for searching
      *
      * @param {Array<String>} [fields] fields to ultimately fetch during the search
-     * @returns {openerp.web.Query}
+     * @returns {instance.web.Query}
      */
     query: function (fields) {
         return new instance.web.Query(this, fields);
@@ -348,9 +351,11 @@ instance.web.Model = instance.web.Class.extend({
      * FIXME: remove when evaluator integrated
      */
     call_button: function (method, args) {
+        instance.web.pyeval.ensure_evaluated(args, {});
         return instance.session.rpc('/web/dataset/call_button', {
             model: this.name,
             method: method,
+            // Should not be necessary anymore. Integrate remote in this?
             domain_id: null,
             context_id: args.length - 1,
             args: args || []
@@ -605,7 +610,8 @@ instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, 
         return instance.session.rpc('/web/dataset/resequence', {
             model: this.model,
             ids: ids,
-            context: this.get_context(options.context),
+            context: instance.web.pyeval.eval(
+                'context', this.get_context(options.context)),
         }).then(function (results) {
             return results;
         });

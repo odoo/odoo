@@ -22,9 +22,9 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
         this.name = instance._session_id;
         this.qweb_mutex = new $.Mutex();
     },
-    rpc: function(url, params) {
+    rpc: function(url, params, options) {
         params.session_id = this.session_id;
-        return this._super(url, params);
+        return this._super(url, params, options);
     },
     /**
      * Setup a sessionm
@@ -119,6 +119,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
     },
     session_logout: function() {
         this.set_cookie('session_id', '');
+        $.bbq.removeState();
         return this.rpc("/web/session/destroy", {});
     },
     get_cookie: function (name) {
@@ -543,12 +544,12 @@ instance.web._lt = function (s) {
     return {toString: function () { return instance.web._t(s); }}
 };
 instance.web.qweb = new QWeb2.Engine();
-instance.web.qweb.default_dict['__debug__'] = instance.session.debug; // Which one ?
 instance.web.qweb.debug = instance.session.debug;
 instance.web.qweb.default_dict = {
     '_' : _,
     '_t' : instance.web._t,
     'JSON': JSON,
+    '__debug__': instance.session.debug,
 };
 instance.web.qweb.preprocess_node = function() {
     // Note that 'this' is the Qweb Node
@@ -619,7 +620,7 @@ var messages_by_seconds = function() {
         [120, _t("Don't leave yet,<br />it's still loading...")],
         [300, _t("You may not believe it,<br />but the application is actually loading...")],
         [420, _t("Take a minute to get a coffee,<br />because it's loading...")],
-        [3600, _t("Maybe you should consider reloading the application by pressing F5...")],
+        [3600, _t("Maybe you should consider reloading the application by pressing F5...")]
     ];
 };
 

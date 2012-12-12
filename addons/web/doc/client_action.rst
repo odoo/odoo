@@ -32,10 +32,14 @@ information:
 
 The major difference is in the lifecycle of these:
 
-* if the client action maps to a function, the function will simply be
-  called when executing the action. The function can have no further
+* if the client action maps to a function, the function will be called
+  when executing the action. The function can have no further
   interaction with the Web Client itself, although it can return an
   action which will be executed after it.
+
+  The function takes 2 parameters: the ActionManager calling it and
+  the descriptor for the current action (the ``ir.actions.client``
+  dictionary).
 
 * if, on the other hand, the client action maps to a
   :js:class:`~openerp.web.Widget`, that
@@ -51,7 +55,7 @@ object::
     // Registers the object 'openerp.web_dashboard.Widget' to the client
     // action tag 'board.home.widgets'
     instance.web.client_actions.add(
-        'board.home.widgets', 'openerp.web_dashboard.Widget');
+        'board.home.widgets', 'instance.web_dashboard.Widget');
     instance.web_dashboard.Widget = instance.web.Widget.extend({
         template: 'HomeWidget'
     });
@@ -60,15 +64,15 @@ At this point, the generic :js:class:`~openerp.web.Widget` lifecycle
 takes over, the template is rendered, inserted in the client DOM,
 bound on the object's ``$el`` property and the object is started.
 
-If the client action takes parameters, these parameters are passed in as a
-second positional parameter to the constructor::
+The second parameter to the constructor is the descriptor for the
+action itself, which contains any parameter provided::
 
-    init: function (parent, params) {
+    init: function (parent, action) {
         // execute the Widget's init
         this._super(parent);
         // board.home.widgets only takes a single param, the identifier of the
         // res.widget object it should display. Store it for later
-        this.widget_id = params.widget_id;
+        this.widget_id = action.params.widget_id;
     }
 
 More complex initialization (DOM manipulations, RPC requests, ...)
@@ -82,9 +86,6 @@ method.
     code it should return a ``$.Deferred`` so callers know when it's
     ready for interaction.
 
-    Although generally speaking client actions are not really
-    interacted with.
-
 .. code-block:: javascript
 
     start: function () {
@@ -93,7 +94,7 @@ method.
             // Simply read the res.widget object this action should display
             new instance.web.Model('res.widget').call(
                 'read', [[this.widget_id], ['title']])
-                .then(this.proxy('on_widget_loaded'));
+                    .then(this.proxy('on_widget_loaded'));
     }
 
 The client action can then behave exactly as it wishes to within its

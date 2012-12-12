@@ -1,51 +1,35 @@
-$(document).ready(function () {
-    var instance;
-    var $fix = $('#qunit-fixture');
-
-    module('list.buttons', {
-        setup: function () {
-            instance = openerp.testing.instanceFor('list');
-
-            openerp.testing.loadTemplate(instance);
-
-            openerp.testing.mockifyRPC(instance);
-        }
-    });
-    asyncTest('record-deletion', 2, function () {
-        instance.session.responses['/web/view/load'] = function () {
-            return {result: {
+openerp.testing.section('list.buttons', {
+    dependencies: ['web.list', 'web.form'],
+    rpc: 'mock',
+    templates: true
+}, function (test) {
+    test('record-deletion', {asserts: 2}, function (instance, $fix, mock) {
+        mock('demo:fields_view_get', function () {
+            return {
                 type: 'tree',
                 fields: {
                     a: {type: 'char', string: "A"}
                 },
-                arch: {
-                    tag: 'tree',
-                    attrs: { },
-                    children: [
-                        {tag: 'field', attrs: {name: 'a'}},
-                        {tag: 'button', attrs: {type: 'object', name: 'foo'}}
-                    ]
-                }
-            }};
-        };
-        instance.session.responses['/web/dataset/call_kw:read'] = function (req) {
-            var args = req.params.args[0];
-            if (_.isEqual(args, [1, 2, 3])) {
-                return {result: [
+                arch: '<tree><field name="a"/><button type="object" name="foo"/></tree>',
+            };
+        });
+        mock('demo:read', function (args, kwargs) {
+            if (_.isEqual(args[0], [1, 2, 3])) {
+                return [
                     {id: 1, a: 'foo'}, {id: 2, a: 'bar'}, {id: 3, a: 'baz'}
-                ]};
-            } else if (_.isEqual(args, [2])) {
+                ];
+            } else if (_.isEqual(args[0], [2])) {
                 // button action virtually removed record
-                return {result: []};
+                return [];
             }
-            throw new Error(JSON.stringify(req.params));
-        };
-        instance.session.responses['/web/dataset/call_button'] = function () {
-            return {result: false};
-        };
+            throw new Error(JSON.stringify(_.toArray(arguments)));
+        });
+        mock('/web/dataset/call_button', function () { return false; });
         var ds = new instance.web.DataSetStatic(null, 'demo', null, [1, 2, 3]);
-        var l = new instance.web.ListView({}, ds, false, {editable: 'top'});
-        l.appendTo($fix)
+        var l = new instance.web.ListView({
+            do_action: openerp.testing.noop
+        }, ds, false, {editable: 'top'});
+        return l.appendTo($fix)
         .then(l.proxy('reload_content'))
         .then(function () {
             var d = $.Deferred();
@@ -55,14 +39,11 @@ $(document).ready(function () {
             $fix.find('table tbody tr:eq(1) button').click();
             return d.promise();
         })
-        .always(function () { start(); })
         .then(function () {
             strictEqual(l.records.length, 2,
                         "should have 2 records left");
             strictEqual($fix.find('table tbody tr[data-id]').length, 2,
                         "should have 2 rows left");
-        }, function (e) {
-            ok(false, e && e.message || e);
         });
     });
 });

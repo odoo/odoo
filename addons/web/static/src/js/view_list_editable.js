@@ -3,6 +3,8 @@
  * @namespace
  */
 openerp.web.list_editable = function (instance) {
+    var _t = instance.web._t;
+
     // editability status of list rows
     instance.web.ListView.prototype.defaults.editable = null;
 
@@ -63,6 +65,12 @@ openerp.web.list_editable = function (instance) {
             }
             this._super();
         },
+        sort_by_column: function (e) {
+            e.stopPropagation();
+            if (!this.editor.is_editing()) {
+                this._super.apply(this, arguments);
+            }
+        },
         /**
          * Handles the activation of a record in editable mode (making a record
          * editable), called *after* the record has become editable.
@@ -77,17 +85,35 @@ openerp.web.list_editable = function (instance) {
         do_edit: function (index, id, dataset) {
             _.extend(this.dataset, dataset);
         },
+        do_delete: function (ids) {
+            var nonfalse = _.compact(ids);
+            var _super = this._super.bind(this);
+            var next = this.editor.is_editing()
+                    ? this.cancel_edition(true)
+                    : $.when();
+            return next.then(function () {
+                return _super(nonfalse);
+            });
+        },
         editable: function () {
-            return this.fields_view.arch.attrs.editable
+            return !this.options.disable_editable_mode 
+                && (this.fields_view.arch.attrs.editable
                 || this._context_editable
-                || this.options.editable;
+                || this.options.editable);
         },
         /**
          * Replace do_search to handle editability process
          */
         do_search: function(domain, context, group_by) {
-            this._context_editable = !!context.set_editable;
-            this._super.apply(this, arguments);
+            var self=this, _super = self._super, args=arguments;
+            var ready = this.editor.is_editing()
+                    ? this.cancel_edition(true)
+                    : $.when();
+
+            return ready.then(function () {
+                self._context_editable = !!context.set_editable;
+                return _super.apply(self, args);
+            });
         },
         /**
          * Replace do_add_record to handle editability (and adding new record
@@ -366,7 +392,8 @@ openerp.web.list_editable = function (instance) {
                 version: '7.0'
             });
             _(view.arch.children).chain()
-                .zip(this.columns)
+                .zip(_(this.columns).filter(function (c) {
+                    return !(c instanceof instance.web.list.MetaColumn);}))
                 .each(function (ar) {
                     var widget = ar[0], column = ar[1];
                     var modifiers = _.extend({}, column.modifiers);
@@ -758,7 +785,7 @@ openerp.web.list_editable = function (instance) {
         cancel: function (force) {
             if (!(force || this.form.can_be_discarded())) {
                 return $.Deferred().reject({
-                    message: "The form's data can not be discarded"}).promise();
+                    message: _t("The form's data can not be discarded")}).promise();
             }
             var record = this.record;
             this.record = null;

@@ -430,6 +430,85 @@ instance.web.PropertiesMixin = _.extend({}, instance.web.EventDispatcherMixin, {
 // Classes
 
 /**
+    A class containing common utility methods useful when working with OpenERP as well as the PropertiesMixin.
+*/
+instance.web.Controller = instance.web.Class.extend(instance.web.PropertiesMixin, {
+    /**
+     * Constructs the object and sets its parent if a parent is given.
+     *
+     * @param {instance.web.Controller} parent Binds the current instance to the given Controller instance.
+     * When that controller is destroyed by calling destroy(), the current instance will be
+     * destroyed too. Can be null.
+     */
+    init: function(parent) {
+        instance.web.PropertiesMixin.init.call(this);
+        this.setParent(parent);
+    },
+    /**
+     * Proxies a method of the object, in order to keep the right ``this`` on
+     * method invocations.
+     *
+     * This method is similar to ``Function.prototype.bind`` or ``_.bind``, and
+     * even more so to ``jQuery.proxy`` with a fundamental difference: its
+     * resolution of the method being called is lazy, meaning it will use the
+     * method as it is when the proxy is called, not when the proxy is created.
+     *
+     * Other methods will fix the bound method to what it is when creating the
+     * binding/proxy, which is fine in most javascript code but problematic in
+     * OpenERP Web where developers may want to replace existing callbacks with
+     * theirs.
+     *
+     * The semantics of this precisely replace closing over the method call.
+     *
+     * @param {String|Function} method function or name of the method to invoke
+     * @returns {Function} proxied method
+     */
+    proxy: function (method) {
+        var self = this;
+        return function () {
+            var fn = (typeof method === 'string') ? self[method] : method;
+            return fn.apply(self, arguments);
+        }
+    },
+    /**
+     * Informs the action manager to do an action. This supposes that
+     * the action manager can be found amongst the ancestors of the current widget.
+     * If that's not the case this method will simply return `false`.
+     */
+    do_action: function() {
+        var parent = this.getParent();
+        if (parent) {
+            return parent.do_action.apply(parent, arguments);
+        }
+        return false;
+    },
+    do_notify: function() {
+        if (this.getParent()) {
+            return this.getParent().do_notify.apply(this,arguments);
+        }
+        return false;
+    },
+    do_warn: function() {
+        if (this.getParent()) {
+            return this.getParent().do_warn.apply(this,arguments);
+        }
+        return false;
+    },
+    rpc: function(url, data, options) {
+        var def = $.Deferred();
+        var self = this;
+        instance.session.rpc(url, data, options).done(function() {
+            if (!self.isDestroyed())
+                def.resolve.apply(def, arguments);
+        }).fail(function() {
+            if (!self.isDestroyed())
+                def.reject.apply(def, arguments);
+        });
+        return def.promise();
+    }
+});
+
+/**
  * Base class for all visual components. Provides a lot of functionalities helpful
  * for the management of a part of the DOM.
  *
@@ -477,7 +556,7 @@ instance.web.PropertiesMixin = _.extend({}, instance.web.EventDispatcherMixin, {
  *
  * That will kill the widget in a clean way and erase its content from the dom.
  */
-instance.web.Widget = instance.web.Class.extend(instance.web.PropertiesMixin, {
+instance.web.Widget = instance.web.Controller.extend({
     // Backbone-ish API
     tagName: 'div',
     id: null,
@@ -501,8 +580,7 @@ instance.web.Widget = instance.web.Class.extend(instance.web.PropertiesMixin, {
      * destroyed too. Can be null.
      */
     init: function(parent) {
-        instance.web.PropertiesMixin.init.call(this);
-        this.setParent(parent);
+        this._super(parent);
         // Bind on_/do_* methods to this
         // We might remove this automatic binding in the future
         for (var name in this) {
@@ -603,32 +681,6 @@ instance.web.Widget = instance.web.Class.extend(instance.web.PropertiesMixin, {
      */
     start: function() {
         return $.when();
-    },
-    /**
-     * Proxies a method of the object, in order to keep the right ``this`` on
-     * method invocations.
-     *
-     * This method is similar to ``Function.prototype.bind`` or ``_.bind``, and
-     * even more so to ``jQuery.proxy`` with a fundamental difference: its
-     * resolution of the method being called is lazy, meaning it will use the
-     * method as it is when the proxy is called, not when the proxy is created.
-     *
-     * Other methods will fix the bound method to what it is when creating the
-     * binding/proxy, which is fine in most javascript code but problematic in
-     * OpenERP Web where developers may want to replace existing callbacks with
-     * theirs.
-     *
-     * The semantics of this precisely replace closing over the method call.
-     *
-     * @param {String|Function} method function or name of the method to invoke
-     * @returns {Function} proxied method
-     */
-    proxy: function (method) {
-        var self = this;
-        return function () {
-            var fn = (typeof method === 'string') ? self[method] : method;
-            return fn.apply(self, arguments);
-        }
     },
     /**
      * Renders the element. The default implementation renders the widget using QWeb,
@@ -749,42 +801,6 @@ instance.web.Widget = instance.web.Class.extend(instance.web.PropertiesMixin, {
      */
     $: function(selector) {
         return this.$el.find(selector);
-    },
-    /**
-     * Informs the action manager to do an action. This supposes that
-     * the action manager can be found amongst the ancestors of the current widget.
-     * If that's not the case this method will simply return `false`.
-     */
-    do_action: function() {
-        var parent = this.getParent();
-        if (parent) {
-            return parent.do_action.apply(parent, arguments);
-        }
-        return false;
-    },
-    do_notify: function() {
-        if (this.getParent()) {
-            return this.getParent().do_notify.apply(this,arguments);
-        }
-        return false;
-    },
-    do_warn: function() {
-        if (this.getParent()) {
-            return this.getParent().do_warn.apply(this,arguments);
-        }
-        return false;
-    },
-    rpc: function(url, data, success, error) {
-        var def = $.Deferred().done(success).fail(error);
-        var self = this;
-        instance.session.rpc(url, data).done(function() {
-            if (!self.isDestroyed())
-                def.resolve.apply(def, arguments);
-        }).fail(function() {
-            if (!self.isDestroyed())
-                def.reject.apply(def, arguments);
-        });
-        return def.promise();
     }
 });
 
@@ -932,296 +948,6 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
         this.server = this.origin; // keep chs happy
         this.rpc_function = (this.origin == window_origin) ? this.rpc_json : this.rpc_jsonp;
     },
-    test_eval_get_context: function () {
-        var asJS = function (arg) {
-            if (arg instanceof py.object) {
-                return arg.toJSON();
-            }
-            return arg;
-        };
-
-        var datetime = new py.object();
-        datetime.datetime = new py.type(function datetime() {
-            throw new Error('datetime.datetime not implemented');
-        });
-        var date = datetime.date = new py.type(function date(y, m, d) {
-            if (y instanceof Array) {
-                d = y[2];
-                m = y[1];
-                y = y[0];
-            }
-            this.year = asJS(y);
-            this.month = asJS(m);
-            this.day = asJS(d);
-        }, py.object, {
-            strftime: function (args) {
-                var f = asJS(args[0]), self = this;
-                return new py.str(f.replace(/%([A-Za-z])/g, function (m, c) {
-                    switch (c) {
-                    case 'Y': return self.year;
-                    case 'm': return _.str.sprintf('%02d', self.month);
-                    case 'd': return _.str.sprintf('%02d', self.day);
-                    }
-                    throw new Error('ValueError: No known conversion for ' + m);
-                }));
-            }
-        });
-        date.__getattribute__ = function (name) {
-            if (name === 'today') {
-                return date.today;
-            }
-            throw new Error("AttributeError: object 'date' has no attribute '" + name +"'");
-        };
-        date.today = new py.def(function () {
-            var d = new Date();
-            return new date(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
-        });
-        datetime.time = new py.type(function time() {
-            throw new Error('datetime.time not implemented');
-        });
-
-        var time = new py.object();
-        time.strftime = new py.def(function (args) {
-            return date.today.__call__().strftime(args);
-        });
-
-        var relativedelta = new py.type(function relativedelta(args, kwargs) {
-            if (!_.isEmpty(args)) {
-                throw new Error('Extraction of relative deltas from existing datetimes not supported');
-            }
-            this.ops = kwargs;
-        }, py.object, {
-            __add__: function (other) {
-                if (!(other instanceof datetime.date)) {
-                    return py.NotImplemented;
-                }
-                // TODO: test this whole mess
-                var year = asJS(this.ops.year) || asJS(other.year);
-                if (asJS(this.ops.years)) {
-                    year += asJS(this.ops.years);
-                }
-
-                var month = asJS(this.ops.month) || asJS(other.month);
-                if (asJS(this.ops.months)) {
-                    month += asJS(this.ops.months);
-                    // FIXME: no divmod in JS?
-                    while (month < 1) {
-                        year -= 1;
-                        month += 12;
-                    }
-                    while (month > 12) {
-                        year += 1;
-                        month -= 12;
-                    }
-                }
-
-                var lastMonthDay = new Date(year, month, 0).getDate();
-                var day = asJS(this.ops.day) || asJS(other.day);
-                if (day > lastMonthDay) { day = lastMonthDay; }
-                var days_offset = ((asJS(this.ops.weeks) || 0) * 7) + (asJS(this.ops.days) || 0);
-                if (days_offset) {
-                    day = new Date(year, month-1, day + days_offset).getDate();
-                }
-                // TODO: leapdays?
-                // TODO: hours, minutes, seconds? Not used in XML domains
-                // TODO: weekday?
-                return new datetime.date(year, month, day);
-            },
-            __radd__: function (other) {
-                return this.__add__(other);
-            },
-
-            __sub__: function (other) {
-                if (!(other instanceof datetime.date)) {
-                    return py.NotImplemented;
-                }
-                // TODO: test this whole mess
-                var year = asJS(this.ops.year) || asJS(other.year);
-                if (asJS(this.ops.years)) {
-                    year -= asJS(this.ops.years);
-                }
-
-                var month = asJS(this.ops.month) || asJS(other.month);
-                if (asJS(this.ops.months)) {
-                    month -= asJS(this.ops.months);
-                    // FIXME: no divmod in JS?
-                    while (month < 1) {
-                        year -= 1;
-                        month += 12;
-                    }
-                    while (month > 12) {
-                        year += 1;
-                        month -= 12;
-                    }
-                }
-
-                var lastMonthDay = new Date(year, month, 0).getDate();
-                var day = asJS(this.ops.day) || asJS(other.day);
-                if (day > lastMonthDay) { day = lastMonthDay; }
-                var days_offset = ((asJS(this.ops.weeks) || 0) * 7) + (asJS(this.ops.days) || 0);
-                if (days_offset) {
-                    day = new Date(year, month-1, day - days_offset).getDate();
-                }
-                // TODO: leapdays?
-                // TODO: hours, minutes, seconds? Not used in XML domains
-                // TODO: weekday?
-                return new datetime.date(year, month, day);
-            },
-            __rsub__: function (other) {
-                return this.__sub__(other);
-            }
-        });
-
-        return {
-            uid: new py.float(this.uid),
-            datetime: datetime,
-            time: time,
-            relativedelta: relativedelta,
-            current_date: date.today.__call__().strftime(['%Y-%m-%d'])
-        };
-    },
-    /**
-     * FIXME: Huge testing hack, especially the evaluation context, rewrite + test for real before switching
-     */
-    test_eval: function (source, expected) {
-        var match_template = '<ul>' +
-                '<li>Source: %(source)s</li>' +
-                '<li>Local: %(local)s</li>' +
-                '<li>Remote: %(remote)s</li>' +
-            '</ul>',
-            fail_template = '<ul>' +
-                '<li>Error: %(error)s</li>' +
-                '<li>Source: %(source)s</li>' +
-            '</ul>';
-        try {
-            // see Session.eval_context in Python
-            var ctx = this.test_eval_contexts(
-                ([this.context] || []).concat(source.contexts));
-            if (!_.isEqual(ctx, expected.context)) {
-                instance.webclient.notification.warn('Context mismatch, report to xmo',
-                    _.str.sprintf(match_template, {
-                        source: JSON.stringify(source.contexts),
-                        local: JSON.stringify(ctx),
-                        remote: JSON.stringify(expected.context)
-                    }), true);
-            }
-        } catch (e) {
-            instance.webclient.notification.warn('Context fail, report to xmo',
-                _.str.sprintf(fail_template, {
-                    error: e.message,
-                    source: JSON.stringify(source.contexts)
-                }), true);
-        }
-
-        try {
-            var dom = this.test_eval_domains(source.domains, this.test_eval_get_context());
-            if (!_.isEqual(dom, expected.domain)) {
-                instance.webclient.notification.warn('Domains mismatch, report to xmo',
-                    _.str.sprintf(match_template, {
-                        source: JSON.stringify(source.domains),
-                        local: JSON.stringify(dom),
-                        remote: JSON.stringify(expected.domain)
-                    }), true);
-            }
-        } catch (e) {
-            instance.webclient.notification.warn('Domain fail, report to xmo',
-                _.str.sprintf(fail_template, {
-                    error: e.message,
-                    source: JSON.stringify(source.domains)
-                }), true);
-        }
-
-        try {
-            var groups = this.test_eval_groupby(source.group_by_seq);
-            if (!_.isEqual(groups, expected.group_by)) {
-                instance.webclient.notification.warn('GroupBy mismatch, report to xmo',
-                    _.str.sprintf(match_template, {
-                        source: JSON.stringify(source.group_by_seq),
-                        local: JSON.stringify(groups),
-                        remote: JSON.stringify(expected.group_by)
-                    }), true);
-            }
-        } catch (e) {
-            instance.webclient.notification.warn('GroupBy fail, report to xmo',
-                _.str.sprintf(fail_template, {
-                    error: e.message,
-                    source: JSON.stringify(source.group_by_seq)
-                }), true);
-        }
-    },
-    test_eval_contexts: function (contexts, evaluation_context) {
-        evaluation_context = evaluation_context || {};
-        var self = this;
-        return _(contexts).reduce(function (result_context, ctx) {
-            // __eval_context evaluations can lead to some of `contexts`'s
-            // values being null, skip them as well as empty contexts
-            if (_.isEmpty(ctx)) { return result_context; }
-            var evaluated = ctx;
-            switch(ctx.__ref) {
-            case 'context':
-                evaluated = py.eval(ctx.__debug, evaluation_context);
-                break;
-            case 'compound_context':
-                var eval_context = self.test_eval_contexts([ctx.__eval_context]);
-                evaluated = self.test_eval_contexts(
-                    ctx.__contexts, _.extend({}, evaluation_context, eval_context));
-                break;
-            }
-            // add newly evaluated context to evaluation context for following
-            // siblings
-            _.extend(evaluation_context, evaluated);
-            return _.extend(result_context, evaluated);
-        }, _.extend({}, this.user_context));
-    },
-    test_eval_domains: function (domains, evaluation_context) {
-        var result_domain = [], self = this;
-        _(domains).each(function (dom) {
-            switch(dom.__ref) {
-            case 'domain':
-                result_domain.push.apply(
-                    result_domain, py.eval(dom.__debug, evaluation_context));
-                break;
-            case 'compound_domain':
-                var eval_context = self.test_eval_contexts([dom.__eval_context]);
-                result_domain.push.apply(
-                    result_domain, self.test_eval_domains(
-                        dom.__domains, _.extend(
-                            {}, evaluation_context, eval_context)));
-                break;
-            default:
-                result_domain.push.apply(
-                    result_domain, dom);
-            }
-        });
-        return result_domain;
-    },
-    test_eval_groupby: function (contexts) {
-        var result_group = [], self = this;
-        _(contexts).each(function (ctx) {
-            var group;
-            switch(ctx.__ref) {
-            case 'context':
-                group = py.eval(ctx.__debug).group_by;
-                break;
-            case 'compound_context':
-                group = self.test_eval_contexts(
-                    ctx.__contexts, ctx.__eval_context).group_by;
-                break;
-            default:
-                group = ctx.group_by
-            }
-            if (!group) { return; }
-            if (typeof group === 'string') {
-                result_group.push(group);
-            } else if (group instanceof Array) {
-                result_group.push.apply(result_group, group);
-            } else {
-                throw new Error('Got invalid groupby {{'
-                        + JSON.stringify(group) + '}}');
-            }
-        });
-        return result_group;
-    },
     /**
      * Executes an RPC call, registering the provided callbacks.
      *
@@ -1231,16 +957,21 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
      *
      * @param {String} url RPC endpoint
      * @param {Object} params call parameters
+     * @param {Object} options additional options for rpc call
      * @param {Function} success_callback function to execute on RPC call success
      * @param {Function} error_callback function to execute on RPC call failure
      * @returns {jQuery.Deferred} jquery-provided ajax deferred
      */
-    rpc: function(url, params) {
+    rpc: function(url, params, options) {
         var self = this;
+        options = options || {};
         // url can be an $.ajax option object
         if (_.isString(url)) {
             url = { url: url };
         }
+        _.defaults(params, {
+            context: this.user_context || {}
+        });
         // Construct a JSON-RPC2 request, method is currently unused
         if (this.debug)
             params.debug = 1;
@@ -1251,24 +982,24 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
             id: _.uniqueId('r')
         };
         var deferred = $.Deferred();
-        this.trigger('request', url, payload);
-        var request = this.rpc_function(url, payload).done(
+        if (! options.shadow)
+            this.trigger('request', url, payload);
+
+        this.rpc_function(url, payload).then(
             function (response, textStatus, jqXHR) {
-                self.trigger('response', response);
+                if (! options.shadow)
+                    self.trigger('response', response);
                 if (!response.error) {
-                    if (url.url === '/web/session/eval_domain_and_context') {
-                        self.test_eval(params, response.result);
-                    }
                     deferred.resolve(response["result"], textStatus, jqXHR);
                 } else if (response.error.data.type === "session_invalid") {
                     self.uid = false;
                 } else {
                     deferred.reject(response.error, $.Event());
                 }
-            }
-        ).fail(
+            },
             function(jqXHR, textStatus, errorThrown) {
-                self.trigger('response_failed', jqXHR);
+                if (! options.shadow)
+                    self.trigger('response_failed', jqXHR);
                 var error = {
                     code: -32098,
                     message: "XmlHttpRequestError " + errorThrown,

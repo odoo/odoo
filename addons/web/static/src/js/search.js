@@ -341,17 +341,17 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         if (this.headless) {
             this.ready.resolve();
         } else {
-            var load_view = this.rpc("/web/searchview/load", {
-                model: this.model,
+            var load_view = instance.web.fields_view_get({
+                model: this.dataset._model,
                 view_id: this.view_id,
-                context: this.dataset.get_context() });
+                view_type: 'search',
+            });
 
-            $.when(load_view)
-                .then(function(r) {
-                    self.search_view_loaded(r)
-                }, function () {
-                    self.ready.reject.apply(null, arguments);
-                });
+            $.when(load_view).then(function (r) {
+                return self.search_view_loaded(r)
+            }).fail(function () {
+                self.ready.reject.apply(null, arguments);
+            });
         }
 
         instance.web.bus.on('click', this, function(ev) {
@@ -615,16 +615,16 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
 
     search_view_loaded: function(data) {
         var self = this;
-        this.fields_view = data.fields_view;
-        if (data.fields_view.type !== 'search' ||
-            data.fields_view.arch.tag !== 'search') {
+        this.fields_view = data;
+        if (data.type !== 'search' ||
+            data.arch.tag !== 'search') {
                 throw new Error(_.str.sprintf(
                     "Got non-search view after asking for a search view: type %s, arch root %s",
-                    data.fields_view.type, data.fields_view.arch.tag));
+                    data.type, data.arch.tag));
         }
         this.make_widgets(
-            data.fields_view['arch'].children,
-            data.fields_view.fields);
+            data['arch'].children,
+            data.fields);
 
         this.add_common_inputs();
 
@@ -632,6 +632,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         var drawer_started = $.when.apply(
             null, _(this.select_for_drawer()).invoke(
                 'appendTo', this.$('.oe_searchview_drawer')));
+
         
         // load defaults
         var defaults_fetched = $.when.apply(null, _(this.inputs).invoke(
@@ -1006,6 +1007,7 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
     get_context: function (facet) {
         var contexts = facet.values.chain()
             .map(function (f) { return f.get('value').attrs.context; })
+            .without('{}')
             .reject(_.isEmpty)
             .value();
 
@@ -1024,6 +1026,7 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
     get_groupby: function (facet) {
         return  facet.values.chain()
             .map(function (f) { return f.get('value').attrs.context; })
+            .without('{}')
             .reject(_.isEmpty)
             .value();
     },
@@ -1036,6 +1039,7 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
     get_domain: function (facet) {
         var domains = facet.values.chain()
             .map(function (f) { return f.get('value').attrs.domain; })
+            .without('[]')
             .reject(_.isEmpty)
             .value();
 
@@ -1506,16 +1510,10 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
         this.$el.on('click', 'h4', function () {
             self.$el.toggleClass('oe_opened');
         });
-        // FIXME: local eval of domain and context to get rid of special endpoint
-        return this.rpc('/web/searchview/get_filters', {
-            model: this.view.model
-        })
+        return this.model.call('get_filters', [this.view.model])
             .then(this.proxy('set_filters'))
-            .then(function () {
-                self.is_ready.resolve(null);
-            }, function () {
-                self.is_ready.reject();
-            });
+            .done(function () { self.is_ready.resolve(); })
+            .fail(function () { self.is_ready.reject.apply(self.is_ready, arguments); });
     },
     /**
      * Special implementation delaying defaults until CustomFilters is loaded
@@ -1614,7 +1612,7 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
         var set_as_default = this.$('#oe_searchview_custom_default').prop('checked');
 
         var search = this.view.build_search_data();
-        this.rpc('/web/session/eval_domain_and_context', {
+        instance.web.pyeval.eval_domains_and_contexts({
             domains: search.domains,
             contexts: search.contexts,
             group_by_seq: search.groupbys || []
@@ -1708,10 +1706,10 @@ instance.web.search.Advanced = instance.web.search.Input.extend({
             });
         return $.when(
             this._super(),
-            this.rpc("/web/searchview/fields_get", {model: this.view.model}).done(function(data) {
+            new instance.web.Model(this.view.model).call('fields_get').done(function(data) {
                 self.fields = _.extend({
                     id: { string: 'ID', type: 'id' }
-                }, data.fields);
+                }, data);
         })).done(function () {
             self.append_proposition();
         });
@@ -1893,6 +1891,9 @@ instance.web.search.ExtendedSearchProposition.DateTime = instance.web.search.Ext
     get_value: function() {
         return this.datewidget.get_value();
     },
+    toString: function () {
+        return instance.web.format_value(this.get_value(), { type:"datetime" });
+    },
     start: function() {
         var ready = this._super();
         this.datewidget = new (this.widget())(this);
@@ -1901,7 +1902,10 @@ instance.web.search.ExtendedSearchProposition.DateTime = instance.web.search.Ext
     }
 });
 instance.web.search.ExtendedSearchProposition.Date = instance.web.search.ExtendedSearchProposition.DateTime.extend({
-    widget: function () { return instance.web.DateWidget; }
+    widget: function () { return instance.web.DateWidget; },
+    toString: function () {
+        return instance.web.format_value(this.get_value(), { type:"date" });
+    }
 });
 instance.web.search.ExtendedSearchProposition.Integer = instance.web.search.ExtendedSearchProposition.Field.extend({
     template: 'SearchView.extended_search.proposition.integer',
@@ -1918,7 +1922,8 @@ instance.web.search.ExtendedSearchProposition.Integer = instance.web.search.Exte
     },
     get_value: function() {
         try {
-            return instance.web.parse_value(this.$el.val(), {'widget': 'integer'});
+            var val =this.$el.val();
+            return instance.web.parse_value(val == "" ? 0 : val, {'widget': 'integer'});
         } catch (e) {
             return "";
         }
@@ -1942,7 +1947,8 @@ instance.web.search.ExtendedSearchProposition.Float = instance.web.search.Extend
     },
     get_value: function() {
         try {
-            return instance.web.parse_value(this.$el.val(), {'widget': 'float'});
+            var val =this.$el.val();
+            return instance.web.parse_value(val == "" ? 0.0 : val, {'widget': 'float'});
         } catch (e) {
             return "";
         }

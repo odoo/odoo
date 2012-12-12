@@ -536,6 +536,8 @@ $sheet-padding: 16px
         float: left
     .oe_notebook > li > a
         display: block
+        color: #808080
+    .oe_notebook > li.ui-tabs-active > a
         color: #4c4c4c
     .oe_notebook
         border-color: #ddd
@@ -570,7 +572,7 @@ $sheet-padding: 16px
         position: relative
         cursor: pointer
     .oe_dropdown_toggle
-        color: rgba(0,0,0,0.3)
+        color: #4C4C4C
         font-weight: normal
     .oe_dropdown_hover:hover .oe_dropdown_menu, .oe_dropdown_menu.oe_opened
         display: block
@@ -604,6 +606,9 @@ $sheet-padding: 16px
                 display: block
                 color: #4c4c4c
                 text-decoration: none
+                width: 200px
+                text-overflow: ellipsis
+                overflow: hidden
                 &:hover
                     text-decoration: none
     .oe_dropdown_arrow:after
@@ -677,9 +682,21 @@ $sheet-padding: 16px
         border-bottom-right-radius: 8px
         border-bottom-left-radius: 8px
     // }}}
-    // Notification {{{
+    // Notifications {{{
     .oe_notification
         z-index: 1050
+    .oe_webclient_timezone_notification
+        a
+            color: white
+            text-decoration: underline
+        p
+            margin-top: 1em
+        dt
+            font-weight: bold
+    .oe_timezone_systray
+        span
+            margin-top: 1px
+            background-color: #f6cf3b
     // }}}
     // Login {{{
     .oe_login
@@ -692,8 +709,6 @@ $sheet-padding: 16px
             list-style-type: none
             padding: 0 0 4px 0
         button
-            float: right
-            display: inline-block
             cursor: pointer
             padding: 6px 16px
             border: 1px solid #222
@@ -929,7 +944,7 @@ $sheet-padding: 16px
             height: 40px
             width: 157px
             margin: 14px 0
-            border: none
+            border: 0
     .oe_footer
         position: fixed
         bottom: 0
@@ -1129,47 +1144,6 @@ $sheet-padding: 16px
             .oe_view_manager_buttons
                 white-space: nowrap
         // }}}
-        // ViewManager.pager {{{
-        .oe_view_manager_pager
-            line-height: 26px
-            .oe_list_pager_single_page .oe_pager_group
-                display: none
-        .oe_pager_value
-            float: left
-            margin-right: 8px
-        ul.oe_pager_group
-            padding: 0
-            margin: 0
-        .oe_pager_group
-            float: left
-            height: 24px
-            line-height: 24px
-            display: inline-block
-            border: 1px solid #ababab
-            cursor: pointer
-            @include radius(5px)
-            li
-                height: 24px
-                line-height: 24px
-                padding: 0
-                margin: 0
-                list-style-type: none
-                float: left
-                border-right: 1px solid #ababab
-                &:last-child
-                    border: none
-            a
-                color: #4c4c4c
-                padding: 0 8px
-                &:hover
-                    text-decoration: none
-            .active
-                background: #999
-                @include box-shadow(0 1px 4px rgba(0,0,0,0.3) inset)
-                a
-                    color: #fff
-                    text-shadow: 0 1px 2px rgba(0,0,0,0.4)
-        // }}}
         // ViewManager.switches {{{
         .oe_view_manager_switch
             padding: 0
@@ -1210,6 +1184,47 @@ $sheet-padding: 16px
             .oe_vm_switch_diagram:after
                 content: "f"
         // }}}
+    // List pager {{{
+    .oe_list_pager
+        line-height: 26px
+    .oe_pager_value
+        float: left
+        margin-right: 8px
+    ul.oe_pager_group
+        padding: 0
+        margin: 0
+    .oe_pager_group
+        float: left
+        height: 24px
+        line-height: 24px
+        display: inline-block
+        border: 1px solid #ababab
+        cursor: pointer
+        @include radius(5px)
+        li
+            height: 24px
+            line-height: 24px
+            padding: 0
+            margin: 0
+            list-style-type: none
+            float: left
+            border-right: 1px solid #ababab
+            &:last-child
+                border: none
+        a
+            color: #4c4c4c
+            padding: 0 8px
+            &:hover
+                text-decoration: none
+        .active
+            background: #999
+            @include box-shadow(0 1px 4px rgba(0,0,0,0.3) inset)
+            a
+                color: #fff
+                text-shadow: 0 1px 2px rgba(0,0,0,0.4)
+    .oe_list_pager.oe_list_pager_single_page .oe_pager_group
+        display: none
+    // }}}
     // ViewManager application {{{
     .oe_view_manager_current
         height: 100%
@@ -1230,9 +1245,11 @@ $sheet-padding: 16px
         > .oe_view_manager_header
             display: none
     // }}}
-    // Viewmanager popup {{{
+    // FormPopup {{{
     .oe_popup_form > .oe_formview > .oe_form_pager
         display: none !important
+    .oe_popup_list_pager
+        float: right
     // }}}
     // SearchView {{{
     .oe_searchview
@@ -1479,6 +1496,7 @@ $sheet-padding: 16px
                     list-style: none
                     padding: 0
                 li
+                    cursor: pointer
                     position: relative
                     list-style: none
                     margin: 0
@@ -1541,13 +1559,20 @@ $sheet-padding: 16px
         font-size: 125%
         max-width: 700px
         .oe_view_nocontent_create
-            background: transparent url(/web/static/src/img/view_empty_arrow.png) no-repeat 7px 0
             margin-top: 0
             padding-top: 35px
-            min-height: 28px
             color: #4c4c4c
+            &:before
+                content: ""
+                display: inline-block
+                position: absolute
+                width: 70px
+                height: 80px
+                margin-left: -70px
+                margin-top: -50px
+                background: transparent url(/web/static/src/img/view_empty_arrow.png) no-repeat 0px 0px
         > p
-            padding-left: 95px
+            padding-left: 78px
         .oe_empty_custom_dashboard
             background: transparent url(/web/static/src/img/graph_background.png) no-repeat 0 0
             margin-top: -15px
@@ -1788,6 +1813,7 @@ $sheet-padding: 16px
             border-left: 8px solid #eee
         .oe_form_field_url button img
             vertical-align: top
+        .oe_form_field_monetary,
         .oe_form_field_date,
         .oe_form_field_datetime
             white-space: nowrap
@@ -1880,7 +1906,7 @@ $sheet-padding: 16px
             .oe_form_field_image_controls
                 position: absolute
                 top: 1px
-                padding: 4px
+                padding: 4px 0
                 width: 100%
                 display: none
                 text-align: center
@@ -1900,6 +1926,7 @@ $sheet-padding: 16px
             width: 100%
             left: +2px
             top: +7px
+            overflow: hidden
             button
                 display: inline
                 height: 24px
@@ -1922,10 +1949,11 @@ $sheet-padding: 16px
                     left: -9px
             input.oe_form_binary_file
                 display: inline-block
-                margin-left: -5px
-                height: 28px
-                width: 52px
-                margin-top: -26px
+                margin-left: -85px
+                height: 22px
+                width: 152px
+                margin-top: -24px
+                cursor: pointer
             .oe_attach_label
                 color: #7C7BAD
                 margin-left: -3px

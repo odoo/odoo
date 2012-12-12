@@ -1,11 +1,7 @@
-$(document).ready(function () {
-    var instance;
-    module('query', {
-        setup: function () {
-            instance = openerp.testing.instanceFor('search');
-        }
-    });
-    test('Adding a facet to the query creates a facet and a value', function () {
+openerp.testing.section('query', {
+    dependencies: ['web.search']
+}, function (test) {
+    test('Adding a facet to the query creates a facet and a value', function (instance) {
         var query = new instance.web.search.SearchQuery;
         var field = {};
         query.add({
@@ -19,7 +15,7 @@ $(document).ready(function () {
         equal(facet.get('field'), field);
         deepEqual(facet.get('values'), [{label: 'Value', value: 3}]);
     });
-    test('Adding two facets', function () {
+    test('Adding two facets', function (instance) {
         var query = new instance.web.search.SearchQuery;
         query.add([
             { category: 'Foo', field: {}, values: [{label: 'Value', value: 3}] },
@@ -30,7 +26,7 @@ $(document).ready(function () {
         equal(query.at(0).values.length, 1);
         equal(query.at(1).values.length, 1);
     });
-    test('If a facet already exists, add values to it', function () {
+    test('If a facet already exists, add values to it', function (instance) {
         var query = new instance.web.search.SearchQuery;
         var field = {};
         query.add({category: 'A', field: field, values: [{label: 'V1', value: 0}]});
@@ -43,7 +39,7 @@ $(document).ready(function () {
             {label: 'V2', value: 1}
         ]);
     });
-    test('Facet being implicitly changed should trigger change, not add', function () {
+    test('Facet being implicitly changed should trigger change, not add', function (instance) {
         var query = new instance.web.search.SearchQuery;
         var field = {}, added = false, changed = false;
         query.add({category: 'A', field: field, values: [{label: 'V1', value: 0}]});
@@ -54,7 +50,7 @@ $(document).ready(function () {
         ok(!added, "query.add adding values to a facet should not trigger an add");
         ok(changed, "query.add adding values to a facet should not trigger a change");
     });
-    test('Toggling a facet, value which does not exist should add it', function () {
+    test('Toggling a facet, value which does not exist should add it', function (instance) {
         var query = new instance.web.search.SearchQuery;
         var field = {};
         query.toggle({category: 'A', field: field, values: [{label: 'V1', value: 0}]});
@@ -65,7 +61,7 @@ $(document).ready(function () {
         deepEqual(facet.get('values'), [{label: 'V1', value: 0}],
                   "Facet's value should match input");
     });
-    test('Toggling a facet which exists with a value which does not should add the value to the facet', function () {
+    test('Toggling a facet which exists with a value which does not should add the value to the facet', function (instance) {
         var field = {};
         var query = new instance.web.search.SearchQuery;
         query.add({category: 'A', field: field, values: [{label: 'V1', value: 0}]});
@@ -79,7 +75,7 @@ $(document).ready(function () {
             {label: 'V2', value: 1}
         ]);
     });
-    test('Toggling a facet which exists with a value which does as well should remove the value from the facet', function () {
+    test('Toggling a facet which exists with a value which does as well should remove the value from the facet', function (instance) {
         var field = {};
         var query = new instance.web.search.SearchQuery;
         query.add({category: 'A', field: field, values: [{label: 'V1', value: 0}]});
@@ -94,7 +90,7 @@ $(document).ready(function () {
             {label: 'V1', value: 0}
         ]);
     });
-    test('Toggling off the last value of a facet should remove the facet', function () {
+    test('Toggling off the last value of a facet should remove the facet', function (instance) {
         var field = {};
         var query = new instance.web.search.SearchQuery;
         query.add({category: 'A', field: field, values: [{label: 'V1', value: 0}]});
@@ -103,7 +99,7 @@ $(document).ready(function () {
 
         equal(query.length, 0, 'Should have removed the facet');
     });
-    test('Intermediate emptiness should not remove the facet', function () {
+    test('Intermediate emptiness should not remove the facet', function (instance) {
         var field = {};
         var query = new instance.web.search.SearchQuery;
         query.add({category: 'A', field: field, values: [{label: 'V1', value: 0}]});
@@ -121,7 +117,7 @@ $(document).ready(function () {
         ]);
     });
 
-    test('Reseting with multiple facets should still work to load defaults', function () {
+    test('Reseting with multiple facets should still work to load defaults', function (instance) {
         var query = new instance.web.search.SearchQuery;
         var field = {};
         query.reset([
@@ -135,78 +131,64 @@ $(document).ready(function () {
             {label: 'V2', value: 1}
         ])
     });
+});
 
-    module('defaults', {
-        setup: function () {
-            instance = openerp.testing.instanceFor('search');
-
-            openerp.testing.loadTemplate(instance);
-
-            openerp.testing.mockifyRPC(instance);
-        }
-    });
-
-    /**
-     * Builds a basic search view with a single "dummy" field. The dummy
-     * extends `instance.web.search.Field`, it does not add any (class)
-     * attributes beyond what is provided through ``dummy_widget_attributes``.
-     *
-     * The view is returned un-started, it is the caller's role to start it
-     * (or use DOM-insertion methods to start it indirectly).
-     *
-     * @param [dummy_widget_attributes={}]
-     * @param [defaults={}]
-     * @return {instance.web.SearchView}
-     */
-    function makeSearchView(dummy_widget_attributes, defaults) {
-        instance.web.search.fields.add(
-            'dummy', 'instance.dummy.DummyWidget');
-        instance.dummy = {};
-        instance.dummy.DummyWidget = instance.web.search.Field.extend(
-            dummy_widget_attributes || {});
-        if (!('/web/searchview/load' in instance.session.responses)) {
-            instance.session.responses['/web/searchview/load'] = function () {
-                return {result: {fields_view: {
-                    type: 'search',
-                    fields: {
-                        dummy: {type: 'char', string: "Dummy"}
-                    },
-                    arch: {
-                        tag: 'search',
-                        attrs: {},
-                        children: [{
-                            tag: 'field',
-                            attrs: {
-                                name: 'dummy',
-                                widget: 'dummy'
-                            },
-                            children: []
-                        }]
-                    }
-                }}};
+/**
+ * Builds a basic search view with a single "dummy" field. The dummy
+ * extends `instance.web.search.Field`, it does not add any (class)
+ * attributes beyond what is provided through ``dummy_widget_attributes``.
+ *
+ * The view is returned un-started, it is the caller's role to start it
+ * (or use DOM-insertion methods to start it indirectly).
+ *
+ * @param instance
+ * @param [dummy_widget_attributes={}]
+ * @param [defaults={}]
+ * @return {instance.web.SearchView}
+ */
+var makeSearchView = function (instance, dummy_widget_attributes, defaults) {
+    instance.web.search.fields.add(
+        'dummy', 'instance.dummy.DummyWidget');
+    instance.dummy = {};
+    instance.dummy.DummyWidget = instance.web.search.Field.extend(
+        dummy_widget_attributes || {});
+    if (!('dummy.model:fields_view_get' in instance.session.responses)) {
+        instance.session.responses['dummy.model:fields_view_get'] = function () {
+            return {
+                type: 'search',
+                fields: {
+                    dummy: {type: 'char', string: "Dummy"}
+                },
+                arch: '<search><field name="dummy" widget="dummy"/></search>'
             };
-        }
-        instance.session.responses['/web/searchview/get_filters'] = function () {
-            return {result: []};
         };
-        instance.session.responses['/web/searchview/fields_get'] = function () {
-            return {result: {fields: {
-                dummy: {type: 'char', string: 'Dummy'}
-            }}};
-        };
-
-        var dataset = {model: 'dummy.model', get_context: function () { return {}; }};
-        var view = new instance.web.SearchView(null, dataset, false, defaults);
-        var self = this;
-        view.on('invalid_search', self, function () {
-            ok(false, JSON.stringify([].slice(arguments)));
-        });
-        return view;
     }
-    asyncTest('calling', 2, function () {
+    instance.session.responses['ir.filters:get_filters'] = function () {
+        return [];
+    };
+    instance.session.responses['dummy.model:fields_get'] = function () {
+        return {
+            dummy: {type: 'char', string: 'Dummy'}
+        };
+    };
+
+    var dataset = new instance.web.DataSet(null, 'dummy.model');
+    var view = new instance.web.SearchView(null, dataset, false, defaults);
+    var self = this;
+    view.on('invalid_search', self, function () {
+        ok(false, JSON.stringify([].slice(arguments)));
+    });
+    return view;
+};
+openerp.testing.section('defaults', {
+    dependencies: ['web.search'],
+    rpc: 'mock',
+    templates: true,
+}, function (test) {
+    test('calling', {asserts: 2}, function (instance, $s) {
         var defaults_called = false;
 
-        var view = makeSearchView({
+        var view = makeSearchView(instance, {
             facet_for_defaults: function (defaults) {
                 defaults_called = true;
                 return $.when({
@@ -216,9 +198,7 @@ $(document).ready(function () {
                 });
             }
         }, {dummy: 42});
-        view.appendTo($('#qunit-fixture'))
-            .always(start)
-            .fail(function (error) { ok(false, error.message); })
+        return view.appendTo($s)
             .done(function () {
                 ok(defaults_called, "should have called defaults");
                 deepEqual(
@@ -227,7 +207,7 @@ $(document).ready(function () {
                     "should have generated a facet with the default value");
             });
     });
-    asyncTest('FilterGroup', 3, function () {
+    test('FilterGroup', {asserts: 3}, function (instance) {
         var view = {inputs: [], query: {on: function () {}}};
         var filter_a = new instance.web.search.Filter(
             {attrs: {name: 'a'}}, view);
@@ -235,9 +215,7 @@ $(document).ready(function () {
             {attrs: {name: 'b'}}, view);
         var group = new instance.web.search.FilterGroup(
             [filter_a, filter_b], view);
-        group.facet_for_defaults({a: true, b: true})
-            .always(start)
-            .fail(function (error) { ok(false, error && error.message); })
+        return group.facet_for_defaults({a: true, b: true})
             .done(function (facet) {
                 var model = facet;
                 if (!(model instanceof instance.web.search.Facet)) {
@@ -249,13 +227,11 @@ $(document).ready(function () {
                 strictEqual(values.at(1).get('value'), filter_b);
             });
     });
-    asyncTest('Field', 4, function () {
+    test('Field', {asserts: 4}, function (instance) {
         var view = {inputs: []};
         var f = new instance.web.search.Field(
             {attrs: {string: 'Dummy', name: 'dummy'}}, {}, view);
-        f.facet_for_defaults({dummy: 42})
-            .always(start)
-            .fail(function (error) { ok(false, error && error.message); })
+        return f.facet_for_defaults({dummy: 42})
             .done(function (facet) {
                 var model = facet;
                 if (!(model instanceof instance.web.search.Facet)) {
@@ -275,15 +251,13 @@ $(document).ready(function () {
                     "facet value should match provided default");
                 });
     });
-    asyncTest('Selection: valid value', 4, function () {
+    test('Selection: valid value', {asserts: 4}, function (instance) {
         var view = {inputs: []};
         var f = new instance.web.search.SelectionField(
             {attrs: {name: 'dummy', string: 'Dummy'}},
             {selection: [[1, "Foo"], [2, "Bar"], [3, "Baz"], [4, "Qux"]]},
             view);
-        f.facet_for_defaults({dummy: 3})
-            .always(start)
-            .fail(function (error) { ok(false, error && error.message); })
+        return f.facet_for_defaults({dummy: 3})
             .done(function (facet) {
                 var model = facet;
                 if (!(model instanceof instance.web.search.Facet)) {
@@ -303,36 +277,28 @@ $(document).ready(function () {
                     "facet value should match provided default's selection");
             });
     });
-    asyncTest('Selection: invalid value', 1, function () {
+    test('Selection: invalid value', {asserts: 1}, function (instance) {
         var view = {inputs: []};
         var f = new instance.web.search.SelectionField(
             {attrs: {name: 'dummy', string: 'Dummy'}},
             {selection: [[1, "Foo"], [2, "Bar"], [3, "Baz"], [4, "Qux"]]},
             view);
-        f.facet_for_defaults({dummy: 42})
-            .always(start)
-            .fail(function (error) { ok(false, error && error.message); })
+        return f.facet_for_defaults({dummy: 42})
             .done(function (facet) {
                 ok(!facet, "an invalid value should result in a not-facet");
             });
     });
-    asyncTest("M2O default: value", 7, function () {
+    test("M2O default: value", {asserts: 5}, function (instance, $s, mock) {
         var view = {inputs: []}, id = 4;
         var f = new instance.web.search.ManyToOneField(
             {attrs: {name: 'dummy', string: 'Dummy'}},
             {relation: 'dummy.model.name'},
             view);
-        instance.session.responses['/web/dataset/call_kw'] = function (req) {
-            equal(req.params.method, 'name_get',
-                  "m2o should resolve default id");
-            equal(req.params.model, f.attrs.relation,
-                  "query model should match m2o relation");
-            equal(req.params.args[0], id);
-            return {result: [[id, "DumDumDum"]]};
-        };
-        f.facet_for_defaults({dummy: id})
-            .always(start)
-            .fail(function (error) { ok(false, error && error.message); })
+        mock('dummy.model.name:name_get', function (args) {
+            equal(args[0], id);
+            return [[id, "DumDumDum"]];
+        });
+        return f.facet_for_defaults({dummy: id})
             .done(function (facet) {
                 var model = facet;
                 if (!(model instanceof instance.web.search.Facet)) {
@@ -352,34 +318,26 @@ $(document).ready(function () {
                     "facet value should match provided default's selection");
             });
     });
-    asyncTest("M2O default: value", 1, function () {
+    test("M2O default: value", {asserts: 1}, function (instance, $s, mock) {
         var view = {inputs: []}, id = 4;
         var f = new instance.web.search.ManyToOneField(
             {attrs: {name: 'dummy', string: 'Dummy'}},
             {relation: 'dummy.model.name'},
             view);
-        instance.session.responses['/web/dataset/call_kw'] = function (req) {
-           return {result: []};
-        };
-        f.facet_for_defaults({dummy: id})
-            .always(start)
-            .fail(function (error) { ok(false, error && error.message); })
+        mock('dummy.model.name:name_get', function () { return [] });
+        return f.facet_for_defaults({dummy: id})
             .done(function (facet) {
                 ok(!facet, "an invalid m2o default should yield a non-facet");
             });
     });
-
-    module('completions', {
-        setup: function () {
-            instance = openerp.testing.instanceFor('search');
-
-            openerp.testing.loadTemplate(instance);
-
-            openerp.testing.mockifyRPC(instance);
-        }
-    });
-    asyncTest('calling', 4, function () {
-        var view = makeSearchView({
+});
+openerp.testing.section('completions', {
+    dependencies: ['web.search'],
+    rpc: 'mock',
+    templates: true
+}, function (test) {
+    test('calling', {asserts: 4}, function (instance, $s) {
+        var view = makeSearchView(instance, {
             complete: function () {
                 return $.when({
                     label: "Dummy",
@@ -391,10 +349,11 @@ $(document).ready(function () {
                 });
             }
         });
-        view.appendTo($('#qunit-fixture'))
-            .done(function () {
+        var done = $.Deferred();
+        view.appendTo($s)
+            .then(function () {
                 view.complete_global_search({term: "dum"}, function (completions) {
-                    start();
+                    done.resolve();
                     equal(completions.length, 1, "should have a single completion");
                     var completion = completions[0];
                     equal(completion.label, "Dummy",
@@ -405,9 +364,10 @@ $(document).ready(function () {
                               [{label: 'dummy', value: 42}],
                               "should have provided values");
                 });
-            });
+            }).fail(function () { done.reject.apply(done, arguments); });
+        return done;
     });
-    asyncTest('facet selection', 2, function () {
+    test('facet selection', {asserts: 2}, function (instance, $s) {
         var completion = {
             label: "Dummy",
             facet: {
@@ -421,10 +381,8 @@ $(document).ready(function () {
             }
         };
 
-        var view = makeSearchView({});
-        view.appendTo($('#qunit-fixture'))
-            .always(start)
-            .fail(function (error) { ok(false, error.message); })
+        var view = makeSearchView(instance);
+        return view.appendTo($s)
             .done(function () {
                 view.select_completion(
                     {preventDefault: function () {}},
@@ -436,7 +394,7 @@ $(document).ready(function () {
                     "should have the right facet in the query");
             });
     });
-    asyncTest('facet selection: new value existing facet', 3, function () {
+    test('facet selection: new value existing facet', {asserts: 3}, function (instance, $s) {
         var field = {
             get_domain: openerp.testing.noop,
             get_context: openerp.testing.noop,
@@ -451,10 +409,8 @@ $(document).ready(function () {
             }
         };
 
-        var view = makeSearchView({});
-        view.appendTo($('#qunit-fixture'))
-            .always(start)
-            .fail(function (error) { ok(false, error.message); })
+        var view = makeSearchView(instance);
+        return view.appendTo($s)
             .done(function () {
                 view.query.add({field: field, category: 'Dummy',
                                 values: [{label: 'previous', value: 41}]});
@@ -470,23 +426,19 @@ $(document).ready(function () {
                     "should have added selected value to old one");
             });
     });
-    asyncTest('Field', 1, function () {
+    test('Field', {asserts: 1}, function (instance) {
         var view = {inputs: []};
         var f = new instance.web.search.Field({attrs: {}}, {}, view);
-        f.complete('foo')
-            .always(start)
-            .fail(function (error) { ok(false, error.message); })
+        return f.complete('foo')
             .done(function (completions) {
                 ok(_(completions).isEmpty(), "field should not provide any completion");
             });
     });
-    asyncTest('CharField', 6, function () {
+    test('CharField', {asserts: 6}, function (instance) {
         var view = {inputs: []};
         var f = new instance.web.search.CharField(
             {attrs: {string: "Dummy"}}, {}, view);
-        f.complete('foo<')
-            .always(start)
-            .fail(function (error) { ok(false, error.message); })
+        return f.complete('foo<')
             .done(function (completions) {
                 equal(completions.length, 1, "should provide a single completion");
                 var c = completions[0];
@@ -503,15 +455,13 @@ $(document).ready(function () {
                           "facet should have single value using completion item");
             });
     });
-    asyncTest('Selection: match found', 14, function () {
+    test('Selection: match found', {asserts: 14}, function (instance) {
         var view = {inputs: []};
         var f = new instance.web.search.SelectionField(
             {attrs: {string: "Dummy"}},
             {selection: [[1, "Foo"], [2, "Bar"], [3, "Baz"], [4, "Bazador"]]},
             view);
-        f.complete("ba")
-            .always(start)
-            .fail(function (error) { ok(false, error.message); })
+        return f.complete("ba")
             .done(function (completions) {
                 equal(completions.length, 4,
                     "should provide two completions and a section title");
@@ -536,20 +486,18 @@ $(document).ready(function () {
                 deepEqual(c3.facet.values, [{label: "Bazador", value: 4}]);
             });
     });
-    asyncTest('Selection: no match', 1, function () {
+    test('Selection: no match', {asserts: 1}, function (instance) {
         var view = {inputs: []};
         var f = new instance.web.search.SelectionField(
             {attrs: {string: "Dummy"}},
             {selection: [[1, "Foo"], [2, "Bar"], [3, "Baz"], [4, "Bazador"]]},
             view);
-        f.complete("qux")
-            .always(start)
-            .fail(function (error) { ok(false, error.message); })
+        return f.complete("qux")
             .done(function (completions) {
                 ok(!completions, "if no value matches the needle, no completion shall be provided");
             });
     });
-    asyncTest('Date', 6, function () {
+    test('Date', {asserts: 6}, function (instance) {
         instance.web._t.database.parameters = {
             date_format: '%Y-%m-%d',
             time_format: '%H:%M:%S'
@@ -557,9 +505,7 @@ $(document).ready(function () {
         var view = {inputs: []};
         var f = new instance.web.search.DateField(
             {attrs: {string: "Dummy"}}, {type: 'datetime'}, view);
-        f.complete('2012-05-21T21:21:21')
-            .always(start)
-            .fail(function (error) { ok(false, error.message); })
+        return f.complete('2012-05-21T21:21:21')
             .done(function (completions) {
                 equal(completions.length, 1, "should provide a single completion");
                 var c = completions[0];
@@ -573,21 +519,17 @@ $(document).ready(function () {
                       new Date(2012, 4, 21, 21, 21, 21).getTime());
             });
     });
-    asyncTest("M2O", 15, function () {
-        instance.session.responses['/web/dataset/call_kw'] = function (req) {
-            equal(req.params.method, "name_search");
-            equal(req.params.model, "dummy.model");
-            deepEqual(req.params.args, []);
-            deepEqual(req.params.kwargs.name, 'bob');
-            return {result: [[42, "choice 1"], [43, "choice @"]]}
-        };
+    test("M2O", {asserts: 13}, function (instance, $s, mock) {
+        mock('dummy.model:name_search', function (args, kwargs) {
+            deepEqual(args, []);
+            strictEqual(kwargs.name, 'bob');
+            return [[42, "choice 1"], [43, "choice @"]];
+        });
 
         var view = {inputs: []};
         var f = new instance.web.search.ManyToOneField(
             {attrs: {string: 'Dummy'}}, {relation: 'dummy.model'}, view);
-        f.complete("bob")
-            .always(start)
-            .fail(function (error) { ok(false, error.message); })
+        return f.complete("bob")
             .done(function (c) {
                 equal(c.length, 3, "should return results + title");
                 var title = c[0];
@@ -607,38 +549,29 @@ $(document).ready(function () {
                 deepEqual(f2.values.toJSON(), [{label: 'choice @', value: 43}]);
             });
     });
-    asyncTest("M2O no match", 5, function () {
-        instance.session.responses['/web/dataset/call_kw'] = function (req) {
-            equal(req.params.method, "name_search");
-            equal(req.params.model, "dummy.model");
-            deepEqual(req.params.args, []);
-            deepEqual(req.params.kwargs.name, 'bob');
-            return {result: []}
-        };
+    test("M2O no match", {asserts: 3}, function (instance, $s, mock) {
+        mock('dummy.model:name_search', function (args, kwargs) {
+            deepEqual(args, []);
+            strictEqual(kwargs.name, 'bob');
+            return [];
+        });
         var view = {inputs: []};
         var f = new instance.web.search.ManyToOneField(
             {attrs: {string: 'Dummy'}}, {relation: 'dummy.model'}, view);
-        f.complete("bob")
-            .always(start)
-            .fail(function (error) { ok(false, error.message); })
+        return f.complete("bob")
             .done(function (c) {
                 ok(!c, "no match should yield no completion");
             });
     });
-
-    module('search-serialization', {
-        setup: function () {
-            instance = openerp.testing.instanceFor('search');
-
-            openerp.testing.loadTemplate(instance);
-
-            openerp.testing.mockifyRPC(instance);
-        }
-    });
-    asyncTest('No facet, no call', 6, function () {
+});
+openerp.testing.section('search-serialization', {
+    dependencies: ['web.search'],
+    rpc: 'mock',
+    templates: true
+}, function (test) {
+    test('No facet, no call', {asserts: 6}, function (instance, $s) {
         var got_domain = false, got_context = false, got_groupby = false;
-        var $fix = $('#qunit-fixture');
-        var view = makeSearchView({
+        var view = makeSearchView(instance, {
             get_domain: function () {
                 got_domain = true;
                 return null;
@@ -654,11 +587,9 @@ $(document).ready(function () {
         });
         var ds, cs, gs;
         view.on('search_data', this, function (d, c, g) {
-            ds = d, cs = c, gs = g;
+            ds = d; cs = c; gs = g;
         });
-        view.appendTo($fix)
-            .always(start)
-            .fail(function (error) { ok(false, error.message); })
+        return view.appendTo($s)
             .done(function () {
                 view.do_search();
                 ok(!got_domain, "no facet, should not have fetched domain");
@@ -671,10 +602,9 @@ $(document).ready(function () {
                 ok(_(gs).isEmpty(), "groupby list should be empty");
             })
     });
-    asyncTest('London, calling', 8, function () {
+    test('London, calling', {asserts: 8}, function (instance, $fix) {
         var got_domain = false, got_context = false, got_groupby = false;
-        var $fix = $('#qunit-fixture');
-        var view = makeSearchView({
+        var view = makeSearchView(instance, {
             get_domain: function (facet) {
                 equal(facet.get('category'), "Dummy");
                 deepEqual(facet.values.toJSON(), [{label: "42", value: 42}]);
@@ -692,11 +622,9 @@ $(document).ready(function () {
         }, {dummy: 42});
         var ds, cs, gs;
         view.on('search_data', this, function (d, c, g) {
-            ds = d, cs = c, gs = g;
+            ds = d; cs = c; gs = g;
         });
-        view.appendTo($fix)
-            .always(start)
-            .fail(function (error) { ok(false, error.message); })
+        return view.appendTo($fix)
             .done(function () {
                 view.do_search();
                 ok(got_domain, "should have fetched domain");
@@ -709,9 +637,8 @@ $(document).ready(function () {
                 ok(_(gs).isEmpty(), "groupby list should be empty");
             })
     });
-    asyncTest('Generate domains', 1, function () {
-        var $fix = $('#qunit-fixture');
-        var view = makeSearchView({
+    test('Generate domains', {asserts: 1}, function (instance, $fix) {
+        var view = makeSearchView(instance, {
             get_domain: function (facet) {
                 return facet.values.map(function (value) {
                     return ['win', '4', value.get('value')];
@@ -720,9 +647,7 @@ $(document).ready(function () {
         }, {dummy: 42});
         var ds;
         view.on('search_data', this, function (d) { ds = d; });
-        view.appendTo($fix)
-            .always(start)
-            .fail(function (error) { ok(false, error.message); })
+        return view.appendTo($fix)
             .done(function () {
                 view.do_search();
                 deepEqual(ds, [[['win', '4', 42]]],
@@ -730,7 +655,9 @@ $(document).ready(function () {
             });
     });
 
-    test('Field single value, default domain & context', function () {
+    test('Field single value, default domain & context', {
+        rpc: false
+    }, function (instance) {
         var f = new instance.web.search.Field({}, {name: 'foo'}, {inputs: []});
         var facet = new instance.web.search.Facet({
             field: f,
@@ -742,7 +669,9 @@ $(document).ready(function () {
         equal(f.get_context(facet), null,
             "default field context is null");
     });
-    test('Field multiple values, default domain & context', function () {
+    test('Field multiple values, default domain & context', {
+        rpc: false
+    }, function (instance) {
         var f = new instance.web.search.Field({}, {name: 'foo'}, {inputs: []});
         var facet = new instance.web.search.Facet({
             field: f,
@@ -763,7 +692,9 @@ $(document).ready(function () {
         equal(f.get_context(facet), null,
             "default field context is null");
     });
-    test('Field single value, custom domain & context', function () {
+    test('Field single value, custom domain & context', {
+        rpc: false
+    }, function (instance) {
         var f = new instance.web.search.Field({attrs:{
             context: "{'bob': self}",
             filter_domain: "[['edmund', 'is', self]]"
@@ -793,7 +724,9 @@ $(document).ready(function () {
             self: "great"
         }, "evaluation context should hold facet value as self");
     });
-    test("M2O default", function () {
+    test("M2O default", {
+        rpc: false
+    }, function (instance) {
         var f = new instance.web.search.ManyToOneField(
             {}, {name: 'foo'}, {inputs: []});
         var facet = new instance.web.search.Facet({
@@ -806,7 +739,9 @@ $(document).ready(function () {
         deepEqual(f.get_context(facet), {default_foo: 42},
             "m2o should use value as context default");
     });
-    test("M2O default multiple values", function () {
+    test("M2O default multiple values", {
+        rpc: false
+    }, function (instance) {
         var f = new instance.web.search.ManyToOneField(
             {}, {name: 'foo'}, {inputs: []});
         var facet = new instance.web.search.Facet({
@@ -823,7 +758,9 @@ $(document).ready(function () {
         equal(f.get_context(facet), null,
             "m2o should not have default context in case of multiple values");
     });
-    test("M2O custom operator", function () {
+    test("M2O custom operator", {
+        rpc: false
+    }, function (instance) {
         var f = new instance.web.search.ManyToOneField(
             {attrs: {operator: 'boos'}}, {name: 'foo'}, {inputs: []});
         var facet = new instance.web.search.Facet({
@@ -836,7 +773,9 @@ $(document).ready(function () {
         deepEqual(f.get_context(facet), {default_foo: 42},
             "m2o should use value as context default");
     });
-    test("M2O custom domain & context", function () {
+    test("M2O custom domain & context", {
+        rpc: false
+    }, function (instance) {
         var f = new instance.web.search.ManyToOneField({attrs: {
             context: "{'whee': self}",
             filter_domain: "[['filter', 'is', self]]"
@@ -862,7 +801,7 @@ $(document).ready(function () {
         }, "custom context's self should be label");
     });
 
-    asyncTest('FilterGroup', 6, function () {
+    test('FilterGroup', {asserts: 6}, function (instance) {
         var view = {inputs: [], query: {on: function () {}}};
         var filter_a = new instance.web.search.Filter(
             {attrs: {name: 'a', context: 'c1', domain: 'd1'}}, view);
@@ -872,9 +811,7 @@ $(document).ready(function () {
             {attrs: {name: 'c', context: 'c3', domain: 'd3'}}, view);
         var group = new instance.web.search.FilterGroup(
             [filter_a, filter_b, filter_c], view);
-        group.facet_for_defaults({a: true, c: true})
-            .always(start)
-            .fail(function (error) { ok(false, error && error.message); })
+        return group.facet_for_defaults({a: true, c: true})
             .done(function (facet) {
                 var model = facet;
                 if (!(model instanceof instance.web.search.Facet)) {
@@ -897,19 +834,50 @@ $(document).ready(function () {
                 ok(!context.get_eval_context(), "context should have no evaluation context");
             });
     });
+    test('Empty filter domains', {asserts: 4}, function (instance) {
+        var view = {inputs: [], query: {on: function () {}}};
+        var filter_a = new instance.web.search.Filter(
+            {attrs: {name: 'a', context: '{}', domain: '[]'}}, view);
+        var filter_b = new instance.web.search.Filter(
+            {attrs: {name: 'b', context: '{}', domain: '[]'}}, view);
+        var filter_c = new instance.web.search.Filter(
+            {attrs: {name: 'c', context: '{b: 42}', domain: '[["a", "=", 3]]'}}, view);
+        var group = new instance.web.search.FilterGroup(
+            [filter_a, filter_b, filter_c], view);
+        var t1 = group.facet_for_defaults({a: true, c: true})
+        .done(function (facet) {
+            var model = facet;
+            if (!(model instanceof instance.web.search.Facet)) {
+                model = new instance.web.search.Facet(facet);
+            }
 
-    module('removal', {
-        setup: function () {
-            instance = openerp.testing.instanceFor('search');
+            var domain = group.get_domain(model);
+            deepEqual(domain, '[["a", "=", 3]]', "domain should ignore empties");
+            var context = group.get_context(model);
+            deepEqual(context, '{b: 42}', "context should ignore empties");
+        });
+        var t2 = group.facet_for_defaults({a: true, b: true})
+        .done(function (facet) {
+            var model = facet;
+            if (!(model instanceof instance.web.search.Facet)) {
+                model = new instance.web.search.Facet(facet);
+            }
 
-            openerp.testing.loadTemplate(instance);
-
-            openerp.testing.mockifyRPC(instance);
-        }
+            var domain = group.get_domain(model);
+            equal(domain, null, "domain should ignore empties");
+            var context = group.get_context(model);
+            equal(context, null, "context should ignore empties");
+        });
+        return $.when(t1, t2);
     });
-    asyncTest('clear button', function () {
-        var $fix = $('#qunit-fixture');
-        var view = makeSearchView({
+});
+openerp.testing.section('removal', {
+    dependencies: ['web.search'],
+    rpc: 'mock',
+    templates: true
+}, function (test) {
+    test('clear button', {asserts: 2}, function (instance, $fix) {
+        var view = makeSearchView(instance, {
             facet_for_defaults: function (defaults) {
                 return $.when({
                     field: this,
@@ -918,31 +886,22 @@ $(document).ready(function () {
                 });
             }
         }, {dummy: 42});
-        view.appendTo($fix)
-            .always(start)
-            .fail(function (error) { ok(false, error.message); })
+        return view.appendTo($fix)
             .done(function () {
                 equal(view.query.length, 1, "view should have default facet");
                 $fix.find('.oe_searchview_clear').click();
                 equal(view.query.length, 0, "cleared view should not have any facet");
             });
     });
-
-    module('drawer', {
-        setup: function () {
-            instance = openerp.testing.instanceFor('search');
-
-            openerp.testing.loadTemplate(instance);
-
-            openerp.testing.mockifyRPC(instance);
-        }
-    });
-    asyncTest('is-drawn', 2, function () {
-        var view = makeSearchView();
-        var $fix = $('#qunit-fixture');
-        view.appendTo($fix)
-            .always(start)
-            .fail(function (error) { ok(false, error.message); })
+});
+openerp.testing.section('drawer', {
+    dependencies: ['web.search'],
+    rpc: 'mock',
+    templates: true
+}, function (test) {
+    test('is-drawn', {asserts: 2}, function (instance, $fix) {
+        var view = makeSearchView(instance);
+        return view.appendTo($fix)
             .done(function () {
                 ok($fix.find('.oe_searchview_filters').length,
                    "filters drawer control has been drawn");
@@ -950,50 +909,29 @@ $(document).ready(function () {
                    "filters advanced search has been drawn");
             });
     });
-
-    module('filters', {
-        setup: function () {
-            instance = openerp.testing.instanceFor('search');
-
-            openerp.testing.loadTemplate(instance);
-
-            openerp.testing.mockifyRPC(instance, {
-                '/web/searchview/load': function () {
-                    // view with a single group of filters
-                    return {result: {fields_view: {
-                        type: 'search',
-                        fields: {},
-                        arch: {
-                            tag: 'search',
-                            attrs: {},
-                            children: [{
-                                tag: 'filter',
-                                attrs: { string: "Foo1", domain: [ ['foo', '=', '1'] ] },
-                                children: []
-                            }, {
-                                tag: 'filter',
-                                attrs: {
-                                    name: 'foo2',
-                                    string: "Foo2",
-                                    domain: [ ['foo', '=', '2'] ] },
-                                children: []
-                            }, {
-                                tag: 'filter',
-                                attrs: { string: "Foo3", domain: [ ['foo', '=', '3'] ] },
-                                children: []
-                            }]
-                        }
-                    }}};
-                }
-            });
-        }
-    });
-    asyncTest('drawn', 3, function () {
-        var view = makeSearchView();
-        var $fix = $('#qunit-fixture');
-        view.appendTo($fix)
-            .always(start)
-            .fail(function (error) { ok(false, error.message); })
+});
+openerp.testing.section('filters', {
+    dependencies: ['web.search'],
+    rpc: 'mock',
+    templates: true,
+    setup: function (instance, $s, mock) {
+        mock('dummy.model:fields_view_get', function () {
+            // view with a single group of filters
+            return {
+                type: 'search',
+                fields: {},
+                arch: '<search>' +
+                        '<filter string="Foo1" domain="[ [\'foo\', \'=\', \'1\'] ]"/>' +
+                        '<filter name="foo2" string="Foo2" domain="[ [\'foo\', \'=\', \'2\'] ]"/>' +
+                        '<filter string="Foo3" domain="[ [\'foo\', \'=\', \'3\'] ]"/>' +
+                        '</search>',
+            };
+        });
+    }
+}, function (test) {
+    test('drawn', {asserts: 3}, function (instance, $fix) {
+        var view = makeSearchView(instance);
+        return view.appendTo($fix)
             .done(function () {
                 var $fs = $fix.find('.oe_searchview_filters ul');
                 // 3 filters, 1 filtergroup, 1 custom filters widget,
@@ -1006,12 +944,9 @@ $(document).ready(function () {
                       "Text content of first filter option should match filter string");
             });
     });
-    asyncTest('click adding from empty query', 4, function () {
-        var view = makeSearchView();
-        var $fix = $('#qunit-fixture');
-        view.appendTo($fix)
-            .always(start)
-            .fail(function (error) { ok(false, error.message); })
+    test('click adding from empty query', {asserts: 4}, function (instance, $fix) {
+        var view = makeSearchView(instance);
+        return view.appendTo($fix)
             .done(function () {
                 var $fs = $fix.find('.oe_searchview_filters ul');
                 $fs.children(':eq(2)').trigger('click');
@@ -1025,12 +960,9 @@ $(document).ready(function () {
                       "value should be third filter");
             });
     });
-    asyncTest('click adding from existing query', 4, function () {
-        var view = makeSearchView({}, {foo2: true});
-        var $fix = $('#qunit-fixture');
-        view.appendTo($fix)
-            .always(start)
-            .fail(function (error) { ok(false, error.message); })
+    test('click adding from existing query', {asserts: 4}, function (instance, $fix) {
+        var view = makeSearchView(instance, {}, {foo2: true});
+        return view.appendTo($fix)
             .done(function () {
                 var $fs = $fix.find('.oe_searchview_filters ul');
                 $fs.children(':eq(2)').trigger('click');
@@ -1045,16 +977,13 @@ $(document).ready(function () {
                       "second value should be clicked filter");
             });
     });
-    asyncTest('click removing from query', 4, function () {
+    test('click removing from query', {asserts: 4}, function (instance, $fix) {
         var calls = 0;
-        var view = makeSearchView({}, {foo2: true});
+        var view = makeSearchView(instance, {}, {foo2: true});
         view.on('search_data', null, function () {
             ++calls;
         });
-        var $fix = $('#qunit-fixture');
-        view.appendTo($fix)
-            .always(start)
-            .fail(function (error) { ok(false, error.message); })
+        return view.appendTo($fix)
             .done(function () {
                 var $fs = $fix.find('.oe_searchview_filters ul');
                 // sanity check
@@ -1065,29 +994,19 @@ $(document).ready(function () {
                 strictEqual(calls, 1, "one search should have been triggered");
             });
     });
+});
+openerp.testing.section('saved_filters', {
+    dependencies: ['web.search'],
+    rpc: 'mock',
+    templates: true
+}, function (test) {
+    test('checkboxing', {asserts: 6}, function (instance, $fix, mock) {
+        var view = makeSearchView(instance);
+        mock('ir.filters:get_filters', function () {
+            return [{ name: "filter name", user_id: 42 }];
+        });
 
-    module('saved_filters', {
-        setup: function () {
-            instance = openerp.testing.instanceFor('search');
-
-            openerp.testing.loadTemplate(instance);
-
-            openerp.testing.mockifyRPC(instance);
-        }
-    });
-    asyncTest('checkboxing', 6, function () {
-        var view = makeSearchView();
-        instance.session.responses['/web/searchview/get_filters'] = function () {
-            return {result: [{
-                name: "filter name",
-                user_id: 42
-            }]};
-        };
-        var $fix = $('#qunit-fixture');
-
-        view.appendTo($fix)
-            .always(start)
-            .fail(function (error) { ok(false, error.message); })
+        return view.appendTo($fix)
             .done(function () {
                 var $row = $fix.find('.oe_searchview_custom li:first').click();
 
@@ -1104,44 +1023,31 @@ $(document).ready(function () {
                     "should have no value set");
             })
     });
-    asyncTest('removal', 1, function () {
-        var view = makeSearchView();
-        instance.session.responses['/web/searchview/get_filters'] = function () {
-            return {result: [{
-                name: "filter name",
-                user_id: 42
-            }]};
-        };
-        var $fix = $('#qunit-fixture');
+    test('removal', {asserts: 1}, function (instance, $fix, mock) {
+        var view = makeSearchView(instance);
+        mock('ir.filters:get_filters', function () {
+            return [{ name: "filter name", user_id: 42 }];
+        });
 
-        view.appendTo($fix)
-            .always(start)
-            .fail(function (error) { ok(false, error.message); })
+        return view.appendTo($fix)
             .done(function () {
                 var $row = $fix.find('.oe_searchview_custom li:first').click();
 
                 view.query.remove(view.query.at(0));
                 ok(!$row.hasClass('oe_selected'),
                     "should not be checked anymore");
-            })
+            });
     });
+});
+openerp.testing.section('advanced', {
+    dependencies: ['web.search'],
+    rpc: 'mock',
+    templates: true
+}, function (test) {
+    test('single-advanced', {asserts: 6}, function (instance, $fix) {
+        var view = makeSearchView(instance);
 
-    module('advanced', {
-        setup: function () {
-            instance = openerp.testing.instanceFor('search');
-
-            openerp.testing.loadTemplate(instance);
-
-            openerp.testing.mockifyRPC(instance);
-        }
-    });
-    asyncTest('single-advanced', 6, function () {
-        var view = makeSearchView();
-        var $fix = $('#qunit-fixture');
-
-        view.appendTo($fix)
-            .always(start)
-            .fail(function (error) { ok(false, error.message); })
+        return view.appendTo($fix)
             .done(function () {
                 var $advanced = $fix.find('.oe_searchview_advanced');
                 // open advanced search (not actually useful)
@@ -1174,13 +1080,10 @@ $(document).ready(function () {
                           "advanced search facet should return proposed domain");
             });
     });
-    asyncTest('multiple-advanced', 3, function () {
-        var view = makeSearchView();
-        var $fix = $('#qunit-fixture');
+    test('multiple-advanced', {asserts: 3}, function (instance, $fix) {
+        var view = makeSearchView(instance);
 
-        view.appendTo($fix)
-            .always(start)
-            .fail(function (error) { ok(false, error.message); })
+        return view.appendTo($fix)
             .done(function () {
                 var $advanced = $fix.find('.oe_searchview_advanced');
                 // open advanced search (not actually useful)

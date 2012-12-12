@@ -9,6 +9,7 @@ var QWeb = instance.web.qweb,
 instance.web.views.add('tree', 'instance.web.TreeView');
 instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeView# */{
     display_name: _lt('Tree'),
+    view_type: 'tree',
     /**
      * Indicates that this view is not searchable, and thus that no search
      * view should be displayed (if there is one active).
@@ -36,17 +37,9 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
         this.options = _.extend({}, this.defaults, options || {});
 
         _.bindAll(this, 'color_for');
+        this.on('view_loaded', this, this.load_tree);
     },
 
-    start: function () {
-        return this.rpc("/web/treeview/load", {
-            model: this.model,
-            view_id: this.view_id,
-            view_type: "tree",
-            toolbar: this.view_manager ? !!this.view_manager.sidebar : false,
-            context: this.dataset.get_context()
-        }).done(this.on_loaded);
-    },
     /**
      * Returns the list of fields needed to correctly read objects.
      *
@@ -63,7 +56,7 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
         }
         return fields;
     },
-    on_loaded: function (fields_view) {
+    load_tree: function (fields_view) {
         var self = this;
         var has_toolbar = !!fields_view.arch.attrs.toolbar;
         // field name in OpenERP is kinda stupid: this is the name of the field
@@ -227,8 +220,9 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
         return this.rpc('/web/treeview/action', {
             id: id,
             model: this.dataset.model,
-            context: new instance.web.CompoundContext(
-                this.dataset.get_context(), local_context)
+            context: instance.web.pyeval.eval(
+                'context', new instance.web.CompoundContext(
+                    this.dataset.get_context(), local_context))
         }).then(function (actions) {
             if (!actions.length) { return; }
             var action = actions[0][2];
@@ -236,7 +230,7 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
             if (action.context) {
                 c.add(action.context);
             }
-            return self.rpc('/web/session/eval_domain_and_context', {
+            return instance.web.pyeval.eval_domains_and_contexts({
                 contexts: [c], domains: []
             }).then(function (res) {
                 action.context = res.context;

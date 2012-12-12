@@ -17,7 +17,6 @@ import tempfile
 import threading
 import time
 import traceback
-import urllib
 import urlparse
 import uuid
 import xmlrpclib
@@ -33,7 +32,6 @@ import werkzeug.wsgi
 
 import openerp
 
-import nonliterals
 import session
 
 _logger = logging.getLogger(__name__)
@@ -95,12 +93,12 @@ class WebRequest(object):
         if not self.session:
             self.session = session.OpenERPSession()
             self.httpsession[self.session_id] = self.session
-        self.context = self.params.pop('context', None)
+        self.context = self.params.pop('context', {})
         self.debug = self.params.pop('debug', False) is not False
         # Determine self.lang
         lang = self.params.get('lang', None)
         if lang is None:
-            lang = self.session.eval_context(self.context).get('lang')
+            lang = self.context.get('lang')
         if lang is None:
             lang = self.httprequest.cookies.get('lang')
         if lang is None:
@@ -112,6 +110,11 @@ class WebRequest(object):
         # we use _ as seprator where RFC2616 uses '-'
         self.lang = lang.replace('-', '_')
 
+def reject_nonliteral(dct):
+    if '__ref' in dct:
+        raise ValueError(
+            "Non literal contexts can not be sent to the server anymore (%r)" % (dct,))
+    return dct
 
 class JsonRequest(WebRequest):
     """ JSON-RPC2 over HTTP.
@@ -182,9 +185,9 @@ class JsonRequest(WebRequest):
         try:
             # Read POST content or POST Form Data named "request"
             if requestf:
-                self.jsonrequest = simplejson.load(requestf, object_hook=nonliterals.non_literal_decoder)
+                self.jsonrequest = simplejson.load(requestf, object_hook=reject_nonliteral)
             else:
-                self.jsonrequest = simplejson.loads(request, object_hook=nonliterals.non_literal_decoder)
+                self.jsonrequest = simplejson.loads(request, object_hook=reject_nonliteral)
             self.init(self.jsonrequest.get("params", {}))
             if _logger.isEnabledFor(logging.DEBUG):
                 _logger.debug("--> %s.%s\n%s", method.im_class.__name__, method.__name__, pprint.pformat(self.jsonrequest))
@@ -233,10 +236,10 @@ class JsonRequest(WebRequest):
             # We need then to manage http sessions manually.
             response['httpsessionid'] = self.httpsession.sid
             mime = 'application/javascript'
-            body = "%s(%s);" % (jsonp, simplejson.dumps(response, cls=nonliterals.NonLiteralEncoder),)
+            body = "%s(%s);" % (jsonp, simplejson.dumps(response),)
         else:
             mime = 'application/json'
-            body = simplejson.dumps(response, cls=nonliterals.NonLiteralEncoder)
+            body = simplejson.dumps(response)
 
         r = werkzeug.wrappers.Response(body, headers=[('Content-Type', mime), ('Content-Length', len(body))])
         return r
@@ -402,8 +405,10 @@ def session_context(request, session_store, session_lock, sid):
                 for k, v in request.session.iteritems():
                     stored = in_store.get(k)
                     if stored and isinstance(v, session.OpenERPSession):
-                        v.contexts_store.update(stored.contexts_store)
-                        v.domains_store.update(stored.domains_store)
+                        if hasattr(v, 'contexts_store'):
+                            del v.contexts_store
+                        if hasattr(v, 'domains_store'):
+                            del v.domains_store
                         if not hasattr(v, 'jsonp_requests'):
                             v.jsonp_requests = {}
                         v.jsonp_requests.update(getattr(
@@ -458,6 +463,16 @@ class DisableCacheMiddleware(object):
             start_response(status, new_headers)
         return self.app(environ, start_wrapped)
 
+def session_path():
+    try:
+        username = getpass.getuser()
+    except Exception:
+        username = "unknown"
+    path = os.path.join(tempfile.gettempdir(), "oe-sessions-" + username)
+    if not os.path.exists(path):
+        os.mkdir(path, 0700)
+    return path
+
 class Root(object):
     """Root WSGI application for the OpenERP Web Client.
     """
@@ -469,13 +484,7 @@ class Root(object):
         self.dispatch = DisableCacheMiddleware(app)
 
         # Setup http sessions
-        try:
-            username = getpass.getuser()
-        except Exception:
-            username = "unknown"
-        path = os.path.join(tempfile.gettempdir(), "oe-sessions-" + username)
-        if not os.path.exists(path):
-            os.mkdir(path, 0700)
+        path = session_path()
         self.session_store = werkzeug.contrib.sessions.FilesystemSessionStore(path)
         self.session_lock = threading.Lock()
         _logger.debug('HTTP sessions stored in: %s', path)
@@ -528,7 +537,7 @@ class Root(object):
         """
         statics = {}
         for addons_path in openerp.modules.module.ad_paths:
-            for module in os.listdir(addons_path):
+            for module in sorted(os.listdir(addons_path)):
                 if module not in addons_module:
                     manifest_path = os.path.join(addons_path, module, '__openerp__.py')
                     path_static = os.path.join(addons_path, module, 'static')
@@ -561,7 +570,7 @@ class Root(object):
         :rtype: ``Controller | None``
         """
         if l:
-            ps = '/' + '/'.join(l)
+            ps = '/' + '/'.join(filter(None, l))
             method_name = 'index'
             while ps:
                 c = controllers_path.get(ps)

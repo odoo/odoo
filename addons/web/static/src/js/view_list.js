@@ -1,6 +1,6 @@
 openerp.web.list = function (instance) {
 var _t = instance.web._t,
-   _lt = instance.web._lt;
+    _lt = instance.web._lt;
 var QWeb = instance.web.qweb;
 instance.web.views.add('list', 'instance.web.ListView');
 instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListView# */ {
@@ -21,8 +21,13 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         // whether the view rows can be reordered (via vertical drag & drop)
         'reorderable': true,
         'action_buttons': true,
+        //whether the editable property of the view has to be disabled
+        'disable_editable_mode': false,
     },
     view_type: 'tree',
+    events: {
+        'click thead th.oe_sortable[data-id]': 'sort_by_column'
+    },
     /**
      * Core class for list-type displays.
      *
@@ -262,21 +267,6 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                 'selected', [selection.ids, selection.records]);
         });
 
-        // Sorting columns
-        this.$el.find('thead').delegate('th.oe_sortable[data-id]', 'click', function (e) {
-            e.stopPropagation();
-            var $this = $(this);
-            self.dataset.sort($this.data('id'));
-            if($this.hasClass("sortdown") || $this.hasClass("sortup"))  {
-                $this.toggleClass("sortdown").toggleClass("sortup");
-            } else {
-                $this.toggleClass("sortdown");
-            }
-            $this.siblings('.oe_sortable').removeClass("sortup sortdown");
-
-            self.reload_content();
-        });
-
         // Add button
         if (!this.$buttons) {
             this.$buttons = $(QWeb.render("ListView.buttons", {'widget':self}));
@@ -358,6 +348,19 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         }
         this.trigger('list_view_loaded', data, this.grouped);
     },
+    sort_by_column: function (e) {
+        e.stopPropagation();
+        var $column = $(e.currentTarget);
+        this.dataset.sort($column.data('id'));
+        if($column.hasClass("sortdown") || $column.hasClass("sortup"))  {
+            $column.toggleClass("sortup sortdown");
+        } else {
+            $column.addClass("sortdown");
+        }
+        $column.siblings('.oe_sortable').removeClass("sortup sortdown");
+
+        this.reload_content();
+    },
     /**
      * Configures the ListView pager based on the provided dataset's information
      *
@@ -386,7 +389,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             if (range_stop > total) {
                 range_stop = total;
             }
-            spager = _.str.sprintf('%d-%d of %d', range_start, range_stop, total);
+            spager = _.str.sprintf(_t("%d-%d of %d"), range_start, range_stop, total);
         }
 
         this.$pager.find('.oe_list_pager_state').text(spager);
@@ -597,6 +600,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         this.dataset.index = _(this.dataset.ids).indexOf(ids[0]);
         if (this.sidebar) {
+            this.options.$sidebar.show();
             this.sidebar.$el.show();
         }
 
@@ -884,8 +888,8 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                 var $row;
                 if (attribute === 'id') {
                     if (old_value) {
-                        throw new Error("Setting 'id' attribute on existing record "
-                            + JSON.stringify(record.attributes));
+                        throw new Error(_.str.sprintf( _t("Setting 'id' attribute on existing record %s"),
+                            JSON.stringify(record.attributes) ));
                     }
                     if (!_.contains(self.dataset.ids, value)) {
                         // add record to dataset if not already in (added by
@@ -919,6 +923,18 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
         }, this);
 
         this.$current = $('<tbody>')
+            .delegate('input[readonly=readonly]', 'click', function (e) {
+                /*
+                    Against all logic and sense, as of right now @readonly
+                    apparently does nothing on checkbox and radio inputs, so
+                    the trick of using @readonly to have, well, readonly
+                    checkboxes (which still let clicks go through) does not
+                    work out of the box. We *still* need to preventDefault()
+                    on the event, otherwise the checkbox's state *will* toggle
+                    on click
+                 */
+                e.preventDefault();
+            })
             .delegate('th.oe_list_record_selector', 'click', function (e) {
                 e.stopPropagation();
                 var selection = self.get_selection();
@@ -936,12 +952,18 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                       field = $target.closest('td').data('field'),
                        $row = $target.closest('tr'),
                   record_id = self.row_id($row);
+                
+                if ($target.attr('disabled')) {
+                    return;
+                }
+                $target.attr('disabled', 'disabled');
 
                 // note: $.data converts data to number if it's composed only
                 // of digits, nice when storing actual numbers, not nice when
                 // storing strings composed only of digits. Force the action
                 // name to be a string
                 $(self).trigger('action', [field.toString(), record_id, function (id) {
+                    $target.removeAttr('disabled');
                     return self.reload_record(self.records.get(id));
                 }]);
             })
@@ -953,7 +975,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                 if (row_id) {
                     e.stopPropagation();
                     if (!self.dataset.select_id(row_id)) {
-                        throw new Error("Could not find id in dataset");
+                        throw new Error(_t("Could not find id in dataset"));
                     }
                     self.row_clicked(e);
                 }
@@ -1013,7 +1035,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                     var command = value[0];
                     // 1. an array of m2m commands (usually (6, false, ids))
                     if (command[0] !== 6) {
-                        throw new Error(_t("Unknown m2m command ") + command[0]);
+                        throw new Error(_.str.sprintf( _t("Unknown m2m command %s"), command[0]));
                     }
                     ids = command[2];
                 } else {
@@ -1321,7 +1343,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                 }
                 // group_label is html-clean (through format or explicit
                 // escaping if format failed), can inject straight into HTML
-                $group_column.html(_.str.sprintf("%s (%d)",
+                $group_column.html(_.str.sprintf(_t("%s (%d)"),
                     group_label, group.length));
 
                 if (group.length && group.openable) {
@@ -1740,7 +1762,7 @@ var Record = instance.web.Class.extend(/** @lends Record# */{
             } else if (val instanceof Array) {
                 output[k] = val[0];
             } else {
-                throw new Error("Can't convert value " + val + " to context");
+                throw new Error(_.str.sprintf(_t("Can't convert value %s to context"), val));
             }
         }
         return output;

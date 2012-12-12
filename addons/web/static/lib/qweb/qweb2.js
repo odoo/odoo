@@ -228,6 +228,7 @@ QWeb2.Engine = (function() {
                     }
                     if (name) {
                         this.templates[name] = node;
+                        this.compiled_templates[name] = null;
                     } else if (extend) {
                         delete(this.compiled_templates[extend]);
                         if (this.extend_templates[extend]) {
@@ -698,7 +699,7 @@ QWeb2.Element = (function() {
             this.top("debugger;");
         },
         compile_action_log : function(value) {
-            this.top("console.log(" + this.format_expression(value) + "});");
+            this.top("console.log(" + this.format_expression(value) + ");");
         }
     });
     return Element;
