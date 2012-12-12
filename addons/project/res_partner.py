@@ -28,6 +28,12 @@ class res_partner(osv.osv):
     _columns = {
         'task_ids': fields.one2many('project.task', 'partner_id', 'Tasks'),
     }
+    
+    def copy(self, cr, uid, id, default=None, context=None):
+        if not default:
+            default = {}
+        default = dict(default, task_ids=[])
+        return super(res_partner, self).copy(cr, uid, id, default=default, context=context)
 
 res_partner()
 
