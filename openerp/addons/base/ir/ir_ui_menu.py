@@ -307,7 +307,9 @@ class ir_ui_menu(osv.osv):
         'name': fields.char('Menu', size=64, required=True, translate=True),
         'sequence': fields.integer('Sequence'),
         'child_id': fields.one2many('ir.ui.menu', 'parent_id', 'Child IDs'),
-        'parent_id': fields.many2one('ir.ui.menu', 'Parent Menu', select=True),
+        'parent_id': fields.many2one('ir.ui.menu', 'Parent Menu', select=True, ondelete="restrict"),
+        'parent_left': fields.integer('Parent Left', select=True),
+        'parent_right': fields.integer('Parent Right', select=True),
         'groups_id': fields.many2many('res.groups', 'ir_ui_menu_group_rel',
             'menu_id', 'gid', 'Groups', help="If you have groups, the visibility of this menu will be based on these groups. "\
                 "If this field is empty, OpenERP will compute visibility based on the related object's read access."),
@@ -348,5 +350,6 @@ class ir_ui_menu(osv.osv):
         'sequence': 10,
     }
     _order = "sequence,id"
+    _parent_store = True
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
