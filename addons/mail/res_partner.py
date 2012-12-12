@@ -28,6 +28,12 @@ class res_partner(osv.osv):
     _columns = {
         'emails': fields.one2many('mail.message', 'partner_id', 'Emails', readonly=True, domain=[('email_from','!=',False)]),
     }
+    
+    def copy(self, cr, uid, id, default=None, context=None):
+        if not default:
+            default = {}
+        default = dict(default, emails=[])
+        return super(res_partner, self).copy(cr, uid, id, default=default, context=context)
 
 res_partner()
 
