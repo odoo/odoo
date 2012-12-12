@@ -84,7 +84,7 @@ class TestRelatedField(common.TransactionCase):
             'related_related_company_id': fields.related('single_related_company_id', type='many2one', obj='res.company'),
         })
         self.partner._all_columns.update({
-            'single_related_company_id': fields.column_info('single_related_company_id', self.partner._columns['single_related_company_id'], None, None, None)
+            'single_related_company_id': fields.column_info('single_related_company_id', self.partner._columns['single_related_company_id'], None, None, None),
             'related_related_company_id': fields.column_info('related_related_company_id', self.partner._columns['related_related_company_id'], None, None, None)
         })
 

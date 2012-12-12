@@ -3545,6 +3545,10 @@ class BaseModel(object):
         """
         def p(field_name):
             """Predicate to test if the user has access to the given field name."""
+            # Ignore requested field if it doesn't exist. This is ugly but
+            # it seems to happen at least with 'name_alias' on res.partner.
+            if field_name not in self._all_columns:
+                return True
             field = self._all_columns[field_name].column
             if field.groups:
                 return self.user_has_groups(cr, user, groups=field.groups, context=context)
