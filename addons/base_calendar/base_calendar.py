@@ -88,6 +88,16 @@ def base_calendar_id2real_id(base_calendar_id=None, with_date=False):
 
     return base_calendar_id and int(base_calendar_id) or base_calendar_id
 
+def get_real_ids(ids):
+    if isinstance(ids, (str, int, long)):
+        return base_calendar_id2real_id(ids)
+
+    if isinstance(ids, (list, tuple)):
+        res = []
+        for id in ids:
+            res.append(base_calendar_id2real_id(id))
+        return res
+
 def real_id2base_calendar_id(real_id, recurrent_date):
     """
     Convert a real event id (type int) into a "virtual/recurring event id" (type string).
@@ -966,13 +976,13 @@ class calendar_event(osv.osv):
 
     def unlink_events(self, cr, uid, ids, context=None):
         """
-        This function deletes event which are linked with the event with recurrent_uid
+        This function deletes event which are linked with the event with recurrent_id
                 (Removes the events which refers to the same UID value)
         """
         if context is None:
             context = {}
         for event_id in ids:
-            cr.execute("select id from %s where recurrent_uid=%%s" % (self._table), (event_id,))
+            cr.execute("select id from %s where recurrent_id=%%s" % (self._table), (event_id,))
             r_ids = map(lambda x: x[0], cr.fetchall())
             self.unlink(cr, uid, r_ids, context=context)
         return True
@@ -1050,8 +1060,8 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         'alarm_id': fields.many2one('res.alarm', 'Reminder', states={'done': [('readonly', True)]},
                         help="Set an alarm at this time, before the event occurs" ),
         'base_calendar_alarm_id': fields.many2one('calendar.alarm', 'Alarm'),
-        'recurrent_uid': fields.integer('Recurrent ID'),
-        'recurrent_id': fields.datetime('Recurrent ID date'),
+        'recurrent_id': fields.integer('Recurrent ID'),
+        'recurrent_id_date': fields.datetime('Recurrent ID date'),
         'vtimezone': fields.selection(_tz_get, size=64, string='Timezone'),
         'user_id': fields.many2one('res.users', 'Responsible', states={'done': [('readonly', True)]}),
         'organizer': fields.char("Organizer", size=256, states={'done': [('readonly', True)]}), # Map with organizer attribute of VEvent.
@@ -1328,16 +1338,6 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             data['end_type'] = 'end_date'
         return data
 
-    def remove_virtual_id(self, ids):
-        if isinstance(ids, (str, int, long)):
-            return base_calendar_id2real_id(ids)
-
-        if isinstance(ids, (list, tuple)):
-            res = []
-            for id in ids:
-                res.append(base_calendar_id2real_id(id))
-            return res
-
     def search(self, cr, uid, args, offset=0, limit=0, order=None, context=None, count=False):
         context = context or {}
         args_without_date = []
@@ -1387,6 +1387,13 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                 return True
 
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
+        def _only_changes_to_apply_on_real_ids(field_names):
+            ''' return True if changes are only to be made on the real ids'''
+            for field in field_names:
+                if field not in ['message_follower_ids']:
+                    return False
+            return True
+
         context = context or {}
         if isinstance(ids, (str, int, long)):
             ids = [ids]
@@ -1398,7 +1405,11 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                 continue
             ids.remove(event_id)
             real_event_id = base_calendar_id2real_id(event_id)
-            if not vals.get('recurrency', True):
+
+            # if we are setting the recurrency flag to False or if we are only changing fields that
+            # should be only updated on the real ID and not on the virtual (like message_follower_ids):
+            # then set real ids to be updated.
+            if not vals.get('recurrency', True) or _only_changes_to_apply_on_real_ids(vals.keys()):
                 ids.append(real_event_id)
                 continue
 
@@ -1408,13 +1419,15 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             if data.get('rrule'):
                 data.update(
                     vals,
-                    recurrent_uid=real_event_id,
-                    recurrent_id=data.get('date'),
+                    recurrent_id=real_event_id,
+                    recurrent_id_date=data.get('date'),
                     rrule_type=False,
                     rrule='',
                     recurrency=False,
                 )
-
+                #do not copy the id
+                if data.get('id'):
+                    del(data['id'])
                 new_id = self.copy(cr, uid, real_event_id, default=data, context=context)
 
                 date_new = event_id.split('-')[1]
@@ -1507,7 +1520,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
 
         for r in result:
             for k in EXTRAFIELDS:
-                if (k in r) and ((not fields) or (k not in fields)):
+                if (k in r) and (fields and (k not in fields)):
                     del r[k]
         if isinstance(ids, (str, int, long)):
             return result and result[0] or False
