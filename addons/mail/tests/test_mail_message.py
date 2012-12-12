@@ -123,7 +123,8 @@ class test_mail_access_rights(TestMailBase):
         user_bert_id, user_raoul_id = self.user_bert_id, self.user_raoul_id
 
         # Prepare groups: Pigs (employee), Jobs (public)
-        self.mail_group.message_post(cr, uid, self.group_pigs_id, body='Message')
+        pigs_msg_id = self.mail_group.message_post(cr, uid, self.group_pigs_id, body='Message')
+        priv_msg_id = self.mail_group.message_post(cr, uid, self.group_priv_id, body='Message')
 
         # prepare an attachment
         attachment_id = self.ir_attachment.create(cr, uid, {'datas': 'My attachment'.encode('base64'), 'name': 'doc.txt', 'datas_fname': 'doc.txt'})
@@ -184,11 +185,20 @@ class test_mail_access_rights(TestMailBase):
         # Do: Bert create a private message -> ko, no creation rights
         self.assertRaises(except_orm, self.mail_message.create,
             cr, user_bert_id, {'body': 'Test'})
+
         # Do: Raoul creates a message on Jobs -> ok, write access to the related document
         self.mail_message.create(cr, user_raoul_id, {'model': 'mail.group', 'res_id': self.group_jobs_id, 'body': 'Test'})
         # Do: Raoul creates a message on Priv -> ko, no write access to the related document
         self.assertRaises(except_orm, self.mail_message.create,
             cr, user_raoul_id, {'model': 'mail.group', 'res_id': self.group_priv_id, 'body': 'Test'})
+        # Do: Raoul creates a private message -> ok
+        self.mail_message.create(cr, user_raoul_id, {'body': 'Test'})
+        # Do: Raoul creates a reply to a message on Priv -> ko
+        self.assertRaises(except_orm, self.mail_message.create,
+            cr, user_raoul_id, {'model': 'mail.group', 'res_id': self.group_priv_id, 'body': 'Test', 'parent_id': priv_msg_id})
+        # Do: Raoul creates a reply to a message on Priv-> ok if has received parent
+        self.mail_notification.create(cr, uid, {'message_id': priv_msg_id, 'partner_id': self.partner_raoul_id})
+        self.mail_message.create(cr, user_raoul_id, {'model': 'mail.group', 'res_id': self.group_priv_id, 'body': 'Test', 'parent_id': priv_msg_id})
 
     def test_20_message_set_star(self):
         """ Tests for starring messages and its related access rights """
@@ -326,6 +336,11 @@ class test_mail_access_rights(TestMailBase):
                           self.mail_group.message_post,
                           cr, user_bert_id, self.group_jobs_id, body='I love Pigs')
 
+        # Do: Bert writes on its own profile, ko because no message create access
+        with self.assertRaises(except_orm):
+            self.res_users.message_post(cr, user_bert_id, user_bert_id, body='I love Bert')
+            self.res_partner.message_post(cr, user_bert_id, partner_bert_id, body='I love Bert')
+
         # ----------------------------------------
         # CASE2: Raoul, employee
         # ----------------------------------------
@@ -349,4 +364,12 @@ class test_mail_access_rights(TestMailBase):
         compose_id = mail_compose.create(cr, user_raoul_id,
             {'subject': 'Subject', 'body': 'Body text'},
             {'default_composition_mode': 'reply', 'default_parent_id': pigs_msg_id})
+        mail_compose.send_mail(cr, user_raoul_id, [compose_id])
+
+        # Do: Raoul writes on its own profile, ok because follower of its partner
+        self.res_users.message_post(cr, user_raoul_id, user_raoul_id, body='I love Raoul')
+        self.res_partner.message_post(cr, user_raoul_id, partner_raoul_id, body='I love Raoul')
+        compose_id = mail_compose.create(cr, user_raoul_id,
+            {'subject': 'Subject', 'body': 'Body text', 'partner_ids': []},
+            {'default_composition_mode': 'comment', 'default_model': 'res.users', 'default_res_id': self.user_raoul_id})
         mail_compose.send_mail(cr, user_raoul_id, [compose_id])

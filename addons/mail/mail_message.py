@@ -608,55 +608,73 @@ class mail_message(osv.Model):
                 - uid have read access to the related document if model, res_id
                 - otherwise: raise
             - create: if
-                - no model, no res_id, I create a private message
+                - no model, no res_id, I create a private message OR
                 - pid in message_follower_ids if model, res_id OR
+                - mail_notification (parent_id.id, pid) exists, uid has been notified of the parent, OR
                 - uid have write access on the related document if model, res_id, OR
                 - otherwise: raise
             - write: if
                 - author_id == pid, uid is the author, OR
                 - uid has write access on the related document if model, res_id
-                - Otherwise: raise
+                - otherwise: raise
             - unlink: if
                 - uid has write access on the related document if model, res_id
-                - Otherwise: raise
+                - otherwise: raise
         """
+        def _generate_model_record_ids(msg_val, msg_ids=[]):
+            """ :param model_record_ids: {'model': {'res_id': (msg_id, msg_id)}, ... }
+                :param message_values: {'msg_id': {'model': .., 'res_id': .., 'author_id': ..}}
+            """
+            model_record_ids = {}
+            for id in msg_ids:
+                if msg_val[id]['model'] and msg_val[id]['res_id']:
+                    model_record_ids.setdefault(msg_val[id]['model'], dict()).setdefault(msg_val[id]['res_id'], set()).add(msg_val[id]['res_id'])
+            return model_record_ids
+
         if uid == SUPERUSER_ID:
             return
         if isinstance(ids, (int, long)):
             ids = [ids]
+        not_obj = self.pool.get('mail.notification')
+        fol_obj = self.pool.get('mail.followers')
         partner_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=None)['partner_id'][0]
 
         # Read mail_message.ids to have their values
         message_values = dict.fromkeys(ids)
-        model_record_ids = {}
-        cr.execute('SELECT DISTINCT id, model, res_id, author_id FROM "%s" WHERE id = ANY (%%s)' % self._table, (ids,))
-        for id, rmod, rid, author_id in cr.fetchall():
-            message_values[id] = {'res_model': rmod, 'res_id': rid, 'author_id': author_id}
-            if rmod:
-                model_record_ids.setdefault(rmod, dict()).setdefault(rid, set()).add(id)
+        cr.execute('SELECT DISTINCT id, model, res_id, author_id, parent_id FROM "%s" WHERE id = ANY (%%s)' % self._table, (ids,))
+        for id, rmod, rid, author_id, parent_id in cr.fetchall():
+            message_values[id] = {'model': rmod, 'res_id': rid, 'author_id': author_id, 'parent_id': parent_id}
 
-        # Author condition, for read and create (private message) -> could become an ir.rule, but not till we do not have a many2one variable field
+        # Author condition (READ, WRITE, CREATE (private)) -> could become an ir.rule ?
+        author_ids = []
         if operation == 'read' or operation == 'write':
             author_ids = [mid for mid, message in message_values.iteritems()
                 if message.get('author_id') and message.get('author_id') == partner_id]
         elif operation == 'create':
             author_ids = [mid for mid, message in message_values.iteritems()
                 if not message.get('model') and not message.get('res_id')]
-        else:
-            author_ids = []
+
+        # Parent condition, for create (check for received notifications for the created message parent)
+        notified_ids = []
+        if operation == 'create':
+            parent_ids = [message.get('parent_id') for mid, message in message_values.iteritems()
+                if message.get('parent_id')]
+            not_ids = not_obj.search(cr, SUPERUSER_ID, [('message_id.id', 'in', parent_ids), ('partner_id', '=', partner_id)], context=context)
+            not_parent_ids = [notif.message_id.id for notif in not_obj.browse(cr, SUPERUSER_ID, not_ids, context=context)]
+            notified_ids += [mid for mid, message in message_values.iteritems()
+                if message.get('parent_id') in not_parent_ids]
 
         # Notification condition, for read (check for received notifications and create (in message_follower_ids)) -> could become an ir.rule, but not till we do not have a many2one variable field
+        other_ids = set(ids).difference(set(author_ids), set(notified_ids))
+        model_record_ids = _generate_model_record_ids(message_values, other_ids)
         if operation == 'read':
-            not_obj = self.pool.get('mail.notification')
             not_ids = not_obj.search(cr, SUPERUSER_ID, [
                 ('partner_id', '=', partner_id),
                 ('message_id', 'in', ids),
             ], context=context)
             notified_ids = [notification.message_id.id for notification in not_obj.browse(cr, SUPERUSER_ID, not_ids, context=context)]
         elif operation == 'create':
-            notified_ids = []
             for doc_model, doc_dict in model_record_ids.items():
-                fol_obj = self.pool.get('mail.followers')
                 fol_ids = fol_obj.search(cr, SUPERUSER_ID, [
                     ('res_model', '=', doc_model),
                     ('res_id', 'in', list(doc_dict.keys())),
@@ -664,22 +682,15 @@ class mail_message(osv.Model):
                     ], context=context)
                 fol_mids = [follower.res_id for follower in fol_obj.browse(cr, SUPERUSER_ID, fol_ids, context=context)]
                 notified_ids += [mid for mid, message in message_values.iteritems()
-                    if message.get('res_model') == doc_model and message.get('res_id') in fol_mids]
-        else:
-            notified_ids = []
-
-        # Calculate remaining ids, and related model/res_ids
-        model_record_ids = {}
-        other_ids = set(ids).difference(set(author_ids), set(notified_ids))
-        for id in other_ids:
-            if message_values[id]['res_model']:
-                model_record_ids.setdefault(message_values[id]['res_model'], set()).add(message_values[id]['res_id'])
+                    if message.get('model') == doc_model and message.get('res_id') in fol_mids]
 
         # CRUD: Access rights related to the document
+        other_ids = other_ids.difference(set(notified_ids))
+        model_record_ids = _generate_model_record_ids(message_values, other_ids)
         document_related_ids = []
-        for model, mids in model_record_ids.items():
+        for model, doc_dict in model_record_ids.items():
             model_obj = self.pool.get(model)
-            mids = model_obj.exists(cr, uid, mids)
+            mids = model_obj.exists(cr, uid, doc_dict.keys())
             if operation in ['create', 'write', 'unlink']:
                 model_obj.check_access_rights(cr, uid, 'write')
                 model_obj.check_access_rule(cr, uid, mids, 'write', context=context)
@@ -687,10 +698,10 @@ class mail_message(osv.Model):
                 model_obj.check_access_rights(cr, uid, operation)
                 model_obj.check_access_rule(cr, uid, mids, operation, context=context)
             document_related_ids += [mid for mid, message in message_values.iteritems()
-                if message.get('res_model') == model and message.get('res_id') in mids]
+                if message.get('model') == model and message.get('res_id') in mids]
 
         # Calculate remaining ids: if not void, raise an error
-        other_ids = other_ids - set(document_related_ids)
+        other_ids = other_ids.difference(set(document_related_ids))
         if not other_ids:
             return
         raise orm.except_orm(_('Access Denied'),
