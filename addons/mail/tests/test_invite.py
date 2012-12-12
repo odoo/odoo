@@ -43,6 +43,6 @@ class test_invite(TestMailBase):
         self.assertEqual(len(self._build_email_kwargs_list), 1, 'sent email number incorrect, should be only for Bert')
         for sent_email in self._build_email_kwargs_list:
             self.assertEqual(sent_email.get('subject'), 'Invitation to follow Pigs',
-                             'subject of invitation email is incorrect')
+                            'subject of invitation email is incorrect')
             self.assertTrue('You have been invited to follow Pigs' in sent_email.get('body'),
                             'body of invitation email is incorrect')

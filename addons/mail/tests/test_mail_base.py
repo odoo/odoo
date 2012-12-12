@@ -41,6 +41,7 @@ class TestMailBase(common.TransactionCase):
     def setUp(self):
         super(TestMailBase, self).setUp()
         cr, uid = self.cr, self.uid
+
         # Install mock SMTP gateway
         self._init_mock_build_email()
         self._build_email = self.registry('ir.mail_server').build_email
