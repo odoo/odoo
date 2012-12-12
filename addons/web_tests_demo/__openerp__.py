@@ -2,8 +2,9 @@
     'name': "Demonstration of web/javascript tests",
     'category': 'Hidden',
     'description': """ 
-        OpenERP Web test demo suite.
+        OpenERP Web demo of a test suite.
         =======================
+        Holds the examples used in the testing documentation.
     """,
     'depends': ['web'],
     'js': ['static/src/js/demo.js'],
