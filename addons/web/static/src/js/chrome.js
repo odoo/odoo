@@ -804,6 +804,7 @@ instance.web.Menu =  instance.web.Widget.extend({
         this.maximum_visible_links = 'auto'; // # of menu to show. 0 = do not crop, 'auto' = algo
         this.data = {data:{children:[]}};
         this.on("menu_loaded", this, function (menu_data) {
+            self.reflow();
             // launch the fetch of needaction counters, asynchronous
             if (!_.isEmpty(menu_data.all_menu_ids)) {
                 this.rpc("/web/menu/load_needaction", {menu_ids: menu_data.all_menu_ids}).done(function(r) {
@@ -811,7 +812,6 @@ instance.web.Menu =  instance.web.Widget.extend({
                 });
             }
         });
-        
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -829,7 +829,6 @@ instance.web.Menu =  instance.web.Widget.extend({
         var self = this;
         this.data = {data: data};
         this.renderElement();
-        this.limit_entries();
         // Hide toplevel item if there is only one
         var $toplevel = this.$("li");
         if($toplevel.length == 1) {
@@ -855,6 +854,25 @@ instance.web.Menu =  instance.web.Widget.extend({
                 $item.append(QWeb.render("Menu.needaction_counter", { widget : item }));
             }
         });
+    },
+    reflow: function() {
+        var self = this;
+        var $more_container = $('.oe_menu_more_container');
+        var $more = $('.oe_menu_more');
+        $more.find('li').before($more_container);
+        var $li = this.$el.find('> li').not($more_container).hide();
+        var remaining_space = self.$el.parent().width();
+        remaining_space -= self.$el.parent().children(':visible').not(this.$el).width();
+        //debugger
+        $li.each(function() {
+            remaining_space -= self.$el.children(':visible').width();
+            if ($(this).width() > remaining_space) {
+                return false;
+            }
+            $(this).show();
+        });
+        $li.filter(':hidden').appendTo($more);
+        $more_container.toggle(!!$more.children().length);
     },
     limit_entries: function() {
         var maximum_visible_links = this.maximum_visible_links;
