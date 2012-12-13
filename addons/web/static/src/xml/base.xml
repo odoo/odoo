@@ -348,10 +348,7 @@
         <li t-foreach="widget.data.data.children" t-as="menu">
             <t t-call="Menu.link"/>
         </li>
-        <li t-foreach="widget.data.data.children" t-as="menu">
-            <t t-call="Menu.link"/>
-        </li>
-        <li class="oe_menu_more_container">
+        <li class="oe_menu_more_container" style="display: none;">
             <span class="oe_topbar_item oe_menu_more_link oe_dropdown_toggle oe_dropdown_arrow">
                 More
                 <ul class="oe_menu_more oe_dropdown_menu"/>

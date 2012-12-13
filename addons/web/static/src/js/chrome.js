@@ -812,6 +812,15 @@ instance.web.Menu =  instance.web.Widget.extend({
                 });
             }
         });
+        var resizing_timer = null;
+        instance.web.bus.on('resize', this, function() {
+            if (resizing_timer) {
+                clearTimeout(resizing_timer);
+            }
+            resizing_timer = setTimeout(function() {
+                self.reflow();
+            }, 500);
+        });
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -857,12 +866,12 @@ instance.web.Menu =  instance.web.Widget.extend({
     },
     reflow: function() {
         var self = this;
-        var $more_container = $('.oe_menu_more_container');
+        var $more_container = $('.oe_menu_more_container').hide();
         var $more = $('.oe_menu_more');
-        $more.find('li').before($more_container);
+        $more.find('> li').insertBefore($more_container);
         var $li = this.$el.find('> li').not($more_container).hide();
         $li.each(function() {
-            var remaining_space = self.$el.parent().width();
+            var remaining_space = self.$el.parent().width() - $more_container.outerWidth();
             self.$el.parent().children(':visible').each(function() {
                 remaining_space -= $(this).outerWidth();
             });
@@ -871,26 +880,8 @@ instance.web.Menu =  instance.web.Widget.extend({
             }
             $(this).show();
         });
-        $li.filter(':hidden').appendTo($more);
+        $more.append($li.filter(':hidden').show());
         $more_container.toggle(!!$more.children().length);
-    },
-    limit_entries: function() {
-        var maximum_visible_links = this.maximum_visible_links;
-        if (maximum_visible_links === 'auto') {
-            maximum_visible_links = this.auto_limit_entries();
-        }
-        if (maximum_visible_links < this.data.data.children.length) {
-            var $more = $(QWeb.render('Menu.more')),
-                $index = this.$el.find('li').eq(maximum_visible_links - 1);
-            $index.after($more);
-            //$('.oe_topbar').append($more);
-            $more.find('.oe_menu_more').append($index.next().nextAll());
-        }
-    },
-    auto_limit_entries: function() {
-        // TODO: auto detect overflow and bind window on resize
-        var width = $(window).width();
-        return Math.floor(width / 125);
     },
     /**
      * Opens a given menu by id, as if a user had browsed to that menu by hand
