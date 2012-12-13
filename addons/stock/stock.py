@@ -243,7 +243,7 @@ class stock_location(osv.osv):
         elif location.chained_location_type == 'fixed':
             result = location.chained_location_id
         if result:
-            return result, location.chained_auto_packing, location.chained_delay, location.chained_journal_id and location.chained_journal_id.id or False, location.chained_company_id and location.chained_company_id.id or False, location.chained_picking_type
+            return result, location.chained_auto_packing, location.chained_delay, location.chained_journal_id and location.chained_journal_id.id or False, location.chained_company_id and location.chained_company_id.id or False, location.chained_picking_type, False
         return result
 
     def picking_type_get(self, cr, uid, from_location, to_location, context=None):
@@ -1023,8 +1023,10 @@ class stock_picking(osv.osv):
             partner = self.pool.get('res.partner').browse(cr, uid, partner, context=context)
         if inv_type in ('out_invoice', 'out_refund'):
             account_id = partner.property_account_receivable.id
+            payment_term = partner.property_payment_term.id or False
         else:
             account_id = partner.property_account_payable.id
+            payment_term = partner.property_supplier_payment_term.id or False
         comment = self._get_comment_invoice(cr, uid, picking)
         invoice_vals = {
             'name': picking.name,
@@ -1033,7 +1035,7 @@ class stock_picking(osv.osv):
             'account_id': account_id,
             'partner_id': partner.id,
             'comment': comment,
-            'payment_term': partner.property_payment_term and partner.property_payment_term.id or False,
+            'payment_term': payment_term,
             'fiscal_position': partner.property_account_position.id,
             'date_invoice': context.get('date_inv', False),
             'company_id': picking.company_id.id,
@@ -1141,6 +1143,9 @@ class stock_picking(osv.osv):
             res[picking.id] = invoice_id
             for move_line in picking.move_lines:
                 if move_line.state == 'cancel':
+                    continue
+                if move_line.scrapped:
+                    # do no invoice scrapped products
                     continue
                 vals = self._prepare_invoice_line(cr, uid, group, picking, move_line,
                                 invoice_id, invoice_vals, context=context)
@@ -1393,6 +1398,14 @@ class stock_picking(osv.osv):
         """
         if context is None:
             context = {}
+        lang_obj = self.pool.get('res.lang')
+        user_lang = self.pool.get('res.users').browse(cr, uid, uid, context=context).context_lang
+        lang_ids = lang_obj.search(cr, uid, [('code','like',user_lang)])
+        if lang_ids:
+            date_format = lang_obj.browse(cr, uid, lang_ids[0], context=context).date_format
+        else:
+            date_format = '%m/%d/%Y'
+
         for pick in self.browse(cr, uid, ids, context=context):
             msg=''
             if pick.auto_picking:
@@ -1404,7 +1417,7 @@ class stock_picking(osv.osv):
             }
             message = type_list.get(pick.type, _('Document')) + " '" + (pick.name or '?') + "' "
             if pick.min_date:
-                msg= _(' for the ')+ datetime.strptime(pick.min_date, '%Y-%m-%d %H:%M:%S').strftime('%m/%d/%Y')
+                msg= _(' for the ')+ datetime.strptime(pick.min_date, '%Y-%m-%d %H:%M:%S').strftime(date_format)
             state_list = {
                 'confirmed': _('is scheduled %s.') % msg,
                 'assigned': _('is ready to process.'),
@@ -2126,7 +2139,7 @@ class stock_move(osv.osv):
                     self.pool.get('stock.picking').write(cr, uid, [picking.id], {'name': old_pick_name, 'type': old_ptype}, context=context)
             else:
                 pickid = False
-            for move, (loc, dummy, delay, dummy, company_id, ptype) in todo:
+            for move, (loc, dummy, delay, dummy, company_id, ptype, invoice_state) in todo:
                 new_id = move_obj.copy(cr, uid, move.id, {
                     'location_id': move.location_dest_id.id,
                     'location_dest_id': loc.id,
@@ -2135,7 +2148,7 @@ class stock_move(osv.osv):
                     'state': 'waiting',
                     'company_id': company_id or res_obj._company_default_get(cr, uid, 'stock.company', context=context)  ,
                     'move_history_ids': [],
-                    'date': (datetime.strptime(move.date, '%Y-%m-%d %H:%M:%S') + relativedelta(days=delay or 0)).strftime('%Y-%m-%d'),
+                    'date_expected': (datetime.strptime(move.date, '%Y-%m-%d %H:%M:%S') + relativedelta(days=delay or 0)).strftime('%Y-%m-%d'),
                     'move_history_ids2': []}
                 )
                 move_obj.write(cr, uid, [move.id], {
@@ -2871,7 +2884,7 @@ class stock_inventory(osv.osv):
             move_ids = []
             for line in inv.inventory_line_id:
                 pid = line.product_id.id
-                product_context.update(uom=line.product_uom.id, date=inv.date, prodlot_id=line.prod_lot_id.id)
+                product_context.update(uom=line.product_uom.id, to_date=inv.date, date=inv.date, prodlot_id=line.prod_lot_id.id)
                 amount = location_obj._product_get(cr, uid, line.location_id.id, [pid], product_context)[pid]
                 change = line.product_qty - amount
                 lot_id = line.prod_lot_id.id

@@ -6,12 +6,6 @@
             <field name="model">event.moodle.config.wiz</field>
             <field name="arch" type="xml">
                 <form string="Configure Moodle" version="7.0">
-                    <header>
-                        <button type="object" name="configure_moodle"
-                            string="Apply" class="oe_highlight"  />
-                            or
-                            <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                     <group>
                      <separator string="Server" colspan="4"/>
                      <field name="server_moodle"/>
@@ -25,6 +19,12 @@
                      <field name="moodle_username"/>
                      <field name="moodle_password" password="True"/>
                     </group>
+                    <footer>
+                        <button type="object" name="configure_moodle"
+                            string="Apply" class="oe_highlight"  />
+                            or
+                            <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

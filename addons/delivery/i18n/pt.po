@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2010-12-14 23:04+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
+"PO-Revision-Date: 2012-12-12 16:38+0000\n"
+"Last-Translator: Rui Franco (multibase.pt) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 05:42+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-13 04:42+0000\n"
+"X-Generator: Launchpad (build 16361)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -64,7 +64,7 @@ msgstr "Volume"
 #. module: delivery
 #: view:delivery.carrier:0
 msgid "Zip"
-msgstr ""
+msgstr "Código postal"
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
@@ -217,7 +217,7 @@ msgstr "Definição da grelha"
 #: code:addons/delivery/stock.py:89
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Aviso!"
 
 #. module: delivery
 #: field:delivery.grid.line,operator:0
@@ -237,7 +237,7 @@ msgstr "Ordem de Vendas"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking_out
 msgid "Delivery Orders"
-msgstr ""
+msgstr "Ordens de entrega"
 
 #. module: delivery
 #: view:sale.order:0
@@ -265,11 +265,6 @@ msgstr "Facturado a"
 #: model:ir.model,name:delivery.model_stock_picking
 msgid "Picking List"
 msgstr "Lista Picking"
-
-#. module: delivery
-#: field:delivery.carrier,grids_id:0
-msgid "Delivery Grids"
-msgstr "Grelhas de entrega"
 
 #. module: delivery
 #: field:delivery.grid.line,name:0
@@ -415,19 +410,9 @@ msgid "Condition"
 msgstr "Condição"
 
 #. module: delivery
-#: constraint:stock.move:0
-msgid "You must assign a serial number for this product."
-msgstr ""
-
-#. module: delivery
 #: field:delivery.grid.line,standard_price:0
 msgid "Cost Price"
 msgstr "Preço de custo"
-
-#. module: delivery
-#: constraint:stock.move:0
-msgid "You cannot move products from or to a location of the type view."
-msgstr ""
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -439,13 +424,6 @@ msgstr "Variável"
 #: help:res.partner,property_delivery_carrier:0
 msgid "This delivery method will be used when invoicing from picking."
 msgstr "Este método de entrega será usado quando a faturação do picking."
-
-#. module: delivery
-#: sql_constraint:stock.picking:0
-#: sql_constraint:stock.picking.in:0
-#: sql_constraint:stock.picking.out:0
-msgid "Reference must be unique per Company!"
-msgstr "A referência deve ser única por empresa!"
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
@@ -476,11 +454,6 @@ msgid "Free if more than %.2f"
 msgstr "Grátis se for mais que %.2f"
 
 #. module: delivery
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique per Company!"
-msgstr "Ordem de referência deve ser única por empresa!"
-
-#. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking_in
 msgid "Incoming Shipments"
 msgstr ""
@@ -489,11 +462,6 @@ msgstr ""
 #: selection:delivery.grid.line,operator:0
 msgid "<="
 msgstr "<="
-
-#. module: delivery
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product."
-msgstr ""
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -569,7 +537,7 @@ msgstr "Transportadora"
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 msgid "Delivery Methods"
-msgstr ""
+msgstr "Métodos de entrega"
 
 #. module: delivery
 #: field:sale.order,id:0
@@ -584,9 +552,9 @@ msgstr ""
 "O estado da ordem tem que estar em rascunho para adicionar linhas de entrega."
 
 #. module: delivery
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr "Erro! Não pode criar membros recursivos."
+#: field:delivery.carrier,grids_id:0
+msgid "Delivery Grids"
+msgstr "Grelhas de entrega"
 
 #. module: delivery
 #: field:delivery.grid,sequence:0
@@ -601,18 +569,13 @@ msgstr "Preço de Venda"
 #. module: delivery
 #: view:stock.picking.out:0
 msgid "Print Delivery Order"
-msgstr ""
+msgstr "Imprimir ordem de entrega"
 
 #. module: delivery
 #: view:delivery.grid:0
 #: field:delivery.grid,state_ids:0
 msgid "States"
 msgstr "Estados"
-
-#. module: delivery
-#: constraint:res.partner:0
-msgid "Error: Invalid ean code"
-msgstr "Erro: Código ean inválido"
 
 #. module: delivery
 #: field:delivery.grid.line,price_type:0
@@ -624,6 +587,9 @@ msgstr "Tipo de Preço"
 
 #~ msgid "Notes"
 #~ msgstr "Notas"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Erro: Código ean inválido"
 
 #~ msgid "Cancel"
 #~ msgstr "Cancelar"
@@ -787,6 +753,9 @@ msgstr "Tipo de Preço"
 #~ msgid "Setup Your Picking Policy"
 #~ msgstr "Configure a Política de Recolha"
 
+#~ msgid "Reference must be unique per Company!"
+#~ msgstr "A referência deve ser única por empresa!"
+
 #~ msgid "You can not move products from or to a location of the type view."
 #~ msgstr "Não pode mover os artigos de ou para um local de tipo vista."
 
@@ -813,8 +782,14 @@ msgstr "Tipo de Preço"
 #~ msgid "Free If More Than"
 #~ msgstr "Grátis se for maior que"
 
+#~ msgid "Order Reference must be unique per Company!"
+#~ msgstr "Ordem de referência deve ser única por empresa!"
+
 #~ msgid "Deliver all products at once"
 #~ msgstr "Entregar todos os artigos de uma só vez"
+
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr "Erro! Não pode criar membros recursivos."
 
 #~ msgid "Deliver each product when available"
 #~ msgstr "Entregar cada artigo quando estiver disponível"

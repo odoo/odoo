@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:51+0000\n"
-"PO-Revision-Date: 2011-12-19 17:23+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
+"PO-Revision-Date: 2012-12-11 15:33+0000\n"
 "Last-Translator: Goran Kliska <gkliska@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:09+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-12 04:40+0000\n"
+"X-Generator: Launchpad (build 16361)\n"
 
 #. module: hr_timesheet_sheet
 #: field:hr.analytic.timesheet,sheet_id:0
@@ -25,15 +25,15 @@ msgid "Sheet"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: constraint:hr.attendance:0
-msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr ""
+#: model:process.transition,name:hr_timesheet_sheet.process_transition_timesheetdraft0
+msgid "Service"
+msgstr "Usluga"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,quantity:0
 #: field:timesheet.report,quantity:0
 msgid "Time"
-msgstr ""
+msgstr "Vrijeme"
 
 #. module: hr_timesheet_sheet
 #: help:hr.config.settings,timesheet_max_difference:0
@@ -53,7 +53,7 @@ msgstr "Grupiraj po..."
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,total_attendance:0
 msgid "Total Attendance"
-msgstr ""
+msgstr "Ukupna prisutnost"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -84,20 +84,15 @@ msgid "March"
 msgstr "Ožujak"
 
 #. module: hr_timesheet_sheet
-#: model:process.transition,name:hr_timesheet_sheet.process_transition_timesheetdraft0
-msgid "Service"
-msgstr "Usluga"
-
-#. module: hr_timesheet_sheet
 #: view:timesheet.report:0
 #: field:timesheet.report,cost:0
 msgid "#Cost"
-msgstr ""
+msgstr "#Trošak"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Nepročitane poruke"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -133,12 +128,12 @@ msgstr ""
 #: field:hr_timesheet_sheet.sheet,date_to:0
 #: field:timesheet.report,date_to:0
 msgid "Date to"
-msgstr ""
+msgstr "Datum do"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "to"
-msgstr ""
+msgstr "do"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_invoiceonwork0
@@ -156,7 +151,7 @@ msgstr ""
 #: view:hr.timesheet.report:0
 #: view:timesheet.report:0
 msgid "Group by day of date"
-msgstr ""
+msgstr "Grupiraj po danu u tjednu"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my_current
@@ -171,7 +166,7 @@ msgstr "Potvrdi"
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
 msgid "Approved"
-msgstr ""
+msgstr "Odobreno"
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state_attendance:0
@@ -213,7 +208,7 @@ msgstr ""
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:205
 #, python-format
 msgid "Week "
-msgstr ""
+msgstr "Tjedan "
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.action_hr_timesheet_current_open
@@ -229,7 +224,7 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Poruke"
 
 #. module: hr_timesheet_sheet
 #: help:hr_timesheet_sheet.sheet,state:0
@@ -255,7 +250,7 @@ msgstr ""
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:38
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Greška!"
 
 #. module: hr_timesheet_sheet
 #: field:hr.config.settings,timesheet_max_difference:0
@@ -279,7 +274,7 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet.account,name:0
 msgid "Project / Analytic Account"
-msgstr ""
+msgstr "Projekt / Analitički konto"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_validatetimesheet0
@@ -330,13 +325,13 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: field:timesheet.report,nbr:0
 msgid "#Nbr"
-msgstr ""
+msgstr "#Br"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,date_from:0
 #: field:timesheet.report,date_from:0
 msgid "Date from"
-msgstr ""
+msgstr "Datum od"
 
 #. module: hr_timesheet_sheet
 #: view:hr.employee:0
@@ -358,7 +353,7 @@ msgstr ""
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_attendance
 #: model:process.node,name:hr_timesheet_sheet.process_node_attendance0
 msgid "Attendance"
-msgstr ""
+msgstr "Prisutnost"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition.action,name:hr_timesheet_sheet.process_transition_action_draftconfirmtimesheet0
@@ -368,11 +363,6 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,timesheet_ids:0
 msgid "Timesheet lines"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -399,7 +389,7 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_week_attendance_graph
 msgid "My Total Attendances By Week"
-msgstr ""
+msgstr "Moja prisutnost po tjednima"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet.account,total:0
@@ -571,23 +561,8 @@ msgid ""
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#. openerp-web
-#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:61
-#, python-format
-msgid ""
-"By default, you record timesheets on analytic accounts.\n"
-"                        But if an analytic account represents a customer\n"
-"                        contract, you can change the type of the analytic\n"
-"                        account to 'Contract or Project' to setup the "
-"invoicing\n"
-"                        options."
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#. openerp-web
-#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:56
-#, python-format
-msgid "Click to add projects/analytic accounts you worked on."
+#: view:hr.timesheet.current.open:0
+msgid "or"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -907,6 +882,13 @@ msgid "Group by year of date"
 msgstr ""
 
 #. module: hr_timesheet_sheet
+#. openerp-web
+#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:56
+#, python-format
+msgid "Click to add projects, contracts or analytic accounts."
+msgstr ""
+
+#. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_validatedtimesheet0
 msgid "State is 'validated'."
 msgstr ""
@@ -982,8 +964,8 @@ msgid "May"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: model:process.node,note:hr_timesheet_sheet.process_node_workontask0
-msgid "Defines the work summary of task"
+#: field:hr.timesheet.report,journal_id:0
+msgid "Journal"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -1032,11 +1014,6 @@ msgid "February"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr ""
-
-#. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.action_hr_timesheet_report_stat_all
 msgid ""
 "<p>\n"
@@ -1047,11 +1024,6 @@ msgid ""
 "                by specific selection criteria thanks to the search tool.\n"
 "              </p>\n"
 "            "
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: constraint:account.analytic.line:0
-msgid "You cannot create analytic line on view account."
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -1131,11 +1103,6 @@ msgid "#Total Attendance"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.current.open:0
-msgid "or"
-msgstr ""
-
-#. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,cost:0
 msgid "Cost"
 msgstr ""
@@ -1179,8 +1146,8 @@ msgid "Total"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: field:hr.timesheet.report,journal_id:0
-msgid "Journal"
+#: model:process.node,note:hr_timesheet_sheet.process_node_workontask0
+msgid "Defines the work summary of task"
 msgstr ""
 
 #. module: hr_timesheet_sheet

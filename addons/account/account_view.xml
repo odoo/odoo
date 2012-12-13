@@ -1105,7 +1105,7 @@
                     <field name="invoice" invisible="1"/>
                     <field name="amount_currency" readonly="True" invisible="not context.get('currency',False)"/>
                     <field name="currency_id" readonly="True" invisible="not context.get('currency',False)" />
-                    <field name="state" />
+                    <field name="state" invisible="1"/>
                     <field name="company_id" invisible="1"/>
                 </tree>
             </field>
@@ -1207,12 +1207,6 @@
                 </p>
             </field>
         </record>
-        <menuitem
-             name="Journal Items to Reconcile"
-             action="action_account_manual_reconcile"
-             id="menu_manual_reconcile_bank"
-             sequence="20"
-             parent="account.menu_finance_bank_and_cash"/>
         <menuitem
              name="Manual Reconciliation"
              action="action_account_manual_reconcile"
@@ -1428,6 +1422,7 @@
             context="{'search_default_journal_id': active_id, 'default_journal_id': active_id}"
             res_model="account.move.line"
             src_model="account.move"/>
+
         <act_window
             domain="[('reconcile_id', '=', active_id)]"
             id="act_account_acount_move_line_reconcile_open"
@@ -1554,10 +1549,8 @@
             <field name="model">account.payment.term.line</field>
             <field name="arch" type="xml">
                 <tree string="Payment Term">
-                    <field name="sequence"/>
-                    <field name="name"/>
                     <field name="value"/>
-                    <field name="value_amount"/>
+                    <field name="value_amount" attrs="{'readonly':[('value','=','balance')]}"/>
                     <field name="days"/>
                     <field name="days2"/>
                 </tree>
@@ -1569,35 +1562,18 @@
             <field name="arch" type="xml">
                 <form string="Payment Term" version="7.0">
                     <group>
-                        <field name="name"/>
-                        <field name="sequence"/>
-                    </group>
-                    <group>
                         <group string="Amount Computation">
-                            <field name="value"/>
-                            <field name="value_amount" attrs="{'readonly':[('value','=','balance')]}"/>
+	                        <field name="value"/>
+	                        <label for="value_amount" string="Amount To Pay"  attrs="{'invisible':[('value','=','balance')]}"/>
+	                        <div attrs="{'invisible':[('value','=','balance')]}">
+	                            <field name="value_amount" class="oe_inline"/>
+	                            <label string="%%" class="oe_inline" attrs="{'invisible':['!',('value','=','procent')]}" />
+	                        </div>
                         </group>
                         <group string="Due Date Computation">
                             <field name="days"/>
                             <field name="days2"/>
                         </group>
-                    </group>
-
-                    <separator string="Example"/>
-                    <label string="At 14 net days 2 percent, remaining amount at 30 days end of month."/>
-                    <group>
-                        <label string="Line 1:" colspan="2"/>
-                        <label string="  Valuation: Percent"/>
-                        <label string="  Number of Days: 14"/>
-                        <label string="  Value amount: 0.02"/>
-                        <label string="  Day of the Month: 0"/>
-                    </group>
-                    <group>
-                        <label string="Line 2:" colspan="2"/>
-                        <label string="  Valuation: Balance"/>
-                        <label string="  Number of Days: 30"/>
-                        <label string="  Value amount: n.a"/>
-                        <label string="  Day of the Month= -1"/>
                     </group>
                 </form>
             </field>
@@ -1621,7 +1597,7 @@
                         <field name="name"/>
                         <field name="active"/>
                     </group>
-                    <field name="note" placeholder="Note for the invoice..."/>
+                    <field name="note" placeholder="Payment term explanation for the customer..."/>
                     <separator string="Computation"/>
                     <field name="line_ids"/>
                 </form>

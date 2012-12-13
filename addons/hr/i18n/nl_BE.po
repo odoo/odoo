@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:51+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2009-04-10 10:19+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:13+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:40+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -45,7 +45,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr.open_board_hr
 #: model:ir.ui.menu,name:hr.menu_hr_dashboard
 #: model:ir.ui.menu,name:hr.menu_hr_main
-#: model:ir.ui.menu,name:hr.menu_hr_management
 #: model:ir.ui.menu,name:hr.menu_hr_reporting
 #: model:ir.ui.menu,name:hr.menu_hr_root
 #: model:ir.ui.menu,name:hr.menu_human_resources_configuration
@@ -161,8 +160,9 @@ msgid "Birth"
 msgstr ""
 
 #. module: hr
-#: field:hr.employee,last_login:0
-msgid "Latest Connection"
+#: model:ir.actions.act_window,name:hr.open_view_categ_form
+#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
+msgid "Employee Tags"
 msgstr ""
 
 #. module: hr
@@ -245,12 +245,6 @@ msgstr ""
 #. module: hr
 #: selection:hr.employee,gender:0
 msgid "Female"
-msgstr ""
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_categ_form
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
-msgid "Categories of Employees"
 msgstr ""
 
 #. module: hr
@@ -361,6 +355,11 @@ msgid "Configuration"
 msgstr ""
 
 #. module: hr
+#: model:process.node,note:hr.process_node_employee0
+msgid "Employee form and structure"
+msgstr ""
+
+#. module: hr
 #: field:hr.config.settings,module_hr_expense:0
 msgid "Manage employees expenses"
 msgstr ""
@@ -384,11 +383,6 @@ msgstr ""
 #. module: hr
 #: field:hr.employee.category,parent_id:0
 msgid "Parent Category"
-msgstr ""
-
-#. module: hr
-#: sql_constraint:res.users:0
-msgid "OAuth UID must be unique per provider"
 msgstr ""
 
 #. module: hr
@@ -512,11 +506,6 @@ msgstr ""
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
 msgid "Employees Structure"
-msgstr ""
-
-#. module: hr
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
 
 #. module: hr
@@ -644,11 +633,6 @@ msgid "Error! You cannot create recursive departments."
 msgstr ""
 
 #. module: hr
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr ""
-
-#. module: hr
 #: field:hr.employee,address_id:0
 msgid "Working Address"
 msgstr ""
@@ -669,8 +653,8 @@ msgid "ir.actions.act_window"
 msgstr ""
 
 #. module: hr
-#: model:process.node,note:hr.process_node_employee0
-msgid "Employee form and structure"
+#: field:hr.employee,last_login:0
+msgid "Latest Connection"
 msgstr ""
 
 #. module: hr
@@ -771,12 +755,6 @@ msgstr ""
 #. module: hr
 #: field:hr.config.settings,module_hr_timesheet:0
 msgid "Manage timesheets"
-msgstr ""
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_categ_tree
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_tree
-msgid "Categories Structure"
 msgstr ""
 
 #. module: hr
@@ -976,11 +954,6 @@ msgstr ""
 #: view:hr.employee:0
 #: field:hr.employee,parent_id:0
 msgid "Manager"
-msgstr ""
-
-#. module: hr
-#: constraint:res.users:0
-msgid "Error: Invalid ean code"
 msgstr ""
 
 #. module: hr

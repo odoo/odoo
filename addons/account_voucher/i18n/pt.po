@@ -6,25 +6,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:51+0000\n"
-"PO-Revision-Date: 2012-05-10 18:24+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
+"POT-Creation-Date: 2012-12-03 16:01+0000\n"
+"PO-Revision-Date: 2012-12-11 17:16+0000\n"
+"Last-Translator: Rui Franco (multibase.pt) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:15+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-12 04:40+0000\n"
+"X-Generator: Launchpad (build 16361)\n"
 
 #. module: account_voucher
 #: field:account.bank.statement.line,voucher_id:0
 msgid "Reconciliation"
-msgstr ""
+msgstr "Reconciliação"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_config_settings
 msgid "account.config.settings"
-msgstr ""
+msgstr "account.config.settings"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:348
@@ -100,7 +100,7 @@ msgstr "Março"
 #. module: account_voucher
 #: field:account.voucher,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Mensagens por ler"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -131,12 +131,20 @@ msgstr "Agrupar por ano da data de fatura"
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,user_id:0
 msgid "Salesperson"
-msgstr ""
+msgstr "Vendedor"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Voucher Statistics"
 msgstr "Estatísticas do voucher"
+
+#. module: account_voucher
+#: code:addons/account_voucher/account_voucher.py:1558
+#, python-format
+msgid ""
+"You can not change the journal as you already reconciled some statement "
+"lines!"
+msgstr ""
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -203,7 +211,7 @@ msgstr "Notas"
 #. module: account_voucher
 #: field:account.voucher,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Mensagens"
 
 #. module: account_voucher
 #: selection:account.voucher,type:0
@@ -221,7 +229,7 @@ msgstr "Item do Diário"
 #: code:addons/account_voucher/account_voucher.py:964
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Erro!"
 
 #. module: account_voucher
 #: field:account.voucher.line,amount:0
@@ -283,11 +291,6 @@ msgid "Day"
 msgstr "Dia"
 
 #. module: account_voucher
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr "Estrutura de comunicação BBA inválida!"
-
-#. module: account_voucher
 #: field:account.voucher,tax_id:0
 msgid "Tax"
 msgstr "Imposto"
@@ -296,12 +299,7 @@ msgstr "Imposto"
 #: code:addons/account_voucher/account_voucher.py:864
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
-
-#. module: account_voucher
-#: constraint:account.bank.statement:0
-msgid "The journal and period chosen have to belong to the same company."
-msgstr "O diário e o período escolhidos devem pertencer à mesma empresa."
+msgstr "Ação inválida!"
 
 #. module: account_voucher
 #: field:account.voucher,comment:0
@@ -328,7 +326,7 @@ msgstr "Informação de pagamento"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "(update)"
-msgstr ""
+msgstr "(atualizar)"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -371,11 +369,6 @@ msgid "Sales Lines"
 msgstr "Linhas de Vendas"
 
 #. module: account_voucher
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "Erro! Não pode criar empresas recursivas."
-
-#. module: account_voucher
 #: view:account.voucher:0
 #: field:account.voucher,period_id:0
 msgid "Period"
@@ -394,7 +387,7 @@ msgstr "Fornecedor de voucher"
 #. module: account_voucher
 #: field:account.voucher,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Seguidores"
 
 #. module: account_voucher
 #: selection:account.voucher.line,type:0
@@ -402,9 +395,10 @@ msgid "Debit"
 msgstr "Débito"
 
 #. module: account_voucher
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr "O nome da empresa deve ser único!"
+#: code:addons/account_voucher/account_voucher.py:1558
+#, python-format
+msgid "Unable to change journal !"
+msgstr ""
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -666,7 +660,7 @@ msgstr "Reconciliar Balanço de Pagamentos"
 #: code:addons/account_voucher/account_voucher.py:960
 #, python-format
 msgid "Configuration Error !"
-msgstr ""
+msgstr "Erro de configuração!"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -701,7 +695,7 @@ msgstr "Alocação"
 #: view:account.statement.from.invoice.lines:0
 #: view:account.voucher:0
 msgid "or"
-msgstr ""
+msgstr "ou"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -746,7 +740,7 @@ msgstr "Pago"
 #. module: account_voucher
 #: field:account.voucher,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "É um seguidor"
 
 #. module: account_voucher
 #: field:account.voucher,analytic_id:0
@@ -833,12 +827,12 @@ msgstr "Empresas"
 #. module: account_voucher
 #: field:account.voucher,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Resumo"
 
 #. module: account_voucher
 #: field:account.voucher,active:0
 msgid "Active"
-msgstr ""
+msgstr "Ativo"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:965
@@ -871,11 +865,6 @@ msgstr "Colocar"
 #: view:account.voucher:0
 msgid "Invoices and outstanding transactions"
 msgstr "Faturas e transações pendentes"
-
-#. module: account_voucher
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr "O número da fatura deve ser único por empresa!"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -1263,7 +1252,7 @@ msgstr "Abrir Balanço"
 #: code:addons/account_voucher/account_voucher.py:1001
 #, python-format
 msgid "Insufficient Configuration!"
-msgstr ""
+msgstr "Configuração incompleta!"
 
 #. module: account_voucher
 #: help:account.voucher,active:0
@@ -1560,12 +1549,24 @@ msgstr ""
 #~ msgid "Unreconcile entries"
 #~ msgstr "Entradas inconciliáveis"
 
+#~ msgid "Invalid BBA Structured Communication !"
+#~ msgstr "Estrutura de comunicação BBA inválida!"
+
+#~ msgid "The journal and period chosen have to belong to the same company."
+#~ msgstr "O diário e o período escolhidos devem pertencer à mesma empresa."
+
 #, python-format
 #~ msgid "Warning"
 #~ msgstr "Aviso !"
 
 #~ msgid "Go"
 #~ msgstr "Ir"
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "O nome da empresa deve ser único!"
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "Erro! Não pode criar empresas recursivas."
 
 #~ msgid "current month"
 #~ msgstr "mês atual"
@@ -1611,6 +1612,9 @@ msgstr ""
 #~ msgid "Please define default credit/debit accounts on the journal \"%s\" !"
 #~ msgstr ""
 #~ "Por favor, defina padrão de crédito / débito em contas diárias \"%s\"!"
+
+#~ msgid "Invoice Number must be unique per Company!"
+#~ msgstr "O número da fatura deve ser único por empresa!"
 
 #~ msgid "Expense Currency Rate"
 #~ msgstr "Despesa da Taxa de câmbio"

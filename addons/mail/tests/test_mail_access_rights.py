@@ -31,6 +31,7 @@ class test_mail_access_rights(test_mail_mockup.TestMailMockups):
         cr, uid = self.cr, self.uid
         self.mail_group = self.registry('mail.group')
         self.mail_message = self.registry('mail.message')
+        self.attachment = self.registry('ir.attachment')
         self.mail_notification = self.registry('mail.notification')
         self.res_users = self.registry('res.users')
         self.res_groups = self.registry('res.groups')
@@ -97,12 +98,16 @@ class test_mail_access_rights(test_mail_mockup.TestMailMockups):
         self.mail_group.message_post(cr, uid, self.group_pigs_id, body='Message')
         self.group_jobs_id = self.mail_group.create(cr, uid, {'name': 'Jobs', 'public': 'public'})
 
+        # prepare an attachment
+        attachment_id = self.attachment.create(cr, uid, {'datas': 'My attachment'.encode('base64'), 'name': 'doc.txt', 'datas_fname': 'doc.txt' })
+
         # ----------------------------------------
         # CASE1: Bert, basic mail.message read access
         # ----------------------------------------
 
         # Do: create a new mail.message
-        message_id = self.mail_message.create(cr, uid, {'body': 'My Body'})
+        message_id = self.mail_message.create(cr, uid, {'body': 'My Body', 'attachment_ids': [4, attachment_id] })
+
         # Test: Bert reads the message, crash because not notification/not in doc followers/not read on doc
         self.assertRaises(except_orm, self.mail_message.read,
             cr, user_bert_id, message_id)
@@ -110,11 +115,16 @@ class test_mail_access_rights(test_mail_mockup.TestMailMockups):
         notif_id = self.mail_notification.create(cr, uid, {'message_id': message_id, 'partner_id': partner_bert_id})
         # Test: Bert reads the message, ok because notification pushed
         self.mail_message.read(cr, user_bert_id, message_id)
+        # Test: Bert download attachment, ok because he can read message
+        self.mail_message.download_attachment(cr, user_bert_id, message_id, attachment_id)
         # Do: remove notification
         self.mail_notification.unlink(cr, uid, notif_id)
         # Test: Bert reads the message, crash because not notification/not in doc followers/not read on doc
         self.assertRaises(except_orm, self.mail_message.read,
             cr, self.user_bert_id, message_id)
+        # Test: Bert download attachment, crash because he can't read message
+        self.assertRaises(except_orm, self.mail_message.download_attachment,
+            cr, user_bert_id, message_id, attachment_id)
         # Do: Bert is now the author
         self.mail_message.write(cr, uid, [message_id], {'author_id': partner_bert_id})
         # Test: Bert reads the message, ok because Bert is the author

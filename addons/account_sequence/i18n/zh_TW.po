@@ -7,20 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-08-28 02:48+0000\n"
 "Last-Translator: Eric Huang <eh@cenoq.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:31+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on closed account."
-msgstr ""
+"X-Launchpad-Export-Date: 2012-12-04 05:53+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: account_sequence
 #: view:account.sequence.installer:0
@@ -75,13 +70,6 @@ msgid "Company"
 msgstr "公司"
 
 #. module: account_sequence
-#: help:account.journal,internal_sequence_id:0
-msgid ""
-"This sequence will be used to maintain the internal number for the journal "
-"entries related to this journal."
-msgstr "此序列用於當前帳簿的所有會計分錄。"
-
-#. module: account_sequence
 #: field:account.sequence.installer,padding:0
 msgid "Number padding"
 msgstr "數字位數"
@@ -110,37 +98,9 @@ msgid "Name"
 msgstr "名稱"
 
 #. module: account_sequence
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on an account of type view."
-msgstr ""
-
-#. module: account_sequence
-#: constraint:account.journal:0
-msgid ""
-"Configuration error!\n"
-"The currency chosen should be shared by the default accounts too."
-msgstr ""
-
-#. module: account_sequence
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
-msgstr "會計分錄中包含錯誤的借貸值！"
-
-#. module: account_sequence
-#: constraint:account.move:0
-msgid ""
-"You cannot create more than one move per period on a centralized journal."
-msgstr ""
-
-#. module: account_sequence
 #: field:account.journal,internal_sequence_id:0
 msgid "Internal Sequence"
 msgstr "內部序列"
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid "Account and Period must belong to the same company."
-msgstr ""
 
 #. module: account_sequence
 #: help:account.sequence.installer,prefix:0
@@ -163,34 +123,16 @@ msgid "title"
 msgstr "標題"
 
 #. module: account_sequence
-#: sql_constraint:account.journal:0
-msgid "The name of the journal must be unique per company !"
-msgstr "每個公司的帳簿名稱必須唯一！"
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry forces to provide a secondary "
-"currency. You should remove the secondary currency on the account or select "
-"a multi-currency view on the journal."
-msgstr "分錄上的科目要求輸入一個外幣。你可以在科目設置中去掉這個外幣或在日記帳設置上選擇一個支持多幣種的輸入界面。"
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid ""
-"The date of your Journal Entry is not in the defined period! You should "
-"change the date or remove this constraint from the journal."
-msgstr "分錄日期不在所選期間內！可以修改憑證日期或在日記帳上去掉這個檢查項。"
-
-#. module: account_sequence
 #: field:account.sequence.installer,prefix:0
 msgid "Prefix"
 msgstr "前綴"
 
 #. module: account_sequence
-#: sql_constraint:account.journal:0
-msgid "The code of the journal must be unique per company !"
-msgstr "每個公司的帳簿編碼必須唯一！"
+#: help:account.journal,internal_sequence_id:0
+msgid ""
+"This sequence will be used to maintain the internal number for the journal "
+"entries related to this journal."
+msgstr "此序列用於當前帳簿的所有會計分錄。"
 
 #. module: account_sequence
 #: model:ir.model,name:account_sequence.model_account_sequence_installer
@@ -219,6 +161,26 @@ msgstr "你可以用安裝的方式來擴充會計序列應用程式"
 
 #~ msgid "You can not create journal items on an account of type view."
 #~ msgstr "借貸項不能使用視圖類型的科目"
+
+#~ msgid "Wrong credit or debit value in accounting entry !"
+#~ msgstr "會計分錄中包含錯誤的借貸值！"
+
+#~ msgid "The name of the journal must be unique per company !"
+#~ msgstr "每個公司的帳簿名稱必須唯一！"
+
+#~ msgid ""
+#~ "The selected account of your Journal Entry forces to provide a secondary "
+#~ "currency. You should remove the secondary currency on the account or select "
+#~ "a multi-currency view on the journal."
+#~ msgstr "分錄上的科目要求輸入一個外幣。你可以在科目設置中去掉這個外幣或在日記帳設置上選擇一個支持多幣種的輸入界面。"
+
+#~ msgid ""
+#~ "The date of your Journal Entry is not in the defined period! You should "
+#~ "change the date or remove this constraint from the journal."
+#~ msgstr "分錄日期不在所選期間內！可以修改憑證日期或在日記帳上去掉這個檢查項。"
+
+#~ msgid "The code of the journal must be unique per company !"
+#~ msgstr "每個公司的帳簿編碼必須唯一！"
 
 #~ msgid "You can not create journal items on closed account."
 #~ msgstr "你不能在已關閉的會計科目建立分錄"

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:51+0000\n"
-"PO-Revision-Date: 2012-11-25 19:14+0000\n"
-"Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
+"PO-Revision-Date: 2012-12-04 07:48+0000\n"
+"Last-Translator: Leen Sonneveld <leen.sonneveld@opensol.nl>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-26 04:41+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-05 05:20+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_config_settings
@@ -59,6 +59,7 @@ msgstr "Dag"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancelorder0
+#: view:sale.order:0
 msgid "Cancel Order"
 msgstr "Annuleer order"
 
@@ -101,6 +102,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: field:sale.order,project_id:0
 #: view:sale.report:0
 #: field:sale.report,analytic_account_id:0
 #: field:sale.shop,project_id:0
@@ -141,7 +143,7 @@ msgid "Default Payment Term"
 msgstr "Std. betalingstermijn"
 
 #. module: sale
-#: code:addons/sale/sale.py:696
+#: code:addons/sale/sale.py:662
 #, python-format
 msgid "Invoice <b>paid</b>."
 msgstr "Factuur <b>betaald</b>."
@@ -162,7 +164,7 @@ msgid "Disc.(%)"
 msgstr "Krt. (%)"
 
 #. module: sale
-#: code:addons/sale/sale.py:807
+#: code:addons/sale/sale.py:787
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr ""
@@ -210,7 +212,7 @@ msgid "Other Information"
 msgstr "Overige informatie"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:111
+#: code:addons/sale/wizard/sale_line_invoice.py:109
 #: code:addons/sale/wizard/sale_make_invoice.py:42
 #, python-format
 msgid "Warning!"
@@ -255,6 +257,11 @@ msgid "Discount (%)"
 msgstr "Korting (%)"
 
 #. module: sale
+#: view:sale.order.line.make.invoice:0
+msgid "Create & View Invoice"
+msgstr "Maak en bekijk factuur"
+
+#. module: sale
 #: view:board.board:0
 #: model:ir.actions.act_window,name:sale.action_quotation_for_sale
 msgid "My Quotations"
@@ -297,7 +304,7 @@ msgid "Advance of %s %%"
 msgstr "Vooruitbetaling van %s %%"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_orders_exception
+#: model:ir.actions.act_window,name:sale.action_order_tree2
 msgid "Sales in Exception"
 msgstr "Verkooporders met uitgestelde levering"
 
@@ -373,8 +380,8 @@ msgid "Advance of %s %s"
 msgstr "Voorschot van %s %s"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_quotations
-#: model:ir.ui.menu,name:sale.menu_sale_quotations
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.action_quotation_for_sale
 #: view:sale.order:0
 #: view:sale.report:0
 msgid "Quotations"
@@ -383,14 +390,13 @@ msgstr "Offertes"
 #. module: sale
 #: field:sale.advance.payment.inv,qtty:0
 #: report:sale.order:0
-#: field:sale.order.line,product_uom_qty:0
 msgid "Quantity"
 msgstr "Aantal"
 
 #. module: sale
 #: help:sale.order,partner_shipping_id:0
 msgid "Delivery address for current sales order."
-msgstr ""
+msgstr "Afleveradres voor de huidige verkooporder"
 
 #. module: sale
 #: report:sale.order:0
@@ -408,15 +414,16 @@ msgid "Fiscal Position"
 msgstr "Fiscale positie"
 
 #. module: sale
+#: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "In Progress"
 msgstr "In behandeling"
 
 #. module: sale
-#: code:addons/sale/sale.py:701
+#: code:addons/sale/sale.py:667
 #, python-format
 msgid "Draft Invoice of %s %s <b>waiting for validation</b>."
-msgstr ""
+msgstr "Concept factuur van %s %s <b>wacht op validatie</b>."
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_confirmquotation0
@@ -428,7 +435,7 @@ msgstr ""
 "behandeling'."
 
 #. module: sale
-#: code:addons/sale/sale.py:864
+#: code:addons/sale/sale.py:843
 #, python-format
 msgid "You cannot cancel a sale order line that has already been invoiced."
 msgstr ""
@@ -454,7 +461,7 @@ msgid "Before Delivery"
 msgstr "Voor levering"
 
 #. module: sale
-#: code:addons/sale/sale.py:824
+#: code:addons/sale/sale.py:804
 #, python-format
 msgid ""
 "There is no Fiscal Position defined or Income category account defined for "
@@ -482,7 +489,7 @@ msgid "Ordered month of the sales order"
 msgstr "Bestelde maand van de verkooporder"
 
 #. module: sale
-#: code:addons/sale/sale.py:492
+#: code:addons/sale/sale.py:496
 #, python-format
 msgid ""
 "You cannot group sales having different currencies for the same partner."
@@ -498,12 +505,6 @@ msgid "or"
 msgstr "of"
 
 #. module: sale
-#: constraint:res.partner:0
-msgid "Error: Invalid ean code"
-msgstr "Fout, ongeldige EAN-code"
-
-#. module: sale
-#: field:sale.order,invoice_exists:0
 #: field:sale.order,invoiced_rate:0
 #: field:sale.order.line,invoiced:0
 msgid "Invoiced"
@@ -533,6 +534,11 @@ msgstr "Factureer order"
 #: selection:sale.report,month:0
 msgid "March"
 msgstr "Maart"
+
+#. module: sale
+#: model:ir.actions.server,name:sale.actions_server_sale_order_read
+msgid "Sale: Mark read"
+msgstr ""
 
 #. module: sale
 #: help:sale.order,amount_total:0
@@ -585,10 +591,13 @@ msgid "Quotation / Order"
 msgstr "Offerte / Order"
 
 #. module: sale
-#: view:sale.report:0
-#: field:sale.report,nbr:0
-msgid "# of Lines"
-msgstr "# Regels"
+#: view:sale.order.line.make.invoice:0
+msgid ""
+"All items in these order lines will be invoiced. You can also invoice a "
+"percentage of the sale order \n"
+"                    or a fixed price (for advances) directly from the sale "
+"order form if you prefer."
+msgstr ""
 
 #. module: sale
 #: view:sale.order:0
@@ -597,6 +606,7 @@ msgstr "(update)"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
+#: field:stock.move,sale_line_id:0
 msgid "Sales Order Line"
 msgstr "Verkooporderregel"
 
@@ -616,7 +626,6 @@ msgid "Order N°"
 msgstr "Order nr."
 
 #. module: sale
-#: view:sale.order:0
 #: field:sale.order,order_line:0
 msgid "Order Lines"
 msgstr "Orderregels"
@@ -641,7 +650,7 @@ msgid "Creation Date"
 msgstr "Datum gemaakt"
 
 #. module: sale
-#: code:addons/sale/sale.py:693
+#: code:addons/sale/sale.py:659
 #, python-format
 msgid "Sale Order for <em>%s</em> set to <b>Done</b>"
 msgstr "Verkooporder voor <em>%s</em> is <b>gereed</b>"
@@ -689,7 +698,7 @@ msgid "There is no income account defined as global property."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:1005
+#: code:addons/sale/sale.py:984
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:91
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:95
 #, python-format
@@ -714,6 +723,7 @@ msgstr "Orderdatum"
 
 #. module: sale
 #: view:sale.order.line:0
+#: field:sale.report,shipped:0
 msgid "Shipped"
 msgstr "Verzonden"
 
@@ -725,7 +735,6 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model:ir.model,name:sale.model_res_partner
 #: view:sale.report:0
 #: field:sale.report,partner_id:0
 msgid "Partner"
@@ -756,13 +765,13 @@ msgid "Quotation Date"
 msgstr "Offertedatum"
 
 #. module: sale
-#: code:addons/sale/sale.py:624
+#: code:addons/sale/sale.py:590
 #, python-format
 msgid "You cannot confirm a sale order which has no line."
 msgstr "Het is niet mogelijk een verkooporder zonder regels te bevestigen"
 
 #. module: sale
-#: code:addons/sale/sale.py:987
+#: code:addons/sale/sale.py:1124
 #, python-format
 msgid ""
 "You have to select a pricelist or a customer in the sales form !\n"
@@ -778,7 +787,7 @@ msgid "Category of Product"
 msgstr "Productcategorie"
 
 #. module: sale
-#: code:addons/sale/sale.py:589
+#: code:addons/sale/sale.py:555
 #, python-format
 msgid "Cannot cancel this sales order!"
 msgstr "Het is niet mogelijk deze verkooprder te annuleren!"
@@ -848,7 +857,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:1000
+#: code:addons/sale/sale.py:979
 #, python-format
 msgid "No valid pricelist line found ! :"
 msgstr "Geen geldige prijslijst gevonden!:"
@@ -875,6 +884,7 @@ msgid "Your Reference"
 msgstr "Uw referentie"
 
 #. module: sale
+#: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Qty"
 msgstr "Hvhd"
@@ -886,9 +896,10 @@ msgstr "Mijn verkooporderregels"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancel0
+#: model:process.transition.action,name:sale.process_transition_action_cancel1
+#: model:process.transition.action,name:sale.process_transition_action_cancel2
 #: view:sale.advance.payment.inv:0
 #: view:sale.make.invoice:0
-#: view:sale.order:0
 #: view:sale.order.line:0
 #: view:sale.order.line.make.invoice:0
 msgid "Cancel"
@@ -900,7 +911,7 @@ msgid "Order Reference must be unique per Company!"
 msgstr "Orderreferentie moet uniek zijn per bedrijf!"
 
 #. module: sale
-#: code:addons/sale/sale.py:997
+#: code:addons/sale/sale.py:976
 #, python-format
 msgid ""
 "Cannot find a pricelist line matching this product and quantity.\n"
@@ -909,10 +920,9 @@ msgstr ""
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_invoice0
+#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
 #: model:process.transition.action,name:sale.process_transition_action_createinvoice0
 #: view:sale.advance.payment.inv:0
-#: view:sale.order:0
-#: field:sale.order,order_policy:0
 #: view:sale.order.line:0
 msgid "Create Invoice"
 msgstr "Maak factuur"
@@ -939,6 +949,7 @@ msgstr ""
 
 #. module: sale
 #: report:sale.order:0
+#: view:sale.order.line:0
 msgid "Price"
 msgstr "Bedrag"
 
@@ -968,7 +979,7 @@ msgid "Draft state of sales order"
 msgstr "Offerte status van een verkooporder"
 
 #. module: sale
-#: code:addons/sale/sale.py:681
+#: code:addons/sale/sale.py:647
 #, python-format
 msgid "Quotation for <em>%s</em> <b>created</b>."
 msgstr "Offerte voor <em>%s</em> <b>aangemaakt</b>."
@@ -984,7 +995,7 @@ msgid "New Copy of Quotation"
 msgstr "Nieuwe kopie van offerte"
 
 #. module: sale
-#: code:addons/sale/sale.py:1028
+#: code:addons/sale/sale.py:1007
 #, python-format
 msgid "Cannot delete a sales order line which is in state '%s'."
 msgstr ""
@@ -997,7 +1008,7 @@ msgid "Properties on lines"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:909
+#: code:addons/sale/sale.py:888
 #, python-format
 msgid ""
 "Before choosing a product,\n"
@@ -1038,11 +1049,6 @@ msgid "Product Features"
 msgstr "Product mogelijkheden"
 
 #. module: sale
-#: view:sale.config.settings:0
-msgid "Contract Feature"
-msgstr "Contract kenmerken"
-
-#. module: sale
 #: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "Waiting Schedule"
@@ -1081,6 +1087,7 @@ msgid "Sale Order"
 msgstr "Verkooporder"
 
 #. module: sale
+#: view:sale.order:0
 #: field:sale.order,amount_tax:0
 #: field:sale.order.line,tax_id:0
 msgid "Taxes"
@@ -1116,8 +1123,8 @@ msgstr "Maak facturen"
 
 #. module: sale
 #: code:addons/sale/sale.py:263
-#: code:addons/sale/sale.py:864
-#: code:addons/sale/sale.py:1028
+#: code:addons/sale/sale.py:843
+#: code:addons/sale/sale.py:1007
 #, python-format
 msgid "Invalid Action!"
 msgstr "Ongeldige actie!"
@@ -1150,6 +1157,7 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice
 #: model:ir.actions.act_window,name:sale.action_view_sale_order_line_make_invoice
+#: view:sale.order:0
 msgid "Make Invoices"
 msgstr "Maak facturen"
 
@@ -1198,7 +1206,7 @@ msgid "Group the invoices"
 msgstr "Groepeer de facturen"
 
 #. module: sale
-#: code:addons/sale/sale.py:685
+#: code:addons/sale/sale.py:651
 #, python-format
 msgid "Quotation for <em>%s</em> <b>converted</b> to Sale Order of %s %s."
 msgstr ""
@@ -1254,7 +1262,7 @@ msgstr "Verkoopanalyse"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_quotation0
-#: view:sale.order:0
+#: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "Quotation"
 msgstr "Offerte"
@@ -1397,16 +1405,14 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:431
+#: code:addons/sale/sale.py:435
 #, python-format
 msgid "Customer Invoices"
 msgstr "Klantfacturen"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.open_board_sales
-#: model:ir.ui.menu,name:sale.menu_dashboard_sales
+#: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
 #: model:process.process,name:sale.process_process_salesprocess0
-#: view:res.partner:0
 #: view:sale.order:0
 #: view:sale.report:0
 msgid "Sales"
@@ -1428,7 +1434,6 @@ msgid "Unit Price"
 msgstr "Prijs"
 
 #. module: sale
-#: view:sale.order:0
 #: selection:sale.order,state:0
 #: view:sale.order.line:0
 #: selection:sale.order.line,state:0
@@ -1438,7 +1443,7 @@ msgstr "Gereed"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_invoice0
-#: view:sale.order:0
+#: model:process.node,name:sale.process_node_invoiceafterdelivery0
 msgid "Invoice"
 msgstr "Factuur"
 
@@ -1514,14 +1519,15 @@ msgid "Product UoS"
 msgstr "Artikel UoS"
 
 #. module: sale
+#: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "Manual In Progress"
 msgstr "Handmatig in behandeling"
 
 #. module: sale
 #: model:ir.actions.server,name:sale.actions_server_sale_order_unread
-msgid "Mark unread"
-msgstr "Markeer als ongelezen"
+msgid "Sale: Mark unread"
+msgstr ""
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1633,7 +1639,7 @@ msgid "Date on which sales order is confirmed."
 msgstr "Datum waarop de verkooporder is bevestigd."
 
 #. module: sale
-#: code:addons/sale/sale.py:590
+#: code:addons/sale/sale.py:556
 #, python-format
 msgid "First cancel all invoices attached to this sales order."
 msgstr ""
@@ -1665,7 +1671,7 @@ msgid "Invoice Exception"
 msgstr "Fouten in facturatie"
 
 #. module: sale
-#: code:addons/sale/sale.py:909
+#: code:addons/sale/sale.py:1017
 #, python-format
 msgid "No Customer Defined !"
 msgstr "Geen klant opgegeven!"
@@ -1696,11 +1702,11 @@ msgid "Project"
 msgstr "Project"
 
 #. module: sale
-#: code:addons/sale/sale.py:350
-#: code:addons/sale/sale.py:491
-#: code:addons/sale/sale.py:624
-#: code:addons/sale/sale.py:806
-#: code:addons/sale/sale.py:823
+#: code:addons/sale/sale.py:354
+#: code:addons/sale/sale.py:495
+#: code:addons/sale/sale.py:590
+#: code:addons/sale/sale.py:786
+#: code:addons/sale/sale.py:803
 #, python-format
 msgid "Error!"
 msgstr "Fout!"
@@ -1733,7 +1739,7 @@ msgstr "Niet-gefactureerde regels zoeken"
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Quotation Sent"
-msgstr "Offerte verstuurt"
+msgstr "Offerte verstuurd"
 
 #. module: sale
 #: model:ir.model,name:sale.model_mail_compose_message
@@ -1742,6 +1748,7 @@ msgstr "E-mail samenstellen wizard"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_shop_form
+#: model:ir.ui.menu,name:sale.menu_action_shop_form
 #: field:sale.order,shop_id:0
 #: view:sale.report:0
 #: field:sale.report,shop_id:0
@@ -1754,21 +1761,23 @@ msgid "Date Confirm"
 msgstr "Datum bevestigd"
 
 #. module: sale
-#: code:addons/sale/sale.py:351
+#: code:addons/sale/sale.py:355
 #, python-format
 msgid "Please define sales journal for this company: \"%s\" (id:%d)."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:273
-#: code:addons/sale/sale.py:610
+#: view:sale.config.settings:0
+msgid "Contract Features"
+msgstr ""
+
+#. module: sale
 #: model:ir.model,name:sale.model_sale_order
 #: model:process.node,name:sale.process_node_order0
 #: model:process.node,name:sale.process_node_saleorder0
-#: field:res.partner,sale_order_ids:0
 #: model:res.request.link,name:sale.req_link_sale_order
 #: view:sale.order:0
-#, python-format
+#: field:stock.picking,sale_id:0
 msgid "Sales Order"
 msgstr "Verkooporder"
 
@@ -1803,17 +1812,18 @@ msgid "Followers"
 msgstr "Volgers"
 
 #. module: sale
+#: view:sale.order:0
 #: field:sale.order.line,invoice_lines:0
 msgid "Invoice Lines"
 msgstr "Factuurregels"
 
 #. module: sale
-#: model:ir.actions.server,name:sale.actions_server_sale_order_read
-msgid "Mark read"
-msgstr "Markeer als gelezen"
+#: view:sale.report:0
+#: field:sale.report,nbr:0
+msgid "# of Lines"
+msgstr "# Regels"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_line_product_tree
 #: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Sales Order Lines"
@@ -1911,6 +1921,8 @@ msgid "Weight"
 msgstr "Gewicht"
 
 #. module: sale
+#: view:sale.open.invoice:0
+#: view:sale.order:0
 #: field:sale.order,invoice_ids:0
 msgid "Invoices"
 msgstr "Facturen"
@@ -1942,7 +1954,10 @@ msgid "Untaxed Amount"
 msgstr "Netto bedrag"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:202
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:163
+#: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
+#: view:sale.advance.payment.inv:0
+#: view:sale.order:0
 #, python-format
 msgid "Advance Invoice"
 msgstr "Vooruitbetalen"
@@ -1983,6 +1998,8 @@ msgid "Email Templates"
 msgstr "Email-sjablonen"
 
 #. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_form
+#: model:ir.ui.menu,name:sale.menu_sale_order
 #: view:sale.order:0
 msgid "Sales Orders"
 msgstr "Verkooporders"
@@ -2020,7 +2037,7 @@ msgid "January"
 msgstr "Januari"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_orders_in_progress
+#: model:ir.actions.act_window,name:sale.action_order_tree4
 msgid "Sales Order in Progress"
 msgstr "Lopende verkooporders"
 
@@ -2030,7 +2047,7 @@ msgid "Prepare invoices based on timesheets"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:689
+#: code:addons/sale/sale.py:655
 #, python-format
 msgid "Sale Order for <em>%s</em> <b>cancelled</b>."
 msgstr ""
@@ -2078,7 +2095,7 @@ msgid "from stock"
 msgstr "Uit Voorraad"
 
 #. module: sale
-#: code:addons/sale/sale.py:989
+#: code:addons/sale/sale.py:968
 #, python-format
 msgid "No Pricelist ! : "
 msgstr "Geen prijslijst! "
@@ -2112,7 +2129,6 @@ msgstr "Mei"
 
 #. module: sale
 #: view:sale.make.invoice:0
-#: view:sale.order.line.make.invoice:0
 msgid "Do you really want to create the invoice(s)?"
 msgstr "Wilt u echt de facturen aanmaken?"
 
@@ -2164,12 +2180,6 @@ msgid "What do you want to invoice?"
 msgstr "Wat wilt u factureren?"
 
 #. module: sale
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr ""
-"Fout! Het is niet mogelijk om recursieve geassocieerde leden te maken"
-
-#. module: sale
 #: field:sale.order.line,sequence:0
 msgid "Sequence"
 msgstr "Volgorde"
@@ -2206,6 +2216,7 @@ msgid "Quotation N°"
 msgstr "Offerte nr."
 
 #. module: sale
+#: field:sale.order,picked_rate:0
 #: view:sale.report:0
 msgid "Picked"
 msgstr "Verzameld"
@@ -2215,6 +2226,11 @@ msgstr "Verzameld"
 #: field:sale.report,year:0
 msgid "Year"
 msgstr "Jaar"
+
+#. module: sale
+#: view:sale.order.line.make.invoice:0
+msgid "Do you want to invoice the selected sale order lines?"
+msgstr ""
 
 #~ msgid "Partial Delivery"
 #~ msgstr "Deellevering"
@@ -2644,6 +2660,9 @@ msgstr "Jaar"
 #~ msgid "Related invoices"
 #~ msgstr "Gerelateerde facturen"
 
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Fout, ongeldige EAN-code"
+
 #~ msgid "Stock Moves"
 #~ msgstr "Goederenstromen"
 
@@ -2943,9 +2962,6 @@ msgstr "Jaar"
 
 #~ msgid "Sales by Partner"
 #~ msgstr "Omzet per relatie"
-
-#~ msgid "Open Invoice"
-#~ msgstr "Openstaande factuur"
 
 #~ msgid "Sales Application Configuration"
 #~ msgstr "Verkoop applicatie configuratie"
@@ -3778,3 +3794,6 @@ msgstr "Jaar"
 
 #~ msgid "Contract/Analytic Account"
 #~ msgstr "Contract/Kostenplaats"
+
+#~ msgid "Open Invoice"
+#~ msgstr "Open factuur"

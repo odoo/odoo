@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:53+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2012-11-30 11:49+0000\n"
 "Last-Translator: ccdos <ccdos@163.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-01 05:09+0000\n"
-"X-Generator: Launchpad (build 16319)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:53+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -71,11 +71,6 @@ msgid "Invitation Message"
 msgstr "邀请消息"
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.portal_company
-msgid "Our company"
-msgstr "我们公司"
-
-#. module: portal
 #: view:res.groups:0
 msgid "Non-Portal Groups"
 msgstr "非门户组"
@@ -84,6 +79,16 @@ msgstr "非门户组"
 #: view:share.wizard:0
 msgid "Details"
 msgstr "详情"
+
+#. module: portal
+#: model:ir.ui.menu,name:portal.portal_orders
+msgid "Quotations and Sales Orders"
+msgstr ""
+
+#. module: portal
+#: view:portal.payment.acquirer:0
+msgid "reference: the reference number of the document to pay"
+msgstr ""
 
 #. module: portal
 #: help:portal.payment.acquirer,visible:0
@@ -98,14 +103,18 @@ msgid "Share Wizard"
 msgstr "共享向导"
 
 #. module: portal
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr "群组名必须唯一！"
-
-#. module: portal
 #: field:portal.wizard.user,email:0
 msgid "Email"
 msgstr "Email"
+
+#. module: portal
+#: model:ir.actions.client,help:portal.action_news
+msgid ""
+"<p>\n"
+"                    Youd don't have unread company's news.\n"
+"                </p>\n"
+"            "
+msgstr ""
 
 #. module: portal
 #: view:portal.wizard:0
@@ -113,7 +122,7 @@ msgid "or"
 msgstr "or"
 
 #. module: portal
-#: model:ir.actions.act_window,name:portal.action_jobs
+#: model:ir.actions.client,name:portal.action_jobs
 #: model:ir.ui.menu,name:portal.portal_jobs
 msgid "Jobs"
 msgstr "作业"
@@ -148,6 +157,15 @@ msgid "Users you already shared with"
 msgstr "你已经分享的用户"
 
 #. module: portal
+#: model:ir.actions.client,help:portal.action_jobs
+msgid ""
+"<p>\n"
+"                    Youd don't have unread job offers.\n"
+"                </p>\n"
+"            "
+msgstr ""
+
+#. module: portal
 #: model:ir.ui.menu,name:portal.company_jobs_ir_ui_menu
 msgid "Company's jobs"
 msgstr ""
@@ -177,9 +195,10 @@ msgid "In Portal"
 msgstr "在门户中"
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.portal_invoices_payements
-msgid "Invoices and Payments"
-msgstr "开票和支付"
+#: model:ir.actions.client,name:portal.action_news
+#: model:ir.ui.menu,name:portal.portal_company_news
+msgid "News"
+msgstr "新闻"
 
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_after_sales
@@ -204,6 +223,12 @@ msgstr ""
 #: model:ir.ui.menu,name:portal.portal_projects
 msgid "Projects"
 msgstr "项目"
+
+#. module: portal
+#: model:ir.actions.client,name:portal.action_mail_inbox_feeds_portal
+#: model:ir.ui.menu,name:portal.portal_inbox
+msgid "Inbox"
+msgstr ""
 
 #. module: portal
 #: view:share.wizard:0
@@ -271,24 +296,18 @@ msgid "Outgoing Mails"
 msgstr "发出邮件"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:199
+#: code:addons/portal/wizard/portal_wizard.py:194
 #, python-format
 msgid "Email required"
 msgstr "必须输入邮件地址"
 
 #. module: portal
-#: model:ir.actions.act_window,name:portal.action_news
-#: model:ir.ui.menu,name:portal.portal_company_news
-msgid "News"
-msgstr "新闻"
-
-#. module: portal
-#: view:portal.payment.acquirer:0
-msgid "reference: the reference number of the document to pay"
+#: model:ir.ui.menu,name:portal.portal_messages
+msgid "Messaging"
 msgstr ""
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:200
+#: code:addons/portal/wizard/portal_wizard.py:195
 #, python-format
 msgid ""
 "You must have an email address in your User Preferences to send emails."
@@ -307,8 +326,28 @@ msgid ""
 msgstr ""
 
 #. module: portal
+#: model:ir.actions.client,help:portal.action_mail_inbox_feeds_portal
+msgid ""
+"<p>\n"
+"                    <b>Good Job!</b> Your inbox is empty.\n"
+"                </p><p>\n"
+"                    Your inbox contains private messages or emails sent to "
+"you\n"
+"                    as well as information related to documents or people "
+"you\n"
+"                    follow.\n"
+"                </p>\n"
+"            "
+msgstr ""
+
+#. module: portal
 #: help:portal.wizard,welcome_message:0
 msgid "This text is included in the email sent to new users of the portal."
+msgstr ""
+
+#. module: portal
+#: model:ir.ui.menu,name:portal.portal_company
+msgid "About Us"
 msgstr ""
 
 #. module: portal
@@ -322,11 +361,6 @@ msgstr ""
 #: view:portal.payment.acquirer:0
 msgid "Payment Acquirer"
 msgstr ""
-
-#. module: portal
-#: model:ir.model,name:portal.model_portal_wizard_user
-msgid "Portal User Config"
-msgstr "门户用户配置"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:35
@@ -373,9 +407,9 @@ msgid ""
 msgstr ""
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.portal_orders
-msgid "Orders"
-msgstr ""
+#: model:ir.model,name:portal.model_portal_wizard_user
+msgid "Portal User Config"
+msgstr "门户用户配置"
 
 #. module: portal
 #: view:portal.payment.acquirer:0

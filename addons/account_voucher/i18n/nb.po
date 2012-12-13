@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:51+0000\n"
-"PO-Revision-Date: 2012-11-29 20:14+0000\n"
+"POT-Creation-Date: 2012-12-03 16:01+0000\n"
+"PO-Revision-Date: 2012-12-10 15:48+0000\n"
 "Last-Translator: Kaare Pettersen <Unknown>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-30 05:07+0000\n"
-"X-Generator: Launchpad (build 16319)\n"
+"X-Launchpad-Export-Date: 2012-12-11 04:48+0000\n"
+"X-Generator: Launchpad (build 16356)\n"
 
 #. module: account_voucher
 #: field:account.bank.statement.line,voucher_id:0
@@ -36,7 +36,7 @@ msgstr "Nedskrivning."
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Payment Ref"
-msgstr ""
+msgstr "Betaling referanse."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -46,7 +46,7 @@ msgstr "Totalt beløp."
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Open Customer Journal Entries"
-msgstr ""
+msgstr "Åpne kundens journal oppføringer."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -60,6 +60,8 @@ msgid ""
 "Computed as the difference between the amount stated in the voucher and the "
 "sum of allocation on the voucher lines."
 msgstr ""
+"Beregnet som forskjellen mellom beløpet som er angitt i kupong summen av "
+"tildeling på kupong linjer."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -73,6 +75,8 @@ msgid ""
 "You have to delete the bank statement line which the payment was reconciled "
 "to manually. Please check the payment of the partner %s by the amount of %s."
 msgstr ""
+"Du må slette kontoutskrift linje som betalingen ble forsonet til manuelt. "
+"Vennligst sjekk betaling av partner% s av mengden% s."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -89,7 +93,7 @@ msgstr "Import"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Voucher Entry"
-msgstr ""
+msgstr "Kupong inngang."
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -138,9 +142,19 @@ msgid "Voucher Statistics"
 msgstr "Kupong statistikker."
 
 #. module: account_voucher
+#: code:addons/account_voucher/account_voucher.py:1558
+#, python-format
+msgid ""
+"You can not change the journal as you already reconciled some statement "
+"lines!"
+msgstr ""
+"Du kan ikke endre tidsskriftet som du allerede forsonet noen uttalelse "
+"linjer!"
+
+#. module: account_voucher
 #: view:account.voucher:0
 msgid "Validate"
-msgstr ""
+msgstr "Valider."
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
@@ -162,7 +176,7 @@ msgstr "Søk kuponger."
 #. module: account_voucher
 #: field:account.voucher,writeoff_acc_id:0
 msgid "Counterpart Account"
-msgstr ""
+msgstr "Motparts konto."
 
 #. module: account_voucher
 #: field:account.voucher,account_id:0
@@ -184,7 +198,7 @@ msgstr "Ok"
 #. module: account_voucher
 #: field:account.voucher.line,reconcile:0
 msgid "Full Reconcile"
-msgstr ""
+msgstr "Full avstemming."
 
 #. module: account_voucher
 #: field:account.voucher,date_due:0
@@ -249,6 +263,7 @@ msgstr "Kansellert."
 msgid ""
 "You have to configure account base code and account tax code on the '%s' tax!"
 msgstr ""
+"Du må konfigurere kontoens basiskode og kontoens skatteklasse på '% s' skatt!"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
@@ -266,7 +281,7 @@ msgstr ""
 #. module: account_voucher
 #: help:account.voucher,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Hvis det er merket nye meldinger så krever dette din oppmerksomhet."
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_bank_statement_line
@@ -280,11 +295,6 @@ msgid "Day"
 msgstr "Dag."
 
 #. module: account_voucher
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr "Ugyldig BBA Strukturert Kommunikasjon!"
-
-#. module: account_voucher
 #: field:account.voucher,tax_id:0
 msgid "Tax"
 msgstr "Skatt."
@@ -296,14 +306,9 @@ msgid "Invalid Action!"
 msgstr "Ugyldig handling!"
 
 #. module: account_voucher
-#: constraint:account.bank.statement:0
-msgid "The journal and period chosen have to belong to the same company."
-msgstr "Tidsskriftet og perioden er valgt å tilhøre samme selskap."
-
-#. module: account_voucher
 #: field:account.voucher,comment:0
 msgid "Counterpart Comment"
-msgstr ""
+msgstr "Motpartens kommentar."
 
 #. module: account_voucher
 #: field:account.voucher.line,account_analytic_id:0
@@ -344,7 +349,7 @@ msgstr "Importer fakturaer."
 #: selection:account.voucher,pay_now:0
 #: selection:sale.receipt.report,pay_now:0
 msgid "Pay Later or Group Funds"
-msgstr ""
+msgstr "Betal senere eller gruppe fondene."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -368,11 +373,6 @@ msgid "Sales Lines"
 msgstr "Salgs linjer."
 
 #. module: account_voucher
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "Feil ! Du kan ikke lage rekursive firmaer."
-
-#. module: account_voucher
 #: view:account.voucher:0
 #: field:account.voucher,period_id:0
 msgid "Period"
@@ -386,7 +386,7 @@ msgstr "Leverandør"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Supplier Voucher"
-msgstr ""
+msgstr "Leverandør kupong."
 
 #. module: account_voucher
 #: field:account.voucher,message_follower_ids:0
@@ -399,15 +399,16 @@ msgid "Debit"
 msgstr "Debet."
 
 #. module: account_voucher
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr "Firmanavn må være unikt !"
+#: code:addons/account_voucher/account_voucher.py:1558
+#, python-format
+msgid "Unable to change journal !"
+msgstr "Kan ikke endre journal!"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,nbr:0
 msgid "# of Voucher Lines"
-msgstr ""
+msgstr "# av kupong linjer."
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -418,7 +419,7 @@ msgstr "Type."
 #. module: account_voucher
 #: view:sale.receipt.report:0
 msgid "Pro-forma Vouchers"
-msgstr ""
+msgstr "Proforma Kuponger."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -429,7 +430,7 @@ msgstr "Kupong oppføringer."
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Open Supplier Journal Entries"
-msgstr ""
+msgstr "Åpen leverandør journal inngang."
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
@@ -444,7 +445,7 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Are you sure to unreconcile and cancel this record ?"
-msgstr ""
+msgstr "Er du sikker på å unreconcile og avbryte denne posten?"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -456,7 +457,7 @@ msgstr "Salgs kvittering."
 #. module: account_voucher
 #: field:account.voucher,is_multi_currency:0
 msgid "Multi Currency Voucher"
-msgstr ""
+msgstr "Fler valuta kupong."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -484,13 +485,13 @@ msgstr ""
 #. module: account_voucher
 #: field:account.voucher,writeoff_amount:0
 msgid "Difference Amount"
-msgstr ""
+msgstr "Forskjellig beløp."
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,due_delay:0
 msgid "Avg. Due Delay"
-msgstr ""
+msgstr "Avg. på grunn av Forsinkelse."
 
 #. module: account_voucher
 #: code:addons/account_voucher/invoice.py:33
@@ -512,7 +513,7 @@ msgstr "Skatt beløp."
 #. module: account_voucher
 #: view:sale.receipt.report:0
 msgid "Validated Vouchers"
-msgstr ""
+msgstr "Validert kupong."
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_vendor_receipt
@@ -534,7 +535,7 @@ msgstr ""
 #: field:account.config.settings,expense_currency_exchange_account_id:0
 #: field:res.company,expense_currency_exchange_account_id:0
 msgid "Loss Exchange Rate Account"
-msgstr ""
+msgstr "Tap vekslings pris konto."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -544,13 +545,13 @@ msgstr "Betalt beløp."
 #. module: account_voucher
 #: field:account.voucher,payment_option:0
 msgid "Payment Difference"
-msgstr ""
+msgstr "Betaling forskjell."
 
 #. module: account_voucher
 #: view:account.voucher:0
 #: field:account.voucher,audit:0
 msgid "To Review"
-msgstr ""
+msgstr "Til gjennomgang."
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1008
@@ -604,7 +605,7 @@ msgstr "Desember."
 #. module: account_voucher
 #: view:sale.receipt.report:0
 msgid "Group by month of Invoice Date"
-msgstr ""
+msgstr "Grupper etter måned fra fakturadato."
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -622,7 +623,7 @@ msgstr "Valuta."
 #. module: account_voucher
 #: view:account.statement.from.invoice.lines:0
 msgid "Payable and Receivables"
-msgstr ""
+msgstr "Betalbar og Fordringer."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -637,7 +638,7 @@ msgstr "Kupong status."
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Are you sure to unreconcile this record?"
-msgstr ""
+msgstr "Er du sikker på å ikke forene denne posten?"
 
 #. module: account_voucher
 #: field:account.voucher,company_id:0
@@ -655,7 +656,7 @@ msgstr "Kupongen har blitt fullstendig betalt."
 #. module: account_voucher
 #: selection:account.voucher,payment_option:0
 msgid "Reconcile Payment Balance"
-msgstr ""
+msgstr "Avstemming betalings balanse."
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:960
@@ -729,7 +730,7 @@ msgstr "Juni."
 #. module: account_voucher
 #: field:account.voucher,payment_rate_currency_id:0
 msgid "Payment Rate Currency"
-msgstr ""
+msgstr "Betaling Pris Valuta."
 
 #. module: account_voucher
 #: field:account.voucher,paid:0
@@ -842,7 +843,7 @@ msgstr "Vennligst definere en sekvens på tidsskriftet."
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Total Allocation"
-msgstr ""
+msgstr "Total tildeling."
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -864,11 +865,6 @@ msgstr "Publiser."
 #: view:account.voucher:0
 msgid "Invoices and outstanding transactions"
 msgstr "Fakturaer og enestående transaksjoner."
-
-#. module: account_voucher
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr "Fakturanummer må være unik pr. firma!"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -910,7 +906,7 @@ msgstr "Kontoutskrift."
 #. module: account_voucher
 #: view:account.bank.statement:0
 msgid "onchange_amount(amount)"
-msgstr ""
+msgstr "Onchange_mengde(mengde)"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -962,7 +958,7 @@ msgstr "Åpne fakturering meny."
 #: view:sale.receipt.report:0
 #: selection:sale.receipt.report,state:0
 msgid "Pro-forma"
-msgstr ""
+msgstr "Proforma"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -975,6 +971,7 @@ msgstr "Journal Elementer."
 #, python-format
 msgid "Please define default credit/debit accounts on the journal \"%s\"."
 msgstr ""
+"Vennligst definere standard kreditt / debet-kontoer på tidsskriftet \"% s\"."
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.act_pay_voucher
@@ -1030,7 +1027,7 @@ msgstr "Lagt ut kuponger."
 #. module: account_voucher
 #: field:account.voucher,payment_rate:0
 msgid "Exchange Rate"
-msgstr ""
+msgstr "Vekslings vurdering."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -1075,7 +1072,7 @@ msgstr "Interne notater."
 #: view:account.voucher:0
 #: field:account.voucher,line_cr_ids:0
 msgid "Credits"
-msgstr ""
+msgstr "Kreditter."
 
 #. module: account_voucher
 #: field:account.voucher.line,amount_original:0
@@ -1153,7 +1150,7 @@ msgstr "April."
 #. module: account_voucher
 #: help:account.voucher,tax_id:0
 msgid "Only for tax excluded from price"
-msgstr ""
+msgstr "Bare for skatt ekskludert fra pris"
 
 #. module: account_voucher
 #: field:account.voucher,type:0
@@ -1168,7 +1165,7 @@ msgstr "Meldinger og kommunikasjon historie."
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_statement_from_invoice_lines
 msgid "Entries by Statement from Invoices"
-msgstr ""
+msgstr "Påmeldingene med erklæringen fra fakturaer."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -1187,6 +1184,7 @@ msgid ""
 "The amount of the voucher must be the same amount as the one on the "
 "statement line."
 msgstr ""
+"Mengden av kupongen må være det samme beløp som den på uttalelse linje."
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:864
@@ -1197,7 +1195,7 @@ msgstr "Kan ikke slette kupong(er) som allerede er åpnet eller betalt."
 #. module: account_voucher
 #: help:account.voucher,date:0
 msgid "Effective date for accounting entries"
-msgstr ""
+msgstr "Effektiv dato for regnskapsføring."
 
 #. module: account_voucher
 #: model:mail.message.subtype,name:account_voucher.mt_voucher
@@ -1220,7 +1218,7 @@ msgstr "Kupong linjer."
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,delay_to_pay:0
 msgid "Avg. Delay To Pay"
-msgstr ""
+msgstr "Avg. Forsinkelse til betaling."
 
 #. module: account_voucher
 #: field:account.voucher.line,untax_amount:0
@@ -1244,7 +1242,7 @@ msgstr "Partner."
 #. module: account_voucher
 #: field:account.voucher.line,amount_unreconciled:0
 msgid "Open Balance"
-msgstr ""
+msgstr "Åpen balanse."
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:997
@@ -1260,3 +1258,18 @@ msgid ""
 "inactive, which allow to hide the customer/supplier payment while the bank "
 "statement isn't confirmed."
 msgstr ""
+
+#~ msgid "Invalid BBA Structured Communication !"
+#~ msgstr "Ugyldig BBA Strukturert Kommunikasjon!"
+
+#~ msgid "The journal and period chosen have to belong to the same company."
+#~ msgstr "Tidsskriftet og perioden er valgt å tilhøre samme selskap."
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "Firmanavn må være unikt !"
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "Feil ! Du kan ikke lage rekursive firmaer."
+
+#~ msgid "Invoice Number must be unique per Company!"
+#~ msgstr "Fakturanummer må være unik pr. firma!"

@@ -71,10 +71,18 @@ class acquirer(osv.Model):
             return
 
     def _wrap_payment_block(self, cr, uid, html_block, amount, currency, context=None):
-        payment_header = _('Pay safely online')
-        amount_str = float_repr(amount, self.pool.get('decimal.precision').precision_get(cr, uid, 'Account'))
-        currency_str = currency.symbol or currency.name
-        amount = u"%s %s" % ((currency_str, amount_str) if currency.position == 'before' else (amount_str, currency_str))  
+        if not html_block:
+            link = '#action=account.action_account_config'
+            payment_header = _('You can finish the configuration in the <a href="%s">Bank&Cash settings</a>') % link
+            amount = _('No online payment acquirers configured')
+            group_ids = self.pool.get('res.users').browse(cr, uid, uid, context=context).groups_id
+            if any(group.is_portal for group in group_ids):
+                return ''
+        else:
+            payment_header = _('Pay safely online')
+            amount_str = float_repr(amount, self.pool.get('decimal.precision').precision_get(cr, uid, 'Account'))
+            currency_str = currency.symbol or currency.name
+            amount = u"%s %s" % ((currency_str, amount_str) if currency.position == 'before' else (amount_str, currency_str))
         result =  """<div class="payment_acquirers">
                          <div class="payment_header">
                              <div class="payment_amount">%s</div>
@@ -93,6 +101,8 @@ class acquirer(osv.Model):
             return
         html_forms = []
         for this in self.browse(cr, uid, acquirer_ids):
-            html_forms.append(this.render(object, reference, currency, amount, context=context, **kwargs))
+            content = this.render(object, reference, currency, amount, context=context, **kwargs)
+            if content:
+                html_forms.append(content)
         html_block = '\n'.join(filter(None,html_forms))
         return self._wrap_payment_block(cr, uid, html_block, amount, currency, context=context)  
