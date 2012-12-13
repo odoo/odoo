@@ -3,7 +3,6 @@ openerp.portal_anonymous = function(instance) {
     instance.web.Login.include({
         start: function() {
             var self = this;
-            console.log($.deparam.querystring());
             return $.when(this._super()).then(function() {
                 var dblist = self.db_list || [];
                 if (!!self.params.token || !!self.params.login) {
