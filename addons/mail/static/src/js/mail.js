@@ -29,8 +29,13 @@ openerp.mail = function (session) {
         },
 
         /* Get the url of an attachment {'id': id} */
-        get_attachment_url: function (session, attachment) {
-            return session.url('/web/binary/saveas', {model: 'ir.attachment', field: 'datas', filename_field: 'datas_fname', id: attachment['id']});
+        get_attachment_url: function (session, message_id, attachment_id) {
+            return session.url('/mail/download_attachment', {
+                'model': 'mail.message',
+                'id': message_id,
+                'method': 'download_attachment',
+                'attachment_id': attachment_id
+            });
         },
 
         /**
@@ -258,7 +263,7 @@ openerp.mail = function (session) {
             for (var l in this.attachment_ids) {
                 var attach = this.attachment_ids[l];
                 if (!attach.formating) {
-                    attach.url = mail.ChatterUtils.get_attachment_url(this.session, attach);
+                    attach.url = mail.ChatterUtils.get_attachment_url(this.session, this.id, attach.id);
                     attach.filetype = mail.ChatterUtils.filetype(attach.filename);
                     attach.name = mail.ChatterUtils.breakword(attach.name || attach.filename);
                     attach.formating = true;
@@ -420,18 +425,23 @@ openerp.mail = function (session) {
         /* when the file is uploaded 
         */
         on_attachment_loaded: function (event, result) {
-            for (var i in this.attachment_ids) {
-                if (this.attachment_ids[i].filename == result.filename && this.attachment_ids[i].upload) {
-                    this.attachment_ids[i]={
-                        'id': result.id,
-                        'name': result.name,
-                        'filename': result.filename,
-                        'url': mail.ChatterUtils.get_attachment_url(this.session, result)
-                    };
+
+            if (result.erorr || !result.id ) {
+                this.do_warn( session.web.qweb.render('mail.error_upload'), result.error);
+                this.attachment_ids = _.filter(this.attachment_ids, function (val) { return !val.upload; });
+            } else {
+                for (var i in this.attachment_ids) {
+                    if (this.attachment_ids[i].filename == result.filename && this.attachment_ids[i].upload) {
+                        this.attachment_ids[i]={
+                            'id': result.id,
+                            'name': result.name,
+                            'filename': result.filename,
+                            'url': mail.ChatterUtils.get_attachment_url(this.session, this.id, result.id)
+                        };
+                    }
                 }
             }
             this.display_attachments();
-
             var $input = this.$('input.oe_form_binary_file');
             $input.after($input.clone(true)).remove();
             this.$(".oe_attachment_file").show();
@@ -484,6 +494,11 @@ openerp.mail = function (session) {
         },
 
         on_compose_fullmail: function (default_composition_mode) {
+
+            if(!this.do_check_attachment_upload()) {
+                return false;
+            }
+
             if (default_composition_mode == 'reply') {
                 var context = {
                     'default_composition_mode': default_composition_mode,
@@ -534,31 +549,31 @@ openerp.mail = function (session) {
             this.reinit();
         },
 
+        /* return true if all file are complete else return false and make an alert */
+        do_check_attachment_upload: function () {
+            if (_.find(this.attachment_ids, function (file) {return file.upload;})) {
+                this.do_warn(session.web.qweb.render('mail.error_upload'), session.web.qweb.render('mail.error_upload_please_wait'));
+                return false;
+            } else {
+                return true;
+            }
+        },
+
         /*post a message and fetch the message*/
         on_message_post: function (event) {
             var self = this;
 
             var comment_node =  this.$('textarea');
             var body = comment_node.val();
-            comment_node.val('');
 
-            var attachments=[];
-            for (var i in this.attachment_ids) {
-                if (this.attachment_ids[i].upload) {
-                    session.web.dialog($('<div>' + session.web.qweb.render('CrashManager.warning', {message: 'Please, wait while the file is uploading.'}) + '</div>'));
-                    return false;
-                }
-                attachments.push(this.attachment_ids[i].id);
-            }
-
-            if (body.match(/\S+/)) {
+            if (this.do_check_attachment_upload() && (this.attachment_ids.length || body.match(/\S+/))) {
                 //session.web.blockUI();
                 this.parent_thread.ds_thread.call('message_post_user_api', [
                         this.context.default_res_id, 
                         body, 
                         false, 
                         this.context.default_parent_id, 
-                        attachments,
+                        _.map(this.attachment_ids, function (file) {return file.id;}),
                         this.parent_thread.context
                     ]).done(function (record) {
                         var thread = self.parent_thread;
@@ -571,8 +586,8 @@ openerp.mail = function (session) {
                             var message = thread.create_message_object( data[0] );
                             // insert the message on dom
                             thread.insert_message( message, root ? undefined : self.$el, root );
-                            self.on_cancel();
                         });
+                        self.on_cancel();
                         //session.web.unblockUI();
                     });
                 return true;
@@ -847,7 +862,7 @@ openerp.mail = function (session) {
             }
             var message_ids = _.map(messages, function (val) { return val.id; });
 
-            this.ds_notification.call('set_message_read', [message_ids, read_value, this.context])
+            this.ds_message.call('set_message_read', [message_ids, read_value, this.context])
                 .then(function () {
                     // apply modification
                     _.each(messages, function (msg) {
@@ -896,7 +911,7 @@ openerp.mail = function (session) {
             var self=this;
             var button = self.$('.oe_star:first');
 
-            this.ds_message.call('favorite_toggle', [[self.id]])
+            this.ds_message.call('set_message_starred', [[self.id], !self.is_favorite])
                 .then(function (star) {
                     self.is_favorite=star;
                     if (self.is_favorite) {
@@ -991,7 +1006,7 @@ openerp.mail = function (session) {
             // add message composition form view
             if (!this.compose_message) {
                 this.compose_message = new mail.ThreadComposeMessage(this, this, {
-                    'context': this.options.compose_as_todo && !this.thread_level ? _.extend(this.context, { 'default_favorite_user_ids': [this.session.uid] }) : this.context,
+                    'context': this.options.compose_as_todo && !this.thread_level ? _.extend(this.context, { 'default_starred': true }) : this.context,
                     'options': this.options,
                 });
                 if (!this.thread_level || this.thread_level > this.options.display_indented_thread) {

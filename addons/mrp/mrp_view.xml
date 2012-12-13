@@ -687,7 +687,7 @@
                                                    groups="stock.group_production_lot"/>
                                             <button name="%(stock.move_scrap)d"
                                                 string="Scrap Products" type="action"
-                                                icon="gtk-convert" context="{'scrap': True}"
+                                                icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
                                                 states="draft,waiting,confirmed,assigned"/>
                                         </tree>
                                     </field>
@@ -704,7 +704,7 @@
                                            <button
                                                name="%(stock.move_scrap)d"
                                                string="Scrap Products" type="action"
-                                               icon="gtk-convert"
+                                               icon="terp-gtk-jump-to-ltr"
                                                states="done,cancel"/>
                                        </tree>
                                     </field>
@@ -726,7 +726,7 @@
                                                 icon="gtk-justify-fill"/>
                                             <button name="%(stock.move_scrap)d"
                                                 string="Scrap Products" type="action"
-                                                icon="gtk-convert" context="{'scrap': True}"
+                                                icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
                                                 states="draft,waiting,confirmed,assigned"/>
                                         </tree>
                                     </field>
@@ -744,7 +744,7 @@
                                             <button name="%(stock.track_line)d"
                                                  string="Split in Serial Numbers" type="action" icon="gtk-justify-fill" states="done,cancel"/>
                                             <button name="%(stock.move_scrap)d"
-                                                string="Scrap Products" type="action" icon="gtk-convert"
+                                                string="Scrap Products" type="action" icon="terp-gtk-jump-to-ltr"
                                                 states="done,cancel"/>
                                         </tree>
                                     </field>
@@ -784,8 +784,8 @@
                             <group>
                                 <group>
                                     <field name="priority"/>
-                                    <field name="date_start"/>
-                                    <field name="date_finished"/>
+                                    <field name="date_start" invisible="1"/>
+                                    <field name="date_finished" invisible="1"/>
                                 </group>
                                 <group>
                                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>

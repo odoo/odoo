@@ -522,10 +522,10 @@ class survey_question_wiz(osv.osv_memory):
                                     value[field] = ans.value
 
                         if que.comment and (field.split('_')[1] == "comment" or field.split('_')[1] == "other"):
-                            value[field] = str(que.comment)
+                            value[field] = tools.ustr(que.comment)
 
                         elif que.single_text and field.split('_')[1] == "single":
-                            value[field] = str(que.single_text)
+                            value[field] = tools.ustr(que.single_text)
 
                         elif que.response_answer_ids and len(field.split('_')) == 3 and field.split('_')[1] == "selection":
                             for ans in que.response_answer_ids:
