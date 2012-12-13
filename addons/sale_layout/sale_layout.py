@@ -120,7 +120,7 @@ class sale_order_line(osv.osv):
             ,'Line Type', select=True, required=True),
         'sequence': fields.integer('Line Sequence', select=True),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Sale Price'), readonly=True, states={'draft': [('readonly', False)]}),
-        'product_uom_qty': fields.float('Quantity (UoM)', digits=(16,2)),
+        'product_uom_qty': fields.float('Quantity (UoM)', digits_compute= dp.get_precision('Product UoM')),
         'product_uom': fields.many2one('product.uom', 'Product UoM'),
         # Override the field to call the overridden _amount_line function
         'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal', digits_compute= dp.get_precision('Sale Price')),
