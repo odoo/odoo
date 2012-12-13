@@ -5,7 +5,7 @@ openerp.pad = function(instance) {
         configured: false,
         content: "",
         start: function() {
-            this._super.apply(this, arguments);
+            this._super();
             var self  = this;
             this.on('change:effective_readonly',this,function(){
                 self.renderElement();
