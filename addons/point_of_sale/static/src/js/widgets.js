@@ -308,11 +308,21 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         	if (this.amount !== this.payment_line.get_amount())
         		this.renderElement();
         },
+        checkAmount:function(e){
+            if (e.which !== 0 && e.charCode !== 0) {
+                if(isNaN(String.fromCharCode(e.charCode))){
+                    return (String.fromCharCode(e.charCode) === "." && e.currentTarget.value.toString().split(".").length < 2)?true:false;
+                }
+            }
+            return true
+        },
         renderElement: function() {
             var self = this;
             this.name =   this.payment_line.get_cashregister().get('journal_id')[1];
             this._super();
-            this.$('input').keyup(_.bind(this.changeAmount, this));
+            this.$('input')
+                .keypress(_.bind(this.checkAmount, this))
+                .keyup(_.bind(this.changeAmount, this));
             this.$('.delete-payment-line').click(function() {
                 self.trigger('delete_payment_line', self);
             });
