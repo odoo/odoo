@@ -26,11 +26,9 @@
     "website" : "http://www.mentis.si",
     "category" : "Localization/Account Charts",
     "description" : " ",
-    "depends" : ["base", "account", "base_iban", "base_vat", "account_chart", "account_cancel"],
+    "depends" : ["account", "base_iban", "base_vat", "account_chart", "account_cancel"],
     "description" : "Kontni načrt za gospodarske družbe",
-    "init_xml" : [ ],
-    "demo_xml" : [ ],
-    "update_xml" : [
+    "data" : [
         "data/account.account.type.csv", 
         "data/account.account.template.csv",
         "data/account.tax.code.template.csv",
@@ -41,6 +39,7 @@
         "data/account.fiscal.position.tax.template.csv",
         "l10n_si_wizard.xml"
     ],
-    "installable": True
+    'auto_install': False,
+    "installable": True,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

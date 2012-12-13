@@ -22,18 +22,13 @@
 import tools
 from osv import osv
 import addons
-import os
 
-class AccountsWizard(osv.osv_memory):
-	_inherit='wizard.multi.charts.accounts'	
+class AccountWizard_cd(osv.osv_memory):
+	_inherit='wizard.multi.charts.accounts'
+		
 	_defaults = {
         'code_digits' : 6,
-        'seq_journal' : True,
-        'sale_tax' : False,
-        'purchase_tax' : False
 	}
 
-AccountsWizard()
+AccountWizard_cd()
 
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
