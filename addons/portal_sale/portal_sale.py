@@ -21,11 +21,12 @@
 
 from openerp.osv import osv, fields
 
+
 class sale_order(osv.Model):
     _inherit = 'sale.order'
 
     # make the real method inheritable
-    _payment_block_proxy = lambda self,*a,**kw: self._portal_payment_block(*a, **kw)
+    _payment_block_proxy = lambda self, *a, **kw: self._portal_payment_block(*a, **kw)
 
     _columns = {
         'portal_payment_options': fields.function(_payment_block_proxy, type="html", string="Portal Payment Options"),
@@ -35,14 +36,14 @@ class sale_order(osv.Model):
         result = dict.fromkeys(ids, False)
         payment_acquirer = self.pool.get('portal.payment.acquirer')
         for this in self.browse(cr, uid, ids, context=context):
-            if this.state not in ('draft','cancel') and not this.invoiced:
+            if this.state not in ('draft', 'cancel') and not this.invoiced:
                 result[this.id] = payment_acquirer.render_payment_block(cr, uid, this, this.name,
                     this.pricelist_id.currency_id, this.amount_total, context=context)
         return result
 
     def action_quotation_send(self, cr, uid, ids, context=None):
         '''  Override to use a modified template that includes a portal signup link '''
-        action_dict = super(sale_order, self).action_quotation_send(cr, uid, ids, context=context) 
+        action_dict = super(sale_order, self).action_quotation_send(cr, uid, ids, context=context)
         try:
             template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'portal_sale', 'email_template_edi_sale')[1]
             # assume context is still a dict, as prepared by super
@@ -55,12 +56,14 @@ class sale_order(osv.Model):
 
     def action_button_confirm(self, cr, uid, ids, context=None):
         # fetch the partner's id and subscribe the partner to the sale order
-        partner = self.browse(cr, uid, ids[0], context=context)['partner_id']
-        if partner.id not in self.browse(cr, uid, ids[0], context=context)['message_follower_ids']:
+        assert len(ids) == 1
+        document = self.browse(cr, uid, ids[0], context=context)
+        partner = document.partner_id
+        if partner.id not in document.message_follower_ids:
             self.message_subscribe(cr, uid, ids, [partner.id], context=context)
-            document = self.browse(cr, uid, ids[0], context=context)
+            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
             mail_values = {
-                'email_from': self.pool.get('res.users').browse(cr, uid, uid, context=context)['partner_id']['email'],
+                'email_from': user.partner_id.email,
                 'email_to': partner.email,
                 'subject': 'Invitation to follow %s' % document.name_get()[0][1],
                 'body_html': 'You have been invited to follow %s' % document.name_get()[0][1],
@@ -76,7 +79,7 @@ class account_invoice(osv.Model):
     _inherit = 'account.invoice'
 
     # make the real method inheritable
-    _payment_block_proxy = lambda self,*a,**kw: self._portal_payment_block(*a, **kw)
+    _payment_block_proxy = lambda self, *a, **kw: self._portal_payment_block(*a, **kw)
 
     _columns = {
         'portal_payment_options': fields.function(_payment_block_proxy, type="html", string="Portal Payment Options"),
@@ -86,14 +89,14 @@ class account_invoice(osv.Model):
         result = dict.fromkeys(ids, False)
         payment_acquirer = self.pool.get('portal.payment.acquirer')
         for this in self.browse(cr, uid, ids, context=context):
-            if this.type == 'out_invoice' and this.state not in ('draft','done') and not this.reconciled:
+            if this.type == 'out_invoice' and this.state not in ('draft', 'done') and not this.reconciled:
                 result[this.id] = payment_acquirer.render_payment_block(cr, uid, this, this.number,
                     this.currency_id, this.residual, context=context)
         return result
 
     def action_invoice_sent(self, cr, uid, ids, context=None):
         '''  Override to use a modified template that includes a portal signup link '''
-        action_dict = super(account_invoice, self).action_invoice_sent(cr, uid, ids, context=context) 
+        action_dict = super(account_invoice, self).action_invoice_sent(cr, uid, ids, context=context)
         try:
             template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'portal_sale', 'email_template_edi_invoice')[1]
             # assume context is still a dict, as prepared by super
@@ -105,13 +108,14 @@ class account_invoice(osv.Model):
         return action_dict
 
     def invoice_validate(self, cr, uid, ids, context=None):
-        # fetch the partner's id and subscribe the partner to the sale order
-        partner = self.browse(cr, uid, ids[0], context=context)['partner_id']
-        if partner.id not in self.browse(cr, uid, ids[0], context=context)['message_follower_ids']:
+        # fetch the partner's id and subscribe the partner to the invoice
+        document = self.browse(cr, uid, ids[0], context=context)
+        partner = document.partner_id
+        if partner.id not in document.message_follower_ids:
             self.message_subscribe(cr, uid, ids, [partner.id], context=context)
-            document = self.browse(cr, uid, ids[0], context=context)
+            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
             mail_values = {
-                'email_from': self.pool.get('res.users').browse(cr, uid, uid, context=context)['partner_id']['email'],
+                'email_from': user.partner_id.email,
                 'email_to': partner.email,
                 'subject': 'Invitation to follow %s' % document.name_get()[0][1],
                 'body_html': 'You have been invited to follow %s' % document.name_get()[0][1],
@@ -129,12 +133,13 @@ class mail_mail(osv.osv):
     def _postprocess_sent_message(self, cr, uid, mail, context=None):
         if mail.model == 'sale.order':
             so_obj = self.pool.get('sale.order')
-            partner = so_obj.browse(cr, uid, mail.res_id, context=context)['partner_id']
+            order = so_obj.browse(cr, uid, mail.res_id, context=context)
+            partner = order.partner_id
             # Add the customer in the SO as follower
-            if partner.id not in so_obj.browse(cr, uid, mail.res_id, context=context)['message_follower_ids']:
+            if partner.id not in order.message_follower_ids:
                 so_obj.message_subscribe(cr, uid, [mail.res_id], [partner.id], context=context)
             # Add all recipients of the email as followers
             for p in mail.partner_ids:
-                if p.id not in so_obj.browse(cr, uid, mail.res_id, context=context)['message_follower_ids']:
+                if p.id not in order.message_follower_ids:
                     so_obj.message_subscribe(cr, uid, [mail.res_id], [p.id], context=context)
         return super(mail_mail, self)._postprocess_sent_message(cr, uid, mail=mail, context=context)
