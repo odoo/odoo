@@ -3,8 +3,12 @@ openerp.portal_anonymous = function(instance) {
     instance.web.Login.include({
         start: function() {
             var self = this;
+            console.log($.deparam.querystring());
             return $.when(this._super()).then(function() {
                 var dblist = self.db_list || [];
+                if (!!self.params.token || !!self.params.login) {
+                    return false;
+                }
                 if (!self.session.session_is_valid() && dblist.length === 1) {
                     self.remember_credentials = false;
                     // XXX get login/pass from server (via a rpc call) ?
