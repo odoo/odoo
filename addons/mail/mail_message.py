@@ -205,6 +205,22 @@ class mail_message(osv.Model):
         return new_has_voted or False
 
     #------------------------------------------------------
+    # download an attachment
+    #------------------------------------------------------
+
+    def download_attachment(self, cr, uid, id_message, attachment_id, context=None):
+        """ Return the content of linked attachments. """
+        message = self.browse(cr, uid, id_message, context=context)
+        if attachment_id in [attachment.id for attachment in message.attachment_ids]:
+            attachment = self.pool.get('ir.attachment').browse(cr, SUPERUSER_ID, attachment_id, context=context)
+            if attachment.datas and attachment.datas_fname:
+                return {
+                    'base64': attachment.datas,
+                    'filename': attachment.datas_fname,
+                }
+        return False
+
+    #------------------------------------------------------
     # Notification API
     #------------------------------------------------------
 
@@ -294,7 +310,7 @@ class mail_message(osv.Model):
         partner_tree = dict((partner[0], partner) for partner in partners)
 
         # 2. Attachments
-        attachments = ir_attachment_obj.read(cr, uid, list(attachment_ids), ['id', 'datas_fname'], context=context)
+        attachments = ir_attachment_obj.read(cr, SUPERUSER_ID, list(attachment_ids), ['id', 'datas_fname'], context=context)
         attachments_tree = dict((attachment['id'], {'id': attachment['id'], 'filename': attachment['datas_fname']}) for attachment in attachments)
 
         # 3. Update message dictionaries
@@ -534,6 +550,20 @@ class mail_message(osv.Model):
         if not cr.fetchone():
             cr.execute("""CREATE INDEX mail_message_model_res_id_idx ON mail_message (model, res_id)""")
 
+    def _find_allowed_model_wise(self, cr, uid, doc_model, doc_dict, context=None):
+        doc_ids = doc_dict.keys()
+        allowed_doc_ids = self.pool.get(doc_model).search(cr, uid, [('id', 'in', doc_ids)], context=context)
+        return set([message_id for allowed_doc_id in allowed_doc_ids for message_id in doc_dict[allowed_doc_id]])
+
+    def _find_allowed_doc_ids(self, cr, uid, model_ids, context=None):
+        model_access_obj = self.pool.get('ir.model.access')
+        allowed_ids = set()
+        for doc_model, doc_dict in model_ids.iteritems():
+            if not model_access_obj.check(cr, uid, doc_model, 'read', False):
+                continue
+            allowed_ids |= self._find_allowed_model_wise(cr, uid, doc_model, doc_dict, context=context)
+        return allowed_ids
+
     def _search(self, cr, uid, args, offset=0, limit=None, order=None,
         context=None, count=False, access_rights_uid=None):
         """ Override that adds specific access rights of mail.message, to remove
@@ -571,13 +601,7 @@ class mail_message(osv.Model):
             elif message.get('model') and message.get('res_id'):
                 model_ids.setdefault(message.get('model'), {}).setdefault(message.get('res_id'), set()).add(message.get('id'))
 
-        model_access_obj = self.pool.get('ir.model.access')
-        for doc_model, doc_dict in model_ids.iteritems():
-            if not model_access_obj.check(cr, uid, doc_model, 'read', False):
-                continue
-            doc_ids = doc_dict.keys()
-            allowed_doc_ids = self.pool.get(doc_model).search(cr, uid, [('id', 'in', doc_ids)], context=context)
-            allowed_ids |= set([message_id for allowed_doc_id in allowed_doc_ids for message_id in doc_dict[allowed_doc_id]])
+        allowed_ids = self._find_allowed_doc_ids(cr, uid, model_ids, context=context)
 
         final_ids = author_ids | partner_ids | allowed_ids
         if count:

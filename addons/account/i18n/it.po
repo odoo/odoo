@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-09 23:36+0000\n"
+"PO-Revision-Date: 2012-12-13 02:49+0000\n"
 "Last-Translator: Sergio Corato <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-11 04:47+0000\n"
-"X-Generator: Launchpad (build 16356)\n"
+"X-Launchpad-Export-Date: 2012-12-13 04:43+0000\n"
+"X-Generator: Launchpad (build 16361)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -1336,6 +1336,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliccare per creare un nuovo log di cassa.\n"
+"              </p><p>\n"
+"                Un Registro di cassa permette di gestire le entrate di cassa "
+"nel sezionale\n"
+"                di cassa. Questa funzione fornisce un facile mezzo per "
+"seguire i pagamenti\n"
+"                di cassa su una base giornaliera. E' possibile sia indicare "
+"il contante che c'è\n"
+"                in cassa, e quindi registrare quando i contanti entrano od "
+"escono dalla\n"
+"                cassa.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_bank
@@ -4101,6 +4115,12 @@ msgid ""
 "by\n"
 "                                    your supplier/customer."
 msgstr ""
+"Sarà possibile modificare e validare questa\n"
+"                                    nota di credito direttamente o tenerla "
+"in bozza,\n"
+"                                    aspettando che il documento sia emesso "
+"dal \n"
+"                                    fornitore/cliente."
 
 #. module: account
 #: view:validate.account.move.lines:0
@@ -5612,7 +5632,7 @@ msgstr "Attivo"
 #: view:account.bank.statement:0
 #: field:account.journal,cash_control:0
 msgid "Cash Control"
-msgstr ""
+msgstr "Controllo di Cassa"
 
 #. module: account
 #: field:account.analytic.balance,date2:0
@@ -5642,7 +5662,7 @@ msgstr "Saldo per Tipo Conto"
 #: code:addons/account/account_cash_statement.py:301
 #, python-format
 msgid "There is no %s Account on the journal %s."
-msgstr ""
+msgstr "Non ci sono Conti %s nel sezionale %s."
 
 #. module: account
 #: model:res.groups,name:account.group_account_user
@@ -5683,7 +5703,7 @@ msgstr "Movimenti"
 #: field:account.bank.statement,details_ids:0
 #: view:account.journal:0
 msgid "CashBox Lines"
-msgstr ""
+msgstr "Righe di Cassa"
 
 #. module: account
 #: model:ir.model,name:account.model_account_vat_declaration
@@ -5785,12 +5805,14 @@ msgstr "Registrazioni:"
 msgid ""
 "Move cannot be deleted if linked to an invoice. (Invoice: %s - Move ID:%s)"
 msgstr ""
+"I movimenti non possono essere eliminati se collegati ad una fattura. "
+"(Fattura: %s - ID Movimento:%s)"
 
 #. module: account
 #: view:account.bank.statement:0
 #: help:account.cashbox.line,number_opening:0
 msgid "Opening Unit Numbers"
-msgstr ""
+msgstr "Numeri Apertura"
 
 #. module: account
 #: field:account.subscription,period_type:0
@@ -5837,7 +5859,7 @@ msgstr ""
 #: code:addons/account/account_invoice.py:1335
 #, python-format
 msgid "%s <b>paid</b>."
-msgstr ""
+msgstr "%s <b>pagato</b>."
 
 #. module: account
 #: view:account.financial.report:0
@@ -6035,6 +6057,13 @@ msgid ""
 "entry was reconciled, either the user pressed the button \"Fully "
 "Reconciled\" in the manual reconciliation process"
 msgstr ""
+"Ultima data nella quale le registrazioni contabili del partner erano "
+"completamente riconciliate. E' diversa dalla data dell'ultima "
+"riconciliazione fatta per questo partner, in quanto ci rappresenta il fatto "
+"che più nulla era dovuto a questa data. Può essere raggiunta in due modi: "
+"sia dall'ultima registrazione di debito/credito riconciliata, sia dalla "
+"pressione da parte dell'utente del tasto \"Riconciliata Totalmente\" nel "
+"processo di riconciliazione manuale"
 
 #. module: account
 #: field:account.journal,update_posted:0
@@ -6286,7 +6315,7 @@ msgstr "Data di pagamento"
 #: view:account.bank.statement:0
 #: field:account.bank.statement,opening_details_ids:0
 msgid "Opening Cashbox Lines"
-msgstr ""
+msgstr "Righe Apertura di Cassa"
 
 #. module: account
 #: view:account.analytic.account:0
@@ -6622,6 +6651,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliccare per aggiungere un conto\n"
+"              </p><p>\n"
+"                Un conto è pare di un piano che permette all'azienda\n"
+"                di registrare tutti i tipi di movimenti di debiti e "
+"crediti.\n"
+"                Le aziende presentano annualmente il bilancio in due\n"
+"                parti principali: lo stato patrimoniale e il conto "
+"economico\n"
+"                (profitti e perdite). Il bilancio annuale di un'azienda è "
+"richiesto\n"
+"                dalla legge per fornire una certa serie di informazioni.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: view:account.invoice.report:0
@@ -6696,6 +6739,12 @@ msgid ""
 "created by the system on document validation (invoices, bank statements...) "
 "and will be created in 'Posted' status."
 msgstr ""
+"Tutte le registrazioni contabili create manualmente sono solitamente in "
+"stato 'Non pubblicato', ma è possibile impostare l'opzione per saltare "
+"quello stato nel relativo sezionale. In quel caso, le registrazioni create "
+"automaticamente dal sistema alla validazione del documento (fatture, "
+"registrazioni bancarie...) risulteranno come registrazioni contabili in "
+"stato 'Pubblicato'."
 
 #. module: account
 #: field:account.payment.term.line,days:0
@@ -6887,6 +6936,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliccare per registrare un rimborso ricevuto da un "
+"fornitore.\n"
+"              </p><p>\n"
+"                Invece di creare manualmente un rimborso da fornitore, è "
+"possibile generare\n"
+"                rimborsi e riconciliarli direttamente dalla relativa fattura "
+"fornitore.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: field:account.tax,type:0
@@ -7086,6 +7145,7 @@ msgstr "Conto Trasferimenti Interni"
 #, python-format
 msgid "Please check that the field 'Journal' is set on the Bank Statement"
 msgstr ""
+"Verificare che il campo 'Sezionale' sia impostato nella Configurazione Banche"
 
 #. module: account
 #: selection:account.tax,type:0
@@ -7730,6 +7790,8 @@ msgstr "Insieme completo delle imposte"
 msgid ""
 "Selected Entry Lines does not have any account move enties in draft state."
 msgstr ""
+"Le Registrazioni selezionate non hanno alcun movimento contabile in stato "
+"bozza."
 
 #. module: account
 #: view:account.chart.template:0
@@ -7759,6 +7821,8 @@ msgid ""
 "Configuration error!\n"
 "The currency chosen should be shared by the default accounts too."
 msgstr ""
+"Errore di configurazione!\n"
+"La valuta scelta dovrebbe essere condivisa anche dai conti di default."
 
 #. module: account
 #: code:addons/account/account.py:2251
@@ -7893,6 +7957,9 @@ msgid ""
 "You cannot define children to an account with internal type different of "
 "\"View\"."
 msgstr ""
+"Errore di configurazione!\n"
+"Non è possibile definire figli ad un conto con tipo interno diverso da "
+"\"Vista\"."
 
 #. module: account
 #: model:ir.model,name:account.model_accounting_report
@@ -8041,7 +8108,7 @@ msgstr "Sbilancio nelle registrazioni contabili"
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_charts_modules
 msgid "Chart Templates"
-msgstr ""
+msgstr "Piani dei Conti"
 
 #. module: account
 #: field:account.journal.period,icon:0
@@ -8173,6 +8240,11 @@ msgid ""
 "                                    with the invoice. You will not be able "
 "to modify the credit note."
 msgstr ""
+"Usare questa opzione se si vuole annullare una fattura che non\n"
+"                                    dovrebbe essere stata emessa. Sarà "
+"creata la nota di credito, validata e riconciliata\n"
+"                                    con la fattura. Non sarà possibile "
+"modificare la nota di credito."
 
 #. module: account
 #: help:account.partner.reconcile.process,next_partner_id:0
@@ -8627,7 +8699,7 @@ msgstr ""
 #. module: account
 #: view:account.move.line.reconcile:0
 msgid "Reconciliation Transactions"
-msgstr ""
+msgstr "Transazioni di Riconciliazione"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_legal_statement
@@ -9374,6 +9446,9 @@ msgid ""
 "computed. Because it is space consuming, we do not allow to use it while "
 "doing a comparison."
 msgstr ""
+"Questa opzione permette di avere più dettagli sul modo in cui i saldi sono "
+"calcolati. Dato che consuma molte risorse, non è possibile utilizzarla "
+"quando si fa una comparazione."
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscalyear_close
@@ -9536,6 +9611,7 @@ msgstr ""
 #, python-format
 msgid "The account move (%s) for centralisation has been confirmed."
 msgstr ""
+"Il movimento contabile (%s) per la centralizzazione è stato confermato."
 
 #. module: account
 #: report:account.analytic.account.journal:0
@@ -9695,11 +9771,15 @@ msgid ""
 "You cannot select an account type with a deferral method different of "
 "\"Unreconciled\" for accounts with internal type \"Payable/Receivable\"."
 msgstr ""
+"Errore di configurazione!\n"
+"Non è possibile selezionare un tipo di conto con un metodo di chiusura "
+"diverso da \"Non riconciliato\" per conti con tipo interno "
+"\"Debiti/Crediti\"."
 
 #. module: account
 #: field:account.config.settings,has_fiscal_year:0
 msgid "Company has a fiscal year"
-msgstr ""
+msgstr "L'azienda ha un anno fiscale"
 
 #. module: account
 #: help:account.tax,child_depend:0
@@ -9716,6 +9796,7 @@ msgstr ""
 #, python-format
 msgid "You cannot deactivate an account that contains journal items."
 msgstr ""
+"Non è possibile disattivare un conto che contiene registrazioni contabili."
 
 #. module: account
 #: selection:account.tax,applicable_type:0
@@ -9771,7 +9852,7 @@ msgstr "Periodo da"
 #. module: account
 #: field:account.cashbox.line,pieces:0
 msgid "Unit of Currency"
-msgstr ""
+msgstr "Unità di Valuta"
 
 #. module: account
 #: code:addons/account/account.py:3137
@@ -10974,7 +11055,7 @@ msgstr "Data di Maturazione"
 #: field:cash.box.in,name:0
 #: field:cash.box.out,name:0
 msgid "Reason"
-msgstr ""
+msgstr "Motivo"
 
 #. module: account
 #: selection:account.partner.ledger,filter:0
@@ -11061,6 +11142,9 @@ msgid ""
 "customer. The tool search can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
+"Da questo report, è possibile avere un'anteprima del totale fatturato per il "
+"cliente. L'utilità ricerca può inoltre essere usata per personalizzare i "
+"report delle Fatture, soddisfando così le proprie necessità."
 
 #. module: account
 #: view:account.partner.reconcile.process:0
@@ -11081,7 +11165,7 @@ msgstr "Lo stato della fattura è 'Completato'"
 #. module: account
 #: field:account.config.settings,module_account_followup:0
 msgid "Manage customer payment follow-ups"
-msgstr ""
+msgstr "Gestione pagamenti clienti seguenti"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_sales
@@ -11438,7 +11522,7 @@ msgstr ""
 #: code:addons/account/wizard/account_change_currency.py:59
 #, python-format
 msgid "New currency is not configured properly."
-msgstr ""
+msgstr "La nuova valuta non è configurata correttamente."
 
 #. module: account
 #: view:account.account.template:0
@@ -11549,7 +11633,7 @@ msgstr ""
 #: view:account.bank.statement:0
 #: help:account.cashbox.line,number_closing:0
 msgid "Closing Unit Numbers"
-msgstr ""
+msgstr "Numeri Chiusura"
 
 #. module: account
 #: field:account.bank.accounts.wizard,bank_account_id:0
