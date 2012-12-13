@@ -53,6 +53,25 @@ class sale_order(osv.Model):
             pass
         return action_dict
 
+    def action_button_confirm(self, cr, uid, ids, context=None):
+        # fetch the partner's id and subscribe the partner to the sale order
+        partner = self.browse(cr, uid, ids[0], context=context)['partner_id']
+        if partner.id not in self.browse(cr, uid, ids[0], context=context)['message_follower_ids']:
+            self.message_subscribe(cr, uid, ids, [partner.id], context=context)
+            document = self.browse(cr, uid, ids[0], context=context)
+            mail_values = {
+                'email_from': self.pool.get('res.users').browse(cr, uid, uid, context=context)['partner_id']['email'],
+                'email_to': partner.email,
+                'subject': 'Invitation to follow %s' % document.name_get()[0][1],
+                'body_html': 'You have been invited to follow %s' % document.name_get()[0][1],
+                'auto_delete': True,
+            }
+            mail_obj = self.pool.get('mail.mail')
+            mail_id = mail_obj.create(cr, uid, mail_values, context=context)
+            mail_obj.send(cr, uid, [mail_id], recipient_ids=[partner.id], context=context)
+        return super(sale_order, self).action_button_confirm(cr, uid, ids, context=context)
+
+
 class account_invoice(osv.Model):
     _inherit = 'account.invoice'
 
@@ -84,3 +103,38 @@ class account_invoice(osv.Model):
         except Exception:
             pass
         return action_dict
+
+    def invoice_validate(self, cr, uid, ids, context=None):
+        # fetch the partner's id and subscribe the partner to the sale order
+        partner = self.browse(cr, uid, ids[0], context=context)['partner_id']
+        if partner.id not in self.browse(cr, uid, ids[0], context=context)['message_follower_ids']:
+            self.message_subscribe(cr, uid, ids, [partner.id], context=context)
+            document = self.browse(cr, uid, ids[0], context=context)
+            mail_values = {
+                'email_from': self.pool.get('res.users').browse(cr, uid, uid, context=context)['partner_id']['email'],
+                'email_to': partner.email,
+                'subject': 'Invitation to follow %s' % document.name_get()[0][1],
+                'body_html': 'You have been invited to follow %s' % document.name_get()[0][1],
+                'auto_delete': True,
+            }
+            mail_obj = self.pool.get('mail.mail')
+            mail_id = mail_obj.create(cr, uid, mail_values, context=context)
+            mail_obj.send(cr, uid, [mail_id], recipient_ids=[partner.id], context=context)
+        return super(account_invoice, self).invoice_validate(cr, uid, ids, context=context)
+
+
+class mail_mail(osv.osv):
+    _inherit = 'mail.mail'
+
+    def _postprocess_sent_message(self, cr, uid, mail, context=None):
+        if mail.model == 'sale.order':
+            so_obj = self.pool.get('sale.order')
+            partner = so_obj.browse(cr, uid, mail.res_id, context=context)['partner_id']
+            # Add the customer in the SO as follower
+            if partner.id not in so_obj.browse(cr, uid, mail.res_id, context=context)['message_follower_ids']:
+                so_obj.message_subscribe(cr, uid, [mail.res_id], [partner.id], context=context)
+            # Add all recipients of the email as followers
+            for p in mail.partner_ids:
+                if p.id not in so_obj.browse(cr, uid, mail.res_id, context=context)['message_follower_ids']:
+                    so_obj.message_subscribe(cr, uid, [mail.res_id], [p.id], context=context)
+        return super(mail_mail, self)._postprocess_sent_message(cr, uid, mail=mail, context=context)
