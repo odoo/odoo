@@ -7,9 +7,6 @@ openerp.pad = function(instance) {
         start: function() {
             this._super.apply(this, arguments);
             var self  = this;
-            this.on('click', '.oe_pad_switch', function(){
-                self.$el.toggleClass('oe_pad_fullscreen');
-            });
             this.on('change:effective_readonly',this,function(){
                 self.renderElement();
             });
@@ -37,6 +34,9 @@ openerp.pad = function(instance) {
         renderElement: function(){
             var self  = this;
             var value = this.get('value');
+            if (this.pad_loading_request) {
+                this.pad_loading_request.abort();
+            }
             if(!_.str.startsWith(value,'http')){
                 this.configured = false;
                 this.content = "";
@@ -46,24 +46,22 @@ openerp.pad = function(instance) {
                     this.content = '<iframe width="100%" height="100%" frameborder="0" src="'+value+'?showChat=false&userName='+this.session.username+'"></iframe>';
                 }else{
                     this.content = '<div class="oe_pad_loading">... Loading pad ...</div>';
-                    $.get(value+'/export/html').success(function(data){
-                        if(!self.get('effective_readonly')){
-                            return false;
-                        }
+                    this.pad_loading_request = $.get(value+'/export/html')
+                    .done(function(data){
                         groups = /\<\s*body\s*\>(.*?)\<\s*\/body\s*\>/.exec(data);
                         data = (groups || []).length >= 2 ? groups[1] : '';
                         self.$('.oe_pad_content').html('<div class="oe_pad_readonly"><div>');
                         self.$('.oe_pad_readonly').html(data);
                     }).error(function(){
-                        if(!self.get('effective_readonly')){
-                            return false;
-                        }
                         self.$('.oe_pad_content').text('Unable to load pad');
                     });
                 }
             }
             this._super();
             this.$('.oe_pad_content').html(this.content);
+            this.$('.oe_pad_switch').click(function(){
+                self.$el.toggleClass('oe_pad_fullscreen');
+            });
         },
     });
 
