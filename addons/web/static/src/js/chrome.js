@@ -861,11 +861,11 @@ instance.web.Menu =  instance.web.Widget.extend({
         var $more = $('.oe_menu_more');
         $more.find('li').before($more_container);
         var $li = this.$el.find('> li').not($more_container).hide();
-        var remaining_space = self.$el.parent().width();
-        remaining_space -= self.$el.parent().children(':visible').not(this.$el).width();
-        //debugger
         $li.each(function() {
-            remaining_space -= self.$el.children(':visible').width();
+            var remaining_space = self.$el.parent().width();
+            self.$el.parent().children(':visible').each(function() {
+                remaining_space -= $(this).outerWidth();
+            });
             if ($(this).width() > remaining_space) {
                 return false;
             }
