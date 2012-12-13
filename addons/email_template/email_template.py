@@ -53,6 +53,10 @@ try:
         trim_blocks=True,               # do not output newline after blocks
         autoescape=True,                # XML/HTML automatic escaping
     )
+    mako_template_env.globals.update({
+        'str': str,
+        'quote': quote,
+    })
 except ImportError:
     _logger.warning("jinja2 not available, templating features will not work!")
 
@@ -89,7 +93,6 @@ class email_template(osv.osv):
                 'object': record,
                 'user': user,
                 'ctx': context,     # context kw would clash with mako internals
-                'quote': quote,
             }
             result = mako_template_env.from_string(template).render(variables)
             if result == u"False":
