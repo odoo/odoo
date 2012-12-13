@@ -873,7 +873,7 @@ instance.web.Menu =  instance.web.Widget.extend({
         var $more_container = $('.oe_menu_more_container').hide();
         var $more = $('.oe_menu_more');
         $more.find('> li').insertBefore($more_container);
-        var $li = this.$el.find('> li').not($more_container).hide();
+        var $li = this.$('> li').not($more_container).hide();
         $li.each(function() {
             var remaining_space = self.$el.parent().width() - $more_container.outerWidth();
             self.$el.parent().children(':visible').each(function() {
@@ -886,6 +886,11 @@ instance.web.Menu =  instance.web.Widget.extend({
         });
         $more.append($li.filter(':hidden').show());
         $more_container.toggle(!!$more.children().length);
+        // Hide toplevel item if there is only one
+        var $toplevel = this.$("> li:visible");
+        if ($toplevel.length === 1) {
+            $toplevel.hide();
+        }
     },
     /**
      * Opens a given menu by id, as if a user had browsed to that menu by hand
