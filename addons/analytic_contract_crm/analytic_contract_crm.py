@@ -27,6 +27,7 @@ class account_analytic_account(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         obj_id =  super(account_analytic_account, self).create(cr, uid, vals, context=context)
+        # subscribe salesteam followers & subtypes to the contract
         self._subscribe_salesteam_followers_to_contract(cr, uid, [obj_id], context)
         if obj_id:
             self.create_send_note(cr, uid, [obj_id], context=context)
@@ -36,6 +37,7 @@ class account_analytic_account(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         res = super(account_analytic_account, self).write(cr, uid, ids, vals, context=context)
+        # subscribe new salesteam followers & subtypes to the contract
         if vals.get('manager_id'):
             self._subscribe_salesteam_followers_to_contract(cr, uid, ids, context)
         return res 
@@ -47,11 +49,15 @@ class account_analytic_account(osv.osv):
         manager_id = record and record[0].manager_id or False
         if manager_id:
             if manager_id.default_section_id:
+                # fetch subscribers
                 followers = [follow.id for follow in manager_id.default_section_id.message_follower_ids]
                 contract_subtype_ids = subtype_obj.search(cr, uid, ['|', ('res_model', '=', False), ('res_model', '=', self._name)], context=context)
                 contract_subtypes = subtype_obj.browse(cr, uid, contract_subtype_ids, context=context)
+                # fetch subscriptions
                 follower_ids = follower_obj.search(cr, uid, [('res_model', '=', 'crm.case.section'), ('res_id', '=', manager_id.default_section_id.id)], context=context)
+                # when subscribe new salesteam update followers
                 self.write(cr, uid, obj_id, {'message_follower_ids': [(6, 0, followers)]}, context=context)
+                # copy followers & select subtypes
                 for follower in follower_obj.browse(cr, uid, follower_ids, context=context):
                     if not follower.subtype_ids:
                         continue

@@ -304,6 +304,7 @@ class crm_lead(base_stage, format_address, osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(crm_lead, self).create(cr, uid, vals, context)
+        # subscribe salesteam followers & subtypes to the lead
         self._subscribe_salesteam_followers_to_lead(cr, uid, [obj_id], context=context)
         self.create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
@@ -314,11 +315,16 @@ class crm_lead(base_stage, format_address, osv.osv):
         rec = self.browse(cr, uid, obj_id, context=context)
         section_id =  rec and rec[0].section_id or False
         if section_id:
+            # fetch subscribers
             followers = [follow.id for follow in section_id.message_follower_ids]
+            # fetch subtypes
             lead_subtype_ids = subtype_obj.search(cr, uid, ['|', ('res_model', '=', False), ('res_model', '=', self._name)], context=context)
             lead_subtypes = subtype_obj.browse(cr, uid, lead_subtype_ids, context=context)
+            # fetch subscriptions
             follower_ids = follower_obj.search(cr, uid, [('res_model', '=', 'crm.case.section'), ('res_id', '=', section_id)], context=context)
+            # when subscribe new salesteam update followers
             self.write(cr, uid, obj_id, {'message_follower_ids': [(6, 0, followers)]}, context=context)
+            # copy followers & select subtypes
             for follower in follower_obj.browse(cr, uid, follower_ids, context=context):
                 if not follower.subtype_ids:
                     continue
@@ -928,6 +934,7 @@ class crm_lead(base_stage, format_address, osv.osv):
             if stage.on_change:
                 vals['probability'] = stage.probability
         res = super(crm_lead,self).write(cr, uid, ids, vals, context)
+        # subscribe new salesteam followers & subtypes to the lead
         if vals.get('section_id'):
             self._subscribe_salesteam_followers_to_lead(cr, uid, ids, context=context)
         return res

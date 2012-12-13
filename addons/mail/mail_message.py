@@ -506,6 +506,7 @@ class mail_message(osv.Model):
         # fetch parent if threaded, sort messages
         for message in self.browse(cr, uid, ids, context=context):
             notified_partner_id = [user.id for user in message.notified_partner_ids]
+            # fatch only parent meassages & chiled messages which have notified_partner_id
             if not parent_id or notified_partner_id:
                 message_id = message.id
                 if message_id in message_tree:

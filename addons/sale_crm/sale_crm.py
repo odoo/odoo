@@ -31,6 +31,7 @@ class sale_order(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         order =  super(sale_order, self).create(cr, uid, vals, context=context)
+        # subscribe salesteam followers & subtypes to the sale order
         self._subscribe_salesteam_followers_to_order(cr, uid, [order], context=context)
         return order
 
@@ -40,12 +41,15 @@ class sale_order(osv.osv):
         rec = self.browse(cr, uid, order, context=context)
         section_id = rec and rec[0].section_id or False
         if section_id:
+            # fetch subscribers
             followers = [follow.id for follow in section_id.message_follower_ids]
             order_subtype_ids = subtype_obj.search(cr, uid, ['|', ('res_model', '=', False), ('res_model', '=', self._name)], context=context)
             order_subtypes = subtype_obj.browse(cr, uid, order_subtype_ids, context=context)
-            followers = [follow.id for follow in section_id.message_follower_ids]
+            # fetch subscriptions
             follower_ids = follower_obj.search(cr, uid, [('res_model', '=', 'crm.case.section'), ('res_id', '=', section_id)], context=context)
+            # when subscribe new salesteam update followers
             self.write(cr, uid, order, {'message_follower_ids': [(6, 0, followers)]}, context=context)
+            # copy followers & select subtypes
             for follower in follower_obj.browse(cr, uid, follower_ids, context=context):
                 if not follower.subtype_ids:
                     continue
@@ -55,6 +59,7 @@ class sale_order(osv.osv):
 
     def write(self, cr, uid, ids, vals, context=None):
         res = super(sale_order, self).write(cr, uid, ids, vals, context=context)
+        # subscribe new salesteam followers & subtypes to the sale order
         if vals.get('section_id'):
             self._subscribe_salesteam_followers_to_order(cr, uid, ids, context=context)
         return res
