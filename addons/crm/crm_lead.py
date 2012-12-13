@@ -311,7 +311,8 @@ class crm_lead(base_stage, format_address, osv.osv):
     def _subscribe_salesteam_followers_to_lead(self, cr, uid, obj_id, context=None):
         follower_obj = self.pool.get('mail.followers')
         subtype_obj = self.pool.get('mail.message.subtype')
-        section_id = self.browse(cr, uid, obj_id[0], context=context).section_id
+        rec = self.browse(cr, uid, obj_id, context=context)
+        section_id =  rec and rec[0].section_id or False
         if section_id:
             followers = [follow.id for follow in section_id.message_follower_ids]
             lead_subtype_ids = subtype_obj.search(cr, uid, ['|', ('res_model', '=', False), ('res_model', '=', self._name)], context=context)
