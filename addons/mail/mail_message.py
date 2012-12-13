@@ -434,7 +434,7 @@ class mail_message(osv.Model):
                 continue
 
             # check there are message for expandable
-            child_ids = set([child.id for child in message.child_ids]) - set(message_unload_ids)
+            child_ids = set([child.id for child in message.child_ids if child.notified_partner_ids]) - set(message_unload_ids)
             child_ids = sorted(list(child_ids), reverse=True)
             if not child_ids:
                 continue
