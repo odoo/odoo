@@ -2,14 +2,14 @@
 <openerp>
     <data>
         <!-- Top menu item -->
-        <menuitem name="Tools" id="base.menu_tools" sequence="120"/>
+        <menuitem name="Tools" id="base.menu_tools" sequence="120" groups="base.group_tool_user"/>
 
         <menuitem name="Surveys" id="menu_surveys" parent="base.menu_tools" sequence="2" groups="base.group_tool_user,base.group_tool_manager,base.group_survey_user"/>
         
         <menuitem name="Reporting" parent="base.menu_tools"
             id="base.menu_lunch_reporting" sequence="6"/>
         <menuitem name="Reporting" id="menu_reporting" parent="menu_surveys" sequence="60"/>
-        <menuitem id="base.next_id_10" name="Survey" parent="base.menu_reporting" sequence="1" />
+        <menuitem id="base.next_id_10" name="Survey" parent="base.menu_reporting" sequence="1" groups="base.group_survey_user"/>
 
         <!--
             Survey
@@ -45,8 +45,8 @@
                         <group>
                             <field name="id" invisible="1"/>
                             <field name="responsible_id" class="oe_inline" attrs="{'readonly':[('state','=','close')]}"/>
+                            <field name="type" attrs="{'readonly':[('state','=','close')]}" class="oe_inline"/>
                             <field name="send_response" attrs="{'readonly':[('state','=','close')]}"/>
-                            <field name="type" attrs="{'readonly':[('state','=','close')]}"/>
                         </group>
                         <group>
                             <field name="max_response_limit" attrs="{'readonly':[('state','=','close')]}"/>

@@ -6,7 +6,7 @@
             <field name="name">hr.analytic.timesheet.tree</field>
             <field name="model">hr.analytic.timesheet</field>
             <field name="arch" type="xml">
-                <tree editable="bottom" string="Timesheet Activities">
+                <tree editable="top" string="Timesheet Activities">
                     <field name="date" on_change="on_change_date(date)"/>
                     <field name="user_id" on_change="on_change_user_id(user_id)" required="1" options='{"no_open": True}'/>
                     <field name="journal_id" invisible="1"/>
