@@ -194,7 +194,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             }
             this.sidebar.add_items('other', _.compact([
                 self.is_action_enabled('delete') && { label: _t('Delete'), callback: self.on_button_delete },
-                self.is_action_enabled('create') && { label: _t('Duplicate'), callback: self.on_button_duplicate },
+                self.is_action_enabled('create') && { label: _t('Duplicate'), callback: self.on_button_duplicate }
             ]));
         }
 
@@ -1694,6 +1694,10 @@ instance.web.form.compute_domain = function(expr, fields) {
     return _.all(stack, _.identity);
 };
 
+instance.web.form.is_bin_size = function(v) {
+    return /^\d+(\.\d*)? \w+$/.test(v);
+};
+
 /**
  * Must be applied over an class already possessing the PropertiesMixin.
  *
@@ -2216,19 +2220,28 @@ instance.web.form.ReinitializeFieldMixin =  _.extend({}, instance.web.form.Reini
 instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
     template: 'FieldChar',
     widget_class: 'oe_form_field_char',
+    events: {
+        'change input': 'store_dom_value',
+    },
     init: function (field_manager, node) {
         this._super(field_manager, node);
         this.password = this.node.attrs.password === 'True' || this.node.attrs.password === '1';
     },
     initialize_content: function() {
-        var self = this;
-        var $input = this.$el.find('input');
-        $input.change(function() {
-            if(self.is_syntax_valid()){
-                self.internal_set_value(self.parse_value($input.val()));
-            }
-        });
-        this.setupFocus($input);
+        this.setupFocus(this.$('input'));
+    },
+    store_dom_value: function () {
+        if (!this.get('effective_readonly')
+                && this.$('input').length
+                && this.is_syntax_valid()) {
+            this.internal_set_value(
+                this.parse_value(
+                    this.$('input').val()));
+        }
+    },
+    commit_value: function () {
+        this.store_dom_value();
+        return this._super();
     },
     render_value: function() {
         var show_value = this.format_value(this.get('value'), '');
@@ -2244,7 +2257,7 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.we
     is_syntax_valid: function() {
         if (!this.get("effective_readonly") && this.$("input").size() > 0) {
             try {
-                var value_ = this.parse_value(this.$el.find('input').val(), '');
+                this.parse_value(this.$('input').val(), '');
                 return true;
             } catch(e) {
                 return false;
@@ -2262,7 +2275,7 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.we
         return this.get('value') === '' || this._super();
     },
     focus: function() {
-        this.$('input:first').focus();
+        this.$('input:first')[0].focus();
     },
     set_dimensions: function (height, width) {
         this._super(height, width);
@@ -2363,6 +2376,9 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
     template: "web.datepicker",
     jqueryui_object: 'datetimepicker',
     type_of_date: "datetime",
+    events: {
+        'change .oe_datepicker_master': 'change_datetime',
+    },
     init: function(parent) {
         this._super(parent);
         this.name = parent.name;
@@ -2371,9 +2387,6 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
         var self = this;
         this.$input = this.$el.find('input.oe_datepicker_master');
         this.$input_picker = this.$el.find('input.oe_datepicker_container');
-        this.$input.change(function(){
-            self.change_datetime();
-        });
         
         this.picker({
             onClose: this.on_picker_select,
@@ -2447,7 +2460,10 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
             this.set_value_from_ui_();
             this.trigger("datetime_changed");
         }
-    }
+    },
+    commit_value: function () {
+        this.change_datetime();
+    },
 });
 
 instance.web.DateWidget = instance.web.DateTimeWidget.extend({
@@ -2494,7 +2510,7 @@ instance.web.form.FieldDatetime = instance.web.form.AbstractField.extend(instanc
     },
     focus: function() {
         if (this.datewidget && this.datewidget.$input) {
-            this.datewidget.$input.focus();
+            this.datewidget.$input[0].focus();
         }
     },
     set_dimensions: function (height, width) {
@@ -2512,6 +2528,14 @@ instance.web.form.FieldDate = instance.web.form.FieldDatetime.extend({
 
 instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
     template: 'FieldText',
+    events: {
+        'keyup': function (e) {
+            if (e.which === $.ui.keyCode.ENTER) {
+                e.stopPropagation();
+            }
+        },
+        'change textarea': 'store_dom_value',
+    },
     init: function (field_manager, node) {
         this._super(field_manager, node);
     },
@@ -2519,19 +2543,22 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
         var self = this;
         this.$textarea = this.$el.find('textarea');
         this.default_height = this.$textarea.css('height');
-        if (!this.get("effective_readonly")) {
-            this.$textarea.change(_.bind(function() {
-                self.internal_set_value(instance.web.parse_value(self.$textarea.val(), self));
-            }, this));
-        } else {
+        if (this.get("effective_readonly")) {
             this.$textarea.attr('disabled', 'disabled');
         }
-        this.$el.keyup(function (e) {
-            if (e.which === $.ui.keyCode.ENTER) {
-                e.stopPropagation();
-            }
-        });
         this.setupFocus(this.$textarea);
+    },
+    commit_value: function () {
+        this.store_dom_value();
+        return this._super();
+    },
+    store_dom_value: function () {
+        if (!this.get('effective_readonly') && this.$('textarea').length) {
+            this.internal_set_value(
+                instance.web.parse_value(
+                    this.$textarea.val(),
+                    this));
+        }
     },
     render_value: function() {
         $(window).resize();
@@ -2545,7 +2572,7 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
     is_syntax_valid: function() {
         if (!this.get("effective_readonly") && this.$textarea) {
             try {
-                var value_ = instance.web.parse_value(this.$textarea.val(), this, '');
+                instance.web.parse_value(this.$textarea.val(), this, '');
                 return true;
             } catch(e) {
                 return false;
@@ -2557,7 +2584,7 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
         return this.get('value') === '' || this._super();
     },
     focus: function($el) {
-        this.$textarea.focus();
+        this.$textarea[0].focus();
     },
     set_dimensions: function (height, width) {
         this._super(height, width);
@@ -2638,7 +2665,7 @@ instance.web.form.FieldBoolean = instance.web.form.AbstractField.extend({
         this.$checkbox[0].checked = this.get('value');
     },
     focus: function() {
-        this.$checkbox.focus();
+        this.$checkbox[0].focus();
     }
 });
 
@@ -2660,6 +2687,9 @@ instance.web.form.FieldProgressBar = instance.web.form.AbstractField.extend({
 
 instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
     template: 'FieldSelection',
+    events: {
+        'change select': 'store_dom_value',
+    },
     init: function(field_manager, node) {
         var self = this;
         this._super(field_manager, node);
@@ -2682,9 +2712,6 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
         //   row
         var ischanging = false;
         var $select = this.$el.find('select')
-            .change(_.bind(function() {
-                this.internal_set_value(this.values[this.$el.find('select')[0].selectedIndex][0]);
-            }, this))
             .change(function () { ischanging = true; })
             .click(function () { ischanging = false; })
             .keyup(function (e) {
@@ -2693,6 +2720,16 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
                 ischanging = false;
             });
         this.setupFocus($select);
+    },
+    commit_value: function () {
+        this.store_dom_value();
+        return this._super();
+    },
+    store_dom_value: function () {
+        if (!this.get('effective_readonly') && this.$('select').length) {
+            this.internal_set_value(
+                this.values[this.$('select')[0].selectedIndex][0]);
+        }
     },
     set_value: function(value_) {
         value_ = value_ === null ? false : value_;
@@ -2714,7 +2751,7 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
         }
     },
     focus: function() {
-        this.$el.find('select:first').focus();
+        this.$('select:first')[0].focus();
     },
     set_dimensions: function (height, width) {
         this._super(height, width);
@@ -2910,6 +2947,15 @@ instance.web.form.M2ODialog = instance.web.Dialog.extend({
 
 instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instance.web.form.CompletionFieldMixin, instance.web.form.ReinitializeFieldMixin, {
     template: "FieldMany2One",
+    events: {
+        'keydown input': function (e) {
+            switch (e.which) {
+            case $.ui.keyCode.UP:
+            case $.ui.keyCode.DOWN:
+                e.stopPropagation();
+            }
+        }
+    },
     init: function(field_manager, node) {
         this._super(field_manager, node);
         instance.web.form.CompletionFieldMixin.init.call(this);
@@ -3191,7 +3237,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
     },
     focus: function () {
         if (!this.get('effective_readonly')) {
-            this.$input.focus();
+            this.$input[0].focus();
         }
     },
     _quick_create: function() {
@@ -4041,6 +4087,9 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
     add_id: function(id) {
         this.set({'value': _.uniq(this.get('value').concat([id]))});
     },
+    focus: function () {
+        this.$text[0].focus();
+    },
 });
 
 /**
@@ -4377,7 +4426,7 @@ instance.web.form.Many2ManyQuickCreate = instance.web.Widget.extend({
         });
     },
     focus: function() {
-        this.$text.focus();
+        this.$text[0].focus();
     },
     add_id: function(id) {
         var self = this;
@@ -4825,11 +4874,6 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
         if (!value) {
             this.do_warn(_t("Save As..."), _t("The field is empty, there's nothing to save !"));
             ev.stopPropagation();
-        } else if (this._dirty_flag) {
-            var link = this.$('.oe_form_binary_file_save_data')[0];
-            link.download = this.filename || "download.bin"; // Works on only on Google Chrome
-            //link.target = '_blank';
-            link.href = "data:application/octet-stream;base64," + value;
         } else {
             instance.web.blockUI();
             var c = instance.webclient.crashmanager;
@@ -4840,6 +4884,7 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
                     id: (this.view.datarecord.id || ''),
                     field: this.name,
                     filename_field: (this.node.attrs.filename || ''),
+                    data: instance.web.form.is_bin_size(value) ? null : value,
                     context: this.view.dataset.get_context()
                 })},
                 complete: instance.web.unblockUI,
@@ -4919,7 +4964,7 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
     render_value: function() {
         var self = this;
         var url;
-        if (this.get('value') && ! /^\d+(\.\d*)? \w+$/.test(this.get('value'))) {
+        if (this.get('value') && !instance.web.form.is_bin_size(this.get('value'))) {
             url = 'data:image/png;base64,' + this.get('value');
         } else if (this.get('value')) {
             var id = JSON.stringify(this.view.datarecord.id || null);
@@ -5020,7 +5065,7 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
         this._super( ids );
     },
     get_value: function() {
-        return _.map(this.get('value'), function (value) { return commands.link_to( value.id ); });
+        return _.map(this.get('value'), function (value) { return commands.link_to( isNaN(value) ? value.id : value ); });
     },
     get_file_url: function (attachment) {
         return this.session.url('/web/binary/saveas', {model: 'ir.attachment', field: 'datas', filename_field: 'datas_fname', id: attachment['id']});
@@ -5114,6 +5159,8 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
         }
     },
     on_file_loaded: function (event, result) {
+        var files = this.get('value');
+
         // unblock UI
         if(this.node.attrs.blockui>0) {
             instance.web.unblockUI();
@@ -5121,15 +5168,19 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
 
         // TODO : activate send on wizard and form
 
-        var files = this.get('value');
-        for(var i in files){
-            if(files[i].filename == result.filename && files[i].upload) {
-                files[i] = {
-                    'id': result.id,
-                    'name': result.name,
-                    'filename': result.filename,
-                    'url': this.get_file_url(result)
-                };
+        if (result.error || !result.id ) {
+            this.do_warn( _t('Uploading error'), result.error);
+            files = _.filter(files, function (val) { return !val.upload; });
+        } else {
+            for(var i in files){
+                if(files[i].filename == result.filename && files[i].upload) {
+                    files[i] = {
+                        'id': result.id,
+                        'name': result.name,
+                        'filename': result.filename,
+                        'url': this.get_file_url(result)
+                    };
+                }
             }
         }
 

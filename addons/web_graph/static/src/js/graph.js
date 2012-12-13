@@ -136,9 +136,8 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
     make_graph: function (mode, container, data) {
         if (mode === 'area') { mode = 'line'; }
-        return Flotr.draw(
-            container, data.data,
-            this.get_format(this['options_' + mode](data)));
+        var format = this.get_format(this['options_' + mode](data));
+        return Flotr.draw(container, data.data, format);
     },
 
     options_bar: function (data) {
@@ -210,7 +209,9 @@ instance.web_graph.GraphView = instance.web.View.extend({
         return {
             lines : {
                 show : true,
-                stacked : this.stacked
+            },
+            points: {
+                show: true,
             },
             grid : {
                 verticalLines : this.orientation,

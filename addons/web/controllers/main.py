@@ -523,21 +523,7 @@ html_template = """<!DOCTYPE html>
     <body>
         <!--[if lte IE 8]>
         <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
-        <script>
-            var test = function() {
-                CFInstall.check({
-                    mode: "overlay"
-                });
-            };
-            if (window.localStorage && false) {
-                if (! localStorage.getItem("hasShownGFramePopup")) {
-                    test();
-                    localStorage.setItem("hasShownGFramePopup", true);
-                }
-            } else {
-                test();
-            }
-        </script>
+        <script>CFInstall.check({mode: "overlay"});</script>
         <![endif]-->
     </body>
 </html>
@@ -920,14 +906,7 @@ class Menu(openerpweb.Controller):
     _cp_path = "/web/menu"
 
     @openerpweb.jsonrequest
-    def load(self, req):
-        return {'data': self.do_load(req)}
-
-    @openerpweb.jsonrequest
     def get_user_roots(self, req):
-        return self.do_get_user_roots(req)
-
-    def do_get_user_roots(self, req):
         """ Return all root menu ids visible for the session user.
 
         :param req: A request object, with an OpenERP session attribute
@@ -950,7 +929,8 @@ class Menu(openerpweb.Controller):
 
         return Menus.search(menu_domain, 0, False, False, req.context)
 
-    def do_load(self, req):
+    @openerpweb.jsonrequest
+    def load(self, req):
         """ Loads all menu items (all applications and their sub-menus).
 
         :param req: A request object, with an OpenERP session attribute
@@ -960,24 +940,28 @@ class Menu(openerpweb.Controller):
         """
         Menus = req.session.model('ir.ui.menu')
 
-        fields = ['name', 'sequence', 'parent_id', 'action',
-                  'needaction_enabled', 'needaction_counter']
-        menu_roots = Menus.read(self.do_get_user_roots(req), fields, req.context)
+        fields = ['name', 'sequence', 'parent_id', 'action']
+        menu_root_ids = self.get_user_roots(req)
+        menu_roots = Menus.read(menu_root_ids, fields, req.context) if menu_root_ids else []
         menu_root = {
             'id': False,
             'name': 'root',
             'parent_id': [-1, ''],
-            'children': menu_roots
+            'children': menu_roots,
+            'all_menu_ids': menu_root_ids,
         }
+        if not menu_roots:
+            return menu_root
 
         # menus are loaded fully unlike a regular tree view, cause there are a
         # limited number of items (752 when all 6.1 addons are installed)
-        menu_ids = Menus.search([], 0, False, False, req.context)
+        menu_ids = Menus.search([('id', 'child_of', menu_root_ids)], 0, False, False, req.context)
         menu_items = Menus.read(menu_ids, fields, req.context)
         # adds roots at the end of the sequence, so that they will overwrite
         # equivalent menu items from full menu read when put into id:item
         # mapping, resulting in children being correctly set on the roots.
         menu_items.extend(menu_roots)
+        menu_root['all_menu_ids'] = menu_ids # includes menu_root_ids!
 
         # make a tree using parent_id
         menu_items_map = dict(
@@ -999,7 +983,17 @@ class Menu(openerpweb.Controller):
         return menu_root
 
     @openerpweb.jsonrequest
+    def load_needaction(self, req, menu_ids):
+        """ Loads needaction counters for specific menu ids.
+
+            :return: needaction data
+            :rtype: dict(menu_id: {'needaction_enabled': boolean, 'needaction_counter': int})
+        """
+        return req.session.model('ir.ui.menu').get_needaction_data(menu_ids, req.context)
+
+    @openerpweb.jsonrequest
     def action(self, req, menu_id):
+        # still used by web_shortcut
         actions = load_actions_from_ir_values(req,'action', 'tree_but_open',
                                              [('ir.ui.menu', menu_id)], False)
         return {"action": actions}
@@ -1250,6 +1244,7 @@ class Binary(openerpweb.Controller):
         jdata = simplejson.loads(data)
         model = jdata['model']
         field = jdata['field']
+        data = jdata['data']
         id = jdata.get('id', None)
         filename_field = jdata.get('filename_field', None)
         context = jdata.get('context', {})
@@ -1258,7 +1253,9 @@ class Binary(openerpweb.Controller):
         fields = [field]
         if filename_field:
             fields.append(filename_field)
-        if id:
+        if data:
+            res = { field: data }
+        elif id:
             res = Model.read([int(id)], fields, context)[0]
         else:
             res = Model.default_get(fields, context)
@@ -1310,7 +1307,7 @@ class Binary(openerpweb.Controller):
                 'id':  attachment_id
             }
         except Exception,e:
-            args = {'erorr':e.faultCode.split('--')[1],'title':e.faultCode.split('--')[0]}
+            args = {'error':e.faultCode }
         return out % (simplejson.dumps(callback), simplejson.dumps(args))
 
 class Action(openerpweb.Controller):

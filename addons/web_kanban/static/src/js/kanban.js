@@ -988,7 +988,7 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
     kanban_image: function(model, field, id, cache, options) {
         options = options || {};
         var url;
-        if (this.record[field] && this.record[field].value && ! /^\d+(\.\d*)? \w+$/.test(this.record[field].value)) {
+        if (this.record[field] && this.record[field].value && !instance.web.form.is_bin_size(this.record[field].value)) {
             url = 'data:image/png;base64,' + this.record[field].value;
         } else if (this.record[field] && ! this.record[field].value) {
             url = "/web/static/src/img/placeholder.png";

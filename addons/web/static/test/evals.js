@@ -4,27 +4,37 @@ openerp.testing.section('eval.types', {
         instance.session.uid = 42;
     }
 }, function (test) {
-    test('strftime', function (instance) {
-        var d = new Date();
+    var makeTimeCheck = function (instance) {
         var context = instance.web.pyeval.context();
-        strictEqual(
-            py.eval("time.strftime('%Y')", context),
-            String(d.getFullYear()));
-        strictEqual(
-            py.eval("time.strftime('%Y')+'-01-30'", context),
-            String(d.getFullYear()) + '-01-30');
-        strictEqual(
-            py.eval("time.strftime('%Y-%m-%d %H:%M:%S')", context),
-            _.str.sprintf('%04d-%02d-%02d %02d:%02d:%02d',
+        return function (expr, func, message) {
+            // evaluate expr between two calls to new Date(), and check that
+            // the result is between the transformed dates
+            var d0 = new Date;
+            var result = py.eval(expr, context);
+            var d1 = new Date;
+            ok(func(d0) <= result && result <= func(d1), message);
+        };
+    };
+    test('strftime', function (instance) {
+        var check = makeTimeCheck(instance);
+        check("time.strftime('%Y')", function(d) {
+            return String(d.getFullYear());
+        });
+        check("time.strftime('%Y')+'-01-30'", function(d) {
+            return String(d.getFullYear()) + '-01-30';
+        });
+        check("time.strftime('%Y-%m-%d %H:%M:%S')", function(d) {
+            return _.str.sprintf('%04d-%02d-%02d %02d:%02d:%02d',
                 d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate(),
-                d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds()));
+                d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds());
+        });
     });
     test('context_today', function (instance) {
-        var d = new Date();
-        var context = instance.web.pyeval.context();
-        strictEqual(
-            py.eval("context_today().strftime('%Y-%m-%d')", context),
-            String(_.str.sprintf('%04d-%02d-%02d', d.getFullYear(), d.getMonth() + 1, d.getDate())));
+        var check = makeTimeCheck(instance);
+        check("context_today().strftime('%Y-%m-%d')", function(d) {
+            return String(_.str.sprintf('%04d-%02d-%02d',
+                d.getFullYear(), d.getMonth() + 1, d.getDate()));
+        });
     });
     // Port from pypy/lib_pypy/test_datetime.py
     var makeEq = function (instance, c2) {

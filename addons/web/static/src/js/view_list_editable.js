@@ -105,8 +105,15 @@ openerp.web.list_editable = function (instance) {
          * Replace do_search to handle editability process
          */
         do_search: function(domain, context, group_by) {
-            this._context_editable = !!context.set_editable;
-            this._super.apply(this, arguments);
+            var self=this, _super = self._super, args=arguments;
+            var ready = this.editor.is_editing()
+                    ? this.cancel_edition(true)
+                    : $.when();
+
+            return ready.then(function () {
+                self._context_editable = !!context.set_editable;
+                return _super.apply(self, args);
+            });
         },
         /**
          * Replace do_add_record to handle editability (and adding new record
