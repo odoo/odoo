@@ -74,6 +74,14 @@ class sale_order(osv.Model):
             mail_obj.send(cr, uid, [mail_id], recipient_ids=[partner.id], context=context)
         return super(sale_order, self).action_button_confirm(cr, uid, ids, context=context)
 
+    def get_signup_url(self, cr, uid, ids, context=None):
+        assert len(ids) == 1
+        document = self.browse(cr, uid, ids[0], context=context)
+        partner = document.partner_id
+        action = 'portal_sale.action_quotations_portal' if document.state in ('draft', 'sent') else 'portal_sale.action_orders_portal'
+        partner.signup_prepare()
+        return partner._get_signup_url_for_action(action=action, view_type='form', res_id=document.id)[partner.id]
+
 
 class account_invoice(osv.Model):
     _inherit = 'account.invoice'
@@ -125,6 +133,14 @@ class account_invoice(osv.Model):
             mail_id = mail_obj.create(cr, uid, mail_values, context=context)
             mail_obj.send(cr, uid, [mail_id], recipient_ids=[partner.id], context=context)
         return super(account_invoice, self).invoice_validate(cr, uid, ids, context=context)
+
+    def get_signup_url(self, cr, uid, ids, context=None):
+        assert len(ids) == 1
+        document = self.browse(cr, uid, ids[0], context=context)
+        partner = document.partner_id
+        action = 'portal_sale.portal_action_invoices'
+        partner.signup_prepare()
+        return partner._get_signup_url_for_action(action=action, view_type='form', res_id=document.id)[partner.id]
 
 
 class mail_mail(osv.osv):
