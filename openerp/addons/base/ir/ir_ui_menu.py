@@ -168,9 +168,22 @@ class ir_ui_menu(osv.osv):
         self.clear_cache()
         return super(ir_ui_menu, self).write(*args, **kwargs)
 
-    def unlink(self, *args, **kwargs):
+    def unlink(self, cr, uid, ids, context=None):
+        # Detach children and promote them to top-level, because it would be unwise to
+        # cascade-delete submenus blindly. We also can't use ondelete=set null because
+        # that is not supported when _parent_store is used (would silently corrupt it).
+        # TODO: ideally we should move them under a generic "Orphans" menu somewhere?
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        local_context = dict(context or {})
+        local_context['ir.ui.menu.full_list'] = True
+        direct_children_ids = self.search(cr, uid, [('parent_id', 'in', ids)], context=local_context)
+        if direct_children_ids:
+            self.write(cr, uid, direct_children_ids, {'parent_id': False})
+
+        result = super(ir_ui_menu, self).unlink(cr, uid, ids, context=context)
         self.clear_cache()
-        return super(ir_ui_menu, self).unlink(*args, **kwargs)
+        return result
 
     def copy(self, cr, uid, id, default=None, context=None):
         ir_values_obj = self.pool.get('ir.values')
