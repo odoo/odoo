@@ -841,11 +841,6 @@ instance.web.Menu =  instance.web.Widget.extend({
         var self = this;
         this.data = {data: data};
         this.renderElement();
-        // Hide toplevel item if there is only one
-        var $toplevel = this.$("li");
-        if($toplevel.length == 1) {
-            $toplevel.hide();
-        }
         this.$secondary_menus.html(QWeb.render("Menu.secondary", { widget : this }));
         this.$el.on('click', 'a[data-menu]', this.on_menu_click);
         // Hide second level submenus
