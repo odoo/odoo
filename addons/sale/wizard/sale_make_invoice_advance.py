@@ -86,7 +86,7 @@ class sale_advance_payment_inv(osv.osv_memory):
                 prop = ir_property_obj.get(cr, uid,
                             'property_account_income_categ', 'product.category', context=context)
                 prop_id = prop and prop.id or False
-                account_id = fiscal_obj.map_account(cr, uid, sale.fiscal_position.id or False, prop_id)
+                account_id = fiscal_obj.map_account(cr, uid, sale.fiscal_position or False, prop_id)
                 if not account_id:
                     raise osv.except_osv(_('Configuration Error!'),
                             _('There is no income account defined as global property.'))
