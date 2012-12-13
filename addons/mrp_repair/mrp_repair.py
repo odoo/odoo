@@ -752,7 +752,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         return {'value': {
                 'to_invoice': False,
                 'location_id': location_id,
-                'location_dest_id': self.pool.get('stock.location').search(cr, uid, [('name','=','Inventory loss')], context=context)
+                'location_dest_id': False
                 }}
 
 mrp_repair_line()
