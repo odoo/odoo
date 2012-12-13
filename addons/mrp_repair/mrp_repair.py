@@ -748,11 +748,13 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
                 'location_id': stock_id,
                 'location_dest_id': location_id
                 }}
+        obj_data = self.pool.get('ir.model.data')
+        dummy, scrapped_location_id = obj_data.get_object_reference(cr, uid, 'stock', 'stock_location_scrapped')
 
         return {'value': {
                 'to_invoice': False,
                 'location_id': location_id,
-                'location_dest_id': False
+                'location_dest_id': scrapped_location_id,
                 }}
 
 mrp_repair_line()
