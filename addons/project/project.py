@@ -275,7 +275,7 @@ class project(osv.osv):
         ids = self.pool.get('project.task.type').search(cr, uid, [('case_default','=',1)], context=context)
         return ids
 
-    _order = "sequence"
+    _order = "sequence, id"
     _defaults = {
         'active': True,
         'type': 'contract',
