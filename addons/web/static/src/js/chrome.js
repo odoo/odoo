@@ -813,13 +813,16 @@ instance.web.Menu =  instance.web.Widget.extend({
             }
         });
         var resizing_timer = null;
-        instance.web.bus.on('resize', this, function() {
+        instance.web.bus.on('resize', this, function(ev) {
             if (resizing_timer) {
                 clearTimeout(resizing_timer);
+            } else {
+                self.$el.hide();
             }
             resizing_timer = setTimeout(function() {
                 self.reflow();
-            }, 500);
+                resizing_timer = null;
+            }, 300);
         });
     },
     start: function() {
@@ -866,6 +869,7 @@ instance.web.Menu =  instance.web.Widget.extend({
     },
     reflow: function() {
         var self = this;
+        this.$el.show();
         var $more_container = $('.oe_menu_more_container').hide();
         var $more = $('.oe_menu_more');
         $more.find('> li').insertBefore($more_container);
