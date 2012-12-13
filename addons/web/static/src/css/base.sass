@@ -870,6 +870,13 @@ $sheet-padding: 16px
                 &:hover
                     @include vertical-gradient(#292929, #191919)
                     @include box-shadow(none)
+        .oe_topbar_name
+            max-width: 150px
+            overflow: hidden
+            display: inline-block
+            max-height: 100%
+            text-overflow: ellipsis
+            white-space: nowrap
 
     // oe menu is the list of the buttons on the left side of the bar.
     // So why aren't the buttons oe_topbar_items ? This sad state of affairs
