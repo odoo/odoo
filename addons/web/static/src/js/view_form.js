@@ -128,12 +128,14 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             self.init_pager();
         });
         self.on("load_record", self, self.load_record);
-        this.on('view_loaded', self, self.load_form);
         instance.web.bus.on('clear_uncommitted_changes', this, function(e) {
             if (!this.can_be_discarded()) {
                 e.preventDefault();
             }
         });
+    },
+    view_loading: function(r) {
+        return this.load_form(r);
     },
     destroy: function() {
         _.each(this.get_widgets(), function(w) {

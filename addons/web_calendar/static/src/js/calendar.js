@@ -49,7 +49,9 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         this.range_stop = null;
         this.update_range_dates(Date.today());
         this.selected_filters = [];
-        this.on('view_loaded', self, self.load_calendar);
+    },
+    view_loading: function(r) {
+        return this.load_calendar(r);
     },
     destroy: function() {
         scheduler.clearAll();

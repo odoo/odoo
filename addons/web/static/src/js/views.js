@@ -1186,31 +1186,35 @@ instance.web.View = instance.web.Widget.extend({
     },
     load_view: function(context) {
         var self = this;
-        var view_loaded;
+        var view_loaded_def;
         if (this.embedded_view) {
-            view_loaded = $.Deferred();
+            view_loaded_def = $.Deferred();
             $.async_when().done(function() {
-                view_loaded.resolve(self.embedded_view);
+                view_loaded_def.resolve(self.embedded_view);
             });
         } else {
             if (! this.view_type)
                 console.warn("view_type is not defined", this);
-            view_loaded = instance.web.fields_view_get({
+            view_loaded_def = instance.web.fields_view_get({
                 "model": this.dataset._model,
                 "view_id": this.view_id,
                 "view_type": this.view_type,
                 "toolbar": !!this.options.$sidebar,
             });
         }
-        return view_loaded.then(function(r) {
+        return view_loaded_def.then(function(r) {
             self.fields_view = r;
-            self.trigger('view_loaded', r);
             // add css classes that reflect the (absence of) access rights
             self.$el.addClass('oe_view')
                 .toggleClass('oe_cannot_create', !self.is_action_enabled('create'))
                 .toggleClass('oe_cannot_edit', !self.is_action_enabled('edit'))
                 .toggleClass('oe_cannot_delete', !self.is_action_enabled('delete'));
+            return $.when(self.view_loading(r)).then(function() {
+                self.trigger('view_loaded', r);
+            });
         });
+    },
+    view_loading: function(r) {
     },
     set_default_options: function(options) {
         this.options = options || {};

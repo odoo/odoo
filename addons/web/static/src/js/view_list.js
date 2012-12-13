@@ -90,7 +90,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         this.no_leaf = false;
         this.grouped = false;
-        this.on('view_loaded', self, self.load_list);
+    },
+    view_loading: function(r) {
+        return this.load_list(r);
     },
     set_default_options: function (options) {
         this._super(options);

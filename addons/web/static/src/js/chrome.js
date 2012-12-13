@@ -1122,6 +1122,8 @@ instance.web.WebClient = instance.web.Client.extend({
     init: function(parent) {
         this._super(parent);
         this._current_state = null;
+        this.menu_dm = new instance.web.DropMisordered();
+        this.action_mutex = new $.Mutex();
     },
     start: function() {
         var self = this;
@@ -1287,18 +1289,20 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     on_menu_action: function(options) {
         var self = this;
-        return this.rpc("/web/action/load", { action_id: options.action_id })
+        return this.menu_dm.add(this.rpc("/web/action/load", { action_id: options.action_id }))
             .then(function (result) {
-                if (options.needaction) {
-                    result.context = new instance.web.CompoundContext(
-                        result.context,
-                        {search_default_message_unread: true});
-                }
-                return $.when(self.action_manager.do_action(result, {
-                    clear_breadcrumbs: true,
-                    action_menu_id: self.menu.current_menu,
-                })).fail(function() {
-                    self.menu.open_menu(options.previous_menu_id);
+                return self.action_mutex.exec(function() {
+                    if (options.needaction) {
+                        result.context = new instance.web.CompoundContext(
+                            result.context,
+                            {search_default_message_unread: true});
+                    }
+                    return $.when(self.action_manager.do_action(result, {
+                        clear_breadcrumbs: true,
+                        action_menu_id: self.menu.current_menu,
+                    })).fail(function() {
+                        self.menu.open_menu(options.previous_menu_id);
+                    });
                 });
             });
     },
