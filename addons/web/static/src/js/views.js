@@ -467,6 +467,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         this.flags = flags || {};
         this.registry = instance.web.views;
         this.views_history = [];
+        this.view_completely_inited = $.Deferred();
     },
     /**
      * @returns {jQuery.Deferred} initial view loading promise
@@ -586,6 +587,8 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                     && self.flags.auto_search
                     && view.controller.searchable !== false) {
                 self.searchview.ready.done(self.searchview.do_search);
+            } else {
+                self.view_completely_inited.resolve();
             }
             self.trigger("controller_inited",view_type,controller);
         });
@@ -700,7 +703,9 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             if (_.isString(groupby)) {
                 groupby = [groupby];
             }
-            controller.do_search(results.domain, results.context, groupby || []);
+            $.when(controller.do_search(results.domain, results.context, groupby || [])).then(function() {
+                self.view_completely_inited.resolve();
+            });
         });
     },
     /**
@@ -782,7 +787,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
 
         var main_view_loaded = this._super();
 
-        var manager_ready = $.when(searchview_loaded, main_view_loaded);
+        var manager_ready = $.when(searchview_loaded, main_view_loaded, this.view_completely_inited);
 
         this.$el.find('.oe_debug_view').change(this.on_debug_changed);
         this.$el.addClass("oe_view_manager_" + (this.action.target || 'current'));
