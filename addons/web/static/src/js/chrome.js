@@ -867,6 +867,10 @@ instance.web.Menu =  instance.web.Widget.extend({
             }
         });
     },
+    /**
+     * Reflow the menu items and dock overflowing items into a "More" menu item.
+     * Automatically called when 'menu_loaded' event is triggered and on window resizing.
+     */
     reflow: function() {
         var self = this;
         this.$el.show();
