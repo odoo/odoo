@@ -146,7 +146,10 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
     cr.execute("select (now() at time zone 'UTC')::timestamp")
     dt_before_load = cr.fetchone()[0]
 
-    pool.fields_by_model = {'whatever': {}}
+    # Query manual fields for all models at once and save them on the registry
+    # so the initialization code for each model does not have to do it
+    # one model at a time.
+    pool.fields_by_model = {'so_this_dict_is_not_empty': {}}
     cr.execute('SELECT * FROM ir_model_fields WHERE state=%s', ('manual',))
     for field in cr.dictfetchall():
         pool.fields_by_model.setdefault(field['model'], []).append(field)
@@ -227,6 +230,8 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
         cr.commit()
 
+    # The query won't be valid for models created later (i.e. custom model
+    # created after the registry has been loaded), so empty its result.
     pool.fields_by_model = {}
     
     cr.commit()
