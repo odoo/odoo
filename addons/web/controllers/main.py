@@ -1276,11 +1276,11 @@ class Binary(openerpweb.Controller):
     @openerpweb.httprequest
     def upload(self, req, callback, ufile):
         # TODO: might be useful to have a configuration flag for max-length file uploads
+        out = """<script language="javascript" type="text/javascript">
+                    var win = window.top.window;
+                    win.jQuery(win).trigger(%s, %s);
+                </script>"""
         try:
-            out = """<script language="javascript" type="text/javascript">
-                        var win = window.top.window;
-                        win.jQuery(win).trigger(%s, %s);
-                    </script>"""
             data = ufile.read()
             args = [len(data), ufile.filename,
                     ufile.content_type, base64.b64encode(data)]
@@ -1291,11 +1291,11 @@ class Binary(openerpweb.Controller):
     @openerpweb.httprequest
     def upload_attachment(self, req, callback, model, id, ufile):
         Model = req.session.model('ir.attachment')
+        out = """<script language="javascript" type="text/javascript">
+                    var win = window.top.window;
+                    win.jQuery(win).trigger(%s, %s);
+                </script>"""
         try:
-            out = """<script language="javascript" type="text/javascript">
-                        var win = window.top.window;
-                        win.jQuery(win).trigger(%s, %s);
-                    </script>"""
             attachment_id = Model.create({
                 'name': ufile.filename,
                 'datas': base64.encodestring(ufile.read()),
@@ -1307,7 +1307,7 @@ class Binary(openerpweb.Controller):
                 'filename': ufile.filename,
                 'id':  attachment_id
             }
-        except Exception,e:
+        except xmlrpclib.Fault, e:
             args = {'error':e.faultCode }
         return out % (simplejson.dumps(callback), simplejson.dumps(args))
 
