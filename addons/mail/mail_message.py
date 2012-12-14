@@ -76,7 +76,7 @@ class mail_message(osv.Model):
         # TDE note: regroup by model/ids, to have less queries to perform
         result = dict.fromkeys(ids, False)
         for message in self.read(cr, uid, ids, ['model', 'res_id'], context=context):
-            if not message.get('model') or not message.get('res_id'):
+            if not message.get('model') or not message.get('res_id') or not self.pool.get(message['model']):
                 continue
             result[message['id']] = self._shorten_name(self.pool.get(message['model']).name_get(cr, SUPERUSER_ID, [message['res_id']], context=context)[0][1])
         return result
@@ -549,6 +549,20 @@ class mail_message(osv.Model):
         if not cr.fetchone():
             cr.execute("""CREATE INDEX mail_message_model_res_id_idx ON mail_message (model, res_id)""")
 
+    def _find_allowed_model_wise(self, cr, uid, doc_model, doc_dict, context=None):
+        doc_ids = doc_dict.keys()
+        allowed_doc_ids = self.pool.get(doc_model).search(cr, uid, [('id', 'in', doc_ids)], context=context)
+        return set([message_id for allowed_doc_id in allowed_doc_ids for message_id in doc_dict[allowed_doc_id]])
+
+    def _find_allowed_doc_ids(self, cr, uid, model_ids, context=None):
+        model_access_obj = self.pool.get('ir.model.access')
+        allowed_ids = set()
+        for doc_model, doc_dict in model_ids.iteritems():
+            if not model_access_obj.check(cr, uid, doc_model, 'read', False):
+                continue
+            allowed_ids |= self._find_allowed_model_wise(cr, uid, doc_model, doc_dict, context=context)
+        return allowed_ids
+
     def _search(self, cr, uid, args, offset=0, limit=None, order=None,
         context=None, count=False, access_rights_uid=None):
         """ Override that adds specific access rights of mail.message, to remove
@@ -586,13 +600,7 @@ class mail_message(osv.Model):
             elif message.get('model') and message.get('res_id'):
                 model_ids.setdefault(message.get('model'), {}).setdefault(message.get('res_id'), set()).add(message.get('id'))
 
-        model_access_obj = self.pool.get('ir.model.access')
-        for doc_model, doc_dict in model_ids.iteritems():
-            if not model_access_obj.check(cr, uid, doc_model, 'read', False):
-                continue
-            doc_ids = doc_dict.keys()
-            allowed_doc_ids = self.pool.get(doc_model).search(cr, uid, [('id', 'in', doc_ids)], context=context)
-            allowed_ids |= set([message_id for allowed_doc_id in allowed_doc_ids for message_id in doc_dict[allowed_doc_id]])
+        allowed_ids = self._find_allowed_doc_ids(cr, uid, model_ids, context=context)
 
         final_ids = author_ids | partner_ids | allowed_ids
         if count:

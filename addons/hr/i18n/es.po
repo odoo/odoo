@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-11 22:04+0000\n"
-"Last-Translator: Ana Juaristi Olalde <ajuaristio@gmail.com>\n"
+"PO-Revision-Date: 2012-12-12 12:42+0000\n"
+"Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-12 04:40+0000\n"
+"X-Launchpad-Export-Date: 2012-12-13 04:44+0000\n"
 "X-Generator: Launchpad (build 16361)\n"
 
 #. module: hr
@@ -434,6 +434,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Pulse para definir un nuevo puesto de trabajo.\n"
+"</p><p>\n"
+"Los puestos de trabajo se usan para definir puestos y sus requisitos. Puede "
+"seguir el número de empleados que tiene por puesto de trabajo y su evolución "
+"de acuerdo a lo que tiene planeado para el futuro.\n"
+"</p><p>\n"
+"Puede adjuntar una encuesta a un puesto de trabajo. Será usada en el proceso "
+"de reclutamiento para evaluar a los solicitantes de dicho puesto.\n"
+"</p>\n"
+"            "
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -446,6 +457,8 @@ msgid ""
 "$('.oe_employee_picture').load(function() { if($(this).width() > "
 "$(this).height()) { $(this).addClass('oe_employee_picture_wide') } });"
 msgstr ""
+"$('.oe_employee_picture').load(function() { if($(this).width() > "
+"$(this).height()) { $(this).addClass('oe_employee_picture_wide') } });"
 
 #. module: hr
 #: help:hr.config.settings,module_hr_evaluation:0
@@ -633,6 +646,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Pulse para añdir un nuevo empleado.\n"
+"</p><p>\n"
+"Con sólo una vista rápido en la pantalla de empleados de OpenERP, puede "
+"encontrar fácilmente toda la información que necesita de cada persona: datos "
+"de contacto, puesto de trabajo, disponibilidad, etc.\n"
+"</p>\n"
+"            "
 
 #. module: hr
 #: view:hr.employee:0
@@ -697,6 +718,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Pulse para crear un departamento.\n"
+"</p><p>\n"
+"La estructura de departamentos de OpenERP se usa para administrar por "
+"departamentos todos los documentos relacionados con los empleados: gastos, "
+"partes de hora, ausencias y vacaciones, reclutamientos, etc.\n"
+"</p>\n"
+"            "
 
 #. module: hr
 #: help:hr.config.settings,module_hr_timesheet:0
@@ -722,6 +751,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Pulse para definir un nuevo departamento.\n"
+"</p><p>\n"
+"La estructura de departamentos se usa para administrar por departamentos "
+"todos los documentos relacionados con los empleados: gastos y partes de "
+"horas, ausencias y vacaciones, reclutamientos, etc.\n"
+"</p>\n"
+"            "
 
 #. module: hr
 #: view:hr.employee:0
@@ -888,7 +925,7 @@ msgstr "Configurar recursos humanos"
 #. module: hr
 #: selection:hr.job,state:0
 msgid "No Recruitment"
-msgstr ""
+msgstr "Sin reclutamiento"
 
 #. module: hr
 #: help:hr.employee,ssnid:0
@@ -916,6 +953,8 @@ msgid ""
 "By default 'In position', set it to 'In Recruitment' if recruitment process "
 "is going on for this job position."
 msgstr ""
+"Por defecto tiene el valor 'Ocupado'. Establézcalo a 'En reclutamiento si el "
+"proceso de reclutamiento ha comenzado para este puesto de trabajo."
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
@@ -946,6 +985,19 @@ msgid ""
 "              </div>\n"
 "            "
 msgstr ""
+"<div class=\"oe_empty_custom_dashboard\">\n"
+"<p>\n"
+"<b>El tablero de recursos humanos está vacío.</b>\n"
+"</p><p>\n"
+"Para añadir su primer informe en este tablero, vaya al menú, cambie a la "
+"vista de lista o de gráfico, y pulse en <i>'Añadir al tablero'</i> en las "
+"opciones de búsqueda avanzada.\n"
+"</p><p>\n"
+"Puede filtrar y agrupar los datos antes de insertarlos en el tablero usando "
+"las opciones de búsqueda.\n"
+"</p>\n"
+"</div>\n"
+"            "
 
 #. module: hr
 #: view:hr.employee:0
@@ -966,7 +1018,7 @@ msgstr "Se instalará el módulo hr_expense"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_config_settings
 msgid "hr.config.settings"
-msgstr ""
+msgstr "Parámetros de configuración de RRHH"
 
 #. module: hr
 #: field:hr.department,manager_id:0
