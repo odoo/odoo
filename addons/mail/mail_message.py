@@ -303,12 +303,11 @@ class mail_message(osv.Model):
                 partner_ids |= set([partner.id for partner in message.partner_ids])
             if message.attachment_ids:
                 attachment_ids |= set([attachment.id for attachment in message.attachment_ids])
-
-        # Filter author_ids uid can see
+        # Read partners as SUPERUSER -> display the names like classic m2o even if no access
         partners = res_partner_obj.name_get(cr, SUPERUSER_ID, list(partner_ids), context=context)
         partner_tree = dict((partner[0], partner) for partner in partners)
 
-        # 2. Attachments
+        # 2. Attachments as SUPERUSER, because could receive msg and attachments for doc uid cannot see
         attachments = ir_attachment_obj.read(cr, SUPERUSER_ID, list(attachment_ids), ['id', 'datas_fname'], context=context)
         attachments_tree = dict((attachment['id'], {'id': attachment['id'], 'filename': attachment['datas_fname']}) for attachment in attachments)
 
@@ -856,6 +855,7 @@ class mail_message(osv.Model):
         # all followers of the mail.message document have to be added as partners and notified
         if message.model and message.res_id:
             fol_obj = self.pool.get("mail.followers")
+            # browse as SUPERUSER because rules could restrict the search results
             fol_ids = fol_obj.search(cr, SUPERUSER_ID, [
                 ('res_model', '=', message.model),
                 ('res_id', '=', message.res_id),
@@ -868,18 +868,17 @@ class mail_message(osv.Model):
         elif message.author_id:
             partners_to_notify = partners_to_notify - set([message.author_id])
 
+        # notify
         if partners_to_notify:
             self.write(cr, SUPERUSER_ID, [newid], {'notified_partner_ids': [(4, p.id) for p in partners_to_notify]}, context=context)
-
         notification_obj._notify(cr, uid, newid, context=context)
+        message.refresh()
 
-        # An error appear when a user receive a notify to a message without notify to his parent message.
-        # Add a notification with read = true to the parented message if there are no notification
+        # An error appear when a user receive a notification without notifying
+        # the parent message -> add a read notification for the parent
         if message.parent_id:
             # all notified_partner_ids of the mail.message have to be notified for the parented messages
-            if message.notified_partner_ids:
-                partners_to_notify |= set(message.notified_partner_ids)
-            partners_to_parent_notify = set(partners_to_notify) - set(message.parent_id.notified_partner_ids)
+            partners_to_parent_notify = set(message.notified_partner_ids).difference(message.parent_id.notified_partner_ids)
             for partner in partners_to_parent_notify:
                 notification_obj.create(cr, uid, {
                         'message_id': message.parent_id.id,

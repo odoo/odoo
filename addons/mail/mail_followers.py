@@ -120,6 +120,7 @@ class mail_notification(osv.Model):
         # mail_noemail (do not send email) or no partner_ids: do not send, return
         if context.get('mail_noemail'):
             return True
+        # browse as SUPERUSER_ID because of access to res_partner not necessarily allowed
         msg = self.pool.get('mail.message').browse(cr, SUPERUSER_ID, msg_id, context=context)
         notify_partner_ids = self.get_partners_to_notify(cr, uid, msg, context=context)
         if not notify_partner_ids:
