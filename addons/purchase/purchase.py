@@ -1041,17 +1041,18 @@ class procurement_order(osv.osv):
         'purchase_id': fields.many2one('purchase.order', 'Purchase Order'),
     }
 
-    def check_buy(self, cr, uid, ids):
+    def check_buy(self, cr, uid, ids, context=None):
         ''' return True if the supply method of the mto product is 'buy'
         '''
-        user = self.pool.get('res.users').browse(cr, uid, uid)
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         partner_obj = self.pool.get('res.partner')
-        for procurement in self.browse(cr, uid, ids):
+        for procurement in self.browse(cr, uid, ids, context=context):
             if procurement.product_id.product_tmpl_id.supply_method <> 'buy':
                 return False
         return True
 
     def check_supplier_info(self, cr, uid, ids, context=None):
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         for procurement in self.browse(cr, uid, ids, context=context):
             if not procurement.product_id.seller_ids:
                 message = _('No supplier defined for this product !')
