@@ -5,7 +5,8 @@ openerp.portal_anonymous = function(instance) {
             var self = this;
             return $.when(this._super()).then(function() {
                 var dblist = self.db_list || [];
-                if (!!self.params.token || !!self.params.login) {
+                var params = $.deparam($.param.querystring());
+                if (!!params.token || !!params.login) {
                     return false;
                 }
                 if (!self.session.session_is_valid() && dblist.length === 1) {
