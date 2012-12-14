@@ -251,9 +251,7 @@ class rml_parse(object):
         d = DEFAULT_DIGITS = 2
         if dp:
             decimal_precision_obj = self.pool.get('decimal.precision')
-            ids = decimal_precision_obj.search(self.cr, self.uid, [('name', '=', dp)])
-            if ids:
-                d = decimal_precision_obj.browse(self.cr, self.uid, ids)[0].digits
+            d = decimal_precision_obj.precision_get(self.cr, self.uid, dp)
         elif obj and f:
             res_digits = getattr(obj._columns[f], 'digits', lambda x: ((16, DEFAULT_DIGITS)))
             if isinstance(res_digits, tuple):
