@@ -561,8 +561,8 @@ def human_size(sz):
         sz=len(sz)
     s, i = float(sz), 0
     while s >= 1024 and i < len(units)-1:
-        s = s / 1024
-        i = i + 1
+        s /= 1024
+        i += 1
     return "%0.2f %s" % (s, units[i])
 
 def logged(f):

@@ -96,7 +96,7 @@ class NumberedCanvas(canvas.Canvas):
         key=self._pageCounter
         if not self.pages.get(key,False):
             while not self.pages.get(key,False):
-                key = key + 1
+                key += 1
         self.setFont("Helvetica", 8)
         self.drawRightString((self._pagesize[0]-30), (self._pagesize[1]-40),
             " %(this)i / %(total)i" % {
@@ -890,7 +890,7 @@ class TinyDocTemplate(platypus.BaseDocTemplate):
         self.canv._storyCount = 0
 
     def ___handle_pageBegin(self):
-        self.page = self.page + 1
+        self.page += 1
         self.pageTemplate.beforeDrawPage(self.canv,self)
         self.pageTemplate.checkPageSize(self.canv,self)
         self.pageTemplate.onPage(self.canv,self)

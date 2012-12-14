@@ -310,7 +310,7 @@ class graph(object):
         """
         if not self.result[node]['y']:
             self.result[node]['y'] = self.order[level]
-            self.order[level] = self.order[level]+1
+            self.order[level] += 1
 
         for sec_end in self.transitions.get(node, []):
             if node!=sec_end:
