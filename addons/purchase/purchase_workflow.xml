@@ -201,29 +201,30 @@
             <field name="act_from" ref="act_invoice_end"/>
             <field name="act_to" ref="act_done"/>
         </record>
-    
+
     <!-- Procurement -->
-        <record id="act_buy_sub" model="workflow.activity">
+        <record id="act_buy" model="workflow.activity">
             <field name="wkf_id" ref="procurement.wkf_procurement"/>
-            <field name="name">buy_subflows</field>
+            <field name="name">buy</field>
             <field name="kind">subflow</field>
             <field name="subflow_id" search="[('osv','=','purchase.order')]"/>
             <field name="action">action_po_assign()</field>
         </record>
-        
-        <record id="trans_buy_buy_sub" model="workflow.transition">
-            <field name="act_from" ref="procurement.act_buy"/>
-            <field name="act_to" ref="act_buy_sub"/>
+
+        <record id="trans_confirm_mto_purchase" model="workflow.transition">
+            <field name="act_from" ref="procurement.act_confirm_mto"/>
+            <field name="act_to" ref="act_buy"/>
+            <field name="condition">check_buy() and check_supplier_info()</field>
         </record>
-        
+
         <record id="trans_buy_make_done" model="workflow.transition">
-            <field name="act_from" ref="act_buy_sub"/>
-            <field name="act_to" ref="procurement.act_buy_end"/>
+            <field name="act_from" ref="act_buy"/>
+            <field name="act_to" ref="procurement.act_make_done"/>
             <field name="signal">subflow.delivery_done</field>
         </record>
-        
+
         <record id="trans_buy_cancel" model="workflow.transition">
-            <field name="act_from" ref="act_buy_sub"/>
+            <field name="act_from" ref="act_buy"/>
             <field name="act_to" ref="procurement.act_cancel"/>
             <field name="signal">subflow.cancel</field>
         </record>

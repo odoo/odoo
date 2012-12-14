@@ -34,6 +34,7 @@
             <field name="action">write({'state':'exception'})</field>
             <field name="join_mode">AND</field>
         </record>
+        <!-- to check... what's the use? mrp_jit, i guess -->
         <record id="act_confirm_temp" model="workflow.activity">
             <field name="wkf_id" ref="wkf_procurement"/>
             <field name="name">confirm_temp</field>
@@ -46,16 +47,6 @@
         <record id="act_confirm_mto" model="workflow.activity">
             <field name="wkf_id" ref="wkf_procurement"/>
             <field name="name">confirm_mto</field>
-        </record>
-        <record id="act_buy" model="workflow.activity">
-            <field name="wkf_id" ref="wkf_procurement"/>
-            <field name="name">buy</field>
-            <field name="split_mode">OR</field>
-        </record>
-        <record id="act_buy_end" model="workflow.activity">
-            <field name="wkf_id" ref="wkf_procurement"/>
-            <field name="name">buy_end</field>
-            <field name="join_mode">AND</field>
         </record>
         <record id="act_make_to_stock" model="workflow.activity">
             <field name="wkf_id" ref="wkf_procurement"/>
@@ -116,6 +107,7 @@
             <field name="signal">button_check</field>
             <field name="condition">not test_cancel()</field>
         </record>
+        <!-- to check... what's the use? mrp_jit, i guess -->
         <record id="trans_confirm_temp_confirm_wait" model="workflow.transition">
             <field name="act_from" ref="act_confirm_temp"/>
             <field name="act_to" ref="act_confirm_wait"/>
@@ -150,18 +142,6 @@
             <field name="act_to" ref="act_cancel"/>
             <field name="signal">button_cancel</field>
         </record>
-        <record id="trans_confirm_mto_purchase" model="workflow.transition">
-            <field name="act_from" ref="act_confirm_mto"/>
-            <field name="act_to" ref="act_buy"/>
-            <field name="condition">check_buy()</field>
-        </record>
-        <record id="trans_buy_buy_end" model="workflow.transition">
-            <field name="act_from" ref="act_buy"/>
-            <field name="act_to" ref="act_buy_end"/>
-        </record>
-        <record id="trans_buy_done" model="workflow.transition">
-            <field name="act_from" ref="act_buy_end"/>
-            <field name="act_to" ref="act_make_done"/>
         </record>
         <record id="trans_confirm_mto_confirm" model="workflow.transition">
             <field name="act_from" ref="act_confirm_mto"/>
@@ -182,7 +162,7 @@
         <record id="trans_confirm_mto_make_done" model="workflow.transition">
             <field name="act_from" ref="act_confirm_mto"/>
             <field name="act_to" ref="act_make_done"/>
-            <field name="condition">not check_produce()</field>
+            <field name="condition">not check_produce() and not check_buy()</field>
         </record>
 
         <record id="trans_make_to_stock_make_done" model="workflow.transition">

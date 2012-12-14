@@ -274,37 +274,9 @@ class procurement_order(osv.osv):
         return True
 
     def check_buy(self, cr, uid, ids):
-        """ Checks product type.
-        @return: True or Product Id.
+        """ability of the workflow to manage the supply_method == 'buy'.
         """
-        user = self.pool.get('res.users').browse(cr, uid, uid)
-        partner_obj = self.pool.get('res.partner')
-        for procurement in self.browse(cr, uid, ids):
-            if procurement.product_id.product_tmpl_id.supply_method <> 'buy':
-                return False
-            if not procurement.product_id.seller_ids:
-                message = _('No supplier defined for this product !')
-                self.message_post(cr, uid, [procurement.id], body=message)
-                cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
-                return False
-            partner = procurement.product_id.seller_id #Taken Main Supplier of Product of Procurement.
-
-            if not partner:
-                message = _('No default supplier defined for this product')
-                self.message_post(cr, uid, [procurement.id], body=message)
-                cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
-                return False
-            if user.company_id and user.company_id.partner_id:
-                if partner.id == user.company_id.partner_id.id:
-                    raise osv.except_osv(_('Configuration Error!'), _('The product "%s" has been defined with your company as reseller which seems to be a configuration error!' % procurement.product_id.name))
-
-            address_id = partner_obj.address_get(cr, uid, [partner.id], ['delivery'])['delivery']
-            if not address_id:
-                message = _('No address defined for the supplier')
-                self.message_post(cr, uid, [procurement.id], body=message)
-                cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
-                return False
-        return True
+        return False
 
     def test_cancel(self, cr, uid, ids):
         """ Tests whether state of move is cancelled or not.
