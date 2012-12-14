@@ -44,10 +44,6 @@ class mail_group(osv.Model):
     def _set_image(self, cr, uid, id, name, value, args, context=None):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
 
-    def _get_name(self, cr, uid, context=None):
-        ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'group_user')
-        return ref and ref[1] or False
-
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
         'description': fields.text('Description'),
@@ -97,7 +93,7 @@ class mail_group(osv.Model):
         'public': 'groups',
         'group_public_id': _get_default_employee_group,
         'image': _get_default_image,
-        'alias_domain': False, # always hide alias during creation
+        'alias_domain': False,  # always hide alias during creation
     }
 
     def _subscribe_users(self, cr, uid, ids, context=None):
@@ -110,7 +106,7 @@ class mail_group(osv.Model):
     def create(self, cr, uid, vals, context=None):
         mail_alias = self.pool.get('mail.alias')
         if not vals.get('alias_id'):
-            vals.pop('alias_name', None) # prevent errors during copy()
+            vals.pop('alias_name', None)  # prevent errors during copy()
             alias_id = mail_alias.create_unique_alias(cr, uid,
                           # Using '+' allows using subaddressing for those who don't
                           # have a catchall domain setup.
