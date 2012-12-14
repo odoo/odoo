@@ -32,7 +32,7 @@
        &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />
        % endif
        % if object.user_id:
-       &nbsp;&nbsp;Your contact: <a href="mailto:${object.user_id.email or ''}?subject=Order%20${quote(object.name)|safe}">${object.user_id.name}</a>
+       &nbsp;&nbsp;Your contact: <a href="mailto:${object.user_id.email or ''}?subject=Order%20${object.name}">${object.user_id.name}</a>
        % endif
     </p>
 
