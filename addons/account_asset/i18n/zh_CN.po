@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-05-10 17:45+0000\n"
-"Last-Translator: 开阖软件     Jeff Wang <jeff@osbzr.com>\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
+"PO-Revision-Date: 2012-12-07 15:37+0000\n"
+"Last-Translator: ccdos <ccdos@163.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:32+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-08 04:59+0000\n"
+"X-Generator: Launchpad (build 16341)\n"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -38,11 +38,6 @@ msgstr "剩余价值"
 #: field:account.asset.category,account_expense_depreciation_id:0
 msgid "Depr. Expense Account"
 msgstr "折旧费用科目"
-
-#. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0
-msgid "Compute Asset"
-msgstr "计算资产"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -158,7 +153,7 @@ msgstr "折旧日期"
 #. module: account_asset
 #: constraint:account.asset.asset:0
 msgid "Error ! You cannot create recursive assets."
-msgstr ""
+msgstr "错误！你不能创建循环的固定资产."
 
 #. module: account_asset
 #: field:asset.asset.report,posted_value:0
@@ -195,11 +190,6 @@ msgid "Depreciation Entry"
 msgstr "折旧分录"
 
 #. module: account_asset
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
-msgstr "会计分录中包含错误的借贷值！"
-
-#. module: account_asset
 #: view:asset.asset.report:0
 #: field:asset.asset.report,nbr:0
 msgid "# of Depreciation Lines"
@@ -208,7 +198,7 @@ msgstr "折旧行编号"
 #. module: account_asset
 #: field:account.asset.asset,method_period:0
 msgid "Number of Months in a Period"
-msgstr ""
+msgstr "在一个周期内的月数"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -227,11 +217,6 @@ msgstr "结束日期"
 #: field:account.asset.asset,code:0
 msgid "Reference"
 msgstr "引用"
-
-#. module: account_asset
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr "BBA传输结构有误！"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -320,13 +305,6 @@ msgstr ""
 "截止日期：设定两次折旧的间隔时间和折旧的截止日期"
 
 #. module: account_asset
-#: constraint:account.move.line:0
-msgid ""
-"The date of your Journal Entry is not in the defined period! You should "
-"change the date or remove this constraint from the journal."
-msgstr "凭证日期不在所选期间内！可以修改凭证日期或在凭证簿上去掉这个检查项。"
-
-#. module: account_asset
 #: help:account.asset.history,method_period:0
 msgid "Time in month between two depreciations"
 msgstr "以月计的折旧间隔"
@@ -357,11 +335,6 @@ msgid "Assets in closed state"
 msgstr "处于报废状态的资产"
 
 #. module: account_asset
-#: constraint:account.move.line:0
-msgid "Account and Period must belong to the same company."
-msgstr ""
-
-#. module: account_asset
 #: field:account.asset.asset,parent_id:0
 msgid "Parent Asset"
 msgstr "上级资产"
@@ -381,14 +354,6 @@ msgstr "搜索资产类别"
 #: model:ir.model,name:account_asset.model_account_invoice_line
 msgid "Invoice Line"
 msgstr "发票明细"
-
-#. module: account_asset
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry forces to provide a secondary "
-"currency. You should remove the secondary currency on the account or select "
-"a multi-currency view on the journal."
-msgstr "凭证上的科目要求输入一个外币。您可以在科目设置中去掉这个外币或在凭证簿设置上选择一个支持多币种的输入界面。"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -416,11 +381,6 @@ msgstr "计时方法"
 #: view:asset.depreciation.confirmation.wizard:0
 #: view:asset.modify:0
 msgid "or"
-msgstr ""
-
-#. module: account_asset
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on closed account."
 msgstr ""
 
 #. module: account_asset
@@ -481,7 +441,7 @@ msgstr ""
 #: field:account.asset.asset,state:0
 #: field:asset.asset.report,state:0
 msgid "Status"
-msgstr ""
+msgstr "状态"
 
 #. module: account_asset
 #: field:account.asset.asset,partner_id:0
@@ -528,7 +488,7 @@ msgstr "计算"
 #. module: account_asset
 #: view:account.asset.history:0
 msgid "Asset History"
-msgstr ""
+msgstr "资产历史"
 
 #. module: account_asset
 #: field:asset.asset.report,name:0
@@ -562,9 +522,9 @@ msgid "History"
 msgstr "历史"
 
 #. module: account_asset
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr "发票号必须在公司范围内唯一"
+#: view:asset.depreciation.confirmation.wizard:0
+msgid "Compute Asset"
+msgstr "计算资产"
 
 #. module: account_asset
 #: field:asset.depreciation.confirmation.wizard,period_id:0
@@ -647,7 +607,7 @@ msgstr "要折旧的金额"
 #. module: account_asset
 #: field:account.asset.asset,name:0
 msgid "Asset Name"
-msgstr ""
+msgstr "资产名称"
 
 #. module: account_asset
 #: field:account.asset.category,open_asset:0
@@ -702,17 +662,12 @@ msgstr ""
 #. module: account_asset
 #: field:account.asset.asset,purchase_value:0
 msgid "Gross Value"
-msgstr ""
+msgstr "总值"
 
 #. module: account_asset
 #: field:account.asset.category,name:0
 msgid "Name"
 msgstr "名称"
-
-#. module: account_asset
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on an account of type view."
-msgstr ""
 
 #. module: account_asset
 #: help:account.asset.category,open_asset:0
@@ -753,7 +708,7 @@ msgstr "新建固定资产会计凭证"
 #. module: account_asset
 #: field:account.asset.depreciation.line,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "编号"
 
 #. module: account_asset
 #: help:account.asset.category,method_period:0
@@ -787,6 +742,9 @@ msgstr "确认固定资产"
 msgid "Asset Hierarchy"
 msgstr "固定资产树"
 
+#~ msgid "Wrong credit or debit value in accounting entry !"
+#~ msgstr "会计分录中包含错误的借贷值！"
+
 #~ msgid "Sequence of the depreciation"
 #~ msgstr "折旧顺序号"
 
@@ -811,8 +769,19 @@ msgstr "固定资产树"
 #~ msgid "Assets purchased in current year"
 #~ msgstr "本年内采购的资产"
 
+#~ msgid ""
+#~ "The selected account of your Journal Entry forces to provide a secondary "
+#~ "currency. You should remove the secondary currency on the account or select "
+#~ "a multi-currency view on the journal."
+#~ msgstr "凭证上的科目要求输入一个外币。您可以在科目设置中去掉这个外币或在凭证簿设置上选择一个支持多币种的输入界面。"
+
 #~ msgid "State"
 #~ msgstr "状态"
+
+#~ msgid ""
+#~ "The date of your Journal Entry is not in the defined period! You should "
+#~ "change the date or remove this constraint from the journal."
+#~ msgstr "凭证日期不在所选期间内！可以修改凭证日期或在凭证簿上去掉这个检查项。"
 
 #~ msgid "Assets purchased in current month"
 #~ msgstr "本月采购的资产"
@@ -822,6 +791,9 @@ msgstr "固定资产树"
 
 #~ msgid "Company must be the same for its related account and period."
 #~ msgstr "科目和期间必须属于同一个公司"
+
+#~ msgid "Invoice Number must be unique per Company!"
+#~ msgstr "发票号必须在公司范围内唯一"
 
 #~ msgid "Accounting information"
 #~ msgstr "会计信息"
@@ -840,6 +812,9 @@ msgstr "固定资产树"
 
 #~ msgid "Close asset"
 #~ msgstr "报废资产"
+
+#~ msgid "Invalid BBA Structured Communication !"
+#~ msgstr "BBA传输结构有误！"
 
 #~ msgid ""
 #~ "This wizard will post the depreciation lines of running assets that belong "

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:54+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2012-11-27 09:28+0000\n"
 "Last-Translator: ccdos <ccdos@163.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-28 04:41+0000\n"
-"X-Generator: Launchpad (build 16309)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:33+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: product
 #: field:product.packaging,rows:0
@@ -336,11 +336,6 @@ msgid "Public Price"
 msgstr "公开价格"
 
 #. module: product
-#: sql_constraint:product.product:0
-msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr "错误!结束日期不能早于开始日期。"
-
-#. module: product
 #: field:product.price_list,qty5:0
 msgid "Quantity-5"
 msgstr "数量-5"
@@ -651,7 +646,6 @@ msgstr "或"
 
 #. module: product
 #: constraint:product.packaging:0
-#: constraint:res.partner:0
 msgid "Error: Invalid ean code"
 msgstr "错误：无效的(EAN)条码"
 
@@ -922,11 +916,6 @@ msgstr ""
 #: view:product.category:0
 msgid "Product Categories"
 msgstr "产品类别"
-
-#. module: product
-#: sql_constraint:res.currency:0
-msgid "The currency code must be unique per company!"
-msgstr "每个公司的货币代码必须唯一"
 
 #. module: product
 #: view:product.template:0
@@ -2518,11 +2507,6 @@ msgid "On demand hard-disk having capacity based on requirement."
 msgstr "基于需求的硬盘容量要求"
 
 #. module: product
-#: help:product.template,volume:0
-msgid "The volume in m3."
-msgstr "这体积是m3"
-
-#. module: product
 #: selection:product.template,state:0
 msgid "End of Lifecycle"
 msgstr "生命周期结束"
@@ -2545,11 +2529,6 @@ msgstr "指定同一产品的多种包装方式。此处与分拣单并不冲突
 #: field:product.pricelist,version_id:0
 msgid "Pricelist Versions"
 msgstr "价格表版本"
-
-#. module: product
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr "错误，您不能创建循环引用的会员用户"
 
 #. module: product
 #: help:product.pricelist.item,price_round:0
@@ -2597,9 +2576,9 @@ msgid "This is a quantity which is converted into Default Unit of Measure."
 msgstr "这是转换为默认计量单位的值"
 
 #. module: product
-#: sql_constraint:decimal.precision:0
-msgid "Only one value can be defined for each given usage!"
-msgstr "每个用途只能定义一个值"
+#: help:product.template,volume:0
+msgid "The volume in m3."
+msgstr "这体积是m3"
 
 #. module: product
 #: field:product.pricelist.item,price_discount:0
@@ -3512,6 +3491,9 @@ msgstr "价格折扣"
 
 #~ msgid "Wood 10mm"
 #~ msgstr "10毫米厚的木板"
+
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr "错误，您不能创建循环引用的会员用户"
 
 #~ msgid "Both stockable and consumable products"
 #~ msgstr "可库存产品和消耗品"

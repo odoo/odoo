@@ -218,9 +218,20 @@ class hr_timesheet_sheet(osv.osv):
     def onchange_employee_id(self, cr, uid, ids, employee_id, context=None):
         department_id =  False
         if employee_id:
-            department_id = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context).department_id.id
-        return {'value': {'department_id': department_id}}
+            empl_id = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context)
+            department_id = empl_id.department_id.id
+            user_id = empl_id.user_id.id
+        return {'value': {'department_id': department_id, 'user_id': user_id,}}
 
+    # ------------------------------------------------
+    # OpenChatter methods and notifications
+    # ------------------------------------------------
+    
+    def _needaction_domain_get(self, cr, uid, ids, context=None):
+        emp_obj = self.pool.get('hr.employee')
+        empids = emp_obj.search(cr, uid, [('parent_id.user_id', '=', uid)], context=context)
+        dom = ['&', ('state', '=', 'confirm'), ('employee_id', 'in', empids)]
+        return dom
 hr_timesheet_sheet()
 
 class account_analytic_line(osv.osv):

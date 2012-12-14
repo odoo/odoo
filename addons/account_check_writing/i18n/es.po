@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-11-09 12:09+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
+"PO-Revision-Date: 2012-12-11 11:55+0000\n"
 "Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:32+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-12 04:41+0000\n"
+"X-Generator: Launchpad (build 16361)\n"
 
 #. module: account_check_writing
 #: selection:res.company,check_layout:0
@@ -48,11 +48,6 @@ msgstr ""
 #: selection:res.company,check_layout:0
 msgid "Check on bottom"
 msgstr "Cheque en la parte de abajo"
-
-#. module: account_check_writing
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "¡Error! No puede crear compañías recursivas."
 
 #. module: account_check_writing
 #: help:account.journal,allow_check_writing:0
@@ -112,6 +107,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Pulse para crear un nuevo cheque.\n"
+"</p>\n"
+"<p>\n"
+"El formulario de pago por cheque le permite registrar los pagos que hace a "
+"sus proveedores usando cheques. Cuando selecciona un proveedor, el método de "
+"pago y la cantidad para el pago, OpenERP le propondrá reconciliar su pago "
+"con las facturas abiertas del proveedor.\n"
+"</p>\n"
+"            "
 
 #. module: account_check_writing
 #: field:account.voucher,allow_check:0
@@ -133,12 +138,7 @@ msgstr "Usar cheque preimpreso"
 #. module: account_check_writing
 #: model:ir.actions.report.xml,name:account_check_writing.account_print_check_bottom
 msgid "Print Check (Bottom)"
-msgstr ""
-
-#. module: account_check_writing
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr "¡El nombre de la compañía debe ser único!"
+msgstr "Imprimir cheque (abajo)"
 
 #. module: account_check_writing
 #: report:account.print.check.bottom:0
@@ -150,14 +150,7 @@ msgstr "Fecha de vencimiento"
 #. module: account_check_writing
 #: model:ir.actions.report.xml,name:account_check_writing.account_print_check_middle
 msgid "Print Check (Middle)"
-msgstr ""
-
-#. module: account_check_writing
-#: constraint:account.journal:0
-msgid ""
-"Configuration error!\n"
-"The currency chosen should be shared by the default accounts too."
-msgstr ""
+msgstr "Imprimir cheque (en medio)"
 
 #. module: account_check_writing
 #: model:ir.model,name:account_check_writing.model_res_company
@@ -173,7 +166,7 @@ msgstr "Saldo pendiente"
 #. module: account_check_writing
 #: model:ir.actions.report.xml,name:account_check_writing.account_print_check_top
 msgid "Print Check (Top)"
-msgstr ""
+msgstr "Imprimir cheque (arriba)"
 
 #. module: account_check_writing
 #: report:account.print.check.bottom:0
@@ -186,16 +179,6 @@ msgstr "Importe del cheque"
 #: model:ir.model,name:account_check_writing.model_account_voucher
 msgid "Accounting Voucher"
 msgstr "Comprobante contable"
-
-#. module: account_check_writing
-#: sql_constraint:account.journal:0
-msgid "The name of the journal must be unique per company !"
-msgstr "¡El nombre del diaro debe ser único por compañía!"
-
-#. module: account_check_writing
-#: sql_constraint:account.journal:0
-msgid "The code of the journal must be unique per company !"
-msgstr "¡El código del diario debe ser único por compañía!"
 
 #. module: account_check_writing
 #: field:account.voucher,amount_in_word:0
@@ -223,6 +206,9 @@ msgstr "Elija el formato del cheque."
 #~ "proveedor, medio de pago e importe, OpenERP propondrá reconciliar su pago "
 #~ "con las facturas o recibos abiertos. Puede imprimir el cheque"
 
+#~ msgid "The company name must be unique !"
+#~ msgstr "¡El nombre de la compañía debe ser único!"
+
 #~ msgid "Configuration"
 #~ msgstr "Configuración"
 
@@ -232,6 +218,15 @@ msgstr "Elija el formato del cheque."
 #~ msgstr ""
 #~ "¡Error de configuración! La divisa escogida debe ser la de las cuentas por "
 #~ "defecto."
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "¡Error! No puede crear compañías recursivas."
+
+#~ msgid "The code of the journal must be unique per company !"
+#~ msgstr "¡El código del diario debe ser único por compañía!"
+
+#~ msgid "The name of the journal must be unique per company !"
+#~ msgstr "¡El nombre del diaro debe ser único por compañía!"
 
 #~ msgid "Default Check layout"
 #~ msgstr "Formato de cheque por defecto"

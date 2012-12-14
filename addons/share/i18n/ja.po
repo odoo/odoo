@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:54+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2012-06-29 23:24+0000\n"
 "Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:23+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:47+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:837
@@ -169,11 +169,6 @@ msgid "Optional domain for further data filtering"
 msgstr "さらに上位のデータ共有のためのオプションのドメイン"
 
 #. module: share
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr "同じログインでは２つのユーザを持てません。"
-
-#. module: share
 #: view:share.wizard:0
 msgid "Next"
 msgstr "次へ"
@@ -219,11 +214,6 @@ msgid ""
 "Please select the action that opens the screen containing the data you want "
 "to share."
 msgstr "共有したいデータを含む画面を開くアクションを選択して下さい。"
-
-#. module: share
-#: sql_constraint:res.users:0
-msgid "OAuth UID must be unique per provider"
-msgstr ""
 
 #. module: share
 #: field:res.groups,share:0
@@ -324,11 +314,6 @@ msgid ""
 msgstr "共有したいデータを含む画面を開くアクション"
 
 #. module: share
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr "選択した会社は、このユーザに許された会社ではありません。"
-
-#. module: share
 #: code:addons/share/wizard/share_wizard.py:541
 #, python-format
 msgid "(Copy for sharing)"
@@ -362,11 +347,6 @@ msgid ""
 "You must configure your email address in the user preferences before using "
 "the Share button."
 msgstr "共有ボタンを使用する前にユーザ設定であなたのEメールアドレスを設定する必要があります。"
-
-#. module: share
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr "グループ名は一意である必要があります。"
 
 #. module: share
 #: model:res.groups,name:share.group_share_user
@@ -628,11 +608,6 @@ msgid "or"
 msgstr ""
 
 #. module: share
-#: constraint:res.users:0
-msgid "Error: Invalid ean code"
-msgstr ""
-
-#. module: share
 #: help:share.wizard,access_mode:0
 msgid "Access rights to be granted on the shared documents."
 msgstr "共有ドキュメント上に生成されたアクセス権"
@@ -646,6 +621,9 @@ msgstr "共有ドキュメント上に生成されたアクセス権"
 #, python-format
 #~ msgid "You must be a member of the Share/User group to use the share wizard"
 #~ msgstr "共有ウィザードを使うためには、あなたは共有 / ユーザグループのメンバーである必要があります。"
+
+#~ msgid "You can not have two users with the same login !"
+#~ msgstr "同じログインでは２つのユーザを持てません。"
 
 #, python-format
 #~ msgid "Action and Access Mode are required to create a shared access"
@@ -671,9 +649,15 @@ msgstr "共有ドキュメント上に生成されたアクセス権"
 #~ msgid "Regular groups only (no share groups"
 #~ msgstr "通常のグループのみ（非共有グループ"
 
+#~ msgid "The chosen company is not in the allowed companies for this user"
+#~ msgstr "選択した会社は、このユーザに許された会社ではありません。"
+
 #, python-format
 #~ msgid "I've shared %s with you!"
 #~ msgstr "%s を共有しました。"
+
+#~ msgid "The name of the group must be unique !"
+#~ msgstr "グループ名は一意である必要があります。"
 
 #~ msgid "Groups"
 #~ msgstr "グループ"

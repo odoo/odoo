@@ -6,20 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:51+0000\n"
-"PO-Revision-Date: 2011-01-02 09:30+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2012-12-03 16:01+0000\n"
+"PO-Revision-Date: 2012-12-10 13:37+0000\n"
+"Last-Translator: Grzegorz Grzelak (OpenGLOBE.pl) <grzegorz@openglobe.pl>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:15+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-11 04:48+0000\n"
+"X-Generator: Launchpad (build 16356)\n"
 
 #. module: account_voucher
 #: field:account.bank.statement.line,voucher_id:0
 msgid "Reconciliation"
-msgstr ""
+msgstr "Uzgodnienie"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_config_settings
@@ -99,7 +99,7 @@ msgstr "Marzec"
 #. module: account_voucher
 #: field:account.voucher,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Nieprzeczytane wiadomości"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -109,7 +109,7 @@ msgstr "Zapłać rachunek"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Are you sure you want to cancel this receipt?"
-msgstr ""
+msgstr "Jestes pewien, że chcesz anulować ten rachunek ?"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -130,12 +130,20 @@ msgstr "Grupuj wg roku (po datach faktur)"
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,user_id:0
 msgid "Salesperson"
-msgstr ""
+msgstr "Sprzedawca"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Voucher Statistics"
 msgstr "Statystyka poleceń"
+
+#. module: account_voucher
+#: code:addons/account_voucher/account_voucher.py:1558
+#, python-format
+msgid ""
+"You can not change the journal as you already reconciled some statement "
+"lines!"
+msgstr "Nie możesz zmienić dziennika, jeśli już uzgodniłeś niektóre pozycje!"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -202,7 +210,7 @@ msgstr "Notatki"
 #. module: account_voucher
 #: field:account.voucher,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Wiadomości"
 
 #. module: account_voucher
 #: selection:account.voucher,type:0
@@ -220,7 +228,7 @@ msgstr "Pozycja zapisu dziennika"
 #: code:addons/account_voucher/account_voucher.py:964
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Błąd!"
 
 #. module: account_voucher
 #: field:account.voucher.line,amount:0
@@ -267,7 +275,7 @@ msgstr ""
 #. module: account_voucher
 #: help:account.voucher,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Jeśli zaznaczone, to wiadomość wymaga twojej uwagi"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_bank_statement_line
@@ -281,11 +289,6 @@ msgid "Day"
 msgstr "Dzień"
 
 #. module: account_voucher
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr "Niedozwolona komunikacja strukturalna BBA !"
-
-#. module: account_voucher
 #: field:account.voucher,tax_id:0
 msgid "Tax"
 msgstr "Podatek"
@@ -294,12 +297,7 @@ msgstr "Podatek"
 #: code:addons/account_voucher/account_voucher.py:864
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
-
-#. module: account_voucher
-#: constraint:account.bank.statement:0
-msgid "The journal and period chosen have to belong to the same company."
-msgstr "Dziennik i okres muszą należeć do tej samej firmy."
+msgstr "Niedozwolona akcja!"
 
 #. module: account_voucher
 #: field:account.voucher,comment:0
@@ -352,7 +350,7 @@ msgstr "Zapłać później lub grupuj płatności"
 #: selection:account.voucher,type:0
 #: selection:sale.receipt.report,type:0
 msgid "Receipt"
-msgstr "Potwierdzenie"
+msgstr "Rachunek"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1001
@@ -362,16 +360,13 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr ""
+"Powinieneś skonfigurować 'Konto zysku różnicy kursowej' w ustawieniach "
+"księgowości, aby automatycznie księgować różnice kursowe."
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Sales Lines"
 msgstr "Pozycje sprzedaży"
-
-#. module: account_voucher
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "Błąd! Nie możesz tworzyć firm rekurencyjnych."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -400,9 +395,10 @@ msgid "Debit"
 msgstr "Winien"
 
 #. module: account_voucher
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr "Nazwa firmy musi być unikalna !"
+#: code:addons/account_voucher/account_voucher.py:1558
+#, python-format
+msgid "Unable to change journal !"
+msgstr "Nie można zmienić dziennika !"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -435,7 +431,7 @@ msgstr "Otwarte zapisy dostawcy"
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
 msgid "Vouchers Entries"
-msgstr "Zapisy polecenia"
+msgstr "Zapisy rachunku"
 
 #. module: account_voucher
 #: field:account.voucher,name:0
@@ -536,7 +532,7 @@ msgstr ""
 #: field:account.config.settings,expense_currency_exchange_account_id:0
 #: field:res.company,expense_currency_exchange_account_id:0
 msgid "Loss Exchange Rate Account"
-msgstr ""
+msgstr "Konto strat różnic kursowych"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -570,6 +566,8 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr ""
+"Powinieneś skonfigurować 'Konto strat różnic kursowych' w ustawieniach "
+"księgowości, aby automatycznie zarządzać księgowaniami różnić kursowych."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -579,7 +577,7 @@ msgstr "Pozycje wydatków"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Sale voucher"
-msgstr ""
+msgstr "Rachunek sprzedaży"
 
 #. module: account_voucher
 #: help:account.voucher,is_multi_currency:0
@@ -593,7 +591,7 @@ msgstr ""
 #. module: account_voucher
 #: view:account.invoice:0
 msgid "Register Payment"
-msgstr ""
+msgstr "Rejestruj płatność"
 
 #. module: account_voucher
 #: field:account.statement.from.invoice.lines,line_ids:0
@@ -631,17 +629,17 @@ msgstr "Zobowiązania i należności"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Voucher Payment"
-msgstr ""
+msgstr "Płatności rachunku"
 
 #. module: account_voucher
 #: field:sale.receipt.report,state:0
 msgid "Voucher Status"
-msgstr ""
+msgstr "Stan rachunku"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Are you sure to unreconcile this record?"
-msgstr ""
+msgstr "Jesteś pewien, że chcesz skasować uzgodnienie tego rekordu ?"
 
 #. module: account_voucher
 #: field:account.voucher,company_id:0
@@ -665,7 +663,7 @@ msgstr "Uzgodnij bilans płatności"
 #: code:addons/account_voucher/account_voucher.py:960
 #, python-format
 msgid "Configuration Error !"
-msgstr ""
+msgstr "Błąd konfiguracji !"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -682,14 +680,14 @@ msgstr "Suma z podatkiem"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Purchase Voucher"
-msgstr ""
+msgstr "Rachunek zakupu"
 
 #. module: account_voucher
 #: view:account.voucher:0
 #: field:account.voucher,state:0
 #: view:sale.receipt.report:0
 msgid "Status"
-msgstr ""
+msgstr "Stan"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -700,7 +698,7 @@ msgstr "Przydział"
 #: view:account.statement.from.invoice.lines:0
 #: view:account.voucher:0
 msgid "or"
-msgstr ""
+msgstr "lub"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -725,7 +723,7 @@ msgstr "Październik"
 #: code:addons/account_voucher/account_voucher.py:961
 #, python-format
 msgid "Please activate the sequence of selected journal !"
-msgstr ""
+msgstr "Aktywuj numerację wybranego dziennika !"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -783,7 +781,7 @@ msgstr "Kwota uzgodniona"
 #: field:account.voucher,message_comment_ids:0
 #: help:account.voucher,message_comment_ids:0
 msgid "Comments and emails"
-msgstr ""
+msgstr "Komentarze i emaile"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_vendor_payment
@@ -832,18 +830,18 @@ msgstr "Firmy"
 #. module: account_voucher
 #: field:account.voucher,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Podsumowanie"
 
 #. module: account_voucher
 #: field:account.voucher,active:0
 msgid "Active"
-msgstr ""
+msgstr "Aktywne"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:965
 #, python-format
 msgid "Please define a sequence on the journal."
-msgstr ""
+msgstr "Zdefiniuj numerację w dzienniku"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -859,7 +857,7 @@ msgstr "Grupuj wg dat"
 #: code:addons/account_voucher/account_voucher.py:1093
 #, python-format
 msgid "Wrong bank statement line"
-msgstr ""
+msgstr "Błędna pozycja wyciągu"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -870,11 +868,6 @@ msgstr "Zaksięguj"
 #: view:account.voucher:0
 msgid "Invoices and outstanding transactions"
 msgstr "Faktury i pozostałe transakcje"
-
-#. module: account_voucher
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr "Numer faktury musi być unikalny w firmie!"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -961,7 +954,7 @@ msgstr "Anuluj"
 #. module: account_voucher
 #: model:ir.actions.client,name:account_voucher.action_client_invoice_menu
 msgid "Open Invoicing Menu"
-msgstr ""
+msgstr "Otwórz menu fakturowania"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -980,7 +973,7 @@ msgstr "Pozycje zapisów dziennika"
 #: code:addons/account_voucher/account_voucher.py:492
 #, python-format
 msgid "Please define default credit/debit accounts on the journal \"%s\"."
-msgstr ""
+msgstr "Zdefiniuj domyślne konta Winien/Ma w dzienniku \"%s\"."
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.act_pay_voucher
@@ -1058,7 +1051,7 @@ msgstr "Maj"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Sale Receipt"
-msgstr ""
+msgstr "Rachunek sprzedaży"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -1152,7 +1145,7 @@ msgstr "Rok"
 #: field:account.config.settings,income_currency_exchange_account_id:0
 #: field:res.company,income_currency_exchange_account_id:0
 msgid "Gain Exchange Rate Account"
-msgstr ""
+msgstr "Konto zysków różnic kursowych"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -1172,7 +1165,7 @@ msgstr "Typ domyślny"
 #. module: account_voucher
 #: help:account.voucher,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Wiadomości i historia komunikacji"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_statement_from_invoice_lines
@@ -1195,13 +1188,13 @@ msgstr "Zapis na koncie"
 msgid ""
 "The amount of the voucher must be the same amount as the one on the "
 "statement line."
-msgstr ""
+msgstr "Kwota płatności musi być taka sama jak w pozycji wyciągu."
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:864
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
-msgstr ""
+msgstr "Nie mozna usuwać racunków/płatności, które są otwarte lub zapłacone."
 
 #. module: account_voucher
 #: help:account.voucher,date:0
@@ -1211,7 +1204,7 @@ msgstr "Efektywna data zapisów"
 #. module: account_voucher
 #: model:mail.message.subtype,name:account_voucher.mt_voucher
 msgid "Status Change"
-msgstr ""
+msgstr "Zmiana statusu"
 
 #. module: account_voucher
 #: selection:account.voucher,payment_option:0
@@ -1260,7 +1253,7 @@ msgstr "Stan początkowy"
 #: code:addons/account_voucher/account_voucher.py:1001
 #, python-format
 msgid "Insufficient Configuration!"
-msgstr ""
+msgstr "Niepełna konfiguracja!"
 
 #. module: account_voucher
 #: help:account.voucher,active:0
@@ -1269,6 +1262,8 @@ msgid ""
 "inactive, which allow to hide the customer/supplier payment while the bank "
 "statement isn't confirmed."
 msgstr ""
+"Domyślnie uzgodnienie dla projektów wyciągów jest nieaktywne. Pozwala to "
+"ukryć płatności dopóki wyciąg jest niepotwierdzony."
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML niewłaściwy dla tej architektury wyświetlania!"
@@ -1475,12 +1470,24 @@ msgstr ""
 #~ msgid "Unreconciliation transactions"
 #~ msgstr "Kasowanie uzgodnień"
 
+#~ msgid "Invalid BBA Structured Communication !"
+#~ msgstr "Niedozwolona komunikacja strukturalna BBA !"
+
+#~ msgid "The journal and period chosen have to belong to the same company."
+#~ msgstr "Dziennik i okres muszą należeć do tej samej firmy."
+
 #, python-format
 #~ msgid "Warning"
 #~ msgstr "Ostrzeżenie"
 
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "Błąd! Nie możesz tworzyć firm rekurencyjnych."
+
 #~ msgid "current month"
 #~ msgstr "bieżący miesiąc"
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "Nazwa firmy musi być unikalna !"
 
 #~ msgid "Salesman"
 #~ msgstr "Sprzedawca"
@@ -1489,6 +1496,9 @@ msgstr ""
 #~ "The amount of the voucher must be the same amount as the one on the "
 #~ "statement line"
 #~ msgstr "Kwota płatności musi być taka sama jak kwota pozycji wyciągu."
+
+#~ msgid "Invoice Number must be unique per Company!"
+#~ msgstr "Numer faktury musi być unikalny w firmie!"
 
 #~ msgid ""
 #~ "From this report, you can have an overview of the amount invoiced to your "

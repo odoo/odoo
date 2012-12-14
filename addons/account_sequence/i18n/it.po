@@ -7,37 +7,32 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2011-02-15 15:36+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
+"PO-Revision-Date: 2012-12-03 20:02+0000\n"
+"Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:31+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on closed account."
-msgstr ""
+"X-Launchpad-Export-Date: 2012-12-04 05:53+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: account_sequence
 #: view:account.sequence.installer:0
 #: model:ir.actions.act_window,name:account_sequence.action_account_seq_installer
 msgid "Account Sequence Application Configuration"
-msgstr "Configurazione applicazione sequenza conti"
+msgstr "Configurazione Sequenza Conti"
 
 #. module: account_sequence
 #: help:account.move,internal_sequence_number:0
 #: help:account.move.line,internal_sequence_number:0
 msgid "Internal Sequence Number"
-msgstr "Numero sequenza interna"
+msgstr "Numero Sequenza Interna"
 
 #. module: account_sequence
 #: help:account.sequence.installer,number_next:0
 msgid "Next number of this sequence"
-msgstr "Numero successivo di questa sequenza"
+msgstr "Numero successivo per questa sequenza"
 
 #. module: account_sequence
 #: field:account.sequence.installer,number_next:0
@@ -52,13 +47,12 @@ msgstr "Incrementa Numero"
 #. module: account_sequence
 #: help:account.sequence.installer,number_increment:0
 msgid "The next number of the sequence will be incremented by this number"
-msgstr ""
-"Il prossimo numero della sequenza verrà incrementato per questo numero"
+msgstr "Il prossimo numero della sequenza sarà incrementato di questo numero"
 
 #. module: account_sequence
 #: view:account.sequence.installer:0
 msgid "Configure Your Account Sequence Application"
-msgstr "Configurare la vostra applicazione sequenza conto"
+msgstr "Configura la Sequenza dei Conti"
 
 #. module: account_sequence
 #: view:account.sequence.installer:0
@@ -76,18 +70,9 @@ msgid "Company"
 msgstr "Azienda"
 
 #. module: account_sequence
-#: help:account.journal,internal_sequence_id:0
-msgid ""
-"This sequence will be used to maintain the internal number for the journal "
-"entries related to this journal."
-msgstr ""
-"Questa sequenza verrà utilizzata per mantenere il numero interno per le "
-"registrazioni relative a questo giornale."
-
-#. module: account_sequence
 #: field:account.sequence.installer,padding:0
 msgid "Number padding"
-msgstr ""
+msgstr "Riempimento Numero"
 
 #. module: account_sequence
 #: model:ir.model,name:account_sequence.model_account_move_line
@@ -115,37 +100,9 @@ msgid "Name"
 msgstr "Nome"
 
 #. module: account_sequence
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on an account of type view."
-msgstr ""
-
-#. module: account_sequence
-#: constraint:account.journal:0
-msgid ""
-"Configuration error!\n"
-"The currency chosen should be shared by the default accounts too."
-msgstr ""
-
-#. module: account_sequence
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
-msgstr "Valore di credito o debito errato nella registrazione contabile !"
-
-#. module: account_sequence
-#: constraint:account.move:0
-msgid ""
-"You cannot create more than one move per period on a centralized journal."
-msgstr ""
-
-#. module: account_sequence
 #: field:account.journal,internal_sequence_id:0
 msgid "Internal Sequence"
 msgstr "Sequenza interna"
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid "Account and Period must belong to the same company."
-msgstr ""
 
 #. module: account_sequence
 #: help:account.sequence.installer,prefix:0
@@ -168,34 +125,18 @@ msgid "title"
 msgstr "titolo"
 
 #. module: account_sequence
-#: sql_constraint:account.journal:0
-msgid "The name of the journal must be unique per company !"
-msgstr "Il nome del registro deve essere unico per ogni azienda!"
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry forces to provide a secondary "
-"currency. You should remove the secondary currency on the account or select "
-"a multi-currency view on the journal."
-msgstr ""
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid ""
-"The date of your Journal Entry is not in the defined period! You should "
-"change the date or remove this constraint from the journal."
-msgstr ""
-
-#. module: account_sequence
 #: field:account.sequence.installer,prefix:0
 msgid "Prefix"
 msgstr "Prefisso"
 
 #. module: account_sequence
-#: sql_constraint:account.journal:0
-msgid "The code of the journal must be unique per company !"
-msgstr "Il codice del registro deve essere unico per una stessa azienda!"
+#: help:account.journal,internal_sequence_id:0
+msgid ""
+"This sequence will be used to maintain the internal number for the journal "
+"entries related to this journal."
+msgstr ""
+"Questa sequenza verrà utilizzata per mantenere il numero interno per le "
+"registrazioni relative a questo giornale."
 
 #. module: account_sequence
 #: model:ir.model,name:account_sequence.model_account_sequence_installer
@@ -210,7 +151,7 @@ msgstr "Giornale"
 #. module: account_sequence
 #: view:account.sequence.installer:0
 msgid "You can enhance the Account Sequence Application by installing ."
-msgstr ""
+msgstr "E' possibile migliorare la sequenza conto installando"
 
 #~ msgid ""
 #~ "\n"
@@ -244,5 +185,14 @@ msgstr ""
 #~ msgid "You can not create move line on closed account."
 #~ msgstr "Non è possibile creare una registrazione su un conto chiuso."
 
+#~ msgid "Wrong credit or debit value in accounting entry !"
+#~ msgstr "Valore di credito o debito errato nella registrazione contabile !"
+
 #~ msgid "Image"
 #~ msgstr "Immagine"
+
+#~ msgid "The name of the journal must be unique per company !"
+#~ msgstr "Il nome del registro deve essere unico per ogni azienda!"
+
+#~ msgid "The code of the journal must be unique per company !"
+#~ msgstr "Il codice del registro deve essere unico per una stessa azienda!"

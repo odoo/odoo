@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-05-21 12:06+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:32+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:54+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: account_check_writing
 #: selection:res.company,check_layout:0
@@ -47,11 +47,6 @@ msgstr ""
 #: selection:res.company,check_layout:0
 msgid "Check on bottom"
 msgstr "Cecul in partea de jos"
-
-#. module: account_check_writing
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "Eroare! Nu puteti crea companii recursive."
 
 #. module: account_check_writing
 #: help:account.journal,allow_check_writing:0
@@ -136,11 +131,6 @@ msgid "Print Check (Bottom)"
 msgstr ""
 
 #. module: account_check_writing
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr "Numele companiei trebuie sa fie unic !"
-
-#. module: account_check_writing
 #: report:account.print.check.bottom:0
 #: report:account.print.check.middle:0
 #: report:account.print.check.top:0
@@ -150,13 +140,6 @@ msgstr "Data scadentei"
 #. module: account_check_writing
 #: model:ir.actions.report.xml,name:account_check_writing.account_print_check_middle
 msgid "Print Check (Middle)"
-msgstr ""
-
-#. module: account_check_writing
-#: constraint:account.journal:0
-msgid ""
-"Configuration error!\n"
-"The currency chosen should be shared by the default accounts too."
 msgstr ""
 
 #. module: account_check_writing
@@ -188,16 +171,6 @@ msgid "Accounting Voucher"
 msgstr "Chitanta contabila"
 
 #. module: account_check_writing
-#: sql_constraint:account.journal:0
-msgid "The name of the journal must be unique per company !"
-msgstr "Numele jurnalului trebuie sa fie unic per companie !"
-
-#. module: account_check_writing
-#: sql_constraint:account.journal:0
-msgid "The code of the journal must be unique per company !"
-msgstr "Codul jurnalului trebuie sa fie unic per companie !"
-
-#. module: account_check_writing
 #: field:account.voucher,amount_in_word:0
 msgid "Amount in Word"
 msgstr "Suma in litere"
@@ -224,8 +197,17 @@ msgstr "Alegeti formatul Cecului"
 #~ "reconcilierea platii d-voastra cu facturile deschise ale furnizorului. "
 #~ "Puteti printa cecul"
 
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "Eroare! Nu puteti crea companii recursive."
+
 #~ msgid "Configuration"
 #~ msgstr "Configurare"
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "Numele companiei trebuie sa fie unic !"
+
+#~ msgid "The code of the journal must be unique per company !"
+#~ msgstr "Codul jurnalului trebuie sa fie unic per companie !"
 
 #~ msgid "Default Check layout"
 #~ msgstr "Formatul implicit al cecului"
@@ -236,3 +218,6 @@ msgstr "Alegeti formatul Cecului"
 #~ msgstr ""
 #~ "Eroare de configurare! Moneda aleasa ar trebui sa fie comuna si conturilor "
 #~ "predefinite."
+
+#~ msgid "The name of the journal must be unique per company !"
+#~ msgstr "Numele jurnalului trebuie sa fie unic per companie !"

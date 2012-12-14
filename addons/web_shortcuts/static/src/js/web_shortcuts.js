@@ -126,20 +126,23 @@ instance.web.ViewManagerAction.include({
             $shortcut_toggle.hide();
             return;
         }
-        $shortcut_toggle.toggleClass('oe_shortcuts_remove', shortcuts_menu.has(self.session.active_id));
-        $shortcut_toggle.unbind("click").click(function() {
-            if ($shortcut_toggle.hasClass("oe_shortcuts_remove")) {
-                shortcuts_menu.trigger('remove', self.session.active_id);
-            } else {
-                shortcuts_menu.trigger('add', {
-                    'user_id': self.session.uid,
-                    'res_id': self.session.active_id,
-                    'resource': 'ir.ui.menu',
-                    'name': self.action.name
-                });
-            }
-            $shortcut_toggle.toggleClass("oe_shortcuts_remove");
-        });
+        // Anonymous users don't have user_menu
+        if (shortcuts_menu) {
+            $shortcut_toggle.toggleClass('oe_shortcuts_remove', shortcuts_menu.has(self.session.active_id));
+            $shortcut_toggle.unbind("click").click(function() {
+                if ($shortcut_toggle.hasClass("oe_shortcuts_remove")) {
+                    shortcuts_menu.trigger('remove', self.session.active_id);
+                } else {
+                    shortcuts_menu.trigger('add', {
+                        'user_id': self.session.uid,
+                        'res_id': self.session.active_id,
+                        'resource': 'ir.ui.menu',
+                        'name': self.action.name
+                    });
+                }
+                $shortcut_toggle.toggleClass("oe_shortcuts_remove");
+            });
+        }
     }
 });
 
