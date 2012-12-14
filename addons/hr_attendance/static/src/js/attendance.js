@@ -72,34 +72,22 @@ openerp.hr_attendance = function (instance) {
     });
 
     instance.web.UserMenu.include({
-
-        is_employee: function() {
-            var self = this;
-            if (_.isUndefined(self._is_employee)) {
-                var Users = new instance.web.Model('res.users');
-                return Users.query(['employee']).filter([['id', '=', self.session.uid]]).all().then(function(records) {
-                    if (_.isEmpty(records)) {
-                        self._is_employee = false;
-                    } else {
-                        self._is_employee = records[0].employee;
-                    }
-                    return self._is_employee;
-                });
-            } else {
-                return $.Deferred().resolve(self._is_employee).promise();
-            }
-        },
-
         do_update: function () {
             this._super();
             var self = this;
             this.update_promise.done(function () {
-                $.when(self.is_employee()).done(function(is_employee) {
-                    if (!is_employee || self.attendanceslider) {
-                        return;
+                if (_.isUndefined(self.attendanceslider)) {
+                    return;
+                }
+                // check current user is an employee
+                var Users = new instance.web.Model('res.users');
+                Users.call('has_group', ['base.group_user']).done(function(is_employee) {
+                    if (is_employee) {
+                        self.attendanceslider = new instance.hr_attendance.AttendanceSlider(self);
+                        self.attendanceslider.prependTo(instance.webclient.$('.oe_systray'));
+                    } else {
+                        self.attendanceslider = null;
                     }
-                    self.attendanceslider = new instance.hr_attendance.AttendanceSlider(self);
-                    self.attendanceslider.prependTo(instance.webclient.$('.oe_systray'));
                 });
             });
         },
