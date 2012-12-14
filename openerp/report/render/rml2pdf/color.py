@@ -28,7 +28,7 @@ regex_t = re.compile('\(([0-9\.]*),([0-9\.]*),([0-9\.]*)\)')
 regex_h = re.compile('#([0-9a-zA-Z][0-9a-zA-Z])([0-9a-zA-Z][0-9a-zA-Z])([0-9a-zA-Z][0-9a-zA-Z])')
 
 def get(col_str):
-    if col_str == None:
+    if col_str is None:
         col_str = ''
     global allcols
     if col_str in allcols.keys():

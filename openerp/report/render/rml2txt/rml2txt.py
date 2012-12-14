@@ -220,7 +220,7 @@ class _flowable(object):
     def rec_render(self,node):
         """ Recursive render: fill outarr with text of current node
         """
-        if node.tag != None:
+        if node.tag is not None:
             if node.tag in self._tags:
                 self._tags[node.tag](node)
             else:

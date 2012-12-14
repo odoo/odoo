@@ -81,7 +81,7 @@ def readObject(stream, pdf):
             return NumberObject.readFromStream(stream)
         peek = stream.read(20)
         stream.seek(-len(peek), 1) # reset to start
-        if re.match(r"(\d+)\s(\d+)\sR[^a-zA-Z]", peek) != None:
+        if re.match(r"(\d+)\s(\d+)\sR[^a-zA-Z]", peek) is not None:
             return IndirectObject.readFromStream(stream, pdf)
         else:
             return NumberObject.readFromStream(stream)
@@ -169,7 +169,7 @@ class IndirectObject(PdfObject):
 
     def __eq__(self, other):
         return (
-            other != None and
+            other is not None and
             isinstance(other, IndirectObject) and
             self.idnum == other.idnum and
             self.generation == other.generation and
@@ -489,7 +489,7 @@ class DictionaryObject(dict, PdfObject):
     # return None if no metadata was found on the document root.
     def getXmpMetadata(self):
         metadata = self.get("/Metadata", None)
-        if metadata == None:
+        if metadata is None:
             return None
         metadata = metadata.getObject()
         import xmp

@@ -96,7 +96,7 @@ class report_custom(report_int):
             else:
                 # Process group_by data first
                 key = []
-                if group_by != None and fields[group_by] != None:
+                if group_by is not None and fields[group_by] is not None:
                     if fields[group_by][0] in levels.keys():
                         key.append(fields[group_by][0])
                     for l in levels.keys():
@@ -212,7 +212,7 @@ class report_custom(report_int):
         new_res = []
 
         prev = None
-        if groupby != None:
+        if groupby is not None:
             res_dic = {}
             for line in results:
                 if not line[groupby] and prev in res_dic:
@@ -322,7 +322,7 @@ class report_custom(report_int):
                     col.attrib.update(para='yes',
                                       tree='yes',
                                       space=str(3*shift)+'mm')
-                if line[f] != None:
+                if line[f] is not None:
                     col.text = prefix+str(line[f]) or ''
                 else:
                     col.text = '/'
@@ -381,7 +381,7 @@ class report_custom(report_int):
         # plots are usually displayed year by year
         # so we do so if the first field is a date
         data_by_year = {}
-        if date_idx != None:
+        if date_idx is not None:
             for r in results:
                 key = process_date['Y'](r[date_idx])
                 if key not in data_by_year:
@@ -480,7 +480,7 @@ class report_custom(report_int):
         # plot are usually displayed year by year
         # so we do so if the first field is a date
         data_by_year = {}
-        if date_idx != None:
+        if date_idx is not None:
             for r in results:
                 key = process_date['Y'](r[date_idx])
                 if key not in data_by_year:
@@ -602,7 +602,7 @@ class report_custom(report_int):
             node_line = etree.SubElement(lines, 'row')
             for f in range(len(fields)):
                 col = etree.SubElement(node_line, 'col', tree='no')
-                if line[f] != None:
+                if line[f] is not None:
                     col.text = line[f] or ''
                 else:
                     col.text = '/'

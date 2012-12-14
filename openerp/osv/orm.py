@@ -2675,7 +2675,7 @@ class BaseModel(object):
         groupby = group_by
         for r in cr.dictfetchall():
             for fld, val in r.items():
-                if val == None: r[fld] = False
+                if val is None: r[fld] = False
             alldata[r['id']] = r
             del r['id']
 
@@ -3584,7 +3584,7 @@ class BaseModel(object):
             context = {}
         if not ids:
             return []
-        if fields_to_read == None:
+        if fields_to_read is None:
             fields_to_read = self._columns.keys()
 
         # Construct a clause for the security rules.

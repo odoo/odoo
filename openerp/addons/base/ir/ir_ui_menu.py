@@ -144,7 +144,7 @@ class ir_ui_menu(osv.osv):
         return res
 
     def _get_full_name(self, cr, uid, ids, name=None, args=None, context=None):
-        if context == None:
+        if context is None:
             context = {}
         res = {}
         for elmt in self.browse(cr, uid, ids, context=context):

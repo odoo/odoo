@@ -230,7 +230,7 @@ class report_printscreen_list(report_int):
                     col.text = line[f] = 'Undefined'
                     col.set('tree', 'undefined')
 
-                if line[f] != None:
+                if line[f] is not None:
                     col.text = tools.ustr(line[f] or '')
                     if float_flag:
                         col.set('tree','float')
@@ -245,7 +245,7 @@ class report_printscreen_list(report_int):
         for f in range(0, len(fields_order)):
             col = etree.SubElement(node_line, 'col', para='group', tree='no')
             col.set('tree', 'float')
-            if tsum[f] != None:
+            if tsum[f] is not None:
                 if tsum[f] != 0.0:
                     digits = fields[fields_order[f]].get('digits', (16, 2))
                     prec = '%%.%sf' % (digits[1], )

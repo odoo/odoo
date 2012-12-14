@@ -119,7 +119,7 @@ class report_printscreen_list(report_int):
                     precision=(('digits' in fields[f]) and fields[f]['digits'][1]) or 2
                     line[f]=round(line[f],precision)
                 col = etree.SubElement(node_line, 'col', tree='no')
-                if line[f] != None:
+                if line[f] is not None:
                     col.text = tools.ustr(line[f] or '')
                 else:
                     col.text = '/'
