@@ -181,7 +181,7 @@ class ir_ui_menu(osv.osv):
             next_num=int(concat[0])+1
             datas['name']=rex.sub(('(%d)'%next_num),datas['name'])
         else:
-            datas['name']=datas['name']+'(1)'
+            datas['name'] += '(1)'
         self.write(cr,uid,[res],{'name':datas['name']})
         ids = ir_values_obj.search(cr, uid, [
             ('model', '=', 'ir.ui.menu'),

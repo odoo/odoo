@@ -307,10 +307,10 @@ class ir_values(osv.osv):
                    ORDER BY v.user_id, u.company_id"""
         params = ('default', model, uid, uid)
         if condition:
-            query = query % 'AND v.key2 = %s'
+            query %= 'AND v.key2 = %s'
             params += (condition[:200],)
         else:
-            query = query % 'AND v.key2 is NULL'
+            query %= 'AND v.key2 is NULL'
         cr.execute(query, params)
 
         # keep only the highest priority default for each field
