@@ -244,10 +244,10 @@ class report_rml(report_int):
         return obj.get()
 
     def _get_path(self):
-        ret = []
-        ret.append(self.tmpl.replace(os.path.sep, '/').rsplit('/',1)[0]) # Same dir as the report rml
-        ret.append('addons')
-        ret.append(tools.config['root_path'])
-        return ret
+        return [
+            self.tmpl.replace(os.path.sep, '/').rsplit('/', 1)[0],
+            'addons',
+            tools.config['root_path']
+        ]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
