@@ -53,13 +53,7 @@ import utils
 from generic import *
 from utils import readNonWhitespace, readUntilWhitespace, ConvertFunctionsToVirtualList
 
-if version_info < ( 2, 4 ):
-   from sets import ImmutableSet as frozenset
-
-if version_info < ( 2, 5 ):
-    from md5 import md5
-else:
-    from hashlib import md5
+from hashlib import md5
 
 ##
 # This class supports writing PDF files out, given pages produced by another
