@@ -44,9 +44,8 @@ class ir_ui_menu(osv.osv):
     def __init__(self, *args, **kwargs):
         self.cache_lock = threading.RLock()
         self._cache = {}
-        r = super(ir_ui_menu, self).__init__(*args, **kwargs)
+        super(ir_ui_menu, self).__init__(*args, **kwargs)
         self.pool.get('ir.model.access').register_cache_clearing_method(self._name, 'clear_cache')
-        return r
 
     def clear_cache(self):
         with self.cache_lock:

@@ -1304,7 +1304,7 @@ class sparse(function):
 
     def __init__(self, serialization_field, **kwargs):
         self.serialization_field = serialization_field
-        return super(sparse, self).__init__(self._fnct_read, fnct_inv=self._fnct_write, multi='__sparse_multi', **kwargs)
+        super(sparse, self).__init__(self._fnct_read, fnct_inv=self._fnct_write, multi='__sparse_multi', **kwargs)
      
 
 
