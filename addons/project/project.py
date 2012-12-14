@@ -46,7 +46,7 @@ class project_task_type(osv.osv):
         'state': fields.selection(_TASK_STATE, 'Related Status', required=True,
                         help="The status of your document is automatically changed regarding the selected stage. " \
                             "For example, if a stage is related to the status 'Close', when your document reaches this stage, it is automatically closed."),
-        'fold': fields.boolean('Hide in views if empty',
+        'fold': fields.boolean('Folded by Default',
                         help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
     }
     def _get_default_project_id(self, cr, uid, ctx={}):
@@ -275,7 +275,7 @@ class project(osv.osv):
         ids = self.pool.get('project.task.type').search(cr, uid, [('case_default','=',1)], context=context)
         return ids
 
-    _order = "sequence"
+    _order = "sequence, id"
     _defaults = {
         'active': True,
         'type': 'contract',

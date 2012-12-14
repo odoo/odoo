@@ -76,7 +76,7 @@ class mail_message(osv.Model):
         # TDE note: regroup by model/ids, to have less queries to perform
         result = dict.fromkeys(ids, False)
         for message in self.read(cr, uid, ids, ['model', 'res_id'], context=context):
-            if not message.get('model') or not message.get('res_id'):
+            if not message.get('model') or not message.get('res_id') or not self.pool.get(message['model']):
                 continue
             result[message['id']] = self._shorten_name(self.pool.get(message['model']).name_get(cr, SUPERUSER_ID, [message['res_id']], context=context)[0][1])
         return result
