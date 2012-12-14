@@ -480,7 +480,7 @@ openerp.mail = function (session) {
             this.$('.oe_full').on('click', _.bind( this.on_compose_fullmail, this, this.id ? 'reply' : 'comment') );
 
             /* stack for don't close the compose form if the user click on a button */
-            this.$('.oe_msg_footer').on('mousedown', _.bind( function () { this.stay_open = true; }, this));
+            this.$('.oe_msg_footer, .oe_mail_list_recipients').on('mousedown', _.bind( function () { this.stay_open = true; }, this));
             var ev_stay = {};
             ev_stay.mouseup = ev_stay.keydown = ev_stay.focus = function () { self.stay_open = false; };
             this.$('textarea').on(ev_stay);
