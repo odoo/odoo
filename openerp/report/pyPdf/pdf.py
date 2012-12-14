@@ -838,7 +838,6 @@ class PdfFileReader(object):
                 else:
                     # no xref table found at specified location
                     assert False
-                    break
 
     def _pairs(self, array):
         i = 0
