@@ -21,7 +21,7 @@
         <!--Email template -->
         <record id="email_template_edi_sale" model="email.template">
             <field name="name">Sale Order - Send by Email</field>
-            <field name="email_from">${object.user_id.email or ''|safe}</field>
+            <field name="email_from">${object.user_id.email or ''}</field>
             <field name="subject">${object.company_id.name} ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })</field>
             <field name="email_recipients">${object.partner_invoice_id.id}</field>
             <field name="model_id" ref="sale.model_sale_order"/>
@@ -48,31 +48,27 @@
        &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />
        % endif
        % if object.user_id:
-       &nbsp;&nbsp;Your contact: <a href="mailto:${object.user_id.email or ''|safe}?subject=Order%20${object.name}">${object.user_id.name}</a>
+       &nbsp;&nbsp;Your contact: <a href="mailto:${object.user_id.email or ''}?subject=Order%20${object.name}">${object.user_id.name}</a>
        % endif
     </p>
 
     % if object.order_policy in ('prepaid','manual') and object.company_id.paypal_account and object.state != 'draft':
-    <% set paypal_url = ("https://www.paypal.com/cgi-bin/webscr?cmd=_xclick"
-            "&amp;business=%(paypal_account)s"
-            "&amp;item_name=%(company_name)s%%20Order%%20%(order_name)s"
-            "&amp;invoice=%(order_name)s"
-            "&amp;amount=%(order_amount)s"
-            "&amp;currency_code=%(currency)s"
-            "&amp;button_subtype=services"
-            "&amp;no_note=1"
-            "&amp;bn=OpenERP_Order_PayNow_%(currency)s"
-            % {
-                'paypal_account': quote(object.company_id.paypal_account),
-                'company_name': quote(object.company_id.name),
-                'order_name': quote(object.name),
-                'order_amount': quote(str(object.amount_total)),
-                'currency': quote(object.pricelist_id.currency_id.name),
+    <% set paypal_url = "https://www.paypal.com/cgi-bin/webscr?" +
+            urlencode({
+                "cmd": "_xclick",
+                "business": object.company_id.paypal_account,
+                "item_name": object.company_id.name + " Order " + object.name,
+                "invoice": object.name,
+                "amount": object.amount_total,
+                "currency_code": object.pricelist_id.currency_id.name,
+                "button_subtype": "services",
+                "no_note": "1",
+                "bn": "OpenERP_Order_PayNow_" + object.pricelist_id.currency_id.name,
             })
     %>
     <br/>
     <p>It is also possible to directly pay with Paypal:</p>
-        <a style="margin-left: 120px;" href="${paypal_url|safe}">
+        <a style="margin-left: 120px;" href="${paypal_url}">
             <img class="oe_edi_paypal_button" src="https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif"/>
         </a>
     % endif
@@ -108,7 +104,7 @@
         % endif
         % if object.company_id.website:
             <div>
-                Web :&nbsp;<a href="${object.company_id.website|safe}">${object.company_id.website|safe}</a>
+                Web :&nbsp;<a href="${object.company_id.website}">${object.company_id.website}</a>
             </div>
         %endif
         <p></p>

@@ -28,7 +28,7 @@ from osv import osv
 from osv import fields
 import tools
 from tools.translate import _
-from urllib import quote as quote
+from urllib import quote, urlencode
 
 _logger = logging.getLogger(__name__)
 
@@ -56,6 +56,7 @@ try:
     mako_template_env.globals.update({
         'str': str,
         'quote': quote,
+        'urlencode': urlencode,
     })
 except ImportError:
     _logger.warning("jinja2 not available, templating features will not work!")

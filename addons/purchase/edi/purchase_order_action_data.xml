@@ -19,7 +19,7 @@
         <!--Email template -->
         <record id="email_template_edi_purchase" model="email.template">
             <field name="name">Purchase Order - Send by mail</field>
-            <field name="email_from">${object.validator.email or ''|safe}</field>
+            <field name="email_from">${object.validator.email or ''}</field>
             <field name="subject">${object.company_id.name} Order (Ref ${object.name or 'n/a' })</field>
             <field name="email_recipients">${object.partner_id.id}</field>
             <field name="model_id" ref="purchase.model_purchase_order"/>
@@ -46,7 +46,7 @@
        &nbsp;&nbsp;Your reference: ${object.partner_ref}<br />
        % endif
        % if object.validator:
-       &nbsp;&nbsp;Your contact: <a href="mailto:${object.validator.email or ''|safe}?subject=Order%20${object.name}">${object.validator.name}</a>
+       &nbsp;&nbsp;Your contact: <a href="mailto:${object.validator.email or ''}?subject=Order%20${object.name}">${object.validator.name}</a>
        % endif
     </p>
 
@@ -81,7 +81,7 @@
         % endif
         % if object.company_id.website:
             <div>
-                Web :&nbsp;<a href="${object.company_id.website|safe}">${object.company_id.website|safe}</a>
+                Web :&nbsp;<a href="${object.company_id.website}">${object.company_id.website}</a>
             </div>
         %endif
         <p></p>
