@@ -23,7 +23,7 @@ from osv import osv
 
 
 class ir_needaction_mixin(osv.AbstractModel):
-    '''Mixin class for objects using the need action feature.
+    """Mixin class for objects using the need action feature.
 
     Need action feature can be used by models that have to be able to
     signal that an action is required on a particular record. If in
@@ -37,7 +37,7 @@ class ir_needaction_mixin(osv.AbstractModel):
 
     This class also offers several global services:
     - ``_needaction_count``: returns the number of actions uid has to perform
-    '''
+    """
 
     _name = 'ir.needaction_mixin'
     _needaction = True
