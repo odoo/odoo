@@ -76,7 +76,7 @@ openerp.hr_attendance = function (instance) {
             this._super();
             var self = this;
             this.update_promise.done(function () {
-                if (_.isUndefined(self.attendanceslider)) {
+                if (!_.isUndefined(self.attendanceslider)) {
                     return;
                 }
                 // check current user is an employee
