@@ -158,9 +158,10 @@ class ir_model(osv.osv):
         if context is None: context = {}
         if isinstance(ids, (int, long)):
             ids = [ids]
-        if not context.get(MODULE_UNINSTALL_FLAG) and \
-                any(model.state != 'manual' for model in self.browse(cr, user, ids, context)):
-            raise except_orm(_('Error'), _("Model '%s' contains module data and cannot be removed!") % (model.name,))
+        if not context.get(MODULE_UNINSTALL_FLAG):
+            for model in self.browse(cr, user, ids, context):
+                if model.state != 'manual':
+                    raise except_orm(_('Error'), _("Model '%s' contains module data and cannot be removed!") % (model.name,))
 
         self._drop_table(cr, user, ids, context)
         res = super(ir_model, self).unlink(cr, user, ids, context)
