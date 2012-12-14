@@ -3560,7 +3560,11 @@ class BaseModel(object):
             filtered_fields = filter(lambda a: not p(a), fields)
             if filtered_fields:
                 _logger.warning('Access Denied by ACLs for operation: %s, uid: %s, model: %s, fields: %s', operation, user, self._name, ', '.join(filtered_fields))
-                raise except_orm(_('Access Denied'), 'TODO')
+                raise except_orm(
+                    _('Access Denied'),
+                    _('The requested operation cannot be completed due to security restrictions. '
+                    'Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
+                    (self._description, operation))
         return fields
 
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
