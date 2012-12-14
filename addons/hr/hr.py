@@ -46,9 +46,9 @@ class hr_employee_category(osv.osv):
     _name = "hr.employee.category"
     _description = "Employee Category"
     _columns = {
-        'name': fields.char("Category", size=64, required=True),
+        'name': fields.char("Employee Tag", size=64, required=True),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
-        'parent_id': fields.many2one('hr.employee.category', 'Parent Category', select=True),
+        'parent_id': fields.many2one('hr.employee.category', 'Parent Employee Tag', select=True),
         'child_ids': fields.one2many('hr.employee.category', 'parent_id', 'Child Categories'),
         'employee_ids': fields.many2many('hr.employee', 'employee_category_rel', 'category_id', 'emp_id', 'Employees'),
     }
