@@ -50,23 +50,10 @@
        % endif
     </p>  
     
-    % if object.company_id.paypal_account and object.type in ('out_invoice'):
-    <% set paypal_url = "https://www.paypal.com/cgi-bin/webscr?" +
-            urlencode({
-                "cmd": "_xclick",
-                "business": object.company_id.paypal_account,
-                "item_name": object.company_id.name + " Invoice " + object.number,
-                "invoice": object.number,
-                "amount": object.residual,
-                "currency_code": object.currency_id.name,
-                "button_subtype": "services",
-                "no_note": "1",
-                "bn": "OpenERP_Invoice_PayNow_" + object.currency_id.name,
-            })
-    %>
+    % if object.paypal_url:
     <br/>
     <p>It is also possible to directly pay with Paypal:</p>
-        <a style="margin-left: 120px;" href="${paypal_url}">
+        <a style="margin-left: 120px;" href="${object.paypal_url}">
             <img class="oe_edi_paypal_button" src="https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif"/>
         </a>
     % endif
