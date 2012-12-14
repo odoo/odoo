@@ -210,8 +210,8 @@ class graph(object):
 
     def exchange(self, e, f):
         """Exchange edges to make feasible-tree optimized
-        @param edge edge with negative cut-value
-        @param edge new edge with minimum slack-value
+        :param e: edge with negative cut-value
+        :param f: new edge with minimum slack-value
         """
         del self.tree_edges[self.tree_edges.index(e)]
         self.tree_edges.append(f)
@@ -601,8 +601,6 @@ class graph(object):
 
     def rank(self):
         """Finds the optimized rank of the nodes using Network-simplex algorithm
-
-        @param start starting node of the component
         """
         self.levels = {}
         self.critical_edges = []
@@ -641,8 +639,6 @@ class graph(object):
 
     def order_in_rank(self):
         """Finds optimized order of the nodes within their ranks using median heuristic
-
-        @param start: starting node of the component
         """
 
         self.make_chain()

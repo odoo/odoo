@@ -3485,7 +3485,7 @@ class BaseModel(object):
 
         :param cr: database cursor
         :param user: current user id
-        :param fields: list of fields
+        :param allfields: list of fields
         :param context: context arguments, like lang, time zone
         :return: dictionary of field dictionaries, each one describing a field of the business object
         :raise AccessError: * if user has no create/write rights on the requested object
@@ -4838,7 +4838,7 @@ class BaseModel(object):
         Copy given record's data with all its fields values
 
         :param cr: database cursor
-        :param user: current user id
+        :param uid: current user id
         :param id: id of the record to copy
         :param default: field values to override in the original values of the copied record
         :type default: dictionary

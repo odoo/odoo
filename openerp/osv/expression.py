@@ -332,9 +332,9 @@ def generate_table_alias(src_table_alias, joined_tables=[]):
         - src_model='res_users', join_tables=[(res.partner, 'parent_id')]
             alias = ('res_users__parent_id', '"res_partner" as "res_users__parent_id"')
 
-        :param model src_model: model source of the alias
-        :param list join_tables: list of tuples
-            (dst_model, link_field)
+        :param model src_table_alias: model source of the alias
+        :param list joined_tables: list of tuples
+                                   (dst_model, link_field)
 
         :return tuple: (table_alias, alias statement for from clause with quotes added)
     """
@@ -351,8 +351,6 @@ def get_alias_from_query(from_query):
     """ :param string from_query: is something like :
         - '"res_partner"' OR
         - '"res_partner" as "res_users__partner_id"''
-        :param tuple result: (unquoted table name, unquoted alias)
-            i.e. (res_partners, res_partner) OR (res_partner, res_users__partner_id)
     """
     from_splitted = from_query.split(' as ')
     if len(from_splitted) > 1:
@@ -497,11 +495,19 @@ class ExtendedLeaf(object):
                 adding joins
             :attr list join_context: list of join contexts. This is a list of
                 tuples like ``(lhs, table, lhs_col, col, link)``
-                :param obj lhs: source (left hand) model
-                :param obj model: destination (right hand) model
-                :param string lhs_col: source model column for join condition
-                :param string col: destination model column for join condition
-                :param link: link column between source and destination model
+
+                where
+
+                lhs
+                    source (left hand) model
+                model
+                    destination (right hand) model
+                lhs_col
+                    source model column for join condition
+                col
+                    destination model column for join condition
+                link
+                    link column between source and destination model
                     that is not necessarily (but generally) a real column used
                     in the condition (i.e. in many2one); this link is used to
                     compute aliases
