@@ -121,7 +121,7 @@ class hr_job(osv.osv):
     }
 
     _sql_constraints = [
-        ('name_company_uniq', 'unique(name, company_id)', 'The name of the job position must be unique per company!'),
+        ('name_company_uniq', 'unique(name, company_id, department_id)', 'The name of the job position must be unique per company!'),
     ]
 
 
