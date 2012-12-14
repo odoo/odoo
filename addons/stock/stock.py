@@ -3048,7 +3048,6 @@ class stock_picking_in(osv.osv):
 
     _columns = {
         'backorder_id': fields.many2one('stock.picking.in', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
-        'date_done': fields.datetime('Date of Reception', help="Date of Completion", states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'state': fields.selection(
             [('draft', 'Draft'),
             ('auto', 'Waiting Another Operation'),
@@ -3094,7 +3093,6 @@ class stock_picking_out(osv.osv):
 
     _columns = {
         'backorder_id': fields.many2one('stock.picking.out', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
-        'date_done': fields.datetime('Date of Delivery ', help="Date of Completion", states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'state': fields.selection(
             [('draft', 'Draft'),
             ('auto', 'Waiting Another Operation'),
