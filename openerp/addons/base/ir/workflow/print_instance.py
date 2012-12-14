@@ -77,8 +77,10 @@ def graph_get(cr, graph, wkf_ids, nested, workitem, processed_subflows):
     for t in transitions:
         if not t['act_to'] in activities:
             continue
-        args = {}
-        args['label'] = str(t['condition']).replace(' or ', '\\nor ').replace(' and ', '\\nand ')
+        args = {
+            'label': str(t['condition']).replace(' or ', '\\nor ')
+                                        .replace(' and ','\\nand ')
+        }
         if t['signal']:
             args['label'] += '\\n'+str(t['signal'])
             args['style'] = 'bold'

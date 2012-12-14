@@ -144,10 +144,11 @@ class report_custom(report_int):
             parent_field = self.pool.get('ir.model.fields').read(cr, uid, [report['field_parent'][0]], ['model'])
         model_name = self.pool.get('ir.model').read(cr, uid, [report['model_id'][0]], ['model'], context=context)[0]['model']
 
-        fct = {}
-        fct['id'] = lambda x : x
-        fct['gety'] = lambda x: x.split('-')[0]
-        fct['in'] = lambda x: x.split(',')
+        fct = {
+            'id': lambda x: x,
+            'gety': lambda x: x.split('-')[0],
+           'in': lambda x: x.split(',')
+        }
         new_fields = []
         new_cond = []
         for f in fields:
@@ -350,15 +351,17 @@ class report_custom(report_int):
         x_axis = axis.X(label = fields[0]['name'], format="/a-30{}%s"),
         y_axis = axis.Y(label = ', '.join(map(lambda x : x['name'], fields[1:]))))
         
-        process_date = {}
-        process_date['D'] = lambda x : reduce(lambda xx,yy : xx+'-'+yy,x.split('-')[1:3])
-        process_date['M'] = lambda x : x.split('-')[1]
-        process_date['Y'] = lambda x : x.split('-')[0]
+        process_date = {
+            'D': lambda x: reduce(lambda xx, yy: xx + '-' + yy, x.split('-')[1:3]),
+            'M': lambda x: x.split('-')[1],
+            'Y': lambda x: x.split('-')[0]
+        }
 
-        order_date = {}
-        order_date['D'] = lambda x : time.mktime((2005,int(x.split('-')[0]), int(x.split('-')[1]),0,0,0,0,0,0))
-        order_date['M'] = lambda x : x
-        order_date['Y'] = lambda x : x
+        order_date = {
+            'D': lambda x: time.mktime((2005, int(x.split('-')[0]), int(x.split('-')[1]), 0, 0, 0, 0, 0, 0)),
+            'M': lambda x: x,
+            'Y': lambda x: x
+        }
 
         abscissa = []
         
@@ -447,15 +450,17 @@ class report_custom(report_int):
         
         can.show(80,380,'/16/H'+report['title'])
         
-        process_date = {}
-        process_date['D'] = lambda x : reduce(lambda xx,yy : xx+'-'+yy,x.split('-')[1:3])
-        process_date['M'] = lambda x : x.split('-')[1]
-        process_date['Y'] = lambda x : x.split('-')[0]
+        process_date = {
+            'D': lambda x: reduce(lambda xx, yy: xx + '-' + yy, x.split('-')[1:3]),
+            'M': lambda x: x.split('-')[1],
+            'Y': lambda x: x.split('-')[0]
+        }
 
-        order_date = {}
-        order_date['D'] = lambda x : time.mktime((2005,int(x.split('-')[0]), int(x.split('-')[1]),0,0,0,0,0,0))
-        order_date['M'] = lambda x : x
-        order_date['Y'] = lambda x : x
+        order_date = {
+            'D': lambda x: time.mktime((2005, int(x.split('-')[0]), int(x.split('-')[1]), 0, 0, 0, 0, 0, 0)),
+            'M': lambda x: x,
+            'Y': lambda x: x
+        }
 
         ar = area.T(size=(350,350),
             x_axis = axis.X(label = fields[0]['name'], format="/a-30{}%s"),
