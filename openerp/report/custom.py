@@ -273,7 +273,7 @@ class report_custom(report_int):
                 res = self._create_bars(cr,uid, ids, report, fields, results2, context)
             elif report['type']=='line':
                 res = self._create_lines(cr,uid, ids, report, fields, results2, context)
-        return (self.obj.get(), 'pdf')
+        return self.obj.get(), 'pdf'
 
     def _create_tree(self, uid, ids, report, fields, level, results, context):
         pageSize=common.pageSize.get(report['print_format'], [210.0,297.0])

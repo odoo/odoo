@@ -514,7 +514,7 @@ class ir_model_constraint(Model):
             # double-check we are really going to delete all the owners of this schema element
             cr.execute("""SELECT id from ir_model_constraint where name=%s""", (data.name,))
             external_ids = [x[0] for x in cr.fetchall()]
-            if (set(external_ids)-ids_set):
+            if set(external_ids)-ids_set:
                 # as installed modules have defined this element we must not delete it!
                 continue
 
@@ -573,7 +573,7 @@ class ir_model_relation(Model):
             # double-check we are really going to delete all the owners of this schema element
             cr.execute("""SELECT id from ir_model_relation where name = %s""", (data.name,))
             external_ids = [x[0] for x in cr.fetchall()]
-            if (set(external_ids)-ids_set):
+            if set(external_ids)-ids_set:
                 # as installed modules have defined this element we must not delete it!
                 continue
 
@@ -585,7 +585,7 @@ class ir_model_relation(Model):
 
         # drop m2m relation tables
         for table in to_drop_table:
-            cr.execute('DROP TABLE %s CASCADE'% (table),)
+            cr.execute('DROP TABLE %s CASCADE'% table,)
             _logger.info('Dropped table %s', table)
 
         cr.commit()
@@ -862,7 +862,7 @@ class ir_model_data(osv.osv):
         res = self.read(cr, uid, data_id, ['model', 'res_id'])
         if not res['res_id']:
             raise ValueError('No such external ID currently defined in the system: %s.%s' % (module, xml_id))
-        return (res['model'], res['res_id'])
+        return res['model'], res['res_id']
 
     def get_object(self, cr, uid, module, xml_id, context=None):
         """Returns a browsable record for the given module name and xml_id or raise ValueError if not found"""
@@ -903,7 +903,7 @@ class ir_model_data(osv.osv):
         # records created during module install should not display the messages of OpenChatter
         context = dict(context, install_mode=True)
         if xml_id and ('.' in xml_id):
-            assert len(xml_id.split('.'))==2, _("'%s' contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id") % (xml_id)
+            assert len(xml_id.split('.'))==2, _("'%s' contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id") % xml_id
             module, xml_id = xml_id.split('.')
         if (not xml_id) and (not self.doinit):
             return False

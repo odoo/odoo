@@ -668,7 +668,7 @@ class many2many(_column):
                 col1 = '%s_id' % source_model._table
             if not col2:
                 col2 = '%s_id' % dest_model._table
-        return (tbl, col1, col2)
+        return tbl, col1, col2
 
     def _get_query_and_where_params(self, cr, model, ids, values, where_params):
         """ Extracted from ``get`` to facilitate fine-tuning of the generated

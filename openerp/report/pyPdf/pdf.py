@@ -299,7 +299,7 @@ class PdfFileWriter(object):
         trailer.writeToStream(stream, None)
         
         # eof
-        stream.write("\nstartxref\n%s\n%%%%EOF\n" % (xref_location))
+        stream.write("\nstartxref\n%s\n%%%%EOF\n" % xref_location)
 
     def _sweepIndirectReferences(self, externMap, data):
         if isinstance(data, DictionaryObject):

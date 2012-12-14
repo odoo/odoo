@@ -101,11 +101,11 @@ def graph_get(cr, graph, wkf_ids, nested, workitem, processed_subflows):
     start = cr.fetchone()[0]
     cr.execute("select 'subflow.'||name,id from wkf_activity where flow_stop=True and wkf_id in ("+','.join(['%s']*len(wkf_ids))+')', wkf_ids)
     stop = cr.fetchall()
-    if (stop):
+    if stop:
         stop = (stop[0][1], dict(stop))
     else:
         stop = ("stop",{})
-    return ((start,{}),stop)
+    return (start, {}), stop
 
 
 def graph_instance_get(cr, graph, inst_id, nested=False):
@@ -208,13 +208,13 @@ class report_graph(report.interface.report_int):
 
     def result(self):
         if self.obj.is_done():
-            return (True, self.obj.get(), 'pdf')
+            return True, self.obj.get(), 'pdf'
         else:
-            return (False, False, False)
+            return False, False, False
 
     def create(self, cr, uid, ids, data, context=None):
         self.obj = report_graph_instance(cr, uid, ids, data)
-        return (self.obj.get(), 'pdf')
+        return self.obj.get(), 'pdf'
 
 report_graph('report.workflow.instance.graph', 'ir.workflow')
 

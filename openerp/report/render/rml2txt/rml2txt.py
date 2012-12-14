@@ -107,11 +107,11 @@ class textbox(object):
     def haplines(self,arr,offset,cc= ''):
         """ Horizontaly append lines 
         """
-        while (len(self.lines) < len(arr)):
+        while len(self.lines) < len(arr):
             self.lines.append("")
         
         for i in range(len(self.lines)):
-            while (len(self.lines[i]) < offset):
+            while len(self.lines[i]) < offset:
                 self.lines[i] += " "
         for i in range(len(arr)):
             self.lines[i] += cc +arr[i] 

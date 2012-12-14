@@ -288,7 +288,7 @@ class TinyPoFile(object):
         return lines
 
     def cur_line(self):
-        return (self.lines_count - len(self.lines))
+        return self.lines_count - len(self.lines)
 
     def next(self):
         trans_type = name = res_id = source = trad = None
@@ -301,7 +301,7 @@ class TinyPoFile(object):
             targets = []
             line = None
             fuzzy = False
-            while (not line):
+            while not line:
                 if 0 == len(self.lines):
                     raise StopIteration()
                 line = self.lines.pop(0).strip()
@@ -861,7 +861,7 @@ def trans_generate(lang, modules, cr):
         frelativepath = fabsolutepath[len(path):]
         display_path = "addons%s" % frelativepath
         module = get_module_from_path(fabsolutepath, mod_paths=mod_paths)
-        if (('all' in modules) or (module in modules)) and module in installed_modules:
+        if ('all' in modules or module in modules) and module in installed_modules:
             return module, fabsolutepath, frelativepath, display_path
         return None, None, None, None
 

@@ -340,11 +340,11 @@ def generate_table_alias(src_table_alias, joined_tables=[]):
     """
     alias = src_table_alias
     if not joined_tables:
-        return ('%s' % alias, '%s' % _quote(alias))
+        return '%s' % alias, '%s' % _quote(alias)
     for link in joined_tables:
         alias += '__' + link[1]
-    assert len(alias) < 64, 'Table alias name %s is longer than the 64 characters size accepted by default in postgresql.' % (alias)
-    return ('%s' % alias, '%s as %s' % (_quote(joined_tables[-1][0]), _quote(alias)))
+    assert len(alias) < 64, 'Table alias name %s is longer than the 64 characters size accepted by default in postgresql.' % alias
+    return '%s' % alias, '%s as %s' % (_quote(joined_tables[-1][0]), _quote(alias))
 
 
 def get_alias_from_query(from_query):
@@ -356,9 +356,9 @@ def get_alias_from_query(from_query):
     """
     from_splitted = from_query.split(' as ')
     if len(from_splitted) > 1:
-        return (from_splitted[0].replace('"', ''), from_splitted[1].replace('"', ''))
+        return from_splitted[0].replace('"', ''), from_splitted[1].replace('"', '')
     else:
-        return (from_splitted[0].replace('"', ''), from_splitted[0].replace('"', ''))
+        return from_splitted[0].replace('"', ''), from_splitted[0].replace('"', '')
 
 
 def normalize_leaf(element):
@@ -377,7 +377,7 @@ def normalize_leaf(element):
     if isinstance(right, (list, tuple)) and operator in ('=', '!='):
         _logger.warning("The domain term '%s' should use the 'in' or 'not in' operator." % ((left, original, right),))
         operator = 'in' if operator == '=' else 'not in'
-    return (left, operator, right)
+    return left, operator, right
 
 
 def is_operator(element):
@@ -829,7 +829,7 @@ class expression(object):
                     push(create_substitution_leaf(leaf, AND_OPERATOR, relational_model))
 
             elif len(field_path) > 1 and field._auto_join:
-                raise NotImplementedError('_auto_join attribute not supported on many2many field %s' % (left))
+                raise NotImplementedError('_auto_join attribute not supported on many2many field %s' % left)
 
             elif len(field_path) > 1 and field._type == 'many2one':
                 right_ids = relational_model.search(cr, uid, [(field_path[1], operator, right)], context=context)
@@ -989,7 +989,7 @@ class expression(object):
                         res_ids = [x[0] for x in relational_model.name_search(cr, uid, right, [], operator, limit=None, context=c)]
                         if operator in NEGATIVE_TERM_OPERATORS:
                             res_ids.append(False)  # TODO this should not be appended if False was in 'right'
-                        return (left, 'in', res_ids)
+                        return left, 'in', res_ids
                     # resolve string-based m2o criterion into IDs
                     if isinstance(right, basestring) or \
                             right and isinstance(right, (tuple, list)) and all(isinstance(item, basestring) for item in right):
@@ -1140,8 +1140,8 @@ class expression(object):
             query = '%s."%s" IS NOT NULL' % (table_alias, left)
             params = []
 
-        elif (operator == '=?'):
-            if (right is False or right is None):
+        elif operator == '=?':
+            if right is False or right is None:
                 # '=?' is a short-circuit that makes the term TRUE if right is None or False
                 query = 'TRUE'
                 params = []
@@ -1187,7 +1187,7 @@ class expression(object):
 
         if isinstance(params, basestring):
             params = [params]
-        return (query, params)
+        return query, params
 
     def to_sql(self):
         stack = []
@@ -1213,6 +1213,6 @@ class expression(object):
         if joins:
             query = '(%s) AND %s' % (joins, query)
 
-        return (query, tools.flatten(params))
+        return query, tools.flatten(params)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

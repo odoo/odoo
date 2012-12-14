@@ -115,7 +115,7 @@ class report_printscreen_list(report_int):
                     rows_new += [elem for elem in rows if elem['id'] == id]
                 rows = rows_new
         res = self._create_table(uid, datas['ids'], result['fields'], fields_order, rows, context, model_desc)
-        return (self.obj.get(), 'pdf')
+        return self.obj.get(), 'pdf'
 
 
     def _create_table(self, uid, ids, fields, fields_order, results, context, title=''):

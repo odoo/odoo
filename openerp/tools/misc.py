@@ -92,7 +92,7 @@ def exec_pg_command_pipe(name, *args):
     pop = subprocess.Popen((prog,) + args, bufsize= -1,
           stdin=subprocess.PIPE, stdout=subprocess.PIPE,
           close_fds=(os.name=="posix"))
-    return (pop.stdin, pop.stdout)
+    return pop.stdin, pop.stdout
 
 def exec_command_pipe(name, *args):
     prog = find_in_path(name)
@@ -103,7 +103,7 @@ def exec_command_pipe(name, *args):
     pop = subprocess.Popen((prog,) + args, bufsize= -1,
           stdin=subprocess.PIPE, stdout=subprocess.PIPE,
           close_fds=(os.name=="posix"))
-    return (pop.stdin, pop.stdout)
+    return pop.stdin, pop.stdout
 
 #----------------------------------------------------------
 # File paths
@@ -181,7 +181,7 @@ def _fileopen(path, mode, basedir, pathinfo, basename=None):
     if os.path.isfile(name):
         fo = open(name, mode)
         if pathinfo:
-            return (fo, name)
+            return fo, name
         return fo
 
     # Support for loading modules in zipped form.
@@ -208,7 +208,7 @@ def _fileopen(path, mode, basedir, pathinfo, basename=None):
                         os.sep, '/')))
                 fo.seek(0)
                 if pathinfo:
-                    return (fo, name)
+                    return fo, name
                 return fo
             except Exception:
                 pass
@@ -725,7 +725,7 @@ def get_win32_timezone():
        @return the standard name of the current win32 timezone, or False if it cannot be found.
     """
     res = False
-    if (sys.platform == "win32"):
+    if sys.platform == "win32":
         try:
             import _winreg
             hklm = _winreg.ConnectRegistry(None,_winreg.HKEY_LOCAL_MACHINE)
@@ -756,7 +756,7 @@ def detect_server_timezone():
                 (time.tzname[0], 'time.tzname'),
                 (os.environ.get('TZ',False),'TZ environment variable'), ]
     # Option 4: OS-specific: /etc/timezone on Unix
-    if (os.path.exists("/etc/timezone")):
+    if os.path.exists("/etc/timezone"):
         tz_value = False
         try:
             f = open("/etc/timezone")
@@ -767,7 +767,7 @@ def detect_server_timezone():
             f.close()
         sources.append((tz_value,"/etc/timezone file"))
     # Option 5: timezone info from registry on Win32
-    if (sys.platform == "win32"):
+    if sys.platform == "win32":
         # Timezone info is stored in windows registry.
         # However this is not likely to work very well as the standard name
         # of timezones in windows is rarely something that is known to pytz.

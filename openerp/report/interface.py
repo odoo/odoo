@@ -85,7 +85,7 @@ class report_rml(report_int):
         xml = tools.ustr(xml).encode('utf8')
         report_type = datas.get('report_type', 'pdf')
         if report_type == 'raw':
-            return (xml,report_type)
+            return xml, report_type
         rml = self.create_rml(cr, xml, uid, context)
         pool = pooler.get_pool(cr.dbname)
         ir_actions_report_xml_obj = pool.get('ir.actions.report.xml')
@@ -93,7 +93,7 @@ class report_rml(report_int):
         self.title = report_xml_ids and ir_actions_report_xml_obj.browse(cr,uid,report_xml_ids)[0].name or 'OpenERP Report'
         create_doc = self.generators[report_type]
         pdf = create_doc(rml, title=self.title)
-        return (pdf, report_type)
+        return pdf, report_type
 
     def create_xml(self, cr, uid, ids, datas, context=None):
         if not context:

@@ -134,7 +134,7 @@ class ir_translation_import_cursor(object):
               """ % (self._parent_table, self._table_name, self._parent_table, find_expr))
 
         if self._debug:
-            cr.execute('SELECT COUNT(*) FROM ONLY %s' % (self._parent_table))
+            cr.execute('SELECT COUNT(*) FROM ONLY %s' % self._parent_table)
             c1 = cr.fetchone()[0]
             cr.execute('SELECT COUNT(*) FROM ONLY %s AS irt, %s AS ti WHERE %s' % \
                 (self._parent_table, self._table_name, find_expr))

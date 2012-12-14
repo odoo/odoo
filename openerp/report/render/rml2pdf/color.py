@@ -35,7 +35,7 @@ def get(col_str):
         return allcols[col_str]
     res = regex_t.search(col_str, 0)
     if res:
-        return (float(res.group(1)),float(res.group(2)),float(res.group(3)))
+        return float(res.group(1)), float(res.group(2)), float(res.group(3))
     res = regex_h.search(col_str, 0)
     if res:
         return tuple([ float(int(res.group(i),16))/255 for i in range(1,4)])

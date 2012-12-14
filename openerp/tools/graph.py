@@ -70,7 +70,7 @@ class graph(object):
             for edge in list_edge:
                 if ((self.reachable_nodes.__contains__(edge[0]) and edge[1] not in self.reachable_nodes) or
                     (self.reachable_nodes.__contains__(edge[1]) and  edge[0] not in self.reachable_nodes)):
-                    if(slack>self.edge_wt[edge]-1):
+                    if slack > self.edge_wt[edge]-1:
                         slack = self.edge_wt[edge]-1
                         new_edge = edge
 
@@ -243,7 +243,7 @@ class graph(object):
             if source_node in self.head_nodes:
                 for dest_node in self.transitions[source_node]:
                     if dest_node not in self.head_nodes:
-                        if(slack>(self.edge_wt[edge]-1)):
+                        if slack>(self.edge_wt[edge]-1):
                             slack = self.edge_wt[edge]-1
                             new_edge = (source_node, dest_node)
 
@@ -276,7 +276,7 @@ class graph(object):
 
         least_rank = min(map(lambda x: x['x'], self.result.values()))
 
-        if(least_rank!=0):
+        if least_rank!=0:
             for node in self.result:
                 self.result[node]['x']-=least_rank
 
@@ -377,7 +377,7 @@ class graph(object):
 
         if pre_level_nodes:
             for src in pre_level_nodes:
-                if (self.transitions.get(src) and self.transitions[src].__contains__(node)):
+                if self.transitions.get(src) and self.transitions[src].__contains__(node):
                     adj_nodes.append(self.result[src]['y'])
 
         return adj_nodes
@@ -455,7 +455,7 @@ class graph(object):
             mid_node = l[no/2]
             self.result[mid_node]['y'] = mid_pos
 
-            if self.transitions.get((mid_node), False):
+            if self.transitions.get(mid_node, False):
                 if last:
                     self.result[mid_node]['y'] = last + len(self.transitions[mid_node])/2 + 1
                 if node!=mid_node:
@@ -494,7 +494,7 @@ class graph(object):
             if max_level%2:
                 self.result[self.start]['y'] = (max_level+1)/2 + self.max_order + (self.max_order and 1)
             else:
-                self.result[self.start]['y'] = (max_level)/2 + self.max_order + (self.max_order and 1)
+                self.result[self.start]['y'] = max_level /2 + self.max_order + (self.max_order and 1)
 
             self.graph_order()
 
@@ -716,7 +716,7 @@ class graph(object):
             #for flat edges ie. source an destination nodes are on the same rank
         for src in self.transitions:
             for des in self.transitions[src]:
-                if (self.result[des]['x'] - self.result[src]['x'] == 0):
+                if self.result[des]['x'] - self.result[src]['x'] == 0:
                     self.result[src]['x'] += 0.08
                     self.result[des]['x'] -= 0.08
 
