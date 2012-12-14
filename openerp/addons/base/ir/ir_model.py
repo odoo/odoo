@@ -272,7 +272,7 @@ class ir_model_fields(osv.osv):
         except Exception:
             _logger.warning('Invalid selection list definition for fields.selection', exc_info=True)
             raise except_orm(_('Error'),
-                    _("The Selection Options expression is not a valid Pythonic expression." \
+                    _("The Selection Options expression is not a valid Pythonic expression."
                       "Please provide an expression in the [('key','Label'), ...] format."))
 
         check = True

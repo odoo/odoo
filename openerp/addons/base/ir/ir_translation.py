@@ -217,11 +217,11 @@ class ir_translation(osv.osv):
     def _get_ids(self, cr, uid, name, tt, lang, ids):
         translations = dict.fromkeys(ids, False)
         if ids:
-            cr.execute('select res_id,value ' \
-                    'from ir_translation ' \
-                    'where lang=%s ' \
-                        'and type=%s ' \
-                        'and name=%s ' \
+            cr.execute('select res_id,value '
+                    'from ir_translation '
+                    'where lang=%s '
+                        'and type=%s '
+                        'and name=%s '
                         'and res_id IN %s',
                     (lang,tt,name,tuple(ids)))
             for res_id, value in cr.fetchall():
@@ -237,10 +237,10 @@ class ir_translation(osv.osv):
             self._get_ids.clear_cache(self, uid, name, tt, lang, res_id)
         self._get_source.clear_cache(self, uid, name, tt, lang)
 
-        cr.execute('delete from ir_translation ' \
-                'where lang=%s ' \
-                    'and type=%s ' \
-                    'and name=%s ' \
+        cr.execute('delete from ir_translation '
+                'where lang=%s '
+                    'and type=%s '
+                    'and name=%s '
                     'and res_id IN %s',
                 (lang,tt,name,tuple(ids),))
         for id in ids:
