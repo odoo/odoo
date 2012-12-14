@@ -2411,7 +2411,7 @@ class BaseModel(object):
            :rtype: tuple
            :return: the :meth:`~.name_get` pair value for the newly-created record.
         """
-        rec_id = self.create(cr, uid, {self._rec_name: name}, context);
+        rec_id = self.create(cr, uid, {self._rec_name: name}, context)
         return self.name_get(cr, uid, [rec_id], context)[0]
 
     # private implementation of name_search, allows passing a dedicated user for the name_get part to

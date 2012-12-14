@@ -29,7 +29,8 @@ import utils
 Font_size= 10.0
 
 def verbose(text):
-    sys.stderr.write(text+"\n");
+    sys.stderr.write(text+"\n")
+
 
 class textbox(object):
     """A box containing plain text.

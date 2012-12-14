@@ -117,7 +117,7 @@ class graph(object):
         """
         self.cut_edges = {}
         self.head_nodes = []
-        i=0;
+        i=0
 
         for edge in self.tree_edges:
             self.head_nodes = []

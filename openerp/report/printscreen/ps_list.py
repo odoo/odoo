@@ -147,7 +147,7 @@ class report_printscreen_list(report_int):
         for i in range(0, len(fields_order)):
             temp.append(0)
             tsum.append(0)
-        ince = -1;
+        ince = -1
         for f in fields_order:
             s = 0
             ince += 1
@@ -237,7 +237,7 @@ class report_printscreen_list(report_int):
                     if line.get('__no_leaf') and temp[count] == 1 and f != 'id' and not line['__context']['group_by']:
                         tsum[count] = float(tsum[count]) + float(line[f])
                     if not line.get('__group') and f != 'id' and temp[count] == 1:
-                        tsum[count] = float(tsum[count])  + float(line[f]);
+                        tsum[count] = float(tsum[count])  + float(line[f])
                 else:
                     col.text = '/'
 

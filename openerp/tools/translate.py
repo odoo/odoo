@@ -272,7 +272,7 @@ class TinyPoFile(object):
     def __iter__(self):
         self.buffer.seek(0)
         self.lines = self._get_lines()
-        self.lines_count = len(self.lines);
+        self.lines_count = len(self.lines)
 
         self.first = True
         self.extra_lines= []
