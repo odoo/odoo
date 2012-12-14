@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2011-01-12 13:08+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2012-12-13 21:32+0000\n"
+"Last-Translator: Grzegorz Grzelak (OpenGLOBE.pl) <grzegorz@openglobe.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:48+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-14 05:38+0000\n"
+"X-Generator: Launchpad (build 16369)\n"
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_sched
@@ -46,7 +46,7 @@ msgstr "Grupuj wg..."
 #. module: procurement
 #: help:stock.warehouse.orderpoint,procurement_draft_ids:0
 msgid "Draft procurement of the product and location of that orderpoint"
-msgstr ""
+msgstr "Projekt zapotrzebowania na produkt i strefa punktu zamawiania"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:290
@@ -60,6 +60,8 @@ msgid ""
 "required quantities are always\n"
 "                           available"
 msgstr ""
+"Wymagane ilości są zawsze\n"
+"                           dostępne"
 
 #. module: procurement
 #: view:product.product:0
@@ -69,6 +71,10 @@ msgid ""
 "inventory, you should\n"
 "                           create others rules like orderpoints."
 msgstr ""
+"Jeśli ilość jest niedostateczna, to wydanie zewnętrzne będzie\n"
+"                           czekało na produkty. Aby uzupełnić zapas, "
+"powinieneś\n"
+"                           utworzyć reguły jak punkt zamawiania."
 
 #. module: procurement
 #: field:procurement.order,procure_method:0
@@ -79,7 +85,7 @@ msgstr "Metoda zapotrzebowania"
 #. module: procurement
 #: selection:product.template,supply_method:0
 msgid "Manufacture"
-msgstr ""
+msgstr "Produkcja"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:307
@@ -95,7 +101,7 @@ msgstr "Oblicz tylko reguły minimalnych zapasów"
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Rules"
-msgstr ""
+msgstr "Reguły"
 
 #. module: procurement
 #: field:procurement.order,company_id:0
@@ -127,7 +133,7 @@ msgstr "Ostatni błąd"
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_min_qty:0
 msgid "Minimum Quantity"
-msgstr ""
+msgstr "Ilość minialna"
 
 #. module: procurement
 #: help:mrp.property,composition:0
@@ -154,11 +160,17 @@ msgid ""
 "will generate a procurement request to increase the stock up to the maximum "
 "quantity."
 msgstr ""
+"Możesz zdefiniować regułę minimalnego zapasu, a OpenERP będzie tworzyło "
+"automatycznie projekt Zamówienia produkcji albo Zamówienia zakupu kiedy "
+"przewidywany zapas spadnie poniżej minimalnego. Kiedy zapas wirtualny (= "
+"zapas rzeczywisty minus potwierdzone wydania i rezerwacje) jest poniżej "
+"minimum, to OpenERP wygeneruje zapotrzebowanie, które spowoduje uzupełnienie "
+"zapasu do jego maklsymalnej wartości."
 
 #. module: procurement
 #: field:procurement.order,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Wiadomości"
 
 #. module: procurement
 #: help:procurement.order,message:0
@@ -168,17 +180,17 @@ msgstr "Wystąpił wyjątek w trakcie obliczania zapotrzebowań."
 #. module: procurement
 #: view:product.product:0
 msgid "Products"
-msgstr ""
+msgstr "Produkty"
 
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Anulowano"
 
 #. module: procurement
 #: help:procurement.order,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Jeśli zaznaczone, to wiadomość wymaga twojej uwagi"
 
 #. module: procurement
 #: view:procurement.order.compute.all:0
@@ -199,7 +211,7 @@ msgstr "Oblicz wszystkie planowania"
 #: code:addons/procurement/procurement.py:137
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "Niedozwolona akcja!"
 
 #. module: procurement
 #: help:procurement.order,message_summary:0
@@ -239,7 +251,7 @@ msgstr ""
 #. module: procurement
 #: view:product.product:0
 msgid "Stockable products"
-msgstr ""
+msgstr "Produkty rejestrowane"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -255,7 +267,7 @@ msgstr "Ponów"
 #: code:addons/procurement/procurement.py:498
 #, python-format
 msgid "Procurement <b>confirmed</b>."
-msgstr ""
+msgstr "Zapotrzebowanie <b>potwierdzono</b>."
 
 #. module: procurement
 #: view:procurement.order.compute:0
@@ -271,7 +283,7 @@ msgstr "Potwierdź"
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Quantity Multiple"
-msgstr ""
+msgstr "Wielokrotność ilości"
 
 #. module: procurement
 #: help:procurement.order,origin:0
@@ -285,7 +297,7 @@ msgstr ""
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Procurement Orders to Process"
-msgstr ""
+msgstr "Zapotrzebowania do przetworzenia"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_stock_warehouse_orderpoint
@@ -296,7 +308,7 @@ msgstr "Reguła minimalnych zapasów"
 #: code:addons/procurement/procurement.py:395
 #, python-format
 msgid "Procurement '%s' is in exception: "
-msgstr ""
+msgstr "Zapotrzebowanie '%s' jest w stanie wyjątkowym: "
 
 #. module: procurement
 #: field:procurement.order,priority:0
@@ -311,7 +323,7 @@ msgstr ""
 #. module: procurement
 #: field:procurement.order,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Podsumowanie"
 
 #. module: procurement
 #: field:procurement.order,message_follower_ids:0
@@ -395,13 +407,13 @@ msgstr "Jednostka Miary"
 #: selection:procurement.order,procure_method:0
 #: selection:product.template,procure_method:0
 msgid "Make to Stock"
-msgstr ""
+msgstr "Na zapas"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:501
 #, python-format
 msgid "Procurement <b>cancelled</b>."
-msgstr ""
+msgstr "Zapotrzebowanie <b>anulowano</b>."
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -501,7 +513,7 @@ msgstr ""
 #. module: procurement
 #: field:procurement.order,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Nieprzeczytane wiadomości"
 
 #. module: procurement
 #: selection:mrp.property,composition:0
