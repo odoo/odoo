@@ -56,7 +56,7 @@ class ir_needaction_mixin(osv.AbstractModel):
     # "Need action" API
     #------------------------------------------------------
 
-    def _needaction_count(self, cr, uid, domain=[], context=None):
+    def _needaction_count(self, cr, uid, domain=None, context=None):
         """ Get the number of actions uid has to perform. """
         dom = self._needaction_domain_get(cr, uid, context=context)
         if not dom:
