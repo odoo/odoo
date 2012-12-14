@@ -417,7 +417,7 @@ class ir_values(osv.osv):
                                 continue
                 # keep only the first action registered for each action name
                 results[action['name']] = (action['id'], action['name'], action_def)
-            except except_orm, e:
+            except except_orm:
                 continue
         return sorted(results.values())
 

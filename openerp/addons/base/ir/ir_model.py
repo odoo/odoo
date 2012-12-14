@@ -568,7 +568,6 @@ class ir_model_relation(Model):
         ids.reverse()
         for data in self.browse(cr, uid, ids, context):
             model = data.model
-            model_obj = self.pool.get(model)
             name = openerp.tools.ustr(data.name)
 
             # double-check we are really going to delete all the owners of this schema element
@@ -1074,7 +1073,6 @@ class ir_model_data(osv.osv):
                                 if model == 'ir.model.fields')
 
         ir_model_relation = self.pool.get('ir.model.relation')
-        relation_ids = ir_model_relation.search(cr, uid, [('module', 'in', modules_to_remove)])
         ir_module_module = self.pool.get('ir.module.module')
         modules_to_remove_ids = ir_module_module.search(cr, uid, [('name', 'in', modules_to_remove)])
         relation_ids = ir_model_relation.search(cr, uid, [('module', 'in', modules_to_remove_ids)])

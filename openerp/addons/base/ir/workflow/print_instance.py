@@ -96,7 +96,7 @@ def graph_get(cr, graph, wkf_ids, nested, workitem, processed_subflows):
         activity_from = actfrom[t['act_from']][1].get(t['signal'], actfrom[t['act_from']][0])
         activity_to = actto[t['act_to']][1].get(t['signal'], actto[t['act_to']][0])
         graph.add_edge(pydot.Edge( str(activity_from) ,str(activity_to), fontsize='10', **args))
-    nodes = cr.dictfetchall()
+
     cr.execute('select * from wkf_activity where flow_start=True and wkf_id in ('+','.join(['%s']*len(wkf_ids))+')', wkf_ids)
     start = cr.fetchone()[0]
     cr.execute("select 'subflow.'||name,id from wkf_activity where flow_stop=True and wkf_id in ("+','.join(['%s']*len(wkf_ids))+')', wkf_ids)
@@ -109,7 +109,6 @@ def graph_get(cr, graph, wkf_ids, nested, workitem, processed_subflows):
 
 
 def graph_instance_get(cr, graph, inst_id, nested=False):
-    workitems = {}
     cr.execute('select wkf_id from wkf_instance where id=%s', (inst_id,))
     inst = cr.fetchall()
 
@@ -171,7 +170,7 @@ showpage'''
                         inst_id = inst_id[0]
                         graph_instance_get(cr, graph, inst_id, data.get('nested', False))
                     ps_string = graph.create(prog='dot', format='ps')
-        except Exception, e:
+        except Exception:
             _logger.exception('Exception in call:')
             # string is in PS, like the success message would have been
             ps_string = '''%PS-Adobe-3.0
