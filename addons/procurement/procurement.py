@@ -153,9 +153,9 @@ class procurement_order(osv.osv):
             return {'value': v}
         return {}
 
-    def check_product(self, cr, uid, ids, context=None):
-        """ Checks product type.
-        @return: True or False
+    def is_product(self, cr, uid, ids, context=None):
+        """ Checks product type to decide which transition of the workflow to follow.
+        @return: True if all product ids received in argument are of type 'product' or 'consummable'. False if any is of type 'service'
         """
         return all(proc.product_id.type in ('product', 'consu') for proc in self.browse(cr, uid, ids, context=context))
 
@@ -264,10 +264,6 @@ class procurement_order(osv.osv):
             product = procurement.product_id
             #TOFIX: if product type is 'service' but supply_method is 'buy'.
             if product.supply_method <> 'produce':
-                supplier = product.seller_id
-                if supplier and user.company_id and user.company_id.partner_id:
-                    if supplier.id == user.company_id.partner_id.id:
-                        continue
                 return False
             if product.type=='service':
                 res = self.check_produce_service(cr, uid, procurement, context)
@@ -300,7 +296,7 @@ class procurement_order(osv.osv):
                 return False
             if user.company_id and user.company_id.partner_id:
                 if partner.id == user.company_id.partner_id.id:
-                    return False
+                    raise osv.except_osv(_('Configuration Error!'), _('The product "%s" has been defined with your company as reseller which seems to be a configuration error!' % procurement.product_id.name))
 
             address_id = partner_obj.address_get(cr, uid, [partner.id], ['delivery'])['delivery']
             if not address_id:
