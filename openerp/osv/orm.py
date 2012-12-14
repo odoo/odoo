@@ -1020,7 +1020,7 @@ class BaseModel(object):
 
         # Check the query is already done for all modules of if we need to
         # do it ourselves.
-        if self.pool.fields_by_model:
+        if self.pool.fields_by_model is not None:
             manual_fields = self.pool.fields_by_model.get(self._name, [])
         else:
             cr.execute('SELECT * FROM ir_model_fields WHERE model=%s AND state=%s', (self._name, 'manual'))

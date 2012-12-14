@@ -50,6 +50,7 @@ class Registry(object):
         self._init = True
         self._init_parent = {}
         self._assertion_report = assertion_report.assertion_report()
+        self.fields_by_model = None
 
         # modules fully loaded (maintained during init phase by `loading` module)
         self._init_modules = set()
