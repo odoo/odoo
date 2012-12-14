@@ -288,12 +288,38 @@ class ir_translation(osv.osv):
             return tools.ustr(source)
         return trad
 
+    def _clear_cache_for(self, cr, uid, name, type, lang, src, res_id):
+        """ clear translation cache for the requested value
+        """
+        # handle special cases for:
+        # - 'report_sxw' and '_()' translations which are requested using
+        #   multiple types (and so generating a different cache key than if
+        #   requested with each types individually).
+        # - 'code', 'sql_constraint' which are requested with name = None
+        # - 'field' and 'help' type which are requested without 'src' param
+        use_src = True
+        types_to_invalidate = [ type ]
+        if type in ('report', 'rml'):
+            types_to_invalidate.append((type == 'rml' and 'report' or 'rml'))
+            types_to_invalidate.append(('report', 'rml'))
+        elif type in  ('code','sql_constraint'):
+            name = None  # GettextAlias always request source with name = None
+            types_to_invalidated.append(('code','sql_constraint'))
+        elif type in ('field', 'help'):
+            use_src = None  # orm fields_get() request translation without source
+
+        for type in types_to_invalidate:
+            if not use_src:
+                self._get_source.clear_cache(self, uid, name, type, lang)
+            else:
+                self._get_source.clear_cache(self, uid, name, type, lang, src)
+            self._get_ids.clear_cache(self, uid, name, type, lang, res_id)
+
     def create(self, cr, uid, vals, context=None):
         if not context:
             context = {}
         ids = super(ir_translation, self).create(cr, uid, vals, context=context)
-        self._get_source.clear_cache(self, uid, vals.get('name',0), vals.get('type',0),  vals.get('lang',0), vals.get('src',0))
-        self._get_ids.clear_cache(self, uid, vals.get('name',0), vals.get('type',0), vals.get('lang',0), vals.get('res_id',0))
+        self._clear_cache_for(cr, uid, vals.get('name',0), vals.get('type',0), vals.get('lang',0), vals.get('src',0), vals.get('res_id',0))
         return ids
 
     def write(self, cursor, user, ids, vals, context=None):
@@ -303,8 +329,7 @@ class ir_translation(osv.osv):
             ids = [ids]
         result = super(ir_translation, self).write(cursor, user, ids, vals, context=context)
         for trans_obj in self.read(cursor, user, ids, ['name','type','res_id','src','lang'], context=context):
-            self._get_source.clear_cache(self, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], trans_obj['src'])
-            self._get_ids.clear_cache(self, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], trans_obj['res_id'])
+            self._clear_cache_for(cursor, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], trans_obj['src'], trans_obj['res_id'])
         return result
 
     def unlink(self, cursor, user, ids, context=None):
@@ -313,8 +338,7 @@ class ir_translation(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         for trans_obj in self.read(cursor, user, ids, ['name','type','res_id','src','lang'], context=context):
-            self._get_source.clear_cache(self, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], trans_obj['src'])
-            self._get_ids.clear_cache(self, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], trans_obj['res_id'])
+            self._clear_cache_for(cursor, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], trans_obj['src'], trans_obj['res_id'])
         result = super(ir_translation, self).unlink(cursor, user, ids, context=context)
         return result
 
