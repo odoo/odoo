@@ -33,19 +33,24 @@ class procurement_order(osv.osv):
         'property_ids': fields.many2many('mrp.property', 'procurement_property_rel', 'procurement_id','property_id', 'Properties'),
         'production_id': fields.many2one('mrp.production', 'Manufacturing Order'),
     }
-    
+
     def check_produce_product(self, cr, uid, procurement, context=None):
+        return True
+
+    def check_bom_exists(self, cr, uid, ids, context=None):
         """ Finds the bill of material for the product from procurement order.
         @return: True or False
         """
-        properties = [x.id for x in procurement.property_ids]
-        bom_id = self.pool.get('mrp.bom')._bom_find(cr, uid, procurement.product_id.id, procurement.product_uom.id, properties)
-        if not bom_id:
-            cr.execute('update procurement_order set message=%s where id=%s', (_('No BoM defined for this product !'), procurement.id))
-            for (id, name) in self.name_get(cr, uid, procurement.id):
-                message = _("Procurement '%s' has an exception: 'No BoM defined for this product !'") % name
-                self.message_post(cr, uid, [procurement.id], body=message, context=context)
-            return False
+        for procurement in self.browse(cr, uid, ids, context=context):
+            product = procurement.product_id
+            properties = [x.id for x in procurement.property_ids]
+            bom_id = self.pool.get('mrp.bom')._bom_find(cr, uid, procurement.product_id.id, procurement.product_uom.id, properties)
+            if not bom_id:
+                cr.execute('update procurement_order set message=%s where id=%s', (_('No BoM defined for this product !'), procurement.id))
+                for (id, name) in self.name_get(cr, uid, procurement.id):
+                    message = _("Procurement '%s' has an exception: 'No BoM defined for this product !'") % name
+                    self.message_post(cr, uid, [procurement.id], body=message, context=context)
+                return False
         return True
     
     def get_phantom_bom_id(self, cr, uid, ids, context=None):

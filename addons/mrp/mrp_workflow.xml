@@ -116,6 +116,10 @@
 
         <!-- Procurement -->
 
+        <record id="act_need_production" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_procurement"/>
+            <field name="name">need_production</field>
+        </record>
         <record id="act_produce" model="workflow.activity">
             <field name="wkf_id" ref="procurement.wkf_procurement"/>
             <field name="name">produce</field>
@@ -123,30 +127,34 @@
             <field name="subflow_id" search="[('osv','=','mrp.production')]"/>
             <field name="action">action_produce_assign_product()</field>
         </record>
-        
+
+        <record id="trans_confirm_mto_need_production" model="workflow.transition">
+            <field name="act_from" ref="procurement.act_confirm_mto"/>
+            <field name="act_to" ref="act_need_production"/>
+            <field name="condition">check_produce()</field>
+        </record>
         <record id="trans_product_check_produce" model="workflow.transition">
-            <field name="act_from" ref="procurement.act_produce_check"/>
+            <field name="act_from" ref="act_need_production"/>
             <field name="act_to" ref="act_produce"/>
-            <field name="condition">check_product()</field>
+            <field name="condition">is_product() and check_bom_exists()</field>
         </record>
-        
-        <record id="trans_produce_cancel" model="workflow.transition">
-            <field name="act_from" ref="act_produce"/>
-            <field name="act_to" ref="procurement.act_cancel"/>
-            <field name="signal">subflow.cancel</field>
-        </record>
-        
-        <record id="trans_produce_make_done" model="workflow.transition">
+
+        <record id="trans_produce_finished_prod" model="workflow.transition">
             <field name="act_from" ref="act_produce"/>
             <field name="act_to" ref="procurement.act_make_done"/>
             <field name="signal">subflow.done</field>
         </record>
-        
+
         <record id="trans_conf_conf_wait" model="workflow.transition">
             <field name="act_from" ref="procurement.act_confirm"/>
             <field name="act_to" ref="procurement.act_confirm_temp"/>
             <field name="condition">not test_cancel() and not get_phantom_bom_id()</field>
         </record>
-        
+        <record id="trans_produce_cancel" model="workflow.transition">
+            <field name="act_from" ref="act_produce"/>
+            <field name="act_to" ref="procurement.act_cancel"/>
+            <field name="signal">subflow.cancel</field>
+        </record>
+
     </data>
 </openerp>

@@ -241,7 +241,7 @@ class procurement_order(osv.osv):
         @param procurement: Current procurement.
         @return: True or False.
         """
-        return True
+        return False
 
     def check_make_to_stock(self, cr, uid, ids, context=None):
         """ Checks product type.
