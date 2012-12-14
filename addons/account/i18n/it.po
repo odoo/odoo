@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-13 02:49+0000\n"
-"Last-Translator: Sergio Corato <Unknown>\n"
+"PO-Revision-Date: 2012-12-13 22:30+0000\n"
+"Last-Translator: paola <pcaffaro@tiscali.it>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-13 04:43+0000\n"
-"X-Generator: Launchpad (build 16361)\n"
+"X-Launchpad-Export-Date: 2012-12-14 05:37+0000\n"
+"X-Generator: Launchpad (build 16369)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -1118,7 +1118,7 @@ msgstr "Consolidamento"
 #: model:account.financial.report,name:account.account_financial_report_liability0
 #: model:account.financial.report,name:account.account_financial_report_liabilitysum0
 msgid "Liability"
-msgstr "Debiti"
+msgstr "Passività"
 
 #. module: account
 #: code:addons/account/account_invoice.py:855
@@ -1792,7 +1792,7 @@ msgstr "Anteprima pie' di pagina conti bancari"
 #: selection:account.fiscalyear,state:0
 #: selection:account.period,state:0
 msgid "Closed"
-msgstr "Chiuso"
+msgstr "Chiusura"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_recurrent_entries
@@ -1892,6 +1892,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliccare per definire un nuovo tipo di conto.\n"
+"              </p><p>\n"
+"                Un tipo di conto è usato per determinare come un conto è "
+"utilizzato in\n"
+"                ogni sezionale. Il metodo riapertura di un tipo di conto "
+"determina\n"
+"                il processo per la chiusura annuale. I report come lo Stato "
+"Patrimoniale\n"
+"                e il Conto Economico usano la categoria\n"
+"                (profitti e perdite o stato patrimoniale).\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: report:account.invoice:0
@@ -2918,6 +2931,8 @@ msgid ""
 "You cannot change the type of account from 'Closed' to any other type as it "
 "contains journal items!"
 msgstr ""
+"Non è possibile cambiare il tipo di conto da 'Chiusura' ad un altro tipo "
+"perchè contiene movimenti contabili!"
 
 #. module: account
 #: field:account.invoice.report,account_line_id:0
@@ -2983,7 +2998,7 @@ msgstr "Posizioni fiscali"
 #, python-format
 msgid "You cannot create journal items on a closed account %s %s."
 msgstr ""
-"Non è possibile creare registrazioni nei sezionali con un conto chiuso %s %s."
+"Non è possibile creare registrazioni nei sezionali su un conto chiuso %s %s."
 
 #. module: account
 #: field:account.period.close,sure:0
@@ -4065,6 +4080,11 @@ msgid ""
 "You can create one in the menu: \n"
 "Configuration/Journals/Journals."
 msgstr ""
+"Non è possibile trovare alcun sezionale contabile di tipo %s per questa "
+"azienda.\n"
+"\n"
+"E' possibile crearne uno nel menu: \n"
+"Configurazione/Sezionali/Sezionali."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_unreconcile
@@ -5942,7 +5962,7 @@ msgstr "Stato Patrimoniale"
 #: code:addons/account/account.py:187
 #, python-format
 msgid "Profit & Loss (Income account)"
-msgstr "Conto economico"
+msgstr "Conto Economico (Ricavi)"
 
 #. module: account
 #: field:account.journal,allow_date:0
@@ -6176,7 +6196,7 @@ msgstr "Inizio Periodo"
 #. module: account
 #: model:account.account.type,name:account.account_type_asset_view1
 msgid "Asset View"
-msgstr "Vista Immobilizzazioni"
+msgstr "Vista Attività"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_account_report
@@ -6526,7 +6546,7 @@ msgstr "Storno"
 #. module: account
 #: field:res.partner,debit:0
 msgid "Total Payable"
-msgstr "Totale debito"
+msgstr "Debito Totale"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_income
@@ -7578,7 +7598,7 @@ msgstr "Crea registrazione"
 #: code:addons/account/account.py:188
 #, python-format
 msgid "Profit & Loss (Expense account)"
-msgstr "Conto Economico"
+msgstr "Conto Economico (Costi)"
 
 #. module: account
 #: field:account.bank.statement,total_entry_encoding:0
@@ -9992,7 +10012,7 @@ msgstr "Report Finanziari"
 #. module: account
 #: model:account.account.type,name:account.account_type_liability_view1
 msgid "Liability View"
-msgstr ""
+msgstr "Vista Passività"
 
 #. module: account
 #: report:account.account.balance:0
@@ -10099,6 +10119,12 @@ msgid ""
 "payments.\n"
 "                This installs the module account_payment."
 msgstr ""
+"Permette di creare e gestire gli ordini di pagamento, al fine di\n"
+"                     * servire come base per un facile plug-in di vari "
+"meccanismi automatici di pagamento, e\n"
+"                     * di fornire una forma più efficiente di gestire i "
+"pagamenti delle fatture.\n"
+"                 Installa il modulo account_payment."
 
 #. module: account
 #: xsl:account.transfer:0
@@ -10163,7 +10189,7 @@ msgstr "Mostra il conto"
 #: model:account.account.type,name:account.data_account_type_payable
 #: selection:account.entries.report,type:0
 msgid "Payable"
-msgstr "Debito"
+msgstr "Debiti"
 
 #. module: account
 #: view:board.board:0

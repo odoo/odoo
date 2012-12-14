@@ -20,8 +20,8 @@
 ##############################################################################
 from datetime import datetime, timedelta
 import random
-import urllib
-import urlparse
+from urllib import urlencode
+from urlparse import urljoin
 
 from openerp.osv import osv, fields
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
@@ -62,25 +62,27 @@ class res_partner(osv.Model):
             if context and context.get('signup_valid') and not partner.user_ids:
                 self.signup_prepare(cr, uid, [partner.id], context=context)
 
-            action_template = None
-            params = {
-                'action': urllib.quote(action),
-                'db': urllib.quote(cr.dbname),
-            }
+            # the parameters to encode for the query and fragment part of url
+            query = {'db': cr.dbname}
+            fragment = {'action': action}
+
             if partner.signup_token:
-                action_template = "?db=%(db)s#action=%(action)s&token=%(token)s"
-                params['token'] = urllib.quote(partner.signup_token)
+                fragment['token'] = partner.signup_token
             elif partner.user_ids:
-                action_template = "?db=%(db)s#action=%(action)s&login=%(login)s"
-                params['login'] = urllib.quote(partner.user_ids[0].login)
-            if action_template:
-                if view_type:
-                    action_template += '&view_type=%s' % urllib.quote(view_type)
-                if menu_id:
-                    action_template += '&menu_id=%s' % urllib.quote(str(menu_id))
-                if res_id:
-                    action_template += '&id=%s' % urllib.quote(str(res_id))
-                res[partner.id] = urlparse.urljoin(base_url, action_template % params)
+                fragment['db'] = cr.dbname
+                fragment['login'] = partner.user_ids[0].login
+            else:
+                continue        # no signup token, no user, thus no signup url!
+
+            if view_type:
+                fragment['view_type'] = view_type
+            if menu_id:
+                fragment['menu_id'] = menu_id
+            if res_id:
+                fragment['id'] = res_id
+
+            res[partner.id] = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
+
         return res
 
     def _get_signup_url(self, cr, uid, ids, name, arg, context=None):
