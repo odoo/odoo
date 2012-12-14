@@ -9,7 +9,7 @@
         </record>
 
         <record id="trans_product_check_produce_service" model="workflow.transition">
-            <field name="act_from" ref="mrp.act_produce_check"/>
+            <field name="act_from" ref="mrp.act_need_production"/>
             <field name="act_to" ref="act_produce_service"/>
             <field name="condition">not is_product()</field>
         </record>
