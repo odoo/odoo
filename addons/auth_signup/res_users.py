@@ -71,7 +71,7 @@ class res_partner(osv.Model):
                 action_template = "?db=%(db)s#action=%(action)s&token=%(token)s"
                 params['token'] = urllib.quote(partner.signup_token)
             elif partner.user_ids:
-                action_template = "?db=%(db)s#action=%(action)s&db=%(db)s&login=%(login)s"
+                action_template = "?db=%(db)s#action=%(action)s&login=%(login)s"
                 params['login'] = urllib.quote(partner.user_ids[0].login)
             if action_template:
                 if view_type:
