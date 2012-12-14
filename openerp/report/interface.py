@@ -55,13 +55,12 @@ class report_int(netsvc.Service):
     def create(self, cr, uid, ids, datas, context=None):
         return False
 
-"""
-    Class to automatically build a document using the transformation process:
-        XML -> DATAS -> RML -> PDF
-                            -> HTML
-    using a XSL:RML transformation
-"""
 class report_rml(report_int):
+    """
+        Automatically builds a document using the transformation process:
+            XML -> DATAS -> RML -> PDF -> HTML
+        using a XSL:RML transformation
+    """
     def __init__(self, name, table, tmpl, xsl):
         super(report_rml, self).__init__(name)
         self.table = table

@@ -357,11 +357,6 @@ class Cursor(object):
     def __getattr__(self, name):
         return getattr(self._obj, name)
 
-        """ Set the mode of postgres operations for all cursors
-        """
-        """Obtain the mode of postgres operations for all cursors
-        """
-
 class PsycoConnection(psycopg2.extensions.connection):
     pass
 
@@ -521,8 +516,8 @@ def db_connect(db_name):
     return Connection(_Pool, db_name)
 
 def close_db(db_name):
-    global _Pool
     """ You might want to call openerp.modules.registry.RegistryManager.delete(db_name) along this function."""
+    global _Pool
     if _Pool:
         _Pool.close_all(dsn(db_name))
     ct = currentThread()
