@@ -23,7 +23,7 @@ import io
 import StringIO
 
 from PIL import Image
-from PIL import ImageEnhance
+from PIL import ImageEnhance, ImageOps
 from random import random
 
 # ----------------------------------------
@@ -64,29 +64,9 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
         return False
     if size == (None, None):
         return base64_source
-
     image_stream = io.BytesIO(base64_source.decode(encoding))
     image = Image.open(image_stream)
-
-    asked_width, asked_height = size
-    if asked_width is None:
-        asked_width = int(image.size[0] * (float(asked_height) / image.size[1]))
-    if asked_height is None:
-        asked_height = int(image.size[1] * (float(asked_width) / image.size[0]))
-    size = asked_width, asked_height
-
-    # check image size: do not create a thumbnail if avoiding smaller images
-    if avoid_if_small and image.size[0] <= size[0] and image.size[1] <= size[1]:
-        return base64_source
-    # create a thumbnail: will resize and keep ratios, then sharpen for better looking result
-    image.thumbnail(size, Image.ANTIALIAS)
-    sharpener = ImageEnhance.Sharpness(image.convert('RGBA'))
-    image = sharpener.enhance(2.0)
-    # create a transparent image for background
-    background = Image.new('RGBA', size, (255, 255, 255, 0))
-    # past the resized image on the background
-    background.paste(image, ((size[0] - image.size[0]) / 2, (size[1] - image.size[1]) / 2))
-    # return an encoded image
+    background = ImageOps.fit(image, size, Image.ANTIALIAS)
     background_stream = StringIO.StringIO()
     background.save(background_stream, filetype)
     return background_stream.getvalue().encode(encoding)
@@ -169,4 +149,14 @@ def image_get_resized_images(base64_source, return_big=False, return_medium=True
     if return_small:
         return_dict[small_name] = image_resize_image_small(base64_source, avoid_if_small=avoid_resize_small)
     return return_dict
+
+
+if __name__=="__main__":
+    import sys
+
+    assert len(sys.argv)==3, 'Usage to Test: image.py SRC.png DEST.png'
+
+    img = file(sys.argv[1],'rb').read().encode('base64')
+    new = image_resize_image(img, (128,100))
+    file(sys.argv[2], 'wb').write(new.decode('base64'))
 
