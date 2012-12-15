@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
+        <!--
+        Account Type
+        -->
+
+        <record id="account_type_cash_equity" model="account.account.type">
+            <field name="name">Equity</field>
+            <field name="code">equity</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">liability</field>
+        </record>
 
         <!--
         Chart of Accounts
