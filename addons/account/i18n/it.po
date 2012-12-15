@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-13 22:30+0000\n"
-"Last-Translator: paola <pcaffaro@tiscali.it>\n"
+"PO-Revision-Date: 2012-12-14 21:07+0000\n"
+"Last-Translator: Davide Corio - agilebg.com <davide.corio@agilebg.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-14 05:37+0000\n"
-"X-Generator: Launchpad (build 16369)\n"
+"X-Launchpad-Export-Date: 2012-12-15 05:05+0000\n"
+"X-Generator: Launchpad (build 16372)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -2422,6 +2422,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliccare per creare una nuova fattura fornitore.\n"
+"              </p><p>\n"
+"                E' possibile controllare la fattura fornitore in base a\n"
+"                quanto acquisto o ricevuto. OpenERP può anche creare\n"
+"                fatture bozza automaticamente da ordini di acquisto o "
+"ricevute.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: sql_constraint:account.move.line:0
@@ -2482,6 +2491,22 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliccare per creare un estratto conto bancario.\n"
+"              </p><p>\n"
+"                Un estratto conto bancario è il riepilogo di tutte le "
+"transazioni finanziarie\n"
+"                avvenute in un determinato periodo di tempo su un conto "
+"bancario.\n"
+"                Dovresti riceverlo periodicamente dalla tua banca.\n"
+"              </p><p>\n"
+"                OpenERP allows you to reconcile a statement line directly "
+"with\n"
+"                OpenERP consente di riconciliare una riga dell'estratto "
+"conto direttamente con\n"
+"                le fatture di vendita o acquisto relative.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: field:account.config.settings,currency_id:0
@@ -2953,6 +2978,11 @@ msgid ""
 "amount greater than the total invoiced amount. In order to avoid rounding "
 "issues, the latest line of your payment term must be of type 'balance'."
 msgstr ""
+"Impossibile creare la fattura.\n"
+"Il termine di pagamento relativo è probabilmente mal configurato siccome "
+"fornisce un importo calcolato superiore al totale fatturato. Per evitare "
+"errori di arrotondamento, l'ultima riga del pagamento deve essere di tipo "
+"'bilancio'."
 
 #. module: account
 #: view:account.move:0
@@ -3149,6 +3179,22 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliccare per creare una registrazione sezionale.\n"
+"              </p><p>\n"
+"                Una registrazione sezionale consiste in diverse voci "
+"sezionale, ognuna delle\n"
+"                quali può essere una transazione in dare o avere.\n"
+"              </p><p>\n"
+"                OpenERP crea automaticamente una registrazione sezionale per "
+"ogni documento\n"
+"                contabile: fattura, nota di credito, pagamento fornitore, "
+"estratto conto bancario,\n"
+"                etc. Quindi, è possibile creare registrazione sezionali "
+"puramente o principalmente manuali\n"
+"                per varie operazioni.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: help:account.invoice,date_due:0
@@ -3360,6 +3406,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliccare per creare un nuovo anno fiscale.\n"
+"              </p><p>\n"
+"                Dinire l'anno fiscale della propria azienda in base alle "
+"proprie necessità.\n"
+"                aziandale si conclude (generalmente 12 mesi). L'anno fiscale "
+"è\n"
+"                solitamente riferito alla data in cui termina. Per esempio,\n"
+"                se l'anno fiscale aziendale termina il 30 novembre 2011, "
+"quindi tutto ciò\n"
+"                che accade tra il 1 dicembre 2010 e il 30 novembre 2011\n"
+"                verrà identificato come AF 2011.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: view:account.common.report:0
@@ -4210,6 +4270,21 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliccare per creare una fattura cliente.\n"
+"              </p><p>\n"
+"                La fatturazione elettronica di OpenERP consente di "
+"collezionare\n"
+"                velocemente e facilmente i pagamenti fornitore. I tuoi "
+"clienti ricevono\n"
+"                le fatture vie email e possono pagarle online o importarle\n"
+"                nel proprio sistema.\n"
+"              </p><p>\n"
+"                Le discussioni con i propri clienti vengono automaticamente "
+"mostrate\n"
+"                al fondo di ogni fattura.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: field:account.tax.code,name:0
@@ -4915,6 +4990,18 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to setup a new bank account. \n"
+"            Cliccare per configurare un nuovo conto bancario.\n"
+"          </p><p>\n"
+"            Configura il conto bancario per l'azienda e seleziona quelli "
+"che\n"
+"            devono comparire nel footer delle stampe.\n"
+"          </p><p>\n"
+"            Se si usano le funzionalità contabili di OpenERP, sezionali e\n"
+"            conti verranno creati automaticamente in base ai dati forniti.\n"
+"          </p>\n"
+"        "
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_cancel
@@ -5275,6 +5362,10 @@ msgid ""
 "You can create one in the menu: \n"
 "Configuration\\Journals\\Journals."
 msgstr ""
+"Impossibile trovare un sezionale contabile di tipo %s per l'azienda.\n"
+"\n"
+"E' possibile crearne uno manualmente dal menù: \n"
+"Configurazione\\Sezionali\\Sezionali."
 
 #. module: account
 #: report:account.vat.declaration:0
@@ -8072,7 +8163,7 @@ msgstr "Prezzo"
 #: view:account.bank.statement:0
 #: field:account.bank.statement,closing_details_ids:0
 msgid "Closing Cashbox Lines"
-msgstr ""
+msgstr "Chiusura Righe Registrazione di Cassa"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -8340,6 +8431,25 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                Click to add a new analytic account.\n"
+"                Cliccare per creare un nuovo conto analitico.\n"
+"              </p><p>\n"
+"                Il piano dei conti standard ha una struttura definita in "
+"base alla\n"
+"                normativa locale. Il piano dei conti analitico dovrebbe "
+"invece riflettere\n"
+"                le necessità aziendali in fatto di reportistica "
+"costi/ricavi.\n"
+"              </p><p>\n"
+"                Sono generalmente strutturati in base a contratti, progetti, "
+"prodotti o\n"
+"                dipartimenti. La maggior parte delle operazioni OpenERP "
+"(fatture,\n"
+"                timesheets, spese, etc) generano movimenti analitici sui "
+"conti relativi.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_view
@@ -8751,7 +8861,7 @@ msgstr "Riga Movimento di Cassa"
 #. module: account
 #: field:account.installer,charts:0
 msgid "Accounting Package"
-msgstr ""
+msgstr "Pacchetto Contabilità"
 
 #. module: account
 #: report:account.third_party_ledger:0
@@ -8941,7 +9051,7 @@ msgstr "Residuo totale"
 #. module: account
 #: view:account.bank.statement:0
 msgid "Opening Cash Control"
-msgstr ""
+msgstr "Apertura Controllo Cassa"
 
 #. module: account
 #: model:process.node,note:account.process_node_invoiceinvoice0
@@ -9151,6 +9261,9 @@ msgid ""
 "This wizard will remove the end of year journal entries of selected fiscal "
 "year. Note that you can run this wizard many times for the same fiscal year."
 msgstr ""
+"Questo wizard rimuoverà le registrazioni di fine anno dall'anno fiscale "
+"selezionato. Notare che è possibile avviare questo wizard diverse volte per "
+"lo stesso anno fiscale."
 
 #. module: account
 #: report:account.invoice:0
@@ -9232,6 +9345,12 @@ msgid ""
 "invoice will be created \n"
 "                                    so that you can edit it."
 msgstr ""
+"Usare questa opzione se si vuole annullare una fattura e crearne\n"
+"                                    una nuova. La nota di credito verrà "
+"creata, validata e riconciliata\n"
+"                                    con la fattura corrente. Una nuova "
+"fattura bozza, verrà creata\n"
+"                                    così da poterla modificare."
 
 #. module: account
 #: model:process.transition,name:account.process_transition_filestatement0
@@ -9333,6 +9452,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliccare per aggiungere un sezionale.\n"
+"              </p><p>\n"
+"                Un sezionale è usato per registrare movimenti contabili "
+"riguardanti\n"
+"                l'attività contabile quotidiana.\n"
+"              </p><p>\n"
+"                L'azienda tipicamente userà un sezionale per ogni tipo di "
+"pagamento\n"
+"                (cassa, banca, assegni), un sezionale acquisti, un sezionale "
+"vendite\n"
+"                e uno per operazioni varie.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscalyear_close_state
@@ -9549,6 +9682,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliccare per definire una nuova voce ricorrente.\n"
+"              </p><p>\n"
+"                Una voce ricorrente avviene su base ricorrente ad una "
+"specifica\n"
+"                data, cioè corrispondente alla firma di un contratto o un "
+"accordo\n"
+"                con un cliente o un fornitore. E' possibile creare questi "
+"movimenti\n"
+"                per automatizzare le registrazioni nel sistema.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: view:account.journal:0
@@ -9895,6 +10040,10 @@ msgid ""
 "chart\n"
 "                        of accounts."
 msgstr ""
+"Quando le fatture bozza vengono confermate, non è possibile\n"
+"                        modificarle. Le fatture riceveranno un numero\n"
+"                        univoco e registrazioni sezionale verranno create\n"
+"                        nel piano dei conti."
 
 #. module: account
 #: model:process.node,note:account.process_node_bankstatement0
@@ -9909,7 +10058,7 @@ msgstr "Chiudi lo stato dell'anno Fiscale e dei periodi"
 #. module: account
 #: field:account.config.settings,purchase_refund_journal_id:0
 msgid "Purchase refund journal"
-msgstr ""
+msgstr "Sezionale Note di Debito"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -9933,7 +10082,7 @@ msgstr "Crea fattura"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_configuration_installer
 msgid "Configure Accounting Data"
-msgstr ""
+msgstr "Configurazione Dati Contabili"
 
 #. module: account
 #: field:wizard.multi.charts.accounts,purchase_tax_rate:0
@@ -9953,6 +10102,8 @@ msgid ""
 "Please check that the field 'Internal Transfers Account' is set on the "
 "payment method '%s'."
 msgstr ""
+"Si prega di controllare che il campo 'Conto Movimenti Interni' sia "
+"configurato sul metodo di pagamento '%s'."
 
 #. module: account
 #: field:account.vat.declaration,display_detail:0
@@ -9993,6 +10144,15 @@ msgid ""
 "related journal entries may or may not be reconciled.             \n"
 "* The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+" * Lo stato 'Bozza' è usato quando un utente sta registrando una fattura "
+"nuova o non confermata.\n"
+"* Quando la fattura è 'Pro-forma' non ha un numero.\n"
+"* Lo stato 'Aperta' è usato quando l'utente crea la fattura. Un numero "
+"fattura viene generato. Rimane in questo stato fino a quando l'utente non "
+"paga la fattura.\n"
+"* Lo stato 'Pagata' viene impostato automaticamente quando la fattura viene "
+"pagata. Le registrazioni giornale possono o no essere riconciliate.    \n"
+"* Lo stato 'Annullata' viene usato quando un utente annulla la fattura."
 
 #. module: account
 #: field:account.period,date_stop:0
@@ -10397,7 +10557,7 @@ msgstr "Bilancio Contabilità Analitica"
 msgid ""
 "Credit note base on this type. You can not Modify and Cancel if the invoice "
 "is already reconciled"
-msgstr ""
+msgstr "Impossibile modificare o annullare la fattura se è riconciliata."
 
 #. module: account
 #: report:account.account.balance:0
@@ -10525,7 +10685,7 @@ msgstr "Fatture bozza"
 #: view:cash.box.in:0
 #: model:ir.actions.act_window,name:account.action_cash_box_in
 msgid "Put Money In"
-msgstr ""
+msgstr "Immettere denaro"
 
 #. module: account
 #: selection:account.account.type,close_method:0
@@ -10636,6 +10796,10 @@ msgid ""
 "some non legal fields or you must unconfirm the journal entry first.\n"
 "%s."
 msgstr ""
+"Non è possibile applicare questa modifica su una registrazione confermata. "
+"E' possibile solamente modificare alcuni dati non legali altrimenti è "
+"necessario annullare le registrazioni sezionali prima.\n"
+"%s."
 
 #. module: account
 #: help:account.config.settings,module_account_budget:0
@@ -10646,6 +10810,11 @@ msgid ""
 "analytic account.\n"
 "                This installs the module account_budget."
 msgstr ""
+"Consente ai contabili di gestire budgets incrociati ed analitici.\n"
+"                Una volta che il budget principale viene definito,\n"
+"                il project manager può impostare l'importo pianficato su "
+"ogni conto analitico.\n"
+"                Installa il modulo account_budget."
 
 #. module: account
 #: help:res.partner,property_account_payable:0
@@ -10705,7 +10874,7 @@ msgstr "Bozza Fattura "
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Cancel: create credit note and reconcile"
-msgstr ""
+msgstr "Annulla: crea e riconcilia note di credito"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_general_journal
@@ -10721,7 +10890,7 @@ msgstr "Modello di  Registrazione"
 #: code:addons/account/account.py:1058
 #, python-format
 msgid "Start period should precede then end period."
-msgstr ""
+msgstr "Il periodo di inizio deve essere antecedente a quello finale"
 
 #. module: account
 #: field:account.invoice,number:0
@@ -10885,7 +11054,7 @@ msgstr "Tipo interno"
 #. module: account
 #: field:account.subscription.generate,date:0
 msgid "Generate Entries Before"
-msgstr ""
+msgstr "Genera prima le registrazioni"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_subscription_form_running
@@ -11014,7 +11183,7 @@ msgstr "Non è possibile %s una fattura bozza/proforma/annullata."
 #. module: account
 #: field:account.tax,account_analytic_paid_id:0
 msgid "Refund Tax Analytic Account"
-msgstr ""
+msgstr "Conto Rimborso Imposte Analitico"
 
 #. module: account
 #: view:account.move.bank.reconcile:0
@@ -11435,6 +11604,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliccare per creare un nuovo conto imposta.\n"
+"              </p><p>\n"
+"                In base al paese, un conto imposta è generalmente una cella "
+"dove inserire\n"
+"                le registrazioni legali riguardanti le imposte. OpenERP "
+"consente di definire\n"
+"                la struttura delle imposte ed ogni formula per il calcolo "
+"verrà applicata ad\n"
+"                uno o più conti imposta.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -11461,6 +11642,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Selezionare periodo e sezionale da usare.\n"
+"              </p><p>\n"
+"                Verranno usati dai contabili per registrare velocemente\n"
+"                movimenti in OpenERP. Se si vuole registrare una fattura "
+"fornitore,\n"
+"                iniziare a registrare la riga del conto spese. OpenERP\n"
+"                proporrà automaticamente l'imposta relativa a questo conto\n"
+"                e la sua contropartita.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: help:account.invoice.line,account_id:0

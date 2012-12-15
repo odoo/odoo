@@ -7,14 +7,15 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-10-12 23:20+0000\n"
-"Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
+"PO-Revision-Date: 2012-12-14 17:36+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:09+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-15 05:04+0000\n"
+"X-Generator: Launchpad (build 16372)\n"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -28,6 +29,15 @@ msgid ""
 "                    * Notes for the technician and for the final customer.\n"
 "                This installs the module mrp_repair."
 msgstr ""
+"Verwalten Sie Ihre Reparatur Vorfälle.\n"
+"                    * Hinzufügen / Entfernen von neuen Reparaturen\n"
+"                    * Auswirkung auf Bestände\n"
+"                    * Abrechnung (Ersatzteile und / oder Dienstleistungen)\n"
+"                    * Garantie Abwicklung\n"
+"                    * Statistik erledigter Reparaturaufträge\n"
+"                    * Hinweise und Mitteilungen für den Service oder End-"
+"Kunden\n"
+"                Durch Aktivierung insatllieren Sie das Modul mrp-repair."
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -79,7 +89,7 @@ msgstr "Ausschuss buchen"
 #. module: mrp
 #: view:mrp.workcenter:0
 msgid "Mrp Workcenter"
-msgstr ""
+msgstr "Arbeitsplatz"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_routing_action
@@ -116,7 +126,7 @@ msgstr ""
 #. module: mrp
 #: view:product.product:0
 msgid "False"
-msgstr ""
+msgstr "Ungültig"
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -143,6 +153,9 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Hier finden Sie die Nachrichtenübersicht (Anzahl Nachrichten etc., ...) im "
+"html Format, um über dieses Format dann später in einer Kanban Ansicht "
+"weiterzuarbeiten."
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_servicerfq0
@@ -162,6 +175,8 @@ msgid ""
 "The selection of the right Bill of Material to use will depend on the  "
 "properties specified on the sale order and the Bill of Material."
 msgstr ""
+"Die Auswahl der richtigen Stückliste hängt ab von der Eigenschaft, die im "
+"Auftrag  ausgewählt wird und eine Stückliste spezifiziert."
 
 #. module: mrp
 #: view:mrp.production:0
@@ -205,13 +220,13 @@ msgstr "Für eingekauftes Material"
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_operations:0
 msgid "Allow detailed planning of work order"
-msgstr ""
+msgstr "Ermöglicht detaillierte Planung von Arbeitsaufträgen"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:648
 #, python-format
 msgid "Cannot cancel manufacturing order!"
-msgstr ""
+msgstr "Fertigungsauftrag kann nicht abgebrochen werden!"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle_account_id:0
@@ -253,6 +268,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klicken Sie zur Erstellung eines Arbeitsplan.\n"
+"              </p><p>\n"
+"                Arbeitspläne ermöglichen die Erstellung und das Management "
+"von Arbeitsaufträgen,\n"
+"                die an einem Arbeitsplatz zur Erstellung eines Produkts "
+"bearbeitet werden müssen. \n"
+"                Arbeitspläne werden bei einer Stückliste zugeordnet, die den "
+"Bedarf an Komponenten\n"
+"                beinhaltet.                \n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: view:mrp.production:0
@@ -273,7 +300,7 @@ msgstr "Stücklisten"
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_byproduct:0
 msgid "Produce several products from one manufacturing order"
-msgstr ""
+msgstr "Erstelle  mehrere Produkte durch einen Fertigungsauftrag"
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -309,7 +336,7 @@ msgstr "Referenz für externe Planungsposition."
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
 msgid "Manage Routings"
-msgstr ""
+msgstr "Verwalte Arbeitspläne"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce
@@ -348,6 +375,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klicken Sie zur Erstellung eines Fertigungsauftrags. \n"
+"              </p><p>\n"
+"               Ein Fertigungsauftrag basierend auf einer Stückliste, "
+"erfordert Komponenten\n"
+"               um fertige Produkte zu erstellen.\n"
+"              </p><p>\n"
+"                Normalerweise werden Fertigungsaufträge automatisch entweder "
+"durch \n"
+"                Aufträge von Kunden oder durch Regeln für Meldebestände "
+"vorgeschlagen.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: sql_constraint:mrp.production:0
@@ -371,6 +411,8 @@ msgid ""
 "Fill this product to easily track your production costs in the analytic "
 "accounting."
 msgstr ""
+"Tragen Sie hier ein Produkt ein, zur Verfolgung der Arbeitskosten auf einer "
+"Kostenstelle."
 
 #. module: mrp
 #: field:mrp.workcenter,product_id:0
@@ -436,6 +478,17 @@ msgid ""
 "'In Production'.\n"
 "                When the production is over, the status is set to 'Done'."
 msgstr ""
+"Durch die Erstellung eines Fertigungsauftrags ist der Status 'Neu'.\n"
+"                Durch Bestätigung wechselt der Status zu 'Erwartet "
+"Material'.\n"
+"                In Ausnahme Sonderfällen, kann der Status auf 'Sonderfall' "
+"wechseln.\n"
+"                Wenn Material verfügbar ist, wechselt der Status zu "
+"'Startbereit für Fertigung'.\n"
+"                Nach Start des Fertigungsauftrags wechselt der Status zu "
+"'Produktion begonnen'.\n"
+"                Wenn die Produktion gemeldet wurde, wechselt der Status auf "
+"'Erledigt'."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_report_in_out_picking_tree
@@ -453,7 +506,7 @@ msgstr "Geplantes Datum"
 #: code:addons/mrp/procurement.py:113
 #, python-format
 msgid "Manufacturing Order <em>%s</em> created."
-msgstr ""
+msgstr "Fertigungsauftrag <em>%s</em> wurde erstellt."
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -468,6 +521,8 @@ msgid ""
 "Manufacturing order has been <b>confirmed</b> and is <b>scheduled</b> for "
 "the <em>%s</em>."
 msgstr ""
+"Fertigungsauftrag wurde <b>bestätigt</b> und ist <b>geplant</b> für den "
+"<em>%s</em>."
 
 #. module: mrp
 #: help:mrp.routing,location_id:0
@@ -496,7 +551,7 @@ msgstr "Stücklistenstruktur"
 #: code:addons/mrp/mrp.py:1043
 #, python-format
 msgid "Manufacturing order has been <b>canceled</b>."
-msgstr ""
+msgstr "Fertigungsauftrag wurde <b>abgebrochen</b>."
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_serviceproduct0
@@ -531,7 +586,7 @@ msgstr "Anfrage für Angebot"
 #: view:mrp.product_price:0
 #: view:mrp.workcenter.load:0
 msgid "or"
-msgstr ""
+msgstr "oder"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_billofmaterialrouting0
@@ -551,7 +606,7 @@ msgstr "Produkte zu produzieren"
 #. module: mrp
 #: view:mrp.config.settings:0
 msgid "Apply"
-msgstr ""
+msgstr "Anwenden"
 
 #. module: mrp
 #: view:mrp.routing:0
@@ -608,6 +663,16 @@ msgid ""
 "assembly operation.\n"
 "                This installs the module stock_no_autopicking."
 msgstr ""
+"Diese Anwendung ermöglicht einen vorgelagerten Pickvorgang zur "
+"Materialbereitstellung.\n"
+"                Dieses ist z.B. bei Fremdvergabe von Fertigungsaufträgen an "
+"Lieferanten sinnvoll  (Lohnfertigung).\n"
+"                Um dies zu erreichen, deaktivieren Sie beim fremd "
+"anzufertigenden Produkt \"Auto-Picking\"\n"
+"                und hinterlegen den Lagerort des Lieferanten im Arbeitsplan "
+"bei der entsprechenden Arbeitsposition.\n"
+"                Durch Aktivierung installieren Sie hiermit das Modul "
+"stock_no_autopicking."
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -635,7 +700,7 @@ msgstr "Durch Deaktivierung können Sie den Arbeitsvorgang ausblenden."
 #: code:addons/mrp/mrp.py:386
 #, python-format
 msgid "Bill of Material has been <b>created</b> for <em>%s</em> product."
-msgstr ""
+msgstr "Stückliste wurde <b>erstellt</b> für das Produkt <em>%s</em>."
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_billofmaterialrouting0
@@ -715,6 +780,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klicken Sie für eine neue Stücklisten Komponente.\n"
+"              </p><p>\n"
+"                Stücklisten Komponenten sind Komponenten und Vor-Produkte, "
+"die als Bestandteile von\n"
+"                Master Stücklisten benötigt werden. Verwenden Sie dieses "
+"Hauptmenü, um zu suchen,\n"
+"                in welchen Stücklisten spezifische Komponenten verwendet "
+"werden.         \n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: constraint:mrp.bom:0
