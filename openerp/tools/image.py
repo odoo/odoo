@@ -66,6 +66,14 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
         return base64_source
     image_stream = io.BytesIO(base64_source.decode(encoding))
     image = Image.open(image_stream)
+
+    asked_width, asked_height = size
+    if asked_width is None:
+        asked_width = int(image.size[0] * (float(asked_height) / image.size[1]))
+    if asked_height is None:
+        asked_height = int(image.size[1] * (float(asked_width) / image.size[0]))
+    size = asked_width, asked_height
+
     background = ImageOps.fit(image, size, Image.ANTIALIAS)
     background_stream = StringIO.StringIO()
     background.save(background_stream, filetype)
