@@ -1175,6 +1175,7 @@ instance.web.WebClient = instance.web.Client.extend({
     show_application: function() {
         var self = this;
         self.toggle_bars(true);
+        self.update_logo();
         self.menu = new instance.web.Menu(self);
         self.menu.replace(this.$el.find('.oe_menu_placeholder'));
         self.menu.on('menu_click', this, this.on_menu_action);
@@ -1185,6 +1186,10 @@ instance.web.WebClient = instance.web.Client.extend({
         self.bind_hashchange();
         self.set_title();
         self.check_timezone();
+    },
+    update_logo: function() {
+        var img = this.session.url('/web/binary/company_logo');
+        this.$el.find('.oe_logo img').attr('src', '').attr('src', img);
     },
     check_timezone: function() {
         var self = this;
