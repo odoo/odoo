@@ -1331,8 +1331,10 @@ class Binary(openerpweb.Controller):
             registry = openerp.modules.registry.RegistryManager.get(dbname)
             with registry.cursor() as cr:
                 user = registry.get('res.users').browse(cr, uid, uid)
-                image_data = user.company_id.logo_web.decode('base64')
-
+                if user.company_id.logo_web:
+                    image_data = user.company_id.logo_web.decode('base64')
+                else:
+                    image_data = self.placeholder(req, 'nologo.png')
         headers = [
             ('Content-Type', 'image/png'),
             ('Content-Length', len(image_data)),
