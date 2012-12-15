@@ -73,10 +73,10 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
     if asked_height is None:
         asked_height = int(image.size[1] * (float(asked_width) / image.size[0]))
     size = asked_width, asked_height
-
-    background = ImageOps.fit(image, size, Image.ANTIALIAS)
+    if image.size <> size:
+        image = ImageOps.fit(image, size, Image.ANTIALIAS)
     background_stream = StringIO.StringIO()
-    background.save(background_stream, filetype)
+    image.save(background_stream, filetype)
     return background_stream.getvalue().encode(encoding)
 
 def image_resize_image_big(base64_source, size=(1204, 1204), encoding='base64', filetype='PNG', avoid_if_small=True):
