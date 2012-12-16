@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:01+0000\n"
-"PO-Revision-Date: 2012-12-14 15:06+0000\n"
+"PO-Revision-Date: 2012-12-15 10:35+0000\n"
 "Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <openerp-hungarian-team@lists.launchpad.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-15 05:03+0000\n"
+"X-Launchpad-Export-Date: 2012-12-16 04:44+0000\n"
 "X-Generator: Launchpad (build 16372)\n"
 
 #. module: base
@@ -3517,6 +3517,16 @@ msgid ""
 "    * ``base_stage``: stage management\n"
 "    "
 msgstr ""
+"\n"
+"Ez a modulállapotokat és szakaszokat kezel. A crm_base  /crm_alap/ -ból lesz "
+"átadva a crm_case /crm_váz/ osztályba a crm /ügyfélkapcsolati rendszer/ -"
+"ből.\n"
+"============================================================================="
+"======================\n"
+"\n"
+"    * ``base_state``: állapot kezelés\n"
+"    * ``base_stage``: szakasz kezelés\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_linkedin
@@ -3570,6 +3580,8 @@ msgid ""
 "the user will have an access to the sales configuration as well as statistic "
 "reports."
 msgstr ""
+"a felhasználónak hozzáférése lesz az eladások konfigurálásához valamint a "
+"statikus beszámolókhoz."
 
 #. module: base
 #: model:res.country,name:base.nz
@@ -3634,6 +3646,20 @@ msgid ""
 "      above. Specify the interval information and partner to be invoice.\n"
 "    "
 msgstr ""
+"\n"
+"Ismétlődő dokumentumok létrehozása.\n"
+"===========================\n"
+"\n"
+"Ez a modul lehetővé teszi új dokumentum létrehozását és feliratkozási "
+"lehetőséget teremt hozzá.\n"
+"\n"
+"p.l. Egy periódikus számla autómatikus generálása:\n"
+"-------------------------------------------------------------\n"
+"    * Határozzon meg egy dokumentum típust a számla objektum alapján\n"
+"    * Határozzon meg egy feliratkozást melynek a forrás dokumentuma a \n"
+"       fent meghatározott dokumentum. Határozzon meg egy intervallumot\n"
+"       és egy partnert, akinek számlázni fog.\n"
+"    "
 
 #. module: base
 #: constraint:res.company:0
@@ -3656,6 +3682,8 @@ msgid ""
 "the user will have an access to the human resources configuration as well as "
 "statistic reports."
 msgstr ""
+"a felhasználónak elérése lesz az emberi erőforrások beállításához és a "
+"statikus beszámolókhoz."
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_shortcuts
@@ -3671,6 +3699,16 @@ msgid ""
 "shortcut.\n"
 "    "
 msgstr ""
+"\n"
+"Lerövidítés lehetőséget kapcsol be a web kiszolgálóhoz.\n"
+"===========================================\n"
+"\n"
+"Lerövidítési ikont ad a rendszertálcához a felhasználói rövidítések "
+"eléréséhez (ha léteznek).\n"
+"\n"
+"A nézetek cím mellé egy rövidítés ikont ad a rövidített útvonalak "
+"hozzáadásához/törléséhez.\n"
+"    "
 
 #. module: base
 #: field:ir.actions.client,params_store:0
@@ -3722,7 +3760,7 @@ msgstr "Örményország"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_evaluation
 msgid "Periodical Evaluations, Appraisals, Surveys"
-msgstr ""
+msgstr "Időszakos értékelések, Felbecsülések, Felmérések"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_property_form
@@ -3796,7 +3834,7 @@ msgstr "Svédország"
 #. module: base
 #: field:ir.actions.report.xml,report_file:0
 msgid "Report File"
-msgstr ""
+msgstr "Beszámoló fájl"
 
 #. module: base
 #: selection:ir.actions.act_window.view,view_mode:0
@@ -4220,6 +4258,38 @@ msgid ""
 "* Work Order Analysis\n"
 "    "
 msgstr ""
+"\n"
+"AzOpenERP gyártási folyamat kezelése\n"
+"===========================================\n"
+"\n"
+"A gyártási modul lehetővé teszi a tervezés, megrendelés, raktár és gyártási "
+"vagy összeszerelési gyártási folyamatok alapanyagból és részegységekből való "
+"elkészítését. Kezeli a felhasználást és termék gyártását a darabjegyzékből "
+"és az összes szükséges gépen végzett művelettel, eszközzel vagy emberi "
+"erőforrással a megadott útvonalak szerint.\n"
+"\n"
+"Támogatja a raktározott termékek, fogyóeszközök vagy szolgáltatások "
+"integrációját. Szolgáltatások teljesen integráltak a szoftver teljes "
+"egységével. Például, beállíthat egy alvállalkozói szolgáltatást a "
+"darabjegyzékben az autómatikus anyag beszerzéshez egy  összeszerelni kívánt "
+"termék megrendelésénél.\n"
+"\n"
+"Fő tulajdonságok\n"
+"------------\n"
+"* Raktár létrehozás/Megrendelés létrehozás\n"
+"* Több szintű darabjegyzés, nini határ\n"
+"* Több szintű útvonal, nincs határ\n"
+"* Útvonal és munka központ integrálva az analitikai könyvitellel\n"
+"* Periódikus ütemező számítás \n"
+"* Lehetővé teszi a darabjegyzékek böngészését komplett szerkezetben ami "
+"magában foglalja az al- és a fantom darabjegyzékeket\n"
+"\n"
+"Dashboard / Műszerfal jelentések az MRP-hez ami magában foglalja:\n"
+"-----------------------------------------\n"
+"* A kivételekről gondoskodik (Grafikon)\n"
+"* Raktár érték variációk (Grafikon)\n"
+"* Munka megrendelés analízis\n"
+"    "
 
 #. module: base
 #: view:ir.attachment:0
@@ -4249,6 +4319,15 @@ msgid ""
 "easily\n"
 "keep track and order all your purchase orders.\n"
 msgstr ""
+"\n"
+"Ezzel a modullal vásárlási igényeket tud szervezni.\n"
+"===========================================================\n"
+"\n"
+"Ha egy vásárlási megrendelést állít elő, akkor most már lehetősége van az "
+"ide \n"
+"vonatkozó igényeket is elmenteni. Ez az új objektum átcsoportosít és "
+"lehetővé\n"
+"teszi az összes megrendelés könnyű nyomonkövetését és rendelését.\n"
 
 #. module: base
 #: help:ir.mail_server,smtp_host:0
