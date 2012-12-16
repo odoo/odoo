@@ -7,15 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-10 23:02+0000\n"
-"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
-"consulting.net>\n"
+"PO-Revision-Date: 2012-12-15 22:36+0000\n"
+"Last-Translator: Thorsten Vocks <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-12 04:39+0000\n"
-"X-Generator: Launchpad (build 16361)\n"
+"X-Launchpad-Export-Date: 2012-12-16 04:47+0000\n"
+"X-Generator: Launchpad (build 16372)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -92,7 +91,7 @@ msgstr "Falsches Konto!"
 #: view:account.move:0
 #: view:account.move.line:0
 msgid "Total Debit"
-msgstr "Forderungsgesamtsumme"
+msgstr "Summe Soll"
 
 #. module: account
 #: view:account.unreconcile:0
@@ -143,8 +142,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the payment "
 "term without removing it."
 msgstr ""
-"Wenn dieses Feld deaktiviert wird, werden die Zahlungsbedingungen nicht "
-"angezeigt."
+"Wenn dieses Feld deaktiviert wird, kann die Zahlungsbedingung ohne "
+"Entfernung einfach ausgeblendet werden."
 
 #. module: account
 #: code:addons/account/account.py:640
@@ -369,7 +368,7 @@ msgstr "Storno Ausgleich"
 #. module: account
 #: field:account.config.settings,module_account_budget:0
 msgid "Budget management"
-msgstr "Budgetverwaltung"
+msgstr "Budget Management"
 
 #. module: account
 #: view:product.template:0
@@ -411,7 +410,7 @@ msgstr "Juni"
 #: code:addons/account/wizard/account_automatic_reconcile.py:148
 #, python-format
 msgid "You must select accounts to reconcile."
-msgstr "Bitte wählen Sie ein Konto für Ihre Ausgleichsbuchung"
+msgstr "Bitte wählen Sie die auszugleichenden Konten"
 
 #. module: account
 #: help:account.config.settings,group_analytic_accounting:0
@@ -541,7 +540,7 @@ msgstr "In alternativer Währung dargestellter Betrag"
 #. module: account
 #: view:account.journal:0
 msgid "Available Coins"
-msgstr "Verfügbare Münzen"
+msgstr "Bargeld Stückelung"
 
 #. module: account
 #: field:accounting.report,enable_filter:0
@@ -716,7 +715,7 @@ msgstr "Steuern Zuordnung"
 #. module: account
 #: report:account.central.journal:0
 msgid "Centralized Journal"
-msgstr "Zentraljournal"
+msgstr "Hauptbuch Journal"
 
 #. module: account
 #: sql_constraint:account.sequence.fiscalyear:0
@@ -785,15 +784,15 @@ msgstr "Startbuchungen der Periode"
 #. module: account
 #: model:ir.model,name:account.model_account_journal_period
 msgid "Journal Period"
-msgstr "Berichtsperiode"
+msgstr "Journal Periode"
 
 #. module: account
 #: constraint:account.move:0
 msgid ""
 "You cannot create more than one move per period on a centralized journal."
 msgstr ""
-"Pro Periode ist nur eine Buchungszeile je Konto in ein Journal mit "
-"zentralisiertem Gegenkonto erlaubt."
+"Pro Periode ist nur eine Buchungszeile je Konto in ein Hauptbuch Journal "
+"erlaubt."
 
 #. module: account
 #: help:account.tax,account_analytic_paid_id:0
@@ -857,8 +856,9 @@ msgid ""
 "Cannot %s invoice which is already reconciled, invoice should be "
 "unreconciled first. You can only refund this invoice."
 msgstr ""
-"Eine bereits ausgeglichene Rechnung %s kann nicht erneut abgerechnet werden. "
-" Es ist zunächst nur eine Gutschrift möglich."
+"Der bereits ausgeglichene Rechnungsausgleich für %s sollte vor erneuter "
+"Abrechnung zuerst storniert werden . Es ist zunächst nur eine Gutschrift für "
+"diese Rechnung möglich."
 
 #. module: account
 #: selection:account.financial.report,display_detail:0
@@ -1117,7 +1117,8 @@ msgstr "Verbindlichkeit"
 #: code:addons/account/account_invoice.py:855
 #, python-format
 msgid "Please define sequence on the journal related to this invoice."
-msgstr "Bitte legen Sie Sequenzen für das Journal dieser Rechnung fest."
+msgstr ""
+"Bitte legen Sie die Nummernfolge für das Journal dieser Rechnung fest."
 
 #. module: account
 #: view:account.entries.report:0
@@ -1127,12 +1128,12 @@ msgstr "Erweiterte Filter..."
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_central_journal
 msgid "Centralizing Journal"
-msgstr "Zentrales Buchungsjournal"
+msgstr "Hauptbuch Journal"
 
 #. module: account
 #: selection:account.journal,type:0
 msgid "Sale Refund"
-msgstr "Rückerstattung aus Verkauf"
+msgstr "Gutschrift Verkauf"
 
 #. module: account
 #: model:process.node,note:account.process_node_accountingstatemententries0
@@ -1181,7 +1182,7 @@ msgstr "Buchungsvorlage"
 #: report:account.partner.balance:0
 #: field:account.period,code:0
 msgid "Code"
-msgstr "Kurzbez."
+msgstr "Kürzel"
 
 #. module: account
 #: view:account.config.settings:0
@@ -1196,7 +1197,7 @@ msgstr "Funktionen"
 #: code:addons/account/account_move_line.py:195
 #, python-format
 msgid "No Analytic Journal !"
-msgstr "Kein Analytischer Bericht!"
+msgstr "Kein Kostenstellen Journal"
 
 #. module: account
 #: report:account.partner.balance:0
@@ -1239,7 +1240,7 @@ msgstr ""
 #. module: account
 #: field:account.bank.accounts.wizard,acc_name:0
 msgid "Account Name."
-msgstr "Kontobezeichnung"
+msgstr "Konto Bezeichnung"
 
 #. module: account
 #: field:account.journal,with_last_closing_balance:0
@@ -7525,7 +7526,7 @@ msgstr "Status ist Entwurf"
 #. module: account
 #: view:account.move.line:0
 msgid "Total debit"
-msgstr "Gesamt Soll"
+msgstr "Summe Soll"
 
 #. module: account
 #: code:addons/account/account_move_line.py:825

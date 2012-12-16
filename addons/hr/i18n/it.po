@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-14 13:13+0000\n"
+"PO-Revision-Date: 2012-12-15 09:13+0000\n"
 "Last-Translator: Davide Corio - agilebg.com <davide.corio@agilebg.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-15 05:05+0000\n"
+"X-Launchpad-Export-Date: 2012-12-16 04:48+0000\n"
 "X-Generator: Launchpad (build 16372)\n"
 
 #. module: hr
@@ -58,6 +58,8 @@ msgid ""
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
 msgstr ""
+"Foto grandezza media del dipendente. Viene automaticamente ridimensionata a "
+"128x128px, preservando le proporzioni. Usato nei form ed in alcune kanban."
 
 #. module: hr
 #: view:hr.config.settings:0
@@ -301,6 +303,8 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is "
 "required."
 msgstr ""
+"Foto piccola del dipendente. Ridimensionata automaticamente a 64x64px, "
+"preservando le proporzioni. Usato ovuque sia necessaria una foto piccola."
 
 #. module: hr
 #: field:hr.employee,birthday:0
@@ -332,6 +336,8 @@ msgid ""
 "This installs the module account_analytic_analysis, which will install sales "
 "management too."
 msgstr ""
+"Installa il modulo account_analytic_analysis, che installerà anche la "
+"gestione vendite."
 
 #. module: hr
 #: view:board.board:0
@@ -427,6 +433,23 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliccare per definire una nuova posizione lavorativa.\n"
+"              </p><p>\n"
+"                Le posizioni lavorative sono usate per definire i lavori e "
+"le loro caratteristiche.\n"
+"                E' possibile tenere traccia del numero dipendenti per "
+"posizione e seguire\n"
+"                l'evoluzione in base a quanto è stato pianificato per il "
+"futuro.\n"
+"              </p><p>\n"
+"                E' possibile allegare un questionario ad una posizione. "
+"Verrà usato\n"
+"                durante il processo di assunzione per valutare i canditati "
+"per questa\n"
+"                posizione.\n"
+"              </p>\n"
+"            "
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -628,6 +651,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Clicca per creare un nuovo dipendente.\n"
+"              </p><p>\n"
+"                Con un semplice click sulla scheda del dipendente, è "
+"possibile\n"
+"                trovare facilmente tutte le informazioni su tale persona;\n"
+"                contatti, posizione lavorativa, disponibilità, etc.\n"
+"              </p>\n"
+"            "
 
 #. module: hr
 #: view:hr.employee:0
@@ -692,6 +724,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliccare per creare un dipartimento.\n"
+"              </p><p>\n"
+"                La struttura dei dipartimenti è usata per gestire i "
+"documenti\n"
+"                relativi ai dipendenti per dipartimento: spese, timesheet,\n"
+"                permessi e ferie, assunzioni, etc.\n"
+"              </p>\n"
+"            "
 
 #. module: hr
 #: help:hr.config.settings,module_hr_timesheet:0
@@ -717,6 +758,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliccare per creare un dipartimento.\n"
+"              </p><p>\n"
+"                La struttura dei dipartimenti è usata per gestire i "
+"documenti\n"
+"                relativi ai dipendenti per dipartimento: spese, timesheet,\n"
+"                permessi e ferie, assunzioni, etc.\n"
+"              </p>\n"
+"            "
 
 #. module: hr
 #: view:hr.employee:0
@@ -799,7 +849,7 @@ msgstr "Installa il modulo hr_payroll."
 #. module: hr
 #: field:hr.config.settings,module_hr_contract:0
 msgid "Record contracts per employee"
-msgstr ""
+msgstr "Gestisci i contratti del dipendente"
 
 #. module: hr
 #: view:hr.department:0
@@ -911,6 +961,8 @@ msgid ""
 "By default 'In position', set it to 'In Recruitment' if recruitment process "
 "is going on for this job position."
 msgstr ""
+"Preimpostato su 'In posizione', da impostare a 'In Assunzione' se il "
+"processo di assunzione è attivo per questa posizione."
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
@@ -941,6 +993,23 @@ msgid ""
 "              </div>\n"
 "            "
 msgstr ""
+"<div class=\"oe_empty_custom_dashboard\">\n"
+"                  <p>\n"
+"                    <b>La dashboard Risorse Umane è vuota.</b>\n"
+"                  </p><p>\n"
+"                    Per aggiungere il primo report in questa dashboard, vai\n"
+"                    in qualsiasi menù, passa alla modalità lista o grafico, "
+"e clicca\n"
+"                    su <i>'Aggiungi a Dashboard'</i> nelle opzioni di "
+"ricerca\n"
+"                    avanzata.\n"
+"                  </p><p>\n"
+"                    Puoi filtrare e raggruppare i dati prima di inserirli "
+"nella\n"
+"                    dashboard usando le opzioni di ricerca.\n"
+"                  </p>\n"
+"              </div>\n"
+"            "
 
 #. module: hr
 #: view:hr.employee:0
@@ -951,7 +1020,7 @@ msgstr "Istruttore"
 #. module: hr
 #: sql_constraint:hr.job:0
 msgid "The name of the job position must be unique per company!"
-msgstr ""
+msgstr "Il nome della posizione lavorativa deve essere unico per azienda!"
 
 #. module: hr
 #: help:hr.config.settings,module_hr_expense:0
