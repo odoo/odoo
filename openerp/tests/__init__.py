@@ -22,4 +22,22 @@ import test_translate
 import test_uninstall
 import test_view_validation
 
+fast_suite = [
+    test_ir_sequence,
+    test_ir_filters
+]
+
+checks = [
+    test_expression,
+    test_mail,
+    test_db_cursor,
+    test_orm,
+    test_fields,
+    test_basecase,
+    test_view_validation,
+    test_misc,
+    test_osv,
+    test_translate,
+]
+ 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
