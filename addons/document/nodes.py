@@ -134,7 +134,6 @@ class node_context(object):
 
         return self.node_file_class(fbro.name, parent, self, fbro)
 
-
 class node_descriptor(object):
     """A file-like interface to the data contents of a node.
 

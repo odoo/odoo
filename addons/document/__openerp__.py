@@ -27,7 +27,6 @@
     'description': """
 This is a complete document management system.
 ==============================================
-
     * User Authentication
     * Document Indexation:- .pptx and .docx files are not supported in Windows platform.
     * Dashboard for Document that includes:
@@ -35,13 +34,6 @@ This is a complete document management system.
         * Files by Resource Type (graph)
         * Files by Partner (graph)
         * Files Size by Month (graph)
-
-ATTENTION:
-----------
-    - When you install this module in a running company that have already PDF 
-      files stored into the database, you will lose them all.
-    - After installing this module PDF's are no longer stored into the database,
-      but in the servers rootpad like /server/bin/filestore.
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
