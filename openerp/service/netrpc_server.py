@@ -22,8 +22,6 @@
 #.apidoc title: NET-RPC Server
 
 """ This file contains instance of the net-rpc server
-
-    
 """
 import logging
 import select
@@ -37,6 +35,85 @@ import openerp.netsvc as netsvc
 import openerp.tools as tools
 
 _logger = logging.getLogger(__name__)
+
+class Server:
+    """ Generic interface for all servers with an event loop etc.
+        Override this to impement http, net-rpc etc. servers.
+
+        Servers here must have threaded behaviour. start() must not block,
+        there is no run().
+    """
+    __is_started = False
+    __servers = []
+    __starter_threads = []
+
+    # we don't want blocking server calls (think select()) to
+    # wait forever and possibly prevent exiting the process,
+    # but instead we want a form of polling/busy_wait pattern, where
+    # _server_timeout should be used as the default timeout for
+    # all I/O blocking operations
+    _busywait_timeout = 0.5
+
+    def __init__(self):
+        Server.__servers.append(self)
+        if Server.__is_started:
+            # raise Exception('All instances of servers must be inited before the startAll()')
+            # Since the startAll() won't be called again, allow this server to
+            # init and then start it after 1sec (hopefully). Register that
+            # timer thread in a list, so that we can abort the start if quitAll
+            # is called in the meantime
+            t = threading.Timer(1.0, self._late_start)
+            t.name = 'Late start timer for %s' % str(self.__class__)
+            Server.__starter_threads.append(t)
+            t.start()
+
+    def start(self):
+        _logger.debug("called stub Server.start")
+
+    def _late_start(self):
+        self.start()
+        for thr in Server.__starter_threads:
+            if thr.finished.is_set():
+                Server.__starter_threads.remove(thr)
+
+    def stop(self):
+        _logger.debug("called stub Server.stop")
+
+    def stats(self):
+        """ This function should return statistics about the server """
+        return "%s: No statistics" % str(self.__class__)
+
+    @classmethod
+    def startAll(cls):
+        if cls.__is_started:
+            return
+        _logger.info("Starting %d services" % len(cls.__servers))
+        for srv in cls.__servers:
+            srv.start()
+        cls.__is_started = True
+
+    @classmethod
+    def quitAll(cls):
+        if not cls.__is_started:
+            return
+        _logger.info("Stopping %d services" % len(cls.__servers))
+        for thr in cls.__starter_threads:
+            if not thr.finished.is_set():
+                thr.cancel()
+            cls.__starter_threads.remove(thr)
+
+        for srv in cls.__servers:
+            srv.stop()
+        cls.__is_started = False
+
+    @classmethod
+    def allStats(cls):
+        res = ["Servers %s" % ('stopped', 'started')[cls.__is_started]]
+        res.extend(srv.stats() for srv in cls.__servers)
+        return '\n'.join(res)
+
+    def _close_socket(self):
+        netsvc.close_socket(self.socket)
 
 class TinySocketClientThread(threading.Thread):
     def __init__(self, sock, threads):
@@ -99,10 +176,10 @@ def netrpc_handle_exception_legacy(e):
         return 'AccessDenied ' + str(e)
     return openerp.tools.exception_to_unicode(e)
 
-class TinySocketServerThread(threading.Thread,netsvc.Server):
+class TinySocketServerThread(threading.Thread,Server):
     def __init__(self, interface, port, secure=False):
         threading.Thread.__init__(self, name="NetRPCDaemon-%d"%port)
-        netsvc.Server.__init__(self)
+        Server.__init__(self)
         self.__port = port
         self.__interface = interface
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -157,11 +234,12 @@ class TinySocketServerThread(threading.Thread,netsvc.Server):
 
 netrpcd = None
 
-def init_servers():
+def start_service():
     global netrpcd
     if tools.config.get('netrpc', False):
-        netrpcd = TinySocketServerThread(
-            tools.config.get('netrpc_interface', ''), 
-            int(tools.config.get('netrpc_port', 8070)))
+        netrpcd = TinySocketServerThread(tools.config.get('netrpc_interface', ''), int(tools.config.get('netrpc_port', 8070)))
+
+def stop_service():
+    Server.quitAll()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

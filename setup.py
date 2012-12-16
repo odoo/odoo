@@ -106,8 +106,9 @@ setuptools.setup(
           'docutils',
           'feedparser',
           'gdata',
-          'lxml < 3', # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
+          'lxml', # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
           'mako',
+          'mock',
           'PIL', # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
           'psutil', # windows binary code.google.com/p/psutil/downloads/list
           'psycopg2',
@@ -120,6 +121,7 @@ setuptools.setup(
           'pyyaml',
           'reportlab', # windows binary pypi.python.org/pypi/reportlab
           'simplejson',
+          'unittest2',
           'vatnumber',
           'vobject',
           'werkzeug',

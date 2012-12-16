@@ -58,7 +58,6 @@ import types
 
 import psycopg2
 from lxml import etree
-import warnings
 
 import fields
 import openerp
@@ -866,10 +865,6 @@ class BaseModel(object):
                 parent_names = [parent_names]
             else:
                 name = cls._name
-            # for res.parnter.address compatiblity, should be remove in v7
-            if 'res.partner.address' in parent_names:
-                parent_names.pop(parent_names.index('res.partner.address'))
-                parent_names.append('res.partner')
             if not name:
                 raise TypeError('_name is mandatory in case of multiple inheritance')
 
@@ -1019,45 +1014,50 @@ class BaseModel(object):
 
         # Load manual fields
 
-        cr.execute("SELECT id FROM ir_model_fields WHERE name=%s AND model=%s", ('state', 'ir.model.fields'))
-        if cr.fetchone():
+        # Check the query is already done for all modules of if we need to
+        # do it ourselves.
+        if self.pool.fields_by_model is not None:
+            manual_fields = self.pool.fields_by_model.get(self._name, [])
+        else:
             cr.execute('SELECT * FROM ir_model_fields WHERE model=%s AND state=%s', (self._name, 'manual'))
-            for field in cr.dictfetchall():
-                if field['name'] in self._columns:
-                    continue
-                attrs = {
-                    'string': field['field_description'],
-                    'required': bool(field['required']),
-                    'readonly': bool(field['readonly']),
-                    'domain': eval(field['domain']) if field['domain'] else None,
-                    'size': field['size'],
-                    'ondelete': field['on_delete'],
-                    'translate': (field['translate']),
-                    'manual': True,
-                    #'select': int(field['select_level'])
-                }
+            manual_fields = cr.dictfetchall()
+        for field in manual_fields:
+            if field['name'] in self._columns:
+                continue
+            attrs = {
+                'string': field['field_description'],
+                'required': bool(field['required']),
+                'readonly': bool(field['readonly']),
+                'domain': eval(field['domain']) if field['domain'] else None,
+                'size': field['size'],
+                'ondelete': field['on_delete'],
+                'translate': (field['translate']),
+                'manual': True,
+                #'select': int(field['select_level'])
+            }
 
-                if field['serialization_field_id']:
-                    cr.execute('SELECT name FROM ir_model_fields WHERE id=%s', (field['serialization_field_id'],))
-                    attrs.update({'serialization_field': cr.fetchone()[0], 'type': field['ttype']})
-                    if field['ttype'] in ['many2one', 'one2many', 'many2many']:
-                        attrs.update({'relation': field['relation']})
-                    self._columns[field['name']] = fields.sparse(**attrs)
-                elif field['ttype'] == 'selection':
-                    self._columns[field['name']] = fields.selection(eval(field['selection']), **attrs)
-                elif field['ttype'] == 'reference':
-                    self._columns[field['name']] = fields.reference(selection=eval(field['selection']), **attrs)
-                elif field['ttype'] == 'many2one':
-                    self._columns[field['name']] = fields.many2one(field['relation'], **attrs)
-                elif field['ttype'] == 'one2many':
-                    self._columns[field['name']] = fields.one2many(field['relation'], field['relation_field'], **attrs)
-                elif field['ttype'] == 'many2many':
-                    _rel1 = field['relation'].replace('.', '_')
-                    _rel2 = field['model'].replace('.', '_')
-                    _rel_name = 'x_%s_%s_%s_rel' % (_rel1, _rel2, field['name'])
-                    self._columns[field['name']] = fields.many2many(field['relation'], _rel_name, 'id1', 'id2', **attrs)
-                else:
-                    self._columns[field['name']] = getattr(fields, field['ttype'])(**attrs)
+            if field['serialization_field_id']:
+                cr.execute('SELECT name FROM ir_model_fields WHERE id=%s', (field['serialization_field_id'],))
+                attrs.update({'serialization_field': cr.fetchone()[0], 'type': field['ttype']})
+                if field['ttype'] in ['many2one', 'one2many', 'many2many']:
+                    attrs.update({'relation': field['relation']})
+                self._columns[field['name']] = fields.sparse(**attrs)
+            elif field['ttype'] == 'selection':
+                self._columns[field['name']] = fields.selection(eval(field['selection']), **attrs)
+            elif field['ttype'] == 'reference':
+                self._columns[field['name']] = fields.reference(selection=eval(field['selection']), **attrs)
+            elif field['ttype'] == 'many2one':
+                self._columns[field['name']] = fields.many2one(field['relation'], **attrs)
+            elif field['ttype'] == 'one2many':
+                self._columns[field['name']] = fields.one2many(field['relation'], field['relation_field'], **attrs)
+            elif field['ttype'] == 'many2many':
+                _rel1 = field['relation'].replace('.', '_')
+                _rel2 = field['model'].replace('.', '_')
+                _rel_name = 'x_%s_%s_%s_rel' % (_rel1, _rel2, field['name'])
+                self._columns[field['name']] = fields.many2many(field['relation'], _rel_name, 'id1', 'id2', **attrs)
+            else:
+                self._columns[field['name']] = getattr(fields, field['ttype'])(**attrs)
+
         self._inherits_check()
         self._inherits_reload()
         if not self._sequence:
@@ -2509,6 +2509,7 @@ class BaseModel(object):
         try:
             getattr(self, '_ormcache')
             self._ormcache = {}
+            self.pool._any_cache_cleared = True
         except AttributeError:
             pass
 
@@ -2720,22 +2721,17 @@ class BaseModel(object):
 
         return result
 
-    def _inherits_join_add(self, current_table, parent_model_name, query):
+    def _inherits_join_add(self, current_model, parent_model_name, query):
         """
         Add missing table SELECT and JOIN clause to ``query`` for reaching the parent table (no duplicates)
-        :param current_table: current model object
+        :param current_model: current model object
         :param parent_model_name: name of the parent model for which the clauses should be added
         :param query: query object on which the JOIN should be added
         """
-        inherits_field = current_table._inherits[parent_model_name]
+        inherits_field = current_model._inherits[parent_model_name]
         parent_model = self.pool.get(parent_model_name)
-        parent_table_name = parent_model._table
-        quoted_parent_table_name = '"%s"' % parent_table_name
-        if quoted_parent_table_name not in query.tables:
-            query.tables.append(quoted_parent_table_name)
-            query.where_clause.append('(%s.%s = %s.id)' % (current_table._table, inherits_field, parent_table_name))
-
-
+        parent_alias, parent_alias_statement = query.add_join((current_model._table, parent_model._table, inherits_field, 'id', inherits_field), implicit=True)
+        return parent_alias
 
     def _inherits_join_calc(self, field, query):
         """
@@ -2747,12 +2743,13 @@ class BaseModel(object):
         :return: qualified name of field, to be used in SELECT clause
         """
         current_table = self
+        parent_alias = '"%s"' % current_table._table
         while field in current_table._inherit_fields and not field in current_table._columns:
             parent_model_name = current_table._inherit_fields[field][0]
             parent_table = self.pool.get(parent_model_name)
-            self._inherits_join_add(current_table, parent_model_name, query)
+            parent_alias = self._inherits_join_add(current_table, parent_model_name, query)
             current_table = parent_table
-        return '"%s".%s' % (current_table._table, field)
+        return '%s."%s"' % (parent_alias, field)
 
     def _parent_store_compute(self, cr):
         if not self._parent_store:
@@ -3234,7 +3231,7 @@ class BaseModel(object):
 
 
     def _create_table(self, cr):
-        cr.execute('CREATE TABLE "%s" (id SERIAL NOT NULL, PRIMARY KEY(id)) WITHOUT OIDS' % (self._table,))
+        cr.execute('CREATE TABLE "%s" (id SERIAL NOT NULL, PRIMARY KEY(id))' % (self._table,))
         cr.execute(("COMMENT ON TABLE \"%s\" IS %%s" % self._table), (self._description,))
         _schema.debug("Table '%s': created", self._table)
 
@@ -3266,8 +3263,8 @@ class BaseModel(object):
         elif not self._columns['parent_right'].select:
             _logger.error('parent_right column on object %s must be indexed! Add select=1 to the field definition)',
                           self._table)
-        if self._columns[self._parent_name].ondelete != 'cascade':
-            _logger.error("The column %s on object %s must be set as ondelete='cascade'",
+        if self._columns[self._parent_name].ondelete not in ('cascade', 'restrict'):
+            _logger.error("The column %s on object %s must be set as ondelete='cascade' or 'restrict'",
                           self._parent_name, self._name)
 
         cr.commit()
@@ -3318,7 +3315,7 @@ class BaseModel(object):
                 raise except_orm('Programming Error', ('Many2Many destination model does not exist: `%s`') % (f._obj,))
             dest_model = self.pool.get(f._obj)
             ref = dest_model._table
-            cr.execute('CREATE TABLE "%s" ("%s" INTEGER NOT NULL, "%s" INTEGER NOT NULL, UNIQUE("%s","%s")) WITH OIDS' % (m2m_tbl, col1, col2, col1, col2))
+            cr.execute('CREATE TABLE "%s" ("%s" INTEGER NOT NULL, "%s" INTEGER NOT NULL, UNIQUE("%s","%s"))' % (m2m_tbl, col1, col2, col1, col2))
             # create foreign key references with ondelete=cascade, unless the targets are SQL views
             cr.execute("SELECT relkind FROM pg_class WHERE relkind IN ('v') AND relname=%s", (ref,))
             if not cr.fetchall():
@@ -3449,8 +3446,8 @@ class BaseModel(object):
                 _logger.info('Missing many2one field definition for _inherits reference "%s" in "%s", using default one.', field_name, self._name)
                 self._columns[field_name] = fields.many2one(table, string="Automatically created field to link to parent %s" % table,
                                                              required=True, ondelete="cascade")
-            elif not self._columns[field_name].required or self._columns[field_name].ondelete.lower() != "cascade":
-                _logger.warning('Field definition for _inherits reference "%s" in "%s" must be marked as "required" with ondelete="cascade", forcing it.', field_name, self._name)
+            elif not self._columns[field_name].required or self._columns[field_name].ondelete.lower() not in ("cascade", "restrict"):
+                _logger.warning('Field definition for _inherits reference "%s" in "%s" must be marked as "required" with ondelete="cascade" or "restrict", forcing it to required + cascade.', field_name, self._name)
                 self._columns[field_name].required = True
                 self._columns[field_name].ondelete = "cascade"
 
@@ -3632,15 +3629,16 @@ class BaseModel(object):
         else:
             res = map(lambda x: {'id': x}, ids)
 
-        for f in fields_pre:
-            if f == self.CONCURRENCY_CHECK_FIELD:
-                continue
-            if self._columns[f].translate:
-                ids = [x['id'] for x in res]
-                #TODO: optimize out of this loop
-                res_trans = self.pool.get('ir.translation')._get_ids(cr, user, self._name+','+f, 'model', context.get('lang', False) or 'en_US', ids)
-                for r in res:
-                    r[f] = res_trans.get(r['id'], False) or r[f]
+        if context.get('lang'):
+            for f in fields_pre:
+                if f == self.CONCURRENCY_CHECK_FIELD:
+                    continue
+                if self._columns[f].translate:
+                    ids = [x['id'] for x in res]
+                    #TODO: optimize out of this loop
+                    res_trans = self.pool.get('ir.translation')._get_ids(cr, user, self._name+','+f, 'model', context['lang'], ids)
+                    for r in res:
+                        r[f] = res_trans.get(r['id'], False) or r[f]
 
         for table in self._inherits:
             col = self._inherits[table]
@@ -4661,11 +4659,27 @@ class BaseModel(object):
            :param query: the current query object
         """
         def apply_rule(added_clause, added_params, added_tables, parent_model=None, child_object=None):
+            """ :param string parent_model: string of the parent model
+                :param model child_object: model object, base of the rule application
+            """
             if added_clause:
                 if parent_model and child_object:
                     # as inherited rules are being applied, we need to add the missing JOIN
                     # to reach the parent table (if it was not JOINed yet in the query)
-                    child_object._inherits_join_add(child_object, parent_model, query)
+                    parent_alias = child_object._inherits_join_add(child_object, parent_model, query)
+                    # inherited rules are applied on the external table -> need to get the alias and replace
+                    parent_table = self.pool.get(parent_model)._table
+                    added_clause = [clause.replace('"%s"' % parent_table, '"%s"' % parent_alias) for clause in added_clause]
+                    # change references to parent_table to parent_alias, because we now use the alias to refer to the table
+                    new_tables = []
+                    for table in added_tables:
+                        # table is just a table name -> switch to the full alias
+                        if table == '"%s"' % (parent_table):
+                            new_tables.append('"%s" as "%s"' % (parent_table, parent_alias))
+                        # table is already a full statement -> replace reference to the table to its alias, is correct with the way aliases are generated
+                        else:
+                            new_tables.append(table.replace('"%s"' % parent_table, '"%s"' % parent_alias))
+                    added_tables = new_tables
                 query.where_clause += added_clause
                 query.where_clause_params += added_params
                 for table in added_tables:
@@ -4676,12 +4690,14 @@ class BaseModel(object):
 
         # apply main rules on the object
         rule_obj = self.pool.get('ir.rule')
-        apply_rule(*rule_obj.domain_get(cr, uid, self._name, mode, context=context))
+        rule_where_clause, rule_where_clause_params, rule_tables = rule_obj.domain_get(cr, uid, self._name, mode, context=context)
+        apply_rule(rule_where_clause, rule_where_clause_params, rule_tables)
 
         # apply ir.rules from the parents (through _inherits)
         for inherited_model in self._inherits:
-            kwargs = dict(parent_model=inherited_model, child_object=self) #workaround for python2.5
-            apply_rule(*rule_obj.domain_get(cr, uid, inherited_model, mode, context=context), **kwargs)
+            rule_where_clause, rule_where_clause_params, rule_tables = rule_obj.domain_get(cr, uid, inherited_model, mode, context=context)
+            apply_rule(rule_where_clause, rule_where_clause_params, rule_tables,
+                        parent_model=inherited_model, child_object=self)
 
     def _generate_m2o_order_by(self, order_field, query):
         """
@@ -4716,16 +4732,15 @@ class BaseModel(object):
             # extract the field names, to be able to qualify them and add desc/asc
             m2o_order_list = []
             for order_part in m2o_order.split(","):
-                m2o_order_list.append(order_part.strip().split(" ",1)[0].strip())
+                m2o_order_list.append(order_part.strip().split(" ", 1)[0].strip())
             m2o_order = m2o_order_list
 
         # Join the dest m2o table if it's not joined yet. We use [LEFT] OUTER join here
         # as we don't want to exclude results that have NULL values for the m2o
-        src_table, src_field = qualified_field.replace('"','').split('.', 1)
-        query.join((src_table, dest_model._table, src_field, 'id'), outer=True)
-        qualify = lambda field: '"%s"."%s"' % (dest_model._table, field)
+        src_table, src_field = qualified_field.replace('"', '').split('.', 1)
+        dst_alias, dst_alias_statement = query.add_join((src_table, dest_model._table, src_field, 'id', src_field), implicit=False, outer=True)
+        qualify = lambda field: '"%s"."%s"' % (dst_alias, field)
         return map(qualify, m2o_order) if isinstance(m2o_order, list) else qualify(m2o_order)
-
 
     def _generate_order_by(self, order_spec, query):
         """
@@ -4734,7 +4749,8 @@ class BaseModel(object):
 
         :raise" except_orm in case order_spec is malformed
         """
-        order_by_clause = self._order
+        order_by_clause = ''
+        order_spec = order_spec or self._order
         if order_spec:
             order_by_elements = []
             self._check_qorder(order_spec)
@@ -4752,7 +4768,7 @@ class BaseModel(object):
                     elif order_column._type == 'many2one':
                         inner_clause = self._generate_m2o_order_by(order_field, query)
                     else:
-                        continue # ignore non-readable or "non-joinable" fields
+                        continue  # ignore non-readable or "non-joinable" fields
                 elif order_field in self._inherit_fields:
                     parent_obj = self.pool.get(self._inherit_fields[order_field][3])
                     order_column = parent_obj._columns[order_field]
@@ -4761,7 +4777,7 @@ class BaseModel(object):
                     elif order_column._type == 'many2one':
                         inner_clause = self._generate_m2o_order_by(order_field, query)
                     else:
-                        continue # ignore non-readable or "non-joinable" fields
+                        continue  # ignore non-readable or "non-joinable" fields
                 if inner_clause:
                     if isinstance(inner_clause, list):
                         for clause in inner_clause:
