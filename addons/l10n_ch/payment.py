@@ -24,7 +24,7 @@ from osv import osv
 class payment_order(osv.osv):
     _inherit = 'payment.order'
 
-    def get_wizard(self,mode):
+    def get_wizard(self, mode):
         if mode == 'dta':
             return 'l10n_ch', 'action_dta_create'
 

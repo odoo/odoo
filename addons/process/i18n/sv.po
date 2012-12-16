@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
 "PO-Revision-Date: 2010-11-22 20:09+0000\n"
 "Last-Translator: Olivier Dony (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:15+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-11-25 05:51+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: process
 #: model:ir.model,name:process.model_process_node
@@ -29,11 +29,18 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the process "
 "without removing it."
 msgstr ""
+"Om det aktiva fältet är satt till falskt, kommer det att du kan dölja "
+"processen utan att ta bort den."
 
 #. module: process
 #: field:process.node,menu_id:0
 msgid "Related Menu"
 msgstr "Related Menu"
+
+#. module: process
+#: selection:process.node,kind:0
+msgid "Status"
+msgstr ""
 
 #. module: process
 #: field:process.transition,action_ids:0
@@ -44,22 +51,22 @@ msgstr "Buttons"
 #: view:process.node:0
 #: view:process.process:0
 msgid "Group By..."
-msgstr ""
-
-#. module: process
-#: selection:process.node,kind:0
-msgid "State"
-msgstr "State"
+msgstr "Gruppera på..."
 
 #. module: process
 #: view:process.node:0
 msgid "Kind Of Node"
-msgstr ""
+msgstr "En slags nod"
 
 #. module: process
 #: field:process.node,help_url:0
 msgid "Help URL"
 msgstr "Help URL"
+
+#. module: process
+#: field:process.node,flow_start:0
+msgid "Starting Flow"
+msgstr "Starting Flow"
 
 #. module: process
 #: model:ir.actions.act_window,name:process.action_process_node_form
@@ -76,7 +83,6 @@ msgid "Nodes"
 msgstr "Nodes"
 
 #. module: process
-#: view:process.node:0
 #: field:process.node,condition_ids:0
 #: view:process.process:0
 msgid "Conditions"
@@ -85,7 +91,7 @@ msgstr "Conditions"
 #. module: process
 #: view:process.transition:0
 msgid "Search Process Transition"
-msgstr ""
+msgstr "Sök processövergångar"
 
 #. module: process
 #: field:process.condition,node_id:0
@@ -128,9 +134,23 @@ msgid "Workflow Transitions"
 msgstr "Workflow Transitions"
 
 #. module: process
+#. openerp-web
+#: code:addons/process/static/src/xml/process.xml:39
+#, python-format
+msgid "Last modified by:"
+msgstr ""
+
+#. module: process
 #: field:process.transition.action,action:0
 msgid "Action ID"
 msgstr "Action ID"
+
+#. module: process
+#. openerp-web
+#: code:addons/process/static/src/xml/process.xml:7
+#, python-format
+msgid "Process View"
+msgstr ""
 
 #. module: process
 #: model:ir.model,name:process.model_process_transition
@@ -152,7 +172,12 @@ msgstr "Dummy"
 #: model:ir.actions.act_window,name:process.action_process_form
 #: model:ir.ui.menu,name:process.menu_process_form
 msgid "Processes"
-msgstr ""
+msgstr "Processer"
+
+#. module: process
+#: field:process.transition.action,transition_id:0
+msgid "Transition"
+msgstr "Transition"
 
 #. module: process
 #: field:process.condition,name:0
@@ -169,6 +194,13 @@ msgid "Starting Transitions"
 msgstr "Starting Transitions"
 
 #. module: process
+#. openerp-web
+#: code:addons/process/static/src/xml/process.xml:54
+#, python-format
+msgid "Related:"
+msgstr ""
+
+#. module: process
 #: view:process.node:0
 #: field:process.node,note:0
 #: view:process.process:0
@@ -178,20 +210,23 @@ msgid "Notes"
 msgstr "Notes"
 
 #. module: process
-#: field:process.transition.action,transition_id:0
-msgid "Transition"
-msgstr "Transition"
+#. openerp-web
+#: code:addons/process/static/src/xml/process.xml:88
+#, python-format
+msgid "Edit Process"
+msgstr ""
+
+#. module: process
+#. openerp-web
+#: code:addons/process/static/src/xml/process.xml:39
+#, python-format
+msgid "N/A"
+msgstr ""
 
 #. module: process
 #: view:process.process:0
 msgid "Search Process"
-msgstr ""
-
-#. module: process
-#: selection:process.node,kind:0
-#: field:process.node,subflow_id:0
-msgid "Subflow"
-msgstr "Subflow"
+msgstr "Sök process"
 
 #. module: process
 #: field:process.process,active:0
@@ -201,7 +236,7 @@ msgstr "Active"
 #. module: process
 #: view:process.transition:0
 msgid "Associated Groups"
-msgstr ""
+msgstr "Tillhörande grupper"
 
 #. module: process
 #: field:process.node,model_states:0
@@ -214,9 +249,11 @@ msgid "Action"
 msgstr "Action"
 
 #. module: process
-#: field:process.node,flow_start:0
-msgid "Starting Flow"
-msgstr "Starting Flow"
+#. openerp-web
+#: code:addons/process/static/src/xml/process.xml:67
+#, python-format
+msgid "Select Process"
+msgstr ""
 
 #. module: process
 #: field:process.condition,model_states:0
@@ -226,13 +263,13 @@ msgstr "Expression"
 #. module: process
 #: field:process.transition,group_ids:0
 msgid "Required Groups"
-msgstr ""
+msgstr "Obligatoriska grupper"
 
 #. module: process
 #: view:process.node:0
 #: view:process.process:0
 msgid "Incoming Transitions"
-msgstr ""
+msgstr "Inkommande övergångar"
 
 #. module: process
 #: field:process.transition.action,state:0
@@ -245,22 +282,26 @@ msgid "Ending Transitions"
 msgstr "Ending Transitions"
 
 #. module: process
+#. openerp-web
+#: code:addons/process/static/src/js/process.js:243
+#: code:addons/process/static/src/xml/process.xml:33
 #: model:ir.model,name:process.model_process_process
 #: field:process.node,process_id:0
 #: view:process.process:0
+#, python-format
 msgid "Process"
 msgstr "Process"
 
 #. module: process
 #: view:process.node:0
 msgid "Search ProcessNode"
-msgstr ""
+msgstr "Sök processnod"
 
 #. module: process
 #: view:process.node:0
 #: view:process.process:0
 msgid "Other Conditions"
-msgstr ""
+msgstr "Andra villkor"
 
 #. module: process
 #: model:ir.ui.menu,name:process.menu_process
@@ -276,7 +317,7 @@ msgstr "Actions"
 #: view:process.node:0
 #: view:process.process:0
 msgid "Properties"
-msgstr ""
+msgstr "Attribut"
 
 #. module: process
 #: model:ir.actions.act_window,name:process.action_process_transition_form
@@ -295,10 +336,30 @@ msgid "Kind of Node"
 msgstr "Kind of Node"
 
 #. module: process
+#. openerp-web
+#: code:addons/process/static/src/xml/process.xml:42
+#, python-format
+msgid "Subflows:"
+msgstr ""
+
+#. module: process
 #: view:process.node:0
 #: view:process.process:0
 msgid "Outgoing Transitions"
 msgstr "Outgoing Transitions"
+
+#. module: process
+#. openerp-web
+#: code:addons/process/static/src/xml/process.xml:36
+#, python-format
+msgid "Notes:"
+msgstr ""
+
+#. module: process
+#: selection:process.node,kind:0
+#: field:process.node,subflow_id:0
+msgid "Subflow"
+msgstr "Subflow"
 
 #. module: process
 #: view:process.node:0
@@ -311,6 +372,13 @@ msgstr "Transitions"
 msgid "Object Method"
 msgstr "Object Method"
 
+#. module: process
+#. openerp-web
+#: code:addons/process/static/src/xml/process.xml:77
+#, python-format
+msgid "Select"
+msgstr ""
+
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
@@ -321,6 +389,9 @@ msgstr "Object Method"
 
 #~ msgid "Roles from Workflow"
 #~ msgstr "Roles from Workflow"
+
+#~ msgid "State"
+#~ msgstr "State"
 
 #~ msgid "Details"
 #~ msgstr "Details"

@@ -34,7 +34,7 @@ def geo_find(addr):
         xml = urllib.urlopen(url).read()
     except Exception, e:
         raise osv.except_osv(_('Network error'),
-                             _('Could not contact geolocation servers, please make sure you have a working internet connection (%s)') % e)
+                             _('Cannot contact geolocation servers. Please make sure that your internet connection is up and running (%s).') % e)
 
     if '<error>' in xml:
         return None
@@ -46,11 +46,11 @@ def geo_find(addr):
 def geo_query_address(street=None, zip=None, city=None, state=None, country=None):
     if country and ',' in country and (country.endswith(' of') or country.endswith(' of the')):
         # put country qualifier in front, otherwise GMap gives wrong results,
-        # e.g. 'Congo, Democratic Republic of the' => 'Democratic Republic of the Congo' 
-        country = '{1} {0}'.format(*country.split(',',1)) 
-    return tools.ustr(', '.join(filter(None, [street, 
-                                              ("%s %s" % (zip or '', city or '')).strip(), 
-                                              state, 
+        # e.g. 'Congo, Democratic Republic of the' => 'Democratic Republic of the Congo'
+        country = '{1} {0}'.format(*country.split(',',1))
+    return tools.ustr(', '.join(filter(None, [street,
+                                              ("%s %s" % (zip or '', city or '')).strip(),
+                                              state,
                                               country])))
 
 class res_partner_grade(osv.osv):
@@ -87,7 +87,7 @@ class res_partner(osv.osv):
             help="Gives the probability to assign a lead to this partner. (0 means no assignation.)"),
         'opportunity_assigned_ids': fields.one2many('crm.lead', 'partner_assigned_id',\
             'Assigned Opportunities'),
-        'grade_id': fields.many2one('res.partner.grade', 'Partner Grade'),
+        'grade_id': fields.many2one('res.partner.grade', 'Partner Level'),
         'activation' : fields.many2one('res.partner.activation', 'Activation', select=1),
         'date_partnership' : fields.date('Partnership Date'),
         'date_review' : fields.date('Latest Partner Review'),

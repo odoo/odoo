@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2010-08-03 03:44+0000\n"
-"Last-Translator: Mantavya Gajjar (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"PO-Revision-Date: 2012-12-10 07:10+0000\n"
+"Last-Translator: Goran Kliska <gkliska@gmail.com>\n"
 "Language-Team: Vinteh\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-11 05:01+0000\n"
-"X-Generator: Launchpad (build 15225)\n"
+"X-Launchpad-Export-Date: 2012-12-11 04:48+0000\n"
+"X-Generator: Launchpad (build 16356)\n"
 "Language: hr\n"
 
 #. module: base_report_designer
@@ -35,7 +35,7 @@ msgid ""
 msgstr ""
 
 #. module: base_report_designer
-#: view:base.report.file.sxw:0
+#: view:base.report.sxw:0
 msgid "Upload the modified report"
 msgstr "Pošalji promijenjen Izvještaj na Server"
 
@@ -50,24 +50,19 @@ msgid "base_report_designer.installer"
 msgstr ""
 
 #. module: base_report_designer
-#: view:base_report_designer.installer:0
-msgid "_Close"
-msgstr ""
-
-#. module: base_report_designer
-#: view:base.report.rml.save:0
-msgid "The RML Report"
+#: model:ir.model,name:base_report_designer.model_base_report_rml_save
+msgid "base.report.rml.save"
 msgstr ""
 
 #. module: base_report_designer
 #: view:base_report_designer.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "Postavke"
 
 #. module: base_report_designer
 #: view:base_report_designer.installer:0
 msgid "title"
-msgstr ""
+msgstr "naslov"
 
 #. module: base_report_designer
 #: field:base.report.file.sxw,report_id:0
@@ -76,8 +71,8 @@ msgid "Report"
 msgstr "Izvještaj"
 
 #. module: base_report_designer
-#: model:ir.model,name:base_report_designer.model_base_report_rml_save
-msgid "base.report.rml.save"
+#: view:base.report.rml.save:0
+msgid "The RML Report"
 msgstr ""
 
 #. module: base_report_designer
@@ -88,7 +83,7 @@ msgstr "Dizajner Izvještaja"
 #. module: base_report_designer
 #: field:base_report_designer.installer,name:0
 msgid "File name"
-msgstr ""
+msgstr "Naziv datoteke"
 
 #. module: base_report_designer
 #: view:base.report.file.sxw:0
@@ -110,7 +105,7 @@ msgstr "Nastavi"
 #. module: base_report_designer
 #: field:base.report.rml.save,file_rml:0
 msgid "Save As"
-msgstr ""
+msgstr "Spremi kao"
 
 #. module: base_report_designer
 #: help:base_report_designer.installer,plugin_file:0
@@ -122,7 +117,7 @@ msgstr ""
 #. module: base_report_designer
 #: view:base.report.rml.save:0
 msgid "Save RML FIle"
-msgstr ""
+msgstr "Snimi RML datoteku"
 
 #. module: base_report_designer
 #: field:base.report.file.sxw,file_sxw:0
@@ -133,12 +128,12 @@ msgstr "Vaša .SXW datoteka"
 #. module: base_report_designer
 #: view:base_report_designer.installer:0
 msgid "Installation and Configuration Steps"
-msgstr ""
+msgstr "Koraci instalacije i konfiguracije"
 
 #. module: base_report_designer
 #: field:base_report_designer.installer,description:0
 msgid "Description"
-msgstr ""
+msgstr "Opis"
 
 #. module: base_report_designer
 #: view:base.report.file.sxw:0
@@ -147,11 +142,6 @@ msgid ""
 "Save it as a .SXW file and open it with OpenOffice.\n"
 "Don't forget to install the OpenERP SA OpenOffice package to modify it.\n"
 "Once it is modified, re-upload it in OpenERP using this wizard."
-msgstr ""
-
-#. module: base_report_designer
-#: field:base_report_designer.installer,config_logo:0
-msgid "Image"
 msgstr ""
 
 #. module: base_report_designer
@@ -175,12 +165,14 @@ msgid "OpenERP Report Designer Installation"
 msgstr ""
 
 #. module: base_report_designer
-#: view:base.report.file.sxw:0
-#: view:base.report.rml.save:0
 #: view:base.report.sxw:0
-#: view:base_report_designer.installer:0
 msgid "Cancel"
 msgstr "Odustani"
+
+#. module: base_report_designer
+#: view:base.report.sxw:0
+msgid "or"
+msgstr "ili"
 
 #. module: base_report_designer
 #: model:ir.model,name:base_report_designer.model_ir_actions_report_xml

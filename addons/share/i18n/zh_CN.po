@@ -7,39 +7,74 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-06-07 03:37+0000\n"
-"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
+"PO-Revision-Date: 2012-12-09 05:00+0000\n"
+"Last-Translator: sum1201 <Unknown>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-06-07 04:41+0000\n"
-"X-Generator: Launchpad (build 15353)\n"
+"X-Launchpad-Export-Date: 2012-12-10 04:39+0000\n"
+"X-Generator: Launchpad (build 16341)\n"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:837
+#, python-format
+msgid "Invitation to collaborate about %s"
+msgstr "关于%s的合作邀请"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:775
+#, python-format
+msgid ""
+"The share engine has not been able to fetch a record_id for your invitation."
+msgstr ""
+
+#. module: share
+#: view:share.wizard:0
+msgid "Include an Optional Personal Message"
+msgstr "包括一个可选的个人信息"
 
 #. module: share
 #: field:share.wizard,embed_option_title:0
 msgid "Display title"
-msgstr ""
+msgstr "显示标题"
 
 #. module: share
 #: view:share.wizard:0
 msgid "Access granted!"
-msgstr ""
+msgstr "存取授权！"
+
+#. module: share
+#: field:share.wizard,record_name:0
+msgid "Record name"
+msgstr "记录名称"
+
+#. module: share
+#: help:share.wizard,message:0
+msgid ""
+"An optional personal message, to be included in the email notification."
+msgstr "一个可选的个人信息，被包含在电子邮件通知。"
 
 #. module: share
 #: field:share.wizard,user_type:0
 msgid "Sharing method"
-msgstr ""
-
-#. module: share
-#: view:share.wizard:0
-msgid "Share with these People (one e-mail per line)"
-msgstr ""
+msgstr "共享方式"
 
 #. module: share
 #: field:share.wizard,name:0
 msgid "Share Title"
+msgstr "共享标题"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:843
+#: code:addons/share/wizard/share_wizard.py:872
+#, python-format
+msgid ""
+"The documents are not attached, you can view them online directly on my "
+"OpenERP server at:\n"
+"    %s\n"
+"\n"
 msgstr ""
 
 #. module: share
@@ -48,51 +83,63 @@ msgid "Sharing"
 msgstr "共享"
 
 #. module: share
-#: field:share.wizard,share_root_url:0
-msgid "Share Access URL"
+#: code:addons/share/wizard/share_wizard.py:838
+#: code:addons/share/wizard/share_wizard.py:870
+#, python-format
+msgid ""
+"Hello,\n"
+"\n"
 msgstr ""
+"Hello，\n"
+"\n"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:782
+#: field:share.wizard,share_root_url:0
+msgid "Share Access URL"
+msgstr "分享访问URL"
+
+#. module: share
+#: field:share.wizard,email_1:0
+#: field:share.wizard,email_2:0
+#: field:share.wizard,email_3:0
+msgid "New user email"
+msgstr "新用户Email"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:882
 #, python-format
 msgid "You may use your current login (%s) and password to view them.\n"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:601
+#: code:addons/share/wizard/share_wizard.py:616
 #, python-format
 msgid "(Modified)"
-msgstr ""
+msgstr "(已修改)"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:769
+#: code:addons/share/wizard/share_wizard.py:660
 #, python-format
-msgid ""
-"The documents are not attached, you can view them online directly on my "
-"OpenERP server at:"
-msgstr ""
+msgid "You must be a member of the Share/User group to use the share wizard."
+msgstr "必须是销售/用户组才能使用 分享向导"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:579
+#: code:addons/share/wizard/share_wizard.py:594
 #, python-format
 msgid "Sharing filter created by user %s (%s) for group %s"
 msgstr "创建用户 %s （%s ）的共享过滤器，在用户组 %s"
 
 #. module: share
-#: field:share.wizard,embed_url:0 field:share.wizard.result.line,share_url:0
+#: field:share.wizard,embed_url:0
+#: field:share.wizard.result.line,share_url:0
 msgid "Share URL"
 msgstr "共享URL"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:776
+#: code:addons/share/wizard/share_wizard.py:844
+#: code:addons/share/wizard/share_wizard.py:876
 #, python-format
 msgid "These are your credentials to access this protected area:\n"
-msgstr ""
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:643
-#, python-format
-msgid "You must be a member of the Share/User group to use the share wizard"
 msgstr ""
 
 #. module: share
@@ -106,9 +153,16 @@ msgid "Share"
 msgstr "共享"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:551
+#: code:addons/share/wizard/share_wizard.py:566
 #, python-format
 msgid "(Duplicated for modified sharing permissions)"
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:664
+#, python-format
+msgid ""
+"Please indicate the emails of the persons to share with, one per line."
 msgstr ""
 
 #. module: share
@@ -117,22 +171,19 @@ msgid "Optional domain for further data filtering"
 msgstr "可选的过滤条件，用于再次过滤数据"
 
 #. module: share
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr "你不能同时登录两个用户！"
-
-#. module: share
-#: model:ir.model,name:share.model_ir_model_access
-msgid "ir.model.access"
-msgstr ""
-
-#. module: share
 #: view:share.wizard:0
 msgid "Next"
 msgstr "下一个"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:777
+#: code:addons/share/wizard/share_wizard.py:657
+#, python-format
+msgid "Action and Access Mode are required to create a shared access."
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:845
+#: code:addons/share/wizard/share_wizard.py:877
 #, python-format
 msgid "Username"
 msgstr "用户名"
@@ -143,20 +194,20 @@ msgid "Sharing Options"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:765
+#. openerp-web
+#: code:addons/share/static/src/xml/share.xml:9
 #, python-format
-msgid "Hello,"
+msgid "Invite"
 msgstr ""
 
 #. module: share
 #: view:share.wizard:0
-msgid "Close"
-msgstr "结束"
+msgid "Embedded code options"
+msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:640
-#, python-format
-msgid "Action and Access Mode are required to create a shared access"
+#: view:share.wizard:0
+msgid "Configuration"
 msgstr ""
 
 #. module: share
@@ -167,25 +218,13 @@ msgid ""
 msgstr "该操作是打开选择要包含哪些共享数据的视图"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:781
-#, python-format
-msgid ""
-"The documents have been automatically added to your current OpenERP "
-"documents.\n"
-msgstr ""
-
-#. module: share
-#: view:share.wizard:0
-msgid "Cancel"
-msgstr "取消"
-
-#. module: share
 #: field:res.groups,share:0
 msgid "Share Group"
 msgstr "共享用户组"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:763
+#: code:addons/share/wizard/share_wizard.py:830
+#: code:addons/share/wizard/share_wizard.py:861
 #, python-format
 msgid "Email required"
 msgstr "需要一个电子邮件地址"
@@ -198,22 +237,26 @@ msgid ""
 msgstr "可选项，你可以针对于要分享的数据指定一个过滤条件。"
 
 #. module: share
-#: help:share.wizard,name:0
-msgid "Title for the share (displayed to users as menu and shortcut name)"
+#: view:res.groups:0
+msgid "Non-Share Groups"
 msgstr ""
 
 #. module: share
 #: view:share.wizard:0
-msgid "Options"
+msgid ""
+"An email notification with instructions has been sent to the following "
+"people:"
 msgstr ""
 
 #. module: share
-#: view:res.groups:0
-msgid "Regular groups only (no share groups"
-msgstr "只是普通组（不是共享组）"
+#: code:addons/share/wizard/share_wizard.py:77
+#, python-format
+msgid "Direct link or embed code"
+msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:787
+#: code:addons/share/wizard/share_wizard.py:851
+#: code:addons/share/wizard/share_wizard.py:885
 #, python-format
 msgid ""
 "OpenERP is a powerful and user-friendly suite of Business Applications (CRM, "
@@ -227,8 +270,8 @@ msgid "Action to share"
 msgstr "共享操作"
 
 #. module: share
-#: view:share.wizard:0
-msgid "Optional: include a personal message"
+#: help:share.wizard,record_name:0
+msgid "Name of the shared record, if sharing a precise record"
 msgstr ""
 
 #. module: share
@@ -237,14 +280,21 @@ msgid "Share User"
 msgstr "共享用户"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:647
-#, python-format
-msgid "Please indicate the emails of the persons to share with, one per line"
+#: field:share.wizard.result.line,user_id:0
+msgid "unknown"
 msgstr ""
 
 #. module: share
-#: field:share.wizard,embed_code:0 field:share.wizard.result.line,user_id:0
-msgid "unknown"
+#: code:addons/share/wizard/share_wizard.py:61
+#: code:addons/share/wizard/share_wizard.py:652
+#, python-format
+msgid "Sharing access cannot be created."
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:775
+#, python-format
+msgid "Record id not found"
 msgstr ""
 
 #. module: share
@@ -253,18 +303,18 @@ msgid "Group created to set access rights for sharing data with some users."
 msgstr "为设置一些用户的共享数据访问权限所建立的用户组"
 
 #. module: share
+#: view:res.groups:0
+msgid "Share Groups"
+msgstr ""
+
+#. module: share
 #: help:share.wizard,action_id:0
 msgid ""
 "The action that opens the screen containing the data you wish to share."
 msgstr "这操作是打开包含要共享数据的视图。"
 
 #. module: share
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr "选择的用户组不在这用允许的用户组"
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:526
+#: code:addons/share/wizard/share_wizard.py:541
 #, python-format
 msgid "(Copy for sharing)"
 msgstr "（共享复制）"
@@ -275,16 +325,15 @@ msgid "Newly created"
 msgstr "创建新的"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:616
+#: help:share.wizard,name:0
+msgid "Title for the share (displayed to users as menu and shortcut name)"
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:631
 #, python-format
 msgid "Indirect sharing filter created by user %s (%s) for group %s"
 msgstr "创建用户 %s  （%s ）间接共享过滤器，在用户组 %s"
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:767
-#, python-format
-msgid "I've shared %s with you!"
-msgstr ""
 
 #. module: share
 #: help:share.wizard,share_root_url:0
@@ -292,9 +341,12 @@ msgid "Main access page for users that are granted shared access"
 msgstr ""
 
 #. module: share
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr "用户组名必须唯一！"
+#: code:addons/share/wizard/share_wizard.py:206
+#, python-format
+msgid ""
+"You must configure your email address in the user preferences before using "
+"the Share button."
+msgstr ""
 
 #. module: share
 #: model:res.groups,name:share.group_share_user
@@ -302,12 +354,7 @@ msgid "User"
 msgstr ""
 
 #. module: share
-#: view:res.groups:0
-msgid "Groups"
-msgstr "用户组"
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:636
+#: code:addons/share/wizard/share_wizard.py:653
 #, python-format
 msgid ""
 "Sorry, the current screen and filter you are trying to share are not "
@@ -317,14 +364,20 @@ msgstr "对不起，你当前的视图和过滤器试图访问当前不支持到
 
 #. module: share
 #: view:share.wizard:0
-msgid "Use this Link"
+msgid "Use this link"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:779
+#: code:addons/share/wizard/share_wizard.py:847
+#: code:addons/share/wizard/share_wizard.py:879
 #, python-format
 msgid "Database"
 msgstr "数据库"
+
+#. module: share
+#: view:share.wizard:0
+msgid "Share with these People (one email per line)"
+msgstr ""
 
 #. module: share
 #: field:share.wizard,domain:0
@@ -332,15 +385,33 @@ msgid "Domain"
 msgstr "过滤条件"
 
 #. module: share
-#: view:share.wizard:0 field:share.wizard,result_line_ids:0
+#: view:res.groups:0
+msgid "{'search_default_no_share':1}"
+msgstr ""
+
+#. module: share
+#: view:share.wizard:0
+#: field:share.wizard,result_line_ids:0
 msgid "Summary"
 msgstr "简述"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:493
+#: help:share.wizard,embed_code:0
+msgid ""
+"Embed this code in your documents to provide a link to the shared document."
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:508
 #, python-format
 msgid "Copied access for sharing"
 msgstr "共享的复制访问"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:812
+#, python-format
+msgid "Invitation"
+msgstr ""
 
 #. module: share
 #: model:ir.actions.act_window,name:share.action_share_wizard_step1
@@ -353,10 +424,11 @@ msgid "Or insert the following code where you want to embed your documents"
 msgstr ""
 
 #. module: share
-#: view:share.wizard:0
+#: code:addons/share/wizard/share_wizard.py:881
+#, python-format
 msgid ""
-"An e-mail notification with instructions has been sent to the following "
-"people:"
+"The documents have been automatically added to your current OpenERP "
+"documents.\n"
 msgstr ""
 
 #. module: share
@@ -365,9 +437,22 @@ msgid "share.wizard.result.line"
 msgstr "share.wizard.result.line"
 
 #. module: share
+#: field:share.wizard,embed_code:0
+msgid "Code"
+msgstr ""
+
+#. module: share
 #: help:share.wizard,user_type:0
 msgid "Select the type of user(s) you would like to share data with."
 msgstr "选择你想共享数据的用户类型。"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:839
+#, python-format
+msgid ""
+"I have shared %s (%s) with you!\n"
+"\n"
+msgstr ""
 
 #. module: share
 #: field:share.wizard,view_type:0
@@ -385,22 +470,9 @@ msgid "Can edit"
 msgstr ""
 
 #. module: share
-#: help:share.wizard,message:0
-msgid ""
-"An optional personal message, to be included in the e-mail notification."
-msgstr ""
-
-#. module: share
-#: model:ir.model,name:share.model_res_users
-msgid "res.users"
-msgstr "res.users"
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:60
-#: code:addons/share/wizard/share_wizard.py:635
-#, python-format
-msgid "Sharing access could not be created"
-msgstr ""
+#: view:share.wizard:0
+msgid "Cancel"
+msgstr "取消"
 
 #. module: share
 #: help:res.users,share:0
@@ -417,7 +489,7 @@ msgid "Share Wizard"
 msgstr "共享向导"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:740
+#: code:addons/share/wizard/share_wizard.py:788
 #, python-format
 msgid "Shared access created!"
 msgstr ""
@@ -431,19 +503,48 @@ msgid ""
 msgstr ""
 
 #. module: share
+#: code:addons/share/wizard/share_wizard.py:848
+#, python-format
+msgid ""
+"The documents have been automatically added to your subscriptions.\n"
+"\n"
+msgstr ""
+
+#. module: share
+#: model:ir.model,name:share.model_res_users
+msgid "Users"
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:871
+#, python-format
+msgid ""
+"I've shared %s with you!\n"
+"\n"
+msgstr ""
+
+#. module: share
 #: model:ir.model,name:share.model_res_groups
 msgid "Access Groups"
 msgstr "访问用户组"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:778
+#: field:share.wizard,invite:0
+msgid "Invite users to OpenSocial record"
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:846
+#: code:addons/share/wizard/share_wizard.py:878
 #: field:share.wizard.result.line,password:0
 #, python-format
 msgid "Password"
 msgstr "密码"
 
 #. module: share
+#: code:addons/share/wizard/share_wizard.py:77
 #: field:share.wizard,new_users:0
+#, python-format
 msgid "Emails"
 msgstr ""
 
@@ -453,23 +554,24 @@ msgid "Display search view"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:197
-#, python-format
-msgid "No e-mail address configured"
-msgstr ""
-
-#. module: share
 #: field:share.wizard,message:0
 msgid "Personal Message"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:763
+#: code:addons/share/wizard/share_wizard.py:830
+#: code:addons/share/wizard/share_wizard.py:861
 #, python-format
 msgid ""
 "The current user must have an email address configured in User Preferences "
 "to be able to send outgoing emails."
 msgstr "当前用户必须有一个电子邮件地址，设置在用户首选项的电子邮件发送地址。"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:205
+#, python-format
+msgid "No email address configured"
+msgstr ""
 
 #. module: share
 #: field:share.wizard.result.line,login:0
@@ -492,11 +594,13 @@ msgid "Sharing: preparation"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:198
-#, python-format
-msgid ""
-"You must configure your e-mail address in the user preferences before using "
-"the Share button."
+#: model:ir.model,name:share.model_ir_model_access
+msgid "ir.model.access"
+msgstr ""
+
+#. module: share
+#: view:share.wizard:0
+msgid "or"
 msgstr ""
 
 #. module: share
@@ -504,15 +608,8 @@ msgstr ""
 msgid "Access rights to be granted on the shared documents."
 msgstr ""
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/share/static/src/xml/share.xml:8
-msgid "Link or embed..."
-msgstr ""
-
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/share/static/src/xml/share.xml:9
-msgid "Share with..."
-msgstr ""
+#~ msgid "You can not have two users with the same login !"
+#~ msgstr "你不能同时登录两个用户！"
 
 #, python-format
 #~ msgid ""
@@ -551,6 +648,9 @@ msgstr ""
 
 #~ msgid "Generic Share Access URL"
 #~ msgstr "一般共享访问URL"
+
+#~ msgid "Regular groups only (no share groups"
+#~ msgstr "只是普通组（不是共享组）"
 
 #, python-format
 #~ msgid "Please specify \"share_root_url\" in context"
@@ -594,11 +694,17 @@ msgstr ""
 #~ msgid "Send Email Notification(s)"
 #~ msgstr "发送通知的电子邮件"
 
+#~ msgid "The name of the group must be unique !"
+#~ msgstr "用户组名必须唯一！"
+
 #~ msgid "Sharing Tools"
 #~ msgstr "共享工具"
 
 #~ msgid "Select the desired shared access mode:"
 #~ msgstr "选择共享访问的方式："
+
+#~ msgid "Groups"
+#~ msgstr "用户组"
 
 #~ msgid "Users to share with"
 #~ msgstr "与用户共享"
@@ -637,8 +743,17 @@ msgstr ""
 #~ msgid "*usual password*"
 #~ msgstr "*通用密码*"
 
+#~ msgid "Close"
+#~ msgstr "结束"
+
+#~ msgid "The chosen company is not in the allowed companies for this user"
+#~ msgstr "选择的用户组不在这用允许的用户组"
+
 #~ msgid "Congratulations, you have successfully setup a new shared access!"
 #~ msgstr "恭喜，你已设置好新的共享权限！"
 
 #~ msgid "New users (emails required)"
 #~ msgstr "新用户（需要一个电子邮件地址）"
+
+#~ msgid "res.users"
+#~ msgstr "res.users"

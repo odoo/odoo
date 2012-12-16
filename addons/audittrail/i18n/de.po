@@ -6,18 +6,23 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-01-13 19:14+0000\n"
 "Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:44+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:14+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: audittrail
-#: code:addons/audittrail/audittrail.py:75
+#: view:audittrail.log:0
+msgid "Old Value Text : "
+msgstr "Alter Wert Text : "
+
+#. module: audittrail
+#: code:addons/audittrail/audittrail.py:76
 #, python-format
 msgid "WARNING: audittrail is not part of the pool"
 msgstr "WARNUNG: audittrail ist nicht Teil dieses Pools"
@@ -34,11 +39,12 @@ msgid "Subscribed"
 msgstr "Abonniert"
 
 #. module: audittrail
-#: sql_constraint:audittrail.rule:0
-msgid ""
-"There is already a rule defined on this object\n"
-" You cannot define another: please edit the existing one."
-msgstr "Es gibt bereits eine Regel für dieses Objekt, bitte diese Bearbeiten"
+#: code:addons/audittrail/audittrail.py:260
+#: code:addons/audittrail/audittrail.py:347
+#: code:addons/audittrail/audittrail.py:408
+#, python-format
+msgid "'%s' Model does not exist..."
+msgstr ""
 
 #. module: audittrail
 #: view:audittrail.rule:0
@@ -46,14 +52,21 @@ msgid "Subscribed Rule"
 msgstr "Abonnierte Regel"
 
 #. module: audittrail
+#: view:audittrail.rule:0
 #: model:ir.model,name:audittrail.model_audittrail_rule
 msgid "Audittrail Rule"
 msgstr "Regel Belegrückverfolgung"
 
 #. module: audittrail
+#: view:audittrail.rule:0
+#: field:audittrail.rule,state:0
+msgid "Status"
+msgstr ""
+
+#. module: audittrail
 #: view:audittrail.view.log:0
 #: model:ir.actions.act_window,name:audittrail.action_audittrail_log_tree
-#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_log_tree
+#: model:ir.ui.menu,name:audittrail.menu_audit_logs
 msgid "Audit Logs"
 msgstr "Audit Protokolle"
 
@@ -62,12 +75,6 @@ msgstr "Audit Protokolle"
 #: view:audittrail.rule:0
 msgid "Group By..."
 msgstr "Gruppierung..."
-
-#. module: audittrail
-#: view:audittrail.rule:0
-#: field:audittrail.rule,state:0
-msgid "State"
-msgstr "Status"
 
 #. module: audittrail
 #: view:audittrail.rule:0
@@ -202,9 +209,9 @@ msgstr ""
 "erfassen wollen."
 
 #. module: audittrail
-#: field:audittrail.rule,log_create:0
-msgid "Log Creates"
-msgstr "Protokolleinträge"
+#: view:audittrail.rule:0
+msgid "AuditTrail Rules"
+msgstr "Belegsammlung Regel"
 
 #. module: audittrail
 #: help:audittrail.rule,object_id:0
@@ -212,9 +219,9 @@ msgid "Select object for which you want to generate log."
 msgstr "Wähle Objekt für Rückverfolgung"
 
 #. module: audittrail
-#: view:audittrail.log:0
-msgid "Old Value Text : "
-msgstr "Alter Wert Text : "
+#: model:ir.ui.menu,name:audittrail.menu_audit
+msgid "Audit"
+msgstr ""
 
 #. module: audittrail
 #: field:audittrail.rule,log_workflow:0
@@ -227,7 +234,7 @@ msgid "Log Reads"
 msgstr "Protokoll Lesevorgänge"
 
 #. module: audittrail
-#: code:addons/audittrail/audittrail.py:76
+#: code:addons/audittrail/audittrail.py:77
 #, python-format
 msgid "Change audittrail depends -- Setting rule as DRAFT"
 msgstr "Ändern der Nachvollziehbarkeit -- Regel auf Entwurf setzten"
@@ -243,9 +250,9 @@ msgid "Fields"
 msgstr "Felder"
 
 #. module: audittrail
-#: view:audittrail.rule:0
-msgid "AuditTrail Rules"
-msgstr "Belegsammlung Regel"
+#: field:audittrail.rule,log_create:0
+msgid "Log Creates"
+msgstr "Protokolleinträge"
 
 #. module: audittrail
 #: help:audittrail.rule,log_unlink:0
@@ -276,9 +283,22 @@ msgid "UnSubscribe"
 msgstr "Nicht abonnieren"
 
 #. module: audittrail
+#: sql_constraint:audittrail.rule:0
+msgid ""
+"There is already a rule defined on this object\n"
+" You cannot define another: please edit the existing one."
+msgstr "Es gibt bereits eine Regel für dieses Objekt, bitte diese Bearbeiten"
+
+#. module: audittrail
 #: field:audittrail.rule,log_unlink:0
 msgid "Log Deletes"
 msgstr "Protokoll Löschvorgänge"
+
+#. module: audittrail
+#: view:audittrail.log:0
+#: view:audittrail.rule:0
+msgid "Model"
+msgstr ""
 
 #. module: audittrail
 #: field:audittrail.log.line,field_description:0
@@ -316,6 +336,12 @@ msgid "New Value"
 msgstr "Neuer Wert"
 
 #. module: audittrail
+#: code:addons/audittrail/audittrail.py:223
+#, python-format
+msgid "'%s' field does not exist in '%s' model"
+msgstr ""
+
+#. module: audittrail
 #: view:audittrail.log:0
 msgid "AuditTrail Logs"
 msgstr "Belegsammlung Protokolle"
@@ -326,6 +352,7 @@ msgid "Draft  Rule"
 msgstr "Regel in Entwurf"
 
 #. module: audittrail
+#: view:audittrail.log:0
 #: model:ir.model,name:audittrail.model_audittrail_log
 msgid "Audittrail Log"
 msgstr "Audittrail Vorgangsprotokollierung"
@@ -363,6 +390,11 @@ msgid "Log Line"
 msgstr "Protokoll Zeile"
 
 #. module: audittrail
+#: view:audittrail.view.log:0
+msgid "or"
+msgstr ""
+
+#. module: audittrail
 #: field:audittrail.rule,log_action:0
 msgid "Log Action"
 msgstr "Protokoll Aktion"
@@ -384,6 +416,9 @@ msgstr ""
 
 #~ msgid "Create"
 #~ msgstr "Erzeuge"
+
+#~ msgid "State"
+#~ msgstr "Status"
 
 #~ msgid "audittrail.log.line"
 #~ msgstr "audittrail.log.line"

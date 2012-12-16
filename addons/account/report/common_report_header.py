@@ -89,15 +89,15 @@ class common_report_header(object):
         return ''
 
     def _get_sortby(self, data):
-        raise (_('Error'), _('Not implemented'))
+        raise (_('Error!'), _('Not implemented.'))
 
     def _get_filter(self, data):
         if data.get('form', False) and data['form'].get('filter', False):
             if data['form']['filter'] == 'filter_date':
-                return 'Date'
+                return self._translate('Date')
             elif data['form']['filter'] == 'filter_period':
-                return 'Periods'
-        return 'No Filter'
+                return self._translate('Periods')
+        return self._translate('No Filters')
 
     def _sum_debit_period(self, period_id, journal_id=None):
         journals = journal_id or self.journal_ids

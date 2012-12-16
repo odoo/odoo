@@ -26,10 +26,22 @@ class res_partner(osv.osv):
     _inherit = 'res.partner'
 
     def _sale_order_count(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
-        for partner in self.browse(cr, uid, ids, context):
-            res[partner.id] = len(partner.sale_order_ids)
+        res = dict(map(lambda x: (x,0), ids))
+        # The current user may not have access rights for sale orders
+        try:
+            for partner in self.browse(cr, uid, ids, context):
+                res[partner.id] = len(partner.sale_order_ids)
+        except:
+            pass
         return res
+
+    def copy(self, cr, uid, record_id, default=None, context=None):
+        if default is None:
+            default = {}
+
+        default.update({'sale_order_ids': []})
+
+        super(res_partner, self).copy(cr, uid, record_id, default, context)
 
     _columns = {
         'sale_order_count': fields.function(_sale_order_count, string='# of Sales Order', type='integer'),

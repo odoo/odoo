@@ -195,8 +195,8 @@ class process_process(osv.osv):
             if nodes[nid].get('directory_id', False):
                 resource['directory'] = self.pool.get('document.directory').get_resource_path(cr, uid, nodes[nid]['directory_id'], ref_model, ref_id)
 
-            resource['name'] = refobj.name_get(context)[0][1]
-            resource['perm'] = pool.get(ref_model).perm_read(cr, uid, [ref_id], context)[0]
+            resource['name'] = pool.get(ref_model).name_get(cr, uid, [ref_id], context=context)[0][1]
+            resource['perm'] = pool.get(ref_model).perm_read(cr, uid, [ref_id], context=context)[0]
 
             for r in relatives:
                 node = nodes[r]

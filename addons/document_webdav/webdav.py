@@ -29,12 +29,10 @@ import urllib
 from osv import osv
 from tools.translate import _
 
-try:
-    from DAV import utils
-    from DAV.propfind import PROPFIND
-    from DAV.report import REPORT
-except ImportError:
-    raise osv.except_osv(_('PyWebDAV Import Error!'), _('Please install PyWebDAV from http://code.google.com/p/pywebdav/downloads/detail?name=PyWebDAV-0.9.4.tar.gz&can=2&q=/'))
+from DAV import utils
+from DAV.propfind import PROPFIND
+from DAV.report import REPORT
+
 
 import tools
 
@@ -65,7 +63,7 @@ class Prop2xml(object):
 
     def createText2Node(self, data):
         if not isinstance(data, StringTypes):
-            raise TypeError, "node contents must be a string"
+            raise TypeError, "Node contents must be a string."
         t = Text2()
         t.data = data
         t.ownerDocument = self.doc
@@ -236,7 +234,7 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
     return re
 
 
-def mk_propname_response(self,uri,propnames,doc):
+def mk_propname_response(self, uri, propnames, doc):
     """ make a new <prop> result element for a PROPNAME request
 
     This will simply format the propnames list.

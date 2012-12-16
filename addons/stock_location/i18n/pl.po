@@ -6,15 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2010-12-09 11:37+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:48+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:43+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
+
+#. module: stock_location
+#: help:product.pulled.flow,company_id:0
+msgid "Is used to know to which company the pickings and moves belong."
+msgstr ""
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -43,11 +48,6 @@ msgid "Automatic No Step Added"
 msgstr "Automatycznie i bezpośrednio"
 
 #. module: stock_location
-#: view:product.product:0
-msgid "Parameters"
-msgstr "Parametry"
-
-#. module: stock_location
 #: field:product.pulled.flow,location_src_id:0
 #: field:stock.location.path,location_from_id:0
 msgid "Source Location"
@@ -63,11 +63,6 @@ msgstr ""
 #: field:product.product,flow_pull_ids:0
 msgid "Pulled Flows"
 msgstr ""
-
-#. module: stock_location
-#: constraint:stock.move:0
-msgid "You must assign a production lot for this product"
-msgstr "Musisz podać nr partii dla tego produktu"
 
 #. module: stock_location
 #: help:product.pulled.flow,location_src_id:0
@@ -154,11 +149,6 @@ msgid "Dispatch Zone"
 msgstr "Strefa wysyłki"
 
 #. module: stock_location
-#: model:ir.model,name:stock_location.model_stock_move
-msgid "Stock Move"
-msgstr "Przesunięcie zapasu"
-
-#. module: stock_location
 #: view:product.product:0
 msgid "Pulled flows"
 msgstr ""
@@ -170,9 +160,9 @@ msgid "Company"
 msgstr "Firma"
 
 #. module: stock_location
-#: view:product.product:0
-msgid "Logistics Flows"
-msgstr ""
+#: model:ir.model,name:stock_location.model_stock_move
+msgid "Stock Move"
+msgstr "Przesunięcie zapasu"
 
 #. module: stock_location
 #: help:stock.move,cancel_cascade:0
@@ -195,6 +185,12 @@ msgstr "Na zamówienie"
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Stock"
 msgstr "Na zapas"
+
+#. module: stock_location
+#: code:addons/stock_location/procurement_pull.py:118
+#, python-format
+msgid "Pulled from another location."
+msgstr ""
 
 #. module: stock_location
 #: field:product.pulled.flow,partner_address_id:0
@@ -225,11 +221,6 @@ msgid "Type of Procurement"
 msgstr "Typ zapotrzebowania"
 
 #. module: stock_location
-#: help:product.pulled.flow,company_id:0
-msgid "Is used to know to which company belong packings and moves"
-msgstr "Oznacza firmę dla pobrania i przesunięć"
-
-#. module: stock_location
 #: field:product.pulled.flow,name:0
 msgid "Name"
 msgstr "Nazwa"
@@ -243,11 +234,6 @@ msgstr ""
 "drzewie stref magazynowych."
 
 #. module: stock_location
-#: constraint:stock.move:0
-msgid "You can not move products from or to a location of the type view."
-msgstr ""
-
-#. module: stock_location
 #: selection:stock.location.path,auto:0
 msgid "Manual Operation"
 msgstr "Ręczna operacja"
@@ -257,11 +243,6 @@ msgstr "Ręczna operacja"
 #: field:product.pulled.flow,product_id:0
 msgid "Product"
 msgstr "Produkt"
-
-#. module: stock_location
-#: field:product.pulled.flow,procure_method:0
-msgid "Procure Method"
-msgstr "Metoda zapotrzebowania"
 
 #. module: stock_location
 #: field:product.pulled.flow,picking_type:0
@@ -288,12 +269,6 @@ msgstr "Jest strefą docelową, która wymaga uzupełnienia"
 #: field:stock.location.path,product_id:0
 msgid "Products"
 msgstr "Produkty"
-
-#. module: stock_location
-#: code:addons/stock_location/procurement_pull.py:118
-#, python-format
-msgid "Pulled from another location via procurement %d"
-msgstr ""
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.stock_location_qualitytest0
@@ -333,11 +308,6 @@ msgid ""
 msgstr ""
 
 #. module: stock_location
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product"
-msgstr "Próbujesz powiązac z numerem partii z innego produktu"
-
-#. module: stock_location
 #: model:ir.model,name:stock_location.model_procurement_order
 msgid "Procurement"
 msgstr "Zapotrzebowanie"
@@ -366,9 +336,9 @@ msgid "Action Type"
 msgstr "Typ akcji"
 
 #. module: stock_location
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Błąd: Niedozwolony kod EAN"
+#: field:product.pulled.flow,procure_method:0
+msgid "Procure Method"
+msgstr "Metoda zapotrzebowania"
 
 #. module: stock_location
 #: help:product.pulled.flow,picking_type:0
@@ -424,8 +394,23 @@ msgstr "Zafakturowano"
 #~ msgid "Stock Location Paths"
 #~ msgstr "Ścieżki stref"
 
+#~ msgid "You must assign a production lot for this product"
+#~ msgstr "Musisz podać nr partii dla tego produktu"
+
+#~ msgid "Parameters"
+#~ msgstr "Parametry"
+
 #~ msgid "Warehouse Locations Paths"
 #~ msgstr "Ścieżki magazynowe"
+
+#~ msgid "Is used to know to which company belong packings and moves"
+#~ msgstr "Oznacza firmę dla pobrania i przesunięć"
+
+#~ msgid "You try to assign a lot which is not from the same product"
+#~ msgstr "Próbujesz powiązac z numerem partii z innego produktu"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Błąd: Niedozwolony kod EAN"
 
 #~ msgid "Procurement & Locations"
 #~ msgstr "Zapotrzebowanie i strefy"

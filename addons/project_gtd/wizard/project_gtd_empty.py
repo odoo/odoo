@@ -30,7 +30,7 @@ class project_timebox_empty(osv.osv_memory):
         'name': fields.char('Name', size=32)
     }
 
-    def view_init(self, cr , uid , fields_list, context=None):
+    def view_init(self, cr, uid, fields_list, context=None):
         if context is None:
             context = {}
         self._empty(cr, uid, context=context)
@@ -49,7 +49,7 @@ class project_timebox_empty(osv.osv_memory):
 
         ids = obj_tb.search(cr, uid, [], context=context)
         if not len(ids):
-            raise osv.except_osv(_('Error !'), _('No timebox child of this one !'))
+            raise osv.except_osv(_('Error!'), _('No timebox child of this one !'))
         tids = obj_task.search(cr, uid, [('timebox_id', '=', context['active_id'])])
         for task in obj_task.browse(cr, uid, tids, context):
             if (task.state in ('cancel','done')) or (task.user_id.id <> uid):

@@ -4,7 +4,6 @@
         <record id="view_account_analytic_default_tree" model="ir.ui.view">
             <field name="name">account.analytic.default.tree</field>
             <field name="model">account.analytic.default</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Analytic Defaults">
                     <field name="sequence"/>
@@ -22,18 +21,19 @@
         <record id="view_account_analytic_default_form" model="ir.ui.view">
             <field name="name">account.analytic.default.form</field>
             <field name="model">account.analytic.default</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Analytic Defaults">
-                    <field name="analytic_id" required="1" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
-                    <field name="sequence"/>
-                    <separator string="Conditions" colspan="4"/>
-                    <field name="product_id"/>
-                    <field name="partner_id"/>
-                    <field name="user_id"/>
-                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                    <field name="date_start"/>
-                    <field name="date_stop"/>
+                <form string="Analytic Defaults" version="7.0">
+                    <group col="4">
+                        <field name="analytic_id" required="1" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
+                        <field name="sequence"/>
+                        <separator string="Conditions" colspan="4"/>
+                        <field name="product_id"/>
+                        <field name="partner_id"/>
+                        <field name="user_id"/>
+                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        <field name="date_start"/>
+                        <field name="date_stop"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -41,26 +41,19 @@
         <record id="view_account_analytic_default_form_search" model="ir.ui.view">
             <field name="name">account.analytic.default.search</field>
             <field name="model">account.analytic.default</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Accounts">
-                    <group>
-                    <filter icon="terp-go-month" string="Current" name = "current" help="Analytical defaults whose end date is greater than today or None" domain = "['|', ('date_stop', '&gt;', datetime.date.today().strftime('%%Y-%%m-%%d')), ('date_stop', '=', False)]" />
-                    <separator orientation="vertical"/>
+                    <field name="date_stop"/>
                     <field name="analytic_id" groups="analytic.group_analytic_accounting"/>
                     <field name="product_id"/>
                     <field name="partner_id"/>
                     <field name="user_id"/>
-                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                    </group>
-                    <newline/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <group expand="0" string="Group By...">
                         <filter string="User" icon="terp-personal" context="{'group_by':'user_id'}" help="User"/>
-						<filter string="Partner" icon="terp-partner"  context="{'group_by':'partner_id'}" help="Partner"/>
-						<separator orientation="vertical"/>
-						<filter string="Product" icon="terp-accessories-archiver"  context="{'group_by':'product_id'}" help="Product" />
+                        <filter string="Partner" icon="terp-partner"  context="{'group_by':'partner_id'}" help="Partner"/>
+                        <filter string="Product" icon="terp-accessories-archiver"  context="{'group_by':'product_id'}" help="Product" />
                         <filter string="Analytic Account" icon="terp-folder-green"  context="{'group_by':'analytic_id'}" help="Analytic Account" groups="analytic.group_analytic_accounting"/>
-                         <separator orientation="vertical"/>
                         <filter string="Company" icon="terp-go-home"  context="{'group_by':'company_id'}" groups="base.group_multi_company" />
                     </group>
                 </search>

@@ -91,8 +91,8 @@ class _IncompleteError(Exception):
             Exception.__init__(self, *args)
         else:
             Exception.__init__(self,
-                               "not enough data for calculating task, "\
-                               "maybe you have a recursive reference",
+                               "Not enough data for calculating task, "\
+                               "maybe you have a recursive reference.",
                                *args)
     #@-node:__init__
     #@-others
@@ -567,7 +567,8 @@ class _ValueWrapper(object):
         return result
     #@-node:_cmp
     #@+node:__getattr__
-    def __getattr__(self, name): return getattr(self._value, name)
+    def __getattr__(self, name):
+        return getattr(self._value, name)
     #@-node:__getattr__
     #@+node:__getitem__
     def __getitem__(self, slice):
@@ -1997,7 +1998,7 @@ class Task(object):
         except IndexError:
             raise AttributeError()
 
-        exception = AttributeError("'%s' is not a valid attribute of '%s'"
+        exception = AttributeError("'%s' is not a valid attribute of '%s'."
                                    % (name, self.path))
         exception.is_frozen = self._is_frozen
         raise exception
@@ -2925,7 +2926,7 @@ class Task(object):
 
         try:
             dest, dattr = self.__at_compile
-            raise RecursionError("Recursive definition of %s(%s) and %s(%s)" \
+            raise RecursionError("Recursive definition of %s(%s) and %s(%s)." \
                                  % (self.path, attrib_name, dest.path, dattr))
         except AttributeError: pass
 
@@ -3325,7 +3326,7 @@ class Task(object):
     #@+node:__assert
     def __assert(self, value):
         if not value:
-            warnings.warn('assertion in scenario: "%s"' % self.scenario,
+            warnings.warn('Assertion in scenario: "%s".' % self.scenario,
                           RuntimeWarning, 2)
     #@-node:__assert
     #@+node:_warn

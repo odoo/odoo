@@ -1,41 +1,42 @@
 <?xml version="1.0" ?>
 <openerp>
-	<data>
-	
-		<!--
-			Browse Response Wizard (Survey Browse answer) 
-		 -->
-		 
-		<record id="view_survey_answer" model="ir.ui.view">
-			<field name="name">Survey</field>
-			<field name="model">survey.browse.answer</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Survey">
-					<separator colspan="4"  string =  "Select Survey and Related Answer"/>
-					<field name="survey_id" width="250"/>
-					<field name="response_id" domain="[('survey_id','=', survey_id)]"/>
-					<separator colspan="4" />
-					<label align="0.0" colspan="2" string="" />
-					<button colspan="1" icon="gtk-cancel" special="cancel" string="Cancel"/>
-					<button colspan="1" icon="gtk-go-forward" name="action_next" string="Start" type="object"/>
-				</form>
-			</field>
-		</record>
+    <data>
+    
+        <!--
+            Browse Response Wizard (Survey Browse answer) 
+         -->
+         
+        <record id="view_survey_answer" model="ir.ui.view">
+            <field name="name">Survey</field>
+            <field name="model">survey.browse.answer</field>
+            <field name="arch" type="xml">
+                <form string="Survey" version="7.0">
+                    <header>
+                        <button name="action_next" string="Start" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
+                    <group col="4">
+                        <field name="survey_id"/>
+                        <field name="response_id" domain="[('survey_id','=', survey_id)]"/>
+                    </group>
+                </form>
+            </field>
+        </record>
 
-		<record id="action_browse_survey_response"
-			model="ir.actions.act_window">
-			<field name="name">Answer Survey</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">survey.browse.answer</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">form</field>
-			<field name="target">new</field>
-		</record>
+        <record id="action_browse_survey_response"
+            model="ir.actions.act_window">
+            <field name="name">Answer Survey</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">survey.browse.answer</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
 
-		<menuitem name="Browse Answers" id="menu_browse_survey_response"
-			action="action_browse_survey_response" parent="menu_reporting"
-			groups="base.group_tool_manager" icon="STOCK_PRINT_PREVIEW"/>
+        <menuitem name="Browse Answers" id="menu_browse_survey_response"
+            action="action_browse_survey_response" parent="base.next_id_10"
+            groups="base.group_tool_manager" icon="STOCK_PRINT_PREVIEW"/>
 
-	</data>
+    </data>
 </openerp>

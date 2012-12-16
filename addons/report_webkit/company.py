@@ -29,9 +29,9 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 
-class ResCompany(osv.osv):
+class res_company(osv.osv):
     """Override company to add Header object link a company can have many header and logos"""
 
     _inherit = "res.company"
@@ -50,13 +50,6 @@ class ResCompany(osv.osv):
                                                     'html_id',
                                                     'Available html',
                                                 ),
-                'lib_path' : fields.char('Webkit Executable Path', size=264,
-                                         help="Full path to the wkhtmltopdf executable file. "
-                                              "Version 0.9.9 is required. Install a static version "
-                                              "of the library if you experience missing header/footers "
-                                              "on Linux."),
-
     }
-ResCompany()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

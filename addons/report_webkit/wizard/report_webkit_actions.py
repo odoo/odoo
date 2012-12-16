@@ -53,6 +53,7 @@ class report_webkit_actions(osv.osv_memory):
          @param context: A standard dictionary 
          @return: New arch of view.
         """
+        if not context: context = {}
         res = super(report_webkit_actions, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
         record_id = context and context.get('active_id', False) or False
         active_model = context.get('active_model')
@@ -76,11 +77,6 @@ class report_webkit_actions(osv.osv_memory):
         if ids:
             res['arch'] = '''<form string="Add Print Buttons">
                                  <label string="Report Action already exist for this report."/>
-                                 <separator colspan="4"/>
-                                 <group col="2" colspan="4">
-                                     <button icon='gtk-cancel' special="cancel"
-                                         string="_Cancel" />
-                                 </group>
                              </form> 
                             '''
         

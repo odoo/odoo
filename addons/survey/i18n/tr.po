@@ -7,75 +7,75 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2012-01-25 17:40+0000\n"
 "Last-Translator: Ahmet Altınışık <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-11 05:08+0000\n"
-"X-Generator: Launchpad (build 15225)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:45+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: survey
-#: view:survey.print:0
-#: view:survey.print.answer:0
-msgid "Print Option"
-msgstr ""
+#: view:survey.response.line:0
+msgid "Single Textboxes"
+msgstr "Tek metin Kutucuğu"
 
 #. module: survey
-#: code:addons/survey/survey.py:417
+#: code:addons/survey/survey.py:473
 #, python-format
 msgid ""
 "Minimum Required Answer you                                     entered is "
 "greater than the number of answer.                                      "
 "Please use a number that is smaller than %d."
 msgstr ""
+"Girdiğiniz Gerekli Enaz Yanıt, yanıt sayısından daha büyüktür. Lütfen %d "
+"sayısından daha küçük bir sayı kullanın."
 
 #. module: survey
 #: view:survey.question.wiz:0
 msgid "Your Messages"
-msgstr ""
+msgstr "Mesajlarınız"
 
 #. module: survey
 #: field:survey.question,comment_valid_type:0
 #: field:survey.question,validation_type:0
 msgid "Text Validation"
-msgstr ""
+msgstr "Karakter Kontrolü"
 
 #. module: survey
-#: code:addons/survey/survey.py:429
-#, python-format
-msgid ""
-"Maximum Required Answer you                                     entered for "
-"your maximum is greater than the number of answer.                           "
-"           Please use a number that is smaller than %d."
+#: view:survey:0
+msgid "Answers:"
 msgstr ""
 
 #. module: survey
 #: view:survey:0
 #: field:survey,invited_user_ids:0
 msgid "Invited User"
+msgstr "Davetli Kullanıcı"
+
+#. module: survey
+#: model:survey.type,name:survey.survey_type1
+msgid "Human Resources"
 msgstr ""
 
 #. module: survey
 #: selection:survey.answer,type:0
 msgid "Character"
-msgstr ""
+msgstr "Karakter"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_form1
-#: model:ir.ui.menu,name:survey.menu_print_survey_form
-#: model:ir.ui.menu,name:survey.menu_reporting
 #: model:ir.ui.menu,name:survey.menu_survey_form
 #: model:ir.ui.menu,name:survey.menu_surveys
 msgid "Surveys"
-msgstr ""
+msgstr "Anketler"
 
 #. module: survey
 #: field:survey.question,in_visible_answer_type:0
 msgid "Is Answer Type Invisible?"
-msgstr ""
+msgstr "Anket Türü gizli mi?"
 
 #. module: survey
 #: view:survey:0
@@ -93,549 +93,27 @@ msgstr "Sonuçlar :"
 #. module: survey
 #: view:survey.request:0
 msgid "Survey Request"
-msgstr ""
+msgstr "Anket İsteği"
 
 #. module: survey
 #: selection:survey.question,required_type:0
 msgid "A Range"
-msgstr ""
+msgstr "Aralık"
 
 #. module: survey
 #: view:survey.response.line:0
 msgid "Table Answer"
-msgstr ""
+msgstr "Tablo Cevabı"
 
 #. module: survey
 #: field:survey.history,date:0
 msgid "Date started"
-msgstr ""
+msgstr "Başlangıç Tarihi"
 
 #. module: survey
 #: field:survey,history:0
 msgid "History Lines"
-msgstr ""
-
-#. module: survey
-#: code:addons/survey/survey.py:443
-#, python-format
-msgid ""
-"You must enter one or more menu                                 choices in "
-"column heading (white spaces not allowed)"
-msgstr ""
-
-#. module: survey
-#: field:survey.question.column.heading,in_visible_menu_choice:0
-msgid "Is Menu Choice Invisible??"
-msgstr ""
-
-#. module: survey
-#: field:survey.send.invitation,mail:0
-msgid "Body"
-msgstr ""
-
-#. module: survey
-#: field:survey.question,allow_comment:0
-msgid "Allow Comment Field"
-msgstr ""
-
-#. module: survey
-#: selection:survey.print,paper_size:0
-#: selection:survey.print.answer,paper_size:0
-msgid "A4 (210mm x 297mm)"
-msgstr ""
-
-#. module: survey
-#: field:survey.question,comment_maximum_date:0
-#: field:survey.question,validation_maximum_date:0
-msgid "Maximum date"
-msgstr ""
-
-#. module: survey
-#: field:survey.question,in_visible_menu_choice:0
-msgid "Is Menu Choice Invisible?"
-msgstr ""
-
-#. module: survey
-#: view:survey:0
-msgid "Completed"
-msgstr ""
-
-#. module: survey
-#: selection:survey.question,required_type:0
-msgid "Exactly"
-msgstr ""
-
-#. module: survey
-#: view:survey:0
-msgid "Open Date"
-msgstr ""
-
-#. module: survey
-#: view:survey.request:0
-msgid "Set to Draft"
-msgstr ""
-
-#. module: survey
-#: field:survey.question,is_comment_require:0
-msgid "Add Comment Field"
-msgstr ""
-
-#. module: survey
-#: code:addons/survey/survey.py:396
-#, python-format
-msgid ""
-"#Required Answer you entered                                     is greater "
-"than the number of answer.                                     Please use a "
-"number that is smaller than %d."
-msgstr ""
-
-#. module: survey
-#: field:survey.question,tot_resp:0
-msgid "Total Answer"
-msgstr ""
-
-#. module: survey
-#: field:survey.tbl.column.heading,name:0
-msgid "Row Number"
-msgstr ""
-
-#. module: survey
-#: model:ir.model,name:survey.model_survey_name_wiz
-msgid "survey.name.wiz"
-msgstr ""
-
-#. module: survey
-#: model:ir.actions.act_window,name:survey.action_survey_question_form
-msgid "Survey Questions"
-msgstr ""
-
-#. module: survey
-#: selection:survey.question,type:0
-msgid "Matrix of Choices (Only One Answers Per Row)"
-msgstr ""
-
-#. module: survey
-#: code:addons/survey/survey.py:470
-#, python-format
-msgid ""
-"Maximum Required Answer you entered for your maximum is greater than the "
-"number of answer. Please use a number that is smaller than %d."
-msgstr ""
-
-#. module: survey
-#: model:ir.actions.act_window,name:survey.action_view_survey_question_message
-#: model:ir.model,name:survey.model_survey_question
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
-msgid "Survey Question"
-msgstr ""
-
-#. module: survey
-#: view:survey.question.column.heading:0
-msgid "Use if question type is rating_scale"
-msgstr ""
-
-#. module: survey
-#: field:survey.print,page_number:0
-#: field:survey.print.answer,page_number:0
-msgid "Include Page Number"
-msgstr ""
-
-#. module: survey
-#: view:survey.page:0
-#: view:survey.question:0
-msgid "Ok"
-msgstr ""
-
-#. module: survey
-#: field:survey.page,title:0
-msgid "Page Title"
-msgstr ""
-
-#. module: survey
-#: model:ir.ui.menu,name:survey.menu_define_survey
-msgid "Define Surveys"
-msgstr ""
-
-#. module: survey
-#: model:ir.model,name:survey.model_survey_history
-msgid "Survey History"
-msgstr ""
-
-#. module: survey
-#: field:survey.response.answer,comment:0
-#: field:survey.response.line,comment:0
-msgid "Notes"
-msgstr ""
-
-#. module: survey
-#: view:survey:0
-#: view:survey.request:0
-msgid "Search Survey"
-msgstr ""
-
-#. module: survey
-#: field:survey.response.answer,answer:0
-#: field:survey.tbl.column.heading,value:0
-msgid "Value"
-msgstr ""
-
-#. module: survey
-#: field:survey.question,column_heading_ids:0
-msgid " Column heading"
-msgstr ""
-
-#. module: survey
-#: model:ir.ui.menu,name:survey.menu_run_survey_form
-msgid "Answer a Survey"
-msgstr ""
-
-#. module: survey
-#: code:addons/survey/wizard/survey_answer.py:87
-#, python-format
-msgid "Error!"
-msgstr ""
-
-#. module: survey
-#: field:survey,tot_comp_survey:0
-msgid "Total Completed Survey"
-msgstr ""
-
-#. module: survey
-#: view:survey.response.answer:0
-msgid "(Use Only Question Type is matrix_of_drop_down_menus)"
-msgstr ""
-
-#. module: survey
-#: model:ir.actions.report.xml,name:survey.survey_analysis
-msgid "Survey Statistics"
-msgstr ""
-
-#. module: survey
-#: selection:survey,state:0
-#: view:survey.request:0
-#: selection:survey.request,state:0
-msgid "Cancelled"
-msgstr ""
-
-#. module: survey
-#: selection:survey.question,type:0
-msgid "Rating Scale"
-msgstr ""
-
-#. module: survey
-#: field:survey.question,comment_field_type:0
-msgid "Comment Field Type"
-msgstr ""
-
-#. module: survey
-#: code:addons/survey/survey.py:370
-#: code:addons/survey/survey.py:382
-#: code:addons/survey/survey.py:396
-#: code:addons/survey/survey.py:401
-#: code:addons/survey/survey.py:411
-#: code:addons/survey/survey.py:417
-#: code:addons/survey/survey.py:423
-#: code:addons/survey/survey.py:429
-#: code:addons/survey/survey.py:433
-#: code:addons/survey/survey.py:439
-#: code:addons/survey/survey.py:443
-#: code:addons/survey/survey.py:453
-#: code:addons/survey/survey.py:457
-#: code:addons/survey/survey.py:462
-#: code:addons/survey/survey.py:468
-#: code:addons/survey/survey.py:470
-#: code:addons/survey/survey.py:472
-#: code:addons/survey/survey.py:477
-#: code:addons/survey/survey.py:479
-#: code:addons/survey/survey.py:630
-#: code:addons/survey/wizard/survey_answer.py:119
-#: code:addons/survey/wizard/survey_answer.py:126
-#: code:addons/survey/wizard/survey_answer.py:686
-#: code:addons/survey/wizard/survey_answer.py:725
-#: code:addons/survey/wizard/survey_answer.py:745
-#: code:addons/survey/wizard/survey_answer.py:774
-#: code:addons/survey/wizard/survey_answer.py:779
-#: code:addons/survey/wizard/survey_answer.py:787
-#: code:addons/survey/wizard/survey_answer.py:798
-#: code:addons/survey/wizard/survey_answer.py:807
-#: code:addons/survey/wizard/survey_answer.py:812
-#: code:addons/survey/wizard/survey_answer.py:886
-#: code:addons/survey/wizard/survey_answer.py:922
-#: code:addons/survey/wizard/survey_answer.py:940
-#: code:addons/survey/wizard/survey_answer.py:968
-#: code:addons/survey/wizard/survey_answer.py:971
-#: code:addons/survey/wizard/survey_answer.py:974
-#: code:addons/survey/wizard/survey_answer.py:986
-#: code:addons/survey/wizard/survey_answer.py:993
-#: code:addons/survey/wizard/survey_answer.py:996
-#: code:addons/survey/wizard/survey_selection.py:80
-#: code:addons/survey/wizard/survey_selection.py:83
-#: code:addons/survey/wizard/survey_send_invitation.py:74
-#, python-format
-msgid "Warning !"
-msgstr ""
-
-#. module: survey
-#: selection:survey.question,comment_field_type:0
-msgid "Single Line Of Text"
-msgstr ""
-
-#. module: survey
-#: view:survey.send.invitation:0
-#: field:survey.send.invitation,send_mail_existing:0
-msgid "Send Reminder for Existing User"
-msgstr ""
-
-#. module: survey
-#: selection:survey.question,type:0
-msgid "Multiple Choice (Multiple Answer)"
-msgstr ""
-
-#. module: survey
-#: view:survey:0
-msgid "Edit Survey"
-msgstr ""
-
-#. module: survey
-#: view:survey.response.line:0
-msgid "Survey Answer Line"
-msgstr ""
-
-#. module: survey
-#: field:survey.question.column.heading,menu_choice:0
-msgid "Menu Choice"
-msgstr ""
-
-#. module: survey
-#: selection:survey.question,required_type:0
-msgid "At Most"
-msgstr ""
-
-#. module: survey
-#: view:survey:0
-msgid "My Survey(s)"
-msgstr ""
-
-#. module: survey
-#: field:survey.question,is_validation_require:0
-msgid "Validate Text"
-msgstr ""
-
-#. module: survey
-#: view:survey.send.invitation:0
-msgid "_Cancel"
-msgstr ""
-
-#. module: survey
-#: field:survey.response.line,single_text:0
-msgid "Text"
-msgstr ""
-
-#. module: survey
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
-
-#. module: survey
-#: selection:survey.print,paper_size:0
-#: selection:survey.print.answer,paper_size:0
-msgid "Letter (8.5\" x 11\")"
-msgstr ""
-
-#. module: survey
-#: view:survey:0
-#: field:survey,responsible_id:0
-msgid "Responsible"
-msgstr ""
-
-#. module: survey
-#: model:ir.model,name:survey.model_survey_request
-msgid "survey.request"
-msgstr ""
-
-#. module: survey
-#: field:survey.send.invitation,mail_subject:0
-#: field:survey.send.invitation,mail_subject_existing:0
-msgid "Subject"
-msgstr ""
-
-#. module: survey
-#: field:survey.question,comment_maximum_float:0
-#: field:survey.question,validation_maximum_float:0
-msgid "Maximum decimal number"
-msgstr ""
-
-#. module: survey
-#: model:ir.model,name:survey.model_survey_tbl_column_heading
-msgid "survey.tbl.column.heading"
-msgstr ""
-
-#. module: survey
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr ""
-
-#. module: survey
-#: field:survey.send.invitation,mail_from:0
-msgid "From"
-msgstr ""
-
-#. module: survey
-#: selection:survey.question,comment_valid_type:0
-#: selection:survey.question,validation_type:0
-msgid "Don't Validate Comment Text."
-msgstr ""
-
-#. module: survey
-#: selection:survey.question,comment_valid_type:0
-#: selection:survey.question,validation_type:0
-msgid "Must Be A Whole Number"
-msgstr ""
-
-#. module: survey
-#: field:survey.answer,question_id:0
-#: field:survey.page,question_ids:0
-#: field:survey.question,question:0
-#: field:survey.question.column.heading,question_id:0
-#: field:survey.response.line,question_id:0
-msgid "Question"
-msgstr ""
-
-#. module: survey
-#: view:survey.page:0
-msgid "Search Survey Page"
-msgstr ""
-
-#. module: survey
-#: field:survey.question.wiz,name:0
-msgid "Number"
-msgstr ""
-
-#. module: survey
-#: code:addons/survey/survey.py:439
-#, python-format
-msgid ""
-"You must enter one or more menu choices                                 in "
-"column heading"
-msgstr ""
-
-#. module: survey
-#: model:ir.actions.act_window,help:survey.action_survey_form1
-msgid ""
-"You can create survey for different purposes: recruitment interviews, "
-"employee's periodical evaluations, marketing campaigns, etc. A survey is "
-"made of pages containing questions of several types: text, multiple choices, "
-"etc. You can edit survey manually or click on the 'Edit Survey' for a "
-"WYSIWYG interface."
-msgstr ""
-
-#. module: survey
-#: view:survey:0
-#: view:survey.request:0
-#: field:survey.request,state:0
-msgid "State"
-msgstr ""
-
-#. module: survey
-#: view:survey.request:0
-msgid "Evaluation Plan Phase"
-msgstr ""
-
-#. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
-msgid "Between"
-msgstr ""
-
-#. module: survey
-#: view:survey.print:0
-#: view:survey.print.answer:0
-#: view:survey.print.statistics:0
-msgid "Print"
-msgstr ""
-
-#. module: survey
-#: view:survey:0
-msgid "New"
-msgstr ""
-
-#. module: survey
-#: field:survey.question,make_comment_field:0
-msgid "Make Comment Field an Answer Choice"
-msgstr ""
-
-#. module: survey
-#: view:survey:0
-#: field:survey,type:0
-msgid "Type"
-msgstr ""
-
-#. module: survey
-#: selection:survey.answer,type:0
-msgid "Email"
-msgstr ""
-
-#. module: survey
-#: model:ir.ui.menu,name:survey.menu_answer_surveys
-msgid "Answer Surveys"
-msgstr ""
-
-#. module: survey
-#: selection:survey.response,state:0
-msgid "Not Finished"
-msgstr ""
-
-#. module: survey
-#: view:survey.print:0
-msgid "Survey Print"
-msgstr ""
-
-#. module: survey
-#: view:survey.send.invitation:0
-msgid "Select Partner"
-msgstr ""
-
-#. module: survey
-#: field:survey.question,type:0
-msgid "Question Type"
-msgstr ""
-
-#. module: survey
-#: code:addons/survey/wizard/survey_answer.py:126
-#, python-format
-msgid "You can not answer this survey more than %s times"
-msgstr ""
-
-#. module: survey
-#: model:ir.actions.act_window,name:survey.act_survey_answer
-msgid "Answers"
-msgstr ""
-
-#. module: survey
-#: code:addons/survey/wizard/survey_answer.py:119
-#, python-format
-msgid "You can not answer because the survey is not open"
-msgstr ""
-
-#. module: survey
-#: selection:survey.response,response_type:0
-msgid "Link"
-msgstr ""
-
-#. module: survey
-#: model:ir.actions.act_window,name:survey.action_survey_type_form
-#: model:ir.model,name:survey.model_survey_type
-#: view:survey.type:0
-msgid "Survey Type"
-msgstr ""
-
-#. module: survey
-#: field:survey.page,sequence:0
-msgid "Page Nr"
-msgstr ""
+msgstr "Geçmiş Satırlar"
 
 #. module: survey
 #: view:survey:0
@@ -644,127 +122,626 @@ msgstr ""
 #: field:survey.question,descriptive_text:0
 #: selection:survey.question,type:0
 msgid "Descriptive Text"
-msgstr ""
+msgstr "Açıklayıcı Metin"
 
 #. module: survey
-#: field:survey.question,minimum_req_ans:0
-msgid "Minimum Required Answer"
-msgstr ""
+#: field:survey.send.invitation,mail:0
+msgid "Body"
+msgstr "Gövde"
 
 #. module: survey
-#: code:addons/survey/survey.py:479
+#: field:survey.question,allow_comment:0
+msgid "Allow Comment Field"
+msgstr "Yorum Alanına İzin Ver"
+
+#. module: survey
+#: selection:survey.print,paper_size:0
+#: selection:survey.print.answer,paper_size:0
+msgid "A4 (210mm x 297mm)"
+msgstr "A4 (210mm x 297mm)"
+
+#. module: survey
+#: field:survey.question,comment_maximum_date:0
+#: field:survey.question,validation_maximum_date:0
+msgid "Maximum date"
+msgstr "Maksimum Tarih"
+
+#. module: survey
+#: field:survey.question,in_visible_menu_choice:0
+msgid "Is Menu Choice Invisible?"
+msgstr "Menü Seçeneği Görünmez mi?"
+
+#. module: survey
+#: view:survey:0
+msgid "Completed"
+msgstr "Tamamlandı"
+
+#. module: survey
+#: selection:survey.question,required_type:0
+msgid "Exactly"
+msgstr "Tam olarak"
+
+#. module: survey
+#: view:survey:0
+msgid "Open Date"
+msgstr "Başlangıç Tarihi"
+
+#. module: survey
+#: view:survey.request:0
+msgid "Set to Draft"
+msgstr "Taslak Olarak Kaydet"
+
+#. module: survey
+#: field:survey.question,is_comment_require:0
+msgid "Add Comment Field"
+msgstr "Yorum Alanı Ekle"
+
+#. module: survey
+#: code:addons/survey/survey.py:452
 #, python-format
 msgid ""
-"You must enter one or more menu choices in column heading (white spaces not "
-"allowed)"
+"#Required Answer you entered                                     is greater "
+"than the number of answer.                                     Please use a "
+"number that is smaller than %d."
 msgstr ""
+"Girdiğiniz Gerekli Yanıt sayısı yanıt sayısından büyüktür. Lütfen %d "
+"sayısından daha küçük bir sayı kullanın."
 
 #. module: survey
-#: field:survey.question,req_error_msg:0
-msgid "Error Message"
-msgstr ""
+#: field:survey.question,tot_resp:0
+msgid "Total Answer"
+msgstr "Toplam Cevap"
 
 #. module: survey
-#: code:addons/survey/survey.py:477
+#: field:survey.tbl.column.heading,name:0
+msgid "Row Number"
+msgstr "Satır Numarası"
+
+#. module: survey
+#: model:ir.model,name:survey.model_survey_name_wiz
+msgid "survey.name.wiz"
+msgstr "anket.ad.sih"
+
+#. module: survey
+#: code:addons/survey/survey.py:485
 #, python-format
-msgid "You must enter one or more menu choices in column heading"
+msgid ""
+"Maximum Required Answer you                                     entered for "
+"your maximum is greater than the number of answer.                           "
+"           Please use a number that is smaller than %d."
+msgstr ""
+"Ençok için girdiğiniz Gerekli Ençok Yanıt, yanıt sayısından daha büyüktür. "
+"Lütfen %d sayısından daha küçük bir sayı kullanın."
+
+#. module: survey
+#: selection:survey.question,type:0
+msgid "Matrix of Choices (Only One Answers Per Row)"
+msgstr "Seçenekler Matrisi (Satır başına bir cevap)"
+
+#. module: survey
+#: view:survey.send.invitation:0
+#: field:survey.send.invitation,send_mail_existing:0
+msgid "Send Reminder for Existing User"
 msgstr ""
 
 #. module: survey
-#: field:survey.request,date_deadline:0
-msgid "Deadline date"
+#: code:addons/survey/survey.py:527
+#, python-format
+msgid ""
+"Maximum Required Answer you entered for your maximum is greater than the "
+"number of answer. Please use a number that is smaller than %d."
+msgstr ""
+"Ençok için girdiğiniz Gerekli Ençok Yanıt, yanıt sayısından daha büyüktür. "
+"Lütfen %d sayısından daha küçük bir sayı kullanın."
+
+#. module: survey
+#: model:ir.model,name:survey.model_survey_question
+#: view:survey:0
+#: view:survey.page:0
+#: view:survey.question:0
+msgid "Survey Question"
+msgstr "Anket Sorusu"
+
+#. module: survey
+#: view:survey.question.column.heading:0
+msgid "Use if question type is rating_scale"
+msgstr "Soru ölçülebilir (rating scale) ise seçiniz"
+
+#. module: survey
+#: field:survey.print,page_number:0
+#: field:survey.print.answer,page_number:0
+msgid "Include Page Number"
+msgstr "Sayfa Numarası Dahil"
+
+#. module: survey
+#: view:survey.page:0
+#: view:survey.question:0
+msgid "Ok"
+msgstr "Tamam"
+
+#. module: survey
+#: field:survey.page,title:0
+msgid "Page Title"
+msgstr "Sayfa Başlığı"
+
+#. module: survey
+#: model:ir.model,name:survey.model_survey_history
+msgid "Survey History"
+msgstr "Anket Geçmişi"
+
+#. module: survey
+#: field:survey.response.answer,comment:0
+#: field:survey.response.line,comment:0
+msgid "Notes"
+msgstr "Notlar"
+
+#. module: survey
+#: view:survey:0
+#: view:survey.request:0
+msgid "Search Survey"
+msgstr "Anket Ara"
+
+#. module: survey
+#: field:survey.response.answer,answer:0
+#: field:survey.tbl.column.heading,value:0
+msgid "Value"
+msgstr "Değer"
+
+#. module: survey
+#: field:survey.question,column_heading_ids:0
+msgid " Column heading"
+msgstr " Sütun Başlığı"
+
+#. module: survey
+#: code:addons/survey/wizard/survey_send_invitation.py:74
+#, python-format
+msgid "The following surveys are not in open state: %s"
+msgstr ""
+
+#. module: survey
+#: field:survey,tot_comp_survey:0
+msgid "Total Completed Survey"
+msgstr "Toplam Cevaplanan Anket"
+
+#. module: survey
+#: view:survey.response.answer:0
+msgid "(Use Only Question Type is matrix_of_drop_down_menus)"
+msgstr "(Yalnızca Kullanılacak Soru Türü: matrix_of_drop_down_menus)"
+
+#. module: survey
+#: model:ir.actions.report.xml,name:survey.survey_analysis
+msgid "Survey Statistics"
+msgstr "Anket İstatistiği"
+
+#. module: survey
+#: selection:survey,state:0
+#: selection:survey.request,state:0
+msgid "Cancelled"
+msgstr "İptal Edildi"
+
+#. module: survey
+#: selection:survey.question,type:0
+msgid "Rating Scale"
+msgstr "Ölçüm Skalası (Rating Scale)"
+
+#. module: survey
+#: code:addons/survey/survey.py:154
+#: code:addons/survey/survey.py:189
+#, python-format
+msgid ""
+"This survey has no question defined. Please define the questions and answers "
+"first."
+msgstr ""
+
+#. module: survey
+#: field:survey.question,comment_field_type:0
+msgid "Comment Field Type"
+msgstr "Yorum Alanı Türü"
+
+#. module: survey
+#: selection:survey.question,comment_field_type:0
+msgid "Single Line Of Text"
+msgstr "Yazının tek satırı"
+
+#. module: survey
+#: field:survey,date_open:0
+msgid "Survey Open Date"
+msgstr "Anket Başlangıç Tarihi"
+
+#. module: survey
+#: code:addons/survey/wizard/survey_answer.py:801
+#, python-format
+msgid "You cannot select the same answer more than one time."
+msgstr ""
+
+#. module: survey
+#: field:survey,color:0
+msgid "Color Index"
+msgstr ""
+
+#. module: survey
+#: selection:survey.question,type:0
+msgid "Multiple Choice (Multiple Answer)"
+msgstr "Çoktan Seçmeli"
+
+#. module: survey
+#: view:survey:0
+msgid "Edit Survey"
+msgstr "Anket Düzenle"
+
+#. module: survey
+#: code:addons/survey/wizard/survey_answer.py:767
+#: code:addons/survey/wizard/survey_answer.py:962
+#, python-format
+msgid "Please enter an integer value."
+msgstr ""
+
+#. module: survey
+#: field:survey.question.column.heading,menu_choice:0
+msgid "Menu Choice"
+msgstr "Menü Seçeneği"
+
+#. module: survey
+#: code:addons/survey/survey.py:495
+#, python-format
+msgid ""
+"You must enter one or more menu choices                                 in "
+"column heading."
+msgstr ""
+
+#. module: survey
+#: selection:survey.question,required_type:0
+msgid "At Most"
+msgstr "En Çok"
+
+#. module: survey
+#: view:survey:0
+#: view:survey.request:0
+msgid "My Survey(s)"
+msgstr "Anketlerim"
+
+#. module: survey
+#: view:survey.response.line:0
+msgid "Survey Answer Line"
+msgstr "Anket Cevap Satırı"
+
+#. module: survey
+#: code:addons/survey/wizard/survey_send_invitation.py:75
+#, python-format
+msgid ""
+"\n"
+"Hello %%(name)s, \n"
+"\n"
+"\n"
+"Would you please spent some of your time to fill-in our survey: \n"
+"%s\n"
+"\n"
+"You can access this survey with the following parameters:\n"
+" URL: %s\n"
+" Your login ID: %%(login)s\n"
+"\n"
+" Your password: %%(passwd)s\n"
+"\n"
+"\n"
+"\n"
+"\n"
+"Thanks,"
+msgstr ""
+
+#. module: survey
+#: field:survey.response.line,single_text:0
+msgid "Text"
+msgstr "Metin"
+
+#. module: survey
+#: view:survey:0
+msgid "Edit..."
+msgstr ""
+
+#. module: survey
+#: selection:survey.print,paper_size:0
+#: selection:survey.print.answer,paper_size:0
+msgid "Letter (8.5\" x 11\")"
+msgstr "Mektup (8.5\" x 11\")"
+
+#. module: survey
+#: view:survey:0
+#: field:survey,responsible_id:0
+msgid "Responsible"
+msgstr "Sorumlu"
+
+#. module: survey
+#: model:ir.model,name:survey.model_survey_request
+msgid "survey.request"
+msgstr "İstek"
+
+#. module: survey
+#: field:survey.send.invitation,mail_subject:0
+#: field:survey.send.invitation,mail_subject_existing:0
+msgid "Subject"
+msgstr "Konu"
+
+#. module: survey
+#: field:survey.question,comment_maximum_float:0
+#: field:survey.question,validation_maximum_float:0
+msgid "Maximum decimal number"
+msgstr "Maksimum ondalık sayı"
+
+#. module: survey
+#: model:ir.model,name:survey.model_survey_tbl_column_heading
+msgid "survey.tbl.column.heading"
+msgstr "Başlık"
+
+#. module: survey
+#: view:survey.send.invitation:0
+#: field:survey.send.invitation,send_mail:0
+msgid "Send Mail for New User"
+msgstr ""
+
+#. module: survey
+#: field:survey.send.invitation,mail_from:0
+msgid "From"
+msgstr "Gönderen"
+
+#. module: survey
+#: selection:survey.question,comment_valid_type:0
+#: selection:survey.question,validation_type:0
+msgid "Don't Validate Comment Text."
+msgstr "Metnin geçerliliğini kontrol etme"
+
+#. module: survey
+#: code:addons/survey/survey.py:534
+#, python-format
+msgid "You must enter one or more menu choices in column heading."
 msgstr ""
 
 #. module: survey
 #: selection:survey.question,comment_valid_type:0
 #: selection:survey.question,validation_type:0
-msgid "Must Be A Date"
+msgid "Must Be A Whole Number"
+msgstr "Bütün bir numara olmalı"
+
+#. module: survey
+#: field:survey.answer,question_id:0
+#: view:survey.question:0
+#: field:survey.question,question:0
+#: field:survey.question.column.heading,question_id:0
+#: field:survey.response.line,question_id:0
+msgid "Question"
+msgstr "Soru"
+
+#. module: survey
+#: view:survey.page:0
+msgid "Search Survey Page"
+msgstr "Anket Sayfası Ara"
+
+#. module: survey
+#: field:survey.question.wiz,name:0
+msgid "Number"
+msgstr "Sayı"
+
+#. module: survey
+#: view:survey.request:0
+msgid "Evaluation Plan Phase"
+msgstr "Eleme Planı Fazı"
+
+#. module: survey
+#: code:addons/survey/wizard/survey_send_invitation.py:188
+#: code:addons/survey/wizard/survey_send_invitation.py:199
+#: code:addons/survey/wizard/survey_send_invitation.py:202
+#, python-format
+msgid "Unknown"
 msgstr ""
+
+#. module: survey
+#: view:survey:0
+#: view:survey.page:0
+#: view:survey.question:0
+msgid "Between"
+msgstr "Arasında"
+
+#. module: survey
+#: view:survey.print:0
+#: view:survey.print.answer:0
+#: view:survey.print.statistics:0
+msgid "Print"
+msgstr "Yazdır"
+
+#. module: survey
+#: view:survey:0
+msgid "New"
+msgstr "Yeni"
+
+#. module: survey
+#: field:survey.question,make_comment_field:0
+msgid "Make Comment Field an Answer Choice"
+msgstr "Yorum Alanını Seçeneklerden Biri Yap"
+
+#. module: survey
+#: view:survey:0
+#: field:survey,type:0
+msgid "Type"
+msgstr "Tür"
+
+#. module: survey
+#: selection:survey.answer,type:0
+#: field:survey.request,email:0
+msgid "Email"
+msgstr "Email"
+
+#. module: survey
+#: code:addons/survey/survey.py:98
+#: code:addons/survey/survey.py:261
+#, python-format
+msgid "%s (copy)"
+msgstr ""
+
+#. module: survey
+#: selection:survey.response,state:0
+msgid "Not Finished"
+msgstr "Bitmedi"
+
+#. module: survey
+#: view:survey.print:0
+msgid "Survey Print"
+msgstr "Anket Yazdır"
+
+#. module: survey
+#: view:survey.send.invitation:0
+msgid "Select Partner"
+msgstr "Ortak Seç"
+
+#. module: survey
+#: code:addons/survey/survey.py:529
+#, python-format
+msgid "Maximum Required Answer is greater than Minimum Required Answer."
+msgstr ""
+
+#. module: survey
+#: model:ir.ui.menu,name:survey.menu_reporting
+msgid "Reporting"
+msgstr ""
+
+#. module: survey
+#: model:ir.actions.act_window,name:survey.act_survey_answer
+msgid "Answers"
+msgstr "Cevaplar"
+
+#. module: survey
+#: selection:survey.response,response_type:0
+msgid "Link"
+msgstr "Bağlantı"
+
+#. module: survey
+#: model:ir.actions.act_window,name:survey.action_survey_type_form
+#: model:ir.model,name:survey.model_survey_type
+#: view:survey.type:0
+msgid "Survey Type"
+msgstr "Anket Türü"
+
+#. module: survey
+#: field:survey.page,sequence:0
+msgid "Page Nr"
+msgstr "Sayfa No"
+
+#. module: survey
+#: model:ir.ui.menu,name:survey.menu_print_survey_form
+msgid "Print Surveys"
+msgstr ""
+
+#. module: survey
+#: field:survey.question.column.heading,in_visible_menu_choice:0
+msgid "Is Menu Choice Invisible??"
+msgstr "Menü seçeneği görünmez olacak mı?"
+
+#. module: survey
+#: field:survey.question,minimum_req_ans:0
+msgid "Minimum Required Answer"
+msgstr "Gerekli Minimum Cevap Sayısı"
+
+#. module: survey
+#: field:survey.question,req_error_msg:0
+msgid "Error Message"
+msgstr "Hata Mesajı"
+
+#. module: survey
+#: code:addons/survey/wizard/survey_answer.py:126
+#, python-format
+msgid "You cannot answer this survey more than %s times."
+msgstr ""
+
+#. module: survey
+#: field:survey.request,date_deadline:0
+msgid "Deadline date"
+msgstr "Bitiş Tarihi"
+
+#. module: survey
+#: selection:survey.question,comment_valid_type:0
+#: selection:survey.question,validation_type:0
+msgid "Must Be A Date"
+msgstr "Tarih olmalı"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_print
 msgid "survey.print"
-msgstr ""
+msgstr "Yazdır"
+
+#. module: survey
+#: view:survey:0
+#: view:survey.page:0
+#: field:survey.question,page_id:0
+msgid "Survey Page"
+msgstr "Anket Sayfası"
 
 #. module: survey
 #: view:survey.question.column.heading:0
 #: field:survey.question.column.heading,title:0
 msgid "Column Heading"
-msgstr ""
+msgstr "Sütun Başlığı"
 
 #. module: survey
 #: field:survey.question,is_require_answer:0
 msgid "Require Answer to Question"
-msgstr ""
+msgstr "Cevap zorunlu olsun"
 
 #. module: survey
+#: model:ir.actions.act_window,name:survey.act_survey_request
 #: model:ir.actions.act_window,name:survey.action_survey_request_tree
 #: model:ir.ui.menu,name:survey.menu_survey_type_form1
 msgid "Survey Requests"
-msgstr ""
-
-#. module: survey
-#: code:addons/survey/survey.py:370
-#: code:addons/survey/survey.py:457
-#, python-format
-msgid "You must enter one or more column heading."
-msgstr ""
-
-#. module: survey
-#: code:addons/survey/wizard/survey_answer.py:745
-#: code:addons/survey/wizard/survey_answer.py:940
-#, python-format
-msgid "Please enter an integer value"
-msgstr ""
+msgstr "Anket İstekleri"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_browse_answer
 msgid "survey.browse.answer"
-msgstr ""
+msgstr "Cevap"
 
 #. module: survey
 #: selection:survey.question,comment_field_type:0
 msgid "Paragraph of Text"
-msgstr ""
+msgstr "Metnin Paragrafı"
 
 #. module: survey
-#: code:addons/survey/survey.py:423
+#: code:addons/survey/survey.py:479
 #, python-format
 msgid ""
 "Maximum Required Answer you                                     entered for "
 "your maximum is greater than the number of answer.                           "
 "          Please use a number that is smaller than %d."
 msgstr ""
+"Ençok için girdiğiniz Ençok Gerekli Yanıt sayısı yanıt sayısından büyüktür. "
+"Lütfen %d sayısından az bir sayı kullanın"
 
 #. module: survey
 #: view:survey:0
 #: view:survey.page:0
 #: view:survey.question:0
 msgid "When the question is not answered, display this error message:"
-msgstr ""
+msgstr "Bu soruya cevap vermediniz."
 
 #. module: survey
 #: view:survey:0
 #: view:survey.page:0
 #: view:survey.question:0
 msgid "Options"
+msgstr "Seçenekler"
+
+#. module: survey
+#: code:addons/survey/survey.py:438
+#, python-format
+msgid "You must enter one or more Answers for question \"%s\" of page %s."
 msgstr ""
 
 #. module: survey
-#: view:survey.send.invitation.log:0
-msgid "_Ok"
-msgstr ""
-
-#. module: survey
-#: model:ir.ui.menu,name:survey.menu_browse_survey_response
-msgid "Browse Answers"
+#: view:survey:0
+msgid "Delete"
 msgstr ""
 
 #. module: survey
 #: field:survey.response.answer,comment_field:0
 #: view:survey.response.line:0
 msgid "Comment"
-msgstr ""
+msgstr "Açıklama"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_answer
@@ -774,200 +751,215 @@ msgstr ""
 #: view:survey.response.answer:0
 #: view:survey.response.line:0
 msgid "Survey Answer"
-msgstr ""
+msgstr "Anket Cevabı"
 
 #. module: survey
 #: selection:survey.answer,type:0
 msgid "Selection"
-msgstr ""
+msgstr "Seçim"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_browse_survey_response
 #: view:survey:0
 msgid "Answer Survey"
-msgstr ""
+msgstr "Anket Cevapları"
 
 #. module: survey
 #: view:survey:0
 #: view:survey.page:0
 #: view:survey.question:0
 msgid "Comment Field"
-msgstr ""
+msgstr "Yorum Alanı"
 
 #. module: survey
 #: selection:survey.response,response_type:0
 msgid "Manually"
-msgstr ""
+msgstr "El ile"
 
 #. module: survey
 #: view:survey.send.invitation:0
 msgid "_Send"
-msgstr ""
+msgstr "_Gönder"
 
 #. module: survey
 #: help:survey,responsible_id:0
 msgid "User responsible for survey"
-msgstr ""
+msgstr "Anket sorumlu kullanıcı"
 
 #. module: survey
 #: field:survey,page_ids:0
+#: view:survey.page:0
 #: view:survey.question:0
 #: field:survey.response.line,page_id:0
 msgid "Page"
-msgstr ""
+msgstr "Sayfa"
 
 #. module: survey
 #: field:survey.question,comment_column:0
 msgid "Add comment column in matrix"
-msgstr ""
+msgstr "Matrise Yorum Alanı Ekle"
 
 #. module: survey
 #: field:survey.answer,response:0
 msgid "#Answer"
-msgstr ""
+msgstr "#Cevap"
 
 #. module: survey
 #: field:survey.print,without_pagebreak:0
 #: field:survey.print.answer,without_pagebreak:0
 msgid "Print Without Page Breaks"
-msgstr ""
+msgstr "Sayfa Aralıksız Yazdır"
 
 #. module: survey
 #: view:survey:0
 #: view:survey.page:0
 #: view:survey.question:0
 msgid "When the comment is an invalid format, display this error message"
-msgstr ""
-
-#. module: survey
-#: code:addons/survey/wizard/survey_selection.py:83
-#, python-format
-msgid ""
-"You can not give more response. Please contact the author of this survey for "
-"further assistance."
-msgstr ""
+msgstr "Girdiğiniz metnin formatı yanlış, düzeltiniz."
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.act_survey_page_question
 #: model:ir.actions.act_window,name:survey.act_survey_question
+#: field:survey.page,question_ids:0
 msgid "Questions"
-msgstr ""
+msgstr "Sorular"
 
 #. module: survey
 #: help:survey,response_user:0
 msgid "Set to one if  you require only one Answer per user"
+msgstr "Eğer kullanıcı başına bir cevap gerekiyorsa seçiniz"
+
+#. module: survey
+#: code:addons/survey/survey.py:426
+#: code:addons/survey/survey.py:514
+#, python-format
+msgid ""
+"You must enter one or more column headings for question \"%s\" of page %s."
 msgstr ""
 
 #. module: survey
+#: model:ir.model,name:survey.model_res_users
 #: field:survey,users:0
 msgid "Users"
-msgstr ""
+msgstr "Kullanıcılar"
 
 #. module: survey
 #: view:survey.send.invitation:0
 msgid "Message"
-msgstr ""
+msgstr "Mesaj"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.request:0
-msgid "MY"
+#: code:addons/survey/survey.py:499
+#, python-format
+msgid ""
+"You must enter one or more menu                                 choices in "
+"column heading (white spaces not allowed)."
 msgstr ""
 
 #. module: survey
 #: field:survey.question,maximum_req_ans:0
 msgid "Maximum Required Answer"
-msgstr ""
+msgstr "Maksimum Gerekli Cevap"
 
 #. module: survey
 #: field:survey.name.wiz,page_no:0
 msgid "Page Number"
-msgstr ""
+msgstr "Sayfa Numarası"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_answer.py:87
-#, python-format
-msgid "Cannot locate survey for the question wizard!"
-msgstr ""
+#: view:survey.print:0
+#: view:survey.print.answer:0
+msgid "Print Option"
+msgstr "Yazdırma Seçenekleri"
 
 #. module: survey
 #: view:survey:0
 #: view:survey.page:0
 #: view:survey.question:0
 msgid "and"
-msgstr ""
+msgstr "ve"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_view_survey_print_statistics
 #: view:survey.print.statistics:0
 msgid "Survey Print Statistics"
-msgstr ""
+msgstr "Anket Yazdırma İstatistiği"
 
 #. module: survey
 #: field:survey.send.invitation.log,note:0
 msgid "Log"
-msgstr ""
+msgstr "Log"
 
 #. module: survey
 #: view:survey:0
 #: view:survey.page:0
 #: view:survey.question:0
 msgid "When the choices do not add up correctly, display this error message"
+msgstr "Girdiğiniz seçenek düzgün eklenemedi!"
+
+#. module: survey
+#: model:ir.actions.act_window,help:survey.action_survey_form1
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new survey. \n"
+"              </p><p>\n"
+"                You can create survey for different purposes: recruitment\n"
+"                interviews, employee's periodical evaluations, marketing\n"
+"                campaigns, etc.\n"
+"              </p><p>\n"
+"                A survey is made of pages containing questions\n"
+"                of several types: text, multiple choices, etc.\n"
+"              </p>\n"
+"            "
 msgstr ""
 
 #. module: survey
 #: field:survey,date_close:0
 msgid "Survey Close Date"
-msgstr ""
-
-#. module: survey
-#: field:survey,date_open:0
-msgid "Survey Open Date"
-msgstr ""
+msgstr "Anket Bitiş Tarihi"
 
 #. module: survey
 #: field:survey.question.column.heading,in_visible_rating_weight:0
 msgid "Is Rating Scale Invisible ??"
-msgstr ""
+msgstr "Öçlüm skalası (rating scale) görünmez mi?"
+
+#. module: survey
+#: field:survey.question,is_validation_require:0
+msgid "Validate Text"
+msgstr "Metnin geçerliliğini denetle"
 
 #. module: survey
 #: view:survey.browse.answer:0
 #: view:survey.name.wiz:0
 msgid "Start"
-msgstr ""
-
-#. module: survey
-#: code:addons/survey/survey.py:472
-#, python-format
-msgid "Maximum Required Answer is greater than Minimum Required Answer"
-msgstr ""
+msgstr "Başla"
 
 #. module: survey
 #: field:survey.question,comment_maximum_no:0
 #: field:survey.question,validation_maximum_no:0
 msgid "Maximum number"
-msgstr ""
+msgstr "Maksimum Numara"
 
 #. module: survey
 #: selection:survey.request,state:0
 #: selection:survey.response.line,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Taslak"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_print_statistics
 msgid "survey.print.statistics"
-msgstr ""
+msgstr "anket.yazdır.istatistik"
 
 #. module: survey
 #: selection:survey,state:0
 msgid "Closed"
-msgstr ""
+msgstr "Kapatıldı"
 
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Matrix of Drop-down Menus"
-msgstr ""
+msgstr "Açılır Menü Matrisi"
 
 #. module: survey
 #: view:survey:0
@@ -989,97 +981,109 @@ msgstr ""
 #: field:survey.send.invitation,partner_ids:0
 #: field:survey.tbl.column.heading,response_table_id:0
 msgid "Answer"
-msgstr ""
+msgstr "Cevap"
 
 #. module: survey
 #: field:survey,max_response_limit:0
 msgid "Maximum Answer Limit"
-msgstr ""
+msgstr "Maksimum Cevap Limiti"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_act_view_survey_send_invitation
 msgid "Send Invitations"
-msgstr ""
+msgstr "Davetiyeleri Gönder"
 
 #. module: survey
 #: field:survey.name.wiz,store_ans:0
 msgid "Store Answer"
+msgstr "Cevapları Sakla"
+
+#. module: survey
+#: code:addons/survey/wizard/survey_selection.py:83
+#, python-format
+msgid ""
+"You cannot give more responses. Please contact the author of this survey for "
+"further assistance."
 msgstr ""
 
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Date and Time"
-msgstr ""
+msgstr "Tarih ve Zaman"
 
 #. module: survey
+#: view:survey:0
 #: field:survey,state:0
+#: view:survey.request:0
+#: field:survey.request,state:0
 #: field:survey.response,state:0
 #: field:survey.response.line,state:0
 msgid "Status"
-msgstr ""
+msgstr "Durum"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_view_survey_print
 msgid "Print Survey"
-msgstr ""
-
-#. module: survey
-#: field:survey,send_response:0
-msgid "E-mail Notification on Answer"
-msgstr ""
+msgstr "Anketi Yazdır"
 
 #. module: survey
 #: field:survey.response.answer,value_choice:0
 msgid "Value Choice"
-msgstr ""
+msgstr "Seçenek Ederi (Değeri)"
+
+#. module: survey
+#: field:survey.response,response_type:0
+msgid "Answer Type"
+msgstr "Cevap Türü"
 
 #. module: survey
 #: view:survey:0
 msgid "Started"
-msgstr ""
+msgstr "Başlanmış"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_view_survey_print_answer
 #: view:survey:0
 #: view:survey.print.answer:0
 msgid "Print Answer"
-msgstr ""
+msgstr "Cevap Yazdır"
 
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Multiple Textboxes"
-msgstr ""
+msgstr "Birden fazla metin kutucuğu"
 
 #. module: survey
 #: selection:survey.print,orientation:0
 #: selection:survey.print.answer,orientation:0
 msgid "Landscape(Horizontal)"
-msgstr ""
+msgstr "Yatay"
 
 #. module: survey
 #: field:survey.question,no_of_rows:0
 msgid "No of Rows"
-msgstr ""
+msgstr "Satır Sayısı"
 
 #. module: survey
 #: view:survey:0
-#: view:survey.name.wiz:0
 msgid "Survey Details"
-msgstr ""
+msgstr "Anket Hakkında"
 
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Multiple Textboxes With Different Type"
-msgstr ""
+msgstr "Birden fazla değişik tipte metin kutucuğu"
 
 #. module: survey
-#: view:survey.question.column.heading:0
-msgid "Menu Choices (each choice on separate lines)"
-msgstr ""
+#: view:survey:0
+#: view:survey.page:0
+#: view:survey.question:0
+msgid "Required Answer"
+msgstr "Boş geçemezsiniz"
 
 #. module: survey
-#: field:survey.response,response_type:0
-msgid "Answer Type"
+#: model:survey.type,name:survey.survey_type2
+msgid "Customer Feeback"
 msgstr ""
 
 #. module: survey
@@ -1087,40 +1091,40 @@ msgstr ""
 #: view:survey.page:0
 #: view:survey.question:0
 msgid "Validation"
-msgstr ""
+msgstr "Validation"
 
 #. module: survey
 #: view:survey.request:0
 #: selection:survey.request,state:0
 msgid "Waiting Answer"
-msgstr ""
+msgstr "Cevap Bekliyor"
 
 #. module: survey
 #: selection:survey.question,comment_valid_type:0
 #: selection:survey.question,validation_type:0
 msgid "Must Be A Decimal Number"
-msgstr ""
+msgstr "Ondalık Sayı Olmalı"
 
 #. module: survey
 #: field:res.users,survey_id:0
 msgid "Groups"
-msgstr ""
+msgstr "Gruplar"
 
 #. module: survey
 #: selection:survey.answer,type:0
 #: selection:survey.question,type:0
 msgid "Date"
-msgstr ""
+msgstr "Tarih"
 
 #. module: survey
-#: view:survey:0
-msgid "All New Survey"
-msgstr ""
+#: selection:survey.answer,type:0
+msgid "Integer"
+msgstr "Tamsayı"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_send_invitation
 msgid "survey.send.invitation"
-msgstr ""
+msgstr "anket.gönder.davet"
 
 #. module: survey
 #: field:survey.history,user_id:0
@@ -1128,39 +1132,52 @@ msgstr ""
 #: field:survey.request,user_id:0
 #: field:survey.response,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Kullanıcı"
 
 #. module: survey
 #: field:survey.name.wiz,transfer:0
 msgid "Page Transfer"
-msgstr ""
+msgstr "Sayfa Transferi"
 
 #. module: survey
 #: selection:survey.response.line,state:0
 msgid "Skiped"
+msgstr "Atlanmış"
+
+#. module: survey
+#: code:addons/survey/survey.py:536
+#, python-format
+msgid ""
+"You must enter one or more menu choices in column heading (white spaces not "
+"allowed)."
 msgstr ""
 
 #. module: survey
 #: field:survey.print,paper_size:0
 #: field:survey.print.answer,paper_size:0
 msgid "Paper Size"
-msgstr ""
+msgstr "Kağıt Boyutu"
 
 #. module: survey
 #: field:survey.response.answer,column_id:0
 #: field:survey.tbl.column.heading,column_id:0
 msgid "Column"
-msgstr ""
+msgstr "Sütun"
+
+#. module: survey
+#: model:ir.ui.menu,name:survey.menu_browse_survey_response
+msgid "Browse Answers"
+msgstr "Cevapları İncele"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_response_line
 msgid "Survey Response Line"
-msgstr ""
+msgstr "Anket Cevap Hattı"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_selection.py:80
+#: code:addons/survey/survey.py:171
 #, python-format
-msgid "You can not give response for this survey more than %s times"
+msgid "This survey has no pages defined. Please define pages first."
 msgstr ""
 
 #. module: survey
@@ -1182,53 +1199,53 @@ msgstr ""
 #: field:survey.request,survey_id:0
 #: field:survey.response,survey_id:0
 msgid "Survey"
-msgstr ""
+msgstr "Anket"
 
 #. module: survey
 #: field:survey.question,in_visible_rating_weight:0
 msgid "Is Rating Scale Invisible?"
-msgstr ""
+msgstr "Ölçüm skalası (rating scale) görünmez mi?"
 
 #. module: survey
-#: selection:survey.answer,type:0
-msgid "Integer"
-msgstr ""
+#: view:survey:0
+msgid "All New Survey"
+msgstr "Tüm Yeni Anketler"
 
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Numerical Textboxes"
-msgstr ""
+msgstr "Nümerik Kutucuk"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_question_wiz
 msgid "survey.question.wiz"
-msgstr ""
+msgstr "anket.soru.sih"
 
 #. module: survey
 #: view:survey:0
 msgid "History"
-msgstr ""
+msgstr "Geçmiş Bilgisi"
 
 #. module: survey
 #: view:survey.request:0
 msgid "Late"
-msgstr ""
+msgstr "Geçmiş Anketler"
 
 #. module: survey
 #: field:survey.type,code:0
 msgid "Code"
-msgstr ""
+msgstr "Kod"
 
 #. module: survey
 #: model:ir.ui.menu,name:survey.menu_print_survey_statistics
 msgid "Surveys Statistics"
-msgstr ""
+msgstr "Anket İstatistiği"
 
 #. module: survey
 #: field:survey.print,orientation:0
 #: field:survey.print.answer,orientation:0
 msgid "Orientation"
-msgstr ""
+msgstr "Sayfa yönü"
 
 #. module: survey
 #: view:survey:0
@@ -1236,55 +1253,50 @@ msgstr ""
 #: view:survey.page:0
 #: view:survey.question:0
 msgid "Seq"
-msgstr ""
+msgstr "Sıra"
 
 #. module: survey
-#: field:survey.request,email:0
-msgid "E-mail"
-msgstr ""
+#: view:survey.question.column.heading:0
+msgid "Menu Choices (each choice on separate lines)"
+msgstr "Menü Seçenekleri (Her seçenek farklı satırda)"
 
 #. module: survey
 #: field:survey.question,comment_minimum_no:0
 #: field:survey.question,validation_minimum_no:0
 msgid "Minimum number"
-msgstr ""
+msgstr "Minimum Sayı"
 
 #. module: survey
 #: field:survey.question,req_ans:0
 msgid "#Required Answer"
-msgstr ""
+msgstr "#Boş geçemezsiniz"
 
 #. module: survey
 #: field:survey.answer,sequence:0
 #: field:survey.question,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Sıra"
 
 #. module: survey
 #: field:survey.question,comment_label:0
 msgid "Field Label"
-msgstr ""
-
-#. module: survey
-#: view:survey:0
-msgid "Other"
-msgstr ""
+msgstr "Alan İsmi"
 
 #. module: survey
 #: view:survey.request:0
 #: selection:survey.request,state:0
 msgid "Done"
-msgstr ""
+msgstr "Tamamlandı"
 
 #. module: survey
 #: view:survey:0
 msgid "Test Survey"
-msgstr ""
+msgstr "Test Anketi"
 
 #. module: survey
 #: field:survey.question,rating_allow_one_column_require:0
 msgid "Allow Only One Answer per Column (Forced Ranking)"
-msgstr ""
+msgstr "Sütun Başına Sadece Bir Cevaba İzin ver"
 
 #. module: survey
 #: view:survey:0
@@ -1293,260 +1305,269 @@ msgstr ""
 #: view:survey.print:0
 #: view:survey.print.answer:0
 #: view:survey.print.statistics:0
+#: view:survey.request:0
+#: view:survey.send.invitation:0
 msgid "Cancel"
-msgstr ""
+msgstr "İptal"
 
 #. module: survey
 #: view:survey:0
 msgid "Close"
-msgstr ""
+msgstr "Kapat"
 
 #. module: survey
 #: field:survey.question,comment_minimum_float:0
 #: field:survey.question,validation_minimum_float:0
 msgid "Minimum decimal number"
-msgstr ""
+msgstr "Minimum Ondalık Sayı"
 
 #. module: survey
 #: view:survey:0
 #: selection:survey,state:0
 msgid "Open"
+msgstr "Açık"
+
+#. module: survey
+#: code:addons/survey/survey.py:510
+#, python-format
+msgid "You must enter one or more answers for question \"%s\" of page %s ."
 msgstr ""
 
 #. module: survey
 #: field:survey,tot_start_survey:0
 msgid "Total Started Survey"
-msgstr ""
+msgstr "Toplam Başlatılmış Anket"
 
 #. module: survey
-#: code:addons/survey/survey.py:462
+#: code:addons/survey/survey.py:519
 #, python-format
 msgid ""
 "#Required Answer you entered is greater than the number of answer. Please "
 "use a number that is smaller than %d."
-msgstr ""
+msgstr "#Lütfen %d sayısından daha küçük sayı giriniz."
 
 #. module: survey
 #: help:survey,max_response_limit:0
 msgid "Set to one if survey is answerable only once"
-msgstr ""
+msgstr "Anket yalnız bir kez yanıtlanabiliyorsa bire ayarla"
 
 #. module: survey
 #: selection:survey.response,state:0
 msgid "Finished "
-msgstr ""
+msgstr "Bitti "
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_question_column_heading
 msgid "Survey Question Column Heading"
-msgstr ""
+msgstr "Anket Sorusu Sütun Başlığı"
 
 #. module: survey
 #: field:survey.answer,average:0
 msgid "#Avg"
-msgstr ""
+msgstr "#Ort"
 
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Matrix of Choices (Multiple Answers Per Row)"
-msgstr ""
+msgstr "Seçenekler Matrisi (Satır başına birden çok cevap)"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_view_survey_name
 msgid "Give Survey Answer"
-msgstr ""
-
-#. module: survey
-#: model:ir.model,name:survey.model_res_users
-msgid "res.users"
-msgstr ""
+msgstr "Anket Cevapla"
 
 #. module: survey
 #: help:survey.browse.answer,response_id:0
 msgid ""
 "If this field is empty, all answers of the selected survey will be print."
-msgstr ""
+msgstr "Eğer bu alan boş ise, seçili anketin tüm cevapları yazdırılır."
 
 #. module: survey
 #: selection:survey.response.line,state:0
 msgid "Answered"
+msgstr "Cevaplanmış"
+
+#. module: survey
+#: field:survey,send_response:0
+msgid "Email Notification on Answer"
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/wizard/survey_answer.py:425
+#: code:addons/survey/wizard/survey_answer.py:446
 #, python-format
 msgid "Complete Survey Answer"
-msgstr ""
+msgstr "Anketi Yanıtlar"
 
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Comment/Essay Box"
-msgstr ""
+msgstr "Yorum Kutusu"
 
 #. module: survey
 #: field:survey.answer,type:0
 msgid "Type of Answer"
-msgstr ""
+msgstr "Cevap Türü"
 
 #. module: survey
 #: field:survey.question,required_type:0
 msgid "Respondent must answer"
-msgstr ""
+msgstr "Mutlaka cevaplanmalı"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_view_survey_send_invitation
 #: view:survey.send.invitation:0
 msgid "Send Invitation"
-msgstr ""
+msgstr "Davetiye Gönder"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_answer.py:779
+#: code:addons/survey/wizard/survey_selection.py:80
 #, python-format
-msgid "You cannot select the same answer more than one time"
+msgid "You cannot give response for this survey more than %s times."
 msgstr ""
 
 #. module: survey
 #: view:survey.question:0
 msgid "Search Question"
-msgstr ""
-
-#. module: survey
-#: field:survey,title:0
-msgid "Survey Title"
-msgstr ""
+msgstr "Cevaplarda Ara"
 
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Single Textbox"
-msgstr ""
+msgstr "Tek Metin Kutusu"
 
 #. module: survey
-#: view:survey:0
+#: model:ir.actions.act_window,name:survey.action_survey_question_form
+msgid "Survey Questions"
+msgstr "Anket Soruları"
+
+#. module: survey
 #: field:survey,note:0
 #: field:survey.name.wiz,note:0
 #: view:survey.page:0
 #: field:survey.page,note:0
 #: view:survey.response.line:0
 msgid "Description"
-msgstr ""
-
-#. module: survey
-#: view:survey.name.wiz:0
-msgid "Select Survey"
-msgstr ""
+msgstr "Tanım"
 
 #. module: survey
 #: selection:survey.question,required_type:0
 msgid "At Least"
-msgstr ""
+msgstr "En Az"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_view_survey_send_invitation_log
 #: model:ir.model,name:survey.model_survey_send_invitation_log
 msgid "survey.send.invitation.log"
-msgstr ""
+msgstr "survey.send.invitation.log"
 
 #. module: survey
 #: selection:survey.print,orientation:0
 #: selection:survey.print.answer,orientation:0
 msgid "Portrait(Vertical)"
+msgstr "Dikey"
+
+#. module: survey
+#: code:addons/survey/wizard/survey_send_invitation.py:70
+#: code:addons/survey/wizard/survey_send_invitation.py:71
+#, python-format
+msgid "Invitation for %s"
 msgstr ""
 
 #. module: survey
 #: selection:survey.question,comment_valid_type:0
 #: selection:survey.question,validation_type:0
 msgid "Must Be Specific Length"
+msgstr "Belirtilen Uzunlukta Olmalı"
+
+#. module: survey
+#: model:survey.type,name:survey.survey_type3
+msgid "Supplier Selection"
 msgstr ""
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: field:survey.question,page_id:0
-msgid "Survey Page"
+#: code:addons/survey/wizard/survey_answer.py:993
+#, python-format
+msgid "You cannot select same answer more than one time.'"
 msgstr ""
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
-msgid "Required Answer"
-msgstr ""
+#: code:addons/survey/survey.py:687
+#, python-format
+msgid "You cannot duplicate the resource!"
+msgstr "Kaynağın bir eşini kopyalayamazsınız(duplicate)"
 
 #. module: survey
-#: code:addons/survey/survey.py:468
+#: code:addons/survey/survey.py:525
 #, python-format
 msgid ""
 "Minimum Required Answer you entered is greater than the number of answer. "
 "Please use a number that is smaller than %d."
 msgstr ""
-
-#. module: survey
-#: code:addons/survey/survey.py:453
-#, python-format
-msgid "You must enter one or more answer."
-msgstr ""
+"Girdiğiniz minimum cevap sayısı verdiğiniz cevaplardan fazladır. Lütfen %d "
+"sayısından küçük bir sayı giriniz"
 
 #. module: survey
 #: view:survey:0
 msgid "All Open Survey"
-msgstr ""
+msgstr "Tüm Açık Anketler"
 
 #. module: survey
 #: model:ir.actions.report.xml,name:survey.survey_browse_response
 #: field:survey.browse.answer,response_id:0
 msgid "Survey Answers"
-msgstr ""
-
-#. module: survey
-#: view:survey.browse.answer:0
-msgid "Select Survey and Related Answer"
-msgstr ""
+msgstr "Anket Cevaplarında"
 
 #. module: survey
 #: model:ir.ui.menu,name:survey.menu_print_survey_answer
 msgid "Surveys Answers"
-msgstr ""
+msgstr "Anketlerin Cevapları"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.act_survey_pages
 msgid "Pages"
-msgstr ""
+msgstr "Sayfalar"
 
 #. module: survey
-#: code:addons/survey/survey.py:401
+#: code:addons/survey/survey.py:457
 #, python-format
 msgid ""
 "#Required Answer you entered is                                     greater "
 "than the number of answer.                                    Please use a "
 "number that is smaller than %d."
 msgstr ""
-
-#. module: survey
-#: code:addons/survey/wizard/survey_answer.py:971
-#, python-format
-msgid "You cannot select same answer more than one time'"
-msgstr ""
+"Girdiğiniz cevap sayısı verdiğiniz cevaplardan fazladır. Lütfen %d "
+"sayısından küçük bir sayı giriniz"
 
 #. module: survey
 #: selection:survey.print,paper_size:0
 #: selection:survey.print.answer,paper_size:0
 msgid "Legal (8.5\" x 14\")"
-msgstr ""
+msgstr "Legal (8.5\" x 14\")"
 
 #. module: survey
 #: field:survey.type,name:0
 msgid "Name"
-msgstr ""
+msgstr "Adı"
 
 #. module: survey
 #: view:survey.page:0
 msgid "#Questions"
+msgstr "#Sorular"
+
+#. module: survey
+#: field:survey.question,numeric_required_sum:0
+msgid "Sum of all choices"
+msgstr "Bütün tercihlerin toplamı"
+
+#. module: survey
+#: view:survey.request:0
+msgid "Request"
 msgstr ""
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_response
 msgid "survey.response"
-msgstr ""
+msgstr "survey.response"
 
 #. module: survey
 #: field:survey.question,comment_valid_err_msg:0
@@ -1554,82 +1575,123 @@ msgstr ""
 #: field:survey.question,numeric_required_sum_err_msg:0
 #: field:survey.question,validation_valid_err_msg:0
 msgid "Error message"
-msgstr ""
+msgstr "Hata mesajı"
 
 #. module: survey
-#: view:survey.send.invitation:0
-#: field:survey.send.invitation,send_mail:0
-msgid "Send Mail for New User"
-msgstr ""
-
-#. module: survey
-#: code:addons/survey/survey.py:382
+#: code:addons/survey/survey.py:154
+#: code:addons/survey/survey.py:171
+#: code:addons/survey/survey.py:189
+#: code:addons/survey/survey.py:426
+#: code:addons/survey/survey.py:438
+#: code:addons/survey/survey.py:452
+#: code:addons/survey/survey.py:457
+#: code:addons/survey/survey.py:467
+#: code:addons/survey/survey.py:473
+#: code:addons/survey/survey.py:479
+#: code:addons/survey/survey.py:485
+#: code:addons/survey/survey.py:489
+#: code:addons/survey/survey.py:495
+#: code:addons/survey/survey.py:499
+#: code:addons/survey/survey.py:510
+#: code:addons/survey/survey.py:514
+#: code:addons/survey/survey.py:519
+#: code:addons/survey/survey.py:525
+#: code:addons/survey/survey.py:527
+#: code:addons/survey/survey.py:529
+#: code:addons/survey/survey.py:534
+#: code:addons/survey/survey.py:536
+#: code:addons/survey/survey.py:687
+#: code:addons/survey/wizard/survey_answer.py:119
+#: code:addons/survey/wizard/survey_answer.py:126
+#: code:addons/survey/wizard/survey_answer.py:708
+#: code:addons/survey/wizard/survey_answer.py:747
+#: code:addons/survey/wizard/survey_answer.py:767
+#: code:addons/survey/wizard/survey_answer.py:796
+#: code:addons/survey/wizard/survey_answer.py:801
+#: code:addons/survey/wizard/survey_answer.py:809
+#: code:addons/survey/wizard/survey_answer.py:820
+#: code:addons/survey/wizard/survey_answer.py:829
+#: code:addons/survey/wizard/survey_answer.py:834
+#: code:addons/survey/wizard/survey_answer.py:908
+#: code:addons/survey/wizard/survey_answer.py:944
+#: code:addons/survey/wizard/survey_answer.py:962
+#: code:addons/survey/wizard/survey_answer.py:990
+#: code:addons/survey/wizard/survey_answer.py:993
+#: code:addons/survey/wizard/survey_answer.py:996
+#: code:addons/survey/wizard/survey_answer.py:1008
+#: code:addons/survey/wizard/survey_answer.py:1015
+#: code:addons/survey/wizard/survey_answer.py:1018
+#: code:addons/survey/wizard/survey_selection.py:80
+#: code:addons/survey/wizard/survey_selection.py:83
+#: code:addons/survey/wizard/survey_send_invitation.py:74
 #, python-format
-msgid "You must enter one or more Answer."
+msgid "Warning!"
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/survey.py:411
+#: code:addons/survey/survey.py:467
 #, python-format
 msgid ""
 "Minimum Required Answer                                     you entered is "
 "greater than the number of answer.                                    Please "
 "use a number that is smaller than %d."
 msgstr ""
+"Girdiğiniz Enaz Gerekli Yanıt sayısı yanıt sayısından büyüktür. Lütfen %d "
+"sayısından az bir sayı kullanın"
 
 #. module: survey
 #: field:survey.answer,menu_choice:0
 msgid "Menu Choices"
-msgstr ""
+msgstr "Menü Seçenekleri"
 
 #. module: survey
 #: field:survey,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: survey
-#: code:addons/survey/survey.py:433
+#: code:addons/survey/survey.py:489
 #, python-format
 msgid ""
 "Maximum Required Answer is greater                                     than "
 "Minimum Required Answer"
-msgstr ""
+msgstr "Maksimum gerekli cevap sayısı minimum gerekliden daha fazla."
 
 #. module: survey
 #: view:survey.send.invitation.log:0
 msgid "User creation"
-msgstr ""
+msgstr "Kullanıcı Tarafından Yaratılmış"
 
 #. module: survey
 #: selection:survey.question,required_type:0
 msgid "All"
-msgstr ""
+msgstr "Hepsi"
 
 #. module: survey
 #: selection:survey.question,comment_valid_type:0
 #: selection:survey.question,validation_type:0
 msgid "Must Be An Email Address"
-msgstr ""
+msgstr "Email Adresi olmalı."
 
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Multiple Choice (Only One Answer)"
-msgstr ""
+msgstr "Çoktan Seçmeli (Sadece Bir Cevap)"
 
 #. module: survey
 #: field:survey.answer,in_visible_answer_type:0
 msgid "Is Answer Type Invisible??"
-msgstr ""
+msgstr "Cevap Tipi Görünmez mi?"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_print_answer
 msgid "survey.print.answer"
-msgstr ""
+msgstr "Anketi Yazdır"
 
 #. module: survey
 #: view:survey.answer:0
 msgid "Menu Choices (each choice on separate by lines)"
-msgstr ""
+msgstr "Menü Seçenekleri (Her seçenek satır ile ayrı)"
 
 #. module: survey
 #: selection:survey.answer,type:0
@@ -1637,36 +1699,40 @@ msgid "Float"
 msgstr ""
 
 #. module: survey
-#: view:survey.response.line:0
-msgid "Single Textboxes"
+#: view:survey.browse.answer:0
+#: view:survey.name.wiz:0
+#: view:survey.print:0
+#: view:survey.print.answer:0
+#: view:survey.print.statistics:0
+#: view:survey.send.invitation:0
+msgid "or"
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/wizard/survey_send_invitation.py:74
-#, python-format
-msgid "%sSurvey is not in open state"
-msgstr ""
+#: field:survey,title:0
+msgid "Survey Title"
+msgstr "Anket Başlığı"
 
 #. module: survey
 #: field:survey.question.column.heading,rating_weight:0
 msgid "Weight"
-msgstr ""
+msgstr "Etki"
 
 #. module: survey
 #: selection:survey.answer,type:0
 msgid "Date & Time"
-msgstr ""
+msgstr "Tarih ve Zaman"
 
 #. module: survey
 #: field:survey.response,date_create:0
 #: field:survey.response.line,date_create:0
 msgid "Create Date"
-msgstr ""
+msgstr "Oluşturulma Tarihi"
 
 #. module: survey
 #: field:survey.question,column_name:0
 msgid "Column Name"
-msgstr ""
+msgstr "Sütun Adı"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_page_form
@@ -1674,37 +1740,185 @@ msgstr ""
 #: model:ir.ui.menu,name:survey.menu_survey_page_form1
 #: view:survey.page:0
 msgid "Survey Pages"
-msgstr ""
+msgstr "Anket Sayfaları"
 
 #. module: survey
-#: field:survey.question,numeric_required_sum:0
-msgid "Sum of all choices"
-msgstr ""
+#: field:survey.question,type:0
+msgid "Question Type"
+msgstr "Soru Tipi"
 
 #. module: survey
 #: selection:survey.question,type:0
 #: view:survey.response.line:0
 msgid "Table"
-msgstr ""
+msgstr "Tablo"
 
 #. module: survey
-#: code:addons/survey/survey.py:630
+#: code:addons/survey/wizard/survey_answer.py:119
 #, python-format
-msgid "You cannot duplicate the resource!"
+msgid "You cannot answer because the survey is not open."
 msgstr ""
 
 #. module: survey
 #: field:survey.question,comment_minimum_date:0
 #: field:survey.question,validation_minimum_date:0
 msgid "Minimum date"
-msgstr ""
+msgstr "Minimum Tarih"
 
 #. module: survey
 #: field:survey,response_user:0
 msgid "Maximum Answer per User"
-msgstr ""
+msgstr "Kullanıcı başına maksimum cevap sayısı"
 
 #. module: survey
 #: field:survey.name.wiz,page:0
 msgid "Page Position"
-msgstr ""
+msgstr "Sayfa Pozisyonu"
+
+#, python-format
+#~ msgid ""
+#~ "You must enter one or more menu                                 choices in "
+#~ "column heading (white spaces not allowed)"
+#~ msgstr ""
+#~ "Kolon başlığında bir veya birden fazla seçenek girmelisiniz (Boşluk "
+#~ "kullanamazsınız)"
+
+#~ msgid "Define Surveys"
+#~ msgstr "Anket Tanımla"
+
+#, python-format
+#~ msgid "Error!"
+#~ msgstr "Hata!"
+
+#~ msgid "Answer a Survey"
+#~ msgstr "Anket Cevapla"
+
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "Uyarı!"
+
+#~ msgid "Send reminder for existing user"
+#~ msgstr "Mevcut Kullanıcılara Uyarıcı Gönder"
+
+#~ msgid "The chosen company is not in the allowed companies for this user"
+#~ msgstr "Bu kullanıcının seçilen şirkete erişim hakkı yok"
+
+#~ msgid "_Cancel"
+#~ msgstr "İptal Et"
+
+#~ msgid "You can not have two users with the same login !"
+#~ msgstr "Aynı kullanıcı adı ile iki kullanıcı oluşturamazsınız !"
+
+#, python-format
+#~ msgid ""
+#~ "You must enter one or more menu choices                                 in "
+#~ "column heading"
+#~ msgstr "Sütun başlığında bir veya daha fazla seçenek girmelisiniz."
+
+#~ msgid "Answer Surveys"
+#~ msgstr "Anket Yanıtla"
+
+#~ msgid "State"
+#~ msgstr "Durum"
+
+#, python-format
+#~ msgid "You can not answer this survey more than %s times"
+#~ msgstr "Bu anketi %s kereden fazla yanıtlayamazsınız."
+
+#, python-format
+#~ msgid "You can not answer because the survey is not open"
+#~ msgstr "Anket aktif değil, yanıtlayamazsınız."
+
+#, python-format
+#~ msgid "You must enter one or more menu choices in column heading"
+#~ msgstr "Sütun başılığında bir veya daha fazla seçenek girmelisiniz"
+
+#, python-format
+#~ msgid ""
+#~ "You must enter one or more menu choices in column heading (white spaces not "
+#~ "allowed)"
+#~ msgstr ""
+#~ "Sütun başılığında bir veya daha fazla seçenek girmelisiniz (Boşluk "
+#~ "kullanamazsınız)"
+
+#, python-format
+#~ msgid "Please enter an integer value"
+#~ msgstr "Lütfen bir Tamsayı değer girin"
+
+#, python-format
+#~ msgid "You must enter one or more column heading."
+#~ msgstr "Sütun başılığında bir veya daha fazla seçenek girmelisiniz"
+
+#~ msgid "_Ok"
+#~ msgstr "_Tamam"
+
+#, python-format
+#~ msgid ""
+#~ "You can not give more response. Please contact the author of this survey for "
+#~ "further assistance."
+#~ msgstr "Daha fazla cevap veremezsiniz. Anket sahibi ile iletişime geçiniz."
+
+#, python-format
+#~ msgid "Cannot locate survey for the question wizard!"
+#~ msgstr "Soru sihirbazı için anket yüklenemiyor."
+
+#, python-format
+#~ msgid "Maximum Required Answer is greater than Minimum Required Answer"
+#~ msgstr "Maksimum gerekli cevap sayısı minimumdan daha fazla"
+
+#~ msgid "E-mail Notification on Answer"
+#~ msgstr "Cevaplandığında Email ile Uyar"
+
+#, python-format
+#~ msgid "You can not give response for this survey more than %s times"
+#~ msgstr "Bu ankete %s kereden fazla cevap veremezsiniz"
+
+#~ msgid "E-mail"
+#~ msgstr "E-mail"
+
+#~ msgid "Other"
+#~ msgstr "Diğeri"
+
+#~ msgid "res.users"
+#~ msgstr "res.users"
+
+#, python-format
+#~ msgid "You cannot select the same answer more than one time"
+#~ msgstr "Aynı cevabı birden fazla kez seçemezsiniz"
+
+#~ msgid "Select Survey"
+#~ msgstr "Anket Seç"
+
+#, python-format
+#~ msgid "You cannot select same answer more than one time'"
+#~ msgstr "Aynı cevabı birden fazla kez seçemezsiniz"
+
+#~ msgid "Select Survey and related answer"
+#~ msgstr "Anketi ve ilgili cevapları seç"
+
+#, python-format
+#~ msgid "You must enter one or more answer."
+#~ msgstr "Bir veya daha fazla cevap girmelisiniz"
+
+#, python-format
+#~ msgid "You must enter one or more Answer."
+#~ msgstr "En az bir veya daha fazla cevap girmelisiniz"
+
+#~ msgid "Send mail for new user"
+#~ msgstr "Yeni Kullanıcıya Email GÖnder"
+
+#, python-format
+#~ msgid "%sSurvey is not in open state"
+#~ msgstr "%s anket aktif durumda değil."
+
+#~ msgid ""
+#~ "You can create survey for different purposes: recruitment interviews, "
+#~ "employee's periodical evaluations, marketing campaigns, etc. A survey is "
+#~ "made of pages containing questions of several types: text, multiple choices, "
+#~ "etc. You can edit survey manually or click on the 'Edit Survey' for a "
+#~ "WYSIWYG interface."
+#~ msgstr ""
+#~ "Farklı amaçlar için anket oluşturabilirsiniz: işealım görüşmeleri, çalışanın "
+#~ "periyodik değerlendirilmesi, pazarlama kampanyaları, v.s. Bir anket birçok "
+#~ "türde soru içerebilir: metin, çoklu seçme, v.s. Anketi elle düzenleyebilir "
+#~ "ya da bir WYSIWYG arayüzü için 'Anket Düzenle'ye tıklayabilirsiniz."

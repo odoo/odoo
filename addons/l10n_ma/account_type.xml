@@ -2,94 +2,94 @@
 <openerp>
     <data>
         <!-- account.account.type -->
-	<record id="cpt_type_cp" model="account.account.type">
-	    <field name="name">Capitaux Propres</field>
-	    <field name="code">equity</field>
-	    <field name="report_type">liability</field>
-	    <field name="close_method">balance</field>
-	</record>
-	<record id="cpt_type_dlt" model="account.account.type">
-	   <field name="name">Dettes à long terme</field>
-	   <field name="code">dettes</field>
-	   <field name="report_type">liability</field>
-	   <field name="close_method">balance</field>
-	</record>
-	<record id="cpt_type_dct" model="account.account.type">
+    <record id="cpt_type_cp" model="account.account.type">
+        <field name="name">Capitaux Propres</field>
+        <field name="code">equity</field>
+        <field name="report_type">liability</field>
+        <field name="close_method">balance</field>
+    </record>
+    <record id="cpt_type_dlt" model="account.account.type">
+       <field name="name">Dettes à long terme</field>
+       <field name="code">dettes</field>
+       <field name="report_type">liability</field>
+       <field name="close_method">balance</field>
+    </record>
+    <record id="cpt_type_dct" model="account.account.type">
            <field name="name">Dettes à court terme</field>
            <field name="code">payable</field>
-	   <field name="report_type">liability</field>
+       <field name="report_type">liability</field>
            <field name="close_method">unreconciled</field>
-	</record>
-	<record id="cpt_type_liq" model="account.account.type">
+    </record>
+    <record id="cpt_type_liq" model="account.account.type">
            <field name="name">Liquidité</field>
            <field name="code">cash</field>
-	   <field name="report_type">asset</field>
+       <field name="report_type">asset</field>
            <field name="close_method">balance</field>
-	</record>
-	<record id="cpt_type_tax" model="account.account.type">
+    </record>
+    <record id="cpt_type_tax" model="account.account.type">
            <field name="name">Taxes</field>
            <field name="code">tax</field>
-	   <field name="report_type">asset</field>
+       <field name="report_type">asset</field>
            <field name="close_method">unreconciled</field>
-	</record>
-	<record id="cpt_type_imm" model="account.account.type">
+    </record>
+    <record id="cpt_type_imm" model="account.account.type">
            <field name="name">Immobilisations</field>
            <field name="code">immobilisations</field>
-	   <field name="report_type">asset</field>
+       <field name="report_type">asset</field>
            <field name="close_method">balance</field>
-	</record>
-	<record id="cpt_type_cre" model="account.account.type">
+    </record>
+    <record id="cpt_type_cre" model="account.account.type">
            <field name="name">Créances</field>
            <field name="code">recevable</field>
-	   <field name="report_type">asset</field>
+       <field name="report_type">asset</field>
            <field name="close_method">unreconciled</field>
-	</record>
-	<record id="cpt_type_stk" model="account.account.type">
+    </record>
+    <record id="cpt_type_stk" model="account.account.type">
            <field name="name">Stocks</field>
            <field name="code">stocks</field>
-	   <field name="report_type">asset</field>
+       <field name="report_type">asset</field>
            <field name="close_method">balance</field>
-	</record>
-	<record id="cpt_type_tpl" model="account.account.type">
+    </record>
+    <record id="cpt_type_tpl" model="account.account.type">
            <field name="name">Titres de placement</field>
            <field name="code">titres</field>
-	   <field name="report_type">asset</field>
+       <field name="report_type">asset</field>
            <field name="close_method">balance</field>
-	</record>
-	<record id="cpt_type_ach" model="account.account.type">
+    </record>
+    <record id="cpt_type_ach" model="account.account.type">
            <field name="name">Charges Achats</field>
            <field name="code">charges_achats</field>
-	   <field name="report_type">expense</field>
+       <field name="report_type">expense</field>
            <field name="close_method">none</field>
-	</record>
-	<record id="cpt_type_per" model="account.account.type">
+    </record>
+    <record id="cpt_type_per" model="account.account.type">
            <field name="name">Charges Personnel</field>
            <field name="code">charges_personnel</field>
-	   <field name="report_type">expense</field>
+       <field name="report_type">expense</field>
            <field name="close_method">none</field>
-	</record>
-	<record id="cpt_type_aut" model="account.account.type">
+    </record>
+    <record id="cpt_type_aut" model="account.account.type">
            <field name="name">Charges Autres</field>
            <field name="code">charges_autres</field>
-	   <field name="report_type">expense</field>
+       <field name="report_type">expense</field>
            <field name="close_method">none</field>
-	</record>
-	<record id="cpt_type_pdt" model="account.account.type">
+    </record>
+    <record id="cpt_type_pdt" model="account.account.type">
            <field name="name">Produits</field>
            <field name="code">produits</field>
-	   <field name="report_type">income</field>
+       <field name="report_type">income</field>
            <field name="close_method">none</field>
-	</record>
-	<record id="cpt_type_reg" model="account.account.type">
+    </record>
+    <record id="cpt_type_reg" model="account.account.type">
            <field name="name">Régularisation</field>
            <field name="code">regularisation</field>
-	   <field name="report_type">asset</field>
+       <field name="report_type">asset</field>
            <field name="close_method">balance</field>
-	</record>
-	<record id="cpt_type_vue" model="account.account.type">
+    </record>
+    <record id="cpt_type_vue" model="account.account.type">
            <field name="name">Vue</field>
            <field name="code">view</field>
            <field name="close_method">none</field>
-	</record>
+    </record>
   </data>
 </openerp>

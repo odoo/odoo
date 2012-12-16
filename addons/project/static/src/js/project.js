@@ -1,26 +1,43 @@
 openerp.project = function(openerp) {
     openerp.web_kanban.KanbanView.include({
-        on_groups_started: function() {
+        project_display_members_names: function() {
+            /*
+             * Set avatar title for members.
+             * In kanban views, many2many fields only return a list of ids.
+             * We can implement return value of m2m fields like [(1,"Adminstration"),...].
+             */
             var self = this;
-            self._super.apply(this, arguments);
-            if (this.dataset.model === 'project.project') {
-                /* Set avatar title for members.
-                   In many2many fields, returns only list of ids.
-                   we can implement return value of m2m fields like [(1,"Adminstration"),...].
-                */
-                var members_ids = [];
-                this.$element.find('.oe_kanban_project_avatars img').each(function() {
-                    members_ids.push($(this).data('member_id'));
-                });
-                var dataset = new openerp.web.DataSetSearch(this, 'res.users', self.session.context, [['id', 'in', _.uniq(members_ids)]]);
-                dataset.read_slice(['id', 'name']).then(function(result) {
-                    _.each(result, function(v, k) {
-                        self.$element.find('.oe_kanban_project_avatars img[data-member_id=' + v.id + ']').attr('title', v.name).tipsy({
-                            offset: 10
-                        });
+            var members_ids = [];
+
+            // Collect members ids
+            self.$el.find('img[data-member_id]').each(function() {
+                members_ids.push($(this).data('member_id'));
+            });
+
+            // Find their matching names
+            var dataset = new openerp.web.DataSetSearch(self, 'res.users', self.session.context, [['id', 'in', _.uniq(members_ids)]]);
+            dataset.read_slice(['id', 'name']).done(function(result) {
+                _.each(result, function(v, k) {
+                    // Set the proper value in the DOM
+                    self.$el.find('img[data-member_id=' + v.id + ']').attr('title', v.name).tipsy({
+                        offset: 10
                     });
                 });
+            });
+        },
+        on_groups_started: function() {
+            var self = this;
+            self._super.apply(self, arguments);
+
+            if (self.dataset.model === 'project.project') {
+                self.project_display_members_names();
             }
+        },
+        on_record_moved: function(record, old_group, old_index, new_group, new_index){
+            var self = this;
+            this._super.apply(this, arguments);
+            if(new_group.state.folded)
+                new_group.do_action_toggle_fold();
         }
     });
 
@@ -31,6 +48,6 @@ openerp.project = function(openerp) {
             } else {
                 this._super.apply(this, arguments);
             }
-        }
+        },
     });
 };

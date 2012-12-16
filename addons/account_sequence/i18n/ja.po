@@ -7,32 +7,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-04-28 05:41+0000\n"
 "Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-04-29 04:45+0000\n"
-"X-Generator: Launchpad (build 15149)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:53+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: account_sequence
 #: view:account.sequence.installer:0
 #: model:ir.actions.act_window,name:account_sequence.action_account_seq_installer
 msgid "Account Sequence Application Configuration"
 msgstr "アカウント順序アプリケーション設定"
-
-#. module: account_sequence
-#: constraint:account.move:0
-msgid ""
-"You can not create more than one move per period on centralized journal"
-msgstr "一元化仕訳帳上では期間毎に１回以上の移動を作成することは出来ません。"
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid "Company must be the same for its related account and period."
-msgstr "会社は関連するアカウントと期間は同じでなければなりません。"
 
 #. module: account_sequence
 #: help:account.move,internal_sequence_number:0
@@ -81,13 +70,6 @@ msgid "Company"
 msgstr "会社"
 
 #. module: account_sequence
-#: help:account.journal,internal_sequence_id:0
-msgid ""
-"This sequence will be used to maintain the internal number for the journal "
-"entries related to this journal."
-msgstr "この順序はこの仕訳帳に関係する仕訳帳エントリーのために内部番号を維持するために使用されます。"
-
-#. module: account_sequence
 #: field:account.sequence.installer,padding:0
 msgid "Number padding"
 msgstr "数値埋め"
@@ -104,11 +86,6 @@ msgid "Internal Number"
 msgstr "内部番号"
 
 #. module: account_sequence
-#: constraint:account.move.line:0
-msgid "You can not create journal items on an account of type view."
-msgstr "ビュータイプのアカウントでは仕訳項目を作ることはできません。"
-
-#. module: account_sequence
 #: help:account.sequence.installer,padding:0
 msgid ""
 "OpenERP will automatically adds some '0' on the left of the 'Next Number' to "
@@ -119,23 +96,6 @@ msgstr "OpenERPは自動的に次の番号に要求されているサイズに�
 #: field:account.sequence.installer,name:0
 msgid "Name"
 msgstr "名前"
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid "You can not create journal items on closed account."
-msgstr "閉鎖アカウントには仕訳項目を作ることはできません。"
-
-#. module: account_sequence
-#: constraint:account.journal:0
-msgid ""
-"Configuration error! The currency chosen should be shared by the default "
-"accounts too."
-msgstr "設定エラー。選択された通貨はデフォルトアカウントによっても共有されなければなりません。"
-
-#. module: account_sequence
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
-msgstr "会計エントリーにおいて貸方または借方の値が誤っています。"
 
 #. module: account_sequence
 #: field:account.journal,internal_sequence_id:0
@@ -158,34 +118,9 @@ msgid "Suffix"
 msgstr "サフィックス"
 
 #. module: account_sequence
-#: field:account.sequence.installer,config_logo:0
-msgid "Image"
-msgstr "画像"
-
-#. module: account_sequence
 #: view:account.sequence.installer:0
 msgid "title"
 msgstr "タイトル"
-
-#. module: account_sequence
-#: sql_constraint:account.journal:0
-msgid "The name of the journal must be unique per company !"
-msgstr "仕訳帳の名前は会社ごとに固有でなければなりません、"
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry forces to provide a secondary "
-"currency. You should remove the secondary currency on the account or select "
-"a multi-currency view on the journal."
-msgstr "選択した仕訳のアカウントは第２の通貨の入力を要求しています。アカウントの第２通貨を削除するか、仕訳で多通貨ビューを選択して下さい。"
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid ""
-"The date of your Journal Entry is not in the defined period! You should "
-"change the date or remove this constraint from the journal."
-msgstr "仕訳帳エントリーの日付が定義された期間ではありません。日付を変更するか仕訳帳からこの制約を削除する必要があります。"
 
 #. module: account_sequence
 #: field:account.sequence.installer,prefix:0
@@ -193,9 +128,11 @@ msgid "Prefix"
 msgstr "プレフィックス"
 
 #. module: account_sequence
-#: sql_constraint:account.journal:0
-msgid "The code of the journal must be unique per company !"
-msgstr "仕訳帳のコードは会社ごとに固有でなければなりません。"
+#: help:account.journal,internal_sequence_id:0
+msgid ""
+"This sequence will be used to maintain the internal number for the journal "
+"entries related to this journal."
+msgstr "この順序はこの仕訳帳に関係する仕訳帳エントリーのために内部番号を維持するために使用されます。"
 
 #. module: account_sequence
 #: model:ir.model,name:account_sequence.model_account_sequence_installer
@@ -211,3 +148,44 @@ msgstr "仕訳帳"
 #: view:account.sequence.installer:0
 msgid "You can enhance the Account Sequence Application by installing ."
 msgstr "インストールによってアカウント順序アプリケーションを拡張できます。"
+
+#~ msgid "Company must be the same for its related account and period."
+#~ msgstr "会社は関連するアカウントと期間は同じでなければなりません。"
+
+#~ msgid ""
+#~ "You can not create more than one move per period on centralized journal"
+#~ msgstr "一元化仕訳帳上では期間毎に１回以上の移動を作成することは出来ません。"
+
+#~ msgid "You can not create journal items on closed account."
+#~ msgstr "閉鎖アカウントには仕訳項目を作ることはできません。"
+
+#~ msgid "Wrong credit or debit value in accounting entry !"
+#~ msgstr "会計エントリーにおいて貸方または借方の値が誤っています。"
+
+#~ msgid "Image"
+#~ msgstr "画像"
+
+#~ msgid ""
+#~ "The selected account of your Journal Entry forces to provide a secondary "
+#~ "currency. You should remove the secondary currency on the account or select "
+#~ "a multi-currency view on the journal."
+#~ msgstr "選択した仕訳のアカウントは第２の通貨の入力を要求しています。アカウントの第２通貨を削除するか、仕訳で多通貨ビューを選択して下さい。"
+
+#~ msgid "The name of the journal must be unique per company !"
+#~ msgstr "仕訳帳の名前は会社ごとに固有でなければなりません、"
+
+#~ msgid ""
+#~ "Configuration error! The currency chosen should be shared by the default "
+#~ "accounts too."
+#~ msgstr "設定エラー。選択された通貨はデフォルトアカウントによっても共有されなければなりません。"
+
+#~ msgid ""
+#~ "The date of your Journal Entry is not in the defined period! You should "
+#~ "change the date or remove this constraint from the journal."
+#~ msgstr "仕訳帳エントリーの日付が定義された期間ではありません。日付を変更するか仕訳帳からこの制約を削除する必要があります。"
+
+#~ msgid "The code of the journal must be unique per company !"
+#~ msgstr "仕訳帳のコードは会社ごとに固有でなければなりません。"
+
+#~ msgid "You can not create journal items on an account of type view."
+#~ msgstr "ビュータイプのアカウントでは仕訳帳項目を作ることはできません。"

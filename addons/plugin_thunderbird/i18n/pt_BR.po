@@ -7,25 +7,44 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-09 00:36+0000\n"
-"PO-Revision-Date: 2011-12-26 19:12+0000\n"
-"Last-Translator: tfr (Openerp) <Unknown>\n"
+"POT-Creation-Date: 2012-11-24 02:53+0000\n"
+"PO-Revision-Date: 2012-07-28 20:54+0000\n"
+"Last-Translator: Fábio Martinelli - http://zupy.com.br "
+"<webmaster@guaru.net>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-10 04:49+0000\n"
-"X-Generator: Launchpad (build 14771)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:18+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: plugin_thunderbird
-#: field:plugin_thunderbird.installer,pdf_file:0
-msgid "Installation Manual"
-msgstr "Manual de instalação"
+#: view:plugin_thunderbird.installer:0
+msgid "Restart Thunderbird."
+msgstr ""
 
 #. module: plugin_thunderbird
-#: field:plugin_thunderbird.installer,description:0
-msgid "Description"
-msgstr "Descrição"
+#: view:plugin_thunderbird.installer:0
+msgid "Thunderbird plug-in installation:"
+msgstr ""
+
+#. module: plugin_thunderbird
+#: view:sale.config.settings:0
+msgid "Download and install the plug-in"
+msgstr ""
+
+#. module: plugin_thunderbird
+#: model:ir.actions.act_window,name:plugin_thunderbird.action_thunderbird_installer
+#: model:ir.ui.menu,name:plugin_thunderbird.menu_base_config_plugins_thunderbird
+#: view:plugin_thunderbird.installer:0
+msgid "Install Thunderbird Plug-In"
+msgstr "Instalar Plug-in do Thunderbird"
+
+#. module: plugin_thunderbird
+#: help:plugin_thunderbird.installer,plugin_file:0
+msgid ""
+"Thunderbird plug-in file. Save this file and install it in Thunderbird."
+msgstr ""
 
 #. module: plugin_thunderbird
 #: view:plugin_thunderbird.installer:0
@@ -33,14 +52,24 @@ msgid "title"
 msgstr "Título"
 
 #. module: plugin_thunderbird
-#: model:ir.model,name:plugin_thunderbird.model_plugin_thunderbird_installer
-msgid "plugin_thunderbird.installer"
+#: view:plugin_thunderbird.installer:0
+msgid "Installation and Configuration Steps"
+msgstr "Instalação e Passos de Configuração"
+
+#. module: plugin_thunderbird
+#: field:plugin_thunderbird.installer,plugin_name:0
+msgid "File name"
+msgstr "Nome do arquivo"
+
+#. module: plugin_thunderbird
+#: view:plugin_thunderbird.installer:0
+msgid "Click \"Install Now\"."
 msgstr ""
 
 #. module: plugin_thunderbird
-#: field:plugin_thunderbird.installer,config_logo:0
-msgid "Image"
-msgstr "Imagem"
+#: model:ir.model,name:plugin_thunderbird.model_plugin_thunderbird_installer
+msgid "plugin_thunderbird.installer"
+msgstr "plugin_thunderbird.installer"
 
 #. module: plugin_thunderbird
 #: field:plugin_thunderbird.installer,plugin_file:0
@@ -50,12 +79,8 @@ msgstr "Plug-in Thunderbird"
 
 #. module: plugin_thunderbird
 #: view:plugin_thunderbird.installer:0
-msgid ""
-"This plug-in allows you to link your e-mail to OpenERP's documents. You can "
-"attach it to any existing one in OpenERP or create a new one."
+msgid "Configure your openerp server."
 msgstr ""
-"Este plug-in permite que você relacione o seu email aos documentos do "
-"OpenERP. Você pode anexar em qualquer documento do OpenERP ou criar um novo."
 
 #. module: plugin_thunderbird
 #: help:plugin_thunderbird.installer,thunderbird:0
@@ -66,38 +91,57 @@ msgstr ""
 "Permite que você selecione um objeto para adicionar no seu email com anexos."
 
 #. module: plugin_thunderbird
-#: help:plugin_thunderbird.installer,pdf_file:0
-msgid "The documentation file :- how to install Thunderbird Plug-in."
-msgstr "O arquivo de documentação :- como instalar o Plug-in do Thunderbird."
+#: view:plugin_thunderbird.installer:0
+msgid "Save the Thunderbird plug-in."
+msgstr ""
 
 #. module: plugin_thunderbird
 #: view:plugin_thunderbird.installer:0
-msgid "_Close"
-msgstr "Fe_char"
+msgid "Close"
+msgstr ""
 
 #. module: plugin_thunderbird
 #: view:plugin_thunderbird.installer:0
-msgid "Installation and Configuration Steps"
-msgstr "Instalação e Passos de Configuração"
+msgid "Select the plug-in (the file named openerp_plugin.xpi)."
+msgstr ""
 
 #. module: plugin_thunderbird
-#: field:plugin_thunderbird.installer,name:0
-#: field:plugin_thunderbird.installer,pdf_name:0
-msgid "File name"
-msgstr "Nome do arquivo"
-
-#. module: plugin_thunderbird
-#: help:plugin_thunderbird.installer,plugin_file:0
+#: view:plugin_thunderbird.installer:0
 msgid ""
-"Thunderbird plug-in file. Save as this file and install this plug-in in "
-"thunderbird."
+"From the Thunderbird menubar: Tools ­> Add-ons -> Screwdriver/Wrench Icon -> "
+"Install add-on from file..."
 msgstr ""
-"Arquivo plug-in do Thunderbird. Salve este arquivo e instale este plug-in no "
-"Thunderbird."
 
 #. module: plugin_thunderbird
-#: model:ir.actions.act_window,name:plugin_thunderbird.action_thunderbird_installer
-#: model:ir.ui.menu,name:plugin_thunderbird.menu_base_config_plugins_thunderbird
 #: view:plugin_thunderbird.installer:0
-msgid "Install Thunderbird Plug-In"
+msgid "From the Thunderbird menubar: OpenERP -> Configuration."
 msgstr ""
+
+#~ msgid "Description"
+#~ msgstr "Descrição"
+
+#~ msgid ""
+#~ "Thunderbird plug-in file. Save as this file and install this plug-in in "
+#~ "thunderbird."
+#~ msgstr ""
+#~ "Arquivo plug-in do Thunderbird. Salve este arquivo e instale este plug-in no "
+#~ "Thunderbird."
+
+#~ msgid "The documentation file :- how to install Thunderbird Plug-in."
+#~ msgstr "O arquivo de documentação :- como instalar o Plug-in do Thunderbird."
+
+#~ msgid "_Close"
+#~ msgstr "Fe_char"
+
+#~ msgid "Installation Manual"
+#~ msgstr "Manual de instalação"
+
+#~ msgid "Image"
+#~ msgstr "Imagem"
+
+#~ msgid ""
+#~ "This plug-in allows you to link your e-mail to OpenERP's documents. You can "
+#~ "attach it to any existing one in OpenERP or create a new one."
+#~ msgstr ""
+#~ "Este plug-in permite que você relacione o seu email aos documentos do "
+#~ "OpenERP. Você pode anexar em qualquer documento do OpenERP ou criar um novo."

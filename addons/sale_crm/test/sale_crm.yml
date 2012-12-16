@@ -19,12 +19,12 @@
 -
   !python {model: crm.make.sale}: |
     crm_lead = self.pool.get('crm.lead')
-    crm = crm_lead.browse(cr, uid, ref("crm.crm_case_construstazunits0"))
+    crm = crm_lead.browse(cr, uid, ref("crm.crm_case_13"))
     self.makeOrder(cr, uid, [ref("crm_make_sale_0")], {"active_ids": [crm.id],
       "active_id": crm.id})
 -
   I check that reference number of "Quotation" in opportunity.
 -
   !python {model: crm.lead}: |
-    crm = self.browse(cr, uid, ref("crm.crm_case_construstazunits0"))
+    crm = self.browse(cr, uid, ref("crm.crm_case_13"))
     assert crm.ref, "Quotation has not been created."

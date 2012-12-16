@@ -4,12 +4,14 @@
         <record id="view_hr_config_inherit" model="ir.ui.view">
             <field name="name">hr settings for payroll</field>
             <field name="model">hr.config.settings</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="hr.view_human_resources_configuration"/>
             <field name="arch" type="xml">
-                <field name="module_hr_holidays" position="after">
-                    <field name="module_hr_payroll_account"/>
-                </field>
+                <xpath expr="//div[@name='hr_payroll']" position="after">
+                    <div>
+                        <field name="module_hr_payroll_account" class="oe_inline"/>
+                        <label for="module_hr_payroll_account"/>
+                    </div>
+                </xpath>
             </field>
         </record>
     </data>

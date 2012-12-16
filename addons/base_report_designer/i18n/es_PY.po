@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2011-03-12 01:56+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish (Paraguay) <es_PY@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-11 05:01+0000\n"
-"X-Generator: Launchpad (build 15225)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:09+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: base_report_designer
 #: model:ir.model,name:base_report_designer.model_base_report_sxw
@@ -37,7 +37,7 @@ msgstr ""
 "OpenOffice Writer."
 
 #. module: base_report_designer
-#: view:base.report.file.sxw:0
+#: view:base.report.sxw:0
 msgid "Upload the modified report"
 msgstr "Subir el informe modificado"
 
@@ -52,14 +52,9 @@ msgid "base_report_designer.installer"
 msgstr "base_informe_diseñador.instalador"
 
 #. module: base_report_designer
-#: view:base_report_designer.installer:0
-msgid "_Close"
-msgstr "_Cerrar"
-
-#. module: base_report_designer
-#: view:base.report.rml.save:0
-msgid "The RML Report"
-msgstr ""
+#: model:ir.model,name:base_report_designer.model_base_report_rml_save
+msgid "base.report.rml.save"
+msgstr "base.informe.rml.guardar"
 
 #. module: base_report_designer
 #: view:base_report_designer.installer:0
@@ -78,9 +73,9 @@ msgid "Report"
 msgstr "Informe"
 
 #. module: base_report_designer
-#: model:ir.model,name:base_report_designer.model_base_report_rml_save
-msgid "base.report.rml.save"
-msgstr "base.informe.rml.guardar"
+#: view:base.report.rml.save:0
+msgid "The RML Report"
+msgstr ""
 
 #. module: base_report_designer
 #: model:ir.ui.menu,name:base_report_designer.menu_action_report_designer_wizard
@@ -159,11 +154,6 @@ msgstr ""
 "Una vez que se modifica, volverlo a cargar en OpenERP con este asistente."
 
 #. module: base_report_designer
-#: field:base_report_designer.installer,config_logo:0
-msgid "Image"
-msgstr "Imagen"
-
-#. module: base_report_designer
 #: model:ir.actions.act_window,name:base_report_designer.action_view_base_report_sxw
 msgid "Base Report sxw"
 msgstr "Base informe sxw"
@@ -184,12 +174,14 @@ msgid "OpenERP Report Designer Installation"
 msgstr "Instalación diseñador informe OpenERP"
 
 #. module: base_report_designer
-#: view:base.report.file.sxw:0
-#: view:base.report.rml.save:0
 #: view:base.report.sxw:0
-#: view:base_report_designer.installer:0
 msgid "Cancel"
 msgstr "Cancelar"
+
+#. module: base_report_designer
+#: view:base.report.sxw:0
+msgid "or"
+msgstr ""
 
 #. module: base_report_designer
 #: model:ir.model,name:base_report_designer.model_ir_actions_report_xml
@@ -223,6 +215,9 @@ msgstr "Seleccione su informe"
 #~ "puede modificar en OpenOffice. Una vez lo haya modificado, puede\n"
 #~ "cargar el informe con el mismo asistente.\n"
 
+#~ msgid "_Close"
+#~ msgstr "_Cerrar"
+
 #~ msgid "The RML report"
 #~ msgstr "El informe RML"
 
@@ -231,3 +226,6 @@ msgstr "Seleccione su informe"
 
 #~ msgid "Skip"
 #~ msgstr "Omitir"
+
+#~ msgid "Image"
+#~ msgstr "Imagen"

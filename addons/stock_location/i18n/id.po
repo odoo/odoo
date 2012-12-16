@@ -6,15 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2011-02-21 05:13+0000\n"
 "Last-Translator: moelyana <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:48+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:43+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
+
+#. module: stock_location
+#: help:product.pulled.flow,company_id:0
+msgid "Is used to know to which company the pickings and moves belong."
+msgstr ""
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -43,11 +48,6 @@ msgid "Automatic No Step Added"
 msgstr ""
 
 #. module: stock_location
-#: view:product.product:0
-msgid "Parameters"
-msgstr "Parameter"
-
-#. module: stock_location
 #: field:product.pulled.flow,location_src_id:0
 #: field:stock.location.path,location_from_id:0
 msgid "Source Location"
@@ -65,11 +65,6 @@ msgstr ""
 #: field:product.product,flow_pull_ids:0
 msgid "Pulled Flows"
 msgstr "Alur Penarikan"
-
-#. module: stock_location
-#: constraint:stock.move:0
-msgid "You must assign a production lot for this product"
-msgstr "Anda harus menetapkan lot produksi untuk produk  ini"
 
 #. module: stock_location
 #: help:product.pulled.flow,location_src_id:0
@@ -154,11 +149,6 @@ msgid "Dispatch Zone"
 msgstr ""
 
 #. module: stock_location
-#: model:ir.model,name:stock_location.model_stock_move
-msgid "Stock Move"
-msgstr "Perpindahan Stok"
-
-#. module: stock_location
 #: view:product.product:0
 msgid "Pulled flows"
 msgstr ""
@@ -170,9 +160,9 @@ msgid "Company"
 msgstr "Perusahaan"
 
 #. module: stock_location
-#: view:product.product:0
-msgid "Logistics Flows"
-msgstr "Alur Logistik"
+#: model:ir.model,name:stock_location.model_stock_move
+msgid "Stock Move"
+msgstr "Perpindahan Stok"
 
 #. module: stock_location
 #: help:stock.move,cancel_cascade:0
@@ -195,6 +185,12 @@ msgstr ""
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Stock"
 msgstr "Buat Stok"
+
+#. module: stock_location
+#: code:addons/stock_location/procurement_pull.py:118
+#, python-format
+msgid "Pulled from another location."
+msgstr ""
 
 #. module: stock_location
 #: field:product.pulled.flow,partner_address_id:0
@@ -223,11 +219,6 @@ msgid "Type of Procurement"
 msgstr ""
 
 #. module: stock_location
-#: help:product.pulled.flow,company_id:0
-msgid "Is used to know to which company belong packings and moves"
-msgstr ""
-
-#. module: stock_location
 #: field:product.pulled.flow,name:0
 msgid "Name"
 msgstr "Nama"
@@ -236,11 +227,6 @@ msgstr "Nama"
 #: help:product.product,path_ids:0
 msgid ""
 "These rules set the right path of the product in the whole location tree."
-msgstr ""
-
-#. module: stock_location
-#: constraint:stock.move:0
-msgid "You can not move products from or to a location of the type view."
 msgstr ""
 
 #. module: stock_location
@@ -253,11 +239,6 @@ msgstr "Proses Manual"
 #: field:product.pulled.flow,product_id:0
 msgid "Product"
 msgstr "Produk"
-
-#. module: stock_location
-#: field:product.pulled.flow,procure_method:0
-msgid "Procure Method"
-msgstr "Metode Pengadaan"
 
 #. module: stock_location
 #: field:product.pulled.flow,picking_type:0
@@ -285,12 +266,6 @@ msgstr "Ini adalah lokasi tujuan yang membutuhkan pasokan"
 #: field:stock.location.path,product_id:0
 msgid "Products"
 msgstr "Produk"
-
-#. module: stock_location
-#: code:addons/stock_location/procurement_pull.py:118
-#, python-format
-msgid "Pulled from another location via procurement %d"
-msgstr ""
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.stock_location_qualitytest0
@@ -330,11 +305,6 @@ msgid ""
 msgstr ""
 
 #. module: stock_location
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product"
-msgstr ""
-
-#. module: stock_location
 #: model:ir.model,name:stock_location.model_procurement_order
 msgid "Procurement"
 msgstr ""
@@ -363,9 +333,9 @@ msgid "Action Type"
 msgstr "Jenis Tindakan"
 
 #. module: stock_location
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Ada Kesalahan !! kode EAN tidak sah"
+#: field:product.pulled.flow,procure_method:0
+msgid "Procure Method"
+msgstr "Metode Pengadaan"
 
 #. module: stock_location
 #: help:product.pulled.flow,picking_type:0
@@ -409,3 +379,15 @@ msgstr ""
 #: selection:stock.location.path,invoice_state:0
 msgid "Invoiced"
 msgstr "Difakturkan"
+
+#~ msgid "You must assign a production lot for this product"
+#~ msgstr "Anda harus menetapkan lot produksi untuk produk  ini"
+
+#~ msgid "Parameters"
+#~ msgstr "Parameter"
+
+#~ msgid "Logistics Flows"
+#~ msgstr "Alur Logistik"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Ada Kesalahan !! kode EAN tidak sah"

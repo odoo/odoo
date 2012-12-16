@@ -23,13 +23,13 @@
 import time
 from report import report_sxw
 import pooler
-import netsvc
-logger=netsvc.Logger()
+import logging
+_logger = logging.getLogger(__name__)
 
 class bank_statement_balance_report(report_sxw.rml_parse):
 
     def set_context(self, objects, data, ids, report_type=None):
-        #logger.notifyChannel('addons.'+__name__, netsvc.LOG_WARNING, 'set_context, objects = %s, data = %s, ids = %s' % (objects, data, ids))
+        #_logger.warning('addons.'+__name__, 'set_context, objects = %s, data = %s, ids = %s' % (objects, data, ids))
         cr = self.cr
         uid = self.uid
         context = self.context

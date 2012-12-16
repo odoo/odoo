@@ -6,20 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2011-01-13 09:28+0000\n"
-"Last-Translator: Carlos @ smile.fr <Unknown>\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
+"PO-Revision-Date: 2012-12-12 13:01+0000\n"
+"Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:34+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
-
-#. module: sale_journal
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique per Company!"
-msgstr ""
+"X-Launchpad-Export-Date: 2012-12-13 04:44+0000\n"
+"X-Generator: Launchpad (build 16361)\n"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,note:0
@@ -29,24 +24,30 @@ msgstr "Nota"
 #. module: sale_journal
 #: field:res.partner,property_invoice_type:0
 msgid "Invoicing Type"
-msgstr ""
+msgstr "Tipo de facturación"
 
 #. module: sale_journal
 #: help:res.partner,property_invoice_type:0
 msgid ""
-"This invoicing type will be used, by default, for invoicing the current "
-"partner."
+"This invoicing type will be used, by default, to invoice the current partner."
 msgstr ""
-
-#. module: sale_journal
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+"Se usará este tipo de facturación por defecto, cuando se factura a la "
+"empresa actual."
 
 #. module: sale_journal
 #: view:res.partner:0
 msgid "Sales & Purchases"
 msgstr "Ventas & Compras"
+
+#. module: sale_journal
+#: view:res.partner:0
+msgid "Invoicing"
+msgstr "Facturación"
+
+#. module: sale_journal
+#: model:ir.model,name:sale_journal.model_stock_picking_in
+msgid "Incoming Shipments"
+msgstr "Envíos a recibir"
 
 #. module: sale_journal
 #: help:sale_journal.invoice.type,active:0
@@ -66,6 +67,11 @@ msgstr "Notas"
 #: field:sale_journal.invoice.type,invoicing_method:0
 msgid "Invoicing method"
 msgstr "Método de facturación"
+
+#. module: sale_journal
+#: model:ir.model,name:sale_journal.model_stock_picking
+msgid "Picking List"
+msgstr "Albarán"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
@@ -97,15 +103,21 @@ msgstr ""
 "miércoles, mensual, etc."
 
 #. module: sale_journal
-#: sql_constraint:stock.picking:0
-msgid "Reference must be unique per Company!"
-msgstr ""
+#: help:sale.order,invoice_type_id:0
+msgid "Generate invoice based on the selected option."
+msgstr "Generar facturas basadas en la opción seleccionada."
 
 #. module: sale_journal
+#: view:sale.order:0
 #: field:sale.order,invoice_type_id:0
 #: view:sale_journal.invoice.type:0
 #: field:sale_journal.invoice.type,name:0
+#: view:stock.picking:0
 #: field:stock.picking,invoice_type_id:0
+#: view:stock.picking.in:0
+#: field:stock.picking.in,invoice_type_id:0
+#: view:stock.picking.out:0
+#: field:stock.picking.out,invoice_type_id:0
 msgid "Invoice Type"
 msgstr "Tipo de factura"
 
@@ -125,14 +137,9 @@ msgid "Sales Order"
 msgstr "Pedido de venta"
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking
-msgid "Picking List"
-msgstr "Albarán"
-
-#. module: sale_journal
-#: view:res.partner:0
-msgid "Invoicing"
-msgstr "Facturación"
+#: model:ir.model,name:sale_journal.model_stock_picking_out
+msgid "Delivery Orders"
+msgstr "Órdenes de entrega"
 
 #~ msgid "Confirmed packing"
 #~ msgstr "Albarán confirmado"
@@ -449,3 +456,19 @@ msgstr "Facturación"
 #~ "\n"
 #~ "    Se proporcionan algunas estadísticas por diario.\n"
 #~ "    "
+
+#~ msgid ""
+#~ "This invoicing type will be used, by default, for invoicing the current "
+#~ "partner."
+#~ msgstr ""
+#~ "Este tipo de facturación será usada por defecto para la facturación de esta "
+#~ "empresa."
+
+#~ msgid "Reference must be unique per Company!"
+#~ msgstr "¡La referencia debe ser única por compañía!"
+
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr "¡Error! No puede crear miembros asociados recursivamente."
+
+#~ msgid "Order Reference must be unique per Company!"
+#~ msgstr "¡La referencia del pedido debe ser única por compañía!"

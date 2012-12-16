@@ -40,6 +40,7 @@ class stock_picking(osv.osv):
         'purchase_id': fields.many2one('purchase.order', 'Purchase Order',
             ondelete='set null', select=True),
     }
+
     _defaults = {
         'purchase_id': False,
     }
@@ -59,6 +60,13 @@ class stock_picking(osv.osv):
         invoice_vals = super(stock_picking, self)._prepare_invoice(cr, uid, picking, partner, inv_type, journal_id, context=context)
         if picking.purchase_id:
             invoice_vals['fiscal_position'] = picking.purchase_id.fiscal_position.id
+            invoice_vals['payment_term'] = picking.purchase_id.payment_term_id.id
+            # Fill the date_due on the invoice, for usability purposes.
+            # Note that when an invoice with a payment term is validated, the
+            # date_due is always recomputed from the invoice date and the payment
+            # term.
+            if picking.purchase_id.payment_term_id and context.get('date_inv'):
+                invoice_vals['date_due'] = self.pool.get('account.invoice').onchange_payment_term_date_invoice(cr, uid, [], picking.purchase_id.payment_term_id.id, context.get('date_inv'))['value'].get('date_due')
         return invoice_vals
 
     def get_currency_id(self, cursor, user, picking):
@@ -106,7 +114,6 @@ class stock_picking(osv.osv):
                 'invoiced': True,
                 'invoice_lines': [(4, invoice_line_id)],
             })
-            invoice_line_obj.write(cursor, user, [invoice_line_id], {'note':  move_line.purchase_line_id.notes,})
         return super(stock_picking, self)._invoice_line_hook(cursor, user, move_line, invoice_line_id)
 
     def _invoice_hook(self, cursor, user, picking, invoice_id):
@@ -134,5 +141,6 @@ class stock_picking_in(osv.osv):
     _columns = {
         'purchase_id': fields.many2one('purchase.order', 'Purchase Order',
             ondelete='set null', select=True),
+        'warehouse_id': fields.related('purchase_id', 'warehouse_id', type='many2one', relation='stock.warehouse', string='Destination Warehouse'),
     }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

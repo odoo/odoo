@@ -24,13 +24,13 @@ import logging
 import urlparse
 from service.websrv_lib import FixSendError, HTTPHandler, HttpOptions
 from service.http_server import HttpLogHandler
-
+_logger = logging.getLogger(__name__)
 class RedirectHTTPHandler(HttpLogHandler, FixSendError, HttpOptions, HTTPHandler):
-    _logger = logging.getLogger('httpd.well-known')
+    
     _HTTP_OPTIONS = { 'Allow': ['OPTIONS', 'GET', 'HEAD', 'PROPFIND'] }
     redirect_paths = {}
 
-    def __init__(self,request, client_address, server):
+    def __init__(self, request, client_address, server):
         HTTPHandler.__init__(self,request,client_address,server)
 
     def send_head(self):
@@ -80,7 +80,7 @@ class RedirectHTTPHandler(HttpLogHandler, FixSendError, HttpOptions, HTTPHandler
         self.send_header("Content-Length", 0)
         self.end_headers()
         # Do we need a Cache-content: header here?
-        self._logger.debug("redirecting %s to %s", self.path, redir_path)
+        _logger.debug("redirecting %s to %s", self.path, redir_path)
         return None
 
     def do_PROPFIND(self):

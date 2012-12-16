@@ -114,16 +114,15 @@ class project_phase(osv.osv):
         'task_ids': fields.one2many('project.task', 'phase_id', "Project Tasks", states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'user_force_ids': fields.many2many('res.users', string='Force Assigned Users'),
         'user_ids': fields.one2many('project.user.allocation', 'phase_id', "Assigned Users",states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]},
-            help="The ressources on the project can be computed automatically by the scheduler"),
+            help="The resources on the project can be computed automatically by the scheduler."),
         'state': fields.selection([('draft', 'New'), ('cancelled', 'Cancelled'),('open', 'In Progress'), ('pending', 'Pending'), ('done', 'Done')], 'Status', readonly=True, required=True,
-                                  help='If the phase is created the state \'Draft\'.\n If the phase is started, the state becomes \'In Progress\'.\n If review is needed the phase is in \'Pending\' state.\
-                                  \n If the phase is over, the states is set to \'Done\'.'),
+                                  help='If the phase is created the status \'Draft\'.\n If the phase is started, the status becomes \'In Progress\'.\n If review is needed the phase is in \'Pending\' status.\
+                                  \n If the phase is over, the status is set to \'Done\'.'),
         'progress': fields.function(_compute_progress, string='Progress', help="Computed based on related tasks"),
      }
     _defaults = {
         'state': 'draft',
         'sequence': 10,
-        'product_uom': lambda self,cr,uid,c: self.pool.get('product.uom').search(cr, uid, [('name', '=', _('Day'))], context=c)[0]
     }
     _order = "project_id, date_start, sequence"
     _constraints = [
@@ -138,7 +137,7 @@ class project_phase(osv.osv):
         if default is None:
             default = {}
         if not default.get('name', False):
-            default['name'] = self.browse(cr, uid, id, context=context).name + _(' (copy)')
+            default.update(name=_('%s (copy)') % (self.browse(cr, uid, id, context=context).name))
         return super(project_phase, self).copy(cr, uid, id, default, context)
 
     def set_draft(self, cr, uid, ids, *args):
@@ -169,11 +168,12 @@ class project_phase(osv.osv):
         for phase in phases:
             if phase.state in ('done','cancelled'):
                 continue
+            # FIXME: brittle and not working if context['lang'] != 'en_US'
             duration_uom = {
-                'days': 'd', 'day': 'd', 'd':'d',
-                'months': 'm', 'month':'month', 'm':'m',
-                'weeks': 'w', 'week': 'w', 'w':'w',
-                'hours': 'H', 'hour': 'H', 'h':'H',
+                'day(s)': 'd', 'days': 'd', 'day': 'd', 'd':'d',
+                'month(s)': 'm', 'months': 'm', 'month':'month', 'm':'m',
+                'week(s)': 'w', 'weeks': 'w', 'week': 'w', 'w':'w',
+                'hour(s)': 'H', 'hours': 'H', 'hour': 'H', 'h':'H',
             }.get(phase.product_uom.name.lower(), "H")
             duration = str(phase.duration) + duration_uom
             result += '''
@@ -225,11 +225,7 @@ class project(osv.osv):
 
     _columns = {
         'phase_ids': fields.one2many('project.phase', 'project_id', "Project Phases"),
-        'use_phases': fields.boolean('Use Phases', help="Check this field if project manages phases"),
         'phase_count': fields.function(_phase_count, type='integer', string="Open Phases"),
-    }
-    _defaults = {
-        'use_phases': True,
     }
 
     def schedule_phases(self, cr, uid, ids, context=None):
@@ -254,7 +250,7 @@ class project(osv.osv):
                 # Maybe it's better to update than unlink/create if it already exists ?
                 p = getattr(project_gantt, 'Phase_%d' % (phase.id,))
 
-                self.pool.get('project.user.allocation').unlink(cr, uid, 
+                self.pool.get('project.user.allocation').unlink(cr, uid,
                     [x.id for x in phase.user_ids],
                     context=context
                 )
@@ -273,10 +269,30 @@ class project(osv.osv):
         return True
 project()
 
+class account_analytic_account(osv.osv):
+    _inherit = 'account.analytic.account'
+    _description = 'Analytic Account'
+    _columns = {
+        'use_phases': fields.boolean('Phases', help="Check this field if you plan to use phase-based scheduling"),
+    }
+
+    def on_change_template(self, cr, uid, ids, template_id, context=None):
+        res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, context=context)
+        if template_id and 'value' in res:
+            template = self.browse(cr, uid, template_id, context=context)
+            res['value']['use_phases'] = template.use_phases
+        return res
+
+    def _trigger_project_creation(self, cr, uid, vals, context=None):
+        res= super(account_analytic_account, self)._trigger_project_creation(cr, uid, vals, context=context)
+        return res or vals.get('use_phases')
+
+account_analytic_account()
+
 class project_task(osv.osv):
     _inherit = "project.task"
     _columns = {
-        'phase_id': fields.many2one('project.phase', 'Project Phase'),
+        'phase_id': fields.many2one('project.phase', 'Project Phase', domain="[('project_id', '=', project_id)]"),
     }
 project_task()
 

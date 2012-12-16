@@ -75,7 +75,7 @@
         <record id="hr_salary_rule_meal_voucher" model="hr.salary.rule">
             <field name="amount_select">fix</field>
             <field eval="10" name="amount_fix"/>
-            <field name="quantity">worked_days.WORK100.number_of_days</field>
+            <field name="quantity">worked_days.WORK100 and worked_days.WORK100.number_of_days</field>
             <field name="code">MA</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="register_id" ref="hr_meal_voucher_register"/>
@@ -89,7 +89,7 @@
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="name">Get 1% of sales</field>
             <field name="sequence" eval="17"/>
-            <field name="amount_python_compute">result = (inputs.SALEURO.amount + inputs.SALASIA.amount) * 0.01</field>
+            <field name="amount_python_compute">result = ((inputs.SALEURO and inputs.SALEURO.amount) + (inputs.SALASIA and inputs.SALASIA.amount)) * 0.01</field>
          </record>
 
         <!-- Rule Inputs -->
@@ -126,12 +126,12 @@
 
         <!-- Employee -->
 
-        <record id="hr_employee_bonamy0" model="hr.employee">
+        <record id="hr_employee_payroll" model="hr.employee">
             <field eval="0" name="manager"/>
             <field eval="1.0" name="time_efficiency"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="1" name="active"/>
-            <field name="name">Bonamy</field>
+            <field name="name">Roger Scott</field>
             <field name="resource_type">user</field>
         </record>
 
@@ -143,7 +143,7 @@
             <field name="date_start" eval="time.strftime('%Y-%m')+'-1'"/>
             <field name="date_end" eval="time.strftime('%Y')+'-12-31'"/>
             <field name="struct_id" ref="hr_payroll.structure_001"/>
-            <field name="employee_id" ref="hr_employee_bonamy0"/>
+            <field name="employee_id" ref="hr_employee_payroll"/>
             <field name="notes">Default contract for marketing executives</field>
             <field eval="4000.0" name="wage"/>
             <field name="working_hours" ref="resource.timesheet_group1"/>

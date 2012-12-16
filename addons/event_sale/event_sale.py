@@ -26,7 +26,7 @@ class product(osv.osv):
     _inherit = 'product.product'
     _columns = {
         'event_ok': fields.boolean('Event Subscription', help='Determine if a product needs to create automatically an event registration at the confirmation of a sale order line.'),
-        'event_type_id': fields.many2one('event.type', 'Type of Event', help='Filter the list of event on this category only, in the sale order lines'),
+        'event_type_id': fields.many2one('event.type', 'Type of Event', help='Select event types so when we use this product in Sale order line, it will filter events of this type only.'),
     }
 
     def onchange_event_ok(self, cr, uid, ids, event_ok, context=None):
@@ -37,10 +37,10 @@ product()
 class sale_order_line(osv.osv):
     _inherit = 'sale.order.line'
     _columns = {
-        'event_id': fields.many2one('event.event', 'Event', help="Choose an event and it will authomaticaly create a registration for this event"),
+        'event_id': fields.many2one('event.event', 'Event', help="Choose an event and it will automatically create a registration for this event."),
         #those 2 fields are used for dynamic domains and filled by onchange
-        'event_type_id': fields.related('event_type_id', type='many2one', relation="event.type", string="Event Type"),
-        'event_ok': fields.related('event_ok', string='event_ok', type='boolean'),
+        'event_type_id': fields.related('product_id','event_type_id', type='many2one', relation="event.type", string="Event Type"),
+        'event_ok': fields.related('product_id', 'event_ok', string='event_ok', type='boolean'),
     }
 
     def product_id_change(self, cr, uid, ids,
@@ -78,16 +78,13 @@ class sale_order_line(osv.osv):
                 dic = {
                     'name': order_line.order_id.partner_invoice_id.name,
                     'partner_id': order_line.order_id.partner_id.id,
-                    'contact_id': order_line.order_id.partner_invoice_id.id,
                     'nb_register': int(order_line.product_uom_qty),
                     'email': order_line.order_id.partner_id.email,
                     'phone': order_line.order_id.partner_id.phone,
-                    'street': order_line.order_id.partner_invoice_id.street,
-                    'city': order_line.order_id.partner_invoice_id.city,
                     'origin': order_line.order_id.name,
                     'event_id': order_line.event_id.id,
                 }
                 registration_id = registration_obj.create(cr, uid, dic, context=context)
                 message = _("The registration %s has been created from the Sale Order %s.") % (registration_id, order_line.order_id.name)
-                registration_obj.log(cr, uid, registration_id, message)
+                registration_obj.message_post(cr, uid, [registration_id], body=message, context=context)
         return super(sale_order_line, self).button_confirm(cr, uid, ids, context=context)

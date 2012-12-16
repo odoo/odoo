@@ -46,7 +46,7 @@ class hr_employee(osv.osv):
     def _getEmployeeProduct(self, cr, uid, context=None):
         md = self.pool.get('ir.model.data')
         try:
-            result = md.get_object_reference(cr, uid, 'product', 'product_consultant')
+            result = md.get_object_reference(cr, uid, 'product', 'product_product_consultant')
             return result[1]
         except ValueError:
             pass
@@ -99,7 +99,7 @@ class hr_analytic_timesheet(osv.osv):
         if context is None:
             context = {}
         emp_obj = self.pool.get('hr.employee')
-        emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))], context=context)
+        emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id') or uid)], context=context)
         if emp_id:
             emp = emp_obj.browse(cr, uid, emp_id[0], context=context)
             if emp.product_id:
@@ -110,7 +110,7 @@ class hr_analytic_timesheet(osv.osv):
         emp_obj = self.pool.get('hr.employee')
         if context is None:
             context = {}
-        emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))], context=context)
+        emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id') or uid)], context=context)
         if emp_id:
             emp = emp_obj.browse(cr, uid, emp_id[0], context=context)
             if emp.product_id:
@@ -121,7 +121,7 @@ class hr_analytic_timesheet(osv.osv):
         emp_obj = self.pool.get('hr.employee')
         if context is None:
             context = {}
-        emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))], context=context)
+        emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id') or uid)], context=context)
         if emp_id:
             emp = emp_obj.browse(cr, uid, emp_id[0], context=context)
             if bool(emp.product_id):
@@ -136,12 +136,17 @@ class hr_analytic_timesheet(osv.osv):
         emp_obj = self.pool.get('hr.employee')
         if context is None:
             context = {}
-        emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))], context=context)
-        if emp_id:
-            emp = emp_obj.browse(cr, uid, emp_id[0], context=context)
-            if emp.journal_id:
-                return emp.journal_id.id
-        return False
+        if context.get('employee_id'):
+            emp_id = [context.get('employee_id')]
+        else:
+            emp_id = emp_obj.search(cr, uid, [('user_id','=',context.get('user_id') or uid)], limit=1, context=context)
+        if not emp_id:
+            raise osv.except_osv(_('Warning!'), _('Please create an employee for this user, using the menu: Human Resources > Employees.'))
+        emp = emp_obj.browse(cr, uid, emp_id[0], context=context)
+        if emp.journal_id:
+            return emp.journal_id.id
+        else :
+            raise osv.except_osv(_('Warning!'), _('No analytic journal defined for \'%s\'.\nYou should assign an analytic journal on the employee form.')%(emp.name))
 
 
     _defaults = {
@@ -150,9 +155,9 @@ class hr_analytic_timesheet(osv.osv):
         'general_account_id': _getGeneralAccount,
         'journal_id': _getAnalyticJournal,
         'date': lambda self, cr, uid, ctx: ctx.get('date', fields.date.context_today(self,cr,uid,context=ctx)),
-        'user_id': lambda obj, cr, uid, ctx: ctx.get('user_id', uid),
+        'user_id': lambda obj, cr, uid, ctx: ctx.get('user_id') or uid,
     }
-    def on_change_account_id(self, cr, uid, ids, account_id):
+    def on_change_account_id(self, cr, uid, ids, account_id, context=None):
         return {'value':{}}
 
     def on_change_date(self, cr, uid, ids, date):
@@ -167,14 +172,14 @@ class hr_analytic_timesheet(osv.osv):
         if context is None:
             context = {}
         emp_obj = self.pool.get('hr.employee')
-        emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))], context=context)
+        emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id') or uid)], context=context)
         ename = ''
         if emp_id:
             ename = emp_obj.browse(cr, uid, emp_id[0], context=context).name
         if not vals.get('journal_id',False):
-           raise osv.except_osv(_('Warning !'), _('Analytic journal is not defined for employee %s \nDefine an employee for the selected user and assign an analytic journal!')%(ename,))
+           raise osv.except_osv(_('Warning!'), _('No \'Analytic Journal\' is defined for employee %s \nDefine an employee for the selected user and assign an \'Analytic Journal\'!')%(ename,))
         if not vals.get('account_id',False):
-           raise osv.except_osv(_('Warning !'), _('No analytic account defined on the project.\nPlease set one or we can not automatically fill the timesheet.'))
+           raise osv.except_osv(_('Warning!'), _('No analytic account is defined on the project.\nPlease set one or we cannot automatically fill the timesheet.'))
         return super(hr_analytic_timesheet, self).create(cr, uid, vals, context=context)
 
     def on_change_user_id(self, cr, uid, ids, user_id):
@@ -188,6 +193,19 @@ class hr_analytic_timesheet(osv.osv):
             'journal_id': self._getAnalyticJournal(cr, uid, context),
         }}
 
-hr_analytic_timesheet()
+class account_analytic_account(osv.osv):
+
+    _inherit = 'account.analytic.account'
+    _description = 'Analytic Account'
+    _columns = {
+        'use_timesheets': fields.boolean('Timesheets', help="Check this field if this project manages timesheets"),
+    }
+
+    def on_change_template(self, cr, uid, ids, template_id, context=None):
+        res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, context=context)
+        if template_id and 'value' in res:
+            template = self.browse(cr, uid, template_id, context=context)
+            res['value']['use_timesheets'] = template.use_timesheets
+        return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -7,15 +7,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2011-12-29 06:36+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 07:02+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:49+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
+
+#. module: crm_claim
+#: help:crm.claim.stage,fold:0
+msgid ""
+"This stage is not visible, for example in status bar or kanban view, when "
+"there are no records in that stage to display."
+msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim.report,nbr:0
@@ -26,7 +33,7 @@ msgstr "# de Cazuri"
 #: view:crm.claim:0
 #: view:crm.claim.report:0
 msgid "Group By..."
-msgstr "Grupare după..."
+msgstr "Grupeaza dupa..."
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -34,9 +41,16 @@ msgid "Responsibilities"
 msgstr "Responsabilitati"
 
 #. module: crm_claim
-#: field:crm.claim,date_action_next:0
-msgid "Next Action Date"
-msgstr "Data actiunii urmatoare"
+#: help:sale.config.settings,fetchmail_claim:0
+msgid ""
+"Allows you to configure your incoming mail server, and create claims from "
+"incoming emails."
+msgstr ""
+
+#. module: crm_claim
+#: model:ir.model,name:crm_claim.model_crm_claim_stage
+msgid "Claim stages"
+msgstr ""
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -46,12 +60,17 @@ msgstr "Martie"
 #. module: crm_claim
 #: field:crm.claim.report,delay_close:0
 msgid "Delay to close"
-msgstr "Întârziere la inchidere"
+msgstr "Intarziere la inchidere"
+
+#. module: crm_claim
+#: field:crm.claim,message_unread:0
+msgid "Unread Messages"
+msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim,resolution:0
 msgid "Resolution"
-msgstr "Rezoluție"
+msgstr "Rezolutie"
 
 #. module: crm_claim
 #: field:crm.claim,company_id:0
@@ -61,9 +80,17 @@ msgid "Company"
 msgstr "Companie"
 
 #. module: crm_claim
-#: field:crm.claim,email_cc:0
-msgid "Watchers Emails"
-msgstr "Email-uri supraveghetori"
+#: model:ir.actions.act_window,help:crm_claim.crm_claim_categ_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a claim category.\n"
+"              </p><p>\n"
+"                Create claim categories to better manage and classify your\n"
+"                claims. Some example of claims can be: preventive action,\n"
+"                corrective action.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -71,26 +98,29 @@ msgid "#Claim"
 msgstr "# Solicitare"
 
 #. module: crm_claim
-#: model:ir.actions.act_window,help:crm_claim.crm_claim_stage_act
+#: field:crm.claim.stage,name:0
+msgid "Stage Name"
+msgstr ""
+
+#. module: crm_claim
+#: model:ir.actions.act_window,help:crm_claim.action_report_crm_claim
 msgid ""
-"You can create claim stages to categorize the status of every claim entered "
-"in the system. The stages define all the steps required for the resolution "
-"of a claim."
+"Have a general overview of all claims processed in the system by sorting "
+"them with specific criteria."
 msgstr ""
-"Puteti crea etape ale solicitarii pentru a clasifica statusul fiecarei "
-"solicitati introduse in sistem. Etapele definesc toti pasii necesari "
-"rezolvarii unei solicitari."
+"Aveti o vedere de ansamblu asupra tuturor solicitarilor procesate in sistem "
+"sortandu-le dupa criterii specifice."
 
 #. module: crm_claim
-#: code:addons/crm_claim/crm_claim.py:132
-#, python-format
-msgid "The claim '%s' has been opened."
+#: view:crm.claim.report:0
+msgid "Salesperson"
 msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "Date Closed"
-msgstr ""
+#: selection:crm.claim,priority:0
+#: selection:crm.claim.report,priority:0
+msgid "Highest"
+msgstr "Cel mai ridicat (cea mai ridicata)"
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -100,22 +130,8 @@ msgstr "Zi"
 
 #. module: crm_claim
 #: view:crm.claim:0
-msgid "Add Internal Note"
-msgstr "Adauga nota interna"
-
-#. module: crm_claim
-#: help:crm.claim,section_id:0
-msgid ""
-"Sales team to which Case belongs to.Define Responsible user and Email "
-"account for mail gateway."
-msgstr ""
-"Echipa de vanzari careia ii apartine acest Caz. Definiti Utilizatorul "
-"responsabil si contul de email pentru mail gateway."
-
-#. module: crm_claim
-#: view:crm.claim:0
 msgid "Claim Description"
-msgstr "Descrierea solicitării"
+msgstr "Descrierea solicitarii"
 
 #. module: crm_claim
 #: field:crm.claim,message_ids:0
@@ -130,8 +146,9 @@ msgstr "Solicitari bazate pe fapte"
 #. module: crm_claim
 #: selection:crm.claim,state:0
 #: selection:crm.claim.report,state:0
+#: selection:crm.claim.stage,state:0
 msgid "Cancelled"
-msgstr "Anulat(ă)"
+msgstr "Anulat(a)"
 
 #. module: crm_claim
 #: model:crm.case.resource.type,name:crm_claim.type_claim2
@@ -139,24 +156,29 @@ msgid "Preventive"
 msgstr "Preventiv"
 
 #. module: crm_claim
+#: help:crm.claim,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr ""
+
+#. module: crm_claim
 #: field:crm.claim.report,date_closed:0
 msgid "Close Date"
-msgstr "Data închiderii"
+msgstr "Data inchiderii"
+
+#. module: crm_claim
+#: view:res.partner:0
+msgid "False"
+msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim,ref:0
 msgid "Reference"
-msgstr "Referinţă"
+msgstr "Referinta"
 
 #. module: crm_claim
 #: view:crm.claim.report:0
 msgid "Date of claim"
-msgstr ""
-
-#. module: crm_claim
-#: view:crm.claim:0
-msgid "All pending Claims"
-msgstr ""
+msgstr "Data solicitarii"
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -164,16 +186,18 @@ msgid "# Mails"
 msgstr "# mail-uri"
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "Reset to Draft"
-msgstr "Resetare ca ciorna"
+#: help:crm.claim,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim:0
 #: field:crm.claim,date_deadline:0
 #: field:crm.claim.report,date_deadline:0
 msgid "Deadline"
-msgstr "Data scadenta"
+msgstr "Termen limita"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -185,9 +209,9 @@ msgid "Partner"
 msgstr "Partener"
 
 #. module: crm_claim
-#: view:crm.claim.report:0
-msgid "Month of claim"
-msgstr ""
+#: view:crm.claim:0
+msgid "Follow Up"
+msgstr "Urmare"
 
 #. module: crm_claim
 #: selection:crm.claim,type_action:0
@@ -196,14 +220,19 @@ msgid "Preventive Action"
 msgstr "Actiune preventiva"
 
 #. module: crm_claim
+#: field:crm.claim.report,delay_expected:0
+msgid "Overpassed Deadline"
+msgstr "Termen limita depasit"
+
+#. module: crm_claim
 #: field:crm.claim.report,section_id:0
 msgid "Section"
-msgstr "Secţiune"
+msgstr "Sectiune"
 
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Root Causes"
-msgstr "Radacina cauze"
+msgstr "Cauze"
 
 #. module: crm_claim
 #: field:crm.claim,user_fault:0
@@ -218,27 +247,33 @@ msgid "Priority"
 msgstr "Prioritate"
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "Send New Email"
-msgstr "Trimite un e-mail nou"
+#: field:crm.claim.stage,fold:0
+msgid "Hide in Views when Empty"
+msgstr ""
+
+#. module: crm_claim
+#: field:crm.claim,message_follower_ids:0
+msgid "Followers"
+msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim:0
 #: selection:crm.claim,state:0
 #: view:crm.claim.report:0
+#: model:crm.claim.stage,name:crm_claim.stage_claim1
+#: selection:crm.claim.stage,state:0
 msgid "New"
-msgstr ""
+msgstr "Nou(a)"
 
 #. module: crm_claim
-#: view:crm.claim:0
-#: view:crm.claim.report:0
-msgid "Type"
-msgstr "Tip"
+#: field:crm.claim.stage,section_ids:0
+msgid "Sections"
+msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim,email_from:0
 msgid "Email"
-msgstr "Email"
+msgstr "E-Mail"
 
 #. module: crm_claim
 #: selection:crm.claim,priority:0
@@ -249,22 +284,17 @@ msgstr "Cel mai scazut (cea mai scazuta)"
 #. module: crm_claim
 #: field:crm.claim,action_next:0
 msgid "Next Action"
-msgstr "Următoarea acţiune"
+msgstr "Urmatoarea actiune"
 
 #. module: crm_claim
 #: view:crm.claim.report:0
 msgid "My Sales Team(s)"
-msgstr ""
-
-#. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim3
-msgid "Won't fix"
-msgstr "nu se va repara"
+msgstr "Echipa mea (echipele mele) de vanzari"
 
 #. module: crm_claim
 #: field:crm.claim,create_date:0
 msgid "Creation Date"
-msgstr "Data creării"
+msgstr "Data crearii"
 
 #. module: crm_claim
 #: field:crm.claim,name:0
@@ -272,13 +302,20 @@ msgid "Claim Subject"
 msgstr "Subiect solicitare"
 
 #. module: crm_claim
-#: model:ir.actions.act_window,help:crm_claim.action_report_crm_claim
-msgid ""
-"Have a general overview of all claims processed in the system by sorting "
-"them with specific criteria."
+#: model:crm.claim.stage,name:crm_claim.stage_claim3
+msgid "Rejected"
 msgstr ""
-"Aveti o vedere de ansamblu asupra tuturor solicitarilor procesate in sistem "
-"sortandu-le dupa criterii specifice."
+
+#. module: crm_claim
+#: field:crm.claim,date_action_next:0
+msgid "Next Action Date"
+msgstr "Data actiunii urmatoare"
+
+#. module: crm_claim
+#: code:addons/crm_claim/crm_claim.py:243
+#, python-format
+msgid "Claim has been <b>created</b>."
+msgstr ""
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -286,9 +323,10 @@ msgid "July"
 msgstr "Iulie"
 
 #. module: crm_claim
+#: view:crm.claim.stage:0
 #: model:ir.actions.act_window,name:crm_claim.crm_claim_stage_act
 msgid "Claim Stages"
-msgstr "Etape solicitare"
+msgstr "Etapele Solicitarii"
 
 #. module: crm_claim
 #: model:ir.ui.menu,name:crm_claim.menu_crm_case_claim-act
@@ -301,12 +339,7 @@ msgstr "Categorii"
 #: view:crm.claim.report:0
 #: field:crm.claim.report,stage_id:0
 msgid "Stage"
-msgstr "Etapă"
-
-#. module: crm_claim
-#: view:crm.claim:0
-msgid "History Information"
-msgstr "Istoric Informatii"
+msgstr "Etapa"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -314,14 +347,34 @@ msgid "Dates"
 msgstr "Date"
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "Contact"
-msgstr "Contact"
+#: help:crm.claim,email_from:0
+msgid "Destination email for email gateway."
+msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim.report:0
-msgid "Month-1"
+#: code:addons/crm_claim/crm_claim.py:199
+#, python-format
+msgid "No Subject"
 msgstr ""
+
+#. module: crm_claim
+#: help:crm.claim.stage,state:0
+msgid ""
+"The related status for the stage. The status of your document will "
+"automatically change regarding the selected stage. For example, if a stage "
+"is related to the status 'Close', when your document reaches this stage, it "
+"will be automatically have the 'closed' status."
+msgstr ""
+
+#. module: crm_claim
+#: view:crm.claim:0
+msgid "Settle"
+msgstr ""
+
+#. module: crm_claim
+#: model:ir.ui.menu,name:crm_claim.menu_claim_stage_view
+msgid "Stages"
+msgstr "Etape"
 
 #. module: crm_claim
 #: model:ir.actions.act_window,name:crm_claim.action_report_crm_claim
@@ -332,17 +385,17 @@ msgstr "Analiza solicitari"
 #. module: crm_claim
 #: help:crm.claim.report,delay_close:0
 msgid "Number of Days to close the case"
-msgstr "Numarul de zile pana la inchiderea (rezolvarea) cazului"
+msgstr "Numarul de zile pana la inchiderea cazului"
 
 #. module: crm_claim
 #: model:ir.model,name:crm_claim.model_crm_claim_report
 msgid "CRM Claim Report"
-msgstr "Raport solicitare MRC"
+msgstr "MRC Raport solicitare"
 
 #. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim1
-msgid "Accepted as Claim"
-msgstr "Acceptat(ă) ca solicitare"
+#: view:sale.config.settings:0
+msgid "Configure"
+msgstr ""
 
 #. module: crm_claim
 #: model:crm.case.resource.type,name:crm_claim.type_claim1
@@ -370,7 +423,7 @@ msgstr "Luna"
 #: view:crm.claim.report:0
 #: field:crm.claim.report,type_action:0
 msgid "Action Type"
-msgstr "Tipul acţiunii"
+msgstr "Tipul actiunii"
 
 #. module: crm_claim
 #: field:crm.claim,write_date:0
@@ -380,12 +433,14 @@ msgstr "Data actualizarii"
 #. module: crm_claim
 #: view:crm.claim.report:0
 msgid "Year of claim"
-msgstr ""
+msgstr "Anul solicitarii"
 
 #. module: crm_claim
-#: view:crm.claim.report:0
-msgid "Salesman"
-msgstr "Agent comercial"
+#: help:crm.claim.stage,case_default:0
+msgid ""
+"If you check this field, this stage will be proposed by default on each "
+"sales team. It will not assign this stage to existing teams."
+msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim,categ_id:0
@@ -402,7 +457,12 @@ msgstr "Valoare solicitari"
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Responsible User"
-msgstr ""
+msgstr "Utilizator responsabil"
+
+#. module: crm_claim
+#: field:crm.claim,email_cc:0
+msgid "Watchers Emails"
+msgstr "Email-uri supraveghetori"
 
 #. module: crm_claim
 #: help:crm.claim,email_cc:0
@@ -418,38 +478,54 @@ msgstr ""
 #. module: crm_claim
 #: selection:crm.claim.report,state:0
 msgid "Draft"
-msgstr "Ciornă"
+msgstr "Ciorna"
 
 #. module: crm_claim
 #: selection:crm.claim,priority:0
 #: selection:crm.claim.report,priority:0
 msgid "Low"
-msgstr "Scăzut(ă)"
+msgstr "Scazut(a)"
 
 #. module: crm_claim
 #: field:crm.claim,date_closed:0
 #: selection:crm.claim,state:0
 #: selection:crm.claim.report,state:0
+#: selection:crm.claim.stage,state:0
 msgid "Closed"
-msgstr "Închis"
+msgstr "Inchis"
 
 #. module: crm_claim
 #: view:crm.claim:0
-msgid "Reply"
-msgstr "Răspuns"
+msgid "Reject"
+msgstr ""
+
+#. module: crm_claim
+#: view:res.partner:0
+msgid "Partners Claim"
+msgstr "Solicitare Parteneri"
+
+#. module: crm_claim
+#: view:crm.claim.stage:0
+msgid "Claim Stage"
+msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim:0
 #: selection:crm.claim,state:0
 #: view:crm.claim.report:0
 #: selection:crm.claim.report,state:0
+#: selection:crm.claim.stage,state:0
 msgid "Pending"
-msgstr "În așteptare"
+msgstr "In asteptare"
 
 #. module: crm_claim
 #: view:crm.claim:0
-msgid "Communication & History"
-msgstr "Comunicare & Istoric"
+#: field:crm.claim,state:0
+#: view:crm.claim.report:0
+#: field:crm.claim.report,state:0
+#: field:crm.claim.stage,state:0
+msgid "Status"
+msgstr ""
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -460,12 +536,12 @@ msgstr "August"
 #: selection:crm.claim,priority:0
 #: selection:crm.claim.report,priority:0
 msgid "Normal"
-msgstr "Normal"
+msgstr "Obisnuit"
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "Global CC"
-msgstr "CC global"
+#: help:crm.claim.stage,sequence:0
+msgid "Used to order stages. Lower is better."
+msgstr ""
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -473,14 +549,19 @@ msgid "June"
 msgstr "Iunie"
 
 #. module: crm_claim
-#: view:res.partner:0
-msgid "Partners Claim"
-msgstr ""
+#: field:crm.claim,id:0
+msgid "ID"
+msgstr "ID"
 
 #. module: crm_claim
 #: field:crm.claim,partner_phone:0
 msgid "Phone"
-msgstr "Telefon"
+msgstr "Telefoneaza"
+
+#. module: crm_claim
+#: field:crm.claim,message_is_follower:0
+msgid "Is a Follower"
+msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim.report,user_id:0
@@ -488,9 +569,35 @@ msgid "User"
 msgstr "Utilizator"
 
 #. module: crm_claim
+#: model:ir.actions.act_window,help:crm_claim.crm_claim_stage_act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to setup a new stage in the processing of the claims. "
+"\n"
+"              </p><p>\n"
+"                You can create claim stages to categorize the status of "
+"every\n"
+"                claim entered in the system. The stages define all the "
+"steps\n"
+"                required for the resolution of a claim.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: crm_claim
+#: help:crm.claim,state:0
+msgid ""
+"The status is set to 'Draft', when a case is created.                      "
+"If the case is in progress the status is set to 'Open'.                      "
+"When the case is over, the status is set to 'Done'.                      If "
+"the case needs to be reviewed then the status is                       set "
+"to 'Pending'."
+msgstr ""
+
+#. module: crm_claim
 #: field:crm.claim,active:0
 msgid "Active"
-msgstr ""
+msgstr "Activ(a)"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -500,7 +607,13 @@ msgstr "Noiembrie"
 #. module: crm_claim
 #: view:crm.claim.report:0
 msgid "Extended Filters..."
-msgstr "Filtre extinse..."
+msgstr "Filtre Extinse..."
+
+#. module: crm_claim
+#: field:crm.claim,message_comment_ids:0
+#: help:crm.claim,message_comment_ids:0
+msgid "Comments and emails"
+msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -508,9 +621,11 @@ msgid "Closure"
 msgstr "Inchidere"
 
 #. module: crm_claim
-#: view:crm.claim.report:0
-msgid "Search"
-msgstr "Căutare"
+#: help:crm.claim,section_id:0
+msgid ""
+"Responsible sales team. Define Responsible user and Email account for mail "
+"gateway."
+msgstr ""
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -529,9 +644,9 @@ msgid "Claim Date"
 msgstr "Data solicitarii"
 
 #. module: crm_claim
-#: help:crm.claim,email_from:0
-msgid "These people will receive email."
-msgstr "Aceste persoane vor primi e-mail."
+#: field:crm.claim,message_summary:0
+msgid "Summary"
+msgstr ""
 
 #. module: crm_claim
 #: model:ir.actions.act_window,name:crm_claim.crm_claim_categ_action
@@ -539,12 +654,17 @@ msgid "Claim Categories"
 msgstr "Categorii solicitare"
 
 #. module: crm_claim
+#: field:crm.claim.stage,case_default:0
+msgid "Common to All Teams"
+msgstr ""
+
+#. module: crm_claim
 #: view:crm.claim:0
 #: view:crm.claim.report:0
 #: model:ir.actions.act_window,name:crm_claim.act_claim_partner
-#: model:ir.actions.act_window,name:crm_claim.act_claim_partner_address
 #: model:ir.actions.act_window,name:crm_claim.crm_case_categ_claim0
 #: model:ir.ui.menu,name:crm_claim.menu_crm_case_claims
+#: view:res.partner:0
 #: field:res.partner,claims_ids:0
 msgid "Claims"
 msgstr "Solicitari"
@@ -562,36 +682,22 @@ msgstr "Politica Solicitari"
 
 #. module: crm_claim
 #: view:crm.claim:0
-msgid "History"
-msgstr "Istoric"
+msgid "Date Closed"
+msgstr "Data inchiderii"
 
 #. module: crm_claim
+#: view:crm.claim:0
 #: model:ir.model,name:crm_claim.model_crm_claim
 #: model:ir.ui.menu,name:crm_claim.menu_config_claim
 msgid "Claim"
 msgstr "Solicitare"
 
 #. module: crm_claim
-#: selection:crm.claim,priority:0
-#: selection:crm.claim.report,priority:0
-msgid "Highest"
-msgstr "Cel mai ridicat (cea mai ridicata)"
-
-#. module: crm_claim
-#: field:crm.claim,partner_address_id:0
-msgid "Partner Contact"
-msgstr "Contact partener"
-
-#. module: crm_claim
-#: view:crm.claim:0
-#: field:crm.claim,state:0
 #: view:crm.claim.report:0
-#: field:crm.claim.report,state:0
-msgid "State"
-msgstr "Stare"
+msgid "My Company"
+msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim:0
 #: view:crm.claim.report:0
 msgid "Done"
 msgstr "Efectuat"
@@ -602,33 +708,28 @@ msgid "Claim Reporter"
 msgstr "Raportor solicitare"
 
 #. module: crm_claim
-#: view:crm.claim:0
 #: view:crm.claim.report:0
 msgid "Cancel"
-msgstr "Anulează"
+msgstr "Anuleaza"
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "Close"
-msgstr "Închide"
-
-#. module: crm_claim
-#: view:crm.claim:0
 #: view:crm.claim.report:0
 #: selection:crm.claim.report,state:0
 msgid "Open"
-msgstr "Deschide"
+msgstr "Deschideti"
 
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "New Claims"
-msgstr ""
+msgstr "Solicitari noi"
 
 #. module: crm_claim
 #: view:crm.claim:0
 #: selection:crm.claim,state:0
+#: model:crm.claim.stage,name:crm_claim.stage_claim5
+#: selection:crm.claim.stage,state:0
 msgid "In Progress"
-msgstr "În desfasurare"
+msgstr "In curs de desfasurare"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -638,28 +739,24 @@ msgstr "Responsabil"
 
 #. module: crm_claim
 #: view:crm.claim.report:0
-msgid "Claims created in current year"
-msgstr ""
+msgid "Search"
+msgstr "Cauta"
 
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Unassigned Claims"
-msgstr ""
+msgstr "Solicitari neatribuite"
 
 #. module: crm_claim
-#: view:crm.claim.report:0
-msgid "Claims created in current month"
+#: code:addons/crm_claim/crm_claim.py:247
+#, python-format
+msgid "Claim has been <b>refused</b>."
 msgstr ""
-
-#. module: crm_claim
-#: field:crm.claim.report,delay_expected:0
-msgid "Overpassed Deadline"
-msgstr "Termen limita depasit"
 
 #. module: crm_claim
 #: field:crm.claim,cause:0
 msgid "Root Cause"
-msgstr "Radacina cauza"
+msgstr "Cauza"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -674,13 +771,7 @@ msgstr "Descriere"
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Search Claims"
-msgstr "Cautare solicitari"
-
-#. module: crm_claim
-#: field:crm.claim,section_id:0
-#: view:crm.claim.report:0
-msgid "Sales Team"
-msgstr "Echipa de vânzări"
+msgstr "Cauta Solicitari"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -689,8 +780,19 @@ msgstr "Mai"
 
 #. module: crm_claim
 #: view:crm.claim:0
+#: view:crm.claim.report:0
+msgid "Type"
+msgstr "Tip"
+
+#. module: crm_claim
+#: view:crm.claim:0
 msgid "Resolution Actions"
-msgstr "Rezolutie actiuni"
+msgstr "Rezolutie Actiuni"
+
+#. module: crm_claim
+#: field:crm.claim.stage,case_refused:0
+msgid "Refused stage"
+msgstr ""
 
 #. module: crm_claim
 #: model:ir.actions.act_window,help:crm_claim.crm_case_categ_claim0
@@ -713,48 +815,25 @@ msgid "# Emails"
 msgstr "# Email-uri"
 
 #. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim2
-msgid "Actions Done"
-msgstr "Actiuni efectuate"
+#: code:addons/crm_claim/crm_claim.py:253
+#, python-format
+msgid "Stage changed to <b>%s</b>."
+msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim.report:0
-msgid "Claims created in last month"
-msgstr ""
-
-#. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim5
-msgid "Actions Defined"
-msgstr "Actiuni definite"
-
-#. module: crm_claim
-#: view:crm.claim:0
-msgid "Follow Up"
-msgstr "Urmare"
-
-#. module: crm_claim
-#: help:crm.claim,state:0
-msgid ""
-"The state is set to 'Draft', when a case is created.                         "
-"         \n"
-"If the case is in progress the state is set to 'Open'.                       "
-"           \n"
-"When the case is over, the state is set to 'Done'.                           "
-"       \n"
-"If the case needs to be reviewed then the state is set to 'Pending'."
-msgstr ""
-"Starea este setata pe 'Ciorna', atunci cand este creat un caz.               "
-"                                                                  \n"
-"Daca cazul este in desfasurare, starea este setata pe 'Deschis'.             "
-"                                                            \n"
-"Atunci cand cazul este incheiat, starea este setata pe 'Efectuat'.           "
-"                                                         \n"
-"Daca cazul trebuie revazut, atunci starea este setata pe 'In asteptare'."
+msgid "Month of claim"
+msgstr "Luna solicitarii"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
 msgid "February"
 msgstr "Februarie"
+
+#. module: crm_claim
+#: model:ir.model,name:crm_claim.model_sale_config_settings
+msgid "sale.config.settings"
+msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -765,7 +844,7 @@ msgstr "An"
 #. module: crm_claim
 #: view:crm.claim.report:0
 msgid "My company"
-msgstr ""
+msgstr "Compania mea"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -778,57 +857,103 @@ msgid "My Case(s)"
 msgstr "Cazul (cazurile) meu (mele)"
 
 #. module: crm_claim
-#: field:crm.claim,id:0
-msgid "ID"
-msgstr "ID"
+#: model:crm.claim.stage,name:crm_claim.stage_claim2
+msgid "Settled"
+msgstr ""
 
 #. module: crm_claim
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
+#: help:crm.claim,message_ids:0
+msgid "Messages and communication history"
+msgstr ""
+
+#. module: crm_claim
+#: field:sale.config.settings,fetchmail_claim:0
+msgid "Create claims from incoming mails"
+msgstr ""
+
+#. module: crm_claim
+#: field:crm.claim.stage,sequence:0
+msgid "Sequence"
 msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Actions"
-msgstr "Acţiuni"
+msgstr "Actiuni"
 
 #. module: crm_claim
 #: selection:crm.claim,priority:0
 #: selection:crm.claim.report,priority:0
 msgid "High"
-msgstr "Ridicat(ă)"
+msgstr "Ridicat(a)"
 
 #. module: crm_claim
-#: model:ir.actions.act_window,help:crm_claim.crm_claim_categ_action
-msgid ""
-"Create claim categories to better manage and classify your claims. Some "
-"example of claims can be: preventive action, corrective action."
-msgstr ""
-"Creati categorii ale solicitarilor pentru a gestiona si clasifica mai bine "
-"solicitarile. Unele exemple e solicitari ar putea fi: actiune preventiva, "
-"actiune corectiva."
+#: field:crm.claim,section_id:0
+#: view:crm.claim.report:0
+msgid "Sales Team"
+msgstr "Echipa de vanzari"
 
 #. module: crm_claim
 #: field:crm.claim.report,create_date:0
 msgid "Create Date"
-msgstr "Creare data"
+msgstr "Data Crearii"
 
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "In Progress Claims"
+msgstr "Solicitari in desfasurare"
+
+#. module: crm_claim
+#: help:crm.claim.stage,section_ids:0
+msgid ""
+"Link between stages and sales teams. When set, this limitate the current "
+"stage to the selected sales teams."
+msgstr ""
+
+#. module: crm_claim
+#: help:crm.claim.stage,case_refused:0
+msgid "Refused stages are specific stages for done."
 msgstr ""
 
 #~ msgid "Probability"
 #~ msgstr "Probabilitate"
 
+#~ msgid ""
+#~ "You can create claim stages to categorize the status of every claim entered "
+#~ "in the system. The stages define all the steps required for the resolution "
+#~ "of a claim."
+#~ msgstr ""
+#~ "Puteti crea etape ale solicitarii pentru a clasifica statusul fiecarei "
+#~ "solicitati introduse in sistem. Etapele definesc toti pasii necesari "
+#~ "rezolvarii unei solicitari."
+
+#~ msgid ""
+#~ "Sales team to which Case belongs to.Define Responsible user and Email "
+#~ "account for mail gateway."
+#~ msgstr ""
+#~ "Echipa de vanzari careia ii apartine acest Caz. Definiti Utilizatorul "
+#~ "responsabil si contul de email pentru mail gateway."
+
+#~ msgid "Add Internal Note"
+#~ msgstr "Adauga nota interna"
+
+#~ msgid "Partner Contact"
+#~ msgstr "Contact partener"
+
 #~ msgid "   Month   "
 #~ msgstr "   Luna   "
+
+#~ msgid "Send New Email"
+#~ msgstr "Trimite un e-mail nou"
+
+#~ msgid "History Information"
+#~ msgstr "Istoric Informatii"
 
 #~ msgid "    Month-1    "
 #~ msgstr "    Luna-1    "
 
-#~ msgid "Stages"
-#~ msgstr "Etape"
+#~ msgid "Contact"
+#~ msgstr "Contact"
 
 #~ msgid "  Year  "
 #~ msgstr "  An  "
@@ -851,11 +976,26 @@ msgstr ""
 #~ msgid "Customer & Supplier Relationship Management"
 #~ msgstr "Gestionarea Relatiilor cu Clienţii & Furnizorii"
 
+#~ msgid "Global CC"
+#~ msgstr "CC global"
+
+#~ msgid "Communication & History"
+#~ msgstr "Comunicare & Istoric"
+
+#~ msgid "These people will receive email."
+#~ msgstr "Aceste persoane vor primi e-mail."
+
 #~ msgid "Stage of case"
 #~ msgstr "Etapa caz"
 
+#~ msgid "History"
+#~ msgstr "Istoric"
+
 #~ msgid "Attachments"
 #~ msgstr "Atașamente"
+
+#~ msgid "State"
+#~ msgstr "Stare"
 
 #~ msgid "Details"
 #~ msgstr "Detalii"
@@ -865,3 +1005,74 @@ msgstr ""
 
 #~ msgid "Report a Claim"
 #~ msgstr "Raportati o solicitare"
+
+#~ msgid "Actions Defined"
+#~ msgstr "Actiuni definite"
+
+#~ msgid "Actions Done"
+#~ msgstr "Actiuni efectuate"
+
+#~ msgid ""
+#~ "Create claim categories to better manage and classify your claims. Some "
+#~ "example of claims can be: preventive action, corrective action."
+#~ msgstr ""
+#~ "Creati categorii ale solicitarilor pentru a gestiona si clasifica mai bine "
+#~ "solicitarile. Unele exemple e solicitari ar putea fi: actiune preventiva, "
+#~ "actiune corectiva."
+
+#~ msgid "Won't fix"
+#~ msgstr "nu se va repara"
+
+#, python-format
+#~ msgid "The claim '%s' has been opened."
+#~ msgstr "Solicitarea '%s' a fost deschisa."
+
+#~ msgid "Reset to Draft"
+#~ msgstr "Resetare ca Ciorna"
+
+#~ msgid "All pending Claims"
+#~ msgstr "Toate Solicitarile in asteptare"
+
+#~ msgid "Accepted as Claim"
+#~ msgstr "Acceptat(a) ca solicitare"
+
+#~ msgid "Salesman"
+#~ msgstr "Agent de vanzari"
+
+#~ msgid "Reply"
+#~ msgstr "Raspundeti"
+
+#~ msgid "Claims created in current year"
+#~ msgstr "Solicitari create in anul curent"
+
+#~ msgid "Close"
+#~ msgstr "Inchideti"
+
+#~ msgid "Claims created in current month"
+#~ msgstr "Solicitari create in luna curenta"
+
+#~ msgid ""
+#~ "The state is set to 'Draft', when a case is created.                         "
+#~ "         \n"
+#~ "If the case is in progress the state is set to 'Open'.                       "
+#~ "           \n"
+#~ "When the case is over, the state is set to 'Done'.                           "
+#~ "       \n"
+#~ "If the case needs to be reviewed then the state is set to 'Pending'."
+#~ msgstr ""
+#~ "Starea este setata pe 'Ciorna', atunci cand este creat un caz.               "
+#~ "                   \n"
+#~ "Daca cazul este in desfasurare, starea este setata pe 'Deschis'.             "
+#~ "                     \n"
+#~ "Atunci cand cazul este incheiat, starea este setata pe 'Efectuat'.           "
+#~ "                       \n"
+#~ "Daca cazul trebuie revazut, atunci starea este setata pe 'In asteptare'."
+
+#~ msgid "Claims created in last month"
+#~ msgstr "Solicitari create luna trecuta"
+
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr "Eroare ! Nu puteti crea membri asociati recursiv."
+
+#~ msgid "Month-1"
+#~ msgstr "Luna-1"

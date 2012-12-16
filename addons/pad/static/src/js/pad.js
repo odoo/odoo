@@ -1,18 +1,63 @@
 openerp.pad = function(instance) {
+    
+    instance.web.form.FieldPad = instance.web.form.AbstractField.extend({
+        template: 'FieldPad',
+        configured: false,
+        content: "",
+        render_value: function() {
+            var self = this;
+            var _super = _.bind(this._super, this);
+            if (this.get("value") === false || this.get("value") === "") {
+                self.view.dataset.call('pad_generate_url',{context:{
+                        model: self.view.model,
+                        field_name: self.name,
+                        object_id: self.view.datarecord.id
+                    }}).done(function(data) {
+                    if(data&&data.url){
+                        self.set({value: data.url});
+                        _super(data.url);
+                        self.renderElement();
+                    }
+                });
+            } else {
+                self.renderElement();
+            }
+            this._dirty_flag = true;
+        },
+        renderElement: function(){
+            var self  = this;
+            var value = this.get('value');
+            if(!_.str.startsWith(value,'http')){
+                this.configured = false;
+                this.content = "";
+            }else{
+                this.configured = true;
+                if(!this.get('effective_readonly')){
+                    this.content = '<iframe width="100%" height="100%" frameborder="0" src="'+value+'?showChat=false&userName='+this.session.username+'"></iframe>';
+                }else{
+                    this.content = '<div class="oe_pad_loading">... Loading pad ...</div>';
+                    $.get(value+'/export/html').success(function(data){
+                        groups = /\<\s*body\s*\>(.*?)\<\s*\/body\s*\>/.exec(data);
+                        data = (groups || []).length >= 2 ? groups[1] : '';
+                        self.$('.oe_pad_content').html('<div class="oe_pad_readonly"><div>');
+                        self.$('.oe_pad_readonly').html(data);
+                    }).error(function(){
+                        self.$('.oe_pad_content').text('Unable to load pad');
+                    });
+                }
+            }
+            this._super();
+            this.$('.oe_pad_content').html(this.content);
+            this.$('.oe_pad_switch').click(function(){
+                self.$el.toggleClass('oe_pad_fullscreen');
+            });
+            this.on('change:effective_readonly',this,function(){
+                self.renderElement();
+            });
+        },
+    });
 
-instance.web.Sidebar = instance.web.Sidebar.extend({
-    init: function(parent) {
-        this._super(parent);
-        this.add_items('other',[{ label: "Pad", callback: this.on_add_pad }]);
-    },
-    on_add_pad: function() {
-        var self = this;
-        var view = this.getParent();
-        var model = new instance.web.Model('ir.attachment');
-        model.call('pad_get', [view.model ,view.datarecord.id],{}).then(function(r) {
-            self.do_action({ type: "ir.actions.act_url", url: r });
-        });
-    }
-});
-
+    instance.web.form.widgets = instance.web.form.widgets.extend({
+        'pad': 'instance.web.form.FieldPad',
+    });
 };

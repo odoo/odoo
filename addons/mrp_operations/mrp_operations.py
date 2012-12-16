@@ -50,17 +50,6 @@ class stock_move(osv.osv):
 stock_move()
 
 class mrp_production_workcenter_line(osv.osv):
-    def _get_date_date(self, cr, uid, ids, field_name, arg, context=None):
-        """ Finds starting date.
-        @return: Dictionary of values.
-        """
-        res={}
-        for op in self.browse(cr, uid, ids, context=context):
-            if op.date_start:
-                res[op.id] = op.date_start[:10]
-            else:
-                res[op.id]=False
-        return res
 
     def _get_date_end(self, cr, uid, ids, field_name, arg, context=None):
         """ Finds ending date.
@@ -82,17 +71,27 @@ class mrp_production_workcenter_line(osv.osv):
                     res[op.id] = op.date_planned
         return res
 
+    def onchange_production_id(self, cr, uid, ids, production_id, context=None):
+        if not production_id:
+            return {}
+        production = self.pool.get('mrp.production').browse(cr, uid, production_id, context=None)
+        result = {
+            'product': production.product_id.id,
+            'qty': production.product_qty,
+            'uom': production.product_uom.id,
+        }
+        return {'value': result}
+
     _inherit = 'mrp.production.workcenter.line'
     _order = "sequence, date_planned"
 
     _columns = {
        'state': fields.selection([('draft','Draft'),('cancel','Cancelled'),('pause','Pending'),('startworking', 'In Progress'),('done','Finished')],'Status', readonly=True,
-                                 help="* When a work order is created it is set in 'Draft' state.\n" \
-                                       "* When user sets work order in start mode that time it will be set in 'In Progress' state.\n" \
-                                       "* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pending' state.\n" \
-                                       "* When the user cancels the work order it will be set in 'Canceled' state.\n" \
-                                       "* When order is completely processed that time it is set in 'Finished' state."),
-       'date_start_date': fields.function(_get_date_date, string='Start Date', type='date'),
+                                 help="* When a work order is created it is set in 'Draft' status.\n" \
+                                       "* When user sets work order in start mode that time it will be set in 'In Progress' status.\n" \
+                                       "* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pending' status.\n" \
+                                       "* When the user cancels the work order it will be set in 'Canceled' status.\n" \
+                                       "* When order is completely processed that time it is set in 'Finished' status."),
        'date_planned': fields.datetime('Scheduled Date', select=True),
        'date_planned_end': fields.function(_get_date_end, string='End Date', type='datetime'),
        'date_start': fields.datetime('Start Date'),
@@ -109,8 +108,9 @@ class mrp_production_workcenter_line(osv.osv):
     }
 
     _defaults = {
-        'state': lambda *a: 'draft',
-        'delay': lambda *a: 0.0
+        'state': 'draft',
+        'delay': 0.0,
+        'production_state': 'draft'
     }
 
     def modify_production_order_state(self, cr, uid, ids, action):
@@ -224,7 +224,7 @@ class mrp_production_workcenter_line(osv.osv):
         for workorder in self.browse(cr, uid, ids):
             for prod in prod_obj.browse(cr, uid, [workorder.production_id]):
                 message = _("Work order has been <b>created</b> for production order <em>%s</em>.") % (prod.id.name)
-                self.message_append_note(cr, uid, [workorder.id], body=message, context=context)
+                self.message_post(cr, uid, [workorder.id], body=message, context=context)
         return True
 
     def action_start_send_note(self, cr, uid, ids, context=None):
@@ -232,7 +232,7 @@ class mrp_production_workcenter_line(osv.osv):
         for workorder in self.browse(cr, uid, ids):
             for prod in prod_obj.browse(cr, uid, [workorder.production_id]):
                 message = _("Work order has been <b>started</b> for production order <em>%s</em>.") % (prod.id.name)
-                self.message_append_note(cr, uid, [workorder.id], body=message, context=context)
+                self.message_post(cr, uid, [workorder.id], body=message, context=context)
         return True
 
     def action_done_send_note(self, cr, uid, ids, context=None):
@@ -240,7 +240,7 @@ class mrp_production_workcenter_line(osv.osv):
         for workorder in self.browse(cr, uid, ids):
             for prod in prod_obj.browse(cr, uid, [workorder.production_id]):
                 message = _("Work order has been <b>done</b> for production order <em>%s</em>.") % (prod.id.name)
-                self.message_append_note(cr, uid, [workorder.id], body=message, context=context)
+                self.message_post(cr, uid, [workorder.id], body=message, context=context)
         return True
 
     def action_pending_send_note(self, cr, uid, ids, context=None):
@@ -248,7 +248,7 @@ class mrp_production_workcenter_line(osv.osv):
         for workorder in self.browse(cr, uid, ids):
             for prod in prod_obj.browse(cr, uid, [workorder.production_id]):
                 message = _("Work order is <b>pending</b> for production order <em>%s</em>.") % (prod.id.name)
-                self.message_append_note(cr, uid, [workorder.id], body=message, context=context)
+                self.message_post(cr, uid, [workorder.id], body=message, context=context)
         return True
 
     def action_cancel_send_note(self, cr, uid, ids, context=None):
@@ -256,7 +256,7 @@ class mrp_production_workcenter_line(osv.osv):
         for workorder in self.browse(cr, uid, ids):
             for prod in prod_obj.browse(cr, uid, [workorder.production_id]):
                 message = _("Work order has been <b>cancelled</b> for production order <em>%s</em>.") % (prod.id.name)
-                self.message_append_note(cr, uid, [workorder.id], body=message, context=context)
+                self.message_post(cr, uid, [workorder.id], body=message, context=context)
         return True
 
 mrp_production_workcenter_line()
@@ -422,7 +422,7 @@ class mrp_production(osv.osv):
                 pass
         return result
 
-    def action_compute(self, cr, uid, ids, properties=[], context=None):
+    def action_compute(self, cr, uid, ids, properties=None, context=None):
         """ Computes bills of material of a product and planned date of work order.
         @param properties: List containing dictionaries of properties.
         @return: No. of products.
@@ -513,7 +513,7 @@ class mrp_operations_operation(osv.osv):
                  code_lst.append(oper.code_id.start_stop)
             if code.start_stop=='start':
                     if 'start' in code_lst:
-                        raise osv.except_osv(_('Sorry!'),_('Operation has already started !' 'Youcan either Pause/Finish/Cancel the operation'))
+                        raise osv.except_osv(_('Sorry!'),_('Operation has already started! You can either Pause/Finish/Cancel the operation.'))
                         return False
             if code.start_stop=='pause':
                     if  code_lst[len(code_lst)-1]!='resume' and code_lst[len(code_lst)-1]!='start':
@@ -533,7 +533,7 @@ class mrp_operations_operation(osv.osv):
                   return False
             if code.start_stop=='cancel':
                if  not 'start' in code_lst :
-                   raise osv.except_osv(_('Error!'),_('There is no Operation to be cancelled!'))
+                   raise osv.except_osv(_('Error!'),_('No operation to cancel.'))
                    return False
                if 'done' in code_lst:
                   raise osv.except_osv(_('Error!'),_('Operation is already finished!'))

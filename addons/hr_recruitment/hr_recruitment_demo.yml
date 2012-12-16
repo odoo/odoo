@@ -17,7 +17,6 @@
     priority: '3'
     user_id: base.user_demo
     partner_name: 'Marie Justine'
-    state: 'open'
     partner_mobile: '9988774455'
     job_id: hr.job_developer
     stage_id: stage_job4
@@ -41,7 +40,6 @@
     type_id: degree_bac5
     user_id: base.user_root
     partner_name: 'Sandra Elvis'
-    state: 'cancel'
     stage_id: stage_job6
     name: 'More than 5 yrs Experience in PHP'
 -
@@ -50,8 +48,8 @@
     type_id: degree_licenced
     user_id: base.user_demo
     partner_name: 'John Bruno'
-    state: 'done'
     job_id: hr.job_developer
+    color: 5
     stage_id: stage_job5
     name: 'Marketing Job'
 -
@@ -60,8 +58,6 @@
     type_id: degree_licenced
     priority: '4'
     partner_name: 'David Armstrong'
-    state: 'pending'
-    state: open
     partner_mobile: '9966332214'
     job_id: hr.job_developer
     stage_id: stage_job2
@@ -72,7 +68,6 @@
     date: !eval time.strftime('%Y-%m-12 17:49:19')
     type_id: degree_bac5
     partner_name: 'Tina Augustie'
-    state: 'open'
     partner_mobile: '9898745745'
     job_id: hr.job_developer
     stage_id: stage_job4
@@ -84,7 +79,6 @@
     date: !eval time.strftime('%Y-%m-12 17:49:19')
     type_id: degree_bac5
     partner_name: 'Shane Williams'
-    state: 'open'
     partner_mobile: '9812398524'
     stage_id: stage_job4
     name: 'Programmer'
@@ -100,6 +94,9 @@
     partner_name: 'David Armstrong'
     job_id: hr.job_developer
     stage_id: stage_job2
+    color: 4
     name: 'Advertisement'
     salary_expected: 11000.0
-
+-
+  !record {model: hr.job, id: hr.job_developer}:
+    survey_id: hr_recruitment.survey_job_0

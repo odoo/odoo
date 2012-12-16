@@ -1,4 +1,4 @@
-﻿/*
+/*
 
     OpenERP, Open Source Business Applications
     Copyright (c) 2011 OpenERP S.A. <http://openerp.com>
@@ -105,7 +105,7 @@ namespace OpenERPOutlookPlugin
             /*
              
              * Will Redirect to the web-browser and open partner.
-             * If it will not found partner in res.partner.address (in contact) then 
+             * If it will not found partner in res.partner (in contact) then 
                it will open the contact form to create a partner.
                :Param outlook.MailItem mailItem : Outlook Mail item
              */
@@ -189,7 +189,7 @@ namespace OpenERPOutlookPlugin
         {
             /*
              
-            * Creates a Contact record in the res.partner.address as per the details given in the 
+            * Creates a Contact record in the res.partner as per the details given in the 
               plugin form of openERP outlook Plugin.
               :Param string partner_id : Partner id for which it creates a contact
               :Param string name : Contact name 

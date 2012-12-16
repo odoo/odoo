@@ -6,27 +6,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2010-12-11 16:04+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:49+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
-
-#. module: warning
-#: sql_constraint:purchase.order:0
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique per Company!"
-msgstr ""
+"X-Launchpad-Export-Date: 2012-12-04 05:43+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order_line
 #: field:product.product,purchase_line_warn:0
 msgid "Purchase Order Line"
-msgstr "Linie comandă de aprovizionare"
+msgstr "Linie comanda de achizitie"
+
+#. module: warning
+#: model:ir.model,name:warning.model_stock_picking_in
+msgid "Incoming Shipments"
+msgstr ""
 
 #. module: warning
 #: field:product.product,sale_line_warn_msg:0
@@ -41,17 +40,17 @@ msgstr "Mesaj pentru Linia Comenzii de Achizitie"
 #. module: warning
 #: model:ir.model,name:warning.model_stock_picking
 msgid "Picking List"
-msgstr "Listă ridicare"
+msgstr "Lista de ridicare"
 
 #. module: warning
 #: field:product.product,sale_line_warn:0
 msgid "Sale Order Line"
-msgstr "Linia Comenzii de vanzare"
+msgstr "Linia comenzii de vanzare"
 
 #. module: warning
 #: view:product.product:0
 msgid "Warning when Purchasing this Product"
-msgstr "Avertizare la Achizitia acestui Produs"
+msgstr "Avertizare la achizitia acestui produs"
 
 #. module: warning
 #: model:ir.model,name:warning.model_product_product
@@ -62,17 +61,7 @@ msgstr "Produs"
 #: view:product.product:0
 #: view:res.partner:0
 msgid "Warnings"
-msgstr "Atenționări"
-
-#. module: warning
-#: selection:product.product,purchase_line_warn:0
-#: selection:product.product,sale_line_warn:0
-#: selection:res.partner,invoice_warn:0
-#: selection:res.partner,picking_warn:0
-#: selection:res.partner,purchase_warn:0
-#: selection:res.partner,sale_warn:0
-msgid "Warning"
-msgstr "Atenționare"
+msgstr "Atentionare"
 
 #. module: warning
 #: selection:product.product,purchase_line_warn:0
@@ -82,17 +71,12 @@ msgstr "Atenționare"
 #: selection:res.partner,purchase_warn:0
 #: selection:res.partner,sale_warn:0
 msgid "Blocking Message"
-msgstr "Blocarea mesajului"
-
-#. module: warning
-#: field:res.partner,picking_warn:0
-msgid "Stock Picking"
-msgstr "Ridicare stoc"
+msgstr "Mesaj de blocare"
 
 #. module: warning
 #: view:res.partner:0
 msgid "Warning on the Invoice"
-msgstr "Avertizare pe Factură"
+msgstr "Avertizare pe Factura"
 
 #. module: warning
 #: selection:product.product,purchase_line_warn:0
@@ -108,7 +92,7 @@ msgstr "Nici un mesaj"
 #: model:ir.model,name:warning.model_account_invoice
 #: field:res.partner,invoice_warn:0
 msgid "Invoice"
-msgstr "Factură"
+msgstr "Factura"
 
 #. module: warning
 #: view:product.product:0
@@ -118,23 +102,18 @@ msgstr "Avertizare la Vanzarea acestui Produs"
 #. module: warning
 #: field:res.partner,sale_warn:0
 msgid "Sale Order"
-msgstr "Comandă de vanzare"
+msgstr "Comanda de vanzare"
 
 #. module: warning
-#: field:res.partner,invoice_warn_msg:0
-msgid "Message for Invoice"
-msgstr "Mesaj pentru Factură"
+#: field:res.partner,picking_warn:0
+msgid "Stock Picking"
+msgstr "Ridicare stoc"
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order
 #: field:res.partner,purchase_warn:0
 msgid "Purchase Order"
-msgstr "Comanda de aprovizionare"
-
-#. module: warning
-#: sql_constraint:stock.picking:0
-msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "Comanda de achizitie"
 
 #. module: warning
 #: field:res.partner,sale_warn_msg:0
@@ -144,7 +123,7 @@ msgstr "Mesaj pentru Comanda de vanzare"
 #. module: warning
 #: field:res.partner,purchase_warn_msg:0
 msgid "Message for Purchase Order"
-msgstr "Mesaj pentru Comanda de achizitie"
+msgstr "Mesaj pentru Comanda de aprovizionare"
 
 #. module: warning
 #: code:addons/warning/warning.py:32
@@ -160,35 +139,27 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
-"Dacă selectati optiunea \"Avertizare\" veti instiinta utilizatorul cu un "
-"mesaj, Selectand \"Blocarea Mesajului\" veti trimite o exceptie cu mesajul "
-"si veti bloca fluxul. Mesajul trebuie să fie scris in campul următor."
+"Daca selectati optiunea \"Avertizare\" veti instiinta utilizatorul cu un "
+"mesaj, Selectand \"Mesaj de blocare\" veti trimite o exceptie cu mesajul si "
+"va bloca fluxul. Mesajul trebuie scris în campul urmator."
 
 #. module: warning
 #: code:addons/warning/warning.py:67
 #: code:addons/warning/warning.py:96
-#: code:addons/warning/warning.py:132
-#: code:addons/warning/warning.py:163
-#: code:addons/warning/warning.py:213
-#: code:addons/warning/warning.py:246
+#: code:addons/warning/warning.py:130
+#: code:addons/warning/warning.py:161
+#: code:addons/warning/warning.py:191
+#: code:addons/warning/warning.py:217
+#: code:addons/warning/warning.py:265
+#: code:addons/warning/warning.py:298
 #, python-format
 msgid "Alert for %s !"
-msgstr "Alarmă pentru %s !"
+msgstr "Alarma pentru %s !"
 
 #. module: warning
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr ""
-
-#. module: warning
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr ""
-
-#. module: warning
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr ""
+#: field:res.partner,invoice_warn_msg:0
+msgid "Message for Invoice"
+msgstr "Mesaj pentru Factura"
 
 #. module: warning
 #: view:res.partner:0
@@ -203,10 +174,12 @@ msgstr "Avertizare pe Comanda de Achizitie"
 #. module: warning
 #: code:addons/warning/warning.py:68
 #: code:addons/warning/warning.py:97
-#: code:addons/warning/warning.py:134
-#: code:addons/warning/warning.py:164
-#: code:addons/warning/warning.py:214
-#: code:addons/warning/warning.py:247
+#: code:addons/warning/warning.py:132
+#: code:addons/warning/warning.py:162
+#: code:addons/warning/warning.py:192
+#: code:addons/warning/warning.py:218
+#: code:addons/warning/warning.py:266
+#: code:addons/warning/warning.py:299
 #, python-format
 msgid "Warning for %s"
 msgstr "Avertizare pentru %s"
@@ -217,9 +190,14 @@ msgid "Warning on the Sale Order"
 msgstr "Avertizare pe Comanda de Vanzare"
 
 #. module: warning
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Eroare : cod EAN invalid"
+#: selection:product.product,purchase_line_warn:0
+#: selection:product.product,sale_line_warn:0
+#: selection:res.partner,invoice_warn:0
+#: selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0
+#: selection:res.partner,sale_warn:0
+msgid "Warning"
+msgstr "Atentionare"
 
 #. module: warning
 #: field:res.partner,picking_warn_msg:0
@@ -234,21 +212,44 @@ msgstr "Partener"
 #. module: warning
 #: model:ir.model,name:warning.model_sale_order
 msgid "Sales Order"
-msgstr "Comandă de vânzare"
+msgstr "Comanda de vanzare"
+
+#. module: warning
+#: model:ir.model,name:warning.model_stock_picking_out
+msgid "Delivery Orders"
+msgstr ""
 
 #. module: warning
 #: model:ir.model,name:warning.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Linie comandă de vânzare"
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Eroare ! Nu puteţi crea membri asociaţi recursiv."
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "Referinţa comenzii trebuie să fie unică !"
+msgstr "Linie comanda de vanzare"
 
 #~ msgid "Module for Warnings form onchange Event"
 #~ msgstr "Modulul pentru Avertizări din Evenimentul in schimbare"
 
 #~ msgid "Module for Warnings form onchange Event."
 #~ msgstr "Modul pentru Avertizări din Evenimentul in schimbare."
+
+#~ msgid "Order Reference must be unique !"
+#~ msgstr "Referința comenzii trebuie să fie unică!"
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr "Eroare ! Nu puteți crea membri asociați recursiv."
+
+#~ msgid "Order Reference must be unique per Company!"
+#~ msgstr "Referinta comenzii trebuie sa fie unica per Companie!"
+
+#~ msgid "Reference must be unique per Company!"
+#~ msgstr "Referinta trebuie sa fie unica per Companie!"
+
+#~ msgid "Invalid BBA Structured Communication !"
+#~ msgstr "Comunicare Structurata BBA Invalida !"
+
+#~ msgid "Invoice Number must be unique per Company!"
+#~ msgstr "Numarul Facturii trebuie sa fie unic per Companie!"
+
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr "Eroare ! Nu puteti crea membri asociati recursiv."
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Eroare: cod ean invalid"

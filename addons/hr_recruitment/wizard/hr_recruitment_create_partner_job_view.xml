@@ -2,26 +2,23 @@
 <openerp>
     <data>
 
-		<record id="view_hr_recruitment_partner_create" model="ir.ui.view">
+        <record id="view_hr_recruitment_partner_create" model="ir.ui.view">
             <field name="name">hr.recruitment.partner.create.form</field>
             <field name="model">hr.recruitment.partner.create</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-			<form string="Convert To Partner">
-			    <group col="4" colspan="6">
-			            <label string="Are you sure you want to create a partner based on this job request ?"/>
-				</group>
-				<separator colspan="4"/>
-			    <group col="2" colspan="4">
-            		<button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-					<button name="make_order" string="Create Partner" colspan="1" type="object" icon="gtk-execute" groups="base.group_partner_manager"/>
-				</group>
-			</form>
+                <form string="Convert To Partner" version="7.0">
+                    <label string="Are you sure you want to create a contact based on this job request ?"/>
+                    <footer>
+                        <button name="make_order" string="Create Contact" type="object" groups="base.group_partner_manager" class="oe_highlight"/>
+                        <label string="or" groups="base.group_partner_manager"/>
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
             </field>
         </record>
 
         <record id="action_hr_recruitment_partner_create" model="ir.actions.act_window">
-            <field name="name">Create Partner</field>
+            <field name="name">Create Contact</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.recruitment.partner.create</field>
             <field name="view_type">form</field>
@@ -29,5 +26,5 @@
             <field name="target">new</field>
         </record>
 
-	</data>
+    </data>
 </openerp>

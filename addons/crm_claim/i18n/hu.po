@@ -6,16 +6,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2011-02-02 19:57+0000\n"
-"Last-Translator: NOVOTRADE RENDSZERHÁZ ( novotrade.hu ) "
-"<openerp@novotrade.hu>\n"
+"Last-Translator: Krisztian Eyssen <krisz@eyssen.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 07:02+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:49+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
+
+#. module: crm_claim
+#: help:crm.claim.stage,fold:0
+msgid ""
+"This stage is not visible, for example in status bar or kanban view, when "
+"there are no records in that stage to display."
+msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim.report,nbr:0
@@ -34,9 +40,16 @@ msgid "Responsibilities"
 msgstr "Felelősségek"
 
 #. module: crm_claim
-#: field:crm.claim,date_action_next:0
-msgid "Next Action Date"
-msgstr "Következő művelet időpontja"
+#: help:sale.config.settings,fetchmail_claim:0
+msgid ""
+"Allows you to configure your incoming mail server, and create claims from "
+"incoming emails."
+msgstr ""
+
+#. module: crm_claim
+#: model:ir.model,name:crm_claim.model_crm_claim_stage
+msgid "Claim stages"
+msgstr ""
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -46,6 +59,11 @@ msgstr "Március"
 #. module: crm_claim
 #: field:crm.claim.report,delay_close:0
 msgid "Delay to close"
+msgstr ""
+
+#. module: crm_claim
+#: field:crm.claim,message_unread:0
+msgid "Unread Messages"
 msgstr ""
 
 #. module: crm_claim
@@ -61,8 +79,16 @@ msgid "Company"
 msgstr "Vállalat"
 
 #. module: crm_claim
-#: field:crm.claim,email_cc:0
-msgid "Watchers Emails"
+#: model:ir.actions.act_window,help:crm_claim.crm_claim_categ_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a claim category.\n"
+"              </p><p>\n"
+"                Create claim categories to better manage and classify your\n"
+"                claims. Some example of claims can be: preventive action,\n"
+"                corrective action.\n"
+"              </p>\n"
+"            "
 msgstr ""
 
 #. module: crm_claim
@@ -71,41 +97,33 @@ msgid "#Claim"
 msgstr "Követelések száma"
 
 #. module: crm_claim
-#: model:ir.actions.act_window,help:crm_claim.crm_claim_stage_act
+#: field:crm.claim.stage,name:0
+msgid "Stage Name"
+msgstr ""
+
+#. module: crm_claim
+#: model:ir.actions.act_window,help:crm_claim.action_report_crm_claim
 msgid ""
-"You can create claim stages to categorize the status of every claim entered "
-"in the system. The stages define all the steps required for the resolution "
-"of a claim."
+"Have a general overview of all claims processed in the system by sorting "
+"them with specific criteria."
 msgstr ""
 
 #. module: crm_claim
-#: code:addons/crm_claim/crm_claim.py:132
-#, python-format
-msgid "The claim '%s' has been opened."
+#: view:crm.claim.report:0
+msgid "Salesperson"
 msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "Date Closed"
-msgstr ""
+#: selection:crm.claim,priority:0
+#: selection:crm.claim.report,priority:0
+msgid "Highest"
+msgstr "Legmagasabb"
 
 #. module: crm_claim
 #: view:crm.claim.report:0
 #: field:crm.claim.report,day:0
 msgid "Day"
 msgstr "Nap"
-
-#. module: crm_claim
-#: view:crm.claim:0
-msgid "Add Internal Note"
-msgstr "Belső jegyzet hozzáadása"
-
-#. module: crm_claim
-#: help:crm.claim,section_id:0
-msgid ""
-"Sales team to which Case belongs to.Define Responsible user and Email "
-"account for mail gateway."
-msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -125,6 +143,7 @@ msgstr "Tényleges követelések"
 #. module: crm_claim
 #: selection:crm.claim,state:0
 #: selection:crm.claim.report,state:0
+#: selection:crm.claim.stage,state:0
 msgid "Cancelled"
 msgstr "Törölt"
 
@@ -134,9 +153,19 @@ msgid "Preventive"
 msgstr "Preventív"
 
 #. module: crm_claim
+#: help:crm.claim,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr ""
+
+#. module: crm_claim
 #: field:crm.claim.report,date_closed:0
 msgid "Close Date"
 msgstr "Zárás dátuma"
+
+#. module: crm_claim
+#: view:res.partner:0
+msgid "False"
+msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim,ref:0
@@ -149,19 +178,16 @@ msgid "Date of claim"
 msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "All pending Claims"
-msgstr ""
-
-#. module: crm_claim
 #: view:crm.claim.report:0
 msgid "# Mails"
 msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "Reset to Draft"
-msgstr "Visszaállítás Tervezet állapotba"
+#: help:crm.claim,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -180,15 +206,20 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: crm_claim
-#: view:crm.claim.report:0
-msgid "Month of claim"
-msgstr ""
+#: view:crm.claim:0
+msgid "Follow Up"
+msgstr "Nyomon követés"
 
 #. module: crm_claim
 #: selection:crm.claim,type_action:0
 #: selection:crm.claim.report,type_action:0
 msgid "Preventive Action"
 msgstr "Preventív művelet"
+
+#. module: crm_claim
+#: field:crm.claim.report,delay_expected:0
+msgid "Overpassed Deadline"
+msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim.report,section_id:0
@@ -213,22 +244,28 @@ msgid "Priority"
 msgstr "Prioritás"
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "Send New Email"
-msgstr "Új e-mail küldése"
+#: field:crm.claim.stage,fold:0
+msgid "Hide in Views when Empty"
+msgstr ""
+
+#. module: crm_claim
+#: field:crm.claim,message_follower_ids:0
+msgid "Followers"
+msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim:0
 #: selection:crm.claim,state:0
 #: view:crm.claim.report:0
+#: model:crm.claim.stage,name:crm_claim.stage_claim1
+#: selection:crm.claim.stage,state:0
 msgid "New"
 msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim:0
-#: view:crm.claim.report:0
-msgid "Type"
-msgstr "Típus"
+#: field:crm.claim.stage,section_ids:0
+msgid "Sections"
+msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim,email_from:0
@@ -252,11 +289,6 @@ msgid "My Sales Team(s)"
 msgstr ""
 
 #. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim3
-msgid "Won't fix"
-msgstr "Nem lesz kijavítva"
-
-#. module: crm_claim
 #: field:crm.claim,create_date:0
 msgid "Creation Date"
 msgstr "Létrehozás dátuma"
@@ -267,10 +299,19 @@ msgid "Claim Subject"
 msgstr "Követelés tárgya"
 
 #. module: crm_claim
-#: model:ir.actions.act_window,help:crm_claim.action_report_crm_claim
-msgid ""
-"Have a general overview of all claims processed in the system by sorting "
-"them with specific criteria."
+#: model:crm.claim.stage,name:crm_claim.stage_claim3
+msgid "Rejected"
+msgstr ""
+
+#. module: crm_claim
+#: field:crm.claim,date_action_next:0
+msgid "Next Action Date"
+msgstr "Következő művelet időpontja"
+
+#. module: crm_claim
+#: code:addons/crm_claim/crm_claim.py:243
+#, python-format
+msgid "Claim has been <b>created</b>."
 msgstr ""
 
 #. module: crm_claim
@@ -279,6 +320,7 @@ msgid "July"
 msgstr "Július"
 
 #. module: crm_claim
+#: view:crm.claim.stage:0
 #: model:ir.actions.act_window,name:crm_claim.crm_claim_stage_act
 msgid "Claim Stages"
 msgstr "Követelés szakaszai"
@@ -298,23 +340,38 @@ msgstr "Szakasz"
 
 #. module: crm_claim
 #: view:crm.claim:0
-msgid "History Information"
-msgstr "Előzmény"
-
-#. module: crm_claim
-#: view:crm.claim:0
 msgid "Dates"
 msgstr "Dátumok"
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "Contact"
-msgstr "Kapcsolat"
+#: help:crm.claim,email_from:0
+msgid "Destination email for email gateway."
+msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim.report:0
-msgid "Month-1"
+#: code:addons/crm_claim/crm_claim.py:199
+#, python-format
+msgid "No Subject"
 msgstr ""
+
+#. module: crm_claim
+#: help:crm.claim.stage,state:0
+msgid ""
+"The related status for the stage. The status of your document will "
+"automatically change regarding the selected stage. For example, if a stage "
+"is related to the status 'Close', when your document reaches this stage, it "
+"will be automatically have the 'closed' status."
+msgstr ""
+
+#. module: crm_claim
+#: view:crm.claim:0
+msgid "Settle"
+msgstr ""
+
+#. module: crm_claim
+#: model:ir.ui.menu,name:crm_claim.menu_claim_stage_view
+msgid "Stages"
+msgstr "Szakaszok"
 
 #. module: crm_claim
 #: model:ir.actions.act_window,name:crm_claim.action_report_crm_claim
@@ -333,9 +390,9 @@ msgid "CRM Claim Report"
 msgstr "CRM Követelésjelentés"
 
 #. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim1
-msgid "Accepted as Claim"
-msgstr "Elfogadott követelés"
+#: view:sale.config.settings:0
+msgid "Configure"
+msgstr ""
 
 #. module: crm_claim
 #: model:crm.case.resource.type,name:crm_claim.type_claim1
@@ -376,9 +433,11 @@ msgid "Year of claim"
 msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim.report:0
-msgid "Salesman"
-msgstr "Értékesítő"
+#: help:crm.claim.stage,case_default:0
+msgid ""
+"If you check this field, this stage will be proposed by default on each "
+"sales team. It will not assign this stage to existing teams."
+msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim,categ_id:0
@@ -395,6 +454,11 @@ msgstr ""
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Responsible User"
+msgstr ""
+
+#. module: crm_claim
+#: field:crm.claim,email_cc:0
+msgid "Watchers Emails"
 msgstr ""
 
 #. module: crm_claim
@@ -420,25 +484,41 @@ msgstr "Alacsony"
 #: field:crm.claim,date_closed:0
 #: selection:crm.claim,state:0
 #: selection:crm.claim.report,state:0
+#: selection:crm.claim.stage,state:0
 msgid "Closed"
 msgstr "Lezárt"
 
 #. module: crm_claim
 #: view:crm.claim:0
-msgid "Reply"
-msgstr "Válasz"
+msgid "Reject"
+msgstr ""
+
+#. module: crm_claim
+#: view:res.partner:0
+msgid "Partners Claim"
+msgstr ""
+
+#. module: crm_claim
+#: view:crm.claim.stage:0
+msgid "Claim Stage"
+msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim:0
 #: selection:crm.claim,state:0
 #: view:crm.claim.report:0
 #: selection:crm.claim.report,state:0
+#: selection:crm.claim.stage,state:0
 msgid "Pending"
 msgstr "Függőben lévő"
 
 #. module: crm_claim
 #: view:crm.claim:0
-msgid "Communication & History"
+#: field:crm.claim,state:0
+#: view:crm.claim.report:0
+#: field:crm.claim.report,state:0
+#: field:crm.claim.stage,state:0
+msgid "Status"
 msgstr ""
 
 #. module: crm_claim
@@ -453,8 +533,8 @@ msgid "Normal"
 msgstr "Normál"
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "Global CC"
+#: help:crm.claim.stage,sequence:0
+msgid "Used to order stages. Lower is better."
 msgstr ""
 
 #. module: crm_claim
@@ -463,9 +543,9 @@ msgid "June"
 msgstr "Június"
 
 #. module: crm_claim
-#: view:res.partner:0
-msgid "Partners Claim"
-msgstr ""
+#: field:crm.claim,id:0
+msgid "ID"
+msgstr "ID"
 
 #. module: crm_claim
 #: field:crm.claim,partner_phone:0
@@ -473,9 +553,40 @@ msgid "Phone"
 msgstr "Telefon"
 
 #. module: crm_claim
+#: field:crm.claim,message_is_follower:0
+msgid "Is a Follower"
+msgstr ""
+
+#. module: crm_claim
 #: field:crm.claim.report,user_id:0
 msgid "User"
 msgstr "Felhasználó"
+
+#. module: crm_claim
+#: model:ir.actions.act_window,help:crm_claim.crm_claim_stage_act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to setup a new stage in the processing of the claims. "
+"\n"
+"              </p><p>\n"
+"                You can create claim stages to categorize the status of "
+"every\n"
+"                claim entered in the system. The stages define all the "
+"steps\n"
+"                required for the resolution of a claim.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: crm_claim
+#: help:crm.claim,state:0
+msgid ""
+"The status is set to 'Draft', when a case is created.                      "
+"If the case is in progress the status is set to 'Open'.                      "
+"When the case is over, the status is set to 'Done'.                      If "
+"the case needs to be reviewed then the status is                       set "
+"to 'Pending'."
+msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim,active:0
@@ -493,14 +604,22 @@ msgid "Extended Filters..."
 msgstr "Kiterjesztett szűrők…"
 
 #. module: crm_claim
+#: field:crm.claim,message_comment_ids:0
+#: help:crm.claim,message_comment_ids:0
+msgid "Comments and emails"
+msgstr ""
+
+#. module: crm_claim
 #: view:crm.claim:0
 msgid "Closure"
 msgstr "Bezárás"
 
 #. module: crm_claim
-#: view:crm.claim.report:0
-msgid "Search"
-msgstr "Keresés"
+#: help:crm.claim,section_id:0
+msgid ""
+"Responsible sales team. Define Responsible user and Email account for mail "
+"gateway."
+msgstr ""
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -519,9 +638,9 @@ msgid "Claim Date"
 msgstr "Követelés időpontja"
 
 #. module: crm_claim
-#: help:crm.claim,email_from:0
-msgid "These people will receive email."
-msgstr "Ezek az emberek fogják megkapni az e-mailt."
+#: field:crm.claim,message_summary:0
+msgid "Summary"
+msgstr ""
 
 #. module: crm_claim
 #: model:ir.actions.act_window,name:crm_claim.crm_claim_categ_action
@@ -529,12 +648,17 @@ msgid "Claim Categories"
 msgstr "Követelés kategória"
 
 #. module: crm_claim
+#: field:crm.claim.stage,case_default:0
+msgid "Common to All Teams"
+msgstr ""
+
+#. module: crm_claim
 #: view:crm.claim:0
 #: view:crm.claim.report:0
 #: model:ir.actions.act_window,name:crm_claim.act_claim_partner
-#: model:ir.actions.act_window,name:crm_claim.act_claim_partner_address
 #: model:ir.actions.act_window,name:crm_claim.crm_case_categ_claim0
 #: model:ir.ui.menu,name:crm_claim.menu_crm_case_claims
+#: view:res.partner:0
 #: field:res.partner,claims_ids:0
 msgid "Claims"
 msgstr "Követelések"
@@ -552,36 +676,22 @@ msgstr "Követelési politika"
 
 #. module: crm_claim
 #: view:crm.claim:0
-msgid "History"
-msgstr "Előzmény"
+msgid "Date Closed"
+msgstr ""
 
 #. module: crm_claim
+#: view:crm.claim:0
 #: model:ir.model,name:crm_claim.model_crm_claim
 #: model:ir.ui.menu,name:crm_claim.menu_config_claim
 msgid "Claim"
 msgstr "Követelés"
 
 #. module: crm_claim
-#: selection:crm.claim,priority:0
-#: selection:crm.claim.report,priority:0
-msgid "Highest"
-msgstr "Legmagasabb"
-
-#. module: crm_claim
-#: field:crm.claim,partner_address_id:0
-msgid "Partner Contact"
-msgstr "Partner kapcsolat"
-
-#. module: crm_claim
-#: view:crm.claim:0
-#: field:crm.claim,state:0
 #: view:crm.claim.report:0
-#: field:crm.claim.report,state:0
-msgid "State"
-msgstr "Állapot"
+msgid "My Company"
+msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim:0
 #: view:crm.claim.report:0
 msgid "Done"
 msgstr "Kész"
@@ -592,18 +702,11 @@ msgid "Claim Reporter"
 msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim:0
 #: view:crm.claim.report:0
 msgid "Cancel"
 msgstr "Mégsem"
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "Close"
-msgstr "Zárás"
-
-#. module: crm_claim
-#: view:crm.claim:0
 #: view:crm.claim.report:0
 #: selection:crm.claim.report,state:0
 msgid "Open"
@@ -617,6 +720,8 @@ msgstr ""
 #. module: crm_claim
 #: view:crm.claim:0
 #: selection:crm.claim,state:0
+#: model:crm.claim.stage,name:crm_claim.stage_claim5
+#: selection:crm.claim.stage,state:0
 msgid "In Progress"
 msgstr "Folyamatban"
 
@@ -628,8 +733,8 @@ msgstr "Felelős"
 
 #. module: crm_claim
 #: view:crm.claim.report:0
-msgid "Claims created in current year"
-msgstr ""
+msgid "Search"
+msgstr "Keresés"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -637,13 +742,9 @@ msgid "Unassigned Claims"
 msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim.report:0
-msgid "Claims created in current month"
-msgstr ""
-
-#. module: crm_claim
-#: field:crm.claim.report,delay_expected:0
-msgid "Overpassed Deadline"
+#: code:addons/crm_claim/crm_claim.py:247
+#, python-format
+msgid "Claim has been <b>refused</b>."
 msgstr ""
 
 #. module: crm_claim
@@ -667,20 +768,25 @@ msgid "Search Claims"
 msgstr "Követelések keresése"
 
 #. module: crm_claim
-#: field:crm.claim,section_id:0
-#: view:crm.claim.report:0
-msgid "Sales Team"
-msgstr "Értékesítési csapat"
-
-#. module: crm_claim
 #: selection:crm.claim.report,month:0
 msgid "May"
 msgstr "Május"
 
 #. module: crm_claim
 #: view:crm.claim:0
+#: view:crm.claim.report:0
+msgid "Type"
+msgstr "Típus"
+
+#. module: crm_claim
+#: view:crm.claim:0
 msgid "Resolution Actions"
 msgstr "Döntési műveletek"
+
+#. module: crm_claim
+#: field:crm.claim.stage,case_refused:0
+msgid "Refused stage"
+msgstr ""
 
 #. module: crm_claim
 #: model:ir.actions.act_window,help:crm_claim.crm_case_categ_claim0
@@ -697,41 +803,25 @@ msgid "# Emails"
 msgstr "E-mailek száma"
 
 #. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim2
-msgid "Actions Done"
+#: code:addons/crm_claim/crm_claim.py:253
+#, python-format
+msgid "Stage changed to <b>%s</b>."
 msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim.report:0
-msgid "Claims created in last month"
-msgstr ""
-
-#. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim5
-msgid "Actions Defined"
-msgstr ""
-
-#. module: crm_claim
-#: view:crm.claim:0
-msgid "Follow Up"
-msgstr "Nyomon követés"
-
-#. module: crm_claim
-#: help:crm.claim,state:0
-msgid ""
-"The state is set to 'Draft', when a case is created.                         "
-"         \n"
-"If the case is in progress the state is set to 'Open'.                       "
-"           \n"
-"When the case is over, the state is set to 'Done'.                           "
-"       \n"
-"If the case needs to be reviewed then the state is set to 'Pending'."
+msgid "Month of claim"
 msgstr ""
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
 msgid "February"
 msgstr "Február"
+
+#. module: crm_claim
+#: model:ir.model,name:crm_claim.model_sale_config_settings
+msgid "sale.config.settings"
+msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -755,13 +845,23 @@ msgid "My Case(s)"
 msgstr "Eseteim"
 
 #. module: crm_claim
-#: field:crm.claim,id:0
-msgid "ID"
-msgstr "ID"
+#: model:crm.claim.stage,name:crm_claim.stage_claim2
+msgid "Settled"
+msgstr ""
 
 #. module: crm_claim
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
+#: help:crm.claim,message_ids:0
+msgid "Messages and communication history"
+msgstr ""
+
+#. module: crm_claim
+#: field:sale.config.settings,fetchmail_claim:0
+msgid "Create claims from incoming mails"
+msgstr ""
+
+#. module: crm_claim
+#: field:crm.claim.stage,sequence:0
+msgid "Sequence"
 msgstr ""
 
 #. module: crm_claim
@@ -776,11 +876,10 @@ msgid "High"
 msgstr "Magas"
 
 #. module: crm_claim
-#: model:ir.actions.act_window,help:crm_claim.crm_claim_categ_action
-msgid ""
-"Create claim categories to better manage and classify your claims. Some "
-"example of claims can be: preventive action, corrective action."
-msgstr ""
+#: field:crm.claim,section_id:0
+#: view:crm.claim.report:0
+msgid "Sales Team"
+msgstr "Értékesítési csapat"
 
 #. module: crm_claim
 #: field:crm.claim.report,create_date:0
@@ -792,8 +891,17 @@ msgstr "Létrehozás dátuma"
 msgid "In Progress Claims"
 msgstr ""
 
-#~ msgid "Stages"
-#~ msgstr "Szakaszok"
+#. module: crm_claim
+#: help:crm.claim.stage,section_ids:0
+msgid ""
+"Link between stages and sales teams. When set, this limitate the current "
+"stage to the selected sales teams."
+msgstr ""
+
+#. module: crm_claim
+#: help:crm.claim.stage,case_refused:0
+msgid "Refused stages are specific stages for done."
+msgstr ""
 
 #~ msgid "Customer & Supplier Relationship Management"
 #~ msgstr "Vevő és szállítói kapcsolatok kezelése"
@@ -801,17 +909,53 @@ msgstr ""
 #~ msgid "Probability"
 #~ msgstr "Valószínűség"
 
+#~ msgid "Add Internal Note"
+#~ msgstr "Belső jegyzet hozzáadása"
+
+#~ msgid "Partner Contact"
+#~ msgstr "Partner kapcsolat"
+
+#~ msgid "Reset to Draft"
+#~ msgstr "Visszaállítás Tervezet állapotba"
+
 #~ msgid "   Month   "
 #~ msgstr "   Hónap   "
+
+#~ msgid "Send New Email"
+#~ msgstr "Új e-mail küldése"
+
+#~ msgid "History Information"
+#~ msgstr "Előzmény"
+
+#~ msgid "Contact"
+#~ msgstr "Kapcsolat"
+
+#~ msgid "Accepted as Claim"
+#~ msgstr "Elfogadott követelés"
+
+#~ msgid "Salesman"
+#~ msgstr "Értékesítő"
 
 #~ msgid "  Year  "
 #~ msgstr "  Év  "
 
+#~ msgid "These people will receive email."
+#~ msgstr "Ezek az emberek fogják megkapni az e-mailt."
+
 #~ msgid "Stage of case"
 #~ msgstr "Eset szakasza"
 
+#~ msgid "History"
+#~ msgstr "Előzmény"
+
 #~ msgid "Attachments"
 #~ msgstr "Mellékletek"
+
+#~ msgid "State"
+#~ msgstr "Állapot"
+
+#~ msgid "Reply"
+#~ msgstr "Válasz"
 
 #~ msgid "Details"
 #~ msgstr "Részletek"
@@ -819,8 +963,14 @@ msgstr ""
 #~ msgid "Current"
 #~ msgstr "Jelenleg"
 
+#~ msgid "Close"
+#~ msgstr "Zárás"
+
 #~ msgid "Report a Claim"
 #~ msgstr "Követelési jelentés"
+
+#~ msgid "Won't fix"
+#~ msgstr "Nem lesz kijavítva"
 
 #~ msgid "    Month-1    "
 #~ msgstr "    Előző hónap    "

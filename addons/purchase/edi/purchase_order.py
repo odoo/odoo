@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Business Applications
-#    Copyright (c) 2011 OpenERP S.A. <http://openerp.com>
+#    Copyright (c) 2011-2012 OpenERP S.A. <http://openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,13 +19,8 @@
 #
 ##############################################################################
 
-from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
-
-from osv import fields, osv, orm
+from openerp.osv import osv
 from edi import EDIMixin
-from edi.models import edi
-from tools import DEFAULT_SERVER_DATE_FORMAT
 from tools.translate import _
 
 PURCHASE_ORDER_LINE_EDI_STRUCT = {
@@ -35,7 +30,6 @@ PURCHASE_ORDER_LINE_EDI_STRUCT = {
     'product_uom': True,
     'price_unit': True,
     'product_qty': True,
-    'notes': True,
 
     # fields used for web preview only - discarded on import
     'price_subtotal': True,
@@ -62,16 +56,6 @@ PURCHASE_ORDER_EDI_STRUCT = {
 
 class purchase_order(osv.osv, EDIMixin):
     _inherit = 'purchase.order'
-
-    def wkf_send_rfq(self, cr, uid, ids, context=None):
-        """"Override this method to add a link to mail"""
-        if context is None:
-            context = {}
-        purchase_objs = self.browse(cr, uid, ids, context=context) 
-        edi_token = self.pool.get('edi.document').export_edi(cr, uid, purchase_objs, context = context)[0]
-        web_root_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-        ctx = dict(context, edi_web_url_view=edi.EDI_VIEW_WEB_URL % (web_root_url, cr.dbname, edi_token))
-        return super(purchase_order, self).wkf_send_rfq(cr, uid, ids, context=ctx)
 
     def edi_export(self, cr, uid, records, edi_struct=None, context=None):
         """Exports a purchase order"""
@@ -107,22 +91,26 @@ class purchase_order(osv.osv, EDIMixin):
         #       the desired company among the user's allowed companies
 
         self._edi_requires_attributes(('company_id','company_address'), edi_document)
-        res_partner_obj = self.pool.get('res.partner')
+        res_partner = self.pool.get('res.partner')
 
-        # imported company_address = new partner address
-        src_company_id, src_company_name = edi_document.pop('company_id')
-        address_info = edi_document.pop('company_address')
-        address_info['customer'] = True
-        if 'name' not in address_info:
-            address_info['name'] = src_company_name
-        address_id = res_partner_obj.edi_import(cr, uid, address_info, context=context)
+        xid, company_name = edi_document.pop('company_id')
+        # Retrofit address info into a unified partner info (changed in v7 - used to keep them separate)
+        company_address_edi = edi_document.pop('company_address')
+        company_address_edi['name'] = company_name
+        company_address_edi['is_company'] = True
+        company_address_edi['__import_model'] = 'res.partner'
+        company_address_edi['__id'] = xid  # override address ID, as of v7 they should be the same anyway
+        if company_address_edi.get('logo'):
+            company_address_edi['image'] = company_address_edi.pop('logo')
+        company_address_edi['supplier'] = True
+        partner_id = res_partner.edi_import(cr, uid, company_address_edi, context=context)
 
-        # modify edi_document to refer to new partner/address
-        partner_address = res_partner_obj.browse(cr, uid, address_id, context=context)
-        edi_document.pop('partner_address', False) # ignored
-        edi_document['partner_id'] = self.edi_m2o(cr, uid, partner_address, context=context)
-
-        return address_id
+        # modify edi_document to refer to new partner
+        partner = res_partner.browse(cr, uid, partner_id, context=context)
+        partner_edi_m2o = self.edi_m2o(cr, uid, partner, context=context)
+        edi_document['partner_id'] = partner_edi_m2o
+        edi_document.pop('partner_address', None) # ignored, that's supposed to be our own address!
+        return partner_id
 
     def _edi_get_pricelist(self, cr, uid, partner_id, currency, context=None):
         # TODO: refactor into common place for purchase/sale, e.g. into product module

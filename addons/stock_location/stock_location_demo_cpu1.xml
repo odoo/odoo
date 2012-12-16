@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <openerp>
     <data noupdate="1">
-         <record id="product.product_product_cpu1" model="product.product">
+         <record id="product.product_product_9" model="product.product">
             <field name="description">This product is configured with example of push/pull flows</field>
         </record>
         <record id="stock_journal_quality" model="stock.journal">
@@ -19,7 +19,7 @@
         </record>
         <record id="stock_location_path_4" model="stock.location.path">
             <field model="stock.location" name="location_from_id" search="[('name', '=', u'Input')]"/>
-            <field name="product_id" ref="product.product_product_cpu3"/>
+            <field name="product_id" ref="product.product_product_10"/>
             <field name="auto">transparent</field>
             <field name="invoice_state">none</field>
             <field eval="1" name="delay"/>
@@ -30,7 +30,7 @@
         </record>
         <record id="stock_location_path_5" model="stock.location.path">
             <field name="location_from_id" ref="stock_location_qualitytest0"/>
-            <field name="product_id" ref="product.product_product_cpu3"/>
+            <field name="product_id" ref="product.product_product_10"/>
             <field name="auto">manual</field>
             <field name="invoice_state">none</field>
             <field name="journal_id" ref="stock_journal_quality"/>
@@ -41,12 +41,12 @@
         </record>
 
         <record id="product_pulled_flow_l0" model="product.pulled.flow">
-            <field name="product_id" ref="product.product_product_cpu1"/>
+            <field name="product_id" ref="product.product_product_9"/>
             <field name="location_src_id" ref="stock.stock_location_intermediatelocation0"/>
             <field name="location_id" ref="stock.stock_location_shop0"/>
             <field name="partner_address_id" ref="base.main_partner"/>
             <field name="invoice_state">none</field>
-            <field name="company_id" ref="stock.res_company_shop0"/>
+            <field name="company_id" ref="stock.res_company_1"/>
             <field name="type_proc">move</field>
             <field eval="0" name="cancel_cascade"/>
             <field name="procure_method">make_to_order</field>
@@ -54,10 +54,10 @@
             <field name="name">Receive from Warehouse</field>
         </record>
         <record id="product_pulled_flow_l1" model="product.pulled.flow">
-            <field name="product_id" ref="product.product_product_cpu1"/>
+            <field name="product_id" ref="product.product_product_9"/>
             <field name="location_id" ref="stock.stock_location_intermediatelocation0"/>
             <field name="location_src_id" ref="stock.stock_location_stock"/>
-            <field name="partner_address_id" ref="stock.res_partner_address_fabien0"/>
+            <field name="partner_address_id" ref="stock.res_partner_address_41"/>
             <field name="type_proc">move</field>
             <field name="invoice_state">none</field>
             <field name="company_id" ref="base.main_company"/>
@@ -70,22 +70,22 @@
             <field name="product_max_qty">20.0</field>
             <field name="product_min_qty">10.0</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="company_id" ref="stock.res_company_shop0"/>
+            <field name="company_id" ref="stock.res_company_1"/>
             <field name="warehouse_id" ref="stock.stock_warehouse_shop0"/>
             <field name="location_id" ref="stock.stock_location_shop0"/>
-            <field model="product.product" name="product_id" ref="product.product_product_cpu1"/>
+            <field model="product.product" name="product_id" ref="product.product_product_9"/>
         </record>
 
-        <record id="sale_shop1" model="sale.shop">
-            <field name="name">Shop 1</field>
+        <record id="sale_shop2" model="sale.shop">
+            <field name="name">Chicago Shop</field>
             <field name="warehouse_id" ref="stock.stock_warehouse_shop0"/>
-            <field name="company_id" ref="stock.res_company_shop0"/>
+            <field name="company_id" ref="stock.res_company_1"/>
             <field model="account.payment.term" name="payment_default_id" search="[]"/>
         </record>
-        <record id="sale_shop2" model="sale.shop">
-            <field name="name">Shop 2</field>
+        <record id="sale_shop3" model="sale.shop">
+            <field name="name">Birmingham shop</field>
             <field name="warehouse_id" ref="stock.stock_warehouse_shop1"/>
-            <field name="company_id" ref="stock.res_company_tinyshop0"/>
+            <field name="company_id" ref="stock.res_company_2"/>
             <field model="account.payment.term" name="payment_default_id" search="[]"/>
         </record>
     </data>

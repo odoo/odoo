@@ -43,38 +43,32 @@
         -->
         
         <record model="crm.claim.stage" id="stage_claim1">
-            <field name="name">Draft claim</field>
+            <field name="name">New</field>
             <field name="state">draft</field>
             <field name="sequence">26</field>
             <field name="case_default" eval="True"/>
         </record>
         <record model="crm.claim.stage" id="stage_claim5">
-            <field name="name">Actions Defined</field>
+            <field name="name">In Progress</field>
             <field name="state">open</field>
             <field name="sequence">27</field>
             <field name="case_default" eval="True"/>
         </record>
         <record model="crm.claim.stage" id="stage_claim2">
-            <field name="name">Actions Done</field>
+            <field name="name">Settled</field>
             <field name="state">done</field>
             <field name="sequence">28</field>
             <field name="case_default" eval="True"/>
         </record>
         <record model="crm.claim.stage" id="stage_claim3">
-            <field name="name">Refused</field>
-            <field name="state">done</field>
+            <field name="name">Rejected</field>
+            <field name="state">cancel</field>
             <field name="sequence">29</field>
             <field name="case_default" eval="True"/>
             <field name="case_refused" eval="True"/>
             <field name="fold" eval="True"/>
         </record>
-        <record model="crm.claim.stage" id="stage_claim3">
-            <field name="name">Cancelled</field>
-            <field name="state">cancel</field>
-            <field name="sequence">30</field>
-            <field name="case_default" eval="True"/>
-            <field name="fold" eval="True"/>
-        </record>
+        
 
     </data>
 </openerp>

@@ -6,26 +6,31 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2009-02-03 06:25+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:48+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:43+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
+
+#. module: stock_location
+#: help:product.pulled.flow,company_id:0
+msgid "Is used to know to which company the pickings and moves belong."
+msgstr ""
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
 #: selection:stock.location.path,picking_type:0
 msgid "Sending Goods"
-msgstr ""
+msgstr "ارسال السلع"
 
 #. module: stock_location
 #: view:product.product:0
 msgid "Pulled Paths"
-msgstr ""
+msgstr "سحب المسارات"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
@@ -35,44 +40,34 @@ msgstr "نقل"
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location_path
 msgid "Pushed Flows"
-msgstr ""
+msgstr "دفع المسارات"
 
 #. module: stock_location
 #: selection:stock.location.path,auto:0
 msgid "Automatic No Step Added"
-msgstr ""
-
-#. module: stock_location
-#: view:product.product:0
-msgid "Parameters"
-msgstr "المحددات"
+msgstr "اضافة رقم الخطة التلقائي"
 
 #. module: stock_location
 #: field:product.pulled.flow,location_src_id:0
 #: field:stock.location.path,location_from_id:0
 msgid "Source Location"
-msgstr ""
+msgstr "مكان المورد"
 
 #. module: stock_location
 #: help:product.pulled.flow,cancel_cascade:0
 msgid "Allow you to cancel moves related to the product pull flow"
-msgstr ""
+msgstr "يسمح لك بالغاء التحركات المتعلقة بسحب مسارا لمنتج"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_product_pulled_flow
 #: field:product.product,flow_pull_ids:0
 msgid "Pulled Flows"
-msgstr ""
-
-#. module: stock_location
-#: constraint:stock.move:0
-msgid "You must assign a production lot for this product"
-msgstr "يجب تعيين دفعة إنتاج لهذا المنتج"
+msgstr "سحب المسارات"
 
 #. module: stock_location
 #: help:product.pulled.flow,location_src_id:0
 msgid "Location used by Destination Location to supply"
-msgstr ""
+msgstr "استخدم الموقع بواسطة المخصص للتزويد"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -87,6 +82,8 @@ msgid ""
 "Pulled procurement coming from original location %s, pull rule %s, via "
 "original Procurement %s (#%d)"
 msgstr ""
+"تأتي المشتريات المسحوبة من الموقع الأصلي %s،قاعدة السحب %s، عن طريق الشراء "
+"الأصلي %s (#%d)"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location
@@ -97,7 +94,7 @@ msgstr "المكان"
 #: field:product.pulled.flow,invoice_state:0
 #: field:stock.location.path,invoice_state:0
 msgid "Invoice Status"
-msgstr ""
+msgstr "حالات الفاتورة"
 
 #. module: stock_location
 #: help:stock.location.path,auto:0
@@ -109,6 +106,11 @@ msgid ""
 "move has to be validated by a worker. With 'Automatic No Step Added', the "
 "location is replaced in the original move."
 msgstr ""
+"ويستخدم  لتحديد مسارات المنتج لديها لمتابعة ما داخل شجرة الموقع.\n"
+"وينشأ قيمة 'النقل التلقائي تحرك الاسهم بعد النظام الحالي الذي سيتم التحقق من "
+"صحته تلقائيا. مع \"دليل التشغيل\"، تحرك المخزون هذا  لا بد من التحقق من صحته "
+"من قبل العامل. مع 'التلقائي بدون خطوة مضافة'، يتم استبدال الموقع في هذه "
+"الخطوة الأصلية."
 
 #. module: stock_location
 #: view:product.product:0
@@ -118,17 +120,17 @@ msgstr "الشروط"
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_pack_zone
 msgid "Pack Zone"
-msgstr ""
+msgstr "نطاق المجموعة"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_gate_b
 msgid "Gate B"
-msgstr ""
+msgstr "البوابة B"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_gate_a
 msgid "Gate A"
-msgstr ""
+msgstr "البوابة A"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
@@ -138,22 +140,17 @@ msgstr "شراء"
 #. module: stock_location
 #: view:product.product:0
 msgid "Pushed flows"
-msgstr ""
+msgstr "دفع المسارات"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_dispatch_zone
 msgid "Dispatch Zone"
-msgstr ""
-
-#. module: stock_location
-#: model:ir.model,name:stock_location.model_stock_move
-msgid "Stock Move"
-msgstr "حركة مخزن"
+msgstr "نطاق الانجاز"
 
 #. module: stock_location
 #: view:product.product:0
 msgid "Pulled flows"
-msgstr ""
+msgstr "سحب المسارات"
 
 #. module: stock_location
 #: field:product.pulled.flow,company_id:0
@@ -162,28 +159,34 @@ msgid "Company"
 msgstr "شركة"
 
 #. module: stock_location
-#: view:product.product:0
-msgid "Logistics Flows"
-msgstr ""
+#: model:ir.model,name:stock_location.model_stock_move
+msgid "Stock Move"
+msgstr "حركة مخزن"
 
 #. module: stock_location
 #: help:stock.move,cancel_cascade:0
 msgid "If checked, when this move is cancelled, cancel the linked move too"
-msgstr ""
+msgstr "اذا تم التحقق منه, عند الغاء هذا التحرك, الغي ايضًا التحرك المتصل"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
 msgid "Produce"
-msgstr ""
+msgstr "ينتج"
 
 #. module: stock_location
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Order"
-msgstr ""
+msgstr "اجعله امر"
 
 #. module: stock_location
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Stock"
+msgstr "اضفه الى المخزون"
+
+#. module: stock_location
+#: code:addons/stock_location/procurement_pull.py:118
+#, python-format
+msgid "Pulled from another location."
 msgstr ""
 
 #. module: stock_location
@@ -195,27 +198,22 @@ msgstr "عنوان الشريك"
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "To Be Invoiced"
-msgstr ""
+msgstr "ليتم عمل الفاتورة"
 
 #. module: stock_location
 #: help:stock.location.path,delay:0
 msgid "Number of days to do this transition"
-msgstr ""
+msgstr "عدد الايام لانجاز هذا الانتقال"
 
 #. module: stock_location
 #: help:product.pulled.flow,name:0
 msgid "This field will fill the packing Origin and the name of its moves"
-msgstr ""
+msgstr "سيملأ هذا الحقل اصل الاختيار و اسم تحركاتها"
 
 #. module: stock_location
 #: field:product.pulled.flow,type_proc:0
 msgid "Type of Procurement"
-msgstr ""
-
-#. module: stock_location
-#: help:product.pulled.flow,company_id:0
-msgid "Is used to know to which company belong packings and moves"
-msgstr ""
+msgstr "علامة المشتريات"
 
 #. module: stock_location
 #: field:product.pulled.flow,name:0
@@ -226,17 +224,12 @@ msgstr "الاسم"
 #: help:product.product,path_ids:0
 msgid ""
 "These rules set the right path of the product in the whole location tree."
-msgstr ""
-
-#. module: stock_location
-#: constraint:stock.move:0
-msgid "You can not move products from or to a location of the type view."
-msgstr ""
+msgstr "تضع هذه القواعد المسار الصحيح للمنتج في اي مكان من الشجرة."
 
 #. module: stock_location
 #: selection:stock.location.path,auto:0
 msgid "Manual Operation"
-msgstr ""
+msgstr "العملية اليدوية"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_product_product
@@ -245,15 +238,10 @@ msgid "Product"
 msgstr "المنتج"
 
 #. module: stock_location
-#: field:product.pulled.flow,procure_method:0
-msgid "Procure Method"
-msgstr "أسلوب الشراء"
-
-#. module: stock_location
 #: field:product.pulled.flow,picking_type:0
 #: field:stock.location.path,picking_type:0
 msgid "Shipping Type"
-msgstr ""
+msgstr "نوع الشحن"
 
 #. module: stock_location
 #: help:product.pulled.flow,procure_method:0
@@ -262,11 +250,13 @@ msgid ""
 "supplying. 'Make to Order': When needed, purchase or produce for the "
 "procurement request."
 msgstr ""
+"‘اجعله للمخزون‘: اذا تم احتياجه, خذه من المخزون او انتظر حتى اعادة تزويده. "
+"‘اجعله للامر‘: اذا تم احتياجه, اشتري او انتج لطلب المشتريات."
 
 #. module: stock_location
 #: help:product.pulled.flow,location_id:0
 msgid "Is the destination location that needs supplying"
-msgstr ""
+msgstr "وهي موقع التخصيص التي تحتاج التزويد"
 
 #. module: stock_location
 #: field:stock.location.path,product_id:0
@@ -274,15 +264,9 @@ msgid "Products"
 msgstr "المنتجات"
 
 #. module: stock_location
-#: code:addons/stock_location/procurement_pull.py:118
-#, python-format
-msgid "Pulled from another location via procurement %d"
-msgstr ""
-
-#. module: stock_location
 #: model:stock.location,name:stock_location.stock_location_qualitytest0
 msgid "Quality Control"
-msgstr ""
+msgstr "hgjp;l td hgohwdm"
 
 #. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
@@ -293,7 +277,7 @@ msgstr "غير ممكن"
 #. module: stock_location
 #: field:stock.location.path,delay:0
 msgid "Delay (days)"
-msgstr ""
+msgstr "تأخير (الايام)"
 
 #. module: stock_location
 #: code:addons/stock_location/procurement_pull.py:67
@@ -302,11 +286,13 @@ msgid ""
 "Picking for pulled procurement coming from original location %s, pull rule "
 "%s, via original Procurement %s (#%d)"
 msgstr ""
+"اختيار للمشترى المسحوب الآتي من الموقع الاصلي %s, قاعدة السحب %s, عبر "
+"المشتريات الاصلية %s (#%d)"
 
 #. module: stock_location
 #: field:product.product,path_ids:0
 msgid "Pushed Flow"
-msgstr ""
+msgstr "دفع المسار"
 
 #. module: stock_location
 #: code:addons/stock_location/procurement_pull.py:89
@@ -315,11 +301,8 @@ msgid ""
 "Move for pulled procurement coming from original location %s, pull rule %s, "
 "via original Procurement %s (#%d)"
 msgstr ""
-
-#. module: stock_location
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product"
-msgstr ""
+"التحرك بالنسبة للمشتريات المسحوبة تأتي من المكان الاصلي %s, قاعدة السحب %s, "
+"عبر المشترى الاصلي %s (#%d)"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_procurement_order
@@ -330,19 +313,19 @@ msgstr "المشتريات"
 #: field:product.pulled.flow,location_id:0
 #: field:stock.location.path,location_dest_id:0
 msgid "Destination Location"
-msgstr ""
+msgstr "الموقع المخصص"
 
 #. module: stock_location
 #: field:stock.location.path,auto:0
 #: selection:stock.location.path,auto:0
 msgid "Automatic Move"
-msgstr ""
+msgstr "تحرك تلقائي"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
 #: selection:stock.location.path,picking_type:0
 msgid "Getting Goods"
-msgstr ""
+msgstr "الحصول على السلع"
 
 #. module: stock_location
 #: view:product.product:0
@@ -350,9 +333,9 @@ msgid "Action Type"
 msgstr "نوع الإجراء"
 
 #. module: stock_location
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr ""
+#: field:product.pulled.flow,procure_method:0
+msgid "Procure Method"
+msgstr "أسلوب الشراء"
 
 #. module: stock_location
 #: help:product.pulled.flow,picking_type:0
@@ -360,12 +343,12 @@ msgstr ""
 msgid ""
 "Depending on the company, choose whatever you want to receive or send "
 "products"
-msgstr ""
+msgstr "بناءًا على الشركة, اختار ماتريد استقباله او ارسال المنتجات"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_order
 msgid "Order Processing"
-msgstr ""
+msgstr "تقدم الامر"
 
 #. module: stock_location
 #: field:stock.location.path,name:0
@@ -375,7 +358,7 @@ msgstr "العملية"
 #. module: stock_location
 #: view:stock.location.path:0
 msgid "Location Paths"
-msgstr ""
+msgstr "موقع المسارات"
 
 #. module: stock_location
 #: field:product.pulled.flow,journal_id:0
@@ -387,10 +370,38 @@ msgstr "يومية"
 #: field:product.pulled.flow,cancel_cascade:0
 #: field:stock.move,cancel_cascade:0
 msgid "Cancel Cascade"
-msgstr ""
+msgstr "الغي التتابع"
 
 #. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "Invoiced"
 msgstr "مفوتر"
+
+#~ msgid "You must assign a production lot for this product"
+#~ msgstr "يجب تعيين دفعة إنتاج لهذا المنتج"
+
+#~ msgid "Parameters"
+#~ msgstr "المحددات"
+
+#~ msgid "You try to assign a lot which is not from the same product"
+#~ msgstr "انت تحاول تخصيص الكثير من ما هو دون المنتج نفسه"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "خطأ: كود إين غير صالح"
+
+#~ msgid "Logistics Flows"
+#~ msgstr "المسارات التسويقية"
+
+#~ msgid "Warehouse Locations Paths"
+#~ msgstr "مسارات مواقع المستودع"
+
+#~ msgid "Is used to know to which company belong packings and moves"
+#~ msgstr "أُستخدمت لمعرفة اي شركة تنتمي اليها العبوات والتحركات"
+
+#, python-format
+#~ msgid "Pulled from another location via procurement %d"
+#~ msgstr "تم سحبه من موقع اخر عبر المشتريات %d"
+
+#~ msgid "You can not move products from or to a location of the type view."
+#~ msgstr "لا يمكنك نقل المنتجات أو المكان من المستعرض."

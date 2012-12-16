@@ -7,71 +7,62 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2011-03-20 07:56+0000\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
+"PO-Revision-Date: 2012-11-28 12:29+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 07:09+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-11-29 05:15+0000\n"
+"X-Generator: Launchpad (build 16319)\n"
 
 #. module: purchase_double_validation
-#: view:purchase.double.validation.installer:0
-msgid "Purchase Application Configuration"
-msgstr "Настройка программы закупок"
+#: model:ir.model,name:purchase_double_validation.model_purchase_config_settings
+msgid "purchase.config.settings"
+msgstr "purchase.config.settings"
 
 #. module: purchase_double_validation
-#: view:purchase.double.validation.installer:0
-msgid "Define minimum amount after which puchase is needed to be validated."
-msgstr ""
-"Определите минимальную сумму, после которой закупка нуждается в утверждении."
+#: view:purchase.order:0
+msgid "Purchase orders which are not approved yet."
+msgstr "Заказы закупки, которые еще ​​не утверждены."
 
 #. module: purchase_double_validation
-#: view:purchase.double.validation.installer:0
-msgid "title"
-msgstr ""
-
-#. module: purchase_double_validation
-#: field:purchase.double.validation.installer,config_logo:0
-msgid "Image"
-msgstr "Изображение"
-
-#. module: purchase_double_validation
-#: model:ir.actions.act_window,name:purchase_double_validation.action_config_purchase_limit_amount
-#: view:purchase.double.validation.installer:0
-msgid "Configure Limit Amount for Purchase"
-msgstr "Настроить предельную сумму для закупки"
+#: field:purchase.config.settings,limit_amount:0
+msgid "limit to require a second approval"
+msgstr "лимит требующий второго утверждения"
 
 #. module: purchase_double_validation
 #: view:board.board:0
 #: model:ir.actions.act_window,name:purchase_double_validation.purchase_waiting
-msgid "Purchase Order Waiting Approval"
-msgstr ""
+msgid "Purchase Orders Waiting Approval"
+msgstr "Заказы закупок ожидающие утверждения"
 
 #. module: purchase_double_validation
-#: view:purchase.double.validation.installer:0
-msgid "res_config_contents"
-msgstr "res_config_contents"
+#: view:purchase.order:0
+msgid "To Approve"
+msgstr "На утверждение"
 
 #. module: purchase_double_validation
-#: help:purchase.double.validation.installer,limit_amount:0
-msgid "Maximum amount after which validation of purchase is required."
-msgstr "Максимальная сумма, после которой требуется утверждение закупки."
+#: help:purchase.config.settings,limit_amount:0
+msgid "Amount after which validation of purchase is required."
+msgstr "Сумма после которой требуется утверждение"
 
-#. module: purchase_double_validation
-#: model:ir.model,name:purchase_double_validation.model_purchase_double_validation_installer
-msgid "purchase.double.validation.installer"
-msgstr "purchase.double.validation.installer"
+#~ msgid "Maximum amount after which validation of purchase is required."
+#~ msgstr "Максимальная сумма, после которой требуется утверждение закупки."
 
-#. module: purchase_double_validation
-#: field:purchase.double.validation.installer,limit_amount:0
-msgid "Maximum Purchase Amount"
-msgstr "Максимальная сумма закупки"
+#~ msgid "Configure Limit Amount for Purchase"
+#~ msgstr "Настроить предельную сумму для закупки"
 
 #~ msgid "Configuration Progress"
 #~ msgstr "Выполнение настройки"
+
+#~ msgid "Define minimum amount after which puchase is needed to be validated."
+#~ msgstr ""
+#~ "Определите минимальную сумму, после которой закупка нуждается в утверждении."
+
+#~ msgid "Image"
+#~ msgstr "Изображение"
 
 #~ msgid ""
 #~ "\n"
@@ -84,5 +75,23 @@ msgstr "Максимальная сумма закупки"
 #~ "установленную при настройке, нуждается в утверждении.\n"
 #~ "    "
 
+#~ msgid "Maximum Purchase Amount"
+#~ msgstr "Максимальная сумма закупки"
+
+#~ msgid "res_config_contents"
+#~ msgstr "res_config_contents"
+
+#~ msgid "purchase.double.validation.installer"
+#~ msgstr "purchase.double.validation.installer"
+
 #~ msgid "purchase_double_validation"
 #~ msgstr "purchase_double_validation"
+
+#~ msgid "Purchase Order Waiting Approval"
+#~ msgstr "Заказ закупки в ожидании утверждения"
+
+#~ msgid "title"
+#~ msgstr "заглавие"
+
+#~ msgid "Purchase Application Configuration"
+#~ msgstr "Настройка приложения закупок"

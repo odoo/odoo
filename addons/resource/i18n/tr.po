@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
 "PO-Revision-Date: 2012-01-25 17:38+0000\n"
 "Last-Translator: Ahmet Altınışık <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-11 05:10+0000\n"
-"X-Generator: Launchpad (build 15225)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:22+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: resource
 #: help:resource.calendar.leaves,resource_id:0
@@ -23,6 +23,8 @@ msgid ""
 "If empty, this is a generic holiday for the company. If a resource is set, "
 "the holiday/leave is only for this resource"
 msgstr ""
+"Boşsa, bu firma için genel bir tatildir. Bir kaynak ayarlanmışsa, tatil/izin "
+"yalnızca bu kaynak içindir"
 
 #. module: resource
 #: selection:resource.resource,resource_type:0
@@ -38,21 +40,17 @@ msgstr "Kaynak Tipi"
 #: model:ir.model,name:resource.model_resource_calendar_leaves
 #: view:resource.calendar.leaves:0
 msgid "Leave Detail"
-msgstr ""
+msgstr "İzin Ayrıntısı"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
 msgid "Resources Leaves"
-msgstr ""
+msgstr "İzin Kaynakları"
 
 #. module: resource
-#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
-#: view:resource.calendar:0
-#: field:resource.calendar,attendance_ids:0
-#: view:resource.calendar.attendance:0
-#: field:resource.resource,calendar_id:0
-msgid "Working Time"
-msgstr "Çalışma Süresi"
+#: field:resource.calendar.attendance,dayofweek:0
+msgid "Day of Week"
+msgstr ""
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -71,9 +69,14 @@ msgid "Sunday"
 msgstr "Pazar"
 
 #. module: resource
+#: field:resource.resource,time_efficiency:0
+msgid "Efficiency Factor"
+msgstr ""
+
+#. module: resource
 #: view:resource.resource:0
 msgid "Search Resource"
-msgstr ""
+msgstr "Arama Kaynağı"
 
 #. module: resource
 #: view:resource.resource:0
@@ -91,26 +94,28 @@ msgstr "Kaynaklar"
 #, python-format
 msgid "Make sure the Working time has been configured with proper week days!"
 msgstr ""
+"Çalışma süresinin haftanın doğru günleriyle yapılandırıldığından emin olun!"
 
 #. module: resource
-#: field:resource.calendar,manager:0
-msgid "Workgroup Manager"
+#: code:addons/resource/resource.py:310
+#, python-format
+msgid "%s (copy)"
 msgstr ""
 
 #. module: resource
-#: help:resource.calendar.attendance,hour_from:0
-msgid "Working time will start from"
-msgstr ""
+#: view:resource.calendar:0
+msgid "Search Working Time"
+msgstr "Çalışma Süresi Ara"
 
 #. module: resource
 #: constraint:resource.calendar.leaves:0
 msgid "Error! leave start-date must be lower then leave end-date."
-msgstr ""
+msgstr "Hata! İzin başlangıç tarihi izin bitiş tarihinden önce olmalı."
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar
 msgid "Resource Calendar"
-msgstr ""
+msgstr "Kaynak Takvim"
 
 #. module: resource
 #: field:resource.calendar,company_id:0
@@ -119,7 +124,7 @@ msgstr ""
 #: view:resource.resource:0
 #: field:resource.resource,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Firma"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -127,60 +132,50 @@ msgid "Friday"
 msgstr "Cuma"
 
 #. module: resource
-#: field:resource.calendar.attendance,dayofweek:0
-msgid "Day of Week"
-msgstr ""
-
-#. module: resource
-#: help:resource.calendar.attendance,hour_to:0
-msgid "Working time will end at"
-msgstr ""
-
-#. module: resource
-#: field:resource.calendar.attendance,date_from:0
-msgid "Starting date"
-msgstr ""
-
-#. module: resource
-#: view:resource.calendar:0
-msgid "Search Working Time"
+#: view:resource.calendar.attendance:0
+msgid "Hours"
 msgstr ""
 
 #. module: resource
 #: view:resource.calendar.leaves:0
 msgid "Reason"
-msgstr ""
+msgstr "Neden"
 
 #. module: resource
 #: view:resource.resource:0
 #: field:resource.resource,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Kullanıcı"
 
 #. module: resource
 #: view:resource.calendar.leaves:0
 msgid "Date"
-msgstr ""
+msgstr "Tarih"
 
 #. module: resource
 #: view:resource.calendar.leaves:0
 msgid "Search Working Period Leaves"
+msgstr "Çalışma Dönemi İzinleri Ara"
+
+#. module: resource
+#: field:resource.calendar.attendance,date_from:0
+msgid "Starting Date"
 msgstr ""
 
 #. module: resource
-#: field:resource.resource,time_efficiency:0
-msgid "Efficiency Factor"
+#: field:resource.calendar,manager:0
+msgid "Workgroup Manager"
 msgstr ""
 
 #. module: resource
 #: field:resource.calendar.leaves,date_to:0
 msgid "End Date"
-msgstr ""
+msgstr "Bitiş Tarihi"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
 msgid "Closing Days"
-msgstr ""
+msgstr "Kapanış Günleri"
 
 #. module: resource
 #: model:ir.ui.menu,name:resource.menu_resource_config
@@ -188,37 +183,51 @@ msgstr ""
 #: field:resource.calendar.leaves,resource_id:0
 #: view:resource.resource:0
 msgid "Resource"
-msgstr ""
+msgstr "Kaynak"
 
 #. module: resource
-#: view:resource.calendar:0
 #: field:resource.calendar,name:0
 #: field:resource.calendar.attendance,name:0
 #: field:resource.calendar.leaves,name:0
 #: field:resource.resource,name:0
 msgid "Name"
-msgstr ""
+msgstr "Adı"
 
 #. module: resource
-#: selection:resource.calendar.attendance,dayofweek:0
-msgid "Wednesday"
+#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
+#: view:resource.calendar:0
+#: field:resource.calendar,attendance_ids:0
+#: view:resource.calendar.attendance:0
+#: field:resource.calendar.leaves,calendar_id:0
+#: field:resource.resource,calendar_id:0
+msgid "Working Time"
+msgstr "Çalışma Süresi"
+
+#. module: resource
+#: help:resource.calendar.attendance,hour_from:0
+msgid "Start and End time of working."
 msgstr ""
 
 #. module: resource
 #: view:resource.calendar.leaves:0
 #: view:resource.resource:0
 msgid "Working Period"
-msgstr ""
+msgstr "Çalışma Aralığı"
+
+#. module: resource
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Wednesday"
+msgstr "Çarşamba"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_resource
 msgid "Resource Detail"
-msgstr ""
+msgstr "Kaynak Ayrıntısı"
 
 #. module: resource
 #: field:resource.resource,active:0
 msgid "Active"
-msgstr ""
+msgstr "Etkin"
 
 #. module: resource
 #: help:resource.resource,active:0
@@ -226,16 +235,18 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
+"Etkin alan Yanlış olarak ayarlıysa, kaynak kaydını silmeden gizlemenizi "
+"sağlayacaktır."
 
 #. module: resource
 #: field:resource.calendar.attendance,calendar_id:0
 msgid "Resource's Calendar"
-msgstr ""
+msgstr "Kaynağın Takvimi"
 
 #. module: resource
 #: field:resource.calendar.attendance,hour_from:0
 msgid "Work from"
-msgstr ""
+msgstr "Çalışma Başlangıcı"
 
 #. module: resource
 #: model:ir.actions.act_window,help:resource.action_resource_calendar_form
@@ -243,31 +254,32 @@ msgid ""
 "Define working hours and time table that could be scheduled to your project "
 "members"
 msgstr ""
+"Proje üyelerinize planlanacak çalışma saatleri ve zaman çizelgesi tanımla"
 
 #. module: resource
 #: help:resource.resource,user_id:0
 msgid "Related user name for the resource to manage its access."
-msgstr ""
+msgstr "Erişimini yönetmek için kaynak için ilgili kullanıcı adı."
 
 #. module: resource
 #: help:resource.resource,calendar_id:0
 msgid "Define the schedule of resource"
-msgstr ""
+msgstr "Kaynağın planlamasını tanımla"
 
 #. module: resource
 #: view:resource.calendar.leaves:0
 msgid "Starting Date of Leave"
-msgstr ""
+msgstr "İzin Başlangıç Tarihi"
 
 #. module: resource
 #: field:resource.resource,code:0
 msgid "Code"
-msgstr ""
+msgstr "Kod"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Monday"
-msgstr ""
+msgstr "Pazartesi"
 
 #. module: resource
 #: field:resource.calendar.attendance,hour_to:0
@@ -275,29 +287,29 @@ msgid "Work to"
 msgstr ""
 
 #. module: resource
-#: help:resource.resource,time_efficiency:0
-msgid ""
-"This field depict the efficiency of the resource to complete tasks. e.g  "
-"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficency of "
-"200%, then his load will only be 50%."
-msgstr ""
+#: model:ir.model,name:resource.model_resource_calendar_attendance
+msgid "Work Detail"
+msgstr "Çalışma Ayrıntısı"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Tuesday"
-msgstr ""
+msgstr "Salı"
 
 #. module: resource
-#: field:resource.calendar.leaves,calendar_id:0
-msgid "Working time"
+#: help:resource.resource,time_efficiency:0
+msgid ""
+"This field depict the efficiency of the resource to complete tasks. e.g  "
+"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
+"show a load of 100% for this phase by default, but if we put a efficiency of "
+"200%, then his load will only be 50%."
 msgstr ""
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
 #: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
 msgid "Resource Leaves"
-msgstr ""
+msgstr "Kaynak İzinler"
 
 #. module: resource
 #: model:ir.actions.act_window,help:resource.action_resource_resource_tree
@@ -310,42 +322,61 @@ msgstr ""
 #. module: resource
 #: view:resource.resource:0
 msgid "Inactive"
-msgstr ""
+msgstr "Etkinsiz"
 
 #. module: resource
 #: code:addons/resource/faces/resource.py:340
 #, python-format
 msgid "(vacation)"
-msgstr ""
+msgstr "(tatil)"
 
 #. module: resource
 #: code:addons/resource/resource.py:392
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "Yapılandırma Hatası!"
 
 #. module: resource
 #: selection:resource.resource,resource_type:0
 msgid "Human"
-msgstr ""
+msgstr "İnsan"
 
 #. module: resource
-#: model:ir.model,name:resource.model_resource_calendar_attendance
-msgid "Work Detail"
+#: view:resource.calendar.leaves:0
+msgid "Duration"
 msgstr ""
 
 #. module: resource
 #: field:resource.calendar.leaves,date_from:0
 msgid "Start Date"
-msgstr ""
-
-#. module: resource
-#: code:addons/resource/resource.py:310
-#, python-format
-msgid " (copy)"
-msgstr ""
+msgstr "Başlangıç Tarihi"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Saturday"
-msgstr ""
+msgstr "Cumartesi"
+
+#~ msgid "Working time will start from"
+#~ msgstr "İş süresinin başlama zamanı"
+
+#~ msgid "Workgroup manager"
+#~ msgstr "İşgrubu Yöneticisi"
+
+#~ msgid "Starting date"
+#~ msgstr "Başlangıç Tarihi"
+
+#~ msgid "Day of week"
+#~ msgstr "Hafta Günü"
+
+#~ msgid "Efficiency factor"
+#~ msgstr "Verim faktörü"
+
+#~ msgid "Working time will end at"
+#~ msgstr "Çalışma süresinin bitiş zamanı"
+
+#~ msgid "Working time"
+#~ msgstr "Çalışma zamanı"
+
+#, python-format
+#~ msgid " (copy)"
+#~ msgstr " (kopya)"

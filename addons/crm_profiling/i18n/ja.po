@@ -7,20 +7,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-05-10 18:04+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
+"PO-Revision-Date: 2012-07-06 04:06+0000\n"
+"Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-11 05:04+0000\n"
-"X-Generator: Launchpad (build 15225)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:40+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
 msgid "Questions List"
 msgstr "質問一覧"
+
+#. module: crm_profiling
+#: view:crm_profiling.question:0
+#: field:crm_profiling.question,answers_ids:0
+msgid "Avalaible Answers"
+msgstr "有効な回答"
 
 #. module: crm_profiling
 #: model:ir.actions.act_window,help:crm_profiling.open_questionnaires
@@ -30,7 +36,7 @@ msgid ""
 "segmentation tool allows you to automatically assign a partner to a category "
 "according to his answers to the different questionnaires."
 msgstr ""
-"特定のトピックに関連した質問票を作成して、それを使って販売チームが適切な質問をするように指導できます。区分ツールを使って、質問に対する回答に応じて、パート"
+"特定のトピックに関連した質問票を作成して、それを使って営業チームが適切な質問をするように指導できます。区分ツールを使って、質問に対する回答に応じて、パート"
 "ナを自動的に区分することができます。"
 
 #. module: crm_profiling
@@ -113,11 +119,6 @@ msgid "Use a questionnaire"
 msgstr "質問票を使う"
 
 #. module: crm_profiling
-#: view:open.questionnaire:0
-msgid "_Cancel"
-msgstr "キャンセル(_C)"
-
-#. module: crm_profiling
 #: field:open.questionnaire,question_ans_ids:0
 msgid "Question / Answers"
 msgstr "質問 / 回答"
@@ -139,25 +140,14 @@ msgid ""
 msgstr "区分の規則としてこのタブを使うのであれば、これをチェックして下さい。チェックしないと下記の基準は無視されます。"
 
 #. module: crm_profiling
-#: constraint:crm.segmentation:0
-msgid "Error ! You can not create recursive profiles."
-msgstr "エラー：重複したプロファイルを作ることはできません。"
-
-#. module: crm_profiling
 #: field:crm.segmentation,profiling_active:0
 msgid "Use The Profiling Rules"
 msgstr "プロファイル規則を使って下さい。"
 
 #. module: crm_profiling
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr "エラー：再帰的なメンバーを作ることはできません。"
-
-#. module: crm_profiling
-#: view:crm_profiling.question:0
-#: field:crm_profiling.question,answers_ids:0
-msgid "Avalaible Answers"
-msgstr "有効な回答"
+#: constraint:crm.segmentation:0
+msgid "Error ! You cannot create recursive profiles."
+msgstr ""
 
 #. module: crm_profiling
 #: field:crm.segmentation,answer_yes:0
@@ -203,5 +193,19 @@ msgstr "質問票"
 msgid "Save Data"
 msgstr "データを保存する"
 
+#. module: crm_profiling
+#: view:open.questionnaire:0
+msgid "or"
+msgstr ""
+
+#~ msgid "_Cancel"
+#~ msgstr "キャンセル(_C)"
+
 #~ msgid "Avalaible answers"
 #~ msgstr "有効な回答"
+
+#~ msgid "Error ! You can not create recursive profiles."
+#~ msgstr "エラー：重複したプロファイルを作ることはできません。"
+
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr "エラー：再帰的なメンバーを作ることはできません。"

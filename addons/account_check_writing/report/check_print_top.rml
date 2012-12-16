@@ -153,9 +153,7 @@
               </td>
               <td>
                 <para style="P9">[[ voucher.partner_id.name ]] </para>
-                <para style="P15">[[ voucher.partner_id.street2 or removeParentNode('para') ]]</para>
-                <para style="P15">[[ get_zip_line(voucher.partner_id) ]] </para>
-                <para style="P15">[[ voucher.partner_id.country_id.name]]</para>
+                <para style="P15">[[ display_address(voucher.partner_id) or removeParentNode('para') ]]</para>
               </td>
               <td>
                 <para/>

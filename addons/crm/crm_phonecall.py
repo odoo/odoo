@@ -32,7 +32,7 @@ class crm_phonecall(base_state, osv.osv):
     _name = "crm.phonecall"
     _description = "Phonecall"
     _order = "id desc"
-    _inherit = ['ir.needaction_mixin', 'mail.thread']
+    _inherit = ['mail.thread']
     _columns = {
         # base_state required fields
         'date_action_last': fields.datetime('Last Action', readonly=1),
@@ -41,7 +41,7 @@ class crm_phonecall(base_state, osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                         select=True, help='Sales team to which Case belongs to.'),
         'user_id': fields.many2one('res.users', 'Responsible'),
-        'partner_id': fields.many2one('res.partner', 'Partner'),
+        'partner_id': fields.many2one('res.partner', 'Contact'),
         'company_id': fields.many2one('res.company', 'Company'),
         'description': fields.text('Description'),
         'state': fields.selection([ ('draft', 'Draft'),
@@ -50,10 +50,10 @@ class crm_phonecall(base_state, osv.osv):
                                     ('cancel', 'Cancelled'),
                                     ('done', 'Held'),],
                         string='Status', size=16, readonly=True,
-                        help='The state is set to \'Todo\', when a case is created.\
-                                If the case is in progress the state is set to \'Open\'.\
-                                When the call is over, the state is set to \'Held\'.\
-                                If the call needs to be done then the state is set to \'Not Held\'.'),
+                        help='The status is set to \'Todo\', when a case is created.\
+                                If the case is in progress the status is set to \'Open\'.\
+                                When the call is over, the status is set to \'Held\'.\
+                                If the call needs to be done then the status is set to \'Not Held\'.'),
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
         'date_open': fields.datetime('Opened', readonly=True),
         # phonecall fields
@@ -81,6 +81,7 @@ class crm_phonecall(base_state, osv.osv):
         'priority': crm.AVAILABLE_PRIORITIES[2][0],
         'state':  _get_default_state,
         'user_id': lambda self,cr,uid,ctx: uid,
+        'active': 1
     }
 
     def create(self, cr, uid, vals, context=None):
@@ -126,6 +127,8 @@ class crm_phonecall(base_state, osv.osv):
                 section_id = call.section_id and call.section_id.id or False
             if not user_id:
                 user_id = call.user_id and call.user_id.id or False
+            if not schedule_time:
+                schedule_time = call.date
             vals = {
                     'name' : call_summary,
                     'user_id' : user_id or False,
@@ -154,6 +157,18 @@ class crm_phonecall(base_state, osv.osv):
         })
         return partner_id
 
+    def on_change_opportunity(self, cr, uid, ids, opportunity_id, context=None):
+        values = {}
+        if opportunity_id:
+            opportunity = self.pool.get('crm.lead').browse(cr, uid, opportunity_id, context=context)
+            values = {
+                'section_id' : opportunity.section_id and opportunity.section_id.id or False,
+                'partner_phone' : opportunity.phone,
+                'partner_mobile' : opportunity.mobile,
+                'partner_id' : opportunity.partner_id and opportunity.partner_id.id or False,
+            }
+        return {'value' : values}
+
     def _call_set_partner(self, cr, uid, ids, partner_id, context=None):
         write_res = self.write(cr, uid, ids, {'partner_id' : partner_id}, context=context)
         self._call_set_partner_send_note(cr, uid, ids, context)
@@ -167,20 +182,26 @@ class crm_phonecall(base_state, osv.osv):
                     'phone': phonecall.partner_phone,
         })
 
-    def convert_partner(self, cr, uid, ids, action='create', partner_id=False, context=None):
+    def handle_partner_assignation(self, cr, uid, ids, action='create', partner_id=False, context=None):
         """
-        This function convert partner based on action.
+        Handle partner assignation during a lead conversion.
         if action is 'create', create new partner with contact and assign lead to new partner_id.
         otherwise assign lead to specified partner_id
+
+        :param list ids: phonecalls ids to process
+        :param string action: what has to be done regarding partners (create it, assign an existing one, or nothing)
+        :param int partner_id: partner to assign if any
+        :return dict: dictionary organized as followed: {lead_id: partner_assigned_id}
         """
-        if context is None:
-            context = {}
+        #TODO this is a duplication of the handle_partner_assignation method of crm_lead
         partner_ids = {}
+        # If a partner_id is given, force this partner for all elements
+        force_partner_id = partner_id
         for call in self.browse(cr, uid, ids, context=context):
+            # If the action is set to 'create' and no partner_id is set, create a new one
             if action == 'create':
-               if not partner_id:
-                   partner_id = self._call_create_partner(cr, uid, call, context=context)
-               self._call_create_partner_address(cr, uid, call, partner_id, context=context)
+                partner_id = force_partner_id or self._call_create_partner(cr, uid, call, context=context)
+                self._call_create_partner_address(cr, uid, call, partner_id, context=context)
             self._call_set_partner(cr, uid, [call.id], partner_id, context=context)
             partner_ids[call.id] = partner_id
         return partner_ids
@@ -203,7 +224,6 @@ class crm_phonecall(base_state, osv.osv):
                 'search_view_id': search_view and search_view[1] or False,
         }
         return value
-
 
     def convert_opportunity(self, cr, uid, ids, opportunity_summary=False, partner_id=False, planned_revenue=0.0, probability=0.0, context=None):
         partner = self.pool.get('res.partner')
@@ -242,72 +262,48 @@ class crm_phonecall(base_state, osv.osv):
 
     def action_make_meeting(self, cr, uid, ids, context=None):
         """
-        This opens Meeting's calendar view to schedule meeting on current Phonecall
-        @return : Dictionary value for created Meeting view
+        Open meeting's calendar view to schedule a meeting on current phonecall.
+        :return dict: dictionary value for created meeting view
         """
-        value = {}
-        for phonecall in self.browse(cr, uid, ids, context=context):
-            data_obj = self.pool.get('ir.model.data')
+        phonecall = self.browse(cr, uid, ids[0], context)
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'base_calendar', 'action_crm_meeting', context)
+        res['context'] = {
+            'default_phonecall_id': phonecall.id,
+            'default_partner_id': phonecall.partner_id and phonecall.partner_id.id or False,
+            'default_user_id': uid,
+            'default_email_from': phonecall.email_from,
+            'default_state': 'open',
+            'default_name': phonecall.name,
+        }
+        return res
 
-            # Get meeting views
-            result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_meetings_filter')
-            res = data_obj.read(cr, uid, result, ['res_id'])
-            id1 = data_obj._get_id(cr, uid, 'crm', 'crm_case_calendar_view_meet')
-            id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_form_view_meet')
-            id3 = data_obj._get_id(cr, uid, 'crm', 'crm_case_tree_view_meet')
-            if id1:
-                id1 = data_obj.browse(cr, uid, id1, context=context).res_id
-            if id2:
-                id2 = data_obj.browse(cr, uid, id2, context=context).res_id
-            if id3:
-                id3 = data_obj.browse(cr, uid, id3, context=context).res_id
+    def action_button_convert2opportunity(self, cr, uid, ids, context=None):
+        """
+        Convert a phonecall into an opp and then redirect to the opp view.
 
-            context = {
-                        'default_phonecall_id': phonecall.id,
-                        'default_partner_id': phonecall.partner_id and phonecall.partner_id.id or False,
-                        'default_email': phonecall.email_from ,
-                        'default_name': phonecall.name
-                    }
+        :param list ids: list of calls ids to convert (typically contains a single id)
+        :return dict: containing view information
+        """
+        if len(ids) != 1:
+            raise osv.except_osv(_('Warning!'),_('It\'s only possible to convert one phonecall at a time.'))
 
-            value = {
-                'name': _('Meetings'),
-                'domain' : "[('user_id','=',%s)]" % (uid),
-                'context': context,
-                'view_type': 'form',
-                'view_mode': 'calendar,form,tree',
-                'res_model': 'crm.meeting',
-                'view_id': False,
-                'views': [(id1, 'calendar'), (id2, 'form'), (id3, 'tree')],
-                'type': 'ir.actions.act_window',
-                'search_view_id': res['res_id'],
-                'nodestroy': True
-                }
+        opportunity_dict = self.convert_opportunity(cr, uid, ids, context=context)
+        return self.pool.get('crm.lead').redirect_opportunity_view(cr, uid, opportunity_dict[ids[0]], context)
 
-        return value
-    
     # ----------------------------------------
     # OpenChatter
     # ----------------------------------------
-    
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids)
-        for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = []
-            if (obj.state == 'draft' and obj.user_id):
-                result[obj.id] = [obj.user_id.id]
-        return result
 
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
         return 'Phonecall'
-    
+
     def case_reset_send_note(self, cr, uid, ids, context=None):
         message = _('Phonecall has been <b>reset and set as open</b>.')
-        return self.message_append_note(cr, uid, ids, body=message, context=context)
+        return self.message_post(cr, uid, ids, body=message, context=context)
 
     def case_open_send_note(self, cr, uid, ids, context=None):
         lead_obj = self.pool.get('crm.lead')
         for phonecall in self.browse(cr, uid, ids, context=context):
-            phonecall.message_subscribe([phonecall.user_id.id], context=context)
             if phonecall.opportunity_id:
                 lead = phonecall.opportunity_id
                 # convert datetime field to a datetime, using server format, then
@@ -317,11 +313,10 @@ class crm_phonecall(base_state, osv.osv):
                 message = _("Phonecall linked to the opportunity <em>%s</em> has been <b>created</b> and <b>scheduled</b> on <em>%s</em>.") % (lead.name, phonecall_date_str)
             else:
                 message = _("Phonecall has been <b>created and opened</b>.")
-            phonecall.message_append_note(body=message)
+            phonecall.message_post(body=message)
         return True
 
     def _call_set_partner_send_note(self, cr, uid, ids, context=None):
-        return self.message_append_note(cr, uid, ids, body=_("Partner has been <b>created</b>"), context=context)
-
+        return self.message_post(cr, uid, ids, body=_("Partner has been <b>created</b>."), context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

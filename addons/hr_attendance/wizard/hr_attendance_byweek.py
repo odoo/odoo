@@ -18,7 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import time
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 from osv import osv, fields
 
@@ -30,13 +31,14 @@ class hr_attendance_byweek(osv.osv_memory):
         'end_date': fields.date('Ending Date', required=True)
     }
     _defaults = {
-         'init_date': lambda *a: time.strftime('%Y-%m-%d'),
-         'end_date': lambda *a: time.strftime('%Y-%m-%d'),
+         'init_date': (datetime.today() - relativedelta(days=datetime.date(datetime.today()).weekday())).strftime('%Y-%m-%d'),
+         'end_date': (datetime.today() + relativedelta(days=6 - datetime.date(datetime.today()).weekday())).strftime('%Y-%m-%d'),
     }
 
     def print_report(self, cr, uid, ids, context=None):
         datas = {
              'ids': [],
+             'active_ids': context['active_ids'],
              'model': 'hr.employee',
              'form': self.read(cr, uid, ids)[0]
         }

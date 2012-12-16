@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-23 09:56+0000\n"
+"POT-Creation-Date: 2012-11-24 02:53+0000\n"
 "PO-Revision-Date: 2012-02-19 15:17+0000\n"
 "Last-Translator: Gustavo T <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-20 05:41+0000\n"
-"X-Generator: Launchpad (build 14833)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:31+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: l10n_br
 #: field:account.tax,tax_discount:0
@@ -23,7 +23,7 @@ msgstr ""
 #: field:account.tax.code.template,tax_discount:0
 #: field:account.tax.template,tax_discount:0
 msgid "Discount this Tax in Prince"
-msgstr "Desconta esta taxa no Preço"
+msgstr "Desconta este imposto no Preço"
 
 #. module: l10n_br
 #: model:ir.actions.act_window,name:l10n_br.action_l10n_br_cst_form
@@ -31,13 +31,18 @@ msgstr "Desconta esta taxa no Preço"
 #: model:ir.ui.menu,name:l10n_br.menu_action_l10n_br_cst
 #: view:l10n_br_account.cst:0
 msgid "Tax Situation Code"
-msgstr "Código de Situação da Taxa"
+msgstr "Código da Situação do Imposto"
+
+#. module: l10n_br
+#: model:account.account.type,name:l10n_br.despesa
+msgid "Despesas"
+msgstr "Despesas"
 
 #. module: l10n_br
 #: model:ir.model,name:l10n_br.model_account_tax_code
 #: field:l10n_br_account.cst,tax_code_id:0
 msgid "Tax Code"
-msgstr "Código da Taxa"
+msgstr "Código do Imposto"
 
 #. module: l10n_br
 #: help:account.tax.code,domain:0
@@ -58,7 +63,7 @@ msgstr "Resultado"
 #. module: l10n_br
 #: model:ir.model,name:l10n_br.model_account_tax_template
 msgid "account.tax.template"
-msgstr ""
+msgstr "account.tax.template"
 
 #. module: l10n_br
 #: model:account.account.type,name:l10n_br.passivo
@@ -72,9 +77,11 @@ msgid "Description"
 msgstr "Descrição"
 
 #. module: l10n_br
-#: model:account.account.type,name:l10n_br.despesa
-msgid "Despesas"
-msgstr "Despesas"
+#: constraint:account.tax.code:0
+msgid ""
+"Error!\n"
+"You cannot create recursive accounts."
+msgstr ""
 
 #. module: l10n_br
 #: field:account.tax,amount_mva:0
@@ -87,6 +94,7 @@ msgstr "MVA (em %)"
 #: help:account.tax.template,base_reduction:0
 msgid "For taxes of type percentage, enter % ratio between 0-1."
 msgstr ""
+"Para impostos do tipo porcentagem, entre com um percentual entre 0 e 1."
 
 #. module: l10n_br
 #: field:account.tax,base_reduction:0
@@ -95,19 +103,14 @@ msgid "Redution"
 msgstr "Redução"
 
 #. module: l10n_br
-#: constraint:account.tax.code.template:0
-msgid "Error ! You can not create recursive Tax Codes."
-msgstr ""
-
-#. module: l10n_br
 #: sql_constraint:account.tax:0
 msgid "Tax Name must be unique per company!"
-msgstr "O Nome da taxa tem que ser único por empresa!"
+msgstr "O Nome do Imposto deve ser único por empresa!"
 
 #. module: l10n_br
 #: model:ir.model,name:l10n_br.model_account_tax
 msgid "account.tax"
-msgstr ""
+msgstr "account.tax"
 
 #. module: l10n_br
 #: model:account.account.type,name:l10n_br.receita
@@ -120,12 +123,12 @@ msgstr "Receita"
 #: model:ir.ui.menu,name:l10n_br.menu_action_l10n_br_cst_template
 #: view:l10n_br_account.cst.template:0
 msgid "Tax Situation Code Template"
-msgstr "Modelo do Código de Situação da Taxa"
+msgstr "Modelo de CST - Código da Situação Tributária"
 
 #. module: l10n_br
 #: model:ir.model,name:l10n_br.model_wizard_multi_charts_accounts
 msgid "wizard.multi.charts.accounts"
-msgstr ""
+msgstr "wizard.multi.charts.accounts"
 
 #. module: l10n_br
 #: model:ir.actions.todo,note:l10n_br.config_call_account_template_brazilian_localization
@@ -146,6 +149,13 @@ msgstr ""
 "Financeira/Conta/Contas/Gerar Plano de Contas a partir de um Plano Modelo."
 
 #. module: l10n_br
+#: constraint:account.tax.code.template:0
+msgid ""
+"Error!\n"
+"You cannot create recursive Tax Codes."
+msgstr ""
+
+#. module: l10n_br
 #: help:account.tax,tax_discount:0
 #: help:account.tax.code,tax_discount:0
 #: help:account.tax.code.template,tax_discount:0
@@ -156,36 +166,37 @@ msgstr "Marque para (ICMS, PIS e etc.)."
 #. module: l10n_br
 #: model:account.account.type,name:l10n_br.ativo
 msgid "Ativo"
-msgstr ""
+msgstr "Ativo"
 
 #. module: l10n_br
 #: field:account.tax.code,domain:0
 #: field:account.tax.code.template,domain:0
 msgid "Domain"
-msgstr ""
+msgstr "Domínio"
 
 #. module: l10n_br
 #: field:l10n_br_account.cst,code:0
 #: field:l10n_br_account.cst.template,code:0
 msgid "Code"
-msgstr ""
-
-#. module: l10n_br
-#: constraint:account.tax.code:0
-msgid "Error ! You can not create recursive accounts."
-msgstr ""
+msgstr "Código"
 
 #. module: l10n_br
 #: help:account.tax,amount_mva:0
 #: help:account.tax,base_reduction:0
 msgid "Um percentual decimal em % entre 0-1."
-msgstr ""
+msgstr "Um percentual decimal em % entre 0-1"
 
 #. module: l10n_br
 #: model:ir.model,name:l10n_br.model_account_tax_code_template
 #: field:l10n_br_account.cst.template,tax_code_template_id:0
 msgid "Tax Code Template"
-msgstr ""
+msgstr "Modelo do Código do Imposto"
 
 #~ msgid "Brazilian Localization"
 #~ msgstr "Localização Brasileira"
+
+#~ msgid "Error ! You can not create recursive Tax Codes."
+#~ msgstr "Erro ! Você não pode criar Códigos de Impostos recursivos"
+
+#~ msgid "Error ! You can not create recursive accounts."
+#~ msgstr "Erro ! Você não pode criar contas recursivas"
