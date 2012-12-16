@@ -99,9 +99,9 @@ class ir_attachment(osv.osv):
             _logger.error("_file_write writing %s",full_path)
         return fname
 
-    def _file_delete(self, cr, uid, location, fname, threshold=1):
+    def _file_delete(self, cr, uid, location, fname):
         count = self.search(cr, 1, [('store_fname','=',fname)], count=True)
-        if count <= threshold:
+        if count <= 1:
             full_path = self._full_path(cr, uid, location, fname)
             try:
                 os.unlink(full_path)
@@ -122,14 +122,13 @@ class ir_attachment(osv.osv):
         return result
 
     def _data_set(self, cr, uid, id, name, value, arg, context=None):
+        # We dont handle setting data to null
         if not value:
             return True
         if context is None:
             context = {}
-        result = {}
         location = self.pool.get('ir.config_parameter').get_param('ir_attachment.location')
-        bin_size = context.get('bin_size', False)
-        if path:
+        if location:
             i = self.browse(cr, uid, id, context=context)
             if i.store_fname:
                 self._file_delete(cr, uid, location, i.store_fname)
