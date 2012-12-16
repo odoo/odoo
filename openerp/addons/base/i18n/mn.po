@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:01+0000\n"
-"PO-Revision-Date: 2012-11-28 13:28+0000\n"
+"PO-Revision-Date: 2012-12-14 04:43+0000\n"
 "Last-Translator: gobi <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 04:58+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-15 05:03+0000\n"
+"X-Generator: Launchpad (build 16372)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_check_writing
@@ -614,7 +614,7 @@ msgstr "Харьцааны Нэр"
 #. module: base
 #: view:ir.rule:0
 msgid "Create Access Right"
-msgstr ""
+msgstr "Хандах Эрх Үүсгэх"
 
 #. module: base
 #: model:res.country,name:base.tv
@@ -1346,7 +1346,7 @@ msgstr "Андорра, Principality of"
 #. module: base
 #: field:ir.rule,perm_read:0
 msgid "Apply for Read"
-msgstr ""
+msgstr "Уншихаар Хэрэгжүүлэх"
 
 #. module: base
 #: model:res.country,name:base.mn
@@ -1431,7 +1431,7 @@ msgstr "Сүүлийн Хувилбар"
 #. module: base
 #: view:ir.rule:0
 msgid "Delete Access Right"
-msgstr ""
+msgstr "Хандах Эрхийг Устгах"
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:213
@@ -1486,7 +1486,7 @@ msgstr "Дэмжигчид"
 #. module: base
 #: field:ir.rule,perm_unlink:0
 msgid "Apply for Delete"
-msgstr ""
+msgstr "Устгахаар Хэрэгжүүлэх"
 
 #. module: base
 #: selection:ir.property,type:0
@@ -1561,6 +1561,9 @@ msgid ""
 "                                for uploading to OpenERP's translation "
 "platform,"
 msgstr ""
+"TGZ формат: Энэ нь шахагдсан архив бөгөөд PO файлуудыг агуулсан\n"
+"                           шууд OpenERP-н орчуулгын хөрсрүү хуулахад "
+"тохиромжтой файл юм."
 
 #. module: base
 #: view:res.lang:0
@@ -1587,7 +1590,7 @@ msgstr "Тест"
 #. module: base
 #: field:ir.actions.report.xml,attachment:0
 msgid "Save as Attachment Prefix"
-msgstr ""
+msgstr "Хавсралтыг нэрлэж хадгалах угтвар"
 
 #. module: base
 #: field:ir.ui.view_sc,res_id:0
@@ -1624,7 +1627,7 @@ msgstr "Гаити"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_hr_payroll
 msgid "French Payroll"
-msgstr ""
+msgstr "Фран Цалин"
 
 #. module: base
 #: view:ir.ui.view:0
@@ -1698,6 +1701,33 @@ msgid ""
 "Also implements IETF RFC 5785 for services discovery on a http server,\n"
 "which needs explicit configuration in openerp-server.conf too.\n"
 msgstr ""
+"\n"
+"Энэ модулиар баримтуудын хувьд WebDAV сервер идэвхжинэ.\n"
+"===============================================================\n"
+"\n"
+"Ингэснээр OpenObject дахь хавсралт баримтуудыг нийцтэй ямар ч интернет \n"
+"тольдруураар харах боломжтой.\n"
+"\n"
+"Суулгасан дараагаараа WebDAV сервер нь серверийн тохиргооны файлын  [webdav] "
+"\n"
+" гэсэн хэсэгт тохиргоог хийх боломжтой.\n"
+"Серверийн тохиргооны параметр нь:\n"
+"\n"
+"    [webdav]\n"
+"    ; enable = True ; http(s) протоколь дээр WebDAV идэвхжинэ\n"
+"    ; vdir = webdav ; WebDAV ажиллах директорын нэр.\n"
+"    ; энэхүү webdav гэсэн анхны утгын хувьд \n"
+"    ; дараах байдлаар хандана \\\"http://localhost:8069/webdav/\n"
+"    ; verbose = True ; webdav-н дэлгэрэнгүй мэдэгдэлтэй горимыг нээнэ\n"
+"    ; debug = True ; webdav-н дебаагдах горимыг идэвхжүүлнэ.\n"
+"    ; ингэснээр мессежүүд нь python log-руу бичигдэнэ. \n"
+"    ; логийн түвшин нь \\\"debug\\\" болон \\\"debug_rpc\\\" байдаг. эдгээр "
+"\n"
+"сонголтыг\n"
+"    ; хэвээр нь үлдээж болно.\n"
+"\n"
+"Түүнчлэн IETF RFC 5785-г http серверт хэрэгжүүлдэг. Тодорхой тохиргоог \n"
+"openerp-server.conf-д тохируулах хэрэгтэй.\n"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_purchase_management
@@ -1745,6 +1775,12 @@ msgid ""
 "=============\n"
 "    "
 msgstr ""
+"\n"
+"Энэ модуль нь хэрэв гомдол, порталь суулгагдсан байгаа бол гомдол меню болон "
+"боломжийг портальд нэмдэг.\n"
+"============================================================================="
+"=============\n"
+"    "
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_res_partner_bank_account_form
@@ -1791,7 +1827,7 @@ msgstr "Кодгүй хэл \"%s\" байна"
 #: model:ir.module.category,name:base.module_category_social_network
 #: model:ir.module.module,shortdesc:base.module_mail
 msgid "Social Network"
-msgstr ""
+msgstr "Нийгмийн Сүлжээ"
 
 #. module: base
 #: view:res.lang:0
@@ -1832,6 +1868,28 @@ msgid ""
 "in their pockets, this module is essential.\n"
 "    "
 msgstr ""
+"\n"
+"Энэ модуль нь үдийн цайг менеж хийх модуль.\n"
+"================================\n"
+"\n"
+"Компаниуд нь ажилчиддаа орчин, нөхцлийг таатай болгох үүднээс олон "
+"нийлүүлэгчээс хачиртай талх, пицца гэх мэтийг захиалах боломжийг санал "
+"болгодог.\n"
+"\n"
+"Гэхдээ олон тооны ажилтан, нийлүүлэгч нар байгаа тохиолдолд зөв удирдлага "
+"шаардлагатай болдог.\n"
+"\n"
+"\n"
+"\"Үдийн цайны Захиалга\" модуль нь энэ менежментийг хялбар болгож ажилчидад "
+"илүү өргөн багаж, хэрэглэгээг санал болгодог.\n"
+"\n"
+"Цаашлаад ажилчны тохиргоо дээр үндэслэн сануулга, хоол хурдан захиалах "
+"боломж зэрэгийг санал болгодогоороо хоол болон нийлүүлэгчийн менежментийг "
+"бүрэн гүйцэд болгодог.\n"
+"\n"
+"Ажилчид заавал задгай мөнгө кармалж явах заваан ажлаас ажилчдаа чөлөөлж "
+"ажилчдынхаа цагийг хэмнэхэд энэ модуль нь туйлын чухал.\n"
+"    "
 
 #. module: base
 #: view:wizard.ir.model.menu.create:0
@@ -1871,7 +1929,7 @@ msgstr ""
 #. module: base
 #: help:res.partner,website:0
 msgid "Website of Partner or Company"
-msgstr ""
+msgstr "Харилцагч эсвэл Компаний веб сайт"
 
 #. module: base
 #: help:base.language.install,overwrite:0
@@ -1916,7 +1974,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_sale
 msgid "Quotations, Sale Orders, Invoicing"
-msgstr ""
+msgstr "Үнийн санал, Борлуулалтын Захиалга, Нэхэмжлэл"
 
 #. module: base
 #: field:res.users,login:0
@@ -1935,7 +1993,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_portal_project_issue
 msgid "Portal Issue"
-msgstr ""
+msgstr "Портал Асуудал"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_tools
@@ -1955,11 +2013,15 @@ msgid ""
 "Launch Manually Once: after having been launched manually, it sets "
 "automatically to Done."
 msgstr ""
+"Гараар: Гараар ажилуулна.\n"
+"Автомат: Системийн тохиргоо өөрчлөгдөх бүрт автомат ажиллана.\n"
+"Гараар нэг удаа: гараар ажилуулсан дараа автоматаар Хийгдсэн болж \n"
+"тохируулагдана."
 
 #. module: base
 #: field:res.partner,image_small:0
 msgid "Small-sized image"
-msgstr ""
+msgstr "Жижиг-хэмжээт зураг"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock
@@ -2040,6 +2102,15 @@ msgid ""
 "It assigns manager and user access rights to the Administrator and only user "
 "rights to the Demo user. \n"
 msgstr ""
+"\n"
+"Санхүүгийн Хандах Эрх.\n"
+"=========================\n"
+"\n"
+"Энэ модуль нь санхүүгийн журнал, дансны мод гэх мэт бүх боломж руу хандах \n"
+"хандалтыг удирдах боломжийг олгодог.\n"
+"\n"
+"Энэ нь менежер, хэрэглэгч хандалтын эрхийг Администраторт олгож Demo \n"
+"хэрэглэгчид хэрэглэгч эрхийг олгодог. \n"
 
 #. module: base
 #: field:ir.attachment,res_id:0
@@ -2066,6 +2137,8 @@ msgstr ""
 #, python-format
 msgid "Unknown value '%s' for boolean field '%%(field)s', assuming '%s'"
 msgstr ""
+"'%s' гэсэн утга boolean '%%(field)s' талбарт мэдэгдэхгүй утга, '%s' гэж үзэж "
+"байна"
 
 #. module: base
 #: model:res.country,name:base.nl
@@ -2075,12 +2148,12 @@ msgstr "Нидерланд"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_portal_event
 msgid "Portal Event"
-msgstr ""
+msgstr "Порталь Үйл явдал"
 
 #. module: base
 #: selection:ir.translation,state:0
 msgid "Translation in Progress"
-msgstr ""
+msgstr "Орчуулга Хийгдэж байна"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_rule
@@ -2095,7 +2168,7 @@ msgstr "Өдөр"
 #. module: base
 #: model:ir.module.module,summary:base.module_fleet
 msgid "Vehicle, leasing, insurances, costs"
-msgstr ""
+msgstr "Машин, лизинг, даатгал, өртөгүүд"
 
 #. module: base
 #: view:ir.model.access:0
@@ -2123,6 +2196,23 @@ msgid ""
 "synchronization with other companies.\n"
 "    "
 msgstr ""
+"\n"
+"Энэ модуль нь ерөнхиий тохиолдолд хуваалцах боломжийг таны OpenERP өгөгдлийн "
+"\n"
+"баазад олгодог багаж юм.\n"
+"========================================================================\n"
+"\n"
+"Энэ нь 'хуваалцах' даруулыг нэмдэг бөгөөд OpenERP-н дуртай өгөгдлийг хамт \n"
+"ажиллагч, захиалагч, найз нартайгаа хуваалцах боломжийг вебэд олгодог.\n"
+"\n"
+"Систем нь шинэ хэрэглэгч болон группыг автоматаар үүсгэдэг. Зохистой хандах "
+"\n"
+"дүрэмийг ir.rules-д автоматаар нэмж зөвхөн  хуваалцсан өгөгдөл рүү хандах \n"
+"хандалтын хяналтаар хангаддаг.\n"
+"\n"
+"Энэ нь хамтран ажиллах, мэдлэгээ хуваалцах, бусад компанитай мэдээллээ \n"
+"ижилтгэх зэрэгт маш зохимжтой.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_process
@@ -2135,6 +2225,8 @@ msgid ""
 "Check this box if this contact is a supplier. If it's not checked, purchase "
 "people will not see it when encoding a purchase order."
 msgstr ""
+"Хэрэв холбогч нь нийлүүлэгч бол үүнийг тэмдэглэнэ. Хэрэв тэмдэглээгүй бол "
+"худалдан авалтын хүмүүст худалдан авалтын захиалга шивэх үед харагдахгүй."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_evaluation
@@ -2207,6 +2299,15 @@ msgid ""
 "with the effect of creating, editing and deleting either ways.\n"
 "    "
 msgstr ""
+"\n"
+"Төслийн даалгаврыг ажлын цагийн хуваарьтай ижилтгэх.\n"
+"====================================================================\n"
+"\n"
+"Энэ модуль нь Төслийн Менежмент модуль дахь даалгавруудыг Цагийн хуваарийн\n"
+"ажлууд руу тодорхой огноонд тодорхой хэрэглэгчид шилжүүлдэг. Мөн цагийн \n"
+"хуваариас нөгөө чиглэлд үүсгэх, засах, устгах\n"
+"хоёр чиглэлд хийх боломжтой.\n"
+"    "
 
 #. module: base
 #: model:ir.model,name:base.model_ir_model_access
