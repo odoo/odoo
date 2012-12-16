@@ -94,10 +94,8 @@ def setup_pid_file():
 def preload_registry(dbname):
     """ Preload a registry, and start the cron."""
     try:
-        db, registry = openerp.pooler.get_db_and_pool(dbname, update_module=openerp.tools.config['init'] or openerp.tools.config['update'], pooljobs=False)
-
-        # jobs will start to be processed later, when openerp.cron.start_master_thread() is called by openerp.service.start_services()
-        registry.schedule_cron_jobs()
+        update_module = True if openerp.tools.config['init'] or openerp.tools.config['update'] else False
+        db, registry = openerp.pooler.get_db_and_pool(dbname, update_module=update_module,  pooljobs=False)
     except Exception:
         _logger.exception('Failed to initialize database `%s`.', dbname)
 

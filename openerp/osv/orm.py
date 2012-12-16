@@ -1014,45 +1014,50 @@ class BaseModel(object):
 
         # Load manual fields
 
-        cr.execute("SELECT id FROM ir_model_fields WHERE name=%s AND model=%s", ('state', 'ir.model.fields'))
-        if cr.fetchone():
+        # Check the query is already done for all modules of if we need to
+        # do it ourselves.
+        if self.pool.fields_by_model is not None:
+            manual_fields = self.pool.fields_by_model.get(self._name, [])
+        else:
             cr.execute('SELECT * FROM ir_model_fields WHERE model=%s AND state=%s', (self._name, 'manual'))
-            for field in cr.dictfetchall():
-                if field['name'] in self._columns:
-                    continue
-                attrs = {
-                    'string': field['field_description'],
-                    'required': bool(field['required']),
-                    'readonly': bool(field['readonly']),
-                    'domain': eval(field['domain']) if field['domain'] else None,
-                    'size': field['size'],
-                    'ondelete': field['on_delete'],
-                    'translate': (field['translate']),
-                    'manual': True,
-                    #'select': int(field['select_level'])
-                }
+            manual_fields = cr.dictfetchall()
+        for field in manual_fields:
+            if field['name'] in self._columns:
+                continue
+            attrs = {
+                'string': field['field_description'],
+                'required': bool(field['required']),
+                'readonly': bool(field['readonly']),
+                'domain': eval(field['domain']) if field['domain'] else None,
+                'size': field['size'],
+                'ondelete': field['on_delete'],
+                'translate': (field['translate']),
+                'manual': True,
+                #'select': int(field['select_level'])
+            }
 
-                if field['serialization_field_id']:
-                    cr.execute('SELECT name FROM ir_model_fields WHERE id=%s', (field['serialization_field_id'],))
-                    attrs.update({'serialization_field': cr.fetchone()[0], 'type': field['ttype']})
-                    if field['ttype'] in ['many2one', 'one2many', 'many2many']:
-                        attrs.update({'relation': field['relation']})
-                    self._columns[field['name']] = fields.sparse(**attrs)
-                elif field['ttype'] == 'selection':
-                    self._columns[field['name']] = fields.selection(eval(field['selection']), **attrs)
-                elif field['ttype'] == 'reference':
-                    self._columns[field['name']] = fields.reference(selection=eval(field['selection']), **attrs)
-                elif field['ttype'] == 'many2one':
-                    self._columns[field['name']] = fields.many2one(field['relation'], **attrs)
-                elif field['ttype'] == 'one2many':
-                    self._columns[field['name']] = fields.one2many(field['relation'], field['relation_field'], **attrs)
-                elif field['ttype'] == 'many2many':
-                    _rel1 = field['relation'].replace('.', '_')
-                    _rel2 = field['model'].replace('.', '_')
-                    _rel_name = 'x_%s_%s_%s_rel' % (_rel1, _rel2, field['name'])
-                    self._columns[field['name']] = fields.many2many(field['relation'], _rel_name, 'id1', 'id2', **attrs)
-                else:
-                    self._columns[field['name']] = getattr(fields, field['ttype'])(**attrs)
+            if field['serialization_field_id']:
+                cr.execute('SELECT name FROM ir_model_fields WHERE id=%s', (field['serialization_field_id'],))
+                attrs.update({'serialization_field': cr.fetchone()[0], 'type': field['ttype']})
+                if field['ttype'] in ['many2one', 'one2many', 'many2many']:
+                    attrs.update({'relation': field['relation']})
+                self._columns[field['name']] = fields.sparse(**attrs)
+            elif field['ttype'] == 'selection':
+                self._columns[field['name']] = fields.selection(eval(field['selection']), **attrs)
+            elif field['ttype'] == 'reference':
+                self._columns[field['name']] = fields.reference(selection=eval(field['selection']), **attrs)
+            elif field['ttype'] == 'many2one':
+                self._columns[field['name']] = fields.many2one(field['relation'], **attrs)
+            elif field['ttype'] == 'one2many':
+                self._columns[field['name']] = fields.one2many(field['relation'], field['relation_field'], **attrs)
+            elif field['ttype'] == 'many2many':
+                _rel1 = field['relation'].replace('.', '_')
+                _rel2 = field['model'].replace('.', '_')
+                _rel_name = 'x_%s_%s_%s_rel' % (_rel1, _rel2, field['name'])
+                self._columns[field['name']] = fields.many2many(field['relation'], _rel_name, 'id1', 'id2', **attrs)
+            else:
+                self._columns[field['name']] = getattr(fields, field['ttype'])(**attrs)
+
         self._inherits_check()
         self._inherits_reload()
         if not self._sequence:
@@ -3624,15 +3629,16 @@ class BaseModel(object):
         else:
             res = map(lambda x: {'id': x}, ids)
 
-        for f in fields_pre:
-            if f == self.CONCURRENCY_CHECK_FIELD:
-                continue
-            if self._columns[f].translate:
-                ids = [x['id'] for x in res]
-                #TODO: optimize out of this loop
-                res_trans = self.pool.get('ir.translation')._get_ids(cr, user, self._name+','+f, 'model', context.get('lang', False) or 'en_US', ids)
-                for r in res:
-                    r[f] = res_trans.get(r['id'], False) or r[f]
+        if context.get('lang'):
+            for f in fields_pre:
+                if f == self.CONCURRENCY_CHECK_FIELD:
+                    continue
+                if self._columns[f].translate:
+                    ids = [x['id'] for x in res]
+                    #TODO: optimize out of this loop
+                    res_trans = self.pool.get('ir.translation')._get_ids(cr, user, self._name+','+f, 'model', context['lang'], ids)
+                    for r in res:
+                        r[f] = res_trans.get(r['id'], False) or r[f]
 
         for table in self._inherits:
             col = self._inherits[table]
