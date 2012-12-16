@@ -221,7 +221,7 @@
                                         </span>
                                     </div>
                                     <div class="oe_kanban_project_avatars">
-                                        <t t-foreach="record.members.raw_value" t-as="member">
+                                        <t t-foreach="record.members.raw_value.slice(0,17)" t-as="member">
                                             <img t-att-src="kanban_image('res.users', 'image_small', member)" t-att-data-member_id="member"/>
                                         </t>
                                     </div>
