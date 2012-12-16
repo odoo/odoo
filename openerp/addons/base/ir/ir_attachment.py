@@ -19,7 +19,10 @@
 #
 ##############################################################################
 
+import hashlib
 import itertools
+import os
+import re
 
 from osv import fields,osv
 from osv.orm import except_orm
@@ -65,7 +68,7 @@ class ir_attachment(osv.osv):
 
         # sanitize location name and path
         location = re.sub('[.]','',location)
-        location = path.strip('/\\')
+        location = location.strip('/\\')
 
         path = re.sub('[.]','',path)
         path = path.strip('/\\')
@@ -106,6 +109,7 @@ class ir_attachment(osv.osv):
             try:
                 os.unlink(full_path)
             except IOError:
+                # Harmless and needed for race conditions
                 _logger.error("_file_delete could not unlink %s",full_path)
 
     def _data_get(self, cr, uid, ids, name, arg, context=None):
@@ -113,12 +117,12 @@ class ir_attachment(osv.osv):
             context = {}
         result = {}
         location = self.pool.get('ir.config_parameter').get_param(cr, uid, 'ir_attachment.location')
-        bin_size = context.get('bin_size', False)
+        bin_size = context.get('bin_size')
         for attach in self.browse(cr, uid, ids, context=context):
             if location and attach.store_fname:
-                result[i.id] = self._file_read(cr, uid, location, i.store_fname, bin_size)
+                result[attach.id] = self._file_read(cr, uid, location, attach.store_fname, bin_size)
             else:
-                result[i.id] = attach.db_datas
+                result[attach.id] = attach.db_datas
         return result
 
     def _data_set(self, cr, uid, id, name, value, arg, context=None):
@@ -129,9 +133,9 @@ class ir_attachment(osv.osv):
             context = {}
         location = self.pool.get('ir.config_parameter').get_param(cr, uid, 'ir_attachment.location')
         if location:
-            i = self.browse(cr, uid, id, context=context)
-            if i.store_fname:
-                self._file_delete(cr, uid, location, i.store_fname)
+            attach = self.browse(cr, uid, id, context=context)
+            if attach.store_fname:
+                self._file_delete(cr, uid, location, attach.store_fname)
             fname = self._file_write(cr, uid, location, value)
             self.write(cr, uid, [id], {'store_fname': fname}, context=context)
         else:
@@ -263,6 +267,11 @@ class ir_attachment(osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         self.check(cr, uid, ids, 'unlink', context=context)
+        location = self.pool.get('ir.config_parameter').get_param(cr, uid, 'ir_attachment.location')
+        if location:
+            for attach in self.browse(cr, uid, ids, context=context):
+                if attach.store_fname:
+                    self._file_delete(cr, uid, location, attach.store_fname)
         return super(ir_attachment, self).unlink(cr, uid, ids, context)
 
     def create(self, cr, uid, values, context=None):
