@@ -55,7 +55,7 @@ ATTENTION:
         'report/document_report_view.xml',
         'board_document_view.xml',
     ],
-    'demo': [ 'document_demo.xml','board_document_demo.xml'],
+    'demo': [ 'document_demo.xml' ],
     'test': ['test/document_test2.yml'],
     'js': ['static/src/js/document.js'],
     'installable': True,
