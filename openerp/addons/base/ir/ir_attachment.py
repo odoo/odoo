@@ -112,13 +112,13 @@ class ir_attachment(osv.osv):
         if context is None:
             context = {}
         result = {}
-        location = self.pool.get('ir.config_parameter').get_param('ir_attachment.location')
+        location = self.pool.get('ir.config_parameter').get_param(cr, uid, 'ir_attachment.location')
         bin_size = context.get('bin_size', False)
-        for i in self.browse(cr, uid, ids, context=context):
-            if location and i.store_fname:
+        for attach in self.browse(cr, uid, ids, context=context):
+            if location and attach.store_fname:
                 result[i.id] = self._file_read(cr, uid, location, i.store_fname, bin_size)
             else:
-                result[i.id] = i.db_datas
+                result[i.id] = attach.db_datas
         return result
 
     def _data_set(self, cr, uid, id, name, value, arg, context=None):
@@ -127,7 +127,7 @@ class ir_attachment(osv.osv):
             return True
         if context is None:
             context = {}
-        location = self.pool.get('ir.config_parameter').get_param('ir_attachment.location')
+        location = self.pool.get('ir.config_parameter').get_param(cr, uid, 'ir_attachment.location')
         if location:
             i = self.browse(cr, uid, id, context=context)
             if i.store_fname:
