@@ -132,14 +132,15 @@ class ir_attachment(osv.osv):
         if context is None:
             context = {}
         location = self.pool.get('ir.config_parameter').get_param(cr, uid, 'ir_attachment.location')
+        file_size = len(value.decode('base64'))
         if location:
             attach = self.browse(cr, uid, id, context=context)
             if attach.store_fname:
                 self._file_delete(cr, uid, location, attach.store_fname)
             fname = self._file_write(cr, uid, location, value)
-            self.write(cr, uid, [id], {'store_fname': fname}, context=context)
+            super(ir_attachment, self).write(cr, uid, [id], {'store_fname': fname, 'file_size': file_size}, context=context)
         else:
-            self.write(cr, uid, [id], {'db_datas': value}, context=context)
+            super(ir_attachment, self).write(cr, uid, [id], {'db_datas': value, 'file_size': file_size}, context=context)
         return True
 
     _name = 'ir.attachment'
@@ -156,14 +157,16 @@ class ir_attachment(osv.osv):
         'type': fields.selection( [ ('url','URL'), ('binary','Binary'), ],
                 'Type', help="Binary File or URL", required=True, change_default=True),
         'url': fields.char('Url', size=1024),
-        # al: For the moment I keepi those shitty field names for backward compatibility with document
+        # al: We keep shitty field names for backward compatibility with document
         'datas': fields.function(_data_get, fnct_inv=_data_set, string='File Content', type="binary", nodrop=True),
         'store_fname': fields.char('Stored Filename', size=256),
         'db_datas': fields.binary('Database Data'),
+        'file_size': fields.integer('File Size'),
     }
 
     _defaults = {
         'type': 'binary',
+        'file_size': 0,
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'ir.attachment', context=c),
     }
 
@@ -259,6 +262,8 @@ class ir_attachment(osv.osv):
 
     def write(self, cr, uid, ids, vals, context=None):
         self.check(cr, uid, ids, 'write', context=context, values=vals)
+        if 'file_size' in vals:
+            del vals['file_size']
         return super(ir_attachment, self).write(cr, uid, ids, vals, context)
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -276,14 +281,13 @@ class ir_attachment(osv.osv):
 
     def create(self, cr, uid, values, context=None):
         self.check(cr, uid, [], mode='create', context=context, values=values)
+        if 'file_size' in values:
+            del values['file_size']
         return super(ir_attachment, self).create(cr, uid, values, context)
 
     def action_get(self, cr, uid, context=None):
         return self.pool.get('ir.actions.act_window').for_xml_id(
             cr, uid, 'base', 'action_attachment', context=context)
-
-ir_attachment()
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
