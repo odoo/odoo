@@ -142,7 +142,7 @@ class res_users(osv.osv):
         'id': fields.integer('ID'),
         'login_date': fields.date('Latest connection', select=1),
         'partner_id': fields.many2one('res.partner', required=True,
-            string='Related Partner', ondelete='cascade',
+            string='Related Partner', ondelete='restrict',
             help='Partner-related data of the user'),
         'login': fields.char('Login', size=64, required=True,
             help="Used to log into the system"),

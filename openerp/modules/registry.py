@@ -110,15 +110,16 @@ class Registry(object):
         and registers them in the registry.
 
         """
-
-        res = []
-
+        models_to_load = [] # need to preserve loading order
         # Instantiate registered classes (via the MetaModel automatic discovery
         # or via explicit constructor call), and add them to the pool.
         for cls in openerp.osv.orm.MetaModel.module_to_models.get(module.name, []):
-            res.append(cls.create_instance(self, cr))
-
-        return res
+            # models register themselves in self.models
+            model = cls.create_instance(self, cr)
+            if model._name not in models_to_load:
+                # avoid double-loading models whose declaration is split
+                models_to_load.append(model._name)
+        return [self.models[m] for m in models_to_load]
 
     def schedule_cron_jobs(self):
         """ Make the cron thread care about this registry/database jobs.
