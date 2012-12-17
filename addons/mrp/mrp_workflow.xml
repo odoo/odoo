@@ -116,10 +116,6 @@
 
         <!-- Procurement -->
 
-        <record id="act_need_production" model="workflow.activity">
-            <field name="wkf_id" ref="procurement.wkf_procurement"/>
-            <field name="name">need_production</field>
-        </record>
         <record id="act_produce" model="workflow.activity">
             <field name="wkf_id" ref="procurement.wkf_procurement"/>
             <field name="name">produce</field>
@@ -130,13 +126,8 @@
 
         <record id="trans_confirm_mto_need_production" model="workflow.transition">
             <field name="act_from" ref="procurement.act_confirm_mto"/>
-            <field name="act_to" ref="act_need_production"/>
-            <field name="condition">check_produce()</field>
-        </record>
-        <record id="trans_product_check_produce" model="workflow.transition">
-            <field name="act_from" ref="act_need_production"/>
             <field name="act_to" ref="act_produce"/>
-            <field name="condition">is_product() and check_bom_exists()</field>
+            <field name="condition">check_produce() and is_product() and check_bom_exists()</field>
         </record>
 
         <record id="trans_produce_finished_prod" model="workflow.transition">
