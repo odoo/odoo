@@ -303,6 +303,7 @@ class res_users(osv.osv):
             for id in ids:
                 if id in self._uid_cache[db]:
                     del self._uid_cache[db][id]
+        self.context_get.clear_cache(self, cr)
 
         return res
 
@@ -337,6 +338,7 @@ class res_users(osv.osv):
             default['login'] = _("%s (copy)") % user2copy['login']
         return super(res_users, self).copy(cr, uid, id, default, context)
 
+    @tools.ormcache(skiparg=2)
     def context_get(self, cr, uid, context=None):
         user = self.browse(cr, SUPERUSER_ID, uid, context)
         result = {}
