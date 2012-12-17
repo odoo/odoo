@@ -24,7 +24,7 @@ import time
 
 from openerp.osv import osv,fields
 from openerp.tools.translate import _
-import decimal_precision as dp
+import openerp.addons.decimal_precision as dp
 
 class stock_return_picking_memory(osv.osv_memory):
     _name = "stock.return.picking.memory"

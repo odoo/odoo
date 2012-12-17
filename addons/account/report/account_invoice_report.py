@@ -20,7 +20,7 @@
 ##############################################################################
 
 from openerp import tools
-import decimal_precision as dp
+import openerp.addons.decimal_precision as dp
 from openerp.osv import fields,osv
 
 class account_invoice_report(osv.osv):

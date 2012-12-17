@@ -27,7 +27,7 @@ from calendar import isleap
 from openerp.tools.translate import _
 from openerp.osv import fields, osv
 from openerp import netsvc
-import decimal_precision as dp
+import openerp.addons.decimal_precision as dp
 
 DATETIME_FORMAT = "%Y-%m-%d"
 

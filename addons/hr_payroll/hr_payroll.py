@@ -30,7 +30,7 @@ from openerp import netsvc
 from openerp.osv import fields, osv
 from openerp import tools
 from openerp.tools.translate import _
-import decimal_precision as dp
+import openerp.addons.decimal_precision as dp
 
 from openerp.tools.safe_eval import safe_eval as eval
 

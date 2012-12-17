@@ -24,7 +24,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from openerp.osv import fields, osv
-import decimal_precision as dp
+import openerp.addons.decimal_precision as dp
 
 class account_asset_category(osv.osv):
     _name = 'account.asset.category'

@@ -29,7 +29,7 @@ from lxml import etree
 from openerp import netsvc
 from openerp.osv import fields, osv, orm
 from openerp.tools.translate import _
-import decimal_precision as dp
+import openerp.addons.decimal_precision as dp
 from openerp import tools
 
 class account_move_line(osv.osv):

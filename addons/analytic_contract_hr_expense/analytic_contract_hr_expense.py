@@ -23,7 +23,7 @@ from openerp.osv import fields, osv
 from osv.orm import intersect, except_orm
 import tools.sql
 from openerp.tools.translate import _
-from decimal_precision import decimal_precision as dp
+from openerp.addons.decimal_precision import decimal_precision as dp
 
 
 class account_analytic_account(osv.osv):

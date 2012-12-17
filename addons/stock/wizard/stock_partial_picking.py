@@ -24,7 +24,7 @@ from lxml import etree
 from openerp.osv import fields, osv
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.float_utils import float_compare
-import decimal_precision as dp
+import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
 
 class stock_partial_picking_line(osv.TransientModel):

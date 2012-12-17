@@ -22,7 +22,7 @@
 from openerp.osv import fields,osv
 from openerp.tools.translate import _
 
-import decimal_precision as dp
+import openerp.addons.decimal_precision as dp
 
 # Overloaded stock_picking to manage carriers :
 class stock_picking(osv.osv):

@@ -26,7 +26,7 @@ from openerp import netsvc
 
 from openerp.osv import fields,osv
 from openerp.tools.translate import _
-import decimal_precision as dp
+import openerp.addons.decimal_precision as dp
 
 class purchase_requisition(osv.osv):
     _name = "purchase.requisition"

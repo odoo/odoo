@@ -20,7 +20,7 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
-import decimal_precision as dp
+import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
 from openerp import tools
 

@@ -22,7 +22,7 @@
 import time
 from openerp.osv import fields,osv
 from openerp.tools.translate import _
-import decimal_precision as dp
+import openerp.addons.decimal_precision as dp
 
 class delivery_carrier(osv.osv):
     _name = "delivery.carrier"

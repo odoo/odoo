@@ -23,7 +23,7 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp import netsvc
 import time
-import decimal_precision as dp
+import openerp.addons.decimal_precision as dp
 
 # Procurement
 # ------------------------------------------------------------------

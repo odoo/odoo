@@ -27,7 +27,7 @@ from operator import itemgetter
 from openerp import netsvc
 from openerp import pooler
 from openerp.osv import fields, osv
-import decimal_precision as dp
+import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
 
 # ---------------------------------------------------------
