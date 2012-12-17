@@ -1436,7 +1436,7 @@ openerp.mail = function (session) {
                 'view_inbox': false,
                 'message_ids': undefined,
                 'compose_as_todo' : false,
-                'readonly' : true,
+                'readonly' : false,
             }, this.action.params);
 
             this.action.params.help = this.action.help || false;
