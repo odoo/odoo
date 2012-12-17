@@ -1301,12 +1301,21 @@ instance.web.WebClient = instance.web.Client.extend({
                             result.context,
                             {search_default_message_unread: true});
                     }
-                    return $.when(self.action_manager.do_action(result, {
+                    var completed = $.Deferred();
+                    $.when(self.action_manager.do_action(result, {
                         clear_breadcrumbs: true,
                         action_menu_id: self.menu.current_menu,
                     })).fail(function() {
                         self.menu.open_menu(options.previous_menu_id);
+                    }).always(function() {
+                        completed.resolve();
                     });
+                    setTimeout(function() {
+                        completed.resolve();
+                    }, 2000);
+                    // We block the menu when clicking on an element until the action has correctly finished
+                    // loading. If something crash, there is a 2 seconds timeout before it's unblocked.
+                    return completed;
                 });
             });
     },
