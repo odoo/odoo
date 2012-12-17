@@ -1414,6 +1414,7 @@ openerp.mail = function (session) {
          *     @param {String} [no_message] Message to display when there are no message
          *     @param {Boolean} [show_link] Display partner (authors, followers...) on link or not
          *     @param {Boolean} [compose_as_todo] The root composer mark automatically the message as todo
+         *     @param {Boolean} [readonly] Read only mode, hide all action buttons and composer
          */
         init: function (parent, action) {
             this._super(parent, action);
@@ -1435,6 +1436,7 @@ openerp.mail = function (session) {
                 'view_inbox': false,
                 'message_ids': undefined,
                 'compose_as_todo' : false,
+                'readonly' : true,
             }, this.action.params);
 
             this.action.params.help = this.action.help || false;
