@@ -1045,13 +1045,13 @@ class procurement_order(osv.osv):
         ''' return True if the supply method of the mto product is 'buy'
         '''
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        partner_obj = self.pool.get('res.partner')
         for procurement in self.browse(cr, uid, ids, context=context):
             if procurement.product_id.product_tmpl_id.supply_method <> 'buy':
                 return False
         return True
 
     def check_supplier_info(self, cr, uid, ids, context=None):
+        partner_obj = self.pool.get('res.partner')
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         for procurement in self.browse(cr, uid, ids, context=context):
             if not procurement.product_id.seller_ids:
