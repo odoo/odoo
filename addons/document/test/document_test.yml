@@ -5,7 +5,6 @@
 -
     !record {model: 'document.directory', id: dir_partner_label}:
         name : "Partner Labels"
-        storage_id : storage_default
         type : ressource
         content_ids:
             - name: "Label"
@@ -22,7 +21,6 @@
 -
     !record {model: 'document.directory', id: directory_1}:
         name : "Directory 1"
-        storage_id : storage_default
         type : directory
 -
     In order to make a directory hierarchy in OpenERP I will make other static directory "Directory 2" and I put its Parent Item as "Directory 1",
@@ -30,7 +28,6 @@
 -
     !record {model: 'document.directory', id: directory_2}:
         name : "Directory 2"
-        storage_id : storage_default
         type : directory
         parent_id : directory_1
 -
