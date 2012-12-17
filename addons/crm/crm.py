@@ -79,9 +79,9 @@ class crm_case_stage(osv.osv):
             help="The status of your document will automatically change regarding the selected stage. " \
                 "For example, if a stage is related to the status 'Close', when your document reaches this stage, it is automatically closed."),
         'subtype': fields.char('Related Subtype', size=64),
-        'case_default': fields.boolean('Common to All Teams',
+        'case_default': fields.boolean('Default to New Sales Team',
                         help="If you check this field, this stage will be proposed by default on each sales team. It will not assign this stage to existing teams."),
-        'fold': fields.boolean('Hide in Views when Empty',
+        'fold': fields.boolean('Fold by Default',
                         help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
         'type': fields.selection([  ('lead','Lead'),
                                     ('opportunity', 'Opportunity'),
@@ -195,14 +195,12 @@ class crm_case_categ(osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'object_id': fields.many2one('ir.model', 'Object Name'),
     }
-
     def _find_object_id(self, cr, uid, context=None):
         """Finds id for case object"""
         context = context or {}
         object_id = context.get('object_id', False)
         ids = self.pool.get('ir.model').search(cr, uid, ['|',('id', '=', object_id),('model', '=', context.get('object_name', False))])
         return ids and ids[0] or False
-
     _defaults = {
         'object_id' : _find_object_id
     }

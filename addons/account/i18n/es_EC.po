@@ -10,14 +10,15 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-10-17 01:09+0000\n"
-"Last-Translator: Cristian Salamea (Gnuthink) <ovnicraft@gmail.com>\n"
+"PO-Revision-Date: 2012-12-13 05:27+0000\n"
+"Last-Translator: Christopher Ormaza - (Ecuadorenlinea.net) "
+"<chris.ormaza@gmail.com>\n"
 "Language-Team: Spanish (Ecuador) <es_EC@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:29+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-14 05:37+0000\n"
+"X-Generator: Launchpad (build 16369)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -29,6 +30,7 @@ msgstr "Sistema de Pago"
 msgid ""
 "An account fiscal position could be defined only once time on same accounts."
 msgstr ""
+"Una posición fiscal solo puede estar definida una vez en las mismas cuentas."
 
 #. module: account
 #: view:account.unreconcile:0
@@ -88,7 +90,7 @@ msgstr "Importar desde factura o pago"
 #: code:addons/account/account_move_line.py:1198
 #, python-format
 msgid "Bad Account!"
-msgstr ""
+msgstr "Cuenta erronea."
 
 #. module: account
 #: view:account.move:0
@@ -111,6 +113,8 @@ msgid ""
 "Error!\n"
 "You cannot create recursive account templates."
 msgstr ""
+"¡Error!\n"
+"No puede crear plantillas de cuentas recursivas."
 
 #. module: account
 #. openerp-web
@@ -183,6 +187,9 @@ msgid ""
 "which is set after generating opening entries from 'Generate Opening "
 "Entries'."
 msgstr ""
+"Tiene que establecer un diario para el asiento de cierre para este año "
+"fiscal, que se crea después de generar el asiento de apertura desde "
+"\"Generar asiento de apertura\"."
 
 #. module: account
 #: field:account.fiscal.position.account,account_src_id:0
@@ -201,6 +208,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Haga clic para añadir un período fiscal.\n"
+"              </p><p>\n"
+"                Un período fiscal es habitualmente un mes o un trimestre. \n"
+"                Normalmente se corresponde con los períodos de presentación "
+"de impuestos\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
@@ -215,7 +230,7 @@ msgstr "Etiqueta de Columna"
 #. module: account
 #: help:account.config.settings,code_digits:0
 msgid "No. of digits to use for account code"
-msgstr ""
+msgstr "Cantidad de dígitos a usar para el código de la cuenta"
 
 #. module: account
 #: help:account.analytic.journal,type:0
@@ -235,6 +250,9 @@ msgid ""
 "lines for invoices. Leave empty if you don't want to use an analytic account "
 "on the invoice tax lines by default."
 msgstr ""
+"Introduzca la cuenta analítica a usar por defecto en las líneas de impuestos "
+"de las facturas. Déjelo vacío si no quiere utilizar cuantas analíticas por "
+"defecto en las líneas de impuestos."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_template_form
@@ -265,7 +283,7 @@ msgstr "Reportes de Bélgica"
 #. module: account
 #: model:account.account.type,name:account.account_type_income_view1
 msgid "Income View"
-msgstr ""
+msgstr "Vista de ingresos"
 
 #. module: account
 #: help:account.account,user_type:0
@@ -281,7 +299,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,sale_refund_sequence_next:0
 msgid "Next credit note number"
-msgstr ""
+msgstr "Número siguiente de nota de crédito"
 
 #. module: account
 #: help:account.config.settings,module_account_voucher:0
@@ -290,6 +308,9 @@ msgid ""
 "sales, purchase, expense, contra, etc.\n"
 "                This installs the module account_voucher."
 msgstr ""
+"Incluye todos los requisitos básicos para la anotación de comprobantes de "
+"banco, efectivo, ventas, compras, gastos, etc.. \n"
+"                Instala el módulo account_voucher"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_use_model_create_entry

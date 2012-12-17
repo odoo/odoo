@@ -121,7 +121,9 @@ class crm_lead(base_stage, format_address, osv.osv):
         section_id = self._resolve_section_id_from_context(cr, uid, context=context)
         if section_id:
             search_domain += ['|', ('section_ids', '=', section_id)]
-        search_domain += ['|', ('id', 'in', ids), ('case_default', '=', True)]
+            search_domain += [('id', 'in', ids)]
+        else:
+            search_domain += ['|', ('id', 'in', ids), ('case_default', '=', True)]
         # retrieve type from the context (if set: choose 'type' or 'both')
         type = self._resolve_type_from_context(cr, uid, context=context)
         if type:
@@ -135,7 +137,6 @@ class crm_lead(base_stage, format_address, osv.osv):
         fold = {}
         for stage in stage_obj.browse(cr, access_rights_uid, stage_ids, context=context):
             fold[stage.id] = stage.fold or False
-
         return result, fold
 
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
