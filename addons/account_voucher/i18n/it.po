@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:01+0000\n"
-"PO-Revision-Date: 2012-12-15 22:40+0000\n"
-"Last-Translator: Sergio Corato <Unknown>\n"
+"PO-Revision-Date: 2012-12-16 22:28+0000\n"
+"Last-Translator: Luca Crea – EUROPA s.a.s. <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-16 04:48+0000\n"
+"X-Launchpad-Export-Date: 2012-12-17 04:47+0000\n"
 "X-Generator: Launchpad (build 16372)\n"
 
 #. module: account_voucher
@@ -286,6 +286,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliccare per creare una ricevuta di vendita.\n"
+"              </p><p>\n"
+"                Quando la ricevuta di vendita è confermata, è possibile "
+"registrazione l'incasso del cliente\n"
+"                relativo a questa ricevuta di vendita.\n"
+"              </p>\n"
+"            "
 
 #. module: account_voucher
 #: help:account.voucher,message_unread:0
@@ -552,6 +560,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliccare per registrare un pagamento. \n"
+"              </p><p>\n"
+"                Inserire il cliente e il metodo di pagamento e poi, sarà "
+"possibile sia\n"
+"                creare manualmente una registrazione di pagamento oppure\n"
+"                OpenERP proporrà automaticamente la riconciliazione di \n"
+"                questo pagamento con le fatture o le vendite aperte.\n"
+"              </p>\n"
+"            "
 
 #. module: account_voucher
 #: field:account.config.settings,expense_currency_exchange_account_id:0
@@ -818,6 +836,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliccare per creare un nuovo pagamento a fornitore.\n"
+"              </p><p>\n"
+"                OpenERP aiuta a tracciare facilmente i pagamenti fatti e a "
+"ricordare\n"
+"                i saldi residui da pagare ai fornitori.\n"
+"              </p>\n"
+"            "
 
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
@@ -870,7 +896,7 @@ msgstr "E' necessario definire una sequenza per il sezionale."
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Total Allocation"
-msgstr ""
+msgstr "Totale Importo"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -881,12 +907,12 @@ msgstr "Raggruppa per Data Fattura"
 #: code:addons/account_voucher/account_voucher.py:1093
 #, python-format
 msgid "Wrong bank statement line"
-msgstr ""
+msgstr "Riga registrazione bancaria errata"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Post"
-msgstr "Emetti"
+msgstr "Pubblica"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -978,7 +1004,7 @@ msgstr "Annulla"
 #. module: account_voucher
 #: model:ir.actions.client,name:account_voucher.action_client_invoice_menu
 msgid "Open Invoicing Menu"
-msgstr ""
+msgstr "Apri Menu Fatturazione"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -1088,7 +1114,7 @@ msgstr "Maggio"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Sale Receipt"
-msgstr ""
+msgstr "Ricevuta di Vendita"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -1125,7 +1151,7 @@ msgstr "Importo originario"
 #: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
 msgid "Purchase Receipt"
-msgstr ""
+msgstr "Ricevuta d'Acquisto"
 
 #. module: account_voucher
 #: help:account.voucher,payment_rate:0
@@ -1133,6 +1159,9 @@ msgid ""
 "The specific rate that will be used, in this voucher, between the selected "
 "currency (in 'Payment Rate Currency' field)  and the voucher currency."
 msgstr ""
+"Il tasso specificato sarà usato, in questo voucher, tra la valuta "
+"selezionata (nel campo 'Tasso di Cambio Valuta Pagamento') e la valuta del "
+"voucher."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -1206,7 +1235,7 @@ msgstr "Storico messaggi e comunicazioni"
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_statement_from_invoice_lines
 msgid "Entries by Statement from Invoices"
-msgstr ""
+msgstr "Registrazioni per Movimento da Fatture"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -1232,7 +1261,7 @@ msgstr ""
 #: code:addons/account_voucher/account_voucher.py:864
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
-msgstr ""
+msgstr "Non è possibile eliminare voucher(s) che sono già aperti o pagati."
 
 #. module: account_voucher
 #: help:account.voucher,date:0
@@ -1242,7 +1271,7 @@ msgstr "Data effettiva per le registrazioni contabili"
 #. module: account_voucher
 #: model:mail.message.subtype,name:account_voucher.mt_voucher
 msgid "Status Change"
-msgstr ""
+msgstr "Cambio di stato"
 
 #. module: account_voucher
 #: selection:account.voucher,payment_option:0
@@ -1291,7 +1320,7 @@ msgstr "Residuo"
 #: code:addons/account_voucher/account_voucher.py:1001
 #, python-format
 msgid "Insufficient Configuration!"
-msgstr ""
+msgstr "Configurazione Insufficiente!"
 
 #. module: account_voucher
 #: help:account.voucher,active:0
