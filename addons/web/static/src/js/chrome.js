@@ -1200,7 +1200,7 @@ instance.web.WebClient = instance.web.Client.extend({
             var browser_offset = (offset < 0) ? "-" : "+";
             browser_offset += _.str.sprintf("%02d", Math.abs(offset / 60));
             browser_offset += _.str.sprintf("%02d", Math.abs(offset % 60));
-            if (browser_offset !== user_offset && self.session.username !== 'anonymous') {
+            if (browser_offset !== user_offset) {
                 var $icon = $(QWeb.render('WebClient.timezone_systray'));
                 $icon.on('click', function() {
                     var notification = self.do_warn(_t("Timezone mismatch"), QWeb.render('WebClient.timezone_notification', {
