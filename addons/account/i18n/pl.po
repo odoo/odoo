@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-12 20:07+0000\n"
+"PO-Revision-Date: 2012-12-15 20:08+0000\n"
 "Last-Translator: Grzegorz Grzelak (OpenGLOBE.pl) <grzegorz@openglobe.pl>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-13 04:43+0000\n"
-"X-Generator: Launchpad (build 16361)\n"
+"X-Launchpad-Export-Date: 2012-12-16 04:47+0000\n"
+"X-Generator: Launchpad (build 16372)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -1344,6 +1344,8 @@ msgid ""
 "The amount expressed in the secondary currency must be positif when journal "
 "item are debit and negatif when journal item are credit."
 msgstr ""
+"Wartość wyrażona w drugiej walucie musi być dodatnia dla pozycji Winien lub "
+"ujemna jeśli pozycja jest Ma."
 
 #. module: account
 #: view:account.invoice.cancel:0
@@ -1868,6 +1870,14 @@ msgid ""
 "should choose 'Round per line' because you certainly want the sum of your "
 "tax-included line subtotals to be equal to the total amount with taxes."
 msgstr ""
+"Jeśli wybierzesz 'Zaokrąglaj pozycje', to dla każdego podatku, każda wartość "
+"będzie obliczona i zaokrąglona w każdej pozycji zamówienia sprzedaży, "
+"zamówienia zakupu lub faktury i dopiero zaokrąglone wartości będą zsumowane. "
+"Jeśli wybierzesz 'Zaokrąglaj globalnie', to podatki i pozycje zostaną "
+"najpierw zsumowane i dopiero ewentualnie zaokrąglone. Jeśli stosujesz "
+"sprzedaż z podatkami wliczonymi w cenę, to powinieneś wybrać 'Zaokrąglaj "
+"pozycje' ponieważ zapewne chcesz, aby suma wartości z podatkami była równa "
+"sumie wartości brutto."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_report_account_type_sales_tree_all
@@ -2215,6 +2225,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kliknij, aby zarejestrować fakturę od dostawcy.\n"
+"              </p><p>\n"
+"                Możesz rejestrować faktury w zależności od zakupów lub\n"
+"                przyjęć. OpenERP generuje również projekty faktur\n"
+"                automatycznie z zamówienia zakupu lub przyjęcia "
+"zewnętrznego.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: sql_constraint:account.move.line:0
@@ -2245,6 +2264,7 @@ msgid ""
 "This journal already contains items for this period, therefore you cannot "
 "modify its company field."
 msgstr ""
+"Nie możesz modyfikować firmy, ponieważ dziennik zawiera zapisy w tym okresie."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_project_account_analytic_line_form
@@ -2273,6 +2293,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kliknij, aby zarejestrować wyciąg bankowy.\n"
+"              </p><p>\n"
+"                Wyciąg jest listę transakcji banko dla konkretnego konta\n"
+"                w określonym czasie.\n"
+"              </p><p>\n"
+"                OpenERP pozwala uzgadniać pozycje wyciągu bezpośrednio\n"
+"                z fakturami sprzedaży lub zakupu.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: field:account.config.settings,currency_id:0
@@ -2325,7 +2355,7 @@ msgstr "Zaksięgowane"
 #: field:account.bank.statement,message_follower_ids:0
 #: field:account.invoice,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Wypowiadający się"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_print_journal
@@ -3556,7 +3586,7 @@ msgstr "Zawsze"
 #: field:account.config.settings,module_account_accountant:0
 msgid ""
 "Full accounting features: journals, legal statements, chart of accounts, etc."
-msgstr ""
+msgstr "Funkcjonalności księgowe: dzienniki, okresy, konta, wyciągi itp."
 
 #. module: account
 #: view:account.analytic.line:0
@@ -3957,6 +3987,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kliknij, aby utworzyć fakturę dla klienta.\n"
+"              </p><p>\n"
+"                Elektroniczne fakturowanie OpenERP pozwala szybko \n"
+"                i łatwo zarządzać płatnościami. Klient może otrzymać\n"
+"                fakturę mailem i może zapłacić ją od razu lub\n"
+"                zaimportować do swoejgo systemu.\n"
+"              </p><p>\n"
+"                Komunikacja z klientem jest automatycznie wyświetlana\n"
+"                pod fakturą.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: field:account.tax.code,name:0
@@ -4467,7 +4509,7 @@ msgstr "tytuł"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Create a draft credit note"
-msgstr ""
+msgstr "Utwórz projekt korekty"
 
 #. module: account
 #: view:account.invoice:0
@@ -5772,6 +5814,9 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Zawiera podsumowanie wypowiedzi (liczbę wiadomości, ...). To podsumowanie "
+"jest bezpośrednio w formacie html, aby można je było stosować w widokach "
+"kanban."
 
 #. module: account
 #: field:account.tax,child_depend:0
@@ -6777,7 +6822,7 @@ msgstr "Nie możesz tworzyć zapisów na zamknietym koncie"
 #: code:addons/account/account_invoice.py:594
 #, python-format
 msgid "Invoice line account's company and invoice's compnay does not match."
-msgstr ""
+msgstr "Firma z pozycji nie odpowiada firmie z faktury"
 
 #. module: account
 #: view:account.invoice:0
@@ -7589,7 +7634,7 @@ msgstr "Dokument źródłowy"
 #: code:addons/account/account_analytic_line.py:90
 #, python-format
 msgid "There is no expense account defined for this product: \"%s\" (id:%d)."
-msgstr ""
+msgstr "Brak konta rozchodów dla produktu: \"%s\" (id:%d)."
 
 #. module: account
 #: constraint:account.account:0
@@ -7621,6 +7666,8 @@ msgid ""
 "You can not delete an invoice which is not cancelled. You should refund it "
 "instead."
 msgstr ""
+"Nie możesz usuwać faktury, która nie jest anulowana. Powinieneś wystawić "
+"korektę."
 
 #. module: account
 #: help:account.tax,amount:0
@@ -7948,11 +7995,25 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                Kliknij, aby utworzyć konto analityczne.\n"
+"              </p><p>\n"
+"                Ustawowy plan kont ma strukturę dostosowaną do wymagań\n"
+"                urzędowych twojego kraju. Analityczny plan kont powinien\n"
+"                odzwierciedlać strukturę twojego biznesu w analizie\n"
+"                kosztów i przychodów.\n"
+"              </p><p>\n"
+"                Zwykle ta struktura odzwierciedla umowy, projekty, produkty\n"
+"                lub wydziały. Większość operacji w OpenERP (faktury, karty\n"
+"                pracy, wydatki itd.) generują zapisy analityczne na kontach\n"
+"                analitycznych.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_view
 msgid "Root/View"
-msgstr ""
+msgstr "Widok/Korzeń"
 
 #. module: account
 #: code:addons/account/account.py:3148
@@ -8067,6 +8128,8 @@ msgid ""
 "This date will be used as the invoice date for credit note and period will "
 "be chosen accordingly!"
 msgstr ""
+"Ta data zostanie przyjęta jako data korekty a okres zostanie przypisany "
+"odpowiedni!"
 
 #. module: account
 #: view:product.template:0
@@ -9063,6 +9126,7 @@ msgstr "Kod konta musi byc unikalny w ramach firmy !"
 #: help:product.template,property_account_expense:0
 msgid "This account will be used to value outgoing stock using cost price."
 msgstr ""
+"To konto będzie stosowane do wyceny zapasów wychodzących wg ceny kosztowej."
 
 #. module: account
 #: view:account.invoice:0
@@ -9332,7 +9396,7 @@ msgstr "Proejkty faktur są sprawdzone, zatwierdzane i wydrukowane."
 #: field:account.bank.statement,message_is_follower:0
 #: field:account.invoice,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Jest wypowiadającym się"
 
 #. module: account
 #: view:account.move:0
@@ -10536,7 +10600,7 @@ msgstr "Suma"
 #: code:addons/account/wizard/account_invoice_refund.py:109
 #, python-format
 msgid "Cannot %s draft/proforma/cancel invoice."
-msgstr ""
+msgstr "Nie można %s faktury w stanie projekt/proforma/anulowano."
 
 #. module: account
 #: field:account.tax,account_analytic_paid_id:0

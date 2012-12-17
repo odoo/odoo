@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-03 16:01+0000\n"
-"PO-Revision-Date: 2012-12-09 13:10+0000\n"
+"PO-Revision-Date: 2012-12-15 13:57+0000\n"
 "Last-Translator: Davide Corio - agilebg.com <davide.corio@agilebg.com>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-10 04:39+0000\n"
-"X-Generator: Launchpad (build 16341)\n"
+"X-Launchpad-Export-Date: 2012-12-16 04:49+0000\n"
+"X-Generator: Launchpad (build 16372)\n"
 
 #. module: mail
 #: field:res.partner,notification_email_send:0
@@ -385,6 +385,10 @@ msgid ""
 "incoming email that does not reply to an existing record will cause the "
 "creation of a new record of this model (e.g. a Project Task)"
 msgstr ""
+"Il model (Tipo Documento OpenERP) al quale questo alias corrisponde. Tutte "
+"le email in arrivo che non corrispondono ad una risposta ad un record "
+"esistente creeranno un nuovo record con questo model (es. un'attività di "
+"progetto)"
 
 #. module: mail
 #: selection:mail.compose.message,type:0
@@ -436,7 +440,7 @@ msgstr "Messaggio email"
 #: help:mail.compose.message,favorite_user_ids:0
 #: help:mail.message,favorite_user_ids:0
 msgid "Users that set this message in their favorites"
-msgstr ""
+msgstr "Utenti che hanno messo questo messaggio nei loro favoriti"
 
 #. module: mail
 #: model:ir.model,name:mail.model_base_config_settings
@@ -551,6 +555,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is "
 "required."
 msgstr ""
+"Foto piccola del gruppo. Automaticamente ridimensionata a 64x64px, "
+"preservando le proporzioni. Usa questo campo ovunque dove un'immagine "
+"piccola è richiesta."
 
 #. module: mail
 #: view:mail.compose.message:0
@@ -591,7 +598,7 @@ msgstr "Mittente messaggi, preso dalle preferenze utente."
 #: code:addons/mail/wizard/invite.py:39
 #, python-format
 msgid "<div>You have been invited to follow a new document.</div>"
-msgstr ""
+msgstr "<div>Sei stato invitato a seguire un nuovo documento.</div>"
 
 #. module: mail
 #: field:mail.compose.message,parent_id:0
@@ -605,7 +612,7 @@ msgstr "Messaggio Superiore"
 #: field:mail.message,res_id:0
 #: field:mail.wizard.invite,res_id:0
 msgid "Related Document ID"
-msgstr ""
+msgstr "ID documento collegato"
 
 #. module: mail
 #: model:ir.actions.client,help:mail.action_mail_to_me_feeds
@@ -617,6 +624,12 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    <b>Nessun messaggio privato.</b>\n"
+"                </p><p>\n"
+"                    Questa lista contiene messaggi inviati a te.\n"
+"                </p>\n"
+"            "
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.group_rd_ir_ui_menu
@@ -633,7 +646,7 @@ msgstr "/web/binary/upload_attachment"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread
 msgid "Email Thread"
-msgstr ""
+msgstr "Thread Email"
 
 #. module: mail
 #: view:mail.mail:0
@@ -661,6 +674,8 @@ msgid ""
 "You may not create a user. To create new users, you should use the "
 "\"Settings > Users\" menu."
 msgstr ""
+"Non dovresti creare un utente. Per creare nuovi utenti dovresti usare il "
+"menù \"Configurazioni > Utenti\"."
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_message
@@ -676,7 +691,7 @@ msgstr "Messaggi"
 #: help:mail.followers,res_model:0
 #: help:mail.wizard.invite,res_model:0
 msgid "Model of the followed resource"
-msgstr ""
+msgstr "Model della risorsa seguita"
 
 #. module: mail
 #. openerp-web
@@ -710,6 +725,7 @@ msgid ""
 "Only the invited followers can read the\n"
 "                                    discussions on this group."
 msgstr ""
+"Solo gli utenti invitati possono leggere le discussioni di questo gruppo."
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_ui_menu
@@ -724,7 +740,7 @@ msgstr "Ha allegati"
 #. module: mail
 #: view:mail.mail:0
 msgid "on"
-msgstr ""
+msgstr "in data"
 
 #. module: mail
 #: code:addons/mail/mail_message.py:809
@@ -733,6 +749,8 @@ msgid ""
 "The following partners chosen as recipients for the email have no email "
 "address linked :"
 msgstr ""
+"Il partner seguito usato come destinatario dell'email non ha un indirizzo "
+"email collegato:"
 
 #. module: mail
 #: help:mail.alias,alias_defaults:0
@@ -740,6 +758,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
+"Un dizionario Python che verrà usato per fornire valori di default durante "
+"la creazione di nuovi record per questi alias."
 
 #. module: mail
 #: help:mail.compose.message,notified_partner_ids:0
@@ -747,6 +767,8 @@ msgstr ""
 msgid ""
 "Partners that have a notification pushing this message in their mailboxes"
 msgstr ""
+"Partners che hanno un avviso di ricezione di questo messaggio nelle loro "
+"caselle."
 
 #. module: mail
 #: selection:mail.compose.message,type:0
@@ -769,6 +791,15 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    <b>Ben fatto!</b> La tua inbox è vuota.\n"
+"                </p><p>\n"
+"                    La tua inbox contiene messaggi privati o email inviate a "
+"te\n"
+"                    così come informazioni riguardanti documento o persone\n"
+"                    che segui.\n"
+"                </p>\n"
+"            "
 
 #. module: mail
 #: field:mail.mail,notification:0
@@ -793,6 +824,8 @@ msgstr "Invia Adesso"
 msgid ""
 "Unable to send email, please configure the sender's email address or alias."
 msgstr ""
+"Impossibile inviare email, si prega di configuare l'indirizzo email del "
+"mittente o alias."
 
 #. module: mail
 #: help:res.users,alias_id:0
@@ -800,6 +833,8 @@ msgid ""
 "Email address internally associated with this user. Incoming emails will "
 "appear in the user's notifications."
 msgstr ""
+"Indirizzo email internamente associato all'utente. Le email in ingresso "
+"compariranno tra le notifiche dell'utente."
 
 #. module: mail
 #: field:mail.group,image:0
@@ -819,7 +854,7 @@ msgstr "o"
 #: help:mail.compose.message,vote_user_ids:0
 #: help:mail.message,vote_user_ids:0
 msgid "Users that voted for this message"
-msgstr ""
+msgstr "Utenti che hanno votato questo messaggio"
 
 #. module: mail
 #: help:mail.group,alias_id:0
@@ -827,6 +862,8 @@ msgid ""
 "The email address associated with this group. New emails received will "
 "automatically create new topics."
 msgstr ""
+"L'indirizzo email associato a questo gruppo. Le nuove email ricevuto "
+"creeranno automaticamente nuovi argomenti."
 
 #. module: mail
 #: view:mail.mail:0
@@ -854,6 +891,7 @@ msgstr "Messaggi Figli"
 #: help:mail.message,to_read:0
 msgid "Functional field to search for messages the current user has to read"
 msgstr ""
+"Campo funzione per ricercare i messaggi che l'utente corrente ha già letto"
 
 #. module: mail
 #: field:mail.alias,alias_user_id:0
@@ -939,7 +977,7 @@ msgstr "Chiuso"
 #. module: mail
 #: field:mail.alias,alias_force_thread_id:0
 msgid "Record Thread ID"
-msgstr ""
+msgstr "ID Record Discussione"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_group_root
@@ -958,6 +996,16 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    Nessun messaggio trovato e nessun messaggio ancora "
+"inviato.\n"
+"                </p><p>\n"
+"                    Cliccare sull'icona in alto a destra per comporre un "
+"messaggio.\n"
+"                    Questo messaggio verrà inviato via email se per un "
+"contatto interno.\n"
+"                </p>\n"
+"            "
 
 #. module: mail
 #: view:mail.mail:0
@@ -980,7 +1028,7 @@ msgstr "Tutti i feeds"
 #: help:mail.compose.message,record_name:0
 #: help:mail.message,record_name:0
 msgid "Name get of the related document."
-msgstr ""
+msgstr "Nome del documento correlato."
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_notifications
@@ -1005,6 +1053,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
+"ID opzionale della discussione (record) al quale ogni messaggio in arrivo "
+"verrà allegato, anche senza risposte. Se impostato, disabiliterà totalmente "
+"la creazione di nuovi record."
 
 #. module: mail
 #: help:mail.message.subtype,name:0
@@ -1015,6 +1066,11 @@ msgid ""
 "subtypes allow to precisely tune the notifications the user want to receive "
 "on its wall."
 msgstr ""
+"Il sottotipo messaggio fornisce un tipo più preciso di messaggio, "
+"specialmente per il sistema di notifiche. Per esempio, può essere una "
+"notifica relativa ad un nuovo record (Nuovo), o ad un cambiamento di fase in "
+"un processo (Cambio fase). I sottotipi messaggio consentono di rendere "
+"preceise le notifiche che l'utente vuole dicevere sulla sua bacheca."
 
 #. module: mail
 #: view:mail.mail:0
@@ -1024,7 +1080,7 @@ msgstr "da"
 #. module: mail
 #: model:ir.ui.menu,name:mail.group_best_sales_practices_ir_ui_menu
 msgid "Best Sales Practices"
-msgstr ""
+msgstr "Best Sales Practices"
 
 #. module: mail
 #: selection:mail.group,public:0
@@ -1101,7 +1157,7 @@ msgstr "Scrivi ai miei followers"
 #. module: mail
 #: model:ir.model,name:mail.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "Gruppi d'accesso"
 
 #. module: mail
 #: field:mail.message.subtype,default:0
@@ -1167,6 +1223,8 @@ msgstr "Seguendo"
 msgid ""
 "Unfortunately this email alias is already used, please choose a unique one"
 msgstr ""
+"Sfortunatamente questo alias email è già usato, si prega di sceglierne uno "
+"univoco."
 
 #. module: mail
 #: help:mail.alias,alias_user_id:0
@@ -1176,11 +1234,15 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
+"Il proprietario dei record creati all'arrivo delle email su questo alias. Se "
+"questo campo non è valorizzato il sistema tenterà di cercare il proprietario "
+"corretto in base all'indirizzo mittente (Da), o userà l'account "
+"amministratore se nessun utente verrà trovato per quell'indirizzo."
 
 #. module: mail
 #: view:mail.favorite:0
 msgid "Favorite Form"
-msgstr ""
+msgstr "Form Preferiti"
 
 #. module: mail
 #: help:mail.group,image:0
@@ -1188,6 +1250,8 @@ msgid ""
 "This field holds the image used as photo for the group, limited to "
 "1024x1024px."
 msgstr ""
+"Questo campo gestisce l'immagine usata come foto per il gruppo, limitata a "
+"1024x1024px."
 
 #. module: mail
 #: field:mail.compose.message,attachment_ids:0
@@ -1200,7 +1264,7 @@ msgstr "Allegati"
 #: field:mail.compose.message,record_name:0
 #: field:mail.message,record_name:0
 msgid "Message Record Name"
-msgstr ""
+msgstr "Nome record messaggio"
 
 #. module: mail
 #: field:mail.mail,email_cc:0
@@ -1239,6 +1303,8 @@ msgstr "Completato"
 msgid ""
 "Related model of the subtype. If False, this subtype exists for all models."
 msgstr ""
+"Model relativo al sottotipo. Se Falso, questo sottotipo è valido per tutti i "
+"models."
 
 #. module: mail
 #: model:mail.message.subtype,name:mail.mt_comment
@@ -1331,22 +1397,24 @@ msgid ""
 "This group is visible by non members.             Invisible groups can add "
 "members through the invite button."
 msgstr ""
+"Questo gruppo è visibile ai non membri. I gruppi invisibili posso aggiungere "
+"membri tramite il pulsante invita."
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.group_board_ir_ui_menu
 msgid "Board meetings"
-msgstr ""
+msgstr "Appuntamenti CdA"
 
 #. module: mail
 #: field:mail.alias,alias_model_id:0
 msgid "Aliased Model"
-msgstr ""
+msgstr "Modello con alias"
 
 #. module: mail
 #: help:mail.compose.message,message_id:0
 #: help:mail.message,message_id:0
 msgid "Message unique identifier"
-msgstr ""
+msgstr "Identificativo univoco messaggio"
 
 #. module: mail
 #: field:mail.group,description:0
@@ -1373,6 +1441,10 @@ msgid ""
 "\n"
 "(Document type: %s, Operation: %s)"
 msgstr ""
+"L'operazione richiesta non può essere completata per questioni di sicurezza. "
+"Si prega di contattare l'amministratore di sistema.\n"
+"\n"
+"(TIpo documento: %s, Operazione: %s)"
 
 #. module: mail
 #: selection:res.partner,notification_email_send:0
@@ -1408,6 +1480,8 @@ msgstr "Preferiti"
 msgid ""
 "Choose in which case you want to receive an email when you receive new feeds."
 msgstr ""
+"Scegliere in quale caso si vuole ricevere un'email quando si riceve un nuovo "
+"feed."
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_groups
@@ -1423,6 +1497,10 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    Nessun messaggio per questo gruppo.\n"
+"                </p>\n"
+"            "
 
 #. module: mail
 #: view:mail.group:0
@@ -1432,13 +1510,15 @@ msgid ""
 "installed\n"
 "                                    the portal module."
 msgstr ""
+"Questo gruppo è invisibile a tutti, inclusi i clienti se installi il modulo "
+"portal."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:210
 #, python-format
 msgid "Set back to Todo"
-msgstr ""
+msgstr "Ripristina a Da Fare"
 
 #. module: mail
 #. openerp-web
@@ -1468,6 +1548,8 @@ msgid ""
 "If you have setup a catch-all email domain redirected to the OpenERP server, "
 "enter the domain name here."
 msgstr ""
+"Se un dominio catch-all è stato configurato per essere rediretto su OpenERP, "
+"inserire il dominio qui."
 
 #. module: mail
 #: field:mail.compose.message,favorite_user_ids:0
@@ -1502,12 +1584,14 @@ msgid ""
 "Technical field holding the message notifications. Use notified_partner_ids "
 "to access notified partners."
 msgstr ""
+"Campo contenente le notifiche messaggio. Usare notified_partner_ids per "
+"accedere ai partner notificati."
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_feeds
 #: model:ir.ui.menu,name:mail.mail_feeds_main
 msgid "Messaging"
-msgstr ""
+msgstr "Comunicazioni"
 
 #. module: mail
 #: view:mail.alias:0
@@ -1526,6 +1610,8 @@ msgid ""
 "Message subtypes followed, meaning subtypes that will be pushed onto the "
 "user's Wall."
 msgstr ""
+"Sottotipi messaggio seguiti, ovvero sottotipi che verranno pubblicati sulla "
+"bacheca dell'utente."
 
 #. module: mail
 #: help:mail.group,message_ids:0
@@ -1537,7 +1623,7 @@ msgstr "Storico messaggi e comunicazioni"
 #. module: mail
 #: help:mail.mail,references:0
 msgid "Message references, such as identifiers of previous messages"
-msgstr ""
+msgstr "Riferimenti messaggio, come l'identificatore dei messaggi precedenti"
 
 #. module: mail
 #: field:mail.compose.message,composition_mode:0
@@ -1550,14 +1636,14 @@ msgstr "Modo composizione"
 #: field:mail.message,model:0
 #: field:mail.wizard.invite,res_model:0
 msgid "Related Document Model"
-msgstr ""
+msgstr "Model documento relativo"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:272
 #, python-format
 msgid "unlike"
-msgstr ""
+msgstr "unlike"
 
 #. module: mail
 #: help:mail.compose.message,author_id:0
@@ -1566,6 +1652,8 @@ msgid ""
 "Author of the message. If not set, email_from may hold an email address that "
 "did not match any partner."
 msgstr ""
+"Autore del messaggio. Se non valorizzato, email_from può equivalere ad un "
+"indirizzo email che non corrisponde a nessun partner."
 
 #. module: mail
 #: help:mail.mail,email_cc:0
@@ -1581,12 +1669,12 @@ msgstr "Alias dominio"
 #: code:addons/mail/update.py:93
 #, python-format
 msgid "Error during communication with the publisher warranty server."
-msgstr ""
+msgstr "Errore nella comunicazione con il server di garanzia dell'editore."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_vote
 msgid "Mail Vote"
-msgstr ""
+msgstr "Voto Email"
 
 #. module: mail
 #: model:ir.actions.client,help:mail.action_mail_star_feeds
@@ -1601,6 +1689,15 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    <b>Nessun todo.</b>\n"
+"                </p><p>\n"
+"                    Quando si processanno messaggi nella propria inbox, è "
+"possibile marcarne\n"
+"                    alcuni come <i>todo</i>. Da questo menù, è possibile "
+"processare i propri todo.\n"
+"                </p>\n"
+"            "
 
 #. module: mail
 #: selection:mail.mail,state:0
@@ -1616,12 +1713,12 @@ msgstr "Contatti Aggiuntivi"
 #: help:mail.compose.message,parent_id:0
 #: help:mail.message,parent_id:0
 msgid "Initial thread message."
-msgstr ""
+msgstr "Messaggio iniziale della discussione"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.group_hr_policies_ir_ui_menu
 msgid "HR Policies"
-msgstr ""
+msgstr "Politiche HR"
 
 #. module: mail
 #: selection:res.partner,notification_email_send:0
@@ -1646,7 +1743,7 @@ msgstr "File"
 #: code:addons/mail/static/src/js/many2many_tags_email.js:63
 #, python-format
 msgid "Please complete partner's informations and Email"
-msgstr ""
+msgstr "Si prega di completare le informazioni e l'email del partner"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_message_subtype
@@ -1657,17 +1754,17 @@ msgstr "Sottotipi"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias
 msgid "Email Aliases"
-msgstr ""
+msgstr "Alias Email"
 
 #. module: mail
 #: field:mail.group,image_small:0
 msgid "Small-sized photo"
-msgstr ""
+msgstr "Foto piccola"
 
 #. module: mail
 #: help:mail.mail,reply_to:0
 msgid "Preferred response address for the message"
-msgstr ""
+msgstr "Indirizzo risposte preferito per i messaggi"
 
 #~ msgid "Open Attachments"
 #~ msgstr "Apri allegati"
