@@ -33,16 +33,16 @@ if os.name == 'nt':
 
 
 def listdir(dir, recursive=False):
-	"""Allow to recursively get the file listing"""
-	dir = os.path.normpath(dir)
-	if not recursive:
-		return os.listdir(dir)
+    """Allow to recursively get the file listing"""
+    dir = os.path.normpath(dir)
+    if not recursive:
+        return os.listdir(dir)
 
-	res = []
-	for root, dirs, files in walksymlinks(dir):
-		root = root[len(dir)+1:]
-		res.extend([opj(root, f) for f in files])
-	return res
+    res = []
+    for root, dirs, files in walksymlinks(dir):
+        root = root[len(dir)+1:]
+        res.extend([opj(root, f) for f in files])
+    return res
 
 def walksymlinks(top, topdown=True, onerror=None):
     """
@@ -117,7 +117,7 @@ else:
                 return info['ProcessId'] == getppid()
 
 if __name__ == '__main__':
-	from pprint import pprint as pp
-	pp(listdir('../report', True))
+    from pprint import pprint as pp
+    pp(listdir('../report', True))
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

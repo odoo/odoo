@@ -44,9 +44,8 @@ class ir_ui_menu(osv.osv):
     def __init__(self, *args, **kwargs):
         self.cache_lock = threading.RLock()
         self._cache = {}
-        r = super(ir_ui_menu, self).__init__(*args, **kwargs)
+        super(ir_ui_menu, self).__init__(*args, **kwargs)
         self.pool.get('ir.model.access').register_cache_clearing_method(self._name, 'clear_cache')
-        return r
 
     def clear_cache(self):
         with self.cache_lock:
@@ -66,7 +65,7 @@ class ir_ui_menu(osv.osv):
             modelaccess = self.pool.get('ir.model.access')
             user_groups = set(self.pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['groups_id'])['groups_id'])
             result = []
-            for menu in self.browse(cr, SUPERUSER_ID, ids, context=context):
+            for menu in self.browse(cr, uid, ids, context=context):
                 # this key works because user access rights are all based on user's groups (cfr ir_model_access.check)
                 key = (cr.dbname, menu.id, tuple(user_groups))
                 if key in self._cache:
@@ -144,7 +143,7 @@ class ir_ui_menu(osv.osv):
         return res
 
     def _get_full_name(self, cr, uid, ids, name=None, args=None, context=None):
-        if context == None:
+        if context is None:
             context = {}
         res = {}
         for elmt in self.browse(cr, uid, ids, context=context):
@@ -168,9 +167,22 @@ class ir_ui_menu(osv.osv):
         self.clear_cache()
         return super(ir_ui_menu, self).write(*args, **kwargs)
 
-    def unlink(self, *args, **kwargs):
+    def unlink(self, cr, uid, ids, context=None):
+        # Detach children and promote them to top-level, because it would be unwise to
+        # cascade-delete submenus blindly. We also can't use ondelete=set null because
+        # that is not supported when _parent_store is used (would silently corrupt it).
+        # TODO: ideally we should move them under a generic "Orphans" menu somewhere?
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        local_context = dict(context or {})
+        local_context['ir.ui.menu.full_list'] = True
+        direct_children_ids = self.search(cr, uid, [('parent_id', 'in', ids)], context=local_context)
+        if direct_children_ids:
+            self.write(cr, uid, direct_children_ids, {'parent_id': False})
+
+        result = super(ir_ui_menu, self).unlink(cr, uid, ids, context=context)
         self.clear_cache()
-        return super(ir_ui_menu, self).unlink(*args, **kwargs)
+        return result
 
     def copy(self, cr, uid, id, default=None, context=None):
         ir_values_obj = self.pool.get('ir.values')
@@ -182,7 +194,7 @@ class ir_ui_menu(osv.osv):
             next_num=int(concat[0])+1
             datas['name']=rex.sub(('(%d)'%next_num),datas['name'])
         else:
-            datas['name']=datas['name']+'(1)'
+            datas['name'] += '(1)'
         self.write(cr,uid,[res],{'name':datas['name']})
         ids = ir_values_obj.search(cr, uid, [
             ('model', '=', 'ir.ui.menu'),
@@ -307,7 +319,9 @@ class ir_ui_menu(osv.osv):
         'name': fields.char('Menu', size=64, required=True, translate=True),
         'sequence': fields.integer('Sequence'),
         'child_id': fields.one2many('ir.ui.menu', 'parent_id', 'Child IDs'),
-        'parent_id': fields.many2one('ir.ui.menu', 'Parent Menu', select=True),
+        'parent_id': fields.many2one('ir.ui.menu', 'Parent Menu', select=True, ondelete="restrict"),
+        'parent_left': fields.integer('Parent Left', select=True),
+        'parent_right': fields.integer('Parent Right', select=True),
         'groups_id': fields.many2many('res.groups', 'ir_ui_menu_group_rel',
             'menu_id', 'gid', 'Groups', help="If you have groups, the visibility of this menu will be based on these groups. "\
                 "If this field is empty, OpenERP will compute visibility based on the related object's read access."),
@@ -348,5 +362,6 @@ class ir_ui_menu(osv.osv):
         'sequence': 10,
     }
     _order = "sequence,id"
+    _parent_store = True
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

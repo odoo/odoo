@@ -231,7 +231,7 @@ class ir_cron(osv.osv):
                 _logger.warning('Tried to poll an undefined table on database %s.', db_name)
             else:
                 raise
-        except Exception, ex:
+        except Exception:
             _logger.warning('Exception in cron:', exc_info=True)
 
         finally:

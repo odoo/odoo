@@ -309,7 +309,7 @@ class res_config_installer(osv.osv_memory):
 
         hooks_results = set()
         for module in base:
-            hook = getattr(self, '_if_%s'%(module), None)
+            hook = getattr(self, '_if_%s'% module, None)
             if hook:
                 hooks_results.update(hook(cr, uid, ids, context=None) or set())
 

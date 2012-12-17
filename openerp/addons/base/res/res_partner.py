@@ -208,10 +208,6 @@ class res_partner(osv.osv, format_address):
         'bank_ids': fields.one2many('res.partner.bank', 'partner_id', 'Banks'),
         'website': fields.char('Website', size=64, help="Website of Partner or Company"),
         'comment': fields.text('Notes'),
-        'address': fields.one2many('res.partner.address', 'partner_id', 'Addresses',
-                deprecated="The address information is now directly stored on each Partner record. "\
-                           "Multiple contacts with their own address can be added via the child_ids relationship. "\
-                           "This field will be removed as of OpenERP 7.1."),
         'category_id': fields.many2many('res.partner.category', id1='partner_id', id2='category_id', string='Tags'),
         'credit_limit': fields.float(string='Credit Limit'),
         'ean13': fields.char('EAN13', size=13),
@@ -309,7 +305,7 @@ class res_partner(osv.osv, format_address):
         if default is None:
             default = {}
         name = self.read(cr, uid, [id], ['name'], context)[0]['name']
-        default.update({'name': _('%s (copy)') % (name)})
+        default.update({'name': _('%s (copy)') % name})
         return super(res_partner, self).copy(cr, uid, id, default, context)
 
     def onchange_type(self, cr, uid, ids, is_company, context=None):
@@ -519,7 +515,7 @@ class res_partner(osv.osv, format_address):
     def view_header_get(self, cr, uid, view_id, view_type, context):
         res = super(res_partner, self).view_header_get(cr, uid, view_id, view_type, context)
         if res: return res
-        if (not context.get('category_id', False)):
+        if not context.get('category_id', False):
             return False
         return _('Partners: ')+self.pool.get('res.partner.category').browse(cr, uid, context['category_id'], context).name
 
@@ -538,7 +534,7 @@ class res_partner(osv.osv, format_address):
         The purpose of this function is to build and return an address formatted accordingly to the
         standards of the country where it belongs.
 
-        :param address: browse record of the res.partner.address to format
+        :param address: browse record of the res.partner to format
         :returns: the address formatted in a display that fit its country habits (or the default ones
             if not country is specified)
         :rtype: string
@@ -563,56 +559,5 @@ class res_partner(osv.osv, format_address):
         elif address.parent_id:
             address_format = '%(company_name)s\n' + address_format
         return address_format % args
-
-# res.partner.address is deprecated; it is still there for backward compability only and will be removed in next version
-class res_partner_address(osv.osv):
-    _table = "res_partner"
-    _name = 'res.partner.address'
-    _order = 'type, name'
-    _columns = {
-        'parent_id': fields.many2one('res.partner', 'Company', ondelete='set null', select=True),
-        'partner_id': fields.related('parent_id', type='many2one', relation='res.partner', string='Partner'),   # for backward compatibility
-        'type': fields.selection( [ ('default','Default'),('invoice','Invoice'), ('delivery','Delivery'), ('contact','Contact'), ('other','Other') ],'Address Type', help="Used to select automatically the right address according to the context in sales and purchases documents."),
-        'function': fields.char('Function', size=128),
-        'title': fields.many2one('res.partner.title','Title'),
-        'name': fields.char('Contact Name', size=64, select=1),
-        'street': fields.char('Street', size=128),
-        'street2': fields.char('Street2', size=128),
-        'zip': fields.char('Zip', change_default=True, size=24),
-        'city': fields.char('City', size=128),
-        'state_id': fields.many2one("res.country.state", 'Fed. State', domain="[('country_id','=',country_id)]"),
-        'country_id': fields.many2one('res.country', 'Country'),
-        'email': fields.char('Email', size=240),
-        'phone': fields.char('Phone', size=64),
-        'fax': fields.char('Fax', size=64),
-        'mobile': fields.char('Mobile', size=64),
-        'birthdate': fields.char('Birthdate', size=64),
-        'is_customer_add': fields.related('partner_id', 'customer', type='boolean', string='Customer'),
-        'is_supplier_add': fields.related('partner_id', 'supplier', type='boolean', string='Supplier'),
-        'active': fields.boolean('Active', help="Uncheck the active field to hide the contact."),
-        'company_id': fields.many2one('res.company', 'Company',select=1),
-        'color': fields.integer('Color Index'),
-    }
-
-    _defaults = {
-        'active': True,
-        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'res.partner', context=c),
-        'color': 0,
-        'type': 'default',
-    }
-
-    def write(self, cr, uid, ids, vals, context=None):
-        logging.getLogger('res.partner').warning("Deprecated use of res.partner.address")
-        if 'partner_id' in vals:
-            vals['parent_id'] = vals.get('partner_id')
-            del(vals['partner_id'])
-        return self.pool.get('res.partner').write(cr, uid, ids, vals, context=context)
-
-    def create(self, cr, uid, vals, context=None):
-        logging.getLogger('res.partner').warning("Deprecated use of res.partner.address")
-        if 'partner_id' in vals:
-            vals['parent_id'] = vals.get('partner_id')
-            del(vals['partner_id'])
-        return self.pool.get('res.partner').create(cr, uid, vals, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
