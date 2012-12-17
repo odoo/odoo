@@ -67,6 +67,7 @@ class res_partner(osv.Model):
             fragment = {'action': action}
 
             if partner.signup_token:
+                fragment['type'] = partner.signup_type
                 fragment['token'] = partner.signup_token
             elif partner.user_ids:
                 fragment['db'] = cr.dbname
@@ -91,6 +92,7 @@ class res_partner(osv.Model):
 
     _columns = {
         'signup_token': fields.char('Signup Token'),
+        'signup_type': fields.char('Signup Token Type'),
         'signup_expiration': fields.datetime('Signup Expiration'),
         'signup_valid': fields.function(_get_signup_valid, type='boolean', string='Signup Token is Valid'),
         'signup_url': fields.function(_get_signup_url, type='char', string='Signup URL'),
@@ -99,7 +101,7 @@ class res_partner(osv.Model):
     def action_signup_prepare(self, cr, uid, ids, context=None):
         return self.signup_prepare(cr, uid, ids, context=context)
 
-    def signup_prepare(self, cr, uid, ids, expiration=False, context=None):
+    def signup_prepare(self, cr, uid, ids, signup_type="signup", expiration=False, context=None):
         """ generate a new token for the partners with the given validity, if necessary
             :param expiration: the expiration datetime of the token (string, optional)
         """
@@ -108,7 +110,7 @@ class res_partner(osv.Model):
                 token = random_token()
                 while self._signup_retrieve_partner(cr, uid, token, context=context):
                     token = random_token()
-                partner.write({'signup_token': token, 'signup_expiration': expiration})
+                partner.write({'signup_token': token, 'signup_type': signup_type, 'signup_expiration': expiration})
         return True
 
     def _signup_retrieve_partner(self, cr, uid, token,
@@ -182,7 +184,7 @@ class res_users(osv.Model):
             partner = res_partner._signup_retrieve_partner(
                             cr, uid, token, check_validity=True, raise_exception=True, context=None)
             # invalidate signup token
-            partner.write({'signup_token': False, 'signup_expiration': False})
+            partner.write({'signup_token': False, 'signup_type': False, 'signup_expiration': False})
 
             partner_user = partner.user_ids and partner.user_ids[0] or False
             if partner_user:
@@ -240,7 +242,7 @@ class res_users(osv.Model):
         # prepare reset password signup
         res_partner = self.pool.get('res.partner')
         partner_ids = [user.partner_id.id for user in self.browse(cr, uid, ids, context)]
-        res_partner.signup_prepare(cr, uid, partner_ids, expiration=now(days=+1), context=context)
+        res_partner.signup_prepare(cr, uid, partner_ids, signup_type="reset", expiration=now(days=+1), context=context)
 
         # send email to users with their signup url
         template = self.pool.get('ir.model.data').get_object(cr, uid, 'auth_signup', 'reset_password_email')
