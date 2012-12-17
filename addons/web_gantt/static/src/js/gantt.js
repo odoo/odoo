@@ -16,7 +16,9 @@ instance.web_gantt.GanttView = instance.web.View.extend({
         this._super.apply(this, arguments);
         this.has_been_loaded = $.Deferred();
         this.chart_id = _.uniqueId();
-        this.on('view_loaded', self, self.load_gantt);
+    },
+    view_loading: function(r) {
+        return this.load_gantt(r);
     },
     load_gantt: function(fields_view_get, fields_get) {
         var self = this;

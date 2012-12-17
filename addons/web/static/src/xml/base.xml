@@ -437,7 +437,7 @@
         <tr>
             <td class="oe_leftbar" valign="top">
                 <t t-set="debug" t-value="__debug__ ? '&amp;debug' : ''"/>
-                <a class="oe_logo" t-attf-href="/?ts=#{Date.now()}#{debug}"><img t-att-src='_s + "/web/static/src/img/logo.png"'/></a>
+                <a class="oe_logo" t-attf-href="/?ts=#{Date.now()}#{debug}"><img t-att-src='widget.session.url("/web/binary/company_logo")'/></a>
                 <div class="oe_secondary_menus_container"/>
                 <div class="oe_footer">
                     Powered by <a href="http://www.openerp.com" target="_blank"><span>OpenERP</span></a>
@@ -1366,7 +1366,7 @@
 </t>
 <t t-name="SelectCreatePopup.search.buttons">
     <t t-if="! widget.options.disable_multiple_selection">
-        <button type="button" class="oe_button oe_selectcreatepopup-search-select" disabled="disabled">Select</button>
+        <button type="button" class="oe_button oe_selectcreatepopup-search-select oe_highlight" disabled="disabled">Select</button>
     </t>
     <button type="button" class="oe_button oe_selectcreatepopup-search-create">Create</button>
     or <a class="oe_button oe_selectcreatepopup-search-close oe_bold oe_form_button_cancel" href="javascript:void(0)">Cancel</a>

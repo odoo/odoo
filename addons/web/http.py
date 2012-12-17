@@ -103,7 +103,7 @@ class WebRequest(object):
             lang = self.httprequest.cookies.get('lang')
         if lang is None:
             lang = self.httprequest.accept_languages.best
-        if lang is None:
+        if not lang:
             lang = 'en_US'
         # tranform 2 letters lang like 'en' into 5 letters like 'en_US'
         lang = babel.core.LOCALE_ALIASES.get(lang, lang)

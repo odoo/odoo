@@ -467,6 +467,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         this.flags = flags || {};
         this.registry = instance.web.views;
         this.views_history = [];
+        this.view_completely_inited = $.Deferred();
     },
     /**
      * @returns {jQuery.Deferred} initial view loading promise
@@ -586,6 +587,8 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                     && self.flags.auto_search
                     && view.controller.searchable !== false) {
                 self.searchview.ready.done(self.searchview.do_search);
+            } else {
+                self.view_completely_inited.resolve();
             }
             self.trigger("controller_inited",view_type,controller);
         });
@@ -700,7 +703,9 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             if (_.isString(groupby)) {
                 groupby = [groupby];
             }
-            controller.do_search(results.domain, results.context, groupby || []);
+            $.when(controller.do_search(results.domain, results.context, groupby || [])).then(function() {
+                self.view_completely_inited.resolve();
+            });
         });
     },
     /**
@@ -782,7 +787,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
 
         var main_view_loaded = this._super();
 
-        var manager_ready = $.when(searchview_loaded, main_view_loaded);
+        var manager_ready = $.when(searchview_loaded, main_view_loaded, this.view_completely_inited);
 
         this.$el.find('.oe_debug_view').change(this.on_debug_changed);
         this.$el.addClass("oe_view_manager_" + (this.action.target || 'current'));
@@ -1186,31 +1191,35 @@ instance.web.View = instance.web.Widget.extend({
     },
     load_view: function(context) {
         var self = this;
-        var view_loaded;
+        var view_loaded_def;
         if (this.embedded_view) {
-            view_loaded = $.Deferred();
+            view_loaded_def = $.Deferred();
             $.async_when().done(function() {
-                view_loaded.resolve(self.embedded_view);
+                view_loaded_def.resolve(self.embedded_view);
             });
         } else {
             if (! this.view_type)
                 console.warn("view_type is not defined", this);
-            view_loaded = instance.web.fields_view_get({
+            view_loaded_def = instance.web.fields_view_get({
                 "model": this.dataset._model,
                 "view_id": this.view_id,
                 "view_type": this.view_type,
                 "toolbar": !!this.options.$sidebar,
             });
         }
-        return view_loaded.then(function(r) {
+        return view_loaded_def.then(function(r) {
             self.fields_view = r;
-            self.trigger('view_loaded', r);
             // add css classes that reflect the (absence of) access rights
             self.$el.addClass('oe_view')
                 .toggleClass('oe_cannot_create', !self.is_action_enabled('create'))
                 .toggleClass('oe_cannot_edit', !self.is_action_enabled('edit'))
                 .toggleClass('oe_cannot_delete', !self.is_action_enabled('delete'));
+            return $.when(self.view_loading(r)).then(function() {
+                self.trigger('view_loaded', r);
+            });
         });
+    },
+    view_loading: function(r) {
     },
     set_default_options: function(options) {
         this.options = options || {};

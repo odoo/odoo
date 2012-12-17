@@ -128,12 +128,14 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             self.init_pager();
         });
         self.on("load_record", self, self.load_record);
-        this.on('view_loaded', self, self.load_form);
         instance.web.bus.on('clear_uncommitted_changes', this, function(e) {
             if (!this.can_be_discarded()) {
                 e.preventDefault();
             }
         });
+    },
+    view_loading: function(r) {
+        return this.load_form(r);
     },
     destroy: function() {
         _.each(this.get_widgets(), function(w) {
@@ -2542,6 +2544,7 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
     initialize_content: function() {
         var self = this;
         this.$textarea = this.$el.find('textarea');
+        this.auto_sized = false;
         this.default_height = this.$textarea.css('height');
         if (this.get("effective_readonly")) {
             this.$textarea.attr('disabled', 'disabled');
@@ -2561,13 +2564,17 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
         }
     },
     render_value: function() {
-        $(window).resize();
         var show_value = instance.web.format_value(this.get('value'), this, '');
         if (show_value === '') {
             this.$textarea.css('height', parseInt(this.default_height)+"px");
         }
         this.$textarea.val(show_value);
-        this.$textarea.autosize();        
+        if (! this.auto_sized) {
+            this.auto_sized = true;
+            this.$textarea.autosize();
+        } else {
+            this.$textarea.trigger("autosize");
+        }
     },
     is_syntax_valid: function() {
         if (!this.get("effective_readonly") && this.$textarea) {

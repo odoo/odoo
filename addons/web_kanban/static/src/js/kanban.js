@@ -43,7 +43,9 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.currently_dragging = {};
         this.limit = options.limit || 40;
         this.add_group_mutex = new $.Mutex();
-        this.on('view_loaded', self, self.load_kanban);
+    },
+    view_loading: function(r) {
+        return this.load_kanban(r);
     },
     start: function() {
         var self = this;
