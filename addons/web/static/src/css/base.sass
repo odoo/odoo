@@ -827,6 +827,24 @@ $sheet-padding: 16px
         height: 32px
         background-color: #414141
         @include vertical-gradient(#646060, #262626)
+        .oe_topbar_anonymous_login
+            background-color: #dc5f59
+            color: #eeeeee
+            @include vertical-gradient(#FC8787, #800000)
+            a
+                display: block
+                padding: 5px 10px 7px
+                line-height: 20px
+                height: 20px
+                text-decoration: none
+                color: white
+                background: transparent
+                @include transition(all 0.2s ease-out)
+            a:hover
+                background: rgba(0,0,0,0.1)
+                color: white
+                text-shadow: 0px 0px 3px rgba(0,0,0,0.2)
+                @include box-shadow(0 1px 2px rgba(0,0,0,0.2) inset)
         .oe_topbar_item
             display: block
             padding: 5px 10px 7px
@@ -1670,7 +1688,7 @@ $sheet-padding: 16px
                 width: 400px
                 padding-bottom: 0
         div.oe_chatter
-            box-sizing: border-box 
+            box-sizing: border-box
             min-width: $sheet-min-width + 2* $sheet-padding
             max-width: $sheet-max-width + 2* $sheet-padding
             margin: 0 auto
@@ -1942,7 +1960,7 @@ $sheet-padding: 16px
                 overflow: hidden
                 width: 24px
                 overflow: hidden
-                background: transparent 
+                background: transparent
                 color: #7C7BAD
                 box-shadow: none
                 border: none
@@ -2517,6 +2535,10 @@ div.ui-widget-overlay
         .openerp div.oe_mail_wall
             overflow: hidden !important
 // }}}
+
+.blockUI.blockOverlay
+    background-color: black
+    opacity: 0.6000000238418579
 
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
 // vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:
