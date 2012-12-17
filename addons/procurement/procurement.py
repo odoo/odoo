@@ -84,7 +84,7 @@ class procurement_order(osv.osv):
     _inherit = ['mail.thread']
     _log_create = False
     _columns = {
-        'name': fields.char('Reason', size=64, required=True, help='Procurement name.'),
+        'name': fields.char('Description', required=True),
         'origin': fields.char('Source Document', size=64,
             help="Reference of the document that created this Procurement.\n"
             "This is automatically completed by OpenERP."),
