@@ -35,6 +35,7 @@ class procurement_order(osv.osv):
     }
 
     def check_produce_product(self, cr, uid, procurement, context=None):
+        ''' Depict the capacity of the procurement workflow to produce products (not services)'''
         return True
 
     def check_bom_exists(self, cr, uid, ids, context=None):

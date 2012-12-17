@@ -234,12 +234,14 @@ class procurement_order(osv.osv):
         return False
 
     def check_produce_service(self, cr, uid, procurement, context=None):
+        """ Depicts the capacity of the procurement workflow to deal with production of services.
+            By default, it's False. Overwritten by project_mrp module.
+        """
         return False
 
     def check_produce_product(self, cr, uid, procurement, context=None):
-        """ Finds BoM of a product if not found writes exception message.
-        @param procurement: Current procurement.
-        @return: True or False.
+        """ Depicts the capacity of the procurement workflow to deal with production of products.
+            By default, it's False. Overwritten by mrp module.
         """
         return False
 
@@ -274,7 +276,8 @@ class procurement_order(osv.osv):
         return True
 
     def check_buy(self, cr, uid, ids):
-        """ability of the workflow to manage the supply_method == 'buy'.
+        """ Depicts the capacity of the procurement workflow to manage the supply_method == 'buy'.
+            By default, it's False. Overwritten by purchase module.
         """
         return False
 
