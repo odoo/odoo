@@ -41,7 +41,7 @@ class actions(osv.osv):
     _order = 'name'
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'type': fields.char('Action Type', required=True, size=32,readonly=True),
+        'type': fields.char('Action Type', required=True, size=32),
         'usage': fields.char('Action Usage', size=32),
         'help': fields.text('Action description',
             help='Optional help text for the users with a description of the target view, such as its usage and purpose.',

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-server\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-03 16:01+0000\n"
-"PO-Revision-Date: 2012-08-20 15:47+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2012-12-16 23:21+0000\n"
+"Last-Translator: David Bowers <sales@skitzotek.com>\n"
 "Language-Team: English (United Kingdom) <en_GB@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:02+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-17 04:44+0000\n"
+"X-Generator: Launchpad (build 16372)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_check_writing
@@ -48,7 +48,7 @@ msgid ""
 "The second argument of the many2many field %s must be a SQL table !You used "
 "%s, which is not a valid SQL table name."
 msgstr ""
-"The second argument of the many2many field %s must be a SQL table !You used "
+"The second argument of the many2many field %s must be a SQL table! You used "
 "%s, which is not a valid SQL table name."
 
 #. module: base
@@ -101,7 +101,7 @@ msgstr ""
 msgid ""
 "Model name on which the method to be called is located, e.g. 'res.partner'."
 msgstr ""
-"Model name on which the method to be called is located, e.g. 'res.partner'."
+"Model name in which the method to be called is located, e.g. 'res.partner'."
 
 #. module: base
 #: view:ir.module.module:0
@@ -123,6 +123,17 @@ msgid ""
 "    * Product Attributes\n"
 "    "
 msgstr ""
+"\n"
+"A module which adds manufacturers and attributes to the product form.\n"
+"=====================================================================\n"
+"\n"
+"You can now define the following for a product:\n"
+"-----------------------------------------------\n"
+"    * Manufacturer\n"
+"    * Manufacturer Product Name\n"
+"    * Manufacturer Product Code\n"
+"    * Product Attributes\n"
+"    "
 
 #. module: base
 #: field:ir.actions.client,params:0
@@ -226,6 +237,35 @@ msgid ""
 "* Planned Revenue by Stage and User (graph)\n"
 "* Opportunities by Stage (graph)\n"
 msgstr ""
+"\n"
+"The generic OpenERP Customer Relationship Management\n"
+"=====================================================\n"
+"\n"
+"This application enables a group of people to intelligently and efficiently "
+"manage leads, opportunities, meetings and phone calls.\n"
+"\n"
+"It manages key tasks such as communication, identification, prioritization, "
+"assignment, resolution and notification.\n"
+"\n"
+"OpenERP ensures that all cases are successfully tracked by users, customers "
+"and suppliers. It can automatically send reminders, escalate a request, "
+"trigger specific methods and many other actions based on your own enterprise "
+"rules.\n"
+"\n"
+"The greatest thing about this system is that users don't need to do anything "
+"special. The CRM module has an email gateway for the synchronization "
+"interface between mails and OpenERP. That way, users can just send emails to "
+"the request tracker.\n"
+"\n"
+"OpenERP will take care of thanking them for their message, automatically "
+"routing it to the appropriate staff and make sure all future correspondence "
+"gets to the right place.\n"
+"\n"
+"\n"
+"Dashboard for CRM will include:\n"
+"-------------------------------\n"
+"* Planned Revenue by Stage and User (graph)\n"
+"* Opportunities by Stage (graph)\n"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:397
@@ -235,7 +275,7 @@ msgid ""
 "them through Python code, preferably through a custom addon!"
 msgstr ""
 "Properties of base fields cannot be altered in this manner! Please modify "
-"them through Python code, preferably through a custom addon!"
+"them through Python code, preferably by a custom addon!"
 
 #. module: base
 #: code:addons/osv.py:130
@@ -318,6 +358,7 @@ msgid ""
 "The internal user that is in charge of communicating with this contact if "
 "any."
 msgstr ""
+"The internal user who is in charge of communicating with this contact if any."
 
 #. module: base
 #: view:res.partner:0
@@ -625,6 +666,19 @@ msgid ""
 "* Use emails to automatically confirm and send acknowledgements for any "
 "event registration\n"
 msgstr ""
+"\n"
+"Organization and management of Events.\n"
+"======================================\n"
+"\n"
+"The event module allows you to efficiently organise events and all related "
+"tasks: planning, registration tracking,\n"
+"attendance, etc.\n"
+"\n"
+"Key Features\n"
+"------------\n"
+"* Manage your Events and Registrations\n"
+"* Use emails to automatically confirm and send acknowledgements for any "
+"event registration\n"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -860,7 +914,7 @@ msgstr "Eritrea"
 #. module: base
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr "The company name must be unique !"
+msgstr "The company name must be unique!"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_action_rule_admin
@@ -884,6 +938,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is "
 "required."
 msgstr ""
+"Small-sized image of this contact. It is automatically resized to 64x64 "
+"pixels with the aspect ratio preserved. Use this field anywhere a small "
+"image is required."
 
 #. module: base
 #: help:ir.actions.server,mobile:0
@@ -892,7 +949,7 @@ msgid ""
 "invoice, then `object.invoice_address_id.mobile` is the field which gives "
 "the correct mobile number"
 msgstr ""
-"Provides fields that be used to fetch the mobile number, e.g. you select the "
+"Provides fields used to fetch the mobile number, e.g. you select the "
 "invoice, then `object.invoice_address_id.mobile` is the field which gives "
 "the correct mobile number"
 
@@ -988,8 +1045,6 @@ msgid ""
 "Provide the field name that the record id refers to for the write operation. "
 "If it is empty it will refer to the active id of the object."
 msgstr ""
-"Provide the field name that the record id refers to for the write operation. "
-"If it is empty it will refer to the active id of the object."
 
 #. module: base
 #: help:ir.actions.report.xml,report_type:0
@@ -1089,6 +1144,13 @@ msgid ""
 "actions(Sign in/Sign out) performed by them.\n"
 "       "
 msgstr ""
+"\n"
+"This module aims to manage employees' attendances.\n"
+"==================================================\n"
+"\n"
+"Keeps account of the attendances of employees based on the\n"
+"actions (Sign in/Sign out) performed by them.\n"
+"       "
 
 #. module: base
 #: model:res.country,name:base.nu
@@ -1148,7 +1210,7 @@ msgid ""
 msgstr ""
 "Expression containing a value specification. \n"
 "When Formula type is selected, this field may be a Python expression that "
-"can use the same values as for the condition field on the server action.\n"
+"can use the same values as the condition field on the server action.\n"
 "If Value type is selected, the value will be used directly without "
 "evaluation."
 
@@ -1234,7 +1296,7 @@ msgstr "Guam (USA)"
 #. module: base
 #: sql_constraint:res.country:0
 msgid "The name of the country must be unique !"
-msgstr "The country name must be unique !"
+msgstr "The country name must be unique!"
 
 #. module: base
 #: field:ir.module.module,installed_version:0
@@ -1382,9 +1444,9 @@ msgid ""
 "decimal number [00,53]. All days in a new year preceding the first Monday "
 "are considered to be in week 0."
 msgstr ""
-"%W - Week number of the year (Monday as the first day of the week) as a "
-"decimal number [00,53]. All days in a new year preceding the first Monday "
-"are considered to be in week 0."
+"%W - Week number of the year (Monday being the first day of the week) as an "
+"integer [00,53]. All days in a new year preceding the first Monday are "
+"considered to be in week 0."
 
 #. module: base
 #: code:addons/base/module/wizard/base_language_install.py:53
@@ -1724,8 +1786,8 @@ msgid ""
 "'%s' contains too many dots. XML ids should not contain dots ! These are "
 "used to refer to other modules data, as in module.reference_id"
 msgstr ""
-"'%s' contains too many dots. XML ids should not contain dots ! These are "
-"used to refer to other modules data, as in module.reference_id"
+"'%s' contains too many dots. XML ids should not contain dots! These are used "
+"to refer to other modules' data, as in module.reference_id"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale
@@ -1872,8 +1934,8 @@ msgid ""
 "simplified payment mode encoding, automatic picking lists generation and "
 "more."
 msgstr ""
-"Get the most out of your points of sales with fast sale encoding, simplified "
-"payment mode encoding, automatic picking lists generation and more."
+"Get the most out of your points of sale with fast sale encoding, simplified "
+"payment mode encoding, automatic pick list generation and more."
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:165
@@ -2021,6 +2083,14 @@ msgid ""
 "with the effect of creating, editing and deleting either ways.\n"
 "    "
 msgstr ""
+"\n"
+"Synchronization of project task work entries with timesheet entries.\n"
+"====================================================================\n"
+"\n"
+"This module lets you transfer the entries under tasks defined for Project\n"
+"Management to the Timesheet line entries for a particular date and user\n"
+"with the effect of creating, editing and deleting either way.\n"
+"    "
 
 #. module: base
 #: model:ir.model,name:base.model_ir_model_access
@@ -2132,6 +2202,25 @@ msgid ""
 "* *Before Delivery*: A Draft invoice is created and must be paid before "
 "delivery\n"
 msgstr ""
+"\n"
+"Manage sales quotations and orders\n"
+"==================================\n"
+"\n"
+"This module makes the link between the sales and warehouse management "
+"applications.\n"
+"\n"
+"Preferences\n"
+"-----------\n"
+"* Shipping: Choice of delivery at once or partial delivery\n"
+"* Invoicing: choose how invoices will be paid\n"
+"* Incoterms: International Commercial terms\n"
+"\n"
+"You can choose flexible invoicing methods:\n"
+"\n"
+"* *On Demand*: Invoices are created manually from Sales Orders when needed\n"
+"* *On Delivery Order*: Invoices are generated from picking (delivery)\n"
+"* *Before Delivery*: A Draft invoice is created and must be paid before "
+"delivery\n"
 
 #. module: base
 #: field:ir.ui.menu,complete_name:0
@@ -2155,9 +2244,9 @@ msgid ""
 "decimal number [00,53]. All days in a new year preceding the first Sunday "
 "are considered to be in week 0."
 msgstr ""
-"%U - Week number of the year (Sunday as the first day of the week) as a "
-"decimal number [00,53]. All days in a new year preceding the first Sunday "
-"are considered to be in week 0."
+"%U - Week number of the year (Sunday being the first day of the week) as an "
+"integer [00,53]. All days in a new year preceding the first Sunday are "
+"considered to be in week 0."
 
 #. module: base
 #: view:base.language.export:0
@@ -2316,6 +2405,28 @@ msgid ""
 "* Maximal difference between timesheet and attendances\n"
 "    "
 msgstr ""
+"\n"
+"Record and validate timesheets and attendance easily\n"
+"====================================================\n"
+"\n"
+"This application supplies a new screen enabling you to manage both "
+"attendance (Sign in/Sign out) and your work encoding (timesheet) by period. "
+"Timesheet entries are made by employees each day. At the end of the defined "
+"period, employees validate their sheet and the manager must then approve "
+"their team's entries. Periods are defined in the company forms and you can "
+"set them to run monthly or weekly.\n"
+"\n"
+"The complete timesheet validation process is:\n"
+"---------------------------------------------\n"
+"* Draft sheet\n"
+"* Confirmation at the end of the period by the employee\n"
+"* Validation by the project manager\n"
+"\n"
+"The validation can be configured in the company:\n"
+"------------------------------------------------\n"
+"* Period size (Day, Week, Month)\n"
+"* Maximal difference between timesheet and attendances\n"
+"    "
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:342
@@ -2371,7 +2482,7 @@ msgstr "Belize"
 #. module: base
 #: help:ir.actions.report.xml,header:0
 msgid "Add or not the corporate RML header"
-msgstr "Add or not the corporate RML header"
+msgstr "Optionally add the corporate RML header"
 
 #. module: base
 #: model:res.country,name:base.ge
@@ -2410,6 +2521,32 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"    \n"
+"Belgian localization for in/outgoing invoices (prereq to account_coda):\n"
+"=========================================================================\n"
+"    - Rename 'reference' field labels to 'Communication'\n"
+"    - Add support for Belgian Structured Communication\n"
+"\n"
+"A Structured Communication can be generated automatically on outgoing "
+"invoices according to the following algorithms:\n"
+"-----------------------------------------------------------------------------"
+"----------------------------------------\n"
+"    1) Random : +++RRR/RRRR/RRRDD+++\n"
+"        **R..R =** Random Digits, **DD =** Check Digits\n"
+"    2) Date : +++DOY/YEAR/SSSDD+++\n"
+"        **DOY =** Day of the Year, **SSS =** Sequence Number, **DD =** Check "
+"Digits\n"
+"    3) Customer Reference +++RRR/RRRR/SSSDDD+++\n"
+"        **R..R =** Customer Reference without non-numeric characters, **SSS "
+"=** Sequence Number, **DD =** Check Digits  \n"
+"        \n"
+"The preferred type of Structured Communication and associated Algorithm can "
+"be\n"
+"specified on the Partner records. A 'random' Structured Communication will\n"
+"generated if no algorithm is specified on the Partner record. \n"
+"\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.pl
@@ -2454,8 +2591,8 @@ msgid ""
 "order in Object, and you can have loop on the sales order line. Expression = "
 "`object.order_line`."
 msgstr ""
-"Enter the field/expression that will return the list. E.g. select the sale "
-"order in Object, and you can have loop on the sales order line. Expression = "
+"Enter the field/expression that will return the list. E.g. selecting the "
+"sale order in Object, you can loop on the sales order line: Expression = "
 "`object.order_line`."
 
 #. module: base
@@ -2546,6 +2683,27 @@ msgid ""
 "Print product labels with barcode.\n"
 "    "
 msgstr ""
+"\n"
+"This is the base module for managing products and pricelists in OpenERP.\n"
+"========================================================================\n"
+"\n"
+"Products support variants, various pricing methods, supplier information,\n"
+"made to stock/order, different units of measures, packaging and other "
+"properties.\n"
+"\n"
+"Pricelists support:\n"
+"-------------------\n"
+"    * Multiple-levels of discount (by product, category, quantities)\n"
+"    * Compute price based on different criteria:\n"
+"        * Other pricelist\n"
+"        * Cost price\n"
+"        * List price\n"
+"        * Supplier price\n"
+"\n"
+"Set pricelist preferences by product and/or partner.\n"
+"\n"
+"Print product labels with barcode.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_analytic_default
@@ -2563,6 +2721,18 @@ msgid ""
 "    * Date\n"
 "    "
 msgstr ""
+"\n"
+"Set default values for your analytic accounts.\n"
+"==============================================\n"
+"\n"
+"Allows to automatically select analytic accounts based on criteria:\n"
+"---------------------------------------------------------------------\n"
+"    * Product\n"
+"    * Partner\n"
+"    * User\n"
+"    * Company\n"
+"    * Date\n"
+"    "
 
 #. module: base
 #: field:res.company,rml_header1:0
@@ -2887,6 +3057,29 @@ msgid ""
 "* Purchase Analysis\n"
 "    "
 msgstr ""
+"\n"
+"Manage goods requirement by Purchase Orders easily\n"
+"==================================================\n"
+"\n"
+"Purchase management enables you to track your suppliers' price quotations "
+"and convert them into purchase orders if necessary.\n"
+"OpenERP has several methods of monitoring invoices and tracking the receipt "
+"of ordered goods. You can handle partial deliveries in OpenERP with the "
+"ability to keep track of items yet to be delivered from orders and to issue "
+"reminders automatically.\n"
+"\n"
+"OpenERP’s replenishment-management rules enable the system to generate draft "
+"purchase orders automatically. Alternatively you can configure it to run a "
+"lean process driven entirely by current production needs.\n"
+"\n"
+"Dashboard / Reports for Purchase Management will include:\n"
+"---------------------------------------------------------\n"
+"* Request for Quotations\n"
+"* Purchase Orders Waiting Approval \n"
+"* Monthly Purchases by Category\n"
+"* Receptions Analysis\n"
+"* Purchase Analysis\n"
+"    "
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window_close
@@ -3016,6 +3209,15 @@ msgid ""
 "    * ``base_stage``: stage management\n"
 "    "
 msgstr ""
+"\n"
+"This module handles state and stage. It is derived from the crm_base and "
+"crm_case classes of crm.\n"
+"============================================================================="
+"======================\n"
+"\n"
+"    * ``base_state``: state management\n"
+"    * ``base_stage``: stage management\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_linkedin
@@ -3312,6 +3514,8 @@ msgid ""
 "For more details about translating OpenERP in your language, please refer to "
 "the"
 msgstr ""
+"For more details about translating OpenERP into your language, please refer "
+"to the"
 
 #. module: base
 #: field:res.partner,image:0
@@ -3563,19 +3767,11 @@ msgid ""
 "Canadian accounting charts and localizations.\n"
 "    "
 msgstr ""
-"\n"
-"This is the module to manage the English and French - Canadian accounting "
-"chart in OpenERP.\n"
-"============================================================================="
-"==============\n"
-"\n"
-"Canadian accounting charts and localisations.\n"
-"    "
 
 #. module: base
 #: view:base.module.import:0
 msgid "Select module package to import (.zip file):"
-msgstr "Select module package to import (.zip file):"
+msgstr "Select module package to import (*.zip file):"
 
 #. module: base
 #: view:ir.filters:0
@@ -3674,6 +3870,14 @@ msgid ""
 "easily\n"
 "keep track and order all your purchase orders.\n"
 msgstr ""
+"\n"
+"This module allows you to manage your Purchase Requisition.\n"
+"===========================================================\n"
+"\n"
+"When a purchase order is created, you now have the opportunity to save the\n"
+"related requisition. By regrouping, this new object will allow you to "
+"easily\n"
+"keep track of and order all your purchase orders.\n"
 
 #. module: base
 #: help:ir.mail_server,smtp_host:0
@@ -3798,13 +4002,13 @@ msgstr "If not set, acts as a default value for new resources"
 #: code:addons/orm.py:4213
 #, python-format
 msgid "Recursivity Detected."
-msgstr "Recursivity detected."
+msgstr "Recursion detected."
 
 #. module: base
 #: code:addons/base/module/module.py:345
 #, python-format
 msgid "Recursion error in modules dependencies !"
-msgstr "Recursion error in modules dependencies !"
+msgstr "Recursion error in modules dependencies!"
 
 #. module: base
 #: model:ir.module.module,description:base.module_analytic_user_function
