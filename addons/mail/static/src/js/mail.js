@@ -1509,6 +1509,9 @@ openerp.mail = function (session) {
             if (this.node.attrs.placeholder) {
                 this.node.params.compose_placeholder = this.node.attrs.placeholder;
             }
+            if (this.node.attrs.readonly) {
+                this.node.params.readonly = this.node.attrs.readonly;
+            }
 
             this.domain = this.node.params && this.node.params.domain || [];
         },
