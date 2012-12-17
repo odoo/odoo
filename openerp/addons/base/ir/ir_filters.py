@@ -24,9 +24,6 @@ from openerp.osv import osv, fields
 from openerp.tools.translate import _
 
 class ir_filters(osv.osv):
-    '''
-    Filters
-    '''
     _name = 'ir.filters'
     _description = 'Filters'
 

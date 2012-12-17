@@ -99,7 +99,7 @@ class res_currency(osv.osv):
         res = super(res_currency, self).read(cr, user, ids, fields, context, load)
         currency_rate_obj = self.pool.get('res.currency.rate')
         values = res
-        if not isinstance(values, (list)):
+        if not isinstance(values, list):
             values = [values]
         for r in values:
             if r.__contains__('rate_ids'):
@@ -217,7 +217,7 @@ class res_currency(osv.osv):
             if round:
                 return self.round(cr, uid, to_currency, from_amount * rate)
             else:
-                return (from_amount * rate)
+                return from_amount * rate
 
 res_currency()
 

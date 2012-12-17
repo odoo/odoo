@@ -670,7 +670,7 @@ class actions_server(osv.osv):
                 context['object'] = obj
                 for i in expr:
                     context['active_id'] = i.id
-                    result = self.run(cr, uid, [action.loop_action.id], context)
+                    self.run(cr, uid, [action.loop_action.id], context)
 
             if action.state == 'object_write':
                 res = {}
@@ -715,8 +715,6 @@ class actions_server(osv.osv):
                         expr = exp.value
                     res[exp.col1.name] = expr
 
-                obj_pool = None
-                res_id = False
                 obj_pool = self.pool.get(action.srcmodel_id.model)
                 res_id = obj_pool.create(cr, uid, res)
                 if action.record_id:
@@ -735,7 +733,7 @@ class actions_server(osv.osv):
                 model = action.copy_object.split(',')[0]
                 cid = action.copy_object.split(',')[1]
                 obj_pool = self.pool.get(model)
-                res_id = obj_pool.copy(cr, uid, int(cid), res)
+                obj_pool.copy(cr, uid, int(cid), res)
 
         return False
 
