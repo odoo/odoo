@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-09 04:42+0000\n"
-"Last-Translator: sum1201 <Unknown>\n"
+"PO-Revision-Date: 2012-12-14 15:57+0000\n"
+"Last-Translator: digitalsatori <digisatori@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-10 04:38+0000\n"
-"X-Generator: Launchpad (build 16341)\n"
+"X-Launchpad-Export-Date: 2012-12-15 05:05+0000\n"
+"X-Generator: Launchpad (build 16372)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -25,7 +25,7 @@ msgstr "系统支付"
 #: sql_constraint:account.fiscal.position.account:0
 msgid ""
 "An account fiscal position could be defined only once time on same accounts."
-msgstr ""
+msgstr "在一个科目上只能设置一个应税设定"
 
 #. module: account
 #: view:account.unreconcile:0
@@ -175,7 +175,7 @@ msgid ""
 "You have to set the 'End  of Year Entries Journal' for this Fiscal Year "
 "which is set after generating opening entries from 'Generate Opening "
 "Entries'."
-msgstr ""
+msgstr "在生成开账分录之后必须设置分类账的结束年度。"
 
 #. module: account
 #: field:account.fiscal.position.account,account_src_id:0
@@ -214,7 +214,7 @@ msgstr "字段标签"
 #. module: account
 #: help:account.config.settings,code_digits:0
 msgid "No. of digits to use for account code"
-msgstr ""
+msgstr "科目代码的编码长度"
 
 #. module: account
 #: help:account.analytic.journal,type:0
@@ -274,7 +274,7 @@ msgstr "科目类别用于生成合乎各国财税规范的报表，设置财年
 #. module: account
 #: field:account.config.settings,sale_refund_sequence_next:0
 msgid "Next credit note number"
-msgstr ""
+msgstr "下一个信用证编码"
 
 #. module: account
 #: help:account.config.settings,module_account_voucher:0
@@ -283,6 +283,9 @@ msgid ""
 "sales, purchase, expense, contra, etc.\n"
 "                This installs the module account_voucher."
 msgstr ""
+"This includes all the basic requirements of voucher entries for bank, cash, "
+"sales, purchase, expense, contra, etc.\n"
+"                This installs the module account_voucher."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_use_model_create_entry
@@ -314,6 +317,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                点击创建一个客户退款. \n"
+"              </p><p>\n"
+"                退款是全部或部分借记销售发票的证明。\n"
+"              </p><p>\n"
+"                可以直接从与客户相关联的发票直接生成退款，以代替手工创建客户退款。.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: help:account.installer,charts:0
@@ -442,6 +453,10 @@ msgid ""
 "this box, you will be able to do invoicing & payments,\n"
 "                but not accounting (Journal Items, Chart of Accounts, ...)"
 msgstr ""
+"此处可以管理属于公司或者个人的资产.\n"
+"                跟踪资产折旧的发生，创建折旧明细账户。.\n"
+"                要安装account_asset模块. 如果不检查box, 可以处理发票和付款,\n"
+"                但不能处理账记(账簿明细, 会计报表, ...)"
 
 #. module: account
 #. openerp-web
@@ -537,7 +552,7 @@ msgstr "上级目标"
 #. module: account
 #: help:account.invoice.line,sequence:0
 msgid "Gives the sequence of this line when displaying the invoice."
-msgstr ""
+msgstr "显示发票的时候给出明细编号。"
 
 #. module: account
 #: field:account.bank.statement,account_id:0
@@ -944,6 +959,10 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    账簿明细未找到.\n"
+"                </p>\n"
+"            "
 
 #. module: account
 #: code:addons/account/account.py:1632
