@@ -200,6 +200,7 @@ class report_custom(report_rml):
 
         date_xml.append('</days>')
         date_xml.append('<cols>3.5cm%s,0.4cm</cols>\n' % (',0.4cm' * (60)))
+        date_xml = ''.join(date_xml)
 
         st='<cols_months>3.5cm'
         for m in range(1,len(width_dict)+1):
