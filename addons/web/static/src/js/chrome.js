@@ -872,8 +872,8 @@ instance.web.Menu =  instance.web.Widget.extend({
         var $more_container = this.$('.oe_menu_more_container').hide();
         var $more = this.$('.oe_menu_more');
         $more.children('li').insertBefore($more_container);
-        var $li = this.$el.children('li').not($more_container).hide();
-        $li.each(function() {
+        var $toplevel_items = this.$el.children('li').not($more_container).hide();
+        $toplevel_items.each(function() {
             var remaining_space = self.$el.parent().width() - $more_container.outerWidth();
             self.$el.parent().children(':visible').each(function() {
                 remaining_space -= $(this).outerWidth();
@@ -883,7 +883,7 @@ instance.web.Menu =  instance.web.Widget.extend({
             }
             $(this).show();
         });
-        $more.append($li.filter(':hidden').show());
+        $more.append($toplevel_items.filter(':hidden').show());
         $more_container.toggle(!!$more.children().length);
         // Hide toplevel item if there is only one
         var $toplevel = this.$el.children("li:visible");
