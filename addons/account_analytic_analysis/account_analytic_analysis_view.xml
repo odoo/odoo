@@ -21,7 +21,13 @@
                 <xpath expr='//div[@name="duration"]' position="after" version="7.0">
                     <label for="quantity_max"/>
                     <div>
-                        <field name="quantity_max" class="oe_inline"/>
+                        <field name="quantity_max"/>
+                        <div attrs="{'invisible': [('quantity','=',0)]}" class="oe_grey">
+                            <field name="quantity" class="oe_inline"/> Units Done
+                        </div>
+                        <div attrs="{'invisible': [('quantity_max','=',0)]}" class="oe_grey">
+                            <field name="remaining_hours" class="oe_inline"/> Units Remaining
+                        </div>
                     </div>
                 </xpath>
                 <xpath expr='//group[@name="invoice_on_timesheets"]' position="replace">
@@ -143,6 +149,7 @@
                 <field name="date" position="before">
                     <field name="last_invoice_date"/>
                     <field name="toinvoice_total"/>
+                    <field name="remaining_hours"/>
                 </field>
             </field>
         </record>

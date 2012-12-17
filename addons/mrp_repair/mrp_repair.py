@@ -729,8 +729,9 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
                 'location_id': False,
                 'location_dest_id': False
                 }}
+        location_obj = self.pool.get('stock.location')
         warehouse_obj = self.pool.get('stock.warehouse')
-        location_id = self.pool.get('stock.location').search(cr, uid, [('usage','=','production')], context=context)
+        location_id = location_obj.search(cr, uid, [('usage','=','production')], context=context)
         location_id = location_id and location_id[0] or False
 
         if type == 'add':
@@ -748,11 +749,12 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
                 'location_id': stock_id,
                 'location_dest_id': location_id
                 }}
+        scrap_location_ids = location_obj.search(cr, uid, [('scrap_location', '=', True)], context=context)
 
         return {'value': {
                 'to_invoice': False,
                 'location_id': location_id,
-                'location_dest_id': False
+                'location_dest_id': scrap_location_ids and scrap_location_ids[0] or False,
                 }}
 
 mrp_repair_line()

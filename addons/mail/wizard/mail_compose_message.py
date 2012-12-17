@@ -90,6 +90,17 @@ class mail_compose_message(osv.TransientModel):
         for field in vals:
             if field in fields:
                 result[field] = vals[field]
+
+        # TDE HACK: as mailboxes used default_model='res.users' and default_res_id=uid
+        # (because of lack of an accessible pid), creating a message on its own
+        # profile may crash (res_users does not allow writing on it)
+        # Posting on its own profile works (res_users redirect to res_partner)
+        # but when creating the mail.message to create the mail.compose.message
+        # access rights issues may rise
+        # We therefore directly change the model and res_id
+        if result.get('model') == 'res.users' and result.get('res_id') == uid:
+            result['model'] = 'res.partner'
+            result['res_id'] = self.pool.get('res.users').browse(cr, uid, uid).partner_id.id
         return result
 
     def _get_composition_mode_selection(self, cr, uid, context=None):
