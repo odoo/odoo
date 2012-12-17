@@ -20,7 +20,7 @@
 ##############################################################################
 
 #import decimal_precision
-from openerp.addons.decimal_precision import get_precision
+from decimal_precision import get_precision
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

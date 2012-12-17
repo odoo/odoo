@@ -18,16 +18,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp import pooler
-import sql_db
-
 import os
 import time
 import errno
 import re
 
 import openerp
-from openerp import netsvc
+from openerp import pooler, sql_db, netsvc
 import urlparse
 try:
     from pywebdav.lib.constants import COLLECTION  # , OBJECT
@@ -42,8 +39,8 @@ except ImportError:
 
 import urllib
 
-from cache import memoize
 from openerp.tools import misc
+from openerp.tools.cache import memoize
 
 from webdav import mk_lock_response
 

@@ -9,10 +9,7 @@ import errno
 import glob
 import fnmatch
 
-from openerp import pooler
-from openerp import netsvc
-import sql_db
-
+from openerp import pooler, netsvc, sql_db
 from openerp.service import security
 from openerp.osv import osv
 from document.nodes import get_node_context

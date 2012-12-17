@@ -22,7 +22,7 @@
 
 from openerp.osv import fields,osv
 from openerp import tools
-from crm import crm
+from openerp.addons.crm import crm
 
 AVAILABLE_STATES = [
     ('draft','Draft'),

@@ -21,7 +21,7 @@
 
 from openerp.addons.base_status.base_state import base_state
 from openerp.addons.base_status.base_stage import base_stage
-from crm import crm
+from openerp.addons.crm import crm
 from openerp.osv import fields, osv
 from openerp import tools
 from openerp.tools.translate import _
