@@ -84,7 +84,7 @@ class _column(object):
     # used to hide a certain field type in the list of field types
     _deprecated = False
 
-    def __init__(self, string='unknown', required=False, readonly=False, domain=None, context=None, states=None, priority=0, change_default=False, size=None, ondelete=None, translate=False, select=False, manual=False, **args):
+    def __init__(self, string='unknown', required=False, readonly=False, domain=None, context=None, states=None, priority=0, change_default=False, size=None, ondelete=None, translate=False, select=False, manual=False, tracked=False, **args):
         """
 
         The 'manual' keyword argument specifies if the field is a custom one.
@@ -113,6 +113,7 @@ class _column(object):
         self.select = select
         self.manual = manual
         self.selectable = True
+        self.tracked = tracked  # Automatic logging system if mail installed
         self.group_operator = args.get('group_operator', False)
         self.groups = False  # CSV list of ext IDs of groups that can access this field
         self.deprecated = False # Optional deprecation warning
