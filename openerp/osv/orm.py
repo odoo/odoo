@@ -3537,6 +3537,37 @@ class BaseModel(object):
 
         return res
 
+    def check_field_access_rights(self, cr, user, operation, fields, context=None):
+        """
+        Check the user access rights on the given fields. This raises Access
+        Denied if the user does not have the rights. Otherwise it returns the
+        fields (as is if the fields is not falsy, or the readable/writable
+        fields if fields is falsy).
+        """
+        def p(field_name):
+            """Predicate to test if the user has access to the given field name."""
+            # Ignore requested field if it doesn't exist. This is ugly but
+            # it seems to happen at least with 'name_alias' on res.partner.
+            if field_name not in self._all_columns:
+                return True
+            field = self._all_columns[field_name].column
+            if field.groups:
+                return self.user_has_groups(cr, user, groups=field.groups, context=context)
+            else:
+                return True
+        if not fields:
+            fields = filter(p, self._all_columns.keys())
+        else:
+            filtered_fields = filter(lambda a: not p(a), fields)
+            if filtered_fields:
+                _logger.warning('Access Denied by ACLs for operation: %s, uid: %s, model: %s, fields: %s', operation, user, self._name, ', '.join(filtered_fields))
+                raise except_orm(
+                    _('Access Denied'),
+                    _('The requested operation cannot be completed due to security restrictions. '
+                    'Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
+                    (self._description, operation))
+        return fields
+
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
         """ Read records with given ids with the given fields
 
@@ -3562,8 +3593,7 @@ class BaseModel(object):
         if not context:
             context = {}
         self.check_access_rights(cr, user, 'read')
-        if not fields:
-            fields = list(set(self._columns.keys() + self._inherit_fields.keys()))
+        fields = self.check_field_access_rights(cr, user, 'read', fields)
         if isinstance(ids, (int, long)):
             select = [ids]
         else:
@@ -4020,6 +4050,7 @@ class BaseModel(object):
 
         """
         readonly = None
+        self.check_field_access_rights(cr, user, 'write', vals.keys())
         for field in vals.copy():
             fobj = None
             if field in self._columns:
