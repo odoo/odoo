@@ -13,7 +13,7 @@ from openerp import pooler
 from openerp import netsvc
 import sql_db
 
-from service import security
+from openerp.service import security
 from openerp.osv import osv
 from document.nodes import get_node_context
 

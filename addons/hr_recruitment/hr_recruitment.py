@@ -22,7 +22,7 @@
 import time
 from openerp import tools
 
-from base_status.base_stage import base_stage
+from openerp.addons.base_status.base_stage import base_stage
 from datetime import datetime
 from openerp.osv import fields, osv
 from openerp.tools.translate import _

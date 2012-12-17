@@ -21,7 +21,7 @@
 
 from openerp.osv import osv,fields
 from openerp.tools.translate import _
-from tools.amount_to_text_en import amount_to_text
+from openerp.tools.amount_to_text_en import amount_to_text
 from lxml import etree
 
 class account_voucher(osv.osv):

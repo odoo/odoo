@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from base_status.base_stage import base_stage
+from openerp.addons.base_status.base_stage import base_stage
 import crm
 from datetime import datetime
 from openerp.osv import fields, osv

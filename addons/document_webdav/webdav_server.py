@@ -48,8 +48,8 @@ except ImportError:
     from DAV.utils import IfParser, TagList
     from DAV.errors import DAV_Error, DAV_Forbidden, DAV_NotFound
     from DAV.propfind import PROPFIND
-from service import http_server
-from service.websrv_lib import FixSendError, HttpOptions
+from openerp.service import http_server
+from openerp.service.websrv_lib import FixSendError, HttpOptions
 from BaseHTTPServer import BaseHTTPRequestHandler
 import urlparse
 import urllib
@@ -433,7 +433,7 @@ class DAVHandler(DAVRequestHandler, HttpOptions, FixSendError):
                 data['lockowner'] = owners
         return data
 
-from service.http_server import reg_http_service,OpenERPAuthProvider
+from openerp.service.http_server import reg_http_service,OpenERPAuthProvider
 
 class DAVAuthProvider(OpenERPAuthProvider):
     def authenticate(self, db, user, passwd, client_address):

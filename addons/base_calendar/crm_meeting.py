@@ -24,7 +24,7 @@ from openerp import tools
 from openerp.tools.translate import _
 
 from base_calendar import get_real_ids, base_calendar_id2real_id
-from base_status.base_state import base_state
+from openerp.addons.base_status.base_state import base_state
 #
 # crm.meeting is defined here so that it may be used by modules other than crm,
 # without forcing the installation of crm.

@@ -41,7 +41,7 @@ from string import ascii_letters, digits
 from openerp.osv import fields,osv
 from openerp import pooler
 from openerp.tools.translate import _
-from service import security
+from openerp.service import security
 import logging
 
 magic_md5 = '$1$'

@@ -20,7 +20,7 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
-from osv.osv import object_proxy
+from openerp.osv.osv import object_proxy
 from openerp.tools.translate import _
 from openerp import pooler
 import time
