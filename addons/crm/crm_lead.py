@@ -224,7 +224,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         'date_action_next': fields.datetime('Next Action', readonly=1),
         'email_from': fields.char('Email', size=128, help="Email address of the contact", select=1),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
-                        select=True, help='When sending mails, the default email address is taken from the sales team.'),
+                        select=True, tracked=True, help='When sending mails, the default email address is taken from the sales team.'),
         'create_date': fields.datetime('Creation Date' , readonly=True),
         'email_cc': fields.text('Global CC', size=252 , help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'description': fields.text('Notes'),
@@ -240,9 +240,9 @@ class crm_lead(base_stage, format_address, osv.osv):
         'type':fields.selection([ ('lead','Lead'), ('opportunity','Opportunity'), ],'Type', help="Type is used to separate Leads and Opportunities"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'date_closed': fields.datetime('Closed', readonly=True),
-        'stage_id': fields.many2one('crm.case.stage', 'Stage',
+        'stage_id': fields.many2one('crm.case.stage', 'Stage',tracked=True,
                         domain="['&', ('fold', '=', False), '&', '|', ('section_ids', '=', section_id), ('case_default', '=', True), '|', ('type', '=', type), ('type', '=', 'both')]"),
-        'user_id': fields.many2one('res.users', 'Salesperson'),
+        'user_id': fields.many2one('res.users', 'Salesperson', tracked=True),
         'referred': fields.char('Referred By', size=64),
         'date_open': fields.datetime('Opened', readonly=True),
         'day_open': fields.function(_compute_day, string='Days to Open', \
@@ -255,7 +255,7 @@ class crm_lead(base_stage, format_address, osv.osv):
 
         # Only used for type opportunity
         'probability': fields.float('Success Rate (%)',group_operator="avg"),
-        'planned_revenue': fields.float('Expected Revenue'),
+        'planned_revenue': fields.float('Expected Revenue', tracked=True),
         'ref': fields.reference('Reference', selection=crm._links_get, size=128),
         'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128),
         'phone': fields.char("Phone", size=64),
@@ -972,11 +972,6 @@ class crm_lead(base_stage, format_address, osv.osv):
     # OpenChatter methods and notifications
     # ----------------------------------------
 
-    def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
-        """ Override of the (void) default notification method. """
-        stage_name = self.pool.get('crm.case.stage').name_get(cr, uid, [stage_id], context=context)[0][1]
-        return self.message_post(cr, uid, ids, body=_("Stage changed to <b>%s</b>.") % (stage_name), subtype="mt_crm_stage", context=context)
-
     def case_get_note_msg_prefix(self, cr, uid, lead, context=None):
         if isinstance(lead, (int, long)):
             lead = self.browse(cr, uid, [lead], context=context)[0]
@@ -987,14 +982,6 @@ class crm_lead(base_stage, format_address, osv.osv):
             message = _("%s has been <b>created</b>.") % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
             self.message_post(cr, uid, [id], body=message, context=context)
         return True
-
-    def case_mark_lost_send_note(self, cr, uid, ids, context=None):
-        message = _("Opportunity has been <b>lost</b>.")
-        return self.message_post(cr, uid, ids, body=message, subtype="mt_crm_lost", context=context)
-
-    def case_mark_won_send_note(self, cr, uid, ids, context=None):
-        message = _("Opportunity has been <b>won</b>.")
-        return self.message_post(cr, uid, ids, body=message, subtype="mt_crm_won", context=context)
 
     def schedule_phonecall_send_note(self, cr, uid, ids, phonecall_id, action, context=None):
         phonecall = self.pool.get('crm.phonecall').browse(cr, uid, [phonecall_id], context=context)[0]

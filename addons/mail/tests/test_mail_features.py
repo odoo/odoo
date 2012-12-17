@@ -586,3 +586,31 @@ class test_mail(TestMailBase):
         na_demo_group = self.mail_message._needaction_count(cr, user_raoul.id, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])
         self.assertEqual(na_demo, na_demo_base + 0, 'Demo should have 0 new needaction')
         self.assertEqual(na_demo_group, 0, 'Demo should have 0 needaction related to Pigs')
+        
+    def test_40_track_field(self):
+        """ Test designed for tracking field. """
+        
+        cr, uid, user_admin, user_raoul, group_pigs = self.cr, self.uid, self.user_admin, self.user_raoul, self.group_pigs
+        partner_user_id = self.res_partner._columns.get('user_id')
+
+        # Set tracked attribute as True for tracked field.
+        partner_user_id.tracked = True
+        p_d_id = self.res_partner.create(cr, uid, {'name': 'Osbert Armour', 'notification_email_send': 'all'})
+
+        #Set Raoul as sales person.
+        self.res_partner.write(cr, uid, [p_d_id], {'user_id' : user_raoul.id})
+        mail_ids = self.mail_message.search(cr, uid, [('model', '=', 'res.partner'),('res_id','=',p_d_id)])
+
+        #Test: tracked record logged in openchatter
+        self.assertEqual(1,len(mail_ids), ' After change in field logged in openchatter.')
+
+        # Set tracked attribute as False for tracked field.
+        partner_user_id.tracked = False
+        p_a_id = self.res_partner.create(cr, uid, {'name': 'Timmy Simons', 'notification_email_send': 'all'})
+
+        #Set Admin as sales person.
+        self.res_partner.write(cr, uid, [p_a_id], {'user_id' : user_admin.id})
+        mail_a_ids = self.mail_message.search(cr, uid, [('model', '=', 'res.partner'),('res_id','=',p_a_id)])
+
+        #Test: tracked record logged in openchatter.
+        self.assertEqual(len(mail_a_ids),0,' No more logged openchatter.')

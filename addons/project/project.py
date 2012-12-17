@@ -742,7 +742,7 @@ class task(base_stage, osv.osv):
         'description': fields.text('Description'),
         'priority': fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Important'), ('0','Very important')], 'Priority', select=True),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of tasks."),
-        'stage_id': fields.many2one('project.task.type', 'Stage',
+        'stage_id': fields.many2one('project.task.type', 'Stage', tracked=True,
                         domain="['&', ('fold', '=', False), ('project_ids', '=', project_id)]"),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
                 selection=_TASK_STATE, string="Status", readonly=True,
@@ -762,7 +762,7 @@ class task(base_stage, osv.osv):
         'date_start': fields.datetime('Starting Date',select=True),
         'date_end': fields.datetime('Ending Date',select=True),
         'date_deadline': fields.date('Deadline',select=True),
-        'project_id': fields.many2one('project.project', 'Project', ondelete='set null', select="1"),
+        'project_id': fields.many2one('project.project', 'Project', ondelete='set null', select="1", tracked=True),
         'parent_ids': fields.many2many('project.task', 'project_task_parent_rel', 'task_id', 'parent_id', 'Parent Tasks'),
         'child_ids': fields.many2many('project.task', 'project_task_parent_rel', 'parent_id', 'task_id', 'Delegated Tasks'),
         'notes': fields.text('Notes'),
@@ -788,7 +788,7 @@ class task(base_stage, osv.osv):
                 'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids', 'remaining_hours', 'planned_hours'], 10),
                 'project.task.work': (_get_task, ['hours'], 10),
             }),
-        'user_id': fields.many2one('res.users', 'Assigned to'),
+        'user_id': fields.many2one('res.users', 'Assigned to', tracked=True),
         'delegated_user_id': fields.related('child_ids', 'user_id', type='many2one', relation='res.users', string='Delegated To'),
         'partner_id': fields.many2one('res.partner', 'Customer'),
         'work_ids': fields.one2many('project.task.work', 'task_id', 'Work done'),
@@ -1060,7 +1060,6 @@ class task(base_stage, osv.osv):
                 self.do_pending(cr, uid, [task.id], context=context)
             elif delegate_data['state'] == 'done':
                 self.do_close(cr, uid, [task.id], context=context)
-            self.do_delegation_send_note(cr, uid, [task.id], context)
             delegated_tasks[task.id] = delegated_task_id
         return delegated_tasks
 
@@ -1140,7 +1139,6 @@ class task(base_stage, osv.osv):
         self._subscribe_project_followers_to_task(cr, uid, task_id, context=context)
 
         self._store_history(cr, uid, [task_id], context=context)
-        self.create_send_note(cr, uid, [task_id], context=context)
         return task_id
 
     # Overridden to reset the kanban_state to normal whenever
@@ -1158,7 +1156,6 @@ class task(base_stage, osv.osv):
                     #raise osv.except_osv(_('Warning!'), _('Stage is not defined in the project.'))
                 write_vals = vals_reset_kstate if t.stage_id != new_stage else vals
                 super(task, self).write(cr, uid, [t.id], write_vals, context=context)
-                self.stage_set_send_note(cr, uid, [t.id], new_stage, context=context)
             result = True
         else:
             result = super(task, self).write(cr, uid, ids, vals, context=context)
