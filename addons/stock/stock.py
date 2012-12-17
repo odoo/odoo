@@ -712,7 +712,7 @@ class stock_picking(osv.osv):
             default['name'] = self.pool.get('ir.sequence').get(cr, uid, seq_obj_name)
             default['origin'] = ''
             default['backorder_id'] = False
-        if picking_obj.invoice_state == 'invoiced':
+        if 'invoice_state' not in default and picking_obj.invoice_state == 'invoiced':
             default['invoice_state'] = '2binvoiced'
         res=super(stock_picking, self).copy(cr, uid, id, default, context)
         if res:
@@ -1398,6 +1398,14 @@ class stock_picking(osv.osv):
         """
         if context is None:
             context = {}
+        lang_obj = self.pool.get('res.lang')
+        user_lang = self.pool.get('res.users').browse(cr, uid, uid, context=context).context_lang
+        lang_ids = lang_obj.search(cr, uid, [('code','like',user_lang)])
+        if lang_ids:
+            date_format = lang_obj.browse(cr, uid, lang_ids[0], context=context).date_format
+        else:
+            date_format = '%m/%d/%Y'
+
         for pick in self.browse(cr, uid, ids, context=context):
             msg=''
             if pick.auto_picking:
@@ -1409,7 +1417,7 @@ class stock_picking(osv.osv):
             }
             message = type_list.get(pick.type, _('Document')) + " '" + (pick.name or '?') + "' "
             if pick.min_date:
-                msg= _(' for the ')+ datetime.strptime(pick.min_date, '%Y-%m-%d %H:%M:%S').strftime('%m/%d/%Y')
+                msg= _(' for the ')+ datetime.strptime(pick.min_date, '%Y-%m-%d %H:%M:%S').strftime(date_format)
             state_list = {
                 'confirmed': _('is scheduled %s.') % msg,
                 'assigned': _('is ready to process.'),
@@ -1571,6 +1579,13 @@ class stock_production_lot(osv.osv):
         """
         value=self.pool.get('action.traceability').action_traceability(cr,uid,ids,context)
         return value
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        context = context or {}
+        default = default and default.copy() or {}
+        default.update(date=time.strftime('%Y-%m-%d %H:%M:%S'), move_ids=[])
+        return super(stock_production_lot, self).copy(cr, uid, id, default=default, context=context)
+
 stock_production_lot()
 
 class stock_production_lot_revision(osv.osv):

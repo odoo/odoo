@@ -73,12 +73,15 @@ class invite_wizard(osv.osv_memory):
             if wizard.message:
                 for follower_id in new_follower_ids:
                     mail_mail = self.pool.get('mail.mail')
+                    # the invite wizard should create a private message not related to any object -> no model, no res_id
                     mail_id = mail_mail.create(cr, uid, {
                         'model': wizard.res_model,
                         'res_id': wizard.res_id,
                         'subject': 'Invitation to follow %s' % document.name_get()[0][1],
                         'body_html': '%s' % wizard.message,
                         'auto_delete': True,
+                        'res_id': False,
+                        'model': False,
                         }, context=context)
                     mail_mail.send(cr, uid, [mail_id], recipient_ids=[follower_id], context=context)
         return {'type': 'ir.actions.act_window_close'}

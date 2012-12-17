@@ -181,7 +181,7 @@
                 <sheet>
                     <div class="oe_title">
                         <h1>
-                            <label string="Quotation " attrs="{'invisible': [('state','not in',('draft','sent'))]}"/>
+                            <label string="Request for Quotation " attrs="{'invisible': [('state','not in',('draft','sent'))]}"/>
                             <label string="Purchase Order " attrs="{'invisible': [('state','in',('draft','sent'))]}"/>
                             <field name="name" class="oe_inline" readonly="1"/>
                         </h1>
@@ -242,7 +242,7 @@
                                     <field name="invoice_method"/>
                                     <field name="invoiced"/>
                                     <field name="payment_term_id" widget="selection"/>
-                                    <field name="fiscal_position"/>
+                                    <field name="fiscal_position" attrs="{'readonly': [('invoiced','=', True)]}" />
                                     <!-- We do not need these fields anymore, the information is in open chatter -->
                                     <field name="validator" groups="base.group_no_one"/>
                                     <field name="date_approve" groups="base.group_no_one"/>
