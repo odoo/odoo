@@ -7,7 +7,7 @@
              but, this time, without the signal -->
         <field name="act_from" ref="procurement.act_confirm"/>
         <field name="act_to" ref="procurement.act_confirm_wait"/>
-        <field name="condition">not test_cancel()</field>
+        <field name="condition">check_conditions_confirm2wait()</field>
     </record>
 
 </data>

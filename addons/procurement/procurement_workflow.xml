@@ -25,7 +25,6 @@
             <field name="name">confirm</field>
             <field name="kind">function</field>
             <field name="action">action_confirm()</field>
-            <field name="slip_mode">OR</field>
         </record>
         <record id="act_confirm_wait" model="workflow.activity">
             <field name="wkf_id" ref="wkf_procurement"/>
@@ -98,7 +97,7 @@
             <field name="act_from" ref="act_confirm"/>
             <field name="act_to" ref="act_confirm_wait"/>
             <field name="signal">button_check</field>
-            <field name="condition">not test_cancel()</field>
+            <field name="condition">check_conditions_confirm2wait()</field>
         </record>
         <record id="trans_confirm_wait_confirm_mto" model="workflow.transition">
             <field name="act_from" ref="act_confirm_wait"/>

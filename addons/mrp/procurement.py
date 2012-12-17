@@ -53,7 +53,12 @@ class procurement_order(osv.osv):
                     self.message_post(cr, uid, [procurement.id], body=message, context=context)
                 return False
         return True
-    
+
+    def check_conditions_confirm2wait(self, cr, uid, ids):
+        """ condition on the transition to go from 'confirm' activity to 'confirm_wait' activity """
+        res = super(procurement_order, self).check_conditions_confirm2wait(cr, uid, ids)
+        return res and not self.get_phantom_bom_id(cr, uid, ids)
+
     def get_phantom_bom_id(self, cr, uid, ids, context=None):
         for procurement in self.browse(cr, uid, ids, context=context):
             if procurement.move_id and procurement.move_id.product_id.supply_method=='produce' \

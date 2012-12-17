@@ -136,11 +136,6 @@
             <field name="signal">subflow.done</field>
         </record>
 
-        <record id="trans_conf_conf_wait" model="workflow.transition">
-            <field name="act_from" ref="procurement.act_confirm"/>
-            <field name="act_to" ref="procurement.act_confirm_temp"/>
-            <field name="condition">not test_cancel() and not get_phantom_bom_id()</field>
-        </record>
         <record id="trans_produce_cancel" model="workflow.transition">
             <field name="act_from" ref="act_produce"/>
             <field name="act_to" ref="procurement.act_cancel"/>

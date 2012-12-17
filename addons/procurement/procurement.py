@@ -281,6 +281,10 @@ class procurement_order(osv.osv):
         """
         return False
 
+    def check_conditions_confirm2wait(self, cr, uid, ids):
+        """ condition on the transition to go from 'confirm' activity to 'confirm_wait' activity """
+        return not self.test_cancel(cr, uid, ids)
+
     def test_cancel(self, cr, uid, ids):
         """ Tests whether state of move is cancelled or not.
         @return: True or False
