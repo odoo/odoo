@@ -869,8 +869,8 @@ instance.web.Menu =  instance.web.Widget.extend({
     reflow: function() {
         var self = this;
         this.$el.show();
-        var $more_container = $('.oe_menu_more_container').hide();
-        var $more = $('.oe_menu_more');
+        var $more_container = this.$('.oe_menu_more_container').hide();
+        var $more = this.$('.oe_menu_more');
         $more.find('> li').insertBefore($more_container);
         var $li = this.$('> li').not($more_container).hide();
         $li.each(function() {
