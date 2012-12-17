@@ -374,9 +374,13 @@ class project_issue(base_stage, osv.osv):
 
         # subscribe new project followers to the issue
         if vals.get('project_id'):
+            project_id = self.pool.get('project.project').browse(cr, uid, vals.get('project_id'), context=context)
+            vals.setdefault('message_follower_ids', [])
+            vals['message_follower_ids'] += [(6, 0,[follower.id]) for follower in project_id.message_follower_ids]
+        res = super(project_issue, self).write(cr, uid, ids, vals, context)
+        if vals.get('project_id'):
             self._subscribe_followers_subtype(cr, uid, ids, vals.get('project_id'), 'project.project', context=context)
-
-        return super(project_issue, self).write(cr, uid, ids, vals, context)
+        return res
     
     def onchange_task_id(self, cr, uid, ids, task_id, context=None):
         if not task_id:

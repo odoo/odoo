@@ -39,10 +39,14 @@ class account_analytic_account(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
+        if vals.get('manager_id'):
+            section_id = self.pool.get('res.users').browse(cr, uid, vals.get('manager_id'), context=context).default_section_id
+            if section_id:
+                vals.setdefault('message_follower_ids', [])
+                vals['message_follower_ids'] += [(6, 0,[follower.id]) for follower in section_id.message_follower_ids]
         res = super(account_analytic_account, self).write(cr, uid, ids, vals, context=context)
         # subscribe new salesteam followers & subtypes to the contract
         if vals.get('manager_id'):
-            section_id = self.pool.get('res.users').browse(cr, uid, vals.get('manager_id'), context=context).default_section_id
             if section_id:
                 self._subscribe_followers_subtype(cr, uid, ids, section_id, 'crm.case.section', context=context)
         return res 

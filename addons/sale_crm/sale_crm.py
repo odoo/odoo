@@ -38,6 +38,9 @@ class sale_order(osv.osv):
         return order
 
     def write(self, cr, uid, ids, vals, context=None):
+        if vals.get('section_id'):
+            section_id = self.pool.get('crm.case.section').browse(cr, uid, vals.get('section_id'), context=context)
+            vals['message_follower_ids'] = [(6, 0, [follower.id]) for follower in section_id.message_follower_ids]
         res = super(sale_order, self).write(cr, uid, ids, vals, context=context)
         # subscribe new salesteam followers & subtypes to the sale order
         if vals.get('section_id'):

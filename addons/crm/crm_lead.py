@@ -915,9 +915,8 @@ class crm_lead(base_stage, format_address, osv.osv):
                 vals['probability'] = stage.probability
         if vals.get('section_id'):
             section_id = self.pool.get('crm.case.section').browse(cr, uid, vals.get('section_id'), context=context)
-            if section_id:
-                vals.setdefault('message_follower_ids', [])
-                vals['message_follower_ids'] += [(6, 0,[follower.id]) for follower in section_id.message_follower_ids]
+            vals.setdefault('message_follower_ids', [])
+            vals['message_follower_ids'] += [(6, 0,[follower.id]) for follower in section_id.message_follower_ids]
         res = super(crm_lead,self).write(cr, uid, ids, vals, context)
         # subscribe new salesteam followers & subtypes to the lead
         if vals.get('section_id'):
