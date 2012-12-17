@@ -454,7 +454,7 @@ class browse_record(object):
                             new_data[field_name] = browse_null()
                     elif field_column._type in ('one2many', 'many2many') and len(result_line[field_name]):
                         new_data[field_name] = self._list_class([browse_record(self._cr, self._uid, id, self._table.pool.get(field_column._obj), self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process) for id in result_line[field_name]], self._context)
-                    elif field_column._type in 'reference':
+                    elif field_column._type == 'reference':
                         if result_line[field_name]:
                             if isinstance(result_line[field_name], browse_record):
                                 new_data[field_name] = result_line[field_name]
@@ -1741,7 +1741,7 @@ class BaseModel(object):
                 views = {}
                 xml = "<form>"
                 for f in node:
-                    if f.tag in 'field':
+                    if f.tag == 'field':
                         xml += etree.tostring(f, encoding="utf-8")
                 xml += "</form>"
                 new_xml = etree.fromstring(encode(xml))
