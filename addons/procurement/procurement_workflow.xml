@@ -32,13 +32,6 @@
             <field name="name">confirm_wait</field>
             <field name="kind">function</field>
             <field name="action">write({'state':'exception'})</field>
-            <field name="join_mode">AND</field>
-        </record>
-        <!-- to check... what's the use? mrp_jit, i guess -->
-        <record id="act_confirm_temp" model="workflow.activity">
-            <field name="wkf_id" ref="wkf_procurement"/>
-            <field name="name">confirm_temp</field>
-            <field name="slip_mode">OR</field>
         </record>
         <record id="act_confirm_mts" model="workflow.activity">
             <field name="wkf_id" ref="wkf_procurement"/>
@@ -103,14 +96,9 @@
         </record>
         <record id="trans_confirm_confirm_wait" model="workflow.transition">
             <field name="act_from" ref="act_confirm"/>
-            <field name="act_to" ref="act_confirm_temp"/>
+            <field name="act_to" ref="act_confirm_wait"/>
             <field name="signal">button_check</field>
             <field name="condition">not test_cancel()</field>
-        </record>
-        <!-- to check... what's the use? mrp_jit, i guess -->
-        <record id="trans_confirm_temp_confirm_wait" model="workflow.transition">
-            <field name="act_from" ref="act_confirm_temp"/>
-            <field name="act_to" ref="act_confirm_wait"/>
         </record>
         <record id="trans_confirm_wait_confirm_mto" model="workflow.transition">
             <field name="act_from" ref="act_confirm_wait"/>
