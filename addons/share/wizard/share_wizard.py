@@ -69,7 +69,7 @@ class share_wizard(osv.TransientModel):
             return False
         return group_id in self.pool.get('res.users').read(cr, uid, uid, ['groups_id'], context=context)['groups_id']
 
-    def has_share(self, cr, uid, context=None):
+    def has_share(self, cr, uid, unused_param, context=None):
         return self.has_group(cr, uid, module='share', group_xml_id='group_share_user', context=context)
 
     def _user_type_selection(self, cr, uid, context=None):
