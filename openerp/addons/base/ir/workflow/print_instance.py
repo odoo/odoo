@@ -18,13 +18,11 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 import logging
-import time
 from operator import itemgetter
 import os
 
-from openerp import netsvc, pooler, report, tools
+from openerp import report, tools
 
 _logger = logging.getLogger(__name__)
 

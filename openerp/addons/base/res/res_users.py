@@ -19,21 +19,17 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-
 from functools import partial
 import logging
 from lxml import etree
 from lxml.builder import E
-import random
 
 import openerp
 from openerp import SUPERUSER_ID
-from openerp import netsvc, pooler, tools
+from openerp import pooler, tools
 import openerp.exceptions
 from openerp.osv import fields,osv
 from openerp.osv.orm import browse_record
-from openerp.service import security
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)

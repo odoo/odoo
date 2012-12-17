@@ -18,10 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 import time
-from operator import itemgetter
-from functools import partial
 
 from openerp import SUPERUSER_ID
 from openerp import tools

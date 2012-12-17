@@ -18,11 +18,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 import logging
-from operator import attrgetter, itemgetter
+from operator import attrgetter
 
-from openerp import netsvc, pooler
+from openerp import pooler
 from openerp.osv import osv, fields
 from openerp.tools import ustr
 from openerp.tools.translate import _

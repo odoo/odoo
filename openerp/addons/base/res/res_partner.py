@@ -20,7 +20,6 @@
 ##############################################################################
 
 import datetime
-import logging
 from lxml import etree
 import math
 import pytz
