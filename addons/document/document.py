@@ -2055,10 +2055,8 @@ class nodefd_db(StringIO, node_descriptor):
 
         if mode in ('r', 'r+'):
             data = ira_browse.datas
-            print "READ64",data
             if data:
                 data = data.decode('base64')
-                print "READ",data
                 self._size = len(data)
             StringIO.__init__(self, data)
         elif mode in ('w', 'w+'):
