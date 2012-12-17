@@ -79,17 +79,26 @@ class document_file(osv.osv):
         ids = super(document_file, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=False)
         if not ids:
             return 0 if count else []
+
         # Filter out documents that are in directories that the user is not allowed to read.
         # Must use pure SQL to avoid access rules exceptions (we want to remove the records,
         # not fail), and the records have been filtered in parent's search() anyway.
-        cr.execute('SELECT id, parent_id from "%s" WHERE id in %%s' % self._table, (tuple(ids),))
-        doc_pairs = cr.fetchall()
-        parent_ids = set(zip(*doc_pairs)[1])
+        cr.execute('SELECT id, parent_id from ir_attachment WHERE id in %s', (tuple(ids),))
+
+        # cont a dict of parent -> attach
+        parents = {}
+        for attach_id, attach_parent in cr.fetchall():
+            parents.setdefault(attach_parent, []).append(attach_id)
+        parent_ids = parents.keys()
+
+        # filter parents
         visible_parent_ids = self.pool.get('document.directory').search(cr, uid, [('id', 'in', list(parent_ids))])
-        disallowed_parents = parent_ids.difference(visible_parent_ids)
-        for doc_id, parent_id in doc_pairs:
-            if parent_id in disallowed_parents:
-                ids.remove(doc_id)
+
+        # null parents means allowed
+        ids = parents.get(None,[])
+        for parent_id in visible_parent_ids:
+            ids.extend(parents[parent_id])
+
         return len(ids) if count else ids
 
     def copy(self, cr, uid, id, default=None, context=None):
