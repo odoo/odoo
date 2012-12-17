@@ -26,7 +26,7 @@ openerp.portal_anonymous = function(instance) {
         start: function() {
             var self = this;
             this._super.apply(this, arguments);
-            this.$el.click(function() {
+            this.$el.find('a.login').click(function() {
                 var p = self.getParent();
                 var am = p.action_manager;
                 p.$el.find('.oe_leftbar').hide();
