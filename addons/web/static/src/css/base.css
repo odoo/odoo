@@ -30,7 +30,7 @@
   text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
   /* http://www.quirksmode.org/dom/inputfile.html
    * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
-   */ */
+   */
 }
 .openerp.openerp_webclient_container {
   height: 100%;
@@ -997,6 +997,39 @@
   background-image: -ms-linear-gradient(top, #646060, #262626);
   background-image: -o-linear-gradient(top, #646060, #262626);
   background-image: linear-gradient(to bottom, #646060, #262626);
+}
+.openerp .oe_topbar .oe_topbar_anonymous_login {
+  background-color: #dc5f59;
+  color: #eeeeee;
+  background-color: #fc8787;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#fc8787), to(maroon));
+  background-image: -webkit-linear-gradient(top, #fc8787, maroon);
+  background-image: -moz-linear-gradient(top, #fc8787, maroon);
+  background-image: -ms-linear-gradient(top, #fc8787, maroon);
+  background-image: -o-linear-gradient(top, #fc8787, maroon);
+  background-image: linear-gradient(to bottom, #fc8787, maroon);
+}
+.openerp .oe_topbar .oe_topbar_anonymous_login a {
+  display: block;
+  padding: 5px 10px 7px;
+  line-height: 20px;
+  height: 20px;
+  text-decoration: none;
+  color: white;
+  background: transparent;
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  -ms-transition: all 0.2s ease-out;
+  -o-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
+}
+.openerp .oe_topbar .oe_topbar_anonymous_login a:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: white;
+  text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) inset;
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) inset;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) inset;
 }
 .openerp .oe_topbar .oe_topbar_item {
   display: block;

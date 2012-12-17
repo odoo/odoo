@@ -811,7 +811,6 @@ instance.web.Menu =  instance.web.Widget.extend({
                 });
             }
         });
-        
     },
     start: function() {
         this._super.apply(this, arguments);
