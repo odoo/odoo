@@ -95,7 +95,7 @@ class account_coda_import(osv.osv_memory):
                 if bank_ids and len(bank_ids) > 0:
                     bank_accs = self.pool.get('res.partner.bank').browse(cr, uid, bank_ids)
                     for bank_acc in bank_accs:
-                        if not (bank_acc.journal_id.currency and bank_acc.journal_id.currency.name != statement['currency']) and (not bank_acc.journal_id.currency and bank_acc.journal_id.company_id.currency_id.name != statement['currency']):
+                        if not ((bank_acc.journal_id.currency and bank_acc.journal_id.currency.name != statement['currency']) and (not bank_acc.journal_id.currency and bank_acc.journal_id.company_id.currency_id.name != statement['currency'])):
                             statement['journal_id'] = bank_acc.journal_id
                             statement['bank_account'] = bank_acc
                             break
