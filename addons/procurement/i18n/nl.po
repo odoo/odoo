@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2012-10-28 09:05+0000\n"
+"PO-Revision-Date: 2012-12-16 09:38+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-29 05:18+0000\n"
-"X-Generator: Launchpad (build 16194)\n"
+"X-Launchpad-Export-Date: 2012-12-17 05:07+0000\n"
+"X-Generator: Launchpad (build 16372)\n"
 
 #. module: procurement
 #: view:make.procurement:0
@@ -54,18 +54,20 @@ msgid "Draft procurement of the product and location of that orderpoint"
 msgstr "Concept verwerving van het product en locatie van dat bestelniveau"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:291
+#: code:addons/procurement/procurement.py:290
 #, python-format
 msgid "No supplier defined for this product !"
 msgstr "Geen leverancier voor dit product opgegeven!"
 
 #. module: procurement
 #: field:make.procurement,uom_id:0
+#: view:procurement.order:0
 msgid "Unit of Measure"
-msgstr "Meeteenheid"
+msgstr "Maateenheid"
 
 #. module: procurement
 #: field:procurement.order,procure_method:0
+#: field:product.template,procure_method:0
 msgid "Procurement Method"
 msgstr "Verwervingswijze"
 
@@ -276,7 +278,7 @@ msgid "Error! You can not create recursive companies."
 msgstr "Fout! U kunt geen recursieve bedrijven aanmaken."
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:386
+#: code:addons/procurement/procurement.py:395
 #, python-format
 msgid "Procurement '%s' is in exception: "
 msgstr "Bij de verwerving van '%s' is een probleem ontstaan: "
@@ -317,7 +319,7 @@ msgid "Best price (not yet active!)"
 msgstr "Beste prijs (nog niet actief)"
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:111
+#: code:addons/procurement/schedulers.py:110
 #, python-format
 msgid "PROC %d: from stock - %3.2f %-5s - %s"
 msgstr "VERW %d: van voorraaad - %3.2f %-5s - %s"
@@ -376,7 +378,7 @@ msgid "Quantity"
 msgstr "Aantal"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:379
+#: code:addons/procurement/procurement.py:390
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
 msgstr "Onvoldoende voorraad en geen minimale voorraadregel gedefinieerd."
@@ -564,7 +566,6 @@ msgstr ""
 "kunnen wachten voordat de verwerking gereed is."
 
 #. module: procurement
-#: view:procurement.order:0
 #: field:procurement.order,note:0
 msgid "Note"
 msgstr "Notitie"
@@ -581,6 +582,7 @@ msgstr "Deze wizard zal verwervingen inplannen"
 
 #. module: procurement
 #: view:procurement.order:0
+#: field:procurement.order,state:0
 msgid "Status"
 msgstr "Status"
 
@@ -596,7 +598,7 @@ msgstr ""
 "U probeert een partij toe te wijzen die niet van hetzelfde product is."
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:383
+#: code:addons/procurement/procurement.py:392
 #, python-format
 msgid "Not enough stock."
 msgstr "Onvoldoende voorraad."
@@ -628,7 +630,7 @@ msgid "No minimum orderpoint rule defined."
 msgstr "Geen minimum bestelhoeveelheid gedefinieerd."
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:151
+#: code:addons/procurement/schedulers.py:133
 #, python-format
 msgid "Automatic OP: %s"
 msgstr "Automatisch BP: %s"
@@ -701,7 +703,7 @@ msgid "Properties composition"
 msgstr "Samenstellingseigenschappen"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:327
+#: code:addons/procurement/procurement.py:335
 #, python-format
 msgid "Data Insufficient !"
 msgstr "Onvoldoende gegevens !"
@@ -746,7 +748,6 @@ msgstr "Gereed"
 #. module: procurement
 #: view:make.procurement:0
 #: view:procurement.order:0
-#: selection:procurement.order,state:0
 #: view:procurement.order.compute:0
 #: view:procurement.order.compute.all:0
 #: view:procurement.orderpoint.compute:0
@@ -799,13 +800,7 @@ msgid "Procurement Exceptions"
 msgstr "Verwervingsfouten"
 
 #. module: procurement
-#: model:ir.actions.act_window,name:procurement.act_procurement_2_stock_warehouse_orderpoint
-#: model:ir.actions.act_window,name:procurement.act_product_product_2_stock_warehouse_orderpoint
-#: model:ir.actions.act_window,name:procurement.act_stock_warehouse_2_stock_warehouse_orderpoint
-#: model:ir.actions.act_window,name:procurement.action_orderpoint_form
-#: model:ir.ui.menu,name:procurement.menu_stock_order_points
-#: view:product.product:0
-#: view:stock.warehouse.orderpoint:0
+#: field:product.product,orderpoint_ids:0
 msgid "Minimum Stock Rules"
 msgstr "Minimale  voorraadregels"
 
@@ -866,6 +861,8 @@ msgstr "Product maateenheid"
 
 #. module: procurement
 #: model:process.node,name:procurement.process_node_serviceonorder0
+#: selection:procurement.order,procure_method:0
+#: selection:product.template,procure_method:0
 msgid "Make to Order"
 msgstr "Op order maken"
 
@@ -1035,13 +1032,13 @@ msgid "Error: Invalid ean code"
 msgstr "Fout: Ongeldige EAN-code"
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:152
+#: code:addons/procurement/schedulers.py:134
 #, python-format
 msgid "SCHEDULER"
 msgstr "PLANNER"
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:88
+#: code:addons/procurement/schedulers.py:87
 #, python-format
 msgid "PROC %d: on order - %3.2f %-5s - %s"
 msgstr "VERW %d: van order - %3.2f %-5s - %s"
