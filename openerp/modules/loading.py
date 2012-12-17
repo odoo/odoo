@@ -142,10 +142,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
     migrations = openerp.modules.migration.MigrationManager(cr, graph)
     _logger.debug('loading %d packages...', len(graph))
 
-    # get db timestamp
-    cr.execute("select (now() at time zone 'UTC')::timestamp")
-    dt_before_load = cr.fetchone()[0]
-
     # Query manual fields for all models at once and save them on the registry
     # so the initialization code for each model does not have to do it
     # one model at a time.
