@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import osv
+from osv import osv, fields
 from tools.translate import _
 import netsvc
 
