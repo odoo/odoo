@@ -15,7 +15,7 @@ import sql_db
 
 from service import security
 from osv import osv
-from document.nodes import get_node_context
+from document.document import get_node_context
 
 def _get_month_name(month):
     month=int(month)

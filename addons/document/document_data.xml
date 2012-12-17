@@ -1,17 +1,9 @@
 <?xml version="1.0"?>
 <openerp>
 <data noupdate="1">
-    
-    <record model="document.storage" id="storage_default">
-        <field name="name">Database storage</field>
-        <field name="type">db</field>
-        <field name="user_id" ref="base.user_root"/>
-    </record>
-
     <record model="document.directory" id="dir_root">
         <field name="name">Documents</field>
         <field name="user_id" eval="False"/>
-        <field name="storage_id" ref="storage_default"/>
         <field name="ressource_id">0</field>
     </record>
 
@@ -20,7 +12,6 @@
         <field name="parent_id" ref="dir_root"/>
         <field name="user_id" ref="base.user_root"/>
         <field name="ressource_id">0</field>
- 
     </record>
 </data>
 
@@ -101,8 +92,5 @@
         <field name="ressource_id">0</field>
     </record>
 
-    <!-- After we have setup the root directory, migrate the attachments
-        to point to that. -->
-    <function model="ir.attachment" name="_attach_parent_id"/>
 </data>
 </openerp>

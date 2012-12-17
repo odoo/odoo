@@ -37,7 +37,7 @@ This is a complete document management system.
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['process','board', 'knowledge'],
+    'depends': ['knowledge'],
     'data': [
         'security/document_security.xml',
         'document_view.xml',
@@ -45,7 +45,6 @@ This is a complete document management system.
         'wizard/document_configuration_view.xml',
         'security/ir.model.access.csv',
         'report/document_report_view.xml',
-        'board_document_view.xml',
     ],
     'demo': [ 'document_demo.xml' ],
     'test': ['test/document_test2.yml'],
