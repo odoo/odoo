@@ -20,6 +20,9 @@
 #
 ##############################################################################
 
+import logging
+
+_logger = logging.getLogger(__name__)
 import xml.dom.minidom
 domimpl = xml.dom.minidom.getDOMImplementation()
 from xml.dom.minicompat import StringTypes
@@ -29,10 +32,14 @@ import urllib
 from openerp.osv import osv
 from openerp.tools.translate import _
 
-from DAV import utils
-from DAV.propfind import PROPFIND
-from DAV.report import REPORT
-
+try:
+    from pywebdav.lib import utils
+    from pywebdav.lib.propfind import PROPFIND
+    from pywebdav.lib.report import REPORT
+except ImportError:
+    from DAV import utils
+    from DAV.propfind import PROPFIND
+    from DAV.report import REPORT
 
 from openerp import tools
 
