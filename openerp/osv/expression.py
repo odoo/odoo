@@ -1104,7 +1104,7 @@ class expression(object):
                 query = '(%s."%s" IS %s)' % (table_alias, left, r)
                 params = []
             elif isinstance(right, (list, tuple)):
-                params = right[:]
+                params = list(right)
                 check_nulls = False
                 for i in range(len(params))[::-1]:
                     if params[i] == False:
