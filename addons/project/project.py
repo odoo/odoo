@@ -1106,35 +1106,12 @@ class task(base_stage, osv.osv):
             }, context=context)
         return True
 
-    def _subscribe_project_followers_to_task(self, cr, uid, task_id, context=None):
-        """ TDE note: not the best way to do this, we could override _get_followers
-            of task, and perform a better mapping of subtypes than a mapping
-            based on names.
-            However we will keep this implementation, maybe to be refactored
-            in 7.1 of future versions. """
-        # task followers are project followers, with matching subtypes
-        task_record = self.browse(cr, uid, task_id, context=context)
-        subtype_obj = self.pool.get('mail.message.subtype')
-        follower_obj = self.pool.get('mail.followers')
-        if task_record.project_id:
-            # create mapping
-            task_subtype_ids = subtype_obj.search(cr, uid, ['|', ('res_model', '=', False), ('res_model', '=', self._name)], context=context)
-            task_subtypes = subtype_obj.browse(cr, uid, task_subtype_ids, context=context)
-            # fetch subscriptions
-            follower_ids = follower_obj.search(cr, uid, [('res_model', '=', 'project.project'), ('res_id', '=', task_record.project_id.id)], context=context)
-            # copy followers
-            for follower in follower_obj.browse(cr, uid, follower_ids, context=context):
-                if not follower.subtype_ids:
-                    continue
-                project_subtype_names = [project_subtype.name for project_subtype in follower.subtype_ids]
-                task_subtype_ids = [task_subtype.id for task_subtype in task_subtypes if task_subtype.name in project_subtype_names]
-                self.message_subscribe(cr, uid, [task_id], [follower.partner_id.id],
-                    subtype_ids=task_subtype_ids, context=context)
-
     def create(self, cr, uid, vals, context=None):
         task_id = super(task, self).create(cr, uid, vals, context=context)
-        # subscribe project followers to the task
-        self._subscribe_project_followers_to_task(cr, uid, task_id, context=context)
+        project_id = self.browse(cr, uid, task_id, context=context).project_id
+        if project_id:
+            # subscribe project followers to the task
+            self._subscribe_followers_subtype(cr, uid, [task_id], project_id, 'project.project', context=context)
 
         self._store_history(cr, uid, [task_id], context=context)
         self.create_send_note(cr, uid, [task_id], context=context)
@@ -1163,8 +1140,7 @@ class task(base_stage, osv.osv):
 
         # subscribe new project followers to the task
         if vals.get('project_id'):
-            for id in ids:
-                self._subscribe_project_followers_to_task(cr, uid, id, context=context)
+            self._subscribe_followers_subtype(cr, uid, ids, vals.get('project_id'), 'project.project', context=context)
         return result
 
     def unlink(self, cr, uid, ids, context=None):

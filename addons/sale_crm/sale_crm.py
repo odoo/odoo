@@ -31,37 +31,17 @@ class sale_order(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         order =  super(sale_order, self).create(cr, uid, vals, context=context)
-        # subscribe salesteam followers & subtypes to the sale order
-        self._subscribe_salesteam_followers_to_order(cr, uid, [order], context=context)
-        return order
-
-    def _subscribe_salesteam_followers_to_order(self, cr, uid, order, context=None):
-        follower_obj = self.pool.get('mail.followers')
-        subtype_obj = self.pool.get('mail.message.subtype')
-        rec = self.browse(cr, uid, order, context=context)
-        section_id = rec and rec[0].section_id or False
+        section_id = self.browse(cr, uid, order, context=context).section_id
         if section_id:
-            # fetch subscribers
-            followers = [follow.id for follow in section_id.message_follower_ids]
-            order_subtype_ids = subtype_obj.search(cr, uid, ['|', ('res_model', '=', False), ('res_model', '=', self._name)], context=context)
-            order_subtypes = subtype_obj.browse(cr, uid, order_subtype_ids, context=context)
-            # fetch subscriptions
-            follower_ids = follower_obj.search(cr, uid, [('res_model', '=', 'crm.case.section'), ('res_id', '=', section_id)], context=context)
-            # when subscribe new salesteam update followers
-            self.write(cr, uid, order, {'message_follower_ids': [(6, 0, followers)]}, context=context)
-            # copy followers & select subtypes
-            for follower in follower_obj.browse(cr, uid, follower_ids, context=context):
-                if not follower.subtype_ids:
-                    continue
-                salesteam_subtype_names = [salesteam_subtype.name for salesteam_subtype in follower.subtype_ids]
-                order_subtype_ids = [order_subtype.id for order_subtype in order_subtypes if order_subtype.name in salesteam_subtype_names]
-                self.message_subscribe(cr, uid, order, [follower.partner_id.id], subtype_ids=order_subtype_ids, context=context)
+            # subscribe salesteam followers & subtypes to the sale order
+            self._subscribe_followers_subtype(cr, uid, [order], section_id, 'crm.case.section', context=context)
+        return order
 
     def write(self, cr, uid, ids, vals, context=None):
         res = super(sale_order, self).write(cr, uid, ids, vals, context=context)
         # subscribe new salesteam followers & subtypes to the sale order
         if vals.get('section_id'):
-            self._subscribe_salesteam_followers_to_order(cr, uid, ids, context=context)
+            self._subscribe_followers_subtype(cr, uid, ids, vals.get('section_id'), 'crm.case.section', context=context)
         return res
 
 sale_order()

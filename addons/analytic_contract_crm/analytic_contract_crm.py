@@ -27,8 +27,11 @@ class account_analytic_account(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         obj_id =  super(account_analytic_account, self).create(cr, uid, vals, context=context)
-        # subscribe salesteam followers & subtypes to the contract
-        self._subscribe_salesteam_followers_to_contract(cr, uid, [obj_id], context)
+        manager_id = self.browse(cr, uid, obj_id, context=context).manager_id
+        if manager_id:
+            if manager_id.default_section_id:
+                # subscribe salesteam followers & subtypes to the contract
+                self._subscribe_followers_subtype(cr, uid, [obj_id], manager_id.default_section_id, 'crm.case.section', context=context)
         if obj_id:
             self.create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
@@ -39,33 +42,10 @@ class account_analytic_account(osv.osv):
         res = super(account_analytic_account, self).write(cr, uid, ids, vals, context=context)
         # subscribe new salesteam followers & subtypes to the contract
         if vals.get('manager_id'):
-            self._subscribe_salesteam_followers_to_contract(cr, uid, ids, context)
+            section_id = self.pool.get('res.users').browse(cr, uid, vals.get('manager_id'), context=context).default_section_id
+            if section_id:
+                self._subscribe_followers_subtype(cr, uid, ids, section_id, 'crm.case.section', context=context)
         return res 
-
-    def _subscribe_salesteam_followers_to_contract(self, cr, uid, obj_id, context=None):
-        follower_obj = self.pool.get('mail.followers')
-        subtype_obj = self.pool.get('mail.message.subtype')
-        record = self.browse(cr, uid, obj_id, context=context)
-        manager_id = record and record[0].manager_id or False
-        if manager_id:
-            if manager_id.default_section_id:
-                # fetch subscribers
-                followers = [follow.id for follow in manager_id.default_section_id.message_follower_ids]
-                contract_subtype_ids = subtype_obj.search(cr, uid, ['|', ('res_model', '=', False), ('res_model', '=', self._name)], context=context)
-                contract_subtypes = subtype_obj.browse(cr, uid, contract_subtype_ids, context=context)
-                # fetch subscriptions
-                follower_ids = follower_obj.search(cr, uid, [('res_model', '=', 'crm.case.section'), ('res_id', '=', manager_id.default_section_id.id)], context=context)
-                # when subscribe new salesteam update followers
-                self.write(cr, uid, obj_id, {'message_follower_ids': [(6, 0, followers)]}, context=context)
-                # copy followers & select subtypes
-                for follower in follower_obj.browse(cr, uid, follower_ids, context=context):
-                    if not follower.subtype_ids:
-                        continue
-                    salesteam_subtype_names = [salesteam_subtype.name for salesteam_subtype in follower.subtype_ids]
-                    contract_subtype_ids = [contract_subtype.id for contract_subtype in contract_subtypes if contract_subtype.name in salesteam_subtype_names]
-                    self.message_subscribe(cr, uid, obj_id, [follower.partner_id.id], subtype_ids=contract_subtype_ids, context=context)
-        else:
-            return
 
 account_analytic_account()
 

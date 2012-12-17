@@ -847,4 +847,25 @@ class mail_thread(osv.AbstractModel):
         ''', (ids, self._name, partner_id))
         return True
 
+    def _subscribe_followers_subtype(self, cr, uid, ids, res_id, model, context=None):
+        """ TDE note: not the best way to do this, we could override _get_followers
+            of task, and perform a better mapping of subtypes than a mapping
+            based on names.
+            However we will keep this implementation, maybe to be refactored
+            in 7.1 of future versions. """
+        subtype_obj = self.pool.get('mail.message.subtype')
+        follower_obj = self.pool.get('mail.followers')
+        # create mapping
+        subtype_ids = subtype_obj.search(cr, uid, ['|', ('res_model', '=', False), ('res_model', '=', self._name)], context=context)
+        subtypes = subtype_obj.browse(cr, uid, subtype_ids, context=context)
+        # fetch subscriptions
+        follower_ids = follower_obj.search(cr, uid, [('res_model', '=', model), ('res_id', '=', res_id)], context=context)
+        # copy followers
+        for follower in follower_obj.browse(cr, uid, follower_ids, context=context):
+            if not follower.subtype_ids:
+                continue
+            subtype_names = [follower_subtype.name for follower_subtype in follower.subtype_ids]
+            subtype_ids = [subtype.id for subtype in subtypes if subtype.name in subtype_names]
+            self.message_subscribe(cr, uid, ids, [follower.partner_id.id],
+                subtype_ids=subtype_ids, context=context)
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
