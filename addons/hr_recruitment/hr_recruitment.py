@@ -253,9 +253,8 @@ class hr_applicant(base_stage, osv.Model):
         return {'value': {'department_id': False}}
 
     def onchange_department_id(self, cr, uid, ids, department_id=False, context=None):
-        obj_recru_stage = self.pool.get('hr.recruitment.stage')
-        stage_ids = obj_recru_stage.search(cr, uid, ['|',('department_id','=',department_id),('department_id','=',False)], context=context)
-        stage_id = stage_ids and stage_ids[0] or False
+        stage_ids = self.browse(cr, uid,ids,context=context)
+        stage_id = stage_ids and stage_ids[0].stage_id.id or False
         return {'value': {'stage_id': stage_id}}
 
     def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
