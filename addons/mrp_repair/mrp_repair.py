@@ -130,7 +130,7 @@ class mrp_repair(osv.osv):
             ('2binvoiced','To be Invoiced'),
             ('invoice_except','Invoice Exception'),
             ('done','Repaired')
-            ], 'Status', readonly=True,
+            ], 'Status', readonly=True, track_visibility=1,
             help=' * The \'Draft\' status is used when a user is encoding a new and unconfirmed repair order. \
             \n* The \'Confirmed\' status is used when a user confirms the repair order. \
             \n* The \'Ready to Repair\' status is used to start to repairing, user can start repairing only after repair order is confirmed. \
@@ -562,52 +562,6 @@ class mrp_repair(osv.osv):
                 self.write(cr, uid, [repair.id], {'state': 'done'})
             self.set_done_send_note(cr, uid, [repair.id], context)
         return res
-
-    def create(self, cr, uid, vals, context=None):
-        repair_id = super(mrp_repair, self).create(cr, uid, vals, context=context)
-        self.create_send_note(cr, uid, [repair_id], context=context)
-        return repair_id
-
-    def create_send_note(self, cr, uid, ids, context=None):
-        for repair in self.browse(cr, uid, ids, context):
-            message = _("Repair Order for <em>%s</em> has been <b>created</b>." % (repair.product_id.name))
-            self.message_post(cr, uid, [repair.id], body=message, context=context)
-        return True
-
-    def set_start_send_note(self, cr, uid, ids, context=None):
-        for repair in self.browse(cr, uid, ids, context):
-            message = _("Repair Order for <em>%s</em> has been <b>started</b>." % (repair.product_id.name))
-            self.message_post(cr, uid, [repair.id], body=message, context=context)
-        return True
-
-    def set_toinvoiced_send_note(self, cr, uid, ids, context=None):
-        for repair in self.browse(cr, uid, ids, context):
-            message = _("Draft Invoice of %s %s <b>waiting for validation</b>.") % (repair.invoice_id.amount_total, repair.invoice_id.currency_id.symbol)
-            self.message_post(cr, uid, [repair.id], body=message, context=context)
-        return True
-
-    def set_confirm_send_note(self, cr, uid, ids, context=None):
-        for repair in self.browse(cr, uid, ids, context):
-            message = _( "Repair Order for <em>%s</em> has been <b>accepted</b>." % (repair.product_id.name))
-            self.message_post(cr, uid, [repair.id], body=message, context=context)
-        return True
-
-    def set_cancel_send_note(self, cr, uid, ids, context=None):
-        message = _("Repair has been <b>cancelled</b>.")
-        self.message_post(cr, uid, ids, body=message, context=context)
-        return True
-
-    def set_ready_send_note(self, cr, uid, ids, context=None):
-        message = _("Repair Order is now <b>ready</b> to repair.")
-        self.message_post(cr, uid, ids, body=message, context=context)
-        return True
-
-    def set_done_send_note(self, cr, uid, ids, context=None):
-        message = _("Repair Order is <b>closed</b>.")
-        self.message_post(cr, uid, ids, body=message, context=context)
-        return True
-
-mrp_repair()
 
 
 class ProductChangeMixin(object):
