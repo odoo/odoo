@@ -77,7 +77,7 @@ class stock_picking(osv.osv):
         invoice_vals = super(stock_picking, self)._prepare_invoice_line(cr, uid, group, picking, move_line, invoice_id, invoice_vals, context=context)
         if picking.sale_id:
             if move_line.sale_line_id:
-                invoice_vals['account_analytic_id'] = self._get_account_analytic_invoice(cr, uid, picking, move_line.sale_line_id.id)
+                invoice_vals['account_analytic_id'] = self._get_account_analytic_invoice(cr, uid, picking, move_line)
         return invoice_vals
 
     def _get_price_unit_invoice(self, cursor, user, move_line, type):
