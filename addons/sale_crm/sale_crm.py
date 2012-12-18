@@ -29,15 +29,8 @@ class sale_order(osv.osv):
             domain="['|',('section_id','=',section_id),('section_id','=',False), ('object_id.model', '=', 'crm.lead')]")
     }
 
-    def create(self, cr, uid, vals, context=None):
-        order =  super(sale_order, self).create(cr, uid, vals, context=context)
-        section_id = self.browse(cr, uid, order, context=context).section_id
-        if section_id:
-            # subscribe salesteam followers & subtypes to the sale order
-            self._subscribe_followers_subtype(cr, uid, [order], section_id, 'crm.case.section', context=context)
-        return order
-
     def write(self, cr, uid, ids, vals, context=None):
+        # TDE todo: will be replaced by automatic in mail.thread
         if vals.get('section_id'):
             section_id = self.pool.get('crm.case.section').browse(cr, uid, vals.get('section_id'), context=context)
             vals['message_follower_ids'] = [(6, 0, [follower.id]) for follower in section_id.message_follower_ids]

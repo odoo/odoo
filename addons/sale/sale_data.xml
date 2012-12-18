@@ -48,22 +48,12 @@
         <record id="mt_quotation_sent" model="mail.message.subtype">
             <field name="name">Quotation sent</field>
             <field name="res_model">sale.order</field>
+            <field name="description">Quotation &lt;b&gt;send&lt;/b&gt;</field>
         </record>
         <record id="mt_order_confirmed" model="mail.message.subtype">
             <field name="name">Sale Order Confirmed</field>
             <field name="res_model">sale.order</field>
-        </record>
-
-        <!-- Salesteam-related subtypes for messaging / Chatter -->
-        <record id="mt_salesteam_sent" model="mail.message.subtype">
-            <field name="name">Quotation sent</field>
-            <field name="res_model">crm.case.section</field>
-            <field name="default" eval="False"/>
-        </record>
-        <record id="mt_salesteam_confirmed" model="mail.message.subtype">
-            <field name="name">Sale Order Confirmed</field>
-            <field name="res_model">crm.case.section</field>
-            <field name="default" eval="False"/>
+            <field name="description">Quotation &lt;b&gt;confirmed&lt;/b&gt;</field>
         </record>
 
     </data>
