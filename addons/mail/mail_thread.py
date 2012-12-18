@@ -295,7 +295,7 @@ class mail_thread(osv.AbstractModel):
                     if getattr(column_info.column, '_track_visibility', False) == 2
                     or (getattr(column_info.column, '_track_visibility', False) == 1 and name in updated_fields))
 
-    def message_track(self, cr, uid, ids, updated_fields, initial_values, log_message='', context=None):
+    def message_track(self, cr, uid, ids, updated_fields, initial_values, log_message='Document <b>updated</b>', context=None):
         """
             :param list updated_fields: modified field names
         """
