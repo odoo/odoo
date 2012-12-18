@@ -311,14 +311,6 @@ class crm_lead(base_stage, format_address, osv.osv):
         ('check_probability', 'check(probability >= 0 and probability <= 100)', 'The probability of closing the deal should be between 0% and 100%!')
     ]
 
-    def create(self, cr, uid, vals, context=None):
-        obj_id = super(crm_lead, self).create(cr, uid, vals, context)
-        section_id = self.browse(cr, uid, obj_id, context=context).section_id
-        if section_id:
-            # subscribe salesteam followers & subtypes to the lead
-            self._subscribe_followers_subtype(cr, uid, [obj_id], section_id, 'crm.case.section', context=context)
-        return obj_id
-
     def onchange_stage_id(self, cr, uid, ids, stage_id, context=None):
         if not stage_id:
             return {'value':{}}
