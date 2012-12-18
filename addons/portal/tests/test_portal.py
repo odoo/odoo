@@ -19,97 +19,107 @@
 #
 ##############################################################################
 
-from openerp.addons.mail.tests import test_mail_mockup
+from openerp.addons.mail.tests.test_mail_base import TestMailBase
 from openerp.osv.orm import except_orm
 from openerp.tools.misc import mute_logger
 
 
-class test_portal(test_mail_mockup.TestMailMockups):
+class test_portal(TestMailBase):
 
     def setUp(self):
         super(test_portal, self).setUp()
         cr, uid = self.cr, self.uid
-        self.ir_model = self.registry('ir.model')
-        self.mail_group = self.registry('mail.group')
-        self.mail_mail = self.registry('mail.mail')
-        self.mail_message = self.registry('mail.message')
-        self.mail_invite = self.registry('mail.wizard.invite')
-        self.res_users = self.registry('res.users')
-        self.res_partner = self.registry('res.partner')
-
-        # create a 'pigs' group that will be used through the various tests
-        self.group_pigs_id = self.mail_group.create(self.cr, self.uid,
-            {'name': 'Pigs', 'description': 'Fans of Pigs, unite !'})
 
         # Find Portal group
         group_portal = self.registry('ir.model.data').get_object(cr, uid, 'portal', 'group_portal')
         self.group_portal_id = group_portal.id
 
         # Create Chell (portal user)
-        self.user_chell_id = self.res_users.create(cr, uid, {'name': 'Chell Gladys', 'login': 'chell', 'groups_id': [(6, 0, [self.group_portal_id])]})
-        user_chell = self.res_users.browse(cr, uid, self.user_chell_id)
-        self.partner_chell_id = user_chell.partner_id.id
+        self.user_chell_id = self.res_users.create(cr, uid, {'name': 'Chell Gladys', 'login': 'chell', 'email': 'chell@gladys.portal', 'groups_id': [(6, 0, [self.group_portal_id])]})
+        self.user_chell = self.res_users.browse(cr, uid, self.user_chell_id)
+        self.partner_chell_id = self.user_chell.partner_id.id
+
+        # Create a PigsPortal group
+        self.group_port_id = self.mail_group.create(cr, uid, {'name': 'PigsPortal', 'public': 'groups', 'group_public_id': self.group_portal_id})
 
         # Set an email address for the user running the tests, used as Sender for outgoing mails
         self.res_users.write(cr, uid, uid, {'email': 'test@localhost'})
 
-    @mute_logger('openerp.addons.base.ir.ir_model')
-    def test_00_access_rights(self):
+    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.osv.orm')
+    def test_00_mail_access_rights(self):
         """ Test basic mail_message and mail_group access rights for portal users. """
         cr, uid = self.cr, self.uid
+        mail_compose = self.registry('mail.compose.message')
 
-        # Prepare group: Pigs (portal)
-        self.mail_group.message_post(cr, uid, self.group_pigs_id, body='Message')
-        self.mail_group.write(cr, uid, [self.group_pigs_id], {'name': 'Jobs', 'public': 'groups', 'group_public_id': self.group_portal_id})
+        # Prepare group: Pigs and PigsPortal
+        pigs_msg_id = self.mail_group.message_post(cr, uid, self.group_pigs_id, body='Message')
+        port_msg_id = self.mail_group.message_post(cr, uid, self.group_port_id, body='Message')
 
-        # ----------------------------------------
-        # CASE1: Chell will use the Chatter
-        # ----------------------------------------
-
-        # Do: Chell reads Pigs messages, ok because restricted to portal group
-        message_ids = self.mail_group.read(cr, self.user_chell_id, self.group_pigs_id, ['message_ids'])['message_ids']
-        self.mail_message.read(cr, self.user_chell_id, message_ids)
+        # Do: Chell browses Pigs -> ko, employee group
+        chell_pigs = self.mail_group.browse(cr, self.user_chell_id, self.group_pigs_id)
+        with self.assertRaises(except_orm):
+            trigger_read = chell_pigs.name
 
         # Do: Chell posts a message on Pigs, crash because can not write on group or is not in the followers
         with self.assertRaises(except_orm):
             self.mail_group.message_post(cr, self.user_chell_id, self.group_pigs_id, body='Message')
 
-        # Do: Chell is added to Pigs followers
-        self.mail_group.message_subscribe(cr, uid, [self.group_pigs_id], [self.partner_chell_id])
+        # Do: Chell is added into Pigs followers and browse it -> ok for messages, ko for partners (no read permission)
+        self.mail_group.message_subscribe_users(cr, uid, [self.group_pigs_id], [self.user_chell_id])
+        chell_pigs = self.mail_group.browse(cr, self.user_chell_id, self.group_pigs_id)
+        trigger_read = chell_pigs.name
+        for message in chell_pigs.message_ids:
+            trigger_read = message.subject
+        for partner in chell_pigs.message_follower_ids:
+            with self.assertRaises(except_orm):
+                trigger_read = partner.name
 
-        # Test: Chell posts a message on Pigs, ok because in the followers
-        self.mail_group.message_post(cr, self.user_chell_id, self.group_pigs_id, body='Message')
+        # Do: Chell comments Pigs, ok because he is now in the followers
+        self.mail_group.message_post(cr, self.user_chell_id, self.group_pigs_id, body='I love Pigs')
+        # Do: Chell creates a mail.compose.message record on Pigs, because he uses the wizard
+        compose_id = mail_compose.create(cr, self.user_chell_id,
+            {'subject': 'Subject', 'body': 'Body text', 'partner_ids': []},
+            {'default_composition_mode': 'comment', 'default_model': 'mail.group', 'default_res_id': self.group_pigs_id})
+        mail_compose.send_mail(cr, self.user_chell_id, [compose_id])
+        # Do: Chell replies to a Pigs message using the composer
+        compose_id = mail_compose.create(cr, self.user_chell_id,
+            {'subject': 'Subject', 'body': 'Body text'},
+            {'default_composition_mode': 'reply', 'default_parent_id': pigs_msg_id})
+        mail_compose.send_mail(cr, self.user_chell_id, [compose_id])
 
-    def test_50_mail_invite(self):
+        # Do: Chell browses PigsPortal -> ok because groups security, ko for partners (no read permission)
+        chell_port = self.mail_group.browse(cr, self.user_chell_id, self.group_port_id)
+        trigger_read = chell_port.name
+        for message in chell_port.message_ids:
+            trigger_read = message.subject
+        for partner in chell_port.message_follower_ids:
+            with self.assertRaises(except_orm):
+                trigger_read = partner.name
+
+    def test_10_mail_invite(self):
         cr, uid = self.cr, self.uid
-        user_admin = self.res_users.browse(cr, uid, uid)
+        mail_invite = self.registry('mail.wizard.invite')
         base_url = self.registry('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='')
-        # 0 - Admin
-        partner_admin_id = user_admin.partner_id.id
-        # 1 - Bert Tartopoils, with email, should receive emails for comments and emails
-        partner_bert_id = self.res_partner.create(cr, uid, {'name': 'Bert Tartopoils', 'email': 'b@b'})
-
-        # ----------------------------------------
-        # CASE: invite Bert to follow Pigs
-        # ----------------------------------------
+        # Carine Poilvache, with email, should receive emails for comments and emails
+        partner_carine_id = self.res_partner.create(cr, uid, {'name': 'Carine Poilvache', 'email': 'c@c'})
 
         # Do: create a mail_wizard_invite, validate it
         self._init_mock_build_email()
         context = {'default_res_model': 'mail.group', 'default_res_id': self.group_pigs_id}
-        mail_invite_id = self.mail_invite.create(cr, uid, {'partner_ids': [(4, partner_bert_id)]}, context)
-        self.mail_invite.add_followers(cr, uid, [mail_invite_id])
+        mail_invite_id = mail_invite.create(cr, uid, {'partner_ids': [(4, partner_carine_id)]}, context)
+        mail_invite.add_followers(cr, uid, [mail_invite_id])
 
         # Test: Pigs followers should contain Admin and Bert
         group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
         follower_ids = [follower.id for follower in group_pigs.message_follower_ids]
-        self.assertEqual(set(follower_ids), set([partner_admin_id, partner_bert_id]), 'Pigs followers after invite is incorrect')
+        self.assertEqual(set(follower_ids), set([self.partner_admin_id, partner_carine_id]), 'Pigs followers after invite is incorrect')
 
         # Test: partner must have been prepared for signup
-        partner_bert = self.res_partner.browse(cr, uid, partner_bert_id)
-        self.assertTrue(partner_bert.signup_valid, 'partner has not been prepared for signup')
-        self.assertTrue(base_url in partner_bert.signup_url, 'signup url is incorrect')
-        self.assertTrue(cr.dbname in partner_bert.signup_url, 'signup url is incorrect')
-        self.assertTrue(partner_bert.signup_token in partner_bert.signup_url, 'signup url is incorrect')
+        partner_carine = self.res_partner.browse(cr, uid, partner_carine_id)
+        self.assertTrue(partner_carine.signup_valid, 'partner has not been prepared for signup')
+        self.assertTrue(base_url in partner_carine.signup_url, 'signup url is incorrect')
+        self.assertTrue(cr.dbname in partner_carine.signup_url, 'signup url is incorrect')
+        self.assertTrue(partner_carine.signup_token in partner_carine.signup_url, 'signup url is incorrect')
 
         # Test: (pretend to) send email and check subject, body
         self.assertEqual(len(self._build_email_kwargs_list), 1, 'sent email number incorrect, should be only for Bert')
@@ -118,5 +128,5 @@ class test_portal(test_mail_mockup.TestMailMockups):
                              'subject of invitation email is incorrect')
             self.assertTrue('You have been invited to follow Pigs' in sent_email.get('body'),
                             'body of invitation email is incorrect')
-            self.assertTrue(partner_bert.signup_url in sent_email.get('body'),
+            self.assertTrue(partner_carine.signup_url in sent_email.get('body'),
                             'body of invitation email does not contain signup url')

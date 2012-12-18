@@ -34,24 +34,27 @@ class res_users(osv.Model):
     _inherits = {'mail.alias': 'alias_id'}
 
     _columns = {
-        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True, 
+        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True,
             help="Email address internally associated with this user. Incoming "\
                  "emails will appear in the user's notifications."),
     }
-    
+
     _defaults = {
-        'alias_domain': False, # always hide alias during creation
+        'alias_domain': False,  # always hide alias during creation
     }
 
     def __init__(self, pool, cr):
         """ Override of __init__ to add access rights on notification_email_send
-            field. Access rights are disabled by default, but allowed on
-            fields defined in self.SELF_WRITEABLE_FIELDS.
+            and alias fields. Access rights are disabled by default, but allowed
+            on some specific fields defined in self.SELF_{READ/WRITE}ABLE_FIELDS.
         """
         init_res = super(res_users, self).__init__(pool, cr)
         # duplicate list to avoid modifying the original reference
         self.SELF_WRITEABLE_FIELDS = list(self.SELF_WRITEABLE_FIELDS)
         self.SELF_WRITEABLE_FIELDS.append('notification_email_send')
+        # duplicate list to avoid modifying the original reference
+        self.SELF_READABLE_FIELDS = list(self.SELF_READABLE_FIELDS)
+        self.SELF_READABLE_FIELDS.extend(['notification_email_send', 'alias_domain', 'alias_name'])
         return init_res
 
     def _auto_init(self, cr, context=None):
@@ -124,7 +127,7 @@ class res_users(osv.Model):
             context['thread_model'] = 'res.partner'
         if isinstance(thread_id, (list, tuple)):
             thread_id = thread_id[0]
-        partner_id = self.pool.get('res.users').read(cr, uid, thread_id, ['partner_id'], context=context)['partner_id'][0]
+        partner_id = self.browse(cr, uid, thread_id).partner_id.id
         return self.pool.get('res.partner').message_post_user_api(cr, uid, partner_id, body=body, subject=subject,
             parent_id=parent_id, attachment_ids=attachment_ids, context=context, content_subtype=content_subtype, **kwargs)
 
@@ -138,11 +141,11 @@ class res_users(osv.Model):
             context['thread_model'] = 'res.partner'
         if isinstance(thread_id, (list, tuple)):
             thread_id = thread_id[0]
-        partner_id = self.pool.get('res.users').read(cr, uid, thread_id, ['partner_id'], context=context)['partner_id'][0]
+        partner_id = self.browse(cr, uid, thread_id).partner_id.id
         return self.pool.get('res.partner').message_post(cr, uid, partner_id, context=context, **kwargs)
 
     def message_update(self, cr, uid, ids, msg_dict, update_vals=None, context=None):
-        partner_id = self.pool.get('res.users').browse(cr, uid, ids)[0].partner_id.id
+        partner_id = self.browse(cr, uid, ids)[0].partner_id.id
         return self.pool.get('res.partner').message_update(cr, uid, [partner_id], msg_dict,
             update_vals=update_vals, context=context)
 

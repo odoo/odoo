@@ -303,7 +303,7 @@ class calendar_attendee(osv.osv):
             if name == 'language':
                 user_obj = self.pool.get('res.users')
                 lang = user_obj.read(cr, uid, uid, ['lang'], context=context)['lang']
-                result[id][name] = lang.replace('_', '-')
+                result[id][name] = lang.replace('_', '-') if lang else False
 
         return result
 
@@ -852,7 +852,7 @@ class calendar_alarm(osv.osv):
             res_obj = model_obj.browse(cr, uid, alarm.res_id, context=context)
             re_dates = []
 
-            if res_obj.rrule:
+            if hasattr(res_obj, 'rrule') and res_obj.rrule:
                 event_date = datetime.strptime(res_obj.date, '%Y-%m-%d %H:%M:%S')
                 recurrent_dates = get_recurrent_dates(res_obj.rrule, res_obj.exdate, event_date, res_obj.exrule)
 

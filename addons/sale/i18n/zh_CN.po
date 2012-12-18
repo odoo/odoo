@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-11-30 17:53+0000\n"
-"Last-Translator: ccdos <ccdos@163.com>\n"
+"PO-Revision-Date: 2012-12-14 14:24+0000\n"
+"Last-Translator: sum1201 <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:31+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-15 05:05+0000\n"
+"X-Generator: Launchpad (build 16372)\n"
 
 #. module: sale
 #: help:sale.order,message_summary:0
@@ -64,6 +64,7 @@ msgstr "天"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancelorder0
+#: view:sale.order:0
 msgid "Cancel Order"
 msgstr "取消订单"
 
@@ -106,6 +107,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: field:sale.order,project_id:0
 #: view:sale.report:0
 #: field:sale.report,analytic_account_id:0
 #: field:sale.shop,project_id:0
@@ -254,7 +256,7 @@ msgstr "折扣(%)"
 #. module: sale
 #: view:sale.order.line.make.invoice:0
 msgid "Create & View Invoice"
-msgstr ""
+msgstr "创建和查看发票"
 
 #. module: sale
 #: view:board.board:0
@@ -299,7 +301,7 @@ msgid "Advance of %s %%"
 msgstr "%s%% 的预付款"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_orders_exception
+#: model:ir.actions.act_window,name:sale.action_order_tree2
 msgid "Sales in Exception"
 msgstr "销售异常"
 
@@ -375,8 +377,8 @@ msgid "Advance of %s %s"
 msgstr "预付款：%s %s"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_quotations
-#: model:ir.ui.menu,name:sale.menu_sale_quotations
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.action_quotation_for_sale
 #: view:sale.order:0
 #: view:sale.report:0
 msgid "Quotations"
@@ -385,7 +387,6 @@ msgstr "报价单"
 #. module: sale
 #: field:sale.advance.payment.inv,qtty:0
 #: report:sale.order:0
-#: field:sale.order.line,product_uom_qty:0
 msgid "Quantity"
 msgstr "数量"
 
@@ -410,6 +411,7 @@ msgid "Fiscal Position"
 msgstr "财务结构"
 
 #. module: sale
+#: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "In Progress"
 msgstr "处理中"
@@ -496,7 +498,6 @@ msgid "or"
 msgstr "or"
 
 #. module: sale
-#: field:sale.order,invoice_exists:0
 #: field:sale.order,invoiced_rate:0
 #: field:sale.order.line,invoiced:0
 msgid "Invoiced"
@@ -530,7 +531,7 @@ msgstr "3月"
 #. module: sale
 #: model:ir.actions.server,name:sale.actions_server_sale_order_read
 msgid "Sale: Mark read"
-msgstr ""
+msgstr "销售：标记为已读"
 
 #. module: sale
 #: help:sale.order,amount_total:0
@@ -598,6 +599,7 @@ msgstr "（更新）"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
+#: field:stock.move,sale_line_id:0
 msgid "Sales Order Line"
 msgstr "销售订单明细"
 
@@ -617,7 +619,6 @@ msgid "Order N°"
 msgstr "单号"
 
 #. module: sale
-#: view:sale.order:0
 #: field:sale.order,order_line:0
 msgid "Order Lines"
 msgstr "订单明细"
@@ -722,6 +723,7 @@ msgstr "订单日期"
 
 #. module: sale
 #: view:sale.order.line:0
+#: field:sale.report,shipped:0
 msgid "Shipped"
 msgstr "已送货"
 
@@ -733,7 +735,6 @@ msgid ""
 msgstr "通过菜单“按行开票”，允许销售员为销售订单行制作发票"
 
 #. module: sale
-#: model:ir.model,name:sale.model_res_partner
 #: view:sale.report:0
 #: field:sale.report,partner_id:0
 msgid "Partner"
@@ -778,7 +779,7 @@ msgid "You cannot confirm a sale order which has no line."
 msgstr "你不能确认没有明细的销售订单。"
 
 #. module: sale
-#: code:addons/sale/sale.py:966
+#: code:addons/sale/sale.py:1124
 #, python-format
 msgid ""
 "You have to select a pricelist or a customer in the sales form !\n"
@@ -888,6 +889,7 @@ msgid "Your Reference"
 msgstr "您的关联单号"
 
 #. module: sale
+#: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Qty"
 msgstr "数量"
@@ -899,9 +901,10 @@ msgstr "我的销售订单明细"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancel0
+#: model:process.transition.action,name:sale.process_transition_action_cancel1
+#: model:process.transition.action,name:sale.process_transition_action_cancel2
 #: view:sale.advance.payment.inv:0
 #: view:sale.make.invoice:0
-#: view:sale.order:0
 #: view:sale.order.line:0
 #: view:sale.order.line.make.invoice:0
 msgid "Cancel"
@@ -924,10 +927,9 @@ msgstr ""
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_invoice0
+#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
 #: model:process.transition.action,name:sale.process_transition_action_createinvoice0
 #: view:sale.advance.payment.inv:0
-#: view:sale.order:0
-#: field:sale.order,order_policy:0
 #: view:sale.order.line:0
 msgid "Create Invoice"
 msgstr "生成发票"
@@ -958,6 +960,7 @@ msgstr ""
 
 #. module: sale
 #: report:sale.order:0
+#: view:sale.order.line:0
 msgid "Price"
 msgstr "价格"
 
@@ -1093,6 +1096,7 @@ msgid "Sale Order"
 msgstr "销售订单"
 
 #. module: sale
+#: view:sale.order:0
 #: field:sale.order,amount_tax:0
 #: field:sale.order.line,tax_id:0
 msgid "Taxes"
@@ -1160,6 +1164,7 @@ msgstr "如果你修改这订单的价格表（货币），现有订单明细的
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice
 #: model:ir.actions.act_window,name:sale.action_view_sale_order_line_make_invoice
+#: view:sale.order:0
 msgid "Make Invoices"
 msgstr "生成发票"
 
@@ -1264,7 +1269,7 @@ msgstr "销售分析表"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_quotation0
-#: view:sale.order:0
+#: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "Quotation"
 msgstr "报价单"
@@ -1410,10 +1415,8 @@ msgid "Customer Invoices"
 msgstr "客户发票"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.open_board_sales
-#: model:ir.ui.menu,name:sale.menu_dashboard_sales
+#: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
 #: model:process.process,name:sale.process_process_salesprocess0
-#: view:res.partner:0
 #: view:sale.order:0
 #: view:sale.report:0
 msgid "Sales"
@@ -1438,7 +1441,6 @@ msgid "Unit Price"
 msgstr "单价"
 
 #. module: sale
-#: view:sale.order:0
 #: selection:sale.order,state:0
 #: view:sale.order.line:0
 #: selection:sale.order.line,state:0
@@ -1447,10 +1449,8 @@ msgid "Done"
 msgstr "已完成"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:123
 #: model:process.node,name:sale.process_node_invoice0
-#: view:sale.order:0
-#, python-format
+#: model:process.node,name:sale.process_node_invoiceafterdelivery0
 msgid "Invoice"
 msgstr "发票"
 
@@ -1529,6 +1529,7 @@ msgid "Product UoS"
 msgstr "产品销售单位"
 
 #. module: sale
+#: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "Manual In Progress"
 msgstr "手动处理"
@@ -1536,7 +1537,7 @@ msgstr "手动处理"
 #. module: sale
 #: model:ir.actions.server,name:sale.actions_server_sale_order_unread
 msgid "Sale: Mark unread"
-msgstr ""
+msgstr "销售单：标记未读"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1684,7 +1685,7 @@ msgid "Invoice Exception"
 msgstr "发票异常"
 
 #. module: sale
-#: code:addons/sale/sale.py:888
+#: code:addons/sale/sale.py:1017
 #, python-format
 msgid "No Customer Defined !"
 msgstr "客户没有定义 ！"
@@ -1763,6 +1764,7 @@ msgstr "Email撰写向导"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_shop_form
+#: model:ir.ui.menu,name:sale.menu_action_shop_form
 #: field:sale.order,shop_id:0
 #: view:sale.report:0
 #: field:sale.report,shop_id:0
@@ -1783,18 +1785,15 @@ msgstr "轻微公司 \"%s\" (id:%d) 定义销售分类账"
 #. module: sale
 #: view:sale.config.settings:0
 msgid "Contract Features"
-msgstr ""
+msgstr "合同特性"
 
 #. module: sale
-#: code:addons/sale/sale.py:273
-#: code:addons/sale/sale.py:576
 #: model:ir.model,name:sale.model_sale_order
 #: model:process.node,name:sale.process_node_order0
 #: model:process.node,name:sale.process_node_saleorder0
-#: field:res.partner,sale_order_ids:0
 #: model:res.request.link,name:sale.req_link_sale_order
 #: view:sale.order:0
-#, python-format
+#: field:stock.picking,sale_id:0
 msgid "Sales Order"
 msgstr "销售订单"
 
@@ -1829,6 +1828,7 @@ msgid "Followers"
 msgstr "关注者"
 
 #. module: sale
+#: view:sale.order:0
 #: field:sale.order.line,invoice_lines:0
 msgid "Invoice Lines"
 msgstr "发票明细"
@@ -1840,7 +1840,6 @@ msgid "# of Lines"
 msgstr "明细#"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_line_product_tree
 #: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Sales Order Lines"
@@ -1932,7 +1931,7 @@ msgstr ""
 "            "
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:109
+#: code:addons/sale/wizard/sale_line_invoice.py:111
 #, python-format
 msgid ""
 "Invoice cannot be created for this Sales Order Line due to one of the "
@@ -1955,6 +1954,8 @@ msgid "Weight"
 msgstr "重量"
 
 #. module: sale
+#: view:sale.open.invoice:0
+#: view:sale.order:0
 #: field:sale.order,invoice_ids:0
 msgid "Invoices"
 msgstr "发票"
@@ -1986,7 +1987,10 @@ msgid "Untaxed Amount"
 msgstr "不含税金额"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:202
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:163
+#: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
+#: view:sale.advance.payment.inv:0
+#: view:sale.order:0
 #, python-format
 msgid "Advance Invoice"
 msgstr "预付款发票"
@@ -2027,6 +2031,8 @@ msgid "Email Templates"
 msgstr "电子邮件模板"
 
 #. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_form
+#: model:ir.ui.menu,name:sale.menu_sale_order
 #: view:sale.order:0
 msgid "Sales Orders"
 msgstr "销售订单"
@@ -2064,7 +2070,7 @@ msgid "January"
 msgstr "1月"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_orders_in_progress
+#: model:ir.actions.act_window,name:sale.action_order_tree4
 msgid "Sales Order in Progress"
 msgstr "销售订单处理中"
 
@@ -2239,6 +2245,7 @@ msgid "Quotation N°"
 msgstr "报价单号"
 
 #. module: sale
+#: field:sale.order,picked_rate:0
 #: view:sale.report:0
 msgid "Picked"
 msgstr "已装箱"
@@ -2252,7 +2259,7 @@ msgstr "年"
 #. module: sale
 #: view:sale.order.line.make.invoice:0
 msgid "Do you want to invoice the selected sale order lines?"
-msgstr ""
+msgstr "您要将选定的销售单记录生成发票吗？"
 
 #~ msgid "sale.config.picking_policy"
 #~ msgstr "sale.config.picking_policy"

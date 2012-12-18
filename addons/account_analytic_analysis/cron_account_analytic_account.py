@@ -32,7 +32,7 @@ Here is the list of contracts to renew:
       % endif
       - Dates: ${account.date_start} to ${account.date and account.date or '???'}
       - Contacts:
-        ${account.partner_id.name}, ${account.partner_id.phone}, ${account.partner_id.email}
+        ${account.partner_id.name}, ${account.partner_id.phone or ''}, ${account.partner_id.email or ''}
 
   % endfor
 % endfor
