@@ -157,8 +157,6 @@ def mako_template(text):
 
 class BVRWebKitParser(webkit_report.WebKitParser):
 
-    bvr_file_path = ('l10n_ch','report','bvr.mako')
-
     def create_single_pdf(self, cursor, uid, ids, data, report_xml, context=None):
         """generate the PDF"""
         context = context or {}
@@ -199,7 +197,7 @@ class BVRWebKitParser(webkit_report.WebKitParser):
         company = user.company_id
         body_mako_tpl = mako_template(template)
         #BVR specific
-        bvr_path = addons.get_module_resource(self.bvr_file_path)
+        bvr_path = addons.get_module_resource('l10n_ch','report','bvr.mako')
         body_bvr_tpl = mako_template(file(bvr_path).read())
         helper = report_helper.WebKitHelper(cursor, uid, report_xml.id, context)
         ##BVR Specific
