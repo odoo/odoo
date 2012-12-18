@@ -102,13 +102,13 @@ class account_coda_import(osv.osv_memory):
                     The following request try to find the Account Number using a 'like' operator.
                     So, if the Account Number is stored with IBAN code, it can be found thanks to this.
                     """
-                    cr.execute("select id from res_partner_bank where replace('-','',replace(acc_number,' ','')) like %s", ('%' + statement['acc_number'] + '%',))
+                    cr.execute("select id from res_partner_bank where replace(replace(acc_number,' ',''),'-','') like %s", ('%' + statement['acc_number'] + '%',))
                 else:
                     """
                     This case is necessary to avoid cases like the Account Number in the CODA file is set to a single or few digits,
                     and so a 'like' operator would return the first account number in the database which matches.
                     """
-                    cr.execute("select id from res_partner_bank where replace('-','',replace(acc_number,' ','')) = %s", (statement['acc_number'],))
+                    cr.execute("select id from res_partner_bank where replace(replace(acc_number,' ',''),'-','') = %s", (statement['acc_number'],))
                 bank_ids = [id[0] for id in cr.fetchall()]
                 if bank_ids and len(bank_ids) > 0:
                     bank_accs = self.pool.get('res.partner.bank').browse(cr, uid, bank_ids)
