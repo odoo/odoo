@@ -53,6 +53,7 @@ ClientAction (ir.actions.client)
       - ``compose_placeholder`` : Message to display on the textareaboxes.
       - ``show_link`` : Display partner (authors, followers...) on link or not
       - ``compose_as_todo`` : The root composer mark automatically the message as todo
+      - ``readonly`` : Read only mode, hide all action buttons and composer
 
 Fields
 +++++++
