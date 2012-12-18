@@ -20,13 +20,13 @@
 ##############################################################################
 
 import base64
-from osv import osv, fields
+from openerp.osv import fields, osv
 import os
 
 #from psycopg2 import Binary
 #from tools import config
-import tools
-from tools.translate import _
+from openerp import tools
+from openerp.tools.translate import _
 import nodes
 import logging
 

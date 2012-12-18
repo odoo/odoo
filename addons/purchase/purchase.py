@@ -23,13 +23,13 @@ import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from osv import osv, fields
-import netsvc
-import pooler
-from tools.translate import _
-import decimal_precision as dp
-from osv.orm import browse_record, browse_null
-from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
+from openerp.osv import fields, osv
+from openerp import netsvc
+from openerp import pooler
+from openerp.tools.translate import _
+import openerp.addons.decimal_precision as dp
+from openerp.osv.orm import browse_record, browse_null
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
 
 class purchase_order(osv.osv):
 
@@ -611,7 +611,7 @@ class purchase_order(osv.osv):
 
     def _prepare_order_line_move(self, cr, uid, order, order_line, picking_id, context=None):
         return {
-            'name': order.name + ': ' + (order_line.name or ''),
+            'name': order_line.name or '',
             'product_id': order_line.product_id.id,
             'product_qty': order_line.product_qty,
             'product_uos_qty': order_line.product_qty,

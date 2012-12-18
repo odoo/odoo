@@ -33,7 +33,7 @@
 import subprocess
 import os
 import sys
-import report
+from openerp import report
 import tempfile
 import time
 import logging
@@ -42,14 +42,14 @@ from mako.template import Template
 from mako.lookup import TemplateLookup
 from mako import exceptions
 
-import netsvc
-import pooler
+from openerp import netsvc
+from openerp import pooler
 from report_helper import WebKitHelper
-from report.report_sxw import *
-import addons
-import tools
-from tools.translate import _
-from osv.osv import except_osv
+from openerp.report.report_sxw import *
+from openerp import addons
+from openerp import tools
+from openerp.tools.translate import _
+from openerp.osv.osv import except_osv
 
 _logger = logging.getLogger(__name__)
 

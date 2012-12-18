@@ -26,10 +26,10 @@ from itertools import groupby
 from operator import itemgetter
 
 import math
-import netsvc
-import tools
-from osv import fields, osv
-from tools.translate import _
+from openerp import netsvc
+from openerp import tools
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 
 class hr_holidays_status(osv.osv):

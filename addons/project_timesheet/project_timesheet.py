@@ -21,10 +21,10 @@
 import time
 import datetime
 
-from osv import fields, osv
-import pooler
-import tools
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp import pooler
+from openerp import tools
+from openerp.tools.translate import _
 
 class project_project(osv.osv):
     _inherit = 'project.project'

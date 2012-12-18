@@ -38,10 +38,10 @@
 
 from random import seed, sample
 from string import ascii_letters, digits
-from osv import fields,osv
-import pooler
-from tools.translate import _
-from service import security
+from openerp.osv import fields,osv
+from openerp import pooler
+from openerp.tools.translate import _
+from openerp.service import security
 import logging
 
 magic_md5 = '$1$'

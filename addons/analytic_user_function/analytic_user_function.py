@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-from osv import fields,osv
-from tools.translate import _
-import decimal_precision as dp
+from openerp.osv import fields,osv
+from openerp.tools.translate import _
+import openerp.addons.decimal_precision as dp
 
 class analytic_user_funct_grid(osv.osv):
     _name="analytic.user.funct.grid"

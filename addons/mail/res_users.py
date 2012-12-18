@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 from openerp import SUPERUSER_ID
-from tools.translate import _
+from openerp.tools.translate import _
 
 class res_users(osv.Model):
     """ Update of res.users class

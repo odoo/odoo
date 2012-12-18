@@ -21,7 +21,7 @@
 
 import time
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 
 class account_analytic_default(osv.osv):
     _name = "account.analytic.default"

@@ -25,14 +25,14 @@ import email
 import logging
 import pytz
 import time
-import tools
+from openerp import tools
 import xmlrpclib
 
 from email.message import Message
 from mail_message import decode
 from openerp import SUPERUSER_ID
-from osv import osv, fields
-from tools.safe_eval import safe_eval as eval
+from openerp.osv import fields, osv
+from openerp.tools.safe_eval import safe_eval as eval
 
 _logger = logging.getLogger(__name__)
 
@@ -338,8 +338,9 @@ class mail_thread(osv.AbstractModel):
         # 2. Look for a matching mail.alias entry
         # Delivered-To is a safe bet in most modern MTAs, but we have to fallback on To + Cc values
         # for all the odd MTAs out there, as there is no standard header for the envelope's `rcpt_to` value.
-        rcpt_tos = decode_header(message, 'Delivered-To') or \
-             ','.join([decode_header(message, 'To'),
+        rcpt_tos = \
+             ','.join([decode_header(message, 'Delivered-To'),
+                       decode_header(message, 'To'),
                        decode_header(message, 'Cc'),
                        decode_header(message, 'Resent-To'),
                        decode_header(message, 'Resent-Cc')])

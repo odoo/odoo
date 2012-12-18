@@ -18,11 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 ##############################################################################
-
-from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
-from openerp import tools
-
+from openerp import tools, SUPERUSER_ID
 
 class mail_followers(osv.Model):
     """ mail_followers holds the data related to the follow mechanism inside

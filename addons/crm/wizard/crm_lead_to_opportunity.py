@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-from osv import osv, fields
-from tools.translate import _
-import tools
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+from openerp import tools
 import re
 
 class crm_lead2opportunity_partner(osv.osv_memory):

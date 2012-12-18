@@ -19,14 +19,14 @@
 #
 ##############################################################################
 
-from base_status.base_stage import base_stage
+from openerp.addons.base_status.base_stage import base_stage
 import crm
 from datetime import datetime
-from osv import fields, osv
+from openerp.osv import fields, osv
 import time
-import tools
-from tools.translate import _
-from tools import html2plaintext
+from openerp import tools
+from openerp.tools.translate import _
+from openerp.tools import html2plaintext
 
 from base.res.res_partner import format_address
 
@@ -241,7 +241,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'date_closed': fields.datetime('Closed', readonly=True),
         'stage_id': fields.many2one('crm.case.stage', 'Stage',
-                        domain="['&', ('fold', '=', False), '&', '|', ('section_ids', '=', section_id), ('case_default', '=', True), '|', ('type', '=', type), ('type', '=', 'both')]"),
+                        domain="[('fold', '=', False), ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"),
         'user_id': fields.many2one('res.users', 'Salesperson'),
         'referred': fields.char('Referred By', size=64),
         'date_open': fields.datetime('Opened', readonly=True),
