@@ -49,10 +49,10 @@ class sale_order(osv.osv):
     _name = "sale.order"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = "Sales Order"
-
     _track = {
         'state': {
-            'sale.mt_order_confirmed': lambda self, cr, uid, obj, ctx=None: obj.state in ['manual', 'progress']
+            'sale.mt_order_confirmed': lambda self, cr, uid, obj, ctx=None: obj.state in ['manual', 'progress'],
+            'sale.mt_quotation_sent': lambda self, cr, uid, obj, ctx=None: obj.state in ['sent']
         },
     }
 
@@ -198,8 +198,8 @@ class sale_order(osv.osv):
         'date_order': fields.date('Date', required=True, readonly=True, select=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
         'create_date': fields.datetime('Creation Date', readonly=True, select=True, help="Date on which sales order is created."),
         'date_confirm': fields.date('Confirmation Date', readonly=True, select=True, help="Date on which sales order is confirmed."),
-        'user_id': fields.many2one('res.users', 'Salesperson', states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, select=True),
-        'partner_id': fields.many2one('res.partner', 'Customer', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, required=True, change_default=True, select=True),
+        'user_id': fields.many2one('res.users', 'Salesperson', states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, select=True, track_visibility=1),
+        'partner_id': fields.many2one('res.partner', 'Customer', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, required=True, change_default=True, select=True, track_visibility=2),
         'partner_invoice_id': fields.many2one('res.partner', 'Invoice Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Invoice address for current sales order."),
         'partner_shipping_id': fields.many2one('res.partner', 'Delivery Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Delivery address for current sales order."),
         'order_policy': fields.selection([
@@ -225,7 +225,7 @@ class sale_order(osv.osv):
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
             },
-            multi='sums', help="The amount without tax."),
+            multi='sums', help="The amount without tax.", track_visibility=2),
         'amount_tax': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Taxes',
             store={
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
@@ -237,7 +237,7 @@ class sale_order(osv.osv):
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
             },
-            multi='sums', track_visibility=2, help="The total amount."),
+            multi='sums', help="The total amount."),
 
         'invoice_quantity': fields.selection([('order', 'Ordered Quantities')], 'Invoice on', help="The sale order will automatically create the invoice proposition (draft invoice).", required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'payment_term': fields.many2one('account.payment.term', 'Payment Term'),
@@ -531,8 +531,6 @@ class sale_order(osv.osv):
                     invoice_ids.append(res)
                     self.write(cr, uid, [order.id], {'state': 'progress'})
                     cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%s,%s)', (order.id, res))
-        if res:
-            self.invoice_send_note(cr, uid, ids, res, context)
         return res
 
     def action_invoice_cancel(self, cr, uid, ids, context=None):
@@ -546,7 +544,6 @@ class sale_order(osv.osv):
                     line.write({'state': 'confirmed'})
             if this.state == 'invoice_except':
                 this.write({'state': 'progress'})
-            this.invoice_paid_send_note()
         return True
 
     def action_cancel(self, cr, uid, ids, context=None):
@@ -645,15 +642,6 @@ class sale_order(osv.osv):
     def needaction_domain_get(self, cr, uid, ids, context=None):
         return [('state', '=', 'draft'), ('user_id', '=', uid)]
 
-    def invoice_paid_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Invoice <b>paid</b>."), context=context)
-
-    def invoice_send_note(self, cr, uid, ids, invoice_id, context=None):
-        for order in self.browse(cr, uid, ids, context=context):
-            for invoice in (inv for inv in order.invoice_ids if inv.id == invoice_id):
-                self.message_post(cr, uid, [order.id], body=_("Draft Invoice of %s %s <b>waiting for validation</b>.") % (invoice.amount_total, invoice.currency_id.symbol), context=context)
-
-sale_order()
 
 # TODO add a field price_unit_uos
 # - update it on change product and unit price

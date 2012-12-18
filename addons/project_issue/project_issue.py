@@ -354,7 +354,8 @@ class project_issue(base_stage, osv.osv):
                 'task_id': new_task_id,
                 'stage_id': self.stage_find(cr, uid, [bug], bug.project_id.id, [('state', '=', 'pending')], context=context),
             }
-            self.convert_to_task_send_note(cr, uid, [bug.id], context=context)
+            message = _("Project issue <b>converted</b> to task.")
+            self.message_post(cr, uid, [bug.id], body=message, context=context)
             case_obj.write(cr, uid, [bug.id], vals, context=context)
 
         return  {
@@ -522,15 +523,6 @@ class project_issue(base_stage, osv.osv):
 
         return super(project_issue, self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
 
-    # -------------------------------------------------------
-    # OpenChatter methods and notifications
-    # -------------------------------------------------------
-
-    def convert_to_task_send_note(self, cr, uid, ids, context=None):
-        message = _("Project issue <b>converted</b> to task.")
-        return self.message_post(cr, uid, ids, body=message, context=context)
-
-project_issue()
 
 class project(osv.osv):
     _inherit = "project.project"

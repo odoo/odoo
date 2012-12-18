@@ -375,19 +375,6 @@ class mrp_bom(osv.osv):
         default.update(name=_("%s (copy)") % (bom_data['name']), bom_id=False)
         return super(mrp_bom, self).copy_data(cr, uid, id, default, context=context)
 
-    def create(self, cr, uid, vals, context=None):
-        obj_id = super(mrp_bom, self).create(cr, uid, vals, context=context)
-        self.create_send_note(cr, uid, [obj_id], context=context)
-        return obj_id
-
-    def create_send_note(self, cr, uid, ids, context=None):
-        prod_obj = self.pool.get('product.product')
-        for obj in self.browse(cr, uid, ids, context=context):
-            for prod in prod_obj.browse(cr, uid, [obj.product_id], context=context):
-                self.message_post(cr, uid, [obj.id], body=_("Bill of Material has been <b>created</b> for <em>%s</em> product.") % (prod.id.name_template), context=context)
-        return True
-
-mrp_bom()
 
 def rounding(f, r):
     import math
@@ -1010,7 +997,6 @@ class mrp_production(osv.osv):
 
             wf_service.trg_validate(uid, 'stock.picking', shipment_id, 'button_confirm', cr)
             production.write({'state':'confirmed'}, context=context)
-            self.action_confirm_send_note(cr, uid, [production.id], context=context)
         return shipment_id
 
     def force_production(self, cr, uid, ids, *args):
@@ -1022,22 +1008,6 @@ class mrp_production(osv.osv):
         pick_obj.force_assign(cr, uid, [prod.picking_id.id for prod in self.browse(cr, uid, ids)])
         return True
 
-    # ---------------------------------------------------
-    # OpenChatter methods and notifications
-    # ---------------------------------------------------
-
-    def action_confirm_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            # convert datetime field to a datetime, using server format, then
-            # convert it to the user TZ and re-render it with %Z to add the timezone
-            obj_datetime = fields.DT.datetime.strptime(obj.date_planned, DEFAULT_SERVER_DATETIME_FORMAT)
-            obj_date_str = fields.datetime.context_timestamp(cr, uid, obj_datetime, context=context).strftime(DATETIME_FORMATS_MAP['%+'] + " (%Z)")
-            message = _("Manufacturing order has been <b>confirmed</b> and is <b>scheduled</b> for the <em>%s</em>.") % (obj_date_str)
-            self.message_post(cr, uid, [obj.id], body=message, context=context)
-        return True
-
-
-mrp_production()
 
 class mrp_production_workcenter_line(osv.osv):
     _name = 'mrp.production.workcenter.line'
@@ -1059,7 +1029,6 @@ class mrp_production_workcenter_line(osv.osv):
         'hour': lambda *a: 0,
         'cycle': lambda *a: 0,
     }
-mrp_production_workcenter_line()
 
 class mrp_production_product_line(osv.osv):
     _name = 'mrp.production.product.line'
@@ -1073,7 +1042,6 @@ class mrp_production_product_line(osv.osv):
         'product_uos': fields.many2one('product.uom', 'Product UOS'),
         'production_id': fields.many2one('mrp.production', 'Production Order', select=True),
     }
-mrp_production_product_line()
 
 class product_product(osv.osv):
     _inherit = "product.product"

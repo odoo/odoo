@@ -399,9 +399,6 @@ class sale_order(osv.osv):
         wf_service = netsvc.LocalService("workflow")
         if picking_id:
             wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
-            self.delivery_send_note(cr, uid, [order.id], picking_id, context)
-
-
         for proc_id in proc_ids:
             wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
 
@@ -440,8 +437,6 @@ class sale_order(osv.osv):
                 if towrite:
                     self.pool.get('sale.order.line').write(cr, uid, towrite, {'state': 'done'}, context=context)
             res = self.write(cr, uid, [order.id], val)
-            if res:
-                self.delivery_end_send_note(cr, uid, [order.id], context=context)
         return True
 
     def has_stockable_products(self, cr, uid, ids, *args):
@@ -454,22 +449,10 @@ class sale_order(osv.osv):
     # ------------------------------------------------
     # OpenChatter methods and notifications
     # ------------------------------------------------
-    
+
     def get_needaction_user_ids(self, cr, uid, ids, context=None):
         result = super(sale_order, self).get_needaction_user_ids(cr, uid, ids, context=context)
         return result
-
-    def delivery_send_note(self, cr, uid, ids, picking_id, context=None):
-        for order in self.browse(cr, uid, ids, context=context):
-            for picking in (pck for pck in order.picking_ids if pck.id == picking_id):
-                # convert datetime field to a datetime, using server format, then
-                # convert it to the user TZ and re-render it with %Z to add the timezone
-                picking_datetime = fields.DT.datetime.strptime(picking.min_date, DEFAULT_SERVER_DATETIME_FORMAT)
-                picking_date_str = fields.datetime.context_timestamp(cr, uid, picking_datetime, context=context).strftime(DATETIME_FORMATS_MAP['%+'] + " (%Z)")
-                self.message_post(cr, uid, [order.id], body=_("Delivery Order <em>%s</em> <b>scheduled</b> for %s.") % (picking.name, picking_date_str), context=context)
-
-    def delivery_end_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Order <b>delivered</b>."), context=context)
 
 class sale_order_line(osv.osv):
 

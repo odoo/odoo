@@ -308,23 +308,6 @@ class account_analytic_account(osv.osv):
             account_ids = self.search(cr, uid, args, limit=limit, context=context)
         return self.name_get(cr, uid, account_ids, context=context)
 
-    def create(self, cr, uid, vals, context=None):
-        contract =  super(account_analytic_account, self).create(cr, uid, vals, context=context)
-        if contract:
-            self.create_send_note(cr, uid, [contract], context=context)
-        return contract
-
-    def create_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            message = _("Contract <b>created</b>.")
-            if obj.partner_id:
-                message = _("Contract for <em>%s</em> has been <b>created</b>.") % (obj.partner_id.name,)
-            self.message_post(cr, uid, [obj.id], body=message,
-                context=context)
-
-account_analytic_account()
-
-
 class account_analytic_line(osv.osv):
     _name = 'account.analytic.line'
     _description = 'Analytic Line'

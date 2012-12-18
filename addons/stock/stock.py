@@ -621,8 +621,6 @@ class stock_picking(osv.osv):
             seq_obj_name =  self._name
             vals['name'] = self.pool.get('ir.sequence').get(cr, user, seq_obj_name)
         new_id = super(stock_picking, self).create(cr, user, vals, context)
-        if new_id:
-            self.create_send_note(cr, user, [new_id], context=context)
         return new_id
 
     _columns = {
@@ -644,7 +642,7 @@ class stock_picking(osv.osv):
             ('confirmed', 'Waiting Availability'),
             ('assigned', 'Ready to Transfer'),
             ('done', 'Transferred'),
-            ], 'Status', readonly=True, select=True, help="""
+            ], 'Status', readonly=True, select=True, track_visibility=1, help="""
             * Draft: not confirmed yet and will not be scheduled until confirmed\n
             * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n
             * Waiting Availability: still waiting for the availability of products\n
@@ -666,7 +664,7 @@ class stock_picking(osv.osv):
             ("invoiced", "Invoiced"),
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not Applicable")], "Invoice Control",
-            select=True, required=True, readonly=True, states={'draft': [('readonly', False)]}),
+            select=True, required=True, readonly=True, track_visibility=1, states={'draft': [('readonly', False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
     }
     _defaults = {
@@ -742,9 +740,6 @@ class stock_picking(osv.osv):
         @return: True
         """
         pickings = self.browse(cr, uid, ids, context=context)
-        for picking in pickings:
-            if picking.state <> 'confirmed':
-                self.confirm_send_note(cr, uid, [picking.id], context=context)
         self.write(cr, uid, ids, {'state': 'confirmed'})
         todo = []
         for picking in pickings:
@@ -869,7 +864,6 @@ class stock_picking(osv.osv):
             ids2 = [move.id for move in pick.move_lines]
             self.pool.get('stock.move').action_cancel(cr, uid, ids2, context)
         self.write(cr, uid, ids, {'state': 'cancel', 'invoice_state': 'none'})
-        self.ship_cancel_send_note(cr, uid, ids, context)
         return True
 
     #
@@ -1366,7 +1360,6 @@ class stock_picking(osv.osv):
                 self.action_move(cr, uid, [pick.id], context=context)
                 wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_done', cr)
                 delivered_pack_id = pick.id
-                self.ship_done_send_note(cr, uid, ids, context)
 
             delivered_pack = self.browse(cr, uid, delivered_pack_id, context=context)
             res[pick.id] = {'delivered_picking': delivered_pack.id or False}
@@ -1442,35 +1435,12 @@ class stock_picking(osv.osv):
         }
         return type_dict.get(obj.type, _('Picking'))
 
-    def create_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("%s has been <b>created</b>.") % (self._get_document_type(cr, uid, obj, context=context)), context=context)
-
-    def confirm_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("%s has been <b>confirmed</b>.") % (self._get_document_type(cr, uid, obj, context=context)), context=context)
-
     def scrap_send_note(self, cr, uid, ids, quantity, uom, name, context=None):
         return self.message_post(cr, uid, ids, body= _("%s %s %s has been <b>moved to</b> scrap.") % (quantity, uom, name), context=context)
 
     def back_order_send_note(self, cr, uid, ids, back_name, context=None):
         return self.message_post(cr, uid, ids, body=_("Back order <em>%s</em> has been <b>created</b>.") % (back_name), context=context)
 
-    def ship_done_send_note(self, cr, uid, ids, context=None):
-        type_dict = {
-                'out': _("Products have been <b>delivered</b>."),
-                'in': _("Products have been <b>received</b>."),
-                'internal': _("Products have been <b>moved</b>."),
-        }
-        for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("Products have been <b>%s</b>.") % (type_dict.get(obj.type, 'move done')), context=context)
-
-    def ship_cancel_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("%s has been <b>cancelled</b>.") % (self._get_document_type(cr, uid, obj, context=context)), context=context)
-
-
-stock_picking()
 
 class stock_production_lot(osv.osv):
 
