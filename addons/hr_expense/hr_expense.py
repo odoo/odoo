@@ -128,6 +128,8 @@ class hr_expense_expense(osv.osv):
         for expense in self.browse(cr, uid, ids):
             if expense.employee_id and expense.employee_id.parent_id.user_id:
                 self.message_subscribe_users(cr, uid, [expense.id], user_ids=[expense.employee_id.parent_id.user_id.id])
+        self.message_post(cr, uid, ids, body=_("The request is <b>waiting for Approval</b>"),
+                          subtype="hr_expense.mt_expense_approve")
         self.write(cr, uid, ids, {
             'state':'confirm',
             'date_confirm': time.strftime('%Y-%m-%d')
@@ -135,6 +137,8 @@ class hr_expense_expense(osv.osv):
         return True
 
     def expense_accept(self, cr, uid, ids, *args):
+        self.message_post(cr, uid, ids, body=_("The request has been <b>approved</b>"),
+                          subtype="hr_expense.mt_expense_approved")
         self.write(cr, uid, ids, {
             'state':'accepted',
             'date_valid':time.strftime('%Y-%m-%d'),
@@ -143,6 +147,8 @@ class hr_expense_expense(osv.osv):
         return True
 
     def expense_canceled(self, cr, uid, ids, *args):
+        self.message_post(cr, uid, ids, body=_("Request <b>refused</b>"), 
+                          subtype="hr_expense.mt_expense_refused")
         self.write(cr, uid, ids, {'state':'cancelled'})
         return True
 

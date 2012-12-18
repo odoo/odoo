@@ -373,10 +373,7 @@ class account_invoice(osv.osv):
         if context is None:
             context = {}
         try:
-            res = super(account_invoice, self).create(cr, uid, vals, context)
-            if res:
-                self.create_send_note(cr, uid, [res], context=context)
-            return res
+            return super(account_invoice, self).create(cr, uid, vals, context)
         except Exception, e:
             if '"journal_id" viol' in e.args[0]:
                 raise orm.except_orm(_('Configuration Error!'),
@@ -1079,7 +1076,7 @@ class account_invoice(osv.osv):
                 if obj_inv.type in ('out_invoice', 'out_refund'):
                     ctx = self.get_log_context(cr, uid, context=ctx)
                 message = _("Invoice  '%s' is validated.") % name
-                self.message_post(cr, uid, [inv_id], body=message, context=context)
+                self.message_post(cr, uid, [inv_id], body=message, subtype="account.mt_invoice_validated", context=context)
         return True
 
     def action_cancel(self, cr, uid, ids, context=None):
@@ -1334,11 +1331,6 @@ class account_invoice(osv.osv):
                 'in_refund': _('Supplier Refund'),
         }
         return type_dict.get(type, 'Invoice')
-
-    def create_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("%s <b>created</b>.") % (self._get_document_type(obj.type)),
-                subtype="account.mt_invoice_new", context=context)
 
     def confirm_paid_send_note(self, cr, uid, ids, context=None):
          for obj in self.browse(cr, uid, ids, context=context):

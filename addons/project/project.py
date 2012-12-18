@@ -317,9 +317,7 @@ class project(osv.osv):
         task_obj = self.pool.get('project.task')
         task_ids = task_obj.search(cr, uid, [('project_id', 'in', ids), ('state', '!=', 'done')])
         task_obj.case_cancel(cr, uid, task_ids, context=context)
-        self.write(cr, uid, ids, {'state':'cancelled'}, context=context)
-        self.set_cancel_send_note(cr, uid, ids, context=context)
-        return True
+        return self.write(cr, uid, ids, {'state':'cancelled'}, context=context)
 
     def set_pending(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'pending'}, context=context)
@@ -564,9 +562,6 @@ def Project():
 
     def set_pending_send_note(self, cr, uid, ids, context=None):
         return self.message_post(cr, uid, ids, body=_("Project is now <b>pending</b>."), context=context)
-
-    def set_cancel_send_note(self, cr, uid, ids, context=None):
-        return self.message_post(cr, uid, ids, body=_("Project has been <b>canceled</b>."), context=context)
 
     def set_close_send_note(self, cr, uid, ids, context=None):
         return self.message_post(cr, uid, ids, body=_("Project has been <b>closed</b>."), context=context)
@@ -993,7 +988,6 @@ class task(base_stage, osv.osv):
         self._check_child_task(cr, uid, ids, context=context)
         for task in tasks:
             self.case_set(cr, uid, [task.id], 'cancelled', {'remaining_hours': 0.0}, context=context)
-            self.case_cancel_send_note(cr, uid, [task.id], context=context)
         return True
 
     def do_open(self, cr, uid, ids, context=None):
@@ -1085,11 +1079,13 @@ class task(base_stage, osv.osv):
 
     def set_kanban_state_blocked(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'kanban_state': 'blocked'}, context=context)
-        return False
+        self.case_block_send_note(cr, uid, ids, context=context)
+        return True
 
     def set_kanban_state_normal(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'kanban_state': 'normal'}, context=context)
-        return False
+        self.case_open_send_note(cr, uid, ids, context=context)
+        return True
 
     def set_kanban_state_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'kanban_state': 'done'}, context=context)
@@ -1109,35 +1105,12 @@ class task(base_stage, osv.osv):
             }, context=context)
         return True
 
-    def _subscribe_project_followers_to_task(self, cr, uid, task_id, context=None):
-        """ TDE note: not the best way to do this, we could override _get_followers
-            of task, and perform a better mapping of subtypes than a mapping
-            based on names.
-            However we will keep this implementation, maybe to be refactored
-            in 7.1 of future versions. """
-        # task followers are project followers, with matching subtypes
-        task_record = self.browse(cr, uid, task_id, context=context)
-        subtype_obj = self.pool.get('mail.message.subtype')
-        follower_obj = self.pool.get('mail.followers')
-        if task_record.project_id:
-            # create mapping
-            task_subtype_ids = subtype_obj.search(cr, uid, ['|', ('res_model', '=', False), ('res_model', '=', self._name)], context=context)
-            task_subtypes = subtype_obj.browse(cr, uid, task_subtype_ids, context=context)
-            # fetch subscriptions
-            follower_ids = follower_obj.search(cr, uid, [('res_model', '=', 'project.project'), ('res_id', '=', task_record.project_id.id)], context=context)
-            # copy followers
-            for follower in follower_obj.browse(cr, uid, follower_ids, context=context):
-                if not follower.subtype_ids:
-                    continue
-                project_subtype_names = [project_subtype.name for project_subtype in follower.subtype_ids]
-                task_subtype_ids = [task_subtype.id for task_subtype in task_subtypes if task_subtype.name in project_subtype_names]
-                self.message_subscribe(cr, uid, [task_id], [follower.partner_id.id],
-                    subtype_ids=task_subtype_ids, context=context)
-
     def create(self, cr, uid, vals, context=None):
         task_id = super(task, self).create(cr, uid, vals, context=context)
-        # subscribe project followers to the task
-        self._subscribe_project_followers_to_task(cr, uid, task_id, context=context)
+        project_id = self.browse(cr, uid, task_id, context=context).project_id
+        if project_id:
+            # subscribe project followers to the task
+            self._subscribe_followers_subtype(cr, uid, [task_id], project_id, 'project.project', context=context)
 
         self._store_history(cr, uid, [task_id], context=context)
         return task_id
@@ -1147,6 +1120,11 @@ class task(base_stage, osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
+        if vals.get('project_id'):
+            project_id = self.pool.get('project.project').browse(cr, uid, vals.get('project_id'), context=context)
+            if project_id:
+                vals.setdefault('message_follower_ids', [])
+                vals['message_follower_ids'] += [(6, 0,[follower.id]) for follower in project_id.message_follower_ids]
         if vals and not 'kanban_state' in vals and 'stage_id' in vals:
             new_stage = vals.get('stage_id')
             vals_reset_kstate = dict(vals, kanban_state='normal')
@@ -1165,8 +1143,7 @@ class task(base_stage, osv.osv):
 
         # subscribe new project followers to the task
         if vals.get('project_id'):
-            for id in ids:
-                self._subscribe_project_followers_to_task(cr, uid, id, context=context)
+            self._subscribe_followers_subtype(cr, uid, ids, vals.get('project_id'), 'project.project', context=context)
         return result
 
     def unlink(self, cr, uid, ids, context=None):
@@ -1266,24 +1243,33 @@ class task(base_stage, osv.osv):
         res = super(task, self).message_get_monitored_follower_fields(cr, uid, ids, context=context)
         return res + ['user_id', 'manager_id']
 
+    def create_send_note(self, cr, uid, ids, context=None):
+        return self.message_post(cr, uid, ids, body=_("Task <b>created</b>."), subtype="project.mt_task_new", context=context)
+
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """
         stage_name = self.pool.get('project.task.type').name_get(cr, uid, [stage_id], context=context)[0][1]
         return self.message_post(cr, uid, ids, body=_("Stage changed to <b>%s</b>.") % (stage_name),
             context=context)
 
-    def create_send_note(self, cr, uid, ids, context=None):
-        return self.message_post(cr, uid, ids, body=_("Task has been <b>created</b>."), context=context)
+    def case_open_send_note(self, cr, uid, ids, context=None):
+        return self.message_post(cr, uid, ids, body=_("Task <b>started</b>."), subtype="project.mt_task_started", context=context)
+
+    def case_close_send_note(self, cr, uid, ids, context=None):
+        return self.message_post(cr, uid, ids, body=_("Task <b>closed</b>."), subtype="project.mt_task_closed", context=context)
+
+    def case_block_send_note(self, cr, uid, ids, context=None):
+        return self.message_post(cr, uid, ids, body=_("Task <b>blocked</b>."), subtype="project.mt_task_blocked", context=context)
 
     def case_draft_send_note(self, cr, uid, ids, context=None):
-        return self.message_post(cr, uid, ids, body=_('Task has been set as <b>draft</b>.'), context=context)
+        return self.message_post(cr, uid, ids, body=_('Task set as <b>draft</b>.'), context=context)
 
     def do_delegation_send_note(self, cr, uid, ids, context=None):
         for task in self.browse(cr, uid, ids, context=context):
             msg = _('Task has been <b>delegated</b> to <em>%s</em>.') % (task.user_id.name)
             self.message_post(cr, uid, [task.id], body=msg, context=context)
         return True
-   
+
     def project_task_reevaluate(self, cr, uid, ids, context=None):
         if self.pool.get('res.users').has_group(cr, uid, 'project.group_time_work_estimation_tasks'):
             return {

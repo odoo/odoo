@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,33 +15,10 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
-{
-    'name' : 'Analytic Accounting',
-    'version': '1.1',
-    'author' : 'OpenERP SA',
-    'website' : 'http://www.openerp.com',
-    'category': 'Hidden/Dependency',
-    'depends' : ['base', 'decimal_precision', 'mail'],
-    'description': """
-Module for defining analytic accounting object.
-===============================================
+import analytic_contract_crm
 
-In OpenERP, analytic accounts are linked to general accounts but are treated
-totally independently. So, you can enter various different analytic operations
-that have no counterpart in the general financial accounts.
-    """,
-    'data': [
-        'security/analytic_security.xml',
-        'security/ir.model.access.csv',
-        'analytic_sequence.xml',
-        'analytic_view.xml'
-    ],
-    'demo': [],
-    'installable': True,
-    'auto_install': False,
-}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

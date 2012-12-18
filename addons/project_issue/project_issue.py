@@ -233,6 +233,12 @@ class project_issue(base_stage, osv.osv):
                       When the case is over, the status is set to \'Done\'.\
                       If the case needs to be reviewed then the status is \
                       set to \'Pending\'.'),
+        'kanban_state': fields.selection([('normal', 'Normal'),('blocked', 'Blocked'),('done', 'Ready for next stage')], 'Kanban State',
+                                         help="A Issue's kanban state indicates special situations affecting it:\n"
+                                              " * Normal is the default situation\n"
+                                              " * Blocked indicates something is preventing the progress of this issue\n"
+                                              " * Ready for next stage indicates the issue is ready to be pulled to the next stage",
+                                         readonly=True, required=False),
         'email_from': fields.char('Email', size=128, help="These people will receive email.", select=1),
         'email_cc': fields.char('Watchers Emails', size=256, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'date_open': fields.datetime('Opened', readonly=True,select=True),
@@ -279,6 +285,7 @@ class project_issue(base_stage, osv.osv):
         'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, c),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
         'priority': crm.AVAILABLE_PRIORITIES[2][0],
+        'kanban_state': 'normal',
     }
 
     _group_by_full = {
@@ -359,31 +366,6 @@ class project_issue(base_stage, osv.osv):
         return super(project_issue, self).copy(cr, uid, id, default=default,
                 context=context)
 
-    def _subscribe_project_followers_to_issue(self, cr, uid, task_id, context=None):
-        """ TDE note: not the best way to do this, we could override _get_followers
-            of issue, and perform a better mapping of subtypes than a mapping
-            based on names.
-            However we will keep this implementation, maybe to be refactored
-            in 7.1 of future versions. """
-        # task followers are project followers, with matching subtypes
-        task_record = self.browse(cr, uid, task_id, context=context)
-        subtype_obj = self.pool.get('mail.message.subtype')
-        follower_obj = self.pool.get('mail.followers')
-        if task_record.project_id:
-            # create mapping
-            task_subtype_ids = subtype_obj.search(cr, uid, ['|', ('res_model', '=', False), ('res_model', '=', self._name)], context=context)
-            task_subtypes = subtype_obj.browse(cr, uid, task_subtype_ids, context=context)
-            # fetch subscriptions
-            follower_ids = follower_obj.search(cr, uid, [('res_model', '=', 'project.project'), ('res_id', '=', task_record.project_id.id)], context=context)
-            # copy followers
-            for follower in follower_obj.browse(cr, uid, follower_ids, context=context):
-                if not follower.subtype_ids:
-                    continue
-                project_subtype_names = [project_subtype.name for project_subtype in follower.subtype_ids]
-                task_subtype_ids = [task_subtype.id for task_subtype in task_subtypes if task_subtype.name in project_subtype_names]
-                self.message_subscribe(cr, uid, [task_id], [follower.partner_id.id],
-                    subtype_ids=task_subtype_ids, context=context)
-
     def write(self, cr, uid, ids, vals, context=None):
         #Update last action date every time the user change the stage, the state or send a new email
         logged_fields = ['stage_id', 'state', 'message_ids']
@@ -392,11 +374,14 @@ class project_issue(base_stage, osv.osv):
 
         # subscribe new project followers to the issue
         if vals.get('project_id'):
-            for id in ids:
-                self._subscribe_project_followers_to_issue(cr, uid, id, context=context)
-
-        return super(project_issue, self).write(cr, uid, ids, vals, context)
-
+            project_id = self.pool.get('project.project').browse(cr, uid, vals.get('project_id'), context=context)
+            vals.setdefault('message_follower_ids', [])
+            vals['message_follower_ids'] += [(6, 0,[follower.id]) for follower in project_id.message_follower_ids]
+        res = super(project_issue, self).write(cr, uid, ids, vals, context)
+        if vals.get('project_id'):
+            self._subscribe_followers_subtype(cr, uid, ids, vals.get('project_id'), 'project.project', context=context)
+        return res
+    
     def onchange_task_id(self, cr, uid, ids, task_id, context=None):
         if not task_id:
             return {'value': {}}
@@ -413,8 +398,10 @@ class project_issue(base_stage, osv.osv):
     def create(self, cr, uid, vals, context=None):
         obj_id = super(project_issue, self).create(cr, uid, vals, context=context)
 
-        # subscribe project follower to the issue
-        self._subscribe_project_followers_to_issue(cr, uid, obj_id, context=context)
+        project_id = self.browse(cr, uid, obj_id, context=context).project_id
+        if project_id: 
+            # subscribe project follower to the issue
+            self._subscribe_followers_subtype(cr, uid, [obj_id], project_id, 'project.project', context=context)
         self.create_send_note(cr, uid, [obj_id], context=context)
 
         return obj_id
@@ -455,7 +442,6 @@ class project_issue(base_stage, osv.osv):
     def case_cancel(self, cr, uid, ids, context=None):
         """ Cancels case """
         self.case_set(cr, uid, ids, 'cancelled', {'active': True}, context=context)
-        self.case_cancel_send_note(cr, uid, ids, context=context)
         return True
 
     def case_escalate(self, cr, uid, ids, context=None):
@@ -536,7 +522,7 @@ class project_issue(base_stage, osv.osv):
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """
         stage_name = self.pool.get('project.task.type').name_get(cr, uid, [stage_id], context=context)[0][1]
-        return self.message_post(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), subtype="mt_issue_new", context=context)
+        return self.message_post(cr, uid, ids, body=_("Stage changed to <b>%s</b>.") % (stage_name), context=context)
 
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
         """ Override of default prefix for notifications. """
@@ -548,7 +534,10 @@ class project_issue(base_stage, osv.osv):
 
     def create_send_note(self, cr, uid, ids, context=None):
         message = _("Project issue <b>created</b>.")
-        return self.message_post(cr, uid, ids, body=message, subtype="mt_issue_new", context=context)
+        return self.message_post(cr, uid, ids, body=message, subtype="project_issue.mt_issue_new", context=context)
+
+    def case_open_send_note(self, cr, uid, ids, context=None):
+        return self.message_post(cr, uid, ids, body=_("Issue <b>started</b>."), subtype="project_issue.mt_issue_started", context=context)
 
     def case_escalate_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
@@ -560,6 +549,25 @@ class project_issue(base_stage, osv.osv):
                 obj.message_post(body=message)
         return True
 
+    def case_block_send_note(self, cr, uid, ids, context=None):
+        return self.message_post(cr, uid, ids, body=_("Issue <b>blocked</b>."), subtype="project_issue.mt_issue_blocked", context=context)
+    
+    def case_close_send_note(self, cr, uid, ids, context=None):
+        return self.message_post(cr, uid, ids, body=_("Project issue <b>closed</b>."), subtype="project_issue.mt_issue_closed", context=context)
+
+    def set_kanban_state_blocked(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'kanban_state': 'blocked'}, context=context)
+        self.case_block_send_note(cr, uid, ids, context=context)
+        return True
+
+    def set_kanban_state_normal(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'kanban_state': 'normal'}, context=context)
+        self.case_open_send_note(cr, uid, ids, context=context)
+        return True
+
+    def set_kanban_state_done(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'kanban_state': 'done'}, context=context)
+        return False
 project_issue()
 
 class project(osv.osv):

@@ -315,8 +315,8 @@ class crm_lead(base_stage, format_address, osv.osv):
         obj_id = super(crm_lead, self).create(cr, uid, vals, context)
         section_id = self.browse(cr, uid, obj_id, context=context).section_id
         if section_id:
-            followers = [follow.id for follow in section_id.message_follower_ids]
-            self.message_subscribe(cr, uid, [obj_id], followers, context=context)
+            # subscribe salesteam followers & subtypes to the lead
+            self._subscribe_followers_subtype(cr, uid, [obj_id], section_id, 'crm.case.section', context=context)
         return obj_id
 
     def onchange_stage_id(self, cr, uid, ids, stage_id, context=None):
@@ -920,10 +920,13 @@ class crm_lead(base_stage, format_address, osv.osv):
                 vals['probability'] = stage.probability
         if vals.get('section_id'):
             section_id = self.pool.get('crm.case.section').browse(cr, uid, vals.get('section_id'), context=context)
-            if section_id:
-                vals.setdefault('message_follower_ids', [])
-                vals['message_follower_ids'] += [(4, follower.id) for follower in section_id.message_follower_ids]
-        return super(crm_lead,self).write(cr, uid, ids, vals, context)
+            vals.setdefault('message_follower_ids', [])
+            vals['message_follower_ids'] += [(6, 0,[follower.id]) for follower in section_id.message_follower_ids]
+        res = super(crm_lead,self).write(cr, uid, ids, vals, context)
+        # subscribe new salesteam followers & subtypes to the lead
+        if vals.get('section_id'):
+            self._subscribe_followers_subtype(cr, uid, ids, vals.get('section_id'), 'crm.case.section', context=context)
+        return res
 
     # ----------------------------------------
     # Mail Gateway
@@ -992,7 +995,7 @@ class crm_lead(base_stage, format_address, osv.osv):
 
     def convert_opportunity_send_note(self, cr, uid, lead, context=None):
         message = _("Lead has been <b>converted to an opportunity</b>.")
-        lead.message_post(body=message)
+        lead.message_post(body=message, subtype="crm.mt_lead_convert_to_opportunity")
         return True
 
     def onchange_state(self, cr, uid, ids, state_id, context=None):

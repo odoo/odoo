@@ -43,5 +43,28 @@
             <field name="body"><![CDATA[<p>This application lets you create and send quotations and process your sales orders; from delivery to invoicing.</p>
 <p>If you need to manage your sales pipeline (leads, opportunities, phonecalls), the <i>CRM</i> application may be useful. Use the Settings menu to install it.</p>]]></field>
         </record>
+        
+        <!-- Sale-related subtypes for messaging / Chatter -->
+        <record id="mt_quotation_sent" model="mail.message.subtype">
+            <field name="name">Quotation sent</field>
+            <field name="res_model">sale.order</field>
+        </record>
+        <record id="mt_order_confirmed" model="mail.message.subtype">
+            <field name="name">Sale Order Confirmed</field>
+            <field name="res_model">sale.order</field>
+        </record>
+
+        <!-- Salesteam-related subtypes for messaging / Chatter -->
+        <record id="mt_salesteam_sent" model="mail.message.subtype">
+            <field name="name">Quotation sent</field>
+            <field name="res_model">crm.case.section</field>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mt_salesteam_confirmed" model="mail.message.subtype">
+            <field name="name">Sale Order Confirmed</field>
+            <field name="res_model">crm.case.section</field>
+            <field name="default" eval="False"/>
+        </record>
+
     </data>
 </openerp>

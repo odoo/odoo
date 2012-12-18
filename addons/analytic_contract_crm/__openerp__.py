@@ -19,29 +19,23 @@
 #
 ##############################################################################
 
-{
-    'name' : 'Analytic Accounting',
-    'version': '1.1',
-    'author' : 'OpenERP SA',
-    'website' : 'http://www.openerp.com',
-    'category': 'Hidden/Dependency',
-    'depends' : ['base', 'decimal_precision', 'mail'],
-    'description': """
-Module for defining analytic accounting object.
-===============================================
 
-In OpenERP, analytic accounts are linked to general accounts but are treated
-totally independently. So, you can enter various different analytic operations
-that have no counterpart in the general financial accounts.
-    """,
-    'data': [
-        'security/analytic_security.xml',
-        'security/ir.model.access.csv',
-        'analytic_sequence.xml',
-        'analytic_view.xml'
-    ],
+{
+    'name': 'CRM: Contract link',
+    'version': '1.1',
+    'category': 'Hidden',
+    'description': """
+This module is for set subtype of sales team in contract.
+======================================================================================================
+""",
+    'author': 'OpenERP S.A.',
+    'website': 'http://www.openerp.com/',
+    'depends': ['account_analytic_analysis','crm'],
+    'data': [],
     'demo': [],
+    'css' : [],
     'installable': True,
-    'auto_install': False,
+    'auto_install': True,
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

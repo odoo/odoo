@@ -95,19 +95,19 @@ class account_analytic_account(osv.osv):
     def set_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'cancelled'}, context=context)
         message = _("Contract has been <b>canceled</b>.")
-        self.message_post(cr, uid, ids, body=message, subtype="hr_timesheet_invoice.mt_account_canceled", context=context)
+        self.message_post(cr, uid, ids, body=message, context=context)
         return True
 
     def set_open(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'open'}, context=context)
         message = _("Contract has been <b>opened</b>.")
-        self.message_post(cr, uid, ids, body=message, context=context)
+        self.message_post(cr, uid, ids, body=message, subtype="hr_timesheet_invoice.mt_account_renewed", context=context)
         return True
 
     def set_pending(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'pending'}, context=context)
         message = _("Contract has been set as <b>pending</b>.")
-        self.message_post(cr, uid, ids, body=message, context=context)
+        self.message_post(cr, uid, ids, body=message, subtype="hr_timesheet_invoice.mt_account_renew", context=context)
         return True
 
 account_analytic_account()
