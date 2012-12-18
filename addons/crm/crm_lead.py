@@ -242,7 +242,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         'date_closed': fields.datetime('Closed', readonly=True),
         'stage_id': fields.many2one('crm.case.stage', 'Stage',
                         domain="['&', '&', ('fold', '=', False), ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"),
-        'user_id': fields.many2one('res.users', 'Salesperson'),
+        'user_id': fields.many2one('res.users', 'Salesperson', select=True),
         'referred': fields.char('Referred By', size=64),
         'date_open': fields.datetime('Opened', readonly=True),
         'day_open': fields.function(_compute_day, string='Days to Open', \
