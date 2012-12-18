@@ -173,17 +173,18 @@
                     </page>
                     <page string="Extra Info">
                         <group>
-                            <group string="Categorization">
+                            <group string="Categorization" groups="base.group_multi_company,base.group_no_one" name="categorization">
                                 <field name="company_id"
                                     groups="base.group_multi_company"
                                     widget="selection" colspan="2"/>
-                                <field name="type_id"/>
-                                <field name="channel_id" widget="selection"/>
-                                <field name="referred"/>
                                 <field name="state" groups="base.group_no_one"/>
                             </group>
                             <group string="Mailings">
                                 <field name="opt_out"/>
+                            </group>
+                            <group string="Misc">
+                                <field name="active"/>
+                                <field name="referred"/>
                             </group>
                         </group>
                     </page>
@@ -370,6 +371,7 @@
                                 states="draft,open,pending" class="oe_highlight"/>
                         <button name="case_mark_lost" string="Mark Lost" type="object"
                                 states="draft,open" class="oe_highlight"/>
+                        <button name="new_mail_send" string="Send Mail" type="object" states="draft,open,pending"/>
                         <field name="stage_id" widget="statusbar" clickable="True"/>
                     </header>
                     <sheet>
@@ -463,12 +465,7 @@
                                     <field name="mobile"/>
                                     <field name="fax"/>
                                 </group>
-
-                                <group string="Categorization">
-                                    <field name="type_id" />
-                                    <field name="channel_id" widget="selection"/>
-                                </group>
-                                <group string="Mailings">
+                                <group string="Mailings" name="mailings">
                                     <field name="opt_out"/>
                                 </group>
                                 <group string="Misc">
