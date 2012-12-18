@@ -19,13 +19,12 @@
 #
 ##############################################################################
 import logging
-from operator import attrgetter, itemgetter
+from operator import attrgetter
 
-from osv import osv, fields
-from tools.translate import _
-import netsvc
-from tools import ustr
-import pooler
+from openerp import pooler
+from openerp.osv import osv, fields
+from openerp.tools import ustr
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -309,7 +308,7 @@ class res_config_installer(osv.osv_memory):
 
         hooks_results = set()
         for module in base:
-            hook = getattr(self, '_if_%s'%(module), None)
+            hook = getattr(self, '_if_%s'% module, None)
             if hook:
                 hooks_results.update(hook(cr, uid, ids, context=None) or set())
 

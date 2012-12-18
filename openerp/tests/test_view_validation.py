@@ -1,11 +1,9 @@
 # This test can be run stand-alone with something like:
 # > PYTHONPATH=. python2 openerp/tests/test_view_validation.py
-
 from lxml import etree
 from StringIO import StringIO
 import unittest2
 
-import openerp
 from openerp.tools.view_validation import *
 
 invalid_form = etree.parse(StringIO('''\

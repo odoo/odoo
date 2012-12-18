@@ -670,7 +670,7 @@ class many2many(_column):
                 col1 = '%s_id' % source_model._table
             if not col2:
                 col2 = '%s_id' % dest_model._table
-        return (tbl, col1, col2)
+        return tbl, col1, col2
 
     def _get_query_and_where_params(self, cr, model, ids, values, where_params):
         """ Extracted from ``get`` to facilitate fine-tuning of the generated
@@ -1306,7 +1306,7 @@ class sparse(function):
 
     def __init__(self, serialization_field, **kwargs):
         self.serialization_field = serialization_field
-        return super(sparse, self).__init__(self._fnct_read, fnct_inv=self._fnct_write, multi='__sparse_multi', **kwargs)
+        super(sparse, self).__init__(self._fnct_read, fnct_inv=self._fnct_write, multi='__sparse_multi', **kwargs)
      
 
 
@@ -1562,7 +1562,7 @@ class column_info(object):
 
     def __str__(self):
         return '%s(%s, %s, %s, %s, %s)' % (
-            self.__name__, self.name, self.column,
+            self.__class__.__name__, self.name, self.column,
             self.parent_model, self.parent_column, self.original_parent)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

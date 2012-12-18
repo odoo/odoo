@@ -93,7 +93,6 @@ _LOCALE2WIN32 = {
     'lt_LT': 'Lithuanian_Lithuania',
     'lat': 'Latvian_Latvia',
     'ml_IN': 'Malayalam_India',
-    'id_ID': 'Indonesian_indonesia',
     'mi_NZ': 'Maori',
     'mn': 'Cyrillic_Mongolian',
     'no_NO': 'Norwegian_Norway',
@@ -103,7 +102,6 @@ _LOCALE2WIN32 = {
     'pt_BR': 'Portuguese_Brazil',
     'ro_RO': 'Romanian_Romania',
     'ru_RU': 'Russian_Russia',
-    'mi_NZ': 'Maori',
     'sr_CS': 'Serbian (Cyrillic)_Serbia and Montenegro',
     'sk_SK': 'Slovak_Slovakia',
     'sl_SI': 'Slovenian_Slovenia',
@@ -131,7 +129,6 @@ _LOCALE2WIN32 = {
     'sv_SE': 'Swedish_Sweden',
     'ta_IN': 'English_Australia',
     'th_TH': 'Thai_Thailand',
-    'mi_NZ': 'Maori',
     'tr_TR': 'Turkish_Turkey',
     'uk_UA': 'Ukrainian_Ukraine',
     'vi_VN': 'Vietnamese_Viet Nam',
@@ -275,7 +272,7 @@ class TinyPoFile(object):
     def __iter__(self):
         self.buffer.seek(0)
         self.lines = self._get_lines()
-        self.lines_count = len(self.lines);
+        self.lines_count = len(self.lines)
 
         self.first = True
         self.extra_lines= []
@@ -291,7 +288,7 @@ class TinyPoFile(object):
         return lines
 
     def cur_line(self):
-        return (self.lines_count - len(self.lines))
+        return self.lines_count - len(self.lines)
 
     def next(self):
         trans_type = name = res_id = source = trad = None
@@ -304,7 +301,7 @@ class TinyPoFile(object):
             targets = []
             line = None
             fuzzy = False
-            while (not line):
+            while not line:
                 if 0 == len(self.lines):
                     raise StopIteration()
                 line = self.lines.pop(0).strip()
@@ -864,7 +861,7 @@ def trans_generate(lang, modules, cr):
         frelativepath = fabsolutepath[len(path):]
         display_path = "addons%s" % frelativepath
         module = get_module_from_path(fabsolutepath, mod_paths=mod_paths)
-        if (('all' in modules) or (module in modules)) and module in installed_modules:
+        if ('all' in modules or module in modules) and module in installed_modules:
             return module, fabsolutepath, frelativepath, display_path
         return None, None, None, None
 

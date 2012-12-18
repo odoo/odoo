@@ -454,7 +454,7 @@ class browse_record(object):
                             new_data[field_name] = browse_null()
                     elif field_column._type in ('one2many', 'many2many') and len(result_line[field_name]):
                         new_data[field_name] = self._list_class([browse_record(self._cr, self._uid, id, self._table.pool.get(field_column._obj), self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process) for id in result_line[field_name]], self._context)
-                    elif field_column._type in ('reference'):
+                    elif field_column._type == 'reference':
                         if result_line[field_name]:
                             if isinstance(result_line[field_name], browse_record):
                                 new_data[field_name] = result_line[field_name]
@@ -1759,7 +1759,7 @@ class BaseModel(object):
                 views = {}
                 xml = "<form>"
                 for f in node:
-                    if f.tag in ('field'):
+                    if f.tag == 'field':
                         xml += etree.tostring(f, encoding="utf-8")
                 xml += "</form>"
                 new_xml = etree.fromstring(encode(xml))
@@ -2028,7 +2028,7 @@ class BaseModel(object):
         view = etree.Element('calendar', string=self._description)
         etree.SubElement(view, 'field', self._rec_name_fallback(cr, user, context))
 
-        if (self._date_name not in self._columns):
+        if self._date_name not in self._columns:
             date_found = False
             for dt in ['date', 'date_start', 'x_date', 'x_date_start']:
                 if dt in self._columns:
@@ -2049,7 +2049,7 @@ class BaseModel(object):
                                 self._columns, 'date_delay'):
                 raise except_orm(
                     _('Invalid Object Architecture!'),
-                    _("Insufficient fields to generate a Calendar View for %s, missing a date_stop or a date_delay" % (self._name)))
+                    _("Insufficient fields to generate a Calendar View for %s, missing a date_stop or a date_delay" % self._name))
 
         return view
 
@@ -2429,7 +2429,7 @@ class BaseModel(object):
            :rtype: tuple
            :return: the :meth:`~.name_get` pair value for the newly-created record.
         """
-        rec_id = self.create(cr, uid, {self._rec_name: name}, context);
+        rec_id = self.create(cr, uid, {self._rec_name: name}, context)
         return self.name_get(cr, uid, [rec_id], context)[0]
 
     # private implementation of name_search, allows passing a dedicated user for the name_get part to
@@ -2693,7 +2693,7 @@ class BaseModel(object):
         groupby = group_by
         for r in cr.dictfetchall():
             for fld, val in r.items():
-                if val == None: r[fld] = False
+                if val is None: r[fld] = False
             alldata[r['id']] = r
             del r['id']
 
@@ -2907,15 +2907,15 @@ class BaseModel(object):
             # usually because they could block deletion due to the FKs.
             # So unless stated otherwise we default them to ondelete=cascade.
             ondelete = ondelete or 'cascade'
-        self._foreign_keys.append((self._table, source_field, dest_model._table, ondelete or 'set null'))
-        _schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s",
-            self._table, source_field, dest_model._table, ondelete)
+        fk_def = (self._table, source_field, dest_model._table, ondelete or 'set null')
+        self._foreign_keys.add(fk_def)
+        _schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s", *fk_def)
 
     # unchecked version: for custom cases, such as m2m relationships
     def _m2o_add_foreign_key_unchecked(self, source_table, source_field, dest_model, ondelete):
-        self._foreign_keys.append((source_table, source_field, dest_model._table, ondelete or 'set null'))
-        _schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s",
-            source_table, source_field, dest_model._table, ondelete)
+        fk_def = (source_table, source_field, dest_model._table, ondelete or 'set null')
+        self._foreign_keys.add(fk_def)
+        _schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s", *fk_def)
 
     def _drop_constraint(self, cr, source_table, constraint_name):
         cr.execute("ALTER TABLE %s DROP CONSTRAINT %s" % (source_table,constraint_name))
@@ -2946,18 +2946,22 @@ class BaseModel(object):
                 cons, = constraints
                 if cons['ondelete_rule'] != POSTGRES_CONFDELTYPES.get((ondelete or 'set null').upper(), 'a')\
                     or cons['foreign_table'] != dest_model._table:
+                    # Wrong FK: drop it and recreate
                     _schema.debug("Table '%s': dropping obsolete FK constraint: '%s'",
                                   source_table, cons['constraint_name'])
                     self._drop_constraint(cr, source_table, cons['constraint_name'])
-                    self._m2o_add_foreign_key_checked(source_field, dest_model, ondelete)
-                # else it's all good, nothing to do!
+                else:
+                    # it's all good, nothing to do!
+                    return
             else:
                 # Multiple FKs found for the same field, drop them all, and re-create
                 for cons in constraints:
                     _schema.debug("Table '%s': dropping duplicate FK constraints: '%s'",
                                   source_table, cons['constraint_name'])
                     self._drop_constraint(cr, source_table, cons['constraint_name'])
-                self._m2o_add_foreign_key_checked(source_field, dest_model, ondelete)
+
+        # (re-)create the FK
+        self._m2o_add_foreign_key_checked(source_field, dest_model, ondelete)
 
 
 
@@ -2979,7 +2983,7 @@ class BaseModel(object):
           _auto_end).
 
         """
-        self._foreign_keys = []
+        self._foreign_keys = set()
         raise_on_invalid_object_name(self._name)
         if context is None:
             context = {}
@@ -3115,7 +3119,7 @@ class BaseModel(object):
                                     else:
                                         default = self._defaults[k]
 
-                                    if (default is not None):
+                                    if default is not None:
                                         ss = self._columns[k]._symbol_set
                                         query = 'UPDATE "%s" SET "%s"=%s WHERE "%s" is NULL' % (self._table, k, ss[0], k)
                                         cr.execute(query, (ss[1](default),))
@@ -3194,7 +3198,7 @@ class BaseModel(object):
                             # and add constraints if needed
                             if isinstance(f, fields.many2one):
                                 if not self.pool.get(f._obj):
-                                    raise except_orm('Programming Error', ('There is no reference available for %s') % (f._obj,))
+                                    raise except_orm('Programming Error', 'There is no reference available for %s' % (f._obj,))
                                 dest_model = self.pool.get(f._obj)
                                 ref = dest_model._table
                                 # ir_actions is inherited so foreign key doesn't work on it
@@ -3321,7 +3325,7 @@ class BaseModel(object):
             # TODO the condition could use fields_get_keys().
             if f._fields_id not in other._columns.keys():
                 if f._fields_id not in other._inherit_fields.keys():
-                    raise except_orm('Programming Error', ("There is no reference field '%s' found for '%s'") % (f._fields_id, f._obj,))
+                    raise except_orm('Programming Error', "There is no reference field '%s' found for '%s'" % (f._fields_id, f._obj,))
 
     def _m2m_raise_or_create_relation(self, cr, f):
         m2m_tbl, col1, col2 = f._sql_names(self)
@@ -3329,7 +3333,7 @@ class BaseModel(object):
         cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (m2m_tbl,))
         if not cr.dictfetchall():
             if not self.pool.get(f._obj):
-                raise except_orm('Programming Error', ('Many2Many destination model does not exist: `%s`') % (f._obj,))
+                raise except_orm('Programming Error', 'Many2Many destination model does not exist: `%s`' % (f._obj,))
             dest_model = self.pool.get(f._obj)
             ref = dest_model._table
             cr.execute('CREATE TABLE "%s" ("%s" INTEGER NOT NULL, "%s" INTEGER NOT NULL, UNIQUE("%s","%s"))' % (m2m_tbl, col1, col2, col1, col2))
@@ -3503,7 +3507,7 @@ class BaseModel(object):
 
         :param cr: database cursor
         :param user: current user id
-        :param fields: list of fields
+        :param allfields: list of fields
         :param context: context arguments, like lang, time zone
         :return: dictionary of field dictionaries, each one describing a field of the business object
         :raise AccessError: * if user has no create/write rights on the requested object
@@ -3554,6 +3558,37 @@ class BaseModel(object):
 
         return res
 
+    def check_field_access_rights(self, cr, user, operation, fields, context=None):
+        """
+        Check the user access rights on the given fields. This raises Access
+        Denied if the user does not have the rights. Otherwise it returns the
+        fields (as is if the fields is not falsy, or the readable/writable
+        fields if fields is falsy).
+        """
+        def p(field_name):
+            """Predicate to test if the user has access to the given field name."""
+            # Ignore requested field if it doesn't exist. This is ugly but
+            # it seems to happen at least with 'name_alias' on res.partner.
+            if field_name not in self._all_columns:
+                return True
+            field = self._all_columns[field_name].column
+            if field.groups:
+                return self.user_has_groups(cr, user, groups=field.groups, context=context)
+            else:
+                return True
+        if not fields:
+            fields = filter(p, self._all_columns.keys())
+        else:
+            filtered_fields = filter(lambda a: not p(a), fields)
+            if filtered_fields:
+                _logger.warning('Access Denied by ACLs for operation: %s, uid: %s, model: %s, fields: %s', operation, user, self._name, ', '.join(filtered_fields))
+                raise except_orm(
+                    _('Access Denied'),
+                    _('The requested operation cannot be completed due to security restrictions. '
+                    'Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
+                    (self._description, operation))
+        return fields
+
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
         """ Read records with given ids with the given fields
 
@@ -3579,8 +3614,7 @@ class BaseModel(object):
         if not context:
             context = {}
         self.check_access_rights(cr, user, 'read')
-        if not fields:
-            fields = list(set(self._columns.keys() + self._inherit_fields.keys()))
+        fields = self.check_field_access_rights(cr, user, 'read', fields)
         if isinstance(ids, (int, long)):
             select = [ids]
         else:
@@ -3602,7 +3636,7 @@ class BaseModel(object):
             context = {}
         if not ids:
             return []
-        if fields_to_read == None:
+        if fields_to_read is None:
             fields_to_read = self._columns.keys()
 
         # Construct a clause for the security rules.
@@ -4037,6 +4071,7 @@ class BaseModel(object):
 
         """
         readonly = None
+        self.check_field_access_rights(cr, user, 'write', vals.keys())
         for field in vals.copy():
             fobj = None
             if field in self._columns:
@@ -4691,7 +4726,7 @@ class BaseModel(object):
                     new_tables = []
                     for table in added_tables:
                         # table is just a table name -> switch to the full alias
-                        if table == '"%s"' % (parent_table):
+                        if table == '"%s"' % parent_table:
                             new_tables.append('"%s" as "%s"' % (parent_table, parent_alias))
                         # table is already a full statement -> replace reference to the table to its alias, is correct with the way aliases are generated
                         else:
@@ -4857,7 +4892,7 @@ class BaseModel(object):
         Copy given record's data with all its fields values
 
         :param cr: database cursor
-        :param user: current user id
+        :param uid: current user id
         :param id: id of the record to copy
         :param default: field values to override in the original values of the copied record
         :type default: dictionary
@@ -5016,7 +5051,7 @@ class BaseModel(object):
         """
         if type(ids) in (int, long):
             ids = [ids]
-        query = 'SELECT id FROM "%s"' % (self._table)
+        query = 'SELECT id FROM "%s"' % self._table
         cr.execute(query + "WHERE ID IN %s", (tuple(ids),))
         return [x[0] for x in cr.fetchall()]
 
