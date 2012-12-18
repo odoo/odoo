@@ -20,8 +20,9 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
-import nodes
 from openerp.tools import config
+
+import nodes
 
 class document_davdir(osv.osv):
     _inherit = 'document.directory'
