@@ -278,7 +278,7 @@
           <para style="terp_default_Right_9">[[ formatLang(get_amount_total(o), currency_obj=o.company_id.currency_id) or '' ]] </para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(get_amount_total_in_currency(o), currency_obj=(o.order_lines and o.order_lines[0].currency or None)) or '' ]] </para>
+          <para style="terp_default_Right_9">[[ formatLang(get_amount_total_in_currency(o), currency_obj=(o.line_ids and o.line_ids[0].currency or None)) or '' ]] </para>
         </td>
       </tr>
     </blockTable>
