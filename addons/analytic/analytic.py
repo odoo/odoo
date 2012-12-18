@@ -22,10 +22,10 @@
 import time
 from datetime import datetime
 
-from osv import fields, osv
-import tools
-from tools.translate import _
-import decimal_precision as dp
+from openerp.osv import fields, osv
+from openerp import tools
+from openerp.tools.translate import _
+import openerp.addons.decimal_precision as dp
 
 class account_analytic_account(osv.osv):
     _name = 'account.analytic.account'

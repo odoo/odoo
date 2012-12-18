@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-from osv import osv
-from tools.translate import _
+from openerp.osv import osv
+from openerp.tools.translate import _
 
 class crm_phonecall2meeting(osv.osv_memory):
     """ Phonecall to Meeting """

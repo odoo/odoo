@@ -22,16 +22,16 @@
 import datetime
 import time
 
-from osv import fields, osv
-from report.interface import report_rml
-from report.interface import toxml
+from openerp.osv import fields, osv
+from openerp.report.interface import report_rml
+from openerp.report.interface import toxml
 
-import pooler
+from openerp import pooler
 import time
-from report import report_sxw
-from tools import ustr
-from tools.translate import _
-from tools import to_xml
+from openerp.report import report_sxw
+from openerp.tools import ustr
+from openerp.tools.translate import _
+from openerp.tools import to_xml
 
 def lengthmonth(year, month):
     if month == 2 and ((year % 4 == 0) and ((year % 100 != 0) or (year % 400 == 0))):

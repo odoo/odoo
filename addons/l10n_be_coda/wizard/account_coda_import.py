@@ -19,15 +19,16 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 import base64
-from osv import fields, osv
-from tools.translate import _
 import time
-import tools
-import logging
-_logger = logging.getLogger(__name__)
 
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+from openerp import tools
+
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class account_coda_import(osv.osv_memory):
     _name = 'account.coda.import'
@@ -89,19 +90,30 @@ class account_coda_import(osv.osv_memory):
                         raise osv.except_osv(_('Error') + ' R1002', _('Foreign bank accounts with IBAN structure are not supported '))
                     else:  # Something else, not supported
                         raise osv.except_osv(_('Error') + ' R1003', _('Unsupported bank account structure '))
-                bank_ids = self.pool.get('res.partner.bank').search(cr, uid, [('acc_number', '=', statement['acc_number'])])
-                not_found_except = osv.except_osv(_('Error') + ' R1004', _("No matching Bank Account.\n\nPlease set-up a Bank Account with as Account Number '%s' and as Currency '%s'.") % (statement['acc_number'], statement['currency']))
+                statement['journal_id'] = False
+                statement['bank_account'] = False
+                # Belgian Account Numbers are composed of 12 digits.
+                # In OpenERP, the user can fill the bank number in any format: With or without IBan code, with or without spaces, with or without '-'
+                # The two following sql requests handle those cases.
+                if len(statement['acc_number']) >= 12:
+                    # If the Account Number is >= 12 digits, it is mostlikely a Belgian Account Number (With or without IBAN).
+                    # The following request try to find the Account Number using a 'like' operator.
+                    # So, if the Account Number is stored with IBAN code, it can be found thanks to this.
+                    cr.execute("select id from res_partner_bank where replace(replace(acc_number,' ',''),'-','') like %s", ('%' + statement['acc_number'] + '%',))
+                else:
+                    # This case is necessary to avoid cases like the Account Number in the CODA file is set to a single or few digits,
+                    # and so a 'like' operator would return the first account number in the database which matches.
+                    cr.execute("select id from res_partner_bank where replace(replace(acc_number,' ',''),'-','') = %s", (statement['acc_number'],))
+                bank_ids = [id[0] for id in cr.fetchall()]
                 if bank_ids and len(bank_ids) > 0:
                     bank_accs = self.pool.get('res.partner.bank').browse(cr, uid, bank_ids)
                     for bank_acc in bank_accs:
-                        if (bank_acc.journal_id.currency and bank_acc.journal_id.currency.name != statement['currency']) and (not bank_acc.journal_id.currency and bank_acc.journal_id.company_id.currency_id.name != statement['currency']):
-                            raise not_found_except
-                        else:
+                        if not (bank_acc.journal_id and (bank_acc.journal_id.currency and bank_acc.journal_id.currency.name != statement['currency']) and (not bank_acc.journal_id.currency and bank_acc.journal_id.company_id.currency_id.name != statement['currency'])):
                             statement['journal_id'] = bank_acc.journal_id
                             statement['bank_account'] = bank_acc
                             break
-                else:
-                    raise not_found_except
+                if statement['bank_account'] == False:
+                    raise osv.except_osv(_('Error') + ' R1004', _("No matching Bank Account (with Account Journal) found.\n\nPlease set-up a Bank Account with as Account Number '%s' and as Currency '%s' and an Account Journal.") % (statement['acc_number'], statement['currency']))
                 statement['description'] = rmspaces(line[90:125])
                 statement['balance_start'] = float(rmspaces(line[43:58])) / 1000
                 statement['balance_start_date'] = time.strftime(tools.DEFAULT_SERVER_DATE_FORMAT, time.strptime(rmspaces(line[58:64]), '%d%m%y'))

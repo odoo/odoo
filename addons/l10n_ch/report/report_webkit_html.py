@@ -28,19 +28,20 @@ from mako.lookup import TemplateLookup
 from mako import exceptions
 
 
-from report import report_sxw
-from report_webkit import webkit_report
-from report_webkit import report_helper
-
-from osv import osv
-from osv.osv import except_osv
-
-from tools import mod10r
-from tools.translate import _
-from tools.config import config
 
 from openerp import addons
-import pooler
+from openerp import pooler
+from openerp.report import report_sxw
+
+from openerp.osv import osv
+from openerp.osv.osv import except_osv
+
+from openerp.tools import mod10r
+from openerp.tools.translate import _
+from openerp.tools.config import config
+
+from openerp.addons.report_webkit import webkit_report
+from openerp.addons.report_webkit import report_helper
 
 
 class l10n_ch_report_webkit_html(report_sxw.rml_parse):

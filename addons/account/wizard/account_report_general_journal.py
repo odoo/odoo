@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 
 class account_general_journal(osv.osv_memory):
     _inherit = "account.common.journal.report"

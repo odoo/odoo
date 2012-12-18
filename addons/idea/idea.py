@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-from osv import osv
-from osv import fields
-from tools.translate import _
+from openerp.osv import osv
+from openerp.osv import fields
+from openerp.tools.translate import _
 import time
 
 VoteValues = [('-1', 'Not Voted'), ('0', 'Very Bad'), ('25', 'Bad'), \

@@ -18,9 +18,9 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-from tools.translate import _
-import netsvc
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+from openerp import netsvc
 
 class sale_make_invoice(osv.osv_memory):
     _name = "sale.make.invoice"

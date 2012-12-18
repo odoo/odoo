@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-import pooler
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp import pooler
+from openerp.tools.translate import _
 
 class purchase_config_settings(osv.osv_memory):
     _name = 'purchase.config.settings'

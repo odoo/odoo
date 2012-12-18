@@ -20,8 +20,8 @@
 ##############################################################################
 import string
 
-from osv import fields, osv
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 # Reference Examples of IBAN
 _ref_iban = { 'al':'ALkk BBBS SSSK CCCC CCCC CCCC CCCC', 'ad':'ADkk BBBB SSSS CCCC CCCC CCCC',

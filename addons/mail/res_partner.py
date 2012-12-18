@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 
 class res_partner_mail(osv.Model):
     """ Update partner to add a field about notification preferences """

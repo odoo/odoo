@@ -19,12 +19,13 @@
 #
 ##############################################################################
 
-import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from dateutil import parser
-from osv import fields, osv
-from tools.translate import _
+import time
+
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class hr_evaluation_plan(osv.osv):
     _name = "hr_evaluation.plan"

@@ -21,10 +21,10 @@
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from osv import fields
-from osv import osv
-from tools.translate import _
-import netsvc
+from openerp.osv import fields
+from openerp.osv import osv
+from openerp.tools.translate import _
+from openerp import netsvc
 
 class procurement_order(osv.osv):
     _inherit = 'procurement.order'
