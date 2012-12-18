@@ -239,6 +239,7 @@ class mail_thread(osv.AbstractModel):
         # subscribe uid unless asked not to
         if not context.get('mail_nosubscribe'):
             self.message_subscribe_users(cr, uid, [thread_id], [uid], context=context)
+            self.message_subscribe_from_parent(cr, uid, [thread_id], context=context)
 
         # automatic logging
         # self.message_post(cr, uid, thread_id, body='Document <b>created</b>.', context=context)
@@ -952,6 +953,31 @@ class mail_thread(osv.AbstractModel):
         """ Remove partners from the records followers. """
         self.check_access_rights(cr, uid, 'read')
         return self.write(cr, SUPERUSER_ID, ids, {'message_follower_ids': [(3, pid) for pid in partner_ids]}, context=context)
+
+    def message_subscribe_from_parent(self, cr, uid, ids, context=None):
+
+        subtype_obj = self.pool.get('mail.message.subtype')
+        follower_obj = self.pool.get('mail.followers')
+
+        # fetch record subtypes
+        subtype_ids = subtype_obj.search(cr, uid, ['|', ('parent_id.res_model', '=', False), ('parent_id.res_model', '=', self._name)], context=context)
+        if not subtype_ids:
+            return
+        subtypes = subtype_obj.browse(cr, uid, subtype_ids, context=context)
+
+        for record in self.browse(cr, uid, ids, context=context):
+            new_followers = dict()
+            for subtype in subtypes:
+                if subtype.parent_field and subtype.parent_id:
+                    if subtype.parent_field in self._columns and getattr(record, subtype.parent_field):
+                        parent_res_id = getattr(record, subtype.parent_field).id
+                        parent_model = subtype.res_model
+                        follower_ids = follower_obj.search(cr, SUPERUSER_ID, [('res_model', '=', parent_model), ('res_id', '=', parent_res_id), ('subtype_ids', 'in', [subtype.id])], context=context)
+                        for follower in follower_obj.browse(cr, SUPERUSER_ID, follower_ids, context=context):
+                            new_followers.setdefault(follower.partner_id.id, set()).add(subtype.parent_id.id)
+
+            for pid, subtypes in new_followers.items():
+                self.message_subscribe(cr, uid, [record.id], [pid], list(subtypes), context=context)
 
     def _subscribe_followers_subtype(self, cr, uid, ids, res_id, model, context=None):
         """ TDE note: not the best way to do this, we could override _get_followers

@@ -594,9 +594,8 @@ class test_mail(TestMailBase):
         def _strip_string_spaces(body):
             return body.replace(' ', '').replace('\n', '')
 
-        cr, uid = self.cr, self.uid
-
         # Data: subscribe Raoul to Pigs, because he will change the public attribute and may loose access to the record
+        cr, uid = self.cr, self.uid
         self.mail_group.message_subscribe_users(cr, uid, [self.group_pigs_id], [self.user_raoul_id])
 
         # Data: res.users.group, to test group_public_id automatic logging

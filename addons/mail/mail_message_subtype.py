@@ -39,6 +39,10 @@ class mail_message_subtype(osv.osv):
         'description': fields.text('Description', translate=True,
             help='Description that will be added in the message posted for this '\
                     'subtype. If void, no message will be added.'),
+        'parent_id': fields.many2one('mail.message.subtype', string='Parent',
+            ondelete='set null'),
+        'parent_field': fields.char('Parent field',
+            help='Field used to find the parent model'),
         'res_model': fields.char('Model',
             help="Model the subtype applies to. If False, this subtype exists for all models."),
         'default': fields.boolean('Default',
