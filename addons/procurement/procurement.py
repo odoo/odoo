@@ -84,7 +84,7 @@ class procurement_order(osv.osv):
     _inherit = ['mail.thread']
     _log_create = False
     _columns = {
-        'name': fields.char('Description', required=True),
+        'name': fields.text('Description', required=True),
         'origin': fields.char('Source Document', size=64,
             help="Reference of the document that created this Procurement.\n"
             "This is automatically completed by OpenERP."),
@@ -153,9 +153,9 @@ class procurement_order(osv.osv):
             return {'value': v}
         return {}
 
-    def check_product(self, cr, uid, ids, context=None):
-        """ Checks product type.
-        @return: True or False
+    def is_product(self, cr, uid, ids, context=None):
+        """ Checks product type to decide which transition of the workflow to follow.
+        @return: True if all product ids received in argument are of type 'product' or 'consummable'. False if any is of type 'service'
         """
         return all(proc.product_id.type in ('product', 'consu') for proc in self.browse(cr, uid, ids, context=context))
 
@@ -234,14 +234,16 @@ class procurement_order(osv.osv):
         return False
 
     def check_produce_service(self, cr, uid, procurement, context=None):
+        """ Depicts the capacity of the procurement workflow to deal with production of services.
+            By default, it's False. Overwritten by project_mrp module.
+        """
         return False
 
     def check_produce_product(self, cr, uid, procurement, context=None):
-        """ Finds BoM of a product if not found writes exception message.
-        @param procurement: Current procurement.
-        @return: True or False.
+        """ Depicts the capacity of the procurement workflow to deal with production of products.
+            By default, it's False. Overwritten by mrp module.
         """
-        return True
+        return False
 
     def check_make_to_stock(self, cr, uid, ids, context=None):
         """ Checks product type.
@@ -264,10 +266,6 @@ class procurement_order(osv.osv):
             product = procurement.product_id
             #TOFIX: if product type is 'service' but supply_method is 'buy'.
             if product.supply_method <> 'produce':
-                supplier = product.seller_id
-                if supplier and user.company_id and user.company_id.partner_id:
-                    if supplier.id == user.company_id.partner_id.id:
-                        continue
                 return False
             if product.type=='service':
                 res = self.check_produce_service(cr, uid, procurement, context)
@@ -278,37 +276,14 @@ class procurement_order(osv.osv):
         return True
 
     def check_buy(self, cr, uid, ids):
-        """ Checks product type.
-        @return: True or Product Id.
+        """ Depicts the capacity of the procurement workflow to manage the supply_method == 'buy'.
+            By default, it's False. Overwritten by purchase module.
         """
-        user = self.pool.get('res.users').browse(cr, uid, uid)
-        partner_obj = self.pool.get('res.partner')
-        for procurement in self.browse(cr, uid, ids):
-            if procurement.product_id.product_tmpl_id.supply_method <> 'buy':
-                return False
-            if not procurement.product_id.seller_ids:
-                message = _('No supplier defined for this product !')
-                self.message_post(cr, uid, [procurement.id], body=message)
-                cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
-                return False
-            partner = procurement.product_id.seller_id #Taken Main Supplier of Product of Procurement.
+        return False
 
-            if not partner:
-                message = _('No default supplier defined for this product')
-                self.message_post(cr, uid, [procurement.id], body=message)
-                cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
-                return False
-            if user.company_id and user.company_id.partner_id:
-                if partner.id == user.company_id.partner_id.id:
-                    return False
-
-            address_id = partner_obj.address_get(cr, uid, [partner.id], ['delivery'])['delivery']
-            if not address_id:
-                message = _('No address defined for the supplier')
-                self.message_post(cr, uid, [procurement.id], body=message)
-                cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
-                return False
-        return True
+    def check_conditions_confirm2wait(self, cr, uid, ids):
+        """ condition on the transition to go from 'confirm' activity to 'confirm_wait' activity """
+        return not self.test_cancel(cr, uid, ids)
 
     def test_cancel(self, cr, uid, ids):
         """ Tests whether state of move is cancelled or not.

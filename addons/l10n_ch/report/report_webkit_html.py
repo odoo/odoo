@@ -27,8 +27,6 @@ from mako.template import Template
 from mako.lookup import TemplateLookup
 from mako import exceptions
 
-
-
 from openerp import addons
 from openerp import pooler
 from openerp.report import report_sxw
@@ -42,7 +40,6 @@ from openerp.tools.config import config
 
 from openerp.addons.report_webkit import webkit_report
 from openerp.addons.report_webkit import report_helper
-
 
 class l10n_ch_report_webkit_html(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):

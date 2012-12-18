@@ -20,6 +20,7 @@
 ##############################################################################
 
 import base64
+import datetime
 import dateutil
 import email
 import logging
@@ -461,13 +462,14 @@ class mail_thread(osv.AbstractModel):
                               message_id, model, thread_id, custom_values, uid)
                 return [(model, thread_id, custom_values, uid)]
 
-        # Verify this is a reply to a private message
-        message_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', '=', in_reply_to)], limit=1, context=context)
-        if message_ids:
-            message = self.pool.get('mail.message').browse(cr, uid, message_ids[0], context=context)
-            _logger.debug('Routing mail with Message-Id %s: direct reply to a private message: %s, custom_values: %s, uid: %s',
-                            message_id, message.id, custom_values, uid)
-            return [(message.model, message.res_id, custom_values, uid)]
+        # Verify whether this is a reply to a private message
+        if in_reply_to:
+            message_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', '=', in_reply_to)], limit=1, context=context)
+            if message_ids:
+                message = self.pool.get('mail.message').browse(cr, uid, message_ids[0], context=context)
+                _logger.debug('Routing mail with Message-Id %s: direct reply to a private message: %s, custom_values: %s, uid: %s',
+                                message_id, message.id, custom_values, uid)
+                return [(message.model, message.res_id, custom_values, uid)]
 
         # 2. Look for a matching mail.alias entry
         # Delivered-To is a safe bet in most modern MTAs, but we have to fallback on To + Cc values
@@ -736,11 +738,22 @@ class mail_thread(osv.AbstractModel):
         msg_dict['partner_ids'] = [(4, partner_id) for partner_id in partner_ids]
 
         if 'Date' in message:
-            date_hdr = decode(message.get('Date'))
-            # convert from email timezone to server timezone
-            date_server_datetime = dateutil.parser.parse(date_hdr).astimezone(pytz.timezone(tools.get_server_timezone()))
-            date_server_datetime_str = date_server_datetime.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
-            msg_dict['date'] = date_server_datetime_str
+            try:
+                date_hdr = decode(message.get('Date'))
+                parsed_date = dateutil.parser.parse(date_hdr, fuzzy=True)
+                if parsed_date.utcoffset() is None:
+                    # naive datetime, so we arbitrarily decide to make it
+                    # UTC, there's no better choice. Should not happen,
+                    # as RFC2822 requires timezone offset in Date headers.
+                    stored_date = parsed_date.replace(tzinfo=pytz.utc)
+                else:
+                    stored_date = parsed_date.astimezone(pytz.utc)
+            except Exception:
+                _logger.warning('Failed to parse Date header %r in incoming mail '
+                                'with message-id %r, assuming current date/time.',
+                                message.get('Date'), message_id)
+                stored_date = datetime.datetime.now()
+            msg_dict['date'] = stored_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
 
         if 'In-Reply-To' in message:
             parent_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', '=', decode(message['In-Reply-To']))])

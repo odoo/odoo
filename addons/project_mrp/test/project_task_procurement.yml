@@ -30,7 +30,6 @@
     assert datetime.strptime(task.date_deadline, '%Y-%m-%d') == datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S'), 'Deadline does not correspond.'
     if procurement.product_id.product_manager:
         assert task.user_id.id == procurement.product_id.product_manager.id, 'Allocated Person does not correspond with Service Product Manager.'
-    assert task.description == procurement.note, "Task description does not correspond."
 -
   I close that task.
 -
