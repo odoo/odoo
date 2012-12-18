@@ -2289,7 +2289,10 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.we
 });
 
 instance.web.form.FieldID = instance.web.form.FieldChar.extend({
-
+    process_modifiers: function () {
+        this._super();
+        this.set({ readonly: true });
+    },
 });
 
 instance.web.form.FieldEmail = instance.web.form.FieldChar.extend({
