@@ -840,9 +840,7 @@ class mrp_production(osv.osv):
         """ Changes state to In Production and writes starting date.
         @return: True
         """
-        self.write(cr, uid, ids, {'state': 'in_production', 'date_start': time.strftime('%Y-%m-%d %H:%M:%S')})
-        self.action_in_production_send_note(cr, uid, ids, context)
-        return True
+        return self.write(cr, uid, ids, {'state': 'in_production', 'date_start': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     def test_if_product(self, cr, uid, ids):
         """
@@ -1012,6 +1010,7 @@ class mrp_production(osv.osv):
 
             wf_service.trg_validate(uid, 'stock.picking', shipment_id, 'button_confirm', cr)
             production.write({'state':'confirmed'}, context=context)
+            self.action_confirm_send_note(cr, uid, [production.id], context=context)
         return shipment_id
 
     def force_production(self, cr, uid, ids, *args):
