@@ -74,10 +74,12 @@ class crm_lead(base_stage, format_address, osv.osv):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     _track = {
+        'state': {
+            'crm.mt_lead_won': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'done',
+            'crm.mt_lead_lost': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'cancel',
+        },
         'stage_id': {
-            'crm.mt_lead_won': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.state == 'done' and obj.probability == 100.0,
-            'crm.mt_lead_lost': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.state == 'cancel' and obj.probability == 0.0,
-            'crm.mt_lead_stage': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.state not in ['cancel', 'done'],
+            'crm.mt_lead_stage': lambda self, cr, uid, obj, ctx=None: obj['state'] not in ['cancel', 'done'],
         },
     }
 

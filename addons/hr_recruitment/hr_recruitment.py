@@ -93,10 +93,12 @@ class hr_applicant(base_stage, osv.Model):
     _order = "id desc"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _track = {
+        'state': {
+            'hr_recruitment.mt_applicant_hired': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'done',
+            'hr_recruitment.mt_applicant_refused': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'cancel',
+        },
         'stage_id': {
-            'hr_recruitment.mt_applicant_hired': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.state == 'done' and obj.emp_id,
-            'hr_recruitment.mt_applicant_refused': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.state == 'cancel' and not obj.emp_id,
-            'hr_recruitment.mt_stage_changed': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.state not in ['done', 'cancel'],
+            'hr_recruitment.mt_stage_changed': lambda self, cr, uid, obj, ctx=None: obj['state'] not in ['done', 'cancel'],
         },
     }
 

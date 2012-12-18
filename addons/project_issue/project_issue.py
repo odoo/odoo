@@ -51,13 +51,15 @@ class project_issue(base_stage, osv.osv):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     _track = {
+        'state': {
+            'project_issue.mt_project_issue_closed': lambda self, cr, uid, obj, ctx=None:  obj['state'] == 'done',
+            'project_issue.mt_project_issue_started': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'open',
+        },
         'stage_id': {
-            'project_issue.mt_project_issue_closed': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.state == 'done',
-            'project_issue.mt_project_issue_started': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.state == 'open',
-            'project_issue.mt_project_issue_stage': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.state not in ['done', 'open'],
+            'project_issue.mt_project_issue_stage': lambda self, cr, uid, obj, ctx=None: obj['state'] not in ['done', 'open'],
         },
         'kanban_state': {
-            'project_issue.mt_project_issue_blocked': lambda self, cr, uid, obj, ctx=None: obj.kanban_state == 'blocked',
+            'project_issue.mt_project_issue_blocked': lambda self, cr, uid, obj, ctx=None: obj['kanban_state'] == 'blocked',
         },
     }
 

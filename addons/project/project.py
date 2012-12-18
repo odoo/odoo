@@ -559,13 +559,15 @@ class task(base_stage, osv.osv):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     _track = {
+        'state': {
+            'project.mt_project_task_closed': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'done',
+            'project.mt_project_task_started': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'open',
+        },
         'stage_id': {
-            'project.mt_project_task_closed': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.state == 'done',
-            'project.mt_project_task_started': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.state == 'open',
-            'project.mt_project_task_stage': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.state not in ['done', 'open'],
+            'project.mt_project_task_stage': lambda self, cr, uid, obj, ctx=None: obj['state'] not in ['done', 'open'],
         },
         'kanban_state': {  # kanban state: tracked, but only block subtype
-            'project.mt_project_task_blocked': lambda self, cr, uid, obj, ctx=None: obj.kanban_state == 'blocked',
+            'project.mt_project_task_blocked': lambda self, cr, uid, obj, ctx=None: obj['kanban_state'] == 'blocked',
         },
     }
 
