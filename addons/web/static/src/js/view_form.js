@@ -213,7 +213,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         });
         //bounce effect on red button when click on statusbar.
         this.$el.find(".oe_form_field_status:not(.oe_form_status_clickable)").on('click', function (e) {
-            if((self.get("actual_mode") == "view")) { 
+            if((self.get("actual_mode") == "view")) {
                 var $button = self.$el.find(".oe_highlight:not(.oe_form_invisible)").css({'float':'left','clear':'none'});
                 $button.effect('bounce', {distance:18, times: 5}, 150);
                 e.stopPropagation();
@@ -919,7 +919,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             this.do_update_pager();
             if (this.sidebar) {
                 this.sidebar.do_attachement_update(this.dataset, this.datarecord.id);
-            }            
+            }
             //openerp.log("The record has been created with id #" + this.datarecord.id);
             return $.when(this.reload()).then(function () {
                 self.trigger('record_created', r);
@@ -2389,7 +2389,7 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
         var self = this;
         this.$input = this.$el.find('input.oe_datepicker_master');
         this.$input_picker = this.$el.find('input.oe_datepicker_container');
-        
+
         this.picker({
             onClose: this.on_picker_select,
             onSelect: this.on_picker_select,
@@ -5092,7 +5092,7 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
                 _.each(datas, function (data) {
                     data.no_unlink = true;
                     data.url = self.session.url('/web/binary/saveas', {model: 'ir.attachment', field: 'datas', filename_field: 'datas_fname', id: data.id});
-                    
+
                     _.each(self.get('value'), function (val, key) {
                         if(val == data.id) {
                             self.get('value')[key] = data;
@@ -5258,7 +5258,8 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         if (this.field.type == "many2one") {
             var domain = [];
             if(!_.isEmpty(this.field.domain) || !_.isEmpty(this.node.attrs.domain)) {
-                domain = new instance.web.CompoundDomain(['|'], self.build_domain(), [['id', '=', self.get('value')]]);
+                var d = instance.web.pyeval.eval('domain', self.build_domain());
+                domain = ['|', ['id', '=', self.get('value')]].concat(d);
             }
             var ds = new instance.web.DataSetSearch(this, this.field.relation, self.build_context(), domain);
             return ds.read_slice(['name'], {}).then(function (records) {
