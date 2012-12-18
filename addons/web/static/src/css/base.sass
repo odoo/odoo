@@ -2550,6 +2550,7 @@ div.ui-widget-overlay
     ul.oe_form_status, ul.oe_form_status_clickable
         li
             display: inline-block
+            clear: both
             &:last-child
                 margin-right: -24px 
                 border-right: 1px solid #cacaca
@@ -2573,8 +2574,10 @@ div.ui-widget-overlay
                 border-bottom: 1px solid #729fcf
             .arrow span
                 background-color: #729fcf !important
-                
 
+// jquery ui for ie
+.openerp_ie .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#EFEFEF', endColorstr='#D8D8D8')
                 
 // }}}
 

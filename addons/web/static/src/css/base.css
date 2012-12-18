@@ -3214,6 +3214,7 @@ div.ui-widget-overlay {
 }
 .openerp_ie ul.oe_form_status li, .openerp_ie ul.oe_form_status_clickable li {
   display: inline-block;
+  clear: both;
 }
 .openerp_ie ul.oe_form_status li:last-child, .openerp_ie ul.oe_form_status_clickable li:last-child {
   margin-right: -24px;
@@ -3241,4 +3242,8 @@ div.ui-widget-overlay {
 }
 .openerp_ie ul.oe_form_status li.oe_active .arrow span, .openerp_ie ul.oe_form_status_clickable li.oe_active .arrow span {
   background-color: #729fcf !important;
+}
+
+.openerp_ie .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button {
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#EFEFEF', endColorstr='#D8D8D8');
 }
