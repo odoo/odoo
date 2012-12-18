@@ -99,7 +99,6 @@ class account_coda_import(osv.osv_memory):
         recordlist = unicode(base64.decodestring(codafile), 'windows-1252', 'strict').split('\n')
 
         for line in recordlist:
-
             if not line:
                 pass
             elif line[0] == '0':
@@ -174,7 +173,7 @@ class account_coda_import(osv.osv_memory):
                         return (err_code, err_string)
                     raise osv.except_osv(_('Data Error!'), err_string)
                 coda_statement['description'] = line[90:125].strip()
-                cba_filter = lambda x: ((coda_statement['acc_number'] in (x['iban'] or '')) or (coda_statement['acc_number'] == x['acc_number'])) \
+                cba_filter = lambda x: (coda_statement['acc_number'] in _get_acc_numbers(x['acc_number'])) \
                     and (coda_statement['currency'] == x['currency_name']) and (coda_statement['description'] == (x['description1'] or x['description2'] or ''))
                 coda_bank =  filter(cba_filter, coda_bank_table)
                 if coda_bank:
@@ -239,7 +238,6 @@ class account_coda_import(osv.osv_memory):
                     st_line['globalisation_code'] = ''
                     st_line['globalisation_amount'] = False
                     st_line['amount'] = False
-
                     st_line['ref'] = line[2:10]
                     st_line['trans_ref'] = line[10:31]
                     st_line_amt = list2float(line[32:47])
@@ -595,11 +593,8 @@ class account_coda_import(osv.osv_memory):
         bk_st_ids = []
 
         for statement in coda_statements:
-
             # The CODA Statement info is written to two objects: 'coda.bank.statement' and 'account.bank.statement'
-
             try:
-
                 coda_st_id = coda_st_obj.create(cr, uid, {
                     'name': statement['name'],
                     'type': statement['type'],
@@ -652,9 +647,7 @@ class account_coda_import(osv.osv_memory):
                     line = lines[x]
 
                     # handling non-transactional records : line['type'] in ['information', 'communication']
-
                     if line['type'] == 'information':
-
                         line['globalisation_id'] = glob_id_stack[-1][2]
                         line_note = _('Transaction Type' ': %s - %s'                \
                             '\nTransaction Family: %s - %s'                         \
@@ -680,10 +673,8 @@ class account_coda_import(osv.osv_memory):
                                    })
 
                     elif line['type'] == 'communication':
-
                         line_note = _('Free Communication:\n %s')                  \
                             %(line['communication'])
-
                         coda_st_line_id = coda_st_line_obj.create(cr, uid, {
                                    'sequence': line['sequence'],
                                    'ref': line['ref'],
@@ -695,9 +686,7 @@ class account_coda_import(osv.osv_memory):
                                    })
 
                     # handling transactional records, # line['type'] in ['globalisation', 'general', 'supplier', 'customer']
-
                     else:
-
                         glob_lvl_flag = line['glob_lvl_flag']
                         if glob_lvl_flag:
                             if glob_id_stack[-1][0] == glob_lvl_flag:
@@ -732,7 +721,6 @@ class account_coda_import(osv.osv_memory):
                               line['communication'])
 
                         if line['type'] == 'globalisation':
-
                             coda_st_line_id = coda_st_line_obj.create(cr, uid, {
                                    'sequence': line['sequence'],
                                    'ref': line['ref'],
@@ -754,8 +742,7 @@ class account_coda_import(osv.osv_memory):
                             if glob_lvl_flag == 0:
                                 line['globalisation_id'] = glob_id_stack[-1][2]
                             if not line['account_id']:
-                                    line['account_id'] = awaiting_acc
-
+                                line['account_id'] = awaiting_acc
                             coda_st_line_id = coda_st_line_obj.create(cr, uid, {
                                    'sequence': line['sequence'],
                                    'ref': line['ref'],
@@ -777,7 +764,6 @@ class account_coda_import(osv.osv_memory):
                                    })
 
                             if statement['type'] == 'normal':
-
                                 st_line_seq += 1
                                 voucher_id = False
                                 line_name = line['name'].strip()
@@ -973,5 +959,14 @@ def list2float(lst):
         return str2float((lambda s : s[:-3] + '.' + s[-3:])(lst))
     except:
         return 0.0
+
+def _get_acc_numbers(acc_number):
+    #TODO this method is needed because the iban and bank account fields have been merged together. But sometimes we
+    #   need to retrieve the normal bank account from the IBAN. This should be globalized and defined as a method on the
+    #   bank account class. Each country part of the IBAN area should define its own code to do so.
+    acc_number = acc_number.replace(' ', '')
+    if acc_number.lower().startswith('be'):
+        return [acc_number[4:], acc_number]
+    return [acc_number]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

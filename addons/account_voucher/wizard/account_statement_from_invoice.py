@@ -74,7 +74,8 @@ class account_statement_from_invoice_lines(osv.osv_memory):
                 amount = currency_obj.compute(cr, uid, line.invoice.currency_id.id,
                     statement.currency.id, amount, context=ctx)
 
-            context.update({'move_line_ids': [line.id]})
+            context.update({'move_line_ids': [line.id],
+                            'invoice_id': line.invoice.id})
             type = 'general'
             ttype = amount < 0 and 'payment' or 'receipt'
             sign = 1
@@ -90,11 +91,13 @@ class account_statement_from_invoice_lines(osv.osv_memory):
                             'name': line.name,
                             'partner_id': line.partner_id.id,
                             'journal_id': statement.journal_id.id,
-                            'account_id': result.get('account_id', statement.journal_id.default_credit_account_id.id),
+                            'account_id': result['value'].get('account_id', statement.journal_id.default_credit_account_id.id),
                             'company_id': statement.company_id.id,
                             'currency_id': statement.currency.id,
                             'date': line.date,
                             'amount': sign*amount,
+                            'payment_rate': result['value']['payment_rate'],
+                            'payment_rate_currency_id': result['value']['payment_rate_currency_id'],
                             'period_id':statement.period_id.id}
             voucher_id = voucher_obj.create(cr, uid, voucher_res, context=context)
 

@@ -27,7 +27,6 @@ from mako.template import Template
 from mako.lookup import TemplateLookup
 from mako import exceptions
 
-
 from report import report_sxw
 from report_webkit import webkit_report
 from report_webkit import report_helper
@@ -41,7 +40,6 @@ from tools.config import config
 
 from openerp import addons
 import pooler
-
 
 class l10n_ch_report_webkit_html(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
@@ -159,6 +157,8 @@ def mako_template(text):
 
 class BVRWebKitParser(webkit_report.WebKitParser):
 
+    bvr_file_path = ('l10n_ch','report','bvr.mako')
+
     def create_single_pdf(self, cursor, uid, ids, data, report_xml, context=None):
         """generate the PDF"""
         context = context or {}
@@ -199,7 +199,7 @@ class BVRWebKitParser(webkit_report.WebKitParser):
         company = user.company_id
         body_mako_tpl = mako_template(template)
         #BVR specific
-        bvr_path = addons.get_module_resource('l10n_ch','report','bvr.mako')
+        bvr_path = addons.get_module_resource(self.bvr_file_path)
         body_bvr_tpl = mako_template(file(bvr_path).read())
         helper = report_helper.WebKitHelper(cursor, uid, report_xml.id, context)
         ##BVR Specific
