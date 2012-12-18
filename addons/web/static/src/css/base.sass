@@ -1089,6 +1089,7 @@ $sheet-padding: 16px
     // ActionManager {{{
     .oe_application
         width: 100%
+        height: 100%
         a
             color: $link-color
             &:hover
@@ -2546,7 +2547,11 @@ div.ui-widget-overlay
     img
         border: none
     .oe_topbar
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#646060', endColorstr='#262626') 
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#646060', endColorstr='#262626')
+    .oe_popup_form
+        width: 99% !important
+    .oe_form_label
+        white-space: normal !important
     ul.oe_form_status, ul.oe_form_status_clickable
         li
             display: inline-block
