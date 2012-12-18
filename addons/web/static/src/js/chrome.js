@@ -461,7 +461,6 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
                 params: {
                     'db': form_obj['db_name'],
                     'login': 'admin',
-                    'password': form_obj['create_admin_pwd'],
                     'login_successful': function() {
                         self.do_action("reload");
                     },
