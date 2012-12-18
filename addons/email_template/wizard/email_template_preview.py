@@ -20,7 +20,7 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 
 class email_template_preview(osv.osv_memory):
     _inherit = "email.template"

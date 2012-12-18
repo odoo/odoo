@@ -21,12 +21,12 @@
 
 import time
 from lxml import etree
-import decimal_precision as dp
+import openerp.addons.decimal_precision as dp
 
-import netsvc
-import pooler
-from osv import fields, osv, orm
-from tools.translate import _
+from openerp import netsvc
+from openerp import pooler
+from openerp.osv import fields, osv, orm
+from openerp.tools.translate import _
 
 class account_invoice(osv.osv):
     def _amount_all(self, cr, uid, ids, name, args, context=None):

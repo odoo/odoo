@@ -99,7 +99,7 @@
                     </group>
                     <notebook>
                         <page string="Summary">
-                            <widget type="weekly_timesheet">
+                            <widget type="weekly_timesheet" attrs="{'readonly': [['state', 'not in', ['new', 'draft']]]}">
                             </widget>
                         </page>
                         <page string="Details">

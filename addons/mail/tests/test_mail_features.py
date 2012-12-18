@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+from openerp import tools
+
 from openerp.addons.mail.tests.test_mail_base import TestMailBase
 from openerp.tools.mail import html_sanitize, append_content_to_html
 

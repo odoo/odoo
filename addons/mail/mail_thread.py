@@ -27,7 +27,7 @@ from functools import partial
 import logging
 import pytz
 import time
-import tools
+from openerp import tools
 import xmlrpclib
 
 from mako.template import Template as MakoTemplate
@@ -35,9 +35,9 @@ from mako.template import Template as MakoTemplate
 from email.message import Message
 from mail_message import decode
 from openerp import SUPERUSER_ID
-from osv import osv, fields
+from openerp.osv import fields, osv
 from openerp.osv.orm import browse_record
-from tools.safe_eval import safe_eval as eval
+from openerp.tools.safe_eval import safe_eval as eval
 from tools.translate import _
 
 _logger = logging.getLogger(__name__)

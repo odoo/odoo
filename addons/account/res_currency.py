@@ -18,7 +18,7 @@
 #
 ##############################################################################
 
-from osv import osv
+from openerp.osv import osv
 
 """Inherit res.currency to handle accounting date values when converting currencies"""
 

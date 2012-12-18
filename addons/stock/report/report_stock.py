@@ -19,10 +19,10 @@
 #
 ##############################################################################
 
-from osv import osv, fields
-from tools.translate import _
-import tools
-from tools.sql import drop_view_if_exists
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+from openerp import tools
+from openerp.tools.sql import drop_view_if_exists
 
 class stock_report_prodlots(osv.osv):
     _name = "stock.report.prodlots"

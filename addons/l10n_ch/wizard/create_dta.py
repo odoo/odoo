@@ -23,9 +23,9 @@ import time
 from datetime import datetime
 import base64
 
-from osv import osv, fields
-import pooler
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp import pooler
+from openerp.tools.translate import _
 import unicode2ascii
 
 import re
