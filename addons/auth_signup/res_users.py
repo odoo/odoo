@@ -64,10 +64,9 @@ class res_partner(osv.Model):
 
             # the parameters to encode for the query and fragment part of url
             query = {'db': cr.dbname}
-            fragment = {'action': action}
+            fragment = {'action': action, 'type': partner.signup_type}
 
             if partner.signup_token:
-                fragment['type'] = partner.signup_type
                 fragment['token'] = partner.signup_token
             elif partner.user_ids:
                 fragment['db'] = cr.dbname
