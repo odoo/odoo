@@ -22,8 +22,8 @@
 import time
 from collections import defaultdict
 
-import pooler
-from report import report_sxw
+from openerp import pooler
+from openerp.report import report_sxw
 
 class report_rappel(report_sxw.rml_parse):
     _name = "account_followup.report.rappel"

@@ -20,12 +20,12 @@
 #
 ##############################################################################
 import time
-import netsvc
+from openerp import netsvc
 from datetime import date, datetime, timedelta
 
-from osv import fields, osv
-from tools import config
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp.tools import config
+from openerp.tools.translate import _
 
 class hr_payslip(osv.osv):
     '''

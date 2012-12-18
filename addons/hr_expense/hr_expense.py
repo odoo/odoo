@@ -21,10 +21,11 @@
 
 import time
 
-from osv import fields, osv
-from tools.translate import _
-import decimal_precision as dp
-import netsvc
+from openerp import netsvc
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+
+import openerp.addons.decimal_precision as dp
 
 def _employee_get(obj, cr, uid, context=None):
     if context is None:

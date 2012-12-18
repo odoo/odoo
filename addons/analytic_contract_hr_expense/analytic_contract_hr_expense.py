@@ -18,13 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-from osv import osv, fields
-from osv.orm import intersect, except_orm
-import tools.sql
-from tools.translate import _
-from decimal_precision import decimal_precision as dp
-
+from openerp.osv import fields, osv
+from openerp.osv.orm import intersect
+from openerp.tools.translate import _
 
 class account_analytic_account(osv.osv):
     _name = "account.analytic.account"

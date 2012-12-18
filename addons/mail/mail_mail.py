@@ -21,11 +21,11 @@
 
 import base64
 import logging
-import tools
+from openerp import tools
 
 from openerp import SUPERUSER_ID
-from osv import osv, fields
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 

@@ -18,17 +18,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import pooler
-import sql_db
-
 import os
 import time
 import errno
 import re
-
-import openerp
-import netsvc
 import urlparse
+import urllib
+
 try:
     from pywebdav.lib.constants import COLLECTION  # , OBJECT
     from pywebdav.lib.errors import DAV_Error, DAV_Forbidden, DAV_NotFound
@@ -40,17 +36,13 @@ except ImportError:
     from DAV.iface import dav_interface
     from DAV.davcmd import copyone, copytree, moveone, movetree, delone, deltree
 
-import urllib
+import openerp
+from openerp import pooler, sql_db, netsvc
+from openerp.tools import misc
+from openerp.addons.document.dict_tools import dict_merge2
 
 from cache import memoize
-from tools import misc
-
 from webdav import mk_lock_response
-
-try:
-    from tools.dict_tools import dict_merge2
-except ImportError:
-    from document.dict_tools import dict_merge2
 
 CACHE_SIZE=20000
 

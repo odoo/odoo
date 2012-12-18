@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 
 class stock_inventory_line_split(osv.osv_memory):
     _inherit = "stock.move.split"

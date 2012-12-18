@@ -26,12 +26,12 @@ import time
 from operator import itemgetter
 from itertools import groupby
 
-from osv import fields, osv
-from tools.translate import _
-import netsvc
-import tools
-from tools import float_compare
-import decimal_precision as dp
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+from openerp import netsvc
+from openerp import tools
+from openerp.tools import float_compare
+import openerp.addons.decimal_precision as dp
 import logging
 _logger = logging.getLogger(__name__)
 

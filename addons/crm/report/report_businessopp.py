@@ -20,13 +20,13 @@
 ##############################################################################
 
 import os, time
-import netsvc
+from openerp import netsvc
 
 import random
 import StringIO
 
-from report.render import render
-from report.interface import report_int
+from openerp.report.render import render
+from openerp.report.interface import report_int
 from pychart import *
 
 theme.use_color = 1

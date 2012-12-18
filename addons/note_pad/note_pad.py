@@ -20,7 +20,7 @@
 ##############################################################################
 
 from openerp.osv import osv, fields
-from tools.translate import _
+from openerp.tools.translate import _
 
 class note_pad_note(osv.osv):
     """ memo pad """

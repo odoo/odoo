@@ -18,7 +18,7 @@
 #
 ##############################################################################
 
-from service import security
+from openerp.service import security
 import crypt
 
 

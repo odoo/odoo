@@ -20,8 +20,8 @@
 ##############################################################################
 
 from datetime import datetime
-from osv import fields, osv
-from tools import mod10r
+from openerp.osv import fields, osv
+from openerp.tools import mod10r
 
 class account_invoice(osv.osv):
     """Inherit account.invoice in order to add bvr
