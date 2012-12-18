@@ -1182,6 +1182,7 @@
   padding-bottom: 16px;
 }
 .openerp a.oe_logo {
+  position: relative;
   width: 220px;
   display: block;
   text-align: center;
@@ -1189,6 +1190,24 @@
 .openerp a.oe_logo img {
   margin: 14px 0;
   border: 0;
+}
+.openerp a.oe_logo .oe_logo_edit {
+  margin: 14px 0;
+  position: absolute;
+  top: 1px;
+  padding: 4px;
+  width: 100%;
+  display: none;
+  text-align: center;
+  color: #eeeeee;
+  background: rgba(37, 37, 37, 0.9);
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.openerp a.oe_logo:hover .oe_logo_edit_admin {
+  display: block;
 }
 .openerp .oe_footer {
   position: fixed;

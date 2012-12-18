@@ -1118,6 +1118,9 @@ instance.web.Client = instance.web.Widget.extend({
 
 instance.web.WebClient = instance.web.Client.extend({
     _template: 'WebClient',
+    events: {
+        'click .oe_logo_edit_admin': 'logo_edit'
+    },
     init: function(parent) {
         this._super(parent);
         this._current_state = null;
@@ -1188,7 +1191,29 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     update_logo: function() {
         var img = this.session.url('/web/binary/company_logo');
-        this.$el.find('.oe_logo img').attr('src', '').attr('src', img);
+        this.$('.oe_logo img').attr('src', '').attr('src', img);
+        this.$('.oe_logo_edit').toggleClass('oe_logo_edit_admin', this.session.uid === 1);
+    },
+    logo_edit: function(ev) {
+        var self = this;
+        new instance.web.Model("res.users").get_func("read")(this.session.uid, ["company_id"]).then(function(res) {
+            self.rpc("/web/action/load", { action_id: "base.action_res_company_form" }).done(function(result) {
+                result.res_id = res['company_id'][0];
+                result.target = "new";
+                result.views = [[false, 'form']];
+                result.flags = {
+                    action_buttons: true,
+                };
+                self.action_manager.do_action(result);
+                var form = self.action_manager.dialog_widget.views.form.controller;
+                form.on("on_button_cancel", self.action_manager.dialog, self.action_manager.dialog.close);
+                form.on('record_saved', self, function() {
+                    self.action_manager.dialog.close();
+                    self.update_logo();
+                });
+            });
+        });
+        return false;
     },
     check_timezone: function() {
         var self = this;
