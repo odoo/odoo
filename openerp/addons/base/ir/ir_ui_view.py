@@ -254,7 +254,7 @@ class view(osv.osv):
                 if label:
                     for lbl in eval(label):
                         if t.has_key(tools.ustr(lbl)) and tools.ustr(t[lbl])=='False':
-                            label_string = label_string + ' '
+                            label_string += ' '
                         else:
                             label_string = label_string + " " + tools.ustr(t[lbl])
                 labels[str(t['id'])] = (a['id'],label_string)

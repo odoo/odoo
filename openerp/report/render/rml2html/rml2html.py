@@ -391,7 +391,7 @@ class _rml_doc(object):
             list_story.append(story_text)
         del f
         if template.data:
-            tag = '''<img src = '%s' width=80 height=72/>'''%(template.data)
+            tag = '''<img src = '%s' width=80 height=72/>'''% template.data
         else:
             tag = ''
         self.result +='''

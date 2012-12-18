@@ -78,7 +78,7 @@ class ConvertFunctionsToVirtualList(object):
         len_self = len(self)
         if index < 0:
             # support negative indexes
-            index = len_self + index
+            index += len_self
         if index < 0 or index >= len_self:
             raise IndexError, "sequence index out of range"
         return self.getFunction(index)
