@@ -2041,6 +2041,7 @@ $sheet-padding: 16px
                     padding-right: 14px
                 .arrow
                     display: none
+                    
             .label
                 color: #4c4c4c
                 text-shadow: 0 1px 1px #fcfcfc, 0 -1px 1px #dedede
@@ -2539,6 +2540,44 @@ div.ui-widget-overlay
 .blockUI.blockOverlay
     background-color: black
     opacity: 0.6000000238418579
+
+// fix for ie {{{
+.openerp_ie
+    img
+        border: none
+    .oe_topbar
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#646060', endColorstr='#262626') 
+    ul.oe_form_status, ul.oe_form_status_clickable
+        li
+            display: inline-block
+            padding
+            &:last-child
+                margin-right: -24px
+                border-right: 1px solid #cacaca
+                .label
+                    padding-right: 14px
+                    border-right: none
+                .arrow
+                    display: inline-block
+                    opacity: 0
+                    filter: alpha(opacity = 0)
+                    border: none
+                    width: 0
+ 
+        .label
+            border-bottom: 1px solid #cacaca
+        .arrow
+            span
+                background-color: #fefefe !important
+        li.oe_active
+            .label
+                border-bottom: 1px solid #729fcf
+            .arrow span
+                background-color: #729fcf !important
+                
+
+                
+// }}}
 
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
 // vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:
