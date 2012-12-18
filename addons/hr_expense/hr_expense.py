@@ -171,7 +171,7 @@ class hr_expense_expense(osv.osv):
                     journal = account_journal.browse(cr, uid, journal_id, context=context)
             for line in exp.line_ids:
                 if line.product_id:
-                    acc = line.product_id.product_tmpl_id.property_account_expense
+                    acc = line.product_id.property_account_expense
                     if not acc:
                         acc = line.product_id.categ_id.property_account_expense_categ
                 else:
