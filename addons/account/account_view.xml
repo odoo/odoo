@@ -2243,8 +2243,8 @@
                     <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,confirm"/>
                 </header>
                 <sheet string="Statement">
-                    <label for="name" class="oe_edit_only" attrs="{'invisible':[('name','=','/')]}"/>
-                    <h1><field name="name" class="oe_inline" attrs="{'invisible':[('name','=','/')]}"/></h1>
+                    <label for="name" class="oe_edit_only"/>
+                    <h1><field name="name" class="oe_inline"/></h1>
                     <group>
                         <group>
                             <field name="journal_id" on_change="onchange_journal_id(journal_id)" widget="selection" domain="[('type', '=', 'cash')]" />
