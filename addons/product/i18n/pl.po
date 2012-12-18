@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-12-10 19:50+0000\n"
+"PO-Revision-Date: 2012-12-16 19:25+0000\n"
 "Last-Translator: Grzegorz Grzelak (OpenGLOBE.pl) <grzegorz@openglobe.pl>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-11 04:48+0000\n"
-"X-Generator: Launchpad (build 16356)\n"
+"X-Launchpad-Export-Date: 2012-12-17 04:46+0000\n"
+"X-Generator: Launchpad (build 16372)\n"
 
 #. module: product
 #: field:product.packaging,rows:0
@@ -108,6 +108,9 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Zawiera podsumowanie wypowiedzi (liczbę wiadomości, ...). To podsumowanie "
+"jest bezpośrednio w formacie html, aby można je było stosować w widokach "
+"kanban."
 
 #. module: product
 #: code:addons/product/pricelist.py:177
@@ -119,7 +122,7 @@ msgstr "Ostrzeżenie !"
 #. module: product
 #: field:product.product,image_small:0
 msgid "Small-sized image"
-msgstr ""
+msgstr "Mały obrazek"
 
 #. module: product
 #: code:addons/product/product.py:174
@@ -206,6 +209,8 @@ msgid ""
 "Error! You cannot define the decimal precision of 'Account' as greater than "
 "the rounding factor of the company's main currency"
 msgstr ""
+"Błąd: Nie możesz ustawiać zaokrąglenia 'Account' jako większego niż "
+"zaokrąglenie waluty dla firmy."
 
 #. module: product
 #: field:product.category,parent_id:0
@@ -233,6 +238,8 @@ msgid ""
 "Error! You cannot define a rounding factor for the company's main currency "
 "that is smaller than the decimal precision of 'Account'."
 msgstr ""
+"Błąd: nie możesz definiować zaokrąglenia waluty w firmie jako mniejszego niż "
+"zaokrąglenie 'Account'."
 
 #. module: product
 #: help:product.product,outgoing_qty:0
@@ -247,6 +254,15 @@ msgid ""
 "Otherwise, this includes goods leaving any Stock Location with 'internal' "
 "type."
 msgstr ""
+"Ilość produktów planowanych do wydania.\n"
+"W kontekście pojedynczej strefy oznacza wydania z tej strefy i ich "
+"podrzędnych.\n"
+"W kontekście magazynu oznacza wydania ze strefy składowania tego magazynu i "
+"jej podrzędnych.\n"
+"W kontekście sklepu oznacza wydania ze strefy składowania magazynu dla tego "
+"sklepu i wszystkich stref podrzędnych.\n"
+"W pozostałych przypadkach oznacza wydania z dowolnej strefy typu "
+"'wewnętrzne'."
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_42_product_template
@@ -414,6 +430,8 @@ msgid ""
 "Specify a product if this rule only applies to one product. Keep empty "
 "otherwise."
 msgstr ""
+"Podaj produkt, jeśli ta reguła dotyczy jednego produktu. Pozostaw puste w "
+"przeciwnym przypadku."
 
 #. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_kgm
@@ -535,6 +553,8 @@ msgid ""
 "Error: The default Unit of Measure and the purchase Unit of Measure must be "
 "in the same category."
 msgstr ""
+"Błąd: Domyślna jednostka miary i jednostka zakupu muszą być z tej samej "
+"kategorii."
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
@@ -611,7 +631,7 @@ msgstr "Szablony produktów"
 #. module: product
 #: field:product.category,parent_left:0
 msgid "Left Parent"
-msgstr ""
+msgstr "Lewy nadrzędny"
 
 #. module: product
 #: help:product.pricelist.item,price_max_margin:0
@@ -624,11 +644,13 @@ msgid ""
 "Error! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
 "Item!"
 msgstr ""
+"Błąd: Nie możesz powiązać głownego cennika jako innego cennika w pozycji "
+"cennika !"
 
 #. module: product
 #: view:product.price_list:0
 msgid "or"
-msgstr ""
+msgstr "lub"
 
 #. module: product
 #: constraint:product.packaging:0
@@ -703,6 +725,10 @@ msgid ""
 "period (usually every year). \n"
 "Average Price: The cost price is recomputed at each incoming shipment."
 msgstr ""
+"Cena ewidencyjna: Cena kosztowa jest ręcznie aktualizowana na końcu "
+"określonego okresu (zwykle na koniec roku). \n"
+"Cena przeciętna: Cena kosztowa jest przeliczana przy każdym przyjęciu "
+"zewnętrznym."
 
 #. module: product
 #: field:product.product,qty_available:0
@@ -925,7 +951,7 @@ msgstr "Suma wag opakowań"
 #. module: product
 #: field:product.product,seller_info_id:0
 msgid "unknown"
-msgstr ""
+msgstr "nieznane"
 
 #. module: product
 #: help:product.packaging,code:0
@@ -940,7 +966,7 @@ msgstr "Typy ceny produktów"
 #. module: product
 #: field:product.product,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Jest obserwatorem"
 
 #. module: product
 #: field:product.product,price_extra:0
@@ -1053,6 +1079,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kliknij, aby zdefiniować nowy produkt.\n"
+"              </p><p>\n"
+"                Musisz zdefiniować produkt do wygodnej powtarzalnej\n"
+"                sprzedaży. Może to być produkt materialny rejestrowany,\n"
+"                materiał pomocniczy lub usługa.\n"
+"              </p><p>\n"
+"                Produkt zawiera informacje do uproszczenia procesu\n"
+"                sprzedaży: ceny, notatki, dane księgowe, metody\n"
+"                nabycia itp.\n"
+"              </p>\n"
+"            "
 
 #. module: product
 #: view:product.price_list:0
@@ -1103,7 +1141,7 @@ msgstr "Cena jednostkowa"
 #. module: product
 #: field:product.category,parent_right:0
 msgid "Right Parent"
-msgstr ""
+msgstr "Prawa nadrzędna"
 
 #. module: product
 #: field:product.pricelist.item,price_surcharge:0
@@ -1253,6 +1291,12 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                To jest lista produktów podzielona na kategorie. Możesz\n"
+"                kliknąć kategorię, aby zobaczyć listę produktół z tej\n"
+"                kategorii lub podkategorii.\n"
+"              </p>\n"
+"            "
 
 #. module: product
 #: code:addons/product/product.py:359
@@ -1340,7 +1384,7 @@ msgstr "%s (kopia)"
 #. module: product
 #: model:product.template,name:product.product_product_2_product_template
 msgid "On Site Assistance"
-msgstr ""
+msgstr "Asysta u klienta"
 
 #. module: product
 #: model:product.template,name:product.product_product_39_product_template
@@ -1504,6 +1548,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kliknij, aby dodać wersję cennika.\n"
+"              </p><p>\n"
+"                Wersji cennika może być więcej. Każda z nich musi mieć\n"
+"                okres ważności. Przykłądy: Ceny 2010, 2011, Ceny letnie\n"
+"                itp.\n"
+"              </p>\n"
+"            "
 
 #. module: product
 #: help:product.template,uom_po_id:0
@@ -1654,6 +1706,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kliknij, aby dodać nową kategorię jednostek miary.\n"
+"              </p><p>\n"
+"                Jednostki należące do tej samej kategorii mogą być\n"
+"                konwertowane pomiędzy sobą. Na przykład: \n"
+"                w kategorii Czas możesz mieć godziny i dni.\n"
+"              </p>\n"
+"            "
 
 #. module: product
 #: help:pricelist.partnerinfo,min_quantity:0
@@ -1767,6 +1827,8 @@ msgid ""
 "The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
 "of Measure that cannot be further split, such as a piece."
 msgstr ""
+"Obliczone ilości będą wielokrotnością tej wartości. Stosuj 1,0 dla "
+"jednostek, które nie mogą być podzielne, na przykład dla sztuki."
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -1980,6 +2042,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kliknij, aby zdefiniować nowy produkt.\n"
+"              </p><p>\n"
+"                Musisz zdefiniować produkt do powtarzalnej sprzedaży.\n"
+"                Produkt, to może być materialny towar, materiał pomocniczy\n"
+"                lub usługa podwykonawcy.\n"
+"              </p><p>\n"
+"                Formularz produktu zawiera informacje do wspomagania "
+"zakupów:\n"
+"                ceny, logistykę nabycia, dane księgowe, dostępnych dostawców "
+"itp.\n"
+"              </p>\n"
+"            "
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_44_product_template
@@ -2006,7 +2081,7 @@ msgstr ""
 #. module: product
 #: field:product.product,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Obserwatorzy"
 
 #. module: product
 #: view:product.product:0
@@ -2089,6 +2164,8 @@ msgid ""
 "Consumable: Will not imply stock management for this product. \n"
 "Stockable product: Will imply stock management for this product."
 msgstr ""
+"Pomocniczy: Produkt nie będzie rejestrowany magazynowo. \n"
+"Produkt rejestrowany: Dla produktu będą wykonywane operacje magazynowe."
 
 #. module: product
 #: help:product.pricelist.type,key:0
@@ -2109,6 +2186,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kliknij, aby zdefiniować nowy produkt.\n"
+"              </p><p>\n"
+"                Musisz zdefiniować produkt do powtarzalnych zakupów i\n"
+"                sprzedaży. Produkt może być materialny lub może być\n"
+"                usługą.\n"
+"              </p>\n"
+"            "
 
 #. module: product
 #: view:product.product:0
