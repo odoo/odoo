@@ -303,7 +303,7 @@ class calendar_attendee(osv.osv):
             if name == 'language':
                 user_obj = self.pool.get('res.users')
                 lang = user_obj.read(cr, uid, uid, ['lang'], context=context)['lang']
-                result[id][name] = lang.replace('_', '-')
+                result[id][name] = lang.replace('_', '-') if lang else False
 
         return result
 
