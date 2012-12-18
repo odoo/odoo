@@ -408,12 +408,12 @@ class document_directory_content(osv.osv):
         res2 = []
         tname = ''
         if content.include_name:
-            content_name = node.displayname or ''
+            record_name = node.displayname or ''
             # obj = node.context._dirobj.pool.get(model)
-            if content_name:
-                tname = (content.prefix or '') + content_name + (content.suffix or '') + (content.extension or '')
+            if record_name:
+                tname = (content.prefix or '') + record_name + (content.suffix or '') + (content.extension or '')
         else:
-            tname = (content.prefix or '') + (content.suffix or '') + (content.extension or '')
+            tname = (content.prefix or '') + (content.name or '') + (content.suffix or '') + (content.extension or '')
         if tname.find('/'):
             tname=tname.replace('/', '_')
         act_id = False
@@ -556,7 +556,7 @@ class document_storage(osv.osv):
             file_node.content_type = mime
             return True
         except Exception, e :
-            self._logger.warning("Cannot save data.", exc_info=True)
+            _logger.warning("Cannot save data.", exc_info=True)
             # should we really rollback once we have written the actual data?
             # at the db case (only), that rollback would be safe
             raise except_orm(_('Error at doc write!'), str(e))
