@@ -100,8 +100,8 @@
                              <field name="user_id" string="Responsible User"/>
                              <field name="show_as" string="Show Time as"/>
                              <field name="class" string="Privacy"/>
+                             <field name="recurrent_id_date" invisible="1"/>
                              <field name="recurrent_id" invisible="1"/>
-                             <field name="recurrent_uid" invisible="1"/>
                         </group>
                         <separator string="Description"/>
                         <field name="description"/>
@@ -162,7 +162,7 @@
                         <group col="4" colspan="4" name="rrule">
                             <group col="4" colspan="4">
                                 <field name="rrule_type" string="Recurrency period"
-                                   attrs="{'readonly':[('recurrent_uid','!=',False)]}"/>
+                                   attrs="{'readonly':[('recurrent_id','!=',False)]}"/>
                                 <field name="interval"/>
                                 <separator string="End of Recurrence" colspan="4"/>
                                 <field name="end_type"/>

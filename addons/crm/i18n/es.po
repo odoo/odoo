@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:01+0000\n"
-"PO-Revision-Date: 2012-12-10 22:54+0000\n"
-"Last-Translator: Ana Juaristi Olalde <ajuaristio@gmail.com>\n"
+"PO-Revision-Date: 2012-12-13 12:36+0000\n"
+"Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-11 04:46+0000\n"
-"X-Generator: Launchpad (build 16356)\n"
+"X-Launchpad-Export-Date: 2012-12-14 05:36+0000\n"
+"X-Generator: Launchpad (build 16369)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -59,12 +59,14 @@ msgid ""
 "Phonecall linked to the opportunity <em>%s</em> has been <b>created</b> and "
 "<b>scheduled</b> on <em>%s</em>."
 msgstr ""
+"La llamada asociada a la oportunidad  <em>%s</em>  ha sido <b>creada</b> y  "
+"<b>planificada</b> en <em>%s</em>."
 
 #. module: crm
 #: model:res.groups,name:crm.group_fund_raising
 #: field:sale.config.settings,group_fund_raising:0
 msgid "Manage Fund Raising"
-msgstr ""
+msgstr "Administrar recaudación de fondos"
 
 #. module: crm
 #: view:crm.lead2opportunity.partner.mass:0
@@ -99,7 +101,7 @@ msgstr "Análisis Iniciativas CRM"
 #. module: crm
 #: model:ir.actions.server,subject:crm.action_email_reminder_customer_lead
 msgid "Reminder on Lead: [[object.id ]]"
-msgstr ""
+msgstr "Recordatorio en iniciativa: [[object.id ]]"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -122,7 +124,7 @@ msgstr "Formación"
 #: model:ir.actions.act_window,name:crm.crm_lead_categ_action
 #: model:ir.ui.menu,name:crm.menu_crm_lead_categ
 msgid "Sales Tags"
-msgstr ""
+msgstr "Etiquetas de ventas"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -174,6 +176,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Contiene el resumen del chatter (nº de mensajes, ...). Este resumen viene "
+"directamente en formato HTML para poder ser insertado en las vistas kanban."
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:552
@@ -218,7 +222,7 @@ msgstr "No acepta recibir emails"
 #. module: crm
 #: field:crm.case.stage,fold:0
 msgid "Hide in Views when Empty"
-msgstr ""
+msgstr "Ocultar en vistas si está vacío"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_email_reminder_lead
@@ -252,6 +256,8 @@ msgstr "Análisis de iniciativas"
 #, python-format
 msgid "<b>%s a call</b> for the <em>%s</em>."
 msgstr ""
+"Copy text \t\r\n"
+"<b>%s una llamada</b> para el <em>%s</em>."
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_resource_type_act
@@ -323,6 +329,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Pulse para definir una nueva segmentación de clientes.\n"
+"</p><p>\n"
+"Cree categorías específicas que puede asignar a sus contactos para "
+"administrar mejor sus interacciones con ellos. La herramienta de "
+"segmentación es capaz de asignar categorías a los contactos de acuerdo a los "
+"criterios que establezca.\n"
+"</p>\n"
+"            "
 
 #. module: crm
 #: field:crm.opportunity2phonecall,contact_name:0
@@ -376,11 +391,22 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Pulse para crear una oportunidad relacionada con este cliente.\n"
+"</p><p>\n"
+"Use las oportunidades para seguir la pista al flujo de sus ventas, seguir "
+"una venta potencial y prever mejor sus futuros ingresos.\n"
+"</p><p>\n"
+"Podrá planificar reuniones y llamadas telefónicas desde las oportunidades, "
+"convertirlas en ofertas, adjuntar documentos relacionados, rastrear todas "
+"las discusiones, y mucho más.\n"
+"</p>\n"
+"            "
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead7
 msgid "Dead"
-msgstr ""
+msgstr "Muerta"
 
 #. module: crm
 #: field:crm.case.section,message_unread:0
@@ -457,6 +483,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Pulse para definir un nuevo equipo de ventas.\n"
+"</p><p>\n"
+"Use los equipos de venta para organizar a los diferentes comerciales o "
+"departamentos en equipos separados. Cada equipo trabajará en su propia lista "
+"de oportunidades.\n"
+"</p>\n"
+"            "
 
 #. module: crm
 #: model:process.transition,note:crm.process_transition_opportunitymeeting0
@@ -549,6 +583,10 @@ msgid ""
 "                       If the call needs to be done then the status is set "
 "to 'Not Held'."
 msgstr ""
+"El estado se establece a 'Para hacer', cuando un caso es creado. Si el caso "
+"está en progreso el estado se establece a 'Abierto'. Cuando la llamada "
+"finaliza, el estado se establece a 'Realizada'. si la llamada requiere ser "
+"realizada entonces el estado se establece a 'No realizada'"
 
 #. module: crm
 #: field:crm.case.section,message_summary:0
@@ -583,6 +621,8 @@ msgid ""
 "Reminder on Lead: [[object.id ]] [[object.partner_id and 'of ' "
 "+object.partner_id.name or '']]"
 msgstr ""
+"Recordatorio en iniciativa: [[object.id ]] [[object.partner_id and 'of ' "
+"+object.partner_id.name or '']]"
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -618,6 +658,13 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Pulse para añadir una nueva categoría.\n"
+"</p><p>\n"
+"Cree categorías específicas de llamadas telefónicas para definir mejor el "
+"tipo de llamadas registradas en el sistema.\n"
+"</p>\n"
+"        "
 
 #. module: crm
 #: help:crm.case.section,reply_to:0
@@ -741,7 +788,7 @@ msgstr "Convertir a oportunidad"
 #. module: crm
 #: model:ir.model,name:crm.model_sale_config_settings
 msgid "sale.config.settings"
-msgstr ""
+msgstr "sale.config.settings"
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -845,6 +892,16 @@ msgid ""
 "Thanks,\n"
 "            "
 msgstr ""
+"Hola [[object.user_id.name]], \n"
+"¿podría comprobar la siguiente iniciativa? Está abierta desde hace 5 días.\n"
+"\n"
+"Iniciativa: [[object.id ]]\n"
+"Descripción:\n"
+"\n"
+"    [[object.description]]\n"
+"\n"
+"Gracias,\n"
+"            "
 
 #. module: crm
 #: view:crm.case.stage:0
@@ -1023,6 +1080,8 @@ msgid ""
 "Allows you to track your customers/suppliers claims and grievances.\n"
 "                    This installs the module crm_claim."
 msgstr ""
+"Le permite rastrear las reclamaciones y quejas de sus clientes/proveedores.\n"
+"Esto instalará el módulo 'crm_claim'."
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead6
@@ -1152,7 +1211,7 @@ msgstr "﻿Ingreso estimado"
 #. module: crm
 #: view:crm.lead:0
 msgid "í"
-msgstr ""
+msgstr "í"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:867
@@ -1189,7 +1248,7 @@ msgstr ""
 #. module: crm
 #: view:crm.lead:0
 msgid "oe_kanban_text_red"
-msgstr ""
+msgstr "oe_kanban_text_red"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_crm_payment_mode_act
@@ -1346,6 +1405,10 @@ msgid ""
 "set to 'Done'. If the case needs to be reviewed then the Status is  set to "
 "'Pending'."
 msgstr ""
+"El estado se establece a 'Borrador', cuando un caso es creado. Si el caso "
+"está en progreso el estado se establece 'Abierto'. Cuando el caso finaliza, "
+"el estado se establece a 'Realizado'. Si el caso necesita ser revisado "
+"entonces el estado se establece a 'Pendiente'."
 
 #. module: crm
 #: model:crm.case.section,name:crm.crm_case_section_1
@@ -2013,6 +2076,17 @@ msgid ""
 "            </p>\n"
 "          "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Pulse para crear una nueva oportunidad.\n"
+"</p><p>\n"
+"OpenERP le ayuda a seguir el flujo de ventas para mantener las ventas "
+"potenciales y prever mejor futuros ingresos.\n"
+"</p><p>\n"
+"Será capaz de planificar reuniones y llamadas telefónicas desde las "
+"oportunidades, convertirlas en ofertas, adjuntar documentos relacionados, "
+"seguir todas las discusiones, y mucho más.\n"
+"</p>\n"
+"          "
 
 #. module: crm
 #: view:crm.phonecall.report:0
@@ -2099,6 +2173,18 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Pulse para crear una iniciativa sin calificar.\n"
+"</p><p>\n"
+"Use las iniciativas si necesita un paso de calificación antes de crear la "
+"oportunidad o el cliente. Puede ser una tarjeta de visita que ha recibido, "
+"un formulario de contacto rellenado en su web, un archivo de prospectos sin "
+"calificar que ha importado, etc.\n"
+"</p><p>\n"
+"Una vez calificada, la iniciativa puede ser convertida en una oportunidad "
+"y/o un nuevo cliente en su libreta de direcciones.\n"
+"</p>\n"
+"        "
 
 #. module: crm
 #: field:crm.lead,email_cc:0
@@ -2358,6 +2444,16 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Pulse para planificar una llamada.\n"
+"</p><p>\n"
+"OpenERP le permite definir fácilmente las llamadas a ser realizadas por su "
+"equipo de ventas y seguirlas basadas en su resumen.\n"
+"</p><p>  \n"
+"Puede usar la característica de importación para importar masivamente una "
+"nueva lista de prospectos a calificar.\n"
+"</p>\n"
+"        "
 
 #. module: crm
 #: help:crm.case.stage,fold:0
@@ -2382,7 +2478,7 @@ msgstr "Equipo de ventas al cual pertence el caso"
 #. module: crm
 #: model:crm.case.resource.type,name:crm.type_lead6
 msgid "Banner Ads"
-msgstr ""
+msgstr "Anuncios"
 
 #. module: crm
 #: field:crm.merge.opportunity,opportunity_ids:0
@@ -2448,6 +2544,16 @@ msgid ""
 "Thanks,\n"
 "            "
 msgstr ""
+"Hola [[object.partner_id and object.partner_id.name or '']], \n"
+"la siguiente iniciativa no ha sido abierta desde hace 5 días.\n"
+"\n"
+"Iniciativa: [[object.id ]]\n"
+"Descripción:\n"
+"\n"
+"    [[object.description]]\n"
+"\n"
+"Gracias,\n"
+"            "
 
 #. module: crm
 #: view:crm.phonecall2opportunity:0
@@ -2640,6 +2746,17 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Pulse para registrar el resumen de una llamada telefónica.\n"
+"</p><p>\n"
+"OpenERP le permite registrar las llamadas entrantes sobre la marcha para "
+"mantener el histórico de comunicación con un cliente o informar a otro "
+"miembro del equipo.\n"
+"</p><p>\n"
+"Para seguir una llamada, puede lanzar una petición para otra llamada, una "
+"reunión o una oportunidad.\n"
+"</p>\n"
+"        "
 
 #. module: crm
 #: model:process.node,note:crm.process_node_leads0
@@ -2685,6 +2802,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Pulse para definir una nueva etiqueta de ventas.\n"
+"</p><p>\n"
+"Cree etiquetas específicas que se ajusten a las actividades de su compañía "
+"para clasificar y analizar mejor sus iniciativas y oportunidades. Dichas "
+"categorías pueden reflejar por ejemplo su estructura de productos o los "
+"diferentes tipos de ventas que hace.\n"
+"</p>\n"
+"            "
 
 #. module: crm
 #: code:addons/crm/wizard/crm_lead_to_partner.py:48
@@ -2972,6 +3098,7 @@ msgstr "Reglas de acciones"
 #: help:sale.config.settings,group_fund_raising:0
 msgid "Allows you to trace and manage your activities for fund raising."
 msgstr ""
+"Permitir rastrear y administrar sus actividades para recaudación de fondos."
 
 #. module: crm
 #: field:crm.meeting,phonecall_id:0
@@ -2983,6 +3110,8 @@ msgstr "Llamada telefónica"
 #: view:crm.phonecall.report:0
 msgid "Phone calls that are assigned to one of the sale teams I manage"
 msgstr ""
+"Las llamadas de teléfono están asignadas a uno de los equipos que yo "
+"gestiono."
 
 #. module: crm
 #: view:crm.lead:0
@@ -3060,6 +3189,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Pulse para definir un nuevo canal.\n"
+"</p><p>\n"
+"Use los canales para administrar las fuentes de sus iniciativas y "
+"oportunidades. Los canales se usan sobre todo en los informes para analizar "
+"el rendimiento de ventas en relación con los esfuerzos de marketing.\n"
+"</p><p>\n"
+"Algunos ejemplos de canales: web de la compañía, campaña de llamadas "
+"telefónicas, distribuidor, etc.\n"
+"</p>\n"
+"            "
 
 #. module: crm
 #: view:crm.lead:0
@@ -3135,6 +3275,8 @@ msgstr "Perdido"
 #, python-format
 msgid "Closed/Cancelled leads cannot be converted into opportunities."
 msgstr ""
+"Las iniciativas Cerradas/canceladas no pueden ser convertidas en "
+"oportunidades."
 
 #. module: crm
 #: field:crm.lead,country_id:0
@@ -3185,6 +3327,8 @@ msgid ""
 "Meeting linked to the opportunity <em>%s</em> has been <b>created</b> and "
 "<b>scheduled</b> on <em>%s</em>."
 msgstr ""
+"La reunión relacionada con la oportunidad <em>%s</em> ha sido <b>creada</b> "
+"y <b>planificada</b> en <em>%s</em>."
 
 #. module: crm
 #: view:crm.lead:0
@@ -3236,6 +3380,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Pulse para establecer una nueva etapa en su flujo iniciativa/oportunidad.\n"
+"</p><p>\n"
+"Las etapas permiten ver fácilmente a los comerciales cómo una iniciativa u "
+"oportunidad están posicionadas en el ciclo de ventas.\n"
+"</p>\n"
+"            "
 
 #, python-format
 #~ msgid ""

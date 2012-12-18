@@ -534,7 +534,7 @@ class product_category(osv.osv):
     _columns = {
         'property_stock_journal': fields.property('account.journal',
             relation='account.journal', type='many2one',
-            string='Stock journal', view_load=True,
+            string='Stock Journal', view_load=True,
             help="When doing real-time inventory valuation, this is the Accounting Journal in which entries will be automatically posted when stock moves are processed."),
         'property_stock_account_input_categ': fields.property('account.account',
             type='many2one', relation='account.account',
