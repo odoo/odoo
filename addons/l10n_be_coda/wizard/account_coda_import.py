@@ -91,23 +91,17 @@ class account_coda_import(osv.osv_memory):
                         raise osv.except_osv(_('Error') + ' R1003', _('Unsupported bank account structure '))
                 statement['journal_id'] = False
                 statement['bank_account'] = False
-                """
-                Belgian Account Numbers are composed of 12 digits.
-                In OpenERP, the user can fill the bank number in any format: With or without IBan code, with or without spaces, with or without '-'
-                The two following sql requests handle those cases.
-                """
+                # Belgian Account Numbers are composed of 12 digits.
+                # In OpenERP, the user can fill the bank number in any format: With or without IBan code, with or without spaces, with or without '-'
+                # The two following sql requests handle those cases.
                 if len(statement['acc_number']) >= 12:
-                    """
-                    If the Account Number is >= 12 digits, it is mostlikely a Belgian Account Number (With or without IBAN).
-                    The following request try to find the Account Number using a 'like' operator.
-                    So, if the Account Number is stored with IBAN code, it can be found thanks to this.
-                    """
+                    # If the Account Number is >= 12 digits, it is mostlikely a Belgian Account Number (With or without IBAN).
+                    # The following request try to find the Account Number using a 'like' operator.
+                    # So, if the Account Number is stored with IBAN code, it can be found thanks to this.
                     cr.execute("select id from res_partner_bank where replace(replace(acc_number,' ',''),'-','') like %s", ('%' + statement['acc_number'] + '%',))
                 else:
-                    """
-                    This case is necessary to avoid cases like the Account Number in the CODA file is set to a single or few digits,
-                    and so a 'like' operator would return the first account number in the database which matches.
-                    """
+                    # This case is necessary to avoid cases like the Account Number in the CODA file is set to a single or few digits,
+                    # and so a 'like' operator would return the first account number in the database which matches.
                     cr.execute("select id from res_partner_bank where replace(replace(acc_number,' ',''),'-','') = %s", (statement['acc_number'],))
                 bank_ids = [id[0] for id in cr.fetchall()]
                 if bank_ids and len(bank_ids) > 0:
