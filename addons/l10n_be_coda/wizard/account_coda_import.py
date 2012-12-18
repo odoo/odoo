@@ -91,18 +91,21 @@ class account_coda_import(osv.osv_memory):
                         raise osv.except_osv(_('Error') + ' R1003', _('Unsupported bank account structure '))
                 statement['journal_id'] = False
                 statement['bank_account'] = False
-                bank_ids = self.pool.get('res.partner.bank').search(cr, uid, [('acc_number', '=', statement['acc_number'])])
+                if len(statement['acc_number']) >= 12:
+                    cr.execute("select id from res_partner_bank where replace(acc_number,' ','') like '%" + statement['acc_number'] + "%'")
+                else:
+                    cr.execute("select id from res_partner_bank where replace(acc_number,' ','') = '" + statement['acc_number'] + "'")
+                bank_ids = [id[0] for id in cr.fetchall()]
+                print bank_ids
                 if bank_ids and len(bank_ids) > 0:
                     bank_accs = self.pool.get('res.partner.bank').browse(cr, uid, bank_ids)
                     for bank_acc in bank_accs:
-                        if not ((bank_acc.journal_id.currency and bank_acc.journal_id.currency.name != statement['currency']) and (not bank_acc.journal_id.currency and bank_acc.journal_id.company_id.currency_id.name != statement['currency'])):
+                        if not (bank_acc.journal_id and (bank_acc.journal_id.currency and bank_acc.journal_id.currency.name != statement['currency']) and (not bank_acc.journal_id.currency and bank_acc.journal_id.company_id.currency_id.name != statement['currency'])):
                             statement['journal_id'] = bank_acc.journal_id
                             statement['bank_account'] = bank_acc
                             break
                 if statement['bank_account'] == False:
-                    raise osv.except_osv(_('Error') + ' R1004', _("No matching Bank Account.\n\nPlease set-up a Bank Account with as Account Number '%s' and as Currency '%s'.") % (statement['acc_number'], statement['currency']))
-                elif statement['journal_id'] == False:
-                    raise osv.except_osv(_('Error') + ' R1005', _("Your bank account '%s' has been found, but no Account Journal is set for it.\n\nPlease set it.") % (statement['acc_number']))
+                    raise osv.except_osv(_('Error') + ' R1004', _("No matching Bank Account (with Account Journal) found.\n\nPlease set-up a Bank Account with as Account Number '%s' and as Currency '%s' and an Account Journal.") % (statement['acc_number'], statement['currency']))
                 statement['description'] = rmspaces(line[90:125])
                 statement['balance_start'] = float(rmspaces(line[43:58])) / 1000
                 statement['balance_start_date'] = time.strftime(tools.DEFAULT_SERVER_DATE_FORMAT, time.strptime(rmspaces(line[58:64]), '%d%m%y'))
