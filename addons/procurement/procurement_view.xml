@@ -19,7 +19,6 @@
                     <field name="procure_method"/>
                     <field name="state"/>
                     <field name="message"/>
-                    <field name="name" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -52,12 +51,18 @@
                         <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed" />
                     </header>
                     <sheet>
-                    <label for="name" class="oe_edit_only"/>
                     <h1>
-                        <field name="name" class="oe_inline"/>
-                        <label string="-" attrs="{'invisible':[('origin','=',False)]}"/>
-                        <field name="origin" class="oe_inline" placeholder="e.g. SO005"/>
+                        <label for="product_id" class="oe_edit_only"/>
+                        <field name="product_id" on_change="onchange_product_id(product_id)"/>
                     </h1>
+                    <h2>
+                        <label for="product_qty" class="oe_edit_only"/>
+                        <div>
+                            <field name="product_qty" class="oe_inline"/>
+                            <field name="product_uom" class="oe_inline" groups="product.group_uom"/>
+                        </div>
+                    </h2>
+                    <field name="name" placeholder="External note..."/>
                     <group>
                         <group>
                             <field name="date_planned"/>
@@ -65,8 +70,9 @@
                             <field name="priority"/>
                         </group>
                         <group>
-                            <field name="message"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                            <field name="origin" class="oe_inline" placeholder="e.g. SO005"/>
+                            <field name="message"/>
                         </group>
                     </group>
                     <notebook>
@@ -98,7 +104,7 @@
                         </group>
                     </page>
                     <page string="Notes">
-                        <field name="note"/>
+                        <field name="note" placeholder="Internal note..."/>
                     </page>
                     </notebook>
                     </sheet>
