@@ -473,6 +473,7 @@ class mrp_production(osv.osv):
             [('draft', 'New'), ('cancel', 'Cancelled'), ('picking_except', 'Picking Exception'), ('confirmed', 'Awaiting Raw Materials'),
                 ('ready', 'Ready to Produce'), ('in_production', 'Production Started'), ('done', 'Done')],
             string='Status', readonly=True,
+            track_visibility=1,
             help="When the production order is created the status is set to 'Draft'.\n\
                 If the order is confirmed the status is set to 'Waiting Goods'.\n\
                 If any exceptions are there, the status is set to 'Picking Exception'.\n\
@@ -509,11 +510,6 @@ class mrp_production(osv.osv):
     _constraints = [
         (_check_qty, 'Order quantity cannot be negative or zero!', ['product_qty']),
     ]
-
-    def create(self, cr, uid, vals, context=None):
-        obj_id = super(mrp_production, self).create(cr, uid, vals, context=context)
-        self.create_send_note(cr, uid, [obj_id], context=context)
-        return obj_id
 
     def unlink(self, cr, uid, ids, context=None):
         for production in self.browse(cr, uid, ids, context=context):
@@ -651,7 +647,6 @@ class mrp_production(osv.osv):
                 move_obj.action_cancel(cr, uid, [x.id for x in production.move_created_ids])
             move_obj.action_cancel(cr, uid, [x.id for x in production.move_lines])
         self.write(cr, uid, ids, {'state': 'cancel'})
-        self.action_cancel_send_note(cr, uid, ids, context)
         return True
 
     def action_ready(self, cr, uid, ids, context=None):
@@ -666,7 +661,6 @@ class mrp_production(osv.osv):
             if production.move_prod_id and production.move_prod_id.location_id.id != production.location_dest_id.id:
                 move_obj.write(cr, uid, [production.move_prod_id.id],
                         {'location_id': production.location_dest_id.id})
-            self.action_ready_send_note(cr, uid, [production_id], context)
         return True
 
     def action_production_end(self, cr, uid, ids, context=None):
@@ -676,7 +670,6 @@ class mrp_production(osv.osv):
         for production in self.browse(cr, uid, ids):
             self._costs_generate(cr, uid, production)
         write_res = self.write(cr, uid, ids, {'state': 'done', 'date_finished': time.strftime('%Y-%m-%d %H:%M:%S')})
-        self.action_done_send_note(cr, uid, ids, context)
         return write_res
 
     def test_production_done(self, cr, uid, ids):
@@ -1019,7 +1012,6 @@ class mrp_production(osv.osv):
 
             wf_service.trg_validate(uid, 'stock.picking', shipment_id, 'button_confirm', cr)
             production.write({'state':'confirmed'}, context=context)
-            self.action_confirm_send_note(cr, uid, [production.id], context);
         return shipment_id
 
     def force_production(self, cr, uid, ids, *args):
@@ -1034,30 +1026,6 @@ class mrp_production(osv.osv):
     # ---------------------------------------------------
     # OpenChatter methods and notifications
     # ---------------------------------------------------
-
-    def create_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Manufacturing order has been <b>created</b>."), context=context)
-        return True
-
-    def action_cancel_send_note(self, cr, uid, ids, context=None):
-        message = _("Manufacturing order has been <b>canceled</b>.")
-        self.message_post(cr, uid, ids, body=message, context=context)
-        return True
-
-    def action_ready_send_note(self, cr, uid, ids, context=None):
-        message = _("Manufacturing order is <b>ready to produce</b>.")
-        self.message_post(cr, uid, ids, body=message, context=context)
-        return True
-
-    def action_in_production_send_note(self, cr, uid, ids, context=None):
-        message = _("Manufacturing order is <b>in production</b>.")
-        self.message_post(cr, uid, ids, body=message, context=context)
-        return True
-
-    def action_done_send_note(self, cr, uid, ids, context=None):
-        message = _("Manufacturing order has been <b>done</b>.")
-        self.message_post(cr, uid, ids, body=message, context=context)
-        return True
 
     def action_confirm_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
