@@ -64,6 +64,14 @@ class hr_expense_expense(osv.osv):
     _inherit = ['mail.thread']
     _description = "Expense"
     _order = "id desc"
+    _track = {
+        'state': {
+            'hr_expense.mt_expense_approved': lambda self, cr, uid, obj, ctx=None: obj.state == 'accepted',
+            'hr_expense.mt_expense_refused': lambda self, cr, uid, obj, ctx=None: obj.state == 'cancelled',
+            'hr_expense.mt_expense_confirmed': lambda self, cr, uid, obj, ctx=None: obj.state == 'confirm',
+        },
+    }
+
     _columns = {
         'name': fields.char('Description', size=128, required=True, readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'id': fields.integer('Sheet ID', readonly=True),
@@ -89,7 +97,8 @@ class hr_expense_expense(osv.osv):
             ('accepted', 'Approved'),
             ('done', 'Done'),
             ],
-            'Status', readonly=True, help='When the expense request is created the status is \'Draft\'.\n It is confirmed by the user and request is sent to admin, the status is \'Waiting Confirmation\'.\
+            'Status', readonly=True, track_visibility=1,
+            help='When the expense request is created the status is \'Draft\'.\n It is confirmed by the user and request is sent to admin, the status is \'Waiting Confirmation\'.\
             \nIf the admin accepts it, the status is \'Accepted\'.\n If a receipt is made for the expense request, the status is \'Done\'.'),
     }
     _defaults = {
@@ -124,33 +133,17 @@ class hr_expense_expense(osv.osv):
             company_id = employee.company_id.id
         return {'value': {'department_id': department_id, 'company_id': company_id}}
 
-    def expense_confirm(self, cr, uid, ids, *args):
+    def expense_confirm(self, cr, uid, ids, context=None):
         for expense in self.browse(cr, uid, ids):
             if expense.employee_id and expense.employee_id.parent_id.user_id:
                 self.message_subscribe_users(cr, uid, [expense.id], user_ids=[expense.employee_id.parent_id.user_id.id])
-        self.message_post(cr, uid, ids, body=_("The request is <b>waiting for Approval</b>"),
-                          subtype="hr_expense.mt_expense_approve")
-        self.write(cr, uid, ids, {
-            'state':'confirm',
-            'date_confirm': time.strftime('%Y-%m-%d')
-        })
-        return True
+        return self.write(cr, uid, ids, {'state': 'confirm', 'date_confirm': time.strftime('%Y-%m-%d')}, context=context)
 
-    def expense_accept(self, cr, uid, ids, *args):
-        self.message_post(cr, uid, ids, body=_("The request has been <b>approved</b>"),
-                          subtype="hr_expense.mt_expense_approved")
-        self.write(cr, uid, ids, {
-            'state':'accepted',
-            'date_valid':time.strftime('%Y-%m-%d'),
-            'user_valid': uid,
-            })
-        return True
+    def expense_accept(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state': 'accepted', 'date_valid': time.strftime('%Y-%m-%d'), 'user_valid': uid}, context=context)
 
-    def expense_canceled(self, cr, uid, ids, *args):
-        self.message_post(cr, uid, ids, body=_("Request <b>refused</b>"), 
-                          subtype="hr_expense.mt_expense_refused")
-        self.write(cr, uid, ids, {'state':'cancelled'})
-        return True
+    def expense_canceled(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state': 'cancelled'}, context=context)
 
     def action_receipt_create(self, cr, uid, ids, context=None):
         property_obj = self.pool.get('ir.property')
