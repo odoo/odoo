@@ -19,12 +19,13 @@
 #
 ##############################################################################
 
-import tools
 import base64
 import cStringIO
-from osv import fields,osv
-from tools.translate import _
-from tools.misc import get_iso_codes
+
+from openerp import tools
+from openerp.osv import fields,osv
+from openerp.tools.translate import _
+from openerp.tools.misc import get_iso_codes
 
 NEW_LANG_KEY = '__new__'
 

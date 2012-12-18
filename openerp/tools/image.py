@@ -23,7 +23,7 @@ import io
 import StringIO
 
 from PIL import Image
-from PIL import ImageEnhance, ImageOps
+from PIL import ImageOps
 from random import random
 
 # ----------------------------------------

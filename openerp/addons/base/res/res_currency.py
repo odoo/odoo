@@ -18,14 +18,14 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import re
 import time
-import netsvc
-from osv import fields, osv
-import tools
 
-from tools import float_round, float_is_zero, float_compare
-from tools.translate import _
+from openerp import tools
+from openerp.osv import fields, osv
+from openerp.tools import float_round, float_is_zero, float_compare
+from openerp.tools.translate import _
 
 CURRENCY_DISPLAY_PATTERN = re.compile(r'(\w+)\s*(?:\((.*)\))?')
 

@@ -19,13 +19,12 @@
 #
 ##############################################################################
 import logging
-from operator import attrgetter, itemgetter
+from operator import attrgetter
 
-from osv import osv, fields
-from tools.translate import _
-import netsvc
-from tools import ustr
-import pooler
+from openerp import pooler
+from openerp.osv import osv, fields
+from openerp.tools import ustr
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 

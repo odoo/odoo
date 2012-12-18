@@ -19,8 +19,6 @@
 #
 ##############################################################################
 
-import tools
-
 import res_country
 import res_lang
 import res_partner
