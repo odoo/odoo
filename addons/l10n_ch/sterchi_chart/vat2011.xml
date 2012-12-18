@@ -189,7 +189,7 @@
             <field name="account_collected_id" ref="ch_1171"/>
             <field name="account_paid_id" ref="ch_1171"/>
         </record>
-        
+
         <record model="account.tax.template" id="vat_38">
             <field name="name">TVA due a 3.8% (TS)</field>
             <field name="amount" eval="0.038"/>
@@ -250,6 +250,7 @@
         <record model="account.tax.template" id="vat_80">
             <field name="name">TVA due a 8.0% (TN)</field>
             <field name="amount" eval="0.080"/>
+            <field name="sequence" eval="0"/>
             <field name="type">percent</field>
             <field name="base_code_id" ref="vat_code_due_80"/>
             <field name="tax_code_id" ref="vat_code_due_tva80"/>
@@ -270,6 +271,7 @@
             <field name="name">TVA 8.0% sur achat B&amp;S (TN)</field>
             <field name="amount" eval="0.080"/>
             <field name="type">percent</field>
+            <field name="sequence" eval="0"/>
             <field name="base_code_id" ref="vat_code_receivable_base_80"/>
             <field name="tax_code_id" ref="vat_code_payable_bs"/>
             <field name="ref_base_code_id" ref="vat_code_receivable_base_80"/>
@@ -366,6 +368,6 @@
             <field name="type_tax_use">purchase</field>
             <field name="account_collected_id" ref="ch_1171"/>
             <field name="account_paid_id" ref="ch_1171"/>
-        </record>        
+        </record>
     </data>
 </openerp>
