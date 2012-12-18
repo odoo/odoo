@@ -611,7 +611,7 @@ class purchase_order(osv.osv):
 
     def _prepare_order_line_move(self, cr, uid, order, order_line, picking_id, context=None):
         return {
-            'name': order.name + ': ' + (order_line.name or ''),
+            'name': order_line.name or '',
             'product_id': order_line.product_id.id,
             'product_qty': order_line.product_qty,
             'product_uos_qty': order_line.product_qty,

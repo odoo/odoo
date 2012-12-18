@@ -266,7 +266,7 @@ class sale_order(osv.osv):
 
     def _prepare_order_line_procurement(self, cr, uid, order, line, move_id, date_planned, context=None):
         return {
-            'name': line.name.split('\n')[0],
+            'name': line.name,
             'origin': order.name,
             'date_planned': date_planned,
             'product_id': line.product_id.id,
@@ -280,14 +280,14 @@ class sale_order(osv.osv):
             'procure_method': line.type,
             'move_id': move_id,
             'company_id': order.company_id.id,
-            'note': '\n'.join(line.name.split('\n')[1:])
+            'note': line.name,
         }
 
     def _prepare_order_line_move(self, cr, uid, order, line, picking_id, date_planned, context=None):
         location_id = order.shop_id.warehouse_id.lot_stock_id.id
         output_id = order.shop_id.warehouse_id.lot_output_id.id
         return {
-            'name': line.name.split('\n')[0][:250],
+            'name': line.name,
             'picking_id': picking_id,
             'product_id': line.product_id.id,
             'date': date_planned,
@@ -305,7 +305,6 @@ class sale_order(osv.osv):
             'tracking_id': False,
             'state': 'draft',
             #'state': 'waiting',
-            'note': '\n'.join(line.name.split('\n')[1:]),
             'company_id': order.company_id.id,
             'price_unit': line.product_id.standard_price or 0.0
         }

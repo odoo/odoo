@@ -20,7 +20,7 @@
         mail.compose_message when focus on textarea
         -->
     <t t-name="mail.compose_message">
-        <div t-if="widget.show_composer" t-attf-class="oe_msg oe_msg_composer #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''}">
+        <div t-if="widget.show_composer and !widget.options.readonly" t-attf-class="oe_msg oe_msg_composer #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''}">
             <div class="oe_msg_left">
                 <img class="oe_msg_icon" alt="User img" t-attf-src="#{widget.avatar}"/>
             </div>
@@ -38,7 +38,7 @@
                 </div>
             </div>
         </div>
-        <div t-if="widget.show_compact_message and !widget.show_composer" t-attf-class="oe_msg oe_msg_composer_compact #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''}">
+        <div t-if="widget.show_compact_message and !widget.show_composer and !widget.options.readonly" t-attf-class="oe_msg oe_msg_composer_compact #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''}">
             <textarea t-if="widget.options.compose_placeholder" class="field_text oe_compact" t-att-placeholder="widget.options.compose_placeholder"/>
             <textarea t-if="!widget.options.compose_placeholder and !widget.options.view_mailbox" class="field_text oe_compact" placeholder="Write to the followers of this document..."/>
             <textarea t-if="!widget.options.compose_placeholder and widget.options.view_mailbox" class="field_text oe_compact" placeholder="Share with my followers..."/>
@@ -211,7 +211,7 @@
             </div>
 
             <div class="oe_msg_center">
-                <div class='oe_msg_icons'>
+                <div class='oe_msg_icons' t-if="!widget.options.readonly">
                     <span class='oe_read' t-if="widget.options.show_read"><a title="Done" class="oe_e">W</a></span>
                     <span class='oe_unread' t-if="widget.is_favorite and widget.options.show_unread"><a title="Set back to Todo" class="oe_e">v</a></span>
                     <span class='oe_unread' t-if="!widget.is_favorite and widget.options.show_unread"><a title="Set back to Inbox" class="oe_e">v</a></span>
@@ -236,8 +236,8 @@
                     <span t-if="widget.author_id and !widget.options.show_link"><t t-raw="widget.author_id[1]"/></span>
                     <span class='oe_subtle'>•</span>
                     <span t-att-title="widget.date"><t t-raw="widget.timerelative"/></span>
-                    <span class='oe_subtle'>•</span>
-                    <t t-call="mail.thread.message.vote"/>
+                    <span t-if="!widget.options.readonly" class='oe_subtle'>•</span>
+                    <t t-if="!widget.options.readonly" t-call="mail.thread.message.vote"/>
                 </div>
             </div>
         </div>
