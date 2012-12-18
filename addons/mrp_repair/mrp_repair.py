@@ -335,7 +335,6 @@ class mrp_repair(osv.osv):
                     if line.product_id.track_production and not line.prodlot_id:
                         raise osv.except_osv(_('Warning!'), _("Serial number is required for operation line with product '%s'") % (line.product_id.name))
                 mrp_line_obj.write(cr, uid, [l.id for l in o.operations], {'state': 'confirmed'})
-        self.set_confirm_send_note(cr, uid, ids)
         return True
 
     def action_cancel(self, cr, uid, ids, context=None):
@@ -348,14 +347,10 @@ class mrp_repair(osv.osv):
                 mrp_line_obj.write(cr, uid, [l.id for l in repair.operations], {'state': 'cancel'}, context=context)
             else:
                 raise osv.except_osv(_('Warning!'),_('Repair order is already invoiced.'))
-        self.write(cr,uid,ids,{'state':'cancel'})
-        self.set_cancel_send_note(cr, uid, ids, context)
-        return True
+        return self.write(cr,uid,ids,{'state':'cancel'})
 
     def wkf_invoice_create(self, cr, uid, ids, *args):
-        self.action_invoice_create(cr, uid, ids)
-        self.set_toinvoiced_send_note(cr, uid, ids)
-        return True
+        return self.action_invoice_create(cr, uid, ids)
 
     def action_invoice_create(self, cr, uid, ids, group=False, context=None):
         """ Creates invoice(s) for repair order.
@@ -470,7 +465,6 @@ class mrp_repair(osv.osv):
             self.pool.get('mrp.repair.line').write(cr, uid, [l.id for
                     l in repair.operations], {'state': 'confirmed'}, context=context)
             self.write(cr, uid, [repair.id], {'state': 'ready'})
-        self.set_ready_send_note(cr, uid, ids, context)
         return True
 
     def action_repair_start(self, cr, uid, ids, context=None):
@@ -482,7 +476,6 @@ class mrp_repair(osv.osv):
             repair_line.write(cr, uid, [l.id for
                     l in repair.operations], {'state': 'confirmed'}, context=context)
             repair.write({'state': 'under_repair'})
-        self.set_start_send_note(cr, uid, ids, context)
         return True
 
     def action_repair_end(self, cr, uid, ids, context=None):
@@ -560,7 +553,6 @@ class mrp_repair(osv.osv):
                 res[repair.id] = picking
             else:
                 self.write(cr, uid, [repair.id], {'state': 'done'})
-            self.set_done_send_note(cr, uid, [repair.id], context)
         return res
 
 
