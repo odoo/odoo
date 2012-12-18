@@ -75,9 +75,9 @@ class crm_lead(base_stage, format_address, osv.osv):
 
     _track = {
         'stage_id': {
-            'crm.mt_crm_won': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.state == 'done' and obj.probability == 100.0,
-            'crm.mt_crm_lost': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.state == 'cancel' and obj.probability == 0.0,
-            'crm.mt_crm_stage': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.state not in ['cancel', 'done'],
+            'crm.mt_lead_won': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.state == 'done' and obj.probability == 100.0,
+            'crm.mt_lead_lost': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.state == 'cancel' and obj.probability == 0.0,
+            'crm.mt_lead_stage': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.state not in ['cancel', 'done'],
         },
     }
 
@@ -705,7 +705,7 @@ class crm_lead(base_stage, format_address, osv.osv):
                 continue
             vals = self._convert_opportunity_data(cr, uid, lead, customer, section_id, context=context)
             self.write(cr, uid, [lead.id], vals, context=context)
-            self.convert_opportunity_send_note(cr, uid, lead, context=context)
+        self.message_post(cr, uid, ids, body=_("Lead has been <b>converted to an opportunity</b>."), subtype="crm.mt_lead_convert_to_opportunity", context=context)
 
         if user_ids or section_id:
             self.allocate_salesman(cr, uid, ids, user_ids, section_id, context=context)
@@ -764,7 +764,8 @@ class crm_lead(base_stage, format_address, osv.osv):
             res_partner.write(cr, uid, partner_id, {'section_id': lead.section_id.id or False})
             contact_id = res_partner.address_get(cr, uid, [partner_id])['default']
             res = lead.write({'partner_id': partner_id}, context=context)
-            self._lead_set_partner_send_note(cr, uid, [lead.id], context)
+            message = _("%s <b>partner</b> is now set to <em>%s</em>." % ('Opportunity' if lead.type == 'opportunity' else 'Lead', lead.partner_id.name))
+            self.message_post(cr, uid, [lead.id], body=message, context=context)
         return res
 
     def handle_partner_assignation(self, cr, uid, ids, action='create', partner_id=False, context=None):
@@ -986,17 +987,6 @@ class crm_lead(base_stage, format_address, osv.osv):
         else: prefix = 'Scheduled'
         message = _("<b>%s a call</b> for the <em>%s</em>.") % (prefix, phonecall.date)
         return self.message_post(cr, uid, ids, body=message, context=context)
-
-    def _lead_set_partner_send_note(self, cr, uid, ids, context=None):
-        for lead in self.browse(cr, uid, ids, context=context):
-            message = _("%s <b>partner</b> is now set to <em>%s</em>." % ('Opportunity' if lead.type == 'opportunity' else 'Lead', lead.partner_id.name))
-            lead.message_post(body=message)
-        return True
-
-    def convert_opportunity_send_note(self, cr, uid, lead, context=None):
-        message = _("Lead has been <b>converted to an opportunity</b>.")
-        lead.message_post(body=message, subtype="crm.mt_lead_convert_to_opportunity")
-        return True
 
     def onchange_state(self, cr, uid, ids, state_id, context=None):
         if state_id:
