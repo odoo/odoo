@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-16 00:45+0000\n"
+"PO-Revision-Date: 2012-12-17 16:09+0000\n"
 "Last-Translator: Dusan Laznik <laznik@mentis.si>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-16 04:48+0000\n"
+"X-Launchpad-Export-Date: 2012-12-18 05:01+0000\n"
 "X-Generator: Launchpad (build 16372)\n"
 
 #. module: account
@@ -179,7 +179,7 @@ msgid ""
 "You have to set the 'End  of Year Entries Journal' for this Fiscal Year "
 "which is set after generating opening entries from 'Generate Opening "
 "Entries'."
-msgstr ""
+msgstr "Nastavite morate dnevnik za zaključek leta."
 
 #. module: account
 #: field:account.fiscal.position.account,account_src_id:0
@@ -323,6 +323,10 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Tu lahko kreirate dobropise kupcem\n"
+"              </p><p>\n"
+"            "
 
 #. module: account
 #: help:account.installer,charts:0
@@ -339,7 +343,7 @@ msgstr "Neusklajen konto"
 #. module: account
 #: field:account.config.settings,module_account_budget:0
 msgid "Budget management"
-msgstr ""
+msgstr "Upravljanje proračuna"
 
 #. module: account
 #: view:product.template:0
@@ -381,7 +385,7 @@ msgstr "Junij"
 #: code:addons/account/wizard/account_automatic_reconcile.py:148
 #, python-format
 msgid "You must select accounts to reconcile."
-msgstr ""
+msgstr "Izbrati morate konte za usklajevnaje"
 
 #. module: account
 #: help:account.config.settings,group_analytic_accounting:0
@@ -453,7 +457,7 @@ msgid ""
 "                This installs the module account_asset. If you do not check "
 "this box, you will be able to do invoicing & payments,\n"
 "                but not accounting (Journal Items, Chart of Accounts, ...)"
-msgstr ""
+msgstr "Vodenje osnovnih sredstev"
 
 #. module: account
 #. openerp-web
@@ -482,6 +486,8 @@ msgid ""
 "should choose 'Round per line' because you certainly want the sum of your "
 "tax-included line subtotals to be equal to the total amount with taxes."
 msgstr ""
+"Če imate davek vključen v prodajno ceno , morate izbrati zaokroževanje na "
+"vrstico."
 
 #. module: account
 #: model:ir.model,name:account.model_wizard_multi_charts_accounts
@@ -549,7 +555,7 @@ msgstr "Nadrejeni element"
 #. module: account
 #: help:account.invoice.line,sequence:0
 msgid "Gives the sequence of this line when displaying the invoice."
-msgstr ""
+msgstr "Prikaz zaporednih številk pozicij na računu."
 
 #. module: account
 #: field:account.bank.statement,account_id:0
@@ -709,7 +715,7 @@ msgstr "SAJ"
 #: code:addons/account/account.py:1546
 #, python-format
 msgid "Cannot create move with currency different from .."
-msgstr ""
+msgstr "Valuta se razlikuje od .."
 
 #. module: account
 #: model:email.template,report_name:account.email_template_edi_invoice
@@ -753,7 +759,7 @@ msgid ""
 "Set the analytic account that will be used by default on the invoice tax "
 "lines for refunds. Leave empty if you don't want to use an analytic account "
 "on the invoice tax lines by default."
-msgstr ""
+msgstr "Tu lahko nastavite privzeti konto za davek na dobropisih kupcem."
 
 #. module: account
 #: view:account.account:0
@@ -806,7 +812,7 @@ msgstr "Izpis računa"
 msgid ""
 "Cannot %s invoice which is already reconciled, invoice should be "
 "unreconciled first. You can only refund this invoice."
-msgstr ""
+msgstr "Ni možno  %s račun , ki je že zaprt."
 
 #. module: account
 #: selection:account.financial.report,display_detail:0
@@ -962,6 +968,10 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    Ni postavk.\n"
+"                </p>\n"
+"            "
 
 #. module: account
 #: code:addons/account/account.py:1632
@@ -971,6 +981,8 @@ msgid ""
 "                                                  opening/closing fiscal "
 "year process."
 msgstr ""
+"Ne morete odpreti postavk, ki so bile ustvarjene ob avtomatskem "
+"zaključevanju/odpiranju poslovnega leta."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_subscription_form_new
@@ -1015,7 +1027,7 @@ msgstr "Dnevnik nabav"
 msgid ""
 "You cannot validate this journal entry because account \"%s\" does not "
 "belong to chart of accounts \"%s\"."
-msgstr ""
+msgstr "Konto \"%s\" ne pripada kontnemu načrtu  \"%s\"."
 
 #. module: account
 #: view:validate.account.move:0
@@ -1033,7 +1045,7 @@ msgstr "Skupni znesek"
 #. module: account
 #: help:account.invoice,supplier_invoice_number:0
 msgid "The reference of this invoice as provided by the supplier."
-msgstr ""
+msgstr "Dobaviteljeva številka računa."
 
 #. module: account
 #: selection:account.account,type:0

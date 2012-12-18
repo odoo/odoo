@@ -20,13 +20,8 @@
 ##############################################################################
 import logging
 
-_logger = logging.getLogger(__name__)
-
+import webdav
+import webdav_server
 import document_webdav
-try:
-    import webdav
-    import webdav_server
-except ImportError:
-    _logger.info('document_webdav disabled please install PyWebDAV from http://code.google.com/p/pywebdav/downloads/detail?name=PyWebDAV-0.9.4.tar.gz&can=2&q=/')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

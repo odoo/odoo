@@ -28,18 +28,19 @@ import string
 import time
 from StringIO import StringIO
 
-import openerp
-import netsvc
-import pooler
 import psycopg2
-import tools
-import pooler
+
+import openerp
+from openerp import netsvc
+from openerp import pooler
+from openerp import tools
+from openerp.osv import fields, osv
+from openerp.osv.orm import except_orm
+from openerp.tools.misc import ustr
+from openerp.tools.translate import _
+from openerp.tools.safe_eval import safe_eval
+
 from content_index import cntIndex
-from osv import osv, fields
-from osv.orm import except_orm
-from tools.misc import ustr
-from tools.translate import _
-from tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 

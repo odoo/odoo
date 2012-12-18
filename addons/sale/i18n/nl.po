@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-15 10:48+0000\n"
-"Last-Translator: Leen Sonneveld <leen.sonneveld@opensol.nl>\n"
+"PO-Revision-Date: 2012-12-17 14:54+0000\n"
+"Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-16 04:48+0000\n"
+"X-Launchpad-Export-Date: 2012-12-18 05:01+0000\n"
 "X-Generator: Launchpad (build 16372)\n"
 
 #. module: sale
@@ -129,6 +129,7 @@ msgstr "# Aantal"
 #: help:sale.config.settings,group_discount_per_so_line:0
 msgid "Allows you to apply some discount per sale order line."
 msgstr ""
+"Geeft u de mogelijkheid om een korting in te geven per verkooporderregel."
 
 #. module: sale
 #: help:sale.config.settings,group_sale_pricelist:0
@@ -341,6 +342,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik om een offerte te maken welke kan worden omgezet in "
+"een\n"
+"                verkooporder.\n"
+"              </p><p>\n"
+"                OpenERP helpt u met het efficiënt beheersen van uw "
+"verkoopproces:\n"
+"                Offerte, Verkooporder, Levering, Facturering en betaling\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -439,6 +450,8 @@ msgstr ""
 #, python-format
 msgid "You cannot cancel a sale order line that has already been invoiced."
 msgstr ""
+"Het is niet mogelijk een verkooporderregel te annuleren welke al is "
+"gefactureerd."
 
 #. module: sale
 #: report:sale.order:0
@@ -481,7 +494,7 @@ msgstr "Contract / Kostenplaats"
 #. module: sale
 #: model:res.groups,name:sale.group_invoice_so_lines
 msgid "Enable Invoicing Sale order lines"
-msgstr ""
+msgstr "Activeren van facturering van verkooporderregels"
 
 #. module: sale
 #: view:sale.report:0
@@ -513,7 +526,7 @@ msgstr "Gefactureerd"
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
 msgid "Analytic Accounting for Sales"
-msgstr ""
+msgstr "Kostenplaatsen voor verkoop"
 
 #. module: sale
 #: field:sale.order,date_confirm:0
@@ -538,7 +551,7 @@ msgstr "Maart"
 #. module: sale
 #: model:ir.actions.server,name:sale.actions_server_sale_order_read
 msgid "Sale: Mark read"
-msgstr ""
+msgstr "Verkoop: Markeer als gelezen"
 
 #. module: sale
 #: help:sale.order,amount_total:0
@@ -573,7 +586,7 @@ msgstr "Maateenheid "
 #. module: sale
 #: field:sale.config.settings,time_unit:0
 msgid "The default working time unit for services is"
-msgstr ""
+msgstr "De standaard werktijd maateenheid voor diensten is"
 
 #. module: sale
 #: field:sale.order,partner_invoice_id:0
@@ -633,7 +646,7 @@ msgstr "Orderregels"
 #. module: sale
 #: field:account.config.settings,module_sale_analytic_plans:0
 msgid "Use multiple analytic accounts on sales"
-msgstr ""
+msgstr "Gebruik meerdere kostenplaatsen bij verkoop"
 
 #. module: sale
 #: help:sale.config.settings,module_sale_journal:0
@@ -972,6 +985,7 @@ msgstr "Afleveradres :"
 #: help:account.config.settings,group_analytic_account_for_sales:0
 msgid "Allows you to specify an analytic account on sale orders."
 msgstr ""
+"Geeft u de mogelijkheid om een kostenplaats te definieren per verkooporder"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_quotation0
@@ -1005,7 +1019,7 @@ msgstr ""
 #. module: sale
 #: model:res.groups,name:sale.group_mrp_properties
 msgid "Properties on lines"
-msgstr ""
+msgstr "Eigenschappen op regels"
 
 #. module: sale
 #: code:addons/sale/sale.py:888
@@ -1527,7 +1541,7 @@ msgstr "Handmatig in behandeling"
 #. module: sale
 #: model:ir.actions.server,name:sale.actions_server_sale_order_unread
 msgid "Sale: Mark unread"
-msgstr ""
+msgstr "Verkoop: Markeer ongelezen"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1769,7 +1783,7 @@ msgstr ""
 #. module: sale
 #: view:sale.config.settings:0
 msgid "Contract Features"
-msgstr ""
+msgstr "Contract mogelijkheden"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order
@@ -1884,7 +1898,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "On Delivery Order"
-msgstr ""
+msgstr "Bij uitgaande levering"
 
 #. module: sale
 #: view:sale.report:0
@@ -2059,13 +2073,13 @@ msgstr "Lopende verkooporders"
 #. module: sale
 #: field:sale.config.settings,timesheet:0
 msgid "Prepare invoices based on timesheets"
-msgstr ""
+msgstr "Voorbereiden van facturen op urenstaten"
 
 #. module: sale
 #: code:addons/sale/sale.py:655
 #, python-format
 msgid "Sale Order for <em>%s</em> <b>cancelled</b>."
-msgstr ""
+msgstr "Verkooporder voor <em>%s</em> <b>geannuleerd</b>."
 
 #. module: sale
 #: help:sale.order,origin:0
@@ -2919,9 +2933,6 @@ msgstr ""
 #~ msgid "  Year  "
 #~ msgstr "  Jaar  "
 
-#~ msgid "Security Days"
-#~ msgstr "Dagen veiligheidsmarge"
-
 #~ msgid "Do you really want to create the invoice(s) ?"
 #~ msgstr "Wilt u echt de facturen aanmaken?"
 
@@ -3121,9 +3132,6 @@ msgstr ""
 #, python-format
 #~ msgid "Warning"
 #~ msgstr "Waarschuwing"
-
-#~ msgid "Delivery Lead Time"
-#~ msgstr "Leveringstermijn"
 
 #~ msgid "Error! You can not create recursive companies."
 #~ msgstr "Fout ! U kunt geen recursieve bedrijven maken."
@@ -3812,3 +3820,9 @@ msgstr ""
 
 #~ msgid "Properties"
 #~ msgstr "Eigenschappen"
+
+#~ msgid "Delivery Lead Time"
+#~ msgstr "Levertijd (dagen)"
+
+#~ msgid "Security Days"
+#~ msgstr "Extra dagen levertijd verkoop"

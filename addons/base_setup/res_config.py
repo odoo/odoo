@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 
 class base_config_settings(osv.osv_memory):
     _name = 'base.config.settings'
@@ -31,7 +31,7 @@ class base_config_settings(osv.osv_memory):
         'module_share': fields.boolean('Allow documents sharing',
             help="""Share or embbed any screen of openerp."""),
         'module_portal': fields.boolean('Activate the customer portal',
-            help="""Give access your customers to their documents."""),
+            help="""Give your customers access to their documents."""),
         'module_portal_anonymous': fields.boolean('Activate the public portal',
             help="""Enable the public part of openerp, openerp becomes a public website."""),
         'module_auth_oauth': fields.boolean('Use external authentication providers, sign in with google, facebook, ...'),

@@ -22,13 +22,13 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 
-import netsvc
-import pooler
-from osv import fields, osv
-import decimal_precision as dp
-from tools.misc import currency
-from tools.translate import _
-from tools import config
+from openerp import netsvc
+from openerp import pooler
+from openerp.osv import fields, osv
+import openerp.addons.decimal_precision as dp
+from openerp.tools.misc import currency
+from openerp.tools.translate import _
+from openerp.tools import config
 from openerp import SUPERUSER_ID
 
 class account_tax_code_template(osv.osv):

@@ -21,7 +21,7 @@
 
 
 from document import document as nodes
-from tools.safe_eval import safe_eval as eval
+from openerp.tools.safe_eval import safe_eval as eval
 import time
 import urllib
 import uuid

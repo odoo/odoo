@@ -23,14 +23,13 @@ from datetime import datetime, timedelta, date
 from dateutil import parser
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
-from osv import fields, osv
-from service import web_services
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp.service import web_services
+from openerp.tools.translate import _
 import pytz
 import re
 import time
-import tools
-from openerp import SUPERUSER_ID
+from openerp import tools, SUPERUSER_ID
 
 months = {
     1: "January", 2: "February", 3: "March", 4: "April", \
@@ -303,7 +302,7 @@ class calendar_attendee(osv.osv):
             if name == 'language':
                 user_obj = self.pool.get('res.users')
                 lang = user_obj.read(cr, uid, uid, ['lang'], context=context)['lang']
-                result[id][name] = lang.replace('_', '-')
+                result[id][name] = lang.replace('_', '-') if lang else False
 
         return result
 

@@ -19,13 +19,13 @@
 #
 ##############################################################################
 
-from base_status.base_state import base_state
+from openerp.addons.base_status.base_state import base_state
 import crm
 from datetime import datetime
-from osv import fields, osv
+from openerp.osv import fields, osv
 import time
-from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
-from tools.translate import _
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
+from openerp.tools.translate import _
 
 class crm_phonecall(base_state, osv.osv):
     """ Model for CRM phonecalls """

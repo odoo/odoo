@@ -21,8 +21,8 @@
 
 import time
 
-from osv import osv, fields
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 #
 # Create an final invoice based on selected timesheet lines

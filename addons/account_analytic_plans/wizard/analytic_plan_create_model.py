@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-from osv import osv
-from tools.translate import _
+from openerp.osv import osv
+from openerp.tools.translate import _
 
 class analytic_plan_create_model(osv.osv_memory):
     _name = "analytic.plan.create.model"

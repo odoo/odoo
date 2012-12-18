@@ -19,19 +19,19 @@
 #
 ##############################################################################
 
-import time
+import logging
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
+import time
 
-import logging
-import pooler
-from osv import fields, osv
-import decimal_precision as dp
-from tools.translate import _
-from tools.float_utils import float_round
 from openerp import SUPERUSER_ID
-import tools
+from openerp import pooler, tools
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+from openerp.tools.float_utils import float_round
+
+import openerp.addons.decimal_precision as dp
 
 _logger = logging.getLogger(__name__)
 

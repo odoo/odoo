@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-15 10:47+0000\n"
+"PO-Revision-Date: 2012-12-17 14:28+0000\n"
 "Last-Translator: Harjan Talen <harjantalen@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-16 04:47+0000\n"
+"X-Launchpad-Export-Date: 2012-12-18 05:00+0000\n"
 "X-Generator: Launchpad (build 16372)\n"
 
 #, python-format
@@ -808,6 +808,9 @@ msgid ""
 "lines for refunds. Leave empty if you don't want to use an analytic account "
 "on the invoice tax lines by default."
 msgstr ""
+"Selecteer de kostenplaats rekening welke standaard gebruikt wordt voor "
+"belastingregels op creditfacturen. Laat deze leeg wanneer geen gebruikt "
+"gemaakt wordt van kostenplaatsen."
 
 #. module: account
 #: view:account.account:0
@@ -1227,6 +1230,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik om een grootboekkaar toe te voegen.\n"
+"              </p><p>\n"
+"                Bij transacties in meerdere valuta kan een valutaresultaat "
+"tot\n"
+"                stand komen. Dit menu geeft het actuele valutaresultaat aan\n"
+"                tegen de huidige koers. Dit wordt alleen aangegeven bij "
+"groot-\n"
+"                boekkaarten waar meerdere valuta aan gekoppeld zijn.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: field:account.bank.accounts.wizard,acc_name:0
@@ -1236,7 +1250,7 @@ msgstr "Rekeningnaam."
 #. module: account
 #: field:account.journal,with_last_closing_balance:0
 msgid "Opening With Last Closing Balance"
-msgstr ""
+msgstr "Openen met het laatst afgesloten saldo."
 
 #. module: account
 #: help:account.tax.code,notprintable:0
@@ -1646,6 +1660,8 @@ msgid ""
 "There is no default debit account defined \n"
 "on journal \"%s\"."
 msgstr ""
+"Er is geen standaard debet grootboekrekening gedefinieerd in dit dagboek: "
+"\"%s\"."
 
 #. module: account
 #: view:account.tax:0
@@ -1680,6 +1696,8 @@ msgid ""
 "There is nothing to reconcile. All invoices and payments\n"
 "                    have been reconciled, your partner balance is clean."
 msgstr ""
+"Er zijn geen facturen om af te letteren. Alle facturen en betalingen zijn "
+"afgeletterd."
 
 #. module: account
 #: field:account.chart.template,code_digits:0
@@ -13651,9 +13669,6 @@ msgstr ""
 #~ "U kunt het bedrijf niet meer veranderen in dit dagboek omdat er inmiddels al "
 #~ "gerelateerde transacties op zijn geboekt."
 
-#~ msgid "Reference UoM"
-#~ msgstr "Referentie meeteenheid"
-
 #~ msgid "Unreconciliate transactions"
 #~ msgstr "Afletteren transactief ongedaan maken"
 
@@ -15278,3 +15293,6 @@ msgstr ""
 #~ "OpenERP geeft u de mogelijkheid om, vanuit dit menu, een belastingweergave "
 #~ "te beheren. Het is mogelijk om numerieke en alfanumerieke belastingrubrieken "
 #~ "te gebruiken."
+
+#~ msgid "Reference UoM"
+#~ msgstr "Referentie maateenheid"
