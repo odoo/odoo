@@ -33,6 +33,7 @@ class lunch_order(osv.Model):
     """
     _name = 'lunch.order'
     _description = 'Lunch Order'
+    _order = 'date desc'
 
     def _price_get(self, cr, uid, ids, name, arg, context=None):
         """ 
