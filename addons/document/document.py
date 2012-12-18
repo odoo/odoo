@@ -341,7 +341,7 @@ class document_directory_dctx(osv.osv):
         domain expression. For that, their parents will export a context where useful
         information will be passed on.
         If you define sth like "s_id" = "this.id" at a folder iterating over sales, its
-        children could have a domain like [('sale_id', = ,dctx_s_id )]
+        children could have a domain like [('sale_id', = ,s_id )]
         This system should be used recursively, that is, parent dynamic context will be
         appended to all children down the tree.
     """
@@ -349,7 +349,7 @@ class document_directory_dctx(osv.osv):
     _description = 'Directory Dynamic Context'
     _columns = {
         'dir_id': fields.many2one('document.directory', 'Directory', required=True, ondelete="cascade"),
-        'field': fields.char('Field', size=20, required=True, select=1, help="The name of the field. Note that the prefix \"dctx_\" will be prepended to what is typed here."),
+        'field': fields.char('Field', size=20, required=True, select=1, help="The name of the field."),
         'expr': fields.char('Expression', size=64, required=True, help="A python expression used to evaluate the field.\n" + \
                 "You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference to the current record, in dynamic folders"),
         }
@@ -418,7 +418,7 @@ class document_directory_content(osv.osv):
             tname=tname.replace('/', '_')
         act_id = False
         if 'dctx_res_id' in node.dctx:
-            act_id = node.dctx['dctx_res_id']
+            act_id = node.dctx['res_id']
         elif hasattr(node, 'res_id'):
             act_id = node.res_id
         else:
@@ -1010,7 +1010,7 @@ class node_dir(node_database):
         if dirr and dirr.dctx_ids:
             for dfld in dirr.dctx_ids:
                 try:
-                    self.dctx['dctx_' + dfld.field] = safe_eval(dfld.expr,dc2)
+                    self.dctx[dfld.field] = safe_eval(dfld.expr,dc2)
                 except Exception,e:
                     print "Cannot eval %s." % dfld.expr
                     print e
@@ -1254,7 +1254,7 @@ class node_res_dir(node_class):
         # and then, we prepare a dctx dict, for deferred evaluation:
         self.dctx_dict = {}
         for dfld in dirr.dctx_ids:
-            self.dctx_dict['dctx_' + dfld.field] = dfld.expr
+            self.dctx_dict[dfld.field] = dfld.expr
 
     def __eq__(self, other):
         if type(self) != type(other):
