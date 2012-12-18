@@ -20,10 +20,8 @@
 ##############################################################################
 
 import base64
-from collections import defaultdict
 import dateutil
 import email
-from functools import partial
 import logging
 import pytz
 import time
@@ -74,11 +72,18 @@ class mail_thread(osv.AbstractModel):
     _name = 'mail.thread'
     _description = 'Email Thread'
     _mail_flat_thread = True
+
     _TRACK_TEMPLATE = """
-        <span>${updated_fields}</span>
+        %if message_description:
+            <span>${message_description}</span>
+        %endif
         <ul>
-        %for chg in changes:
-            <li><span>${chg[0]}</span>: ${chg[1]} -> ${chg[2]}</li>
+        %for name, change in tracked_values.items():
+            <li><span>${name}</span>:
+                %if change.get('old_value'):
+                    ${change.get('old_value')} ->
+                %endif
+                ${change.get('new_value')}</li>
         %endfor
         </ul>
     """
@@ -222,17 +227,36 @@ class mail_thread(osv.AbstractModel):
     }
 
     #------------------------------------------------------
-    # Automatic subscription when creating
+    # CRUD overrides for automatic subscription and logging
     #------------------------------------------------------
 
-    def create(self, cr, uid, vals, context=None):
+    def create(self, cr, uid, values, context=None):
         """ Override to subscribe the current user. """
         if context is None:
             context = {}
-        thread_id = super(mail_thread, self).create(cr, uid, vals, context=context)
+        thread_id = super(mail_thread, self).create(cr, uid, values, context=context)
+
+        # subscribe uid unless asked not to
         if not context.get('mail_nosubscribe'):
             self.message_subscribe_users(cr, uid, [thread_id], [uid], context=context)
+
+        # automatic logging
+        # self.message_post(cr, uid, thread_id, body='Document <b>created</b>.', context=context)
+
         return thread_id
+
+    def write(self, cr, uid, ids, values, context=None):
+        tracked_fields = self._get_tracked_fields(cr, uid, values.keys(), context=context)
+        to_log = [name for name in values.keys() if name in tracked_fields]
+        if to_log:
+            initial = self.read(cr, uid, ids, [name for name, info in tracked_fields.items()], context=context)
+            initial_values = dict((item['id'], item) for item in initial)
+
+        result = super(mail_thread, self).write(cr, uid, ids, values, context=context)
+
+        if to_log:
+            self.message_track(cr, uid, ids, values.keys(), initial_values, context=context)
+        return result
 
     def unlink(self, cr, uid, ids, context=None):
         """ Override unlink to delete messages and followers. This cannot be
@@ -259,82 +283,96 @@ class mail_thread(osv.AbstractModel):
     # Automatically log tracked fields
     #------------------------------------------------------
 
-    def write(self, cr, uid, ids, values, context=None):
-        
-        if context is None:
-            context = {}
-        #import pudb;pudb.set_trace()
+    def _get_tracked_fields(self, cr, uid, updated_fields, context=None):
+        """ Return a structure of tracked fields for the current model.
+            :param list updated_fields: modified field names
+            :return list: a list of (field_name, column_info obj), containing
+                always tracked fields and modified on_change fields
+        """
+        return dict((name, column_info)
+                    for name, column_info in self._all_columns.items()
+                    if getattr(column_info.column, '_track_visibility', False) == 2
+                    or (getattr(column_info.column, '_track_visibility', False) == 1 and name in updated_fields))
 
-        def false_value(f):
-            if f._type == 'boolean':
+    def message_track(self, cr, uid, ids, updated_fields, initial_values, log_message='', context=None):
+        """
+            :param list updated_fields: modified field names
+        """
+        translation_obj = self.pool.get('ir.translation')
+
+        def format_false_value(field_obj):
+            if field_obj._type == 'boolean':
                 return False
-            return f._symbol_set[1](False)
+            return field_obj._symbol_set[1](False)
 
-        def convert_for_comparison(v, f):
-            # It will convert value for comparison between current and new.
-            if not v:
-                return false_value(f)
-            if isinstance(v, browse_record):
-                return v.id
-            return v
+        def convert_for_comparison(value, field_obj):
+            if not value:
+                return format_false_value(field_obj)
+            if isinstance(value, browse_record):  # compare browse record on id only
+                return value.id
+            if isinstance(value, tuple) and len(value) == 2:  # name_get result
+                return value[0]
+            return value
 
-        tracked = dict((n, f) for n, f in self._all_columns.items() if getattr(f.column, 'tracked', False))
-        to_log = [k for k in values if k in tracked]
+        def convert_for_display(value, field_obj):
+            if not value:
+                return format_false_value(field_obj)
+            if field_obj._type == 'many2one':
+                if isinstance(value, tuple) and len(value) == 2:  # already name_get result
+                    return value[1]
+                if not isinstance(value, browse_record):  # value should be an ID
+                    value = self.pool.get(field_obj._obj).browse(cr, SUPERUSER_ID, value, context=None)
+                return value.name_get()[0][1]
+            if field_obj._type == 'selection':  # CHS/TDE TODO: translated value ?
+                select_value = filter(lambda item: item[0] == value, field_obj.selection)
+                return select_value[0][1]
+            return value
 
-        from_ = None
-        changes = defaultdict(list)
-        if to_log:
-            for record in self.browse(cr, uid, ids, context):
-                for tl in to_log:
-                    column = tracked[tl].column
-                    current = convert_for_comparison(record[tl], column)
-                    new = convert_for_comparison(values[tl], column)
-                    if new != current:
-                        changes[record].append(tl)
-                        from_ = record[tl]
+        def translate_field(column_info):
+            model = column_info.parent_model or self._name
+            return translation_obj._get_source(cr, uid, '{0},{1}'.format(model, column_info.name), 'field', context.get('lang'), column_info.column.string)
 
-        result = super(mail_thread, self).write(cr, uid, ids, values, context=context)
+        tracked_fields = self._get_tracked_fields(cr, uid, updated_fields, context=context)
+        to_log = [name for name in updated_fields if name in tracked_fields]
+        if not to_log:
+            return True
 
-        updated_fields = _('Updated Fields:')
+        # browse with SUPERUSER_ID to avoid rights issues (i.e. tracking res.partner relational field -> name_get result should always be visible)
+        for record in self.browse(cr, SUPERUSER_ID, ids, context=context):
+            tracked_values = {}
+            default_log = True
+            changes_found = False
+            initial = initial_values[record.id]
 
-        Trans = self.pool['ir.translation']
-        def _t(c):
-            # translate field
-            model = c.parent_model or self._name
-            lang = context.get('lang')
-            return Trans._get_source(cr, uid, '{0},{1}'.format(model, c.name), 'field', lang, ci.column.string)
-        
-        def get_subtype(model, record):
-            # it will return subtype name(xml_id) for stage.
-            record_model = self.pool[model].browse(cr, SUPERUSER_ID, record)
-            if record_model.__hasattr__('subtype'):
-                return record_model.subtype
-            return False 
+            # generate tracked_values data structure: {'col_name': {col_info, new_value, old_value}}
+            for col_name, col_info in tracked_fields.items():
+                old_value = convert_for_comparison(initial[col_name], col_info.column)
+                new_value = convert_for_comparison(record[col_name], col_info.column)
+                if old_value == new_value and col_info.column._track_visibility == 2:
+                    tracked_values[col_name] = dict(col_info=col_info, new_value=convert_for_display(record[col_name], col_info.column))
+                elif old_value != new_value:
+                    tracked_values[col_name] = dict(col_info=col_info, old_value=convert_for_display(initial[col_name], col_info.column), new_value=convert_for_display(record[col_name], col_info.column))
+                    changes_found = True
+            if not changes_found:
+                continue
 
-        for record, changed_fields in changes.items():
-            # TODO tpl changed_fields
-            chg = []
-            subtype = False
-            for f in changed_fields:
-                to = self.browse(cr, uid, ids[0], context)[f]
-                ci = tracked[f]
-                if ci.column._type == "many2one":
-                    if to:
-                        to = to.name_get()[0][1]
-                    else:
-                        to = "Removed"
-                    if isinstance(from_, browse_record):
-                        from_ = from_.name_get()[0][1]
-                    
-                    subtype = get_subtype(ci.column._obj,values[f])
-                chg.append((_t(ci), from_, to))
+            # find subtypes and post messages or log if no subtype found
+            subtypes = set([subtype for field, track_info in self._track.items() if field in to_log
+                            for subtype, method in track_info.items() if method(self, cr, uid, record, context)])
+            for subtype in subtypes:
+                subtype_data = subtype.split('.')
+                subtype_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, subtype_data[0], subtype_data[1])
+                if not subtype_ref:
+                    continue
+                subtype_rec = self.pool.get('mail.message.subtype').browse(cr, uid, subtype_ref[1], context=context)
+                message = MakoTemplate(self._TRACK_TEMPLATE).render_unicode(message_description=subtype_rec.description, tracked_values=tracked_values)
+                self.message_post(cr, uid, record.id, body=message, subtype=subtype, context=context)
+                default_log = False
+            if default_log:
+                message = MakoTemplate(self._TRACK_TEMPLATE).render_unicode(message_description=log_message, tracked_values=tracked_values)
+                self.message_post(cr, uid, record.id, body=message, context=context)
 
-            message = MakoTemplate(self._TRACK_TEMPLATE).render_unicode(updated_fields=updated_fields,
-                                                                        changes=chg)
-
-            record.message_post(message,subtype=subtype)
-
-        return result
+        return True
 
     #------------------------------------------------------
     # mail.message wrappers and tools

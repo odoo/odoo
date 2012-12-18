@@ -51,6 +51,7 @@ class TestMailBase(common.TransactionCase):
 
         # Usefull models
         self.ir_model = self.registry('ir.model')
+        self.ir_model_data = self.registry('ir.model.data')
         self.ir_attachment = self.registry('ir.attachment')
         self.mail_alias = self.registry('mail.alias')
         self.mail_thread = self.registry('mail.thread')
