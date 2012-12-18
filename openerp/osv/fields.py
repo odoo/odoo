@@ -80,12 +80,11 @@ class _column(object):
     _symbol_f = _symbol_set
     _symbol_set = (_symbol_c, _symbol_f)
     _symbol_get = None
+
     # used to hide a certain field type in the list of field types
     _deprecated = False
-    # used for automatic logging system if mail installed (should be 'on_change' or 'always')
-    _track_visibility = False
 
-    def __init__(self, string='unknown', required=False, readonly=False, domain=None, context=None, states=None, priority=0, change_default=False, size=None, ondelete=None, translate=False, select=False, manual=False, track_visibility=False, **args):
+    def __init__(self, string='unknown', required=False, readonly=False, domain=None, context=None, states=None, priority=0, change_default=False, size=None, ondelete=None, translate=False, select=False, manual=False, tracked=False, **args):
         """
 
         The 'manual' keyword argument specifies if the field is a custom one.
@@ -104,7 +103,7 @@ class _column(object):
         self.help = args.get('help', '')
         self.priority = priority
         self.change_default = change_default
-        self.ondelete = ondelete.lower() if ondelete else None  # defaults to 'set null' in ORM
+        self.ondelete = ondelete.lower() if ondelete else None # defaults to 'set null' in ORM
         self.translate = translate
         self._domain = domain
         self._context = context
@@ -114,14 +113,14 @@ class _column(object):
         self.select = select
         self.manual = manual
         self.selectable = True
-        self._track_visibility = track_visibility
+        self.tracked = tracked  # Automatic logging system if mail installed
         self.group_operator = args.get('group_operator', False)
         self.groups = False  # CSV list of ext IDs of groups that can access this field
-        self.deprecated = False  # Optional deprecation warning
+        self.deprecated = False # Optional deprecation warning
         for a in args:
             if args[a]:
                 setattr(self, a, args[a])
-
+ 
     def restart(self):
         pass
 
