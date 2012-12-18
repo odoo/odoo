@@ -26,12 +26,12 @@ import time
 from operator import itemgetter
 from itertools import groupby
 
-from osv import fields, osv
-from tools.translate import _
-import netsvc
-import tools
-from tools import float_compare
-import decimal_precision as dp
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+from openerp import netsvc
+from openerp import tools
+from openerp.tools import float_compare
+import openerp.addons.decimal_precision as dp
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -655,7 +655,7 @@ class stock_picking(osv.osv):
         'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
                  store=True, type='datetime', string='Scheduled Time', select=1, help="Scheduled time for the shipment to be processed"),
         'date': fields.datetime('Time', help="Creation time, usually the time of the order.", select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
-        'date_done': fields.datetime('Date Done', help="Date of Completion", states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
+        'date_done': fields.datetime('Date of Transfer', help="Date of Completion", states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'max_date': fields.function(get_min_max_date, fnct_inv=_set_maximum_date, multi="min_max_date",
                  store=True, type='datetime', string='Max. Expected Date', select=2),
         'move_lines': fields.one2many('stock.move', 'picking_id', 'Internal Moves', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}),
@@ -712,7 +712,7 @@ class stock_picking(osv.osv):
             default['name'] = self.pool.get('ir.sequence').get(cr, uid, seq_obj_name)
             default['origin'] = ''
             default['backorder_id'] = False
-        if picking_obj.invoice_state == 'invoiced':
+        if 'invoice_state' not in default and picking_obj.invoice_state == 'invoiced':
             default['invoice_state'] = '2binvoiced'
         res=super(stock_picking, self).copy(cr, uid, id, default, context)
         if res:
@@ -1579,6 +1579,13 @@ class stock_production_lot(osv.osv):
         """
         value=self.pool.get('action.traceability').action_traceability(cr,uid,ids,context)
         return value
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        context = context or {}
+        default = default and default.copy() or {}
+        default.update(date=time.strftime('%Y-%m-%d %H:%M:%S'), move_ids=[])
+        return super(stock_production_lot, self).copy(cr, uid, id, default=default, context=context)
+
 stock_production_lot()
 
 class stock_production_lot_revision(osv.osv):
@@ -1682,7 +1689,7 @@ class stock_move(osv.osv):
         return True
 
     _columns = {
-        'name': fields.char('Name', size=250, required=True, select=True),
+        'name': fields.char('Description', required=True, select=True),
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Urgent')], 'Priority'),
         'create_date': fields.datetime('Creation Date', readonly=True, select=True),
         'date': fields.datetime('Date', required=True, select=True, help="Move date: scheduled date until move is done, then date of actual move processing", states={'done': [('readonly', True)]}),

@@ -18,9 +18,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
 
-from osv import osv, fields
+from openerp.osv import osv, fields
 
 class account_analytic_cost_ledger(osv.osv_memory):
     _name = 'account.analytic.cost.ledger'

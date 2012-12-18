@@ -20,13 +20,13 @@
 ##############################################################################
 
 import time
-import tools
+from openerp import tools
 
-from base_status.base_stage import base_stage
+from openerp.addons.base_status.base_stage import base_stage
 from datetime import datetime
-from osv import fields, osv
-from tools.translate import _
-from tools import html2plaintext
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+from openerp.tools import html2plaintext
 
 AVAILABLE_STATES = [
     ('draft', 'New'),

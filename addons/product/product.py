@@ -19,14 +19,16 @@
 #
 ##############################################################################
 
-from osv import osv, fields
-import decimal_precision as dp
-
 import math
-from _common import rounding
 import re
-import tools
-from tools.translate import _
+
+from _common import rounding
+
+from openerp import tools
+from openerp.osv import osv, fields
+from openerp.tools.translate import _
+
+import openerp.addons.decimal_precision as dp
 
 def ean_checksum(eancode):
     """returns the checksum of an ean string of length 13, returns -1 if the string has the wrong length"""

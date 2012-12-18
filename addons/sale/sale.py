@@ -22,12 +22,12 @@
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 import time
-import pooler
-from osv import fields, osv
-from tools.translate import _
-from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP, float_compare
-import decimal_precision as dp
-import netsvc
+from openerp import pooler
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP, float_compare
+import openerp.addons.decimal_precision as dp
+from openerp import netsvc
 
 class sale_shop(osv.osv):
     _name = "sale.shop"
@@ -475,7 +475,7 @@ class sale_order(osv.osv):
                 return False
         return True
 
-    def action_invoice_create(self, cr, uid, ids, grouped=False, states=None, date_inv = False, context=None):
+    def action_invoice_create(self, cr, uid, ids, grouped=False, states=None, date_invoice = False, context=None):
         if states is None:
             states = ['confirmed', 'done', 'exception']
         res = False
@@ -488,8 +488,8 @@ class sale_order(osv.osv):
             context = {}
         # If date was specified, use it as date invoiced, usefull when invoices are generated this month and put the
         # last day of the last month as invoice date
-        if date_inv:
-            context['date_inv'] = date_inv
+        if date_invoice:
+            context['date_invoice'] = date_invoice
         for o in self.browse(cr, uid, ids, context=context):
             currency_id = o.pricelist_id.currency_id.id
             if (o.partner_id.id in partner_currency) and (partner_currency[o.partner_id.id] <> currency_id):
@@ -714,7 +714,7 @@ class sale_order_line(osv.osv):
     _description = 'Sales Order Line'
     _columns = {
         'order_id': fields.many2one('sale.order', 'Order Reference', required=True, ondelete='cascade', select=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'name': fields.text('Description', size=256, required=True, select=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'name': fields.text('Description', required=True, select=True, readonly=True, states={'draft': [('readonly', False)]}),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of sales order lines."),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], change_default=True),
         'invoice_lines': fields.many2many('account.invoice.line', 'sale_order_line_invoice_rel', 'order_line_id', 'invoice_id', 'Invoice Lines', readonly=True),

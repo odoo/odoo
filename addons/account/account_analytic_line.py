@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-from osv import fields
-from osv import osv
-from tools.translate import _
+from openerp.osv import fields
+from openerp.osv import osv
+from openerp.tools.translate import _
 
 class account_analytic_line(osv.osv):
     _inherit = 'account.analytic.line'

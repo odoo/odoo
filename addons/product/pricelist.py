@@ -19,12 +19,14 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+import time
 
 from _common import rounding
-import time
-from tools.translate import _
-import decimal_precision as dp
+
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+
+import openerp.addons.decimal_precision as dp
 
 
 class price_type(osv.osv):

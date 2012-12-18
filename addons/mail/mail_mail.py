@@ -21,11 +21,11 @@
 
 import base64
 import logging
-import tools
+from openerp import tools
 
 from openerp import SUPERUSER_ID
-from osv import osv, fields
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -205,7 +205,7 @@ class mail_mail(osv.Model):
                 # specific behavior to customize the send email for notified partners
                 email_list = []
                 if recipient_ids:
-                    for partner in self.pool.get('res.partner').browse(cr, uid, recipient_ids, context=context):
+                    for partner in self.pool.get('res.partner').browse(cr, SUPERUSER_ID, recipient_ids, context=context):
                         email_list.append(self.send_get_email_dict(cr, uid, mail, partner=partner, context=context))
                 else:
                     email_list.append(self.send_get_email_dict(cr, uid, mail, context=context))

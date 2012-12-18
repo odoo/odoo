@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-from tools.translate import _
-import decimal_precision as dp
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+import openerp.addons.decimal_precision as dp
 
 class product_product(osv.osv):
     _inherit = "product.product"
@@ -530,7 +530,7 @@ class product_category(osv.osv):
     _columns = {
         'property_stock_journal': fields.property('account.journal',
             relation='account.journal', type='many2one',
-            string='Stock journal', view_load=True,
+            string='Stock Journal', view_load=True,
             help="When doing real-time inventory valuation, this is the Accounting Journal in which entries will be automatically posted when stock moves are processed."),
         'property_stock_account_input_categ': fields.property('account.account',
             type='many2one', relation='account.account',

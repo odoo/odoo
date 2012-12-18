@@ -19,10 +19,9 @@
 #
 ##############################################################################
 
-from osv import osv, fields
-import tools
-import pooler
 from openerp import SUPERUSER_ID
+from openerp import pooler, tools
+from openerp.osv import osv, fields
 
 class decimal_precision(osv.osv):
     _name = 'decimal.precision'

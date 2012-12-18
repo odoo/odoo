@@ -20,7 +20,7 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 
 class ir_action_report_xml(osv.osv):
     _name="ir.actions.report.xml"

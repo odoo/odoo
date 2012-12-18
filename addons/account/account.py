@@ -19,19 +19,19 @@
 #
 ##############################################################################
 
-import time
+import logging
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
+import time
 
-import logging
-import pooler
-from osv import fields, osv
-import decimal_precision as dp
-from tools.translate import _
-from tools.float_utils import float_round
 from openerp import SUPERUSER_ID
-import tools
+from openerp import pooler, tools
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+from openerp.tools.float_utils import float_round
+
+import openerp.addons.decimal_precision as dp
 
 _logger = logging.getLogger(__name__)
 
@@ -3348,10 +3348,25 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         all the provided information to create the accounts, the banks, the journals, the taxes, the tax codes, the
         accounting properties... accordingly for the chosen company.
         '''
+        obj_data = self.pool.get('ir.model.data')
         ir_values_obj = self.pool.get('ir.values')
         obj_wizard = self.browse(cr, uid, ids[0])
         company_id = obj_wizard.company_id.id
+
         self.pool.get('res.company').write(cr, uid, [company_id], {'currency_id': obj_wizard.currency_id.id})
+
+        # When we install the CoA of first company, set the currency to price types and pricelists
+        if company_id==1:
+            for ref in (('product','list_price'),('product','standard_price'),('product','list0'),('purchase','list0')):
+                try:
+                    tmp2 = obj_data.get_object_reference(cr, uid, *ref)
+                    if tmp2: 
+                        self.pool.get(tmp2[0]).write(cr, uid, tmp2[1], {
+                            'currency_id': obj_wizard.currency_id.id
+                        })
+                except ValueError, e:
+                    pass
+
         # If the floats for sale/purchase rates have been filled, create templates from them
         self._create_tax_templates_from_rates(cr, uid, obj_wizard, company_id, context=context)
 

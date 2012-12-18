@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 
 class account_report_general_ledger(osv.osv_memory):
     _inherit = "account.common.account.report"
