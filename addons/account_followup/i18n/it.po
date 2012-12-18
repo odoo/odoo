@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-16 23:52+0000\n"
+"PO-Revision-Date: 2012-12-17 22:31+0000\n"
 "Last-Translator: Sergio Corato <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-17 04:45+0000\n"
+"X-Launchpad-Export-Date: 2012-12-18 05:00+0000\n"
 "X-Generator: Launchpad (build 16372)\n"
 
 #. module: account_followup
@@ -202,17 +202,17 @@ msgstr "Passi Solleciti di Pagamento"
 #. module: account_followup
 #: field:account_followup.print,email_body:0
 msgid "Email Body"
-msgstr ""
+msgstr "Corpo Mail"
 
 #. module: account_followup
 #: help:res.partner,payment_responsible_id:0
 msgid "Responsible for making sure the action happens."
-msgstr ""
+msgstr "Responsabile verifica esecuzione attività."
 
 #. module: account_followup
 #: view:res.partner:0
 msgid "Overdue amount"
-msgstr ""
+msgstr "Importo scaduto"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_print
@@ -227,7 +227,7 @@ msgstr "Importo"
 #. module: account_followup
 #: view:res.partner:0
 msgid "No Responsible"
-msgstr ""
+msgstr "Nessun Responsabile"
 
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
@@ -242,12 +242,12 @@ msgstr "Totale debiti"
 #. module: account_followup
 #: field:res.partner,payment_next_action:0
 msgid "Next Action"
-msgstr ""
+msgstr "Prossima Azione"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid ": Partner Name"
-msgstr ""
+msgstr ": Nome del Partner"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -282,7 +282,7 @@ msgstr "Data:"
 #. module: account_followup
 #: view:res.partner:0
 msgid "I am responsible"
-msgstr ""
+msgstr "Io sono responsabile"
 
 #. module: account_followup
 #: sql_constraint:account_followup.followup:0
@@ -310,11 +310,27 @@ msgid ""
 "Best Regards,\n"
 "            "
 msgstr ""
+"\n"
+"Egregio %(partner_name)s,\n"
+"\n"
+"Nonostante vari promemoria, il Vs. debito risulta ancora impagato.\n"
+"\n"
+"A meno che il pagamento completo sia eseguito nei prossimi 8 giorni, "
+"verranno attivate le azioni legali opportune senza altro avviso.\n"
+"\n"
+"Nella speranza che tali azioni non siano necessarie, troverete in calce il "
+"saldo di quanto dovuto.\n"
+"\n"
+"Per ogni dettaglio in merito a quanto in oggetto, non esitate a contattare "
+"il ns. ufficio amministrativo al (+39).xxx.xxx.xxx.\n"
+"\n"
+"Cordiali saluti,\n"
+"            "
 
 #. module: account_followup
 #: help:account_followup.followup.line,send_letter:0
 msgid "When processing, it will print a letter"
-msgstr ""
+msgstr "Se eseguito, verrà stampata una lettera"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -324,12 +340,12 @@ msgstr "Non Contenzioso"
 #. module: account_followup
 #: view:res.partner:0
 msgid "Without responsible"
-msgstr ""
+msgstr "Senza responsabile"
 
 #. module: account_followup
 #: view:account_followup.print:0
 msgid "Send emails and generate letters"
-msgstr ""
+msgstr "Invia email e genera lettere"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_customer_followup
@@ -339,7 +355,7 @@ msgstr "Solleciti di Pagamento Manuali"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(partner_name)s"
-msgstr ""
+msgstr "%(partner_name)s"
 
 #. module: account_followup
 #: field:account_followup.stat,debit:0
@@ -354,7 +370,7 @@ msgstr "Statistiche Solleciti di Pagamento"
 #. module: account_followup
 #: view:res.partner:0
 msgid "Send Overdue Email"
-msgstr ""
+msgstr "Invia Email Pagamenti in Ritardo"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup_line
@@ -372,18 +388,18 @@ msgstr ""
 #: code:addons/account_followup/wizard/account_followup_print.py:166
 #, python-format
 msgid " will be sent"
-msgstr ""
+msgstr " saranno spediti"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid ": User's Company Name"
-msgstr ""
+msgstr ": Nome Utente Azienda"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 #: field:account_followup.followup.line,send_letter:0
 msgid "Send a Letter"
-msgstr ""
+msgstr "Invia Lettera"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_definition_form
@@ -393,13 +409,13 @@ msgstr "Solleciti di Pagamento"
 #. module: account_followup
 #: field:account_followup.followup.line,delay:0
 msgid "Due Days"
-msgstr ""
+msgstr "Giorni di Ritardo"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:155
 #, python-format
 msgid "Nobody"
-msgstr ""
+msgstr "Nessuno"
 
 #. module: account_followup
 #: field:account.move.line,followup_line_id:0
@@ -431,7 +447,7 @@ msgstr "Li."
 #. module: account_followup
 #: field:account_followup.print,email_conf:0
 msgid "Send Email Confirmation"
-msgstr ""
+msgstr "Invia Email di Conferma"
 
 #. module: account_followup
 #: view:res.partner:0
@@ -507,7 +523,7 @@ msgstr ""
 #. module: account_followup
 #: help:account_followup.followup.line,send_email:0
 msgid "When processing, it will send an email"
-msgstr ""
+msgstr "Se eseguito, verrà inviata una mail"
 
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
@@ -547,7 +563,7 @@ msgstr ""
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_sending_results
 msgid "Results from the sending of the different letters and emails"
-msgstr ""
+msgstr "Risultati dall'invio di diverse lettere e email"
 
 #. module: account_followup
 #: constraint:account_followup.followup.line:0
@@ -582,7 +598,7 @@ msgstr ""
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.account_followup_print_menu
 msgid "Send Letters and Emails"
-msgstr ""
+msgstr "Invio Lettere e Email"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -598,7 +614,7 @@ msgstr ""
 #: code:addons/account_followup/wizard/account_followup_print.py:240
 #, python-format
 msgid "Send Letters and Emails: Actions Summary"
-msgstr ""
+msgstr "Invio Lettere e Email: Resoconto Azioni"
 
 #. module: account_followup
 #: view:account_followup.print:0
@@ -642,7 +658,7 @@ msgstr "Data Invio Sollecito di Pagamento"
 #. module: account_followup
 #: field:res.partner,payment_responsible_id:0
 msgid "Follow-up Responsible"
-msgstr "Responsabile Sollecito di Pagamento"
+msgstr "Responsabile Gestione Crediti"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -763,7 +779,7 @@ msgstr "Riepilogo"
 #: view:account_followup.followup.line:0
 #: field:account_followup.followup.line,send_email:0
 msgid "Send an Email"
-msgstr ""
+msgstr "Invia una Email"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line2
@@ -1129,6 +1145,8 @@ msgid ""
 "If not specified by the latest follow-up level, it will send from the "
 "default follow-up of overdue invoices template"
 msgstr ""
+"Se non specificato dall'ultimo livello di sollecito di pagamento, verrà "
+"inviato dal livello di default di sollecito del modello di fatture scadute"
 
 #. module: account_followup
 #: model:ir.actions.act_window,help:account_followup.action_account_manual_reconcile_receivable
@@ -1160,6 +1178,9 @@ msgid ""
 "This action will send follow-up emails, print the letters and\n"
 "                        set the manual actions per customers."
 msgstr ""
+"Questa azione invierà email di sollecito di pagamento, stamperà le lettere "
+"e\n"
+"                        imposterà le azioni manuali per i clienti."
 
 #. module: account_followup
 #: help:account_followup.print,partner_lang:0
@@ -1337,7 +1358,7 @@ msgstr ""
 #. module: account_followup
 #: view:account_followup.print:0
 msgid "Send follow-ups"
-msgstr "Spedizione solleciti di pagamento"
+msgstr "Invia solleciti di pagamento"
 
 #. module: account_followup
 #: view:account.move.line:0
