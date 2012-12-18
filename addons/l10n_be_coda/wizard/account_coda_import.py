@@ -92,9 +92,9 @@ class account_coda_import(osv.osv_memory):
                 statement['journal_id'] = False
                 statement['bank_account'] = False
                 if len(statement['acc_number']) >= 12:
-                    cr.execute("select id from res_partner_bank where replace(acc_number,' ','') like '%%%s%%'" % statement['acc_number'])
+                    cr.execute("select id from res_partner_bank where replace(acc_number,' ','') like %s", ('%' + statement['acc_number'] + '%',))
                 else:
-                    cr.execute("select id from res_partner_bank where replace(acc_number,' ','') = '%s'" % statement['acc_number'])
+                    cr.execute("select id from res_partner_bank where replace(acc_number,' ','') = %s", (statement['acc_number'],))
                 bank_ids = [id[0] for id in cr.fetchall()]
                 if bank_ids and len(bank_ids) > 0:
                     bank_accs = self.pool.get('res.partner.bank').browse(cr, uid, bank_ids)
