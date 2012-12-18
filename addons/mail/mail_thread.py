@@ -471,8 +471,9 @@ class mail_thread(osv.AbstractModel):
         # 2. Look for a matching mail.alias entry
         # Delivered-To is a safe bet in most modern MTAs, but we have to fallback on To + Cc values
         # for all the odd MTAs out there, as there is no standard header for the envelope's `rcpt_to` value.
-        rcpt_tos = decode_header(message, 'Delivered-To') or \
-             ','.join([decode_header(message, 'To'),
+        rcpt_tos = \
+             ','.join([decode_header(message, 'Delivered-To'),
+                       decode_header(message, 'To'),
                        decode_header(message, 'Cc'),
                        decode_header(message, 'Resent-To'),
                        decode_header(message, 'Resent-Cc')])
