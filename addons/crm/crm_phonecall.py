@@ -23,8 +23,7 @@ from openerp.addons.base_status.base_state import base_state
 import crm
 from datetime import datetime
 from openerp.osv import fields, osv
-import time
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.translate import _
 
 class crm_phonecall(base_state, osv.osv):

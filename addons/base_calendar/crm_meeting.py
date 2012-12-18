@@ -20,7 +20,6 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
-from openerp import tools
 from openerp.tools.translate import _
 
 from base_calendar import get_real_ids, base_calendar_id2real_id
