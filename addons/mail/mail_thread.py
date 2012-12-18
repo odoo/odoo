@@ -327,13 +327,14 @@ class mail_thread(osv.AbstractModel):
                               message_id, model, thread_id, custom_values, uid)
                 return [(model, thread_id, custom_values, uid)]
 
-        # Verify this is a reply to a private message
-        message_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', '=', in_reply_to)], limit=1, context=context)
-        if message_ids:
-            message = self.pool.get('mail.message').browse(cr, uid, message_ids[0], context=context)
-            _logger.debug('Routing mail with Message-Id %s: direct reply to a private message: %s, custom_values: %s, uid: %s',
-                            message_id, message.id, custom_values, uid)
-            return [(message.model, message.res_id, custom_values, uid)]
+        # Verify whether this is a reply to a private message
+        if in_reply_to:
+            message_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', '=', in_reply_to)], limit=1, context=context)
+            if message_ids:
+                message = self.pool.get('mail.message').browse(cr, uid, message_ids[0], context=context)
+                _logger.debug('Routing mail with Message-Id %s: direct reply to a private message: %s, custom_values: %s, uid: %s',
+                                message_id, message.id, custom_values, uid)
+                return [(message.model, message.res_id, custom_values, uid)]
 
         # 2. Look for a matching mail.alias entry
         # Delivered-To is a safe bet in most modern MTAs, but we have to fallback on To + Cc values
