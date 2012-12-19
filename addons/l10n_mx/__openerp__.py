@@ -1,10 +1,13 @@
 # -*- encoding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
-#
+###########################################################################
+#    Module Writen to OpenERP, Open Source Management Solution
+#    All Rights Reserved
+###############Credits######################################################
+#    Coded by: Alejandro Negrin anegrin@vauxoo.com,
+#    Planified by: Alejandro Negrin, Humberto Arocha, Moises Lopez
+#    Finance by: Vauxoo.
+#    Audited by: Humberto Arocha (hbto@vauxoo.com) y Moises Lopez (moylop260@vauxoo.com)
+#############################################################################
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
@@ -17,27 +20,44 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
 ##############################################################################
-{
-    'name': 'Mexico - Accounting',
-    'version': '1.0',
-    'author': 'RelTek Mexico',
-    'category': 'Localization/Account Charts',
-    'description': """
-This is the module to manage the accounting chart for Mexico in OpenERP.
-========================================================================
 
-Mexican accounting chart and localization.
+{
+    "name" : "Mexico - Accounting",
+    "version" : "2.0",
+    "author" : "Vauxoo",
+    "category" : "Localization/Account Charts",
+    "description": """
+Minimal accounting configuration for Mexico.
+============================================
+
+This Chart of account is a minimal proposal to be able to use OoB the 
+accounting feature of Openerp.
+
+This doesn't pretend be all the localization for MX it is just the minimal 
+data required to start from 0 in mexican localization.
+
+This modules and its content is updated frequently by openerp-mexico team.
+
+With this module you will have:
+
+ - Minimal chart of account tested in production eviroments.
+ - Minimal chart of taxes, to comply with SAT_ requirements.
+
+.. SAT: http://www.sat.gob.mx/
     """,
-    'depends': ['account', 'base_vat', 'account_chart'],
-    'demo': [],
-    'data': ['account_tax_code.xml','account_chart.xml',
-              'account_tax.xml','l10n_chart_mx_wizard.xml'
-    ],
-    'auto_install': False,
-    'installable': True,
-    'images': ['images/config_chart_l10n_mx.jpeg','images/l10n_mx_chart.jpeg'],
+    "depends" : ["account", 
+                 "base_vat", 
+                 "account_chart",
+                 ],
+    "demo_xml" : [],
+    "update_xml" : ["data/account_tax_code.xml",                    
+                    "data/account_chart.xml",
+                    "data/account_tax.xml",
+                    "data/l10n_chart_mx_wizard.xml"],
+    "active": False,
+    "installable": True,
+    "certificate": False,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

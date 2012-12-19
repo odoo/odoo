@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 
 class hr_timesheet_settings(osv.osv_memory):
     _inherit = 'hr.config.settings'

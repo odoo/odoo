@@ -19,22 +19,20 @@
 #
 ##############################################################################
 
-import pdb
-import openerp
-import addons
-import openerp.addons.product.product
-
-import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-import logging
-
-import netsvc
-from osv import fields, osv
-import tools
-from tools.translate import _
 from decimal import Decimal
-import decimal_precision as dp
+import logging
+import pdb
+import time
+
+import openerp
+from openerp import netsvc, tools
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+
+import openerp.addons.decimal_precision as dp
+import openerp.addons.product.product
 
 _logger = logging.getLogger(__name__)
 

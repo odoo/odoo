@@ -20,7 +20,7 @@
 ##############################################################################
 
 import time
-from report import report_sxw
+from openerp.report import report_sxw
 from common_report_header import common_report_header
 
 class aged_trial_report(report_sxw.rml_parse, common_report_header):

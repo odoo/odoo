@@ -21,10 +21,11 @@
 
 import time
 
-from osv import fields, osv
-from tools.translate import _
-import decimal_precision as dp
-import netsvc
+from openerp import netsvc
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+
+import openerp.addons.decimal_precision as dp
 
 def _employee_get(obj, cr, uid, context=None):
     if context is None:
@@ -76,7 +77,7 @@ class hr_expense_expense(osv.osv):
         'account_move_id': fields.many2one('account.move', 'Ledger Posting'),
         'line_ids': fields.one2many('hr.expense.line', 'expense_id', 'Expense Lines', readonly=True, states={'draft':[('readonly',False)]} ),
         'note': fields.text('Note'),
-        'amount': fields.function(_amount, string='Total Amount', digits_compute= dp.get_precision('Account')),
+        'amount': fields.function(_amount, string='Total Amount', digits_compute=dp.get_precision('Account')),
         'voucher_id': fields.many2one('account.voucher', "Employee's Receipt"),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'department_id':fields.many2one('hr.department','Department', readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
@@ -170,7 +171,7 @@ class hr_expense_expense(osv.osv):
                     journal = account_journal.browse(cr, uid, journal_id, context=context)
             for line in exp.line_ids:
                 if line.product_id:
-                    acc = line.product_id.product_tmpl_id.property_account_expense
+                    acc = line.product_id.property_account_expense
                     if not acc:
                         acc = line.product_id.categ_id.property_account_expense_categ
                 else:

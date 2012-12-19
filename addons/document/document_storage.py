@@ -20,21 +20,21 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 import os
-import tools
+from openerp import tools
 import base64
 import errno
 import logging
 import shutil
 from StringIO import StringIO
 import psycopg2
-from tools.misc import ustr
-from tools.translate import _
-from osv.orm import except_orm
+from openerp.tools.misc import ustr
+from openerp.tools.translate import _
+from openerp.osv.orm import except_orm
 import random
 import string
-import pooler
+from openerp import pooler
 import nodes
 from content_index import cntIndex
 _logger = logging.getLogger(__name__)

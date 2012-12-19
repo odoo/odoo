@@ -19,10 +19,10 @@
 #
 ##############################################################################
 
-from osv import osv
-from osv import fields
-from tools.translate import _
 from lxml import etree
+
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class survey_name_wiz(osv.osv_memory):
     _name = 'survey.name.wiz'

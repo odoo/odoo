@@ -24,12 +24,12 @@ from datetime import timedelta
 import re
 import time
 
-from osv import fields, osv, orm
-from tools.translate import _
-from tools.safe_eval import safe_eval
-from tools import ustr
-import pooler
-import tools
+from openerp.osv import fields, osv, orm
+from openerp.tools.translate import _
+from openerp.tools.safe_eval import safe_eval
+from openerp.tools import ustr
+from openerp import pooler
+from openerp import tools
 
 
 def get_datetime(date_field):

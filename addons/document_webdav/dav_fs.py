@@ -18,31 +18,31 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import pooler
-import sql_db
-
 import os
 import time
 import errno
-
-import netsvc
+import re
 import urlparse
-
-from DAV.constants import COLLECTION  #, OBJECT
-from DAV.errors import DAV_Error, DAV_Forbidden, DAV_NotFound
-from DAV.iface import dav_interface
 import urllib
 
-from DAV.davcmd import copyone, copytree, moveone, movetree, delone, deltree
-from cache import memoize
-from tools import misc
-
-from webdav import mk_lock_response
-
 try:
-    from tools.dict_tools import dict_merge2
+    from pywebdav.lib.constants import COLLECTION  # , OBJECT
+    from pywebdav.lib.errors import DAV_Error, DAV_Forbidden, DAV_NotFound
+    from pywebdav.lib.iface import dav_interface
+    from pywebdav.lib.davcmd import copyone, copytree, moveone, movetree, delone, deltree
 except ImportError:
-    from document.dict_tools import dict_merge2
+    from DAV.constants import COLLECTION  #, OBJECT
+    from DAV.errors import DAV_Error, DAV_Forbidden, DAV_NotFound
+    from DAV.iface import dav_interface
+    from DAV.davcmd import copyone, copytree, moveone, movetree, delone, deltree
+
+import openerp
+from openerp import pooler, sql_db, netsvc
+from openerp.tools import misc
+from openerp.addons.document.dict_tools import dict_merge2
+
+from cache import memoize
+from webdav import mk_lock_response
 
 CACHE_SIZE=20000
 
@@ -355,7 +355,8 @@ class openerp_dav_handler(dav_interface):
         return self.parent.get_baseuri(self) + '/'.join(ajoin)
 
     @memoize(4)
-    def db_list(self):
+    def _all_db_list(self):
+        """return all databases who have module document_webdav installed"""
         s = netsvc.ExportService.getService('db')
         result = s.exp_list()
         self.db_name_list=[]
@@ -364,7 +365,7 @@ class openerp_dav_handler(dav_interface):
             try:
                 db = sql_db.db_connect(db_name)
                 cr = db.cursor()
-                cr.execute("SELECT id FROM ir_module_module WHERE name = 'document' AND state='installed' ")
+                cr.execute("SELECT id FROM ir_module_module WHERE name = 'document_webdav' AND state='installed' ")
                 res=cr.fetchone()
                 if res and len(res):
                     self.db_name_list.append(db_name)
@@ -375,6 +376,15 @@ class openerp_dav_handler(dav_interface):
                     cr.close()
         return self.db_name_list
 
+    def db_list(self, uri):
+        # import pudb;pudb.set_trace()
+        u = urlparse.urlsplit(uri)
+        h = u.hostname
+        d = h.split('.')[0]
+        r = openerp.tools.config['dbfilter'].replace('%h', h).replace('%d',d)
+        dbs = [i for i in self._all_db_list() if re.match(r, i)]
+        return dbs
+
     def get_childs(self,uri, filters=None):
         """ return the child objects as self.baseuris for the given URI """
         self.parent.log_message('get children: %s' % uri)
@@ -382,7 +392,7 @@ class openerp_dav_handler(dav_interface):
 
         if not dbname:
             if cr: cr.close()
-            res = map(lambda x: self.urijoin(x), self.db_list())
+            res = map(lambda x: self.urijoin(x), self.db_list(uri))
             return res
         result = []
         node = self.uri2object(cr, uid, pool, uri2[:])

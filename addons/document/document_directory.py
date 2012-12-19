@@ -20,11 +20,11 @@
 ##############################################################################
 
 
-from osv import osv, fields
-from osv.orm import except_orm
+from openerp.osv import fields, osv
+from openerp.osv.orm import except_orm
 import logging
 import nodes
-from tools.translate import _
+from openerp.tools.translate import _
 _logger = logging.getLogger(__name__)
 class document_directory(osv.osv):
     _name = 'document.directory'

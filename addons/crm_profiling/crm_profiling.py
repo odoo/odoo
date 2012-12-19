@@ -19,10 +19,10 @@
 #
 ##############################################################################
 
-from osv import fields,osv
-from osv import orm
+from openerp.osv import fields,osv
+from openerp.osv import orm
 
-from tools.translate import _
+from openerp.tools.translate import _
 
 def _get_answers(cr, uid, ids):
     """

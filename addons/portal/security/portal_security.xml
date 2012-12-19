@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="portal_read_own_res_partner" model="ir.rule">
+            <field name="name">res_partner: read access on my partner</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="domain_force">[('user_ids', 'in', user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_portal')), (4, ref('group_anonymous'))]"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="perm_write" eval="False"/>
+        </record>
+
+    </data>
+</openerp>

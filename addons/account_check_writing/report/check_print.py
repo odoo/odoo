@@ -20,8 +20,8 @@
 ##############################################################################
 
 import time
-from report import report_sxw
-from tools import amount_to_text_en
+from openerp.report import report_sxw
+from openerp.tools import amount_to_text_en
 
 class report_print_check(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):

@@ -18,7 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from osv import osv, fields
+from openerp.osv import fields, osv
 
 class lunch_order_order(osv.TransientModel):
     """ lunch order meal """

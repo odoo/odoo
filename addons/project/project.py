@@ -19,16 +19,17 @@
 #
 ##############################################################################
 
-import time
-from lxml import etree
 from datetime import datetime, date
+from lxml import etree
+import time
 
-import tools
-from base_status.base_stage import base_stage
-from osv import fields, osv
-from openerp.addons.resource.faces import task as Task
-from tools.translate import _
 from openerp import SUPERUSER_ID
+from openerp import tools
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+
+from openerp.addons.base_status.base_stage import base_stage
+from openerp.addons.resource.faces import task as Task
 
 _TASK_STATE = [('draft', 'New'),('open', 'In Progress'),('pending', 'Pending'), ('done', 'Done'), ('cancelled', 'Cancelled')]
 
@@ -40,7 +41,7 @@ class project_task_type(osv.osv):
         'name': fields.char('Stage Name', required=True, size=64, translate=True),
         'description': fields.text('Description'),
         'sequence': fields.integer('Sequence'),
-        'case_default': fields.boolean('Common to All Projects',
+        'case_default': fields.boolean('Default for New Projects',
                         help="If you check this field, this stage will be proposed by default on each new project. It will not assign this stage to existing projects."),
         'project_ids': fields.many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', 'Projects'),
         'state': fields.selection(_TASK_STATE, 'Related Status', required=True,
@@ -58,7 +59,7 @@ class project_task_type(osv.osv):
         'sequence': 1,
         'state': 'open',
         'fold': False,
-        'case_default': True,
+        'case_default': False,
         'project_ids': _get_default_project_id
     }
     _order = 'sequence'
@@ -190,10 +191,10 @@ class project(osv.osv):
         attachment = self.pool.get('ir.attachment')
         task = self.pool.get('project.task')
         for id in ids:
-            project_attachments = attachment.search(cr, uid, [('res_model', '=', 'project.project'), ('res_id', 'in', [id])], context=context, count=True)
-            task_ids = task.search(cr, uid, [('project_id', 'in', [id])], context=context)
+            project_attachments = attachment.search(cr, uid, [('res_model', '=', 'project.project'), ('res_id', '=', id)], context=context, count=True)
+            task_ids = task.search(cr, uid, [('project_id', '=', id)], context=context)
             task_attachments = attachment.search(cr, uid, [('res_model', '=', 'project.task'), ('res_id', 'in', task_ids)], context=context, count=True)
-            res[id] = project_attachments or 0 + task_attachments or 0
+            res[id] = (project_attachments or 0) + (task_attachments or 0)
         return res
         
     def _task_count(self, cr, uid, ids, field_name, arg, context=None):
@@ -206,7 +207,7 @@ class project(osv.osv):
     def _get_alias_models(self, cr, uid, context=None):
         """Overriden in project_issue to offer more options"""
         return [('project.task', "Tasks")]
-    
+
     def attachment_tree_view(self, cr, uid, ids, context):
         task_ids = self.pool.get('project.task').search(cr, uid, [('project_id', 'in', ids)])
         domain = [
@@ -811,25 +812,15 @@ class task(base_stage, osv.osv):
     }
     _order = "priority, sequence, date_start, name, id"
 
-    def set_priority(self, cr, uid, ids, priority, *args):
-        """Set task priority
-        """
-        return self.write(cr, uid, ids, {'priority' : priority})
-
-    def set_very_high_priority(self, cr, uid, ids, *args):
-        """Set task priority to very high
-        """
-        return self.set_priority(cr, uid, ids, '0')
-    
     def set_high_priority(self, cr, uid, ids, *args):
         """Set task priority to high
         """
-        return self.set_priority(cr, uid, ids, '1')
+        return self.write(cr, uid, ids, {'priority' : '0'})
 
     def set_normal_priority(self, cr, uid, ids, *args):
         """Set task priority to normal
         """
-        return self.set_priority(cr, uid, ids, '2')
+        return self.write(cr, uid, ids, {'priority' : '2'})
 
     def _check_recursion(self, cr, uid, ids, context=None):
         for id in ids:

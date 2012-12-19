@@ -29,8 +29,8 @@ except ImportError:
     import pickle
 import random
 import datetime
-from osv import fields, osv
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 from itertools import groupby
 from operator import itemgetter

@@ -22,9 +22,9 @@
 import logging
 import random
 
-from osv import osv, fields
-from tools.translate import _
-from tools import email_re
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+from openerp.tools import email_re
 from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)

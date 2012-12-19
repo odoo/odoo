@@ -21,8 +21,8 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from osv import fields,osv
-import tools
+from openerp.osv import fields,osv
+from openerp import tools
 
 class report_timesheet_task_user(osv.osv):
     _name = "report.timesheet.task.user"
@@ -56,7 +56,7 @@ class report_timesheet_task_user(osv.osv):
         tools.drop_view_if_exists(cr, 'report_timesheet_task_user')
         cr.execute(""" create or replace view report_timesheet_task_user as (
         select
-         ((r.id*12)+to_number(months.m_id,'99'))::integer as id,
+         ((r.id*12)+to_number(months.m_id,'999999'))::integer as id,
                months.name as name,
                r.id as user_id,
                to_char(to_date(months.name, 'YYYY/MM/DD'),'YYYY') as year,
@@ -65,12 +65,12 @@ class report_timesheet_task_user(osv.osv):
             interval '1 day') ) as task_hrs
         from res_users r,
                 (select to_char(p.date,'YYYY-MM-01') as name,
-            to_char(p.date,'MM') as m_id
+            to_char(p.date,'YYYYMM') as m_id
                 from project_task_work p
 
             union
                 select to_char(h.name,'YYYY-MM-01') as name,
-                to_char(h.name,'MM') as m_id
+                to_char(h.name,'YYYYMM') as m_id
                 from hr_timesheet_sheet_sheet_day h) as months
 
             group by

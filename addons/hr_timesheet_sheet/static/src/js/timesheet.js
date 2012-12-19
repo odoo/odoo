@@ -14,7 +14,7 @@ openerp.hr_timesheet_sheet = function(instance) {
                 date_to: false,
                 date_from: false,
             });
-            this.updating = true;
+            this.updating = false;
             this.field_manager.on("field_changed:timesheet_ids", this, this.query_sheets);
             this.field_manager.on("field_changed:date_from", this, function() {
                 this.set({"date_from": instance.web.str_to_date(this.field_manager.get_field_value("date_from"))});
