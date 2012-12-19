@@ -31,6 +31,13 @@ class account_analytic_account(osv.osv):
     _name = 'account.analytic.account'
     _inherit = ['mail.thread']
     _description = 'Analytic Account'
+    _track = {
+        'state': {
+            'analytic.mt_account_pending': lambda self, cr, uid, obj, ctx=None:  obj['state'] == 'pending',
+            'analytic.mt_account_closed': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'close',
+            'analytic.mt_account_opened': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'open',
+        },
+    }
 
     def _compute_level_tree(self, cr, uid, ids, child_ids, res, field_names, context=None):
         currency_obj = self.pool.get('res.currency')
@@ -189,7 +196,7 @@ class account_analytic_account(osv.osv):
         'date_start': fields.date('Start Date'),
         'date': fields.date('Date End', select=True),
         'company_id': fields.many2one('res.company', 'Company', required=False), #not required because we want to allow different companies to use the same chart of account, except for leaf accounts.
-        'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','To Renew'),('close','Closed')], 'Status', required=True,),
+        'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','To Renew'),('close','Closed')], 'Status', required=True, track_visibility=1),
         'currency_id': fields.function(_currency, fnct_inv=_set_company_currency, #the currency_id field is readonly except if it's a view account and if there is no company
             store = {
                 'res.company': (_get_analytic_account, ['currency_id'], 10),
