@@ -80,12 +80,10 @@ openerp.base = function(instance) {
             }
         },
 
-        clean: function() {
-            self.get_client().always(function(client) { client.destroy(); });
-        },
-
         destroy: function() {
-            this.clean();
+            if (instance.base.apps_client) {
+                instance.base.apps_client.destroy();
+            }
             return this._super();
         },
 
