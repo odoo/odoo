@@ -1050,13 +1050,12 @@ class account_invoice(osv.osv):
         self.write(cr, uid, ids, {})
 
         for obj_inv in self.browse(cr, uid, ids, context=context):
-            id = obj_inv.id
             invtype = obj_inv.type
             number = obj_inv.number
             move_id = obj_inv.move_id and obj_inv.move_id.id or False
             reference = obj_inv.reference or ''
 
-            self.write(cr, uid, ids, {'internal_number':number})
+            self.write(cr, uid, ids, {'internal_number': number})
 
             if invtype in ('in_invoice', 'in_refund'):
                 if not reference:
@@ -1077,13 +1076,6 @@ class account_invoice(osv.osv):
                     'WHERE account_move_line.move_id = %s ' \
                         'AND account_analytic_line.move_id = account_move_line.id',
                         (ref, move_id))
-
-            for inv_id, name in self.name_get(cr, uid, [id]):
-                ctx = context.copy()
-                if obj_inv.type in ('out_invoice', 'out_refund'):
-                    ctx = self.get_log_context(cr, uid, context=ctx)
-                message = _("Invoice  '%s' is validated.") % name
-                self.message_post(cr, uid, [inv_id], body=message, subtype="account.mt_invoice_validated", context=context)
         return True
 
     def action_cancel(self, cr, uid, ids, context=None):
@@ -1334,8 +1326,8 @@ class account_invoice(osv.osv):
         else:
             code = invoice.currency_id.symbol
             # TODO: use currency's formatting function
-            msg = _("Invoice '%s' is paid partially: %s%s of %s%s (%s%s remaining).") % \
-                    (name, pay_amount, code, invoice.amount_total, code, total, code)
+            msg = _("Invoice partially paid: %s%s of %s%s (%s%s remaining).") % \
+                    (pay_amount, code, invoice.amount_total, code, total, code)
             self.message_post(cr, uid, [inv_id], body=msg, context=context)
             self.pool.get('account.move.line').reconcile_partial(cr, uid, line_ids, 'manual', context)
 
@@ -1343,19 +1335,6 @@ class account_invoice(osv.osv):
         self.pool.get('account.invoice').write(cr, uid, ids, {}, context=context)
         return True
 
-    # -----------------------------------------
-    # OpenChatter notifications and need_action
-    # -----------------------------------------
-
-    def _get_document_type(self, type):
-        type_dict = {
-                # Translation markers will have no effect at runtime, only used to properly flag export
-                'out_invoice': _('Customer invoice'),
-                'in_invoice': _('Supplier invoice'),
-                'out_refund': _('Customer Refund'),
-                'in_refund': _('Supplier Refund'),
-        }
-        return type_dict.get(type, 'Invoice')
 
 class account_invoice_line(osv.osv):
 
