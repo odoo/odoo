@@ -103,7 +103,7 @@ class WebRequest(object):
             lang = self.httprequest.cookies.get('lang')
         if lang is None:
             lang = self.httprequest.accept_languages.best
-        if lang is None:
+        if not lang:
             lang = 'en_US'
         # tranform 2 letters lang like 'en' into 5 letters like 'en_US'
         lang = babel.core.LOCALE_ALIASES.get(lang, lang)
@@ -534,7 +534,7 @@ class Root(object):
         controllers and configure them.  """
 
         for addons_path in openerp.modules.module.ad_paths:
-            for module in os.listdir(addons_path):
+            for module in sorted(os.listdir(addons_path)):
                 if module not in addons_module:
                     manifest_path = os.path.join(addons_path, module, '__openerp__.py')
                     path_static = os.path.join(addons_path, module, 'static')

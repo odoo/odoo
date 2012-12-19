@@ -43,7 +43,9 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.currently_dragging = {};
         this.limit = options.limit || 40;
         this.add_group_mutex = new $.Mutex();
-        this.on('view_loaded', self, self.load_kanban);
+    },
+    view_loading: function(r) {
+        return this.load_kanban(r);
     },
     start: function() {
         var self = this;
@@ -988,7 +990,7 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
     kanban_image: function(model, field, id, cache, options) {
         options = options || {};
         var url;
-        if (this.record[field] && this.record[field].value && ! /^\d+(\.\d*)? \w+$/.test(this.record[field].value)) {
+        if (this.record[field] && this.record[field].value && !instance.web.form.is_bin_size(this.record[field].value)) {
             url = 'data:image/png;base64,' + this.record[field].value;
         } else if (this.record[field] && ! this.record[field].value) {
             url = "/web/static/src/img/placeholder.png";

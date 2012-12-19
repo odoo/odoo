@@ -1,6 +1,8 @@
 Widget
 ======
 
+.. js:class:: openerp.web.Widget
+
 This is the base class for all visual components. It corresponds to an MVC
 view. It provides a number of services to handle a section of a page:
 
@@ -15,19 +17,19 @@ view. It provides a number of services to handle a section of a page:
   be anything the corresponding jQuery method accepts (generally selectors,
   DOM nodes and jQuery objects):
 
-  :js:func:`~openerp.base.Widget.appendTo`
+  :js:func:`~openerp.web.Widget.appendTo`
     Renders the widget and inserts it as the last child of the target, uses
     `.appendTo()`_
 
-  :js:func:`~openerp.base.Widget.prependTo`
+  :js:func:`~openerp.web.Widget.prependTo`
     Renders the widget and inserts it as the first child of the target, uses
     `.prependTo()`_
 
-  :js:func:`~openerp.base.Widget.insertAfter`
+  :js:func:`~openerp.web.Widget.insertAfter`
     Renders the widget and inserts it as the preceding sibling of the target,
     uses `.insertAfter()`_
 
-  :js:func:`~openerp.base.Widget.insertBefore`
+  :js:func:`~openerp.web.Widget.insertBefore`
     Renders the widget and inserts it as the following sibling of the target,
     uses `.insertBefore()`_
 
@@ -41,7 +43,7 @@ DOM Root
 A :js:class:`~openerp.web.Widget` is responsible for a section of the
 page materialized by the DOM root of the widget. The DOM root is
 available via the :js:attr:`~openerp.web.Widget.el` and
-:js:attr:`~openerp.web.Widget.$element` attributes, which are
+:js:attr:`~openerp.web.Widget.$el` attributes, which are
 respectively the raw DOM Element and the jQuery wrapper around the DOM
 element.
 
@@ -123,7 +125,7 @@ DOM:
 
     .. code-block:: javascript
 
-        this.$element.find(selector);
+        this.$el.find(selector);
 
     :param String selector: CSS selector
     :returns: jQuery object
@@ -159,7 +161,16 @@ To this end, :js:class:`~openerp.web.Widget` provides an shortcut:
     Events are a mapping of ``event selector`` (an event name and a
     CSS selector separated by a space) to a callback. The callback can
     be either a method name in the widget or a function. In either
-    case, the ``this`` will be set to the widget.
+    case, the ``this`` will be set to the widget:
+
+    .. code-block:: javascript
+
+        events: {
+            'click p.oe_some_class a': 'some_method',
+            'change input': function (e) {
+                e.stopPropagation();
+            }
+        },
 
     The selector is used for jQuery's `event delegation`_, the
     callback will only be triggered for descendants of the DOM root
