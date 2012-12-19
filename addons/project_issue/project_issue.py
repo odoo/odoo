@@ -52,14 +52,14 @@ class project_issue(base_stage, osv.osv):
 
     _track = {
         'state': {
-            'project_issue.mt_project_issue_closed': lambda self, cr, uid, obj, ctx=None:  obj['state'] == 'done',
-            'project_issue.mt_project_issue_started': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'open',
+            'project_issue.mt_issue_closed': lambda self, cr, uid, obj, ctx=None:  obj['state'] == 'done',
+            'project_issue.mt_issue_started': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'open',
         },
         'stage_id': {
-            'project_issue.mt_project_issue_stage': lambda self, cr, uid, obj, ctx=None: obj['state'] not in ['done', 'open'],
+            'project_issue.mt_issue_stage': lambda self, cr, uid, obj, ctx=None: obj['state'] not in ['done', 'open'],
         },
         'kanban_state': {
-            'project_issue.mt_project_issue_blocked': lambda self, cr, uid, obj, ctx=None: obj['kanban_state'] == 'blocked',
+            'project_issue.mt_issue_blocked': lambda self, cr, uid, obj, ctx=None: obj['kanban_state'] == 'blocked',
         },
     }
 
@@ -248,7 +248,7 @@ class project_issue(base_stage, osv.osv):
                       If the case needs to be reviewed then the status is \
                       set to \'Pending\'.'),
         'kanban_state': fields.selection([('normal', 'Normal'),('blocked', 'Blocked'),('done', 'Ready for next stage')], 'Kanban State',
-                                         _track_visibility=1,
+                                         track_visibility=1,
                                          help="A Issue's kanban state indicates special situations affecting it:\n"
                                               " * Normal is the default situation\n"
                                               " * Blocked indicates something is preventing the progress of this issue\n"
@@ -265,16 +265,16 @@ class project_issue(base_stage, osv.osv):
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'version_id': fields.many2one('project.issue.version', 'Version'),
         'stage_id': fields.many2one ('project.task.type', 'Stage',
-                        _track_visibility=1,
+                        track_visibility=1,
                         domain="['&', ('fold', '=', False), ('project_ids', '=', project_id)]"),
-        'project_id':fields.many2one('project.project', 'Project', _track_visibility=1),
+        'project_id':fields.many2one('project.project', 'Project', track_visibility=1),
         'duration': fields.float('Duration'),
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
         'day_open': fields.function(_compute_day, string='Days to Open', \
                                 multi='compute_day', type="float", store=True),
         'day_close': fields.function(_compute_day, string='Days to Close', \
                                 multi='compute_day', type="float", store=True),
-        'user_id': fields.many2one('res.users', 'Assigned to', required=False, select=1, _track_visibility=1),
+        'user_id': fields.many2one('res.users', 'Assigned to', required=False, select=1, track_visibility=1),
         'working_hours_open': fields.function(_compute_day, string='Working Hours to Open the Issue', \
                                 multi='compute_day', type="float", store=True),
         'working_hours_close': fields.function(_compute_day, string='Working Hours to Close the Issue', \
@@ -388,12 +388,7 @@ class project_issue(base_stage, osv.osv):
         if any([field in vals for field in logged_fields]):
             vals['date_action_last'] = time.strftime('%Y-%m-%d %H:%M:%S')
 
-        res = super(project_issue, self).write(cr, uid, ids, vals, context)
-
-        # subscribe new project followers to the issue
-        if vals.get('project_id'):
-            self.message_subscribe_from_parent(cr, uid, ids, context=context)
-        return res
+        return super(project_issue, self).write(cr, uid, ids, vals, context)
 
     def onchange_task_id(self, cr, uid, ids, task_id, context=None):
         if not task_id:
