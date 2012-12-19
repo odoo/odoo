@@ -26,7 +26,6 @@ from openerp import tools
 
 class stock_change_product_qty(osv.osv_memory):
     _name = "stock.change.product.qty"
-    _inherit = ['mail.thread']
     _description = "Change Product Quantity"
     _columns = {
         'product_id' : fields.many2one('product.product', 'Product'),

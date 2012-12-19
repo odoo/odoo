@@ -1353,7 +1353,7 @@ class stock_picking(osv.osv):
                 wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
                 delivered_pack_id = new_picking
                 back_order_name = self.browse(cr, uid, delivered_pack_id, context=context).name
-                self.back_order_send_note(cr, uid, ids, back_order_name, context)
+                self.message_post(cr, uid, ids, body=_("Back order <em>%s</em> has been <b>created</b>.") % (back_order_name), context=context)
             else:
                 self.action_move(cr, uid, [pick.id], context=context)
                 wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_done', cr)
@@ -1379,65 +1379,6 @@ class stock_picking(osv.osv):
         res = self.pool.get('ir.model.data').get_object_reference(cr, uid, 
             'stock', self._VIEW_LIST.get(type, 'view_picking_form'))            
         return res and res[1] or False
-
-    def log_picking(self, cr, uid, ids, context=None):
-        """ This function will create log messages for picking.
-        @param cr: the database cursor
-        @param uid: the current user's ID for security checks,
-        @param ids: List of Picking Ids
-        @param context: A standard dictionary for contextual values
-        """
-        if context is None:
-            context = {}
-        lang_obj = self.pool.get('res.lang')
-        user_lang = self.pool.get('res.users').browse(cr, uid, uid, context=context).context_lang
-        lang_ids = lang_obj.search(cr, uid, [('code','like',user_lang)])
-        if lang_ids:
-            date_format = lang_obj.browse(cr, uid, lang_ids[0], context=context).date_format
-        else:
-            date_format = '%m/%d/%Y'
-
-        for pick in self.browse(cr, uid, ids, context=context):
-            msg=''
-            if pick.auto_picking:
-                continue
-            type_list = {
-                'out':_("Delivery Order"),
-                'in':_('Reception'),
-                'internal': _('Internal picking'),
-            }
-            message = type_list.get(pick.type, _('Document')) + " '" + (pick.name or '?') + "' "
-            if pick.min_date:
-                msg= _(' for the ')+ datetime.strptime(pick.min_date, '%Y-%m-%d %H:%M:%S').strftime(date_format)
-            state_list = {
-                'confirmed': _('is scheduled %s.') % msg,
-                'assigned': _('is ready to process.'),
-                'cancel': _('is cancelled.'),
-                'done': _('is done.'),
-                'auto': _('is waiting.'),
-                'draft': _('is in draft state.'),
-            }
-            context['view_id'] = self._get_view_id(cr, uid, pick.type)
-            message += state_list[pick.state]
-        return True
-
-    # -----------------------------------------
-    # OpenChatter methods and notifications
-    # -----------------------------------------
-
-    def _get_document_type(self, cr, uid, obj, context=None):
-        type_dict = {
-                'out': _('Delivery order'),
-                'in': _('Shipment'),
-                'internal': _('Internal picking'),
-        }
-        return type_dict.get(obj.type, _('Picking'))
-
-    def scrap_send_note(self, cr, uid, ids, quantity, uom, name, context=None):
-        return self.message_post(cr, uid, ids, body= _("%s %s %s has been <b>moved to</b> scrap.") % (quantity, uom, name), context=context)
-
-    def back_order_send_note(self, cr, uid, ids, back_name, context=None):
-        return self.message_post(cr, uid, ids, body=_("Back order <em>%s</em> has been <b>created</b>.") % (back_name), context=context)
 
 
 class stock_production_lot(osv.osv):
@@ -2552,7 +2493,8 @@ class stock_move(osv.osv):
             for product in product_obj.browse(cr, uid, [move.product_id.id], context=context):
                 if move.picking_id:
                     uom = product.uom_id.name if product.uom_id else ''
-                    move.picking_id.scrap_send_note(quantity, uom, product.name, context=context)
+                    message = _("%s %s %s has been <b>moved to</b> scrap.") % (quantity, uom, product.name)
+                    move.picking_id.message_post(body=message)
 
         self.action_done(cr, uid, res, context=context)
         return res
