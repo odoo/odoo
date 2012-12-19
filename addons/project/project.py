@@ -560,14 +560,15 @@ class task(base_stage, osv.osv):
 
     _track = {
         'state': {
-            'project.mt_project_task_closed': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'done',
-            'project.mt_project_task_started': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'open',
+            'project.mt_task_new': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'new',
+            'project.mt_task_started': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'open',
+            'project.mt_task_closed': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'done',
         },
         'stage_id': {
-            'project.mt_project_task_stage': lambda self, cr, uid, obj, ctx=None: obj['state'] not in ['done', 'open'],
+            'project.mt_task_stage': lambda self, cr, uid, obj, ctx=None: obj['state'] not in ['new', 'done', 'open'],
         },
         'kanban_state': {  # kanban state: tracked, but only block subtype
-            'project.mt_project_task_blocked': lambda self, cr, uid, obj, ctx=None: obj['kanban_state'] == 'blocked',
+            'project.mt_task_blocked': lambda self, cr, uid, obj, ctx=None: obj['kanban_state'] == 'blocked',
         },
     }
 
@@ -1117,10 +1118,6 @@ class task(base_stage, osv.osv):
             result = super(task, self).write(cr, uid, ids, vals, context=context)
         if ('stage_id' in vals) or ('remaining_hours' in vals) or ('user_id' in vals) or ('state' in vals) or ('kanban_state' in vals):
             self._store_history(cr, uid, ids, context=context)
-
-        # subscribe new project followers to the task
-        if vals.get('project_id'):
-            self._subscribe_followers_subtype(cr, uid, ids, vals.get('project_id'), 'project.project', context=context)
         return result
 
     def unlink(self, cr, uid, ids, context=None):
