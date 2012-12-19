@@ -813,8 +813,11 @@ instance.web.Menu =  instance.web.Widget.extend({
                 });
             }
         });
-        var lazyreflow = _.debounce(this.reflow.bind(this), 300);
-        instance.web.bus.on('resize', this, lazyreflow);
+        var lazyreflow = _.debounce(this.reflow.bind(this), 200);
+        instance.web.bus.on('resize', this, function() {
+            self.$el.height(0);
+            lazyreflow();
+        });
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -859,7 +862,7 @@ instance.web.Menu =  instance.web.Widget.extend({
      */
     reflow: function() {
         var self = this;
-        this.$el.show();
+        this.$el.height('auto').show();
         var $more_container = this.$('.oe_menu_more_container').hide();
         var $more = this.$('.oe_menu_more');
         $more.children('li').insertBefore($more_container);
