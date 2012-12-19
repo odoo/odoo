@@ -185,9 +185,11 @@ class account_invoice(osv.osv):
     _description = 'Invoice'
     _order = "id desc"
     _track = {
+        'type': {
+        },
         'state': {
-            'account.mt_invoice_paid': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'paid' and obj['type'] in ('out_invoice','out_refund'),
-            'account.mt_invoice_validated': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'open' and obj['type'] in ('out_invoice','out_refund'),
+            'account.mt_invoice_paid': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'paid' and obj['type'] in ('out_invoice', 'out_refund'),
+            'account.mt_invoice_validated': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'open' and obj['type'] in ('out_invoice', 'out_refund'),
         },
     }
     _columns = {
@@ -199,7 +201,7 @@ class account_invoice(osv.osv):
             ('in_invoice','Supplier Invoice'),
             ('out_refund','Customer Refund'),
             ('in_refund','Supplier Refund'),
-            ],'Type', readonly=True, select=True, change_default=True),
+            ],'Type', readonly=True, select=True, change_default=True, track_visibility=2),
 
         'number': fields.related('move_id','name', type='char', readonly=True, size=64, relation='account.move', store=True, string='Number'),
         'internal_number': fields.char('Invoice Number', size=32, readonly=True, help="Unique number of the invoice, computed automatically when the invoice is created."),
@@ -215,7 +217,7 @@ class account_invoice(osv.osv):
             ('open','Open'),
             ('paid','Paid'),
             ('cancel','Cancelled'),
-            ],'Status', select=True, readonly=True, tracked=True,
+            ],'Status', select=True, readonly=True, track_visibility=1,
             help=' * The \'Draft\' status is used when a user is encoding a new and unconfirmed Invoice. \
             \n* The \'Pro-forma\' when invoice is in Pro-forma status,invoice does not have an invoice number. \
             \n* The \'Open\' status is used when user create invoice,a invoice number is generated.Its in open status till user does not pay invoice. \
@@ -283,7 +285,7 @@ class account_invoice(osv.osv):
             help="Remaining amount due."),
         'payment_ids': fields.function(_compute_lines, relation='account.move.line', type="many2many", string='Payments'),
         'move_name': fields.char('Journal Entry', size=64, readonly=True, states={'draft':[('readonly',False)]}),
-        'user_id': fields.many2one('res.users', 'Salesperson', readonly=True, tracked=True, states={'draft':[('readonly',False)]}, track_visibility=1),
+        'user_id': fields.many2one('res.users', 'Salesperson', readonly=True, track_visibility=1, states={'draft':[('readonly',False)]}),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position', readonly=True, states={'draft':[('readonly',False)]})
     }
     _defaults = {

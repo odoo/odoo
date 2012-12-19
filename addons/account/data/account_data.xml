@@ -156,10 +156,12 @@
             <field name="name">Validated</field>
             <field name="res_model">account.invoice</field>
             <field name="default" eval="False"/>
+            <field name="description">Invoice &lt;b&gt;validated&lt;/b&gt;</field>
         </record>
         <record id="mt_invoice_paid" model="mail.message.subtype">
             <field name="name">Paid</field>
             <field name="res_model">account.invoice</field>
+            <field name="description">Invoice &lt;b&gt;paid&lt;/b&gt;</field>
         </record>
     </data>
 </openerp>
