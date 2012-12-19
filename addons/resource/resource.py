@@ -58,10 +58,10 @@ class resource_calendar(osv.osv):
         return res
 
     def _get_leaves(self, cr, uid, id, resource):
-        """Private Method to Calculate resource Leaves days
+        """Private Method to Calculate resource Time off days
 
         @param id: resource calendar id
-        @param resource: resource id for which leaves will ew calculated
+        @param resource: resource id for which Time off will ew calculated
 
         @return : returns the list of dates, where resource on leave in
                   resource.calendar.leaves object (e.g.['%Y-%m-%d', '%Y-%m-%d'])
@@ -91,7 +91,7 @@ class resource_calendar(osv.osv):
         @param dt_from: datetime object, start of working scheduled
         @param hours: float, total number working  hours needed scheduled from
                       start date
-        @param resource : Optional Resource id, if supplied than resource leaves
+        @param resource : Optional Resource id, if supplied than resource Time off
                         will also taken into consideration for calculating working
                         schedule.
         @return : List datetime object of working schedule based on supplies
@@ -202,7 +202,7 @@ class resource_calendar(osv.osv):
     def interval_hours_get(self, cr, uid, id, dt_from, dt_to, resource=False):
         """ Calculates the Total Working hours based on given start_date to
         end_date, If resource id is supplied that it will consider the source
-        leaves also in calculating the hours.
+        Time off also in calculating the hours.
 
         @param dt_from : date start to calculate hours
         @param dt_end : date end to calculate hours

@@ -32,7 +32,7 @@ class hr_config_settings(osv.osv_memory):
             help ="""This installs the module hr_attendance."""),
         'module_hr_timesheet': fields.boolean('Manage timesheets',
             help ="""This installs the module hr_timesheet."""),
-        'module_hr_holidays': fields.boolean('Manage holidays, leaves and allocation requests',
+        'module_hr_holidays': fields.boolean('Manage holidays, Time off and allocation requests',
             help ="""This installs the module hr_holidays."""),
         'module_hr_expense': fields.boolean('Manage employees expenses',
             help ="""This installs the module hr_expense."""),

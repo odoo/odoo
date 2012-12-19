@@ -24,7 +24,7 @@ from openerp.osv import fields, osv
 
 class hr_holidays_summary_employee(osv.osv_memory):
     _name = 'hr.holidays.summary.employee'
-    _description = 'HR Leaves Summary Report By Employee'
+    _description = 'HR Time off Summary Report By Employee'
     _columns = {
         'date_from': fields.date('From', required=True),
         'emp': fields.many2many('hr.employee', 'summary_emp_rel', 'sum_id', 'emp_id', 'Employee(s)'),
