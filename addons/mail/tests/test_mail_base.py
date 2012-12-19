@@ -83,7 +83,7 @@ class TestMailBase(common.TransactionCase):
         # Test 'pigs' group to use through the various tests
         self.group_pigs_id = self.mail_group.create(cr, uid,
             {'name': 'Pigs', 'description': 'Fans of Pigs, unite !'},
-            {'mail_nolog': True})
+            {'mail_create_nolog': True})
         self.group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
 
     def tearDown(self):

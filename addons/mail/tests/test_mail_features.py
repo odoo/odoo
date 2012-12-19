@@ -204,7 +204,7 @@ class test_mail(TestMailBase):
 
         # Data: create 'disturbing' values in mail.followers: same res_id, other res_model; same res_model, other res_id
         group_dummy_id = self.mail_group.create(cr, uid,
-            {'name': 'Dummy group'}, {'mail_nolog': True})
+            {'name': 'Dummy group'}, {'mail_create_nolog': True})
         self.mail_followers.create(cr, uid,
             {'res_model': 'mail.thread', 'res_id': self.group_pigs_id, 'partner_id': partner_bert_id})
         self.mail_followers.create(cr, uid,
@@ -443,7 +443,7 @@ class test_mail(TestMailBase):
         cr, uid, user_admin, group_pigs = self.cr, self.uid, self.user_admin, self.group_pigs
         mail_compose = self.registry('mail.compose.message')
         self.res_users.write(cr, uid, [uid], {'signature': 'Admin', 'email': 'a@a'})
-        group_bird_id = self.mail_group.create(cr, uid, {'name': 'Bird', 'description': 'Bird resistance'}, {'mail_nolog': True})
+        group_bird_id = self.mail_group.create(cr, uid, {'name': 'Bird', 'description': 'Bird resistance'}, {'mail_create_nolog': True})
         group_bird = self.mail_group.browse(cr, uid, group_bird_id)
 
         # Mail data

@@ -241,12 +241,12 @@ class mail_thread(osv.AbstractModel):
         thread_id = super(mail_thread, self).create(cr, uid, values, context=context)
 
         # subscribe uid unless asked not to
-        if not context.get('mail_nosubscribe'):
+        if not context.get('mail_create_nosubscribe'):
             self.message_subscribe_users(cr, uid, [thread_id], [uid], context=context)
             self.message_subscribe_from_parent(cr, uid, [thread_id], values.keys(), context=context)
 
         # automatic logging unless asked not to (mainly for various testing purpose)
-        if not context.get('mail_nolog'):
+        if not context.get('mail_create_nolog'):
             self.message_post(cr, uid, thread_id, body='Document <b>created</b>.', context=context)
         return thread_id
 
