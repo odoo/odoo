@@ -266,6 +266,8 @@ class mail_thread(osv.AbstractModel):
         return thread_id
 
     def write(self, cr, uid, ids, values, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         tracked_fields = self._get_tracked_fields(cr, uid, values.keys(), context=context)
         if tracked_fields:
             initial = self.read(cr, uid, ids, tracked_fields.keys(), context=context)
