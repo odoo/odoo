@@ -268,7 +268,7 @@ class mail_thread(osv.AbstractModel):
         """ Find partners related to some header fields of the message. """
         s = ', '.join([decode(message.get(h)) for h in header_fields if message.get(h)])
         return [partner_id for email in tools.email_split(s)
-                for partner_id in self.pool.get('res.partner').search(cr, uid, [('email', 'ilike', email)], context=context)]
+                for partner_id in self.pool.get('res.partner').search(cr, uid, [('email', 'ilike', email)], limit=1, context=context)]
 
     def _message_find_user_id(self, cr, uid, message, context=None):
         from_local_part = tools.email_split(decode(message.get('From')))[0]
@@ -431,6 +431,10 @@ class mail_thread(osv.AbstractModel):
         msg = self.message_parse(cr, uid, msg_txt, save_original=save_original, context=context)
         if strip_attachments:
             msg.pop('attachments', None)
+
+        # postpone setting msg.partner_ids after message_post, to avoid double notifications
+        partner_ids = msg.pop('partner_ids', [])
+
         thread_id = False
         for model, thread_id, custom_values, user_id in routes:
             if self._name != model:
@@ -440,14 +444,24 @@ class mail_thread(osv.AbstractModel):
                 assert thread_id and hasattr(model_pool, 'message_update') or hasattr(model_pool, 'message_new'), \
                     "Undeliverable mail with Message-Id %s, model %s does not accept incoming emails" % \
                         (msg['message_id'], model)
+
+                # disabled subscriptions during message_new/update to avoid having the system user running the
+                # email gateway become a follower of all inbound messages  
+                nosub_ctx = dict(context, mail_nosubscribe=True)
                 if thread_id and hasattr(model_pool, 'message_update'):
-                    model_pool.message_update(cr, user_id, [thread_id], msg, context=context)
+                    model_pool.message_update(cr, user_id, [thread_id], msg, context=nosub_ctx)
                 else:
-                    thread_id = model_pool.message_new(cr, user_id, msg, custom_values, context=context)
+                    thread_id = model_pool.message_new(cr, user_id, msg, custom_values, context=nosub_ctx)
             else:
                 assert thread_id == 0, "Posting a message without model should be with a null res_id, to create a private message."
                 model_pool = self.pool.get('mail.thread')
-            model_pool.message_post_user_api(cr, uid, [thread_id], context=context, content_subtype='html', **msg)
+            new_msg_id = model_pool.message_post_user_api(cr, uid, [thread_id], context=context, content_subtype='html', **msg)
+
+            if partner_ids:
+                # postponed after message_post, because this is an external message and we don't want to create
+                # duplicate emails due to notifications
+                self.pool.get('mail.message').write(cr, uid, [new_msg_id], {'partner_ids': partner_ids}, context=context)
+
         return thread_id
 
     def message_new(self, cr, uid, msg_dict, custom_values=None, context=None):
