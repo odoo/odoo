@@ -341,11 +341,13 @@ class mail_thread(osv.AbstractModel):
                 if record[col_name] == initial[col_name] and getattr(self._all_columns[col_name].column, 'track_visibility', 0) == 2:
                     tracked_values[col_name] = dict(col_info=col_info['string'],
                         new_value=convert_for_display(record[col_name], col_info))
-                elif record[col_name] != initial[col_name] and getattr(self._all_columns[col_name].column, 'track_visibility', 0) in [1, 2]:
-                    tracked_values[col_name] = dict(col_info=col_info['string'],
-                        old_value=convert_for_display(initial[col_name], col_info),
-                        new_value=convert_for_display(record[col_name], col_info))
-                    changes.append(col_name)
+                elif record[col_name] != initial[col_name]:
+                    if getattr(self._all_columns[col_name].column, 'track_visibility', 0) in [1, 2]:
+                        tracked_values[col_name] = dict(col_info=col_info['string'],
+                            old_value=convert_for_display(initial[col_name], col_info),
+                            new_value=convert_for_display(record[col_name], col_info))
+                    if col_name in tracked_fields:
+                        changes.append(col_name)
             if not changes:
                 continue
 
