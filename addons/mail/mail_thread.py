@@ -90,7 +90,6 @@ class mail_thread(osv.AbstractModel):
     #   :param obj: is a browse_record
     #   :param function lambda: returns whether the tracking should record using this subtype
     _track = {}
-
     _TRACK_TEMPLATE = """
         %if message_description:
             <span>${message_description}</span>
@@ -249,7 +248,11 @@ class mail_thread(osv.AbstractModel):
     #------------------------------------------------------
 
     def create(self, cr, uid, values, context=None):
-        """ Override to subscribe the current user. """
+        """ Chatter override :
+            - subscribe uid
+            - subscribe followers of parent
+            - log a creation message
+        """
         if context is None:
             context = {}
         thread_id = super(mail_thread, self).create(cr, uid, values, context=context)
@@ -259,8 +262,9 @@ class mail_thread(osv.AbstractModel):
             self.message_subscribe_users(cr, uid, [thread_id], [uid], context=context)
             self.message_subscribe_from_parent(cr, uid, [thread_id], context=context)
 
-        # automatic logging
-        self.message_post(cr, uid, thread_id, body='Document <b>created</b>.', context=context)
+        # automatic logging unless asked not to (mainly for various testing purpose)
+        if not context.get('mail_nolog'):
+            self.message_post(cr, uid, thread_id, body='Document <b>created</b>.', context=context)
         return thread_id
 
     def write(self, cr, uid, ids, values, context=None):
@@ -306,14 +310,15 @@ class mail_thread(osv.AbstractModel):
         """
         lst = []
         for name, column_info in self._all_columns.items():
-            vis = getattr(column_info.column, 'track_visibility', False)
-            if (vis==2) or ((vis==1) and (name in updated_fields)) or (name in self._track):
+            visibility = getattr(column_info.column, 'track_visibility', False)
+            if visibility == 2 or (visibility == 1 and name in updated_fields) or name in self._track:
                 lst.append(name)
+        if not lst:
+            return lst
         return self.fields_get(cr, uid, lst, context=context)
 
     def message_track(self, cr, uid, ids, tracked_fields, initial_values, context=None):
-        if not tracked_fields:
-            return True
+
         def convert_for_display(value, field_obj):
             if not value:
                 return ''
@@ -323,29 +328,32 @@ class mail_thread(osv.AbstractModel):
                 return dict(field_obj['selection'])[value]
             return value
 
+        if not tracked_fields:
+            return True
+
         for record in self.read(cr, uid, ids, tracked_fields.keys(), context=context):
             initial = initial_values[record['id']]
-
             changes = []
             tracked_values = {}
+
             # generate tracked_values data structure: {'col_name': {col_info, new_value, old_value}}
             for col_name, col_info in tracked_fields.items():
-                if record[col_name] == initial[col_name] and (getattr(self._all_columns[col_name].column, 'track_visibility', 0) == 2):
+                if record[col_name] == initial[col_name] and getattr(self._all_columns[col_name].column, 'track_visibility', 0) == 2:
                     tracked_values[col_name] = dict(col_info=col_info['string'],
                         new_value=convert_for_display(record[col_name], col_info))
-                elif record[col_name] != initial[col_name] and (getattr(self._all_columns[col_name].column, 'track_visibility', 0) == 1):
-                    tracked_values[col_name] = dict(col_info=col_info['string'], 
-                        old_value=convert_for_display(initial[col_name], col_info), 
+                elif record[col_name] != initial[col_name] and getattr(self._all_columns[col_name].column, 'track_visibility', 0) in [1, 2]:
+                    tracked_values[col_name] = dict(col_info=col_info['string'],
+                        old_value=convert_for_display(initial[col_name], col_info),
                         new_value=convert_for_display(record[col_name], col_info))
                     changes.append(col_name)
             if not changes:
                 continue
 
             # find subtypes and post messages or log if no subtype found
-
             subtypes = []
             for field, track_info in self._track.items():
-                if field not in changes: continue
+                if field not in changes:
+                    continue
                 for subtype, method in track_info.items():
                     if method(self, cr, uid, record, context):
                         subtypes.append(subtype)
@@ -353,8 +361,8 @@ class mail_thread(osv.AbstractModel):
             posted = False
             for subtype in subtypes:
                 try:
-                    subtype_rec = self.pool.get('ir.model.data').get_object(cr, uid, *subtype.split('.'))
-                except ValueError, e:
+                    subtype_rec = self.pool.get('ir.model.data').get_object(cr, uid, subtype.split('.')[0], subtype.split('.')[1])
+                except ValueError:
                     continue
                 message = MakoTemplate(self._TRACK_TEMPLATE).render_unicode(message_description=subtype_rec.description, tracked_values=tracked_values)
                 self.message_post(cr, uid, record['id'], body=message, subtype=subtype, context=context)
@@ -642,9 +650,9 @@ class mail_thread(osv.AbstractModel):
             alternative = (message.get_content_type() == 'multipart/alternative')
             for part in message.walk():
                 if part.get_content_maintype() == 'multipart':
-                    continue # skip container
-                filename = part.get_filename() # None if normal part
-                encoding = part.get_content_charset() # None if attachment
+                    continue  # skip container
+                filename = part.get_filename()  # None if normal part
+                encoding = part.get_content_charset()  # None if attachment
                 # 1) Explicit Attachments -> attachments
                 if filename or part.get('content-disposition', '').strip().startswith('attachment'):
                     attachments.append((filename or 'attachment', part.get_payload(decode=True)))
