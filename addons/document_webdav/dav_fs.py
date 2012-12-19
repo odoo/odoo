@@ -39,10 +39,6 @@ except ImportError:
 import openerp
 from openerp import pooler, sql_db, netsvc
 from openerp.tools import misc
-try:
-    from tools.dict_tools import dict_merge2
-except ImportError:
-    from document.dict_tools import dict_merge2
 
 from cache import memoize
 from webdav import mk_lock_response
@@ -56,6 +52,22 @@ urlparse.uses_netloc.append('webdavs')
 day_names = { 0: 'Mon', 1: 'Tue' , 2: 'Wed', 3: 'Thu', 4: 'Fri', 5: 'Sat', 6: 'Sun' }
 month_names = { 1: 'Jan', 2: 'Feb', 3: 'Mar', 4: 'Apr', 5: 'May', 6: 'Jun',
         7: 'Jul', 8: 'Aug', 9: 'Sep', 10: 'Oct', 11: 'Nov', 12: 'Dec' }
+
+def dict_merge2(*dicts):
+    """ Return a dict with all values of dicts.
+        If some key appears twice and contains iterable objects, the values
+        are merged (instead of overwritten).
+    """
+    res = {}
+    for d in dicts:
+        for k in d.keys():
+            if k in res and isinstance(res[k], (list, tuple)):
+                res[k] = res[k] + d[k]
+            elif k in res and isinstance(res[k], dict):
+                res[k].update(d[k])
+            else:
+                res[k] = d[k]
+    return res
 
 class DAV_NotFound2(DAV_NotFound):
     """404 exception, that accepts our list uris
