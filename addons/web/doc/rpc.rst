@@ -240,6 +240,8 @@ regular query for records):
 The result of a (successful) :js:func:`~openerp.web.Query.group_by` is
 an array of :js:class:`~openerp.web.QueryGroup`.
 
+.. _rpc_rpc:
+
 Low-level API: RPC calls to Python side
 ---------------------------------------
 

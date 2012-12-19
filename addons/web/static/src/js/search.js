@@ -341,12 +341,10 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         if (this.headless) {
             this.ready.resolve();
         } else {
-            var load_view = this.rpc("/web/view/load", {
-                model: this.model,
+            var load_view = instance.web.fields_view_get({
+                model: this.dataset._model,
                 view_id: this.view_id,
                 view_type: 'search',
-                context: instance.web.pyeval.eval(
-                    'context', this.dataset.get_context())
             });
 
             $.when(load_view).then(function (r) {
@@ -642,7 +640,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             .then(this.proxy('setup_default_query'));
 
         return $.when(drawer_started, defaults_fetched)
-            .done(function () { 
+            .then(function () { 
                 self.trigger("search_view_loaded", data);
                 self.ready.resolve();
             });

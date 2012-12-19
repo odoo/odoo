@@ -49,7 +49,9 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         this.range_stop = null;
         this.update_range_dates(Date.today());
         this.selected_filters = [];
-        this.on('view_loaded', self, self.load_calendar);
+    },
+    view_loading: function(r) {
+        return this.load_calendar(r);
     },
     destroy: function() {
         scheduler.clearAll();
@@ -463,12 +465,12 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
             });
         } else {
             var pop = new instance.web.form.FormOpenPopup(this);
-            var id_for_buggy_addons = this.dataset.ids[index]; // ids could be non numeric
-            pop.show_element(this.dataset.model, id_for_buggy_addons, this.dataset.get_context(), {
+            var id_from_dataset = this.dataset.ids[index]; // dhtmlx scheduler loses id's type
+            pop.show_element(this.dataset.model, id_from_dataset, this.dataset.get_context(), {
                 title: _t("Edit: ") + this.name
             });
             pop.on('write_completed', self, function(){
-                self.reload_event(event_id);
+                self.reload_event(id_from_dataset);
             });
         }
     },

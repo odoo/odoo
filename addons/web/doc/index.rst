@@ -12,17 +12,21 @@ Contents:
     :maxdepth: 1
 
     module
-    testing
-
     widget
+
 
     async
     rpc
     qweb
     client_action
-    form_view
+
+    guidelines
+
+    testing
+
     search_view
     list_view
+    form_view
 
     changelog-7.0
 

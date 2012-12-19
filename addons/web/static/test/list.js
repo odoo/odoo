@@ -4,20 +4,13 @@ openerp.testing.section('list.buttons', {
     templates: true
 }, function (test) {
     test('record-deletion', {asserts: 2}, function (instance, $fix, mock) {
-        mock('/web/view/load', function () {
+        mock('demo:fields_view_get', function () {
             return {
                 type: 'tree',
                 fields: {
                     a: {type: 'char', string: "A"}
                 },
-                arch: {
-                    tag: 'tree',
-                    attrs: { },
-                    children: [
-                        {tag: 'field', attrs: {name: 'a'}},
-                        {tag: 'button', attrs: {type: 'object', name: 'foo'}}
-                    ]
-                }
+                arch: '<tree><field name="a"/><button type="object" name="foo"/></tree>',
             };
         });
         mock('demo:read', function (args, kwargs) {

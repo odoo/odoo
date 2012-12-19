@@ -28,6 +28,7 @@ except ImportError:
     xlwt = None
 
 import openerp
+import openerp.modules.registry
 from openerp.tools.translate import _
 
 from .. import http
@@ -169,7 +170,6 @@ def module_installed_bypass_session(dbname):
     loadable = openerpweb.addons_manifest.keys()
     modules = {}
     try:
-        import openerp.modules.registry
         registry = openerp.modules.registry.RegistryManager.get(dbname)
         with registry.cursor() as cr:
             m = registry.get('ir.module.module')
@@ -523,21 +523,7 @@ html_template = """<!DOCTYPE html>
     <body>
         <!--[if lte IE 8]>
         <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
-        <script>
-            var test = function() {
-                CFInstall.check({
-                    mode: "overlay"
-                });
-            };
-            if (window.localStorage && false) {
-                if (! localStorage.getItem("hasShownGFramePopup")) {
-                    test();
-                    localStorage.setItem("hasShownGFramePopup", true);
-                }
-            } else {
-                test();
-            }
-        </script>
+        <script>CFInstall.check({mode: "overlay"});</script>
         <![endif]-->
     </body>
 </html>
@@ -920,14 +906,7 @@ class Menu(openerpweb.Controller):
     _cp_path = "/web/menu"
 
     @openerpweb.jsonrequest
-    def load(self, req):
-        return {'data': self.do_load(req)}
-
-    @openerpweb.jsonrequest
     def get_user_roots(self, req):
-        return self.do_get_user_roots(req)
-
-    def do_get_user_roots(self, req):
         """ Return all root menu ids visible for the session user.
 
         :param req: A request object, with an OpenERP session attribute
@@ -950,7 +929,8 @@ class Menu(openerpweb.Controller):
 
         return Menus.search(menu_domain, 0, False, False, req.context)
 
-    def do_load(self, req):
+    @openerpweb.jsonrequest
+    def load(self, req):
         """ Loads all menu items (all applications and their sub-menus).
 
         :param req: A request object, with an OpenERP session attribute
@@ -960,24 +940,28 @@ class Menu(openerpweb.Controller):
         """
         Menus = req.session.model('ir.ui.menu')
 
-        fields = ['name', 'sequence', 'parent_id', 'action',
-                  'needaction_enabled', 'needaction_counter']
-        menu_roots = Menus.read(self.do_get_user_roots(req), fields, req.context)
+        fields = ['name', 'sequence', 'parent_id', 'action']
+        menu_root_ids = self.get_user_roots(req)
+        menu_roots = Menus.read(menu_root_ids, fields, req.context) if menu_root_ids else []
         menu_root = {
             'id': False,
             'name': 'root',
             'parent_id': [-1, ''],
-            'children': menu_roots
+            'children': menu_roots,
+            'all_menu_ids': menu_root_ids,
         }
+        if not menu_roots:
+            return menu_root
 
         # menus are loaded fully unlike a regular tree view, cause there are a
         # limited number of items (752 when all 6.1 addons are installed)
-        menu_ids = Menus.search([], 0, False, False, req.context)
+        menu_ids = Menus.search([('id', 'child_of', menu_root_ids)], 0, False, False, req.context)
         menu_items = Menus.read(menu_ids, fields, req.context)
         # adds roots at the end of the sequence, so that they will overwrite
         # equivalent menu items from full menu read when put into id:item
         # mapping, resulting in children being correctly set on the roots.
         menu_items.extend(menu_roots)
+        menu_root['all_menu_ids'] = menu_ids # includes menu_root_ids!
 
         # make a tree using parent_id
         menu_items_map = dict(
@@ -999,7 +983,17 @@ class Menu(openerpweb.Controller):
         return menu_root
 
     @openerpweb.jsonrequest
+    def load_needaction(self, req, menu_ids):
+        """ Loads needaction counters for specific menu ids.
+
+            :return: needaction data
+            :rtype: dict(menu_id: {'needaction_enabled': boolean, 'needaction_counter': int})
+        """
+        return req.session.model('ir.ui.menu').get_needaction_data(menu_ids, req.context)
+
+    @openerpweb.jsonrequest
     def action(self, req, menu_id):
+        # still used by web_shortcut
         actions = load_actions_from_ir_values(req,'action', 'tree_but_open',
                                              [('ir.ui.menu', menu_id)], False)
         return {"action": actions}
@@ -1065,14 +1059,15 @@ class DataSet(openerpweb.Controller):
 
     def _call_kw(self, req, model, method, args, kwargs):
         # Temporary implements future display_name special field for model#read()
-        if method == 'read' and kwargs.get('context') and kwargs['context'].get('future_display_name'):
+        if method == 'read' and kwargs.get('context', {}).get('future_display_name'):
             if 'display_name' in args[1]:
-                names = req.session.model(model).name_get(args[0], **kwargs)
+                names = dict(req.session.model(model).name_get(args[0], **kwargs))
                 args[1].remove('display_name')
-                r = getattr(req.session.model(model), method)(*args, **kwargs)
-                for i in range(len(r)):
-                    r[i]['display_name'] = names[i][1] or "%s#%d" % (model, names[i][0])
-                return r
+                records = req.session.model(model).read(*args, **kwargs)
+                for record in records:
+                    record['display_name'] = \
+                        names.get(record['id']) or "%s#%d" % (model, (record['id']))
+                return records
 
         return getattr(req.session.model(model), method)(*args, **kwargs)
 
@@ -1121,41 +1116,6 @@ class DataSet(openerpweb.Controller):
 class View(openerpweb.Controller):
     _cp_path = "/web/view"
 
-    def fields_view_get(self, req, model, view_id, view_type,
-                        transform=True, toolbar=False, submenu=False):
-        Model = req.session.model(model)
-        fvg = Model.fields_view_get(view_id, view_type, req.context, toolbar, submenu)
-        # todo fme?: check that we should pass the evaluated context here
-        self.process_view(req.session, fvg, req.context, transform, (view_type == 'kanban'))
-        return fvg
-
-    def process_view(self, session, fvg, context, transform, preserve_whitespaces=False):
-        # depending on how it feels, xmlrpclib.ServerProxy can translate
-        # XML-RPC strings to ``str`` or ``unicode``. ElementTree does not
-        # enjoy unicode strings which can not be trivially converted to
-        # strings, and it blows up during parsing.
-
-        # So ensure we fix this retardation by converting view xml back to
-        # bit strings.
-        if isinstance(fvg['arch'], unicode):
-            arch = fvg['arch'].encode('utf-8')
-        else:
-            arch = fvg['arch']
-        fvg['arch_string'] = arch
-
-        fvg['arch'] = xml2json_from_elementtree(
-            ElementTree.fromstring(arch), preserve_whitespaces)
-
-        if 'id' in fvg['fields']:
-            # Special case for id's
-            id_field = fvg['fields']['id']
-            id_field['original_type'] = id_field['type']
-            id_field['type'] = 'id'
-
-        for field in fvg['fields'].itervalues():
-            for view in field.get("views", {}).itervalues():
-                self.process_view(session, view, None, transform)
-
     @openerpweb.jsonrequest
     def add_custom(self, req, view_id, arch):
         CustomView = req.session.model('ir.ui.view.custom')
@@ -1178,10 +1138,6 @@ class View(openerpweb.Controller):
                 CustomView.unlink([vcustom[0]], req.context)
             return {'result': True}
         return {'result': False}
-
-    @openerpweb.jsonrequest
-    def load(self, req, model, view_id, view_type, toolbar=False):
-        return self.fields_view_get(req, model, view_id, view_type, toolbar=toolbar)
 
 class TreeView(View):
     _cp_path = "/web/treeview"
@@ -1245,9 +1201,10 @@ class Binary(openerpweb.Controller):
         except:
             pass
         return req.make_response(image_data, headers)
-    def placeholder(self, req):
+
+    def placeholder(self, req, image='placeholder.png'):
         addons_path = openerpweb.addons_manifest['web']['addons_path']
-        return open(os.path.join(addons_path, 'web', 'static', 'src', 'img', 'placeholder.png'), 'rb').read()
+        return open(os.path.join(addons_path, 'web', 'static', 'src', 'img', image), 'rb').read()
 
     @openerpweb.httprequest
     def saveas(self, req, model, field, id=None, filename_field=None, **kw):
@@ -1289,6 +1246,7 @@ class Binary(openerpweb.Controller):
         jdata = simplejson.loads(data)
         model = jdata['model']
         field = jdata['field']
+        data = jdata['data']
         id = jdata.get('id', None)
         filename_field = jdata.get('filename_field', None)
         context = jdata.get('context', {})
@@ -1297,7 +1255,9 @@ class Binary(openerpweb.Controller):
         fields = [field]
         if filename_field:
             fields.append(filename_field)
-        if id:
+        if data:
+            res = { field: data }
+        elif id:
             res = Model.read([int(id)], fields, context)[0]
         else:
             res = Model.default_get(fields, context)
@@ -1317,11 +1277,11 @@ class Binary(openerpweb.Controller):
     @openerpweb.httprequest
     def upload(self, req, callback, ufile):
         # TODO: might be useful to have a configuration flag for max-length file uploads
+        out = """<script language="javascript" type="text/javascript">
+                    var win = window.top.window;
+                    win.jQuery(win).trigger(%s, %s);
+                </script>"""
         try:
-            out = """<script language="javascript" type="text/javascript">
-                        var win = window.top.window;
-                        win.jQuery(win).trigger(%s, %s);
-                    </script>"""
             data = ufile.read()
             args = [len(data), ufile.filename,
                     ufile.content_type, base64.b64encode(data)]
@@ -1332,11 +1292,11 @@ class Binary(openerpweb.Controller):
     @openerpweb.httprequest
     def upload_attachment(self, req, callback, model, id, ufile):
         Model = req.session.model('ir.attachment')
+        out = """<script language="javascript" type="text/javascript">
+                    var win = window.top.window;
+                    win.jQuery(win).trigger(%s, %s);
+                </script>"""
         try:
-            out = """<script language="javascript" type="text/javascript">
-                        var win = window.top.window;
-                        win.jQuery(win).trigger(%s, %s);
-                    </script>"""
             attachment_id = Model.create({
                 'name': ufile.filename,
                 'datas': base64.encodestring(ufile.read()),
@@ -1348,9 +1308,38 @@ class Binary(openerpweb.Controller):
                 'filename': ufile.filename,
                 'id':  attachment_id
             }
-        except Exception,e:
-            args = {'erorr':e.faultCode.split('--')[1],'title':e.faultCode.split('--')[0]}
+        except xmlrpclib.Fault, e:
+            args = {'error':e.faultCode }
         return out % (simplejson.dumps(callback), simplejson.dumps(args))
+
+    @openerpweb.httprequest
+    def company_logo(self, req, dbname=None):
+        # TODO add etag, refactor to use /image code for etag
+        uid = None
+        if req.session._db:
+            dbname = req.session._db
+            uid = req.session._uid
+        elif dbname is None:
+            dbname = db_monodb(req)
+
+        if uid is None:
+            uid = openerp.SUPERUSER_ID
+
+        if not dbname:
+            image_data = self.placeholder(req, 'logo.png')
+        else:
+            registry = openerp.modules.registry.RegistryManager.get(dbname)
+            with registry.cursor() as cr:
+                user = registry.get('res.users').browse(cr, uid, uid)
+                if user.company_id.logo_web:
+                    image_data = user.company_id.logo_web.decode('base64')
+                else:
+                    image_data = self.placeholder(req, 'nologo.png')
+        headers = [
+            ('Content-Type', 'image/png'),
+            ('Content-Length', len(image_data)),
+        ]
+        return req.make_response(image_data, headers)
 
 class Action(openerpweb.Controller):
     _cp_path = "/web/action"

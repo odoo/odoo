@@ -9,6 +9,7 @@ var QWeb = instance.web.qweb,
 instance.web.views.add('tree', 'instance.web.TreeView');
 instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeView# */{
     display_name: _lt('Tree'),
+    view_type: 'tree',
     /**
      * Indicates that this view is not searchable, and thus that no search
      * view should be displayed (if there is one active).
@@ -38,16 +39,10 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
         _.bindAll(this, 'color_for');
     },
 
-    start: function () {
-        return this.rpc("/web/treeview/load", {
-            model: this.model,
-            view_id: this.view_id,
-            view_type: "tree",
-            toolbar: this.view_manager ? !!this.view_manager.sidebar : false,
-            context: instance.web.pyeval.eval(
-                    'context', this.dataset.get_context())
-        }).done(this.on_loaded);
+    view_loading: function(r) {
+        return this.load_tree(r);
     },
+
     /**
      * Returns the list of fields needed to correctly read objects.
      *
@@ -64,7 +59,7 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
         }
         return fields;
     },
-    on_loaded: function (fields_view) {
+    load_tree: function (fields_view) {
         var self = this;
         var has_toolbar = !!fields_view.arch.attrs.toolbar;
         // field name in OpenERP is kinda stupid: this is the name of the field
