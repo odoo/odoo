@@ -30,7 +30,6 @@ from openerp import tools
 import xmlrpclib
 
 from email.message import Message
-from mako.template import Template as MakoTemplate
 
 from openerp import SUPERUSER_ID
 from openerp.addons.mail.mail_message import decode
@@ -88,20 +87,6 @@ class mail_thread(osv.AbstractModel):
     #   :param obj: is a browse_record
     #   :param function lambda: returns whether the tracking should record using this subtype
     _track = {}
-    _TRACK_TEMPLATE = """
-        %if message_description:
-            <span>${message_description}</span>
-        %endif
-        %for name, change in tracked_values.items():
-            <div>
-            &nbsp; &nbsp; &bull; <b>${change.get('col_info')}</b>:
-                %if change.get('old_value'):
-                    ${change.get('old_value')} &rarr;
-                %endif
-                ${change.get('new_value')}
-            </div>
-        %endfor
-    """
 
     def _get_message_data(self, cr, uid, ids, name, args, context=None):
         """ Computes:
@@ -258,7 +243,7 @@ class mail_thread(osv.AbstractModel):
         # subscribe uid unless asked not to
         if not context.get('mail_nosubscribe'):
             self.message_subscribe_users(cr, uid, [thread_id], [uid], context=context)
-            self.message_subscribe_from_parent(cr, uid, [thread_id], context=context)
+            self.message_subscribe_from_parent(cr, uid, [thread_id], values.keys(), context=context)
 
         # automatic logging unless asked not to (mainly for various testing purpose)
         if not context.get('mail_nolog'):
@@ -268,11 +253,17 @@ class mail_thread(osv.AbstractModel):
     def write(self, cr, uid, ids, values, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
+        # Track initial values of tracked fields
         tracked_fields = self._get_tracked_fields(cr, uid, values.keys(), context=context)
         if tracked_fields:
             initial = self.read(cr, uid, ids, tracked_fields.keys(), context=context)
             initial_values = dict((item['id'], item) for item in initial)
+
+        # Perform write, update followers
         result = super(mail_thread, self).write(cr, uid, ids, values, context=context)
+        self.message_subscribe_from_parent(cr, uid, ids, values.keys(), context=context)
+
+        # Perform the tracking
         if tracked_fields:
             self.message_track(cr, uid, ids, tracked_fields, initial_values, context=context)
         return result
@@ -328,6 +319,17 @@ class mail_thread(osv.AbstractModel):
                 return dict(field_obj['selection'])[value]
             return value
 
+        def format_message(message_description, tracked_values):
+            message = ''
+            if message_description:
+                message = '<span>%s</span>' % message_description
+            for name, change in tracked_values.items():
+                message += '<div> &nbsp; &nbsp; &bull; <b>%s</b>: ' % change.get('col_info')
+                if change.get('old_value'):
+                    message += '%s &rarr; ' % change.get('old_value')
+                message += '%s</div>' % change.get('new_value')
+            return message
+
         if not tracked_fields:
             return True
 
@@ -367,11 +369,11 @@ class mail_thread(osv.AbstractModel):
                 except ValueError, e:
                     _logger.debug('subtype %s not found, giving error "%s"' % (subtype, e))
                     continue
-                message = MakoTemplate(self._TRACK_TEMPLATE).render_unicode(message_description=subtype_rec.description, tracked_values=tracked_values)
+                message = format_message(subtype_rec.description, tracked_values)
                 self.message_post(cr, uid, record['id'], body=message, subtype=subtype, context=context)
                 posted = True
             if not posted:
-                message = MakoTemplate(self._TRACK_TEMPLATE).render_unicode(message_description='Document <b>modified</b>', tracked_values=tracked_values)
+                message = format_message('', tracked_values)
                 self.message_post(cr, uid, record['id'], body=message, context=context)
         return True
 
@@ -966,52 +968,57 @@ class mail_thread(osv.AbstractModel):
         self.check_access_rights(cr, uid, 'read')
         return self.write(cr, SUPERUSER_ID, ids, {'message_follower_ids': [(3, pid) for pid in partner_ids]}, context=context)
 
-    def message_subscribe_from_parent(self, cr, uid, ids, context=None):
-
+    def message_subscribe_from_parent(self, cr, uid, ids, updated_fields, context=None):
+        """
+            1. fetch project subtype related to task (parent_id.res_model = 'project.task')
+            2. for each project subtype: subscribe the follower to the task
+        """
         subtype_obj = self.pool.get('mail.message.subtype')
         follower_obj = self.pool.get('mail.followers')
 
-        # fetch record subtypes
-        subtype_ids = subtype_obj.search(cr, uid, ['|', ('parent_id.res_model', '=', False), ('parent_id.res_model', '=', self._name)], context=context)
-        if not subtype_ids:
-            return
-        subtypes = subtype_obj.browse(cr, uid, subtype_ids, context=context)
+        # fetch related record subtypes
+        related_subtype_ids = subtype_obj.search(cr, uid, ['|', ('res_model', '=', False), ('parent_id.res_model', '=', self._name)], context=context)
+        subtypes = subtype_obj.browse(cr, uid, related_subtype_ids, context=context)
+        default_subtypes = [subtype for subtype in subtypes if subtype.res_model == False]
+        related_subtypes = [subtype for subtype in subtypes if subtype.res_model != False]
+        relation_fields = set([subtype.relation_field for subtype in subtypes if subtype.relation_field != False])
+        if not related_subtypes or not any(relation in updated_fields for relation in relation_fields):
+            return True
 
         for record in self.browse(cr, uid, ids, context=context):
             new_followers = dict()
-            for subtype in subtypes:
-                if subtype.parent_field and subtype.parent_id:
-                    if subtype.parent_field in self._columns and getattr(record, subtype.parent_field):
-                        parent_res_id = getattr(record, subtype.parent_field).id
-                        parent_model = subtype.res_model
-                        follower_ids = follower_obj.search(cr, SUPERUSER_ID, [('res_model', '=', parent_model), ('res_id', '=', parent_res_id), ('subtype_ids', 'in', [subtype.id])], context=context)
-                        for follower in follower_obj.browse(cr, SUPERUSER_ID, follower_ids, context=context):
-                            new_followers.setdefault(follower.partner_id.id, set()).add(subtype.parent_id.id)
+            parent_res_id = False
+            parent_model = False
+            for subtype in related_subtypes:
+                if not subtype.relation_field or not subtype.parent_id:
+                    continue
+                if not subtype.relation_field in self._columns or not getattr(record, subtype.relation_field, False):
+                    continue
+                parent_res_id = getattr(record, subtype.relation_field).id
+                parent_model = subtype.res_model
+                follower_ids = follower_obj.search(cr, SUPERUSER_ID, [
+                    ('res_model', '=', parent_model),
+                    ('res_id', '=', parent_res_id),
+                    ('subtype_ids', 'in', [subtype.id])
+                    ], context=context)
+                for follower in follower_obj.browse(cr, SUPERUSER_ID, follower_ids, context=context):
+                    new_followers.setdefault(follower.partner_id.id, set()).add(subtype.parent_id.id)
+
+            if not parent_res_id or not parent_model:
+                continue
+
+            for subtype in default_subtypes:
+                follower_ids = follower_obj.search(cr, SUPERUSER_ID, [
+                    ('res_model', '=', parent_model),
+                    ('res_id', '=', parent_res_id),
+                    ('subtype_ids', 'in', [subtype.id])
+                    ], context=context)
+                for follower in follower_obj.browse(cr, SUPERUSER_ID, follower_ids, context=context):
+                    new_followers.setdefault(follower.partner_id.id, set()).add(subtype.id)
 
             for pid, subtypes in new_followers.items():
                 self.message_subscribe(cr, uid, [record.id], [pid], list(subtypes), context=context)
-
-    def _subscribe_followers_subtype(self, cr, uid, ids, res_id, model, context=None):
-        """ TDE note: not the best way to do this, we could override _get_followers
-            of task, and perform a better mapping of subtypes than a mapping
-            based on names.
-            However we will keep this implementation, maybe to be refactored
-            in 7.1 of future versions. """
-        subtype_obj = self.pool.get('mail.message.subtype')
-        follower_obj = self.pool.get('mail.followers')
-        # create mapping
-        subtype_ids = subtype_obj.search(cr, uid, ['|', ('res_model', '=', False), ('res_model', '=', self._name)], context=context)
-        subtypes = subtype_obj.browse(cr, uid, subtype_ids, context=context)
-        # fetch subscriptions
-        follower_ids = follower_obj.search(cr, uid, [('res_model', '=', model), ('res_id', '=', res_id)], context=context)
-        # copy followers
-        for follower in follower_obj.browse(cr, uid, follower_ids, context=context):
-            if not follower.subtype_ids:
-                continue
-            subtype_names = [follower_subtype.name for follower_subtype in follower.subtype_ids]
-            subtype_ids = [subtype.id for subtype in subtypes if subtype.name in subtype_names]
-            self.message_subscribe(cr, uid, ids, [follower.partner_id.id],
-                subtype_ids=subtype_ids, context=context)
+        return True
 
     #------------------------------------------------------
     # Thread state
