@@ -948,7 +948,7 @@ class mrp_production(osv.osv):
 
     def _make_production_produce_line(self, cr, uid, production, context=None):
         stock_move = self.pool.get('stock.move')
-        source_location_id = production.product_id.product_tmpl_id.property_stock_production.id
+        source_location_id = production.product_id.property_stock_production.id
         destination_location_id = production.location_dest_id.id
         data = {
             'name': production.name,
@@ -974,7 +974,7 @@ class mrp_production(osv.osv):
         # Internal shipment is created for Stockable and Consumer Products
         if production_line.product_id.type not in ('product', 'consu'):
             return False
-        destination_location_id = production.product_id.product_tmpl_id.property_stock_production.id
+        destination_location_id = production.product_id.property_stock_production.id
         if not source_location_id:
             source_location_id = production.location_src_id.id
         move_id = stock_move.create(cr, uid, {

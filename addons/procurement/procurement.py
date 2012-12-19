@@ -313,7 +313,7 @@ class procurement_order(osv.osv):
                 if not procurement.move_id:
                     source = procurement.location_id.id
                     if procurement.procure_method == 'make_to_order':
-                        source = procurement.product_id.product_tmpl_id.property_stock_procurement.id
+                        source = procurement.product_id.property_stock_procurement.id
                     id = move_obj.create(cr, uid, {
                         'name': procurement.name,
                         'location_id': source,
