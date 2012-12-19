@@ -793,6 +793,7 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
     },
     renderElement: function() {
         this.qweb_context = {
+            instance: instance,
             record: this.record,
             widget: this,
             read_only_mode: this.view.options.read_only_mode,
