@@ -3,7 +3,7 @@
     <data>
 
         <record model="ir.actions.act_window" id="action_hr_holidays_leaves_by_month">
-            <field name="name">My Leaves</field>
+            <field name="name">My Time off</field>
             <field name="res_model">hr.holidays.status</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -18,7 +18,7 @@
             <field name="inherit_id" ref="hr.board_hr_form"/>
             <field name="arch" type="xml">
                 <xpath expr="/form/board/column[1]" position="inside">
-                    <action name="%(action_hr_holidays_leaves_by_month)d" string="My Leaves"/>
+                    <action name="%(action_hr_holidays_leaves_by_month)d" string="My Time off"/>
                 </xpath>
             </field>
         </record>

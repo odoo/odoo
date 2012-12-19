@@ -6,7 +6,7 @@
         <field name="name">hr.holidays.remaining.leaves.user.tree</field>
         <field name="model">hr.holidays.remaining.leaves.user</field>
         <field name="arch" type="xml">
-            <tree string="Leaves by Type">
+            <tree string="Time off by Type">
                 <field name="name"/>
                 <field name="leave_type"/>
                 <field name="no_of_leaves"/>
@@ -18,7 +18,7 @@
         <field name="name">hr.holidays.remaining.leaves.user.graph</field>
         <field name="model">hr.holidays.remaining.leaves.user</field>
         <field name="arch" type="xml">
-            <graph string="Leaves by Type" orientation = "horizontal" type="bar">
+            <graph string="Time off by Type" orientation = "horizontal" type="bar">
                 <field name="name" />
                 <field name="no_of_leaves" operator = "+"/>
                 <field name="leave_type" group = "True"/>

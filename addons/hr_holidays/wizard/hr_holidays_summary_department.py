@@ -26,7 +26,7 @@ from openerp.tools.translate import _
 
 class hr_holidays_summary_dept(osv.osv_memory):
     _name = 'hr.holidays.summary.dept'
-    _description = 'HR Leaves Summary Report By Department'
+    _description = 'HR Time off Summary Report By Department'
     _columns = {
         'date_from': fields.date('From', required=True),
         'depts': fields.many2many('hr.department', 'summary_dept_rel', 'sum_id', 'dept_id', 'Department(s)'),

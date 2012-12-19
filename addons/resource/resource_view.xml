@@ -40,7 +40,7 @@
             <field name="name">resource.calendar.leaves.search</field>
             <field name="model">resource.calendar.leaves</field>
             <field name="arch" type="xml">
-                <search string="Search Working Period Leaves">
+                <search string="Search Working Period Time off">
                     <field name="name" string="Reason"/>
                     <field name="resource_id" string="Resource"/>
                     <field name="company_id" string="Company" groups="base.group_multi_company"/>
@@ -146,7 +146,7 @@
 
         <act_window
             id="resource_calendar_resources_leaves"
-            name="Resources Leaves"
+            name="Resources Time off"
             res_model="resource.calendar.leaves"
             src_model="resource.calendar"
             view_mode="calendar,tree,form"
@@ -242,7 +242,7 @@
             </field>
         </record>
         <record id="action_resource_calendar_leave_tree" model="ir.actions.act_window">
-            <field name="name">Resource Leaves</field>
+            <field name="name">Resource Time off</field>
             <field name="res_model">resource.calendar.leaves</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="search_view_id" ref="view_resource_calendar_leaves_search"/>

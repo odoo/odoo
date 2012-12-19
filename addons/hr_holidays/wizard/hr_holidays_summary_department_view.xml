@@ -6,7 +6,7 @@
             <field name="name">hr.holidays.summary.dept.form</field>
             <field name="model">hr.holidays.summary.dept</field>
             <field name="arch" type="xml">
-            <form string="Leaves by Department" version="7.0">
+            <form string="Time off by Department" version="7.0">
                 <group>
                     <field name="date_from" />
                     <field name="holiday_type"/>
@@ -21,7 +21,7 @@
         </record>
 
         <record id="action_hr_holidays_summary_dept" model="ir.actions.act_window">
-            <field name="name">Leaves by Department</field>
+            <field name="name">Time off by Department</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.holidays.summary.dept</field>
             <field name="view_type">form</field>
@@ -30,7 +30,7 @@
         </record>
 
         <menuitem
-            name="Leaves by Department"
+            name="Time off by Department"
             parent="hr.menu_hr_reporting_timesheet"
             action="action_hr_holidays_summary_dept"
             id="menu_account_central_journal"

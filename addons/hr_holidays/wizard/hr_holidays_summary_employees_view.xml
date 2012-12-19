@@ -6,7 +6,7 @@
             <field name="name">hr.holidays.summary.employee.form</field>
             <field name="model">hr.holidays.summary.employee</field>
             <field name="arch" type="xml">
-                <form string="Leaves Summary" version="7.0">
+                <form string="Time off Summary" version="7.0">
                     <group col="4" colspan="6">
                         <field name="date_from"/>
                         <newline/>
@@ -24,7 +24,7 @@
         </record>
 
         <record id="action_hr_holidays_summary_employee" model="ir.actions.act_window">
-            <field name="name">Leaves Summary</field>
+            <field name="name">Time off Summary</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.holidays.summary.employee</field>
             <field name="view_type">form</field>
@@ -34,7 +34,7 @@
 
         <record model="ir.values" id="hr_holidays_summary_employee_value">
             <field name="model_id" ref="hr.model_hr_employee" />
-            <field name="name">Leaves Summary</field>
+            <field name="name">Time off Summary</field>
             <field name="key2">client_print_multi</field>
             <field name="value" eval="'ir.actions.act_window,' + str(ref('action_hr_holidays_summary_employee'))" />
             <field name="key">action</field>

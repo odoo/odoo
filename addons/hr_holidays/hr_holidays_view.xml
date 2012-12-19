@@ -14,9 +14,9 @@
                     <separator/>
                     <filter icon="terp-go-year" name="year" string="Year" domain="[('holiday_status_id.active','=',True)]" help="Filters only on allocations and requests that belong to an holiday type that is 'active' (active field is True)"/>
                     <separator/>
-                    <filter string="My Leaves" icon="terp-personal" name="my_leaves" domain="[('employee_id.user_id','=', uid)]" help="My Leaves"/>
+                    <filter string="My Time off" icon="terp-personal" name="my_leaves" domain="[('employee_id.user_id','=', uid)]" help="My Time off"/>
                     <separator/>
-                    <filter string="My Department Leaves" icon="terp-personal+" help="My Department Leaves" domain="[('department_id.manager_id','=',uid)]"/>
+                    <filter string="My Department Time off" icon="terp-personal+" help="My Department Time off" domain="[('department_id.manager_id','=',uid)]"/>
                     <field name="employee_id"/>
                     <field name="department_id"/>
                     <field name="holiday_status_id"/>
@@ -154,10 +154,10 @@
 
         <!-- Holidays: Leaves Management -->
         <record model="ir.ui.view" id="allocation_company_new">
-            <field name="name">Leaves Management</field>
+            <field name="name">Time off Management</field>
             <field name="model">hr.holidays</field>
             <field name="arch" type="xml">
-                <form string="Leaves Management" version="7.0">
+                <form string="Time off Management" version="7.0">
                     <header>
                         <button string="Submit to Manager" name="confirm" states="draft" type="workflow" icon="gtk-yes"/>
                         <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply"/>
@@ -183,7 +183,7 @@
             <field name="model">hr.holidays</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
-                <tree colors="red:state == 'refuse';blue:state == ' draft';black:state in ('confirm','validate','validate1')" string="Leaves Summary">
+                <tree colors="red:state == 'refuse';blue:state == ' draft';black:state in ('confirm','validate','validate1')" string="Time off Summary">
                     <field name="employee_id"/>
                     <field name="category_id" invisible="1"/>
                     <field name="department_id" invisible="1"/>
@@ -221,7 +221,7 @@
             </field>
         </record>
 
-        <menuitem name="Leaves" parent="hr.menu_hr_root" id="menu_open_ask_holidays" sequence="20"/>
+        <menuitem name="Time off" parent="hr.menu_hr_root" id="menu_open_ask_holidays" sequence="20"/>
 
         <record model="ir.actions.act_window" id="open_ask_holidays">
             <field name="name">Leave Requests</field>
@@ -345,7 +345,7 @@
         <menuitem parent="menu_open_ask_holidays" id="menu_request_approve_allocation" action="request_approve_allocation" groups="base.group_hr_manager"/>
 
         <record model="ir.actions.act_window" id="open_company_allocation">
-            <field name="name">Leaves Summary</field>
+            <field name="name">Time off Summary</field>
             <field name="res_model">hr.holidays</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -355,7 +355,7 @@
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>
 
-        <menuitem name="Leaves Summary" parent="menu_open_ask_holidays" id="menu_open_company_allocation" action="open_company_allocation" sequence="40"/>
+        <menuitem name="Time off Summary" parent="menu_open_ask_holidays" id="menu_open_company_allocation" action="open_company_allocation" sequence="40"/>
 
         <!-- Holidays status -->
         <record id="view_holidays_status_filter" model="ir.ui.view">
@@ -442,8 +442,8 @@
             <field name="search_view_id" ref="view_hr_holidays_status_search"/>
         </record>
 
-        <menuitem sequence="3" id="hr.menu_open_view_attendance_reason_config" parent="hr.menu_hr_configuration" name="Leaves"/>
-        <menuitem name="Leaves Types" action="open_view_holiday_status" id="menu_open_view_holiday_status" parent="hr.menu_hr_configuration" sequence="10"/>
+        <menuitem sequence="3" id="hr.menu_open_view_attendance_reason_config" parent="hr.menu_hr_configuration" name="Time off"/>
+        <menuitem name="Time off Types" action="open_view_holiday_status" id="menu_open_view_holiday_status" parent="hr.menu_hr_configuration" sequence="10"/>
 
         <!-- Holiday on resource leave -->
         <record id="resource_calendar_leave_form_inherit" model="ir.ui.view">
@@ -459,7 +459,7 @@
 
         <!-- Shortcuts -->
         <record id="act_hr_employee_holiday_request" model="ir.actions.act_window">
-            <field name="name">Leaves</field>
+            <field name="name">Time off</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.holidays</field>
             <field name="src_model">hr.employee</field>
@@ -476,15 +476,15 @@
             <field name="model">hr.employee</field>
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
-                <tree string="Assign Leaves" editable="bottom">
+                <tree string="Assign Time off" editable="bottom">
                     <field name="name" string="Employee"/>
-                    <field name="remaining_leaves" string="Remaining Legal Leaves"/>
+                    <field name="remaining_leaves" string="Remaining Legal Time off"/>
                 </tree>
             </field>
         </record>
 
         <record model="ir.actions.act_window" id="hr_holidays_leaves_assign_legal">
-           <field name="name">Allocate Leaves for Employees</field>
+           <field name="name">Allocate Time off for Employees</field>
            <field name="type">ir.actions.act_window</field>
            <field name="res_model">hr.employee</field>
            <field name="view_type">form</field>
@@ -492,7 +492,7 @@
            <field name="view_id" ref="hr_holidays_leaves_assign_tree_view"/>
            <field name="help" type="html">
              <p>
-               You can assign remaining Legal Leaves for each employee, OpenERP
+               You can assign remaining Legal Time off for each employee, OpenERP
                will automatically create and validate allocation requests.
              </p>
            </field>
@@ -505,7 +505,7 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='active_group']" position="before">
-                    <group string="Leaves">
+                    <group string="Time off">
                         <label for="remaining_leaves"/>
                         <div>
                             <field name="remaining_leaves" class="oe_inline"/> days
@@ -513,7 +513,7 @@
                     </group>
                 </xpath>
                 <xpath expr="//div[@name='button_box']" position="inside">
-                    <button name="%(act_hr_employee_holiday_request)d" string="Leaves" type="action" groups="base.group_hr_user"/>
+                    <button name="%(act_hr_employee_holiday_request)d" string="Time off" type="action" groups="base.group_hr_user"/>
                 </xpath>
             </field>
         </record>

@@ -29,18 +29,18 @@
     'summary': 'Holidays, Allocation and Leave Requests',
     'website': 'http://www.openerp.com',
     'description': """
-Manage leaves and allocation requests
+Manage Time off and allocation requests
 =====================================
 
 This application controls the holiday schedule of your company. It allows employees to request holidays. Then, managers can review requests for holidays and approve or reject them. This way you can control the overall holiday planning for the company or department.
 
-You can configure several kinds of leaves (sickness, holidays, paid days, ...) and allocate leaves to an employee or department quickly using allocation requests. An employee can also make a request for more days off by making a new Allocation. It will increase the total of available days for that leave type (if the request is accepted).
+You can configure several kinds of Time off (sickness, holidays, paid days, ...) and allocate Time off to an employee or department quickly using allocation requests. An employee can also make a request for more days off by making a new Allocation. It will increase the total of available days for that leave type (if the request is accepted).
 
-You can keep track of leaves in different ways by following reports: 
+You can keep track of Time off in different ways by following reports: 
 
-* Leaves Summary
-* Leaves by Department
-* Leaves Analysis
+* Time off Summary
+* Time off by Department
+* Time off Analysis
 
 A synchronization with an internal agenda (Meetings of the CRM module) is also possible in order to automatically create a meeting when a holiday request is accepted by setting up a type of meeting in Leave Type.
 """,

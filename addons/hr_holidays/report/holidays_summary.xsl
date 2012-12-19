@@ -149,9 +149,9 @@
             </tr>
         </blockTable>
         <spacer length="1.0cm" />
-        <para style="title" t="1">Leaves Summary <xsl:value-of select="report/name" /></para>
+        <para style="title" t="1">Time off Summary <xsl:value-of select="report/name" /></para>
         <spacer length="0.5cm" />
-        <para style="normal-title" t="1">Analyze from <u><xsl:value-of select="report/from" /></u> to <u> <xsl:value-of select="report/to" /> </u> of the <u><xsl:value-of select="report/type" /></u> leaves. </para>
+        <para style="normal-title" t="1">Analyze from <u><xsl:value-of select="report/from" /></u> to <u> <xsl:value-of select="report/to" /> </u> of the <u><xsl:value-of select="report/type" /></u> Time off. </para>
         <spacer length="1.0cm" />
         <xsl:variable name="cols_legend">
             <xsl:text>0.7cm,5.0cm</xsl:text>
