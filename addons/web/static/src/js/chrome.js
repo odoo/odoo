@@ -691,6 +691,7 @@ instance.web.Login =  instance.web.Widget.extend({
 });
 instance.web.client_actions.add("login", "instance.web.Login");
 
+
 /**
  * Redirect to url by replacing window.location
  * If wait is true, sleep 1s and wait for the server i.e. after a restart.
@@ -1368,17 +1369,17 @@ instance.web.EmbeddedClient = instance.web.Client.extend({
     _template: 'EmbedClient',
     init: function(parent, origin, dbname, login, key, action_id, options) {
         this._super(parent, origin);
-
-        this.dbname = dbname;
-        this.login = login;
-        this.key = key;
+        this.bind_credentials(dbname, login, key);
         this.action_id = action_id;
         this.options = options || {};
     },
     start: function() {
         var self = this;
         return $.when(this._super()).then(function() {
-            return instance.session.session_authenticate(self.dbname, self.login, self.key, true).then(function() {
+            return self.authenticate().then(function() {
+                if (!self.action_id) {
+                    return;
+                }
                 return self.rpc("/web/action/load", { action_id: self.action_id }).done(function(result) {
                     var action = result;
                     action.flags = _.extend({
@@ -1389,11 +1390,30 @@ instance.web.EmbeddedClient = instance.web.Client.extend({
                         //pager : false
                     }, self.options, action.flags || {});
 
-                    self.action_manager.do_action(action);
+                    self.do_action(action);
                 });
             });
         });
     },
+
+    do_action: function(action) {
+        return this.action_manager.do_action(action);
+    },
+
+    authenticate: function() {
+        var s = instance.session;
+        if (s.session_is_valid() && s.db === this.dbname && s.login === this.login) {
+            return $.when();
+        }
+        return instance.session.session_authenticate(this.dbname, this.login, this.key, true);
+    },
+
+    bind_credentials: function(dbname, login, key) {
+        this.dbname = dbname;
+        this.login = login;
+        this.key = key;
+    },
+
 });
 
 instance.web.embed = function (origin, dbname, login, key, action, options) {
