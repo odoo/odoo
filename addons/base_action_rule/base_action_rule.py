@@ -117,7 +117,7 @@ class base_action_rule(osv.osv):
                 self._action(cr, uid, [rule_id], model_pool.browse(cr, uid, ids, context=context), precondition_ok=precondition_ok, context=context)
         return True
 
-    def _create(self, old_create, model, context=None):
+    def _wrap_create(self, old_create, model):
         """
         Return a wrapper around `old_create` calling both `old_create` and
         `post_action`, in that order.
@@ -140,7 +140,7 @@ class base_action_rule(osv.osv):
             return new_id
         return wrapper
 
-    def _write(self, old_write, model, context=None):
+    def _wrap_write(self, old_write, model):
         """
         Return a wrapper around `old_write` calling both `old_write` and
         `post_action`, in that order.
@@ -171,41 +171,31 @@ class base_action_rule(osv.osv):
             return True
         return wrapper
 
-    def _register_hook(self, cr):
+    def _register_hook(self, cr, ids=None):
+        """ Wrap the methods `create` and `write` of the models specified by
+            the rules given by `ids` (or all existing rules if `ids` is `Ǹone`.)
         """
-        Wrap every `create` and `write` methods of the models specified by
-        the rules (given by `ids`).
-        """
-        ids = self.search(cr,SUPERUSER_ID,[])
-        return self._register_hook_(cr,SUPERUSER_ID,ids,context=None)
-
-    def _register_hook_(self, cr, uid, ids, context=None):
-        """
-        Wrap every `create` and `write` methods of the models specified by
-        the rules (given by `ids`).
-        """
-        reg_ids = []
-        if not isinstance(ids, list):
-            reg_ids.append(ids)
-        else:
-            reg_ids.extend(ids)
-        for action_rule in self.browse(cr, uid, reg_ids, context=context):
+        if ids is None:
+            ids = self.search(cr, SUPERUSER_ID, [])
+        for action_rule in self.browse(cr, SUPERUSER_ID, ids):
             model = action_rule.model_id.model
-            obj_pool = self.pool.get(model)
-            if not hasattr(obj_pool, 'base_action_ruled'):
-                obj_pool.create = self._create(obj_pool.create, model, context=None)
-                obj_pool.write = self._write(obj_pool.write, model, context=None)
-                obj_pool.base_action_ruled = True
+            model_obj = self.pool.get(model)
+            if not hasattr(model_obj, 'base_action_ruled'):
+                model_obj.create = self._wrap_create(model_obj.create, model)
+                model_obj.write = self._wrap_write(model_obj.write, model)
+                model_obj.base_action_ruled = True
         return True
 
     def create(self, cr, uid, vals, context=None):
         res_id = super(base_action_rule, self).create(cr, uid, vals, context=context)
-        self._register_hook_(cr, uid, res_id,context=context)
+        self._register_hook(cr, [res_id])
         return res_id
 
     def write(self, cr, uid, ids, vals, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         super(base_action_rule, self).write(cr, uid, ids, vals, context=context)
-        self._register_hook_(cr, uid, ids, context=context)
+        self._register_hook(cr, ids)
         return True
 
     def _check(self, cr, uid, automatic=False, use_new_cursor=False, \
@@ -214,7 +204,6 @@ class base_action_rule(osv.osv):
         This Function is call by scheduler.
         """
         rule_ids = self.search(cr, uid, [], context=context)
-        self._register_hook_(cr, uid, rule_ids, context=context)
         if context is None:
             context = {}
         for rule in self.browse(cr, uid, rule_ids, context=context):
