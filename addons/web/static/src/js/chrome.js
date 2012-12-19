@@ -813,18 +813,8 @@ instance.web.Menu =  instance.web.Widget.extend({
                 });
             }
         });
-        var resizing_timer = null;
-        instance.web.bus.on('resize', this, function(ev) {
-            if (resizing_timer) {
-                clearTimeout(resizing_timer);
-            } else {
-                self.$el.hide();
-            }
-            resizing_timer = setTimeout(function() {
-                self.reflow();
-                resizing_timer = null;
-            }, 300);
-        });
+        var lazyreflow = _.debounce(this.reflow.bind(this), 300);
+        instance.web.bus.on('resize', this, lazyreflow);
     },
     start: function() {
         this._super.apply(this, arguments);
