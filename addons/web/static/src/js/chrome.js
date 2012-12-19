@@ -1326,7 +1326,7 @@ instance.web.EmbeddedClient = instance.web.Client.extend({
     _template: 'EmbedClient',
     init: function(parent, origin, dbname, login, key, action_id, options) {
         this._super(parent, origin);
-        this.bind(dbname, login, key);
+        this.bind_credentials(dbname, login, key);
         this.action_id = action_id;
         this.options = options || {};
     },
@@ -1365,7 +1365,7 @@ instance.web.EmbeddedClient = instance.web.Client.extend({
         return instance.session.session_authenticate(this.dbname, this.login, this.key, true);
     },
 
-    bind: function(dbname, login, key) {
+    bind_credentials: function(dbname, login, key) {
         this.dbname = dbname;
         this.login = login;
         this.key = key;

@@ -480,7 +480,7 @@ class Root(object):
         self.addons = {}
         self.statics = {}
 
-        self._load_addons()
+        self.load_addons()
 
         # Setup http sessions
         path = session_path()
@@ -493,7 +493,7 @@ class Root(object):
         """
         return self.dispatch(environ, start_response)
 
-    def _dispatch(self, environ, start_response):
+    def dispatch(self, environ, start_response):
         """
         Performs the actual WSGI dispatching for the application, may be
         wrapped during the initialization of the object.
@@ -529,11 +529,9 @@ class Root(object):
 
         return response(environ, start_response)
 
-    def _load_addons(self):
-        """
-        Loads all addons at the specified addons path, returns a mapping of
-        static URLs to the corresponding directories
-        """
+    def load_addons(self):
+        """ Load all addons from addons patch containg static files and
+        controllers and configure them.  """
 
         for addons_path in openerp.modules.module.ad_paths:
             for module in os.listdir(addons_path):
@@ -559,7 +557,7 @@ class Root(object):
                 if hasattr(o, '_cp_path'):
                     controllers_path[o._cp_path] = o
 
-        app = werkzeug.wsgi.SharedDataMiddleware(self._dispatch, self.statics)
+        app = werkzeug.wsgi.SharedDataMiddleware(self.dispatch, self.statics)
         self.dispatch = DisableCacheMiddleware(app)
 
     def find_handler(self, *l):
