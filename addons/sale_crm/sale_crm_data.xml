@@ -3,13 +3,13 @@
     <data noupdate="1">
 
         <!-- Salesteam-related subtypes for messaging / Chatter -->
-        <record id="mt_salesteam_sent" model="mail.message.subtype">
-            <field name="name">Quotation sent</field>
+        <record id="mt_salesteam_order_sent" model="mail.message.subtype">
+            <field name="name">Quotation Send</field>
             <field name="res_model">crm.case.section</field>
-            <field name="parent_id" eval="ref('sale.mt_quotation_sent')"/>
+            <field name="parent_id" eval="ref('sale.mt_order_sent')"/>
             <field name="relation_field">section_id</field>
         </record>
-        <record id="mt_salesteam_confirmed" model="mail.message.subtype">
+        <record id="mt_salesteam_order_confirmed" model="mail.message.subtype">
             <field name="name">Sale Order Confirmed</field>
             <field name="res_model">crm.case.section</field>
             <field name="parent_id" eval="ref('sale.mt_order_confirmed')"/>

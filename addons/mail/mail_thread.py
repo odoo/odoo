@@ -247,7 +247,7 @@ class mail_thread(osv.AbstractModel):
 
         # automatic logging unless asked not to (mainly for various testing purpose)
         if not context.get('mail_create_nolog'):
-            self.message_post(cr, uid, thread_id, body='Document <b>created</b>.', context=context)
+            self.message_post(cr, uid, thread_id, body='Document created', context=context)
         return thread_id
 
     def write(self, cr, uid, ids, values, context=None):
@@ -342,12 +342,12 @@ class mail_thread(osv.AbstractModel):
             for col_name, col_info in tracked_fields.items():
                 if record[col_name] == initial[col_name] and getattr(self._all_columns[col_name].column, 'track_visibility', 0) == 2:
                     tracked_values[col_name] = dict(col_info=col_info['string'],
-                        new_value=convert_for_display(record[col_name], col_info))
+                                                        new_value=convert_for_display(record[col_name], col_info))
                 elif record[col_name] != initial[col_name]:
                     if getattr(self._all_columns[col_name].column, 'track_visibility', 0) in [1, 2]:
                         tracked_values[col_name] = dict(col_info=col_info['string'],
-                            old_value=convert_for_display(initial[col_name], col_info),
-                            new_value=convert_for_display(record[col_name], col_info))
+                                                            old_value=convert_for_display(initial[col_name], col_info),
+                                                            new_value=convert_for_display(record[col_name], col_info))
                     if col_name in tracked_fields:
                         changes.append(col_name)
             if not changes:
@@ -369,7 +369,7 @@ class mail_thread(osv.AbstractModel):
                 except ValueError, e:
                     _logger.debug('subtype %s not found, giving error "%s"' % (subtype, e))
                     continue
-                message = format_message(subtype_rec.description, tracked_values)
+                message = format_message(subtype_rec.description if subtype_rec.description else subtype_rec.name, tracked_values)
                 self.message_post(cr, uid, record['id'], body=message, subtype=subtype, context=context)
                 posted = True
             if not posted:

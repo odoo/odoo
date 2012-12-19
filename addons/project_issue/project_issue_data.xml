@@ -48,60 +48,60 @@ Access all issues from the top Project menu, and access the issues of a specific
             <field name="name">Issue Created</field>
             <field name="res_model">project.issue</field>
             <field name="default" eval="False"/>
-            <field name="description">Issue &lt;b&gt;created&lt;/b&gt;</field>
+            <field name="description">Issue created</field>
         </record>
         <record id="mt_issue_started" model="mail.message.subtype">
             <field name="name">Issue Started</field>
             <field name="res_model">project.issue</field>
             <field name="default" eval="False"/>
-            <field name="description">Issue &lt;b&gt;started&lt;/b&gt;</field>
+            <field name="description">Issue started</field>
         </record>
         <record id="mt_issue_blocked" model="mail.message.subtype">
             <field name="name">Issue Blocked</field>
             <field name="res_model">project.issue</field>
-            <field name="description">Issue &lt;b&gt;blocked&lt;/b&gt;</field>
+            <field name="description">Issue blocked</field>
         </record>
         <record id="mt_issue_closed" model="mail.message.subtype">
             <field name="name">Issue Closed</field>
             <field name="res_model">project.issue</field>
-            <field name="description">Issue &lt;b&gt;closed&lt;/b&gt;</field>
+            <field name="description">Issue closed</field>
         </record>
         <record id="mt_issue_stage" model="mail.message.subtype">
             <field name="name">Stage Changed</field>
             <field name="res_model">project.issue</field>
-            <field name="description">Stage &lt;b&gt;changed&lt;/b&gt;</field>
+            <field name="description">Stage changed</field>
         </record>
         <!-- Project-related subtypes for messaging / Chatter -->
         <record id="mt_project_issue_new" model="mail.message.subtype">
-            <field name="name">PJ-Issue Created</field>
+            <field name="name">Issue Created</field>
             <field name="res_model">project.project</field>
             <field name="default" eval="False"/>
             <field name="parent_id" eval="ref('mt_issue_new')"/>
             <field name="relation_field">project_id</field>
         </record>
         <record id="mt_project_issue_started" model="mail.message.subtype">
-            <field name="name">PJ-Issue Started</field>
+            <field name="name">Issue Started</field>
             <field name="res_model">project.project</field>
             <field name="default" eval="False"/>
             <field name="parent_id" eval="ref('mt_issue_started')"/>
             <field name="relation_field">project_id</field>
         </record>
         <record id="mt_project_issue_blocked" model="mail.message.subtype">
-            <field name="name">PJ-Issue Blocked</field>
+            <field name="name">Issue Blocked</field>
             <field name="res_model">project.project</field>
             <field name="parent_id" eval="ref('mt_issue_blocked')"/>
             <field name="relation_field">project_id</field>
         </record>
         <record id="mt_project_issue_closed" model="mail.message.subtype">
-            <field name="name">PJ-Issue Closed</field>
+            <field name="name">Issue Closed</field>
             <field name="res_model">project.project</field>
             <field name="parent_id" eval="ref('mt_issue_closed')"/>
             <field name="relation_field">project_id</field>
         </record>
         <record id="mt_project_issue_stage" model="mail.message.subtype">
-            <field name="name">PJ-Stage Changed</field>
+            <field name="name">Issue Stage Changed</field>
             <field name="res_model">project.project</field>
-            <field name="description">Stage &lt;b&gt;changed&lt;/b&gt;</field>
+            <field name="description">Stage changed</field>
             <field name="parent_id" eval="ref('mt_issue_stage')"/>
             <field name="relation_field">project_id</field>
         </record>

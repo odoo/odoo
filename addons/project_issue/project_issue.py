@@ -52,11 +52,12 @@ class project_issue(base_stage, osv.osv):
 
     _track = {
         'state': {
+            'project_issue.mt_issue_new': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'new',
             'project_issue.mt_issue_closed': lambda self, cr, uid, obj, ctx=None:  obj['state'] == 'done',
             'project_issue.mt_issue_started': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'open',
         },
         'stage_id': {
-            'project_issue.mt_issue_stage': lambda self, cr, uid, obj, ctx=None: obj['state'] not in ['done', 'open'],
+            'project_issue.mt_issue_stage': lambda self, cr, uid, obj, ctx=None: obj['state'] not in ['new', 'done', 'open'],
         },
         'kanban_state': {
             'project_issue.mt_issue_blocked': lambda self, cr, uid, obj, ctx=None: obj['kanban_state'] == 'blocked',
