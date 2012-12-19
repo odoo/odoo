@@ -493,7 +493,7 @@ class _rml_canvas(object):
             img = ImageReader(s)
             (sx,sy) = img.getSize()
             _logger.debug("Image is %dx%d", sx, sy)
-            args = { 'x': 0.0, 'y': 0.0 }
+            args = { 'x': 0.0, 'y': 0.0, 'mask': 'auto'}
             for tag in ('width','height','x','y'):
                 if node.get(tag):
                     args[tag] = utils.unit_get(node.get(tag))
