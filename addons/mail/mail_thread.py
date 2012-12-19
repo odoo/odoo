@@ -73,6 +73,7 @@ class mail_thread(osv.AbstractModel):
     _name = 'mail.thread'
     _description = 'Email Thread'
     _mail_flat_thread = True
+    _track = {}
 
     _TRACK_TEMPLATE = """
         %if message_description:
@@ -303,10 +304,10 @@ class mail_thread(osv.AbstractModel):
         def convert_for_display(value, field_obj):
             if not value:
                 return ''
-            if field_obj._type == 'many2one':
+            if field_obj['type'] == 'many2one':
                 return value[1]
-            if field_obj._type == 'selection':
-                return dict(field_obj.selection)[value]
+            if field_obj['type'] == 'selection':
+                return dict(field_obj['selection'])[value]
             return value
 
 
@@ -317,13 +318,13 @@ class mail_thread(osv.AbstractModel):
             changes_found = False
             # generate tracked_values data structure: {'col_name': {col_info, new_value, old_value}}
             for col_name, col_info in tracked_fields.items():
-                if record[col_name] == initial[col_name] and col_info.column.track_visibility == 2:
+                if record[col_name] == initial[col_name] and (getattr(self._all_columns[col_name], 'track_visibility', 0) == 2):
                     tracked_values[col_name] = dict(col_info=col_info['string'],
-                        new_value=convert_for_display(record[col_name], col_info.column))
+                        new_value=convert_for_display(record[col_name], col_info))
                 elif record[col_name] != initial[col_name]:
                     tracked_values[col_name] = dict(col_info=col_info['string'], 
-                        old_value=convert_for_display(initial[col_name], col_info.column), 
-                        new_value=convert_for_display(record[col_name], col_info.column))
+                        old_value=convert_for_display(initial[col_name], col_info), 
+                        new_value=convert_for_display(record[col_name], col_info))
                     changes_found = True
             if not changes_found:
                 continue
@@ -342,7 +343,7 @@ class mail_thread(osv.AbstractModel):
                 posted = True
             if not posted:
                 message = MakoTemplate(self._TRACK_TEMPLATE).render_unicode(message_description='', tracked_values=tracked_values)
-                self.message_post(cr, uid, record.id, body=message, context=context)
+                self.message_post(cr, uid, record['id'], body=message, context=context)
         return True
 
     #------------------------------------------------------
