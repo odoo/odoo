@@ -29,15 +29,13 @@ import time
 from openerp import tools
 import xmlrpclib
 
+from email.message import Message
 from mako.template import Template as MakoTemplate
 
-from email.message import Message
-from mail_message import decode
 from openerp import SUPERUSER_ID
+from openerp.addons.mail.mail_message import decode
 from openerp.osv import fields, osv
-from openerp.osv.orm import browse_record
 from openerp.tools.safe_eval import safe_eval as eval
-from tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -364,13 +362,14 @@ class mail_thread(osv.AbstractModel):
             for subtype in subtypes:
                 try:
                     subtype_rec = self.pool.get('ir.model.data').get_object(cr, uid, subtype.split('.')[0], subtype.split('.')[1])
-                except ValueError:
+                except ValueError, e:
+                    _logger.debug('subtype %s not found, giving error "%s"' % (subtype, e))
                     continue
                 message = MakoTemplate(self._TRACK_TEMPLATE).render_unicode(message_description=subtype_rec.description, tracked_values=tracked_values)
                 self.message_post(cr, uid, record['id'], body=message, subtype=subtype, context=context)
                 posted = True
             if not posted:
-                message = MakoTemplate(self._TRACK_TEMPLATE).render_unicode(message_description='', tracked_values=tracked_values)
+                message = MakoTemplate(self._TRACK_TEMPLATE).render_unicode(message_description='Document <b>modified</b>', tracked_values=tracked_values)
                 self.message_post(cr, uid, record['id'], body=message, context=context)
         return True
 
