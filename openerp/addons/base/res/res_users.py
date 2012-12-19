@@ -299,8 +299,7 @@ class res_users(osv.osv):
             for id in ids:
                 if id in self._uid_cache[db]:
                     del self._uid_cache[db][id]
-        self.context_get.clear_cache(self, cr)
-
+        self.context_get.clear_cache(self)
         return res
 
     def unlink(self, cr, uid, ids, context=None):
