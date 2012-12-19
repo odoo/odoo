@@ -79,15 +79,15 @@ class mail_thread(osv.AbstractModel):
         %if message_description:
             <span>${message_description}</span>
         %endif
-        <ul>
         %for name, change in tracked_values.items():
-            <li><span>${change.get('col_info')}</span>:
+            <div>
+            &nbsp; &nbsp; &bull; <b>${change.get('col_info')}</b>:
                 %if change.get('old_value'):
-                    ${change.get('old_value')} ->
+                    ${change.get('old_value')} &rarr;
                 %endif
-                ${change.get('new_value')}</li>
+                ${change.get('new_value')}
+            </div>
         %endfor
-        </ul>
     """
 
     def _get_message_data(self, cr, uid, ids, name, args, context=None):
@@ -249,15 +249,12 @@ class mail_thread(osv.AbstractModel):
 
     def write(self, cr, uid, ids, values, context=None):
         tracked_fields = self._get_tracked_fields(cr, uid, values.keys(), context=context)
-        #to_log = [name for name in values.keys() if name in tracked_fields]
         if tracked_fields:
             initial = self.read(cr, uid, ids, tracked_fields.keys(), context=context)
             initial_values = dict((item['id'], item) for item in initial)
-
         result = super(mail_thread, self).write(cr, uid, ids, values, context=context)
-
         if tracked_fields:
-            self.message_track(cr, uid, ids, tracked_fields, initial_values, values.keys(), context=context)
+            self.message_track(cr, uid, ids, tracked_fields, initial_values, context=context)
         return result
 
     def unlink(self, cr, uid, ids, context=None):
@@ -298,7 +295,7 @@ class mail_thread(osv.AbstractModel):
                 lst.append(name)
         return self.fields_get(cr, uid, lst, context=context)
 
-    def message_track(self, cr, uid, ids, tracked_fields, initial_values, modified_fields=[], context=None):
+    def message_track(self, cr, uid, ids, tracked_fields, initial_values, context=None):
         if not tracked_fields:
             return True
         def convert_for_display(value, field_obj):
@@ -310,28 +307,33 @@ class mail_thread(osv.AbstractModel):
                 return dict(field_obj['selection'])[value]
             return value
 
-
-        for record in self.read(cr, uid, ids, tracked_fields, context=context):
+        for record in self.read(cr, uid, ids, tracked_fields.keys(), context=context):
             initial = initial_values[record['id']]
 
+            changes = []
             tracked_values = {}
-            changes_found = False
             # generate tracked_values data structure: {'col_name': {col_info, new_value, old_value}}
             for col_name, col_info in tracked_fields.items():
-                if record[col_name] == initial[col_name] and (getattr(self._all_columns[col_name], 'track_visibility', 0) == 2):
+                if record[col_name] == initial[col_name] and (getattr(self._all_columns[col_name].column, 'track_visibility', 0) == 2):
                     tracked_values[col_name] = dict(col_info=col_info['string'],
                         new_value=convert_for_display(record[col_name], col_info))
-                elif record[col_name] != initial[col_name]:
+                elif record[col_name] != initial[col_name] and (getattr(self._all_columns[col_name].column, 'track_visibility', 0) == 1):
                     tracked_values[col_name] = dict(col_info=col_info['string'], 
                         old_value=convert_for_display(initial[col_name], col_info), 
                         new_value=convert_for_display(record[col_name], col_info))
-                    changes_found = True
-            if not changes_found:
+                    changes.append(col_name)
+            if not changes:
                 continue
 
             # find subtypes and post messages or log if no subtype found
-            subtypes = set([subtype for field, track_info in self._track.items() if field in tracked_fields
-                            for subtype, method in track_info.items() if method(self, cr, uid, record, context)])
+
+            subtypes = []
+            for field, track_info in self._track.items():
+                if field not in changes: continue
+                for subtype, method in track_info.items():
+                    if method(self, cr, uid, record, context):
+                        subtypes.append(subtype)
+
             posted = False
             for subtype in subtypes:
                 try:
