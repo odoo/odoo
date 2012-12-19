@@ -446,13 +446,6 @@ class sale_order(osv.osv):
                     return True
         return False
 
-    # ------------------------------------------------
-    # OpenChatter methods and notifications
-    # ------------------------------------------------
-
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = super(sale_order, self).get_needaction_user_ids(cr, uid, ids, context=context)
-        return result
 
 class sale_order_line(osv.osv):
 

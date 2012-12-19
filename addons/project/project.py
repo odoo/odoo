@@ -1192,31 +1192,6 @@ class task(base_stage, osv.osv):
             getattr(self,act)(cr, uid, ids, context=context)
         return super(task,self).message_update(cr, uid, msg, update_vals=update_vals, context=context)
 
-    # ---------------------------------------------------
-    # OpenChatter methods and notifications
-    # ---------------------------------------------------
-
-    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
-        """ Override of default prefix for notifications. """
-        return 'Task'
-
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        """ Returns the user_ids that have to perform an action.
-            Add to the previous results given by super the document responsible
-            when in draft mode.
-            :return: dict { record_id: [user_ids], }
-        """
-        result = super(task, self).get_needaction_user_ids(cr, uid, ids, context=context)
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.state == 'draft' and obj.user_id:
-                result[obj.id].append(obj.user_id.id)
-        return result
-
-    def message_get_monitored_follower_fields(self, cr, uid, ids, context=None):
-        """ Add 'user_id' and 'manager_id' to the monitored fields """
-        res = super(task, self).message_get_monitored_follower_fields(cr, uid, ids, context=context)
-        return res + ['user_id', 'manager_id']
-
     def project_task_reevaluate(self, cr, uid, ids, context=None):
         if self.pool.get('res.users').has_group(cr, uid, 'project.group_time_work_estimation_tasks'):
             return {
