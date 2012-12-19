@@ -161,8 +161,8 @@ class purchase_order(osv.osv):
     ]
     _track = {
         'state': {
-            'purchase.mt_rfq_confirmed': lambda self, cr, uid, obj, ctx=None: obj['state']=='confirmed',
-            'purchase.mt_rfq_approved': lambda self, cr, uid, obj, ctx=None: obj['state']=='approved',
+            'purchase.mt_rfq_confirmed': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'confirmed',
+            'purchase.mt_rfq_approved': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'approved',
         },
     }
     _columns = {
@@ -1160,21 +1160,15 @@ class procurement_order(osv.osv):
             }
             res[procurement.id] = self.create_procurement_purchase_order(cr, uid, procurement, po_vals, line_vals, context=new_context)
             self.write(cr, uid, [procurement.id], {'state': 'running', 'purchase_id': res[procurement.id]})
-        self.purchase_order_create_note(cr, uid, ids, context=context)
+        self.message_post(cr, uid, ids, body=_("Draft Purchase Order created"), context=context)
         return res
-    
+
     def _product_virtual_get(self, cr, uid, order_point):
         procurement = order_point.procurement_id
         if procurement and procurement.state != 'exception' and procurement.purchase_id and procurement.purchase_id.state in ('draft', 'confirmed'):
             return None
         return super(procurement_order, self)._product_virtual_get(cr, uid, order_point)
 
-    def purchase_order_create_note(self, cr, uid, ids, context=None):
-        for procurement in self.browse(cr, uid, ids, context=context):
-            body = _("Draft Purchase Order created")
-            self.message_post(cr, uid, [procurement.id], body=body, context=context)
-
-procurement_order()
 
 class mail_mail(osv.osv):
     _name = 'mail.mail'
