@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-<data noupdate="1">
+<data noupdate="0">
 
     <record id="group_project_user" model="res.groups">
         <field name="name">User</field>
@@ -33,6 +33,9 @@
         <field name="name">Task Delegation</field>
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
+
+</data>
+<data noupdate="1">
 
     <record model="ir.rule" id="project_comp_rule">
         <field name="name">Project multi-company</field>
