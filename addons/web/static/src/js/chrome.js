@@ -805,12 +805,18 @@ instance.web.Menu =  instance.web.Widget.extend({
         this.maximum_visible_links = 'auto'; // # of menu to show. 0 = do not crop, 'auto' = algo
         this.data = {data:{children:[]}};
         this.on("menu_loaded", this, function (menu_data) {
+            self.reflow();
             // launch the fetch of needaction counters, asynchronous
             if (!_.isEmpty(menu_data.all_menu_ids)) {
                 this.rpc("/web/menu/load_needaction", {menu_ids: menu_data.all_menu_ids}).done(function(r) {
                     self.on_needaction_loaded(r);
                 });
             }
+        });
+        var lazyreflow = _.debounce(this.reflow.bind(this), 200);
+        instance.web.bus.on('resize', this, function() {
+            self.$el.height(0);
+            lazyreflow();
         });
     },
     start: function() {
@@ -829,12 +835,6 @@ instance.web.Menu =  instance.web.Widget.extend({
         var self = this;
         this.data = {data: data};
         this.renderElement();
-        this.limit_entries();
-        // Hide toplevel item if there is only one
-        var $toplevel = this.$("li");
-        if($toplevel.length == 1) {
-            $toplevel.hide();
-        }
         this.$secondary_menus.html(QWeb.render("Menu.secondary", { widget : this }));
         this.$el.on('click', 'a[data-menu]', this.on_menu_click);
         // Hide second level submenus
@@ -856,23 +856,34 @@ instance.web.Menu =  instance.web.Widget.extend({
             }
         });
     },
-    limit_entries: function() {
-        var maximum_visible_links = this.maximum_visible_links;
-        if (maximum_visible_links === 'auto') {
-            maximum_visible_links = this.auto_limit_entries();
+    /**
+     * Reflow the menu items and dock overflowing items into a "More" menu item.
+     * Automatically called when 'menu_loaded' event is triggered and on window resizing.
+     */
+    reflow: function() {
+        var self = this;
+        this.$el.height('auto').show();
+        var $more_container = this.$('.oe_menu_more_container').hide();
+        var $more = this.$('.oe_menu_more');
+        $more.children('li').insertBefore($more_container);
+        var $toplevel_items = this.$el.children('li').not($more_container).hide();
+        $toplevel_items.each(function() {
+            var remaining_space = self.$el.parent().width() - $more_container.outerWidth();
+            self.$el.parent().children(':visible').each(function() {
+                remaining_space -= $(this).outerWidth();
+            });
+            if ($(this).width() > remaining_space) {
+                return false;
+            }
+            $(this).show();
+        });
+        $more.append($toplevel_items.filter(':hidden').show());
+        $more_container.toggle(!!$more.children().length);
+        // Hide toplevel item if there is only one
+        var $toplevel = this.$el.children("li:visible");
+        if ($toplevel.length === 1) {
+            $toplevel.hide();
         }
-        if (maximum_visible_links < this.data.data.children.length) {
-            var $more = $(QWeb.render('Menu.more')),
-                $index = this.$el.find('li').eq(maximum_visible_links - 1);
-            $index.after($more);
-            //$('.oe_topbar').append($more);
-            $more.find('.oe_menu_more').append($index.next().nextAll());
-        }
-    },
-    auto_limit_entries: function() {
-        // TODO: auto detect overflow and bind window on resize
-        var width = $(window).width();
-        return Math.floor(width / 125);
     },
     /**
      * Opens a given menu by id, as if a user had browsed to that menu by hand
