@@ -30,6 +30,12 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
      * Setup a sessionm
      */
     session_bind: function(origin) {
+        if (!_.isUndefined(this.origin)) {
+            if (this.origin === origin) {
+                return $.when();
+            }
+            throw new Error('Session already bound to ' + this.origin);
+        }
         var self = this;
         this.setup(origin);
         instance.web.qweb.default_dict['_s'] = this.origin;

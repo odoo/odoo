@@ -36,11 +36,11 @@
 <t t-name="CrashManager.warning">
     <table cellspacing="0" cellpadding="0" border="0" class="oe_dialog_warning">
     <tr>
-        <td><img t-att-src='_s + "/web/static/src/img/warning.png"' class="oe_dialog_icon"/></td>
+        <td class="oe_dialog_icon"><img t-att-src='_s + "/web/static/src/img/warning.png"'/></td>
         <td>
             <p>
                 <t t-js="d">
-                    var message = d.message ? d.message : d.error.data.fault_code;
+                    var message = d.error.message ? d.error.message : d.error.data.fault_code;
                     d.html_error = context.engine.tools.html_escape(message)
                         .replace(/\n/g, '<br/>');
                 </t>
@@ -437,7 +437,10 @@
         <tr>
             <td class="oe_leftbar" valign="top">
                 <t t-set="debug" t-value="__debug__ ? '&amp;debug' : ''"/>
-                <a class="oe_logo" t-attf-href="/?ts=#{Date.now()}#{debug}"><img t-att-src='widget.session.url("/web/binary/company_logo")'/></a>
+                <a class="oe_logo" t-attf-href="/?ts=#{Date.now()}#{debug}">
+                    <span class="oe_logo_edit">Edit Company data</span>
+                    <img t-att-src='widget.session.url("/web/binary/company_logo")'/>
+                </a>
                 <div class="oe_secondary_menus_container"/>
                 <div class="oe_footer">
                     Powered by <a href="http://www.openerp.com" target="_blank"><span>OpenERP</span></a>

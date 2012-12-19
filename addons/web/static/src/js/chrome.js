@@ -691,6 +691,7 @@ instance.web.Login =  instance.web.Widget.extend({
 });
 instance.web.client_actions.add("login", "instance.web.Login");
 
+
 /**
  * Redirect to url by replacing window.location
  * If wait is true, sleep 1s and wait for the server i.e. after a restart.
@@ -1136,6 +1137,9 @@ instance.web.Client = instance.web.Widget.extend({
 
 instance.web.WebClient = instance.web.Client.extend({
     _template: 'WebClient',
+    events: {
+        'click .oe_logo_edit_admin': 'logo_edit'
+    },
     init: function(parent) {
         this._super(parent);
         this._current_state = null;
@@ -1206,7 +1210,29 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     update_logo: function() {
         var img = this.session.url('/web/binary/company_logo');
-        this.$el.find('.oe_logo img').attr('src', '').attr('src', img);
+        this.$('.oe_logo img').attr('src', '').attr('src', img);
+        this.$('.oe_logo_edit').toggleClass('oe_logo_edit_admin', this.session.uid === 1);
+    },
+    logo_edit: function(ev) {
+        var self = this;
+        new instance.web.Model("res.users").get_func("read")(this.session.uid, ["company_id"]).then(function(res) {
+            self.rpc("/web/action/load", { action_id: "base.action_res_company_form" }).done(function(result) {
+                result.res_id = res['company_id'][0];
+                result.target = "new";
+                result.views = [[false, 'form']];
+                result.flags = {
+                    action_buttons: true,
+                };
+                self.action_manager.do_action(result);
+                var form = self.action_manager.dialog_widget.views.form.controller;
+                form.on("on_button_cancel", self.action_manager.dialog, self.action_manager.dialog.close);
+                form.on('record_saved', self, function() {
+                    self.action_manager.dialog.close();
+                    self.update_logo();
+                });
+            });
+        });
+        return false;
     },
     check_timezone: function() {
         var self = this;
@@ -1319,12 +1345,21 @@ instance.web.WebClient = instance.web.Client.extend({
                             result.context,
                             {search_default_message_unread: true});
                     }
-                    return $.when(self.action_manager.do_action(result, {
+                    var completed = $.Deferred();
+                    $.when(self.action_manager.do_action(result, {
                         clear_breadcrumbs: true,
                         action_menu_id: self.menu.current_menu,
                     })).fail(function() {
                         self.menu.open_menu(options.previous_menu_id);
+                    }).always(function() {
+                        completed.resolve();
                     });
+                    setTimeout(function() {
+                        completed.resolve();
+                    }, 2000);
+                    // We block the menu when clicking on an element until the action has correctly finished
+                    // loading. If something crash, there is a 2 seconds timeout before it's unblocked.
+                    return completed;
                 });
             });
     },
@@ -1352,17 +1387,17 @@ instance.web.EmbeddedClient = instance.web.Client.extend({
     _template: 'EmbedClient',
     init: function(parent, origin, dbname, login, key, action_id, options) {
         this._super(parent, origin);
-
-        this.dbname = dbname;
-        this.login = login;
-        this.key = key;
+        this.bind_credentials(dbname, login, key);
         this.action_id = action_id;
         this.options = options || {};
     },
     start: function() {
         var self = this;
         return $.when(this._super()).then(function() {
-            return instance.session.session_authenticate(self.dbname, self.login, self.key, true).then(function() {
+            return self.authenticate().then(function() {
+                if (!self.action_id) {
+                    return;
+                }
                 return self.rpc("/web/action/load", { action_id: self.action_id }).done(function(result) {
                     var action = result;
                     action.flags = _.extend({
@@ -1373,11 +1408,30 @@ instance.web.EmbeddedClient = instance.web.Client.extend({
                         //pager : false
                     }, self.options, action.flags || {});
 
-                    self.action_manager.do_action(action);
+                    self.do_action(action);
                 });
             });
         });
     },
+
+    do_action: function(action) {
+        return this.action_manager.do_action(action);
+    },
+
+    authenticate: function() {
+        var s = instance.session;
+        if (s.session_is_valid() && s.db === this.dbname && s.login === this.login) {
+            return $.when();
+        }
+        return instance.session.session_authenticate(this.dbname, this.login, this.key, true);
+    },
+
+    bind_credentials: function(dbname, login, key) {
+        this.dbname = dbname;
+        this.login = login;
+        this.key = key;
+    },
+
 });
 
 instance.web.embed = function (origin, dbname, login, key, action, options) {
