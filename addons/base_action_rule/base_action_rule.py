@@ -50,17 +50,18 @@ class base_action_rule(osv.osv):
 
     def state_get(self, cr, uid, context=None):
         """ Get State """
-        return [('', ''), ('na','N/A (No previous state)')]
+        return [('', '')]
 
     _columns = {
         'name':  fields.char('Rule Name', size=64, required=True),
-        'model_id': fields.many2one('ir.model', 'Related Document Model', required=True, domain=[('osv_memory','=', False)]),
+        'model_id': fields.many2one('ir.model', 'Related Document Model',
+            required=True, domain=[('osv_memory', '=', False)]),
         'model': fields.related('model_id', 'model', type="char", size=256, string='Model'),
         'create_date': fields.datetime('Create Date', readonly=1),
-        'active': fields.boolean('Active', help="If the active field is set to False,\
- it will allow you to hide the rule without removing it."),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order \
-when displaying a list of rules."),
+        'active': fields.boolean('Active',
+            help="When unchecked, the rule is hidden and will not be executed."),
+        'sequence': fields.integer('Sequence',
+            help="Gives the sequence order when displaying a list of rules."),
         'trg_date_type':  fields.selection([
             ('none', 'None'),
             ('create', 'Creation Date'),
@@ -69,18 +70,27 @@ when displaying a list of rules."),
             ('date', 'Date'),
             ('deadline', 'Deadline'),
             ], 'Trigger Date', size=16),
-        'trg_date_range': fields.integer('Delay after trigger date', \
-                                         help="Delay After Trigger Date,\
-specifies you can put a negative number. If you need a delay before the \
-trigger date, like sending a reminder 15 minutes before a meeting."),
-        'trg_date_range_type': fields.selection([('minutes', 'Minutes'), ('hour', 'Hours'), \
+        'trg_date_range': fields.integer('Delay after trigger date',
+            help="Delay after the trigger date." \
+            "You can put a negative number if you need a delay before the" \
+            "trigger date, like sending a reminder 15 minutes before a meeting."),
+        'trg_date_range_type': fields.selection([('minutes', 'Minutes'), ('hour', 'Hours'),
                                 ('day', 'Days'), ('month', 'Months')], 'Delay type'),
         'act_user_id': fields.many2one('res.users', 'Set Responsible to'),
         'act_state': fields.selection(_state_get, 'Set State to', size=16),
         'act_followers': fields.many2many("res.partner", string="Set Followers"),
-        'server_action_ids': fields.one2many('ir.actions.server', 'action_rule_id', 'Server Action', help="Define Server actions.\neg:Email Reminders, Call Object Service, etc.."), #TODO: set domain [('model_id','=',model_id)]
-        'filter_id':fields.many2one('ir.filters', 'Postcondition Filter', required=False), #TODO: set domain [('model_id','=',model_id.model)]
-        'filter_pre_id': fields.many2one('ir.filters', 'Precondition Filter', required=False),
+        'server_action_ids': fields.one2many('ir.actions.server', 'action_rule_id',
+            domain="[('model_id', '=', model_id)]",
+            string='Server Action',
+            help="Example: email reminders, call object service, etc."),
+        'filter_pre_id': fields.many2one('ir.filters', string='Before Filter',
+            ondelete='restrict',
+            domain="[('model_id', '=', model_id.model)]",
+            help="If present, this condition must be satisfied before the update of the record."),
+        'filter_id': fields.many2one('ir.filters', string='After Filter',
+            ondelete='restrict',
+            domain="[('model_id', '=', model_id.model)]",
+            help="If present, this condition must be satisfied after the update of the record."),
         'last_run': fields.datetime('Last Run', readonly=1),
     }
 
