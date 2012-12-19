@@ -75,11 +75,12 @@ class crm_lead(base_stage, format_address, osv.osv):
 
     _track = {
         'state': {
+            'crm.mt_lead_create': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'new',
             'crm.mt_lead_won': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'done',
             'crm.mt_lead_lost': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'cancel',
         },
         'stage_id': {
-            'crm.mt_lead_stage': lambda self, cr, uid, obj, ctx=None: obj['state'] not in ['cancel', 'done'],
+            'crm.mt_lead_stage': lambda self, cr, uid, obj, ctx=None: obj['state'] not in ['new', 'cancel', 'done'],
         },
     }
 
@@ -699,7 +700,7 @@ class crm_lead(base_stage, format_address, osv.osv):
                 continue
             vals = self._convert_opportunity_data(cr, uid, lead, customer, section_id, context=context)
             self.write(cr, uid, [lead.id], vals, context=context)
-        self.message_post(cr, uid, ids, body=_("Lead has been <b>converted to an opportunity</b>."), subtype="crm.mt_lead_convert_to_opportunity", context=context)
+        self.message_post(cr, uid, ids, body=_("Lead <b>converted into an Opportunity</b>"), subtype="crm.mt_lead_convert_to_opportunity", context=context)
 
         if user_ids or section_id:
             self.allocate_salesman(cr, uid, ids, user_ids, section_id, context=context)
@@ -758,7 +759,7 @@ class crm_lead(base_stage, format_address, osv.osv):
             res_partner.write(cr, uid, partner_id, {'section_id': lead.section_id.id or False})
             contact_id = res_partner.address_get(cr, uid, [partner_id])['default']
             res = lead.write({'partner_id': partner_id}, context=context)
-            message = _("%s <b>partner</b> is now set to <em>%s</em>." % ('Opportunity' if lead.type == 'opportunity' else 'Lead', lead.partner_id.name))
+            message = _("<b>Partner</b> set to <em>%s</em>." % (lead.partner_id.name))
             self.message_post(cr, uid, [lead.id], body=message, context=context)
         return res
 
@@ -913,15 +914,7 @@ class crm_lead(base_stage, format_address, osv.osv):
             stage = self.pool.get('crm.case.stage').browse(cr, uid, vals['stage_id'], context=context)
             if stage.on_change:
                 vals['probability'] = stage.probability
-        if vals.get('section_id'):
-            section_id = self.pool.get('crm.case.section').browse(cr, uid, vals.get('section_id'), context=context)
-            vals.setdefault('message_follower_ids', [])
-            vals['message_follower_ids'] += [(6, 0,[follower.id]) for follower in section_id.message_follower_ids]
-        res = super(crm_lead,self).write(cr, uid, ids, vals, context)
-        # subscribe new salesteam followers & subtypes to the lead
-        if vals.get('section_id'):
-            self._subscribe_followers_subtype(cr, uid, ids, vals.get('section_id'), 'crm.case.section', context=context)
-        return res
+        return super(crm_lead, self).write(cr, uid, ids, vals, context=context)
 
     def new_mail_send(self, cr, uid, ids, context=None):
         '''
