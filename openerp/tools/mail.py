@@ -135,8 +135,8 @@ def html_email_clean(html):
 
     html = ustr(html)
 
-    # 0. remove doctype and xml tags
-    doctype = re.compile(r"(<[?]xml.*?[?]>|<[!]DOCTYPE.*?>)[\n\r\s]*", re.IGNORECASE | re.DOTALL)
+    # 0. remove encoding attribute inside tags
+    doctype = re.compile(r'(<[^>]*\s)(encoding=(["\'][^"\']*?["\']|[^\s\n\r>]+)(\s[^>]*|/)?>)', re.IGNORECASE | re.DOTALL)
     html = doctype.sub(r"", html)
 
     # 1. <br[ /]> -> \n, because otherwise the tree is obfuscated
