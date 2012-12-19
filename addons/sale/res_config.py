@@ -69,7 +69,7 @@ Example: Product: this product is deprecated, do not purchase more than 5.
                 But the possibility to change these values is still available.
                 This installs the module analytic_user_function."""),
         'module_project': fields.boolean("Project"),
-        'module_sale_stock': fields.boolean("Trigger delivery orders automatically from sale orders",
+        'module_sale_stock': fields.boolean("Trigger delivery orders automatically from sales orders",
             help="""Allows you to Make Quotation, Sale Order using different Order policy and Manage Related Stock.
                     This installs the module sale_stock."""),
     }
@@ -126,7 +126,7 @@ class account_config_settings(osv.osv_memory):
             help="""This allows install module sale_analytic_plans."""),
         'group_analytic_account_for_sales': fields.boolean('Analytic accounting for sales',
             implied_group='sale.group_analytic_accounting',
-            help="Allows you to specify an analytic account on sale orders."),
+            help="Allows you to specify an analytic account on sales orders."),
     }
 
     def onchange_sale_analytic_plans(self, cr, uid, ids, module_sale_analytic_plans, context=None):

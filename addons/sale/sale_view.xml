@@ -307,7 +307,7 @@
                     <filter icon="terp-dolar_ok!" string="To Invoice" domain="[('state','=','manual')]" help="Sales Order ready to be invoiced"/>
                     <filter icon="terp-dolar_ok!" string="Done" domain="[('state','=','done')]" help="Sales Order done"/>
                     <separator/>
-                    <filter string="My Sale Orders" domain="[('user_id','=',uid)]" help="My Sale Orders" icon="terp-personal" name="my_sale_orders_filter"/>
+                    <filter string="My Sales Orders" domain="[('user_id','=',uid)]" help="My Sales Orders" icon="terp-personal" name="my_sale_orders_filter"/>
                     <field name="partner_id"/>
                     <field name="user_id"/>
                     <field name="project_id"/>
@@ -322,7 +322,7 @@
         </record>
 
         <record id="action_orders" model="ir.actions.act_window">
-            <field name="name">Sale Orders</field>
+            <field name="name">Sales Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
@@ -336,7 +336,7 @@
                 order.
               </p><p>
                 OpenERP will help you efficiently handle the complete sales flow:
-                quotation, sale order, delivery, invoicing and payment.
+                quotation, sales orders, delivery, invoicing and payment.
               </p>
             </field>
         </record>
