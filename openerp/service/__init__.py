@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2010-2012 OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +16,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -23,17 +24,16 @@ import logging
 import threading
 import time
 
-import http_server
+import cron
 import netrpc_server
 import web_services
-import websrv_lib
+import web_services
+import wsgi_server
 
-import openerp.cron
 import openerp.modules
 import openerp.netsvc
 import openerp.osv
 import openerp.tools
-import openerp.service.wsgi_server
 
 #.apidoc title: RPC Services
 
@@ -61,6 +61,7 @@ Maybe you forgot to add those addons in your addons_path configuration."""
             _logger.exception('Failed to load server-wide module `%s`.%s', m, msg)
 
 start_internal_done = False
+main_thread_id = threading.currentThread().ident
 
 def start_internal():
     global start_internal_done
@@ -68,38 +69,32 @@ def start_internal():
         return
     openerp.netsvc.init_logger()
     openerp.modules.loading.open_openerp_namespace()
+
     # Instantiate local services (this is a legacy design).
     openerp.osv.osv.start_object_proxy()
     # Export (for RPC) services.
-    web_services.start_web_services()
+    web_services.start_service()
+
     load_server_wide_modules()
     start_internal_done = True
 
 def start_services():
     """ Start all services including http, netrpc and cron """
     start_internal()
-
-    # Initialize the HTTP stack.
-    netrpc_server.init_servers()
-
-    # Start the main cron thread.
-    if openerp.conf.max_cron_threads:
-        openerp.cron.start_master_thread()
-
-    # Start the top-level servers threads (normally HTTP, HTTPS, and NETRPC).
-    openerp.netsvc.Server.startAll()
-
+    # Initialize the NETRPC server.
+    netrpc_server.start_service()
     # Start the WSGI server.
-    openerp.service.wsgi_server.start_server()
+    wsgi_server.start_service()
+    # Start the main cron thread.
+    cron.start_service()
 
 def stop_services():
     """ Stop all services. """
-    # stop scheduling new jobs; we will have to wait for the jobs to complete below
-    openerp.cron.cancel_all()
+    # stop services
+    cron.stop_service()
+    netrpc_server.stop_service()
+    wsgi_server.stop_service()
 
-    openerp.netsvc.Server.quitAll()
-    openerp.service.wsgi_server.stop_server()
-    config = openerp.tools.config
     _logger.info("Initiating shutdown")
     _logger.info("Hit CTRL-C again or send a second signal to force the shutdown.")
     logging.shutdown()
@@ -107,8 +102,9 @@ def stop_services():
     # Manually join() all threads before calling sys.exit() to allow a second signal
     # to trigger _force_quit() in case some non-daemon threads won't exit cleanly.
     # threading.Thread.join() should not mask signals (at least in python 2.5).
+    me = threading.currentThread()
     for thread in threading.enumerate():
-        if thread != threading.currentThread() and not thread.isDaemon():
+        if thread != me and not thread.isDaemon() and thread.ident != main_thread_id:
             while thread.isAlive():
                 # Need a busyloop here as thread.join() masks signals
                 # and would prevent the forced shutdown.
@@ -119,10 +115,9 @@ def stop_services():
 
 def start_services_workers():
     import openerp.service.workers
-    openerp.multi_process = True # Nah!
+    openerp.multi_process = True
 
     openerp.service.workers.Multicorn(openerp.service.wsgi_server.application).run()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

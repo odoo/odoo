@@ -23,6 +23,8 @@
 
 from functools import wraps
 import logging
+import threading
+
 from psycopg2 import IntegrityError, errorcodes
 
 import orm
@@ -168,6 +170,7 @@ class object_proxy(object):
 
     @check
     def execute(self, db, uid, obj, method, *args, **kw):
+        threading.currentThread().dbname = db
         cr = pooler.get_db(db).cursor()
         try:
             try:

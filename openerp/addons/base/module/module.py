@@ -18,9 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-import base64
-from docutils import io, nodes
+from docutils import nodes
 from docutils.core import publish_string
 from docutils.transforms import Transform, writer_aux
 from docutils.writers.html4css1 import Writer
@@ -30,6 +28,7 @@ import re
 import urllib
 import zipimport
 
+import openerp
 from openerp import modules, pooler, release, tools, addons
 from openerp.modules.db import create_categories
 from openerp.tools.parse_version import parse_version
@@ -369,22 +368,28 @@ class module(osv.osv):
         # Mark the given modules to be installed.
         self.state_update(cr, uid, ids, 'to install', ['uninstalled'], context)
 
-        # Mark (recursively) the newly satisfied modules to also be installed:
+        # Mark (recursively) the newly satisfied modules to also be installed
 
         # Select all auto-installable (but not yet installed) modules.
-        domain = [('state', '=', 'uninstalled'), ('auto_install', '=', True),]
+        domain = [('state', '=', 'uninstalled'), ('auto_install', '=', True)]
         uninstalled_ids = self.search(cr, uid, domain, context=context)
         uninstalled_modules = self.browse(cr, uid, uninstalled_ids, context=context)
 
-        # Keep those with all their dependencies satisfied.
+        # Keep those with:
+        #  - all dependencies satisfied (installed or to be installed),
+        #  - at least one dependency being 'to install'
+        satisfied_states = frozenset(('installed', 'to install', 'to upgrade'))
         def all_depencies_satisfied(m):
-            return all(x.state in ('to install', 'installed', 'to upgrade') for x in m.dependencies_id)
+            states = set(d.state for d in m.dependencies_id)
+            return states.issubset(satisfied_states) and ('to install' in states)
         to_install_modules = filter(all_depencies_satisfied, uninstalled_modules)
         to_install_ids = map(lambda m: m.id, to_install_modules)
 
         # Mark them to be installed.
         if to_install_ids:
             self.button_install(cr, uid, to_install_ids, context=context)
+
+        openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
         return dict(ACTION_DICT, name=_('Install'))
 
     def button_immediate_install(self, cr, uid, ids, context=None):

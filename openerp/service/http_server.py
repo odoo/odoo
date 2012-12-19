@@ -139,7 +139,7 @@ class OpenERPAuthProvider(AuthProvider):
             uid = security.login(db,user,passwd)
             if uid is False:
                 return False
-            return (user, passwd, db, uid)
+            return user, passwd, db, uid
         except Exception,e:
             _logger.debug("Fail auth: %s" % e )
             return False
@@ -175,7 +175,5 @@ class OpenERPAuthProvider(AuthProvider):
             raise AuthRejectedExc("Authorization failed.")
         self.auth_tries += 1
         raise AuthRequiredExc(atype='Basic', realm=self.realm)
-
-#eof
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

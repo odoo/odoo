@@ -50,20 +50,25 @@ class test_ir_values(common.TransactionCase):
 
         # Create some action bindings for a non-existing model.
 
+        act_id_1 = self.ref('base.act_values_form_action')
+        act_id_2 = self.ref('base.act_values_form_defaults')
+        act_id_3 = self.ref('base.action_res_company_form')
+        act_id_4 = self.ref('base.action_res_company_tree')
+
         ir_values = self.registry('ir.values')
-        ir_values.set(self.cr, self.uid, 'action', 'tree_but_open', 'OnDblClick Action', ['unexisting_model'], 'ir.actions.act_window,10', isobject=True)
-        ir_values.set(self.cr, self.uid, 'action', 'tree_but_open', 'OnDblClick Action 2', ['unexisting_model'], 'ir.actions.act_window,11', isobject=True)
-        ir_values.set(self.cr, self.uid, 'action', 'client_action_multi', 'Side Wizard', ['unexisting_model'], 'ir.actions.act_window,12', isobject=True)
+        ir_values.set(self.cr, self.uid, 'action', 'tree_but_open', 'OnDblClick Action', ['unexisting_model'], 'ir.actions.act_window,%d' % act_id_1, isobject=True)
+        ir_values.set(self.cr, self.uid, 'action', 'tree_but_open', 'OnDblClick Action 2', ['unexisting_model'], 'ir.actions.act_window,%d' % act_id_2, isobject=True)
+        ir_values.set(self.cr, self.uid, 'action', 'client_action_multi', 'Side Wizard', ['unexisting_model'], 'ir.actions.act_window,%d' % act_id_3, isobject=True)
         report_ids = self.registry('ir.actions.report.xml').search(self.cr, self.uid, [], {})
         reports = self.registry('ir.actions.report.xml').browse(self.cr, self.uid, report_ids, {})
-        report_id = [report.id for report in reports if not report.groups_id][0] # assume at least one
-        ir_values.set(self.cr, self.uid, 'action', 'client_print_multi', 'Nice Report', ['unexisting_model'], 'ir.actions.report.xml,%s'%report_id, isobject=True)
-        ir_values.set(self.cr, self.uid, 'action', 'client_action_relate', 'Related Stuff', ['unexisting_model'], 'ir.actions.act_window,14', isobject=True)
+        report_id = [report.id for report in reports if not report.groups_id][0]  # assume at least one
+        ir_values.set(self.cr, self.uid, 'action', 'client_print_multi', 'Nice Report', ['unexisting_model'], 'ir.actions.report.xml,%d' % report_id, isobject=True)
+        ir_values.set(self.cr, self.uid, 'action', 'client_action_relate', 'Related Stuff', ['unexisting_model'], 'ir.actions.act_window,%d' % act_id_4, isobject=True)
 
         # Replace one action binding to set a new name.
 
         ir_values = self.registry('ir.values')
-        ir_values.set(self.cr, self.uid, 'action', 'tree_but_open', 'OnDblClick Action New', ['unexisting_model'], 'ir.actions.act_window,10', isobject=True)
+        ir_values.set(self.cr, self.uid, 'action', 'tree_but_open', 'OnDblClick Action New', ['unexisting_model'], 'ir.actions.act_window,%d' % act_id_1, isobject=True)
 
         # Retrieve the action bindings and check they're correct
 
@@ -73,17 +78,17 @@ class test_ir_values(common.TransactionCase):
         #first action
         assert len(actions[0]) == 3, "Malformed action definition"
         assert actions[0][1] == 'OnDblClick Action 2', 'Bound action does not match definition'
-        assert isinstance(actions[0][2], dict) and actions[0][2]['id'] == 11, 'Bound action does not match definition'
+        assert isinstance(actions[0][2], dict) and actions[0][2]['id'] == act_id_2, 'Bound action does not match definition'
         #second action - this ones comes last because it was re-created with a different name
         assert len(actions[1]) == 3, "Malformed action definition"
         assert actions[1][1] == 'OnDblClick Action New', 'Re-Registering an action should replace it'
-        assert isinstance(actions[1][2], dict) and actions[1][2]['id'] == 10, 'Bound action does not match definition'
+        assert isinstance(actions[1][2], dict) and actions[1][2]['id'] == act_id_1, 'Bound action does not match definition'
 
         actions = ir_values.get(self.cr, self.uid, 'action', 'client_action_multi', ['unexisting_model'])
         assert len(actions) == 1, "Mismatching number of bound actions"
         assert len(actions[0]) == 3, "Malformed action definition"
         assert actions[0][1] == 'Side Wizard', 'Bound action does not match definition'
-        assert isinstance(actions[0][2], dict) and actions[0][2]['id'] == 12, 'Bound action does not match definition'
+        assert isinstance(actions[0][2], dict) and actions[0][2]['id'] == act_id_3, 'Bound action does not match definition'
 
         actions = ir_values.get(self.cr, self.uid, 'action', 'client_print_multi', ['unexisting_model'])
         assert len(actions) == 1, "Mismatching number of bound actions"
@@ -95,7 +100,7 @@ class test_ir_values(common.TransactionCase):
         assert len(actions) == 1, "Mismatching number of bound actions"
         assert len(actions[0]) == 3, "Malformed action definition"
         assert actions[0][1] == 'Related Stuff', 'Bound action does not match definition'
-        assert isinstance(actions[0][2], dict) and actions[0][2]['id'] == 14, 'Bound action does not match definition'
+        assert isinstance(actions[0][2], dict) and actions[0][2]['id'] == act_id_4, 'Bound action does not match definition'
 
 
 if __name__ == '__main__':

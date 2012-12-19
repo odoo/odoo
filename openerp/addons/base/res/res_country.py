@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 
 def location_name_search(self, cr, user, name='', args=None, operator='ilike',
                          context=None, limit=100):

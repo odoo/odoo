@@ -22,17 +22,16 @@
 import logging
 import os
 import re
-import time
-import tools
-
-import netsvc
-from osv import fields,osv
-from report.report_sxw import report_sxw, report_rml
-from tools.config import config
-from tools.safe_eval import safe_eval as eval
-from tools.translate import _
 from socket import gethostname
+import time
+
 from openerp import SUPERUSER_ID
+from openerp import netsvc, tools
+from openerp.osv import fields, osv
+from openerp.report.report_sxw import report_sxw, report_rml
+from openerp.tools.config import config
+from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -42,7 +41,7 @@ class actions(osv.osv):
     _order = 'name'
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'type': fields.char('Action Type', required=True, size=32,readonly=True),
+        'type': fields.char('Action Type', required=True, size=32),
         'usage': fields.char('Action Usage', size=32),
         'help': fields.text('Action description',
             help='Optional help text for the users with a description of the target view, such as its usage and purpose.',
@@ -671,7 +670,7 @@ class actions_server(osv.osv):
                 context['object'] = obj
                 for i in expr:
                     context['active_id'] = i.id
-                    result = self.run(cr, uid, [action.loop_action.id], context)
+                    self.run(cr, uid, [action.loop_action.id], context)
 
             if action.state == 'object_write':
                 res = {}
@@ -716,8 +715,6 @@ class actions_server(osv.osv):
                         expr = exp.value
                     res[exp.col1.name] = expr
 
-                obj_pool = None
-                res_id = False
                 obj_pool = self.pool.get(action.srcmodel_id.model)
                 res_id = obj_pool.create(cr, uid, res)
                 if action.record_id:
@@ -736,7 +733,7 @@ class actions_server(osv.osv):
                 model = action.copy_object.split(',')[0]
                 cid = action.copy_object.split(',')[1]
                 obj_pool = self.pool.get(model)
-                res_id = obj_pool.copy(cr, uid, int(cid), res)
+                obj_pool.copy(cr, uid, int(cid), res)
 
         return False
 

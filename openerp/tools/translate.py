@@ -93,7 +93,6 @@ _LOCALE2WIN32 = {
     'lt_LT': 'Lithuanian_Lithuania',
     'lat': 'Latvian_Latvia',
     'ml_IN': 'Malayalam_India',
-    'id_ID': 'Indonesian_indonesia',
     'mi_NZ': 'Maori',
     'mn': 'Cyrillic_Mongolian',
     'no_NO': 'Norwegian_Norway',
@@ -103,7 +102,6 @@ _LOCALE2WIN32 = {
     'pt_BR': 'Portuguese_Brazil',
     'ro_RO': 'Romanian_Romania',
     'ru_RU': 'Russian_Russia',
-    'mi_NZ': 'Maori',
     'sr_CS': 'Serbian (Cyrillic)_Serbia and Montenegro',
     'sk_SK': 'Slovak_Slovakia',
     'sl_SI': 'Slovenian_Slovenia',
@@ -131,7 +129,6 @@ _LOCALE2WIN32 = {
     'sv_SE': 'Swedish_Sweden',
     'ta_IN': 'English_Australia',
     'th_TH': 'Thai_Thailand',
-    'mi_NZ': 'Maori',
     'tr_TR': 'Turkish_Turkey',
     'uk_UA': 'Ukrainian_Ukraine',
     'vi_VN': 'Vietnamese_Viet Nam',
@@ -275,7 +272,7 @@ class TinyPoFile(object):
     def __iter__(self):
         self.buffer.seek(0)
         self.lines = self._get_lines()
-        self.lines_count = len(self.lines);
+        self.lines_count = len(self.lines)
 
         self.first = True
         self.extra_lines= []
@@ -291,7 +288,7 @@ class TinyPoFile(object):
         return lines
 
     def cur_line(self):
-        return (self.lines_count - len(self.lines))
+        return self.lines_count - len(self.lines)
 
     def next(self):
         trans_type = name = res_id = source = trad = None
@@ -304,7 +301,7 @@ class TinyPoFile(object):
             targets = []
             line = None
             fuzzy = False
-            while (not line):
+            while not line:
                 if 0 == len(self.lines):
                     raise StopIteration()
                 line = self.lines.pop(0).strip()
@@ -793,26 +790,33 @@ def trans_generate(lang, modules, cr):
     cr.execute(query_models, query_param)
 
     def push_constraint_msg(module, term_type, model, msg):
-        # Check presence of __call__ directly instead of using
-        # callable() because it will be deprecated as of Python 3.0
         if not hasattr(msg, '__call__'):
-            push_translation(module, term_type, model, 0, encode(msg))
+            push_translation(encode(module), term_type, encode(model), 0, encode(msg))
 
+    def push_local_constraints(module, model, cons_type='sql_constraints'):
+        """Climb up the class hierarchy and ignore inherited constraints
+           from other modules"""
+        term_type = 'sql_constraint' if cons_type == 'sql_constraints' else 'constraint'
+        msg_pos = 2 if cons_type == 'sql_constraints' else 1
+        for cls in model.__class__.__mro__:
+            if getattr(cls, '_module', None) != module:
+                continue
+            constraints = getattr(cls, '_local_' + cons_type, [])
+            for constraint in constraints:
+                push_constraint_msg(module, term_type, model._name, constraint[msg_pos])
+            
     for (_, model, module) in cr.fetchall():
-        module = encode(module)
-        model = encode(model)
-
         model_obj = pool.get(model)
 
         if not model_obj:
             _logger.error("Unable to find object %r", model)
             continue
 
-        for constraint in getattr(model_obj, '_constraints', []):
-            push_constraint_msg(module, 'constraint', model, constraint[1])
+        if model_obj._constraints:
+            push_local_constraints(module, model_obj, 'constraints')
 
-        for constraint in getattr(model_obj, '_sql_constraints', []):
-            push_constraint_msg(module, 'sql_constraint', model, constraint[2])
+        if model_obj._sql_constraints:
+            push_local_constraints(module, model_obj, 'sql_constraints')
 
     def get_module_from_path(path, mod_paths=None):
         if not mod_paths:
@@ -857,7 +861,7 @@ def trans_generate(lang, modules, cr):
         frelativepath = fabsolutepath[len(path):]
         display_path = "addons%s" % frelativepath
         module = get_module_from_path(fabsolutepath, mod_paths=mod_paths)
-        if (('all' in modules) or (module in modules)) and module in installed_modules:
+        if ('all' in modules or module in modules) and module in installed_modules:
             return module, fabsolutepath, frelativepath, display_path
         return None, None, None, None
 

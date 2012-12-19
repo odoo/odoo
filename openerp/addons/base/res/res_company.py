@@ -19,14 +19,14 @@
 #
 ##############################################################################
 
-from osv import osv
-from osv import fields
 import os
-import tools
+
 import openerp
-from openerp import SUPERUSER_ID
-from tools.translate import _
-from tools.safe_eval import safe_eval as eval
+from openerp import SUPERUSER_ID, tools
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools import image_resize_image
 
 class multi_company_default(osv.osv):
     """
@@ -102,6 +102,16 @@ class res_company(osv.osv):
                 part_obj.create(cr, uid, {name: value or False, 'parent_id': company.partner_id.id}, context=context)
         return True
 
+    def _get_logo_web(self, cr, uid, ids, _field_name, _args, context=None):
+        result = dict.fromkeys(ids, False)
+        for record in self.browse(cr, uid, ids, context=context):
+            size = (180, None)
+            result[record.id] = image_resize_image(record.partner_id.image, size)
+        return result
+
+    def _get_companies_from_partner(self, cr, uid, ids, context=None):
+        return self.pool['res.company'].search(cr, uid, [('partner_id', 'in', ids)], context=context)
+
     _columns = {
         'name': fields.related('partner_id', 'name', string='Company Name', size=128, required=True, store=True, type='char'),
         'parent_id': fields.many2one('res.company', 'Parent Company', select=True),
@@ -115,6 +125,10 @@ class res_company(osv.osv):
         'rml_footer_readonly': fields.related('rml_footer', type='text', string='Report Footer', readonly=True),
         'custom_footer': fields.boolean('Custom Footer', help="Check this to define the report footer manually.  Otherwise it will be filled in automatically."),
         'logo': fields.related('partner_id', 'image', string="Logo", type="binary"),
+        'logo_web': fields.function(_get_logo_web, string="Logo Web", type="binary", store={
+            'res.company': (lambda s, c, u, i, x: i, ['partner_id'], 10),
+            'res.partner': (_get_companies_from_partner, ['image'], 10),
+        }),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
         'currency_ids': fields.one2many('res.currency', 'company_id', 'Currency'),
         'user_ids': fields.many2many('res.users', 'res_company_users_rel', 'cid', 'user_id', 'Accepted Users'),
@@ -352,7 +366,4 @@ class res_company(osv.osv):
     ]
 
 
-res_company()
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
