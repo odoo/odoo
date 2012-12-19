@@ -73,6 +73,22 @@ class mail_thread(osv.AbstractModel):
     _name = 'mail.thread'
     _description = 'Email Thread'
     _mail_flat_thread = True
+
+    # Automatic logging system if mail installed
+    # _track = {
+    #   'field': {
+    #       'module.subtype_xml': lambda self, cr, uid, obj, context=None: obj.state == done,
+    #       'module.subtype_xml2': lambda self, cr, uid, obj, context=None: obj.state != done,
+    #   },
+    #   'field2': {
+    #       ...
+    #   },
+    # }
+    # where
+    #   :param string field: field name
+    #   :param module.subtype_xml: xml_id of a mail.message.subtype (i.e. mail.mt_comment)
+    #   :param obj: is a browse_record
+    #   :param function lambda: returns whether the tracking should record using this subtype
     _track = {}
 
     _TRACK_TEMPLATE = """
