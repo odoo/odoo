@@ -42,11 +42,8 @@ openerp.base = function(instance) {
         if (instance.base.apps._client) {
             return check_client_available(instance.base.apps._client);
         } else {
-            //var DEFAULT_SERVER = 'http://apps.openerp.com/loempia';           // PROD
-            var DEFAULT_SERVER = 'http://apps.v7.openerp.com:8069/apps';     // TEST
-            //var DEFAULT_SERVER = 'http://localhost:8080/trunk_loempia7';        // DEV
             var ICP = new instance.web.Model('ir.config_parameter');
-            return ICP.call('get_param', ['loempia.server', DEFAULT_SERVER]).then(function(u) {
+            return ICP.call('get_param', ['apps.server', 'https://apps.openerp.com/apps']).then(function(u) {
                 var link = $(_.str.sprintf('<a href="%s"></a>', u))[0];
                 var host = _.str.sprintf('%s//%s', link.protocol, link.host);
                 var dbname = link.pathname;

@@ -55,14 +55,10 @@ from openerp import SUPERUSER_ID
 _logger = logging.getLogger(__name__)
 
 RPC_VERSION_1 = {
-    'openerp': {
-        'version': release.version,
-        'version_info': release.version_info,
-        'serie': release.serie,
-    },
-    'protocol': {
-        'version': 1
-    },
+        'server_version': release.version,
+        'server_version_info': release.version_info,
+        'server_serie': release.serie,
+        'protocol_version': 1,
 }
 
 # This should be moved to openerp.modules.db, along side initialize().
