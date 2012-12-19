@@ -122,7 +122,7 @@ class base_action_rule(osv.osv):
         Return a wrapper around `old_create` calling both `old_create` and
         `post_action`, in that order.
         """
-        def wrapper(cr, uid, vals, context=context):
+        def wrapper(cr, uid, vals, context=None):
             if context is None:
                 context = {}
             new_id = old_create(cr, uid, vals, context=context)
@@ -145,7 +145,7 @@ class base_action_rule(osv.osv):
         Return a wrapper around `old_write` calling both `old_write` and
         `post_action`, in that order.
         """
-        def wrapper(cr, uid, ids, vals, context=context):
+        def wrapper(cr, uid, ids, vals, context=None):
             old_records = {}
             if context is None:
                 context = {}
