@@ -749,7 +749,8 @@ class mail_thread(osv.AbstractModel):
         return mail_message.create(cr, uid, values, context=context)
 
     def message_post_user_api(self, cr, uid, thread_id, body='', subject=False, parent_id=False,
-                                attachment_ids=None, context=None, content_subtype='plaintext', **kwargs):
+                                attachment_ids=None, context=None, content_subtype='plaintext',
+                                extra_email=[], **kwargs):
         """ Wrapper on message_post, used for user input :
             - mail gateway
             - quick reply in Chatter (refer to mail.js), not
@@ -761,6 +762,7 @@ class mail_thread(osv.AbstractModel):
             - type and subtype: comment and mail.mt_comment by default
             - attachment_ids: supposed not attached to any document; attach them
                 to the related document. Should only be set by Chatter.
+            - extra_email: [ 'Fabien <fpi@openerp.com>', 'al@openerp.com' ]
         """
         ir_attachment = self.pool.get('ir.attachment')
         mail_message = self.pool.get('mail.message')
@@ -768,6 +770,12 @@ class mail_thread(osv.AbstractModel):
         # 1. Pre-processing: body, partner_ids, type and subtype
         if content_subtype == 'plaintext':
             body = tools.plaintext2html(body)
+
+        for partner in extra_email:
+            part_ids = self.pool.get('res.partner').search(cr, uid, [('email', '=', partner)], context=context)
+            if not part_ids:
+                part_ids = [self.pool.get('res.partner').name_create(cr, uid, partner, context=context)[0]]
+            self.message_subscribe(cr, uid, [thread_id], part_ids, context=context)
 
         partner_ids = kwargs.pop('partner_ids', [])
         if parent_id:
