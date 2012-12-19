@@ -167,9 +167,6 @@
     line-height:24px;
     text-align: center;
 }
-.openerp_ie .oe_mail .oe_msg .oe_msg_icons span {
-    -ms-filter: "progid:DXImageTransform.Microsoft.shadow(color=#aaaaaa,strength=2)";
-}
 .openerp .oe_mail .oe_msg .oe_msg_icons a {
     text-decoration: none;
     color: #FFF;
@@ -222,6 +219,29 @@
 .openerp .oe_mail .oe_msg.oe_msg_composer_compact textarea{
     height: 24px;
     width: 100%;
+}
+
+/* d) I.E. tweaks for Message action icons */
+
+.openerp.openerp_ie .oe_mail .oe_msg .oe_msg_icons a {
+    color: #C8BFDA;
+    text-shadow: none;
+}
+.openerp.openerp_ie .oe_mail .oe_msg .oe_msg_icons .oe_star:hover a{
+    color: #FFB700;
+    text-shadow: none;
+}
+.openerp.openerp_ie .oe_mail .oe_msg .oe_msg_icons .oe_starred a{
+    color: #FFB700;
+    text-shadow:none;
+}
+.openerp.openerp_ie .oe_mail .oe_msg .oe_msg_icons .oe_read:hover a{
+    color: #7C7BAD;
+    text-shadow: none;
+}
+.openerp.openerp_ie .oe_mail .oe_msg .oe_msg_icons .oe_unread:hover a{
+    color: #7C7BAD;
+    text-shadow: none;
 }
 
 /* --------------------- ATTACHMENTS --------------------- */
