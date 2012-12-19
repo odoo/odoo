@@ -477,7 +477,7 @@
                 <td>
                     <ul class="oe_view_manager_switch oe_button_group oe_right">
                         <t t-if="widget.views_src.length > 1" t-foreach="widget.views_src" t-as="view">
-                          <li class="oe_e"><a t-attf-class="oe_vm_switch_#{view.view_type}" t-att-data-view-type="view.view_type" t-att-title="(view.label || view.view_type) + _t(' view') ">
+                          <li class="oe_e"><a t-attf-class="oe_vm_switch_#{view.view_type}" t-att-data-view-type="view.view_type" t-att-title="(view.label || view.view_type) + _t(' view')">
                             </a></li>
                         </t>
                     </ul>
