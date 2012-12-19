@@ -39,7 +39,10 @@ except ImportError:
 import openerp
 from openerp import pooler, sql_db, netsvc
 from openerp.tools import misc
-from openerp.addons.document.dict_tools import dict_merge2
+try:
+    from tools.dict_tools import dict_merge2
+except ImportError:
+    from document.dict_tools import dict_merge2
 
 from cache import memoize
 from webdav import mk_lock_response
