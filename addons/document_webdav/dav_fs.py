@@ -709,7 +709,6 @@ class openerp_dav_handler(dav_interface):
             if not dir_node:
                 cr.close()
                 raise DAV_NotFound('Parent folder not found.')
-
             newchild = self._try_function(dir_node.create_child, (cr, objname, data),
                     "create %s" % objname, cr=cr)
             if not newchild:
