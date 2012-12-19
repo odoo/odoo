@@ -1,4 +1,4 @@
-import tools
+from openerp import SUPERUSER_ID
 from openerp.tests import common
 from .. import test_models
 
@@ -8,8 +8,8 @@ class base_action_rule_test(common.TransactionCase):
         """*****setUp*****"""
         super(base_action_rule_test, self).setUp()
         cr, uid = self.cr, self.uid
-        self.demo_user = self.registry('ir.model.data').get_object_reference(cr, uid, 'base', 'user_demo')
-        self.admin_user = self.registry('ir.model.data').get_object_reference(cr, uid, 'base', 'user_admin')
+        self.demo = self.registry('ir.model.data').get_object(cr, uid, 'base', 'user_demo').id
+        self.admin = SUPERUSER_ID
 
     def create_filter_done(self, cr, uid, context=None):
         filter_pool = self.registry('ir.filters')
@@ -36,12 +36,12 @@ class base_action_rule_test(common.TransactionCase):
         lead_pool = self.registry('base.action.rule.lead.test')
         return lead_pool.create(cr, uid, {
             'name': "Lead Test 1",
-            'user_id': self.admin_user[1],
+            'user_id': self.admin,
             }, context=context)
 
     def create_rule(self, cr, uid, filter_id=None, filter_pre_id=None, context=None):
         """
-            The "Rule 1" says that when a lead goes to the 'draft' state, the responsible for that lead changes to "demo_user"
+            The "Rule 1" says that when a lead goes to the 'draft' state, the responsible for that lead changes to user "demo"
         """
         self.action_pool = self.registry('base.action.rule')
         return self.action_pool.create(cr,uid,{
@@ -51,7 +51,7 @@ class base_action_rule_test(common.TransactionCase):
             'trg_date_type' : 'none',
             'filter_pre_id' : filter_pre_id,
             'filter_id' : filter_id,
-            'act_user_id': self.demo_user[1],
+            'act_user_id': self.demo,
             }, context=context)
 
     def test_00_check_to_state_draft_pre(self):
@@ -65,7 +65,7 @@ class base_action_rule_test(common.TransactionCase):
         new_lead_id = self.create_lead_test_1(cr,uid,context=context)
         new_lead = self.registry('base.action.rule.lead.test').browse(cr, uid, new_lead_id, context=context)
         self.assertTrue(new_lead.state=='draft')
-        self.assertTrue(new_lead.user_id==self.registry('res.users').browse(cr, uid, self.admin_user[1], context=context))
+        self.assertTrue(new_lead.user_id==self.registry('res.users').browse(cr, uid, self.admin, context=context))
 
     def test_01_check_to_state_draft_post(self):
         """
@@ -78,7 +78,7 @@ class base_action_rule_test(common.TransactionCase):
         new_lead_id = self.create_lead_test_1(cr,uid,context=context)
         new_lead = self.registry('base.action.rule.lead.test').browse(cr, uid, new_lead_id, context=context)
         self.assertTrue(new_lead.state=='draft')
-        self.assertTrue(new_lead.user_id==self.registry('res.users').browse(cr, uid, self.demo_user[1], context=context))
+        self.assertTrue(new_lead.user_id==self.registry('res.users').browse(cr, uid, self.demo, context=context))
 
     def test_02_check_from_draft_to_done_with_steps(self):
         """
@@ -96,27 +96,27 @@ class base_action_rule_test(common.TransactionCase):
         new_lead_id = self.create_lead_test_1(cr,uid,context=context)
         new_lead = self.registry('base.action.rule.lead.test').browse(cr, uid, new_lead_id, context=context)
         self.assertTrue(new_lead.state=='draft')
-        self.assertTrue(new_lead.user_id==self.registry('res.users').browse(cr, uid, self.admin_user[1], context=context))
+        self.assertTrue(new_lead.user_id==self.registry('res.users').browse(cr, uid, self.admin, context=context))
         """ change the state of new_lead to open and check that responsible doen't change"""
         new_lead.write({'state': 'open'}, context=context)
         new_lead = self.registry('base.action.rule.lead.test').browse(cr, uid, new_lead_id, context=context)
         self.assertTrue(new_lead.state=='open')
-        self.assertTrue(new_lead.user_id==self.registry('res.users').browse(cr, uid, self.admin_user[1], context=context))
+        self.assertTrue(new_lead.user_id==self.registry('res.users').browse(cr, uid, self.admin, context=context))
         """ change the state of new_lead to pending and check that responsible doen't change"""
         new_lead.write({'state': 'pending'}, context=context)
         new_lead = self.registry('base.action.rule.lead.test').browse(cr, uid, new_lead_id, context=context)
         self.assertTrue(new_lead.state=='pending')
-        self.assertTrue(new_lead.user_id==self.registry('res.users').browse(cr, uid, self.admin_user[1], context=context))
+        self.assertTrue(new_lead.user_id==self.registry('res.users').browse(cr, uid, self.admin, context=context))
         """ change the state of new_lead to cancel and check that responsible doen't change"""
         new_lead.write({'state': 'cancel'}, context=context)
         new_lead = self.registry('base.action.rule.lead.test').browse(cr, uid, new_lead_id, context=context)
         self.assertTrue(new_lead.state=='cancel')
-        self.assertTrue(new_lead.user_id==self.registry('res.users').browse(cr, uid, self.admin_user[1], context=context))
+        self.assertTrue(new_lead.user_id==self.registry('res.users').browse(cr, uid, self.admin, context=context))
         """ change the state of new_lead to done and check that responsible doen't change """
         new_lead.write({'state': 'done'}, context=context)
         new_lead = self.registry('base.action.rule.lead.test').browse(cr, uid, new_lead_id, context=context)
         self.assertTrue(new_lead.state=='done')
-        self.assertTrue(new_lead.user_id==self.registry('res.users').browse(cr, uid, self.admin_user[1], context=context))
+        self.assertTrue(new_lead.user_id==self.registry('res.users').browse(cr, uid, self.admin, context=context))
 
     def test_02_check_from_draft_to_done_without_steps(self):
         """
@@ -124,7 +124,7 @@ class base_action_rule_test(common.TransactionCase):
         We will create a rule that says in precondition that the record must be in the "draft" state while a postcondition filter says
         that the record will be done. If the state goes from 'draft' to 'done' the responsible will change. If those two conditions aren't
         verified, the responsible will stay the same
-        The responsible in that test will change to "demo_user"
+        The responsible in that test will change to user "demo"
         """
         cr, uid = self.cr, self.uid
         context = {}
@@ -134,9 +134,9 @@ class base_action_rule_test(common.TransactionCase):
         new_lead_id = self.create_lead_test_1(cr,uid,context=context)
         new_lead = self.registry('base.action.rule.lead.test').browse(cr, uid, new_lead_id, context=context)
         self.assertTrue(new_lead.state=='draft')
-        self.assertTrue(new_lead.user_id==self.registry('res.users').browse(cr, uid, self.admin_user[1], context=context))
+        self.assertTrue(new_lead.user_id==self.registry('res.users').browse(cr, uid, self.admin, context=context))
         """ change the state of new_lead to done and check that responsible change to Demo_user"""
         new_lead.write({'state': 'done'}, context=context)
         new_lead = self.registry('base.action.rule.lead.test').browse(cr, uid, new_lead_id, context=context)
         self.assertTrue(new_lead.state=='done')
-        self.assertTrue(new_lead.user_id==self.registry('res.users').browse(cr, uid, self.demo_user[1], context=context))
+        self.assertTrue(new_lead.user_id==self.registry('res.users').browse(cr, uid, self.demo, context=context))
