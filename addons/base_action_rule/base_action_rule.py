@@ -21,16 +21,11 @@
 
 from datetime import datetime
 from datetime import timedelta
-import re
 import time
 from openerp import SUPERUSER_ID
 
-from openerp.osv import fields, osv, orm
+from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp.tools.safe_eval import safe_eval
-from openerp.tools import ustr
-from openerp import pooler
-from openerp import tools
 
 
 def get_datetime(date_field):
@@ -56,10 +51,6 @@ class base_action_rule(osv.osv):
     def state_get(self, cr, uid, context=None):
         """ Get State """
         return [('', ''), ('na','N/A (No previous state)')]
-
-    def priority_get(self, cr, uid, context=None):
-        """ Get Priority """
-        return [('', '')]
 
     _columns = {
         'name':  fields.char('Rule Name', size=64, required=True),
@@ -100,7 +91,6 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
     }
 
     _order = 'sequence'
-
 
     def post_action(self, cr, uid, ids, model, precondition_ok=None, context=None):
         # Searching for action rules
