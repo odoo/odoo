@@ -56,7 +56,7 @@ def check_cycle(self, cr, uid, ids, context=None):
 
 class account_payment_term(osv.osv):
     _name = "account.payment.term"
-    _description = "Payment Terms"
+    _description = "Payment Term"
     _columns = {
         'name': fields.char('Payment Terms', size=64, translate=True, required=True),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the payment term without removing it."),
@@ -101,7 +101,7 @@ class account_payment_term(osv.osv):
 
 class account_payment_term_line(osv.osv):
     _name = "account.payment.term.line"
-    _description = "Payment Terms Line"
+    _description = "Payment Term Line"
     _columns = {
         'value': fields.selection([('procent', 'Percent'),
                                    ('balance', 'Balance'),
@@ -128,7 +128,7 @@ class account_payment_term_line(osv.osv):
         return True
 
     _constraints = [
-        (_check_percent, 'Percentages for Payment Terms Line must be between 0 and 1, Example: 0.02 for 2%.', ['value_amount']),
+        (_check_percent, 'Percentages for Payment Term Line must be between 0 and 1, Example: 0.02 for 2%.', ['value_amount']),
     ]
 
 account_payment_term_line()
