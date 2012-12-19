@@ -18,12 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 import itertools
 
-from osv import fields,osv
-from osv.orm import except_orm
-import tools
+from openerp.osv import fields,osv
 
 class ir_attachment(osv.osv):
     def check(self, cr, uid, ids, mode, context=None, values=None):

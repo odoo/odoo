@@ -2890,15 +2890,15 @@ class BaseModel(object):
             # usually because they could block deletion due to the FKs.
             # So unless stated otherwise we default them to ondelete=cascade.
             ondelete = ondelete or 'cascade'
-        self._foreign_keys.append((self._table, source_field, dest_model._table, ondelete or 'set null'))
-        _schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s",
-            self._table, source_field, dest_model._table, ondelete)
+        fk_def = (self._table, source_field, dest_model._table, ondelete or 'set null')
+        self._foreign_keys.add(fk_def)
+        _schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s", *fk_def)
 
     # unchecked version: for custom cases, such as m2m relationships
     def _m2o_add_foreign_key_unchecked(self, source_table, source_field, dest_model, ondelete):
-        self._foreign_keys.append((source_table, source_field, dest_model._table, ondelete or 'set null'))
-        _schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s",
-            source_table, source_field, dest_model._table, ondelete)
+        fk_def = (source_table, source_field, dest_model._table, ondelete or 'set null')
+        self._foreign_keys.add(fk_def)
+        _schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s", *fk_def)
 
     def _drop_constraint(self, cr, source_table, constraint_name):
         cr.execute("ALTER TABLE %s DROP CONSTRAINT %s" % (source_table,constraint_name))
@@ -2929,18 +2929,22 @@ class BaseModel(object):
                 cons, = constraints
                 if cons['ondelete_rule'] != POSTGRES_CONFDELTYPES.get((ondelete or 'set null').upper(), 'a')\
                     or cons['foreign_table'] != dest_model._table:
+                    # Wrong FK: drop it and recreate
                     _schema.debug("Table '%s': dropping obsolete FK constraint: '%s'",
                                   source_table, cons['constraint_name'])
                     self._drop_constraint(cr, source_table, cons['constraint_name'])
-                    self._m2o_add_foreign_key_checked(source_field, dest_model, ondelete)
-                # else it's all good, nothing to do!
+                else:
+                    # it's all good, nothing to do!
+                    return
             else:
                 # Multiple FKs found for the same field, drop them all, and re-create
                 for cons in constraints:
                     _schema.debug("Table '%s': dropping duplicate FK constraints: '%s'",
                                   source_table, cons['constraint_name'])
                     self._drop_constraint(cr, source_table, cons['constraint_name'])
-                self._m2o_add_foreign_key_checked(source_field, dest_model, ondelete)
+
+        # (re-)create the FK
+        self._m2o_add_foreign_key_checked(source_field, dest_model, ondelete)
 
 
 
@@ -2962,7 +2966,7 @@ class BaseModel(object):
           _auto_end).
 
         """
-        self._foreign_keys = []
+        self._foreign_keys = set()
         raise_on_invalid_object_name(self._name)
         if context is None:
             context = {}

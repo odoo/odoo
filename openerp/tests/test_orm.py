@@ -1,4 +1,3 @@
-from openerp import exceptions
 from openerp.tools import mute_logger
 import common
 

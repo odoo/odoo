@@ -19,10 +19,11 @@
 #
 ##############################################################################
 
-import tools
 import base64
 from tempfile import TemporaryFile
-from osv import osv, fields
+
+from openerp import tools
+from openerp.osv import osv, fields
 
 class base_language_import(osv.osv_memory):
     """ Language Import """

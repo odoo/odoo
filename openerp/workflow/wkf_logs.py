@@ -22,7 +22,6 @@
 #
 # May be uncommented to logs workflows modifications
 #
-import openerp.netsvc as netsvc
 
 def log(cr,ident,act_id,info=''):
     return 

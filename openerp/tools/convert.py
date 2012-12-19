@@ -46,7 +46,6 @@ except:
 from datetime import datetime, timedelta
 from lxml import etree
 import misc
-import openerp.loglevels as loglevels
 import openerp.pooler as pooler
 from config import config
 from translate import _

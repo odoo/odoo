@@ -23,7 +23,7 @@ import io
 import StringIO
 
 from PIL import Image
-from PIL import ImageEnhance, ImageOps
+from PIL import ImageOps
 from random import random
 
 # ----------------------------------------
@@ -73,8 +73,15 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
     if asked_height is None:
         asked_height = int(image.size[1] * (float(asked_width) / image.size[0]))
     size = asked_width, asked_height
+
+    # check image size: do not create a thumbnail if avoiding smaller images
+    if avoid_if_small and image.size[0] <= size[0] and image.size[1] <= size[1]:
+        return base64_source
+
     if image.size <> size:
+        # If you need faster thumbnails you may use use Image.NEAREST
         image = ImageOps.fit(image, size, Image.ANTIALIAS)
+
     background_stream = StringIO.StringIO()
     image.save(background_stream, filetype)
     return background_stream.getvalue().encode(encoding)

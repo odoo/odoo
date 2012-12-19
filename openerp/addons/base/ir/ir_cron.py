@@ -18,23 +18,18 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-import calendar
 import time
 import logging
-import threading
 import psycopg2
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-import netsvc
 import openerp
-import pooler
-import tools
-from osv import fields, osv
-from tools import DEFAULT_SERVER_DATETIME_FORMAT
-from tools.safe_eval import safe_eval as eval
-from tools.translate import _
+from openerp import netsvc
+from openerp.osv import fields, osv
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
