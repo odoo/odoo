@@ -29,7 +29,6 @@ from openerp.tools.translate import _
 from openerp.tools import html2plaintext
 
 from base.res.res_partner import format_address
-import pdb
 
 CRM_LEAD_FIELDS_TO_MERGE = ['name',
     'partner_id',
