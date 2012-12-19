@@ -56,9 +56,9 @@ def check_cycle(self, cr, uid, ids, context=None):
 
 class account_payment_term(osv.osv):
     _name = "account.payment.term"
-    _description = "Payment Term"
+    _description = "Payment Terms"
     _columns = {
-        'name': fields.char('Payment Term', size=64, translate=True, required=True),
+        'name': fields.char('Payment Terms', size=64, translate=True, required=True),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the payment term without removing it."),
         'note': fields.text('Description', translate=True),
         'line_ids': fields.one2many('account.payment.term.line', 'payment_id', 'Terms'),
@@ -101,7 +101,7 @@ class account_payment_term(osv.osv):
 
 class account_payment_term_line(osv.osv):
     _name = "account.payment.term.line"
-    _description = "Payment Term Line"
+    _description = "Payment Terms Line"
     _columns = {
         'value': fields.selection([('procent', 'Percent'),
                                    ('balance', 'Balance'),
@@ -112,7 +112,7 @@ class account_payment_term_line(osv.osv):
         'days': fields.integer('Number of Days', required=True, help="Number of days to add before computation of the day of month." \
             "If Date=15/01, Number of Days=22, Day of Month=-1, then the due date is 28/02."),
         'days2': fields.integer('Day of the Month', required=True, help="Day of the month, set -1 for the last day of the current month. If it's positive, it gives the day of the next month. Set 0 for net days (otherwise it's based on the beginning of the month)."),
-        'payment_id': fields.many2one('account.payment.term', 'Payment Term', required=True, select=True, ondelete='cascade'),
+        'payment_id': fields.many2one('account.payment.term', 'Payment Terms', required=True, select=True, ondelete='cascade'),
     }
     _defaults = {
         'value': 'balance',
@@ -128,7 +128,7 @@ class account_payment_term_line(osv.osv):
         return True
 
     _constraints = [
-        (_check_percent, 'Percentages for Payment Term Line must be between 0 and 1, Example: 0.02 for 2%.', ['value_amount']),
+        (_check_percent, 'Percentages for Payment Terms Line must be between 0 and 1, Example: 0.02 for 2%.', ['value_amount']),
     ]
 
 account_payment_term_line()

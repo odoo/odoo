@@ -63,7 +63,7 @@ class account_invoice_report(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'product_qty':fields.float('Qty', readonly=True),
         'uom_name': fields.char('Reference Unit of Measure', size=128, readonly=True),
-        'payment_term': fields.many2one('account.payment.term', 'Payment Term', readonly=True),
+        'payment_term': fields.many2one('account.payment.term', 'Payment Terms', readonly=True),
         'period_id': fields.many2one('account.period', 'Force Period', domain=[('state','<>','done')], readonly=True),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position', readonly=True),
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),

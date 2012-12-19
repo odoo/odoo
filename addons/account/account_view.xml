@@ -1548,7 +1548,7 @@
             <field name="name">account.payment.term.line.tree</field>
             <field name="model">account.payment.term.line</field>
             <field name="arch" type="xml">
-                <tree string="Payment Term">
+                <tree string="Payment Terms">
                     <field name="value"/>
                     <field name="value_amount" attrs="{'readonly':[('value','=','balance')]}"/>
                     <field name="days"/>
@@ -1560,7 +1560,7 @@
             <field name="name">account.payment.term.line.form</field>
             <field name="model">account.payment.term.line</field>
             <field name="arch" type="xml">
-                <form string="Payment Term" version="7.0">
+                <form string="Payment Terms" version="7.0">
                     <group>
                         <group string="Amount Computation">
 	                        <field name="value"/>
@@ -1582,8 +1582,8 @@
             <field name="name">account.payment.term.search</field>
             <field name="model">account.payment.term</field>
             <field name="arch" type="xml">
-                <search string="Payment Term">
-                    <field name="name" string="Payment Term"/>
+                <search string="Payment Terms">
+                    <field name="name" string="Payment Terms"/>
                     <field name="active"/>
                 </search>
             </field>
@@ -1592,7 +1592,7 @@
             <field name="name">account.payment.term.form</field>
             <field name="model">account.payment.term</field>
             <field name="arch" type="xml">
-                <form string="Payment Term" version="7.0">
+                <form string="Payment Terms" version="7.0">
                     <group col="4">
                         <field name="name"/>
                         <field name="active"/>
@@ -2296,17 +2296,17 @@
                                     <tree string="Opening Cashbox Lines" editable="bottom">
                                         <field name="pieces"/>
                                         <field name="number_opening" string="Opening Unit Numbers" on_change="on_change_sub_opening(pieces, number_opening, parent.balance_end)"/>
-                                        <field name="subtotal_opening" string="Opening Subtotal"/>
+                                        <field name="subtotal_opening" string="Opening Amount"/>
                                     </tree>
                                 </field>
                                 <field name="closing_details_ids" nolabel="1" colspan="4" attrs="{'invisible' : [('state', '=', 'draft')]}">
                                     <tree string="Closing Cashbox Lines" editable="bottom">
                                         <field name="pieces" readonly="1" />
                                         <field name="number_opening" string="Opening Unit Numbers" readonly="1" />
-                                        <field name="subtotal_opening" string="Opening Subtotal" readonly="1" />
+                                        <field name="subtotal_opening" string="Opening Amount" readonly="1" />
 
                                         <field name="number_closing" string="Closing Unit Numbers" on_change="on_change_sub_closing(pieces, number_closing, parent.balance_end)"/>
-                                        <field name="subtotal_closing" string="Closing Subtotal"/>
+                                        <field name="subtotal_closing" string="Closing Amount"/>
                                     </tree>
                                 </field>
                             </group>
