@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp.osv import osv,fields
+from openerp.osv import osv, fields
 
 class sale_order(osv.osv):
     _inherit = 'sale.order'
@@ -29,18 +29,6 @@ class sale_order(osv.osv):
             domain="['|',('section_id','=',section_id),('section_id','=',False), ('object_id.model', '=', 'crm.lead')]")
     }
 
-    def write(self, cr, uid, ids, vals, context=None):
-        # TDE todo: will be replaced by automatic in mail.thread
-        if vals.get('section_id'):
-            section_id = self.pool.get('crm.case.section').browse(cr, uid, vals.get('section_id'), context=context)
-            vals['message_follower_ids'] = [(6, 0, [follower.id]) for follower in section_id.message_follower_ids]
-        res = super(sale_order, self).write(cr, uid, ids, vals, context=context)
-        # subscribe new salesteam followers & subtypes to the sale order
-        if vals.get('section_id'):
-            self._subscribe_followers_subtype(cr, uid, ids, vals.get('section_id'), 'crm.case.section', context=context)
-        return res
-
-sale_order()
 
 class res_users(osv.Model):
     _inherit = 'res.users'
