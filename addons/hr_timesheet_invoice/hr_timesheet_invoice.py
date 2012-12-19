@@ -255,7 +255,7 @@ class account_analytic_line(osv.osv):
 
                     price = self._get_invoice_price(cr, uid, account, product_id, user_id, qty, ctx)
 
-                    general_account = product.product_tmpl_id.property_account_income or product.categ_id.property_account_income_categ
+                    general_account = product.property_account_income or product.categ_id.property_account_income_categ
                     if not general_account:
                         raise osv.except_osv(_("Configuration Error!"), _("Please define income account for product '%s'.") % product.name)
                     taxes = product.taxes_id or general_account.tax_ids

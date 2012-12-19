@@ -518,7 +518,7 @@ class purchase_order(osv.osv):
             inv_lines = []
             for po_line in order.order_line:
                 if po_line.product_id:
-                    acc_id = po_line.product_id.product_tmpl_id.property_account_expense.id
+                    acc_id = po_line.product_id.property_account_expense.id
                     if not acc_id:
                         acc_id = po_line.product_id.categ_id.property_account_expense_categ.id
                     if not acc_id:
@@ -566,7 +566,7 @@ class purchase_order(osv.osv):
     def has_stockable_product(self, cr, uid, ids, *args):
         for order in self.browse(cr, uid, ids):
             for order_line in order.order_line:
-                if order_line.product_id and order_line.product_id.product_tmpl_id.type in ('product', 'consu'):
+                if order_line.product_id and order_line.product_id.type in ('product', 'consu'):
                     return True
         return False
 
@@ -1006,7 +1006,7 @@ class procurement_order(osv.osv):
         '''
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         for procurement in self.browse(cr, uid, ids, context=context):
-            if procurement.product_id.product_tmpl_id.supply_method <> 'buy':
+            if procurement.product_id.supply_method <> 'buy':
                 return False
         return True
 
@@ -1129,7 +1129,7 @@ class procurement_order(osv.osv):
             new_context.update({'lang': partner.lang, 'partner_id': partner_id})
 
             product = prod_obj.browse(cr, uid, procurement.product_id.id, context=new_context)
-            taxes_ids = procurement.product_id.product_tmpl_id.supplier_taxes_id
+            taxes_ids = procurement.product_id.supplier_taxes_id
             taxes = acc_pos_obj.map_tax(cr, uid, partner.property_account_position, taxes_ids)
 
             name = product.partner_ref
