@@ -22,9 +22,9 @@
 import datetime
 import time
 
-import tools
-from osv import fields, osv
-from tools.translate import _
+from openerp import tools
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class account_followup_stat_by_partner(osv.osv):
     _name = "account_followup.stat.by.partner"
@@ -152,7 +152,7 @@ class account_followup_print(osv.osv_memory):
             if partner.max_followup_id.manual_action:
                 partner_obj.do_partner_manual_action(cr, uid, [partner.partner_id.id], context=context)
                 nbmanuals = nbmanuals + 1
-                key = partner.partner_id.payment_responsible_id.name or _("Nobody")
+                key = partner.partner_id.payment_responsible_id.name or _("Anybody")
                 if not key in manuals.keys():
                     manuals[key]= 1
                 else:
@@ -198,15 +198,12 @@ class account_followup_print(osv.osv_memory):
         ids = self.pool.get('res.partner').search(cr, uid, ['&', ('id', 'not in', partner_list_ids), '|', 
                                                              ('payment_responsible_id', '!=', False), 
                                                              ('payment_next_action_date', '!=', False)], context=context)
-        partners = self.pool.get('res.partner').browse(cr, uid, ids, context=context)
-        newids = []
-        for part in partners:
-            credit = 0
-            for aml in part.unreconciled_aml_ids: 
-                credit +=aml.result
-            if credit <= 0: 
-                newids.append(part.id)
-        self.pool.get('res.partner').action_done(cr, uid, newids, context=context)
+
+        partners_to_clear = []
+        for part in self.pool.get('res.partner').browse(cr, uid, ids, context=context): 
+            if not part.unreconciled_aml_ids: 
+                partners_to_clear.append(part.id)
+        self.pool.get('res.partner').action_done(cr, uid, partners_to_clear, context=context)
         return len(ids)
 
     def do_process(self, cr, uid, ids, context=None):

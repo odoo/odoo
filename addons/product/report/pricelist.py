@@ -20,10 +20,10 @@
 ##############################################################################
 
 import datetime
-from report.interface import report_rml
-from report.interface import toxml
-import pooler
-from osv import osv
+from openerp.report.interface import report_rml
+from openerp.report.interface import toxml
+from openerp import pooler
+from openerp.osv import osv
 import datetime
 
 class report_custom(report_rml):

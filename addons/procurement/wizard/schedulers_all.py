@@ -20,9 +20,9 @@
 ##############################################################################
 
 import threading
-import pooler
+from openerp import pooler
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 
 class procurement_compute_all(osv.osv_memory):
     _name = 'procurement.order.compute.all'

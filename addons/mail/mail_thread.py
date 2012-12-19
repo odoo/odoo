@@ -20,19 +20,20 @@
 ##############################################################################
 
 import base64
+import datetime
 import dateutil
 import email
 import logging
 import pytz
 import time
-import tools
+from openerp import tools
 import xmlrpclib
 
 from email.message import Message
 from mail_message import decode
 from openerp import SUPERUSER_ID
-from osv import osv, fields
-from tools.safe_eval import safe_eval as eval
+from openerp.osv import fields, osv
+from openerp.tools.safe_eval import safe_eval as eval
 
 _logger = logging.getLogger(__name__)
 
@@ -88,7 +89,7 @@ class mail_thread(osv.AbstractModel):
 
         for thread in self.browse(cr, uid, ids, context=context):
             cls = res[thread.id]['message_unread'] and ' class="oe_kanban_mail_new"' or ''
-            res[thread.id]['message_summary'] = "<span%s><span class='oe_e'>9</span> %d</span> <span><span class='oe_e'>+</span> %d</span>" % (cls, len(thread.message_comment_ids), len(thread.message_follower_ids))
+            res[thread.id]['message_summary'] = "<span%s><span class='oe_e'>9</span> %d</span> <span><span class='oe_e'>+</span> %d</span>" % (cls, len(thread.message_ids), len(thread.message_follower_ids))
 
         return res
 
@@ -121,18 +122,8 @@ class mail_thread(osv.AbstractModel):
 
         return res
 
-    def _search_unread(self, cr, uid, obj=None, name=None, domain=None, context=None):
-        partner_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
-        res = {}
-        notif_obj = self.pool.get('mail.notification')
-        notif_ids = notif_obj.search(cr, uid, [
-            ('partner_id', '=', partner_id),
-            ('message_id.model', '=', self._name),
-            ('read', '=', False)
-        ], context=context)
-        for notif in notif_obj.browse(cr, uid, notif_ids, context=context):
-            res[notif.message_id.res_id] = True
-        return [('id', 'in', res.keys())]
+    def _search_message_unread(self, cr, uid, obj=None, name=None, domain=None, context=None):
+        return [('message_ids.to_read', '=', True)]
 
     def _get_followers(self, cr, uid, ids, name, arg, context=None):
         fol_obj = self.pool.get('mail.followers')
@@ -201,16 +192,14 @@ class mail_thread(osv.AbstractModel):
         'message_follower_ids': fields.function(_get_followers, fnct_inv=_set_followers,
                 fnct_search=_search_followers, type='many2many',
                 obj='res.partner', string='Followers', multi='_get_followers'),
-        'message_comment_ids': fields.one2many('mail.message', 'res_id',
-            domain=lambda self: [('model', '=', self._name), ('type', 'in', ('comment', 'email'))],
-            string='Comments and emails',
-            help="Comments and emails"),
         'message_ids': fields.one2many('mail.message', 'res_id',
             domain=lambda self: [('model', '=', self._name)],
+            auto_join=True,
             string='Messages',
             help="Messages and communication history"),
-        'message_unread': fields.function(_get_message_data, fnct_search=_search_unread,
-            type='boolean', string='Unread Messages', multi="_get_message_data",
+        'message_unread': fields.function(_get_message_data,
+            fnct_search=_search_message_unread, multi="_get_message_data",
+            type='boolean', string='Unread Messages',
             help="If checked new messages require your attention."),
         'message_summary': fields.function(_get_message_data, method=True,
             type='text', string='Summary', multi="_get_message_data",
@@ -225,8 +214,11 @@ class mail_thread(osv.AbstractModel):
 
     def create(self, cr, uid, vals, context=None):
         """ Override to subscribe the current user. """
+        if context is None:
+            context = {}
         thread_id = super(mail_thread, self).create(cr, uid, vals, context=context)
-        self.message_subscribe_users(cr, uid, [thread_id], [uid], context=context)
+        if not context.get('mail_nosubscribe'):
+            self.message_subscribe_users(cr, uid, [thread_id], [uid], context=context)
         return thread_id
 
     def unlink(self, cr, uid, ids, context=None):
@@ -237,15 +229,16 @@ class mail_thread(osv.AbstractModel):
         # delete messages and notifications
         msg_ids = msg_obj.search(cr, uid, [('model', '=', self._name), ('res_id', 'in', ids)], context=context)
         msg_obj.unlink(cr, uid, msg_ids, context=context)
+        # delete
+        res = super(mail_thread, self).unlink(cr, uid, ids, context=context)
         # delete followers
-        fol_ids = fol_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', ids)], context=context)
-        fol_obj.unlink(cr, uid, fol_ids, context=context)
-        return super(mail_thread, self).unlink(cr, uid, ids, context=context)
+        fol_ids = fol_obj.search(cr, SUPERUSER_ID, [('res_model', '=', self._name), ('res_id', 'in', ids)], context=context)
+        fol_obj.unlink(cr, SUPERUSER_ID, fol_ids, context=context)
+        return res
 
     def copy(self, cr, uid, id, default=None, context=None):
         default = default or {}
         default['message_ids'] = []
-        default['message_comment_ids'] = []
         default['message_follower_ids'] = []
         return super(mail_thread, self).copy(cr, uid, id, default=default, context=context)
 
@@ -335,19 +328,21 @@ class mail_thread(osv.AbstractModel):
                               message_id, model, thread_id, custom_values, uid)
                 return [(model, thread_id, custom_values, uid)]
 
-        # Verify this is a reply to a private message
-        message_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', '=', in_reply_to)], limit=1, context=context)
-        if message_ids:
-            message = self.pool.get('mail.message').browse(cr, uid, message_ids[0], context=context)
-            _logger.debug('Routing mail with Message-Id %s: direct reply to a private message: %s, custom_values: %s, uid: %s',
-                            message_id, message.id, custom_values, uid)
-            return [(message.model, message.res_id, custom_values, uid)]
+        # Verify whether this is a reply to a private message
+        if in_reply_to:
+            message_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', '=', in_reply_to)], limit=1, context=context)
+            if message_ids:
+                message = self.pool.get('mail.message').browse(cr, uid, message_ids[0], context=context)
+                _logger.debug('Routing mail with Message-Id %s: direct reply to a private message: %s, custom_values: %s, uid: %s',
+                                message_id, message.id, custom_values, uid)
+                return [(message.model, message.res_id, custom_values, uid)]
 
         # 2. Look for a matching mail.alias entry
         # Delivered-To is a safe bet in most modern MTAs, but we have to fallback on To + Cc values
         # for all the odd MTAs out there, as there is no standard header for the envelope's `rcpt_to` value.
-        rcpt_tos = decode_header(message, 'Delivered-To') or \
-             ','.join([decode_header(message, 'To'),
+        rcpt_tos = \
+             ','.join([decode_header(message, 'Delivered-To'),
+                       decode_header(message, 'To'),
                        decode_header(message, 'Cc'),
                        decode_header(message, 'Resent-To'),
                        decode_header(message, 'Resent-Cc')])
@@ -609,11 +604,22 @@ class mail_thread(osv.AbstractModel):
         msg_dict['partner_ids'] = [(4, partner_id) for partner_id in partner_ids]
 
         if 'Date' in message:
-            date_hdr = decode(message.get('Date'))
-            # convert from email timezone to server timezone
-            date_server_datetime = dateutil.parser.parse(date_hdr).astimezone(pytz.timezone(tools.get_server_timezone()))
-            date_server_datetime_str = date_server_datetime.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
-            msg_dict['date'] = date_server_datetime_str
+            try:
+                date_hdr = decode(message.get('Date'))
+                parsed_date = dateutil.parser.parse(date_hdr, fuzzy=True)
+                if parsed_date.utcoffset() is None:
+                    # naive datetime, so we arbitrarily decide to make it
+                    # UTC, there's no better choice. Should not happen,
+                    # as RFC2822 requires timezone offset in Date headers.
+                    stored_date = parsed_date.replace(tzinfo=pytz.utc)
+                else:
+                    stored_date = parsed_date.astimezone(pytz.utc)
+            except Exception:
+                _logger.warning('Failed to parse Date header %r in incoming mail '
+                                'with message-id %r, assuming current date/time.',
+                                message.get('Date'), message_id)
+                stored_date = datetime.datetime.now()
+            msg_dict['date'] = stored_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
 
         if 'In-Reply-To' in message:
             parent_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', '=', decode(message['In-Reply-To']))])
@@ -807,7 +813,7 @@ class mail_thread(osv.AbstractModel):
         # if subtypes are not specified (and not set to a void list), fetch default ones
         if subtype_ids is None:
             subtype_obj = self.pool.get('mail.message.subtype')
-            subtype_ids = subtype_obj.search(cr, SUPERUSER_ID, [('default', '=', True), '|', ('res_model', '=', self._name), ('res_model', '=', False)], context=context)
+            subtype_ids = subtype_obj.search(cr, uid, [('default', '=', True), '|', ('res_model', '=', self._name), ('res_model', '=', False)], context=context)
         # update the subscriptions
         fol_obj = self.pool.get('mail.followers')
         fol_ids = fol_obj.search(cr, SUPERUSER_ID, [('res_model', '=', self._name), ('res_id', 'in', ids), ('partner_id', 'in', partner_ids)], context=context)

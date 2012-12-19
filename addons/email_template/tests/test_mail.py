@@ -20,22 +20,15 @@
 ##############################################################################
 
 import base64
-from openerp.addons.mail.tests import test_mail_mockup
+from openerp.addons.mail.tests.test_mail_base import TestMailBase
 
 
-class test_message_compose(test_mail_mockup.TestMailMockups):
+class test_message_compose(TestMailBase):
 
     def setUp(self):
         super(test_message_compose, self).setUp()
-        self.mail_group = self.registry('mail.group')
-        self.mail_mail = self.registry('mail.mail')
-        self.mail_message = self.registry('mail.message')
-        self.res_users = self.registry('res.users')
-        self.res_partner = self.registry('res.partner')
 
         # create a 'pigs' and 'bird' groups that will be used through the various tests
-        self.group_pigs_id = self.mail_group.create(self.cr, self.uid,
-            {'name': 'Pigs', 'description': 'Fans of Pigs, unite !'})
         self.group_bird_id = self.mail_group.create(self.cr, self.uid,
             {'name': 'Bird', 'description': 'I am angry !'})
 

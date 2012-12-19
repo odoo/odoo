@@ -19,9 +19,8 @@
 #
 ##############################################################################
 
-import pdb
-from osv import fields, osv
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class base_stage(object):
     """ Base utility mixin class for objects willing to manage their stages.

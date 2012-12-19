@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-03 16:04+0000\n"
-"PO-Revision-Date: 2010-11-27 02:46+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2012-12-16 13:12+0000\n"
+"Last-Translator: Grzegorz Grzelak (OpenGLOBE.pl) <grzegorz@openglobe.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:52+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-17 04:47+0000\n"
+"X-Generator: Launchpad (build 16372)\n"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -42,11 +42,15 @@ msgid ""
 "orders.On confirmation of a purchase order it does not cancel the remaining "
 "orders"
 msgstr ""
+"Zlecenie zakupu (wyłączne):  Po potwierdzeniu zamówienia zakupu pozostałe "
+"zamówienia ze zlecenia są anulowane.\n"
+"Zlecenie zakupu (wielokrotne):  Pozwala grupować zamówienia zakupu. Po "
+"potwierdzeniu jednego z nich pozostałe pozostają aktywne."
 
 #. module: purchase_requisition
 #: field:purchase.requisition,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Nieprzeczytane wiadomości"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,company_id:0
@@ -57,7 +61,7 @@ msgstr "Firma"
 #. module: purchase_requisition
 #: help:purchase.requisition,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Jeśli zaznaczone, to wiadomość wymaga twojej uwagi."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:153
@@ -77,7 +81,7 @@ msgstr "Ilość"
 #. module: purchase_requisition
 #: field:purchase.requisition,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Wiadomości"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order
@@ -119,7 +123,7 @@ msgstr "Odnośnik"
 #. module: purchase_requisition
 #: selection:purchase.requisition,exclusive:0
 msgid "Multiple Requisitions"
-msgstr ""
+msgstr "Wielokrotne zlecenia"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -130,7 +134,7 @@ msgstr "Przywróć do projektu"
 #: code:addons/purchase_requisition/purchase_requisition.py:153
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Ostrzeżenie !"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -154,12 +158,12 @@ msgstr ""
 #: report:purchase.requisition:0
 #: view:purchase.requisition:0
 msgid "Source"
-msgstr ""
+msgstr "Źródło"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Wypowiadający się"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,warehouse_id:0
@@ -194,7 +198,7 @@ msgstr "Zlecenie zakupu"
 #: view:purchase.requisition:0
 #: selection:purchase.requisition,state:0
 msgid "Sent to Suppliers"
-msgstr ""
+msgstr "Wyślij do dostawców"
 
 #. module: purchase_requisition
 #: help:purchase.requisition,message_summary:0
@@ -202,6 +206,9 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Zawiera podsumowanie wypowiedzi (liczbę wiadomości, ...). To podsumowanie "
+"jest bezpośrednio w formacie html, aby można je było stosować w widokach "
+"kanban."
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -211,7 +218,7 @@ msgstr "Zaaprobowane przez dostawcę"
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Send to Suppliers"
-msgstr ""
+msgstr "Wyślij do dostawców"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -237,7 +244,7 @@ msgstr "Zlecenie"
 #: code:addons/purchase_requisition/purchase_requisition.py:186
 #, python-format
 msgid "Purchase Requisition has been <b>created</b>."
-msgstr ""
+msgstr "Zlecenie zakupu zostało <b>utworzone</b>."
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_partner
@@ -252,7 +259,7 @@ msgstr "Zamówienia zakupu"
 #. module: purchase_requisition
 #: selection:purchase.requisition,exclusive:0
 msgid "Purchase Requisition (exclusive)"
-msgstr ""
+msgstr "Zlecenie zakupu (wyłączne)"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -267,33 +274,33 @@ msgstr "Data Początkowa"
 #. module: purchase_requisition
 #: view:purchase.requisition.partner:0
 msgid "or"
-msgstr ""
+msgstr "lub"
 
 #. module: purchase_requisition
 #: field:purchase.requisition.line,product_uom_id:0
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Jednostka miary produktu"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 #: field:purchase.requisition,state:0
 msgid "Status"
-msgstr ""
+msgstr "Stan"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Terms and Conditions"
-msgstr ""
+msgstr "Warunki i postanowienia"
 
 #. module: purchase_requisition
 #: view:purchase.order:0
 msgid "Purchase Orders with requisition"
-msgstr ""
+msgstr "Zamówienia zakupu ze zleceniem"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Current Purchase Requisition"
-msgstr ""
+msgstr "Bieżące Zlecenie zakupu"
 
 #. module: purchase_requisition
 #: model:res.groups,name:purchase_requisition.group_purchase_requisition_user
@@ -303,13 +310,13 @@ msgstr "Użytkownik"
 #. module: purchase_requisition
 #: field:purchase.requisition,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Jest wypowiadającym się"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,message_comment_ids:0
 #: help:purchase.requisition,message_comment_ids:0
 msgid "Comments and emails"
-msgstr ""
+msgstr "Komentarze i emaile"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -320,7 +327,7 @@ msgstr "Szukaj zlecenia zakupu"
 #: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:41
 #, python-format
 msgid "No Product in Tender."
-msgstr ""
+msgstr "Brak produktu"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -330,7 +337,7 @@ msgstr "Anuluj zamówienie zakupu"
 #. module: purchase_requisition
 #: field:purchase.requisition,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Podsumowanie"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -351,7 +358,7 @@ msgstr "Zapytanie ofertowe"
 #: code:addons/purchase_requisition/purchase_requisition.py:103
 #, python-format
 msgid "Purchase Requisition has been <b>cancelled</b>."
-msgstr ""
+msgstr "Zlecenie zakupu zostało <b>anulowane</b>."
 
 #. module: purchase_requisition
 #: field:procurement.order,requisition_id:0
@@ -367,7 +374,7 @@ msgstr "Il."
 #: code:addons/purchase_requisition/purchase_requisition.py:94
 #, python-format
 msgid "Draft Requisition has been <b>sent to suppliers</b>."
-msgstr ""
+msgstr "Projekt Zlecenia zakupu został <b>wysłany do dostawców</b>."
 
 #. module: purchase_requisition
 #: view:purchase.requisition.partner:0
@@ -391,6 +398,8 @@ msgid ""
 "Check this box to generates purchase requisition instead of generating "
 "requests for quotation from procurement."
 msgstr ""
+"Zaznacz tę opcję, aby generować zlecenia zakupu zamiast generować zapytania "
+"ofertowe z zapotrzebowania."
 
 #. module: purchase_requisition
 #: field:purchase.requisition,purchase_ids:0
@@ -400,7 +409,7 @@ msgstr "Zamówienia Zakupu"
 #. module: purchase_requisition
 #: field:purchase.requisition,origin:0
 msgid "Source Document"
-msgstr ""
+msgstr "Dokument źródłowy"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -412,7 +421,7 @@ msgstr "Odpowiedzialny"
 #: view:purchase.requisition:0
 #: selection:purchase.requisition,state:0
 msgid "Purchase Done"
-msgstr ""
+msgstr "Zakup wykonano"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -440,7 +449,7 @@ msgstr "Opis"
 #: code:addons/purchase_requisition/purchase_requisition.py:97
 #, python-format
 msgid "Purchase Requisition has been set to <b>draft</b>."
-msgstr ""
+msgstr "Zlecenie zakupu zostało ustawione na <b>projekt</b>."
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -488,12 +497,12 @@ msgstr "Data zlecenia"
 #. module: purchase_requisition
 #: help:purchase.requisition,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Wiadomości i historia komunikacji"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
 msgid "Purchase for Requisitions"
-msgstr "Zamówienia dla zlecenia"
+msgstr "Zamówienia dla zleceń"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,date_end:0
@@ -504,7 +513,7 @@ msgstr "Termin zlecenia"
 #: code:addons/purchase_requisition/purchase_requisition.py:100
 #, python-format
 msgid "Purchase Requisition has been <b>done</b>."
-msgstr ""
+msgstr "Zlecenie zakupu zostało <b>wykonane</b>."
 
 #. module: purchase_requisition
 #: model:res.groups,name:purchase_requisition.group_purchase_requisition_manager

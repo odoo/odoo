@@ -1,5 +1,3 @@
-# Notice:
-# ------
 #
 # Implements encrypting functions.
 #
@@ -36,44 +34,44 @@
 # Boston, MA  02111-1307
 # USA.
 
-from random import seed, sample
-from string import ascii_letters, digits
-from osv import fields,osv
-import pooler
-from tools.translate import _
-from service import security
+import hashlib
 import logging
+from random import sample
+from string import ascii_letters, digits
+
+from openerp import pooler
+from openerp.osv import fields,osv
+from openerp.tools.translate import _
+from openerp.service import security
 
 magic_md5 = '$1$'
 _logger = logging.getLogger(__name__)
 
-def gen_salt( length=8, symbols=None):
+def gen_salt(length=8, symbols=None):
     if symbols is None:
         symbols = ascii_letters + digits
-    seed()
-    return ''.join( sample( symbols, length ) )
-
-# The encrypt_md5 is based on Mark Johnson's md5crypt.py, which in turn is
-# based on  FreeBSD src/lib/libcrypt/crypt.c (1.2)  by  Poul-Henning Kamp.
-# Mark's port can be found in  ActiveState ASPN Python Cookbook.  Kudos to
-# Poul and Mark. -agi
-#
-# Original license:
-#
-# * "THE BEER-WARE LICENSE" (Revision 42):
-# *
-# * <phk@login.dknet.dk>  wrote  this file.  As  long as  you retain  this
-# * notice  you can do  whatever you want with this stuff. If we meet some
-# * day,  and you think this stuff is worth it,  you can buy me  a beer in
-# * return.
-# *
-# * Poul-Henning Kamp
+    return ''.join(sample(symbols, length))
 
 
-#TODO: py>=2.6: from hashlib import md5
-import hashlib
+def md5crypt( raw_pw, salt, magic=magic_md5 ):
+    """ md5crypt FreeBSD crypt(3) based on but different from md5
 
-def encrypt_md5( raw_pw, salt, magic=magic_md5 ):
+    The md5crypt is based on Mark Johnson's md5crypt.py, which in turn is
+    based on  FreeBSD src/lib/libcrypt/crypt.c (1.2)  by  Poul-Henning Kamp.
+    Mark's port can be found in  ActiveState ASPN Python Cookbook.  Kudos to
+    Poul and Mark. -agi
+
+    Original license:
+
+    * "THE BEER-WARE LICENSE" (Revision 42):
+    *
+    * <phk@login.dknet.dk>  wrote  this file.  As  long as  you retain  this
+    * notice  you can do  whatever you want with this stuff. If we meet some
+    * day,  and you think this stuff is worth it,  you can buy me  a beer in
+    * return.
+    *
+    * Poul-Henning Kamp
+    """
     raw_pw = raw_pw.encode('utf-8')
     salt = salt.encode('utf-8')
     hash = hashlib.md5()
@@ -133,6 +131,7 @@ def encrypt_md5( raw_pw, salt, magic=magic_md5 ):
 
     return magic + salt + '$' + rearranged
 
+
 class users(osv.osv):
     _name="res.users"
     _inherit="res.users"
@@ -146,7 +145,7 @@ class users(osv.osv):
                 obj._salt_cache = {}
 
             salt = obj._salt_cache[id] = gen_salt()
-            encrypted = encrypt_md5(value, salt)
+            encrypted = md5crypt(value, salt)
 
         else:
             #setting a password to '' is allowed. It can be used to inactivate the classic log-in of the user
@@ -167,12 +166,7 @@ class users(osv.osv):
         return res
 
     _columns = {
-        # The column size could be smaller as it is meant to store a hash, but
-        # an existing column cannot be downsized; thus we use the original
-        # column size.
-        'password': fields.function(get_pw, fnct_inv=set_pw, type='char',
-            size=64, string='Password', invisible=True,
-            store=True),
+        'password': fields.function(get_pw, fnct_inv=set_pw, type='char', string='Password', invisible=True, store=True),
     }
 
     def login(self, db, login, password):
@@ -213,7 +207,7 @@ class users(osv.osv):
         if not hasattr(obj, "_salt_cache"):
             obj._salt_cache = {}
         salt = obj._salt_cache[id] = stored_pw[len(magic_md5):11]
-        encrypted_pw = encrypt_md5(password, salt)
+        encrypted_pw = md5crypt(password, salt)
 
         # Check if the encrypted password matches against the one in the db.
         cr.execute("""UPDATE res_users
@@ -260,7 +254,7 @@ class users(osv.osv):
             else:
                 salt = self._salt_cache[db][uid]
                 cr.execute('SELECT COUNT(*) FROM res_users WHERE id=%s AND password=%s AND active',
-                    (int(uid), encrypt_md5(passwd, salt)))
+                    (int(uid), md5crypt(passwd, salt)))
                 res = cr.fetchone()[0]
         finally:
             cr.close()
@@ -284,21 +278,18 @@ class users(osv.osv):
         """
 
         if not pw.startswith(magic_md5):
-            cr.execute("SELECT id, password FROM res_users " \
-                "WHERE active=true AND password NOT LIKE '$%'")
+            cr.execute("SELECT id, password FROM res_users WHERE active=true AND password NOT LIKE '$%'")
             # Note that we skip all passwords like $.., in anticipation for
             # more than md5 magic prefixes.
             res = cr.fetchall()
             for i, p in res:
-                encrypted = encrypt_md5(p, gen_salt())
-                cr.execute('UPDATE res_users SET password=%s where id=%s',
-                        (encrypted, i))
+                encrypted = md5crypt(p, gen_salt())
+                cr.execute('UPDATE res_users SET password=%s where id=%s', (encrypted, i))
                 if i == id:
                     encrypted_res = encrypted
             cr.commit()
             return encrypted_res
         return pw
 
-users()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

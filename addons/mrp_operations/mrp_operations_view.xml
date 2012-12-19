@@ -74,9 +74,9 @@
             </header>
             <sheet string="Work Orders">
                 <group col="4">
-                    <field colspan="4" name="name"/>
+                    <field colspan="2" name="name"/>
                     <field name="workcenter_id"/>
-                    <field name="production_id"/>
+                    <field name="production_id" on_change="onchange_production_id(production_id)"/>
                     <field name="production_state"/>
                     <field name="sequence"/>
                 </group>
@@ -92,7 +92,7 @@
                             <field name="cycle"/>
                             <field name="hour" widget="float_time"/>
                         </group>
-                        <group string="Real" >
+                        <group string="Actual Production Date" >
                             <field name="date_start" readonly="1"/>
                             <field name="date_finished" readonly="1"/>
                             <field name="delay" widget="float_time"/>

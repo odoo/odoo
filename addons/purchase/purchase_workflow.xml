@@ -22,6 +22,7 @@
         <record id="act_confirmed" model="workflow.activity">
             <field name="wkf_id" ref="purchase_order"/>
             <field name="name">confirmed</field>
+            <field name="split_mode">OR</field>
             <field name="kind">function</field>
             <field name="action">wkf_confirm_order()</field>
         </record>
@@ -49,6 +50,7 @@
             <field name="name">router</field>
             <field name="split_mode">OR</field>
             <field name="kind">function</field>
+            <field name="join_mode">AND</field>
             <field name="action">wkf_approve_order()</field>
         </record>
         <record id="act_invoice" model="workflow.activity">
@@ -199,7 +201,7 @@
             <field name="act_from" ref="act_invoice_end"/>
             <field name="act_to" ref="act_done"/>
         </record>
-    
+
     <!-- Procurement -->
         <record id="act_buy" model="workflow.activity">
             <field name="wkf_id" ref="procurement.wkf_procurement"/>
@@ -208,19 +210,19 @@
             <field name="subflow_id" search="[('osv','=','purchase.order')]"/>
             <field name="action">action_po_assign()</field>
         </record>
-        
-        <record id="procurement.trans_confirm_mto_purchase" model="workflow.transition">
+
+        <record id="trans_confirm_mto_purchase" model="workflow.transition">
             <field name="act_from" ref="procurement.act_confirm_mto"/>
             <field name="act_to" ref="act_buy"/>
-            <field name="condition">check_buy()</field>
+            <field name="condition">check_buy() and check_supplier_info()</field>
         </record>
-        
+
         <record id="trans_buy_make_done" model="workflow.transition">
             <field name="act_from" ref="act_buy"/>
             <field name="act_to" ref="procurement.act_make_done"/>
             <field name="signal">subflow.delivery_done</field>
         </record>
-        
+
         <record id="trans_buy_cancel" model="workflow.transition">
             <field name="act_from" ref="act_buy"/>
             <field name="act_to" ref="procurement.act_cancel"/>

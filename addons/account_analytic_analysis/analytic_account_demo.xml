@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <record id="account.analytic_consultancy" model="account.analytic.account">
+            <field name="partner_id" ref="base.res_partner_15"/>
+            <field name="invoice_on_timesheets">True</field>
+            <field name="hours_qtt_est">1200</field>
+            <field name="fix_price_invoices">True</field>
+            <field name="to_invoice" ref="hr_timesheet_invoice.timesheet_invoice_factor1"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="amount_max">100000</field>
+        </record>
+
+        <record id="sale.sale_order_4" model="sale.order">
+            <field name="project_id" ref="account.analytic_consultancy"/>
+        </record>
+        
+        <record id="hr_timesheet.working_hours_maintenance" model="hr.analytic.timesheet">
+            <field name="account_id" ref="account.analytic_consultancy"/>
+            <field name="to_invoice" ref="hr_timesheet_invoice.timesheet_invoice_factor1"/>
+            <field name="unit_amount">100</field>
+        </record>
+
+        <record id="account.analytic_super_product_trainings" model="account.analytic.account">
+            <field name="partner_id" ref="base.res_partner_18"/>
+            <field name="invoice_on_timesheets">True</field>
+            <field name="hours_qtt_est">500</field>
+            <field name="fix_price_invoices">True</field>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="amount_max">50000</field>
+            <field name="to_invoice" ref="hr_timesheet_invoice.timesheet_invoice_factor1"/>
+        </record>
+        
+        <record id="sale.sale_order_6" model="sale.order">
+            <field name="project_id" ref="account.analytic_super_product_trainings"/>
+        </record>
+
+        <record id="account.analytic_support_internal" model="account.analytic.account">
+            <field name="use_timesheets">True</field>
+            <field name="invoice_on_timesheets">True</field>
+            <field name="hours_qtt_est">100</field>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="to_invoice" ref="hr_timesheet_invoice.timesheet_invoice_factor1"/>
+        </record>
+
+    </data>
+</openerp>
+

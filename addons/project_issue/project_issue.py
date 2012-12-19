@@ -19,15 +19,15 @@
 #
 ##############################################################################
 
-from base_status.base_stage import base_stage
-from crm import crm
+from openerp.addons.base_status.base_stage import base_stage
+from openerp.addons.crm import crm
 from datetime import datetime
-from osv import fields,osv
-from tools.translate import _
+from openerp.osv import fields,osv
+from openerp.tools.translate import _
 import binascii
 import time
-import tools
-from tools import html2plaintext
+from openerp import tools
+from openerp.tools import html2plaintext
 
 class project_issue_version(osv.osv):
     _name = "project.issue.version"
@@ -500,7 +500,6 @@ class project_issue(base_stage, osv.osv):
             custom_values['priority'] =  msg.get('priority')
 
         res_id = super(project_issue, self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
-        # self.convert_to_bug(cr, uid, [res_id], context=context)
         return res_id
 
     def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):

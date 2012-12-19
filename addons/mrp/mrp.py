@@ -19,15 +19,16 @@
 #
 ##############################################################################
 
-from datetime import datetime
-from osv import osv, fields
-import decimal_precision as dp
-from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
-from tools.translate import _
-import netsvc
 import time
-import tools
+from datetime import datetime
 
+import openerp.addons.decimal_precision as dp
+from openerp.osv import fields, osv
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
+from openerp.tools import float_compare
+from openerp.tools.translate import _
+from openerp import netsvc
+from openerp import tools
 
 #----------------------------------------------------------
 # Work Centers
@@ -531,7 +532,8 @@ class mrp_production(osv.osv):
             'move_created_ids' : [],
             'move_created_ids2' : [],
             'product_lines' : [],
-            'picking_id': False
+            'move_prod_id' : False,
+            'picking_id' : False
         })
         return super(mrp_production, self).copy(cr, uid, id, default, context)
 
@@ -749,8 +751,7 @@ class mrp_production(osv.osv):
                 if raw_product:
                     # qtys we have to consume
                     qty = total_consume - consumed_data.get(scheduled.product_id.id, 0.0)
-
-                    if qty > qty_avail:
+                    if float_compare(qty, qty_avail, precision_rounding=scheduled.product_id.uom_id.rounding) == 1:
                         # if qtys we have to consume is more than qtys available to consume
                         prod_name = scheduled.product_id.name_get()[0][1]
                         raise osv.except_osv(_('Warning!'), _('You are going to consume total %s quantities of "%s".\nBut you can only consume up to total %s quantities.') % (qty, prod_name, qty_avail))
@@ -808,6 +809,7 @@ class mrp_production(osv.osv):
         for wc_line in production.workcenter_lines:
             wc = wc_line.workcenter_id
             if wc.costs_journal_id and wc.costs_general_account_id:
+                # Cost per hour
                 value = wc_line.hour * wc.costs_hour
                 account = wc.costs_hour_account_id.id
                 if value and account:
@@ -821,10 +823,9 @@ class mrp_production(osv.osv):
                         'ref': wc.code,
                         'product_id': wc.product_id.id,
                         'unit_amount': wc_line.hour,
-                        'product_uom_id': wc.product_id.id and wc.product_id.uom_id.id or False
-
+                        'product_uom_id': wc.product_id and wc.product_id.uom_id.id or False
                     } )
-            if wc.costs_journal_id and wc.costs_general_account_id:
+                # Cost per cycle
                 value = wc_line.cycle * wc.costs_cycle
                 account = wc.costs_cycle_account_id.id
                 if value and account:
@@ -838,8 +839,7 @@ class mrp_production(osv.osv):
                         'ref': wc.code,
                         'product_id': wc.product_id.id,
                         'unit_amount': wc_line.cycle,
-                        'product_uom_id': wc.product_id.id and wc.product_id.uom_id.id or False
-
+                        'product_uom_id': wc.product_id and wc.product_id.uom_id.id or False
                     } )
         return amount
 
@@ -948,7 +948,7 @@ class mrp_production(osv.osv):
 
     def _make_production_produce_line(self, cr, uid, production, context=None):
         stock_move = self.pool.get('stock.move')
-        source_location_id = production.product_id.product_tmpl_id.property_stock_production.id
+        source_location_id = production.product_id.property_stock_production.id
         destination_location_id = production.location_dest_id.id
         data = {
             'name': production.name,
@@ -974,7 +974,7 @@ class mrp_production(osv.osv):
         # Internal shipment is created for Stockable and Consumer Products
         if production_line.product_id.type not in ('product', 'consu'):
             return False
-        destination_location_id = production.product_id.product_tmpl_id.property_stock_production.id
+        destination_location_id = production.product_id.property_stock_production.id
         if not source_location_id:
             source_location_id = production.location_src_id.id
         move_id = stock_move.create(cr, uid, {
@@ -1084,7 +1084,7 @@ class mrp_production_workcenter_line(osv.osv):
         'cycle': fields.float('Number of Cycles', digits=(16,2)),
         'hour': fields.float('Number of Hours', digits=(16,2)),
         'sequence': fields.integer('Sequence', required=True, help="Gives the sequence order when displaying a list of work orders."),
-        'production_id': fields.many2one('mrp.production', 'Production Order', select=True, ondelete='cascade', required=True),
+        'production_id': fields.many2one('mrp.production', 'Manufacturing Order', select=True, ondelete='cascade', required=True),
     }
     _defaults = {
         'sequence': lambda *a: 1,

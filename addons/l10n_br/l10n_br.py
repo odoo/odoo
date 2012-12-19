@@ -17,7 +17,7 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.          #
 #################################################################################
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 
 class l10n_br_account_cst_template(osv.osv):
     _name = 'l10n_br_account.cst.template'

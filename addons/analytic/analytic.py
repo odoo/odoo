@@ -22,10 +22,10 @@
 import time
 from datetime import datetime
 
-from osv import fields, osv
-import tools
-from tools.translate import _
-import decimal_precision as dp
+from openerp.osv import fields, osv
+from openerp import tools
+from openerp.tools.translate import _
+import openerp.addons.decimal_precision as dp
 
 class account_analytic_account(osv.osv):
     _name = 'account.analytic.account'
@@ -166,7 +166,7 @@ class account_analytic_account(osv.osv):
     _columns = {
         'name': fields.char('Account/Contract Name', size=128, required=True),
         'complete_name': fields.function(_get_full_name, type='char', string='Full Account Name'),
-        'code': fields.char('Reference', size=24, select=True),
+        'code': fields.char('Reference', select=True),
         'type': fields.selection([('view','Analytic View'), ('normal','Analytic Account'),('contract','Contract or Project'),('template','Template of Contract')], 'Type of Account', required=True,
                                  help="If you select the View Type, it means you won\'t allow to create journal entries using that account.\n"\
                                   "The type 'Analytic account' stands for usual accounts that you only want to use in accounting.\n"\

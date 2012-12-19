@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields,osv
+from openerp.osv import fields,osv
 
 class stock_location_path(osv.osv):
     _name = "stock.location.path"
@@ -109,6 +109,11 @@ class stock_move(osv.osv):
                 self.action_cancel(cr, uid, [m.move_dest_id.id], context=context)
         res = super(stock_move,self).action_cancel(cr,uid,ids,context)
         return res
+
+    def _prepare_chained_picking(self, cr, uid, picking_name, picking, picking_type, moves_todo, context=None):
+        res = super(stock_move, self)._prepare_chained_picking(cr, uid, picking_name, picking, picking_type, moves_todo, context=context)
+        res.update({'invoice_state': moves_todo[0][1][6] or 'none'})
+        return res
 stock_move()
 
 class stock_location(osv.osv):
@@ -117,7 +122,7 @@ class stock_location(osv.osv):
         if product:
             for path in product.path_ids:
                 if path.location_from_id.id == location.id:
-                    return path.location_dest_id, path.auto, path.delay, path.journal_id and path.journal_id.id or False, path.company_id and path.company_id.id or False, path.picking_type
+                    return path.location_dest_id, path.auto, path.delay, path.journal_id and path.journal_id.id or False, path.company_id and path.company_id.id or False, path.picking_type, path.invoice_state
         return super(stock_location, self).chained_location_get(cr, uid, location, partner, product, context)
 stock_location()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

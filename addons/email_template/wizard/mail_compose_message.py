@@ -68,7 +68,7 @@ class mail_compose_message(osv.TransientModel):
             values = self.pool.get('email.template').read(cr, uid, template_id, ['subject', 'body_html'], context)
             values.pop('id')
         elif template_id:
-            # FIXME odo: change the mail generation to avoid attachment duplication 
+            # FIXME odo: change the mail generation to avoid attachment duplication
             values = self.generate_email_for_composer(cr, uid, template_id, res_id, context=context)
             # transform attachments into attachment_ids
             values['attachment_ids'] = []
@@ -142,12 +142,12 @@ class mail_compose_message(osv.TransientModel):
         return values
 
     def render_message(self, cr, uid, wizard, res_id, context=None):
-        """ Generate an email from the template for given (model, res_id) pair.
-            This method is meant to be inherited by email_template that will
-            produce a more complete dictionary, with email_to, ...
-        """
+        """ Override to handle templates. """
         # generate the composer email
-        values = self.generate_email_for_composer(cr, uid, wizard.template_id, res_id, context=context)
+        if wizard.template_id:
+            values = self.generate_email_for_composer(cr, uid, wizard.template_id, res_id, context=context)
+        else:
+            values = {}
         # get values to return
         email_dict = super(mail_compose_message, self).render_message(cr, uid, wizard, res_id, context)
         email_dict.update(values)

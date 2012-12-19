@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-from osv import fields
-from osv import osv
-from tools.translate import _
+from openerp.osv import fields
+from openerp.osv import osv
+from openerp.tools.translate import _
 
 class account_analytic_line(osv.osv):
     _inherit = 'account.analytic.line'
@@ -82,7 +82,7 @@ class account_analytic_line(osv.osv):
             if j_id.type == 'purchase':
                 unit = prod.uom_po_id.id
         if j_id.type <> 'sale':
-            a = prod.product_tmpl_id.property_account_expense.id
+            a = prod.property_account_expense.id
             if not a:
                 a = prod.categ_id.property_account_expense_categ.id
             if not a:
@@ -91,7 +91,7 @@ class account_analytic_line(osv.osv):
                                 'for this product: "%s" (id:%d).') % \
                                 (prod.name, prod.id,))
         else:
-            a = prod.product_tmpl_id.property_account_income.id
+            a = prod.property_account_income.id
             if not a:
                 a = prod.categ_id.property_account_income_categ.id
             if not a:

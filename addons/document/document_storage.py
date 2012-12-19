@@ -20,21 +20,21 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 import os
-import tools
+from openerp import tools
 import base64
 import errno
 import logging
 import shutil
 from StringIO import StringIO
 import psycopg2
-from tools.misc import ustr
-from tools.translate import _
-from osv.orm import except_orm
+from openerp.tools.misc import ustr
+from openerp.tools.translate import _
+from openerp.osv.orm import except_orm
 import random
 import string
-import pooler
+from openerp import pooler
 import nodes
 from content_index import cntIndex
 _logger = logging.getLogger(__name__)
@@ -349,7 +349,7 @@ class document_storage(osv.osv):
         'type': fields.selection([('db', 'Database'), ('filestore', 'Internal File storage'),
                 ('realstore','External file storage'),], 'Type', required=True),
         'path': fields.char('Path', size=250, select=1, help="For file storage, the root path of the storage"),
-        'online': fields.boolean('Online', help="If not checked, media is currently offline and its contents not available", required=True),
+        'online': fields.boolean('Online', help="If not checked, media is currently offline and its contents not available"),
         'readonly': fields.boolean('Read Only', help="If set, media is for reading only"),
     }
 

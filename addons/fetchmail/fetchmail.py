@@ -32,12 +32,12 @@ except ImportError:
 
 import zipfile
 import base64
-import addons
+from openerp import addons
 
-import netsvc
-from osv import osv, fields
-import tools
-from tools.translate import _
+from openerp import netsvc
+from openerp.osv import fields, osv
+from openerp import tools
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -195,12 +195,12 @@ openerp_mailgate.py -u %(uid)d -p PASSWORD -o %(model)s -d %(dbname)s --host=HOS
                                                              strip_attachments=(not server.attach),
                                                              context=context)
                         if res_id and server.action_id:
-                            action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id], 'active_model': context.get("thread_model", False)})
+                            action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id], 'active_model': context.get("thread_model", server.object_id.model)})
                             imap_server.store(num, '+FLAGS', '\\Seen')
                             cr.commit()
                         count += 1
                     _logger.info("fetched/processed %s email(s) on %s server %s", count, server.type, server.name)
-                except Exception, e:
+                except Exception:
                     _logger.exception("Failed to fetch mail from %s server %s.", server.type, server.name)
                 finally:
                     if imap_server:
@@ -220,11 +220,11 @@ openerp_mailgate.py -u %(uid)d -p PASSWORD -o %(model)s -d %(dbname)s --host=HOS
                                                              strip_attachments=(not server.attach),
                                                              context=context)
                         if res_id and server.action_id:
-                            action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id], 'active_model': context.get("thread_model", False)})
+                            action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id], 'active_model': context.get("thread_model", server.object_id.model)})
                         pop_server.dele(num)
                         cr.commit()
                     _logger.info("fetched/processed %s email(s) on %s server %s", numMsgs, server.type, server.name)
-                except Exception, e:
+                except Exception:
                     _logger.exception("Failed to fetch mail from %s server %s.", server.type, server.name)
                 finally:
                     if pop_server:

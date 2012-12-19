@@ -23,9 +23,9 @@ import logging
 from ldap.filter import filter_format
 
 import openerp.exceptions
-import pooler
-import tools
-from osv import fields, osv
+from openerp import pooler
+from openerp import tools
+from openerp.osv import fields, osv
 from openerp import SUPERUSER_ID
 _logger = logging.getLogger(__name__)
 

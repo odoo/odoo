@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 
 class base_config_settings(osv.osv_memory):
     _name = 'base.config.settings'
@@ -30,9 +30,9 @@ class base_config_settings(osv.osv_memory):
                 This installs the module multi_company."""),
         'module_share': fields.boolean('Allow documents sharing',
             help="""Share or embbed any screen of openerp."""),
-        'module_portal': fields.boolean('Activate the customer/supplier portal',
-            help="""Give access your customers and suppliers to their documents."""),
-        'module_auth_anonymous': fields.boolean('Activate the public portal',
+        'module_portal': fields.boolean('Activate the customer portal',
+            help="""Give your customers access to their documents."""),
+        'module_portal_anonymous': fields.boolean('Activate the public portal',
             help="""Enable the public part of openerp, openerp becomes a public website."""),
         'module_auth_oauth': fields.boolean('Use external authentication providers, sign in with google, facebook, ...'),
         'module_base_import': fields.boolean("Allow users to import data from CSV files"),
@@ -60,6 +60,7 @@ class sale_config_settings(osv.osv_memory):
         'module_web_linkedin': fields.boolean('Get contacts automatically from linkedIn',
             help="""When you create a new contact (person or company), you will be able to load all the data from LinkedIn (photos, address, etc)."""),
         'module_crm': fields.boolean('CRM'),
+        'module_sale' : fields.boolean('SALE'),
         'module_plugin_thunderbird': fields.boolean('Enable Thunderbird plug-in',
             help="""The plugin allows you archive email and its attachments to the selected
                 OpenERP objects. You can select a partner, or a lead and

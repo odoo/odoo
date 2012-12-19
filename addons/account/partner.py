@@ -20,8 +20,9 @@
 ##############################################################################
 
 from operator import itemgetter
-from osv import fields, osv
 import time
+
+from openerp.osv import fields, osv
 
 class account_fiscal_position(osv.osv):
     _name = 'account.fiscal.position'
@@ -134,18 +135,23 @@ class res_partner(osv.osv):
             return []
         having_values = tuple(map(itemgetter(2), args))
         where = ' AND '.join(
-            map(lambda x: '(SUM(debit-credit) %(operator)s %%s)' % {
+            map(lambda x: '(SUM(bal2) %(operator)s %%s)' % {
                                 'operator':x[1]},args))
         query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
-        cr.execute(('SELECT partner_id FROM account_move_line l '\
-                    'WHERE account_id IN '\
-                        '(SELECT id FROM account_account '\
-                        'WHERE type=%s AND active) '\
-                    'AND reconcile_id IS NULL '\
-                    'AND '+query+' '\
-                    'AND partner_id IS NOT NULL '\
-                    'GROUP BY partner_id HAVING '+where),
-                   (type,) + having_values)
+        cr.execute(('SELECT pid AS partner_id, SUM(bal2) FROM ' \
+                    '(SELECT CASE WHEN bal IS NOT NULL THEN bal ' \
+                    'ELSE 0.0 END AS bal2, p.id as pid FROM ' \
+                    '(SELECT (debit-credit) AS bal, partner_id ' \
+                    'FROM account_move_line l ' \
+                    'WHERE account_id IN ' \
+                            '(SELECT id FROM account_account '\
+                            'WHERE type=%s AND active) ' \
+                    'AND reconcile_id IS NULL ' \
+                    'AND '+query+') AS l ' \
+                    'RIGHT JOIN res_partner p ' \
+                    'ON p.id = partner_id ) AS pl ' \
+                    'GROUP BY pid HAVING ' + where), 
+                    (type,) + having_values)
         res = cr.fetchall()
         if not res:
             return [('id','=','0')]

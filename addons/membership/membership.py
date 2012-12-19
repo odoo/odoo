@@ -21,9 +21,9 @@
 
 import time
 
-from osv import fields, osv
-import decimal_precision as dp
-from tools.translate import _
+from openerp.osv import fields, osv
+import openerp.addons.decimal_precision as dp
+from openerp.tools.translate import _
 
 STATE = [
     ('none', 'Non Member'),
@@ -467,8 +467,8 @@ class Product(osv.osv):
     _inherit = 'product.product'
     _columns = {
         'membership': fields.boolean('Membership', help='Check if the product is eligible for membership.'),
-        'membership_date_from': fields.date('Date from', help='Date from which membership becomes active.'),
-        'membership_date_to': fields.date('Date to', help='Date until which membership remains active.'),
+        'membership_date_from': fields.date('Membership Start Date', help='Date from which membership becomes active.'),
+        'membership_date_to': fields.date('Membership End Date', help='Date until which membership remains active.'),
     }
 
     _sql_constraints = [('membership_date_greater','check(membership_date_to >= membership_date_from)','Error ! Ending Date cannot be set before Beginning Date.')]

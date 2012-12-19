@@ -25,9 +25,9 @@
 import time
 import base64
 
-from osv import osv, fields
-from tools.translate import _
-from report import report_sxw
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+from openerp.report import report_sxw
 
 class partner_vat_intra(osv.osv_memory):
     """
@@ -164,7 +164,10 @@ class partner_vat_intra(osv.osv_memory):
                         'comments': comments,
                         'issued_by': issued_by,
                         })
-
+        #tax code 44: services
+        #tax code 46L: normal good deliveries
+        #tax code 46T: ABC good deliveries
+        #tax code 48xxx: credite note on tax code xxx
         codes = ('44', '46L', '46T', '48s44', '48s46L', '48s46T')
         cr.execute('''SELECT p.name As partner_name, l.partner_id AS partner_id, p.vat AS vat,
                       (CASE WHEN t.code = '48s44' THEN '44'

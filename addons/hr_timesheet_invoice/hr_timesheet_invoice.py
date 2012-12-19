@@ -21,8 +21,8 @@
 
 import time
 
-from osv import fields, osv
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class hr_timesheet_invoice_factor(osv.osv):
     _name = "hr_timesheet_invoice.factor"
@@ -77,13 +77,6 @@ class account_analytic_account(osv.osv):
     _defaults = {
         'pricelist_id': lambda self, cr, uid, ctx: ctx.get('pricelist_id', False),
     }
-
-    def on_change_use_timesheets(self, cr, uid, ids, use_timesheets, context=None):
-        res = {'value': {}}
-        if use_timesheets:
-            ir_model_obj = self.pool.get('ir.model.data')
-            res['value']['to_invoice'] = ir_model_obj.get_object_reference(cr, uid, 'hr_timesheet_invoice', 'timesheet_invoice_factor1')[1]
-        return res
 
     def on_change_partner_id(self, cr, uid, ids, partner_id, name, context=None):
         res = super(account_analytic_account, self).on_change_partner_id(cr, uid, ids, partner_id, name, context=context)
@@ -262,7 +255,7 @@ class account_analytic_line(osv.osv):
 
                     price = self._get_invoice_price(cr, uid, account, product_id, user_id, qty, ctx)
 
-                    general_account = product.product_tmpl_id.property_account_income or product.categ_id.property_account_income_categ
+                    general_account = product.property_account_income or product.categ_id.property_account_income_categ
                     if not general_account:
                         raise osv.except_osv(_("Configuration Error!"), _("Please define income account for product '%s'.") % product.name)
                     taxes = product.taxes_id or general_account.tax_ids
@@ -368,10 +361,13 @@ class account_move_line(osv.osv):
         res = super(account_move_line, self).create_analytic_lines(cr, uid, ids,context=context)
         analytic_line_obj = self.pool.get('account.analytic.line')
         for move_line in self.browse(cr, uid, ids, context=context):
+            #For customer invoice, link analytic line to the invoice so it is not proposed for invoicing in Bill Tasks Work
+            invoice_id = move_line.invoice and move_line.invoice.type in ('out_invoice','out_refund') and move_line.invoice.id or False
             for line in move_line.analytic_lines:
-                toinv = line.account_id.to_invoice.id
-                if toinv:
-                    analytic_line_obj.write(cr, uid, line.id, {'to_invoice': toinv})
+                analytic_line_obj.write(cr, uid, line.id, {
+                    'invoice_id': invoice_id,
+                    'to_invoice': line.account_id.to_invoice and line.account_id.to_invoice.id or False
+                    }, context=context)
         return res
 
 account_move_line()

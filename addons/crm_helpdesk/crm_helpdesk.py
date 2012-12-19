@@ -19,13 +19,13 @@
 #
 ##############################################################################
 
-from base_status.base_state import base_state
-from base_status.base_stage import base_stage
-from crm import crm
-from osv import fields, osv
-import tools
-from tools.translate import _
-from tools import html2plaintext
+from openerp.addons.base_status.base_state import base_state
+from openerp.addons.base_status.base_stage import base_stage
+from openerp.addons.crm import crm
+from openerp.osv import fields, osv
+from openerp import tools
+from openerp.tools.translate import _
+from openerp.tools import html2plaintext
 
 CRM_HELPDESK_STATES = (
     crm.AVAILABLE_STATES[2][0], # Cancelled

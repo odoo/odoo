@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-11-30 17:32+0000\n"
-"Last-Translator: ccdos <ccdos@163.com>\n"
+"PO-Revision-Date: 2012-12-14 15:57+0000\n"
+"Last-Translator: digitalsatori <digisatori@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:29+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-15 05:05+0000\n"
+"X-Generator: Launchpad (build 16372)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -25,7 +25,7 @@ msgstr "系统支付"
 #: sql_constraint:account.fiscal.position.account:0
 msgid ""
 "An account fiscal position could be defined only once time on same accounts."
-msgstr ""
+msgstr "在一个科目上只能设置一个应税设定"
 
 #. module: account
 #: view:account.unreconcile:0
@@ -104,6 +104,8 @@ msgid ""
 "Error!\n"
 "You cannot create recursive account templates."
 msgstr ""
+"错误！\n"
+"您不能创建重复的帐户模板。"
 
 #. module: account
 #. openerp-web
@@ -173,7 +175,7 @@ msgid ""
 "You have to set the 'End  of Year Entries Journal' for this Fiscal Year "
 "which is set after generating opening entries from 'Generate Opening "
 "Entries'."
-msgstr ""
+msgstr "在生成开账分录之后必须设置分类账的结束年度。"
 
 #. module: account
 #: field:account.fiscal.position.account,account_src_id:0
@@ -192,6 +194,12 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"点击添加一个会计期间.\n"
+"</p><p>\n"
+"会计期间通常是一个月或一个季度。它通常对应纳税申报的期间。\n"
+"</p>\n"
+"            "
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
@@ -206,7 +214,7 @@ msgstr "字段标签"
 #. module: account
 #: help:account.config.settings,code_digits:0
 msgid "No. of digits to use for account code"
-msgstr ""
+msgstr "科目代码的编码长度"
 
 #. module: account
 #: help:account.analytic.journal,type:0
@@ -266,7 +274,7 @@ msgstr "科目类别用于生成合乎各国财税规范的报表，设置财年
 #. module: account
 #: field:account.config.settings,sale_refund_sequence_next:0
 msgid "Next credit note number"
-msgstr ""
+msgstr "下一个信用证编码"
 
 #. module: account
 #: help:account.config.settings,module_account_voucher:0
@@ -275,6 +283,9 @@ msgid ""
 "sales, purchase, expense, contra, etc.\n"
 "                This installs the module account_voucher."
 msgstr ""
+"This includes all the basic requirements of voucher entries for bank, cash, "
+"sales, purchase, expense, contra, etc.\n"
+"                This installs the module account_voucher."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_use_model_create_entry
@@ -306,6 +317,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                点击创建一个客户退款. \n"
+"              </p><p>\n"
+"                退款是全部或部分借记销售发票的证明。\n"
+"              </p><p>\n"
+"                可以直接从与客户相关联的发票直接生成退款，以代替手工创建客户退款。.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: help:account.installer,charts:0
@@ -434,13 +453,17 @@ msgid ""
 "this box, you will be able to do invoicing & payments,\n"
 "                but not accounting (Journal Items, Chart of Accounts, ...)"
 msgstr ""
+"此处可以管理属于公司或者个人的资产.\n"
+"                跟踪资产折旧的发生，创建折旧明细账户。.\n"
+"                要安装account_asset模块. 如果不检查box, 可以处理发票和付款,\n"
+"                但不能处理账记(账簿明细, 会计报表, ...)"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_move_line_quickadd.xml:8
 #, python-format
 msgid "Period :"
-msgstr ""
+msgstr "时间："
 
 #. module: account
 #: field:account.account.template,chart_template_id:0
@@ -529,7 +552,7 @@ msgstr "上级目标"
 #. module: account
 #: help:account.invoice.line,sequence:0
 msgid "Gives the sequence of this line when displaying the invoice."
-msgstr ""
+msgstr "显示发票的时候给出明细编号。"
 
 #. module: account
 #: field:account.bank.statement,account_id:0
@@ -603,7 +626,7 @@ msgstr "没有什么被核销"
 #. module: account
 #: field:account.config.settings,decimal_precision:0
 msgid "Decimal precision on journal entries"
-msgstr ""
+msgstr "日记帐分录小数精度"
 
 #. module: account
 #: selection:account.config.settings,period:0
@@ -722,7 +745,7 @@ msgstr "账簿的会计期间"
 #: constraint:account.move:0
 msgid ""
 "You cannot create more than one move per period on a centralized journal."
-msgstr ""
+msgstr "在每个会计期间，你不可以创建1个以上的总分类凭证"
 
 #. module: account
 #: help:account.tax,account_analytic_paid_id:0
@@ -936,6 +959,10 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    账簿明细未找到.\n"
+"                </p>\n"
+"            "
 
 #. module: account
 #: code:addons/account/account.py:1632
@@ -1137,7 +1164,7 @@ msgstr "科目名称"
 #. module: account
 #: field:account.journal,with_last_closing_balance:0
 msgid "Opening With Last Closing Balance"
-msgstr "用末期的期终余额打开"
+msgstr "用上个期末余额作期初"
 
 #. module: account
 #: help:account.tax.code,notprintable:0
@@ -1401,7 +1428,7 @@ msgstr "级别"
 #: code:addons/account/wizard/account_change_currency.py:38
 #, python-format
 msgid "You can only change currency for Draft Invoice."
-msgstr ""
+msgstr "您只能修改发票草稿的货币。"
 
 #. module: account
 #: report:account.invoice:0
@@ -1959,7 +1986,7 @@ msgstr "Pending Accounts"
 #. module: account
 #: view:account.open.closed.fiscalyear:0
 msgid "Cancel Fiscal Year Opening Entries"
-msgstr ""
+msgstr "取消财务年度未结案分录"
 
 #. module: account
 #: report:account.journal.period.print.sale.purchase:0
@@ -2288,7 +2315,7 @@ msgstr "关闭财政年度"
 #: code:addons/account/static/src/xml/account_move_line_quickadd.xml:14
 #, python-format
 msgid "Journal :"
-msgstr ""
+msgstr "流水帐"
 
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
@@ -2995,7 +3022,7 @@ msgstr "单号"
 #. module: account
 #: view:wizard.multi.charts.accounts:0
 msgid "Purchase Tax"
-msgstr ""
+msgstr "购置税"
 
 #. module: account
 #: help:account.move.line,tax_code_id:0
@@ -3089,7 +3116,7 @@ msgstr "沟通类型"
 #. module: account
 #: constraint:account.move.line:0
 msgid "Account and Period must belong to the same company."
-msgstr ""
+msgstr "帐户和帐期必须属于同一家公司。"
 
 #. module: account
 #: field:account.invoice.line,discount:0
@@ -3117,7 +3144,7 @@ msgstr "补差额金额"
 #: field:account.bank.statement,message_unread:0
 #: field:account.invoice,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "未读消息"
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_state.py:44
@@ -10443,7 +10470,7 @@ msgstr "发票的状态已完成"
 #. module: account
 #: field:account.config.settings,module_account_followup:0
 msgid "Manage customer payment follow-ups"
-msgstr ""
+msgstr "管理客户付款 催款"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_sales

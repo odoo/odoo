@@ -26,10 +26,10 @@ from itertools import groupby
 from operator import itemgetter
 
 import math
-import netsvc
-import tools
-from osv import fields, osv
-from tools.translate import _
+from openerp import netsvc
+from openerp import tools
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 
 class hr_holidays_status(osv.osv):
@@ -424,7 +424,7 @@ class hr_holidays(osv.osv):
 
     def create_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, ids,
+            self.message_post(cr, uid, [obj.id],
                 _("Request <b>created</b>, waiting confirmation."), context=context)
         return True
 

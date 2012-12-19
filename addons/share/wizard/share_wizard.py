@@ -27,11 +27,11 @@ from openerp import SUPERUSER_ID
 
 import simplejson
 
-import tools
-from osv import osv, fields
-from osv import expression
-from tools.translate import _
-from tools.safe_eval import safe_eval
+from openerp import tools
+from openerp.osv import fields, osv
+from openerp.osv import expression
+from openerp.tools.translate import _
+from openerp.tools.safe_eval import safe_eval
 import openerp
 _logger = logging.getLogger(__name__)
 
@@ -69,7 +69,7 @@ class share_wizard(osv.TransientModel):
             return False
         return group_id in self.pool.get('res.users').read(cr, uid, uid, ['groups_id'], context=context)['groups_id']
 
-    def has_share(self, cr, uid, context=None):
+    def has_share(self, cr, uid, unused_param, context=None):
         return self.has_group(cr, uid, module='share', group_xml_id='group_share_user', context=context)
 
     def _user_type_selection(self, cr, uid, context=None):
@@ -224,6 +224,8 @@ class share_wizard(osv.TransientModel):
            for the password field, so they can receive it by email.
            Returns the ids of the created users, and the ids of the
            ignored, existing ones."""
+        if context is None:
+            context = {}
         user_obj = self.pool.get('res.users')
         current_user = user_obj.browse(cr, UID_ROOT, uid, context=context)
         # modify context to disable shortcuts when creating share users
@@ -257,7 +259,8 @@ class share_wizard(osv.TransientModel):
                         'email': new_user,
                         'groups_id': [(6,0,[group_id])],
                         'share': True,
-                        'company_id': current_user.company_id.id
+                        'company_id': current_user.company_id.id,
+                        'company_ids': [(6, 0, [current_user.company_id.id])],
                 }, context)
                 new_line = { 'user_id': user_id,
                              'password': new_pass,
@@ -274,7 +277,8 @@ class share_wizard(osv.TransientModel):
                 'name': new_login,
                 'groups_id': [(6,0,[group_id])],
                 'share': True,
-                'company_id': current_user.company_id.id
+                'company_id': current_user.company_id.id,
+                'company_ids': [(6, 0, [current_user.company_id.id])],
             }, context)
             new_line = { 'user_id': user_id,
                          'password': new_pass,

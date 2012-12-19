@@ -26,12 +26,12 @@ import time
 from operator import itemgetter
 from itertools import groupby
 
-from osv import fields, osv
-from tools.translate import _
-import netsvc
-import tools
-from tools import float_compare
-import decimal_precision as dp
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+from openerp import netsvc
+from openerp import tools
+from openerp.tools import float_compare
+import openerp.addons.decimal_precision as dp
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -243,7 +243,7 @@ class stock_location(osv.osv):
         elif location.chained_location_type == 'fixed':
             result = location.chained_location_id
         if result:
-            return result, location.chained_auto_packing, location.chained_delay, location.chained_journal_id and location.chained_journal_id.id or False, location.chained_company_id and location.chained_company_id.id or False, location.chained_picking_type
+            return result, location.chained_auto_packing, location.chained_delay, location.chained_journal_id and location.chained_journal_id.id or False, location.chained_company_id and location.chained_company_id.id or False, location.chained_picking_type, False
         return result
 
     def picking_type_get(self, cr, uid, from_location, to_location, context=None):
@@ -655,7 +655,7 @@ class stock_picking(osv.osv):
         'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
                  store=True, type='datetime', string='Scheduled Time', select=1, help="Scheduled time for the shipment to be processed"),
         'date': fields.datetime('Time', help="Creation time, usually the time of the order.", select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
-        'date_done': fields.datetime('Date Done', help="Date of Completion", states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
+        'date_done': fields.datetime('Date of Transfer', help="Date of Completion", states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'max_date': fields.function(get_min_max_date, fnct_inv=_set_maximum_date, multi="min_max_date",
                  store=True, type='datetime', string='Max. Expected Date', select=2),
         'move_lines': fields.one2many('stock.move', 'picking_id', 'Internal Moves', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}),
@@ -712,7 +712,7 @@ class stock_picking(osv.osv):
             default['name'] = self.pool.get('ir.sequence').get(cr, uid, seq_obj_name)
             default['origin'] = ''
             default['backorder_id'] = False
-        if picking_obj.invoice_state == 'invoiced':
+        if 'invoice_state' not in default and picking_obj.invoice_state == 'invoiced':
             default['invoice_state'] = '2binvoiced'
         res=super(stock_picking, self).copy(cr, uid, id, default, context)
         if res:
@@ -1067,14 +1067,12 @@ class stock_picking(osv.osv):
             origin += ':' + move_line.picking_id.origin
 
         if invoice_vals['type'] in ('out_invoice', 'out_refund'):
-            account_id = move_line.product_id.product_tmpl_id.\
-                    property_account_income.id
+            account_id = move_line.product_id.property_account_income.id
             if not account_id:
                 account_id = move_line.product_id.categ_id.\
                         property_account_income_categ.id
         else:
-            account_id = move_line.product_id.product_tmpl_id.\
-                    property_account_expense.id
+            account_id = move_line.product_id.property_account_expense.id
             if not account_id:
                 account_id = move_line.product_id.categ_id.\
                         property_account_expense_categ.id
@@ -1143,6 +1141,9 @@ class stock_picking(osv.osv):
             res[picking.id] = invoice_id
             for move_line in picking.move_lines:
                 if move_line.state == 'cancel':
+                    continue
+                if move_line.scrapped:
+                    # do no invoice scrapped products
                     continue
                 vals = self._prepare_invoice_line(cr, uid, group, picking, move_line,
                                 invoice_id, invoice_vals, context=context)
@@ -1395,6 +1396,14 @@ class stock_picking(osv.osv):
         """
         if context is None:
             context = {}
+        lang_obj = self.pool.get('res.lang')
+        user_lang = self.pool.get('res.users').browse(cr, uid, uid, context=context).context_lang
+        lang_ids = lang_obj.search(cr, uid, [('code','like',user_lang)])
+        if lang_ids:
+            date_format = lang_obj.browse(cr, uid, lang_ids[0], context=context).date_format
+        else:
+            date_format = '%m/%d/%Y'
+
         for pick in self.browse(cr, uid, ids, context=context):
             msg=''
             if pick.auto_picking:
@@ -1406,7 +1415,7 @@ class stock_picking(osv.osv):
             }
             message = type_list.get(pick.type, _('Document')) + " '" + (pick.name or '?') + "' "
             if pick.min_date:
-                msg= _(' for the ')+ datetime.strptime(pick.min_date, '%Y-%m-%d %H:%M:%S').strftime('%m/%d/%Y')
+                msg= _(' for the ')+ datetime.strptime(pick.min_date, '%Y-%m-%d %H:%M:%S').strftime(date_format)
             state_list = {
                 'confirmed': _('is scheduled %s.') % msg,
                 'assigned': _('is ready to process.'),
@@ -1568,6 +1577,13 @@ class stock_production_lot(osv.osv):
         """
         value=self.pool.get('action.traceability').action_traceability(cr,uid,ids,context)
         return value
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        context = context or {}
+        default = default and default.copy() or {}
+        default.update(date=time.strftime('%Y-%m-%d %H:%M:%S'), move_ids=[])
+        return super(stock_production_lot, self).copy(cr, uid, id, default=default, context=context)
+
 stock_production_lot()
 
 class stock_production_lot_revision(osv.osv):
@@ -1671,7 +1687,7 @@ class stock_move(osv.osv):
         return True
 
     _columns = {
-        'name': fields.char('Name', size=250, required=True, select=True),
+        'name': fields.char('Description', required=True, select=True),
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Urgent')], 'Priority'),
         'create_date': fields.datetime('Creation Date', readonly=True, select=True),
         'date': fields.datetime('Date', required=True, select=True, help="Move date: scheduled date until move is done, then date of actual move processing", states={'done': [('readonly', True)]}),
@@ -2128,7 +2144,7 @@ class stock_move(osv.osv):
                     self.pool.get('stock.picking').write(cr, uid, [picking.id], {'name': old_pick_name, 'type': old_ptype}, context=context)
             else:
                 pickid = False
-            for move, (loc, dummy, delay, dummy, company_id, ptype) in todo:
+            for move, (loc, dummy, delay, dummy, company_id, ptype, invoice_state) in todo:
                 new_id = move_obj.copy(cr, uid, move.id, {
                     'location_id': move.location_dest_id.id,
                     'location_dest_id': loc.id,
@@ -2137,7 +2153,7 @@ class stock_move(osv.osv):
                     'state': 'waiting',
                     'company_id': company_id or res_obj._company_default_get(cr, uid, 'stock.company', context=context)  ,
                     'move_history_ids': [],
-                    'date': (datetime.strptime(move.date, '%Y-%m-%d %H:%M:%S') + relativedelta(days=delay or 0)).strftime('%Y-%m-%d'),
+                    'date_expected': (datetime.strptime(move.date, '%Y-%m-%d %H:%M:%S') + relativedelta(days=delay or 0)).strftime('%Y-%m-%d'),
                     'move_history_ids2': []}
                 )
                 move_obj.write(cr, uid, [move.id], {
@@ -2873,12 +2889,12 @@ class stock_inventory(osv.osv):
             move_ids = []
             for line in inv.inventory_line_id:
                 pid = line.product_id.id
-                product_context.update(uom=line.product_uom.id, date=inv.date, prodlot_id=line.prod_lot_id.id)
+                product_context.update(uom=line.product_uom.id, to_date=inv.date, date=inv.date, prodlot_id=line.prod_lot_id.id)
                 amount = location_obj._product_get(cr, uid, line.location_id.id, [pid], product_context)[pid]
                 change = line.product_qty - amount
                 lot_id = line.prod_lot_id.id
                 if change:
-                    location_id = line.product_id.product_tmpl_id.property_stock_inventory.id
+                    location_id = line.product_id.property_stock_inventory.id
                     value = {
                         'name': _('INV:') + (line.inventory_id.name or ''),
                         'product_id': line.product_id.id,
