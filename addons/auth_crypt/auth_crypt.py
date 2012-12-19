@@ -9,6 +9,7 @@
 #
 
 import hashlib
+import hmac
 import logging
 from random import sample
 from string import ascii_letters, digits
@@ -19,6 +20,7 @@ from openerp.osv import fields, osv
 _logger = logging.getLogger(__name__)
 
 magic_md5 = '$1$'
+magic_sha256 = '$5$'
 
 def gen_salt(length=8, symbols=None):
     if symbols is None:
@@ -103,6 +105,15 @@ def md5crypt( raw_pw, salt, magic=magic_md5 ):
 
     return magic + salt + '$' + rearranged
 
+def sh256crypt(cls, password, salt, magic=magic_sha256):
+    iterations = 1000
+    # see http://en.wikipedia.org/wiki/PBKDF2
+    result = password.encode('utf8')
+    for i in xrange(cls.iterations):
+        result = hmac.HMAC(result, salt, hashlib.sha256).digest() # uses HMAC (RFC 2104) to apply salt
+    result = result.encode('base64') # doesnt seem to be crypt(3) compatible
+    return '%s%s$%s' % (magic_sha256, salt, result)
+
 class res_users(osv.osv):
     _inherit = "res.users"
 
@@ -140,11 +151,16 @@ class res_users(osv.osv):
             return super(res_users, self).check_credentials(cr, uid, password)
         except openerp.exceptions.AccessDenied:
             # check md5crypt
-            if stored_password_crypt[:len(magic_md5)] == "$1$":
+            if stored_password_crypt[:len(magic_md5)] == magic_md5:
+                salt = stored_password_crypt[len(magic_md5):11]
+                if stored_password_crypt == md5crypt(password, salt):
+                    return
+            elif stored_password_crypt[:len(magic_md5)] == magic_sha256:
                 salt = stored_password_crypt[len(magic_md5):11]
                 if stored_password_crypt == md5crypt(password, salt):
                     return
             # Reraise password incorrect
             raise
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
