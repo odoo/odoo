@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <!-- Analytic-account-related subtypes for messaging / Chatter -->
+        <record id="mt_account_pending" model="mail.message.subtype">
+            <field name="name">Contract to Renew</field>
+            <field name="res_model">account.analytic.account</field>
+            <field name="description">Contract &lt;b&gt;pending&lt;/b&gt;</field>
+        </record>
+        <record id="mt_account_closed" model="mail.message.subtype">
+            <field name="name">Contract Finished</field>
+            <field name="res_model">account.analytic.account</field>
+            <field name="description">Contract &lt;b&gt;closed&lt;/b&gt;</field>
+        </record>
+        <record id="mt_account_opened" model="mail.message.subtype">
+            <field name="name">Contract Opened</field>
+            <field name="res_model">account.analytic.account</field>
+            <field name="description">Stage &lt;b&gt;opened&lt;/b&gt;</field>
+        </record>
+
+    </data>
+</openerp>
