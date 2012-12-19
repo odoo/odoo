@@ -56,6 +56,13 @@ class account_config_settings(osv.osv_memory):
             relation='account.account',
             string="Loss Exchange Rate Account"),
     }
+    def onchange_company_id(self, cr, uid, ids, company_id):
+        res = super(account_config_settings, self).onchange_company_id(cr, uid, ids, company_id)
+        if company_id:
+            company = self.pool.get('res.company').browse(cr, uid, company_id)
+            res['value'].update({'income_currency_exchange_account_id': company.income_currency_exchange_account_id and company.income_currency_exchange_account_id.id, 
+                                 'expense_currency_exchange_account_id': company.expense_currency_exchange_account_id and company.expense_currency_exchange_account_id.id})
+        return res
 
 class account_voucher(osv.osv):
     def _check_paid(self, cr, uid, ids, name, args, context=None):
