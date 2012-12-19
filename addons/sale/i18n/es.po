@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-17 18:38+0000\n"
+"PO-Revision-Date: 2012-12-18 18:24+0000\n"
 "Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-18 05:01+0000\n"
-"X-Generator: Launchpad (build 16372)\n"
+"X-Launchpad-Export-Date: 2012-12-19 05:16+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_config_settings
@@ -100,6 +100,13 @@ msgid ""
 "The 'Waiting Schedule' status is set when the invoice is confirmed           "
 "    but waiting for the scheduler to run on the order date."
 msgstr ""
+"Indica el estado del presupuesto o del pedido de venta.\n"
+"El estado de excepción se establece automáticamente cuando ocurre una "
+"operación de cancelación en la validación de la factura (excepción de "
+"factura) o en el proceso de albaranado (excepción de envío).\n"
+"El estado 'Esperando fecha planificada' se establece cuando la factura está "
+"confirmada, pero se espera a que el planificador se ejecute en la fecha de "
+"pedido establecida."
 
 #. module: sale
 #: field:sale.order,project_id:0
@@ -197,6 +204,11 @@ msgid ""
 "user-wise as well as month wise.\n"
 "                This installs the module account_analytic_analysis."
 msgstr ""
+"Para modificar la vista de contabilidad analítica para mostrar datos "
+"importantes para el gestor de proyecto de compañías de servicios.\n"
+"Puede también ver el informe de resumen de contabilidad analítica por "
+"usuario y por mes.\n"
+"Esto instala el módulo 'account_analytica_analysis'."
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
@@ -296,6 +308,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"Ésta es una lista de cada línea de pedido de venta a ser facturada. Puede "
+"facturar pedidos de venta parcialmente, por líneas de pedido de venta. No "
+"necesita esta lista si factura desde las órdenes de entrega o si factura las "
+"ventas totalmente.\n"
+"</p>\n"
+"            "
 
 #. module: sale
 #: view:sale.order:0
@@ -481,6 +500,8 @@ msgid ""
 "There is no Fiscal Position defined or Income category account defined for "
 "default properties of Product categories."
 msgstr ""
+"No hay posición fiscal definida o categoría de cuenta de ingresos definida "
+"para las propiedades por defecto de las categorías de producto."
 
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
@@ -711,12 +732,22 @@ msgid ""
 "             \n"
 "* The 'Cancelled' status is set when a user cancel the sales order related."
 msgstr ""
+"* El estado 'Borrador' se establece cuando el pedido de venta relacionado "
+"está como borrador.\n"
+"* El estado 'Confirmado' se establece cuando el pedido de venta relacionado "
+"se confirma.\n"
+"* El estado de excepción se establece cuando el pedido de venta relacionado "
+"está en uno de los estados de excepción.\n"
+"* El estado 'Realizado' cuando todas las líneas de pedido de venta han sido "
+"albaranadas.\n"
+"* El estado 'Cancelado' se establece cuando un usuario cancela el pedido de "
+"venta asociado."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:92
 #, python-format
 msgid "There is no income account defined as global property."
-msgstr ""
+msgstr "No hay cuenta de ingresos definida como propiedad global."
 
 #. module: sale
 #: code:addons/sale/sale.py:984
@@ -729,7 +760,7 @@ msgstr "¡Error de configuración!"
 #. module: sale
 #: view:sale.order:0
 msgid "Send by Email"
-msgstr ""
+msgstr "Enviar por correo electrónico"
 
 #. module: sale
 #: code:addons/sale/res_config.py:89
@@ -754,6 +785,8 @@ msgid ""
 "To allow your salesman to make invoices for sale order lines using the menu "
 "'Lines to Invoice'."
 msgstr ""
+"Permitir a su comercial realizar facturas para las líneas de pedido venta "
+"usando el menú 'Líneas a facturar'."
 
 #. module: sale
 #: view:sale.report:0
@@ -764,7 +797,7 @@ msgstr "Empresa"
 #. module: sale
 #: view:sale.advance.payment.inv:0
 msgid "Create and View Invoice"
-msgstr ""
+msgstr "Crear y ver factura"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_shop_form
@@ -779,6 +812,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Pulse para definir una nueva tienda.\n"
+"</p><p>\n"
+"Cada presupuesto o pedido de venta debe estar enlazado con una tienda. La "
+"tienda define el almacén desde el que el producto serás entregado para cada "
+"venta en particular.\n"
+"</p>\n"
+"            "
 
 #. module: sale
 #: report:sale.order:0
@@ -811,7 +852,7 @@ msgstr "Categoría de producto"
 #: code:addons/sale/sale.py:555
 #, python-format
 msgid "Cannot cancel this sales order!"
-msgstr ""
+msgstr "¡No se puede cancelar este pedido de venta!"
 
 #. module: sale
 #: view:sale.order:0
@@ -824,6 +865,7 @@ msgstr "Volver a Crear factura"
 msgid ""
 "In order to delete a confirmed sale order, you must cancel it before !"
 msgstr ""
+"¡Para eliminar un pedido de venta confirmado, debe cancelarlo primero!"
 
 #. module: sale
 #: report:sale.order:0
@@ -833,7 +875,7 @@ msgstr "Impuestos :"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "On Demand"
-msgstr ""
+msgstr "Bajo demanda"
 
 #. module: sale
 #: field:sale.order,currency_id:0
@@ -867,6 +909,10 @@ msgid ""
 "                You may have to create it and set it as a default value on "
 "this field."
 msgstr ""
+"Seleccione un producto de tipo servicio que es llamado 'Avance de "
+"producto'.\n"
+"Tal vez tenga que crearlo y establecerlo como valor por defecto en este "
+"campo."
 
 #. module: sale
 #: help:sale.config.settings,module_warning:0
@@ -876,6 +922,11 @@ msgid ""
 "Example: Product: this product is deprecated, do not purchase more than 5.\n"
 "                Supplier: don't forget to ask for an express delivery."
 msgstr ""
+"Permite configurar notificaciones en los productos y lanzarlas cuando un "
+"usuario quiere vender un producto dado o a un cliente determinado.\n"
+"Ejemplo: \n"
+"Producto: Este producto está obsoleto. No vender más de 5.\n"
+"Cliente: No olvidar preguntar por envío urgente."
 
 #. module: sale
 #: code:addons/sale/sale.py:979
@@ -938,6 +989,9 @@ msgid ""
 "Cannot find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
 msgstr ""
+"No se puede encontrar una línea de tarifa coincidente con este producto y "
+"cantidad.\n"
+"Tiene que cambiar o bien el producto, la cantidad, o la tarifa."
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_invoice0
@@ -960,6 +1014,9 @@ msgid ""
 "Manage Related Stock.\n"
 "                    This installs the module sale_stock."
 msgstr ""
+"Permite realizar un presupuesto o un pedido de venta usando diferentes "
+"políticas de pedido y gestionar el stock relacionado.\n"
+"Esto instala el módulo 'sale_stock'."
 
 #. module: sale
 #: model:email.template,subject:sale.email_template_edi_sale
@@ -984,7 +1041,7 @@ msgstr "Número de presupuesto"
 #. module: sale
 #: selection:sale.order.line,type:0
 msgid "on order"
-msgstr "bajo pedido"
+msgstr "Bajo pedido"
 
 #. module: sale
 #: report:sale.order:0
@@ -1005,28 +1062,29 @@ msgstr "Estado borrador del pedido de venta"
 #: code:addons/sale/sale.py:647
 #, python-format
 msgid "Quotation for <em>%s</em> <b>created</b>."
-msgstr ""
+msgstr "Presupuesto para <em>%s</em> <b>crado</b>."
 
 #. module: sale
 #: help:sale.order,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Mensajes e historial de comunicación"
 
 #. module: sale
 #: view:sale.order:0
 msgid "New Copy of Quotation"
-msgstr ""
+msgstr "Nueva copia de presupuesto"
 
 #. module: sale
 #: code:addons/sale/sale.py:1007
 #, python-format
 msgid "Cannot delete a sales order line which is in state '%s'."
 msgstr ""
+"No se puede eliminar una línea de pedido de venta que está en estado '%s'."
 
 #. module: sale
 #: model:res.groups,name:sale.group_mrp_properties
 msgid "Properties on lines"
-msgstr ""
+msgstr "Propiedades en las líneas"
 
 #. module: sale
 #: code:addons/sale/sale.py:888
@@ -1035,6 +1093,8 @@ msgid ""
 "Before choosing a product,\n"
 " select a customer in the sales form."
 msgstr ""
+"Antes de escoger un producto, seleccione un cliente en el formulario de "
+"ventas."
 
 #. module: sale
 #: view:sale.order:0
@@ -1055,7 +1115,7 @@ msgstr "Confirmar presupuesto"
 #: model:ir.actions.act_window,name:sale.action_order_line_tree2
 #: model:ir.ui.menu,name:sale.menu_invoicing_sales_order_lines
 msgid "Order Lines to Invoice"
-msgstr ""
+msgstr "Pedidos de venta a facturar"
 
 #. module: sale
 #: view:sale.order:0
@@ -1067,7 +1127,7 @@ msgstr "Agrupar por..."
 #. module: sale
 #: view:sale.config.settings:0
 msgid "Product Features"
-msgstr ""
+msgstr "Características de los productos"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1079,7 +1139,7 @@ msgstr "Esperando fecha planificada"
 #: view:sale.order.line:0
 #: field:sale.report,product_uom:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Unidad de medida"
 
 #. module: sale
 #: field:sale.order.line,type:0
@@ -1089,18 +1149,18 @@ msgstr "Método abastecimiento"
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoice the whole sale order"
-msgstr ""
+msgstr "Facturar el pedido de venta completo"
 
 #. module: sale
 #: view:sale.order:0
 #: field:sale.order,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Mensajes sin leer"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Draft Quotation"
-msgstr ""
+msgstr "Presupuesto borrador"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1130,6 +1190,12 @@ msgid ""
 "available.\n"
 "                This installs the module analytic_user_function."
 msgstr ""
+"Permite definir cuál es la función por defecto de un usuario específico en "
+"una cuenta dad.\n"
+"Se usa en su mayoría cuando un usuario introduce su parte de horas, para que "
+"los campos sean rellenados automáticamente. Pero la posibilidad de cambiar "
+"estos valores está aún disponible.\n"
+"Esto instala el módulo 'analytic_user_function'."
 
 #. module: sale
 #: help:sale.order,create_date:0
@@ -1148,7 +1214,7 @@ msgstr "Crear facturas"
 #: code:addons/sale/sale.py:1007
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "¡Acción no válida!"
 
 #. module: sale
 #: report:sale.order:0
@@ -1185,7 +1251,7 @@ msgstr "Realizar facturas"
 #. module: sale
 #: field:res.partner,sale_order_count:0
 msgid "# of Sales Order"
-msgstr ""
+msgstr "Nº de pedido de venta"
 
 #. module: sale
 #: view:sale.order:0
@@ -1209,11 +1275,13 @@ msgid ""
 "After clicking 'Show Lines to Invoice', select lines to invoice and create "
 "the invoice from the 'More' dropdown menu."
 msgstr ""
+"Después de hacer clic en 'Mostrar líneas a facturar', seleccione las líneas "
+"a facturar y cree la factura desde el menú desplegable 'Más'."
 
 #. module: sale
 #: help:sale.order,invoice_exists:0
 msgid "It indicates that sale order has at least one invoice."
-msgstr ""
+msgstr "Indica que el pedido de venta tiene al menos una factura."
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1231,16 +1299,17 @@ msgstr "Agrupar las facturas"
 #, python-format
 msgid "Quotation for <em>%s</em> <b>converted</b> to Sale Order of %s %s."
 msgstr ""
+"Presupuesto para <em>%s</em> <b>convertido</b> a pedido de venta de %s %s."
 
 #. module: sale
 #: view:sale.advance.payment.inv:0
 msgid "Invoice Sale Order"
-msgstr ""
+msgstr "Facturar pedido de venta"
 
 #. module: sale
 #: view:sale.config.settings:0
 msgid "Contracts Management"
-msgstr ""
+msgstr "Gestión de contratos"
 
 #. module: sale
 #: view:sale.report:0
@@ -1406,11 +1475,114 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
+"255, 255); \">\n"
+"\n"
+"    <p>Hola ${object.partner_id.name and ' ' or ''}${object.partner_id.name "
+"or ''},</p>\n"
+"    \n"
+"    <p>Aquí tiene su ${object.state in ('draft', 'sent') and 'presupuesto' "
+"or 'confirmación de pedido'} de ${object.company_id.name}: </p>\n"
+"\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERENCIAS</strong><br />\n"
+"       &nbsp;&nbsp;Número de pedido: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;Total del pedido: <strong>${object.amount_total} "
+"${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Fecha del pedido: ${object.date_order}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;Referencia del pedido: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.client_order_ref:\n"
+"       &nbsp;&nbsp;Su referencia: ${object.client_order_ref}<br />\n"
+"       % endif\n"
+"       % if object.user_id:\n"
+"       &nbsp;&nbsp;Su contacto: <a href=\"mailto:${object.user_id.email or "
+"''}?subject=Pedido%20${object.name}\">${object.user_id.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    % if object.order_policy in ('prepaid','manual') and "
+"object.company_id.paypal_account and object.state != 'draft':\n"
+"    <%\n"
+"    comp_name = quote(object.company_id.name)\n"
+"    order_name = quote(object.name)\n"
+"    paypal_account = quote(object.company_id.paypal_account)\n"
+"    order_amount = quote(str(object.amount_total))\n"
+"    cur_name = quote(object.pricelist_id.currency_id.name)\n"
+"    paypal_url = \"https://www.paypal.com/cgi-"
+"bin/webscr?cmd=_xclick&amp;business=%s&amp;item_name=%s%%20Order%%20%s\" \\\n"
+"       "
+"\"&amp;invoice=%s&amp;amount=%s&amp;currency_code=%s&amp;button_subtype=servi"
+"ces&amp;no_note=1\" \\\n"
+"       \"&amp;bn=OpenERP_Order_PayNow_%s\" % \\\n"
+"       "
+"(paypal_account,comp_name,order_name,order_name,order_amount,cur_name,cur_nam"
+"e)\n"
+"    %>\n"
+"    <br/>\n"
+"    <p>También es posible pagar directamente con Paypal:</p>\n"
+"        <a style=\"margin-left: 120px;\" href=\"${paypal_url}\">\n"
+"            <img class=\"oe_edi_paypal_button\" "
+"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"        </a>\n"
+"    % endif\n"
+"\n"
+"    <br/>\n"
+"    <p>Si tiene alguna pregunta, no dude en contactar con nosotros.</p>\n"
+"    <p>Gracias por elegir a ${object.company_id.name or 'us'}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#FFF;\">\n"
+"            <strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % "
+"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
+"or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                Teléfono:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: field:sale.config.settings,group_sale_pricelist:0
 msgid "Use pricelists to adapt your price per customers"
-msgstr ""
+msgstr "Usar tarifas para adaptar los precios a cada cliente"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1424,6 +1596,9 @@ msgid ""
 "invoice).                                              You have to choose  "
 "if you want your invoice based on ordered "
 msgstr ""
+"El pedido de venta creará automáticamente una propuesta de factura (factura "
+"borrador). Tiene que escoger si quiere su factura basada en lo pedido o en "
+"lo enviado. "
 
 #. module: sale
 #: code:addons/sale/sale.py:435
@@ -1447,6 +1622,10 @@ msgid ""
 "between the Unit Price and Cost Price.\n"
 "                This installs the module sale_margin."
 msgstr ""
+"Añade el campo 'Margen' en los pedidos de venta, que informa de la "
+"rentabilidad calculando la diferencia entre el precio unitario y el precio "
+"de coste.\n"
+"Esto instala el módulo 'sale_margin'."
 
 #. module: sale
 #: report:sale.order:0
@@ -1499,7 +1678,7 @@ msgstr "Producto"
 #. module: sale
 #: field:sale.config.settings,group_invoice_so_lines:0
 msgid "Generate invoices based on the sale order lines"
-msgstr ""
+msgstr "Generar facturas basadas en las líneas del pedido de venta"
 
 #. module: sale
 #: help:sale.order,order_policy:0
@@ -1511,6 +1690,12 @@ msgid ""
 "Before delivery: A draft invoice is created from the sales order and must be "
 "paid before the products can be delivered."
 msgstr ""
+"Bajo demanda: Se puede crear una factura borrador desde el pedido de venta "
+"cuando sea necesario.\n"
+"Sobre la orden de entrega: Se puede crear una factura borrador desde la "
+"orden de entrega cuando los productos hayan sido entregados.\n"
+"Antes de la entrega: Se crea una factura borrador del pedido de venta, y "
+"debe ser pagada antes de que los productos puedan ser entregados."
 
 #. module: sale
 #: view:account.invoice.report:0
@@ -1527,7 +1712,7 @@ msgstr "Facturar las"
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Fixed price (deposit)"
-msgstr ""
+msgstr "Precio fijo (depósito)"
 
 #. module: sale
 #: report:sale.order:0
@@ -1548,7 +1733,7 @@ msgstr "Manual en proceso"
 #. module: sale
 #: model:ir.actions.server,name:sale.actions_server_sale_order_unread
 msgid "Sale: Mark unread"
-msgstr ""
+msgstr "Ventas: Marcar como no leídos"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1558,7 +1743,7 @@ msgstr "Pedido"
 #. module: sale
 #: view:sale.order:0
 msgid "Confirm Sale"
-msgstr ""
+msgstr "Confirmar venta"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleinvoice0
@@ -1586,17 +1771,17 @@ msgstr ""
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Some order lines"
-msgstr ""
+msgstr "Algunas líneas de pedido"
 
 #. module: sale
 #: view:res.partner:0
 msgid "sale.group_delivery_invoice_address"
-msgstr ""
+msgstr "Grupo de dirección de entrega de venta"
 
 #. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
 msgid "Discount on lines"
-msgstr ""
+msgstr "Descuentos en líneas"
 
 #. module: sale
 #: field:sale.order,client_order_ref:0
@@ -1616,6 +1801,8 @@ msgid ""
 "                        will create a draft invoice that can be modified\n"
 "                        before validation."
 msgstr ""
+"Seleccione cómo quiere facturar este pedido. Esto creará una factura "
+"borrador que puede ser modificada antes de la validación."
 
 #. module: sale
 #: view:board.board:0
@@ -1631,6 +1818,11 @@ msgid ""
 "                Use Some Order Lines to invoice a selection of the sale "
 "order lines."
 msgstr ""
+"Use 'Todo' para crear la factura final.\n"
+"Use 'Porcentaje' para facturar un porcentaje del importe total.\n"
+"Use 'Precio fijo' para facturar una cantidad específica como avance.\n"
+"Use 'Algunas líneas de pedido' para facturar una selección de las líneas de "
+"pedido de venta."
 
 #. module: sale
 #: help:sale.config.settings,module_account_analytic_analysis:0
@@ -1644,6 +1836,11 @@ msgid ""
 "invoice automatically.\n"
 "            It installs the account_analytic_analysis module."
 msgstr ""
+"Permite definir las condiciones del contrato de cliente: método de "
+"facturación (precio fijo, con parte de horas, factura avanzada), el precio "
+"exacto (650 €/día de un desarrollador), la duración (contrato de soporte de "
+"un año). Podrá seguir el progreso del contrato y facturar automáticamente.\n"
+"Esto instalará el módulo 'account_analytic_analysis'."
 
 #. module: sale
 #: model:email.template,report_name:sale.email_template_edi_sale
@@ -1651,6 +1848,8 @@ msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
 msgstr ""
+"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
+"'borrador' or ''}"
 
 #. module: sale
 #: help:sale.order,date_confirm:0
@@ -1661,7 +1860,7 @@ msgstr "Fecha en la que se confirma el pedido de venta."
 #: code:addons/sale/sale.py:556
 #, python-format
 msgid "First cancel all invoices attached to this sales order."
-msgstr ""
+msgstr "Primero cancele todas las facturas relativas a este pedido de venta."
 
 #. module: sale
 #: field:sale.order,company_id:0
@@ -1697,27 +1896,27 @@ msgstr "¡No se ha definido un cliente!"
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
 msgid "Delivery Address"
-msgstr ""
+msgstr "Dirección de entrega"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Sale to Invoice"
-msgstr ""
+msgstr "Venta a facturar"
 
 #. module: sale
 #: view:sale.config.settings:0
 msgid "Warehouse Features"
-msgstr ""
+msgstr "Características del almacén"
 
 #. module: sale
 #: field:sale.order,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Mensajes"
 
 #. module: sale
 #: field:sale.config.settings,module_project:0
 msgid "Project"
-msgstr ""
+msgstr "Proyecto"
 
 #. module: sale
 #: code:addons/sale/sale.py:354
@@ -1727,7 +1926,7 @@ msgstr ""
 #: code:addons/sale/sale.py:803
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "¡Error!"
 
 #. module: sale
 #: report:sale.order:0
@@ -1741,6 +1940,9 @@ msgid ""
 "replenishment.\n"
 "On order: When needed, the product is purchased or produced."
 msgstr ""
+"Desde stock: Cuando se necesite, el producto se cogerá del stock o se "
+"esperará a su reposición.\n"
+"Bajo pedido: Cuando se necesite, el producto se compra o se fabrica."
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1757,12 +1959,12 @@ msgstr "Buscar líneas no facturadas"
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Quotation Sent"
-msgstr ""
+msgstr "Presupuesto enviado"
 
 #. module: sale
 #: model:ir.model,name:sale.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr ""
+msgstr "Asistente de redacción de correo electrónico."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_shop_form
@@ -1783,11 +1985,12 @@ msgstr "Fecha confirmación"
 #, python-format
 msgid "Please define sales journal for this company: \"%s\" (id:%d)."
 msgstr ""
+"Defina por favor un diario de ventas para esta compañía: \"%s\" (id: %d)."
 
 #. module: sale
 #: view:sale.config.settings:0
 msgid "Contract Features"
-msgstr ""
+msgstr "Características del contrato"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order
@@ -1817,7 +2020,7 @@ msgstr "Confirmado"
 #. module: sale
 #: field:sale.order,note:0
 msgid "Terms and conditions"
-msgstr ""
+msgstr "Términos y condiciones"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_confirm0
@@ -1827,7 +2030,7 @@ msgstr "Confirmar"
 #. module: sale
 #: field:sale.order,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Seguidores"
 
 #. module: sale
 #: view:sale.order:0
@@ -1850,12 +2053,12 @@ msgstr "Líneas pedido de ventas"
 #. module: sale
 #: view:sale.config.settings:0
 msgid "Default Options"
-msgstr ""
+msgstr "Opciones por defecto"
 
 #. module: sale
 #: field:account.config.settings,group_analytic_account_for_sales:0
 msgid "Analytic accounting for sales"
-msgstr ""
+msgstr "Contabilidad analítica para ventas"
 
 #. module: sale
 #: code:addons/sale/edi/sale_order.py:139
@@ -1883,16 +2086,26 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Pulse para crear un presupuesto o un pedido de venta para este cliente.\n"
+"</p><p>\n"
+"OpenERP le ayudará a gestionar de manera eficiente el flujo completo de "
+"ventas: presupuesto, pedido de venta, entrega, factura y pago.\n"
+"</p><p>\n"
+"Las características sociales le permite organizar discusiones en cada pedido "
+"de venta, y permite a los clientes seguir la evolución del pedido de venta.\n"
+"</p>\n"
+"            "
 
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "On Delivery Order"
-msgstr ""
+msgstr "Sobre la orden de entrega"
 
 #. module: sale
 #: view:sale.report:0
 msgid "Reference Unit of Measure"
-msgstr ""
+msgstr "Unidad de medida de referencia"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -1913,6 +2126,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Pulse para crear un presupuesto, el primer paso de una nueva venta.\n"
+"</p><p>\n"
+"OpenERP le ayuda a gestionar eficientemente el flujo completo de ventas: "
+"desde el presupuesto al pedido de venta, la entrega, la facturación y su "
+"pago.\n"
+"</p><p>\n"
+"Las características sociales le permiten organizar discusiones en cada "
+"pedido de venta, y permiten que sus clientes puedan seguir la evolución del "
+"pedido de venta.\n"
+"</p>\n"
+"            "
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:111
@@ -1956,6 +2181,7 @@ msgstr "Diciembre"
 #, python-format
 msgid "There is no income account defined for this product: \"%s\" (id:%d)."
 msgstr ""
+"No hay cuenta de ingresos definida para este producto: \"%s\" (id: %d)."
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1984,7 +2210,7 @@ msgstr "Avanzar factura"
 #. module: sale
 #: model:ir.actions.client,name:sale.action_client_sale_menu
 msgid "Open Sale Menu"
-msgstr ""
+msgstr "Abrir menú de ventas"
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -1994,7 +2220,7 @@ msgstr "Borrador"
 #. module: sale
 #: field:sale.config.settings,module_sale_stock:0
 msgid "Trigger delivery orders automatically from sale orders"
-msgstr ""
+msgstr "Lanzar órdenes de entrega automáticamente desde los pedidos de venta"
 
 #. module: sale
 #: help:sale.order,amount_tax:0
@@ -2004,7 +2230,7 @@ msgstr "El importe de los impuestos."
 #. module: sale
 #: view:sale.order:0
 msgid "Sale Order "
-msgstr ""
+msgstr "Pedido de venta "
 
 #. module: sale
 #: view:sale.order.line:0
@@ -2038,7 +2264,7 @@ msgstr "Noviembre"
 #: field:sale.order,message_comment_ids:0
 #: help:sale.order,message_comment_ids:0
 msgid "Comments and emails"
-msgstr ""
+msgstr "Comentarios y correos electrónicos"
 
 #. module: sale
 #: field:sale.advance.payment.inv,product_id:0
@@ -2049,6 +2275,8 @@ msgstr "Producto avanzado"
 #: help:sale.order.line,sequence:0
 msgid "Gives the sequence order when displaying a list of sales order lines."
 msgstr ""
+"Indica el orden de secuencia cuando se muestra una lista de líneas de "
+"pedidos de venta."
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -2063,13 +2291,13 @@ msgstr "Pedidos de ventas en proceso"
 #. module: sale
 #: field:sale.config.settings,timesheet:0
 msgid "Prepare invoices based on timesheets"
-msgstr ""
+msgstr "Preparar facturas basadas en los partes de horas"
 
 #. module: sale
 #: code:addons/sale/sale.py:655
 #, python-format
 msgid "Sale Order for <em>%s</em> <b>cancelled</b>."
-msgstr ""
+msgstr "Pedido de venta para <em>%s</em> <b>cancelado</b>."
 
 #. module: sale
 #: help:sale.order,origin:0
@@ -2086,12 +2314,12 @@ msgstr "Retraso realización"
 #. module: sale
 #: field:sale.report,state:0
 msgid "Order Status"
-msgstr ""
+msgstr "Estado del pedido"
 
 #. module: sale
 #: view:sale.advance.payment.inv:0
 msgid "Show Lines to Invoice"
-msgstr ""
+msgstr "Mostrar líneas a facturar"
 
 #. module: sale
 #: field:sale.report,date:0
@@ -2123,12 +2351,12 @@ msgstr "¡No hay tarifa! "
 #: model:ir.actions.act_window,name:sale.action_orders
 #: model:ir.ui.menu,name:sale.menu_sale_order
 msgid "Sale Orders"
-msgstr ""
+msgstr "Pedidos de venta"
 
 #. module: sale
 #: field:sale.config.settings,module_account_analytic_analysis:0
 msgid "Use contracts management"
-msgstr ""
+msgstr "Usar gestión de contratos"
 
 #. module: sale
 #: help:sale.order,invoiced:0
@@ -2154,7 +2382,7 @@ msgstr "¿Desea crear la(s) factura(s)?"
 #. module: sale
 #: view:sale.order:0
 msgid "Order Number"
-msgstr ""
+msgstr "Número de pedido"
 
 #. module: sale
 #: view:sale.order:0
@@ -2186,6 +2414,8 @@ msgid ""
 "with\n"
 "                        your customer."
 msgstr ""
+"Usar contratos para gestionar sus servicios con facturación múltiple como "
+"parte del mismo contrato con su cliente."
 
 #. module: sale
 #: view:sale.order:0
@@ -2196,7 +2426,7 @@ msgstr "Buscar pedido de venta"
 #. module: sale
 #: field:sale.advance.payment.inv,advance_payment_method:0
 msgid "What do you want to invoice?"
-msgstr ""
+msgstr "¿Qué quiere facturar?"
 
 #. module: sale
 #: field:sale.order.line,sequence:0
@@ -2212,7 +2442,7 @@ msgstr "Plazo de pago"
 #. module: sale
 #: help:account.config.settings,module_sale_analytic_plans:0
 msgid "This allows install module sale_analytic_plans."
-msgstr ""
+msgstr "Permite instalar el módulo 'sale_analytic_plans'."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all
@@ -2250,7 +2480,7 @@ msgstr "Año"
 #. module: sale
 #: view:sale.order.line.make.invoice:0
 msgid "Do you want to invoice the selected sale order lines?"
-msgstr ""
+msgstr "¿Desea facturar las líneas de pedido de venta seleccionadas?"
 
 #~ msgid "Configure Sale Order Logistic"
 #~ msgstr "Configurar la logística de los pedidos de venta"

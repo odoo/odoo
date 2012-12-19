@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-11-29 14:54+0000\n"
-"Last-Translator: Numérigraphe <Unknown>\n"
+"PO-Revision-Date: 2012-12-18 18:25+0000\n"
+"Last-Translator: Nicolas JEUDY <njeudy@tuxservices.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:11+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-19 05:15+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML non valide pour l'architecture de la vue !"
@@ -35,7 +35,7 @@ msgstr "Livraison par la poste"
 #. module: delivery
 #: view:delivery.grid.line:0
 msgid " in Function of "
-msgstr ""
+msgstr " en fonction de "
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -70,7 +70,7 @@ msgstr "Volume"
 #. module: delivery
 #: view:delivery.carrier:0
 msgid "Zip"
-msgstr ""
+msgstr "Code Postal"
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
@@ -106,12 +106,32 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliquez pour créer un nouveau mode de livraison.\n"
+"              </p><p>\n"
+"                Chaque transporteur (par exemple UPS) peut avoir plusieurs "
+"modes\n"
+"                de livraison (UPS Express, UPS Standard, etc.), chacun "
+"possédant ses\n"
+"                propres règles de tarification.\n"
+"              </p><p>\n"
+"                Les différents modes de livraison permettent de calculer "
+"automatiquement\n"
+"                les frais de port, selon les paramètres que vous définissez, "
+"dans les commandes\n"
+"                de vente (fondées sur les devis), ou sur les factures "
+"(créées à partir de bons de\n"
+"                livraison).\n"
+"              </p>\n"
+"            "
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:221
 #, python-format
 msgid "No line matched this product or order in the chosen delivery grid."
 msgstr ""
+"Aucune ligne ne correspond à ce produit ou à cette commande dans la grille "
+"de livraison choisie."
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
@@ -153,6 +173,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliquez pour créer une liste de prix de livraison pour une "
+"région particulière.\n"
+"              </p><p>\n"
+"                La liste de prix de livraison permet de calculer le coût et\n"
+"                le prix de vente de la livraison selon le poids de\n"
+"                 l'article et d'autres critères. Vous pouvez définir "
+"différentes listes de prix\n"
+"                pour chaque méthode de livraison : par pays ou, dans un "
+"pays\n"
+"                particulier,  dans une zone définie par une série de codes "
+"postaux.\n"
+"              </p>\n"
+"            "
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -172,7 +206,7 @@ msgstr "Montant"
 #. module: delivery
 #: view:sale.order:0
 msgid "Add in Quote"
-msgstr ""
+msgstr "Ajouter au devis"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -225,7 +259,7 @@ msgstr "Définition des tarifs"
 #: code:addons/delivery/stock.py:89
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Attention !"
 
 #. module: delivery
 #: field:delivery.grid.line,operator:0
@@ -245,7 +279,7 @@ msgstr "Commande de ventes"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking_out
 msgid "Delivery Orders"
-msgstr ""
+msgstr "Bons de livraison"
 
 #. module: delivery
 #: view:sale.order:0
@@ -253,6 +287,9 @@ msgid ""
 "If you don't 'Add in Quote', the exact price will be computed when invoicing "
 "based on delivery order(s)."
 msgstr ""
+"Si vous ne cochez pas « Ajouter au devis », les frais de livraison exacts "
+"seront calculés lors de la génération de la facture, à partir du bon de "
+"livraison."
 
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
@@ -300,7 +337,7 @@ msgstr ""
 #. module: delivery
 #: field:delivery.carrier,free_if_more_than:0
 msgid "Free If Order Total Amount Is More Than"
-msgstr ""
+msgstr "Gratuit si le montant total de la commande est supérieur à"
 
 #. module: delivery
 #: field:delivery.grid.line,grid_id:0
@@ -468,7 +505,7 @@ msgstr "Gratuit si plus de %.2f"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking_in
 msgid "Incoming Shipments"
-msgstr ""
+msgstr "Livraisons à recevoir"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -582,7 +619,7 @@ msgstr "Prix de vente"
 #. module: delivery
 #: view:stock.picking.out:0
 msgid "Print Delivery Order"
-msgstr ""
+msgstr "Imprimer le bordereau de livraison"
 
 #. module: delivery
 #: view:delivery.grid:0
