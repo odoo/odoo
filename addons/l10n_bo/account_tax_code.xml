@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+  <data>
+	<record model="account.tax.code.template" id="vat_code_tax">
+		<field name="name">Bolivia Impuestos</field>
+	</record>
+		<record model="account.tax.code.template" id="vat_code_base">
+			<field name="name">Base Imponible</field>
+			<field name="parent_id" ref="vat_code_tax"/>
+		</record>
+			<record model="account.tax.code.template" id="vat_code_base_sale_parent">
+				<field name="name">Base Imponible - Ventas</field>
+				<field name="parent_id" ref="vat_code_base"/>
+			</record>
+				<record model="account.tax.code.template" id="vat_code_base_sale">
+					<field name="name">Impuesto al Valor Agregado con IVA</field>
+					<field name="parent_id" ref="vat_code_base_sale_parent"/>
+				</record>
+				<record model="account.tax.code.template" id="vat_code_base_sale_exonerada">
+					<field name="name">Ventas NO Gravadas (Exoneradas)</field>
+					<field name="parent_id" ref="vat_code_base_sale_parent"/>
+				</record>
+				<record model="account.tax.code.template" id="vat_code_base_sale_fuera">
+					<field name="name">Ventas Gravadas Fuera de Ámbito</field>
+					<field name="parent_id" ref="vat_code_base_sale_parent"/>
+				</record>
+			<record model="account.tax.code.template" id="vat_code_base_purchase_parent">
+				<field name="name">Base Imponible - Compras</field>
+				<field name="parent_id" ref="vat_code_base"/>
+			</record>
+				<record model="account.tax.code.template" id="vat_code_base_purchase">
+					<field name="name">Compras Gravadas con IVA</field>
+					<field name="parent_id" ref="vat_code_base_purchase_parent"/>
+				</record>
+				<record model="account.tax.code.template" id="vat_code_base_purchase_exonerada">
+					<field name="name">Compras NO Gravadas (Exoneradas)</field>
+					<field name="parent_id" ref="vat_code_base_purchase_parent"/>
+				</record>
+				<record model="account.tax.code.template" id="vat_code_base_purchase_fuera">
+					<field name="name">Compras Gravadas Fuera de Ámbito</field>
+					<field name="parent_id" ref="vat_code_base_purchase_parent"/>
+				</record>
+	
+		<record model="account.tax.code.template" id="vat_code_IVA">
+			<field name="name">Impuesto al Valor Agregado (IVA) Total a Pagar</field>
+			<field name="parent_id" ref="vat_code_tax"/>
+		</record>
+			<record model="account.tax.code.template" id="vat_code_IVA_pay_parent">
+				<field name="name">Impuesto Pagado</field>
+				<field name="parent_id" ref="vat_code_IVA"/>
+			</record>
+				<record model="account.tax.code.template" id="vat_code_IVA_pay">
+					<field name="name">Impuesto Pagado IVA</field>
+					<field name="parent_id" ref="vat_code_IVA_pay_parent"/>
+                    <field name="sign">-1</field>
+				</record>
+				<record model="account.tax.code.template" id="vat_code_IVA_pay_exonerado">
+					<field name="name">Impuesto Pagado de Exonerados al IVA</field>
+					<field name="parent_id" ref="vat_code_IVA_pay_parent"/>
+                    <field name="sign">-1</field>
+				</record>
+				<record model="account.tax.code.template" id="vat_code_IVA_pay_fuera">
+					<field name="name">Impuesto Pagado Fuera de Ámbito</field>
+					<field name="parent_id" ref="vat_code_IVA_pay_parent"/>
+                    <field name="sign">-1</field>
+				</record>
+			<record model="account.tax.code.template" id="vat_code_IVA_receive_parent">
+				<field name="name">Impuesto Cobrado</field>
+				<field name="parent_id" ref="vat_code_IVA"/>
+			</record>
+				<record model="account.tax.code.template" id="vat_code_IVA_receive">
+					<field name="name">Impuesto Cobrado IVA</field>
+					<field name="parent_id" ref="vat_code_IVA_receive_parent"/>
+				</record>
+				<record model="account.tax.code.template" id="vat_code_IVA_receive_exonerado">
+					<field name="name">Impuesto Cobrado de Exonerados al IVA</field>
+					<field name="parent_id" ref="vat_code_IVA_receive_parent"/>
+				</record>
+				<record model="account.tax.code.template" id="vat_code_IVA_receive_fuera">
+					<field name="name">Impuesto Cobrado Fuera de Ámbito</field>
+					<field name="parent_id" ref="vat_code_IVA_receive_parent"/>
+				</record>
+	
+		<record model="account.tax.code.template" id="vat_code_transacciones">
+			<field name="name">Impuesto a las Transacciones IT (3%)</field>
+			<field name="parent_id" ref="vat_code_tax"/>
+		</record>
+		<record model="account.tax.code.template" id="vat_code_ganancias">
+			<field name="name">Impuesto a las Utilidades de la Empresa IUE (25%)</field>
+			<field name="parent_id" ref="vat_code_tax"/>
+		</record>
+  </data>
+</openerp>
