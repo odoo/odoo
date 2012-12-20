@@ -264,7 +264,7 @@ class mail_message(osv.Model):
         user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
         domain = [('partner_id', '=', user_pid), ('message_id', 'in', msg_ids)]
         if not create_missing:
-            domain += [('starred', '=', not read)]
+            domain += [('starred', '=', not starred)]
         notif_ids = notification_obj.search(cr, uid, domain, context=context)
 
         # all message have notifications: already set them as (un)starred
