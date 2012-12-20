@@ -399,6 +399,7 @@ class account_coda_import(osv.osv_memory):
             'context': action.context,
             'type': 'ir.actions.act_window',
             'search_view_id': action.search_view_id.id,
+            'views': [(v.view_id.id, v.view_mode) for v in action.view_ids]
         }
 
 
