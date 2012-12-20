@@ -224,23 +224,25 @@ class mail_message(osv.Model):
     # Notification API
     #------------------------------------------------------
 
-    def set_message_read(self, cr, uid, msg_ids, read, context=None):
+    def set_message_read(self, cr, uid, msg_ids, read, create_missing=True, context=None):
         """ Set messages as (un)read. Technically, the notifications related
             to uid are set to (un)read. If for some msg_ids there are missing
             notifications (i.e. due to load more or thread parent fetching),
             they are created.
 
             :param bool read: set notification as (un)read
+            :param bool create_missing: create notifications for missing entries
+                (i.e. when acting on displayed messages not notified)
         """
         notification_obj = self.pool.get('mail.notification')
         user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
-        notif_ids = notification_obj.search(cr, uid, [
-            ('partner_id', '=', user_pid),
-            ('message_id', 'in', msg_ids)
-            ], context=context)
+        domain = [('partner_id', '=', user_pid), ('message_id', 'in', msg_ids)]
+        if not create_missing:
+            domain += [('read', '=', not read)]
+        notif_ids = notification_obj.search(cr, uid, domain, context=context)
 
         # all message have notifications: already set them as (un)read
-        if len(notif_ids) == len(msg_ids):
+        if len(notif_ids) == len(msg_ids) or not create_missing:
             return notification_obj.write(cr, uid, notif_ids, {'read': read}, context=context)
 
         # some messages do not have notifications: find which one, create notification, update read status
@@ -250,23 +252,23 @@ class mail_message(osv.Model):
             notification_obj.create(cr, uid, {'partner_id': user_pid, 'read': read, 'message_id': msg_id}, context=context)
         return notification_obj.write(cr, uid, notif_ids, {'read': read}, context=context)
 
-    def set_message_starred(self, cr, uid, msg_ids, starred, context=None):
+    def set_message_starred(self, cr, uid, msg_ids, starred, create_missing=True, context=None):
         """ Set messages as (un)starred. Technically, the notifications related
-            to uid are set to (un)starred. If for some msg_ids there are missing
-            notifications (i.e. due to load more or thread parent fetching),
-            they are created.
+            to uid are set to (un)starred.
 
             :param bool starred: set notification as (un)starred
+            :param bool create_missing: create notifications for missing entries
+                (i.e. when acting on displayed messages not notified)
         """
         notification_obj = self.pool.get('mail.notification')
         user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
-        notif_ids = notification_obj.search(cr, uid, [
-            ('partner_id', '=', user_pid),
-            ('message_id', 'in', msg_ids)
-            ], context=context)
+        domain = [('partner_id', '=', user_pid), ('message_id', 'in', msg_ids)]
+        if not create_missing:
+            domain += [('starred', '=', not read)]
+        notif_ids = notification_obj.search(cr, uid, domain, context=context)
 
         # all message have notifications: already set them as (un)starred
-        if len(notif_ids) == len(msg_ids):
+        if len(notif_ids) == len(msg_ids) or not create_missing:
             notification_obj.write(cr, uid, notif_ids, {'starred': starred}, context=context)
             return starred
 
@@ -534,12 +536,6 @@ class mail_message(osv.Model):
         parent_list = parent_tree.items()
         parent_list = sorted(parent_list, key=lambda item: max([msg.get('id') for msg in item[1]]) if item[1] else item[0], reverse=True)
         message_list = [message for (key, msg_list) in parent_list for message in msg_list]
-
-        # if requested: mark messages as read
-        if context and context.get('mail_read_set_read'):
-            message_ids = [message.get('id') for message in message_list]
-            unread_notif_ids = notification_obj.search(cr, uid, [('read', '=', False), ('partner_id.user_ids', 'in', uid), ('message_id', 'in', message_ids)], context=context)
-            notification_obj.write(cr, uid, unread_notif_ids, {'read': True}, context=context)
 
         # get the child expandable messages for the tree
         self._message_read_dict_postprocess(cr, uid, message_list, message_tree, context=context)
