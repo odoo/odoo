@@ -776,7 +776,7 @@ class mail_thread(osv.AbstractModel):
         for partner in extra_email:
             part_ids = self.pool.get('res.partner').search(cr, uid, [('email', '=', partner)], context=context)
             if not part_ids:
-                part_ids = [self.pool.get('res.partner').name_create(cr, uid, partner, context=context)[0]]
+                part_ids = [self.pool.get('res.partner').name_create(cr, uid, partner, context=dict())[0]]
             self.message_subscribe(cr, uid, [thread_id], part_ids, context=context)
 
             message_ids = mail_message.search(cr, uid, [('email_from', '=', partner)], context=context)
