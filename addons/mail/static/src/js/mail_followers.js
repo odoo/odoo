@@ -184,6 +184,7 @@ openerp_mail_followers = function(session, mail) {
 
         /** Fetch subtypes, only if current user is follower */
         fetch_subtypes: function () {
+            var subtype_list_ul = this.$('.oe_subtype_list').empty();
             if (! this.message_is_follower) return;
             var context = new session.web.CompoundContext(this.build_context(), {});
             this.ds_model.call('message_get_subscription_data', [[this.view.datarecord.id], context]).then(this.proxy('display_subtypes'));
@@ -192,22 +193,14 @@ openerp_mail_followers = function(session, mail) {
         /** Display subtypes: {'name': default, followed} */
         display_subtypes:function (data) {
             var self = this;
-            var subtype = [];
-            var subtype_list_ul = this.$('.oe_subtype_list').empty().hide();
+            var subtype_list_ul = this.$('.oe_subtype_list');
             subtype_list_ul.empty();
             var records = data[this.view.datarecord.id || this.view.dataset.ids[0]].message_subtype_data;
             _(records).each(function (record, record_name) {
                 record.name = record_name;
                 record.followed = record.followed || undefined;
-                subtype.push(record);
-            })
-            subtype.sort(function(a,b){return a.id - b.id});
-            _(subtype).each(function (record) {
-                $(session.web.qweb.render('mail.followers.subtype', {'record': record})).appendTo(subtype_list_ul);
+                $(session.web.qweb.render('mail.followers.subtype', {'record': record})).appendTo( self.$('.oe_subtype_list') );
             });
-            if (subtype.length > 1) {
-                subtype_list_ul.show();
-            }
         },
 
         do_follow: function () {
@@ -235,12 +228,10 @@ openerp_mail_followers = function(session, mail) {
                     checklist.push(parseInt($(record).data('id')));
                 }
             });
+
             var context = new session.web.CompoundContext(this.build_context(), {});
             return this.ds_model.call('message_subscribe_users', [[this.view.datarecord.id], [this.session.uid], this.message_is_follower ? checklist : undefined, context])
-                .then(this.proxy('read_value')).then(function(){
-                    if(checklist.length == 0){
-                        return self.do_unfollow();}
-                    });
+                .then(this.proxy('read_value'));
         },
     });
 };
