@@ -80,6 +80,7 @@ The kernel of OpenERP, needed for all installation.
         'res/res_bank_view.xml',
         'res/res_country_view.xml',
         'res/res_currency_view.xml',
+        'res/wizard/change_password_wizard_view.xml',
         'res/res_users_view.xml',
         'res/res_partner_data.xml',
         'res/ir_property_view.xml',
