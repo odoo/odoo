@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-13 16:07+0000\n"
-"Last-Translator: Andrei Talpa (multibase.pt) <andrei.talpa@multibase.pt>\n"
+"PO-Revision-Date: 2012-12-18 15:21+0000\n"
+"Last-Translator: Rui Franco (multibase.pt) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-14 05:37+0000\n"
-"X-Generator: Launchpad (build 16369)\n"
+"X-Launchpad-Export-Date: 2012-12-19 05:16+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -108,6 +108,8 @@ msgid ""
 "Error!\n"
 "You cannot create recursive account templates."
 msgstr ""
+"Erro!\n"
+"Não pode criar modelos de conta de forma recursiva."
 
 #. module: account
 #. openerp-web
@@ -357,7 +359,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,group_multi_currency:0
 msgid "Allow multi currencies"
-msgstr ""
+msgstr "Permitir várias divisas"
 
 #. module: account
 #: code:addons/account/account_invoice.py:73
@@ -962,6 +964,10 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                     Não foram encontradas entradas em diário.\n"
+"                </p>\n"
+"            "
 
 #. module: account
 #: code:addons/account/account.py:1632
@@ -1007,7 +1013,7 @@ msgstr "Limite"
 #. module: account
 #: field:account.config.settings,purchase_journal_id:0
 msgid "Purchase journal"
-msgstr ""
+msgstr "Diário de compras"
 
 #. module: account
 #: code:addons/account/account.py:1316
@@ -1342,7 +1348,7 @@ msgstr "Taxa de câmbios nas vendas"
 #. module: account
 #: field:account.config.settings,chart_template_id:0
 msgid "Template"
-msgstr ""
+msgstr "Modelo"
 
 #. module: account
 #: selection:account.analytic.journal,type:0
@@ -1434,7 +1440,7 @@ msgstr "Nível"
 #: code:addons/account/wizard/account_change_currency.py:38
 #, python-format
 msgid "You can only change currency for Draft Invoice."
-msgstr ""
+msgstr "Só se pode mudar a divisa num rascunho de fatura."
 
 #. module: account
 #: report:account.invoice:0
@@ -1505,7 +1511,7 @@ msgstr "Opções de relatório"
 #. module: account
 #: field:account.fiscalyear.close.state,fy_id:0
 msgid "Fiscal Year to Close"
-msgstr ""
+msgstr "Ano fiscal a ser fechado"
 
 #. module: account
 #: field:account.config.settings,sale_sequence_prefix:0
@@ -1634,7 +1640,7 @@ msgstr "Nota de crédito"
 #. module: account
 #: view:account.config.settings:0
 msgid "eInvoicing & Payments"
-msgstr ""
+msgstr "Faturação eletrónica e pagamentos"
 
 #. module: account
 #: view:account.analytic.cost.ledger.journal.report:0
@@ -1711,7 +1717,7 @@ msgstr "Sem imposto"
 #. module: account
 #: view:account.journal:0
 msgid "Advanced Settings"
-msgstr ""
+msgstr "Configurações avançadas"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -2025,7 +2031,7 @@ msgstr ""
 #. module: account
 #: view:account.period:0
 msgid "Duration"
-msgstr ""
+msgstr "Duração"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -2089,7 +2095,7 @@ msgstr "Montante do crédito"
 #: field:account.bank.statement,message_ids:0
 #: field:account.invoice,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Mensagens"
 
 #. module: account
 #: view:account.vat.declaration:0
@@ -2188,7 +2194,7 @@ msgstr "Análise de faturas"
 #. module: account
 #: model:ir.model,name:account.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr ""
+msgstr "Assistente de criação de mensagem eletrónica"
 
 #. module: account
 #: model:ir.model,name:account.model_account_period_close
@@ -2234,7 +2240,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,currency_id:0
 msgid "Default company currency"
-msgstr ""
+msgstr "Divisa padrão da empresa"
 
 #. module: account
 #: field:account.invoice,move_id:0
@@ -2282,7 +2288,7 @@ msgstr "Válido"
 #: field:account.bank.statement,message_follower_ids:0
 #: field:account.invoice,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Seguidores"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_print_journal
@@ -2311,14 +2317,14 @@ msgstr "Relatório de Balancete de Antiguidade de Contas  Experimental"
 #. module: account
 #: view:account.fiscalyear.close.state:0
 msgid "Close Fiscal Year"
-msgstr ""
+msgstr "Fechar ano fiscal"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_move_line_quickadd.xml:14
 #, python-format
 msgid "Journal :"
-msgstr ""
+msgstr "Diáro:"
 
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
@@ -2356,7 +2362,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_move_reconciliation.xml:8
 #, python-format
 msgid "Good job!"
-msgstr ""
+msgstr "Bom trabalho!"
 
 #. module: account
 #: field:account.config.settings,module_account_asset:0
@@ -2737,7 +2743,7 @@ msgstr "Posições Fiscais"
 #: code:addons/account/account_move_line.py:578
 #, python-format
 msgid "You cannot create journal items on a closed account %s %s."
-msgstr ""
+msgstr "Não se pode criar entradas em diário numa conta já fechada %s %s."
 
 #. module: account
 #: field:account.period.close,sure:0
@@ -2770,7 +2776,7 @@ msgstr "Estado de rascunho de uma fatura"
 #. module: account
 #: view:product.category:0
 msgid "Account Properties"
-msgstr ""
+msgstr "Propriedades da conta"
 
 #. module: account
 #: view:account.partner.reconcile.process:0
@@ -2857,7 +2863,7 @@ msgstr "EXJ"
 #. module: account
 #: view:account.invoice.refund:0
 msgid "Create Credit Note"
-msgstr ""
+msgstr "Criar nota de crédito"
 
 #. module: account
 #: field:product.template,supplier_taxes_id:0
@@ -3167,7 +3173,7 @@ msgstr "Fechar montante"
 #: field:account.bank.statement,message_unread:0
 #: field:account.invoice,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Mensagens por ler"
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_state.py:44
@@ -3204,7 +3210,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,sale_journal_id:0
 msgid "Sale journal"
-msgstr ""
+msgstr "Diário de vendas"
 
 #. module: account
 #: code:addons/account/account.py:2293
@@ -3308,7 +3314,7 @@ msgstr "Conta de Despesas"
 #: field:account.bank.statement,message_summary:0
 #: field:account.invoice,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Resumo"
 
 #. module: account
 #: help:account.invoice,period_id:0
@@ -3431,7 +3437,7 @@ msgstr "Escolha o Ano Fiscal"
 #: view:account.config.settings:0
 #: view:account.installer:0
 msgid "Date Range"
-msgstr ""
+msgstr "Intervalo de datas"
 
 #. module: account
 #: view:account.period:0
@@ -3615,7 +3621,7 @@ msgstr "Templates de Plano de Contas"
 #. module: account
 #: view:account.bank.statement:0
 msgid "Transactions"
-msgstr ""
+msgstr "Transações"
 
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile_reconcile
@@ -4031,7 +4037,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_journal_cashbox_line
 msgid "account.journal.cashbox.line"
-msgstr ""
+msgstr "account.journal.cashbox.line"
 
 #. module: account
 #: model:ir.model,name:account.model_account_partner_reconcile_process
@@ -4314,7 +4320,7 @@ msgstr "ID Parceiro"
 #: help:account.bank.statement,message_ids:0
 #: help:account.invoice,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Histórico de mensagens e comunicação"
 
 #. module: account
 #: help:account.journal,analytic_journal_id:0
@@ -4355,7 +4361,7 @@ msgstr ""
 #: code:addons/account/account_move_line.py:1131
 #, python-format
 msgid "You cannot use an inactive account."
-msgstr ""
+msgstr "Não se pode usar uma conta inativa."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.open_board_account
@@ -4386,7 +4392,7 @@ msgstr "Dependentes consolidados"
 #: code:addons/account/wizard/account_invoice_refund.py:146
 #, python-format
 msgid "Insufficient Data!"
-msgstr ""
+msgstr "Dados insuficientes!"
 
 #. module: account
 #: help:account.account,unrealized_gain_loss:0
@@ -4423,7 +4429,7 @@ msgstr "título"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Create a draft credit note"
-msgstr ""
+msgstr "Criar um rascunho de nota de crédito"
 
 #. module: account
 #: view:account.invoice:0
@@ -4455,7 +4461,7 @@ msgstr "Ativos"
 #. module: account
 #: view:account.config.settings:0
 msgid "Accounting & Finance"
-msgstr ""
+msgstr "Contabilidade e finanças"
 
 #. module: account
 #: view:account.invoice.confirm:0
@@ -4632,6 +4638,8 @@ msgid ""
 "Error!\n"
 "You cannot create recursive Tax Codes."
 msgstr ""
+"Erro!\n"
+"Não se pode criar códigos de imposto de forma recursiva."
 
 #. module: account
 #: constraint:account.period:0
@@ -4639,6 +4647,8 @@ msgid ""
 "Error!\n"
 "The duration of the Period(s) is/are invalid."
 msgstr ""
+"Erro!\n"
+"As durações dos períodos são inválidas."
 
 #. module: account
 #: field:account.entries.report,month:0
@@ -4676,7 +4686,7 @@ msgstr ""
 #: view:analytic.entries.report:0
 #: field:analytic.entries.report,product_uom_id:0
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Unidade de medida do produto"
 
 #. module: account
 #: field:res.company,paypal_account:0
@@ -4936,6 +4946,9 @@ msgid ""
 "Error!\n"
 "You cannot create an account which has parent account of different company."
 msgstr ""
+"Erro!\n"
+"Não se pode criar uma conta que esteja dependente de uma conta pertencente a "
+"outra empresa."
 
 #. module: account
 #: code:addons/account/account_invoice.py:615
@@ -5071,7 +5084,7 @@ msgstr "Fatura cancelada"
 #. module: account
 #: view:account.invoice:0
 msgid "My Invoices"
-msgstr ""
+msgstr "As minhas faturas"
 
 #. module: account
 #: selection:account.bank.statement,state:0
@@ -5185,7 +5198,7 @@ msgstr "Cheque"
 #: view:validate.account.move:0
 #: view:validate.account.move.lines:0
 msgid "or"
-msgstr ""
+msgstr "ou"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -5278,7 +5291,7 @@ msgstr ""
 #: field:account.invoice,message_comment_ids:0
 #: help:account.invoice,message_comment_ids:0
 msgid "Comments and emails"
-msgstr ""
+msgstr "Comentários e emails"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -6235,7 +6248,7 @@ msgstr "Mapeamento Fiscal"
 #. module: account
 #: view:account.config.settings:0
 msgid "Select Company"
-msgstr ""
+msgstr "Selecione a empresa"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_state_open
@@ -6310,7 +6323,7 @@ msgstr "Número de linhas"
 #. module: account
 #: view:account.invoice:0
 msgid "(update)"
-msgstr ""
+msgstr "(atualizar)"
 
 #. module: account
 #: field:account.aged.trial.balance,filter:0
@@ -6519,7 +6532,7 @@ msgstr "Linha analítica"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_model_form
 msgid "Models"
-msgstr ""
+msgstr "Modelos"
 
 #. module: account
 #: code:addons/account/account_invoice.py:1090
@@ -6699,7 +6712,7 @@ msgstr "A receber"
 #. module: account
 #: constraint:account.move.line:0
 msgid "You cannot create journal items on closed account."
-msgstr ""
+msgstr "Não se pode criar entradas em diário numa conta já fechada."
 
 #. module: account
 #: code:addons/account/account_invoice.py:594
@@ -7238,7 +7251,7 @@ msgstr "Manual"
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:58
 #, python-format
 msgid "You must set a start date."
-msgstr ""
+msgstr "Tem de definir uma data de início"
 
 #. module: account
 #: view:account.automatic.reconcile:0
@@ -7466,6 +7479,8 @@ msgid ""
 "Error!\n"
 "The start date of a fiscal year must precede its end date."
 msgstr ""
+"Erro!\n"
+"O início do ano fiscal deve ser anterior ao seu fim."
 
 #. module: account
 #: view:account.tax.template:0
@@ -7774,7 +7789,7 @@ msgstr "Criar movimentos"
 #. module: account
 #: model:ir.model,name:account.model_cash_box_out
 msgid "cash.box.out"
-msgstr ""
+msgstr "cash.box.out"
 
 #. module: account
 #: help:account.config.settings,currency_id:0
@@ -8205,6 +8220,8 @@ msgid ""
 "Error!\n"
 "You cannot create recursive accounts."
 msgstr ""
+"Erro!\n"
+"Não se pode criar contas de forma recursiva."
 
 #. module: account
 #: model:ir.model,name:account.model_cash_box_in

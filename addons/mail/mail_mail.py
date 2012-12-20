@@ -230,10 +230,14 @@ class mail_mail(osv.Model):
                         mail_server_id=mail.mail_server_id.id, context=context)
                 if res:
                     mail.write({'state': 'sent', 'message_id': res})
+                    mail_sent = True
                 else:
                     mail.write({'state': 'exception'})
-                mail.refresh()
-                if mail.state == 'sent':
+                    mail_sent = False
+
+                # /!\ can't use mail.state here, as mail.refresh() will cause an error
+                # see revid:odo@openerp.com-20120622152536-42b2s28lvdv3odyr in 6.1
+                if mail_sent:
                     self._postprocess_sent_message(cr, uid, mail, context=context)
             except Exception:
                 _logger.exception('failed sending mail.mail %s', mail.id)

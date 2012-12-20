@@ -153,11 +153,11 @@ ${object.get_followup_table_html() | safe}
             ]]></field>
         </record>
 
-        <record id="demo_followup1" model="account_followup.followup">
+        <record id="demo_followup1" model="account_followup.followup" forcecreate="False">
             <field name="company_id" ref="base.main_company"/>
         </record>
 
-        <record id="demo_followup_line1" model="account_followup.followup.line">
+        <record id="demo_followup_line1" model="account_followup.followup.line" forcecreate="False">
             <field name="name">Send first reminder email</field>
             <field name="sequence">0</field>
             <field name="delay">15</field>
@@ -175,7 +175,7 @@ Best Regards,
             <field name="email_template_id" ref="email_template_account_followup_level0"/>
         </record>
 
-        <record id="demo_followup_line2" model="account_followup.followup.line">
+        <record id="demo_followup_line2" model="account_followup.followup.line" forcecreate="False">
             <field name="name">Send reminder letter and email</field>
             <field name="sequence">1</field>
             <field name="delay">30</field>
@@ -199,7 +199,7 @@ Best Regards,
 </field>
         </record>
 
-        <record id="demo_followup_line3" model="account_followup.followup.line">
+        <record id="demo_followup_line3" model="account_followup.followup.line" forcecreate="False">
             <field name="name">Call the customer on the phone</field>
             <field name="sequence">3</field>
             <field name="delay">40</field>

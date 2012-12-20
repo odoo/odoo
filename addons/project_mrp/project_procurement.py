@@ -78,9 +78,8 @@ class procurement_order(osv.osv):
                 'remaining_hours': planned_hours,
                 'partner_id': procurement.sale_line_id and procurement.sale_line_id.order_id.partner_id.id or False,
                 'user_id': procurement.product_id.product_manager.id,
-                'notes': procurement.note,
                 'procurement_id': procurement.id,
-                'description': procurement.note,
+                'description': procurement.name + '\n' + (procurement.note or ''),
                 'project_id':  project and project.id or False,
                 'company_id': procurement.company_id.id,
             },context=context)

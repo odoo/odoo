@@ -983,7 +983,8 @@ class account_move_line(osv.osv):
         if context is None:
             context = {}
         period_pool = self.pool.get('account.period')
-        pids = period_pool.search(cr, user, [('date_start','<=',date), ('date_stop','>=',date)])
+        ctx = dict(context, account_period_prefer_normal=True)
+        pids = period_pool.find(cr, user, date, context=ctx)
         if pids:
             res.update({
                 'period_id':pids[0]
