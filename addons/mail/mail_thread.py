@@ -859,7 +859,11 @@ class mail_thread(osv.AbstractModel):
 
     def message_unsubscribe(self, cr, uid, ids, partner_ids, context=None):
         """ Remove partners from the records followers. """
-        self.check_access_rights(cr, uid, 'read')
+        user_pids = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id']
+        if set(partner_ids) == set(user_pids):
+            self.check_access_rights(cr, uid, 'read')
+        else:
+            self.check_access_rights(cr, uid, 'write')
         return self.write(cr, SUPERUSER_ID, ids, {'message_follower_ids': [(3, pid) for pid in partner_ids]}, context=context)
 
     #------------------------------------------------------
