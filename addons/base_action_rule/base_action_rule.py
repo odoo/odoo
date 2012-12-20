@@ -144,10 +144,10 @@ class base_action_rule(osv.osv):
 
         # modify records
         values = {}
-        if action.act_user_id and 'user_id' in model._all_columns:
-            values['user_id'] = action.act_user_id.id
         if 'date_action_last' in model._all_columns:
             values['date_action_last'] = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        if action.act_user_id and 'user_id' in model._all_columns:
+            values['user_id'] = action.act_user_id.id
         if action.act_state and 'state' in model._all_columns:
             values['state'] = action.act_state
 

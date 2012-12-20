@@ -39,26 +39,25 @@ class base_action_rule(osv.osv):
         'act_categ_id': fields.many2one('crm.case.categ', 'Set Category to'),
     }
 
-    def do_action(self, cr, uid, action, obj, context=None):
-        res = super(base_action_rule, self).do_action(cr, uid, action, obj, context=context)
-        model_obj = self.pool.get(action.model_id.model)
-        write = {}
-        if hasattr(action, 'act_section_id') and action.act_section_id:
-            write['section_id'] = action.act_section_id.id
+    def _process(self, cr, uid, action, record_ids, context=None):
+        """ process the given action on the records """
+        res = super(base_action_rule, self)._process(cr, uid, action, record_ids, context=context)
 
-        if hasattr(action, 'act_categ_id') and action.act_categ_id:
-            write['categ_ids'] = [(4, action.act_categ_id.id)]
+        # add record modifications
+        context = dict(context or {}, action=True)
+        model = self.pool.get(action.model_id.model)
+        values = {}
+        if action.act_section_id and 'section_id' in model._all_columns:
+            values['section_id'] = action.act_section_id.id
+        if action.act_categ_id and 'categ_ids' in model._all_columns:
+            values['categ_ids'] = [(4, action.act_categ_id.id)]
+        model.write(cr, uid, record_ids, values, context=context)
 
-        model_obj.write(cr, uid, [obj.id], write, context)
         return res
 
     def state_get(self, cr, uid, context=None):
         """Gets available states for crm"""
         res = super(base_action_rule, self).state_get(cr, uid, context=context)
         return res + crm.AVAILABLE_STATES
-
-    def priority_get(self, cr, uid, context=None):
-        res = super(base_action_rule, self).priority_get(cr, uid, context=context)
-        return res + crm.AVAILABLE_PRIORITIES
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
