@@ -849,9 +849,7 @@ class mail_message(osv.Model):
         # message has no subtype_id: pure log message -> no partners, no one notified
         if not message.subtype_id:
             return True
-        # all partner_ids of the mail.message have to be notified
-        if message.partner_ids:
-            partners_to_notify |= set(message.partner_ids)
+            
         # all followers of the mail.message document have to be added as partners and notified
         if message.model and message.res_id:
             fol_obj = self.pool.get("mail.followers")
@@ -866,7 +864,11 @@ class mail_message(osv.Model):
         if message.author_id and message.model == "res.partner" and message.res_id == message.author_id.id:
             partners_to_notify |= set([message.author_id])
         elif message.author_id:
-            partners_to_notify = partners_to_notify - set([message.author_id])
+            partners_to_notify -= set([message.author_id])
+
+        # all partner_ids of the mail.message have to be notified regardless of the above (even the author if explicitly added!)
+        if message.partner_ids:
+            partners_to_notify |= set(message.partner_ids)
 
         # notify
         if partners_to_notify:
