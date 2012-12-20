@@ -43,6 +43,9 @@ openerp.auth_signup = function(instance) {
                         .fail(self.on_token_failed)
                 });
             }
+            if (self.params.db && self.params.login) {
+                this.$("form input[name=login]").val(self.params.login);
+            }
 
             // bind reset password link
             this.$('a.oe_signup_reset_password').click(this.do_reset_password);
@@ -130,7 +133,7 @@ openerp.auth_signup = function(instance) {
                     login: login,
                     password: password,
                 };
-                
+
                 var self = this,
                     super_ = this._super;
                 this.rpc('/auth_signup/signup', params)

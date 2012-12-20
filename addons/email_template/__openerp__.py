@@ -64,7 +64,7 @@ campaigns on any OpenERP document.
     ],
     'demo': ['res_partner_demo.yml'],
     'installable': True,
-    'auto_install': False,
+    'auto_install': True,
     'images': ['images/1_email_account.jpeg','images/2_email_template.jpeg','images/3_emails.jpeg'],
 }
 

@@ -1,6 +1,6 @@
 
 openerp.share = function(session) {
-
+    var _t = session.web._t;
     var has_action_id = false;
 
     function launch_wizard(self, view, user_type, invite) {
@@ -57,10 +57,10 @@ openerp.share = function(session) {
             this._super(this);
             has_share(function() {
                 self.add_items('other', [
-                    {   label: 'Share',
+                    {   label: _t('Share'),
                         callback: self.on_click_share,
                         classname: 'oe_share' },
-                    {   label: 'Embed',
+                    {   label: _t('Embed'),
                         callback: self.on_click_share_link,
                         classname: 'oe_share' },
                 ]);

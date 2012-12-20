@@ -3,64 +3,6 @@
 <data>
     <menuitem name="Document Management" id="menu_document_management_configuration" parent="knowledge.menu_document_configuration" sequence="1"/>
 
-    <record model="ir.ui.view" id="view_document_storage_form">
-        <field name="name">document.storage</field>
-        <field name="model">document.storage</field>
-        <field name="arch" type="xml">
-            <form string="Storage Media">
-                <group col="4">
-                    <field name="name" colspan="4"/>
-                    <field name="type"/>
-                    <field name="user_id"/>
-                    <field name="online"/>
-                    <field name="readonly"/>
-                </group>
-                <group attrs="{'invisible':[('type','in',['db', 'db64'])]}">
-                    <field name="path"/>
-                </group>
-            </form>
-        </field>
-    </record>
-
-    <record model="ir.ui.view" id="view_document_storage_tree">
-        <field name="name">document.storage</field>
-        <field name="model">document.storage</field>
-        <field name="arch" type="xml">
-            <tree string="Storage Media" toolbar="1">
-                <field name="name"/>
-                <field name="type"/>
-            </tree>
-        </field>
-    </record>
-
-    <record id="view_document_storage_filter" model="ir.ui.view">
-            <field name="name">Search View: Document Storage</field>
-            <field name="model">document.storage</field>
-            <field name="arch" type="xml">
-                <search string="Search Document Storage">
-                    <field name="name" string="Document Storage"/>
-                    <group expand="0" string="Group By...">
-                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
-                    </group>
-               </search>
-            </field>
-        </record>
-
-    <record model="ir.actions.act_window" id="action_document_storage_form">
-        <field name="name">Storage Media</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">document.storage</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="search_view_id" ref="view_document_storage_filter"/>
-    </record>
-   <menuitem
-        name="Storage Media"
-        action="action_document_storage_form"
-        id="menu_document_storage_media"
-        groups="base.group_no_one"
-        parent="menu_document_management_configuration"/>
-
     <record model="ir.ui.view" id="view_document_directory_form">
         <field name="name">document.directory</field>
         <field name="model">document.directory</field>
@@ -69,7 +11,6 @@
                 <group col="4">
                     <field name="name"/>
                     <field name="parent_id"/>
-                    <field name="storage_id"/>
                     <field name="user_id"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </group>
@@ -153,7 +94,6 @@
                 <field name="type"/>
                 <field name="user_id"/>
                 <field name="company_id" groups="base.group_multi_company"/>
-                <field name="storage_id"/>
                 <field name="create_date"/>
                 <field name="write_date"/>
             </tree>
@@ -161,25 +101,23 @@
     </record>
 
     <record id="view_document_directory_filter" model="ir.ui.view">
-            <field name="name">Search View: Document Directory</field>
-            <field name="model">document.directory</field>
-            <field name="arch" type="xml">
-                <search string="Search Document Directory">
-                    <field name="name" string="Document Directory"/>
-                    <filter string="Static" domain="[('type','=','directory')]"/>
-                    <filter string="Resources" icon="terp-personal" domain="[('type','=','ressource')]"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="storage_id" />
-                    <field name="user_id" />
-                    <group expand="0" string="Group By...">
-                        <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
-                        <filter string="Storage" domain="[]" icon="terp-accessories-archiver" context="{'group_by':'storage_id'}"/>
-                        <filter string="Company" domain="[]" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    </group>
-               </search>
-            </field>
-        </record>
+        <field name="name">Search View: Document Directory</field>
+        <field name="model">document.directory</field>
+        <field name="arch" type="xml">
+            <search string="Search Document Directory">
+                <field name="name" string="Document Directory"/>
+                <filter string="Static" domain="[('type','=','directory')]"/>
+                <filter string="Resources" icon="terp-personal" domain="[('type','=','ressource')]"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="user_id" />
+                <group expand="0" string="Group By...">
+                    <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
+                    <filter string="Company" domain="[]" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                </group>
+           </search>
+        </field>
+    </record>
 
     <record model="ir.actions.act_window" id="action_document_directory_form">
         <field name="name">Directories</field>
@@ -268,10 +206,7 @@
                 </xpath>
             </field>
     </record>
-
-
     <record id="view_attach_filter_inherit2" model="ir.ui.view">
-
             <field name="name">IR Attachment2</field>
             <field name="model">ir.attachment</field>
             <field name="inherit_id" ref="base.view_attachment_search"/>
@@ -341,32 +276,6 @@
         <field name="value" eval="'ir.actions.act_window,%d'%action_document_file_directory_form"/>
     </record>
 
-
-    <record model="ir.ui.view" id="view_process_node_form_inherit1">
-        <field name="name">process.node.form</field>
-        <field name="model">process.node</field>
-        <field name="inherit_id" ref="process.view_process_node_form"/>
-        <field name="priority" eval="1"/>
-        <field name="arch" type="xml">
-            <field name="subflow_id" position="after">
-                <field name="directory_id" string="Document Directory" domain="[('ressource_type_id','=',model_id),('ressource_parent_type_id','=',False)]"/>
-                <newline/>
-            </field>
-        </field>
-    </record>
-
-    <record model="ir.ui.view" id="view_process_form_inherit1">
-        <field name="name">process.process.form</field>
-        <field name="model">process.process</field>
-        <field name="inherit_id" ref="process.view_process_form"/>
-        <field name="priority" eval="1"/>
-        <field name="arch" type="xml">
-            <field name="subflow_id" position="after">
-                <field name="directory_id" domain="[('ressource_type_id','=',model_id),('ressource_parent_type_id','=',False)]"/>
-                <newline/>
-            </field>
-        </field>
-    </record>
 
     <act_window domain="[('partner_id', '=', active_id)]"
         context="{'default_partner_id': active_id}"

@@ -19,14 +19,14 @@
 #
 ##############################################################################
 
-from base_status.base_stage import base_stage
+from openerp.addons.base_status.base_stage import base_stage
 import crm
 from datetime import datetime
-from osv import fields, osv
+from openerp.osv import fields, osv
 import time
-import tools
-from tools.translate import _
-from tools import html2plaintext
+from openerp import tools
+from openerp.tools.translate import _
+from openerp.tools import html2plaintext
 
 from base.res.res_partner import format_address
 
@@ -121,7 +121,9 @@ class crm_lead(base_stage, format_address, osv.osv):
         section_id = self._resolve_section_id_from_context(cr, uid, context=context)
         if section_id:
             search_domain += ['|', ('section_ids', '=', section_id)]
-        search_domain += ['|', ('id', 'in', ids), ('case_default', '=', True)]
+            search_domain += [('id', 'in', ids)]
+        else:
+            search_domain += ['|', ('id', 'in', ids), ('case_default', '=', True)]
         # retrieve type from the context (if set: choose 'type' or 'both')
         type = self._resolve_type_from_context(cr, uid, context=context)
         if type:
@@ -135,7 +137,6 @@ class crm_lead(base_stage, format_address, osv.osv):
         fold = {}
         for stage in stage_obj.browse(cr, access_rights_uid, stage_ids, context=context):
             fold[stage.id] = stage.fold or False
-
         return result, fold
 
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
@@ -240,8 +241,8 @@ class crm_lead(base_stage, format_address, osv.osv):
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'date_closed': fields.datetime('Closed', readonly=True),
         'stage_id': fields.many2one('crm.case.stage', 'Stage',
-                        domain="['&', ('fold', '=', False), '&', '|', ('section_ids', '=', section_id), ('case_default', '=', True), '|', ('type', '=', type), ('type', '=', 'both')]"),
-        'user_id': fields.many2one('res.users', 'Salesperson'),
+                        domain="['&', '&', ('fold', '=', False), ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"),
+        'user_id': fields.many2one('res.users', 'Salesperson', select=True),
         'referred': fields.char('Referred By', size=64),
         'date_open': fields.datetime('Opened', readonly=True),
         'day_open': fields.function(_compute_day, string='Days to Open', \
@@ -918,6 +919,41 @@ class crm_lead(base_stage, format_address, osv.osv):
                 vals.setdefault('message_follower_ids', [])
                 vals['message_follower_ids'] += [(4, follower.id) for follower in section_id.message_follower_ids]
         return super(crm_lead,self).write(cr, uid, ids, vals, context)
+
+    def new_mail_send(self, cr, uid, ids, context=None):
+        '''
+        This function opens a window to compose an email, with the edi sale template message loaded by default
+        '''
+        assert len(ids) == 1, 'This option should only be used for a single id at a time.'
+        ir_model_data = self.pool.get('ir.model.data')
+        try:
+            template_id = ir_model_data.get_object_reference(cr, uid, 'crm', 'email_template_opportunity_mail')[1]
+        except ValueError:
+            template_id = False
+        try:
+            compose_form_id = ir_model_data.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')[1]
+        except ValueError:
+            compose_form_id = False 
+        if context is None:
+            context = {}
+        ctx = context.copy()
+        ctx.update({
+            'default_model': 'crm.lead',
+            'default_res_id': ids[0],
+            'default_use_template': bool(template_id),
+            'default_template_id': template_id,
+            'default_composition_mode': 'comment',
+        })
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(compose_form_id, 'form')],
+            'view_id': compose_form_id,
+            'target': 'new',
+            'context': ctx,
+        }
 
     # ----------------------------------------
     # Mail Gateway

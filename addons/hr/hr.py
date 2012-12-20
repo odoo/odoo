@@ -19,10 +19,10 @@
 #
 ##############################################################################
 
-import addons
+from openerp import addons
 import logging
-from osv import fields, osv
-import tools
+from openerp.osv import fields, osv
+from openerp import tools
 _logger = logging.getLogger(__name__)
 
 class hr_employee_category(osv.osv):

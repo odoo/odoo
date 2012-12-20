@@ -21,9 +21,9 @@
 
 import time
 
-from report import report_sxw
-from osv import osv
-from tools.translate import _
+from openerp.report import report_sxw
+from openerp.osv import osv
+from openerp.tools.translate import _
 
 class pos_invoice(report_sxw.rml_parse):
 

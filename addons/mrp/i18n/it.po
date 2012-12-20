@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-03 20:36+0000\n"
+"PO-Revision-Date: 2012-12-15 09:57+0000\n"
 "Last-Translator: Davide Corio - agilebg.com <davide.corio@agilebg.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:09+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-16 04:46+0000\n"
+"X-Generator: Launchpad (build 16372)\n"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -28,6 +28,15 @@ msgid ""
 "                    * Notes for the technician and for the final customer.\n"
 "                This installs the module mrp_repair."
 msgstr ""
+"Consente di gestire la riparazione dei prodotti.\n"
+"* Aggiungi/rimuovi prodotti durante la riparazione\n"
+"* Implicazioni nelle giacenze\n"
+"* Fatturazione (prodotti e/o servizi)\n"
+"* Concetto di garanzia\n"
+"* Report preventivi riparazioni\n"
+"* Note dei tecnici al cliente finale.\n"
+"\n"
+"Installa il modulo mrp_repair."
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -259,6 +268,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a routing.\n"
+"                Cliccare per creare un routing.\n"
+"              </p><p>\n"
+"                I routing consentono di creare e gestire le operazioni di "
+"produzione che\n"
+"                dovranno essere seguite dai centri di lavoro. Sono collegati "
+"alle distinte\n"
+"                base dei materiali che definiscono la materia prima.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: view:mrp.production:0
@@ -354,6 +374,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a manufacturing order. \n"
+"                Clicca per creare un ordine di produzione.\n"
+"              </p><p>\n"
+"                Un ordine di produzione, basato su una distinta base,\n"
+"                consumerà materie prima e produrrà prodotti finiti.\n"
+"              </p><p>\n"
+"                Gli ordini di produzione sono solutamente proposti "
+"automaticamente\n"
+"                in base alle richieste dei clienti o regole automatiche come "
+"la\n"
+"                regola di giacenza minima.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: sql_constraint:mrp.production:0
@@ -443,6 +477,12 @@ msgid ""
 "'In Production'.\n"
 "                When the production is over, the status is set to 'Done'."
 msgstr ""
+"Quando l'ordine di produzione viene creato lo stato è impostato a 'Bozza'.\n"
+"Se l'ordine viene convermato lo stato passa a 'Attesa Materiale'.\n"
+"In caso di eccezioni, lo stato passa a 'Eccezione Prelievo'.\n"
+"Se il materiale è disponibile, lo stato passa a 'Pronto per la produzione'.\n"
+"Quando la produzione parte lo stato passa a 'In Produzione'.\n"
+"Quando la produzione termina, lo stato passa a 'Completato'."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_report_in_out_picking_tree
@@ -616,6 +656,14 @@ msgid ""
 "assembly operation.\n"
 "                This installs the module stock_no_autopicking."
 msgstr ""
+"Questo modulo consente prelievi intermedi per fornire materia prima agli "
+"ordini di produzione.\n"
+"Per esempio per gestire produzioni fatte dai fornitori (esternalizzazione).\n"
+"Per raggiungere questo, impostare i prodotti assemblati da terzisti come "
+"\"No prelievo automatico\"\n"
+"e impostare la locazione di magazzino del fornitore nel routing delle "
+"operazioni di assemblaggio.\n"
+"Installa il modulo stock_no_autopicking."
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -726,6 +774,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a component to a bill of material.\n"
+"                Cliccare per aggiungere un componente alla distinta base.\n"
+"              </p><p>\n"
+"                I componenti delle distinte base sono usati per creare le "
+"distinte base\n"
+"                principali. Usa questo menù per cercare in quale BoM uno "
+"specifico\n"
+"                componente viene usato.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: constraint:mrp.bom:0
@@ -760,6 +819,12 @@ msgid ""
 "                    * Product Attributes.\n"
 "                This installs the module product_manufacturer."
 msgstr ""
+"Consente di definire le sequenti opzioni sui prodotti:\n"
+"* Produttore\n"
+"* Nome del prodotto per il produttore\n"
+"* Codide prodotto per il produttore\n"
+"* Attributi prodotto\n"
+"Installa il modulo product_manufacturer."
 
 #. module: mrp
 #: view:mrp.product_price:0
@@ -796,6 +861,27 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Clicca per creare un gruppo di proprietà.\n"
+"              </p><p>\n"
+"                Definisci specifici gruppi di proprietà che verranno "
+"assegnati\n"
+"                alle distinte base e ordini di vendita. Le proprietà "
+"consento ad\n"
+"                OpenERP di selezionare la distinta base corretta in base "
+"alle\n"
+"                proprietà selezionate dai commerciali sugli ordini di "
+"vendita.\n"
+"              </p><p>\n"
+"                Per esempio, nel gruppo di proprietà \"Garanzia\", puoi "
+"trovare\n"
+"                due proprietà: 1 anno di garanzia, 3 anni di garanzia. In "
+"base alle\n"
+"                proprietà selezionate sull'ordine di vendita, OpenERP "
+"pianificherà\n"
+"                la produzione usando la distinta base corrispondente.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
@@ -811,6 +897,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a work center.\n"
+"                Clicca per creare un centro di lavoro.\n"
+"              </p><p>\n"
+"                I centri di lavoro consentono di creare e gestire le unità "
+"di produzione.\n"
+"                Consistono in operai e/o macchinari, che vengono "
+"considerati\n"
+"                unità per l'assegnazione delle attività e per le previsioni "
+"di carico.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_minimumstockrule0
@@ -917,6 +1015,8 @@ msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
 msgstr ""
+"L'unità di misura del prodotto scelta appartiene ad una categoria differente "
+"da quella usata nel form del prodotto."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production
@@ -938,6 +1038,9 @@ msgid ""
 "You should install the mrp_byproduct module if you want to manage extra "
 "products on BoMs !"
 msgstr ""
+"Tutte le quantità devono essere superiori a 0.\n"
+"Dovresti installare il modulo mrp_byproduct se vuoi gestire prodotti extra "
+"nelle BoM!"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -980,6 +1083,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliccare per avviare un nuovo ordine di produzione.\n"
+"              </p><p>\n"
+"                Un ordine di produzione, basato su una distinta base,\n"
+"                consumerà materia prima e produrrà prodotti finiti.\n"
+"              </p><p>\n"
+"                Gli ordini di produzione vengono generalmente proposti "
+"automaticamente\n"
+"                in base alle richieste dei clienti o in base a regole "
+"automatiche come la\n"
+"                regola di giacenza minima.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: field:mrp.bom,type:0
@@ -1017,6 +1133,8 @@ msgid ""
 "You must first cancel related internal picking attached to this "
 "manufacturing order."
 msgstr ""
+"Devi prima annullare i prelievi di magazzino interni collegati all'ordine di "
+"produzione."
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_minimumstockrule0
@@ -1174,6 +1292,17 @@ msgid ""
 "                cases entail a small performance impact.\n"
 "                This installs the module mrp_jit."
 msgstr ""
+"This allows Just In Time computation of procurement orders.\n"
+"                All procurement orders will be processed immediately, which "
+"could in some\n"
+"                cases entail a small performance impact.\n"
+"                This installs the module mrp_jit.\n"
+"\n"
+"Consente la gestione Just In Time per gli ordini di approvvigionamento.\n"
+"Tutti gli ordini di approvvigionamento verranno processati immediatamente, "
+"cosa che in\n"
+"alcuni casi potrebbe impattare sensibilmente nelle performance.\n"
+"Installa il modulo mrp_jit."
 
 #. module: mrp
 #: help:mrp.workcenter,costs_hour:0
@@ -1186,6 +1315,9 @@ msgid ""
 "Number of operations this Work Center can do in parallel. If this Work "
 "Center represents a team of 5 workers, the capacity per cycle is 5."
 msgstr ""
+"Numero delle operazioni che questo centro di lavoro può eseguire "
+"parallelamente. Se questo centro di lavoro rappresente un team di 5 operai, "
+"la capacità per ciclo sarà 5."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action3
@@ -1245,6 +1377,8 @@ msgid ""
 "Time in hours for this Work Center to achieve the operation of the specified "
 "routing."
 msgstr ""
+"Tempo in ore che questo centro di lavoro impiegherà per completare le "
+"operazioni specifica sul routing."
 
 #. module: mrp
 #: field:mrp.workcenter,costs_journal_id:0
@@ -1332,6 +1466,9 @@ msgid ""
 "Routing is indicated then,the third tab of a production order (Work Centers) "
 "will be automatically pre-completed."
 msgstr ""
+"Il routing indica che il centro di lavoro è in uso, per quanto tempo e "
+"quanti cicli. Se il routing è specificao, quindi il tero tab dell'ordine di "
+"produzione (centri di lavoro) verrà automaticamente pre-compilato."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:521
@@ -1378,6 +1515,8 @@ msgid ""
 "Bill of Materials allow you to define the list of required raw materials to "
 "make a finished product."
 msgstr ""
+"Le disinte base consentono di definire la lista della materia prima da usare "
+"per creare i prodotti finiti."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:374
@@ -1442,6 +1581,22 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliccare per creare una nuova proprietà.\n"
+"              </p><p>\n"
+"                Le proprietà in OpenERP vengono usate per selezionare la "
+"distinta base\n"
+"                corretta quanto l'ordine di produzione ha differenti modi di "
+"produrre\n"
+"                lo stesso prodotto. Puoi associare differenti proprietà alla "
+"distinta base.\n"
+"                Quando un commerciale crea un ordine di vendita, può "
+"associare diverse\n"
+"                proprietà e OpenERP selezionerà automaticamente la BoM da "
+"usare in\n"
+"                relazione alle necessità.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_order
@@ -1533,6 +1688,9 @@ msgid ""
 "are attached to bills of materials\n"
 "                that will define the required raw materials."
 msgstr ""
+"I routings consentono di creare e gestire le operazioni di produzione che "
+"devono essere seguite da centri di lavoro per produrre i prodotti. Sono "
+"collegate alle distinte base che definiscono la materia prima richiesta."
 
 #. module: mrp
 #: view:report.workcenter.load:0
@@ -1802,6 +1960,8 @@ msgid ""
 "                                will contain the raw materials, instead of "
 "the finished product."
 msgstr ""
+"Processando un ordine di produzione per questo prodotto, l'ordine di "
+"consegna conterrà la materia prima, invece che il prodotto finito."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:1039
@@ -1857,6 +2017,9 @@ msgid ""
 "lines (in the \"Work Centers\" tab).\n"
 "                This installs the module mrp_operations."
 msgstr ""
+"Consente di aggiungere stato, data inizio e data fine nelle righe delle "
+"operazioni di produzione (nel tab \"centri di lavoro\").\n"
+"Installa il modulo mrp_operations."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:756
@@ -1865,6 +2028,8 @@ msgid ""
 "You are going to consume total %s quantities of \"%s\".\n"
 "But you can only consume up to total %s quantities."
 msgstr ""
+"Stai per consumare un totale di %s del prodotto \"%s\".\n"
+"Ma puoi consumare al massimo fino a %s."
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_bom0
@@ -2116,6 +2281,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Clicca per creare una distinta base.\n"
+"              </p><p>\n"
+"                Le distinte base consentono di definire la lista della "
+"materia prima\n"
+"                necessaria per produrre un prodotto finito; attraverso un "
+"ordine di\n"
+"                produzione o un set di prodotti.\n"
+"              </p><p>\n"
+"                OpenERP usa le BoM per proporre automaticamente ordini di\n"
+"                produzione in base alle necessità di approvvigionamento.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: field:mrp.routing.workcenter,routing_id:0
@@ -2140,6 +2318,10 @@ msgid ""
 "                With this module: A + B + C -> D + E.\n"
 "                This installs the module mrp_byproduct."
 msgstr ""
+"Puoi configurare prodotti secondari nelle distinte base.\n"
+"Senza questo modulo: A + B + C -> D.\n"
+"Con questo modulo: A + B + C -> D + E.\n"
+"Installa il modulo mrp_byproduct."
 
 #. module: mrp
 #: field:procurement.order,bom_id:0
@@ -2230,6 +2412,8 @@ msgid ""
 "You are going to produce total %s quantities of \"%s\".\n"
 "But you can only produce up to total %s quantities."
 msgstr ""
+"Stai per produrre un totale di %s \"%s\".\n"
+"Ma puoi produrne al massimo %s."
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_stockproduct0
@@ -2383,6 +2567,11 @@ msgid ""
 "product, it will be sold and shipped as a set of components, instead of "
 "being produced."
 msgstr ""
+"Se un prodotto secondario è usato in diversi prodotti, potrebbe essere utile "
+"creare una sua BoM. Comunque se non si vogliono ordini di produzione "
+"separati per i prodotti secondari, selezionare Set/Phantom come tipo BoM.\r\n"
+"Se una BoM Phantom è usata per il prodotto radice, verrà vendito e spedito "
+"come un set di componenti, invece di essere prodotto."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration

@@ -22,10 +22,10 @@ import base64
 import time
 import re
 
-from tools.translate import _
-from osv import osv, fields
-from tools import mod10r
-import pooler
+from openerp.tools.translate import _
+from openerp.osv import fields, osv
+from openerp.tools import mod10r
+from openerp import pooler
 
 def _reconstruct_invoice_ref(cursor, user, reference, context=None):
     ###

@@ -23,9 +23,9 @@ import time
 from datetime import datetime
 import base64
 
-from osv import osv, fields
-import pooler
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp import pooler
+from openerp.tools.translate import _
 import unicode2ascii
 
 import re
@@ -421,7 +421,7 @@ def _create_dta(obj, cr, uid, data, context=None):
             raise osv.except_osv(_('Error!'), _('No bank defined\n' \
                     'for the bank account: %s\n' \
                     'on the partner: %s\n' \
-                    'on line: %s') + (pline.bank_id.state, pline.partner_id.name, pline.name))
+                    'on line: %s') % (pline.bank_id.state, pline.partner_id.name, pline.name))
 
         v['sequence'] = str(seq).rjust(5).replace(' ', '0')
         v['amount_to_pay']= str(pline.amount_currency).replace('.', ',')

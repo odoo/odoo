@@ -20,12 +20,12 @@
 ##############################################################################
 
 import time
-import pooler
-from report.interface import report_rml
-from tools import to_xml
-from report import report_sxw
+from openerp import pooler
+from openerp.report.interface import report_rml
+from openerp.tools import to_xml
+from openerp.report import report_sxw
 from datetime import datetime
-from tools.translate import _
+from openerp.tools.translate import _
 
 class report_custom(report_rml):
     def create_xml(self, cr, uid, ids, datas, context=None):

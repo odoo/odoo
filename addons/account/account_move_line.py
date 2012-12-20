@@ -26,11 +26,11 @@ from operator import itemgetter
 
 from lxml import etree
 
-import netsvc
-from osv import fields, osv, orm
-from tools.translate import _
-import decimal_precision as dp
-import tools
+from openerp import netsvc
+from openerp.osv import fields, osv, orm
+from openerp.tools.translate import _
+import openerp.addons.decimal_precision as dp
+from openerp import tools
 
 class account_move_line(osv.osv):
     _name = "account.move.line"
@@ -983,7 +983,8 @@ class account_move_line(osv.osv):
         if context is None:
             context = {}
         period_pool = self.pool.get('account.period')
-        pids = period_pool.search(cr, user, [('date_start','<=',date), ('date_stop','>=',date)])
+        ctx = dict(context, account_period_prefer_normal=True)
+        pids = period_pool.find(cr, user, date, context=ctx)
         if pids:
             res.update({
                 'period_id':pids[0]

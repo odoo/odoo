@@ -29,7 +29,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 
 class HeaderHTML(osv.osv):
     """HTML Header allows you to define HTML CSS and Page format"""

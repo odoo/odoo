@@ -23,9 +23,9 @@ import time
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
-from osv import fields, osv
-from tools.translate import _
-import netsvc
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+from openerp import netsvc
 
 class hr_timesheet_sheet(osv.osv):
     _name = "hr_timesheet_sheet.sheet"
@@ -218,8 +218,10 @@ class hr_timesheet_sheet(osv.osv):
     def onchange_employee_id(self, cr, uid, ids, employee_id, context=None):
         department_id =  False
         if employee_id:
-            department_id = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context).department_id.id
-        return {'value': {'department_id': department_id}}
+            empl_id = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context)
+            department_id = empl_id.department_id.id
+            user_id = empl_id.user_id.id
+        return {'value': {'department_id': department_id, 'user_id': user_id,}}
 
     # ------------------------------------------------
     # OpenChatter methods and notifications
