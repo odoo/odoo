@@ -41,6 +41,7 @@ openerp_mail_followers = function(session, mail) {
             this.reinit();
             this.bind_events();
             this._super();
+            this.view_is_editable = this.__parentedParent.is_action_enabled('edit');
         },
 
         on_check_visibility_mode: function () {
@@ -165,7 +166,7 @@ openerp_mail_followers = function(session, mail) {
             var truncated = records.splice(0, this.displayed_nb);
             _(truncated).each(function (record) {
                 record.avatar_url = mail.ChatterUtils.get_image(self.session, 'res.partner', 'image_small', record.id);
-                $(session.web.qweb.render('mail.followers.partner', {'record': record})).appendTo(node_user_list);
+                $(session.web.qweb.render('mail.followers.partner', {'record': record, 'widget': self})).appendTo(node_user_list);
             });
             // FVA note: be sure it is correctly translated
             if (truncated.length < records.length) {
@@ -222,7 +223,6 @@ openerp_mail_followers = function(session, mail) {
                 .then(this.proxy('read_value'));
 
             _.each(this.$('.oe_subtype_list input'), function (record) {
-                console.log(record);
                 $(record).attr('checked', 'checked');
             });
         },
