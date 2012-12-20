@@ -26,12 +26,14 @@ openerp_mail_followers = function(session, mail) {
             this._super.apply(this, arguments);
             this.image = this.node.attrs.image || 'image_small';
             this.comment = this.node.attrs.help || false;
-            this.displayed_nb = this.node.attrs.displayed_nb || 10;
+            this.displayed_limit = this.node.attrs.displayed_nb || 10;
+            this.displayed_nb = this.displayed_limit;
             this.ds_model = new session.web.DataSetSearch(this, this.view.model);
             this.ds_follow = new session.web.DataSetSearch(this, this.field.relation);
             this.ds_users = new session.web.DataSetSearch(this, 'res.users');
 
             this.value = [];
+            this.followers = [];
         },
 
         start: function() {
@@ -72,6 +74,7 @@ openerp_mail_followers = function(session, mail) {
             // event: click on 'invite' button, that opens the invite wizard
             this.$('.oe_invite').on('click', self.on_invite_follower);
             this.$el.on('click', '.oe_remove_follower', self.on_remove_follower);
+            this.$el.on('click', '.oe_show_more', self.on_show_more_followers)
         },
 
         on_invite_follower: function (event) {
@@ -95,6 +98,11 @@ openerp_mail_followers = function(session, mail) {
             });
         },
 
+        on_show_more_followers: function (event) {
+            this.displayed_nb += this.displayed_limit;
+            this.display_followers(false);
+        },
+
         on_remove_follower: function (event) {
             var partner_id = $(event.target).data('id');
             var context = new session.web.CompoundContext(this.build_context(), {});
@@ -104,6 +112,7 @@ openerp_mail_followers = function(session, mail) {
 
         read_value: function () {
             var self = this;
+            this.displayed_nb = this.displayed_limit;
             return this.ds_model.read_ids([this.view.datarecord.id], ['message_follower_ids']).then(function (results) {
                 self.value = results[0].message_follower_ids;
                 self.render_value();
@@ -157,20 +166,20 @@ openerp_mail_followers = function(session, mail) {
         /** Display the followers */
         display_followers: function (records) {
             var self = this;
-            records = records || [];
-            this.message_is_follower = this.set_is_follower(records);
+            this.followers = records || this.followers;
+            this.message_is_follower = this.set_is_follower(this.followers);
             // clean and display title
             var node_user_list = this.$('.oe_follower_list').empty();
-            this.$('.oe_follower_title').html(this._format_followers(records.length));
+            this.$('.oe_follower_title').html(this._format_followers(this.followers.length));
             // truncate number of displayed followers
-            var truncated = records.splice(0, this.displayed_nb);
+            var truncated = this.followers.slice(0, this.displayed_nb);
             _(truncated).each(function (record) {
                 record.avatar_url = mail.ChatterUtils.get_image(self.session, 'res.partner', 'image_small', record.id);
                 $(session.web.qweb.render('mail.followers.partner', {'record': record, 'widget': self})).appendTo(node_user_list);
             });
             // FVA note: be sure it is correctly translated
-            if (truncated.length < records.length) {
-                $('<div class="oe_partner">And ' + (records.length - truncated.length) + ' more.</div>').appendTo(node_user_list);
+            if (truncated.length < this.followers.length) {
+                $(session.web.qweb.render('mail.followers.show_more', {'number': (this.followers.length - truncated.length)} )).appendTo(node_user_list);
             }
         },
 
