@@ -118,7 +118,7 @@ class sale_order(osv.osv):
             ('sent', 'Quotation Sent'),
             ('cancel', 'Cancelled'),
             ('waiting_date', 'Waiting Schedule'),
-            ('progress', 'Sale Order'),
+            ('progress', 'Sales Order'),
             ('manual', 'Sale to Invoice'),
             ('shipping_except', 'Shipping Exception'),
             ('invoice_except', 'Invoice Exception'),
