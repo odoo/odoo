@@ -112,7 +112,7 @@ class crm_meeting(base_state, osv.Model):
     # ----------------------------------------
 
     # shows events of the day for this user
-    def _needaction_domain_get(self, cr, uid, domain=[], context={}):
+    def _needaction_domain_get(self, cr, uid, context=None):
         return [('date', '<=', time.strftime('%Y-%M-%D 23:59:59')), ('date_deadline', '>=', time.strftime('%Y-%M-%D 00:00:00')), ('user_id', '=', uid)]
 
     def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification',
