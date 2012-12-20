@@ -126,7 +126,7 @@
         background: #f0eeee
         border-left: 1px solid #f0f8f8
         border-right: 1px solid #b9b9b9
-    &.oe_kanban_grouped 
+    &.oe_kanban_grouped
         .oe_kanban_group_header
             width: 1%
 
@@ -484,6 +484,7 @@
     .oe_kanban_color_9
         background-color: #FFC7F1
         color: #6d2c70
+    // }}}
 
 .openerp .oe_form .oe_kanban_view
     .oe_kanban_column, .oe_kanban_group_header
@@ -506,6 +507,23 @@
                 @include vertical-gradient(#f6f6f6, #e3e3e3)
                 @include box-shadow((0 1px 2px rgba(0, 0, 0, .1), 0 1px 1px rgba(255, 255, 255, .8) inset))
 
+
+// Internet Explorer 9+ specifics {{{
+.openerp_ie .oe_kanban_view
+    .oe_kanban_group_header .oe_kanban_group_title_vertical
+        // TODO: check for IE10
+        display: none !important
+    .oe_kanban_group_header.oe_kanban_group_folded .oe_kanban_group_title_vertical
+        display: inline-block !important
+    .oe_kanban_group_title_vertical
+        -ms-writing-mode: lr-tb !important
+        background: rgb(240, 238, 238)
+        top: -5px !important
+    &.oe_kanban_grouped
+        .oe_kanban_group_header
+            height: 1%
+// }}}
+
 @media print
     .openerp
         .oe_kanban_groups
@@ -516,5 +534,6 @@
                     visibility: hidden
         .oe_kanban_view .oe_kanban_group_title
             text-shadow: none !important
+
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
 // vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:

@@ -1265,7 +1265,7 @@
   color: white;
   padding: 2px 4px;
   margin: 1px 6px 0 0;
-  border: 1px solid lightgrey;
+  border: 1px solid lightGray;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
@@ -1290,7 +1290,7 @@
   transform: scale(1.1);
 }
 .openerp .oe_secondary_submenu .oe_active {
-  border-top: 1px solid lightgrey;
+  border-top: 1px solid lightGray;
   border-bottom: 1px solid #dedede;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2);
@@ -2239,7 +2239,7 @@
 }
 .openerp .oe_form .oe_form_label_help[for] span, .openerp .oe_form .oe_form_label[for] span {
   font-size: 80%;
-  color: darkgreen;
+  color: darkGreen;
   vertical-align: top;
   position: relative;
   top: -4px;
@@ -3127,6 +3127,9 @@ div.ui-widget-overlay {
   border-radius: 3px;
 }
 
+.openerp_ie .oe_form_field_boolean input {
+  background: white;
+}
 .openerp_ie input[type='checkbox'] {
   border: none;
   background: none;
@@ -3186,8 +3189,62 @@ div.ui-widget-overlay {
   padding-top: 0;
   padding-bottom: 0;
 }
-.openerp_ie .oe_form_field.oe_tags {
-  float: left;
+.openerp_ie img {
+  border: none;
+}
+.openerp_ie .oe_dropdown_arrow {
+  line-height: 1.7em;
+}
+.openerp_ie .oe_form_buttons button, .openerp_ie .oe_view_manager_buttons button {
+  line-height: 1.7em;
+}
+.openerp_ie .oe_form_buttons .oe_highlight, .openerp_ie .oe_view_manager_buttons .oe_highlight {
+  line-height: 1.7em;
+}
+.openerp_ie .oe_topbar {
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#646060', endColorstr='#262626');
+}
+.openerp_ie .oe_popup_form {
+  width: 99% !important;
+}
+.openerp_ie .oe_form_label {
+  white-space: normal !important;
+}
+.openerp_ie ul.oe_form_status li, .openerp_ie ul.oe_form_status_clickable li {
+  display: inline-block;
+  clear: both;
+}
+.openerp_ie ul.oe_form_status li:last-child, .openerp_ie ul.oe_form_status_clickable li:last-child {
+  overflow: hidden;
+  border-right: 1px solid #cacaca;
+}
+.openerp_ie ul.oe_form_status li:last-child .label, .openerp_ie ul.oe_form_status_clickable li:last-child .label {
+  padding-right: 14px;
+  border-right: none;
+}
+.openerp_ie ul.oe_form_status li:last-child .arrow, .openerp_ie ul.oe_form_status_clickable li:last-child .arrow {
+  display: inline-block;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  border: none;
+  width: 0;
+  border-right: none;
+}
+.openerp_ie ul.oe_form_status .label, .openerp_ie ul.oe_form_status_clickable .label {
+  border-bottom: 1px solid #cacaca;
+  background: transparent;
+}
+.openerp_ie ul.oe_form_status .arrow span, .openerp_ie ul.oe_form_status_clickable .arrow span {
+  background-color: #fefefe !important;
+}
+.openerp_ie ul.oe_form_status li.oe_active .label, .openerp_ie ul.oe_form_status_clickable li.oe_active .label {
+  border-bottom: 1px solid #729fcf;
+}
+.openerp_ie ul.oe_form_status li.oe_active .arrow span, .openerp_ie ul.oe_form_status_clickable li.oe_active .arrow span {
+  background-color: #729fcf !important;
+}
+.openerp_ie .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button {
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#EFEFEF', endColorstr='#D8D8D8');
 }
 
 @media print {

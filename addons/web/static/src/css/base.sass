@@ -2469,6 +2469,8 @@ div.ui-widget-overlay
 
 // Internet Explorer 9+ specifics {{{
 .openerp_ie
+    .oe_form_field_boolean input
+        background: #fff
     input[type='checkbox']
         border: none
         background: none
@@ -2505,7 +2507,6 @@ div.ui-widget-overlay
         filter: none
     .oe_link
         filter: none
-
     .oe_kanban_show_more
         clear: both
         text-align: center
@@ -2519,9 +2520,54 @@ div.ui-widget-overlay
     .oe_sidebar button
         padding-top: 0
         padding-bottom: 0
+    img
+        border: none
+    //buttons.
+    .oe_dropdown_arrow
+        line-height: 1.7em
+    .oe_form_buttons, .oe_view_manager_buttons
+        button
+            line-height: 1.7em
+        .oe_highlight
+            line-height: 1.7em
+    .oe_topbar
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#646060', endColorstr='#262626')
+    .oe_popup_form
+        width: 99% !important
+    .oe_form_label
+        white-space: normal !important
+    ul.oe_form_status, ul.oe_form_status_clickable
+        li
+            display: inline-block
+            clear: both
+            &:last-child
+                overflow: hidden
+                border-right: 1px solid #cacaca
+                .label
+                    padding-right: 14px
+                    border-right: none
+                .arrow
+                    display: inline-block
+                    opacity: 0
+                    filter: alpha(opacity = 0)
+                    border: none
+                    width: 0
+                    border-right: none 
+        .label
+            border-bottom: 1px solid #cacaca
+            background: transparent
+        .arrow
+            span
+                background-color: #fefefe !important
+        li.oe_active
+            .label
+                border-bottom: 1px solid #729fcf
+            .arrow span
+                background-color: #729fcf !important
 
-    .oe_form_field.oe_tags
-        float: left
+    // jquery ui for ie
+    .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#EFEFEF', endColorstr='#D8D8D8')
 // }}}
 
 // @media print {{{

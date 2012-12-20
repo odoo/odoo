@@ -618,6 +618,21 @@
   -box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(255, 255, 255, 0.8) inset;
 }
 
+.openerp_ie .oe_kanban_view .oe_kanban_group_header .oe_kanban_group_title_vertical {
+  display: none !important;
+}
+.openerp_ie .oe_kanban_view .oe_kanban_group_header.oe_kanban_group_folded .oe_kanban_group_title_vertical {
+  display: inline-block !important;
+}
+.openerp_ie .oe_kanban_view .oe_kanban_group_title_vertical {
+  -ms-writing-mode: lr-tb !important;
+  background: #f0eeee;
+  top: -5px !important;
+}
+.openerp_ie .oe_kanban_view.oe_kanban_grouped .oe_kanban_group_header {
+  height: 1%;
+}
+
 @media print {
   .openerp .oe_kanban_groups button {
     visibility: hidden;
