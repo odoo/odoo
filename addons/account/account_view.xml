@@ -537,6 +537,7 @@
         <record id="view_bank_statement_form" model="ir.ui.view">
             <field name="name">account.bank.statement.form</field>
             <field name="model">account.bank.statement</field>
+            <field name="priority">1</field>
             <field name="arch" type="xml">
                 <form string="Bank Statement" version="7.0">
                 <header>
@@ -2232,6 +2233,7 @@
         <record id="view_bank_statement_form2" model="ir.ui.view">
             <field name="name">account.bank.statement.form</field>
             <field name="model">account.bank.statement</field>
+            <field name="priority">2</field>
             <field name="arch" type="xml">
                 <form string="Statement" version="7.0">
                 <header>
