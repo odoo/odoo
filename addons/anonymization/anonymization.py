@@ -543,7 +543,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
             fixes = group(fixes, ('model_name', 'field_name'))
 
             for line in data:
-                table_name = self.pool.get(line['model_id'])._table
+                table_name = self.pool.get(line['model_id'])._table if self.pool.get(line['model_id']) else None
 
                 # check if custom sql exists:
                 key = (line['model_id'], line['field_id'])

@@ -581,8 +581,8 @@ class mail_thread(osv.AbstractModel):
                         (msg['message_id'], model)
 
                 # disabled subscriptions during message_new/update to avoid having the system user running the
-                # email gateway become a follower of all inbound messages  
-                nosub_ctx = dict(context, mail_nosubscribe=True)
+                # email gateway become a follower of all inbound messages
+                nosub_ctx = dict(context, mail_create_nosubscribe=True)
                 if thread_id and hasattr(model_pool, 'message_update'):
                     model_pool.message_update(cr, user_id, [thread_id], msg, context=nosub_ctx)
                 else:
