@@ -79,7 +79,7 @@ class base_action_rule(osv.osv):
         'act_user_id': fields.many2one('res.users', 'Set Responsible to'),
         'act_state': fields.selection(_state_get, 'Set State to', size=16),
         'act_followers': fields.many2many("res.partner", string="Set Followers"),
-        'server_action_ids': fields.one2many('ir.actions.server', 'action_rule_id',
+        'server_action_ids': fields.many2many('ir.actions.server',
             domain="[('model_id', '=', model_id)]",
             string='Server Action',
             help="Example: email reminders, call object service, etc."),
@@ -318,11 +318,5 @@ class base_action_rule(osv.osv):
                     self.do_action(cr, uid, action, obj, context=context)
         context.update({'action': False})
         return True
-
-class actions_server(osv.osv):
-    _inherit = 'ir.actions.server'
-    _columns = {
-        'action_rule_id': fields.many2one("base.action.rule", string="Action Rule")
-    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
