@@ -32,9 +32,8 @@ class WizardMultiChartsAccounts(TransientModel):
         # 0 is evaluated as False in python so we have to do this
         # because original wizard test code_digits value on a float widget
         if chart_template_id:
-            chart = self.pool['account.chart.template'].browse(cursor, uid,
-                                                               chart_template_id, context=context)
-            if chart.name == "Plan comptable STERCHI":
+            sterchi_template = self.pool.get('ir.model.data').get_object('l10n_ch','l10nch_chart_template')
+            if sterchi_template.id == template_id:
                 res['value']['code_digits'] = 0
         return res
 
