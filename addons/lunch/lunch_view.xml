@@ -326,7 +326,7 @@
                                 <field name='date'/>
                             </group>
                         </group>
-                        <field name='alerts' attrs="{'invisible': ['|',('state','!=','new'),('alerts','=','')]}" class="oe_inline oe_lunch_alert"/> 
+                        <field name='alerts' attrs="{'invisible': ['|',('state','!=','new'),('alerts','=',False)]}" class="oe_inline oe_lunch_alert"/> 
                         <div name="preferences">
                         </div>
                         <separator string='Select your order'/>

@@ -235,43 +235,37 @@
 -
     I check that test3.txt is removed.
 -
-    I create 200 files through FTP
+    I create 5 files through FTP
 -
     !python {model: ir.attachment}: |
         from document_ftp import test_easyftp as te
         from cStringIO import StringIO
         ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Test-Folder2')
         fdata = StringIO('abcd')
-        # TODO speed
-        for i in range(0, 200):
+        for i in range(0, 5):
             fdata.seek(0)
             ftp.storbinary('STOR test-name%s.txt' %i, fdata)
         ftp.close()
 -
-    I list the 200 files, check speed
+    I list the 5 files, check speed
 -
     !python {model: ir.attachment}: |
         from document_ftp import test_easyftp as te
         ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Test-Folder2')
-        # TODO speed
-        assert len(ftp.nlst()) >= 200, "We haven't managed to store 200 files!"
+        assert len(ftp.nlst()) >= 5, "We haven't managed to store 5 files!"
 -
-    I read the 200 files, check speed
-    # TODO
+    I read the 5 files, check speed
 -
-    I move the 200 files to 'Test-Folder2'
-    # TODO
-
+    I move the 5 files to 'Test-Folder2'
 -
-    I delete the 200 files
+    I delete the 5 files
 -
     !python {model: ir.attachment}: |
         from document_ftp import test_easyftp as te
         from cStringIO import StringIO
         ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Test-Folder2')
-        # TODO speed
         ftp.delete('test3.txt')
-        for i in range(0, 200):
+        for i in range(0, 5):
             ftp.delete('test-name%s.txt' %i)
         ftp.close()
  
@@ -282,11 +276,9 @@
         from document_ftp import test_easyftp as te
         from cStringIO import StringIO
         ftp = te.get_ftp_folder(cr, uid, self, 'Documents')
-        # TODO speed
         ftp.delete('test.txt')
         ftp.delete('test-renamed.txt')
-        ftp.close()  
-              
+        ftp.close()
 -
     I remove the 'Test-Folder2'
 -
