@@ -1112,7 +1112,6 @@ $sheet-padding: 16px
     // ActionManager {{{
     .oe_application
         width: 100%
-        height: 100%
         a
             color: $link-color
             &:hover
@@ -2471,6 +2470,8 @@ div.ui-widget-overlay
 
 // Internet Explorer 9+ specifics {{{
 .openerp_ie
+    .oe_form_group .field_boolean input
+        background: #fff
     input[type='checkbox']
         border: none
         background: none
@@ -2495,8 +2496,6 @@ div.ui-widget-overlay
         button .oe_form_button_create
             padding-top: 0
             padding-bottom: 0
-        .field_boolean
-            background: #fff
     .oe_kanban_image
         border: none
     .oe_msg_icon
