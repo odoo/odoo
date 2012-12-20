@@ -538,8 +538,8 @@ class mail_message(osv.Model):
         # if requested: mark messages as read
         if context and context.get('mail_read_set_read'):
             message_ids = [message.get('id') for message in message_list]
-            notif_ids = notification_obj.search(cr, uid, [('partner_id.user_ids', 'in', uid), ('message_id', 'in', message_ids)], context=context)
-            notification_obj.write(cr, uid, notif_ids, {'read': True}, context=context)
+            unread_notif_ids = notification_obj.search(cr, uid, [('read', '=', False), ('partner_id.user_ids', 'in', uid), ('message_id', 'in', message_ids)], context=context)
+            notification_obj.write(cr, uid, unread_notif_ids, {'read': True}, context=context)
 
         # get the child expandable messages for the tree
         self._message_read_dict_postprocess(cr, uid, message_list, message_tree, context=context)
