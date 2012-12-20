@@ -501,6 +501,11 @@ class mail_message(osv.Model):
         if ids is None:
             ids = self.search(cr, uid, domain, context=context, limit=limit)
 
+        # if requested: mark messages as read
+        if context and context.has_key('mail_read_set_read'):
+            notif_ids = notif_obj.search(cr, uid, [('message_id', '=', msg.id)], context=context)
+            notif_obj.write(cr, uid, notif_ids, {'read': True}, context=context)
+
         # fetch parent if threaded, sort messages
         for message in self.browse(cr, uid, ids, context=context):
             message_id = message.id

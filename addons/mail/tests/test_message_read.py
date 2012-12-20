@@ -80,6 +80,14 @@ class test_mail_access_rights(TestMailBase):
             elif msg.get('type') == 'expandable':
                 new_msg_exp = msg
 
+        # #check notification For message readable or unread.
+        # notif_msg1_ids1 = self.mail_notification.search(cr, uid, [('partner_id', '=', user_bert.partner_id.id),('message_id', '=', message1.id)], context=context)
+        # notif_data1 = self.mail_notification.read(cr, uid, notif_msg1_ids1, ['read'])[0]['read']
+        # # Test: Message1 are marked as read.
+        # self.assertTrue(notif_data1, 'Message1 are set as read for the user Bert that read it')
+        # #Pass key in context for unread message..
+        # context.update({'default_model': 'mail.group', 'default_res_id': [self.group_pigs_id], 'mail_keep_unread': True})
+
         # Do: fetch new messages in first thread, domain from expandable
         self.assertIsNotNone(new_msg_exp, 'message_read on last Pigs message should have returned a new messages expandable')
         domain = new_msg_exp.get('domain', [])
