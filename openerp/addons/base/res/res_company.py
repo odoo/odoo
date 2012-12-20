@@ -18,15 +18,15 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import os
 
 import openerp
-from openerp import SUPERUSER_ID
-from openerp.osv import osv, fields
-from openerp import tools
+from openerp import SUPERUSER_ID, tools
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools import image_resize_image
-from tools.translate import _
-from tools.safe_eval import safe_eval as eval
 
 class multi_company_default(osv.osv):
     """

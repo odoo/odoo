@@ -31,8 +31,7 @@ import re
 import smtplib
 import threading
 
-from osv import osv
-from osv import fields
+from openerp.osv import osv, fields
 from openerp.tools.translate import _
 from openerp.tools import html2text
 import openerp.tools as tools
@@ -228,7 +227,7 @@ class ir_mail_server(osv.osv):
            :param int port: SMTP port to connect to
            :param user: optional username to authenticate with
            :param password: optional password to authenticate with
-           :param string encryption: optional: ``'ssl'`` | ``'starttls'``
+           :param string encryption: optional, ``'ssl'`` | ``'starttls'``
            :param bool smtp_debug: toggle debugging of SMTP sessions (all i/o
                               will be output in logs)
         """

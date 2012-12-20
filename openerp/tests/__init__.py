@@ -8,6 +8,7 @@ Tests can be explicitely added to the `fast_suite` or `checks` lists or not.
 See the :ref:`test-framework` section in the :ref:`features` list.
 """
 
+import test_acl
 import test_basecase
 import test_db_cursor
 import test_expression
@@ -28,6 +29,7 @@ fast_suite = [
 ]
 
 checks = [
+    test_acl,
     test_expression,
     test_mail,
     test_db_cursor,

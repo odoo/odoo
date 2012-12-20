@@ -77,11 +77,11 @@ def _initialize_db(serv, id, db_name, demo, lang, user_password):
             mids = modobj.search(cr, SUPERUSER_ID, [('state', '=', 'installed')])
             modobj.update_translations(cr, SUPERUSER_ID, mids, lang)
 
-        cr.execute('UPDATE res_users SET password=%s, lang=%s, active=True WHERE login=%s', (
-            user_password, lang, 'admin'))
-        cr.execute('SELECT login, password ' \
-                   ' FROM res_users ' \
-                   ' ORDER BY login')
+        # update admin's password and lang
+        values = {'password': user_password, 'lang': lang}
+        pool.get('res.users').write(cr, SUPERUSER_ID, [SUPERUSER_ID], values)
+
+        cr.execute('SELECT login, password FROM res_users ORDER BY login')
         serv.actions[id].update(users=cr.dictfetchall(), clean=True)
         cr.commit()
         cr.close()
@@ -172,13 +172,13 @@ class db(netsvc.ExportService):
     def exp_get_progress(self, id):
         if self.actions[id]['thread'].isAlive():
 #           return openerp.modules.init_progress[db_name]
-            return (min(self.actions[id].get('progress', 0),0.95), [])
+            return min(self.actions[id].get('progress', 0),0.95), []
         else:
             clean = self.actions[id]['clean']
             if clean:
                 users = self.actions[id]['users']
                 self.actions.pop(id)
-                return (1.0, users)
+                return 1.0, users
             else:
                 e = self.actions[id]['exception'] # TODO this seems wrong: actions[id]['traceback'] is set, but not 'exception'.
                 self.actions.pop(id)
@@ -543,7 +543,7 @@ GNU Public Licence.
         if os.name == 'posix':
             if platform.system() == 'Linux':
                 lsbinfo = os.popen('lsb_release -a').read()
-                environment += '%s'%(lsbinfo)
+                environment += '%s'% lsbinfo
             else:
                 environment += 'Your System is not lsb compliant\n'
         environment += 'Operating System Release : %s\n' \

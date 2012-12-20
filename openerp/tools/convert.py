@@ -46,7 +46,6 @@ except:
 from datetime import datetime, timedelta
 from lxml import etree
 import misc
-import openerp.loglevels as loglevels
 import openerp.pooler as pooler
 from config import config
 from translate import _
@@ -662,7 +661,7 @@ form: module.record_id""" % (xml_id,)
         if rec.get('action') and pid:
             action = "ir.actions.%s,%d" % (a_type, a_id)
             self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', 'tree_but_open', 'Menuitem', [('ir.ui.menu', int(pid))], action, True, True, xml_id=rec_id)
-        return ('ir.ui.menu', pid)
+        return 'ir.ui.menu', pid
 
     def _assert_equals(self, f1, f2, prec=4):
         return not round(f1 - f2, prec)

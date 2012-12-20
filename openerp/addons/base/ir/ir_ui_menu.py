@@ -23,11 +23,11 @@
 import base64
 import re
 import threading
-from tools.safe_eval import safe_eval as eval
-import tools
+from openerp.tools.safe_eval import safe_eval as eval
+from openerp import tools
 import openerp.modules
-from osv import fields, osv
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
 
 def one_in(setA, setB):
@@ -44,9 +44,8 @@ class ir_ui_menu(osv.osv):
     def __init__(self, *args, **kwargs):
         self.cache_lock = threading.RLock()
         self._cache = {}
-        r = super(ir_ui_menu, self).__init__(*args, **kwargs)
+        super(ir_ui_menu, self).__init__(*args, **kwargs)
         self.pool.get('ir.model.access').register_cache_clearing_method(self._name, 'clear_cache')
-        return r
 
     def clear_cache(self):
         with self.cache_lock:
@@ -144,7 +143,7 @@ class ir_ui_menu(osv.osv):
         return res
 
     def _get_full_name(self, cr, uid, ids, name=None, args=None, context=None):
-        if context == None:
+        if context is None:
             context = {}
         res = {}
         for elmt in self.browse(cr, uid, ids, context=context):
@@ -195,7 +194,7 @@ class ir_ui_menu(osv.osv):
             next_num=int(concat[0])+1
             datas['name']=rex.sub(('(%d)'%next_num),datas['name'])
         else:
-            datas['name']=datas['name']+'(1)'
+            datas['name'] += '(1)'
         self.write(cr,uid,[res],{'name':datas['name']})
         ids = ir_values_obj.search(cr, uid, [
             ('model', '=', 'ir.ui.menu'),

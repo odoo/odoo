@@ -34,7 +34,6 @@ condition/math builtins.
 from opcode import HAVE_ARGUMENT, opmap, opname
 from types import CodeType
 import logging
-import os
 
 __all__ = ['test_expr', 'safe_eval', 'const_eval']
 

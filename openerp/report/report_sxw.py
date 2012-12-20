@@ -441,7 +441,7 @@ class report_sxw(report_rml, preprocess.report):
             raise NotImplementedError(_('Unknown report type: %s') % report_type)
         fnct_ret = fnct(cr, uid, ids, data, report_xml, context)
         if not fnct_ret:
-            return (False,False)
+            return False, False
         return fnct_ret
 
     def create_source_odt(self, cr, uid, ids, data, report_xml, context=None):
@@ -531,7 +531,7 @@ class report_sxw(report_rml, preprocess.report):
             logo = base64.decodestring(rml_parser.logo)
         create_doc = self.generators[report_xml.report_type]
         pdf = create_doc(etree.tostring(processed_rml),rml_parser.localcontext,logo,title.encode('utf8'))
-        return (pdf, report_xml.report_type)
+        return pdf, report_xml.report_type
 
     def create_single_odt(self, cr, uid, ids, data, report_xml, context=None):
         if not context:
@@ -644,7 +644,7 @@ class report_sxw(report_rml, preprocess.report):
         sxw_z.close()
         final_op = sxw_io.getvalue()
         sxw_io.close()
-        return (final_op, mime_type)
+        return final_op, mime_type
 
     def create_single_html2html(self, cr, uid, ids, data, report_xml, context=None):
         if not context:
@@ -666,7 +666,7 @@ class report_sxw(report_rml, preprocess.report):
         create_doc = self.generators['html2html']
         html = etree.tostring(create_doc(html_dom, html_parser.localcontext))
 
-        return (html.replace('&amp;','&').replace('&lt;', '<').replace('&gt;', '>').replace('</br>',''), report_type)
+        return html.replace('&amp;','&').replace('&lt;', '<').replace('&gt;', '>').replace('</br>',''), report_type
 
     def create_single_mako2html(self, cr, uid, ids, data, report_xml, context=None):
         mako_html = report_xml.report_rml_content
@@ -675,7 +675,7 @@ class report_sxw(report_rml, preprocess.report):
         html_parser.set_context(objs, data, ids, 'html')
         create_doc = self.generators['makohtml2html']
         html = create_doc(mako_html,html_parser.localcontext)
-        return (html,'html')
+        return html,'html'
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -24,9 +24,7 @@ import itertools
 import os
 import re
 
-from osv import fields,osv
-from osv.orm import except_orm
-import tools
+from openerp.osv import fields,osv
 
 class ir_attachment(osv.osv):
     """Attachments are used to link binary files or url to any openerp document.

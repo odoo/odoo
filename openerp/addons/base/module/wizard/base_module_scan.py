@@ -21,11 +21,10 @@
 import os
 import glob
 import imp
-
-import tools
-
 import zipfile
-from osv import osv
+
+from openerp import tools
+from openerp.osv import osv
 
 class base_module_scan(osv.osv_memory):
     """ scan module """
