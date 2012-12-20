@@ -19,13 +19,13 @@
 #
 ##############################################################################
 
-from datetime import datetime
-from datetime import timedelta
+from datetime import datetime, timedelta
 import time
 import logging
 
 from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -46,14 +46,12 @@ DATE_RANGE_FUNCTION = {
     False: lambda interval: timedelta(0),
 }
 
-def get_datetime(date_field):
+def get_datetime(date_str):
     '''Return a datetime from a date string or a datetime string'''
-    #complete date time if date_field contains only a date
-    date_split = date_field.split(' ')
-    if len(date_split) == 1:
-        date_field = date_split[0] + " 00:00:00"
-
-    return datetime.strptime(date_field[:19], '%Y-%m-%d %H:%M:%S')
+    # complete date time if date_str contains only a date
+    if ' ' not in date_str:
+        date_str = date_str + " 00:00:00"
+    return datetime.strptime(date_str, DEFAULT_SERVER_DATETIME_FORMAT)
 
 
 class base_action_rule(osv.osv):
@@ -149,7 +147,7 @@ class base_action_rule(osv.osv):
         if action.act_user_id and 'user_id' in model._all_columns:
             values['user_id'] = action.act_user_id.id
         if 'date_action_last' in model._all_columns:
-            values['date_action_last'] = time.strftime('%Y-%m-%d %H:%M:%S')
+            values['date_action_last'] = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         if action.act_state and 'state' in model._all_columns:
             values['state'] = action.act_state
 
@@ -270,4 +268,4 @@ class base_action_rule(osv.osv):
                         import traceback
                         _logger.error(traceback.format_exc())
 
-            action.write({'last_run': now})
+            action.write({'last_run': now.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
