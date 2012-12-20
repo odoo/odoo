@@ -136,15 +136,14 @@ class mail_group(osv.Model):
                 'domain': [('model', '=', 'mail.group'), ('res_id', '=', mail_group_id)],
                 'context': {'default_model': 'mail.group',
                             'default_res_id': mail_group_id,
-                            'search_default_message_unread': True,
-                            'mail_read_keep_unread':True},
+                            'search_default_message_unread': True},
                 'res_model': 'mail.message',
                 'thread_level': 1,
                 'header_description': vals.get('description'),
             }
             cobj = self.pool.get('ir.actions.client')
             newref = cobj.copy(cr, SUPERUSER_ID, ref[1], default={'params': str(params), 'name': vals['name']}, context=context)
-            mobj.write(cr, SUPERUSER_ID, menu_id, { 'action': 'ir.actions.client,' + str(newref), 'mail_group_id': mail_group_id}, context=context)
+            mobj.write(cr, SUPERUSER_ID, menu_id, {'action': 'ir.actions.client,' + str(newref), 'mail_group_id': mail_group_id}, context=context)
 
         if vals.get('group_ids'):
             self._subscribe_users(cr, uid, [mail_group_id], context=context)

@@ -1540,6 +1540,7 @@ openerp.mail = function (session) {
                 'show_compose_message': this.view.is_action_enabled('edit'),
             });
             this.node.context = {
+                'mail_read_set_read': true,  // set messages as read in Chatter
                 'default_res_id': this.view.datarecord.id || false,
                 'default_model': this.view.model || false,
             };

@@ -492,6 +492,7 @@ class mail_message(osv.Model):
         message_unload_ids = message_unload_ids if message_unload_ids is not None else []
         if message_unload_ids:
             domain += [('id', 'not in', message_unload_ids)]
+        notification_obj = self.pool.get('mail.notification')
         limit = limit or self._message_read_limit
         message_tree = {}
         message_list = []
@@ -500,11 +501,6 @@ class mail_message(osv.Model):
         # no specific IDS given: fetch messages according to the domain, add their parents if uid has access to
         if ids is None:
             ids = self.search(cr, uid, domain, context=context, limit=limit)
-
-        # if requested: mark messages as read
-        if context and context.has_key('mail_read_set_read'):
-            notif_ids = notif_obj.search(cr, uid, [('message_id', '=', msg.id)], context=context)
-            notif_obj.write(cr, uid, notif_ids, {'read': True}, context=context)
 
         # fetch parent if threaded, sort messages
         for message in self.browse(cr, uid, ids, context=context):
@@ -534,9 +530,16 @@ class mail_message(osv.Model):
                 message_id_list.sort(key=lambda item: item['id'])
                 message_id_list.insert(0, self._message_read_dict(cr, uid, message_tree[key], context=context))
 
+        # create final ordered message_list based on parent_tree
         parent_list = parent_tree.items()
         parent_list = sorted(parent_list, key=lambda item: max([msg.get('id') for msg in item[1]]) if item[1] else item[0], reverse=True)
         message_list = [message for (key, msg_list) in parent_list for message in msg_list]
+
+        # if requested: mark messages as read
+        if context and context.get('mail_read_set_read'):
+            message_ids = [message.get('id') for message in message_list]
+            notif_ids = notification_obj.search(cr, uid, [('partner_id.user_ids', 'in', uid), ('message_id', 'in', message_ids)], context=context)
+            notification_obj.write(cr, uid, notif_ids, {'read': True}, context=context)
 
         # get the child expandable messages for the tree
         self._message_read_dict_postprocess(cr, uid, message_list, message_tree, context=context)
@@ -605,12 +608,14 @@ class mail_message(osv.Model):
                 model_ids.setdefault(message.get('model'), {}).setdefault(message.get('res_id'), set()).add(message.get('id'))
 
         allowed_ids = self._find_allowed_doc_ids(cr, uid, model_ids, context=context)
-
         final_ids = author_ids | partner_ids | allowed_ids
+
         if count:
             return len(final_ids)
         else:
-            return list(final_ids)
+            # re-construct a list based on ids, because set did not keep the original order
+            id_list = [id for id in ids if id in final_ids]
+            return id_list
 
     def check_access_rule(self, cr, uid, ids, operation, context=None):
         """ Access rules of mail.message:
