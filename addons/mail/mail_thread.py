@@ -783,14 +783,14 @@ class mail_thread(osv.AbstractModel):
             if part_ids and message_ids:
                 mail_message.write(cr, uid, message_ids, {'email_from': None, 'author_id': part_ids[0]}, context=context)
 
-            partner_ids = set(partner_ids) + set(part_ids)
+            partner_ids = set(partner_ids) | set(part_ids)
 
         if parent_id:
             parent_message = self.pool.get('mail.message').browse(cr, uid, parent_id, context=context)
-            partner_ids += [(4, partner.id) for partner in parent_message.partner_ids]
+            partner_ids |= set([(4, partner.id) for partner in parent_message.partner_ids])
             # TDE FIXME HACK: mail.thread -> private message
             if self._name == 'mail.thread' and parent_message.author_id.id:
-                partner_ids.append((4, parent_message.author_id.id))
+                partner_ids.add((4, parent_message.author_id.id))
 
         message_type = kwargs.pop('type', 'comment')
         message_subtype = kwargs.pop('subtype', 'mail.mt_comment')
