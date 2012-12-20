@@ -963,6 +963,7 @@ openerp.mail = function (session) {
          *              use with browse, fetch... [O]= top parent
          */
         init: function (parent, datasets, options) {
+            var self = this;
             this._super(parent, options);
             this.domain = options.domain || [];
             this.context = _.extend(options.context || {});
@@ -975,14 +976,15 @@ openerp.mail = function (session) {
             this.parent_message= parent.thread!= undefined ? parent : false ;
 
             // data of this thread
-            this.id =  datasets.id || false,
-            this.last_id =  datasets.last_id || false,
-            this.parent_id =  datasets.parent_id || false,
-
-            this.is_private =  datasets.is_private || false,
-            this.author_id =  datasets.author_id || false,
-            this.thread_level =  (datasets.thread_level+1) || 0,
-            this.partner_ids =  _.filter(datasets.partner_ids, function (partner) { return partner[0]!=datasets.author_id[0]; } ) 
+            this.id = datasets.id || false;
+            this.last_id = datasets.last_id || false;
+            this.parent_id = datasets.parent_id || false;
+            this.is_private = datasets.is_private || false;
+            this.author_id = datasets.author_id || false;
+            this.thread_level = (datasets.thread_level+1) || 0;
+            this.partner_ids = datasets.partner_ids || [];
+            if (datasets.author_id)
+                this.partner_ids.push(datasets.author_id);
             this.messages = [];
 
             this.options.flat_mode = !!(this.options.display_indented_thread > this.thread_level ? this.options.display_indented_thread - this.thread_level : 0);
