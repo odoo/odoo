@@ -130,7 +130,7 @@ class mrp_repair(osv.osv):
             ('2binvoiced','To be Invoiced'),
             ('invoice_except','Invoice Exception'),
             ('done','Repaired')
-            ], 'Status', readonly=True, track_visibility=1,
+            ], 'Status', readonly=True, track_visibility='onchange',
             help=' * The \'Draft\' status is used when a user is encoding a new and unconfirmed repair order. \
             \n* The \'Confirmed\' status is used when a user confirms the repair order. \
             \n* The \'Ready to Repair\' status is used to start to repairing, user can start repairing only after repair order is confirmed. \

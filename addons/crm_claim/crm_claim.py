@@ -104,7 +104,7 @@ class crm_claim(base_stage, osv.osv):
         'email_cc': fields.text('Watchers Emails', size=252, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'email_from': fields.char('Email', size=128, help="Destination email for email gateway."),
         'partner_phone': fields.char('Phone', size=32),
-        'stage_id': fields.many2one ('crm.claim.stage', 'Stage', track_visibility=1,
+        'stage_id': fields.many2one ('crm.claim.stage', 'Stage', track_visibility='onchange',
                 domain="['&',('fold', '=', False),'|', ('section_ids', '=', section_id), ('case_default', '=', True)]"),
         'cause': fields.text('Root Cause'),
         'state': fields.related('stage_id', 'state', type="selection", store=True,

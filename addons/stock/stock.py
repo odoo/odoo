@@ -642,7 +642,7 @@ class stock_picking(osv.osv):
             ('confirmed', 'Waiting Availability'),
             ('assigned', 'Ready to Transfer'),
             ('done', 'Transferred'),
-            ], 'Status', readonly=True, select=True, track_visibility=1, help="""
+            ], 'Status', readonly=True, select=True, track_visibility='onchange', help="""
             * Draft: not confirmed yet and will not be scheduled until confirmed\n
             * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n
             * Waiting Availability: still waiting for the availability of products\n
@@ -664,7 +664,7 @@ class stock_picking(osv.osv):
             ("invoiced", "Invoiced"),
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not Applicable")], "Invoice Control",
-            select=True, required=True, readonly=True, track_visibility=1, states={'draft': [('readonly', False)]}),
+            select=True, required=True, readonly=True, track_visibility='onchange', states={'draft': [('readonly', False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
     }
     _defaults = {

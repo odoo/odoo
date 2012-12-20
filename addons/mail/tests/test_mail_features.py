@@ -623,9 +623,9 @@ class test_mail(TestMailBase):
         public_col = self.mail_group._columns.get('public')
         name_col = self.mail_group._columns.get('name')
         group_public_col = self.mail_group._columns.get('group_public_id')
-        public_col.track_visibility = 1
-        name_col.track_visibility = 2
-        group_public_col.track_visibility = 1
+        public_col.track_visibility = 'onchange'
+        name_col.track_visibility = 'always'
+        group_public_col.track_visibility = 'onchange'
 
         # Test: change name -> always tracked, not related to a subtype
         self.mail_group.write(cr, self.user_raoul_id, [self.group_pigs_id], {'public': 'public'})
@@ -670,7 +670,7 @@ class test_mail(TestMailBase):
         self.assertEqual(len(self.group_pigs.message_ids), 4, 'tracked: No message should have been produced')
 
         # Data: removed changes
-        public_col.track_visibility = False
-        name_col.track_visibility = False
-        group_public_col.track_visibility = False
+        public_col.track_visibility = None
+        name_col.track_visibility = None
+        group_public_col.track_visibility = None
         self.mail_group._track = {}

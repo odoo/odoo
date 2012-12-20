@@ -108,7 +108,7 @@ class note_note(osv.osv):
             type='many2one', 
             relation='note.stage'),
         'stage_ids': fields.many2many('note.stage','note_stage_rel','note_id','stage_id','Stages of Users'),
-        'open': fields.boolean('Active', track_visibility=1),
+        'open': fields.boolean('Active', track_visibility='onchange'),
         'date_done': fields.date('Date done'),
         'color': fields.integer('Color Index'),
         'tag_ids' : fields.many2many('note.tag','note_tags_rel','note_id','tag_id','Tags'),

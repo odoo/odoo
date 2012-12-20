@@ -249,7 +249,7 @@ class project_issue(base_stage, osv.osv):
                       If the case needs to be reviewed then the status is \
                       set to \'Pending\'.'),
         'kanban_state': fields.selection([('normal', 'Normal'),('blocked', 'Blocked'),('done', 'Ready for next stage')], 'Kanban State',
-                                         track_visibility=1,
+                                         track_visibility='onchange',
                                          help="A Issue's kanban state indicates special situations affecting it:\n"
                                               " * Normal is the default situation\n"
                                               " * Blocked indicates something is preventing the progress of this issue\n"
@@ -266,16 +266,16 @@ class project_issue(base_stage, osv.osv):
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'version_id': fields.many2one('project.issue.version', 'Version'),
         'stage_id': fields.many2one ('project.task.type', 'Stage',
-                        track_visibility=1,
+                        track_visibility='onchange',
                         domain="['&', ('fold', '=', False), ('project_ids', '=', project_id)]"),
-        'project_id':fields.many2one('project.project', 'Project', track_visibility=1),
+        'project_id':fields.many2one('project.project', 'Project', track_visibility='onchange'),
         'duration': fields.float('Duration'),
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
         'day_open': fields.function(_compute_day, string='Days to Open', \
                                 multi='compute_day', type="float", store=True),
         'day_close': fields.function(_compute_day, string='Days to Close', \
                                 multi='compute_day', type="float", store=True),
-        'user_id': fields.many2one('res.users', 'Assigned to', required=False, select=1, track_visibility=1),
+        'user_id': fields.many2one('res.users', 'Assigned to', required=False, select=1, track_visibility='onchange'),
         'working_hours_open': fields.function(_compute_day, string='Working Hours to Open the Issue', \
                                 multi='compute_day', type="float", store=True),
         'working_hours_close': fields.function(_compute_day, string='Working Hours to Close the Issue', \

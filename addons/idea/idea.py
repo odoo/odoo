@@ -54,7 +54,7 @@ class idea_idea(osv.osv):
             ('open', 'Accepted'),
             ('cancel', 'Refused'),
             ('close', 'Done')],
-            'Status', readonly=True, track_visibility=1,
+            'Status', readonly=True, track_visibility='onchange',
         )
     }
     _sql_constraints = [

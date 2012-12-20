@@ -97,7 +97,7 @@ class hr_expense_expense(osv.osv):
             ('accepted', 'Approved'),
             ('done', 'Done'),
             ],
-            'Status', readonly=True, track_visibility=1,
+            'Status', readonly=True, track_visibility='onchange',
             help='When the expense request is created the status is \'Draft\'.\n It is confirmed by the user and request is sent to admin, the status is \'Waiting Confirmation\'.\
             \nIf the admin accepts it, the status is \'Accepted\'.\n If a receipt is made for the expense request, the status is \'Done\'.'),
     }

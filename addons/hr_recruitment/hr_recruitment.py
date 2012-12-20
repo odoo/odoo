@@ -195,7 +195,7 @@ class hr_applicant(base_stage, osv.Model):
         'partner_id': fields.many2one('res.partner', 'Contact'),
         'create_date': fields.datetime('Creation Date', readonly=True, select=True),
         'write_date': fields.datetime('Update Date', readonly=True),
-        'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage', track_visibility=1,
+        'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage', track_visibility='onchange',
                         domain="['&', ('fold', '=', False), '|', ('department_id', '=', department_id), ('department_id', '=', False)]"),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
                 selection=AVAILABLE_STATES, string="Status", readonly=True,
@@ -206,7 +206,7 @@ class hr_applicant(base_stage, osv.Model):
                       set to \'Pending\'.'),
         'categ_ids': fields.many2many('hr.applicant_category', string='Tags'),
         'company_id': fields.many2one('res.company', 'Company'),
-        'user_id': fields.many2one('res.users', 'Responsible', track_visibility=1),
+        'user_id': fields.many2one('res.users', 'Responsible', track_visibility='onchange'),
         # Applicant Columns
         'date_closed': fields.datetime('Closed', readonly=True, select=True),
         'date_open': fields.datetime('Opened', readonly=True, select=True),

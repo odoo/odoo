@@ -461,7 +461,7 @@ class mrp_production(osv.osv):
             [('draft', 'New'), ('cancel', 'Cancelled'), ('picking_except', 'Picking Exception'), ('confirmed', 'Awaiting Raw Materials'),
                 ('ready', 'Ready to Produce'), ('in_production', 'Production Started'), ('done', 'Done')],
             string='Status', readonly=True,
-            track_visibility=1,
+            track_visibility='onchange',
             help="When the production order is created the status is set to 'Draft'.\n\
                 If the order is confirmed the status is set to 'Waiting Goods'.\n\
                 If any exceptions are there, the status is set to 'Picking Exception'.\n\
@@ -1022,7 +1022,7 @@ class mrp_production_workcenter_line(osv.osv):
         'hour': fields.float('Number of Hours', digits=(16,2)),
         'sequence': fields.integer('Sequence', required=True, help="Gives the sequence order when displaying a list of work orders."),
         'production_id': fields.many2one('mrp.production', 'Manufacturing Order',
-            track_visibility=1, select=True, ondelete='cascade', required=True),
+            track_visibility='onchange', select=True, ondelete='cascade', required=True),
     }
     _defaults = {
         'sequence': lambda *a: 1,

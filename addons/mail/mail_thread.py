@@ -340,11 +340,11 @@ class mail_thread(osv.AbstractModel):
 
             # generate tracked_values data structure: {'col_name': {col_info, new_value, old_value}}
             for col_name, col_info in tracked_fields.items():
-                if record[col_name] == initial[col_name] and getattr(self._all_columns[col_name].column, 'track_visibility', 0) == 2:
+                if record[col_name] == initial[col_name] and getattr(self._all_columns[col_name].column, 'track_visibility', None) == 'always':
                     tracked_values[col_name] = dict(col_info=col_info['string'],
                                                         new_value=convert_for_display(record[col_name], col_info))
                 elif record[col_name] != initial[col_name]:
-                    if getattr(self._all_columns[col_name].column, 'track_visibility', 0) in [1, 2]:
+                    if getattr(self._all_columns[col_name].column, 'track_visibility', None) in ['always', 'onchange']:
                         tracked_values[col_name] = dict(col_info=col_info['string'],
                                                             old_value=convert_for_display(initial[col_name], col_info),
                                                             new_value=convert_for_display(record[col_name], col_info))

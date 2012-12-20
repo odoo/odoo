@@ -48,7 +48,7 @@ class crm_phonecall(base_state, osv.osv):
                                     ('pending', 'Not Held'),
                                     ('cancel', 'Cancelled'),
                                     ('done', 'Held'),],
-                        string='Status', size=16, readonly=True, track_visibility=1,
+                        string='Status', size=16, readonly=True, track_visibility='onchange',
                         help='The status is set to \'Todo\', when a case is created.\
                                 If the case is in progress the status is set to \'Open\'.\
                                 When the call is over, the status is set to \'Held\'.\

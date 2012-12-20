@@ -54,7 +54,7 @@ class crm_meeting(base_state, osv.Model):
             string='Attendees', states={'done': [('readonly', True)]}),
         'state': fields.selection(
                     [('draft', 'Unconfirmed'), ('open', 'Confirmed')],
-                    string='Status', size=16, readonly=True, track_visibility=1),
+                    string='Status', size=16, readonly=True, track_visibility='onchange'),
         # Meeting fields
         'name': fields.char('Meeting Subject', size=128, required=True, states={'done': [('readonly', True)]}),
         'categ_ids': fields.many2many('crm.meeting.type', 'meeting_category_rel',
