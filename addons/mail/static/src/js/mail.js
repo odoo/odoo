@@ -369,6 +369,7 @@ openerp.mail = function (session) {
             this._super(parent, datasets, options);
             this.show_compact_message = false;
             this.show_delete_attachment = true;
+            this.emails_from = [];
         },
 
         start: function () {
@@ -478,9 +479,11 @@ openerp.mail = function (session) {
             this.$('.oe_cancel').on('click', _.bind( this.on_cancel, this) );
             this.$('.oe_post').on('click', _.bind( this.on_message_post, this) );
             this.$('.oe_full').on('click', _.bind( this.on_compose_fullmail, this, this.id ? 'reply' : 'comment') );
-
+        
             /* stack for don't close the compose form if the user click on a button */
-            this.$('.oe_msg_footer').on('mousedown', _.bind( function () { this.stay_open = true; }, this));
+            this.$('.oe_msg_left, .oe_msg_center').on('mousedown', _.bind( function () { this.stay_open = true; }, this));
+            this.$('.oe_msg_left, .oe_msg_content').on('mouseup', _.bind( function () { this.$('textarea').focus(); }, this));
+
             var ev_stay = {};
             ev_stay.mouseup = ev_stay.keydown = ev_stay.focus = function () { self.stay_open = false; };
             this.$('textarea:not(.oe_compact)').on(ev_stay);
@@ -491,6 +494,8 @@ openerp.mail = function (session) {
 
             // event: delete child attachments off the oe_msg_attachment_list box
             this.$(".oe_msg_attachment_list").on('click', '.oe_delete', this.on_attachment_delete);
+
+            this.$(".oe_emails_from").on('change', 'input', this.on_checked_email_from);
         },
 
         on_compose_fullmail: function (default_composition_mode) {
@@ -568,21 +573,23 @@ openerp.mail = function (session) {
 
             if (this.do_check_attachment_upload() && (this.attachment_ids.length || body.match(/\S+/))) {
                 //session.web.blockUI();
-                this.parent_thread.ds_thread.call('message_post_user_api', [
-                        this.context.default_res_id, 
-                        body, 
-                        false, 
-                        this.context.default_parent_id, 
-                        _.map(this.attachment_ids, function (file) {return file.id;}),
-                        this.parent_thread.context
-                    ]).done(function (record) {
+                var values = [
+                    this.context.default_res_id, //thread_id
+                    body, //body
+                    false, //subject
+                    this.context.default_parent_id, //parent_id
+                    _.map(this.attachment_ids, function (file) {return file.id;}), //attachment_ids
+                    _.map(_.filter(this.emails_from, function (f) {return f[1]}), function (f) {return f[0]}), //extra_email
+                    this.parent_thread.context, // context
+                ];
+                this.parent_thread.ds_thread.call('message_post_user_api', values).done(function (record) {
                         var thread = self.parent_thread;
                         var root = thread == self.options.root_thread;
                         if (self.options.display_indented_thread < self.thread_level && thread.parent_message) {
                             var thread = thread.parent_message.parent_thread;
                         }
                         // create object and attach to the thread object
-                        thread.message_fetch([['id', 'child_of', [self.id]]], false, [record], function (arg, data) {
+                        thread.message_fetch([["id", "=", record]], false, [record], function (arg, data) {
                             var message = thread.create_message_object( data[0] );
                             // insert the message on dom
                             thread.insert_message( message, root ? undefined : self.$el, root );
@@ -597,8 +604,8 @@ openerp.mail = function (session) {
         /* convert the compact mode into the compose message
         */
         on_compose_expandable: function (event) {
-
-            if ((!this.stay_open || (event && event.type == 'click')) && (!this.show_composer || !this.$('textarea:not(.oe_compact)').val().match(/\S+/))) {
+            this.get_emails_from();
+            if ((!this.stay_open || (event && event.type == 'click')) && (!this.show_composer || !this.$('textarea:not(.oe_compact)').val().match(/\S+/) && !this.attachment_ids.length)) {
                 this.show_composer = !this.show_composer || this.stay_open;
                 this.reinit();
             }
@@ -620,6 +627,41 @@ openerp.mail = function (session) {
             if (!this.show_composer) {
                 this.reinit();
             }
+        },
+
+        get_emails_from: function () {
+            var self = this;
+            var messages = [];
+
+            if (this.parent_thread.parent_message) {
+                // go to the parented message
+                var message = this.parent_thread.parent_message;
+                var parent_message = message.parent_id ? message.parent_thread.parent_message : message;
+                var messages = [parent_message].concat(parent_message.get_childs());
+            } else {
+                // get all wall messages
+                _.each(this.options.root_thread.messages, function (msg) {messages.push(msg); messages.concat(msg.get_childs());});
+            }
+            
+            var emails_from = _.map(_.filter(messages,
+                    function (thread) {return thread.author_id && !thread.author_id[0];}),
+                function (thread) {return thread.author_id[1];});
+
+            return _.each(emails_from, function (email_from) {
+                if (!_.find(self.emails_from, function (from) {return from[0] == email_from;})) {
+                    self.emails_from.push([email_from, true]);
+                }
+            });
+        },
+
+        on_checked_email_from: function (event) {
+            var $input = $(event.target);
+            var email = $input.attr("data");
+            _.each(this.emails_from, function (email_from) {
+                if (email_from[0] == email) {
+                    email_from[1] = $input.is(":checked");
+                }
+            });
         }
     });
 
@@ -1477,7 +1519,7 @@ openerp.mail = function (session) {
             $(window).resize( _.bind(this.thread.on_scroll, this.thread) );
             this.$el.resize( _.bind(this.thread.on_scroll, this.thread) );
             window.setTimeout( _.bind(this.thread.on_scroll, this.thread), 500 );
-        }
+        },
     });
 
 

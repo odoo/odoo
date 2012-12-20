@@ -749,8 +749,8 @@ class mail_thread(osv.AbstractModel):
         return mail_message.create(cr, uid, values, context=context)
 
     def message_post_user_api(self, cr, uid, thread_id, body='', subject=False, parent_id=False,
-                                attachment_ids=None, context=None, content_subtype='plaintext',
-                                extra_email=[], **kwargs):
+                                attachment_ids=None, extra_email=[], 
+                                context=None, content_subtype='plaintext', **kwargs):
         """ Wrapper on message_post, used for user input :
             - mail gateway
             - quick reply in Chatter (refer to mail.js), not
@@ -771,13 +771,20 @@ class mail_thread(osv.AbstractModel):
         if content_subtype == 'plaintext':
             body = tools.plaintext2html(body)
 
+        partner_ids = kwargs.pop('partner_ids', [])
+        
         for partner in extra_email:
             part_ids = self.pool.get('res.partner').search(cr, uid, [('email', '=', partner)], context=context)
             if not part_ids:
                 part_ids = [self.pool.get('res.partner').name_create(cr, uid, partner, context=context)[0]]
             self.message_subscribe(cr, uid, [thread_id], part_ids, context=context)
 
-        partner_ids = kwargs.pop('partner_ids', [])
+            message_ids = mail_message.search(cr, uid, [('email_from', '=', partner)], context=context)
+            if part_ids and message_ids:
+                mail_message.write(cr, uid, message_ids, {'email_from': None, 'author_id': part_ids[0]}, context=context)
+
+            partner_ids = set(partner_ids) + set(part_ids)
+
         if parent_id:
             parent_message = self.pool.get('mail.message').browse(cr, uid, parent_id, context=context)
             partner_ids += [(4, partner.id) for partner in parent_message.partner_ids]

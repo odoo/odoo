@@ -27,6 +27,11 @@
             <div class="oe_msg_center">
                 <div class="oe_msg_content">
                     <t t-call="mail.thread.list_recipients"/>
+                    <div class="oe_emails_from" t-if="widget.emails_from.length">
+                        <t t-foreach='widget.emails_from' t-as='email_from'>
+                            <label><input type="checkbox" t-att-checked="email_from[1] ? 'checked' : undefind" t-att-data="email_from[0]"/> <t t-raw="email_from[0]"/></label>
+                        </t>
+                    </div>
                     <textarea class="field_text"></textarea>
                 </div>
                 <div class="oe_msg_footer">
@@ -79,7 +84,7 @@
                         <img t-att-src="'/mail/static/src/img/mimetypes/' + attachment.filetype + '.png'"></img>
                         <div class='oe_name'><t t-raw='attachment.name' /></div>
                     </a>
-                    <div class='oe_delete oe_e' title="Delete this attachment" t-attf-data-id="{attachment.id}">[</div>
+                    <div class='oe_delete oe_e' title="Delete this attachment" t-att-data-id="attachment.id">[</div>
                     <div class='oe_progress_bar'>
                         uploading
                     </div>
@@ -91,7 +96,7 @@
                         <img t-att-src="widget.attachments_resize_image(attachment.id, [100,80])"></img>
                         <div class='oe_name'><t t-raw='attachment.name' /></div>
                     </a>
-                    <div class='oe_delete oe_e'>[</div>
+                    <div class='oe_delete oe_e' title="Delete this attachment" t-att-data-id="attachment.id">[</div>
                     <div class='oe_progress_bar'>
                         uploading
                     </div>
