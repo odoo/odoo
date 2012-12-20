@@ -24,6 +24,7 @@ import itertools
 import os
 import re
 
+from openerp import tools
 from openerp.osv import fields,osv
 
 class ir_attachment(osv.osv):
@@ -77,7 +78,7 @@ class ir_attachment(osv.osv):
         r = ''
         try:
             if bin_size:
-                r = os.path.filesize(full_path)
+                r = os.path.getsize(full_path)
             else:
                 r = open(full_path).read().encode('base64')
         except IOError:
