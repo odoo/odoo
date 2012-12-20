@@ -589,12 +589,26 @@ openerp.mail = function (session) {
                             var thread = thread.parent_message.parent_thread;
                         }
                         // create object and attach to the thread object
-                        thread.message_fetch([["id", "=", record]], false, [record], function (arg, data) {
+                        thread.message_fetch([["id", "=", record.message_id]], false, [record.message_id], function (arg, data) {
                             var message = thread.create_message_object( data[0] );
                             // insert the message on dom
                             thread.insert_message( message, root ? undefined : self.$el, root );
                         });
                         self.on_cancel();
+
+                        if (record.new_partner_ids && record.new_partner_ids.length) {
+                            _.each(record.new_partner_ids, function (id) {
+                                var pop = new session.web.form.FormOpenPopup(self);
+                                pop.show_element(
+                                    'res.partner',
+                                    id,
+                                    self.parent_thread.context,
+                                    {
+                                        title: _t("Please complete partner's informations"),
+                                    }
+                                );
+                            });
+                        }
                         //session.web.unblockUI();
                     });
                 return true;
