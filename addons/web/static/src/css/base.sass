@@ -696,6 +696,15 @@ $sheet-padding: 16px
             margin-top: 1px
             background-color: #f6cf3b
     // }}}
+    // CrashManager {{{
+    .oe_dialog_warning
+        width: 100%
+        p
+            text-align: center
+    .oe_dialog_icon
+        padding: 5px
+        width: 32px
+    // }}}
     // Login {{{
     .oe_login
         background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAKUlEQVQIHWO8e/fufwYsgAUkJigoiCIF5DMyoYggcUiXgNnBiGQKmAkARpcEQeriln4AAAAASUVORK5CYII=)
@@ -958,12 +967,26 @@ $sheet-padding: 16px
         text-shadow: 0 1px 1px white
         padding-bottom: 16px
     a.oe_logo
+        position: relative
         width: 220px
         display: block
         text-align: center
         img
             margin: 14px 0
             border: 0
+        .oe_logo_edit
+            margin: 14px 0
+            position: absolute
+            top: 1px
+            padding: 4px
+            width: 100%
+            display: none
+            text-align: center
+            color: #eee
+            background: rgba(37,37,37,0.9)
+            @include box-sizing(border)
+        &:hover .oe_logo_edit_admin
+            display: block
     .oe_footer
         position: fixed
         bottom: 0

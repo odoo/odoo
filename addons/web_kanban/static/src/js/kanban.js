@@ -52,7 +52,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this._super.apply(this, arguments);
         this.$el.on('click', '.oe_kanban_dummy_cell', function() {
             if (self.$buttons) {
-                self.$buttons.find('.oe_kanban_add_column').effect('bounce', {distance: 18, times: 5}, 150);
+                self.$buttons.find('.oe_kanban_add_column').openerpBounce();
             }
         });
     },
@@ -322,7 +322,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.compute_groups_width();
         if (this.group_by) {
             // Kanban cards drag'n'drop
-            var $columns = this.$el.find('.oe_kanban_column');
+            var $columns = this.$el.find('.oe_kanban_column .oe_kanban_column_cards');
             $columns.sortable({
                 handle : '.oe_kanban_draghandle',
                 start: function(event, ui) {
@@ -366,7 +366,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                     scroll: false,
                     start: function(event, ui) {
                         start_index = ui.item.index();
-                        self.$('.oe_kanban_record').css({ visibility: 'hidden' });
+                        self.$('.oe_kanban_record, .oe_kanban_quick_create').css({ visibility: 'hidden' });
                     },
                     stop: function(event, ui) {
                         var stop_index = ui.item.index();
@@ -384,7 +384,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                                 }
                             });
                         }
-                        self.$('.oe_kanban_record').css({ visibility: 'visible' });
+                        self.$('.oe_kanban_record, .oe_kanban_quick_create').css({ visibility: 'visible' });
                     }
                 });
             }
@@ -471,7 +471,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         );
         var create_nocontent = this.$buttons;
         this.$el.find('.oe_view_nocontent').click(function() {
-            create_nocontent.effect('bounce', {distance: 18, times: 5}, 150);
+            create_nocontent.openerpBounce();
         });
     },
 
@@ -612,10 +612,10 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         this.$has_been_started.resolve();
         var add_btn = this.$el.find('.oe_kanban_add');
         add_btn.tipsy({delayIn: 500, delayOut: 1000});
-        this.$records.click(function (ev) {
+        this.$records.find(".oe_kanban_column_cards").click(function (ev) {
             if (ev.target == ev.currentTarget) {
                 if (!self.state.folded) {
-                    add_btn.effect('bounce', {distance: 18, times: 5}, 150);                    
+                    add_btn.openerpBounce();
                 }
             }
         });
@@ -660,14 +660,15 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         var self = this;
         var $list_header = this.$records.find('.oe_kanban_group_list_header');
         var $show_more = this.$records.find('.oe_kanban_show_more');
+        var $cards = this.$records.find('.oe_kanban_column_cards');
 
         _.each(records, function(record) {
             var rec = new instance.web_kanban.KanbanRecord(self, record);
             if (!prepend) {
-                rec.insertBefore($show_more);
+                rec.appendTo($cards);
                 self.records.push(rec);
             } else {
-                rec.insertAfter($list_header);
+                rec.prependTo($cards);
                 self.records.unshift(rec);
             }
         });
@@ -792,6 +793,7 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
     },
     renderElement: function() {
         this.qweb_context = {
+            instance: instance,
             record: this.record,
             widget: this,
             read_only_mode: this.view.options.read_only_mode,

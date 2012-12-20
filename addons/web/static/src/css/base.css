@@ -819,6 +819,16 @@
   margin-top: 1px;
   background-color: #f6cf3b;
 }
+.openerp .oe_dialog_warning {
+  width: 100%;
+}
+.openerp .oe_dialog_warning p {
+  text-align: center;
+}
+.openerp .oe_dialog_icon {
+  padding: 5px;
+  width: 32px;
+}
 .openerp .oe_login {
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAKUlEQVQIHWO8e/fufwYsgAUkJigoiCIF5DMyoYggcUiXgNnBiGQKmAkARpcEQeriln4AAAAASUVORK5CYII=);
   text-align: center;
@@ -1182,6 +1192,7 @@
   padding-bottom: 16px;
 }
 .openerp a.oe_logo {
+  position: relative;
   width: 220px;
   display: block;
   text-align: center;
@@ -1189,6 +1200,24 @@
 .openerp a.oe_logo img {
   margin: 14px 0;
   border: 0;
+}
+.openerp a.oe_logo .oe_logo_edit {
+  margin: 14px 0;
+  position: absolute;
+  top: 1px;
+  padding: 4px;
+  width: 100%;
+  display: none;
+  text-align: center;
+  color: #eeeeee;
+  background: rgba(37, 37, 37, 0.9);
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.openerp a.oe_logo:hover .oe_logo_edit_admin {
+  display: block;
 }
 .openerp .oe_footer {
   position: fixed;
