@@ -2244,7 +2244,12 @@ instance.web.list.Handle = instance.web.list.Column.extend({
 instance.web.list.Many2OneButton = instance.web.list.Column.extend({
     _format: function (row_data, options) {
         this.has_value = !!row_data[this.id].value;
-        return QWeb.render('Many2OneButton.cell', {'widget': this});
+        this.icon = this.has_value ? 'gtk-yes' : 'gtk-no';
+        this.string = this.has_value ? _t('View') : _t('Create');
+        return QWeb.render('Many2OneButton.cell', {
+            'widget': this,
+            'prefix': instance.session.prefix,
+        });
     },
 });
 instance.web.list.Many2Many = instance.web.list.Column.extend({
