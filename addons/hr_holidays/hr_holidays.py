@@ -418,7 +418,7 @@ class hr_holidays(osv.osv):
     # OpenChatter and notifications
     # -----------------------------
 
-    def needaction_domain_get(self, cr, uid, ids, context=None):
+    def _needaction_domain_get(self, cr, uid, ids, context=None):
         emp_obj = self.pool.get('hr.employee')
         empids = emp_obj.search(cr, uid, [('parent_id.user_id', '=', uid)], context=context)
         dom = ['&', ('state', '=', 'confirm'), ('employee_id', 'in', empids)]

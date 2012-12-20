@@ -635,12 +635,6 @@ class sale_order(osv.osv):
     def action_done(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'done'}, context=context)
 
-    # ------------------------------------------------
-    # OpenChatter methods and notifications
-    # ------------------------------------------------
-
-    def needaction_domain_get(self, cr, uid, ids, context=None):
-        return [('state', '=', 'draft'), ('user_id', '=', uid)]
 
 
 # TODO add a field price_unit_uos

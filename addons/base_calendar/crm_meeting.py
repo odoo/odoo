@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+import time
+
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
@@ -110,12 +112,11 @@ class crm_meeting(base_state, osv.Model):
     # ----------------------------------------
 
     # shows events of the day for this user
-    def needaction_domain_get(self, cr, uid, domain=[], context={}):
-        return [('date','<=',time.strftime('%Y-%M-%D 23:59:59')), ('date_deadline','>=', time.strftime('%Y-%M-%D 00:00:00')), ('user_id','=',uid)]
+    def _needaction_domain_get(self, cr, uid, domain=[], context={}):
+        return [('date', '<=', time.strftime('%Y-%M-%D 23:59:59')), ('date_deadline', '>=', time.strftime('%Y-%M-%D 00:00:00')), ('user_id', '=', uid)]
 
     def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification',
                         subtype=None, parent_id=False, attachments=None, context=None, **kwargs):
-        cal_event_pool = self.pool.get('calendar.event')
         if isinstance(thread_id, str):
             thread_id = get_real_ids(thread_id)
         return super(crm_meeting, self).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, **kwargs)

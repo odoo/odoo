@@ -48,7 +48,7 @@ class event_event(osv.osv):
     _name = 'event.event'
     _description = __doc__
     _order = 'date_begin'
-    _inherit = ['mail.thread','ir.needaction_mixin']
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
@@ -289,7 +289,7 @@ class event_registration(osv.osv):
     """Event Registration"""
     _name= 'event.registration'
     _description = __doc__
-    _inherit = ['ir.needaction_mixin','mail.thread']
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
     _columns = {
         'id': fields.integer('ID'),
         'origin': fields.char('Source Document', size=124,readonly=True,help="Name of the sale order which create the registration"),

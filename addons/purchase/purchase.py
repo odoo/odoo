@@ -805,13 +805,6 @@ class purchase_order(osv.osv):
                 wf_service.trg_validate(uid, 'purchase.order', old_id, 'purchase_cancel', cr)
         return orders_info
 
-    # --------------------------------------
-    # OpenChatter methods and notifications
-    # --------------------------------------
-
-    def needaction_domain_get(self, cr, uid, ids, context=None):
-        return [('state', '=', 'draft')]
-
 
 class purchase_order_line(osv.osv):
     def _amount_line(self, cr, uid, ids, prop, arg, context=None):
