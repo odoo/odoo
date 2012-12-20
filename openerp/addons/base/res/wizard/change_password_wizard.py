@@ -25,22 +25,34 @@ class change_password_wizard(osv.TransientModel):
     """
         A wizard to manage the change of users' passwords
     """
-    def _get_user_ids(self, cr, uid, context=None):
-        if context == None:
-            context = {}
-        return context.get('active_ids', [])
 
     _name = "change.password.wizard"
     _description = "Change Password Wizard"
     _columns = {
         'user_ids': fields.one2many('change.password.user', 'wizard_id', string='Users'),
     }
-    _defaults = {
-        'user_ids': _get_user_ids,
-    }
 
-    def change_password_button(self, cr, uid, ids, context=None):
-        user_ids = self.browse(cr, uid, ids[0], context=context).user_ids
+    def default_get(self, cr, uid, fields, context=None):
+        if context == None:
+            context = {}
+        user_ids = context.get('active_ids', [])
+        wiz_id = context.get('active_id', None)
+        res = []
+        users = self.pool.get('res.users').browse(cr, uid, user_ids, context=context)
+        for user in users:
+            res.append((0, 0, {
+                'wizard_id': wiz_id,
+                'user_id': user.id,
+                'user_login': user.login,
+            }))
+        return {'user_ids': res}
+
+
+    def change_password_button(self, cr, uid, id, context=None):
+        wizard = self.browse(cr, uid, id, context=context)[0]
+        user_ids = []
+        for user in wizard.user_ids:
+            user_ids.append(user.id)
         self.pool.get('change.password.user').change_password_button(cr, uid, user_ids, context=context)
         return {
             'type': 'ir.actions.act_window_close',
@@ -51,20 +63,19 @@ class change_password_user(osv.TransientModel):
         A model to configure users in the change password wizard
     """
 
-
-
     _name = 'change.password.user'
     _description = 'Change Password Wizard User'
     _columns = {
         'wizard_id': fields.many2one('change.password.wizard', string='Wizard', required=True),
         'user_id': fields.many2one('res.users', string='User', required=True),
-        'login': fields.related('user_id', 'login', type='char', relation='res.users', string='User Login', readonly=True),
-        'new_passwd': fields.char('New Password', required=True),
-        'old_passwd': fields.related('user_id', 'password', type='char', relation='res.users', string='Old Password', readonly=True)
+        'user_login': fields.char('User Login', readonly=True),
+        'new_passwd': fields.char('New Password'),
     }
     _defaults = {
+        'new_passwd': '',
     }
 
     def change_password_button(self, cr, uid, ids, context=None):
         for user in self.browse(cr, uid, ids, context=context):
-            self.pool.get('res.users').change_password(cr, uid, user.old_passwd, user.new_passwd, context=context)
+            self.pool.get('res.users').write(cr, uid, user.user_id.id, {'password': user.new_passwd})
+
