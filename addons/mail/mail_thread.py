@@ -26,11 +26,10 @@ import email
 import logging
 import pytz
 import time
-from openerp import tools
 import xmlrpclib
-
 from email.message import Message
 
+from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.addons.mail.mail_message import decode
 from openerp.osv import fields, osv
@@ -74,8 +73,8 @@ class mail_thread(osv.AbstractModel):
     # Automatic logging system if mail installed
     # _track = {
     #   'field': {
-    #       'module.subtype_xml': lambda self, cr, uid, obj, context=None: obj.state == done,
-    #       'module.subtype_xml2': lambda self, cr, uid, obj, context=None: obj.state != done,
+    #       'module.subtype_xml': lambda self, cr, uid, obj, context=None: obj[state] == done,
+    #       'module.subtype_xml2': lambda self, cr, uid, obj, context=None: obj[state] != done,
     #   },
     #   'field2': {
     #       ...
@@ -302,7 +301,7 @@ class mail_thread(osv.AbstractModel):
         lst = []
         for name, column_info in self._all_columns.items():
             visibility = getattr(column_info.column, 'track_visibility', False)
-            if visibility == 2 or (visibility == 1 and name in updated_fields) or name in self._track:
+            if visibility == 'always' or (visibility == 'onchange' and name in updated_fields) or name in self._track:
                 lst.append(name)
         if not lst:
             return lst
