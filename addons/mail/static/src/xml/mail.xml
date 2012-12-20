@@ -126,6 +126,11 @@
                     <t t-if="!widget.options.show_link" t-raw="partner[1]"/>
                 </span><t t-set="inc" t-value="inc+1"/>
             </t>
+
+            <t t-if="widget.partner_ids.length and widget.author_id" t-raw="', '"/>
+            <a t-if="widget.author_id and widget.options.show_link and widget.author_id[0]" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}"><t t-raw="widget.author_id[1]"/></a>
+            <span t-if="widget.author_id and (!widget.options.show_link or !widget.author_id[0])"><t t-raw="widget.author_id[1]"/></span>
+
             <t t-if="widget.partner_ids.length>=3">
                 <span class="oe_more">, <a><t t-raw="widget.partner_ids.length-3"/> others...</a></span>
                 <a class="oe_more_hidden">&lt;&lt;&lt;</a>
@@ -238,7 +243,7 @@
                         <div class="oe_msg_attachment_list"></div>
                     </t>
                     <a t-if="widget.author_id and widget.options.show_link and widget.author_id[0]" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}"><t t-raw="widget.author_id[1]"/></a>
-                    <span t-if="widget.author_id and (!widget.options.show_link or widget.author_id[0])"><t t-raw="widget.author_id[1]"/></span>
+                    <span t-if="widget.author_id and (!widget.options.show_link or !widget.author_id[0])"><t t-raw="widget.author_id[1]"/></span>
                     <span class='oe_subtle'>•</span>
                     <span t-att-title="widget.date"><t t-raw="widget.timerelative"/></span>
                     <span t-if="!widget.options.readonly" class='oe_subtle'>•</span>
