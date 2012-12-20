@@ -28,7 +28,7 @@ class mail_message_subtype(osv.osv):
         the follower subscription, allowing only some subtypes to be pushed
         on the Wall. """
     _name = 'mail.message.subtype'
-    _description = 'mail_message_subtype'
+    _description = 'Message subtypes'
     _columns = {
         'name': fields.char('Message Type', required=True, translate=True,
             help='Message subtype gives a more precise type on the message, '\
@@ -36,10 +36,20 @@ class mail_message_subtype(osv.osv):
                     'a notification related to a new record (New), or to a stage '\
                     'change in a process (Stage change). Message subtypes allow to '\
                     'precisely tune the notifications the user want to receive on its wall.'),
+        'description': fields.text('Description', translate=True,
+            help='Description that will be added in the message posted for this '\
+                    'subtype. If void, the name will be added instead.'),
+        'parent_id': fields.many2one('mail.message.subtype', string='Parent',
+            ondelete='set null',
+            help='Parent subtype, used for automatic subscription.'),
+        'relation_field': fields.char('Relation field',
+            help='Field used to link the related model to the subtype model when '\
+                    'using automatic subscription on a related document. The field '\
+                    'is used to compute getattr(related_document.relation_field).'),
         'res_model': fields.char('Model',
-            help="Related model of the subtype. If False, this subtype exists for all models."),
+            help="Model the subtype applies to. If False, this subtype applies to all models."),
         'default': fields.boolean('Default',
-            help="Checked by default when subscribing."),
+            help="Activated by default when subscribing."),
     }
     _defaults = {
         'default': True,
