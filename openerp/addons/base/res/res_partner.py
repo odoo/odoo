@@ -402,6 +402,8 @@ class res_partner(osv.osv, format_address):
                 name = name + "\n" + self._display_address(cr, uid, record, without_company=True, context=context)
                 name = name.replace('\n\n','\n')
                 name = name.replace('\n\n','\n')
+            if context.get('show_email') and record.email:
+                name = "%s <%s>" % (name, record.email)
             res.append((record.id, name))
         return res
 
@@ -437,18 +439,23 @@ class res_partner(osv.osv, format_address):
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args = []
-        if name and operator in ('=', 'ilike', '=ilike', 'like'):
+        if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
             # search on the name of the contacts and of its company
-            name2 = operator == '=' and name or '%' + name + '%'
+            search_name = name
+            if operator in ('ilike', 'like'):
+                search_name = '%%%s%%' % name
+            if operator in ('=ilike', '=like'):
+                operator = operator[1:]
+            query_args = {'name': search_name}
             limit_str = ''
-            query_args = [name2]
             if limit:
-                limit_str = ' limit %s'
-                query_args += [limit]
+                limit_str = ' limit %(limit)s'
+                query_args['limit'] = limit
             cr.execute('''SELECT partner.id FROM res_partner partner
                           LEFT JOIN res_partner company ON partner.parent_id = company.id
-                          WHERE partner.name || ' (' || COALESCE(company.name,'') || ')'
-                          ''' + operator + ''' %s ''' + limit_str, query_args)
+                          WHERE partner.email ''' + operator +''' %(name)s
+                             OR partner.name || ' (' || COALESCE(company.name,'') || ')'
+                          ''' + operator + ' %(name)s ' + limit_str, query_args)
             ids = map(lambda x: x[0], cr.fetchall())
             if args:
                 ids = self.search(cr, uid, [('id', 'in', ids)] + args, limit=limit, context=context)
