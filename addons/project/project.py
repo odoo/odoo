@@ -1293,7 +1293,8 @@ class account_analytic_account(osv.osv):
         for account in self.browse(cr, uid, ids, context=context):
             if not name:
                 vals['name'] = account.name
-            vals['type'] = account.type
+            if not vals.get('type'):
+                vals['type'] = account.type
             self.project_create(cr, uid, account.id, vals, context=context)
         return super(account_analytic_account, self).write(cr, uid, ids, vals, context=context)
 
