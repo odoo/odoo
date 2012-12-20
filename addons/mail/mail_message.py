@@ -350,15 +350,9 @@ class mail_message(osv.Model):
         vote_nb = len(message.vote_user_ids)
         has_voted = uid in [user.id for user in message.vote_user_ids]
 
-        # TDE tmp hack
-        if not message.body:
-            body = ''
-        else:
-            body = html_email_clean(message.body or '')
-
         return {'id': message.id,
                 'type': message.type,
-                'body': body,
+                'body': html_email_clean(message.body or ''),
                 'model': message.model,
                 'res_id': message.res_id,
                 'record_name': message.record_name,
