@@ -18,11 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 ##############################################################################
-
-from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
-from openerp import tools
-
+from openerp import tools, SUPERUSER_ID
 
 class mail_followers(osv.Model):
     """ mail_followers holds the data related to the follow mechanism inside
@@ -117,8 +114,8 @@ class mail_notification(osv.Model):
         """ Send by email the notification depending on the user preferences """
         if context is None:
             context = {}
-        # mail_noemail (do not send email) or no partner_ids: do not send, return
-        if context.get('mail_noemail'):
+        # mail_notify_noemail (do not send email) or no partner_ids: do not send, return
+        if context.get('mail_notify_noemail'):
             return True
         # browse as SUPERUSER_ID because of access to res_partner not necessarily allowed
         msg = self.pool.get('mail.message').browse(cr, SUPERUSER_ID, msg_id, context=context)

@@ -101,11 +101,11 @@ class crm_contact_us(osv.TransientModel):
         """
         Create an empty record in the contact table.
         Since the 'name' field is mandatory, give an empty string to avoid an integrity error.
-        Pass mail_nosubscribe key in context because otherwise the inheritance
+        Pass mail_create_nosubscribe key in context because otherwise the inheritance
         leads to a message_subscribe_user, that triggers access right issues.
         """
         empty_values = dict((k, False) if k != 'name' else (k, '') for k, v in values.iteritems())
-        return super(crm_contact_us, self).create(cr, uid, empty_values, {'mail_nosubscribe': True})
+        return super(crm_contact_us, self).create(cr, SUPERUSER_ID, empty_values, {'mail_create_nosubscribe': True})
 
     def submit(self, cr, uid, ids, context=None):
         """ When the form is submitted, redirect the user to a "Thanks" message """

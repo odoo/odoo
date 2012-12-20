@@ -18,10 +18,11 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 
 class hr_attendance_byweek(osv.osv_memory):
     _name = 'hr.attendance.week'

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-12-14 14:17+0000\n"
-"Last-Translator: nmglyy <nmglyy@163.com>\n"
+"PO-Revision-Date: 2012-12-20 03:03+0000\n"
+"Last-Translator: ccdos <ccdos@163.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-15 05:06+0000\n"
-"X-Generator: Launchpad (build 16372)\n"
+"X-Launchpad-Export-Date: 2012-12-20 04:46+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: base_import
 #. openerp-web
@@ -47,6 +47,12 @@ msgid ""
 "give \n"
 "                        you an example for Products and their Categories."
 msgstr ""
+"当你使用External IDs,导入CSV文件\n"
+"你导入的每一条记录得External\n"
+"ID 用 \"External ID\" 列来定义 . 然后, \n"
+"你将用一个列为\"Field/External ID\" 的\n"
+"数据记录做参考. 下面的两个 CSV 文件\n"
+"给你一个产品和产品类别的例子。"
 
 #. module: base_import
 #. openerp-web
@@ -87,6 +93,11 @@ msgid ""
 "\n"
 "                        have a unique Database ID)"
 msgstr ""
+"使用\n"
+"Country/Database ID: 你将很少用这中\n"
+"标记法. 这种标记法对开发者用来不产生\n"
+"冲突有好处 (可能有些记录有相同的名\n"
+"但它们有不同的Database ID)"
 
 #. module: base_import
 #. openerp-web
@@ -121,6 +132,10 @@ msgid ""
 "companies) TO \n"
 "                        '/tmp/company.csv' with CSV HEADER;"
 msgstr ""
+"复制\n"
+"(select 'company_'||id as \"External ID\",company_name\n"
+"as \"Name\",'True' as \"Is a Company\" from companies) TO\n"
+"'/tmp/company.csv' with CSV HEADER"
 
 #. module: base_import
 #. openerp-web
@@ -181,6 +196,11 @@ msgid ""
 "\n"
 "                        See the following question."
 msgstr ""
+"注意 如果你的CSV文件\n"
+"一个制表符作为分隔符，OpenERP的将不\n"
+"检测隔开。您需要通过你的电子表格应用\n"
+"程序的文件格式选项来修改。\n"
+"请参阅下面的问题"
 
 #. module: base_import
 #. openerp-web
@@ -224,6 +244,9 @@ msgid ""
 "                        the easiest way when your data come from CSV files \n"
 "                        that have been created manually."
 msgstr ""
+"使用国家: \n"
+"当你数据从CSV文件手动创建，这是\n"
+"最简单的方法."
 
 #. module: base_import
 #. openerp-web
@@ -232,7 +255,7 @@ msgstr ""
 msgid ""
 "What's the difference between Database ID and \n"
 "                        External ID?"
-msgstr ""
+msgstr "数据库ID和外部ID之间的区别是什么？"
 
 #. module: base_import
 #. openerp-web
@@ -244,13 +267,16 @@ msgid ""
 "\n"
 "                        you 3 different fields to import:"
 msgstr ""
+"例如，要\n"
+"引用国家的关系，OpenERP给\n"
+"你3个不同字段的导入"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:175
 #, python-format
 msgid "What can I do if I have multiple matches for a field?"
-msgstr ""
+msgstr "如果我有多对一的字段怎么做？"
 
 #. module: base_import
 #. openerp-web
@@ -262,7 +288,7 @@ msgstr ""
 #. module: base_import
 #: field:base_import.tests.models.preview,somevalue:0
 msgid "Some Value"
-msgstr ""
+msgstr "一些值"
 
 #. module: base_import
 #. openerp-web
@@ -342,7 +368,7 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/import.xml:233
 #, python-format
 msgid "Suppliers and their respective contacts"
-msgstr ""
+msgstr "供应商和他们各自的联系人"
 
 #. module: base_import
 #. openerp-web
@@ -390,7 +416,7 @@ msgstr ""
 #. module: base_import
 #: field:base_import.tests.models.preview,othervalue:0
 msgid "Other Variable"
-msgstr ""
+msgstr "其它变量"
 
 #. module: base_import
 #. openerp-web

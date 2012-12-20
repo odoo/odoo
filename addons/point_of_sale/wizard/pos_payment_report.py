@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import osv
+from openerp.osv import osv
 
 class pos_payment_report(osv.osv_memory):
     _name = 'pos.payment.report'

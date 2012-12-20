@@ -26,12 +26,9 @@ import os
 import datetime
 import socket
 
-from osv import fields
-from osv import osv
-import tools
-from tools.translate import _
-import netsvc
-import addons
+from openerp import addons, netsvc, tools
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 
 class survey_send_invitation(osv.osv_memory):

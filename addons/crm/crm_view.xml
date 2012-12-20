@@ -128,7 +128,7 @@
                         </page>
                     </notebook>
                     <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers" help="Followers of this salesteam follow automatically all opportunities related to this salesteam."/>
+                        <field name="message_follower_ids" widget="mail_followers" help="Follow this salesteam to automatically track the events associated to users of this team."/>
                         <field name="message_ids" widget="mail_thread"/>
                     </div>
                 </form>
@@ -180,7 +180,7 @@
             <field name="model">crm.case.stage</field>
             <field name="arch" type="xml">
                 <tree string="Stages">
-                    <field name="sequence"/>
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="probability"/>
                     <field name="state"/>

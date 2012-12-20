@@ -20,7 +20,7 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 
 class mrp_production(osv.osv):
     _inherit = 'mrp.production'

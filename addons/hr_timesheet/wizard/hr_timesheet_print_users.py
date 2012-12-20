@@ -21,7 +21,7 @@
 
 import datetime
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 
 class analytical_timesheet_employees(osv.osv_memory):
     _name = 'hr.analytical.timesheet.users'

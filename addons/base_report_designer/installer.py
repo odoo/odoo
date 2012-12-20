@@ -19,11 +19,11 @@
 #
 ##############################################################################
 
-from osv import fields
-from osv import osv
+from openerp.osv import fields
+from openerp.osv import osv
 import base64
-from tools.translate import _
-import addons
+from openerp.tools.translate import _
+from openerp import addons
 
 class base_report_designer_installer(osv.osv_memory):
     _name = 'base_report_designer.installer'

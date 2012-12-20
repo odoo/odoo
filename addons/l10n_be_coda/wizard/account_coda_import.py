@@ -19,15 +19,16 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 import base64
-from osv import fields, osv
-from tools.translate import _
 import time
-import tools
-import logging
-_logger = logging.getLogger(__name__)
 
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+from openerp import tools
+
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class account_coda_import(osv.osv_memory):
     _name = 'account.coda.import'

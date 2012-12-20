@@ -168,7 +168,7 @@
                     <button name="purchase_confirm" states="draft" string="Confirm Order"/>
                     <button name="purchase_confirm" states="sent" string="Confirm Order" class="oe_highlight"/>
                     <button name="wkf_send_rfq" states="confirmed" string="Resend Purchase Order" type="object" class="oe_highlight"/>
-                    <button name="action_cancel" states="except_picking,except_invoice" string="Cancel" type="object" />
+                    <button name="action_cancel" states="approved,except_picking,except_invoice" string="Cancel" type="object" />
                     <button name="picking_ok" states="except_picking" string="Manually Corrected"/>
                     <button name="invoice_ok" states="except_invoice" string="Manually Corrected"/>
                     <button name="purchase_approve" states="confirmed" string="Approve Order" class="oe_highlight" groups="purchase.group_purchase_manager"/>

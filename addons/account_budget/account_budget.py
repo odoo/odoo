@@ -21,10 +21,10 @@
 
 import datetime
 
-from osv import osv, fields
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
-import decimal_precision as dp
+import openerp.addons.decimal_precision as dp
 
 def strToDate(dt):
         dt_date=datetime.date(int(dt[0:4]),int(dt[5:7]),int(dt[8:10]))

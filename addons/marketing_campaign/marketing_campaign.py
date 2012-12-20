@@ -27,13 +27,13 @@ from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 from traceback import format_exception
 from sys import exc_info
-from tools.safe_eval import safe_eval as eval
+from openerp.tools.safe_eval import safe_eval as eval
 import re
-from decimal_precision import decimal_precision as dp
+from openerp.addons.decimal_precision import decimal_precision as dp
 
-from osv import fields, osv
-import netsvc
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp import netsvc
+from openerp.tools.translate import _
 
 _intervalTypes = {
     'hours': lambda interval: relativedelta(hours=interval),

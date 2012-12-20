@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import osv
+from openerp.osv import osv
 
 class payment_order(osv.osv):
     _inherit = 'payment.order'

@@ -18,17 +18,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import pooler
-import sql_db
-
 import os
 import time
 import errno
 import re
-
-import openerp
-import netsvc
 import urlparse
+import urllib
+
 try:
     from pywebdav.lib.constants import COLLECTION  # , OBJECT
     from pywebdav.lib.errors import DAV_Error, DAV_Forbidden, DAV_NotFound
@@ -40,17 +36,12 @@ except ImportError:
     from DAV.iface import dav_interface
     from DAV.davcmd import copyone, copytree, moveone, movetree, delone, deltree
 
-import urllib
+import openerp
+from openerp import pooler, sql_db, netsvc
+from openerp.tools import misc
 
 from cache import memoize
-from tools import misc
-
 from webdav import mk_lock_response
-
-try:
-    from tools.dict_tools import dict_merge2
-except ImportError:
-    from document.dict_tools import dict_merge2
 
 CACHE_SIZE=20000
 
@@ -61,6 +52,22 @@ urlparse.uses_netloc.append('webdavs')
 day_names = { 0: 'Mon', 1: 'Tue' , 2: 'Wed', 3: 'Thu', 4: 'Fri', 5: 'Sat', 6: 'Sun' }
 month_names = { 1: 'Jan', 2: 'Feb', 3: 'Mar', 4: 'Apr', 5: 'May', 6: 'Jun',
         7: 'Jul', 8: 'Aug', 9: 'Sep', 10: 'Oct', 11: 'Nov', 12: 'Dec' }
+
+def dict_merge2(*dicts):
+    """ Return a dict with all values of dicts.
+        If some key appears twice and contains iterable objects, the values
+        are merged (instead of overwritten).
+    """
+    res = {}
+    for d in dicts:
+        for k in d.keys():
+            if k in res and isinstance(res[k], (list, tuple)):
+                res[k] = res[k] + d[k]
+            elif k in res and isinstance(res[k], dict):
+                res[k].update(d[k])
+            else:
+                res[k] = d[k]
+    return res
 
 class DAV_NotFound2(DAV_NotFound):
     """404 exception, that accepts our list uris
@@ -717,7 +724,6 @@ class openerp_dav_handler(dav_interface):
             if not dir_node:
                 cr.close()
                 raise DAV_NotFound('Parent folder not found.')
-
             newchild = self._try_function(dir_node.create_child, (cr, objname, data),
                     "create %s" % objname, cr=cr)
             if not newchild:

@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-from osv import osv
-from tools.translate import _
-import netsvc
+from openerp.osv import osv, fields
+from openerp.tools.translate import _
+from openerp import netsvc
 
 class sale_order_line_make_invoice(osv.osv_memory):
     _name = "sale.order.line.make.invoice"
@@ -72,7 +72,8 @@ class sale_order_line_make_invoice(osv.osv_memory):
                 'payment_term': pay_term,
                 'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id,
                 'user_id': order.user_id and order.user_id.id or False,
-                'company_id': order.company_id and order.company_id.id or False
+                'company_id': order.company_id and order.company_id.id or False,
+                'date_invoice': fields.date.today(),
             }
             inv_id = self.pool.get('account.invoice').create(cr, uid, inv)
             return inv_id

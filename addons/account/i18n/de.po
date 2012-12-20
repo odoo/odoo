@@ -7,15 +7,15 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-17 21:28+0000\n"
+"PO-Revision-Date: 2012-12-19 23:16+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-18 05:00+0000\n"
-"X-Generator: Launchpad (build 16372)\n"
+"X-Launchpad-Export-Date: 2012-12-20 04:45+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -39,8 +39,8 @@ msgid ""
 "Determine the display order in the report 'Accounting \\ Reporting \\ "
 "Generic Reporting \\ Taxes \\ Taxes Report'"
 msgstr ""
-"Legen Sie die Reihenfolge der Anzeige im Report 'Finanz \\ Berichte \\ "
-"Allgemeine Berichte \\ Steuern \\ Steuererklärung' fest"
+"Legen Sie die Reihenfolge der Anzeige im Bericht  'Finanzen \\ Berichte \\ "
+"Standard Auswertungen \\ Steuern \\ Umsatzsteuer Anmeldung' fest"
 
 #. module: account
 #: view:account.move.reconcile:0
@@ -1749,7 +1749,7 @@ msgstr "eRechnung & Zahlungen"
 #. module: account
 #: view:account.analytic.cost.ledger.journal.report:0
 msgid "Cost Ledger for Period"
-msgstr "Auszug Analysekonto für Periode"
+msgstr "Kostenstellen Umsatz der Periode"
 
 #. module: account
 #: view:account.entries.report:0
@@ -2524,7 +2524,7 @@ msgstr "Offene Rechnungen"
 #: model:ir.model,name:account.model_account_treasury_report
 #: model:ir.ui.menu,name:account.menu_action_account_treasury_report_all
 msgid "Treasury Analysis"
-msgstr "Analyse Liquidität"
+msgstr "Statistik Finanzmittel"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_journal_sale_purchase
@@ -4410,7 +4410,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_journal_cashbox_line
 msgid "account.journal.cashbox.line"
-msgstr ""
+msgstr "account.journal.cashbox.line"
 
 #. module: account
 #: model:ir.model,name:account.model_account_partner_reconcile_process
@@ -4544,8 +4544,8 @@ msgid ""
 "If not applicable (computed through a Python code), the tax won't appear on "
 "the invoice."
 msgstr ""
-"Wenn nicht aktiviert (Berechnung durch Python Code) scheint die Steuer nicht "
-"auf der Rechnung auf."
+"Soweit nicht Berechnung durch Python Code ausgewählt wird, wird die Steuer "
+"nicht auf der Rechnung erscheinen."
 
 #. module: account
 #: field:account.config.settings,group_check_supplier_invoice_total:0
@@ -4837,7 +4837,7 @@ msgstr "Anzeige Partner"
 #. module: account
 #: view:account.invoice:0
 msgid "Validate"
-msgstr "Validieren"
+msgstr "Genehmigen & Buchen"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
@@ -5030,9 +5030,9 @@ msgid ""
 "Analytic costs (timesheets, some purchased products, ...) come from analytic "
 "accounts. These generate draft supplier invoices."
 msgstr ""
-"Analytische Kosten (Zeiterfassung, eingekaufte Produkte, ...) durch "
-"Buchungen auf Analytischen Konten. Diese Buchungen erzeugen "
-"Eingangsrechnungen im Entwurf."
+"Zu analysierende Kosten (Stundenzettel, eingekaufte Produkte, ...) werden "
+"verursacht durch Kostenstellen.  Diese erzeugen Lieferantenrechnungen im "
+"Entwurf."
 
 #. module: account
 #: view:account.bank.statement:0
@@ -6208,7 +6208,7 @@ msgstr ""
 #. module: account
 #: field:account.tax.code,sign:0
 msgid "Coefficent for parent"
-msgstr "Koeff. f. übergeordnete Steuer"
+msgstr "Koeffizient für Konsolidierung"
 
 #. module: account
 #: report:account.partner.balance:0
@@ -6312,7 +6312,7 @@ msgstr "Standardauswertung Finanzen"
 #: field:account.bank.statement.line,name:0
 #: field:account.invoice,reference:0
 msgid "Communication"
-msgstr "Kommunikation"
+msgstr "Verwendungszweck"
 
 #. module: account
 #: view:account.config.settings:0
@@ -7095,7 +7095,7 @@ msgid ""
 "choice assumes that the set of tax defined for the chosen template is "
 "complete"
 msgstr ""
-"Diese Auswähl erlaubt Ihnen die Einkaufs- und Verkaufssteuern zu definieren "
+"Diese Auswahl erlaubt Ihnen die Einkaufs- und Verkaufssteuern zu definieren "
 "oder aus einer Liste auszuwählen. Letzteres setzt voraus, dass die Vorlage "
 "vollständig ist."
 
@@ -7292,7 +7292,7 @@ msgstr "Journal & Partner"
 #. module: account
 #: field:account.automatic.reconcile,power:0
 msgid "Power"
-msgstr "Stärke"
+msgstr "Maximum Ausgleichspositionen"
 
 #. module: account
 #: code:addons/account/account.py:3392
@@ -7334,12 +7334,12 @@ msgstr "Ausgleich Offener Posten: Gehe zu nächstem Partner"
 #: model:ir.actions.act_window,name:account.action_account_analytic_invert_balance
 #: model:ir.actions.report.xml,name:account.account_analytic_account_inverted_balance
 msgid "Inverted Analytic Balance"
-msgstr "Umgekehrter Saldo (Anal.)"
+msgstr "Kostenstellen - Kostenarten Analyse"
 
 #. module: account
 #: field:account.tax.template,applicable_type:0
 msgid "Applicable Type"
-msgstr "Anwendbare Art"
+msgstr "Anwendbarer Typ"
 
 #. module: account
 #: field:account.invoice.line,invoice_id:0
@@ -7405,7 +7405,7 @@ msgstr "Kostenstellen Buchungen"
 #. module: account
 #: field:account.config.settings,has_default_company:0
 msgid "Has default company"
-msgstr ""
+msgstr "Hat Unternehmensvorgabe"
 
 #. module: account
 #: view:account.fiscalyear.close:0
@@ -7454,6 +7454,8 @@ msgid ""
 "You cannot change the owner company of an account that already contains "
 "journal items."
 msgstr ""
+"Sie dürfen die Unternehmenszuordnung eines Kontos nicht ändern, wenn es "
+"bereits Buchungen gibt."
 
 #. module: account
 #: report:account.invoice:0
@@ -7940,7 +7942,8 @@ msgid ""
 "The currency chosen should be shared by the default accounts too."
 msgstr ""
 "Konfigurationsfehler !\n"
-"Die Währung  sollte auch durch die Standard Konten freigegeben werden."
+"Die ausgewählte Währung sollte auch bei den verwendeten Standard Konten "
+"zugelassen werden."
 
 #. module: account
 #: code:addons/account/account.py:2251
@@ -8311,7 +8314,7 @@ msgstr "Buchungen anlegen"
 #. module: account
 #: model:ir.model,name:account.model_cash_box_out
 msgid "cash.box.out"
-msgstr ""
+msgstr "cash.box.out"
 
 #. module: account
 #: help:account.config.settings,currency_id:0
@@ -8778,7 +8781,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_cash_box_in
 msgid "cash.box.in"
-msgstr ""
+msgstr "cash.box.in"
 
 #. module: account
 #: help:account.invoice,move_id:0
@@ -8788,7 +8791,7 @@ msgstr "Verweis auf automatisch generierte Buchungen"
 #. module: account
 #: model:ir.model,name:account.model_account_config_settings
 msgid "account.config.settings"
-msgstr ""
+msgstr "account.config.settings"
 
 #. module: account
 #: selection:account.config.settings,period:0
@@ -10200,7 +10203,7 @@ msgstr "Start Periode"
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_central_journal
 msgid "Central Journal"
-msgstr ""
+msgstr "Zentrales Journal"
 
 #. module: account
 #: field:account.aged.trial.balance,direction_selection:0
@@ -10210,7 +10213,7 @@ msgstr "Analysezeitraum"
 #. module: account
 #: field:res.partner,ref_companies:0
 msgid "Companies that refers to partner"
-msgstr ""
+msgstr "Unternehmen mit Bezug zu diesem Partner"
 
 #. module: account
 #: view:account.invoice:0

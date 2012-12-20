@@ -20,11 +20,11 @@
 #
 ##############################################################################
 from datetime import datetime, timedelta
-from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP, float_compare
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP, float_compare
 from dateutil.relativedelta import relativedelta
-from osv import fields, osv
-import netsvc
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp import netsvc
+from openerp.tools.translate import _
 
 class sale_shop(osv.osv):
     _inherit = "sale.shop"
@@ -383,7 +383,7 @@ class sale_order(osv.osv):
             date_planned = self._get_date_planned(cr, uid, order, line, order.date_order, context=context)
 
             if line.product_id:
-                if line.product_id.product_tmpl_id.type in ('product', 'consu'):
+                if line.product_id.type in ('product', 'consu'):
                     if not picking_id:
                         picking_id = picking_obj.create(cr, uid, self._prepare_order_picking(cr, uid, order, context=context))
                     move_id = move_obj.create(cr, uid, self._prepare_order_line_move(cr, uid, order, line, picking_id, date_planned, context=context))
@@ -399,9 +399,6 @@ class sale_order(osv.osv):
         wf_service = netsvc.LocalService("workflow")
         if picking_id:
             wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
-            self.delivery_send_note(cr, uid, [order.id], picking_id, context)
-
-
         for proc_id in proc_ids:
             wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
 
@@ -440,36 +437,15 @@ class sale_order(osv.osv):
                 if towrite:
                     self.pool.get('sale.order.line').write(cr, uid, towrite, {'state': 'done'}, context=context)
             res = self.write(cr, uid, [order.id], val)
-            if res:
-                self.delivery_end_send_note(cr, uid, [order.id], context=context)
         return True
 
     def has_stockable_products(self, cr, uid, ids, *args):
         for order in self.browse(cr, uid, ids):
             for order_line in order.order_line:
-                if order_line.product_id and order_line.product_id.product_tmpl_id.type in ('product', 'consu'):
+                if order_line.product_id and order_line.product_id.type in ('product', 'consu'):
                     return True
         return False
 
-    # ------------------------------------------------
-    # OpenChatter methods and notifications
-    # ------------------------------------------------
-    
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = super(sale_order, self).get_needaction_user_ids(cr, uid, ids, context=context)
-        return result
-
-    def delivery_send_note(self, cr, uid, ids, picking_id, context=None):
-        for order in self.browse(cr, uid, ids, context=context):
-            for picking in (pck for pck in order.picking_ids if pck.id == picking_id):
-                # convert datetime field to a datetime, using server format, then
-                # convert it to the user TZ and re-render it with %Z to add the timezone
-                picking_datetime = fields.DT.datetime.strptime(picking.min_date, DEFAULT_SERVER_DATETIME_FORMAT)
-                picking_date_str = fields.datetime.context_timestamp(cr, uid, picking_datetime, context=context).strftime(DATETIME_FORMATS_MAP['%+'] + " (%Z)")
-                self.message_post(cr, uid, [order.id], body=_("Delivery Order <em>%s</em> <b>scheduled</b> for %s.") % (picking.name, picking_date_str), context=context)
-
-    def delivery_end_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Order <b>delivered</b>."), context=context)
 
 class sale_order_line(osv.osv):
 

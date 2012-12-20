@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+  <data>
+    <record model="account.tax.code.template" id="vat_code_tax">
+        <field name="name">Panamá Impuestos</field>
+    </record>
+        <record model="account.tax.code.template" id="vat_code_base">
+            <field name="name">Base Imponible</field>
+            <field name="parent_id" ref="vat_code_tax"/>
+        </record>
+            <record model="account.tax.code.template" id="vat_code_base_sale_parent">
+                <field name="name">Base Imponible - Ventas</field>
+                <field name="parent_id" ref="vat_code_base"/>
+            </record>
+                <record model="account.tax.code.template" id="vat_code_base_sale">
+                    <field name="name">Ventas Gravadas con ITBMS</field>
+                    <field name="parent_id" ref="vat_code_base_sale_parent"/>
+                </record>
+                <record model="account.tax.code.template" id="vat_code_base_sale_exonerada">
+                    <field name="name">Ventas NO Gravadas (Exoneradas)</field>
+                    <field name="parent_id" ref="vat_code_base_sale_parent"/>
+                </record>
+                <record model="account.tax.code.template" id="vat_code_base_sale_fuera">
+                    <field name="name">Ventas Gravadas Fuera de Ámbito</field>
+                    <field name="parent_id" ref="vat_code_base_sale_parent"/>
+                </record>
+            <record model="account.tax.code.template" id="vat_code_base_purchase_parent">
+                <field name="name">Base Imponible - Compras</field>
+                <field name="parent_id" ref="vat_code_base"/>
+            </record>
+                <record model="account.tax.code.template" id="vat_code_base_purchase">
+                    <field name="name">Compras Gravadas con ITBMS</field>
+                    <field name="parent_id" ref="vat_code_base_purchase_parent"/>
+                </record>
+                <record model="account.tax.code.template" id="vat_code_base_purchase_exonerada">
+                    <field name="name">Compras NO Gravadas (Exoneradas)</field>
+                    <field name="parent_id" ref="vat_code_base_purchase_parent"/>
+                </record>
+                <record model="account.tax.code.template" id="vat_code_base_purchase_fuera">
+                    <field name="name">Compras Gravadas Fuera de Ámbito</field>
+                    <field name="parent_id" ref="vat_code_base_purchase_parent"/>
+                </record>
+    
+        <record model="account.tax.code.template" id="vat_code_ITBMS">
+            <field name="name">Impuesto General a las Ventas (ITBMS) Total a Pagar</field>
+            <field name="parent_id" ref="vat_code_tax"/>
+        </record>
+            <record model="account.tax.code.template" id="vat_code_ITBMS_pay_parent">
+                <field name="name">Impuesto Pagado</field>
+                <field name="parent_id" ref="vat_code_ITBMS"/>
+            </record>
+                <record model="account.tax.code.template" id="vat_code_ITBMS_pay">
+                    <field name="name">Impuesto Pagado ITBMS</field>
+                    <field name="parent_id" ref="vat_code_ITBMS_pay_parent"/>
+                    <field name="sign">-1</field>
+                </record>
+                <record model="account.tax.code.template" id="vat_code_ITBMS_pay_exonerado">
+                    <field name="name">Impuesto Pagado de Exonerados al ITBMS</field>
+                    <field name="parent_id" ref="vat_code_ITBMS_pay_parent"/>
+                    <field name="sign">-1</field>
+                </record>
+                <record model="account.tax.code.template" id="vat_code_ITBMS_pay_fuera">
+                    <field name="name">Impuesto Pagado Fuera de Ámbito</field>
+                    <field name="parent_id" ref="vat_code_ITBMS_pay_parent"/>
+                    <field name="sign">-1</field>
+                </record>
+            <record model="account.tax.code.template" id="vat_code_ITBMS_receive_parent">
+                <field name="name">Impuesto Cobrado</field>
+                <field name="parent_id" ref="vat_code_ITBMS"/>
+            </record>
+                <record model="account.tax.code.template" id="vat_code_ITBMS_receive">
+                    <field name="name">Impuesto Cobrado ITBMS</field>
+                    <field name="parent_id" ref="vat_code_ITBMS_receive_parent"/>
+                </record>
+                <record model="account.tax.code.template" id="vat_code_ITBMS_receive_exonerado">
+                    <field name="name">Impuesto Cobrado de Exonerados al ITBMS</field>
+                    <field name="parent_id" ref="vat_code_ITBMS_receive_parent"/>
+                </record>
+                <record model="account.tax.code.template" id="vat_code_ITBMS_receive_fuera">
+                    <field name="name">Impuesto Cobrado Fuera de Ámbito</field>
+                    <field name="parent_id" ref="vat_code_ITBMS_receive_parent"/>
+                </record>
+    
+        <record model="account.tax.code.template" id="vat_code_renta">
+            <field name="name">Impuestos Directos a Pagar</field>
+            <field name="parent_id" ref="vat_code_tax"/>
+        </record>
+            <record model="account.tax.code.template" id="vat_code_renta1ra">
+                <field name="name">Impuesto sobre la Renta a Pagar</field>
+                <field name="parent_id" ref="vat_code_renta"/>
+            </record>
+  </data>
+</openerp>
