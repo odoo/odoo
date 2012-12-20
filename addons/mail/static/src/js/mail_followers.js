@@ -196,18 +196,24 @@ openerp_mail_followers = function(session, mail) {
             var subtype_list_ul = this.$('.oe_subtype_list');
             subtype_list_ul.empty();
             var records = data[this.view.datarecord.id || this.view.dataset.ids[0]].message_subtype_data;
-            _(records).each(function (record, record_name) {
-                record.name = record_name;
-                record.followed = record.followed || undefined;
-                $(session.web.qweb.render('mail.followers.subtype', {'record': record})).appendTo( self.$('.oe_subtype_list') );
-            });
+            if (records.length > 1) {
+                _(records).each(function (record, record_name) {
+                    record.name = record_name;
+                    record.followed = record.followed || undefined;
+                    $(session.web.qweb.render('mail.followers.subtype', {'record': record})).appendTo( self.$('.oe_subtype_list') );
+                });
+            }
         },
 
         do_follow: function () {
-            _(this.$('.oe_msg_subtype_check')).each(function (record) {
+            var context = new session.web.CompoundContext(this.build_context(), {});
+            this.ds_model.call('message_subscribe_users', [[this.view.datarecord.id], [this.session.uid], undefined, context])
+                .then(this.proxy('read_value'));
+
+            _.each(this.$('.oe_subtype_list input'), function (record) {
+                console.log(record);
                 $(record).attr('checked', 'checked');
             });
-            this.do_update_subscription();
         },
         
         do_unfollow: function () {
@@ -229,9 +235,13 @@ openerp_mail_followers = function(session, mail) {
                 }
             });
 
-            var context = new session.web.CompoundContext(this.build_context(), {});
-            return this.ds_model.call('message_subscribe_users', [[this.view.datarecord.id], [this.session.uid], this.message_is_follower ? checklist : undefined, context])
-                .then(this.proxy('read_value'));
+            if (!checklist.length) {
+                this.do_unfollow();
+            } else {
+                var context = new session.web.CompoundContext(this.build_context(), {});
+                return this.ds_model.call('message_subscribe_users', [[this.view.datarecord.id], [this.session.uid], checklist, context])
+                    .then(this.proxy('read_value'));
+            }
         },
     });
 };
