@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-12-03 16:03+0000\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2012-12-21 17:06+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -28,11 +28,6 @@ msgstr ""
 #. module: product
 #: help:product.product,seller_qty:0
 msgid "This is minimum quantity to purchase from Main Supplier."
-msgstr ""
-
-#. module: product
-#: model:product.uom,name:product.product_uom_day
-msgid "Day"
 msgstr ""
 
 #. module: product
@@ -101,8 +96,8 @@ msgid "Holds the Chatter summary (number of messages, ...). This summary is dire
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:177
-#: code:addons/product/product.py:206
+#: code:addons/product/pricelist.py:179
+#: code:addons/product/product.py:208
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -113,14 +108,9 @@ msgid "Small-sized image"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:174
+#: code:addons/product/product.py:176
 #, python-format
 msgid "Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!."
-msgstr ""
-
-#. module: product
-#: model:product.uom,name:product.product_uom_dozen
-msgid "Dozen"
 msgstr ""
 
 #. module: product
@@ -176,7 +166,7 @@ msgid "Product Type"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:410
+#: code:addons/product/product.py:412
 #, python-format
 msgid "Products: "
 msgstr ""
@@ -250,11 +240,6 @@ msgstr ""
 #: field:product.template,categ_id:0
 #: field:product.uom,category_id:0
 msgid "Category"
-msgstr ""
-
-#. module: product
-#: model:product.uom,name:product.product_uom_litre
-msgid "Litre"
 msgstr ""
 
 #. module: product
@@ -470,6 +455,11 @@ msgid "Headset standard"
 msgstr ""
 
 #. module: product
+#: model:product.uom,name:product.product_uom_day
+msgid "Day(s)"
+msgstr ""
+
+#. module: product
 #: help:product.product,incoming_qty:0
 msgid "Quantity of products that are planned to arrive.\n"
 "In a context with a single Stock Location, this includes goods arriving to this Location, or any of its children.\n"
@@ -519,8 +509,8 @@ msgid "PC Assemble + Custom (PC on Demand)"
 msgstr ""
 
 #. module: product
-#: model:process.transition,note:product.process_transition_supplierofproduct0
-msgid "1 or several supplier(s) can be linked to a product. All information stands in the product form."
+#: model:product.template,description:product.product_product_27_product_template
+msgid "Custom Laptop based on customer's requirement."
 msgstr ""
 
 #. module: product
@@ -529,7 +519,7 @@ msgid "The width of the package"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:359
+#: code:addons/product/product.py:361
 #, python-format
 msgid "Unit of Measure categories Mismatch!"
 msgstr ""
@@ -626,6 +616,7 @@ msgstr ""
 
 #. module: product
 #: field:product.supplierinfo,name:0
+#: field:product.template,seller_ids:0
 msgid "Supplier"
 msgstr ""
 
@@ -651,8 +642,8 @@ msgid "If checked new messages require your attention."
 msgstr ""
 
 #. module: product
-#: model:product.category,name:product.product_category_1
-msgid "Saleable"
+#: field:product.product,ean13:0
+msgid "EAN13 Barcode"
 msgstr ""
 
 #. module: product
@@ -725,6 +716,11 @@ msgid "End Date"
 msgstr ""
 
 #. module: product
+#: model:product.uom,name:product.product_uom_litre
+msgid "Liter(s)"
+msgstr ""
+
+#. module: product
 #: view:product.price_list:0
 msgid "Print"
 msgstr ""
@@ -757,7 +753,6 @@ msgstr ""
 #. module: product
 #: model:ir.actions.report.xml,name:product.report_product_pricelist
 #: model:ir.model,name:product.model_product_pricelist
-#: field:product.product,price:0
 #: field:product.product,pricelist_id:0
 #: view:product.supplierinfo:0
 msgid "Pricelist"
@@ -765,7 +760,7 @@ msgstr ""
 
 #. module: product
 #: model:product.uom,name:product.product_uom_hour
-msgid "Hour"
+msgid "Hour(s)"
 msgstr ""
 
 #. module: product
@@ -779,8 +774,8 @@ msgid "Partner"
 msgstr ""
 
 #. module: product
-#: model:product.template,description:product.product_product_27_product_template
-msgid "Custom Laptop based on customer's requirement."
+#: model:process.transition,note:product.process_transition_supplierofproduct0
+msgid "1 or several supplier(s) can be linked to a product. All information stands in the product form."
 msgstr ""
 
 #. module: product
@@ -843,11 +838,6 @@ msgstr ""
 #. module: product
 #: field:product.packaging,weight:0
 msgid "Total Package Weight"
-msgstr ""
-
-#. module: product
-#: field:product.product,seller_info_id:0
-msgid "unknown"
 msgstr ""
 
 #. module: product
@@ -1008,6 +998,11 @@ msgid "Right Parent"
 msgstr ""
 
 #. module: product
+#: field:product.product,price:0
+msgid "Price"
+msgstr ""
+
+#. module: product
 #: field:product.pricelist.item,price_surcharge:0
 msgid "Price Surcharge"
 msgstr ""
@@ -1078,6 +1073,11 @@ msgstr ""
 #. module: product
 #: help:product.category,sequence:0
 msgid "Gives the sequence order when displaying a list of product categories."
+msgstr ""
+
+#. module: product
+#: model:product.uom,name:product.product_uom_dozen
+msgid "Dozen(s)"
 msgstr ""
 
 #. module: product
@@ -1152,7 +1152,7 @@ msgid "<p>\n"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:359
+#: code:addons/product/product.py:361
 #, python-format
 msgid "New Unit of Measure '%s' must belong to same Unit of Measure category '%s' as of old Unit of Measure '%s'. If you need to change the unit of measure, you may deactivate this product from the 'Procurements' tab and create a new one."
 msgstr ""
@@ -1200,11 +1200,6 @@ msgid "This field holds the image used as image for the product, limited to 1024
 msgstr ""
 
 #. module: product
-#: field:product.template,seller_ids:0
-msgid "Partners"
-msgstr ""
-
-#. module: product
 #: help:product.pricelist.item,categ_id:0
 msgid "Specify a product category if this rule only applies to products belonging to this category or its children categories. Keep empty otherwise."
 msgstr ""
@@ -1215,7 +1210,12 @@ msgid "Inventory"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:736
+#: field:product.product,seller_info_id:0
+msgid "Supplier Info"
+msgstr ""
+
+#. module: product
+#: code:addons/product/product.py:729
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -1327,15 +1327,8 @@ msgstr ""
 
 #. module: product
 #: selection:product.ul,type:0
-#: model:product.uom,name:product.product_uom_unit
 #: model:product.uom.categ,name:product.product_uom_categ_unit
 msgid "Unit"
-msgstr ""
-
-#. module: product
-#: code:addons/product/product.py:588
-#, python-format
-msgid "Product has been <b>created</b>."
 msgstr ""
 
 #. module: product
@@ -1440,8 +1433,8 @@ msgid "Pricelist Name"
 msgstr ""
 
 #. module: product
-#: field:product.product,ean13:0
-msgid "EAN13 Barcode"
+#: model:product.category,name:product.product_category_1
+msgid "Saleable"
 msgstr ""
 
 #. module: product
@@ -1663,7 +1656,7 @@ msgid "Sepcify a unit of measure here if invoicing is made in another unit of me
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:206
+#: code:addons/product/product.py:208
 #, python-format
 msgid "Cannot change the category of existing Unit of Measure '%s'."
 msgstr ""
@@ -1699,7 +1692,7 @@ msgid "Default Unit of Measure"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:375
+#: code:addons/product/pricelist.py:377
 #, python-format
 msgid "Partner section of the product form"
 msgstr ""
@@ -1725,7 +1718,12 @@ msgid "Messages"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:174
+#: model:product.uom,name:product.product_uom_unit
+msgid "Unit(s)"
+msgstr ""
+
+#. module: product
+#: code:addons/product/product.py:176
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -2012,7 +2010,7 @@ msgid "Normal"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:177
+#: code:addons/product/pricelist.py:179
 #, python-format
 msgid "At least one pricelist has no active version !\n"
 "Please create or activate one."
@@ -2053,12 +2051,6 @@ msgstr ""
 #. module: product
 #: selection:product.template,mes_type:0
 msgid "Variable"
-msgstr ""
-
-#. module: product
-#: field:product.product,message_comment_ids:0
-#: help:product.product,message_comment_ids:0
-msgid "Comments and emails"
 msgstr ""
 
 #. module: product
@@ -2210,7 +2202,7 @@ msgid "15” LCD Monitor"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:374
+#: code:addons/product/pricelist.py:376
 #: field:product.pricelist.item,base_pricelist_id:0
 #, python-format
 msgid "Other Pricelist"

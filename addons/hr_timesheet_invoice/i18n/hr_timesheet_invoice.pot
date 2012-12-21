@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-12-03 16:03+0000\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 17:05+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -93,17 +93,12 @@ msgid "March"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: help:account.analytic.account,to_invoice:0
-msgid "You usually invoice 100% of the timesheets. But if you mix fixed price and timesheet invoicing, you may use another ratio. For instance, if you do a 20% advance invoice (fixed price, based on a sale order), you should invoice the rest on timesheet with a 80% ratio."
-msgstr ""
-
-#. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
 msgid "Profit"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:165
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:144
 #, python-format
 msgid "You cannot modify an invoiced analytic line!"
 msgstr ""
@@ -116,11 +111,6 @@ msgstr ""
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create.final,time:0
 msgid "Display time in the history of works"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.profit:0
-msgid "Journals"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -164,7 +154,7 @@ msgid "Invoiced Amount"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:209
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:188
 #, python-format
 msgid "Analytic Account incomplete !"
 msgstr ""
@@ -175,10 +165,8 @@ msgid "Project"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:164
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:254
-#, python-format
-msgid "Error!"
+#: view:account.analytic.account:0
+msgid "Invoice on Timesheets Options"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -189,12 +177,6 @@ msgstr ""
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,name:0
 msgid "The detail of each work done will be displayed on the invoice"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:116
-#, python-format
-msgid "Contract has been set as <b>pending</b>."
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -215,6 +197,11 @@ msgstr ""
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_report_analytic_account_close
 msgid "Analytic account to close"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: help:account.analytic.account,to_invoice:0
+msgid "You usually invoice 100% of the timesheets. But if you mix fixed price and timesheet invoicing, you may use another ratio. For instance, if you do a 20% advance invoice (fixed price, based on a sales order), you should invoice the rest on timesheet with a 80% ratio."
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -242,7 +229,7 @@ msgid "Deadline"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:267
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:246
 #, python-format
 msgid "Configuration Error!"
 msgstr ""
@@ -279,7 +266,7 @@ msgid "Costs to invoice"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:267
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:246
 #, python-format
 msgid "Please define income account for product '%s'."
 msgstr ""
@@ -320,12 +307,6 @@ msgstr ""
 #: view:hr.analytic.timesheet:0
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice
 msgid "To Invoice"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:98
-#, python-format
-msgid "Contract has been <b>closed</b>."
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -447,11 +428,6 @@ msgstr ""
 #. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
 msgid "Currency"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.profit:0
-msgid "Users"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -607,11 +583,6 @@ msgid "Date"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: model:mail.message.subtype,name:hr_timesheet_invoice.mt_account_closed
-msgid "finished"
-msgstr ""
-
-#. module: hr_timesheet_invoice
 #: field:report.timesheet.line,quantity:0
 #: field:report_timesheet.account,quantity:0
 #: field:report_timesheet.account.date,quantity:0
@@ -642,8 +613,8 @@ msgid "General Account"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: view:account.analytic.account:0
-msgid "Invoice on Timesheets Options"
+#: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_analytic_profit
+msgid "Print Timesheet Profit"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -652,8 +623,9 @@ msgid "Totals:"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: model:mail.message.subtype,name:hr_timesheet_invoice.mt_account_canceled
-msgid "canceled"
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_account_analytic_line_to_invoice
+#: view:report.account.analytic.line.to.invoice:0
+msgid "Analytic Lines to Invoice"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -751,13 +723,7 @@ msgid "Timesheets to invoice"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:104
-#, python-format
-msgid "Contract has been <b>canceled</b>."
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:210
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:189
 #, python-format
 msgid "Contract incomplete. Please fill in the Customer and Pricelist fields."
 msgstr ""
@@ -802,12 +768,6 @@ msgstr ""
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create.final,product:0
 msgid "The product that will be used to invoice the remaining amount"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:110
-#, python-format
-msgid "Contract has been <b>opened</b>."
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -865,11 +825,6 @@ msgid "Sale price"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_analytic_profit
-msgid "Print Timesheet Profit"
-msgstr ""
-
-#. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timesheet_user
 msgid "Timesheets per day"
 msgstr ""
@@ -884,7 +839,7 @@ msgid "April"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:254
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:233
 #, python-format
 msgid "There is no product defined. Please select one or force the product through the wizard."
 msgstr ""
@@ -912,9 +867,10 @@ msgid "Units"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_account_analytic_line_to_invoice
-#: view:report.account.analytic.line.to.invoice:0
-msgid "Analytic Lines to Invoice"
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:143
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:233
+#, python-format
+msgid "Error!"
 msgstr ""
 
 #. module: hr_timesheet_invoice
