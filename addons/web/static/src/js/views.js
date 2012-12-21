@@ -453,11 +453,14 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         this.active_view = null;
         this.views_src = _.map(views, function(x) {
             if (x instanceof Array) {
-                var View = instance.web.views.get_object(x[1], true);
+                var view_type = x[1];
+                var View = instance.web.views.get_object(view_type, true);
+                var view_label = View ? View.prototype.display_name : (void 'nope');
                 return {
                     view_id: x[0],
-                    view_type: x[1],
-                    label: View ? View.prototype.display_name : (void 'nope')
+                    view_type: view_type,
+                    label: view_label,
+                    button_label: View ? _.str.sprintf(_t('%(view_type)s view'), {'view_type': (view_label || view_type)}) : (void 'nope'),
                 };
             } else {
                 return x;
