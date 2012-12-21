@@ -132,9 +132,8 @@
             </t>
         </div>
         <div class="oe_emails_from" t-if="widget.emails_from.length">
-            Add this contact's email on recipient and follower : 
             <t t-foreach='widget.emails_from' t-as='email_from'>
-                <label><input type="checkbox" t-att-checked="email_from[1] ? 'checked' : undefind" t-att-data="email_from[0]"/> <t t-raw="email_from[0]"/></label>
+                <label title="Add them into recipients and followers"><input type="checkbox" t-att-checked="email_from[1] ? 'checked' : undefind" t-att-data="email_from[0]"/> <t t-raw="email_from[0]"/></label>
             </t>
         </div>
     </t>

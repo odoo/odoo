@@ -567,25 +567,30 @@ openerp.mail = function (session) {
         check_recipient_partners: function (emails) {
             var self = this;
             var deferreds = [];
+            var ds_partner = new session.web.DataSetSearch(this, 'res.partner');
             _.each(emails, function (email) {
-                var deferred = $.Deferred();
-                var pop = new session.web.form.FormOpenPopup(this);
-                pop.show_element(
-                    'res.partner',
-                    0,
-                    {
-                        'default_email': email,
-                        'force_email': true,
-                        'ref': "compound_context",
-                    },
-                    {
-                        title: _t("Please complete partner's informations"),
+                ds_partner.call('search', [[['email', '=', email]]]).then(function (partner_ids) {
+                    if (!partner_ids.length) {
+                        var deferred = $.Deferred();
+                        var pop = new session.web.form.FormOpenPopup(this);
+                        pop.show_element(
+                            'res.partner',
+                            0,
+                            {
+                                'default_email': email,
+                                'force_email': true,
+                                'ref': "compound_context",
+                            },
+                            {
+                                title: _t("Please complete partner's informations"),
+                            }
+                        );
+                        pop.on('write_completed, closed', self, function () {
+                            deferred.resolve();
+                        });
+                        deferreds.push(deferred);
                     }
-                );
-                pop.on('write_completed, closed', self, function () {
-                    deferred.resolve();
                 });
-                deferreds.push(deferred);
             });
             return $.when.apply( $, deferreds );
         },
@@ -1587,7 +1592,7 @@ openerp.mail = function (session) {
             }
 
             this.domain = this.node.params && this.node.params.domain || [];
-            
+
             if (!this.__parentedParent.is_action_enabled('edit')) {
                 this.node.params.show_link = false;
             }

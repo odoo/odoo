@@ -784,7 +784,7 @@ class mail_thread(osv.AbstractModel):
             new_partner_ids |= set(part_ids)
 
         if new_partner_ids:
-            self.message_subscribe(cr, uid, new_partner_ids, part_ids, context=context)
+            self.message_subscribe(cr, uid, [thread_id], list(new_partner_ids), context=context)
 
         partner_ids = set(kwargs.pop('partner_ids', [])) | set(new_partner_ids)
 
