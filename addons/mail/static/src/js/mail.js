@@ -862,7 +862,7 @@ openerp.mail = function (session) {
             }
             var message_ids = _.map(messages, function (val) { return val.id; });
 
-            this.ds_message.call('set_message_read', [message_ids, read_value, this.context])
+            this.ds_message.call('set_message_read', [message_ids, read_value, true, this.context])
                 .then(function () {
                     // apply modification
                     _.each(messages, function (msg) {
@@ -911,7 +911,7 @@ openerp.mail = function (session) {
             var self=this;
             var button = self.$('.oe_star:first');
 
-            this.ds_message.call('set_message_starred', [[self.id], !self.is_favorite])
+            this.ds_message.call('set_message_starred', [[self.id], !self.is_favorite, true])
                 .then(function (star) {
                     self.is_favorite=star;
                     if (self.is_favorite) {
@@ -963,6 +963,7 @@ openerp.mail = function (session) {
          *              use with browse, fetch... [O]= top parent
          */
         init: function (parent, datasets, options) {
+            var self = this;
             this._super(parent, options);
             this.domain = options.domain || [];
             this.context = _.extend(options.context || {});
@@ -975,14 +976,15 @@ openerp.mail = function (session) {
             this.parent_message= parent.thread!= undefined ? parent : false ;
 
             // data of this thread
-            this.id =  datasets.id || false,
-            this.last_id =  datasets.last_id || false,
-            this.parent_id =  datasets.parent_id || false,
-
-            this.is_private =  datasets.is_private || false,
-            this.author_id =  datasets.author_id || false,
-            this.thread_level =  (datasets.thread_level+1) || 0,
-            this.partner_ids =  _.filter(datasets.partner_ids, function (partner) { return partner[0]!=datasets.author_id[0]; } ) 
+            this.id = datasets.id || false;
+            this.last_id = datasets.last_id || false;
+            this.parent_id = datasets.parent_id || false;
+            this.is_private = datasets.is_private || false;
+            this.author_id = datasets.author_id || false;
+            this.thread_level = (datasets.thread_level+1) || 0;
+            this.partner_ids = datasets.partner_ids || [];
+            if (datasets.author_id)
+                this.partner_ids.push(datasets.author_id);
             this.messages = [];
 
             this.options.flat_mode = !!(this.options.display_indented_thread > this.thread_level ? this.options.display_indented_thread - this.thread_level : 0);
@@ -992,6 +994,7 @@ openerp.mail = function (session) {
 
             this.ds_thread = new session.web.DataSetSearch(this, this.context.default_model || 'mail.thread');
             this.ds_message = new session.web.DataSetSearch(this, 'mail.message');
+            this.render_mutex = new $.Mutex();
         },
         
         start: function () {
@@ -1184,7 +1187,17 @@ openerp.mail = function (session) {
                     (replace_context ? replace_context : this.context), 
                     // parent_id
                     this.context.default_parent_id || undefined
-                ]).done(callback ? _.bind(callback, this, arguments) : this.proxy('switch_new_message'));
+                ]).done(callback ? _.bind(callback, this, arguments) : this.proxy('switch_new_message')
+                ).done(this.proxy('message_fetch_set_read'));
+        },
+
+        message_fetch_set_read: function (message_list) {
+            if (! this.context.mail_read_set_read) return;
+            this.render_mutex.exec(_.bind(function() {
+                msg_ids = _.pluck(message_list, 'id');
+                return this.ds_message.call('set_message_read', [
+                        msg_ids, true, false, this.context]);
+             }, this));
         },
 
         /**
@@ -1540,6 +1553,7 @@ openerp.mail = function (session) {
                 'show_compose_message': this.view.is_action_enabled('edit'),
             });
             this.node.context = {
+                'mail_read_set_read': true,  // set messages as read in Chatter
                 'default_res_id': this.view.datarecord.id || false,
                 'default_model': this.view.model || false,
             };

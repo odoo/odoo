@@ -977,11 +977,13 @@ class sale_order_line(osv.osv):
         return super(sale_order_line, self).unlink(cr, uid, ids, context=context)
 
 
-class mail_compose_message(osv.osv):
+class mail_compose_message(osv.Model):
     _inherit = 'mail.compose.message'
+
     def send_mail(self, cr, uid, ids, context=None):
         context = context or {}
         if context.get('default_model') == 'sale.order' and context.get('default_res_id') and context.get('mark_so_as_sent'):
+            context = dict(context, mail_post_autofollow=True)
             wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'sale.order', context['default_res_id'], 'quotation_sent', cr)
         return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
