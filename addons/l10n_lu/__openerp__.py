@@ -40,10 +40,11 @@ This is the base module to manage the accounting chart for Luxembourg.
     'depends': ['account', 'base_vat', 'base_iban'],
     'data': [
         # basic accounting data
+        'account_financial_report.xml',
         'account.account.type-2011.csv',
         'account.account.template-2011.csv',
         'account.tax.code.template-2011.csv',
-        'account.chart.template-2011.csv',
+        'account_chart_template.xml',
         'account.tax.template-2011.csv',
         # Change BRE: adds fiscal position
         'account.fiscal.position.template-2011.csv',
