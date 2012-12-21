@@ -773,19 +773,26 @@ class mail_thread(osv.AbstractModel):
             body = tools.plaintext2html(body)
 
         new_partner_ids = set([])
+        link_partner_ids = set([])
         for partner in extra_email:
             part_ids = self.pool.get('res.partner').search(cr, uid, [('email', '=', partner)], context=context)
             if not part_ids:
+                # create a new partner
                 part_ids = [self.pool.get('res.partner').name_create(cr, uid, partner, context=dict())[0]]
+                new_partner_ids |= set(part_ids)
+            else:
+                # partners is already create
+                link_partner_ids |= set(part_ids)
+
             self.message_subscribe(cr, uid, [thread_id], part_ids, context=context)
 
+            # link mail with this from mail to the new partner id
             message_ids = mail_message.search(cr, uid, [('email_from', '=', partner)], context=context)
             if part_ids and message_ids:
                 mail_message.write(cr, uid, message_ids, {'email_from': None, 'author_id': part_ids[0]}, context=context)
 
-            new_partner_ids |= set(part_ids)
 
-        partner_ids = set(kwargs.pop('partner_ids', [])) | set(new_partner_ids)
+        partner_ids = set(kwargs.pop('partner_ids', [])) | set(new_partner_ids) | set(link_partner_ids)
 
         if parent_id:
             parent_message = self.pool.get('mail.message').browse(cr, uid, parent_id, context=context)
