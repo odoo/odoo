@@ -223,7 +223,7 @@
                 <div class='oe_msg_icons' t-if="!widget.options.readonly">
                     <span class='oe_read' t-if="widget.options.show_read"><a title="Done" class="oe_e">W</a></span>
                     <span class='oe_unread' t-if="widget.is_favorite and widget.options.show_unread"><a title="Set back to Todo" class="oe_e">v</a></span>
-                    <span class='oe_unread' t-if="!widget.is_favorite and widget.options.show_unread"><a title="Set back to Inbox" class="oe_e">v</a></span>
+                    <span class='oe_unread' t-if="!widget.is_favorite and widget.options.show_unread"><a title="Move to Inbox" class="oe_e">v</a></span>
                     <span class='oe_reply' t-if="widget.options.show_reply_button"><a title="Reply" class="oe_e">(</a></span>
                     <span t-attf-class="oe_star #{widget.is_favorite?'oe_starred':''}"><a title="Mark as Todo" class="oe_e">7</a></span>
                 </div>

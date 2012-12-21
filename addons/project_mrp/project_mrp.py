@@ -27,7 +27,7 @@ class project_task(osv.osv):
     _inherit = "project.task"
     _columns = {
         'procurement_id': fields.many2one('procurement.order', 'Procurement', ondelete='set null'),
-        'sale_line_id': fields.related('procurement_id', 'sale_line_id', type='many2one', relation='sale.order.line', store=True, string='Sale Order Line'),
+        'sale_line_id': fields.related('procurement_id', 'sale_line_id', type='many2one', relation='sale.order.line', store=True, string='Sales Order Line'),
     }
 
     def _validate_subflows(self, cr, uid, ids):

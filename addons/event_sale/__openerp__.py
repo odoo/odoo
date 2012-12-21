@@ -28,7 +28,7 @@
 Creating registration with sale orders.
 =======================================
 
-This module allows you to automatize and connect your registration creation with
+This module allows you to automate and connect your registration creation with
 your main sale flow and therefore, to enable the invoicing feature of registrations.
 
 It defines a new kind of service products that offers you the possibility to
