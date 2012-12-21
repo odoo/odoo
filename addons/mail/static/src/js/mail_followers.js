@@ -34,6 +34,8 @@ openerp_mail_followers = function(session, mail) {
 
             this.value = [];
             this.followers = [];
+            
+            this.view_is_editable = this.__parentedParent.is_action_enabled('edit');
         },
 
         start: function() {
@@ -43,7 +45,6 @@ openerp_mail_followers = function(session, mail) {
             this.reinit();
             this.bind_events();
             this._super();
-            this.view_is_editable = this.__parentedParent.is_action_enabled('edit');
         },
 
         on_check_visibility_mode: function () {
