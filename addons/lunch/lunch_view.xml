@@ -64,6 +64,7 @@
             <field name='model'>lunch.order</field>
             <field name='arch' type='xml'>
                 <search string="lunch orders">
+                    <field name="user_id"/>
                     <field name="date"/>
                     <field name="order_line_ids"/>
                     <filter name='is_mine' string="My Orders" domain="[('user_id','=',uid)]"/>
