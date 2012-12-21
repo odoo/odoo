@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-05-10 17:33+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
+"PO-Revision-Date: 2012-12-20 19:34+0000\n"
+"Last-Translator: Ahti Hinnov <sipelgas@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:21+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-21 04:40+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -115,7 +115,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_move_reconciliation.xml:30
 #, python-format
 msgid "Reconcile"
-msgstr "Võrdle"
+msgstr "Võrdlus"
 
 #. module: account
 #: field:account.bank.statement,name:0
@@ -1450,7 +1450,7 @@ msgstr ""
 #: model:ir.actions.report.xml,name:account.account_overdue
 #: view:res.company:0
 msgid "Overdue Payments"
-msgstr "Tasumata Maksed"
+msgstr "Hilinenud maksed"
 
 #. module: account
 #: report:account.third_party_ledger:0
@@ -1671,7 +1671,7 @@ msgstr "Grupid"
 #: field:account.invoice,amount_untaxed:0
 #: field:report.invoice.created,amount_untaxed:0
 msgid "Untaxed"
-msgstr "Maksuvaba"
+msgstr "Maksuta"
 
 #. module: account
 #: view:account.journal:0
@@ -1775,7 +1775,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,group_analytic_accounting:0
 msgid "Analytic accounting"
-msgstr ""
+msgstr "Analüütiline raamatupidamine"
 
 #. module: account
 #: report:account.overdue:0
@@ -1946,6 +1946,8 @@ msgid ""
 "Select a configuration package to setup automatically your\n"
 "                        taxes and chart of accounts."
 msgstr ""
+"Vali raamatupidamise pakett, et automaatselt seadistada\n"
+"                        maksud ja kontoplaan."
 
 #. module: account
 #: view:account.analytic.account:0
@@ -2139,7 +2141,7 @@ msgstr ""
 #. module: account
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr "Vale kreedit või deebeti raamatupidamise sisend !"
+msgstr ""
 
 #. module: account
 #: view:account.invoice.report:0
@@ -2298,7 +2300,7 @@ msgstr "Maksu definitsioon"
 #: view:account.config.settings:0
 #: model:ir.actions.act_window,name:account.action_account_config
 msgid "Configure Accounting"
-msgstr ""
+msgstr "Seadista raamatupidamine"
 
 #. module: account
 #: field:account.invoice.report,uom_name:0
@@ -2348,7 +2350,7 @@ msgstr ""
 #: view:account.invoice:0
 #: view:report.invoice.created:0
 msgid "Untaxed Amount"
-msgstr "Maksuvaba summa"
+msgstr "Maksuta summa"
 
 #. module: account
 #: help:account.tax,active:0
@@ -2493,7 +2495,7 @@ msgstr ""
 #. module: account
 #: report:account.invoice:0
 msgid "Customer Code"
-msgstr ""
+msgstr "Kliendi kood"
 
 #. module: account
 #: view:account.account.type:0
@@ -2516,7 +2518,7 @@ msgstr "Kirjeldus"
 #: field:account.tax,price_include:0
 #: field:account.tax.template,price_include:0
 msgid "Tax Included in Price"
-msgstr "Maks Sisaldub Hinnas"
+msgstr "Maks sisaldub hinnas"
 
 #. module: account
 #: view:account.subscription:0
@@ -2811,7 +2813,7 @@ msgstr ""
 #. module: account
 #: field:product.template,supplier_taxes_id:0
 msgid "Supplier Taxes"
-msgstr "Tarnija maksud"
+msgstr "Ostumaksud"
 
 #. module: account
 #: view:account.entries.report:0
@@ -2882,7 +2884,7 @@ msgstr ""
 #: field:account.move.line,account_tax_id:0
 #: view:account.tax:0
 msgid "Tax"
-msgstr "Maks"
+msgstr "Maksud"
 
 #. module: account
 #: view:account.analytic.account:0
@@ -2986,7 +2988,7 @@ msgstr "Viide"
 #. module: account
 #: view:wizard.multi.charts.accounts:0
 msgid "Purchase Tax"
-msgstr ""
+msgstr "Ostu maks"
 
 #. module: account
 #: help:account.move.line,tax_code_id:0
@@ -4190,7 +4192,7 @@ msgstr ""
 #. module: account
 #: field:account.move.line,date:0
 msgid "Effective date"
-msgstr "Kehtivusaeg"
+msgstr "Kuupäev"
 
 #. module: account
 #: code:addons/account/wizard/account_fiscalyear_close.py:100
@@ -4341,7 +4343,7 @@ msgstr ""
 #. module: account
 #: view:account.invoice:0
 msgid "Validate"
-msgstr "Valideeri"
+msgstr "Kinnita"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
@@ -4695,7 +4697,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_wizard_multi_chart
 msgid "Set Your Accounting Options"
-msgstr ""
+msgstr "Määra oma raamatupidamise valikud"
 
 #. module: account
 #: model:ir.model,name:account.model_account_chart
@@ -4706,7 +4708,7 @@ msgstr ""
 #: code:addons/account/account_invoice.py:1322
 #, python-format
 msgid "Supplier invoice"
-msgstr "Tarnija arve"
+msgstr "Ostuarve"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -4969,7 +4971,7 @@ msgstr ""
 #. module: account
 #: view:wizard.multi.charts.accounts:0
 msgid "Sale Tax"
-msgstr ""
+msgstr "Müügi maks"
 
 #. module: account
 #: field:account.tax,ref_tax_code_id:0
@@ -5661,7 +5663,7 @@ msgstr "Kaasa baassummasse"
 #. module: account
 #: field:account.invoice,supplier_invoice_number:0
 msgid "Supplier Invoice Number"
-msgstr ""
+msgstr "Ostuarve number"
 
 #. module: account
 #: help:account.payment.term.line,days:0
@@ -5832,7 +5834,7 @@ msgstr ""
 #. module: account
 #: view:account.invoice:0
 msgid "Payment Date"
-msgstr ""
+msgstr "Makse kuupäev"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -5850,7 +5852,7 @@ msgstr "Analüütilised kontod"
 #. module: account
 #: view:account.invoice.report:0
 msgid "Customer Invoices And Refunds"
-msgstr ""
+msgstr "Müügiarved ja hüvitised"
 
 #. module: account
 #: field:account.analytic.line,amount_currency:0
@@ -6388,7 +6390,7 @@ msgstr ""
 #. module: account
 #: field:product.template,taxes_id:0
 msgid "Customer Taxes"
-msgstr "Kliendi maksud"
+msgstr "Müügimaksud"
 
 #. module: account
 #: help:account.model,name:0
@@ -6577,7 +6579,7 @@ msgstr ""
 #: code:addons/account/installer.py:48
 #, python-format
 msgid "Custom"
-msgstr ""
+msgstr "Kohandatud"
 
 #. module: account
 #: view:account.analytic.account:0
@@ -6879,7 +6881,7 @@ msgstr ""
 #: report:account.invoice:0
 #: field:account.invoice.tax,base:0
 msgid "Base"
-msgstr "Baas"
+msgstr "Alus"
 
 #. module: account
 #: field:account.model,name:0
@@ -6939,7 +6941,7 @@ msgstr ""
 #: code:addons/account/account_invoice.py:1321
 #, python-format
 msgid "Customer invoice"
-msgstr ""
+msgstr "Müügiarve"
 
 #. module: account
 #: selection:account.account.type,report_type:0
@@ -7289,7 +7291,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_invoice_tree1
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree1
 msgid "Customer Invoices"
-msgstr "Kliendi arved"
+msgstr "Müügiarved"
 
 #. module: account
 #: view:account.tax:0
@@ -7428,7 +7430,7 @@ msgstr ""
 #. module: account
 #: view:account.invoice:0
 msgid "Customer Reference"
-msgstr ""
+msgstr "Kliendi viide"
 
 #. module: account
 #: field:account.account.template,parent_id:0
@@ -8085,7 +8087,7 @@ msgstr ""
 #. module: account
 #: field:account.installer,charts:0
 msgid "Accounting Package"
-msgstr ""
+msgstr "Raamatupidamise pakett"
 
 #. module: account
 #: report:account.third_party_ledger:0
@@ -8707,7 +8709,7 @@ msgstr "Ostupäevik"
 #. module: account
 #: field:account.invoice.line,price_subtotal:0
 msgid "Subtotal"
-msgstr ""
+msgstr "Vahesumma"
 
 #. module: account
 #: view:account.vat.declaration:0
@@ -9199,7 +9201,7 @@ msgstr "Loo arve"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_configuration_installer
 msgid "Configure Accounting Data"
-msgstr ""
+msgstr "Seadista raamatupidamise andmed"
 
 #. module: account
 #: field:wizard.multi.charts.accounts,purchase_tax_rate:0
@@ -10051,7 +10053,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_invoice_tree2
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree2
 msgid "Supplier Invoices"
-msgstr "Tarnija arved"
+msgstr "Ostuarved"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -10422,7 +10424,7 @@ msgstr ""
 #: model:process.process,name:account.process_process_supplierinvoiceprocess0
 #: selection:report.invoice.created,type:0
 msgid "Supplier Invoice"
-msgstr "Tarnija arve"
+msgstr "Ostuarve"
 
 #. module: account
 #: field:account.account,debit:0

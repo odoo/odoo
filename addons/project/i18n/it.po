@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-12 07:47+0000\n"
-"Last-Translator: Davide Corio - agilebg.com <davide.corio@agilebg.com>\n"
+"PO-Revision-Date: 2012-12-18 22:53+0000\n"
+"Last-Translator: Sergio Corato <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-13 04:42+0000\n"
-"X-Generator: Launchpad (build 16361)\n"
+"X-Launchpad-Export-Date: 2012-12-19 05:15+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: project
 #: view:project.project:0
@@ -55,7 +55,7 @@ msgstr "Attività di Progetto"
 #. module: project
 #: field:project.task.type,name:0
 msgid "Stage Name"
-msgstr "Nome Stadio"
+msgstr "Nome Fase"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_openpendingtask0
@@ -216,7 +216,7 @@ msgstr "Pubblico"
 #. module: project
 #: model:project.category,name:project.project_category_01
 msgid "Contact's suggestion"
-msgstr ""
+msgstr "Consiglio del contatto"
 
 #. module: project
 #: help:project.config.settings,group_time_work_estimation_tasks:0
@@ -659,6 +659,22 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                  Click to start a new project.\n"
+"                  Cliccare per avviare un nuovo progetto.\n"
+"                </p><p>\n"
+"                  I progetti sono usati per organizzare le attività; "
+"pianificare attività,\n"
+"                  tracciare problematiche, fatturare timesheet. Puoi "
+"definire\n"
+"                  progetti interni (R&amp;D, Miglioramenti Processo "
+"Vendite),\n"
+"                  progetti privati (Miei Todo) o quelli per i clienti.\n"
+"                </p><p>\n"
+"                  Potrai collaborare con gli utenti interni sui progetti o\n"
+"                  invitare clienti ai quali condividere le attività.\n"
+"                </p>\n"
+"            "
 
 #. module: project
 #: view:project.config.settings:0
@@ -871,6 +887,10 @@ msgid ""
 "the case needs to be reviewed then the status is                       set "
 "to 'Pending'."
 msgstr ""
+"Lo stato viene impostato su 'Bozza', quando un caso viene creato. Se il caso "
+"è in progresso lo stato passa a 'Aperto'. Quando il caso è concluso, lo "
+"stato passa a 'Completato'. Se il caso necessità di essere rivisto lo stato "
+"viene impostato su 'In attesa'."
 
 #. module: project
 #: model:ir.model,name:project.model_res_company
@@ -902,6 +922,12 @@ msgid ""
 " * Ready for next stage indicates the task is ready to be pulled to the next "
 "stage"
 msgstr ""
+"Lo stato kanban di un'attività indica la situazione speciale in cui si "
+"trova:\n"
+"* Normale è la situazione standard\n"
+"* Bloccata indica che qualcosa previene la progressione di questa attività\n"
+"* Pronta, come prossima fase, indica che l'attività può passare alla fase "
+"successiva"
 
 #. module: project
 #: view:project.task:0
@@ -1250,6 +1276,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliccare per aggiungere una nuova fase per l'attività.\n"
+"              </p><p>\n"
+"                Definisce i passi che verranno usati nel progetto dalla "
+"creazione\n"
+"                dell'attività fino alla chiusura di questa o delle "
+"problematica.\n"
+"                Userai queste fasi per tenere traccia del progresso delle "
+"attività\n"
+"                o delle problematiche.\n"
+"              </p>\n"
+"            "
 
 #. module: project
 #: help:project.task,total_hours:0
@@ -1589,6 +1627,9 @@ msgid ""
 "                (by default, http://ietherpad.com/).\n"
 "                This installs the module pad."
 msgstr ""
+"Consente all'azienda di decidere quale servizio Pad usare nella creazione "
+"dei nuovi pads (di default, http://ietherpad.com/).\n"
+"Installa il modulo pad."
 
 #. module: project
 #: field:project.task,id:0
@@ -1697,6 +1738,10 @@ msgid ""
 "                editing and deleting either ways.\n"
 "                This installs the module project_timesheet."
 msgstr ""
+"Consente di trasferire le voci delle attività verso le righe timesheet per "
+"un particolare utente e data, con lo scopo di creare, modificare ed "
+"eliminare entrambi contemporaneamente.\n"
+"Installa il modulo project_timesheet"
 
 #. module: project
 #: field:project.config.settings,module_project_issue:0
@@ -1770,6 +1815,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new task.\n"
+"                Cliccare per creare una nuova attività.\n"
+"              </p><p>\n"
+"                La gestione progetti di OpenERP consente di gestire la coda "
+"di attività al fine\n"
+"                di gestire le cose da fare agevolmente.\n"
+"                Puoi tenere traccia del progresso, discussioni sulle "
+"attività, allegati, etc.\n"
+"              </p>\n"
+"            "
 
 #. module: project
 #: field:project.task,date_end:0
@@ -1896,7 +1952,7 @@ msgstr "Progetti"
 #. module: project
 #: model:res.groups,name:project.group_tasks_work_on_tasks
 msgid "Task's Work on Tasks"
-msgstr ""
+msgstr "Esecuzioni Attività"
 
 #. module: project
 #: help:project.task.delegate,name:0
@@ -1964,6 +2020,13 @@ msgid ""
 "'Manufacture'.\n"
 "                This installs the module project_mrp."
 msgstr ""
+"Questa caratteristica crea automaticamente attività dai servizi negli ordini "
+"di vendita.\n"
+"Più precisamente, le attività vengono create dalle voci di "
+"approvvigionamento di tipo 'Servizio',\n"
+"metodo di approvvigionamento 'Produci su ordine' e metodo di fornitura "
+"'Produci'.\n"
+"Installa il modulo project_mrp."
 
 #. module: project
 #: help:project.task.delegate,planned_hours:0
@@ -2138,6 +2201,9 @@ msgid ""
 "resource allocation.\n"
 "                This installs the module project_long_term."
 msgstr ""
+"Il modulo gestione progetti a lungo termine tiene traccia della "
+"pianificazione e dell'allocazione risorse.\n"
+"Installa il modulo project_long_term."
 
 #. module: project
 #: selection:report.project.task.user,month:0
@@ -2165,6 +2231,9 @@ msgid ""
 "Provides timesheet support for the issues/bugs management in project.\n"
 "                This installs the module project_issue_sheet."
 msgstr ""
+"Fornisce il supporto ai timesheet per la gestione bugs/problematiche nei "
+"progetti.\n"
+"Installa il modulo project_issue_sheet."
 
 #. module: project
 #: selection:project.project,privacy_visibility:0

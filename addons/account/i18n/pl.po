@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-12 20:07+0000\n"
+"PO-Revision-Date: 2012-12-19 17:42+0000\n"
 "Last-Translator: Grzegorz Grzelak (OpenGLOBE.pl) <grzegorz@openglobe.pl>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-13 04:43+0000\n"
-"X-Generator: Launchpad (build 16361)\n"
+"X-Launchpad-Export-Date: 2012-12-20 04:45+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -187,7 +187,7 @@ msgstr ""
 #: field:account.fiscal.position.account,account_src_id:0
 #: field:account.fiscal.position.account.template,account_src_id:0
 msgid "Account Source"
-msgstr "Źródło konta"
+msgstr "Konto źródłowe"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_period
@@ -921,7 +921,7 @@ msgstr "Dziennik kont analitycznych"
 #. module: account
 #: view:account.invoice:0
 msgid "Send by Email"
-msgstr "Wysłano jako mail"
+msgstr "Wyślij mailem"
 
 #. module: account
 #: help:account.central.journal,amount_currency:0
@@ -1285,6 +1285,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kliknij, aby utworzyć nowy raport kasowy.\n"
+"              </p><p>\n"
+"                Raport kasowy pozwala rejestrować operacje kasowe.\n"
+"                Służy do obsługi codziennych płatności w gotówce.\n"
+"                Po utworzeniu raportu, na początku możesz wprowadzić\n"
+"                banknoty i monety, które posiadasz w kasetce. A następnie\n"
+"                rejestrować każdą operację wpłaty i wypłaty.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_bank
@@ -1344,6 +1354,8 @@ msgid ""
 "The amount expressed in the secondary currency must be positif when journal "
 "item are debit and negatif when journal item are credit."
 msgstr ""
+"Wartość wyrażona w drugiej walucie musi być dodatnia dla pozycji Winien lub "
+"ujemna jeśli pozycja jest Ma."
 
 #. module: account
 #: view:account.invoice.cancel:0
@@ -1868,6 +1880,14 @@ msgid ""
 "should choose 'Round per line' because you certainly want the sum of your "
 "tax-included line subtotals to be equal to the total amount with taxes."
 msgstr ""
+"Jeśli wybierzesz 'Zaokrąglaj pozycje', to dla każdego podatku, każda wartość "
+"będzie obliczona i zaokrąglona w każdej pozycji zamówienia sprzedaży, "
+"zamówienia zakupu lub faktury i dopiero zaokrąglone wartości będą zsumowane. "
+"Jeśli wybierzesz 'Zaokrąglaj globalnie', to podatki i pozycje zostaną "
+"najpierw zsumowane i dopiero ewentualnie zaokrąglone. Jeśli stosujesz "
+"sprzedaż z podatkami wliczonymi w cenę, to powinieneś wybrać 'Zaokrąglaj "
+"pozycje' ponieważ zapewne chcesz, aby suma wartości z podatkami była równa "
+"sumie wartości brutto."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_report_account_type_sales_tree_all
@@ -2215,6 +2235,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kliknij, aby zarejestrować fakturę od dostawcy.\n"
+"              </p><p>\n"
+"                Możesz rejestrować faktury w zależności od zakupów lub\n"
+"                przyjęć. OpenERP generuje również projekty faktur\n"
+"                automatycznie z zamówienia zakupu lub przyjęcia "
+"zewnętrznego.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: sql_constraint:account.move.line:0
@@ -2245,6 +2274,7 @@ msgid ""
 "This journal already contains items for this period, therefore you cannot "
 "modify its company field."
 msgstr ""
+"Nie możesz modyfikować firmy, ponieważ dziennik zawiera zapisy w tym okresie."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_project_account_analytic_line_form
@@ -2273,6 +2303,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kliknij, aby zarejestrować wyciąg bankowy.\n"
+"              </p><p>\n"
+"                Wyciąg jest listę transakcji banko dla konkretnego konta\n"
+"                w określonym czasie.\n"
+"              </p><p>\n"
+"                OpenERP pozwala uzgadniać pozycje wyciągu bezpośrednio\n"
+"                z fakturami sprzedaży lub zakupu.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: field:account.config.settings,currency_id:0
@@ -2325,7 +2365,7 @@ msgstr "Zaksięgowane"
 #: field:account.bank.statement,message_follower_ids:0
 #: field:account.invoice,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Wypowiadający się"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_print_journal
@@ -2805,7 +2845,7 @@ msgstr "Filtry"
 #: selection:account.period,state:0
 #: selection:report.invoice.created,state:0
 msgid "Open"
-msgstr "Otwarty"
+msgstr "Otwarte"
 
 #. module: account
 #: model:process.node,note:account.process_node_draftinvoices0
@@ -2934,6 +2974,21 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kliknij, aby utworzyć zapis księgowy.\n"
+"              </p><p>\n"
+"                Zapis księgowy zawiera kilka pozycji. Każda z nich jest "
+"transakcją\n"
+"                po albo stronie Winien, albo po stronie Ma.\n"
+"              </p><p>\n"
+"                OpenERP tworzy automatycznie zapisy przy zatwierdzaniu "
+"wielu\n"
+"                dokumentów: faktur, korekt, płatności, wyciągów bankowych, "
+"itp.\n"
+"                Ręcznie powinieneś wprowadzać zapisy tylko dla nietypowych\n"
+"                operacji.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: help:account.invoice,date_due:0
@@ -3556,7 +3611,7 @@ msgstr "Zawsze"
 #: field:account.config.settings,module_account_accountant:0
 msgid ""
 "Full accounting features: journals, legal statements, chart of accounts, etc."
-msgstr ""
+msgstr "Funkcjonalności księgowe: dzienniki, okresy, konta, wyciągi itp."
 
 #. module: account
 #: view:account.analytic.line:0
@@ -3830,6 +3885,10 @@ msgid ""
 "quotations with a button \"Pay with  Paypal\" in automated emails or through "
 "the OpenERP portal."
 msgstr ""
+"Konto paypal (adres email) do otrzymywania płatności online (kartami "
+"kredytowymi, itp). Jeśli ustawisz konto paypal, to klient będzie mógł "
+"zapłacić za fakturę lub wpłacić przedpłatę przyciskiem \"Płać przez PayPal\" "
+"automatycznymi mailami lub w portalu OpenERP."
 
 #. module: account
 #: code:addons/account/account_move_line.py:535
@@ -3840,6 +3899,10 @@ msgid ""
 "You can create one in the menu: \n"
 "Configuration/Journals/Journals."
 msgstr ""
+"Nie można znaleźć dziennika typu %s dla tej firmy.\n"
+"\n"
+"Utwórz go w menu: \n"
+"Konfiguracja/Dzienniki/Dzienniki."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_unreconcile
@@ -3890,6 +3953,10 @@ msgid ""
 "by\n"
 "                                    your supplier/customer."
 msgstr ""
+"Będziesz mógł edytować i zatwierdzić\n"
+"                                    tę korektę od razu lub trzymac ją w \n"
+"                                    stanie Projekt do czasu otrzymania\n"
+"                                    dokumentu od partnera."
 
 #. module: account
 #: view:validate.account.move.lines:0
@@ -3957,6 +4024,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kliknij, aby utworzyć fakturę dla klienta.\n"
+"              </p><p>\n"
+"                Elektroniczne fakturowanie OpenERP pozwala szybko \n"
+"                i łatwo zarządzać płatnościami. Klient może otrzymać\n"
+"                fakturę mailem i może zapłacić ją od razu lub\n"
+"                zaimportować do swoejgo systemu.\n"
+"              </p><p>\n"
+"                Komunikacja z klientem jest automatycznie wyświetlana\n"
+"                pod fakturą.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: field:account.tax.code,name:0
@@ -4444,6 +4523,8 @@ msgid ""
 "Value of Loss or Gain due to changes in exchange rate when doing multi-"
 "currency transactions."
 msgstr ""
+"Wartości zysków i strat w zależności od zmian w kursie walut przy transakcja "
+"wielowalutowych."
 
 #. module: account
 #: view:account.analytic.line:0
@@ -4467,7 +4548,7 @@ msgstr "tytuł"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Create a draft credit note"
-msgstr ""
+msgstr "Utwórz projekt korekty"
 
 #. module: account
 #: view:account.invoice:0
@@ -4526,7 +4607,7 @@ msgstr "(Faktura musi mieć skasowane uzgodnienia, jeśli chcesz ją otworzyć)"
 #. module: account
 #: field:account.tax,account_analytic_collected_id:0
 msgid "Invoice Tax Analytic Account"
-msgstr ""
+msgstr "Konto analityczne podatku faktury"
 
 #. module: account
 #: field:account.chart,period_from:0
@@ -5240,7 +5321,7 @@ msgstr "Czek"
 #: view:validate.account.move:0
 #: view:validate.account.move.lines:0
 msgid "or"
-msgstr ""
+msgstr "lub"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -5772,6 +5853,9 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Zawiera podsumowanie wypowiedzi (liczbę wiadomości, ...). To podsumowanie "
+"jest bezpośrednio w formacie html, aby można je było stosować w widokach "
+"kanban."
 
 #. module: account
 #: field:account.tax,child_depend:0
@@ -6133,7 +6217,7 @@ msgstr "Proejkt korekty"
 #: view:account.chart:0
 #: view:account.tax.chart:0
 msgid "Open Charts"
-msgstr "Otwórz plany kont"
+msgstr "Otwórz plan kont"
 
 #. module: account
 #: field:account.central.journal,amount_currency:0
@@ -6440,6 +6524,10 @@ msgid ""
 "created by the system on document validation (invoices, bank statements...) "
 "and will be created in 'Posted' status."
 msgstr ""
+"Wszystkie ręcznie utworzone zapisy mają zwykle stan 'Niezaksięgowane', ale "
+"możesz ustawić opcję w dzienniku, że zapisy będą automatycznie księgowane po "
+"wprowadzeniu. Będą się w tedy zachowywały jak zapisy przy fakturach i "
+"wyciągach bankowych i przechodziły w stan 'Zaksięgowano'."
 
 #. module: account
 #: field:account.payment.term.line,days:0
@@ -6777,7 +6865,7 @@ msgstr "Nie możesz tworzyć zapisów na zamknietym koncie"
 #: code:addons/account/account_invoice.py:594
 #, python-format
 msgid "Invoice line account's company and invoice's compnay does not match."
-msgstr ""
+msgstr "Firma z pozycji nie odpowiada firmie z faktury"
 
 #. module: account
 #: view:account.invoice:0
@@ -6989,6 +7077,8 @@ msgid ""
 "the tool search to analyse information about analytic entries generated in "
 "the system."
 msgstr ""
+"W tym widoku masz analizę zapisów analitycznych na kontach analitycznych. "
+"Konta odzwierciedlają twoje biznesowe potrzeby analityczne."
 
 #. module: account
 #: sql_constraint:account.journal:0
@@ -6998,7 +7088,7 @@ msgstr "Nazwa dziennika musi być unikalna w ramach firmy !"
 #. module: account
 #: field:account.account.template,nocreate:0
 msgid "Optional create"
-msgstr ""
+msgstr "Opcjonalne tworzenie"
 
 #. module: account
 #: code:addons/account/account.py:685
@@ -7054,7 +7144,7 @@ msgstr "Grupuj wg..."
 #. module: account
 #: view:account.payment.term.line:0
 msgid "  Valuation: Balance"
-msgstr ""
+msgstr "  Wartość: Saldo"
 
 #. module: account
 #: field:account.analytic.line,product_uom_id:0
@@ -7105,6 +7195,8 @@ msgid ""
 "Percentages for Payment Term Line must be between 0 and 1, Example: 0.02 for "
 "2%."
 msgstr ""
+"Oprocentowanie w pozycji warunku płatności musi być jako liczba między 0 a "
+"1, Na przykład: 0.02 oznacza 2%."
 
 #. module: account
 #: report:account.invoice:0
@@ -7556,6 +7648,9 @@ msgid ""
 "Make sure you have configured payment terms properly.\n"
 "The latest payment term line should be of the \"Balance\" type."
 msgstr ""
+"Nie możesz zatwierdzić niezbilansowanego zapisu.\n"
+"Upewnij się, że warunki płatności są poprawne.\n"
+"Ostatnia pozycja warunków płatności powinna być typu 'Saldo'."
 
 #. module: account
 #: model:process.transition,note:account.process_transition_invoicemanually0
@@ -7589,7 +7684,7 @@ msgstr "Dokument źródłowy"
 #: code:addons/account/account_analytic_line.py:90
 #, python-format
 msgid "There is no expense account defined for this product: \"%s\" (id:%d)."
-msgstr ""
+msgstr "Brak konta rozchodów dla produktu: \"%s\" (id:%d)."
 
 #. module: account
 #: constraint:account.account:0
@@ -7621,6 +7716,8 @@ msgid ""
 "You can not delete an invoice which is not cancelled. You should refund it "
 "instead."
 msgstr ""
+"Nie możesz usuwać faktury, która nie jest anulowana. Powinieneś wystawić "
+"korektę."
 
 #. module: account
 #: help:account.tax,amount:0
@@ -7948,11 +8045,25 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                Kliknij, aby utworzyć konto analityczne.\n"
+"              </p><p>\n"
+"                Ustawowy plan kont ma strukturę dostosowaną do wymagań\n"
+"                urzędowych twojego kraju. Analityczny plan kont powinien\n"
+"                odzwierciedlać strukturę twojego biznesu w analizie\n"
+"                kosztów i przychodów.\n"
+"              </p><p>\n"
+"                Zwykle ta struktura odzwierciedla umowy, projekty, produkty\n"
+"                lub wydziały. Większość operacji w OpenERP (faktury, karty\n"
+"                pracy, wydatki itd.) generują zapisy analityczne na kontach\n"
+"                analitycznych.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_view
 msgid "Root/View"
-msgstr ""
+msgstr "Widok/Korzeń"
 
 #. module: account
 #: code:addons/account/account.py:3148
@@ -8067,6 +8178,8 @@ msgid ""
 "This date will be used as the invoice date for credit note and period will "
 "be chosen accordingly!"
 msgstr ""
+"Ta data zostanie przyjęta jako data korekty a okres zostanie przypisany "
+"odpowiedni!"
 
 #. module: account
 #: view:product.template:0
@@ -8102,7 +8215,7 @@ msgstr "Do"
 #: code:addons/account/account.py:1497
 #, python-format
 msgid "Currency Adjustment"
-msgstr ""
+msgstr "Poprawka walutowa"
 
 #. module: account
 #: field:account.fiscalyear.close,fy_id:0
@@ -8831,7 +8944,7 @@ msgstr "Automatyczny import wyciągu bankowego"
 #: code:addons/account/account_invoice.py:370
 #, python-format
 msgid "Unknown Error!"
-msgstr ""
+msgstr "Nieznany błąd!"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_bank_reconcile
@@ -8857,11 +8970,13 @@ msgid ""
 "You cannot use this general account in this journal, check the tab 'Entry "
 "Controls' on the related journal."
 msgstr ""
+"Nie możesz stosować tego konta w tym dzienniku. Sprawdź zakładkę 'Kontrola "
+"zapisów' w dzienniku."
 
 #. module: account
 #: view:account.payment.term.line:0
 msgid "  Value amount: n.a"
-msgstr ""
+msgstr "  Wartość: nd."
 
 #. module: account
 #: view:account.automatic.reconcile:0
@@ -9063,6 +9178,7 @@ msgstr "Kod konta musi byc unikalny w ramach firmy !"
 #: help:product.template,property_account_expense:0
 msgid "This account will be used to value outgoing stock using cost price."
 msgstr ""
+"To konto będzie stosowane do wyceny zapasów wychodzących wg ceny kosztowej."
 
 #. module: account
 #: view:account.invoice:0
@@ -9240,6 +9356,9 @@ msgid ""
 "created. If you leave that field empty, it will use the same journal as the "
 "current invoice."
 msgstr ""
+"Możesz wybrać dziennik dla tworzonej korekty. Jeśli pozostawisz to pole "
+"puste, to do korekty będzie stosowany ten sam dzinnik co do oryginalnej "
+"faktury."
 
 #. module: account
 #: help:account.bank.statement.line,sequence:0
@@ -9288,6 +9407,9 @@ msgid ""
 "some non legal fields or you must unreconcile first.\n"
 "%s."
 msgstr ""
+"Nie możesz modyfikować uzgodnionego zapisu. Możesz zmieniać jedynie pola "
+"nieistotne księgowo lub najpierw musisz skasować uzgodnienie.\n"
+"%s."
 
 #. module: account
 #: help:account.financial.report,sign:0
@@ -9332,7 +9454,7 @@ msgstr "Proejkty faktur są sprawdzone, zatwierdzane i wydrukowane."
 #: field:account.bank.statement,message_is_follower:0
 #: field:account.invoice,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Jest wypowiadającym się"
 
 #. module: account
 #: view:account.move:0
@@ -9387,6 +9509,9 @@ msgid ""
 "the amount of this case into its parent. For example, set 1/-1 if you want "
 "to add/substract it."
 msgstr ""
+"Podaj współczynnik, który będzie zastosowany do doliczenia wartości tego "
+"rejestru do rejestru nadrzędnego. Podaj 1 jeśli chcesz dodać do innych "
+"wartości w nadrzędnym rejestrze lub -1, jeśli chcesz odjąć."
 
 #. module: account
 #: view:account.invoice:0
@@ -9444,6 +9569,10 @@ msgid ""
 "chart\n"
 "                        of accounts."
 msgstr ""
+"Kiedy projekt faktury zostanie zatwierdzony, to nie\n"
+"                        będziesz mógł go modyfikować. Faktura otrzyma\n"
+"                        unikalny numer i zostanie utworzony zapis\n"
+"                        księgowy."
 
 #. module: account
 #: model:process.node,note:account.process_node_bankstatement0
@@ -10536,7 +10665,7 @@ msgstr "Suma"
 #: code:addons/account/wizard/account_invoice_refund.py:109
 #, python-format
 msgid "Cannot %s draft/proforma/cancel invoice."
-msgstr ""
+msgstr "Nie można %s faktury w stanie projekt/proforma/anulowano."
 
 #. module: account
 #: field:account.tax,account_analytic_paid_id:0
@@ -11158,6 +11287,8 @@ msgid ""
 "be with same name as statement name. This allows the statement entries to "
 "have the same references than the statement itself"
 msgstr ""
+"Jeśli nadasz nazwę (numer) inną niż /, to zapis księgowy będzie miał ten sam "
+"numer (nazwę) co wyciąg. To pozwala mieć te same numery wyciągów i zapisów."
 
 #. module: account
 #: view:account.bank.statement:0

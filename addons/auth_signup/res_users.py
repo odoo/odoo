@@ -20,8 +20,8 @@
 ##############################################################################
 from datetime import datetime, timedelta
 import random
-import urllib
-import urlparse
+from urllib import urlencode
+from urlparse import urljoin
 
 from openerp.osv import osv, fields
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
@@ -62,25 +62,27 @@ class res_partner(osv.Model):
             if context and context.get('signup_valid') and not partner.user_ids:
                 self.signup_prepare(cr, uid, [partner.id], context=context)
 
-            action_template = None
-            params = {
-                'action': urllib.quote(action),
-                'db': urllib.quote(cr.dbname),
-            }
+            # the parameters to encode for the query and fragment part of url
+            query = {'db': cr.dbname}
+            fragment = {'action': action, 'type': partner.signup_type}
+
             if partner.signup_token:
-                action_template = "?db=%(db)s#action=%(action)s&token=%(token)s"
-                params['token'] = urllib.quote(partner.signup_token)
+                fragment['token'] = partner.signup_token
             elif partner.user_ids:
-                action_template = "?db=%(db)s#action=%(action)s&db=%(db)s&login=%(login)s"
-                params['login'] = urllib.quote(partner.user_ids[0].login)
-            if action_template:
-                if view_type:
-                    action_template += '&view_type=%s' % urllib.quote(view_type)
-                if menu_id:
-                    action_template += '&menu_id=%s' % urllib.quote(str(menu_id))
-                if res_id:
-                    action_template += '&id=%s' % urllib.quote(str(res_id))
-                res[partner.id] = urlparse.urljoin(base_url, action_template % params)
+                fragment['db'] = cr.dbname
+                fragment['login'] = partner.user_ids[0].login
+            else:
+                continue        # no signup token, no user, thus no signup url!
+
+            if view_type:
+                fragment['view_type'] = view_type
+            if menu_id:
+                fragment['menu_id'] = menu_id
+            if res_id:
+                fragment['id'] = res_id
+
+            res[partner.id] = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
+
         return res
 
     def _get_signup_url(self, cr, uid, ids, name, arg, context=None):
@@ -89,6 +91,7 @@ class res_partner(osv.Model):
 
     _columns = {
         'signup_token': fields.char('Signup Token'),
+        'signup_type': fields.char('Signup Token Type'),
         'signup_expiration': fields.datetime('Signup Expiration'),
         'signup_valid': fields.function(_get_signup_valid, type='boolean', string='Signup Token is Valid'),
         'signup_url': fields.function(_get_signup_url, type='char', string='Signup URL'),
@@ -97,7 +100,7 @@ class res_partner(osv.Model):
     def action_signup_prepare(self, cr, uid, ids, context=None):
         return self.signup_prepare(cr, uid, ids, context=context)
 
-    def signup_prepare(self, cr, uid, ids, expiration=False, context=None):
+    def signup_prepare(self, cr, uid, ids, signup_type="signup", expiration=False, context=None):
         """ generate a new token for the partners with the given validity, if necessary
             :param expiration: the expiration datetime of the token (string, optional)
         """
@@ -106,7 +109,7 @@ class res_partner(osv.Model):
                 token = random_token()
                 while self._signup_retrieve_partner(cr, uid, token, context=context):
                     token = random_token()
-                partner.write({'signup_token': token, 'signup_expiration': expiration})
+                partner.write({'signup_token': token, 'signup_type': signup_type, 'signup_expiration': expiration})
         return True
 
     def _signup_retrieve_partner(self, cr, uid, token,
@@ -180,7 +183,7 @@ class res_users(osv.Model):
             partner = res_partner._signup_retrieve_partner(
                             cr, uid, token, check_validity=True, raise_exception=True, context=None)
             # invalidate signup token
-            partner.write({'signup_token': False, 'signup_expiration': False})
+            partner.write({'signup_token': False, 'signup_type': False, 'signup_expiration': False})
 
             partner_user = partner.user_ids and partner.user_ids[0] or False
             if partner_user:
@@ -238,15 +241,21 @@ class res_users(osv.Model):
         # prepare reset password signup
         res_partner = self.pool.get('res.partner')
         partner_ids = [user.partner_id.id for user in self.browse(cr, uid, ids, context)]
-        res_partner.signup_prepare(cr, uid, partner_ids, expiration=now(days=+1), context=context)
+        res_partner.signup_prepare(cr, uid, partner_ids, signup_type="reset", expiration=now(days=+1), context=context)
 
         # send email to users with their signup url
         template = self.pool.get('ir.model.data').get_object(cr, uid, 'auth_signup', 'reset_password_email')
+        mail_obj = self.pool.get('mail.mail')
         assert template._name == 'email.template'
         for user in self.browse(cr, uid, ids, context):
             if not user.email:
                 raise osv.except_osv(_("Cannot send email: user has no email address."), user.name)
-            self.pool.get('email.template').send_mail(cr, uid, template.id, user.id, context=context)
+            mail_id = self.pool.get('email.template').send_mail(cr, uid, template.id, user.id, True, context=context)
+            mail_state = mail_obj.read(cr, uid, mail_id, ['state'], context=context)
+            if mail_state and mail_state == 'exception':
+                raise osv.except_osv(_("Cannot send email: no outgoing email server configured.\nYou can configure it under Settings/General Settings."), user.name)
+            else:
+                raise osv.except_osv(_("Mail sent to:"), user.email)
 
         return True
 

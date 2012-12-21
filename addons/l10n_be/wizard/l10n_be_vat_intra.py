@@ -25,9 +25,9 @@
 import time
 import base64
 
-from osv import osv, fields
-from tools.translate import _
-from report import report_sxw
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+from openerp.report import report_sxw
 
 class partner_vat_intra(osv.osv_memory):
     """

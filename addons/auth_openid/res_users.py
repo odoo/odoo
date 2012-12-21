@@ -21,7 +21,7 @@
 from openerp.modules.registry import RegistryManager
 from openerp.osv import osv, fields
 import openerp.exceptions
-import tools
+from openerp import tools
 
 import utils
 

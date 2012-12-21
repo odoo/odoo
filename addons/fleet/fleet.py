@@ -19,12 +19,12 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 import time
 import datetime
-import tools
-from osv.orm import except_orm
-from tools.translate import _
+from openerp import tools
+from openerp.osv.orm import except_orm
+from openerp.tools.translate import _
 from dateutil.relativedelta import relativedelta
 
 def str_to_datetime(strdate):
@@ -787,7 +787,7 @@ class fleet_vehicle_log_contract(osv.Model):
         'cost_amount': fields.related('cost_id', 'amount', string='Amount', type='float', store=True), #we need to keep this field as a related with store=True because the graph view doesn't support (1) to address fields from inherited table and (2) fields that aren't stored in database
     }
     _defaults = {
-        'purchaser_id': lambda self, cr, uid, ctx: uid,
+        'purchaser_id': lambda self, cr, uid, ctx: self.pool.get('res.users').browse(cr, uid, uid, context=ctx).partner_id.id or False,
         'date': fields.date.context_today,
         'start_date': fields.date.context_today,
         'state':'open',

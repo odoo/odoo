@@ -171,9 +171,6 @@
     line-height:24px;
     text-align: center;
 }
-.openerp_ie .oe_mail .oe_msg .oe_msg_icons span {
-    -ms-filter: "progid:DXImageTransform.Microsoft.shadow(direction=135,color=aaaaaa,strength=2)";
-}
 .openerp .oe_mail .oe_msg .oe_msg_icons a {
     text-decoration: none;
     color: #FFF;
@@ -240,6 +237,29 @@
     color: #AAA;
     font-style: italic;
     word-spacing: 3px;
+}
+
+/* d) I.E. tweaks for Message action icons */
+
+.openerp.openerp_ie .oe_mail .oe_msg .oe_msg_icons a {
+    color: #C8BFDA;
+    text-shadow: none;
+}
+.openerp.openerp_ie .oe_mail .oe_msg .oe_msg_icons .oe_star:hover a{
+    color: #FFB700;
+    text-shadow: none;
+}
+.openerp.openerp_ie .oe_mail .oe_msg .oe_msg_icons .oe_starred a{
+    color: #FFB700;
+    text-shadow:none;
+}
+.openerp.openerp_ie .oe_mail .oe_msg .oe_msg_icons .oe_read:hover a{
+    color: #7C7BAD;
+    text-shadow: none;
+}
+.openerp.openerp_ie .oe_mail .oe_msg .oe_msg_icons .oe_unread:hover a{
+    color: #7C7BAD;
+    text-shadow: none;
 }
 
 /* --------------------- ATTACHMENTS --------------------- */
@@ -461,7 +481,7 @@
     filter:none;
     cursor: pointer;
 }
-.openerp .oe_mail .oe_mail_list_recipients{
+.openerp .oe_mail .oe_msg_content .oe_mail_list_recipients{
     font-size: 12px;
     margin-top: 4px;
     margin-bottom: 4px;

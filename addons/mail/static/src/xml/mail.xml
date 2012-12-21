@@ -20,7 +20,7 @@
         mail.compose_message when focus on textarea
         -->
     <t t-name="mail.compose_message">
-        <div t-if="widget.show_composer" t-attf-class="oe_msg oe_msg_composer #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''}">
+        <div t-if="widget.show_composer and !widget.options.readonly" t-attf-class="oe_msg oe_msg_composer #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''}">
             <div class="oe_msg_left">
                 <img class="oe_msg_icon" alt="User img" t-attf-src="#{widget.avatar}"/>
             </div>
@@ -38,7 +38,7 @@
                 </div>
             </div>
         </div>
-        <div t-if="widget.show_compact_message and !widget.show_composer" t-attf-class="oe_msg oe_msg_composer_compact #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''}">
+        <div t-if="widget.show_compact_message and !widget.show_composer and !widget.options.readonly" t-attf-class="oe_msg oe_msg_composer_compact #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''}">
             <div class="field_text oe_compact">
                 <t t-if="widget.options.compose_placeholder" t-raw="widget.options.compose_placeholder"/>
                 <t t-if="!widget.options.compose_placeholder and !widget.options.view_mailbox">Write to the followers of this document...</t>
@@ -119,8 +119,8 @@
             <t t-set="inc" t-value="0"/>
             <t t-if="widget.partner_ids.length" t-foreach="widget.partner_ids" t-as="partner">
                 <span t-attf-class="oe_partner_follower #{inc>=3?'oe_hidden':''}"><t t-if="inc" t-raw="', '"/>
-                    <a t-if="widget.options.show_link_partner" t-attf-href="#model=res.partner&amp;id=#{partner[0]}"><t t-raw="partner[1]"/></a>
-                    <t t-if="!widget.options.show_link_partner" t-raw="partner[1]"/>
+                    <a t-if="widget.options.show_link" t-attf-href="#model=res.partner&amp;id=#{partner[0]}"><t t-raw="partner[1]"/></a>
+                    <t t-if="!widget.options.show_link" t-raw="partner[1]"/>
                 </span><t t-set="inc" t-value="inc+1"/>
             </t>
             <t t-if="widget.partner_ids.length>=3">
@@ -206,14 +206,14 @@
         <div t-attf-class="oe_msg #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''} oe_msg_#{widget.type}">
 
             <div class='oe_msg_left'>
-                <a t-if="widget.options.show_link_partner" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}" t-att-title="widget.author_id[1]">
+                <a t-if="widget.options.show_link" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}" t-att-title="widget.author_id[1]">
                     <img class="oe_msg_icon" t-att-src="widget.avatar"/>
                 </a>
-                <img t-if="!widget.options.show_link_partner" class="oe_msg_icon" t-att-src="widget.avatar"/>
+                <img t-if="!widget.options.show_link" class="oe_msg_icon" t-att-src="widget.avatar"/>
             </div>
 
             <div class="oe_msg_center">
-                <div class='oe_msg_icons'>
+                <div class='oe_msg_icons' t-if="!widget.options.readonly">
                     <span class='oe_read' t-if="widget.options.show_read"><a title="Done" class="oe_e">W</a></span>
                     <span class='oe_unread' t-if="widget.is_favorite and widget.options.show_unread"><a title="Set back to Todo" class="oe_e">v</a></span>
                     <span class='oe_unread' t-if="!widget.is_favorite and widget.options.show_unread"><a title="Set back to Inbox" class="oe_e">v</a></span>
@@ -223,7 +223,7 @@
                 <!-- message itself -->
                 <div class="oe_msg_content">
                     <h1 t-if="(widget.show_record_name or widget.subject) and !widget.thread_level" class="oe_msg_title">
-                        <a t-if="widget.show_record_name" class="oe_mail_action_model" t-attf-href="#model=#{widget.model}&amp;id=#{widget.res_id}"><t t-raw="widget.record_name"/></a>
+                        <a t-if="widget.options.show_link and widget.show_record_name" class="oe_mail_action_model" t-attf-href="#model=#{widget.model}&amp;id=#{widget.res_id}"><t t-raw="widget.record_name"/></a><span t-if="!widget.options.show_link and widget.show_record_name"><t t-raw="widget.record_name"/></span><t t-if="widget.show_record_name">: </t>
                         <t t-if="widget.subject" t-raw="widget.subject"/>
                     </h1>
                     <div class="oe_msg_body">
@@ -234,12 +234,12 @@
                     <t t-if="widget.attachment_ids.length > 0">
                         <div class="oe_msg_attachment_list"></div>
                     </t>
-                    <a t-if="widget.author_id and widget.options.show_link_partner" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}"><t t-raw="widget.author_id[1]"/></a>
-                    <span t-if="widget.author_id and !widget.options.show_link_partner"><t t-raw="widget.author_id[1]"/></span>
+                    <a t-if="widget.author_id and widget.options.show_link" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}"><t t-raw="widget.author_id[1]"/></a>
+                    <span t-if="widget.author_id and !widget.options.show_link"><t t-raw="widget.author_id[1]"/></span>
                     <span class='oe_subtle'>•</span>
                     <span t-att-title="widget.date"><t t-raw="widget.timerelative"/></span>
-                    <span class='oe_subtle'>•</span>
-                    <t t-call="mail.thread.message.vote"/>
+                    <span t-if="!widget.options.readonly" class='oe_subtle'>•</span>
+                    <t t-if="!widget.options.readonly" t-call="mail.thread.message.vote"/>
                 </div>
             </div>
         </div>

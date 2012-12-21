@@ -21,7 +21,7 @@
 
 import time
 
-from osv import osv, fields
+from openerp.osv import osv, fields
 
 class pos_details(osv.osv_memory):
     _name = 'pos.details'

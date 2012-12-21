@@ -21,9 +21,9 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 import time
-from tools.translate import _
+from openerp.tools.translate import _
 
 class res_partner(osv.osv):  
     """ add field to indicate default 'Communication Type' on customer invoices """

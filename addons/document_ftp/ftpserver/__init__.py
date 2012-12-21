@@ -24,7 +24,7 @@ import ftpserver
 import authorizer
 import abstracted_fs
 import logging
-from tools import config
+from openerp.tools import config
 _logger = logging.getLogger(__name__)
 def start_server():
     HOST = config.get('ftp_server_host', '127.0.0.1')

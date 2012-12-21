@@ -4,13 +4,13 @@ openerp.portal_anonymous = function(instance) {
         start: function() {
             var self = this;
             return $.when(this._super()).then(function() {
+                var params = $.deparam($.param.querystring());
                 var dblist = self.db_list || [];
-                if (!self.session.session_is_valid() && dblist.length === 1) {
+                if (!self.session.session_is_valid() && dblist.length === 1 && (!params.token || !params.login)) {
                     self.remember_credentials = false;
                     // XXX get login/pass from server (via a rpc call) ?
                     return self.do_login(dblist[0], 'anonymous', 'anonymous');
                 }
-
             });
         },
     });
@@ -26,7 +26,7 @@ openerp.portal_anonymous = function(instance) {
         start: function() {
             var self = this;
             this._super.apply(this, arguments);
-            this.$el.find('.oe_topbar_anonymous_login').click(function() {
+            this.$el.find('a.login').click(function() {
                 var p = self.getParent();
                 var am = p.action_manager;
                 p.$el.find('.oe_leftbar').hide();
@@ -42,6 +42,23 @@ openerp.portal_anonymous = function(instance) {
                 });
             });
         }
+    });
+
+    instance.web.WebClient.include({
+        check_timezone: function() {
+            if (this.session.username !== 'anonymous') {
+                return this._super.apply(this, arguments);
+            }
+            return false;
+        },
+        // Avoid browser preloading
+        show_application: function() {
+            var params = $.deparam($.param.querystring());
+            if (!!params.token || !!params.login) {
+                return this.show_login();
+            }
+            return this._super();
+        },
     });
 
 };

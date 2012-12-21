@@ -19,8 +19,8 @@
 ##############################################################################
 
 import datetime
-from osv import fields, osv
-import pooler
+from openerp.osv import fields, osv
+from openerp import pooler
 
 class stock_production_lot(osv.osv):
     _inherit = 'stock.production.lot'
