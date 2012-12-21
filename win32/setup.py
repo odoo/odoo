@@ -24,11 +24,6 @@ import glob
 from distutils.core import setup
 import py2exe
 
-def datas():
-    r = []
-    if os.name == 'nt':
-        r.append(("Microsoft.VC90.CRT", glob.glob('C:\Microsoft.VC90.CRT\*.*')))
-    return r
 
 meta = {}
 execfile(os.path.join(os.path.dirname(__file__), '..', 'openerp', 'release.py'), meta)
@@ -40,6 +35,8 @@ def generate_files():
     }
 
     files = []
+    if os.name == 'nt':
+        files.append(("Microsoft.VC90.CRT", glob.glob('C:\Microsoft.VC90.CRT\*.*')))
     for action, steps in actions.items():
         fname = action + '.bat'
         files.append(fname)
@@ -69,7 +66,6 @@ setup(service      = ["OpenERPServerService"],
                         "skip_archive": 1,
                         "optimize": 2,
                      }},
-      data_files=datas(),
       )
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
