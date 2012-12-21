@@ -189,7 +189,7 @@ class base_action_rule(osv.osv):
 
     def _register_hook(self, cr, ids=None):
         """ Wrap the methods `create` and `write` of the models specified by
-            the rules given by `ids` (or all existing rules if `ids` is `Ǹone`.)
+            the rules given by `ids` (or all existing rules if `ids` is `None`.)
         """
         if ids is None:
             ids = self.search(cr, SUPERUSER_ID, [])
