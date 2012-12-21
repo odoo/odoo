@@ -4785,8 +4785,7 @@ class BaseModel(object):
         :raise" except_orm in case order_spec is malformed
         """
         order_by_clause = ''
-        if order_spec is None:
-            order_spec = self._order
+        order_spec = order_spec or self._order
         if order_spec:
             order_by_elements = []
             self._check_qorder(order_spec)
