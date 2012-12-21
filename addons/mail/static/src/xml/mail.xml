@@ -113,8 +113,8 @@
                     <t t-if="!widget.parent_thread.parent_message.record_name">this document</t>
                 </span>
             </t>
-            <t t-if="!widget.is_private and (widget.partner_ids.length || widget.author_id)"> and </t>
-            <t t-if="widget.author_id">
+            <t t-if="!widget.is_private and (widget.partner_ids.length or (widget.author_id and widget.author_id[0]))"> and </t>
+            <t t-if="widget.author_id and widget.author_id[0]">
                 <a t-if="widget.options.show_link and widget.author_id[0]" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}"><t t-raw="widget.author_id[1]"/></a>
                 <span t-if="(!widget.options.show_link or !widget.author_id[0])"><t t-raw="widget.author_id[1]"/></span>
                 <t t-if="widget.partner_ids.length" t-raw="', '"/>
@@ -132,6 +132,7 @@
             </t>
         </div>
         <div class="oe_emails_from" t-if="widget.emails_from.length">
+            Add this contact's email on recipient and follower : 
             <t t-foreach='widget.emails_from' t-as='email_from'>
                 <label><input type="checkbox" t-att-checked="email_from[1] ? 'checked' : undefind" t-att-data="email_from[0]"/> <t t-raw="email_from[0]"/></label>
             </t>

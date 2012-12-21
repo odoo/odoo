@@ -774,18 +774,17 @@ class mail_thread(osv.AbstractModel):
         new_partner_ids = set([])
         for partner in extra_email:
             part_ids = self.pool.get('res.partner').search(cr, uid, [('email', '=', partner)], context=context)
-
             # create a new partner if not exists
             if not part_ids:
                 part_ids = [self.pool.get('res.partner').name_create(cr, uid, partner, context=dict())[0]]
-            
-            new_partner_ids |= set(part_ids)
-            self.message_subscribe(cr, uid, [thread_id], part_ids, context=context)
-
             # link mail with this from mail to the new partner id
             message_ids = mail_message.search(cr, uid, [('email_from', '=', partner)], context=context)
             if part_ids and message_ids:
                 mail_message.write(cr, uid, message_ids, {'email_from': None, 'author_id': part_ids[0]}, context=context)
+            new_partner_ids |= set(part_ids)
+
+        if new_partner_ids:
+            self.message_subscribe(cr, uid, new_partner_ids, part_ids, context=context)
 
         partner_ids = set(kwargs.pop('partner_ids', [])) | set(new_partner_ids)
 
@@ -846,7 +845,7 @@ class mail_thread(osv.AbstractModel):
             self.check_access_rights(cr, uid, 'read')
         else:
             self.check_access_rights(cr, uid, 'write')
-        
+
         self.write(cr, SUPERUSER_ID, ids, {'message_follower_ids': [(4, pid) for pid in partner_ids]}, context=context)
         # if subtypes are not specified (and not set to a void list), fetch default ones
         if subtype_ids is None:
