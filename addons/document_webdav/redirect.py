@@ -22,8 +22,8 @@
 
 import logging
 import urlparse
-from service.websrv_lib import FixSendError, HTTPHandler, HttpOptions
-from service.http_server import HttpLogHandler
+from openerp.service.websrv_lib import FixSendError, HTTPHandler, HttpOptions
+from openerp.service.http_server import HttpLogHandler
 _logger = logging.getLogger(__name__)
 class RedirectHTTPHandler(HttpLogHandler, FixSendError, HttpOptions, HTTPHandler):
     

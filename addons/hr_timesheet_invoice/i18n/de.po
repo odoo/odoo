@@ -7,14 +7,15 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-12-09 21:46+0000\n"
-"Last-Translator: Felix Schubert <Unknown>\n"
+"PO-Revision-Date: 2012-12-21 01:45+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-10 04:38+0000\n"
-"X-Generator: Launchpad (build 16341)\n"
+"X-Launchpad-Export-Date: 2012-12-21 04:42+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -57,7 +58,7 @@ msgstr "Unzureichende Daten"
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
 msgid "Group By..."
-msgstr "Gruppieren nach"
+msgstr "Gruppierung ..."
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
@@ -67,7 +68,7 @@ msgstr "Erzwinge Verwendung eines spezifischen Produktes"
 #. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
 msgid "Income"
-msgstr "Einnahmen"
+msgstr "Erlöse"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create.final,name:0
@@ -121,7 +122,7 @@ msgstr "Gewinn"
 #: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:165
 #, python-format
 msgid "You cannot modify an invoiced analytic line!"
-msgstr "Sie können keine fakturierte Analysebuchung ändern"
+msgstr "Sie können keine abgerechnete Kostenstellenbuchung ändern"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_factor
@@ -204,7 +205,7 @@ msgstr "Abgerechneter Betrag"
 #: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:209
 #, python-format
 msgid "Analytic Account incomplete !"
-msgstr "Analytisches Konto unvollständig!"
+msgstr "Die Kostenstelle ist unvollständig!"
 
 #. module: hr_timesheet_invoice
 #: field:report_timesheet.invoice,account_id:0
@@ -252,7 +253,7 @@ msgstr "bis Periode"
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_report_analytic_account_close
 msgid "Analytic account to close"
-msgstr "Abzuschliessende Analytische Konten"
+msgstr "Abzuschliessende Kostenstellen"
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
@@ -271,7 +272,7 @@ msgstr "Tägliche Zeiterfassung nach Konto"
 #: field:report_timesheet.account,account_id:0
 #: field:report_timesheet.account.date,account_id:0
 msgid "Analytic Account"
-msgstr "Analytisches Konto"
+msgstr "Kostenstelle"
 
 #. module: hr_timesheet_invoice
 #: field:report.analytic.account.close,date_deadline:0
@@ -325,7 +326,7 @@ msgstr "Bitte legen Sie ein Ertragskonto für das Produkt '%s' fest."
 #: field:report.account.analytic.line.to.invoice,account_id:0
 #: field:report.analytic.account.close,name:0
 msgid "Analytic account"
-msgstr "Analytisches Konto"
+msgstr "Kostenstelle"
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.analytic.profit:0
@@ -437,7 +438,7 @@ msgstr "Zeiterfassung nach Abrechnung"
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_analytic_account_tree
 #: view:report.analytic.account.close:0
 msgid "Expired analytic accounts"
-msgstr "Überfällige Analytische Konten"
+msgstr "Überfällige Kostenstellen"
 
 #. module: hr_timesheet_invoice
 #: field:hr_timesheet_invoice.factor,factor:0
@@ -541,7 +542,7 @@ msgstr "Status"
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Analytische Buchung"
+msgstr "Kostenstellen Buchung"
 
 #. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
@@ -858,12 +859,12 @@ msgstr ""
 #: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:110
 #, python-format
 msgid "Contract has been <b>opened</b>."
-msgstr ""
+msgstr "Vertrag wurde <b>geöffnet</b>."
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create.final,time:0
 msgid "Time Spent"
-msgstr ""
+msgstr "Geleistete Stunden"
 
 #. module: hr_timesheet_invoice
 #: help:account.analytic.account,amount_max:0
@@ -874,6 +875,7 @@ msgstr "Leer lassen, wenn der Vertrag keinen fixierten Preis beinhaltet."
 #: view:hr.timesheet.invoice.create.final:0
 msgid "Do you want to show details of each activity to your customer?"
 msgstr ""
+"Möchten Sie die Details zu den einzelnen Aktivitäten Ihrer Kunden einsehen ?"
 
 #. module: hr_timesheet_invoice
 #: view:report_timesheet.invoice:0
@@ -902,7 +904,7 @@ msgstr "Kunde"
 #. module: hr_timesheet_invoice
 #: view:report.account.analytic.line.to.invoice:0
 msgid "Analytic Lines"
-msgstr ""
+msgstr "Kostenstellen Buchungen"
 
 #. module: hr_timesheet_invoice
 #: view:report_timesheet.account.date:0
@@ -940,6 +942,8 @@ msgid ""
 "There is no product defined. Please select one or force the product through "
 "the wizard."
 msgstr ""
+"Es ist kein Produkt definiert, bitte wählen Sie eins aus oder definieren Sie "
+"ein Neues durch den Assistenten."
 
 #. module: hr_timesheet_invoice
 #: help:hr_timesheet_invoice.factor,factor:0
@@ -967,19 +971,19 @@ msgstr "Einheiten"
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_account_analytic_line_to_invoice
 #: view:report.account.analytic.line.to.invoice:0
 msgid "Analytic Lines to Invoice"
-msgstr "Analytische Buchungen zur Abrechnung"
+msgstr "Kostenstellen Buchungen zur Abrechnung"
 
 #. module: hr_timesheet_invoice
 #: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor4
 msgid "80%"
-msgstr ""
+msgstr "80 %"
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.analytic.profit:0
 #: view:hr.timesheet.invoice.create:0
 #: view:hr.timesheet.invoice.create.final:0
 msgid "or"
-msgstr ""
+msgstr "oder"
 
 #. module: hr_timesheet_invoice
 #: field:report_timesheet.invoice,manager_id:0
@@ -1009,7 +1013,7 @@ msgstr "Jahr"
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.analytic.profit:0
 msgid "Duration"
-msgstr ""
+msgstr "Dauer"
 
 #~ msgid "%"
 #~ msgstr "%"

@@ -20,8 +20,8 @@
 ##############################################################################
 
 import time
-from osv import fields,osv
-from tools.translate import _
+from openerp.osv import fields,osv
+from openerp.tools.translate import _
 
 WARNING_MESSAGE = [
                    ('no-message','No Message'),
@@ -136,7 +136,8 @@ class account_invoice(osv.osv):
                 'message': message
                 }
         result =  super(account_invoice, self).onchange_partner_id(cr, uid, ids, type, partner_id,
-            date_invoice=False, payment_term=False, partner_bank_id=False)
+            date_invoice=date_invoice, payment_term=payment_term, 
+            partner_bank_id=partner_bank_id, company_id=company_id)
 
         if result.get('warning',False):
             warning['title'] = title and title +' & '+ result['warning']['title'] or result['warning']['title']

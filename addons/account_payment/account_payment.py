@@ -22,8 +22,8 @@
 import logging
 import time
 
-from osv import osv, fields
-import netsvc
+from openerp.osv import fields, osv
+from openerp import netsvc
 
 _logger = logging.getLogger(__name__)
 

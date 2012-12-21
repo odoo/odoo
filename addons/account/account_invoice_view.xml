@@ -145,7 +145,8 @@
                 <header>
                         <button name="invoice_open" states="draft,proforma2" string="Validate" class="oe_highlight" groups="account.group_account_invoice"/>
                         <button name="%(action_account_invoice_refund)d" type='action' string='Ask Refund' states='open,paid' groups="account.group_account_invoice"/>
-                        <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" groups="base.group_no_one"/>
+                        <button name="invoice_cancel" states="draft,proforma2" string="Cancel" groups="account.group_account_invoice"/>
+                        <button name="invoice_cancel" states="sale,open" string="Cancel" groups="base.group_no_one"/>
                         <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" groups="account.group_account_invoice"/>
                         <button name='%(action_account_state_open)d' type='action' string='Re-Open' groups="account.group_account_invoice" attrs="{'invisible':['|', ('state','&lt;&gt;','paid'), ('reconciled', '=', True)]}" help="This button only appears when the state of the invoice is 'paid' (showing that it has been fully reconciled) and auto-computed boolean 'reconciled' is False (depicting that it's not the case anymore). In other words, the invoice has been dereconciled and it does not fit anymore the 'paid' state. You should press this button to re-open it and let it continue its normal process after having resolved the eventual exceptions it may have created."/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,open,paid" statusbar_colors='{"proforma":"blue","proforma2":"blue"}'/>
@@ -194,7 +195,7 @@
                                     <field name="product_id"
                                         on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, context, parent.company_id)"/>
                                     <field name="name"/>
-                                    <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                                    <field name="company_id" invisible="1"/>
                                     <field name="account_id" groups="account.group_account_user"
                                         domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '!=', 'view')]"
                                         on_change="onchange_account_id(product_id, parent.partner_id, parent.type, parent.fiscal_position,account_id)"/>
@@ -349,7 +350,7 @@
                                     <field name="product_id"
                                         on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, context, parent.company_id)"/>
                                     <field name="name"/>
-                                    <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                                    <field name="company_id" invisible="1"/>
                                     <field name="account_id" groups="account.group_account_user"
                                         domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '!=', 'view')]"
                                         on_change="onchange_account_id(product_id, parent.partner_id, parent.type, parent.fiscal_position,account_id)"/>
@@ -627,6 +628,7 @@
            id="act_account_journal_2_account_invoice_opened"
            name="Unpaid Invoices"
            context="{'search_default_journal_id': [active_id], 'search_default_unpaid':1, 'default_journal_id': active_id}"
+           domain="[('journal_id','=', active_id)]"
            res_model="account.invoice"
            src_model="account.journal"/>
 

@@ -23,13 +23,13 @@ from datetime import datetime, timedelta, date
 from dateutil import parser
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
-from osv import fields, osv
-from service import web_services
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp.service import web_services
+from openerp.tools.translate import _
 import pytz
 import re
 import time
-import tools
+from openerp import tools, SUPERUSER_ID
 
 months = {
     1: "January", 2: "February", 3: "March", 4: "April", \
@@ -87,6 +87,16 @@ def base_calendar_id2real_id(base_calendar_id=None, with_date=False):
             return int(real_id)
 
     return base_calendar_id and int(base_calendar_id) or base_calendar_id
+
+def get_real_ids(ids):
+    if isinstance(ids, (str, int, long)):
+        return base_calendar_id2real_id(ids)
+
+    if isinstance(ids, (list, tuple)):
+        res = []
+        for id in ids:
+            res.append(base_calendar_id2real_id(id))
+        return res
 
 def real_id2base_calendar_id(real_id, recurrent_date):
     """
@@ -292,7 +302,7 @@ class calendar_attendee(osv.osv):
             if name == 'language':
                 user_obj = self.pool.get('res.users')
                 lang = user_obj.read(cr, uid, uid, ['lang'], context=context)['lang']
-                result[id][name] = lang.replace('_', '-')
+                result[id][name] = lang.replace('_', '-') if lang else False
 
         return result
 
@@ -841,7 +851,7 @@ class calendar_alarm(osv.osv):
             res_obj = model_obj.browse(cr, uid, alarm.res_id, context=context)
             re_dates = []
 
-            if res_obj.rrule:
+            if hasattr(res_obj, 'rrule') and res_obj.rrule:
                 event_date = datetime.strptime(res_obj.date, '%Y-%m-%d %H:%M:%S')
                 recurrent_dates = get_recurrent_dates(res_obj.rrule, res_obj.exdate, event_date, res_obj.exrule)
 
@@ -966,13 +976,13 @@ class calendar_event(osv.osv):
 
     def unlink_events(self, cr, uid, ids, context=None):
         """
-        This function deletes event which are linked with the event with recurrent_uid
+        This function deletes event which are linked with the event with recurrent_id
                 (Removes the events which refers to the same UID value)
         """
         if context is None:
             context = {}
         for event_id in ids:
-            cr.execute("select id from %s where recurrent_uid=%%s" % (self._table), (event_id,))
+            cr.execute("select id from %s where recurrent_id=%%s" % (self._table), (event_id,))
             r_ids = map(lambda x: x[0], cr.fetchall())
             self.unlink(cr, uid, r_ids, context=context)
         return True
@@ -991,12 +1001,15 @@ class calendar_event(osv.osv):
         if not isinstance(ids, list):
             ids = [ids]
 
-        for data in self.read(cr, uid, ids, ['id','byday','recurrency', 'month_list','end_date', 'rrule_type', 'select1', 'interval', 'count', 'end_type', 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su', 'exrule', 'day', 'week_list' ], context=context):
-            event = data['id']
+        for id in ids:
+            #read these fields as SUPERUSER because if the record is private a normal search could return False and raise an error
+            data = self.read(cr, SUPERUSER_ID, id, ['interval', 'count'], context=context)
             if data.get('interval', 0) < 0:
                 raise osv.except_osv(_('Warning!'), _('Interval cannot be negative.'))
             if data.get('count', 0) <= 0:
                 raise osv.except_osv(_('Warning!'), _('Count cannot be negative or 0.'))
+            data = self.read(cr, uid, id, ['id','byday','recurrency', 'month_list','end_date', 'rrule_type', 'select1', 'interval', 'count', 'end_type', 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su', 'exrule', 'day', 'week_list' ], context=context)
+            event = data['id']
             if data['recurrency']:
                 result[event] = self.compute_rule_string(data)
             else:
@@ -1050,8 +1063,8 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         'alarm_id': fields.many2one('res.alarm', 'Reminder', states={'done': [('readonly', True)]},
                         help="Set an alarm at this time, before the event occurs" ),
         'base_calendar_alarm_id': fields.many2one('calendar.alarm', 'Alarm'),
-        'recurrent_uid': fields.integer('Recurrent ID'),
-        'recurrent_id': fields.datetime('Recurrent ID date'),
+        'recurrent_id': fields.integer('Recurrent ID'),
+        'recurrent_id_date': fields.datetime('Recurrent ID date'),
         'vtimezone': fields.selection(_tz_get, size=64, string='Timezone'),
         'user_id': fields.many2one('res.users', 'Responsible', states={'done': [('readonly', True)]}),
         'organizer': fields.char("Organizer", size=256, states={'done': [('readonly', True)]}), # Map with organizer attribute of VEvent.
@@ -1328,51 +1341,33 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             data['end_type'] = 'end_date'
         return data
 
-    def remove_virtual_id(self, ids):
-        if isinstance(ids, (str, int, long)):
-            return base_calendar_id2real_id(ids)
-
-        if isinstance(ids, (list, tuple)):
-            res = []
-            for id in ids:
-                res.append(base_calendar_id2real_id(id))
-            return res
-
     def search(self, cr, uid, args, offset=0, limit=0, order=None, context=None, count=False):
-        context = context or {}
-        args_without_date = []
-        filter_date = []
+        if context is None:
+            context = {}
+        new_args = []
 
         for arg in args:
-            if arg[0] == "id":
-                new_id = self.remove_virtual_id(arg[2])
+            new_arg = arg
+            if arg[0] in ('date', unicode('date'), 'date_deadline', unicode('date_deadline')):
+                if context.get('virtual_id', True):
+                    new_args += ['|','&',('recurrency','=',1),('recurrent_id_date', arg[1], arg[2])]
+            elif arg[0] == "id":
+                new_id = get_real_ids(arg[2])
                 new_arg = (arg[0], arg[1], new_id)
-                args_without_date.append(new_arg)
-            elif arg[0] not in ('date', unicode('date'), 'date_deadline', unicode('date_deadline')):
-                args_without_date.append(arg)
-            else:
-                if context.get('virtual_id', True):
-                    args_without_date.append('|')
-                args_without_date.append(arg)
-                if context.get('virtual_id', True):
-                    args_without_date.append(('recurrency','=',1))
-                filter_date.append(arg)
+            new_args.append(new_arg)
 
-        res = super(calendar_event, self).search(cr, uid, args_without_date, \
-                                 0, 0, order, context, count=False)
+        #offset, limit and count must be treated separately as we may need to deal with virtual ids
+        res = super(calendar_event, self).search(cr, uid, new_args, offset=0, limit=0, order=order, context=context, count=False)
         if context.get('virtual_id', True):
-            res = self.get_recurrent_ids(cr, uid, res, args, limit, context=context)
-
+            res = self.get_recurrent_ids(cr, uid, res, new_args, limit, context=context)
         if count:
             return len(res)
         elif limit:
             return res[offset:offset+limit]
-        else:
-            return res
+        return res
 
     def _get_data(self, cr, uid, id, context=None):
-        res = self.read(cr, uid, [id],['date', 'date_deadline'])
-        return res[0]
+        return self.read(cr, uid, id,['date', 'date_deadline'])
 
     def need_to_update(self, event_id, vals):
         split_id = str(event_id).split("-")
@@ -1387,6 +1382,13 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                 return True
 
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
+        def _only_changes_to_apply_on_real_ids(field_names):
+            ''' return True if changes are only to be made on the real ids'''
+            for field in field_names:
+                if field not in ['message_follower_ids']:
+                    return False
+            return True
+
         context = context or {}
         if isinstance(ids, (str, int, long)):
             ids = [ids]
@@ -1398,7 +1400,11 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                 continue
             ids.remove(event_id)
             real_event_id = base_calendar_id2real_id(event_id)
-            if not vals.get('recurrency', True):
+
+            # if we are setting the recurrency flag to False or if we are only changing fields that
+            # should be only updated on the real ID and not on the virtual (like message_follower_ids):
+            # then set real ids to be updated.
+            if not vals.get('recurrency', True) or _only_changes_to_apply_on_real_ids(vals.keys()):
                 ids.append(real_event_id)
                 continue
 
@@ -1408,13 +1414,15 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             if data.get('rrule'):
                 data.update(
                     vals,
-                    recurrent_uid=real_event_id,
-                    recurrent_id=data.get('date'),
+                    recurrent_id=real_event_id,
+                    recurrent_id_date=data.get('date'),
                     rrule_type=False,
                     rrule='',
                     recurrency=False,
                 )
-
+                #do not copy the id
+                if data.get('id'):
+                    del(data['id'])
                 new_id = self.copy(cr, uid, real_event_id, default=data, context=context)
 
                 date_new = event_id.split('-')[1]
@@ -1507,7 +1515,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
 
         for r in result:
             for k in EXTRAFIELDS:
-                if (k in r) and ((not fields) or (k not in fields)):
+                if (k in r) and (fields and (k not in fields)):
                     del r[k]
         if isinstance(ids, (str, int, long)):
             return result and result[0] or False

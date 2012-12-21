@@ -19,12 +19,12 @@
 #
 ##############################################################################
 
-from osv import fields,osv
-import netsvc
+from openerp.osv import fields,osv
+from openerp import netsvc
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from tools.translate import _
-import decimal_precision as dp
+from openerp.tools.translate import _
+import openerp.addons.decimal_precision as dp
 
 class mrp_repair(osv.osv):
     _name = 'mrp.repair'
@@ -130,7 +130,7 @@ class mrp_repair(osv.osv):
             ('2binvoiced','To be Invoiced'),
             ('invoice_except','Invoice Exception'),
             ('done','Repaired')
-            ], 'Status', readonly=True,
+            ], 'Status', readonly=True, track_visibility='onchange',
             help=' * The \'Draft\' status is used when a user is encoding a new and unconfirmed repair order. \
             \n* The \'Confirmed\' status is used when a user confirms the repair order. \
             \n* The \'Ready to Repair\' status is used to start to repairing, user can start repairing only after repair order is confirmed. \
@@ -335,7 +335,6 @@ class mrp_repair(osv.osv):
                     if line.product_id.track_production and not line.prodlot_id:
                         raise osv.except_osv(_('Warning!'), _("Serial number is required for operation line with product '%s'") % (line.product_id.name))
                 mrp_line_obj.write(cr, uid, [l.id for l in o.operations], {'state': 'confirmed'})
-        self.set_confirm_send_note(cr, uid, ids)
         return True
 
     def action_cancel(self, cr, uid, ids, context=None):
@@ -348,14 +347,10 @@ class mrp_repair(osv.osv):
                 mrp_line_obj.write(cr, uid, [l.id for l in repair.operations], {'state': 'cancel'}, context=context)
             else:
                 raise osv.except_osv(_('Warning!'),_('Repair order is already invoiced.'))
-        self.write(cr,uid,ids,{'state':'cancel'})
-        self.set_cancel_send_note(cr, uid, ids, context)
-        return True
+        return self.write(cr,uid,ids,{'state':'cancel'})
 
     def wkf_invoice_create(self, cr, uid, ids, *args):
-        self.action_invoice_create(cr, uid, ids)
-        self.set_toinvoiced_send_note(cr, uid, ids)
-        return True
+        return self.action_invoice_create(cr, uid, ids)
 
     def action_invoice_create(self, cr, uid, ids, group=False, context=None):
         """ Creates invoice(s) for repair order.
@@ -470,7 +465,6 @@ class mrp_repair(osv.osv):
             self.pool.get('mrp.repair.line').write(cr, uid, [l.id for
                     l in repair.operations], {'state': 'confirmed'}, context=context)
             self.write(cr, uid, [repair.id], {'state': 'ready'})
-        self.set_ready_send_note(cr, uid, ids, context)
         return True
 
     def action_repair_start(self, cr, uid, ids, context=None):
@@ -482,7 +476,6 @@ class mrp_repair(osv.osv):
             repair_line.write(cr, uid, [l.id for
                     l in repair.operations], {'state': 'confirmed'}, context=context)
             repair.write({'state': 'under_repair'})
-        self.set_start_send_note(cr, uid, ids, context)
         return True
 
     def action_repair_end(self, cr, uid, ids, context=None):
@@ -560,54 +553,7 @@ class mrp_repair(osv.osv):
                 res[repair.id] = picking
             else:
                 self.write(cr, uid, [repair.id], {'state': 'done'})
-            self.set_done_send_note(cr, uid, [repair.id], context)
         return res
-
-    def create(self, cr, uid, vals, context=None):
-        repair_id = super(mrp_repair, self).create(cr, uid, vals, context=context)
-        self.create_send_note(cr, uid, [repair_id], context=context)
-        return repair_id
-
-    def create_send_note(self, cr, uid, ids, context=None):
-        for repair in self.browse(cr, uid, ids, context):
-            message = _("Repair Order for <em>%s</em> has been <b>created</b>." % (repair.product_id.name))
-            self.message_post(cr, uid, [repair.id], body=message, context=context)
-        return True
-
-    def set_start_send_note(self, cr, uid, ids, context=None):
-        for repair in self.browse(cr, uid, ids, context):
-            message = _("Repair Order for <em>%s</em> has been <b>started</b>." % (repair.product_id.name))
-            self.message_post(cr, uid, [repair.id], body=message, context=context)
-        return True
-
-    def set_toinvoiced_send_note(self, cr, uid, ids, context=None):
-        for repair in self.browse(cr, uid, ids, context):
-            message = _("Draft Invoice of %s %s <b>waiting for validation</b>.") % (repair.invoice_id.amount_total, repair.invoice_id.currency_id.symbol)
-            self.message_post(cr, uid, [repair.id], body=message, context=context)
-        return True
-
-    def set_confirm_send_note(self, cr, uid, ids, context=None):
-        for repair in self.browse(cr, uid, ids, context):
-            message = _( "Repair Order for <em>%s</em> has been <b>accepted</b>." % (repair.product_id.name))
-            self.message_post(cr, uid, [repair.id], body=message, context=context)
-        return True
-
-    def set_cancel_send_note(self, cr, uid, ids, context=None):
-        message = _("Repair has been <b>cancelled</b>.")
-        self.message_post(cr, uid, ids, body=message, context=context)
-        return True
-
-    def set_ready_send_note(self, cr, uid, ids, context=None):
-        message = _("Repair Order is now <b>ready</b> to repair.")
-        self.message_post(cr, uid, ids, body=message, context=context)
-        return True
-
-    def set_done_send_note(self, cr, uid, ids, context=None):
-        message = _("Repair Order is <b>closed</b>.")
-        self.message_post(cr, uid, ids, body=message, context=context)
-        return True
-
-mrp_repair()
 
 
 class ProductChangeMixin(object):
@@ -729,8 +675,9 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
                 'location_id': False,
                 'location_dest_id': False
                 }}
+        location_obj = self.pool.get('stock.location')
         warehouse_obj = self.pool.get('stock.warehouse')
-        location_id = self.pool.get('stock.location').search(cr, uid, [('usage','=','production')], context=context)
+        location_id = location_obj.search(cr, uid, [('usage','=','production')], context=context)
         location_id = location_id and location_id[0] or False
 
         if type == 'add':
@@ -748,11 +695,12 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
                 'location_id': stock_id,
                 'location_dest_id': location_id
                 }}
+        scrap_location_ids = location_obj.search(cr, uid, [('scrap_location', '=', True)], context=context)
 
         return {'value': {
                 'to_invoice': False,
                 'location_id': location_id,
-                'location_dest_id': False
+                'location_dest_id': scrap_location_ids and scrap_location_ids[0] or False,
                 }}
 
 mrp_repair_line()

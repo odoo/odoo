@@ -4,7 +4,7 @@ Created on 18 oct. 2011
 @author: openerp
 '''
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 
 class plugin_handler(osv.osv_memory):
     _name = 'plugin.handler'

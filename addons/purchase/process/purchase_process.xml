@@ -135,7 +135,7 @@
         <record id="process_condition_conditionorigin" model="process.condition">
             <field name="model_id" ref="purchase.model_purchase_order"/>
             <field name="node_id" ref="process_node_draftpurchaseorder1"/>
-            <field eval="&quot;&quot;&quot;object.origin==''&quot;&quot;&quot;" name="model_states"/>
+            <field eval="&quot;&quot;&quot;not object.origin&quot;&quot;&quot;" name="model_states"/>
             <field eval="&quot;&quot;&quot;condition_origin&quot;&quot;&quot;" name="name"/>
         </record>
 
