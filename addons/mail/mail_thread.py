@@ -788,7 +788,7 @@ class mail_thread(osv.AbstractModel):
                 mail_message.write(cr, uid, message_ids, {'email_from': None, 'author_id': part_ids[0]}, context=context)
 
         partner_ids = set(kwargs.pop('partner_ids', [])) | set(new_partner_ids)
-        
+
         if parent_id:
             parent_message = self.pool.get('mail.message').browse(cr, uid, parent_id, context=context)
             partner_ids |= set([(4, partner.id) for partner in parent_message.partner_ids])
@@ -841,7 +841,12 @@ class mail_thread(osv.AbstractModel):
 
     def message_subscribe(self, cr, uid, ids, partner_ids, subtype_ids=None, context=None):
         """ Add partners to the records followers. """
-        self.check_access_rights(cr, uid, 'read')
+        user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
+        if set(partner_ids) == set([user_pid]):
+            self.check_access_rights(cr, uid, 'read')
+        else:
+            self.check_access_rights(cr, uid, 'write')
+        
         self.write(cr, SUPERUSER_ID, ids, {'message_follower_ids': [(4, pid) for pid in partner_ids]}, context=context)
         # if subtypes are not specified (and not set to a void list), fetch default ones
         if subtype_ids is None:
@@ -863,8 +868,8 @@ class mail_thread(osv.AbstractModel):
 
     def message_unsubscribe(self, cr, uid, ids, partner_ids, context=None):
         """ Remove partners from the records followers. """
-        user_pids = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id']
-        if set(partner_ids) == set(user_pids):
+        user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
+        if set(partner_ids) == set([user_pid]):
             self.check_access_rights(cr, uid, 'read')
         else:
             self.check_access_rights(cr, uid, 'write')

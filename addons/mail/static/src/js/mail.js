@@ -1587,6 +1587,10 @@ openerp.mail = function (session) {
             }
 
             this.domain = this.node.params && this.node.params.domain || [];
+            
+            if (!this.__parentedParent.is_action_enabled('edit')) {
+                this.node.params.show_link = false;
+            }
         },
 
         start: function () {
