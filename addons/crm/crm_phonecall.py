@@ -23,8 +23,7 @@ from openerp.addons.base_status.base_state import base_state
 import crm
 from datetime import datetime
 from openerp.osv import fields, osv
-import time
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.translate import _
 
 class crm_phonecall(base_state, osv.osv):
@@ -49,7 +48,7 @@ class crm_phonecall(base_state, osv.osv):
                                     ('pending', 'Not Held'),
                                     ('cancel', 'Cancelled'),
                                     ('done', 'Held'),],
-                        string='Status', size=16, readonly=True,
+                        string='Status', size=16, readonly=True, track_visibility='onchange',
                         help='The status is set to \'Todo\', when a case is created.\
                                 If the case is in progress the status is set to \'Open\'.\
                                 When the call is over, the status is set to \'Held\'.\
@@ -83,13 +82,6 @@ class crm_phonecall(base_state, osv.osv):
         'user_id': lambda self,cr,uid,ctx: uid,
         'active': 1
     }
-
-    def create(self, cr, uid, vals, context=None):
-        obj_id = super(crm_phonecall, self).create(cr, uid, vals, context)
-        for phonecall in self.browse(cr, uid, [obj_id], context=context):
-            if not phonecall.opportunity_id:
-                self.case_open_send_note(cr, uid, [obj_id], context=context)
-        return obj_id
 
     def case_close(self, cr, uid, ids, context=None):
         """ Overrides close for crm_case for setting duration """
@@ -293,28 +285,6 @@ class crm_phonecall(base_state, osv.osv):
     # ----------------------------------------
     # OpenChatter
     # ----------------------------------------
-
-    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
-        return 'Phonecall'
-
-    def case_reset_send_note(self, cr, uid, ids, context=None):
-        message = _('Phonecall has been <b>reset and set as open</b>.')
-        return self.message_post(cr, uid, ids, body=message, context=context)
-
-    def case_open_send_note(self, cr, uid, ids, context=None):
-        lead_obj = self.pool.get('crm.lead')
-        for phonecall in self.browse(cr, uid, ids, context=context):
-            if phonecall.opportunity_id:
-                lead = phonecall.opportunity_id
-                # convert datetime field to a datetime, using server format, then
-                # convert it to the user TZ and re-render it with %Z to add the timezone
-                phonecall_datetime = fields.DT.datetime.strptime(phonecall.date, DEFAULT_SERVER_DATETIME_FORMAT)
-                phonecall_date_str = fields.datetime.context_timestamp(cr, uid, phonecall_datetime, context=context).strftime(DATETIME_FORMATS_MAP['%+'] + " (%Z)")
-                message = _("Phonecall linked to the opportunity <em>%s</em> has been <b>created</b> and <b>scheduled</b> on <em>%s</em>.") % (lead.name, phonecall_date_str)
-            else:
-                message = _("Phonecall has been <b>created and opened</b>.")
-            phonecall.message_post(body=message)
-        return True
 
     def _call_set_partner_send_note(self, cr, uid, ids, context=None):
         return self.message_post(cr, uid, ids, body=_("Partner has been <b>created</b>."), context=context)

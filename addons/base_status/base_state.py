@@ -106,7 +106,6 @@ class base_state(object):
             else:
                 raise osv.except_osv(_('Error !'), _('You can not escalate, you are already at the top level regarding your sales-team category.'))
             self.write(cr, uid, [case.id], data, context=context)
-            case.case_escalate_send_note(parent_id, context=context)
         self._action(cr, uid, cases, 'escalate', context=context)
         return True
 
@@ -120,39 +119,30 @@ class base_state(object):
             if not case.user_id:
                 values['user_id'] = uid
             self.case_set(cr, uid, [case.id], 'open', values, context=context)
-            self.case_open_send_note(cr, uid, [case.id], context=context)
         return True
 
     def case_close(self, cr, uid, ids, context=None):
         """ Closes case """
-        self.case_set(cr, uid, ids, 'done', {'date_closed': fields.datetime.now()}, context=context)
-        self.case_close_send_note(cr, uid, ids, context=context)
-        return True
+        return self.case_set(cr, uid, ids, 'done', {'date_closed': fields.datetime.now()}, context=context)
 
     def case_cancel(self, cr, uid, ids, context=None):
         """ Cancels case """
-        self.case_set(cr, uid, ids, 'cancel', {'active': True}, context=context)
-        self.case_cancel_send_note(cr, uid, ids, context=context)
-        return True
+        return self.case_set(cr, uid, ids, 'cancel', {'active': True}, context=context)
 
     def case_pending(self, cr, uid, ids, context=None):
         """ Sets case as pending """
-        self.case_set(cr, uid, ids, 'pending', {'active': True}, context=context)
-        self.case_pending_send_note(cr, uid, ids, context=context)
-        return True
+        return self.case_set(cr, uid, ids, 'pending', {'active': True}, context=context)
 
     def case_reset(self, cr, uid, ids, context=None):
         """ Resets case as draft """
-        self.case_set(cr, uid, ids, 'draft', {'active': True}, context=context)
-        self.case_reset_send_note(cr, uid, ids, context=context)
-        return True
-    
+        return self.case_set(cr, uid, ids, 'draft', {'active': True}, context=context)
+
     def case_set(self, cr, uid, ids, state_name, update_values=None, context=None):
         """ Generic method for setting case. This methods wraps the update
             of the record, as well as call to _action and browse_record
             case setting to fill the cache.
-            
-            :params: state_name: the new value of the state, such as 
+
+            :params: state_name: the new value of the state, such as
                      'draft' or 'close'.
             :params: update_values: values that will be added with the state
                      update when writing values to the record.
@@ -162,8 +152,9 @@ class base_state(object):
         if update_values is None:
             update_values = {}
         update_values['state'] = state_name
-        self.write(cr, uid, ids, update_values, context=context)
+        res = self.write(cr, uid, ids, update_values, context=context)
         self._action(cr, uid, cases, state_name, context=context)
+        return res
 
     def _action(self, cr, uid, cases, state_to, scrit=None, context=None):
         if context is None:
@@ -174,49 +165,3 @@ class base_state(object):
         model_ids = model_obj.search(cr, uid, [('model','=',self._name)])
         rule_ids = rule_obj.search(cr, uid, [('model_id','=',model_ids[0])])
         return rule_obj._action(cr, uid, rule_ids, cases, scrit=scrit, context=context)
-    
-    # ******************************
-    # Notifications
-    # ******************************
-    
-    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
-        return ''
-
-    def case_open_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            msg = _('%s has been <b>opened</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_post(cr, uid, [id], body=msg, context=context)
-        return True
-
-    def case_escalate_send_note(self, cr, uid, ids, new_section=None, context=None):
-        for id in ids:
-            if new_section:
-                msg = '%s has been <b>escalated</b> to <b>%s</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context), new_section.name)
-            else:
-                msg = '%s has been <b>escalated</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_post(cr, uid, [id], body=msg, context=context)
-        return True
-
-    def case_close_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            msg = _('%s has been <b>closed</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_post(cr, uid, [id], body=msg, context=context)
-        return True
-
-    def case_cancel_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            msg = _('%s has been <b>canceled</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_post(cr, uid, [id], body=msg, context=context)
-        return True
-
-    def case_pending_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            msg = _('%s is now <b>pending</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_post(cr, uid, [id], body=msg, context=context)
-        return True
-
-    def case_reset_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            msg = _('%s has been <b>renewed</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_post(cr, uid, [id], body=msg, context=context)
-        return True

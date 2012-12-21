@@ -165,6 +165,7 @@ class test_message_compose(TestMailBase):
         message_pigs_pids = [partner.id for partner in message_pigs.notified_partner_ids]
         message_bird_pids = [partner.id for partner in message_bird.notified_partner_ids]
         partner_ids = self.res_partner.search(cr, uid, [('email', 'in', ['b@b.b', 'c@c.c', 'd@d.d'])])
+        partner_ids.append(p_a_id)
         self.assertEqual(set(message_pigs_pids), set(partner_ids), 'mail.message on pigs incorrect number of notified_partner_ids')
         self.assertEqual(set(message_bird_pids), set(partner_ids), 'mail.message on bird notified_partner_ids incorrect')
 
