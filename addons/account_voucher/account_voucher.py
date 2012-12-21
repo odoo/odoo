@@ -599,12 +599,11 @@ class account_voucher(osv.osv):
                 This function returns True if the line is considered as noise and should not be displayed
             """
             if line.reconcile_partial_id:
-                sign = 1 if ttype == 'receipt' else -1
                 if currency_id == line.currency_id.id:
-                    if line.amount_residual_currency * sign <= 0:
+                    if line.amount_residual_currency <= 0:
                         return True
                 else:
-                    if line.amount_residual * sign <= 0:
+                    if line.amount_residual <= 0:
                         return True
             return False
 
