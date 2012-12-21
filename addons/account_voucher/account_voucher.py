@@ -26,6 +26,7 @@ from openerp import netsvc
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
+from openerp.tools import float_compare
 
 class res_company(osv.osv):
     _inherit = "res.company"
@@ -599,12 +600,11 @@ class account_voucher(osv.osv):
                 This function returns True if the line is considered as noise and should not be displayed
             """
             if line.reconcile_partial_id:
-                sign = 1 if ttype == 'receipt' else -1
                 if currency_id == line.currency_id.id:
-                    if line.amount_residual_currency * sign <= 0:
+                    if line.amount_residual_currency <= 0:
                         return True
                 else:
-                    if line.amount_residual * sign <= 0:
+                    if line.amount_residual <= 0:
                         return True
             return False
 
@@ -1083,17 +1083,19 @@ class account_voucher(osv.osv):
         voucher_brw = self.pool.get('account.voucher').browse(cr, uid, voucher_id, context)
         ctx = context.copy()
         ctx.update({'date': voucher_brw.date})
+        prec = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
         for line in voucher_brw.line_ids:
             #create one move line per voucher line where amount is not 0.0
-            if not line.amount:
+            # AND (second part of the clause) only if the original move line was not having debit = credit = 0 (which is a legal value)
+            if not line.amount and not (line.move_line_id and not float_compare(line.move_line_id.debit, line.move_line_id.credit, precision_rounding=prec) and not float_compare(line.move_line_id.debit, 0.0, precision_rounding=prec)):
                 continue
             # convert the amount set on the voucher line into the currency of the voucher's company
             amount = self._convert_amount(cr, uid, line.untax_amount or line.amount, voucher_brw.id, context=ctx)
             # if the amount encoded in voucher is equal to the amount unreconciled, we need to compute the
             # currency rate difference
             if line.amount == line.amount_unreconciled:
-                if not line.move_line_id.amount_residual:
-                    raise osv.except_osv(_('Wrong bank statement line'),_("You have to delete the bank statement line which the payment was reconciled to manually. Please check the payment of the partner %s by the amount of %s.")%(line.voucher_id.partner_id.name, line.voucher_id.amount))
+                if not line.move_line_id:
+                    raise osv.except_osv(_('Wrong voucher line'),_("The invoice you are willing to pay is not valid anymore."))
                 sign = voucher_brw.type in ('payment', 'purchase') and -1 or 1
                 currency_rate_difference = sign * (line.move_line_id.amount_residual - amount)
             else:

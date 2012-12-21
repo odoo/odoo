@@ -886,9 +886,9 @@ class mail_thread(osv.AbstractModel):
 
         return mail_message.create(cr, uid, values, context=context)
 
-    def message_post_user_api(self, cr, uid, thread_id, body='', subject=False, parent_id=False,
-                                attachment_ids=None, context=None, content_subtype='plaintext',
-                                extra_email=[], **kwargs):
+    def message_post_user_api(self, cr, uid, thread_id, body='', parent_id=False,
+                                attachment_ids=None, extra_emails=None, content_subtype='plaintext',
+                                context=None, **kwargs):
         """ Wrapper on message_post, used for user input :
             - mail gateway
             - quick reply in Chatter (refer to mail.js), not
@@ -902,30 +902,41 @@ class mail_thread(osv.AbstractModel):
                 to the related document. Should only be set by Chatter.
             - extra_email: [ 'Fabien <fpi@openerp.com>', 'al@openerp.com' ]
         """
+        partner_obj = self.pool.get('res.partner')
+        mail_message_obj = self.pool.get('mail.message')
         ir_attachment = self.pool.get('ir.attachment')
+        extra_emails = extra_emails or []
 
-        # 1. Pre-processing: body, partner_ids, type and subtype
-        if content_subtype == 'plaintext':
-            body = tools.plaintext2html(body)
+        # 1.A.1: pre-process partners and incoming extra_emails
+        partner_ids = set([])
+        for email in extra_emails:
+            partner_id = partner_obj.find_or_create(cr, uid, email, context=context)
+            # link mail with this from mail to the new partner id
+            partner_msg_ids = mail_message_obj.search(cr, SUPERUSER_ID, [('email_from', '=', email), ('author_id', '=', False)], context=context)
+            if partner_id and partner_msg_ids:
+                mail_message_obj.write(cr, SUPERUSER_ID, partner_msg_ids, {'email_from': None, 'author_id': partner_id}, context=context)
+            partner_ids.add((4, partner_id))
+        if partner_ids:
+            self.message_subscribe(cr, uid, [thread_id], [item[1] for item in partner_ids], context=context)
 
-        for partner in extra_email:
-            part_ids = self.pool.get('res.partner').search(cr, uid, [('email', '=', partner)], context=context)
-            if not part_ids:
-                part_ids = [self.pool.get('res.partner').name_create(cr, uid, partner, context=context)[0]]
-            self.message_subscribe(cr, uid, [thread_id], part_ids, context=context)
-
-        partner_ids = kwargs.pop('partner_ids', [])
+        # 1.A.2: add recipients of parent message
         if parent_id:
-            parent_message = self.pool.get('mail.message').browse(cr, uid, parent_id, context=context)
-            partner_ids += [(4, partner.id) for partner in parent_message.partner_ids]
+            parent_message = mail_message_obj.browse(cr, uid, parent_id, context=context)
+            partner_ids |= set([(4, partner.id) for partner in parent_message.partner_ids])
             # TDE FIXME HACK: mail.thread -> private message
             if self._name == 'mail.thread' and parent_message.author_id.id:
-                partner_ids.append((4, parent_message.author_id.id))
+                partner_ids.add((4, parent_message.author_id.id))
 
-        message_type = kwargs.pop('type', 'comment')
-        message_subtype = kwargs.pop('subtype', 'mail.mt_comment')
+        # 1.A.3: add specified recipients
+        partner_ids |= set(kwargs.pop('partner_ids', []))
 
-        # 2. Pre-processing: free attachments linked to the model
+        # 1.B: handle body, message_type and message_subtype
+        if content_subtype == 'plaintext':
+            body = tools.plaintext2html(body)
+        msg_type = kwargs.pop('type', 'comment')
+        msg_subtype = kwargs.pop('subtype', 'mail.mt_comment')
+
+        # 2. Pre-processing: attachments
         # HACK TDE FIXME: Chatter: attachments linked to the document (not done JS-side), load the message
         if attachment_ids:
             # TDE FIXME (?): when posting a private message, we use mail.thread as a model
@@ -943,13 +954,12 @@ class mail_thread(osv.AbstractModel):
                     ir_attachment.write(cr, SUPERUSER_ID, attachment_ids, {'res_model': model, 'res_id': thread_id}, context=context)
         else:
             attachment_ids = []
+        attachment_ids = [(4, id) for id in attachment_ids]
 
         # 3. Post message
-        new_message_id = self.message_post(cr, uid, thread_id=thread_id, body=body, subject=subject, type=message_type,
-                            subtype=message_subtype, parent_id=parent_id, attachment_ids=[(4, id) for id in attachment_ids],
-                            context=context, partner_ids=partner_ids, **kwargs)
-
-        return new_message_id
+        return self.message_post(cr, uid, thread_id=thread_id, body=body,
+                            type=msg_type, subtype=msg_subtype, parent_id=parent_id,
+                            attachment_ids=attachment_ids, partner_ids=partner_ids, context=context, **kwargs)
 
     #------------------------------------------------------
     # Followers API
@@ -969,7 +979,12 @@ class mail_thread(osv.AbstractModel):
 
     def message_subscribe(self, cr, uid, ids, partner_ids, subtype_ids=None, context=None):
         """ Add partners to the records followers. """
-        self.check_access_rights(cr, uid, 'read')
+        user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
+        if set(partner_ids) == set([user_pid]):
+            self.check_access_rights(cr, uid, 'read')
+        else:
+            self.check_access_rights(cr, uid, 'write')
+
         self.write(cr, SUPERUSER_ID, ids, {'message_follower_ids': [(4, pid) for pid in partner_ids]}, context=context)
         # if subtypes are not specified (and not set to a void list), fetch default ones
         if subtype_ids is None:
@@ -991,7 +1006,11 @@ class mail_thread(osv.AbstractModel):
 
     def message_unsubscribe(self, cr, uid, ids, partner_ids, context=None):
         """ Remove partners from the records followers. """
-        self.check_access_rights(cr, uid, 'read')
+        user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
+        if set(partner_ids) == set([user_pid]):
+            self.check_access_rights(cr, uid, 'read')
+        else:
+            self.check_access_rights(cr, uid, 'write')
         return self.write(cr, SUPERUSER_ID, ids, {'message_follower_ids': [(3, pid) for pid in partner_ids]}, context=context)
 
     def message_subscribe_from_parent(self, cr, uid, ids, updated_fields, context=None):

@@ -81,7 +81,7 @@
                         <img t-att-src="'/mail/static/src/img/mimetypes/' + attachment.filetype + '.png'"></img>
                         <div class='oe_name'><t t-raw='attachment.name' /></div>
                     </a>
-                    <div class='oe_delete oe_e' title="Delete this attachment" t-attf-data-id="{attachment.id}">[</div>
+                    <div class='oe_delete oe_e' title="Delete this attachment" t-att-data-id="attachment.id">[</div>
                     <div class='oe_progress_bar'>
                         uploading
                     </div>
@@ -93,7 +93,7 @@
                         <img t-att-src="widget.attachments_resize_image(attachment.id, [100,80])"></img>
                         <div class='oe_name'><t t-raw='attachment.name' /></div>
                     </a>
-                    <div class='oe_delete oe_e'>[</div>
+                    <div class='oe_delete oe_e' title="Delete this attachment" t-att-data-id="attachment.id">[</div>
                     <div class='oe_progress_bar'>
                         uploading
                     </div>
@@ -115,17 +115,26 @@
                     <t t-if="!widget.parent_thread.parent_message.record_name">this document</t>
                 </span>
             </t>
-            <t t-if="!widget.is_private and widget.partner_ids.length"> and </t>
+            <t t-if="!widget.is_private and (widget.partner_ids.length or (widget.author_id and widget.author_id[0]))"> and </t>
             <t t-set="inc" t-value="0"/>
-            <t t-if="widget.partner_ids.length" t-foreach="widget.partner_ids" t-as="partner">
+            <t t-foreach="widget.partner_ids" t-as="partner">
                 <span t-attf-class="oe_partner_follower #{inc>=3?'oe_hidden':''}"><t t-if="inc" t-raw="', '"/>
                     <a t-if="widget.options.show_link" t-attf-href="#model=res.partner&amp;id=#{partner[0]}"><t t-raw="partner[1]"/></a>
                     <t t-if="!widget.options.show_link" t-raw="partner[1]"/>
-                </span><t t-set="inc" t-value="inc+1"/>
+                </span>
+                <t t-set="inc" t-value="inc+1"/>
             </t>
-            <t t-if="widget.partner_ids.length>=3">
-                <span class="oe_more">, <a><t t-raw="widget.partner_ids.length-3"/> others...</a></span>
+            <t t-if="widget.partner_ids.length > 3">
+                <span class="oe_more">, <a><t t-raw="widget.partner_ids.length - 3"/> others...</a></span>
                 <a class="oe_more_hidden">&lt;&lt;&lt;</a>
+            </t>
+        </div>
+        <div class="oe_emails_from">
+            <t t-foreach='widget.emails_from' t-as='email_from'>
+                <label title="Add them into recipients and followers">
+                    <input type="checkbox" t-att-checked="email_from[1] ? 'checked' : undefind" t-att-data="email_from[0]"/>
+                    <t t-raw="email_from[0]"/>
+                </label>
             </t>
         </div>
     </t>
@@ -234,8 +243,8 @@
                     <t t-if="widget.attachment_ids.length > 0">
                         <div class="oe_msg_attachment_list"></div>
                     </t>
-                    <a t-if="widget.author_id and widget.options.show_link" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}"><t t-raw="widget.author_id[1]"/></a>
-                    <span t-if="widget.author_id and !widget.options.show_link"><t t-raw="widget.author_id[1]"/></span>
+                    <a t-if="widget.author_id and widget.options.show_link and widget.author_id[0]" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}"><t t-raw="widget.author_id[1]"/></a>
+                    <span t-if="widget.author_id and (!widget.options.show_link or !widget.author_id[0])"><t t-raw="widget.author_id[1]"/></span>
                     <span class='oe_subtle'>•</span>
                     <span t-att-title="widget.date"><t t-raw="widget.timerelative"/></span>
                     <span t-if="!widget.options.readonly" class='oe_subtle'>•</span>

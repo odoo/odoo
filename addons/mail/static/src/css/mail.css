@@ -271,6 +271,19 @@
 .openerp .oe_mail .oe_msg_composer .oe_msg_attachment_list{
     display: block;
 }
+.openerp .oe_mail .oe_msg_composer .oe_emails_from{
+    font-size: 12px;
+    margin-left: 20px;
+    margin-bottom: 2px;
+}
+.openerp .oe_mail .oe_msg_composer .oe_emails_from label{
+    vertical-align: middle;
+    display: block;
+    line-height: 14px;
+}
+.openerp .oe_mail .oe_msg_composer .oe_emails_from input{
+    vertical-align: middle;
+}
 .openerp .oe_mail .oe_attachment{
     display: inline-block;
     width: 100px;
@@ -483,8 +496,8 @@
 }
 .openerp .oe_mail .oe_msg_content .oe_mail_list_recipients{
     font-size: 12px;
-    margin-top: 4px;
-    margin-bottom: 4px;
+    margin: 4px 0 4px 20px;
+    text-indent: -20px;
 }
 
 /* ---------------- HIDDEN MESSAGES ------------------ */
@@ -595,6 +608,14 @@
     width: 32px;
     margin-right:4px;
     border-radius: 2px;
+}
+.openerp .oe_followers .oe_remove_follower{
+    cursor: pointer;
+    float: right;
+}
+
+.openerp .oe_followers .oe_show_more{
+    cursor: pointer;
 }
 
 /* ---------------- MESSAGES BODY ------------------ */

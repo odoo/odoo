@@ -49,17 +49,6 @@ class invite_wizard(osv.osv_memory):
         'message': fields.html('Message'),
     }
 
-    def onchange_partner_ids(self, cr, uid, ids, value, context=None):
-        """ onchange_partner_ids (value format: [[6, 0, [3, 4]]]). The
-            basic purpose of this method is to check that destination partners
-            effectively have email addresses. Otherwise a warning is thrown.
-        """
-        res = {'value': {}}
-        if not value or not value[0] or not value[0][0] == 6:
-            return
-        res.update(self.pool.get('mail.message').check_partners_email(cr, uid, value[0][2], context=context))
-        return res
-
     def add_followers(self, cr, uid, ids, context=None):
         for wizard in self.browse(cr, uid, ids, context=context):
             model_obj = self.pool.get(wizard.res_model)
