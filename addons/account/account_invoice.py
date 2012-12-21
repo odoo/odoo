@@ -690,9 +690,6 @@ class account_invoice(osv.osv):
         return super(account_invoice, self).copy(cr, uid, id, default, context)
 
     def test_paid(self, cr, uid, ids, *args):
-        for inv in self.browse(cr, uid, ids):
-            if inv.amount_total == 0.0:
-                return True
         res = self.move_line_id_payment_get(cr, uid, ids)
         if not res:
             return False

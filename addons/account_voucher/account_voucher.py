@@ -26,6 +26,7 @@ from openerp import netsvc
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
+from openerp.tools import float_compare
 
 class res_company(osv.osv):
     _inherit = "res.company"
@@ -1083,15 +1084,15 @@ class account_voucher(osv.osv):
         ctx.update({'date': voucher_brw.date})
         for line in voucher_brw.line_ids:
             #create one move line per voucher line where amount is not 0.0
-            if not line.amount:
+            if not line.amount and not float_compare(line.move_line_id.invoice.amount_total,0.0,precision_rounding=0.0):
                 continue
             # convert the amount set on the voucher line into the currency of the voucher's company
             amount = self._convert_amount(cr, uid, line.untax_amount or line.amount, voucher_brw.id, context=ctx)
             # if the amount encoded in voucher is equal to the amount unreconciled, we need to compute the
             # currency rate difference
             if line.amount == line.amount_unreconciled:
-                if not line.move_line_id.amount_residual:
-                    raise osv.except_osv(_('Wrong bank statement line'),_("You have to delete the bank statement line which the payment was reconciled to manually. Please check the payment of the partner %s by the amount of %s.")%(line.voucher_id.partner_id.name, line.voucher_id.amount))
+                if not line.move_line_id:
+                    raise osv.except_osv(_('Wrong voucher line'),_("The invoice you are willing to pay is not valid anymore."))
                 sign = voucher_brw.type in ('payment', 'purchase') and -1 or 1
                 currency_rate_difference = sign * (line.move_line_id.amount_residual - amount)
             else:
