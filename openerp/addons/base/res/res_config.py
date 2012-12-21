@@ -525,25 +525,32 @@ class res_config_settings(osv.osv_memory):
                 getattr(self, method)(cr, uid, ids, context)
 
         # module fields: install/uninstall the selected modules
-        to_install_names = []
+        to_install_missing_names = []
         to_uninstall_ids = []
+        to_install_ids = []
         lm = len('module_')
         for name, module in classified['module']:
             if config[name]:
-                if not module or module.state == 'uninstalled':
-                    to_install_names.append(name[lm:])
+                if not module:
+                    # missing module, will be provided by apps.openerp.com
+                    to_install_missing_names.append(name[lm:])
+                elif module.state == 'uninstalled':
+                    # local module, to be installed
+                    to_install_ids.append(module.id)
             else:
                 if module and module.state in ('installed', 'to upgrade'):
                     to_uninstall_ids.append(module.id)
 
         if to_uninstall_ids:
             ir_module.button_immediate_uninstall(cr, uid, to_uninstall_ids, context=context)
+        if to_install_ids:
+            ir_module.button_immediate_install(cr, uid, to_install_ids, context=context)
 
-        if to_install_names:
+        if to_install_missing_names:
             return {
                 'type': 'ir.actions.client',
                 'tag': 'apps',
-                'params': {'modules': to_install_names},
+                'params': {'modules': to_install_missing_names},
             }
 
         config = self.pool.get('res.config').next(cr, uid, [], context=context) or {}
