@@ -71,7 +71,18 @@ class crm_lead(base_stage, format_address, osv.osv):
     _name = "crm.lead"
     _description = "Lead/Opportunity"
     _order = "priority,date_action,id desc"
-    _inherit = ['mail.thread','ir.needaction_mixin']
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
+
+    _track = {
+        'state': {
+            'crm.mt_lead_create': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'new',
+            'crm.mt_lead_won': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'done',
+            'crm.mt_lead_lost': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'cancel',
+        },
+        'stage_id': {
+            'crm.mt_lead_stage': lambda self, cr, uid, obj, ctx=None: obj['state'] not in ['new', 'cancel', 'done'],
+        },
+    }
 
     def _get_default_section_id(self, cr, uid, context=None):
         """ Gives default section by checking if present in the context """
@@ -214,7 +225,7 @@ class crm_lead(base_stage, format_address, osv.osv):
             return [('id', '=', '0')]
 
     _columns = {
-        'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null',
+        'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null', track_visibility='onchange',
             select=True, help="Linked partner (optional). Usually created when converting the lead."),
 
         'id': fields.integer('ID', readonly=True),
@@ -223,8 +234,8 @@ class crm_lead(base_stage, format_address, osv.osv):
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
         'email_from': fields.char('Email', size=128, help="Email address of the contact", select=1),
-        'section_id': fields.many2one('crm.case.section', 'Sales Team', \
-                        select=True, help='When sending mails, the default email address is taken from the sales team.'),
+        'section_id': fields.many2one('crm.case.section', 'Sales Team',
+                        select=True, track_visibility='onchange', help='When sending mails, the default email address is taken from the sales team.'),
         'create_date': fields.datetime('Creation Date' , readonly=True),
         'email_cc': fields.text('Global CC', size=252 , help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'description': fields.text('Notes'),
@@ -240,9 +251,9 @@ class crm_lead(base_stage, format_address, osv.osv):
         'type':fields.selection([ ('lead','Lead'), ('opportunity','Opportunity'), ],'Type', help="Type is used to separate Leads and Opportunities"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'date_closed': fields.datetime('Closed', readonly=True),
-        'stage_id': fields.many2one('crm.case.stage', 'Stage',
+        'stage_id': fields.many2one('crm.case.stage', 'Stage', track_visibility='onchange',
                         domain="['&', '&', ('fold', '=', False), ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"),
-        'user_id': fields.many2one('res.users', 'Salesperson', select=True),
+        'user_id': fields.many2one('res.users', 'Salesperson', select=True, track_visibility='onchange'),
         'referred': fields.char('Referred By', size=64),
         'date_open': fields.datetime('Opened', readonly=True),
         'day_open': fields.function(_compute_day, string='Days to Open', \
@@ -255,7 +266,7 @@ class crm_lead(base_stage, format_address, osv.osv):
 
         # Only used for type opportunity
         'probability': fields.float('Success Rate (%)',group_operator="avg"),
-        'planned_revenue': fields.float('Expected Revenue'),
+        'planned_revenue': fields.float('Expected Revenue', track_visibility='always'),
         'ref': fields.reference('Reference', selection=crm._links_get, size=128),
         'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128),
         'phone': fields.char("Phone", size=64),
@@ -302,15 +313,6 @@ class crm_lead(base_stage, format_address, osv.osv):
     _sql_constraints = [
         ('check_probability', 'check(probability >= 0 and probability <= 100)', 'The probability of closing the deal should be between 0% and 100%!')
     ]
-
-    def create(self, cr, uid, vals, context=None):
-        obj_id = super(crm_lead, self).create(cr, uid, vals, context)
-        section_id = self.browse(cr, uid, obj_id, context=context).section_id
-        if section_id:
-            followers = [follow.id for follow in section_id.message_follower_ids]
-            self.message_subscribe(cr, uid, [obj_id], followers, context=context)
-        self.create_send_note(cr, uid, [obj_id], context=context)
-        return obj_id
 
     def onchange_stage_id(self, cr, uid, ids, stage_id, context=None):
         if not stage_id:
@@ -413,7 +415,6 @@ class crm_lead(base_stage, format_address, osv.osv):
             stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, [('probability', '=', 0.0)], context=context)
             if stage_id:
                 self.case_set(cr, uid, [lead.id], values_to_update={'probability': 0.0}, new_stage_id=stage_id, context=context)
-        self.case_mark_lost_send_note(cr, uid, ids, context=context)
         return True
 
     def case_mark_won(self, cr, uid, ids, context=None):
@@ -422,7 +423,6 @@ class crm_lead(base_stage, format_address, osv.osv):
             stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, [('probability', '=', 100.0)], context=context)
             if stage_id:
                 self.case_set(cr, uid, [lead.id], values_to_update={'probability': 100.0}, new_stage_id=stage_id, context=context)
-        self.case_mark_won_send_note(cr, uid, ids, context=context)
         return True
 
     def set_priority(self, cr, uid, ids, priority):
@@ -700,7 +700,7 @@ class crm_lead(base_stage, format_address, osv.osv):
                 continue
             vals = self._convert_opportunity_data(cr, uid, lead, customer, section_id, context=context)
             self.write(cr, uid, [lead.id], vals, context=context)
-            self.convert_opportunity_send_note(cr, uid, lead, context=context)
+        self.message_post(cr, uid, ids, body=_("Lead <b>converted into an Opportunity</b>"), subtype="crm.mt_lead_convert_to_opportunity", context=context)
 
         if user_ids or section_id:
             self.allocate_salesman(cr, uid, ids, user_ids, section_id, context=context)
@@ -759,7 +759,8 @@ class crm_lead(base_stage, format_address, osv.osv):
             res_partner.write(cr, uid, partner_id, {'section_id': lead.section_id.id or False})
             contact_id = res_partner.address_get(cr, uid, [partner_id])['default']
             res = lead.write({'partner_id': partner_id}, context=context)
-            self._lead_set_partner_send_note(cr, uid, [lead.id], context)
+            message = _("<b>Partner</b> set to <em>%s</em>." % (lead.partner_id.name))
+            self.message_post(cr, uid, [lead.id], body=message, context=context)
         return res
 
     def handle_partner_assignation(self, cr, uid, ids, action='create', partner_id=False, context=None):
@@ -913,12 +914,7 @@ class crm_lead(base_stage, format_address, osv.osv):
             stage = self.pool.get('crm.case.stage').browse(cr, uid, vals['stage_id'], context=context)
             if stage.on_change:
                 vals['probability'] = stage.probability
-        if vals.get('section_id'):
-            section_id = self.pool.get('crm.case.section').browse(cr, uid, vals.get('section_id'), context=context)
-            if section_id:
-                vals.setdefault('message_follower_ids', [])
-                vals['message_follower_ids'] += [(4, follower.id) for follower in section_id.message_follower_ids]
-        return super(crm_lead,self).write(cr, uid, ids, vals, context)
+        return super(crm_lead, self).write(cr, uid, ids, vals, context=context)
 
     def new_mail_send(self, cr, uid, ids, context=None):
         '''
@@ -1007,47 +1003,12 @@ class crm_lead(base_stage, format_address, osv.osv):
     # OpenChatter methods and notifications
     # ----------------------------------------
 
-    def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
-        """ Override of the (void) default notification method. """
-        stage_name = self.pool.get('crm.case.stage').name_get(cr, uid, [stage_id], context=context)[0][1]
-        return self.message_post(cr, uid, ids, body=_("Stage changed to <b>%s</b>.") % (stage_name), subtype="mt_crm_stage", context=context)
-
-    def case_get_note_msg_prefix(self, cr, uid, lead, context=None):
-        if isinstance(lead, (int, long)):
-            lead = self.browse(cr, uid, [lead], context=context)[0]
-        return ('Opportunity' if lead.type == 'opportunity' else 'Lead')
-
-    def create_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            message = _("%s has been <b>created</b>.") % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_post(cr, uid, [id], body=message, context=context)
-        return True
-
-    def case_mark_lost_send_note(self, cr, uid, ids, context=None):
-        message = _("Opportunity has been <b>lost</b>.")
-        return self.message_post(cr, uid, ids, body=message, subtype="mt_crm_lost", context=context)
-
-    def case_mark_won_send_note(self, cr, uid, ids, context=None):
-        message = _("Opportunity has been <b>won</b>.")
-        return self.message_post(cr, uid, ids, body=message, subtype="mt_crm_won", context=context)
-
     def schedule_phonecall_send_note(self, cr, uid, ids, phonecall_id, action, context=None):
         phonecall = self.pool.get('crm.phonecall').browse(cr, uid, [phonecall_id], context=context)[0]
         if action == 'log': prefix = 'Logged'
         else: prefix = 'Scheduled'
         message = _("<b>%s a call</b> for the <em>%s</em>.") % (prefix, phonecall.date)
         return self.message_post(cr, uid, ids, body=message, context=context)
-
-    def _lead_set_partner_send_note(self, cr, uid, ids, context=None):
-        for lead in self.browse(cr, uid, ids, context=context):
-            message = _("%s <b>partner</b> is now set to <em>%s</em>." % (self.case_get_note_msg_prefix(cr, uid, lead, context=context), lead.partner_id.name))
-            lead.message_post(body=message)
-        return True
-
-    def convert_opportunity_send_note(self, cr, uid, lead, context=None):
-        message = _("Lead has been <b>converted to an opportunity</b>.")
-        lead.message_post(body=message)
-        return True
 
     def onchange_state(self, cr, uid, ids, state_id, context=None):
         if state_id:

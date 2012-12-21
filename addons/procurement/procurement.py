@@ -112,7 +112,7 @@ class procurement_order(osv.osv):
             ('running','Running'),
             ('ready','Ready'),
             ('done','Done'),
-            ('waiting','Waiting')], 'Status', required=True,
+            ('waiting','Waiting')], 'Status', required=True, track_visibility='onchange',
             help='When a procurement is created the status is set to \'Draft\'.\n If the procurement is confirmed, the status is set to \'Confirmed\'.\
             \nAfter confirming the status is set to \'Running\'.\n If any exception arises in the order then the status is set to \'Exception\'.\n Once the exception is removed the status becomes \'Ready\'.\n It is in \'Waiting\'. status when the procurement is waiting for another one to finish.'),
         'note': fields.text('Note'),
@@ -329,7 +329,6 @@ class procurement_order(osv.osv):
                     move_obj.action_confirm(cr, uid, [id], context=context)
                     self.write(cr, uid, [procurement.id], {'move_id': id, 'close_move': 1})
         self.write(cr, uid, ids, {'state': 'confirmed', 'message': ''})
-        self.confirm_send_note(cr, uid, ids, context)
         return True
 
     def action_move_assigned(self, cr, uid, ids, context=None):
@@ -414,7 +413,6 @@ class procurement_order(osv.osv):
         if len(to_assign):
             move_obj.write(cr, uid, to_assign, {'state': 'assigned'})
         self.write(cr, uid, ids, {'state': 'cancel'})
-        self.cancel_send_note(cr, uid, ids, context=None)
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
             wf_service.trg_trigger(uid, 'procurement.order', id, cr)
@@ -451,38 +449,13 @@ class procurement_order(osv.osv):
                 if procurement.close_move and (procurement.move_id.state <> 'done'):
                     move_obj.action_done(cr, uid, [procurement.move_id.id])
         res = self.write(cr, uid, ids, {'state': 'done', 'date_close': time.strftime('%Y-%m-%d')})
-        self.done_send_note(cr, uid, ids, context=None)
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
             wf_service.trg_trigger(uid, 'procurement.order', id, cr)
         return res
 
-    # ----------------------------------------
-    # OpenChatter methods and notifications
-    # ----------------------------------------
-
-    def create(self, cr, uid, vals, context=None):
-        obj_id = super(procurement_order, self).create(cr, uid, vals, context)
-        self.create_send_note(cr, uid, [obj_id], context=context)
-        return obj_id
-
-    def create_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Procurement <b>created</b>."), context=context)
-
-    def confirm_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Procurement <b>confirmed</b>."), context=context)
-
-    def cancel_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Procurement <b>cancelled</b>."), context=context)
-
-    def done_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Procurement <b>done</b>."), context=context)
-
-procurement_order()
-
 class StockPicking(osv.osv):
     _inherit = 'stock.picking'
-
     def test_finished(self, cursor, user, ids):
         wf_service = netsvc.LocalService("workflow")
         res = super(StockPicking, self).test_finished(cursor, user, ids)
@@ -493,8 +466,6 @@ class StockPicking(osv.osv):
                         wf_service.trg_validate(user, 'procurement.order',
                             procurement.id, 'button_check', cursor)
         return res
-
-StockPicking()
 
 class stock_warehouse_orderpoint(osv.osv):
     """

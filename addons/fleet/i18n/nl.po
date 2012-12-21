@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-12-15 10:46+0000\n"
+"PO-Revision-Date: 2012-12-20 13:59+0000\n"
 "Last-Translator: Leen Sonneveld <leen.sonneveld@opensol.nl>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-16 04:49+0000\n"
-"X-Generator: Launchpad (build 16372)\n"
+"X-Launchpad-Export-Date: 2012-12-21 04:42+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: fleet
 #: selection:fleet.vehicle,fuel_type:0
@@ -79,7 +79,7 @@ msgstr "Kenteken: van '%s' tot '%s'"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_38
 msgid "Resurface Rotors"
-msgstr ""
+msgstr "Reviseren remschijven"
 
 #. module: fleet
 #: view:fleet.vehicle.cost:0
@@ -142,7 +142,7 @@ msgstr "Liter"
 #: view:fleet.vehicle.cost:0
 #: field:fleet.vehicle.cost,parent_id:0
 msgid "Parent"
-msgstr ""
+msgstr "Bovenliggende"
 
 #. module: fleet
 #: view:board.board:0
@@ -246,6 +246,8 @@ msgstr "Beide"
 #: field:fleet.vehicle.log.services,cost_id:0
 msgid "Automatically created field to link to parent fleet.vehicle.cost"
 msgstr ""
+"Automatisch gecreëerd veld om te verbindnen met bovenliggende "
+"fleet.vehicle.cost"
 
 #. module: fleet
 #: view:fleet.vehicle.log.contract:0
@@ -255,7 +257,7 @@ msgstr "Beëindig contract"
 #. module: fleet
 #: help:fleet.vehicle.cost,parent_id:0
 msgid "Parent cost to this current cost"
-msgstr ""
+msgstr "Bovenliggnede kosten voor deze kosten"
 
 #. module: fleet
 #: help:fleet.vehicle.log.contract,cost_frequency:0
@@ -265,7 +267,7 @@ msgstr "Frequentie van de terugkerende kosten"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_1
 msgid "Calculation Benefit In Kind"
-msgstr ""
+msgstr "Berekening privé voordeel"
 
 #. module: fleet
 #: help:fleet.vehicle.log.contract,expiration_date:0
@@ -437,6 +439,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik om een nieuw contract te creëren.\n"
+"              </p><p>\n"
+"                 Beheer al uw contracten (lease, verzekeringen, enz.) met "
+"de\n"
+"                 bijbehorende diensten en kosten. OpenERP zal u automatisch "
+"waarschuwen\n"
+"                 wanneer een contract moeten worden vernieuwd.\n"
+"              </p><p>\n"
+"                 Ieder contract (bijvoorbeeld: lease) kan verschillende "
+"diensten omvatten\n"
+"                 (bijv. reparatie, verzekeringen, periodiek onderhoud).\n"
+"              </p>\n"
+"            "
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_service_type
@@ -472,6 +488,8 @@ msgid ""
 "$('.oe_picture').load(function() { if($(this).width() > $(this).height()) { "
 "$(this).addClass('oe_employee_picture_wide') } });"
 msgstr ""
+"$('.oe_picture').load(function() { if($(this).width() > $(this).height()) { "
+"$(this).addClass('oe_employee_picture_wide') } });"
 
 #. module: fleet
 #: view:board.board:0
@@ -490,6 +508,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik om  nieuwe kosten te creëren.\n"
+"              </p><p>\n"
+"                 OpenERP helpt u bij het beheer van de kosten voor uw "
+"verschillende\n"
+"                 voertuigen. De kosten worden automatisch gemaakt op basis "
+"van diensten,\n"
+"                 contracten (vaste of terugkerende) en brandstof logs.\n"
+"              </p>\n"
+"            "
 
 #. module: fleet
 #: view:fleet.vehicle:0
@@ -1246,6 +1274,18 @@ msgid ""
 "              </div>\n"
 "            "
 msgstr ""
+"<div class=\"oe_empty_custom_dashboard\">\n"
+"                  <p>\n"
+"                    <b>Wagenpark dashboard is leeg.</b>\n"
+"                  </p><p>\n"
+"                    Om het eerste rapport aan het dasboard toe te voegen, ga "
+"naar een \n"
+"                    menu, schakel naar de overzichts- of grafiek weergave en "
+"klik <i>'Toevoegen aan \n"
+"                    Dashboard'</i>  bij de uitgebreide zoekopties.\n"
+"                  </p>\n"
+"              </div>\n"
+"            "
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_12
@@ -1330,6 +1370,18 @@ msgid ""
 "        </p>\n"
 "      "
 msgstr ""
+"<p>\n"
+"          OpenERP helpt u bij het beheer van de kosten voor uw verschillende "
+"voertuigen\n"
+"          De kosten bestaan in het algemeen uit diensten en contracten en "
+"worden hier weergegeven.\n"
+"        </p>\n"
+"        <p>\n"
+"          Dankzij de verschillende filters, kan OpenERP de effectieve kosten "
+"\n"
+"          afdrukken en sorteren per type en per voertuig.\n"
+"        </p>\n"
+"      "
 
 #. module: fleet
 #: field:fleet.vehicle,car_value:0
@@ -1709,6 +1761,13 @@ msgid ""
 "        </p>\n"
 "      "
 msgstr ""
+"<p>\n"
+"                 Hier worden voertuigen getoond, waarvan één of meer "
+"contracten moeten worden vernieuwd.           \n"
+"                 Als u deze melding ziet, zijn er geen contracten die "
+"vernieuwd moeten worden.\n"
+"</p>\n"
+"      "
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_15
@@ -1744,7 +1803,7 @@ msgstr "Opties"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_contract_repairing
 msgid "Repairing"
-msgstr ""
+msgstr "In reparatie"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.action_fleet_reporting_costs
@@ -1801,6 +1860,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik om een nieuw service item aan te maken.\n"
+"              </p><p>\n"
+"                OpenERP helpt u om de uitgevoerde services op uw voertuigen "
+"\n"
+"                bij te houden. Er zijn verschillende soorten diensten: "
+"incidentele reparaties,\n"
+"                vast onderhoud, etc.\n"
+"              </p>\n"
+"            "
 
 #. module: fleet
 #: field:fleet.vehicle,co2:0
@@ -1810,7 +1879,7 @@ msgstr "CO2 Emissie"
 #. module: fleet
 #: view:fleet.vehicle.log.contract:0
 msgid "Contract logs"
-msgstr ""
+msgstr "Contract logboek"
 
 #. module: fleet
 #: view:fleet.vehicle:0
@@ -1880,6 +1949,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik om een nieuw type service aan te maken\n"
+"              </p><p>\n"
+"                Ieder type service kan gebruikt worden in contracten, als "
+"een afzonderlijke service of beide.\n"
+"              </p>\n"
+"            "
 
 #. module: fleet
 #: view:board.board:0

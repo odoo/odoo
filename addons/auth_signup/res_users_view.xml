@@ -19,16 +19,12 @@
                     </header>
                 </xpath>
                 <!-- add Reset Password button -->
-                <xpath expr="//sheet/*[1]" position="before">
+                <xpath expr="//div[@class='oe_right oe_button_box']" position="replace">
                     <div class="oe_right oe_button_box">
                         <button string="Reset Password" type="object" name="action_reset_password"
                             help="Send an email to the user to (re)set their password."/>
                     </div>
                 </xpath>
-                <!-- hide field set_password -->
-                <field name="new_password" position="replace">
-                    <field name="new_password" groups="base.group_no_one" password="True"/>
-                </field>
             </field>
         </record>
 
