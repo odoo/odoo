@@ -143,7 +143,8 @@ class base_action_rule(osv.osv):
             model.write(cr, uid, record_ids, values, context=context)
 
         if action.act_followers and hasattr(model, 'message_subscribe'):
-            model.message_subscribe(cr, uid, record_ids, map(int, action.act_followers), context=context)
+            follower_ids = map(int, action.act_followers)
+            model.message_subscribe(cr, uid, record_ids, follower_ids, context=context)
 
         return True
 
