@@ -106,7 +106,7 @@ class base_state(object):
             else:
                 raise osv.except_osv(_('Error !'), _('You can not escalate, you are already at the top level regarding your sales-team category.'))
             self.write(cr, uid, [case.id], data, context=context)
-        self._action(cr, uid, cases, 'escalate', context=context)
+            case.case_escalate_send_note(parent_id, context=context)
         return True
 
     def case_open(self, cr, uid, ids, context=None):
@@ -152,16 +152,50 @@ class base_state(object):
         if update_values is None:
             update_values = {}
         update_values['state'] = state_name
-        res = self.write(cr, uid, ids, update_values, context=context)
-        self._action(cr, uid, cases, state_name, context=context)
-        return res
+        return self.write(cr, uid, ids, update_values, context=context)
+    
+    # ******************************
+    # Notifications
+    # ******************************
+    
+    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
+        return ''
 
-    def _action(self, cr, uid, cases, state_to, scrit=None, context=None):
-        if context is None:
-            context = {}
-        context['state_to'] = state_to
-        rule_obj = self.pool.get('base.action.rule')
-        model_obj = self.pool.get('ir.model')
-        model_ids = model_obj.search(cr, uid, [('model','=',self._name)])
-        rule_ids = rule_obj.search(cr, uid, [('model_id','=',model_ids[0])])
-        return rule_obj._action(cr, uid, rule_ids, cases, scrit=scrit, context=context)
+    def case_open_send_note(self, cr, uid, ids, context=None):
+        for id in ids:
+            msg = _('%s has been <b>opened</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            self.message_post(cr, uid, [id], body=msg, context=context)
+        return True
+
+    def case_escalate_send_note(self, cr, uid, ids, new_section=None, context=None):
+        for id in ids:
+            if new_section:
+                msg = '%s has been <b>escalated</b> to <b>%s</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context), new_section.name)
+            else:
+                msg = '%s has been <b>escalated</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            self.message_post(cr, uid, [id], body=msg, context=context)
+        return True
+
+    def case_close_send_note(self, cr, uid, ids, context=None):
+        for id in ids:
+            msg = _('%s has been <b>closed</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            self.message_post(cr, uid, [id], body=msg, context=context)
+        return True
+
+    def case_cancel_send_note(self, cr, uid, ids, context=None):
+        for id in ids:
+            msg = _('%s has been <b>canceled</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            self.message_post(cr, uid, [id], body=msg, context=context)
+        return True
+
+    def case_pending_send_note(self, cr, uid, ids, context=None):
+        for id in ids:
+            msg = _('%s is now <b>pending</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            self.message_post(cr, uid, [id], body=msg, context=context)
+        return True
+
+    def case_reset_send_note(self, cr, uid, ids, context=None):
+        for id in ids:
+            msg = _('%s has been <b>renewed</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            self.message_post(cr, uid, [id], body=msg, context=context)
+        return True
