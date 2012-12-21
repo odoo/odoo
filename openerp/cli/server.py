@@ -96,6 +96,9 @@ def preload_registry(dbname):
     try:
         update_module = True if openerp.tools.config['init'] or openerp.tools.config['update'] else False
         db, registry = openerp.pooler.get_db_and_pool(dbname, update_module=update_module,  pooljobs=False)
+
+        # jobs will start to be processed later, when openerp.cron.start_master_thread() is called by openerp.service.start_services()
+        registry.schedule_cron_jobs()
     except Exception:
         _logger.exception('Failed to initialize database `%s`.', dbname)
 
