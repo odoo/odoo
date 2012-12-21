@@ -20,12 +20,12 @@
 ##############################################################################
 
 import re
-import tools
+from openerp import tools
 
-from tools.translate import _
-from tools import ustr
-from osv import fields
-from osv import osv
+from openerp.tools.translate import _
+from openerp.tools import ustr
+from openerp.osv import fields
+from openerp.osv import osv
 
 import crm
 

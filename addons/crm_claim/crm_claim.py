@@ -19,14 +19,14 @@
 #
 ##############################################################################
 
-from base_status.base_stage import base_stage
+from openerp.addons.base_status.base_stage import base_stage
 import binascii
-from crm import crm
-from osv import fields, osv
+from openerp.addons.crm import crm
+from openerp.osv import fields, osv
 import time
-import tools
-from tools.translate import _
-from tools import html2plaintext
+from openerp import tools
+from openerp.tools.translate import _
+from openerp.tools import html2plaintext
 
 CRM_CLAIM_PENDING_STATES = (
     crm.AVAILABLE_STATES[2][0], # Cancelled
@@ -104,8 +104,8 @@ class crm_claim(base_stage, osv.osv):
         'email_cc': fields.text('Watchers Emails', size=252, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'email_from': fields.char('Email', size=128, help="Destination email for email gateway."),
         'partner_phone': fields.char('Phone', size=32),
-        'stage_id': fields.many2one ('crm.claim.stage', 'Stage',
-                        domain="['&',('fold', '=', False),'|', ('section_ids', '=', section_id), ('case_default', '=', True)]"),
+        'stage_id': fields.many2one ('crm.claim.stage', 'Stage', track_visibility='onchange',
+                domain="['&',('fold', '=', False),'|', ('section_ids', '=', section_id), ('case_default', '=', True)]"),
         'cause': fields.text('Root Cause'),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
                 selection=crm.AVAILABLE_STATES, string="Status", readonly=True,
@@ -158,18 +158,13 @@ class crm_claim(base_stage, osv.osv):
             return stage_ids[0]
         return False
 
-    def create(self, cr, uid, vals, context=None):
-        obj_id = super(crm_claim, self).create(cr, uid, vals, context)
-        self.create_send_note(cr, uid, [obj_id], context=context)
-        return obj_id
-
     def case_refuse(self, cr, uid, ids, context=None):
         """ Mark the case as refused: state=done and case_refused=True """
         for lead in self.browse(cr, uid, ids):
             stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, ['&', ('state', '=', 'done'), ('case_refused', '=', True)], context=context)
             if stage_id:
                 self.case_set(cr, uid, [lead.id], values_to_update={}, new_stage_id=stage_id, context=context)
-        return self.case_refuse_send_note(cr, uid, ids, context=context)
+        return True
 
     def onchange_partner_id(self, cr, uid, ids, part, email=False):
         """This function returns value of partner address based on partner
@@ -230,28 +225,6 @@ class crm_claim(base_stage, osv.osv):
                 update_vals[key] = res.group(2).lower()
 
         return  super(crm_claim,self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
-
-    # ---------------------------------------------------
-    # OpenChatter methods and notifications
-    # ---------------------------------------------------
-
-    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
-        """ Override of default prefix for notifications. """
-        return 'Claim'
-
-    def create_send_note(self, cr, uid, ids, context=None):
-        msg = _('Claim has been <b>created</b>.')
-        return self.message_post(cr, uid, ids, body=msg, context=context)
-
-    def case_refuse_send_note(self, cr, uid, ids, context=None):
-        msg = _('Claim has been <b>refused</b>.')
-        return self.message_post(cr, uid, ids, body=msg, context=context)
-
-    def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
-        """ Override of the (void) default notification method. """
-        stage_name = self.pool.get('crm.claim.stage').name_get(cr, uid, [stage_id], context=context)[0][1]
-        return self.message_post(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), context=context)
-
 
 class res_partner(osv.osv):
     _inherit = 'res.partner'

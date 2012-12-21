@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:54+0000\n"
-"PO-Revision-Date: 2012-05-10 17:31+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
+"PO-Revision-Date: 2012-12-20 17:10+0000\n"
+"Last-Translator: Ahti Hinnov <sipelgas@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:04+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-21 04:41+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #, python-format
 #~ msgid "Warning !"
@@ -48,12 +48,12 @@ msgstr ""
 #. module: product
 #: field:product.product,incoming_qty:0
 msgid "Incoming"
-msgstr "Sissetulev"
+msgstr "Sisenev"
 
 #. module: product
 #: view:product.product:0
 msgid "Product Name"
-msgstr ""
+msgstr "Toote nimi"
 
 #. module: product
 #: view:product.template:0
@@ -327,18 +327,13 @@ msgstr ""
 #. module: product
 #: field:product.product,outgoing_qty:0
 msgid "Outgoing"
-msgstr "Väljuvad"
+msgstr "Väljuv"
 
 #. module: product
 #: model:product.price.type,name:product.list_price
 #: field:product.product,lst_price:0
 msgid "Public Price"
 msgstr "Avalik hind"
-
-#. module: product
-#: sql_constraint:product.product:0
-msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
 
 #. module: product
 #: field:product.price_list,qty5:0
@@ -373,7 +368,7 @@ msgstr ""
 #. module: product
 #: field:product.supplierinfo,product_name:0
 msgid "Supplier Product Name"
-msgstr ""
+msgstr "Tarnija toote nimi"
 
 #. module: product
 #: view:product.pricelist:0
@@ -446,7 +441,7 @@ msgstr "Kõrgus"
 #. module: product
 #: view:product.product:0
 msgid "Procurements"
-msgstr ""
+msgstr "Hanked"
 
 #. module: product
 #: model:res.groups,name:product.group_mrp_properties
@@ -550,7 +545,7 @@ msgstr "Kast20x20x40"
 #. module: product
 #: field:product.template,warranty:0
 msgid "Warranty"
-msgstr ""
+msgstr "Garantii"
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -631,7 +626,6 @@ msgstr ""
 
 #. module: product
 #: constraint:product.packaging:0
-#: constraint:res.partner:0
 msgid "Error: Invalid ean code"
 msgstr "Viga: Vigane EAN kood"
 
@@ -707,7 +701,7 @@ msgstr ""
 #. module: product
 #: field:product.product,qty_available:0
 msgid "Quantity On Hand"
-msgstr ""
+msgstr "Tegelik kogus"
 
 #. module: product
 #: field:product.price.type,name:0
@@ -736,7 +730,7 @@ msgstr "Hinnakiri"
 #. module: product
 #: field:product.product,virtual_available:0
 msgid "Forecasted Quantity"
-msgstr ""
+msgstr "Prognoositud kogus"
 
 #. module: product
 #: view:product.product:0
@@ -867,7 +861,7 @@ msgstr ""
 #. module: product
 #: view:product.template:0
 msgid "days"
-msgstr ""
+msgstr "päeva"
 
 #. module: product
 #: model:process.node,name:product.process_node_supplier0
@@ -901,11 +895,6 @@ msgstr ""
 #: view:product.category:0
 msgid "Product Categories"
 msgstr "Toote kategooriad"
-
-#. module: product
-#: sql_constraint:res.currency:0
-msgid "The currency code must be unique per company!"
-msgstr ""
 
 #. module: product
 #: view:product.template:0
@@ -1106,7 +1095,7 @@ msgstr "Hinna lisamaks"
 #: field:product.product,code:0
 #: field:product.product,default_code:0
 msgid "Internal Reference"
-msgstr ""
+msgstr "Sisemine viide"
 
 #. module: product
 #: model:product.template,name:product.product_product_8_product_template
@@ -1315,7 +1304,7 @@ msgstr ""
 #. module: product
 #: view:product.product:0
 msgid "Inventory"
-msgstr ""
+msgstr "Laoseis"
 
 #. module: product
 #: code:addons/product/product.py:736
@@ -1411,7 +1400,7 @@ msgstr "Kaalud"
 #. module: product
 #: view:product.product:0
 msgid "Description for Quotations"
-msgstr ""
+msgstr "Kirjeldus pakkumistele"
 
 #. module: product
 #: help:pricelist.partnerinfo,price:0
@@ -1446,7 +1435,7 @@ msgstr "Ühik"
 #: code:addons/product/product.py:588
 #, python-format
 msgid "Product has been <b>created</b>."
-msgstr ""
+msgstr "Toode on <b>loodud</b>."
 
 #. module: product
 #: field:product.pricelist.version,date_start:0
@@ -1557,7 +1546,7 @@ msgstr "Hinnakirja nimi"
 #. module: product
 #: field:product.product,ean13:0
 msgid "EAN13 Barcode"
-msgstr ""
+msgstr "EAN13 triipkood"
 
 #. module: product
 #: sql_constraint:product.uom:0
@@ -1613,7 +1602,7 @@ msgstr "Vaikimisi mõõtühik kasutatakse kõigis laooperatsioonides."
 #. module: product
 #: view:product.product:0
 msgid "Sales"
-msgstr ""
+msgstr "Müük"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_categ_form_action
@@ -1772,7 +1761,7 @@ msgstr "Teenus"
 #. module: product
 #: view:product.template:0
 msgid "Internal Description"
-msgstr ""
+msgstr "Sisemine kirjeldus"
 
 #. module: product
 #: model:product.template,name:product.product_product_48_product_template
@@ -1894,7 +1883,7 @@ msgstr ""
 #: view:product.product:0
 #: field:product.template,sale_ok:0
 msgid "Can be Sold"
-msgstr ""
+msgstr "On müüdav"
 
 #. module: product
 #: field:product.template,produce_delay:0
@@ -1977,7 +1966,7 @@ msgstr ""
 #. module: product
 #: view:product.product:0
 msgid "Sale Conditions"
-msgstr ""
+msgstr "Müügi tingimused"
 
 #. module: product
 #: view:product.packaging:0
@@ -1993,7 +1982,7 @@ msgstr ""
 #. module: product
 #: view:product.product:0
 msgid "Description for Suppliers"
-msgstr ""
+msgstr "Kirjeldus tarnijatele"
 
 #. module: product
 #: field:product.supplierinfo,delay:0
@@ -2003,7 +1992,7 @@ msgstr ""
 #. module: product
 #: view:product.product:0
 msgid "months"
-msgstr ""
+msgstr "kuud"
 
 #. module: product
 #: help:product.uom,active:0
@@ -2430,11 +2419,6 @@ msgid "On demand hard-disk having capacity based on requirement."
 msgstr ""
 
 #. module: product
-#: help:product.template,volume:0
-msgid "The volume in m3."
-msgstr "Maht kuupmeetrites."
-
-#. module: product
 #: selection:product.template,state:0
 msgid "End of Lifecycle"
 msgstr "Eluea lõpp"
@@ -2457,11 +2441,6 @@ msgstr ""
 #: field:product.pricelist,version_id:0
 msgid "Pricelist Versions"
 msgstr "Hinnakirja versioonid"
-
-#. module: product
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr ""
 
 #. module: product
 #: help:product.pricelist.item,price_round:0
@@ -2510,9 +2489,9 @@ msgid "This is a quantity which is converted into Default Unit of Measure."
 msgstr ""
 
 #. module: product
-#: sql_constraint:decimal.precision:0
-msgid "Only one value can be defined for each given usage!"
-msgstr ""
+#: help:product.template,volume:0
+msgid "The volume in m3."
+msgstr "Maht kuupmeetrites."
 
 #. module: product
 #: field:product.pricelist.item,price_discount:0

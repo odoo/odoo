@@ -6,28 +6,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2011-01-12 03:48+0000\n"
-"Last-Translator: Quentin THEURET <Unknown>\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
+"PO-Revision-Date: 2012-12-03 21:19+0000\n"
+"Last-Translator: Frederic Clementi - Camptocamp.com "
+"<frederic.clementi@camptocamp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:07+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:35+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
-#. module: account_payment
-#: view:account.move.line:0
-msgid "Total debit"
-msgstr "Débit total"
-
-#. module: account_payment
-#: view:account.move.line:0
-msgid "Total credit"
-msgstr "Crédit total"
+#~ msgid "Total debit"
+#~ msgstr "Débit total"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML non valide pour l'architecture de la vue !"
+
+#~ msgid "Total credit"
+#~ msgstr "Crédit total"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -47,6 +44,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"               Cliquez pour créer un ordre de paiement.\n"
+"              </p><p>\n"
+"                Un ordre de paiement est un demande de règlement fournisseur "
+"ou le remboursement d'un avoir client.\n"
+"              </p>\n"
+"            "
 
 #. module: account_payment
 #: field:payment.line,currency:0
@@ -125,11 +129,6 @@ msgid "Due Date"
 msgstr "Date d'échéance"
 
 #. module: account_payment
-#: view:account.move.line:0
-msgid "Account Entry Line"
-msgstr "Ligne d'écriture comptable"
-
-#. module: account_payment
 #: view:payment.order.create:0
 msgid "_Add to payment order"
 msgstr "_Ajouter à l'ordre de paiement"
@@ -141,21 +140,27 @@ msgid "Payment Populate statement"
 msgstr "Relevé rempli par paiement"
 
 #. module: account_payment
+#: code:addons/account_payment/account_invoice.py:43
+#, python-format
+msgid ""
+"You cannot cancel an invoice which has already been imported in a payment "
+"order. Remove it from the following payment order : %s."
+msgstr ""
+"Vous ne pouvez pas supprimer une facture déja importée dans un ordre de "
+"paiement. Il s'agit de l'ordre de paiement : %s."
+
+#. module: account_payment
+#: code:addons/account_payment/account_invoice.py:43
 #: code:addons/account_payment/account_move_line.py:110
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Erreur !"
 
 #. module: account_payment
 #: report:payment.order:0
 #: view:payment.order:0
 msgid "Amount"
 msgstr "Montant"
-
-#. module: account_payment
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
-msgstr "Valeur erronée au crédit ou au débit de l'écriture comptable !"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -184,24 +189,10 @@ msgid "The payment line name must be unique!"
 msgstr "Le nom de la ligne de paiement doit être unique !"
 
 #. module: account_payment
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr "Structure de communication BBA incorrecte !"
-
-#. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
 msgid "Payment Orders"
 msgstr "Ordres de paiement"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid ""
-"The date of your Journal Entry is not in the defined period! You should "
-"change the date or remove this constraint from the journal."
-msgstr ""
-"La date de votre écriture ne correspond pas à la période définie! Vous devez "
-"modifier la date ou supprimer la contrainte de date du journal."
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -228,6 +219,11 @@ msgid ""
 " Once the bank is confirmed the status is set to 'Confirmed'.\n"
 " Then the order is paid the status is 'Done'."
 msgstr ""
+"Lorsqu'un ordre de paiement est créé il est à l'état 'brouillon'.\n"
+" Lorsque vous avez la confirmation de la banque passez le statut à "
+"'Confirmé'\n"
+" Le statut doit être 'Terminé' lors de la confirmation du relevé bancaire "
+"dans lequel vous avez importé les lignes de paiement."
 
 #. module: account_payment
 #: view:payment.order:0
@@ -253,7 +249,7 @@ msgstr "Structuré"
 #. module: account_payment
 #: view:account.bank.statement:0
 msgid "Import Payment Lines"
-msgstr ""
+msgstr "Import de lignes de paiement"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -296,7 +292,7 @@ msgstr ""
 #. module: account_payment
 #: field:payment.order,date_created:0
 msgid "Creation Date"
-msgstr ""
+msgstr "Date de création"
 
 #. module: account_payment
 #: help:payment.mode,journal:0
@@ -357,11 +353,6 @@ msgid "Partner"
 msgstr "Partenaire"
 
 #. module: account_payment
-#: constraint:account.move.line:0
-msgid "Account and Period must belong to the same company."
-msgstr ""
-
-#. module: account_payment
 #: field:payment.line,bank_statement_line_id:0
 msgid "Bank statement line"
 msgstr "Ligne de relevé bancaire"
@@ -375,17 +366,6 @@ msgstr "Date d'échéance"
 #: field:account.invoice,amount_to_pay:0
 msgid "Amount to be paid"
 msgstr "Montant à payer"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry forces to provide a secondary "
-"currency. You should remove the secondary currency on the account or select "
-"a multi-currency view on the journal."
-msgstr ""
-"Le compte sélectionné dans votre ligne d'écriture requiert une deuxième "
-"devise. Vous devez soit supprimer la deuxième devise sur le compte, soit "
-"sélectionner une vue multi-devise sur le journal."
 
 #. module: account_payment
 #: report:payment.order:0
@@ -420,7 +400,7 @@ msgstr "Relevé de compte rempli par paiement"
 #: code:addons/account_payment/account_move_line.py:110
 #, python-format
 msgid "There is no partner defined on the entry line."
-msgstr ""
+msgstr "Pas de partenaire défini sur la ligne."
 
 #. module: account_payment
 #: help:payment.mode,name:0
@@ -452,7 +432,7 @@ msgstr "Brouillon"
 #: view:payment.order:0
 #: field:payment.order,state:0
 msgid "Status"
-msgstr ""
+msgstr "Statut"
 
 #. module: account_payment
 #: help:payment.line,communication2:0
@@ -502,7 +482,7 @@ msgstr "Recherche"
 #. module: account_payment
 #: field:payment.order,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "Responsable"
 
 #. module: account_payment
 #: field:payment.line,date:0
@@ -517,7 +497,7 @@ msgstr "Total :"
 #. module: account_payment
 #: field:payment.order,date_done:0
 msgid "Execution Date"
-msgstr ""
+msgstr "Date d'exécution"
 
 #. module: account_payment
 #: view:account.payment.populate.statement:0
@@ -553,11 +533,6 @@ msgstr "Paiement"
 #: report:payment.order:0
 msgid "Invoice Ref"
 msgstr "Réf. facture"
-
-#. module: account_payment
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr "Le numéro de facture doit être unique par société !"
 
 #. module: account_payment
 #: field:payment.line,name:0
@@ -640,7 +615,7 @@ msgstr "Communication 2"
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Date fixée"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
@@ -701,11 +676,6 @@ msgid "Name"
 msgstr "Nom"
 
 #. module: account_payment
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on an account of type view."
-msgstr ""
-
-#. module: account_payment
 #: report:payment.order:0
 msgid "Bank Account"
 msgstr "Compte bancaire"
@@ -740,19 +710,14 @@ msgstr "Faire le paiement"
 #. module: account_payment
 #: field:payment.order,date_prefered:0
 msgid "Preferred Date"
-msgstr ""
+msgstr "Date préférée"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
 #: view:account.payment.populate.statement:0
 #: view:payment.order.create:0
 msgid "or"
-msgstr ""
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on closed account."
-msgstr ""
+msgstr "ou"
 
 #. module: account_payment
 #: help:payment.mode,bank_id:0
@@ -816,6 +781,9 @@ msgstr "Compte bancaire pour le mode de paiement"
 #~ msgid "Scheduled date if fixed"
 #~ msgstr "Date prévue si fixe"
 
+#~ msgid "Account Entry Line"
+#~ msgstr "Ligne d'écriture comptable"
+
 #, python-format
 #~ msgid "Error !"
 #~ msgstr "Erreur !"
@@ -863,6 +831,9 @@ msgstr "Compte bancaire pour le mode de paiement"
 #~ msgid "You can not create move line on closed account."
 #~ msgstr "Impossible de créer une ligne d'écriture sur un compte clôturé"
 
+#~ msgid "Wrong credit or debit value in accounting entry !"
+#~ msgstr "Valeur erronée au crédit ou au débit de l'écriture comptable !"
+
 #~ msgid "You can not create move line on view account."
 #~ msgstr ""
 #~ "Vous ne pouvez pas créer de ligne d'écriture sur un compte de type \"Vue\"."
@@ -904,6 +875,22 @@ msgstr "Compte bancaire pour le mode de paiement"
 #~ "et mentionner la facture et le partenaire pour lequel le règlement doit être "
 #~ "effectué."
 
+#~ msgid ""
+#~ "The selected account of your Journal Entry forces to provide a secondary "
+#~ "currency. You should remove the secondary currency on the account or select "
+#~ "a multi-currency view on the journal."
+#~ msgstr ""
+#~ "Le compte sélectionné dans votre ligne d'écriture requiert une deuxième "
+#~ "devise. Vous devez soit supprimer la deuxième devise sur le compte, soit "
+#~ "sélectionner une vue multi-devise sur le journal."
+
+#~ msgid ""
+#~ "The date of your Journal Entry is not in the defined period! You should "
+#~ "change the date or remove this constraint from the journal."
+#~ msgstr ""
+#~ "La date de votre écriture ne correspond pas à la période définie! Vous devez "
+#~ "modifier la date ou supprimer la contrainte de date du journal."
+
 #~ msgid "Company must be the same for its related account and period."
 #~ msgstr "La société doit être la même pour son compte et la période liée."
 
@@ -912,3 +899,9 @@ msgstr "Compte bancaire pour le mode de paiement"
 
 #~ msgid "You can not create journal items on closed account."
 #~ msgstr "Vous ne pouvez pas passer d'écritures sur un compte clôturé."
+
+#~ msgid "Invalid BBA Structured Communication !"
+#~ msgstr "Structure de communication BBA incorrecte !"
+
+#~ msgid "Invoice Number must be unique per Company!"
+#~ msgstr "Le numéro de facture doit être unique par société !"

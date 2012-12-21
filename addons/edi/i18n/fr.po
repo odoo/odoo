@@ -7,67 +7,41 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-02-09 10:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
+"PO-Revision-Date: 2012-12-18 23:20+0000\n"
+"Last-Translator: WANTELLET Sylvain <Swantellet@tetra-info.com>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:32+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-20 04:46+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: edi
 #. openerp-web
 #: code:addons/edi/static/src/js/edi.js:67
 #, python-format
 msgid "Reason:"
-msgstr ""
+msgstr "Motif:"
 
 #. module: edi
 #. openerp-web
 #: code:addons/edi/static/src/js/edi.js:60
 #, python-format
 msgid "The document has been successfully imported!"
-msgstr ""
-
-#. module: edi
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr "Le nom de la société doit être unique !"
-
-#. module: edi
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr ""
-"Erreur ! Vous ne pouvez pas créer des membres associés de manière récursive."
+msgstr "Le document a été importé avec succès !"
 
 #. module: edi
 #. openerp-web
 #: code:addons/edi/static/src/js/edi.js:65
 #, python-format
 msgid "Sorry, the document could not be imported."
-msgstr ""
-
-#. module: edi
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "Erreur ! Vous ne pouvez pas créer de sociétés récursives."
+msgstr "Désolé, le document ne peut pas être importé."
 
 #. module: edi
 #: model:ir.model,name:edi.model_res_company
 msgid "Companies"
 msgstr "Sociétés"
-
-#. module: edi
-#: constraint:res.partner:0
-msgid "Error: Invalid ean code"
-msgstr ""
-
-#. module: edi
-#: sql_constraint:res.currency:0
-msgid "The currency code must be unique per company!"
-msgstr "Le code de la devise doit être unique par société !"
 
 #. module: edi
 #: model:ir.model,name:edi.model_res_currency
@@ -111,13 +85,6 @@ msgid "Partner"
 msgstr "Partenaire"
 
 #. module: edi
-#: constraint:res.currency:0
-msgid ""
-"Error! You cannot define a rounding factor for the company's main currency "
-"that is smaller than the decimal precision of 'Account'."
-msgstr ""
-
-#. module: edi
 #: model:ir.model,name:edi.model_edi_edi
 msgid "EDI Subsystem"
 msgstr ""
@@ -158,8 +125,21 @@ msgstr ""
 #~ msgid "OpenERP documentation"
 #~ msgstr "documentation OpenERP"
 
+#~ msgid "The currency code must be unique per company!"
+#~ msgstr "Le code de la devise doit être unique par société !"
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "Le nom de la société doit être unique !"
+
 #~ msgid "Partner Addresses"
 #~ msgstr "Adresses des partenaires"
+
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr ""
+#~ "Erreur ! Vous ne pouvez pas créer des membres associés de manière récursive."
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "Erreur ! Vous ne pouvez pas créer de sociétés récursives."
 
 #~ msgid "Import it into an existing OpenERP instance"
 #~ msgstr "Importer dans une instance OpenERP existante"

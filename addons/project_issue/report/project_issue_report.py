@@ -20,9 +20,9 @@
 #
 ##############################################################################
 
-from osv import fields,osv
-import tools
-from crm import crm
+from openerp.osv import fields,osv
+from openerp import tools
+from openerp.addons.crm import crm
 
 AVAILABLE_STATES = [
     ('draft','Draft'),
@@ -52,8 +52,8 @@ class project_issue_report(osv.osv):
         'date_closed': fields.date('Date of Closing', readonly=True),
         'stage_id': fields.many2one('project.task.type', 'Stage'),
         'nbr': fields.integer('# of Issues', readonly=True),
-        'working_hours_open': fields.float('Avg. Working Hours to Open', readonly=True),
-        'working_hours_close': fields.float('Avg. Working Hours to Close', readonly=True),
+        'working_hours_open': fields.float('Avg. Working Hours to Open', readonly=True, group_operator="avg"),
+        'working_hours_close': fields.float('Avg. Working Hours to Close', readonly=True, group_operator="avg"),
         'delay_open': fields.float('Avg. Delay to Open', digits=(16,2), readonly=True, group_operator="avg",
                                        help="Number of Days to open the project issue."),
         'delay_close': fields.float('Avg. Delay to Close', digits=(16,2), readonly=True, group_operator="avg",

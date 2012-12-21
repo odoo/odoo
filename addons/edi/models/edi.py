@@ -21,7 +21,7 @@
 
 import base64
 import hashlib
-import json
+import simplejson as json
 import logging
 import re
 import time
@@ -31,8 +31,8 @@ import openerp
 import openerp.release as release
 import openerp.netsvc as netsvc
 from openerp.osv import osv, fields
-from tools.translate import _
-from tools.safe_eval import safe_eval as eval
+from openerp.tools.translate import _
+from openerp.tools.safe_eval import safe_eval as eval
 _logger = logging.getLogger(__name__)
 
 EXTERNAL_ID_PATTERN = re.compile(r'^([^.:]+)(?::([^.]+))?\.(\S+)$')

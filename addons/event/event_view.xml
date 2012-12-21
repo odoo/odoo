@@ -57,43 +57,6 @@
 
         <!-- Events Organisation/CONFIGURATION/EVENTS -->
 
-        <!-- Event Read/Unread actions -->
-        <record id="actions_server_event_event_unread" model="ir.actions.server">
-            <field name="name">Event: Mark unread</field>
-            <field name="condition">True</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="model_event_event"/>
-            <field name="state">code</field>
-            <field name="code">self.message_mark_as_unread(cr, uid, context.get('active_ids'), context=context)</field>
-        </record>
-        <record id="action_event_event_unread" model="ir.values">
-            <field name="name">action_event_event_unread</field>
-            <field name="action_id" ref="actions_server_event_event_unread"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_event_event_unread'))" />
-            <field name="key">action</field>
-            <field name="model_id" ref="model_event_event" />
-            <field name="model">event.event</field>
-            <field name="key2">client_action_multi</field>
-        </record>
-
-        <record id="actions_server_event_event_read" model="ir.actions.server">
-            <field name="name">Event: Mark read</field>
-            <field name="condition">True</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="model_event_event"/>
-            <field name="state">code</field>
-            <field name="code">self.message_mark_as_read(cr, uid, context.get('active_ids'), context=context)</field>
-        </record>
-        <record id="action_event_event_read" model="ir.values">
-            <field name="name">action_event_event_read</field>
-            <field name="action_id" ref="actions_server_event_event_read"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_event_event_read'))" />
-            <field name="key">action</field>
-            <field name="model_id" ref="model_event_event" />
-            <field name="model">event.event</field>
-            <field name="key2">client_action_multi</field>
-        </record>
-
         <record model="ir.ui.view" id="view_event_form">
             <field name="name">Events</field>
             <field name="model">event.event</field>
@@ -277,20 +240,22 @@
                                 </i>
                               </t>
                             </p>
-                            <t t-if="record.register_avail.raw_value gt 0 and record.register_avail.raw_value lt 9999">
-                              <t t-if="!record.is_subscribed.raw_value">
-                                <input t-att-id="record.id.raw_value" type="text" name="subscribe" class="no_of_seats" value="1" onchange="document.getElementById('btn_sub' +this.id).setAttribute('data-context',JSON.stringify({'ticket':this.value}))"/>
-                                <button t-att-id="'btn_sub'+record.id.raw_value" type="object" name="subscribe_to_event" class="oe_subscribe_button">
-                                    <span >Subscribe</span>
-                                </button>
-                              </t>
-                            </t>
-                            <t t-if="record.is_subscribed.raw_value">
-                              <button type="object" name="unsubscribe_to_event" class="oe_unsubscribe_button ">
-                                <span>Subscribed</span>
-                                <span class="oe_unsubscribe">Unsubscribe</span>
-                              </button>
-                            </t>
+                            <div groups="base.group_user,portal.group_portal">
+                                <t t-if="record.register_avail.raw_value gt 0 and record.register_avail.raw_value lt 9999">
+                                  <t t-if="!record.is_subscribed.raw_value">
+                                    <input t-att-id="record.id.raw_value" type="text" name="subscribe" class="no_of_seats" value="1" onchange="document.getElementById('btn_sub' +this.id).setAttribute('data-context',JSON.stringify({'ticket':this.value}))"/>
+                                    <button t-att-id="'btn_sub'+record.id.raw_value" type="object" name="subscribe_to_event" class="oe_subscribe_button">
+                                        <span >Subscribe</span>
+                                    </button>
+                                  </t>
+                                </t>
+                                <t t-if="record.is_subscribed.raw_value">
+                                  <button type="object" name="unsubscribe_to_event" class="oe_unsubscribe_button ">
+                                    <span>Subscribed</span>
+                                    <span class="oe_unsubscribe">Unsubscribe</span>
+                                  </button>
+                                </t>
+                            </div>
                         </div>
                       </div>
                     </t>
@@ -375,42 +340,6 @@
 
         <!-- EVENTS/REGISTRATIONS/EVENTS  -->
 
-        <!-- Registration Read/Unread actions -->
-        <record id="actions_server_event_registration_unread" model="ir.actions.server">
-            <field name="name">Event registration : Mark unread</field>
-            <field name="condition">True</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="model_event_registration"/>
-            <field name="state">code</field>
-            <field name="code">self.message_mark_as_unread(cr, uid, context.get('active_ids'), context=context)</field>
-        </record>
-        <record id="action_event_registration_unread" model="ir.values">
-            <field name="name">action_event_registration_unread</field>
-            <field name="action_id" ref="actions_server_event_registration_unread"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_event_registration_unread'))" />
-            <field name="key">action</field>
-            <field name="model_id" ref="model_event_registration" />
-            <field name="model">event.registration</field>
-            <field name="key2">client_action_multi</field>
-        </record>
-
-        <record id="actions_server_event_registration_read" model="ir.actions.server">
-            <field name="name">Event registration : Mark read</field>
-            <field name="condition">True</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="model_event_registration"/>
-            <field name="state">code</field>
-            <field name="code">self.message_mark_as_read(cr, uid, context.get('active_ids'), context=context)</field>
-        </record>
-        <record id="action_event_registration_read" model="ir.values">
-            <field name="name">action_event_registration_read</field>
-            <field name="action_id" ref="actions_server_event_registration_read"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_event_registration_read'))" />
-            <field name="key">action</field>
-            <field name="model_id" ref="model_event_registration" />
-            <field name="model">event.registration</field>
-            <field name="key2">client_action_multi</field>
-        </record>
 
         <record model="ir.ui.view" id="view_event_registration_tree">
             <field name="name">event.registration.tree</field>
@@ -423,10 +352,13 @@
                     <field name="email"/>
                     <field name="event_id" />
                     <field name="nb_register"/>
-                    <field name="user_id"/>
+                    <field name="user_id" invisible="1"/>
                     <field name="origin"/>
                     <field name="state"/>
                     <field name="message_unread" invisible="1"/>
+                    <button name="registration_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
+                    <button name="button_reg_close" string="Attended the Event" states="open" type="object" icon="gtk-jump-to"/>
+                    <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
                 </tree>
             </field>
         </record>

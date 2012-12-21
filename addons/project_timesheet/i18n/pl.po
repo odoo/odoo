@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:54+0000\n"
-"PO-Revision-Date: 2010-12-28 07:48+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
+"PO-Revision-Date: 2012-12-16 12:58+0000\n"
+"Last-Translator: Grzegorz Grzelak (OpenGLOBE.pl) <grzegorz@openglobe.pl>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:12+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-17 04:47+0000\n"
+"X-Generator: Launchpad (build 16372)\n"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -24,12 +24,12 @@ msgstr "Zadania wg użytkowników"
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
 msgid "Group by year of date"
-msgstr ""
+msgstr "Grupuj wg lat"
 
 #. module: project_timesheet
-#: constraint:project.task:0
-msgid "Error ! Task end-date must be greater then task start-date"
-msgstr ""
+#: selection:report.timesheet.task.user,month:0
+msgid "June"
+msgstr "Czerwiec"
 
 #. module: project_timesheet
 #: field:project.task.work,hr_analytic_timesheet_id:0
@@ -43,6 +43,8 @@ msgid ""
 "You cannot delete a partner which is assigned to project, but you can "
 "uncheck the active box."
 msgstr ""
+"Nie możesz usunąć partnera, który jest związany z projektem. Możesz usunąć "
+"zaznaczenie pola Aktywne."
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_task_work
@@ -55,6 +57,7 @@ msgstr "Praca w zadaniu"
 msgid ""
 "You cannot select a Analytic Account which is in Close or Cancelled state."
 msgstr ""
+"Nie możesz wybierać konta analitycznego w stanie Zamknięte lub Anulowano."
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -76,18 +79,12 @@ msgstr "Październik"
 #: view:project.project:0
 #, python-format
 msgid "Timesheets"
-msgstr ""
-
-#. module: project_timesheet
-#: view:report.timesheet.task.user:0
-#: field:report.timesheet.task.user,year:0
-msgid "Year"
-msgstr "Rok"
+msgstr "Karty czasu pracy"
 
 #. module: project_timesheet
 #: view:project.project:0
 msgid "Billable"
-msgstr ""
+msgstr "Do rozliczania"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,help:project_timesheet.action_account_analytic_overdue
@@ -100,26 +97,28 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kliknij, aby dodać umowę z klientem.\n"
+"              </p><p>\n"
+"                Znajdziesz tu umowy na projekty z  klientem\n"
+"                do śledzenie fakturowania.\n"
+"              </p>\n"
+"            "
 
 #. module: project_timesheet
 #: view:account.analytic.line:0
 msgid "Analytic Account/Project"
-msgstr ""
+msgstr "Konto analityczne/Projekt"
 
 #. module: project_timesheet
 #: view:account.analytic.line:0
 msgid "Analytic account/project"
-msgstr ""
-
-#. module: project_timesheet
-#: constraint:project.project:0
-msgid "Error! project start-date must be lower then project end-date."
-msgstr "Błąd ! data początkowa projektu musi być mniejsza od daty końcowej."
+msgstr "Konto analityczne/Projekt"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,name:project_timesheet.action_account_analytic_overdue
 msgid "Customer Projects"
-msgstr ""
+msgstr "Projekty klienta"
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:89
@@ -129,11 +128,13 @@ msgid ""
 "employee.\n"
 "Fill in the HR Settings tab of the employee form."
 msgstr ""
+"Zdefiniuj produkt i konto właściwości kategorii produktu dla pracownika.\n"
+"Wypełnij zakładkę Ustawienia w formularzu pracownika."
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "Pozycja analityczna"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
@@ -156,34 +157,39 @@ msgid "May"
 msgstr "Maj"
 
 #. module: project_timesheet
-#: constraint:project.task:0
-msgid "Error ! You cannot create recursive tasks."
-msgstr "Błąd ! Nie możesz tworzyć rekurencyjnych zadań."
+#: code:addons/project_timesheet/project_timesheet.py:93
+#, python-format
+msgid ""
+"Please define journal on the related employee.\n"
+"Fill in the timesheet tab of the employee form."
+msgstr ""
+"Zdefiniuj dziennik dla pracownika.\n"
+"Wypełnij zakładkę Karta pracy w formularzu pracownika."
 
 #. module: project_timesheet
 #: model:ir.ui.menu,name:project_timesheet.menu_hr_timesheet_sign_in
 msgid "Sign in / Sign out by project"
-msgstr ""
+msgstr "Wejście/Wyjście wg projektów"
 
 #. module: project_timesheet
 #: view:project.project:0
 msgid "Billable Project"
-msgstr ""
+msgstr "Projekt fakturowany"
 
 #. module: project_timesheet
 #: model:ir.ui.menu,name:project_timesheet.menu_invoicing_contracts
 msgid "Contracts to Renew"
-msgstr ""
+msgstr "Umowy do odnowienia"
 
 #. module: project_timesheet
 #: view:project.project:0
 msgid "Hours"
-msgstr ""
+msgstr "Godziny"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
 msgid "Group by month of date"
-msgstr ""
+msgstr "Grupuj według miesiąca"
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_task
@@ -203,11 +209,6 @@ msgid "User"
 msgstr "Użytkownik"
 
 #. module: project_timesheet
-#: constraint:project.project:0
-msgid "Error! You cannot assign escalation to the same project!"
-msgstr "Błąd! Nie możesz wiązać przedziału do tego samego projektu!"
-
-#. module: project_timesheet
 #: view:report.timesheet.task.user:0
 #: field:report.timesheet.task.user,name:0
 msgid "Date"
@@ -221,17 +222,12 @@ msgstr "Lipiec"
 #. module: project_timesheet
 #: model:process.node,note:project_timesheet.process_node_timesheettask0
 msgid "Complete Your Timesheet."
-msgstr "Uzupełnij swją kartę pracy"
+msgstr "Uzupełnij swoją kartę pracy"
 
 #. module: project_timesheet
 #: field:report.timesheet.task.user,task_hrs:0
 msgid "Task Hours"
 msgstr "Godziny zadania"
-
-#. module: project_timesheet
-#: model:process.node,note:project_timesheet.process_node_taskwork0
-msgid "Work on task"
-msgstr "Przebieg zadania"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
@@ -249,6 +245,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                Tutaj znajdziesz karty pracy i zakupy wykonane w związku z "
+"umowami, które powinny\n"
+"                być fakturowane na klienta. Jeśli chcesz rejestrować nowe "
+"prace, to stosuj menu Karty pracy..\n"
+"              </p>\n"
+"            "
 
 #. module: project_timesheet
 #: model:process.node,name:project_timesheet.process_node_timesheettask0
@@ -309,18 +312,18 @@ msgstr "Zapisz czas spędzony na zadaniu"
 #: code:addons/project_timesheet/project_timesheet.py:85
 #, python-format
 msgid "Please define employee for user \"%s\". You must create one."
-msgstr ""
+msgstr "Zdefiniuj pracownika dla użytkownika \"%s\"."
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:294
 #, python-format
 msgid "Invalid Analytic Account !"
-msgstr ""
+msgstr "Niedozwolone konto analityczne !"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -349,6 +352,8 @@ msgid ""
 "employee.\n"
 "Fill in the timesheet tab of the employee form."
 msgstr ""
+"Zdefiniuj produkt i konto właściwości kategorii produktu dla pracownika.\n"
+"Wypełnij zakładkę Karta pracy w formularzu pracownika."
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:60
@@ -357,11 +362,13 @@ msgid ""
 "<p>Timesheets on this project may be invoiced to %s, according to the terms "
 "defined in the contract.</p>"
 msgstr ""
+"<p>Praca nad tym projektem może być fakturowana na %s, zgodnie z warunkami z "
+"umowy.</p>"
 
 #. module: project_timesheet
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+#: model:process.node,note:project_timesheet.process_node_taskwork0
+msgid "Work on task"
+msgstr "Przebieg zadania"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,name:project_timesheet.action_report_timesheet_task_user
@@ -386,15 +393,10 @@ msgid "After task is completed, Create its invoice."
 msgstr "Kiedy zadanie jest wypełnione, utwórz do niego fakturę."
 
 #. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "June"
-msgstr "Czerwiec"
-
-#. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:266
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "Niedozwolona akcja!"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -403,17 +405,14 @@ msgid "Month"
 msgstr "Miesiąc"
 
 #. module: project_timesheet
-#: constraint:res.partner:0
-msgid "Error: Invalid ean code"
-msgstr ""
-
-#. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:57
 #, python-format
 msgid ""
 "<p class=\"oe_view_nocontent_create\">Record your timesheets for the project "
 "'%s'.</p>"
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">Rejestruj twoje karty pracy dla "
+"projektu '%s'.</p>"
 
 #. module: project_timesheet
 #: field:report.timesheet.task.user,timesheet_hrs:0
@@ -421,22 +420,15 @@ msgid "Timesheet Hours"
 msgstr "Godziny karty czasu pracy"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:93
-#, python-format
-msgid ""
-"Please define journal on the related employee.\n"
-"Fill in the timesheet tab of the employee form."
-msgstr ""
+#: view:report.timesheet.task.user:0
+#: field:report.timesheet.task.user,year:0
+msgid "Year"
+msgstr "Rok"
 
 #. module: project_timesheet
 #: model:process.transition,name:project_timesheet.process_transition_filltimesheet0
 msgid "Fill Timesheet"
 msgstr "Wypełnij kartę czasu pracy"
-
-#. module: project_timesheet
-#: constraint:account.analytic.line:0
-msgid "You cannot create analytic line on view account."
-msgstr ""
 
 #~ msgid "Project Timesheet"
 #~ msgstr "Karta czasu pracy projektu"
@@ -454,8 +446,17 @@ msgstr ""
 #~ "Nie zdefiniowano dziennika dla pracownika.\n"
 #~ "Wprowadź w formularzu pracownika w zakładce karta pracy."
 
+#~ msgid "Error! project start-date must be lower then project end-date."
+#~ msgstr "Błąd ! data początkowa projektu musi być mniejsza od daty końcowej."
+
 #~ msgid " Year "
 #~ msgstr " Rok "
+
+#~ msgid "Error! You cannot assign escalation to the same project!"
+#~ msgstr "Błąd! Nie możesz wiązać przedziału do tego samego projektu!"
+
+#~ msgid "Error ! You cannot create recursive tasks."
+#~ msgstr "Błąd ! Nie możesz tworzyć rekurencyjnych zadań."
 
 #~ msgid "Invoiceable"
 #~ msgstr "Do fakturowania"

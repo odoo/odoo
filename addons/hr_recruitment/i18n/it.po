@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2011-01-15 19:29+0000\n"
-"Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
+"PO-Revision-Date: 2012-12-18 23:11+0000\n"
+"Last-Translator: Sergio Corato <Unknown>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:24+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-19 05:17+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr_recruitment
 #: help:hr.applicant,active:0
@@ -131,7 +131,7 @@ msgstr "Lavoro"
 #. module: hr_recruitment
 #: field:hr.recruitment.partner.create,close:0
 msgid "Close job request"
-msgstr ""
+msgstr "Chiudi richiesta lavoro"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
@@ -229,7 +229,7 @@ msgstr ""
 #: field:hr.applicant,job_id:0
 #: field:hr.recruitment.report,job_id:0
 msgid "Applied Job"
-msgstr ""
+msgstr "Lavoro Richiesto"
 
 #. module: hr_recruitment
 #: help:hr.recruitment.stage,department_id:0
@@ -354,9 +354,8 @@ msgid "Job Description"
 msgstr "Descrizione lavoro"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: field:hr.applicant,source_id:0
-msgid "Source"
+#: model:ir.actions.server,name:hr_recruitment.actions_server_applicant_read
+msgid "HR Applicant: Mark read"
 msgstr ""
 
 #. module: hr_recruitment
@@ -372,7 +371,7 @@ msgstr ""
 #: selection:hr.recruitment.report,state:0
 #: selection:hr.recruitment.stage,state:0
 msgid "New"
-msgstr ""
+msgstr "Nuovo"
 
 #. module: hr_recruitment
 #: field:hr.applicant,email_from:0
@@ -396,7 +395,7 @@ msgstr ""
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
 msgid "Available"
-msgstr ""
+msgstr "Disponibile"
 
 #. module: hr_recruitment
 #: field:hr.applicant,title_action:0
@@ -417,11 +416,6 @@ msgid "Good"
 msgstr "Buono"
 
 #. module: hr_recruitment
-#: model:ir.actions.server,name:hr_recruitment.actions_server_applicant_read
-msgid "Mark read"
-msgstr ""
-
-#. module: hr_recruitment
 #: view:hr.applicant:0
 #: field:hr.applicant,create_date:0
 #: view:hr.recruitment.report:0
@@ -435,11 +429,16 @@ msgid "Create Employee"
 msgstr ""
 
 #. module: hr_recruitment
+#: field:hr.applicant,partner_phone:0
+msgid "Phone"
+msgstr "Telefono"
+
+#. module: hr_recruitment
 #: view:hr.applicant:0
 #: field:hr.applicant,priority:0
 #: field:hr.recruitment.report,priority:0
 msgid "Appreciation"
-msgstr ""
+msgstr "Valutazione"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
@@ -563,7 +562,7 @@ msgstr ""
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Jobs - Recruitment Form"
-msgstr ""
+msgstr "Modulo di Assunzione"
 
 #. module: hr_recruitment
 #: field:hr.applicant,probability:0
@@ -615,12 +614,12 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
 msgid "Degree of Recruitment"
-msgstr ""
+msgstr "Gradi del Processo di assunzione"
 
 #. module: hr_recruitment
 #: field:hr.applicant,write_date:0
 msgid "Update Date"
-msgstr ""
+msgstr "Aggiorna data"
 
 #. module: hr_recruitment
 #: view:hired.employee:0
@@ -704,7 +703,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_degree
 msgid "Degrees"
-msgstr ""
+msgstr "Gradi"
 
 #. module: hr_recruitment
 #: field:hr.applicant,date_closed:0
@@ -764,9 +763,9 @@ msgid "Degree"
 msgstr "Grado"
 
 #. module: hr_recruitment
-#: field:hr.applicant,partner_phone:0
-msgid "Phone"
-msgstr "Telefono"
+#: model:ir.actions.server,name:hr_recruitment.actions_server_applicant_unread
+msgid "HR Applicant: Mark unread"
+msgstr ""
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -932,6 +931,12 @@ msgid "Applicant has been <b>hired</b> and created as an employee."
 msgstr ""
 
 #. module: hr_recruitment
+#: view:hr.applicant:0
+#: field:hr.applicant,source_id:0
+msgid "Source"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
 msgid "Contract Proposed"
 msgstr "Contratto proposto"
@@ -991,7 +996,7 @@ msgstr ""
 #. module: hr_recruitment
 #: help:hr.recruitment.degree,sequence:0
 msgid "Gives the sequence order when displaying a list of degrees."
-msgstr ""
+msgstr "Fornisce l'ordinamento quando viene visualizzata una lista di gradi."
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -1199,11 +1204,6 @@ msgid "April"
 msgstr "Aprile"
 
 #. module: hr_recruitment
-#: model:ir.actions.server,name:hr_recruitment.actions_server_applicant_unread
-msgid "Mark unread"
-msgstr ""
-
-#. module: hr_recruitment
 #: view:hr.recruitment.report:0
 msgid "Pending recruitment"
 msgstr ""
@@ -1231,11 +1231,6 @@ msgstr ""
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
 msgid "In progress recruitment"
-msgstr ""
-
-#. module: hr_recruitment
-#: sql_constraint:hr.job:0
-msgid "The name of the job position must be unique per company!"
 msgstr ""
 
 #. module: hr_recruitment

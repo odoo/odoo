@@ -21,9 +21,9 @@
 
 import sys
 
-from osv import fields, osv
-import tools
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp import tools
+from openerp.tools.translate import _
 
 class project_gtd_context(osv.osv):
     _name = "project.gtd.context"

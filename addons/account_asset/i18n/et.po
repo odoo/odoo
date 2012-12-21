@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-06-08 18:43+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
+"PO-Revision-Date: 2012-12-20 19:06+0000\n"
+"Last-Translator: Ahti Hinnov <sipelgas@gmail.com>\n"
 "Language-Team: Estonian <et@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:31+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-21 04:42+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -32,17 +32,12 @@ msgstr "Lõppkuupäev"
 #. module: account_asset
 #: field:account.asset.asset,value_residual:0
 msgid "Residual Value"
-msgstr "Jääkväärtus"
+msgstr "Hetkeväärtus"
 
 #. module: account_asset
 #: field:account.asset.category,account_expense_depreciation_id:0
 msgid "Depr. Expense Account"
 msgstr ""
-
-#. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0
-msgid "Compute Asset"
-msgstr "Arvestus"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -97,7 +92,7 @@ msgstr "Muuda"
 #: view:asset.asset.report:0
 #: selection:asset.asset.report,state:0
 msgid "Running"
-msgstr "Käivitatud"
+msgstr "Käigus"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,amount:0
@@ -127,7 +122,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_list_normal
 #: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_list_normal
 msgid "Asset Categories"
-msgstr ""
+msgstr "Varade kategooriad"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -195,11 +190,6 @@ msgid "Depreciation Entry"
 msgstr ""
 
 #. module: account_asset
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
-msgstr ""
-
-#. module: account_asset
 #: view:asset.asset.report:0
 #: field:asset.asset.report,nbr:0
 msgid "# of Depreciation Lines"
@@ -208,7 +198,7 @@ msgstr ""
 #. module: account_asset
 #: field:account.asset.asset,method_period:0
 msgid "Number of Months in a Period"
-msgstr ""
+msgstr "Kuude arv perioodis"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -229,11 +219,6 @@ msgid "Reference"
 msgstr "Viide"
 
 #. module: account_asset
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr ""
-
-#. module: account_asset
 #: view:account.asset.asset:0
 msgid "Account Asset"
 msgstr ""
@@ -249,7 +234,7 @@ msgstr ""
 #: field:account.asset.history,method_period:0
 #: field:asset.modify,method_period:0
 msgid "Period Length"
-msgstr ""
+msgstr "Perioodi pikkus"
 
 #. module: account_asset
 #: selection:account.asset.asset,state:0
@@ -317,13 +302,6 @@ msgid ""
 msgstr ""
 
 #. module: account_asset
-#: constraint:account.move.line:0
-msgid ""
-"The date of your Journal Entry is not in the defined period! You should "
-"change the date or remove this constraint from the journal."
-msgstr ""
-
-#. module: account_asset
 #: help:account.asset.history,method_period:0
 msgid "Time in month between two depreciations"
 msgstr ""
@@ -338,7 +316,7 @@ msgstr "Muuda"
 #. module: account_asset
 #: field:account.asset.asset,salvage_value:0
 msgid "Salvage Value"
-msgstr ""
+msgstr "Jääkväärtus"
 
 #. module: account_asset
 #: field:account.asset.asset,category_id:0
@@ -346,7 +324,7 @@ msgstr ""
 #: field:account.invoice.line,asset_category_id:0
 #: view:asset.asset.report:0
 msgid "Asset Category"
-msgstr "Kategooria"
+msgstr "Vara kategooria"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -354,14 +332,9 @@ msgid "Assets in closed state"
 msgstr "Suletud põhivarad"
 
 #. module: account_asset
-#: constraint:account.move.line:0
-msgid "Account and Period must belong to the same company."
-msgstr ""
-
-#. module: account_asset
 #: field:account.asset.asset,parent_id:0
 msgid "Parent Asset"
-msgstr ""
+msgstr "Ülem"
 
 #. module: account_asset
 #: view:account.asset.history:0
@@ -378,14 +351,6 @@ msgstr ""
 #: model:ir.model,name:account_asset.model_account_invoice_line
 msgid "Invoice Line"
 msgstr "Arve rida"
-
-#. module: account_asset
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry forces to provide a secondary "
-"currency. You should remove the secondary currency on the account or select "
-"a multi-currency view on the journal."
-msgstr ""
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -407,17 +372,12 @@ msgstr ""
 #: field:account.asset.category,method_time:0
 #: field:account.asset.history,method_time:0
 msgid "Time Method"
-msgstr ""
+msgstr "Aja meetod"
 
 #. module: account_asset
 #: view:asset.depreciation.confirmation.wizard:0
 #: view:asset.modify:0
 msgid "or"
-msgstr ""
-
-#. module: account_asset
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on closed account."
 msgstr ""
 
 #. module: account_asset
@@ -472,7 +432,7 @@ msgstr ""
 #: field:account.asset.asset,state:0
 #: field:asset.asset.report,state:0
 msgid "Status"
-msgstr ""
+msgstr "Olek"
 
 #. module: account_asset
 #: field:account.asset.asset,partner_id:0
@@ -553,9 +513,9 @@ msgid "History"
 msgstr "Ajalugu"
 
 #. module: account_asset
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr ""
+#: view:asset.depreciation.confirmation.wizard:0
+msgid "Compute Asset"
+msgstr "Arvestus"
 
 #. module: account_asset
 #: field:asset.depreciation.confirmation.wizard,period_id:0
@@ -638,7 +598,7 @@ msgstr ""
 #. module: account_asset
 #: field:account.asset.asset,name:0
 msgid "Asset Name"
-msgstr ""
+msgstr "Vara nimi"
 
 #. module: account_asset
 #: field:account.asset.category,open_asset:0
@@ -693,17 +653,12 @@ msgstr ""
 #. module: account_asset
 #: field:account.asset.asset,purchase_value:0
 msgid "Gross Value"
-msgstr ""
+msgstr "Koguväärtus"
 
 #. module: account_asset
 #: field:account.asset.category,name:0
 msgid "Name"
 msgstr "Nimi"
-
-#. module: account_asset
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on an account of type view."
-msgstr ""
 
 #. module: account_asset
 #: help:account.asset.category,open_asset:0
@@ -760,7 +715,7 @@ msgstr ""
 #: selection:account.asset.history,method_time:0
 #: field:asset.modify,method_number:0
 msgid "Number of Depreciations"
-msgstr ""
+msgstr "Mitu amortisatsiooni"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -770,13 +725,13 @@ msgstr ""
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Confirm Asset"
-msgstr ""
+msgstr "Kinnita vara"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_tree
 #: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_tree
 msgid "Asset Hierarchy"
-msgstr ""
+msgstr "Varade hierarhia"
 
 #~ msgid "Other Information"
 #~ msgstr "Muu info"

@@ -18,9 +18,9 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-from tools.translate import _
-import decimal_precision as dp
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+import openerp.addons.decimal_precision as dp
 
 class sale_advance_payment_inv(osv.osv_memory):
     _name = "sale.advance.payment.inv"
@@ -78,7 +78,7 @@ class sale_advance_payment_inv(osv.osv_memory):
         result = []
         for sale in sale_obj.browse(cr, uid, sale_ids, context=context):
             val = inv_line_obj.product_id_change(cr, uid, [], wizard.product_id.id,
-                    uom=False, partner_id=sale.partner_id.id, fposition_id=sale.fiscal_position.id)
+                    uom_id=False, partner_id=sale.partner_id.id, fposition_id=sale.fiscal_position.id)
             res = val['value']
 
             # determine and check income account

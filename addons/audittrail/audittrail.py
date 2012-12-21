@@ -19,12 +19,12 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-from osv.osv import object_proxy
-from tools.translate import _
-import pooler
+from openerp.osv import fields, osv
+from openerp.osv.osv import object_proxy
+from openerp.tools.translate import _
+from openerp import pooler
 import time
-import tools
+from openerp import tools
 from openerp import SUPERUSER_ID
 
 class audittrail_rule(osv.osv):
@@ -83,11 +83,11 @@ class audittrail_rule(osv.osv):
                  "domain": "[('object_id','=', " + str(thisrule.object_id.id) + "), ('res_id', '=', active_id)]"
 
             }
-            action_id = obj_action.create(cr, uid, val)
+            action_id = obj_action.create(cr, SUPERUSER_ID, val)
             self.write(cr, uid, [thisrule.id], {"state": "subscribed", "action_id": action_id})
             keyword = 'client_action_relate'
             value = 'ir.actions.act_window,' + str(action_id)
-            res = obj_model.ir_set(cr, uid, 'action', keyword, 'View_log_' + thisrule.object_id.model, [thisrule.object_id.model], value, replace=True, isobject=True, xml_id=False)
+            res = obj_model.ir_set(cr, SUPERUSER_ID, 'action', keyword, 'View_log_' + thisrule.object_id.model, [thisrule.object_id.model], value, replace=True, isobject=True, xml_id=False)
             #End Loop
         return True
 
@@ -109,7 +109,7 @@ class audittrail_rule(osv.osv):
                     setattr(function[0], function[1], function[2])
             w_id = obj_action.search(cr, uid, [('name', '=', 'View Log'), ('res_model', '=', 'audittrail.log'), ('src_model', '=', thisrule.object_id.model)])
             if w_id:
-                obj_action.unlink(cr, uid, w_id)
+                obj_action.unlink(cr, SUPERUSER_ID, w_id)
                 value = "ir.actions.act_window" + ',' + str(w_id[0])
             val_id = ir_values_obj.search(cr, uid, [('model', '=', thisrule.object_id.model), ('value', '=', value)])
             if val_id:

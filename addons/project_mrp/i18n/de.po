@@ -6,20 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:54+0000\n"
-"PO-Revision-Date: 2012-01-13 18:38+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
+"PO-Revision-Date: 2012-12-18 06:32+0000\n"
 "Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:08+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
-
-#. module: project_mrp
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique per Company!"
-msgstr "Die Bestellreferenz muss je Firma eindeutig sein"
+"X-Launchpad-Export-Date: 2012-12-19 05:17+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_procuretasktask0
@@ -34,15 +29,10 @@ msgid "Product type is service, then its creates the task."
 msgstr "Für die Produktart Dienstleistungen, wird eine Aufgabe generiert."
 
 #. module: project_mrp
-#: constraint:project.task:0
-msgid "Error ! Task end-date must be greater then task start-date"
-msgstr "Fehler! Aufgaben End-Datum muss größer als Aufgaben-Beginn sein"
-
-#. module: project_mrp
 #: code:addons/project_mrp/project_procurement.py:93
 #, python-format
 msgid "Task created"
-msgstr ""
+msgstr "Aufgabe angelegt"
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_mrptask0
@@ -67,16 +57,6 @@ msgstr ""
 "erzeugt."
 
 #. module: project_mrp
-#: constraint:project.task:0
-msgid "Error ! You cannot create recursive tasks."
-msgstr "Fehler ! Sie können keine rekursiven Aufgaben definieren."
-
-#. module: project_mrp
-#: sql_constraint:product.product:0
-msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
-
-#. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_ordertask0
 msgid "Order Task"
 msgstr "Bestelle Aufgabe"
@@ -97,7 +77,7 @@ msgstr "Aufgabe"
 #. module: project_mrp
 #: view:product.product:0
 msgid "When you sell this service to a customer,"
-msgstr ""
+msgstr "Wenn Sie diese Dienstleistung verkaufen,"
 
 #. module: project_mrp
 #: field:product.product,project_id:0
@@ -118,7 +98,7 @@ msgstr "Verkaufsauftragsposition"
 #. module: project_mrp
 #: view:product.product:0
 msgid "False"
-msgstr ""
+msgstr "Ungültig"
 
 #. module: project_mrp
 #: view:product.product:0
@@ -129,19 +109,15 @@ msgid ""
 "                        in the project related to the contract of the sale "
 "order."
 msgstr ""
+"wird angelegt um Ihre Aufgaben zu verfolgen. Diese Aufgabe wird beim Projekt "
+"aufscheinen, \n"
+"das zu dem Kontrakt des Verkaufsauftrages gehört."
 
 #. module: project_mrp
 #: code:addons/project_mrp/project_procurement.py:87
 #, python-format
 msgid "Task created."
-msgstr ""
-
-#. module: project_mrp
-#: constraint:product.product:0
-msgid ""
-"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
-"\"Internal Reference\" field instead."
-msgstr ""
+msgstr "Aufgabe angelegt"
 
 #. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_ordertask0
@@ -168,7 +144,7 @@ msgstr "Verkaufsauftrag"
 #. module: project_mrp
 #: view:project.task:0
 msgid "Order Line"
-msgstr ""
+msgstr "Auftragsposition"
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_saleordertask0
@@ -180,7 +156,7 @@ msgstr ""
 #. module: project_mrp
 #: view:product.product:0
 msgid "a task"
-msgstr ""
+msgstr "eine Aufgabe"
 
 #~ msgid "If procure method is Make to order and supply method is produce"
 #~ msgstr ""
@@ -192,6 +168,9 @@ msgstr ""
 
 #~ msgid "Procure Task"
 #~ msgstr "Beschaffung Aufgabe"
+
+#~ msgid "Error ! You cannot create recursive tasks."
+#~ msgstr "Fehler ! Sie können keine rekursiven Aufgaben definieren."
 
 #~ msgid "Error: Invalid ean code"
 #~ msgstr "Fehler: Falscher EAN code"
@@ -247,3 +226,9 @@ msgstr ""
 #~ "Aufgaben \n"
 #~ "auch eine Abrechnung der geleisteten Arbeiten an den Kunden erfolgt.\n"
 #~ "\n"
+
+#~ msgid "Error ! Task end-date must be greater then task start-date"
+#~ msgstr "Fehler! Aufgaben End-Datum muss größer als Aufgaben-Beginn sein"
+
+#~ msgid "Order Reference must be unique per Company!"
+#~ msgstr "Die Bestellreferenz muss je Firma eindeutig sein"

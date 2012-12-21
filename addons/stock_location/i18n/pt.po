@@ -6,20 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:54+0000\n"
-"PO-Revision-Date: 2010-12-12 09:18+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
+"PO-Revision-Date: 2012-12-17 14:45+0000\n"
+"Last-Translator: Rui Franco (multibase.pt) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:16+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-18 05:01+0000\n"
+"X-Generator: Launchpad (build 16372)\n"
 
 #. module: stock_location
 #: help:product.pulled.flow,company_id:0
 msgid "Is used to know to which company the pickings and moves belong."
-msgstr ""
+msgstr "Usa-se para saber a que empresa as entregas e movimentos pertencem"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -68,11 +68,6 @@ msgstr "Pulled Flows"
 #: help:product.pulled.flow,location_src_id:0
 msgid "Location used by Destination Location to supply"
 msgstr "Localização usada por Local de Destino para fornecimento"
-
-#. module: stock_location
-#: constraint:stock.move:0
-msgid "You must assign a serial number for this product."
-msgstr ""
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -160,9 +155,10 @@ msgid "Pulled flows"
 msgstr "Pulled flows"
 
 #. module: stock_location
-#: sql_constraint:product.product:0
-msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
+#: field:product.pulled.flow,company_id:0
+#: field:stock.location.path,company_id:0
+msgid "Company"
+msgstr "Empresa"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_move
@@ -195,7 +191,7 @@ msgstr "Produzir para Stock"
 #: code:addons/stock_location/procurement_pull.py:118
 #, python-format
 msgid "Pulled from another location."
-msgstr ""
+msgstr "Trazido de outra localização"
 
 #. module: stock_location
 #: field:product.pulled.flow,partner_address_id:0
@@ -238,11 +234,6 @@ msgstr ""
 "localizações."
 
 #. module: stock_location
-#: constraint:stock.move:0
-msgid "You cannot move products from or to a location of the type view."
-msgstr ""
-
-#. module: stock_location
 #: selection:stock.location.path,auto:0
 msgid "Manual Operation"
 msgstr "Operação Manual"
@@ -274,11 +265,6 @@ msgstr ""
 #: help:product.pulled.flow,location_id:0
 msgid "Is the destination location that needs supplying"
 msgstr "É o local de destino que deve fornecer"
-
-#. module: stock_location
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product."
-msgstr ""
 
 #. module: stock_location
 #: field:stock.location.path,product_id:0
@@ -327,12 +313,6 @@ msgstr ""
 "via original Procurement %s (#%d)"
 
 #. module: stock_location
-#: field:product.pulled.flow,journal_id:0
-#: field:stock.location.path,journal_id:0
-msgid "Journal"
-msgstr "Diário"
-
-#. module: stock_location
 #: model:ir.model,name:stock_location.model_procurement_order
 msgid "Procurement"
 msgstr "Aquisição"
@@ -354,13 +334,6 @@ msgstr "Movimento Automático"
 #: selection:stock.location.path,picking_type:0
 msgid "Getting Goods"
 msgstr "Obter mercadorias"
-
-#. module: stock_location
-#: constraint:product.product:0
-msgid ""
-"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
-"\"Internal Reference\" field instead."
-msgstr ""
 
 #. module: stock_location
 #: view:product.product:0
@@ -396,10 +369,10 @@ msgid "Location Paths"
 msgstr "Trajetos de Localização"
 
 #. module: stock_location
-#: field:product.pulled.flow,company_id:0
-#: field:stock.location.path,company_id:0
-msgid "Company"
-msgstr "Empresa"
+#: field:product.pulled.flow,journal_id:0
+#: field:stock.location.path,journal_id:0
+msgid "Journal"
+msgstr "Diário"
 
 #. module: stock_location
 #: field:product.pulled.flow,cancel_cascade:0

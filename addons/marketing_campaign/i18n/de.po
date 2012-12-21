@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:53+0000\n"
-"PO-Revision-Date: 2012-02-08 09:32+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
+"PO-Revision-Date: 2012-12-18 08:09+0000\n"
 "Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:27+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-19 05:17+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -75,7 +75,7 @@ msgstr "Auslöser"
 #. module: marketing_campaign
 #: view:marketing.campaign:0
 msgid "Follow-Up"
-msgstr ""
+msgstr "Mahnung"
 
 #. module: marketing_campaign
 #: field:campaign.analysis,count:0
@@ -158,11 +158,12 @@ msgid ""
 "The campaign cannot be started. It does not have any starting activity. "
 "Modify campaign's activities to mark one as the starting point."
 msgstr ""
+"Die Kampagne kann nicht gestartet werden, weil sie keine Start Aktivität hat."
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,email_template_id:0
 msgid "The email to send when this activity is activated"
-msgstr ""
+msgstr "Diese E-Mail wird bei Aktivierung der Aktivität beversandt."
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
@@ -190,6 +191,11 @@ msgstr "Zurücksetzen"
 #: help:marketing.campaign,object_id:0
 msgid "Choose the resource on which you want this campaign to be run"
 msgstr "Wählen Sie die Ressource auf die sich die Kampagne beziehen soll."
+
+#. module: marketing_campaign
+#: model:ir.actions.client,name:marketing_campaign.action_client_marketing_menu
+msgid "Open Marketing Menu"
+msgstr "Öffne Marketing Menü"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,sync_last_date:0
@@ -255,7 +261,7 @@ msgstr "Erstmalige Definition des Segments"
 #. module: marketing_campaign
 #: view:res.partner:0
 msgid "False"
-msgstr ""
+msgstr "Ungültig"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -272,7 +278,7 @@ msgstr "Kampagne"
 #. module: marketing_campaign
 #: model:email.template,body_html:marketing_campaign.email_template_1
 msgid "Hello, you will receive your welcome pack via email shortly."
-msgstr ""
+msgstr "Hallo, Sie werden das Willkommenspaket in Kürze per EMail erhalten"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -287,7 +293,7 @@ msgstr "Kundensegment"
 #: code:addons/marketing_campaign/marketing_campaign.py:214
 #, python-format
 msgid "You cannot duplicate a campaign, Not supported yet."
-msgstr ""
+msgstr "Duplizieren einer Kampagne ist derzeit nicht möglich"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,type:0
@@ -352,7 +358,7 @@ msgstr "Das Intervall sollte positiv oder mindestens Null sein."
 #. module: marketing_campaign
 #: selection:marketing.campaign.activity,type:0
 msgid "Email"
-msgstr ""
+msgstr "E-Mail"
 
 #. module: marketing_campaign
 #: field:marketing.campaign,name:0
@@ -644,7 +650,7 @@ msgstr "Entwurf"
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
 msgid "Marketing Campaign Activity"
-msgstr ""
+msgstr "Marketing Kampagne Aktivität"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
@@ -661,7 +667,7 @@ msgstr "Vorschau"
 #: view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,state:0
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -889,7 +895,7 @@ msgstr "Kampagne Überleitung"
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Marketing Campaign Segment"
-msgstr ""
+msgstr "Marketing Kampagne Segment"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_segment_opened
@@ -964,12 +970,6 @@ msgstr ""
 "dieser die Kampagne bereits zuvor zugefügt wurde. Nur leicht vergleichbare "
 "Felder, wie Text, Ganzzahlen, Auswahlen oder einfache Relationen (m:1), "
 "dürfen hier verwendet werden."
-
-#. module: marketing_campaign
-#: view:campaign.analysis:0
-#: field:campaign.analysis,total_cost:0
-msgid "Cost"
-msgstr "Kosten"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:529
@@ -1086,6 +1086,7 @@ msgstr ""
 #, python-format
 msgid "The campaign cannot be started. There are no activities in it."
 msgstr ""
+"Die Kampagne kann nicht gestartet werden, da es keine Aktivitäten gibt"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,date_next_sync:0
@@ -1114,13 +1115,6 @@ msgid "Only records created after last sync"
 msgstr "Nur neu erstellte Daten"
 
 #. module: marketing_campaign
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr ""
-"Fehler! Sie können keine rekursiv assoziierten (sich selbst einschließende) "
-"Mitglieder anlegen."
-
-#. module: marketing_campaign
 #: field:marketing.campaign.activity,variable_cost:0
 msgid "Variable Cost"
 msgstr "Variable Kosten"
@@ -1128,12 +1122,13 @@ msgstr "Variable Kosten"
 #. module: marketing_campaign
 #: model:email.template,subject:marketing_campaign.email_template_1
 msgid "Welcome to the OpenERP Partner Channel!"
-msgstr ""
+msgstr "Willkommen beim OpenERP Partner Channel!"
 
 #. module: marketing_campaign
-#: constraint:res.partner:0
-msgid "Error: Invalid ean code"
-msgstr ""
+#: view:campaign.analysis:0
+#: field:campaign.analysis,total_cost:0
+msgid "Cost"
+msgstr "Kosten"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -1362,3 +1357,8 @@ msgstr "Jahr"
 #~ msgid "The campaign cannot be started: there are no activities in it."
 #~ msgstr ""
 #~ "Die Kampagne kann nicht gestartet werden, weil es keine Inhalte gibt."
+
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr ""
+#~ "Fehler! Sie können keine rekursiv assoziierten (sich selbst einschließende) "
+#~ "Mitglieder anlegen."

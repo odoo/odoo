@@ -19,13 +19,13 @@
 #
 ##############################################################################
 
-from report.render import render
-from report.interface import report_int
+from openerp.report.render import render
+from openerp.report.interface import report_int
 import time
 from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
-from report.misc import choice_colors
+from openerp.report.misc import choice_colors
 
 import StringIO
 

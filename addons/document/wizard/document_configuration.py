@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 
 class document_configuration(osv.osv_memory):
     _name='document.configuration'

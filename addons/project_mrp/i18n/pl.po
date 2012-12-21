@@ -6,20 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:54+0000\n"
-"PO-Revision-Date: 2010-08-03 09:34+0000\n"
-"Last-Translator: Mantavya Gajjar (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
+"PO-Revision-Date: 2012-12-16 12:39+0000\n"
+"Last-Translator: Grzegorz Grzelak (OpenGLOBE.pl) <grzegorz@openglobe.pl>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:08+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
-
-#. module: project_mrp
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique per Company!"
-msgstr ""
+"X-Launchpad-Export-Date: 2012-12-17 04:46+0000\n"
+"X-Generator: Launchpad (build 16372)\n"
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_procuretasktask0
@@ -32,15 +27,10 @@ msgid "Product type is service, then its creates the task."
 msgstr "Typ produktu jest 'usługa', czyli tworzone jest zadanie."
 
 #. module: project_mrp
-#: constraint:project.task:0
-msgid "Error ! Task end-date must be greater then task start-date"
-msgstr ""
-
-#. module: project_mrp
 #: code:addons/project_mrp/project_procurement.py:93
 #, python-format
 msgid "Task created"
-msgstr ""
+msgstr "Utworzone zadanie"
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_mrptask0
@@ -50,27 +40,17 @@ msgstr "Utworzono zadanie dla wykonywanej usługi"
 #. module: project_mrp
 #: field:project.task,sale_line_id:0
 msgid "Sale Order Line"
-msgstr ""
+msgstr "Pozycja zamówienia sprzedaży"
 
 #. module: project_mrp
 #: model:ir.model,name:project_mrp.model_product_product
 msgid "Product"
-msgstr ""
+msgstr "Produkt"
 
 #. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_procuretask0
 msgid "if product type is 'service' then it creates the task."
 msgstr "jeśli typ produktu jest 'usługa' to tworzone jest zadanie."
-
-#. module: project_mrp
-#: constraint:project.task:0
-msgid "Error ! You cannot create recursive tasks."
-msgstr ""
-
-#. module: project_mrp
-#: sql_constraint:product.product:0
-msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
 
 #. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_ordertask0
@@ -80,7 +60,7 @@ msgstr "Zamów zadanie"
 #. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_procuretask0
 msgid "Procurement Task"
-msgstr ""
+msgstr "Zapotrzebowanie na zadanie"
 
 #. module: project_mrp
 #: model:ir.model,name:project_mrp.model_project_task
@@ -93,28 +73,28 @@ msgstr "Zadanie"
 #. module: project_mrp
 #: view:product.product:0
 msgid "When you sell this service to a customer,"
-msgstr ""
+msgstr "Kiedy sprzedasz tę usługę klientowi"
 
 #. module: project_mrp
 #: field:product.product,project_id:0
 msgid "Project"
-msgstr ""
+msgstr "Projekt"
 
 #. module: project_mrp
 #: model:ir.model,name:project_mrp.model_procurement_order
 #: field:project.task,procurement_id:0
 msgid "Procurement"
-msgstr "Nabycie"
+msgstr "Zapotrzebowanie"
 
 #. module: project_mrp
 #: field:procurement.order,sale_line_id:0
 msgid "Sale order line"
-msgstr ""
+msgstr "Pozycja zamówienia sprzedaży"
 
 #. module: project_mrp
 #: view:product.product:0
 msgid "False"
-msgstr ""
+msgstr "Fałsz"
 
 #. module: project_mrp
 #: view:product.product:0
@@ -130,19 +110,14 @@ msgstr ""
 #: code:addons/project_mrp/project_procurement.py:87
 #, python-format
 msgid "Task created."
-msgstr ""
-
-#. module: project_mrp
-#: constraint:product.product:0
-msgid ""
-"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
-"\"Internal Reference\" field instead."
-msgstr ""
+msgstr "Zadanie utworzono"
 
 #. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_ordertask0
 msgid "If procurement method is Make to order and supply method is produce"
 msgstr ""
+"Jeśli metoda zapotrzebowania jest Na zamówienie a metoda nabycia jest "
+"Produkcja."
 
 #. module: project_mrp
 #: model:process.node,name:project_mrp.process_node_saleordertask0
@@ -157,12 +132,12 @@ msgstr "Utwórz zadanie"
 #. module: project_mrp
 #: model:ir.model,name:project_mrp.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Zamówienie sprzedaży"
 
 #. module: project_mrp
 #: view:project.task:0
 msgid "Order Line"
-msgstr ""
+msgstr "Pozycja zamówienia"
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_saleordertask0
@@ -172,7 +147,7 @@ msgstr "W przypadku sprzedaży usług na zamówienie sprzedaży"
 #. module: project_mrp
 #: view:product.product:0
 msgid "a task"
-msgstr ""
+msgstr "zadanie"
 
 #~ msgid "Project Management - MRP and Sale Integration"
 #~ msgstr "Zarządzanie projektami - Integracja ze sprzedażą i MRP"

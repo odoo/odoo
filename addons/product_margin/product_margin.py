@@ -21,7 +21,7 @@
 
 import time
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 
 
 class product_product(osv.osv):
@@ -93,8 +93,8 @@ class product_product(osv.osv):
         return res
 
     _columns = {
-        'date_from': fields.function(_product_margin, type='date', string='From Date', multi='product_margin'),
-        'date_to': fields.function(_product_margin, type='date', string='To Date', multi='product_margin'),
+        'date_from': fields.function(_product_margin, type='date', string='Margin Date From', multi='product_margin'),
+        'date_to': fields.function(_product_margin, type='date', string='Margin Date To', multi='product_margin'),
         'invoice_state': fields.function(_product_margin, type='selection', selection=[
                 ('paid','Paid'),('open_paid','Open and Paid'),('draft_open_paid','Draft, Open and Paid')
             ], string='Invoice State',multi='product_margin', readonly=True),
@@ -102,9 +102,9 @@ class product_product(osv.osv):
             help="Avg. Price in Customer Invoices."),
         'purchase_avg_price' : fields.function(_product_margin, type='float', string='Avg. Unit Price', multi='product_margin',
             help="Avg. Price in Supplier Invoices "),
-        'sale_num_invoiced' : fields.function(_product_margin, type='float', string='# Invoiced', multi='product_margin',
+        'sale_num_invoiced' : fields.function(_product_margin, type='float', string='# Invoiced in Sale', multi='product_margin',
             help="Sum of Quantity in Customer Invoices"),
-        'purchase_num_invoiced' : fields.function(_product_margin, type='float', string='# Invoiced', multi='product_margin',
+        'purchase_num_invoiced' : fields.function(_product_margin, type='float', string='# Invoiced in Purchase', multi='product_margin',
             help="Sum of Quantity in Supplier Invoices"),
         'sales_gap' : fields.function(_product_margin, type='float', string='Sales Gap', multi='product_margin',
             help="Expected Sale - Turn Over"),
@@ -122,7 +122,7 @@ class product_product(osv.osv):
             help="Turnover - Standard price"),
         'expected_margin' : fields.function(_product_margin, type='float', string='Expected Margin', multi='product_margin',
             help="Expected Sale - Normal Cost"),
-        'total_margin_rate' : fields.function(_product_margin, type='float', string='Total Margin (%)', multi='product_margin',
+        'total_margin_rate' : fields.function(_product_margin, type='float', string='Total Margin Rate(%)', multi='product_margin',
             help="Total margin * 100 / Turnover"),
         'expected_margin_rate' : fields.function(_product_margin, type='float', string='Expected Margin (%)', multi='product_margin',
             help="Expected margin * 100 / Expected Sale"),

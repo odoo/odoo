@@ -6,20 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:54+0000\n"
-"PO-Revision-Date: 2012-02-15 20:01+0000\n"
-"Last-Translator: Carlos Ch. <Unknown>\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
+"PO-Revision-Date: 2012-12-17 11:44+0000\n"
+"Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:08+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
-
-#. module: project_mrp
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique per Company!"
-msgstr "¡La referencia del pedido debe ser única por compañía!"
+"X-Launchpad-Export-Date: 2012-12-18 05:01+0000\n"
+"X-Generator: Launchpad (build 16372)\n"
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_procuretasktask0
@@ -32,16 +27,10 @@ msgid "Product type is service, then its creates the task."
 msgstr "Tipo de producto es servicio, luego se crea la tarea."
 
 #. module: project_mrp
-#: constraint:project.task:0
-msgid "Error ! Task end-date must be greater then task start-date"
-msgstr ""
-"¡ Error ! La fecha final de la tarea debe ser mayor que la fecha de inicio"
-
-#. module: project_mrp
 #: code:addons/project_mrp/project_procurement.py:93
 #, python-format
 msgid "Task created"
-msgstr ""
+msgstr "Tarea creada"
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_mrptask0
@@ -64,16 +53,6 @@ msgid "if product type is 'service' then it creates the task."
 msgstr "si tipo de producto es 'servicio' entonces se crea la tarea."
 
 #. module: project_mrp
-#: constraint:project.task:0
-msgid "Error ! You cannot create recursive tasks."
-msgstr "¡Error! No puede crear tareas recursivas."
-
-#. module: project_mrp
-#: sql_constraint:product.product:0
-msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
-
-#. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_ordertask0
 msgid "Order Task"
 msgstr "Tarea orden"
@@ -94,7 +73,7 @@ msgstr "Tarea"
 #. module: project_mrp
 #: view:product.product:0
 msgid "When you sell this service to a customer,"
-msgstr ""
+msgstr "Cuando vende este servicio al cliente,"
 
 #. module: project_mrp
 #: field:product.product,project_id:0
@@ -115,7 +94,7 @@ msgstr "Línea de pedido de venta"
 #. module: project_mrp
 #: view:product.product:0
 msgid "False"
-msgstr ""
+msgstr "Falso"
 
 #. module: project_mrp
 #: view:product.product:0
@@ -126,19 +105,14 @@ msgid ""
 "                        in the project related to the contract of the sale "
 "order."
 msgstr ""
+"será creado para seguir la tarea a realizar. Esta tarea aparecerá en el "
+"proyecto relacionado con el contrato del pedido de venta."
 
 #. module: project_mrp
 #: code:addons/project_mrp/project_procurement.py:87
 #, python-format
 msgid "Task created."
-msgstr ""
-
-#. module: project_mrp
-#: constraint:product.product:0
-msgid ""
-"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
-"\"Internal Reference\" field instead."
-msgstr ""
+msgstr "Tarea creada."
 
 #. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_ordertask0
@@ -165,7 +139,7 @@ msgstr "Pedidos de Venta"
 #. module: project_mrp
 #: view:project.task:0
 msgid "Order Line"
-msgstr ""
+msgstr "Línea del pedido"
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_saleordertask0
@@ -175,7 +149,7 @@ msgstr "En caso que venda servicios sobre pedido de venta"
 #. module: project_mrp
 #: view:product.product:0
 msgid "a task"
-msgstr ""
+msgstr "una tarea"
 
 #~ msgid "If procure method is Make to order and supply method is produce"
 #~ msgstr ""
@@ -190,6 +164,9 @@ msgstr ""
 
 #~ msgid "Procurement and Project Management integration"
 #~ msgstr "Integración de abastecimientos y gestión de proyectos"
+
+#~ msgid "Error ! You cannot create recursive tasks."
+#~ msgstr "¡Error! No puede crear tareas recursivas."
 
 #~ msgid "Error: Invalid ean code"
 #~ msgstr "Error: Código EAN no válido"
@@ -238,3 +215,10 @@ msgstr ""
 #~ "Este módulo es útil para poder facturar servicios basados en tareas creadas\n"
 #~ "automáticamente a través de pedidos de venta.\n"
 #~ "\n"
+
+#~ msgid "Error ! Task end-date must be greater then task start-date"
+#~ msgstr ""
+#~ "¡ Error ! La fecha final de la tarea debe ser mayor que la fecha de inicio"
+
+#~ msgid "Order Reference must be unique per Company!"
+#~ msgstr "¡La referencia del pedido debe ser única por compañía!"

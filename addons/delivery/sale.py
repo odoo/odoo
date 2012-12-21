@@ -20,15 +20,14 @@
 ##############################################################################
 
 import time
-from osv import fields,osv
-from tools.translate import _
+from openerp.osv import fields,osv
+from openerp.tools.translate import _
 
 # Overloaded sale_order to manage carriers :
 class sale_order(osv.osv):
     _inherit = 'sale.order'
     _columns = {
         'carrier_id':fields.many2one("delivery.carrier", "Delivery Method", help="Complete this field if you plan to invoice the shipping based on picking."),
-        'id': fields.integer('ID', readonly=True,invisible=True),
     }
 
     def onchange_partner_id(self, cr, uid, ids, part, context=None):

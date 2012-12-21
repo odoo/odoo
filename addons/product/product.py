@@ -19,14 +19,16 @@
 #
 ##############################################################################
 
-from osv import osv, fields
-import decimal_precision as dp
-
 import math
-from _common import rounding
 import re
-import tools
-from tools.translate import _
+
+from _common import rounding
+
+from openerp import tools
+from openerp.osv import osv, fields
+from openerp.tools.translate import _
+
+import openerp.addons.decimal_precision as dp
 
 def ean_checksum(eancode):
     """returns the checksum of an ean string of length 13, returns -1 if the string has the wrong length"""
@@ -323,7 +325,7 @@ class product_template(osv.osv):
             help='Coefficient to convert default Unit of Measure to Unit of Sale\n'
             ' uos = uom * coeff'),
         'mes_type': fields.selection((('fixed', 'Fixed'), ('variable', 'Variable')), 'Measure Type'),
-        'seller_ids': fields.one2many('product.supplierinfo', 'product_id', 'Partners'),
+        'seller_ids': fields.one2many('product.supplierinfo', 'product_id', 'Supplier'),
         'company_id': fields.many2one('res.company', 'Company', select=1),
     }
 
@@ -539,7 +541,7 @@ class product_product(osv.osv):
         'virtual_available': fields.function(_product_virtual_available, type='float', string='Quantity Available'),
         'incoming_qty': fields.function(_product_incoming_qty, type='float', string='Incoming'),
         'outgoing_qty': fields.function(_product_outgoing_qty, type='float', string='Outgoing'),
-        'price': fields.function(_product_price, type='float', string='Pricelist', digits_compute=dp.get_precision('Product Price')),
+        'price': fields.function(_product_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
         'lst_price' : fields.function(_product_lst_price, type='float', string='Public Price', digits_compute=dp.get_precision('Product Price')),
         'code': fields.function(_product_code, type='char', string='Internal Reference'),
         'partner_ref' : fields.function(_product_partner_ref, type='char', string='Customer ref'),
@@ -573,20 +575,11 @@ class product_product(osv.osv):
             help="Small-sized image of the product. It is automatically "\
                  "resized as a 64x64px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
-        'seller_info_id': fields.function(_calc_seller, type='many2one', relation="product.supplierinfo", multi="seller_info"),
+        'seller_info_id': fields.function(_calc_seller, type='many2one', relation="product.supplierinfo", string="Supplier Info", multi="seller_info"),
         'seller_delay': fields.function(_calc_seller, type='integer', string='Supplier Lead Time', multi="seller_info", help="This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."),
         'seller_qty': fields.function(_calc_seller, type='float', string='Supplier Quantity', multi="seller_info", help="This is minimum quantity to purchase from Main Supplier."),
         'seller_id': fields.function(_calc_seller, type='many2one', relation="res.partner", string='Main Supplier', help="Main Supplier who has highest priority in Supplier List.", multi="seller_info"),
     }
-
-    def create(self, cr, uid, vals, context=None):
-        obj_id = super(product_product, self).create(cr, uid, vals, context=context)
-        self.create_send_note(cr, uid, [obj_id], context=context)
-        return obj_id
-
-    def create_send_note(self, cr, uid, ids, context=None):
-        return self.message_post(cr, uid, ids, body=_("Product has been <b>created</b>."), context=context)
-
     def unlink(self, cr, uid, ids, context=None):
         unlink_ids = []
         unlink_product_tmpl_ids = []

@@ -19,89 +19,44 @@
 #
 ##############################################################################
 
-{
-    'name': 'Switzerland - Accounting',
-    'description':  """
+{'name': 'Switzerland - Accounting',
+ 'description':  """
 Swiss localization :
 ====================
-    - DTA generation for a lot of payment types
-    - BVR management (number generation, report.)
-    - Import account move from the bank file (like v11)
-    - Simplify the way you handle the bank statement for reconciliation
-
-You can also add ZIP and bank completion with:
-----------------------------------------------
-    - l10n_ch_zip
-    - l10n_ch_bank
- 
+**Multilang swiss STERCHI account chart and taxes**
  **Author:** Camptocamp SA
- 
+
  **Donors:** Hasa Sàrl, Open Net Sàrl and Prisme Solutions Informatique SA
 
-Module incluant la localisation Suisse de OpenERP revu et corrigé par Camptocamp.
-Cette nouvelle version comprend la gestion et l'émissionde BVR, le paiement
-électronique via DTA (pour les banques, le système postal est en développement)
-et l'import du relevé de compte depuis la banque de manière automatisée. De plus,
-nous avons intégré la définition de toutes les banques Suisses(adresse, swift et clearing).
+ **Translators:** brain-tec AG, Agile Business Group
 
-Par ailleurs, conjointement à ce module, nous proposons la complétion NPA:
---------------------------------------------------------------------------
-Vous pouvez ajouter la completion des banques et des NPA avec with:
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    - l10n_ch_zip
-    - l10n_ch_bank
- 
- **Auteur:** Camptocamp SA
- 
- **Donateurs:** Hasa Sàrl, Open Net Sàrl and Prisme Solutions Informatique SA
+**This release will introduce major changes to l10n_ch.**
 
-TODO :
-------
-    - Implement bvr import partial reconciliation
-    - Replace wizard by osv_memory when possible
-    - Add mising HELP
-    - Finish code comment
-    - Improve demo data
+Due to important refactoring needs and the Switzerland adoption of new international payment standard during 2013-2014. We have reorganised the swiss localization addons this way:
 
+- **l10n_ch**: Multilang swiss STERCHI account chart and taxes (official addon)
+- **l10n_ch_base_bank**: Technical module that introduces a new and simplified version of bank type management
+- **l10n_ch_bank**: List of swiss banks
+- **l10n_ch_zip**: List of swiss postal zip
+- **l10n_ch_dta**: Support of dta payment protocol (will be deprecated end 2014)
+- **l10n_ch_payment_slip**: Support of ESR/BVR payment slip report and reconciliation. Report refactored with easy element positioning.
+- **l10n_ch_sepa**: Alpha implementation of PostFinance SEPA/PAIN support will be completed during 2013/2014
+
+The modules will be soon available on OpenERP swiss localization on launchpad:
+https://launchpad.net/openerp-swiss-localization
 """,
-    'version': '6.1',
-    'author': 'Camptocamp',
-    'category': 'Localization/Account Charts',
-    'website': 'http://www.camptocamp.com',
-    'depends': ['account_cancel',
-                 'base_iban',
-                 'account_payment',
-                 'account_voucher',
-                 'report_webkit',
-                 'l10n_multilang'
-    ],
-    'data': ['dta_data.xml',
-             'journal_data.xml',
-             #FR sterchi chart data
-             'sterchi_chart/account.xml',
-             'sterchi_chart/vat.xml',
-             'sterchi_chart/vat2011.xml',
-             'sterchi_chart/fiscal_position.xml',
-             'wizard.xml',
-             'wizard/bvr_import_view.xml',
-             'wizard/create_dta_view.xml',
-             'company_view.xml',
-             'account_invoice.xml',
-             'bank_view.xml',
-             'security/ir.model.access.csv',
-             'report/report_webkit_html_view.xml'
-    ],
-    'demo': ['demo/demo.xml',
-             'demo/dta_demo.xml'
-    ],
-    'test': ['test/l10n_ch_report.yml',
-             'test/l10n_ch_dta.yml',
-          #TODO: uncomment the 2 following tests once they are fixed
-          #'test/l10n_ch_v11.yml',
-          #'test/l10n_ch_v11_part.yml'
-    ],
-    'auto_install': False,
-    'installable': True,
-    'images': ['images/config_chart_l10n_ch.jpeg','images/l10n_ch_chart.jpeg']
+ 'version': '7.0',
+ 'author': 'Camptocamp',
+ 'category': 'Localization/Account Charts',
+ 'website': 'http://www.camptocamp.com',
+ 'depends': ['account', 'l10n_multilang'],
+ 'data': ['sterchi_chart/account.xml',
+          'sterchi_chart/vat2011.xml',
+          'sterchi_chart/fiscal_position.xml' ],
+ 'demo': [],
+ 'test': [],
+ 'auto_install': False,
+ 'installable': True,
+ 'images': ['images/config_chart_l10n_ch.jpeg','images/l10n_ch_chart.jpeg']
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

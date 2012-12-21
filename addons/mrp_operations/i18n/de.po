@@ -6,15 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:53+0000\n"
-"PO-Revision-Date: 2012-02-16 09:14+0000\n"
-"Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
+"PO-Revision-Date: 2012-12-17 08:59+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:13+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-18 05:01+0000\n"
+"X-Generator: Launchpad (build 16372)\n"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
@@ -46,6 +47,7 @@ msgstr "mrp_operations.operation.code"
 msgid ""
 "Work order has been <b>cancelled</b> for production order <em>%s</em>."
 msgstr ""
+"Arbeitsauftrag wurde <b>storniert</b> beim Fertigungsauftrag <em>%s</em>."
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -61,7 +63,7 @@ msgstr "Information von der Arbeitsplan Definition"
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,uom:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "ME"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -100,6 +102,8 @@ msgstr "Setze auf Entwurf"
 #, python-format
 msgid "Work order is <b>pending</b> for production order <em>%s</em>."
 msgstr ""
+"Arbeitsauftrag ist zur <b>Wiedervorlage</b> geändert worden für den "
+"Fertigungauftrag <em>%s</em>."
 
 #. module: mrp_operations
 #: field:mrp.production,allow_reorder:0
@@ -186,7 +190,7 @@ msgstr "Lieferung"
 #: code:addons/mrp_operations/mrp_operations.py:524
 #, python-format
 msgid "No operation to cancel."
-msgstr ""
+msgstr "Es gibt keinen Auftrag, der storniert werden könnte."
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:517
@@ -213,7 +217,7 @@ msgstr "Entwurf"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Production Workcenter"
-msgstr ""
+msgstr "Arbeitsplatz"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_finished:0
@@ -250,7 +254,7 @@ msgstr "Statistik Arbeitsaufträge"
 #. module: mrp_operations
 #: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_action_planning
 msgid "Work Orders By Resource"
-msgstr ""
+msgstr "Arbeitsaufträge"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -324,6 +328,20 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Klicken Sie, um neuen Arbeitsauftrag zu erstellen.\n"
+"          </p><p>\n"
+"            Arbeitsaufträge repräsentieren die Auflistung der "
+"durchzuführenden Vorgänge für einen\n"
+"            Fertigungsauftrag. Sobald Sie den ersten Arbeitsauftrag zu einem "
+"Fertigungsauftrag starten,\n"
+"            wird dieser automatisch mit gestartet. Sobald Sie den letzten "
+"Arbeitsvorgang beenden,\n"
+"            wird ebenso der Fertigungsauftrag abgeschlossen sowie die "
+"produzierte Menge als Bestand\n"
+"            gebucht.\n"
+"          </p>\n"
+"        "
 
 #. module: mrp_operations
 #: help:mrp.production.workcenter.line,delay:0
@@ -356,6 +374,7 @@ msgstr "Dezember"
 #, python-format
 msgid "Work order has been <b>done</b> for production order <em>%s</em>."
 msgstr ""
+"Arbeitsauftrag wurde <b>erledigt</b> für den Fertigungsauftrag <em<%s</em>."
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -379,11 +398,6 @@ msgid "Work Order Report"
 msgstr "Bericht Arbeitsauftrag"
 
 #. module: mrp_operations
-#: constraint:mrp.production:0
-msgid "Order quantity cannot be negative or zero!"
-msgstr "Die Bestellmenge kann nicht negativ oder 0 sein"
-
-#. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_start:0
 #: field:mrp_operations.operation,date_start:0
 msgid "Start Date"
@@ -397,7 +411,7 @@ msgstr "Erwartet Material"
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,production_state:0
 msgid "Production Status"
-msgstr ""
+msgstr "Status der Produktion"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,state:0
@@ -473,6 +487,8 @@ msgid ""
 "Operation has already started! You can either Pause/Finish/Cancel the "
 "operation."
 msgstr ""
+"Der Arbeitsauftrag wurde bereits gestartet! Sie können jetzt entweder "
+"unterbrechen / erledigen / stornieren."
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -532,11 +548,6 @@ msgid "November"
 msgstr "November"
 
 #. module: mrp_operations
-#: constraint:stock.move:0
-msgid "You must assign a serial number for this product."
-msgstr ""
-
-#. module: mrp_operations
 #: view:mrp.workorder:0
 msgid "Search"
 msgstr "Suchen"
@@ -550,11 +561,6 @@ msgstr "Oktober"
 #: selection:mrp.workorder,month:0
 msgid "January"
 msgstr "Januar"
-
-#. module: mrp_operations
-#: constraint:stock.move:0
-msgid "You cannot move products from or to a location of the type view."
-msgstr ""
 
 #. module: mrp_operations
 #: view:mrp.production:0
@@ -576,11 +582,6 @@ msgstr "Arbeitsauftrag wurde noch nicht gestartet !"
 #: model:process.node,note:mrp_operations.process_node_productionorder0
 msgid "Information from the production order."
 msgstr "Information zum Fertigungsauftrag."
-
-#. module: mrp_operations
-#: sql_constraint:mrp.production:0
-msgid "Reference must be unique per Company!"
-msgstr "Die Referenz muss je Firma eindeutig sein"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:497
@@ -652,12 +653,21 @@ msgid ""
 "* When order is completely processed that time it is set in 'Finished' "
 "status."
 msgstr ""
+"* Wenn ein Arbeitsauftrag erstellt wurde, befindet er sich zunächst im "
+"Status 'Entwurf'.\n"
+"* Wenn ein Anwender den Arbeitsauftrag dann started, ist der Auftrag dadurch "
+"'in Bearbeitung'.\n"
+"* Ein Auftrag in Bearbeitung kann durch Unterbrechung oder Anpassung in den "
+"'Wiedervorlage\" Status versetzt werden.\n"
+"* Durch Abbrechen des Arbeitsauftrags kann er 'Storniert' werden.\n"
+"* Wenn der Auftrag fertig gestellt wird, kann er dadurch 'Erledigt' werden."
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:214
 #, python-format
 msgid "Work order has been <b>created</b> for production order <em>%s</em>."
 msgstr ""
+"Arbeitsauftrag wurde <b>erstellt</b> für den Fertigungsauftrag <em>%s</em>."
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_startoperation0
@@ -685,6 +695,20 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Klicken Sie zur Erstellung eines neuen Arbeitsauftrags.\n"
+"          </p><p>\n"
+"            Zur Herstellung oder zur Montage von Produkten, unter Verwendung "
+"von Komponenten\n"
+"            oder Halbfertigprodukten sind oft verschiedene Arbeitsvorgänge "
+"zu verrichten. Diese\n"
+"            Vorgänge werden häufig als Arbeitsaufträge bezeichnet. Diese "
+"verschiedenen Vorgänge\n"
+"            haben diverse Auswirkungen auf Herstellkosten und "
+"Ressourcenplanung in Abhängigkeit von\n"
+"            der Auslastungssituation.\n"
+"          </p>\n"
+"        "
 
 #. module: mrp_operations
 #: model:ir.actions.report.xml,name:mrp_operations.report_wc_barcode
@@ -739,11 +763,6 @@ msgstr "Geplantes Datum"
 #: field:mrp.workorder,product_id:0
 msgid "Product"
 msgstr "Produkt"
-
-#. module: mrp_operations
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product."
-msgstr ""
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -823,6 +842,7 @@ msgstr "Auftragspositionen"
 #, python-format
 msgid "Work order has been <b>started</b> for production order <em>%s</em>."
 msgstr ""
+"Arbeitsauftrag wurde <b>gestartet</b> für den Fertigungsauftrag <em>%s</em>."
 
 #. module: mrp_operations
 #: view:mrp.production:0
@@ -1157,8 +1177,14 @@ msgstr "Dauer"
 #~ msgid "Work orders during last month"
 #~ msgstr "Arbeitsauftäge letztes Monat"
 
+#~ msgid "Reference must be unique per Company!"
+#~ msgstr "Die Referenz muss je Firma eindeutig sein"
+
 #~ msgid "Work orders made during current month"
 #~ msgstr "Arbeitsaufträge laufender Monat"
+
+#~ msgid "Order quantity cannot be negative or zero!"
+#~ msgstr "Die Bestellmenge kann nicht negativ oder 0 sein"
 
 #~ msgid ""
 #~ "* When a work order is created it is set in 'Draft' state.\n"

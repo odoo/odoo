@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-05-22 12:19+0000\n"
-"Last-Translator: Quentin THEURET <Unknown>\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
+"PO-Revision-Date: 2012-12-03 20:30+0000\n"
+"Last-Translator: Frederic Clementi - Camptocamp.com "
+"<frederic.clementi@camptocamp.com>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:31+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:53+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -38,11 +39,6 @@ msgstr "Valeur résiduelle"
 #: field:account.asset.category,account_expense_depreciation_id:0
 msgid "Depr. Expense Account"
 msgstr "Compte de dépréciation (charge)"
-
-#. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0
-msgid "Compute Asset"
-msgstr "Calcul des amortissements"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -160,7 +156,7 @@ msgstr "Date de dépréciation"
 #. module: account_asset
 #: constraint:account.asset.asset:0
 msgid "Error ! You cannot create recursive assets."
-msgstr ""
+msgstr "erreur ! Vous ne pouvez pas créer des immobilisations récursivement"
 
 #. module: account_asset
 #: field:asset.asset.report,posted_value:0
@@ -197,11 +193,6 @@ msgid "Depreciation Entry"
 msgstr "Ecriture de dépreciation"
 
 #. module: account_asset
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
-msgstr "Valeur erronée au crédit ou au débit de la pièce comptable !"
-
-#. module: account_asset
 #: view:asset.asset.report:0
 #: field:asset.asset.report,nbr:0
 msgid "# of Depreciation Lines"
@@ -210,7 +201,7 @@ msgstr "Nb. de lignes de dépréciation"
 #. module: account_asset
 #: field:account.asset.asset,method_period:0
 msgid "Number of Months in a Period"
-msgstr ""
+msgstr "Nombre de mois dans une période"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -229,11 +220,6 @@ msgstr "Date de fin"
 #: field:account.asset.asset,code:0
 msgid "Reference"
 msgstr "Référence"
-
-#. module: account_asset
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr "Structure de communication BBA incorrecte !"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -327,15 +313,6 @@ msgstr ""
 "des amortissements."
 
 #. module: account_asset
-#: constraint:account.move.line:0
-msgid ""
-"The date of your Journal Entry is not in the defined period! You should "
-"change the date or remove this constraint from the journal."
-msgstr ""
-"La date de votre écriture ne correspond pas à la période définie ! Vous "
-"devez modifier la date ou supprimer la contrainte de date du journal."
-
-#. module: account_asset
 #: help:account.asset.history,method_period:0
 msgid "Time in month between two depreciations"
 msgstr "Temps en mois entre deux dépréciations"
@@ -366,11 +343,6 @@ msgid "Assets in closed state"
 msgstr "Amortissements terminés"
 
 #. module: account_asset
-#: constraint:account.move.line:0
-msgid "Account and Period must belong to the same company."
-msgstr ""
-
-#. module: account_asset
 #: field:account.asset.asset,parent_id:0
 msgid "Parent Asset"
 msgstr "Immobilisation parente"
@@ -390,17 +362,6 @@ msgstr "Recherche une catérogie d'immobilisation"
 #: model:ir.model,name:account_asset.model_account_invoice_line
 msgid "Invoice Line"
 msgstr "Lignes de facture"
-
-#. module: account_asset
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry forces to provide a secondary "
-"currency. You should remove the secondary currency on the account or select "
-"a multi-currency view on the journal."
-msgstr ""
-"Le compte sélectionné dans votre ligne d'écriture requiert une deuxième "
-"devise. Vous devez soit supprimer la deuxième devise sur le compte, soit "
-"sélectionner une vue multi-devise sur le journal."
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -428,12 +389,7 @@ msgstr "Méthode de temps"
 #: view:asset.depreciation.confirmation.wizard:0
 #: view:asset.modify:0
 msgid "or"
-msgstr ""
-
-#. module: account_asset
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on closed account."
-msgstr ""
+msgstr "ou"
 
 #. module: account_asset
 #: field:account.asset.asset,note:0
@@ -493,12 +449,18 @@ msgid ""
 "You can manually close an asset when the depreciation is over. If the last "
 "line of depreciation is posted, the asset automatically goes in that status."
 msgstr ""
+"Lorsqu'une immobilisation est créée, le statut est 'Brouillon'.\n"
+"A la confirmation, le statut passe à 'En cours' et les amortissement peuvent "
+"être passé en comptabilité.\n"
+"Vous pouvez cloturer manuellement une immobilisation.. \n"
+"Lors de la comptabilisation du dernier amortissement, le statut passe "
+"automatiquement à ''Terminé'"
 
 #. module: account_asset
 #: field:account.asset.asset,state:0
 #: field:asset.asset.report,state:0
 msgid "Status"
-msgstr ""
+msgstr "Statut"
 
 #. module: account_asset
 #: field:account.asset.asset,partner_id:0
@@ -545,7 +507,7 @@ msgstr "Calculer"
 #. module: account_asset
 #: view:account.asset.history:0
 msgid "Asset History"
-msgstr ""
+msgstr "Historique de l'immobilisation"
 
 #. module: account_asset
 #: field:asset.asset.report,name:0
@@ -579,9 +541,9 @@ msgid "History"
 msgstr "Hstorique"
 
 #. module: account_asset
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr "Le numéro de facture doit être unique par société !"
+#: view:asset.depreciation.confirmation.wizard:0
+msgid "Compute Asset"
+msgstr "Calcul des amortissements"
 
 #. module: account_asset
 #: field:asset.depreciation.confirmation.wizard,period_id:0
@@ -666,7 +628,7 @@ msgstr "Montant de l'amortissement"
 #. module: account_asset
 #: field:account.asset.asset,name:0
 msgid "Asset Name"
-msgstr ""
+msgstr "Nom de l'immobilisation"
 
 #. module: account_asset
 #: field:account.asset.category,open_asset:0
@@ -717,21 +679,21 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p>\n"
+"            Ce rapport donne un vue d'ensemble de tout les amortissements. \n"
+"            Vous pouvez aussi afiner votre recherche selon vos besoins;\n"
+"          </p>\n"
+"        "
 
 #. module: account_asset
 #: field:account.asset.asset,purchase_value:0
 msgid "Gross Value"
-msgstr ""
+msgstr "Valeur brute"
 
 #. module: account_asset
 #: field:account.asset.category,name:0
 msgid "Name"
 msgstr "Nom"
-
-#. module: account_asset
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on an account of type view."
-msgstr ""
 
 #. module: account_asset
 #: help:account.asset.category,open_asset:0
@@ -998,14 +960,39 @@ msgstr "Hiérarchie des immobilisations"
 #~ msgid "Other Information"
 #~ msgstr "Autre information"
 
+#~ msgid "Invalid BBA Structured Communication !"
+#~ msgstr "Structure de communication BBA incorrecte !"
+
+#~ msgid "Wrong credit or debit value in accounting entry !"
+#~ msgstr "Valeur erronée au crédit ou au débit de la pièce comptable !"
+
 #~ msgid "Month"
 #~ msgstr "Mois"
 
 #~ msgid "You can not create journal items on an account of type view."
 #~ msgstr "Vous ne pouvez pas passer d'écriture sur un compte de type 'vue'"
 
+#~ msgid ""
+#~ "The date of your Journal Entry is not in the defined period! You should "
+#~ "change the date or remove this constraint from the journal."
+#~ msgstr ""
+#~ "La date de votre écriture ne correspond pas à la période définie ! Vous "
+#~ "devez modifier la date ou supprimer la contrainte de date du journal."
+
 #~ msgid "Company must be the same for its related account and period."
 #~ msgstr "La société doit être la même pour son compte et la période liée."
+
+#~ msgid ""
+#~ "The selected account of your Journal Entry forces to provide a secondary "
+#~ "currency. You should remove the secondary currency on the account or select "
+#~ "a multi-currency view on the journal."
+#~ msgstr ""
+#~ "Le compte sélectionné dans votre ligne d'écriture requiert une deuxième "
+#~ "devise. Vous devez soit supprimer la deuxième devise sur le compte, soit "
+#~ "sélectionner une vue multi-devise sur le journal."
+
+#~ msgid "Invoice Number must be unique per Company!"
+#~ msgstr "Le numéro de facture doit être unique par société !"
 
 #~ msgid "Month-1"
 #~ msgstr "Mois -1"

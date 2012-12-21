@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-09-11 18:35+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
+"PO-Revision-Date: 2012-12-20 11:08+0000\n"
+"Last-Translator: Fábio Martinelli - http://zupy.com.br "
+"<webmaster@guaru.net>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:32+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-21 04:42+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -59,12 +60,7 @@ msgstr "Cancelar linhas de instrução selecionadas"
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line,val_date:0
 msgid "Value Date"
-msgstr ""
-
-#. module: account_bank_statement_extensions
-#: constraint:res.partner.bank:0
-msgid "The RIB and/or IBAN is not valid"
-msgstr "A RIB e/ ou IBAN não é válido."
+msgstr "Data do Valor"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -109,7 +105,7 @@ msgstr "Informações de Pagamento em Lote"
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line,state:0
 msgid "Status"
-msgstr ""
+msgstr "Situação"
 
 #. module: account_bank_statement_extensions
 #: code:addons/account_bank_statement_extensions/account_bank_statement.py:129
@@ -118,11 +114,13 @@ msgid ""
 "Delete operation not allowed.             Please go to the associated bank "
 "statement in order to delete and/or modify bank statement line."
 msgstr ""
+"Operação Excluir não permitida. Por favor acesse o demonstrativo bancário "
+"relacionado para excluir e ou modificar uma linha do lançamento bancário."
 
 #. module: account_bank_statement_extensions
 #: view:confirm.statement.line:0
 msgid "or"
-msgstr ""
+msgstr "ou"
 
 #. module: account_bank_statement_extensions
 #: view:confirm.statement.line:0
@@ -197,17 +195,6 @@ msgid "Confirmed lines cannot be changed anymore."
 msgstr "Linhas confirmadas não podem ser alteradas."
 
 #. module: account_bank_statement_extensions
-#: constraint:res.partner.bank:0
-msgid ""
-"\n"
-"Please define BIC/Swift code on bank for bank type IBAN Account to make "
-"valid payments"
-msgstr ""
-"\n"
-"Por favor defina o BIC/Swift code no Banco para o tipo de conta IBAN para "
-"fazer pagamentos válidos"
-
-#. module: account_bank_statement_extensions
 #: view:cancel.statement.line:0
 msgid "Are you sure you want to cancel the selected Bank Statement lines ?"
 msgstr ""
@@ -237,7 +224,7 @@ msgstr "Manual"
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
 msgid "Bank Transaction"
-msgstr ""
+msgstr "Transação Bancária"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -305,13 +292,6 @@ msgid "Code"
 msgstr "Código"
 
 #. module: account_bank_statement_extensions
-#: constraint:account.bank.statement.line:0
-msgid ""
-"The amount of the voucher must be the same amount as the one on the "
-"statement line."
-msgstr ""
-
-#. module: account_bank_statement_extensions
 #: field:account.bank.statement.line,counterparty_name:0
 msgid "Counterparty Name"
 msgstr "Nome da Contrapartida"
@@ -325,11 +305,6 @@ msgstr "Comunicação"
 #: model:ir.model,name:account_bank_statement_extensions.model_res_partner_bank
 msgid "Bank Accounts"
 msgstr "Contas Bancárias"
-
-#. module: account_bank_statement_extensions
-#: constraint:account.bank.statement:0
-msgid "The journal and period chosen have to belong to the same company."
-msgstr "O diário e o período escolhido tem que pertencer à mesma empresa."
 
 #. module: account_bank_statement_extensions
 #: model:ir.model,name:account_bank_statement_extensions.model_account_bank_statement
@@ -357,7 +332,7 @@ msgstr "Linhas do Demonstrativo Bancário"
 #: code:addons/account_bank_statement_extensions/account_bank_statement.py:129
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Aviso!"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line.global:0
@@ -384,6 +359,9 @@ msgstr "Valor Total"
 msgid "Globalisation ID"
 msgstr "ID Globalização"
 
+#~ msgid "The RIB and/or IBAN is not valid"
+#~ msgstr "A RIB e/ ou IBAN não é válido."
+
 #~ msgid "State"
 #~ msgstr "Situação"
 
@@ -403,10 +381,22 @@ msgstr "ID Globalização"
 #~ msgstr "Confirmar as linhas do demonstrativo."
 
 #~ msgid ""
+#~ "\n"
+#~ "Please define BIC/Swift code on bank for bank type IBAN Account to make "
+#~ "valid payments"
+#~ msgstr ""
+#~ "\n"
+#~ "Por favor defina o BIC/Swift code no Banco para o tipo de conta IBAN para "
+#~ "fazer pagamentos válidos"
+
+#~ msgid ""
 #~ "The amount of the voucher must be the same amount as the one on the "
 #~ "statement line"
 #~ msgstr ""
 #~ "O valor do recibo deve ser o mesmo valor da linha equivalente no extrato"
+
+#~ msgid "The journal and period chosen have to belong to the same company."
+#~ msgstr "O diário e o período escolhido tem que pertencer à mesma empresa."
 
 #~ msgid "Valuta Date"
 #~ msgstr "Data do Crédito"

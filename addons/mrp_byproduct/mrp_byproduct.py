@@ -19,10 +19,10 @@
 #
 ##############################################################################
 
-from osv import fields
-from osv import osv
-import decimal_precision as dp
-from tools.translate import _
+from openerp.osv import fields
+from openerp.osv import osv
+import openerp.addons.decimal_precision as dp
+from openerp.tools.translate import _
 
 class mrp_subproduct(osv.osv):
     _name = 'mrp.subproduct'
@@ -39,6 +39,7 @@ class mrp_subproduct(osv.osv):
     }
     _defaults={
         'subproduct_type': 'variable',
+        'product_qty': lambda *a: 1.0,
     }
 
     def onchange_product_id(self, cr, uid, ids, product_id, context=None):
@@ -86,18 +87,23 @@ class mrp_production(osv.osv):
         @return: Newly generated picking Id.
         """
         picking_id = super(mrp_production,self).action_confirm(cr, uid, ids)
+        product_uom_obj = self.pool.get('product.uom')
         for production in self.browse(cr, uid, ids):
-            source = production.product_id.product_tmpl_id.property_stock_production.id
+            source = production.product_id.property_stock_production.id
             if not production.bom_id:
                 continue
             for sub_product in production.bom_id.sub_products:
+                product_uom_factor = product_uom_obj._compute_qty(cr, uid, production.product_uom.id, production.product_qty, production.bom_id.product_uom.id)
                 qty1 = sub_product.product_qty
                 qty2 = production.product_uos and production.product_uos_qty or False
+                product_uos_factor = 0.0
+                if qty2 and production.bom_id.product_uos.id:
+                    product_uos_factor = product_uom_obj._compute_qty(cr, uid, production.product_uos.id, production.product_uos_qty, production.bom_id.product_uos.id)
                 if sub_product.subproduct_type == 'variable':
                     if production.product_qty:
-                        qty1 *= production.product_qty / (production.bom_id.product_qty or 1.0)
+                        qty1 *= product_uom_factor / (production.bom_id.product_qty or 1.0)
                     if production.product_uos_qty:
-                        qty2 *= production.product_uos_qty / (production.bom_id.product_uos_qty or 1.0)
+                        qty2 *= product_uos_factor / (production.bom_id.product_uos_qty or 1.0)
                 data = {
                     'name': 'PROD:'+production.name,
                     'date': production.date_planned,

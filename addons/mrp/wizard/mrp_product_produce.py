@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-import decimal_precision as dp
+from openerp.osv import fields, osv
+import openerp.addons.decimal_precision as dp
 
 class mrp_product_produce(osv.osv_memory):
     _name = "mrp.product.produce"

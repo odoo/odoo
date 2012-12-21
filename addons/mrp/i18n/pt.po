@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:51+0000\n"
-"PO-Revision-Date: 2011-12-06 10:51+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
+"PO-Revision-Date: 2012-12-14 10:20+0000\n"
+"Last-Translator: Rui Franco (multibase.pt) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 05:41+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-15 05:04+0000\n"
+"X-Generator: Launchpad (build 16372)\n"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -116,7 +116,7 @@ msgstr ""
 #. module: mrp
 #: view:product.product:0
 msgid "False"
-msgstr ""
+msgstr "Falso"
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -204,9 +204,9 @@ msgid "For purchased material"
 msgstr "Para materiais comprados"
 
 #. module: mrp
-#: view:mrp.production:0
-msgid "Total Qty"
-msgstr "Total de Quantidade"
+#: field:mrp.config.settings,module_mrp_operations:0
+msgid "Allow detailed planning of work order"
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:648
@@ -313,11 +313,6 @@ msgid "Manage Routings"
 msgstr ""
 
 #. module: mrp
-#: sql_constraint:product.product:0
-msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
-
-#. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce
 msgid "Product Produce"
 msgstr "Produzir Artigo"
@@ -326,11 +321,6 @@ msgstr "Produzir Artigo"
 #: constraint:mrp.bom:0
 msgid "Error ! You cannot create recursive BoM."
 msgstr "Erro ! Não pode criar um BoM recursivo."
-
-#. module: mrp
-#: constraint:stock.move:0
-msgid "You must assign a serial number for this product."
-msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing_workcenter
@@ -362,7 +352,6 @@ msgstr ""
 
 #. module: mrp
 #: sql_constraint:mrp.production:0
-#: sql_constraint:stock.picking:0
 msgid "Reference must be unique per Company!"
 msgstr "A referência deve ser única por empresa!"
 
@@ -513,11 +502,6 @@ msgid "Product type is service"
 msgstr "O tipo de artigo é  um serviço"
 
 #. module: mrp
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr "O nome da empresa deve ser único!"
-
-#. module: mrp
 #: help:mrp.workcenter,costs_cycle:0
 msgid "Specify Cost of Work Center per cycle."
 msgstr "Especifique os Custos do Centro de Trabalho por ciclo."
@@ -545,7 +529,7 @@ msgstr "Pedido de cotação"
 #: view:mrp.product_price:0
 #: view:mrp.workcenter.load:0
 msgid "or"
-msgstr ""
+msgstr "ou"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_billofmaterialrouting0
@@ -565,7 +549,7 @@ msgstr "Artigos para produzir"
 #. module: mrp
 #: view:mrp.config.settings:0
 msgid "Apply"
-msgstr ""
+msgstr "Aplicar"
 
 #. module: mrp
 #: view:mrp.routing:0
@@ -690,13 +674,6 @@ msgstr "Ficha técnica de componentes do material"
 #: model:ir.model,name:mrp.model_stock_move
 msgid "Stock Move"
 msgstr "Movimento de Stock"
-
-#. module: mrp
-#: constraint:product.product:0
-msgid ""
-"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
-"\"Internal Reference\" field instead."
-msgstr ""
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_planning
@@ -964,7 +941,7 @@ msgstr "Pronto para produzir"
 #: field:mrp.production,message_is_follower:0
 #: field:mrp.production.workcenter.line,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "É um seguidor"
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -1120,11 +1097,6 @@ msgid "BOM Name"
 msgstr "BoM Nome"
 
 #. module: mrp
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product."
-msgstr ""
-
-#. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_product_manufacturing_open
 #: model:ir.actions.act_window,name:mrp.mrp_production_action
 #: model:ir.actions.act_window,name:mrp.mrp_production_action_planning
@@ -1132,6 +1104,11 @@ msgstr ""
 #: view:mrp.production:0
 msgid "Manufacturing Orders"
 msgstr "Ordens de produção"
+
+#. module: mrp
+#: selection:mrp.production,state:0
+msgid "Awaiting Raw Materials"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,position:0
@@ -1168,7 +1145,7 @@ msgstr "Modo"
 #: help:mrp.production,message_ids:0
 #: help:mrp.production.workcenter.line,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Histórico de mensagens e comunicação"
 
 #. module: mrp
 #: field:mrp.workcenter.load,measure_unit:0
@@ -1208,7 +1185,7 @@ msgstr "Ordens de fabrico em Progresso"
 #. module: mrp
 #: model:ir.actions.client,name:mrp.action_client_mrp_menu
 msgid "Open MRP Menu"
-msgstr ""
+msgstr "Abrir o menu de MRP"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action4
@@ -1282,7 +1259,7 @@ msgstr "Por semana"
 #: field:mrp.production,message_unread:0
 #: field:mrp.production.workcenter.line,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Mensagens por ler"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_stockmts0
@@ -1328,7 +1305,7 @@ msgstr "Selecionar unidade de tempo"
 #: model:ir.ui.menu,name:mrp.menu_mrp_product_form
 #: view:mrp.config.settings:0
 msgid "Products"
-msgstr ""
+msgstr "Produtos"
 
 #. module: mrp
 #: view:report.workcenter.load:0
@@ -1356,7 +1333,7 @@ msgstr ""
 #: code:addons/mrp/mrp.py:521
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "Ação inválida!"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_producttostockrules0
@@ -1402,7 +1379,7 @@ msgstr ""
 #: code:addons/mrp/mrp.py:374
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (cópia)"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_product_line
@@ -1514,7 +1491,7 @@ msgstr "Conta horária"
 #: field:mrp.production,product_uom:0
 #: field:mrp.production.product.line,product_uom:0
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Unidade de medida do produto"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1625,7 +1602,7 @@ msgstr "Número SO"
 #: code:addons/mrp/mrp.py:521
 #, python-format
 msgid "Cannot delete a manufacturing order in state '%s'."
-msgstr ""
+msgstr "Não se pode apagar uma ordem deprodução com o estado '%s'."
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -1783,7 +1760,7 @@ msgstr "Aprovar"
 #. module: mrp
 #: view:mrp.config.settings:0
 msgid "Order"
-msgstr ""
+msgstr "Ordem"
 
 #. module: mrp
 #: view:mrp.property.group:0
@@ -1907,7 +1884,7 @@ msgstr "Empresa"
 #. module: mrp
 #: view:mrp.bom:0
 msgid "Default Unit of Measure"
-msgstr ""
+msgstr "Unidade de medida padrão"
 
 #. module: mrp
 #: field:mrp.workcenter,time_cycle:0
@@ -1933,7 +1910,7 @@ msgstr "Regra de aquisição automática"
 #: field:mrp.production,message_ids:0
 #: field:mrp.production.workcenter.line,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Mensagens"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1946,7 +1923,7 @@ msgstr "Processar dados"
 #: code:addons/mrp/wizard/change_production_qty.py:88
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Erro!"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:139
@@ -1990,7 +1967,7 @@ msgstr "Tempo de fabrico da lead"
 #: code:addons/mrp/mrp.py:284
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Aviso"
 
 #. module: mrp
 #: field:mrp.bom,product_uos_qty:0
@@ -2024,16 +2001,11 @@ msgid "Manufacturing Efficiency"
 msgstr "Eficiência de produção"
 
 #. module: mrp
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "Erro! Não pode criar empresas recursivas"
-
-#. module: mrp
 #: field:mrp.bom,message_follower_ids:0
 #: field:mrp.production,message_follower_ids:0
 #: field:mrp.production.workcenter.line,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Seguidores"
 
 #. module: mrp
 #: help:mrp.bom,active:0
@@ -2090,9 +2062,9 @@ msgid "Type of period"
 msgstr "Tipo de período"
 
 #. module: mrp
-#: field:mrp.config.settings,module_mrp_operations:0
-msgid "Allow detailed planning of work order"
-msgstr ""
+#: view:mrp.production:0
+msgid "Total Qty"
+msgstr "Total de Quantidade"
 
 #. module: mrp
 #: field:mrp.production.workcenter.line,hour:0
@@ -2182,11 +2154,6 @@ msgid "Assignment from stock."
 msgstr "Atribuição de stock."
 
 #. module: mrp
-#: selection:mrp.production,state:0
-msgid "Waiting Goods"
-msgstr "Esperar bens"
-
-#. module: mrp
 #: code:addons/mrp/report/price.py:139
 #, python-format
 msgid "Cost Price per Unit of Measure"
@@ -2249,12 +2216,7 @@ msgstr "BOM Ref"
 #: field:mrp.production.workcenter.line,message_comment_ids:0
 #: help:mrp.production.workcenter.line,message_comment_ids:0
 msgid "Comments and emails"
-msgstr ""
-
-#. module: mrp
-#: constraint:stock.move:0
-msgid "You cannot move products from or to a location of the type view."
-msgstr ""
+msgstr "Comentários e emails"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:784
@@ -2330,7 +2292,7 @@ msgstr "Produções"
 #: model:ir.model,name:mrp.model_stock_move_split
 #: view:mrp.production:0
 msgid "Split in Serial Numbers"
-msgstr ""
+msgstr "Dividir em números de série"
 
 #. module: mrp
 #: help:mrp.bom,product_uos:0
@@ -2469,7 +2431,7 @@ msgstr "Tempo em horas para a limpeza."
 #: field:mrp.production,message_summary:0
 #: field:mrp.production.workcenter.line,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Resumo"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_purchaseprocure0
@@ -2531,7 +2493,7 @@ msgstr "Dá a ordem da sequência ao exibir uma lista de listas de materiais."
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_config_settings
 msgid "mrp.config.settings"
-msgstr ""
+msgstr "mrp.config.settings"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -2796,6 +2758,9 @@ msgstr "Artigos para consumir"
 
 #~ msgid "plus"
 #~ msgstr "mais"
+
+#~ msgid "Waiting Goods"
+#~ msgstr "Esperar bens"
 
 #~ msgid "New Production Order"
 #~ msgstr "Nova pedido de produção"
@@ -3780,6 +3745,9 @@ msgstr "Artigos para consumir"
 #~ msgstr ""
 #~ "UdM (Unidade de Medida) é a unidade de medida para o controle do inventário"
 
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "Erro! Não pode criar empresas recursivas"
+
 #~ msgid ""
 #~ "This reporting allows you to analyse your manufacturing activities and "
 #~ "performance."
@@ -3898,6 +3866,9 @@ msgstr "Artigos para consumir"
 #~ "de materiais. Quando uma pessoa de vendas cria uma ordem de venda, ele pode "
 #~ "relacioná-la com várias propriedades e o OpenERP irá selecionar "
 #~ "automaticamente o BoM para usar-lo de acordo com as necessidades."
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "O nome da empresa deve ser único!"
 
 #, python-format
 #~ msgid "Couldn't find a bill of material for this product."

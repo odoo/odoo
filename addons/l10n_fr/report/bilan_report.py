@@ -27,7 +27,7 @@
 ##############################################################################
 
 import base_report
-from report import report_sxw
+from openerp.report import report_sxw
 
 class bilan(base_report.base_report):
     def __init__(self, cr, uid, name, context):

@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-from osv import osv
-from tools.translate import _
+from openerp.osv import osv
+from openerp.tools.translate import _
 
 
 class purchase_line_invoice(osv.osv_memory):
@@ -74,10 +74,6 @@ class purchase_line_invoice(osv.osv_memory):
                 journal_id = account_jrnl_obj.search(cr, uid, [('type', '=', 'purchase')], context=None)
                 journal_id = journal_id and journal_id[0] or False
                 a = partner.property_account_payable.id
-                if partner and partner.property_payment_term.id:
-                    pay_term = partner.property_payment_term.id
-                else:
-                    pay_term = False
                 inv = {
                     'name': name,
                     'origin': name,
@@ -89,7 +85,7 @@ class purchase_line_invoice(osv.osv_memory):
                     'invoice_line': [(6,0,lines_ids)],
                     'currency_id' : orders[0].pricelist_id.currency_id.id,
                     'comment': multiple_order_invoice_notes(orders),
-                    'payment_term': pay_term,
+                    'payment_term': orders[0].payment_term_id.id,
                     'fiscal_position': partner.property_account_position.id
                 }
                 inv_id = invoice_obj.create(cr, uid, inv)
@@ -102,7 +98,7 @@ class purchase_line_invoice(osv.osv_memory):
                     if not line.partner_id.id in invoices:
                         invoices[line.partner_id.id] = []
                     if line.product_id:
-                        a = line.product_id.product_tmpl_id.property_account_expense.id
+                        a = line.product_id.property_account_expense.id
                         if not a:
                             a = line.product_id.categ_id.property_account_expense_categ.id
                         if not a:
