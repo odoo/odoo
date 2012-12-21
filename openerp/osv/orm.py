@@ -4857,7 +4857,15 @@ class BaseModel(object):
             return res[0][0]
         cr.execute('SELECT "%s".id FROM ' % self._table + from_clause + where_str + order_by + limit_str + offset_str, where_clause_params)
         res = cr.fetchall()
-        return [x[0] for x in res]
+
+        # TDE note: with auto_join, we could have several lines about the same result
+        # i.e. a lead with several unread messages; we uniquify the result using
+        # a fast way to do it while preserving order (http://www.peterbe.com/plog/uniqifiers-benchmark)
+        def _uniquify_list(seq):
+            seen = set()
+            return [x for x in seq if x not in seen and not seen.add(x)]
+
+        return _uniquify_list([x[0] for x in res])
 
     # returns the different values ever entered for one field
     # this is used, for example, in the client when the user hits enter on

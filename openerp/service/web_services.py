@@ -54,7 +54,12 @@ from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 
-RPC_VERSION_1 = {'server_version': '6.1', 'protocol_version': 1}
+RPC_VERSION_1 = {
+        'server_version': release.version,
+        'server_version_info': release.version_info,
+        'server_serie': release.serie,
+        'protocol_version': 1,
+}
 
 # This should be moved to openerp.modules.db, along side initialize().
 def _initialize_db(serv, id, db_name, demo, lang, user_password):
@@ -120,6 +125,12 @@ class db(netsvc.ExportService):
         db = sql_db.db_connect('postgres')
         cr = db.cursor()
         chosen_template = tools.config['db_template']
+        cr.execute("""SELECT datname 
+                              FROM pg_database
+                              WHERE datname = %s """,
+                           (name,))
+        if cr.fetchall():
+            raise openerp.exceptions.Warning(" %s database already exists!" % name )
         try:
             cr.autocommit(True) # avoid transaction block
             cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "%s" """ % (name, chosen_template))

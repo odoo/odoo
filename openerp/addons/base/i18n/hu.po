@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:01+0000\n"
-"PO-Revision-Date: 2012-12-18 17:37+0000\n"
+"PO-Revision-Date: 2012-12-20 15:01+0000\n"
 "Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <openerp-hungarian-team@lists.launchpad.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-19 05:14+0000\n"
+"X-Launchpad-Export-Date: 2012-12-21 04:38+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
 
 #. module: base
@@ -251,6 +251,35 @@ msgid ""
 "* Planned Revenue by Stage and User (graph)\n"
 "* Opportunities by Stage (graph)\n"
 msgstr ""
+"\n"
+"Az alapértelemezett OpenERP CRM Ügyfélkapcsolat-kezelés\n"
+"=====================================================\n"
+"\n"
+"Ez az alkalmazás lehetővé teszi egy csoportnak, hogy inteligensen és "
+"hatékonyan kezelje a vezetői gyűléseket, lehetőségeket, találkozókat és "
+"telefonokat.\n"
+"\n"
+"Kezeli a kulcsfontosságú munkákat mint kommunikáció, azonosítás, kiosztás, "
+"felosztás és értesítés.\n"
+"\n"
+"OpenERP biztosítja, hogy minden esetben nyomon követhetőek legyenek a "
+"felhasználók, vásárlók és beszállítók. Autómatikusan küldhető emlékeztető, "
+"kiterjezti az igényt, bekapcsol speciális eszközt és még több cselekvésen "
+"alapuló módot, melyet a vállalkozása szabályaira szabhat.\n"
+"\n"
+"A legnayobb dolog ebben a rendszerben, hgoy a felhasználónak nem kell semmi "
+"speciálisat véghezvinnie. A CRM modulnak van egy e-amil átjárója  ami "
+"szinkronizálja az e-maileket az OpenERP által. Így, a felhasználók e-"
+"maileket küldhetnek az igénylés helyére.\n"
+"\n"
+"OpenERP törődni fog az üzenetek megköszönésével, automatikusan átirányítva a "
+"megfelelő osztályhoz, biztosítva a jövőbeni munkafolyamat megfelő helyét.\n"
+"\n"
+"\n"
+"Dashboard / irányítópult a CRM-ben, ezt is beleértve:\n"
+"-------------------------------\n"
+"* Tervezett bevétel szintek és felhasználók szerint (grafikon)\n"
+"* Lehetőségek szintenként (grafikon)\n"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:397
@@ -5753,6 +5782,23 @@ msgid ""
 "since it's the same which has been renamed.\n"
 "    "
 msgstr ""
+"\n"
+"Ez a modul lehetővé teszi a felhasználók részére a partnerek leválogatását.\n"
+"=================================================================\n"
+"\n"
+"A profil kritériumokat használja az előző leválogató modulból ami fel lett "
+"javítva. \n"
+"Köszönhető az új felfogású kikérdezőnek. Újra tudja csoportosítani a "
+"kérdéseket\n"
+"egy kikérdezőbe  és direkt használhatja azokat a partnerekhez.\n"
+"\n"
+"Össze lett kapcsolva az előző CRM & SRM leválogatás eszközzel mivel ezek át "
+"lettek fedve.\n"
+"\n"
+"    **Megjegyzés** ez a modul nem kompatibilis a leválogató modullal, mivel "
+"ez ugyanaz, csak más \n"
+"másként lett elnevezve.\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.gt
@@ -6358,7 +6404,7 @@ msgstr "Man Sziget"
 #. module: base
 #: help:ir.actions.client,res_model:0
 msgid "Optional model, mostly used for needactions."
-msgstr ""
+msgstr "Választható modell, főként szükséges műveletekhez használják."
 
 #. module: base
 #: field:ir.attachment,create_uid:0
@@ -6523,6 +6569,58 @@ msgid ""
 "    * Zip return for separated PDF\n"
 "    * Web client WYSIWYG\n"
 msgstr ""
+"\n"
+"Ez a modul hozzáad egy Kimutatás motort WebKit könyvtárt alapul véve "
+"(wkhtmltopdf) a HTML +CCS megalkotott kimutatások támogatásához.\n"
+"============================================================================="
+"========================================\n"
+"\n"
+"A modul felépítését és egy pár kódolást a report_openoffice modul "
+"ösztönözte.\n"
+"\n"
+"A modul lehetővé teszi:\n"
+"------------------\n"
+"    - HTML kimutatás meghatározását\n"
+"    - Többszörös fejléc támogatása\n"
+"    - Többszörös logó használat\n"
+"    - Többszörös vállalat támogatás\n"
+"    - HTML és CSS-3 támogatás (az aktuális WebKIT verzió határain belül)\n"
+"    - JavaScript támogatás\n"
+"    - Nyers HTML debugger\n"
+"    - Könyv nyomtatási lehetőség\n"
+"    - Margó meghatározás\n"
+"    - Papír méret meghatározás\n"
+"\n"
+"Többszörös fejléc és logó meghatározható vállalatonként. CCS stílus, fejléc "
+"és\n"
+"lábjegyzet meghatározható vállalatonként.\n"
+"\n"
+"Például kimutatást megtekinthet webkit_report_sample modulban, és ebben a "
+"videóban:\n"
+"    http://files.me.com/nbessi/06n92k.mov\n"
+"\n"
+"Követelmények és telepítés:\n"
+"------------------------------\n"
+"Ehhez a modulhoz kell a ``wkthtmltopdf`` könyvtár a HTML dokumentumok PDF "
+"ábrázolásához.\n"
+"Verzió 0.9.9 vagy későbbi szükséges, és megtalálható a \n"
+"http://code.google.com/p/wkhtmltopdf/ a Linux, Mac OS X (i386) és Windows "
+"(32bits) rendszerekhez.\n"
+"\n"
+"A könyvtár OpenERP szerveren való telepítése után, be kell állítani az "
+"elérési utat a ``wkthtmltopdf`` futtatójához minden vállalathoz.\n"
+"\n"
+"Ha nem talál fejlécet/lábjegyzetet vagy egyéb probléma merül fel a Linuxon, "
+"akkor győződjön meg, hogy telepíti a könyvtár 'static' verzióját. UBUNTU "
+"alatt ez ey ismert ``wkhtmltopdf`` probléma.\n"
+"\n"
+"\n"
+"Tennivaló:\n"
+"-----\n"
+"    * JavaScript támogatás aktiválás deaktiválás\n"
+"    * Gyűjtő és könyv formátum támogatás\n"
+"    * Zip visszaadás egy külön PDF-hez\n"
+"    * Web kliens WYSIWYG\n"
 
 #. module: base
 #: model:res.groups,name:base.group_sale_salesman_all_leads
@@ -8175,6 +8273,30 @@ msgid ""
 "* In a module, so that administrators and users of OpenERP who do not\n"
 "  need or want an online import can avoid it being available to users.\n"
 msgstr ""
+"\n"
+"Új fájl import kiterjesztések az OpenERP rendszerhez\n"
+"======================================\n"
+"\n"
+"Az OpenERP fájl rendszerének újra-implementálása:\n"
+"\n"
+"* Szerver oldal, az előző rendszer a legtöbb végrehalytást a kliensre "
+"kényszerítette\n"
+"  amely megduplázta az energiát (kliensek közt), az importálási rendszert \n"
+"  nehézkessé teszi a kliens nélkül(direkt RPC vagy\n"
+"  más automata formátumnál) és az export/import rendszer érthetőségét\n"
+"  is nehézkessé teszi amint 3 + különböző projekten hajtódik végre.\n"
+"\n"
+"* Érthetőbben a felhasználók és partnerek a saját import kivitelezést tudnak "
+"\n"
+"   készíteni más fájl formátumokból (pl. OpenDocument fájlok)\n"
+"  ami leegyszerűsítheti  a munka folyamatuk kezelését az adat forrásból "
+"való\n"
+"  előállítását.\n"
+"\n"
+"* A modulban, azok az OpenERP adminisztrátorok és felhasználók  akik nem\n"
+"   igénylik az online importot biztosíthatják, hogy azok nem lesznek "
+"elérhetők \n"
+"  a felhasználók részére.\n"
 
 #. module: base
 #: selection:res.currency,position:0
@@ -12740,7 +12862,7 @@ msgstr "Olvasási hozzáférési jog"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic_user_function
 msgid "Jobs on Contracts"
-msgstr ""
+msgstr "Feladatok a szerződésekben"
 
 #. module: base
 #: code:addons/base/res/res_lang.py:187
@@ -14646,6 +14768,8 @@ msgid ""
 "Helps you manage your inventory and main stock operations: delivery orders, "
 "receptions, etc."
 msgstr ""
+"Segít Önnek a készletek és a fő készletműveletek kezelésében: "
+"szállítólevelek, áruátvételek, stb."
 
 #. module: base
 #: model:ir.model,name:base.model_base_module_update
@@ -15790,6 +15914,10 @@ msgid ""
 "                                the rightmost column (value) contains the "
 "translations"
 msgstr ""
+"CSV formátum: szerkessze egyenesen a megszokott táblázatkezelő "
+"alkalmazásával,\n"
+"                                a leg jobboldalt lévő oszlop (érték) "
+"tartalmazza a fordításokat"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_chart
@@ -15800,11 +15928,16 @@ msgid ""
 "\n"
 "Deactivates minimal chart of accounts.\n"
 msgstr ""
+"\n"
+"a minimum számlatükör kikapcsolása.\n"
+"=============================\n"
+"\n"
+"Kikapcsolja a minimum számlatükröket.\n"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_crypt
 msgid "DB Password Encryption"
-msgstr ""
+msgstr "DB adatbázis jelszó titkosítás"
 
 #. module: base
 #: help:workflow.transition,act_to:0
@@ -15814,7 +15947,7 @@ msgstr "A cél tevékenység."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_issue
 msgid "Issue Tracker"
-msgstr ""
+msgstr "Ügy nyomonkövetése"
 
 #. module: base
 #: view:base.module.update:0
@@ -15830,6 +15963,9 @@ msgid ""
 "The common interface for plug-in.\n"
 "=================================\n"
 msgstr ""
+"\n"
+"A plug-in általános intefész\n"
+"============================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_crm
@@ -15848,11 +15984,26 @@ msgid ""
 "modules.\n"
 "    "
 msgstr ""
+"\n"
+"Ez a modul útvonal rövidítéseket ad meg egy vagy több lehetséges eseményhez "
+"a CRM (ügyfélkapcsolat kezelőben).\n"
+"===========================================================================\n"
+"\n"
+"Ezek a rövidebb utak lehetővé teszik a kiválasztott esemény alapján generált "
+"megrendelések létrehozását.\n"
+"Különböző eseményekhez megnyílik (egy lista), ez generálja az események "
+"szerinti megrendeléseket.\n"
+"Az esemény ezután lezárásra kerül és hozzá lesz csatolva egy generált "
+"megrendeléshez.\n"
+"\n"
+"Ajánljuk ennek a modulnak a telepítését, ha az eladás és a crm modult is "
+"telepítette már.\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.bq
 msgid "Bonaire, Sint Eustatius and Saba"
-msgstr ""
+msgstr "Karib tengeri Bonaire, Sint Eustatius and Saba"
 
 #. module: base
 #: model:ir.actions.report.xml,name:base.ir_module_reference_print
@@ -15887,6 +16038,10 @@ msgid ""
 "your home page.\n"
 "You can track your suppliers, customers and other contacts.\n"
 msgstr ""
+"\n"
+"Ez a modul egy gyors áttekintést tesz lehetővé a címjegyzékén, ami elérhető "
+"a saját oldaláról.\n"
+"Nyomon követheti a beszállítóit, vásárlóit és egyéb ügyfeleit.\n"
 
 #. module: base
 #: help:res.company,custom_footer:0
@@ -15894,6 +16049,8 @@ msgid ""
 "Check this to define the report footer manually.  Otherwise it will be "
 "filled in automatically."
 msgstr ""
+"Jelölje be a kimutatás lábjegyzet kézi meghatározásához. Egyébként "
+"automatikusan ki lesz töltve."
 
 #. module: base
 #: view:res.partner:0
@@ -15908,7 +16065,7 @@ msgstr "Modulok telepítése"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_import_crm
 msgid "Import & Synchronize"
-msgstr ""
+msgstr "Import & Szinkronizáció"
 
 #. module: base
 #: view:res.partner:0
@@ -15941,7 +16098,7 @@ msgstr "Forrás"
 #: field:ir.model.constraint,date_init:0
 #: field:ir.model.relation,date_init:0
 msgid "Initialization Date"
-msgstr ""
+msgstr "Alap adatok"
 
 #. module: base
 #: model:res.country,name:base.vu
@@ -15972,6 +16129,26 @@ msgid ""
 "    Unit price=225, Discount=0,00, Net price=225.\n"
 "    "
 msgstr ""
+"\n"
+"Ez a modul lehetővé teszi az árengedmények számítását a megrendelések és "
+"számlák sorain a partner árlistája alapján.\n"
+"============================================================================="
+"==================================\n"
+"\n"
+"Ehhez egy új jelölő négyzet lesz, melynek neve 'látható árengedmény', hozzá "
+"lesz adva az árlista formához.\n"
+"\n"
+"**Például:**\n"
+"    A PC1 termékhez és az \"ASUSTEK\" partnerhez: ha a listaár=450, és az ár "
+"az \n"
+"    Asustek árlista ár=255 árból lett kalkulálva. Ha be van jelölve a "
+"négyzet akkor\n"
+"    megrendelés sorához ez lesz jelölve: Egységár=450, Árengedmény=50,00, "
+"Nettó ár=225.\n"
+"    Ha nincs bejelölve a négyzet akkor a megrendelés és a számla sorain a "
+"következő lesz:\n"
+"    Egységár=225, Árengedmény=0,00, Nettó ár=225.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm
@@ -15989,6 +16166,13 @@ msgid ""
 "OpenOffice. \n"
 "Once you have modified it you can upload the report using the same wizard.\n"
 msgstr ""
+"\n"
+"Ez a modul együtt lesz használva az OpenERP OpenOffice Pluginnal.\n"
+"=========================================================\n"
+"\n"
+"Ez a modul az Import/Export .sxw kimutatáshoz varázsló ad amit az OpenOffice-"
+"al tud módosítani.. \n"
+"módosítás után ezzel a varázslóval újra fel tudja tölteni a kimutatást.\n"
 
 #. module: base
 #: view:base.module.upgrade:0
@@ -16023,12 +16207,13 @@ msgstr ""
 #. module: base
 #: selection:ir.mail_server,smtp_encryption:0
 msgid "TLS (STARTTLS)"
-msgstr ""
+msgstr "TLS (STARTTLS)"
 
 #. module: base
 #: help:ir.actions.act_window,usage:0
 msgid "Used to filter menu and home actions from the user form."
 msgstr ""
+"A menű és főoldal műveletek szűrésére használták a felhasználói űrlapból."
 
 #. module: base
 #: model:res.country,name:base.sa
@@ -16050,6 +16235,15 @@ msgid ""
 "order.\n"
 "    "
 msgstr ""
+"\n"
+"Ez a modul lehetőséget ad MRP és eladási modul egyszeri telepítésére.\n"
+"============================================================================="
+"=======\n"
+"\n"
+"Alapvetően akkor használt, ha nyomon szeretnénk követni a megrendelésekből "
+"generált termelési megrendeléseket. A gyártási megrendeléshez ad hozzá "
+"eladás nevet és eladási hivatkozást.\n"
+"    "
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:147
@@ -16073,6 +16267,12 @@ msgid ""
 "=========================\n"
 "    "
 msgstr ""
+"\n"
+"Ez a modul hozzáadja a portáljához a project/terv menűt és annak "
+"tulajdonságait (feladatait) ha a projekt/terv és portál telepítve vannak.\n"
+"============================================================================="
+"=========================\n"
+"    "
 
 #. module: base
 #: code:addons/base/module/wizard/base_module_configuration.py:38
@@ -16085,7 +16285,7 @@ msgstr "Rendszer konfigurálása kész"
 #: view:ir.config_parameter:0
 #: model:ir.ui.menu,name:base.ir_config_menu
 msgid "System Parameters"
-msgstr ""
+msgstr "Rendszer paraméterek"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ch
@@ -16203,7 +16403,7 @@ msgstr "Művelet több dokumentumon"
 #: model:ir.actions.act_window,name:base.action_partner_title_partner
 #: model:ir.ui.menu,name:base.menu_partner_title_partner
 msgid "Titles"
-msgstr ""
+msgstr "Címek"
 
 #. module: base
 #: model:ir.module.module,description:base.module_anonymization
@@ -16226,6 +16426,22 @@ msgid ""
 "anonymization process to recover your previous data.\n"
 "    "
 msgstr ""
+"\n"
+"Ez a modul lehetővé teszi az adatbázis titkosítását.\n"
+"===============================================\n"
+"\n"
+"Ezzel a modullal a bizalmas adatait biztonságban tarthatja egy megadott "
+"adatbázisban.\n"
+"Ez az eljárás hasznos, ha költöztetéskor megakarja védeni a saját ügyfelei "
+"bizalmas adatait. \n"
+"Az alapelv az, hogy egy titkosító eszközt futtat amely elrejti a bizalmas "
+"adatokat (ki lesznek \n"
+"cserélve ‘XXX’ karakterekkel). Ekkor elküldheti a titkosított adatokat a "
+"költözési csoporhoz.\n"
+"Amikor visszatértek a költöztetni kívánt adatok, akkor vissza lehet állítani "
+"azokat\n"
+"a titkosító eljárással az adatok visszanyeréssel.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_analytics
@@ -16237,6 +16453,12 @@ msgid ""
 "Collects web application usage with Google Analytics.\n"
 "    "
 msgstr ""
+"\n"
+"Google Analytics.\n"
+"==============================\n"
+"\n"
+"Összegyűjti a web alkalmazás használaát a  Google Analytics rendszerrel.\n"
+"    "
 
 #. module: base
 #: help:ir.sequence,implementation:0
@@ -16245,6 +16467,9 @@ msgid ""
 "later is slower than the former but forbids any gap in the sequence (while "
 "they are possible in the former)."
 msgstr ""
+"Két sorrendet ajánl a tárgy beillesztésthez: Alapértelmezett és 'Nincs rés'. "
+"A későbbi lasúbb mint a mostani, de megtilt minden rést ami ebben a "
+"sorrendben van (mivel ezek az előzőben lehettek)."
 
 #. module: base
 #: model:res.country,name:base.gn
@@ -16280,7 +16505,7 @@ msgstr "Hiba ! Nem hozhat létre rekurzív menüket."
 #. module: base
 #: view:ir.translation:0
 msgid "Web-only translations"
-msgstr ""
+msgstr "Kizárólag-web fordítások"
 
 #. module: base
 #: view:ir.rule:0
@@ -16337,16 +16562,60 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Belga számlatükör és lokalizáció \n"
+"\n"
+"This is the base module to manage the accounting chart for Belgium in "
+"OpenERP.\n"
+"============================================================================="
+"=\n"
+"\n"
+"After installing this module, the Configuration wizard for accounting is "
+"launched.\n"
+"    * We have the account templates which can be helpful to generate Charts "
+"of Accounts.\n"
+"    * On that particular wizard, you will be asked to pass the name of the "
+"company,\n"
+"      the chart template to follow, the no. of digits to generate, the code "
+"for your\n"
+"      account and bank account, currency to create journals.\n"
+"\n"
+"Thus, the pure copy of Chart Template is generated.\n"
+"\n"
+"Wizards provided by this module:\n"
+"--------------------------------\n"
+"    * Partner VAT Intra: Enlist the partners with their related VAT and "
+"invoiced\n"
+"      amounts. Prepares an XML file format.\n"
+"      \n"
+"        **Path to access :** Invoicing/Reporting/Legal Reports/Belgium "
+"Statements/Partner VAT Intra\n"
+"    * Periodical VAT Declaration: Prepares an XML file for Vat Declaration "
+"of\n"
+"      the Main company of the User currently Logged in.\n"
+"      \n"
+"        **Path to access :** Invoicing/Reporting/Legal Reports/Belgium "
+"Statements/Periodical VAT Declaration\n"
+"    * Annual Listing Of VAT-Subjected Customers: Prepares an XML file for "
+"Vat\n"
+"      Declaration of the Main company of the User currently Logged in Based "
+"on\n"
+"      Fiscal year.\n"
+"      \n"
+"        **Path to access :** Invoicing/Reporting/Legal Reports/Belgium "
+"Statements/Annual Listing Of VAT-Subjected Customers\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_gengo
 msgid "Automated Translations through Gengo API"
-msgstr ""
+msgstr "Automatikus fordítás a Gengo API keresztül"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_payment
 msgid "Suppliers Payment Management"
-msgstr ""
+msgstr "Szállítói kifizetések kezelése"
 
 #. module: base
 #: model:res.country,name:base.sv
@@ -16376,7 +16645,7 @@ msgstr "Thaiföld"
 #. module: base
 #: model:ir.module.module,summary:base.module_account_voucher
 msgid "Send Invoices and Track Payments"
-msgstr ""
+msgstr "Számlák küldése és fizetések nyomonkövetése"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_crm_config_lead
@@ -16387,6 +16656,7 @@ msgstr "Lehetőségek"
 #: model:res.country,name:base.gg
 msgid "Guernsey"
 msgstr ""
+"Guernsey-sziget - Guernsey valutaunióban van az Egyesült Királysággal"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -16406,6 +16676,17 @@ msgid ""
 "      bilgileriniz, ilgili para birimi gibi bilgiler isteyecek.\n"
 "    "
 msgstr ""
+"\n"
+"Török számlatükör és lokalizáció\n"
+"\n"
+"Türkiye için Tek düzen hesap planı şablonu OpenERP Modülü.\n"
+"==========================================================\n"
+"\n"
+"Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır\n"
+"    * Sihirbaz sizden hesap planı şablonu, planın kurulacağı şirket, banka "
+"hesap\n"
+"      bilgileriniz, ilgili para birimi gibi bilgiler isteyecek.\n"
+"    "
 
 #. module: base
 #: selection:workflow.activity,join_mode:0
@@ -16418,6 +16699,8 @@ msgstr "És"
 msgid ""
 "Database identifier of the record to which this applies. 0 = for all records"
 msgstr ""
+"Adatbázis azonosító arra a rekordra amelyre ez vonatkozik. 0 = összes "
+"rekordra"
 
 #. module: base
 #: field:ir.model.fields,relation:0
@@ -16427,7 +16710,7 @@ msgstr "Objektum kapcsolat"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_voucher
 msgid "eInvoicing & Payments"
-msgstr ""
+msgstr "Számlázás & Kifizetések"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_crypt
@@ -16463,6 +16746,42 @@ msgid ""
 "This module is currently not compatible with the ``user_ldap`` module and\n"
 "will disable LDAP authentication completely if installed at the same time.\n"
 msgstr ""
+"\n"
+"Rendesszövegű jelszó kiváltása biztonsági hasító függvénnyel az "
+"adatbázisban.\n"
+"================================================================\n"
+"\n"
+"A meglévő felhasználói adatbázisban, a rendesszövegű jelszavak azonnal el "
+"lesznek távolítva\n"
+"amint telepítésre kerül a base_crypt.\n"
+"\n"
+"Minden jelszó ki lesz cserélve egy biztonságos, konzervált, kriptográfiai "
+"hasító függvénnyel, \n"
+"ezzel megakadályozva az eredeti jelszó kiolvasását az adatbázisból.\n"
+"\n"
+"Miután telepítette ezt a modult, nem lesz lehetősége az elfelejtett jelszó "
+"visszafejtésére \n"
+"a felhasználók részéről, az adminisztátor egyedüli lehetősége lesz egy új "
+"jelszó megadása.\n"
+"\n"
+"Biztonsági figyelmeztetés:\n"
+"-----------------\n"
+"Ennek a modulnak a telepítésével nem hagyhatja figyelmen kívül a többi "
+"biztonsági intézkedést,\n"
+"mivel a jelszó a hálózaton keresztül kódolatlanul halad keresztül, kivéve, "
+"ha \n"
+"biztonsági protokolt használ mint a XML-RPCS vagy HTTPS.\n"
+"\n"
+"Ez nem védi meg az adatbázis többi részét, mely bizalmas\n"
+"adatokat is tartalmazhat. Pontos biztonsági intézkedést kell beileszteni\n"
+"a rendszer adminisztrátornak minden területen, mint: adatbázis védelmi "
+"mentések,\n"
+"rendszer fájlok, távoli héj hozzáférések, fizikai szerver hozzáférések.\n"
+"\n"
+"Kölcsönhatás az LDAP azonosítással:\n"
+"-------------------------------------\n"
+"Ez a modul most még nem kompatibilis a ``user_ldap`` modullal és\n"
+"ki fogja iktatni a LDAP azonosítást teljesen ha ugyanakkor telepítettek.\n"
 
 #. module: base
 #: view:ir.rule:0
@@ -16499,12 +16818,12 @@ msgstr "Valuta árfolyam"
 #: view:base.module.upgrade:0
 #: field:base.module.upgrade,module_info:0
 msgid "Modules to Update"
-msgstr ""
+msgstr "Frissítendő modulok"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_custom_multicompany
 msgid "Multi-Companies"
-msgstr ""
+msgstr "Többszörös-vállalatok"
 
 #. module: base
 #: field:workflow,osv:0
@@ -16516,12 +16835,12 @@ msgstr "Erőforrás objektum"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_helpdesk
 msgid "Helpdesk"
-msgstr ""
+msgstr "Ügyfélszolgálat"
 
 #. module: base
 #: field:ir.rule,perm_write:0
 msgid "Apply for Write"
-msgstr ""
+msgstr "Íráshoz alkamaz"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock
@@ -16559,6 +16878,38 @@ msgid ""
 "* Moves Analysis\n"
 "    "
 msgstr ""
+"\n"
+"Több-raktárhely kezelése, multi- és struktúrált  raktár helyek\n"
+"==============================================================\n"
+"\n"
+"A raktár és leltár kezelés a hierarchikus elhelyezkedés struktúrán alapul, a "
+"raktárhelyből a raktárba kapcsolattal. \n"
+"A dupla bevitelű raktár rendszer lehetővé teszi a vevők és beszállítók "
+"kezelését beleértve a gyártási raktárkészletet is. \n"
+"\n"
+"OpenERP-ben megvan a lehetőség a köteg és gyáriszám kezelésre biztosítva a "
+"nyomon követhetőséget, ami a gyártást szavatolja.\n"
+"\n"
+"Fő jellemzők\n"
+"-------------\n"
+"* Mozgások előzményei és tervezése,\n"
+"* Raktár értékelése (alapár vagy átlagár, ...)\n"
+"* Erőteljesség a raktárkészlet különbségek tükrében\n"
+"* Automata újrarendelés szabályok\n"
+"* Bárkódok támogatása\n"
+"* Gyors hiba érzékelés a dupla beviteli rendszer  miatt\n"
+"* Nyomon követhetőség (ellentétes irányú / Folyamat irányú, Széria számok, "
+"...)\n"
+"\n"
+"Dashboard / Műszerfal kimutatások a Raktárhely kezeléshez ideérve:\n"
+"----------------------------------------------------------\n"
+"* Bejövő áruk (Grafikon)\n"
+"* Kimenő áruk (Grafikon)\n"
+"* Lehetséges beszerzés\n"
+"* Raktári tételek analízisei / elemzései\n"
+"* Záró tételek raktárhelyei\n"
+"* Mozgás analízis, elemzés\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_document_page
@@ -16569,6 +16920,11 @@ msgid ""
 "Web pages\n"
 "    "
 msgstr ""
+"\n"
+"Oldalak\n"
+"=====\n"
+"Web oldalak\n"
+"    "
 
 #. module: base
 #: help:ir.actions.server,code:0
@@ -16576,6 +16932,8 @@ msgid ""
 "Python code to be executed if condition is met.\n"
 "It is a Python block that can use the same values as for the condition field"
 msgstr ""
+"Python code to be executed if condition is met.\n"
+"It is a Python block that can use the same values as for the condition field"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.grant_menu_access
@@ -16600,7 +16958,7 @@ msgstr "Gyermek elem mező"
 #. module: base
 #: view:ir.rule:0
 msgid "Detailed algorithm:"
-msgstr ""
+msgstr "Részletes algoritmus:"
 
 #. module: base
 #: field:ir.actions.act_url,usage:0
@@ -16617,7 +16975,7 @@ msgstr "Művelet használata"
 #. module: base
 #: field:ir.module.module,name:0
 msgid "Technical Name"
-msgstr ""
+msgstr "Technikai név"
 
 #. module: base
 #: model:ir.model,name:base.model_workflow_workitem
@@ -16656,7 +17014,7 @@ msgstr "Automatikus betöltés bézet"
 #. module: base
 #: view:res.users:0
 msgid "Allowed Companies"
-msgstr ""
+msgstr "Engedélyezett vállalatok"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de
@@ -16666,7 +17024,7 @@ msgstr "Németország - Könyvelés"
 #. module: base
 #: view:ir.sequence:0
 msgid "Day of the Year: %(doy)s"
-msgstr ""
+msgstr "Az év napja: %(doy)s"
 
 #. module: base
 #: field:ir.ui.menu,web_icon:0
@@ -16689,6 +17047,8 @@ msgid ""
 "If this field is empty, the view applies to all users. Otherwise, the view "
 "applies to the users of those groups only."
 msgstr ""
+"Ha ez a mező üres, akkor a nézet az összes felhasználóra érvényes. "
+"Egyébként, csak arra a kijelölt csoport felhasználóra vonatkozik a nézet."
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -16722,21 +17082,44 @@ msgid ""
 "customers' expenses if your work by project.\n"
 "    "
 msgstr ""
+"\n"
+"Munkavállalók szerinti kiadások kezelése\n"
+"============================\n"
+"\n"
+"Ez az alkalmazás lehetővé teszi a munkavállalók napi kiadásait. Hozzáférést "
+"biztosít a munkavállalói kiadási jegyzeteihez és azok kiegészítésének és "
+"érvényesítésének jogához vagy érvénytelenítheti is a jegyzeteket. Az "
+"érvényesítés után egy számlát készít a munkavállaló részére.\n"
+"A munkavállalók bevihetik a saját kiadásaikat amit az érvényesítési út "
+"automatikusan felad könyvelésre az osztályvezető érvényesítése után.\n"
+"\n"
+"\n"
+"A teljes folyamat a következő:\n"
+"----------------------------------\n"
+"* Kiadás terve\n"
+"* a munkavállaló visszaigazolása a listára\n"
+"* az osztályvezetője általi érvényesítés\n"
+"* a könyvelő érvényesítése és számla készítés\n"
+"\n"
+"Ez a modul használja az analitikai, elemző számlát és kompatibilis az "
+"időbeosztásos számlázás modullal így automatikus munkavállalói kiadás újra-"
+"számlázást készíthet ha projektenként dolgozik.\n"
+"    "
 
 #. module: base
 #: view:base.language.export:0
 msgid "Export Settings"
-msgstr ""
+msgstr "A beállítások exportálása"
 
 #. module: base
 #: field:ir.actions.act_window,src_model:0
 msgid "Source Model"
-msgstr ""
+msgstr "Modell forrás"
 
 #. module: base
 #: view:ir.sequence:0
 msgid "Day of the Week (0:Monday): %(weekday)s"
-msgstr ""
+msgstr "A hét napja (0:Hétfő): %(weekday)s"
 
 #. module: base
 #: code:addons/base/module/wizard/base_module_upgrade.py:84
@@ -16750,7 +17133,7 @@ msgstr "Függőség nem teljesült !"
 #: code:addons/base/ir/ir_model.py:1023
 #, python-format
 msgid "Administrator access is required to uninstall a module"
-msgstr ""
+msgstr "Adminisztrátori hozzáférés szükséges a modul törléséhez"
 
 #. module: base
 #: model:ir.model,name:base.model_base_module_configuration
@@ -16766,6 +17149,10 @@ msgid ""
 "\n"
 "(Document type: %s, Operation: %s)"
 msgstr ""
+"Az igényelt műveletet nem lehetett végrehajtani biztonsági korlátok miatt. "
+"Kérem vegye fel a kapcsolatot a rendszer adminisztrátorral.\n"
+"\n"
+"(Dokumentum típus: %s, Művelet: %s)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_idea
@@ -16782,6 +17169,19 @@ msgid ""
 "The managers can obtain an easy view of best ideas from all the users.\n"
 "Once installed, check the menu 'Ideas' in the 'Tools' main menu."
 msgstr ""
+"\n"
+"Ez a modul lehetővé teszi a felhasználók könnyű és hatékony vállalati "
+"fejlesztéshez való csatlakozását.\n"
+"============================================================================="
+"==========\n"
+"\n"
+"Lehetővé teszi mindenki számára az ötleteinek közzétételét a különböző "
+"témákban.\n"
+"Ezután, a többi felhasználó megjegyzéseket fűzhet hozzá és szavazhat egy "
+"bizonyos ötletre.\n"
+"Minden ötletnek van egy pontértékelése a szavazatok alapján.\n"
+"A vezető rálát az összes felhasználóra és az ötleteikre.\n"
+"Ha telepítve lett, az 'eszközök' menü 'ötletek' címszó alatt találja az meg."
 
 #. module: base
 #: code:addons/orm.py:5248
@@ -16790,6 +17190,8 @@ msgid ""
 "%s This might be '%s' in the current model, or a field of the same name in "
 "an o2m."
 msgstr ""
+"%s Ez lehet, hogy '%s' a jelenlegi modellben, vagy egy mező ugyanazzal a "
+"névvel az o2m-ben."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_payment
@@ -16821,6 +17223,29 @@ msgid ""
 "have a new option to import payment orders as bank statement lines.\n"
 "    "
 msgstr ""
+"\n"
+"Modul a beszállítók számlái kifizetésének kezeléséhez.\n"
+"=======================================================\n"
+"\n"
+"Ez a modul lehetővé teszi a kifizetések létrehozását és kezelését, a "
+"következő szándékkal\n"
+"-----------------------------------------------------------------------------"
+"---- \n"
+"    * egy a könnyű plug-in alap variációkból az automatikus kifizetés "
+"működtetésre.\n"
+"    * lehetővé teszi a hatékonyabb számla kifizetés szervezést.\n"
+"\n"
+"Figyelem:\n"
+"~~~~~~~~\n"
+"A kifizetés megbízás visszaigazolása nem készít könyvelés bejegyzést, csak "
+"rögzíti a \n"
+"tényt ,hogy elkészítette a bankhoz a megbízást. A megbízás bevitelét\n"
+"el kell végezni a szokásos módon a banki kivonattal. Azonban, ezt csak\n"
+"akkor, ha megjött a banktól a kivonat, hogy azt a bank befogadta \n"
+"azt és ekkor beviheti azt a könyvelésébe is. Ennek a műveletnek a "
+"segítségéhez, lesz\n"
+"egy új lehetősége a fizetési megbízás importálása mint banki kivonat sorok.\n"
+"    "
 
 #. module: base
 #: field:ir.model,access_ids:0
@@ -16833,7 +17258,7 @@ msgstr "Hozzáférés"
 #: field:res.partner,vat:0
 #, python-format
 msgid "TIN"
-msgstr ""
+msgstr "TIN"
 
 #. module: base
 #: model:res.country,name:base.aw
@@ -16844,7 +17269,7 @@ msgstr "Aruba"
 #: code:addons/base/module/wizard/base_module_import.py:58
 #, python-format
 msgid "File is not a zip file!"
-msgstr ""
+msgstr "A fájl nem zip fájl!"
 
 #. module: base
 #: model:res.country,name:base.ar
@@ -16898,7 +17323,7 @@ msgstr "Haladó kimutatás"
 #. module: base
 #: model:ir.module.module,summary:base.module_purchase
 msgid "Purchase Orders, Receptions, Supplier Invoices"
-msgstr ""
+msgstr "Megrendelések, Átvétel igazolások, Beszállítói számlák"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_payroll
@@ -16917,6 +17342,19 @@ msgid ""
 "    * Integrated with Holiday Management\n"
 "    "
 msgstr ""
+"\n"
+"Általános bérszámfejtői rendszer\n"
+"=======================\n"
+"\n"
+"    * Munkavállalók adatai\n"
+"    * Munkavállalók szerződései\n"
+"    * Útlevél alapú szerződés\n"
+"    * Engedmények/Levonások\n"
+"    * Lehetőség az alap/Bruttó/Nettó fizetés beállításához\n"
+"    * Munkavállalók fizetési papírjai\n"
+"    * Havi bérszámfejtési regiszter\n"
+"    * Integrálva a szabadság szervezővel\n"
+"    "
 
 #. module: base
 #: model:ir.model,name:base.model_ir_model_data
@@ -16936,7 +17374,7 @@ msgstr "Értékesítés utáni szolgáltatások"
 #. module: base
 #: field:base.language.import,code:0
 msgid "ISO Code"
-msgstr ""
+msgstr "ISO Kód"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr
@@ -16951,7 +17389,7 @@ msgstr "Indítás"
 #. module: base
 #: selection:res.partner,type:0
 msgid "Shipping"
-msgstr ""
+msgstr "Szállítás"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_mrp
@@ -16986,6 +17424,30 @@ msgid ""
 "the\n"
 "task is completed.\n"
 msgstr ""
+"\n"
+"Az beszerzéssoraiból automatikusan készít projekt/terv feladatot.\n"
+"===========================================================\n"
+"\n"
+"Ez a modul minden beszerzés igény sorból elkészít egy új feladatot\n"
+"(pl.: a megrendelés sorait), ha a szóban forgó termék kielégíti a következő\n"
+"jellemzőket:\n"
+"\n"
+"    * Termék típusa = Szolgáltatás\n"
+"    * Beszerzés módszere (Megrendelés végrehajtás) = MTO (Rendelés "
+"előkészítése)\n"
+"    * Ellátás/Beszerzés módszer = Gyártás\n"
+"\n"
+"Ezen felül, ha a tervet a termék leírásban meghatározták (a beszerzés "
+"fülön), \n"
+"akkor egy új munka lesz létrehozva ehhez a tervhez. Máskülönben, az új\n"
+"feladat nem függ egyik tervtől sem, és később hozzáadható egy másik tervhez "
+"kézzel.\n"
+"\n"
+"Ha a terv feladat el lett végezve vagy törölve lett, akkor a kapcsolódó "
+"beszerzés \n"
+"munkafolyamat frissítve lesz annak megfelelően. Például, ha ez a beszerzés \n"
+"egy megrendelés sorához tartozik, akkor a megrendelés sora leszállításként \n"
+"értendő, ha a feladatot elvégezték.\n"
 
 #. module: base
 #: field:ir.actions.act_window,limit:0
@@ -16995,13 +17457,13 @@ msgstr "Limit"
 #. module: base
 #: model:res.groups,name:base.group_hr_user
 msgid "Officer"
-msgstr ""
+msgstr "Hivatalnok"
 
 #. module: base
 #: code:addons/orm.py:789
 #, python-format
 msgid "Serialization field `%s` not found for sparse field `%s`!"
-msgstr ""
+msgstr "Soros művelet mező `%s` nem található az elszórt mezőkhöz `%s`!"
 
 #. module: base
 #: model:res.country,name:base.jm
@@ -17012,7 +17474,7 @@ msgstr "Jamaika"
 #: field:res.partner,color:0
 #: field:res.partner.address,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "Szín mutató"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_category_form
@@ -17046,12 +17508,26 @@ msgid ""
 "user name and password for the invitation of the survey.\n"
 "    "
 msgstr ""
+"\n"
+"Ez a modul felmérésekhez használható.\n"
+"==================================\n"
+"\n"
+"Ez a különböző felhasználók egyes kérdéseinek a válaszán vagy vizsgálati "
+"szempontjain alapul.\n"
+"Egy felmérésnek több oldala lehet. Mindegyik oldal több kérdést tartalmazhat "
+"és mindegyik\n"
+"kérdésre több választ is tartalmazhat. Különböző felhasználó különböző "
+"választ adhat a \n"
+"különböző kérdésekre ha a felmérés elkészült. Partnerek is küldhetnek emailt "
+"a felhasználó\n"
+"nevével és jelszóval meghívásként a felmérésben való részvételhez.\n"
+"    "
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:163
 #, python-format
 msgid "Model '%s' contains module data and cannot be removed!"
-msgstr ""
+msgstr "Modell '%s' modul adatokat tartalmaz és ezért nem lehet törölni!"
 
 #. module: base
 #: model:res.country,name:base.az
@@ -17068,12 +17544,12 @@ msgstr "Figyelem"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_edi
 msgid "Electronic Data Interchange (EDI)"
-msgstr ""
+msgstr "Elektormos adat kicserélés (EDI)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_anglo_saxon
 msgid "Anglo-Saxon Accounting"
-msgstr ""
+msgstr "Angolszász könyvelés"
 
 #. module: base
 #: model:res.country,name:base.vg
@@ -17099,12 +17575,12 @@ msgstr "Cseh / Čeština"
 #. module: base
 #: model:ir.module.category,name:base.module_category_generic_modules
 msgid "Generic Modules"
-msgstr ""
+msgstr "Általános modulok"
 
 #. module: base
 #: model:res.country,name:base.mk
 msgid "Macedonia, the former Yugoslav Republic of"
-msgstr ""
+msgstr "Macedónia, korábban Jugoszláv Köztársaság"
 
 #. module: base
 #: model:res.country,name:base.rw
@@ -17118,11 +17594,14 @@ msgid ""
 "Allow users to login through OpenID.\n"
 "====================================\n"
 msgstr ""
+"\n"
+"Engedélyezi a felhasználók OpenID általi belépését.\n"
+"====================================\n"
 
 #. module: base
 #: help:ir.mail_server,smtp_port:0
 msgid "SMTP Port. Usually 465 for SSL, and 25 or 587 for other cases."
-msgstr ""
+msgstr "SMTP Port. Rendszerint 465 az SSL, és 25 vagy 587 egyéb esetben."
 
 #. module: base
 #: model:res.country,name:base.ck
@@ -17153,7 +17632,7 @@ msgstr "Jelenlegi ablak"
 #: model:ir.module.category,name:base.module_category_hidden
 #: view:res.users:0
 msgid "Technical Settings"
-msgstr ""
+msgstr "Műszaki beállítások"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_accounting_and_finance
@@ -17161,16 +17640,18 @@ msgid ""
 "Helps you handle your accounting needs, if you are not an accountant, we "
 "suggest you to install only the Invoicing."
 msgstr ""
+"Segít a könyvelés igényeinek kezelésében, ha Ön nem könyvelő, akkor azt "
+"ajánljuk, hogy csak a számlázást telepítse."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_plugin_thunderbird
 msgid "Thunderbird Plug-In"
-msgstr ""
+msgstr "Thunderbird kiegészítő plug-in"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_event
 msgid "Trainings, Conferences, Meetings, Exhibitions, Registrations"
-msgstr ""
+msgstr "Képzések, Konferenciák, Találkozók, Kiállítások, Regisztrációk"
 
 #. module: base
 #: model:ir.model,name:base.model_res_country
@@ -17188,7 +17669,7 @@ msgstr "Ország"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_15
 msgid "Wholesaler"
-msgstr ""
+msgstr "Nagykereskedő"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_vat
@@ -17212,7 +17693,7 @@ msgstr ""
 #. module: base
 #: view:ir.values:0
 msgid "Action Bindings/Defaults"
-msgstr ""
+msgstr "Foglalások/alapértelmezett tevékenységek"
 
 #. module: base
 #: view:base.language.export:0
@@ -17220,6 +17701,8 @@ msgid ""
 "file encoding, please be sure to view and edit\n"
 "                           using the same encoding."
 msgstr ""
+"fájl kódolás, kérem nézze meg és szerkessze\n"
+"                           ugyanazzal a kódolással."
 
 #. module: base
 #: view:ir.rule:0
@@ -17238,7 +17721,7 @@ msgstr "Hollandia - Könyvelés"
 #. module: base
 #: model:res.country,name:base.gs
 msgid "South Georgia and the South Sandwich Islands"
-msgstr ""
+msgstr "Dél-Georgia és a Dél-Sandwich-szigetek"
 
 #. module: base
 #: view:res.lang:0
@@ -17253,12 +17736,12 @@ msgstr "Spanyol (SV) / Español (SV)"
 #. module: base
 #: model:ir.actions.act_window,name:base.open_module_tree
 msgid "Install a Module"
-msgstr ""
+msgstr "Egy modul telepítése"
 
 #. module: base
 #: field:ir.module.module,auto_install:0
 msgid "Automatic Installation"
-msgstr ""
+msgstr "Automata telepítés"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hn
@@ -17273,6 +17756,18 @@ msgid ""
 "taxes\n"
 "and the Lempira currency."
 msgstr ""
+"\n"
+"Hondurasz számlatükör\n"
+"\n"
+"\n"
+"This is the base module to manage the accounting chart for Honduras.\n"
+"====================================================================\n"
+"    \n"
+"Agrega una nomenclatura contable para Honduras. También incluye impuestos y "
+"la\n"
+"moneda Lempira. -- Adds accounting chart for Honduras. It also includes "
+"taxes\n"
+"and the Lempira currency."
 
 #. module: base
 #: model:res.country,name:base.jp
@@ -17323,6 +17818,29 @@ msgid ""
 "gives \n"
 "       the spreading, for the selected Analytic Accounts of Budgets.\n"
 msgstr ""
+"\n"
+"Ez a modul lehetővé teszi könyvelők részére az analitika/elemzés szervezést "
+"és a keresztváltós költségvetéseket.\n"
+"==========================================================================\n"
+"\n"
+"Ha már a költségvetés meg van határozva (a "
+"Számlák/Költségvetés/Költségvetések alatt), a terv irányító vezető "
+"beállíthatja a tervezett összeget mindegyik analitikai/elemző számlán.\n"
+"\n"
+"A könyvelő láthatja a teljes tervezetet mindegyik költségvetésre annak "
+"biztosítására, hogy ne legyen több/kevesebb költségvetés mint amennyi a "
+"tervezett volt.\n"
+"\n"
+"Három kimutatás lehetséges:\n"
+"----------------------------\n"
+"    1. Az első a költségvetés listákból áll elő. Ez az elemző számlák "
+"költségeinek a kiterjesztése.\n"
+"\n"
+"    2. A második az első összegzése, ez csak az válogatott elemző számlák "
+"költségeinek a kiterjesztése.\n"
+"\n"
+"    3. Az utolsó az elérhető az analitikus/elemző számlatükörből .Ez a "
+"költségek  kiterjesztése a válogatott elemző számlákon.\n"
 
 #. module: base
 #: selection:ir.actions.act_window.view,view_mode:0
@@ -17371,11 +17889,13 @@ msgid ""
 "Ambiguous specification for field '%(field)s', only provide one of name, "
 "external id or database id"
 msgstr ""
+"Kétértelmű meghatározás a mezőre '%(field)s', csak egy nevet adjon meg, "
+"külső azonosító vagy adatbázis azonosító"
 
 #. module: base
 #: field:ir.sequence,implementation:0
 msgid "Implementation"
-msgstr ""
+msgstr "Végrehajtás"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ve
@@ -17390,7 +17910,7 @@ msgstr "Chile"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_view_editor
 msgid "View Editor"
-msgstr ""
+msgstr "Nézet szerkesztő"
 
 #. module: base
 #: view:ir.cron:0
@@ -17407,7 +17927,7 @@ msgstr "Feltétel"
 #. module: base
 #: help:res.currency,rate:0
 msgid "The rate of the currency to the currency of rate 1."
-msgstr ""
+msgstr "Deviza árfolyam az 1 deviza árfolyamához."
 
 #. module: base
 #: field:ir.ui.view,name:0
@@ -17417,7 +17937,7 @@ msgstr "Nézet neve"
 #. module: base
 #: model:ir.model,name:base.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "Csoportok hozzáférése"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -17452,6 +17972,22 @@ msgid ""
 "In that case, you can not use priorities any more on the different picking.\n"
 "    "
 msgstr ""
+"\n"
+"Ez a modul lehetővé teszi a Just In Time számítást a beszerzési "
+"megrendelésekhez.\n"
+"==================================================================\n"
+"\n"
+"Ha telepíti ezt a modult, akkor nem kell az általános beszerzési ütemezőt\n"
+"futtatnia többé (de még mindig kell a minimum rendelési pont szabály\n"
+"ütemező, vagy például futtassa naponta).\n"
+"Minden beszerzési megrendelés azonnal futtatva lesz, ami egyes esetekben\n"
+"teljesítmény eséshez vezethet.\n"
+"\n"
+"Ez megemelheti a raktárkészletet mivel a termék le lesz foglalva amint "
+"lehet\n"
+"és az ütemezési idő nem lesz figyelembe véve többé.\n"
+"Ebben az esetben, nem használhat prioritásokat a különböző kiválogatásokon.\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.hr
@@ -17480,7 +18016,7 @@ msgstr "Rendszer frissítés"
 #: field:ir.actions.report.xml,report_sxw_content:0
 #: field:ir.actions.report.xml,report_sxw_content_data:0
 msgid "SXW Content"
-msgstr ""
+msgstr "SXW tartalom"
 
 #. module: base
 #: help:ir.sequence,prefix:0
@@ -17495,7 +18031,7 @@ msgstr "Seychelle-szigetek"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_4
 msgid "Gold"
-msgstr ""
+msgstr "Arany"
 
 #. module: base
 #: code:addons/base/res/res_company.py:159
@@ -17522,7 +18058,7 @@ msgstr "Általános információk"
 #. module: base
 #: field:ir.model.data,complete_name:0
 msgid "Complete ID"
-msgstr ""
+msgstr "Teljes azonosító"
 
 #. module: base
 #: model:res.country,name:base.tc
@@ -17535,6 +18071,8 @@ msgid ""
 "Tax Identification Number. Check the box if this contact is subjected to "
 "taxes. Used by the some of the legal statements."
 msgstr ""
+"Adó azonosító szám. Jelölje be a négyzetet, ha a kapcsolat adóköteles. Egyes "
+"jogi kifejezések használják."
 
 #. module: base
 #: field:res.partner.bank,partner_id:0
@@ -17561,6 +18099,26 @@ msgid ""
 "depending on the product's configuration.\n"
 "    "
 msgstr ""
+"\n"
+"A beszerzések kiszámítására használ modul.\n"
+"==============================================\n"
+"\n"
+"Az MRP eljárásban, beszerzési rendeléseket a gyártási rendelések, "
+"megrendelések, \n"
+"raktári elhelyezés elindításához használják. Beszerzési rendelések "
+"automatikusan\n"
+"generáltak a rendszerből és ha hiba nem jön közbe, a felhasználó nem\n"
+"is lesz figyelmeztetve. Hiba esetén a rendszer egyes beszerzési kivételt "
+"visz\n"
+"fel az akadályozó problémáról információt küldve a felhasználónak, hogy azt\n"
+"kézzel kell megoldani (mint, darabjegyzék BoM hiánya vagy nem létező "
+"beszállító).\n"
+"\n"
+"A beszerzési rendelés elindít egy javaslatot a feltölteni kívánt termék\n"
+"automatikus beszerzésére. Ez a beszerzés elindít egy tervet, \n"
+"ami vagy a szállító felé egy beszerzés, vagy a termék beállítása szerinti \n"
+"beszerzést.\n"
+"    "
 
 #. module: base
 #: code:addons/base/res/res_users.py:174
@@ -17621,7 +18179,7 @@ msgstr ""
 #. module: base
 #: view:res.partner:0
 msgid "Internal Notes"
-msgstr ""
+msgstr "Belső jegyzetek"
 
 #. module: base
 #: selection:res.partner.address,type:0
@@ -17637,12 +18195,12 @@ msgstr "NyRt."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_requisition
 msgid "Purchase Requisitions"
-msgstr ""
+msgstr "Beszerzési igénylések"
 
 #. module: base
 #: selection:ir.actions.act_window,target:0
 msgid "Inline Edit"
-msgstr ""
+msgstr "Lineáris szerkesztés"
 
 #. module: base
 #: selection:ir.cron,interval_type:0
@@ -17685,7 +18243,7 @@ msgstr "Objektum létrehozása"
 #. module: base
 #: model:res.country,name:base.ss
 msgid "South Sudan"
-msgstr ""
+msgstr "Dél-Szudán"
 
 #. module: base
 #: field:ir.filters,context:0
@@ -17695,7 +18253,7 @@ msgstr "Kontextus"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_mrp
 msgid "Sales and MRP Management"
-msgstr ""
+msgstr "Eladás és MRP (Anyagszükséglet Tervezés) szervezése"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_form
@@ -17709,6 +18267,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kattintson egy kapcsolat hozzáadásához a címtárba.\n"
+"              </p><p>\n"
+"                OpenERP segítséget nyújt az ügyfél tevékenységek könnyű "
+"nyomon követéséhez; \n"
+"                megbeszélések, az üzleti lehetőségek története,\n"
+"                dokumentumok, stb.\n"
+"              </p>\n"
+"            "
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_2
@@ -17718,7 +18285,7 @@ msgstr "Érdeklődő"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_invoice_directly
 msgid "Invoice Picking Directly"
-msgstr ""
+msgstr "Árukiválogatás számlázása közvetlenül"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -17752,6 +18319,15 @@ msgid ""
 "on a supplier purchase order into several accounts and analytic plans.\n"
 "    "
 msgstr ""
+"\n"
+"alap modul az elemző megoszlások és beszerzési megrendelésekhez.\n"
+"====================================================================\n"
+"\n"
+"Lehetővé teszi a felhasználók egyes elemző terveinek karbantartását. Ez "
+"lehetővé\n"
+"teszi a beszállító beszerzési megrendelés sorainak szétválasztását több "
+"számlára és elemző tervekre.\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.lk
