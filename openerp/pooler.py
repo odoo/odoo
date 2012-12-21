@@ -36,7 +36,11 @@ def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False,
 
 def restart_pool(db_name, force_demo=False, status=None, update_module=False):
     """Delete an existing registry and return a database connection and a newly initialized registry."""
-    registry = RegistryManager.new(db_name, force_demo, status, update_module, True)
+    # preserve previous `cron-active` status of registry if it existed already
+    previous_registry = RegistryManager.registries.get(db_name)
+    cron_active = previous_registry and previous_registry.cron or False
+
+    registry = RegistryManager.new(db_name, force_demo, status, update_module, pooljobs=cron_active)
     return registry.db, registry
 
 
