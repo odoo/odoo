@@ -1082,9 +1082,11 @@ class account_voucher(osv.osv):
         voucher_brw = self.pool.get('account.voucher').browse(cr, uid, voucher_id, context)
         ctx = context.copy()
         ctx.update({'date': voucher_brw.date})
+        prec = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
         for line in voucher_brw.line_ids:
             #create one move line per voucher line where amount is not 0.0
-            if not line.amount and not float_compare(line.move_line_id.invoice.amount_total,0.0,precision_rounding=0.0):
+            #The second part of the condition handle cases were payment/receipt has an amount of 0 
+            if not line.amount and not (line.move_line_id and not float_compare(line.move_line_id.debit, line.move_line_id.credit, precision_rounding=prec) and not float_compare(line.move_line_id.debit, 0.0, precision_rounding=prec)):
                 continue
             # convert the amount set on the voucher line into the currency of the voucher's company
             amount = self._convert_amount(cr, uid, line.untax_amount or line.amount, voucher_brw.id, context=ctx)
