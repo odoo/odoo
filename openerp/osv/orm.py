@@ -5064,24 +5064,20 @@ class BaseModel(object):
 
     def _transient_clean_rows_older_than(self, cr, seconds):
         assert self._transient, "Model %s is not transient, it cannot be vacuumed!" % self._name
-        '''Never delete rows used in last 5 minutes'''
+        # Never delete rows used in last 5 minutes
         seconds = max(seconds, 300)
-        now_str = "(now() at time zone 'UTC')"
-        cr.execute(
-        "SELECT id FROM " + self._table + " WHERE"
-        " COALESCE(write_date, create_date, " + now_str + ")::timestamp"
-        "< (" + now_str + " - interval %s)", ("%s seconds" % seconds,))
+        query = ("SELECT id FROM " + self._table + " WHERE"
+            " COALESCE(write_date, create_date, (now() at time zone 'UTC'))::timestamp"
+            " < ((now() at time zone 'UTC') - interval %s)")
+        cr.execute(query, ("%s seconds" % seconds,))
         ids = [x[0] for x in cr.fetchall()]
-        if  ids:
-            self.unlink(cr, SUPERUSER_ID, ids)
+        self.unlink(cr, SUPERUSER_ID, ids)
 
     def _transient_clean_old_rows(self, cr, max_count):
         # Check how many rows we have in the table
-        sql_statement = "SELECT count(*) as row_count FROM %s" % (self._table, )
-        cr.execute(sql_statement)
+        cr.execute("SELECT count(*) AS row_count FROM " + self._table)
         res = cr.fetchall()
-        row_count = res[0][0]
-        if  row_count <= max_count:
+        if res[0][0] <= max_count:
             return  # max not reached, nothing to do
         self._transient_clean_rows_older_than(cr, 300)
 
@@ -5103,10 +5099,9 @@ class BaseModel(object):
         - the 10 rows that have been created/changed the last 5 minutes will NOT be deleted
         """
         assert self._transient, "Model %s is not transient, it cannot be vacuumed!" % self._name
-        _transient_check_time = 20 # arbitrary limit on vacuum executions
+        _transient_check_time = 20          # arbitrary limit on vacuum executions
         self._transient_check_count += 1
-        if ((not force)
-        and (self._transient_check_count < _transient_check_time)):
+        if not force and (self._transient_check_count < _transient_check_time):
             return True  # no vacuum cleaning this time
         self._transient_check_count = 0
 
