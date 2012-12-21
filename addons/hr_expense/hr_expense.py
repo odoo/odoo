@@ -168,6 +168,8 @@ class hr_expense_expense(osv.osv):
                 journal_id = voucher_obj._get_journal(cr, uid, context={'type': 'purchase', 'company_id': company_id})
                 if journal_id:
                     journal = account_journal.browse(cr, uid, journal_id, context=context)
+            if not journal:
+               raise osv.except_osv(_('Error!'), _("No expense journal found. Please make sure you have a journal with type 'purchase' configured."))
             for line in exp.line_ids:
                 if line.product_id:
                     acc = line.product_id.property_account_expense
