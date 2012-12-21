@@ -415,7 +415,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 new_group.do_save_sequences();
             }).fail(function(error, evt) {
                 evt.preventDefault();
-                alert(_t("An error has occured while moving the record to this group."));
+                alert(_t("An error has occured while moving the record to this group: ") + data.fault_code);
                 self.do_reload(); // TODO: use draggable + sortable in order to cancel the dragging when the rcp fails
             });
         }
@@ -434,8 +434,8 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 } else if (262*unfolded<self.$el.width()) {
                     group.$el.children(':first').css('width', "250px");
                 } else {
-		    // -12 because of padding 6 between cards
-		    // -1 because of the border of the latest dummy column
+            // -12 because of padding 6 between cards
+            // -1 because of the border of the latest dummy column
                     group.$el.children(':first').css('width', Math.floor((self.$el.width()-1)/unfolded)-12 + 'px');
                 }
             }
