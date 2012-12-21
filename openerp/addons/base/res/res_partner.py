@@ -187,6 +187,12 @@ class res_partner(osv.osv, format_address):
     def _set_image(self, cr, uid, id, name, value, args, context=None):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
 
+    def _has_image(self, cr, uid, ids, name, args, context=None):
+        result = {}
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = obj.image != False
+        return result
+
     _order = "name"
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
@@ -253,6 +259,7 @@ class res_partner(osv.osv, format_address):
             help="Small-sized image of this contact. It is automatically "\
                  "resized as a 64x64px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
+        'has_image': fields.function(_has_image, type="boolean"),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'color': fields.integer('Color Index'),
         'user_ids': fields.one2many('res.users', 'partner_id', 'Users'),
@@ -297,7 +304,7 @@ class res_partner(osv.osv, format_address):
         'is_company': False,
         'type': 'default',
         'use_parent_address': True,
-        'image': lambda self, cr, uid, ctx: self._get_default_image(cr, uid, ctx.get('default_is_company', False), ctx),
+        'image': False,
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -308,8 +315,7 @@ class res_partner(osv.osv, format_address):
         return super(res_partner, self).copy(cr, uid, id, default, context)
 
     def onchange_type(self, cr, uid, ids, is_company, context=None):
-        # get value as for an onchange on the image
-        value = tools.image_get_resized_images(self._get_default_image(cr, uid, is_company, context), return_big=True, return_medium=False, return_small=False)
+        value = {}
         value['title'] = False
         if is_company:
             value['parent_id'] = False
