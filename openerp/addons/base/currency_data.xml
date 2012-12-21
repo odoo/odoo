@@ -510,14 +510,6 @@
            <field name="currency_id" ref="CRC"/>
            <field eval="time.strftime('%Y-01-01')" name="name"/>
         </record>
-
-        <record id="ir_mail_server_localhost0" model="ir.mail_server">
-            <field name="name">localhost</field>
-            <field name="smtp_host">localhost</field>
-            <field eval="25" name="smtp_port"/>
-            <field eval="10" name="sequence"/>
-	    </record>
-
         <record id="MUR" model="res.currency">
             <field name="name">MUR</field>
             <field name="symbol">Rs</field>
