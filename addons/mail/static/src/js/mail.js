@@ -1055,9 +1055,11 @@ openerp.mail = function (session) {
             this.is_private = datasets.is_private || false;
             this.author_id = datasets.author_id || false;
             this.thread_level = (datasets.thread_level+1) || 0;
-            this.partner_ids = datasets.partner_ids || [];
-            if (datasets.author_id && datasets.author_id[0])
-                this.partner_ids.push(datasets.author_id);
+            datasets.partner_ids = datasets.partner_ids || [];
+            if (datasets.author_id && ! _.contains(datasets.partner_ids, datasets.author_id) && datasets.author_id[0]) {
+                datasets.partner_ids.push(datasets.author_id);
+            }
+            this.partner_ids = datasets.partner_ids;
             this.messages = [];
 
             this.options.flat_mode = !!(this.options.display_indented_thread > this.thread_level ? this.options.display_indented_thread - this.thread_level : 0);

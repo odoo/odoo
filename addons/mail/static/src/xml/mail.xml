@@ -114,11 +114,13 @@
                 </span>
             </t>
             <t t-if="!widget.is_private and (widget.partner_ids.length or (widget.author_id and widget.author_id[0]))"> and </t>
+            <t t-set="inc" t-value="0"/>
             <t t-foreach="widget.partner_ids" t-as="partner">
                 <span t-attf-class="oe_partner_follower #{inc>=3?'oe_hidden':''}"><t t-if="inc" t-raw="', '"/>
                     <a t-if="widget.options.show_link" t-attf-href="#model=res.partner&amp;id=#{partner[0]}"><t t-raw="partner[1]"/></a>
                     <t t-if="!widget.options.show_link" t-raw="partner[1]"/>
-                </span><t t-set="inc" t-value="(inc or 0)+1"/>
+                </span>
+                <t t-set="inc" t-value="inc+1"/>
             </t>
             <t t-if="widget.partner_ids.length > 3">
                 <span class="oe_more">, <a><t t-raw="widget.partner_ids.length - 3"/> others...</a></span>
