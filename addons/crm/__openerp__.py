@@ -77,7 +77,6 @@ Dashboard for CRM will include:
 
         'crm_view.xml',
 
-        'crm_action_rule_view.xml',
         'crm_lead_view.xml',
         'crm_lead_menu.xml',
 
