@@ -345,7 +345,7 @@ class res_company(osv.osv):
 </header>"""
 
     _header_a4 = _header_main % ('23.0cm', '27.6cm', '27.7cm', '27.7cm', '27.8cm', '27.4cm', '25.8cm', '26.0cm', '26.0cm', '25.6cm', '25.6cm', '25.5cm', '25.5cm')
-    _header_letter = _header_main % ('21.3cm', '25.9cm', '26.0cm', '26.0cm', '26.1cm', '25.5cm', '25.1cm', '24.3cm', '24.3cm', '23.9cm', '23.9cm', '23.8cm', '23.8cm')
+    _header_letter = _header_main % ('21.3cm', '25.9cm', '26.0cm', '26.0cm', '26.1cm', '25.7cm', '24.1cm', '24.3cm', '24.3cm', '23.9cm', '23.9cm', '23.8cm', '23.8cm')
 
     def onchange_paper_format(self, cr, uid, ids, paper_format, context=None):
         if paper_format == 'us_letter':
