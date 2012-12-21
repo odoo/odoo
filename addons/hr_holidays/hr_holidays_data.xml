@@ -44,5 +44,24 @@
             <field name="limit">True</field>
             <field name="color_name">brown</field>
         </record>
+
+        <!-- Holidays-related subtypes for messaging / Chatter -->
+        <record id="mt_holidays_confirmed" model="mail.message.subtype">
+            <field name="name">To Approve</field>
+            <field name="res_model">hr.holidays</field>
+            <field name="description">Request confirmed, waiting confirmation</field>
+        </record>
+        <record id="mt_holidays_approved" model="mail.message.subtype">
+            <field name="name">Approved</field>
+            <field name="res_model">hr.holidays</field>
+            <field name="description">Request approved</field>
+        </record>
+        <record id="mt_holidays_refused" model="mail.message.subtype">
+            <field name="name">Refused</field>
+            <field name="res_model">hr.holidays</field>
+            <field name="default" eval="False"/>
+            <field name="description">Request refused</field>
+        </record>
+
     </data>
 </openerp>

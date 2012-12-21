@@ -7,24 +7,24 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-02-15 12:20+0000\n"
-"Last-Translator: mikel <mikel.martin@gmail.com>\n"
+"PO-Revision-Date: 2012-12-18 17:43+0000\n"
+"Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:12+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-19 05:15+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
 msgid "Analytic Accounting for Purchases"
-msgstr ""
+msgstr "Contabilidad analítica para las compras"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_config_settings
 msgid "account.config.settings"
-msgstr ""
+msgstr "Parámetros de configuración contable"
 
 #. module: purchase
 #: view:board.board:0
@@ -39,6 +39,11 @@ msgid ""
 "Example: Product: this product is deprecated, do not purchase more than 5.\n"
 "                Supplier: don't forget to ask for an express delivery."
 msgstr ""
+"Permite configurar notificaciones en los productos y lanzarlas cuando un "
+"usuario quiera comprar un producto dado o en un proveedor determinado.\n"
+"Ejemplo: \n"
+"Producto: este producto está obsoleto - No comprar más de 5 -.\n"
+"Proveedor: no olvidar preguntar por una entrega rápida."
 
 #. module: purchase
 #: model:product.pricelist,name:purchase.list0
@@ -48,7 +53,7 @@ msgstr "Tarifa de compra por defecto"
 #. module: purchase
 #: report:purchase.order:0
 msgid "Tel :"
-msgstr ""
+msgstr "Tel :"
 
 #. module: purchase
 #: help:purchase.order,pricelist_id:0
@@ -62,7 +67,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.actions.server,name:purchase.actions_server_purchase_order_read
 msgid "Purchase: Mark read"
-msgstr ""
+msgstr "Compras: Marcar como leídos"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -78,7 +83,7 @@ msgstr "Orden del día"
 #. module: purchase
 #: help:purchase.order,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Si está marcado, hay nuevos mensajes que requieren su atención"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_inventory
@@ -103,6 +108,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Contiene el resumen del chatter (nº de mensajes, ...). Este resumen viene "
+"directamente en formato HTML para poder ser insertado en las vistas kanban."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:973
@@ -111,7 +118,7 @@ msgstr ""
 #: code:addons/purchase/wizard/purchase_order_group.py:47
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "¡Advertencia!"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:573
@@ -151,6 +158,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"Aquí puede gestionar todas las recepciones de producto de los pedidos de "
+"compra cuya facturación es \"Basada en envíos entrantes\", y para las que "
+"aún no haya recibido una factura de proveedor.\n"
+"Puede generar facturas de proveedor basadas en estas recepciones.\n"
+"</p>\n"
+"            "
 
 #. module: purchase
 #: view:purchase.report:0
@@ -162,7 +176,7 @@ msgstr "Precio medio"
 #: code:addons/purchase/purchase.py:830
 #, python-format
 msgid "Invoice <b>paid</b>."
-msgstr ""
+msgstr "Factura <b>pagada</b>."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -196,12 +210,12 @@ msgstr "Dirección de envío :"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Confirm Order"
-msgstr ""
+msgstr "Confirmar pedido"
 
 #. module: purchase
 #: field:purchase.config.settings,module_warning:0
 msgid "Alerts by products or supplier"
-msgstr ""
+msgstr "Avisos por producto o proveedor"
 
 #. module: purchase
 #: field:purchase.order,name:0
@@ -213,7 +227,7 @@ msgstr "Referencia del pedido"
 #. module: purchase
 #: view:purchase.config.settings:0
 msgid "Invoicing Process"
-msgstr ""
+msgstr "Proceso de facturación"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_approvingpurchaseorder0
@@ -225,6 +239,8 @@ msgstr "Aprobación"
 msgid ""
 "Allows you to select and maintain different units of measure for products."
 msgstr ""
+"Permite seleccionar y configurar diferentes unidades de medida para los "
+"productos."
 
 #. module: purchase
 #: help:purchase.order,minimum_planned_date:0
@@ -239,12 +255,12 @@ msgstr ""
 #: code:addons/purchase/purchase.py:255
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
-msgstr ""
+msgstr "Para borrar un pedido de compra, debe cancelarlo primero."
 
 #. module: purchase
 #: view:product.product:0
 msgid "When you sell this product, OpenERP will trigger"
-msgstr ""
+msgstr "Cuando venda este producto, OpenERP lanzará"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -264,7 +280,7 @@ msgstr "Total importe base"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
 msgid "Unit of Measure Categories"
-msgstr ""
+msgstr "Categorías de las unidades de medida"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -275,7 +291,7 @@ msgstr "Categoría"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Quotation "
-msgstr ""
+msgstr "Presupuesto "
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:810
@@ -283,6 +299,7 @@ msgstr ""
 msgid ""
 "Quotation for <em>%s</em> <b>converted</b> to a Purchase Order of %s %s."
 msgstr ""
+"Presupuesto para <em>%s</em> <b>convertido</b> a pedido de compra de %s %s."
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_purchaseinvoice0
@@ -302,7 +319,7 @@ msgstr ""
 #: field:purchase.order.line,state:0
 #: view:purchase.report:0
 msgid "Status"
-msgstr ""
+msgstr "Estado"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -312,7 +329,7 @@ msgstr "Agosto"
 #. module: purchase
 #: view:product.product:0
 msgid "to"
-msgstr ""
+msgstr "a"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -329,6 +346,7 @@ msgstr "Pedidos de compras"
 #: help:purchase.config.settings,group_analytic_account_for_purchases:0
 msgid "Allows you to specify an analytic account on purchase orders."
 msgstr ""
+"Permite asignar una cuenta analítica específica en los pedidos de compra."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
@@ -345,6 +363,17 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Pulse para crear una factura en borrador.\n"
+"</p><p>\n"
+"Use este menú para controlar las facturas a ser recibidas de sus "
+"proveedores. OpenERP genera facturas borrados de los pedidos de venta o "
+"recepciones, dependiendo de su configuración.\n"
+"</p><p>\n"
+"Una vez recibe una factura de proveedor, puede casarla con la factura en "
+"borrador y validarla.\n"
+"</p>\n"
+"        "
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -355,12 +384,12 @@ msgstr "Octubre"
 #: code:addons/purchase/purchase.py:837
 #, python-format
 msgid "Purchase Order for <em>%s</em> <b>cancelled</b>."
-msgstr ""
+msgstr "El pedido de compra para <em>%s</em> ha sido <b>cancelado</b>."
 
 #. module: purchase
 #: field:purchase.order,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Resumen"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_createpackinglist0
@@ -378,7 +407,7 @@ msgstr "Presupuestos"
 #. module: purchase
 #: view:purchase.order.line_invoice:0
 msgid "Do you want to generate the supplier invoices?"
-msgstr ""
+msgstr "¿Quiere generar las facturas de proveedor?"
 
 #. module: purchase
 #: field:purchase.order.line,product_qty:0
@@ -391,7 +420,7 @@ msgstr "Cantidad"
 #: code:addons/purchase/purchase.py:819
 #, python-format
 msgid "Shipment <em>%s</em> <b>scheduled</b> for %s."
-msgstr ""
+msgstr "Envío <em>%s</em> <b>programado</b> para %s."
 
 #. module: purchase
 #: field:purchase.order,fiscal_position:0
@@ -401,7 +430,7 @@ msgstr "Posición fiscal"
 #. module: purchase
 #: field:purchase.config.settings,default_invoice_method:0
 msgid "Default invoicing control method"
-msgstr ""
+msgstr "Método de control de facturación por defecto"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_picking_in
@@ -425,6 +454,14 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Pulse para registrar una factura de proveedor.\n"
+"</p><p>\n"
+"Las factura de proveedor pueden ser pre-generadas basadas en pedidos de "
+"compra o en recepciones. Esto permite controlar  las facturas recibidas de "
+"los proveedores acorde con los documentos borrador en OpenERP.\n"
+"</p>\n"
+"            "
 
 #. module: purchase
 #: view:purchase.order:0
@@ -449,12 +486,16 @@ msgid ""
 "Put an address if you want to deliver directly from the supplier to the "
 "customer. Otherwise, keep empty to deliver to your own company."
 msgstr ""
+"Coloque una dirección si quiere enviar directamente del proveedor al "
+"cliente. En caso contrario, déjelo en blanco para enviar a su propia "
+"compañía."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:824
 #, python-format
 msgid "Draft Invoice of %s %s is <b>waiting for validation</b>."
 msgstr ""
+"La factura en borrador de %s %s esta <b>esperando para validación</b>."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_line_form_action2
@@ -470,6 +511,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"Aquí puede seguir todas las líneas de los pedidos de compra cuya facturación "
+"sea \"Basada en las líneas de pedido de compra\", y para las cuales aún no "
+"ha recibido factura de proveedor. Puede generar facturas de compra borrador "
+"basadas en las líneas de esta lista.\n"
+"</p>\n"
+"            "
 
 #. module: purchase
 #: field:purchase.order.line,date_planned:0
@@ -501,19 +549,19 @@ msgstr "Pedidos de compra que incluyen líneas no facturadas."
 #: view:product.product:0
 #: field:product.template,purchase_ok:0
 msgid "Can be Purchased"
-msgstr ""
+msgstr "Puede ser comprado"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
 msgid "Incoming  Products"
-msgstr ""
+msgstr "Productos a recibir"
 
 #. module: purchase
 #: view:purchase.config.settings:0
 #: view:purchase.order.group:0
 #: view:purchase.order.line_invoice:0
 msgid "or"
-msgstr ""
+msgstr "o"
 
 #. module: purchase
 #: field:res.company,po_lead:0
@@ -534,7 +582,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.config.settings:0
 msgid "Apply"
-msgstr ""
+msgstr "Aplicar"
 
 #. module: purchase
 #: field:purchase.order,amount_untaxed:0
@@ -554,12 +602,12 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:0
 msgid "Customer Address"
-msgstr ""
+msgstr "Dirección de cliente"
 
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "RFQ Sent"
-msgstr ""
+msgstr "Petición de cotización enviada"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -579,7 +627,7 @@ msgstr "Proveedor"
 #: code:addons/purchase/purchase.py:508
 #, python-format
 msgid "Define expense account for this company: \"%s\" (id:%d)."
-msgstr ""
+msgstr "Defina la cuenta de gastos para esta compañía: \"%s\" (id:%d)."
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_packinginvoice0
@@ -612,12 +660,12 @@ msgstr "Pedidos de compra que están en borrador"
 #. module: purchase
 #: view:product.product:0
 msgid "Suppliers"
-msgstr ""
+msgstr "Proveedores"
 
 #. module: purchase
 #: view:product.product:0
 msgid "To Purchase"
-msgstr ""
+msgstr "A comprar"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
@@ -635,11 +683,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Pulse para crear un presupuesto que será convertido en pedido de venta.\n"
+"</p><p>\n"
+"Use este menú para buscar sus pedidos de compra por referencias, proveedor, "
+"productos, etc. Para cada pedido de venta, puede controlar la discusión "
+"relativa con el proveedor, controlar los productos recibidos y controlar las "
+"facturas de proveedor.\n"
+"</p>\n"
+"            "
 
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "Invoices and Receptions"
-msgstr ""
+msgstr "Facturas y recepciones"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -651,12 +708,12 @@ msgstr "Nº de líneas"
 #: code:addons/purchase/wizard/purchase_line_invoice.py:110
 #, python-format
 msgid "Define expense account for this product: \"%s\" (id:%d)."
-msgstr ""
+msgstr "Defina la cuenta de gastos para este producto:\"%s\" (id:%d)."
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "(update)"
-msgstr ""
+msgstr "(actualizar)"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -673,12 +730,12 @@ msgstr "Indica que un albarán ha sido realizado."
 #: code:addons/purchase/purchase.py:572
 #, python-format
 msgid "Unable to cancel this purchase order."
-msgstr ""
+msgstr "No se ha podido cancelar este pedido de compra."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_invoice
 msgid "Invoice Control"
-msgstr "Control factura"
+msgstr "Control de facturas"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_stock_move_report_po
@@ -705,6 +762,8 @@ msgid ""
 "Unique number of the purchase order, computed automatically when the "
 "purchase order is created."
 msgstr ""
+"Número único del pedido de compra, calculado automáticamente cuando se crea "
+"el pedido."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
@@ -732,7 +791,7 @@ msgstr "Tarifa"
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "Draft PO"
-msgstr ""
+msgstr "OC en borrador"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_draftpurchaseorder0
@@ -752,7 +811,7 @@ msgstr "Fecha pedido"
 #. module: purchase
 #: field:purchase.config.settings,group_uom:0
 msgid "Manage different units of measure for products"
-msgstr ""
+msgstr "Gestionar diferentes unidades de medida para los productos"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_invoiceafterpacking0
@@ -778,13 +837,13 @@ msgstr "Esperando aceptación proveedor"
 #. module: purchase
 #: report:purchase.quotation:0
 msgid "Request for Quotation :"
-msgstr "Presupuesto solicitado:"
+msgstr "Solicitud de presupuesto:"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_picking_tree4_picking_to_invoice
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree4_picking_to_invoice
 msgid "On Incoming Shipments"
-msgstr ""
+msgstr "En envíos entrantes"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -800,7 +859,7 @@ msgstr "Movimientos de stock"
 #: code:addons/purchase/purchase.py:1158
 #, python-format
 msgid "Draft Purchase Order created"
-msgstr ""
+msgstr "Pedido de compra en borrador creado"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
@@ -815,12 +874,12 @@ msgstr "Indica que una factura ha sido pagada."
 #. module: purchase
 #: field:purchase.order,notes:0
 msgid "Terms and Conditions"
-msgstr ""
+msgstr "Términos y condiciones"
 
 #. module: purchase
 #: field:purchase.order,currency_id:0
 msgid "unknown"
-msgstr ""
+msgstr "desconocido"
 
 #. module: purchase
 #: help:purchase.order,date_order:0
@@ -830,7 +889,7 @@ msgstr "Fecha de la creación de este documento."
 #. module: purchase
 #: field:purchase.order,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Es un seguidor"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_graph
@@ -867,17 +926,17 @@ msgstr "Compañías"
 #. module: purchase
 #: view:purchase.order.group:0
 msgid "Are you sure you want to merge these orders?"
-msgstr ""
+msgstr "¿Está seguro de que desea juntar estos pedidos?"
 
 #. module: purchase
 #: field:account.config.settings,module_purchase_analytic_plans:0
 msgid "Use multiple analytic accounts on orders"
-msgstr ""
+msgstr "Usar múltiples cuentas analíticas en los pedidos"
 
 #. module: purchase
 #: view:product.product:0
 msgid "will be created in order to subcontract the job"
-msgstr ""
+msgstr "será creado para subcontrar el trabajo"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
@@ -897,7 +956,7 @@ msgstr "Días a validar"
 #. module: purchase
 #: view:purchase.config.settings:0
 msgid "Supplier Features"
-msgstr ""
+msgstr "Características del proveedor"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -919,7 +978,7 @@ msgstr "Cancelar"
 #: field:purchase.order,message_comment_ids:0
 #: help:purchase.order,message_comment_ids:0
 msgid "Comments and emails"
-msgstr ""
+msgstr "Comentarios y correos"
 
 #. module: purchase
 #: sql_constraint:purchase.order:0
@@ -958,12 +1017,12 @@ msgstr "Fecha aprobación"
 #: code:addons/purchase/purchase.py:806
 #, python-format
 msgid "Request for quotation <b>created</b>."
-msgstr ""
+msgstr "Solicitud de presupuesto <b>creada</b>."
 
 #. module: purchase
 #: view:product.product:0
 msgid "a draft purchase order"
-msgstr ""
+msgstr "un pedido de compra en borrador"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -973,13 +1032,13 @@ msgstr "Pedidos del año"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
 msgid "RFQs and Purchases"
-msgstr ""
+msgstr "PdO y compras"
 
 #. module: purchase
 #: field:account.config.settings,group_analytic_account_for_purchases:0
 #: field:purchase.config.settings,group_analytic_account_for_purchases:0
 msgid "Analytic accounting for purchases"
-msgstr ""
+msgstr "Contabilidad analítica para compras"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder1
@@ -998,33 +1057,36 @@ msgid ""
 "                Example: 10% for retailers, promotion of 5 EUR on this "
 "product, etc."
 msgstr ""
+"Permite gestionar diferentes precios basados en reglas por categoría de "
+"proveedor.\n"
+"Ejemplo: 10% para minoristas, promoción de 5 EUR en este producto, etc."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_mail_mail
 msgid "Outgoing Mails"
-msgstr ""
+msgstr "Correos salientes"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:437
 #, python-format
 msgid "You cannot confirm a purchase order without any purchase order line."
-msgstr ""
+msgstr "No puede confirmar un pedido de compra que no tiene líneas."
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.actions_server_purchase_order_unread
 msgid "Purchase: Mark unread"
-msgstr ""
+msgstr "Compras: Marcar como no leído"
 
 #. module: purchase
 #: help:purchase.order,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Mensajes e historial de comunicación"
 
 #. module: purchase
 #: field:purchase.order,warehouse_id:0
 #: field:stock.picking.in,warehouse_id:0
 msgid "Destination Warehouse"
-msgstr ""
+msgstr "Almacén destino"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:973
@@ -1033,6 +1095,8 @@ msgid ""
 "Selected Unit of Measure does not belong to the same category as the product "
 "Unit of Measure."
 msgstr ""
+"La unidad de medida seleccionada no pertenece a la misma categoría que la "
+"unidad de medida del producto."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_unit_measure_purchase
@@ -1043,13 +1107,13 @@ msgstr "Unidades de medida"
 #. module: purchase
 #: field:purchase.config.settings,group_purchase_pricelist:0
 msgid "Manage pricelist per supplier"
-msgstr ""
+msgstr "Gestionar tarifas por proveedor"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:833
 #, python-format
 msgid "Purchase Order has been set to <b>draft</b>."
-msgstr ""
+msgstr "El pedido de compra se ha establecido como <b>borrador</b>."
 
 #. module: purchase
 #: view:board.board:0
@@ -1061,11 +1125,12 @@ msgstr "Tablero de compras"
 #, python-format
 msgid "First cancel all receptions related to this purchase order."
 msgstr ""
+"Primero cancele todas las recepciones relativas a este pedido de compra."
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Approve Order"
-msgstr ""
+msgstr "Aprobar pedido"
 
 #. module: purchase
 #: help:purchase.report,date:0
@@ -1093,7 +1158,7 @@ msgstr "Estadísticas pedidos de compra"
 #: view:purchase.order:0
 #: field:purchase.order,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Mensajes sin leer"
 
 #. module: purchase
 #: view:purchase.order.line_invoice:0
@@ -1113,7 +1178,7 @@ msgstr "Notas"
 #. module: purchase
 #: field:purchase.config.settings,module_purchase_requisition:0
 msgid "Manage purchase requisitions"
-msgstr ""
+msgstr "Gestionar solicitudes de compra"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1138,7 +1203,7 @@ msgstr "Moviemiento de stock"
 #: code:addons/purchase/purchase.py:255
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "¡Acción no válida!"
 
 #. module: purchase
 #: field:purchase.order,validator:0
@@ -1161,12 +1226,12 @@ msgstr "Pedidos de compra que están en estado de excepción"
 #: model:process.node,note:purchase.process_node_draftpurchaseorder0
 #: model:process.node,note:purchase.process_node_draftpurchaseorder1
 msgid "Request for Quotations."
-msgstr "Solicitud de presupuesto"
+msgstr "Solicitud de presupuestos."
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Source"
-msgstr ""
+msgstr "Origen"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_picking
@@ -1187,12 +1252,14 @@ msgstr "Facturas generadas para un pedido de compra"
 #. module: purchase
 #: selection:purchase.config.settings,default_invoice_method:0
 msgid "Pre-generate draft invoices based on purchase orders"
-msgstr ""
+msgstr "Pre-generar facturas borrador basadas en los pedidos de compra"
 
 #. module: purchase
 #: help:product.template,purchase_ok:0
 msgid "Specify if the product can be selected in a purchase order line."
 msgstr ""
+"Especifica si el producto puede ser seleccionado en una línea de un pedido "
+"de compra."
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_invoicefrompackinglist0
@@ -1228,19 +1295,21 @@ msgid ""
 "received the\n"
 "                        products."
 msgstr ""
+"para comprar las cantidades requeridas al proveedor.\n"
+"La orden de entrega estará lista después de haber recibido los productos."
 
 #. module: purchase
 #: view:product.product:0
 msgid ""
 "a draft\n"
 "                        purchase order"
-msgstr ""
+msgstr "un pedido de compra en borrador"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:310
 #, python-format
 msgid "Please create Invoices."
-msgstr ""
+msgstr "Por favor, cree facturas."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_order
@@ -1261,7 +1330,7 @@ msgstr "Marzo"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Receive Invoice"
-msgstr ""
+msgstr "Recibir factura"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1288,7 +1357,7 @@ msgstr "Para ser revisado por el contable."
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_config_settings
 msgid "purchase.config.settings"
-msgstr ""
+msgstr "Parámetros de configuración de compra"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_approvepurchaseorder0
@@ -1299,7 +1368,7 @@ msgstr "Estado del pedido de compra."
 #. module: purchase
 #: field:purchase.order.line,product_uom:0
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Unidad de medida del producto"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_pricelist_version_action
@@ -1315,6 +1384,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Pulse para añadir una versión de tarifa.\n"
+"</p><p>\n"
+"Puede haber más de una versión de tarifa, que será válida durante cierto "
+"periodo de tiempo. Algunos ejemplos de versiones son: precios principales, "
+"2010, 2011, ventas de verano, etc.\n"
+"</p>\n"
+"            "
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_view_purchase_line_invoice
@@ -1335,18 +1412,18 @@ msgstr "PC: %s"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Send by EMail"
-msgstr ""
+msgstr "Enviar por correo electrónico"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:498
 #, python-format
 msgid "Define purchase journal for this company: \"%s\" (id:%d)."
-msgstr ""
+msgstr "Defina el diario de compras para esta compañía: \"%s\" (id: %d)."
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Purchase Order "
-msgstr ""
+msgstr "Pedido de compra "
 
 #. module: purchase
 #: view:purchase.order.line:0
@@ -1357,12 +1434,12 @@ msgstr "Facturas manuales"
 #: model:ir.actions.act_window,name:purchase.action_purchase_configuration
 #: view:purchase.config.settings:0
 msgid "Configure Purchases"
-msgstr ""
+msgstr "Configurar compras"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Untaxed"
-msgstr ""
+msgstr "Base imponible"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_createpackinglist0
@@ -1373,7 +1450,7 @@ msgstr "Albarán generado"
 #: model:ir.actions.act_window,name:purchase.purchase_line_form_action2
 #: model:ir.ui.menu,name:purchase.menu_purchase_line_order_draft
 msgid "On Purchase Order Lines"
-msgstr ""
+msgstr "En las líneas del pedido de compra"
 
 #. module: purchase
 #: report:purchase.quotation:0
@@ -1386,16 +1463,18 @@ msgid ""
 "This is the list of incoming shipments that have been generated for this "
 "purchase order."
 msgstr ""
+"Ésta es la lista de los envíos entrantes que se han generado para este "
+"pedido de compra."
 
 #. module: purchase
 #: field:purchase.config.settings,module_purchase_double_validation:0
 msgid "Force two levels of approvals"
-msgstr ""
+msgstr "Forzar dos niveles de aprobación"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase_type
 msgid "Price Types"
-msgstr ""
+msgstr "Tipos de precio"
 
 #. module: purchase
 #: help:purchase.order,date_approve:0
@@ -1449,6 +1528,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Pulse para crear una solicitud de presupuesto.\n"
+"</p><p>\n"
+"El presupuesto contiene el historial de la discusión/negociación que tiene "
+"con su proveedor. Una vez confirmada, la solicitud de presupuesto se "
+"convierte en un pedido de compra.\n"
+"</p><p>\n"
+"La mayoría de propuestas de pedidos de compra se crean automáticamente por "
+"OpenERP basadas en las necesidades de inventario.\n"
+"</p>\n"
+"            "
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_approvingpurchaseorder0
@@ -1479,7 +1569,7 @@ msgstr "Fusionar pedidos"
 #. module: purchase
 #: field:purchase.config.settings,module_purchase_analytic_plans:0
 msgid "Use multiple analytic accounts on purchase orders"
-msgstr ""
+msgstr "Usar múltiples cuentas analíticas en los pedidos de compra"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
@@ -1502,7 +1592,7 @@ msgstr "Corregido manualmente"
 #. module: purchase
 #: field:purchase.config.settings,group_costing_method:0
 msgid "Compute product cost price based on average cost"
-msgstr ""
+msgstr "Calcular precio de coste del producto basado en el coste medio"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:340
@@ -1531,7 +1621,7 @@ msgstr "Confirmación"
 #. module: purchase
 #: report:purchase.order:0
 msgid "TIN :"
-msgstr ""
+msgstr "TIN :"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_by_category_purchase_form
@@ -1550,11 +1640,19 @@ msgid ""
 "* The 'Cancelled' status is set automatically when user cancel purchase "
 "order."
 msgstr ""
+" * El estado 'Borrador' se establece automáticamente cuando se crea el "
+"pedido de compra.\n"
+"* El estado 'Confirmado' se establece cuando se confirma el pedido de "
+"compra.\n"
+"* El estado 'Realizado' se establece automáticamente cuando el pedido de "
+"compra se realiza.\n"
+"* El estado 'Cancelado' se establece cuando el usuario cancela el pedido de "
+"compra."
 
 #. module: purchase
 #: field:purchase.order,invoiced:0
 msgid "Invoice Received"
-msgstr ""
+msgstr "Factura recibida"
 
 #. module: purchase
 #: field:purchase.order,invoice_method:0
@@ -1599,6 +1697,10 @@ msgid ""
 "lines on a purchase order between several accounts and analytic plans.\n"
 "                This installs the module purchase_analytic_plans."
 msgstr ""
+"Permitir al usuario mantener varios planes analíticos, de tal forma que las "
+"líneas de los pedidos de compra se pueden separar entre varias cuentas y "
+"planes analíticos.\n"
+"Esto instalará el módulo 'purchase_analytic_plans'."
 
 #. module: purchase
 #: field:purchase.order,location_id:0
@@ -1610,17 +1712,17 @@ msgstr "Destino"
 #. module: purchase
 #: field:purchase.order,dest_address_id:0
 msgid "Customer Address (Direct Delivery)"
-msgstr ""
+msgstr "Dirección del cliente (Envío directo)"
 
 #. module: purchase
 #: model:ir.actions.client,name:purchase.action_client_purchase_menu
 msgid "Open Purchase Menu"
-msgstr ""
+msgstr "Abrir menú 'Compras'"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr ""
+msgstr "Asistente de redacción de correo electrónico."
 
 #. module: purchase
 #: field:purchase.order,company_id:0
@@ -1674,7 +1776,7 @@ msgstr "Análisis recepciones"
 #. module: purchase
 #: field:purchase.order,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Mensajes"
 
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.report_purchase_order
@@ -1699,7 +1801,7 @@ msgstr "Pedido de compra"
 #: code:addons/purchase/wizard/purchase_line_invoice.py:109
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "¡Error!"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1716,6 +1818,13 @@ msgid ""
 "paid and received, the status becomes 'Done'. If a cancel action occurs in "
 "the invoice or in the reception of goods, the status becomes in exception."
 msgstr ""
+"Estado del pedido de compra o de la solicitud de presupuesto. Un presupuesto "
+"en un pedido de venta en estado 'Borrador'. Entonces el pedido debe ser "
+"confirmado por el usuario, y el estado pasa a 'Confirmado'. El proveedor "
+"debe confirmar el pedido para pasar a estado 'Aprobado'. Cuando el pedido se "
+"paga y se recibe, entonces el estado pasa a ser 'Realizado'. Si una acción "
+"de cancelación ocurre en la factura o en la recepción de los bienes, el "
+"estado se convierte a en excepción."
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_packinginvoice0
@@ -1736,13 +1845,13 @@ msgstr "Cancelado"
 #. module: purchase
 #: field:res.partner,purchase_order_count:0
 msgid "# of Purchase Order"
-msgstr ""
+msgstr "Nº de pedido de compra"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:827
 #, python-format
 msgid "Shipment <b>received</b>."
-msgstr ""
+msgstr "Envío <b>recibido</b>"
 
 #. module: purchase
 #: report:purchase.quotation:0
@@ -1752,7 +1861,7 @@ msgstr "Tel.:"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Resend Purchase Order"
-msgstr ""
+msgstr "Reenviar pedido de compra"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1796,7 +1905,7 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Seguidores"
 
 #. module: purchase
 #: help:purchase.config.settings,module_purchase_requisition:0
@@ -1808,6 +1917,11 @@ msgid ""
 "            to one supplier or if you want a purchase requisition to "
 "negotiate with several suppliers."
 msgstr ""
+"Las solicitudes de presupuesto se usan cuando se solicita cotizaciones de "
+"varios proveedores para un conjunto dado de productos.\n"
+"Puede configurar por producto si directamente se realiza una solicitud de "
+"presupuesto a un proveedor o si desear negociar la compra con varios "
+"proveedores."
 
 #. module: purchase
 #: field:purchase.order.line,invoice_lines:0
@@ -1829,7 +1943,7 @@ msgstr ""
 #. module: purchase
 #: model:email.template,report_name:purchase.email_template_edi_purchase
 msgid "RFQ_${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "PdO_${(object.name or '').replace('/','_')}"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:988
@@ -1859,6 +1973,9 @@ msgid ""
 "amount.\n"
 "                This installs the module purchase_double_validation."
 msgstr ""
+"Provee un mecanismo de doble validación para las compras que exceden un "
+"importe máximo.\n"
+"Esto instala el módulo 'purchase_double_validation'."
 
 #. module: purchase
 #: code:addons/purchase/edi/purchase_order.py:132
@@ -1870,7 +1987,7 @@ msgstr "Tarifa EDI (%s)"
 #: view:purchase.report:0
 #: field:purchase.report,product_uom:0
 msgid "Reference Unit of Measure"
-msgstr ""
+msgstr "Unidad de medida de referencia"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_packinginvoice0
@@ -1917,7 +2034,7 @@ msgstr "Lista de productos solicitados."
 #. module: purchase
 #: view:purchase.order:0
 msgid "Incoming Shipments & Invoices"
-msgstr ""
+msgstr "Envíos y facturas entrantes"
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -1970,6 +2087,7 @@ msgstr "Noviembre"
 #: help:purchase.config.settings,group_costing_method:0
 msgid "Allows you to compute product cost price based on average cost."
 msgstr ""
+"Permite calcular el precio de coste del producto basado en el coste medio."
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1990,6 +2108,13 @@ msgid ""
 "Bases on incoming shipments: let you create an invoice when receptions are "
 "validated."
 msgstr ""
+"Basado en las líneas del pedido de compra: coloca líneas individuales en "
+"'Control de facturas > Basado en líneas de pedidos de compra' desde las que "
+"se puede crear selectivamente una factura.\n"
+"Basado en el borrador de factura generado: crea una factura borrador que se "
+"puede validar más tarde.\n"
+"Basada en envíos entrantes: deja crear una factura cuando las recepciones "
+"son validadas."
 
 #. module: purchase
 #: help:purchase.order,origin:0
@@ -1997,6 +2122,8 @@ msgid ""
 "Reference of the document that generated this purchase order request; a sale "
 "order or an internal procurement request."
 msgstr ""
+"Referencia del documento que genera esta petición de pedido de compra: un "
+"pedido de venta o una petición interna de abastecimiento."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_partner_categories_in_form
@@ -2011,12 +2138,12 @@ msgstr "Estado del pedido"
 #. module: purchase
 #: report:purchase.order:0
 msgid "Request for Quotation N°"
-msgstr "Petición de presupuesto Nº"
+msgstr "Solicitud de presupuesto Nº"
 
 #. module: purchase
 #: view:purchase.config.settings:0
 msgid "Invoicing Settings"
-msgstr ""
+msgstr "Configuración de facturación"
 
 #. module: purchase
 #: model:email.template,body_html:purchase.email_template_edi_purchase
@@ -2100,6 +2227,84 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
+"255, 255); \">\n"
+"\n"
+"    <p>Hola ${object.partner_id.name and ' ' or ''}${object.partner_id.name "
+"or ''},</p>\n"
+"    \n"
+"    <p>Aquí le enviamos ${object.state in ('draft', 'sent') and 'una "
+"solicitud de presupuesto' or 'una confirmación de pedido de compra'} de "
+"${object.company_id.name}: </p>\n"
+"    \n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERENCIAS</strong><br />\n"
+"       &nbsp;&nbsp;Nº de pedido: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;Total del pedido: <strong>${object.amount_total} "
+"${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Fecha del pedido: ${object.date_order}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;Referencia del pedido: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.partner_ref:\n"
+"       &nbsp;&nbsp;Su referencia: ${object.partner_ref}<br />\n"
+"       % endif\n"
+"       % if object.validator:\n"
+"       &nbsp;&nbsp;Su contacto: <a href=\"mailto:${object.validator.email or "
+"''}?subject=Pedido%20${object.name}\">${object.validator.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    <br/>\n"
+"    <p>Si tiene alguna duda, no dude en contactarnos.</p>\n"
+"    <p>¡Gracias!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#FFF;\">\n"
+"            <strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % "
+"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
+"or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                Teléfono:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_by_user_all
@@ -2109,7 +2314,7 @@ msgstr "Total pedidos por usuario mensual"
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "Based on incoming shipments"
-msgstr ""
+msgstr "Basado en envíos entrantes"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -2124,6 +2329,10 @@ msgid ""
 "used to do the matching when you receive the products as this reference is "
 "usually written on the delivery order sent by your supplier."
 msgstr ""
+"Referencia del pedido de venta o presupuesto enviado por el proveedor. Se "
+"usa principalmente para casar documentos cuando recibe los productos, ya que "
+"esta referencia se escribe habitualmente en la orden de entrega enviada por "
+"el proveedor."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:991
@@ -2156,7 +2365,7 @@ msgstr "Febrero"
 #: model:ir.actions.act_window,name:purchase.action_invoice_pending
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_pending_invoice
 msgid "On Draft Invoices"
-msgstr ""
+msgstr "Sobre facturas borrador"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
@@ -2182,7 +2391,7 @@ msgstr "Importe total"
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Plantilla de producto"
 
 #. module: purchase
 #: view:purchase.order.group:0
@@ -2215,7 +2424,7 @@ msgstr ""
 #. module: purchase
 #: view:product.product:0
 msgid "When you sell this service to a customer,"
-msgstr ""
+msgstr "Cuando vende este servicio al cliente,"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_pricelist_version_action
@@ -2237,7 +2446,7 @@ msgstr "Año"
 #. module: purchase
 #: selection:purchase.config.settings,default_invoice_method:0
 msgid "Based on purchase order lines"
-msgstr ""
+msgstr "Basado en las líneas de pedido de compra"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -2254,6 +2463,15 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Este proveedor no tiene ningún pedido de venta. Pulse para crear una nueva "
+"SdP.\n"
+"</p><p>\n"
+"La solicitud de presupuesto (SdP) es el primer paso en el flujo de compras. "
+"Una vez convertida en un pedido de compra, será capaz de gestionar la "
+"recepción de los productos y la factura de proveedor.\n"
+"</p>\n"
+"            "
 
 #. module: purchase
 #: view:purchase.report:0
@@ -3107,9 +3325,6 @@ msgstr "Pedidos"
 #~ "o puede importar sus empresas existentes usando una hoja de cálculo CSV "
 #~ "desde el asistente \"Importar datos\"."
 
-#~ msgid "Is a Back Order"
-#~ msgstr "Es un pedido pendiente"
-
 #, python-format
 #~ msgid "Selected UOM does not belong to the same category as the product UOM"
 #~ msgstr ""
@@ -3237,8 +3452,11 @@ msgstr "Pedidos"
 #~ "en recepciones\", puede seguir aquí todas las recepciones de productos y "
 #~ "crear facturas para esas recepciones."
 
-#~ msgid "Back Orders"
-#~ msgstr "Pedidos pendientes"
-
 #~ msgid "Error ! You cannot create recursive associated members."
 #~ msgstr "¡Error! No puede crear miembros asociados recursivamente."
+
+#~ msgid "Back Orders"
+#~ msgstr "Pedidos en espera"
+
+#~ msgid "Is a Back Order"
+#~ msgstr "Es un pedido en espera"

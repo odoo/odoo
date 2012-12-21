@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-import tools
+from openerp import tools
 from openerp.tests import common
 
 class Test_Lunch(common.TransactionCase):

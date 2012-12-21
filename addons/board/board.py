@@ -22,8 +22,9 @@
 
 from operator import itemgetter
 from textwrap import dedent
-from osv import fields, osv
-import tools
+
+from openerp import tools
+from openerp.osv import fields, osv
 
 class board_board(osv.osv):
     _name = 'board.board'

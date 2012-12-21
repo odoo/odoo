@@ -19,12 +19,12 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 import time
 import datetime
-import tools
-from osv.orm import except_orm
-from tools.translate import _
+from openerp import tools
+from openerp.osv.orm import except_orm
+from openerp.tools.translate import _
 from dateutil.relativedelta import relativedelta
 
 def str_to_datetime(strdate):
@@ -333,9 +333,9 @@ class fleet_vehicle(osv.Model):
         'company_id': fields.many2one('res.company', 'Company'),
         'license_plate': fields.char('License Plate', size=32, required=True, help='License plate number of the vehicle (ie: plate number for a car)'),
         'vin_sn': fields.char('Chassis Number', size=32, help='Unique number written on the vehicle motor (VIN/SN number)'),
-        'driver_id': fields.many2one('res.partner', 'Driver', _idhelp='Driver of the vehicle'),
-        'model_id': fields.many2one('fleet.vehicle.model', 'Model', requ_idired=True, help='Model of the vehicle'),
-        'log_fuel': fields.one2many('fleet.vehicle.log.f_iduel', 'vehicle_id', 'Fuel Logs'),
+        'driver_id': fields.many2one('res.partner', 'Driver', help='Driver of the vehicle'),
+        'model_id': fields.many2one('fleet.vehicle.model', 'Model', required=True, help='Model of the vehicle'),
+        'log_fuel': fields.one2many('fleet.vehicle.log.fuel', 'vehicle_id', 'Fuel Logs'),
         'log_services': fields.one2many('fleet.vehicle.log.services', 'vehicle_id', 'Services Logs'),
         'log_contracts': fields.one2many('fleet.vehicle.log.contract', 'vehicle_id', 'Contracts'),
         'acquisition_date': fields.date('Acquisition Date', required=False, help='Date when the vehicle has been bought'),
@@ -468,10 +468,13 @@ class fleet_vehicle_log_fuel(osv.Model):
     def on_change_vehicle(self, cr, uid, ids, vehicle_id, context=None):
         if not vehicle_id:
             return {}
-        odometer_unit = self.pool.get('fleet.vehicle').browse(cr, uid, vehicle_id, context=context).odometer_unit
+        vehicle = self.pool.get('fleet.vehicle').browse(cr, uid, vehicle_id, context=context)
+        odometer_unit = vehicle.odometer_unit
+        driver = vehicle.driver_id.id
         return {
             'value': {
                 'odometer_unit': odometer_unit,
+                'purchaser_id': driver,
             }
         }
 
@@ -546,7 +549,6 @@ class fleet_vehicle_log_fuel(osv.Model):
         'cost_amount': fields.related('cost_id', 'amount', string='Amount', type='float', store=True), #we need to keep this field as a related with store=True because the graph view doesn't support (1) to address fields from inherited table and (2) fields that aren't stored in database
     }
     _defaults = {
-        'purchaser_id': lambda self, cr, uid, ctx: uid,
         'date': fields.date.context_today,
         'cost_subtype_id': _get_default_service_type,
         'cost_type': 'fuel',
@@ -558,10 +560,13 @@ class fleet_vehicle_log_services(osv.Model):
     def on_change_vehicle(self, cr, uid, ids, vehicle_id, context=None):
         if not vehicle_id:
             return {}
-        odometer_unit = self.pool.get('fleet.vehicle').browse(cr, uid, vehicle_id, context=context).odometer_unit
+        vehicle = self.pool.get('fleet.vehicle').browse(cr, uid, vehicle_id, context=context)
+        odometer_unit = vehicle.odometer_unit
+        driver = vehicle.driver_id.id
         return {
             'value': {
                 'odometer_unit': odometer_unit,
+                'purchaser_id': driver,
             }
         }
 
@@ -583,7 +588,6 @@ class fleet_vehicle_log_services(osv.Model):
         'notes': fields.text('Notes'),
     }
     _defaults = {
-        'purchaser_id': lambda self, cr, uid, ctx: uid,
         'date': fields.date.context_today,
         'cost_subtype_id': _get_default_service_type,
         'cost_type': 'services'
@@ -783,7 +787,7 @@ class fleet_vehicle_log_contract(osv.Model):
         'cost_amount': fields.related('cost_id', 'amount', string='Amount', type='float', store=True), #we need to keep this field as a related with store=True because the graph view doesn't support (1) to address fields from inherited table and (2) fields that aren't stored in database
     }
     _defaults = {
-        'purchaser_id': lambda self, cr, uid, ctx: uid,
+        'purchaser_id': lambda self, cr, uid, ctx: self.pool.get('res.users').browse(cr, uid, uid, context=ctx).partner_id.id or False,
         'date': fields.date.context_today,
         'start_date': fields.date.context_today,
         'state':'open',

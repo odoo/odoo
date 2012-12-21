@@ -43,23 +43,68 @@ You can record issues, assign them to a responsible person, and keep track of th
 Access all issues from the top Project menu, and access the issues of a specific project via the projects gallery view.</p>]]></field>
         </record>
 
-        <!-- Mail subtypes -->
-        <record id="mail.mt_issue_new" model="mail.message.subtype">
-            <field name="name">New</field>
+        <!-- Issue-related subtypes for messaging / Chatter -->
+        <record id="mt_issue_new" model="mail.message.subtype">
+            <field name="name">Issue Created</field>
             <field name="res_model">project.issue</field>
+            <field name="default" eval="False"/>
+            <field name="description">Issue created</field>
         </record>
-        <record id="mail.mt_issue_closed" model="mail.message.subtype">
-            <field name="name">Closed</field>
+        <record id="mt_issue_started" model="mail.message.subtype">
+            <field name="name">Issue Started</field>
             <field name="res_model">project.issue</field>
+            <field name="default" eval="False"/>
+            <field name="description">Issue started</field>
         </record>
-        <record id="mail.mt_issue_canceled" model="mail.message.subtype">
-            <field name="name">Canceled</field>
+        <record id="mt_issue_blocked" model="mail.message.subtype">
+            <field name="name">Issue Blocked</field>
             <field name="res_model">project.issue</field>
+            <field name="description">Issue blocked</field>
         </record>
-        <record id="mail.mt_issue_change" model="mail.message.subtype">
+        <record id="mt_issue_closed" model="mail.message.subtype">
+            <field name="name">Issue Closed</field>
+            <field name="res_model">project.issue</field>
+            <field name="description">Issue closed</field>
+        </record>
+        <record id="mt_issue_stage" model="mail.message.subtype">
             <field name="name">Stage Changed</field>
             <field name="res_model">project.issue</field>
+            <field name="description">Stage changed</field>
         </record>
-
+        <!-- Project-related subtypes for messaging / Chatter -->
+        <record id="mt_project_issue_new" model="mail.message.subtype">
+            <field name="name">Issue Created</field>
+            <field name="res_model">project.project</field>
+            <field name="default" eval="False"/>
+            <field name="parent_id" eval="ref('mt_issue_new')"/>
+            <field name="relation_field">project_id</field>
+        </record>
+        <record id="mt_project_issue_started" model="mail.message.subtype">
+            <field name="name">Issue Started</field>
+            <field name="res_model">project.project</field>
+            <field name="default" eval="False"/>
+            <field name="parent_id" eval="ref('mt_issue_started')"/>
+            <field name="relation_field">project_id</field>
+        </record>
+        <record id="mt_project_issue_blocked" model="mail.message.subtype">
+            <field name="name">Issue Blocked</field>
+            <field name="res_model">project.project</field>
+            <field name="parent_id" eval="ref('mt_issue_blocked')"/>
+            <field name="relation_field">project_id</field>
+        </record>
+        <record id="mt_project_issue_closed" model="mail.message.subtype">
+            <field name="name">Issue Closed</field>
+            <field name="res_model">project.project</field>
+            <field name="parent_id" eval="ref('mt_issue_closed')"/>
+            <field name="relation_field">project_id</field>
+        </record>
+        <record id="mt_project_issue_stage" model="mail.message.subtype">
+            <field name="name">Issue Stage Changed</field>
+            <field name="res_model">project.project</field>
+            <field name="description">Stage changed</field>
+            <field name="parent_id" eval="ref('mt_issue_stage')"/>
+            <field name="relation_field">project_id</field>
+        </record>
+        
     </data>
 </openerp>

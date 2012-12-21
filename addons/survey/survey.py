@@ -19,17 +19,15 @@
 #
 ##############################################################################
 
-from osv import osv
-from osv import fields
-import tools
-import netsvc
-from tools.translate import _
-
-from time import strftime
+import copy
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-import copy
+from time import strftime
 import os
+
+from openerp import netsvc, tools
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class survey_type(osv.osv):
     _name = 'survey.type'

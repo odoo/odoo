@@ -24,10 +24,10 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from calendar import isleap
 
-from tools.translate import _
-from osv import fields, osv
-import netsvc
-import decimal_precision as dp
+from openerp.tools.translate import _
+from openerp.osv import fields, osv
+from openerp import netsvc
+import openerp.addons.decimal_precision as dp
 
 DATETIME_FORMAT = "%Y-%m-%d"
 

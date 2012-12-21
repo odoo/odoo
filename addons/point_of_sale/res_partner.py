@@ -1,7 +1,9 @@
-
 #!/usr/bin/env python
-from osv import osv, fields
+
 import math
+
+from openerp.osv import osv, fields
+
 import openerp.addons.product.product
 
 

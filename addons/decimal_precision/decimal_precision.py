@@ -19,10 +19,9 @@
 #
 ##############################################################################
 
-from osv import osv, fields
-import tools
-import pooler
 from openerp import SUPERUSER_ID
+from openerp import pooler, tools
+from openerp.osv import osv, fields
 
 class decimal_precision(osv.osv):
     _name = 'decimal.precision'
@@ -43,6 +42,16 @@ class decimal_precision(osv.osv):
         cr.execute('select digits from decimal_precision where name=%s', (application,))
         res = cr.fetchone()
         return res[0] if res else 2
+
+    def create(self, cr, uid, data, context=None):
+        res = super(decimal_precision, self).create(cr, uid, data, context=context)
+        self.precision_get.clear_cache(self)
+        return res
+
+    def unlink(self, cr, uid, ids, context=None):
+        res = super(decimal_precision, self).unlink(cr, uid, ids, context=context)
+        self.precision_get.clear_cache(self)
+        return res
 
     def write(self, cr, uid, ids, data, *args, **argv):
         res = super(decimal_precision, self).write(cr, uid, ids, data, *args, **argv)
