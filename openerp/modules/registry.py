@@ -58,8 +58,8 @@ class Registry(object):
         self.db_name = db_name
         self.db = openerp.sql_db.db_connect(db_name)
 
-        # In monoprocess cron jobs flag (pooljobs)
-        self.cron = False
+        # Indicates that the registry is 
+        self.ready = False
 
         # Inter-process signaling (used only when openerp.multi_process is True):
         # The `base_registry_signaling` sequence indicates the whole registry
@@ -120,15 +120,6 @@ class Registry(object):
                 # avoid double-loading models whose declaration is split
                 models_to_load.append(model._name)
         return [self.models[m] for m in models_to_load]
-
-    def schedule_cron_jobs(self):
-        """ Make the cron thread care about this registry/database jobs.
-        This will initiate the cron thread to check for any pending jobs for
-        this registry/database as soon as possible. Then it will continuously
-        monitor the ir.cron model for future jobs. See openerp.cron for
-        details.
-        """
-        self.cron = True
 
     def clear_caches(self):
         """ Clear the caches
@@ -192,18 +183,17 @@ class RegistryManager(object):
     registries_lock = threading.RLock()
 
     @classmethod
-    def get(cls, db_name, force_demo=False, status=None, update_module=False,
-            pooljobs=True):
+    def get(cls, db_name, force_demo=False, status=None, update_module=False):
         """ Return a registry for a given database name."""
         try:
             return cls.registries[db_name]
         except KeyError:
             return cls.new(db_name, force_demo, status,
-                           update_module, pooljobs)
+                           update_module)
 
     @classmethod
     def new(cls, db_name, force_demo=False, status=None,
-            update_module=False, pooljobs=True):
+            update_module=False):
         """ Create and return a new registry for a given database name.
 
         The (possibly) previous registry for that database name is discarded.
@@ -235,8 +225,7 @@ class RegistryManager(object):
             finally:
                 cr.close()
 
-        if pooljobs:
-            registry.schedule_cron_jobs()
+        registry.ready = True
 
         return registry
 
@@ -273,7 +262,7 @@ class RegistryManager(object):
     @classmethod
     def check_registry_signaling(cls, db_name):
         if openerp.multi_process and db_name in cls.registries:
-            registry = cls.get(db_name, pooljobs=False)
+            registry = cls.get(db_name)
             cr = registry.db.cursor()
             try:
                 cr.execute("""
@@ -285,8 +274,7 @@ class RegistryManager(object):
                 # database has been updated by another process).
                 if registry.base_registry_signaling_sequence != r:
                     _logger.info("Reloading the model registry after database signaling.")
-                    # Don't run the cron in the Gunicorn worker.
-                    registry = cls.new(db_name, pooljobs=False)
+                    registry = cls.new(db_name)
                     registry.base_registry_signaling_sequence = r
                 # Check if the model caches must be invalidated (e.g. after a write
                 # occured on another process). Don't clear right after a registry
@@ -311,7 +299,7 @@ class RegistryManager(object):
         if openerp.multi_process and db_name in cls.registries:
             # Check the registries if any cache has been cleared and signal it
             # through the database to other processes.
-            registry = cls.get(db_name, pooljobs=False)
+            registry = cls.get(db_name)
             if registry.any_cache_cleared():
                 _logger.info("At least one model cache has been cleared, signaling through the database.")
                 cr = registry.db.cursor()
@@ -327,7 +315,7 @@ class RegistryManager(object):
     @classmethod
     def signal_registry_change(cls, db_name):
         if openerp.multi_process and db_name in cls.registries:
-            registry = cls.get(db_name, pooljobs=False)
+            registry = cls.get(db_name)
             cr = registry.db.cursor()
             r = 1
             try:
