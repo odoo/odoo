@@ -29,14 +29,6 @@ from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 _logger = logging.getLogger(__name__)
 
-DATE_TYPE_TO_FIELD = {
-    'create': 'create_date',
-    'write': 'write_date',
-    'action_last': 'date_action_last',
-    'date': 'date',
-    'deadline': 'date_deadline',
-}
-
 DATE_RANGE_FUNCTION = {
     'minutes': lambda interval: timedelta(minutes=interval),
     'hour': lambda interval: timedelta(hours=interval),
@@ -69,14 +61,8 @@ class base_action_rule(osv.osv):
             help="When unchecked, the rule is hidden and will not be executed."),
         'sequence': fields.integer('Sequence',
             help="Gives the sequence order when displaying a list of rules."),
-        'trg_date_type':  fields.selection([
-            ('none', 'None'),
-            ('create', 'Creation Date'),
-            ('write', 'Last Modified Date'),
-            ('action_last', 'Last Action Date'),
-            ('date', 'Date'),
-            ('deadline', 'Deadline'),
-            ], 'Trigger Date', size=16),
+        'trg_date_id': fields.many2one('ir.model.fields', string='Trigger Date',
+            domain="[('model_id', '=', model_id), ('ttype', 'in', ('date', 'datetime'))]"),
         'trg_date_range': fields.integer('Delay after trigger date',
             help="Delay after the trigger date." \
             "You can put a negative number if you need a delay before the" \
@@ -101,7 +87,6 @@ class base_action_rule(osv.osv):
 
     _defaults = {
         'active': True,
-        'trg_date_type': 'none',
         'trg_date_range_type': 'day',
     }
 
@@ -157,7 +142,7 @@ class base_action_rule(osv.osv):
 
             new_id = old_create(cr, uid, vals, context=context)
             # as it is a new record, we do not consider the actions that have a prefilter
-            action_dom = [('model', '=', model), ('trg_date_type', 'in', ('none', False)), ('filter_pre_id', '=', False)]
+            action_dom = [('model', '=', model), ('trg_date_id', '=', False), ('filter_pre_id', '=', False)]
             action_ids = self.search(cr, uid, action_dom, context=context)
             # check postconditions, and execute actions on the records that satisfy them
             for action in self.browse(cr, uid, action_ids, context=context):
@@ -177,7 +162,7 @@ class base_action_rule(osv.osv):
 
             ids = [ids] if isinstance(ids, (int, long, str)) else ids
             # retrieve the action rules to possibly execute
-            action_dom = [('model', '=', model), ('trg_date_type', 'in', ('none', False))]
+            action_dom = [('model', '=', model), ('trg_date_id', '=', False)]
             action_ids = self.search(cr, uid, action_dom, context=context)
             actions = self.browse(cr, uid, action_ids, context=context)
             # check preconditions
@@ -225,8 +210,8 @@ class base_action_rule(osv.osv):
     def _check(self, cr, uid, automatic=False, use_new_cursor=False, context=None):
         """ This Function is called by scheduler. """
         context = context or {}
-        # retrieve all the action rules that have a trg_date_type and no precondition
-        action_dom = [('trg_date_type', 'not in', ('none', False)), ('filter_pre_id', '=', False)]
+        # retrieve all the action rules that have a trg_date_id and no precondition
+        action_dom = [('trg_date_id', '!=', False), ('filter_pre_id', '=', False)]
         action_ids = self.search(cr, uid, action_dom, context=context)
         for action in self.browse(cr, uid, action_ids, context=context):
             now = datetime.now()
@@ -242,14 +227,20 @@ class base_action_rule(osv.osv):
             record_ids = model.search(cr, uid, domain, context=ctx)
 
             # determine when action should occur for the records
-            date_field = DATE_TYPE_TO_FIELD.get(action.trg_date_type)
-            if date_field not in model._all_columns:
-                continue
+            date_field = action.trg_date_id.name
+            if date_field == 'date_action_last' and 'create_date' in model._all_columns:
+                get_record_dt = lambda record: record[date_field] or record.create_date
+            else:
+                get_record_dt = lambda record: record[date_field]
+
             delay = DATE_RANGE_FUNCTION[action.trg_date_range_type](action.trg_date_range)
 
             # process action on the records that should be executed
             for record in model.browse(cr, uid, record_ids, context=context):
-                action_dt = get_datetime(record[date_field]) + delay
+                record_dt = get_record_dt(record)
+                if not record_dt:
+                    continue
+                action_dt = get_datetime(record_dt) + delay
                 if last_run and (last_run <= action_dt < now) or (action_dt < now):
                     try:
                         self._process(cr, uid, action, [record.id], context=context)

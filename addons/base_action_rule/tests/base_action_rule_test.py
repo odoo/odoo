@@ -48,7 +48,6 @@ class base_action_rule_test(common.TransactionCase):
             'name' : "Rule 1",
             'model_id': self.registry('ir.model').search(cr, uid, [('model','=','base.action.rule.lead.test')], context=context)[0],
             'active' : 1,
-            'trg_date_type' : 'none',
             'filter_pre_id' : filter_pre_id,
             'filter_id' : filter_id,
             'act_user_id': self.demo,
