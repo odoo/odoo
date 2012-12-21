@@ -105,9 +105,6 @@ class base_action_rule(osv.osv):
 
     def _process(self, cr, uid, action, record_ids, context=None):
         """ process the given action on the records """
-        # IMPORTANT: add 'action':True in the context to avoid cascading actions
-        context = dict(context or {}, action=True)
-
         # execute server actions
         model = self.pool.get(action.model_id.model)
         if action.server_action_ids:
@@ -137,13 +134,17 @@ class base_action_rule(osv.osv):
             `_process`, in that order.
         """
         def wrapper(cr, uid, vals, context=None):
+            # avoid loops or cascading actions
             if context and context.get('action'):
                 return old_create(cr, uid, vals, context=context)
 
+            context = dict(context or {}, action=True)
             new_id = old_create(cr, uid, vals, context=context)
+
             # as it is a new record, we do not consider the actions that have a prefilter
             action_dom = [('model', '=', model), ('trg_date_id', '=', False), ('filter_pre_id', '=', False)]
             action_ids = self.search(cr, uid, action_dom, context=context)
+
             # check postconditions, and execute actions on the records that satisfy them
             for action in self.browse(cr, uid, action_ids, context=context):
                 if self._filter(cr, uid, action, action.filter_id, [new_id], context=context):
@@ -157,20 +158,26 @@ class base_action_rule(osv.osv):
             `_process`, in that order.
         """
         def wrapper(cr, uid, ids, vals, context=None):
+            # avoid loops or cascading actions
             if context and context.get('action'):
                 return old_write(cr, uid, ids, vals, context=context)
 
+            context = dict(context or {}, action=True)
             ids = [ids] if isinstance(ids, (int, long, str)) else ids
+
             # retrieve the action rules to possibly execute
             action_dom = [('model', '=', model), ('trg_date_id', '=', False)]
             action_ids = self.search(cr, uid, action_dom, context=context)
             actions = self.browse(cr, uid, action_ids, context=context)
+
             # check preconditions
             pre_ids = {}
             for action in actions:
                 pre_ids[action] = self._filter(cr, uid, action, action.filter_pre_id, ids, context=context)
+
             # execute write
             old_write(cr, uid, ids, vals, context=context)
+
             # check postconditions, and execute actions on the records that satisfy them
             for action in actions:
                 post_ids = self._filter(cr, uid, action, action.filter_id, pre_ids[action], context=context)
