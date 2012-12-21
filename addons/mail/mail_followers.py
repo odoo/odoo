@@ -145,4 +145,8 @@ class mail_notification(osv.Model):
         }
         mail_values['email_to'] = ', '.join(mail_values['email_to'])
         email_notif_id = mail_mail.create(cr, uid, mail_values, context=context)
-        return mail_mail.send(cr, uid, [email_notif_id], recipient_ids=notify_partner_ids, context=context)
+        try:
+            return mail_mail.send(cr, uid, [email_notif_id], recipient_ids=notify_partner_ids, context=context)
+        except Exception:
+            return False
+
