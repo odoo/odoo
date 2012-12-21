@@ -36,10 +36,10 @@
                                     </group>
                                     <group name="timing" string="Timer">
                                         <field name="trg_date_id"/>
-                                        <label string="Delay After Trigger Date" attrs="{'invisible': [('trg_date_id','=',False)]}"/>
+                                        <label for="trg_date_range" string="Delay After Trigger Date" attrs="{'invisible': [('trg_date_id','=',False)]}"/>
                                         <div attrs="{'invisible': [('trg_date_id','=',False)]}">
-                                            <field name="trg_date_range"/>
-                                            <field name="trg_date_range_type" attrs="{'required': [('trg_date_id','!=',False)]}"/>
+                                            <field name="trg_date_range" class="oe_inline"/>
+                                            <field name="trg_date_range_type" class="oe_inline" attrs="{'required': [('trg_date_id','!=',False)]}"/>
                                         </div>
                                     </group>
                                 </group>
