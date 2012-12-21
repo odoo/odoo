@@ -172,8 +172,6 @@ Section OpenERP_Server SectionOpenERP_Server
 
     SetOutPath "$INSTDIR\service"
     File /r "win32\dist\*"
-    File "win32\start.bat"
-    File "win32\stop.bat"
 
     !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
         ;Create shortcuts
