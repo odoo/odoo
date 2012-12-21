@@ -446,7 +446,7 @@ class mail_thread(osv.AbstractModel):
                         (msg['message_id'], model)
 
                 # disabled subscriptions during message_new/update to avoid having the system user running the
-                # email gateway become a follower of all inbound messages  
+                # email gateway become a follower of all inbound messages
                 nosub_ctx = dict(context, mail_nosubscribe=True)
                 if thread_id and hasattr(model_pool, 'message_update'):
                     model_pool.message_update(cr, user_id, [thread_id], msg, context=nosub_ctx)
@@ -456,6 +456,10 @@ class mail_thread(osv.AbstractModel):
                 assert thread_id == 0, "Posting a message without model should be with a null res_id, to create a private message."
                 model_pool = self.pool.get('mail.thread')
             new_msg_id = model_pool.message_post_user_api(cr, uid, [thread_id], context=context, content_subtype='html', **msg)
+
+            # when posting an incoming email to a document: subscribe the author, if a partner, as follower
+            if model and thread_id and msg.get('author_id'):
+                model_pool.message_subscribe(cr, uid, [thread_id], [msg.get('author_id')], context=context)
 
             if partner_ids:
                 # postponed after message_post, because this is an external message and we don't want to create
