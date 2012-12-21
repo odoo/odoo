@@ -25,7 +25,7 @@ from openerp.tests import common
 class TestMailBase(common.TransactionCase):
 
     def _mock_smtp_gateway(self, *args, **kwargs):
-        return True
+        return args[2]['Message-Id']
 
     def _init_mock_build_email(self):
         self._build_email_args_list = []
