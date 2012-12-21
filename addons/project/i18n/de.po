@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-20 00:08+0000\n"
+"PO-Revision-Date: 2012-12-21 00:06+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-20 04:43+0000\n"
+"X-Launchpad-Export-Date: 2012-12-21 04:39+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
 
 #. module: project
@@ -56,12 +56,12 @@ msgstr "Projektaufgaben"
 #. module: project
 #: field:project.task.type,name:0
 msgid "Stage Name"
-msgstr "Bez. Stufe"
+msgstr "Bezeichnung Stufe"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_openpendingtask0
 msgid "Set pending"
-msgstr "Setze in Wartezustand"
+msgstr "Setze auf Wiedervorlage"
 
 #. module: project
 #: view:project.project:0
@@ -659,20 +659,19 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                   Klicken Sie , um ein neues Projekt zu starten.\n"
-"                 </ p>\n"
-"                   Projekte werden primär dazu verwendet, verschiedene "
-"Aktivitäten zu organisieren, \n"
-"                   Aufgaben zu  planen, Vorfälle nachzuverfolgen,  "
-"Stundenzettel von Mitarbeitern \n"
-"                   abzurechnen etc. Sie können dabei eigene interne Projekte "
-"verwalten (R & D, Improve Sales Process), \n"
-"                   oder eigene Kunden Projekte managen.\n"
-"                 </ p>\n"
-"                   Sie können mit anderen  Benutzern zusammen arrbeiten, "
-"oder Kunden für externen Zugriff \n"
-"                   freigeben.\n"
-"                 </ p>\n"
+"Klicken Sie , um ein neues Projekt zu starten.\n"
+"</ p>\n"
+"Projekte werden primär dazu verwendet, verschiedene Aktivitäten zu "
+"organisieren, \n"
+"Aufgaben zu planen, Vorfälle nachzuverfolgen, Stundenzettel von Mitarbeitern "
+"abzurechnen etc. \n"
+"Sie können dabei eigene interne Projekte verwalten (R & D, Improve Sales "
+"Process), oder eigene \n"
+"Kunden Projekte managen.\n"
+" </ p>\n"
+"Sie können mit anderen Benutzern zusammen arbeiten, oder Kunden für externe "
+"Zugriffe freigeben.\n"
+"</ p>\n"
 "            "
 
 #. module: project
@@ -942,7 +941,7 @@ msgid ""
 "projects. It enables you to connect projects with budgets, planning, cost "
 "and revenue analysis, timesheets on projects, etc."
 msgstr ""
-"Für finanzilelle Auswertungen muss ein Projekt einem Anakysekonto zugeordnet "
+"Für finanzilelle Auswertungen muss ein Projekt einer Kostenstelle zugeordnet "
 "werden. Damit können Projekte Budgets,Planung, Kosten und Erlösen, "
 "Arbeitszeitaufzeichnungen zugeordnet werden."
 
@@ -1077,7 +1076,7 @@ msgstr "Arbeitszeiten Auswertung"
 #: code:addons/project/project.py:563
 #, python-format
 msgid "Project is now <b>pending</b>."
-msgstr ""
+msgstr "Projekt ist jetzt <b>im Wiedervorlage Zustand</b>."
 
 #. module: project
 #: code:addons/project/project.py:560
@@ -1314,7 +1313,7 @@ msgstr ""
 #. module: project
 #: help:project.config.settings,time_unit:0
 msgid "This will set the unit of measure used in projects and tasks."
-msgstr ""
+msgstr "Definieren Sie die Mengeneinheit für Projekte und Aufgaben."
 
 #. module: project
 #: view:report.project.task.user:0
@@ -1431,7 +1430,7 @@ msgstr "Aktiv"
 #. module: project
 #: model:ir.model,name:project.model_project_category
 msgid "Category of project's task, issue, ..."
-msgstr ""
+msgstr "Kategorie von Projekt Aufgaben, Fällen etc."
 
 #. module: project
 #: help:project.project,resource_calendar_id:0
@@ -1498,6 +1497,8 @@ msgid ""
 "You cannot delete a project containing tasks. You can either delete all the "
 "project's tasks and then delete the project or simply deactivate the project."
 msgstr ""
+"Sie können ein Projekt mit Aufgaben nicht einfach löschen. Entweder löschen "
+"Sie alle Aufgaben, dann das Projekt oder Sie deaktivieren das Projekt."
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_draftopentask0
@@ -1781,6 +1782,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klicken Sie zur Erstellung einer neuen Aufgabe.\n"
+"              </p><p>\n"
+"                Das OpenERP's Projektmanagement ermöglicht die effiziente "
+"Verwaltung und \n"
+"                Verfolgung Ihrer anstehenden Aufgaben. Sie können den "
+"Fortschritt der Bearbeitung,\n"
+"                 Diskussionsbeiträge, angehängte Dokumente verfolgen u.s.w.\n"
+"              </p>\n"
+"            "
 
 #. module: project
 #: field:project.task,date_end:0
@@ -1880,7 +1891,7 @@ msgstr "Meine Aufgaben"
 #: view:project.task.history.cumulative:0
 #: view:report.project.task.user:0
 msgid "My Projects"
-msgstr "Meine Projekte"
+msgstr "Eigene Projekte"
 
 #. module: project
 #: help:project.task,sequence:0
@@ -1975,6 +1986,13 @@ msgid ""
 "'Manufacture'.\n"
 "                This installs the module project_mrp."
 msgstr ""
+"Diese Anwendung erstellt automatisch Projekte Aufgaben über die Aufträge aus "
+"dem Vertrieb.\n"
+"Genauer gesagt, werden Aufgaben für Produkte mit der Produktart "
+"'Dienstleistungen', der \n"
+"Beschaffungsmethode 'von Auftrag' sowie der Einkaufsmethode 'Produktion' "
+"erstellt. \n"
+"Sie installieren das Modul project_mrp."
 
 #. module: project
 #: help:project.task.delegate,planned_hours:0
@@ -2077,7 +2095,7 @@ msgstr "Januar"
 #. module: project
 #: model:ir.actions.server,name:project.actions_server_project_unread
 msgid "Project: Mark unread"
-msgstr ""
+msgstr "Projekt: Markieren als ungelesen"
 
 #. module: project
 #: field:project.task.delegate,prefix:0
@@ -2094,7 +2112,7 @@ msgstr "Neubewertung der verbleibenden Zeit"
 #, python-format
 msgid "Please delete the project linked with this account first."
 msgstr ""
-"Löschen Sie bitte vorher das Projekt, das mit diesem Analysekonto verlinkt "
+"Löschen Sie bitte vorher das Projekt, das mit dieser Kostenstelle verlinkt "
 "ist"
 
 #. module: project
@@ -2133,8 +2151,8 @@ msgid ""
 "If you check this field, this stage will be proposed by default on each new "
 "project. It will not assign this stage to existing projects."
 msgstr ""
-"Wenn markiert, dann wird dieser Abschnitt für alle neuen Projekte "
-"vorgeschlagen. Alte Projekte werden nicht aktualisiert."
+"Durch Aktivierung wird diese Phase für alle neuen Projekte vorgeschlagen. "
+"Alte Projekte werden nicht aktualisiert."
 
 #. module: project
 #: field:project.task,partner_id:0
@@ -2153,6 +2171,8 @@ msgid ""
 "resource allocation.\n"
 "                This installs the module project_long_term."
 msgstr ""
+"Eine Anwendung für das Projektmanagement von Langzeit - Projekten , zur "
+"Planung und Reservierung  der benötigten Ressourcen."
 
 #. module: project
 #: selection:report.project.task.user,month:0
@@ -2180,6 +2200,9 @@ msgid ""
 "Provides timesheet support for the issues/bugs management in project.\n"
 "                This installs the module project_issue_sheet."
 msgstr ""
+"Unterstützung für Stundenzettel bei der Aufgaben und Fälle Verwaltung in "
+"Projekten.\n"
+"                    Sie installieren das Modul project_issue_sheet."
 
 #. module: project
 #: selection:project.project,privacy_visibility:0

@@ -226,13 +226,15 @@ class hr_timesheet_sheet(osv.osv):
     # ------------------------------------------------
     # OpenChatter methods and notifications
     # ------------------------------------------------
-    
-    def _needaction_domain_get(self, cr, uid, ids, context=None):
+
+    def _needaction_domain_get(self, cr, uid, context=None):
         emp_obj = self.pool.get('hr.employee')
         empids = emp_obj.search(cr, uid, [('parent_id.user_id', '=', uid)], context=context)
+        if not empids:
+            return False
         dom = ['&', ('state', '=', 'confirm'), ('employee_id', 'in', empids)]
         return dom
-hr_timesheet_sheet()
+
 
 class account_analytic_line(osv.osv):
     _inherit = "account.analytic.line"

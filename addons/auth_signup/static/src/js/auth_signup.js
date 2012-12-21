@@ -6,64 +6,66 @@ openerp.auth_signup = function(instance) {
         start: function() {
             var self = this;
             var d = this._super();
-
-            self.$(".oe_signup_show").hide();
-            // to switch between the signup and regular login form
-            this.$('a.oe_signup_signup').click(function(ev) {
-                if (ev) {
-                    ev.preventDefault();
-                }
-                self.$el.addClass("oe_login_signup");
-                self.$(".oe_signup_show").show();
-                self.$(".oe_signup_hide").hide();
-                return false;
-            });
-            this.$('a.oe_signup_back').click(function(ev) {
-                if (ev) {
-                    ev.preventDefault();
-                }
-                self.$el.removeClass("oe_login_signup");
+            d.done(function() {
                 self.$(".oe_signup_show").hide();
-                self.$(".oe_signup_hide").show();
-                delete self.params.token;
-                return false;
-            });
+                // to switch between the signup and regular login form
+                self.$('a.oe_signup_signup').click(function(ev) {
+                    if (ev) {
+                        ev.preventDefault();
+                    }
+                    self.$el.addClass("oe_login_signup");
+                    self.$(".oe_signup_show").show();
+                    self.$(".oe_signup_hide").hide();
+                    return false;
+                });
+                self.$('a.oe_signup_back').click(function(ev) {
+                    if (ev) {
+                        ev.preventDefault();
+                    }
+                    self.$el.removeClass("oe_login_signup");
+                    self.$(".oe_signup_show").hide();
+                    self.$(".oe_signup_hide").show();
+                    delete self.params.token;
+                    return false;
+                });
 
-            // if there is an error message in params, show it then forget it
-            if (self.params.error_message) {
-                this.show_error(self.params.error_message);
-                delete self.params.error_message;
-            }
+                var dblist = self.db_list || [];
+                var dbname = self.params.db || (dblist.length === 1 ? dblist[0] : null);
 
-            // in case of a signup, retrieve the user information from the token
-            if (self.params.db && self.params.token) {
-                d.done(function() {
-                    self.rpc("/auth_signup/retrieve", {dbname: self.params.db, token: self.params.token})
+                // if there is an error message in params, show it then forget it
+                if (self.params.error_message) {
+                    self.show_error(self.params.error_message);
+                    delete self.params.error_message;
+                }
+
+                // in case of a signup, retrieve the user information from the token
+                if (dbname && self.params.token) {
+                    self.rpc("/auth_signup/retrieve", {dbname: dbname, token: self.params.token})
                         .done(self.on_token_loaded)
                         .fail(self.on_token_failed)
-                });
-            }
-            if (self.params.db && self.params.login) {
-                this.$("form input[name=login]").val(self.params.login);
-            }
+                }
+                if (dbname && self.params.login) {
+                    self.$("form input[name=login]").val(self.params.login);
+                }
 
-            // bind reset password link
-            this.$('a.oe_signup_reset_password').click(this.do_reset_password);
+                // bind reset password link
+                self.$('a.oe_signup_reset_password').click(self.do_reset_password);
 
-            // make signup link and reset password link visible only when enabled
-            this.$('a.oe_signup_signup').hide();
-            this.$('a.oe_signup_reset_password').hide();
-            if (this.params.db) {
-                this.rpc("/auth_signup/get_config", {dbname: self.params.db})
-                    .done(function(result) {
-                        if (result.signup) {
-                            self.$('a.oe_signup_signup').show();
-                        }
-                        if (result.reset_password) {
-                            self.$('a.oe_signup_reset_password').show();
-                        }
-                    });
-            }
+                // make signup link and reset password link visible only when enabled
+                self.$('a.oe_signup_signup').hide();
+                self.$('a.oe_signup_reset_password').hide();
+                if (dbname) {
+                    self.rpc("/auth_signup/get_config", {dbname: dbname})
+                        .done(function(result) {
+                            if (result.signup) {
+                                self.$('a.oe_signup_signup').show();
+                            }
+                            if (result.reset_password) {
+                                self.$('a.oe_signup_reset_password').show();
+                            }
+                        });
+                }
+            });
 
             return d;
         },

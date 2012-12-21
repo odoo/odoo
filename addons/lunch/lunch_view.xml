@@ -64,6 +64,7 @@
             <field name='model'>lunch.order</field>
             <field name='arch' type='xml'>
                 <search string="lunch orders">
+                    <field name="user_id"/>
                     <field name="date"/>
                     <field name="order_line_ids"/>
                     <filter name='is_mine' string="My Orders" domain="[('user_id','=',uid)]"/>
@@ -334,7 +335,7 @@
                             <tree string='List' editable='bottom'>
                                 <field name='product_id' on_change='onchange_price(product_id)'/>
                                 <field name='note' />
-                                <field name='price' />
+                                <field name='price' on_change='onchange_price(product_id)'/>
                                 <field name='supplier' invisible="1"/>
                                 <field name="state" invisible="1"/>
                             </tree>
