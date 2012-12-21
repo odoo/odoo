@@ -1050,7 +1050,6 @@ class account_invoice(osv.osv):
         self.write(cr, uid, ids, {})
 
         for obj_inv in self.browse(cr, uid, ids, context=context):
-            id = obj_inv.id
             invtype = obj_inv.type
             number = obj_inv.number
             move_id = obj_inv.move_id and obj_inv.move_id.id or False
@@ -1745,12 +1744,13 @@ class res_partner(osv.osv):
         return super(res_partner, self).copy(cr, uid, id, default, context)
 
 
-class mail_compose_message(osv.osv):
+class mail_compose_message(osv.Model):
     _inherit = 'mail.compose.message'
 
     def send_mail(self, cr, uid, ids, context=None):
         context = context or {}
         if context.get('default_model') == 'account.invoice' and context.get('default_res_id') and context.get('mark_invoice_as_sent'):
+            context = dict(context, mail_post_autofollow=True)
             self.pool.get('account.invoice').write(cr, uid, [context['default_res_id']], {'sent': True}, context=context)
         return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
 

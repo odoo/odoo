@@ -591,6 +591,10 @@ class mail_thread(osv.AbstractModel):
                 model_pool = self.pool.get('mail.thread')
             new_msg_id = model_pool.message_post_user_api(cr, uid, [thread_id], context=context, content_subtype='html', **msg)
 
+            # when posting an incoming email to a document: subscribe the author, if a partner, as follower
+            if model and thread_id and msg.get('author_id'):
+                model_pool.message_subscribe(cr, uid, [thread_id], [msg.get('author_id')], context=context)
+
             if partner_ids:
                 # postponed after message_post, because this is an external message and we don't want to create
                 # duplicate emails due to notifications
@@ -824,7 +828,7 @@ class mail_thread(osv.AbstractModel):
         mail_message = self.pool.get('mail.message')
         model = context.get('thread_model', self._name) if thread_id else False
 
-        attachment_ids = []
+        attachment_ids = kwargs.pop('attachment_ids', [])
         for name, content in attachments:
             if isinstance(content, unicode):
                 content = content.encode('utf-8')
@@ -899,7 +903,6 @@ class mail_thread(osv.AbstractModel):
             - extra_email: [ 'Fabien <fpi@openerp.com>', 'al@openerp.com' ]
         """
         ir_attachment = self.pool.get('ir.attachment')
-        mail_message = self.pool.get('mail.message')
 
         # 1. Pre-processing: body, partner_ids, type and subtype
         if content_subtype == 'plaintext':
@@ -922,11 +925,7 @@ class mail_thread(osv.AbstractModel):
         message_type = kwargs.pop('type', 'comment')
         message_subtype = kwargs.pop('subtype', 'mail.mt_comment')
 
-        # 2. Post message
-        new_message_id = self.message_post(cr, uid, thread_id=thread_id, body=body, subject=subject, type=message_type,
-                        subtype=message_subtype, parent_id=parent_id, context=context, partner_ids=partner_ids, **kwargs)
-
-        # 3. Post-processing
+        # 2. Pre-processing: free attachments linked to the model
         # HACK TDE FIXME: Chatter: attachments linked to the document (not done JS-side), load the message
         if attachment_ids:
             # TDE FIXME (?): when posting a private message, we use mail.thread as a model
@@ -942,7 +941,13 @@ class mail_thread(osv.AbstractModel):
             if filtered_attachment_ids:
                 if thread_id and model:
                     ir_attachment.write(cr, SUPERUSER_ID, attachment_ids, {'res_model': model, 'res_id': thread_id}, context=context)
-                mail_message.write(cr, SUPERUSER_ID, [new_message_id], {'attachment_ids': [(6, 0, [pid for pid in attachment_ids])]}, context=context)
+        else:
+            attachment_ids = []
+
+        # 3. Post message
+        new_message_id = self.message_post(cr, uid, thread_id=thread_id, body=body, subject=subject, type=message_type,
+                            subtype=message_subtype, parent_id=parent_id, attachment_ids=[(4, id) for id in attachment_ids],
+                            context=context, partner_ids=partner_ids, **kwargs)
 
         return new_message_id
 

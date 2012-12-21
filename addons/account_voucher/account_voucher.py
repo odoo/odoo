@@ -194,7 +194,9 @@ class account_voucher(osv.osv):
         if context.get('type', 'sale') in ('purchase', 'payment'):
             nodes = doc.xpath("//field[@name='partner_id']")
             for node in nodes:
-                node.set('domain', "[('supplier', '=', True)]")
+                node.set('context', "{'search_default_supplier': 1}")
+                if context.get('invoice_type','') in ('in_invoice', 'in_refund'):
+                    node.set('string', _("Supplier"))
         res['arch'] = etree.tostring(doc)
         return res
 
@@ -598,12 +600,11 @@ class account_voucher(osv.osv):
                 This function returns True if the line is considered as noise and should not be displayed
             """
             if line.reconcile_partial_id:
-                sign = 1 if ttype in ['payment', 'receipt'] else -1
                 if currency_id == line.currency_id.id:
-                    if line.amount_residual_currency * sign <= 0:
+                    if line.amount_residual_currency <= 0:
                         return True
                 else:
-                    if line.amount_residual * sign <= 0:
+                    if line.amount_residual <= 0:
                         return True
             return False
 

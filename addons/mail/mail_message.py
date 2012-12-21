@@ -224,23 +224,25 @@ class mail_message(osv.Model):
     # Notification API
     #------------------------------------------------------
 
-    def set_message_read(self, cr, uid, msg_ids, read, context=None):
+    def set_message_read(self, cr, uid, msg_ids, read, create_missing=True, context=None):
         """ Set messages as (un)read. Technically, the notifications related
             to uid are set to (un)read. If for some msg_ids there are missing
             notifications (i.e. due to load more or thread parent fetching),
             they are created.
 
             :param bool read: set notification as (un)read
+            :param bool create_missing: create notifications for missing entries
+                (i.e. when acting on displayed messages not notified)
         """
         notification_obj = self.pool.get('mail.notification')
         user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
-        notif_ids = notification_obj.search(cr, uid, [
-            ('partner_id', '=', user_pid),
-            ('message_id', 'in', msg_ids)
-            ], context=context)
+        domain = [('partner_id', '=', user_pid), ('message_id', 'in', msg_ids)]
+        if not create_missing:
+            domain += [('read', '=', not read)]
+        notif_ids = notification_obj.search(cr, uid, domain, context=context)
 
         # all message have notifications: already set them as (un)read
-        if len(notif_ids) == len(msg_ids):
+        if len(notif_ids) == len(msg_ids) or not create_missing:
             return notification_obj.write(cr, uid, notif_ids, {'read': read}, context=context)
 
         # some messages do not have notifications: find which one, create notification, update read status
@@ -250,23 +252,23 @@ class mail_message(osv.Model):
             notification_obj.create(cr, uid, {'partner_id': user_pid, 'read': read, 'message_id': msg_id}, context=context)
         return notification_obj.write(cr, uid, notif_ids, {'read': read}, context=context)
 
-    def set_message_starred(self, cr, uid, msg_ids, starred, context=None):
+    def set_message_starred(self, cr, uid, msg_ids, starred, create_missing=True, context=None):
         """ Set messages as (un)starred. Technically, the notifications related
-            to uid are set to (un)starred. If for some msg_ids there are missing
-            notifications (i.e. due to load more or thread parent fetching),
-            they are created.
+            to uid are set to (un)starred.
 
             :param bool starred: set notification as (un)starred
+            :param bool create_missing: create notifications for missing entries
+                (i.e. when acting on displayed messages not notified)
         """
         notification_obj = self.pool.get('mail.notification')
         user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
-        notif_ids = notification_obj.search(cr, uid, [
-            ('partner_id', '=', user_pid),
-            ('message_id', 'in', msg_ids)
-            ], context=context)
+        domain = [('partner_id', '=', user_pid), ('message_id', 'in', msg_ids)]
+        if not create_missing:
+            domain += [('starred', '=', not starred)]
+        notif_ids = notification_obj.search(cr, uid, domain, context=context)
 
         # all message have notifications: already set them as (un)starred
-        if len(notif_ids) == len(msg_ids):
+        if len(notif_ids) == len(msg_ids) or not create_missing:
             notification_obj.write(cr, uid, notif_ids, {'starred': starred}, context=context)
             return starred
 
@@ -350,9 +352,15 @@ class mail_message(osv.Model):
         vote_nb = len(message.vote_user_ids)
         has_voted = uid in [user.id for user in message.vote_user_ids]
 
+        try:
+            body_html = html_email_clean(message.body)
+        except Exception:
+            body_html = '<p><b>Encoding Error : </b><br/>Unable to convert this message (id: %s).</p>' % message.id
+            _logger.exception(Exception)
+
         return {'id': message.id,
                 'type': message.type,
-                'body': html_email_clean(message.body or ''),
+                'body': body_html,
                 'model': message.model,
                 'res_id': message.res_id,
                 'record_name': message.record_name,
@@ -492,6 +500,7 @@ class mail_message(osv.Model):
         message_unload_ids = message_unload_ids if message_unload_ids is not None else []
         if message_unload_ids:
             domain += [('id', 'not in', message_unload_ids)]
+        notification_obj = self.pool.get('mail.notification')
         limit = limit or self._message_read_limit
         message_tree = {}
         message_list = []
@@ -529,6 +538,7 @@ class mail_message(osv.Model):
                 message_id_list.sort(key=lambda item: item['id'])
                 message_id_list.insert(0, self._message_read_dict(cr, uid, message_tree[key], context=context))
 
+        # create final ordered message_list based on parent_tree
         parent_list = parent_tree.items()
         parent_list = sorted(parent_list, key=lambda item: max([msg.get('id') for msg in item[1]]) if item[1] else item[0], reverse=True)
         message_list = [message for (key, msg_list) in parent_list for message in msg_list]
@@ -600,12 +610,14 @@ class mail_message(osv.Model):
                 model_ids.setdefault(message.get('model'), {}).setdefault(message.get('res_id'), set()).add(message.get('id'))
 
         allowed_ids = self._find_allowed_doc_ids(cr, uid, model_ids, context=context)
-
         final_ids = author_ids | partner_ids | allowed_ids
+
         if count:
             return len(final_ids)
         else:
-            return list(final_ids)
+            # re-construct a list based on ids, because set did not keep the original order
+            id_list = [id for id in ids if id in final_ids]
+            return id_list
 
     def check_access_rule(self, cr, uid, ids, operation, context=None):
         """ Access rules of mail.message:
