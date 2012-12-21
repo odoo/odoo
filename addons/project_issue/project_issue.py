@@ -448,7 +448,7 @@ class project_issue(base_stage, osv.osv):
 
     def case_cancel(self, cr, uid, ids, context=None):
         """ Cancels case """
-        self.case_set(cr, uid, ids, 'cancel', {'active': True}, context=context)
+        self.case_set(cr, uid, ids, 'cancelled', {'active': True}, context=context)
         return True
 
     def case_escalate(self, cr, uid, ids, context=None):
