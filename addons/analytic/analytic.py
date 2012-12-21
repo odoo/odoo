@@ -299,18 +299,7 @@ class account_analytic_account(osv.osv):
         if name:
             account_ids = self.search(cr, uid, [('code', '=', name)] + args, limit=limit, context=context)
             if not account_ids:
-                names=map(lambda i : i.strip(),name.split('/'))
-                for i in range(len(names)):
-                    dom=[('name', operator, names[i])]
-                    if i>0:
-                        dom+=[('id','child_of',account_ids)]
-                    account_ids = self.search(cr, uid, dom, limit=limit, context=context)
-                newacc = account_ids
-                while newacc:
-                    newacc = self.search(cr, uid, [('parent_id', 'in', newacc)], limit=limit, context=context)
-                    account_ids += newacc
-                if args:
-                    account_ids = self.search(cr, uid, [('id', 'in', account_ids)] + args, limit=limit, context=context)
+                account_ids = self.search(cr, uid, [('name', 'ilike', name)] + args, limit=limit, context=context)
         else:
             account_ids = self.search(cr, uid, args, limit=limit, context=context)
         return self.name_get(cr, uid, account_ids, context=context)
