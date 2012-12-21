@@ -60,14 +60,6 @@ class base_action_rule(osv.osv):
     _name = 'base.action.rule'
     _description = 'Action Rules'
 
-    def _state_get(self, cr, uid, context=None):
-        """ Get State """
-        return self.state_get(cr, uid, context=context)
-
-    def state_get(self, cr, uid, context=None):
-        """ Get State """
-        return [('', '')]
-
     _columns = {
         'name':  fields.char('Rule Name', size=64, required=True),
         'model_id': fields.many2one('ir.model', 'Related Document Model',
@@ -93,7 +85,6 @@ class base_action_rule(osv.osv):
         'trg_date_range_type': fields.selection([('minutes', 'Minutes'), ('hour', 'Hours'),
                                 ('day', 'Days'), ('month', 'Months')], 'Delay type'),
         'act_user_id': fields.many2one('res.users', 'Set Responsible to'),
-        'act_state': fields.selection(_state_get, 'Set State to', size=16),
         'act_followers': fields.many2many("res.partner", string="Set Followers"),
         'server_action_ids': fields.many2many('ir.actions.server',
             domain="[('model_id', '=', model_id)]",
@@ -148,13 +139,9 @@ class base_action_rule(osv.osv):
             values['date_action_last'] = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         if action.act_user_id and 'user_id' in model._all_columns:
             values['user_id'] = action.act_user_id.id
-        if action.act_state and 'state' in model._all_columns:
-            values['state'] = action.act_state
-
         if values:
             model.write(cr, uid, record_ids, values, context=context)
-        if values.get('state') and hasattr(model, 'message_post'):
-            model.message_post(cr, uid, record_ids, _(action.act_state), context=context)
+
         if action.act_followers and hasattr(model, 'message_subscribe'):
             model.message_subscribe(cr, uid, record_ids, map(int, action.act_followers), context=context)
 

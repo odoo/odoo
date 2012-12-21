@@ -42,12 +42,9 @@
                                 </group>
                             </page>
                             <page string="Actions">
-                                <group name="action_followers">
-                                    <field name="act_followers" widget="many2many_tags"/>
-                                </group>
                                 <group name="action_field" col="4" string="Fields to Change">
                                     <field name="act_user_id"/>
-                                    <field name="act_state"/>
+                                    <field name="act_followers" widget="many2many_tags"/>
                                 </group>
                                 <group name="action_server" string="Server Actions to be Triggered (eg. Email Reminder, Call Object Method, etc...)" >
                                     <field name="server_action_ids" domain="[('model_id','=', model_id)]" nolabel="1" context="{'default_model_id': model_id}">
