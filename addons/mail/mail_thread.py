@@ -455,9 +455,8 @@ class mail_thread(osv.AbstractModel):
             else:
                 assert thread_id == 0, "Posting a message without model should be with a null res_id, to create a private message."
                 model_pool = self.pool.get('mail.thread')
-            new_msg_informations = model_pool.message_post_user_api(cr, uid, [thread_id], context=context, content_subtype='html', **msg)
-            new_msg_id = new_msg_informations['message_id'];
-
+            new_msg_id = model_pool.message_post_user_api(cr, uid, [thread_id], context=context, content_subtype='html', **msg)
+            
             if partner_ids:
                 # postponed after message_post, because this is an external message and we don't want to create
                 # duplicate emails due to notifications
@@ -773,17 +772,14 @@ class mail_thread(osv.AbstractModel):
             body = tools.plaintext2html(body)
 
         new_partner_ids = set([])
-        link_partner_ids = set([])
         for partner in extra_email:
             part_ids = self.pool.get('res.partner').search(cr, uid, [('email', '=', partner)], context=context)
-            if not part_ids:
-                # create a new partner
-                part_ids = [self.pool.get('res.partner').name_create(cr, uid, partner, context=dict())[0]]
-                new_partner_ids |= set(part_ids)
-            else:
-                # partners is already create
-                link_partner_ids |= set(part_ids)
 
+            # create a new partner if not exists
+            if not part_ids:
+                part_ids = [self.pool.get('res.partner').name_create(cr, uid, partner, context=dict())[0]]
+            
+            new_partner_ids |= set(part_ids)
             self.message_subscribe(cr, uid, [thread_id], part_ids, context=context)
 
             # link mail with this from mail to the new partner id
@@ -791,9 +787,8 @@ class mail_thread(osv.AbstractModel):
             if part_ids and message_ids:
                 mail_message.write(cr, uid, message_ids, {'email_from': None, 'author_id': part_ids[0]}, context=context)
 
-
-        partner_ids = set(kwargs.pop('partner_ids', [])) | set(new_partner_ids) | set(link_partner_ids)
-
+        partner_ids = set(kwargs.pop('partner_ids', [])) | set(new_partner_ids)
+        
         if parent_id:
             parent_message = self.pool.get('mail.message').browse(cr, uid, parent_id, context=context)
             partner_ids |= set([(4, partner.id) for partner in parent_message.partner_ids])
@@ -826,10 +821,7 @@ class mail_thread(osv.AbstractModel):
                     ir_attachment.write(cr, SUPERUSER_ID, attachment_ids, {'res_model': model, 'res_id': thread_id}, context=context)
                 mail_message.write(cr, SUPERUSER_ID, [new_message_id], {'attachment_ids': [(6, 0, [pid for pid in attachment_ids])]}, context=context)
 
-        return {
-            'message_id': new_message_id,
-            'new_partner_ids': list(new_partner_ids),
-        }
+        return new_message_id
 
     #------------------------------------------------------
     # Followers API

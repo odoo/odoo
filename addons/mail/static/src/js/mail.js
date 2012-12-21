@@ -564,55 +564,73 @@ openerp.mail = function (session) {
             }
         },
 
-        /*post a message and fetch the message*/
+        check_recipient_partners: function (emails) {
+            var self = this;
+            var deferreds = [];
+            _.each(emails, function (email) {
+                var deferred = $.Deferred();
+                var pop = new session.web.form.FormOpenPopup(this);
+                pop.show_element(
+                    'res.partner',
+                    0,
+                    {
+                        'default_email': email,
+                        'force_email': true,
+                        'ref': "compound_context",
+                    },
+                    {
+                        title: _t("Please complete partner's informations"),
+                    }
+                );
+                pop.on('write_completed, closed', self, function () {
+                    deferred.resolve();
+                });
+                deferreds.push(deferred);
+            });
+            return $.when.apply( $, deferreds );
+        },
+
         on_message_post: function (event) {
             var self = this;
-
-            var comment_node =  this.$('textarea');
-            var body = comment_node.val();
-
-            if (this.do_check_attachment_upload() && (this.attachment_ids.length || body.match(/\S+/))) {
-                //session.web.blockUI();
-                var values = [
-                    this.context.default_res_id, //thread_id
-                    body, //body
-                    false, //subject
-                    this.context.default_parent_id, //parent_id
-                    _.map(this.attachment_ids, function (file) {return file.id;}), //attachment_ids
-                    _.map(_.filter(this.emails_from, function (f) {return f[1]}), function (f) {return f[0]}), //extra_email
-                    this.parent_thread.context, // context
-                ];
-                this.parent_thread.ds_thread.call('message_post_user_api', values).done(function (record) {
-                        var thread = self.parent_thread;
-                        var root = thread == self.options.root_thread;
-                        if (self.options.display_indented_thread < self.thread_level && thread.parent_message) {
-                            var thread = thread.parent_message.parent_thread;
-                        }
-                        // create object and attach to the thread object
-                        thread.message_fetch([["id", "=", record.message_id]], false, [record.message_id], function (arg, data) {
-                            var message = thread.create_message_object( data[0] );
-                            // insert the message on dom
-                            thread.insert_message( message, root ? undefined : self.$el, root );
-                        });
-                        self.on_cancel();
-
-                        if (record.new_partner_ids && record.new_partner_ids.length) {
-                            _.each(record.new_partner_ids, function (id) {
-                                var pop = new session.web.form.FormOpenPopup(self);
-                                pop.show_element(
-                                    'res.partner',
-                                    id,
-                                    self.parent_thread.context,
-                                    {
-                                        title: _t("Please complete partner's informations"),
-                                    }
-                                );
-                            });
-                        }
-                        //session.web.unblockUI();
-                    });
-                return true;
+            if (this.do_check_attachment_upload() && (this.attachment_ids.length || this.$('textarea').val().match(/\S+/))) {
+                // create list of new partners
+                var extra_email = _.map(_.filter(this.emails_from, function (f) {return f[1]}), function (f) {return f[0]});
+                this.check_recipient_partners(extra_email).done(function () {
+                    self.do_send_message_post();
+                });
             }
+        },
+
+        /*do post a message and fetch the message*/
+        do_send_message_post: function () {
+            console.log(arguments);
+            return;
+            var self = this;
+            //session.web.blockUI();
+            var values = [
+                this.context.default_res_id, //thread_id
+                this.$('textarea').val(), //body
+                false, //subject
+                this.context.default_parent_id, //parent_id
+                _.map(this.attachment_ids, function (file) {return file.id;}), //attachment_ids
+                _.map(_.filter(this.emails_from, function (f) {return f[1]}), function (f) {return f[0]}), //extra_email
+                this.parent_thread.context, // context
+            ];
+            this.parent_thread.ds_thread.call('message_post_user_api', values).done(function (message_id) {
+                var thread = self.parent_thread;
+                var root = thread == self.options.root_thread;
+                if (self.options.display_indented_thread < self.thread_level && thread.parent_message) {
+                    var thread = thread.parent_message.parent_thread;
+                }
+                // create object and attach to the thread object
+                thread.message_fetch([["id", "=", message_id]], false, [message_id], function (arg, data) {
+                    var message = thread.create_message_object( data[0] );
+                    // insert the message on dom
+                    thread.insert_message( message, root ? undefined : self.$el, root );
+                });
+                self.on_cancel();
+                //session.web.unblockUI();
+            });
         },
 
         /* convert the compact mode into the compose message
