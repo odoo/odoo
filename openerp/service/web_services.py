@@ -125,6 +125,12 @@ class db(netsvc.ExportService):
         db = sql_db.db_connect('postgres')
         cr = db.cursor()
         chosen_template = tools.config['db_template']
+        cr.execute("""SELECT datname 
+                              FROM pg_database
+                              WHERE datname = %s """,
+                           (name,))
+        if cr.fetchall():
+            raise openerp.exceptions.Warning(" %s database already exists!" % name )
         try:
             cr.autocommit(True) # avoid transaction block
             cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "%s" """ % (name, chosen_template))
