@@ -193,7 +193,9 @@ class account_voucher(osv.osv):
         if context.get('type', 'sale') in ('purchase', 'payment'):
             nodes = doc.xpath("//field[@name='partner_id']")
             for node in nodes:
-                node.set('domain', "[('supplier', '=', True)]")
+                node.set('context', "{'search_default_supplier': 1}")
+                if context.get('invoice_type','') in ('in_invoice', 'in_refund'):
+                    node.set('string', _("Supplier"))
         res['arch'] = etree.tostring(doc)
         return res
 
