@@ -886,9 +886,9 @@ class mail_thread(osv.AbstractModel):
 
         return mail_message.create(cr, uid, values, context=context)
 
-    def message_post_user_api(self, cr, uid, thread_id, body='', subject=False,
-                                parent_id=False, attachment_ids=None, extra_emails=None,
-                                context=None, content_subtype='plaintext', **kwargs):
+    def message_post_user_api(self, cr, uid, thread_id, body='', parent_id=False,
+                                attachment_ids=None, extra_emails=None, content_subtype='plaintext',
+                                context=None, **kwargs):
         """ Wrapper on message_post, used for user input :
             - mail gateway
             - quick reply in Chatter (refer to mail.js), not
@@ -933,8 +933,8 @@ class mail_thread(osv.AbstractModel):
         # 1.B: handle body, message_type and message_subtype
         if content_subtype == 'plaintext':
             body = tools.plaintext2html(body)
-        message_type = kwargs.pop('type', 'comment')
-        message_subtype = kwargs.pop('subtype', 'mail.mt_comment')
+        msg_type = kwargs.pop('type', 'comment')
+        msg_subtype = kwargs.pop('subtype', 'mail.mt_comment')
 
         # 2. Pre-processing: attachments
         # HACK TDE FIXME: Chatter: attachments linked to the document (not done JS-side), load the message
@@ -954,13 +954,12 @@ class mail_thread(osv.AbstractModel):
                     ir_attachment.write(cr, SUPERUSER_ID, attachment_ids, {'res_model': model, 'res_id': thread_id}, context=context)
         else:
             attachment_ids = []
+        attachment_ids = [(4, id) for id in attachment_ids]
 
         # 3. Post message
-        new_message_id = self.message_post(cr, uid, thread_id=thread_id, body=body, subject=subject,
-                            type=message_type, subtype=message_subtype, parent_id=parent_id,
-                            attachment_ids=[(4, id) for id in attachment_ids], partner_ids=partner_ids,
-                            context=context, **kwargs)
-        return new_message_id
+        return self.message_post(cr, uid, thread_id=thread_id, body=body,
+                            type=msg_type, subtype=msg_subtype, parent_id=parent_id,
+                            attachment_ids=attachment_ids, partner_ids=partner_ids, context=context, **kwargs)
 
     #------------------------------------------------------
     # Followers API
