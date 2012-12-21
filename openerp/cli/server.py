@@ -207,10 +207,15 @@ def quit_on_signals():
         pass
 
     config = openerp.tools.config
+    openerp.service.stop_services()
+
+    if getattr(openerp, 'phoenix', False):
+        # like the phoenix, reborn from ashes...
+        openerp.service._reexec()
+        return
+
     if config['pidfile']:
         os.unlink(config['pidfile'])
-
-    openerp.service.stop_services()
     sys.exit(0)
 
 def configure_babel_localedata_path():

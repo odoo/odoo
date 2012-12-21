@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2011 OpenERP S.A (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,20 +19,4 @@
 #
 ##############################################################################
 
-import res_country
-import res_lang
-import res_partner
-import res_bank
-import res_config
-import res_currency
-import res_company
-import res_users
-import res_request
-import res_lang
-import ir_property
-
-import report
-import wizard
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
+import change_password_wizard

@@ -442,5 +442,6 @@ def stop_service():
     """
     if httpd:
         httpd.shutdown()
+        openerp.netsvc.close_socket(httpd.socket)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

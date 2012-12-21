@@ -177,6 +177,10 @@ class TestCleaner(unittest2.TestCase):
         new_html = html_email_clean(False)
         self.assertEqual(new_html, False, 'html_email_cleaner did change a False in an other value.')
 
+        # Test6: Message with xml and doctype tags don't crash
+        new_html = html_email_clean(u'<?xml version="1.0" encoding="iso-8859-1"?>\n<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"\n         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\n<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">\n <head>\n  <title>404 - Not Found</title>\n </head>\n <body>\n  <h1>404 - Not Found</h1>\n </body>\n</html>\n')
+        self.assertNotIn('encoding', new_html, 'html_email_cleaner did not remove correctly encoding attributes')
+
 class TestHtmlTools(unittest2.TestCase):
     """ Test some of our generic utility functions about html """
 
