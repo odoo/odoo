@@ -886,8 +886,8 @@ class mail_thread(osv.AbstractModel):
 
         return mail_message.create(cr, uid, values, context=context)
 
-    def message_post_user_api(self, cr, uid, thread_id, body='', subject=False, parent_id=False,
-                                attachment_ids=None, extra_email=[], 
+    def message_post_user_api(self, cr, uid, thread_id, body='', subject=False,
+                                parent_id=False, attachment_ids=None, extra_emails=None,
                                 context=None, content_subtype='plaintext', **kwargs):
         """ Wrapper on message_post, used for user input :
             - mail gateway
@@ -902,40 +902,41 @@ class mail_thread(osv.AbstractModel):
                 to the related document. Should only be set by Chatter.
             - extra_email: [ 'Fabien <fpi@openerp.com>', 'al@openerp.com' ]
         """
+        partner_obj = self.pool.get('res.partner')
+        mail_message_obj = self.pool.get('mail.message')
         ir_attachment = self.pool.get('ir.attachment')
+        extra_emails = extra_emails or []
 
-        # 1. Pre-processing: body, partner_ids, type and subtype
-        if content_subtype == 'plaintext':
-            body = tools.plaintext2html(body)
-
-        new_partner_ids = set([])
-        for partner in extra_email:
-            part_ids = self.pool.get('res.partner').search(cr, uid, [('email', '=', partner)], context=context)
-            # create a new partner if not exists
-            if not part_ids:
-                part_ids = [self.pool.get('res.partner').name_create(cr, uid, partner, context=dict())[0]]
+        # 1.A.1: pre-process partners and incoming extra_emails
+        partner_ids = set([])
+        for email in extra_emails:
+            partner_id = partner_obj.find_or_create(cr, uid, email, context=context)
             # link mail with this from mail to the new partner id
-            message_ids = mail_message.search(cr, uid, [('email_from', '=', partner)], context=context)
-            if part_ids and message_ids:
-                mail_message.write(cr, uid, message_ids, {'email_from': None, 'author_id': part_ids[0]}, context=context)
-            new_partner_ids |= set(part_ids)
+            partner_msg_ids = mail_message_obj.search(cr, SUPERUSER_ID, [('email_from', '=', email), ('author_id', '=', False)], context=context)
+            if partner_id and partner_msg_ids:
+                mail_message_obj.write(cr, SUPERUSER_ID, partner_msg_ids, {'email_from': None, 'author_id': partner_id}, context=context)
+            partner_ids.add((4, partner_id))
+        if partner_ids:
+            self.message_subscribe(cr, uid, [thread_id], list(partner_ids), context=context)
 
-        if new_partner_ids:
-            self.message_subscribe(cr, uid, [thread_id], list(new_partner_ids), context=context)
-
-        partner_ids = set(kwargs.pop('partner_ids', [])) | set(new_partner_ids)
-
+        # 1.A.2: add recipients of parent message
         if parent_id:
-            parent_message = self.pool.get('mail.message').browse(cr, uid, parent_id, context=context)
+            parent_message = mail_message_obj.browse(cr, uid, parent_id, context=context)
             partner_ids |= set([(4, partner.id) for partner in parent_message.partner_ids])
             # TDE FIXME HACK: mail.thread -> private message
             if self._name == 'mail.thread' and parent_message.author_id.id:
                 partner_ids.add((4, parent_message.author_id.id))
 
+        # 1.A.3: add specified recipients
+        partner_ids |= set(kwargs.pop('partner_ids', []))
+
+        # 1.B: handle body, message_type and message_subtype
+        if content_subtype == 'plaintext':
+            body = tools.plaintext2html(body)
         message_type = kwargs.pop('type', 'comment')
         message_subtype = kwargs.pop('subtype', 'mail.mt_comment')
 
-        # 2. Pre-processing: free attachments linked to the model
+        # 2. Pre-processing: attachments
         # HACK TDE FIXME: Chatter: attachments linked to the document (not done JS-side), load the message
         if attachment_ids:
             # TDE FIXME (?): when posting a private message, we use mail.thread as a model
@@ -955,10 +956,10 @@ class mail_thread(osv.AbstractModel):
             attachment_ids = []
 
         # 3. Post message
-        new_message_id = self.message_post(cr, uid, thread_id=thread_id, body=body, subject=subject, type=message_type,
-                            subtype=message_subtype, parent_id=parent_id, attachment_ids=[(4, id) for id in attachment_ids],
-                            context=context, partner_ids=partner_ids, **kwargs)
-
+        new_message_id = self.message_post(cr, uid, thread_id=thread_id, body=body, subject=subject,
+                            type=message_type, subtype=message_subtype, parent_id=parent_id,
+                            attachment_ids=[(4, id) for id in attachment_ids], partner_ids=partner_ids,
+                            context=context, **kwargs)
         return new_message_id
 
     #------------------------------------------------------

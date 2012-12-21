@@ -609,17 +609,14 @@ openerp.mail = function (session) {
         /*do post a message and fetch the message*/
         do_send_message_post: function () {
             var self = this;
-            //session.web.blockUI();
-            var values = [
-                this.context.default_res_id, //thread_id
-                this.$('textarea').val(), //body
-                false, //subject
-                this.context.default_parent_id, //parent_id
-                _.map(this.attachment_ids, function (file) {return file.id;}), //attachment_ids
-                _.map(_.filter(this.emails_from, function (f) {return f[1]}), function (f) {return f[0]}), //extra_email
-                this.parent_thread.context, // context
-            ];
-            this.parent_thread.ds_thread.call('message_post_user_api', values).done(function (message_id) {
+            this.parent_thread.ds_thread._model.call('message_post_user_api', [this.context.default_res_id], {
+                'body': this.$('textarea').val(),
+                'subject': false,
+                'parent_id': this.context.default_parent_id,
+                'attachment_ids': _.map(this.attachment_ids, function (file) {return file.id;}),
+                'extra_emails': _.map(_.filter(this.emails_from, function (f) {return f[1]}), function (f) {return f[0]}),
+                'context': this.parent_thread.context,
+            }).done(function (message_id) {
                 var thread = self.parent_thread;
                 var root = thread == self.options.root_thread;
                 if (self.options.display_indented_thread < self.thread_level && thread.parent_message) {
@@ -632,7 +629,6 @@ openerp.mail = function (session) {
                     thread.insert_message( message, root ? undefined : self.$el, root );
                 });
                 self.on_cancel();
-                //session.web.unblockUI();
             });
         },
 
@@ -1060,7 +1056,7 @@ openerp.mail = function (session) {
             this.author_id = datasets.author_id || false;
             this.thread_level = (datasets.thread_level+1) || 0;
             this.partner_ids = datasets.partner_ids || [];
-            if (datasets.author_id)
+            if (datasets.author_id && datasets.author_id[0])
                 this.partner_ids.push(datasets.author_id);
             this.messages = [];
 
