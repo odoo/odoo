@@ -917,7 +917,7 @@ class mail_thread(osv.AbstractModel):
                 mail_message_obj.write(cr, SUPERUSER_ID, partner_msg_ids, {'email_from': None, 'author_id': partner_id}, context=context)
             partner_ids.add((4, partner_id))
         if partner_ids:
-            self.message_subscribe(cr, uid, [thread_id], list(partner_ids), context=context)
+            self.message_subscribe(cr, uid, [thread_id], [item[1] for item in partner_ids], context=context)
 
         # 1.A.2: add recipients of parent message
         if parent_id:
