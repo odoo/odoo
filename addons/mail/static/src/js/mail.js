@@ -603,8 +603,6 @@ openerp.mail = function (session) {
 
         /*do post a message and fetch the message*/
         do_send_message_post: function () {
-            console.log(arguments);
-            return;
             var self = this;
             //session.web.blockUI();
             var values = [
