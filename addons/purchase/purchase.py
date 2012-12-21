@@ -1214,9 +1214,8 @@ class procurement_order(osv.osv):
             body = _("Draft Purchase Order created")
             self.message_post(cr, uid, [procurement.id], body=body, context=context)
 
-procurement_order()
 
-class mail_mail(osv.osv):
+class mail_mail(osv.Model):
     _name = 'mail.mail'
     _inherit = 'mail.mail'
 
@@ -1226,9 +1225,8 @@ class mail_mail(osv.osv):
             wf_service.trg_validate(uid, 'purchase.order', mail.res_id, 'send_rfq', cr)
         return super(mail_mail, self)._postprocess_sent_message(cr, uid, mail=mail, context=context)
 
-mail_mail()
 
-class product_template(osv.osv):
+class product_template(osv.Model):
     _name = 'product.template'
     _inherit = 'product.template'
     _columns = {
@@ -1238,13 +1236,14 @@ class product_template(osv.osv):
         'purchase_ok': 1,
     }
 
-product_template()
 
-class mail_compose_message(osv.osv):
+class mail_compose_message(osv.Model):
     _inherit = 'mail.compose.message'
+
     def send_mail(self, cr, uid, ids, context=None):
         context = context or {}
         if context.get('default_model') == 'purchase.order' and context.get('default_res_id'):
+            context = dict(context, mail_post_autofollow=True)
             wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'purchase.order', context['default_res_id'], 'send_rfq', cr)
         return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
