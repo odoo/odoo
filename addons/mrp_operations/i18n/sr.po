@@ -1,21 +1,21 @@
 # Serbian translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2010-10-16 09:44+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:40+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:23+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
@@ -26,7 +26,7 @@ msgid "Work Orders"
 msgstr "Radni Nalozi"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:527
+#: code:addons/mrp_operations/mrp_operations.py:484
 #, python-format
 msgid "Operation is already finished!"
 msgstr ""
@@ -40,13 +40,6 @@ msgstr ""
 #: model:ir.model,name:mrp_operations.model_mrp_operations_operation_code
 msgid "mrp_operations.operation.code"
 msgstr "mrp_operacije.postupak.sifra"
-
-#. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:246
-#, python-format
-msgid ""
-"Work order has been <b>cancelled</b> for production order <em>%s</em>."
-msgstr ""
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -97,12 +90,6 @@ msgid "Set to Draft"
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:238
-#, python-format
-msgid "Work order is <b>pending</b> for production order <em>%s</em>."
-msgstr ""
-
-#. module: mrp_operations
 #: field:mrp.production,allow_reorder:0
 msgid "Free Serialisation"
 msgstr "Slobodna Serializacija"
@@ -149,11 +136,11 @@ msgid "The work orders are created on the basis of the production order."
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:122
-#: code:addons/mrp_operations/mrp_operations.py:508
-#: code:addons/mrp_operations/mrp_operations.py:512
-#: code:addons/mrp_operations/mrp_operations.py:524
-#: code:addons/mrp_operations/mrp_operations.py:527
+#: code:addons/mrp_operations/mrp_operations.py:134
+#: code:addons/mrp_operations/mrp_operations.py:465
+#: code:addons/mrp_operations/mrp_operations.py:469
+#: code:addons/mrp_operations/mrp_operations.py:481
+#: code:addons/mrp_operations/mrp_operations.py:484
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -166,7 +153,7 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:520
+#: code:addons/mrp_operations/mrp_operations.py:477
 #, python-format
 msgid "Operation is Already Cancelled!"
 msgstr ""
@@ -183,13 +170,13 @@ msgid "Stock Move"
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:524
+#: code:addons/mrp_operations/mrp_operations.py:481
 #, python-format
 msgid "No operation to cancel."
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:517
+#: code:addons/mrp_operations/mrp_operations.py:474
 #, python-format
 msgid ""
 "In order to Finish the operation, it must be in the Start or Resume state!"
@@ -207,6 +194,11 @@ msgstr ""
 #: selection:mrp.workorder,state:0
 msgid "Draft"
 msgstr "Priprema"
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:0
+msgid "Actual Production Date"
+msgstr ""
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -260,7 +252,7 @@ msgid "Product Qty"
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:122
+#: code:addons/mrp_operations/mrp_operations.py:134
 #, python-format
 msgid "Manufacturing order cannot start in state \"%s\"!"
 msgstr ""
@@ -347,12 +339,6 @@ msgid "December"
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:230
-#, python-format
-msgid "Work order has been <b>done</b> for production order <em>%s</em>."
-msgstr ""
-
-#. module: mrp_operations
 #: view:mrp.workorder:0
 #: field:mrp.workorder,month:0
 msgid "Month"
@@ -403,14 +389,14 @@ msgid "In Progress"
 msgstr "U toku"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:508
+#: code:addons/mrp_operations/mrp_operations.py:465
 #, python-format
 msgid ""
 "In order to Pause the operation, it must be in the Start or Resume state!"
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:512
+#: code:addons/mrp_operations/mrp_operations.py:469
 #, python-format
 msgid "In order to Resume the operation, it must be in the Pause state!"
 msgstr ""
@@ -453,7 +439,7 @@ msgid "Production Operation Code"
 msgstr "Operaciona Sifra Proizvodnje"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:504
+#: code:addons/mrp_operations/mrp_operations.py:461
 #, python-format
 msgid ""
 "Operation has already started! You can either Pause/Finish/Cancel the "
@@ -543,7 +529,7 @@ msgid "Finish the operation."
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:497
+#: code:addons/mrp_operations/mrp_operations.py:454
 #, python-format
 msgid "Operation is not started yet !"
 msgstr ""
@@ -554,10 +540,10 @@ msgid "Information from the production order."
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:497
-#: code:addons/mrp_operations/mrp_operations.py:504
-#: code:addons/mrp_operations/mrp_operations.py:517
-#: code:addons/mrp_operations/mrp_operations.py:520
+#: code:addons/mrp_operations/mrp_operations.py:454
+#: code:addons/mrp_operations/mrp_operations.py:461
+#: code:addons/mrp_operations/mrp_operations.py:474
+#: code:addons/mrp_operations/mrp_operations.py:477
 #, python-format
 msgid "Sorry!"
 msgstr ""
@@ -625,12 +611,6 @@ msgid ""
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:214
-#, python-format
-msgid "Work order has been <b>created</b> for production order <em>%s</em>."
-msgstr ""
-
-#. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_startoperation0
 msgid "Start Operation"
 msgstr "Započni postupak"
@@ -693,11 +673,6 @@ msgstr ""
 #: model:process.node,name:mrp_operations.process_node_workorder0
 msgid "Work Center"
 msgstr "Radionica"
-
-#. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-msgid "Real"
-msgstr "Реални"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_planned:0
@@ -785,12 +760,6 @@ msgid "#Line Orders"
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:222
-#, python-format
-msgid "Work order has been <b>started</b> for production order <em>%s</em>."
-msgstr ""
-
-#. module: mrp_operations
 #: view:mrp.production:0
 msgid "Start Working"
 msgstr ""
@@ -817,99 +786,3 @@ msgstr ""
 #: view:mrp.production.workcenter.line:0
 msgid "Duration"
 msgstr "Trajanje"
-
-#~ msgid "Start Cancel Operation"
-#~ msgstr "Pokreni ponistenje Operacije"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Ime objekta mora da počinje sa x_ i ne sme da sadrži specijalne karaktere !"
-
-#~ msgid "Mrp Operation Process"
-#~ msgstr "Mrp Procesni Postupak"
-
-#~ msgid "Operations Code"
-#~ msgstr "Sifre Operacija"
-
-#~ msgid "Operation is started"
-#~ msgstr "Postupak je pokrenut"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Pogrešno ime modela u definiciji akcije."
-
-#~ msgid "Start Done Operation"
-#~ msgstr "Pokreni Zavrsetak Postupka"
-
-#~ msgid "Work Order Events Using Bar Codes"
-#~ msgstr "Radni Nalozi Koriscenjem Bar-Koda"
-
-#~ msgid "All Work Orders"
-#~ msgstr "Svi Radni Nalozi"
-
-#~ msgid "Start - Stop Codes"
-#~ msgstr "Pokreni - Zaustavi Sifre"
-
-#~ msgid "From production order, create the workorder"
-#~ msgstr "Iz Naloga proizvodnje kreiraj Radni Nalog"
-
-#~ msgid "("
-#~ msgstr "("
-
-#~ msgid "UOM"
-#~ msgstr "JM"
-
-#~ msgid "Operation is done"
-#~ msgstr "Postupak je zavrsen"
-
-#~ msgid "Workcenters Barcode"
-#~ msgstr "Radionicki Bar-Kod"
-
-#~ msgid "Production order for any products"
-#~ msgstr "Proizvodni nalog za bilo koji proizvod"
-
-#~ msgid "Workcenter Production start end workflow"
-#~ msgstr "Radionicka Proizvodnja pocetak i kraj posla"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Nevažeći XML za pregled arhitekture"
-
-#~ msgid "From work order, define the cycles and hour for creating product"
-#~ msgstr ""
-#~ "Iz Radnog Naloga, definisi cikluse i sate potrebne za zavrsetak proizvoda"
-
-#~ msgid "This is delay between operation start and stop in this workcenter"
-#~ msgstr "Ovo je razlika izmedju pocetka i kraja posla ove Radionice"
-
-#~ msgid "Prod.State"
-#~ msgstr "Stanje Proizvoda"
-
-#~ msgid "Workcenter"
-#~ msgstr "Radionica"
-
-#~ msgid "Production Work Center"
-#~ msgstr "Proizvodna Radionica"
-
-#~ msgid "Production start Operation"
-#~ msgstr "Pocetak Operacije Proizvodnje"
-
-#~ msgid "Done Operation"
-#~ msgstr "Zavrsena Operacija"
-
-#~ msgid "Cancel Operation"
-#~ msgstr "Otkazi Operaciju"
-
-#~ msgid "Work start Operation"
-#~ msgstr "Pocetak Rada Operacije"
-
-#~ msgid "Work Orders to Do"
-#~ msgstr "Radni Nalozi na cekanju"
-
-#~ msgid ")"
-#~ msgstr ")"
-
-#~ msgid "Start working"
-#~ msgstr "Pocetak Posla"
-
-#~ msgid "Operation is cancelled"
-#~ msgstr "Operacija je otkazana"

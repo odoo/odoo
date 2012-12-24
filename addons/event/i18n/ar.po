@@ -1,20 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* event
+# Arabic translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-01-12 20:40+0000\n"
-"Last-Translator: kifcaliph <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:12+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:12+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: event
 #: view:event.event:0
@@ -58,20 +59,9 @@ msgid ""
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:305
-#, python-format
-msgid "Event has been <b>cancelled</b>."
-msgstr ""
-
-#. module: event
 #: field:event.registration,date_open:0
 msgid "Registration Date"
 msgstr "تاريخ التسجيل"
-
-#. module: event
-#: help:event.registration,origin:0
-msgid "Name of the sale order which create the registration"
-msgstr ""
 
 #. module: event
 #: field:event.event,type:0
@@ -120,9 +110,8 @@ msgid "Default Maximum Registration"
 msgstr ""
 
 #. module: event
-#: help:event.event,message_unread:0
-#: help:event.registration,message_unread:0
-msgid "If checked new messages require your attention."
+#: view:report.event.registration:0
+msgid "Display"
 msgstr ""
 
 #. module: event
@@ -197,9 +186,9 @@ msgid "Registrations"
 msgstr "التسجيلات"
 
 #. module: event
-#: code:addons/event/event.py:95
-#: code:addons/event/event.py:108
-#: code:addons/event/event.py:400
+#: code:addons/event/event.py:89
+#: code:addons/event/event.py:100
+#: code:addons/event/event.py:355
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -234,8 +223,9 @@ msgid "Opera of Verdi"
 msgstr "أوبرا فيردي"
 
 #. module: event
-#: view:report.event.registration:0
-msgid "Display"
+#: help:event.event,message_unread:0
+#: help:event.registration,message_unread:0
+msgid "If checked new messages require your attention."
 msgstr ""
 
 #. module: event
@@ -255,11 +245,6 @@ msgid "False"
 msgstr ""
 
 #. module: event
-#: model:mail.message.subtype,name:event.mt_event_registration
-msgid "New Registrations"
-msgstr ""
-
-#. module: event
 #: field:event.registration,event_end_date:0
 msgid "Event End Date"
 msgstr ""
@@ -273,18 +258,13 @@ msgid ""
 msgstr ""
 
 #. module: event
-#: selection:report.event.registration,month:0
-msgid "May"
-msgstr "مايو"
-
-#. module: event
 #: view:report.event.registration:0
 msgid "Registrations in confirmed or done state"
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:114
-#: code:addons/event/event.py:116
+#: code:addons/event/event.py:106
+#: code:addons/event/event.py:108
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -303,8 +283,8 @@ msgid "Partner"
 msgstr "شريك"
 
 #. module: event
-#: model:ir.actions.server,name:event.actions_server_event_event_read
-msgid "Event: Mark read"
+#: help:event.type,default_registration_min:0
+msgid "It will select this default minimum value when you choose this event"
 msgstr ""
 
 #. module: event
@@ -401,7 +381,7 @@ msgid "Email"
 msgstr "بريد إلكتروني"
 
 #. module: event
-#: code:addons/event/event.py:367
+#: code:addons/event/event.py:329
 #, python-format
 msgid "New registration confirmed: %s."
 msgstr ""
@@ -470,26 +450,9 @@ msgid "Speaker who will be giving speech at the event."
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:457
-#, python-format
-msgid "Registration has been <b>created</b>."
-msgstr ""
-
-#. module: event
 #: view:event.event:0
 msgid "Cancel Event"
 msgstr "إلغي المشروع"
-
-#. module: event
-#: code:addons/event/event.py:398
-#, python-format
-msgid "State set to Done"
-msgstr ""
-
-#. module: event
-#: model:ir.actions.server,name:event.actions_server_event_registration_read
-msgid "Event registration : Mark read"
-msgstr ""
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_reg
@@ -539,6 +502,11 @@ msgid "December"
 msgstr "ديسمبر"
 
 #. module: event
+#: help:event.registration,origin:0
+msgid "Reference of the sales order which created the registration"
+msgstr ""
+
+#. module: event
 #: field:report.event.registration,draft_state:0
 msgid " # No of Draft Registrations"
 msgstr " #رقم تسجيلات السجل"
@@ -586,18 +554,12 @@ msgid "or"
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:315
-#, python-format
-msgid "Event has been <b>done</b>."
-msgstr ""
-
-#. module: event
 #: help:res.partner,speaker:0
 msgid "Check this box if this contact is a speaker."
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:116
+#: code:addons/event/event.py:108
 #, python-format
 msgid "No Tickets Available!"
 msgstr ""
@@ -635,13 +597,12 @@ msgid ""
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:462
-#, python-format
-msgid "Registration has been set as <b>draft</b>."
-msgstr ""
+#: field:event.event,user_id:0
+msgid "Responsible User"
+msgstr "المستخدم المسؤول"
 
 #. module: event
-#: code:addons/event/event.py:108
+#: code:addons/event/event.py:100
 #, python-format
 msgid ""
 "The total of confirmed registration for the event '%s' does not meet the "
@@ -675,12 +636,6 @@ msgstr "احداث في المقاطعة الجديدة"
 #. module: event
 #: view:report.event.registration:0
 msgid "Events which are in New state"
-msgstr ""
-
-#. module: event
-#: code:addons/event/event.py:404
-#, python-format
-msgid "State set to Cancel"
 msgstr ""
 
 #. module: event
@@ -799,10 +754,9 @@ msgid "My Registrations"
 msgstr "تسجيلاتي"
 
 #. module: event
-#: code:addons/event/event.py:310
-#, python-format
-msgid "Event has been set to <b>draft</b>."
-msgstr ""
+#: selection:report.event.registration,month:0
+msgid "November"
+msgstr "نوفمبر"
 
 #. module: event
 #: view:report.event.registration:0
@@ -810,22 +764,14 @@ msgid "Extended Filters..."
 msgstr "مرشحات مفصلة..."
 
 #. module: event
-#: field:event.event,message_comment_ids:0
-#: help:event.event,message_comment_ids:0
-#: field:event.registration,message_comment_ids:0
-#: help:event.registration,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
-
-#. module: event
 #: selection:report.event.registration,month:0
 msgid "October"
 msgstr "أكتوبر"
 
 #. module: event
-#: model:ir.actions.server,name:event.actions_server_event_registration_unread
-msgid "Event registration : Mark unread"
-msgstr ""
+#: selection:report.event.registration,month:0
+msgid "January"
+msgstr "يناير"
 
 #. module: event
 #: view:event.event:0
@@ -834,12 +780,13 @@ msgstr "وضع كمسودة"
 
 #. module: event
 #: view:event.event:0
+#: view:event.registration:0
 #: view:res.partner:0
 msgid "Confirm Registration"
 msgstr "أكد التسجيل"
 
 #. module: event
-#: code:addons/event/event.py:95
+#: code:addons/event/event.py:89
 #, python-format
 msgid ""
 "You have already set a registration for this event as 'Attended'. Please "
@@ -862,12 +809,6 @@ msgid "Default Minimum Registration"
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:368
-#, python-format
-msgid "Registration confirmed."
-msgstr ""
-
-#. module: event
 #: field:event.event,address_id:0
 msgid "Location Address"
 msgstr "عنوان الموقع"
@@ -887,6 +828,7 @@ msgstr ""
 
 #. module: event
 #: view:event.event:0
+#: view:event.registration:0
 msgid "Attended the Event"
 msgstr ""
 
@@ -896,15 +838,10 @@ msgid "Error ! Closing Date cannot be set before Beginning Date."
 msgstr "خطأ ! لايمكن وضع تاريخ الغلق قبل تاريخ الابتداء."
 
 #. module: event
-#: code:addons/event/event.py:400
+#: code:addons/event/event.py:355
 #, python-format
 msgid "You must wait for the starting day of the event to do this action."
 msgstr ""
-
-#. module: event
-#: field:event.event,user_id:0
-msgid "Responsible User"
-msgstr "المستخدم المسؤول"
 
 #. module: event
 #: selection:event.event,state:0
@@ -928,7 +865,7 @@ msgid "Reply-to Email"
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:114
+#: code:addons/event/event.py:106
 #, python-format
 msgid "Only %d Seats are Available!"
 msgstr ""
@@ -979,18 +916,13 @@ msgid "Upcoming events from today"
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:300
-#, python-format
-msgid "Event has been <b>created</b>."
-msgstr ""
-
-#. module: event
 #: model:event.event,name:event.event_2
 msgid "Conference on ERP Business"
 msgstr ""
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_view_registration
+#: model:mail.message.subtype,name:event.mt_event_registration
 msgid "New Registration"
 msgstr ""
 
@@ -1010,10 +942,9 @@ msgid "Participant / Contact Name"
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:320
-#, python-format
-msgid "Event has been <b>confirmed</b>."
-msgstr ""
+#: selection:report.event.registration,month:0
+msgid "May"
+msgstr "مايو"
 
 #. module: event
 #: view:res.partner:0
@@ -1024,16 +955,6 @@ msgstr "اشتراك الأحداث"
 #: view:event.event:0
 msgid "No ticket available."
 msgstr ""
-
-#. module: event
-#: help:event.type,default_registration_min:0
-msgid "It will select this default minimum value when you choose this event"
-msgstr ""
-
-#. module: event
-#: selection:report.event.registration,month:0
-msgid "January"
-msgstr "يناير"
 
 #. module: event
 #: field:event.event,register_max:0
@@ -1074,11 +995,6 @@ msgstr "الاسم"
 #: field:event.event,country_id:0
 msgid "Country"
 msgstr "دولة"
-
-#. module: event
-#: selection:report.event.registration,month:0
-msgid "November"
-msgstr "نوفمبر"
 
 #. module: event
 #: view:res.partner:0
@@ -1134,12 +1050,6 @@ msgstr ""
 
 #. module: event
 #: view:event.event:0
-#: model:ir.actions.act_window,name:event.act_register_event_partner
-msgid "Subscribe"
-msgstr "اشترك"
-
-#. module: event
-#: view:event.event:0
 msgid "available."
 msgstr ""
 
@@ -1183,9 +1093,10 @@ msgid ""
 msgstr ""
 
 #. module: event
-#: model:ir.actions.server,name:event.actions_server_event_event_unread
-msgid "Event: Mark unread"
-msgstr ""
+#: view:event.event:0
+#: model:ir.actions.act_window,name:event.act_register_event_partner
+msgid "Subscribe"
+msgstr "اشترك"
 
 #. module: event
 #: model:res.groups,name:event.group_event_manager
@@ -1214,491 +1125,3 @@ msgstr "سنة"
 #: field:event.event,speaker_confirmed:0
 msgid "Speaker Confirmed"
 msgstr "تم تأكيد المتحدث"
-
-#~ msgid "Invoice Information"
-#~ msgstr "بيانات الفاتورة"
-
-#~ msgid "Make Invoices"
-#~ msgstr "إصدار الفواتير"
-
-#~ msgid "Title"
-#~ msgstr "الاسم"
-
-#~ msgid "Invoice Date"
-#~ msgstr "تاريخ الفاتورة"
-
-#~ msgid "_Close"
-#~ msgstr "إ_غلاق"
-
-#~ msgid "Parent Event"
-#~ msgstr "الحدث الرئيسي"
-
-#~ msgid "Last 7 Days"
-#~ msgstr "٧ أيام الأخير"
-
-#~ msgid "Current Events"
-#~ msgstr "الحدث الحالي"
-
-#~ msgid "Make Invoice"
-#~ msgstr "عمل فاتورة"
-
-#~ msgid "Reply-To"
-#~ msgstr "رُد إلى"
-
-#~ msgid "Event Dashboard"
-#~ msgstr "لوحة الأحداث"
-
-#~ msgid "Pricelist"
-#~ msgstr "قائمة الأسعار"
-
-#~ msgid "event.registration.badge"
-#~ msgstr "event.registration.badge"
-
-#~ msgid "Partner Contact"
-#~ msgstr "جهة الاتصال بالشريك"
-
-#, python-format
-#~ msgid "Customer Invoices"
-#~ msgstr "فواتير العملاء"
-
-#~ msgid "Badges"
-#~ msgstr "شارات"
-
-#~ msgid "Event type"
-#~ msgstr "نوع الحدث"
-
-#~ msgid "Extra Info"
-#~ msgstr "معلومات إضافية"
-
-#~ msgid "Reference"
-#~ msgstr "مرجع"
-
-#~ msgid "Emails"
-#~ msgstr "البريد الإلكتروني"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "تحذير !"
-
-#~ msgid "Misc"
-#~ msgstr "متفرقات"
-
-#~ msgid "Registration Confirmation"
-#~ msgstr "تأكيد الإشتراك"
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "خطأ !"
-
-#~ msgid "Type"
-#~ msgstr "نوع"
-
-#~ msgid "Reply"
-#~ msgstr "رد"
-
-#~ msgid "Dates"
-#~ msgstr "تواريخ"
-
-#~ msgid "Quantity"
-#~ msgstr "كمية"
-
-#~ msgid "Last 30 Days"
-#~ msgstr "آخر ٣٠ يوم"
-
-#~ msgid "Contact"
-#~ msgstr "جهة الاتصال"
-
-#~ msgid "Group the invoices"
-#~ msgstr "تجميع الفواتير"
-
-#~ msgid "Speakers"
-#~ msgstr "سماعات"
-
-#~ msgid "Create invoices"
-#~ msgstr "إنشاء الفواتير"
-
-#, python-format
-#~ msgid "Invoiced"
-#~ msgstr "مفوتر"
-
-#~ msgid "Event Done"
-#~ msgstr "حدث منتهي"
-
-#~ msgid "Message"
-#~ msgstr "رسالة"
-
-#~ msgid "Do you really want to create the invoice(s) ?"
-#~ msgstr "هل تريد فعلاً  إنشاء الفاتورة/الفواتبر؟"
-
-#~ msgid "Beginning Date"
-#~ msgstr "تاريخ البدء"
-
-#~ msgid "Closed"
-#~ msgstr "مغلق"
-
-#~ msgid "Child Events"
-#~ msgstr "أحداث فرعية"
-
-#~ msgid "Number of Registration"
-#~ msgstr "عدد التسجيلات"
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "خطأ! لا يمكنك إنشاء أعضاء ذوي ارتباطات متداخلة."
-
-#~ msgid "Active"
-#~ msgstr "نشط"
-
-#~ msgid "Language"
-#~ msgstr "لغة"
-
-#~ msgid "Dashboard"
-#~ msgstr "اللوحة الرئيسية"
-
-#~ msgid "History"
-#~ msgstr "المحفوظات"
-
-#~ msgid "Beginning date"
-#~ msgstr "تاريخ البدء"
-
-#~ msgid "Last 365 Days"
-#~ msgstr "٣٦٥ يوم الأخيرة"
-
-#~ msgid "Attachments"
-#~ msgstr "مرفقات"
-
-#~ msgid "Registration Cost"
-#~ msgstr "تكلفة التسجيل"
-
-#, python-format
-#~ msgid "Open"
-#~ msgstr "فتح"
-
-#~ msgid "Close"
-#~ msgstr "إغلاق"
-
-#~ msgid "Invoice"
-#~ msgstr "فاتورة"
-
-#~ msgid "Product"
-#~ msgstr "المنتج"
-
-#~ msgid "Current"
-#~ msgstr "الحالي"
-
-#~ msgid "Details"
-#~ msgstr "تفاصيل"
-
-#~ msgid "Sale Team"
-#~ msgstr "فريق المبيعات"
-
-#~ msgid "Start date"
-#~ msgstr "تاريخ البدء"
-
-#~ msgid "Unit Price"
-#~ msgstr "سعر الوحدة"
-
-#~ msgid "Closing date"
-#~ msgstr "تاريخ الإغلاق"
-
-#~ msgid "  event Registration "
-#~ msgstr "  تسجيل الحدث "
-
-#~ msgid "Address"
-#~ msgstr "العنوان"
-
-#~ msgid "_Subcribe"
-#~ msgstr "اش_ترك"
-
-#~ msgid "Beginning Date of Event"
-#~ msgstr "تاريخ بدء الحدث"
-
-#, python-format
-#~ msgid "Auto Registration: [%s] %s"
-#~ msgstr "تسجيل تلقائي: [%s] %s"
-
-#~ msgid "Total"
-#~ msgstr "الإجمالي"
-
-#~ msgid "Subtotal"
-#~ msgstr "المجموع الفرعي"
-
-#~ msgid "Confirmation for Event Registration"
-#~ msgstr "تأكيد لتسجيل التنفيذ"
-
-#~ msgid "Provide Maximun Number of Registrations"
-#~ msgstr "اعطي رقم كحد اقصى للتسجيلات"
-
-#~ msgid "Registration Email"
-#~ msgstr "البريد الإلكتروني للتسجيل"
-
-#~ msgid "Speaker who are giving speech on event."
-#~ msgstr "المتحدث الذي يعطي امر التنفيذ"
-
-#~ msgid "Event Details"
-#~ msgstr "تفاصيل التنفيذ"
-
-#~ msgid ""
-#~ "This will be the default price used as registration cost when invoicing this "
-#~ "event. Note that you can specify for each registration a specific amount if "
-#~ "you want to"
-#~ msgstr ""
-#~ "سيكون هذا السعر الافتراضي المستخدم كتكلفة التسجيل عند عمل فاتورة لهذا "
-#~ "التنفيذ. لاحظ انه يمكنك تحديد لكل تسجيل كمية محددة اذا اردت ذلك"
-
-#, python-format
-#~ msgid "Registration doesn't have any partner to invoice."
-#~ msgstr "لا يوجد اي شريك في التسجيل في الفاتورة."
-
-#~ msgid "Confirmation Email"
-#~ msgstr "تأكيد البريد الإلكتروني"
-
-#~ msgid "Mail Auto Confirm"
-#~ msgstr "تأكيد ذاتي للبريد"
-
-#~ msgid "Ticket for Opera"
-#~ msgstr "تذكرة للأوبرا"
-
-#~ msgid "Send New Email"
-#~ msgstr "إرسال رسالة جديدة"
-
-#~ msgid "Number of Registrations or Tickets"
-#~ msgstr "عدد التسجيلات او التذاكر"
-
-#~ msgid "Event Make Invoice"
-#~ msgstr "ينشأ المشروع الفاتورة"
-
-#~ msgid "Other Speakers"
-#~ msgstr "متحدثون اخرون"
-
-#~ msgid ""
-#~ "The invoices of this event registration will be created with this Product. "
-#~ "Thus it allows you to set the default label and the accounting info you want "
-#~ "by default on these invoices."
-#~ msgstr ""
-#~ "ستُنشأ فواتير تسجيل المشروع هذه مع هذا المنتج. مما يسمح لك بوضع المادة "
-#~ "الافتراضية و المعلومات المحاسبية التي تريدها بالإفتراض على هذه الفواتير."
-
-#~ msgid "Pricelist version for current event."
-#~ msgstr "نسخة قائمة الاسعار للمشروع الجاري"
-
-#~ msgid "Closing Date of Event"
-#~ msgstr "تاريخ غلق المشروع"
-
-#~ msgid "Mail Auto Register"
-#~ msgstr "بريد يسجل ذاتيًا"
-
-#, python-format
-#~ msgid "Registered partner doesn't have an address to make the invoice."
-#~ msgstr "لا يملك الشريك المسجل عنوان لعمل الفاتورة."
-
-#~ msgid "To be Invoiced"
-#~ msgstr "ليعمل لها فاتورة"
-
-#~ msgid ""
-#~ "This email will be sent when the event gets confimed or when someone "
-#~ "subscribes to a confirmed event. This is also the email sent to remind "
-#~ "someone about the event."
-#~ msgstr ""
-#~ "سيتم ارسال البريد عند تأكيد المشروع عندما يتابع شخص المشروع المؤكد عليه. "
-#~ "ويُرسل هذا الإيميل ايضًا لتذكير شخص ما عن المشروع."
-
-#~ msgid "History Information"
-#~ msgstr "معلومات المحفوظات"
-
-#~ msgid ""
-#~ "If event is created, the state is 'Draft'.If event is confirmed for the "
-#~ "particular dates the state is set to 'Confirmed'. If the event is over, the "
-#~ "state is set to 'Done'.If event is cancelled the state is set to 'Cancelled'."
-#~ msgstr ""
-#~ "اذا نُشأ المشروع, تكون الحالة ‘سجل‘. اذا تم تأكيد المشروع لتواريخ محددة "
-#~ "الحالة تتحول الى ‘مؤكد‘. اذا كان اكثر عن الحد تتحول الى ‘تم‘. اذا تم الغاء "
-#~ "المشروع الحالة تتحول الى ‘ملغي‘."
-
-#~ msgid "Type of Event like Seminar, Exhibition, Conference, Training."
-#~ msgstr "نوع المشروع مثل سمينار, المعرض, المحادثة, التدريب."
-
-#~ msgid "Total of Prospect Registrati./event/event.py:41:ons"
-#~ msgstr "المجموع الكلي للتسجيل المحتمل/الحدث.yp:41ons"
-
-#~ msgid "Invoice Name"
-#~ msgstr "اسم الفاتورة"
-
-#~ msgid "Error ! You cannot create recursive event."
-#~ msgstr "خطأ ! لايمكنك انشاء تنفيذ عودي."
-
-#~ msgid "Reference 2"
-#~ msgstr "مرجع ٢"
-
-#~ msgid "Ticket for Concert"
-#~ msgstr "تذكرة للمعين"
-
-#~ msgid "Mailing"
-#~ msgstr "المراسلة بالبريد"
-
-#, python-format
-#~ msgid "Warning: The Event '%s' has reached its Maximum Limit (%s)."
-#~ msgstr "تنبيه: وصل المشروع ‘%s‘ لأقصى حد له (%s)."
-
-#~ msgid "Partner Invoiced"
-#~ msgstr "فاتورة الشريك"
-
-#~ msgid ""
-#~ "These email addresses will be added to the CC field of all inbound and "
-#~ "outbound emails for this record before being sent. Separate multiple email "
-#~ "addresses with a comma"
-#~ msgstr ""
-#~ "سيتم اضافة عناوين البريد الالكتروني الى حقل CC لكل الايميلات الواردة "
-#~ "والصادرة لهذا التسجيل قبل ان يرسل. افصل بين عناوين البريد الالكتروني "
-#~ "المتعددة بفاصلة"
-
-#~ msgid "The email address put in the 'Reply-To' of all emails sent by OpenERP"
-#~ msgstr ""
-#~ "يوضع عنوان البريد الإلكتروني في ‘الرد إلى‘ لكل الايميلات المرسلة بواسطة "
-#~ "OpenERP"
-
-#~ msgid "These people will receive email."
-#~ msgstr "هؤلاء سيصلهم بريد إلكتروني."
-
-#~ msgid "Confirmation Email Body"
-#~ msgstr "تأكيد هيئة البريد الإلكتروني"
-
-#~ msgid "Total of Open and Done Registrations"
-#~ msgstr "الإجمالي للتسجيلات المكتملة والمفتوحة"
-
-#~ msgid "Write Date"
-#~ msgstr "كتابة التاريخ"
-
-#~ msgid ""
-#~ "Check this box if you want to use the automatic mailing for new registration"
-#~ msgstr ""
-#~ "تحقق من هذه الخانة اذا كنت تريد استخدام البريد التلقائي للتسجيل الجديد"
-
-#~ msgid "CC"
-#~ msgstr "ن.ك"
-
-#~ msgid "Add Internal Note"
-#~ msgstr "أضف ملاحظة داخلية"
-
-#~ msgid "Auto Confirmation Email"
-#~ msgstr "تأكيد ذاتي للبريد الإلكتروني"
-
-#~ msgid "Conference on ERP Buisness"
-#~ msgstr "المحادثة على أعمال ERP"
-
-#~ msgid "Event by Registration"
-#~ msgstr "المشروع للتأكيد"
-
-#, python-format
-#~ msgid "Event related doesn't have any product defined"
-#~ msgstr "ليس لدى المشروع المرتبط اي منتج محدد"
-
-#, python-format
-#~ msgid "Auto Confirmation: [%s] %s"
-#~ msgstr "تأكيد ذاتي:[%s] %s"
-
-#~ msgid "Registration Email Body"
-#~ msgstr "تسجيل هيئة البريد الإلكتروني"
-
-#~ msgid "Event For Registration"
-#~ msgstr "المشروع للتسجيل"
-
-#, python-format
-#~ msgid "Invoice cannot be created if the registration is in %s state."
-#~ msgstr "لايمكن انشاء الفاتورة اذا حالة التسجيل %s."
-
-#~ msgid "Auto Registration Email"
-#~ msgstr "تسجيل ذاتي للبريد الإلكتروني"
-
-#~ msgid "Providee Minimum Number of Registrations"
-#~ msgstr "اعطاء عدد كحد أدنى للتسجيل"
-
-#~ msgid "Ticket for Conference"
-#~ msgstr "تذكرة لحضور المؤتمر"
-
-#, python-format
-#~ msgid "Registration is set as Cannot be invoiced"
-#~ msgstr "تم تعيين التسجيل كعنصر لا يمكن عمل الفاتورة له"
-
-#~ msgid "This email will be sent when someone subscribes to the event."
-#~ msgstr "سيتم ارسال هذا البريد الالكتروني عندما يؤيد شخص ما الاجراء."
-
-#~ msgid ""
-#~ "Check this box if you want ot use the automatic confirmation emailing or the "
-#~ "reminder"
-#~ msgstr ""
-#~ "تحقق من هذا المربع اذا كنت تريد استخدام ارسال البريد الالكتروني تلقائيًا او "
-#~ "التذكير"
-
-#~ msgid ""
-#~ "Event is the low level object used by meeting and others documents that "
-#~ "should be synchronized with mobile devices or calendar applications through "
-#~ "caldav. Most of the users should work in the Calendar menu, and not in the "
-#~ "list of events."
-#~ msgstr ""
-#~ "الحدث هو مشروع ذو مستوى منخفض يستخدم من قبل وثائق الاجتماعات وغيرها من "
-#~ "الجهات التي يجب أن تكون متزامنة مع الأجهزة المحمولة أو من خلال تطبيقات "
-#~ "الجدول الزمني caldav. وينبغي على معظم المستخدمين العمل في قائمة الجدول "
-#~ "الزمني، وليس في قائمة الأحداث."
-
-#~ msgid ""
-#~ "Organization and management of Event.\n"
-#~ "\n"
-#~ "    This module allow you\n"
-#~ "        * to manage your events and their registrations\n"
-#~ "        * to use emails to automatically confirm and send acknowledgements "
-#~ "for any registration to an event\n"
-#~ "        * ...\n"
-#~ "    A dashboard for associations that includes:\n"
-#~ "    * Registration by Events (graph)\n"
-#~ "    Note that:\n"
-#~ "    - You can define new types of events in\n"
-#~ "                Events / Configuration / Types of Events\n"
-#~ "    - You can access predefined reports about number of registration per "
-#~ "event or per event category in:\n"
-#~ "                Events / Reporting\n"
-#~ msgstr ""
-#~ "تنظيم وإدارة الحدث.\n"
-#~ "\n"
-#~ "هذه الوحدة تسمح لك\n"
-#~ "* لإدارة الأحداث الخاصة بك وتسجيلاتهم\n"
-#~ "* لاستخدام البريد الالكتروني لتأكيد وإرسال الإقرارات تلقائيا عن أي تسجيل "
-#~ "لهذا الحدث\n"
-#~ "* ...\n"
-#~ "لوحة القيادة لجمعيات تشمل ما يلي:\n"
-#~ "* التسجيل من قبل الأحداث (الرسم البياني)\n"
-#~ "ملاحظة ما يلي:\n"
-#~ "- يمكنك تحديد أنواع جديدة من أحداث في\n"
-#~ "أحداث / الضبط/ أنواع الأحداث\n"
-#~ "- يمكنك الوصول إلى تقارير محددة مسبقا حول عدد من تسجيل كل حدث أو لكل فئة "
-#~ "الحدث في:\n"
-#~ "أحداث / تقارير\n"
-
-#~ msgid "    Month-1    "
-#~ msgstr "    شهر- ١    "
-
-#~ msgid "My Sales Team(s)"
-#~ msgstr "فريقي للمبيعات"
-
-#~ msgid "Events created in current year"
-#~ msgstr "أحداث أنشأت خلال هذه السنة"
-
-#~ msgid "Provide Minimum Number of Registrations"
-#~ msgstr "توفير الحد الأدنى من عدد التسجيلات"
-
-#~ msgid ""
-#~ "Check this box if you want to use automatic confirmation emailing or "
-#~ "reminder."
-#~ msgstr ""
-#~ "حدد هذا المربع إذا كنت تريد استخدام تأكيد البريد الالكتروني التلقائي للتذكير"
-
-#~ msgid "Events created in last month"
-#~ msgstr "أحداث أنشأت الشهر الماضي"
-
-#~ msgid "Invoiced Registrations only"
-#~ msgstr "فواتير التسجيلات فقط"
-
-#~ msgid "Events States"
-#~ msgstr "حالات الأحداث"
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "خطأ ! لا يمكنك إنشاء أعضاء مرتبطين و متداخلين."

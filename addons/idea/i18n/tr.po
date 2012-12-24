@@ -1,303 +1,125 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-# 	* idea
+# Turkish translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-05-10 17:53+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-11 04:57+0000\n"
-"X-Generator: Launchpad (build 15225)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:18+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: idea
-#: help:idea.category,visibility:0
-msgid "If True creator of the idea will be visible to others"
-msgstr ""
+#: view:idea.category:0
+#: view:idea.idea:0
+msgid "Category"
+msgstr "Kategori"
+
+#. module: idea
+#: view:idea.idea:0
+msgid "In Progress"
+msgstr "Sürüyor"
 
 #. module: idea
 #: view:idea.idea:0
 msgid "By States"
-msgstr ""
-
-#. module: idea
-#: model:ir.actions.act_window,name:idea.action_idea_select
-msgid "Idea select"
-msgstr ""
-
-#. module: idea
-#: view:idea.idea:0
-#: view:idea.vote:0
-#: model:ir.ui.menu,name:idea.menu_idea_vote
-msgid "Votes"
-msgstr "Oylarım"
-
-#. module: idea
-#: view:idea.idea:0
-#: field:idea.idea,comment_ids:0
-msgid "Comments"
-msgstr "Yorumlar"
-
-#. module: idea
-#: view:idea.idea:0
-msgid "Submit Vote"
-msgstr ""
-
-#. module: idea
-#: model:ir.actions.act_window,name:idea.action_report_vote_all
-#: model:ir.ui.menu,name:idea.menu_report_vote_all
-msgid "Ideas Analysis"
-msgstr ""
-
-#. module: idea
-#: view:idea.category:0
-#: view:idea.idea:0
-#: view:idea.vote:0
-#: view:report.vote:0
-msgid "Group By..."
-msgstr ""
-
-#. module: idea
-#: selection:report.vote,month:0
-msgid "March"
-msgstr ""
-
-#. module: idea
-#: view:idea.idea:0
-msgid "Accepted Ideas"
-msgstr ""
-
-#. module: idea
-#: code:addons/idea/wizard/idea_post_vote.py:94
-#, python-format
-msgid "Idea must be in 'Open' state before vote for that idea."
-msgstr ""
-
-#. module: idea
-#: view:report.vote:0
-msgid "Open Date"
-msgstr ""
-
-#. module: idea
-#: view:report.vote:0
-#: field:report.vote,day:0
-msgid "Day"
-msgstr ""
-
-#. module: idea
-#: view:idea.idea:0
-msgid "Refuse"
-msgstr ""
-
-#. module: idea
-#: field:idea.idea,count_votes:0
-msgid "Count of votes"
-msgstr "Oy Sayımı"
-
-#. module: idea
-#: model:ir.model,name:idea.model_report_vote
-msgid "Idea Vote Statistics"
-msgstr ""
-
-#. module: idea
-#: selection:idea.idea,my_vote:0
-#: selection:idea.post.vote,vote:0
-#: selection:idea.vote,score:0
-#: selection:idea.vote.stat,score:0
-msgid "Bad"
-msgstr "Kötü"
-
-#. module: idea
-#: selection:report.vote,idea_state:0
-msgid "Cancelled"
-msgstr ""
-
-#. module: idea
-#: view:idea.category:0
-msgid "Category of ideas"
-msgstr "Fikir Kategorileri"
-
-#. module: idea
-#: code:addons/idea/idea.py:274
-#: code:addons/idea/wizard/idea_post_vote.py:91
-#: code:addons/idea/wizard/idea_post_vote.py:94
-#, python-format
-msgid "Warning !"
-msgstr ""
-
-#. module: idea
-#: view:idea.idea:0
-msgid "Your Comment"
-msgstr "Açıklamanız"
-
-#. module: idea
-#: model:ir.model,name:idea.model_idea_vote
-msgid "Idea Vote"
-msgstr ""
-
-#. module: idea
-#: field:idea.category,parent_id:0
-msgid "Parent Categories"
-msgstr "Üst Kategoriler"
-
-#. module: idea
-#: selection:idea.idea,my_vote:0
-#: selection:idea.post.vote,vote:0
-#: selection:idea.vote,score:0
-#: selection:idea.vote.stat,score:0
-msgid "Very Bad"
-msgstr "Çok Kötü"
-
-#. module: idea
-#: view:idea.vote:0
-msgid "Ideas vote"
-msgstr ""
-
-#. module: idea
-#: view:report.vote:0
-#: field:report.vote,nbr:0
-msgid "# of Lines"
-msgstr ""
-
-#. module: idea
-#: code:addons/idea/wizard/idea_post_vote.py:91
-#, python-format
-msgid "You can not give Vote for this idea more than %s times"
-msgstr ""
-
-#. module: idea
-#: view:idea.category:0
-msgid "Ideas Categories"
-msgstr ""
-
-#. module: idea
-#: help:idea.idea,description:0
-msgid "Content of the idea"
-msgstr "Fikrin içeriği"
-
-#. module: idea
-#: model:ir.model,name:idea.model_idea_category
-msgid "Idea Category"
-msgstr ""
-
-#. module: idea
-#: view:idea.idea:0
-#: field:idea.idea,stat_vote_ids:0
-msgid "Statistics"
-msgstr "İstatistikler"
-
-#. module: idea
-#: selection:idea.idea,my_vote:0
-#: selection:idea.post.vote,vote:0
-#: selection:idea.vote,score:0
-#: selection:idea.vote.stat,score:0
-msgid "Not Voted"
-msgstr "Oylanmamış"
+msgstr "Duruma Göre"
 
 #. module: idea
 #: sql_constraint:idea.category:0
 msgid "The name of the category must be unique"
-msgstr ""
-
-#. module: idea
-#: model:ir.model,name:idea.model_idea_select
-msgid "select idea"
-msgstr ""
-
-#. module: idea
-#: view:idea.stat:0
-msgid "stat"
-msgstr ""
-
-#. module: idea
-#: field:idea.category,child_ids:0
-msgid "Child Categories"
-msgstr "Alt Kategoriler"
-
-#. module: idea
-#: view:idea.select:0
-msgid "Next"
-msgstr ""
+msgstr "Kategori adı benzersiz olmalı"
 
 #. module: idea
 #: view:idea.idea:0
-#: field:idea.idea,state:0
-#: view:report.vote:0
-#: field:report.vote,idea_state:0
-msgid "State"
+msgid "By Idea Category"
+msgstr "Fikir Kategorisine Göre"
+
+#. module: idea
+#: model:ir.model,name:idea.model_idea_category
+msgid "Idea Category"
+msgstr "Fikir Kategorisi"
+
+#. module: idea
+#: view:idea.idea:0
+msgid "Open Ideas"
+msgstr "Açık Fikirler"
+
+#. module: idea
+#: view:idea.idea:0
+msgid "Group By..."
+msgstr "Gruplandır..."
+
+#. module: idea
+#: field:idea.category,name:0
+msgid "Category Name"
 msgstr ""
 
 #. module: idea
 #: view:idea.idea:0
 #: selection:idea.idea,state:0
 msgid "New"
-msgstr ""
-
-#. module: idea
-#: selection:idea.idea,my_vote:0
-#: selection:idea.post.vote,vote:0
-#: selection:idea.vote,score:0
-#: selection:idea.vote.stat,score:0
-msgid "Good"
-msgstr "İyi"
-
-#. module: idea
-#: help:idea.idea,open_date:0
-msgid "Date when an idea opened"
-msgstr ""
-
-#. module: idea
-#: view:idea.idea:0
-msgid "Idea Detail"
-msgstr ""
-
-#. module: idea
-#: help:idea.idea,state:0
-msgid ""
-"When the Idea is created the state is 'Draft'.\n"
-" It is             opened by the user, the state is 'Opened'.            \n"
-"If the idea is accepted, the state is 'Accepted'."
-msgstr ""
+msgstr "Yeni"
 
 #. module: idea
 #: view:idea.idea:0
 msgid "New Ideas"
+msgstr "Yeni Fikirler"
+
+#. module: idea
+#: view:idea.idea:0
+#: field:idea.idea,state:0
+msgid "Status"
+msgstr "Durum"
+
+#. module: idea
+#: sql_constraint:idea.idea:0
+msgid "The name of the idea must be unique"
 msgstr ""
 
 #. module: idea
-#: view:report.vote:0
-msgid "Idea Vote created last month"
+#: view:idea.idea:0
+msgid "Accepted Ideas"
+msgstr "Kabul edilen Fikirler"
+
+#. module: idea
+#: field:idea.idea,category_ids:0
+msgid "Tags"
 msgstr ""
 
 #. module: idea
-#: field:idea.category,visibility:0
-#: field:idea.idea,visibility:0
-msgid "Open Idea?"
+#: field:idea.idea,message_unread:0
+msgid "Unread Messages"
 msgstr ""
 
 #. module: idea
-#: view:report.vote:0
-msgid "Idea Vote created in current month"
+#: help:idea.idea,message_ids:0
+msgid "Messages and communication history"
 msgstr ""
 
 #. module: idea
-#: selection:report.vote,month:0
-msgid "July"
+#: field:idea.idea,message_is_follower:0
+msgid "Is a Follower"
+msgstr ""
+
+#. module: idea
+#: model:ir.model,name:idea.model_idea_idea
+msgid "Email Thread"
 msgstr ""
 
 #. module: idea
 #: view:idea.idea:0
 #: selection:idea.idea,state:0
-#: view:report.vote:0
-#: selection:report.vote,idea_state:0
 msgid "Accepted"
-msgstr ""
+msgstr "Kabul edildi"
 
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_category
@@ -306,196 +128,22 @@ msgid "Categories"
 msgstr "Kategoriler"
 
 #. module: idea
-#: view:idea.category:0
-msgid "Parent Category"
-msgstr ""
-
-#. module: idea
-#: field:idea.idea,open_date:0
-msgid "Open date"
-msgstr ""
-
-#. module: idea
-#: field:idea.idea,vote_ids:0
-#: model:ir.actions.act_window,name:idea.action_idea_post_vote
-msgid "Vote"
-msgstr "Oy"
-
-#. module: idea
-#: model:ir.actions.act_window,name:idea.action_idea_vote_stat
-#: model:ir.ui.menu,name:idea.menu_idea_vote_stat
-msgid "Vote Statistics"
-msgstr "Oy İstatistikleri"
-
-#. module: idea
-#: field:idea.idea,vote_limit:0
-msgid "Maximum Vote per User"
-msgstr ""
-
-#. module: idea
-#: view:idea.vote.stat:0
-msgid "vote_stat of ideas"
-msgstr "fikirlerin vote_stat"
-
-#. module: idea
-#: field:idea.comment,content:0
 #: view:idea.idea:0
-#: view:idea.post.vote:0
-#: field:idea.vote,comment:0
-#: model:ir.model,name:idea.model_idea_comment
-msgid "Comment"
-msgstr "Yorum"
+msgid "Refuse"
+msgstr "Reddet"
 
 #. module: idea
-#: selection:report.vote,month:0
-msgid "September"
-msgstr ""
-
-#. module: idea
-#: selection:report.vote,month:0
-msgid "December"
-msgstr ""
-
-#. module: idea
-#: view:report.vote:0
-#: field:report.vote,month:0
-msgid "Month"
+#: field:idea.idea,message_ids:0
+msgid "Messages"
 msgstr ""
 
 #. module: idea
 #: view:idea.idea:0
-#: model:ir.actions.act_window,name:idea.action_idea_idea_categ_open
-#: model:ir.actions.act_window,name:idea.action_idea_idea_open
-msgid "Open Ideas"
-msgstr "Açık Fikirler"
-
-#. module: idea
-#: view:idea.category:0
-#: field:idea.category,name:0
-#: view:idea.idea:0
-#: field:idea.idea,category_id:0
-#: view:report.vote:0
-#: field:report.vote,category_id:0
-msgid "Category"
-msgstr "Kategori"
-
-#. module: idea
-#: selection:idea.idea,my_vote:0
-#: selection:idea.post.vote,vote:0
-#: selection:idea.vote,score:0
-#: selection:idea.vote.stat,score:0
-msgid "Very Good"
-msgstr "Çok İyi"
-
-#. module: idea
-#: selection:idea.idea,state:0
-#: selection:report.vote,idea_state:0
-msgid "Opened"
-msgstr "Açık"
-
-#. module: idea
-#: model:ir.actions.act_window,name:idea.action_idea_vote
-msgid "Idea's Votes"
-msgstr ""
-
-#. module: idea
-#: view:idea.idea:0
-msgid "By Idea Category"
-msgstr ""
-
-#. module: idea
-#: view:idea.idea:0
-msgid "New Idea"
-msgstr "Yeni Fikir"
-
-#. module: idea
-#: model:ir.actions.act_window,name:idea.action_idea_category_tree
-#: model:ir.ui.menu,name:idea.menu_idea_category_tree
-msgid "Ideas by Categories"
-msgstr "Kategorilere Göre Fikirler"
-
-#. module: idea
-#: selection:report.vote,idea_state:0
-msgid "Draft"
-msgstr "Taslak"
-
-#. module: idea
-#: selection:report.vote,month:0
-msgid "August"
-msgstr ""
-
-#. module: idea
-#: selection:idea.idea,my_vote:0
-#: selection:idea.post.vote,vote:0
-#: selection:idea.vote,score:0
-#: selection:idea.vote.stat,score:0
-msgid "Normal"
-msgstr "Normal"
-
-#. module: idea
-#: selection:report.vote,month:0
-msgid "June"
-msgstr ""
-
-#. module: idea
-#: field:report.vote,creater_id:0
-#: field:report.vote,user_id:0
-msgid "User Name"
-msgstr ""
-
-#. module: idea
-#: model:ir.model,name:idea.model_idea_vote_stat
-msgid "Idea Votes Statistics"
-msgstr "Fikir Oy İstatistileri"
-
-#. module: idea
-#: field:idea.comment,user_id:0
-#: view:idea.vote:0
-#: field:idea.vote,user_id:0
-#: view:report.vote:0
-msgid "User"
-msgstr "Kullanıcı"
-
-#. module: idea
-#: field:idea.vote,date:0
-msgid "Date"
-msgstr ""
-
-#. module: idea
-#: selection:report.vote,month:0
-msgid "November"
-msgstr ""
-
-#. module: idea
-#: field:idea.idea,my_vote:0
-msgid "My Vote"
-msgstr "Oyum"
-
-#. module: idea
-#: selection:report.vote,month:0
-msgid "October"
-msgstr ""
-
-#. module: idea
-#: field:idea.comment,create_date:0
-#: field:idea.idea,created_date:0
-msgid "Creation date"
-msgstr "Oluşturulma tarihi"
-
-#. module: idea
-#: selection:report.vote,month:0
-msgid "January"
-msgstr ""
-
-#. module: idea
-#: model:ir.model,name:idea.model_idea_idea
-msgid "idea.idea"
-msgstr "idea.idea"
-
-#. module: idea
-#: field:idea.category,summary:0
-msgid "Summary"
-msgstr "Özet"
+#: model:ir.actions.act_window,name:idea.action_idea_idea
+#: model:ir.ui.menu,name:idea.menu_idea_idea
+#: model:ir.ui.menu,name:idea.menu_ideas
+msgid "Ideas"
+msgstr "Fikirler"
 
 #. module: idea
 #: field:idea.idea,name:0
@@ -503,52 +151,35 @@ msgid "Idea Summary"
 msgstr "Fikir Özeti"
 
 #. module: idea
-#: view:idea.post.vote:0
-msgid "Post"
+#: view:idea.category:0
+msgid "Category of ideas"
+msgstr "Fikir Kategorileri"
+
+#. module: idea
+#: field:idea.idea,message_summary:0
+msgid "Summary"
+msgstr "Özet"
+
+#. module: idea
+#: help:idea.idea,message_unread:0
+msgid "If checked new messages require your attention."
 msgstr ""
+
+#. module: idea
+#: field:idea.idea,description:0
+msgid "Description"
+msgstr "Açıklama"
+
+#. module: idea
+#: selection:idea.idea,state:0
+msgid "Refused"
+msgstr "Reddedildi"
 
 #. module: idea
 #: view:idea.idea:0
-msgid "History"
-msgstr ""
-
-#. module: idea
-#: field:report.vote,date:0
-msgid "Date Order"
-msgstr ""
-
-#. module: idea
-#: view:idea.idea:0
-#: field:idea.idea,user_id:0
-#: view:report.vote:0
+#: field:idea.idea,create_uid:0
 msgid "Creator"
 msgstr "Oluşturan"
-
-#. module: idea
-#: view:idea.post.vote:0
-#: model:ir.ui.menu,name:idea.menu_give_vote
-msgid "Give Vote"
-msgstr ""
-
-#. module: idea
-#: help:idea.idea,vote_limit:0
-msgid "Set to one if  you require only one Vote per user"
-msgstr ""
-
-#. module: idea
-#: view:idea.idea:0
-msgid "By Creators"
-msgstr ""
-
-#. module: idea
-#: view:idea.post.vote:0
-msgid "Cancel"
-msgstr "İptal"
-
-#. module: idea
-#: view:idea.select:0
-msgid "Close"
-msgstr "Kapat"
 
 #. module: idea
 #: view:idea.idea:0
@@ -557,224 +188,47 @@ msgstr "Aç"
 
 #. module: idea
 #: view:idea.idea:0
-#: view:report.vote:0
-msgid "In Progress"
-msgstr ""
-
-#. module: idea
-#: view:report.vote:0
-msgid "Idea Vote Analysis"
-msgstr ""
-
-#. module: idea
-#: view:idea.idea:0
-#: model:ir.actions.act_window,name:idea.action_idea_idea
-#: model:ir.ui.menu,name:idea.menu_idea_idea
-#: model:ir.ui.menu,name:idea.menu_ideas
-#: model:ir.ui.menu,name:idea.menu_ideas1
-msgid "Ideas"
-msgstr "Fikirler"
-
-#. module: idea
-#: model:ir.model,name:idea.model_idea_post_vote
-msgid "Post vote"
-msgstr ""
-
-#. module: idea
-#: field:idea.vote.stat,score:0
-#: field:report.vote,score:0
-msgid "Score"
-msgstr "Puan"
-
-#. module: idea
-#: view:idea.idea:0
-msgid "Votes Statistics"
-msgstr ""
-
-#. module: idea
-#: view:idea.vote:0
-msgid "Comments:"
-msgstr ""
-
-#. module: idea
-#: view:idea.category:0
-#: field:idea.idea,description:0
-#: field:idea.post.vote,note:0
-msgid "Description"
-msgstr "Açıklama"
-
-#. module: idea
-#: selection:report.vote,month:0
-msgid "May"
-msgstr ""
-
-#. module: idea
-#: selection:idea.idea,state:0
-#: view:report.vote:0
-msgid "Refused"
-msgstr ""
-
-#. module: idea
-#: view:idea.vote:0
-msgid "Vote Date"
-msgstr ""
-
-#. module: idea
-#: selection:report.vote,month:0
-msgid "February"
-msgstr ""
-
-#. module: idea
-#: field:idea.category,complete_name:0
-msgid "Name"
-msgstr ""
-
-#. module: idea
-#: field:idea.vote.stat,nbr:0
-msgid "Number of Votes"
-msgstr "Oyların Sayıları"
-
-#. module: idea
-#: view:report.vote:0
-msgid "Month-1"
-msgstr ""
-
-#. module: idea
-#: selection:report.vote,month:0
-msgid "April"
-msgstr ""
-
-#. module: idea
-#: field:idea.idea,count_comments:0
-msgid "Count of comments"
-msgstr "Yorum sayısı"
-
-#. module: idea
-#: field:idea.vote,score:0
-msgid "Vote Status"
-msgstr ""
-
-#. module: idea
-#: view:report.vote:0
-msgid "Idea Vote created in current year"
-msgstr ""
-
-#. module: idea
-#: field:idea.idea,vote_avg:0
-msgid "Average Score"
-msgstr "Ortalama Puan"
-
-#. module: idea
-#: constraint:idea.category:0
-msgid "Error ! You cannot create recursive categories."
-msgstr ""
-
-#. module: idea
-#: field:idea.comment,idea_id:0
-#: field:idea.select,idea_id:0
-#: view:idea.vote:0
-#: field:idea.vote,idea_id:0
-#: field:idea.vote.stat,idea_id:0
-#: model:ir.ui.menu,name:idea.menu_idea_reporting
-#: view:report.vote:0
-#: field:report.vote,idea_id:0
 msgid "Idea"
 msgstr "Fikir"
 
 #. module: idea
 #: view:idea.idea:0
 msgid "Accept"
+msgstr "Kabul et"
+
+#. module: idea
+#: help:idea.idea,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
 msgstr ""
 
 #. module: idea
-#: field:idea.post.vote,vote:0
-msgid "Post Vote"
+#: selection:idea.idea,state:0
+msgid "Done"
 msgstr ""
 
 #. module: idea
-#: view:report.vote:0
-#: field:report.vote,year:0
-msgid "Year"
+#: view:idea.idea:0
+msgid "By Creators"
+msgstr "Oluşturanlara Göre"
+
+#. module: idea
+#: field:idea.idea,message_follower_ids:0
+msgid "Followers"
 msgstr ""
 
 #. module: idea
-#: code:addons/idea/idea.py:274
-#, python-format
-msgid "You can not vote on a Draft/Accepted/Cancelled ideas."
+#: view:idea.category:0
+msgid "Category of Ideas"
 msgstr ""
 
 #. module: idea
-#: view:idea.select:0
-msgid "Select Idea for Vote"
-msgstr ""
+#: view:idea.category:0
+msgid "Ideas Categories"
+msgstr "Fikir Kategorileri"
 
-#~ msgid "Configuration"
-#~ msgstr "Ayarlar"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Görüntüleme mimarisi için Geçersiz XML"
-
-#~ msgid "My Ideas"
-#~ msgstr "Fikirlerim"
-
-#~ msgid "My Open Ideas"
-#~ msgstr "Açık Fikirlerim"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Eylem tanımlamasında geçersiz model adı."
-
-#~ msgid "Idea Manager"
-#~ msgstr "Fikir Yöneticisi"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr "Nesne adı x_ ile başlamalı ve özel karakterler içermemelidir!"
-
-#~ msgid "Category for an idea"
-#~ msgstr "Fikre göre kategori"
-
-#~ msgid "Statistics on Votes"
-#~ msgstr "Oylar Üzerine İstatistikler"
-
-#~ msgid "Your comment"
-#~ msgstr "Açıklamanız"
-
-#~ msgid "Status"
-#~ msgstr "Durum"
-
-#~ msgid "My Draft Ideas"
-#~ msgstr "Taslak Fikirlerim"
-
-#~ msgid "All Ideas"
-#~ msgstr "Tüm Fikirler"
-
-#~ msgid "Tools"
-#~ msgstr "Araçlar"
-
-#~ msgid "All Votes"
-#~ msgstr "Tüm Oylar"
-
-#~ msgid "Reporting"
-#~ msgstr "Bildirim"
-
-#~ msgid "idea.vote"
-#~ msgstr "idea.vote"
-
-#~ msgid ""
-#~ "This module allows your user to easily and efficiently participate in the "
-#~ "innovation of the enterprise. It allows everybody to express ideas about "
-#~ "different subjects. Then, others users can comment these ideas and vote for "
-#~ "particular ideas. Each idea as a score based on the different votes. The "
-#~ "managers can obtain an easy view on best ideas from all the users. Once "
-#~ "installed, check the menu 'Ideas' in the 'Tools' main menu."
-#~ msgstr ""
-#~ "Bu modül, girişiminizin ilerlemesine kullanıcılarınızın etkili bir şekilde "
-#~ "ve kolayca katılmasını sağlar. Herkesin farklı konular hakkında fikirlerini "
-#~ "ifade etmesine olanak tanır. Daha sonra, diğer kullanıcılar bu fikirleri "
-#~ "yorumlayabilir ve istediği fikre oy verebilir. Her fikrin, farklı oylara "
-#~ "dayanan bir puanı bulunur. Yöneticiler, tüm kullanıcılardan gelen en iyi "
-#~ "fikirler hakkında kolaylıkla bir genel görüş edinebilir.Kurulduktan sonra, "
-#~ "'Araçlar' ana mensünden 'Fikirler'i kontrol edin."
-
-#~ msgid "Canceled"
-#~ msgstr "İptal Edildi"
+#. module: idea
+#: help:idea.idea,description:0
+msgid "Content of the idea"
+msgstr "Fikrin içeriği"

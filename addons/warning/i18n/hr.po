@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:04+0000\n"
-"PO-Revision-Date: 2012-12-17 21:02+0000\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: Goran Kliska <gkliska@gmail.com>\n"
 "Language-Team: Vinteh\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-18 05:01+0000\n"
-"X-Generator: Launchpad (build 16372)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:37+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 "Language: hr\n"
 
 #. module: warning
@@ -29,11 +29,6 @@ msgid "Incoming Shipments"
 msgstr "Primke"
 
 #. module: warning
-#: field:product.product,sale_line_warn_msg:0
-msgid "Message for Sale Order Line"
-msgstr "Poruka za stavku prodajnog naloga"
-
-#. module: warning
 #: field:product.product,purchase_line_warn_msg:0
 msgid "Message for Purchase Order Line"
 msgstr "Poruka za liniju dobave"
@@ -42,11 +37,6 @@ msgstr "Poruka za liniju dobave"
 #: model:ir.model,name:warning.model_stock_picking
 msgid "Picking List"
 msgstr "Skladišni dokument"
-
-#. module: warning
-#: field:product.product,sale_line_warn:0
-msgid "Sale Order Line"
-msgstr "Sale Order Line"
 
 #. module: warning
 #: view:product.product:0
@@ -101,11 +91,6 @@ msgid "Warning when Selling this Product"
 msgstr "Upozorenje kod prodaje ovog proizvoda"
 
 #. module: warning
-#: field:res.partner,sale_warn:0
-msgid "Sale Order"
-msgstr "Sale Order"
-
-#. module: warning
 #: field:res.partner,picking_warn:0
 msgid "Stock Picking"
 msgstr "Skladišnica"
@@ -115,11 +100,6 @@ msgstr "Skladišnica"
 #: field:res.partner,purchase_warn:0
 msgid "Purchase Order"
 msgstr "Nalog za nabavu"
-
-#. module: warning
-#: field:res.partner,sale_warn_msg:0
-msgid "Message for Sale Order"
-msgstr "Poruka za prodajni nalog"
 
 #. module: warning
 #: field:res.partner,purchase_warn_msg:0
@@ -148,19 +128,29 @@ msgstr ""
 #: code:addons/warning/warning.py:67
 #: code:addons/warning/warning.py:96
 #: code:addons/warning/warning.py:130
-#: code:addons/warning/warning.py:161
-#: code:addons/warning/warning.py:191
-#: code:addons/warning/warning.py:217
-#: code:addons/warning/warning.py:265
-#: code:addons/warning/warning.py:298
+#: code:addons/warning/warning.py:162
+#: code:addons/warning/warning.py:192
+#: code:addons/warning/warning.py:218
+#: code:addons/warning/warning.py:266
+#: code:addons/warning/warning.py:299
 #, python-format
 msgid "Alert for %s !"
 msgstr "Alarm za %s !"
 
 #. module: warning
+#: view:res.partner:0
+msgid "Warning on the Sales Order"
+msgstr ""
+
+#. module: warning
 #: field:res.partner,invoice_warn_msg:0
 msgid "Message for Invoice"
 msgstr "Poruka uz račun"
+
+#. module: warning
+#: field:res.partner,sale_warn_msg:0
+msgid "Message for Sales Order"
+msgstr ""
 
 #. module: warning
 #: view:res.partner:0
@@ -176,19 +166,19 @@ msgstr "Upozorenje vezano uz prodajnu narudžbu"
 #: code:addons/warning/warning.py:68
 #: code:addons/warning/warning.py:97
 #: code:addons/warning/warning.py:132
-#: code:addons/warning/warning.py:162
-#: code:addons/warning/warning.py:192
-#: code:addons/warning/warning.py:218
-#: code:addons/warning/warning.py:266
-#: code:addons/warning/warning.py:299
+#: code:addons/warning/warning.py:163
+#: code:addons/warning/warning.py:193
+#: code:addons/warning/warning.py:219
+#: code:addons/warning/warning.py:267
+#: code:addons/warning/warning.py:300
 #, python-format
 msgid "Warning for %s"
 msgstr "Upozorenje za %s"
 
 #. module: warning
-#: view:res.partner:0
-msgid "Warning on the Sale Order"
-msgstr "Upozorenje vezano uz prodajni nalog"
+#: field:product.product,sale_line_warn_msg:0
+msgid "Message for Sales Order Line"
+msgstr ""
 
 #. module: warning
 #: selection:product.product,purchase_line_warn:0
@@ -212,6 +202,7 @@ msgstr "Partner"
 
 #. module: warning
 #: model:ir.model,name:warning.model_sale_order
+#: field:res.partner,sale_warn:0
 msgid "Sales Order"
 msgstr "Prodajni nalog"
 
@@ -222,17 +213,6 @@ msgstr "Otpremnice"
 
 #. module: warning
 #: model:ir.model,name:warning.model_sale_order_line
+#: field:product.product,sale_line_warn:0
 msgid "Sales Order Line"
 msgstr "Stavka prodajnog naloga"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Nepravilan XML format za View Architecture!"
-
-#~ msgid "Module for Warnings form onchange Event"
-#~ msgstr "Module for Warnings form onchange Event"
-
-#~ msgid "Module for Warnings form onchange Event."
-#~ msgstr "Module for Warnings form onchange Event."
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "Greška: Neispravan barkod!"

@@ -1,21 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* hr_attendance
+# German translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-12-10 14:58+0000\n"
-"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
-"consulting.net>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-11 04:48+0000\n"
-"X-Generator: Launchpad (build 16356)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:14+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_month
@@ -71,7 +71,7 @@ msgid "Print Attendance Report Monthly"
 msgstr "Druck Anwesenheitszeit des Monats"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/report/timesheet.py:122
+#: code:addons/hr_attendance/report/timesheet.py:120
 #, python-format
 msgid "Attendances by Week"
 msgstr "Anwesenheitszeiten der Woche"
@@ -95,6 +95,11 @@ msgstr "Gruppierung..."
 #: selection:hr.attendance.month,month:0
 msgid "October"
 msgstr "Oktober"
+
+#. module: hr_attendance
+#: field:hr.employee,attendance_access:0
+msgid "Attendance Access"
+msgstr ""
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/hr_attendance.py:154
@@ -177,11 +182,6 @@ msgid "Allocates attendance group to all users."
 msgstr "Zuweisen der Berechtigung zur Arbeitszeiteingabe für alle Benutzer"
 
 #. module: hr_attendance
-#: field:hr.employee,attendance_access:0
-msgid "unknown"
-msgstr "unbekannt"
-
-#. module: hr_attendance
 #: view:hr.attendance:0
 msgid "My Attendance"
 msgstr "Meine Anwesenheiten"
@@ -192,7 +192,7 @@ msgid "June"
 msgstr "Juni"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/report/attendance_by_month.py:193
+#: code:addons/hr_attendance/report/attendance_by_month.py:190
 #, python-format
 msgid "Attendances by Month"
 msgstr "Anwesenheitszeiten des Monats"
@@ -477,256 +477,3 @@ msgstr "oder"
 msgid ""
 "Specifies the reason for Signing In/Signing Out in case of extra hours."
 msgstr "Begründung für An-/Abmeldung  bei Zusatzstunden"
-
-#~ msgid "Select a time span"
-#~ msgstr "Wähle eine Zeitspanne"
-
-#~ msgid "Print Attendance Report"
-#~ msgstr "Bericht Anwesenheitszeiten"
-
-#, python-format
-#~ msgid ""
-#~ "You tried to sign out with a date anterior to another event !\n"
-#~ "Try to contact the administrator to correct attendances."
-#~ msgstr ""
-#~ "Sie versuchen sich mit einem Datum anzumelden, dass vor einem anderen "
-#~ "Ereignis liegt!\n"
-#~ "Kontaktieren Sie den Administrator um die Anwesenheitszeiten zu korrigieren."
-
-#, python-format
-#~ msgid ""
-#~ "You tried to sign with a date anterior to another event !\n"
-#~ "Try to contact the administrator to correct attendances."
-#~ msgstr ""
-#~ "Sie versuchen sich mit einem Datum anzumelden, dass vor einem anderen "
-#~ "Ereignis liegt!\n"
-#~ "Kontaktieren Sie den Administrator um die Anwesenheitszeiten zu korrigieren."
-
-#, python-format
-#~ msgid ""
-#~ "You tried to sign in with a date anterior to another event !\n"
-#~ "Try to contact the administrator to correct attendances."
-#~ msgstr ""
-#~ "Sie versuchen sich mit einem Datum anzumelden, dass vor einem anderen "
-#~ "Ereignis liegt!\n"
-#~ "Kontaktieren Sie den Administrator um die Anwesenheitszeiten zu korrigieren."
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
-#~ "beinhalten"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Fehlerhafter xml Code für diese Ansicht!"
-
-#~ msgid "Employee's name"
-#~ msgstr "Name Mitarbeiter"
-
-#~ msgid "Print Attendance Error Report"
-#~ msgstr "Bericht Anwesenheitszeiten"
-
-#~ msgid "Action reason"
-#~ msgstr "Ausgangsaktion"
-
-#~ msgid ""
-#~ "You did not signed out the last time. Please enter the date and time you "
-#~ "signed out."
-#~ msgstr ""
-#~ "Sie haben kein Sign - Out vorgenommen beim letzten Mal. Bitte erfassen Sie "
-#~ "das Datum und die Zeit Ihres Sign-Outs."
-
-#~ msgid "Current state"
-#~ msgstr "Aktueller Status"
-
-#, python-format
-#~ msgid "UserError"
-#~ msgstr "BenutzerFehler"
-
-#~ msgid ""
-#~ "You did not signed in the last time. Please enter the date and time you "
-#~ "signed in."
-#~ msgstr ""
-#~ "Sie haben sich beim letzten Mal nicht angemeldet (Sign In). Bitte erfassen "
-#~ "Sie Datum und Zeiten Ihrer Anwesenheit."
-
-#~ msgid "This module aims to manage employee's attendances."
-#~ msgstr "Dieses Module verwaltet die Anwesenheitszeiten der Mitarbeiter"
-
-#~ msgid "Print Timesheet by month"
-#~ msgstr "Stundenzettel je Monat drucken"
-
-#~ msgid "Print Timesheet"
-#~ msgstr "Stundenzettel drucken"
-
-#~ msgid "Print Timesheet by week"
-#~ msgstr "Stundenzettel je Woche drucken"
-
-#~ msgid "Select a month"
-#~ msgstr "Monat auswählen"
-
-#~ msgid "Select a starting and a end date"
-#~ msgstr "Wähle Begin- und End Datum"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
-
-#, python-format
-#~ msgid ""
-#~ "You tried to %s with a date anterior to another event !\n"
-#~ "Try to contact the administrator to correct attendances."
-#~ msgstr ""
-#~ "Sie haben versucht für %s ein Datum vor einem anderen Zeiteintrag zu "
-#~ "erfassen. Kontaktieren Sie Ihren Administrator zur Korrektur der "
-#~ "Anwesenheitszeiten."
-
-#~ msgid ""
-#~ "You did not sign out the last time. Please enter the date and time you "
-#~ "signed out."
-#~ msgstr ""
-#~ "Sie haben sich nicht korrekt abgemeldet. Bitte erfassen Sie Ihre Zeiten nach."
-
-#, python-format
-#~ msgid "The sign-out date must be in the past"
-#~ msgstr "Das Abmeldedatum muss in der Vergangenheit sein"
-
-#~ msgid "Ok"
-#~ msgstr "OK"
-
-#~ msgid "Employees name"
-#~ msgstr "Mitarbeitername"
-
-#~ msgid "Employee attendance"
-#~ msgstr "Mitarbeiter Anwesenheit"
-
-#, python-format
-#~ msgid "The Sign-in date must be in the past"
-#~ msgstr "Das Anmeldedatum muss in der Vergangenheit sein"
-
-#, python-format
-#~ msgid "A sign-in must be right after a sign-out !"
-#~ msgstr "Eine Anmeldung muss logischerweise immer auf eine Abmeldung folgen !"
-
-#~ msgid "You are now ready to sign in or out of the attendance follow up"
-#~ msgstr ""
-#~ "Sie können ab sofort Anmeldungen oder Abmeldungen erfassen und die "
-#~ "entsprechenden Anwesenheitszeiten einsehen und rekapitulieren."
-
-#~ msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-#~ msgstr ""
-#~ "Fehler: Anmeldung (oder Abmeldung) sollte auf Abmeldung ( oder Anmeldung) "
-#~ "erfolgen."
-
-#, python-format
-#~ msgid "No Data Available"
-#~ msgstr "Keine Daten verfügbar"
-
-#, python-format
-#~ msgid "A sign-out must be right after a sign-in !"
-#~ msgstr ""
-#~ "Eine Abmeldung muss logischerweise immer nach einem Anmelde Vorgang erfolgen "
-#~ "!"
-
-#~ msgid "Sign-Out Entry must follow Sign-In."
-#~ msgstr ""
-#~ "Eine Abmeldung (Anmeldung) muss logischerweise immer nach einem Anmelde "
-#~ "(Abmelde) Vorgang erfolgen !"
-
-#, python-format
-#~ msgid "No records found for your selection!"
-#~ msgstr "Keine Einträge gefunden für Ihre Auswahl !"
-
-#~ msgid "Empoyee ID"
-#~ msgstr "Mitarbeiter ID"
-
-#~ msgid "Your last sign out"
-#~ msgstr "Ihre letzte Abmeldung"
-
-#~ msgid "Your last sign in"
-#~ msgstr "Ihre letzte Anmeldung"
-
-#~ msgid "Employee's Name"
-#~ msgstr "Mitarbeiter Name"
-
-#~ msgid ""
-#~ "You did not sign in the last time. Please enter the date and time you signed "
-#~ "in."
-#~ msgstr ""
-#~ "Sie haben beim letzten Mal keine Anmeldung eingetragen. Bitte tragen Sie die "
-#~ "Daten Ihrer Anmeldung ein."
-
-#~ msgid ""
-#~ "If you need your staff to sign in when they arrive at work and sign out "
-#~ "again at the end of the day, OpenERP allows you to manage this with this "
-#~ "tool. If each employee has been linked to a system user, then they can "
-#~ "encode their time with this action button."
-#~ msgstr ""
-#~ "Wenn Sie möchten, dass Ihre Mitarbeiter jeweils zu Beginn und Ende der "
-#~ "Arbeit diese Zeit zur Ermittlung der Anwesenheitszeiten festhalten, können "
-#~ "Sie dieses mit diesem Modul realisieren. Durch die Verbindung eines "
-#~ "Benutzers zu einem Mitarbeiter kann die Anwesenheit einfach durch jeweils "
-#~ "einen Anmelde- und Abmeldevorgang umgesetzt werden."
-
-#~ msgid ""
-#~ "Sign in / Sign out. In some companies, staff have to sign in when they "
-#~ "arrive at work and sign out again at the end of the day. If each employee "
-#~ "has been linked to a system user, then they can encode their time with this "
-#~ "action button."
-#~ msgstr ""
-#~ "Anmelden / Abmelden. In bestimmten Unternehmen ist es erforderlich die "
-#~ "Anwesenheit der Mitarbeiter jeweils zu Beginn und Ende des Arbeitstages "
-#~ "festzuhalten. Wenn ein Mitarbeiter einem Benutzer zugewiesen wurde, kann "
-#~ "eine Erfassung sehr einfach durch diesen Button vorgenommen werden."
-
-#~ msgid "Ask for Sign In Out"
-#~ msgstr "Ask for Sign In Out"
-
-#~ msgid "Sign In Sign Out"
-#~ msgstr "Anmeldung Abmeldung"
-
-#~ msgid "Attendances Of Employees"
-#~ msgstr "Personal Anwesenheitszeiten"
-
-#~ msgid "My Attendances"
-#~ msgstr "Meine Anwesenheit"
-
-#~ msgid "Action's type"
-#~ msgstr "Aktionstyp"
-
-#, python-format
-#~ msgid "Sign in / Sign out"
-#~ msgstr "Anmelden / Abmelden"
-
-#~ msgid ""
-#~ "\n"
-#~ "    This module aims to manage employee's attendances.\n"
-#~ "    Keeps account of the attendances of the employees on the basis of the\n"
-#~ "    actions(Sign in/Sign out) performed by them.\n"
-#~ "       "
-#~ msgstr ""
-#~ "\n"
-#~ "    Diese Anwendung kann die Anwesenheit von Mitarbeitern verwalten und "
-#~ "erfassen.\n"
-#~ "    Ermittelt werden die Arbeitszeiten von Mitarbeitern auf der Basis der "
-#~ "von Ihnen\n"
-#~ "    erfassten Anmeldungen und Abmeldungen.\n"
-#~ "       "
-
-#~ msgid ""
-#~ "Error ! You cannot select a department for which the employee is the manager."
-#~ msgstr ""
-#~ "Fehler ! Sie können keine Abteilung auswählen, für die dieser Mitarbeiter "
-#~ "die Leitung ausübt."
-
-#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
-#~ msgstr ""
-#~ "Fehler ! Sie können keine rekursive Hierachie bei Mitarbeitern definieren."
-
-#~ msgid "hr.sign.in.out.ask"
-#~ msgstr "hr.sign.in.out.ask"
-
-#~ msgid "Employee ID"
-#~ msgstr "Mitarbeiter Nr."
-
-#~ msgid "hr.sign.out.ask"
-#~ msgstr "hr.sign.out.ask"

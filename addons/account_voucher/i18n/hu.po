@@ -1,20 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#    * account_voucher
+# Hungarian translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:01+0000\n"
-"PO-Revision-Date: 2012-05-10 17:22+0000\n"
-"Last-Translator: Krisztian Eyssen <krisz@eyssen.hu>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:41+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:05+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: account_voucher
 #: field:account.bank.statement.line,voucher_id:0
@@ -27,7 +28,7 @@ msgid "account.config.settings"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:348
+#: code:addons/account_voucher/account_voucher.py:357
 #, python-format
 msgid "Write-Off"
 msgstr "Különbözet leírása"
@@ -63,14 +64,6 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "(Update)"
-msgstr ""
-
-#. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1093
-#, python-format
-msgid ""
-"You have to delete the bank statement line which the payment was reconciled "
-"to manually. Please check the payment of the partner %s by the amount of %s."
 msgstr ""
 
 #. module: account_voucher
@@ -137,7 +130,7 @@ msgid "Voucher Statistics"
 msgstr "Nyugta statisztika"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1558
+#: code:addons/account_voucher/account_voucher.py:1533
 #, python-format
 msgid ""
 "You can not change the journal as you already reconciled some statement "
@@ -148,6 +141,12 @@ msgstr ""
 #: view:account.voucher:0
 msgid "Validate"
 msgstr "Jóváhagyás"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.action_vendor_payment
+#: model:ir.ui.menu,name:account_voucher.menu_action_vendor_payment
+msgid "Supplier Payments"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
@@ -212,10 +211,10 @@ msgid "Messages"
 msgstr ""
 
 #. module: account_voucher
-#: selection:account.voucher,type:0
-#: selection:sale.receipt.report,type:0
-msgid "Sale"
-msgstr "Értékesítés"
+#: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
+#: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
+msgid "Purchase Receipts"
+msgstr ""
 
 #. module: account_voucher
 #: field:account.voucher.line,move_line_id:0
@@ -223,8 +222,8 @@ msgid "Journal Item"
 msgstr "Könyvelési tételsor"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:492
-#: code:addons/account_voucher/account_voucher.py:964
+#: code:addons/account_voucher/account_voucher.py:496
+#: code:addons/account_voucher/account_voucher.py:967
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -251,7 +250,7 @@ msgid "Cancelled"
 msgstr "Érvénytelenített"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1134
+#: code:addons/account_voucher/account_voucher.py:1139
 #, python-format
 msgid ""
 "You have to configure account base code and account tax code on the '%s' tax!"
@@ -294,7 +293,7 @@ msgid "Tax"
 msgstr "ÁFA"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:864
+#: code:addons/account_voucher/account_voucher.py:867
 #, python-format
 msgid "Invalid Action!"
 msgstr ""
@@ -314,6 +313,11 @@ msgstr "Gyűjtőkód"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
+msgstr ""
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "Total Allocation"
 msgstr ""
 
 #. module: account_voucher
@@ -340,6 +344,12 @@ msgid "Import Invoices"
 msgstr "Számlák importálása"
 
 #. module: account_voucher
+#: code:addons/account_voucher/account_voucher.py:1098
+#, python-format
+msgid "Wrong voucher line"
+msgstr ""
+
+#. module: account_voucher
 #: selection:account.voucher,pay_now:0
 #: selection:sale.receipt.report,pay_now:0
 msgid "Pay Later or Group Funds"
@@ -353,7 +363,7 @@ msgid "Receipt"
 msgstr "Befizetés"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1001
+#: code:addons/account_voucher/account_voucher.py:1004
 #, python-format
 msgid ""
 "You should configure the 'Gain Exchange Rate Account' in the accounting "
@@ -374,6 +384,8 @@ msgstr "Időszak"
 
 #. module: account_voucher
 #: view:account.voucher:0
+#: code:addons/account_voucher/account_voucher.py:199
+#, python-format
 msgid "Supplier"
 msgstr "Szállító"
 
@@ -393,7 +405,7 @@ msgid "Debit"
 msgstr "Tartozik"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1558
+#: code:addons/account_voucher/account_voucher.py:1533
 #, python-format
 msgid "Unable to change journal !"
 msgstr ""
@@ -422,6 +434,18 @@ msgid "Voucher Entries"
 msgstr "Nyugta tételek"
 
 #. module: account_voucher
+#: model:ir.actions.act_window,help:account_voucher.action_vendor_payment
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new supplier payment.\n"
+"              </p><p>\n"
+"                OpenERP helps you easily track payments you make and the "
+"remaining balances you need to pay your suppliers.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: account_voucher
 #: view:account.voucher:0
 msgid "Open Supplier Journal Entries"
 msgstr "Nyitott szállító tételek"
@@ -440,13 +464,6 @@ msgstr "Megnevezés"
 #: view:account.voucher:0
 msgid "Are you sure to unreconcile and cancel this record ?"
 msgstr ""
-
-#. module: account_voucher
-#: view:account.voucher:0
-#: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
-#: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
-msgid "Sales Receipt"
-msgstr "Nyugta"
 
 #. module: account_voucher
 #: field:account.voucher,is_multi_currency:0
@@ -488,13 +505,13 @@ msgid "Avg. Due Delay"
 msgstr "Álagos fizetési határidő"
 
 #. module: account_voucher
-#: code:addons/account_voucher/invoice.py:33
+#: code:addons/account_voucher/invoice.py:34
 #, python-format
 msgid "Pay Invoice"
 msgstr "Számla kifizetése"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1134
+#: code:addons/account_voucher/account_voucher.py:1139
 #, python-format
 msgid "No Account Base Code and Account Tax Code!"
 msgstr "Nincs adóalapgyűjtő kód és adógyűjtő kód!"
@@ -548,15 +565,15 @@ msgid "To Review"
 msgstr "Ellenőrizendő"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1008
-#: code:addons/account_voucher/account_voucher.py:1022
-#: code:addons/account_voucher/account_voucher.py:1175
+#: code:addons/account_voucher/account_voucher.py:1011
+#: code:addons/account_voucher/account_voucher.py:1025
+#: code:addons/account_voucher/account_voucher.py:1180
 #, python-format
 msgid "change"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:997
+#: code:addons/account_voucher/account_voucher.py:1000
 #, python-format
 msgid ""
 "You should configure the 'Loss Exchange Rate Account' in the accounting "
@@ -653,7 +670,7 @@ msgid "Reconcile Payment Balance"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:960
+#: code:addons/account_voucher/account_voucher.py:963
 #, python-format
 msgid "Configuration Error !"
 msgstr ""
@@ -699,6 +716,11 @@ msgid "August"
 msgstr "Augusztus"
 
 #. module: account_voucher
+#: view:account.voucher:0
+msgid "Validate Payment"
+msgstr ""
+
+#. module: account_voucher
 #: help:account.voucher,audit:0
 msgid ""
 "Check this box if you are unsure of that journal entry and if you want to "
@@ -711,7 +733,7 @@ msgid "October"
 msgstr "Október"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:961
+#: code:addons/account_voucher/account_voucher.py:964
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr ""
@@ -729,6 +751,13 @@ msgstr ""
 #. module: account_voucher
 #: field:account.voucher,paid:0
 msgid "Paid"
+msgstr ""
+
+#. module: account_voucher
+#: view:account.voucher:0
+#: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
+#: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
+msgid "Sales Receipts"
 msgstr ""
 
 #. module: account_voucher
@@ -769,24 +798,6 @@ msgid "Amount reconciled"
 msgstr "Párosított összeg"
 
 #. module: account_voucher
-#: field:account.voucher,message_comment_ids:0
-#: help:account.voucher,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
-
-#. module: account_voucher
-#: model:ir.actions.act_window,help:account_voucher.action_vendor_payment
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a new supplier payment.\n"
-"              </p><p>\n"
-"                OpenERP helps you easily track payments you do and remining\n"
-"                balance to pay to your supplier.\n"
-"              </p>\n"
-"            "
-msgstr ""
-
-#. module: account_voucher
 #: selection:account.voucher,pay_now:0
 #: selection:sale.receipt.report,pay_now:0
 msgid "Pay Directly"
@@ -801,6 +812,12 @@ msgstr ""
 #: field:account.voucher,pre_line:0
 msgid "Previous Payments ?"
 msgstr "Előző kifizetések ?"
+
+#. module: account_voucher
+#: code:addons/account_voucher/account_voucher.py:1098
+#, python-format
+msgid "The invoice you are willing to pay is not valid anymore."
+msgstr ""
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -829,25 +846,28 @@ msgid "Active"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:965
+#: code:addons/account_voucher/account_voucher.py:968
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr ""
 
 #. module: account_voucher
-#: view:account.voucher:0
-msgid "Total Allocation"
+#: model:ir.actions.act_window,name:account_voucher.act_pay_voucher
+#: model:ir.actions.act_window,name:account_voucher.action_vendor_receipt
+#: model:ir.ui.menu,name:account_voucher.menu_action_vendor_receipt
+msgid "Customer Payments"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.action_sale_receipt_report_all
+#: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt_report_all
+#: view:sale.receipt.report:0
+msgid "Sales Receipts Analysis"
 msgstr ""
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
 msgid "Group by Invoice Date"
-msgstr ""
-
-#. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1093
-#, python-format
-msgid "Wrong bank statement line"
 msgstr ""
 
 #. module: account_voucher
@@ -913,13 +933,6 @@ msgid "Sales Information"
 msgstr "Értékesítési információ"
 
 #. module: account_voucher
-#: model:ir.actions.act_window,name:account_voucher.action_sale_receipt_report_all
-#: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt_report_all
-#: view:sale.receipt.report:0
-msgid "Sales Receipt Analysis"
-msgstr "Értékesítési nyugta elemzés"
-
-#. module: account_voucher
 #: view:account.voucher:0
 #: field:account.voucher.line,voucher_id:0
 #: model:res.request.link,name:account_voucher.req_link_voucher
@@ -961,17 +974,10 @@ msgid "Journal Items"
 msgstr "Könyvelési tételsorok"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:492
+#: code:addons/account_voucher/account_voucher.py:496
 #, python-format
 msgid "Please define default credit/debit accounts on the journal \"%s\"."
 msgstr ""
-
-#. module: account_voucher
-#: model:ir.actions.act_window,name:account_voucher.act_pay_voucher
-#: model:ir.actions.act_window,name:account_voucher.action_vendor_receipt
-#: model:ir.ui.menu,name:account_voucher.menu_action_vendor_receipt
-msgid "Customer Payment"
-msgstr "Vevői befizetések"
 
 #. module: account_voucher
 #: selection:account.voucher,type:0
@@ -1051,12 +1057,6 @@ msgid "Journal"
 msgstr "Napló"
 
 #. module: account_voucher
-#: model:ir.actions.act_window,name:account_voucher.action_vendor_payment
-#: model:ir.ui.menu,name:account_voucher.menu_action_vendor_payment
-msgid "Supplier Payment"
-msgstr "Szállítói kifizetések"
-
-#. module: account_voucher
 #: view:account.voucher:0
 msgid "Internal Notes"
 msgstr "Belső megjegyzések"
@@ -1074,8 +1074,6 @@ msgstr "Eredeti összeg"
 
 #. module: account_voucher
 #: view:account.voucher:0
-#: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
-#: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
 msgid "Purchase Receipt"
 msgstr ""
 
@@ -1136,6 +1134,12 @@ msgid "Gain Exchange Rate Account"
 msgstr ""
 
 #. module: account_voucher
+#: selection:account.voucher,type:0
+#: selection:sale.receipt.report,type:0
+msgid "Sale"
+msgstr "Értékesítés"
+
+#. module: account_voucher
 #: selection:sale.receipt.report,month:0
 msgid "April"
 msgstr "Április"
@@ -1179,7 +1183,7 @@ msgid ""
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:864
+#: code:addons/account_voucher/account_voucher.py:867
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr ""
@@ -1190,7 +1194,7 @@ msgid "Effective date for accounting entries"
 msgstr "Könyvelési tételek teljesítési dátuma"
 
 #. module: account_voucher
-#: model:mail.message.subtype,name:account_voucher.mt_voucher
+#: model:mail.message.subtype,name:account_voucher.mt_voucher_state_change
 msgid "Status Change"
 msgstr ""
 
@@ -1237,8 +1241,13 @@ msgid "Open Balance"
 msgstr "Nyitott egyenleg"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:997
-#: code:addons/account_voucher/account_voucher.py:1001
+#: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
+msgid "Status <b>changed</b>"
+msgstr ""
+
+#. module: account_voucher
+#: code:addons/account_voucher/account_voucher.py:1000
+#: code:addons/account_voucher/account_voucher.py:1004
 #, python-format
 msgid "Insufficient Configuration!"
 msgstr ""
@@ -1250,216 +1259,3 @@ msgid ""
 "inactive, which allow to hide the customer/supplier payment while the bank "
 "statement isn't confirmed."
 msgstr ""
-
-#~ msgid "Particulars"
-#~ msgstr "Adatok"
-
-#, python-format
-#~ msgid "Cannot delete Voucher(s) which are already opened or paid !"
-#~ msgstr "Nyitott vagy rendezett nyugtá(ka)t nem lehet törölni!"
-
-#~ msgid "Voucher Print"
-#~ msgstr "Nyugta nyomtatása"
-
-#~ msgid "Account voucher unreconcile"
-#~ msgstr "Nyugta párosítás visszavonása"
-
-#~ msgid ""
-#~ "From this report, you can have an overview of the amount invoiced to your "
-#~ "customer as well as payment delays. The tool search can also be used to "
-#~ "personalise your Invoices reports and so, match this analysis to your needs."
-#~ msgstr ""
-#~ "Ebből a kimutatásból áttekintést nyerhet a vevőknek kiszámlázott összegekről "
-#~ "és a fizetési késedelmekről. A kereső eszköz használatával személyre "
-#~ "szabhatja és az igényeihez igazíthatja a kimutatást."
-
-#~ msgid "Date payment"
-#~ msgstr "Értéknapos átutalás"
-
-#~ msgid "Supplier Vouchers"
-#~ msgstr "Szállítói nyugták"
-
-#~ msgid "Amount (in words) :"
-#~ msgstr "Összeg (betűkkel) :"
-
-#~ msgid "Account :"
-#~ msgstr "Számla :"
-
-#~ msgid "On Account of :"
-#~ msgstr "Számlájára :"
-
-#~ msgid "Date:"
-#~ msgstr "Dátum:"
-
-#~ msgid "State"
-#~ msgstr "Állapot"
-
-#~ msgid "Accounting Voucher Entries"
-#~ msgstr "Könyvelési bizonylat tételek"
-
-#~ msgid "Want to remove accounting entries too ?"
-#~ msgstr "A könyvelési tételeket is törölni szeretné?"
-
-#~ msgid "Unreconciliation"
-#~ msgstr "Párosítás visszavonása"
-
-#~ msgid "Write-Off account"
-#~ msgstr "Leírás főkönyvi számlája"
-
-#~ msgid "Currency:"
-#~ msgstr "Pénznem:"
-
-#~ msgid "PRO-FORMA"
-#~ msgstr "Pro forma"
-
-#~ msgid "Payment Terms"
-#~ msgstr "Fizetési feltételek"
-
-#~ msgid "Are you sure to unreconcile this record ?"
-#~ msgstr "Biztos benne, hogy visszavonja a tétel párosítását?"
-
-#~ msgid "Compute Tax"
-#~ msgstr "Adó kiszámítása"
-
-#, python-format
-#~ msgid "Please define a sequence on the journal !"
-#~ msgstr "Kérem, határozza meg a sorszámozást a naplóra!"
-
-#~ msgid "Import Invoices in Statement"
-#~ msgstr "Számlák importálása a kivonatba"
-
-#~ msgid "Are you sure to confirm this record ?"
-#~ msgstr "Biztos benne, hogy jóváhagyja ezt a tételt?"
-
-#~ msgid "State:"
-#~ msgstr "Állapot:"
-
-#~ msgid "Write-Off Amount"
-#~ msgstr "Leírandó összeg"
-
-#~ msgid "Reconcile with Write-Off"
-#~ msgstr "Párosítás különbözet leírásával"
-
-#~ msgid ""
-#~ "When you sell products to a customer, you can give him a sales receipt or an "
-#~ "invoice. When the sales receipt is confirmed, it creates journal items "
-#~ "automatically and you can record the customer payment related to this sales "
-#~ "receipt."
-#~ msgstr ""
-#~ "Amikor Ön terméket értékesít a vevőnek, számlát vagy nyugtát ad neki. Amikor "
-#~ "a nyugta jóváhagyásra kerül, a könyvelési tételek automatikusan létrejönnek "
-#~ "és Ön berögzítheti a vevői befizetéseket erre a nyugtára."
-
-#~ msgid "Voucher State"
-#~ msgstr "Nyugta állapot"
-
-#~ msgid "Write-Off Comment"
-#~ msgstr "Leírási megjegyzés"
-
-#~ msgid "Voucher Date"
-#~ msgstr "Nyugta kelte"
-
-#~ msgid "Unreconcile entries"
-#~ msgstr "Párosítás visszavonása"
-
-#~ msgid ""
-#~ "Sales payment allows you to register the payments you receive from your "
-#~ "customers. In order to record a payment, you must enter the customer, the "
-#~ "payment method (=the journal) and the payment amount. OpenERP will propose "
-#~ "to you automatically the reconciliation of this payment with the open "
-#~ "invoices or sales receipts."
-#~ msgstr ""
-#~ "Ez a menüpont lehetővé teszi a vevőktől kapott befizetések nyilvántartásba "
-#~ "vételét. A befizetés berögzítéséhez adja meg a vevőt, a fizetési módszert "
-#~ "(=naplót) és a befizetés összegét. A rendszer automatikusan javasolni fogja "
-#~ "a befizetés párosítását a nyitott számlákkal vagy nyugtákkal."
-
-#~ msgid "Go"
-#~ msgstr "Tovább"
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "Hiba!"
-
-#, python-format
-#~ msgid "Invalid action !"
-#~ msgstr "Érvénytelen művelet!"
-
-#~ msgid ""
-#~ "The amount of the voucher must be the same amount as the one on the "
-#~ "statement line"
-#~ msgstr ""
-#~ "A nyugta összegének meg kell egyeznie a kivonat sorban lévő összeggel."
-
-#~ msgid ""
-#~ "The supplier payment form allows you to track the payment you do to your "
-#~ "suppliers. When you select a supplier, the payment method and an amount for "
-#~ "the payment, OpenERP will propose to reconcile your payment with the open "
-#~ "supplier invoices or bills."
-#~ msgstr ""
-#~ "Ez a menüpont lehetővé teszi a szállítók felé teljesített kifizetések nyomon "
-#~ "követését. Miután kiválasztja a szállítót, a fizetési módszert és a "
-#~ "kifizetés összegét, a rendszer javasolni fogja a kifizetés párosítását a "
-#~ "nyitott bejövő számlákkal vagy nyugtákkal."
-
-#~ msgid "Salesman"
-#~ msgstr "Üzletkötő"
-
-#~ msgid "Number:"
-#~ msgstr "Bizonylat sorszáma:"
-
-#~ msgid "Cr/Dr"
-#~ msgstr "T/K"
-
-#~ msgid "Audit Complete ?"
-#~ msgstr "Befejezte az ellenőrzést?"
-
-#~ msgid ""
-#~ "If you unreconciliate transactions, you must also verify all the actions "
-#~ "that are linked to those transactions because they will not be disable"
-#~ msgstr ""
-#~ "Ha visszavonja a tranzakciók párosítását, ellenőriznie kell a tranzakciókhoz "
-#~ "kapcsolt minden műveletet, mert azok nem kerülnek visszavonásra."
-
-#~ msgid ""
-#~ "Account Voucher module includes all the basic requirements of\n"
-#~ "    Voucher Entries for Bank, Cash, Sales, Purchase, Expanse, Contra, "
-#~ "etc...\n"
-#~ "    * Voucher Entry\n"
-#~ "    * Voucher Receipt\n"
-#~ "    * Cheque Register\n"
-#~ "    "
-#~ msgstr ""
-#~ "A nyugta modul minden alapkellékét tartalmazza a\n"
-#~ "    banki, pénztári, értékesítési, beszerzési, stb. nyugtáknak\n"
-#~ "    * nyugta könyvelés\n"
-#~ "    * nyugta készítés\n"
-#~ "    * csekk nyilvántartás\n"
-#~ "    "
-
-#~ msgid "Through :"
-#~ msgstr "Által :"
-
-#~ msgid "Unreconciliation transactions"
-#~ msgstr "Párosítás visszavonása"
-
-#~ msgid ""
-#~ " * The 'Draft' state is used when a user is encoding a new and unconfirmed "
-#~ "Voucher.                         \n"
-#~ "* The 'Pro-forma' when voucher is in Pro-forma state,voucher does not have "
-#~ "an voucher number.                         \n"
-#~ "* The 'Posted' state is used when user create voucher,a voucher number is "
-#~ "generated and voucher entries are created in account                         "
-#~ "\n"
-#~ "* The 'Cancelled' state is used when user cancel voucher."
-#~ msgstr ""
-#~ " * Tervezet állapotban van a nyugta, amikor a felhasználó berögzíti azt, és "
-#~ "még nem hagyja jóvá.                         \n"
-#~ "* Pro forma állapotban még nincs nyugtaszáma.                         \n"
-#~ "* Amikor a felhasználó jóváhagyja a nyugtát, az nyugtaszámot kap, "
-#~ "létrejönnek a könyvelési tételei és könyvelt állapotba kerül.                "
-#~ "         \n"
-#~ "* Érvénytelenített az állapot, ha a felhasználó érvényteleníti a nyugtát."
-
-#~ msgid "Canceled"
-#~ msgstr "Érvénytelenített"

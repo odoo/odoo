@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-07-08 19:19+0000\n"
-"Last-Translator: Akira Hiyama <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:52+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:11+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,delay_close:0
@@ -64,6 +64,11 @@ msgstr "転送"
 #: view:res.partner:0
 msgid "Geo Localize"
 msgstr "ジオロカライゼーション"
+
+#. module: crm_partner_assign
+#: field:crm.lead.forward.to.partner,starred:0
+msgid "Starred"
+msgstr ""
 
 #. module: crm_partner_assign
 #: view:crm.lead.forward.to.partner:0
@@ -139,11 +144,6 @@ msgstr "メッセージ識別番号"
 #. module: crm_partner_assign
 #: field:res.partner,date_review_next:0
 msgid "Next Partner Review"
-msgstr ""
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,favorite_user_ids:0
-msgid "Favorite"
 msgstr ""
 
 #. module: crm_partner_assign
@@ -254,18 +254,6 @@ msgstr "次へ"
 #: field:crm.lead.report.assign,priority:0
 msgid "Priority"
 msgstr "優先度"
-
-#. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,author_id:0
-msgid ""
-"Author of the message. If not set, email_from may hold an email address that "
-"did not match any partner."
-msgstr ""
-
-#. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,favorite_user_ids:0
-msgid "Users that set this message in their favorites"
-msgstr ""
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,delay_expected:0
@@ -509,6 +497,11 @@ msgstr ""
 #: view:crm.lead.report.assign:0
 msgid "#Opportunities"
 msgstr "商談の数"
+
+#. module: crm_partner_assign
+#: help:crm.lead.forward.to.partner,starred:0
+msgid "Current user has a starred notification linked to this message"
+msgstr ""
 
 #. module: crm_partner_assign
 #: field:crm.partner.report.assign,date_partnership:0
@@ -794,6 +787,11 @@ msgid "Partner Level"
 msgstr ""
 
 #. module: crm_partner_assign
+#: help:crm.lead.forward.to.partner,to_read:0
+msgid "Current user has an unread notification linked to this message"
+msgstr ""
+
+#. module: crm_partner_assign
 #: selection:crm.lead.report.assign,type:0
 msgid "Opportunity"
 msgstr "商談"
@@ -887,8 +885,10 @@ msgid "Case Information"
 msgstr "事象情報"
 
 #. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,to_read:0
-msgid "Functional field to search for messages the current user has to read"
+#: help:crm.lead.forward.to.partner,author_id:0
+msgid ""
+"Author of the message. If not set, email_from may hold an email address that "
+"did not match any partner."
 msgstr ""
 
 #. module: crm_partner_assign
@@ -929,137 +929,3 @@ msgstr "フィルタ"
 #: model:ir.model,name:crm_partner_assign.model_res_partner
 msgid "Partner"
 msgstr "パートナ"
-
-#~ msgid "Message type"
-#~ msgstr "メッセージタイプ"
-
-#~ msgid "Send to"
-#~ msgstr "送信する"
-
-#~ msgid "Message recipients"
-#~ msgstr "メッセージの受取人"
-
-#~ msgid "#Partner"
-#~ msgstr "パートナ数"
-
-#~ msgid "Plain-text version of the message"
-#~ msgstr "メッセージのテキスト版"
-
-#~ msgid "Text contents"
-#~ msgstr "テキストの内容"
-
-#~ msgid ""
-#~ "Add here all attachments of the current document you want to include in the "
-#~ "Email."
-#~ msgstr "Eメールに添付する文書をここに追加します。"
-
-#~ msgid "Blind carbon copy message recipients"
-#~ msgstr "BCCの受取人"
-
-#~ msgid "Rich-text/HTML version of the message"
-#~ msgstr "メッセージのリッチテキスト / HTML版"
-
-#~ msgid "Auto Delete"
-#~ msgstr "自動削除"
-
-#~ msgid "State"
-#~ msgstr "状態"
-
-#~ msgid ""
-#~ "Type of message, usually 'html' or 'plain', used to select plaintext or rich "
-#~ "text contents accordingly"
-#~ msgstr "メッセージのタイプ。通常はテキストあるいはリッチテキストを指定するための 「テキスト」あるいは「HTML」"
-
-#~ msgid "Related Document model"
-#~ msgstr "関連する文書モデル"
-
-#, python-format
-#~ msgid ""
-#~ "Could not contact geolocation servers, please make sure you have a working "
-#~ "internet connection (%s)"
-#~ msgstr "ジオロケーションサーバが見つかりません。インターネット接続 (%s) を確認して下さい。"
-
-#~ msgid "7 Days"
-#~ msgstr "7日間"
-
-#~ msgid "Use Template"
-#~ msgstr "テンプレートを使う"
-
-#~ msgid "Contact"
-#~ msgstr "連絡先"
-
-#~ msgid "Category"
-#~ msgstr "分類"
-
-#~ msgid "Salesman"
-#~ msgstr "販売担当"
-
-#~ msgid "Referred Partner"
-#~ msgstr "推奨パートナ"
-
-#~ msgid "Rich-text contents"
-#~ msgstr "リッチテキストの内容"
-
-#~ msgid "Carbon copy message recipients"
-#~ msgstr "CCメッセージの宛先"
-
-#~ msgid "Last 30 Days"
-#~ msgstr "最後の30日間"
-
-#~ msgid "Cc"
-#~ msgstr "写し(CC)"
-
-#~ msgid "References"
-#~ msgstr "参照"
-
-#~ msgid ""
-#~ "Full message headers, e.g. SMTP session headers (usually available on "
-#~ "inbound messages only)"
-#~ msgstr "メッセージの見出し。例えばSMTPセッションの見出し（通常、受信メッセージのみ）。"
-
-#~ msgid "# of Partner"
-#~ msgstr "パートナの数"
-
-#~ msgid "Reply-To"
-#~ msgstr "返信先"
-
-#~ msgid "To"
-#~ msgstr "宛先"
-
-#~ msgid "Partner name"
-#~ msgstr "パートナ名"
-
-#~ msgid ""
-#~ "Message sender, taken from user preferences. If empty, this is not a mail "
-#~ "but a message."
-#~ msgstr "メッセージの差出人。ユーザの優先設定から持って来られます。空白にすると、Eメールではなく、メッセージになります。"
-
-#~ msgid "Message headers"
-#~ msgstr "メッセージの見出し"
-
-#~ msgid "Bcc"
-#~ msgstr "BCC"
-
-#~ msgid "Address"
-#~ msgstr "住所"
-
-#~ msgid "Email Address"
-#~ msgstr "Eメールアドレス"
-
-#~ msgid "Message references, such as identifiers of previous messages"
-#~ msgstr "メッセージの参照。前のメッセージの識別番号など"
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "エラー：重複したメンバーを作ることはできません。"
-
-#~ msgid "crm.lead"
-#~ msgstr "crm.lead"
-
-#~ msgid "Preferred response address for the message"
-#~ msgstr "メッセージの優先返信アドレス"
-
-#~ msgid "Permanently delete emails after sending"
-#~ msgstr "送信後、Eメールを削除"
-
-#~ msgid "E-mail composition wizard"
-#~ msgstr "Eメール作成ウィザード"

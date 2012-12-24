@@ -1,20 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* hr
+# Bulgarian translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-05-10 17:41+0000\n"
-"Last-Translator: Dimitar Markov <dimitar.markov@gmail.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Bulgarian <bg@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:39+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:13+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -91,6 +92,7 @@ msgstr ""
 #: field:hr.employee,department_id:0
 #: view:hr.job:0
 #: field:hr.job,department_id:0
+#: model:ir.model,name:hr.model_hr_department
 msgid "Department"
 msgstr "Отдел"
 
@@ -362,12 +364,6 @@ msgstr ""
 #. module: hr
 #: field:hr.config.settings,module_hr_expense:0
 msgid "Manage employees expenses"
-msgstr ""
-
-#. module: hr
-#: help:hr.job,expected_employees:0
-msgid ""
-"Expected number of employees for this job position after new recruitment."
 msgstr ""
 
 #. module: hr
@@ -687,9 +683,9 @@ msgid "This installs the module hr_timesheet."
 msgstr ""
 
 #. module: hr
-#: field:hr.job,message_comment_ids:0
-#: help:hr.job,message_comment_ids:0
-msgid "Comments and emails"
+#: help:hr.job,expected_employees:0
+msgid ""
+"Expected number of employees for this job position after new recruitment."
 msgstr ""
 
 #. module: hr
@@ -741,11 +737,6 @@ msgstr ""
 #: view:hr.employee.category:0
 msgid "Employees Categories"
 msgstr "Категории на служители"
-
-#. module: hr
-#: model:ir.model,name:hr.model_hr_department
-msgid "hr.department"
-msgstr "отдел чов. ресурси"
 
 #. module: hr
 #: field:hr.employee,address_home_id:0
@@ -970,171 +961,3 @@ msgstr ""
 #: view:hr.config.settings:0
 msgid "Apply"
 msgstr ""
-
-#~ msgid "Reporting"
-#~ msgstr "Справки"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Невалиден XML за преглед на архитектурата"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Името на обекта трябва да започва с \"x_\" и да не съдържа никакви специални "
-#~ "символи!"
-
-#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
-#~ msgstr ""
-#~ "Грешка! Не могат да бъдат създавани рекурсивни йерархии от служители."
-
-#~ msgid "Error! You can not create recursive departments."
-#~ msgstr "Грешка! Вие не можете да създадете рекурсивни отдел."
-
-#~ msgid "Holidays"
-#~ msgstr "Празници"
-
-#~ msgid "title"
-#~ msgstr "заглавие"
-
-#~ msgid "Mark as Old"
-#~ msgstr "Маркирай като стар"
-
-#~ msgid "Employee Marital Status"
-#~ msgstr "Семейно положение на служител"
-
-#~ msgid "Sunday"
-#~ msgstr "Неделя"
-
-#~ msgid "Parents"
-#~ msgstr "Родители"
-
-#~ msgid "Group name"
-#~ msgstr "Име на групата"
-
-#~ msgid "Friday"
-#~ msgstr "Петък"
-
-#~ msgid "Tuesday"
-#~ msgstr "Вторник"
-
-#~ msgid "Day of week"
-#~ msgstr "Ден от седмицата"
-
-#~ msgid "Birthday"
-#~ msgstr "Рожден ден"
-
-#~ msgid "Monday"
-#~ msgstr "Понеделник"
-
-#~ msgid "Categories structure"
-#~ msgstr "Структура на категориите"
-
-#~ msgid "Wednesday"
-#~ msgstr "Сряда"
-
-#~ msgid "Starting date"
-#~ msgstr "Начална дата"
-
-#~ msgid "Working Time"
-#~ msgstr "Работно време"
-
-#~ msgid "Thursday"
-#~ msgstr "Четвъртък"
-
-#~ msgid "Other"
-#~ msgstr "Друг"
-
-#~ msgid "Timesheets"
-#~ msgstr "Графици"
-
-#~ msgid "Work E-mail"
-#~ msgstr "Служебен имейл"
-
-#~ msgid "Categories"
-#~ msgstr "Категории"
-
-#~ msgid "Image"
-#~ msgstr "Изображение"
-
-#~ msgid "unknown"
-#~ msgstr "неизвестен"
-
-#~ msgid "Configure"
-#~ msgstr "Настройване"
-
-#~ msgid "Recruitment Process"
-#~ msgstr "Процес на наемане"
-
-#~ msgid "In Recruitement"
-#~ msgstr "В процес на наемане"
-
-#~ msgid ""
-#~ "Tracks and manages employee expenses, and can automatically re-invoice "
-#~ "clients if the expenses are project-related."
-#~ msgstr ""
-#~ "Проследява и управлява разходи на служител и може автоматично повторно да "
-#~ "префактура клиентите, ако разходите са свързани с проекта."
-
-#~ msgid "Expenses"
-#~ msgstr "Разходи"
-
-#~ msgid "Expected Employees"
-#~ msgstr "Очаквани служители"
-
-#~ msgid "Employee's Contracts"
-#~ msgstr "Договори на служители"
-
-#~ msgid "Periodic Evaluations"
-#~ msgstr "Периодично оценяване"
-
-#~ msgid "Configure Your Human Resources Application"
-#~ msgstr "Настройки на приложението Човешки ресурси"
-
-#~ msgid ""
-#~ "Error ! You cannot select a department for which the employee is the manager."
-#~ msgstr "Грешка! Не можете да изберете отдел, в който служителят е мениджър."
-
-#~ msgid "Configuration Progress"
-#~ msgstr "Прогрес на настройките"
-
-#~ msgid "HR Manager Dashboard"
-#~ msgstr "Табло мениджър ЧР"
-
-#~ msgid "The chosen company is not in the allowed companies for this user"
-#~ msgstr "Избраната фирма не е измежду разрешените фирми за този потребител"
-
-#~ msgid "You can not have two users with the same login !"
-#~ msgstr "Не може да има двама потребитела с един и същ \"логин\"!"
-
-#~ msgid "State"
-#~ msgstr "Състояние"
-
-#~ msgid "Old"
-#~ msgstr "Стари"
-
-#~ msgid "res.users"
-#~ msgstr "res.users"
-
-#~ msgid "Description"
-#~ msgstr "Описание"
-
-#~ msgid "Current"
-#~ msgstr "Текущ"
-
-#~ msgid "Current Activity"
-#~ msgstr "Настояща активност"
-
-#~ msgid "Mobile"
-#~ msgstr "Мобилен"
-
-#~ msgid "Categories of Employee"
-#~ msgstr "Категории на служител"
-
-#~ msgid "Employee Hierarchy"
-#~ msgstr "Йерархия на служителите"
-
-#~ msgid "Error ! You cannot create recursive Categories."
-#~ msgstr "Грешка! Не могат да бъдат създавани рекурсивни Категории."
-
-#~ msgid "Status Description"
-#~ msgstr "Описание на състоянието"

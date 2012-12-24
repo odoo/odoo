@@ -1,20 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* account_voucher
+# Lithuanian translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:01+0000\n"
-"PO-Revision-Date: 2012-11-29 13:01+0000\n"
-"Last-Translator: Andrius Preimantas <andrius.preimantas@gmail.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Lithuanian <lt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:41+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:05+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: account_voucher
 #: field:account.bank.statement.line,voucher_id:0
@@ -27,7 +28,7 @@ msgid "account.config.settings"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:348
+#: code:addons/account_voucher/account_voucher.py:357
 #, python-format
 msgid "Write-Off"
 msgstr "Nurašymas"
@@ -63,14 +64,6 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "(Update)"
-msgstr ""
-
-#. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1093
-#, python-format
-msgid ""
-"You have to delete the bank statement line which the payment was reconciled "
-"to manually. Please check the payment of the partner %s by the amount of %s."
 msgstr ""
 
 #. module: account_voucher
@@ -137,7 +130,7 @@ msgid "Voucher Statistics"
 msgstr "Kvito statistika"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1558
+#: code:addons/account_voucher/account_voucher.py:1533
 #, python-format
 msgid ""
 "You can not change the journal as you already reconciled some statement "
@@ -148,6 +141,12 @@ msgstr ""
 #: view:account.voucher:0
 msgid "Validate"
 msgstr "Patvirtinti"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.action_vendor_payment
+#: model:ir.ui.menu,name:account_voucher.menu_action_vendor_payment
+msgid "Supplier Payments"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
@@ -212,10 +211,10 @@ msgid "Messages"
 msgstr ""
 
 #. module: account_voucher
-#: selection:account.voucher,type:0
-#: selection:sale.receipt.report,type:0
-msgid "Sale"
-msgstr "Pardavimas"
+#: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
+#: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
+msgid "Purchase Receipts"
+msgstr ""
 
 #. module: account_voucher
 #: field:account.voucher.line,move_line_id:0
@@ -223,8 +222,8 @@ msgid "Journal Item"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:492
-#: code:addons/account_voucher/account_voucher.py:964
+#: code:addons/account_voucher/account_voucher.py:496
+#: code:addons/account_voucher/account_voucher.py:967
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -251,7 +250,7 @@ msgid "Cancelled"
 msgstr "Atšauktas"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1134
+#: code:addons/account_voucher/account_voucher.py:1139
 #, python-format
 msgid ""
 "You have to configure account base code and account tax code on the '%s' tax!"
@@ -292,7 +291,7 @@ msgid "Tax"
 msgstr "Mokestis"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:864
+#: code:addons/account_voucher/account_voucher.py:867
 #, python-format
 msgid "Invalid Action!"
 msgstr ""
@@ -312,6 +311,11 @@ msgstr "Analitinė sąskaita"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
+msgstr ""
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "Total Allocation"
 msgstr ""
 
 #. module: account_voucher
@@ -338,6 +342,12 @@ msgid "Import Invoices"
 msgstr "Įkelti S/F"
 
 #. module: account_voucher
+#: code:addons/account_voucher/account_voucher.py:1098
+#, python-format
+msgid "Wrong voucher line"
+msgstr ""
+
+#. module: account_voucher
 #: selection:account.voucher,pay_now:0
 #: selection:sale.receipt.report,pay_now:0
 msgid "Pay Later or Group Funds"
@@ -351,7 +361,7 @@ msgid "Receipt"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1001
+#: code:addons/account_voucher/account_voucher.py:1004
 #, python-format
 msgid ""
 "You should configure the 'Gain Exchange Rate Account' in the accounting "
@@ -372,6 +382,8 @@ msgstr "Periodas"
 
 #. module: account_voucher
 #: view:account.voucher:0
+#: code:addons/account_voucher/account_voucher.py:199
+#, python-format
 msgid "Supplier"
 msgstr "Tiekėjas"
 
@@ -391,7 +403,7 @@ msgid "Debit"
 msgstr "Debetas"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1558
+#: code:addons/account_voucher/account_voucher.py:1533
 #, python-format
 msgid "Unable to change journal !"
 msgstr ""
@@ -420,6 +432,18 @@ msgid "Voucher Entries"
 msgstr "Kvito eilutės"
 
 #. module: account_voucher
+#: model:ir.actions.act_window,help:account_voucher.action_vendor_payment
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new supplier payment.\n"
+"              </p><p>\n"
+"                OpenERP helps you easily track payments you make and the "
+"remaining balances you need to pay your suppliers.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: account_voucher
 #: view:account.voucher:0
 msgid "Open Supplier Journal Entries"
 msgstr ""
@@ -438,13 +462,6 @@ msgstr ""
 #: view:account.voucher:0
 msgid "Are you sure to unreconcile and cancel this record ?"
 msgstr ""
-
-#. module: account_voucher
-#: view:account.voucher:0
-#: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
-#: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
-msgid "Sales Receipt"
-msgstr "Pardavimo kvitai"
 
 #. module: account_voucher
 #: field:account.voucher,is_multi_currency:0
@@ -486,13 +503,13 @@ msgid "Avg. Due Delay"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/invoice.py:33
+#: code:addons/account_voucher/invoice.py:34
 #, python-format
 msgid "Pay Invoice"
 msgstr "Apmokėti sąskaitą"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1134
+#: code:addons/account_voucher/account_voucher.py:1139
 #, python-format
 msgid "No Account Base Code and Account Tax Code!"
 msgstr ""
@@ -546,15 +563,15 @@ msgid "To Review"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1008
-#: code:addons/account_voucher/account_voucher.py:1022
-#: code:addons/account_voucher/account_voucher.py:1175
+#: code:addons/account_voucher/account_voucher.py:1011
+#: code:addons/account_voucher/account_voucher.py:1025
+#: code:addons/account_voucher/account_voucher.py:1180
 #, python-format
 msgid "change"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:997
+#: code:addons/account_voucher/account_voucher.py:1000
 #, python-format
 msgid ""
 "You should configure the 'Loss Exchange Rate Account' in the accounting "
@@ -651,7 +668,7 @@ msgid "Reconcile Payment Balance"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:960
+#: code:addons/account_voucher/account_voucher.py:963
 #, python-format
 msgid "Configuration Error !"
 msgstr ""
@@ -697,6 +714,11 @@ msgid "August"
 msgstr ""
 
 #. module: account_voucher
+#: view:account.voucher:0
+msgid "Validate Payment"
+msgstr ""
+
+#. module: account_voucher
 #: help:account.voucher,audit:0
 msgid ""
 "Check this box if you are unsure of that journal entry and if you want to "
@@ -709,7 +731,7 @@ msgid "October"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:961
+#: code:addons/account_voucher/account_voucher.py:964
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr ""
@@ -727,6 +749,13 @@ msgstr ""
 #. module: account_voucher
 #: field:account.voucher,paid:0
 msgid "Paid"
+msgstr ""
+
+#. module: account_voucher
+#: view:account.voucher:0
+#: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
+#: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
+msgid "Sales Receipts"
 msgstr ""
 
 #. module: account_voucher
@@ -767,24 +796,6 @@ msgid "Amount reconciled"
 msgstr ""
 
 #. module: account_voucher
-#: field:account.voucher,message_comment_ids:0
-#: help:account.voucher,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
-
-#. module: account_voucher
-#: model:ir.actions.act_window,help:account_voucher.action_vendor_payment
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a new supplier payment.\n"
-"              </p><p>\n"
-"                OpenERP helps you easily track payments you do and remining\n"
-"                balance to pay to your supplier.\n"
-"              </p>\n"
-"            "
-msgstr ""
-
-#. module: account_voucher
 #: selection:account.voucher,pay_now:0
 #: selection:sale.receipt.report,pay_now:0
 msgid "Pay Directly"
@@ -798,6 +809,12 @@ msgstr "D/K"
 #. module: account_voucher
 #: field:account.voucher,pre_line:0
 msgid "Previous Payments ?"
+msgstr ""
+
+#. module: account_voucher
+#: code:addons/account_voucher/account_voucher.py:1098
+#, python-format
+msgid "The invoice you are willing to pay is not valid anymore."
 msgstr ""
 
 #. module: account_voucher
@@ -827,25 +844,28 @@ msgid "Active"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:965
+#: code:addons/account_voucher/account_voucher.py:968
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr ""
 
 #. module: account_voucher
-#: view:account.voucher:0
-msgid "Total Allocation"
+#: model:ir.actions.act_window,name:account_voucher.act_pay_voucher
+#: model:ir.actions.act_window,name:account_voucher.action_vendor_receipt
+#: model:ir.ui.menu,name:account_voucher.menu_action_vendor_receipt
+msgid "Customer Payments"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.action_sale_receipt_report_all
+#: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt_report_all
+#: view:sale.receipt.report:0
+msgid "Sales Receipts Analysis"
 msgstr ""
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
 msgid "Group by Invoice Date"
-msgstr ""
-
-#. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1093
-#, python-format
-msgid "Wrong bank statement line"
 msgstr ""
 
 #. module: account_voucher
@@ -911,13 +931,6 @@ msgid "Sales Information"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.actions.act_window,name:account_voucher.action_sale_receipt_report_all
-#: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt_report_all
-#: view:sale.receipt.report:0
-msgid "Sales Receipt Analysis"
-msgstr "Pardavimo kvitų analizė"
-
-#. module: account_voucher
 #: view:account.voucher:0
 #: field:account.voucher.line,voucher_id:0
 #: model:res.request.link,name:account_voucher.req_link_voucher
@@ -959,17 +972,10 @@ msgid "Journal Items"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:492
+#: code:addons/account_voucher/account_voucher.py:496
 #, python-format
 msgid "Please define default credit/debit accounts on the journal \"%s\"."
 msgstr ""
-
-#. module: account_voucher
-#: model:ir.actions.act_window,name:account_voucher.act_pay_voucher
-#: model:ir.actions.act_window,name:account_voucher.action_vendor_receipt
-#: model:ir.ui.menu,name:account_voucher.menu_action_vendor_receipt
-msgid "Customer Payment"
-msgstr "Kliento mokėjimai"
 
 #. module: account_voucher
 #: selection:account.voucher,type:0
@@ -1049,12 +1055,6 @@ msgid "Journal"
 msgstr "Žurnalas"
 
 #. module: account_voucher
-#: model:ir.actions.act_window,name:account_voucher.action_vendor_payment
-#: model:ir.ui.menu,name:account_voucher.menu_action_vendor_payment
-msgid "Supplier Payment"
-msgstr "Mokėjimai tiekėjui"
-
-#. module: account_voucher
 #: view:account.voucher:0
 msgid "Internal Notes"
 msgstr ""
@@ -1072,8 +1072,6 @@ msgstr ""
 
 #. module: account_voucher
 #: view:account.voucher:0
-#: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
-#: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
 msgid "Purchase Receipt"
 msgstr "Pirkimo kvitas"
 
@@ -1134,6 +1132,12 @@ msgid "Gain Exchange Rate Account"
 msgstr ""
 
 #. module: account_voucher
+#: selection:account.voucher,type:0
+#: selection:sale.receipt.report,type:0
+msgid "Sale"
+msgstr "Pardavimas"
+
+#. module: account_voucher
 #: selection:sale.receipt.report,month:0
 msgid "April"
 msgstr ""
@@ -1177,7 +1181,7 @@ msgid ""
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:864
+#: code:addons/account_voucher/account_voucher.py:867
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr ""
@@ -1188,7 +1192,7 @@ msgid "Effective date for accounting entries"
 msgstr ""
 
 #. module: account_voucher
-#: model:mail.message.subtype,name:account_voucher.mt_voucher
+#: model:mail.message.subtype,name:account_voucher.mt_voucher_state_change
 msgid "Status Change"
 msgstr ""
 
@@ -1235,8 +1239,13 @@ msgid "Open Balance"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:997
-#: code:addons/account_voucher/account_voucher.py:1001
+#: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
+msgid "Status <b>changed</b>"
+msgstr ""
+
+#. module: account_voucher
+#: code:addons/account_voucher/account_voucher.py:1000
+#: code:addons/account_voucher/account_voucher.py:1004
 #, python-format
 msgid "Insufficient Configuration!"
 msgstr ""
@@ -1248,236 +1257,3 @@ msgid ""
 "inactive, which allow to hide the customer/supplier payment while the bank "
 "statement isn't confirmed."
 msgstr ""
-
-#~ msgid "Other Info"
-#~ msgstr "Kita informacija"
-
-#~ msgid "Create"
-#~ msgstr "Sukurti"
-
-#~ msgid "-"
-#~ msgstr "-"
-
-#~ msgid "Ref."
-#~ msgstr "Nuoroda"
-
-#~ msgid ":"
-#~ msgstr ":"
-
-#~ msgid "Name"
-#~ msgstr "Pavadinimas"
-
-#~ msgid "Reference Type"
-#~ msgstr "Nuorodos tipas"
-
-#~ msgid "State"
-#~ msgstr "Būsena"
-
-#~ msgid "Canceled"
-#~ msgstr "Atšaukta"
-
-#~ msgid "PRO-FORMA"
-#~ msgstr "Išankstinė sąskaita"
-
-#~ msgid "Bank Receipts"
-#~ msgstr "Banko kvitai"
-
-#~ msgid "Journal Voucher"
-#~ msgstr "Žurnalo kvitas"
-
-#~ msgid ","
-#~ msgstr ","
-
-#~ msgid "State :"
-#~ msgstr "Būsena:"
-
-#~ msgid "Ref. :"
-#~ msgstr "Nuoroda:"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Netinkamas modelio pavadinimas veiksmo apibrėžime."
-
-#~ msgid "Total Credit"
-#~ msgstr "Iš viso kredito"
-
-#~ msgid "D"
-#~ msgstr "D"
-
-#~ msgid "Total Debit"
-#~ msgstr "Iš viso debeto"
-
-#~ msgid "Level"
-#~ msgstr "Lygis"
-
-#~ msgid "Account Entry Line"
-#~ msgstr "Sąskaitos įrašo eilutė"
-
-#~ msgid "Voucher Line"
-#~ msgstr "Kvito eilutė"
-
-#~ msgid "Receiver's Signature"
-#~ msgstr "Gavėjo parašas"
-
-#~ msgid "Journal Sale Voucher"
-#~ msgstr "Pardavimų žurnalo kvitas"
-
-#~ msgid "Payment Vouchers"
-#~ msgstr "Mokėjimo kvitai"
-
-#~ msgid "No."
-#~ msgstr "Nr."
-
-#~ msgid "Amount (in words) :"
-#~ msgstr "Suma (žodžiais) :"
-
-#~ msgid "Account :"
-#~ msgstr "Sąskata:"
-
-#~ msgid "Vouchers"
-#~ msgstr "Kvitai"
-
-#~ msgid "Open Vouchers"
-#~ msgstr "Atviri kvitai"
-
-#~ msgid "None"
-#~ msgstr "Nėra"
-
-#~ msgid "Voucher Reference"
-#~ msgstr "Kvito nuoroda"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Netinkamas XML peržiūros struktūrai!"
-
-#~ msgid "Narration"
-#~ msgstr "Paaiškinimas"
-
-#~ msgid "New Bank Payment"
-#~ msgstr "Naujas banko mokėjimas"
-
-#~ msgid "New Cash Receipt"
-#~ msgstr "Naujas kasos pajamų orderis"
-
-#~ msgid "General Entries"
-#~ msgstr "Bendrieji įrašai"
-
-#~ msgid "Voucher Report"
-#~ msgstr "Kvito ataskaita"
-
-#~ msgid "Cash Receipt"
-#~ msgstr "Kasos pajamų orderis"
-
-#~ msgid "Optional Information"
-#~ msgstr "Papildoma informacija"
-
-#~ msgid "Voucher Report (Cr/Dr)"
-#~ msgstr "Kvito ataskaita (K/D)"
-
-#~ msgid "General Information"
-#~ msgstr "Bendra informacija"
-
-#~ msgid "Voucher Type"
-#~ msgstr "Kvito tipas"
-
-#~ msgid "Bank Payments"
-#~ msgstr "Banko mokėjimai"
-
-#~ msgid "Accounting Voucher Entries"
-#~ msgstr "Apskaitos kvito eilutės"
-
-#~ msgid "Sub Currency"
-#~ msgstr "Vaikinė valiuta"
-
-#~ msgid "Periods"
-#~ msgstr "Periodai"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Objekto pavadinimas turi prasidėti su x_ ir jame negali būti specialiųjų "
-#~ "ženklų!"
-
-#~ msgid "Other Vouchers"
-#~ msgstr "Kiti kvitai"
-
-#~ msgid "Bank Receipt"
-#~ msgstr "Banko kvitas"
-
-#~ msgid "Journal Purchase Voucher"
-#~ msgstr "Pirkimų žurnalo kvitas"
-
-#~ msgid "Cash Payment Voucher"
-#~ msgstr "Pinigų mokėjimo kvitai"
-
-#~ msgid "Closing Balance"
-#~ msgstr "Uždarymo balansas"
-
-#~ msgid "Real Entry"
-#~ msgstr "Tikras įrašas"
-
-#~ msgid "Open a Voucher Entry"
-#~ msgstr "Atverti kvito įrašą"
-
-#~ msgid "Entry Lines"
-#~ msgstr "Įrašo eilutės"
-
-#~ msgid "Cash Payments"
-#~ msgstr "Pinigų mokėjimai"
-
-#~ msgid "Bank Receipt Voucher"
-#~ msgstr "Banko kvitas"
-
-#~ msgid "Bank Payment Voucher"
-#~ msgstr "Banko mokėjimo kvitas"
-
-#~ msgid "New Bank Receipt"
-#~ msgstr "Naujas banko kvitas"
-
-#~ msgid "Cash Receipt Voucher"
-#~ msgstr "Kasos pajamų orderio kvitas"
-
-#~ msgid "Particulars"
-#~ msgstr "Detali ataskaita"
-
-#~ msgid "Open Voucher Entries"
-#~ msgstr "Atverti kvito įrašus"
-
-#~ msgid "Opening Balance Entry"
-#~ msgstr "Balanso įrašo atidarymas"
-
-#~ msgid "Opening Balance"
-#~ msgstr "Balanso atidarymas"
-
-#~ msgid "Receipt Vouchers"
-#~ msgstr "Pajamų kvitai"
-
-#~ msgid "Cash Receipts"
-#~ msgstr "Kasos pajamų orderiai"
-
-#~ msgid "New Cash Payment"
-#~ msgstr "Naujas pinigų mokėjimas"
-
-#~ msgid "Contra Voucher"
-#~ msgstr "Contra kvitas"
-
-#~ msgid "last month"
-#~ msgstr "praeitą mėnesį"
-
-#, python-format
-#~ msgid "Cannot delete Voucher(s) which are already opened or paid !"
-#~ msgstr "Negalima ištrinti kvito(-ū) kuris(-ie) yra atviri arba apmokėti!"
-
-#~ msgid "Unreconciliation transactions"
-#~ msgstr "Sugretinimo atšaukimo transakcijos"
-
-#~ msgid "Unreconcile entries"
-#~ msgstr "Panaikinti sugretinimą"
-
-#, python-format
-#~ msgid "Warning"
-#~ msgstr "Įspėjimas"
-
-#~ msgid "The journal and period chosen have to belong to the same company."
-#~ msgstr "Pasirinktas žurnalas ir periodas turi priklausyti tai pačiai įmonei."
-
-#~ msgid "Date payment"
-#~ msgstr "Mokėjimo data"

@@ -1,20 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-# 	* account_analytic_plans
+# Turkish translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-01-25 00:10+0000\n"
-"Last-Translator: Ahmet Altınışık <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:34+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:03+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account4_ids:0
@@ -449,190 +450,3 @@ msgstr "Satış Siparişi Kalemi"
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "From Date"
 msgstr "Tarihinden"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Görüntüleme mimarisi için Geçersiz XML"
-
-#, python-format
-#~ msgid "User Error"
-#~ msgstr "Kullanıcı Hatası"
-
-#~ msgid "Multiple-plans management in Analytic Accounting"
-#~ msgstr "Analiz Hesabında çoklu plan yönetimi"
-
-#~ msgid "You can not create move line on closed account."
-#~ msgstr "Kapalı hesaplarda hareket satırı oluşturamazsınız."
-
-#~ msgid "Wrong credit or debit value in accounting entry !"
-#~ msgstr "Hesap girişindeki alacak borç değeri hatalı !"
-
-#~ msgid "The code of the journal must be unique per company !"
-#~ msgstr "Yevmiye kodu her firma için benzersiz olmalı."
-
-#, python-format
-#~ msgid "A model having this name and code already exists !"
-#~ msgstr "Bu isimde ve kodda bir model zaten var !"
-
-#, python-format
-#~ msgid "No analytic plan defined !"
-#~ msgstr "Tanımlanmış bir analiz planı yok !"
-
-#~ msgid ""
-#~ "The amount of the voucher must be the same amount as the one on the "
-#~ "statement line"
-#~ msgstr "Fiş tutarı banka ekstresi tutarı ile aynı olmalı"
-
-#, python-format
-#~ msgid "You have to define an analytic journal on the '%s' journal!"
-#~ msgstr "'%s' Yevmiyesinde bir analiz yevmiyesi tanımlamalısınız!"
-
-#~ msgid "Company must be same for its related account and period."
-#~ msgstr "Firma bağlı olduğu hesap ve dönemle aynı olmalıdır."
-
-#, python-format
-#~ msgid "Error"
-#~ msgstr "Hata"
-
-#, python-format
-#~ msgid "Please put a name and a code before saving the model !"
-#~ msgstr "Modeli kaydetmeden önce lütfen bir isim ve kod verin !"
-
-#~ msgid ""
-#~ "This module allows to use several analytic plans, according to the general "
-#~ "journal,\n"
-#~ "so that multiple analytic lines are created when the invoice or the entries\n"
-#~ "are confirmed.\n"
-#~ "\n"
-#~ "For example, you can define the following analytic structure:\n"
-#~ "  Projects\n"
-#~ "      Project 1\n"
-#~ "          SubProj 1.1\n"
-#~ "          SubProj 1.2\n"
-#~ "      Project 2\n"
-#~ "  Salesman\n"
-#~ "      Eric\n"
-#~ "      Fabien\n"
-#~ "\n"
-#~ "Here, we have two plans: Projects and Salesman. An invoice line must\n"
-#~ "be able to write analytic entries in the 2 plans: SubProj 1.1 and\n"
-#~ "Fabien. The amount can also be split. The following example is for\n"
-#~ "an invoice that touches the two subproject and assigned to one salesman:\n"
-#~ "\n"
-#~ "Plan1:\n"
-#~ "    SubProject 1.1 : 50%\n"
-#~ "    SubProject 1.2 : 50%\n"
-#~ "Plan2:\n"
-#~ "    Eric: 100%\n"
-#~ "\n"
-#~ "So when this line of invoice will be confirmed, it will generate 3 analytic "
-#~ "lines,\n"
-#~ "for one account entry.\n"
-#~ "The analytic plan validates the minimum and maximum percentage at the time "
-#~ "of creation\n"
-#~ "of distribution models.\n"
-#~ "        "
-#~ msgstr ""
-#~ "Bu modül yevmiye defterine uygun olarak birkaç analiz planı kullanılmasına "
-#~ "izin verir,\n"
-#~ "böylece fatura ya da girişler onaylanırken çoklu analiz kalemlerinin "
-#~ "oluşması\n"
-#~ "sağlanır.\n"
-#~ "\n"
-#~ "Örneğin, aşağıdaki analitik yapıyı tanımlayabilirsiniz:\n"
-#~ "  Projeler\n"
-#~ "      Proje 1\n"
-#~ "          AltProjj 1.1\n"
-#~ "          AltProj 1.2\n"
-#~ "      Proje 2\n"
-#~ "  Satış Elemanı\n"
-#~ "      Eric\n"
-#~ "      Fabien\n"
-#~ "\n"
-#~ "Burada 2 planımız var: Projeler ve Satış Elemanı. Bir fatura satırına \n"
-#~ "2 planda analitik girişler yapılabilmelidir: AltProj 1.1 ve\n"
-#~ "Fabien. Tutar da bölünebilmeli. Aşağıdaki örnek iki projeye \n"
-#~ "değinen ve bir satış elemanına atana bir faturadır:\n"
-#~ "\n"
-#~ "Plan1:\n"
-#~ "    AltProje 1.1 : 50%\n"
-#~ "    AltProje 1.2 : 50%\n"
-#~ "Plan2:\n"
-#~ "    Eric: 100%\n"
-#~ "\n"
-#~ "Faturanın bu kalemi onaylanırsa, bir hesap girişi için\n"
-#~ "3 analitik satır oluşur.\n"
-#~ "Analitik plan, dağıtım modelleri oluşturulurken enaz ve ençok yüzdeleri\n"
-#~ "doğrular.\n"
-#~ "        "
-
-#, python-format
-#~ msgid "Value Error"
-#~ msgstr "Değer Hatası"
-
-#~ msgid "The name of the journal must be unique per company !"
-#~ msgstr "Yevmiye adı her firmada benzersiz olmalı."
-
-#~ msgid "%"
-#~ msgstr "%"
-
-#~ msgid "You can not create move line on view account."
-#~ msgstr "Hesap Görünümünde hareket oluşturamazsınız."
-
-#, python-format
-#~ msgid "The Total Should be Between %s and %s"
-#~ msgstr "Toplam %s ve %s arasında olmalı"
-
-#~ msgid "Invoice Number must be unique per Company!"
-#~ msgstr "Fatura Numarası Her Şirkette Tekil Olmalı!"
-
-#~ msgid "Define your Analytic Plans"
-#~ msgstr "Analitik Planınızı Tanımlayın"
-
-#~ msgid "Invalid BBA Structured Communication !"
-#~ msgstr "Geçersiz BBA Yapılı İletişim !"
-
-#~ msgid "Company must be the same for its related account and period."
-#~ msgstr "İlişkili hesap ve dönem için firma aynı olmalı."
-
-#~ msgid "You can not create journal items on an account of type view."
-#~ msgstr "Görünüm tipindeki hesaplarda günlük girişi oluşturamazsınız."
-
-#~ msgid ""
-#~ "The selected account of your Journal Entry forces to provide a secondary "
-#~ "currency. You should remove the secondary currency on the account or select "
-#~ "a multi-currency view on the journal."
-#~ msgstr ""
-#~ "Günlük Girişlerinize ait seçilmiş hesap ikincil bir para biriminin "
-#~ "sağlanmasına zorluyor. Hesaptan ikincil para birimini kaldırmanız ya da "
-#~ "çoklu-para birimli bir günlük seçmelisiniz."
-
-#~ msgid ""
-#~ "The date of your Journal Entry is not in the defined period! You should "
-#~ "change the date or remove this constraint from the journal."
-#~ msgstr ""
-#~ "Günlük Girişinizin tarihi tanımlanan dönem içinde değil! Tarihi "
-#~ "değiştirmelisiniz ya da günlükten bu kıstlamayı kaldırmalısınız."
-
-#~ msgid "The journal and period chosen have to belong to the same company."
-#~ msgstr "Seçilen günlük ve dönem aynı firmaya ait olmalıdır."
-
-#~ msgid ""
-#~ "Configuration error! The currency chosen should be shared by the default "
-#~ "accounts too."
-#~ msgstr ""
-#~ "Yapılandırma hatası! Seçilen para birimi öntanımlı hesaplarla aynı olmalı."
-
-#~ msgid "You can not create analytic line on view account."
-#~ msgstr "Hesap görünümde analitik satır oluşturamazsınız."
-
-#~ msgid ""
-#~ "To setup a multiple analytic plans environment, you must define the root "
-#~ "analytic accounts for each plan set. Then, you must attach a plan set to "
-#~ "your account journals."
-#~ msgstr ""
-#~ "Çoklu analitik planları ortamını ayarlamak için, her plan seti için kök "
-#~ "analiz hesabı tanımlamalısınız. Sonra, hesap günlüklerinize bir plan seti "
-#~ "eklemelisiniz."
-
-#~ msgid "You can not create journal items on closed account."
-#~ msgstr "Kapalı hesapta günlük girişi maddeleri oluşturamazsınız."

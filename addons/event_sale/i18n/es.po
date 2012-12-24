@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-12-11 21:53+0000\n"
-"Last-Translator: Ana Juaristi Olalde <ajuaristio@gmail.com>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-12 04:41+0000\n"
-"X-Generator: Launchpad (build 16361)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:13+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_product_product
@@ -26,10 +26,8 @@ msgstr "Producto"
 #: help:product.product,event_ok:0
 msgid ""
 "Determine if a product needs to create automatically an event registration "
-"at the confirmation of a sale order line."
+"at the confirmation of a sales order line."
 msgstr ""
-"Determine si un producto necesita crear automáticamente un registro de "
-"evento y la confirmación de una línea de pedido de venta."
 
 #. module: event_sale
 #: help:sale.order.line,event_id:0
@@ -40,11 +38,6 @@ msgstr ""
 "Escoja un evento y cree automáticamente un registro para este evento."
 
 #. module: event_sale
-#: field:product.product,event_type_id:0
-msgid "Type of Event"
-msgstr "Tipo de Evento"
-
-#. module: event_sale
 #: model:event.event,name:event_sale.event_technical_training
 msgid "Technical training in Grand-Rosiere"
 msgstr "Formación técnica en Grand-Rosiere"
@@ -52,20 +45,19 @@ msgstr "Formación técnica en Grand-Rosiere"
 #. module: event_sale
 #: help:product.product,event_type_id:0
 msgid ""
-"Filter the list of event on this category only, in the sale order lines"
+"Select event types so when we use this product in sales order lines, it will "
+"filter events of this type only."
 msgstr ""
-"Filtre la lista de eventos solo de esta categoría en las líneas de pedido"
+
+#. module: event_sale
+#: field:product.product,event_type_id:0
+msgid "Type of Event"
+msgstr "Tipo de Evento"
 
 #. module: event_sale
 #: field:sale.order.line,event_ok:0
 msgid "event_ok"
 msgstr "event_ok"
-
-#. module: event_sale
-#: code:addons/event_sale/event_sale.py:88
-#, python-format
-msgid "The registration %s has been created from the Sale Order %s."
-msgstr "El registro %s ha sido creado desde el pedido de venta %s."
 
 #. module: event_sale
 #: field:product.product,event_ok:0
@@ -81,6 +73,12 @@ msgstr "Tipo de evento"
 #: model:product.template,name:event_sale.event_product_product_template
 msgid "Technical Training"
 msgstr "Formación técnica"
+
+#. module: event_sale
+#: code:addons/event_sale/event_sale.py:88
+#, python-format
+msgid "The registration %s has been created from the Sales Order %s."
+msgstr ""
 
 #. module: event_sale
 #: field:sale.order.line,event_id:0

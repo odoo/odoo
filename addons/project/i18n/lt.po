@@ -1,20 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-# 	* project
+# Lithuanian translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev0\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2010-09-09 07:17+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Lithuanian <lt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:04+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:29+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: project
 #: view:project.project:0
@@ -82,7 +83,7 @@ msgid "Start Task"
 msgstr "Pradėti užduotį"
 
 #. module: project
-#: code:addons/project/project.py:960
+#: code:addons/project/project.py:932
 #, python-format
 msgid "Warning !"
 msgstr ""
@@ -132,8 +133,8 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:440
-#: code:addons/project/project.py:1414
+#: code:addons/project/project.py:432
+#: code:addons/project/project.py:1305
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -222,8 +223,9 @@ msgid "Assigned To"
 msgstr "Priskirtas"
 
 #. module: project
-#: selection:project.task,priority:0
-msgid "Very important"
+#: model:mail.message.subtype,name:project.mt_project_task_closed
+#: model:mail.message.subtype,name:project.mt_task_closed
+msgid "Task Done"
 msgstr ""
 
 #. module: project
@@ -262,9 +264,14 @@ msgid "Project Task Delegate"
 msgstr "Projekto užduoties delegavimas"
 
 #. module: project
-#: code:addons/project/project.py:557
-#, python-format
-msgid "Project has been <b>created</b>."
+#: model:mail.message.subtype,name:project.mt_project_task_started
+#: model:mail.message.subtype,name:project.mt_task_started
+msgid "Task Started"
+msgstr ""
+
+#. module: project
+#: view:project.task:0
+msgid "Very Important"
 msgstr ""
 
 #. module: project
@@ -308,12 +315,6 @@ msgstr "Būsena"
 #: selection:report.project.task.user,month:0
 msgid "August"
 msgstr "Rugpjūtis"
-
-#. module: project
-#: code:addons/project/project.py:1303
-#, python-format
-msgid "Task has been <b>delegated</b> to <em>%s</em>."
-msgstr ""
 
 #. module: project
 #: view:project.project:0
@@ -388,7 +389,7 @@ msgid "Assigned to"
 msgstr "Priskirtas"
 
 #. module: project
-#: code:addons/project/project.py:1057
+#: code:addons/project/project.py:1021
 #, python-format
 msgid "Delegated User should be specified"
 msgstr ""
@@ -425,12 +426,6 @@ msgid "Re-evaluate Task"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:1292
-#, python-format
-msgid "Stage changed to <b>%s</b>."
-msgstr ""
-
-#. module: project
 #: view:project.task:0
 msgid "Validate planned time"
 msgstr ""
@@ -438,6 +433,12 @@ msgstr ""
 #. module: project
 #: field:project.config.settings,module_pad:0
 msgid "Use integrated collaborative note pads on task"
+msgstr ""
+
+#. module: project
+#: model:mail.message.subtype,name:project.mt_project_task_blocked
+#: model:mail.message.subtype,name:project.mt_task_blocked
+msgid "Task Blocked"
 msgstr ""
 
 #. module: project
@@ -453,6 +454,11 @@ msgstr ""
 #. module: project
 #: view:project.task:0
 msgid "oe_kanban_text_red"
+msgstr ""
+
+#. module: project
+#: model:mail.message.subtype,description:project.mt_task_blocked
+msgid "Task blocked"
 msgstr ""
 
 #. module: project
@@ -607,12 +613,6 @@ msgid "Not a Template Task"
 msgstr "Ne šabloninė užduotis"
 
 #. module: project
-#: view:project.project:0
-msgid ""
-"Follow this project to automatically follow all related tasks and issues."
-msgstr ""
-
-#. module: project
 #: field:project.task,planned_hours:0
 msgid "Initially Planned Hours"
 msgstr ""
@@ -670,6 +670,14 @@ msgstr ""
 #: field:project.config.settings,module_project_issue_sheet:0
 msgid "Invoice working time on issues"
 msgstr ""
+
+#. module: project
+#: view:project.project:0
+#: view:project.task:0
+#: field:project.task.history,end_date:0
+#: field:project.task.history.cumulative,end_date:0
+msgid "End Date"
+msgstr "Pabaigos data"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_specification
@@ -862,6 +870,11 @@ msgid "Companies"
 msgstr "Įmonės"
 
 #. module: project
+#: field:project.task.type,fold:0
+msgid "Folded by Default"
+msgstr ""
+
+#. module: project
 #: field:project.task.history,date:0
 #: field:project.task.history.cumulative,date:0
 #: field:project.task.work,date:0
@@ -891,12 +904,6 @@ msgid "10"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:566
-#, python-format
-msgid "Project has been <b>canceled</b>."
-msgstr ""
-
-#. module: project
 #: help:project.project,analytic_account_id:0
 msgid ""
 "Link this project to an analytic account if you need financial management on "
@@ -916,17 +923,6 @@ msgstr ""
 #: view:project.task.reevaluate:0
 msgid "Cancel"
 msgstr "Atšaukti"
-
-#. module: project
-#: code:addons/project/project.py:569
-#, python-format
-msgid "Project has been <b>closed</b>."
-msgstr ""
-
-#. module: project
-#: model:ir.actions.server,name:project.actions_server_project_task_read
-msgid "Task: Mark read"
-msgstr ""
 
 #. module: project
 #: view:project.project:0
@@ -952,9 +948,11 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: model:project.task.type,name:project.project_tt_development
-msgid "Development"
-msgstr "Kūrimas"
+#: view:project.project:0
+msgid ""
+"Follow this project to automatically track the events associated to tasks "
+"and issues of this project."
+msgstr ""
 
 #. module: project
 #: view:project.task:0
@@ -962,25 +960,19 @@ msgid "Users"
 msgstr "Vartotojai"
 
 #. module: project
-#: model:mail.message.subtype,name:project.mt_project_stage
-#: model:mail.message.subtype,name:project.mt_task_change
+#: model:mail.message.subtype,name:project.mt_task_stage
 msgid "Stage Changed"
 msgstr ""
 
 #. module: project
-#: field:project.task.type,fold:0
-msgid "Hide in views if empty"
-msgstr ""
+#: view:project.project:0
+#: model:res.groups,name:project.group_project_manager
+msgid "Manager"
+msgstr "Vadovas"
 
 #. module: project
-#: view:project.task:0
 #: selection:project.task,priority:0
 msgid "Important"
-msgstr ""
-
-#. module: project
-#: field:project.task.type,case_default:0
-msgid "Common to All Projects"
 msgstr ""
 
 #. module: project
@@ -1031,18 +1023,6 @@ msgstr "Patvirtinimo būsena"
 #: field:project.task.work,name:0
 msgid "Work summary"
 msgstr "Darbo santrauka"
-
-#. module: project
-#: code:addons/project/project.py:563
-#, python-format
-msgid "Project is now <b>pending</b>."
-msgstr ""
-
-#. module: project
-#: code:addons/project/project.py:560
-#, python-format
-msgid "Project has been <b>opened</b>."
-msgstr ""
 
 #. module: project
 #: view:project.project:0
@@ -1097,11 +1077,6 @@ msgid "Parent Tasks"
 msgstr "Pirminės užduotys"
 
 #. module: project
-#: model:ir.actions.server,name:project.actions_server_project_read
-msgid "Project: Mark read"
-msgstr ""
-
-#. module: project
 #: model:process.node,name:project.process_node_opentask0
 msgid "Open task"
 msgstr "Atverti užduotį"
@@ -1149,7 +1124,7 @@ msgid "Done by"
 msgstr "Atliktas"
 
 #. module: project
-#: code:addons/project/project.py:180
+#: code:addons/project/project.py:181
 #, python-format
 msgid "Invalid Action!"
 msgstr ""
@@ -1181,11 +1156,6 @@ msgstr "# užduočių"
 #. module: project
 #: field:project.project,doc_count:0
 msgid "Number of documents attached"
-msgstr ""
-
-#. module: project
-#: model:ir.actions.server,name:project.actions_server_project_task_unread
-msgid "Task: Mark unread"
 msgstr ""
 
 #. module: project
@@ -1228,11 +1198,16 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr "Skaičiuojama taip : Praleistas + Likęs laikas."
 
 #. module: project
-#: code:addons/project/project.py:364
-#: code:addons/project/project.py:385
-#: code:addons/project/project.py:728
+#: code:addons/project/project.py:356
+#: code:addons/project/project.py:377
+#: code:addons/project/project.py:709
 #, python-format
 msgid "%s (copy)"
+msgstr ""
+
+#. module: project
+#: model:mail.message.subtype,name:project.mt_project_task_stage
+msgid "Task Stage Changed"
 msgstr ""
 
 #. module: project
@@ -1270,6 +1245,11 @@ msgstr ""
 #. module: project
 #: help:project.config.settings,time_unit:0
 msgid "This will set the unit of measure used in projects and tasks."
+msgstr ""
+
+#. module: project
+#: selection:project.task,priority:0
+msgid "Very important"
 msgstr ""
 
 #. module: project
@@ -1331,8 +1311,6 @@ msgid "Low"
 msgstr "Žemas"
 
 #. module: project
-#: model:mail.message.subtype,name:project.mt_project_closed
-#: model:mail.message.subtype,name:project.mt_task_closed
 #: selection:project.project,state:0
 msgid "Closed"
 msgstr ""
@@ -1421,7 +1399,7 @@ msgstr ""
 "kai užduotis yra projekto būsenoje)."
 
 #. module: project
-#: code:addons/project/project.py:219
+#: code:addons/project/project.py:220
 #, python-format
 msgid "Attachments"
 msgstr ""
@@ -1441,7 +1419,7 @@ msgid "Done"
 msgstr "Atlikta"
 
 #. module: project
-#: code:addons/project/project.py:181
+#: code:addons/project/project.py:182
 #, python-format
 msgid ""
 "You cannot delete a project containing tasks. You can either delete all the "
@@ -1469,6 +1447,11 @@ msgid "Remaining Hours"
 msgstr "Likusios valandos"
 
 #. module: project
+#: model:mail.message.subtype,description:project.mt_task_stage
+msgid "Stage changed"
+msgstr ""
+
+#. module: project
 #: constraint:project.task:0
 msgid "Error ! Task end-date must be greater then task start-date"
 msgstr "Klaida! Užduočių pabaigos data turi būti vėliau nei pradžios data"
@@ -1490,17 +1473,6 @@ msgid "Delegated Task"
 msgstr "Deleguoti užduotį"
 
 #. module: project
-#: view:project.project:0
-#: model:res.groups,name:project.group_project_manager
-msgid "Manager"
-msgstr "Vadovas"
-
-#. module: project
-#: view:project.task:0
-msgid "Very Important"
-msgstr ""
-
-#. module: project
 #: view:report.project.task.user:0
 #: field:report.project.task.user,total_hours:0
 msgid "Total Hours"
@@ -1512,12 +1484,9 @@ msgid "project.config.settings"
 msgstr ""
 
 #. module: project
-#: view:project.project:0
-#: view:project.task:0
-#: field:project.task.history,end_date:0
-#: field:project.task.history.cumulative,end_date:0
-msgid "End Date"
-msgstr "Pabaigos data"
+#: model:project.task.type,name:project.project_tt_development
+msgid "Development"
+msgstr "Kūrimas"
 
 #. module: project
 #: help:project.task,active:0
@@ -1557,7 +1526,7 @@ msgid "Overpassed Tasks"
 msgstr "Uždelstos užduotys"
 
 #. module: project
-#: code:addons/project/project.py:960
+#: code:addons/project/project.py:932
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1583,6 +1552,11 @@ msgstr ""
 #: model:process.node,note:project.process_node_taskbydelegate0
 msgid "Delegate your task to the other user"
 msgstr "Deleguoti savo užduotį kitam naudotojui"
+
+#. module: project
+#: model:mail.message.subtype,description:project.mt_task_started
+msgid "Task started"
+msgstr ""
 
 #. module: project
 #: help:project.task.reevaluate,remaining_hours:0
@@ -1611,7 +1585,7 @@ msgid "CHECK: "
 msgstr "Patikrinti: "
 
 #. module: project
-#: code:addons/project/project.py:440
+#: code:addons/project/project.py:432
 #, python-format
 msgid "You must assign members on the project '%s' !"
 msgstr ""
@@ -1740,6 +1714,11 @@ msgid "Documents"
 msgstr ""
 
 #. module: project
+#: model:mail.message.subtype,description:project.mt_task_new
+msgid "Task created"
+msgstr ""
+
+#. module: project
 #: view:report.project.task.user:0
 #: field:report.project.task.user,no_of_days:0
 msgid "# of Days"
@@ -1752,8 +1731,6 @@ msgid "Followers"
 msgstr ""
 
 #. module: project
-#: model:mail.message.subtype,name:project.mt_project_new
-#: model:mail.message.subtype,name:project.mt_task_new
 #: selection:project.project,state:0
 #: view:project.task:0
 #: selection:project.task,state:0
@@ -1835,7 +1812,7 @@ msgid "Starting Date"
 msgstr "Pradžios data"
 
 #. module: project
-#: code:addons/project/project.py:406
+#: code:addons/project/project.py:398
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_projects
 #: view:project.project:0
@@ -1869,12 +1846,6 @@ msgid "Project Tasks"
 msgstr "Projekto užduotys"
 
 #. module: project
-#: code:addons/project/project.py:1296
-#, python-format
-msgid "Task has been <b>created</b>."
-msgstr ""
-
-#. module: project
 #: field:account.analytic.account,use_tasks:0
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,name:project.action_view_task
@@ -1891,12 +1862,6 @@ msgstr "Užduotys"
 #: selection:report.project.task.user,month:0
 msgid "December"
 msgstr "Gruodis"
-
-#. module: project
-#: model:mail.message.subtype,name:project.mt_project_canceled
-#: model:mail.message.subtype,name:project.mt_task_canceled
-msgid "Canceled"
-msgstr ""
 
 #. module: project
 #: view:project.config.settings:0
@@ -1938,12 +1903,6 @@ msgstr "Juodraštis"
 #: field:project.task.history,kanban_state:0
 #: field:project.task.history.cumulative,kanban_state:0
 msgid "Kanban State"
-msgstr ""
-
-#. module: project
-#: code:addons/project/project.py:1299
-#, python-format
-msgid "Task has been set as <b>draft</b>."
 msgstr ""
 
 #. module: project
@@ -1994,14 +1953,6 @@ msgid "Configure Project"
 msgstr ""
 
 #. module: project
-#: field:project.project,message_comment_ids:0
-#: help:project.project,message_comment_ids:0
-#: field:project.task,message_comment_ids:0
-#: help:project.task,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
-
-#. module: project
 #: view:project.task.history.cumulative:0
 msgid "Tasks's Cumulative Flow"
 msgstr ""
@@ -2010,11 +1961,6 @@ msgstr ""
 #: selection:report.project.task.user,month:0
 msgid "January"
 msgstr "Sausis"
-
-#. module: project
-#: model:ir.actions.server,name:project.actions_server_project_unread
-msgid "Project: Mark unread"
-msgstr ""
 
 #. module: project
 #: field:project.task.delegate,prefix:0
@@ -2027,9 +1973,15 @@ msgid "Reevaluation Task"
 msgstr "Pakartotinė užduotis"
 
 #. module: project
-#: code:addons/project/project.py:1414
+#: code:addons/project/project.py:1305
 #, python-format
 msgid "Please delete the project linked with this account first."
+msgstr ""
+
+#. module: project
+#: model:mail.message.subtype,name:project.mt_project_task_new
+#: model:mail.message.subtype,name:project.mt_task_new
+msgid "Task Created"
 msgstr ""
 
 #. module: project
@@ -2048,6 +2000,11 @@ msgstr ""
 #: selection:project.task.history,kanban_state:0
 #: selection:project.task.history.cumulative,kanban_state:0
 msgid "Ready for next stage"
+msgstr ""
+
+#. module: project
+#: field:project.task.type,case_default:0
+msgid "Default for New Projects"
 msgstr ""
 
 #. module: project
@@ -2085,6 +2042,11 @@ msgid ""
 "A long term project management module that tracks planning, scheduling, and "
 "resource allocation.\n"
 "                This installs the module project_long_term."
+msgstr ""
+
+#. module: project
+#: model:mail.message.subtype,description:project.mt_task_closed
+msgid "Task closed"
 msgstr ""
 
 #. module: project
@@ -2160,644 +2122,3 @@ msgstr "Metai"
 #: view:project.task.type:0
 msgid "Tasks Stages"
 msgstr "Užduočių etapai"
-
-#~ msgid "Assigned tasks"
-#~ msgstr "Priskirtos užduotys"
-
-#~ msgid "Close Task"
-#~ msgstr "Užbaigti užduotį"
-
-#~ msgid "Subproject"
-#~ msgstr "Subprojektas"
-
-#~ msgid "Task Types"
-#~ msgstr "Užduočių tipai"
-
-#~ msgid "Validate"
-#~ msgstr "Patvirtinti"
-
-#~ msgid "My Tasks in Progress"
-#~ msgstr "Mano užduočių atlikimas"
-
-#~ msgid "Days"
-#~ msgstr "Dienos"
-
-#~ msgid "All Tasks"
-#~ msgstr "Visos užduotys"
-
-#~ msgid "Task: %(name)s"
-#~ msgstr "Užduotis: %(name)s"
-
-#~ msgid "Send Message"
-#~ msgstr "Siųsti žinutę"
-
-#~ msgid "My projects"
-#~ msgstr "Mano projektai"
-
-#~ msgid "Type"
-#~ msgstr "Tipas"
-
-#~ msgid "Weeks"
-#~ msgstr "Savaitės"
-
-#~ msgid "Project task type"
-#~ msgstr "Projekto užduoties tipas"
-
-#~ msgid "Hours"
-#~ msgstr "Valandos"
-
-#~ msgid "My Pending Tasks"
-#~ msgstr "Mano laukiančios užduotys"
-
-#~ msgid "Tasks in Progress"
-#~ msgstr "Užduočių atlikimas"
-
-#~ msgid "Dates"
-#~ msgstr "Datos"
-
-#~ msgid "User: %(user_id)s"
-#~ msgstr "Naudotojas:  %(user_id)s"
-
-#~ msgid "Task type"
-#~ msgstr "Užduoties tipas"
-
-#~ msgid "Project's members"
-#~ msgstr "Projekto dalyviai"
-
-#~ msgid "Status: %(state)s"
-#~ msgstr "Būsena: %(state)s"
-
-#~ msgid "Planned"
-#~ msgstr "Planuota"
-
-#~ msgid "Information"
-#~ msgstr "Informacija"
-
-#~ msgid "E-Mails"
-#~ msgstr "El. pašto adresai"
-
-#~ msgid "Task edition"
-#~ msgstr "Užduoties redagavimas"
-
-#~ msgid "Months"
-#~ msgstr "Mėnesiai"
-
-#~ msgid "User's projects"
-#~ msgstr "Naudotojo projektai"
-
-#~ msgid "Date Closed"
-#~ msgstr "Pabaigos data"
-
-#~ msgid "Month works"
-#~ msgstr "Mėnesio darbai"
-
-#~ msgid "Gantt Representation"
-#~ msgstr "Užduočių grafikas"
-
-#~ msgid "State"
-#~ msgstr "Būsena"
-
-#~ msgid "Task summary"
-#~ msgstr "Užduoties santrauka"
-
-#~ msgid "Date Start: %(date_start)s"
-#~ msgstr "Pradžios data: %(date_start)s"
-
-#~ msgid "ID: %(task_id)s"
-#~ msgstr "ID: %(task_id)s"
-
-#~ msgid "Delay"
-#~ msgstr "Atidėta"
-
-#~ msgid "Send mail to customer"
-#~ msgstr "Siųsti klientui el. laišką"
-
-#~ msgid "Quiet close"
-#~ msgstr "Tylus uždarymas"
-
-#~ msgid "Running"
-#~ msgstr "Veikiantis"
-
-#~ msgid "Project tasks"
-#~ msgstr "Projekto užduotys"
-
-#~ msgid "Date Stop: %(date_stop)s"
-#~ msgstr "Pabaigos data: %(date_stop)s"
-
-#~ msgid "Configuration"
-#~ msgstr "Nustatymai"
-
-#~ msgid "Tasks Process"
-#~ msgstr "Užduoties procesas"
-
-#~ msgid "New title of the task delegated to the user."
-#~ msgstr "Naujas užduoties, paskirtos naudotojui, pavadinimas."
-
-#, python-format
-#~ msgid ""
-#~ "Couldn't send mail because the contact for this task (%s) has no email "
-#~ "address!"
-#~ msgstr ""
-#~ "Negalima išsiųsti elektroninio laiško, kadangi šios užduoties (%s) nurodytas "
-#~ "kontaktas neturi elektroninio pašto adreso!"
-
-#~ msgid "Change Remaining Hours"
-#~ msgstr "Pakeisti likusias valandas"
-
-#, python-format
-#~ msgid "Operation Not Permitted !"
-#~ msgstr "Veiksmas neleidžiamas!"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Netinkamas modelio pavadinimas veiksmo apibrėžime."
-
-#~ msgid "My Running Projects"
-#~ msgstr "Mano vykdomi projektai"
-
-#~ msgid ""
-#~ "Header added at the beginning of the email for the warning message sent to "
-#~ "the customer when a task is closed."
-#~ msgstr ""
-#~ "Kai klientui siunčiamas pranešimas, kad užduotis yra baigta, laiško "
-#~ "pradžioje dedama antraštė."
-
-#~ msgid "Importance"
-#~ msgstr "Svarbumas"
-
-#~ msgid "Update"
-#~ msgstr "Atnaujinti"
-
-#~ msgid "User you want to delegate this task to."
-#~ msgstr "Naudotojas, kuriam norite paskirti šią užduotį."
-
-#~ msgid ""
-#~ "Estimated time for you to validate the work done by the user to whom you "
-#~ "delegate this task."
-#~ msgstr ""
-#~ "Numatomas Jūsų laikas patikrinti užbaigtą užduotį, kurią buvote delegavę "
-#~ "kitam naudotojui."
-
-#~ msgid "My Draft Tasks"
-#~ msgstr "Mano užduočių juodraščiai"
-
-#~ msgid ""
-#~ "Automatic variables for headers and footer. Use exactly the same notation."
-#~ msgstr ""
-#~ "Automatiniai kintamieji antraštėse ir poraštėse. Naudokite lygiai tokią "
-#~ "pačią struktūrą."
-
-#~ msgid "Mail Header"
-#~ msgstr "Laiško antraštė"
-
-#~ msgid ""
-#~ "If you check this, the user will have a popup when closing a task that "
-#~ "propose a message to send by email to the customer."
-#~ msgstr ""
-#~ "Jeigu pažymėsite, uždarydamas užduoties langą naudotojas gaus pranešimą, "
-#~ "siūlantį siųsti žinutę klientui."
-
-#~ msgid "Reinclude the description of the task in the task of the user."
-#~ msgstr "Užduoties aprašymo įterpimas į naudotojo užduotį."
-
-#~ msgid "Delegations"
-#~ msgstr "Delegavimas"
-
-#~ msgid ""
-#~ "Project's member. Not used in any computation, just for information purpose."
-#~ msgstr ""
-#~ "Projekto nariai nėra įtraukiami į jokius skaičiavimus, reikalinga tik "
-#~ "informacija apie juos."
-
-#~ msgid "All projects"
-#~ msgstr "Visi projektai"
-
-#~ msgid "Internal description of the project."
-#~ msgstr "Vidinis projekto aprašymas."
-
-#~ msgid "Parent Project"
-#~ msgstr "Tėvinis projektas"
-
-#~ msgid "My Current Tasks"
-#~ msgstr "Mano atviros užduotys"
-
-#~ msgid "New Project"
-#~ msgstr "Naujas projektas"
-
-#, python-format
-#~ msgid "Operation Done"
-#~ msgstr "Operacija atlikta"
-
-#~ msgid "Estimated time to close this task by the delegated user."
-#~ msgstr "Numatomas laikas, per kurį naudotojas turėtų baigti užduotį."
-
-#~ msgid "Task Details"
-#~ msgstr "Užduoties detalės"
-
-#~ msgid "Trigger Invoice"
-#~ msgstr "Sąskaita faktūra"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Netinkamas XML peržiūros architektūrai!"
-
-#~ msgid "New Task"
-#~ msgstr "Nauja užduotis"
-
-#~ msgid "After task is completed, Create its invoice."
-#~ msgstr "Kai užduotis baigiama, sukuriama sąskaita faktūra."
-
-#~ msgid "Computed as: Time Spent / Total Time."
-#~ msgstr "Skaičiuojama kaip: Praleistas laikas / Laikas iš viso."
-
-#~ msgid "Sum of total hours of all tasks related to this project."
-#~ msgstr "Visos valandos, sugaištos užduotims, susijusioms su projektu."
-
-#~ msgid "Review"
-#~ msgstr "Peržiūrėti"
-
-#~ msgid "Trigger invoices from sale order lines"
-#~ msgstr "Sukurtos sąskaitos faktūros iš pardavimo užsakymo eilučių."
-
-#~ msgid ""
-#~ "New state of your own task. Pending will be reopened automatically when the "
-#~ "delegated task is closed."
-#~ msgstr ""
-#~ "Nauja Jūsų užduoties būsena.  Laukianti būsena bus atidaroma automatiškai, "
-#~ "kai deleguota užduotis yra uždaroma."
-
-#~ msgid "Bug"
-#~ msgstr "Klaida"
-
-#~ msgid "Quotation"
-#~ msgstr "Juodraštis"
-
-#~ msgid ""
-#~ "Computed as: Total Time - Estimated Time. It gives the difference of the "
-#~ "time estimated by the project manager and the real time to close the task."
-#~ msgstr ""
-#~ "Apskaičiuotas kaip:  Visas Laikas - Apskaičiuotas Laikas. Taip "
-#~ "apskaičiuojamas laiko skirtumas tarp projekto vadybininko įvertinto ir "
-#~ "tikslaus laiko, reikalingo užduočiai atlikti."
-
-#, python-format
-#~ msgid "Error"
-#~ msgstr "Klaida"
-
-#~ msgid "Reactivate Project"
-#~ msgstr "Atnaujinti projektą"
-
-#~ msgid "Delegate this task to a user"
-#~ msgstr "Deleguoti šią užduotį naudotojui"
-
-#~ msgid "Sum of spent hours of all tasks related to this project."
-#~ msgstr ""
-#~ "Visos valandos, praleistos užduotims, susijusioms su projektu, atlikti."
-
-#~ msgid ""
-#~ "If you have [?] in the project name, it means there are no analytic account "
-#~ "linked to this project."
-#~ msgstr ""
-#~ "Jeigu Jūs turite [?] pavadinime, tai reiškia, kad nėra analitinės sąskaitos "
-#~ "susijusios su projektu."
-
-#~ msgid "Sum of planned hours of all tasks related to this project."
-#~ msgstr ""
-#~ "Suplanuotos valandos, kurios reikalingos atlikti visas užduotis, susijusias "
-#~ "su projektu."
-
-#~ msgid "Warn Partner"
-#~ msgstr "Įspėti partnerį"
-
-#~ msgid "Create a Task"
-#~ msgstr "Sukurti užduotį"
-
-#, python-format
-#~ msgid ""
-#~ "You can not delete a project with tasks. I suggest you to deactivate it."
-#~ msgstr ""
-#~ "Jūs negalite ištrinti projekto su užduotimis. Mes rekomenduojame ištrinti "
-#~ "jas."
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Objekto pavadinimas turi prasidėti x_ ir neturėti jokių specialių simbolių!"
-
-#~ msgid "Parent Task"
-#~ msgstr "Tėvinė užduotis"
-
-#~ msgid "Warn Manager"
-#~ msgstr "Įspėti vadybininką"
-
-#~ msgid "New title of your own task to validate the work done."
-#~ msgstr "Nauja Jūsų užduoties antraštė leidžia pabaigti užduoties darbą."
-
-#~ msgid "Task invoice"
-#~ msgstr "Užduoties sąskaita faktūra"
-
-#~ msgid "Projects Structure"
-#~ msgstr "Projektų struktūra"
-
-#~ msgid ""
-#~ "If you have [?] in the name, it means there are no analytic account linked "
-#~ "to project."
-#~ msgstr ""
-#~ "Jeigu Jūs turite [?] pavadinime, tai reiškia, kad nėra analitinės sąskaitos "
-#~ "susijusios su projektu."
-
-#~ msgid "Delegate Task"
-#~ msgstr "Deleguoti užduotį"
-
-#~ msgid ""
-#~ "If you check this field, the project manager will receive a request each "
-#~ "time a task is completed by his team."
-#~ msgstr ""
-#~ "Jeigu Jūs pažymėsite šį laukelį, projekto vadybininkas gaus užklausą, "
-#~ "kiekvieną kartą, kai jo komanda baigs užduotį."
-
-#~ msgid "New Feature"
-#~ msgstr "Naujas ypatybė"
-
-#~ msgid "Template of Projects"
-#~ msgstr "Projektų šablonai"
-
-#~ msgid ""
-#~ "Footer added at the beginning of the email for the warning message sent to "
-#~ "the customer when a task is closed."
-#~ msgstr ""
-#~ "Kai klientui siunčiamas pranešimas, kad užduotis yra baigta, laiško "
-#~ "pradžioje dedama poraštė."
-
-#~ msgid "Partner Info"
-#~ msgstr "Partnerio informacija"
-
-#~ msgid "Compute Remaining Hours"
-#~ msgstr "Skaičiuoti likusias valandas"
-
-#~ msgid "Expected End"
-#~ msgstr "Pabaigos data"
-
-#~ msgid "Mail Footer"
-#~ msgstr "Laiško poraštė"
-
-#~ msgid "Running projects"
-#~ msgstr "Vykdomi projektai"
-
-#, python-format
-#~ msgid "The task '%s' has been delegated to %s."
-#~ msgstr "Užduotis '%s' buvo priskirta %s."
-
-#~ msgid "The chosen company is not in the allowed companies for this user"
-#~ msgstr "Pasirinkta įmonė nėra galima šiam vartotojui"
-
-#~ msgid "Issues Tracker"
-#~ msgstr "Problemų stebėjimas"
-
-#~ msgid "Timesheets"
-#~ msgstr "Tabelis"
-
-#~ msgid "SCRUM"
-#~ msgstr "SCRUM"
-
-#~ msgid "Projects: Planned Vs Total hours"
-#~ msgstr "Projektai: Suplanuoti ir atliktos valandos"
-
-#~ msgid "Warn Message"
-#~ msgstr "Įspėjimo žinutė"
-
-#~ msgid "Change Stage"
-#~ msgstr "Pakeisti etapą"
-
-#~ msgid "Error! You cannot assign escalation to the same project!"
-#~ msgstr "Klaida! Jūs negalite išplėsti projekto prie to paties projekto"
-
-#, python-format
-#~ msgid "The task '%s' is done"
-#~ msgstr "Užduotis '%s' atlikta"
-
-#~ msgid "Members"
-#~ msgstr "Dalyviai"
-
-#~ msgid "Invoice Address"
-#~ msgstr "Sąskaitos faktūros adresas"
-
-#~ msgid ""
-#~ "Helps generate invoices based on time spent on tasks, if activated on the "
-#~ "project."
-#~ msgstr ""
-#~ "Jei aktyvuojamas projekte šis nustatymas, padeda sugeneruoti sąskaitas "
-#~ "faktūras pagal atliktų užduočių sugaištą darbo laiką."
-
-#~ msgid "My Open Tasks"
-#~ msgstr "Mano atviros užduotys"
-
-#~ msgid "Configure Your Project Management Application"
-#~ msgstr "Nustatykite projektų valdymo programą"
-
-#~ msgid "   Month   "
-#~ msgstr "   Mėnuo...   "
-
-#~ msgid "res.users"
-#~ msgstr "Vartotojai"
-
-#, python-format
-#~ msgid "Task '%s' closed"
-#~ msgstr "Užduotis '%s' uždaryta"
-
-#~ msgid "_Cancel"
-#~ msgstr "_Atšaukti"
-
-#~ msgid "Error! You can not create recursive analytic accounts."
-#~ msgstr "Klaida! Jūs negalite sukurti pasikartojančių analitinių sąskaitų."
-
-#, python-format
-#~ msgid " (copy)"
-#~ msgstr " .(kopijuoti)"
-
-#~ msgid "Previous"
-#~ msgstr "Ankstesnis"
-
-#~ msgid "Date Stop: %(date)s"
-#~ msgstr "Sustabdymo data: %(date)s"
-
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "Klaida! Jūs negalite sukurti rekursyvių įmonių."
-
-#~ msgid "Next"
-#~ msgstr "Sekantis"
-
-#~ msgid "Methodologies"
-#~ msgstr "Metodologija"
-
-#~ msgid "Email Address of Customer"
-#~ msgstr "Kliento el. pašto adresas"
-
-#~ msgid "Reevaluate"
-#~ msgstr "Iš naujo įvertinti"
-
-#, python-format
-#~ msgid "Send Email after close task"
-#~ msgstr "Siųsti el. paštą kai uždaroma užduotis"
-
-#~ msgid "Public Notes"
-#~ msgstr "Vieši užrašai"
-
-#, python-format
-#~ msgid "Task '%s' Closed"
-#~ msgstr "Užduotis '%s' uždaryta"
-
-#, python-format
-#~ msgid "The task '%s' is opened."
-#~ msgstr "Užduotis '%s' atidaryta."
-
-#~ msgid "    Month-1    "
-#~ msgstr "    ....Mėnuo-1....    "
-
-#, python-format
-#~ msgid "Please specify the email address of Project Manager."
-#~ msgstr "Prašome nurodyti projekto vadovo el. pašto adresą"
-
-#~ msgid "Image"
-#~ msgstr "Paveiksliukas"
-
-#~ msgid "Long Term Planning"
-#~ msgstr "Ilgalaikė prognozė"
-
-#~ msgid "  Year  "
-#~ msgstr "  ..Metai..  "
-
-#~ msgid "Billing"
-#~ msgstr "Mokėjimas"
-
-#~ msgid "Helps accountants manage analytic and crossover budgets."
-#~ msgstr ""
-#~ "Padeda buhalteriui valdyti analitines sąskaitas ir susikertančius biudžetus."
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Klaida! Jūs negalite sukurti rekursyvių susijusių dalyvių"
-
-#~ msgid "My Task's Deadlines"
-#~ msgstr "Mano užduočių galutiniai terminai"
-
-#~ msgid "Task Edition"
-#~ msgstr "Užduoties versija"
-
-#~ msgid "Configure"
-#~ msgstr "Nustatyti"
-
-#~ msgid "Project Dashboard"
-#~ msgstr "Projekto vitrina"
-
-#~ msgid "Customer Email"
-#~ msgstr "Kliento el. pašto adresas"
-
-#, python-format
-#~ msgid "The project '%s' has been closed."
-#~ msgstr "Projektas '%s' uždarytas."
-
-#~ msgid "Warn Manager by Email"
-#~ msgstr "Perspėti vadovą el. paštu"
-
-#~ msgid "Manager Email"
-#~ msgstr "Vadovo el. pašto adresas"
-
-#~ msgid "Dashboard"
-#~ msgstr "Vitrina"
-
-#~ msgid ""
-#~ "Error! The currency has to be the same as the currency of the selected "
-#~ "company"
-#~ msgstr ""
-#~ "Klaida! Valiuta turi būti tokia pati kaip ir pasirinktos įmonės valiuta"
-
-#~ msgid "Configuration Progress"
-#~ msgstr "Nustatymo progresas"
-
-#, python-format
-#~ msgid "Couldn't send mail because your email address is not configured!"
-#~ msgstr ""
-#~ "Negalima išsiųsti laiško, kadangi nenusistatėte savo el. pašto adreso!"
-
-#~ msgid "History"
-#~ msgstr "Istorija"
-
-#~ msgid "Getting Things Done"
-#~ msgstr "Atlikti užduotis"
-
-#~ msgid "Warn Customer by Email"
-#~ msgstr "Perspėti klientą el. paštu"
-
-#, python-format
-#~ msgid "Task '%s' set in progress"
-#~ msgstr "Užduotis '%s' nustatyta kaip vykdoma"
-
-#~ msgid "Close"
-#~ msgstr "Uždaryti"
-
-#~ msgid "Send Email"
-#~ msgstr "Siųsti el. paštą"
-
-#~ msgid "Current Activity"
-#~ msgstr "Dabartinė veikla"
-
-#~ msgid ""
-#~ "GTD is a methodology to efficiently organise yourself and your tasks. This "
-#~ "module fully integrates GTD principle with OpenERP's project management."
-#~ msgstr ""
-#~ "DTG yra metodologija, kuri efektyviai padeda organizuotis darbus. Šis "
-#~ "modulis pilnai integruojasi GTD principu su OpenERP projektų valdymu."
-
-#~ msgid "Current"
-#~ msgstr "Dabartinis"
-
-#~ msgid ""
-#~ "Enables long-term projects tracking, including multiple-phase projects and "
-#~ "resource allocation handling."
-#~ msgstr ""
-#~ "Įgalina ilgalaikių projektų sekimą, įskaitant kelių fazių projektus ir "
-#~ "resursų priskyrimo valdymą."
-
-#~ msgid "Bill Time on Tasks"
-#~ msgstr "Mokėjimo laikas užduotyse"
-
-#~ msgid "Total tasks"
-#~ msgstr "Viso užduočių"
-
-#~ msgid "Email Address of Project's Manager"
-#~ msgstr "Projekto vadovo el. pašto adresas"
-
-#~ msgid "Task By Days"
-#~ msgstr "Užduotys pagal dienas"
-
-#, python-format
-#~ msgid ""
-#~ "Couldn't send mail! Check the email ids and smtp configuration settings"
-#~ msgstr "Negalima išsiųsti el. pašto! Patikrinkite SMTP serverio nustatymus"
-
-#~ msgid "Warn Customer"
-#~ msgstr "Perspėti klientą"
-
-#~ msgid "Edit"
-#~ msgstr "Redaguoti"
-
-#~ msgid "Miscelleanous"
-#~ msgstr "Įvairūs"
-
-#, python-format
-#~ msgid "Task '%s' cancelled"
-#~ msgstr "Užduotis '%s' atšaukta"
-
-#, python-format
-#~ msgid "The task '%s' is cancelled."
-#~ msgstr "Užduotis '%s' atšaukta."
-
-#~ msgid "_Send"
-#~ msgstr "_Siūsti"
-
-#~ msgid "title"
-#~ msgstr "pavadinimas"
-
-#~ msgid "Automatically synchronizes project tasks and crm cases."
-#~ msgstr "Automatiškai sinchronizuoti projektų užduotis su CRM atvejais"
-
-#~ msgid "Budgets"
-#~ msgstr "Biudžetai"

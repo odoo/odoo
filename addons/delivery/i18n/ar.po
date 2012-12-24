@@ -1,20 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* delivery
+# Arabic translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-02-08 02:51+0000\n"
-"Last-Translator: kifcaliph <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:10+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:11+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -46,6 +47,12 @@ msgstr "الوزن الصافي"
 #: model:ir.model,name:delivery.model_delivery_grid_line
 msgid "Delivery Grid Line"
 msgstr "خط شبكة التسليم"
+
+#. module: delivery
+#: field:stock.move,weight_uom_id:0
+#: field:stock.picking,weight_uom_id:0
+msgid "Unit of Measure"
+msgstr ""
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -80,26 +87,6 @@ msgstr ""
 #: model:ir.actions.report.xml,name:delivery.report_shipping
 msgid "Delivery order"
 msgstr "امر تسليم"
-
-#. module: delivery
-#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to define a new deliver method. \n"
-"              </p><p>\n"
-"                Each carrier (e.g. UPS) can have several delivery methods "
-"(e.g.\n"
-"                UPS Express, UPS Standard) with a set of pricing rules "
-"attached\n"
-"                to each method.\n"
-"              </p><p>\n"
-"                These methods allows to automaticaly compute the delivery "
-"price\n"
-"                according to your settings; on the sale order (based on the\n"
-"                quotation) or the invoice (based on the delivery orders).\n"
-"              </p>\n"
-"            "
-msgstr ""
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:221
@@ -214,7 +201,7 @@ msgid "Grid definition"
 msgstr "تعريف الشبكة"
 
 #. module: delivery
-#: code:addons/delivery/stock.py:89
+#: code:addons/delivery/stock.py:90
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -339,7 +326,9 @@ msgstr "عدد العبوات"
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 #: report:sale.shipping:0
+#: view:stock.move:0
 #: field:stock.move,weight:0
+#: view:stock.picking:0
 #: field:stock.picking,weight:0
 #: field:stock.picking.in,weight:0
 #: field:stock.picking.out,weight:0
@@ -360,7 +349,7 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/sale.py:55
+#: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid available !"
 msgstr "لا يوجد شبكة متاحة !"
@@ -371,7 +360,7 @@ msgid ">="
 msgstr ">="
 
 #. module: delivery
-#: code:addons/delivery/sale.py:58
+#: code:addons/delivery/sale.py:57
 #, python-format
 msgid "Order not in draft state !"
 msgstr "الامر غير موجود في حالة السحب !"
@@ -419,6 +408,27 @@ msgid "This delivery method will be used when invoicing from picking."
 msgstr "سيستخدم اسلوب التسليم عندما تكون الفاتورة بالإختيار."
 
 #. module: delivery
+#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to define a new deliver method. \n"
+"              </p><p>\n"
+"                Each carrier (e.g. UPS) can have several delivery methods "
+"(e.g.\n"
+"                UPS Express, UPS Standard) with a set of pricing rules "
+"attached\n"
+"                to each method.\n"
+"              </p><p>\n"
+"                These methods allows to automaticaly compute the delivery "
+"price\n"
+"                according to your settings; on the sales order (based on "
+"the\n"
+"                quotation) or the invoice (based on the delivery orders).\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: delivery
 #: field:delivery.grid.line,max_value:0
 msgid "Maximum Value"
 msgstr "القيمة القصوى"
@@ -456,6 +466,11 @@ msgid "<="
 msgstr "<="
 
 #. module: delivery
+#: help:stock.picking,weight_uom_id:0
+msgid "Unit of measurement for Weight"
+msgstr ""
+
+#. module: delivery
 #: report:sale.shipping:0
 msgid "Description"
 msgstr "وصف"
@@ -482,7 +497,7 @@ msgid "Price"
 msgstr "السعر"
 
 #. module: delivery
-#: code:addons/delivery/sale.py:55
+#: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid matching for this carrier !"
 msgstr "لا توجد شبكة متوافقة مع هذا الناقل !"
@@ -499,7 +514,7 @@ msgid "Weight * Volume"
 msgstr "الوزن * المقدار"
 
 #. module: delivery
-#: code:addons/delivery/stock.py:90
+#: code:addons/delivery/stock.py:91
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
 msgstr "الناقل %s (id: %d( لا يوجد لديها شبكة تسليم!"
@@ -531,12 +546,7 @@ msgid "Delivery Methods"
 msgstr ""
 
 #. module: delivery
-#: field:sale.order,id:0
-msgid "ID"
-msgstr "معرّف"
-
-#. module: delivery
-#: code:addons/delivery/sale.py:58
+#: code:addons/delivery/sale.py:57
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr "يُسجل حالة الامر كمسودة ليضاف الى خطوط التسليم."
@@ -568,120 +578,12 @@ msgid "States"
 msgstr "حالات"
 
 #. module: delivery
+#: help:stock.move,weight_uom_id:0
+msgid ""
+"Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
+msgstr ""
+
+#. module: delivery
 #: field:delivery.grid.line,price_type:0
 msgid "Price Type"
 msgstr "نوع السعر"
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "لا بدّ أن يكون مرجع الأمر فريداً"
-
-#~ msgid "Delivery Order"
-#~ msgstr "أمر التسليم"
-
-#, python-format
-#~ msgid "No price available !"
-#~ msgstr "السعر غير متاح!"
-
-#, python-format
-#~ msgid "Warning"
-#~ msgstr "تحذير"
-
-#~ msgid "_Cancel"
-#~ msgstr "ال_غاء"
-
-#~ msgid "Weights"
-#~ msgstr "الأوزان"
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "خطأ! لا يمكنك إنشاء أعضاء ذوي ارتباطات متداخلة."
-
-#~ msgid "Delivery Costs"
-#~ msgstr "تكاليف التسليم"
-
-#~ msgid "Sales & Purchases"
-#~ msgstr "المبيعات و المشتريات"
-
-#~ msgid "You must assign a production lot for this product"
-#~ msgstr "يجب تعيين دفعة إنتاج لهذا المنتج"
-
-#~ msgid "="
-#~ msgstr "="
-
-#~ msgid "_Apply"
-#~ msgstr "تطبيق"
-
-#~ msgid "Deliveries Properties"
-#~ msgstr "خصائص التسليمات"
-
-#, python-format
-#~ msgid "No line matched this order in the choosed delivery grids !"
-#~ msgstr "لا يوجد خط متوافق مع هذا الامر في شبكات التسليم المختارة !"
-
-#~ msgid "Make Delievery"
-#~ msgstr "قم بالتسلم"
-
-#~ msgid "Carrier Partner"
-#~ msgstr "الشريك الناقل"
-
-#~ msgid "Carriers and deliveries"
-#~ msgstr "الناقلات و التسليمات"
-
-#~ msgid "You try to assign a lot which is not from the same product"
-#~ msgstr "انت تحاول تخصيص الكثير من ما هو دون المنتج نفسه"
-
-#~ msgid "Create Deliveries"
-#~ msgstr "انشيء عمليات التسليم"
-
-#~ msgid ""
-#~ "Allows you to add delivery methods in sale orders and picking.\n"
-#~ "     You can define your own carrier and delivery grids for prices.\n"
-#~ "     When creating invoices from picking, OpenERP is able to add and compute "
-#~ "the shipping line.\n"
-#~ "\n"
-#~ "     "
-#~ msgstr ""
-#~ "يسمح لك بإضافة طرق التسليم في أوامر البيع و الاختيار.\n"
-#~ "يمكنك تحديد الناقل الخاص وشبكات تسليم للأسعار.\n"
-#~ "عند إنشاء الفواتير من الاختيار، OpenERP قادر على إضافة وحساب خط الشحن.\n"
-#~ "\n"
-#~ "     "
-
-#~ msgid ""
-#~ "Create and manage the delivery methods you need for your sales activities. "
-#~ "Each delivery method can be assigned to a price list which computes the "
-#~ "price of the delivery according to the products sold or delivered."
-#~ msgstr ""
-#~ "قم بإنشاء وإدارة وسائل التسليم التي تحتاجها لأنشطة المبيعات الخاصة بك. يمكن "
-#~ "تعيين كل طريقة تسليم إلى قائمة السعر الذي يحسب على سعر التسليم وفقا للمنتجات "
-#~ "المباعة او المسلمة."
-
-#~ msgid ""
-#~ "The delivery price list allows you to compute the cost and sales price of "
-#~ "the delivery according to the weight of the products and other criteria. You "
-#~ "can define several price lists for one delivery method, per country or a "
-#~ "zone in a specific country defined by a postal code range."
-#~ msgstr ""
-#~ "تسمح لك قائمة أسعار التسليم  لحساب التكلفة وسعر البيع للتسليم وفقا لوزن "
-#~ "المنتجات وغيرها من المعايير. يمكنك تحديد عدة قوائم للأسعار لطريقة تسليم "
-#~ "واحدة، في كل بلد أو منطقة في بلد معين محدد من قبل مجموعة اكواد بريدية."
-
-#~ msgid "Picking Policy"
-#~ msgstr "سياسة الالتقاط"
-
-#~ msgid "Reference must be unique per Company!"
-#~ msgstr "المرجع يجب أن يكون فريداً لكل شركة علي حدا!"
-
-#~ msgid "You can not move products from or to a location of the type view."
-#~ msgstr "لا يمكنك نقل المنتجات أو المكان من المستعرض."
-
-#~ msgid "Order Reference must be unique per Company!"
-#~ msgstr "مرجع الأمر يجب أن يكون فريداً لكل شركة علي حدا!"
-
-#~ msgid "Cancel"
-#~ msgstr "إلغاء"
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "خطأ ! لا يمكنك إنشاء أعضاء مرتبطين و متداخلين."
-
-#~ msgid "Apply"
-#~ msgstr "تطبيق"

@@ -1,21 +1,21 @@
 # Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-11-27 03:49+0000\n"
-"Last-Translator: ccdos <ccdos@163.com>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-28 04:41+0000\n"
-"X-Generator: Launchpad (build 16309)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:13+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: fetchmail
 #: selection:fetchmail.server,state:0
@@ -28,9 +28,9 @@ msgid "Server Name"
 msgstr "服务器名称"
 
 #. module: fetchmail
-#: field:fetchmail.server,script:0
-msgid "Script"
-msgstr "脚本"
+#: view:fetchmail.server:0
+msgid "POP"
+msgstr "POP"
 
 #. module: fetchmail
 #: help:fetchmail.server,priority:0
@@ -63,9 +63,9 @@ msgid ""
 msgstr "是不是把每个邮件的内容复制并附加到每次处理内容上。这一般会占用双倍的消息数据库。"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
-msgid "POP"
-msgstr "POP"
+#: view:base.config.settings:0
+msgid "Configure the incoming email gateway"
+msgstr "配置收取邮件网关"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
@@ -150,6 +150,11 @@ msgstr "高级选项"
 #: field:fetchmail.server,configuration:0
 msgid "Configuration"
 msgstr "配置"
+
+#. module: fetchmail
+#: field:fetchmail.server,script:0
+msgid "Script"
+msgstr "脚本"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
@@ -317,134 +322,3 @@ msgstr "POP 服务器"
 #: field:fetchmail.server,port:0
 msgid "Port"
 msgstr "端口"
-
-#~ msgid "User Name"
-#~ msgstr "用户名"
-
-#~ msgid "Confirm"
-#~ msgstr "确认"
-
-#~ msgid "Description"
-#~ msgstr "说明"
-
-#~ msgid "User"
-#~ msgstr "用户"
-
-#~ msgid "Search Email Servers"
-#~ msgstr "搜索电子邮件服务器"
-
-#~ msgid "Set to Draft"
-#~ msgstr "设为草稿"
-
-#~ msgid "Emails"
-#~ msgstr "电子邮件"
-
-#~ msgid "Auto Reply?"
-#~ msgstr "自动回复？"
-
-#~ msgid "SSL ?"
-#~ msgstr "SSL 安全连接？"
-
-#~ msgid "Server"
-#~ msgstr "服务器"
-
-#~ msgid "Model"
-#~ msgstr "模型"
-
-#~ msgid "Process Parameter"
-#~ msgstr "进程参数"
-
-#~ msgid "Date"
-#~ msgstr "日期"
-
-#~ msgid "Type"
-#~ msgstr "类型"
-
-#~ msgid "Add Attachments ?"
-#~ msgstr "添加附件？"
-
-#~ msgid "Group By..."
-#~ msgstr "分组..."
-
-#~ msgid "Email Servers"
-#~ msgstr "电子邮件服务器"
-
-#~ msgid "Mail Server"
-#~ msgstr "邮件服务器"
-
-#~ msgid "Email Server Action"
-#~ msgstr "电子邮件服务器动作"
-
-#~ msgid ""
-#~ "An Email Server Action. It will be run whenever an e-mail is fetched from "
-#~ "server."
-#~ msgstr "电子邮件服务动作。它运行时从服务器取出电子邮件。"
-
-#~ msgid "Priority between 0 to 10, select define the order of Processing"
-#~ msgstr "优先级从0到10，选择它的优先级"
-
-#~ msgid "Fetch Emails"
-#~ msgstr "取邮件"
-
-#~ msgid "Fetchmail Server"
-#~ msgstr "Fetchmail服务器"
-
-#~ msgid ""
-#~ "OpenObject Model. Generates a record of this model.\n"
-#~ "Select Object with message_new attrbutes."
-#~ msgstr ""
-#~ "OpenObject模型。这模型产生一个记录。\n"
-#~ "选择对象与新属性消息。"
-
-#~ msgid "Mailgateway Message"
-#~ msgstr "邮件网关消息"
-
-#~ msgid ""
-#~ "Fetchmail: \n"
-#~ "    * Fetch email from Pop / IMAP server\n"
-#~ "    * Support SSL\n"
-#~ "    * Integrated with all Modules\n"
-#~ "    * Automatic Email Receive\n"
-#~ "    * Email based Records (Add, Update)\n"
-#~ "    "
-#~ msgstr ""
-#~ "Fetchmail（取电子邮件）：\n"
-#~ "     从Pop/IMAP服务器取电子邮件。\n"
-#~ "    支持SSL\n"
-#~ "    整合所有模块\n"
-#~ "    自动接收邮件\n"
-#~ "    邮件根据记录（新增/更新）\n"
-#~ "    "
-
-#~ msgid "Fetches mail with attachments if true."
-#~ msgstr "如果为真取电子邮件与附件"
-
-#~ msgid ""
-#~ "Warning! Record for selected Model can not be created\n"
-#~ "Please choose valid Model"
-#~ msgstr ""
-#~ "警告！选择模型不能创建。\n"
-#~ "请选择有效的模板。"
-
-#~ msgid "Waiting for Verification"
-#~ msgstr "等待审批"
-
-#~ msgid "Warning! Can't have duplicate server configuration!"
-#~ msgstr "警告！不能创建设置重复的服务器！"
-
-#~ msgid "Email Message"
-#~ msgstr "邮件内容"
-
-#, python-format
-#~ msgid ""
-#~ "Here is what we got instead:\n"
-#~ " %s"
-#~ msgstr ""
-#~ "这是我们得到的结果：\n"
-#~ "%s"
-
-#~ msgid "Advanced options"
-#~ msgstr "高级选项"
-
-#~ msgid "State"
-#~ msgstr "省市"

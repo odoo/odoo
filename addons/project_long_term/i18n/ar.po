@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:04+0000\n"
-"PO-Revision-Date: 2012-01-12 21:12+0000\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:51+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:30+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: project_long_term
 #: help:project.phase,constraint_date_end:0
@@ -34,6 +34,14 @@ msgstr "قيد التقدم"
 #: view:project.project:0
 msgid "Phases"
 msgstr "المراحل"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
+#: model:ir.ui.menu,name:project_long_term.menu_resouce_allocation
+#: view:project.phase:0
+#: view:project.user.allocation:0
+msgid "Team Planning"
+msgstr ""
 
 #. module: project_long_term
 #: field:project.phase,user_ids:0
@@ -141,7 +149,7 @@ msgid "In Progress Phases"
 msgstr "مراحل قيد التنفيذ"
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:141
+#: code:addons/project_long_term/project_long_term.py:140
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -151,12 +159,6 @@ msgstr ""
 #, python-format
 msgid "Please specify a project to schedule."
 msgstr "يرجى تحديد مشروع لجدولته."
-
-#. module: project_long_term
-#: view:project.compute.phases:0
-#: view:project.compute.tasks:0
-msgid "or"
-msgstr ""
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -195,11 +197,6 @@ msgstr "مسلسل"
 #: help:account.analytic.account,use_phases:0
 msgid "Check this field if you plan to use phase-based scheduling"
 msgstr ""
-
-#. module: project_long_term
-#: help:project.user.allocation,date_start:0
-msgid "Starting Date"
-msgstr "تاريخ البدء"
 
 #. module: project_long_term
 #: help:project.phase,state:0
@@ -249,10 +246,9 @@ msgid "Pending Phases"
 msgstr ""
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:126
-#, python-format
-msgid "Day"
-msgstr "يوم"
+#: help:project.user.allocation,date_start:0
+msgid "Starting Date"
+msgstr "تاريخ البدء"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -501,169 +497,7 @@ msgid "Name"
 msgstr "الاسم"
 
 #. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
-#: model:ir.ui.menu,name:project_long_term.menu_resouce_allocation
-#: view:project.phase:0
-#: view:project.user.allocation:0
-msgid "Planning of Users"
-msgstr "التخطيط للمستخدمين"
-
-#~ msgid "Schedule"
-#~ msgstr "مجدول"
-
-#~ msgid "_Cancel"
-#~ msgstr "ال_غاء"
-
-#, python-format
-#~ msgid " (copy)"
-#~ msgstr " (نسخ)"
-
-#~ msgid "Availability"
-#~ msgstr "متاح"
-
-#~ msgid "State"
-#~ msgstr "الحالة"
-
-#~ msgid "_Ok"
-#~ msgstr "_موافق"
-
-#~ msgid "Dates"
-#~ msgstr "تواريخ"
-
-#~ msgid "Timetable working hours to adjust the gantt diagram report"
-#~ msgstr "الجدول الزمني لساعات العمل لتعديل تقرير الرسم البياني Gantt"
-
-#~ msgid "unknown"
-#~ msgstr "غير معروف"
-
-#~ msgid "Current"
-#~ msgstr "الحالي"
-
-#~ msgid "Responsible"
-#~ msgstr "مسؤول"
-
-#~ msgid "Resource"
-#~ msgstr "مورد"
-
-#~ msgid "Message"
-#~ msgstr "رسالة"
-
-#~ msgid "Error ! You cannot create recursive tasks."
-#~ msgstr "خطأ ! لا يمكنك انشاء مهام رجعية."
-
-#~ msgid "Error! project start-date must be lower then project end-date."
-#~ msgstr "خطأ! يجب ان يكون تاريخ بدء المشروع اقل من تاريخ انتهائه."
-
-#~ msgid "Error! You cannot assign escalation to the same project!"
-#~ msgstr "خطأ! لا يمكنك تعيين التصعيد لنفس المشروع!"
-
-#~ msgid "Error ! Task end-date must be greater then task start-date"
-#~ msgstr "خطأ! يجب ان يكون تاريخ انتهاء المهمة اكبر من تاريخ البداية"
-
-#~ msgid "Resource Allocations"
-#~ msgstr "تخصيصات الموارد"
-
-#~ msgid "Displaying settings"
-#~ msgstr "عرض الإعدادات"
-
-#~ msgid "Resources Allocation"
-#~ msgstr "تخصيص الموارد"
-
-#~ msgid "Long Term Project Management"
-#~ msgstr "إ>ارة المشاريع الطويلة الاجل"
-
-#~ msgid "Compute Scheduling of Phases"
-#~ msgstr "حساب الجدول الزمني للمراحل"
-
-#~ msgid "Planning"
-#~ msgstr "التخطيط"
-
-#~ msgid "UoM (Unit of Measure) is the unit of measurement for Duration"
-#~ msgstr "تكون وحدة القياس هي وحدة لقياس الفترة"
-
-#~ msgid "Compute Task Scheduling"
-#~ msgstr "حساب الجدول الزمني للمهمة"
-
-#~ msgid "Compute Scheduling of phases for all or specified project"
-#~ msgstr "حساب الجدول الزمني للمراحل لكل المشاريع او المحدد منها"
-
-#~ msgid "Compute Phase Scheduling"
-#~ msgstr "حساب الجدول الزمني المرحلة"
-
-#~ msgid "Duration UoM"
-#~ msgstr "وحدة قياس الفترة"
-
-#~ msgid ""
-#~ "To schedule phases of all or a specified project. It then open a gantt "
-#~ "view.\n"
-#~ "\t           "
-#~ msgstr ""
-#~ "لكل مراحل الجول الزمني لكل المشروح او المحدد منها. وتفتح بعد ذلك عرض جانت.\n"
-#~ "\t           "
-
-#~ msgid ""
-#~ "Availability of this resource for this project phase in percentage (=50%)"
-#~ msgstr "توافر هذه الموارد لمرحلة المشروع هذا بالنسبة المئوية (=50%)"
-
-#~ msgid "Schedule and Display info"
-#~ msgstr "الجدول الزمني و معلومات العرض"
-
-#~ msgid "Project Resources"
-#~ msgstr "موارد المشروع"
-
-#~ msgid "Compute Scheduling of Task"
-#~ msgstr "حساب الجدول الزمني للمهمة"
-
-#~ msgid "Project Resource Allocation"
-#~ msgstr "تخصيص موارد المشروع"
-
-#~ msgid "project.schedule.tasks"
-#~ msgstr "المشروع.الجدول.المهام"
-
-#~ msgid "Resource Allocation"
-#~ msgstr "تخصيص الموارد"
-
-#~ msgid "Task Detail"
-#~ msgstr "تفصيل المهمة"
-
-#~ msgid "Compute Scheduling of Task for specified project."
-#~ msgstr "حساب الجدول الزمني للمهمة للمشروع المحدد."
-
-#, python-format
-#~ msgid "Please Specify Project to be schedule"
-#~ msgstr "الرجاء تحديد المشروع لعمل الجدول الزمني له"
-
-#~ msgid "Task Scheduling completed successfully."
-#~ msgstr "اكتمل الجدول الزمني للمهمة بنجاح."
-
-#~ msgid "Compute All Projects"
-#~ msgstr "حساب كل المشاريع"
-
-#~ msgid ""
-#~ "A project can be split into the different phases. For each phase, you can "
-#~ "define your resources allocation, describe different tasks and link your "
-#~ "phase to previous and next phases, add date constraints for the automated "
-#~ "scheduling. Use the long term planning in order to planify your available "
-#~ "human resources, convert your phases into a series of tasks when you start "
-#~ "working on the project."
-#~ msgstr ""
-#~ "ويمكن تقسيم المشروع الى مراحل مختلفة. لكل مرحلة، يمكنك تعريف الخاص تخصيص "
-#~ "الموارد، ووصف مهام مختلفة وربط مرحلة لمراحل السابقة والتالية، إضافة قيود "
-#~ "موعد لجدولة الآلي. استخدام التخطيط على المدى الطويل من أجل planify مواردك "
-#~ "البشرية المتاحة، وتحويل المراحل الخاص بك إلى سلسلة من المهام عند بدء العمل "
-#~ "في المشروع."
-
-#~ msgid ""
-#~ "If the phase is created the state 'Draft'.\n"
-#~ " If the phase is started, the state becomes 'In Progress'.\n"
-#~ " If review is needed the phase is in 'Pending' state.                        "
-#~ "          \n"
-#~ " If the phase is over, the states is set to 'Done'."
-#~ msgstr ""
-#~ "اذا تم انشاء المرحلة الحالة تكون ‘مشروع‘.\n"
-#~ "اذا بدأت المرحلة, تصبح الحالة ‘في التقدم‘.\n"
-#~ "اذا تم الاحتياج الى المراجعة المرحلة تكون في حالة ‘معلقة‘.\n"
-#~ "اذا زادت المرحلة عن الحد, ستعيين الحالات الى ‘تم‘."
-
-#~ msgid "Resource Detail"
-#~ msgstr "تفاصيل المصدر"
+#: view:project.compute.phases:0
+#: view:project.compute.tasks:0
+msgid "or"
+msgstr ""

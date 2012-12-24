@@ -1,20 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* mrp
+# Dutch translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-09 19:07+0000\n"
-"Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-10 04:37+0000\n"
-"X-Generator: Launchpad (build 16341)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:22+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -42,12 +43,12 @@ msgstr "Locatie waar het systeem zoekt voor componeten"
 #. module: mrp
 #: field:mrp.production,workcenter_lines:0
 msgid "Work Centers Utilisation"
-msgstr "Werkplek gebruik"
+msgstr "Productiestap gebruik"
 
 #. module: mrp
 #: view:mrp.routing.workcenter:0
 msgid "Routing Work Centers"
-msgstr "Werkplek routering"
+msgstr "Productie route"
 
 #. module: mrp
 #: field:mrp.production.workcenter.line,cycle:0
@@ -110,8 +111,8 @@ msgid ""
 "Number of iterations this work center has to do in the specified operation "
 "of the routing."
 msgstr ""
-"Aantal iteraties die deze werkplek heeft te doen in de specifieke verwerking "
-"van de productiestap."
+"Aantal herhalingen die deze productiestap heeft te doen in de specifieke "
+"verwerking van de productie route."
 
 #. module: mrp
 #: view:product.product:0
@@ -161,13 +162,6 @@ msgstr ""
 "leverancier."
 
 #. module: mrp
-#: help:mrp.config.settings,group_mrp_properties:0
-msgid ""
-"The selection of the right Bill of Material to use will depend on the  "
-"properties specified on the sale order and the Bill of Material."
-msgstr ""
-
-#. module: mrp
 #: view:mrp.production:0
 msgid "Products to Finish"
 msgstr "Producten te voltooien"
@@ -207,12 +201,17 @@ msgid "For purchased material"
 msgstr "Voor ingekocht materiaal"
 
 #. module: mrp
+#: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
+msgid "Order Planning"
+msgstr ""
+
+#. module: mrp
 #: field:mrp.config.settings,module_mrp_operations:0
 msgid "Allow detailed planning of work order"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:648
+#: code:addons/mrp/mrp.py:633
 #, python-format
 msgid "Cannot cancel manufacturing order!"
 msgstr "Het is niet mogelijk de productieorder te annuleren!"
@@ -241,7 +240,7 @@ msgstr "Capaciteitsinformatie"
 #. module: mrp
 #: field:mrp.routing,workcenter_lines:0
 msgid "Work Centers"
-msgstr "Werkplekken"
+msgstr "Productiestappen"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_routing_action
@@ -277,6 +276,21 @@ msgstr "Stamgegevens"
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_byproduct:0
 msgid "Produce several products from one manufacturing order"
+msgstr ""
+
+#. module: mrp
+#: help:mrp.config.settings,group_mrp_properties:0
+msgid ""
+"The selection of the right Bill of Material to use will depend on the "
+"properties specified on the sales order and the Bill of Material."
+msgstr ""
+
+#. module: mrp
+#: view:mrp.bom:0
+msgid ""
+"When processing a sales order for this product, the delivery order\n"
+"                                will contain the raw materials, instead of "
+"the finished product."
 msgstr ""
 
 #. module: mrp
@@ -329,7 +343,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing_workcenter
 msgid "Work Center Usage"
-msgstr "Werkplek gebruik"
+msgstr "Productiestap gebruik"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_procurestockableproduct0
@@ -380,7 +394,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.workcenter,product_id:0
 msgid "Work Center Product"
-msgstr "Werkplek product"
+msgstr "Productiestap product"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -447,6 +461,27 @@ msgid "Weekly Stock Value Variation"
 msgstr "Wekelijkse voorraadwaarde variatie"
 
 #. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_property_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new property.\n"
+"              </p><p>\n"
+"                The Properties in OpenERP are used to select the right bill "
+"of\n"
+"                materials for manufacturing a product when you have "
+"different\n"
+"                ways of building the same product.  You can assign several\n"
+"                properties to each bill of materials.  When a salesperson\n"
+"                creates a sales order, they can relate it to several "
+"properties\n"
+"                and OpenERP will automatically select the BoM to use "
+"according\n"
+"                the needs.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: mrp
 #: view:mrp.production:0
 #: field:mrp.production,date_planned:0
 #: report:mrp.production.order:0
@@ -454,7 +489,7 @@ msgid "Scheduled Date"
 msgstr "Geplande datum"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:113
+#: code:addons/mrp/procurement.py:124
 #, python-format
 msgid "Manufacturing Order <em>%s</em> created."
 msgstr "Productieorder <em>%s</em> aangemaakt."
@@ -464,14 +499,6 @@ msgstr "Productieorder <em>%s</em> aangemaakt."
 #: report:mrp.production.order:0
 msgid "Bill Of Material"
 msgstr "Materiaallijst"
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:1068
-#, python-format
-msgid ""
-"Manufacturing order has been <b>confirmed</b> and is <b>scheduled</b> for "
-"the <em>%s</em>."
-msgstr ""
 
 #. module: mrp
 #: help:mrp.routing,location_id:0
@@ -495,12 +522,6 @@ msgid "Bill of Materials Structure"
 msgstr "Materiaallijststructuur"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:1043
-#, python-format
-msgid "Manufacturing order has been <b>canceled</b>."
-msgstr ""
-
-#. module: mrp
 #: model:process.node,note:mrp.process_node_serviceproduct0
 msgid "Product type is service"
 msgstr "Productsoort is service"
@@ -508,7 +529,7 @@ msgstr "Productsoort is service"
 #. module: mrp
 #: help:mrp.workcenter,costs_cycle:0
 msgid "Specify Cost of Work Center per cycle."
-msgstr "Specificeer de kosten van de werkplek per cyclus."
+msgstr "Specificeer de kosten van de productiestap per cyclus."
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_bom0
@@ -541,8 +562,8 @@ msgid ""
 "The Bill of Material is linked to a routing, i.e. the succession of work "
 "centers."
 msgstr ""
-"De materiaallijst is gekoppeld aan een routing, dat wil zeggen de opvolging "
-"van werkplekken."
+"De materiaallijst is gekoppeld aan een productie route, dat wil zeggen de "
+"opeenvolgende productiestappen."
 
 #. module: mrp
 #: view:mrp.production:0
@@ -586,8 +607,8 @@ msgstr "Zoek productie"
 msgid ""
 "Gives the sequence order when displaying a list of routing Work Centers."
 msgstr ""
-"Geeft de volgorde weer bij het weergeven van een lijst van werkplekken in "
-"een productiestap."
+"Geeft de volgorde weer bij het weergeven van een lijst van productiestappen "
+"in een productie route"
 
 #. module: mrp
 #: field:mrp.bom,child_complete_ids:0
@@ -626,7 +647,7 @@ msgstr "Materiaallijstregels"
 #. module: mrp
 #: field:mrp.workcenter,time_start:0
 msgid "Time before prod."
-msgstr "Tijd vóór prod."
+msgstr "Tijd vóór productie (uur)"
 
 #. module: mrp
 #: help:mrp.routing,active:0
@@ -636,12 +657,6 @@ msgid ""
 msgstr ""
 "Indien het actief veld is uitgevinkt heeft u de mogelijkheid om de routing "
 "te verbergen, zonder deze te verwijderen."
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:386
-#, python-format
-msgid "Bill of Material has been <b>created</b> for <em>%s</em> product."
-msgstr ""
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_billofmaterialrouting0
@@ -660,10 +675,10 @@ msgstr "Verbruikte producten"
 #: model:ir.model,name:mrp.model_mrp_workcenter_load
 #: model:ir.model,name:mrp.model_report_workcenter_load
 msgid "Work Center Load"
-msgstr "Werkplek belasting"
+msgstr "Productiestap belasting"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:44
+#: code:addons/mrp/procurement.py:50
 #, python-format
 msgid "No BoM defined for this product !"
 msgstr "Geen materiaallijst opgegeven voor dit product !"
@@ -698,10 +713,10 @@ msgid ""
 "operations and to plan future loads on work centers based on production "
 "plannification."
 msgstr ""
-"De lijst van de bewerkingen (lijst van de werkplekken) om het eindproduct te "
-"vervaardigen. De routing wordt vooral gebruikt om de kosten van werkplekken "
-"te berekenen tijdens bewerkingen en de toekomstige belastingen op de "
-"werkplekken door middel van planningssystemen."
+"De lijst van de bewerkingen (lijst van de productiestappen) om het "
+"eindproduct te vervaardigen. De productie route wordt vooral gebruikt om de "
+"kosten van werkplekken te berekenen tijdens bewerkingen en de toekomstige "
+"belastingen op de productiestappen door middel van planningssystemen."
 
 #. module: mrp
 #: help:mrp.workcenter,time_cycle:0
@@ -740,12 +755,6 @@ msgid "Master Bill of Materials"
 msgstr "Hoofd materialenlijst"
 
 #. module: mrp
-#: view:mrp.production:0
-#: report:mrp.production.order:0
-msgid "Work Orders"
-msgstr "Werkorders"
-
-#. module: mrp
 #: help:mrp.config.settings,module_product_manufacturer:0
 msgid ""
 "This allows you to define the following for a product:\n"
@@ -767,30 +776,6 @@ msgstr "Afdrukken"
 #: view:mrp.workcenter:0
 msgid "Type"
 msgstr "Soort"
-
-#. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_property_group_action
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a group of properties.\n"
-"              </p><p>\n"
-"                Define specific property groups that can be assigned to "
-"your\n"
-"                bill of materials and sales orders. Properties allows "
-"OpenERP\n"
-"                to automatically select the right bill of materials "
-"according\n"
-"                to properties selected in the sale order by salesperson.\n"
-"              </p><p>\n"
-"                For instance, in the property group \"Warranty\", you an "
-"have\n"
-"                two properties: 1 year warranty, 3 years warranty. "
-"Depending\n"
-"                on the propoerties selected in the sale order, OpenERP will\n"
-"                schedule a production using the matching bill of materials.\n"
-"              </p>\n"
-"            "
-msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
@@ -836,8 +821,8 @@ msgstr ""
 "Een factor van 0,9 betekend een verlies van 10% in het productieproces."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:756
-#: code:addons/mrp/mrp.py:784
+#: code:addons/mrp/mrp.py:737
+#: code:addons/mrp/mrp.py:765
 #, python-format
 msgid "Warning!"
 msgstr "Waarschuwing!"
@@ -904,7 +889,7 @@ msgid "Manufacturing Orders which are waiting for raw materials."
 msgstr "Productieorders welke wachten op grondstoffen."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:284
+#: code:addons/mrp/mrp.py:285
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -915,6 +900,7 @@ msgstr ""
 #: model:ir.model,name:mrp.model_mrp_production
 #: view:mrp.config.settings:0
 #: view:mrp.production:0
+#: field:mrp.production.workcenter.line,production_id:0
 #: field:procurement.order,production_id:0
 msgid "Manufacturing Order"
 msgstr "Productieorder"
@@ -980,7 +966,7 @@ msgid "BoM Type"
 msgstr "Materiaallijst soort"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:46
+#: code:addons/mrp/procurement.py:52
 #, python-format
 msgid ""
 "Procurement '%s' has an exception: 'No BoM defined for this product !'"
@@ -1004,7 +990,7 @@ msgid "Companies"
 msgstr "Bedrijven"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:649
+#: code:addons/mrp/mrp.py:634
 #, python-format
 msgid ""
 "You must first cancel related internal picking attached to this "
@@ -1037,7 +1023,7 @@ msgstr "Voorraadartikel"
 #: code:addons/mrp/report/price.py:130
 #, python-format
 msgid "Work Center name"
-msgstr "Werkplek naam"
+msgstr "Productiestap naam"
 
 #. module: mrp
 #: field:mrp.routing,code:0
@@ -1158,7 +1144,7 @@ msgstr "Berichten en communicatie historie"
 #. module: mrp
 #: field:mrp.workcenter.load,measure_unit:0
 msgid "Amount measuring unit"
-msgstr "Hoeveelheid meeteenheid"
+msgstr "Hoeveelheid maateenheid"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_jit:0
@@ -1173,7 +1159,7 @@ msgstr ""
 #. module: mrp
 #: help:mrp.workcenter,costs_hour:0
 msgid "Specify Cost of Work Center per hour."
-msgstr "Specificeer de kosten per werkplek per uur."
+msgstr "Specificeer de kosten per productiestap per uur."
 
 #. module: mrp
 #: help:mrp.workcenter,capacity_per_cycle:0
@@ -1181,9 +1167,9 @@ msgid ""
 "Number of operations this Work Center can do in parallel. If this Work "
 "Center represents a team of 5 workers, the capacity per cycle is 5."
 msgstr ""
-"Het aantal van bewerkingen dat deze werkplek parallel kan doen. Indien de "
-"werkplek een aantal van 5 werknemers vertegenwoordigd, dan is de capaciteit "
-"per cyclus 5."
+"Het aantal bewerkingen dat deze productiestap parallel kan uitvoeren. Indien "
+"de productiestap een aantal van 5 werknemers vertegenwoordigd, dan is de "
+"capaciteit per cyclus 5."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action3
@@ -1243,8 +1229,8 @@ msgid ""
 "Time in hours for this Work Center to achieve the operation of the specified "
 "routing."
 msgstr ""
-"Tijd in uren voor deze werkplek om de bewerking uit te voeren in de "
-"gespecificeerde productiestap."
+"Tijd in uren voor deze productiestap om de bewerking uit te voeren in de "
+"gespecificeerde productie route."
 
 #. module: mrp
 #: field:mrp.workcenter,costs_journal_id:0
@@ -1281,7 +1267,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.routing:0
 msgid "Work Center Operations"
-msgstr "Werkplek verwerkingen"
+msgstr "Productiestappen"
 
 #. module: mrp
 #: view:mrp.routing:0
@@ -1317,7 +1303,7 @@ msgstr "Producten"
 #. module: mrp
 #: view:report.workcenter.load:0
 msgid "Work Center load"
-msgstr "Werkplek belasting"
+msgstr "Productiestap belasting"
 
 #. module: mrp
 #: help:mrp.production,location_dest_id:0
@@ -1331,12 +1317,13 @@ msgid ""
 "Routing is indicated then,the third tab of a production order (Work Centers) "
 "will be automatically pre-completed."
 msgstr ""
-"Productiestappen geven alle gebruikte werkplekken weer, voor hoe lang en/of "
-"cycly. Indien een routing is aangegeven dan wordt het derde tabblad van een "
-"productieorder (Werkplekken) automatisch van tevoren ingevuld."
+"Productie routes geven alle gebruikte productiestappen weer, voor hoe lang "
+"en/of cycly. Indien een productie route is aangegeven dan wordt het derde "
+"tabblad van een productieorder (productiestappen) automatisch van tevoren "
+"ingevuld."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:521
+#: code:addons/mrp/mrp.py:505
 #, python-format
 msgid "Invalid Action!"
 msgstr "Ongeldige actie!"
@@ -1382,7 +1369,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:374
+#: code:addons/mrp/mrp.py:375
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopie)"
@@ -1425,27 +1412,6 @@ msgstr ""
 "een inkooporder aanmaken."
 
 #. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_property_action
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a new property.\n"
-"              </p><p>\n"
-"                The Properties in OpenERP are used to select the right bill "
-"of\n"
-"                materials for manufacturing a product when you have "
-"different\n"
-"                ways of building the same product.  You can assign several\n"
-"                properties to each bill of materials.  When a salesperson\n"
-"                creates a sale order, they can relate it to several "
-"properties\n"
-"                and OpenERP will automatically select the BoM to use "
-"according\n"
-"                the needs.\n"
-"              </p>\n"
-"            "
-msgstr ""
-
-#. module: mrp
 #: model:ir.model,name:mrp.model_procurement_order
 msgid "Procurement"
 msgstr "Verwerving"
@@ -1470,12 +1436,12 @@ msgstr "Componenten leverancier"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Production Work Centers"
-msgstr "Productie werkplekken"
+msgstr "Productiestappen"
 
 #. module: mrp
 #: view:mrp.workcenter:0
 msgid "Search for mrp workcenter"
-msgstr "Zoek naar een productie werkplek"
+msgstr "Zoek naar een productiestap"
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -1515,12 +1481,6 @@ msgid "Pending"
 msgstr "In afwachting"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:1053
-#, python-format
-msgid "Manufacturing order is <b>in production</b>."
-msgstr ""
-
-#. module: mrp
 #: field:mrp.bom,active:0
 #: field:mrp.routing,active:0
 msgid "Active"
@@ -1539,7 +1499,7 @@ msgstr ""
 #. module: mrp
 #: view:report.workcenter.load:0
 msgid "Work Center Loads"
-msgstr "Werkplek belastingen"
+msgstr "Productiestap belastingen"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_action
@@ -1558,12 +1518,6 @@ msgid ""
 msgstr ""
 "Referentie van het document dat het verzoek voor deze productieorder heeft "
 "gedaan."
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:1058
-#, python-format
-msgid "Manufacturing order has been <b>done</b>."
-msgstr ""
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_minimumstockprocure0
@@ -1586,12 +1540,6 @@ msgid "Drives the procurement orders for raw material."
 msgstr "Stuurt de inkoop orders voor grondstoffen."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:1048
-#, python-format
-msgid "Manufacturing order is <b>ready to produce</b>."
-msgstr ""
-
-#. module: mrp
 #: field:mrp.production.product.line,product_uos_qty:0
 msgid "Product UOS Quantity"
 msgstr ""
@@ -1607,7 +1555,7 @@ msgid "SO Number"
 msgstr "Nummer verkoopopdracht"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:521
+#: code:addons/mrp/mrp.py:505
 #, python-format
 msgid "Cannot delete a manufacturing order in state '%s'."
 msgstr ""
@@ -1652,7 +1600,32 @@ msgstr "Productieorders te starten"
 #: view:mrp.workcenter:0
 #: field:report.workcenter.load,workcenter_id:0
 msgid "Work Center"
-msgstr "Werkplek"
+msgstr "Productiestap"
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_property_group_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a group of properties.\n"
+"              </p><p>\n"
+"                Define specific property groups that can be assigned to "
+"your\n"
+"                bill of materials and sales orders. Properties allows "
+"OpenERP\n"
+"                to automatically select the right bill of materials "
+"according\n"
+"                to properties selected in the sales order by salesperson.\n"
+"              </p><p>\n"
+"                For instance, in the property group \"Warranty\", you an "
+"have\n"
+"                two properties: 1 year warranty, 3 years warranty. "
+"Depending\n"
+"                on the propoerties selected in the sales order, OpenERP "
+"will\n"
+"                schedule a production using the matching bill of materials.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: mrp
 #: field:mrp.workcenter,capacity_per_cycle:0
@@ -1717,7 +1690,8 @@ msgid ""
 "Description of the Work Center. Explain here what's a cycle according to "
 "this Work Center."
 msgstr ""
-"Omschrijving van de werkplek. Leg uit wat een cyclus is voor deze werkplek."
+"Omschrijving van de productiestap. Leg uit wat een cyclus is voor deze "
+"productiestap."
 
 #. module: mrp
 #: field:mrp.production,date_finished:0
@@ -1755,10 +1729,10 @@ msgid ""
 "operations and to plan future loads on work centers based on production "
 "planning."
 msgstr ""
-"De lijst van bewerkingen (werkplekken) om een gereed product te produceren. "
-"De productiestappen worden voornamelijk gebruikt om werkplek kosten "
-"gedurende de bewerkingen en toekomstige werkbelasting van de werkplekken te "
-"berekenen gebaseerd op de planning."
+"De lijst van bewerkingen (productiestap) om een gereed product te "
+"produceren. De productie route worden voornamelijk gebruikt om productiestap "
+"kosten gedurende de bewerkingen en toekomstige werkbelasting van de "
+"productiestappen te berekenen gebaseerd op de planning."
 
 #. module: mrp
 #: view:change.production.qty:0
@@ -1798,20 +1772,6 @@ msgid "Manager"
 msgstr "Manager"
 
 #. module: mrp
-#: view:mrp.bom:0
-msgid ""
-"When processing a sale order for this product, the delivery order\n"
-"                                will contain the raw materials, instead of "
-"the finished product."
-msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:1039
-#, python-format
-msgid "Manufacturing order has been <b>created</b>."
-msgstr ""
-
-#. module: mrp
 #: help:mrp.product.produce,mode:0
 msgid ""
 "'Consume only' mode will only consume the products with the quantity "
@@ -1827,9 +1787,10 @@ msgstr ""
 "totaal bestelde hoeveelheid zijn geproduceerd."
 
 #. module: mrp
-#: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
-msgid "Orders Planning"
-msgstr ""
+#: view:mrp.production:0
+#: report:mrp.production.order:0
+msgid "Work Orders"
+msgstr "Werkorders"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle:0
@@ -1861,7 +1822,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:756
+#: code:addons/mrp/mrp.py:737
 #, python-format
 msgid ""
 "You are going to consume total %s quantities of \"%s\".\n"
@@ -1903,7 +1864,6 @@ msgstr "Tijd voor 1 cyclus (uur)"
 #. module: mrp
 #: model:ir.actions.report.xml,name:mrp.report_mrp_production_report
 #: field:mrp.production.product.line,production_id:0
-#: field:mrp.production.workcenter.line,production_id:0
 #: model:process.node,name:mrp.process_node_production0
 #: model:process.node,name:mrp.process_node_productionorder0
 msgid "Production Order"
@@ -1927,7 +1887,7 @@ msgid "Compute Data"
 msgstr "Bereken gegevens"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:625
+#: code:addons/mrp/mrp.py:610
 #: code:addons/mrp/wizard/change_production_qty.py:83
 #: code:addons/mrp/wizard/change_production_qty.py:88
 #, python-format
@@ -1970,10 +1930,10 @@ msgstr "Normale materiaallijst"
 #. module: mrp
 #: field:res.company,manufacturing_lead:0
 msgid "Manufacturing Lead Time"
-msgstr "Productietijd"
+msgstr "Extra dagen productietijd"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:284
+#: code:addons/mrp/mrp.py:285
 #, python-format
 msgid "Warning"
 msgstr "Waarschuwing"
@@ -2063,7 +2023,7 @@ msgstr "Startdatum"
 #. module: mrp
 #: field:mrp.workcenter,time_stop:0
 msgid "Time after prod."
-msgstr "Tijd na prod."
+msgstr "Tijd na productie (uur)"
 
 #. module: mrp
 #: field:mrp.workcenter.load,time_unit:0
@@ -2218,17 +2178,7 @@ msgid "BOM Ref"
 msgstr "Referentie"
 
 #. module: mrp
-#: field:mrp.bom,message_comment_ids:0
-#: help:mrp.bom,message_comment_ids:0
-#: field:mrp.production,message_comment_ids:0
-#: help:mrp.production,message_comment_ids:0
-#: field:mrp.production.workcenter.line,message_comment_ids:0
-#: help:mrp.production.workcenter.line,message_comment_ids:0
-msgid "Comments and emails"
-msgstr "Opmerkingen en e-mails."
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:784
+#: code:addons/mrp/mrp.py:765
 #, python-format
 msgid ""
 "You are going to produce total %s quantities of \"%s\".\n"
@@ -2268,7 +2218,7 @@ msgid "Bill of Materials"
 msgstr "Materiaallijst"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:625
+#: code:addons/mrp/mrp.py:610
 #, python-format
 msgid "Cannot find a bill of material for this product."
 msgstr ""
@@ -2511,1177 +2461,3 @@ msgstr "mrp.config.settings"
 #: report:mrp.production.order:0
 msgid "Products to Consume"
 msgstr "Producten te verbruiken"
-
-#~ msgid "Compute Stock Minimum Rules Only"
-#~ msgstr "Bereken alleen minimum voorraadregels"
-
-#~ msgid "Not used in computations, for information purpose only."
-#~ msgstr "Niet gebruikt in berekeningen, alleen ter informatie."
-
-#, python-format
-#~ msgid "Product name"
-#~ msgstr "Productnaam"
-
-#, python-format
-#~ msgid "products"
-#~ msgstr "producten"
-
-#~ msgid ""
-#~ "Rounding applied on the product quantity. For integer only values, put 1.0"
-#~ msgstr ""
-#~ "Toegepaste afronding voor producthoeveelheiden. Gebruik 1.0 om alleen gehele "
-#~ "getallen te gebruiken."
-
-#~ msgid "product"
-#~ msgstr "product"
-
-#, python-format
-#~ msgid "Product Standard Price"
-#~ msgstr "Standaard productprijs"
-
-#~ msgid "For stockable and consumable"
-#~ msgstr "Voor voorraadartikel en verbruiksartikel"
-
-#, python-format
-#~ msgid "SUBTOTAL"
-#~ msgstr "SUBTOTAAL"
-
-#~ msgid ""
-#~ "Description of the workcenter. Explain here what's a cycle according to this "
-#~ "workcenter."
-#~ msgstr ""
-#~ "Omschrijving van de werkplaats. Leg uit wat een cyclus is vanuit het "
-#~ "gezichtspunt van deze werkplaats."
-
-#~ msgid "Workcenters"
-#~ msgstr "Werkplaatsen"
-
-#~ msgid "A cycle is defined in the workcenter definition."
-#~ msgstr "Een cyclus is gedefinieerd in de werkplaatsdefinitie"
-
-#~ msgid "Validate"
-#~ msgstr "Valideren"
-
-#~ msgid "Service Make to Stock"
-#~ msgstr "Dienstverlening op voorraad maken"
-
-#~ msgid "Minimum stock rule"
-#~ msgstr "Minimum voorraadregel"
-
-#~ msgid "Note"
-#~ msgstr "Opmerking"
-
-#~ msgid "Paid ?"
-#~ msgstr "Betaald?"
-
-#~ msgid "Minimum Stock Rules"
-#~ msgstr "Minimum voorraadregels"
-
-#~ msgid ""
-#~ "Efficiency on the production. A factor of 0.9 means a loss of 10% in the "
-#~ "production."
-#~ msgstr ""
-#~ "Productie-efficiëntie. Een factor van 0.9 betekent een productieverlies van "
-#~ "10%"
-
-#, python-format
-#~ msgid "No address defined for the supplier"
-#~ msgstr "Geen adres gedefinieerd voor de leverancier"
-
-#~ msgid "Minimum Stock Rule"
-#~ msgstr "Minimum voorraadregel"
-
-#, python-format
-#~ msgid "Product quantity"
-#~ msgstr "Producthoeveelheid"
-
-#~ msgid "Stockable Product Process"
-#~ msgstr "Voorraadartikelen proces"
-
-#, python-format
-#~ msgid "TOTAL"
-#~ msgstr "TOTAAL"
-
-#~ msgid "Change Qty"
-#~ msgstr "Wijzig hoeveelheid"
-
-#~ msgid "Print product price"
-#~ msgstr "Druk productprijs af"
-
-#~ msgid "Waiting"
-#~ msgstr "Wachtend"
-
-#, python-format
-#~ msgid "Invalid action !"
-#~ msgstr "Ongeldige actie!"
-
-#~ msgid "Qty"
-#~ msgstr "Hoeveelheid"
-
-#~ msgid "The system waits for requested products in stock."
-#~ msgstr "Het systeem wacht op de gevraagde producten uit voorraad"
-
-#~ msgid "Production scheduled products"
-#~ msgstr "Producten ingepland voor productie"
-
-#, python-format
-#~ msgid "Hours Cost"
-#~ msgstr "Bestede uren"
-
-#~ msgid "A Request for Quotation is created and sent to the supplier."
-#~ msgstr ""
-#~ "Er is een offerteaanvraag aangemaakt en verstuurd naar de leverancier"
-
-#~ msgid "Packing list"
-#~ msgstr "Paklijst"
-
-#~ msgid "Origin"
-#~ msgstr "Oorsprong"
-
-#~ msgid "Details"
-#~ msgstr "Details"
-
-#~ msgid "Reservation"
-#~ msgstr "Reservering"
-
-#~ msgid "max"
-#~ msgstr "max"
-
-#~ msgid "Author"
-#~ msgstr "Auteur"
-
-#~ msgid "Latest error"
-#~ msgstr "Laatste fout"
-
-#~ msgid "indice type"
-#~ msgstr "Indextype"
-
-#~ msgid "Exception"
-#~ msgstr "Uitzondering"
-
-#~ msgid "Machine"
-#~ msgstr "Machine"
-
-#~ msgid "min"
-#~ msgstr "min"
-
-#~ msgid "Human Resource"
-#~ msgstr "Personeel"
-
-#~ msgid "Scheduler Parameters"
-#~ msgstr "Planningsparameters"
-
-#~ msgid "Number of products to produce"
-#~ msgstr "Aantal te produceren producten"
-
-#~ msgid "Revisions"
-#~ msgstr "Revisies"
-
-#~ msgid "Location"
-#~ msgstr "Locatie"
-
-#~ msgid "Tool"
-#~ msgstr "Gereedschap"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
-
-#~ msgid "Production Products"
-#~ msgstr "Maakartikelen"
-
-#~ msgid "Purchase Order"
-#~ msgstr "Inkooporder"
-
-#~ msgid "BOM"
-#~ msgstr "Samengesteld product"
-
-#~ msgid "Confirmed"
-#~ msgstr "Bevestigd"
-
-#~ msgid "Parameters"
-#~ msgstr "Parameters"
-
-#~ msgid "Production workcenters used"
-#~ msgstr "Productie workcenters gebruikt"
-
-#~ msgid "plus"
-#~ msgstr "plus"
-
-#~ msgid "Draft"
-#~ msgstr "Concept"
-
-#~ msgid "Warehouse"
-#~ msgstr "Magazijn"
-
-#~ msgid "Manufacturing Resource Planning"
-#~ msgstr "Manufacturing Resource Planning"
-
-#~ msgid "you can see the minimum stock rules from product"
-#~ msgstr "u kunt de minimale voorraad regels voor het product zien"
-
-#~ msgid "Production Workcenters"
-#~ msgstr "Productie werkplaatsen"
-
-#~ msgid "Stockable Stock"
-#~ msgstr "Op voorraad te nemen voorraad"
-
-#~ msgid ""
-#~ "Location where the system will look for products used in raw materials."
-#~ msgstr ""
-#~ "Lokatie waar het systeem zoekt naar producten die gebruikt worden in de "
-#~ "grondstoffen."
-
-#~ msgid "Sale Ref"
-#~ msgstr "Verkoopreferentie"
-
-#, python-format
-#~ msgid "Product supplier"
-#~ msgstr "Productleverancier"
-
-#~ msgid "Planned Date"
-#~ msgstr "Geplande datum"
-
-#~ msgid "Procurement for raw materials."
-#~ msgstr "Verwerving van grondstoffen"
-
-#~ msgid "Define the product structure, with sub-products and/or components."
-#~ msgstr "Bepaal de productstructuur, met sub-producten en/of componenten."
-
-#~ msgid "-"
-#~ msgstr "-"
-
-#, python-format
-#~ msgid "Error"
-#~ msgstr "Fout"
-
-#~ msgid "This is the leads/security time for each purchase order."
-#~ msgstr "Dit is de opzettijd/veiligheidsmarge voor elke bestelling."
-
-#~ msgid "Central document to procure products"
-#~ msgstr "Centraal document om producten te verwerven"
-
-#~ msgid "Procurement Purchase"
-#~ msgstr "Verwerving aankoop"
-
-#~ msgid "Number of Cycle"
-#~ msgstr "Aantal cycli"
-
-#~ msgid "Production orders are created for the product manufacturing."
-#~ msgstr ""
-#~ "Productie-opdrachten worden gemaakt voor de fabricage van het product."
-
-#~ msgid "Production Orders Waiting Products"
-#~ msgstr "Productie-opdrachten wachtend op producten"
-
-#~ msgid "Orderpoint minimum rule"
-#~ msgstr "Bestelpunt minimale hoeveelheid"
-
-#~ msgid "Product UoM"
-#~ msgstr "Product ME"
-
-#~ msgid "Wait for available products for reservation"
-#~ msgstr "Wacht op beschikbare producten ter reservering"
-
-#~ msgid ""
-#~ "The list of operations (list of workcenters) to produce the finished "
-#~ "product. The routing is mainly used to compute workcenter costs during "
-#~ "operations and to plan futur loads on workcenters based on production "
-#~ "plannification."
-#~ msgstr ""
-#~ "De lijst van handelingen (lijst van werkplaatsen) voor het produceren van "
-#~ "het gereed product. De routering wordt voornamelijk gebruikt voor het "
-#~ "berekenen van de werkplaats-kosten gedurende handelingen en om toekomstige "
-#~ "belasting van werkplaatsen te plannen op basis van de productie-planning."
-
-#~ msgid "Production Orders To Start"
-#~ msgstr "Te starten productie-opdrachten"
-
-#~ msgid "The normal working time of the workcenter."
-#~ msgstr "De normale behandeltijd in een werkplaats."
-
-#~ msgid "Create minimum stock rules"
-#~ msgstr "Maak minimale voorraad-regels."
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "Waarschuwing !"
-
-#~ msgid "Ask New Products"
-#~ msgstr "Vraag nieuwe producten"
-
-#~ msgid ""
-#~ "Number of operation this workcenter can do in parallel. If this workcenter "
-#~ "represent a team of 5 workers, the capacity per cycle is 5."
-#~ msgstr ""
-#~ "Aantal handelingen dat deze werkplaats parallel kan uitvoeren. Als deze "
-#~ "werkplaats bijv. 5 werkeenheden heeft, is de capaciteit per cyclus 5."
-
-#, python-format
-#~ msgid "No supplier defined for this product !"
-#~ msgstr "Geen leverancier voor dit product opgegeven!"
-
-#~ msgid ""
-#~ "This is the days added to what you promise to customers for security purpose"
-#~ msgstr ""
-#~ "Dit is het aantal dagen dat als veiligheidsmarge wordt toegevoegd aan de "
-#~ "beloofde levertijd."
-
-#~ msgid "MRP & Logistic Scheduler"
-#~ msgstr "MRP & logistieke planning"
-
-#~ msgid "Product & Location"
-#~ msgstr "Product & locatie"
-
-#~ msgid "Automatic orderpoint"
-#~ msgstr "Automatisch bestelpunt"
-
-#~ msgid "Do nothing"
-#~ msgstr "Doe niets"
-
-#~ msgid "If the stock of a product is under 0, it will act like an orderpoint"
-#~ msgstr ""
-#~ "Als de voorraad van een product negatief wordt, gedraagt het zich als een "
-#~ "bestelpunt"
-
-#~ msgid "Packing Exception"
-#~ msgstr "Haperingen in verpakkingsproces"
-
-#~ msgid "Service on Order"
-#~ msgstr "Dienst op bestelling"
-
-#, python-format
-#~ msgid "Workcenter name"
-#~ msgstr "Naam werkplaats"
-
-#~ msgid "Product to stock rules"
-#~ msgstr "Product naar voorraadregels"
-
-#, python-format
-#~ msgid "from stock: products assigned."
-#~ msgstr "uit voorraad: producten toegewezen."
-
-#, python-format
-#~ msgid "from stock and no minimum orderpoint rule defined"
-#~ msgstr "uit voorraad en geen minimum bestelpunt regel gedefinieerd"
-
-#~ msgid ""
-#~ "This is the internal picking list take bring the raw materials to the "
-#~ "production plan."
-#~ msgstr ""
-#~ "Dit is de interne pakbon om de grondstoffen naar de productie te brengen"
-
-#~ msgid "Production Orders Planning"
-#~ msgstr "Planning productieopdrachten"
-
-#~ msgid "Manufacturity Lead Time"
-#~ msgstr "Productie opzettijd"
-
-#~ msgid "Factor that multiplies all times expressed in the workcenter."
-#~ msgstr "Factor voor vermenigvuldiging van alle tijden voor deze werkplaats."
-
-#, python-format
-#~ msgid "Couldn't find bill of material for product"
-#~ msgstr "Kan materiaallijst voor product niet vinden"
-
-#~ msgid "If Product type is service and procure method is Make to stock"
-#~ msgstr ""
-#~ "Als soort product 'dienstverlening' is en verwervingsmethode 'maak op "
-#~ "voorraad' is"
-
-#~ msgid "If Product type is service"
-#~ msgstr "Als soort product 'dienstverlening' is"
-
-#~ msgid "BoM Hyerarchy"
-#~ msgstr "Materiaallijst"
-
-#, python-format
-#~ msgid "Unit Product Price"
-#~ msgstr "Eenheid productprijs"
-
-#~ msgid "References"
-#~ msgstr "Verwijzingen"
-
-#, python-format
-#~ msgid "Product uom"
-#~ msgstr "Product meeteenheid"
-
-#~ msgid "Workcenter Name"
-#~ msgstr "Naam werkplaats"
-
-#~ msgid "Create Procurement"
-#~ msgstr "Maak bestelling"
-
-#, python-format
-#~ msgid ""
-#~ "The production is in \"%s\" state. You can not change the production "
-#~ "quantity anymore"
-#~ msgstr ""
-#~ "De productie is in '%s' status. U kunt de productiehoeveelheid niet meer "
-#~ "wijzigen."
-
-#~ msgid "If product type is service and procure method is Make to order"
-#~ msgstr ""
-#~ "Als soort product 'dienstverlening' is en verwervingsmethode 'maak op "
-#~ "bestelling'"
-
-#~ msgid "Scheduler Range"
-#~ msgstr "Bereik planner"
-
-#~ msgid "Define a routing to describe the manufacturing steps."
-#~ msgstr "Definieer een routering om de productiestappen te beschrijven."
-
-#~ msgid "Production Orders in Progress"
-#~ msgstr "Productieopdrachten in behandeling"
-
-#~ msgid "Product type is Stockable and procure method is make to stock"
-#~ msgstr ""
-#~ "Soort product is 'voorraadartikel' en verwervingsmethode is 'maak op "
-#~ "voorraad'"
-
-#~ msgid "if Product type is Stockable in procurement order"
-#~ msgstr "Als soort product 'voorraadsartikel' is in verwervingsopdracht"
-
-#~ msgid ""
-#~ "Use a phantom bill of material in raw materials lines that have to be "
-#~ "automatically computed in on eproduction order and not one per level.If you "
-#~ "put \"Phantom/Set\" at the root level of a bill of material it is considered "
-#~ "as a set or pack: the products are replaced by the components between the "
-#~ "sale order to the picking without going through the production order.The "
-#~ "normal BoM will generate one production order per BoM level."
-#~ msgstr ""
-#~ "Gebruik een spook-materiaallijst voor materiaalregels die op een productie-"
-#~ "opdracht automatisch berekend moeten worden. Indien u \"Spook/Set\" op het "
-#~ "hoogste niveau van de materiaallijst instelt, dan wordt deze beschouwd als "
-#~ "een verzameling/verpakking: alle producten worden vervangen door onderdelen "
-#~ "tussen de verkoopopdracht en de paklijst zonder daarvoor een productie-"
-#~ "opdracht te maken. De normale materiaallijst genereert één productieopdracht "
-#~ "per niveau."
-
-#~ msgid "If Procure method is Make to order and supply method is buy"
-#~ msgstr ""
-#~ "Als verwervingsmethode 'maak op bestelling' is en aanlevering is 'kopen'"
-
-#~ msgid "If procurement is make to order"
-#~ msgstr "Als verwerving 'maak op bestelling' is"
-
-#~ msgid "New Bill of Materials"
-#~ msgstr "Nieuwe materiaallijst"
-
-#~ msgid "Procurement Reason"
-#~ msgstr "Reden voor verwerving"
-
-#~ msgid "New Production Order"
-#~ msgstr "Nieuwe productieopdracht"
-
-#~ msgid "Service Product"
-#~ msgstr "Dienstverleningsproduct"
-
-#~ msgid "Close"
-#~ msgstr "Sluiten"
-
-#~ msgid "Bill of Material Structure"
-#~ msgstr "Structuur materiaallijst"
-
-#~ msgid "Bill of Materials Components"
-#~ msgstr "Onderdelen materiaallijst"
-
-#~ msgid "Unscheduled procurements"
-#~ msgstr "Ongeplande verwervingen"
-
-#~ msgid "You can see its bill of material which are used to make product"
-#~ msgstr "U kunt de gebruikte materiaallijst zien voor het te maken product."
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Ongeldige modelnaam in de actie-definitie."
-
-#~ msgid ""
-#~ "Triggers an automatic procurement for all products that have a virtual stock "
-#~ "under 0. You should probably not use this option, we suggest using a MTO "
-#~ "configuration on products."
-#~ msgstr ""
-#~ "Activeert de automatische verwerving voor alle producten met een virtuele "
-#~ "voorraad van minder dan 0. Het is beter deze optie niet te gebruiken en "
-#~ "gebruik te maken van de MTO instellingen van producten."
-
-#~ msgid "Moves Created"
-#~ msgstr "Gegenereerde boekingen"
-
-#~ msgid "Exceptions Procurements"
-#~ msgstr "Haperingen in verwervingen"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Ongeldige XML voor weergave!"
-
-#~ msgid "Best price (not yet active!)"
-#~ msgstr "Beste prijs (nog niet actief)"
-
-#~ msgid "Automatic Procurements"
-#~ msgstr "Automatische verwervingen"
-
-#~ msgid "Products Consummed"
-#~ msgstr "Producten verbruikt"
-
-#~ msgid "A purchase order is created for a sub-contracting demand."
-#~ msgstr ""
-#~ "Er is een bestelopdracht gegenereerd voor een sub-contracting verzoek."
-
-#~ msgid "Analytic Accounting"
-#~ msgstr "Kostenplaats boekhouding"
-
-#~ msgid "Stockable Production Order"
-#~ msgstr "Productieopdracht voor voorraad"
-
-#~ msgid "Internal Ref."
-#~ msgstr "Interne ref."
-
-#~ msgid "Procure Service Product"
-#~ msgstr "Verwerf dienstverlening"
-
-#~ msgid "Procurements"
-#~ msgstr "Verwervingen"
-
-#~ msgid ""
-#~ "When the virtual stock goes belong the Min Quantity, Open ERP generates a "
-#~ "procurement to bring the virtual stock to the Max Quantity."
-#~ msgstr ""
-#~ "Als de economische voorraad onder de minimum hoeveelheid komt, wordt er een "
-#~ "verwerving aangemaakt zodanig dat de economische voorraad zal worden "
-#~ "aangevuld tot de maximum hoeveelheid."
-
-#~ msgid "Production Orders"
-#~ msgstr "Productie-opdrachten"
-
-#~ msgid "Procurement Process"
-#~ msgstr "Verwervingsproces"
-
-#~ msgid "Purchase Lead Time"
-#~ msgstr "Voorbereidingstijd bestelling"
-
-#~ msgid "Make Procurement"
-#~ msgstr "Maak verwerving"
-
-#~ msgid ""
-#~ "Complete this only if you want automatic analytic accounting entries on "
-#~ "production orders."
-#~ msgstr ""
-#~ "Vul dit alleen in indien u automatisch kostenplaatsboekingen wilt op "
-#~ "productie-opdrachten."
-
-#~ msgid "Production Procure Products"
-#~ msgstr "Productie verwerf producten"
-
-#~ msgid "Service Product Process"
-#~ msgstr "Dienstverleningsproces"
-
-#~ msgid "Procurement convert into the draft purchase order."
-#~ msgstr "Verwerving omzetten in concept bestelopdracht"
-
-#~ msgid "Min Quantity"
-#~ msgstr "Min. hoeveelheid"
-
-#~ msgid "Production orders"
-#~ msgstr "Productie-opdrachten"
-
-#~ msgid "Security Days"
-#~ msgstr "Dagen veiligheidsmarge"
-
-#~ msgid "From minimum stock rules, it goes for procure product."
-#~ msgstr "Van minimale voorraadregels gaat het naar productverwerving"
-
-#~ msgid ""
-#~ "This wizard will planify the procurement for this product. This procurement "
-#~ "may generate task, production orders or purchase orders."
-#~ msgstr ""
-#~ "Deze assistent plant de verwervingen in voor dit product. Een verwerving kan "
-#~ "taken genereren, productie-opdrachten en/of bestellingen."
-
-#~ msgid "Production done"
-#~ msgstr "Productie gereed"
-
-#~ msgid "Move product"
-#~ msgstr "Verplaats product"
-
-#~ msgid "Start Production"
-#~ msgstr "Start productie"
-
-#~ msgid "Compute All Schedulers"
-#~ msgstr "Bereken alle planners"
-
-#~ msgid "Nbr of cycle"
-#~ msgstr "Aant. cycli"
-
-#~ msgid "on order"
-#~ msgstr "op bestelling"
-
-#~ msgid "Run procurement"
-#~ msgstr "Start verwerving"
-
-#~ msgid "Procurement Method"
-#~ msgstr "Verwervingswijze"
-
-#~ msgid "Time Efficiency"
-#~ msgstr "Tijd-efficiëntie"
-
-#~ msgid ""
-#~ "This is the time frame analysed by the scheduler when computing "
-#~ "procurements. All procurement that are not between today and today+range are "
-#~ "skipped for futur computation."
-#~ msgstr ""
-#~ "Dit is de periode die onderzocht wordt door de planner bij het berekenen van "
-#~ "verwervingen. Alle verwervingen die niet tussen vandaag en vandaag+periode "
-#~ "vallen, worden overgeslagen voor latere berekening."
-
-#~ msgid "Compute Procurements"
-#~ msgstr "Bereken verwervingen"
-
-#~ msgid "Nbr of hour"
-#~ msgstr "Aant. uren"
-
-#~ msgid "Material routing"
-#~ msgstr "Routering materiaal"
-
-#~ msgid "Product Efficiency"
-#~ msgstr "Product efficiëntie"
-
-#~ msgid "Procurement orders"
-#~ msgstr "Verwervingsopdrachten"
-
-#~ msgid "Max Quantity"
-#~ msgstr "Max hoeveelheid"
-
-#~ msgid "Minimum Stock Procure"
-#~ msgstr "Verwervingspunt minimale voorraad"
-
-#~ msgid "Procure Stockable Product"
-#~ msgstr "Verwerf voorraadartikel"
-
-#~ msgid "Scheduled date"
-#~ msgstr "Geplande datum"
-
-#~ msgid "Change Product Qty."
-#~ msgstr "Wijzig producthoeveelheid"
-
-#~ msgid "Date Closed"
-#~ msgstr "Datum gesloten"
-
-#~ msgid "Production Products Consommation"
-#~ msgstr "Productie verbruiksartikelen"
-
-#~ msgid ""
-#~ "If you encode manually a procurement, you probably want to use a make to "
-#~ "order method."
-#~ msgstr ""
-#~ "Als U handmatig een verwerving invoert, wilt u waarschijnlijk een 'maak op "
-#~ "bestelling'-methode."
-
-#~ msgid "Planification"
-#~ msgstr "Planning"
-
-#~ msgid "Internal Procurement Request"
-#~ msgstr "Intern verwervingsverzoek"
-
-#~ msgid "Your procurement request has been sent !"
-#~ msgstr "Uw verwervingsverzoek is verstuurd!"
-
-#~ msgid "Compute Procurements Only"
-#~ msgstr "Alleen verwervingen berekenen"
-
-#~ msgid "Property Categories"
-#~ msgstr "Eigenschap categorieën"
-
-#~ msgid "Property"
-#~ msgstr "Eigenschap"
-
-#~ msgid "Canceled"
-#~ msgstr "Geannuleerd"
-
-#~ msgid "last indice"
-#~ msgstr "laatste index"
-
-#~ msgid "An entry is being made from billing material to routing."
-#~ msgstr ""
-#~ "Er wordt een boeking gemaakt van doorbelastbaar materiaal naar routering."
-
-#~ msgid "Retry"
-#~ msgstr "Probeer opnieuw"
-
-#~ msgid "When any procuere products, it comes into the prpcurement orders"
-#~ msgstr ""
-#~ "Te verwerven producten worden op de verwervingsopdracht bijgeplaatst."
-
-#~ msgid "Order to Max"
-#~ msgstr "Tot maximum"
-
-#~ msgid "from stock"
-#~ msgstr "uit voorraad"
-
-#~ msgid "In procurement order, if product type is service"
-#~ msgstr "In verwervingsopdracht, als soort product 'dienstverlening' is"
-
-#~ msgid "Sale Name"
-#~ msgstr "Naam verkoop"
-
-#~ msgid "Workcenter load"
-#~ msgstr "Belasting werkplaats"
-
-#~ msgid "Running"
-#~ msgstr "Bezig"
-
-#~ msgid "Close Move at end"
-#~ msgstr "Sluit boeking aan einde"
-
-#~ msgid "Procurement Details"
-#~ msgstr "Details verwerving"
-
-#~ msgid "If Procure method is Make to order and supply method is produce"
-#~ msgstr ""
-#~ "Als verwervingsmethode 'maak op bestelling' en aanlevering is 'produceren'"
-
-#~ msgid "This wizard will schedule procurements."
-#~ msgstr "Deze assistent zal verwervingen inplannen"
-
-#~ msgid "Procurement Lines"
-#~ msgstr "Verwervingsregels"
-
-#~ msgid "Exceptions Procurements to Fix"
-#~ msgstr "Te verhelpen storingen in verwervingsproces"
-
-#~ msgid "If Product type is Stockable and procure method is make to stock"
-#~ msgstr ""
-#~ "Als productsoort 'voorraadartikel' is en de verwervingsmethode 'maak op "
-#~ "voorraad'"
-
-#~ msgid "New Procurement"
-#~ msgstr "Nieuwe verwerving"
-
-#~ msgid "The procurement quantity will by rounded up to this multiple."
-#~ msgstr ""
-#~ "De verwervingshoeveelheid wordt naar boven afgerond tot een veelvoud van dit "
-#~ "getal."
-
-#~ msgid ""
-#~ "Procurement is created if the product quantity is lower than the minimum "
-#~ "limit."
-#~ msgstr ""
-#~ "Verwerving wordt gemaakt als de producthoeveelheid onder de minimale "
-#~ "hoeveelheid komt."
-
-#~ msgid ""
-#~ "Reference of the document that created this procurement.\n"
-#~ "This is automatically completed by Open ERP."
-#~ msgstr ""
-#~ "Verwijzing naar het document dat aanleiding gaf voor deze verwerving.\n"
-#~ "Deze wordt automatisch ingevuld door OpenERP"
-
-#~ msgid "UoS Quantity"
-#~ msgstr "VE aantal"
-
-#~ msgid "UOM"
-#~ msgstr "ME"
-
-#~ msgid "Product UoS Qty"
-#~ msgstr "Product hvh. VE"
-
-#~ msgid "Revision"
-#~ msgstr "Revisie"
-
-#~ msgid "Routing Workcenters"
-#~ msgstr "Routing werkcentra"
-
-#~ msgid "Error ! You can not create recursive BoM."
-#~ msgstr "Fout! U kunt geen recursieve stuklijst aanmaken."
-
-#~ msgid "Routing workcenter usage"
-#~ msgstr "Routing werkcenter gebruik"
-
-#~ msgid "Qty Multiple"
-#~ msgstr "Hvh veelvoud"
-
-#~ msgid "Workcenter Operations"
-#~ msgstr "Werkcenter operaties"
-
-#~ msgid "alphabetical indices"
-#~ msgstr "Alfabetische index"
-
-#~ msgid "Reordering Mode"
-#~ msgstr "Herbestel modus"
-
-#~ msgid "Workcenter"
-#~ msgstr "Werkcenter"
-
-#~ msgid "Properties composition"
-#~ msgstr "Samenstellingseigenschappen"
-
-#~ msgid "numeric indices"
-#~ msgstr "Numerieke indexen"
-
-#~ msgid "Bill of material revisions"
-#~ msgstr "Stuklijstversies"
-
-#~ msgid "Temporary Procurement Exceptions"
-#~ msgstr "Tijdelijke verwervingsuitzonderingen"
-
-#~ msgid "Waiting Goods"
-#~ msgstr "Wacht op materialen"
-
-#~ msgid "Workcenters Utilisation"
-#~ msgstr "Belasting werkcenters"
-
-#~ msgid "Serivce Stockable Order"
-#~ msgstr "Service voorraad order"
-
-#~ msgid "Stockable Request"
-#~ msgstr "Voorraad aanvraag"
-
-#~ msgid "Stockable Make to Stock"
-#~ msgstr "Voorraad - maak op voorraad"
-
-#~ msgid "Stockable Order Request"
-#~ msgstr "Aanvraag voorraadorder"
-
-#~ msgid "Stockable Product Stock"
-#~ msgstr "Voorraad productvoorraad"
-
-#, python-format
-#~ msgid "Cost Price per Uom"
-#~ msgstr "Kostprijs per eenheid"
-
-#~ msgid "Raw Material Location"
-#~ msgstr "Grondstoffen locatie"
-
-#~ msgid "Day"
-#~ msgstr "Dag"
-
-#~ msgid "State"
-#~ msgstr "Status"
-
-#~ msgid "["
-#~ msgstr "["
-
-#~ msgid "title"
-#~ msgstr "titel"
-
-#~ msgid "June"
-#~ msgstr "Juni"
-
-#~ msgid "October"
-#~ msgstr "Oktober"
-
-#~ msgid "August"
-#~ msgstr "Augustus"
-
-#~ msgid "Repairs"
-#~ msgstr "Reparaties"
-
-#~ msgid "Default UOM"
-#~ msgstr "Standaard maateenheid"
-
-#~ msgid "Nbr of hours"
-#~ msgstr "Aantal uren"
-
-#~ msgid "Orange"
-#~ msgstr "Oranje"
-
-#~ msgid "Fluid"
-#~ msgstr "Voeilstof"
-
-#~ msgid "Sugar"
-#~ msgstr "Suiker"
-
-#~ msgid ""
-#~ "Manufacturing Orders are usually proposed automatically by OpenERP based on "
-#~ "the bill of materials and the procurement rules, but you can also create "
-#~ "manufacturing orders manually. OpenERP will handle the consumption of the "
-#~ "raw materials (stock decrease) and the production of the finished products "
-#~ "(stock increase) when the order is processed."
-#~ msgstr ""
-#~ "Productieorders worden normaliter door OpenERP automatisch voorgesteld, "
-#~ "gebaseert op de grondstoffenlijst en de verwervingsregels. Het si ook "
-#~ "mogelijk om productieooprders met de hand aan te maken. OpenERP zal zorgen "
-#~ "voor het verbruik van de grondstoffen (voorraad afname) en de productie van "
-#~ "gereed product (voorraad toename) wanneer de order is verwerkt."
-
-#~ msgid ""
-#~ "Create a product form for everything you buy or sell. Specify a supplier if "
-#~ "the product can be purchased."
-#~ msgstr ""
-#~ "Maak een product aan voor alles wat je koopt en verkoopt. Specificeer een "
-#~ "leverancier als het product kan worden ingekocht."
-
-#~ msgid "Cloth"
-#~ msgstr "Doek"
-
-#~ msgid "You try to assign a lot which is not from the same product"
-#~ msgstr ""
-#~ "U probeert een partij toe te wijzen die niet van hetzelfde product is."
-
-#~ msgid "The company name must be unique !"
-#~ msgstr "De naam van het bedrijf moet uniek zijn!"
-
-#~ msgid "Configure your work centers"
-#~ msgstr "Configureer uw werkplekken"
-
-#~ msgid "Nbr of cycles"
-#~ msgstr "Aantal cycli"
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "Fout: Ongeldige EAN-code"
-
-#~ msgid "You can not move products from or to a location of the type view."
-#~ msgstr ""
-#~ "Het is niet mogelijk om producten te verplaatsen naar een locatie van het "
-#~ "type 'aanzicht'."
-
-#~ msgid "Shirt Buttons"
-#~ msgstr "Shirt knopen"
-
-#, python-format
-#~ msgid "Could not cancel manufacturing order !"
-#~ msgstr "Het is niet mogelijk de productieorder te annuleren!"
-
-#, python-format
-#~ msgid "Cannot delete a manufacturing order in state '%s'"
-#~ msgstr "Kan geen productieorder verwijderen in de status '%s'"
-
-#~ msgid "Dashboard"
-#~ msgstr "Dashboard"
-
-#~ msgid "Source Loc."
-#~ msgstr "Bron loc."
-
-#~ msgid "]"
-#~ msgstr "]"
-
-#~ msgid "Production Dashboard"
-#~ msgstr "Productie dashboard"
-
-#~ msgid "Shirt"
-#~ msgstr "Shirt"
-
-#~ msgid "Create or Import Products"
-#~ msgstr "Maak of importeer producten"
-
-#, python-format
-#~ msgid "Manufacturing order '%s' is ready to produce."
-#~ msgstr "Productieorder '%s' is gereed om te produceren."
-
-#~ msgid "Water"
-#~ msgstr "Water"
-
-#~ msgid "Component Name"
-#~ msgstr "Naam van de component"
-
-#~ msgid "Split in production lots"
-#~ msgstr "Splits in productie partijen"
-
-#~ msgid ""
-#~ "All product quantities must be greater than 0.\n"
-#~ "You should install the mrp_subproduct module if you want to manage extra "
-#~ "products on BoMs !"
-#~ msgstr ""
-#~ "Alle product hoeveelheden moeten groter zijn dan 0.\n"
-#~ "U kunt de module mrp_subproduct installeren als u gebruik wilt maken van "
-#~ "extra eindproducten bij  een samengesteld product."
-
-#~ msgid "Bill of Material Revision"
-#~ msgstr "Grondstoffenlijst revisie"
-
-#, python-format
-#~ msgid "Copy"
-#~ msgstr "Kopiëren"
-
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "Fout! U kunt geen recursieve bedrijven aanmaken."
-
-#~ msgid "Orange Juice"
-#~ msgstr "Sinasappelsap"
-
-#~ msgid "Litre"
-#~ msgstr "Liter"
-
-#~ msgid "Scheduled End Date"
-#~ msgstr "Geplande einddatum"
-
-#~ msgid "You must assign a production lot for this product"
-#~ msgstr "U moet een productie partij toewijzen voor dit product"
-
-#~ msgid "Split in Production lots"
-#~ msgstr "Splits in productie partijen"
-
-#~ msgid "Next Production Orders"
-#~ msgstr "Volgende productieorders"
-
-#, python-format
-#~ msgid "PROD: %s"
-#~ msgstr "PROD: %s"
-
-#~ msgid ""
-#~ "Fill this product to track easily your production costs in the analytic "
-#~ "accounting."
-#~ msgstr ""
-#~ "Vul dit product is om eenvoudig de productiekosten via kostenplaatsen bij te "
-#~ "houden."
-
-#~ msgid "BoM Revisions"
-#~ msgstr "Materiaallijst versies"
-
-#, python-format
-#~ msgid "Couldn't find a bill of material for this product."
-#~ msgstr "Kan geen materiaallijst voor dit product vinden."
-
-#, python-format
-#~ msgid "Active Id is not found"
-#~ msgstr "Active Id is niet gevonden"
-
-#~ msgid "MRP Management"
-#~ msgstr "Productie"
-
-#~ msgid ""
-#~ "Master Bills of Materials allow you to create and manage the list of "
-#~ "necessary raw materials used to make a finished product. OpenERP will use "
-#~ "these BoMs to automatically propose manufacturing orders according to "
-#~ "product needs. You can either create a bill of materials to define specific "
-#~ "production steps or define a single multi-level bill of materials."
-#~ msgstr ""
-#~ "Met de materiaallijsten kunt u een lijst van materialen/grondstoffen maken "
-#~ "en beheren die worden gebruikt om een ​​eindproduct te maken. OpenERP zal "
-#~ "deze materiaallijsten gebruiken om automatisch productieorders voor te "
-#~ "stellen op basis van wat een product nodig heeft. U kunt aan een "
-#~ "materiaallijst specifieke stappen in het productieproces toevoegen of "
-#~ "definieer een materiaallijst met meerdere niveaus."
-
-#~ msgid ""
-#~ "UoM (Unit of Measure) is the unit of measurement for the inventory control"
-#~ msgstr "De maateenheid is de eenheid voor het beheren van de voorraad"
-
-#~ msgid ""
-#~ "When the production order is created the state is set to 'Draft'.\n"
-#~ " If the order is confirmed the state is set to 'Waiting Goods'.\n"
-#~ " If any exceptions are there, the state is set to 'Picking Exception'.       "
-#~ "                             \n"
-#~ "If the stock is available then the state is set to 'Ready to Produce'.\n"
-#~ " When the production gets started then the state is set to 'In Production'.\n"
-#~ " When the production is over, the state is set to 'Done'."
-#~ msgstr ""
-#~ "Als de productieorder wordt aangemaakt, dan is de status ingesteld op "
-#~ "'Concept'.\n"
-#~ "  Als de productieorder wordt bevestigd, dan wordt de status ingesteld op "
-#~ "'Wachten op materiaal'.\n"
-#~ "  Als er fouten zijn, dan wordt de status ingesteld op 'Picking fout'.\n"
-#~ "Als de voorraad beschikbaar is, dan wordt de status ingesteld op 'Gereed "
-#~ "voor productie'.\n"
-#~ "  Wanneer de productie wordt gestart,dan wordt de status ingesteld op 'In "
-#~ "productie'.\n"
-#~ "  Wanneer de productie gereed is, dan wordt de status ingesteld op 'Gereed'."
-
-#~ msgid ""
-#~ "Define specific property groups that can be assigned to the properties of "
-#~ "your bill of materials."
-#~ msgstr ""
-#~ "Definieer specifieke eigenschap groepen die kunnen worden toegewezen om uw "
-#~ "materiaallijst."
-
-#~ msgid "Component Product"
-#~ msgstr "Component Product"
-
-#~ msgid ""
-#~ "Work Centers allow you to create and manage manufacturing units.  They "
-#~ "consist of workers and/or machines, which are considered as units for "
-#~ "capacity and planning forecast.  Keep in mind that the working time and "
-#~ "resource leave are not taken into account in the time computation of the "
-#~ "work center."
-#~ msgstr ""
-#~ "Met werkplekken kunt u productie plaatsen maken en beheren. Ze bestaan ​​uit "
-#~ "werknemers en/of machines, die worden beschouwd als eenheden voor de "
-#~ "capaciteit en planningsprognose. Houd er rekening mee dat de werk-tijd en "
-#~ "resource afwezigheid niet worden meegenomen in de tijdberekening van de "
-#~ "werkplek."
-
-#~ msgid ""
-#~ "Bills of materials components are components and sub-products used to create "
-#~ "master bills of materials. Use this menu to search in which BoM a specific "
-#~ "component is used."
-#~ msgstr ""
-#~ "Componenten van materiaallijsten zijn componenten en sub-producten die "
-#~ "worden gebruikt om hoofd materiaallijsten te maken. Gebruik dit menu om te "
-#~ "zoeken in welke materiaallijst een specifiek component wordt gebruikt."
-
-#~ msgid ""
-#~ "If a sub-product is used in several products, it can be useful to create its "
-#~ "own BoM. Though if you don't want separated production orders for this sub-"
-#~ "product, select Set/Phantom as BoM type. If a Phantom BoM is used for a root "
-#~ "product, it will be sold and shipped as a set of components, instead of "
-#~ "being produced."
-#~ msgstr ""
-#~ "Indien een sub-product wordt gebruikt in verschillende producten kan het "
-#~ "nuttig zijn een eigen materiaallijst te maken. Maar als u niet wilt dat "
-#~ "gescheiden productie-orders voor deze sub-product worden gemaakt, selecteer "
-#~ "Set/Phantom als materiaallijst type. Als Phantom materiaallijst wordt "
-#~ "gebruikt voor een basisproduct, dan worden de afzonderlijke componenten "
-#~ "verkocht en geleverd in plaats van het geproduceerde product."
-
-#~ msgid ""
-#~ "The Properties in OpenERP are used to select the right bill of materials for "
-#~ "manufacturing a product when you have different ways of building the same "
-#~ "product. You can assign several properties to each Bill of Materials. When a "
-#~ "sales person creates a sales order, he can relate it to several properties "
-#~ "and OpenERP will automatically select the BoM to use according the needs."
-#~ msgstr ""
-#~ "De eigenschappen in OpenERP worden gebruikt om de juiste materiaallijst te "
-#~ "selecteren voor het produceren van een product  wanneer u op verschillende "
-#~ "manieren hetzelfde product kan produceren. U kunt een aantal eigenschappen "
-#~ "aan elke materiaallijst koppelen. Wanneer een verkoper een verkooporder "
-#~ "aanmaakt, kan hij relateren aan een aantal eigenschappen en OpenERP "
-#~ "selecteert automatisch de te gebruiken materiaallijst."
-
-#~ msgid ""
-#~ "Manufacturing Orders describe the operations that need to be carried out and "
-#~ "the raw materials usage for each production stage. You use specifications "
-#~ "(bills of materials or BoM) to work out the raw material requirements and "
-#~ "the manufacturing orders needed for the finished products. Once the bills of "
-#~ "materials have been defined, OpenERP is capable of automatically deciding on "
-#~ "the manufacturing route depending on the needs of the company."
-#~ msgstr ""
-#~ "Productieorders beschrijven de bewerkingen die moeten worden uitgevoerd en "
-#~ "de grondstoffen welke worden gebruik voor elke productie fase. U gebruikt de "
-#~ "specificaties (materialenlijst) om de materiaal-eisen te specificeren en de "
-#~ "productie-orders die nodig zijn voor de eindproducten. Zodra de "
-#~ "materiaallijst zijn gedefinieerd, is OpenERP  in staat om automatisch te "
-#~ "beslissen over de productie-route, afhankelijk van de behoeften van de "
-#~ "onderneming."
-
-#~ msgid "Reporting"
-#~ msgstr "Rapportages"
-
-#~ msgid "Picking list"
-#~ msgstr "Verzamellijst"
-
-#~ msgid "Product UOM"
-#~ msgstr "Product maateenheid"
-
-#, python-format
-#~ msgid "Supplier Price per Uom"
-#~ msgstr "Lev. prijs per eenheid"
-
-#, python-format
-#~ msgid "Manufacturing order '%s' is scheduled for the %s."
-#~ msgstr "Productieorder '%s' is gepland voor %s."
-
-#~ msgid ""
-#~ "Routings allow you to create and manage the manufacturing operations that "
-#~ "should be followed within your work centers in order to produce a product. "
-#~ "They are attached to bills of materials that will define the required raw "
-#~ "materials."
-#~ msgstr ""
-#~ "Productiestappen geven u de mogelijkheid om productie bewerkingen te maken "
-#~ "en te beheren, welke moeten worden opgevolgt binnen uw werkplekken om een "
-#~ "product te produceren. Ze zijn gekoppeld aan een materiaallijst, welke de "
-#~ "benodigde materialen beschrijft."
-
-#~ msgid "Modification name"
-#~ msgstr "Naam van wijziging"
-
-#~ msgid "Modification Date"
-#~ msgstr "Datum van wijziging"

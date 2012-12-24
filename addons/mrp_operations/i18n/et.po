@@ -1,20 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* mrp_operations
+# Estonian translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2010-10-30 10:39+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Estonian <et@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:40+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:23+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
@@ -25,7 +26,7 @@ msgid "Work Orders"
 msgstr "Töökorraldused"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:527
+#: code:addons/mrp_operations/mrp_operations.py:484
 #, python-format
 msgid "Operation is already finished!"
 msgstr ""
@@ -39,13 +40,6 @@ msgstr ""
 #: model:ir.model,name:mrp_operations.model_mrp_operations_operation_code
 msgid "mrp_operations.operation.code"
 msgstr "mrp_operations.operation.code"
-
-#. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:246
-#, python-format
-msgid ""
-"Work order has been <b>cancelled</b> for production order <em>%s</em>."
-msgstr ""
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -96,12 +90,6 @@ msgid "Set to Draft"
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:238
-#, python-format
-msgid "Work order is <b>pending</b> for production order <em>%s</em>."
-msgstr ""
-
-#. module: mrp_operations
 #: field:mrp.production,allow_reorder:0
 msgid "Free Serialisation"
 msgstr ""
@@ -148,11 +136,11 @@ msgid "The work orders are created on the basis of the production order."
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:122
-#: code:addons/mrp_operations/mrp_operations.py:508
-#: code:addons/mrp_operations/mrp_operations.py:512
-#: code:addons/mrp_operations/mrp_operations.py:524
-#: code:addons/mrp_operations/mrp_operations.py:527
+#: code:addons/mrp_operations/mrp_operations.py:134
+#: code:addons/mrp_operations/mrp_operations.py:465
+#: code:addons/mrp_operations/mrp_operations.py:469
+#: code:addons/mrp_operations/mrp_operations.py:481
+#: code:addons/mrp_operations/mrp_operations.py:484
 #, python-format
 msgid "Error!"
 msgstr "Viga!"
@@ -165,7 +153,7 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:520
+#: code:addons/mrp_operations/mrp_operations.py:477
 #, python-format
 msgid "Operation is Already Cancelled!"
 msgstr ""
@@ -182,13 +170,13 @@ msgid "Stock Move"
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:524
+#: code:addons/mrp_operations/mrp_operations.py:481
 #, python-format
 msgid "No operation to cancel."
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:517
+#: code:addons/mrp_operations/mrp_operations.py:474
 #, python-format
 msgid ""
 "In order to Finish the operation, it must be in the Start or Resume state!"
@@ -206,6 +194,11 @@ msgstr ""
 #: selection:mrp.workorder,state:0
 msgid "Draft"
 msgstr "Mustand"
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:0
+msgid "Actual Production Date"
+msgstr ""
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -259,7 +252,7 @@ msgid "Product Qty"
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:122
+#: code:addons/mrp_operations/mrp_operations.py:134
 #, python-format
 msgid "Manufacturing order cannot start in state \"%s\"!"
 msgstr ""
@@ -346,12 +339,6 @@ msgid "December"
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:230
-#, python-format
-msgid "Work order has been <b>done</b> for production order <em>%s</em>."
-msgstr ""
-
-#. module: mrp_operations
 #: view:mrp.workorder:0
 #: field:mrp.workorder,month:0
 msgid "Month"
@@ -402,14 +389,14 @@ msgid "In Progress"
 msgstr "Töös"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:508
+#: code:addons/mrp_operations/mrp_operations.py:465
 #, python-format
 msgid ""
 "In order to Pause the operation, it must be in the Start or Resume state!"
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:512
+#: code:addons/mrp_operations/mrp_operations.py:469
 #, python-format
 msgid "In order to Resume the operation, it must be in the Pause state!"
 msgstr ""
@@ -452,7 +439,7 @@ msgid "Production Operation Code"
 msgstr "Tootmisoperatsiooni kood"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:504
+#: code:addons/mrp_operations/mrp_operations.py:461
 #, python-format
 msgid ""
 "Operation has already started! You can either Pause/Finish/Cancel the "
@@ -542,7 +529,7 @@ msgid "Finish the operation."
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:497
+#: code:addons/mrp_operations/mrp_operations.py:454
 #, python-format
 msgid "Operation is not started yet !"
 msgstr "Operatsiooni pole veel alustatud !"
@@ -553,10 +540,10 @@ msgid "Information from the production order."
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:497
-#: code:addons/mrp_operations/mrp_operations.py:504
-#: code:addons/mrp_operations/mrp_operations.py:517
-#: code:addons/mrp_operations/mrp_operations.py:520
+#: code:addons/mrp_operations/mrp_operations.py:454
+#: code:addons/mrp_operations/mrp_operations.py:461
+#: code:addons/mrp_operations/mrp_operations.py:474
+#: code:addons/mrp_operations/mrp_operations.py:477
 #, python-format
 msgid "Sorry!"
 msgstr "Vabandust!"
@@ -624,12 +611,6 @@ msgid ""
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:214
-#, python-format
-msgid "Work order has been <b>created</b> for production order <em>%s</em>."
-msgstr ""
-
-#. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_startoperation0
 msgid "Start Operation"
 msgstr "Alusta operatsiooni"
@@ -692,11 +673,6 @@ msgstr ""
 #: model:process.node,name:mrp_operations.process_node_workorder0
 msgid "Work Center"
 msgstr "Töökeskus"
-
-#. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-msgid "Real"
-msgstr "Reaalne"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_planned:0
@@ -782,12 +758,6 @@ msgid "#Line Orders"
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:222
-#, python-format
-msgid "Work order has been <b>started</b> for production order <em>%s</em>."
-msgstr ""
-
-#. module: mrp_operations
 #: view:mrp.production:0
 msgid "Start Working"
 msgstr ""
@@ -814,136 +784,3 @@ msgstr ""
 #: view:mrp.production.workcenter.line:0
 msgid "Duration"
 msgstr "Kestvus"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
-
-#~ msgid "Operation is started"
-#~ msgstr "Operatsioon alustatud"
-
-#~ msgid "Start working"
-#~ msgstr "Alusta tööd"
-
-#, python-format
-#~ msgid "Production Order Cannot start in [%s] state"
-#~ msgstr "Töökorraldust ei saa alustada [%s] staatusest"
-
-#~ msgid "Work Order Events Using Bar Codes"
-#~ msgstr "Töökkäsu sündmustik kasutades ribakoode"
-
-#~ msgid "Date Planned"
-#~ msgstr "Plaanitud kuupäev"
-
-#~ msgid "Start - Stop Codes"
-#~ msgstr "Alustamise - peatamisekoodid"
-
-#~ msgid "UOM"
-#~ msgstr "Mõõtühik"
-
-#~ msgid "From production order, create the workorder"
-#~ msgstr "Tootmiskorralduse vorm, loo tootmiskorraldus"
-
-#~ msgid "Start Cancel Operation"
-#~ msgstr "Alusta Tühista operatsiooni"
-
-#~ msgid ")"
-#~ msgstr ")"
-
-#~ msgid "("
-#~ msgstr "("
-
-#~ msgid "Workcenters Barcode"
-#~ msgstr "Töökeskkondade ribakood"
-
-#~ msgid "Operation is done"
-#~ msgstr "Operatsioon valmis"
-
-#, python-format
-#~ msgid "Operation is already finished !"
-#~ msgstr "Operatsioon on juba lõpetatud !"
-
-#~ msgid "Start Done Operation"
-#~ msgstr "Alusta Lõpeta operatsioon"
-
-#, python-format
-#~ msgid "There is no Operation to be cancelled !"
-#~ msgstr "Siin ei ole operatsiooni mida tühistada !"
-
-#~ msgid "Production order for any products"
-#~ msgstr "Tootmiskorraldus iga tootejaoks"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Vigane XML vaate arhitektuurile!"
-
-#, python-format
-#~ msgid "You cannot finish the operation without Starting/Resuming it !"
-#~ msgstr "Sa ei saa lõpetada operatsiooni enne, kui sa ei alusta/jätka seda !"
-
-#~ msgid "This is delay between operation start and stop in this workcenter"
-#~ msgstr ""
-#~ "See on viivitus operatsiooni alustamise ja lõpetamisevahel selles "
-#~ "töökeskkonnas"
-
-#~ msgid "From work order, define the cycles and hour for creating product"
-#~ msgstr "Töökäsu vorm, defineeri tsüklid ja tunnid toote valmistamiseks"
-
-#~ msgid "Production Work Center"
-#~ msgstr "Tootmise töökeskkond"
-
-#, python-format
-#~ msgid "Operation is Already Cancelled  !"
-#~ msgstr "Operatsioon on juba tühistatud !"
-
-#~ msgid "Production start Operation"
-#~ msgstr "Tootmise alustamise operatsioon"
-
-#~ msgid "Workcenter"
-#~ msgstr "Töökeskkond"
-
-#~ msgid "Graph view in hours by workcenter"
-#~ msgstr "Graafiline vaade tundidele töökeskonna kohta"
-
-#, python-format
-#~ msgid "You cannot Pause the Operation other then Start/Resume state !"
-#~ msgstr ""
-#~ "Sa ei saa peatada operatsiooni muus kui alustamise/jätkamise staatuses !"
-
-#~ msgid "Work Orders to Do"
-#~ msgstr "Töökäsud täitmiseks"
-
-#~ msgid "Cancel Operation"
-#~ msgstr "Tühista operatsioon"
-
-#~ msgid "Work start Operation"
-#~ msgstr "Töö alustamise operatsioon"
-
-#~ msgid "Done Operation"
-#~ msgstr "Operatsioon valmis"
-
-#~ msgid "Operation is cancelled"
-#~ msgstr "Operatsioon tühistatud"
-
-#, python-format
-#~ msgid ""
-#~ "Operation has already started !' 'You  can either Pause /Finish/Cancel the "
-#~ "operation"
-#~ msgstr ""
-#~ "Operatsioon on juba alustatud !' 'Sa võid kas Peatada/Lõpetada/Tühistada "
-#~ "operatsiooni"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Vigane mudeli nimi toimingu definitsioonis."
-
-#~ msgid "Operations Code"
-#~ msgstr "Operatsioonide kood"
-
-#~ msgid "Mrp Operation Process"
-#~ msgstr "TVP operatsioonide protsess"
-
-#~ msgid "Prod.State"
-#~ msgstr "Tootmise olek"
-
-#~ msgid "All Work Orders"
-#~ msgstr "Kõik töökorraldused"

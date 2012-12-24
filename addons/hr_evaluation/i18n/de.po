@@ -1,21 +1,20 @@
 # German translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-19 23:18+0000\n"
-"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
-"consulting.net>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-21 04:42+0000\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:14+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr_evaluation
@@ -177,7 +176,7 @@ msgid "Send to Employees"
 msgstr "Sende an Mitarbeiter"
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:83
+#: code:addons/hr_evaluation/hr_evaluation.py:84
 #, python-format
 msgid ""
 "\n"
@@ -239,8 +238,8 @@ msgid "Deadline"
 msgstr "Frist"
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:250
-#: code:addons/hr_evaluation/hr_evaluation.py:326
+#: code:addons/hr_evaluation/hr_evaluation.py:235
+#: code:addons/hr_evaluation/hr_evaluation.py:320
 #, python-format
 msgid "Warning!"
 msgstr "Warnung !"
@@ -266,7 +265,7 @@ msgid "Interviews"
 msgstr "Interviews"
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:82
+#: code:addons/hr_evaluation/hr_evaluation.py:83
 #, python-format
 msgid "Regarding "
 msgstr "Bezüglich "
@@ -604,14 +603,6 @@ msgid "Extended Filters..."
 msgstr "Erweiterter Filter..."
 
 #. module: hr_evaluation
-#: field:hr.evaluation.interview,message_comment_ids:0
-#: help:hr.evaluation.interview,message_comment_ids:0
-#: field:hr_evaluation.evaluation,message_comment_ids:0
-#: help:hr_evaluation.evaluation,message_comment_ids:0
-msgid "Comments and emails"
-msgstr "Kommentare und EMails"
-
-#. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,send_anonymous_employee:0
 msgid "Send an anonymous summary to the employee"
 msgstr "Sende anonymisierte Zusammenfassung an Mitarbeiter"
@@ -646,35 +637,6 @@ msgstr "Datum"
 #: view:hr.evaluation.interview:0
 msgid "Survey"
 msgstr "Umfrage"
-
-#. module: hr_evaluation
-#: model:ir.actions.act_window,help:hr_evaluation.action_hr_evaluation_interview_tree
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a new interview request related to a "
-"personnal evaluation. \n"
-"              </p><p>\n"
-"                Interview requests are usually generated automatically by\n"
-"                OpenERP according to an employee's appraisal plan. Each "
-"user\n"
-"                receives automatic emails and requests to evaluate their\n"
-"                colleagues periodically.\n"
-"              </p>\n"
-"            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klicken Sie zur Erstellung einer Befragung im Kontext einer "
-"Beurteilung eines Mitarbeiters. \n"
-"              </p><p>\n"
-"                Diese Interviews werden normalerweise durch das dem "
-"Mitarbeiter zugewiesene Vorgehen \n"
-"                zur Beurteilung direkt in OpenERP generiert. Jeder "
-"Mitarbeiter erhält dadurch automatisch\n"
-"                und in regelmässigen Zeitabständen Anfragen um die "
-"Mitarbeiter in regelmässigen Abständen\n"
-"                zu beurteilen. \n"
-"              </p>\n"
-"            "
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,action:0
@@ -912,7 +874,7 @@ msgid "Is Appraisal?"
 msgstr "Ist Beurteilung?"
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:326
+#: code:addons/hr_evaluation/hr_evaluation.py:320
 #, python-format
 msgid "You cannot start evaluation without Appraisal."
 msgstr "Ohne Beurteilung können Sie keine den Vorgang nicht starten"
@@ -923,7 +885,7 @@ msgid "Employee to Interview"
 msgstr "Zu beurteilender Mitarbeiter"
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:250
+#: code:addons/hr_evaluation/hr_evaluation.py:235
 #, python-format
 msgid ""
 "You cannot change state, because some appraisal(s) are in waiting answer or "
@@ -941,6 +903,22 @@ msgstr "April"
 #: view:hr_evaluation.plan.phase:0
 msgid "Appraisal Plan Phases"
 msgstr "Phasen des Beurteilungsplanes"
+
+#. module: hr_evaluation
+#: model:ir.actions.act_window,help:hr_evaluation.action_hr_evaluation_interview_tree
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new interview request related to a "
+"personal evaluation. \n"
+"              </p><p>\n"
+"                Interview requests are usually generated automatically by\n"
+"                OpenERP according to an employee's appraisal plan. Each "
+"user\n"
+"                receives automatic emails and requests to evaluate their\n"
+"                colleagues periodically.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: hr_evaluation
 #: help:hr.evaluation.interview,message_ids:0
@@ -992,418 +970,3 @@ msgstr "Zusammenfassende Beurteilung"
 #: field:hr.employee,evaluation_date:0
 msgid "Next Appraisal Date"
 msgstr "Nächstes Beurteilungsdatum"
-
-#~ msgid "Information"
-#~ msgstr "Information"
-
-#~ msgid "Score"
-#~ msgstr "Bewertung"
-
-#~ msgid "Schedule next evaluation"
-#~ msgstr "Nächste Evaluierung festlegen"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
-#~ "beinhalten"
-
-#~ msgid "Bad Points"
-#~ msgstr "Schlechte Punkte"
-
-#~ msgid "My Next Evaluation"
-#~ msgstr "Meine nächste Evaluierung"
-
-#~ msgid "Good Points"
-#~ msgstr "Gute Punkte"
-
-#~ msgid "State"
-#~ msgstr "Status"
-
-#~ msgid "Values"
-#~ msgstr "Werte"
-
-#~ msgid "To Improve"
-#~ msgstr "Zu verbessern"
-
-#~ msgid "Evaluation Type"
-#~ msgstr "Bewertungstyp"
-
-#~ msgid "Ability to create employees evaluation."
-#~ msgstr "Fähigkeit Mitarbeiter zu bewerten"
-
-#~ msgid "Apply to categories"
-#~ msgstr "Auf Kategorien anwenden"
-
-#~ msgid "Quote"
-#~ msgstr "Quote"
-
-#~ msgid "Informal Data"
-#~ msgstr "Informelle Daten"
-
-#~ msgid "Choices Results"
-#~ msgstr "Auswahl Resultat"
-
-#~ msgid "Evaluation User"
-#~ msgstr "Bewertung Mitarbeiter"
-
-#~ msgid "Configuration"
-#~ msgstr "Einstellungen"
-
-#~ msgid "Appliable Role"
-#~ msgstr "Anzuwendende Rolle"
-
-#~ msgid "Next Evaluations"
-#~ msgstr "Nächste Bewertung"
-
-#~ msgid "My Preceeding Evaluations"
-#~ msgstr "Meine vorangegangenen Bewertungen"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Fehlerhafter xml Code für diese Ansicht!"
-
-#~ msgid "Evaluation Criterions"
-#~ msgstr "Bewertungskriterien"
-
-#~ msgid "Next Employee Evaluation"
-#~ msgstr "Nächste Mitarbeiter Bewertung"
-
-#~ msgid "Quotations"
-#~ msgstr "Anführungen"
-
-#~ msgid "Type"
-#~ msgstr "Typ"
-
-#~ msgid "Notes"
-#~ msgstr "Anmerkungen"
-
-#~ msgid "Employee Evaluation Type"
-#~ msgstr "Mitarbeiter Bewertungstyp"
-
-#~ msgid "Value"
-#~ msgstr "Wert"
-
-#~ msgid "HR Responsible"
-#~ msgstr "Personal Verantwortlicher"
-
-#~ msgid "Evalution Quote"
-#~ msgstr "Bewertungs Quote"
-
-#~ msgid "My Next Evaluations"
-#~ msgstr "Meine Nächste Bewertung"
-
-#~ msgid "Evaluation Criterion"
-#~ msgstr "Bewertungskriterien"
-
-#~ msgid "Employee Response"
-#~ msgstr "MItarbeiter Antwort"
-
-#~ msgid "Evaluation Type Value"
-#~ msgstr "Bewertungstyp Wert"
-
-#~ msgid "Employee Evaluation Quote"
-#~ msgstr "Mitarbeiter Bewertungsquote"
-
-#~ msgid "Quotes"
-#~ msgstr "Anführung"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
-
-#~ msgid "Progress"
-#~ msgstr "Fortschritt"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "Warnung !"
-
-#~ msgid "Evaluation Interviews"
-#~ msgstr "Beurteilungsgespräche"
-
-#~ msgid "Sends Reminders to employess to fill the evaluations"
-#~ msgstr "Sende Erinnerung für offene Beurteilung"
-
-#, python-format
-#~ msgid ""
-#~ "You cannot change state, because some appraisal in waiting answer or draft "
-#~ "state"
-#~ msgstr "Nach Startdatum"
-
-#~ msgid " Month "
-#~ msgstr " Monat "
-
-#~ msgid "Send evaluation reminder"
-#~ msgstr "Sende Erinnerung"
-
-#~ msgid "Evaluation Summary"
-#~ msgstr "Gesamtbewertung"
-
-#~ msgid "Evaluation Plan Phase"
-#~ msgstr "Beurteilungsphase"
-
-#~ msgid "Evaluation Deadline"
-#~ msgstr "Frist für Beurteilung"
-
-#~ msgid "    Month-1    "
-#~ msgstr "    Monat - 1    "
-
-#~ msgid "(eval_name)s:Evaluation Name"
-#~ msgstr "(eval_name)s:Beurteilung Bezeichnung"
-
-#~ msgid "Ending Summary"
-#~ msgstr "Abschl. Beurteilung"
-
-#~ msgid "Interview Question"
-#~ msgstr "Fragestellung"
-
-#~ msgid "Evaluation Data"
-#~ msgstr "Beurteilungsdaten"
-
-#~ msgid "7 Days"
-#~ msgstr "7 Tage"
-
-#~ msgid " Year "
-#~ msgstr " Jahr "
-
-#~ msgid "Start Evaluation"
-#~ msgstr "Starte Beurteilung"
-
-#~ msgid "Send Mail"
-#~ msgstr "Sende EMail"
-
-#~ msgid "Interview Evaluation"
-#~ msgstr "Fragebogen Beurteilung"
-
-#~ msgid "Late"
-#~ msgstr "Verspätet"
-
-#~ msgid "Current"
-#~ msgstr "Aktuell"
-
-#~ msgid "Evaluation Interview"
-#~ msgstr "Bewertungsfragebogen"
-
-#~ msgid "Interview"
-#~ msgstr "Fragebogen"
-
-#~ msgid "Search Evaluation"
-#~ msgstr "Suche Beurteilung"
-
-#~ msgid "Evaluation Send Mail"
-#~ msgstr "Beurteilung Sende EMail"
-
-#~ msgid "(months)"
-#~ msgstr "(Monate)"
-
-#, python-format
-#~ msgid "You cannot start evaluation without Evaluation."
-#~ msgstr ""
-#~ "Sie können keine Mitarbeiterbeurteilung ohne das entsprechende Modul "
-#~ "vornehmen."
-
-#~ msgid "My Evaluation Remaining"
-#~ msgstr "Meine Personalbeurteilung"
-
-#~ msgid "Evaluations Analysis"
-#~ msgstr "Statistik Personalbeurteilung"
-
-#~ msgid "Periodic Evaluations"
-#~ msgstr "Personalbeurteilung"
-
-#~ msgid "Evaluations"
-#~ msgstr "Beurteilungen"
-
-#~ msgid "Human Resources Evaluation"
-#~ msgstr "Personalbeurteilung"
-
-#~ msgid "Is Evaluation?"
-#~ msgstr "Personalbeurteilung?"
-
-#~ msgid "Evaluation"
-#~ msgstr "Beurteilung"
-
-#~ msgid "Evaluation Plans"
-#~ msgstr "Beurteilungsablauf"
-
-#~ msgid "This is the appreciation on that summarize the evaluation"
-#~ msgstr ""
-#~ "Dieses ist die zusammenfassende Beurteilung als Ergebnis dieser "
-#~ "Personalbeurteilung"
-
-#~ msgid "Evaluation Plan Phases"
-#~ msgstr "Beurteilungsabfolge Phasen"
-
-#~ msgid "Evaluation Phases"
-#~ msgstr "Personalbeurteilung Phasen"
-
-#~ msgid "Evaluation Reminders"
-#~ msgstr "Personalbeurteilung Erinnerung"
-
-#~ msgid "Validate Evaluation"
-#~ msgstr "Freigabe Beurteilung"
-
-#~ msgid "Evaluation Plan"
-#~ msgstr "Beurteilungsabfolge"
-
-#~ msgid "Employee Evaluation"
-#~ msgstr "Personalbeurteilung"
-
-#~ msgid "Search Evaluation Plan"
-#~ msgstr "Suche Beurteilungsablaufsplan"
-
-#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
-#~ msgstr ""
-#~ "Fehler ! Sie können keine rekursive Hierachie bei Mitarbeitern definieren."
-
-#~ msgid ""
-#~ "Error ! You cannot select a department for which the employee is the manager."
-#~ msgstr ""
-#~ "Fehler ! Sie können keine Abteilung auswählen, für die dieser Mitarbeiter "
-#~ "die Leitung ausübt."
-
-#~ msgid ""
-#~ "\n"
-#~ "          Ability to create employees evaluation.\n"
-#~ "          An evaluation can be created by employee for subordinates,\n"
-#~ "          juniors as well as his manager.The evaluation is done under a "
-#~ "plan\n"
-#~ "          in which various surveys can be created and it can be defined "
-#~ "which\n"
-#~ "          level of employee hierarchy fills what and final review and "
-#~ "evaluation\n"
-#~ "          is done by the manager.Every evaluation filled by the employees "
-#~ "can be viewed\n"
-#~ "          in the form of.Implements a dashboard for My Current Evaluations\n"
-#~ "         "
-#~ msgstr ""
-#~ "\n"
-#~ "          Anwendung für die Mitarbeiterbeurteilung.\n"
-#~ "           Eine Mitarbeiterbeurteilung kann dabei sowohl für Vorgsetzte "
-#~ "durch die Mitarbeiter,\n"
-#~ "           als auch für Mitarbeiter durch deren Abteilungs- oder "
-#~ "Gruppenleiter erfolgen. Das Vorgehen\n"
-#~ "           einer Beurteilung erfolgt dabei planmäßig durch eine bestimmte "
-#~ "Abfolge verschiedener\n"
-#~ "           Befragungen von Mitarbeitern und Vorgesetzten bis zu einer "
-#~ "abschliessenden Beurteilung.\n"
-#~ "           Alle anstehenden Beurteilungsverfahren sind über die Personal "
-#~ "Pinnwand ersichtlich.\n"
-#~ "         "
-
-#~ msgid "Next Evaluation Date"
-#~ msgstr "Nächste Beurteilung"
-
-#~ msgid "Periodicity of Evaluations (months)"
-#~ msgstr "Beurteilungsfrequenz (in Monaten)"
-
-#~ msgid "First Evaluation in (months)"
-#~ msgstr "Erste Beurteilung nach (Monaten)"
-
-#~ msgid ""
-#~ "The date of the next evaluation is computed by the evaluation plan's dates "
-#~ "(first evaluation + periodicity)."
-#~ msgstr ""
-#~ "Das Datum für die nächste Beurteilung wird automatisch auf Basis des "
-#~ "zugeordneten Beurteilungsverfahrens errechnet (Erste Bewertung + Frequenz)"
-
-#~ msgid "Evaluation Form"
-#~ msgstr "Bewertungsformular"
-
-#~ msgid ""
-#~ "Each employee may be assigned an evaluation plan. Such a plan defines the "
-#~ "frequency and the way you manage your periodic personnel evaluation. You "
-#~ "will be able to define steps and attach interviews to each step. OpenERP "
-#~ "manages all kind of evaluations: bottom-up, top-down, self-evaluation and "
-#~ "final evaluation by the manager."
-#~ msgstr ""
-#~ "Jeder Mitarbeiter kann einem Mitarbeiterbewertungsverfahren zugewiesen sein. "
-#~ "Diese Beurteilungspläne definieren die Frequenz und Art der periodischen "
-#~ "Mitarbeiterbeurteilung. Es ist möglich einzelne Schritte dieses Verfahrens "
-#~ "zu definieren und dabei den Schritten Befragungsformulare zuzuweisen. "
-#~ "OpenERP ist für die Beurteilung flexibel hinsichtlich der Richtung: "
-#~ "Beurteilung von Vorgesetzten oder eine eigene Einstufung der Fähigkeiten ist "
-#~ "dabei genauso möglich wie die klassische Beurteilung von Mitarbeitern durch "
-#~ "deren Vorgesetzte. Abgeschlossen wird das Verfahren in der Regel durch eine "
-#~ "finale Beurteilung."
-
-#~ msgid ""
-#~ "Interview Requests are generated automatically by OpenERP according to an "
-#~ "employee's evaluation plan. Each user receives automatic emails and requests "
-#~ "to evaluate their colleagues periodically."
-#~ msgstr ""
-#~ "Mitarbeiterbeurteilungen werden automatisch in Abhängigkeit des "
-#~ "Bewertungsplans durch OpenERP erstellt. Jeder Benutzer erhält dabei "
-#~ "automatisch eine EMail von dem jeweils verantwortlichen Kollegen."
-
-#~ msgid "Appraisal that overpassed the deadline"
-#~ msgstr "Überfällige Berurteilungen"
-
-#~ msgid ""
-#~ "Each employee may be assigned an Appraisal Plan. Such a plan defines the "
-#~ "frequency and the way you manage your periodic personnel evaluation. You "
-#~ "will be able to define steps and attach interviews to each step. OpenERP "
-#~ "manages all kind of evaluations: bottom-up, top-down, self-evaluation and "
-#~ "final evaluation by the manager."
-#~ msgstr ""
-#~ "Jedem Mitarbeiter kann ein Beurteilungsplan zugeordnet werden. Dieser Plan "
-#~ "definiert die Häufigkeit und die Art und Weise Ihre Personal-Beurteilung.\r\n"
-#~ "Sie können Schritte definieren und Interviews zu jedem Schritt anhängen.\r\n"
-#~ "OpenERP verwaltet  verschiedene Arten: bottom-up, top-down, selbst-"
-#~ "Evaluierung und endgültige Evaluierung durch den Mananger."
-
-#~ msgid ""
-#~ "Interview Requests are generated automatically by OpenERP according to an "
-#~ "employee's Appraisal Plan. Each user receives automatic emails and requests "
-#~ "to evaluate their colleagues periodically."
-#~ msgstr ""
-#~ "Interview Anfragen werden von OpenERP entsprechend des Beurteilungsplanes "
-#~ "des Mitarbeiters automatisch erstellt. Jeder Benutzer erhält automatisch ein "
-#~ "EMail um die Kollegen regelmäßig zu beurteilen."
-
-#~ msgid "Appraisal to close within the next 7 days"
-#~ msgstr ""
-#~ "Beurteilungen, die in den nächsten 7 Tagen abgeschlossen werden müssen"
-
-#~ msgid "E-mail composition wizard"
-#~ msgstr "Email-Zusammensetzung Assistent"
-
-#~ msgid "Evaluation done in last month"
-#~ msgstr "Beurteilungen im letzten Monat"
-
-#~ msgid "Evaluation done in current year"
-#~ msgstr "Beurteilungen im aktuellen Jahr erledigt"
-
-#~ msgid "Appraisal Data"
-#~ msgstr "Beurteilungsdaten"
-
-#, python-format
-#~ msgid "Reminder to fill up Survey"
-#~ msgstr "Erinnerung zum Ausfüllen der Umfrage"
-
-#~ msgid "Evaluation done in current month"
-#~ msgstr "Beurteilungen im aktuellen Monat erledigt"
-
-#~ msgid ""
-#~ "You can define appraisal plans (ex: first interview after 6 months, then "
-#~ "every year). Then, each employee can be linked to an appraisal plan so that "
-#~ "OpenERP can automatically generate interview requests to managers and/or "
-#~ "subordinates."
-#~ msgstr ""
-#~ "Sie können Beurteilungspläne festlegen. (zB erstes Interview nach 6 Monaten, "
-#~ "dann jedes Jahr). Jeder Mitarbeiter kann mit einem Beurteilungsplan "
-#~ "verbunden werden. OpenERP erstellt dann automatisch Anfragen an Manager "
-#~ "und/oder Mitarbeiter."
-
-#, python-format
-#~ msgid ""
-#~ "Hello %s, \n"
-#~ "\n"
-#~ " Kindly post your response for '%s' survey interview. \n"
-#~ "\n"
-#~ " Thanks,"
-#~ msgstr ""
-#~ "Hallo %s, \n"
-#~ "\n"
-#~ " Bitte beantworten Sie die das Interview der Umfrage '%s' . \n"
-#~ "\n"
-#~ " Danke,"

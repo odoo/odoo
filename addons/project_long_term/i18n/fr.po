@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:04+0000\n"
-"PO-Revision-Date: 2012-05-10 17:52+0000\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:51+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:30+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: project_long_term
 #: help:project.phase,constraint_date_end:0
@@ -33,6 +33,14 @@ msgstr "En cours"
 #: view:project.project:0
 msgid "Phases"
 msgstr "Phases"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
+#: model:ir.ui.menu,name:project_long_term.menu_resouce_allocation
+#: view:project.phase:0
+#: view:project.user.allocation:0
+msgid "Team Planning"
+msgstr ""
 
 #. module: project_long_term
 #: field:project.phase,user_ids:0
@@ -143,7 +151,7 @@ msgid "In Progress Phases"
 msgstr "Phases en cours"
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:141
+#: code:addons/project_long_term/project_long_term.py:140
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -153,12 +161,6 @@ msgstr ""
 #, python-format
 msgid "Please specify a project to schedule."
 msgstr "Préciser un projet à plannifier"
-
-#. module: project_long_term
-#: view:project.compute.phases:0
-#: view:project.compute.tasks:0
-msgid "or"
-msgstr ""
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -197,11 +199,6 @@ msgstr "Séquence"
 #: help:account.analytic.account,use_phases:0
 msgid "Check this field if you plan to use phase-based scheduling"
 msgstr ""
-
-#. module: project_long_term
-#: help:project.user.allocation,date_start:0
-msgid "Starting Date"
-msgstr "Date de début"
 
 #. module: project_long_term
 #: help:project.phase,state:0
@@ -251,10 +248,9 @@ msgid "Pending Phases"
 msgstr "Phases en attentes"
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:126
-#, python-format
-msgid "Day"
-msgstr "Jour"
+#: help:project.user.allocation,date_start:0
+msgid "Starting Date"
+msgstr "Date de début"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -516,187 +512,7 @@ msgid "Name"
 msgstr "Nom"
 
 #. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
-#: model:ir.ui.menu,name:project_long_term.menu_resouce_allocation
-#: view:project.phase:0
-#: view:project.user.allocation:0
-msgid "Planning of Users"
-msgstr "Planning des utilisateurs"
-
-#~ msgid "Schedule"
-#~ msgstr "Planifier"
-
-#~ msgid "Resources Allocation"
-#~ msgstr "Allocation des ressources"
-
-#~ msgid "Compute Scheduling of Phases"
-#~ msgstr "Calculer l'ordonnancement des phases"
-
-#~ msgid "UoM (Unit of Measure) is the unit of measurement for Duration"
-#~ msgstr "UdM (unité de mesure) est l'unité de mesure de la durée"
-
-#~ msgid "Resource Allocations"
-#~ msgstr "Allocations des ressources"
-
-#, python-format
-#~ msgid " (copy)"
-#~ msgstr " (copie)"
-
-#~ msgid "Availability"
-#~ msgstr "Disponibilité"
-
-#~ msgid "_Cancel"
-#~ msgstr "_Annuler"
-
-#~ msgid "Dates"
-#~ msgstr "Dates"
-
-#~ msgid "Compute Scheduling of Task"
-#~ msgstr "Calculer l'ordonnancement des tâches"
-
-#~ msgid "State"
-#~ msgstr "État"
-
-#~ msgid "Duration UoM"
-#~ msgstr "UdM de durée"
-
-#~ msgid "Compute Task Scheduling"
-#~ msgstr "Calculer l'ordonnancement des tâches"
-
-#~ msgid "Project Resource Allocation"
-#~ msgstr "Allocation des ressources du projet"
-
-#~ msgid ""
-#~ "Availability of this resource for this project phase in percentage (=50%)"
-#~ msgstr ""
-#~ "Disponibilité de cette ressource pour cette phase du projet, en pourcentage "
-#~ "(=50%)"
-
-#~ msgid "_Ok"
-#~ msgstr "_Ok"
-
-#~ msgid "Project Resources"
-#~ msgstr "Ressources du projet"
-
-#~ msgid "project.schedule.tasks"
-#~ msgstr "project.schedule.tasks"
-
-#~ msgid "Resource Allocation"
-#~ msgstr "Allocation des ressources"
-
-#~ msgid "Task Detail"
-#~ msgstr "Détails de la tâche"
-
-#~ msgid "Current"
-#~ msgstr "Actuel"
-
-#~ msgid "Responsible"
-#~ msgstr "Responsable"
-
-#~ msgid "Compute Scheduling of Task for specified project."
-#~ msgstr "Calculer l'ordonnancement des tâches pour un projet spécifié."
-
-#~ msgid "Task Scheduling completed successfully."
-#~ msgstr "L'ordonnancement des tâches a été complété avec succès !"
-
-#~ msgid "Resource Detail"
-#~ msgstr "Détail de la ressource"
-
-#~ msgid "Message"
-#~ msgstr "Message"
-
-#~ msgid "Compute All Projects"
-#~ msgstr "Calculer tous les projets"
-
-#~ msgid "Error ! You cannot create recursive tasks."
-#~ msgstr "Erreur ! Vous ne pouvez pas créer de tâches récursives"
-
-#~ msgid "Timetable working hours to adjust the gantt diagram report"
-#~ msgstr ""
-#~ "Emploi du temps des heures travaillées pour ajuster le rapport du diagramme "
-#~ "de Gantt"
-
-#~ msgid "Long Term Project Management"
-#~ msgstr "Gestion de projets à long terme"
-
-#~ msgid "Planning"
-#~ msgstr "Planification"
-
-#~ msgid "unknown"
-#~ msgstr "inconnue"
-
-#~ msgid ""
-#~ "If the phase is created the state 'Draft'.\n"
-#~ " If the phase is started, the state becomes 'In Progress'.\n"
-#~ " If review is needed the phase is in 'Pending' state.                        "
-#~ "          \n"
-#~ " If the phase is over, the states is set to 'Done'."
-#~ msgstr ""
-#~ "Si la phase est créée, l'état est 'Brouillon'.\n"
-#~ " Si la phase est démarrée, l'état passe à 'En cours'.\n"
-#~ " Si une révision est nécessaire, l'état est 'En attente'.\n"
-#~ " Si la phase est terminée, l'état est 'Terminé'."
-
-#~ msgid "Resource"
-#~ msgstr "Ressource"
-
-#~ msgid ""
-#~ "To schedule phases of all or a specified project. It then open a gantt "
-#~ "view.\n"
-#~ "\t           "
-#~ msgstr ""
-#~ "Ordonnancer les phases d'un projet spécifié ou de tous les projets. ( "
-#~ "Déclenche l'ouverture d'une vue de type Gantt ).\n"
-#~ "\t           "
-
-#~ msgid "Compute Scheduling of phases for all or specified project"
-#~ msgstr ""
-#~ "Calculer la plannification des phases pour tous les projets ou celui spécifié"
-
-#~ msgid "Compute Phase Scheduling"
-#~ msgstr "Calculer la planification des phases"
-
-#, python-format
-#~ msgid "Please Specify Project to be schedule"
-#~ msgstr "Veuillez définir le projet à planifier"
-
-#~ msgid "Error! You cannot assign escalation to the same project!"
-#~ msgstr ""
-#~ "Erreur ! Vous ne pouvez pas attribuer une escalade sur le même projet !"
-
-#~ msgid "Error! project start-date must be lower then project end-date."
-#~ msgstr ""
-#~ "Erreur ! La date de début du projet doit être antérieure à la date de fin du "
-#~ "projet."
-
-#~ msgid "Displaying settings"
-#~ msgstr "Options d'affichage"
-
-#~ msgid ""
-#~ "A project can be split into the different phases. For each phase, you can "
-#~ "define your resources allocation, describe different tasks and link your "
-#~ "phase to previous and next phases, add date constraints for the automated "
-#~ "scheduling. Use the long term planning in order to planify your available "
-#~ "human resources, convert your phases into a series of tasks when you start "
-#~ "working on the project."
-#~ msgstr ""
-#~ "Un projet peut être divisé en différentes phases. Pour chaque phase, on peut "
-#~ "allouer de ressources, décrire différentes tâches et chaîner la phase aux "
-#~ "précédentes et suivantes, ajouter des contraintes de date pour "
-#~ "l'ordonnancement automatique. Utiliser la planification à long terme pour "
-#~ "planifier la disponibilité des ressources humaines, convertir les phases en "
-#~ "une série de tâches quand on commence à travailler sur le projet."
-
-#~ msgid "Schedule and Display info"
-#~ msgstr "Ordonnancer et afficher les informations"
-
-#~ msgid "Error ! Task end-date must be greater then task start-date"
-#~ msgstr ""
-#~ "Erreur ! La date de fin de la tâche doit être postérieure à la date de "
-#~ "démarrage"
-
-#~ msgid ""
-#~ "The ressources on the project can be computed automatically by the scheduler"
-#~ msgstr ""
-#~ "Les ressources du projet peuvent être allouées automatiquement par le "
-#~ "planificateur"
+#: view:project.compute.phases:0
+#: view:project.compute.tasks:0
+msgid "or"
+msgstr ""

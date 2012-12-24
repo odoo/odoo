@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-04 17:19+0000\n"
-"Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-05 05:20+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:03+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -97,9 +97,9 @@ msgid "Running"
 msgstr "Actief"
 
 #. module: account_asset
-#: field:account.asset.depreciation.line,amount:0
-msgid "Depreciation Amount"
-msgstr "Afschrijvingsbedrag"
+#: view:account.asset.asset:0
+msgid "Set to Draft"
+msgstr "Zet op concept"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -145,6 +145,11 @@ msgstr "Afschrijvingsregels"
 msgid "It is the amount you plan to have that you cannot depreciate."
 msgstr ""
 "Het is het bedrag dat u van plan bent te hebben, dat u niet kunt afschrijven."
+
+#. module: account_asset
+#: help:account.asset.asset,method_period:0
+msgid "The amount of time between two depreciations, in months"
+msgstr ""
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,depreciation_date:0
@@ -252,19 +257,16 @@ msgid "Date of asset purchase"
 msgstr "Aankoopdatum van activa"
 
 #. module: account_asset
-#: help:account.asset.asset,method_number:0
-msgid "Calculates Depreciation within specified interval"
-msgstr "Berekent de afschrijving binnen het gespecificeerde interval"
-
-#. module: account_asset
-#: field:account.asset.asset,active:0
-msgid "Active"
-msgstr "Actief"
-
-#. module: account_asset
 #: view:account.asset.asset:0
 msgid "Change Duration"
 msgstr "Verander duur"
+
+#. module: account_asset
+#: help:account.asset.asset,method_number:0
+#: help:account.asset.category,method_number:0
+#: help:account.asset.history,method_number:0
+msgid "The number of depreciations needed to depreciate your asset"
+msgstr ""
 
 #. module: account_asset
 #: view:account.asset.category:0
@@ -283,11 +285,6 @@ msgid "Computation Method"
 msgstr "Berekeningsmethode"
 
 #. module: account_asset
-#: help:account.asset.asset,method_period:0
-msgid "State here the time during 2 depreciations, in months"
-msgstr "Geef hier de tijd gedurende twee afschrijvingen, in maanden"
-
-#. module: account_asset
 #: constraint:account.asset.asset:0
 msgid ""
 "Prorata temporis can be applied only for time method \"number of "
@@ -297,20 +294,9 @@ msgstr ""
 "afschrijvingen\"."
 
 #. module: account_asset
-#: help:account.asset.history,method_time:0
-msgid ""
-"The method to use to compute the dates and number of depreciation lines.\n"
-"Number of Depreciations: Fix the number of depreciation lines and the time "
-"between 2 depreciations.\n"
-"Ending Date: Choose the time between 2 depreciations and the date the "
-"depreciations won't go beyond."
-msgstr ""
-"De methode welke gebruikt kan worden om de datums en het aantal "
-"afschrijvingsregels te berekenen.\n"
-"Aantal afschrijvingen: Bevestig het aantal afschrijvingsregels en de tijd "
-"tussen twee afschrijvingen.\n"
-"Einddatum: Kies de tijd tussen twee afschrijvingen en de datum waarop de "
-"afschrijvingen niet verder zal gaan dan."
+#: field:account.asset.depreciation.line,remaining_value:0
+msgid "Next Period Depreciation"
+msgstr "Volgende afschrijf periode"
 
 #. module: account_asset
 #: help:account.asset.history,method_period:0
@@ -359,6 +345,11 @@ msgid "Search Asset Category"
 msgstr "Zoek in activa categorie"
 
 #. module: account_asset
+#: view:asset.modify:0
+msgid "months"
+msgstr "maanden"
+
+#. module: account_asset
 #: model:ir.model,name:account_asset.model_account_invoice_line
 msgid "Invoice Line"
 msgstr "Factuurregel"
@@ -367,11 +358,6 @@ msgstr "Factuurregel"
 #: view:account.asset.asset:0
 msgid "Depreciation Board"
 msgstr "Afschrijvingskaart"
-
-#. module: account_asset
-#: model:ir.model,name:account_asset.model_account_move_line
-msgid "Journal Items"
-msgstr "Journaalpostregels"
 
 #. module: account_asset
 #: field:asset.asset.report,unposted_value:0
@@ -399,17 +385,20 @@ msgid "Note"
 msgstr "Opmerking"
 
 #. module: account_asset
-#: help:account.asset.asset,method:0
-#: help:account.asset.category,method:0
+#: help:account.asset.history,method_time:0
 msgid ""
-"Choose the method to use to compute the amount of depreciation lines.\n"
-"  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
-"  * Degressive: Calculated on basis of: Remaining Value * Degressive Factor"
+"The method to use to compute the dates and number of depreciation lines.\n"
+"Number of Depreciations: Fix the number of depreciation lines and the time "
+"between 2 depreciations.\n"
+"Ending Date: Choose the time between 2 depreciations and the date the "
+"depreciations won't go beyond."
 msgstr ""
-"Kies de methode welke gebruikt kan worden om de hoeveelheid "
+"De methode welke gebruikt kan worden om de datums en het aantal "
 "afschrijvingsregels te berekenen.\n"
-"   * Lineaire: Berekend op basis van: Bruto waarde / Aantal Afschrijvingen\n"
-"   * Degressief: Berekend op basis van: Restwaarde * Degressief Factor"
+"Aantal afschrijvingen: Bevestig het aantal afschrijvingsregels en de tijd "
+"tussen twee afschrijvingen.\n"
+"Einddatum: Kies de tijd tussen twee afschrijvingen en de datum waarop de "
+"afschrijvingen niet verder zal gaan dan."
 
 #. module: account_asset
 #: help:account.asset.asset,method_time:0
@@ -488,9 +477,9 @@ msgid "User"
 msgstr "Gebruiker"
 
 #. module: account_asset
-#: field:account.asset.history,date:0
-msgid "Date"
-msgstr "Datum"
+#: field:account.asset.category,account_asset_id:0
+msgid "Asset Account"
+msgstr "Activa rekening"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -509,19 +498,14 @@ msgid "Asset History"
 msgstr "Activa historie"
 
 #. module: account_asset
-#: field:asset.asset.report,name:0
-msgid "Year"
-msgstr "Jaar"
-
-#. module: account_asset
 #: model:ir.model,name:account_asset.model_asset_depreciation_confirmation_wizard
 msgid "asset.depreciation.confirmation.wizard"
 msgstr "asset.depreciation.confirmation.wizard"
 
 #. module: account_asset
-#: field:account.asset.category,account_asset_id:0
-msgid "Asset Account"
-msgstr "Activa rekening"
+#: field:account.asset.asset,active:0
+msgid "Active"
+msgstr "Actief"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,parent_state:0
@@ -583,9 +567,9 @@ msgid "Close"
 msgstr "Afsluiten"
 
 #. module: account_asset
-#: view:account.asset.category:0
-msgid "Depreciation Method"
-msgstr "Afschrijvingsmethode"
+#: model:ir.model,name:account_asset.model_account_move_line
+msgid "Journal Items"
+msgstr "Journaalpostregels"
 
 #. module: account_asset
 #: view:asset.modify:0
@@ -620,9 +604,14 @@ msgid "Current"
 msgstr "Huidig"
 
 #. module: account_asset
-#: field:account.asset.depreciation.line,remaining_value:0
-msgid "Amount to Depreciate"
-msgstr "Bedrag voor waardevermindering"
+#: view:account.asset.category:0
+msgid "Depreciation Method"
+msgstr "Afschrijvingsmethode"
+
+#. module: account_asset
+#: field:account.asset.depreciation.line,amount:0
+msgid "Current Depreciation"
+msgstr "Huidige afschrijving"
 
 #. module: account_asset
 #: field:account.asset.asset,name:0
@@ -658,6 +647,15 @@ msgstr "Historische naam"
 #: field:account.asset.depreciation.line,depreciated_value:0
 msgid "Amount Already Depreciated"
 msgstr "Bedrag al in mindering gebracht"
+
+#. module: account_asset
+#: help:account.asset.asset,method:0
+#: help:account.asset.category,method:0
+msgid ""
+"Choose the method to use to compute the amount of depreciation lines.\n"
+"  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
+"  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
+msgstr ""
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,move_check:0
@@ -707,9 +705,9 @@ msgstr ""
 "als deze worden aangemaakt door een facturen."
 
 #. module: account_asset
-#: view:account.asset.asset:0
-msgid "Set to Draft"
-msgstr "Zet op concept"
+#: field:asset.asset.report,name:0
+msgid "Year"
+msgstr "Jaar"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_depreciation_line
@@ -746,6 +744,11 @@ msgid "State here the time between 2 depreciations, in months"
 msgstr "Geef hier de tijd tussen twee afschrijvingen, in maanden"
 
 #. module: account_asset
+#: field:account.asset.history,date:0
+msgid "Date"
+msgstr "Datum"
+
+#. module: account_asset
 #: field:account.asset.asset,method_number:0
 #: selection:account.asset.asset,method_time:0
 #: field:account.asset.category,method_number:0
@@ -771,124 +774,3 @@ msgstr "Bevestig activa"
 #: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_tree
 msgid "Asset Hierarchy"
 msgstr "Activa hiërarchie"
-
-#~ msgid "Wrong credit or debit value in accounting entry !"
-#~ msgstr "Verkeerde debet of credit waarde in boekingsregel!"
-
-#~ msgid "Invalid BBA Structured Communication !"
-#~ msgstr "Ongeldige BBA gestructureerde communicatie!"
-
-#~ msgid "Gross value "
-#~ msgstr "Bruto waarde "
-
-#~ msgid "Other Information"
-#~ msgstr "Overige informatie"
-
-#~ msgid "Month"
-#~ msgstr "Maand"
-
-#~ msgid ""
-#~ "The selected account of your Journal Entry forces to provide a secondary "
-#~ "currency. You should remove the secondary currency on the account or select "
-#~ "a multi-currency view on the journal."
-#~ msgstr ""
-#~ "De geselecteerde rekening van uw journalboeking vraagt om een tweede valuta. "
-#~ "U moet de tweede valuta op de rekening verwijderen of selecteer een multi-"
-#~ "valuta overzicht van de boeking."
-
-#~ msgid "State"
-#~ msgstr "Status"
-
-#~ msgid ""
-#~ "The date of your Journal Entry is not in the defined period! You should "
-#~ "change the date or remove this constraint from the journal."
-#~ msgstr ""
-#~ "De datum van uw dagboek boeking is niet in de gedefinieerde periode! U moet "
-#~ "de datum aanpassen of deze beperking van het dagboek verwijderen."
-
-#~ msgid "You can not create journal items on an account of type view."
-#~ msgstr ""
-#~ "Het is niet mogelijk om journaal boekingen te doen op een rekening van het "
-#~ "type 'aanzicht'"
-
-#~ msgid "Company must be the same for its related account and period."
-#~ msgstr "Bedrijf moet gelijk zijn voor de gerelateerde rekening en periode."
-
-#~ msgid "Month-1"
-#~ msgstr "Maand-1"
-
-#~ msgid "You can not create journal items on closed account."
-#~ msgstr ""
-#~ "Het is niet mogelijk een journaal boeking te doen op een afgesloten rekening."
-
-#~ msgid "Assets purchased in current year"
-#~ msgstr "Activa gekocht in afgelopen jaar"
-
-#~ msgid "Compute assets"
-#~ msgstr "Bereken activa"
-
-#~ msgid "Error ! You can not create recursive assets."
-#~ msgstr "Fout! Het is niet mogelijk recursieve activa te maken."
-
-#~ msgid "Assets purchased in current month"
-#~ msgstr "Activa gekocht in huidige maand"
-
-#~ msgid "Assets purchased in last month"
-#~ msgstr "Activa gekocht in afgelopen maand"
-
-#~ msgid "Sequence of the depreciation"
-#~ msgstr "Volgorde van waardevermindering"
-
-#~ msgid "Modify asset"
-#~ msgstr "Aanpassen activa"
-
-#~ msgid "Analytic information"
-#~ msgstr "Kostenplaats informatie"
-
-#~ msgid "Close asset"
-#~ msgstr "Gesloten activa"
-
-#~ msgid "Invoice Number must be unique per Company!"
-#~ msgstr "Factuurnummer moet uniek zijn per bedrijf!"
-
-#~ msgid "Accounting information"
-#~ msgstr "Boekhoud informatie"
-
-#~ msgid ""
-#~ "This wizard will post the depreciation lines of running assets that belong "
-#~ "to the selected period."
-#~ msgstr ""
-#~ "Deze wizard zal de afschrijvingsregels boeken van de lopende activa, welke "
-#~ "behoren aan de geselecteerde periode."
-
-#~ msgid ""
-#~ "When an asset is created, the state is 'Draft'.\n"
-#~ "If the asset is confirmed, the state goes in 'Running' and the depreciation "
-#~ "lines can be posted in the accounting.\n"
-#~ "You can manually close an asset when the depreciation is over. If the last "
-#~ "line of depreciation is posted, the asset automatically goes in that state."
-#~ msgstr ""
-#~ "Wanneer een activa is aangemaakt, is de status 'Concept'.\n"
-#~ "Als de activa wordt bevestigd, wordt status 'Lopend' en de "
-#~ "afschrijvingsregels kunnen geboekt worden in de boekhouding.\n"
-#~ "U kunt handmatig een activa sluiten als het afschrijven voorbij is. Als de "
-#~ "laatste regel van de afschrijvingen wordt geboekt, wordt dit automatisch de "
-#~ "status."
-
-#~ msgid "Post Depreciation Lines"
-#~ msgstr "Boek afschrijvingsregel"
-
-#~ msgid "Asset durations to modify"
-#~ msgstr "Activa looptijd om te bewerken"
-
-#~ msgid "Review Asset Categories"
-#~ msgstr "Controleer uw activa categorieën"
-
-#~ msgid ""
-#~ "From this report, you can have an overview on all depreciation. The tool "
-#~ "search can also be used to personalise your Assets reports and so, match "
-#~ "this analysis to your needs;"
-#~ msgstr ""
-#~ "Uit dit rapport, krijgt u een overzicht van alle afschrijvingen. De "
-#~ "zoekmogelijkheid kan ook worden gebruikt om uw activarapporten te "
-#~ "personaliseren en deze analyse af te stemmen op uw behoeften;"

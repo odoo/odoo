@@ -1,21 +1,21 @@
 # Serbian translation for openobject-addons
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-05-10 18:22+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:32+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:27+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: product
 #: field:product.packaging,rows:0
@@ -31,11 +31,6 @@ msgstr ""
 #: help:product.product,seller_qty:0
 msgid "This is minimum quantity to purchase from Main Supplier."
 msgstr "Ovo je minimalna kolicina za nabavku od glavnog dobavljaca."
-
-#. module: product
-#: model:product.uom,name:product.product_uom_day
-msgid "Day"
-msgstr "Dan"
 
 #. module: product
 #: model:product.template,name:product.product_product_34_product_template
@@ -109,8 +104,8 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:177
-#: code:addons/product/product.py:206
+#: code:addons/product/pricelist.py:179
+#: code:addons/product/product.py:208
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -121,16 +116,11 @@ msgid "Small-sized image"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:174
+#: code:addons/product/product.py:176
 #, python-format
 msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
 "both belong to different Category!."
-msgstr ""
-
-#. module: product
-#: model:product.uom,name:product.product_uom_dozen
-msgid "Dozen"
 msgstr ""
 
 #. module: product
@@ -192,7 +182,7 @@ msgid "Product Type"
 msgstr "Tip proizvoda"
 
 #. module: product
-#: code:addons/product/product.py:410
+#: code:addons/product/product.py:412
 #, python-format
 msgid "Products: "
 msgstr "Proizvodi: "
@@ -279,11 +269,6 @@ msgstr ""
 #: field:product.uom,category_id:0
 msgid "Category"
 msgstr "Kategorija"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_litre
-msgid "Litre"
-msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_25_product_template
@@ -510,6 +495,11 @@ msgid "Headset standard"
 msgstr ""
 
 #. module: product
+#: model:product.uom,name:product.product_uom_day
+msgid "Day(s)"
+msgstr ""
+
+#. module: product
 #: help:product.product,incoming_qty:0
 msgid ""
 "Quantity of products that are planned to arrive.\n"
@@ -568,13 +558,9 @@ msgid "PC Assemble + Custom (PC on Demand)"
 msgstr ""
 
 #. module: product
-#: model:process.transition,note:product.process_transition_supplierofproduct0
-msgid ""
-"1 or several supplier(s) can be linked to a product. All information stands "
-"in the product form."
+#: model:product.template,description:product.product_product_27_product_template
+msgid "Custom Laptop based on customer's requirement."
 msgstr ""
-"1 ili nekoliko dobavljaca mogu biti povezani sa proizvodom. Sve se "
-"informacije nalaze u formi samog Proizvoda."
 
 #. module: product
 #: help:product.packaging,width:0
@@ -582,7 +568,7 @@ msgid "The width of the package"
 msgstr "Širina paketa"
 
 #. module: product
-#: code:addons/product/product.py:359
+#: code:addons/product/product.py:361
 #, python-format
 msgid "Unit of Measure categories Mismatch!"
 msgstr ""
@@ -687,6 +673,7 @@ msgstr ""
 
 #. module: product
 #: field:product.supplierinfo,name:0
+#: field:product.template,seller_ids:0
 msgid "Supplier"
 msgstr "Dobavljac"
 
@@ -714,8 +701,8 @@ msgid "If checked new messages require your attention."
 msgstr ""
 
 #. module: product
-#: model:product.category,name:product.product_category_1
-msgid "Saleable"
+#: field:product.product,ean13:0
+msgid "EAN13 Barcode"
 msgstr ""
 
 #. module: product
@@ -790,6 +777,11 @@ msgid "End Date"
 msgstr "Datum završetka"
 
 #. module: product
+#: model:product.uom,name:product.product_uom_litre
+msgid "Liter(s)"
+msgstr ""
+
+#. module: product
 #: view:product.price_list:0
 msgid "Print"
 msgstr "Štampa"
@@ -822,7 +814,6 @@ msgstr "Ključ"
 #. module: product
 #: model:ir.actions.report.xml,name:product.report_product_pricelist
 #: model:ir.model,name:product.model_product_pricelist
-#: field:product.product,price:0
 #: field:product.product,pricelist_id:0
 #: view:product.supplierinfo:0
 msgid "Pricelist"
@@ -830,8 +821,8 @@ msgstr "Cenovnik"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_hour
-msgid "Hour"
-msgstr "Sat"
+msgid "Hour(s)"
+msgstr ""
 
 #. module: product
 #: selection:product.template,state:0
@@ -844,9 +835,13 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: product
-#: model:product.template,description:product.product_product_27_product_template
-msgid "Custom Laptop based on customer's requirement."
+#: model:process.transition,note:product.process_transition_supplierofproduct0
+msgid ""
+"1 or several supplier(s) can be linked to a product. All information stands "
+"in the product form."
 msgstr ""
+"1 ili nekoliko dobavljaca mogu biti povezani sa proizvodom. Sve se "
+"informacije nalaze u formi samog Proizvoda."
 
 #. module: product
 #: field:product.pricelist.item,price_round:0
@@ -910,11 +905,6 @@ msgstr ""
 #: field:product.packaging,weight:0
 msgid "Total Package Weight"
 msgstr "Ukupna težina paketa"
-
-#. module: product
-#: field:product.product,seller_info_id:0
-msgid "unknown"
-msgstr ""
 
 #. module: product
 #: help:product.packaging,code:0
@@ -1090,6 +1080,11 @@ msgid "Right Parent"
 msgstr ""
 
 #. module: product
+#: field:product.product,price:0
+msgid "Price"
+msgstr ""
+
+#. module: product
 #: field:product.pricelist.item,price_surcharge:0
 msgid "Price Surcharge"
 msgstr "Cena doplate"
@@ -1162,6 +1157,11 @@ msgstr ""
 msgid ""
 "Gives the sequence order when displaying a list of product categories."
 msgstr "Daje redosled sekvenci pri prikazu liste kategorije proizvoda."
+
+#. module: product
+#: model:product.uom,name:product.product_uom_dozen
+msgid "Dozen(s)"
+msgstr ""
 
 #. module: product
 #: field:product.uom,factor:0
@@ -1238,7 +1238,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:359
+#: code:addons/product/product.py:361
 #, python-format
 msgid ""
 "New Unit of Measure '%s' must belong to same Unit of Measure category '%s' "
@@ -1293,11 +1293,6 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: field:product.template,seller_ids:0
-msgid "Partners"
-msgstr "Partneri"
-
-#. module: product
 #: help:product.pricelist.item,categ_id:0
 msgid ""
 "Specify a product category if this rule only applies to products belonging "
@@ -1310,7 +1305,12 @@ msgid "Inventory"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:736
+#: field:product.product,seller_info_id:0
+msgid "Supplier Info"
+msgstr "Informacije dobavljača"
+
+#. module: product
+#: code:addons/product/product.py:729
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -1431,16 +1431,9 @@ msgstr ""
 
 #. module: product
 #: selection:product.ul,type:0
-#: model:product.uom,name:product.product_uom_unit
 #: model:product.uom.categ,name:product.product_uom_categ_unit
 msgid "Unit"
 msgstr "Jedinica"
-
-#. module: product
-#: code:addons/product/product.py:588
-#, python-format
-msgid "Product has been <b>created</b>."
-msgstr ""
 
 #. module: product
 #: field:product.pricelist.version,date_start:0
@@ -1551,8 +1544,8 @@ msgid "Pricelist Name"
 msgstr "Naziv cenovnika"
 
 #. module: product
-#: field:product.product,ean13:0
-msgid "EAN13 Barcode"
+#: model:product.category,name:product.product_category_1
+msgid "Saleable"
 msgstr ""
 
 #. module: product
@@ -1784,7 +1777,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:206
+#: code:addons/product/product.py:208
 #, python-format
 msgid "Cannot change the category of existing Unit of Measure '%s'."
 msgstr ""
@@ -1820,7 +1813,7 @@ msgid "Default Unit of Measure"
 msgstr "Podrazumevana Jedinica Mere"
 
 #. module: product
-#: code:addons/product/pricelist.py:375
+#: code:addons/product/pricelist.py:377
 #, python-format
 msgid "Partner section of the product form"
 msgstr "Deo za partnera u formi proizvoda"
@@ -1846,7 +1839,12 @@ msgid "Messages"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:174
+#: model:product.uom,name:product.product_uom_unit
+msgid "Unit(s)"
+msgstr ""
+
+#. module: product
+#: code:addons/product/product.py:176
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -2160,7 +2158,7 @@ msgid "Normal"
 msgstr "Normalno"
 
 #. module: product
-#: code:addons/product/pricelist.py:177
+#: code:addons/product/pricelist.py:179
 #, python-format
 msgid ""
 "At least one pricelist has no active version !\n"
@@ -2213,12 +2211,6 @@ msgstr ""
 #: selection:product.template,mes_type:0
 msgid "Variable"
 msgstr "Promenljiva"
-
-#. module: product
-#: field:product.product,message_comment_ids:0
-#: help:product.product,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
 
 #. module: product
 #: field:product.template,rental:0
@@ -2376,7 +2368,7 @@ msgid "15” LCD Monitor"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:374
+#: code:addons/product/pricelist.py:376
 #: field:product.pricelist.item,base_pricelist_id:0
 #, python-format
 msgid "Other Pricelist"
@@ -2510,823 +2502,3 @@ msgstr "Obim u m3"
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
 msgstr "Popust"
-
-#~ msgid ""
-#~ "The cost of the product for accounting stock valuation. It can serves as a "
-#~ "base price for supplier price."
-#~ msgstr ""
-#~ "Cena proizvoda za računovodstvene ocene zaliha. Ona može da služi kao osnova "
-#~ "za cenu dobavljača."
-
-#~ msgid ""
-#~ "Determine if the product is visible in the list of products within a "
-#~ "selection from a purchase order line."
-#~ msgstr ""
-#~ "Odredite da li je proizvod vidljiv na listi proizvoda u okviru  izabranih iz "
-#~ "stavki narudžbenice."
-
-#~ msgid "DDR 512MB PC400"
-#~ msgstr "DDR 512MB PC400"
-
-#~ msgid "Onsite Senior Intervention"
-#~ msgstr "Intervencija stručnjaka na licu mesta"
-
-#~ msgid ""
-#~ "The minimal quantity to purchase for this supplier, expressed in the default "
-#~ "unit of measure."
-#~ msgstr ""
-#~ "Minimalna količina koja se naručuje od ovog dobavljača, izražena u "
-#~ "podrazumevanim jedinicama mere."
-
-#~ msgid "Net weight"
-#~ msgstr "Neto težina"
-
-#~ msgid ""
-#~ "Quantities of products that are planned to arrive in selected locations or "
-#~ "all internal if none have been selected."
-#~ msgstr ""
-#~ "Količina proizvoda koja je planirana da stigne na odabranu lokaciju ili je "
-#~ "sve interno ako ništa nije odabrano."
-
-#~ msgid ""
-#~ "Futur stock for this product according to the selected location or all "
-#~ "internal if none have been selected. Computed as: Real Stock - Outgoing + "
-#~ "Incoming."
-#~ msgstr ""
-#~ "Buduće zalihe za ovaj proizvod su na osnovu odabrane lokacije ili su sve "
-#~ "interne ako ništa nije odabrano. Izračunato kao: Realne zalihe - Odlazne + "
-#~ "Dolazne."
-
-#~ msgid ""
-#~ "Set a template if this rule only apply to a template of product. Keep empty "
-#~ "for all products"
-#~ msgstr ""
-#~ "Postavite šablon ako se ovo pravilo primenjuje samo na šablon proizvoda. "
-#~ "Ostavite prazno za sve proizvode"
-
-#~ msgid "Procure Method"
-#~ msgstr "Obezbeđene metode"
-
-#~ msgid "Product Process"
-#~ msgstr "Procesi proizvoda"
-
-#~ msgid "Sellable"
-#~ msgstr "Za prodaju"
-
-#~ msgid "Kit Keyboard + Mouse"
-#~ msgstr "Komplet tastatura + miš"
-
-#~ msgid "Customer Price"
-#~ msgstr "Cena kupca"
-
-#~ msgid "Rentable Product"
-#~ msgstr "Rentabilan proizvod"
-
-#~ msgid "List Price"
-#~ msgstr "Spisak cena"
-
-#~ msgid "Prices Types"
-#~ msgstr "Vrsta cena"
-
-#~ msgid ""
-#~ "Base price for computing the customer price. Sometimes called the catalog "
-#~ "price."
-#~ msgstr ""
-#~ "Osnovna cena za izračunavanje cene za kupca. Nekada se zove kataloška cena."
-
-#~ msgid "Processor AMD Athlon XP 2200+"
-#~ msgstr "Procesor AMD Athlon XP 2200+"
-
-#~ msgid "Starting date for this pricelist version to be valid."
-#~ msgstr "Datum od kada je ova verzija cenovnika validna."
-
-#~ msgid "Weigths"
-#~ msgstr "Težina"
-
-#~ msgid "Silent fan"
-#~ msgstr "Tihi ventilator"
-
-#~ msgid ""
-#~ "Produce will generate production order or tasks, according to the product "
-#~ "type. Purchase will trigger purchase orders when requested."
-#~ msgstr ""
-#~ "Proizvodi će generisati nalog ili posao, u skladu sa tipom proizvoda. Zahtev "
-#~ "za porudžbinom će da pokrene narudžbenicu."
-
-#~ msgid "You can see the list of suppliers for that product."
-#~ msgstr "Možete da vidite spisak dobavljača za ovaj proizvod."
-
-#~ msgid "The number of layer on a palet or box"
-#~ msgstr "Broj sloja na paleti ili pregradi"
-
-#~ msgid "Units of Measure Categories"
-#~ msgstr "Kategorije jedinica mera"
-
-#~ msgid ""
-#~ "Set a product if this rule only apply to one product. Keep empty for all "
-#~ "products"
-#~ msgstr ""
-#~ "Izaberite proizvod ako se ovo pravilo odnosi samo na njega. Ostavite prazno "
-#~ "za sve proizvode"
-
-#~ msgid "Prices Computations"
-#~ msgstr "Računanje cena"
-
-#~ msgid "Number of Layer"
-#~ msgstr "Broj sloja"
-
-#~ msgid "Error ! You can not create recursive categories."
-#~ msgstr "Greška! Ne možete da napravite rekurzivne kategorije."
-
-#~ msgid "Keyboard"
-#~ msgstr "Tastatura"
-
-#~ msgid "Customer Lead Time"
-#~ msgstr "Vremenski interval za kupca"
-
-#~ msgid "Mouse"
-#~ msgstr "Miš"
-
-#~ msgid ""
-#~ "Standard Price: the cost price is fixed and recomputed periodically (usually "
-#~ "at the end of the year), Average Price: the cost price is recomputed at each "
-#~ "reception of products."
-#~ msgstr ""
-#~ "Standardna cena: cena koštanja je fiksna i preračunava se periodično "
-#~ "(uglavnom na kraju godine), Prosečna cena: cena koštanja se preračunava pri "
-#~ "svakom prijemu proizvoda."
-
-#~ msgid "Create new Product"
-#~ msgstr "Kreiranje novog proizvoda"
-
-#~ msgid "Processor AMD Athlon XP 1800+"
-#~ msgstr "Procesor AMD Athlon XP 1800+"
-
-#~ msgid "Priority"
-#~ msgstr "Prioritet"
-
-#~ msgid "HDD on demand"
-#~ msgstr "HDD na zahtev"
-
-#~ msgid "Factor"
-#~ msgstr "Faktor"
-
-#~ msgid "Supplier Info"
-#~ msgstr "Informacije dobavljača"
-
-#~ msgid "PCE"
-#~ msgstr "PCE"
-
-#~ msgid "Miscelleanous"
-#~ msgstr "Razno"
-
-#~ msgid "Default UoM"
-#~ msgstr "Podrazumevana JM"
-
-#~ msgid "UOM"
-#~ msgstr "JM"
-
-#~ msgid "The mode for computing the price for this rule."
-#~ msgstr "Režim za računanje cene za ovo pravilo."
-
-#~ msgid "PC"
-#~ msgstr "PC"
-
-#~ msgid "Rules Test Match"
-#~ msgstr "Testiranje poklapanja pravila"
-
-#~ msgid ""
-#~ "This pricelist will be used, instead of the default one,                     "
-#~ "for sales to the current partner"
-#~ msgstr ""
-#~ "Koristiće se ovaj cenovnik, umesto podrazumevanog,                     za "
-#~ "prodaje ovom partneru"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Nevažeći XML za pregled arhitekture"
-
-#~ msgid ""
-#~ "Determine if the product can be visible in the list of product within a "
-#~ "selection from a sale order line."
-#~ msgstr ""
-#~ "Odredite da li je proizvod vidljiv na listi proizvoda u okviru  izabranih iz "
-#~ "stavki naloga za prodaju."
-
-#~ msgid "Error: UOS must be in a different category than the UOM"
-#~ msgstr ""
-#~ "Greška: JU (jedinice usluga)  i JM moraju da budu u različitim kategorijama"
-
-#~ msgid ""
-#~ "Quantities of products that are planned to leave in selected locations or "
-#~ "all internal if none have been selected."
-#~ msgstr ""
-#~ "Količine proizvoda za koje je planirano da budu ostavljene na izabrane "
-#~ "lokacije ili je sve interno ako ništa nije odabrano."
-
-#~ msgid ""
-#~ "'Make to Stock': When needed, take from the stock or wait until re-"
-#~ "supplying. 'Make to Order': When needed, purchase or produce for the "
-#~ "procurement request."
-#~ msgstr ""
-#~ "'Napravite da na zalihama': Kada je potrebno, uzmi sa zaliha ili čekaj "
-#~ "ponovnu nabavku. 'Napravite naručivanje': Kada je potrebno, nabavi ili "
-#~ "proizvedi za zahtev za nabavku."
-
-#~ msgid "HDD Seagate 7200.8 80GB"
-#~ msgstr "HDD Seagate 7200.8 80GB"
-
-#~ msgid "HDD Seagate 7200.8 160GB"
-#~ msgstr "HDD Seagate 7200.8 160GB"
-
-#~ msgid "Rack"
-#~ msgstr "Rek"
-
-#~ msgid "UoM Category"
-#~ msgstr "Kategorija JM"
-
-#~ msgid "EAN13"
-#~ msgstr "EAN13"
-
-#~ msgid "Processor on demand"
-#~ msgstr "Procesor na zahtev"
-
-#~ msgid ""
-#~ "Name of the product for this partner, will be used when printing a request "
-#~ "for quotation. Keep empty to use the internal one."
-#~ msgstr ""
-#~ "Naziv proizvoda za ovog partnera, koristiće se pri štampi zahteva za ponudu. "
-#~ "Zadržite prazno ako želite da sačuvate interni naziv."
-
-#~ msgid "Supply method"
-#~ msgstr "Načini nabavke"
-
-#~ msgid "IT components kits"
-#~ msgstr "Komplet IT komponenti"
-
-#~ msgid "Regular processor config"
-#~ msgstr "Standardna konfiguracija procesora"
-
-#~ msgid "Suppliers of Product"
-#~ msgstr "Dobavljači proizvoda"
-
-#~ msgid "Sales Properties"
-#~ msgstr "Karakteristike prodaje"
-
-#~ msgid ""
-#~ "Current quantities of products in selected locations or all internal if none "
-#~ "have been selected."
-#~ msgstr ""
-#~ "Količine proizvoda na odabranim lokacijama ili ako ništa nije odabrano sve "
-#~ "je interno."
-
-#~ msgid "Basic PC"
-#~ msgstr "Osnovni PC"
-
-#~ msgid "Row"
-#~ msgstr "Red"
-
-#~ msgid ""
-#~ "The rule only applies if the partner buys/sells more than this quantity."
-#~ msgstr ""
-#~ "Pravilo će biti primenjeno ako partner kupi/proda više od ove količine."
-
-#~ msgid "DDR 256MB PC400"
-#~ msgstr "DDR 256MB PC400"
-
-#~ msgid "Real Stock"
-#~ msgstr "Realne zalihe"
-
-#~ msgid ""
-#~ "Unit of Measure of a category can be converted between each others in the "
-#~ "same category."
-#~ msgstr ""
-#~ "Jedinica mere kategorije može da se konvertuje u okviru jedne kategorije."
-
-#~ msgid "Can be sold"
-#~ msgstr "Može da se proda"
-
-#~ msgid "Complete PC With Peripherals"
-#~ msgstr "Kompletan PC sa periferijama"
-
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr ""
-#~ "Greška: Podrazumevana JM i kupljena JM moraju da budu u istoj kategoriji."
-
-#~ msgid "Mainboard ASUStek A7V8X-X"
-#~ msgstr "Matična ploča ASUStek A7V8X-X"
-
-#~ msgid ""
-#~ "Used by companies that manages two unit of measure: invoicing and stock "
-#~ "management. For example, in food industries, you will manage a stock of ham "
-#~ "but invoice in Kg. Keep empty to use the default UOM."
-#~ msgstr ""
-#~ "Koriste preduzeća koja upotrebljavaju dve jedinice mere: fakturisanje i "
-#~ "menadžment zaliha. Na primer, u prehrambenoj industriji, upravljaćete "
-#~ "zalihama šunke ali će račun da bude u Kg. Ostavite prazno da koristite "
-#~ "podrazumevane JM."
-
-#~ msgid "Buy"
-#~ msgstr "Kupovina"
-
-#~ msgid "IT components"
-#~ msgstr "IT komponente"
-
-#~ msgid "The weight of the empty UL"
-#~ msgstr "Težina praznog UL"
-
-#~ msgid "Purchase UoM"
-#~ msgstr "Kupovna JM"
-
-#~ msgid "Price list"
-#~ msgstr "Cenovnik"
-
-#~ msgid "Medium PC"
-#~ msgstr "Srednji PC"
-
-#~ msgid "Second UoM"
-#~ msgstr "Druga JM"
-
-#~ msgid "Storage Localisation"
-#~ msgstr "Lokalizacija skladišta"
-
-#~ msgid "Gross weight"
-#~ msgstr "Ukupna težina"
-
-#~ msgid ""
-#~ "Gives the different ways to package the same product. This has no impact on "
-#~ "the packing order and is mainly used if you use the EDI module."
-#~ msgstr ""
-#~ "Daje različite načine pakovanja istog proizvoda. Ovo nema uticaja na "
-#~ "otpremnicu i uglavnom se koristi kod EDI modula."
-
-#~ msgid "Pricelists Types"
-#~ msgstr "Tipovi cenovnika"
-
-#~ msgid "Tells the user if he can use the product or not."
-#~ msgstr ""
-#~ "Prikazuje korisnika ako on može ili ne može da koristi ovaj proizvod."
-
-#~ msgid ""
-#~ "The coefficient for the formula:\n"
-#~ "coeff (base unit) = 1 (this unit). Factor = 1 / Rate."
-#~ msgstr ""
-#~ "Koeficijent za ovu formulu:\n"
-#~ "coeff (base unit) = 1 (this unit). Factor = 1 / Rate."
-
-#~ msgid "Phone Help"
-#~ msgstr "Broj telefona za pomoć"
-
-#~ msgid ""
-#~ "The computed quantity will be a multiple of this value. Use 1.0 for products "
-#~ "that can not be split."
-#~ msgstr ""
-#~ "Izračunata količina će biti pomnožena sa ovim brojem. Za proizvode je 1.0, "
-#~ "ne može da se podeli."
-
-#~ msgid "Customizable PC"
-#~ msgstr "Prilagodljiv PC"
-
-#~ msgid "Ending date for this pricelist version to be valid."
-#~ msgstr "Datum završetka važenja ove verzije cenovnika."
-
-#~ msgid "Onsite Intervention"
-#~ msgstr "Intervencija na terenu"
-
-#~ msgid "The total number of products you can put by palet or box."
-#~ msgstr "Ukupan broj proizvoda koji mogu da se stave na paletu ili u kutiju"
-
-#~ msgid "RAM on demand"
-#~ msgstr "RAM na zahtev"
-
-#~ msgid "HDD Seagate 7200.8 120GB"
-#~ msgstr "HDD Seagate 7200.8 120GB"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Ime objekta mora da počne sa x_ i ne sme da sadrži specijalne karaktere !"
-
-#~ msgid ""
-#~ "Code of the product for this partner, will be used when printing a request "
-#~ "for quotation. Keep empty to use the internal one."
-#~ msgstr ""
-#~ "Kod ovog proizvoda za ovog partnera, koristiće se za štampanje zahteva za "
-#~ "cenama. Zadržite prazno ako hoćete da koristite interne."
-
-#~ msgid "Warranty (months)"
-#~ msgstr "Garancija (meseci)"
-
-#~ msgid ""
-#~ "Will change the way procurements are processed. Consumables are stockable "
-#~ "products with infinite stock, or for use when you have no stock management "
-#~ "in the system."
-#~ msgstr ""
-#~ "Promeniće način na koji su obrađene nabavke. Potrošni materijal su zalihe "
-#~ "proizvoda sa beskonačnim zalihama, ili se koristi kada ne postoji menadžment "
-#~ "zaliha in the system."
-
-#~ msgid "Product suppliers, with their product name, price, etc."
-#~ msgstr "Dobavljači proizvoda, sa njihovim imenima proizvoda, cenama, itd."
-
-#~ msgid "Price type"
-#~ msgstr "Tip cene"
-
-#~ msgid "Product Description"
-#~ msgstr "Opis proizvoda"
-
-#~ msgid ""
-#~ "This is the average time between the confirmation of the customer order and "
-#~ "the delivery of the finished products. It's the time you promise to your "
-#~ "customers."
-#~ msgstr ""
-#~ "Ovo je prosečno vreme između potvrde narudžbenice kupca i isporuke završenog "
-#~ "proizvoda. Ovo je vreme koje je obećano kupcu."
-
-#~ msgid "Produce"
-#~ msgstr "Proizvodi"
-
-#~ msgid "Mainboard ASUStek A7N8X"
-#~ msgstr "Matična ploča ASUStek A7N8X"
-
-#~ msgid "Products Categories"
-#~ msgstr "Kategorije proizvoda"
-
-#~ msgid ""
-#~ "Coefficient to convert UOM to UOS\n"
-#~ " uom = uos * coeff"
-#~ msgstr ""
-#~ "Koeficijent za konvertovanje JM u JU (jedinice usluga)\n"
-#~ " uom = uos * coeff"
-
-#~ msgid "Can be Purchased"
-#~ msgstr "Može da se kupi"
-
-#~ msgid "UOM -> UOS Coeff"
-#~ msgstr "JM -> JU (jedinice usluga) Koeficijent"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "Upozorenje !"
-
-#~ msgid "Prices & Suppliers"
-#~ msgstr "Cene & Dobavljači"
-
-#~ msgid "The weight of a full of products palet or box."
-#~ msgstr "Težina cele palete ili kutije proizvoda"
-
-#~ msgid "Products & Pricelists"
-#~ msgstr "Proizvodi & Cenovnici"
-
-#~ msgid ""
-#~ "The coefficient for the formula:\n"
-#~ "1 (base unit) = coeff (this unit). Rate = 1 / Factor."
-#~ msgstr ""
-#~ "Koeficijent za formulu:\n"
-#~ "1 (base unit) = coeff (this unit). Rate = 1 / Factor."
-
-#~ msgid "ATX Mid-size Tower"
-#~ msgstr "ATX Mid-size Tower"
-
-#~ msgid "Delivery Delay"
-#~ msgstr "Kašnjenje isporuke"
-
-#~ msgid ""
-#~ "Average time to produce this product. This is only for the production order "
-#~ "and, if it is a multi-level bill of material, it's only for the level of "
-#~ "this product. Different delays will be summed for all levels and purchase "
-#~ "orders."
-#~ msgstr ""
-#~ "Prosečno vreme za proizvodnju ovog proizvoda. Ovo je samo za nalog za "
-#~ "proizvodnju i, ako je skup materijala sa više nivoa, samo za nivo ovog "
-#~ "proizvoda. Druga kašnjenja će biti sabrana za sve nivoe i narudžbenice."
-
-#~ msgid "Private"
-#~ msgstr "Privatno"
-
-#~ msgid ""
-#~ "Delay in days between the confirmation of the purchase order and the "
-#~ "reception of the products in your warehouse. Used by the scheduler for "
-#~ "automatic computation of the purchase order planning."
-#~ msgstr ""
-#~ "Kašnjenje, u danima, između potvrde narudžbenice i prijema proizvoda u Vaše "
-#~ "skladište. Koristi planer za automatsko izračunavanje plana narudžbina."
-
-#~ msgid ""
-#~ "Default Unit of Measure used for purchase orders. It must in the same "
-#~ "category than the default unit of measure."
-#~ msgstr ""
-#~ "Podrazumevana jedinica mere koja se koristi za narudžbenice. Mora da bude u "
-#~ "istoj kategoriji kao i podrazumnevana jedinica mere."
-
-#~ msgid ""
-#~ "Set a category of product if this rule only apply to products of a category "
-#~ "and his childs. Keep empty for all products"
-#~ msgstr ""
-#~ "Postavite kategoriju proizvoda ako se ovo pravilo odnosi na proizvode "
-#~ "kategorije i pod kategorije. Ostavite prazno za sve proizvode"
-
-#~ msgid "KGM"
-#~ msgstr "KGM"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Pogrešno ime modela u definiciji akcije."
-
-#~ msgid "Make to Stock"
-#~ msgstr "Prebaci na zalihu"
-
-#~ msgid "If Other Pricelist"
-#~ msgstr "Ako je drugi cjenik"
-
-#~ msgid "Configuration"
-#~ msgstr "Podešavanje"
-
-#~ msgid "In Production"
-#~ msgstr "U proizvodnji"
-
-#~ msgid "Partner Product Name"
-#~ msgstr "Partnerov naziv proizvoda"
-
-#~ msgid ""
-#~ "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
-#~ "Item!"
-#~ msgstr ""
-#~ "Greska ! Ne mozes dodeliti Glavni Cenovnik kao DRugi Cenovnik u stavci "
-#~ "cenovnika!"
-
-#~ msgid "  e.g: 1 * (this unit) = ratio * (reference unit)"
-#~ msgstr "  npr: 1* (ovaj komad) = odnos * (referentni komad)"
-
-#~ msgid "Wood 2mm"
-#~ msgstr "Drvo 2mm"
-
-#~ msgid "Reference UoM for this category"
-#~ msgstr "Referentna JM za ovu kategoriju"
-
-#~ msgid "Metal Cleats"
-#~ msgstr "Metalne Stege"
-
-#~ msgid "Codes"
-#~ msgstr "Kodovi"
-
-#~ msgid "Restaurant Expenses"
-#~ msgstr "Trsokovi Restorana"
-
-#~ msgid ""
-#~ "Quantity conversions may happen automatically between Units of Measure in "
-#~ "the same category, according to their respective ratios."
-#~ msgstr ""
-#~ "Kolicina konverzija se moze desiti automatski izmedju jedinica mere u samoj "
-#~ "kategoriji, uzimajuci u obzir njihove respektivne odnose."
-
-#~ msgid "Virtual Stock"
-#~ msgstr "Virtualna Zaliha"
-
-#~ msgid "High speed processor config"
-#~ msgstr "Konfiguracija sa izuzetno brzim procesorom"
-
-#~ msgid "KIT Shelf of 100cm"
-#~ msgstr "Komplet Polica od 100cm"
-
-#~ msgid "To Purchase"
-#~ msgstr "Za Nabavku"
-
-#~ msgid ""
-#~ "Used by companies that manage two units of measure: invoicing and inventory "
-#~ "management. For example, in food industries, you will manage a stock of ham "
-#~ "but invoice in Kg. Keep empty to use the default UOM."
-#~ msgstr ""
-#~ "KOrisceno od strane preduzeca koje rade sa dve jedinice mere. Fakturno i "
-#~ "inventarno Upravljanje. Na primer, u industriji hrane, mozete voditi magacin "
-#~ "po broju sunki, ali ih mozete fakturisati u Kilogramima. Ostavite ovde "
-#~ "prazno ukoliko ce te koristiti podrazumevanu Jedinicu mere (JM)."
-
-#~ msgid "Ratio & Precision"
-#~ msgstr "Odnos & Preciznost"
-
-#~ msgid "Kitchen Design Project"
-#~ msgstr "Projekat Dizajna Kuhinje"
-
-#~ msgid "Shelf of 200cm"
-#~ msgstr "Polica od 200mm"
-
-#~ msgid "Miscellaneous"
-#~ msgstr "Ostalo"
-
-#~ msgid "  e.g: 1 * (reference unit) = ratio * (this unit)"
-#~ msgstr "  npr: 1 * (referentni komad) = odnos * (Ovaj komad)"
-
-#~ msgid "g"
-#~ msgstr "g"
-
-#~ msgid "Extended Filters..."
-#~ msgstr "Prosireni Filteri..."
-
-#~ msgid ""
-#~ "Product's cost for accounting stock valuation. It is the base price for the "
-#~ "supplier price."
-#~ msgstr ""
-#~ "Cena proizvoda za proracun vrednosti magacina. Ovo je osnovna cena za datu "
-#~ "nabavnu cenu."
-
-#~ msgid "Regular case fan 80mm"
-#~ msgstr "Obican Ventilator 80mm"
-
-#~ msgid "Calculate Product Price per unit base on pricelist version."
-#~ msgstr "Izracunaj cenu Proizvoda po komadu baziranu na verziji cenovnika"
-
-#~ msgid "Seq"
-#~ msgstr "Sekvenca"
-
-#~ msgid "Bigger than the reference UoM"
-#~ msgstr "Vece nego referentna JM"
-
-#~ msgid "To Sell"
-#~ msgstr "za Prodaju"
-
-#~ msgid "Marketable Services"
-#~ msgstr "Marketingske Usluge"
-
-#~ msgid ""
-#~ "Determines if the product can be visible in the list of product within a "
-#~ "selection from a sale order line."
-#~ msgstr ""
-#~ "Determinise ukoliko je proizvod vidljiv u listi proizvoda zajedno sa "
-#~ "selekcijom iz prodajnog naloga."
-
-#~ msgid "Basic+ PC (assembly on order)"
-#~ msgstr "Osnovni + PC ( sklapanje po narudzbi)"
-
-#~ msgid ""
-#~ "Error: The default UOM and the Supplier Product UOM must be in the same "
-#~ "category."
-#~ msgstr ""
-#~ "Greska: Podrazumevana JM i Dobavljaceva JM moraju biti iste kategorije."
-
-#~ msgid "UoM"
-#~ msgstr "JM"
-
-#~ msgid "Reference"
-#~ msgstr "Referenca"
-
-#~ msgid "Stockable"
-#~ msgstr "Moze se lagerovati"
-
-#~ msgid "Worker"
-#~ msgstr "Radnik"
-
-#~ msgid "m"
-#~ msgstr "m"
-
-#~ msgid "Procurement Method"
-#~ msgstr "Metod Nabavke"
-
-#~ msgid ""
-#~ "Average delay in days to produce this product. This is only for the "
-#~ "production order and, if it is a multi-level bill of material, it's only for "
-#~ "the level of this product. Different lead times will be summed for all "
-#~ "levels and purchase orders."
-#~ msgstr ""
-#~ "Srednje kasnjenje u danima da bi se proizvod napravio. Ovo je samo za "
-#~ "proizvodni nalog i, ako proizvod sadrzi vise komponenti, ovo vazi samo za "
-#~ "OVAJ proizvod. Razlicita vremena ce biti sumirana za sve nivoe i nabavne "
-#~ "naloge."
-
-#~ msgid "Wood Lintel 4m"
-#~ msgstr "Drveni Stok 4m"
-
-#, python-format
-#~ msgid " (copy)"
-#~ msgstr " (kopiraj)"
-
-#~ msgid ""
-#~ "This is the average delay in days between the confirmation of the customer "
-#~ "order and the delivery of the finished products. It's the time you promise "
-#~ "to your customers."
-#~ msgstr ""
-#~ "Ovo je srednje kasnjenje u danima izmedju potvrde potrosacevog naloga i "
-#~ "isporuke finalnog proizvoda. Ovo je zagarantovano vreme koje ste dali Kupcu."
-
-#~ msgid "Default UOM"
-#~ msgstr "Podrazumevana JM"
-
-#~ msgid ""
-#~ "How many times this UoM is smaller than the reference UoM in this category:\n"
-#~ "1 * (reference unit) = ratio * (this unit)"
-#~ msgstr ""
-#~ "Koliko je puta ova JM manja od referentne JM u ovoj kategoriji:\n"
-#~ "1 * (referentna jedinica) = odnos * (ova jedinica)"
-
-#~ msgid "Rack 200cm"
-#~ msgstr "Rek 200cm"
-
-#~ msgid "Smaller than the reference UoM"
-#~ msgstr "Manje nego referentna JM"
-
-#~ msgid "Unit of Measure Properties"
-#~ msgstr "Osobine Jedinice Mere"
-
-#~ msgid "Marketable Products"
-#~ msgstr "Ostalo"
-
-#~ msgid "Make to Order"
-#~ msgstr "Napravi Zahtev"
-
-#~ msgid "Default Unit Of Measure"
-#~ msgstr "Podrazumevana Jedinica Mere"
-
-#~ msgid "Characteristics"
-#~ msgstr "Karakteristike"
-
-#~ msgid "Employee"
-#~ msgstr "Zaposleni"
-
-#~ msgid ""
-#~ "Future stock for this product according to the selected locations or all "
-#~ "internal if none have been selected. Computed as: Real Stock - Outgoing + "
-#~ "Incoming."
-#~ msgstr ""
-#~ "Buduci magacin za ovaj proizvod, uzimajuci u obzir selektovanu lokaciju ili "
-#~ "sve interne ako ni jedna nije selektovana. A izracunato kao :\r\n"
-#~ "Stvarni magacin - Izlazni + Ulazni."
-
-#~ msgid "Shelf of 100cm"
-#~ msgstr "polica od 100cm"
-
-#~ msgid "Rear Panel SHE200"
-#~ msgstr "Zadnji Panel SHE200"
-
-#~ msgid "This is use as task responsible"
-#~ msgstr "Ovo je zadatak odgovornih."
-
-#~ msgid "Dello Computer"
-#~ msgstr "Dell Racunar"
-
-#~ msgid "Rear Panel SHE100"
-#~ msgstr "Zadnji Panel SHE100"
-
-#~ msgid "This is a quantity which is converted into Default Uom."
-#~ msgstr "Ovo je kolicina koja je konvertovana u podrazumevanu JM."
-
-#~ msgid "UoM Type"
-#~ msgstr "Tip JM"
-
-#~ msgid ""
-#~ "The computed quantity will be a multiple of this value. Use 1.0 for a UoM "
-#~ "that cannot be further split, such as a piece."
-#~ msgstr ""
-#~ "Izracunata kolicina se umnozava sa ovom vrednoscu. Koristi 1.0 za JM za one "
-#~ "stvari koje se ne mogu nadalje komadati."
-
-#~ msgid "Rack 100cm"
-#~ msgstr "Rek 100cm"
-
-#~ msgid "Hotel Expenses"
-#~ msgstr "Hotelski troskovi"
-
-#~ msgid ""
-#~ "How many times this UoM is bigger than the reference UoM in this category:\n"
-#~ "1 * (this unit) = ratio * (reference unit)"
-#~ msgstr ""
-#~ "Koliko je puta ova JM veca nego referentna JM u ovoj kategoriji:\n"
-#~ "1 * (ova jedinica) = odnos * (referentna jedinica)"
-
-#~ msgid "Close"
-#~ msgstr "Zatvoreno"
-
-#~ msgid "Computer Stuff"
-#~ msgstr "Racunarske Komponente"
-
-#~ msgid "Assembly Section"
-#~ msgstr "Sekcija Sklapanja"
-
-#~ msgid "Misc"
-#~ msgstr "Ostalo"
-
-#~ msgid ""
-#~ "Coefficient to convert UOM to UOS\n"
-#~ " uos = uom * coeff"
-#~ msgstr ""
-#~ "KOeficijent za konverzaciju Jedinice Mere u Jedinicu Usluge\n"
-#~ " ju = jm * koeficijent"
-
-#~ msgid ""
-#~ "Will change the way procurements are processed. Consumables are stockable "
-#~ "products with infinite stock, or for use when you have no inventory "
-#~ "management in the system."
-#~ msgstr ""
-#~ "Promenice nacin nabavke koji se obradjuje. Potrosni materijali su lagerovani "
-#~ "proizvodi sa neogranicenim lagerom, ili se kada nemate inventorni menadzment "
-#~ "u sistemu."
-
-#~ msgid "Shelves"
-#~ msgstr "Police"
-
-#~ msgid "tonne"
-#~ msgstr "tonne"
-
-#~ msgid "Case"
-#~ msgstr "Kuciste"
-
-#~ msgid "Side Panel"
-#~ msgstr "Bocni Panel"

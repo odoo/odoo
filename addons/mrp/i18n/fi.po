@@ -1,21 +1,21 @@
 # Finnish translation for openobject-addons
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2011-12-06 09:50+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:09+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:22+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -158,13 +158,6 @@ msgstr ""
 "Järjestelmä luo automaattisesti tarjouspyynnön suositetulle toimittajalle"
 
 #. module: mrp
-#: help:mrp.config.settings,group_mrp_properties:0
-msgid ""
-"The selection of the right Bill of Material to use will depend on the  "
-"properties specified on the sale order and the Bill of Material."
-msgstr ""
-
-#. module: mrp
 #: view:mrp.production:0
 msgid "Products to Finish"
 msgstr "Viimeisteltävät tuotteet"
@@ -203,12 +196,17 @@ msgid "For purchased material"
 msgstr "Ostettaville materiaaleille"
 
 #. module: mrp
+#: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
+msgid "Order Planning"
+msgstr ""
+
+#. module: mrp
 #: field:mrp.config.settings,module_mrp_operations:0
 msgid "Allow detailed planning of work order"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:648
+#: code:addons/mrp/mrp.py:633
 #, python-format
 msgid "Cannot cancel manufacturing order!"
 msgstr ""
@@ -273,6 +271,21 @@ msgstr "Perustiedot"
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_byproduct:0
 msgid "Produce several products from one manufacturing order"
+msgstr ""
+
+#. module: mrp
+#: help:mrp.config.settings,group_mrp_properties:0
+msgid ""
+"The selection of the right Bill of Material to use will depend on the "
+"properties specified on the sales order and the Bill of Material."
+msgstr ""
+
+#. module: mrp
+#: view:mrp.bom:0
+msgid ""
+"When processing a sales order for this product, the delivery order\n"
+"                                will contain the raw materials, instead of "
+"the finished product."
 msgstr ""
 
 #. module: mrp
@@ -441,6 +454,27 @@ msgid "Weekly Stock Value Variation"
 msgstr "Varastoarvoero viikkotasolla"
 
 #. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_property_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new property.\n"
+"              </p><p>\n"
+"                The Properties in OpenERP are used to select the right bill "
+"of\n"
+"                materials for manufacturing a product when you have "
+"different\n"
+"                ways of building the same product.  You can assign several\n"
+"                properties to each bill of materials.  When a salesperson\n"
+"                creates a sales order, they can relate it to several "
+"properties\n"
+"                and OpenERP will automatically select the BoM to use "
+"according\n"
+"                the needs.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: mrp
 #: view:mrp.production:0
 #: field:mrp.production,date_planned:0
 #: report:mrp.production.order:0
@@ -448,7 +482,7 @@ msgid "Scheduled Date"
 msgstr "Suunniteltu päivämäärä"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:113
+#: code:addons/mrp/procurement.py:124
 #, python-format
 msgid "Manufacturing Order <em>%s</em> created."
 msgstr ""
@@ -458,14 +492,6 @@ msgstr ""
 #: report:mrp.production.order:0
 msgid "Bill Of Material"
 msgstr "Osaluettelo"
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:1068
-#, python-format
-msgid ""
-"Manufacturing order has been <b>confirmed</b> and is <b>scheduled</b> for "
-"the <em>%s</em>."
-msgstr ""
 
 #. module: mrp
 #: help:mrp.routing,location_id:0
@@ -487,12 +513,6 @@ msgstr "Varastoarvoero"
 #: model:ir.actions.act_window,name:mrp.action2
 msgid "Bill of Materials Structure"
 msgstr "Osaluettelon rakenne"
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:1043
-#, python-format
-msgid "Manufacturing order has been <b>canceled</b>."
-msgstr ""
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_serviceproduct0
@@ -628,12 +648,6 @@ msgstr ""
 "sen poistamista"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:386
-#, python-format
-msgid "Bill of Material has been <b>created</b> for <em>%s</em> product."
-msgstr ""
-
-#. module: mrp
 #: model:process.transition,name:mrp.process_transition_billofmaterialrouting0
 msgid "Material Routing"
 msgstr "Materiaalien reititys"
@@ -653,7 +667,7 @@ msgid "Work Center Load"
 msgstr "Työpisteen kuormitus"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:44
+#: code:addons/mrp/procurement.py:50
 #, python-format
 msgid "No BoM defined for this product !"
 msgstr "Tuotteelle ei ole määritetty osalistaa!"
@@ -724,12 +738,6 @@ msgid "Master Bill of Materials"
 msgstr "Pääosaluettelo"
 
 #. module: mrp
-#: view:mrp.production:0
-#: report:mrp.production.order:0
-msgid "Work Orders"
-msgstr "Työtilaukset"
-
-#. module: mrp
 #: help:mrp.config.settings,module_product_manufacturer:0
 msgid ""
 "This allows you to define the following for a product:\n"
@@ -751,30 +759,6 @@ msgstr "Tulosta"
 #: view:mrp.workcenter:0
 msgid "Type"
 msgstr "Tyyppi"
-
-#. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_property_group_action
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a group of properties.\n"
-"              </p><p>\n"
-"                Define specific property groups that can be assigned to "
-"your\n"
-"                bill of materials and sales orders. Properties allows "
-"OpenERP\n"
-"                to automatically select the right bill of materials "
-"according\n"
-"                to properties selected in the sale order by salesperson.\n"
-"              </p><p>\n"
-"                For instance, in the property group \"Warranty\", you an "
-"have\n"
-"                two properties: 1 year warranty, 3 years warranty. "
-"Depending\n"
-"                on the propoerties selected in the sale order, OpenERP will\n"
-"                schedule a production using the matching bill of materials.\n"
-"              </p>\n"
-"            "
-msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
@@ -819,8 +803,8 @@ msgid "A factor of 0.9 means a loss of 10% within the production process."
 msgstr "Tekijä 0.9 tarkoittaa 10%:n tuotantohävikkiä."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:756
-#: code:addons/mrp/mrp.py:784
+#: code:addons/mrp/mrp.py:737
+#: code:addons/mrp/mrp.py:765
 #, python-format
 msgid "Warning!"
 msgstr "Varoitus!"
@@ -883,7 +867,7 @@ msgid "Manufacturing Orders which are waiting for raw materials."
 msgstr "Valmistustilaukset jotka odottavat raaka-aineita."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:284
+#: code:addons/mrp/mrp.py:285
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -894,6 +878,7 @@ msgstr ""
 #: model:ir.model,name:mrp.model_mrp_production
 #: view:mrp.config.settings:0
 #: view:mrp.production:0
+#: field:mrp.production.workcenter.line,production_id:0
 #: field:procurement.order,production_id:0
 msgid "Manufacturing Order"
 msgstr "Valmistustilaus"
@@ -959,7 +944,7 @@ msgid "BoM Type"
 msgstr "Osalistan tyyppi"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:46
+#: code:addons/mrp/procurement.py:52
 #, python-format
 msgid ""
 "Procurement '%s' has an exception: 'No BoM defined for this product !'"
@@ -982,7 +967,7 @@ msgid "Companies"
 msgstr "Yritykset"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:649
+#: code:addons/mrp/mrp.py:634
 #, python-format
 msgid ""
 "You must first cancel related internal picking attached to this "
@@ -1310,7 +1295,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:521
+#: code:addons/mrp/mrp.py:505
 #, python-format
 msgid "Invalid Action!"
 msgstr ""
@@ -1356,7 +1341,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:374
+#: code:addons/mrp/mrp.py:375
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -1397,27 +1382,6 @@ msgid ""
 msgstr ""
 "Tuotteelle, jonka hankintatapa on 'Osto', järjestelmä muodostaa "
 "ostotilauksen."
-
-#. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_property_action
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a new property.\n"
-"              </p><p>\n"
-"                The Properties in OpenERP are used to select the right bill "
-"of\n"
-"                materials for manufacturing a product when you have "
-"different\n"
-"                ways of building the same product.  You can assign several\n"
-"                properties to each bill of materials.  When a salesperson\n"
-"                creates a sale order, they can relate it to several "
-"properties\n"
-"                and OpenERP will automatically select the BoM to use "
-"according\n"
-"                the needs.\n"
-"              </p>\n"
-"            "
-msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_order
@@ -1489,12 +1453,6 @@ msgid "Pending"
 msgstr "Odottava"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:1053
-#, python-format
-msgid "Manufacturing order is <b>in production</b>."
-msgstr ""
-
-#. module: mrp
 #: field:mrp.bom,active:0
 #: field:mrp.routing,active:0
 msgid "Active"
@@ -1532,12 +1490,6 @@ msgid ""
 msgstr "Viittaus dokumenttiin, joka synnytti tämän valmistustilauspyynnön."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:1058
-#, python-format
-msgid "Manufacturing order has been <b>done</b>."
-msgstr ""
-
-#. module: mrp
 #: model:process.transition,name:mrp.process_transition_minimumstockprocure0
 msgid "'Minimum stock rule' material"
 msgstr "'Minimivarasto' säännön mukaiset materiaalit"
@@ -1558,12 +1510,6 @@ msgid "Drives the procurement orders for raw material."
 msgstr "Ohjaa raaka-aineiden hankintaa."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:1048
-#, python-format
-msgid "Manufacturing order is <b>ready to produce</b>."
-msgstr ""
-
-#. module: mrp
 #: field:mrp.production.product.line,product_uos_qty:0
 msgid "Product UOS Quantity"
 msgstr ""
@@ -1579,7 +1525,7 @@ msgid "SO Number"
 msgstr "Myyntitilaus nro"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:521
+#: code:addons/mrp/mrp.py:505
 #, python-format
 msgid "Cannot delete a manufacturing order in state '%s'."
 msgstr ""
@@ -1625,6 +1571,31 @@ msgstr "Aloitettavat valmistustilaukset"
 #: field:report.workcenter.load,workcenter_id:0
 msgid "Work Center"
 msgstr "Työpiste"
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_property_group_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a group of properties.\n"
+"              </p><p>\n"
+"                Define specific property groups that can be assigned to "
+"your\n"
+"                bill of materials and sales orders. Properties allows "
+"OpenERP\n"
+"                to automatically select the right bill of materials "
+"according\n"
+"                to properties selected in the sales order by salesperson.\n"
+"              </p><p>\n"
+"                For instance, in the property group \"Warranty\", you an "
+"have\n"
+"                two properties: 1 year warranty, 3 years warranty. "
+"Depending\n"
+"                on the propoerties selected in the sales order, OpenERP "
+"will\n"
+"                schedule a production using the matching bill of materials.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: mrp
 #: field:mrp.workcenter,capacity_per_cycle:0
@@ -1764,20 +1735,6 @@ msgid "Manager"
 msgstr "Päällikkö"
 
 #. module: mrp
-#: view:mrp.bom:0
-msgid ""
-"When processing a sale order for this product, the delivery order\n"
-"                                will contain the raw materials, instead of "
-"the finished product."
-msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:1039
-#, python-format
-msgid "Manufacturing order has been <b>created</b>."
-msgstr ""
-
-#. module: mrp
 #: help:mrp.product.produce,mode:0
 msgid ""
 "'Consume only' mode will only consume the products with the quantity "
@@ -1788,9 +1745,10 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
-msgid "Orders Planning"
-msgstr ""
+#: view:mrp.production:0
+#: report:mrp.production.order:0
+msgid "Work Orders"
+msgstr "Työtilaukset"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle:0
@@ -1822,7 +1780,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:756
+#: code:addons/mrp/mrp.py:737
 #, python-format
 msgid ""
 "You are going to consume total %s quantities of \"%s\".\n"
@@ -1861,7 +1819,6 @@ msgstr "Yhden kierron aika (tuntia)"
 #. module: mrp
 #: model:ir.actions.report.xml,name:mrp.report_mrp_production_report
 #: field:mrp.production.product.line,production_id:0
-#: field:mrp.production.workcenter.line,production_id:0
 #: model:process.node,name:mrp.process_node_production0
 #: model:process.node,name:mrp.process_node_productionorder0
 msgid "Production Order"
@@ -1885,7 +1842,7 @@ msgid "Compute Data"
 msgstr "Laske tiedot"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:625
+#: code:addons/mrp/mrp.py:610
 #: code:addons/mrp/wizard/change_production_qty.py:83
 #: code:addons/mrp/wizard/change_production_qty.py:88
 #, python-format
@@ -1931,7 +1888,7 @@ msgid "Manufacturing Lead Time"
 msgstr "Tuotannon läpimenoaika"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:284
+#: code:addons/mrp/mrp.py:285
 #, python-format
 msgid "Warning"
 msgstr ""
@@ -2176,17 +2133,7 @@ msgid "BOM Ref"
 msgstr "BOM viite"
 
 #. module: mrp
-#: field:mrp.bom,message_comment_ids:0
-#: help:mrp.bom,message_comment_ids:0
-#: field:mrp.production,message_comment_ids:0
-#: help:mrp.production,message_comment_ids:0
-#: field:mrp.production.workcenter.line,message_comment_ids:0
-#: help:mrp.production.workcenter.line,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:784
+#: code:addons/mrp/mrp.py:765
 #, python-format
 msgid ""
 "You are going to produce total %s quantities of \"%s\".\n"
@@ -2226,7 +2173,7 @@ msgid "Bill of Materials"
 msgstr "Osaluettelo"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:625
+#: code:addons/mrp/mrp.py:610
 #, python-format
 msgid "Cannot find a bill of material for this product."
 msgstr ""
@@ -2463,1267 +2410,3 @@ msgstr ""
 #: report:mrp.production.order:0
 msgid "Products to Consume"
 msgstr "Käytettävät tuotteet"
-
-#~ msgid "Automatic orderpoint"
-#~ msgstr "Automaattinen tilauspiste"
-
-#~ msgid "Packing list"
-#~ msgstr "Pakkauslista"
-
-#~ msgid "Ask New Products"
-#~ msgstr "Kysy uusia tuotteita"
-
-#~ msgid "Automatic Procurements"
-#~ msgstr "Automaattiset hankinnat"
-
-#~ msgid "If the stock of a product is under 0, it will act like an orderpoint"
-#~ msgstr "Jos tuotteen varastosaldo on alle 0, toimii se tilauspisteenä"
-
-#~ msgid "Stockable Request"
-#~ msgstr "Varastoitava pyyntö"
-
-#~ msgid "This wizard will schedule procurements."
-#~ msgstr "Tämä ohjattu toiminto ajoittaa hankinnat."
-
-#~ msgid "Service on Order"
-#~ msgstr "Tilauksessa oleva palvelu"
-
-#~ msgid "Procurements"
-#~ msgstr "Hankinnat"
-
-#~ msgid "Production scheduled products"
-#~ msgstr "Tuotannon suunnitellut tuotteet"
-
-#~ msgid "Production Orders"
-#~ msgstr "Tuotantotilaukset"
-
-#~ msgid "Procurement Process"
-#~ msgstr "Hankintaprosessi"
-
-#~ msgid "Print product price"
-#~ msgstr "Tulosta tuotteen hinta"
-
-#~ msgid "Make Procurement"
-#~ msgstr "Tee hankinta"
-
-#~ msgid "Author"
-#~ msgstr "Tekijä"
-
-#~ msgid "Latest error"
-#~ msgstr "Viimeisin virhe"
-
-#~ msgid "Service Product Process"
-#~ msgstr "Palvelutuoteprosessi"
-
-#~ msgid "Production Orders Planning"
-#~ msgstr "Tuotantomääräysten suunnittelu"
-
-#~ msgid "Min Quantity"
-#~ msgstr "Minimimäärä"
-
-#~ msgid "Exception"
-#~ msgstr "Poikkeus"
-
-#~ msgid "Move product"
-#~ msgstr "Siirrä tuote"
-
-#~ msgid "Start Production"
-#~ msgstr "Aloita tuotanto"
-
-#~ msgid "Time Efficiency"
-#~ msgstr "Ajan hyötysuhde"
-
-#~ msgid "Procurement Method"
-#~ msgstr "Hankintatapa"
-
-#~ msgid "Compute Procurements"
-#~ msgstr "Laske hankinnat"
-
-#~ msgid "Nbr of hour"
-#~ msgstr "Tuntinumero"
-
-#~ msgid "Procurement Purchase"
-#~ msgstr "Ostohankinta"
-
-#~ msgid "Wait for available products for reservation"
-#~ msgstr "Odota saatavilla olevia tuotteita varaukseen"
-
-#~ msgid "Product Efficiency"
-#~ msgstr "Tuotteen hyötysuhde"
-
-#~ msgid "Max Quantity"
-#~ msgstr "Maksimimäärä"
-
-#~ msgid "Minimum Stock Procure"
-#~ msgstr "Varaston minimihankinta"
-
-#~ msgid "Paid ?"
-#~ msgstr "Maksettu?"
-
-#~ msgid "Change Product Qty."
-#~ msgstr "Muuta tuotteen määrää."
-
-#~ msgid "Central document to procure products"
-#~ msgstr "Keskeinen dokumentti tuotteiden hankintaan"
-
-#~ msgid "Purchase Order"
-#~ msgstr "Ostotilaus"
-
-#~ msgid "Internal Procurement Request"
-#~ msgstr "Sisäinen hankintapyyntö"
-
-#~ msgid "Your procurement request has been sent !"
-#~ msgstr "Hankintapyyntösi on lähetetty!"
-
-#~ msgid "Compute Procurements Only"
-#~ msgstr "Laske vain hankinnat"
-
-#~ msgid ""
-#~ "Efficiency on the production. A factor of 0.9 means a loss of 10% in the "
-#~ "production."
-#~ msgstr ""
-#~ "Tuotannon hyötysuhde. Kerroin 0.9 tarkoittaa 10% hävikkiä tuotannossa."
-
-#~ msgid "In procurement order, if product type is service"
-#~ msgstr "Hankintatilauksessa jos tuotteen tyyppi on palvelu"
-
-#~ msgid "Sale Name"
-#~ msgstr "Myyntinimi"
-
-#~ msgid "Service Product"
-#~ msgstr "Palvelutuote"
-
-#~ msgid "Revision"
-#~ msgstr "Revisio"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Virheellinen mallin nimi toiminnon määrittelyssä."
-
-#~ msgid "Manufacturing Resource Planning"
-#~ msgstr "Tuotannon resurssien suunnittelu"
-
-#~ msgid "Moves Created"
-#~ msgstr "Luodut siirrot"
-
-#~ msgid "UoS Quantity"
-#~ msgstr "Myyntiyksikkö määrä"
-
-#~ msgid "Routing Workcenters"
-#~ msgstr "Reitittävät työpisteet"
-
-#~ msgid "Exceptions Procurements"
-#~ msgstr "Hankinnan poikkeukset"
-
-#~ msgid "Not used in computations, for information purpose only."
-#~ msgstr "Ei käytetä laskutoimituksiin - vain tietoja varten."
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "Varoitus!"
-
-#~ msgid "Origin"
-#~ msgstr "Lähde"
-
-#~ msgid "Stockable Stock"
-#~ msgstr "Varastoitavissa oleva varasto"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Virheellinen XML näkymä-arkkitehtuurille!"
-
-#~ msgid ""
-#~ "Number of operation this workcenter can do in parallel. If this workcenter "
-#~ "represent a team of 5 workers, the capacity per cycle is 5."
-#~ msgstr ""
-#~ "Tässä työpisteessä samanaikaisesti suoritettavien tehtävien lukumäärä. Jos "
-#~ "piste koostuu esim. viidestä henkilöstä, on kapasiteetti jokaisessa "
-#~ "kierrossa viisi."
-
-#, python-format
-#~ msgid "No supplier defined for this product !"
-#~ msgstr "Tuotteelle ei ole määritelty toimittajaa!"
-
-#, python-format
-#~ msgid "Product name"
-#~ msgstr "Tuotteen nimi"
-
-#~ msgid "Best price (not yet active!)"
-#~ msgstr "Paras hinta (ei vielä aktiivinen!)"
-
-#~ msgid ""
-#~ "This is the days added to what you promise to customers for security purpose"
-#~ msgstr "Nämä päivät lisätään asiakkaalle luvattuun aikaan turvallisuussyistä"
-
-#~ msgid "MRP & Logistic Scheduler"
-#~ msgstr "Tuotanto- ja logistiikka-aikataulut"
-
-#~ msgid "A purchase order is created for a sub-contracting demand."
-#~ msgstr "Ostotilaus luodaan alihankinnan tarpeisiin."
-
-#~ msgid "Analytic Accounting"
-#~ msgstr "Analyyttinen tilikirjanpito"
-
-#~ msgid "Products Consummed"
-#~ msgstr "Kulutetut tuotteet"
-
-#~ msgid "Packing Exception"
-#~ msgstr "Poikkeus pakkauksessa"
-
-#~ msgid "Do nothing"
-#~ msgstr "Älä tee mitään"
-
-#, python-format
-#~ msgid "products"
-#~ msgstr "tuotteet"
-
-#~ msgid "Internal Ref."
-#~ msgstr "Sisäinen viite"
-
-#~ msgid "Stockable Production Order"
-#~ msgstr "Varastoitava tuotantotilaus"
-
-#~ msgid ""
-#~ "When the virtual stock goes belong the Min Quantity, Open ERP generates a "
-#~ "procurement to bring the virtual stock to the Max Quantity."
-#~ msgstr ""
-#~ "Kun näennäsvaraston saldo menee alle minimimäärän, OpenERP luo hankinnan "
-#~ "kasvattaakseen näennäisen varaston maksimimäärän tasolle."
-
-#~ msgid "Stockable Make to Stock"
-#~ msgstr "Varastoitava, valmistetaan varastoon"
-
-#, python-format
-#~ msgid "Workcenter name"
-#~ msgstr "Työpisteen nimi"
-
-#~ msgid "Details"
-#~ msgstr "Tiedot"
-
-#~ msgid "Procure Service Product"
-#~ msgstr "Hanki palvelutuote"
-
-#~ msgid "max"
-#~ msgstr "max"
-
-#~ msgid ""
-#~ "Rounding applied on the product quantity. For integer only values, put 1.0"
-#~ msgstr ""
-#~ "Tuotteen määrään käytettävä pyöristys. Käyttääksesi vain kokonaislukuja, "
-#~ "aseta 1.0"
-
-#~ msgid "Reservation"
-#~ msgstr "Varaus"
-
-#~ msgid "product"
-#~ msgstr "tuote"
-
-#, python-format
-#~ msgid "Product Standard Price"
-#~ msgstr "Tuotteen standardihinta"
-
-#~ msgid "If Procure method is Make to order and supply method is produce"
-#~ msgstr ""
-#~ "Jos hankintatapa on \"Valmista tilauksesta\" ja hankintatyyppi on tuotanto"
-
-#~ msgid "Purchase Lead Time"
-#~ msgstr "Oston läpimenoaika"
-
-#~ msgid "Change Qty"
-#~ msgstr "Muuta määrä"
-
-#~ msgid "Modification Date"
-#~ msgstr "Muokkauspäivä"
-
-#~ msgid ""
-#~ "Complete this only if you want automatic analytic accounting entries on "
-#~ "production orders."
-#~ msgstr ""
-#~ "Täytä tämä vain jos haluat automaattiset analyyttiset tilimerkinnät "
-#~ "tuotantotilauksista."
-
-#~ msgid "Routing workcenter usage"
-#~ msgstr "Reititys työpisteiden käyttö"
-
-#~ msgid "Production Procure Products"
-#~ msgstr "Tuotanto hankkii tuotteet"
-
-#, python-format
-#~ msgid "from stock and no minimum orderpoint rule defined"
-#~ msgstr "varastosta ja minimitilauspistettä ei ole määritetty"
-
-#~ msgid "Procurement convert into the draft purchase order."
-#~ msgstr "Hankinta muuntuu ostotilauksen luonnokseksi."
-
-#~ msgid "Stockable Product Stock"
-#~ msgstr "Varastoitava tuotteen varasto"
-
-#~ msgid "Error ! You can not create recursive BoM."
-#~ msgstr "Virhe! Et voi luoda itseään toistavaa osaluetteloa."
-
-#~ msgid "Manufacturity Lead Time"
-#~ msgstr "Valmistuksen läpimenoaika"
-
-#~ msgid "Workcenter Operations"
-#~ msgstr "Työpisteen toimenpiteet"
-
-#~ msgid "Exceptions Procurements to Fix"
-#~ msgstr "Korjattavat poikkeukset hankinnoissa"
-
-#~ msgid "If Product type is Stockable and procure method is make to stock"
-#~ msgstr ""
-#~ "Jos tuotteen tyyppi on \"Varastoitava\" ja hankintatapa on \"Valmista "
-#~ "varastoon\""
-
-#~ msgid "Factor that multiplies all times expressed in the workcenter."
-#~ msgstr "Kerroin jolla kaikki tämän työpisteen ajat kerrottaan."
-
-#~ msgid "Waiting"
-#~ msgstr "Odottaa"
-
-#~ msgid ""
-#~ "This is the internal picking list take bring the raw materials to the "
-#~ "production plan."
-#~ msgstr "Tämä sisäinen keräyslista tuo raaka-aineet tuotantosuunnitelmaan."
-
-#~ msgid "For stockable and consumable"
-#~ msgstr "Varastoitaville ja kulutettaville"
-
-#~ msgid "Qty Multiple"
-#~ msgstr "Määrän kerroin"
-
-#~ msgid "indice type"
-#~ msgstr "Luettelon tyyppi"
-
-#, python-format
-#~ msgid "Hours Cost"
-#~ msgstr "Tuntikustannukset"
-
-#~ msgid "Production orders are created for the product manufacturing."
-#~ msgstr "Tuotantotilaukset luodaan tuotteen valmistusta varten."
-
-#, python-format
-#~ msgid "Invalid action !"
-#~ msgstr "Virheellinen toiminto!"
-
-#~ msgid "If Product type is service and procure method is Make to stock"
-#~ msgstr ""
-#~ "Jos tuotteen tyyppi on palvelu ja hankintatapa on \"Valmista varastoon\""
-
-#~ msgid "Procurement Lines"
-#~ msgstr "Hankinnan rivit"
-
-#~ msgid "Production orders"
-#~ msgstr "Tuotannon tilaukset"
-
-#, python-format
-#~ msgid "SUBTOTAL"
-#~ msgstr "Välisumma"
-
-#~ msgid "Security Days"
-#~ msgstr "Turvapäivät"
-
-#~ msgid "If Product type is service"
-#~ msgstr "Jos tuotteen tyyppi on palvelu"
-
-#~ msgid "BoM Hyerarchy"
-#~ msgstr "Osalistahierarkia"
-
-#~ msgid ""
-#~ "This wizard will planify the procurement for this product. This procurement "
-#~ "may generate task, production orders or purchase orders."
-#~ msgstr ""
-#~ "Tämä ohjattu toiminto suunnittelee tuotteen koko hankinnan. Hankinta voi "
-#~ "luoda tehtäviä, tuotantotilauksia tai ostotilauksia."
-
-#~ msgid "Serivce Stockable Order"
-#~ msgstr "Huolto varastoitava tilaus"
-
-#~ msgid "Modification name"
-#~ msgstr "Muutoksen nimi"
-
-#~ msgid "Production done"
-#~ msgstr "Tuotanto valmis"
-
-#~ msgid "The system waits for requested products in stock."
-#~ msgstr "Järjestelmä odottaa vaadittuja tuotteita varastoon."
-
-#, python-format
-#~ msgid "Unit Product Price"
-#~ msgstr "Tuotteen yksikköhinta"
-
-#~ msgid "Machine"
-#~ msgstr "Kone"
-
-#~ msgid "References"
-#~ msgstr "Viitteet"
-
-#~ msgid "Qty"
-#~ msgstr "Määrä"
-
-#~ msgid "min"
-#~ msgstr "min"
-
-#~ msgid "Workcenter Name"
-#~ msgstr "Työpisteen nimi"
-
-#~ msgid ""
-#~ "Description of the workcenter. Explain here what's a cycle according to this "
-#~ "workcenter."
-#~ msgstr ""
-#~ "Työpisteen kuvaus. Selitä tässä mitä kierros tarkoittaa tässä työpisteessä."
-
-#, python-format
-#~ msgid ""
-#~ "The production is in \"%s\" state. You can not change the production "
-#~ "quantity anymore"
-#~ msgstr "Tuotanto on \"%s\" tilassa. Et voi enää muuttaa tuotantomäärä."
-
-#~ msgid "Human Resource"
-#~ msgstr "Ihmistyö"
-
-#~ msgid "-"
-#~ msgstr "-"
-
-#~ msgid "on order"
-#~ msgstr "tilaukseen"
-
-#~ msgid "Workcenters"
-#~ msgstr "Työpisteet"
-
-#~ msgid "UOM"
-#~ msgstr "Mittayksikkö"
-
-#, python-format
-#~ msgid "Product uom"
-#~ msgstr "Tuotteen mittayksikkö"
-
-#~ msgid "Create Procurement"
-#~ msgstr "Luo hankinta"
-
-#~ msgid "Compute All Schedulers"
-#~ msgstr "Laske kaikki aikataulut"
-
-#~ msgid ""
-#~ "This is the time frame analysed by the scheduler when computing "
-#~ "procurements. All procurement that are not between today and today+range are "
-#~ "skipped for futur computation."
-#~ msgstr ""
-#~ "Aikataulutus analysoi tässä määrätyn pituisen ajanjakson laskiessaan "
-#~ "hankintoja. Kaikki hankinnat jotka eivät ole nykypäivän ja nykypäivän + "
-#~ "aikavälin puitteissa ohitetaan ja huomioidaan vasta tulevissa laskelmissa."
-
-#~ msgid "Nbr of cycle"
-#~ msgstr "Kierrosnumero"
-
-#~ msgid "Number of Cycle"
-#~ msgstr "Kierrosnumero"
-
-#~ msgid "Run procurement"
-#~ msgstr "Suorita hankinta"
-
-#~ msgid "Scheduler Parameters"
-#~ msgstr "Aikataulutuksen parametrit"
-
-#~ msgid "A cycle is defined in the workcenter definition."
-#~ msgstr "Kierto on kuvattu työpisteen kuvauksessa."
-
-#~ msgid "Number of products to produce"
-#~ msgstr "Valmistettavien tuotteiden lukumäärä"
-
-#~ msgid "Validate"
-#~ msgstr "Hyväksy"
-
-#~ msgid "Material routing"
-#~ msgstr "Materiaalien reititys"
-
-#~ msgid "Sale Ref"
-#~ msgstr "Myynnin viite"
-
-#~ msgid "Service Make to Stock"
-#~ msgstr "Palvelu valmista varastoon"
-
-#~ msgid "Revisions"
-#~ msgstr "Revisiot"
-
-#~ msgid "Procurement orders"
-#~ msgstr "Hankintatilaukset"
-
-#~ msgid "Planned Date"
-#~ msgstr "Suunniteltu päivämäärä"
-
-#~ msgid "If product type is service and procure method is Make to order"
-#~ msgstr ""
-#~ "Jos tuotteen tyyppi on palvelu ja hankintatapa on \"Valmista tilaukseen\""
-
-#~ msgid "Scheduler Range"
-#~ msgstr "Aikataulutuksen aikaväli"
-
-#~ msgid "Tool"
-#~ msgstr "Työkalu"
-
-#~ msgid "New Procurement"
-#~ msgstr "Uusi hankinta"
-
-#~ msgid "This is the leads/security time for each purchase order."
-#~ msgstr "Tämä on läpimeno-/turva-aika jokaiselle ostotilaukselle."
-
-#~ msgid "Procurement for raw materials."
-#~ msgstr "Raaka-aineiden hankinta."
-
-#~ msgid "Note"
-#~ msgstr "Huomautus"
-
-#~ msgid "Procure Stockable Product"
-#~ msgstr "Hanki varastoitava tuote"
-
-#~ msgid "Scheduled date"
-#~ msgstr "Arvioitu päivämäärä"
-
-#~ msgid "Define a routing to describe the manufacturing steps."
-#~ msgstr "Määritä reititys kuvamaan valmistuksen vaiheita."
-
-#~ msgid "Define the product structure, with sub-products and/or components."
-#~ msgstr "Määritä tuotteen rakenne, jossa on osatuotteet ja/tai komponentit."
-
-#~ msgid "Production Orders Waiting Products"
-#~ msgstr "Tuotantotilaukset jotka odottavat tuotteita"
-
-#~ msgid "The procurement quantity will by rounded up to this multiple."
-#~ msgstr "Hankinnan määrä pyöristetään ylös tähän moninkertaan."
-
-#~ msgid "Reordering Mode"
-#~ msgstr "Uusintatilauksen tapa"
-
-#~ msgid "Date Closed"
-#~ msgstr "Sulkemispäivä"
-
-#~ msgid "Properties composition"
-#~ msgstr "Ominaisuuksien koostumus"
-
-#~ msgid "Production Orders in Progress"
-#~ msgstr "Tuotantotilaukset jotka keskeneräisiä"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr "Objektin nimen tulee alkaa x_ ja se ei saa sisältää erikoismerkkejä!"
-
-#~ msgid "Product UOM"
-#~ msgstr "Tuotteen mittayksikkö"
-
-#~ msgid "Production Workcenters"
-#~ msgstr "Tuotannon työpisteet"
-
-#~ msgid "Production Products"
-#~ msgstr "Tuotannon tuotteet"
-
-#~ msgid "Product type is Stockable and procure method is make to stock"
-#~ msgstr ""
-#~ "Tuotteen tyyppi on varastoitava ja hankintatapa on \"Valmista varastoon\""
-
-#~ msgid "Product UoM"
-#~ msgstr "Tuotteen mittayksikkö"
-
-#~ msgid "Workcenter"
-#~ msgstr "Työpiste"
-
-#~ msgid ""
-#~ "Reference of the document that created this procurement.\n"
-#~ "This is automatically completed by Open ERP."
-#~ msgstr ""
-#~ "Viite dokumenttiin joka loi tämän hankinnan.\n"
-#~ "OpenERP määrittää tämän automaattisesti."
-
-#~ msgid "numeric indices"
-#~ msgstr "Numeerinen järjestys"
-
-#~ msgid "Production Products Consommation"
-#~ msgstr "Tuotannon tuotteiden kulutus"
-
-#~ msgid ""
-#~ "If you encode manually a procurement, you probably want to use a make to "
-#~ "order method."
-#~ msgstr ""
-#~ "Jos syötät hankinnan manuaalisesti, haluat todennäköisesti käytää \"Valmista "
-#~ "tilaukseen\"-tapaa."
-
-#~ msgid "if Product type is Stockable in procurement order"
-#~ msgstr "Jos tuotteen tyyppi hankintatilauksessa on varastoitavissa"
-
-#~ msgid "Stockable Order Request"
-#~ msgstr "Varastoitavan tilauksen pyyntö"
-
-#~ msgid "If Procure method is Make to order and supply method is buy"
-#~ msgstr "Jos hankintatapa on \"Valmista tilaukseen\" ja hankitatyyppi on osto"
-
-#~ msgid "Planification"
-#~ msgstr "Suunnittelu"
-
-#~ msgid "BOM"
-#~ msgstr "Osaluettelo"
-
-#~ msgid "Bill of material revisions"
-#~ msgstr "Osaluettelon revisiot"
-
-#, python-format
-#~ msgid "No address defined for the supplier"
-#~ msgstr "Toimittajan osoitetta ei ole määritetty"
-
-#~ msgid "Property Categories"
-#~ msgstr "Ominaisuuksien kategoriat"
-
-#~ msgid "Temporary Procurement Exceptions"
-#~ msgstr "Väliaikaiset hankinnan poikkeukset"
-
-#~ msgid "Product UoS Qty"
-#~ msgstr "Tuotteen myyntiyksikkö määrä"
-
-#~ msgid "Production workcenters used"
-#~ msgstr "Käytetyt tuotannon työpisteet"
-
-#~ msgid "If procurement is make to order"
-#~ msgstr "Jos hankinta on \"Valmista tilaukseen\""
-
-#~ msgid "Confirmed"
-#~ msgstr "Vahvistettu"
-
-#~ msgid "Workcenters Utilisation"
-#~ msgstr "Työpisteiden käyttöaste"
-
-#~ msgid "Parameters"
-#~ msgstr "Parametrit"
-
-#~ msgid "New Bill of Materials"
-#~ msgstr "Uusi osaluettelo"
-
-#~ msgid "Property"
-#~ msgstr "Ominaisuus"
-
-#, python-format
-#~ msgid "Product quantity"
-#~ msgstr "Tuotteen määrä"
-
-#~ msgid "Canceled"
-#~ msgstr "Peruttu"
-
-#~ msgid "Waiting Goods"
-#~ msgstr "Odottaa tuotteita"
-
-#~ msgid "New Production Order"
-#~ msgstr "Uusi tuotantotilaus"
-
-#~ msgid "last indice"
-#~ msgstr "Viimeinen järjestys"
-
-#~ msgid "plus"
-#~ msgstr "plus"
-
-#~ msgid "A Request for Quotation is created and sent to the supplier."
-#~ msgstr "Tarjouspyyntö luodaan ja lähetetään toimittajalle."
-
-#~ msgid "Stockable Product Process"
-#~ msgstr "Varastoitava tuote prosessi"
-
-#~ msgid ""
-#~ "The list of operations (list of workcenters) to produce the finished "
-#~ "product. The routing is mainly used to compute workcenter costs during "
-#~ "operations and to plan futur loads on workcenters based on production "
-#~ "plannification."
-#~ msgstr ""
-#~ "Lista toiminnoista (työpisteistä) jotka tuotteen valmistaminen vaatii. "
-#~ "Reititystä käytetään pääasiallisesti työpisteiden kustannusten laskentaan ja "
-#~ "kuormitusten suunnitteluun."
-
-#~ msgid "An entry is being made from billing material to routing."
-#~ msgstr "Tehdään merkintä osalistasta reititykseen."
-
-#~ msgid "The normal working time of the workcenter."
-#~ msgstr "Työpisteen normaali työaika."
-
-#~ msgid "BoM Revisions"
-#~ msgstr "Osaluettelon revisiot"
-
-#~ msgid "Procurement Reason"
-#~ msgstr "Hankinnan syy"
-
-#~ msgid "Draft"
-#~ msgstr "Luonnos"
-
-#~ msgid "Retry"
-#~ msgstr "Yritä uudelleen"
-
-#~ msgid "When any procuere products, it comes into the prpcurement orders"
-#~ msgstr "Jos on hankittavia tuotteita, ne tulevat hankintatilauksiin"
-
-#~ msgid "Order to Max"
-#~ msgstr "Tilaa maksimiin"
-
-#~ msgid "Production Orders To Start"
-#~ msgstr "Tuotantotilaukset jotka voidaan aloittaa"
-
-#~ msgid "from stock"
-#~ msgstr "varastosta"
-
-#~ msgid "Close"
-#~ msgstr "Sulje"
-
-#, python-format
-#~ msgid "Product supplier"
-#~ msgstr "Tuotteen toimittaja"
-
-#, python-format
-#~ msgid "TOTAL"
-#~ msgstr "Yhteensä"
-
-#, python-format
-#~ msgid "Error"
-#~ msgstr "Virhe"
-
-#~ msgid "Close Move at end"
-#~ msgstr "Sulje siirto lopussa"
-
-#~ msgid "Unscheduled procurements"
-#~ msgstr "Hankinnat joilla ei ole aikataulua"
-
-#~ msgid "Running"
-#~ msgstr "Kesken"
-
-#~ msgid "Warehouse"
-#~ msgstr "Varasto"
-
-#~ msgid "Create minimum stock rules"
-#~ msgstr "Luo varaston minimirajat"
-
-#~ msgid "Workcenter load"
-#~ msgstr "Työpisteen kuormitus"
-
-#~ msgid "Bill of Material Structure"
-#~ msgstr "Osaluettelon rakenne"
-
-#~ msgid "Bill of Materials Components"
-#~ msgstr "Osaluettelon komponentit"
-
-#~ msgid "You can see its bill of material which are used to make product"
-#~ msgstr "Voit nähdä osaluettelon jota käytetään tuotteen valmistukseen"
-
-#~ msgid "Procurement Details"
-#~ msgstr "Hankinnan tiedot"
-
-#~ msgid ""
-#~ "Triggers an automatic procurement for all products that have a virtual stock "
-#~ "under 0. You should probably not use this option, we suggest using a MTO "
-#~ "configuration on products."
-#~ msgstr ""
-#~ "Liipaisee automaattisen hankinnan kaikille tuotteille joiden näennäisvarasto "
-#~ "on alle 0. Tätä vaihtoehtoa ei yleensä käytetä, vaan tuotteille on parempi "
-#~ "määrittää varastosäännöt."
-
-#, python-format
-#~ msgid "Couldn't find bill of material for product"
-#~ msgstr "Tuotteelle ei löydy osaluetteloa"
-
-#~ msgid ""
-#~ "Use a phantom bill of material in raw materials lines that have to be "
-#~ "automatically computed in on eproduction order and not one per level.If you "
-#~ "put \"Phantom/Set\" at the root level of a bill of material it is considered "
-#~ "as a set or pack: the products are replaced by the components between the "
-#~ "sale order to the picking without going through the production order.The "
-#~ "normal BoM will generate one production order per BoM level."
-#~ msgstr ""
-#~ "Käytä haamu-osaluetteloa raaka-aineille jotka lasketaan yhdelle "
-#~ "tuotantotilaukselle automaattisesti, eikä jokaiselle portaalle erikseen. Jos "
-#~ "\"Sarja / Haamu\" on määritetty osaluettelon juuritasolle käsitellään se "
-#~ "sarjana tai pakkauksena: tuotteet korvataan komponenteilla myyntitilauksesta "
-#~ "keräilyyn, eikä tuotantotilausta tehdä lainkaan. Normaali osalista luo "
-#~ "tuotantotilauksen jokaiselle osalistan portaalle."
-
-#~ msgid "Compute Stock Minimum Rules Only"
-#~ msgstr "Laske vain varaston minimirajat"
-
-#~ msgid "From minimum stock rules, it goes for procure product."
-#~ msgstr "Varaston minimirajasta tulee tuotteen hankinta."
-
-#~ msgid "Minimum Stock Rules"
-#~ msgstr "Varaston minimirajat"
-
-#~ msgid "Minimum Stock Rule"
-#~ msgstr "Varaston minimiraja"
-
-#~ msgid ""
-#~ "Procurement is created if the product quantity is lower than the minimum "
-#~ "limit."
-#~ msgstr ""
-#~ "Hankinta luodaan jos tuotteen lukumäärä on alempi kuin määritetty minimiraja."
-
-#~ msgid "Orderpoint minimum rule"
-#~ msgstr "Tilauspisteen minimiraja"
-
-#~ msgid "Minimum stock rule"
-#~ msgstr "Varaston minimiraja"
-
-#~ msgid "you can see the minimum stock rules from product"
-#~ msgstr "Voit nähdä tuotteesta varaston minimirajat"
-
-#~ msgid "Product to stock rules"
-#~ msgstr "Tuotteen varastorajat"
-
-#~ msgid "alphabetical indices"
-#~ msgstr "Aakkosellinen järjestys"
-
-#, python-format
-#~ msgid "from stock: products assigned."
-#~ msgstr "varastosta: tuotteet luovutettu."
-
-#~ msgid "Location"
-#~ msgstr "Paikka"
-
-#~ msgid "Product & Location"
-#~ msgstr "Tuote ja paikka"
-
-#~ msgid ""
-#~ "Location where the system will look for products used in raw materials."
-#~ msgstr ""
-#~ "Paikka josta järjestelmä etsii tuotteita joita on käytetty raaka-aineissa."
-
-#~ msgid "Day"
-#~ msgstr "Päivä"
-
-#~ msgid "Reporting"
-#~ msgstr "Raportointi"
-
-#~ msgid "June"
-#~ msgstr "Kesäkuu"
-
-#~ msgid "October"
-#~ msgstr "Lokakuu"
-
-#~ msgid "August"
-#~ msgstr "Elokuu"
-
-#~ msgid "title"
-#~ msgstr "otsikko"
-
-#~ msgid "March"
-#~ msgstr "Maaliskuu"
-
-#~ msgid "September"
-#~ msgstr "Syyskuu"
-
-#~ msgid "Month"
-#~ msgstr "Kuukausi"
-
-#~ msgid "Current"
-#~ msgstr "Tämänhetkinen"
-
-#~ msgid "December"
-#~ msgstr "Joulukuu"
-
-#~ msgid "November"
-#~ msgstr "Marraskuu"
-
-#~ msgid "January"
-#~ msgstr "Tammikuu"
-
-#~ msgid "February"
-#~ msgstr "Helmikuu"
-
-#~ msgid "May"
-#~ msgstr "Toukokuu"
-
-#~ msgid "April"
-#~ msgstr "Huhtikuu"
-
-#~ msgid "Year"
-#~ msgstr "Vuosi"
-
-#, python-format
-#~ msgid "Cost Price per Uom"
-#~ msgstr "Kustannus yksikköä kohden"
-
-#~ msgid ""
-#~ "Manufacturing Orders are usually proposed automatically by OpenERP based on "
-#~ "the bill of materials and the procurement rules, but you can also create "
-#~ "manufacturing orders manually. OpenERP will handle the consumption of the "
-#~ "raw materials (stock decrease) and the production of the finished products "
-#~ "(stock increase) when the order is processed."
-#~ msgstr ""
-#~ "OpenERP ehdottaa yleensä valmistustilaukset automaattisesti osaluetteloiden "
-#~ "ja hankintasääntöjen perusteella, mutta ne voidaan muostaa myös "
-#~ "manuaalisesti. OpenERP vähentää raaka-aineet ja vie lopputuotteet varastoon, "
-#~ "kun valimistustilaus käsitellään."
-
-#~ msgid "Picking list"
-#~ msgstr "Keräilylista"
-
-#~ msgid "Raw Material Location"
-#~ msgstr "Raaka-aineen sijainti"
-
-#~ msgid "Production Order Report"
-#~ msgstr "Valmistustilausraportti"
-
-#~ msgid "Repairs"
-#~ msgstr "Korjaukset"
-
-#~ msgid "Default UOM"
-#~ msgstr "Oletusyksikkö"
-
-#~ msgid "Nbr of hours"
-#~ msgstr "Tuntien lkm"
-
-#~ msgid "You try to assign a lot which is not from the same product"
-#~ msgstr "yritätä kiinnittää erää, joka ei ole samaa tuotetta"
-
-#, python-format
-#~ msgid "Supplier Price per Uom"
-#~ msgstr "Toimittajan yksikköhinta"
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "Virhe: Väärä EAN-koodi"
-
-#~ msgid "# of Lines"
-#~ msgstr "Rivien lukumäärä"
-
-#~ msgid "Specify Cost of Work center per hour."
-#~ msgstr "Määritä työpisteen tuntikustannus"
-
-#~ msgid ""
-#~ "Enables multiple product output from a single production order: without "
-#~ "this, a production order can have only one output product."
-#~ msgstr ""
-#~ "Sallii usean tuotteen valmistumisen yksittäiseltä valmistustilaukselta. "
-#~ "Ilman tätä valmistustilaukselta voi valmistua vain yksi tuote."
-
-#~ msgid "Order quantity cannot be negative or zero !"
-#~ msgstr "Tilattu määrä ei voi olle negatiivinen tai nolla !"
-
-#~ msgid "July"
-#~ msgstr "Heinäkuu"
-
-#, python-format
-#~ msgid "Manufacturing order '%s' is ready to produce."
-#~ msgstr "Valmistustilaus '%s'on valmis tuotantoon."
-
-#~ msgid "["
-#~ msgstr "["
-
-#~ msgid "Work Center Future Load"
-#~ msgstr "Työpisteen tuleva kuormitus"
-
-#~ msgid ""
-#~ "This will change the price of parent products also according to the BoM "
-#~ "structure specified for the product."
-#~ msgstr ""
-#~ "Tämä muuttaa myös äitituotteen hintaa tuotteen osaluettelorakenteen "
-#~ "perusteella."
-
-#~ msgid "Change Standard Price"
-#~ msgstr "Muuta standardihintaa"
-
-#, python-format
-#~ msgid "Cannot delete Production Order(s) which are in %s State!"
-#~ msgstr "Valmistustilauksia, jotka ovat %s tilassa, ei voi poistaa!"
-
-#, python-format
-#~ msgid "Copy"
-#~ msgstr "Kopioi"
-
-#~ msgid "Image"
-#~ msgstr "Kuva"
-
-#~ msgid "Bill of Material Revision"
-#~ msgstr "Osaluettelon versio"
-
-#~ msgid "You must assign a production lot for this product"
-#~ msgstr "Tälle tuotteelle pitää määrittää valmistuserä"
-
-#~ msgid "Manufacturing Operations"
-#~ msgstr "Valmistuksen vaiheet"
-
-#~ msgid "Next Production Orders"
-#~ msgstr "Seuraavat valmistustilaukset"
-
-#~ msgid "Scheduled End Date"
-#~ msgstr "Ajoita loppupvm"
-
-#~ msgid "Split in Production lots"
-#~ msgstr "Jaa valmistuseriin"
-
-#~ msgid "State"
-#~ msgstr "Tila"
-
-#~ msgid "Dashboard"
-#~ msgstr "Työtila"
-
-#~ msgid "Production Dashboard"
-#~ msgstr "Tuotannon Työtila"
-
-#~ msgid ""
-#~ "Enhances production orders with readiness states as well as the start date "
-#~ "and end date of execution of the order."
-#~ msgstr ""
-#~ "Parantaa tuotantotilauksia valmiusasteiden tilamerkinnöillä ja aloitus sekä "
-#~ "lopetuspäivillä"
-
-#~ msgid "MRP Subproducts"
-#~ msgstr "MRP alatuotteet"
-
-#~ msgid ""
-#~ "Enables warranty and repair management (and their impact on stocks and "
-#~ "invoicing)."
-#~ msgstr ""
-#~ "Mahdollistaa takuu ja korjaushallinnan (ja näiden vaikutuksen varastoihin ja "
-#~ "laskutukseen)."
-
-#~ msgid "Advanced Routes"
-#~ msgstr "Kehittyneet reitit"
-
-#, python-format
-#~ msgid "Components Cost of "
-#~ msgstr "Komponenttien hinta "
-
-#~ msgid "Specify Cost of Work center per cycle."
-#~ msgstr "Määrittele työpisteen kulut sykliä kohden"
-
-#~ msgid "Nbr of cycles"
-#~ msgstr "Syklien määrä"
-
-#~ msgid "Extended Filters..."
-#~ msgstr "Laajennetut Suotimet..."
-
-#~ msgid ""
-#~ "Time in hours for this work center to achieve the operation of the specified "
-#~ "routing."
-#~ msgstr ""
-#~ "Tämän työpisteen käyttämä tuntimäärä reitityksen vaatiman toiminnon "
-#~ "suorittamiseen."
-
-#~ msgid "Workcenter Usage"
-#~ msgstr "Työpisteen käyttöaste"
-
-#, python-format
-#~ msgid "Could not cancel manufacturing order !"
-#~ msgstr "Valmistustilausta ei voitu peruuttaa!"
-
-#, python-format
-#~ msgid "Total Cost of "
-#~ msgstr "Kokonaiskustannus "
-
-#~ msgid ""
-#~ "Add more functionalities to the core Manufacturing Application with the "
-#~ "following addons."
-#~ msgstr ""
-#~ "Lisää uusia toimintoja perus valmistus ohjelmistoon seuraavilla lisäosilla."
-
-#~ msgid ""
-#~ "Manages product routes and paths within and between locations (e.g. "
-#~ "warehouses)."
-#~ msgstr ""
-#~ "Hallitsee tuotteiden reittejä paikkojen sisällä ja niiden välissä (esim. "
-#~ "varastot)"
-
-#~ msgid "Source Loc."
-#~ msgstr "Alkuperäinen sijainti"
-
-#~ msgid ""
-#~ "Gives the sequence order when displaying a list of routing work centers."
-#~ msgstr ""
-#~ "Antaa järjestysnumeron kun näytetään lista reititettävistä työpisteistä."
-
-#~ msgid ""
-#~ "Number of operations this work center can do in parallel. If this work "
-#~ "center represents a team of 5 workers, the capacity per cycle is 5."
-#~ msgstr ""
-#~ "Työpisteen suorittavien rinnakkaisten tehtävien lukumäärä. Jos työpisteen "
-#~ "henkilöstö on 5 työntekijää, kapasiteetti sykliä kohti on 5."
-
-#~ msgid "Split in production lots"
-#~ msgstr "Jaa tuotantoeriin"
-
-#~ msgid "Just In Time Scheduling"
-#~ msgstr "Just in time ajoitus (JIT)"
-
-#~ msgid "MRP Application Configuration"
-#~ msgstr "MRP ohjelman konfiguraatio"
-
-#~ msgid "Month -1"
-#~ msgstr "edellinen kk"
-
-#, python-format
-#~ msgid "Manufacturing order '%s' is scheduled for the %s."
-#~ msgstr "Valmistustilaus '%s' on aikataulutettu '%s':lle."
-
-#~ msgid "Change Parent Price"
-#~ msgstr "Muuta ylemmän tason tuotteen hintaa"
-
-#~ msgid ""
-#~ "This is the internal picking list that brings the finished product to the "
-#~ "production plan"
-#~ msgstr ""
-#~ "Tämä on sisäinen keräilyslista joka tuo lopputuotteen tuontatosuunnitelmaan"
-
-#~ msgid "Component Name"
-#~ msgstr "Komponentin nimi"
-
-#~ msgid "Configure Your Manufacturing Resource Planning Application"
-#~ msgstr "Määrittele valmistuksen suunnitteluohjelmasi (MRP)"
-
-#~ msgid "Production Analysis"
-#~ msgstr "Tuotannon analyysi"
-
-#~ msgid "Product Consumed"
-#~ msgstr "Tuote käytetty"
-
-#, python-format
-#~ msgid "Active Id is not found"
-#~ msgstr "Aktiivisia tunnisteita (id) ei löydy"
-
-#~ msgid ""
-#~ "All product quantities must be greater than 0.\n"
-#~ "You should install the mrp_subproduct module if you want to manage extra "
-#~ "products on BoMs !"
-#~ msgstr ""
-#~ "Kaikkien määrien on oltava suurempia kuin 0.\n"
-#~ "Asenna mrp_subproduct moduuli jos haluat hallita lisätuotteita tai  BoM:meja!"
-
-#~ msgid ""
-#~ "UoM (Unit of Measure) is the unit of measurement for the inventory control"
-#~ msgstr "UoM (määräyksikkö) on varastonhallinnan laskentayksikkö."
-
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "Virhe! Et voi luoda sisäkkäisiä yrityksiä."
-
-#~ msgid "#Line Orders"
-#~ msgstr "Tilausrivien määrä"
-
-#~ msgid "Configure"
-#~ msgstr "Konfiguroi"
-
-#~ msgid ""
-#~ "This reporting allows you to analyse your manufacturing activities and "
-#~ "performance."
-#~ msgstr ""
-#~ "Tämä raportointi auttaa sinua analysoimaan valmistustoimintaa ja sen "
-#~ "tehokkuutta"
-
-#~ msgid "Configuration Progress"
-#~ msgstr "Konfiguraation eteneminen"
-
-#~ msgid "Component Product"
-#~ msgstr "Komponenttituote"
-
-#~ msgid ""
-#~ "Description of the work center. Explain here what's a cycle according to "
-#~ "this work center."
-#~ msgstr "Työpisteen kuvaus. Kuvaa tähän mikä on työpisteen työnkulku."
-
-#, python-format
-#~ msgid "Work Cost of "
-#~ msgstr "Työn kustannukset "
-
-#~ msgid "MRP Applications Configuration"
-#~ msgstr "MRP ohjelmien konfigurointi"
-
-#~ msgid ""
-#~ "Fill this product to track easily your production costs in the analytic "
-#~ "accounting."
-#~ msgstr ""
-#~ "Täytä tämä tuote seurataksesi helposti tuotantokustannuksia analyyttisessä "
-#~ "kirjanpidossa"
-
-#~ msgid ""
-#~ "Define specific property groups that can be assigned to the properties of "
-#~ "your bill of materials."
-#~ msgstr ""
-#~ "Määrittele eritykset ominaisuusryhmät joita voidaan asettaa osaluetteloille "
-#~ "(bom)."
-
-#~ msgid ""
-#~ "Work Centers allow you to create and manage manufacturing units consisting "
-#~ "of one or more persons and/or machines that can be considered as a unit for "
-#~ "capacity and planning forecasting."
-#~ msgstr ""
-#~ "Työpisteet mahdollistavat valmistusyksiköiden luomisen ja hallitsemisen. Ne "
-#~ "voivat muodostua yhdestä tai useammasta henkilöstä ja/tai koneesta joita "
-#~ "käsitellään kapasiteettiyksikkönä ja suunnittelussa sekä ennustamisessa."
-
-#~ msgid ""
-#~ "Routing indicates all the workcenters used, for how long and/or cycles.If "
-#~ "Routing is indicated then,the third tab of a production order (workcenters) "
-#~ "will be automatically pre-completed."
-#~ msgstr ""
-#~ "Reititys kertoo käytetyt työpisteet, kestoajat ja työkertojen määrät. Jos "
-#~ "reititys on määritelty, niin kolmas alasivu tuotantotilauksissa (työpisteet) "
-#~ "esitäytetään automaattisesti."
-
-#~ msgid ""
-#~ "Work Center Loads gives you a projection of work center loads over a "
-#~ "specified period. It is expressed in number of hours and machine related "
-#~ "cycles."
-#~ msgstr ""
-#~ "Työpisteiden kuormistus antaa käsityksen työpisteiden kuormitustilanteesta "
-#~ "valitulla ajanjaksolla. Se kerrotaan tuntimäärinä ja koneisiin liittyvinä "
-#~ "työkertojen määrinä."
-
-#~ msgid ""
-#~ "Bills of materials components are components and sub-products used to create "
-#~ "master bills of materials. Use this menu to search in which BoM a specific "
-#~ "component is used."
-#~ msgstr ""
-#~ "Osaluettelon komponenetit ovat osia tai alatuotteita joista osaluettelo "
-#~ "(bom) muodostuu. Käytä tätä valikkoa etsiäksesi mitä osaluetteloa käytetään "
-#~ "tietylle komponentille."
-
-#~ msgid "Sugar"
-#~ msgstr "Sokeri"
-
-#~ msgid "Orange"
-#~ msgstr "Oranssi"
-
-#~ msgid "Fluid"
-#~ msgstr "Neste"
-
-#~ msgid "Cloth"
-#~ msgstr "Vaate"
-
-#~ msgid ""
-#~ "Create a product form for everything you buy or sell. Specify a supplier if "
-#~ "the product can be purchased."
-#~ msgstr ""
-#~ "Luo tuotelomake jokaiselle ostettavalle tai myytävälle tuotteelle. "
-#~ "Määrittele toimittaja jos tuote on ostettava"
-
-#~ msgid "Shirt Buttons"
-#~ msgstr "Paidan napit"
-
-#~ msgid "You can not move products from or to a location of the type view."
-#~ msgstr "Et voi siirtää tuotteita paikkaan tai paikasta tässä näkymässä."
-
-#~ msgid "Configure your work centers"
-#~ msgstr "Määrittele työpisteesi"
-
-#~ msgid "The company name must be unique !"
-#~ msgstr "Yrityksen nimen pitää olla uniikki!"
-
-#, python-format
-#~ msgid "Cannot delete a manufacturing order in state '%s'"
-#~ msgstr "Ei voi poistaa valmistustilausta joka on tilassa '%s'"
-
-#~ msgid "Shirt"
-#~ msgstr "Paita"
-
-#~ msgid "MRP Management"
-#~ msgstr "MRP hallinta"
-
-#~ msgid "Create or Import Products"
-#~ msgstr "Luo tai tuo tuotteita"
-
-#~ msgid "Water"
-#~ msgstr "Vesi"
-
-#, python-format
-#~ msgid "Couldn't find a bill of material for this product."
-#~ msgstr "Osaluetteloa tälle tuotteelle ei löytynyt."
-
-#~ msgid "Orange Juice"
-#~ msgstr "Appelssiinimehu"
-
-#~ msgid "Litre"
-#~ msgstr "litra"

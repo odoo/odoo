@@ -1,19 +1,20 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-# 	* project
+# Italian translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-18 22:53+0000\n"
-"Last-Translator: Sergio Corato <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-22 13:40+0000\n"
+"Last-Translator: Davide Corio - agilebg.com <davide.corio@agilebg.com>\n"
+"Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-19 05:15+0000\n"
+"X-Launchpad-Export-Date: 2012-12-23 05:08+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
 
 #. module: project
@@ -84,7 +85,7 @@ msgid "Start Task"
 msgstr "Inizia Attività"
 
 #. module: project
-#: code:addons/project/project.py:960
+#: code:addons/project/project.py:932
 #, python-format
 msgid "Warning !"
 msgstr "Attenzione !"
@@ -136,8 +137,8 @@ msgstr ""
 "direttamente in html così da poter essere inserito nelle viste kanban."
 
 #. module: project
-#: code:addons/project/project.py:440
-#: code:addons/project/project.py:1414
+#: code:addons/project/project.py:432
+#: code:addons/project/project.py:1305
 #, python-format
 msgid "Warning!"
 msgstr "Attenzione!"
@@ -229,9 +230,10 @@ msgid "Assigned To"
 msgstr "Assegnato a"
 
 #. module: project
-#: selection:project.task,priority:0
-msgid "Very important"
-msgstr "Molto importante"
+#: model:mail.message.subtype,name:project.mt_project_task_closed
+#: model:mail.message.subtype,name:project.mt_task_closed
+msgid "Task Done"
+msgstr "Attività completata"
 
 #. module: project
 #: view:project.project:0
@@ -269,10 +271,15 @@ msgid "Project Task Delegate"
 msgstr "Delega attività progetto"
 
 #. module: project
-#: code:addons/project/project.py:557
-#, python-format
-msgid "Project has been <b>created</b>."
-msgstr "Il progetto è stato <b>creato</b>."
+#: model:mail.message.subtype,name:project.mt_project_task_started
+#: model:mail.message.subtype,name:project.mt_task_started
+msgid "Task Started"
+msgstr "Attività iniziata"
+
+#. module: project
+#: view:project.task:0
+msgid "Very Important"
+msgstr "Molto Importante"
 
 #. module: project
 #: view:project.config.settings:0
@@ -317,12 +324,6 @@ msgstr "Stato"
 #: selection:report.project.task.user,month:0
 msgid "August"
 msgstr "Agosto"
-
-#. module: project
-#: code:addons/project/project.py:1303
-#, python-format
-msgid "Task has been <b>delegated</b> to <em>%s</em>."
-msgstr "L'attività è stata <b>delegata</b> a <em>%s</em>."
 
 #. module: project
 #: view:project.project:0
@@ -400,7 +401,7 @@ msgid "Assigned to"
 msgstr "Assegnato a"
 
 #. module: project
-#: code:addons/project/project.py:1057
+#: code:addons/project/project.py:1021
 #, python-format
 msgid "Delegated User should be specified"
 msgstr "L'utente delegato dovrebbe essere specificato"
@@ -437,12 +438,6 @@ msgid "Re-evaluate Task"
 msgstr "Rivaluta l'attività"
 
 #. module: project
-#: code:addons/project/project.py:1292
-#, python-format
-msgid "Stage changed to <b>%s</b>."
-msgstr "Stato cambiato a <b>%s</b>."
-
-#. module: project
 #: view:project.task:0
 msgid "Validate planned time"
 msgstr "Valida pianificazione"
@@ -451,6 +446,12 @@ msgstr "Valida pianificazione"
 #: field:project.config.settings,module_pad:0
 msgid "Use integrated collaborative note pads on task"
 msgstr "Usa appunti (pads) collaborativi sulle attività"
+
+#. module: project
+#: model:mail.message.subtype,name:project.mt_project_task_blocked
+#: model:mail.message.subtype,name:project.mt_task_blocked
+msgid "Task Blocked"
+msgstr "Attività bloccata"
 
 #. module: project
 #: model:process.node,note:project.process_node_opentask0
@@ -466,6 +467,11 @@ msgstr "Alias"
 #: view:project.task:0
 msgid "oe_kanban_text_red"
 msgstr "oe_kanban_text_red"
+
+#. module: project
+#: model:mail.message.subtype,description:project.mt_task_blocked
+msgid "Task blocked"
+msgstr "Attività bloccata"
 
 #. module: project
 #: view:project.task:0
@@ -620,14 +626,6 @@ msgid "Not a Template Task"
 msgstr "Non un'attività di template"
 
 #. module: project
-#: view:project.project:0
-msgid ""
-"Follow this project to automatically follow all related tasks and issues."
-msgstr ""
-"Segui questo progetto per poter seguire automaticamente attività e "
-"problematiche correlate."
-
-#. module: project
 #: field:project.task,planned_hours:0
 msgid "Initially Planned Hours"
 msgstr "Ore Pianificate Inizialmente"
@@ -702,6 +700,14 @@ msgstr "Nuova Attività"
 #: field:project.config.settings,module_project_issue_sheet:0
 msgid "Invoice working time on issues"
 msgstr "Fatturazione del tempo di lavoro sulle problematiche"
+
+#. module: project
+#: view:project.project:0
+#: view:project.task:0
+#: field:project.task.history,end_date:0
+#: field:project.task.history.cumulative,end_date:0
+msgid "End Date"
+msgstr "Data fine"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_specification
@@ -898,6 +904,11 @@ msgid "Companies"
 msgstr "Aziende"
 
 #. module: project
+#: field:project.task.type,fold:0
+msgid "Folded by Default"
+msgstr "Chiuso di default"
+
+#. module: project
 #: field:project.task.history,date:0
 #: field:project.task.history.cumulative,date:0
 #: field:project.task.work,date:0
@@ -935,12 +946,6 @@ msgid "10"
 msgstr "10"
 
 #. module: project
-#: code:addons/project/project.py:566
-#, python-format
-msgid "Project has been <b>canceled</b>."
-msgstr "Il progetto è stato <b>annullato</b>."
-
-#. module: project
 #: help:project.project,analytic_account_id:0
 msgid ""
 "Link this project to an analytic account if you need financial management on "
@@ -960,17 +965,6 @@ msgstr ""
 #: view:project.task.reevaluate:0
 msgid "Cancel"
 msgstr "Annulla"
-
-#. module: project
-#: code:addons/project/project.py:569
-#, python-format
-msgid "Project has been <b>closed</b>."
-msgstr "Il progetto è stato <b>chiuso</b>."
-
-#. module: project
-#: model:ir.actions.server,name:project.actions_server_project_task_read
-msgid "Task: Mark read"
-msgstr "Attività: Segna come letto"
 
 #. module: project
 #: view:project.project:0
@@ -998,9 +992,13 @@ msgstr ""
 "suoi progetti figli"
 
 #. module: project
-#: model:project.task.type,name:project.project_tt_development
-msgid "Development"
-msgstr "Sviluppo"
+#: view:project.project:0
+msgid ""
+"Follow this project to automatically track the events associated to tasks "
+"and issues of this project."
+msgstr ""
+"Segui questo progetto per tracciare automaticamente gli eventi associati "
+"alle attività e alle problematiche."
 
 #. module: project
 #: view:project.task:0
@@ -1008,26 +1006,20 @@ msgid "Users"
 msgstr "Utenti"
 
 #. module: project
-#: model:mail.message.subtype,name:project.mt_project_stage
-#: model:mail.message.subtype,name:project.mt_task_change
+#: model:mail.message.subtype,name:project.mt_task_stage
 msgid "Stage Changed"
 msgstr "Fase Cambiata"
 
 #. module: project
-#: field:project.task.type,fold:0
-msgid "Hide in views if empty"
-msgstr "Nascondi nella vista se vuoto"
+#: view:project.project:0
+#: model:res.groups,name:project.group_project_manager
+msgid "Manager"
+msgstr "Manager"
 
 #. module: project
-#: view:project.task:0
 #: selection:project.task,priority:0
 msgid "Important"
 msgstr "Importante"
-
-#. module: project
-#: field:project.task.type,case_default:0
-msgid "Common to All Projects"
-msgstr "Uguale per tutti i Progetti"
 
 #. module: project
 #: field:project.category,name:0
@@ -1079,18 +1071,6 @@ msgstr "Stato Convalida"
 #: field:project.task.work,name:0
 msgid "Work summary"
 msgstr "Cronologia Lavoro"
-
-#. module: project
-#: code:addons/project/project.py:563
-#, python-format
-msgid "Project is now <b>pending</b>."
-msgstr "Il Progetto adesso è <b>sospeso</b>."
-
-#. module: project
-#: code:addons/project/project.py:560
-#, python-format
-msgid "Project has been <b>opened</b>."
-msgstr "Il progetto è stato <b>aperto</b>."
 
 #. module: project
 #: view:project.project:0
@@ -1146,11 +1126,6 @@ msgid "Parent Tasks"
 msgstr "Attività genitore"
 
 #. module: project
-#: model:ir.actions.server,name:project.actions_server_project_read
-msgid "Project: Mark read"
-msgstr "Progetto: Segna come letto"
-
-#. module: project
 #: model:process.node,name:project.process_node_opentask0
 msgid "Open task"
 msgstr "Apri Attività"
@@ -1198,7 +1173,7 @@ msgid "Done by"
 msgstr "Completato da"
 
 #. module: project
-#: code:addons/project/project.py:180
+#: code:addons/project/project.py:181
 #, python-format
 msgid "Invalid Action!"
 msgstr "Azione non valida!"
@@ -1234,11 +1209,6 @@ msgstr "# di attività"
 #: field:project.project,doc_count:0
 msgid "Number of documents attached"
 msgstr "Numero di documenti allegati"
-
-#. module: project
-#: model:ir.actions.server,name:project.actions_server_project_task_unread
-msgid "Task: Mark unread"
-msgstr "Attività: Segna come letto"
 
 #. module: project
 #: field:project.task,priority:0
@@ -1295,12 +1265,17 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr "Calcolaro come: Tempo impiegato + Tempo rimanente."
 
 #. module: project
-#: code:addons/project/project.py:364
-#: code:addons/project/project.py:385
-#: code:addons/project/project.py:728
+#: code:addons/project/project.py:356
+#: code:addons/project/project.py:377
+#: code:addons/project/project.py:709
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copia)"
+
+#. module: project
+#: model:mail.message.subtype,name:project.mt_project_task_stage
+msgid "Task Stage Changed"
+msgstr "Fase attività cambiata"
 
 #. module: project
 #: view:project.task:0
@@ -1338,6 +1313,11 @@ msgstr "Team"
 #: help:project.config.settings,time_unit:0
 msgid "This will set the unit of measure used in projects and tasks."
 msgstr "Imposta l'unità di misura usata nei progetti e nelle attività."
+
+#. module: project
+#: selection:project.task,priority:0
+msgid "Very important"
+msgstr "Molto importante"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -1400,8 +1380,6 @@ msgid "Low"
 msgstr "Basso"
 
 #. module: project
-#: model:mail.message.subtype,name:project.mt_project_closed
-#: model:mail.message.subtype,name:project.mt_task_closed
 #: selection:project.project,state:0
 msgid "Closed"
 msgstr "Chiuso"
@@ -1495,7 +1473,7 @@ msgstr ""
 "manager quando l'attività è in stato bozza."
 
 #. module: project
-#: code:addons/project/project.py:219
+#: code:addons/project/project.py:220
 #, python-format
 msgid "Attachments"
 msgstr "Allegati"
@@ -1515,7 +1493,7 @@ msgid "Done"
 msgstr "Completato"
 
 #. module: project
-#: code:addons/project/project.py:181
+#: code:addons/project/project.py:182
 #, python-format
 msgid ""
 "You cannot delete a project containing tasks. You can either delete all the "
@@ -1546,6 +1524,11 @@ msgid "Remaining Hours"
 msgstr "Ore Rimanenti"
 
 #. module: project
+#: model:mail.message.subtype,description:project.mt_task_stage
+msgid "Stage changed"
+msgstr "Fase cambiata"
+
+#. module: project
 #: constraint:project.task:0
 msgid "Error ! Task end-date must be greater then task start-date"
 msgstr ""
@@ -1569,17 +1552,6 @@ msgid "Delegated Task"
 msgstr "Attività Delegata"
 
 #. module: project
-#: view:project.project:0
-#: model:res.groups,name:project.group_project_manager
-msgid "Manager"
-msgstr "Manager"
-
-#. module: project
-#: view:project.task:0
-msgid "Very Important"
-msgstr "Molto Importante"
-
-#. module: project
 #: view:report.project.task.user:0
 #: field:report.project.task.user,total_hours:0
 msgid "Total Hours"
@@ -1591,12 +1563,9 @@ msgid "project.config.settings"
 msgstr "project.config.settings"
 
 #. module: project
-#: view:project.project:0
-#: view:project.task:0
-#: field:project.task.history,end_date:0
-#: field:project.task.history.cumulative,end_date:0
-msgid "End Date"
-msgstr "Data fine"
+#: model:project.task.type,name:project.project_tt_development
+msgid "Development"
+msgstr "Sviluppo"
 
 #. module: project
 #: help:project.task,active:0
@@ -1642,7 +1611,7 @@ msgid "Overpassed Tasks"
 msgstr "Attività superate"
 
 #. module: project
-#: code:addons/project/project.py:960
+#: code:addons/project/project.py:932
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1670,6 +1639,11 @@ msgstr "Totale"
 #: model:process.node,note:project.process_node_taskbydelegate0
 msgid "Delegate your task to the other user"
 msgstr "Delega la tua attività ad un altro utente"
+
+#. module: project
+#: model:mail.message.subtype,description:project.mt_task_started
+msgid "Task started"
+msgstr "Attività iniziata"
 
 #. module: project
 #: help:project.task.reevaluate,remaining_hours:0
@@ -1700,7 +1674,7 @@ msgid "CHECK: "
 msgstr "CONTROLLA: "
 
 #. module: project
-#: code:addons/project/project.py:440
+#: code:addons/project/project.py:432
 #, python-format
 msgid "You must assign members on the project '%s' !"
 msgstr "E' necessario assegnare i membri del progetto '%s' !"
@@ -1844,6 +1818,11 @@ msgid "Documents"
 msgstr "Documenti"
 
 #. module: project
+#: model:mail.message.subtype,description:project.mt_task_new
+msgid "Task created"
+msgstr "Attività creata"
+
+#. module: project
 #: view:report.project.task.user:0
 #: field:report.project.task.user,no_of_days:0
 msgid "# of Days"
@@ -1856,8 +1835,6 @@ msgid "Followers"
 msgstr "Followers"
 
 #. module: project
-#: model:mail.message.subtype,name:project.mt_project_new
-#: model:mail.message.subtype,name:project.mt_task_new
 #: selection:project.project,state:0
 #: view:project.task:0
 #: selection:project.task,state:0
@@ -1939,7 +1916,7 @@ msgid "Starting Date"
 msgstr "Data di inizio"
 
 #. module: project
-#: code:addons/project/project.py:406
+#: code:addons/project/project.py:398
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_projects
 #: view:project.project:0
@@ -1973,12 +1950,6 @@ msgid "Project Tasks"
 msgstr "Attività del Progetto"
 
 #. module: project
-#: code:addons/project/project.py:1296
-#, python-format
-msgid "Task has been <b>created</b>."
-msgstr "L'attività è stata <b>creata</b>."
-
-#. module: project
 #: field:account.analytic.account,use_tasks:0
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,name:project.action_view_task
@@ -1995,12 +1966,6 @@ msgstr "Attività"
 #: selection:report.project.task.user,month:0
 msgid "December"
 msgstr "Dicembre"
-
-#. module: project
-#: model:mail.message.subtype,name:project.mt_project_canceled
-#: model:mail.message.subtype,name:project.mt_task_canceled
-msgid "Canceled"
-msgstr "Annullato"
 
 #. module: project
 #: view:project.config.settings:0
@@ -2052,12 +2017,6 @@ msgid "Kanban State"
 msgstr "Stato Kanban"
 
 #. module: project
-#: code:addons/project/project.py:1299
-#, python-format
-msgid "Task has been set as <b>draft</b>."
-msgstr "L'attività è stata impostata a <b>bozza</b>."
-
-#. module: project
 #: field:project.config.settings,module_project_timesheet:0
 msgid "Record timesheet lines per tasks"
 msgstr "Registra linee timesheet per attività"
@@ -2107,14 +2066,6 @@ msgid "Configure Project"
 msgstr "Configura Progetto"
 
 #. module: project
-#: field:project.project,message_comment_ids:0
-#: help:project.project,message_comment_ids:0
-#: field:project.task,message_comment_ids:0
-#: help:project.task,message_comment_ids:0
-msgid "Comments and emails"
-msgstr "Commenti ed Email"
-
-#. module: project
 #: view:project.task.history.cumulative:0
 msgid "Tasks's Cumulative Flow"
 msgstr "Flusso Cumulativo delle Attività"
@@ -2123,11 +2074,6 @@ msgstr "Flusso Cumulativo delle Attività"
 #: selection:report.project.task.user,month:0
 msgid "January"
 msgstr "Gennaio"
-
-#. module: project
-#: model:ir.actions.server,name:project.actions_server_project_unread
-msgid "Project: Mark unread"
-msgstr "Progetto: Segna come letto"
 
 #. module: project
 #: field:project.task.delegate,prefix:0
@@ -2140,10 +2086,16 @@ msgid "Reevaluation Task"
 msgstr "Attività di rivalutazione"
 
 #. module: project
-#: code:addons/project/project.py:1414
+#: code:addons/project/project.py:1305
 #, python-format
 msgid "Please delete the project linked with this account first."
 msgstr "Si prega di eliminare prima il progetto legato a questo conto."
+
+#. module: project
+#: model:mail.message.subtype,name:project.mt_project_task_new
+#: model:mail.message.subtype,name:project.mt_task_new
+msgid "Task Created"
+msgstr "Attività creata"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -2162,6 +2114,11 @@ msgstr "Progetti nei quali sono un manager"
 #: selection:project.task.history.cumulative,kanban_state:0
 msgid "Ready for next stage"
 msgstr "Pronto per la prossima fase"
+
+#. module: project
+#: field:project.task.type,case_default:0
+msgid "Default for New Projects"
+msgstr "Default per i nuovi progetti"
 
 #. module: project
 #: view:project.task:0
@@ -2204,6 +2161,11 @@ msgstr ""
 "Il modulo gestione progetti a lungo termine tiene traccia della "
 "pianificazione e dell'allocazione risorse.\n"
 "Installa il modulo project_long_term."
+
+#. module: project
+#: model:mail.message.subtype,description:project.mt_task_closed
+msgid "Task closed"
+msgstr "Attività chiusa"
 
 #. module: project
 #: selection:report.project.task.user,month:0
@@ -2281,840 +2243,3 @@ msgstr "Anno"
 #: view:project.task.type:0
 msgid "Tasks Stages"
 msgstr "Stadi attività"
-
-#, python-format
-#~ msgid "Operation Not Permitted !"
-#~ msgstr "Operazione Non Permessa !"
-
-#~ msgid "Update"
-#~ msgstr "Aggiorna"
-
-#~ msgid "Mail Header"
-#~ msgstr "Titolo Email"
-
-#~ msgid "Days"
-#~ msgstr "Giorni"
-
-#~ msgid "All projects"
-#~ msgstr "Tutti i progetti"
-
-#~ msgid "Hours"
-#~ msgstr "Ore"
-
-#~ msgid "New Project"
-#~ msgstr "Nuovo progetto"
-
-#~ msgid "Weeks"
-#~ msgstr "Settimane"
-
-#~ msgid "Dates"
-#~ msgstr "Date"
-
-#~ msgid "Planned"
-#~ msgstr "Pianificato"
-
-#~ msgid "Review"
-#~ msgstr "Revisione"
-
-#~ msgid "Quotation"
-#~ msgstr "Quotazione"
-
-#, python-format
-#~ msgid "Error"
-#~ msgstr "Errore"
-
-#~ msgid "Months"
-#~ msgstr "Mesi"
-
-#~ msgid "Bug"
-#~ msgstr "Bug"
-
-#, python-format
-#~ msgid "Couldn't send mail because your email address is not configured!"
-#~ msgstr ""
-#~ "Non è possibile spedire l'email perchè il tuo indirizzo email non è "
-#~ "configurato!"
-
-#~ msgid "State"
-#~ msgstr "Stato"
-
-#~ msgid "Running"
-#~ msgstr "In esecuzione"
-
-#~ msgid "Delay"
-#~ msgstr "Ritardo"
-
-#~ msgid "Projects Structure"
-#~ msgstr "Strutture Progetti"
-
-#~ msgid "Template of Projects"
-#~ msgstr "Modello dei Progetti"
-
-#~ msgid "New Feature"
-#~ msgstr "Nuova Funzionalità"
-
-#~ msgid ""
-#~ "Project's member. Not used in any computation, just for information purpose."
-#~ msgstr ""
-#~ "Membro del progetto.Non usato in ogni calcolo, solo a scopo informativo"
-
-#~ msgid ""
-#~ "Header added at the beginning of the email for the warning message sent to "
-#~ "the customer when a task is closed."
-#~ msgstr ""
-#~ "Intestazione aggiunta all'inizio dell'email per il messaggio di avviso "
-#~ "mandato al cliente quanto l'incarico è chiuso."
-
-#~ msgid "My Running Projects"
-#~ msgstr "Miei progetti in corso"
-
-#~ msgid ""
-#~ "Automatic variables for headers and footer. Use exactly the same notation."
-#~ msgstr ""
-#~ "Variabili automatiche per intestazioni e piè di pagina. Usare esattamente la "
-#~ "stessa notazione."
-
-#~ msgid "Internal description of the project."
-#~ msgstr "Descrizione interna del progetto."
-
-#~ msgid "Computed as: Time Spent / Total Time."
-#~ msgstr "Calcolato come: Tempo impiegato / Tempo totale."
-
-#~ msgid "Warn Partner"
-#~ msgstr "Avvisa Partner"
-
-#~ msgid "Sum of spent hours of all tasks related to this project."
-#~ msgstr ""
-#~ "Somma delle ore impiegate per tutte le attività correlate a questo progetto."
-
-#~ msgid ""
-#~ "Computed as: Total Time - Estimated Time. It gives the difference of the "
-#~ "time estimated by the project manager and the real time to close the task."
-#~ msgstr ""
-#~ "Calcolato come: Tempo Totale - Tempo Stimato. Fornisce la differenza di "
-#~ "tempo stimato dal project manager e il tempo realmente necessario per "
-#~ "terminare l'attività."
-
-#~ msgid "Reactivate Project"
-#~ msgstr "Riattiva Progetto"
-
-#, python-format
-#~ msgid "Operation Done"
-#~ msgstr "Operazione Completata"
-
-#~ msgid "Sum of planned hours of all tasks related to this project."
-#~ msgstr ""
-#~ "Somma delle ore pianificate per tutte le attività correlate a questo "
-#~ "progetto."
-
-#~ msgid "Task invoice"
-#~ msgstr "Fattura dell'attività"
-
-#~ msgid "Warn Manager"
-#~ msgstr "Avvisa Manager"
-
-#~ msgid "New title of your own task to validate the work done."
-#~ msgstr "Nuovo titolo della tua attività per validare il lavoro svolto"
-
-#~ msgid ""
-#~ "If you check this field, the project manager will receive a request each "
-#~ "time a task is completed by his team."
-#~ msgstr ""
-#~ "Se selezioni questo campo, il project manager riceverà una richiesta ogni "
-#~ "volta che un'attività viene completata dal suo team."
-
-#~ msgid ""
-#~ "Footer added at the beginning of the email for the warning message sent to "
-#~ "the customer when a task is closed."
-#~ msgstr ""
-#~ "Footer aggiunto alle email di avviso inviate al cliente quando un'attività è "
-#~ "stata chiusa."
-
-#~ msgid "config.compute.remaining"
-#~ msgstr "config.compute.remaining"
-
-#~ msgid "Mail Footer"
-#~ msgstr "Mail Footer"
-
-#~ msgid "Error ! You can not create recursive projects."
-#~ msgstr "Errore! Non puoi creare progetti ricorsivi."
-
-#~ msgid "Compute Remaining Hours"
-#~ msgstr "Calcola Ore Rimanenti"
-
-#~ msgid "Running projects"
-#~ msgstr "Progetti Attivi"
-
-#~ msgid "New title of the task delegated to the user."
-#~ msgstr "Nuovo titolo dell'attività delegata all'utente."
-
-#~ msgid "Change Remaining Hours"
-#~ msgstr "Modifica Ore Rimanenti"
-
-#, python-format
-#~ msgid ""
-#~ "Couldn't send mail because the contact for this task (%s) has no email "
-#~ "address!"
-#~ msgstr ""
-#~ "Non è possibile spedire l'email perchè il contatto per questa attività (%s) "
-#~ "non ha un indirizzo email!"
-
-#~ msgid "User you want to delegate this task to."
-#~ msgstr "Utente a cui si vuole delegare questa attività"
-
-#~ msgid ""
-#~ "Estimated time for you to validate the work done by the user to whom you "
-#~ "delegate this task."
-#~ msgstr ""
-#~ "Tempo stimato per validare il lavoro fatto dall'utente a cui è stata "
-#~ "delegata l'attività."
-
-#~ msgid "My Draft Tasks"
-#~ msgstr "Mie Bozze di Attività"
-
-#~ msgid ""
-#~ "If you check this, the user will have a popup when closing a task that "
-#~ "propose a message to send by email to the customer."
-#~ msgstr ""
-#~ "Se selezionato, l'utente riceverà, alla chiusura di un'attività, un popup "
-#~ "che proporrà un messaggio da spedire tramite email al cliente."
-
-#~ msgid "Reinclude the description of the task in the task of the user."
-#~ msgstr "Reincludere la descrizione nell'attività dell'utente."
-
-#~ msgid "Estimated time to close this task by the delegated user."
-#~ msgstr ""
-#~ "Tempo stimato per la chiusura di questa attività da parte dell'utente "
-#~ "delegato"
-
-#~ msgid "Create a Task"
-#~ msgstr "Crea una Attività"
-
-#~ msgid "Trigger Invoice"
-#~ msgstr "Esegui Fatturazione"
-
-#~ msgid "After task is completed, Create its invoice."
-#~ msgstr "Dopo che l'attività è stata completata, crea la fattura"
-
-#~ msgid "Trigger invoices from sale order lines"
-#~ msgstr "Esegui fatturazione per le linee dell'ordine di vendita"
-
-#~ msgid "Sum of total hours of all tasks related to this project."
-#~ msgstr ""
-#~ "Somma delle ore totali di tutte le attività correlate con questo progetto."
-
-#~ msgid ""
-#~ "New state of your own task. Pending will be reopened automatically when the "
-#~ "delegated task is closed."
-#~ msgstr ""
-#~ "Nuovo stato della mia attività. In Sospeso verrà riabilitato in automarico "
-#~ "quando l'attività delegata sarà chiusa."
-
-#~ msgid "Expected End"
-#~ msgstr "Fine Stimata"
-
-#~ msgid "Assigned tasks"
-#~ msgstr "Attività Assegnate"
-
-#~ msgid "Close Task"
-#~ msgstr "Chiudi Attività"
-
-#~ msgid "Subproject"
-#~ msgstr "Sottoprogetto"
-
-#~ msgid "Importance"
-#~ msgstr "Importanza"
-
-#~ msgid "Task Types"
-#~ msgstr "Tipi Attività"
-
-#~ msgid "Validate"
-#~ msgstr "Convalida"
-
-#~ msgid "My Tasks in Progress"
-#~ msgstr "Le Mie Attività in corso"
-
-#~ msgid "All Tasks"
-#~ msgstr "Tutte le attività"
-
-#~ msgid "Task: %(name)s"
-#~ msgstr "Attività: %(name)s"
-
-#~ msgid "Delegations"
-#~ msgstr "Deleghe"
-
-#~ msgid "Send Message"
-#~ msgstr "Invia messaggio"
-
-#~ msgid "My projects"
-#~ msgstr "I Miei Progetti"
-
-#~ msgid "Type"
-#~ msgstr "Tipo"
-
-#~ msgid "Project task type"
-#~ msgstr "Tipo Attività di Progetto"
-
-#~ msgid "My Pending Tasks"
-#~ msgstr "Le Mie Attività in attesa"
-
-#~ msgid "Tasks in Progress"
-#~ msgstr "Attività in corso"
-
-#~ msgid "Configuration"
-#~ msgstr "Configurazione"
-
-#~ msgid "Task Details"
-#~ msgstr "Dettagli Attività"
-
-#~ msgid "User: %(user_id)s"
-#~ msgstr "Utente: %(user_id)s"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "XML non valido per Visualizzazione Architettura!"
-
-#~ msgid "Task type"
-#~ msgstr "Tipo di Attività"
-
-#~ msgid "New Task"
-#~ msgstr "Nuova attività"
-
-#~ msgid "Project's members"
-#~ msgstr "Membri di Progetto"
-
-#~ msgid "Status: %(state)s"
-#~ msgstr "Stato: %(state)s"
-
-#~ msgid "Information"
-#~ msgstr "Informazioni"
-
-#~ msgid "E-Mails"
-#~ msgstr "E-Mails"
-
-#~ msgid "Task edition"
-#~ msgstr "Modifica Attività"
-
-#~ msgid "User's projects"
-#~ msgstr "Utenti dei progetti"
-
-#~ msgid "Delegate this task to a user"
-#~ msgstr "Delega questa Attività ad un Utente"
-
-#~ msgid "Date Closed"
-#~ msgstr "Data di Fine"
-
-#~ msgid "Month works"
-#~ msgstr "Lavoro Mensile"
-
-#~ msgid "Gantt Representation"
-#~ msgstr "Grafico di Gantt"
-
-#~ msgid "Task summary"
-#~ msgstr "Riassunto Attività"
-
-#~ msgid "Date Start: %(date_start)s"
-#~ msgstr "Data Inizio: %(date_start)s"
-
-#~ msgid "ID: %(task_id)s"
-#~ msgstr "ID: %(task_id)s"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri "
-#~ "speciali!"
-
-#~ msgid "Parent Task"
-#~ msgstr "Attività Superiore"
-
-#~ msgid "Send mail to customer"
-#~ msgstr "Invia Mail a Cliente"
-
-#~ msgid "Quiet close"
-#~ msgstr "Chiudura Riservata"
-
-#~ msgid "Delegate Task"
-#~ msgstr "Delega Attività"
-
-#~ msgid "Project tasks"
-#~ msgstr "Attività dei Progetti"
-
-#~ msgid "Partner Info"
-#~ msgstr "Informazioni Partner"
-
-#~ msgid "Date Stop: %(date_stop)s"
-#~ msgstr "Data di Fine: %(date_stop)s"
-
-#~ msgid "Tasks Process"
-#~ msgstr "Flusso Attività"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nome del modulo non valido nella definizione dell'azione."
-
-#~ msgid "All Attachments"
-#~ msgstr "Tutti gli allegati"
-
-#~ msgid "My Current Tasks"
-#~ msgstr "Mie Attività in Corso"
-
-#~ msgid "Timesheets"
-#~ msgstr "Orari di Lavoro"
-
-#~ msgid "My Task's Deadlines"
-#~ msgstr "Scadenze delle Mie Attività"
-
-#~ msgid "Public Notes"
-#~ msgstr "Note Pubbliche"
-
-#~ msgid "My accounts to invoice"
-#~ msgstr "I Miei Conti da Fatturare"
-
-#~ msgid "My Open Tasks"
-#~ msgstr "Le Mie Attività aperte"
-
-#~ msgid ""
-#~ "If you have [?] in the project name, it means there are no analytic account "
-#~ "linked to this project."
-#~ msgstr ""
-#~ "Se hai [?] nel nome progetto, significa che non ci sono conti analitici "
-#~ "collegati al progetto."
-
-#, python-format
-#~ msgid "Task '%s' set in progress"
-#~ msgstr "Attività '%s' impostata come \"In Corso\""
-
-#, python-format
-#~ msgid "Task '%s' cancelled"
-#~ msgstr "Attività '%s' annullata"
-
-#, python-format
-#~ msgid ""
-#~ "A new project has been created !\n"
-#~ "We suggest you to close this one and work on this new project."
-#~ msgstr ""
-#~ "Un nuovo progetto è stato creato !\n"
-#~ "Vi suggeriamo di chiudere questo e lavorare sul nuovo progetto."
-
-#, python-format
-#~ msgid "Task '%s' closed"
-#~ msgstr "Attività '%s' chiusa"
-
-#, python-format
-#~ msgid ""
-#~ "You can not delete a project with tasks. I suggest you to deactivate it."
-#~ msgstr ""
-#~ "Non puoi cancellare un progetto con attività. Vi Suggeriamo di disattivarlo."
-
-#~ msgid ""
-#~ "If you have [?] in the name, it means there are no analytic account linked "
-#~ "to project."
-#~ msgstr ""
-#~ "Se hai [?] nel nome, significa che non ci sono conti analitici collegati al "
-#~ "progetto."
-
-#~ msgid ""
-#~ "Project management module that track multi-level projects, tasks,\n"
-#~ "works done on tasks, eso. It is able to render planning, order tasks, eso.\n"
-#~ "    "
-#~ msgstr ""
-#~ "Il Modulo di Gestione Progetto che traccia progetti multi-livello, "
-#~ "attività,\n"
-#~ "lavoro fatto per una attività, eso. E' in grado di disegnare un Planning, "
-#~ "ordinare attività, eso.\n"
-#~ "    "
-
-#~ msgid "Members"
-#~ msgstr "Membri"
-
-#~ msgid "Billing"
-#~ msgstr "Fatturazione"
-
-#~ msgid "Email Address of Customer"
-#~ msgstr "Indirizzo email del cliente"
-
-#, python-format
-#~ msgid "Please specify the email address of Customer."
-#~ msgstr "Specificare l'indirizzo email del cliente"
-
-#~ msgid "Customer Email"
-#~ msgstr "Email del cliente"
-
-#~ msgid ""
-#~ "Helps generate invoices based on time spent on tasks, if activated on the "
-#~ "project."
-#~ msgstr ""
-#~ "Aiuta a generare fatture in base al tempo impiegato nelle attività, se "
-#~ "attivato nel progetto."
-
-#~ msgid "Invoice Address"
-#~ msgstr "Indirizzo fatturazione"
-
-#, python-format
-#~ msgid "The task '%s' has been delegated to %s."
-#~ msgstr "L'attività '%s' è stata affidata a %s."
-
-#, python-format
-#~ msgid "Task '%s' Closed"
-#~ msgstr "Attività '%s' chiusa"
-
-#~ msgid "Parent Project"
-#~ msgstr "Progetto genitore"
-
-#~ msgid "Issues Tracker"
-#~ msgstr "Tracciatore problemi"
-
-#~ msgid "SCRUM"
-#~ msgstr "SCRUM"
-
-#~ msgid "Projects: Planned Vs Total hours"
-#~ msgstr "Progetti: ore pianificate rispetto a totali"
-
-#~ msgid "Warn Message"
-#~ msgstr "Messaggio di avviso"
-
-#~ msgid "Error! You cannot assign escalation to the same project!"
-#~ msgstr ""
-#~ "Errore ! Non è possibile assegnare l'escalation allo stesso progetto!"
-
-#, python-format
-#~ msgid "The task '%s' is done"
-#~ msgstr "L'attività '%s' è completata"
-
-#~ msgid "Project Close Task"
-#~ msgstr "Attività chiusura progetto"
-
-#~ msgid "Project vs remaining hours"
-#~ msgstr "Il Progetto rispetto alle ore rimanenti"
-
-#~ msgid "   Month   "
-#~ msgstr "   Mese   "
-
-#~ msgid "res.users"
-#~ msgstr "res.users"
-
-#~ msgid "_Cancel"
-#~ msgstr "_Annulla"
-
-#~ msgid "Error! You can not create recursive analytic accounts."
-#~ msgstr "Errore! Non è possibile creare conti analitici ricorsivi."
-
-#, python-format
-#~ msgid " (copy)"
-#~ msgstr " (copia)"
-
-#~ msgid ""
-#~ "Tracks and helps employees encode and validate timesheets and attendances."
-#~ msgstr ""
-#~ "Traccia ed aiuta i dipendenti ad inserire e convalidare i timesheet e le "
-#~ "presenze."
-
-#~ msgid "Previous"
-#~ msgstr "Precedente"
-
-#~ msgid "Date Stop: %(date)s"
-#~ msgstr "Data Stop: %(date)s"
-
-#~ msgid "You can not have two users with the same login !"
-#~ msgstr "Non è possibile avere due utenti con lo stesso login !"
-
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "Errore! Non è possibile creare aziende ricorsive."
-
-#~ msgid "Next"
-#~ msgstr "Prossimo"
-
-#~ msgid "Methodologies"
-#~ msgstr "Metodologie"
-
-#~ msgid "Reevaluate"
-#~ msgstr "Rivaluta"
-
-#, python-format
-#~ msgid "Send Email after close task"
-#~ msgstr "Manda email dopo la chiusura dell'attività"
-
-#~ msgid "Warn Manager by Email"
-#~ msgstr "Avvisa il manager per email"
-
-#, python-format
-#~ msgid "The task '%s' is opened."
-#~ msgstr "L'attività '%s' è aperta."
-
-#~ msgid "Project vs Planned and Total Hours"
-#~ msgstr "Il Progetto rispetto alle ore totali e pianificate"
-
-#, python-format
-#~ msgid "Please specify the email address of Project Manager."
-#~ msgstr "Si prega di specificare l'indirizzo email del Project Manager."
-
-#~ msgid "Configuration Progress"
-#~ msgstr "Avanzamento configurazione"
-
-#~ msgid "Image"
-#~ msgstr "Immagine"
-
-#~ msgid ""
-#~ "If the task is created the state is 'Draft'.\n"
-#~ " If the task is started, the state becomes 'In Progress'.\n"
-#~ " If review is needed the task is in 'Pending' state.                         "
-#~ "         \n"
-#~ " If the task is over, the states is set to 'Done'."
-#~ msgstr ""
-#~ "Se l'attività è creata, lo stato è 'Boza'.\n"
-#~ " Se l'attività è iniziata, lo stato diventa 'In corso'.\n"
-#~ " Se è necessaria una revisione, l'attività è nello stato 'In sospeso'.       "
-#~ "         \n"
-#~ " Se l'attività è finita, lo stato è impostato su 'Completato'."
-
-#~ msgid "Long Term Planning"
-#~ msgstr "Pianificazione a lungo termine"
-
-#~ msgid "  Year  "
-#~ msgstr "  Anno  "
-
-#~ msgid "Helps accountants manage analytic and crossover budgets."
-#~ msgstr "Aiuta i contabili a gestire i budget analitici ed incrociati."
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Errore ! Non è possibile creare membri associati ricorsivi."
-
-#~ msgid "Performance"
-#~ msgstr "Performance"
-
-#~ msgid "Task Edition"
-#~ msgstr "Modifica attività"
-
-#~ msgid ""
-#~ "Implements and tracks the concepts and task types defined in the SCRUM "
-#~ "methodology."
-#~ msgstr ""
-#~ "Implementa e tiene traccia dei concetti e dei tipi di attività definiti "
-#~ "nella metodologia SCRUM."
-
-#, python-format
-#~ msgid "The project '%s' has been closed."
-#~ msgstr "Il progetto '%s' è stato chiuso."
-
-#~ msgid "Manager Email"
-#~ msgstr "Email manager"
-
-#, python-format
-#~ msgid "The project '%s' has been opened."
-#~ msgstr "Il progetto '%s' è stato aperto."
-
-#~ msgid "Dashboard"
-#~ msgstr "Dashboard"
-
-#~ msgid "History"
-#~ msgstr "Storia"
-
-#~ msgid "Getting Things Done"
-#~ msgstr "Getting Things Done"
-
-#~ msgid "Warn Customer by Email"
-#~ msgstr "Avvisa cliente per email"
-
-#~ msgid ""
-#~ "Project management module tracks multi-level projects, tasks,\n"
-#~ "work done on tasks, eso. It is able to render planning, order tasks, eso.\n"
-#~ " Dashboard for project members that includes:\n"
-#~ "    * List of my open tasks\n"
-#~ "    * Members list of project\n"
-#~ "    "
-#~ msgstr ""
-#~ "Il modulo di gestione progetti tiene traccia di progetti multi-livello, "
-#~ "delle attività,\n"
-#~ "del lavoro effettuato sulle attività... E' in grado di produrre "
-#~ "pianificazioni, ordinare le attività...\n"
-#~ " Le dashboard per i membri del progetto includono:\n"
-#~ "    * Lista delle proprie attività aperte\n"
-#~ "    * Lista membri del progetto\n"
-#~ "    "
-
-#~ msgid "Close"
-#~ msgstr "Chiuso"
-
-#~ msgid "Send Email"
-#~ msgstr "Manda email"
-
-#~ msgid "Current Activity"
-#~ msgstr "Attività in corso"
-
-#~ msgid ""
-#~ "GTD is a methodology to efficiently organise yourself and your tasks. This "
-#~ "module fully integrates GTD principle with OpenERP's project management."
-#~ msgstr ""
-#~ "GTD è una metodologia per organizzare efficientemente le proprie attività. "
-#~ "Questo modulo integra completamente i principi GTD con la gestione progetti "
-#~ "di OpenERP."
-
-#~ msgid " Project vs  hours"
-#~ msgstr " Progetto rispetto alle ore"
-
-#~ msgid "Current"
-#~ msgstr "In corso"
-
-#~ msgid "Total tasks"
-#~ msgstr "Attività totali"
-
-#~ msgid "My Delegated Tasks"
-#~ msgstr "Le mie attività delegate"
-
-#~ msgid "Task By Days"
-#~ msgstr "Attività per giorni"
-
-#, python-format
-#~ msgid ""
-#~ "Couldn't send mail! Check the email ids and smtp configuration settings"
-#~ msgstr ""
-#~ "Impossibile inviare l'email! Controllare gli id email e le impostazioni smtp"
-
-#~ msgid "Warn Customer"
-#~ msgstr "Avvisa cliente"
-
-#~ msgid "My Projects: Planned vs Total Hours"
-#~ msgstr "I miei progetti: Ore pianificate rispetto a totali"
-
-#~ msgid "project.installer"
-#~ msgstr "project.installer"
-
-#~ msgid "Miscelleanous"
-#~ msgstr "Miscellanea"
-
-#, python-format
-#~ msgid "The task '%s' is pending."
-#~ msgstr "L'attività '%s' è in sospeso."
-
-#~ msgid "Remaining Hours Per Project"
-#~ msgstr "Ore rimanenti per progetto"
-
-#, python-format
-#~ msgid "The task '%s' is cancelled."
-#~ msgstr "L'attività '%s' è annullata."
-
-#~ msgid "_Send"
-#~ msgstr "_Invia"
-
-#~ msgid "title"
-#~ msgstr "titolo"
-
-#~ msgid "Automatically synchronizes project tasks and crm cases."
-#~ msgstr ""
-#~ "Sincronizza automaticamente le attività di un progetto con i casi del CRM."
-
-#~ msgid "Budgets"
-#~ msgstr "Budget"
-
-#~ msgid ""
-#~ "Computed as difference of the time estimated by the project manager and the "
-#~ "real time to close the task."
-#~ msgstr ""
-#~ "Calcolato come la differenza fra il tempo stimato dal project manager ed il "
-#~ "tempo reale impiegato per concludere l'attività."
-
-#~ msgid "Bill Time on Tasks"
-#~ msgstr "Fatturazione delle ore sulle attività"
-
-#~ msgid "My Remaining Hours by Project"
-#~ msgstr "Le mie ore residue rispetto al progetto"
-
-#~ msgid "Project Application Configuration"
-#~ msgstr "Configurazione modulo Project"
-
-#~ msgid "Email Address of Project's Manager"
-#~ msgstr "Indirizzo email del Project Manager"
-
-#~ msgid "Edit"
-#~ msgstr "Modifica"
-
-#~ msgid "Project Dashboard"
-#~ msgstr "Dashboard Progetti"
-
-#~ msgid "Configure"
-#~ msgstr "Configura"
-
-#~ msgid ""
-#~ "Various OpenERP applications are available to manage your projects with "
-#~ "different level of control and flexibility."
-#~ msgstr ""
-#~ "Varie applicazioni OpenERP sono disponibili per gestire i vostri progetti "
-#~ "con un differente livello di controllo e flessiblità."
-
-#~ msgid "    Month-1    "
-#~ msgstr "    Mese-1    "
-
-#~ msgid ""
-#~ "Error! The currency has to be the same as the currency of the selected "
-#~ "company"
-#~ msgstr ""
-#~ "Errore! La valuta deve essere la stessa di quella impostata nell'azienda "
-#~ "selezionata"
-
-#~ msgid "The chosen company is not in the allowed companies for this user"
-#~ msgstr "L'azienda scelta non è fra le aziende abilitate per questo utente"
-
-#~ msgid "Change Stage"
-#~ msgstr "Cambia stadio"
-
-#~ msgid "Configure Your Project Management Application"
-#~ msgstr "Configura l'appliaczione di gestione progetti"
-
-#~ msgid ""
-#~ "A task represents a work that has to be done. Each user works in his own "
-#~ "list of tasks where he can record his task work in hours. He can work and "
-#~ "close the task itself or delegate it to another user. If you delegate a task "
-#~ "to another user, you get a new task in pending state, which will be reopened "
-#~ "when you have to review the work achieved. If you install the "
-#~ "project_timesheet module, task work can be invoiced based on the project "
-#~ "configuration. With the project_mrp module, sales orders can create tasks "
-#~ "automatically when they are confirmed."
-#~ msgstr ""
-#~ "Un'attività rappresenta un lavoro che deve essere fatto. Ogni utente lavora "
-#~ "sulla propria lista di attività nella quale può registrare le ore spese su "
-#~ "di esse. Può lavorare e chiudere l'attività lui stesso o delegarla ad un "
-#~ "altro utente. Se si delega un'attività ad un altro utente, si ottiene una "
-#~ "nuova attività nello stato 'In sospeso', che verrà riaperta quando si dovrà "
-#~ "revisionare il lavoro effettuato. Se si installa il modulo "
-#~ "project_timesheet, il lavoro delle attività può essere fatturato sulla base "
-#~ "della configurazione del progetto. Con il modulo project_mrp, gli ordini di "
-#~ "vendita potranno creare automaticamente le attività una volta confermati."
-
-#~ msgid ""
-#~ "Define the steps that will be used in the project from the creation of the "
-#~ "task, up to the closing of the task or issue. You will use these stages in "
-#~ "order to track the progress in solving a task or an issue."
-#~ msgstr ""
-#~ "Definisce i passi che verranno utilizzati nel progetto, dalla creazione "
-#~ "dell'attività, fino alla chiusura dell'attività o problematica. Questi stadi "
-#~ "verranno utilizzati al fine di tenere traccia dei progressi nella "
-#~ "risoluzione delle attività o problematiche."
-
-#~ msgid ""
-#~ "A project contains a set of tasks or issues that will be performed by your "
-#~ "resources assigned to it. A project can be hierarchically structured, as a "
-#~ "child of a Parent Project. This allows you to design large project "
-#~ "structures with different phases spread over the project duration cycle. "
-#~ "Each user can set his default project in his own preferences to "
-#~ "automatically filter the tasks or issues he usually works on. If you choose "
-#~ "to invoice the time spent on a project task, you can find project tasks to "
-#~ "be invoiced in the billing section."
-#~ msgstr ""
-#~ "Un progetto contiene un insieme di attività o problematiche che saranno "
-#~ "affrontate dalle risorse assegnate ad esso. Un progetto può essere "
-#~ "strutturato gerarchicamente, come figlio di un progetto genitore. Questo "
-#~ "permette di progettare strutture di grossi progetti con varie fasi che si "
-#~ "estendono nel ciclo di durata del progetto. Ogni utente può impostare il "
-#~ "proprio progetto di default nelle proprie preferenze per filtrare "
-#~ "automaticamente le attività o le problematiche su cui lavora solitamente. Se "
-#~ "si sceglie di fatturare il tempo impiegato su una attività, si possono "
-#~ "trovare le attività da fatturare nella sezione dedicata."
-
-#~ msgid ""
-#~ "Enables long-term projects tracking, including multiple-phase projects and "
-#~ "resource allocation handling."
-#~ msgstr ""
-#~ "Abilita il tracciamento dei progetti a lungo termine, inclusi progetti a "
-#~ "multi-fase e gestione allocazione risorse."
-
-#~ msgid "The company name must be unique !"
-#~ msgstr "Il nome azienda deve essere univoco!"

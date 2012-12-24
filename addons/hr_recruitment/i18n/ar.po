@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-01-08 14:34+0000\n"
-"Last-Translator: kifcaliph <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:47+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:16+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr_recruitment
 #: help:hr.applicant,active:0
@@ -117,7 +117,7 @@ msgid "Sources of Applicants"
 msgstr "مصادر مقدمين الطلبات"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:424
+#: code:addons/hr_recruitment/hr_recruitment.py:435
 #, python-format
 msgid "You must define Applied Job for this applicant."
 msgstr "يجب أن تحدد الوظيفة المقدم لها هذا الطلب."
@@ -290,7 +290,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:424
+#: code:addons/hr_recruitment/hr_recruitment.py:435
 #, python-format
 msgid "Warning!"
 msgstr "تحذير!"
@@ -301,9 +301,10 @@ msgid "Salary Proposed"
 msgstr "الراتب المقترح"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Edit..."
-msgstr ""
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,partner_id:0
+msgid "Partner"
+msgstr "شريك"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -324,10 +325,9 @@ msgid "Proposed Salary"
 msgstr "الراتب المقترح"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:482
-#, python-format
-msgid "Applicant has been set <b>in progress</b>."
-msgstr ""
+#: model:ir.model,name:hr_recruitment.model_hr_recruitment_source
+msgid "Source of Applicants"
+msgstr "مصدر مقدمين الطلبات"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.partner.create:0
@@ -355,24 +355,25 @@ msgid "Job Description"
 msgstr "وصف العمل"
 
 #. module: hr_recruitment
-#: model:ir.actions.server,name:hr_recruitment.actions_server_applicant_read
-msgid "HR Applicant: Mark read"
-msgstr ""
-
-#. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:504
-#, python-format
-msgid "Applicant has been set as <b>new</b>."
-msgstr ""
-
-#. module: hr_recruitment
 #: view:hr.applicant:0
-#: selection:hr.applicant,state:0
-#: view:hr.recruitment.report:0
-#: selection:hr.recruitment.report,state:0
-#: selection:hr.recruitment.stage,state:0
-msgid "New"
-msgstr "جديد"
+#: field:hr.applicant,source_id:0
+msgid "Source"
+msgstr "المصدر"
+
+#. module: hr_recruitment
+#: field:hr.applicant,message_follower_ids:0
+msgid "Followers"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:hr.recruitment.source,name:hr_recruitment.source_monster
+msgid "Monster"
+msgstr "موقع مونستر"
+
+#. module: hr_recruitment
+#: model:mail.message.subtype,name:hr_recruitment.mt_applicant_hired
+msgid "Applicant Hired"
+msgstr ""
 
 #. module: hr_recruitment
 #: field:hr.applicant,email_from:0
@@ -417,6 +418,11 @@ msgid "Good"
 msgstr "جيد"
 
 #. module: hr_recruitment
+#: selection:hr.recruitment.report,month:0
+msgid "August"
+msgstr "أغسطس"
+
+#. module: hr_recruitment
 #: view:hr.applicant:0
 #: field:hr.applicant,create_date:0
 #: view:hr.recruitment.report:0
@@ -428,11 +434,6 @@ msgstr "تاريخ الإنشاء"
 #: model:ir.model,name:hr_recruitment.model_hired_employee
 msgid "Create Employee"
 msgstr "إنشاء حساب موظف"
-
-#. module: hr_recruitment
-#: field:hr.applicant,partner_phone:0
-msgid "Phone"
-msgstr "الهاتف"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -492,7 +493,7 @@ msgid "Applicants"
 msgstr "الراتب المتوقع"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:342
+#: code:addons/hr_recruitment/hr_recruitment.py:351
 #, python-format
 msgid "No Subject"
 msgstr "بدون موضوع"
@@ -523,10 +524,14 @@ msgid "Salary Expected by Applicant, extra advantages"
 msgstr "الراتب المتوقع من قبل المتقدم، مزايا إضافية"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,partner_id:0
-msgid "Partner"
-msgstr "شريك"
+#: help:hr.applicant,state:0
+msgid ""
+"The status is set to 'Draft', when a case is created.                      "
+"If the case is in progress the status is set to 'Open'.                      "
+"When the case is over, the status is set to 'Done'.                      If "
+"the case needs to be reviewed then the status is                       set "
+"to 'Pending'."
+msgstr ""
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -561,6 +566,11 @@ msgid "Hire & Create Employee"
 msgstr ""
 
 #. module: hr_recruitment
+#: model:mail.message.subtype,description:hr_recruitment.mt_applicant_hired
+msgid "Applicant hired"
+msgstr ""
+
+#. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Jobs - Recruitment Form"
 msgstr "وظائف - نموذج التعيين"
@@ -571,9 +581,9 @@ msgid "Probability"
 msgstr "الإحتمال"
 
 #. module: hr_recruitment
-#: field:hr.job,alias_id:0
-msgid "Alias"
-msgstr ""
+#: selection:hr.recruitment.report,month:0
+msgid "April"
+msgstr "إبريل"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -613,9 +623,9 @@ msgid "Answer related job question"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
-msgid "Degree of Recruitment"
-msgstr "درجة التوظيف"
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
+msgid "First Interview"
+msgstr "المقابلة الاولى"
 
 #. module: hr_recruitment
 #: field:hr.applicant,write_date:0
@@ -640,9 +650,9 @@ msgid "or"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Search Jobs"
-msgstr "وظائف البحث"
+#: model:mail.message.subtype,name:hr_recruitment.mt_applicant_refused
+msgid "Applicant Refused"
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -749,9 +759,10 @@ msgid "Schedule interview with this applicant"
 msgstr ""
 
 #. module: hr_recruitment
-#: selection:hr.recruitment.report,month:0
-msgid "August"
-msgstr "أغسطس"
+#: code:addons/hr_recruitment/hr_recruitment.py:397
+#, python-format
+msgid "Applicant <b>created</b>"
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -764,24 +775,14 @@ msgid "Degree"
 msgstr "المؤهل"
 
 #. module: hr_recruitment
-#: model:ir.actions.server,name:hr_recruitment.actions_server_applicant_unread
-msgid "HR Applicant: Mark unread"
-msgstr ""
+#: field:hr.applicant,partner_phone:0
+msgid "Phone"
+msgstr "الهاتف"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "June"
 msgstr "يونيو"
-
-#. module: hr_recruitment
-#: help:hr.applicant,state:0
-msgid ""
-"The status is set to 'Draft', when a case is created.                      "
-"If the case is in progress the status is set to 'Open'.                      "
-"When the case is over, the status is set to 'Done'.                      If "
-"the case needs to be reviewed then the status is                       set "
-"to 'Pending'."
-msgstr ""
 
 #. module: hr_recruitment
 #: field:hr.applicant,day_close:0
@@ -834,12 +835,6 @@ msgid "Response"
 msgstr "رد"
 
 #. module: hr_recruitment
-#: field:hr.applicant,message_comment_ids:0
-#: help:hr.applicant,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
-
-#. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "October"
 msgstr "أكتوبر"
@@ -855,11 +850,6 @@ msgid "Proposed Salary Extra"
 msgstr "راتب إضافي مقترح"
 
 #. module: hr_recruitment
-#: model:mail.message.subtype,name:hr_recruitment.mt_hired
-msgid "Employee Hired"
-msgstr ""
-
-#. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "January"
 msgstr "يناير"
@@ -871,10 +861,9 @@ msgid "A contact is already existing with the same name."
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:495
-#, python-format
-msgid "Applicant has been <b>hired</b>."
-msgstr ""
+#: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_form_installer
+msgid "Review Recruitment Stages"
+msgstr "مراجعة مراحل التوظيف"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -882,9 +871,9 @@ msgid "Contact:"
 msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant,message_summary:0
-msgid "Summary"
-msgstr ""
+#: view:hr.applicant:0
+msgid "Search Jobs"
+msgstr "وظائف البحث"
 
 #. module: hr_recruitment
 #: field:hr.applicant,date:0
@@ -928,18 +917,6 @@ msgid "Configure"
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:492
-#, python-format
-msgid "Applicant has been <b>hired</b> and created as an employee."
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-#: field:hr.applicant,source_id:0
-msgid "Source"
-msgstr "المصدر"
-
-#. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
 msgid "Contract Proposed"
 msgstr "العقد المقترح"
@@ -965,11 +942,6 @@ msgstr "سنة"
 #: view:hr.recruitment.partner.create:0
 msgid "Cancel"
 msgstr "إلغاء"
-
-#. module: hr_recruitment
-#: field:hr.applicant,message_follower_ids:0
-msgid "Followers"
-msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.recruitment.partner.create:0
@@ -1002,6 +974,11 @@ msgid "Gives the sequence order when displaying a list of degrees."
 msgstr "ويعطي امر المتتابعة عند عرض قائمة الدرجات."
 
 #. module: hr_recruitment
+#: model:mail.message.subtype,description:hr_recruitment.mt_stage_changed
+msgid "Stage changed"
+msgstr ""
+
+#. module: hr_recruitment
 #: view:hr.applicant:0
 #: field:hr.applicant,user_id:0
 #: view:hr.recruitment.report:0
@@ -1026,7 +1003,7 @@ msgid "LinkedIn"
 msgstr "LinkedIn"
 
 #. module: hr_recruitment
-#: model:mail.message.subtype,name:hr_recruitment.mt_applicant_new
+#: model:mail.message.subtype,name:hr_recruitment.mt_job_new_applicant
 msgid "New Applicant"
 msgstr ""
 
@@ -1041,9 +1018,13 @@ msgid "Cases By Stage and Estimates"
 msgstr "الحالات حسب المرحلة والتقديرات"
 
 #. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_recruitment_source
-msgid "Source of Applicants"
-msgstr "مصدر مقدمين الطلبات"
+#: view:hr.applicant:0
+#: selection:hr.applicant,state:0
+#: view:hr.recruitment.report:0
+#: selection:hr.recruitment.report,state:0
+#: selection:hr.recruitment.stage,state:0
+msgid "New"
+msgstr "جديد"
 
 #. module: hr_recruitment
 #: model:crm.meeting.type,name:hr_recruitment.categ_meet_interview
@@ -1052,20 +1033,9 @@ msgid "Interview"
 msgstr "المقابلة"
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_form_installer
-msgid "Review Recruitment Stages"
-msgstr "مراجعة مراحل التوظيف"
-
-#. module: hr_recruitment
 #: field:hr.recruitment.source,name:0
 msgid "Source Name"
 msgstr "اسم المصدر"
-
-#. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:476
-#, python-format
-msgid "Stage changed to <b>%s</b>."
-msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -1078,9 +1048,9 @@ msgid "Description"
 msgstr "الوصف"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Unassigned Recruitments"
-msgstr "تعيينات غير محددة"
+#: model:mail.message.subtype,name:hr_recruitment.mt_stage_changed
+msgid "Stage Changed"
+msgstr ""
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -1144,9 +1114,9 @@ msgid "On Average"
 msgstr "في المتوسط"
 
 #. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
-msgid "First Interview"
-msgstr "المقابلة الاولى"
+#: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
+msgid "Degree of Recruitment"
+msgstr "درجة التوظيف"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.report,salary_prop_avg:0
@@ -1202,9 +1172,9 @@ msgid "These people will receive email."
 msgstr "هؤلاء سيصلهم بريد إلكتروني."
 
 #. module: hr_recruitment
-#: selection:hr.recruitment.report,month:0
-msgid "April"
-msgstr "إبريل"
+#: field:hr.job,alias_id:0
+msgid "Alias"
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -1217,14 +1187,19 @@ msgid "Contract"
 msgstr ""
 
 #. module: hr_recruitment
+#: field:hr.applicant,message_summary:0
+msgid "Summary"
+msgstr ""
+
+#. module: hr_recruitment
 #: help:hr.applicant,message_ids:0
 msgid "Messages and communication history"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:hr.recruitment.source,name:hr_recruitment.source_monster
-msgid "Monster"
-msgstr "موقع مونستر"
+#: model:mail.message.subtype,description:hr_recruitment.mt_applicant_refused
+msgid "Applicant refused"
+msgstr ""
 
 #. module: hr_recruitment
 #: field:hr.recruitment.stage,department_id:0
@@ -1243,25 +1218,18 @@ msgid "Sequence"
 msgstr "مسلسل"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:490
-#, python-format
-msgid "New employee joined the company %s."
-msgstr ""
-
-#. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bachelor
 msgid "Bachelor Degree"
 msgstr "درجة البكالريوس"
 
 #. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_config_settings
-msgid "hr.config.settings"
-msgstr ""
+#: view:hr.applicant:0
+msgid "Unassigned Recruitments"
+msgstr "تعيينات غير محددة"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:508
-#, python-format
-msgid "Applicant has been <b>created</b>."
+#: model:ir.model,name:hr_recruitment.model_hr_config_settings
+msgid "hr.config.settings"
 msgstr ""
 
 #. module: hr_recruitment
@@ -1297,262 +1265,3 @@ msgstr ""
 #: view:hr.applicant:0
 msgid "Schedule Interview"
 msgstr ""
-
-#~ msgid "Goals"
-#~ msgstr "أهداف"
-
-#~ msgid "Notes"
-#~ msgstr "ملاحظات"
-
-#~ msgid "Reference"
-#~ msgstr "المرجع"
-
-#~ msgid "Partner Contact"
-#~ msgstr "جهة الاتصال بالشريك"
-
-#, python-format
-#~ msgid "Phone Call"
-#~ msgstr "مكالمة هاتفية"
-
-#~ msgid "Previous"
-#~ msgstr "السابق"
-
-#~ msgid "Next"
-#~ msgstr "التالي"
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "خطأ !"
-
-#~ msgid "Dates"
-#~ msgstr "التواريخ"
-
-#~ msgid "    Month-1    "
-#~ msgstr "    شهر-1    "
-
-#~ msgid "Salesman"
-#~ msgstr "مندوب المبيعات"
-
-#~ msgid "Category"
-#~ msgstr "الفئة"
-
-#~ msgid "Answer"
-#~ msgstr "إجابة"
-
-#~ msgid "Meeting"
-#~ msgstr "إجتماع"
-
-#~ msgid "State"
-#~ msgstr "الحالة"
-
-#~ msgid "Attachments"
-#~ msgstr "مرفقات"
-
-#~ msgid "Current"
-#~ msgstr "الحالي"
-
-#~ msgid "Details"
-#~ msgstr "تفاصيل"
-
-#~ msgid "Reply"
-#~ msgstr "رد"
-
-#~ msgid "History"
-#~ msgstr "محفوظات"
-
-#~ msgid "# of Cases"
-#~ msgstr "# للحالات"
-
-#~ msgid "Avg. Delay to Open"
-#~ msgstr "متوسط. تأخر الفتح"
-
-#~ msgid "Partner Contact Name"
-#~ msgstr "اسم الشريك المتصل"
-
-#~ msgid "Contract Data"
-#~ msgstr "بيانات العقد"
-
-#~ msgid "Initial Jobs Demand"
-#~ msgstr "طلب الوظائف المبدئي"
-
-#~ msgid "Junior Developer"
-#~ msgstr "المطور المبتديء"
-
-#~ msgid "Availability (Days)"
-#~ msgstr "الاتاحية (الايام)"
-
-#, python-format
-#~ msgid "A partner is already defined on this job request."
-#~ msgstr "الشريك محدد بالفعل في طلب الوظيفة هذه."
-
-#~ msgid "HR - Recruitement"
-#~ msgstr "تعيين- الموارد البشرية"
-
-#~ msgid "Refused by Company"
-#~ msgstr "تم رفضه من الشركة"
-
-#~ msgid "Global CC"
-#~ msgstr "CC العالمية"
-
-#~ msgid "# Cases"
-#~ msgstr "# الحالات"
-
-#~ msgid "Reset to New"
-#~ msgstr "إعادة الوضع الى جديد"
-
-#~ msgid "Are you sure you want to create a partner based on this job request ?"
-#~ msgstr "هل انت متأكد من انشاء شريك بناءًا على طلب هذه الوظيفة ؟"
-
-#~ msgid "Licenced"
-#~ msgstr "مرخص"
-
-#~ msgid "Phone Call Description"
-#~ msgstr "وصف المكالمة الهاتفية"
-
-#~ msgid "Avg Salary Proposed"
-#~ msgstr "متوسط الراتب المقترح"
-
-#~ msgid "Schedule Phone Call"
-#~ msgstr "جدول المكالمات التليفونية"
-
-#, python-format
-#~ msgid "A partner is already existing with the same name."
-#~ msgstr "الشريك موجود بالفعل بنفس الاسم."
-
-#~ msgid "Applicant Categories"
-#~ msgstr "تصنيفات المتقدم"
-
-#, python-format
-#~ msgid "Applicant '%s' is being hired."
-#~ msgstr "ويجري التعاقد للطلب ‘%s‘"
-
-#~ msgid "Refused by Employee"
-#~ msgstr "مرفوض من الموظف"
-
-#~ msgid "HR Department"
-#~ msgstr "ادارة الموارد البشرية"
-
-#, python-format
-#~ msgid "The job request '%s' has been set 'in progress'."
-#~ msgstr "تم وضع طلب الوظيفة ‘%s‘ في ‘التقدم‘."
-
-#~ msgid "Communication & History"
-#~ msgstr "الاتصالات والسجلات"
-
-#~ msgid "Send New Email"
-#~ msgstr "إرسال رسالة جديدة"
-
-#~ msgid "Create Partner"
-#~ msgstr "إنشاء شريك"
-
-#~ msgid "Planned Date"
-#~ msgstr "الوقت المخطط"
-
-#~ msgid "Add Internal Note"
-#~ msgstr "أضف ملاحظة داخلية"
-
-#~ msgid "History Information"
-#~ msgstr "معلومات المحفوظات"
-
-#~ msgid "Job Info"
-#~ msgstr "معلومات الوظيفة"
-
-#~ msgid "Qualification"
-#~ msgstr "المؤهل"
-
-#~ msgid ""
-#~ "From this menu you can track applicants in the recruitment process and "
-#~ "manage all operations: meetings, interviews, phone calls, etc. If you setup "
-#~ "the email gateway, applicants and their attached CV are created "
-#~ "automatically when an email is sent to jobs@yourcompany.com. If you install "
-#~ "the document management modules, all documents (CV and motivation letters) "
-#~ "are indexed automatically, so that you can easily search through their "
-#~ "content."
-#~ msgstr ""
-#~ "من هذه القائمة، يمكنك تتبع المتقدمين في عملية التوظيف وإدارة جميع العمليات: "
-#~ "لقاءات ومقابلات، والمكالمات الهاتفية، وما إذا قمت بإعداد بوابة البريد "
-#~ "الإلكتروني، ويتم إنشاء المتقدمين وسيرتهم الذاتية المرفقة تلقائيا عندما يتم "
-#~ "إرسال بريد إلكتروني إلى yourcompany @ وظائف. كوم. إذا قمت بتثبيت وحدات "
-#~ "لإدارة الوثائق، وجميع الوثائق (السيرة الذاتية ورسائل التحفيز) يتم فهرستها "
-#~ "تلقائيا، بحيث يمكنك البحث بسهولة عن طريق مضمونها."
-
-#~ msgid "Assign To"
-#~ msgstr "تعيين لـ"
-
-#~ msgid " > Bac +5"
-#~ msgstr " > Bac +5"
-
-#~ msgid ""
-#~ "\n"
-#~ "Manages job positions and the recruitement process. It's integrated with "
-#~ "the\n"
-#~ "survey module to allow you to define interview for different jobs.\n"
-#~ "\n"
-#~ "This module is integrated with the mail gateway to automatically tracks "
-#~ "email\n"
-#~ "sent to jobs@YOURCOMPANY.com. It's also integrated with the document "
-#~ "management\n"
-#~ "system to store and search in your CV base.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "يدير مناصب الوظيفة وعملية الإنتداب. انها تتكامل مع\n"
-#~ "وحدة الاستعراض  للسماح لك لتحديد المقابلة للوظائف المختلفة.\n"
-#~ "\n"
-#~ "تم دمج هذه الوحدة مع عبارة البريد الالكتروني إلى المسارات تلقائيا\n"
-#~ "أرسلت إلى jobs@YOURCOMPANY.com. انها تتكامل أيضا مع نظام إدارة الوثائق\n"
-#~ "لتخزين والبحث في قاعدة سيرتك الذاتية.\n"
-#~ "    "
-
-#~ msgid "Change Color"
-#~ msgstr "تغيير اللون"
-
-#~ msgid "Edit"
-#~ msgstr "تحرير"
-
-#~ msgid "Job Positions"
-#~ msgstr "نوع الوظيفة"
-
-#~ msgid "Refered By"
-#~ msgstr "المشار إليه بواسطة"
-
-#, python-format
-#~ msgid "Changed Stage to: %s"
-#~ msgstr "تغيير المرحلة إلي :%s"
-
-#~ msgid "Hire"
-#~ msgstr "تعيين"
-
-#~ msgid "Recruitment performed in current year"
-#~ msgstr "توظيف أجري في العام الحالي"
-
-#~ msgid "Recruitment during last month"
-#~ msgstr "توظيف خلال الشهر الماضي"
-
-#~ msgid "Recruitment performed in current month"
-#~ msgstr "توظيف أجري في الشهر الحالي"
-
-#~ msgid ""
-#~ "Stages of the recruitment process may be different per department. If this "
-#~ "stage is common to all departments, keep tempy this field."
-#~ msgstr ""
-#~ "مراحل عملية التوظيف قد تكون مختلفة من قسم لآخر. إذا كانت هذه المرحلة مشتركة "
-#~ "بين جميع الأقسام، اترك الحقل فارغ."
-
-#~ msgid ""
-#~ "Define here your stages of the recruitment process, for example: "
-#~ "qualification call, first interview, second interview, refused, hired."
-#~ msgstr ""
-#~ "حدد هنا مراحل عملية التوظيف، على سبيل المثال: المكالمة الهاتفية، المقابلة "
-#~ "الاولي، المقابلة الثانية، الرفض أو التعيين."
-
-#~ msgid ""
-#~ " Check if the following stages are matching your recruitment process. Don't "
-#~ "forget to specify the department if your recruitment process is different "
-#~ "according to the job position."
-#~ msgstr ""
-#~ " اخر ما إذا كانت المراحل التالية مطابقة لعملية التوظيف.  لا تنسي تحديد القسم "
-#~ "إذا كانت عملية التوظيف الخاصة بك تختلف بحسب طبيعة الوظيفة."
-
-#~ msgid "The name of the job position must be unique per company!"
-#~ msgstr "يجب أن يكون اسم الوظيفة فريداً في الشركة !"

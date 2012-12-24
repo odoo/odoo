@@ -1,20 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-# 	* mrp
+# Bulgarian translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2010-08-03 07:29+0000\n"
-"Last-Translator: Boris <boris.t.ivanov@gmail.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Bulgarian <bg@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:09+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:22+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -156,13 +157,6 @@ msgid "The system launches automatically a RFQ to the preferred supplier."
 msgstr "Системата стартира автоматично запитване към предпочитан доставчик."
 
 #. module: mrp
-#: help:mrp.config.settings,group_mrp_properties:0
-msgid ""
-"The selection of the right Bill of Material to use will depend on the  "
-"properties specified on the sale order and the Bill of Material."
-msgstr ""
-
-#. module: mrp
 #: view:mrp.production:0
 msgid "Products to Finish"
 msgstr "Продукти за завършване"
@@ -202,12 +196,17 @@ msgid "For purchased material"
 msgstr "За закупени суровини"
 
 #. module: mrp
+#: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
+msgid "Order Planning"
+msgstr ""
+
+#. module: mrp
 #: field:mrp.config.settings,module_mrp_operations:0
 msgid "Allow detailed planning of work order"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:648
+#: code:addons/mrp/mrp.py:633
 #, python-format
 msgid "Cannot cancel manufacturing order!"
 msgstr ""
@@ -272,6 +271,21 @@ msgstr "Шаблон"
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_byproduct:0
 msgid "Produce several products from one manufacturing order"
+msgstr ""
+
+#. module: mrp
+#: help:mrp.config.settings,group_mrp_properties:0
+msgid ""
+"The selection of the right Bill of Material to use will depend on the "
+"properties specified on the sales order and the Bill of Material."
+msgstr ""
+
+#. module: mrp
+#: view:mrp.bom:0
+msgid ""
+"When processing a sales order for this product, the delivery order\n"
+"                                will contain the raw materials, instead of "
+"the finished product."
 msgstr ""
 
 #. module: mrp
@@ -439,6 +453,27 @@ msgid "Weekly Stock Value Variation"
 msgstr "Седмични промени на стойността"
 
 #. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_property_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new property.\n"
+"              </p><p>\n"
+"                The Properties in OpenERP are used to select the right bill "
+"of\n"
+"                materials for manufacturing a product when you have "
+"different\n"
+"                ways of building the same product.  You can assign several\n"
+"                properties to each bill of materials.  When a salesperson\n"
+"                creates a sales order, they can relate it to several "
+"properties\n"
+"                and OpenERP will automatically select the BoM to use "
+"according\n"
+"                the needs.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: mrp
 #: view:mrp.production:0
 #: field:mrp.production,date_planned:0
 #: report:mrp.production.order:0
@@ -446,7 +481,7 @@ msgid "Scheduled Date"
 msgstr "Планирана дата"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:113
+#: code:addons/mrp/procurement.py:124
 #, python-format
 msgid "Manufacturing Order <em>%s</em> created."
 msgstr ""
@@ -456,14 +491,6 @@ msgstr ""
 #: report:mrp.production.order:0
 msgid "Bill Of Material"
 msgstr "Списък на суровини"
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:1068
-#, python-format
-msgid ""
-"Manufacturing order has been <b>confirmed</b> and is <b>scheduled</b> for "
-"the <em>%s</em>."
-msgstr ""
 
 #. module: mrp
 #: help:mrp.routing,location_id:0
@@ -486,12 +513,6 @@ msgstr "Вариации на стокова наличност"
 #: model:ir.actions.act_window,name:mrp.action2
 msgid "Bill of Materials Structure"
 msgstr "Списък на суровините структура"
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:1043
-#, python-format
-msgid "Manufacturing order has been <b>canceled</b>."
-msgstr ""
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_serviceproduct0
@@ -627,12 +648,6 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:386
-#, python-format
-msgid "Bill of Material has been <b>created</b> for <em>%s</em> product."
-msgstr ""
-
-#. module: mrp
 #: model:process.transition,name:mrp.process_transition_billofmaterialrouting0
 msgid "Material Routing"
 msgstr ""
@@ -652,7 +667,7 @@ msgid "Work Center Load"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:44
+#: code:addons/mrp/procurement.py:50
 #, python-format
 msgid "No BoM defined for this product !"
 msgstr ""
@@ -723,12 +738,6 @@ msgid "Master Bill of Materials"
 msgstr ""
 
 #. module: mrp
-#: view:mrp.production:0
-#: report:mrp.production.order:0
-msgid "Work Orders"
-msgstr "Работни поръчки"
-
-#. module: mrp
 #: help:mrp.config.settings,module_product_manufacturer:0
 msgid ""
 "This allows you to define the following for a product:\n"
@@ -750,30 +759,6 @@ msgstr "Печат"
 #: view:mrp.workcenter:0
 msgid "Type"
 msgstr "Тип"
-
-#. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_property_group_action
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a group of properties.\n"
-"              </p><p>\n"
-"                Define specific property groups that can be assigned to "
-"your\n"
-"                bill of materials and sales orders. Properties allows "
-"OpenERP\n"
-"                to automatically select the right bill of materials "
-"according\n"
-"                to properties selected in the sale order by salesperson.\n"
-"              </p><p>\n"
-"                For instance, in the property group \"Warranty\", you an "
-"have\n"
-"                two properties: 1 year warranty, 3 years warranty. "
-"Depending\n"
-"                on the propoerties selected in the sale order, OpenERP will\n"
-"                schedule a production using the matching bill of materials.\n"
-"              </p>\n"
-"            "
-msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
@@ -818,8 +803,8 @@ msgid "A factor of 0.9 means a loss of 10% within the production process."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:756
-#: code:addons/mrp/mrp.py:784
+#: code:addons/mrp/mrp.py:737
+#: code:addons/mrp/mrp.py:765
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -882,7 +867,7 @@ msgid "Manufacturing Orders which are waiting for raw materials."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:284
+#: code:addons/mrp/mrp.py:285
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -893,6 +878,7 @@ msgstr ""
 #: model:ir.model,name:mrp.model_mrp_production
 #: view:mrp.config.settings:0
 #: view:mrp.production:0
+#: field:mrp.production.workcenter.line,production_id:0
 #: field:procurement.order,production_id:0
 msgid "Manufacturing Order"
 msgstr "Нареждане за производство"
@@ -958,7 +944,7 @@ msgid "BoM Type"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:46
+#: code:addons/mrp/procurement.py:52
 #, python-format
 msgid ""
 "Procurement '%s' has an exception: 'No BoM defined for this product !'"
@@ -980,7 +966,7 @@ msgid "Companies"
 msgstr "Фирми"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:649
+#: code:addons/mrp/mrp.py:634
 #, python-format
 msgid ""
 "You must first cancel related internal picking attached to this "
@@ -1300,7 +1286,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:521
+#: code:addons/mrp/mrp.py:505
 #, python-format
 msgid "Invalid Action!"
 msgstr ""
@@ -1343,7 +1329,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:374
+#: code:addons/mrp/mrp.py:375
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -1381,27 +1367,6 @@ msgstr ""
 msgid ""
 "In case the Supply method of the product is Buy, the system creates a "
 "purchase order."
-msgstr ""
-
-#. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_property_action
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a new property.\n"
-"              </p><p>\n"
-"                The Properties in OpenERP are used to select the right bill "
-"of\n"
-"                materials for manufacturing a product when you have "
-"different\n"
-"                ways of building the same product.  You can assign several\n"
-"                properties to each bill of materials.  When a salesperson\n"
-"                creates a sale order, they can relate it to several "
-"properties\n"
-"                and OpenERP will automatically select the BoM to use "
-"according\n"
-"                the needs.\n"
-"              </p>\n"
-"            "
 msgstr ""
 
 #. module: mrp
@@ -1474,12 +1439,6 @@ msgid "Pending"
 msgstr "Висящи"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:1053
-#, python-format
-msgid "Manufacturing order is <b>in production</b>."
-msgstr ""
-
-#. module: mrp
 #: field:mrp.bom,active:0
 #: field:mrp.routing,active:0
 msgid "Active"
@@ -1517,12 +1476,6 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:1058
-#, python-format
-msgid "Manufacturing order has been <b>done</b>."
-msgstr ""
-
-#. module: mrp
 #: model:process.transition,name:mrp.process_transition_minimumstockprocure0
 msgid "'Minimum stock rule' material"
 msgstr ""
@@ -1543,12 +1496,6 @@ msgid "Drives the procurement orders for raw material."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:1048
-#, python-format
-msgid "Manufacturing order is <b>ready to produce</b>."
-msgstr ""
-
-#. module: mrp
 #: field:mrp.production.product.line,product_uos_qty:0
 msgid "Product UOS Quantity"
 msgstr ""
@@ -1564,7 +1511,7 @@ msgid "SO Number"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:521
+#: code:addons/mrp/mrp.py:505
 #, python-format
 msgid "Cannot delete a manufacturing order in state '%s'."
 msgstr ""
@@ -1610,6 +1557,31 @@ msgstr ""
 #: field:report.workcenter.load,workcenter_id:0
 msgid "Work Center"
 msgstr "Работен център"
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_property_group_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a group of properties.\n"
+"              </p><p>\n"
+"                Define specific property groups that can be assigned to "
+"your\n"
+"                bill of materials and sales orders. Properties allows "
+"OpenERP\n"
+"                to automatically select the right bill of materials "
+"according\n"
+"                to properties selected in the sales order by salesperson.\n"
+"              </p><p>\n"
+"                For instance, in the property group \"Warranty\", you an "
+"have\n"
+"                two properties: 1 year warranty, 3 years warranty. "
+"Depending\n"
+"                on the propoerties selected in the sales order, OpenERP "
+"will\n"
+"                schedule a production using the matching bill of materials.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: mrp
 #: field:mrp.workcenter,capacity_per_cycle:0
@@ -1747,20 +1719,6 @@ msgid "Manager"
 msgstr ""
 
 #. module: mrp
-#: view:mrp.bom:0
-msgid ""
-"When processing a sale order for this product, the delivery order\n"
-"                                will contain the raw materials, instead of "
-"the finished product."
-msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:1039
-#, python-format
-msgid "Manufacturing order has been <b>created</b>."
-msgstr ""
-
-#. module: mrp
 #: help:mrp.product.produce,mode:0
 msgid ""
 "'Consume only' mode will only consume the products with the quantity "
@@ -1771,9 +1729,10 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
-msgid "Orders Planning"
-msgstr ""
+#: view:mrp.production:0
+#: report:mrp.production.order:0
+msgid "Work Orders"
+msgstr "Работни поръчки"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle:0
@@ -1805,7 +1764,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:756
+#: code:addons/mrp/mrp.py:737
 #, python-format
 msgid ""
 "You are going to consume total %s quantities of \"%s\".\n"
@@ -1842,7 +1801,6 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.report.xml,name:mrp.report_mrp_production_report
 #: field:mrp.production.product.line,production_id:0
-#: field:mrp.production.workcenter.line,production_id:0
 #: model:process.node,name:mrp.process_node_production0
 #: model:process.node,name:mrp.process_node_productionorder0
 msgid "Production Order"
@@ -1866,7 +1824,7 @@ msgid "Compute Data"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:625
+#: code:addons/mrp/mrp.py:610
 #: code:addons/mrp/wizard/change_production_qty.py:83
 #: code:addons/mrp/wizard/change_production_qty.py:88
 #, python-format
@@ -1912,7 +1870,7 @@ msgid "Manufacturing Lead Time"
 msgstr "Производствен срок за доставка"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:284
+#: code:addons/mrp/mrp.py:285
 #, python-format
 msgid "Warning"
 msgstr ""
@@ -2152,17 +2110,7 @@ msgid "BOM Ref"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.bom,message_comment_ids:0
-#: help:mrp.bom,message_comment_ids:0
-#: field:mrp.production,message_comment_ids:0
-#: help:mrp.production,message_comment_ids:0
-#: field:mrp.production.workcenter.line,message_comment_ids:0
-#: help:mrp.production.workcenter.line,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:784
+#: code:addons/mrp/mrp.py:765
 #, python-format
 msgid ""
 "You are going to produce total %s quantities of \"%s\".\n"
@@ -2200,7 +2148,7 @@ msgid "Bill of Materials"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:625
+#: code:addons/mrp/mrp.py:610
 #, python-format
 msgid "Cannot find a bill of material for this product."
 msgstr ""
@@ -2431,321 +2379,3 @@ msgstr ""
 #: report:mrp.production.order:0
 msgid "Products to Consume"
 msgstr ""
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Невалиден XML за преглед на архитектурата"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Името на обекта трябва да започва с \"x_\" и да не съдържа никакви специални "
-#~ "символи!"
-
-#~ msgid "Compute Stock Minimum Rules Only"
-#~ msgstr "Изчисляване на правила за минимално правило за количество"
-
-#~ msgid "Not used in computations, for information purpose only."
-#~ msgstr "Не се използва за изчисление, само за информация."
-
-#~ msgid ""
-#~ "Triggers an automatic procurement for all products that have a virtual stock "
-#~ "under 0. You should probably not use this option, we suggest using a MTO "
-#~ "configuration on products."
-#~ msgstr ""
-#~ "Извикване на автоматично набавяне на всички продукти които имат виртуална "
-#~ "наличност под 0. Вероятно не е необходимо да използвате тази възможност, "
-#~ "препоръчваме ви да използвате настройката Производство за Поръчка при "
-#~ "Продукти."
-
-#~ msgid "Manufacturing Resource Planning"
-#~ msgstr "Планиране на ресурси за производство"
-
-#~ msgid "Moves Created"
-#~ msgstr "Създадени движения"
-
-#~ msgid "Exceptions Procurements"
-#~ msgstr "Грешки при набавяне"
-
-#, python-format
-#~ msgid "No supplier defined for this product !"
-#~ msgstr "Не е зададен доставчик за този продукт !"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "Предупреждение !"
-
-#~ msgid "Origin"
-#~ msgstr "Произход"
-
-#~ msgid "Automatic orderpoint"
-#~ msgstr "Автоматично пренареждане"
-
-#~ msgid "Packing list"
-#~ msgstr "Списък за опаковане"
-
-#~ msgid "Stockable Stock"
-#~ msgstr "Складируеми стоки"
-
-#, python-format
-#~ msgid "Product name"
-#~ msgstr "Име на продукт"
-
-#, python-format
-#~ msgid "products"
-#~ msgstr "продукти"
-
-#~ msgid "Change Qty"
-#~ msgstr "Промяна на к-во"
-
-#~ msgid "Author"
-#~ msgstr "Автор"
-
-#~ msgid "Modification Date"
-#~ msgstr "Дата на промяна"
-
-#, python-format
-#~ msgid "Invalid action !"
-#~ msgstr "Невалидно действие !"
-
-#~ msgid "Modification name"
-#~ msgstr "Име на промяна"
-
-#~ msgid "Qty"
-#~ msgstr "К-во"
-
-#~ msgid "Nbr of hour"
-#~ msgstr "Бр. часове"
-
-#~ msgid "Stockable Production Order"
-#~ msgstr "Скадируема поръчка за производство"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Невалидно име на модел при задаване на действие"
-
-#~ msgid "Routing Workcenters"
-#~ msgstr "Маршрутизиране на цехове"
-
-#~ msgid "Reporting"
-#~ msgstr "Справки"
-
-#~ msgid "Day"
-#~ msgstr "Ден"
-
-#, python-format
-#~ msgid "Cost Price per Uom"
-#~ msgstr "Цена за единица количество"
-
-#~ msgid "Revision"
-#~ msgstr "Версия"
-
-#~ msgid "["
-#~ msgstr "["
-
-#~ msgid "title"
-#~ msgstr "заглавие"
-
-#~ msgid "June"
-#~ msgstr "Юни"
-
-#~ msgid "October"
-#~ msgstr "Октомври"
-
-#~ msgid "August"
-#~ msgstr "Август"
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "Грешка: Невалиден европейски баркод"
-
-#~ msgid "March"
-#~ msgstr "Март"
-
-#, python-format
-#~ msgid "Total Cost of "
-#~ msgstr "Тотална цена на "
-
-#~ msgid "September"
-#~ msgstr "Септември"
-
-#~ msgid "Dashboard"
-#~ msgstr "Табло"
-
-#~ msgid "]"
-#~ msgstr "]"
-
-#~ msgid "Order quantity cannot be negative or zero !"
-#~ msgstr "Количество за поръчка не може да бъде отрицателно или нула"
-
-#~ msgid "Revisions"
-#~ msgstr "Ревизии"
-
-#~ msgid "July"
-#~ msgstr "Юли"
-
-#~ msgid "Month"
-#~ msgstr "Месец"
-
-#~ msgid "Picking list"
-#~ msgstr "Избирателен списък"
-
-#~ msgid "Raw Material Location"
-#~ msgstr "Местоположение на суровини"
-
-#~ msgid ""
-#~ "Manufacturing Orders are usually proposed automatically by OpenERP based on "
-#~ "the bill of materials and the procurement rules, but you can also create "
-#~ "manufacturing orders manually. OpenERP will handle the consumption of the "
-#~ "raw materials (stock decrease) and the production of the finished products "
-#~ "(stock increase) when the order is processed."
-#~ msgstr ""
-#~ "Производствeните поръчки се предлагат автоматично от OpenERP на базата на "
-#~ "рецепта за суровини и правилата за производство, но можете да създавате и "
-#~ "производствени поръчки ръчно. OpenERP ще се справи с потреблението на "
-#~ "суровини (намаляване на количеството) и производството на готови продукти "
-#~ "(увеличаване на наличноста), когато поръчката е обработена."
-
-#~ msgid ""
-#~ "Enhances production orders with readiness states as well as the start date "
-#~ "and end date of execution of the order."
-#~ msgstr ""
-#~ "Увеличава поръчките с подготвеното състояние, както и началната и крайна "
-#~ "дата на изпълнение на поръчката."
-
-#~ msgid ""
-#~ "Fill this product to track easily your production costs in the analytic "
-#~ "accounting."
-#~ msgstr ""
-#~ "Попълнете този продукт за да следите лесно производствените си разходи в "
-#~ "аналитичното отчитане."
-
-#~ msgid "UOM"
-#~ msgstr "МЕ"
-
-#, python-format
-#~ msgid "Components Cost of "
-#~ msgstr "Стойност на компонентите "
-
-#~ msgid "You try to assign a lot which is not from the same product"
-#~ msgstr "Опитвате се да зададете партида, която не е от същия продукт"
-
-#~ msgid "Advanced Routes"
-#~ msgstr "Маршрути разширено"
-
-#~ msgid "Repairs"
-#~ msgstr "Ремонти"
-
-#~ msgid "Default UOM"
-#~ msgstr "Основна МЕ"
-
-#~ msgid "Nbr of hours"
-#~ msgstr "Брой часове"
-
-#~ msgid "State"
-#~ msgstr "Състояние"
-
-#~ msgid "MRP Subproducts"
-#~ msgstr "ПМР събпродукти"
-
-#~ msgid ""
-#~ "Enables warranty and repair management (and their impact on stocks and "
-#~ "invoicing)."
-#~ msgstr ""
-#~ "Въвежда гаранция и управление на ремонти (и тяхното въздействие върху "
-#~ "запасите и фактуриране)."
-
-#~ msgid ""
-#~ "Define specific property groups that can be assigned to the properties of "
-#~ "your bill of materials."
-#~ msgstr ""
-#~ "Дефиниране на свойства на групи, които могат да бъдат причислени към "
-#~ "свойствата на списъка с материали."
-
-#~ msgid ""
-#~ "Complete this only if you want automatic analytic accounting entries on "
-#~ "production orders."
-#~ msgstr ""
-#~ "Попълнете това само в случай, че искате автоматична, аналитична сметка на "
-#~ "производствена поръчка."
-
-#~ msgid "Nbr of cycles"
-#~ msgstr "Брой цикли"
-
-#~ msgid "Specify Cost of Work center per cycle."
-#~ msgstr "Посочете разходите на работен център за цикъл."
-
-#, python-format
-#~ msgid "Supplier Price per Uom"
-#~ msgstr "Доставна цена за ЕМ"
-
-#~ msgid "# of Lines"
-#~ msgstr "# от редове"
-
-#~ msgid "Extended Filters..."
-#~ msgstr "Разширени филтри"
-
-#~ msgid "Split in production lots"
-#~ msgstr "Разделяне на партиди за производство"
-
-#~ msgid "Month -1"
-#~ msgstr "Месец -1"
-
-#~ msgid "Current"
-#~ msgstr "Текущ"
-
-#~ msgid "Change Standard Price"
-#~ msgstr "Промени стандартна цена"
-
-#, python-format
-#~ msgid "Copy"
-#~ msgstr "Копиране"
-
-#~ msgid "#Line Orders"
-#~ msgstr "# Линия поръчки"
-
-#~ msgid "Product UOM"
-#~ msgstr "Продукт мер. ед."
-
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "Грешка! НЕ може да създавате рекурсивни фирми"
-
-#~ msgid "Waiting Goods"
-#~ msgstr "Чакащи стоки"
-
-#~ msgid "December"
-#~ msgstr "Декември"
-
-#~ msgid "Image"
-#~ msgstr "Изображение"
-
-#~ msgid "Configure"
-#~ msgstr "Настройване"
-
-#~ msgid "November"
-#~ msgstr "Ноември"
-
-#~ msgid "Configuration Progress"
-#~ msgstr "Прогрес на настройките"
-
-#~ msgid "Draft"
-#~ msgstr "Проект"
-
-#~ msgid "January"
-#~ msgstr "Януари"
-
-#, python-format
-#~ msgid "Error"
-#~ msgstr "Грешка"
-
-#~ msgid "May"
-#~ msgstr "Май"
-
-#~ msgid "February"
-#~ msgstr "Февруари"
-
-#~ msgid "April"
-#~ msgstr "Април"
-
-#~ msgid "Year"
-#~ msgstr "Година"
-
-#~ msgid "Production Order Report"
-#~ msgstr "Справка за поизводствена поръчка"

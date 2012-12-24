@@ -1,24 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* product
+# Estonian translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-12-20 17:10+0000\n"
-"Last-Translator: Ahti Hinnov <sipelgas@gmail.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Estonian <et@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-21 04:41+0000\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:27+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "Ettevaatust !"
 
 #. module: product
 #: field:product.packaging,rows:0
@@ -33,11 +30,6 @@ msgstr ""
 #. module: product
 #: help:product.product,seller_qty:0
 msgid "This is minimum quantity to purchase from Main Supplier."
-msgstr ""
-
-#. module: product
-#: model:product.uom,name:product.product_uom_day
-msgid "Day"
 msgstr ""
 
 #. module: product
@@ -111,8 +103,8 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:177
-#: code:addons/product/product.py:206
+#: code:addons/product/pricelist.py:179
+#: code:addons/product/product.py:208
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -123,16 +115,11 @@ msgid "Small-sized image"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:174
+#: code:addons/product/product.py:176
 #, python-format
 msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
 "both belong to different Category!."
-msgstr ""
-
-#. module: product
-#: model:product.uom,name:product.product_uom_dozen
-msgid "Dozen"
 msgstr ""
 
 #. module: product
@@ -194,7 +181,7 @@ msgid "Product Type"
 msgstr "Toote tüüp"
 
 #. module: product
-#: code:addons/product/product.py:410
+#: code:addons/product/product.py:412
 #, python-format
 msgid "Products: "
 msgstr "Tooted: "
@@ -281,11 +268,6 @@ msgstr ""
 #: field:product.uom,category_id:0
 msgid "Category"
 msgstr "Kategooria"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_litre
-msgid "Litre"
-msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_25_product_template
@@ -512,6 +494,11 @@ msgid "Headset standard"
 msgstr ""
 
 #. module: product
+#: model:product.uom,name:product.product_uom_day
+msgid "Day(s)"
+msgstr ""
+
+#. module: product
 #: help:product.product,incoming_qty:0
 msgid ""
 "Quantity of products that are planned to arrive.\n"
@@ -570,10 +557,8 @@ msgid "PC Assemble + Custom (PC on Demand)"
 msgstr ""
 
 #. module: product
-#: model:process.transition,note:product.process_transition_supplierofproduct0
-msgid ""
-"1 or several supplier(s) can be linked to a product. All information stands "
-"in the product form."
+#: model:product.template,description:product.product_product_27_product_template
+msgid "Custom Laptop based on customer's requirement."
 msgstr ""
 
 #. module: product
@@ -582,7 +567,7 @@ msgid "The width of the package"
 msgstr "Paki laius"
 
 #. module: product
-#: code:addons/product/product.py:359
+#: code:addons/product/product.py:361
 #, python-format
 msgid "Unit of Measure categories Mismatch!"
 msgstr ""
@@ -687,6 +672,7 @@ msgstr ""
 
 #. module: product
 #: field:product.supplierinfo,name:0
+#: field:product.template,seller_ids:0
 msgid "Supplier"
 msgstr ""
 
@@ -714,9 +700,9 @@ msgid "If checked new messages require your attention."
 msgstr ""
 
 #. module: product
-#: model:product.category,name:product.product_category_1
-msgid "Saleable"
-msgstr ""
+#: field:product.product,ean13:0
+msgid "EAN13 Barcode"
+msgstr "EAN13 triipkood"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_product_price_list
@@ -790,6 +776,11 @@ msgid "End Date"
 msgstr "Lõppkuupäev"
 
 #. module: product
+#: model:product.uom,name:product.product_uom_litre
+msgid "Liter(s)"
+msgstr ""
+
+#. module: product
 #: view:product.price_list:0
 msgid "Print"
 msgstr "Trüki"
@@ -822,7 +813,6 @@ msgstr "Võti"
 #. module: product
 #: model:ir.actions.report.xml,name:product.report_product_pricelist
 #: model:ir.model,name:product.model_product_pricelist
-#: field:product.product,price:0
 #: field:product.product,pricelist_id:0
 #: view:product.supplierinfo:0
 msgid "Pricelist"
@@ -830,7 +820,7 @@ msgstr "Hinnakiri"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_hour
-msgid "Hour"
+msgid "Hour(s)"
 msgstr ""
 
 #. module: product
@@ -844,8 +834,10 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: product
-#: model:product.template,description:product.product_product_27_product_template
-msgid "Custom Laptop based on customer's requirement."
+#: model:process.transition,note:product.process_transition_supplierofproduct0
+msgid ""
+"1 or several supplier(s) can be linked to a product. All information stands "
+"in the product form."
 msgstr ""
 
 #. module: product
@@ -910,11 +902,6 @@ msgstr ""
 #: field:product.packaging,weight:0
 msgid "Total Package Weight"
 msgstr "Pakendi kogukaal"
-
-#. module: product
-#: field:product.product,seller_info_id:0
-msgid "unknown"
-msgstr ""
 
 #. module: product
 #: help:product.packaging,code:0
@@ -1087,6 +1074,11 @@ msgid "Right Parent"
 msgstr ""
 
 #. module: product
+#: field:product.product,price:0
+msgid "Price"
+msgstr ""
+
+#. module: product
 #: field:product.pricelist.item,price_surcharge:0
 msgid "Price Surcharge"
 msgstr "Hinna lisamaks"
@@ -1158,6 +1150,11 @@ msgstr ""
 #: help:product.category,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of product categories."
+msgstr ""
+
+#. module: product
+#: model:product.uom,name:product.product_uom_dozen
+msgid "Dozen(s)"
 msgstr ""
 
 #. module: product
@@ -1235,7 +1232,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:359
+#: code:addons/product/product.py:361
 #, python-format
 msgid ""
 "New Unit of Measure '%s' must belong to same Unit of Measure category '%s' "
@@ -1290,11 +1287,6 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: field:product.template,seller_ids:0
-msgid "Partners"
-msgstr "Partnerid"
-
-#. module: product
 #: help:product.pricelist.item,categ_id:0
 msgid ""
 "Specify a product category if this rule only applies to products belonging "
@@ -1307,7 +1299,12 @@ msgid "Inventory"
 msgstr "Laoseis"
 
 #. module: product
-#: code:addons/product/product.py:736
+#: field:product.product,seller_info_id:0
+msgid "Supplier Info"
+msgstr "Tarnija info"
+
+#. module: product
+#: code:addons/product/product.py:729
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -1426,16 +1423,9 @@ msgstr ""
 
 #. module: product
 #: selection:product.ul,type:0
-#: model:product.uom,name:product.product_uom_unit
 #: model:product.uom.categ,name:product.product_uom_categ_unit
 msgid "Unit"
 msgstr "Ühik"
-
-#. module: product
-#: code:addons/product/product.py:588
-#, python-format
-msgid "Product has been <b>created</b>."
-msgstr "Toode on <b>loodud</b>."
 
 #. module: product
 #: field:product.pricelist.version,date_start:0
@@ -1544,9 +1534,9 @@ msgid "Pricelist Name"
 msgstr "Hinnakirja nimi"
 
 #. module: product
-#: field:product.product,ean13:0
-msgid "EAN13 Barcode"
-msgstr "EAN13 triipkood"
+#: model:product.category,name:product.product_category_1
+msgid "Saleable"
+msgstr ""
 
 #. module: product
 #: sql_constraint:product.uom:0
@@ -1776,7 +1766,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:206
+#: code:addons/product/product.py:208
 #, python-format
 msgid "Cannot change the category of existing Unit of Measure '%s'."
 msgstr ""
@@ -1812,7 +1802,7 @@ msgid "Default Unit of Measure"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:375
+#: code:addons/product/pricelist.py:377
 #, python-format
 msgid "Partner section of the product form"
 msgstr "Partneri sektsioon toote vormil"
@@ -1838,7 +1828,12 @@ msgid "Messages"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:174
+#: model:product.uom,name:product.product_uom_unit
+msgid "Unit(s)"
+msgstr ""
+
+#. module: product
+#: code:addons/product/product.py:176
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -2152,7 +2147,7 @@ msgid "Normal"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:177
+#: code:addons/product/pricelist.py:179
 #, python-format
 msgid ""
 "At least one pricelist has no active version !\n"
@@ -2203,12 +2198,6 @@ msgstr ""
 #: selection:product.template,mes_type:0
 msgid "Variable"
 msgstr "Muutuja"
-
-#. module: product
-#: field:product.product,message_comment_ids:0
-#: help:product.product,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
 
 #. module: product
 #: field:product.template,rental:0
@@ -2366,7 +2355,7 @@ msgid "15” LCD Monitor"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:374
+#: code:addons/product/pricelist.py:376
 #: field:product.pricelist.item,base_pricelist_id:0
 #, python-format
 msgid "Other Pricelist"
@@ -2497,564 +2486,3 @@ msgstr "Maht kuupmeetrites."
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
 msgstr "Allahindlus"
-
-#~ msgid "Product Process"
-#~ msgstr "Toote protsess"
-
-#~ msgid ""
-#~ "The minimal quantity to purchase for this supplier, expressed in the default "
-#~ "unit of measure."
-#~ msgstr ""
-#~ "Minimaalne ostukogus sellele tarnijale, väljendatuna vaikimisi mõõtühikuga."
-
-#~ msgid "Produce"
-#~ msgstr "Tooda"
-
-#~ msgid "Units of Measure Categories"
-#~ msgstr "Mõõtühikute kategooriad"
-
-#~ msgid "Number of Layer"
-#~ msgstr "Kihtide arv"
-
-#~ msgid "The number of layer on a palet or box"
-#~ msgstr "Kihtide arv kaubaalusel või kastis"
-
-#~ msgid "Make to Stock"
-#~ msgstr "Loo lattu"
-
-#~ msgid "Customer Lead Time"
-#~ msgstr "Kliendi teostusaeg"
-
-#~ msgid "Weigths"
-#~ msgstr "Kaalud"
-
-#~ msgid "The total number of products you can put by palet or box."
-#~ msgstr "Toodete koguarv, mis mahub kaubaalusele või kasti."
-
-#~ msgid "Can be Purchased"
-#~ msgstr "On ostetav"
-
-#~ msgid "The weight of a full of products palet or box."
-#~ msgstr "Kaubaga täidetud kaubaaluse või kasti kaal."
-
-#~ msgid "KGM"
-#~ msgstr "Kg"
-
-#~ msgid ""
-#~ "Standard Price: the cost price is fixed and recomputed periodically (usually "
-#~ "at the end of the year), Average Price: the cost price is recomputed at each "
-#~ "reception of products."
-#~ msgstr ""
-#~ "Tavahind: omahind on fikseeritud ja ümberarvutatud perioodiliselt "
-#~ "(tavaliselt aasta lõpus). Keskmine hind: omahind arvutatakse ümber igal "
-#~ "toote vastuvõtmisel."
-
-#~ msgid ""
-#~ "Name of the product for this partner, will be used when printing a request "
-#~ "for quotation. Keep empty to use the internal one."
-#~ msgstr ""
-#~ "Tootenimetus sellele partnerile. Kasutatakse hinnapakkumise printimisel. "
-#~ "Jäta tühjaks, kui soovid kasutada sisemist nime."
-
-#~ msgid "Rate"
-#~ msgstr "Määr"
-
-#~ msgid "Onsite Intervention"
-#~ msgstr "Kohapealne sekkumine"
-
-#~ msgid "Onsite Senior Intervention"
-#~ msgstr "Kohapealne kõrgem sekkumine"
-
-#~ msgid "PCE"
-#~ msgstr "TK"
-
-#~ msgid ""
-#~ "Quantities of products that are planned to arrive in selected locations or "
-#~ "all internal if none have been selected."
-#~ msgstr ""
-#~ "Toodete kogused, mille saabumine on planeeritud valitud asukohtades või "
-#~ "kõigis sisemistes asukohtades, kui ühtegi pole valitud"
-
-#~ msgid ""
-#~ "Quantities of products that are planned to leave in selected locations or "
-#~ "all internal if none have been selected."
-#~ msgstr ""
-#~ "Toodete kogused, mille lahkumine on planeeritud valitud asukohtades või "
-#~ "kõigis sisemistes asukohtades, kui ühtegi pole valitud"
-
-#~ msgid "The weight of the empty UL"
-#~ msgstr "Tühja logistilise üksuse kaal"
-
-#~ msgid ""
-#~ "Futur stock for this product according to the selected location or all "
-#~ "internal if none have been selected. Computed as: Real Stock - Outgoing + "
-#~ "Incoming."
-#~ msgstr ""
-#~ "Tulevane laoseis sellele tootele lähtudes valitud asukohast või kõigist "
-#~ "asukohtadest, kui ühtegi pole valitud. Arvututuskäik: Tegelik laoseis - "
-#~ "Väljuvad + Sisenevad."
-
-#~ msgid ""
-#~ "Determine if the product is visible in the list of products within a "
-#~ "selection from a purchase order line."
-#~ msgstr ""
-#~ "Määra, kas toode on nähtav toodete nimekirjas ostutellimuse reale valimiseks."
-
-#~ msgid ""
-#~ "Determine if the product can be visible in the list of product within a "
-#~ "selection from a sale order line."
-#~ msgstr ""
-#~ "Määra, kas toode on nähtav toodete nimekirjas müügikorralduse reale "
-#~ "valimiseks."
-
-#~ msgid ""
-#~ "Produce will generate production order or tasks, according to the product "
-#~ "type. Purchase will trigger purchase orders when requested."
-#~ msgstr ""
-#~ "Tooda genereerib tootmiskorralduse või ülesanded vastavalt toote tüübile. "
-#~ "Osta käivitab ostutellimused, kui nõutakse."
-
-#~ msgid ""
-#~ "Set a product if this rule only apply to one product. Keep empty for all "
-#~ "products"
-#~ msgstr ""
-#~ "Määra toode, kui see reegel rakendub ainult ühele tootele. Hoia tühjana "
-#~ "kõigi toodete jaoks,"
-
-#~ msgid ""
-#~ "Average time to produce this product. This is only for the production order "
-#~ "and, if it is a multi-level bill of material, it's only for the level of "
-#~ "this product. Different delays will be summed for all levels and purchase "
-#~ "orders."
-#~ msgstr ""
-#~ "Keskmine aeg selle toote tootmiseks. See on ainult tootmiskorralduse jaoks "
-#~ "ja kui see on mitmetasandiline kaubakooslus siis on see ainult selle toote "
-#~ "tasemele. Erinevad viivitused summeeritakse kõigile tasemetele ja "
-#~ "ostutellimustele."
-
-#~ msgid "Rules Test Match"
-#~ msgstr "Reegli testi vaste"
-
-#~ msgid ""
-#~ "Used by companies that manages two unit of measure: invoicing and stock "
-#~ "management. For example, in food industries, you will manage a stock of ham "
-#~ "but invoice in Kg. Keep empty to use the default UOM."
-#~ msgstr ""
-#~ "Kasutusel ettetvõtete poolt, mis haldavad kahte mõõtühikut: arveldmine ja  "
-#~ "laohaldus. Näiteks toiduainetööstuses haldad sa singivarusid aga arveldad "
-#~ "kilodes. Hoia tühjana, et kasutada vaikimisi möötühikut."
-
-#~ msgid ""
-#~ "Set a category of product if this rule only apply to products of a category "
-#~ "and his childs. Keep empty for all products"
-#~ msgstr ""
-#~ "Määra toote kategooria, kui see reegel rakendub ainult kategooria toodetele "
-#~ "ja nende alamatele. Hoia tühjana kõigi toodete jaoks."
-
-#~ msgid ""
-#~ "Code of the product for this partner, will be used when printing a request "
-#~ "for quotation. Keep empty to use the internal one."
-#~ msgstr ""
-#~ "Tootekood partneri jaoks. Kasutatakse noteerimispäringu prinitimisel. Hoia "
-#~ "tühjana, et kasutada sisemist koodi."
-
-#~ msgid ""
-#~ "Delay in days between the confirmation of the purchase order and the "
-#~ "reception of the products in your warehouse. Used by the scheduler for "
-#~ "automatic computation of the purchase order planning."
-#~ msgstr ""
-#~ "Viivitus päevades ostutellimuse kinnitamise ja toodete lattu saabumise "
-#~ "vahel. Kasutatakse planeerija poolt ostutellimuse planeerimise automaatseks "
-#~ "arvutamiseks."
-
-#~ msgid ""
-#~ "Gives the different ways to package the same product. This has no impact on "
-#~ "the packing order and is mainly used if you use the EDI module."
-#~ msgstr ""
-#~ "Pakub erinevaid viise sama toote pakendamiseks. Sellel puudub mõju "
-#~ "pakendamiskorrldusele ja kasutatakse peamiselt, kui sa kasutad EDI moodulit."
-
-#~ msgid "DDR 512MB PC400"
-#~ msgstr "DDR 512MB PC400"
-
-#~ msgid "Net weight"
-#~ msgstr "Netokaal"
-
-#~ msgid "Procure Method"
-#~ msgstr "Hankimise viis"
-
-#~ msgid "Sellable"
-#~ msgstr "Müüdav"
-
-#~ msgid "Kit Keyboard + Mouse"
-#~ msgstr "Komplekt Klaviatuur + Hiir"
-
-#~ msgid "Customer Price"
-#~ msgstr "Kliendihind"
-
-#~ msgid "List Price"
-#~ msgstr "Hinnakirjahind"
-
-#~ msgid "Prices Types"
-#~ msgstr "Hinnatüübid"
-
-#~ msgid ""
-#~ "Base price for computing the customer price. Sometimes called the catalog "
-#~ "price."
-#~ msgstr ""
-#~ "Baashind arvutamaks kliendihinda. Vahetevahel kutsutakse kui kataloogihind."
-
-#~ msgid "Processor AMD Athlon XP 2200+"
-#~ msgstr "Processor AMD Athlon XP 2200+"
-
-#~ msgid "If Other Pricelist"
-#~ msgstr "kui Muu hinnakiri"
-
-#~ msgid "Virtual Stock"
-#~ msgstr "Virtuaalladu"
-
-#~ msgid "Prices Computations"
-#~ msgstr "Hinnad arvutamiseks"
-
-#~ msgid "Configuration"
-#~ msgstr "Seadistus"
-
-#~ msgid "Error ! You can not create recursive categories."
-#~ msgstr "Viga! Sa ei saa luua rekursiivseid kategooriaid."
-
-#~ msgid "Default UoM"
-#~ msgstr "Vaikimisi mõõtühik"
-
-#~ msgid "Keyboard"
-#~ msgstr "Klaviatuur"
-
-#~ msgid "Mouse"
-#~ msgstr "Hiir"
-
-#~ msgid "Create new Product"
-#~ msgstr "Loo uus toode"
-
-#~ msgid "Processor AMD Athlon XP 1800+"
-#~ msgstr "Protsessor AMD Athlon XP 1800+"
-
-#~ msgid "In Production"
-#~ msgstr "Tootmises"
-
-#~ msgid "Priority"
-#~ msgstr "Prioriteet"
-
-#~ msgid "HDD on demand"
-#~ msgstr "HDD nõudmisel"
-
-#~ msgid "Factor"
-#~ msgstr "Faktor"
-
-#~ msgid "Supplier Info"
-#~ msgstr "Tarnija info"
-
-#~ msgid "UOM"
-#~ msgstr "Mõõtühik"
-
-#~ msgid "Partner Product Name"
-#~ msgstr "Partneri tootenimi"
-
-#~ msgid "Miscelleanous"
-#~ msgstr "Mitmesugune"
-
-#~ msgid "PC"
-#~ msgstr "PC"
-
-#~ msgid ""
-#~ "This pricelist will be used, instead of the default one,                     "
-#~ "for sales to the current partner"
-#~ msgstr ""
-#~ "Seda hinnakirja kasutatakse (vaikimisi asemel) müümiseks käesolevale "
-#~ "partnerile"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Vigane XML vaate arhitektuurile!"
-
-#~ msgid "HDD Seagate 7200.8 80GB"
-#~ msgstr "HDD Seagate 7200.8 80GB"
-
-#~ msgid "HDD Seagate 7200.8 160GB"
-#~ msgstr "HDD Seagate 7200.8 160GB"
-
-#~ msgid "Rack"
-#~ msgstr "Riiul"
-
-#~ msgid "EAN13"
-#~ msgstr "EAN13"
-
-#~ msgid "Processor on demand"
-#~ msgstr "Protsessor nõudmisel"
-
-#~ msgid "Supply method"
-#~ msgstr "Tarnemeetod"
-
-#~ msgid "IT components kits"
-#~ msgstr "IT komponentide komplektid"
-
-#~ msgid "Regular processor config"
-#~ msgstr "Tavapärane protsessori konfiguratsioon"
-
-#~ msgid "Sales Properties"
-#~ msgstr "Müügiomadused"
-
-#~ msgid ""
-#~ "Current quantities of products in selected locations or all internal if none "
-#~ "have been selected."
-#~ msgstr ""
-#~ "Käesolevad toodete kogused valitud asukohtades või kõik sisemised kui midagi "
-#~ "pole valitud."
-
-#~ msgid "Basic PC"
-#~ msgstr "Baas PC"
-
-#~ msgid "Row"
-#~ msgstr "Rida"
-
-#~ msgid "DDR 256MB PC400"
-#~ msgstr "DDR 256MB PC400"
-
-#~ msgid "Real Stock"
-#~ msgstr "Reaalne ladu"
-
-#~ msgid "Can be sold"
-#~ msgstr "Müüdav"
-
-#~ msgid "Complete PC With Peripherals"
-#~ msgstr "Täielik PC koos välisseadmetega"
-
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr ""
-#~ "Viga: vaikimisi mõõtühik ja ostu mõõtühik peavad olema samast kategooriast."
-
-#~ msgid "Mainboard ASUStek A7V8X-X"
-#~ msgstr "Emaplaat ASUStek A7V8X-X"
-
-#~ msgid "Buy"
-#~ msgstr "Osta"
-
-#~ msgid "IT components"
-#~ msgstr "IT komponendid"
-
-#~ msgid "Purchase UoM"
-#~ msgstr "Ostumõõtühik"
-
-#~ msgid "Price list"
-#~ msgstr "Hinnakiri"
-
-#~ msgid "Medium PC"
-#~ msgstr "Keskmine PC"
-
-#~ msgid "Second UoM"
-#~ msgstr "Teine mõõtühik"
-
-#~ msgid "Dello Computer"
-#~ msgstr "Dello arvuti"
-
-#~ msgid "Storage Localisation"
-#~ msgstr "Ladustamise asukoht"
-
-#~ msgid "Gross weight"
-#~ msgstr "Brutokaal"
-
-#~ msgid "Pricelists Types"
-#~ msgstr "Hinnakirjade tüübid"
-
-#~ msgid "Tells the user if he can use the product or not."
-#~ msgstr "Ütleb kasutajale kas ta saab kasutada toodet või mitte."
-
-#~ msgid "Partner Product Code"
-#~ msgstr "Partneri tootekood"
-
-#~ msgid "Computer Stuff"
-#~ msgstr "Arvutikaubad"
-
-#~ msgid "Seq"
-#~ msgstr "Jrk"
-
-#~ msgid "Phone Help"
-#~ msgstr "Telefoniabi"
-
-#~ msgid "Customizable PC"
-#~ msgstr "Kohandatav PC"
-
-#~ msgid "RAM on demand"
-#~ msgstr "RAM tellimisel"
-
-#~ msgid "HDD Seagate 7200.8 120GB"
-#~ msgstr "HDD Seagate 7200.8 120GB"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
-
-#~ msgid "Warranty (months)"
-#~ msgstr "Garantii (kuud)"
-
-#~ msgid "Product suppliers, with their product name, price, etc."
-#~ msgstr "Toote tarnijad, koos nende tootenimede, hinna jne."
-
-#~ msgid "Product Description"
-#~ msgstr "Toote kirjeldus"
-
-#~ msgid "Make to Order"
-#~ msgstr "Loo tellimus"
-
-#~ msgid "Mainboard ASUStek A7N8X"
-#~ msgstr "Emaplaat ASUStek A7N8X"
-
-#~ msgid "Products Categories"
-#~ msgstr "Toodete kategooriad"
-
-#~ msgid "High speed processor config"
-#~ msgstr "Suurekiirusega protserrori konfiguratsioon"
-
-#~ msgid "Basic+ PC (assembly on order)"
-#~ msgstr "Elementaarne+ PC (pannakse kokku tellimusel)"
-
-#~ msgid "ATX Mid-size Tower"
-#~ msgstr "ATX Mid-size Tower"
-
-#~ msgid "Delivery Delay"
-#~ msgstr "Kohaletoimetamise viivitus"
-
-#~ msgid "Private"
-#~ msgstr "Privaatne"
-
-#~ msgid ""
-#~ "Default Unit of Measure used for purchase orders. It must in the same "
-#~ "category than the default unit of measure."
-#~ msgstr ""
-#~ "Vaikimisi mõõtühik ostutellimusel. See peab olema samas kategooriast kui "
-#~ "vaikimisi mõõtühik."
-
-#~ msgid ""
-#~ "Set a template if this rule only apply to a template of product. Keep empty "
-#~ "for all products"
-#~ msgstr ""
-#~ "Määra mall, kui see reegel rakendub ainult toote mallile. Hoia tühjana kõigi "
-#~ "toodete jaoks."
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Vigane mudeli nimi toimingu definitsioonis."
-
-#~ msgid "Rentable Product"
-#~ msgstr "Renditav toode"
-
-#~ msgid "Error: UOS must be in a different category than the UOM"
-#~ msgstr "Viga: TÜ kategooria peab erinema MÜ kategooriast"
-
-#~ msgid "Codes"
-#~ msgstr "Koodid"
-
-#~ msgid "Products & Pricelists"
-#~ msgstr "Tooted ja hinnakirjad"
-
-#~ msgid "You can see the list of suppliers for that product."
-#~ msgstr "Sa saad näha tarnijate nimekirja sellele tootele"
-
-#~ msgid "Suppliers of Product"
-#~ msgstr "Toote tarnijad"
-
-#~ msgid ""
-#~ "The rule only applies if the partner buys/sells more than this quantity."
-#~ msgstr "Reegel rakendub, kui partner ostab/müüb sellest kogusest rohkem."
-
-#~ msgid "Starting date for this pricelist version to be valid."
-#~ msgstr "Selle hinnakirja kehtivuse algus"
-
-#~ msgid "The mode for computing the price for this rule."
-#~ msgstr "Sellele reeglile hinna arvutamise viis"
-
-#~ msgid "Ending date for this pricelist version to be valid."
-#~ msgstr "Selle hinnakirja versiooni kehtivuse lõpp"
-
-#~ msgid "Case"
-#~ msgstr "Kast"
-
-#~ msgid "Regular case fan 80mm"
-#~ msgstr "Tavaline korpuse ventilaator 80mm"
-
-#~ msgid "Silent fan"
-#~ msgstr "Vaikne ventilaator"
-
-#~ msgid "UoM Category"
-#~ msgstr "Mõõtühiku kategooria"
-
-#~ msgid "Price type"
-#~ msgstr "Hinna tüüp"
-
-#~ msgid ""
-#~ "Will change the way procurements are processed. Consumables are stockable "
-#~ "products with infinite stock, or for use when you have no stock management "
-#~ "in the system."
-#~ msgstr ""
-#~ "Muudab hankimiste töötlemise viisi. Tarvikud on ladustatavad tooted lõputu "
-#~ "laoseisuga või ilma laohalduseta süsteemis."
-
-#~ msgid ""
-#~ "The cost of the product for accounting stock valuation. It can serves as a "
-#~ "base price for supplier price."
-#~ msgstr ""
-#~ "Toote maksumus ramatupidamise laoseisu väärtustamiseks. See võib teenida "
-#~ "baashinda tarnija hinnale."
-
-#~ msgid ""
-#~ "This is the average time between the confirmation of the customer order and "
-#~ "the delivery of the finished products. It's the time you promise to your "
-#~ "customers."
-#~ msgstr ""
-#~ "See on keskmine aeg kliendi tellimuse kinnitamise ja valmis toote "
-#~ "kättetoimetamise vahel. See on aeg, mida sa lubad oma klientidele."
-
-#~ msgid ""
-#~ "Unit of Measure of a category can be converted between each others in the "
-#~ "same category."
-#~ msgstr "Sama kategooria mõõtühikut saab vastastikku ümber arvestada."
-
-#~ msgid ""
-#~ "'Make to Stock': When needed, take from the stock or wait until re-"
-#~ "supplying. 'Make to Order': When needed, purchase or produce for the "
-#~ "procurement request."
-#~ msgstr ""
-#~ "'Loo lattu': Vajadusel võta laost või oota taasvarustamist. 'Loo "
-#~ "tellimusele': Vajadusel osta või tooda hanketellimusele."
-
-#~ msgid ""
-#~ "The computed quantity will be a multiple of this value. Use 1.0 for products "
-#~ "that can not be split."
-#~ msgstr ""
-#~ "Arvutatud kogus on selle väärtuse kordne. Kasuta 1.0 toodetel, mida ei saa "
-#~ "poolitada."
-
-#~ msgid ""
-#~ "The coefficient for the formula:\n"
-#~ "coeff (base unit) = 1 (this unit). Factor = 1 / Rate."
-#~ msgstr ""
-#~ "Koefitsent valemile:\n"
-#~ "koef (baasühik) = 1 (see ühik). Faktor = 1 / määr"
-
-#~ msgid ""
-#~ "The coefficient for the formula:\n"
-#~ "1 (base unit) = coeff (this unit). Rate = 1 / Factor."
-#~ msgstr ""
-#~ "Koefitsent valemile:\n"
-#~ "1 (baasühik) = koef. (see ühik). Määr = 1 / faktor"
-
-#~ msgid "Prices & Suppliers"
-#~ msgstr "Hinnad ja tarnijad"
-
-#~ msgid ""
-#~ "Coefficient to convert UOM to UOS\n"
-#~ " uom = uos * coeff"
-#~ msgstr ""
-#~ "Koefitsent, et konventeerida mõõtühik müügiühikuks.\n"
-#~ " MõÜ = MüÜ * koef."
-
-#~ msgid "UOM -> UOS Coeff"
-#~ msgstr "MõÜ -> MüÜ kordaja"

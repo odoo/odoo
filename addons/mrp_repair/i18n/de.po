@@ -1,21 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* mrp_repair
+# German translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 10:25+0000\n"
-"PO-Revision-Date: 2012-12-17 09:55+0000\n"
-"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
-"consulting.net>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-18 05:01+0000\n"
-"X-Generator: Launchpad (build 16372)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:24+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,move_id:0
@@ -33,7 +33,7 @@ msgid "Recreate Invoice"
 msgstr "Wiedererstellung Rechnung"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:376
+#: code:addons/mrp_repair/mrp_repair.py:371
 #, python-format
 msgid "You have to select a Partner Invoice Address in the repair form !"
 msgstr ""
@@ -72,7 +72,7 @@ msgid "Unread Messages"
 msgstr "Ungelesene Mitteilungen"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:440
+#: code:addons/mrp_repair/mrp_repair.py:435
 #, python-format
 msgid "No product defined on Fees!"
 msgstr "Kein Produkt für den Reparaturaufwand definiert !"
@@ -147,9 +147,9 @@ msgid "Taxes"
 msgstr "Steuern"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:390
-#: code:addons/mrp_repair/mrp_repair.py:418
-#: code:addons/mrp_repair/mrp_repair.py:447
+#: code:addons/mrp_repair/mrp_repair.py:385
+#: code:addons/mrp_repair/mrp_repair.py:413
+#: code:addons/mrp_repair/mrp_repair.py:442
 #, python-format
 msgid "Error!"
 msgstr "Fehler!"
@@ -237,10 +237,9 @@ msgid "Move"
 msgstr "Lieferauftrag"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:579
-#, python-format
-msgid "Repair Order for <em>%s</em> has been <b>started</b>."
-msgstr "Reparaturauftrag für <em>%s</em> ist <b>in Reparatur</b>."
+#: report:repair.order:0
+msgid "Tax"
+msgstr "Steuer"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
@@ -269,8 +268,8 @@ msgstr "Zusatzinfo"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:336
-#: code:addons/mrp_repair/mrp_repair.py:350
-#: code:addons/mrp_repair/mrp_repair.py:440
+#: code:addons/mrp_repair/mrp_repair.py:349
+#: code:addons/mrp_repair/mrp_repair.py:435
 #: code:addons/mrp_repair/wizard/cancel_repair.py:49
 #, python-format
 msgid "Warning!"
@@ -288,7 +287,7 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:390
+#: code:addons/mrp_repair/mrp_repair.py:385
 #, python-format
 msgid "No account defined for partner \"%s\"."
 msgstr "Kein Finanzkonto definiert für den Partner \"%s.\""
@@ -330,11 +329,6 @@ msgstr ""
 #: view:mrp.repair:0
 msgid "Repairs order"
 msgstr "Reparaturauftrag"
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "Tax"
-msgstr "Steuer"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:336
@@ -433,12 +427,6 @@ msgid "Repair Line"
 msgstr "Reparaturposition"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:596
-#, python-format
-msgid "Repair has been <b>cancelled</b>."
-msgstr "Reparatur wurde <b>storniert</b>."
-
-#. module: mrp_repair
 #: report:repair.order:0
 msgid "N° :"
 msgstr "Nr."
@@ -476,10 +464,10 @@ msgid "Yes"
 msgstr "Ja"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:573
-#, python-format
-msgid "Repair Order for <em>%s</em> has been <b>created</b>."
-msgstr "Reparaturauftrag für <em>%s</em> wurde <b>erstellt</b>."
+#: view:mrp.repair.cancel:0
+#: view:mrp.repair.make_invoice:0
+msgid "or"
+msgstr "oder"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -564,12 +552,6 @@ msgid "Pricelist of the selected partner."
 msgstr "Preisliste des ausgewählten Partners"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:606
-#, python-format
-msgid "Repair Order is <b>closed</b>."
-msgstr "Reparaturauftrag wurde <b>beendet</b>."
-
-#. module: mrp_repair
 #: report:repair.order:0
 msgid "Guarantee Limit"
 msgstr "Garantielimit"
@@ -602,12 +584,6 @@ msgid "Is a Follower"
 msgstr "Ist ein Follower"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:591
-#, python-format
-msgid "Repair Order for <em>%s</em> has been <b>accepted</b>."
-msgstr "Reparaturauftrag für <em>%s</em> wurde <b>angenommen</b>."
-
-#. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Date"
 msgstr "Datum"
@@ -618,16 +594,14 @@ msgid "Repair Fees Line"
 msgstr "Reparaturaufwendungen"
 
 #. module: mrp_repair
-#: field:mrp.repair,message_comment_ids:0
-#: help:mrp.repair,message_comment_ids:0
-msgid "Comments and emails"
-msgstr "Kommentare und EMails"
+#: selection:mrp.repair,state:0
+msgid "Quotation"
+msgstr "Angebot"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:585
-#, python-format
-msgid "Draft Invoice of %s %s <b>waiting for validation</b>."
-msgstr "Rechnungsentwurf %s %s <b>wartet auf Bestätigung</b>."
+#: view:mrp.repair:0
+msgid "Confirm Repair"
+msgstr "Annahme Reparatur"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -645,8 +619,8 @@ msgid "End Repair"
 msgstr "Ende Reparatur"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:418
-#: code:addons/mrp_repair/mrp_repair.py:447
+#: code:addons/mrp_repair/mrp_repair.py:413
+#: code:addons/mrp_repair/mrp_repair.py:442
 #, python-format
 msgid "No account defined for product \"%s\"."
 msgstr "Kein Finanzkonto für das Produkt \"%s\" definiert!"
@@ -708,11 +682,6 @@ msgstr "Aufwendungen"
 #: view:mrp.repair.make_invoice:0
 msgid "Cancel"
 msgstr "Abgebrochen"
-
-#. module: mrp_repair
-#: selection:mrp.repair,state:0
-msgid "Quotation"
-msgstr "Angebot"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,location_dest_id:0
@@ -814,15 +783,10 @@ msgid "Do you really want to create the invoice(s)?"
 msgstr "Wollen Sie wirklich die Rechnung(en) erstellen ?"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:350
+#: code:addons/mrp_repair/mrp_repair.py:349
 #, python-format
 msgid "Repair order is already invoiced."
 msgstr "Reparatur wurde bereits abgerechnet."
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Confirm Repair"
-msgstr "Annahme Reparatur"
 
 #. module: mrp_repair
 #: field:mrp.repair,picking_id:0
@@ -857,12 +821,6 @@ msgid "Remove"
 msgstr "Ausbau"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:601
-#, python-format
-msgid "Repair Order is now <b>ready</b> to repair."
-msgstr "Reparaturauftrag ist jetzt <b>startbereit</b>."
-
-#. module: mrp_repair
 #: field:mrp.repair,partner_invoice_id:0
 msgid "Invoicing Address"
 msgstr "Rechnungsanschrift"
@@ -894,12 +852,6 @@ msgid "No Invoice"
 msgstr "Keine Rechnung"
 
 #. module: mrp_repair
-#: view:mrp.repair.cancel:0
-#: view:mrp.repair.make_invoice:0
-msgid "or"
-msgstr "oder"
-
-#. module: mrp_repair
 #: field:mrp.repair,amount_total:0
 msgid "Total"
 msgstr "Bruttobetrag"
@@ -910,296 +862,7 @@ msgid "Ready to Repair"
 msgstr "Fertig zur Reparatur"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:376
+#: code:addons/mrp_repair/mrp_repair.py:371
 #, python-format
 msgid "No partner !"
 msgstr "Kein Partner"
-
-#~ msgid "Repair Order Ref"
-#~ msgstr "Reparaturnummer"
-
-#~ msgid "Repair State"
-#~ msgstr "Reparatur Status"
-
-#~ msgid "Repairs in quotation"
-#~ msgstr "Reparaturen im Angebotsstadium"
-
-#~ msgid "Repair Fees line"
-#~ msgstr "Reparaturgebühren Positionen"
-
-#~ msgid "Repairs"
-#~ msgstr "Reparaturen"
-
-#~ msgid "Packing"
-#~ msgstr "Packauftrag"
-
-#~ msgid "Gives the state of the Repair Order"
-#~ msgstr "Zeigt Status an"
-
-#~ msgid "Repairs in progress"
-#~ msgstr "Reparaturen in Arbeit"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Fehlerhafter xml Code für diese Ansicht!"
-
-#~ msgid ""
-#~ "The garantee limit is computed as: last move date + warranty defined on "
-#~ "selected product. If the current date is below the garantee limit, each "
-#~ "operation and fee you will add will be set as 'not to invoiced' by default. "
-#~ "Note that you can change manually afterwards."
-#~ msgstr ""
-#~ "Das Garantieende wir berechnet: Letzter Vorgang + Garantiedauer des "
-#~ "Produktes. Falls das aktuelle Datum unterhalb dieses Garantieendes ist, wird "
-#~ "jeder Reparaturvorgang als 'nicht abzurechnen' markiert. Dieses kann dann "
-#~ "später geändert werden"
-
-#~ msgid "Canceled"
-#~ msgstr "Abgebrochen"
-
-#~ msgid "No"
-#~ msgstr "Nein"
-
-#~ msgid "New Repair"
-#~ msgstr "Neue Reparatur"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
-#~ "beinhalten"
-
-#~ msgid "The pricelist comes from the selected partner, by default."
-#~ msgstr "Die Standard Preisliste des Partners"
-
-#~ msgid ""
-#~ "This operation  will  cancel the  Repair process, but  will not cancel it's "
-#~ "Invoice. Do you want to continue?"
-#~ msgstr ""
-#~ "Dieser Vorgang bewirkt den Abbruch des Reparaturvorgangs, wird aber nicht "
-#~ "die Rechnung stornieren. Wollen Sie fortfahren?"
-
-#~ msgid "Compute"
-#~ msgstr "Berechnen"
-
-#~ msgid "Repairs Order"
-#~ msgstr "Reparaturauftrag"
-
-#~ msgid "Repairs Ready to Start"
-#~ msgstr "Reparaturen vor Bearbeitung"
-
-#~ msgid "Repairs to be invoiced"
-#~ msgstr "Abzurechnende Reparaturen"
-
-#~ msgid "Repair Operations Lines"
-#~ msgstr "Reparaturpositionen"
-
-#~ msgid "Products Repairs Module"
-#~ msgstr "Produkt Reparatur Modul"
-
-#~ msgid "Do you really want to create the invoices ?"
-#~ msgstr "Wollen Sie wirklich die Rechnungen erstellen ?"
-
-#~ msgid ""
-#~ "Check this box if you want to manage the delivery once the product is "
-#~ "repaired. If cheked, it will create a packing with selected product. Note "
-#~ "that you can select the locations in the Info tab, if you have the extended "
-#~ "view."
-#~ msgstr ""
-#~ "Haken Sie diese Box an, wenn Sie die Auslieferung unmittelbar nach der "
-#~ "Reparatur starten wollen. Falls aktiviert wird ein Packauftrag für das "
-#~ "gewählte Produkt erzeugt. Beachten Sie die Option der Standorthinterlegung "
-#~ "bei der erweiterten Ansicht."
-
-#~ msgid "Make invoices"
-#~ msgstr "Rechnungen buchen"
-
-#~ msgid "Repair Ref"
-#~ msgstr "Reparaturreferenz"
-
-#~ msgid "Cancel Repair...??"
-#~ msgstr "Abbrechen Reparatur ...??"
-
-#~ msgid "Quality"
-#~ msgstr "Qualität"
-
-#~ msgid "States"
-#~ msgstr "Status"
-
-#, python-format
-#~ msgid "You have to select a partner in the repair form !"
-#~ msgstr "Sie müssen einen Partner für den Reparaturauftrag auswählen"
-
-#~ msgid "UoM"
-#~ msgstr "ME"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
-
-#~ msgid ""
-#~ "Check this box if you want to manage the delivery once the product is "
-#~ "repaired. If cheked, it will create a picking with selected product. Note "
-#~ "that you can select the locations in the Info tab, if you have the extended "
-#~ "view."
-#~ msgstr ""
-#~ "Aktiviere diese Option, wenn Sie eine Auslieferung nach Fertigstellung der "
-#~ "Reparatur vornehmen möchten. Bei Aktivierung, wird dann ein Versandauftrag "
-#~ "für das ausgewählte Produkt erstellt. Sie können im erweiterten Ansichtmodus "
-#~ "auch andere als die hinterlegten Standard Lagerorte für die Bestandsbuchung "
-#~ "verwenden."
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "Warnung !"
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "Fehler !"
-
-#~ msgid ""
-#~ " * The 'Draft' state is set automatically as draft when repair order in "
-#~ "draft state.                         \n"
-#~ "* The 'Confirmed' state is set automatically as confirm when repair order in "
-#~ "confirm state.                         \n"
-#~ "* The 'Done' state is set automatically when repair order is completed.      "
-#~ "                  \n"
-#~ "* The 'Cancelled' state is set automatically when user cancel repair order."
-#~ msgstr ""
-#~ " * Der Status 'Entwurf' wird benutzt, wenn ein Benutzer eine neue "
-#~ "Reparaturanfrage erstellt, die noch nicht bestätigt ist.\n"
-#~ "* Der 'Bestätigt' Status erfolgt eben durch einen Klick auf den Button "
-#~ "'Bestätigen'.\n"
-#~ "* Der 'Erledigt' Status erscheint, wenn die Reparatur erfolgreich beendet "
-#~ "wird.\n"
-#~ "* Der 'Abgebrochen' Status erscheint, wenn ein Benutzer den Auftrag abbricht."
-
-#~ msgid "Do you really want to create the invoice(s) ?"
-#~ msgstr "Wollen Sie wirklich die Rechnung(en) erstellen ?"
-
-#~ msgid "State"
-#~ msgstr "Status"
-
-#~ msgid ""
-#~ "This field allow you to change the workflow of the repair order. If value "
-#~ "selected is different from 'No Invoice', it also allow you to select the "
-#~ "pricelist and invoicing address."
-#~ msgstr ""
-#~ "Dieses Feld erlaubt die Änderung des Workflows beim Reparaturauftrag. Falls "
-#~ "der gewählte Wert abweicht von 'keine Rechnung' kann eine Preisliste und "
-#~ "eine Lieferanschrift angegeben werden."
-
-#, python-format
-#~ msgid "Active ID is not Found"
-#~ msgstr "Aktive ID konnte nicht gefunden werden"
-
-#~ msgid ""
-#~ "This field allow you to choose the parner that will be invoiced and delivered"
-#~ msgstr ""
-#~ "Dieses Feld erlaubt die Auswahl des Partners, der abgerechnet und mit der "
-#~ "Reparatur beliefert wird"
-
-#~ msgid "Fees Line"
-#~ msgstr "Aufwandspositionen"
-
-#~ msgid ""
-#~ " * The 'Draft' state is used when a user is encoding a new and unconfirmed "
-#~ "repair order.             \n"
-#~ "* The 'Confirmed' state is used when a user confirms the repair order.       "
-#~ "      \n"
-#~ "* The 'Ready to Repair' state is used to start to repairing, user can start "
-#~ "repairing only after repair order is confirmed.             \n"
-#~ "* The 'To be Invoiced' state is used to generate the invoice before or after "
-#~ "repairing done.             \n"
-#~ "* The 'Done' state is set when repairing is completed.            \n"
-#~ "* The 'Cancelled' state is used when user cancel repair order."
-#~ msgstr ""
-#~ " * Der Status 'Entwurf' wird zugewiesen, wenn ein Benutzer eine neue "
-#~ "Reparaturanfrage erstellt, die noch nicht bestätigt ist.\n"
-#~ "* Der 'Bestätigt' Status erfolgt eben durch einen Klick auf den Button "
-#~ "'Bestätigen'.\n"
-#~ "* Der 'Bereit zur Reparatur' Status beginnt mit einem Klick auf 'Beginne "
-#~ "Reparatur'.\n"
-#~ " * Der Status 'Abrechenbar' erscheint, wenn die Reparatur erfolgreich "
-#~ "beendet wurde und somit der Auftrag abrechenbar ist. \n"
-#~ "* Der 'Erledigt' Status erscheint, wenn die Reparatur erfolgreich beendet "
-#~ "wird.\n"
-#~ "* Der 'Abgebrochen' Status erscheint, wenn ein Benutzer den Auftrag abbricht."
-
-#~ msgid "VAT"
-#~ msgstr "USt."
-
-#~ msgid "Quantity (UoM)"
-#~ msgstr "Anzahl (ME)"
-
-#~ msgid "Qty"
-#~ msgstr "Anzahl"
-
-#~ msgid ""
-#~ "The guarantee limit is computed as: last move date + warranty defined on "
-#~ "selected product. If the current date is below the guarantee limit, each "
-#~ "operation and fee you will add will be set as 'not to invoiced' by default. "
-#~ "Note that you can change manually afterwards."
-#~ msgstr ""
-#~ "Die Garantiefrist wird folgendermassen berechnet: Letzte Lagerbuchung + "
-#~ "Garantiezeit des Produkts. Wenn das aktuelle Datum vor der Garantiefrist "
-#~ "liegt, wird automatisch für jeden Vorgang der Reparatur und für die "
-#~ "Aufwendungen der Reparatur 'nicht abzurechen' standardmässig zugewiesen. "
-#~ "Beachten Sie auch, dass Sie dieses per Hand im Auftrag ändern können."
-
-#~ msgid "invoiced"
-#~ msgstr "Abgerechnet"
-
-#~ msgid ""
-#~ "\n"
-#~ "           The aim is to have a complete module to manage all products "
-#~ "repairs. The following topics should be covered by this module:\n"
-#~ "           * Add/remove products in the reparation\n"
-#~ "           * Impact for stocks\n"
-#~ "           * Invoicing (products and/or services)\n"
-#~ "           * Warranty concept\n"
-#~ "           * Repair quotation report\n"
-#~ "           * Notes for the technician and for the final customer\n"
-#~ msgstr ""
-#~ "\n"
-#~ "           Der Zweck der Anwendung ist die Abbildung aller Vorgänge zur "
-#~ "Reparatur von Produkten. Folgende Anforderungen werden dabei abgebildet:\n"
-#~ "              * Ersatz/Ausbau von Produkten im Kontext des "
-#~ "Reparaturvorgangs\n"
-#~ "              * Berücksichtigung der Bestandsänderung durch Ersatz und "
-#~ "Ausbau\n"
-#~ "              * Abrechnung von Reparaturen\n"
-#~ "              * Berücksichtigung von Garantiezeiten\n"
-#~ "              * Angebotserstellung für kostenpflichtige Reparaturen\n"
-#~ "              * Benachrichtigungen für den technischen Kundendienst und den "
-#~ "Kunden\n"
-
-#~ msgid ""
-#~ "Repair orders allow you to organize your product repairs. In a repair order, "
-#~ "you can detail the components you remove, add or replace and record the time "
-#~ "you spent on the different operations. The repair order uses the warranty "
-#~ "date on the production lot in order to know if whether the repair should be "
-#~ "invoiced to the customer or not."
-#~ msgstr ""
-#~ "Reparaturaufträge ermöglichen die Organisation von Produktreklamationen und "
-#~ "Produktfehlern und deren Reparatur inkusive Rücksendung.  In einem "
-#~ "Reparaturauftrag, können alle zu entnehmenden und auzutauschenden Bauteile "
-#~ "angegeben werden. Der Reparaturauftrag prüft dann noch auf das Garantiedatum "
-#~ "in Bezug auf eine Losnummer, sowie inwieweit der Auftrag bereits abgerechnet "
-#~ "wurde."
-
-#~ msgid "Products Repairs Module - Manage All products Repairs"
-#~ msgstr "Reparatur Anwendung - Management von Reparaturaufträgen"
-
-#, python-format
-#~ msgid "Warning"
-#~ msgstr "Warnung"
-
-#, python-format
-#~ msgid "Production lot is required for opration line with product '%s'"
-#~ msgstr "Produktionslos muss für Produkt '%s' angegeben werden."
-
-#~ msgid "Product UoM"
-#~ msgstr "ME"
-
-#, python-format
-#~ msgid "You cannot confirm a repair order which has no line."
-#~ msgstr "Sie können keinen Reparaturauftrag ohne Positionen bestätigen."

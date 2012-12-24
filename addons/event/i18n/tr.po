@@ -1,20 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-# 	* event
+# Turkish translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2010-08-07 01:28+0000\n"
-"Last-Translator: oguzhan <tazmanyacanawari@hotmail.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:13+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:13+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: event
 #: view:event.event:0
@@ -58,20 +59,9 @@ msgid ""
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:305
-#, python-format
-msgid "Event has been <b>cancelled</b>."
-msgstr ""
-
-#. module: event
 #: field:event.registration,date_open:0
 msgid "Registration Date"
 msgstr "Kayıt Tarihi"
-
-#. module: event
-#: help:event.registration,origin:0
-msgid "Name of the sale order which create the registration"
-msgstr ""
 
 #. module: event
 #: field:event.event,type:0
@@ -120,9 +110,8 @@ msgid "Default Maximum Registration"
 msgstr ""
 
 #. module: event
-#: help:event.event,message_unread:0
-#: help:event.registration,message_unread:0
-msgid "If checked new messages require your attention."
+#: view:report.event.registration:0
+msgid "Display"
 msgstr ""
 
 #. module: event
@@ -197,9 +186,9 @@ msgid "Registrations"
 msgstr "Kayıtlar"
 
 #. module: event
-#: code:addons/event/event.py:95
-#: code:addons/event/event.py:108
-#: code:addons/event/event.py:400
+#: code:addons/event/event.py:89
+#: code:addons/event/event.py:100
+#: code:addons/event/event.py:355
 #, python-format
 msgid "Error!"
 msgstr "Hata!"
@@ -234,8 +223,9 @@ msgid "Opera of Verdi"
 msgstr "Verdi Operası"
 
 #. module: event
-#: view:report.event.registration:0
-msgid "Display"
+#: help:event.event,message_unread:0
+#: help:event.registration,message_unread:0
+msgid "If checked new messages require your attention."
 msgstr ""
 
 #. module: event
@@ -255,11 +245,6 @@ msgid "False"
 msgstr ""
 
 #. module: event
-#: model:mail.message.subtype,name:event.mt_event_registration
-msgid "New Registrations"
-msgstr ""
-
-#. module: event
 #: field:event.registration,event_end_date:0
 msgid "Event End Date"
 msgstr ""
@@ -273,18 +258,13 @@ msgid ""
 msgstr ""
 
 #. module: event
-#: selection:report.event.registration,month:0
-msgid "May"
-msgstr "Mayıs"
-
-#. module: event
 #: view:report.event.registration:0
 msgid "Registrations in confirmed or done state"
 msgstr "Kayıtlar onaylanmış ya da bitmiş durumdadır"
 
 #. module: event
-#: code:addons/event/event.py:114
-#: code:addons/event/event.py:116
+#: code:addons/event/event.py:106
+#: code:addons/event/event.py:108
 #, python-format
 msgid "Warning!"
 msgstr "Uyarı!"
@@ -303,8 +283,8 @@ msgid "Partner"
 msgstr "Paydaş"
 
 #. module: event
-#: model:ir.actions.server,name:event.actions_server_event_event_read
-msgid "Event: Mark read"
+#: help:event.type,default_registration_min:0
+msgid "It will select this default minimum value when you choose this event"
 msgstr ""
 
 #. module: event
@@ -401,7 +381,7 @@ msgid "Email"
 msgstr "Eposta"
 
 #. module: event
-#: code:addons/event/event.py:367
+#: code:addons/event/event.py:329
 #, python-format
 msgid "New registration confirmed: %s."
 msgstr ""
@@ -470,26 +450,9 @@ msgid "Speaker who will be giving speech at the event."
 msgstr "Bu etkinlikte konuşmayı yapacak konuşmacı."
 
 #. module: event
-#: code:addons/event/event.py:457
-#, python-format
-msgid "Registration has been <b>created</b>."
-msgstr ""
-
-#. module: event
 #: view:event.event:0
 msgid "Cancel Event"
 msgstr "Etkinliği İptal Et"
-
-#. module: event
-#: code:addons/event/event.py:398
-#, python-format
-msgid "State set to Done"
-msgstr ""
-
-#. module: event
-#: model:ir.actions.server,name:event.actions_server_event_registration_read
-msgid "Event registration : Mark read"
-msgstr ""
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_reg
@@ -539,6 +502,11 @@ msgid "December"
 msgstr "Aralık"
 
 #. module: event
+#: help:event.registration,origin:0
+msgid "Reference of the sales order which created the registration"
+msgstr ""
+
+#. module: event
 #: field:report.event.registration,draft_state:0
 msgid " # No of Draft Registrations"
 msgstr " # Taslak Kayıtlar Sayısı"
@@ -586,18 +554,12 @@ msgid "or"
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:315
-#, python-format
-msgid "Event has been <b>done</b>."
-msgstr ""
-
-#. module: event
 #: help:res.partner,speaker:0
 msgid "Check this box if this contact is a speaker."
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:116
+#: code:addons/event/event.py:108
 #, python-format
 msgid "No Tickets Available!"
 msgstr ""
@@ -635,13 +597,12 @@ msgid ""
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:462
-#, python-format
-msgid "Registration has been set as <b>draft</b>."
-msgstr ""
+#: field:event.event,user_id:0
+msgid "Responsible User"
+msgstr "Sorumlu Kullanıcı"
 
 #. module: event
-#: code:addons/event/event.py:108
+#: code:addons/event/event.py:100
 #, python-format
 msgid ""
 "The total of confirmed registration for the event '%s' does not meet the "
@@ -676,12 +637,6 @@ msgstr "Yeni durumundaki Etkinlikler"
 #: view:report.event.registration:0
 msgid "Events which are in New state"
 msgstr "Yeni durumundaki etkinlikler"
-
-#. module: event
-#: code:addons/event/event.py:404
-#, python-format
-msgid "State set to Cancel"
-msgstr ""
 
 #. module: event
 #: view:event.event:0
@@ -800,10 +755,9 @@ msgid "My Registrations"
 msgstr "Kayıtlarım"
 
 #. module: event
-#: code:addons/event/event.py:310
-#, python-format
-msgid "Event has been set to <b>draft</b>."
-msgstr ""
+#: selection:report.event.registration,month:0
+msgid "November"
+msgstr "Kasım"
 
 #. module: event
 #: view:report.event.registration:0
@@ -811,22 +765,14 @@ msgid "Extended Filters..."
 msgstr "Genişletilmiş Süzgeçler..."
 
 #. module: event
-#: field:event.event,message_comment_ids:0
-#: help:event.event,message_comment_ids:0
-#: field:event.registration,message_comment_ids:0
-#: help:event.registration,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
-
-#. module: event
 #: selection:report.event.registration,month:0
 msgid "October"
 msgstr "Ekim"
 
 #. module: event
-#: model:ir.actions.server,name:event.actions_server_event_registration_unread
-msgid "Event registration : Mark unread"
-msgstr ""
+#: selection:report.event.registration,month:0
+msgid "January"
+msgstr "Ocak"
 
 #. module: event
 #: view:event.event:0
@@ -835,12 +781,13 @@ msgstr "Taslak İçin Ayarla"
 
 #. module: event
 #: view:event.event:0
+#: view:event.registration:0
 #: view:res.partner:0
 msgid "Confirm Registration"
 msgstr "Kaydı Onayla"
 
 #. module: event
-#: code:addons/event/event.py:95
+#: code:addons/event/event.py:89
 #, python-format
 msgid ""
 "You have already set a registration for this event as 'Attended'. Please "
@@ -863,12 +810,6 @@ msgid "Default Minimum Registration"
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:368
-#, python-format
-msgid "Registration confirmed."
-msgstr ""
-
-#. module: event
 #: field:event.event,address_id:0
 msgid "Location Address"
 msgstr "Konum Adresi"
@@ -888,6 +829,7 @@ msgstr ""
 
 #. module: event
 #: view:event.event:0
+#: view:event.registration:0
 msgid "Attended the Event"
 msgstr ""
 
@@ -897,15 +839,10 @@ msgid "Error ! Closing Date cannot be set before Beginning Date."
 msgstr "Hata ! Kapanış Tarihi, Başlama Tarihinden önceye ayarlanamaz."
 
 #. module: event
-#: code:addons/event/event.py:400
+#: code:addons/event/event.py:355
 #, python-format
 msgid "You must wait for the starting day of the event to do this action."
 msgstr ""
-
-#. module: event
-#: field:event.event,user_id:0
-msgid "Responsible User"
-msgstr "Sorumlu Kullanıcı"
 
 #. module: event
 #: selection:event.event,state:0
@@ -929,7 +866,7 @@ msgid "Reply-to Email"
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:114
+#: code:addons/event/event.py:106
 #, python-format
 msgid "Only %d Seats are Available!"
 msgstr ""
@@ -980,18 +917,13 @@ msgid "Upcoming events from today"
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:300
-#, python-format
-msgid "Event has been <b>created</b>."
-msgstr ""
-
-#. module: event
 #: model:event.event,name:event.event_2
 msgid "Conference on ERP Business"
 msgstr ""
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_view_registration
+#: model:mail.message.subtype,name:event.mt_event_registration
 msgid "New Registration"
 msgstr ""
 
@@ -1011,10 +943,9 @@ msgid "Participant / Contact Name"
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:320
-#, python-format
-msgid "Event has been <b>confirmed</b>."
-msgstr ""
+#: selection:report.event.registration,month:0
+msgid "May"
+msgstr "Mayıs"
 
 #. module: event
 #: view:res.partner:0
@@ -1025,16 +956,6 @@ msgstr "Etkinlik Kaydı"
 #: view:event.event:0
 msgid "No ticket available."
 msgstr ""
-
-#. module: event
-#: help:event.type,default_registration_min:0
-msgid "It will select this default minimum value when you choose this event"
-msgstr ""
-
-#. module: event
-#: selection:report.event.registration,month:0
-msgid "January"
-msgstr "Ocak"
 
 #. module: event
 #: field:event.event,register_max:0
@@ -1075,11 +996,6 @@ msgstr "Adı"
 #: field:event.event,country_id:0
 msgid "Country"
 msgstr "Ülke"
-
-#. module: event
-#: selection:report.event.registration,month:0
-msgid "November"
-msgstr "Kasım"
 
 #. module: event
 #: view:res.partner:0
@@ -1135,12 +1051,6 @@ msgstr ""
 
 #. module: event
 #: view:event.event:0
-#: model:ir.actions.act_window,name:event.act_register_event_partner
-msgid "Subscribe"
-msgstr "Abone ol"
-
-#. module: event
-#: view:event.event:0
 msgid "available."
 msgstr ""
 
@@ -1184,9 +1094,10 @@ msgid ""
 msgstr ""
 
 #. module: event
-#: model:ir.actions.server,name:event.actions_server_event_event_unread
-msgid "Event: Mark unread"
-msgstr ""
+#: view:event.event:0
+#: model:ir.actions.act_window,name:event.act_register_event_partner
+msgid "Subscribe"
+msgstr "Abone ol"
 
 #. module: event
 #: model:res.groups,name:event.group_event_manager
@@ -1215,663 +1126,3 @@ msgstr "Yıl"
 #: field:event.event,speaker_confirmed:0
 msgid "Speaker Confirmed"
 msgstr "Onaylı Konuşmacı"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Görüntüleme mimarisi için Geçersiz XML"
-
-#~ msgid "Configuration"
-#~ msgstr "Ayarlar"
-
-#~ msgid "Ending date"
-#~ msgstr "Bitiş Tarihi"
-
-#~ msgid "Create Invoices"
-#~ msgstr "Faturaları Oluştur"
-
-#~ msgid "Case section"
-#~ msgstr "Servis Talep Bölümü"
-
-#~ msgid "To be Invoiced"
-#~ msgstr "Faturalanacak"
-
-#~ msgid "All Events"
-#~ msgstr "Tüm Etkinlikler"
-
-#~ msgid "Reporting"
-#~ msgstr "Raporlama"
-
-#~ msgid "Events by Categories"
-#~ msgstr "Gruba göre Etkinlikler"
-
-#~ msgid "References"
-#~ msgstr "Referanslar"
-
-#~ msgid "Parent Category"
-#~ msgstr "Ana Kategori"
-
-#~ msgid "Communication history"
-#~ msgstr "İletişim Geçmişi"
-
-#~ msgid "Canceled"
-#~ msgstr "İptal Edildi"
-
-#~ msgid "Events On Registrations"
-#~ msgstr "Etkinlik Kayıtları"
-
-#~ msgid "Events by section"
-#~ msgstr "Bölüme göre Etkinlikler"
-
-#~ msgid "History"
-#~ msgstr "Geçmiş Bilgisi"
-
-#~ msgid "General"
-#~ msgstr "Genel"
-
-#~ msgid "Send Reminder"
-#~ msgstr "Hatırlatıcı Gönder"
-
-#~ msgid "Beginning date"
-#~ msgstr "Başlama Tarihi"
-
-#~ msgid "Invoice"
-#~ msgstr "Fatura"
-
-#, python-format
-#~ msgid "Open"
-#~ msgstr "Açık"
-
-#~ msgid "Unit Price"
-#~ msgstr "Birim Fiyat"
-
-#~ msgid "Confirmed Events"
-#~ msgstr "Onaylanan Etkinlikler"
-
-#~ msgid "Case"
-#~ msgstr "Servis Talebi"
-
-#~ msgid "Product"
-#~ msgstr "Ürün"
-
-#~ msgid "Payments"
-#~ msgstr "Ödemeler"
-
-#~ msgid "Draft Events"
-#~ msgstr "Taslak olan Etkinlikler"
-
-#~ msgid "Events Organisation"
-#~ msgstr "Etkinlik Organizasyon Yönetimi"
-
-#~ msgid "Actions"
-#~ msgstr "İşlemler"
-
-#~ msgid "Ok"
-#~ msgstr "Tamam"
-
-#~ msgid "Confirmation Email"
-#~ msgstr "Onay E-Postası"
-
-#~ msgid "Registration Email"
-#~ msgstr "Kayıt E-Postası"
-
-#~ msgid "Error ! You cannot create recursive sections."
-#~ msgstr "Hata ! Önyinelemeli bölümler oluşturamazsınız."
-
-#~ msgid "Make Invoice"
-#~ msgstr "Fatura Oluştur"
-
-#~ msgid "Draft Registrations"
-#~ msgstr "Taslak Kayıtları"
-
-#~ msgid "Mail Auto Confirm"
-#~ msgstr "Posta Otomatik Onayı"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Eylem tanımlamasında geçersiz model adı."
-
-#~ msgid "Draft Registration"
-#~ msgstr "Olay Kaydı"
-
-#~ msgid "Registration Confirmation"
-#~ msgstr "Kayıt Onaylama"
-
-#~ msgid "Confirm Registrations"
-#~ msgstr "Kaydı Onayla"
-
-#, python-format
-#~ msgid ""
-#~ "You must define a reply-to address in order to mail the participant. You can "
-#~ "do this in the Mailing tab of your event. Note that this is also the place "
-#~ "where you can configure your event to not send emails automaticly while "
-#~ "registering"
-#~ msgstr ""
-#~ "Katılımcı posta için düzgün bir cevap adresi tanımlamalısınız. Bunu "
-#~ "etkinliğinizin Postalama sekmesinde yapabilirsiniz. Bunun kayıt sırasında "
-#~ "otomatik e-postalar gönderilmemesi için yapılandırma yapabileceğiniz yer "
-#~ "olduğunu da unutmayın."
-
-#~ msgid "Badge"
-#~ msgstr "Rozet"
-
-#~ msgid "Error: UOS must be in a different category than the UOM"
-#~ msgstr "Hata: UOS, UOM'dan farklı bir kategoride olmalı."
-
-#~ msgid "Registration Invoiced"
-#~ msgstr "Kayıt Faturalandı."
-
-#~ msgid "Ticket for Concert"
-#~ msgstr "Konser için Bilet"
-
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr ""
-#~ "Hata: Varsayılan ölçü birimi ile satış ölçü birimi aynı kategoride bulunmalı."
-
-#~ msgid "Event Done"
-#~ msgstr "Etkinlik Bitti"
-
-#~ msgid "Badge Name"
-#~ msgstr "Rozet Adı"
-
-#~ msgid "Mailing"
-#~ msgstr "Postalama"
-
-#~ msgid "Error Messages"
-#~ msgstr "Hata İletileri"
-
-#~ msgid "Invoice Created"
-#~ msgstr "Fatura Düzenlendi"
-
-#~ msgid "Event description"
-#~ msgstr "Etkinlik Tanımlama"
-
-#~ msgid "Statistics"
-#~ msgstr "İstatistikler"
-
-#~ msgid "Event type on registration"
-#~ msgstr "Kayıttaki Etkinlik türü"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr "Nesne adı x_ ile başlamalı ve özel karakter içermemelidir!"
-
-#~ msgid "Event Related"
-#~ msgstr "Etkinlikle İlgili"
-
-#~ msgid "Number of Registration"
-#~ msgstr "Kayıt Numarası"
-
-#~ msgid "All Registrations"
-#~ msgstr "Tüm Kayıtlar"
-
-#~ msgid ""
-#~ "Check this box if you want to use the automatic mailing for new registration"
-#~ msgstr ""
-#~ "Yeni kayıt için otomatik postalamayı kullanmak istiyorsanız bu kutuyu "
-#~ "işaretleyin"
-
-#~ msgid "Badge Partner"
-#~ msgstr "Rozet Partneri"
-
-#~ msgid "Auto Confirmation Email"
-#~ msgstr "Otomatik Onay E-Postası"
-
-#~ msgid "Events on registrations"
-#~ msgstr "Kayıtlardaki Etkinlikler"
-
-#~ msgid "New event"
-#~ msgstr "Yeni etkinlik"
-
-#~ msgid "Badge Title"
-#~ msgstr "Rozet Başlığı"
-
-#~ msgid "Ticket for Conference"
-#~ msgstr "Konferans için Bilet"
-
-#~ msgid "Label Invoice"
-#~ msgstr "Etiket Faturası"
-
-#~ msgid "Invoice Rejected"
-#~ msgstr "Fatura Reddedildi"
-
-#~ msgid ""
-#~ "Check this box if you want ot use the automatic confirmation emailing or the "
-#~ "reminder"
-#~ msgstr ""
-#~ "Otomatik Postalama ya da Hatırlatma onayını kullanmak istiyorsanız bu kuyu "
-#~ "işaretleyin"
-
-#~ msgid "List Register Partners"
-#~ msgstr "Kayıt Ortaklarını Listele"
-
-#~ msgid "Auto Registration Email"
-#~ msgstr "Otomatik Kayıt E-Postası"
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "Hata: Geçersiz ean kodu"
-
-#~ msgid "Mail Auto Register"
-#~ msgstr "Posta Otomatik Kaydı"
-
-#~ msgid "Registration By Event Types"
-#~ msgstr "Etkinlik Türleri Kaydı"
-
-#~ msgid "The event limit is reached. What do you want to do?"
-#~ msgstr "Etkinlik sınıra ulaştı. Ne yapmak istersiniz ?"
-
-#~ msgid ""
-#~ "Organization and management of events.\n"
-#~ "\n"
-#~ "    This module allow you\n"
-#~ "        * to manage your events and their registrations\n"
-#~ "        * to use emails to automatically confirm and send acknowledgements "
-#~ "for any registration to an event\n"
-#~ "        * ...\n"
-#~ "\n"
-#~ "    Note that:\n"
-#~ "    - You can define new types of events in\n"
-#~ "                Events / Configuration / Types of Events\n"
-#~ "    - You can access predefined reports about number of registration per "
-#~ "event or per event category in :\n"
-#~ "                Events / Reporting\n"
-#~ msgstr ""
-#~ "Etkinliklerin Organizasyonu ve Yönetimi.\n"
-#~ "\n"
-#~ "    Bu modül size\n"
-#~ "        * etkinliklerinizi ve onların kayıtlarını yönetmek için\n"
-#~ "        * bir etkinliğe her bir kayıt için teşekkür göndermek ve otomatik "
-#~ "olarak onaylamak için e-postaları kullanmanıza izin verir\n"
-#~ "        * ...\n"
-#~ "\n"
-#~ "    Unutmayın ki:\n"
-#~ "    -Etkinlikler / Biçim / Etkinlik Türleri'nde\n"
-#~ "                yeni etkinlik türleri tanımlayabilirsiniz\n"
-#~ "    -Etkinlikler / Raporlama'da etkinlik başına ya da etkinlik kategorisi "
-#~ "başına kayıt sayısı hakkındaki önceden hazırlanmış\n"
-#~ "                raporlara ulaşabilirsiniz.\n"
-
-#~ msgid ""
-#~ "This email will be sent when the event gets confimed or when someone "
-#~ "subscribes to a confirmed event. This is also the email sent to remind "
-#~ "someone about the event."
-#~ msgstr ""
-#~ "Bu e-posta etkinlik onaylandığında ya da birisi onaylı bir etkinliğe abone "
-#~ "olduğunda gönderilecektir. Bu aynı zamanda etkinliği birisine hatırlatmak "
-#~ "için gönderilen e-postadır."
-
-#~ msgid "Conference on ERP Buisness"
-#~ msgstr "ERP Business'da Konferans"
-
-#~ msgid "Ticket for Opera"
-#~ msgstr "Opera İçin Bilet"
-
-#~ msgid "Partner Invoiced"
-#~ msgstr "Faturalanan Ortak"
-
-#~ msgid "Provide Maximun Number of Registrations"
-#~ msgstr "Enfazla Kayıt Sayısını Belirtin"
-
-#~ msgid "Invoice Information"
-#~ msgstr "Fatura Bilgileri"
-
-#~ msgid "Make Invoices"
-#~ msgstr "Faturaları hazırla"
-
-#~ msgid "Title"
-#~ msgstr "Unvan"
-
-#, python-format
-#~ msgid "Registration doesn't have any partner to invoice."
-#~ msgstr "Kayıtta faturalandırılacak paydaş yok."
-
-#~ msgid "Speaker who are giving speech on event."
-#~ msgstr "Olayda konuşacak Konuşmacı"
-
-#~ msgid "_Close"
-#~ msgstr "_Kapat"
-
-#~ msgid "Invoice Date"
-#~ msgstr "Fatura Tarihi"
-
-#~ msgid "Parent Event"
-#~ msgstr "Ana Etkinlik"
-
-#~ msgid "Last 7 Days"
-#~ msgstr "Son 7 Gün"
-
-#~ msgid "Current Events"
-#~ msgstr "Güncel Etkinlikler"
-
-#~ msgid "Subtotal"
-#~ msgstr "Ara Toplam"
-
-#~ msgid "Add Internal Note"
-#~ msgstr "İç Not Ekle"
-
-#~ msgid "Reply-To"
-#~ msgstr "Yanıtla"
-
-#~ msgid "Pricelist"
-#~ msgstr "Fiyat Listesi"
-
-#~ msgid "Partner Contact"
-#~ msgstr "Paydaş İlgilisi"
-
-#, python-format
-#~ msgid "Customer Invoices"
-#~ msgstr "Müşteri Faturaları"
-
-#~ msgid "Event type"
-#~ msgstr "Etkinlik Türü"
-
-#~ msgid "Badges"
-#~ msgstr "İsimlikler"
-
-#~ msgid "Extra Info"
-#~ msgstr "Ek Bilgi"
-
-#~ msgid "Reference"
-#~ msgstr "Referans"
-
-#~ msgid "Closing Date of Event"
-#~ msgstr "Etkinlik Kapanış Tarihi"
-
-#~ msgid "Emails"
-#~ msgstr "Epostalar"
-
-#~ msgid "Send New Email"
-#~ msgstr "Yeni Eposta gönder"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "Uyarı !"
-
-#~ msgid "Number of Registrations or Tickets"
-#~ msgstr "Kayıt ya da Bilet Sayısı"
-
-#~ msgid "Event Make Invoice"
-#~ msgstr "Etkinlik Faturası Hazırla"
-
-#~ msgid "Other Speakers"
-#~ msgstr "Diğer Konuşmacılar"
-
-#~ msgid "Misc"
-#~ msgstr "Çeşitli"
-
-#~ msgid "Pricelist version for current event."
-#~ msgstr "Güncel Etkinlik Fiyat Listesi Sürümü"
-
-#~ msgid "Type"
-#~ msgstr "Tür"
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "Hata !"
-
-#~ msgid "Reply"
-#~ msgstr "Yanıtla"
-
-#~ msgid "Dates"
-#~ msgstr "Tarihler"
-
-#~ msgid "History Information"
-#~ msgstr "Geçmiş Bilgisi"
-
-#~ msgid "Quantity"
-#~ msgstr "Miktar"
-
-#~ msgid "Last 30 Days"
-#~ msgstr "Son 30 Gün"
-
-#~ msgid "Contact"
-#~ msgstr "İlgili"
-
-#~ msgid "Group the invoices"
-#~ msgstr "Faturaları Gruplandır"
-
-#~ msgid "Invoiced Registrations only"
-#~ msgstr "Yalnızca Faturalı Kayıtlar"
-
-#~ msgid "The email address put in the 'Reply-To' of all emails sent by OpenERP"
-#~ msgstr ""
-#~ "OpenERP tarafından gönderilen tüm epostaların 'Bunu Yanıtla'ya konan eposta "
-#~ "adresi"
-
-#~ msgid "Provide Minimum Number of Registrations"
-#~ msgstr "Enaz Sayıda Kayıt Sağlayın"
-
-#~ msgid "Total of Prospect Registrations"
-#~ msgstr "Toplam Umutlar Kayıtları"
-
-#~ msgid ""
-#~ "Check this box if you want to use automatic confirmation emailing or "
-#~ "reminder."
-#~ msgstr ""
-#~ "Otomatik eposta ve anımsatma onaylama kullanımı için bu kutuyu işaretle."
-
-#~ msgid "My Sales Team(s)"
-#~ msgstr "Satış Takım(lar)ım"
-
-#~ msgid "    Month-1    "
-#~ msgstr "    Ay-1    "
-
-#~ msgid "Provide Maximum Number of Registrations"
-#~ msgstr "Ençok Sayıda Kayıt Sağlayın"
-
-#, python-format
-#~ msgid "Registered partner doesn't have an address to make the invoice."
-#~ msgstr "Fatura oluşturmak için kayıtlı paydaşın adresi yok."
-
-#~ msgid "Total of Open and Done Registrations"
-#~ msgstr "Toplam Açık ve Biten Kayıtlar"
-
-#~ msgid "Invoice Name"
-#~ msgstr "Fatura Adı"
-
-#~ msgid "Message"
-#~ msgstr "İleti"
-
-#~ msgid "Create invoices"
-#~ msgstr "Fatura oluştur"
-
-#~ msgid "Do you really want to create the invoice(s) ?"
-#~ msgstr "Gerçekten fatura(lar) oluşturmak istiyor musunuz?"
-
-#~ msgid "Reference 2"
-#~ msgstr "Referans 2"
-
-#, python-format
-#~ msgid "Invoiced"
-#~ msgstr "Faturalandı"
-
-#~ msgid "Beginning Date"
-#~ msgstr "Başlama Tarihi"
-
-#~ msgid "Closed"
-#~ msgstr "Kapalı"
-
-#~ msgid "Speakers"
-#~ msgstr "Konuşmacılar"
-
-#~ msgid ""
-#~ "These email addresses will be added to the CC field of all inbound and "
-#~ "outbound emails for this record before being sent. Separate multiple email "
-#~ "addresses with a comma"
-#~ msgstr ""
-#~ "Bu e-posta adresleri gönderilmeden önce bütün gelen ve giden e-postaların CC "
-#~ "satırına eklenecektir. Birden fazla e-posta adresini virgül ile ayırınız."
-
-#~ msgid ""
-#~ "The invoices of this event registration will be created with this Product. "
-#~ "Thus it allows you to set the default label and the accounting info you want "
-#~ "by default on these invoices."
-#~ msgstr ""
-#~ "Bu etkinlik kaydının faturaları bu ürünle birlikte oluşturulacaktır. "
-#~ "Böylece, bu faturalarda varsayılan olarak istediğiniz öntanımlı etiket ve "
-#~ "muhasebe bilgileri ayarlamanıza izin verir."
-
-#~ msgid "Write Date"
-#~ msgstr "Yazım Tarihi"
-
-#~ msgid "Active"
-#~ msgstr "Etkin"
-
-#~ msgid "Child Events"
-#~ msgstr "Alt Etkinlikler"
-
-#~ msgid "Language"
-#~ msgstr "Dil"
-
-#~ msgid "CC"
-#~ msgstr "CC"
-
-#~ msgid "These people will receive email."
-#~ msgstr "Bu kişilere e-posta alacaktır"
-
-#~ msgid "Start date"
-#~ msgstr "Başlama Tarihi"
-
-#~ msgid "Confirmation Email Body"
-#~ msgstr "Onaylı Eposta Gövdesi"
-
-#~ msgid "Event by Registration"
-#~ msgstr "Kayıta göre Etkinlik"
-
-#~ msgid "Registration Email Body"
-#~ msgstr "Kayıt Epostası Gövdesi"
-
-#~ msgid "Close"
-#~ msgstr "Kapat"
-
-#, python-format
-#~ msgid "Event related doesn't have any product defined"
-#~ msgstr "İlgili Etkinliğe tanımlı herhangi bir ürün yoktur"
-
-#~ msgid "Closing date"
-#~ msgstr "Kapanış tarihi"
-
-#~ msgid "Events created in current month"
-#~ msgstr "Geçerli ayda oluşturulan Etkinlikler"
-
-#~ msgid ""
-#~ "Check this box if you want to use automatic emailing for new registration."
-#~ msgstr ""
-#~ "Yeni kayıtlar için otomatik epostalama kullanmak istiyorsanız bu kutuyu "
-#~ "işaretleyin."
-
-#~ msgid "Registration Cost"
-#~ msgstr "Kayıt Ücreti"
-
-#, python-format
-#~ msgid "Auto Confirmation: [%s] %s"
-#~ msgstr "Oto Onaylama:[%s] %s"
-
-#~ msgid "Beginning Date of Event"
-#~ msgstr "Etkinliğin Başlama Tarihi"
-
-#, python-format
-#~ msgid "Auto Registration: [%s] %s"
-#~ msgstr "Oto Kayıt: [%s] %s"
-
-#~ msgid "Address"
-#~ msgstr "Adres"
-
-#~ msgid "_Subcribe"
-#~ msgstr "_Abone ol"
-
-#~ msgid ""
-#~ "This will be the default price used as registration cost when invoicing this "
-#~ "event. Note that you can specify a specific amount for each registration."
-#~ msgstr ""
-#~ "Bu fiyat, etkinliğin faturalandırılması sırasında varsayılan kayıt ücreti "
-#~ "olarak kullanılacaktır. Her kayıt için özel bir tutar belirleyebileceğinizi "
-#~ "unutmayın."
-
-#~ msgid "Sale Team"
-#~ msgstr "Satış Takımı"
-
-#, python-format
-#~ msgid "Registration is set as Cannot be invoiced"
-#~ msgstr "Kayıt Faturalandırılamaz olarak ayarlı"
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "Hata ! Özyinelemeli ilişkili üyeler oluşturamazsınız."
-
-#~ msgid "Event For Registration"
-#~ msgstr "Kayıt için Etkinlik"
-
-#, python-format
-#~ msgid "Invoice cannot be created if the registration is in %s state."
-#~ msgstr "Kayıt %s durumunda ise fatura oluşturulamaz."
-
-#~ msgid "Total"
-#~ msgstr "Toplam"
-
-#~ msgid ""
-#~ "Event is the low level object used by meeting and others documents that "
-#~ "should be synchronized with mobile devices or calendar applications through "
-#~ "caldav. Most of the users should work in the Calendar menu, and not in the "
-#~ "list of events."
-#~ msgstr ""
-#~ "Etkinlik, mobil aygıtlarla ya da caldav yoluyla takvim uygulamaları "
-#~ "eşitlenecek toplantılar ve diğer belgeler tarafından kullanılan düşük "
-#~ "seviyeli nesnelerdir. Kullanıcıların çoğu Takvim menüsünden çalışmalıdır, "
-#~ "etkinlik listesinden değil."
-
-#~ msgid "Error ! You cannot create recursive event."
-#~ msgstr "Hata ! Özyinelemeli etkinlik oluşturmazsınız."
-
-#~ msgid "Confirmation for Event Registration"
-#~ msgstr "Etkinlik Kaydı Onaylama"
-
-#~ msgid "event.registration.badge"
-#~ msgstr "etkinlik.kayıt.rozet"
-
-#~ msgid "Event Details"
-#~ msgstr "Etkinlik Ayrıntıları"
-
-#~ msgid ""
-#~ "This email will be sent when the event gets confirmed or when someone "
-#~ "subscribes to a confirmed event. This is also the email sent to remind "
-#~ "someone about the event."
-#~ msgstr ""
-#~ "Bu eposta etkinlik onaylandığında ya da biri onaylanmış bir etkinliğe abone "
-#~ "olduğunda gönderilmiş olacaktır. Bu aynı zamanda etkinlik hakkında birine "
-#~ "anımsatma için gönderilen epostadır."
-
-#~ msgid "Events created in last month"
-#~ msgstr "Son ayda oluşturulan Etkinlikler"
-
-#~ msgid "Event Dashboard"
-#~ msgstr "Etkinlik Kontrol Paneli"
-
-#~ msgid ""
-#~ "If event is created, the state is 'Draft'.If event is confirmed for the "
-#~ "particular dates the state is set to 'Confirmed'. If the event is over, the "
-#~ "state is set to 'Done'.If event is cancelled the state is set to 'Cancelled'."
-#~ msgstr ""
-#~ "Eğer etkinlik oluşturulmuşsa, durumu 'Taslak'tır. Etkinlik belirli tarihler "
-#~ "için onaylanmışsa durumu 'Onaylı'ya ayarlanır. Etkinlik bitmişse, durum "
-#~ "'Bitti'ye ayarlanır. Etkinlik iptal edildiyse durum 'İptal edildi'ye "
-#~ "ayarlanır."
-
-#~ msgid "Events States"
-#~ msgstr "Etkinliklerin Durumları"
-
-#~ msgid "Events created in current year"
-#~ msgstr "Geçerli ayda oluşturulan Etkinlikler"
-
-#, python-format
-#~ msgid "Warning: The Event '%s' has reached its Maximum Limit (%s)."
-#~ msgstr "Uyarı: Etkinlik '%s' Ençok Sınırına (%s) ulaşmıştır."
-
-#~ msgid "Type of Event like Seminar, Exhibition, Conference, Training."
-#~ msgstr "Etkinlik Türü; Seminer, Sergi, Konferans, Eğitim gibi."
-
-#~ msgid "Events Type"
-#~ msgstr "Etkinliklerin Türü"
-
-#~ msgid "This email will be sent when someone subscribes to the event."
-#~ msgstr "Birisi Etkinliğe abone olduğunda bu e-posta gönderilmiş olacaktır."
-
-#~ msgid "  event Registration "
-#~ msgstr "  etkinlik Kaydı "

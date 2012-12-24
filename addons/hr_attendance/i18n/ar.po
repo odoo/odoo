@@ -1,20 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* hr_attendance
+# Arabic translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-05-10 17:57+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:41+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:14+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_month
@@ -67,7 +68,7 @@ msgid "Print Attendance Report Monthly"
 msgstr "اطبع تقرير الحضور شهرياً"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/report/timesheet.py:122
+#: code:addons/hr_attendance/report/timesheet.py:120
 #, python-format
 msgid "Attendances by Week"
 msgstr ""
@@ -91,6 +92,11 @@ msgstr "تجميع حسب..."
 #: selection:hr.attendance.month,month:0
 msgid "October"
 msgstr "أكتوبر"
+
+#. module: hr_attendance
+#: field:hr.employee,attendance_access:0
+msgid "Attendance Access"
+msgstr ""
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/hr_attendance.py:154
@@ -173,11 +179,6 @@ msgid "Allocates attendance group to all users."
 msgstr ""
 
 #. module: hr_attendance
-#: field:hr.employee,attendance_access:0
-msgid "unknown"
-msgstr ""
-
-#. module: hr_attendance
 #: view:hr.attendance:0
 msgid "My Attendance"
 msgstr "حضوري"
@@ -188,7 +189,7 @@ msgid "June"
 msgstr "يونيو"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/report/attendance_by_month.py:193
+#: code:addons/hr_attendance/report/attendance_by_month.py:190
 #, python-format
 msgid "Attendances by Month"
 msgstr ""
@@ -466,153 +467,3 @@ msgstr ""
 msgid ""
 "Specifies the reason for Signing In/Signing Out in case of extra hours."
 msgstr "ويحدد سبب تسجيل الدخول والخروج في حالة الساعات الزائدة."
-
-#~ msgid "Ok"
-#~ msgstr "تم"
-
-#, python-format
-#~ msgid "UserError"
-#~ msgstr "خطأ مستخدم"
-
-#~ msgid "hr.sign.out.ask"
-#~ msgstr "hr.sign.out.ask"
-
-#~ msgid ""
-#~ "You did not sign out the last time. Please enter the date and time you "
-#~ "signed out."
-#~ msgstr ""
-#~ "لم قمت بتسجيل الخروج اخر مرة. من فضلك ادخل التاريخ والوقت الذي قمت بتسجيل "
-#~ "الخروج فيه."
-
-#, python-format
-#~ msgid "The sign-out date must be in the past"
-#~ msgstr "تاريخ تسجيل الخروج يجب ان يكون في الماضي"
-
-#~ msgid "Ask for Sign In Out"
-#~ msgstr "اطلب تسجيل في الخروج"
-
-#, python-format
-#~ msgid "A sign-in must be right after a sign-out !"
-#~ msgstr "يجب ان يكون تسجيل الدخول صحيحًا قبل تسجيل الخروج"
-
-#~ msgid "Employee attendance"
-#~ msgstr "حضور الموظفين"
-
-#, python-format
-#~ msgid "The Sign-in date must be in the past"
-#~ msgstr "تارخ تسجيل الدخول يجب ان يكون في الماضي"
-
-#~ msgid "Employees name"
-#~ msgstr "اسماء الموظفين"
-
-#, python-format
-#~ msgid "No Data Available"
-#~ msgstr "لا يوجد تاريخ متاح"
-
-#~ msgid "Sign In Sign Out"
-#~ msgstr "تسجيل الدخول تسجيل الخروج"
-
-#~ msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-#~ msgstr ""
-#~ "خطأ: تسجيل الدخول (استقبال. تسجيل الخروج) يجب ان يتبع تسجيل الخروج (استقبال. "
-#~ "تسجيل الدخول)"
-
-#, python-format
-#~ msgid "Sign in / Sign out"
-#~ msgstr "تسجيل الدخول / تسجيل الخروج"
-
-#, python-format
-#~ msgid "A sign-out must be right after a sign-in !"
-#~ msgstr "تسجيل الخروج يجب ان يكون صحيحًا بعد تسجيل الخروج !"
-
-#~ msgid "My Attendances"
-#~ msgstr "تسجيلات حضوري"
-
-#~ msgid "Attendances Of Employees"
-#~ msgstr "حضور الموظفين"
-
-#~ msgid "Sign-Out Entry must follow Sign-In."
-#~ msgstr "يجب ان يتبع مدخل تسجيل الخروج تسجيل الدخول."
-
-#~ msgid "Empoyee ID"
-#~ msgstr "تعريف الموظف"
-
-#~ msgid "Employee ID"
-#~ msgstr "تعرف الموظف"
-
-#~ msgid "Your last sign in"
-#~ msgstr "اخر تسجيل دخول لك"
-
-#~ msgid ""
-#~ "Sign in / Sign out. In some companies, staff have to sign in when they "
-#~ "arrive at work and sign out again at the end of the day. If each employee "
-#~ "has been linked to a system user, then they can encode their time with this "
-#~ "action button."
-#~ msgstr ""
-#~ "تسجيل الدخول / تسجيل الخروج. في بعض الشركات, يسجل الفريق الدخول عندما يصلون "
-#~ "للعمل و يسجلون الخروج مرة اخرى في نهاية يوم العمل. اذا اوصل كل موظف لمستخدم "
-#~ "النظام , يمكنهم ترميز وقتهم مع زر العمل."
-
-#~ msgid "Your last sign out"
-#~ msgstr "اخر تسجيل خروج لك"
-
-#, python-format
-#~ msgid "No records found for your selection!"
-#~ msgstr "لم يوجد تسجيلات لاختيارك!"
-
-#~ msgid ""
-#~ "You did not sign in the last time. Please enter the date and time you signed "
-#~ "in."
-#~ msgstr ""
-#~ "لم تقم بتسجيل الدخول اخر مرة. من فضلك ادخل التاريخ والوقت الذي قمت بتسجيل "
-#~ "الدخول فيه."
-
-#~ msgid "Current state"
-#~ msgstr "الحالة الجارية"
-
-#~ msgid "Employee's Name"
-#~ msgstr "اسم الموظف"
-
-#~ msgid "hr.sign.in.out.ask"
-#~ msgstr "الموارد البشرية.تسجيل دخول.خروج.اطلب"
-
-#~ msgid "Action's type"
-#~ msgstr "نوع الاجراء"
-
-#~ msgid ""
-#~ "Error ! You cannot select a department for which the employee is the manager."
-#~ msgstr "خطأ! لا يمكنك تحديد الادارة التي يديرها الموظف."
-
-#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
-#~ msgstr "خطأ ! لايمكنك انشاء تسلسل هرمي عودي  للعاملين"
-
-#~ msgid ""
-#~ "If you need your staff to sign in when they arrive at work and sign out "
-#~ "again at the end of the day, OpenERP allows you to manage this with this "
-#~ "tool. If each employee has been linked to a system user, then they can "
-#~ "encode their time with this action button."
-#~ msgstr ""
-#~ "اذا كنت تريد موظفينك تسجيل الدخول مكان وصولهم عند العمل ويسجلون الخروج مرة "
-#~ "اخرى عند نهاية يوم العمل, تسمح لك OpenERP بإدارتها مع الادوات. اذا اتصل كل "
-#~ "موظف لمستخدم النظام, ثم يمكنهم ترميز وقتهم بزر العمل هذا."
-
-#~ msgid ""
-#~ "\n"
-#~ "    This module aims to manage employee's attendances.\n"
-#~ "    Keeps account of the attendances of the employees on the basis of the\n"
-#~ "    actions(Sign in/Sign out) performed by them.\n"
-#~ "       "
-#~ msgstr ""
-#~ "\n"
-#~ "    يهدف هذا النموذج  إلى إدارة حضور الموظف.\n"
-#~ "وتبقي في الاعتبار الحضور من الموظفين على أساس من\n"
-#~ "الإجراءات (تسجيل الدخول / تسجيل الخروج) التي يؤدونها.\n"
-#~ "       "
-
-#, python-format
-#~ msgid ""
-#~ "You tried to %s with a date anterior to another event !\n"
-#~ "Try to contact the administrator to correct attendances."
-#~ msgstr ""
-#~ "حاولت إلى %s مع تاريخ سابق لحدث آخر!\n"
-#~ "حاول الاتصال بالمسؤول لتصحيح الحضور ."

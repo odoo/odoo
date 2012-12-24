@@ -1,21 +1,21 @@
 # Croatian translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-01-28 21:37+0000\n"
-"Last-Translator: Goran Kliska <gkliska@gmail.com>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:49+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:10+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: crm_claim
 #: help:crm.claim.stage,fold:0
@@ -100,13 +100,6 @@ msgstr "#Zahtjeva"
 #. module: crm_claim
 #: field:crm.claim.stage,name:0
 msgid "Stage Name"
-msgstr ""
-
-#. module: crm_claim
-#: model:ir.actions.act_window,help:crm_claim.action_report_crm_claim
-msgid ""
-"Have a general overview of all claims processed in the system by sorting "
-"them with specific criteria."
 msgstr ""
 
 #. module: crm_claim
@@ -218,11 +211,6 @@ msgid "Preventive Action"
 msgstr "Preventivna akcija"
 
 #. module: crm_claim
-#: field:crm.claim.report,delay_expected:0
-msgid "Overpassed Deadline"
-msgstr "Prekoračen rok"
-
-#. module: crm_claim
 #: field:crm.claim.report,section_id:0
 msgid "Section"
 msgstr "Odlomak"
@@ -310,9 +298,10 @@ msgid "Next Action Date"
 msgstr "Datum slijedeće akcije"
 
 #. module: crm_claim
-#: code:addons/crm_claim/crm_claim.py:243
-#, python-format
-msgid "Claim has been <b>created</b>."
+#: model:ir.actions.act_window,help:crm_claim.action_report_crm_claim
+msgid ""
+"Have a general overview of all claims processed in the system by sorting "
+"them with specific criteria."
 msgstr ""
 
 #. module: crm_claim
@@ -350,7 +339,7 @@ msgid "Destination email for email gateway."
 msgstr ""
 
 #. module: crm_claim
-#: code:addons/crm_claim/crm_claim.py:199
+#: code:addons/crm_claim/crm_claim.py:194
 #, python-format
 msgid "No Subject"
 msgstr ""
@@ -607,12 +596,6 @@ msgid "Extended Filters..."
 msgstr "Prošireni filteri..."
 
 #. module: crm_claim
-#: field:crm.claim,message_comment_ids:0
-#: help:crm.claim,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
-
-#. module: crm_claim
 #: view:crm.claim:0
 msgid "Closure"
 msgstr "Zatvaranje"
@@ -745,10 +728,9 @@ msgid "Unassigned Claims"
 msgstr "Neraspoređeni prigovori"
 
 #. module: crm_claim
-#: code:addons/crm_claim/crm_claim.py:247
-#, python-format
-msgid "Claim has been <b>refused</b>."
-msgstr ""
+#: field:crm.claim.report,delay_expected:0
+msgid "Overpassed Deadline"
+msgstr "Prekoračen rok"
 
 #. module: crm_claim
 #: field:crm.claim,cause:0
@@ -808,12 +790,6 @@ msgstr ""
 #: field:crm.claim.report,email:0
 msgid "# Emails"
 msgstr "#E-mail-ova"
-
-#. module: crm_claim
-#: code:addons/crm_claim/crm_claim.py:253
-#, python-format
-msgid "Stage changed to <b>%s</b>."
-msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -909,90 +885,3 @@ msgstr ""
 #: help:crm.claim.stage,case_refused:0
 msgid "Refused stages are specific stages for done."
 msgstr ""
-
-#~ msgid "Add Internal Note"
-#~ msgstr "Dodaj internu bilješku"
-
-#~ msgid "Reset to Draft"
-#~ msgstr "Vrati u nacrt"
-
-#~ msgid "All pending Claims"
-#~ msgstr "Svi nobrađeni prigovori"
-
-#~ msgid "Send New Email"
-#~ msgstr "Pošalji novi e-mail"
-
-#~ msgid "Won't fix"
-#~ msgstr "Neće se popravljati"
-
-#~ msgid "History Information"
-#~ msgstr "Povijest"
-
-#~ msgid "Month-1"
-#~ msgstr "Mjesec-1"
-
-#~ msgid "Contact"
-#~ msgstr "Kontakt"
-
-#~ msgid "Accepted as Claim"
-#~ msgstr "Prihvaćeno kao prigovor"
-
-#~ msgid "Salesman"
-#~ msgstr "Prodavač"
-
-#~ msgid "Reply"
-#~ msgstr "Odgovori"
-
-#~ msgid "Global CC"
-#~ msgstr "Globalni CC"
-
-#~ msgid "Communication & History"
-#~ msgstr "Komunikacija i povijest"
-
-#~ msgid "Partner Contact"
-#~ msgstr "Osoba kod partnera"
-
-#~ msgid "History"
-#~ msgstr "Povijest"
-
-#~ msgid "These people will receive email."
-#~ msgstr "Ove će osobe primiti e-poštu."
-
-#~ msgid "Claims created in current year"
-#~ msgstr "Prigovori tekuće godine"
-
-#~ msgid "State"
-#~ msgstr "Stanje"
-
-#~ msgid "Close"
-#~ msgstr "Zatvori"
-
-#~ msgid ""
-#~ "The state is set to 'Draft', when a case is created.                         "
-#~ "         \n"
-#~ "If the case is in progress the state is set to 'Open'.                       "
-#~ "           \n"
-#~ "When the case is over, the state is set to 'Done'.                           "
-#~ "       \n"
-#~ "If the case needs to be reviewed then the state is set to 'Pending'."
-#~ msgstr ""
-#~ "Stanje je postavljeno na 'Nacrt', kada se stvara slučaj.\n"
-#~ "Ako je slučaj je u tijeku stanje je postavljeno na 'Otvoren'.\n"
-#~ "Kada se slučaj završi, stanje je postavljen na \"Gotovo\".\n"
-#~ "Ako slučaj treba biti pregledan, stanje je postavljeno na 'U tijeku'."
-
-#~ msgid "Actions Defined"
-#~ msgstr "Definirane akcije"
-
-#~ msgid "Actions Done"
-#~ msgstr "Izvršene akcije"
-
-#~ msgid "Claims created in last month"
-#~ msgstr "Pritužbe kreirane prošli mjesec"
-
-#~ msgid "Claims created in current month"
-#~ msgstr "Pritužbe kreirane ovaj mjesec"
-
-#, python-format
-#~ msgid "The claim '%s' has been opened."
-#~ msgstr "Otvorena je pritužba'%s' ."

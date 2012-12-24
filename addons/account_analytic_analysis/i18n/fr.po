@@ -1,19 +1,20 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* account_analytic_analysis
+# French translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-19 15:53+0000\n"
-"Last-Translator: Nicolas JEUDY <njeudy@tuxservices.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-20 04:46+0000\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:02+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
 
 #. module: account_analytic_analysis
@@ -101,14 +102,23 @@ msgid "Sum of timesheet lines invoiced for this contract."
 msgstr ""
 
 #. module: account_analytic_analysis
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:462
+#, python-format
+msgid "Sales Order Lines of %s"
+msgstr ""
+
+#. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
 msgid "Computed using the formula: Invoiced Amount / Total Time"
 msgstr "Calculé selon la formule : Montant facturé / Temps total"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Contracts not assigned"
-msgstr ""
+#: field:account_analytic_analysis.summary.month,account_id:0
+#: field:account_analytic_analysis.summary.user,account_id:0
+#: model:ir.model,name:account_analytic_analysis.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "Compte analytique"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -145,14 +155,9 @@ msgid "End Date"
 msgstr "Date de fin"
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,hours_qtt_non_invoiced:0
-msgid ""
-"Number of time (hours/days) (from journal of type 'general') that can be "
-"invoiced if you invoice based on analytic account."
+#: view:account.analytic.account:0
+msgid "Account Manager"
 msgstr ""
-"Nombre d'unités de temps (heure/jour) défini sur le journal de type "
-"'général' qui peuvent être facturées si vous facturez à partir des comptes "
-"analytiques."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours_to_invoice:0
@@ -167,11 +172,8 @@ msgstr "Attendu"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-#: field:account_analytic_analysis.summary.month,account_id:0
-#: field:account_analytic_analysis.summary.user,account_id:0
-#: model:ir.model,name:account_analytic_analysis.model_account_analytic_account
-msgid "Analytic Account"
-msgstr "Compte analytique"
+msgid "Contracts not assigned"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
@@ -227,12 +229,6 @@ msgid "Nothing to invoice, create"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.template_of_contract_action
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_template_of_contract_action
-msgid "Template of Contract"
-msgstr "Modèle de contrat"
-
-#. module: account_analytic_analysis
 #: model:res.groups,name:account_analytic_analysis.group_template_required
 msgid "Mandatory use of templates in contracts"
 msgstr ""
@@ -261,6 +257,11 @@ msgstr "Calculé selon la formule : (Marge réelle / Coûts totaux) * 100"
 #: view:account.analytic.account:0
 msgid "or view"
 msgstr "ou afficher"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Customer Contracts"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -315,10 +316,14 @@ msgid "Timesheets"
 msgstr "Feuilles de temps"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:461
-#, python-format
-msgid "Sale Order Lines of %s"
+#: help:account.analytic.account,hours_qtt_non_invoiced:0
+msgid ""
+"Number of time (hours/days) (from journal of type 'general') that can be "
+"invoiced if you invoice based on analytic account."
 msgstr ""
+"Nombre d'unités de temps (heure/jour) défini sur le journal de type "
+"'général' qui peuvent être facturées si vous facturez à partir des comptes "
+"analytiques."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -468,14 +473,14 @@ msgstr ""
 "Calculé selon la formule : Montant maximum à facturer - Les montants facturés"
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Responsible"
-msgstr ""
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
 msgid "Last Invoice Date"
 msgstr "Date de la dernière facture"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Units Remaining"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_hr_tree_invoiced_all
@@ -566,8 +571,14 @@ msgid "Mandatory use of templates."
 msgstr ""
 
 #. module: account_analytic_analysis
+#: model:ir.actions.act_window,name:account_analytic_analysis.template_of_contract_action
+#: model:ir.ui.menu,name:account_analytic_analysis.menu_template_of_contract_action
+msgid "Contract Template"
+msgstr ""
+
+#. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Contracts Having a Partner"
+msgid "Units Done"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -620,198 +631,3 @@ msgstr ""
 #: view:account.analytic.account:0
 msgid "Total"
 msgstr ""
-
-#~ msgid "Hours summary by user"
-#~ msgstr "Résumé des heures par utilisateur"
-
-#~ msgid "Computed using the formula: Maximum Quantity - Hours Tot."
-#~ msgstr "Calculé selon la formule : Quantité maximum - Total des heures"
-
-#~ msgid "All Analytic Accounts"
-#~ msgstr "Tous les comptes analytiques"
-
-#~ msgid "My Current Accounts"
-#~ msgstr "Mes comptes gérés"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "XML non valide pour l'architecture de la vue"
-
-#~ msgid "Date of the last invoice created for this analytic account."
-#~ msgstr ""
-#~ "Date de la dernière facture créée à partir des prestations liés à ce compte "
-#~ "analytique (heures sur timesheet, facturation de notes de frais, facturation "
-#~ "de produits)"
-
-#~ msgid "Theorical Revenue"
-#~ msgstr "Revenu théorique"
-
-#~ msgid "Computed using the formula: Theorial Revenue - Total Costs"
-#~ msgstr ""
-#~ "Calculé selon la formule suivante : Revenu théorique - Total des coûts"
-
-#~ msgid "New Analytic Account"
-#~ msgstr "Nouveau Compte Analytique"
-
-#~ msgid "Theorical Margin"
-#~ msgstr "Marge théorique"
-
-#~ msgid "Current Analytic Accounts"
-#~ msgstr "Comptes analytiques gérés"
-
-#~ msgid ""
-#~ "Number of hours you spent on the analytic account (from timesheet). It "
-#~ "computes on all journal of type 'general'."
-#~ msgstr ""
-#~ "Nombre d'heures imputées sur le compte analytique (depuis les timesheet) "
-#~ "calculé sur tous les journaux de type \"général\""
-
-#~ msgid "Remaining Hours"
-#~ msgstr "Heures restantes"
-
-#~ msgid "My Pending Accounts"
-#~ msgstr "Mes comptes en attente"
-
-#~ msgid "My Uninvoiced Entries"
-#~ msgstr "Mes écritures non facturées"
-
-#~ msgid "My Accounts"
-#~ msgstr "Mes comptes"
-
-#~ msgid "Uninvoiced Hours"
-#~ msgstr "Heures non-facturées"
-
-#~ msgid "Hours Tot"
-#~ msgstr "Total des heures"
-
-#~ msgid "Analytic Accounts"
-#~ msgstr "Comptabilité analytique"
-
-#~ msgid "Financial Project Management"
-#~ msgstr "Gestion financière de projet"
-
-#~ msgid "Pending Analytic Accounts"
-#~ msgstr "Comptes analytiques en attente"
-
-#~ msgid "Invoiced Hours"
-#~ msgstr "Heures facturées"
-
-#~ msgid ""
-#~ "Number of hours (from journal of type 'general') that can be invoiced if you "
-#~ "invoice based on analytic account."
-#~ msgstr ""
-#~ "Nombre d'heures (depuis les journaux de type \"général\") qui peuvent êtres "
-#~ "facturées si vous facturez depuis les comptes analytiques"
-
-#~ msgid "Analytic accounts"
-#~ msgstr "Compte Analytique"
-
-#~ msgid "Computed using the formula: Invoiced Amount / Hours Tot."
-#~ msgstr "Calculé selon la formule : Montant facturé / Total des heures"
-
-#~ msgid "Revenue per Hours (real)"
-#~ msgstr "Revenus par heure (réel)"
-
-#, python-format
-#~ msgid "You try to bypass an access rule (Document type: %s)."
-#~ msgstr "Vous essayez d'outrepasser une règle d'accès (Type de Document: %s)"
-
-#~ msgid "Overpassed Accounts"
-#~ msgstr "Comptes échus"
-
-#~ msgid "All Uninvoiced Entries"
-#~ msgstr "Toutes les écritures non facturées"
-
-#~ msgid ""
-#~ "Modify account analytic view to show\n"
-#~ "important data for project manager of services companies.\n"
-#~ "Add menu to show relevant information for each manager."
-#~ msgstr ""
-#~ "Modifie la vue du compte analytique pour montrer\n"
-#~ "les données importantes pour le gestionnaire de projets des sociétés de "
-#~ "service.\n"
-#~ "Ajoute un menu pour montrer les informations utiles à chaque gestionnaire."
-
-#~ msgid ""
-#~ "Number of hours that can be invoiced plus those that already have been "
-#~ "invoiced."
-#~ msgstr ""
-#~ "Nombre d'heures qui peuvent être facturées plus celles qui ont déjà été "
-#~ "facturées."
-
-#~ msgid "report_account_analytic"
-#~ msgstr "report_account_analytic"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Le nom de l'objet doit commencer par x_ et ne doit pas contenir de caractère "
-#~ "spécial !"
-
-#~ msgid "Billing"
-#~ msgstr "Facturation"
-
-#, python-format
-#~ msgid "AccessError"
-#~ msgstr "Erreur d'accès"
-
-#~ msgid "Error! You can not create recursive analytic accounts."
-#~ msgstr "Erreur ! Vous ne pouvez pas créer de comptes analytiques récursifs."
-
-#~ msgid ""
-#~ "\n"
-#~ "This module is for modifying account analytic view to show\n"
-#~ "important data to project manager of services companies.\n"
-#~ "Adds menu to show relevant information to each manager..\n"
-#~ "\n"
-#~ "You can also view the report of account analytic summary\n"
-#~ "user-wise as well as month wise.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Ce module sert à modifier la vue de compte analytique pour afficher\n"
-#~ "des informations importantes aux chefs de projet des sociétés de services.\n"
-#~ "Ajoute un menu pour afficher les informations pertinentes à chaque chef de "
-#~ "projet..\n"
-#~ "\n"
-#~ "Vous pouvez aussi voir le rapport des comptes analytiques par utilisateur \n"
-#~ "ainsi que par mois.\n"
-
-#~ msgid ""
-#~ "Error! The currency has to be the same as the currency of the selected "
-#~ "company"
-#~ msgstr ""
-#~ "Erreur! La monnaie doit être la même que la monnaie de la société "
-#~ "sélectionnée"
-
-#~ msgid "Analytic Accounts with a past deadline in one month."
-#~ msgstr "Comptes analytiques avec une date limite à échéance d'un mois"
-
-#~ msgid ""
-#~ "You will find here the contracts to be renewed because the deadline is "
-#~ "passed or the working hours are higher than the allocated hours. OpenERP "
-#~ "automatically sets these analytic accounts to the pending state, in order to "
-#~ "raise a warning during the timesheets recording. Salesmen should review all "
-#~ "pending accounts and reopen or close the according to the negotiation with "
-#~ "the customer."
-#~ msgstr ""
-#~ "Vous trouverez ici les contrats qui doivent être renouvelés soit parce que "
-#~ "la date limite est passé soit parce qque les heures de travail imputées sont "
-#~ "plus élevés que les heures allouées. OpenERP définit automatiquement ces "
-#~ "comptes analytiques à l'état ​​'ouvert', afin d'afficher un avertissement "
-#~ "lors de l'enregistrement des feuilles de temps. Les vendeurs doivent "
-#~ "examiner tous les comptes ayant cet état afin de les rouvrir ou de les  "
-#~ "fermer en fonction de la négociation avec le client."
-
-#~ msgid " +1 Month"
-#~ msgstr " +1 mois"
-
-#~ msgid "Manager"
-#~ msgstr "Responsable"
-
-#~ msgid "Create Invoice"
-#~ msgstr "Créer la facture"
-
-#~ msgid "Computed using the formula: Maximum Time - Total Time"
-#~ msgstr "Calculé comme : Temps maximum - Temps total"
-
-#~ msgid "Associated Partner"
-#~ msgstr "Partenaire associé"

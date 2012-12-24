@@ -1,20 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* hr_timesheet_sheet
+# Arabic translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-01-13 19:19+0000\n"
-"Last-Translator: kifcaliph <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:36+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:17+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr_timesheet_sheet
 #: field:hr.analytic.timesheet,sheet_id:0
@@ -141,8 +142,8 @@ msgid "Based on the timesheet"
 msgstr "بناءًا على سجل الدوام"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:313
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:384
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:326
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:397
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet."
 msgstr ""
@@ -197,8 +198,8 @@ msgid "Please create an employee and associate it with this user."
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:388
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:408
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:401
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:421
 #, python-format
 msgid ""
 "You cannot enter an attendance date outside the current timesheet dates."
@@ -249,9 +250,9 @@ msgstr ""
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:80
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:82
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:84
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:313
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:384
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:415
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:326
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:397
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:428
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:38
 #, python-format
 msgid "Error!"
@@ -493,11 +494,6 @@ msgid "hr.timesheet.current.open"
 msgstr "الموارد البشرية.سجل الدوام.الجاري.افتح"
 
 #. module: hr_timesheet_sheet
-#: model:process.node,name:hr_timesheet_sheet.process_node_validatedtimesheet0
-msgid "Validated"
-msgstr "تمت الموافقة"
-
-#. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:71
 #, python-format
 msgid ""
@@ -715,10 +711,9 @@ msgid "Timesheet range"
 msgstr "مجموعة سجل الدوام"
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,message_comment_ids:0
-#: help:hr_timesheet_sheet.sheet,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
+#: view:board.board:0
+msgid "My Total Attendance By Week"
+msgstr "المجموع الكلي لحضور في الاسبوع"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
@@ -800,7 +795,7 @@ msgid "Search Account"
 msgstr "ابحث عن حساب"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:415
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:428
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet"
 msgstr ""
@@ -862,9 +857,9 @@ msgid "Cancel"
 msgstr "إلغاء"
 
 #. module: hr_timesheet_sheet
-#: view:board.board:0
-msgid "My Total Attendance By Week"
-msgstr "المجموع الكلي لحضور في الاسبوع"
+#: model:process.node,name:hr_timesheet_sheet.process_node_validatedtimesheet0
+msgid "Validated"
+msgstr "تمت الموافقة"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_invoiceonwork0
@@ -971,9 +966,9 @@ msgid "May"
 msgstr "مايو"
 
 #. module: hr_timesheet_sheet
-#: field:hr.timesheet.report,journal_id:0
-msgid "Journal"
-msgstr "يومية"
+#: model:process.node,note:hr_timesheet_sheet.process_node_workontask0
+msgid "Defines the work summary of task"
+msgstr "ويحدد ملخص العمل للمهمة"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -1071,8 +1066,8 @@ msgid "Invoice rate"
 msgstr "معدل الفاتورة"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:388
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:408
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:401
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:421
 #, python-format
 msgid "User Error!"
 msgstr ""
@@ -1153,209 +1148,11 @@ msgid "Total"
 msgstr "الإجمالي"
 
 #. module: hr_timesheet_sheet
-#: model:process.node,note:hr_timesheet_sheet.process_node_workontask0
-msgid "Defines the work summary of task"
-msgstr "ويحدد ملخص العمل للمهمة"
+#: field:hr.timesheet.report,journal_id:0
+msgid "Journal"
+msgstr "يومية"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_day
 msgid "Timesheet by Day"
 msgstr ""
-
-#~ msgid "Today"
-#~ msgstr "اليوم"
-
-#, python-format
-#~ msgid "UserError"
-#~ msgstr "خطأ مستخدم"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "تحذير !"
-
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "خطأ! لا يمكنك إنشاء شركات متداخلة (شركات تستخدم نفسها)."
-
-#~ msgid "State"
-#~ msgstr "الحالة"
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "خطأ !"
-
-#~ msgid "Configuration"
-#~ msgstr "إعدادات"
-
-#~ msgid "Quantity"
-#~ msgstr "الكمية"
-
-#, python-format
-#~ msgid "Invalid action !"
-#~ msgstr "إجراء خاطئ!"
-
-#, python-format
-#~ msgid ""
-#~ "Please verify that the total difference of the sheet is lower than %.2f !"
-#~ msgstr "الرجاء تحقق من ان  الاختلاف الكلي للسجل اقل من %.f2 !"
-
-#, python-format
-#~ msgid ""
-#~ "You can not have 2 timesheets that overlaps !\n"
-#~ "Please use the menu 'My Current Timesheet' to avoid this problem."
-#~ msgstr ""
-#~ "لايمكن ان يكون لديك 2 سجل دوامي متداخلة !\n"
-#~ "الرجاء استخدم قائمة ‘سجل الدوام الحالي‘ لتجنب هذه المشكلة."
-
-#, python-format
-#~ msgid "You can not sign in from an other date than today"
-#~ msgstr "لا يمكنك تسجيل الدخول من تاريخ اخر غير اليوم"
-
-#~ msgid " Month-1 "
-#~ msgstr " شهر-1 "
-
-#, python-format
-#~ msgid ""
-#~ "You cannot enter an attendance date outside the current timesheet dates!"
-#~ msgstr "لا يمكنك ادخال تاريخ الحضور خارج تواريخ سجل الدوام الحالي!"
-
-#~ msgid "Daily View"
-#~ msgstr "العرض اليومي"
-
-#, python-format
-#~ msgid ""
-#~ "You cannot create a timesheet for an employee that does not have any user "
-#~ "defined !"
-#~ msgstr "لايمكنك انشاء سجل دوام للموظف الذي ليس لديه مستخدم معرّف !"
-
-#~ msgid "Go to:"
-#~ msgstr "إذهب إلى:"
-
-#~ msgid " Year "
-#~ msgstr " سنة "
-
-#, python-format
-#~ msgid "You cannot modify an entry in a confirmed timesheet !"
-#~ msgstr "لايمكنك تصنيف المدخل في سجل الدوام المؤكد !"
-
-#~ msgid "You must select a Current date which is in the timesheet dates !"
-#~ msgstr "يجب ان تختار التاريخ الجاري الذي يكون في تواريخ سجل الدوام"
-
-#, python-format
-#~ msgid "You can not modify an entry in a confirmed timesheet !"
-#~ msgstr "لا يمكنك تصنيف المدخل في سجل الدوام المؤكد !"
-
-#~ msgid ""
-#~ "Check your timesheets for a specific period. You can also encode time spent "
-#~ "on a project (i.e. an analytic account) thus generating costs in the "
-#~ "analytic account concerned."
-#~ msgstr ""
-#~ "تحقق من سجلات دوامك لفترة محددة. يمكنك ايضًا ترميز الوقت المنقضي في "
-#~ "المشروع(مثال الحساب التحليلي) مما ينشأ التكاليف في الحساب التحليلي المعني."
-
-#, python-format
-#~ msgid ""
-#~ "The timesheet cannot be validated as it does not contain equal no. of sign "
-#~ "ins and sign outs!"
-#~ msgstr ""
-#~ "لا يمكن التحقق من صلاحية سجل الدوام كما انها لاتحتوي على رقم مساوي لتسجيلات "
-#~ "الدخول و تسجيلات الخروج!"
-
-#, python-format
-#~ msgid "Cannot delete Sheet(s) which are already confirmed !"
-#~ msgstr "لا يستطيع حذف السجلات المؤكدة بالفعل !"
-
-#~ msgid "By Day"
-#~ msgstr "باليوم"
-
-#, python-format
-#~ msgid "Cannot delete Sheet(s) which have attendance entries encoded !"
-#~ msgstr "لايستطيع حذف السجلات التي تحتوي على مدخلات الحضور المرمزة !"
-
-#~ msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-#~ msgstr ""
-#~ "خطأ: تسجيل الدخول (استقبال. تسجيل الخروج) يجب ان يتبع تسجيل الخروج (استقبال. "
-#~ "تسجيل الدخول)"
-
-#~ msgid ""
-#~ "This report performs analysis on timesheets created by your human resources "
-#~ "in the system. It allows you to have a full overview of  entries done by "
-#~ "your employees. You can group them by specific selection criteria thanks to "
-#~ "the search tool."
-#~ msgstr ""
-#~ "يمثل هذا التقرير تحليل على سجلات الدوام المنشأة من مواردك البشرية في النظام. "
-#~ "وتسمح ان يكون لديك لمحة عامة كاملة للمدخلات المكتملة من موظفينك. يمكنك جمعهم "
-#~ "بمعايير اختيارية محددة بفضل اداة البحث."
-
-#~ msgid " Month "
-#~ msgstr " شهر "
-
-#, python-format
-#~ msgid "No employee defined for your user !"
-#~ msgstr "لا يوجد موظف معرف  لمستخدمك !"
-
-#~ msgid "No employee defined"
-#~ msgstr "لم يعرف الموظف"
-
-#, python-format
-#~ msgid "You cannot duplicate a timesheet !"
-#~ msgstr "لا يمكنك تكرير سجل الدوام !"
-
-#~ msgid ""
-#~ "\n"
-#~ "This module helps you to easily encode and validate timesheet and "
-#~ "attendances\n"
-#~ "within the same view. The upper part of the view is for attendances and\n"
-#~ "track (sign in/sign out) events. The lower part is for timesheet.\n"
-#~ "\n"
-#~ "Other tabs contains statistics views to help you analyse your\n"
-#~ "time or the time of your team:\n"
-#~ "* Time spent by day (with attendances)\n"
-#~ "* Time spent by project\n"
-#~ "\n"
-#~ "This module also implements a complete timesheet validation process:\n"
-#~ "* Draft sheet\n"
-#~ "* Confirmation at the end of the period by the employee\n"
-#~ "* Validation by the project manager\n"
-#~ "\n"
-#~ "The validation can be configured in the company:\n"
-#~ "* Period size (day, week, month, year)\n"
-#~ "* Maximal difference between timesheet and attendances\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "هذه الوحدة تساعدك على تشفير بسهولة والتحقق من صحة سجل الدوام والحضور\n"
-#~ "ضمن وجهة النظر نفسها. الجزء العلوي من وجهة النظر هو الحضور و\n"
-#~ "المسار (في التوقيع / تسجيل الخروج) أحداث. الجزء السفلي هو لسجل الدوام.\n"
-#~ "\n"
-#~ "علامات تبويب أخرى تحتوي على إحصاءات وجهات النظر التي تساعدك على تحليل الخاصة "
-#~ "بك\n"
-#~ "مرة أو مرة في فريقك:\n"
-#~ "* الوقت الذي يقضيه اليوم (مع الحضور)\n"
-#~ "* الوقت الذي يقضيه مشروع\n"
-#~ "\n"
-#~ "هذه الوحدة أيضا بتنفيذ التحقق من صحة سجل الدوام  الكامل العملية:\n"
-#~ "* سجل المشروع\n"
-#~ "* تأكيد في نهاية الفترة من قبل الموظف\n"
-#~ "* التحقق من الصحة من قبل مدير المشروع\n"
-#~ "\n"
-#~ "يمكن تكوين المصادقة في الشركة:\n"
-#~ "* حجم الفترة (يوم في الاسبوع والشهر والسنة)\n"
-#~ "*اقصى اختلاف بين سجل الدوام والحضور\n"
-#~ "    "
-
-#~ msgid ""
-#~ " * The 'Draft' state is used when a user is encoding a new and unconfirmed "
-#~ "timesheet.                 \n"
-#~ "* The 'Confirmed' state is used for to confirm the timesheet by user.        "
-#~ "         \n"
-#~ "* The 'Done' state is used when users timesheet is accepted by his/her "
-#~ "senior."
-#~ msgstr ""
-#~ " * واستخدم الحالة \"مشروع\" عندما يقوم المستخدم بترميز سجل دوام جديد وغير "
-#~ "مؤكد.\n"
-#~ "* يتم استخدام الحالة \"مؤكد\" للتأكد من سجل الدوام من قبل المستخدم.\n"
-#~ "* يتم استخدام الحالة \"تم\" عندما يتم قبول سجل الدوام للمستخدمين من قبل "
-#~ "المدير له / لها."
-
-#~ msgid "Timesheet Lines"
-#~ msgstr "خطوط الجدول الزمني"

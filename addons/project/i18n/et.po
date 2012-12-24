@@ -1,20 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-# 	* project
+# Estonian translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2010-10-30 15:47+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Estonian <et@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:04+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:28+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: project
 #: view:project.project:0
@@ -82,7 +83,7 @@ msgid "Start Task"
 msgstr "Alusta ülesannet"
 
 #. module: project
-#: code:addons/project/project.py:960
+#: code:addons/project/project.py:932
 #, python-format
 msgid "Warning !"
 msgstr ""
@@ -132,8 +133,8 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:440
-#: code:addons/project/project.py:1414
+#: code:addons/project/project.py:432
+#: code:addons/project/project.py:1305
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -222,8 +223,9 @@ msgid "Assigned To"
 msgstr ""
 
 #. module: project
-#: selection:project.task,priority:0
-msgid "Very important"
+#: model:mail.message.subtype,name:project.mt_project_task_closed
+#: model:mail.message.subtype,name:project.mt_task_closed
+msgid "Task Done"
 msgstr ""
 
 #. module: project
@@ -262,9 +264,14 @@ msgid "Project Task Delegate"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:557
-#, python-format
-msgid "Project has been <b>created</b>."
+#: model:mail.message.subtype,name:project.mt_project_task_started
+#: model:mail.message.subtype,name:project.mt_task_started
+msgid "Task Started"
+msgstr ""
+
+#. module: project
+#: view:project.task:0
+msgid "Very Important"
 msgstr ""
 
 #. module: project
@@ -307,12 +314,6 @@ msgstr "Olek"
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "August"
-msgstr ""
-
-#. module: project
-#: code:addons/project/project.py:1303
-#, python-format
-msgid "Task has been <b>delegated</b> to <em>%s</em>."
 msgstr ""
 
 #. module: project
@@ -385,7 +386,7 @@ msgid "Assigned to"
 msgstr "Kellele määratud"
 
 #. module: project
-#: code:addons/project/project.py:1057
+#: code:addons/project/project.py:1021
 #, python-format
 msgid "Delegated User should be specified"
 msgstr ""
@@ -422,12 +423,6 @@ msgid "Re-evaluate Task"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:1292
-#, python-format
-msgid "Stage changed to <b>%s</b>."
-msgstr ""
-
-#. module: project
 #: view:project.task:0
 msgid "Validate planned time"
 msgstr ""
@@ -435,6 +430,12 @@ msgstr ""
 #. module: project
 #: field:project.config.settings,module_pad:0
 msgid "Use integrated collaborative note pads on task"
+msgstr ""
+
+#. module: project
+#: model:mail.message.subtype,name:project.mt_project_task_blocked
+#: model:mail.message.subtype,name:project.mt_task_blocked
+msgid "Task Blocked"
 msgstr ""
 
 #. module: project
@@ -450,6 +451,11 @@ msgstr ""
 #. module: project
 #: view:project.task:0
 msgid "oe_kanban_text_red"
+msgstr ""
+
+#. module: project
+#: model:mail.message.subtype,description:project.mt_task_blocked
+msgid "Task blocked"
 msgstr ""
 
 #. module: project
@@ -605,12 +611,6 @@ msgid "Not a Template Task"
 msgstr ""
 
 #. module: project
-#: view:project.project:0
-msgid ""
-"Follow this project to automatically follow all related tasks and issues."
-msgstr ""
-
-#. module: project
 #: field:project.task,planned_hours:0
 msgid "Initially Planned Hours"
 msgstr ""
@@ -667,6 +667,14 @@ msgstr ""
 #. module: project
 #: field:project.config.settings,module_project_issue_sheet:0
 msgid "Invoice working time on issues"
+msgstr ""
+
+#. module: project
+#: view:project.project:0
+#: view:project.task:0
+#: field:project.task.history,end_date:0
+#: field:project.task.history.cumulative,end_date:0
+msgid "End Date"
 msgstr ""
 
 #. module: project
@@ -860,6 +868,11 @@ msgid "Companies"
 msgstr ""
 
 #. module: project
+#: field:project.task.type,fold:0
+msgid "Folded by Default"
+msgstr ""
+
+#. module: project
 #: field:project.task.history,date:0
 #: field:project.task.history.cumulative,date:0
 #: field:project.task.work,date:0
@@ -889,12 +902,6 @@ msgid "10"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:566
-#, python-format
-msgid "Project has been <b>canceled</b>."
-msgstr ""
-
-#. module: project
 #: help:project.project,analytic_account_id:0
 msgid ""
 "Link this project to an analytic account if you need financial management on "
@@ -914,17 +921,6 @@ msgstr ""
 #: view:project.task.reevaluate:0
 msgid "Cancel"
 msgstr "Loobu"
-
-#. module: project
-#: code:addons/project/project.py:569
-#, python-format
-msgid "Project has been <b>closed</b>."
-msgstr ""
-
-#. module: project
-#: model:ir.actions.server,name:project.actions_server_project_task_read
-msgid "Task: Mark read"
-msgstr ""
 
 #. module: project
 #: view:project.project:0
@@ -950,8 +946,10 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: model:project.task.type,name:project.project_tt_development
-msgid "Development"
+#: view:project.project:0
+msgid ""
+"Follow this project to automatically track the events associated to tasks "
+"and issues of this project."
 msgstr ""
 
 #. module: project
@@ -960,25 +958,19 @@ msgid "Users"
 msgstr ""
 
 #. module: project
-#: model:mail.message.subtype,name:project.mt_project_stage
-#: model:mail.message.subtype,name:project.mt_task_change
+#: model:mail.message.subtype,name:project.mt_task_stage
 msgid "Stage Changed"
 msgstr ""
 
 #. module: project
-#: field:project.task.type,fold:0
-msgid "Hide in views if empty"
+#: view:project.project:0
+#: model:res.groups,name:project.group_project_manager
+msgid "Manager"
 msgstr ""
 
 #. module: project
-#: view:project.task:0
 #: selection:project.task,priority:0
 msgid "Important"
-msgstr ""
-
-#. module: project
-#: field:project.task.type,case_default:0
-msgid "Common to All Projects"
 msgstr ""
 
 #. module: project
@@ -1029,18 +1021,6 @@ msgstr "Kinnitamise olek"
 #: field:project.task.work,name:0
 msgid "Work summary"
 msgstr "Töö kokkuvõte"
-
-#. module: project
-#: code:addons/project/project.py:563
-#, python-format
-msgid "Project is now <b>pending</b>."
-msgstr ""
-
-#. module: project
-#: code:addons/project/project.py:560
-#, python-format
-msgid "Project has been <b>opened</b>."
-msgstr ""
 
 #. module: project
 #: view:project.project:0
@@ -1095,11 +1075,6 @@ msgid "Parent Tasks"
 msgstr ""
 
 #. module: project
-#: model:ir.actions.server,name:project.actions_server_project_read
-msgid "Project: Mark read"
-msgstr ""
-
-#. module: project
 #: model:process.node,name:project.process_node_opentask0
 msgid "Open task"
 msgstr "Ava ülesanne"
@@ -1147,7 +1122,7 @@ msgid "Done by"
 msgstr "Tegija"
 
 #. module: project
-#: code:addons/project/project.py:180
+#: code:addons/project/project.py:181
 #, python-format
 msgid "Invalid Action!"
 msgstr ""
@@ -1179,11 +1154,6 @@ msgstr ""
 #. module: project
 #: field:project.project,doc_count:0
 msgid "Number of documents attached"
-msgstr ""
-
-#. module: project
-#: model:ir.actions.server,name:project.actions_server_project_task_unread
-msgid "Task: Mark unread"
 msgstr ""
 
 #. module: project
@@ -1226,11 +1196,16 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr "Arvutuskäik: kulutatud aeg + järelejäänud aeg"
 
 #. module: project
-#: code:addons/project/project.py:364
-#: code:addons/project/project.py:385
-#: code:addons/project/project.py:728
+#: code:addons/project/project.py:356
+#: code:addons/project/project.py:377
+#: code:addons/project/project.py:709
 #, python-format
 msgid "%s (copy)"
+msgstr ""
+
+#. module: project
+#: model:mail.message.subtype,name:project.mt_project_task_stage
+msgid "Task Stage Changed"
 msgstr ""
 
 #. module: project
@@ -1268,6 +1243,11 @@ msgstr ""
 #. module: project
 #: help:project.config.settings,time_unit:0
 msgid "This will set the unit of measure used in projects and tasks."
+msgstr ""
+
+#. module: project
+#: selection:project.task,priority:0
+msgid "Very important"
 msgstr ""
 
 #. module: project
@@ -1329,8 +1309,6 @@ msgid "Low"
 msgstr "Madal"
 
 #. module: project
-#: model:mail.message.subtype,name:project.mt_project_closed
-#: model:mail.message.subtype,name:project.mt_task_closed
 #: selection:project.project,state:0
 msgid "Closed"
 msgstr ""
@@ -1419,7 +1397,7 @@ msgstr ""
 "poolt, kui ülesanne on mustandi olekus."
 
 #. module: project
-#: code:addons/project/project.py:219
+#: code:addons/project/project.py:220
 #, python-format
 msgid "Attachments"
 msgstr ""
@@ -1439,7 +1417,7 @@ msgid "Done"
 msgstr "Valmis"
 
 #. module: project
-#: code:addons/project/project.py:181
+#: code:addons/project/project.py:182
 #, python-format
 msgid ""
 "You cannot delete a project containing tasks. You can either delete all the "
@@ -1467,6 +1445,11 @@ msgid "Remaining Hours"
 msgstr "Järelejäänud tunnid"
 
 #. module: project
+#: model:mail.message.subtype,description:project.mt_task_stage
+msgid "Stage changed"
+msgstr ""
+
+#. module: project
 #: constraint:project.task:0
 msgid "Error ! Task end-date must be greater then task start-date"
 msgstr ""
@@ -1488,17 +1471,6 @@ msgid "Delegated Task"
 msgstr "Valitatud ülesanne"
 
 #. module: project
-#: view:project.project:0
-#: model:res.groups,name:project.group_project_manager
-msgid "Manager"
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-msgid "Very Important"
-msgstr ""
-
-#. module: project
 #: view:report.project.task.user:0
 #: field:report.project.task.user,total_hours:0
 msgid "Total Hours"
@@ -1510,11 +1482,8 @@ msgid "project.config.settings"
 msgstr ""
 
 #. module: project
-#: view:project.project:0
-#: view:project.task:0
-#: field:project.task.history,end_date:0
-#: field:project.task.history.cumulative,end_date:0
-msgid "End Date"
+#: model:project.task.type,name:project.project_tt_development
+msgid "Development"
 msgstr ""
 
 #. module: project
@@ -1555,7 +1524,7 @@ msgid "Overpassed Tasks"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:960
+#: code:addons/project/project.py:932
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1581,6 +1550,11 @@ msgstr ""
 #: model:process.node,note:project.process_node_taskbydelegate0
 msgid "Delegate your task to the other user"
 msgstr "Volita oma ülesanne teisele kasutajale."
+
+#. module: project
+#: model:mail.message.subtype,description:project.mt_task_started
+msgid "Task started"
+msgstr ""
 
 #. module: project
 #: help:project.task.reevaluate,remaining_hours:0
@@ -1609,7 +1583,7 @@ msgid "CHECK: "
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:440
+#: code:addons/project/project.py:432
 #, python-format
 msgid "You must assign members on the project '%s' !"
 msgstr ""
@@ -1738,6 +1712,11 @@ msgid "Documents"
 msgstr ""
 
 #. module: project
+#: model:mail.message.subtype,description:project.mt_task_new
+msgid "Task created"
+msgstr ""
+
+#. module: project
 #: view:report.project.task.user:0
 #: field:report.project.task.user,no_of_days:0
 msgid "# of Days"
@@ -1750,8 +1729,6 @@ msgid "Followers"
 msgstr ""
 
 #. module: project
-#: model:mail.message.subtype,name:project.mt_project_new
-#: model:mail.message.subtype,name:project.mt_task_new
 #: selection:project.project,state:0
 #: view:project.task:0
 #: selection:project.task,state:0
@@ -1831,7 +1808,7 @@ msgid "Starting Date"
 msgstr "Alguskuupäev"
 
 #. module: project
-#: code:addons/project/project.py:406
+#: code:addons/project/project.py:398
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_projects
 #: view:project.project:0
@@ -1865,12 +1842,6 @@ msgid "Project Tasks"
 msgstr "Projekti ülesanded"
 
 #. module: project
-#: code:addons/project/project.py:1296
-#, python-format
-msgid "Task has been <b>created</b>."
-msgstr ""
-
-#. module: project
 #: field:account.analytic.account,use_tasks:0
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,name:project.action_view_task
@@ -1886,12 +1857,6 @@ msgstr "Ülesanded"
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "December"
-msgstr ""
-
-#. module: project
-#: model:mail.message.subtype,name:project.mt_project_canceled
-#: model:mail.message.subtype,name:project.mt_task_canceled
-msgid "Canceled"
 msgstr ""
 
 #. module: project
@@ -1934,12 +1899,6 @@ msgstr "Mustand"
 #: field:project.task.history,kanban_state:0
 #: field:project.task.history.cumulative,kanban_state:0
 msgid "Kanban State"
-msgstr ""
-
-#. module: project
-#: code:addons/project/project.py:1299
-#, python-format
-msgid "Task has been set as <b>draft</b>."
 msgstr ""
 
 #. module: project
@@ -1990,14 +1949,6 @@ msgid "Configure Project"
 msgstr ""
 
 #. module: project
-#: field:project.project,message_comment_ids:0
-#: help:project.project,message_comment_ids:0
-#: field:project.task,message_comment_ids:0
-#: help:project.task,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
-
-#. module: project
 #: view:project.task.history.cumulative:0
 msgid "Tasks's Cumulative Flow"
 msgstr ""
@@ -2005,11 +1956,6 @@ msgstr ""
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "January"
-msgstr ""
-
-#. module: project
-#: model:ir.actions.server,name:project.actions_server_project_unread
-msgid "Project: Mark unread"
 msgstr ""
 
 #. module: project
@@ -2023,9 +1969,15 @@ msgid "Reevaluation Task"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:1414
+#: code:addons/project/project.py:1305
 #, python-format
 msgid "Please delete the project linked with this account first."
+msgstr ""
+
+#. module: project
+#: model:mail.message.subtype,name:project.mt_project_task_new
+#: model:mail.message.subtype,name:project.mt_task_new
+msgid "Task Created"
 msgstr ""
 
 #. module: project
@@ -2044,6 +1996,11 @@ msgstr ""
 #: selection:project.task.history,kanban_state:0
 #: selection:project.task.history.cumulative,kanban_state:0
 msgid "Ready for next stage"
+msgstr ""
+
+#. module: project
+#: field:project.task.type,case_default:0
+msgid "Default for New Projects"
 msgstr ""
 
 #. module: project
@@ -2081,6 +2038,11 @@ msgid ""
 "A long term project management module that tracks planning, scheduling, and "
 "resource allocation.\n"
 "                This installs the module project_long_term."
+msgstr ""
+
+#. module: project
+#: model:mail.message.subtype,description:project.mt_task_closed
+msgid "Task closed"
 msgstr ""
 
 #. module: project
@@ -2154,426 +2116,3 @@ msgstr ""
 #: view:project.task.type:0
 msgid "Tasks Stages"
 msgstr ""
-
-#~ msgid "Assigned tasks"
-#~ msgstr "Määratud ülesanded"
-
-#~ msgid "Tasks Process"
-#~ msgstr "Ülesannete kulg"
-
-#~ msgid "New title of the task delegated to the user."
-#~ msgstr "Kasutajale volitatud ülesande uus tiitel"
-
-#, python-format
-#~ msgid ""
-#~ "Couldn't send mail because the contact for this task (%s) has no email "
-#~ "address!"
-#~ msgstr ""
-#~ "Ei saanud saata e-kirja, sest selle ülesande (%s) kontaktisikul pole e-posti "
-#~ "aadressi!"
-
-#~ msgid "Change Remaining Hours"
-#~ msgstr "Muuda järelejäänud tunde"
-
-#~ msgid "Close Task"
-#~ msgstr "Sulge ülesanne"
-
-#, python-format
-#~ msgid "Operation Not Permitted !"
-#~ msgstr "Toiming pole lubatud!"
-
-#~ msgid "Subproject"
-#~ msgstr "Alamprojekt"
-
-#~ msgid "My Running Projects"
-#~ msgstr "Minu jooksvad porjektid"
-
-#~ msgid ""
-#~ "Header added at the beginning of the email for the warning message sent to "
-#~ "the customer when a task is closed."
-#~ msgstr ""
-#~ "Ülesande sulgemisel kliendile saadetava hoiatussõnumi algusesse lisatav päis."
-
-#~ msgid "Importance"
-#~ msgstr "Tähtsus"
-
-#~ msgid "Update"
-#~ msgstr "Uuenda"
-
-#~ msgid "User you want to delegate this task to."
-#~ msgstr "Kasutaja, kellele sa soovid seda ülesannet volitada."
-
-#~ msgid ""
-#~ "Project's member. Not used in any computation, just for information purpose."
-#~ msgstr ""
-#~ "Projekti liige. Ei kasutata ühegi arvutuse jaoks vaid puhtalt informatiivsel "
-#~ "eesmärgil."
-
-#~ msgid "Task Types"
-#~ msgstr "Ülesande tüübid"
-
-#~ msgid "Validate"
-#~ msgstr "Kinnita"
-
-#~ msgid "My Tasks in Progress"
-#~ msgstr "Minu edenevad ülesanded"
-
-#~ msgid "Days"
-#~ msgstr "Päevad"
-
-#~ msgid "My Draft Tasks"
-#~ msgstr "Minu ülesannete mustandid"
-
-#~ msgid ""
-#~ "Automatic variables for headers and footer. Use exactly the same notation."
-#~ msgstr ""
-#~ "Automaatsed muutujad päistele ja jalustele. Kasuta täpselt sama kirjaviisi."
-
-#~ msgid "Mail Header"
-#~ msgstr "Kirja päis"
-
-#~ msgid "Reinclude the description of the task in the task of the user."
-#~ msgstr "Sisesta ülesande kirjeldus kasutaja ülesandele."
-
-#~ msgid "All Tasks"
-#~ msgstr "Kõik ülesanded"
-
-#~ msgid "Delegations"
-#~ msgstr "Volitused"
-
-#~ msgid "Send Message"
-#~ msgstr "Saada teade"
-
-#~ msgid "My projects"
-#~ msgstr "Minu projektid"
-
-#~ msgid "All projects"
-#~ msgstr "Kõik projektid"
-
-#~ msgid "Internal description of the project."
-#~ msgstr "Projekti sisemine kirjeldus"
-
-#~ msgid "Parent Project"
-#~ msgstr "Ülemprojekt"
-
-#~ msgid "Type"
-#~ msgstr "Tüüp"
-
-#~ msgid "Weeks"
-#~ msgstr "Nädalad"
-
-#~ msgid "My Current Tasks"
-#~ msgstr "Minu praegused ülesanded"
-
-#~ msgid "New Project"
-#~ msgstr "Uus projekt"
-
-#~ msgid "Project task type"
-#~ msgstr "Projekti ülesande tüüp"
-
-#~ msgid "Hours"
-#~ msgstr "Tunnid"
-
-#~ msgid "My Pending Tasks"
-#~ msgstr "Minu lahtised ülesanded"
-
-#~ msgid "Tasks in Progress"
-#~ msgstr "Töös olevad ülesanded"
-
-#, python-format
-#~ msgid "Operation Done"
-#~ msgstr "Toiming teostatud"
-
-#~ msgid "Estimated time to close this task by the delegated user."
-#~ msgstr "Eeldatav aeg ülesande sulgemiseks selle volitatud kasutaja poolt."
-
-#~ msgid "Configuration"
-#~ msgstr "Seadistus"
-
-#~ msgid "Dates"
-#~ msgstr "Kuupäevad"
-
-#~ msgid "Task Details"
-#~ msgstr "Ülesande üksikasjad"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Vigane XML vaate arhitektuurile!"
-
-#~ msgid "Task type"
-#~ msgstr "Ülesande tüüp"
-
-#~ msgid "New Task"
-#~ msgstr "Uus ülesanne"
-
-#~ msgid "Project's members"
-#~ msgstr "Projekti liikmed"
-
-#~ msgid "After task is completed, Create its invoice."
-#~ msgstr "Pärast ülesande valmimist koosta sellele arve."
-
-#~ msgid "Computed as: Time Spent / Total Time."
-#~ msgstr "Arvutuskäik: kulutatud aeg / aeg kokku."
-
-#~ msgid "Planned"
-#~ msgstr "Planeeritud"
-
-#~ msgid "Sum of total hours of all tasks related to this project."
-#~ msgstr "Selle projektiga seotud ülesannete kogusumma tundides"
-
-#~ msgid "Information"
-#~ msgstr "Teave"
-
-#~ msgid "Review"
-#~ msgstr "Ülevaade"
-
-#~ msgid "E-Mails"
-#~ msgstr "E-kirjad"
-
-#~ msgid ""
-#~ "New state of your own task. Pending will be reopened automatically when the "
-#~ "delegated task is closed."
-#~ msgstr ""
-#~ "Uus olek sinu enda ülesandele. Lahtine avatakse automaatselt, kui volitatud "
-#~ "ülesanne on suletud."
-
-#~ msgid "Bug"
-#~ msgstr "Viga"
-
-#~ msgid "Quotation"
-#~ msgstr "Hinnapakkumine"
-
-#~ msgid "Task edition"
-#~ msgstr "Ülesande muutmine"
-
-#~ msgid ""
-#~ "Computed as: Total Time - Estimated Time. It gives the difference of the "
-#~ "time estimated by the project manager and the real time to close the task."
-#~ msgstr ""
-#~ "Arvutuskäik: aeg kokku - eeldatud aeg. See annab projektihalduri pool "
-#~ "eeldatud aja ja tegelikult ülesande sulgemiseks kulunud aja vahe."
-
-#~ msgid "Months"
-#~ msgstr "Kuud"
-
-#, python-format
-#~ msgid "Error"
-#~ msgstr "Viga"
-
-#~ msgid "User's projects"
-#~ msgstr "Kasutaja projektid"
-
-#~ msgid "Reactivate Project"
-#~ msgstr "Reaktiveeri projekt"
-
-#, python-format
-#~ msgid "Couldn't send mail because your email address is not configured!"
-#~ msgstr "Ei saanud saata e-kirja sest su e-post ei ole seadistatud!"
-
-#~ msgid "Delegate this task to a user"
-#~ msgstr "Volita see ülesanne kasutajale"
-
-#~ msgid "Date Closed"
-#~ msgstr "Sulgemise kuupäev"
-
-#~ msgid "Sum of spent hours of all tasks related to this project."
-#~ msgstr "Kõigi selle projektiga seotud ülesannetele kulunud aeg."
-
-#~ msgid "Sum of planned hours of all tasks related to this project."
-#~ msgstr "Kõigi selle projektiga seotud ülesannetele planeeritud aeg."
-
-#~ msgid "Month works"
-#~ msgstr "Kuu tööd"
-
-#~ msgid "Gantt Representation"
-#~ msgstr "Gantt esitlus"
-
-#~ msgid "Warn Partner"
-#~ msgstr "Hoiata partnerit"
-
-#~ msgid "State"
-#~ msgstr "Olek"
-
-#~ msgid "Task summary"
-#~ msgstr "Ülesande kokkuvõte"
-
-#~ msgid "Create a Task"
-#~ msgstr "Loo ülesanne"
-
-#, python-format
-#~ msgid ""
-#~ "You can not delete a project with tasks. I suggest you to deactivate it."
-#~ msgstr ""
-#~ "Sa ei saa kustutada ülesannetega projekti. Soovitan sul see deaktiveerida."
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
-
-#~ msgid "Parent Task"
-#~ msgstr "Ülem ülesanne"
-
-#~ msgid "Delay"
-#~ msgstr "Viivitus"
-
-#~ msgid "Send mail to customer"
-#~ msgstr "Saada kiri kliendile"
-
-#~ msgid "Warn Manager"
-#~ msgstr "Hoiata haldajat"
-
-#~ msgid "config.compute.remaining"
-#~ msgstr "config.compute.remaining"
-
-#~ msgid "Quiet close"
-#~ msgstr "Vaikne sulgemine"
-
-#~ msgid "New title of your own task to validate the work done."
-#~ msgstr "Sinu ülesande uus tiitel tehtud töö kinnitamiseks."
-
-#~ msgid "Task invoice"
-#~ msgstr "Ülesande arve"
-
-#~ msgid "Projects Structure"
-#~ msgstr "Projektide struktuur"
-
-#~ msgid "Running"
-#~ msgstr "Töötab"
-
-#~ msgid "Delegate Task"
-#~ msgstr "Volita ülesanne"
-
-#~ msgid "Project tasks"
-#~ msgstr "Projekti ülesanded"
-
-#~ msgid "New Feature"
-#~ msgstr "Uus omadus"
-
-#~ msgid "Template of Projects"
-#~ msgstr "Projektide mallid"
-
-#~ msgid ""
-#~ "Footer added at the beginning of the email for the warning message sent to "
-#~ "the customer when a task is closed."
-#~ msgstr ""
-#~ "Ülesande sulgemisel kliendile saadetava hoiatussõnumi algusesse lisatav "
-#~ "jalus."
-
-#~ msgid "Partner Info"
-#~ msgstr "Partneri info"
-
-#~ msgid "Compute Remaining Hours"
-#~ msgstr "Arvuta järelejäänud tunnid"
-
-#~ msgid "Error ! You can not create recursive projects."
-#~ msgstr "Viga! Sa ei saa luua rekursiivseid projekte."
-
-#~ msgid "Expected End"
-#~ msgstr "Eeldatav lõpp"
-
-#~ msgid "Mail Footer"
-#~ msgstr "Kirja jalus"
-
-#~ msgid "Running projects"
-#~ msgstr "Jooksvad projektid"
-
-#~ msgid ""
-#~ "If you check this field, the project manager will receive a request each "
-#~ "time a task is completed by his team."
-#~ msgstr ""
-#~ "Kui sa märgid selle välja siis projektihaldur saab päringu iga kord, kui "
-#~ "ülesanne on lõpetatud tema meeskonna poolt."
-
-#~ msgid ""
-#~ "If you check this, the user will have a popup when closing a task that "
-#~ "propose a message to send by email to the customer."
-#~ msgstr ""
-#~ "Kui sa märgid selle siis avaneb kasutajal hüpikaken ülesande sulgemisel, mis "
-#~ "pakub e-kirja saatmist kliendile."
-
-#~ msgid ""
-#~ "Project management module that track multi-level projects, tasks,\n"
-#~ "works done on tasks, eso. It is able to render planning, order tasks, eso.\n"
-#~ "    "
-#~ msgstr ""
-#~ "Projektihalduse moodul, mis jälgib mitmetasandlisis projekte, ülesandeid,\n"
-#~ "ülesannetel tehtud töid, jne. See võimaldab kuvada planeerimist, korralduse "
-#~ "ülesandeid, jne.\n"
-#~ "    "
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Vigane mudeli nimi toimingu definitsioonis."
-
-#~ msgid "Trigger invoices from sale order lines"
-#~ msgstr "Käivita arved müügikorralduse ridadest"
-
-#, python-format
-#~ msgid ""
-#~ "A new project has been created !\n"
-#~ "We suggest you to close this one and work on this new project."
-#~ msgstr ""
-#~ "Uus projekt on loodud!\n"
-#~ "Me soovitame sul sulgeda see ja töötada uue projektiga."
-
-#~ msgid ""
-#~ "If you have [?] in the name, it means there are no analytic account linked "
-#~ "to project."
-#~ msgstr ""
-#~ "Kui sul on [?] nimes siis tähendab see, et projektiga pole seotud ühtegi "
-#~ "analüütilist kontot."
-
-#~ msgid ""
-#~ "If you have [?] in the project name, it means there are no analytic account "
-#~ "linked to this project."
-#~ msgstr ""
-#~ "Kui sul on [?] projekti nimes siis tähendab see, et selle projektiga pole "
-#~ "seotud ühtegi analüütilist kontot."
-
-#~ msgid ""
-#~ "Estimated time for you to validate the work done by the user to whom you "
-#~ "delegate this task."
-#~ msgstr ""
-#~ "Eeldatav aeg, mis kulub sul delegeeritud kasutaja poolt tehtud töö "
-#~ "valideerimiseks."
-
-#~ msgid "Trigger Invoice"
-#~ msgstr "Käivita arve"
-
-#~ msgid "Task: %(name)s"
-#~ msgstr "Ülesanne: %(name)s"
-
-#~ msgid "All Attachments"
-#~ msgstr "Kõik manused"
-
-#~ msgid "User: %(user_id)s"
-#~ msgstr "Kasutaja: %(user_id)s"
-
-#~ msgid "Status: %(state)s"
-#~ msgstr "Staatus: %(state)s"
-
-#~ msgid "ID: %(task_id)s"
-#~ msgstr "ID: %(task_id)s"
-
-#~ msgid "Date Start: %(date_start)s"
-#~ msgstr "Alguskuupäev: %(date_start)s"
-
-#~ msgid "Date Stop: %(date_stop)s"
-#~ msgstr "Lõppkuupäev: %(date_stop)s"
-
-#~ msgid "Timesheets"
-#~ msgstr "Tööajalehed"
-
-#~ msgid "My Task's Deadlines"
-#~ msgstr "Minu ülesannete tähtajad"
-
-#~ msgid "Public Notes"
-#~ msgstr "Avalikud märkmed"
-
-#~ msgid "Project Dashboard"
-#~ msgstr "Projekti töölaud"
-
-#~ msgid "My accounts to invoice"
-#~ msgstr "Minu kontod arveldada"
-
-#~ msgid "My Open Tasks"
-#~ msgstr "Minu lahtised ülesanded"

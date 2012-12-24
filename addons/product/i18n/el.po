@@ -1,21 +1,21 @@
 # Greek translation for openobject-addons
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-05-10 17:37+0000\n"
-"Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:32+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:27+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: product
 #: field:product.packaging,rows:0
@@ -33,11 +33,6 @@ msgid "This is minimum quantity to purchase from Main Supplier."
 msgstr ""
 "Αυτή είναι η ελάχιστη ποσότητα που επιτρέπεται να αγοραστεί από τον Κύριο "
 "Προμηθευτή."
-
-#. module: product
-#: model:product.uom,name:product.product_uom_day
-msgid "Day"
-msgstr "Ημέρα"
 
 #. module: product
 #: model:product.template,name:product.product_product_34_product_template
@@ -112,8 +107,8 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:177
-#: code:addons/product/product.py:206
+#: code:addons/product/pricelist.py:179
+#: code:addons/product/product.py:208
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -124,16 +119,11 @@ msgid "Small-sized image"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:174
+#: code:addons/product/product.py:176
 #, python-format
 msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
 "both belong to different Category!."
-msgstr ""
-
-#. module: product
-#: model:product.uom,name:product.product_uom_dozen
-msgid "Dozen"
 msgstr ""
 
 #. module: product
@@ -196,7 +186,7 @@ msgid "Product Type"
 msgstr "Τύπος Προϊόντος"
 
 #. module: product
-#: code:addons/product/product.py:410
+#: code:addons/product/product.py:412
 #, python-format
 msgid "Products: "
 msgstr "Προϊόντα: "
@@ -283,11 +273,6 @@ msgstr ""
 #: field:product.uom,category_id:0
 msgid "Category"
 msgstr "Κατηγορία"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_litre
-msgid "Litre"
-msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_25_product_template
@@ -514,6 +499,11 @@ msgid "Headset standard"
 msgstr ""
 
 #. module: product
+#: model:product.uom,name:product.product_uom_day
+msgid "Day(s)"
+msgstr ""
+
+#. module: product
 #: help:product.product,incoming_qty:0
 msgid ""
 "Quantity of products that are planned to arrive.\n"
@@ -572,13 +562,9 @@ msgid "PC Assemble + Custom (PC on Demand)"
 msgstr ""
 
 #. module: product
-#: model:process.transition,note:product.process_transition_supplierofproduct0
-msgid ""
-"1 or several supplier(s) can be linked to a product. All information stands "
-"in the product form."
+#: model:product.template,description:product.product_product_27_product_template
+msgid "Custom Laptop based on customer's requirement."
 msgstr ""
-"Ένας ή περισσότεροι προμηθευτές μπορούν να συνδεθούν με το προϊόν. Όλες οι "
-"πληροφορίες εμφανίζονται στην φόρμα προϊόντος."
 
 #. module: product
 #: help:product.packaging,width:0
@@ -586,7 +572,7 @@ msgid "The width of the package"
 msgstr "Το πλάτος της συσκευασίας"
 
 #. module: product
-#: code:addons/product/product.py:359
+#: code:addons/product/product.py:361
 #, python-format
 msgid "Unit of Measure categories Mismatch!"
 msgstr ""
@@ -691,6 +677,7 @@ msgstr ""
 
 #. module: product
 #: field:product.supplierinfo,name:0
+#: field:product.template,seller_ids:0
 msgid "Supplier"
 msgstr "Προμηθευτής"
 
@@ -718,8 +705,8 @@ msgid "If checked new messages require your attention."
 msgstr ""
 
 #. module: product
-#: model:product.category,name:product.product_category_1
-msgid "Saleable"
+#: field:product.product,ean13:0
+msgid "EAN13 Barcode"
 msgstr ""
 
 #. module: product
@@ -794,6 +781,11 @@ msgid "End Date"
 msgstr "Ημερομηνία Λήξης"
 
 #. module: product
+#: model:product.uom,name:product.product_uom_litre
+msgid "Liter(s)"
+msgstr ""
+
+#. module: product
 #: view:product.price_list:0
 msgid "Print"
 msgstr "Εκτύπωση"
@@ -826,7 +818,6 @@ msgstr "Κλειδί"
 #. module: product
 #: model:ir.actions.report.xml,name:product.report_product_pricelist
 #: model:ir.model,name:product.model_product_pricelist
-#: field:product.product,price:0
 #: field:product.product,pricelist_id:0
 #: view:product.supplierinfo:0
 msgid "Pricelist"
@@ -834,8 +825,8 @@ msgstr "Τιμοκατάλογος"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_hour
-msgid "Hour"
-msgstr "Ώρα"
+msgid "Hour(s)"
+msgstr ""
 
 #. module: product
 #: selection:product.template,state:0
@@ -848,9 +839,13 @@ msgid "Partner"
 msgstr "Συνεργάτης"
 
 #. module: product
-#: model:product.template,description:product.product_product_27_product_template
-msgid "Custom Laptop based on customer's requirement."
+#: model:process.transition,note:product.process_transition_supplierofproduct0
+msgid ""
+"1 or several supplier(s) can be linked to a product. All information stands "
+"in the product form."
 msgstr ""
+"Ένας ή περισσότεροι προμηθευτές μπορούν να συνδεθούν με το προϊόν. Όλες οι "
+"πληροφορίες εμφανίζονται στην φόρμα προϊόντος."
 
 #. module: product
 #: field:product.pricelist.item,price_round:0
@@ -914,11 +909,6 @@ msgstr ""
 #: field:product.packaging,weight:0
 msgid "Total Package Weight"
 msgstr "Συνολικό βάρος δέματος"
-
-#. module: product
-#: field:product.product,seller_info_id:0
-msgid "unknown"
-msgstr ""
 
 #. module: product
 #: help:product.packaging,code:0
@@ -1092,6 +1082,11 @@ msgid "Right Parent"
 msgstr ""
 
 #. module: product
+#: field:product.product,price:0
+msgid "Price"
+msgstr ""
+
+#. module: product
 #: field:product.pricelist.item,price_surcharge:0
 msgid "Price Surcharge"
 msgstr "Τιμή Προσαύξησης"
@@ -1163,6 +1158,11 @@ msgstr ""
 #: help:product.category,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of product categories."
+msgstr ""
+
+#. module: product
+#: model:product.uom,name:product.product_uom_dozen
+msgid "Dozen(s)"
 msgstr ""
 
 #. module: product
@@ -1241,7 +1241,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:359
+#: code:addons/product/product.py:361
 #, python-format
 msgid ""
 "New Unit of Measure '%s' must belong to same Unit of Measure category '%s' "
@@ -1296,11 +1296,6 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: field:product.template,seller_ids:0
-msgid "Partners"
-msgstr "Συνεργάτες"
-
-#. module: product
 #: help:product.pricelist.item,categ_id:0
 msgid ""
 "Specify a product category if this rule only applies to products belonging "
@@ -1313,7 +1308,12 @@ msgid "Inventory"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:736
+#: field:product.product,seller_info_id:0
+msgid "Supplier Info"
+msgstr "Πληροφορίες Προμηθευτή"
+
+#. module: product
+#: code:addons/product/product.py:729
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -1432,16 +1432,9 @@ msgstr ""
 
 #. module: product
 #: selection:product.ul,type:0
-#: model:product.uom,name:product.product_uom_unit
 #: model:product.uom.categ,name:product.product_uom_categ_unit
 msgid "Unit"
 msgstr "Μονάδα"
-
-#. module: product
-#: code:addons/product/product.py:588
-#, python-format
-msgid "Product has been <b>created</b>."
-msgstr ""
 
 #. module: product
 #: field:product.pricelist.version,date_start:0
@@ -1552,8 +1545,8 @@ msgid "Pricelist Name"
 msgstr "Ονομασία Τιμοκαταλόγου"
 
 #. module: product
-#: field:product.product,ean13:0
-msgid "EAN13 Barcode"
+#: model:product.category,name:product.product_category_1
+msgid "Saleable"
 msgstr ""
 
 #. module: product
@@ -1787,7 +1780,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:206
+#: code:addons/product/product.py:208
 #, python-format
 msgid "Cannot change the category of existing Unit of Measure '%s'."
 msgstr ""
@@ -1823,7 +1816,7 @@ msgid "Default Unit of Measure"
 msgstr "Προεπιλεγμένη Μονάδα Μέτρησης"
 
 #. module: product
-#: code:addons/product/pricelist.py:375
+#: code:addons/product/pricelist.py:377
 #, python-format
 msgid "Partner section of the product form"
 msgstr "Τομέας συνεργάτη στην φόρμα προϊόντος"
@@ -1849,7 +1842,12 @@ msgid "Messages"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:174
+#: model:product.uom,name:product.product_uom_unit
+msgid "Unit(s)"
+msgstr ""
+
+#. module: product
+#: code:addons/product/product.py:176
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -2163,7 +2161,7 @@ msgid "Normal"
 msgstr "Κανονικό"
 
 #. module: product
-#: code:addons/product/pricelist.py:177
+#: code:addons/product/pricelist.py:179
 #, python-format
 msgid ""
 "At least one pricelist has no active version !\n"
@@ -2216,12 +2214,6 @@ msgstr ""
 #: selection:product.template,mes_type:0
 msgid "Variable"
 msgstr "Μεταβλητή"
-
-#. module: product
-#: field:product.product,message_comment_ids:0
-#: help:product.product,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
 
 #. module: product
 #: field:product.template,rental:0
@@ -2379,7 +2371,7 @@ msgid "15” LCD Monitor"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:374
+#: code:addons/product/pricelist.py:376
 #: field:product.pricelist.item,base_pricelist_id:0
 #, python-format
 msgid "Other Pricelist"
@@ -2512,803 +2504,3 @@ msgstr "Ο όγκος σε m3."
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
 msgstr "Έκπτωση Τιμής"
-
-#~ msgid ""
-#~ "The minimal quantity to purchase for this supplier, expressed in the default "
-#~ "unit of measure."
-#~ msgstr ""
-#~ "Η μικρότερη ποσότητα αγοράς απο αυτόν τον προμηθευτή, εκφρασμένο στην "
-#~ "προκαθορισμένη μονάδα μέτρησης."
-
-#~ msgid "Net weight"
-#~ msgstr "Καραρό βάρος"
-
-#~ msgid ""
-#~ "Determine if the product is visible in the list of products within a "
-#~ "selection from a purchase order line."
-#~ msgstr ""
-#~ "Διευκρινήστε αν το προϊόν είναι ορατό στην λίστα των προϊόντων μέσα στις "
-#~ "επιλογές μιάς γραμμής αγοράς."
-
-#~ msgid "DDR 512MB PC400"
-#~ msgstr "DDR 512MB PC400"
-
-#~ msgid ""
-#~ "Set a template if this rule only apply to a template of product. Keep empty "
-#~ "for all products"
-#~ msgstr ""
-#~ "Καθορίστε ένα πρότυπο εάν αυτός ο κανόνας εφαρμόζεται σε ένα πρότυπο ενός "
-#~ "προϊόντος. Κρατήστε κενό εάν πρόκειται για όλα τα προϊόντα"
-
-#~ msgid ""
-#~ "Quantities of products that are planned to arrive in selected locations or "
-#~ "all internal if none have been selected."
-#~ msgstr ""
-#~ "Ποσότητες προϊόντων που είναι σχεδιασμένα να παραληφθούν στις επιλεγμένες "
-#~ "τοποθεσίες ή όλες εσωτερικά αν καμμία δεν επιλεγεί."
-
-#~ msgid "Product Process"
-#~ msgstr "Επεξεργασία Προϊόντος"
-
-#~ msgid "Prices Types"
-#~ msgstr "Τύποι Τιμών"
-
-#~ msgid "List Price"
-#~ msgstr "Τιμή τιμοκαταλόγου"
-
-#~ msgid "Customer Price"
-#~ msgstr "Τιμή Πελάτη"
-
-#~ msgid "Produce"
-#~ msgstr "Παραγωγή"
-
-#~ msgid "Kit Keyboard + Mouse"
-#~ msgstr "Kit Keyboard + Mouse"
-
-#~ msgid "Sellable"
-#~ msgstr "Πωλείται"
-
-#~ msgid "Processor AMD Athlon XP 2200+"
-#~ msgstr "Processor AMD Athlon XP 2200+"
-
-#~ msgid ""
-#~ "Base price for computing the customer price. Sometimes called the catalog "
-#~ "price."
-#~ msgstr ""
-#~ "Χονδρική τιμή για τον υπολογισμό της τιμής πελάτη. Μερικές φορές ονομάζεται "
-#~ "και τιμή τιμοκαταλόγου."
-
-#~ msgid "The number of layer on a palet or box"
-#~ msgstr "Ο αριθμός των επιπέδων σε μιά παλέτα ή κούτι."
-
-#~ msgid "If Other Pricelist"
-#~ msgstr "Σε περίπτωση άλλου Τιμοκαταλόγου"
-
-#~ msgid "Silent fan"
-#~ msgstr "Αθόρυβος ανεμιστήρας"
-
-#~ msgid ""
-#~ "Produce will generate production order or tasks, according to the product "
-#~ "type. Purchase will trigger purchase orders when requested."
-#~ msgstr ""
-#~ "Η παραγωγή θα δημιουργήσει μιά εντολή παραγωγής ή εργασίες σύμφωνα με τον "
-#~ "τύπο προϊόντος. Η Αγορές θα ενεργοποιήσουν εντολές αγοράς όταν ζητηθούν."
-
-#~ msgid "Units of Measure Categories"
-#~ msgstr "Κατηγορίες Μονάδων Μέτρησης"
-
-#~ msgid "Prices Computations"
-#~ msgstr "Υπολογισμοί Τιμών"
-
-#~ msgid "Virtual Stock"
-#~ msgstr "Εικονικό Απόθεμα"
-
-#~ msgid "Configuration"
-#~ msgstr "Παραμετροποίηση"
-
-#~ msgid "Error ! You can not create recursive categories."
-#~ msgstr "Σφάλμα! Δεν μπορείτε να δημιουργήσετε επαναλαμβανόμενες κατηγορίες"
-
-#~ msgid "Default UoM"
-#~ msgstr "Προκαθορισμένη ΜΜ"
-
-#~ msgid "Number of Layer"
-#~ msgstr "Αριθμός του Επιπέδου"
-
-#~ msgid "Keyboard"
-#~ msgstr "Πληκτρολόγιο"
-
-#~ msgid ""
-#~ "Standard Price: the cost price is fixed and recomputed periodically (usually "
-#~ "at the end of the year), Average Price: the cost price is recomputed at each "
-#~ "reception of products."
-#~ msgstr ""
-#~ "Σταθερή Τιμή: το κόστος είναι σταθερό και επανυπολογίζεται περιοδικά "
-#~ "(συνήθως στο τέλος του έτους), Η Μέση Τιμή: το κόστος επανυπολογίζεται σε "
-#~ "κάθε παραλαβή προϊόντων."
-
-#~ msgid "Create new Product"
-#~ msgstr "Δημιουργία Νέου Προϊόντος"
-
-#~ msgid "Mouse"
-#~ msgstr "Ποντίκι"
-
-#~ msgid ""
-#~ "Set a product if this rule only apply to one product. Keep empty for all "
-#~ "products"
-#~ msgstr ""
-#~ "Καθορίστε ένα προϊόν εάν αυτός ο κανόνας εφαρμόζεται σε ένα προϊόν. "
-#~ "Διατηρήστε το κενό για όλα τα προϊόντα."
-
-#~ msgid "In Production"
-#~ msgstr "Σε Παραγωγή"
-
-#~ msgid "Priority"
-#~ msgstr "Προτεραιότητα"
-
-#~ msgid "HDD on demand"
-#~ msgstr "HDD κατ'απαίτηση"
-
-#~ msgid "Processor AMD Athlon XP 1800+"
-#~ msgstr "Processor AMD Athlon XP 1800+"
-
-#~ msgid "Miscelleanous"
-#~ msgstr "Διάφορα"
-
-#~ msgid "PCE"
-#~ msgstr "ΤΜΧ"
-
-#~ msgid "Partner Product Name"
-#~ msgstr "Περιγραφή Προϊόντος Συνεργάτη"
-
-#~ msgid "PC"
-#~ msgstr "PC"
-
-#~ msgid ""
-#~ "This pricelist will be used, instead of the default one,                     "
-#~ "for sales to the current partner"
-#~ msgstr ""
-#~ "Αυτός ο τιμοκατάλογος θα χρησιμοποιηθεί αντί για τον προκαθορισμένο για "
-#~ "πωλήσεις στον τρέχοντα συνεργάτη."
-
-#~ msgid "Rules Test Match"
-#~ msgstr "Δοκιμή Σύγκρισης Κανόνων"
-
-#~ msgid ""
-#~ "Quantities of products that are planned to leave in selected locations or "
-#~ "all internal if none have been selected."
-#~ msgstr ""
-#~ "Ποσότητες των προϊόντων που σχεδιάζονται να φύγουν σε επιλεγμένες τοποθεσίες "
-#~ "ή όλες εσωτερικά εάν καμιά δεν επιλεγεί."
-
-#~ msgid "HDD Seagate 7200.8 160GB"
-#~ msgstr "HDD Seagate 7200.8 160GB"
-
-#~ msgid "HDD Seagate 7200.8 80GB"
-#~ msgstr "HDD Seagate 7200.8 80GB"
-
-#~ msgid "Processor on demand"
-#~ msgstr "Επεξεργαστής κατ'απαίτηση"
-
-#~ msgid "EAN13"
-#~ msgstr "EAN13"
-
-#~ msgid ""
-#~ "Name of the product for this partner, will be used when printing a request "
-#~ "for quotation. Keep empty to use the internal one."
-#~ msgstr ""
-#~ "Η Περιγραφή προϊόντος για αυτόν τον συνεργάτη θα χρησιμοποιηθεί στην "
-#~ "εκτύπωση της παραγγελίας. Διατηρήστε κενό αν επιθυμείτε να χρησιμοποιήσετε "
-#~ "την βασική"
-
-#~ msgid "IT components kits"
-#~ msgstr "IT components kits"
-
-#~ msgid ""
-#~ "Current quantities of products in selected locations or all internal if none "
-#~ "have been selected."
-#~ msgstr ""
-#~ "Οι τρέχουσες ποσότητες των προϊόντων στις επιλεγμένες τοποθεσίες ή όλες "
-#~ "εσωτερικά εάν δεν επιλεγεί καμία."
-
-#~ msgid "Sales Properties"
-#~ msgstr "Ιδιότητες Πωλήσεων"
-
-#~ msgid "Basic PC"
-#~ msgstr "Βασικός Η/Υ"
-
-#~ msgid "Mainboard ASUStek A7V8X-X"
-#~ msgstr "Mainboard ASUStek A7V8X-X"
-
-#~ msgid "Complete PC With Peripherals"
-#~ msgstr "Ολοκληρωμένος Η/Υ με Περιφερειακά"
-
-#~ msgid "Can be sold"
-#~ msgstr "Πωλουμενο"
-
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr ""
-#~ "Σφάλμα: Η προκαθορισμένη ΜΜ και η ΜΜ αγορών πρέπει να είναι στην ίδια "
-#~ "κατηγορία."
-
-#~ msgid "Real Stock"
-#~ msgstr "Πραγματικό Απόθεμα"
-
-#~ msgid "DDR 256MB PC400"
-#~ msgstr "DDR 256MB PC400"
-
-#~ msgid "Row"
-#~ msgstr "Σειρά"
-
-#~ msgid ""
-#~ "Used by companies that manages two unit of measure: invoicing and stock "
-#~ "management. For example, in food industries, you will manage a stock of ham "
-#~ "but invoice in Kg. Keep empty to use the default UOM."
-#~ msgstr ""
-#~ "Χρησιμοποιείται απο εταιρίες που διαχειρίζονται δύο μονάδες μέτρησης: "
-#~ "τιμολογήσεις και διαχείρησης αποθεμάτων. Για παράδειγμα, σε εταιρίες "
-#~ "τροφίμων, θα διαχειριζόσασταν ένα απόθεμα ζαμπόν αλλα θα τιμολογούσατε σε "
-#~ "κιλά. Διατηρήστε κενό για προκαθορισμένη μονάδα μέτρησης."
-
-#~ msgid "Weigths"
-#~ msgstr "Βάρη"
-
-#~ msgid "IT components"
-#~ msgstr "IT components"
-
-#~ msgid "Buy"
-#~ msgstr "Αγορά"
-
-#~ msgid "Purchase UoM"
-#~ msgstr "ΜΜ Αγορών"
-
-#~ msgid "Price list"
-#~ msgstr "Τιμοκατάλογος"
-
-#~ msgid "Regular case fan 80mm"
-#~ msgstr "Regular case fan 80mm"
-
-#~ msgid "Medium PC"
-#~ msgstr "Medium PC"
-
-#~ msgid ""
-#~ "Gives the different ways to package the same product. This has no impact on "
-#~ "the packing order and is mainly used if you use the EDI module."
-#~ msgstr ""
-#~ "Δίνει διαφορετικές μεθόδους για την συσκευασία του ίδιου προϊόντος. Αυτό δεν "
-#~ "έχει καμία επίπτωση στην κατανομή των συσκευασιών και κυρίως χρησιμοποιείται "
-#~ "απο το υποσύστημα EDI."
-
-#~ msgid "Dello Computer"
-#~ msgstr "Dello Computer"
-
-#~ msgid "Gross weight"
-#~ msgstr "Μικτό βάρος"
-
-#~ msgid "Storage Localisation"
-#~ msgstr "Τοποθεσία Αποθήκευσης"
-
-#~ msgid "Tells the user if he can use the product or not."
-#~ msgstr "Προτείνει στον χρήστη εάν μπορεί να χρησιμοποιήσει το προϊόν ή όχι."
-
-#~ msgid "Pricelists Types"
-#~ msgstr "Τύποι Τιμοκαταλόγων"
-
-#~ msgid "Partner Product Code"
-#~ msgstr "Κωδικός Προϊόντος Συνεργάτη"
-
-#~ msgid "Phone Help"
-#~ msgstr "Τηλεφωνική Βοήθεια"
-
-#~ msgid "Computer Stuff"
-#~ msgstr "Είδη Ηλεκτρονικών Υπολογιστών"
-
-#~ msgid "Customizable PC"
-#~ msgstr "Customizable PC"
-
-#~ msgid "HDD Seagate 7200.8 120GB"
-#~ msgstr "HDD Seagate 7200.8 120GB"
-
-#~ msgid "The total number of products you can put by palet or box."
-#~ msgstr ""
-#~ "Ο συνολικός αριθμός των προϊότων που μπορείτε να βάλετε σε παλέτα ή κουτί"
-
-#~ msgid "RAM on demand"
-#~ msgstr "RAM κατ'απαίτηση"
-
-#~ msgid ""
-#~ "Code of the product for this partner, will be used when printing a request "
-#~ "for quotation. Keep empty to use the internal one."
-#~ msgstr ""
-#~ "Ο κωδικός του προϊόντος για αυτόν τον συνεργάτη που θα χρησιμοποιηθεί στην "
-#~ "εκτύπωση της αίτησης παραγγελίας. Διατηρήστε κενό για να χρησιμοποιηθεί ο "
-#~ "προτεινόμενος."
-
-#~ msgid "Warranty (months)"
-#~ msgstr "Εγγύηση (μήνες)"
-
-#~ msgid "Supplier Info"
-#~ msgstr "Πληροφορίες Προμηθευτή"
-
-#~ msgid "Price type"
-#~ msgstr "Τύποι Τιμών"
-
-#~ msgid "Product Description"
-#~ msgstr "Περιγραφή Προϊόντος"
-
-#~ msgid "Product suppliers, with their product name, price, etc."
-#~ msgstr "Προμηθευτές προϊόντων με τις περιγραφές των προϊόντων, τιμές, κλπ"
-
-#~ msgid "Make to Order"
-#~ msgstr "Προς Παραγγελία"
-
-#~ msgid "Mainboard ASUStek A7N8X"
-#~ msgstr "Mainboard ASUStek A7N8X"
-
-#~ msgid "Can be Purchased"
-#~ msgstr "Μπορεί να αγοραστεί"
-
-#~ msgid "Products Categories"
-#~ msgstr "Κατηγορίες Προϊόντων"
-
-#~ msgid "Case"
-#~ msgstr "Case"
-
-#~ msgid "Basic+ PC (assembly on order)"
-#~ msgstr "Basic+ PC (assembly on order)"
-
-#~ msgid "The weight of a full of products palet or box."
-#~ msgstr "Το βάρος μιάς πλήρους παλέτας ή κούτας προϊόντων"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "Προσοχή!"
-
-#~ msgid "High speed processor config"
-#~ msgstr "High speed processor config"
-
-#~ msgid "Prices & Suppliers"
-#~ msgstr "Τιμές & Προμηθευτές"
-
-#~ msgid "ATX Mid-size Tower"
-#~ msgstr "ATX Mid-size Tower"
-
-#~ msgid "Delivery Delay"
-#~ msgstr "Καθυστέρηση Παράδοσης"
-
-#~ msgid ""
-#~ "Average time to produce this product. This is only for the production order "
-#~ "and, if it is a multi-level bill of material, it's only for the level of "
-#~ "this product. Different delays will be summed for all levels and purchase "
-#~ "orders."
-#~ msgstr ""
-#~ "Ο μέσος χρόνος παραγωγής του προϊόντος. Χρησιμοποιείται μόνο στην εντολή "
-#~ "παραγωγής, εάν πρόκειται για πολλών επιπέδων σύνθεση υλικών τότε "
-#~ "χρησιμοποιείται το επίπεδο που υπάρχει αυτό το υλικό. Διαφορετικές "
-#~ "καθυστερήσεις θα αθροιστούν για όλα τα επίπεδα και εντολές αγοράς."
-
-#~ msgid "KGM"
-#~ msgstr "KGM"
-
-#~ msgid ""
-#~ "Futur stock for this product according to the selected location or all "
-#~ "internal if none have been selected. Computed as: Real Stock - Outgoing + "
-#~ "Incoming."
-#~ msgstr ""
-#~ "Μελλοντικό στόκ για αυτό το προϊόν σύμφωνα με τις επιλεγμένες τοποθεσίες ή "
-#~ "όλες εσωτερικά εάν καμία δεν επιλεγεί. Υπολογιζόμενο ως: Πραγματικό Στόκ - "
-#~ "Εξερχόμενες + Εισερχόμενες."
-
-#~ msgid "Customer Lead Time"
-#~ msgstr "Προηγμένος χρόνος πελάτη"
-
-#~ msgid "Onsite Senior Intervention"
-#~ msgstr "Onsite Senior Intervention"
-
-#~ msgid "Procure Method"
-#~ msgstr "Μέθοδος Προμήθειας"
-
-#~ msgid "Make to Stock"
-#~ msgstr "Πρός Αποθήκευση"
-
-#~ msgid ""
-#~ "Determine if the product can be visible in the list of product within a "
-#~ "selection from a sale order line."
-#~ msgstr ""
-#~ "Επιβεβαίωση ότι αυτό το προϊόν θα είναι ορατό στην λίστα προϊόντων μέσα σε "
-#~ "μια επιλογή απο γραμμές παραγγελιών πώλησης."
-
-#~ msgid "Factor"
-#~ msgstr "Παράγοντας"
-
-#~ msgid "Rack"
-#~ msgstr "Rack"
-
-#~ msgid "Rate"
-#~ msgstr "Βαθμός"
-
-#~ msgid "Regular processor config"
-#~ msgstr "Regular processor config"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Το όνομα του αντικειμένου θα πρέπει να αρχίζει με x_ και να μην περιέχει "
-#~ "ειδικούς χαρακτήρες!"
-
-#~ msgid ""
-#~ "Default Unit of Measure used for purchase orders. It must in the same "
-#~ "category than the default unit of measure."
-#~ msgstr ""
-#~ "Προκαθορισμένη Μονάδα Μέτρησης που χρησιμοποιείται στις εντολές αγοράς. Θα "
-#~ "πρέπει να είναι στην ίδια κατηγορια με την προκαθορισμένη μονάδα μέτρησης."
-
-#~ msgid "Onsite Intervention"
-#~ msgstr "Onsite Intervention"
-
-#~ msgid ""
-#~ "Set a category of product if this rule only apply to products of a category "
-#~ "and his childs. Keep empty for all products"
-#~ msgstr ""
-#~ "Ρυθμίστε μιά κατηγορία προϊόντων έαν αυτός ο κανόνας χρησιμοποιείται σε "
-#~ "προϊόντα μιάς κατηγορίας και των υποκατηγοριών. Διατηρήστε κενό για όλα τα "
-#~ "προϊόντα."
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Άκυρο XML για την αρχιτεκτονική όψης!"
-
-#~ msgid "Seq"
-#~ msgstr "Ακολουθία"
-
-#~ msgid ""
-#~ "Coefficient to convert UOM to UOS\n"
-#~ " uom = uos * coeff"
-#~ msgstr ""
-#~ "Συντελεστής για την μετατροπή πρώτης μονάδας μέτρησης στην δεύτερη\n"
-#~ "1η ΜΜ = 2η ΜΜ * Συντελεστή"
-
-#~ msgid "UOM -> UOS Coeff"
-#~ msgstr "1η ΜΜ -> 2η ΜΜ Συντ."
-
-#~ msgid "Error: UOS must be in a different category than the UOM"
-#~ msgstr ""
-#~ "Σφάλμα: 2η ΜΜ πρέπει να είναι σε διαφορετική κατηγορία απο την πρώτη ΜΜ"
-
-#~ msgid ""
-#~ "Delay in days between the confirmation of the purchase order and the "
-#~ "reception of the products in your warehouse. Used by the scheduler for "
-#~ "automatic computation of the purchase order planning."
-#~ msgstr ""
-#~ "Delay in days between the confirmation of the purchase order and the "
-#~ "reception of the products in your warehouse. Used by the scheduler for "
-#~ "automatic computation of the purchase order planning."
-
-#~ msgid "Private"
-#~ msgstr "Private"
-
-#~ msgid "The weight of the empty UL"
-#~ msgstr "The weight of the empty UL"
-
-#~ msgid "You can see the list of suppliers for that product."
-#~ msgstr "Μπορείτε να δείτε τους προμηθευτές του προϊόντος."
-
-#~ msgid "Rentable Product"
-#~ msgstr "Ενοικιαζόμενο προϊόν"
-
-#~ msgid ""
-#~ "The cost of the product for accounting stock valuation. It can serves as a "
-#~ "base price for supplier price."
-#~ msgstr ""
-#~ "Το κόστος του προϊόντος για την λογιστική αποτίμηση. Μπορεί να "
-#~ "χρησιμοποιηθεί και σαν βασική τιμή του προμηθευτή."
-
-#~ msgid "Starting date for this pricelist version to be valid."
-#~ msgstr "Ημερομηνία έναρξης της ισχύς του τιμοκαταλόγου."
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Λανθασμένο όνομα μοντέλου στην δήλωση ενέργειας"
-
-#~ msgid "The mode for computing the price for this rule."
-#~ msgstr "Ο τρόπος υπολογισμού της τιμής για αυτό τον κανόνα."
-
-#~ msgid ""
-#~ "'Make to Stock': When needed, take from the stock or wait until re-"
-#~ "supplying. 'Make to Order': When needed, purchase or produce for the "
-#~ "procurement request."
-#~ msgstr ""
-#~ "'Προς Αποθήκευση': Όταν χρειαστεί, εξαγωγή από το απόθεμα ή αναμονή μέχρι "
-#~ "την επόμενη προμήθεια. 'Προς Παραγγελία': Όταν χρειαστεί προμήθεια ή "
-#~ "παραγωγή του προϊόντος."
-
-#~ msgid "Suppliers of Product"
-#~ msgstr "Προμηθευτές του προϊόντος"
-
-#~ msgid "Ending date for this pricelist version to be valid."
-#~ msgstr "Ημερομηνία λήξης της ισχύς του τιμοκαταλόγου."
-
-#~ msgid ""
-#~ "The rule only applies if the partner buys/sells more than this quantity."
-#~ msgstr ""
-#~ "Ο κανόνας εφαρμόζεται μόνο αν ο συνεργάτης αγοράσει/πουλήσει περισσότερο από "
-#~ "αυτήν την ποσότητα."
-
-#~ msgid ""
-#~ "Unit of Measure of a category can be converted between each others in the "
-#~ "same category."
-#~ msgstr ""
-#~ "Οι μονάδες μέτρησης μας κατηγορίας μπορούν να μετατραπούν μεταξύ τους."
-
-#~ msgid ""
-#~ "The computed quantity will be a multiple of this value. Use 1.0 for products "
-#~ "that can not be split."
-#~ msgstr ""
-#~ "Η υπολογισμένη ποσότητα θα είναι πολλαπλάσιο αυτής της αξίας. Χρησιμοποιήστε "
-#~ "1,0 για προϊόντα που δεν μπορούν να διαιρεθούν."
-
-#~ msgid ""
-#~ "The coefficient for the formula:\n"
-#~ "coeff (base unit) = 1 (this unit). Factor = 1 / Rate."
-#~ msgstr ""
-#~ "Ο συντελεστής μετατροπής αυτής της μονάδας.\n"
-#~ "συντελεστής * (βασική μονάδα)  = 1 (αυτή η μονάδα) . Παράγοντας = 1/ βαθμός."
-
-#~ msgid ""
-#~ "The coefficient for the formula:\n"
-#~ "1 (base unit) = coeff (this unit). Rate = 1 / Factor."
-#~ msgstr ""
-#~ "Ο συντελεστής μετατροπής αυτής της μονάδας.\n"
-#~ "1  (βασική μονάδα)  = συντελεστής * (αυτή η μονάδα) . Βαθμός = 1/Παράγοντας."
-
-#~ msgid "Products & Pricelists"
-#~ msgstr "Προϊόντα και Τιμοκατάλογοι"
-
-#~ msgid ""
-#~ "Will change the way procurements are processed. Consumables are stockable "
-#~ "products with infinite stock, or for use when you have no inventory "
-#~ "management in the system."
-#~ msgstr ""
-#~ "Θα αλλάξει τον τρόπο που επεξεργάζονται οι προμήθειες. Τα καταναλωτικά είναι "
-#~ "αποθηκεύσιμα είδη με άπειρο απόθεμα, ή για χρήση όταν δεν χρειάζετε έλεγχο "
-#~ "αποθεμάτων."
-
-#~ msgid ""
-#~ "This is the average time between the confirmation of the customer order and "
-#~ "the delivery of the finished products. It's the time you promise to your "
-#~ "customers."
-#~ msgstr ""
-#~ "Αυτός είναι ο μέσος χρόνος μεταξύ της επιβεβαίωσης της παραγγελίας του "
-#~ "πελάτη και την παράδοση των έτοιμων προϊόντων. Είναι ο χρόνος που υπόσχεστε "
-#~ "στους πελάτες σας."
-
-#~ msgid "Codes"
-#~ msgstr "Κωδικοί"
-
-#~ msgid "Supply method"
-#~ msgstr "Μέθοδος απόκτησης"
-
-#~ msgid "Wood 2mm"
-#~ msgstr "Ξύλο 2χιλ"
-
-#~ msgid "Restaurant Expenses"
-#~ msgstr "Έξοδα εστιατορίου"
-
-#~ msgid "Metal Cleats"
-#~ msgstr "Μεταλικά Στηρίγματα"
-
-#~ msgid "KIT Shelf of 100cm"
-#~ msgstr "ΚΙΤ Ραφιού των 100εκ."
-
-#~ msgid "Kitchen Design Project"
-#~ msgstr "Έργο Σχεδιαμού Κουζίνας"
-
-#~ msgid "Miscellaneous"
-#~ msgstr "Διάφορα"
-
-#~ msgid "Side Panel"
-#~ msgstr "Πλάγιος Πίνακας"
-
-#~ msgid "Extended Filters..."
-#~ msgstr "Εκτεταμένα Φίλτα.."
-
-#~ msgid "Shelf of 200cm"
-#~ msgstr "Ράφι των 200εκ."
-
-#~ msgid "Ratio & Precision"
-#~ msgstr "Αναλογία & Ακρίβεια"
-
-#~ msgid "Calculate Product Price per unit base on pricelist version."
-#~ msgstr "Υπολογισμός Τιμής Προϊόντος ανά μονάδα βάση έκδοσης τιμοκαταλόγου"
-
-#~ msgid "m"
-#~ msgstr "μ"
-
-#~ msgid "Wood Lintel 4m"
-#~ msgstr "Ξύλινο Ανώφλιο 4μ"
-
-#, python-format
-#~ msgid " (copy)"
-#~ msgstr " (αντίγραφο)"
-
-#~ msgid "Rack 200cm"
-#~ msgstr "σχάρα 200εκ"
-
-#~ msgid "Misc"
-#~ msgstr "Διαφ."
-
-#~ msgid "Default Unit Of Measure"
-#~ msgstr "Προεπιλεγμένη Μονάδα Μέτρησης"
-
-#~ msgid "Characteristics"
-#~ msgstr "Χαρακτηριστικά"
-
-#~ msgid "Employee"
-#~ msgstr "Υπάλληλος"
-
-#~ msgid "Shelf of 100cm"
-#~ msgstr "Ράφι των 100εκ"
-
-#~ msgid "Rear Panel SHE200"
-#~ msgstr "Οπίσθιο Πάνελ SHE200"
-
-#~ msgid "Rear Panel SHE100"
-#~ msgstr "Οπίσθιο Πάνελ SHE100"
-
-#~ msgid "Hotel Expenses"
-#~ msgstr "Έξοδα ξενοδοχείου"
-
-#~ msgid "Close"
-#~ msgstr "Κλείνω"
-
-#~ msgid "tonne"
-#~ msgstr "τόνος"
-
-#~ msgid "Rack 100cm"
-#~ msgstr "Σχάρα 100εκ"
-
-#~ msgid "Reference"
-#~ msgstr "Αναφορά"
-
-#~ msgid "Worker"
-#~ msgstr "Εργάτης"
-
-#~ msgid "Reference UoM for this category"
-#~ msgstr "Αναφορά Μ.Μ. για αυτήν την κατηγορία"
-
-#~ msgid "g"
-#~ msgstr "γ"
-
-#~ msgid "Stockable"
-#~ msgstr "Αποθηκεύσιμα"
-
-#~ msgid ""
-#~ "How many times this UoM is smaller than the reference UoM in this category:\n"
-#~ "1 * (reference unit) = ratio * (this unit)"
-#~ msgstr ""
-#~ "Πόσες φορές αυτή η Μ.Μ. είναι μικρότερη από την αναφερόμενη στην κατηγορία:\n"
-#~ "1*(αναφερόμενη μονάδα)= αναλογία*(τρέχουσα μονάδα)"
-
-#~ msgid "Unit of Measure Properties"
-#~ msgstr "Ιδιότητες Μονάδων Μέτρησης"
-
-#~ msgid "Shelves"
-#~ msgstr "Ράφια"
-
-#~ msgid ""
-#~ "How many times this UoM is bigger than the reference UoM in this category:\n"
-#~ "1 * (this unit) = ratio * (reference unit)"
-#~ msgstr ""
-#~ "Πόσες φορές αυτή η Μ.Μ είναι μεγαλύτερη από την αναφερόμενη Μ.Μ. στην "
-#~ "κατηγορία:\n"
-#~ "1 * (τρέχουσα μονάδα)=αναλογία*(αναφερόμενη μονάδα)"
-
-#~ msgid "To Sell"
-#~ msgstr "Επιτρέπεται η πώληση"
-
-#~ msgid "To Purchase"
-#~ msgstr "Επιτρέπεται η αγορά"
-
-#~ msgid "UoM Type"
-#~ msgstr "Τύπος Μονάδας Μέτρησης"
-
-#~ msgid "UOM"
-#~ msgstr "Μονάδα Μέτρησης"
-
-#~ msgid ""
-#~ "Error: The default UOM and the Supplier Product UOM must be in the same "
-#~ "category."
-#~ msgstr ""
-#~ "Λάθος: Η προεπιλεγμένη Μονάδα Μέτρησης και η Μονάδα Μέτρησης του προϊόντος "
-#~ "του Προμηθευτή πρέπει να είναι στην ίδια κατηγορία."
-
-#~ msgid "UoM"
-#~ msgstr "Μονάδα Μέτρησης"
-
-#~ msgid "Second UoM"
-#~ msgstr "Δεύτερη Μονάδα Μέτρησης"
-
-#~ msgid "Bigger than the reference UoM"
-#~ msgstr "Μεγαλύτερο από την αναφερόμενη Μονάδα Μέτρησης"
-
-#~ msgid "UoM Category"
-#~ msgstr "Κατηγορία Μονάδα Μέτρησης"
-
-#~ msgid "Default UOM"
-#~ msgstr "Προεπιλεγμένη Μονάδα Μέτρησης"
-
-#~ msgid "This is a quantity which is converted into Default Uom."
-#~ msgstr ""
-#~ "Αυτή είναι ποσότητα που μετατράπηκε στην προεπιλεγμένη Μονάδα Μέτρησης."
-
-#~ msgid "Smaller than the reference UoM"
-#~ msgstr "Μικρότερο απο την αναφερόμενη Μονάδα Μέτρησης"
-
-#~ msgid ""
-#~ "The computed quantity will be a multiple of this value. Use 1.0 for a UoM "
-#~ "that cannot be further split, such as a piece."
-#~ msgstr ""
-#~ "Η υπολογιζόμενη ποσότητα θα είναι πολλαπλάσιο της τιμής αυτής. "
-#~ "Χρησιμοποιήστε 1,0 για Μονάδα Μέτρησης που δεν μπορεί να χωριστεί περαιτέρω, "
-#~ "όπως ένα τεμάχιο."
-
-#~ msgid ""
-#~ "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
-#~ "Item!"
-#~ msgstr ""
-#~ "Σφάλμα ! Δεν μπορείς να αντιστοιχείσεις τον Κύριο Τιμοκατάλογο σαν Άλλο "
-#~ "Τιμοκατάλογο σε Είδος Τιμοκαταλόγου!"
-
-#~ msgid "Procurement Method"
-#~ msgstr "Μέθοδος Προμήθειας"
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "Σφάλμα!"
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Σφάλμα! Δεν επιτρέπεται η δημιουργία μελών σε κυκλικό συσχετισμό"
-
-#~ msgid ""
-#~ "This price will be considered as a price for the supplier UoM if any or the "
-#~ "default Unit of Measure of the product otherwise"
-#~ msgstr ""
-#~ "Αυτή η τιμή θα θεωρηθεί ως τιμή της ΜΜ προμηθευτή   εάν υπάρχει ή αλλιώς "
-#~ "προεπιλεγμένη Μονάδα Μέτρησης του προϊόντος"
-
-#~ msgid "Supplier UoM"
-#~ msgstr "ΜΜ Προμηθευτή"
-
-#~ msgid "Marketable Products"
-#~ msgstr "Εμπορεύσιμα Προϊόντα"
-
-#~ msgid "Assembly Section"
-#~ msgstr "Τομέας Συναρμολόγησης"
-
-#~ msgid "  e.g: 1 * (this unit) = ratio * (reference unit)"
-#~ msgstr "  π.χ.: 1 *(αυτήν την μονάδα)=αναλογία* (αναφερόμενη μονάδα)"
-
-#~ msgid ""
-#~ "Determines if the product can be visible in the list of product within a "
-#~ "selection from a sale order line."
-#~ msgstr ""
-#~ "Καθορίζει εάν το προϊόν θα είναι ορατό στην λίστα προϊόντων στην επιλογή των "
-#~ "προϊόντων πώλησης."
-
-#~ msgid ""
-#~ "The minimal quantity to trigger this rule, expressed in the supplier UoM if "
-#~ "any or in the default UoM of the product otherrwise."
-#~ msgstr ""
-#~ "Η ελάχιστη ποσότητα για ενεργοποίηση του κανόνα, στην ΜΜ του προμηθευτή αν "
-#~ "υπάρχει ή  αλλιώς η προεπιλεγμένη ΜΜ του προϊόντος."
-
-#~ msgid "Marketable Services"
-#~ msgstr "Εμπορεύσιμες Υπηρεσίες"
-
-#~ msgid ""
-#~ "Create and manage the units of measure you want to be used in your system. "
-#~ "You can define a conversion rate between several Units of Measure within the "
-#~ "same category."
-#~ msgstr ""
-#~ "Δημιουργεί και διαχειρίζεται τις μονάδες μέτρησης που θελετε να "
-#~ "χρησιμοποιηθούν στο σύστημά σας.Μπορείτε να ορίσετε μια αναλογία μετατροπής "
-#~ "μεταξύ πολλών Μονάδων Μέτρησης της ίδιας κατηγορίας."

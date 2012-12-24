@@ -1,20 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* document
+# Romanian translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-05-10 18:23+0000\n"
-"Last-Translator: Dorin <dhongu@gmail.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:17+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:12+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -22,25 +23,10 @@ msgid "Parent Directory"
 msgstr "Director principal"
 
 #. module: document
-#: code:addons/document/document_directory.py:273
+#: code:addons/document/document.py:336
 #, python-format
 msgid "Directory name contains special characters!"
 msgstr "Numele directorului contine caractere speciale!"
-
-#. module: document
-#: view:board.board:0
-msgid "Document board"
-msgstr "Panou documente"
-
-#. module: document
-#: model:ir.model,name:document.model_process_node
-msgid "Process Node"
-msgstr "Nod proces"
-
-#. module: document
-#: sql_constraint:document.directory:0
-msgid "Directory must have a parent or a storage."
-msgstr ""
 
 #. module: document
 #: view:document.directory:0
@@ -58,14 +44,13 @@ msgstr ""
 
 #. module: document
 #: view:document.directory:0
-#: view:document.storage:0
 msgid "Group By..."
 msgstr "Grupeaza dupa..."
 
 #. module: document
-#: model:ir.model,name:document.model_document_directory_content_type
-msgid "Directory Content Type"
-msgstr "Tip de continut director"
+#: view:ir.attachment:0
+msgid "Modification"
+msgstr ""
 
 #. module: document
 #: view:document.directory:0
@@ -105,9 +90,9 @@ msgid "Directory Content"
 msgstr "Continut director"
 
 #. module: document
-#: view:document.directory:0
-msgid "Dynamic context"
-msgstr "Context dinamic"
+#: view:ir.attachment:0
+msgid "My Document(s)"
+msgstr ""
 
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document_management_configuration
@@ -126,13 +111,13 @@ msgstr ""
 "referinta a inregistrarii actuale, in fisiere dinamice"
 
 #. module: document
-#: field:document.storage,path:0
-msgid "Path"
-msgstr "Ruta"
+#: help:document.directory.dctx,field:0
+msgid "The name of the field."
+msgstr ""
 
 #. module: document
-#: code:addons/document/document_directory.py:263
-#: code:addons/document/document_directory.py:268
+#: code:addons/document/document.py:326
+#: code:addons/document/document.py:331
 #, python-format
 msgid "Directory name must be unique!"
 msgstr "Numele directorului trebuie sa fie unic!"
@@ -159,7 +144,6 @@ msgstr ""
 
 #. module: document
 #: view:document.directory:0
-#: field:document.storage,dir_ids:0
 #: model:ir.actions.act_window,name:document.action_document_directory_form
 #: model:ir.ui.menu,name:document.menu_document_directories
 msgid "Directories"
@@ -169,13 +153,6 @@ msgstr "Directoare"
 #: model:ir.model,name:document.model_report_document_user
 msgid "Files details by Users"
 msgstr "Detalii fisiere dupa Utilizator"
-
-#. module: document
-#: code:addons/document/document_storage.py:569
-#: code:addons/document/document_storage.py:597
-#, python-format
-msgid "Error!"
-msgstr "Eroare!"
 
 #. module: document
 #: field:document.directory,resource_find_all:0
@@ -228,14 +205,9 @@ msgid ""
 msgstr ""
 
 #. module: document
-#: field:process.node,directory_id:0
-msgid "Document directory"
-msgstr "Director documente"
-
-#. module: document
-#: code:addons/document/document_directory.py:263
-#: code:addons/document/document_directory.py:268
-#: code:addons/document/document_directory.py:273
+#: code:addons/document/document.py:326
+#: code:addons/document/document.py:331
+#: code:addons/document/document.py:336
 #, python-format
 msgid "ValidateError"
 msgstr "Eroare de Validare"
@@ -253,18 +225,11 @@ msgid "Documents"
 msgstr "Documente"
 
 #. module: document
-#: view:document.directory:0
-#: field:document.directory,storage_id:0
-msgid "Storage"
-msgstr "Depozit"
-
-#. module: document
 #: field:document.directory,ressource_type_id:0
 msgid "Resource model"
 msgstr "Model resursa"
 
 #. module: document
-#: field:ir.attachment,file_size:0
 #: field:report.document.file,file_size:0
 #: field:report.document.user,file_size:0
 msgid "File Size"
@@ -277,21 +242,19 @@ msgid "Content Type"
 msgstr "Tip continut"
 
 #. module: document
-#: view:ir.attachment:0
-msgid "Modification"
-msgstr ""
-
-#. module: document
 #: view:document.directory:0
 #: field:document.directory,type:0
-#: view:document.storage:0
-#: field:document.storage,type:0
 msgid "Type"
 msgstr "Tip"
 
 #. module: document
-#: code:addons/document/document.py:194
-#: code:addons/document/document_directory.py:234
+#: sql_constraint:ir.attachment:0
+msgid "The filename must be unique in a directory !"
+msgstr ""
+
+#. module: document
+#: code:addons/document/document.py:110
+#: code:addons/document/document.py:296
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -329,11 +292,6 @@ msgid "Context fields"
 msgstr "Campuri context"
 
 #. module: document
-#: field:ir.attachment,store_fname:0
-msgid "Stored Filename"
-msgstr "Nume fisier stocat"
-
-#. module: document
 #: view:document.directory:0
 #: field:report.document.user,type:0
 msgid "Directory Type"
@@ -360,7 +318,7 @@ msgid "Virtual Files"
 msgstr "Fisiere virtuale"
 
 #. module: document
-#: code:addons/document/document_storage.py:635
+#: code:addons/document/document.py:562
 #, python-format
 msgid "Error at doc write!"
 msgstr "Eroare la scrierea documentului!"
@@ -397,7 +355,6 @@ msgstr "Securitate"
 
 #. module: document
 #: field:document.directory,write_uid:0
-#: field:document.storage,write_uid:0
 #: field:ir.attachment,write_uid:0
 msgid "Last Modification User"
 msgstr "Utilizatorul ultimei modificari"
@@ -420,7 +377,6 @@ msgstr "Domeniu"
 
 #. module: document
 #: field:document.directory,write_date:0
-#: field:document.storage,write_date:0
 #: field:ir.attachment,write_date:0
 msgid "Date Modified"
 msgstr "Data modificarii"
@@ -465,12 +421,9 @@ msgstr ""
 "subordonate"
 
 #. module: document
-#: help:document.storage,online:0
-msgid ""
-"If not checked, media is currently offline and its contents not available"
-msgstr ""
-"Daca nu bifati, mediile sunt offline in prezent, iar continutul lor nu este "
-"disponibil"
+#: view:document.directory:0
+msgid "Static"
+msgstr "Static"
 
 #. module: document
 #: field:report.document.user,user:0
@@ -480,7 +433,6 @@ msgstr ""
 #. module: document
 #: view:document.directory:0
 #: field:document.directory,user_id:0
-#: field:document.storage,user_id:0
 #: view:ir.attachment:0
 #: field:ir.attachment,user_id:0
 #: field:report.document.user,user_id:0
@@ -499,15 +451,9 @@ msgstr "Cuprins"
 
 #. module: document
 #: field:document.directory,create_date:0
-#: field:document.storage,create_date:0
 #: field:report.document.user,create_date:0
 msgid "Date Created"
 msgstr "Data crearii"
-
-#. module: document
-#: field:document.directory,ressource_id:0
-msgid "Resource ID"
-msgstr "ID resursa"
 
 #. module: document
 #: help:document.directory.content,include_name:0
@@ -519,17 +465,6 @@ msgstr ""
 "Bifati acest camp daca doriti ca numele fisierului sa contina numele "
 "inregistrarii.\n"
 "Daca este setat, directorul va trebui sa fie o resursa."
-
-#. module: document
-#: model:ir.actions.act_window,name:document.open_board_document_manager
-#: model:ir.ui.menu,name:document.menu_reports_document
-msgid "Knowledge"
-msgstr ""
-
-#. module: document
-#: view:document.storage:0
-msgid "Document Storage"
-msgstr ""
 
 #. module: document
 #: view:document.configuration:0
@@ -546,11 +481,6 @@ msgstr "Include Numele Inregistrarii"
 #: field:ir.actions.report.xml,model_id:0
 msgid "Model Id"
 msgstr "Id model"
-
-#. module: document
-#: field:document.storage,online:0
-msgid "Online"
-msgstr "Online"
 
 #. module: document
 #: help:document.directory,ressource_tree:0
@@ -583,9 +513,9 @@ msgid "August"
 msgstr "August"
 
 #. module: document
-#: view:ir.attachment:0
-msgid "My Document(s)"
-msgstr ""
+#: view:document.directory:0
+msgid "Dynamic context"
+msgstr "Context dinamic"
 
 #. module: document
 #: sql_constraint:document.directory:0
@@ -599,7 +529,6 @@ msgstr "Iunie"
 
 #. module: document
 #: field:document.directory,group_ids:0
-#: field:document.storage,group_ids:0
 msgid "Groups"
 msgstr "Grupuri"
 
@@ -612,11 +541,6 @@ msgstr "Activ(a)"
 #: selection:report.document.user,month:0
 msgid "November"
 msgstr "Noiembrie"
-
-#. module: document
-#: field:ir.attachment,db_datas:0
-msgid "Data"
-msgstr "Data"
 
 #. module: document
 #: help:document.directory,ressource_parent_type_id:0
@@ -647,9 +571,9 @@ msgid "Seq."
 msgstr "Secv."
 
 #. module: document
-#: selection:document.storage,type:0
-msgid "Database"
-msgstr "Baza de date"
+#: model:ir.actions.act_window,name:document.action_view_all_document_tree1
+msgid "All Users files"
+msgstr "Fisierele tuturor utilizatorilor"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -657,13 +581,7 @@ msgid "January"
 msgstr "Ianuarie"
 
 #. module: document
-#: field:document.storage,readonly:0
-msgid "Read Only"
-msgstr "Doar citire"
-
-#. module: document
 #: view:document.directory:0
-#: view:process.node:0
 msgid "Document Directory"
 msgstr "Director Documente"
 
@@ -679,7 +597,6 @@ msgstr ""
 
 #. module: document
 #: field:document.directory,create_uid:0
-#: field:document.storage,create_uid:0
 msgid "Creator"
 msgstr "Creator"
 
@@ -698,7 +615,6 @@ msgstr ""
 "functie de modulele instalate."
 
 #. module: document
-#: view:board.board:0
 #: model:ir.actions.act_window,name:document.action_view_files_by_month_graph
 #: view:report.document.user:0
 msgid "Files by Month"
@@ -720,19 +636,9 @@ msgid "Children"
 msgstr "Subordonati"
 
 #. module: document
-#: view:board.board:0
-msgid "Files by user"
-msgstr ""
-
-#. module: document
-#: selection:document.storage,type:0
-msgid "External file storage"
-msgstr "Stocare fisiere externe"
-
-#. module: document
-#: help:document.storage,path:0
-msgid "For file storage, the root path of the storage"
-msgstr "Pentru stocarea fisierelor, root path a stocarii"
+#: field:document.directory,ressource_id:0
+msgid "Resource ID"
+msgstr "ID resursa"
 
 #. module: document
 #: field:document.directory.dctx,field:0
@@ -750,28 +656,18 @@ msgid "Parent Model"
 msgstr "Model parinte"
 
 #. module: document
-#: help:document.directory.dctx,field:0
+#: view:document.directory:0
 msgid ""
-"The name of the field. Note that the prefix \"dctx_\" will be prepended to "
-"what is typed here."
+"These groups, however, do NOT apply to children directories, which must "
+"define their own groups."
 msgstr ""
-"Numele campului. Observati ca prefixul \"dctx_\" va fi adaugat la ceea ce "
-"este scris aici."
-
-#. module: document
-#: field:document.directory,ressource_tree:0
-msgid "Tree Structure"
-msgstr "Structura arbore"
+"Aceste grupuri, totusi, NU se aplica directoarelor subordonate, care trebuie "
+"sa isi defineasca propriile grupuri."
 
 #. module: document
 #: selection:report.document.user,month:0
 msgid "May"
 msgstr "Mai"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.action_view_all_document_tree1
-msgid "All Users files"
-msgstr "Fisierele tuturor utilizatorilor"
 
 #. module: document
 #: view:document.directory:0
@@ -788,20 +684,6 @@ msgstr "ir.atasament"
 #: view:report.document.user:0
 msgid "Users File"
 msgstr ""
-
-#. module: document
-#: view:document.directory:0
-msgid "Static"
-msgstr "Static"
-
-#. module: document
-#: view:document.directory:0
-msgid ""
-"These groups, however, do NOT apply to children directories, which must "
-"define their own groups."
-msgstr ""
-"Aceste grupuri, totusi, NU se aplica directoarelor subordonate, care trebuie "
-"sa isi defineasca propriile grupuri."
 
 #. module: document
 #: model:ir.model,name:document.model_document_configuration
@@ -830,24 +712,13 @@ msgstr "Februarie"
 
 #. module: document
 #: field:document.directory,name:0
-#: field:document.storage,name:0
 msgid "Name"
 msgstr "Nume"
-
-#. module: document
-#: sql_constraint:document.storage:0
-msgid "The storage path must be unique!"
-msgstr "Calea de stocare trebuie sa fie unica!"
 
 #. module: document
 #: view:document.directory:0
 msgid "Fields"
 msgstr "Campuri"
-
-#. module: document
-#: help:document.storage,readonly:0
-msgid "If set, media is for reading only"
-msgstr "Daca sunt setate, media (mijloacele) sunt doar pentru citire"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -861,9 +732,9 @@ msgid "# of Files"
 msgstr "# Fişiere"
 
 #. module: document
-#: view:document.storage:0
-msgid "Search Document Storage"
-msgstr ""
+#: model:ir.model,name:document.model_document_directory_content_type
+msgid "Directory Content Type"
+msgstr "Tip de continut director"
 
 #. module: document
 #: view:document.directory:0
@@ -897,9 +768,9 @@ msgid "File Name"
 msgstr "Nume fisier"
 
 #. module: document
-#: selection:document.storage,type:0
-msgid "Internal File storage"
-msgstr "Stocare Fisier intern"
+#: field:document.directory,ressource_tree:0
+msgid "Tree Structure"
+msgstr "Structura arbore"
 
 #. module: document
 #: view:document.configuration:0
@@ -918,10 +789,7 @@ msgid "Year"
 msgstr "An"
 
 #. module: document
-#: view:document.storage:0
-#: model:ir.actions.act_window,name:document.action_document_storage_form
 #: model:ir.model,name:document.model_document_storage
-#: model:ir.ui.menu,name:document.menu_document_storage_media
 msgid "Storage Media"
 msgstr "Medii de stocare"
 
@@ -929,209 +797,3 @@ msgstr "Medii de stocare"
 #: field:document.directory.content,extension:0
 msgid "Document Type"
 msgstr "Tipul documentului"
-
-#~ msgid "Notes"
-#~ msgstr "Note"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Numele obiectului trebuie să înceapă cu x_ şi să nu conţină nici un caracter "
-#~ "special !"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nume invalid de model în definirea acțiunii"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "XML invalid pentru arhitectura machetei de afișare !"
-
-#~ msgid "Reporting"
-#~ msgstr "Raportare"
-
-#~ msgid "User"
-#~ msgstr "Utilizator"
-
-#~ msgid "This Year"
-#~ msgstr "Acest an"
-
-#~ msgid "title"
-#~ msgstr "titlu"
-
-#~ msgid "Sale Order"
-#~ msgstr "Comadă vânzare"
-
-#~ msgid "Project"
-#~ msgstr "Proiect"
-
-#~ msgid "Document Dashboard"
-#~ msgstr "Panou documente"
-
-#~ msgid "Files by Partner"
-#~ msgstr "Fişiere per partener"
-
-#~ msgid "Configuration Progress"
-#~ msgstr "Configurare procese"
-
-#~ msgid "Image"
-#~ msgstr "Imagine"
-
-#~ msgid "Dashboard"
-#~ msgstr "Tablou de bord"
-
-#~ msgid "Product"
-#~ msgstr "Produs"
-
-#~ msgid "Configure Resource Directory"
-#~ msgstr "Configurare Director Resursa"
-
-#~ msgid "Auto directory configuration for Products."
-#~ msgstr "Configurare auto director pentru Produse."
-
-#~ msgid "Files Per Partner"
-#~ msgstr "Fisiere per Partener"
-
-#~ msgid ""
-#~ "This is a complete document management system:\n"
-#~ "    * User Authentication\n"
-#~ "    * Document Indexation :- .pptx and .docx files are not support in "
-#~ "windows platform.\n"
-#~ "    * Dashboard for Document that includes:\n"
-#~ "        * New Files (list)\n"
-#~ "        * Files by Resource Type (graph)\n"
-#~ "        * Files by Partner (graph)\n"
-#~ "        * Files by Month (graph)\n"
-#~ "    ATTENTION:\n"
-#~ "    - When you install this module in a running company that have already "
-#~ "PDF files stored into the database,\n"
-#~ "      you will lose them all.\n"
-#~ "    - After installing this module PDF's are no longer stored into the "
-#~ "database,\n"
-#~ "      but in the servers rootpad like /server/bin/filestore.\n"
-#~ msgstr ""
-#~ "Acesta este un sistem complet de management al documetelor:\n"
-#~ "    * Autentificare utilizator\n"
-#~ "    * Indexare documente :- fisierele .pptx si .docx nu sunt acceptate de "
-#~ "platforma Windows.\n"
-#~ "    * Tablou de bord pentru documente care include:\n"
-#~ "        * Fisiere noi (lista)\n"
-#~ "        * Fisiere dupa Tipul resursei (grafic)\n"
-#~ "        * Fisiere dupa Partener (grafic)\n"
-#~ "        * Fisiere dupa Luna (grafic)\n"
-#~ "    ATENTIE:\n"
-#~ "    - Atunci cand instalati acest modul intr-o companie care are deja "
-#~ "stocate fisiere PDF in baza de date,\n"
-#~ "      le veti pierde pe toate.\n"
-#~ "    - Dupa instalarea acestui modul, fisierele PDF nu mai sunt stocate in "
-#~ "baza de date,\n"
-#~ "      ci in serverele rootpad precum /server/container/stocare fisiere.\n"
-
-#~ msgid "Auto Configure Directory"
-#~ msgstr "Auto Configurare Director"
-
-#~ msgid "Related to"
-#~ msgstr "Referitor la"
-
-#~ msgid "Choose the following Resouces to auto directory configuration."
-#~ msgstr ""
-#~ "Folositi urmatoarele Resurse pentru configurarea auto a directorului."
-
-#~ msgid "Integrated Document Management System"
-#~ msgstr "Sistemul de management integrat al documentelor"
-
-#~ msgid "Auto directory configuration for Projects."
-#~ msgstr "Configurare auto director pentru Proiecte."
-
-#~ msgid ""
-#~ "The Documents repository gives you access to all attachments, such as mails, "
-#~ "project documents, invoices etc."
-#~ msgstr ""
-#~ "Depozitarea documentelor va da acces la toate atasamentele, cum ar fi email-"
-#~ "uri, documente proiecte, facturi etc."
-
-#~ msgid ""
-#~ "Auto directory configuration for Sale Orders and Quotation with report."
-#~ msgstr ""
-#~ "Configurare auto director pentru Ordine de vanzare si Cotatii cu raport."
-
-#, python-format
-#~ msgid "(copy)"
-#~ msgstr "(copie)"
-
-#, python-format
-#~ msgid "File name must be unique!"
-#~ msgstr "Numele fisierului trebuie sa fie unic!"
-
-#~ msgid "Search Document storage"
-#~ msgstr "Cautare arhiva documente"
-
-#~ msgid "Directory must have a parent or a storage"
-#~ msgstr "Directorul trebuie sa aiba un parinte sau o arhiva"
-
-#~ msgid "Auto Directory Configuration"
-#~ msgstr "Configurare auto Director"
-
-#~ msgid "Files per Month"
-#~ msgstr "Fisiere pe luna"
-
-#~ msgid "Knowledge Management"
-#~ msgstr "Managementul Cunostintelor"
-
-#~ msgid "Files by Users"
-#~ msgstr "Fisiere dupa Utilizator"
-
-#~ msgid "Error! You can not create recursive Directories."
-#~ msgstr "Eroare! Nu puteti crea Directoare recursive."
-
-#~ msgid "Modified"
-#~ msgstr "Modificat(a)"
-
-#~ msgid "Created"
-#~ msgstr "Creat(a)"
-
-#~ msgid "Attachment"
-#~ msgstr "Atasament"
-
-#~ msgid "Files By Users"
-#~ msgstr "Fisiere dupa Utilizatori"
-
-#~ msgid "Attached To"
-#~ msgstr "Anexeaza la"
-
-#~ msgid "Last Posted Time"
-#~ msgstr "Ora ultimei postari"
-
-#~ msgid "Files by users"
-#~ msgstr "Fisiere dupa Utilizatori"
-
-#~ msgid "Wall of Shame"
-#~ msgstr "Peretele Rusinii"
-
-#~ msgid "Files details by Partners"
-#~ msgstr "Detalii fisiere dupa Parteneri"
-
-#~ msgid "Users that did not inserted documents since one month"
-#~ msgstr "Utilizatori care nu au inserat documente de o luna"
-
-#~ msgid "New Files"
-#~ msgstr "Fisiere noi"
-
-#~ msgid "This Months Files"
-#~ msgstr "Fisierele din luna aceata"
-
-#~ msgid "Files By Partner"
-#~ msgstr "Fisiere dupa Parteneri"
-
-#~ msgid "This Month"
-#~ msgstr "Luna curenta"
-
-#~ msgid "Statistics by User"
-#~ msgstr "Statistici per Utilizator"
-
-#~ msgid "Indexed Content - experimental"
-#~ msgstr "Continut indexat - experimental"
-
-#~ msgid "Files by Resource Type"
-#~ msgstr "Fisiere dupa Tipul Resursei"
-
-#~ msgid "All Months Files"
-#~ msgstr "Toate fisierele lunilor"

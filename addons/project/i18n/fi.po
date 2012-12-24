@@ -1,21 +1,21 @@
 # Finnish translation for openobject-addons
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-02-06 16:54+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:04+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:28+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: project
 #: view:project.project:0
@@ -83,7 +83,7 @@ msgid "Start Task"
 msgstr "Aloita tehtävä"
 
 #. module: project
-#: code:addons/project/project.py:960
+#: code:addons/project/project.py:932
 #, python-format
 msgid "Warning !"
 msgstr "Varoitus !"
@@ -133,8 +133,8 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:440
-#: code:addons/project/project.py:1414
+#: code:addons/project/project.py:432
+#: code:addons/project/project.py:1305
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -222,9 +222,10 @@ msgid "Assigned To"
 msgstr "Määritelty käyttäjälle"
 
 #. module: project
-#: selection:project.task,priority:0
-msgid "Very important"
-msgstr "Erittäin tärkeä"
+#: model:mail.message.subtype,name:project.mt_project_task_closed
+#: model:mail.message.subtype,name:project.mt_task_closed
+msgid "Task Done"
+msgstr ""
 
 #. module: project
 #: view:project.project:0
@@ -262,9 +263,14 @@ msgid "Project Task Delegate"
 msgstr "Projektitehtävän suorittaja (delegaatti)"
 
 #. module: project
-#: code:addons/project/project.py:557
-#, python-format
-msgid "Project has been <b>created</b>."
+#: model:mail.message.subtype,name:project.mt_project_task_started
+#: model:mail.message.subtype,name:project.mt_task_started
+msgid "Task Started"
+msgstr ""
+
+#. module: project
+#: view:project.task:0
+msgid "Very Important"
 msgstr ""
 
 #. module: project
@@ -310,12 +316,6 @@ msgstr "Tila"
 #: selection:report.project.task.user,month:0
 msgid "August"
 msgstr "Elokuu"
-
-#. module: project
-#: code:addons/project/project.py:1303
-#, python-format
-msgid "Task has been <b>delegated</b> to <em>%s</em>."
-msgstr ""
 
 #. module: project
 #: view:project.project:0
@@ -387,7 +387,7 @@ msgid "Assigned to"
 msgstr "Annettu tehtäväksi"
 
 #. module: project
-#: code:addons/project/project.py:1057
+#: code:addons/project/project.py:1021
 #, python-format
 msgid "Delegated User should be specified"
 msgstr "Delegoitu käyttäjä tulisi olla määriteltynä"
@@ -424,12 +424,6 @@ msgid "Re-evaluate Task"
 msgstr "Uudelleenarvioi tehtävä"
 
 #. module: project
-#: code:addons/project/project.py:1292
-#, python-format
-msgid "Stage changed to <b>%s</b>."
-msgstr ""
-
-#. module: project
 #: view:project.task:0
 msgid "Validate planned time"
 msgstr ""
@@ -437,6 +431,12 @@ msgstr ""
 #. module: project
 #: field:project.config.settings,module_pad:0
 msgid "Use integrated collaborative note pads on task"
+msgstr ""
+
+#. module: project
+#: model:mail.message.subtype,name:project.mt_project_task_blocked
+#: model:mail.message.subtype,name:project.mt_task_blocked
+msgid "Task Blocked"
 msgstr ""
 
 #. module: project
@@ -452,6 +452,11 @@ msgstr ""
 #. module: project
 #: view:project.task:0
 msgid "oe_kanban_text_red"
+msgstr ""
+
+#. module: project
+#: model:mail.message.subtype,description:project.mt_task_blocked
+msgid "Task blocked"
 msgstr ""
 
 #. module: project
@@ -607,12 +612,6 @@ msgid "Not a Template Task"
 msgstr "Ei malli tehtävä"
 
 #. module: project
-#: view:project.project:0
-msgid ""
-"Follow this project to automatically follow all related tasks and issues."
-msgstr ""
-
-#. module: project
 #: field:project.task,planned_hours:0
 msgid "Initially Planned Hours"
 msgstr ""
@@ -670,6 +669,14 @@ msgstr "Uudet tehtävät"
 #: field:project.config.settings,module_project_issue_sheet:0
 msgid "Invoice working time on issues"
 msgstr ""
+
+#. module: project
+#: view:project.project:0
+#: view:project.task:0
+#: field:project.task.history,end_date:0
+#: field:project.task.history.cumulative,end_date:0
+msgid "End Date"
+msgstr "Loppupvm"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_specification
@@ -862,6 +869,11 @@ msgid "Companies"
 msgstr "Yritykset"
 
 #. module: project
+#: field:project.task.type,fold:0
+msgid "Folded by Default"
+msgstr ""
+
+#. module: project
 #: field:project.task.history,date:0
 #: field:project.task.history.cumulative,date:0
 #: field:project.task.work,date:0
@@ -891,12 +903,6 @@ msgid "10"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:566
-#, python-format
-msgid "Project has been <b>canceled</b>."
-msgstr ""
-
-#. module: project
 #: help:project.project,analytic_account_id:0
 msgid ""
 "Link this project to an analytic account if you need financial management on "
@@ -913,17 +919,6 @@ msgstr ""
 #: view:project.task.reevaluate:0
 msgid "Cancel"
 msgstr "Peruuta"
-
-#. module: project
-#: code:addons/project/project.py:569
-#, python-format
-msgid "Project has been <b>closed</b>."
-msgstr ""
-
-#. module: project
-#: model:ir.actions.server,name:project.actions_server_project_task_read
-msgid "Task: Mark read"
-msgstr ""
 
 #. module: project
 #: view:project.project:0
@@ -951,9 +946,11 @@ msgstr ""
 "kokonaistuntimäärä."
 
 #. module: project
-#: model:project.task.type,name:project.project_tt_development
-msgid "Development"
-msgstr "Kehitys"
+#: view:project.project:0
+msgid ""
+"Follow this project to automatically track the events associated to tasks "
+"and issues of this project."
+msgstr ""
 
 #. module: project
 #: view:project.task:0
@@ -961,26 +958,20 @@ msgid "Users"
 msgstr "Käyttäjät"
 
 #. module: project
-#: model:mail.message.subtype,name:project.mt_project_stage
-#: model:mail.message.subtype,name:project.mt_task_change
+#: model:mail.message.subtype,name:project.mt_task_stage
 msgid "Stage Changed"
 msgstr ""
 
 #. module: project
-#: field:project.task.type,fold:0
-msgid "Hide in views if empty"
-msgstr ""
+#: view:project.project:0
+#: model:res.groups,name:project.group_project_manager
+msgid "Manager"
+msgstr "Päällikkö"
 
 #. module: project
-#: view:project.task:0
 #: selection:project.task,priority:0
 msgid "Important"
 msgstr "Tarkeä"
-
-#. module: project
-#: field:project.task.type,case_default:0
-msgid "Common to All Projects"
-msgstr "Yhteinen kaikille projekteille"
 
 #. module: project
 #: field:project.category,name:0
@@ -1030,18 +1021,6 @@ msgstr "Tarkistuksen tila"
 #: field:project.task.work,name:0
 msgid "Work summary"
 msgstr "Työn yhteenveto"
-
-#. module: project
-#: code:addons/project/project.py:563
-#, python-format
-msgid "Project is now <b>pending</b>."
-msgstr ""
-
-#. module: project
-#: code:addons/project/project.py:560
-#, python-format
-msgid "Project has been <b>opened</b>."
-msgstr ""
 
 #. module: project
 #: view:project.project:0
@@ -1096,11 +1075,6 @@ msgid "Parent Tasks"
 msgstr "Ylätason tehtävät"
 
 #. module: project
-#: model:ir.actions.server,name:project.actions_server_project_read
-msgid "Project: Mark read"
-msgstr ""
-
-#. module: project
 #: model:process.node,name:project.process_node_opentask0
 msgid "Open task"
 msgstr "Avaa tehtävä"
@@ -1148,7 +1122,7 @@ msgid "Done by"
 msgstr "Tehnyt"
 
 #. module: project
-#: code:addons/project/project.py:180
+#: code:addons/project/project.py:181
 #, python-format
 msgid "Invalid Action!"
 msgstr ""
@@ -1180,11 +1154,6 @@ msgstr "tehtävien määrä"
 #. module: project
 #: field:project.project,doc_count:0
 msgid "Number of documents attached"
-msgstr ""
-
-#. module: project
-#: model:ir.actions.server,name:project.actions_server_project_task_unread
-msgid "Task: Mark unread"
 msgstr ""
 
 #. module: project
@@ -1227,12 +1196,17 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr "Laskettu: käytetty aika + jäljelläoleva aika"
 
 #. module: project
-#: code:addons/project/project.py:364
-#: code:addons/project/project.py:385
-#: code:addons/project/project.py:728
+#: code:addons/project/project.py:356
+#: code:addons/project/project.py:377
+#: code:addons/project/project.py:709
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopio)"
+
+#. module: project
+#: model:mail.message.subtype,name:project.mt_project_task_stage
+msgid "Task Stage Changed"
+msgstr ""
 
 #. module: project
 #: view:project.task:0
@@ -1270,6 +1244,11 @@ msgstr ""
 #: help:project.config.settings,time_unit:0
 msgid "This will set the unit of measure used in projects and tasks."
 msgstr ""
+
+#. module: project
+#: selection:project.task,priority:0
+msgid "Very important"
+msgstr "Erittäin tärkeä"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -1332,8 +1311,6 @@ msgid "Low"
 msgstr "Matala"
 
 #. module: project
-#: model:mail.message.subtype,name:project.mt_project_closed
-#: model:mail.message.subtype,name:project.mt_task_closed
 #: selection:project.project,state:0
 msgid "Closed"
 msgstr ""
@@ -1426,7 +1403,7 @@ msgstr ""
 "projektipäällikkö kun tehtävä on luonnostilassa."
 
 #. module: project
-#: code:addons/project/project.py:219
+#: code:addons/project/project.py:220
 #, python-format
 msgid "Attachments"
 msgstr ""
@@ -1446,7 +1423,7 @@ msgid "Done"
 msgstr "Valmis"
 
 #. module: project
-#: code:addons/project/project.py:181
+#: code:addons/project/project.py:182
 #, python-format
 msgid ""
 "You cannot delete a project containing tasks. You can either delete all the "
@@ -1474,6 +1451,11 @@ msgid "Remaining Hours"
 msgstr "Jäljellä olevat tunnit"
 
 #. module: project
+#: model:mail.message.subtype,description:project.mt_task_stage
+msgid "Stage changed"
+msgstr ""
+
+#. module: project
 #: constraint:project.task:0
 msgid "Error ! Task end-date must be greater then task start-date"
 msgstr ""
@@ -1496,17 +1478,6 @@ msgid "Delegated Task"
 msgstr "Delegoidut tehtävät"
 
 #. module: project
-#: view:project.project:0
-#: model:res.groups,name:project.group_project_manager
-msgid "Manager"
-msgstr "Päällikkö"
-
-#. module: project
-#: view:project.task:0
-msgid "Very Important"
-msgstr ""
-
-#. module: project
 #: view:report.project.task.user:0
 #: field:report.project.task.user,total_hours:0
 msgid "Total Hours"
@@ -1518,12 +1489,9 @@ msgid "project.config.settings"
 msgstr ""
 
 #. module: project
-#: view:project.project:0
-#: view:project.task:0
-#: field:project.task.history,end_date:0
-#: field:project.task.history.cumulative,end_date:0
-msgid "End Date"
-msgstr "Loppupvm"
+#: model:project.task.type,name:project.project_tt_development
+msgid "Development"
+msgstr "Kehitys"
 
 #. module: project
 #: help:project.task,active:0
@@ -1563,7 +1531,7 @@ msgid "Overpassed Tasks"
 msgstr "Ohitetut tehtävät"
 
 #. module: project
-#: code:addons/project/project.py:960
+#: code:addons/project/project.py:932
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1593,6 +1561,11 @@ msgid "Delegate your task to the other user"
 msgstr "Delegoi tehtäväsi toiselle käyttäjälle"
 
 #. module: project
+#: model:mail.message.subtype,description:project.mt_task_started
+msgid "Task started"
+msgstr ""
+
+#. module: project
 #: help:project.task.reevaluate,remaining_hours:0
 msgid "Put here the remaining hours required to close the task."
 msgstr "Syötä tähän jäljelläolevat tunnit tehtävän suorittamiseksi."
@@ -1619,7 +1592,7 @@ msgid "CHECK: "
 msgstr "TARKISTA: "
 
 #. module: project
-#: code:addons/project/project.py:440
+#: code:addons/project/project.py:432
 #, python-format
 msgid "You must assign members on the project '%s' !"
 msgstr "Sinun pitää määritellä projektin jäsenet '%s' !"
@@ -1748,6 +1721,11 @@ msgid "Documents"
 msgstr ""
 
 #. module: project
+#: model:mail.message.subtype,description:project.mt_task_new
+msgid "Task created"
+msgstr ""
+
+#. module: project
 #: view:report.project.task.user:0
 #: field:report.project.task.user,no_of_days:0
 msgid "# of Days"
@@ -1760,8 +1738,6 @@ msgid "Followers"
 msgstr ""
 
 #. module: project
-#: model:mail.message.subtype,name:project.mt_project_new
-#: model:mail.message.subtype,name:project.mt_task_new
 #: selection:project.project,state:0
 #: view:project.task:0
 #: selection:project.task,state:0
@@ -1843,7 +1819,7 @@ msgid "Starting Date"
 msgstr "Aloituspäivämäärä"
 
 #. module: project
-#: code:addons/project/project.py:406
+#: code:addons/project/project.py:398
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_projects
 #: view:project.project:0
@@ -1877,12 +1853,6 @@ msgid "Project Tasks"
 msgstr "Projekti tehtävät"
 
 #. module: project
-#: code:addons/project/project.py:1296
-#, python-format
-msgid "Task has been <b>created</b>."
-msgstr ""
-
-#. module: project
 #: field:account.analytic.account,use_tasks:0
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,name:project.action_view_task
@@ -1899,12 +1869,6 @@ msgstr "Tehtävät"
 #: selection:report.project.task.user,month:0
 msgid "December"
 msgstr "Joulukuu"
-
-#. module: project
-#: model:mail.message.subtype,name:project.mt_project_canceled
-#: model:mail.message.subtype,name:project.mt_task_canceled
-msgid "Canceled"
-msgstr ""
 
 #. module: project
 #: view:project.config.settings:0
@@ -1948,12 +1912,6 @@ msgstr "Luonnos"
 #: field:project.task.history.cumulative,kanban_state:0
 msgid "Kanban State"
 msgstr "Kanban tila"
-
-#. module: project
-#: code:addons/project/project.py:1299
-#, python-format
-msgid "Task has been set as <b>draft</b>."
-msgstr ""
 
 #. module: project
 #: field:project.config.settings,module_project_timesheet:0
@@ -2003,14 +1961,6 @@ msgid "Configure Project"
 msgstr ""
 
 #. module: project
-#: field:project.project,message_comment_ids:0
-#: help:project.project,message_comment_ids:0
-#: field:project.task,message_comment_ids:0
-#: help:project.task,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
-
-#. module: project
 #: view:project.task.history.cumulative:0
 msgid "Tasks's Cumulative Flow"
 msgstr "Tehtävien kumulatiivinen virtaus"
@@ -2019,11 +1969,6 @@ msgstr "Tehtävien kumulatiivinen virtaus"
 #: selection:report.project.task.user,month:0
 msgid "January"
 msgstr "Tammikuu"
-
-#. module: project
-#: model:ir.actions.server,name:project.actions_server_project_unread
-msgid "Project: Mark unread"
-msgstr ""
 
 #. module: project
 #: field:project.task.delegate,prefix:0
@@ -2036,10 +1981,16 @@ msgid "Reevaluation Task"
 msgstr "Uudelleenarviointi tehtävä"
 
 #. module: project
-#: code:addons/project/project.py:1414
+#: code:addons/project/project.py:1305
 #, python-format
 msgid "Please delete the project linked with this account first."
 msgstr "Ole hyvä ja poista tähän tunnukseen linkitetty projekti ensin."
+
+#. module: project
+#: model:mail.message.subtype,name:project.mt_project_task_new
+#: model:mail.message.subtype,name:project.mt_task_new
+msgid "Task Created"
+msgstr ""
 
 #. module: project
 #: view:report.project.task.user:0
@@ -2057,6 +2008,11 @@ msgstr "Projektit joissa olen päällikkönä"
 #: selection:project.task.history,kanban_state:0
 #: selection:project.task.history.cumulative,kanban_state:0
 msgid "Ready for next stage"
+msgstr ""
+
+#. module: project
+#: field:project.task.type,case_default:0
+msgid "Default for New Projects"
 msgstr ""
 
 #. module: project
@@ -2094,6 +2050,11 @@ msgid ""
 "A long term project management module that tracks planning, scheduling, and "
 "resource allocation.\n"
 "                This installs the module project_long_term."
+msgstr ""
+
+#. module: project
+#: model:mail.message.subtype,description:project.mt_task_closed
+msgid "Task closed"
 msgstr ""
 
 #. module: project
@@ -2169,667 +2130,3 @@ msgstr "Vuosi"
 #: view:project.task.type:0
 msgid "Tasks Stages"
 msgstr "Tehtävien vaiheet"
-
-#, python-format
-#~ msgid "Operation Not Permitted !"
-#~ msgstr "Toimenpide ei ole sallittu !"
-
-#~ msgid "Close Task"
-#~ msgstr "Sulje tehtävä"
-
-#, python-format
-#~ msgid ""
-#~ "Couldn't send mail because the contact for this task (%s) has no email "
-#~ "address!"
-#~ msgstr ""
-#~ "Sähköpostin lähettäminen epäonnistui, koska tämän tehtävän (%s)  "
-#~ "yhteyshenkilöllä ei ole sähköpostiosoitetta!"
-
-#~ msgid "Tasks Process"
-#~ msgstr "Tehtävien prosessit"
-
-#~ msgid "Assigned tasks"
-#~ msgstr "Tehtävät"
-
-#~ msgid "Importance"
-#~ msgstr "Tärkeys"
-
-#~ msgid "Subproject"
-#~ msgstr "Aliprojekti"
-
-#~ msgid "My Running Projects"
-#~ msgstr "Omat käynnissä olevat projektit"
-
-#~ msgid "User you want to delegate this task to."
-#~ msgstr "Käyttäjä, jolle halut delegoida tämän tehtävän"
-
-#~ msgid "Task Types"
-#~ msgstr "Tehtävän tyypit"
-
-#~ msgid "Days"
-#~ msgstr "Päivät"
-
-#~ msgid "Mail Header"
-#~ msgstr "Sähköpostin ylätunniste"
-
-#~ msgid "All Tasks"
-#~ msgstr "Kaikki tehtävät"
-
-#~ msgid "Task: %(name)s"
-#~ msgstr "Tehtävä: %(name)s"
-
-#~ msgid "My projects"
-#~ msgstr "Omat projektit"
-
-#~ msgid "All projects"
-#~ msgstr "Kaikki projektit"
-
-#~ msgid "Send Message"
-#~ msgstr "Lähetä viesti"
-
-#~ msgid "Weeks"
-#~ msgstr "Viikot"
-
-#~ msgid "My Current Tasks"
-#~ msgstr "Nykyiset tehtävät"
-
-#~ msgid "Type"
-#~ msgstr "Tyyppi"
-
-#~ msgid "New Project"
-#~ msgstr "Uusi projekti"
-
-#, python-format
-#~ msgid "Operation Done"
-#~ msgstr "Operaatio valmis"
-
-#~ msgid "Hours"
-#~ msgstr "Tunnit"
-
-#~ msgid "Task Details"
-#~ msgstr "Tehtävän yksityiskohdat"
-
-#~ msgid "Dates"
-#~ msgstr "Päivämäärät"
-
-#~ msgid "After task is completed, Create its invoice."
-#~ msgstr "Kun tehtävä on valmis, luo sen lasku."
-
-#~ msgid "New Task"
-#~ msgstr "Uusi tehtävä"
-
-#~ msgid "Project's members"
-#~ msgstr "Projektin jäsenet"
-
-#~ msgid "Review"
-#~ msgstr "Katselmus"
-
-#~ msgid "Information"
-#~ msgstr "Tiedot"
-
-#~ msgid "Sum of total hours of all tasks related to this project."
-#~ msgstr "Kaikkien tuntien summa, jotka liittyvät tähän projektiin."
-
-#~ msgid "E-Mails"
-#~ msgstr "Sähköpostit"
-
-#~ msgid "Quotation"
-#~ msgstr "Lainaus"
-
-#~ msgid "Bug"
-#~ msgstr "Vika"
-
-#, python-format
-#~ msgid "Couldn't send mail because your email address is not configured!"
-#~ msgstr ""
-#~ "Sähköpostiviestin lähettäminen epäonnistui, koska sähköpostiosoitetta ei ole "
-#~ "määritetty!"
-
-#~ msgid "Delegate this task to a user"
-#~ msgstr "Delegoi tämä tehtävä käyttäjälle"
-
-#, python-format
-#~ msgid "Error"
-#~ msgstr "Virhe"
-
-#~ msgid "User's projects"
-#~ msgstr "Käyttäjän projektit"
-
-#~ msgid "Task summary"
-#~ msgstr "Tehtävän yhteenveto"
-
-#~ msgid "Date Start: %(date_start)s"
-#~ msgstr "Aloituspäivämäärä: %(date_start)s"
-
-#~ msgid "Create a Task"
-#~ msgstr "Luo tehtävä"
-
-#~ msgid "Delay"
-#~ msgstr "Viive"
-
-#~ msgid "Send mail to customer"
-#~ msgstr "Lähetä sähköpostiviesti asiakkaalle"
-
-#~ msgid "Task invoice"
-#~ msgstr "Tehtävän lasku"
-
-#~ msgid "Running"
-#~ msgstr "Käynnissä"
-
-#~ msgid "Delegate Task"
-#~ msgstr "Delegoi tehtävä"
-
-#~ msgid "Project tasks"
-#~ msgstr "Projektin tehtävät"
-
-#~ msgid "Projects Structure"
-#~ msgstr "Projektien rakenne"
-
-#, python-format
-#~ msgid "Task '%s' closed"
-#~ msgstr "Tehtävä '%s' suljettu"
-
-#~ msgid "New Feature"
-#~ msgstr "Uusi ominaisuus"
-
-#~ msgid "Partner Info"
-#~ msgstr "Kumppanin tiedot"
-
-#~ msgid "Compute Remaining Hours"
-#~ msgstr "Laske jäljellä olevat tunnit"
-
-#~ msgid "Mail Footer"
-#~ msgstr "Sähköpostiviestin alatunnite"
-
-#~ msgid "Running projects"
-#~ msgstr "Käynnissä olevat projektit"
-
-#~ msgid "Validate"
-#~ msgstr "Vahvista"
-
-#~ msgid "Months"
-#~ msgstr "Kuukautta"
-
-#~ msgid "Update"
-#~ msgstr "Päivitä"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Virheellinen mallin nimi toimenpiteen määrittelyssä."
-
-#~ msgid "Timesheets"
-#~ msgstr "Tuntilistat"
-
-#~ msgid "Issues Tracker"
-#~ msgstr "Tapahtumien seuranta"
-
-#~ msgid "The chosen company is not in the allowed companies for this user"
-#~ msgstr "Valittu yritys ei ole sallittu tälle käyttäjälle"
-
-#~ msgid "Delegations"
-#~ msgstr "Delegoinnit"
-
-#~ msgid "Warn Message"
-#~ msgstr "Varoitusviesti"
-
-#~ msgid "Projects: Planned Vs Total hours"
-#~ msgstr "Projektin suunnitellut vrt. todelliset kokonais tunnit"
-
-#~ msgid "Error! You cannot assign escalation to the same project!"
-#~ msgstr "Virhe! Et voi asettaa eskalointia samalle projektille!"
-
-#~ msgid "Change Stage"
-#~ msgstr "Muuta vaihe"
-
-#, python-format
-#~ msgid "The task '%s' is done"
-#~ msgstr "Tehtävä '%s' on valmis"
-
-#~ msgid "Project Close Task"
-#~ msgstr "Projektin sulkemistehtävä"
-
-#~ msgid "Project vs remaining hours"
-#~ msgstr "Projekti vs. jäljelläolevat tunnit"
-
-#~ msgid "Invoice Address"
-#~ msgstr "Laskutusosoite"
-
-#~ msgid "Members"
-#~ msgstr "Jäsenet"
-
-#~ msgid ""
-#~ "Helps generate invoices based on time spent on tasks, if activated on the "
-#~ "project."
-#~ msgstr ""
-#~ "Auttaa luomaan laskuja tehtäviin käytetyn ajan pohjalta, jos aktivoitu "
-#~ "projektilla."
-
-#~ msgid "   Month   "
-#~ msgstr "   Kuukausi   "
-
-#~ msgid "Configure Your Project Management Application"
-#~ msgstr "Konfiguroi projektinhallinta ohjelmasi"
-
-#~ msgid ""
-#~ "Automatic variables for headers and footer. Use exactly the same notation."
-#~ msgstr ""
-#~ "Automaattiset muuttujat ylä ja alatunnisteille. Käytä täsmälleen samaa "
-#~ "muotoilua."
-
-#~ msgid "My Open Tasks"
-#~ msgstr "Omat avoimet tehtävät"
-
-#~ msgid "Reactivate Project"
-#~ msgstr "uudelleenaktivoi projekti"
-
-#~ msgid ""
-#~ "Tracks and helps employees encode and validate timesheets and attendances."
-#~ msgstr ""
-#~ "Seuraa ja auttaa työntekijöitä syöttämään ja tarkistamaan tuntilistoja ja "
-#~ "läsnäoloja."
-
-#, python-format
-#~ msgid " (copy)"
-#~ msgstr " (kopio)"
-
-#~ msgid "Error! You can not create recursive analytic accounts."
-#~ msgstr "Virhe! Et voi luoda sisäkkäisiä analyyttisiä tilejä."
-
-#~ msgid "Next"
-#~ msgstr "Seuraava"
-
-#~ msgid "Previous"
-#~ msgstr "Edellinen"
-
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "Virhe! Et voi luoda sisäkkäisiä yrityksiä."
-
-#~ msgid "You can not have two users with the same login !"
-#~ msgstr "Kahdella eri käyttäjällä ei voi olla samaa käyttäjätunnusta!"
-
-#~ msgid "Date Stop: %(date)s"
-#~ msgstr "Pysäytyspäivä %(date)s"
-
-#~ msgid "Email Address of Customer"
-#~ msgstr "Asiakkaan sähköpostiosoite"
-
-#~ msgid "Reevaluate"
-#~ msgstr "Uudelleenarvioi"
-
-#, python-format
-#~ msgid "Send Email after close task"
-#~ msgstr "Lähetä sähköpostia tehtävän sulkemisen jälkeen"
-
-#~ msgid "Public Notes"
-#~ msgstr "Julkiset tiedotteet"
-
-#, python-format
-#~ msgid "Task '%s' Closed"
-#~ msgstr "Tehtävä '%s' on suljettu"
-
-#~ msgid "User: %(user_id)s"
-#~ msgstr "Käyttäjä: %(user_id)s"
-
-#~ msgid ""
-#~ "Various OpenERP applications are available to manage your projects with "
-#~ "different level of control and flexibility."
-#~ msgstr ""
-#~ "Monia OpenERP ohjelmia on saatavilla projektiesi hallintaan eritasoisilla "
-#~ "seuranta ja joustavuusominaisuuksilla."
-
-#~ msgid "Project vs Planned and Total Hours"
-#~ msgstr "Projekti vs. suunnitellut ja kokonaistunnit"
-
-#, python-format
-#~ msgid "The task '%s' is opened."
-#~ msgstr "Tehtävä '%s' on avattu."
-
-#~ msgid "    Month-1    "
-#~ msgstr "    Kuukausi-1    "
-
-#, python-format
-#~ msgid "Please specify the email address of Project Manager."
-#~ msgstr "Määrittele projektipäällikön sähköpostiosoite"
-
-#~ msgid "Computed as: Time Spent / Total Time."
-#~ msgstr "Laskettu: käytetty aika / kokonaisaika"
-
-#~ msgid "Image"
-#~ msgstr "Kuva"
-
-#~ msgid "Warn Partner"
-#~ msgstr "Varoita kumppania"
-
-#~ msgid "  Year  "
-#~ msgstr "  Vuosi  "
-
-#~ msgid "Billing"
-#~ msgstr "Laskutus"
-
-#~ msgid "Helps accountants manage analytic and crossover budgets."
-#~ msgstr ""
-#~ "Auttaa kirjanpitäjiä hallitsemaan analyyttisiä ja ristikkäisiä budjetteja."
-
-#~ msgid "Status: %(state)s"
-#~ msgstr "Tila: (state)s"
-
-#~ msgid "Long Term Planning"
-#~ msgstr "Pitkän aikavälin suunnittelu"
-
-#~ msgid "My Task's Deadlines"
-#~ msgstr "Omien tehtävien määräajat"
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Virhe! Rekursiivisesti rinnastettuja jäseniä ei voi luoda."
-
-#~ msgid "Task Edition"
-#~ msgstr "Tehtävän muokkaus"
-
-#~ msgid "Performance"
-#~ msgstr "Suorituskyky"
-
-#~ msgid "Project Dashboard"
-#~ msgstr "Projektin työpöytä"
-
-#~ msgid "Parent Project"
-#~ msgstr "Ylätason projekti"
-
-#~ msgid "Configure"
-#~ msgstr "Konfiguroi"
-
-#~ msgid ""
-#~ "Implements and tracks the concepts and task types defined in the SCRUM "
-#~ "methodology."
-#~ msgstr ""
-#~ "Toteuttaa ja seuraa konsepteja ja tehtävätyyppejä jotka on määritelty SCRUM "
-#~ "metodeissa"
-
-#, python-format
-#~ msgid "The project '%s' has been closed."
-#~ msgstr "Projekti '%s' on suljettu"
-
-#~ msgid "Manager Email"
-#~ msgstr "Päällikön sähköpostiosoite"
-
-#~ msgid "Warn Manager by Email"
-#~ msgstr "Varoita päällikköä sähköpostitse"
-
-#~ msgid "Customer Email"
-#~ msgstr "Asiakkaan sähköpostiosoite"
-
-#~ msgid "Task edition"
-#~ msgstr "Tehtävän muokkaus"
-
-#~ msgid "History"
-#~ msgstr "Historia"
-
-#~ msgid "Getting Things Done"
-#~ msgstr "Saada asiat tehtyä"
-
-#~ msgid "Warn Customer by Email"
-#~ msgstr "Varoita asiakasta sähköpostitse"
-
-#~ msgid "Dashboard"
-#~ msgstr "Työpöytä"
-
-#, python-format
-#~ msgid "The project '%s' has been opened."
-#~ msgstr "Projekti '%s' on avattu."
-
-#~ msgid ""
-#~ "Error! The currency has to be the same as the currency of the selected "
-#~ "company"
-#~ msgstr "Virhe! Valuutan tulee olla sama kun valitun yrityksen valutta."
-
-#~ msgid "Configuration Progress"
-#~ msgstr "Konfiguraation eteneminen"
-
-#, python-format
-#~ msgid ""
-#~ "You can not delete a project with tasks. I suggest you to deactivate it."
-#~ msgstr ""
-#~ "Et voi poistaa projekteja jolla on tehtäviä, suosittelen ottamaan sen pois "
-#~ "käytöstä."
-
-#~ msgid "State"
-#~ msgstr "Tila"
-
-#~ msgid "Close"
-#~ msgstr "Sulje"
-
-#~ msgid "Month works"
-#~ msgstr "Kuukauden työt"
-
-#, python-format
-#~ msgid "Task '%s' set in progress"
-#~ msgstr "Tehtävä '%s' asetus menossa"
-
-#~ msgid " Project vs  hours"
-#~ msgstr " Projekti verrattuna tunteihin"
-
-#~ msgid "Warn Manager"
-#~ msgstr "Varoita päällikköä"
-
-#~ msgid "Send Email"
-#~ msgstr "Lähetä sähköposti"
-
-#~ msgid "Current Activity"
-#~ msgstr "Nykyinen aktiviteetti"
-
-#, python-format
-#~ msgid "Please specify the email address of Customer."
-#~ msgstr "Ole hyvä ja määritä asiakkaan sähköpostiosoite"
-
-#~ msgid "Current"
-#~ msgstr "Nykyinen"
-
-#~ msgid ""
-#~ "Enables long-term projects tracking, including multiple-phase projects and "
-#~ "resource allocation handling."
-#~ msgstr ""
-#~ "Mahdollistaa pitkäaikaisten projektien seurannan mukaanlukien monivaiheiset "
-#~ "projektit ja resurssien allokoinnin."
-
-#~ msgid ""
-#~ "Computed as difference of the time estimated by the project manager and the "
-#~ "real time to close the task."
-#~ msgstr ""
-#~ "Laskettu erotuksena projektipäällikön arvion ja projektin valmistumiseen "
-#~ "kuluneen todellisen ajan mukaan"
-
-#~ msgid "My Remaining Hours by Project"
-#~ msgstr "Omat jäljelläolevat tunnit projekteittain"
-
-#~ msgid "Bill Time on Tasks"
-#~ msgstr "Tehtävien laskutettava aika"
-
-#~ msgid "My accounts to invoice"
-#~ msgstr "Omat laskutettavat tilit"
-
-#~ msgid ""
-#~ "If you check this field, the project manager will receive a request each "
-#~ "time a task is completed by his team."
-#~ msgstr ""
-#~ "Jos valitset tämän kentän, projektipäällikkö vastaanottaa pyynnön joka kerta "
-#~ "kun hänen tiiminsä saa valmiiksi tehtävän."
-
-#~ msgid "Email Address of Project's Manager"
-#~ msgstr "Projektipäällikön sähköpostiosoite"
-
-#~ msgid "Total tasks"
-#~ msgstr "Tehtävät yhteensä"
-
-#~ msgid "My Delegated Tasks"
-#~ msgstr "Omat delegoidut tehtävät"
-
-#~ msgid "Project Application Configuration"
-#~ msgstr "Projekti ohjelmiston konfiguraatio"
-
-#~ msgid "Task By Days"
-#~ msgstr "Tehtävä päivien mukaan"
-
-#~ msgid "Warn Customer"
-#~ msgstr "Varoita asiakasta"
-
-#, python-format
-#~ msgid ""
-#~ "Couldn't send mail! Check the email ids and smtp configuration settings"
-#~ msgstr ""
-#~ "Sähköpostia ei voitu lähettää. Tarkista sähköpostiosoitteet ja smtp "
-#~ "konfiguraatio (sähköpostipalvelinasetukset)"
-
-#~ msgid "Edit"
-#~ msgstr "Muokkaa"
-
-#~ msgid "My Projects: Planned vs Total Hours"
-#~ msgstr "Omat projektit: suunnitellut tunnit verrattuna kokonaistunteihin"
-
-#~ msgid "Miscelleanous"
-#~ msgstr "Muut"
-
-#, python-format
-#~ msgid "The task '%s' is pending."
-#~ msgstr "Tehtävä '%s' on odottavassa tilassa."
-
-#, python-format
-#~ msgid "Task '%s' cancelled"
-#~ msgstr "Tehtävä '%s' on peruttu"
-
-#~ msgid ""
-#~ "Footer added at the beginning of the email for the warning message sent to "
-#~ "the customer when a task is closed."
-#~ msgstr ""
-#~ "Vakioviesti lisätään asiakkaalle lähetettävän tehtävän sulkemisesta kertovan "
-#~ "sähköpostin alkuun."
-
-#~ msgid "Remaining Hours Per Project"
-#~ msgstr "Jäljelläolevat tunnit projekteittain"
-
-#~ msgid "Methodologies"
-#~ msgstr "Metodit"
-
-#, python-format
-#~ msgid "The task '%s' has been delegated to %s."
-#~ msgstr "Tehtävä '%s' on delegoitu käyttäjälle %s."
-
-#~ msgid ""
-#~ "If you check this, the user will have a popup when closing a task that "
-#~ "propose a message to send by email to the customer."
-#~ msgstr ""
-#~ "Jos valitset tämän, käyttäjälle tulee popup ilmoitus kun suljetaan tehtävä "
-#~ "jossa ehdotetaan sähköpostin lähettämistä asiakkaalle."
-
-#~ msgid ""
-#~ "Header added at the beginning of the email for the warning message sent to "
-#~ "the customer when a task is closed."
-#~ msgstr ""
-#~ "Asiakkaalle lähetettävän tehtävän valmistumisviesti sähköpostin ylätunniste."
-
-#~ msgid "Configuration"
-#~ msgstr "Konfiguraatio"
-
-#, python-format
-#~ msgid "The task '%s' is cancelled."
-#~ msgstr "Tehtävä '%s' on peruttu"
-
-#~ msgid "Budgets"
-#~ msgstr "Budjetit"
-
-#~ msgid "Automatically synchronizes project tasks and crm cases."
-#~ msgstr "Synkronoi automaattisesti projektin tehtävät ja crm tapaukset."
-
-#~ msgid "title"
-#~ msgstr "otsikko"
-
-#~ msgid "Previous Month"
-#~ msgstr "Edellinen kuukausi"
-
-#~ msgid "Projects and Stages"
-#~ msgstr "Projektit ja vaiheet"
-
-#, python-format
-#~ msgid ""
-#~ "Please specify the Project Manager or email address of Project Manager."
-#~ msgstr ""
-#~ "Ole hyvä ja määrittele projektipäällikkö tai hänen sähköpostiosoitteensa."
-
-#~ msgid "_Cancel"
-#~ msgstr "_Peruuta"
-
-#~ msgid "Change to Next Stage"
-#~ msgstr "Vaihda seuraavaan vaiheeseen"
-
-#~ msgid "For cancelling the task"
-#~ msgstr "Peruuttaaksesi tehtävän"
-
-#~ msgid "Current Month"
-#~ msgstr "Kuluva kuukausi"
-
-#~ msgid "Change Color"
-#~ msgstr "Vaihda väriä"
-
-#~ msgid "E-mail composition wizard"
-#~ msgstr "Sähköpostin luonti velho"
-
-#~ msgid ""
-#~ "If you check this field, the project manager will receive an email each time "
-#~ "a task is completed by his team."
-#~ msgstr ""
-#~ "Jos valitset tämän kentän, projektipäällikkö saa aina sähköpostia kun jokin "
-#~ "tehtävä valmistuu"
-
-#, python-format
-#~ msgid ""
-#~ "You cannot delete a project containing tasks. I suggest you to desactivate "
-#~ "it."
-#~ msgstr ""
-#~ "Et voi poistaa projekteja jotka sisältävät tehtäviä. Suosittelen että se "
-#~ "muutetaan epäaktiiviseen tilaan."
-
-#~ msgid "Review Task Stages"
-#~ msgstr "Tarkista tehtävän vaiheet"
-
-#~ msgid "Change to Previous Stage"
-#~ msgstr "Vaihda edelliseen vaiheeseen"
-
-#~ msgid "Mark as Blocked"
-#~ msgstr "Merkitse estetyksi"
-
-#~ msgid "For changing to delegate state"
-#~ msgstr "Vaihtaaksesi deletointitilaan"
-
-#~ msgid "Change Type"
-#~ msgstr "Vaihda tyyppi"
-
-#~ msgid "Contact Address"
-#~ msgstr "kontaktin osoite"
-
-#~ msgid "Delegations History"
-#~ msgstr "Delegointien historia"
-
-#, python-format
-#~ msgid "Please specify the Customer or email address of Customer."
-#~ msgstr "Ole hyvä ja määrittele asiakas tai asiakkaan sähköpostiosoite."
-
-#~ msgid "Validate planned time and open task"
-#~ msgstr "Tarkista suunniteltu aika ja avaa tehtävä"
-
-#~ msgid "Deployment"
-#~ msgstr "Käyttöönotto"
-
-#~ msgid "Month-2"
-#~ msgstr "Toissakuukausi"
-
-#~ msgid "The company name must be unique !"
-#~ msgstr "Yrityksen nimi on jo käytössä!"
-
-#~ msgid "Month-1"
-#~ msgstr "Edellinen kuukausi"
-
-#~ msgid "Create your Firsts Projects"
-#~ msgstr "Luo ensimmäiset projektisi"
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "Virhe! Rekursiivisen kumppanin luonti ei ole sallittu."
-
-#~ msgid "Current Year"
-#~ msgstr "Kuluva vuosi"

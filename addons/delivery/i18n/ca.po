@@ -1,21 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* delivery
+# Catalan translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2010-10-30 09:21+0000\n"
-"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
-"<jesteve@zikzakmedia.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Catalan <ca@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:11+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:11+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -47,6 +47,12 @@ msgstr "Pes net"
 #: model:ir.model,name:delivery.model_delivery_grid_line
 msgid "Delivery Grid Line"
 msgstr "Línia quadrícula lliurament"
+
+#. module: delivery
+#: field:stock.move,weight_uom_id:0
+#: field:stock.picking,weight_uom_id:0
+msgid "Unit of Measure"
+msgstr ""
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -81,26 +87,6 @@ msgstr ""
 #: model:ir.actions.report.xml,name:delivery.report_shipping
 msgid "Delivery order"
 msgstr "Ordre de lliurament"
-
-#. module: delivery
-#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to define a new deliver method. \n"
-"              </p><p>\n"
-"                Each carrier (e.g. UPS) can have several delivery methods "
-"(e.g.\n"
-"                UPS Express, UPS Standard) with a set of pricing rules "
-"attached\n"
-"                to each method.\n"
-"              </p><p>\n"
-"                These methods allows to automaticaly compute the delivery "
-"price\n"
-"                according to your settings; on the sale order (based on the\n"
-"                quotation) or the invoice (based on the delivery orders).\n"
-"              </p>\n"
-"            "
-msgstr ""
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:221
@@ -217,7 +203,7 @@ msgid "Grid definition"
 msgstr "Definició de la quadrícula"
 
 #. module: delivery
-#: code:addons/delivery/stock.py:89
+#: code:addons/delivery/stock.py:90
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -343,7 +329,9 @@ msgstr "Número de paquets"
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 #: report:sale.shipping:0
+#: view:stock.move:0
 #: field:stock.move,weight:0
+#: view:stock.picking:0
 #: field:stock.picking,weight:0
 #: field:stock.picking.in,weight:0
 #: field:stock.picking.out,weight:0
@@ -364,7 +352,7 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/sale.py:55
+#: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid available !"
 msgstr "No hi ha una xarxa disponible!"
@@ -375,7 +363,7 @@ msgid ">="
 msgstr ">="
 
 #. module: delivery
-#: code:addons/delivery/sale.py:58
+#: code:addons/delivery/sale.py:57
 #, python-format
 msgid "Order not in draft state !"
 msgstr "L'ordre no està en estat borrador!"
@@ -425,6 +413,27 @@ msgstr ""
 "l'albarà."
 
 #. module: delivery
+#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to define a new deliver method. \n"
+"              </p><p>\n"
+"                Each carrier (e.g. UPS) can have several delivery methods "
+"(e.g.\n"
+"                UPS Express, UPS Standard) with a set of pricing rules "
+"attached\n"
+"                to each method.\n"
+"              </p><p>\n"
+"                These methods allows to automaticaly compute the delivery "
+"price\n"
+"                according to your settings; on the sales order (based on "
+"the\n"
+"                quotation) or the invoice (based on the delivery orders).\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: delivery
 #: field:delivery.grid.line,max_value:0
 msgid "Maximum Value"
 msgstr "Valor màxim"
@@ -463,6 +472,11 @@ msgid "<="
 msgstr "<="
 
 #. module: delivery
+#: help:stock.picking,weight_uom_id:0
+msgid "Unit of measurement for Weight"
+msgstr ""
+
+#. module: delivery
 #: report:sale.shipping:0
 msgid "Description"
 msgstr "Descripció"
@@ -490,7 +504,7 @@ msgid "Price"
 msgstr "Preu"
 
 #. module: delivery
-#: code:addons/delivery/sale.py:55
+#: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid matching for this carrier !"
 msgstr "No concorda quadrícula per aquest transportista!"
@@ -507,7 +521,7 @@ msgid "Weight * Volume"
 msgstr "Pes * Volum"
 
 #. module: delivery
-#: code:addons/delivery/stock.py:90
+#: code:addons/delivery/stock.py:91
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
 msgstr "El transportista %s (id: %d) no disposa de quadrícula d'enviament!"
@@ -539,12 +553,7 @@ msgid "Delivery Methods"
 msgstr ""
 
 #. module: delivery
-#: field:sale.order,id:0
-msgid "ID"
-msgstr "ID"
-
-#. module: delivery
-#: code:addons/delivery/sale.py:58
+#: code:addons/delivery/sale.py:57
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr ""
@@ -577,178 +586,12 @@ msgid "States"
 msgstr "Estats"
 
 #. module: delivery
+#: help:stock.move,weight_uom_id:0
+msgid ""
+"Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
+msgstr ""
+
+#. module: delivery
 #: field:delivery.grid.line,price_type:0
 msgid "Price Type"
 msgstr "Tipus de preu"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter "
-#~ "especial!"
-
-#~ msgid "Sales & Purchases"
-#~ msgstr "Vendes & Compres"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "﻿XML invàlid per a la definició de la vista!"
-
-#~ msgid "Generate Draft Invoices On Receptions"
-#~ msgstr "Genera factures esborrany en recepcions"
-
-#~ msgid "Delivery line of grid"
-#~ msgstr "Línia d'enviament de la quadrícula"
-
-#~ msgid "Deliveries Properties"
-#~ msgstr "Propietats d'enviament"
-
-#~ msgid "="
-#~ msgstr "="
-
-#~ msgid "Carrier and delivery grids"
-#~ msgstr "Quadrícula de transportistes i enviaments"
-
-#~ msgid "Error: UOS must be in a different category than the UOM"
-#~ msgstr "Error: La UdV ha d'estar en una categoria diferent que la UdM"
-
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr ""
-#~ "Error: La UdM per defecte i la UdM de compra han d'estar en la mateixa "
-#~ "categoria."
-
-#~ msgid "Notes"
-#~ msgstr "Notes"
-
-#, python-format
-#~ msgid "No grid avaible !"
-#~ msgstr "No hi ha quadrícula disponible!"
-
-#~ msgid "Add Delivery Costs"
-#~ msgstr "Afegeix costos d'enviament"
-
-#~ msgid "Carrier Partner"
-#~ msgstr "Empresa transportista"
-
-#, python-format
-#~ msgid "No line matched this order in the choosed delivery grids !"
-#~ msgstr ""
-#~ "No existeix línia que concordi amb aquesta ordre en les quadrícules "
-#~ "d'enviament seleccionades!"
-
-#, python-format
-#~ msgid "No price available !"
-#~ msgstr "No hi ha preu disponible!"
-
-#~ msgid "Delivery Costs"
-#~ msgstr "Costos d'enviament"
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "Error: Codi EAN erroni"
-
-#~ msgid "Cancel"
-#~ msgstr "Cancel·la"
-
-#, python-format
-#~ msgid "Warning"
-#~ msgstr "Avís"
-
-#~ msgid "Delivery method"
-#~ msgstr "Mètode d'enviament"
-
-#~ msgid "The VAT doesn't seem to be correct."
-#~ msgstr "El CIF/NIF no sembla ser correcte."
-
-#~ msgid ""
-#~ "Complete this field if you plan to invoice the shipping based on packing."
-#~ msgstr ""
-#~ "Completeu aquest camp si voleu facturar els enviaments des d'albarans."
-
-#~ msgid ""
-#~ "Allows you to add delivery methods in sales orders and packing. You can "
-#~ "define your own carrier and delivery grids for prices. When creating "
-#~ "invoices from picking, Open ERP is able to add and compute the shipping line."
-#~ msgstr ""
-#~ "Permet afegir els mètodes d'enviament en les comandes de venda i albarans. "
-#~ "Podeu definir les seves pròpies taules de transportistes i destinacions pel "
-#~ "còmput de preus. En crear factures des albarans, OpenERP és capaç de sumar i "
-#~ "calcular la línia de despeses d'enviament."
-
-#~ msgid "Packing to be invoiced"
-#~ msgstr "Paquets a facturar"
-
-#~ msgid "Carriers and deliveries"
-#~ msgstr "Transportistes i enviaments"
-
-#~ msgid "This delivery method will be used when invoicing from packing."
-#~ msgstr "Aquest mètode d'enviament s'utilitzarà quan es facturi des albarans."
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Error! No podeu crear membres associats recursivament."
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nom de model no vàlid en la definició de l'acció."
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "La referència de la comanda ha de ser única!"
-
-#~ msgid ""
-#~ "The delivery price list allows you to compute the cost and sales price of "
-#~ "the delivery according to the weight of the products and other criteria. You "
-#~ "can define several price lists for one delivery method, per country or a "
-#~ "zone in a specific country defined by a postal code range."
-#~ msgstr ""
-#~ "La llista de preus per lliurament li permet calcular el cost i preu de venda "
-#~ "del lliurament en funció del pes dels productes i d'altres criteris. Podeu "
-#~ "definir diversos preus per un mètode de lliurament, per país, o per zona "
-#~ "d'un país específic, definit per un rang de codis postals."
-
-#~ msgid "_Cancel"
-#~ msgstr "_Canceŀla"
-
-#~ msgid "Weights"
-#~ msgstr "Pesos"
-
-#~ msgid "You try to assign a lot which is not from the same product"
-#~ msgstr "Esteu intentant assignar un lot que no és del mateix producte"
-
-#~ msgid "_Apply"
-#~ msgstr "_Aplica"
-
-#~ msgid "You must assign a production lot for this product"
-#~ msgstr "Heu d'assignar un lot de producció per a aquest producte"
-
-#~ msgid "Create Deliveries"
-#~ msgstr "Crea lliuraments"
-
-#~ msgid "Delivery Order"
-#~ msgstr "Ordre de lliurament"
-
-#~ msgid ""
-#~ "Create and manage the delivery methods you need for your sales activities. "
-#~ "Each delivery method can be assigned to a price list which computes the "
-#~ "price of the delivery according to the products sold or delivered."
-#~ msgstr ""
-#~ "Creeu i gestioneu els mètodes de lliurament que necessiteu per a la seva "
-#~ "activitat de vendes. Cada mètode de lliurament pot ser assignat a una llista "
-#~ "de preus que calcula el preu del lliurament en funció dels productes venuts "
-#~ "o lliurats."
-
-#~ msgid "Make Delievery"
-#~ msgstr "Realitza lliurament"
-
-#~ msgid ""
-#~ "Allows you to add delivery methods in sale orders and picking.\n"
-#~ "     You can define your own carrier and delivery grids for prices.\n"
-#~ "     When creating invoices from picking, OpenERP is able to add and compute "
-#~ "the shipping line.\n"
-#~ "\n"
-#~ "     "
-#~ msgstr ""
-#~ "Permet afegir mètodes d'enviament en comandes de venda i albarans.\n"
-#~ "     Podeu definir el seu propi transportista i xarxes de lliurament per als "
-#~ "preus.\n"
-#~ "     En crear les factures des d'albarans, OpenERP és capaç d'afegir i "
-#~ "calcular la línia de transport.\n"
-#~ "\n"
-#~ "     "

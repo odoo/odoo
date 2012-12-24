@@ -1,19 +1,20 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* hr_timesheet_sheet
+# French translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-19 16:05+0000\n"
-"Last-Translator: Numérigraphe <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-20 04:46+0000\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:17+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr_timesheet_sheet
@@ -141,8 +142,8 @@ msgid "Based on the timesheet"
 msgstr "Basé sur la feuille de temps"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:313
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:384
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:326
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:397
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet."
 msgstr ""
@@ -197,8 +198,8 @@ msgid "Please create an employee and associate it with this user."
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:388
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:408
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:401
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:421
 #, python-format
 msgid ""
 "You cannot enter an attendance date outside the current timesheet dates."
@@ -252,9 +253,9 @@ msgstr ""
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:80
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:82
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:84
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:313
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:384
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:415
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:326
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:397
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:428
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:38
 #, python-format
 msgid "Error!"
@@ -496,11 +497,6 @@ msgid "hr.timesheet.current.open"
 msgstr "hr.timesheet.current.open"
 
 #. module: hr_timesheet_sheet
-#: model:process.node,name:hr_timesheet_sheet.process_node_validatedtimesheet0
-msgid "Validated"
-msgstr "Validé"
-
-#. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:71
 #, python-format
 msgid ""
@@ -724,10 +720,9 @@ msgid "Timesheet range"
 msgstr "Plage de la feuille de temps"
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,message_comment_ids:0
-#: help:hr_timesheet_sheet.sheet,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
+#: view:board.board:0
+msgid "My Total Attendance By Week"
+msgstr "Ma présence totale par semaine"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
@@ -809,7 +804,7 @@ msgid "Search Account"
 msgstr "Recherche de comptes"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:415
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:428
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet"
 msgstr ""
@@ -872,9 +867,9 @@ msgid "Cancel"
 msgstr "Annuler"
 
 #. module: hr_timesheet_sheet
-#: view:board.board:0
-msgid "My Total Attendance By Week"
-msgstr "Ma présence totale par semaine"
+#: model:process.node,name:hr_timesheet_sheet.process_node_validatedtimesheet0
+msgid "Validated"
+msgstr "Validé"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_invoiceonwork0
@@ -981,9 +976,9 @@ msgid "May"
 msgstr "Mai"
 
 #. module: hr_timesheet_sheet
-#: field:hr.timesheet.report,journal_id:0
-msgid "Journal"
-msgstr "Journal"
+#: model:process.node,note:hr_timesheet_sheet.process_node_workontask0
+msgid "Defines the work summary of task"
+msgstr "Définit le résumé du travail pour la tâche"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -1081,8 +1076,8 @@ msgid "Invoice rate"
 msgstr "Taux de facturation"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:388
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:408
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:401
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:421
 #, python-format
 msgid "User Error!"
 msgstr ""
@@ -1163,478 +1158,11 @@ msgid "Total"
 msgstr "Total"
 
 #. module: hr_timesheet_sheet
-#: model:process.node,note:hr_timesheet_sheet.process_node_workontask0
-msgid "Defines the work summary of task"
-msgstr "Définit le résumé du travail pour la tâche"
+#: field:hr.timesheet.report,journal_id:0
+msgid "Journal"
+msgstr "Journal"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_day
 msgid "Timesheet by Day"
 msgstr "Feuilles de temps par jour"
-
-#, python-format
-#~ msgid "Cannot delete Sheet(s) which are already confirmed !"
-#~ msgstr "Ne peut pas supprimer la/les feuille(s) qui sont déjà confirmées !"
-
-#, python-format
-#~ msgid "No employee defined for your user !"
-#~ msgstr "Pas d'employé défini pour cet utilisateur !"
-
-#~ msgid "My timesheets to confirm"
-#~ msgstr "Mes feuilles de présence à confirmer"
-
-#~ msgid "Timeshet range"
-#~ msgstr "Etendue du timesheet"
-
-#~ msgid "Today"
-#~ msgstr "Aujourd'hui"
-
-#~ msgid "Defines employee's timesheet entry"
-#~ msgstr "Définir l'écriture de la feuille de temps de l'employé"
-
-#, python-format
-#~ msgid "UserError"
-#~ msgstr "ErreurUtilisateur"
-
-#~ msgid "Validated Timesheet"
-#~ msgstr "Feuille de temps validée"
-
-#, python-format
-#~ msgid "You can not sign in from an other date than today"
-#~ msgstr "Vous ne pouvez pas pointer une autre date qu'aujourdhui"
-
-#~ msgid "Phone call encoding"
-#~ msgstr "Encoder les appels téléphoniques"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "Avertissement !"
-
-#~ msgid ""
-#~ "Allowed difference between the sign in/out and the timesheet computation for "
-#~ "one sheet. Set this to 0 if you do not want any control."
-#~ msgstr ""
-#~ "La différence permise entre le sign in/out and le calcul de la timesheet "
-#~ "pour une feuille. Mettez cette valeur à 0 si vous ne voulez aucun contrôle."
-
-#~ msgid "Timesheet by Days"
-#~ msgstr "Feuille de Feuilles de Présence"
-
-#~ msgid "timesheet is confirmed at the end of the week / month"
-#~ msgstr "La feuille de temps est confirmé à la fin de la semaine / mois"
-
-#~ msgid "Project Timesheet"
-#~ msgstr "Feuille de présence par projet"
-
-#~ msgid "Analytic cost"
-#~ msgstr "Coût analytique"
-
-#~ msgid "Encode your timesheet line"
-#~ msgstr "Encoder vos lignes de temps"
-
-#~ msgid "Confirm Timesheet"
-#~ msgstr "Confirmer vos feuilles de temps"
-
-#~ msgid "Control by the project manager"
-#~ msgstr "Piloter par le responsable du projet"
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "Erreur !"
-
-#~ msgid "Timesheet Lines"
-#~ msgstr "Lignes des Feuilles de Présence"
-
-#, python-format
-#~ msgid ""
-#~ "Please verify that the total difference of the sheet is lower than %.2f !"
-#~ msgstr ""
-#~ "Merci de vérifier que la différence totale de la fiche est inférieure à %.2f "
-#~ "!"
-
-#~ msgid "Confirm timesheet at the end of the period"
-#~ msgstr "Confirmer la feuille de temps à la fin de la période"
-
-#~ msgid "No employee defined"
-#~ msgstr "Pas d'employé défini"
-
-#~ msgid "Confirmed Timesheet"
-#~ msgstr "Feuilles de temps confirmés"
-
-#~ msgid "Configuration"
-#~ msgstr "Configuration"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "XML non valide pour l'architecture de la vue"
-
-#~ msgid "Daily View"
-#~ msgstr "Vue Journalière"
-
-#~ msgid "Timesheets by period"
-#~ msgstr "Feuilles de présence par période"
-
-#~ msgid "My Department's Timesheet"
-#~ msgstr "Ma feuille de temps du département"
-
-#~ msgid "Go to:"
-#~ msgstr "Aller à :"
-
-#~ msgid "Phone call"
-#~ msgstr "Appel téléphonique"
-
-#~ msgid "Review of work"
-#~ msgstr "Réviser votre travail"
-
-#~ msgid "Encode Your hours and Sign in / out"
-#~ msgstr "Encoder vos heures et pointer l'entrée / sortie"
-
-#~ msgid "Review"
-#~ msgstr "Révision"
-
-#~ msgid "Timesheets To Confirm"
-#~ msgstr "Feuille de Feuilles de Présence"
-
-#, python-format
-#~ msgid "You can not sign out from an other date than today"
-#~ msgstr ""
-#~ "Vous ne pouvez pas pointer la sortie pour un autre jour qu'aujourdhui"
-
-#~ msgid "Invoice on timesheet"
-#~ msgstr "Facture sur la feuille de temps"
-
-#~ msgid "Invoice based on timesheet"
-#~ msgstr "Facture basé sur les feuilles de temps"
-
-#, python-format
-#~ msgid "You can not modify an entry in a confirmed timesheet !"
-#~ msgstr ""
-#~ "Vous ne pouvez pas modifier une entrée d'une feuille de temps confirmée !"
-
-#~ msgid "Creates invoice based on timesheet"
-#~ msgstr "Créer les factures basés sur les feuilles de temps"
-
-#~ msgid "Timesheets To Validate"
-#~ msgstr "Feuilles de Présence à Valider"
-
-#~ msgid "Timesheet allowed difference"
-#~ msgstr "Difference de timesheet permise"
-
-#~ msgid "Timesheet is validate by project manager."
-#~ msgstr "La feuille de temps est validée par le responsable du projet"
-
-#~ msgid "Whatever time u spent for phone call"
-#~ msgstr "Combien de temps avez vous passez au téléphone"
-
-#~ msgid "Validate Timesheet"
-#~ msgstr "Valider la feuille de temps"
-
-#~ msgid "My Department's Timesheet to Confirm"
-#~ msgstr "Mes feuilles de temps du département à confirmer"
-
-#~ msgid "Create Analytic cost"
-#~ msgstr "Créer un coût analytique"
-
-#~ msgid "By Day"
-#~ msgstr "Par Jour"
-
-#~ msgid "hr_timesheet_sheet.sheet"
-#~ msgstr "hr_timesheet_sheet.sheet"
-
-#~ msgid "At the end of the period (week/month)"
-#~ msgstr "À la fin de la période (semaine/mois)"
-
-#~ msgid "timesheet entry is into draft state."
-#~ msgstr "L'écriture de la feuille de temps est en état brouillon"
-
-#~ msgid "Analytic cost is created"
-#~ msgstr "Le coût analytique est créé"
-
-#~ msgid "Encode how much time u spent on phone call"
-#~ msgstr ""
-#~ "Encoder combien de temps vous avez passé sur les appels téléphoniques"
-
-#~ msgid "Review of your work at the end of the day"
-#~ msgstr "Réviser votre travail à la fin de la journée"
-
-#~ msgid "My timesheets"
-#~ msgstr "Mes feuilles de présence"
-
-#~ msgid "Accept"
-#~ msgstr "Accepter"
-
-#~ msgid "My Department's Timesheet to Validate"
-#~ msgstr "Les feuilles de temps de mon département à valider"
-
-#, python-format
-#~ msgid "Invalid action !"
-#~ msgstr "Action invalide !"
-
-#, python-format
-#~ msgid "You cannot modify an entry in a confirmed timesheet !"
-#~ msgstr ""
-#~ "Vous ne pouvez pas modifier une entrée d'une feuille de temps confirmée !"
-
-#, python-format
-#~ msgid ""
-#~ "You can not have 2 timesheets that overlaps !\n"
-#~ "Please use the menu 'My Current Timesheet' to avoid this problem."
-#~ msgstr ""
-#~ "Vous ne pouvez pas avoir 2 feuilles de temps qui se recouvrent !\n"
-#~ "Veuillez utiliser le menu « Ma feuille de temps actuelle » pour éviter ce "
-#~ "problème."
-
-#~ msgid " Month-1 "
-#~ msgstr " Mois -1 "
-
-#, python-format
-#~ msgid ""
-#~ "You cannot enter an attendance date outside the current timesheet dates!"
-#~ msgstr ""
-#~ "Vous ne pouvez pas saisir une date de présence hors de l'intervalle de date "
-#~ "de la feuille de présence actuelle !"
-
-#~ msgid " Month "
-#~ msgstr " Mois "
-
-#~ msgid "State"
-#~ msgstr "État"
-
-#~ msgid ""
-#~ "This report performs analysis on timesheets created by your human resources "
-#~ "in the system. It allows you to have a full overview of  entries done by "
-#~ "your employees. You can group them by specific selection criteria thanks to "
-#~ "the search tool."
-#~ msgstr ""
-#~ "Ce rapport fournit des analyses sur les feuilles de présence créées par les "
-#~ "ressources humaines dans le système. Cela vous permet d'avoir une vue "
-#~ "d'ensemble complète des saisies effectuées par les employés. Vous pouvez les "
-#~ "regrouper selon des critères de recherche spécifiques grâce aux outils de "
-#~ "recherche."
-
-#~ msgid " Year "
-#~ msgstr " Année "
-
-#~ msgid "Quantity"
-#~ msgstr "Quantité"
-
-#, python-format
-#~ msgid ""
-#~ "You cannot create a timesheet for an employee that does not have any user "
-#~ "defined !"
-#~ msgstr ""
-#~ "Vous ne pouvez pas créer de feuille de temps pour un employé qui n'est "
-#~ "défini en tant qu'utilisateur !"
-
-#, python-format
-#~ msgid "You cannot duplicate a timesheet !"
-#~ msgstr "Vous ne pouvez pas dupliquer une feuille de temps !"
-
-#~ msgid "You must select a Current date which is in the timesheet dates !"
-#~ msgstr ""
-#~ "Vous devez sélectionner une date actuelle qui est dans l'intervalle de dates "
-#~ "de la feuille de temps !"
-
-#, python-format
-#~ msgid ""
-#~ "The timesheet cannot be validated as it does not contain equal no. of sign "
-#~ "ins and sign outs!"
-#~ msgstr ""
-#~ "La feuille de temps ne peut pas être validée car le nombre de pointages en "
-#~ "entrée n'est pas égal à celui en sortie !"
-
-#~ msgid ""
-#~ " * The 'Draft' state is used when a user is encoding a new and unconfirmed "
-#~ "timesheet.                 \n"
-#~ "* The 'Confirmed' state is used for to confirm the timesheet by user.        "
-#~ "         \n"
-#~ "* The 'Done' state is used when users timesheet is accepted by his/her "
-#~ "senior."
-#~ msgstr ""
-#~ " * L'état \"Brouillon\" est utilisé quand un utilisateur saisit une nouvelle "
-#~ "feuille de temps non confirmée.\n"
-#~ " * L'état \"Confirmé\" est utilisé pour confirmer la feuille de temps par "
-#~ "utilisateur.\n"
-#~ " * L'état \"Terminé\" est utilisé quand la feuille de temps de l'utilisateur "
-#~ "est acceptée par sa/son responsable."
-
-#, python-format
-#~ msgid "Cannot delete Sheet(s) which have attendance entries encoded !"
-#~ msgstr "Impossible de supprimer une feuille qui a des saisies de présence !"
-
-#~ msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-#~ msgstr ""
-#~ "Erreur : un pointage en entrée (resp. en sortie) doit suivre un pointage en "
-#~ "sortie (resp. en entrée)"
-
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "Erreur ! Vous ne pouvez pas créer de sociétés récursives"
-
-#~ msgid ""
-#~ "Check your timesheets for a specific period. You can also encode time spent "
-#~ "on a project (i.e. an analytic account) thus generating costs in the "
-#~ "analytic account concerned."
-#~ msgstr ""
-#~ "Vérifiez vos feuilles de temps pour une période spécifique. Vous pouvez "
-#~ "aussi saisir le temps passé sur un projet(cad un compte analytique), "
-#~ "générant ainsi des coûts dans le compte analytique concerné."
-
-#~ msgid ""
-#~ "\n"
-#~ "This module helps you to easily encode and validate timesheet and "
-#~ "attendances\n"
-#~ "within the same view. The upper part of the view is for attendances and\n"
-#~ "track (sign in/sign out) events. The lower part is for timesheet.\n"
-#~ "\n"
-#~ "Other tabs contains statistics views to help you analyse your\n"
-#~ "time or the time of your team:\n"
-#~ "* Time spent by day (with attendances)\n"
-#~ "* Time spent by project\n"
-#~ "\n"
-#~ "This module also implements a complete timesheet validation process:\n"
-#~ "* Draft sheet\n"
-#~ "* Confirmation at the end of the period by the employee\n"
-#~ "* Validation by the project manager\n"
-#~ "\n"
-#~ "The validation can be configured in the company:\n"
-#~ "* Period size (day, week, month, year)\n"
-#~ "* Maximal difference between timesheet and attendances\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Ce module vous aide à saisir et valider les feuilles de temps et les "
-#~ "présences\n"
-#~ "avec la même vue. La partie supérieure de la vue est pour les présences et\n"
-#~ "suivre les évènements (entrée/sortie). La partie inférieure est pour les "
-#~ "feuilles de temps.\n"
-#~ "\n"
-#~ "Les autres onglets contiennent des vues statistiques pour vous aider à "
-#~ "analyser\n"
-#~ "votre temps ou le temps de votre équipe :\n"
-#~ "* Temps passé par jour (avec les présences)\n"
-#~ "* Temps passé par projet\n"
-#~ "\n"
-#~ "Ce module implémente aussi un processus complet de validation des feuilles "
-#~ "de temps :\n"
-#~ "* Brouillons de feuille\n"
-#~ "* Confirmation à la fin de la période par l'employé\n"
-#~ "* Validation par le chef de projet\n"
-#~ "\n"
-#~ "La validation peut être configurée au niveau de la société :\n"
-#~ "* Durée de la période (jour, semaine, mois, année)\n"
-#~ "* Différence maximale entre les feuilles de temps et les présences\n"
-#~ "    "
-
-#~ msgid "Timesheet in current year"
-#~ msgstr "Feuille de temps de cette année"
-
-#~ msgid "Timesheet of last month"
-#~ msgstr "Feuille de temps du mois dernier"
-
-#, python-format
-#~ msgid "You cannot duplicate a timesheet!"
-#~ msgstr "Vous ne pouvez pas dupliquer une feuille de temps !"
-
-#, python-format
-#~ msgid "You cannot delete a timesheet which is already confirmed!"
-#~ msgstr ""
-#~ "Vous ne pouvez pas supprimer une feuille de temps qui est déjà confirmée !"
-
-#, python-format
-#~ msgid "You cannot delete a timesheet which have attendance entries!"
-#~ msgstr ""
-#~ "Vous ne pouvez pas supprimer une feuille de temps  qui contient des "
-#~ "pointages !"
-
-#~ msgid "Daily"
-#~ msgstr "Quotidien"
-
-#~ msgid "My Departments Timesheet"
-#~ msgstr "Les feuilles de temps de mon département"
-
-#, python-format
-#~ msgid ""
-#~ "In order to create a timesheet for this employee, you must assign the "
-#~ "employee to an analytic journal!"
-#~ msgstr ""
-#~ "Pour créer une feuille de temps pour cet employé, vous devez assigner un "
-#~ "journal analytique à l'employé !"
-
-#, python-format
-#~ msgid "You cannot modify an entry in a confirmed timesheet!"
-#~ msgstr ""
-#~ "Vous ne pouvez pas modifier une entrée dans une feuille de temps confirmée !"
-
-#, python-format
-#~ msgid ""
-#~ "In order to create a timesheet for this employee, you must link the employee "
-#~ "to a product, like 'Consultant'!"
-#~ msgstr ""
-#~ "Afin de créer une feuille de temps pour cet employé, vous devez lier le "
-#~ "salarié à un produit (par exemple : consultant) !"
-
-#, python-format
-#~ msgid ""
-#~ "You cannot have 2 timesheets that overlaps!\n"
-#~ "You should use the menu 'My Timesheet' to avoid this problem."
-#~ msgstr ""
-#~ "Vous ne pouvez pas avoir 2 feuilles de temps qui se chevauchent (date de fin "
-#~ "de la 1ère postérieure à la date de début de la seconde par exemple)!\n"
-#~ "Vous devez utiliser le menu «Mes feuilles de temps» pour éviter ce problème."
-
-#, python-format
-#~ msgid ""
-#~ "The timesheet cannot be validated as it does not contain an equal number of "
-#~ "sign ins and sign outs!"
-#~ msgstr ""
-#~ "La feuille de temps ne peut pas être validée car elle ne contient pas un "
-#~ "nombre égal de pointages 'Entrée' et de de pointages 'Sortie'!"
-
-#~ msgid ""
-#~ "You cannot have 2 timesheets that overlaps !\n"
-#~ "Please use the menu 'My Current Timesheet' to avoid this problem."
-#~ msgstr ""
-#~ "Vous ne pouvez pas avoir 2 feuilles de temps qui se chevauchent (date de fin "
-#~ "de la 1ère postérieure à la date de début de la seconde par exemple)!\n"
-#~ "Vous devez utiliser le menu «Mes feuilles de temps» pour éviter ce problème."
-
-#, python-format
-#~ msgid ""
-#~ "In order to create a timesheet for this employee, you must link the employee "
-#~ "to a product!"
-#~ msgstr ""
-#~ "Afin de créer une feuille de temps pour cet employé, vous devez lier le "
-#~ "salarié à un produit !"
-
-#~ msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
-#~ msgstr ""
-#~ "Les relevés confirmés/terminés d'une feuille de temps ne peuvent plus être "
-#~ "modifiés !"
-
-#~ msgid "Timesheet in current month"
-#~ msgstr "Feuilles de temps de ce mois"
-
-#~ msgid "The company name must be unique !"
-#~ msgstr "Le nom de la société doit être unique !"
-
-#, python-format
-#~ msgid "You cannot sign in/sign out from an other date than today"
-#~ msgstr "Vous ne pouvez pas pointer pour un autre jour qu'aujourd'hui"
-
-#, python-format
-#~ msgid ""
-#~ "In order to create a timesheet for this employee, you must assign the "
-#~ "employee to an analytic journal, like 'Timesheet'!"
-#~ msgstr ""
-#~ "Afin de créer une feuille de temps pour cet employé, vous devez affecter le "
-#~ "salarié à un journal analytique, comme 'Timesheet'!"
-
-#, python-format
-#~ msgid ""
-#~ "In order to create a timesheet for this employee, you must assign it to a "
-#~ "user!"
-#~ msgstr ""
-#~ "Afin de créer une feuille de temps pour cet employé, vous devez le lier à un "
-#~ "utilisateur !"
-
-#~ msgid "Submited to Manager"
-#~ msgstr "Soumettre au responsable"

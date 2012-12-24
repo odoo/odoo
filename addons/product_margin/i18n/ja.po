@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:04+0000\n"
-"PO-Revision-Date: 2012-06-08 17:54+0000\n"
-"Last-Translator: Akira Hiyama <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:42+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:28+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: product_margin
 #: view:product.product:0
@@ -45,19 +45,14 @@ msgid "To"
 msgstr "終了"
 
 #. module: product_margin
-#: field:product.product,date_to:0
-msgid "To Date"
-msgstr "終了日"
-
-#. module: product_margin
 #: help:product.product,total_margin:0
 msgid "Turnover - Standard price"
 msgstr ""
 
 #. module: product_margin
-#: field:product.product,date_from:0
-msgid "From Date"
-msgstr "開始日"
+#: field:product.product,total_margin_rate:0
+msgid "Total Margin Rate(%)"
+msgstr ""
 
 #. module: product_margin
 #: selection:product.margin,invoice_state:0
@@ -66,15 +61,24 @@ msgid "Draft, Open and Paid"
 msgstr "ドラフトと開始と支払済"
 
 #. module: product_margin
+#: code:addons/product_margin/wizard/product_margin.py:73
+#: model:ir.actions.act_window,name:product_margin.product_margin_act_window
+#: model:ir.ui.menu,name:product_margin.menu_action_product_margin
+#: view:product.product:0
+#, python-format
+msgid "Product Margins"
+msgstr "製品利鞘"
+
+#. module: product_margin
 #: field:product.product,purchase_avg_price:0
 #: field:product.product,sale_avg_price:0
 msgid "Avg. Unit Price"
 msgstr "平均単価"
 
 #. module: product_margin
-#: model:ir.model,name:product_margin.model_product_product
-msgid "Product"
-msgstr "製品"
+#: field:product.product,sale_num_invoiced:0
+msgid "# Invoiced in Sale"
+msgstr ""
 
 #. module: product_margin
 #: view:product.product:0
@@ -86,6 +90,12 @@ msgstr "カタログ価格"
 #: selection:product.product,invoice_state:0
 msgid "Paid"
 msgstr "支払済"
+
+#. module: product_margin
+#: view:product.product:0
+#: field:product.product,sales_gap:0
+msgid "Sales Gap"
+msgstr "販売ギャップ"
 
 #. module: product_margin
 #: help:product.product,sales_gap:0
@@ -108,15 +118,14 @@ msgid "Sum of Quantity in Supplier Invoices"
 msgstr "仕入先請求書の数量合計"
 
 #. module: product_margin
-#: help:product.product,expected_margin:0
-msgid "Expected Sale - Normal Cost"
-msgstr "予想販売 - 通常コスト"
+#: field:product.product,date_to:0
+msgid "Margin Date To"
+msgstr ""
 
 #. module: product_margin
-#: field:product.product,purchase_num_invoiced:0
-#: field:product.product,sale_num_invoiced:0
-msgid "# Invoiced"
-msgstr "請求済数"
+#: view:product.product:0
+msgid "Analysis Criteria"
+msgstr "分析基準"
 
 #. module: product_margin
 #: view:product.product:0
@@ -150,10 +159,9 @@ msgid "Avg. Price in Customer Invoices."
 msgstr ""
 
 #. module: product_margin
-#: help:product.product,sale_expected:0
-msgid ""
-"Sum of Multiplication of Sale Catalog price and quantity of Customer Invoices"
-msgstr ""
+#: help:product.product,purchase_avg_price:0
+msgid "Avg. Price in Supplier Invoices "
+msgstr "仕入先請求書の平均価格 "
 
 #. module: product_margin
 #: field:product.margin,invoice_state:0
@@ -167,15 +175,20 @@ msgid "Normal Cost - Total Cost"
 msgstr "通常コスト - 合計コスト"
 
 #. module: product_margin
+#: help:product.product,sale_expected:0
+msgid ""
+"Sum of Multiplication of Sale Catalog price and quantity of Customer Invoices"
+msgstr ""
+
+#. module: product_margin
 #: field:product.product,total_margin:0
 msgid "Total Margin"
 msgstr "合計利鞘"
 
 #. module: product_margin
-#: view:product.product:0
-#: field:product.product,sales_gap:0
-msgid "Sales Gap"
-msgstr "販売ギャップ"
+#: field:product.product,date_from:0
+msgid "Margin Date From"
+msgstr ""
 
 #. module: product_margin
 #: help:product.product,turnover:0
@@ -194,9 +207,14 @@ msgid "Purchases"
 msgstr "仕入"
 
 #. module: product_margin
-#: help:product.product,purchase_avg_price:0
-msgid "Avg. Price in Supplier Invoices "
-msgstr "仕入先請求書の平均価格 "
+#: field:product.product,purchase_num_invoiced:0
+msgid "# Invoiced in Purchase"
+msgstr ""
+
+#. module: product_margin
+#: help:product.product,expected_margin:0
+msgid "Expected Sale - Normal Cost"
+msgstr "予想販売 - 通常コスト"
 
 #. module: product_margin
 #: view:product.margin:0
@@ -209,9 +227,9 @@ msgid "Total margin * 100 / Turnover"
 msgstr "合計利鞘 * 100 / 売上高"
 
 #. module: product_margin
-#: view:product.product:0
-msgid "Analysis Criteria"
-msgstr "分析基準"
+#: view:product.margin:0
+msgid "Open Margins"
+msgstr "利鞘を開く"
 
 #. module: product_margin
 #: selection:product.margin,invoice_state:0
@@ -225,13 +243,9 @@ msgid "Sales"
 msgstr "売上"
 
 #. module: product_margin
-#: code:addons/product_margin/wizard/product_margin.py:73
-#: model:ir.actions.act_window,name:product_margin.product_margin_act_window
-#: model:ir.ui.menu,name:product_margin.menu_action_product_margin
-#: view:product.product:0
-#, python-format
-msgid "Product Margins"
-msgstr "製品利鞘"
+#: model:ir.model,name:product_margin.model_product_product
+msgid "Product"
+msgstr "製品"
 
 #. module: product_margin
 #: view:product.margin:0
@@ -242,16 +256,6 @@ msgstr "一般情報"
 #: field:product.product,purchase_gap:0
 msgid "Purchase Gap"
 msgstr "仕入ギャップ"
-
-#. module: product_margin
-#: field:product.product,total_margin_rate:0
-msgid "Total Margin (%)"
-msgstr "合計利鞘（%）"
-
-#. module: product_margin
-#: view:product.margin:0
-msgid "Open Margins"
-msgstr "利鞘を開く"
 
 #. module: product_margin
 #: view:product.margin:0
@@ -277,27 +281,3 @@ msgstr ""
 #: model:ir.model,name:product_margin.model_product_margin
 msgid "Product Margin"
 msgstr "製品利鞘"
-
-#~ msgid ""
-#~ "Sum of Multification of Sale Catalog price and quantity of Customer Invoices"
-#~ msgstr "顧客請求書の販売カタログ価格と数量の乗算合計"
-
-#~ msgid "Sum of Multification of Cost price and quantity of Supplier Invoices"
-#~ msgstr "仕入先請求書のコスト価格と数量の乗算合計"
-
-#~ msgid ""
-#~ "Sum of Multification of Invoice price and quantity of Customer Invoices"
-#~ msgstr "顧客請求書の請求書価格と数量の乗算合計"
-
-#~ msgid "Avg. Price in Customer Invoices)"
-#~ msgstr "顧客請求書の平均価格）"
-
-#~ msgid ""
-#~ "Sum of Multification of Invoice price and quantity of Supplier Invoices "
-#~ msgstr "仕入先請求書の請求書価格と数量の乗算合計 "
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "エラー：無効な商品識別番号です。"
-
-#~ msgid "Turnorder - Standard price"
-#~ msgstr "売上高 - 標準価格"

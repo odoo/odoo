@@ -1,20 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* event
+# Russian translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2011-11-07 22:33+0000\n"
-"Last-Translator: Stanislav Hanzhin <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:13+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:13+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: event
 #: view:event.event:0
@@ -58,20 +59,9 @@ msgid ""
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:305
-#, python-format
-msgid "Event has been <b>cancelled</b>."
-msgstr ""
-
-#. module: event
 #: field:event.registration,date_open:0
 msgid "Registration Date"
 msgstr "Дата регистрации"
-
-#. module: event
-#: help:event.registration,origin:0
-msgid "Name of the sale order which create the registration"
-msgstr ""
 
 #. module: event
 #: field:event.event,type:0
@@ -120,9 +110,8 @@ msgid "Default Maximum Registration"
 msgstr ""
 
 #. module: event
-#: help:event.event,message_unread:0
-#: help:event.registration,message_unread:0
-msgid "If checked new messages require your attention."
+#: view:report.event.registration:0
+msgid "Display"
 msgstr ""
 
 #. module: event
@@ -197,9 +186,9 @@ msgid "Registrations"
 msgstr "Регистрации"
 
 #. module: event
-#: code:addons/event/event.py:95
-#: code:addons/event/event.py:108
-#: code:addons/event/event.py:400
+#: code:addons/event/event.py:89
+#: code:addons/event/event.py:100
+#: code:addons/event/event.py:355
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -234,8 +223,9 @@ msgid "Opera of Verdi"
 msgstr "Опера Верди"
 
 #. module: event
-#: view:report.event.registration:0
-msgid "Display"
+#: help:event.event,message_unread:0
+#: help:event.registration,message_unread:0
+msgid "If checked new messages require your attention."
 msgstr ""
 
 #. module: event
@@ -255,11 +245,6 @@ msgid "False"
 msgstr ""
 
 #. module: event
-#: model:mail.message.subtype,name:event.mt_event_registration
-msgid "New Registrations"
-msgstr ""
-
-#. module: event
 #: field:event.registration,event_end_date:0
 msgid "Event End Date"
 msgstr ""
@@ -273,18 +258,13 @@ msgid ""
 msgstr ""
 
 #. module: event
-#: selection:report.event.registration,month:0
-msgid "May"
-msgstr "Май"
-
-#. module: event
 #: view:report.event.registration:0
 msgid "Registrations in confirmed or done state"
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:114
-#: code:addons/event/event.py:116
+#: code:addons/event/event.py:106
+#: code:addons/event/event.py:108
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -303,8 +283,8 @@ msgid "Partner"
 msgstr "Контрагент"
 
 #. module: event
-#: model:ir.actions.server,name:event.actions_server_event_event_read
-msgid "Event: Mark read"
+#: help:event.type,default_registration_min:0
+msgid "It will select this default minimum value when you choose this event"
 msgstr ""
 
 #. module: event
@@ -401,7 +381,7 @@ msgid "Email"
 msgstr "Эл. почта"
 
 #. module: event
-#: code:addons/event/event.py:367
+#: code:addons/event/event.py:329
 #, python-format
 msgid "New registration confirmed: %s."
 msgstr ""
@@ -470,26 +450,9 @@ msgid "Speaker who will be giving speech at the event."
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:457
-#, python-format
-msgid "Registration has been <b>created</b>."
-msgstr ""
-
-#. module: event
 #: view:event.event:0
 msgid "Cancel Event"
 msgstr "Отменить событие"
-
-#. module: event
-#: code:addons/event/event.py:398
-#, python-format
-msgid "State set to Done"
-msgstr ""
-
-#. module: event
-#: model:ir.actions.server,name:event.actions_server_event_registration_read
-msgid "Event registration : Mark read"
-msgstr ""
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_reg
@@ -539,6 +502,11 @@ msgid "December"
 msgstr "Декабрь"
 
 #. module: event
+#: help:event.registration,origin:0
+msgid "Reference of the sales order which created the registration"
+msgstr ""
+
+#. module: event
 #: field:report.event.registration,draft_state:0
 msgid " # No of Draft Registrations"
 msgstr " Кол-во неподтверждённых регистраций"
@@ -586,18 +554,12 @@ msgid "or"
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:315
-#, python-format
-msgid "Event has been <b>done</b>."
-msgstr ""
-
-#. module: event
 #: help:res.partner,speaker:0
 msgid "Check this box if this contact is a speaker."
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:116
+#: code:addons/event/event.py:108
 #, python-format
 msgid "No Tickets Available!"
 msgstr ""
@@ -635,13 +597,12 @@ msgid ""
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:462
-#, python-format
-msgid "Registration has been set as <b>draft</b>."
-msgstr ""
+#: field:event.event,user_id:0
+msgid "Responsible User"
+msgstr "Ответственный пользователь"
 
 #. module: event
-#: code:addons/event/event.py:108
+#: code:addons/event/event.py:100
 #, python-format
 msgid ""
 "The total of confirmed registration for the event '%s' does not meet the "
@@ -675,12 +636,6 @@ msgstr ""
 #. module: event
 #: view:report.event.registration:0
 msgid "Events which are in New state"
-msgstr ""
-
-#. module: event
-#: code:addons/event/event.py:404
-#, python-format
-msgid "State set to Cancel"
 msgstr ""
 
 #. module: event
@@ -800,10 +755,9 @@ msgid "My Registrations"
 msgstr "Мои регистрации"
 
 #. module: event
-#: code:addons/event/event.py:310
-#, python-format
-msgid "Event has been set to <b>draft</b>."
-msgstr ""
+#: selection:report.event.registration,month:0
+msgid "November"
+msgstr "Ноябрь"
 
 #. module: event
 #: view:report.event.registration:0
@@ -811,22 +765,14 @@ msgid "Extended Filters..."
 msgstr "Расширенные фильтры..."
 
 #. module: event
-#: field:event.event,message_comment_ids:0
-#: help:event.event,message_comment_ids:0
-#: field:event.registration,message_comment_ids:0
-#: help:event.registration,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
-
-#. module: event
 #: selection:report.event.registration,month:0
 msgid "October"
 msgstr "Октябрь"
 
 #. module: event
-#: model:ir.actions.server,name:event.actions_server_event_registration_unread
-msgid "Event registration : Mark unread"
-msgstr ""
+#: selection:report.event.registration,month:0
+msgid "January"
+msgstr "Январь"
 
 #. module: event
 #: view:event.event:0
@@ -835,12 +781,13 @@ msgstr "Установть в 'Черновик'"
 
 #. module: event
 #: view:event.event:0
+#: view:event.registration:0
 #: view:res.partner:0
 msgid "Confirm Registration"
 msgstr "Подтвердить регистрацию"
 
 #. module: event
-#: code:addons/event/event.py:95
+#: code:addons/event/event.py:89
 #, python-format
 msgid ""
 "You have already set a registration for this event as 'Attended'. Please "
@@ -863,12 +810,6 @@ msgid "Default Minimum Registration"
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:368
-#, python-format
-msgid "Registration confirmed."
-msgstr ""
-
-#. module: event
 #: field:event.event,address_id:0
 msgid "Location Address"
 msgstr "Адрес местоположения"
@@ -888,6 +829,7 @@ msgstr ""
 
 #. module: event
 #: view:event.event:0
+#: view:event.registration:0
 msgid "Attended the Event"
 msgstr ""
 
@@ -897,15 +839,10 @@ msgid "Error ! Closing Date cannot be set before Beginning Date."
 msgstr "Ошибка! Дата завершения не может быть установлена до даты начала."
 
 #. module: event
-#: code:addons/event/event.py:400
+#: code:addons/event/event.py:355
 #, python-format
 msgid "You must wait for the starting day of the event to do this action."
 msgstr ""
-
-#. module: event
-#: field:event.event,user_id:0
-msgid "Responsible User"
-msgstr "Ответственный пользователь"
 
 #. module: event
 #: selection:event.event,state:0
@@ -929,7 +866,7 @@ msgid "Reply-to Email"
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:114
+#: code:addons/event/event.py:106
 #, python-format
 msgid "Only %d Seats are Available!"
 msgstr ""
@@ -980,18 +917,13 @@ msgid "Upcoming events from today"
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:300
-#, python-format
-msgid "Event has been <b>created</b>."
-msgstr ""
-
-#. module: event
 #: model:event.event,name:event.event_2
 msgid "Conference on ERP Business"
 msgstr ""
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_view_registration
+#: model:mail.message.subtype,name:event.mt_event_registration
 msgid "New Registration"
 msgstr ""
 
@@ -1011,10 +943,9 @@ msgid "Participant / Contact Name"
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:320
-#, python-format
-msgid "Event has been <b>confirmed</b>."
-msgstr ""
+#: selection:report.event.registration,month:0
+msgid "May"
+msgstr "Май"
 
 #. module: event
 #: view:res.partner:0
@@ -1025,16 +956,6 @@ msgstr "Регистрация мероприятий"
 #: view:event.event:0
 msgid "No ticket available."
 msgstr ""
-
-#. module: event
-#: help:event.type,default_registration_min:0
-msgid "It will select this default minimum value when you choose this event"
-msgstr ""
-
-#. module: event
-#: selection:report.event.registration,month:0
-msgid "January"
-msgstr "Январь"
 
 #. module: event
 #: field:event.event,register_max:0
@@ -1075,11 +996,6 @@ msgstr "Название"
 #: field:event.event,country_id:0
 msgid "Country"
 msgstr "Страна"
-
-#. module: event
-#: selection:report.event.registration,month:0
-msgid "November"
-msgstr "Ноябрь"
 
 #. module: event
 #: view:res.partner:0
@@ -1135,12 +1051,6 @@ msgstr ""
 
 #. module: event
 #: view:event.event:0
-#: model:ir.actions.act_window,name:event.act_register_event_partner
-msgid "Subscribe"
-msgstr "Подписаться"
-
-#. module: event
-#: view:event.event:0
 msgid "available."
 msgstr ""
 
@@ -1184,9 +1094,10 @@ msgid ""
 msgstr ""
 
 #. module: event
-#: model:ir.actions.server,name:event.actions_server_event_event_unread
-msgid "Event: Mark unread"
-msgstr ""
+#: view:event.event:0
+#: model:ir.actions.act_window,name:event.act_register_event_partner
+msgid "Subscribe"
+msgstr "Подписаться"
 
 #. module: event
 #: model:res.groups,name:event.group_event_manager
@@ -1215,534 +1126,3 @@ msgstr "Год"
 #: field:event.event,speaker_confirmed:0
 msgid "Speaker Confirmed"
 msgstr "Выступающий утвержден"
-
-#~ msgid "Ending date"
-#~ msgstr "Дата окончания"
-
-#~ msgid "Invoice Rejected"
-#~ msgstr "Счет отклонен"
-
-#~ msgid "Draft Registrations"
-#~ msgstr "Предварительные регистрации"
-
-#~ msgid "Invoice Created"
-#~ msgstr "Счет создан"
-
-#~ msgid "Event type"
-#~ msgstr "Тип события"
-
-#~ msgid "Extra Info"
-#~ msgstr "Доп. информация"
-
-#~ msgid "Create Invoices"
-#~ msgstr "Создать счета"
-
-#~ msgid "Draft Registration"
-#~ msgstr "Предварительная регистрация"
-
-#~ msgid "Reporting"
-#~ msgstr "Отчетность"
-
-#~ msgid "All Events"
-#~ msgstr "Все события"
-
-#~ msgid "Type"
-#~ msgstr "Тип"
-
-#~ msgid "Statistics"
-#~ msgstr "Статистика"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Неправильный XML для просмотра архитектуры!"
-
-#~ msgid "Events by Categories"
-#~ msgstr "События по категориям"
-
-#~ msgid "Confirm Registrations"
-#~ msgstr "Подтвердить регистрации"
-
-#~ msgid "References"
-#~ msgstr "Ссылки"
-
-#~ msgid "Configuration"
-#~ msgstr "Настройки"
-
-#~ msgid "Dates"
-#~ msgstr "Даты"
-
-#~ msgid "Error Messages"
-#~ msgstr "Сообщения об ошибках"
-
-#~ msgid "Communication history"
-#~ msgstr "Журнал переписки"
-
-#~ msgid "Event Done"
-#~ msgstr "Событие завершено"
-
-#~ msgid "Canceled"
-#~ msgstr "Отменено"
-
-#~ msgid "Event description"
-#~ msgstr "Описание события"
-
-#~ msgid "Event Related"
-#~ msgstr "Относится к событию"
-
-#~ msgid "Number of Registration"
-#~ msgstr "Кол-во регистраций"
-
-#~ msgid "Events by section"
-#~ msgstr "События по разделам"
-
-#~ msgid "All Registrations"
-#~ msgstr "Все регистрации"
-
-#~ msgid "Beginning date"
-#~ msgstr "Дата начала"
-
-#~ msgid "History"
-#~ msgstr "Журнал"
-
-#~ msgid "General"
-#~ msgstr "Общее"
-
-#~ msgid "Send Reminder"
-#~ msgstr "Отправить напоминание"
-
-#~ msgid "Invoice"
-#~ msgstr "Счет"
-
-#~ msgid "Unit Price"
-#~ msgstr "Цена за ед."
-
-#, python-format
-#~ msgid "Open"
-#~ msgstr "Открыть"
-
-#~ msgid "New event"
-#~ msgstr "Новое событие"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Название объекта должно начинаться с x_  и не должно содержать специальных "
-#~ "символов !"
-
-#~ msgid "Confirmed Events"
-#~ msgstr "подтвержденные события"
-
-#~ msgid "Product"
-#~ msgstr "Продукция"
-
-#~ msgid "Payments"
-#~ msgstr "Платежи"
-
-#~ msgid "Events Organisation"
-#~ msgstr "Организация событий"
-
-#~ msgid "Actions"
-#~ msgstr "Действия"
-
-#~ msgid "Ticket for Conference"
-#~ msgstr "Билет на конференцию"
-
-#~ msgid "Badge Partner"
-#~ msgstr "Бэдж партнера"
-
-#~ msgid "Badge Name"
-#~ msgstr "Имя на бэдже"
-
-#~ msgid "Badge Title"
-#~ msgstr "Должность на бэдже"
-
-#~ msgid "Ticket for Concert"
-#~ msgstr "Билет на концерт"
-
-#~ msgid "Ticket for Opera"
-#~ msgstr "Билет в оперу"
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "Ошибка: Неправильный штрих-код"
-
-#~ msgid "Ok"
-#~ msgstr "Ок"
-
-#~ msgid "Badge"
-#~ msgstr "Бэйдж"
-
-#~ msgid "Registration By Event Types"
-#~ msgstr "Регистрация по типу событий"
-
-#~ msgid "Mail Auto Confirm"
-#~ msgstr "Письмо автоматически подтверждено"
-
-#~ msgid "Error ! You cannot create recursive sections."
-#~ msgstr "Ошибка! Вы не можете создавать рекурсивные секции."
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Недопустимое имя модели в определении действия."
-
-#~ msgid "Confirmation Email"
-#~ msgstr "Подтверждение ел. почты"
-
-#~ msgid "Registration Confirmation"
-#~ msgstr "Регистрация подтверждена"
-
-#~ msgid "Mailing"
-#~ msgstr "Рассылка"
-
-#~ msgid "Case section"
-#~ msgstr "Секция вопроса"
-
-#~ msgid "Parent Category"
-#~ msgstr "Родительская категория"
-
-#~ msgid "Case"
-#~ msgstr "Вопрос"
-
-#~ msgid "Partner Contact"
-#~ msgstr "Контакт партнера"
-
-#~ msgid "Error: UOS must be in a different category than the UOM"
-#~ msgstr ""
-#~ "Ошибка. Единицы продажи и единицы измерения должны принадлежать к разным "
-#~ "категориям."
-
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr ""
-#~ "Ошибка. ЕИМ по умолчанию и закупочная ЕИМ должны иметь одинаковую категорию."
-
-#~ msgid "event.registration.badge"
-#~ msgstr "event.registration.badge"
-
-#~ msgid "Confirmation for Event Registration"
-#~ msgstr "Подтверждение регистрации на мероприятие"
-
-#~ msgid "Parent Event"
-#~ msgstr "Основное событие"
-
-#~ msgid "Invoice Date"
-#~ msgstr "Дата счёта"
-
-#~ msgid "Make Invoice"
-#~ msgstr "Сформировать счёт"
-
-#~ msgid "Make Invoices"
-#~ msgstr "Сформировать счета"
-
-#~ msgid "Event Details"
-#~ msgstr "Подробнее о мероприятии"
-
-#~ msgid "Number of Registrations or Tickets"
-#~ msgstr "Число регистраций или билетов"
-
-#~ msgid "Badges"
-#~ msgstr "Бейджи"
-
-#~ msgid "Current Events"
-#~ msgstr "Текущие мероприятия"
-
-#~ msgid "Event Dashboard"
-#~ msgstr "Инфо-панель мероприятий"
-
-#~ msgid "Pricelist version for current event."
-#~ msgstr "Версия прайс-листа для текущего мероприятия"
-
-#~ msgid "Closing Date of Event"
-#~ msgstr "Дата завершения мероприятия"
-
-#~ msgid "Mail Auto Register"
-#~ msgstr "Автоматическая регистрация по почте"
-
-#~ msgid "To be Invoiced"
-#~ msgstr "Счета к выставлению"
-
-#~ msgid "Error ! You cannot create recursive event."
-#~ msgstr "Ошибка! Невозможно создать рекурсивное мероприятие."
-
-#~ msgid "Group the invoices"
-#~ msgstr "Сгруппировать счета"
-
-#~ msgid ""
-#~ "Organization and management of Event.\n"
-#~ "\n"
-#~ "    This module allow you\n"
-#~ "        * to manage your events and their registrations\n"
-#~ "        * to use emails to automatically confirm and send acknowledgements "
-#~ "for any registration to an event\n"
-#~ "        * ...\n"
-#~ "    A dashboard for associations that includes:\n"
-#~ "    * Registration by Events (graph)\n"
-#~ "    Note that:\n"
-#~ "    - You can define new types of events in\n"
-#~ "                Events / Configuration / Types of Events\n"
-#~ "    - You can access predefined reports about number of registration per "
-#~ "event or per event category in:\n"
-#~ "                Events / Reporting\n"
-#~ msgstr ""
-#~ "Организация и управление мероприятиями.\n"
-#~ "\n"
-#~ "    Этот модуль позволяет\n"
-#~ "        * управлять мероприятиями и регистрацией на них\n"
-#~ "        * использовать электронную почту для автоматического подтверждения "
-#~ "регистрации и отправки уведомлений любому зарегистрировавшемуся на "
-#~ "мероприятие\n"
-#~ "        * ...\n"
-#~ "    Инфо-панель со связанной информацией:\n"
-#~ "    * Регистрация на мероприятия (в виде графика)\n"
-#~ "    Обратите внимание:\n"
-#~ "    - Можно определять новые типы мероприятий в меню\n"
-#~ "                События / Настройка / Типы событий\n"
-#~ "    - Можно получить доступ к стандартным отчетам о соотношении числа "
-#~ "регистраций к мероприятиям или категориям мероприятий в меню\n"
-#~ "                Событие / Сообщение\n"
-
-#, python-format
-#~ msgid "Registered partner doesn't have an address to make the invoice."
-#~ msgstr "Зарегистрированный контрагент не имеет адреса для выставления счёта."
-
-#, python-format
-#~ msgid "Warning: The Event '%s' has reached its Maximum Limit (%s)."
-#~ msgstr "Внимание: мероприятие '%s' достигло максимальной границы (%s)."
-
-#~ msgid "Type of Event like Seminar, Exhibition, Conference, Training."
-#~ msgstr "Тип мероприятия: семинар, выставка, конференция, обучение."
-
-#~ msgid "Partner Invoiced"
-#~ msgstr "Счёт выставлен контрагенту"
-
-#~ msgid "Provide Maximun Number of Registrations"
-#~ msgstr "Укажите максимальное количество регистраций"
-
-#~ msgid "Invoice Information"
-#~ msgstr "Информация о счёте"
-
-#~ msgid "Registration Email"
-#~ msgstr "Адрес электронной почты"
-
-#~ msgid "Title"
-#~ msgstr "Обращение"
-
-#~ msgid "Subtotal"
-#~ msgstr "Подитог"
-
-#~ msgid "Add Internal Note"
-#~ msgstr "Добавить внутреннюю заметку"
-
-#~ msgid "_Close"
-#~ msgstr "_Закрыть"
-
-#, python-format
-#~ msgid "Customer Invoices"
-#~ msgstr "Счета заказчику"
-
-#~ msgid "Reply-To"
-#~ msgstr "Ответить"
-
-#~ msgid "Pricelist"
-#~ msgstr "Прайс-лист"
-
-#~ msgid "Send New Email"
-#~ msgstr "Отправить новое эл. письмо"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "Внимание !"
-
-#~ msgid "Misc"
-#~ msgstr "Разное"
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "Ошибка !"
-
-#~ msgid "Reply"
-#~ msgstr "Ответ"
-
-#~ msgid "History Information"
-#~ msgstr "История"
-
-#~ msgid "Last 30 Days"
-#~ msgstr "Последние 30 дней"
-
-#~ msgid "Contact"
-#~ msgstr "Контакт"
-
-#~ msgid "Quantity"
-#~ msgstr "Количество"
-
-#~ msgid "Message"
-#~ msgstr "Сообщение"
-
-#~ msgid "Closed"
-#~ msgstr "Закрыто"
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Ошибка! Вы не можете создать рекурсивно связанных участников."
-
-#~ msgid "Write Date"
-#~ msgstr "Дата записи"
-
-#~ msgid "Active"
-#~ msgstr "Активно"
-
-#~ msgid "Language"
-#~ msgstr "Язык"
-
-#~ msgid "CC"
-#~ msgstr "Копия"
-
-#~ msgid "Dashboard"
-#~ msgstr "Инфо-панель"
-
-#~ msgid "These people will receive email."
-#~ msgstr "Эти люди получат эл. письма."
-
-#~ msgid "Close"
-#~ msgstr "Закрыть"
-
-#~ msgid "Last 365 Days"
-#~ msgstr "Последние 365 дней"
-
-#~ msgid "Attachments"
-#~ msgstr "Прикрепленные файлы"
-
-#~ msgid "Details"
-#~ msgstr "Подробности"
-
-#~ msgid "Sale Team"
-#~ msgstr "Отдел продаж"
-
-#~ msgid "Start date"
-#~ msgstr "Дата начала"
-
-#~ msgid "Closing date"
-#~ msgstr "Дата закрытия"
-
-#~ msgid "Address"
-#~ msgstr "Адрес"
-
-#~ msgid "Total"
-#~ msgstr "Всего"
-
-#~ msgid "Last 7 Days"
-#~ msgstr "Последние 7 дней"
-
-#~ msgid "Speaker who are giving speech on event."
-#~ msgstr "Выступающие на мероприятии."
-
-#~ msgid "Other Speakers"
-#~ msgstr "Другие выступающие"
-
-#~ msgid "Speakers"
-#~ msgstr "Выступающие"
-
-#~ msgid "Child Events"
-#~ msgstr "Дочерние мероприятия"
-
-#~ msgid "Beginning Date"
-#~ msgstr "Дата начала"
-
-#~ msgid "Total of Open and Done Registrations"
-#~ msgstr "Сумма открытых и закрытых регистраций"
-
-#~ msgid "Confirmation Email Body"
-#~ msgstr "Тело подтверждающего письма"
-
-#~ msgid "Auto Confirmation Email"
-#~ msgstr "Письмо автоподтверждения"
-
-#~ msgid "Registration Cost"
-#~ msgstr "Стоимость регистрации"
-
-#, python-format
-#~ msgid "Auto Confirmation: [%s] %s"
-#~ msgstr "Автоподтверждение: [%s] %s"
-
-#~ msgid "Event by Registration"
-#~ msgstr "Мероприятия по регистрации"
-
-#~ msgid "_Subcribe"
-#~ msgstr "_Подписаться"
-
-#~ msgid ""
-#~ "This email will be sent when the event gets confimed or when someone "
-#~ "subscribes to a confirmed event. This is also the email sent to remind "
-#~ "someone about the event."
-#~ msgstr ""
-#~ "Это сообщение будет отправлено, когда мероприятие будет утверждено или кто-"
-#~ "то подпишется на утвержденное мероприятие. Оно так же отправляется для "
-#~ "напоминания о мероприятии."
-
-#~ msgid ""
-#~ "Check this box if you want to use the automatic mailing for new registration"
-#~ msgstr ""
-#~ "Отметьте, если хотите получать автоматические сообщения о новой регистрации."
-
-#~ msgid "The email address put in the 'Reply-To' of all emails sent by OpenERP"
-#~ msgstr ""
-#~ "Данный адрес будет указан в поле 'От кого' в письмах, отправленных OpenERP"
-
-#~ msgid "This email will be sent when someone subscribes to the event."
-#~ msgstr "Это письмо будет отправлено при подписке на мероприятие."
-
-#~ msgid "Invoice Name"
-#~ msgstr "Название счёта"
-
-#, python-format
-#~ msgid "Registration doesn't have any partner to invoice."
-#~ msgstr "Для выставления счёта регистрация должна быть связана с партнёром."
-
-#~ msgid "Reference"
-#~ msgstr "Ссылка"
-
-#~ msgid "Emails"
-#~ msgstr "Адреса эл.почты"
-
-#~ msgid ""
-#~ "This will be the default price used as registration cost when invoicing this "
-#~ "event. Note that you can specify for each registration a specific amount if "
-#~ "you want to"
-#~ msgstr ""
-#~ "Укажите здесь стоимость регистрации по-умолчанию, которая будет "
-#~ "использоваться для выставления счетов за мероприятие. Для каждой регистрации "
-#~ "может быть указана своя стоимость."
-
-#~ msgid "Create invoices"
-#~ msgstr "Создать счета"
-
-#~ msgid "Do you really want to create the invoice(s) ?"
-#~ msgstr "Вы уверены, что хотите создать счет(а) ?"
-
-#~ msgid "Reference 2"
-#~ msgstr "Ссылка 2"
-
-#, python-format
-#~ msgid "Invoiced"
-#~ msgstr "Выставлен счет"
-
-#~ msgid "Current"
-#~ msgstr "Текущие"
-
-#~ msgid "Conference on ERP Buisness"
-#~ msgstr "Конференция по ERP-бизнесу"
-
-#~ msgid "  event Registration "
-#~ msgstr "  Регистрация на мероприятие "
-
-#~ msgid "Beginning Date of Event"
-#~ msgstr "Дата начала мероприятия"
-
-#, python-format
-#~ msgid "Auto Registration: [%s] %s"
-#~ msgstr "Авто-регистрация: [%s] %s"
-
-#~ msgid ""
-#~ "These email addresses will be added to the CC field of all inbound and "
-#~ "outbound emails for this record before being sent. Separate multiple email "
-#~ "addresses with a comma"
-#~ msgstr ""
-#~ "Эти электронные адреса будут добавлены в поле \"Копия\" всех входящих и "
-#~ "исходящих сообщений для этой записи перед отправкой. Разделяйте адреса "
-#~ "запятыми."

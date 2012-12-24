@@ -1,21 +1,21 @@
 # Croatian translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-01-30 20:01+0000\n"
-"Last-Translator: Ivan Vađić <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:52+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:11+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,delay_close:0
@@ -63,6 +63,11 @@ msgstr "Proslijedi"
 #. module: crm_partner_assign
 #: view:res.partner:0
 msgid "Geo Localize"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.forward.to.partner,starred:0
+msgid "Starred"
 msgstr ""
 
 #. module: crm_partner_assign
@@ -139,11 +144,6 @@ msgstr ""
 #. module: crm_partner_assign
 #: field:res.partner,date_review_next:0
 msgid "Next Partner Review"
-msgstr ""
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,favorite_user_ids:0
-msgid "Favorite"
 msgstr ""
 
 #. module: crm_partner_assign
@@ -253,18 +253,6 @@ msgstr ""
 #: view:crm.lead.report.assign:0
 #: field:crm.lead.report.assign,priority:0
 msgid "Priority"
-msgstr ""
-
-#. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,author_id:0
-msgid ""
-"Author of the message. If not set, email_from may hold an email address that "
-"did not match any partner."
-msgstr ""
-
-#. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,favorite_user_ids:0
-msgid "Users that set this message in their favorites"
 msgstr ""
 
 #. module: crm_partner_assign
@@ -508,6 +496,11 @@ msgstr ""
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
 msgid "#Opportunities"
+msgstr ""
+
+#. module: crm_partner_assign
+#: help:crm.lead.forward.to.partner,starred:0
+msgid "Current user has a starred notification linked to this message"
 msgstr ""
 
 #. module: crm_partner_assign
@@ -794,6 +787,11 @@ msgid "Partner Level"
 msgstr ""
 
 #. module: crm_partner_assign
+#: help:crm.lead.forward.to.partner,to_read:0
+msgid "Current user has an unread notification linked to this message"
+msgstr ""
+
+#. module: crm_partner_assign
 #: selection:crm.lead.report.assign,type:0
 msgid "Opportunity"
 msgstr ""
@@ -887,8 +885,10 @@ msgid "Case Information"
 msgstr ""
 
 #. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,to_read:0
-msgid "Functional field to search for messages the current user has to read"
+#: help:crm.lead.forward.to.partner,author_id:0
+msgid ""
+"Author of the message. If not set, email_from may hold an email address that "
+"did not match any partner."
 msgstr ""
 
 #. module: crm_partner_assign
@@ -929,9 +929,3 @@ msgstr ""
 #: model:ir.model,name:crm_partner_assign.model_res_partner
 msgid "Partner"
 msgstr "Partner"
-
-#~ msgid "Send to"
-#~ msgstr "Pošalji"
-
-#~ msgid "Salesman"
-#~ msgstr "Prodavač"

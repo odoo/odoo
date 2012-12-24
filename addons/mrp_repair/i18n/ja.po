@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 10:25+0000\n"
-"PO-Revision-Date: 2012-06-12 01:54+0000\n"
-"Last-Translator: Akira Hiyama <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:43+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:24+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,move_id:0
@@ -33,7 +33,7 @@ msgid "Recreate Invoice"
 msgstr "請求書再作成"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:376
+#: code:addons/mrp_repair/mrp_repair.py:371
 #, python-format
 msgid "You have to select a Partner Invoice Address in the repair form !"
 msgstr "修理フォームではパートなの請求書住所を選択する必要があります。"
@@ -71,7 +71,7 @@ msgid "Unread Messages"
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:440
+#: code:addons/mrp_repair/mrp_repair.py:435
 #, python-format
 msgid "No product defined on Fees!"
 msgstr "料金が定義されていない製品です。"
@@ -146,9 +146,9 @@ msgid "Taxes"
 msgstr "税金"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:390
-#: code:addons/mrp_repair/mrp_repair.py:418
-#: code:addons/mrp_repair/mrp_repair.py:447
+#: code:addons/mrp_repair/mrp_repair.py:385
+#: code:addons/mrp_repair/mrp_repair.py:413
+#: code:addons/mrp_repair/mrp_repair.py:442
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -213,9 +213,8 @@ msgid "Move"
 msgstr "移動"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:579
-#, python-format
-msgid "Repair Order for <em>%s</em> has been <b>started</b>."
+#: report:repair.order:0
+msgid "Tax"
 msgstr ""
 
 #. module: mrp_repair
@@ -243,8 +242,8 @@ msgstr "追加情報"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:336
-#: code:addons/mrp_repair/mrp_repair.py:350
-#: code:addons/mrp_repair/mrp_repair.py:440
+#: code:addons/mrp_repair/mrp_repair.py:349
+#: code:addons/mrp_repair/mrp_repair.py:435
 #: code:addons/mrp_repair/wizard/cancel_repair.py:49
 #, python-format
 msgid "Warning!"
@@ -262,7 +261,7 @@ msgid "Partner"
 msgstr "パートナ"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:390
+#: code:addons/mrp_repair/mrp_repair.py:385
 #, python-format
 msgid "No account defined for partner \"%s\"."
 msgstr "パートナ %s にアカウントが定義されていません。"
@@ -293,11 +292,6 @@ msgstr ""
 #: view:mrp.repair:0
 msgid "Repairs order"
 msgstr "修理オーダー"
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "Tax"
-msgstr ""
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:336
@@ -393,12 +387,6 @@ msgid "Repair Line"
 msgstr "修理行"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:596
-#, python-format
-msgid "Repair has been <b>cancelled</b>."
-msgstr ""
-
-#. module: mrp_repair
 #: report:repair.order:0
 msgid "N° :"
 msgstr "番号："
@@ -436,9 +424,9 @@ msgid "Yes"
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:573
-#, python-format
-msgid "Repair Order for <em>%s</em> has been <b>created</b>."
+#: view:mrp.repair.cancel:0
+#: view:mrp.repair.make_invoice:0
+msgid "or"
 msgstr ""
 
 #. module: mrp_repair
@@ -520,12 +508,6 @@ msgid "Pricelist of the selected partner."
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:606
-#, python-format
-msgid "Repair Order is <b>closed</b>."
-msgstr ""
-
-#. module: mrp_repair
 #: report:repair.order:0
 msgid "Guarantee Limit"
 msgstr "保証制限"
@@ -558,12 +540,6 @@ msgid "Is a Follower"
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:591
-#, python-format
-msgid "Repair Order for <em>%s</em> has been <b>accepted</b>."
-msgstr ""
-
-#. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Date"
 msgstr "日付"
@@ -574,16 +550,14 @@ msgid "Repair Fees Line"
 msgstr "修理費行"
 
 #. module: mrp_repair
-#: field:mrp.repair,message_comment_ids:0
-#: help:mrp.repair,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
+#: selection:mrp.repair,state:0
+msgid "Quotation"
+msgstr "見積"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:585
-#, python-format
-msgid "Draft Invoice of %s %s <b>waiting for validation</b>."
-msgstr ""
+#: view:mrp.repair:0
+msgid "Confirm Repair"
+msgstr "修理の確認"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -601,8 +575,8 @@ msgid "End Repair"
 msgstr "修理終了"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:418
-#: code:addons/mrp_repair/mrp_repair.py:447
+#: code:addons/mrp_repair/mrp_repair.py:413
+#: code:addons/mrp_repair/mrp_repair.py:442
 #, python-format
 msgid "No account defined for product \"%s\"."
 msgstr "製品 %s のアカウントが定義されていません。"
@@ -664,11 +638,6 @@ msgstr "費用"
 #: view:mrp.repair.make_invoice:0
 msgid "Cancel"
 msgstr "キャンセル"
-
-#. module: mrp_repair
-#: selection:mrp.repair,state:0
-msgid "Quotation"
-msgstr "見積"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,location_dest_id:0
@@ -762,15 +731,10 @@ msgid "Do you really want to create the invoice(s)?"
 msgstr "本当に請求書を作成しますか？"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:350
+#: code:addons/mrp_repair/mrp_repair.py:349
 #, python-format
 msgid "Repair order is already invoiced."
 msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Confirm Repair"
-msgstr "修理の確認"
 
 #. module: mrp_repair
 #: field:mrp.repair,picking_id:0
@@ -805,12 +769,6 @@ msgid "Remove"
 msgstr "取除く"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:601
-#, python-format
-msgid "Repair Order is now <b>ready</b> to repair."
-msgstr ""
-
-#. module: mrp_repair
 #: field:mrp.repair,partner_invoice_id:0
 msgid "Invoicing Address"
 msgstr "請求住所"
@@ -842,12 +800,6 @@ msgid "No Invoice"
 msgstr "請求外"
 
 #. module: mrp_repair
-#: view:mrp.repair.cancel:0
-#: view:mrp.repair.make_invoice:0
-msgid "or"
-msgstr ""
-
-#. module: mrp_repair
 #: field:mrp.repair,amount_total:0
 msgid "Total"
 msgstr "合計"
@@ -858,139 +810,7 @@ msgid "Ready to Repair"
 msgstr "修理準備完了"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:376
+#: code:addons/mrp_repair/mrp_repair.py:371
 #, python-format
 msgid "No partner !"
 msgstr "パートナがありません。"
-
-#~ msgid ""
-#~ " * The 'Draft' state is used when a user is encoding a new and unconfirmed "
-#~ "repair order.             \n"
-#~ "* The 'Confirmed' state is used when a user confirms the repair order.       "
-#~ "      \n"
-#~ "* The 'Ready to Repair' state is used to start to repairing, user can start "
-#~ "repairing only after repair order is confirmed.             \n"
-#~ "* The 'To be Invoiced' state is used to generate the invoice before or after "
-#~ "repairing done.             \n"
-#~ "* The 'Done' state is set when repairing is completed.            \n"
-#~ "* The 'Cancelled' state is used when user cancel repair order."
-#~ msgstr ""
-#~ " ・ ドラフト状態は、ユーザが未確認の修理オーダーを新たにエンコードした時に使われます。\n"
-#~ "・ 確認済状態は、ユーザが修理オーダーを確認した時に使われます。\n"
-#~ "・ 修理準備完了状態は、修理を開始するために、修理オーダー確認後、修理を開始できる時に使われます。\n"
-#~ "・ 請求状態は、修理の完了前または完了後で請求書を生成した時に使われます。\n"
-#~ "・ 完了状態は、修理が終了した時に設定されます。\n"
-#~ "・ キャンセル済状態は、ユーザが修理オーダーをキャンセルした時に使われます。"
-
-#~ msgid "Fees Line"
-#~ msgstr "料金行"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "警告"
-
-#~ msgid "VAT"
-#~ msgstr "消費税"
-
-#, python-format
-#~ msgid "Warning"
-#~ msgstr "警告"
-
-#~ msgid "Quantity (UoM)"
-#~ msgstr "数量"
-
-#~ msgid ""
-#~ " * The 'Draft' state is set automatically as draft when repair order in "
-#~ "draft state.                         \n"
-#~ "* The 'Confirmed' state is set automatically as confirm when repair order in "
-#~ "confirm state.                         \n"
-#~ "* The 'Done' state is set automatically when repair order is completed.      "
-#~ "                  \n"
-#~ "* The 'Cancelled' state is set automatically when user cancel repair order."
-#~ msgstr ""
-#~ " ・ ドラフト状態は、修理オーダーがドラフト状態の時に自動的に設定されます。\n"
-#~ "・ 確認済状態は、修理オーダーが確認状態の時に自動的に設定されます。\n"
-#~ "・ 完了状態は、修理オーダーが完了した時に自動的に設定されます。\n"
-#~ "・ キャンセル済状態は、ユーザが修理オーダーをキャンセルした時に設定されます。"
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "エラー"
-
-#~ msgid "Canceled"
-#~ msgstr "キャンセル済"
-
-#~ msgid "The pricelist comes from the selected partner, by default."
-#~ msgstr "価格リストはデフォルトで選択したパートナから来ます。"
-
-#, python-format
-#~ msgid "You cannot confirm a repair order which has no line."
-#~ msgstr "修理行には明細行がないため確認できません。"
-
-#~ msgid "Compute"
-#~ msgstr "計算"
-
-#~ msgid "Qty"
-#~ msgstr "数量"
-
-#~ msgid "State"
-#~ msgstr "状態"
-
-#~ msgid ""
-#~ "This field allow you to change the workflow of the repair order. If value "
-#~ "selected is different from 'No Invoice', it also allow you to select the "
-#~ "pricelist and invoicing address."
-#~ msgstr ""
-#~ "この項目は修理オーダーのワークフローを変更することを許します。請求書なしと異なる値が選択された場合、価格リストと請求書住所の選択ができます。"
-
-#~ msgid "invoiced"
-#~ msgstr "請求済"
-
-#, python-format
-#~ msgid "Active ID is not Found"
-#~ msgstr "アクティブIDが見つかりません。"
-
-#~ msgid "Product UoM"
-#~ msgstr "製品単位"
-
-#~ msgid "States"
-#~ msgstr "状態"
-
-#~ msgid ""
-#~ "This field allow you to choose the parner that will be invoiced and delivered"
-#~ msgstr "この項目は請求して配信されるパートナを選択することを許します。"
-
-#~ msgid "UoM"
-#~ msgstr "単位"
-
-#~ msgid ""
-#~ "The guarantee limit is computed as: last move date + warranty defined on "
-#~ "selected product. If the current date is below the guarantee limit, each "
-#~ "operation and fee you will add will be set as 'not to invoiced' by default. "
-#~ "Note that you can change manually afterwards."
-#~ msgstr ""
-#~ "保証制限は次のように計算されます：最終移動日＋選択製品で定義された保証期間。現在日付が保証期限内であれば、各操作と料金にはデフォルトで請求外としてセットさ"
-#~ "れます。その後、手作業で変更ができます。"
-
-#, python-format
-#~ msgid "Production lot is required for opration line with product '%s'"
-#~ msgstr "製造ロットは製品 %s が操作ラインのために必要です。"
-
-#~ msgid ""
-#~ "Repair orders allow you to organize your product repairs. In a repair order, "
-#~ "you can detail the components you remove, add or replace and record the time "
-#~ "you spent on the different operations. The repair order uses the warranty "
-#~ "date on the production lot in order to know if whether the repair should be "
-#~ "invoiced to the customer or not."
-#~ msgstr ""
-#~ "修理オーダーは製品の修理を手配します。修理オーダーでは、取除いた、追加した、交換した部品を詳述でき、異なる操作で費やした時間を記録できます。修理オーダーは"
-#~ "、その修理を顧客に請求すべきであるかどうかを知るために製造ロットの保証日付を使用します。"
-
-#~ msgid ""
-#~ "Check this box if you want to manage the delivery once the product is "
-#~ "repaired. If cheked, it will create a picking with selected product. Note "
-#~ "that you can select the locations in the Info tab, if you have the extended "
-#~ "view."
-#~ msgstr ""
-#~ "製品が修理された後の配送を管理したい場合、このボックスをチェックします。チェックすると、製品の選択とともに集荷を作成します。拡張ビューをしている場合は、情"
-#~ "報タブで場所を指定することができます。"

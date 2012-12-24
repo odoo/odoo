@@ -1,20 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* membership
+# Chinese (Simplified) translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-02-13 08:39+0000\n"
-"Last-Translator: 开阖软件     Jeff Wang <jeff@osbzr.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:14+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:22+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetoassociate0
@@ -95,11 +96,12 @@ msgid "Ending Date Of Membership"
 msgstr "会员资格终止日期"
 
 #. module: membership
-#: field:product.product,membership_date_to:0
-msgid "Date to"
-msgstr "日期到"
+#: help:report.membership,date_to:0
+msgid "End membership date"
+msgstr "会员资格结束日期"
 
 #. module: membership
+#: field:product.product,membership_date_to:0
 #: field:res.partner,membership_stop:0
 msgid "Membership End Date"
 msgstr ""
@@ -195,11 +197,6 @@ msgstr "会员分析"
 #: view:res.partner:0
 msgid "End Membership Date"
 msgstr "会员资格结束日期"
-
-#. module: membership
-#: field:product.product,membership_date_from:0
-msgid "Date from"
-msgstr "日期格式"
 
 #. module: membership
 #: code:addons/membership/membership.py:414
@@ -463,11 +460,6 @@ msgid "Membership Status"
 msgstr ""
 
 #. module: membership
-#: help:report.membership,date_to:0
-msgid "End membership date"
-msgstr "会员资格结束日期"
-
-#. module: membership
 #: view:res.partner:0
 msgid "Customers"
 msgstr "客户"
@@ -661,11 +653,6 @@ msgid "All non Members"
 msgstr "所有非会员"
 
 #. module: membership
-#: view:product.product:0
-msgid "Information"
-msgstr "信息"
-
-#. module: membership
 #: field:membership.membership_line,account_invoice_line:0
 msgid "Account Invoice line"
 msgstr "帐户发票明细"
@@ -696,6 +683,7 @@ msgid "May"
 msgstr "5月"
 
 #. module: membership
+#: field:product.product,membership_date_from:0
 #: field:res.partner,membership_start:0
 msgid "Membership Start Date"
 msgstr ""
@@ -786,289 +774,11 @@ msgid "Year"
 msgstr "年"
 
 #. module: membership
+#: view:product.product:0
+msgid "Accounting"
+msgstr ""
+
+#. module: membership
 #: view:report.membership:0
 msgid "Revenue Done"
 msgstr "已实现收入"
-
-#~ msgid "Partners"
-#~ msgstr "业务伙伴"
-
-#~ msgid "Reporting"
-#~ msgstr "报表"
-
-#~ msgid "Configuration"
-#~ msgstr "设置"
-
-#~ msgid "Currency"
-#~ msgstr "货币"
-
-#~ msgid "State"
-#~ msgstr "状态"
-
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr "错误：默认计量单位和采购计量单位必须在同一分类中。"
-
-#~ msgid "Waiting"
-#~ msgstr "等待"
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "错误：无效的(EAN)条码"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "在这动作定义中无效的模块名"
-
-#~ msgid "Error ! You can not create recursive accounts."
-#~ msgstr "错误!你不能创建递归的账户"
-
-#~ msgid "Free members"
-#~ msgstr "免费会员"
-
-#~ msgid "Confirm"
-#~ msgstr "确定"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "无效的视图结构xml文件!"
-
-#~ msgid "Membership by Years"
-#~ msgstr "会籍年份"
-
-#~ msgid "Error: UOS must be in a different category than the UOM"
-#~ msgstr "错误:销售单位和计量单位必须是不同类型"
-
-#~ msgid "Future members (invoice not confirmed)"
-#~ msgstr "未来会员(发票没确认)"
-
-#~ msgid "Membership Product - 2"
-#~ msgstr "会员产品 - 2"
-
-#~ msgid "Membership Product - 1"
-#~ msgstr "会员产品 - 1"
-
-#~ msgid "Canceled"
-#~ msgstr "取消"
-
-#~ msgid "Member Sale Pricelist"
-#~ msgstr "会员售价表"
-
-#~ msgid "Invoiced"
-#~ msgstr "开发票"
-
-#~ msgid "Member Sale Pricelist Version"
-#~ msgstr "会员售价表版本"
-
-#~ msgid "Cancel membership date"
-#~ msgstr "取消会员日期"
-
-#~ msgid "Paid"
-#~ msgstr "已付"
-
-#~ msgid "Specify if this product is a membership product"
-#~ msgstr "如果这产品是会籍产品指定"
-
-#~ msgid "Invoiced members"
-#~ msgstr "已开发票的会员"
-
-#~ msgid "You cannot have 2 pricelist versions that overlap!"
-#~ msgstr "你不能有2个价格表版本"
-
-#~ msgid "Old members"
-#~ msgstr "旧会员"
-
-#~ msgid "Membership amount"
-#~ msgstr "会员数"
-
-#~ msgid "Choose invoice details"
-#~ msgstr "选择发票细节"
-
-#~ msgid "Future members"
-#~ msgstr "未来的会员"
-
-#~ msgid "Associated members"
-#~ msgstr "准会员"
-
-#~ msgid "Paid members"
-#~ msgstr "付费会员"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr "对象名必须要以x_开头并且不能含特殊的字符"
-
-#~ msgid "Canceled Member"
-#~ msgstr "取消会员"
-
-#~ msgid "Free member"
-#~ msgstr "免费会员"
-
-#~ msgid "Stop membership date"
-#~ msgstr "停止会员日期"
-
-#~ msgid "Current members"
-#~ msgstr "当前的会员"
-
-#~ msgid "New Membership by Years"
-#~ msgstr "年新会员"
-
-#~ msgid "Current membership state"
-#~ msgstr "当前会员状态"
-
-#~ msgid "Error: Invalid Bvr Number (wrong checksum)."
-#~ msgstr "错误：无效的Bvr号（错误的检验和）"
-
-#~ msgid "Error: BVR reference is required."
-#~ msgstr "错误：需要BVR参照"
-
-#~ msgid "Join Membership"
-#~ msgstr "加入成员"
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "错误！"
-
-#~ msgid "Join"
-#~ msgstr "加入"
-
-#~ msgid "Product Template"
-#~ msgstr "产品模板"
-
-#~ msgid "General"
-#~ msgstr "一般"
-
-#~ msgid "Close"
-#~ msgstr "关闭"
-
-#~ msgid "Description"
-#~ msgstr "说明"
-
-#~ msgid "Sale Taxes"
-#~ msgstr "销售税"
-
-#~ msgid "Purchase Description"
-#~ msgstr "采购说明"
-
-#~ msgid "Sale Description"
-#~ msgstr "销售说明"
-
-#~ msgid ""
-#~ "It indicates the membership state.\n"
-#~ "                    -Non Member: A member who has not applied for any "
-#~ "membership.\n"
-#~ "                    -Cancelled Member: A member who has cancelled his "
-#~ "membership.\n"
-#~ "                    -Old Member: A member whose membership date has "
-#~ "expired.\n"
-#~ "                    -Waiting Member: A member who has applied for the "
-#~ "membership and whose invoice is going to be created.\n"
-#~ "                    -Invoiced Member: A member whose invoice has been "
-#~ "created.\n"
-#~ "                    -Paid Member: A member who has paid the membership "
-#~ "amount."
-#~ msgstr ""
-#~ "会员的状态：\n"
-#~ "非会员：      该客户还没有会员资格\n"
-#~ "已退会员：   该客户已退出会员资格\n"
-#~ "旧会员：      该客户的会员资格已过期\n"
-#~ "待办会员：   该客户已签署会员资料等待开发票\n"
-#~ "已开票会员：该客户的发票已开\n"
-#~ "已付款会员：该客户已付款"
-
-#~ msgid "Select if a product is a membership product."
-#~ msgstr "选择作为会员资格的产品"
-
-#~ msgid "Membership State"
-#~ msgstr "会员状态"
-
-#~ msgid "Accounting Info"
-#~ msgstr "财务信息"
-
-#~ msgid "Select if you want to give membership free of cost."
-#~ msgstr "勾选此项则此会员资格免费"
-
-#~ msgid "Categorization"
-#~ msgstr "分类"
-
-#~ msgid "Last 30 Days"
-#~ msgstr "最近30天"
-
-#~ msgid "Last 365 Days"
-#~ msgstr "最近365天"
-
-#~ msgid ""
-#~ "It indicates the membership state.\n"
-#~ "                        -Non Member: A member who has not applied for any "
-#~ "membership.\n"
-#~ "                        -Cancelled Member: A member who has cancelled his "
-#~ "membership.\n"
-#~ "                        -Old Member: A member whose membership date has "
-#~ "expired.\n"
-#~ "                        -Waiting Member: A member who has applied for the "
-#~ "membership and whose invoice is going to be created.\n"
-#~ "                        -Invoiced Member: A member whose invoice has been "
-#~ "created.\n"
-#~ "                        -Paid Member: A member who has paid the membership "
-#~ "amount."
-#~ msgstr ""
-#~ "会员的状态：\n"
-#~ "非会员：客户还没有签署会员协议\n"
-#~ "已退订会员：客户已退订会员资格\n"
-#~ "旧会员：客户的会员资额已过期\n"
-#~ "等待会员：客户已签署会员协议，等待发票\n"
-#~ "已开票会员：会员的发票已开\n"
-#~ "已付款会员：会员已付款"
-
-#~ msgid "Salesman"
-#~ msgstr "业务员"
-
-#~ msgid "Extended Filters..."
-#~ msgstr "增加筛选条件"
-
-#~ msgid "Associate member"
-#~ msgstr "商会成员"
-
-#~ msgid ""
-#~ "\n"
-#~ "This module allows you to manage all operations for managing memberships.\n"
-#~ "It supports different kind of members:\n"
-#~ "* Free member\n"
-#~ "* Associated member (ex: a group subscribe for a membership for all\n"
-#~ "  subsidiaries)\n"
-#~ "* Paid members,\n"
-#~ "* Special member prices, ...\n"
-#~ "\n"
-#~ "It is integrated with sales and accounting to allow you to automatically\n"
-#~ "invoice and send propositions for membership renewal.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "此模块用于管理所有会员管理的日常运营。\n"
-#~ "支持多种会员资格：\n"
-#~ "  免费会员\n"
-#~ "  附属会员（一组会员共用一个会员资格）\n"
-#~ "  已付款会员特价会员\n"
-#~ "\n"
-#~ "与销售和财务系统集成并自动创建会员的发票和续费提醒\n"
-#~ "    "
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "错误！您不能创建递归的商会会员。"
-
-#~ msgid "Events created in current month"
-#~ msgstr "本月新建的活动"
-
-#~ msgid "    Month-1    "
-#~ msgstr "    上月    "
-
-#~ msgid "Events created in last month"
-#~ msgstr "上个月新建的活动"
-
-#~ msgid "   Month   "
-#~ msgstr "   月   "
-
-#~ msgid "Invalid BBA Structured Communication !"
-#~ msgstr "BBA传输结构有误！"
-
-#~ msgid "Events created in current year"
-#~ msgstr "本年新建的活动"
-
-#~ msgid "Invoice Number must be unique per Company!"
-#~ msgstr "发票号必须在公司范围内唯一"

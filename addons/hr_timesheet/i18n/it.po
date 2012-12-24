@@ -1,20 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* hr_timesheet
+# Italian translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-15 14:49+0000\n"
-"Last-Translator: Davide Corio - agilebg.com <davide.corio@agilebg.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-16 04:48+0000\n"
-"X-Generator: Launchpad (build 16372)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:16+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_analytic_cost_revenue
@@ -191,10 +192,10 @@ msgid "Costs and Revenues"
 msgstr "Costi e ricavi"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:141
-#: code:addons/hr_timesheet/hr_timesheet.py:146
-#: code:addons/hr_timesheet/hr_timesheet.py:177
-#: code:addons/hr_timesheet/hr_timesheet.py:179
+#: code:addons/hr_timesheet/hr_timesheet.py:144
+#: code:addons/hr_timesheet/hr_timesheet.py:149
+#: code:addons/hr_timesheet/hr_timesheet.py:180
+#: code:addons/hr_timesheet/hr_timesheet.py:182
 #: code:addons/hr_timesheet/wizard/hr_timesheet_print_employee.py:43
 #, python-format
 msgid "Warning!"
@@ -289,7 +290,7 @@ msgstr ""
 "Specifica la designazione dell'impiegato come un prodotto di tipo servizio."
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:179
+#: code:addons/hr_timesheet/hr_timesheet.py:182
 #, python-format
 msgid ""
 "No analytic account is defined on the project.\n"
@@ -305,7 +306,7 @@ msgid "Total cost"
 msgstr "Costo Totale"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:177
+#: code:addons/hr_timesheet/hr_timesheet.py:180
 #, python-format
 msgid ""
 "No 'Analytic Journal' is defined for employee %s \n"
@@ -379,7 +380,9 @@ msgid "Define your Analytic Structure"
 msgstr "Definire la struttura analitica"
 
 #. module: hr_timesheet
+#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:146
 #: view:hr.sign.in.project:0
+#, python-format
 msgid "Sign in / Sign out"
 msgstr "Entrata / Uscita"
 
@@ -420,7 +423,7 @@ msgid "August"
 msgstr "Agosto"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:146
+#: code:addons/hr_timesheet/hr_timesheet.py:149
 #, python-format
 msgid ""
 "No analytic journal defined for '%s'.\n"
@@ -616,7 +619,7 @@ msgid "Sign Out By Project"
 msgstr "Uscita per Progetto"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:141
+#: code:addons/hr_timesheet/hr_timesheet.py:144
 #, python-format
 msgid ""
 "Please create an employee for this user, using the menu: Human Resources > "
@@ -686,249 +689,3 @@ msgstr "Totale"
 #: view:hr.sign.out.project:0
 msgid "Change Work"
 msgstr "Cambia Lavoro"
-
-#, python-format
-#~ msgid ""
-#~ "No analytic journal available for this employee.\n"
-#~ "Define an employee for the selected user and assign an analytic journal."
-#~ msgstr ""
-#~ "Nessun giornale analitico disponibile per questo dipendente.\n"
-#~ "Definire un dipendente per l'utente selezionato e assegnare un giornale "
-#~ "analitico."
-
-#, python-format
-#~ msgid ""
-#~ "No analytic account defined on the project.\n"
-#~ "Please set one or we can not automatically fill the timesheet."
-#~ msgstr ""
-#~ "Nessun conto analitico definito sul progetto.\n"
-#~ "Per favore selezionane uno o non sarà possibile riempire in automatico il "
-#~ "timesheet"
-
-#~ msgid "Work done stats"
-#~ msgstr "Statistiche Lavoro Svolto"
-
-#~ msgid "Day"
-#~ msgstr "Giorno"
-
-#~ msgid "Current state"
-#~ msgstr "Stato Attuale"
-
-#~ msgid "My Working Hours"
-#~ msgstr "Le Mie Ore Lavorative"
-
-#, python-format
-#~ msgid "UserError"
-#~ msgstr "Errore utente"
-
-#~ msgid "Timesheet Process"
-#~ msgstr "Processo di modulo orario"
-
-#, python-format
-#~ msgid "ValidateError"
-#~ msgstr "Errore di validazione"
-
-#~ msgid "Hour"
-#~ msgstr "Ora"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "XML non valido per Visualizzazione Architettura!"
-
-#~ msgid "Error: UOS must be in a different category than the UOM"
-#~ msgstr ""
-#~ "Errore: L'Unità di Vendita deve essere in una categoria diversa da quella "
-#~ "dell'Unità di misura"
-
-#~ msgid "Choose Users"
-#~ msgstr "Definisci Utente"
-
-#~ msgid "Timesheet line"
-#~ msgstr "Riga Orari di Lavoro"
-
-#~ msgid "My Working Hours of The Day"
-#~ msgstr "Le Mie Ore di Lavoro del Giorno"
-
-#~ msgid "Stats by month"
-#~ msgstr "Statistiche per Mese"
-
-#~ msgid "To be invoiced"
-#~ msgstr "Da Fatturare"
-
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr ""
-#~ "Errore: l'unità di misura predefinita e l'unità di misura d'acquisto devono "
-#~ "trovarsi nella stessa categoria"
-
-#~ msgid "Sign in status"
-#~ msgstr "Stato Entrata"
-
-#~ msgid "User"
-#~ msgstr "Utente"
-
-#~ msgid "Employee's name"
-#~ msgstr "Nome Dipendente"
-
-#~ msgid "Analysis summary"
-#~ msgstr "Riepilogo Analisi"
-
-#~ msgid "Choose your month"
-#~ msgstr "Definisci Mese"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri "
-#~ "speciali!"
-
-#~ msgid "Working Time"
-#~ msgstr "Orario di Lavoro"
-
-#~ msgid "Current Server Date"
-#~ msgstr "Data corrente lato Server"
-
-#~ msgid "Working Hours of The Day"
-#~ msgstr "Ore Lavorative del Giorno"
-
-#~ msgid "Working Hours"
-#~ msgstr "Ore lavorative"
-
-#~ msgid "Analytic line"
-#~ msgstr "Riga Analitica"
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "Errore: codice EAN non valido"
-
-#~ msgid "Stats by user"
-#~ msgstr "Statistiche per Utente"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nome del modello non valido nella definizione dell'azione."
-
-#~ msgid "Consultancy - Senior Developer"
-#~ msgstr "Consulenza - Sviluppatore Senjor"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "Attenzione !"
-
-#~ msgid "Sign In/Out By Project"
-#~ msgstr "Ingresso/Uscita per Progetto"
-
-#~ msgid "Today"
-#~ msgstr "Oggi"
-
-#~ msgid "My Timesheet"
-#~ msgstr "Il mio Timesheet"
-
-#~ msgid "Categories"
-#~ msgstr "Categorie"
-
-#~ msgid "Anlytic account"
-#~ msgstr "Conto analitico"
-
-#, python-format
-#~ msgid "No employee defined for this user"
-#~ msgstr "Non è stato definito l'impiegato per questo utente"
-
-#~ msgid "Invoicing"
-#~ msgstr "Fatturazione"
-
-#~ msgid "This wizard will print monthly timesheet"
-#~ msgstr "Il wizard stamperà il timesheet mensile"
-
-#~ msgid "Partner Id"
-#~ msgstr "ID Partner"
-
-#, python-format
-#~ msgid "UnknownError"
-#~ msgstr "ErroreSconosciuto"
-
-#, python-format
-#~ msgid "Warning"
-#~ msgstr "Attenzione"
-
-#~ msgid "Service on Timesheet"
-#~ msgstr "Servizio su timesheet"
-
-#, python-format
-#~ msgid "No employee defined for your user !"
-#~ msgstr "Nessun impiegato definito per il tuo utente!"
-
-#~ msgid ""
-#~ "Error ! You cannot select a department for which the employee is the manager."
-#~ msgstr ""
-#~ "Errore ! Non è possibile selezionare un reparto del quale l'impiegato è "
-#~ "manager."
-
-#, python-format
-#~ msgid "No cost unit defined for this employee !"
-#~ msgstr "Nessuna unità di costo definito per questo impiegato !"
-
-#~ msgid "Human Resources (Timesheet encoding)"
-#~ msgstr "Risorse Umane (codifica timesheet)"
-
-#~ msgid "Timesheet Lines"
-#~ msgstr "Righe timesheet"
-
-#~ msgid "Print My Timesheet"
-#~ msgstr "Stampa il mio Timesheet"
-
-#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
-#~ msgstr "Errore ! Non è possibile creare gerarchie ricorsive di impiegati."
-
-#~ msgid ""
-#~ "\n"
-#~ "This module implements a timesheet system. Each employee can encode and\n"
-#~ "track their time spent on the different projects. A project is an\n"
-#~ "analytic account and the time spent on a project generates costs on\n"
-#~ "the analytic account.\n"
-#~ "\n"
-#~ "Lots of reporting on time and employee tracking are provided.\n"
-#~ "\n"
-#~ "It is completely integrated with the cost accounting module. It allows you\n"
-#~ "to set up a management by affair.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Questo modulo implementa il sistema timesheet. Ogni impiegato può codificare "
-#~ "e\n"
-#~ "tenere traccia del propio tempo dedicato ai differenti progetti. Un progetto "
-#~ "è un\n"
-#~ "conto analitico e il tempo speso sul progetto genera costi nel\n"
-#~ "conto analitico.\n"
-#~ "\n"
-#~ "Molti report, per tracciamento tempistiche ed impiegati, sono forniti.\n"
-#~ "\n"
-#~ "E completamente integrato con il modulo contabilità costi. Esso vi "
-#~ "permetterà di \n"
-#~ "installare una gestione per affare.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "Through Working Hours you can register your working hours by project every "
-#~ "day."
-#~ msgstr ""
-#~ "Attraverso le ore lavorative è possibile registrare le vostre ore lavorate "
-#~ "per progetto, ogni giorno."
-
-#~ msgid "UoM"
-#~ msgstr "U.M."
-
-#~ msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
-#~ msgstr "Non è possibile modificare un Timesheet Confermato/Completato"
-
-#, python-format
-#~ msgid ""
-#~ "Analytic journal is not defined for employee %s \n"
-#~ "Define an employee for the selected user and assign an analytic journal!"
-#~ msgstr ""
-#~ "Il Sezionale Analitico dell'impiegato %s non è specificato\n"
-#~ "Definisci un impiegato per l'utente selezionato e assegna un Sezionale "
-#~ "Analitico!"
-
-#~ msgid "Analysis stats"
-#~ msgstr "Statistiche"
-
-#~ msgid "Key dates"
-#~ msgstr "Date chiave"

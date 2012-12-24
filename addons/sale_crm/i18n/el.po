@@ -1,23 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* sale_crm
+# Greek translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:04+0000\n"
-"PO-Revision-Date: 2010-11-12 09:10+0000\n"
-"Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
-"Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:19+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
-"X-Poedit-Country: GREECE\n"
-"X-Poedit-Language: Greek\n"
-"X-Poedit-SourceCharset: utf-8\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:33+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: sale_crm
 #: code:addons/sale_crm/wizard/crm_make_sale.py:90
@@ -59,10 +57,13 @@ msgstr ""
 #. module: sale_crm
 #: help:crm.make.sale,close:0
 msgid ""
-"Check this to close the opportunity after having created the sale order."
+"Check this to close the opportunity after having created the sales order."
 msgstr ""
-"Τσέκαρε αυτό για να κλείσει η ευκαιρία αφού δημιουργήθηκε η παραγγελία "
-"πώλησης."
+
+#. module: sale_crm
+#: model:mail.message.subtype,name:sale_crm.mt_salesteam_order_sent
+msgid "Quotation Send"
+msgstr ""
 
 #. module: sale_crm
 #: field:sale.order,categ_ids:0
@@ -120,6 +121,11 @@ msgid "No addresse(s) defined for this customer."
 msgstr ""
 
 #. module: sale_crm
+#: model:mail.message.subtype,name:sale_crm.mt_salesteam_order_confirmed
+msgid "Sales Order Confirmed"
+msgstr ""
+
+#. module: sale_crm
 #: view:account.invoice:0
 #: field:account.invoice,section_id:0
 #: field:account.invoice.report,section_id:0
@@ -152,140 +158,3 @@ msgstr "Παραγγελία Πώλησης"
 #: view:crm.make.sale:0
 msgid "or"
 msgstr ""
-
-#~ msgid "Crm opportunity quotation"
-#~ msgstr "Προσφορά ευκαιρίας Crm"
-
-#~ msgid "Opportunity Analytic"
-#~ msgstr "Αναλυτικό Ευκαιρίας"
-
-#~ msgid "Use this partner if there is no partner on the case"
-#~ msgstr "Χρήση του συνεργάτη αν δεν υπάρχει συνεργάτης στο θέμα"
-
-#~ msgid "Create"
-#~ msgstr "Δημιουργία"
-
-#~ msgid "All at once"
-#~ msgstr "Όλα μαζί"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Άκυρο XML για Αρχιτεκτονική Όψης!"
-
-#~ msgid "Opportunity goes into the quotation"
-#~ msgstr "Η ευκαιρία συμπεριλαμβάνεται στην προσφορά"
-
-#~ msgid "Analytic account"
-#~ msgstr "Αναλυτικός Λογαριασμός"
-
-#~ msgid "Convert opportunity to quotation"
-#~ msgstr "Μετατροπή ευκαιρίας σε προσφορά"
-
-#~ msgid "Your action"
-#~ msgstr "Η ενέργειά σας"
-
-#~ msgid "Packing Policy"
-#~ msgstr "Πολιτική Συσκευασίας"
-
-#~ msgid "Create Quote"
-#~ msgstr "Δημιουργία Προσφοράς"
-
-#~ msgid "Contract Volume (pricelist)"
-#~ msgstr "Μέγεθος Συμβολαίου (τιμοκατάλογος)"
-
-#~ msgid "CRM Opportunity"
-#~ msgstr "Ευκαιρία CRM"
-
-#~ msgid "Sale CRM Stuff"
-#~ msgstr "Υλικό Πωλήσεων CRM"
-
-#~ msgid "Opportunity convert into quotation"
-#~ msgstr "Μετατροπή ευκαιρίας σε προσφορά"
-
-#~ msgid "Direct Delivery"
-#~ msgstr "Απ' ευθείας Παράδοση"
-
-#~ msgid "Opportunity Quotation"
-#~ msgstr "Προσφορά Ευκαιρίας"
-
-#~ msgid "Convert to Quote"
-#~ msgstr "Μετατροπή σε Προσφορά"
-
-#~ msgid "Check this to close the case after having created the sale order."
-#~ msgstr "Κλικ εδώ για να κλείσετε το θέμα με την παραγγελία πώλησης"
-
-#~ msgid "Opporunity convert to the Pricelist"
-#~ msgstr "Μετατροπή ευκαιρίας σε Τιμοκατάλογο"
-
-#~ msgid "User Responsible"
-#~ msgstr "Υπεύθυνος Χρήστης"
-
-#~ msgid "Reflect the contract made with customer"
-#~ msgstr "Αντανακλά το υπογεγραμμένο συμβόλαιο"
-
-#~ msgid "Products"
-#~ msgstr "Προϊόντα"
-
-#~ msgid "Close Case"
-#~ msgstr "Κλείσιμο Θέματος"
-
-#~ msgid "Make Case"
-#~ msgstr "Δημιουργία Θέματος"
-
-#~ msgid "The CRM Opportunity can lead to a quotation."
-#~ msgstr "Η ευκαιρία CRM μπορεί να οδηγήσει σε προσφορά"
-
-#~ msgid "Opportunity Pricelist"
-#~ msgstr "Τιμοκατάλογος Ευκαιρίας"
-
-#~ msgid "Contract Pricelist"
-#~ msgstr "Τιμοκατάλογος Συμβολαίου"
-
-#~ msgid "Case Description"
-#~ msgstr "Περιγραφή Θέματος"
-
-#~ msgid "Analytic Account"
-#~ msgstr "Αναλυτικός Λογαριασμός"
-
-#~ msgid "Case Section"
-#~ msgstr "Τμήμα Θεμάτων"
-
-#, python-format
-#~ msgid "Customer has no addresses defined!"
-#~ msgstr "Δεν υπάρχει επιλεγμένη διεύθυνση στον πελάτη"
-
-#, python-format
-#~ msgid "is converted to Quotation."
-#~ msgstr "έχει μετατραπεί σε προσφορά"
-
-#, python-format
-#~ msgid "Opportunity "
-#~ msgstr "Ευκαιρία "
-
-#~ msgid "My Quotations"
-#~ msgstr "Οι Προσφορές μου"
-
-#~ msgid "Quotations"
-#~ msgstr "Προσφορές"
-
-#, python-format
-#~ msgid "Data Insufficient!"
-#~ msgstr "Ανεπαρκή Δεδομένα!"
-
-#~ msgid "Monthly Turnover"
-#~ msgstr "Μηνιαίος Τζίρος"
-
-#~ msgid "Close Opportunity"
-#~ msgstr "Κλείσιμο Ευκαιρίας"
-
-#~ msgid "Creates Sales order from Opportunity"
-#~ msgstr "Δημιουργεί παραγγελία Πώλησης από Ευκαιρία"
-
-#, python-format
-#~ msgid "Converted to Sales Quotation(id: %s)."
-#~ msgstr "Μετατράπηκε σε Προσφορά Πώλησης(id:%s)."
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "Η αναφορά Παραγγελίας πρέπει να είναι μοναδική"
-
-#~ msgid "Opportunities by Stage"
-#~ msgstr "Ευκαιρίες ανά Στάδιο"

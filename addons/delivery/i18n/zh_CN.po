@@ -1,20 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* delivery
+# Chinese (Simplified) translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-11-27 03:04+0000\n"
-"Last-Translator: ccdos <ccdos@163.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:11+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:11+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -46,6 +47,12 @@ msgstr "净重"
 #: model:ir.model,name:delivery.model_delivery_grid_line
 msgid "Delivery Grid Line"
 msgstr "送货网络明细"
+
+#. module: delivery
+#: field:stock.move,weight_uom_id:0
+#: field:stock.picking,weight_uom_id:0
+msgid "Unit of Measure"
+msgstr "计量单位"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -80,37 +87,6 @@ msgstr "提供送货服务的业务伙伴"
 #: model:ir.actions.report.xml,name:delivery.report_shipping
 msgid "Delivery order"
 msgstr "送货单"
-
-#. module: delivery
-#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to define a new deliver method. \n"
-"              </p><p>\n"
-"                Each carrier (e.g. UPS) can have several delivery methods "
-"(e.g.\n"
-"                UPS Express, UPS Standard) with a set of pricing rules "
-"attached\n"
-"                to each method.\n"
-"              </p><p>\n"
-"                These methods allows to automaticaly compute the delivery "
-"price\n"
-"                according to your settings; on the sale order (based on the\n"
-"                quotation) or the invoice (based on the delivery orders).\n"
-"              </p>\n"
-"            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                单击 定义一个新的运输方法 \n"
-"              </p><p>\n"
-"                每个承运商人 (比如：UPS，顺风)可以几种运输方法 \n"
-"               (例如：UPS Express, UPS Standard ) ，每种方法可\n"
-"               以有一个定价规则.\n"
-"              </p><p>\n"
-"                在销售订单（基于报价单）或者发票（基于发运单），\n"
-"                这些方法可以根据你的设置自动计算运输价格；\n"
-"              </p>\n"
-"            "
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:221
@@ -232,7 +208,7 @@ msgid "Grid definition"
 msgstr "网络定义"
 
 #. module: delivery
-#: code:addons/delivery/stock.py:89
+#: code:addons/delivery/stock.py:90
 #, python-format
 msgid "Warning!"
 msgstr "警告！"
@@ -356,7 +332,9 @@ msgstr "包装件数"
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 #: report:sale.shipping:0
+#: view:stock.move:0
 #: field:stock.move,weight:0
+#: view:stock.picking:0
 #: field:stock.picking,weight:0
 #: field:stock.picking.in,weight:0
 #: field:stock.picking.out,weight:0
@@ -377,7 +355,7 @@ msgid ""
 msgstr "默认的运费的价格，如果根据目的地定价，这里留空。"
 
 #. module: delivery
-#: code:addons/delivery/sale.py:55
+#: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid available !"
 msgstr "没有可用的送货网络"
@@ -388,7 +366,7 @@ msgid ">="
 msgstr ">="
 
 #. module: delivery
-#: code:addons/delivery/sale.py:58
+#: code:addons/delivery/sale.py:57
 #, python-format
 msgid "Order not in draft state !"
 msgstr "单据不在草稿状态！"
@@ -436,6 +414,37 @@ msgid "This delivery method will be used when invoicing from picking."
 msgstr "这个送货方式会在基于送货单开发票的时候使用。"
 
 #. module: delivery
+#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to define a new deliver method. \n"
+"              </p><p>\n"
+"                Each carrier (e.g. UPS) can have several delivery methods "
+"(e.g.\n"
+"                UPS Express, UPS Standard) with a set of pricing rules "
+"attached\n"
+"                to each method.\n"
+"              </p><p>\n"
+"                These methods allows to automaticaly compute the delivery "
+"price\n"
+"                according to your settings; on the sales order (based on "
+"the\n"
+"                quotation) or the invoice (based on the delivery orders).\n"
+"              </p>\n"
+"            "
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                单击以定义一个新的运输方法. \n"
+"              </p><p>\n"
+"                每个承运人 (例如 UPS)可以有几种带有不同定价方案的运输方法\n"
+"             （例如UPS Express, UPS Standard).\n"
+"              </p><p>\n"
+"                这些方法允许你根据你的设置自动计算运输价格：在订单上（基\n"
+"                于报价单）或者在发票上（基于发运单）.\n"
+"              </p>\n"
+"            "
+
+#. module: delivery
 #: field:delivery.grid.line,max_value:0
 msgid "Maximum Value"
 msgstr "最大值"
@@ -473,6 +482,11 @@ msgid "<="
 msgstr "<="
 
 #. module: delivery
+#: help:stock.picking,weight_uom_id:0
+msgid "Unit of measurement for Weight"
+msgstr "重量的计量单位"
+
+#. module: delivery
 #: report:sale.shipping:0
 msgid "Description"
 msgstr "说明"
@@ -498,7 +512,7 @@ msgid "Price"
 msgstr "价格"
 
 #. module: delivery
-#: code:addons/delivery/sale.py:55
+#: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid matching for this carrier !"
 msgstr "没有送货网络适用于此承运方"
@@ -515,7 +529,7 @@ msgid "Weight * Volume"
 msgstr "重量* 体积"
 
 #. module: delivery
-#: code:addons/delivery/stock.py:90
+#: code:addons/delivery/stock.py:91
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
 msgstr "承运方 %s (id: %d) 没有送货网络！"
@@ -547,12 +561,7 @@ msgid "Delivery Methods"
 msgstr "运输方法"
 
 #. module: delivery
-#: field:sale.order,id:0
-msgid "ID"
-msgstr "ID"
-
-#. module: delivery
-#: code:addons/delivery/sale.py:58
+#: code:addons/delivery/sale.py:57
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr "只能对草稿状态的订单增加送货明细"
@@ -584,207 +593,12 @@ msgid "States"
 msgstr "状态"
 
 #. module: delivery
+#: help:stock.move,weight_uom_id:0
+msgid ""
+"Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
+msgstr "计量单位 是测量重量的单位"
+
+#. module: delivery
 #: field:delivery.grid.line,price_type:0
 msgid "Price Type"
 msgstr "价格类型"
-
-#, python-format
-#~ msgid "Warning"
-#~ msgstr "警告"
-
-#~ msgid "Carrier Partner"
-#~ msgstr "承运业务伙伴"
-
-#~ msgid "="
-#~ msgstr "="
-
-#~ msgid "Cancel"
-#~ msgstr "取消"
-
-#~ msgid "Deliveries Properties"
-#~ msgstr "送货属性"
-
-#~ msgid "Delivery Costs"
-#~ msgstr "送货成本"
-
-#~ msgid "Notes"
-#~ msgstr "备注"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr "对象名必须要以X_开头并且不能含有特殊字符!"
-
-#~ msgid "Sales & Purchases"
-#~ msgstr "销售&采购"
-
-#~ msgid "Generate Draft Invoices On Receptions"
-#~ msgstr "在接收产生发票草稿"
-
-#~ msgid "Error: UOS must be in a different category than the UOM"
-#~ msgstr "错误:销售单位必须和计量单位在不同的分类."
-
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr "错误:默认的计量单位和这货物的计量单位必须是同一类型."
-
-#~ msgid "Packing to be invoiced"
-#~ msgstr "包装要开发票"
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "错误:无效EAN编码"
-
-#~ msgid "The VAT doesn't seem to be correct."
-#~ msgstr "这增值税似乎不正确"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "在动作定义中使用了无效的模快名。"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "无效的视图结构xml文件!"
-
-#~ msgid "Delivery line of grid"
-#~ msgstr "交货表格行"
-
-#~ msgid "Carrier and delivery grids"
-#~ msgstr "货运公司和交货表格"
-
-#~ msgid "Add Delivery Costs"
-#~ msgstr "增加交货成本"
-
-#~ msgid ""
-#~ "Complete this field if you plan to invoice the shipping based on packing."
-#~ msgstr "如果你计划根据运输这包装开发票请完整填写这字段"
-
-#~ msgid "Delivery method"
-#~ msgstr "交货方式"
-
-#~ msgid ""
-#~ "Allows you to add delivery methods in sales orders and packing. You can "
-#~ "define your own carrier and delivery grids for prices. When creating "
-#~ "invoices from picking, Open ERP is able to add and compute the shipping line."
-#~ msgstr "允许你在销售单和包装中增加交货方式. 你能定义自己的运输公司和交货表格的价格. 当创建包装发票时, 系统可以增加和计算运输明细"
-
-#~ msgid "This delivery method will be used when invoicing from packing."
-#~ msgstr "这交货方式将用在包装的发票上"
-
-#, python-format
-#~ msgid "No price available !"
-#~ msgstr "无价格表可用！"
-
-#~ msgid "_Cancel"
-#~ msgstr "取消(_C)"
-
-#~ msgid "Delivery Order"
-#~ msgstr "送货单"
-
-#~ msgid "Weights"
-#~ msgstr "重量"
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "单号必须唯一！"
-
-#~ msgid ""
-#~ "The delivery price list allows you to compute the cost and sales price of "
-#~ "the delivery according to the weight of the products and other criteria. You "
-#~ "can define several price lists for one delivery method, per country or a "
-#~ "zone in a specific country defined by a postal code range."
-#~ msgstr "送货价格表允许您通过重量或其它条件计算成本和售价。您可以为一个送货方式定义多个价格表。按国家或地区（以邮政编码区分）"
-
-#~ msgid "Make Delievery"
-#~ msgstr "发运"
-
-#~ msgid "You try to assign a lot which is not from the same product"
-#~ msgstr "你尝试分配一个来自其它产品的批次"
-
-#~ msgid "You must assign a production lot for this product"
-#~ msgstr "必须为此产品赋予一个生产批次"
-
-#~ msgid "_Apply"
-#~ msgstr "应用(_A)"
-
-#, python-format
-#~ msgid "No line matched this order in the choosed delivery grids !"
-#~ msgstr "在所选的送货网络中没有明细匹配这个订单"
-
-#~ msgid ""
-#~ "Create and manage the delivery methods you need for your sales activities. "
-#~ "Each delivery method can be assigned to a price list which computes the "
-#~ "price of the delivery according to the products sold or delivered."
-#~ msgstr "创建和管理你在销售过程中的送货方式。每种送货方式可以指定一个价格表这样可以根据销售和发运的产品计算运费。"
-
-#~ msgid ""
-#~ "Allows you to add delivery methods in sale orders and picking.\n"
-#~ "     You can define your own carrier and delivery grids for prices.\n"
-#~ "     When creating invoices from picking, OpenERP is able to add and compute "
-#~ "the shipping line.\n"
-#~ "\n"
-#~ "     "
-#~ msgstr ""
-#~ "允许你在销售订单或出库单上增加送货方式。\n"
-#~ "你可以定义你自己的承运方和送货网络价格。\n"
-#~ "当基于送货单创建发票时，OpenERP可以增加和自动计算这装运明细。\n"
-#~ "\n"
-#~ "     "
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "错误！您不能创建递归的商会会员。"
-
-#~ msgid "Create Deliveries"
-#~ msgstr "创建送货单"
-
-#~ msgid "Carriers and deliveries"
-#~ msgstr "承运方和送货"
-
-#, python-format
-#~ msgid "No line matched this product or order in the choosed delivery grid."
-#~ msgstr "在选择的运输网格包含的明细中没有匹配的产品或订单。"
-
-#~ msgid "delivery.define.delivery.steps.wizard"
-#~ msgstr "delivery.define.delivery.steps.wizard"
-
-#~ msgid ""
-#~ "Define your delivery methods and their pricing. The delivery costs can be "
-#~ "added on the sale order form or in the invoice, based on the delivery orders."
-#~ msgstr "定义你的送货方式和价格。运费可以被加到销售订单或发票，基于送货单。"
-
-#~ msgid "Picking Policy"
-#~ msgstr "分拣方式"
-
-#~ msgid "You can not move products from or to a location of the type view."
-#~ msgstr "您不能将产品移动到视图类型的库位。"
-
-#~ msgid "Choose Your Default Picking Policy"
-#~ msgstr "选择你的默认分拣方式"
-
-#~ msgid "Deliver all products at once"
-#~ msgstr "一次性交货"
-
-#~ msgid "Define Delivery Methods"
-#~ msgstr "设置发货方式"
-
-#~ msgid "Setup Your Picking Policy"
-#~ msgstr "设置你的分拣方式"
-
-#~ msgid "Free If More Than"
-#~ msgstr "免费起始金额"
-
-#~ msgid ""
-#~ "Define the delivery methods you are using and their pricing in order to "
-#~ "reinvoice the delivery costs when you are doing invoicing based on delivery "
-#~ "orders"
-#~ msgstr "定义送货方式以及价格，以便你基于送货单开发票"
-
-#~ msgid "Order Reference must be unique per Company!"
-#~ msgstr "订单号必须在一个公司范围内唯一"
-
-#~ msgid "Reference must be unique per Company!"
-#~ msgstr "编号必须在公司内唯一！"
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "错误，您不能创建循环引用的会员用户"
-
-#~ msgid "Deliver each product when available"
-#~ msgstr "分批交货"
-
-#~ msgid "Apply"
-#~ msgstr "接受"

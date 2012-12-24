@@ -1,21 +1,21 @@
 # Greek translation for openobject-addons
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2010-12-29 11:33+0000\n"
-"Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:37+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:02+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
@@ -35,6 +35,14 @@ msgid "Default end date for this Analytic Account."
 msgstr ""
 
 #. module: account_analytic_default
+#: help:account.analytic.default,product_id:0
+msgid ""
+"Select a product which will use analytic account specified in analytic "
+"default (e.g. create new customer invoice or Sales order if we select this "
+"product, it will automatically take this as an analytic account)"
+msgstr ""
+
+#. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_stock_picking
 msgid "Picking List"
 msgstr "Λίστα Παραλαβής"
@@ -45,23 +53,18 @@ msgid "Conditions"
 msgstr "Συνθήκες"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,partner_id:0
-msgid ""
-"Select a partner which will use analytic account specified in analytic "
-"default (e.g. create new customer invoice or Sale order if we select this "
-"partner, it will automatically take this as an analytic account)"
-msgstr ""
-
-#. module: account_analytic_default
 #: view:account.analytic.default:0
 #: field:account.analytic.default,product_id:0
 msgid "Product"
 msgstr "Προϊόν"
 
 #. module: account_analytic_default
-#: model:ir.model,name:account_analytic_default.model_account_analytic_default
-msgid "Analytic Distribution"
-msgstr "Αναλυτική Κατανομή"
+#: help:account.analytic.default,partner_id:0
+msgid ""
+"Select a partner which will use analytic account specified in analytic "
+"default (e.g. create new customer invoice or Sales order if we select this "
+"partner, it will automatically take this as an analytic account)"
+msgstr ""
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -81,14 +84,6 @@ msgid "Entries"
 msgstr "Εγγραφές"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,product_id:0
-msgid ""
-"Select a product which will use analytic account specified in analytic "
-"default (e.g. create new customer invoice or Sale order if we select this "
-"product, it will automatically take this as an analytic account)"
-msgstr ""
-
-#. module: account_analytic_default
 #: field:account.analytic.default,date_stop:0
 msgid "End Date"
 msgstr "Ημερομηνία Λήξης"
@@ -106,14 +101,6 @@ msgid "Sequence"
 msgstr "Αλληλουχία"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,company_id:0
-msgid ""
-"Select a company which will use analytic account specified in analytic "
-"default (e.g. create new customer invoice or Sale order if we select this "
-"company, it will automatically take this as an analytic account)"
-msgstr ""
-
-#. module: account_analytic_default
 #: help:account.analytic.default,user_id:0
 msgid ""
 "Select a user which will use analytic account specified in analytic default."
@@ -125,10 +112,23 @@ msgid "Invoice Line"
 msgstr "Γραμμή Τιμολογίου"
 
 #. module: account_analytic_default
+#: help:account.analytic.default,company_id:0
+msgid ""
+"Select a company which will use analytic account specified in analytic "
+"default (e.g. create new customer invoice or Sales order if we select this "
+"company, it will automatically take this as an analytic account)"
+msgstr ""
+
+#. module: account_analytic_default
 #: view:account.analytic.default:0
 #: field:account.analytic.default,analytic_id:0
 msgid "Analytic Account"
 msgstr "Αναλυτικός Λογαριασμός"
+
+#. module: account_analytic_default
+#: model:ir.model,name:account_analytic_default.model_account_analytic_default
+msgid "Analytic Distribution"
+msgstr "Αναλυτική Κατανομή"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,date_start:0
@@ -161,39 +161,3 @@ msgstr ""
 #: model:ir.model,name:account_analytic_default.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "Γραμμή Παραγγελίας Πώλησης"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Το όνομα του αντικειμένου θα πρέπει να ξεκινάει με x_ και να μην περιέχει "
-#~ "ειδικούς χαρακτήρες!"
-
-#~ msgid "Seq"
-#~ msgstr "Αλληλ."
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "'Ακυρο XML για αρχιτεκτονική όψης!"
-
-#~ msgid "Account Analytic Default"
-#~ msgstr "Προκαθορισμένος Λογαριασμός Αναλυτικής"
-
-#~ msgid "Analytic Distributions"
-#~ msgstr "Αναλυτικές Διανομές"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Λανθασμένο όνομα μοντέλου στην δήλωση ενέργειας"
-
-#~ msgid "Current"
-#~ msgstr "Τρέχον"
-
-#~ msgid "Analytical Account"
-#~ msgstr "Λογαριασμός Αναλυτικής"
-
-#~ msgid "Default start date for this Analytical Account"
-#~ msgstr "Προκαθορισμένη ημερομηνία έναρξης γι' αυτόν το Λογαριασμό Αναλυτικής"
-
-#~ msgid "Default end date for this Analytical Account"
-#~ msgstr "Προκαθορισμένη Ημερομηνία Λήξης γι' αυτόν τον Λογαριασμό Αναλυτικής"
-
-#~ msgid "Reference must be unique per Company!"
-#~ msgstr "Η αναφορά πρέπει να είναι μοναδική ανά Εταιρία"

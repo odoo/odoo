@@ -1,20 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* hr_timesheet_invoice
+# Arabic translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2009-02-03 06:25+0000\n"
-"Last-Translator: <>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:35+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:17+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -96,21 +97,12 @@ msgid "March"
 msgstr "مارس"
 
 #. module: hr_timesheet_invoice
-#: help:account.analytic.account,to_invoice:0
-msgid ""
-"You usually invoice 100% of the timesheets. But if you mix fixed price and "
-"timesheet invoicing, you may use another ratio. For instance, if you do a "
-"20% advance invoice (fixed price, based on a sale order), you should invoice "
-"the rest on timesheet with a 80% ratio."
-msgstr ""
-
-#. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
 msgid "Profit"
 msgstr "الربح"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:165
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:144
 #, python-format
 msgid "You cannot modify an invoiced analytic line!"
 msgstr "لا يمكن التعديل في خط الفاتورة التحليلي!"
@@ -124,11 +116,6 @@ msgstr "معدل الفاتورة"
 #: help:hr.timesheet.invoice.create.final,time:0
 msgid "Display time in the history of works"
 msgstr "اعرض الوقت في تاريخ الاعمال"
-
-#. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.profit:0
-msgid "Journals"
-msgstr "اليوميات"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -176,7 +163,7 @@ msgid "Invoiced Amount"
 msgstr "كمية الفاتورة"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:209
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:188
 #, python-format
 msgid "Analytic Account incomplete !"
 msgstr ""
@@ -187,10 +174,8 @@ msgid "Project"
 msgstr "مشروع"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:164
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:254
-#, python-format
-msgid "Error!"
+#: view:account.analytic.account:0
+msgid "Invoice on Timesheets Options"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -202,12 +187,6 @@ msgstr "المقدار"
 #: help:hr.timesheet.invoice.create,name:0
 msgid "The detail of each work done will be displayed on the invoice"
 msgstr "سيتم عرض تفاصيل كل عمل مكتمل على الفاتورة"
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:116
-#, python-format
-msgid "Contract has been set as <b>pending</b>."
-msgstr ""
 
 #. module: hr_timesheet_invoice
 #: field:account.analytic.account,pricelist_id:0
@@ -228,6 +207,15 @@ msgstr "تاريخ انتهاء الفاتورة"
 #: model:ir.model,name:hr_timesheet_invoice.model_report_analytic_account_close
 msgid "Analytic account to close"
 msgstr "غلق الحساب التحليلي"
+
+#. module: hr_timesheet_invoice
+#: help:account.analytic.account,to_invoice:0
+msgid ""
+"You usually invoice 100% of the timesheets. But if you mix fixed price and "
+"timesheet invoicing, you may use another ratio. For instance, if you do a "
+"20% advance invoice (fixed price, based on a sales order), you should "
+"invoice the rest on timesheet with a 80% ratio."
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
@@ -254,7 +242,7 @@ msgid "Deadline"
 msgstr "الموعد النهائي"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:267
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:246
 #, python-format
 msgid "Configuration Error!"
 msgstr ""
@@ -291,7 +279,7 @@ msgid "Costs to invoice"
 msgstr "القيم الى الفاتورة"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:267
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:246
 #, python-format
 msgid "Please define income account for product '%s'."
 msgstr ""
@@ -336,12 +324,6 @@ msgstr "سجل الدوام للمستخدم"
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice
 msgid "To Invoice"
 msgstr "في انتظار الفوترة"
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:98
-#, python-format
-msgid "Contract has been <b>closed</b>."
-msgstr ""
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.analytic.profit:0
@@ -463,11 +445,6 @@ msgstr "شهر"
 #: report:account.analytic.profit:0
 msgid "Currency"
 msgstr "العملة"
-
-#. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.profit:0
-msgid "Users"
-msgstr "مستخدمين"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -622,11 +599,6 @@ msgid "Date"
 msgstr "تاريخ"
 
 #. module: hr_timesheet_invoice
-#: model:mail.message.subtype,name:hr_timesheet_invoice.mt_account_closed
-msgid "finished"
-msgstr ""
-
-#. module: hr_timesheet_invoice
 #: field:report.timesheet.line,quantity:0
 #: field:report_timesheet.account,quantity:0
 #: field:report_timesheet.account.date,quantity:0
@@ -657,9 +629,9 @@ msgid "General Account"
 msgstr "الحساب العام"
 
 #. module: hr_timesheet_invoice
-#: view:account.analytic.account:0
-msgid "Invoice on Timesheets Options"
-msgstr ""
+#: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_analytic_profit
+msgid "Print Timesheet Profit"
+msgstr "اطبع فائدة سجل الدوام"
 
 #. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
@@ -667,9 +639,10 @@ msgid "Totals:"
 msgstr "المجاميع الكلية:"
 
 #. module: hr_timesheet_invoice
-#: model:mail.message.subtype,name:hr_timesheet_invoice.mt_account_canceled
-msgid "canceled"
-msgstr ""
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_account_analytic_line_to_invoice
+#: view:report.account.analytic.line.to.invoice:0
+msgid "Analytic Lines to Invoice"
+msgstr "الخطوط التحليلية للفاتورة"
 
 #. module: hr_timesheet_invoice
 #: help:account.analytic.line,to_invoice:0
@@ -768,13 +741,7 @@ msgid "Timesheets to invoice"
 msgstr "سجلات الدوام للفاتورة"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:104
-#, python-format
-msgid "Contract has been <b>canceled</b>."
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:210
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:189
 #, python-format
 msgid ""
 "Contract incomplete. Please fill in the Customer and Pricelist fields."
@@ -821,12 +788,6 @@ msgstr "يومية"
 #: help:hr.timesheet.invoice.create.final,product:0
 msgid "The product that will be used to invoice the remaining amount"
 msgstr "المنتج الذي سيتم استخدامه لفاتورة المبلغ المتبقي"
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:110
-#, python-format
-msgid "Contract has been <b>opened</b>."
-msgstr ""
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create.final,time:0
@@ -883,11 +844,6 @@ msgid "Sale price"
 msgstr "سعر مخفض"
 
 #. module: hr_timesheet_invoice
-#: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_analytic_profit
-msgid "Print Timesheet Profit"
-msgstr "اطبع فائدة سجل الدوام"
-
-#. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timesheet_user
 msgid "Timesheets per day"
 msgstr "سجلات الدوام عن كل يوم"
@@ -902,7 +858,7 @@ msgid "April"
 msgstr "إبريل"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:254
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:233
 #, python-format
 msgid ""
 "There is no product defined. Please select one or force the product through "
@@ -932,10 +888,11 @@ msgid "Units"
 msgstr "الوحدات"
 
 #. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_account_analytic_line_to_invoice
-#: view:report.account.analytic.line.to.invoice:0
-msgid "Analytic Lines to Invoice"
-msgstr "الخطوط التحليلية للفاتورة"
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:143
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:233
+#, python-format
+msgid "Error!"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor4
@@ -978,331 +935,3 @@ msgstr "سنة"
 #: view:hr.timesheet.analytic.profit:0
 msgid "Duration"
 msgstr ""
-
-#~ msgid "This Year"
-#~ msgstr "هذا العام"
-
-#~ msgid "UoM"
-#~ msgstr "وحدة القياس"
-
-#~ msgid "Sale Pricelist"
-#~ msgstr "قائمة اسعار البيع"
-
-#~ msgid "Timesheets"
-#~ msgstr "الجداول الزمنية"
-
-#~ msgid "Error! You can not create recursive analytic accounts."
-#~ msgstr "خطأ! لا يمكنك إنشاء حسابات تحليلية متكررة."
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "خطأ !"
-
-#~ msgid "Lines to Invoice"
-#~ msgstr "السطور المعدّة للفوترة"
-
-#~ msgid "State"
-#~ msgstr "الحالة"
-
-#~ msgid "Debit"
-#~ msgstr "مدين"
-
-#~ msgid "Printing date"
-#~ msgstr "تاريخ الطباعة"
-
-#~ msgid "Period to"
-#~ msgstr "الفترة إلي"
-
-#~ msgid "Credit"
-#~ msgstr "دائن"
-
-#, python-format
-#~ msgid "Error"
-#~ msgstr "خطأ"
-
-#~ msgid "End of period"
-#~ msgstr "نهاية الفترة"
-
-#~ msgid "Total:"
-#~ msgstr "الإجمالي:"
-
-#~ msgid "Period from"
-#~ msgstr "من الفترة"
-
-#~ msgid "Date/Code"
-#~ msgstr "تاريخ/رمز"
-
-#~ msgid "Close"
-#~ msgstr "إغلاق"
-
-#~ msgid "Start of period"
-#~ msgstr "بداية الفترة"
-
-#~ msgid "%"
-#~ msgstr "٪"
-
-#~ msgid "Internal name"
-#~ msgstr "اسم داخلي"
-
-#~ msgid "This Month"
-#~ msgstr "هذا الشهر"
-
-#~ msgid "Select Period"
-#~ msgstr "اختر فترة"
-
-#~ msgid "Invoicing Data"
-#~ msgstr "بيانات الفواتير"
-
-#, python-format
-#~ msgid "Analytic account incomplete"
-#~ msgstr "حساب تحليلي غير مكتمل"
-
-#~ msgid "Name of entry"
-#~ msgstr "اسم المدخل"
-
-#~ msgid ""
-#~ "The product to invoice is defined on the employee form, the price will be "
-#~ "deduced by this pricelist on the product."
-#~ msgstr ""
-#~ "تم تعريف المنتج للفاتورة على نوع الموظف, وسيستخلص القيمة من التسعيرة "
-#~ "الموجودة على المنتج."
-
-#~ msgid "Reactivate Account"
-#~ msgstr "إعادة تنشيط الحساب"
-
-#~ msgid "Uninvoiced line with billing rate"
-#~ msgstr "خط بدون الفاتورة مع معدل الفواتير"
-
-#~ msgid "Uninvoice Lines With Billing Rate"
-#~ msgstr "خطوط مادون الفاتورة مع معدل الفواتير"
-
-#~ msgid "Balance product"
-#~ msgstr "توازن المنتج"
-
-#, python-format
-#~ msgid "Analytic Account incomplete"
-#~ msgstr "الحساب التحليلي غير مكتمل"
-
-#~ msgid "Do you want details for each line of the invoices ?"
-#~ msgstr "هل تريد تفاصيل لكل خط من الفواتير؟"
-
-#~ msgid "Final invoice for analytic account"
-#~ msgstr "الفاتورة النهائية للحساب التحليلي"
-
-#~ msgid "Final Invoice"
-#~ msgstr "الفاتورة النهائية"
-
-#~ msgid "hr.timesheet.analytic.cost.ledger"
-#~ msgstr "الموارد البشرية.سجل الدوام.التحليلي.قيمة.دفتر الحسابات"
-
-#~ msgid "Accounts to invoice"
-#~ msgstr "الحسابات للفاتورة"
-
-#, python-format
-#~ msgid "Data Insufficient!"
-#~ msgstr "بيانات غير كافية!"
-
-#~ msgid "Gratis"
-#~ msgstr "الخطوط - مجاني"
-
-#~ msgid "Bill Tasks Works"
-#~ msgstr "مهام مشروع قاون الاشغال"
-
-#, python-format
-#~ msgid "Partner incomplete"
-#~ msgstr "الشريك غير مكتمل"
-
-#~ msgid "It allows to set the discount while making invoice"
-#~ msgstr "وهي تسمح بوضع الخصم عد عمل الفاتورة"
-
-#~ msgid ""
-#~ "Complete this field only if you want to force to use a specific product. "
-#~ "Keep empty to use the real product that comes from the cost."
-#~ msgstr ""
-#~ "فقط اكمل هذا الحقل اذا كنت تريد الضغط لاستخدام منتج محدد. احتفظ به فارغًا "
-#~ "لاستخدام المنتج الحقيقي الآتي من القيمة."
-
-#, python-format
-#~ msgid "You can not modify an invoiced analytic line!"
-#~ msgstr "لا يمكنك تصنيف الخط التحليلي للفاتورة"
-
-#, python-format
-#~ msgid ""
-#~ "Please fill in the partner and pricelist field in the analytic account:\n"
-#~ "%s"
-#~ msgstr ""
-#~ "الرجاء ملء حقل لائحة الاسعار والشريك في حساب تحليلي:\n"
-#~ "%s"
-
-#~ msgid "Cost Ledger"
-#~ msgstr "دفتر حسابات التكلفة"
-
-#~ msgid "Invoice Balance amount"
-#~ msgstr "كمية توازن الفاتورة"
-
-#~ msgid "Reinvoice Costs"
-#~ msgstr "اعادة عمل فواتير التكلفات"
-
-#~ msgid "Do you want to show details of work in invoice ?"
-#~ msgstr "هل تريد ان تعرض التفاصيل في الفاتورة؟"
-
-#~ msgid "Invoice analytic lines"
-#~ msgstr "خطوط تحليلية للفاتورة"
-
-#, python-format
-#~ msgid "Please fill in the Address field in the Partner: %s."
-#~ msgstr "الرجاء املأ حقل العنوان للشريك : %s."
-
-#, python-format
-#~ msgid "Balance product needed"
-#~ msgstr "الحاجة الى ميزانية المنتج"
-
-#, python-format
-#~ msgid "At least one line has no product !"
-#~ msgstr "يوجد على الاقل خط واحد بدون منتج !"
-
-#, python-format
-#~ msgid ""
-#~ "Please fill in the Partner or Customer and Sale Pricelist fields in the "
-#~ "Analytic Account:\n"
-#~ "%s"
-#~ msgstr ""
-#~ "من فضلك املأ حقل الشريك او العميل وحقل قائمة الاسعار في الحساب التحليلي:%s"
-
-#~ msgid ""
-#~ "This list shows you every task you can invoice to the customer. Select the "
-#~ "lines and click the Action button to generate the invoices automatically."
-#~ msgstr ""
-#~ "توضح لك هذه القائمة لكل مهمة التي يمكنك عمل لها فاتورة للعميل. اختار  الخطوط "
-#~ "واضغط زر اتمام العملية لإنشاء الفواتير تلقائيًا."
-
-#~ msgid "Uninvoice lines with billing rate"
-#~ msgstr "الخطوط بدون فواتير مع معدل  الفواتير"
-
-#, python-format
-#~ msgid "No Records Found for Report!"
-#~ msgstr "لم يتم العثور على تسجيلات للتقرير!"
-
-#~ msgid "Invoice on analytic lines"
-#~ msgstr "الفاتورة على الخطوط التحليلية"
-
-#~ msgid "    7 Days    "
-#~ msgstr "    ٧ أيام    "
-
-#~ msgid ""
-#~ "Error! The currency has to be the same as the currency of the selected "
-#~ "company"
-#~ msgstr "خطأ! العملة لابد و أن تكون مثل العملة للشركة المختارة"
-
-#~ msgid "J.C. /Move name"
-#~ msgstr "إسم الحركة/.c.j"
-
-#~ msgid "Type of Invoicing"
-#~ msgstr "نوع الفاتورة"
-
-#~ msgid ""
-#~ "Fill this field if you plan to automatically generate invoices based on the "
-#~ "costs in this analytic account: timesheets, expenses, ...You can configure "
-#~ "an automatic invoice rate on analytic accounts."
-#~ msgstr ""
-#~ "املء هذا الحقل إذا كنت تخطط بإنشاء الفواتير تلقائيًا على أساس التكاليف في "
-#~ "هذا الحساب التحليلي: سجلات الدوام، والنفقات، ... يمكنك تكوين معدل الفاتورة "
-#~ "تلقائي على الحسابات التحليلية."
-
-#~ msgid ""
-#~ "OpenERP allows you to create default invoicing types. You might have to "
-#~ "regularly assign discounts because of a specific contract or agreement with "
-#~ "a customer. From this menu, you can create additional types of invoicing to "
-#~ "speed up your invoicing."
-#~ msgstr ""
-#~ "تسمح لك OpenERP بإنشاء انواع من الفواتير الافتراضية. فد تقوم بتخصيص الخصومات "
-#~ "بسبب عقد محدد او موافقة مع العملي. من هذه القائمة, يمكنك انشاء انواع اضافية "
-#~ "من الفواتير للتسريع من الفواتير الخاصة بك."
-
-#, python-format
-#~ msgid "Please fill a Balance product in the wizard"
-#~ msgstr "يرجى ملء المنتج المتوازن في المعالج"
-
-#~ msgid ""
-#~ "\n"
-#~ "Module to generate invoices based on costs (human resources, expenses, "
-#~ "...).\n"
-#~ "You can define price lists in analytic account, make some theoretical "
-#~ "revenue\n"
-#~ "reports, eso."
-#~ msgstr ""
-#~ "\n"
-#~ "الوحدة لإنشاء الفواتير على أساس التكاليف (الموارد البشرية، والنفقات، ...).\n"
-#~ "يمكنك تحديد قوائم الأسعار في حساب التحليل، وجعل بعض تقارير الإيرادات النظرية."
-
-#~ msgid "Timesheet lines in this year"
-#~ msgstr "خطوط سجل الدوام في هذه السنة"
-
-#~ msgid "Daily Timesheets for this year"
-#~ msgstr "سجل الدوام اليومي لهذه السنة"
-
-#~ msgid "Timesheet by user in this month"
-#~ msgstr "الجدول الزمني لكل مستخدم في هذا الشهر"
-
-#~ msgid "Do you want to display work details on the invoice ?"
-#~ msgstr "هل تريد عرض تفاصيل العمل في الفاتورة؟"
-
-#, python-format
-#~ msgid "No income account defined for product '%s'"
-#~ msgstr "لا حساب للإيرادات معرف لهذا المنتج '%s'"
-
-#~ msgid "Invoice on Timesheet & Costs"
-#~ msgstr "فاتورة على الجدول الزمني والتكاليف"
-
-#~ msgid "Daily Timesheets of this month"
-#~ msgstr "الجدول الزمني اليومي لهذا الشهر"
-
-#~ msgid "Customer Pricelist"
-#~ msgstr "قائمة أسعار الزبون"
-
-#~ msgid "You can not create journal items on an account of type view."
-#~ msgstr "لا يمكنك إنشاء عناصر يومية علي حساب من نوع ’عرض’."
-
-#~ msgid "You can not create journal items on closed account."
-#~ msgstr "لا يمنك إنشاء عناصر يومية في حساب مغلق."
-
-#~ msgid ""
-#~ "The date of your Journal Entry is not in the defined period! You should "
-#~ "change the date or remove this constraint from the journal."
-#~ msgstr ""
-#~ "تاريخ قيد اليومية غير معرف الفترة! يجب تغيير التاريخ أو إزالة هذا الشرط من "
-#~ "اليومية."
-
-#~ msgid ""
-#~ "The selected account of your Journal Entry forces to provide a secondary "
-#~ "currency. You should remove the secondary currency on the account or select "
-#~ "a multi-currency view on the journal."
-#~ msgstr ""
-#~ "الحساب المحدد لقيد اليومية يجبرك علي توفير عملة ثانوية. يجب إزالة العملة "
-#~ "الثانوية على الحساب أو تحديد طريقة عرض العملات في اليومية."
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "تحذير !"
-
-#~ msgid "Invoice Number must be unique per Company!"
-#~ msgstr "رقم الفاتورة يجب أن يكون فريداً داخل المشأة !"
-
-#, python-format
-#~ msgid "Configuration Error"
-#~ msgstr "خطأ في الإعدادات"
-
-#~ msgid "Invalid BBA Structured Communication !"
-#~ msgstr "خطأ في إتصال قاعدة البيانات"
-
-#~ msgid "Wrong credit or debit value in accounting entry !"
-#~ msgstr "قيمة دائنة أو مدينة خاطئة في القيد المحاسبي !"
-
-#~ msgid "You can not create analytic line on view account."
-#~ msgstr "لا يمكنك إنشاء سطر تحليلي في حساب للعرض."
-
-#~ msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
-#~ msgstr "لا يمكنك تعديل عملية مؤكدة أو تمت في الجدول الزمني !."
-
-#~ msgid "Company must be the same for its related account and period."
-#~ msgstr "يجب ان تكون الشركة هي نفسها لها الصلة بحسابها و فترتها."

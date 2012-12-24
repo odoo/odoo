@@ -1,26 +1,32 @@
 # Finnish translation for openobject-addons
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-05-10 18:24+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-11 04:57+0000\n"
-"X-Generator: Launchpad (build 15225)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:18+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: idea
-#: help:idea.category,visibility:0
-msgid "If True creator of the idea will be visible to others"
-msgstr "Jos idean todellinen keksijä näkyy muille"
+#: view:idea.category:0
+#: view:idea.idea:0
+msgid "Category"
+msgstr "Kategoria"
+
+#. module: idea
+#: view:idea.idea:0
+msgid "In Progress"
+msgstr "Käynnissä"
 
 #. module: idea
 #: view:idea.idea:0
@@ -28,159 +34,14 @@ msgid "By States"
 msgstr "Tilojen mukaan"
 
 #. module: idea
-#: model:ir.actions.act_window,name:idea.action_idea_select
-msgid "Idea select"
-msgstr "Idean valinta"
+#: sql_constraint:idea.category:0
+msgid "The name of the category must be unique"
+msgstr "Kategorian nimen tulee olla yksilöllinen"
 
 #. module: idea
 #: view:idea.idea:0
-#: view:idea.vote:0
-#: model:ir.ui.menu,name:idea.menu_idea_vote
-msgid "Votes"
-msgstr "Äänestykset"
-
-#. module: idea
-#: view:idea.idea:0
-#: field:idea.idea,comment_ids:0
-msgid "Comments"
-msgstr "Kommentit"
-
-#. module: idea
-#: view:idea.idea:0
-msgid "Submit Vote"
-msgstr "Äänestä"
-
-#. module: idea
-#: model:ir.actions.act_window,name:idea.action_report_vote_all
-#: model:ir.ui.menu,name:idea.menu_report_vote_all
-msgid "Ideas Analysis"
-msgstr "Ideoiden analyysit"
-
-#. module: idea
-#: view:idea.category:0
-#: view:idea.idea:0
-#: view:idea.vote:0
-#: view:report.vote:0
-msgid "Group By..."
-msgstr "Ryhmittele"
-
-#. module: idea
-#: selection:report.vote,month:0
-msgid "March"
-msgstr "Maaliskuu"
-
-#. module: idea
-#: view:idea.idea:0
-msgid "Accepted Ideas"
-msgstr "Hyväksytyt ideat"
-
-#. module: idea
-#: code:addons/idea/wizard/idea_post_vote.py:94
-#, python-format
-msgid "Idea must be in 'Open' state before vote for that idea."
-msgstr "Idean tulee olla 'avoin' tilassa ennenkuin siitä voidaan äänestää."
-
-#. module: idea
-#: view:report.vote:0
-msgid "Open Date"
-msgstr "Avauspäivä"
-
-#. module: idea
-#: view:report.vote:0
-#: field:report.vote,day:0
-msgid "Day"
-msgstr "Päivä"
-
-#. module: idea
-#: view:idea.idea:0
-msgid "Refuse"
-msgstr "Hylkää"
-
-#. module: idea
-#: field:idea.idea,count_votes:0
-msgid "Count of votes"
-msgstr "Äänien lukumäärä"
-
-#. module: idea
-#: model:ir.model,name:idea.model_report_vote
-msgid "Idea Vote Statistics"
-msgstr "Idean äänestystulokset"
-
-#. module: idea
-#: selection:idea.idea,my_vote:0
-#: selection:idea.post.vote,vote:0
-#: selection:idea.vote,score:0
-#: selection:idea.vote.stat,score:0
-msgid "Bad"
-msgstr "Huono"
-
-#. module: idea
-#: selection:report.vote,idea_state:0
-msgid "Cancelled"
-msgstr "Peruttu"
-
-#. module: idea
-#: view:idea.category:0
-msgid "Category of ideas"
-msgstr "Ideakategoriat"
-
-#. module: idea
-#: code:addons/idea/idea.py:274
-#: code:addons/idea/wizard/idea_post_vote.py:91
-#: code:addons/idea/wizard/idea_post_vote.py:94
-#, python-format
-msgid "Warning !"
-msgstr "Varoitus !"
-
-#. module: idea
-#: view:idea.idea:0
-msgid "Your Comment"
-msgstr "Oma kommenttisi"
-
-#. module: idea
-#: model:ir.model,name:idea.model_idea_vote
-msgid "Idea Vote"
-msgstr "Idean äänestys"
-
-#. module: idea
-#: field:idea.category,parent_id:0
-msgid "Parent Categories"
-msgstr "Yläkategoriat"
-
-#. module: idea
-#: selection:idea.idea,my_vote:0
-#: selection:idea.post.vote,vote:0
-#: selection:idea.vote,score:0
-#: selection:idea.vote.stat,score:0
-msgid "Very Bad"
-msgstr "Todella huono"
-
-#. module: idea
-#: view:idea.vote:0
-msgid "Ideas vote"
-msgstr "Ideoiden äänestys"
-
-#. module: idea
-#: view:report.vote:0
-#: field:report.vote,nbr:0
-msgid "# of Lines"
-msgstr "Rivien lukumäärä"
-
-#. module: idea
-#: code:addons/idea/wizard/idea_post_vote.py:91
-#, python-format
-msgid "You can not give Vote for this idea more than %s times"
-msgstr "Et voi aintaa ääntä tälle idealle useammin kuin %s kertaa"
-
-#. module: idea
-#: view:idea.category:0
-msgid "Ideas Categories"
-msgstr "Ideakategoriat"
-
-#. module: idea
-#: help:idea.idea,description:0
-msgid "Content of the idea"
-msgstr "Idean sisältö"
+msgid "By Idea Category"
+msgstr "Ideoiden kategorioiden mukaan"
 
 #. module: idea
 #: model:ir.model,name:idea.model_idea_category
@@ -189,50 +50,18 @@ msgstr "Ideakategoria"
 
 #. module: idea
 #: view:idea.idea:0
-#: field:idea.idea,stat_vote_ids:0
-msgid "Statistics"
-msgstr "Statiikat"
-
-#. module: idea
-#: selection:idea.idea,my_vote:0
-#: selection:idea.post.vote,vote:0
-#: selection:idea.vote,score:0
-#: selection:idea.vote.stat,score:0
-msgid "Not Voted"
-msgstr "Ei äänestetty"
-
-#. module: idea
-#: sql_constraint:idea.category:0
-msgid "The name of the category must be unique"
-msgstr "Kategorian nimen tulee olla yksilöllinen"
-
-#. module: idea
-#: model:ir.model,name:idea.model_idea_select
-msgid "select idea"
-msgstr "Valitse idea"
-
-#. module: idea
-#: view:idea.stat:0
-msgid "stat"
-msgstr "tilasto"
-
-#. module: idea
-#: field:idea.category,child_ids:0
-msgid "Child Categories"
-msgstr "Alakategoriat"
-
-#. module: idea
-#: view:idea.select:0
-msgid "Next"
-msgstr "Seuraava"
+msgid "Open Ideas"
+msgstr "Avoimet Ideat"
 
 #. module: idea
 #: view:idea.idea:0
-#: field:idea.idea,state:0
-#: view:report.vote:0
-#: field:report.vote,idea_state:0
-msgid "State"
-msgstr "Tila"
+msgid "Group By..."
+msgstr "Ryhmittele"
+
+#. module: idea
+#: field:idea.category,name:0
+msgid "Category Name"
+msgstr ""
 
 #. module: idea
 #: view:idea.idea:0
@@ -241,65 +70,54 @@ msgid "New"
 msgstr "Uusi"
 
 #. module: idea
-#: selection:idea.idea,my_vote:0
-#: selection:idea.post.vote,vote:0
-#: selection:idea.vote,score:0
-#: selection:idea.vote.stat,score:0
-msgid "Good"
-msgstr "Hyvä"
-
-#. module: idea
-#: help:idea.idea,open_date:0
-msgid "Date when an idea opened"
-msgstr "Päivä jolloin idea avattiin"
-
-#. module: idea
-#: view:idea.idea:0
-msgid "Idea Detail"
-msgstr "Idean yksityiskohdat"
-
-#. module: idea
-#: help:idea.idea,state:0
-msgid ""
-"When the Idea is created the state is 'Draft'.\n"
-" It is             opened by the user, the state is 'Opened'.            \n"
-"If the idea is accepted, the state is 'Accepted'."
-msgstr ""
-"Kun idea ludaan, sen tila on 'luonnos'.\n"
-" Kun käyttäjä avaa sen, tilaksi tulee 'avoin'.            \n"
-"Jos idea hyväksytää, tila on 'hyväksytty'."
-
-#. module: idea
 #: view:idea.idea:0
 msgid "New Ideas"
 msgstr "uudet ideat"
 
 #. module: idea
-#: view:report.vote:0
-msgid "Idea Vote created last month"
-msgstr "Edellisen kuukauden ideaäänestykset"
+#: view:idea.idea:0
+#: field:idea.idea,state:0
+msgid "Status"
+msgstr "Tila"
 
 #. module: idea
-#: field:idea.category,visibility:0
-#: field:idea.idea,visibility:0
-msgid "Open Idea?"
-msgstr "Avaa idea?"
+#: sql_constraint:idea.idea:0
+msgid "The name of the idea must be unique"
+msgstr ""
 
 #. module: idea
-#: view:report.vote:0
-msgid "Idea Vote created in current month"
-msgstr "Kuluvan kuukauden ideaäänestykset"
+#: view:idea.idea:0
+msgid "Accepted Ideas"
+msgstr "Hyväksytyt ideat"
 
 #. module: idea
-#: selection:report.vote,month:0
-msgid "July"
-msgstr "Heinäkuu"
+#: field:idea.idea,category_ids:0
+msgid "Tags"
+msgstr ""
+
+#. module: idea
+#: field:idea.idea,message_unread:0
+msgid "Unread Messages"
+msgstr ""
+
+#. module: idea
+#: help:idea.idea,message_ids:0
+msgid "Messages and communication history"
+msgstr ""
+
+#. module: idea
+#: field:idea.idea,message_is_follower:0
+msgid "Is a Follower"
+msgstr ""
+
+#. module: idea
+#: model:ir.model,name:idea.model_idea_idea
+msgid "Email Thread"
+msgstr ""
 
 #. module: idea
 #: view:idea.idea:0
 #: selection:idea.idea,state:0
-#: view:report.vote:0
-#: selection:report.vote,idea_state:0
 msgid "Accepted"
 msgstr "Hyväksytty"
 
@@ -310,196 +128,22 @@ msgid "Categories"
 msgstr "Kategoriat"
 
 #. module: idea
-#: view:idea.category:0
-msgid "Parent Category"
-msgstr "Yläkategoria"
-
-#. module: idea
-#: field:idea.idea,open_date:0
-msgid "Open date"
-msgstr "Avauspäivä"
-
-#. module: idea
-#: field:idea.idea,vote_ids:0
-#: model:ir.actions.act_window,name:idea.action_idea_post_vote
-msgid "Vote"
-msgstr "Äänestä"
-
-#. module: idea
-#: model:ir.actions.act_window,name:idea.action_idea_vote_stat
-#: model:ir.ui.menu,name:idea.menu_idea_vote_stat
-msgid "Vote Statistics"
-msgstr "Äänestystilastot"
-
-#. module: idea
-#: field:idea.idea,vote_limit:0
-msgid "Maximum Vote per User"
-msgstr "Maksimi äänten määrä käyttäjää kohti"
-
-#. module: idea
-#: view:idea.vote.stat:0
-msgid "vote_stat of ideas"
-msgstr "Ideoiden äänestys_tilasto"
-
-#. module: idea
-#: field:idea.comment,content:0
 #: view:idea.idea:0
-#: view:idea.post.vote:0
-#: field:idea.vote,comment:0
-#: model:ir.model,name:idea.model_idea_comment
-msgid "Comment"
-msgstr "Kommentti"
+msgid "Refuse"
+msgstr "Hylkää"
 
 #. module: idea
-#: selection:report.vote,month:0
-msgid "September"
-msgstr "Syyskuu"
-
-#. module: idea
-#: selection:report.vote,month:0
-msgid "December"
-msgstr "Joulukuu"
-
-#. module: idea
-#: view:report.vote:0
-#: field:report.vote,month:0
-msgid "Month"
-msgstr "Kuukausi"
+#: field:idea.idea,message_ids:0
+msgid "Messages"
+msgstr ""
 
 #. module: idea
 #: view:idea.idea:0
-#: model:ir.actions.act_window,name:idea.action_idea_idea_categ_open
-#: model:ir.actions.act_window,name:idea.action_idea_idea_open
-msgid "Open Ideas"
-msgstr "Avoimet Ideat"
-
-#. module: idea
-#: view:idea.category:0
-#: field:idea.category,name:0
-#: view:idea.idea:0
-#: field:idea.idea,category_id:0
-#: view:report.vote:0
-#: field:report.vote,category_id:0
-msgid "Category"
-msgstr "Kategoria"
-
-#. module: idea
-#: selection:idea.idea,my_vote:0
-#: selection:idea.post.vote,vote:0
-#: selection:idea.vote,score:0
-#: selection:idea.vote.stat,score:0
-msgid "Very Good"
-msgstr "Todella hyvä"
-
-#. module: idea
-#: selection:idea.idea,state:0
-#: selection:report.vote,idea_state:0
-msgid "Opened"
-msgstr "Avattu"
-
-#. module: idea
-#: model:ir.actions.act_window,name:idea.action_idea_vote
-msgid "Idea's Votes"
-msgstr "Idean äänet"
-
-#. module: idea
-#: view:idea.idea:0
-msgid "By Idea Category"
-msgstr "Ideoiden kategorioiden mukaan"
-
-#. module: idea
-#: view:idea.idea:0
-msgid "New Idea"
-msgstr "Uusi Idea"
-
-#. module: idea
-#: model:ir.actions.act_window,name:idea.action_idea_category_tree
-#: model:ir.ui.menu,name:idea.menu_idea_category_tree
-msgid "Ideas by Categories"
-msgstr "Ideat kategorioittain"
-
-#. module: idea
-#: selection:report.vote,idea_state:0
-msgid "Draft"
-msgstr "Luonnos"
-
-#. module: idea
-#: selection:report.vote,month:0
-msgid "August"
-msgstr "Elokuu"
-
-#. module: idea
-#: selection:idea.idea,my_vote:0
-#: selection:idea.post.vote,vote:0
-#: selection:idea.vote,score:0
-#: selection:idea.vote.stat,score:0
-msgid "Normal"
-msgstr "Tavallinen"
-
-#. module: idea
-#: selection:report.vote,month:0
-msgid "June"
-msgstr "Kesäkuu"
-
-#. module: idea
-#: field:report.vote,creater_id:0
-#: field:report.vote,user_id:0
-msgid "User Name"
-msgstr "Käyttäjänimi"
-
-#. module: idea
-#: model:ir.model,name:idea.model_idea_vote_stat
-msgid "Idea Votes Statistics"
-msgstr "Idean äänestystilastot"
-
-#. module: idea
-#: field:idea.comment,user_id:0
-#: view:idea.vote:0
-#: field:idea.vote,user_id:0
-#: view:report.vote:0
-msgid "User"
-msgstr "Käyttäjä"
-
-#. module: idea
-#: field:idea.vote,date:0
-msgid "Date"
-msgstr "Päiväys"
-
-#. module: idea
-#: selection:report.vote,month:0
-msgid "November"
-msgstr "Marraskuu"
-
-#. module: idea
-#: field:idea.idea,my_vote:0
-msgid "My Vote"
-msgstr "Oma äänestys"
-
-#. module: idea
-#: selection:report.vote,month:0
-msgid "October"
-msgstr "Lokakuu"
-
-#. module: idea
-#: field:idea.comment,create_date:0
-#: field:idea.idea,created_date:0
-msgid "Creation date"
-msgstr "Luontipäivämäärä"
-
-#. module: idea
-#: selection:report.vote,month:0
-msgid "January"
-msgstr "Tammikuu"
-
-#. module: idea
-#: model:ir.model,name:idea.model_idea_idea
-msgid "idea.idea"
-msgstr "idea.idea"
-
-#. module: idea
-#: field:idea.category,summary:0
-msgid "Summary"
-msgstr "Yhteenveto"
+#: model:ir.actions.act_window,name:idea.action_idea_idea
+#: model:ir.ui.menu,name:idea.menu_idea_idea
+#: model:ir.ui.menu,name:idea.menu_ideas
+msgid "Ideas"
+msgstr "Ideat"
 
 #. module: idea
 #: field:idea.idea,name:0
@@ -507,52 +151,35 @@ msgid "Idea Summary"
 msgstr "Ideayhteenveto"
 
 #. module: idea
-#: view:idea.post.vote:0
-msgid "Post"
-msgstr "Viesti"
+#: view:idea.category:0
+msgid "Category of ideas"
+msgstr "Ideakategoriat"
+
+#. module: idea
+#: field:idea.idea,message_summary:0
+msgid "Summary"
+msgstr "Yhteenveto"
+
+#. module: idea
+#: help:idea.idea,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr ""
+
+#. module: idea
+#: field:idea.idea,description:0
+msgid "Description"
+msgstr "Kuvaus"
+
+#. module: idea
+#: selection:idea.idea,state:0
+msgid "Refused"
+msgstr "Torjuttu"
 
 #. module: idea
 #: view:idea.idea:0
-msgid "History"
-msgstr "Historia"
-
-#. module: idea
-#: field:report.vote,date:0
-msgid "Date Order"
-msgstr "Päivämääräjärjestys"
-
-#. module: idea
-#: view:idea.idea:0
-#: field:idea.idea,user_id:0
-#: view:report.vote:0
+#: field:idea.idea,create_uid:0
 msgid "Creator"
 msgstr "Tekijä"
-
-#. module: idea
-#: view:idea.post.vote:0
-#: model:ir.ui.menu,name:idea.menu_give_vote
-msgid "Give Vote"
-msgstr "Äänestä"
-
-#. module: idea
-#: help:idea.idea,vote_limit:0
-msgid "Set to one if  you require only one Vote per user"
-msgstr "Aseta arvoon 1 jos haluat vain yhden äänen käyttäjää kohti"
-
-#. module: idea
-#: view:idea.idea:0
-msgid "By Creators"
-msgstr "Laatijoiden mukaan"
-
-#. module: idea
-#: view:idea.post.vote:0
-msgid "Cancel"
-msgstr "Peruuta"
-
-#. module: idea
-#: view:idea.select:0
-msgid "Close"
-msgstr "Sulje"
 
 #. module: idea
 #: view:idea.idea:0
@@ -561,127 +188,6 @@ msgstr "Avaa"
 
 #. module: idea
 #: view:idea.idea:0
-#: view:report.vote:0
-msgid "In Progress"
-msgstr "Käynnissä"
-
-#. module: idea
-#: view:report.vote:0
-msgid "Idea Vote Analysis"
-msgstr "Idean äänestyksen analyysi"
-
-#. module: idea
-#: view:idea.idea:0
-#: model:ir.actions.act_window,name:idea.action_idea_idea
-#: model:ir.ui.menu,name:idea.menu_idea_idea
-#: model:ir.ui.menu,name:idea.menu_ideas
-#: model:ir.ui.menu,name:idea.menu_ideas1
-msgid "Ideas"
-msgstr "Ideat"
-
-#. module: idea
-#: model:ir.model,name:idea.model_idea_post_vote
-msgid "Post vote"
-msgstr "Äänestä"
-
-#. module: idea
-#: field:idea.vote.stat,score:0
-#: field:report.vote,score:0
-msgid "Score"
-msgstr "Tulos"
-
-#. module: idea
-#: view:idea.idea:0
-msgid "Votes Statistics"
-msgstr "Äänestystulokset"
-
-#. module: idea
-#: view:idea.vote:0
-msgid "Comments:"
-msgstr "Kommentit:"
-
-#. module: idea
-#: view:idea.category:0
-#: field:idea.idea,description:0
-#: field:idea.post.vote,note:0
-msgid "Description"
-msgstr "Kuvaus"
-
-#. module: idea
-#: selection:report.vote,month:0
-msgid "May"
-msgstr "Toukokuu"
-
-#. module: idea
-#: selection:idea.idea,state:0
-#: view:report.vote:0
-msgid "Refused"
-msgstr "Torjuttu"
-
-#. module: idea
-#: view:idea.vote:0
-msgid "Vote Date"
-msgstr "Äänestyspäivä"
-
-#. module: idea
-#: selection:report.vote,month:0
-msgid "February"
-msgstr "Helmikuu"
-
-#. module: idea
-#: field:idea.category,complete_name:0
-msgid "Name"
-msgstr "Nimi"
-
-#. module: idea
-#: field:idea.vote.stat,nbr:0
-msgid "Number of Votes"
-msgstr "Äänestysten lukumäärä"
-
-#. module: idea
-#: view:report.vote:0
-msgid "Month-1"
-msgstr "Edellinen kuukausi"
-
-#. module: idea
-#: selection:report.vote,month:0
-msgid "April"
-msgstr "Huhtikuu"
-
-#. module: idea
-#: field:idea.idea,count_comments:0
-msgid "Count of comments"
-msgstr "Kommenttien lukumäärä"
-
-#. module: idea
-#: field:idea.vote,score:0
-msgid "Vote Status"
-msgstr "Äänestyksen tila"
-
-#. module: idea
-#: view:report.vote:0
-msgid "Idea Vote created in current year"
-msgstr "Ideaäänestykset luotu kuluvana vuonna"
-
-#. module: idea
-#: field:idea.idea,vote_avg:0
-msgid "Average Score"
-msgstr "Keskimääräinen tulos"
-
-#. module: idea
-#: constraint:idea.category:0
-msgid "Error ! You cannot create recursive categories."
-msgstr "Virhe! Et voi luoda rekursiivisia kategoroita."
-
-#. module: idea
-#: field:idea.comment,idea_id:0
-#: field:idea.select,idea_id:0
-#: view:idea.vote:0
-#: field:idea.vote,idea_id:0
-#: field:idea.vote.stat,idea_id:0
-#: model:ir.ui.menu,name:idea.menu_idea_reporting
-#: view:report.vote:0
-#: field:report.vote,idea_id:0
 msgid "Idea"
 msgstr "Idea"
 
@@ -691,88 +197,38 @@ msgid "Accept"
 msgstr "Hyväksy"
 
 #. module: idea
-#: field:idea.post.vote,vote:0
-msgid "Post Vote"
-msgstr "Äänestä"
+#: help:idea.idea,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
 
 #. module: idea
-#: view:report.vote:0
-#: field:report.vote,year:0
-msgid "Year"
-msgstr "Vuosi"
+#: selection:idea.idea,state:0
+msgid "Done"
+msgstr ""
 
 #. module: idea
-#: code:addons/idea/idea.py:274
-#, python-format
-msgid "You can not vote on a Draft/Accepted/Cancelled ideas."
-msgstr "Et voi äänestää luonnos/hyväksytty/peruutettu tilassa olevia ideoita"
+#: view:idea.idea:0
+msgid "By Creators"
+msgstr "Laatijoiden mukaan"
 
 #. module: idea
-#: view:idea.select:0
-msgid "Select Idea for Vote"
-msgstr "Valitse äänestettävä idea"
+#: field:idea.idea,message_follower_ids:0
+msgid "Followers"
+msgstr ""
 
-#~ msgid "My Ideas"
-#~ msgstr "Omat ideat"
+#. module: idea
+#: view:idea.category:0
+msgid "Category of Ideas"
+msgstr ""
 
-#~ msgid "My Open Ideas"
-#~ msgstr "Omat avoimet ideat"
+#. module: idea
+#: view:idea.category:0
+msgid "Ideas Categories"
+msgstr "Ideakategoriat"
 
-#~ msgid "Idea Manager"
-#~ msgstr "Ideahallinta"
-
-#~ msgid "Category for an idea"
-#~ msgstr "Idean kategoria"
-
-#~ msgid "Idea's vote"
-#~ msgstr "Idean äänestys"
-
-#~ msgid "Statistics on Votes"
-#~ msgstr "Äänestystilastot"
-
-#~ msgid "Your comment"
-#~ msgstr "Oma kommenttisi"
-
-#~ msgid "idea.vote"
-#~ msgstr "idea.äänestys"
-
-#~ msgid "All Ideas"
-#~ msgstr "Kaikki Ideat"
-
-#~ msgid "My Draft Ideas"
-#~ msgstr "Omat idealuonnokset"
-
-#~ msgid "All Votes"
-#~ msgstr "Kaikki äänestykset"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr "Objektin nimen tulee alkaa x_ ja se ei saa sisältää erikoismerkkejä!"
-
-#~ msgid "Status"
-#~ msgstr "Tila"
-
-#~ msgid "   Month   "
-#~ msgstr "   Kuukausi   "
-
-#~ msgid "    Month-1    "
-#~ msgstr "    Kuukausi-1    "
-
-#~ msgid "  Year  "
-#~ msgstr "  Vuosi  "
-
-#~ msgid "Vots Statistics"
-#~ msgstr "Äänestystilastot"
-
-#~ msgid "Current"
-#~ msgstr "Nykyinen"
-
-#, python-format
-#~ msgid "Draft/Accepted/Cancelled ideas Could not be voted"
-#~ msgstr "Luonnos/Hyväksytty/peruutettu tilassa olevia ideoita ei voi äänestää"
-
-#~ msgid "Vote date"
-#~ msgstr "Äänestyspäivä"
-
-#~ msgid "    Today    "
-#~ msgstr "    Tänään    "
+#. module: idea
+#: help:idea.idea,description:0
+msgid "Content of the idea"
+msgstr "Idean sisältö"

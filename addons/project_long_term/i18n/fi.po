@@ -1,21 +1,21 @@
 # Finnish translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:04+0000\n"
-"PO-Revision-Date: 2012-05-10 17:39+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:51+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:30+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: project_long_term
 #: help:project.phase,constraint_date_end:0
@@ -34,6 +34,14 @@ msgstr "Käynnissä"
 #: view:project.project:0
 msgid "Phases"
 msgstr "Vaiheet"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
+#: model:ir.ui.menu,name:project_long_term.menu_resouce_allocation
+#: view:project.phase:0
+#: view:project.user.allocation:0
+msgid "Team Planning"
+msgstr ""
 
 #. module: project_long_term
 #: field:project.phase,user_ids:0
@@ -141,7 +149,7 @@ msgid "In Progress Phases"
 msgstr "Meneillään olevat vaiheet"
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:141
+#: code:addons/project_long_term/project_long_term.py:140
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -151,12 +159,6 @@ msgstr ""
 #, python-format
 msgid "Please specify a project to schedule."
 msgstr "Ole hyvä ja määrittele ajoitettava projekti."
-
-#. module: project_long_term
-#: view:project.compute.phases:0
-#: view:project.compute.tasks:0
-msgid "or"
-msgstr ""
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -195,11 +197,6 @@ msgstr "Sekvenssi"
 #: help:account.analytic.account,use_phases:0
 msgid "Check this field if you plan to use phase-based scheduling"
 msgstr ""
-
-#. module: project_long_term
-#: help:project.user.allocation,date_start:0
-msgid "Starting Date"
-msgstr "Aloituspäivämäärä"
 
 #. module: project_long_term
 #: help:project.phase,state:0
@@ -249,10 +246,9 @@ msgid "Pending Phases"
 msgstr "Odottavat vaiheet"
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:126
-#, python-format
-msgid "Day"
-msgstr "Päivä"
+#: help:project.user.allocation,date_start:0
+msgid "Starting Date"
+msgstr "Aloituspäivämäärä"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -503,135 +499,7 @@ msgid "Name"
 msgstr "Nimi"
 
 #. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
-#: model:ir.ui.menu,name:project_long_term.menu_resouce_allocation
-#: view:project.phase:0
-#: view:project.user.allocation:0
-msgid "Planning of Users"
-msgstr "Käyttäjien suunnittelu"
-
-#~ msgid "Error! project start-date must be lower then project end-date."
-#~ msgstr "Virhe: projektin alkupäivä tulee olla aikaisempi kuin loppupäivä."
-
-#~ msgid "Error! You cannot assign escalation to the same project!"
-#~ msgstr "Virhe! Et voi asettaa eskalointia samalle projektille!"
-
-#~ msgid "Resource Allocations"
-#~ msgstr "Resurssien allokoinnit"
-
-#~ msgid "Schedule"
-#~ msgstr "Ajastus"
-
-#~ msgid "Error ! You cannot create recursive tasks."
-#~ msgstr "Virhe ! Et voi luoda rekursiivisiä tehtäviä."
-
-#~ msgid "Displaying settings"
-#~ msgstr "Näyttöasetukset"
-
-#~ msgid "Resources Allocation"
-#~ msgstr "Resurssien allokointi"
-
-#~ msgid "Long Term Project Management"
-#~ msgstr "Pitkäaikaisten projektien hallinta"
-
-#~ msgid "Compute Scheduling of Phases"
-#~ msgstr "Laske vaiheiden ajoitus"
-
-#~ msgid "UoM (Unit of Measure) is the unit of measurement for Duration"
-#~ msgstr "Mittayksikkö (UoM) on keston mittayksikkö"
-
-#, python-format
-#~ msgid " (copy)"
-#~ msgstr " (kopio)"
-
-#~ msgid "Planning"
-#~ msgstr "Suunnittelu"
-
-#~ msgid "Compute Scheduling of phases for all or specified project"
-#~ msgstr "Laske vaiheiden ajoitus kaikille tai valituille projekteille"
-
-#~ msgid "Availability"
-#~ msgstr "Saatavuus"
-
-#~ msgid "_Cancel"
-#~ msgstr "_Peru"
-
-#~ msgid "Compute Phase Scheduling"
-#~ msgstr "Laske vaiheen ajoitus"
-
-#~ msgid "State"
-#~ msgstr "Tila"
-
-#~ msgid "Compute Scheduling of Task"
-#~ msgstr "Laske tehtävän ajoitus"
-
-#~ msgid "Duration UoM"
-#~ msgstr "Keston mittayksikkö"
-
-#~ msgid "Compute Task Scheduling"
-#~ msgstr "Laske tehtävän ajoitus"
-
-#~ msgid "Project Resource Allocation"
-#~ msgstr "Projektin resurssien allokointi"
-
-#~ msgid ""
-#~ "Availability of this resource for this project phase in percentage (=50%)"
-#~ msgstr ""
-#~ "Tämän resurssin saatavuus tälle projektin vaiheelle prosentteina (=50%)"
-
-#~ msgid "Project Resources"
-#~ msgstr "Projektin resurssit"
-
-#~ msgid "Schedule and Display info"
-#~ msgstr "Ajoita ja näytä tiedot"
-
-#~ msgid "Dates"
-#~ msgstr "Päivämäärät"
-
-#~ msgid "unknown"
-#~ msgstr "Tuntematon"
-
-#~ msgid "Resource Allocation"
-#~ msgstr "Resurssien allokointi"
-
-#~ msgid "Task Detail"
-#~ msgstr "Tehtävän yksityiskohdat"
-
-#~ msgid "Timetable working hours to adjust the gantt diagram report"
-#~ msgstr "Aikatauluta työtunnit säätääkseksi gantt diagrammin raporttia"
-
-#~ msgid "Error ! Task end-date must be greater then task start-date"
-#~ msgstr ""
-#~ "Virhe! Tehtävän lopetuspäivän tulee olla myöhäisempi kuin aloituspäivä"
-
-#~ msgid "Current"
-#~ msgstr "Nykyinen"
-
-#, python-format
-#~ msgid "Please Specify Project to be schedule"
-#~ msgstr "Ole hyvä ja määrittele ajoitettava projekti"
-
-#~ msgid "Task Scheduling completed successfully."
-#~ msgstr "Tehtävien ajoitus tehty onnistuneesti."
-
-#~ msgid "Compute Scheduling of Task for specified project."
-#~ msgstr "Laske tehtävän ajoitus määritellylle projektille."
-
-#~ msgid "Responsible"
-#~ msgstr "Vastuuhenkilö"
-
-#~ msgid "Resource Detail"
-#~ msgstr "Resurssin yksityiskohdat"
-
-#~ msgid "Resource"
-#~ msgstr "Resurssi"
-
-#~ msgid "Message"
-#~ msgstr "Viesti"
-
-#~ msgid "Compute All Projects"
-#~ msgstr "Laske kaikki projektit"
-
-#~ msgid ""
-#~ "The ressources on the project can be computed automatically by the scheduler"
-#~ msgstr "Projektin resurssit voidaan laskea automaattisesti ajastimen avulla."
+#: view:project.compute.phases:0
+#: view:project.compute.tasks:0
+msgid "or"
+msgstr ""
