@@ -175,8 +175,8 @@ class mail_group(osv.Model):
         result = super(mail_group, self).write(cr, uid, ids, vals, context=context)
         if vals.get('group_ids'):
             self._subscribe_users(cr, uid, ids, context=context)
-        # if description is changed: update client action
-        if vals.get('description'):
+        # if description, name or alias is changed: update client action
+        if vals.get('description') or vals.get('name') or vals.get('alias_id') or vals.get('alias_name'):
             cobj = self.pool.get('ir.actions.client')
             for action in [group.menu_id.action for group in self.browse(cr, uid, ids, context=context)]:
                 new_params = action.params
