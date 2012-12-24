@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
 "PO-Revision-Date: 2012-01-24 22:26+0000\n"
 "Last-Translator: Ahmet Altınışık <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:49+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 06:00+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: crm_claim
 #: help:crm.claim.stage,fold:0
@@ -101,15 +101,6 @@ msgstr "Şikayet Sayısı"
 #: field:crm.claim.stage,name:0
 msgid "Stage Name"
 msgstr ""
-
-#. module: crm_claim
-#: model:ir.actions.act_window,help:crm_claim.action_report_crm_claim
-msgid ""
-"Have a general overview of all claims processed in the system by sorting "
-"them with specific criteria."
-msgstr ""
-"Sistemde oluşturulmuş tüm şikayetlere belirli kritere göre sıralayarak göz "
-"at."
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -220,11 +211,6 @@ msgid "Preventive Action"
 msgstr "Önlem/ Tedbir Eylemi"
 
 #. module: crm_claim
-#: field:crm.claim.report,delay_expected:0
-msgid "Overpassed Deadline"
-msgstr "Teslim Tarihi Geçen"
-
-#. module: crm_claim
 #: field:crm.claim.report,section_id:0
 msgid "Section"
 msgstr "Bölüm"
@@ -312,10 +298,13 @@ msgid "Next Action Date"
 msgstr "Bir sonraki İşlem Tarihi"
 
 #. module: crm_claim
-#: code:addons/crm_claim/crm_claim.py:243
-#, python-format
-msgid "Claim has been <b>created</b>."
+#: model:ir.actions.act_window,help:crm_claim.action_report_crm_claim
+msgid ""
+"Have a general overview of all claims processed in the system by sorting "
+"them with specific criteria."
 msgstr ""
+"Sistemde oluşturulmuş tüm şikayetlere belirli kritere göre sıralayarak göz "
+"at."
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -352,7 +341,7 @@ msgid "Destination email for email gateway."
 msgstr ""
 
 #. module: crm_claim
-#: code:addons/crm_claim/crm_claim.py:199
+#: code:addons/crm_claim/crm_claim.py:194
 #, python-format
 msgid "No Subject"
 msgstr ""
@@ -609,12 +598,6 @@ msgid "Extended Filters..."
 msgstr "Genişletilmiş Filtreler..."
 
 #. module: crm_claim
-#: field:crm.claim,message_comment_ids:0
-#: help:crm.claim,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
-
-#. module: crm_claim
 #: view:crm.claim:0
 msgid "Closure"
 msgstr "Kapanış"
@@ -747,10 +730,9 @@ msgid "Unassigned Claims"
 msgstr "İşleme konmamış Şikayetler"
 
 #. module: crm_claim
-#: code:addons/crm_claim/crm_claim.py:247
-#, python-format
-msgid "Claim has been <b>refused</b>."
-msgstr ""
+#: field:crm.claim.report,delay_expected:0
+msgid "Overpassed Deadline"
+msgstr "Teslim Tarihi Geçen"
 
 #. module: crm_claim
 #: field:crm.claim,cause:0
@@ -811,12 +793,6 @@ msgstr ""
 #: field:crm.claim.report,email:0
 msgid "# Emails"
 msgstr "E-postaların sayısı"
-
-#. module: crm_claim
-#: code:addons/crm_claim/crm_claim.py:253
-#, python-format
-msgid "Stage changed to <b>%s</b>."
-msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim.report:0

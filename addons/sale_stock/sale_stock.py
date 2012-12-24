@@ -118,7 +118,7 @@ class sale_order(osv.osv):
             ('sent', 'Quotation Sent'),
             ('cancel', 'Cancelled'),
             ('waiting_date', 'Waiting Schedule'),
-            ('progress', 'Sale Order'),
+            ('progress', 'Sales Order'),
             ('manual', 'Sale to Invoice'),
             ('shipping_except', 'Shipping Exception'),
             ('invoice_except', 'Invoice Exception'),
@@ -141,7 +141,7 @@ class sale_order(osv.osv):
         'shipped': fields.boolean('Delivered', readonly=True, help="It indicates that the sales order has been delivered. This field is updated only after the scheduler(s) have been launched."),
         'picked_rate': fields.function(_picked_rate, string='Picked', type='float'),
         'invoice_quantity': fields.selection([('order', 'Ordered Quantities'), ('procurement', 'Shipped Quantities')], 'Invoice on', 
-                                             help="The sale order will automatically create the invoice proposition (draft invoice).\
+                                             help="The sales order will automatically create the invoice proposition (draft invoice).\
                                               You have to choose  if you want your invoice based on ordered ", required=True, readonly=True, states={'draft': [('readonly', False)]}),
     }
     _defaults = {
@@ -164,7 +164,7 @@ class sale_order(osv.osv):
 
     def action_view_delivery(self, cr, uid, ids, context=None):
         '''
-        This function returns an action that display existing delivery orders of given sale order ids. It can either be a in a list or in a form view, if there is only one delivery order to show.
+        This function returns an action that display existing delivery orders of given sales order ids. It can either be a in a list or in a form view, if there is only one delivery order to show.
         '''
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
@@ -329,8 +329,8 @@ class sale_order(osv.osv):
         # FIXME: deals with potentially cancelled shipments, seems broken (specially if shipment has production lot)
         """
         Define ship_recreate for process after shipping exception
-        param order: sale order to which the order lines belong
-        param line: sale order line records to procure
+        param order: sales order to which the order lines belong
+        param line: sales order line records to procure
         param move_id: the ID of stock move
         param proc_id: the ID of procurement
         """
@@ -353,9 +353,9 @@ class sale_order(osv.osv):
         return date_planned
 
     def _create_pickings_and_procurements(self, cr, uid, order, order_lines, picking_id=False, context=None):
-        """Create the required procurements to supply sale order lines, also connecting
+        """Create the required procurements to supply sales order lines, also connecting
         the procurements to appropriate stock moves in order to bring the goods to the
-        sale order's requested location.
+        sales order's requested location.
 
         If ``picking_id`` is provided, the stock moves will be added to it, otherwise
         a standard outgoing picking will be created to wrap the stock moves, as returned
@@ -365,8 +365,8 @@ class sale_order(osv.osv):
         multiple stock pickings may override this method and call ``super()`` with
         different subsets of ``order_lines`` and/or preset ``picking_id`` values.
 
-        :param browse_record order: sale order to which the order lines belong
-        :param list(browse_record) order_lines: sale order line records to procure
+        :param browse_record order: sales order to which the order lines belong
+        :param list(browse_record) order_lines: sales order line records to procure
         :param int picking_id: optional ID of a stock picking to which the created stock moves
                                will be added. A new picking will be created if ommitted.
         :return: True

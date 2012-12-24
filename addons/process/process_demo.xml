@@ -13,8 +13,8 @@
 
         <record id="node_quotation" model="process.node">
             <field name="name">Quotation</field>
-            <field name="note">Quotations are sale orders in draft mode</field>
-            <field name="model_id" model="ir.model" search="[('name', '=', 'Sale Order')]"></field>
+            <field name="note">Quotations are sales orders in draft mode</field>
+            <field name="model_id" model="ir.model" search="[('name', '=', 'Sales Order')]"></field>
             <field name="menu_id" model="ir.ui.menu" search="[('name', '=', 'My Quotations')]"></field>
             <field name="kind">state</field>
             <field name="model_states">object.state == 'draft'</field>
@@ -22,9 +22,9 @@
         </record>
 
         <record id="node_sale_order" model="process.node">
-            <field name="name">Sale Order</field>
+            <field name="name">Sales Order</field>
             <field name="note">Manages the delivery in invoicing process</field>
-            <field name="model_id" model="ir.model" search="[('name', '=', 'Sale Order')]"></field>
+            <field name="model_id" model="ir.model" search="[('name', '=', 'Sales Order')]"></field>
             <field name="menu_id" model="ir.ui.menu" search="[('name', '=', 'All Sales Order')]"></field>
             <field name="kind">state</field>
             <field name="model_states">object.state == 'manual'</field>
@@ -33,7 +33,7 @@
 
         <record id="node_invoice_on_sale" model="process.node">
             <field name="name">Invoice</field>
-            <field name="note">In case you invoiced on Sale Order</field>
+            <field name="note">In case you invoiced on Sales Order</field>
             <field name="model_id" model="ir.model" search="[('name', '=', 'Invoice')]"></field>
             <field name="menu_id" model="ir.ui.menu" search="[('name', '=', 'Invoices')]"></field>
             <field name="kind">state</field>
@@ -85,14 +85,14 @@
 
         <record id="node_condition_invoice_on_order" model="process.condition">
             <field name="name">Invoice on order</field>
-            <field name="model_id" model="ir.model" search="[('name', '=', 'Sale Order')]"></field>
+            <field name="model_id" model="ir.model" search="[('name', '=', 'Sales Order')]"></field>
             <field name="model_states">object.order_policy != 'picking'</field>
             <field name="node_id" ref="node_invoice_on_sale"/>
         </record>
 
         <record id="node_condition_invoice_on_delivery" model="process.condition">
             <field name="name">Invoice on delivery</field>
-            <field name="model_id" model="ir.model" search="[('name', '=', 'Sale Order')]"></field>
+            <field name="model_id" model="ir.model" search="[('name', '=', 'Sales Order')]"></field>
             <field name="model_states">object.order_policy == 'picking'</field>
             <field name="node_id" ref="node_invoice_on_delivery"/>
         </record>

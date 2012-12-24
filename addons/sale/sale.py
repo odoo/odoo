@@ -189,12 +189,12 @@ class sale_order(osv.osv):
             ('sent', 'Quotation Sent'),
             ('cancel', 'Cancelled'),
             ('waiting_date', 'Waiting Schedule'),
-            ('progress', 'Sale Order'),
+            ('progress', 'Sales Order'),
             ('manual', 'Sale to Invoice'),
             ('invoice_except', 'Invoice Exception'),
             ('done', 'Done'),
             ], 'Status', readonly=True, track_visibility='onchange',
-            help="Gives the status of the quotation or sales order. \nThe exception status is automatically set when a cancel operation occurs in the processing of a document linked to the sale order. \nThe 'Waiting Schedule' status is set when the invoice is confirmed but waiting for the scheduler to run on the order date.", select=True),
+            help="Gives the status of the quotation or sales order. \nThe exception status is automatically set when a cancel operation occurs in the processing of a document linked to the sales order. \nThe 'Waiting Schedule' status is set when the invoice is confirmed but waiting for the scheduler to run on the order date.", select=True),
         'date_order': fields.date('Date', required=True, readonly=True, select=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
         'create_date': fields.datetime('Creation Date', readonly=True, select=True, help="Date on which sales order is created."),
         'date_confirm': fields.date('Confirmation Date', readonly=True, select=True, help="Date on which sales order is confirmed."),
@@ -217,7 +217,7 @@ class sale_order(osv.osv):
         'invoiced': fields.function(_invoiced, string='Paid',
             fnct_search=_invoiced_search, type='boolean', help="It indicates that an invoice has been paid."),
         'invoice_exists': fields.function(_invoice_exists, string='Invoiced',
-            fnct_search=_invoiced_search, type='boolean', help="It indicates that sale order has at least one invoice."),
+            fnct_search=_invoiced_search, type='boolean', help="It indicates that sales order has at least one invoice."),
         'note': fields.text('Terms and conditions'),
 
         'amount_untaxed': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Untaxed Amount',
@@ -239,7 +239,7 @@ class sale_order(osv.osv):
             },
             multi='sums', help="The total amount."),
 
-        'invoice_quantity': fields.selection([('order', 'Ordered Quantities')], 'Invoice on', help="The sale order will automatically create the invoice proposition (draft invoice).", required=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'invoice_quantity': fields.selection([('order', 'Ordered Quantities')], 'Invoice on', help="The sales order will automatically create the invoice proposition (draft invoice).", required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'payment_term': fields.many2one('account.payment.term', 'Payment Term'),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
         'company_id': fields.related('shop_id','company_id',type='many2one',relation='res.company',string='Company',store=True,readonly=True)
@@ -267,7 +267,7 @@ class sale_order(osv.osv):
             if s['state'] in ['draft', 'cancel']:
                 unlink_ids.append(s['id'])
             else:
-                raise osv.except_osv(_('Invalid Action!'), _('In order to delete a confirmed sale order, you must cancel it before !'))
+                raise osv.except_osv(_('Invalid Action!'), _('In order to delete a confirmed sales order, you must cancel it before !'))
 
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
@@ -342,7 +342,7 @@ class sale_order(osv.osv):
 
     def _prepare_invoice(self, cr, uid, order, lines, context=None):
         """Prepare the dict of values to create the new invoice for a
-           sale order. This method may be overridden to implement custom
+           sales order. This method may be overridden to implement custom
            invoice generation (making sure to call super() to establish
            a clean extension chain).
 
@@ -407,7 +407,7 @@ class sale_order(osv.osv):
 
     def print_quotation(self, cr, uid, ids, context=None):
         '''
-        This function prints the sale order and mark it as sent, so that we can see more easily the next step of the workflow
+        This function prints the sales order and mark it as sent, so that we can see more easily the next step of the workflow
         '''
         assert len(ids) == 1, 'This option should only be used for a single id at a time'
         wf_service = netsvc.LocalService("workflow")
@@ -420,13 +420,13 @@ class sale_order(osv.osv):
         return {'type': 'ir.actions.report.xml', 'report_name': 'sale.order', 'datas': datas, 'nodestroy': True}
 
     def manual_invoice(self, cr, uid, ids, context=None):
-        """ create invoices for the given sale orders (ids), and open the form
+        """ create invoices for the given sales orders (ids), and open the form
             view of one of the newly created invoices
         """
         mod_obj = self.pool.get('ir.model.data')
         wf_service = netsvc.LocalService("workflow")
 
-        # create invoices through the sale orders' workflow
+        # create invoices through the sales orders' workflow
         inv_ids0 = set(inv.id for sale in self.browse(cr, uid, ids, context) for inv in sale.invoice_ids)
         for id in ids:
             wf_service.trg_validate(uid, 'sale.order', id, 'manual_invoice', cr)
@@ -452,7 +452,7 @@ class sale_order(osv.osv):
 
     def action_view_invoice(self, cr, uid, ids, context=None):
         '''
-        This function returns an action that display existing invoices of given sale order ids. It can either be a in a list or in a form view, if there is only one invoice to show.
+        This function returns an action that display existing invoices of given sales order ids. It can either be a in a list or in a form view, if there is only one invoice to show.
         '''
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
@@ -570,7 +570,7 @@ class sale_order(osv.osv):
         wf_service = netsvc.LocalService('workflow')
         wf_service.trg_validate(uid, 'sale.order', ids[0], 'order_confirm', cr)
 
-        # redisplay the record as a sale order
+        # redisplay the record as a sales order
         view_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'sale', 'view_order_form')
         view_id = view_ref and view_ref[1] or False,
         return {
@@ -589,7 +589,7 @@ class sale_order(osv.osv):
         context = context or {}
         for o in self.browse(cr, uid, ids):
             if not o.order_line:
-                raise osv.except_osv(_('Error!'),_('You cannot confirm a sale order which has no line.'))
+                raise osv.except_osv(_('Error!'),_('You cannot confirm a sales order which has no line.'))
             noprod = self.test_no_product(cr, uid, o, context)
             if (o.order_policy == 'manual') or noprod:
                 self.write(cr, uid, [o.id], {'state': 'manual', 'date_confirm': fields.date.context_today(self, cr, uid, context=context)})
@@ -735,7 +735,7 @@ class sale_order_line(osv.osv):
 
     def _prepare_order_line_invoice_line(self, cr, uid, line, account_id=False, context=None):
         """Prepare the dict of values to create the new invoice line for a
-           sale order line. This method may be overridden to implement custom
+           sales order line. This method may be overridden to implement custom
            invoice generation (making sure to call super() to establish
            a clean extension chain).
 
@@ -809,7 +809,7 @@ class sale_order_line(osv.osv):
     def button_cancel(self, cr, uid, ids, context=None):
         for line in self.browse(cr, uid, ids, context=context):
             if line.invoiced:
-                raise osv.except_osv(_('Invalid Action!'), _('You cannot cancel a sale order line that has already been invoiced.'))
+                raise osv.except_osv(_('Invalid Action!'), _('You cannot cancel a sales order line that has already been invoiced.'))
         return self.write(cr, uid, ids, {'state': 'cancel'})
 
     def button_confirm(self, cr, uid, ids, context=None):

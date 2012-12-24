@@ -27,7 +27,7 @@ class procurement_order(osv.osv):
     _inherit = "procurement.order"
     _columns = {
         'task_id': fields.many2one('project.task', 'Task'),
-        'sale_line_id': fields.many2one('sale.order.line', 'Sale order line')
+        'sale_line_id': fields.many2one('sale.order.line', 'Sales order line')
     }
 
     def action_check_finished(self, cr, uid, ids):
@@ -59,7 +59,7 @@ class procurement_order(osv.osv):
         project_project = self.pool.get('project.project')
         project = procurement.product_id.project_id
         if not project and procurement.sale_line_id:
-            # find the project corresponding to the analytic account of the sale order
+            # find the project corresponding to the analytic account of the sales order
             account = procurement.sale_line_id.order_id.project_id
             project_ids = project_project.search(cr, uid, [('analytic_account_id', '=', account.id)])
             projects = project_project.browse(cr, uid, project_ids, context=context)

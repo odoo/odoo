@@ -20,7 +20,6 @@
 ##############################################################################
 
 import crm
-import crm_action_rule
 import crm_segmentation
 import crm_lead
 import crm_meeting

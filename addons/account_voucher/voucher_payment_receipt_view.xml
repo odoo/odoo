@@ -250,7 +250,7 @@
         </record>
 
         <record id="action_vendor_payment" model="ir.actions.act_window">
-            <field name="name">Supplier Payment</field>
+            <field name="name">Supplier Payments</field>
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','payment')]</field>
@@ -262,8 +262,7 @@
               <p class="oe_view_nocontent_create">
                 Click to create a new supplier payment.
               </p><p>
-                OpenERP helps you easily track payments you do and remining
-                balance to pay to your supplier.
+                OpenERP helps you easily track payments you make and the remaining balances you need to pay your suppliers.
               </p>
             </field>
         </record>
@@ -520,7 +519,7 @@
         </record>
 
         <record id="action_vendor_receipt" model="ir.actions.act_window">
-            <field name="name">Customer Payment</field>
+            <field name="name">Customer Payments</field>
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','receipt')]</field>

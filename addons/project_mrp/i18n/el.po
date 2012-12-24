@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:04+0000\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
 "PO-Revision-Date: 2009-06-15 07:21+0000\n"
 "Last-Translator: Panagiotis Kranidiotis <kranidiotis@vatica.org>\n"
 "Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:36+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:44+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
 "X-Poedit-SourceCharset: utf-8\n"
@@ -30,9 +30,14 @@ msgid "Product type is service, then its creates the task."
 msgstr "Product type is service, then its creates the task."
 
 #. module: project_mrp
-#: code:addons/project_mrp/project_procurement.py:93
+#: code:addons/project_mrp/project_procurement.py:92
 #, python-format
 msgid "Task created"
+msgstr ""
+
+#. module: project_mrp
+#: model:process.node,note:project_mrp.process_node_saleordertask0
+msgid "In case you sell services on sales order"
 msgstr ""
 
 #. module: project_mrp
@@ -41,13 +46,13 @@ msgid "A task is created to provide the service."
 msgstr "Μια εργασία δημιουργείται για την παροχή της υπηρεσίας."
 
 #. module: project_mrp
-#: field:project.task,sale_line_id:0
-msgid "Sale Order Line"
+#: model:ir.model,name:project_mrp.model_product_product
+msgid "Product"
 msgstr ""
 
 #. module: project_mrp
-#: model:ir.model,name:project_mrp.model_product_product
-msgid "Product"
+#: model:process.node,name:project_mrp.process_node_saleordertask0
+msgid "Sales Order Task"
 msgstr ""
 
 #. module: project_mrp
@@ -66,12 +71,27 @@ msgid "Procurement Task"
 msgstr ""
 
 #. module: project_mrp
+#: field:procurement.order,sale_line_id:0
+msgid "Sales order line"
+msgstr ""
+
+#. module: project_mrp
 #: model:ir.model,name:project_mrp.model_project_task
 #: model:process.node,name:project_mrp.process_node_mrptask0
 #: model:process.node,name:project_mrp.process_node_procuretasktask0
 #: field:procurement.order,task_id:0
 msgid "Task"
 msgstr "Εργασία"
+
+#. module: project_mrp
+#: view:product.product:0
+msgid ""
+"will be \n"
+"                        created to follow up the job to do. This task will "
+"appear\n"
+"                        in the project related to the contract of the sales "
+"order."
+msgstr ""
 
 #. module: project_mrp
 #: view:product.product:0
@@ -90,27 +110,12 @@ msgid "Procurement"
 msgstr "Τροφοδοσία"
 
 #. module: project_mrp
-#: field:procurement.order,sale_line_id:0
-msgid "Sale order line"
-msgstr ""
-
-#. module: project_mrp
 #: view:product.product:0
 msgid "False"
 msgstr ""
 
 #. module: project_mrp
-#: view:product.product:0
-msgid ""
-"will be \n"
-"                        created to follow up the job to do. This task will "
-"appear\n"
-"                        in the project related to the contract of the sale "
-"order."
-msgstr ""
-
-#. module: project_mrp
-#: code:addons/project_mrp/project_procurement.py:87
+#: code:addons/project_mrp/project_procurement.py:86
 #, python-format
 msgid "Task created."
 msgstr ""
@@ -121,9 +126,9 @@ msgid "If procurement method is Make to order and supply method is produce"
 msgstr ""
 
 #. module: project_mrp
-#: model:process.node,name:project_mrp.process_node_saleordertask0
-msgid "Sale Order Task"
-msgstr "Εργασία Παραγγελίας Πώλησης"
+#: field:project.task,sale_line_id:0
+msgid "Sales Order Line"
+msgstr ""
 
 #. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_createtask0
@@ -141,11 +146,6 @@ msgid "Order Line"
 msgstr ""
 
 #. module: project_mrp
-#: model:process.node,note:project_mrp.process_node_saleordertask0
-msgid "In case you sell services on sale order"
-msgstr "Σε περίπτωση που προσφέρετε υπηρεσίες με την παραγγελία πώλησης."
-
-#. module: project_mrp
 #: view:product.product:0
 msgid "a task"
 msgstr ""
@@ -158,3 +158,9 @@ msgstr ""
 
 #~ msgid "Procure Task"
 #~ msgstr "Εργασία Τροφοδοσίας"
+
+#~ msgid "Sale Order Task"
+#~ msgstr "Εργασία Παραγγελίας Πώλησης"
+
+#~ msgid "In case you sell services on sale order"
+#~ msgstr "Σε περίπτωση που προσφέρετε υπηρεσίες με την παραγγελία πώλησης."

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-12-03 16:03+0000\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 17:05+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -23,8 +23,10 @@ msgid "&Ntilde;"
 msgstr ""
 
 #. module: pad
-#: model:ir.model,name:pad.model_pad_common
-msgid "pad.common"
+#. openerp-web
+#: code:addons/pad/static/src/xml/pad.xml:10
+#, python-format
+msgid "You must configure the etherpad through the menu Settings > Companies > Companies, in the configuration tab of your company."
 msgstr ""
 
 #. module: pad
@@ -38,10 +40,8 @@ msgid "Companies"
 msgstr ""
 
 #. module: pad
-#. openerp-web
-#: code:addons/pad/static/src/xml/pad.xml:10
-#, python-format
-msgid "You must configure the etherpad through the menu Setting > Companies > Companies, in the configuration tab of your company."
+#: model:ir.model,name:pad.model_pad_common
+msgid "pad.common"
 msgstr ""
 
 #. module: pad

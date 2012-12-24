@@ -168,10 +168,10 @@ class purchase_order(osv.osv):
     _columns = {
         'name': fields.char('Order Reference', size=64, required=True, select=True, help="Unique number of the purchase order, computed automatically when the purchase order is created."),
         'origin': fields.char('Source Document', size=64,
-            help="Reference of the document that generated this purchase order request; a sale order or an internal procurement request."
+            help="Reference of the document that generated this purchase order request; a sales order or an internal procurement request."
         ),
         'partner_ref': fields.char('Supplier Reference', states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]}, size=64,
-            help="Reference of the sale order or quotation sent by your supplier. It's mainly used to do the matching when you receive the products as this reference is usually written on the delivery order sent by your supplier."),
+            help="Reference of the sales order or quotation sent by your supplier. It's mainly used to do the matching when you receive the products as this reference is usually written on the delivery order sent by your supplier."),
         'date_order':fields.date('Order Date', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}, select=True, help="Date on which this document has been created."),
         'date_approve':fields.date('Date Approved', readonly=1, select=True, help="Date on which purchase order has been approved"),
         'partner_id':fields.many2one('res.partner', 'Supplier', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]},
@@ -329,7 +329,7 @@ class purchase_order(osv.osv):
 
     def view_invoice(self, cr, uid, ids, context=None):
         '''
-        This function returns an action that display existing invoices of given sale order ids. It can either be a in a list or in a form view, if there is only one invoice to show.
+        This function returns an action that display existing invoices of given sales order ids. It can either be a in a list or in a form view, if there is only one invoice to show.
         '''
         mod_obj = self.pool.get('ir.model.data')
         wizard_obj = self.pool.get('purchase.order.line_invoice')
