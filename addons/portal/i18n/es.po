@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-12-13 15:40+0000\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-22 11:46+0000\n"
 "Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-14 05:38+0000\n"
-"X-Generator: Launchpad (build 16369)\n"
+"X-Launchpad-Export-Date: 2012-12-23 04:42+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -44,15 +44,14 @@ msgstr ""
 "directamente en la lista."
 
 #. module: portal
-#: code:addons/portal/wizard/share_wizard.py:54
-#, python-format
-msgid "Please select at least one group to share with"
-msgstr "Por favor seleccione al menos un grupo con quien compartir"
+#: model:mail.group,name:portal.company_jobs
+msgid "Company Jobs"
+msgstr "Puestos en la compañía"
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.company_news_feed_ir_ui_menu
-msgid "Company's news"
-msgstr "Noticias de la compañía"
+#: view:portal.payment.acquirer:0
+msgid "amount: the total amount to pay, as a float"
+msgstr "amount: el importe total a pagar, como un float"
 
 #. module: portal
 #: view:portal.wizard.user:0
@@ -79,6 +78,12 @@ msgstr "Mensaje de invitación"
 #: view:res.groups:0
 msgid "Non-Portal Groups"
 msgstr "Grupos sin acceso al portal"
+
+#. module: portal
+#: code:addons/portal/wizard/share_wizard.py:54
+#, python-format
+msgid "Please select at least one group to share with"
+msgstr "Por favor seleccione al menos un grupo con quien compartir"
 
 #. module: portal
 #: view:share.wizard:0
@@ -128,9 +133,13 @@ msgstr ""
 "            "
 
 #. module: portal
-#: view:portal.wizard:0
-msgid "or"
-msgstr "o"
+#: code:addons/portal/wizard/portal_wizard.py:194
+#, python-format
+msgid ""
+"You must have an email address in your User Preferences to send emails."
+msgstr ""
+"Debe tener una dirección email en sus preferencias de usuario para enviar "
+"emails"
 
 #. module: portal
 #: model:ir.actions.client,name:portal.action_jobs
@@ -144,10 +153,16 @@ msgid "Users"
 msgstr "Usuarios"
 
 #. module: portal
-#: code:addons/portal/acquirer.py:74
+#: code:addons/portal/acquirer.py:82
 #, python-format
 msgid "Pay safely online"
 msgstr "Pague en línea de forma segura"
+
+#. module: portal
+#: code:addons/portal/acquirer.py:77
+#, python-format
+msgid "No online payment acquirers configured"
+msgstr "No se ha configurado ningún método de pago"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -183,9 +198,13 @@ msgstr ""
 "            "
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.company_jobs_ir_ui_menu
-msgid "Company's jobs"
-msgstr "Empleos de la compañía"
+#: view:portal.payment.acquirer:0
+msgid ""
+", so it may use Mako expressions.\n"
+"                                The Mako evaluation context provides:"
+msgstr ""
+", por lo que puede contener expresiones Mako.\n"
+"La evaluación del contexto de Mako provee:"
 
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_menu
@@ -202,9 +221,9 @@ msgid "Your OpenERP account at %(company)s"
 msgstr "Su cuenta OpenERP en %(company)s"
 
 #. module: portal
-#: view:portal.payment.acquirer:0
-msgid "cr: the current database cursor"
-msgstr "cr: el cursor actual de la base de datos"
+#: model:res.groups,name:portal.group_anonymous
+msgid "Anonymous"
+msgstr "Anónimo"
 
 #. module: portal
 #: field:portal.wizard.user,in_portal:0
@@ -262,15 +281,6 @@ msgid "Wizard"
 msgstr "Asistente"
 
 #. module: portal
-#: view:portal.payment.acquirer:0
-msgid ""
-", so it may use Mako expressions.\n"
-"                                The Mako evaluation context provides:"
-msgstr ""
-", por lo que puede contener expresiones Mako.\n"
-"La evaluación del contexto de Mako provee:"
-
-#. module: portal
 #: field:portal.payment.acquirer,name:0
 msgid "Name"
 msgstr "Nombre"
@@ -295,11 +305,6 @@ msgstr ""
 "hacerlos adecuados para la inclusión en una URL"
 
 #. module: portal
-#: view:portal.payment.acquirer:0
-msgid "amount: the total amount to pay, as a float"
-msgstr "amount: el importe total a pagar, como un float"
-
-#. module: portal
 #: help:res.groups,is_portal:0
 msgid "If checked, this group is usable as a portal."
 msgstr "Si está marcado, este grupo e"
@@ -320,7 +325,7 @@ msgid "Outgoing Mails"
 msgstr "Correos salientes"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:194
+#: code:addons/portal/wizard/portal_wizard.py:193
 #, python-format
 msgid "Email required"
 msgstr "Correo electrónico requerido"
@@ -331,13 +336,15 @@ msgid "Messaging"
 msgstr "Mensajería"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:195
-#, python-format
+#: model:res.groups,comment:portal.group_anonymous
 msgid ""
-"You must have an email address in your User Preferences to send emails."
+"Anonymous users have specific access rights (such as record rules and "
+"restricted menus).\n"
+"                They usually do not belong to the usual OpenERP groups."
 msgstr ""
-"Debe tener una dirección email en sus preferencias de usuario para enviar "
-"emails"
+"Los usuarios anónimos tienen permisos específicos (tales como reglas de "
+"registro y menús restringidos). Normalmente no pertenecen a los grupos "
+"usuales de OpenERP."
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_payment_acquirer
@@ -345,13 +352,23 @@ msgid "Online Payment Acquirer"
 msgstr "Método de pago en línea"
 
 #. module: portal
-#: view:portal.payment.acquirer:0
+#: model:mail.group,name:portal.company_news_feed
+msgid "Company News"
+msgstr "Noticias de la compañía"
+
+#. module: portal
+#: code:addons/portal/acquirer.py:76
+#, python-format
 msgid ""
-"object: the document on which the payment form is rendered (usually an "
-"invoice or sale order record)"
+"You can finish the configuration in the <a href=\"%s\">Bank&Cash settings</a>"
 msgstr ""
-"object: el documento en el que el formulario de pago es reproducido "
-"(normalmente un registro de factura o de pedido de venta)"
+"Puede finalizar la configuración en <a href=\"%s\">Configuración de banco y "
+"caja</a>"
+
+#. module: portal
+#: view:portal.payment.acquirer:0
+msgid "cr: the current database cursor"
+msgstr "cr: el cursor actual de la base de datos"
 
 #. module: portal
 #: model:ir.actions.client,help:portal.action_mail_inbox_feeds_portal
@@ -375,6 +392,15 @@ msgstr ""
 "a los que sigue.\n"
 "</p>\n"
 "            "
+
+#. module: portal
+#: view:portal.payment.acquirer:0
+msgid ""
+"object: the document on which the payment form is rendered (usually an "
+"invoice or sales order record)"
+msgstr ""
+"objeto: el documento en el que se muestra el formulario de pago (normalmente "
+"una registro de factura o de pedido de venta)"
 
 #. module: portal
 #: help:portal.wizard,welcome_message:0
@@ -437,6 +463,11 @@ msgstr ""
 "%(welcome_message)s\n"
 "\n"
 "--\n"
+
+#. module: portal
+#: view:portal.wizard:0
+msgid "or"
+msgstr "o"
 
 #. module: portal
 #: model:portal.payment.acquirer,form_template:portal.paypal_acquirer
@@ -527,7 +558,7 @@ msgstr ""
 "La plantilla se representará con"
 
 #. module: portal
-#: code:addons/portal/mail_mail.py:40
+#: code:addons/portal/mail_mail.py:42
 #, python-format
 msgid ""
 "Access your personal documents through <a href=\"%s\">our Customer Portal</a>"
@@ -760,4 +791,4 @@ msgstr "Administración de acceso al portal"
 #~ msgstr "Responsable"
 
 #~ msgid "Officer"
-#~ msgstr "Gestor"
+#~ msgstr "Directivo"

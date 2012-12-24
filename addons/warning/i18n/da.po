@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:04+0000\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
 "PO-Revision-Date: 2012-01-27 06:45+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Danish <da@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:43+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:52+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order_line
@@ -29,11 +29,6 @@ msgid "Incoming Shipments"
 msgstr ""
 
 #. module: warning
-#: field:product.product,sale_line_warn_msg:0
-msgid "Message for Sale Order Line"
-msgstr ""
-
-#. module: warning
 #: field:product.product,purchase_line_warn_msg:0
 msgid "Message for Purchase Order Line"
 msgstr ""
@@ -41,11 +36,6 @@ msgstr ""
 #. module: warning
 #: model:ir.model,name:warning.model_stock_picking
 msgid "Picking List"
-msgstr ""
-
-#. module: warning
-#: field:product.product,sale_line_warn:0
-msgid "Sale Order Line"
 msgstr ""
 
 #. module: warning
@@ -101,11 +91,6 @@ msgid "Warning when Selling this Product"
 msgstr ""
 
 #. module: warning
-#: field:res.partner,sale_warn:0
-msgid "Sale Order"
-msgstr ""
-
-#. module: warning
 #: field:res.partner,picking_warn:0
 msgid "Stock Picking"
 msgstr ""
@@ -114,11 +99,6 @@ msgstr ""
 #: model:ir.model,name:warning.model_purchase_order
 #: field:res.partner,purchase_warn:0
 msgid "Purchase Order"
-msgstr ""
-
-#. module: warning
-#: field:res.partner,sale_warn_msg:0
-msgid "Message for Sale Order"
 msgstr ""
 
 #. module: warning
@@ -145,18 +125,28 @@ msgstr ""
 #: code:addons/warning/warning.py:67
 #: code:addons/warning/warning.py:96
 #: code:addons/warning/warning.py:130
-#: code:addons/warning/warning.py:161
-#: code:addons/warning/warning.py:191
-#: code:addons/warning/warning.py:217
-#: code:addons/warning/warning.py:265
-#: code:addons/warning/warning.py:298
+#: code:addons/warning/warning.py:162
+#: code:addons/warning/warning.py:192
+#: code:addons/warning/warning.py:218
+#: code:addons/warning/warning.py:266
+#: code:addons/warning/warning.py:299
 #, python-format
 msgid "Alert for %s !"
 msgstr ""
 
 #. module: warning
+#: view:res.partner:0
+msgid "Warning on the Sales Order"
+msgstr ""
+
+#. module: warning
 #: field:res.partner,invoice_warn_msg:0
 msgid "Message for Invoice"
+msgstr ""
+
+#. module: warning
+#: field:res.partner,sale_warn_msg:0
+msgid "Message for Sales Order"
 msgstr ""
 
 #. module: warning
@@ -173,18 +163,18 @@ msgstr ""
 #: code:addons/warning/warning.py:68
 #: code:addons/warning/warning.py:97
 #: code:addons/warning/warning.py:132
-#: code:addons/warning/warning.py:162
-#: code:addons/warning/warning.py:192
-#: code:addons/warning/warning.py:218
-#: code:addons/warning/warning.py:266
-#: code:addons/warning/warning.py:299
+#: code:addons/warning/warning.py:163
+#: code:addons/warning/warning.py:193
+#: code:addons/warning/warning.py:219
+#: code:addons/warning/warning.py:267
+#: code:addons/warning/warning.py:300
 #, python-format
 msgid "Warning for %s"
 msgstr ""
 
 #. module: warning
-#: view:res.partner:0
-msgid "Warning on the Sale Order"
+#: field:product.product,sale_line_warn_msg:0
+msgid "Message for Sales Order Line"
 msgstr ""
 
 #. module: warning
@@ -209,6 +199,7 @@ msgstr ""
 
 #. module: warning
 #: model:ir.model,name:warning.model_sale_order
+#: field:res.partner,sale_warn:0
 msgid "Sales Order"
 msgstr ""
 
@@ -219,5 +210,6 @@ msgstr ""
 
 #. module: warning
 #: model:ir.model,name:warning.model_sale_order_line
+#: field:product.product,sale_line_warn:0
 msgid "Sales Order Line"
 msgstr ""

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
 "PO-Revision-Date: 2011-08-03 22:59+0000\n"
 "Last-Translator: Stefan Lind <Unknown>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:48+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:59+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_sched
@@ -50,12 +50,6 @@ msgstr ""
 "Anskaffningsförslag för produkter och lagerplats med denna beställningspunkt"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:290
-#, python-format
-msgid "No supplier defined for this product !"
-msgstr "Leverantör saknas för denna produkt !"
-
-#. module: procurement
 #: view:product.product:0
 msgid ""
 "required quantities are always\n"
@@ -83,10 +77,9 @@ msgid "Manufacture"
 msgstr ""
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:307
-#, python-format
-msgid "No address defined for the supplier"
-msgstr "Ingen adress definierad för leverantören"
+#: model:process.process,name:procurement.process_process_serviceproductprocess0
+msgid "Service"
+msgstr "Tjänst"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.action_procurement_compute
@@ -111,7 +104,6 @@ msgstr "Måttenhet Kvantitet"
 
 #. module: procurement
 #: view:procurement.order:0
-#: field:procurement.order,name:0
 msgid "Reason"
 msgstr "Orsak"
 
@@ -139,11 +131,6 @@ msgstr "Används inte i beräkningar, endast avsedd som information."
 #: field:stock.warehouse.orderpoint,procurement_id:0
 msgid "Latest procurement"
 msgstr "Senaste anskaffning"
-
-#. module: procurement
-#: view:procurement.order:0
-msgid "Notes"
-msgstr "Anteckningar"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.action_orderpoint_form
@@ -183,6 +170,11 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: procurement
+#: view:procurement.order:0
+msgid "Permanent Procurement Exceptions"
+msgstr "Permanenta upphandlingsfel"
+
+#. module: procurement
 #: help:procurement.order,message_unread:0
 msgid "If checked new messages require your attention."
 msgstr ""
@@ -198,9 +190,9 @@ msgid "Stock Move"
 msgstr "Lagertransaktion"
 
 #. module: procurement
-#: model:ir.model,name:procurement.model_procurement_order_compute_all
-msgid "Compute all schedulers"
-msgstr "Beräkna alla schemaläggare"
+#: view:product.product:0
+msgid "Stockable products"
+msgstr ""
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:137
@@ -244,11 +236,6 @@ msgid ""
 msgstr ""
 
 #. module: procurement
-#: view:product.product:0
-msgid "Stockable products"
-msgstr ""
-
-#. module: procurement
 #: selection:procurement.order,state:0
 msgid "Confirmed"
 msgstr "Bekräftad"
@@ -257,12 +244,6 @@ msgstr "Bekräftad"
 #: view:procurement.order:0
 msgid "Retry"
 msgstr "Försök igen"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:498
-#, python-format
-msgid "Procurement <b>confirmed</b>."
-msgstr ""
 
 #. module: procurement
 #: view:procurement.order.compute:0
@@ -300,7 +281,7 @@ msgid "Minimum Inventory Rule"
 msgstr "Minsta lager regel"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:395
+#: code:addons/procurement/procurement.py:369
 #, python-format
 msgid "Procurement '%s' is in exception: "
 msgstr "Upphandling '%s' behöver åtgärdas: "
@@ -316,9 +297,9 @@ msgid "Reordering Rules Search"
 msgstr ""
 
 #. module: procurement
-#: field:procurement.order,message_summary:0
-msgid "Summary"
-msgstr ""
+#: selection:procurement.order,state:0
+msgid "Waiting"
+msgstr "Väntar"
 
 #. module: procurement
 #: field:procurement.order,message_follower_ids:0
@@ -387,7 +368,7 @@ msgid "Quantity"
 msgstr "Antal"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:390
+#: code:addons/procurement/procurement.py:364
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
 msgstr "Ej tillräckligt lager och regel för minsta lager saknas."
@@ -402,12 +383,6 @@ msgstr "Måttenhet"
 #: selection:procurement.order,procure_method:0
 #: selection:product.template,procure_method:0
 msgid "Make to Stock"
-msgstr ""
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:501
-#, python-format
-msgid "Procurement <b>cancelled</b>."
 msgstr ""
 
 #. module: procurement
@@ -494,11 +469,6 @@ msgstr "Inköpsförfrågan"
 #: view:procurement.orderpoint.compute:0
 msgid "Compute Stock"
 msgstr "Beräkna Lager"
-
-#. module: procurement
-#: model:process.process,name:procurement.process_process_serviceproductprocess0
-msgid "Service"
-msgstr "Tjänst"
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,procurement_draft_ids:0
@@ -648,7 +618,7 @@ msgid "Is a Follower"
 msgstr ""
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:392
+#: code:addons/procurement/procurement.py:366
 #, python-format
 msgid "Not enough stock."
 msgstr "Inte tillräckligt lager."
@@ -664,17 +634,11 @@ msgid "Procure Products"
 msgstr "Produktanskaffning"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:336
+#: code:addons/procurement/procurement.py:311
 #, python-format
 msgid ""
 "Please check the quantity in procurement order(s) for the product \"%s\", it "
 "should not be 0 or less!"
-msgstr ""
-
-#. module: procurement
-#: field:procurement.order,message_comment_ids:0
-#: help:procurement.order,message_comment_ids:0
-msgid "Comments and emails"
 msgstr ""
 
 #. module: procurement
@@ -727,15 +691,9 @@ msgid "Extra Information"
 msgstr "Extra Information"
 
 #. module: procurement
-#: help:procurement.order,name:0
-msgid "Procurement name."
-msgstr "Upphandling namn."
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:297
-#, python-format
-msgid "No default supplier defined for this product"
-msgstr "Ingen standard leverantör definierad för denna produkt"
+#: field:procurement.order,message_summary:0
+msgid "Summary"
+msgstr ""
 
 #. module: procurement
 #: sql_constraint:stock.warehouse.orderpoint:0
@@ -771,7 +729,7 @@ msgid "Properties composition"
 msgstr "Egenskaper sammansättning"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:335
+#: code:addons/procurement/procurement.py:310
 #, python-format
 msgid "Data Insufficient !"
 msgstr "Otillräckliga data!"
@@ -787,12 +745,6 @@ msgstr "Enhetsgrupp"
 #: view:stock.warehouse.orderpoint:0
 msgid "Misc"
 msgstr "Övrigt"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:504
-#, python-format
-msgid "Procurement <b>done</b>."
-msgstr ""
 
 #. module: procurement
 #: field:stock.move,procurements:0
@@ -834,13 +786,10 @@ msgid "Not urgent"
 msgstr "Inte brådskande"
 
 #. module: procurement
-#: model:ir.actions.act_window,name:procurement.procurement_action5
-#: model:ir.actions.act_window,name:procurement.procurement_action_board
-#: model:ir.actions.act_window,name:procurement.procurement_exceptions
-#: model:ir.ui.menu,name:procurement.menu_stock_procurement_action
-#: view:procurement.order:0
-msgid "Procurement Exceptions"
-msgstr "Anskaffningsundantag"
+#: model:ir.actions.act_window,name:procurement.product_open_orderpoint
+#: view:product.product:0
+msgid "Orderpoints"
+msgstr ""
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,product_max_qty:0
@@ -851,9 +800,9 @@ msgid ""
 msgstr ""
 
 #. module: procurement
-#: view:procurement.order:0
-msgid "Permanent Procurement Exceptions"
-msgstr "Permanenta upphandlingsfel"
+#: model:ir.model,name:procurement.model_procurement_order_compute_all
+msgid "Compute all schedulers"
+msgstr "Beräkna alla schemaläggare"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -866,10 +815,13 @@ msgid "Procurements in Exception"
 msgstr "Anskaffningar i undantag"
 
 #. module: procurement
-#: model:ir.actions.act_window,name:procurement.product_open_orderpoint
-#: view:product.product:0
-msgid "Orderpoints"
-msgstr ""
+#: model:ir.actions.act_window,name:procurement.procurement_action5
+#: model:ir.actions.act_window,name:procurement.procurement_action_board
+#: model:ir.actions.act_window,name:procurement.procurement_exceptions
+#: model:ir.ui.menu,name:procurement.menu_stock_procurement_action
+#: view:procurement.order:0
+msgid "Procurement Exceptions"
+msgstr "Anskaffningsundantag"
 
 #. module: procurement
 #: field:product.product,orderpoint_ids:0
@@ -914,6 +866,7 @@ msgstr "Tillfällig"
 #. module: procurement
 #: field:mrp.property,description:0
 #: field:mrp.property.group,description:0
+#: field:procurement.order,name:0
 msgid "Description"
 msgstr "Beskrivning"
 
@@ -933,11 +886,6 @@ msgstr "Pågående"
 #: selection:product.template,procure_method:0
 msgid "Make to Order"
 msgstr "Anskaffa på order"
-
-#. module: procurement
-#: selection:procurement.order,state:0
-msgid "Waiting"
-msgstr "Väntar"
 
 #. module: procurement
 #: field:product.template,supply_method:0
@@ -1035,11 +983,6 @@ msgid "Automatic Orderpoint"
 msgstr "Automatisk Orderpunkt"
 
 #. module: procurement
-#: view:procurement.order:0
-msgid "Procurement Details"
-msgstr "Upphandling Detaljer"
-
-#. module: procurement
 #: help:procurement.order,message_ids:0
 msgid "Messages and communication history"
 msgstr ""
@@ -1048,12 +991,6 @@ msgstr ""
 #: view:procurement.order:0
 msgid "Procurement started late"
 msgstr "Upphandling startade sent"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:495
-#, python-format
-msgid "Procurement <b>created</b>."
-msgstr ""
 
 #. module: procurement
 #: selection:mrp.property,composition:0
@@ -1086,10 +1023,13 @@ msgid "PROC %d: on order - %3.2f %-5s - %s"
 msgstr "PROC %d : på beställning -% 3.2f%-5s -% s"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:364
+#: code:addons/procurement/procurement.py:338
 #, python-format
 msgid "Products reserved from stock."
 msgstr ""
+
+#~ msgid "Notes"
+#~ msgstr "Anteckningar"
 
 #~ msgid "Configuration"
 #~ msgstr "Konfiguration"
@@ -1121,6 +1061,10 @@ msgstr ""
 
 #~ msgid "on order"
 #~ msgstr "beställt"
+
+#, python-format
+#~ msgid "No supplier defined for this product !"
+#~ msgstr "Leverantör saknas för denna produkt !"
 
 #~ msgid "Product UOM"
 #~ msgstr "Produktenhet"
@@ -1156,6 +1100,10 @@ msgstr ""
 
 #~ msgid "Minimum Stock Rules Search"
 #~ msgstr "Sökning på regler för minimilager"
+
+#, python-format
+#~ msgid "No address defined for the supplier"
+#~ msgstr "Ingen adress definierad för leverantören"
 
 #~ msgid ""
 #~ "When a procurement is created the state is set to 'Draft'.\n"
@@ -1269,6 +1217,9 @@ msgstr ""
 #~ msgid "No minimum orderpoint rule defined."
 #~ msgstr "Ingen regel för minsta orderpunkt har definieras."
 
+#~ msgid "Procurement name."
+#~ msgstr "Upphandling namn."
+
 #~ msgid "Reference must be unique per Company!"
 #~ msgstr "Referens måste vara unikt per företag!"
 
@@ -1280,6 +1231,10 @@ msgstr ""
 
 #~ msgid "General Information"
 #~ msgstr "Allmän information"
+
+#, python-format
+#~ msgid "No default supplier defined for this product"
+#~ msgstr "Ingen standard leverantör definierad för denna produkt"
 
 #~ msgid "Details"
 #~ msgstr "Detaljer"
@@ -1309,6 +1264,9 @@ msgstr ""
 
 #~ msgid "Compute Schedulers"
 #~ msgstr "Beräkna schemaläggare"
+
+#~ msgid "Procurement Details"
+#~ msgstr "Upphandling Detaljer"
 
 #~ msgid "Error: Invalid ean code"
 #~ msgstr "Fel: felaktig EAN kod"

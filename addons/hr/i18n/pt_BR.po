@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
 "PO-Revision-Date: 2012-10-16 23:42+0000\n"
 "Last-Translator: Syllas F. de O. Neto <syllasneto@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:40+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:48+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -91,6 +91,7 @@ msgstr ""
 #: field:hr.employee,department_id:0
 #: view:hr.job:0
 #: field:hr.job,department_id:0
+#: model:ir.model,name:hr.model_hr_department
 msgid "Department"
 msgstr "Departamento"
 
@@ -365,13 +366,6 @@ msgstr "Formulário de Funcionários e estrutura"
 #: field:hr.config.settings,module_hr_expense:0
 msgid "Manage employees expenses"
 msgstr ""
-
-#. module: hr
-#: help:hr.job,expected_employees:0
-msgid ""
-"Expected number of employees for this job position after new recruitment."
-msgstr ""
-"Número de empregados para esta posição após o novo processo de contratação."
 
 #. module: hr
 #: view:hr.employee:0
@@ -692,10 +686,11 @@ msgid "This installs the module hr_timesheet."
 msgstr ""
 
 #. module: hr
-#: field:hr.job,message_comment_ids:0
-#: help:hr.job,message_comment_ids:0
-msgid "Comments and emails"
+#: help:hr.job,expected_employees:0
+msgid ""
+"Expected number of employees for this job position after new recruitment."
 msgstr ""
+"Número de empregados para esta posição após o novo processo de contratação."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.view_department_form_installer
@@ -746,11 +741,6 @@ msgstr ""
 #: view:hr.employee.category:0
 msgid "Employees Categories"
 msgstr "Categorias de Colaboradores"
-
-#. module: hr
-#: model:ir.model,name:hr.model_hr_department
-msgid "hr.department"
-msgstr "departamento.rh"
 
 #. module: hr
 #: field:hr.employee,address_home_id:0
@@ -1062,6 +1052,9 @@ msgstr ""
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML inválido para Arquitetura da View"
+
+#~ msgid "hr.department"
+#~ msgstr "departamento.rh"
 
 #~ msgid "Employee's timesheet group"
 #~ msgstr "Grupo da Folha de Ponto de Colaboradores"

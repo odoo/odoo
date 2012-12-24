@@ -7,26 +7,27 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
 "PO-Revision-Date: 2012-07-07 21:07+0000\n"
 "Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:51+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 06:02+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: base_action_rule
-#: field:base.action.rule,act_followers:0
-msgid "Set Followers"
+#: selection:base.action.rule.lead.test,state:0
+msgid "In Progress"
 msgstr ""
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid ""
-"The rule uses the AND operator. The model must match all non-empty fields so "
-"that the rule executes the action  described in the 'Actions' tab."
+"- In this same \"Search\" view, select the menu \"Save Current Filter\", "
+"enter the name (Ex: Create the 01/01/2012) and add the option \"Share with "
+"all users\""
 msgstr ""
 
 #. module: base_action_rule
@@ -35,30 +36,51 @@ msgid "Action Rules"
 msgstr "アクションルール"
 
 #. module: base_action_rule
-#: field:base.action.rule,trg_user_id:0
+#: view:base.action.rule:0
+msgid "Select a filter or a timer as condition."
+msgstr ""
+
+#. module: base_action_rule
+#: field:base.action.rule.lead.test,user_id:0
 msgid "Responsible"
 msgstr "責任者"
 
 #. module: base_action_rule
-#: model:ir.model,name:base_action_rule.model_ir_actions_server
-msgid "ir.actions.server"
+#: help:base.action.rule,server_action_ids:0
+msgid "Examples: email reminders, call object service, etc."
 msgstr ""
 
 #. module: base_action_rule
-#: view:base.action.rule:0
-msgid "Note"
-msgstr "注記"
+#: field:base.action.rule,act_followers:0
+msgid "Add Followers"
+msgstr ""
 
 #. module: base_action_rule
-#: field:base.action.rule,trg_partner_categ_id:0
-msgid "Partner Category"
-msgstr "パートナ分類"
+#: field:base.action.rule,act_user_id:0
+msgid "Set Responsible"
+msgstr ""
 
 #. module: base_action_rule
-#: view:base.action.rule:0
+#: help:base.action.rule,trg_date_range:0
 msgid ""
-"Server Actions to be Triggered (eg. Email Reminder, Call Object Method, "
-"etc...)"
+"Delay after the trigger date.You can put a negative number if you need a "
+"delay before thetrigger date, like sending a reminder 15 minutes before a "
+"meeting."
+msgstr ""
+
+#. module: base_action_rule
+#: model:ir.model,name:base_action_rule.model_base_action_rule_lead_test
+msgid "base.action.rule.lead.test"
+msgstr ""
+
+#. module: base_action_rule
+#: selection:base.action.rule.lead.test,state:0
+msgid "Closed"
+msgstr ""
+
+#. module: base_action_rule
+#: selection:base.action.rule.lead.test,state:0
+msgid "New"
 msgstr ""
 
 #. module: base_action_rule
@@ -67,27 +89,35 @@ msgid "Delay after trigger date"
 msgstr "トリガー日後の遅延"
 
 #. module: base_action_rule
-#: help:base.action.rule,active:0
-msgid ""
-"If the active field is set to False, it will allow you to hide the rule "
-"without removing it."
-msgstr "アクティブ項目がFalseに設定された場合、ルールを削除することなく非表示にできます。"
-
-#. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Conditions"
 msgstr "条件"
 
 #. module: base_action_rule
-#: field:base.action.rule,trg_state_from:0
+#: selection:base.action.rule.lead.test,state:0
+msgid "Pending"
+msgstr ""
+
+#. module: base_action_rule
+#: field:base.action.rule.lead.test,state:0
 msgid "Status"
 msgstr ""
 
 #. module: base_action_rule
+#: field:base.action.rule,filter_pre_id:0
+msgid "Before Update Filter"
+msgstr ""
+
+#. module: base_action_rule
 #: view:base.action.rule:0
-#: field:ir.actions.server,action_rule_id:0
 msgid "Action Rule"
 msgstr "アクションルール"
+
+#. module: base_action_rule
+#: help:base.action.rule,filter_id:0
+msgid ""
+"If present, this condition must be satisfied after the update of the record."
+msgstr ""
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -95,19 +125,14 @@ msgid "Fields to Change"
 msgstr "変更する項目"
 
 #. module: base_action_rule
-#: field:base.action.rule,trg_state_to:0
-msgid "Button Pressed"
-msgstr "ボタンが押されました。"
-
-#. module: base_action_rule
 #: view:base.action.rule:0
-msgid "Conditions on Status"
+msgid "The filter must therefore be available in this page."
 msgstr ""
 
 #. module: base_action_rule
-#: selection:base.action.rule,trg_date_type:0
-msgid "Last Action Date"
-msgstr "最新実行日"
+#: field:base.action.rule,filter_id:0
+msgid "After Update Filter"
+msgstr ""
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -115,34 +140,15 @@ msgid "Hours"
 msgstr "時間"
 
 #. module: base_action_rule
-#: field:base.action.rule,act_state:0
-msgid "Set State to"
-msgstr "状態を設定："
-
-#. module: base_action_rule
-#: help:base.action.rule,server_action_ids:0
-msgid ""
-"Define Server actions.\n"
-"eg:Email Reminders, Call Object Service, etc.."
+#: view:base.action.rule:0
+msgid "To create a new filter:"
 msgstr ""
 
 #. module: base_action_rule
-#: help:base.action.rule,trg_date_range:0
-msgid ""
-"Delay After Trigger Date,specifies you can put a negative number. If you "
-"need a delay before the trigger date, like sending a reminder 15 minutes "
-"before a meeting."
-msgstr "ミーティングの15分前に通知を送信したいといったトリガー日前の遅延が必要な場合には、トリガー日後の遅延は負の数値を定義できます。"
-
-#. module: base_action_rule
-#: model:ir.model,name:base_action_rule.model_ir_cron
-msgid "ir.cron"
-msgstr ""
-
-#. module: base_action_rule
-#: selection:base.action.rule,trg_date_type:0
-msgid "Date"
-msgstr "日付"
+#: field:base.action.rule,active:0
+#: field:base.action.rule.lead.test,active:0
+msgid "Active"
+msgstr "アクティブ"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -150,19 +156,31 @@ msgid "Delay After Trigger Date"
 msgstr "トリガー日後の遅延"
 
 #. module: base_action_rule
-#: field:base.action.rule,act_user_id:0
-msgid "Set Responsible to"
-msgstr "責任者の設定"
+#: view:base.action.rule:0
+msgid ""
+"An action rule is checked when you create or modify the \"Related Document "
+"Model\". The precondition filter is checked right before the modification "
+"while the postcondition filter is checked after the modification. A "
+"precondition filter will therefore not work during a creation."
+msgstr ""
 
 #. module: base_action_rule
-#: selection:base.action.rule,trg_date_type:0
-msgid "None"
-msgstr "なし"
+#: view:base.action.rule:0
+msgid "Filter Condition"
+msgstr ""
 
 #. module: base_action_rule
-#: selection:base.action.rule,trg_date_range_type:0
-msgid "Months"
-msgstr "月"
+#: view:base.action.rule:0
+msgid ""
+"- Go to your \"Related Document Model\" page and set the filter parameters "
+"in the \"Search\" view (Example of filter based on Leads/Opportunities: "
+"Creation Date \"is equal to\" 01/01/2012)"
+msgstr ""
+
+#. module: base_action_rule
+#: field:base.action.rule,name:0
+msgid "Rule Name"
+msgstr "ルール名"
 
 #. module: base_action_rule
 #: model:ir.actions.act_window,name:base_action_rule.base_action_rule_act
@@ -171,24 +189,14 @@ msgid "Automated Actions"
 msgstr "自動的なアクション"
 
 #. module: base_action_rule
-#: field:base.action.rule,model_id:0
-msgid "Related Document Model"
-msgstr ""
-
-#. module: base_action_rule
 #: help:base.action.rule,sequence:0
 msgid "Gives the sequence order when displaying a list of rules."
 msgstr "ルールのリストを表示する時には、並び順を指定します。"
 
 #. module: base_action_rule
-#: view:base.action.rule:0
-msgid "Conditions on Model Fields"
-msgstr "モデル項目の条件"
-
-#. module: base_action_rule
-#: field:base.action.rule,server_action_ids:0
-msgid "Server Action"
-msgstr "サーバアクション"
+#: selection:base.action.rule,trg_date_range_type:0
+msgid "Months"
+msgstr "月"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -196,28 +204,28 @@ msgid "Days"
 msgstr "日"
 
 #. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Timer"
+msgstr ""
+
+#. module: base_action_rule
 #: field:base.action.rule,trg_date_range_type:0
 msgid "Delay type"
 msgstr "遅延タイプ"
 
 #. module: base_action_rule
-#: field:base.action.rule,filter_id:0
-msgid "Filter"
-msgstr "フィルタ"
+#: view:base.action.rule:0
+msgid "Server actions to run"
+msgstr ""
 
 #. module: base_action_rule
-#: field:base.action.rule,active:0
-msgid "Active"
-msgstr "アクティブ"
+#: help:base.action.rule,active:0
+msgid "When unchecked, the rule is hidden and will not be executed."
+msgstr ""
 
 #. module: base_action_rule
-#: field:base.action.rule,regex_name:0
-msgid "Regex on Resource Name"
-msgstr "リソース名の正規表現"
-
-#. module: base_action_rule
-#: selection:base.action.rule,trg_date_type:0
-msgid "Last Modified Date"
+#: selection:base.action.rule.lead.test,state:0
+msgid "Cancelled"
 msgstr ""
 
 #. module: base_action_rule
@@ -236,36 +244,20 @@ msgid "Minutes"
 msgstr "分"
 
 #. module: base_action_rule
-#: help:base.action.rule,regex_name:0
-msgid ""
-"Regular expression for matching name of the resource\n"
-"e.g.: 'urgent.*' will search for records having name starting with the "
-"string 'urgent'\n"
-"Note: This is case sensitive search."
+#: field:base.action.rule,model_id:0
+msgid "Related Document Model"
 msgstr ""
-"リソースの名前を一致させる正規表現\n"
-"例：\"urgent.*\"  は文字列 \"urgent\" で始まる名前を持つレコードが検索されます.\n"
-"注記：この検索は大文字と小文字を区別します。"
 
 #. module: base_action_rule
-#: view:base.action.rule:0
-msgid "Conditions on Timing"
-msgstr "タイミングの条件"
-
-#. module: base_action_rule
-#: field:base.action.rule,name:0
-msgid "Rule Name"
-msgstr "ルール名"
+#: help:base.action.rule,filter_pre_id:0
+msgid ""
+"If present, this condition must be satisfied before the update of the record."
+msgstr ""
 
 #. module: base_action_rule
 #: field:base.action.rule,sequence:0
 msgid "Sequence"
 msgstr "順序"
-
-#. module: base_action_rule
-#: view:base.action.rule:0
-msgid "Conditions on Model Partner"
-msgstr "モデルパートナとしての条件"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -290,34 +282,38 @@ msgid ""
 msgstr ""
 
 #. module: base_action_rule
-#: selection:base.action.rule,trg_date_type:0
-msgid "Creation Date"
-msgstr "作成日"
-
-#. module: base_action_rule
 #: field:base.action.rule,create_date:0
 msgid "Create Date"
 msgstr "作成日"
 
 #. module: base_action_rule
-#: selection:base.action.rule,trg_date_type:0
-msgid "Deadline"
-msgstr "期限"
+#: field:base.action.rule.lead.test,date_action_last:0
+msgid "Last Action"
+msgstr ""
 
 #. module: base_action_rule
-#: field:base.action.rule,trg_partner_id:0
+#: field:base.action.rule.lead.test,partner_id:0
 msgid "Partner"
 msgstr "パートナ"
 
 #. module: base_action_rule
-#: field:base.action.rule,trg_date_type:0
+#: field:base.action.rule,trg_date_id:0
 msgid "Trigger Date"
 msgstr "トリガー日"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
+#: field:base.action.rule,server_action_ids:0
 msgid "Server Actions"
 msgstr ""
+
+#. module: base_action_rule
+#: field:base.action.rule.lead.test,name:0
+msgid "Subject"
+msgstr ""
+
+#~ msgid "Set State to"
+#~ msgstr "状態を設定："
 
 #~ msgid "Email From"
 #~ msgstr "Eメールフォーム"
@@ -329,8 +325,14 @@ msgstr ""
 #~ msgid "Mail to these Emails"
 #~ msgstr "これらのEメールへのメール"
 
+#~ msgid "Button Pressed"
+#~ msgstr "ボタンが押されました。"
+
 #~ msgid "Object"
 #~ msgstr "オブジェクト"
+
+#~ msgid "Conditions on Model Partner"
+#~ msgstr "モデルパートナとしての条件"
 
 #~ msgid ""
 #~ "These people will receive a copy of the future communication between partner "
@@ -360,13 +362,25 @@ msgstr ""
 #~ msgid "Email-id of the persons whom mail is to be sent"
 #~ msgstr "メールを送信した人のEメールID"
 
+#~ msgid "Creation Date"
+#~ msgstr "作成日"
+
 #~ msgid "Email Reminders"
 #~ msgstr "Eメールの通知"
+
+#~ msgid "Last Action Date"
+#~ msgstr "最新実行日"
 
 #~ msgid ""
 #~ "Use a python expression to specify the right field on which one than we will "
 #~ "use for the 'To' field of the header"
 #~ msgstr "ヘッダーのTo項目を使用するよりも正しい項目を定義するにはPython表現を使用して下さい。"
+
+#~ msgid "Set Responsible to"
+#~ msgstr "責任者の設定"
+
+#~ msgid "None"
+#~ msgstr "なし"
 
 #~ msgid "%(object_user_phone)s = Responsible phone"
 #~ msgstr "%(object_user_phone)s = 連絡先電話"
@@ -384,6 +398,16 @@ msgstr ""
 #~ msgstr "Eメール宛先"
 
 #~ msgid ""
+#~ "Regular expression for matching name of the resource\n"
+#~ "e.g.: 'urgent.*' will search for records having name starting with the "
+#~ "string 'urgent'\n"
+#~ "Note: This is case sensitive search."
+#~ msgstr ""
+#~ "リソースの名前を一致させる正規表現\n"
+#~ "例：\"urgent.*\"  は文字列 \"urgent\" で始まる名前を持つレコードが検索されます.\n"
+#~ "注記：この検索は大文字と小文字を区別します。"
+
+#~ msgid ""
 #~ "The rule uses the AND operator. The model must match all non-empty fields so "
 #~ "that the rule executes the action described in the 'Actions' tab."
 #~ msgstr ""
@@ -396,6 +420,9 @@ msgstr ""
 
 #~ msgid "Call Object Method"
 #~ msgstr "オブジェクトメソッドの呼び出し"
+
+#~ msgid "Note"
+#~ msgstr "注記"
 
 #~ msgid "%(partner)s = Partner name"
 #~ msgstr "%(partner)s = パートナ名"
@@ -416,8 +443,20 @@ msgstr ""
 #~ "アクション名を記述して下さい：\n"
 #~ "例：どのオブジェクトがどの条件に基づきどのアクションを実行するか"
 
+#~ msgid "Filter"
+#~ msgstr "フィルタ"
+
+#~ msgid "Date"
+#~ msgstr "日付"
+
 #~ msgid "Remind Responsible"
 #~ msgstr "責任者への通知"
+
+#~ msgid ""
+#~ "Delay After Trigger Date,specifies you can put a negative number. If you "
+#~ "need a delay before the trigger date, like sending a reminder 15 minutes "
+#~ "before a meeting."
+#~ msgstr "ミーティングの15分前に通知を送信したいといったトリガー日前の遅延が必要な場合には、トリガー日後の遅延は負の数値を定義できます。"
 
 #~ msgid "%(partner_email)s = Partner Email"
 #~ msgstr "%(partner_email)s = パートナEメール"
@@ -458,9 +497,26 @@ msgstr ""
 #~ msgid "Mail to Responsible"
 #~ msgstr "責任者へのメール"
 
+#~ msgid "Conditions on Model Fields"
+#~ msgstr "モデル項目の条件"
+
+#~ msgid "Server Action"
+#~ msgstr "サーバアクション"
+
+#~ msgid "Regex on Resource Name"
+#~ msgstr "リソース名の正規表現"
+
 #~ msgid ""
 #~ "Check this if you want the rule to send a reminder by email to the user."
 #~ msgstr "ユーザにEメールによって通知を送信するルールを希望する場合、ここをチェックして下さい。"
+
+#~ msgid ""
+#~ "If the active field is set to False, it will allow you to hide the rule "
+#~ "without removing it."
+#~ msgstr "アクティブ項目がFalseに設定された場合、ルールを削除することなく非表示にできます。"
+
+#~ msgid "Conditions on Timing"
+#~ msgstr "タイミングの条件"
 
 #~ msgid ""
 #~ "Check this if you want that all documents attached to the object be attached "
@@ -473,8 +529,14 @@ msgstr ""
 #~ msgid "%(object_user)s = Responsible name"
 #~ msgstr "%(object_user)s = 責任者名"
 
+#~ msgid "Deadline"
+#~ msgstr "期限"
+
 #~ msgid "Remind Partner"
 #~ msgstr "パートナを思い出させる"
+
+#~ msgid "Partner Category"
+#~ msgstr "パートナ分類"
 
 #~ msgid ""
 #~ "Use automated actions to automatically trigger actions for various screens. "

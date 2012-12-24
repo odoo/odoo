@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-08 10:41+0000\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 14:27+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-09 04:39+0000\n"
-"X-Generator: Launchpad (build 16341)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:56+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
@@ -29,9 +29,10 @@ msgid "In Progress"
 msgstr "In Arbeit"
 
 #. module: analytic
-#: model:mail.message.subtype,name:analytic.mt_account_status
-msgid "Status Change"
-msgstr "Status Änderung"
+#: code:addons/analytic/analytic.py:229
+#, python-format
+msgid "Contract: "
+msgstr "Vertrag: "
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -47,6 +48,32 @@ msgstr "Ende Datum"
 #: help:account.analytic.line,unit_amount:0
 msgid "Specifies the amount of quantity to count."
 msgstr "Definiert die zu zählende Menge"
+
+#. module: analytic
+#: field:account.analytic.account,debit:0
+msgid "Debit"
+msgstr "Soll"
+
+#. module: analytic
+#: help:account.analytic.account,type:0
+msgid ""
+"If you select the View Type, it means you won't allow to create journal "
+"entries using that account.\n"
+"The type 'Analytic account' stands for usual accounts that you only want to "
+"use in accounting.\n"
+"If you select Contract or Project, it offers you the possibility to manage "
+"the validity and the invoicing options for this account.\n"
+"The special type 'Template of Contract' allows you to define a template with "
+"default data that you can reuse easily."
+msgstr ""
+"Wenn Sie 'Ansicht' als Typ einer Kostenstelle auswählen, darf auf dieser "
+"Kostenstelle nicht gebucht werden.\n"
+"Der Typ 'Kostenstelle' steht für die normalen internen Kostenstellen, die "
+"nur in der Buchhaltung verwendet werden.\n"
+"Wenn Sie 'Vertrag oder Projekt' auswählen, können Sie die Einstellungen zur "
+"Vertragsdauer und zur Abrechnung \n"
+"verwalten. In einer 'Vertrag Vorlage' hinterlegen Sie Standard-Daten, die "
+"Sie immer wieder verwenden können."
 
 #. module: analytic
 #: view:account.analytic.account:0
@@ -67,10 +94,14 @@ msgstr ""
 "Vertrag mit  dem Kunden zu erneuern."
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:222
-#, python-format
-msgid "Contract: "
-msgstr "Vertrag: "
+#: selection:account.analytic.account,type:0
+msgid "Contract or Project"
+msgstr "Vertrag oder Projekt"
+
+#. module: analytic
+#: field:account.analytic.account,name:0
+msgid "Account/Contract Name"
+msgstr "Kostenstelle/Vertrag Bezeichnung"
 
 #. module: analytic
 #: field:account.analytic.account,manager_id:0
@@ -83,20 +114,14 @@ msgid "Followers"
 msgstr "Followers"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:319
-#, python-format
-msgid "Contract <b>created</b>."
-msgstr "Vertrag wurde <b>erstellt</b>."
-
-#. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Closed"
 msgstr "Beendet"
 
 #. module: analytic
-#: field:account.analytic.account,debit:0
-msgid "Debit"
-msgstr "Soll"
+#: model:mail.message.subtype,name:analytic.mt_account_pending
+msgid "Contract to Renew"
+msgstr ""
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -114,7 +139,7 @@ msgid "Status"
 msgstr "Status"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:261
+#: code:addons/analytic/analytic.py:268
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (Kopie)"
@@ -129,11 +154,6 @@ msgstr "Kostenstellen Buchung"
 #: field:account.analytic.line,name:0
 msgid "Description"
 msgstr "Buchungstext"
-
-#. module: analytic
-#: field:account.analytic.account,name:0
-msgid "Account/Contract Name"
-msgstr "Kostenstelle/Vertrag Bezeichnung"
 
 #. module: analytic
 #: field:account.analytic.account,message_unread:0
@@ -162,6 +182,11 @@ msgid "Messages and communication history"
 msgstr "Nachrichten und Kommunikation"
 
 #. module: analytic
+#: model:mail.message.subtype,description:analytic.mt_account_opened
+msgid "Stage <b>opened</b>"
+msgstr ""
+
+#. module: analytic
 #: help:account.analytic.account,quantity_max:0
 msgid ""
 "Sets the higher limit of time to work on the contract, based on the "
@@ -171,7 +196,7 @@ msgstr ""
 "den Stundenzetteln ergibt (z.B. Kontingent Supportstunden)."
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:153
+#: code:addons/analytic/analytic.py:160
 #, python-format
 msgid ""
 "If you set a company, the currency selected has to be the same as it's "
@@ -182,8 +207,8 @@ msgid ""
 "currencies, for example."
 msgstr ""
 "Wenn Sie ein Unternehmen definieren, müssen die Währungen übereinstimmen.\n"
-"Sie können die Definition des Unternehmen für Sicheten entfernen.\n"
-"Damit können Sie verschiedene Firmen mit verschiedenen Währungen "
+"Sie können die Definition des Unternehmen für Ansichten entfernen.\n"
+"Damit können Sie dann auch verschiedene Firmen mit verschiedenen Währungen \n"
 "konsolidieren."
 
 #. module: analytic
@@ -197,9 +222,9 @@ msgid "User"
 msgstr "Benutzer"
 
 #. module: analytic
-#: field:account.analytic.account,parent_id:0
-msgid "Parent Analytic Account"
-msgstr "Übergeordnetes Analyse Konto"
+#: model:mail.message.subtype,description:analytic.mt_account_pending
+msgid "Contract <b>pending</b>"
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.line,date:0
@@ -207,31 +232,24 @@ msgid "Date"
 msgstr "Datum"
 
 #. module: analytic
-#: help:account.analytic.account,type:0
-msgid ""
-"If you select the View Type, it means you won't allow to create journal "
-"entries using that account.\n"
-"The type 'Analytic account' stands for usual accounts that you only want to "
-"use in accounting.\n"
-"If you select Contract or Project, it offers you the possibility to manage "
-"the validity and the invoicing options for this account.\n"
-"The special type 'Template of Contract' allows you to define a template with "
-"default data that you can reuse easily."
+#: model:mail.message.subtype,name:analytic.mt_account_closed
+msgid "Contract Finished"
 msgstr ""
-"Wenn Sie 'Ansicht' als Typ einer Kostenstelle auswählen, darf auf dieser "
-"Kostenstelle nicht gebucht werden.\n"
-"Der Typ 'Kostenstelle' steht für die normalen internen Kostenstellen, die "
-"nur in der Buchhaltung verwendet werden.\n"
-"Wenn Sie 'Vertrag oder Projekt' auswählen, können Sie die Einstellungen zur "
-"Vertragsdauer und zur Abrechnung \n"
-"verwalten. In einer 'Vertrag Vorlage' hinterlegen Sie Standard-Daten, die "
-"Sie immer wieder verwenden können."
 
 #. module: analytic
-#: field:account.analytic.account,message_comment_ids:0
-#: help:account.analytic.account,message_comment_ids:0
-msgid "Comments and emails"
-msgstr "Kommentare und EMails"
+#: view:account.analytic.account:0
+msgid "Terms and Conditions"
+msgstr "Bedingungen und Konditionen"
+
+#. module: analytic
+#: help:account.analytic.line,amount:0
+msgid ""
+"Calculated by multiplying the quantity and the price given in the Product's "
+"cost price. Always expressed in the company main currency."
+msgstr ""
+"Berechnet durch Multiplikation von Menge und Herstellungskosten bzw. "
+"Anschaffungskosten des Produkts. Die Angabe erfolgt immer in der Standard "
+"Währung des Unternehmens."
 
 #. module: analytic
 #: field:account.analytic.account,partner_id:0
@@ -249,10 +267,9 @@ msgid "Messages"
 msgstr "Mitteilungen"
 
 #. module: analytic
-#: constraint:account.analytic.line:0
-msgid "You cannot create analytic line on view account."
-msgstr ""
-"Sie können keine Kostenstellen buchen, die als Ansicht definiert wurde"
+#: field:account.analytic.account,parent_id:0
+msgid "Parent Analytic Account"
+msgstr "Übergeordnete Kostenstelle"
 
 #. module: analytic
 #: view:account.analytic.account:0
@@ -281,20 +298,14 @@ msgid "Credit"
 msgstr "Haben"
 
 #. module: analytic
-#: field:account.analytic.line,amount:0
-msgid "Amount"
-msgstr "Betrag"
+#: model:mail.message.subtype,name:analytic.mt_account_opened
+msgid "Contract Opened"
+msgstr ""
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:321
-#, python-format
-msgid "Contract for <em>%s</em> has been <b>created</b>."
-msgstr "Vertrag für <em>%s</em> wurde <b>erstellt</b>."
-
-#. module: analytic
-#: view:account.analytic.account:0
-msgid "Terms and Conditions"
-msgstr "Bedingungen und Konditionen"
+#: model:mail.message.subtype,description:analytic.mt_account_closed
+msgid "Contract <b>closed</b>"
+msgstr ""
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -338,7 +349,7 @@ msgid "Reference"
 msgstr "Kostenstellennummer"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:153
+#: code:addons/analytic/analytic.py:160
 #, python-format
 msgid "Error!"
 msgstr "Fehler !"
@@ -349,9 +360,9 @@ msgid "Analytic Accounting"
 msgstr "Kostenstellenrechnung"
 
 #. module: analytic
-#: selection:account.analytic.account,type:0
-msgid "Contract or Project"
-msgstr "Vertrag oder Projekt"
+#: field:account.analytic.line,amount:0
+msgid "Amount"
+msgstr "Betrag"
 
 #. module: analytic
 #: field:account.analytic.account,complete_name:0
@@ -392,14 +403,10 @@ msgid "Start Date"
 msgstr "Start Datum"
 
 #. module: analytic
-#: help:account.analytic.line,amount:0
-msgid ""
-"Calculated by multiplying the quantity and the price given in the Product's "
-"cost price. Always expressed in the company main currency."
+#: constraint:account.analytic.line:0
+msgid "You cannot create analytic line on view account."
 msgstr ""
-"Berechnet durch Multiplikation von Menge und Herstellungskosten bzw. "
-"Anschaffungskosten des Produkts. Die Angabe erfolgt immer in der Standard "
-"Währung des Unternehmens."
+"Sie können keine Kostenstellen buchen, die als Ansicht definiert wurde"
 
 #. module: analytic
 #: field:account.analytic.account,line_ids:0
