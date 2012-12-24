@@ -167,7 +167,7 @@
         <field name="inherit_id" ref="base.view_attachment_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='datas_fname']" position="replace">
-                <field name="datas_fname" invisible="1"/>
+                <field name="datas_fname" invisible="1" on_change="onchange_file(datas_fname)"/>
             </xpath>
             <field name="url" position="after">
                 <field name="user_id"/>
