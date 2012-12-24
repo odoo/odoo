@@ -97,10 +97,14 @@ class mail_group(osv.Model):
     }
 
     def _generate_header_description(self, cr, uid, description, group, context=None):
+        header = ''
+        if description:
+            header = '%s' % description
         if group.alias_id and group.alias_id.alias_name and group.alias_id.alias_domain:
-            return '%s<br />Group email gateway: %s@%s' % (description, group.alias_id.alias_name, group.alias_id.alias_domain)
-        else:
-            return '%s' % description
+            if header:
+                header = '%s<br/>' % header
+            return '%sGroup email gateway: %s@%s' % (header, group.alias_id.alias_name, group.alias_id.alias_domain)
+        return header
 
     def _subscribe_users(self, cr, uid, ids, context=None):
         for mail_group in self.browse(cr, uid, ids, context=context):
