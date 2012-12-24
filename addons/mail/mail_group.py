@@ -96,10 +96,10 @@ class mail_group(osv.Model):
         'alias_domain': False,  # always hide alias during creation
     }
 
-    def _generate_header_description(self, cr, uid, description, group, context=None):
+    def _generate_header_description(self, cr, uid, group, context=None):
         header = ''
-        if description:
-            header = '%s' % description
+        if group.description:
+            header = '%s' % group.description
         if group.alias_id and group.alias_id.alias_name and group.alias_id.alias_domain:
             if header:
                 header = '%s<br/>' % header
@@ -148,7 +148,7 @@ class mail_group(osv.Model):
                 'context': {'default_model': 'mail.group', 'default_res_id': mail_group_id, 'search_default_message_unread': True},
                 'res_model': 'mail.message',
                 'thread_level': 1,
-                'header_description': self._generate_header_description(cr, uid, vals.get('description'), group, context=context)
+                'header_description': self._generate_header_description(cr, uid, group, context=context)
             }
             cobj = self.pool.get('ir.actions.client')
             newref = cobj.copy(cr, SUPERUSER_ID, ref[1], default={'params': str(params), 'name': vals['name']}, context=context)
@@ -180,7 +180,7 @@ class mail_group(osv.Model):
             cobj = self.pool.get('ir.actions.client')
             for action in [group.menu_id.action for group in self.browse(cr, uid, ids, context=context)]:
                 new_params = action.params
-                new_params['header_description'] = self._generate_header_description(cr, uid, vals.get('description'), group, context=context)
+                new_params['header_description'] = self._generate_header_description(cr, uid, group, context=context)
                 cobj.write(cr, SUPERUSER_ID, [action.id], {'params': str(new_params)}, context=context)
         # if name is changed: update menu
         if vals.get('name'):
