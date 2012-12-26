@@ -1,5 +1,19 @@
 openerp.portal_anonymous = function(instance) {
 
+    instance.web.Session.include({
+        load_translations: function() {
+            if (this.username === 'anonymous') {
+                var l = (navigator.language) ? navigator.language : navigator.userLanguage;
+                var params = { mods: this.module_list, lang: l };
+                return this.rpc('/web/webclient/translations', params).done(function(trans) {
+                    console.log(trans);
+                    instance.web._t.database.set_bundle(trans);
+                });
+            }
+            return this._super();
+        },
+    });
+
     instance.web.Login.include({
         start: function() {
             var self = this;
