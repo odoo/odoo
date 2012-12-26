@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-13 12:36+0000\n"
+"PO-Revision-Date: 2012-12-24 10:59+0000\n"
 "Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 05:25+0000\n"
+"X-Launchpad-Export-Date: 2012-12-25 04:47+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
 
 #. module: crm
@@ -55,6 +55,11 @@ msgid ""
 "Description: [[object.description]]\n"
 "            "
 msgstr ""
+"Advertencia: Una iniciativa entrante está sin procesar más de 5 días.\n"
+"Nombre: [[object.name ]]\n"
+"ID: [[object.id ]]\n"
+"Descripción: [[object.description]]\n"
+"            "
 
 #. module: crm
 #: field:crm.opportunity2phonecall,action:0
@@ -65,7 +70,7 @@ msgstr "Acción"
 #. module: crm
 #: model:ir.actions.server,name:crm.action_set_team_sales_department
 msgid "Set team to Sales Department"
-msgstr ""
+msgstr "Establecer como equipo al Departamento de ventas"
 
 #. module: crm
 #: view:crm.lead2opportunity.partner.mass:0
@@ -152,7 +157,7 @@ msgstr "Nombre de regla"
 #: code:addons/crm/crm_phonecall.py:280
 #, python-format
 msgid "It's only possible to convert one phonecall at a time."
-msgstr ""
+msgstr "Sólo es posible convertir una llamada telefónica cada vez."
 
 #. module: crm
 #: view:crm.case.resource.type:0
@@ -233,7 +238,7 @@ msgstr "Estado"
 #. module: crm
 #: field:res.partner,meeting_count:0
 msgid "# Meetings"
-msgstr ""
+msgstr "Nº reuniones"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_email_reminder_lead
@@ -253,7 +258,7 @@ msgstr "Respuestas excluidas:"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_merge_opportunity
 msgid "Merge opportunities"
-msgstr ""
+msgstr "Fusionar oportunidades"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -471,6 +476,8 @@ msgstr "# Oportunidades"
 msgid ""
 "Please select more than one element (lead or opportunity) from the list view."
 msgstr ""
+"Seleccione por favor más de un elemento (iniciativa u oportunidad) desde la "
+"vista lista."
 
 #. module: crm
 #: view:crm.lead:0
@@ -541,7 +548,7 @@ msgstr "Mailings"
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_stage
 msgid "Stage changed"
-msgstr ""
+msgstr "Etapa cambiada"
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
@@ -606,7 +613,7 @@ msgstr "Fusionar"
 #. module: crm
 #: model:email.template,subject:crm.email_template_opportunity_mail
 msgid "Opportunity ${object.name | h})"
-msgstr ""
+msgstr "Oportunidad ${object.name | h})"
 
 #. module: crm
 #: view:crm.case.categ:0
@@ -993,7 +1000,7 @@ msgstr "Acción siguiente"
 #: code:addons/crm/crm_lead.py:762
 #, python-format
 msgid "<b>Partner</b> set to <em>%s</em>."
-msgstr ""
+msgstr "<b>Empresa</b> establecida a <em>%s</em>."
 
 #. module: crm
 #: selection:crm.lead.report,state:0
@@ -1084,7 +1091,7 @@ msgstr "Fecha creación"
 #: code:addons/crm/crm_lead.py:703
 #, python-format
 msgid "Lead <b>converted into an Opportunity</b>"
-msgstr ""
+msgstr "Iniciativa <b>convertida a oportunidad</b>"
 
 #. module: crm
 #: selection:crm.segmentation.line,expr_name:0
@@ -1147,7 +1154,7 @@ msgstr "Borrar"
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_create
 msgid "Opportunity created"
-msgstr ""
+msgstr "Oportunidad creada"
 
 #. module: crm
 #: view:crm.lead:0
@@ -1176,6 +1183,17 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Pulse para crear una nueva oportunidad.\n"
+"</p><p>\n"
+"OpenERP le ayuda a gestionar el flujo de ventas para seguir ventas "
+"potenciales y prever mejor sus futuros ingresos.\n"
+"</p><p>\n"
+"Será capaz de planificar reuniones y llamadas telefónicas desde las "
+"oportunidades, convertirlas en presupuestos, adjuntar documentos "
+"relacionados, seguir todas las discusiones, y mucho más.\n"
+"</p>\n"
+"        "
 
 #. module: crm
 #: field:crm.segmentation,partner_id:0
@@ -1254,7 +1272,7 @@ msgstr ""
 #: model:mail.message.subtype,name:crm.mt_lead_create
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead
 msgid "Lead Created"
-msgstr ""
+msgstr "Iniciativa creada"
 
 #. module: crm
 #: help:crm.segmentation,sales_purchase_active:0
@@ -1358,6 +1376,8 @@ msgid ""
 "Phone Calls Assigned to the current user or with a team having the current "
 "user as team leader"
 msgstr ""
+"Llamadas telefónicas asignadas al usuario actual o con un equipo que tiene "
+"al usuario actual como líder del equipo"
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -1444,7 +1464,7 @@ msgstr "Por hacer"
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_lost
 msgid "Opportunity lost"
-msgstr ""
+msgstr "Oportunidad perdida"
 
 #. module: crm
 #: field:crm.lead2opportunity.partner,action:0
@@ -1493,7 +1513,7 @@ msgstr "Usuarios"
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_stage
 msgid "Stage Changed"
-msgstr ""
+msgstr "Etapa cambiada"
 
 #. module: crm
 #: field:crm.case.stage,section_ids:0
@@ -1907,7 +1927,7 @@ msgstr "Equipos de ventas"
 #. module: crm
 #: field:crm.case.stage,case_default:0
 msgid "Default to New Sales Team"
-msgstr ""
+msgstr "Por defecto a un nuevo equipo de ventas"
 
 #. module: crm
 #: view:crm.lead:0
@@ -1949,7 +1969,7 @@ msgstr "Iniciativas"
 #: code:addons/crm/crm_lead.py:571
 #, python-format
 msgid "Merged leads"
-msgstr ""
+msgstr "Combinar iniciativas"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor5
@@ -1972,7 +1992,7 @@ msgstr "Por hacer"
 #: model:mail.message.subtype,name:crm.mt_lead_convert_to_opportunity
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_opportunity
 msgid "Lead to Opportunity"
-msgstr ""
+msgstr "Iniciativa a oportunidad"
 
 #. module: crm
 #: field:crm.lead,user_email:0
@@ -2175,6 +2195,8 @@ msgid ""
 "Follow this salesteam to automatically track the events associated to users "
 "of this team."
 msgstr ""
+"Seguir a este equipo de ventas para rastrear automáticamente los eventos "
+"asociados a los usuarios de este equipo."
 
 #. module: crm
 #: view:crm.lead:0
@@ -2346,7 +2368,7 @@ msgstr "En proceso"
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_convert_to_opportunity
 msgid "Lead converted into an opportunity"
-msgstr ""
+msgstr "Iniciativa convertida a oportunidad"
 
 #. module: crm
 #: view:crm.lead:0
@@ -2356,7 +2378,7 @@ msgstr "Iniciativas sin asignar"
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_won
 msgid "Opportunity won"
-msgstr ""
+msgstr "Oportunidad ganada"
 
 #. module: crm
 #: field:crm.case.categ,object_id:0
@@ -2426,7 +2448,7 @@ msgstr ""
 #. module: crm
 #: field:crm.case.stage,fold:0
 msgid "Fold by Default"
-msgstr ""
+msgstr "Replegar por defecto"
 
 #. module: crm
 #: field:crm.case.stage,state:0
@@ -2463,6 +2485,7 @@ msgstr "Confirmado"
 #: model:ir.model,name:crm.model_crm_partner_binding
 msgid "Handle partner binding or generation in CRM wizards."
 msgstr ""
+"Asistentes CRM para gestionar el enlanzamiento o la generación de empresas."
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.act_oppor_stage_user
@@ -2513,6 +2536,18 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Pulse para crear una iniciativa sin calificar.\n"
+"</p><p>\n"
+"Use las iniciativas si necesita un paso de calificación antes de crear una "
+"oportunidad o un cliente. Puede ser una tarjeta de visita que recibió, un "
+"formulario de contacto rellenado en su sitio web, o un archivo de prospectos "
+"sin calificar importado.\n"
+"</p><p>\n"
+"Una vez calificada, la iniciativa se puede convertir en una oportunidad de "
+"negocio y/o un nuevo cliente en su libreta de direcciones.\n"
+"</p>\n"
+"        "
 
 #. module: crm
 #: field:sale.config.settings,fetchmail_lead:0
@@ -2665,7 +2700,7 @@ msgstr "Agosto"
 #: model:mail.message.subtype,name:crm.mt_lead_lost
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_lost
 msgid "Opportunity Lost"
-msgstr ""
+msgstr "Oportunidad perdida"
 
 #. module: crm
 #: field:crm.lead.report,deadline_month:0
@@ -2764,7 +2799,7 @@ msgstr "Llamadas registradas"
 #: model:mail.message.subtype,name:crm.mt_lead_won
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_won
 msgid "Opportunity Won"
-msgstr ""
+msgstr "Oportunidad ganada"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_section_act_tree
@@ -3150,7 +3185,7 @@ msgstr "Boletín de noticias"
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_stage
 msgid "Opportunity Stage Changed"
-msgstr ""
+msgstr "Etapa de la oportunidad cambiada"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lead_stage_act
