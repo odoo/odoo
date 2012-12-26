@@ -49,7 +49,6 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
         _(this.module_list).each(function (mod) {
             self.module_loaded[mod] = true;
         });
-        this.context = {};
         this.active_id = null;
         return this.session_init();
     },
@@ -67,7 +66,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
                 return deferred.then(function() { return self.load_modules(); });
             }
             return $.when(
-                    deferred, 
+                    deferred,
                     self.rpc('/web/webclient/bootstrap_translations', {mods: instance._modules}).then(function(trans) {
                         instance.web._t.database.set_bundle(trans);
                     })
@@ -86,13 +85,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
             // If immediately follows a login (triggered by trying to restore
             // an invalid session or no session at all), refresh session data
             // (should not change, but just in case...)
-            _.extend(self, {
-                session_id: result.session_id,
-                db: result.db,
-                username: result.login,
-                uid: result.uid,
-                user_context: result.context
-            });
+            _.extend(self,result);
         });
     },
     session_is_valid: function() {
@@ -109,14 +102,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
             if (!result.uid) {
                 return $.Deferred().reject();
             }
-
-            _.extend(self, {
-                session_id: result.session_id,
-                db: result.db,
-                username: result.login,
-                uid: result.uid,
-                user_context: result.context
-            });
+            _.extend(self, result);
             if (!_volatile) {
                 self.set_cookie('session_id', self.session_id);
             }

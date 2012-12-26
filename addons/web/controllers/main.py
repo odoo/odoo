@@ -668,7 +668,7 @@ class WebClient(openerpweb.Controller):
         messages = ir_translation.search_read([('module','in',mods),('lang','=',lang),
                                                ('comments','like','openerp-web'),('value','!=',False),
                                                ('value','!=','')],
-                                              ['module','src','value','lang'], order='module') 
+                                              ['module','src','value','lang'], order='module')
         for mod, msg_group in itertools.groupby(messages, key=operator.itemgetter('module')):
             translations_per_module.setdefault(mod,{'messages':[]})
             translations_per_module[mod]['messages'].extend({'id': m['src'],
@@ -797,9 +797,9 @@ class Session(openerpweb.Controller):
         return {
             "session_id": req.session_id,
             "uid": req.session._uid,
-            "context": req.session.get_context() if req.session._uid else {},
+            "user_context": req.session.get_context() if req.session._uid else {},
             "db": req.session._db,
-            "login": req.session._login,
+            "username": req.session._login,
         }
 
     @openerpweb.jsonrequest
@@ -1072,7 +1072,7 @@ class DataSet(openerpweb.Controller):
     @openerpweb.jsonrequest
     def call(self, req, model, method, args, domain_id=None, context_id=None):
         return self._call_kw(req, model, method, args, {})
-    
+
     @openerpweb.jsonrequest
     def call_kw(self, req, model, method, args, kwargs):
         return self._call_kw(req, model, method, args, kwargs)
@@ -1186,7 +1186,7 @@ class Binary(openerpweb.Controller):
                     if width > 500: width = 500
                     if height > 500: height = 500
                     image_base64 = openerp.tools.image_resize_image(base64_source=image_base64, size=(width, height), encoding='base64', filetype='PNG')
-            
+
             image_data = base64.b64decode(image_base64)
 
         except (TypeError, xmlrpclib.Fault):
@@ -1468,7 +1468,7 @@ class Export(View):
         fields = self.fields_get(req, model)
         if ".id" in export_fields:
             fields['.id'] = fields.pop('id', {'string': 'ID'})
-            
+
         # To make fields retrieval more efficient, fetch all sub-fields of a
         # given field at the same time. Because the order in the export list is
         # arbitrary, this requires ordering all sub-fields of a given field
