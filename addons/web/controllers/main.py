@@ -656,9 +656,6 @@ class WebClient(openerpweb.Controller):
     def translations(self, req, mods, lang):
         res_lang = req.session.model('res.lang')
         ids = res_lang.search([("code", "=", lang)])
-        if not ids:
-            ids = res_lang.search([("iso_code", "=", lang)])
-            lang = res_lang.search_read([('id', "in", ids)], ["code"])[0]['code']
         lang_params = None
         if ids:
             lang_params = res_lang.read(ids[0], ["direction", "date_format", "time_format",
@@ -800,9 +797,9 @@ class Session(openerpweb.Controller):
         return {
             "session_id": req.session_id,
             "uid": req.session._uid,
-            "context": req.session.get_context() if req.session._uid else {},
+            "user_context": req.session.get_context() if req.session._uid else {},
             "db": req.session._db,
-            "login": req.session._login,
+            "username": req.session._login,
         }
 
     @openerpweb.jsonrequest
