@@ -567,11 +567,14 @@ openerp.mail = function (session) {
         check_recipient_partners: function (emails) {
             var self = this;
             var deferreds = [];
+            for (var i = 0; i < emails.length; i++) {
+                deferreds.push($.Deferred());
+            }
             var ds_partner = new session.web.DataSetSearch(this, 'res.partner');
             _.each(emails, function (email) {
-                ds_partner.call('search', [[['email', '=', email]]]).then(function (partner_ids) {
+                ds_partner.call('search', [[['email', 'ilike', email]]]).then(function (partner_ids) {
+                    var deferred = deferreds[_.indexOf(emails, email)];
                     if (!partner_ids.length) {
-                        var deferred = $.Deferred();
                         var pop = new session.web.form.FormOpenPopup(this);
                         pop.show_element(
                             'res.partner',
@@ -588,11 +591,14 @@ openerp.mail = function (session) {
                         pop.on('write_completed, closed', self, function () {
                             deferred.resolve();
                         });
-                        deferreds.push(deferred);
                     }
+                    else {
+                        deferred.resolve();
+                    }
+                    return deferred;
                 });
             });
-            return $.when.apply( $, deferreds );
+            return $.when.apply( $, deferreds ).done();
         },
 
         on_message_post: function (event) {

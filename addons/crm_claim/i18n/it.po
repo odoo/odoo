@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2012-12-25 22:55+0000\n"
+"Last-Translator: Massimiliano Casa <Unknown>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 07:10+0000\n"
+"X-Launchpad-Export-Date: 2012-12-26 05:18+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
 
 #. module: crm_claim
@@ -23,6 +23,8 @@ msgid ""
 "This stage is not visible, for example in status bar or kanban view, when "
 "there are no records in that stage to display."
 msgstr ""
+"Questa fase non è visibile, per esempio nella status bar o nella vista "
+"kanban, quando non ci sono elementi da visualizzare in quella fase."
 
 #. module: crm_claim
 #: field:crm.claim.report,nbr:0
@@ -50,7 +52,7 @@ msgstr ""
 #. module: crm_claim
 #: model:ir.model,name:crm_claim.model_crm_claim_stage
 msgid "Claim stages"
-msgstr ""
+msgstr "Fasi reclamo"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -65,7 +67,7 @@ msgstr "Ritardo per Chiusura"
 #. module: crm_claim
 #: field:crm.claim,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Messaggi Non Letti"
 
 #. module: crm_claim
 #: field:crm.claim,resolution:0
@@ -100,12 +102,12 @@ msgstr "# Reclami"
 #. module: crm_claim
 #: field:crm.claim.stage,name:0
 msgid "Stage Name"
-msgstr ""
+msgstr "Nome Fase"
 
 #. module: crm_claim
 #: view:crm.claim.report:0
 msgid "Salesperson"
-msgstr ""
+msgstr "Commerciale"
 
 #. module: crm_claim
 #: selection:crm.claim,priority:0
@@ -149,7 +151,7 @@ msgstr "Preventivo"
 #. module: crm_claim
 #: help:crm.claim,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Se selezionato, nuovi messaggi richiedono la tua attenzione"
 
 #. module: crm_claim
 #: field:crm.claim.report,date_closed:0
@@ -169,7 +171,7 @@ msgstr "Riferimento"
 #. module: crm_claim
 #: view:crm.claim.report:0
 msgid "Date of claim"
-msgstr ""
+msgstr "Data del reclamo"
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -182,6 +184,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Gestisce il sommario (numero di messaggi, ...) di Chatter. Questo sommario è "
+"direttamente in html così da poter essere inserito nelle viste kanban."
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -235,12 +239,12 @@ msgstr "Priorità"
 #. module: crm_claim
 #: field:crm.claim.stage,fold:0
 msgid "Hide in Views when Empty"
-msgstr ""
+msgstr "Nascondi nelle Viste se Vuoto"
 
 #. module: crm_claim
 #: field:crm.claim,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Followers"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -254,7 +258,7 @@ msgstr "Nuovo"
 #. module: crm_claim
 #: field:crm.claim.stage,section_ids:0
 msgid "Sections"
-msgstr ""
+msgstr "Sezioni"
 
 #. module: crm_claim
 #: field:crm.claim,email_from:0
@@ -275,7 +279,7 @@ msgstr "Prossima Azione"
 #. module: crm_claim
 #: view:crm.claim.report:0
 msgid "My Sales Team(s)"
-msgstr ""
+msgstr "I Miei Team di Vendita"
 
 #. module: crm_claim
 #: field:crm.claim,create_date:0
@@ -290,7 +294,7 @@ msgstr "Oggetto del reclamo"
 #. module: crm_claim
 #: model:crm.claim.stage,name:crm_claim.stage_claim3
 msgid "Rejected"
-msgstr ""
+msgstr "Rifiutato"
 
 #. module: crm_claim
 #: field:crm.claim,date_action_next:0
@@ -338,13 +342,13 @@ msgstr "Date"
 #. module: crm_claim
 #: help:crm.claim,email_from:0
 msgid "Destination email for email gateway."
-msgstr ""
+msgstr "Email di destinazione per il gateway email."
 
 #. module: crm_claim
 #: code:addons/crm_claim/crm_claim.py:194
 #, python-format
 msgid "No Subject"
-msgstr ""
+msgstr "Nessun Oggetto"
 
 #. module: crm_claim
 #: help:crm.claim.stage,state:0
@@ -354,6 +358,10 @@ msgid ""
 "is related to the status 'Close', when your document reaches this stage, it "
 "will be automatically have the 'closed' status."
 msgstr ""
+"Il relativo stato per la fase. Lo stato del documento cambierà "
+"automaticamente a seconda della fase selezionata. Per esempio, se una fase "
+"e' allo stato 'Chiuso', quando il documento raggiunge questa fase, avrà "
+"automaticamente lo stato 'chiuso'."
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -422,7 +430,7 @@ msgstr "Data Aggiornamento"
 #. module: crm_claim
 #: view:crm.claim.report:0
 msgid "Year of claim"
-msgstr ""
+msgstr "Anno del reclamo"
 
 #. module: crm_claim
 #: help:crm.claim.stage,case_default:0
@@ -430,6 +438,8 @@ msgid ""
 "If you check this field, this stage will be proposed by default on each "
 "sales team. It will not assign this stage to existing teams."
 msgstr ""
+"Se si abilita questo campo, questa fase verrà proposta automaticamente per "
+"ogni team di vendita. Non verrà assegnata ai team esistenti."
 
 #. module: crm_claim
 #: field:crm.claim,categ_id:0
@@ -446,7 +456,7 @@ msgstr "Valore reclami"
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Responsible User"
-msgstr ""
+msgstr "Utente Responsabile"
 
 #. module: crm_claim
 #: field:crm.claim,email_cc:0
@@ -460,6 +470,9 @@ msgid ""
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
 msgstr ""
+"Questi indirizzi email verranno aggiunti nel campo CC di tutte le email, in "
+"entrate e uscita, prima di essere spedite. E' necessario separare gli "
+"indirizzi con una virgola"
 
 #. module: crm_claim
 #: selection:crm.claim.report,state:0
@@ -493,7 +506,7 @@ msgstr ""
 #. module: crm_claim
 #: view:crm.claim.stage:0
 msgid "Claim Stage"
-msgstr ""
+msgstr "Fase reclamo"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -511,7 +524,7 @@ msgstr "In sospeso"
 #: field:crm.claim.report,state:0
 #: field:crm.claim.stage,state:0
 msgid "Status"
-msgstr ""
+msgstr "Stato"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -527,7 +540,7 @@ msgstr "Normale"
 #. module: crm_claim
 #: help:crm.claim.stage,sequence:0
 msgid "Used to order stages. Lower is better."
-msgstr ""
+msgstr "Usato per ordinare le fasi. Più basso significa più importante."
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -547,7 +560,7 @@ msgstr "Telefono"
 #. module: crm_claim
 #: field:crm.claim,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "E' un Follower"
 
 #. module: crm_claim
 #: field:crm.claim.report,user_id:0
@@ -579,11 +592,15 @@ msgid ""
 "the case needs to be reviewed then the status is                       set "
 "to 'Pending'."
 msgstr ""
+"Lo stato viene impostato su 'Bozza', quando un caso viene creato. Se il caso "
+"è in corso lo stato passa a 'Aperto'. Quando il caso è concluso, lo stato "
+"passa a 'Completato'. Se il caso necessita di essere rivisto lo stato viene "
+"impostato su 'Sospeso'."
 
 #. module: crm_claim
 #: field:crm.claim,active:0
 msgid "Active"
-msgstr ""
+msgstr "Attivo"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -598,7 +615,7 @@ msgstr "Filtri estesi..."
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Closure"
-msgstr ""
+msgstr "Chiusura"
 
 #. module: crm_claim
 #: help:crm.claim,section_id:0
@@ -606,6 +623,8 @@ msgid ""
 "Responsible sales team. Define Responsible user and Email account for mail "
 "gateway."
 msgstr ""
+"Responsabile del team delle vendite. Definire l'utente responsabile ed un "
+"account email per il gateway email."
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -626,7 +645,7 @@ msgstr "Data reclamo"
 #. module: crm_claim
 #: field:crm.claim,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Riepilogo"
 
 #. module: crm_claim
 #: model:ir.actions.act_window,name:crm_claim.crm_claim_categ_action
@@ -636,7 +655,7 @@ msgstr "Categorie reclami"
 #. module: crm_claim
 #: field:crm.claim.stage,case_default:0
 msgid "Common to All Teams"
-msgstr ""
+msgstr "Comune a Tutti i Teams"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -675,7 +694,7 @@ msgstr "Reclamo"
 #. module: crm_claim
 #: view:crm.claim.report:0
 msgid "My Company"
-msgstr ""
+msgstr "La mia azienda"
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -685,7 +704,7 @@ msgstr "Completato"
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Claim Reporter"
-msgstr ""
+msgstr "Segnalatore del Reclamo"
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -701,7 +720,7 @@ msgstr "Apri"
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "New Claims"
-msgstr ""
+msgstr "Nuovo reclami"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -725,7 +744,7 @@ msgstr "Ricerca"
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Unassigned Claims"
-msgstr ""
+msgstr "Reclami Non Assegnati"
 
 #. module: crm_claim
 #: field:crm.claim.report,delay_expected:0
@@ -771,7 +790,7 @@ msgstr "Azione risolutiva"
 #. module: crm_claim
 #: field:crm.claim.stage,case_refused:0
 msgid "Refused stage"
-msgstr ""
+msgstr "Fase rifiutata"
 
 #. module: crm_claim
 #: model:ir.actions.act_window,help:crm_claim.crm_case_categ_claim0
@@ -790,7 +809,7 @@ msgstr "# Email"
 #. module: crm_claim
 #: view:crm.claim.report:0
 msgid "Month of claim"
-msgstr ""
+msgstr "Mese del reclamo"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -811,7 +830,7 @@ msgstr "Anno"
 #. module: crm_claim
 #: view:crm.claim.report:0
 msgid "My company"
-msgstr ""
+msgstr "La mia azienda"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -826,17 +845,17 @@ msgstr "I miei casi(o)"
 #. module: crm_claim
 #: model:crm.claim.stage,name:crm_claim.stage_claim2
 msgid "Settled"
-msgstr ""
+msgstr "Risolto"
 
 #. module: crm_claim
 #: help:crm.claim,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Storico messaggi e comunicazioni"
 
 #. module: crm_claim
 #: field:sale.config.settings,fetchmail_claim:0
 msgid "Create claims from incoming mails"
-msgstr ""
+msgstr "Creare reclami dalle email in ingresso"
 
 #. module: crm_claim
 #: field:crm.claim.stage,sequence:0
