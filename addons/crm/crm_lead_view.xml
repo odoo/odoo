@@ -156,7 +156,7 @@
                             <label for="section_id"/>
                             <div>
                                 <field name="section_id"/>
-                                <button name="case_escalate" string="Escalate" type="object" attrs="{'invisible': [('section_id','=',False)]}"/>
+                                <button name="case_escalate" string="Escalate" type="object" states="draft,open,pending"/>
                             </div>
                             <field name="type" invisible="1"/>
                         </group>
@@ -421,7 +421,8 @@
                                 <label for="section_id"/>
                                 <div>
                                     <field name="section_id" widget="selection"/>
-                                    <button name="case_escalate" string="Escalate" type="object" class="oe_link" attrs="{'invisible': [('section_id','=',False)]}"/>
+                                    <button name="case_escalate" string="Escalate" type="object" class="oe_link"
+                                        attrs="{'invisible': [('section_id', '=', False)]}"/>
                                 </div>
                             </group>
                             <group>
