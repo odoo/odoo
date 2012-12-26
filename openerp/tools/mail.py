@@ -40,7 +40,6 @@ _logger = logging.getLogger(__name__)
 # HTML Sanitizer
 #----------------------------------------------------------
 
-# FIXME: shouldn't this be a whitelist rather than a blacklist?!
 tags_to_kill = ["script", "head", "meta", "title", "link", "style", "frame", "iframe", "base", "object", "embed"]
 tags_to_remove = ['html', 'body', 'font']
 
@@ -50,12 +49,13 @@ def html_sanitize(src):
         return src
     src = ustr(src, errors='replace')
 
-    # some cases make the parser crash (such as SCRIPT/XSS in test_mail)
+    # some corner cases make the parser crash (such as <SCRIPT/XSS SRC=\"http://ha.ckers.org/xss.js\"></SCRIPT> in test_mail)
     try:
         cleaner = clean.Cleaner(page_structure=True, style=False, safe_attrs_only=False, forms=False, kill_tags=tags_to_kill, remove_tags=tags_to_remove)
         cleaned = cleaner.clean_html(src)
     except:
-        cleaned = 'Impossible to parse'
+        _logger.debug('Failed to parse %s' % (src))
+        cleaned = '<p>Impossible to parse</p>'
     return cleaned
 
 

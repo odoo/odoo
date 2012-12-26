@@ -179,6 +179,7 @@ class TestSanitizer(unittest2.TestCase):
             self.assertEqual(html, expected, 'html_sanitize is broken')
 
     def test_evil_malicious_code(self):
+        # taken from https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#Tests
         cases = [
             ("<IMG SRC=javascript:alert('XSS')>"),  # no quotes and semicolons
             ("<IMG SRC=&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;>"),  # UTF-8 Unicode encoding
