@@ -4,15 +4,15 @@ openerp.portal_anonymous = function(instance) {
         load_translations: function() {
             var self = this;
             if (self.username === 'anonymous') {
-                var browser_lang = (navigator.language || navigator.userLanguage).replace('-', '_');
+                self.user_context.lang = (navigator.language || navigator.userLanguage).replace('-', '_');
                 if (browser_lang.length === 2) {
                     return (new instance.web.Model('res.lang')).query(['code'])
                         .filter([['iso_code', '=', browser_lang]]).all()
                         .then(function(result) {
                             self.user_context.lang = result[0].code;
+                            return self._super();
                         });
                 }
-                self.user_context.lang = browser_lang;
             }
             return self._super();
         },
