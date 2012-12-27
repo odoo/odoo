@@ -629,7 +629,8 @@ class MetaModel(type):
             self._module = module_name
 
         # Remember which models to instanciate for this module.
-        self.module_to_models.setdefault(self._module, []).append(self)
+        if not self._custom:
+            self.module_to_models.setdefault(self._module, []).append(self)
 
 
 # Definition of log access columns, automatically added to models if
@@ -666,6 +667,7 @@ class BaseModel(object):
     _name = None
     _columns = {}
     _constraints = []
+    _custom = False
     _defaults = {}
     _rec_name = None
     _parent_name = 'parent_id'
@@ -942,7 +944,8 @@ class BaseModel(object):
         # managed by the metaclass.
         module_model_list = MetaModel.module_to_models.setdefault(cls._module, [])
         if cls not in module_model_list:
-            module_model_list.append(cls)
+            if not cls._custom:
+                module_model_list.append(cls)
 
         # Since we don't return an instance here, the __init__
         # method won't be called.
