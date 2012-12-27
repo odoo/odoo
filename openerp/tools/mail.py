@@ -54,7 +54,7 @@ def html_sanitize(src):
         cleaner = clean.Cleaner(page_structure=True, style=False, safe_attrs_only=False, forms=False, kill_tags=tags_to_kill, remove_tags=tags_to_remove)
         cleaned = cleaner.clean_html(src)
     except:
-        _logger.debug('Failed to parse %s' % (src))
+        _logger.warning('html_sanitize failed to parse %s' % (src))
         cleaned = '<p>Impossible to parse</p>'
     return cleaned
 
