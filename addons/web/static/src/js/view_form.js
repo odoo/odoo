@@ -2632,7 +2632,7 @@ instance.web.form.FieldTextHtml = instance.web.form.AbstractField.extend(instanc
                             "| removeformat | bullets numbering | outdent " +
                             "indent | link unlink | source",
                 bodyStyle:  // style to assign to document body contained within the editor
-                            "margin:4px; font:12px monospace; cursor:text; color:#1F1F1F"
+                            "margin:4px; color:#4c4c4c; font-size:13px; font-family:\"Lucida Grande\",Helvetica,Verdana,Arial,sans-serif; cursor:text"
             });
             this.$cleditor = this.$textarea.cleditor()[0];
             this.$cleditor.change(function() {
