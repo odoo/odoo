@@ -539,8 +539,7 @@ property or property parameter."),
                         vals['attachment_ids'] = [(0,0,{'name': 'invitation.ics',
                                                         'datas_fname': 'invitation.ics',
                                                         'datas': str(ics_file).encode('base64')})]
-                    mail_id = self.pool.get('mail.mail').create(cr, uid, vals, context=context)
-                    self.pool.get('mail.mail').browse(cr,uid,mail_id,context=context).send()
+                    self.pool.get('mail.mail').create(cr, uid, vals, context=context)
             return True
 
     def onchange_user_id(self, cr, uid, ids, user_id, *args, **argv):
@@ -1118,7 +1117,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             for att in event.attendee_ids:
                 attendees[att.partner_id.id] = True
             new_attendees = []
-            mail_to = ""
+            mail_to = []
             for partner in event.partner_ids:
                 if partner.id in attendees:
                     continue
@@ -1129,7 +1128,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                     'email': partner.email
                 }, context=context)
                 if partner.email:
-                    mail_to = mail_to+" "+partner.email
+                    mail_to.append(partner.email)
                 self.write(cr, uid, [event.id], {
                     'attendee_ids': [(4, att_id)]
                 }, context=context)
