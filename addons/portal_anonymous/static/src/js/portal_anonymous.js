@@ -5,9 +5,9 @@ openerp.portal_anonymous = function(instance) {
             var self = this;
             if (self.username === 'anonymous') {
                 self.user_context.lang = (navigator.language || navigator.userLanguage).replace('-', '_');
-                if (browser_lang.length === 2) {
+                if (self.user_context.lang.length === 2) {
                     return (new instance.web.Model('res.lang')).query(['code'])
-                        .filter([['iso_code', '=', browser_lang]]).all()
+                        .filter([['iso_code', '=', self.user_context.lang]]).all()
                         .then(function(result) {
                             self.user_context.lang = result[0].code;
                             return self._super();
