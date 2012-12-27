@@ -585,6 +585,7 @@
 .openerp .oe_followers .oe_partner {
     height: 32px;
     overflow: hidden;
+    white-space: nowrap;
 }
 .openerp .oe_followers .oe_partner img{
     width: 32px;
@@ -593,7 +594,9 @@
 }
 .openerp .oe_followers .oe_remove_follower{
     cursor: pointer;
-    float: right;
+    position: absolute;
+    right: 0px;
+    line-height: 20px;
 }
 
 .openerp .oe_followers .oe_show_more{
