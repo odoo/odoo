@@ -1,5 +1,37 @@
 openerp.portal_anonymous = function(instance) {
 
+    instance.web.Session.include({
+        load_translations: function() {
+            var self = this;
+            // browser_lang can contain 'xx' or 'xx_XX'
+            // we use the 'xx' to find matching languages installed in the DB
+            var browser_lang = (navigator.language || navigator.userLanguage).replace('-', '_');
+            // By default for anonymous session.user_context.lang === 'en_US',
+            // so do nothing if browser_lang is contained in 'en_US' (like 'en' or 'en_US')
+            if (this.username === 'anonymous' && this.user_context.lang.indexOf(browser_lang) === -1) {
+                return (new instance.web.Model('res.lang')).query(['code', 'iso_code'])
+                    .filter([['code', 'like', browser_lang.substring(0, 2).toLowerCase()]]).all()
+                .then(function(langs) {
+                    // If langs is empty (OpenERP doesn't support the language),
+                    // then don't change session.user_context.lang
+                    if (langs.length > 0) {
+                        // Try to get the right user preference in the browser, else
+                        // get the first returned language
+                        var l = _.filter(langs, function(lang) { return lang.code === browser_lang || lang.iso_code === browser_lang; });
+                        if (!_.isEmpty(l)) {
+                            self.user_context.lang = l[0].code;
+                        } else {
+                            self.user_context.lang = langs.sort(function(a, b) {
+                                return a.length - b.length;
+                            })[0].code;
+                        }
+                    }
+                });
+            }
+            return self._super();
+        },
+    });
+
     instance.web.Login.include({
         start: function() {
             var self = this;
