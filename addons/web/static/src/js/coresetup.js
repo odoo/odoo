@@ -85,7 +85,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
             // If immediately follows a login (triggered by trying to restore
             // an invalid session or no session at all), refresh session data
             // (should not change, but just in case...)
-            _.extend(self,result);
+            _.extend(self, result);
         });
     },
     session_is_valid: function() {
