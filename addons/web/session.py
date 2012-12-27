@@ -22,7 +22,7 @@ class Service(object):
     def __init__(self, session, service_name):
         self.session = session
         self.service_name = service_name
-        
+
     def __getattr__(self, method):
         def proxy_method(*args):
             result = self.session.send(self.service_name, method, *args)
@@ -60,7 +60,7 @@ class OpenERPSession(object):
     in a web session.
 
     .. attribute:: context
-    
+
         The session context, a ``dict``. Can be reloaded by calling
         :meth:`openerpweb.openerpweb.OpenERPSession.get_context`
 
@@ -80,7 +80,7 @@ class OpenERPSession(object):
         self._suicide = False
         self.context = {}
         self.jsonp_requests = {}     # FIXME use a LRU
-        
+
     def send(self, service_name, method, *args):
         code_string = "warning -- %s\n\n%s"
         try:
@@ -112,7 +112,7 @@ class OpenERPSession(object):
     def authenticate(self, db, login, password, env=None):
         uid = self.proxy('common').authenticate(db, login, password, env)
         self.bind(db, uid, login, password)
-        
+
         if uid: self.get_context()
         return uid
 
