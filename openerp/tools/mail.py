@@ -48,10 +48,14 @@ def html_sanitize(src):
     if not src:
         return src
     src = ustr(src, errors='replace')
-
     # some corner cases make the parser crash (such as <SCRIPT/XSS SRC=\"http://ha.ckers.org/xss.js\"></SCRIPT> in test_mail)
     try:
         cleaner = clean.Cleaner(page_structure=True, style=False, safe_attrs_only=False, forms=False, kill_tags=tags_to_kill, remove_tags=tags_to_remove)
+        cleaned = cleaner.clean_html(src)
+    except TypeError, e:
+        # lxml.clean version < 2.3.1 does not have a kill_tags attribute
+        # to remove in 2014
+        cleaner = clean.Cleaner(page_structure=True, style=False, safe_attrs_only=False, forms=False, remove_tags=tags_to_kill+tags_to_remove)
         cleaned = cleaner.clean_html(src)
     except:
         _logger.warning('html_sanitize failed to parse %s' % (src))
