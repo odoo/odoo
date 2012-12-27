@@ -309,13 +309,15 @@ class mail_thread(osv.AbstractModel):
 
     def message_track(self, cr, uid, ids, tracked_fields, initial_values, context=None):
 
-        def convert_for_display(value, field_obj):
+        def convert_for_display(value, col_info):
+            if not value and col_info['type'] == 'boolean':
+                return 'False'
             if not value:
                 return ''
-            if field_obj['type'] == 'many2one':
+            if col_info['type'] == 'many2one':
                 return value[1]
-            if field_obj['type'] == 'selection':
-                return dict(field_obj['selection'])[value]
+            if col_info['type'] == 'selection':
+                return dict(col_info['selection'])[value]
             return value
 
         def format_message(message_description, tracked_values):
