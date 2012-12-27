@@ -13,12 +13,18 @@ openerp.portal_anonymous = function(instance) {
                     .filter([['code', 'like', browser_lang.substring(0, 2).toLowerCase()]]).all()
                 .then(function(langs) {
                     // If langs is empty (OpenERP doesn't support the language),
-                    // then don't change session.user_context.lang else take the
-                    // first returned language
+                    // then don't change session.user_context.lang
                     if (langs.length > 0) {
-                        self.user_context.lang = langs.sort(function(a, b) {
-                            return a.length - b.length;
-                        })[0].code;
+                        // Try to get the right user preference in the browser, else
+                        // get the first returned language
+                        var l = _.filter(langs, function(lang) { return lang.code === browser_lang || lang.iso_code === browser_lang; });
+                        if (!_.isEmpty(l)) {
+                            self.user_context.lang = l[0].code;
+                        } else {
+                            self.user_context.lang = langs.sort(function(a, b) {
+                                return a.length - b.length;
+                            })[0].code;
+                        }
                     }
                 });
             }
