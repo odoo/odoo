@@ -1764,7 +1764,7 @@ class res_users(osv.osv):
         res = {}
         attendee_obj = self.pool.get('calendar.attendee')
         attendee_ids = attendee_obj.search(cr, uid, [
-                    ('event_date', '<=', current_datetime), ('event_end_date', '<=', current_datetime),
+                    # ('event_date', '<=', current_datetime), ('event_end_date', '<=', current_datetime),
                     ('state', '=', 'accepted'), ('user_id', 'in', ids)
                     ])
 
