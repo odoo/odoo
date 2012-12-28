@@ -18,17 +18,17 @@
                     </group>
                     <footer>
                         <div states="init">
-                            <button name="update_module" string="Update" type="object" class="oe_highlight"/> or 
+                            <button name="update_module" string="Update" type="object" class="oe_highlight"/> or
                             <button special="cancel" string="Cancel" class="oe_link"/>
                         </div>
                         <div states="done">
-                            <button name="action_module_open" string="Open Modules" type="object" class="oe_highlight"/> or 
+                            <button name="action_module_open" string="Open Modules" type="object" class="oe_highlight"/> or
                             <button special="cancel" string="Close" class="oe_link"/>
                         </div>
                     </footer>
                 </form>
             </field>
-        </record>        
+        </record>
 
         <record id="action_view_base_module_update" model="ir.actions.act_window">
             <field name="name">Module Update</field>
@@ -45,7 +45,7 @@
             id="menu_view_base_module_update"
             groups="base.group_no_one"
             parent="menu_management"
-            sequence="2"
+            sequence="40"
             icon="STOCK_CONVERT"/>
 
     </data>

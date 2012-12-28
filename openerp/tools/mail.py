@@ -130,10 +130,14 @@ def html_email_clean(html):
         dest += source[idx:]
         return dest
 
-    if not html:
+    if not html or not isinstance(html, basestring):
         return html
 
     html = ustr(html)
+
+    # 0. remove encoding attribute inside tags
+    doctype = re.compile(r'(<[^>]*\s)(encoding=(["\'][^"\']*?["\']|[^\s\n\r>]+)(\s[^>]*|/)?>)', re.IGNORECASE | re.DOTALL)
+    html = doctype.sub(r"", html)
 
     # 1. <br[ /]> -> \n, because otherwise the tree is obfuscated
     br_tags = re.compile(r'([<]\s*[bB][rR]\s*\/?[>])')

@@ -683,9 +683,6 @@ class BaseModel(object):
 
     # Transience
     _transient = False # True in a TransientModel
-    _transient_max_count = None
-    _transient_max_hours = None
-    _transient_check_time = 20
 
     # structure:
     #  { 'parent_model': 'm2o_field', ... }
@@ -4857,7 +4854,15 @@ class BaseModel(object):
             return res[0][0]
         cr.execute('SELECT "%s".id FROM ' % self._table + from_clause + where_str + order_by + limit_str + offset_str, where_clause_params)
         res = cr.fetchall()
-        return [x[0] for x in res]
+
+        # TDE note: with auto_join, we could have several lines about the same result
+        # i.e. a lead with several unread messages; we uniquify the result using
+        # a fast way to do it while preserving order (http://www.peterbe.com/plog/uniqifiers-benchmark)
+        def _uniquify_list(seq):
+            seen = set()
+            return [x for x in seq if x not in seen and not seen.add(x)]
+
+        return _uniquify_list([x[0] for x in res])
 
     # returns the different values ever entered for one field
     # this is used, for example, in the client when the user hits enter on
@@ -5137,20 +5142,22 @@ class BaseModel(object):
 
     def _transient_clean_rows_older_than(self, cr, seconds):
         assert self._transient, "Model %s is not transient, it cannot be vacuumed!" % self._name
-        cr.execute("SELECT id FROM " + self._table + " WHERE"
-            " COALESCE(write_date, create_date, (now() at time zone 'UTC'))::timestamp <"
-            " ((now() at time zone 'UTC') - interval %s)", ("%s seconds" % seconds,))
+        # Never delete rows used in last 5 minutes
+        seconds = max(seconds, 300)
+        query = ("SELECT id FROM " + self._table + " WHERE"
+            " COALESCE(write_date, create_date, (now() at time zone 'UTC'))::timestamp"
+            " < ((now() at time zone 'UTC') - interval %s)")
+        cr.execute(query, ("%s seconds" % seconds,))
         ids = [x[0] for x in cr.fetchall()]
         self.unlink(cr, SUPERUSER_ID, ids)
 
-    def _transient_clean_old_rows(self, cr, count):
-        assert self._transient, "Model %s is not transient, it cannot be vacuumed!" % self._name
-        cr.execute(
-            "SELECT id, COALESCE(write_date, create_date, (now() at time zone 'UTC'))::timestamp"
-            " AS t FROM " + self._table +
-            " ORDER BY t LIMIT %s", (count,))
-        ids = [x[0] for x in cr.fetchall()]
-        self.unlink(cr, SUPERUSER_ID, ids)
+    def _transient_clean_old_rows(self, cr, max_count):
+        # Check how many rows we have in the table
+        cr.execute("SELECT count(*) AS row_count FROM " + self._table)
+        res = cr.fetchall()
+        if res[0][0] <= max_count:
+            return  # max not reached, nothing to do
+        self._transient_clean_rows_older_than(cr, 300)
 
     def _transient_vacuum(self, cr, uid, force=False):
         """Clean the transient records.
@@ -5160,12 +5167,21 @@ class BaseModel(object):
         Actual cleaning will happen only once every "_transient_check_time" calls.
         This means this method can be called frequently called (e.g. whenever
         a new record is created).
+        Example with both max_hours and max_count active:
+        Suppose max_hours = 0.2 (e.g. 12 minutes), max_count = 20, there are 55 rows in the
+        table, 10 created/changed in the last 5 minutes, an additional 12 created/changed between
+        5 and 10 minutes ago, the rest created/changed more then 12 minutes ago.
+        - age based vacuum will leave the 22 rows created/changed in the last 12 minutes
+        - count based vacuum will wipe out another 12 rows. Not just 2, otherwise each addition
+          would immediately cause the maximum to be reached again.
+        - the 10 rows that have been created/changed the last 5 minutes will NOT be deleted
         """
         assert self._transient, "Model %s is not transient, it cannot be vacuumed!" % self._name
+        _transient_check_time = 20          # arbitrary limit on vacuum executions
         self._transient_check_count += 1
-        if (not force) and (self._transient_check_count % self._transient_check_time):
-            self._transient_check_count = 0
-            return True
+        if not force and (self._transient_check_count < _transient_check_time):
+            return True  # no vacuum cleaning this time
+        self._transient_check_count = 0
 
         # Age-based expiration
         if self._transient_max_hours:
@@ -5227,6 +5243,10 @@ class BaseModel(object):
 
     # for backward compatibility
     resolve_o2m_commands_to_record_dicts = resolve_2many_commands
+
+    def _register_hook(self, cr):
+        """ stuff to do right after the registry is built """
+        pass
 
 # keep this import here, at top it will cause dependency cycle errors
 import expression
