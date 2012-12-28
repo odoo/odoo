@@ -85,7 +85,7 @@ class crm_lead(base_stage, format_address, osv.osv):
     }
 
     def create(self, cr, uid, vals, context=None):
-        if not context.get('default_section', False) and vals.get('section_id', False):
+        if not context.get('default_section_id', False) and vals.get('section_id', False):
             ctx = context.copy()
             ctx['default_section_id'] = vals['section_id']
             vals['stage_id'] = self._get_default_stage_id(cr, uid, context=ctx)
