@@ -85,6 +85,8 @@ class crm_lead(base_stage, format_address, osv.osv):
     }
 
     def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
         if not context.get('default_section_id', False) and vals.get('section_id', False):
             ctx = context.copy()
             ctx['default_section_id'] = vals['section_id']
