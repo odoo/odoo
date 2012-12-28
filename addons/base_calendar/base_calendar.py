@@ -142,7 +142,7 @@ html_invitation = """
         <td width="100%%">You are invited for <i>%(company)s</i> Event.</td>
     </tr>
     <tr>
-        <td width="100%%">Below are the details of event:</td>
+        <td width="100%%">Below are the details of event. Hours and dates expressed in %(timezone)s time.</td>
     </tr>
 </table>
 
@@ -427,12 +427,9 @@ property or property parameter."),
         res = None
         def ics_datetime(idate, short=False):
             if idate:
-                if short or len(idate)<=10:
-                    return date.fromtimestamp(time.mktime(time.strptime(idate, '%Y-%m-%d')))
-                else:
-                    return datetime.strptime(idate, '%Y-%m-%d %H:%M:%S')
-            else:
-                return False
+                #returns the datetime as UTC, because it is stored as it in the database
+                return datetime.strptime(idate, '%Y-%m-%d %H:%M:%S').replace(tzinfo=pytz.timezone('UTC'))
+            return False
         try:
             # FIXME: why isn't this in CalDAV?
             import vobject
@@ -516,9 +513,17 @@ property or property parameter."),
                     att_infos.append(((att2.user_id and att2.user_id.name) or \
                                  (att2.partner_id and att2.partner_id.name) or \
                                     att2.email) + ' - Status: ' + att2.state.title())
+                #dates and times are gonna be expressed in `tz` time (local timezone of the `uid`)
+                tz = context.get('tz', pytz.timezone('UTC'))
+                #res_obj.date and res_obj.date_deadline are in UTC in database so we use context_timestamp() to transform them in the `tz` timezone
+                date_start = fields.datetime.context_timestamp(cr, uid, datetime.strptime(res_obj.date, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context)
+                date_stop = False
+                if res_obj.date_deadline:
+                    date_stop = fields.datetime.context_timestamp(cr, uid, datetime.strptime(res_obj.date_deadline, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context)
                 body_vals = {'name': res_obj.name,
-                            'start_date': res_obj.date,
-                            'end_date': res_obj.date_deadline or False,
+                            'start_date': date_start,
+                            'end_date': date_stop,
+                            'timezone': tz,
                             'description': res_obj.description or '-',
                             'location': res_obj.location or '-',
                             'attendees': '<br>'.join(att_infos),
@@ -623,7 +628,7 @@ property or property parameter."),
             email = filter(lambda x:x.__contains__('@'), cnval)
             vals['email'] = email and email[0] or ''
             vals['cn'] = vals.get("cn")
-        res = super(calendar_attendee, self).create(cr, uid, vals, context)
+        res = super(calendar_attendee, self).create(cr, uid, vals, context=context)
         return res
 
 calendar_attendee()
@@ -1136,7 +1141,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
 
             if mail_to and current_user.email:
                 att_obj._send_mail(cr, uid, new_attendees, mail_to,
-                    email_from = current_user.email)
+                    email_from = current_user.email, context=context)
         return True
 
     def default_organizer(self, cr, uid, context=None):
