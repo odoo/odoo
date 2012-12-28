@@ -281,18 +281,17 @@ class res_partner(osv.osv):
     def do_button_print(self, cr, uid, ids, context=None):
         assert(len(ids) == 1)
         self.message_post(cr, uid, [ids[0]], body=_('Printed overdue payments report'), context=context)
+        data['partner_ids'] = [ids[0] * 10000 + company_id]
         datas = {
-             'ids': ids,
-             'model': 'res.partner',
-             'form': self.read(cr, uid, ids[0], context=context)
+             'ids': [],
+             'model': 'account_followup.followup',
+             'form': data
         }
         return {
             'type': 'ir.actions.report.xml',
-            'report_name': 'account.overdue',
+            'report_name': 'account_followup.followup.print',
             'datas': datas,
-            'nodestroy' : True
-        }
-
+            }
 
     def _get_amounts_and_date(self, cr, uid, ids, name, arg, context=None):
         '''
