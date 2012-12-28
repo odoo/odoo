@@ -32,7 +32,6 @@ openerp.portal_anonymous = function(instance) {
                         }
                     }
                     return self.rpc('/web/webclient/translations', { mods: self.module_list, lang: self.user_context.lang }).done(function(trans) {
-                        console.log(trans);
                         instance.web._t.database.set_bundle(trans);
                     });
                 });
