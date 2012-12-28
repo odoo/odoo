@@ -65,6 +65,8 @@ class project_issue(base_stage, osv.osv):
     }
 
     def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
         if not context.get('default_project_id', False) and vals.get('project_id', False):
             ctx = context.copy()
             ctx['default_project_id'] = vals['project_id']
