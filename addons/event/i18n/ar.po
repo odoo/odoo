@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2012-12-27 20:36+0000\n"
+"Last-Translator: almodhesh <Unknown>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 07:12+0000\n"
+"X-Launchpad-Export-Date: 2012-12-28 05:36+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
 
 #. module: event
@@ -26,12 +26,12 @@ msgstr "أحداثي"
 #. module: event
 #: field:event.registration,nb_register:0
 msgid "Number of Participants"
-msgstr ""
+msgstr "عدد المشاركين"
 
 #. module: event
 #: field:event.event,register_attended:0
 msgid "# of Participations"
-msgstr ""
+msgstr "# المشاركين"
 
 #. module: event
 #: field:event.event,main_speaker_id:0
@@ -57,6 +57,8 @@ msgid ""
 "enough registrations you are not able to confirm your event. (put 0 to "
 "ignore this rule )"
 msgstr ""
+"يمكنك تحديد الحد الأدنى للتسجيل. إذا لم يكن التسجيل كافياً لا يمكنك التأكيد "
+"على الحدث. (ضع 0 لتجاهل هذه القاعدة)"
 
 #. module: event
 #: field:event.registration,date_open:0
@@ -78,7 +80,7 @@ msgstr "متفق لبون جوفي"
 #: selection:event.registration,state:0
 #: selection:report.event.registration,registration_state:0
 msgid "Attended"
-msgstr ""
+msgstr "الحضور"
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -102,12 +104,12 @@ msgstr "شركة"
 #: field:event.event,email_confirmation_id:0
 #: field:event.type,default_email_event:0
 msgid "Event Confirmation Email"
-msgstr ""
+msgstr "بريد تأكيد الحدث"
 
 #. module: event
 #: field:event.type,default_registration_max:0
 msgid "Default Maximum Registration"
-msgstr ""
+msgstr "الحد الأقصى الافتراضي التسجيل"
 
 #. module: event
 #: view:report.event.registration:0
@@ -117,7 +119,7 @@ msgstr ""
 #. module: event
 #: field:event.event,register_avail:0
 msgid "Available Registrations"
-msgstr ""
+msgstr "التسجيلات المتاحة"
 
 #. module: event
 #: view:event.registration:0
@@ -128,7 +130,7 @@ msgstr "تسجيل التنفيذ"
 #. module: event
 #: model:ir.module.category,description:event.module_category_event_management
 msgid "Helps you manage your Events."
-msgstr ""
+msgstr "تساعدك لإدارة أحداثك"
 
 #. module: event
 #: view:report.event.registration:0
@@ -161,7 +163,7 @@ msgstr "تحليل التنفيذات"
 #. module: event
 #: help:event.type,default_registration_max:0
 msgid "It will select this default maximum value when you choose this event"
-msgstr ""
+msgstr "سيتم اختيار القيمة القصوى الافتراضية عند اختيار هذا الحدث"
 
 #. module: event
 #: view:report.event.registration:0
@@ -215,7 +217,7 @@ msgstr "ملغي"
 #. module: event
 #: view:event.event:0
 msgid "ticket"
-msgstr ""
+msgstr "تذكرة"
 
 #. module: event
 #: model:event.event,name:event.event_1
@@ -232,12 +234,12 @@ msgstr ""
 #: view:report.event.registration:0
 #: field:report.event.registration,registration_state:0
 msgid "Registration State"
-msgstr ""
+msgstr "حالة التسجيل"
 
 #. module: event
 #: view:event.event:0
 msgid "tickets"
-msgstr ""
+msgstr "التذاكر"
 
 #. module: event
 #: view:res.partner:0
@@ -260,7 +262,7 @@ msgstr ""
 #. module: event
 #: view:report.event.registration:0
 msgid "Registrations in confirmed or done state"
-msgstr ""
+msgstr "تسجيلات في حالة تأكيد أو اكتمال"
 
 #. module: event
 #: code:addons/event/event.py:106
@@ -315,7 +317,7 @@ msgstr "مؤكد"
 #. module: event
 #: view:event.registration:0
 msgid "Participant"
-msgstr ""
+msgstr "مشاركة"
 
 #. module: event
 #: view:event.registration:0
@@ -326,12 +328,12 @@ msgstr "تأكيد"
 #. module: event
 #: view:event.event:0
 msgid "Organized by"
-msgstr ""
+msgstr "نظمت بواسطة"
 
 #. module: event
 #: view:event.event:0
 msgid "Register with this event"
-msgstr ""
+msgstr "تسجيل مع هذا الحدث"
 
 #. module: event
 #: help:event.type,default_email_registration:0
@@ -339,17 +341,19 @@ msgid ""
 "It will select this default confirmation registration mail value when you "
 "choose this event"
 msgstr ""
+"فإنه سيتم تحديد هذا تأكيد قيمة التسجيل الإلكتروني الافتراضي  عند اختيار هذا "
+"الحدث"
 
 #. module: event
 #: view:event.event:0
 msgid "Only"
-msgstr ""
+msgstr "فقط"
 
 #. module: event
 #: field:event.event,message_follower_ids:0
 #: field:event.registration,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "المتابعين"
 
 #. module: event
 #: view:event.event:0
@@ -384,7 +388,7 @@ msgstr "بريد إلكتروني"
 #: code:addons/event/event.py:329
 #, python-format
 msgid "New registration confirmed: %s."
-msgstr ""
+msgstr "تأكيد التسجيل الجديد: %s."
 
 #. module: event
 #: view:event.event:0
@@ -400,7 +404,7 @@ msgstr "تاريخ الإنشاء"
 #: view:report.event.registration:0
 #: field:report.event.registration,user_id:0
 msgid "Event Responsible"
-msgstr ""
+msgstr "مسؤول الحدث"
 
 #. module: event
 #: view:event.event:0
@@ -417,7 +421,7 @@ msgstr "يوليو"
 #. module: event
 #: field:event.event,reply_to:0
 msgid "Reply-To Email"
-msgstr ""
+msgstr "الرد-للبريد الإلكتروني"
 
 #. module: event
 #: view:event.registration:0
@@ -447,7 +451,7 @@ msgstr "عدد المشاريع"
 #. module: event
 #: help:event.event,main_speaker_id:0
 msgid "Speaker who will be giving speech at the event."
-msgstr ""
+msgstr "المتكلم الذي سوف يلقي كلمة في هذا الحدث."
 
 #. module: event
 #: view:event.event:0
@@ -463,7 +467,7 @@ msgstr "حالة تعبئة المشروع"
 #. module: event
 #: view:event.event:0
 msgid "Event Category"
-msgstr ""
+msgstr "فئة الحدث"
 
 #. module: event
 #: field:event.event,register_prospect:0
@@ -473,13 +477,13 @@ msgstr "التسجيلات الغير مؤكدة"
 #. module: event
 #: model:ir.actions.client,name:event.action_client_event_menu
 msgid "Open Event Menu"
-msgstr ""
+msgstr "قائمة الأحداث المفتوحة"
 
 #. module: event
 #: view:report.event.registration:0
 #: field:report.event.registration,event_state:0
 msgid "Event State"
-msgstr ""
+msgstr "حالة الحدث"
 
 #. module: event
 #: field:event.registration,log_ids:0
@@ -504,7 +508,7 @@ msgstr "ديسمبر"
 #. module: event
 #: help:event.registration,origin:0
 msgid "Reference of the sales order which created the registration"
-msgstr ""
+msgstr "مرجعية لأمر المبيعات الذي أنشأ التسجيل"
 
 #. module: event
 #: field:report.event.registration,draft_state:0
@@ -515,7 +519,7 @@ msgstr " #رقم تسجيلات السجل"
 #: field:event.event,email_registration_id:0
 #: field:event.type,default_email_registration:0
 msgid "Registration Confirmation Email"
-msgstr ""
+msgstr "بريد تأكيد التسجيل"
 
 #. module: event
 #: view:report.event.registration:0
@@ -526,17 +530,17 @@ msgstr "شهر"
 #. module: event
 #: field:event.registration,date_closed:0
 msgid "Attended Date"
-msgstr ""
+msgstr "تاريخ الحضور"
 
 #. module: event
 #: view:event.event:0
 msgid "Finish Event"
-msgstr ""
+msgstr "نهاية الحدث"
 
 #. module: event
 #: view:event.registration:0
 msgid "Registrations in unconfirmed state"
-msgstr ""
+msgstr "التسجيل في حالة عدم التأكيد"
 
 #. module: event
 #: view:event.event:0
@@ -556,13 +560,13 @@ msgstr ""
 #. module: event
 #: help:res.partner,speaker:0
 msgid "Check this box if this contact is a speaker."
-msgstr ""
+msgstr "اختر  هذا المربع إذا كان هذا الاتصال هو المتكلم."
 
 #. module: event
 #: code:addons/event/event.py:108
 #, python-format
 msgid "No Tickets Available!"
-msgstr ""
+msgstr "لا توجد تذاكر متاحة!"
 
 #. module: event
 #: help:event.event,state:0
@@ -595,6 +599,8 @@ msgid ""
 "much registrations you are not able to confirm your event. (put 0 to ignore "
 "this rule )"
 msgstr ""
+"يمكنك وضع حد أقصى للتسجيل في كل مرحلة. إذا كان المتسجلين كثر لا يمكنك تأكيد "
+"حدثك"
 
 #. module: event
 #: field:event.event,user_id:0
@@ -636,7 +642,7 @@ msgstr "احداث في المقاطعة الجديدة"
 #. module: event
 #: view:report.event.registration:0
 msgid "Events which are in New state"
-msgstr ""
+msgstr "الأحداث التي هي في حالة جديدة"
 
 #. module: event
 #: view:event.event:0
@@ -662,7 +668,7 @@ msgstr ""
 #. module: event
 #: field:event.event,city:0
 msgid "city"
-msgstr ""
+msgstr "مدينة"
 
 #. module: event
 #: selection:report.event.registration,month:0
