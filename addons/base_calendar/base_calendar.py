@@ -842,7 +842,7 @@ class calendar_alarm(osv.osv):
         current_datetime = datetime.now()
         alarm_ids = self.search(cr, uid, [('state', '!=', 'done')], context=context)
 
-        mail_to = []
+        mail_to = ""
 
         for alarm in self.browse(cr, uid, alarm_ids, context=context):
             next_trigger_date = None
@@ -891,9 +891,9 @@ From:
 </pre>
 """  % (alarm.name, alarm.trigger_date, alarm.description, \
                         alarm.user_id.name, alarm.user_id.signature)
-                    mail_to = [alarm.user_id.email]
+                    mail_to = alarm.user_id.email
                     for att in alarm.attendee_ids:
-                        mail_to.append(att.user_id.email)
+                        mail_to = mail_to+" "+att.user_id.email
                     if mail_to:
                         vals = {
                             'state': 'outgoing',
@@ -1117,7 +1117,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             for att in event.attendee_ids:
                 attendees[att.partner_id.id] = True
             new_attendees = []
-            mail_to = []
+            mail_to = ""
             for partner in event.partner_ids:
                 if partner.id in attendees:
                     continue
@@ -1128,7 +1128,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                     'email': partner.email
                 }, context=context)
                 if partner.email:
-                    mail_to.append(partner.email)
+                    mail_to = mail_to+" "+partner.email
                 self.write(cr, uid, [event.id], {
                     'attendee_ids': [(4, att_id)]
                 }, context=context)
