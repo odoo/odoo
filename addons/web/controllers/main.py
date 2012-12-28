@@ -530,8 +530,9 @@ html_template = """<!DOCTYPE html>
             <script src="/web/static/lib/jquery.placeholder/jquery.placeholder.min.js"></script>
             <script>
                 document.addEventListener("DOMNodeInserted",function(event){
-                    if ( $(event.target).is("input") || $(event.target).is("textarea") ) {
-                    $(event.target).placeholder();
+                    var nodename =  event.target.nodeName.toLowerCase();
+                    if ( nodename === "input" || nodename == "textarea" ) {
+                        $(event.target).placeholder();
                     }
                 });    
             </script>
