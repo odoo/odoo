@@ -355,7 +355,7 @@ class WorkerCron(Worker):
         time.sleep(interval)
 
     def process_work(self):
-        rpc_request = logging.getLogger(__name__ + '.rpc.request')
+        rpc_request = logging.getLogger('openerp.netsvc.rpc.request')
         rpc_request_flag = rpc_request.isEnabledFor(logging.DEBUG)
         _logger.debug("WorkerCron (%s) polling for jobs", self.pid)
         if config['db_name']:
