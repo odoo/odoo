@@ -370,6 +370,7 @@ openerp.mail = function (session) {
             this.show_compact_message = false;
             this.show_delete_attachment = true;
             this.emails_from = [];
+            this.partners_from = [];
         },
 
         start: function () {
@@ -494,43 +495,41 @@ openerp.mail = function (session) {
             this.$(".oe_msg_attachment_list").on('click', '.oe_delete', this.on_attachment_delete);
 
             this.$(".oe_emails_from").on('change', 'input', this.on_checked_email_from);
+            this.$(".oe_partners_from").on('change', 'input', this.on_checked_partner_from);
         },
 
         on_compose_fullmail: function (default_composition_mode) {
-
+            var self = this;
             if(!this.do_check_attachment_upload()) {
                 return false;
             }
 
-            if (default_composition_mode == 'reply') {
+            // create list of new partners
+            var extra_email = _.map(_.filter(this.emails_from, function (f) {return f[1]}), function (f) {return f[0]});
+            this.check_recipient_partners(extra_email).done(function () {
                 var context = {
+                    'default_model': default_composition_mode == 'reply' ? undefined : self.context.default_model,
+                    'default_res_id': default_composition_mode == 'reply' ? undefined : self.context.default_res_id,
                     'default_composition_mode': default_composition_mode,
-                    'default_parent_id': this.id,
-                    'default_body': mail.ChatterUtils.get_text2html(this.$el ? (this.$el.find('textarea:not(.oe_compact)').val() || '') : ''),
-                    'default_attachment_ids': this.attachment_ids,
+                    'default_parent_id': self.id,
+                    'default_body': mail.ChatterUtils.get_text2html(self.$el ? (self.$el.find('textarea:not(.oe_compact)').val() || '') : ''),
+                    'default_attachment_ids': self.attachment_ids,
+                    'default_partner_ids': _.map(_.filter(self.partners_from, function (f) {return f[1]}), function (f) {return f[0]}),
                 };
-            } else {
-                var context = {
-                    'default_model': this.context.default_model,
-                    'default_res_id': this.context.default_res_id,
-                    'default_composition_mode': default_composition_mode,
-                    'default_parent_id': this.id,
-                    'default_body': mail.ChatterUtils.get_text2html(this.$el ? (this.$el.find('textarea:not(.oe_compact)').val() || '') : ''),
-                    'default_attachment_ids': this.attachment_ids,
+                var action = {
+                    type: 'ir.actions.act_window',
+                    res_model: 'mail.compose.message',
+                    view_mode: 'form',
+                    view_type: 'form',
+                    views: [[false, 'form']],
+                    target: 'new',
+                    context: context,
                 };
-            }
-            var action = {
-                type: 'ir.actions.act_window',
-                res_model: 'mail.compose.message',
-                view_mode: 'form',
-                view_type: 'form',
-                views: [[false, 'form']],
-                target: 'new',
-                context: context,
-            };
 
-            this.do_action(action);
-            this.on_cancel();
+                self.do_action(action);
+                self.on_cancel();
+            });
+
         },
 
         reinit: function() {
@@ -564,14 +563,13 @@ openerp.mail = function (session) {
 
         check_recipient_partners: function (emails) {
             var self = this;
+            self.partners_from = [];
             var deferreds = [];
-            for (var i = 0; i < emails.length; i++) {
-                deferreds.push($.Deferred());
-            }
             var ds_partner = new session.web.DataSetSearch(this, 'res.partner');
             _.each(emails, function (email) {
-                ds_partner.call('search', [[['email', 'ilike', email]]]).then(function (partner_ids) {
-                    var deferred = deferreds[_.indexOf(emails, email)];
+                var deferred = $.Deferred();
+                deferreds.push(deferred);   
+                ds_partner.call('search', [[['email', 'like', email]]]).then(function (partner_ids) {
                     if (!partner_ids.length) {
                         var pop = new session.web.form.FormOpenPopup(this);
                         pop.show_element(
@@ -586,17 +584,22 @@ openerp.mail = function (session) {
                                 title: _t("Please complete partner's informations"),
                             }
                         );
-                        pop.on('write_completed, closed', self, function () {
+                        pop.on('closed', self, function () {
+                            deferred.resolve();
+                        });
+                        pop.on('saved', self, function (id) {
+                            self.partners_from.push([id, true]);
                             deferred.resolve();
                         });
                     }
                     else {
+                        self.partners_from.push([partner_ids[0], true]);
                         deferred.resolve();
                     }
                     return deferred;
                 });
             });
-            return $.when.apply( $, deferreds ).done();
+            return $.when.apply( $, deferreds );
         },
 
         on_message_post: function (event) {
@@ -639,7 +642,7 @@ openerp.mail = function (session) {
         /* convert the compact mode into the compose message
         */
         on_compose_expandable: function (event) {
-            this.get_emails_from();
+            this.get_from();
             if ((!this.stay_open || (event && event.type == 'click')) && (!this.show_composer || !this.$('textarea:not(.oe_compact)').val().match(/\S+/) && !this.attachment_ids.length)) {
                 this.show_composer = !this.show_composer || this.stay_open;
                 this.reinit();
@@ -664,7 +667,7 @@ openerp.mail = function (session) {
             }
         },
 
-        get_emails_from: function () {
+        get_from: function () {
             var self = this;
             var messages = [];
 
@@ -678,13 +681,12 @@ openerp.mail = function (session) {
                 _.each(this.options.root_thread.messages, function (msg) {messages.push(msg); messages.concat(msg.get_childs());});
             }
             
-            var emails_from = _.map(_.filter(messages,
-                    function (thread) {return thread.author_id && !thread.author_id[0];}),
-                function (thread) {return thread.author_id[1];});
+            _.each(messages, function (thread) {
+                if (thread.author_id && !thread.author_id[0] &&
+                    !_.find(self.emails_from, function (from) {return from[0] == thread.author_id[1];})) {
 
-            return _.each(emails_from, function (email_from) {
-                if (!_.find(self.emails_from, function (from) {return from[0] == email_from;})) {
-                    self.emails_from.push([email_from, true]);
+                    self.emails_from.push([thread.author_id[1], true]);
+
                 }
             });
         },
@@ -697,7 +699,7 @@ openerp.mail = function (session) {
                     email_from[1] = $input.is(":checked");
                 }
             });
-        }
+        },
     });
 
     /**
