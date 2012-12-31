@@ -229,6 +229,14 @@ class TestSanitizer(unittest2.TestCase):
         for attr in ['javascript']:
             self.assertNotIn(attr, sanitized_html, 'html_sanitize did not remove enough unwanted attributes')
 
+        emails =[("Charles <charles.bidule@truc.fr>", "<p>Charles &lt;charles.bidule@truc.fr&gt;</p>"), 
+                ("Dupuis <'tr/-:dupuis><#><$'@truc.baz.fr>", "<p>Dupuis &lt;'tr/-:dupuis&gt;&lt;#&gt;&lt;$'@truc.baz.fr&gt;</p>"),
+                ("Technical <service/technical+2@open.com>", "<p>Technical &lt;service/technical+2@open.com&gt;</p>"),
+                ("Div nico <div-nico@open.com>", "<p>Div nico &lt;div-nico@open.com&gt;</p>")]
+        for email in emails:
+            self.assertEqual(email[1], html_sanitize(email[0]), 'html_sanitize stripped emails of original html')
+
+
     def test_edi_source(self):
         html = html_sanitize(EDI_LIKE_HTML_SOURCE)
         self.assertIn('div style="font-family: \'Lucica Grande\', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF;', html,

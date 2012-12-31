@@ -48,6 +48,11 @@ def html_sanitize(src):
     if not src:
         return src
     src = ustr(src, errors='replace')
+
+    # html encode email tags
+    part = re.compile(r"(<\s*[^\s]+@[^\s]+\s*>)", re.IGNORECASE | re.DOTALL)
+    src = part.sub(lambda m: cgi.escape(m.group(1)), src)
+    
     # some corner cases make the parser crash (such as <SCRIPT/XSS SRC=\"http://ha.ckers.org/xss.js\"></SCRIPT> in test_mail)
     try:
         cleaner = clean.Cleaner(page_structure=True, style=False, safe_attrs_only=False, forms=False, kill_tags=tags_to_kill, remove_tags=tags_to_remove)
