@@ -249,13 +249,13 @@ class res_users(osv.Model):
         assert template._name == 'email.template'
         for user in self.browse(cr, uid, ids, context):
             if not user.email:
-                raise osv.except_osv(_("Cannot send email: user has no email address."), user.name)
+                m = osv.except_osv(_("Cannot send email: user has no email address."), user.name)
             mail_id = self.pool.get('email.template').send_mail(cr, uid, template.id, user.id, True, context=context)
             mail_state = mail_obj.read(cr, uid, mail_id, ['state'], context=context)
             if mail_state and mail_state == 'exception':
-                raise osv.except_osv(_("Cannot send email: no outgoing email server configured.\nYou can configure it under Settings/General Settings."), user.name)
+                m = osv.except_osv(_("Cannot send email: no outgoing email server configured.\nYou can configure it under Settings/General Settings."), user.name)
             else:
-                raise osv.except_osv(_("Mail sent to:"), user.email)
+                m = osv.except_osv(_("Mail sent to:"), user.email)
         return True
 
     def create(self, cr, uid, values, context=None):
@@ -263,7 +263,5 @@ class res_users(osv.Model):
         user_id = super(res_users, self).create(cr, uid, values, context=context)
         user = self.browse(cr, uid, user_id, context=context)
         if context and context.get('reset_password') and user.email:
-            try:
-                user.action_reset_password()
-            finally:
-                return user_id
+            user.action_reset_password()
+        return user_id
