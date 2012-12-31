@@ -642,7 +642,7 @@ openerp.mail = function (session) {
         /* convert the compact mode into the compose message
         */
         on_compose_expandable: function (event) {
-            this.get_from();
+            this.get_emails_from();
             if ((!this.stay_open || (event && event.type == 'click')) && (!this.show_composer || !this.$('textarea:not(.oe_compact)').val().match(/\S+/) && !this.attachment_ids.length)) {
                 this.show_composer = !this.show_composer || this.stay_open;
                 this.reinit();
@@ -667,7 +667,7 @@ openerp.mail = function (session) {
             }
         },
 
-        get_from: function () {
+        get_emails_from: function () {
             var self = this;
             var messages = [];
 
