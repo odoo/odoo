@@ -69,7 +69,7 @@
     .oe_kanban_clear
         clear: both
     .oe_kanban_content
-        word-break: break-all
+        word-wrap: break-word
         .oe_star_on, .oe_star_off
             color: #ccc
             text-shadow: 0 0 2px black
@@ -126,10 +126,6 @@
         background: #f0eeee
         border-left: 1px solid #f0f8f8
         border-right: 1px solid #b9b9b9
-    &.oe_kanban_grouped
-        .oe_kanban_group_header
-            width: 1%
-
     .oe_form
         .oe_kanban_column
             padding: 0px
@@ -233,8 +229,10 @@
         .oe_kanban_title
             font-weight: bold
             margin: 2px 4px
-    &.oe_kanban_grouped .oe_kanban_record
-        margin-bottom: 4px
+    &.oe_kanban_grouped
+        .oe_kanban_record
+            margin-bottom: 4px
+            width: 200px
     .oe_kanban_avatar_smallbox
         height: 40px
         width: 40px

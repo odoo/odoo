@@ -322,7 +322,6 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     on_groups_started: function() {
         var self = this;
-        this.compute_groups_width();
         if (this.group_by) {
             // Kanban cards drag'n'drop
             var $columns = this.$el.find('.oe_kanban_column .oe_kanban_column_cards');
@@ -419,27 +418,6 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 self.do_reload(); // TODO: use draggable + sortable in order to cancel the dragging when the rcp fails
             });
         }
-    },
-    compute_groups_width: function() {
-        var unfolded = 0;
-        var self = this;
-        _.each(this.groups, function(group) {
-            unfolded += group.state.folded ? 0 : 1;
-            group.$el.children(':first').css('width', '');
-        });
-        _.each(this.groups, function(group) {
-            if (!group.state.folded) {
-                if (182*unfolded>=self.$el.width()) {
-                    group.$el.children(':first').css('width', "170px");
-                } else if (262*unfolded<self.$el.width()) {
-                    group.$el.children(':first').css('width', "250px");
-                } else {
-            // -12 because of padding 6 between cards
-            // -1 because of the border of the latest dummy column
-                    group.$el.children(':first').css('width', Math.floor((self.$el.width()-1)/unfolded)-12 + 'px');
-                }
-            }
-        });
     },
 
     do_show: function() {
@@ -695,7 +673,6 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
     },
     do_action_toggle_fold: function() {
         this.do_toggle_fold();
-        this.view.compute_groups_width();
     },
     do_action_edit: function() {
         var self = this;
