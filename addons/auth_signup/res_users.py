@@ -256,7 +256,6 @@ class res_users(osv.Model):
                 raise osv.except_osv(_("Cannot send email: no outgoing email server configured.\nYou can configure it under Settings/General Settings."), user.name)
             else:
                 raise osv.except_osv(_("Mail sent to:"), user.email)
-
         return True
 
     def create(self, cr, uid, values, context=None):
@@ -264,5 +263,7 @@ class res_users(osv.Model):
         user_id = super(res_users, self).create(cr, uid, values, context=context)
         user = self.browse(cr, uid, user_id, context=context)
         if context and context.get('reset_password') and user.email:
-            user.action_reset_password()
-        return user_id
+            try:
+                user.action_reset_password()
+            finally:
+                return user_id
