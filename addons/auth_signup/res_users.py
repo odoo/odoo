@@ -249,14 +249,22 @@ class res_users(osv.Model):
         assert template._name == 'email.template'
         for user in self.browse(cr, uid, ids, context):
             if not user.email:
-                m = osv.except_osv(_("Cannot send email: user has no email address."), user.name)
+                raise osv.except_osv(_("Cannot send email: user has no email address."), user.name)
             mail_id = self.pool.get('email.template').send_mail(cr, uid, template.id, user.id, True, context=context)
             mail_state = mail_obj.read(cr, uid, mail_id, ['state'], context=context)
-            if mail_state and mail_state == 'exception':
-                m = osv.except_osv(_("Cannot send email: no outgoing email server configured.\nYou can configure it under Settings/General Settings."), user.name)
+            if mail_state and mail_state['state'] == 'exception':
+                raise osv.except_osv(_("Cannot send email: no outgoing email server configured.\nYou can configure it under Settings/General Settings."), user.name)
             else:
-                m = osv.except_osv(_("Mail sent to:"), user.email)
-        return True
+                return {
+                    'type': 'ir.actions.client',
+                    'name': '_(Server Notification)',
+                    'tag': 'action_notify',
+                    'params': {
+                        'title': 'Mail Sent to: %s' % user.name,
+                        'text': 'You can reset the password by yourself using this <a href=%s>link</a>' % user.partner_id.signup_url,
+                        'sticky': True,
+                    }
+                }
 
     def create(self, cr, uid, values, context=None):
         # overridden to automatically invite user to sign up
