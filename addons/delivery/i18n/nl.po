@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-10-23 14:05+0000\n"
+"PO-Revision-Date: 2012-12-25 09:44+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-24 05:50+0000\n"
-"X-Generator: Launchpad (build 16179)\n"
+"X-Launchpad-Export-Date: 2012-12-26 04:56+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -22,7 +22,7 @@ msgid "Order Ref."
 msgstr "Order Ref."
 
 #. module: delivery
-#: model:product.template,name:delivery.delivery_product_product_template
+#: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Delivery by Poste"
 msgstr "Aflevering per post"
 
@@ -57,6 +57,7 @@ msgstr "Afleverplanningen"
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 #: field:stock.picking,volume:0
+#: field:stock.picking.out,volume:0
 msgid "Volume"
 msgstr "Volume"
 
@@ -97,7 +98,6 @@ msgstr ""
 "Geeft de volgorde aan bij afbeelden van de lijst van transportplanningen."
 
 #. module: delivery
-#: view:delivery.carrier:0
 #: view:delivery.grid:0
 #: field:delivery.grid,country_ids:0
 msgid "Countries"
@@ -138,17 +138,13 @@ msgstr "Vast"
 
 #. module: delivery
 #: field:delivery.carrier,name:0
-#: view:delivery.sale.order:0
-#: field:delivery.sale.order,carrier_id:0
-#: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
-#: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 #: field:res.partner,property_delivery_carrier:0
 #: field:sale.order,carrier_id:0
 msgid "Delivery Method"
 msgstr "Verzendwijze"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:213
+#: code:addons/delivery/delivery.py:221
 #, python-format
 msgid "No price available!"
 msgstr "Gen prijs aanwezig!"
@@ -160,11 +156,14 @@ msgstr "Voorraad Verplaatsing"
 
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
+#: field:stock.picking.out,carrier_tracking_ref:0
 msgid "Carrier Tracking Ref"
 msgstr "Vervoerder tracking ref."
 
 #. module: delivery
 #: field:stock.picking,weight_net:0
+#: field:stock.picking.in,weight_net:0
+#: field:stock.picking.out,weight_net:0
 msgid "Net Weight"
 msgstr "Netto gewicht"
 
@@ -297,7 +296,7 @@ msgid "To Zip"
 msgstr "Poscode Afleverradres"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:141
+#: code:addons/delivery/delivery.py:147
 #, python-format
 msgid "Default price"
 msgstr "Standaard prijs"
@@ -329,6 +328,7 @@ msgstr "Gewichten"
 
 #. module: delivery
 #: field:stock.picking,number_of_packages:0
+#: field:stock.picking.out,number_of_packages:0
 msgid "Number of Packages"
 msgstr "Aantal pakketten"
 
@@ -336,8 +336,12 @@ msgstr "Aantal pakketten"
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 #: report:sale.shipping:0
+#: view:stock.move:0
 #: field:stock.move,weight:0
+#: view:stock.picking:0
 #: field:stock.picking,weight:0
+#: field:stock.picking.in,weight:0
+#: field:stock.picking.out,weight:0
 msgid "Weight"
 msgstr "Gewicht"
 
@@ -366,7 +370,7 @@ msgstr ""
 "type 'view'."
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:70
+#: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid available !"
 msgstr "Geen planning beschikbaar !"
@@ -377,8 +381,7 @@ msgid ">="
 msgstr ">="
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:53
-#: code:addons/delivery/wizard/delivery_sale_order.py:73
+#: code:addons/delivery/sale.py:57
 #, python-format
 msgid "Order not in draft state !"
 msgstr "Order niet in status \"Concept\"!"
@@ -439,6 +442,8 @@ msgstr ""
 
 #. module: delivery
 #: sql_constraint:stock.picking:0
+#: sql_constraint:stock.picking.in:0
+#: sql_constraint:stock.picking.out:0
 msgid "Reference must be unique per Company!"
 msgstr "Referentie moet uniek zijn per bedrijf!"
 
@@ -450,7 +455,7 @@ msgstr "Maximumwaarde"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Quantity"
-msgstr "Aantal"
+msgstr "Hoeveelheid"
 
 #. module: delivery
 #: view:delivery.define.delivery.steps.wizard:0
@@ -486,7 +491,7 @@ msgid "Cancel"
 msgstr "Annuleren"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:130
+#: code:addons/delivery/delivery.py:136
 #, python-format
 msgid "Free if more than %.2f"
 msgstr "Gratis indien meer dan %.2f"
@@ -533,7 +538,6 @@ msgid "Create Deliveries"
 msgstr "Maak afleveringen"
 
 #. module: delivery
-#: view:delivery.carrier:0
 #: view:delivery.grid:0
 #: field:delivery.grid,state_ids:0
 msgid "States"
@@ -567,7 +571,7 @@ msgid "Price"
 msgstr "Bedrag"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:70
+#: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid matching for this carrier !"
 msgstr "Geen passende leveringsmatrix gevonden voor deze vervoerder!"
@@ -589,7 +593,7 @@ msgid "="
 msgstr "="
 
 #. module: delivery
-#: code:addons/delivery/stock.py:90
+#: code:addons/delivery/stock.py:91
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
 msgstr "De vervoerder %s (id: %d) heeft geen leveringsmatrix!"
@@ -615,6 +619,7 @@ msgstr "Geavanceerd prijsbeleid per bestemming"
 #: model:ir.model,name:delivery.model_delivery_carrier
 #: report:sale.shipping:0
 #: field:stock.picking,carrier_id:0
+#: field:stock.picking.out,carrier_id:0
 msgid "Carrier"
 msgstr "Vervoerder"
 
@@ -629,8 +634,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:53
-#: code:addons/delivery/wizard/delivery_sale_order.py:73
+#: code:addons/delivery/sale.py:57
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr ""

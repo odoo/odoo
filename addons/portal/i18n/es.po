@@ -8,23 +8,23 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-11-08 12:37+0000\n"
+"PO-Revision-Date: 2012-12-19 23:03+0000\n"
 "Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-09 05:05+0000\n"
-"X-Generator: Launchpad (build 16250)\n"
+"X-Launchpad-Export-Date: 2012-12-20 05:09+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: portal
-#: code:addons/portal/wizard/share_wizard.py:51
+#: code:addons/portal/wizard/share_wizard.py:50
 #, python-format
 msgid "Please select at least one user to share with"
 msgstr "Por favor seleccione al menos un usuario con quien compartir"
 
 #. module: portal
-#: code:addons/portal/wizard/share_wizard.py:55
+#: code:addons/portal/wizard/share_wizard.py:54
 #, python-format
 msgid "Please select at least one group to share with"
 msgstr "Por favor seleccione al menos un grupo con quien compartir"
@@ -41,7 +41,7 @@ msgid "Existing groups"
 msgstr "Grupos existentes"
 
 #. module: portal
-#: model:ir.model,name:portal.model_res_portal_wizard_user
+#: model:ir.model,name:portal.model_portal_wizard_user
 msgid "Portal User Config"
 msgstr "Configuración usuario portal"
 
@@ -160,16 +160,15 @@ msgid "Portal Widgets"
 msgstr "Widgets portal"
 
 #. module: portal
-#: model:ir.model,name:portal.model_res_portal
-#: model:ir.module.category,name:portal.module_category_portal
-#: view:res.portal:0
-#: field:res.portal.widget,portal_id:0
-#: field:res.portal.wizard,portal_id:0
+#: model:ir.ui.menu,name:portal.portal_menu
+#: field:portal.wizard,portal_id:0
+#: field:res.groups,is_portal:0
+#: model:res.groups,name:portal.group_portal
 msgid "Portal"
 msgstr "Portal"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:35
+#: code:addons/portal/wizard/portal_wizard.py:34
 #, python-format
 msgid "Your OpenERP account at %(company)s"
 msgstr "Su cuenta OpenERP en %(company)s"
@@ -209,7 +208,7 @@ msgid "Existing users"
 msgstr "Usuarios existentes"
 
 #. module: portal
-#: field:res.portal.wizard.user,wizard_id:0
+#: field:portal.wizard.user,wizard_id:0
 msgid "Wizard"
 msgstr "Asistente"
 
@@ -243,7 +242,7 @@ msgid "The language for the user's user interface"
 msgstr "El idioma de la interfaz de usuario del usuario"
 
 #. module: portal
-#: view:res.portal.wizard:0
+#: view:portal.wizard:0
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -266,7 +265,7 @@ msgstr ""
 "los usuarios."
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:135
+#: code:addons/portal/wizard/portal_wizard.py:194
 #, python-format
 msgid "Email required"
 msgstr "Correo electrónico requerido"
@@ -282,7 +281,7 @@ msgid "Invalid email address"
 msgstr "Dirección email invalida"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:136
+#: code:addons/portal/wizard/portal_wizard.py:195
 #, python-format
 msgid ""
 "You must have an email address in your User Preferences to send emails."
@@ -296,9 +295,7 @@ msgid "ir.ui.menu"
 msgstr "ir.ui.menu"
 
 #. module: portal
-#: view:res.portal:0
-#: view:res.portal.wizard:0
-#: field:res.portal.wizard,user_ids:0
+#: field:portal.wizard,user_ids:0
 msgid "Users"
 msgstr "Usuarios"
 
@@ -421,4 +418,4 @@ msgstr "Asistente de compartición"
 #. module: portal
 #: model:res.groups,name:portal.group_portal_officer
 msgid "Officer"
-msgstr "Gestor"
+msgstr "Directivo"

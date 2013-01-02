@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-12-16 10:50+0000\n"
+"PO-Revision-Date: 2012-12-25 12:42+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-17 05:07+0000\n"
-"X-Generator: Launchpad (build 16372)\n"
+"X-Launchpad-Export-Date: 2012-12-26 04:57+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -132,8 +132,8 @@ msgstr ""
 "producten volgen en inkoopfacturen beheren."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:340
-#: code:addons/purchase/wizard/purchase_line_invoice.py:141
+#: code:addons/purchase/purchase.py:350
+#: code:addons/purchase/wizard/purchase_line_invoice.py:137
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
 #: view:res.partner:0
 #, python-format
@@ -476,7 +476,7 @@ msgid "Order in last month"
 msgstr "Order in afgelopen maand"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:573
+#: code:addons/purchase/purchase.py:587
 #, python-format
 msgid "You must first cancel all receptions related to this purchase order."
 msgstr ""
@@ -729,7 +729,7 @@ msgid "Miscellaneous"
 msgstr "Diversen"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:988
+#: code:addons/purchase/purchase.py:956
 #, python-format
 msgid "The selected supplier only sells this product by %s"
 msgstr "De geselecteerde leverancier verkoopt dit product alleen per %s"
@@ -744,7 +744,7 @@ msgstr "Referentie eenheid"
 #: view:purchase.report:0
 #: field:purchase.report,quantity:0
 msgid "Quantity"
-msgstr "Aantal"
+msgstr "Hoeveelheid"
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_invoicefrompurchaseorder0
@@ -974,7 +974,6 @@ msgstr "Gebruiker"
 
 #. module: purchase
 #: field:purchase.order,shipped:0
-#: field:purchase.order,shipped_rate:0
 msgid "Received"
 msgstr "Ontvangen"
 
@@ -1091,7 +1090,7 @@ msgstr ""
 "maateenheid van het product"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1133
+#: code:addons/purchase/purchase.py:1141
 #, python-format
 msgid "PO: %s"
 msgstr "IO: %s"
@@ -1433,7 +1432,7 @@ msgstr "Prijs"
 #: selection:purchase.order.line,state:0
 #: selection:purchase.report,state:0
 msgid "Done"
-msgstr "Gereed"
+msgstr "Verwerkt"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1580,7 +1579,7 @@ msgid "Delivery & Invoicing"
 msgstr "Levering & facturatie"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:991
+#: code:addons/purchase/purchase.py:960
 #, python-format
 msgid ""
 "The selected supplier has a minimal quantity set to %s %s, you should not "
@@ -1661,7 +1660,7 @@ msgstr "Levering"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Purchase orders which are in done state."
-msgstr "Inkooporders welke zich de gereed fase bevinden"
+msgstr "Inkooporders welke zich de status 'Verwerkt'"
 
 #. module: purchase
 #: field:purchase.order.line,product_uom:0
@@ -1867,8 +1866,8 @@ msgstr ""
 "bevestigd.                         \n"
 "* De 'Goedgekeurd' status wordt gezet als de leverancier de inkooporder "
 "goedkeurt.               \n"
-"* De 'Gereed' status wordt automatisch gezet als de inkooporder klaars is.   "
-"                                     \n"
+"* De 'Verwerkt' status wordt automatisch gezet als de inkooporder klaars is. "
+"                                       \n"
 "* De 'Geannuleerd' status wordt automatisch gezet als de gebruiker de "
 "inkooporder annuleert."
 
@@ -2080,7 +2079,7 @@ msgstr "Gebaseerd op inkooporders (bestelde hoeveelheid)"
 #: model:ir.actions.todo.category,name:purchase.category_purchase_config
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
 msgid "Purchase Management"
-msgstr "Inkoopbeheer"
+msgstr "Inkoop"
 
 #. module: purchase
 #: view:purchase.order.line:0
