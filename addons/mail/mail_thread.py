@@ -393,7 +393,7 @@ class mail_thread(osv.AbstractModel):
 
     def message_get_reply_to(self, cr, uid, ids, context=None):
         if not self._inherits.get('mail.alias'):
-            return False
+            return [False for id in ids]
         return ["%s@%s" % (record['alias_name'], record['alias_domain'])
                     if record.get('alias_domain') and record.get('alias_name')
                     else False
