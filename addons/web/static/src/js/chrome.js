@@ -42,6 +42,16 @@ instance.web.Notification =  instance.web.Widget.extend({
     }
 });
 
+instance.web.action_notify = function(element, action) {
+    element.do_notify(action.params.title, action.params.text, action.params.sticky);
+};
+instance.web.client_actions.add("action_notify", "instance.web.action_notify");
+
+instance.web.action_warn = function(element, action) {
+    element.do_warn(action.params.title, action.params.text, action.params.sticky);
+};
+instance.web.client_actions.add("action_warn", "instance.web.action_warn");
+
 /**
  * The very minimal function everything should call to create a dialog
  * in OpenERP Web Client.
@@ -606,6 +616,9 @@ instance.web.Login =  instance.web.Widget.extend({
         var d = $.when();
         if ($.deparam.querystring().db) {
             self.params.db = $.deparam.querystring().db;
+        }
+        if ($.param.fragment().token) {
+            self.params.token = $.param.fragment().token;
         }
         // used by dbmanager.do_create via internal client action
         if (self.params.db && self.params.login && self.params.password) {
