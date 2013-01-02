@@ -304,7 +304,7 @@ class ir_translation(osv.osv):
             types_to_invalidate.append(('report', 'rml'))
         elif type in  ('code','sql_constraint'):
             name = None  # GettextAlias always request source with name = None
-            types_to_invalidated.append(('code','sql_constraint'))
+            types_to_invalidate.append(('code','sql_constraint'))
         elif type in ('field', 'help'):
             use_src = None  # orm fields_get() request translation without source
 
