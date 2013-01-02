@@ -19,6 +19,9 @@
 #
 ##############################################################################
 
+from urllib import urlencode
+from urlparse import urljoin
+
 from openerp import SUPERUSER_ID
 from openerp.osv import osv
 from openerp.tools import append_content_to_html
@@ -39,6 +42,26 @@ class mail_mail(osv.Model):
         if partner:
             context = dict(context or {}, signup_valid=True)
             partner = self.pool.get('res.partner').browse(cr, SUPERUSER_ID, partner.id, context=context)
-            text = _("""Access your personal documents through <a href="%s">our Customer Portal</a>""") % partner.signup_url
+            text = ''
+            # private message
+            if not mail.model or not mail.res_id:
+                text = _("""<p>Access your messages through <a href="%s">our Customer Portal</a></p>""") % partner.signup_url
+            # partner is also an user: add a link if read access to the document
+            elif partner.user_ids and self.check_access_rights(cr, partner.user_ids[0].id, 'read', raise_exception=False):
+                related_user = partner.user_ids[0]
+                try:
+                    self.check_access_rule(cr, related_user.id, [mail.res_id], 'read', context=context)
+                    base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+                    url_params = {
+                        'model': mail.model,
+                        'id': mail.res_id,
+                    }
+                    url = urljoin(base_url, "?#%s" % (urlencode(url_params)))
+                    text = _("""<p>Read this document <a href="%s">directly in OpenERP</a></p>""") % url
+                except:  # TODO: catch good exception
+                    text = _("""<p>Access your messages through <a href="%s">our Customer Portal</a></p>""") % partner.signup_url
+            # partner not user
+            else:
+                text = _("""<p>Access your messages through <a href="%s">our Customer Portal</a></p>""") % partner.signup_url
             body = append_content_to_html(body, ("<div><p>%s</p></div>" % text), plaintext=False)
         return body
