@@ -842,11 +842,10 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                     save_deferral = self.dataset.create(values).then(function(r) {
                         return self.record_created(r, prepend_on_create);
                     }, null);
-                } else if (_.isEmpty(values) && ! self.force_dirty) {
+                } else if (_.isEmpty(values)) {
                     // Not dirty, noop save
                     save_deferral = $.Deferred().resolve({}).promise();
                 } else {
-                    self.force_dirty = false;
                     // Write save
                     save_deferral = self.dataset.write(self.datarecord.id, values, {}).then(function(r) {
                         return self.record_saved(r);
@@ -1935,7 +1934,6 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
             }
         };
         if (!this.node.attrs.special) {
-            this.view.force_dirty = true;
             return this.view.recursive_save().then(exec_action);
         } else {
             return exec_action();
