@@ -20,37 +20,42 @@ openerp.web_analytics = function(instance) {
         s.parentNode.insertBefore(ga,s);
     })();
 
+    instance.web_analytics.Tracker = instance.web.Class.extend({
+        init: function() {
+            // initialize tracker
+            _gaq.push(['_setAccount', 'UA-35793871-1']);
+            // _gaq.push(['_setAccount', 'UA-7333765-1']);
+            //_gaq.push(['_setAccount', 'UA-36797757-1']);     // Debug code
+            _gaq.push(['_setDomainName', 'none']);  // Change for the real domain
+            this.initialize_custom();
+            instance.client.on('state_pushed', this, on_state_pushed);
+            this.include_tracker();
+        },
+        initialize_custom: function() {},
+        on_state_pushed: function() {},
+        include_tracker: function() {},
+    });
 
     var init_tracker = function() {
         // initialize tracker
-        _gaq.push(['_setAccount', 'UA-7333765-1']);
+        _gaq.push(['_setAccount', 'UA-35793871-1']);
+        // _gaq.push(['_setAccount', 'UA-7333765-1']);
         //_gaq.push(['_setAccount', 'UA-36797757-1']);     // Debug code
         _gaq.push(['_setDomainName', 'none']);  // Change for the real domain
 
         // Track user types
-        if (instance.session.uid !== 1) {
-            if ((/\.demo.openerp.com/).test(instance.session.server)) {
-                _gaq.push(['_setCustomVar', 1, 'User Type', 'Demo User', 1]);
-            } else {
-                _gaq.push(['_setCustomVar', 1, 'User Type', 'Normal User', 1]);
-            }
-        } else {
+        if (instance.session.uid === 1) {
             _gaq.push(['_setCustomVar', 1, 'User Type', 'Admin User', 1]);
+        } else {
+            _gaq.push(['_setCustomVar', 1, 'User Type', 'Normal User', 1]);
         }
-
-        // Track object usage 
-        _gaq.push(['_setCustomVar', 2, 'Object', 'no_model', 3]);
-        // Tack view usage
-        _gaq.push(['_setCustomVar', 3, 'View Type', 'default', 3]);
-
-        _gaq.push(['_trackPageview']);
     };
 
     var on_state_pushed = function(state) {
         // Track only pages corresponding to a 'normal' view of OpenERP, views
         // related to client actions are tracked by the action manager
-        if (state.model && state.view_type) {                
-            // Track object usage 
+        if (state.model && state.view_type) {
+            // Track object usage
             _gaq.push(['_setCustomVar', 2, 'Object', state.model, 3]);
             // Tack view usage
             _gaq.push(['_setCustomVar', 3, 'View Type', state.view_type, 3]);
@@ -82,6 +87,8 @@ openerp.web_analytics = function(instance) {
         // Track client actions
         instance.web.ActionManager.include({
             ir_actions_client: function (action, options) {
+                console.log(action);
+                console.log(options);
                 var url = instance.web_analytics.generateUrl({'action': action.tag});
                 _gaq.push(['_trackPageview', url]);
                 return this._super.apply(this, arguments);
@@ -95,7 +102,7 @@ openerp.web_analytics = function(instance) {
                 var category = this.model || dataset.model || '';
                 var action;
                 if (action_data.name && _.isNaN(action_data.name-0)) {
-                    action = action_data.name;                
+                    action = action_data.name;
                 } else {
                     action = action_data.string || action_data.special || '';
                 }
