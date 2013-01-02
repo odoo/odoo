@@ -230,7 +230,7 @@ class TestSanitizer(unittest2.TestCase):
             self.assertNotIn(attr, sanitized_html, 'html_sanitize did not remove enough unwanted attributes')
 
         emails =[("Charles <charles.bidule@truc.fr>", "<p>Charles &lt;charles.bidule@truc.fr&gt;</p>"), 
-                ("Dupuis <'tr/-:dupuis><#><$'@truc.baz.fr>", "<p>Dupuis &lt;'tr/-:dupuis&gt;&lt;#&gt;&lt;$'@truc.baz.fr&gt;</p>"),
+                ("Dupuis <'tr/-: ${dupuis><#><$'@truc.baz.fr>", "<p>Dupuis &lt;'tr/-: ${dupuis&gt;&lt;#&gt;&lt;$'@truc.baz.fr&gt;</p>"),
                 ("Technical <service/technical+2@open.com>", "<p>Technical &lt;service/technical+2@open.com&gt;</p>"),
                 ("Div nico <div-nico@open.com>", "<p>Div nico &lt;div-nico@open.com&gt;</p>")]
         for email in emails:
