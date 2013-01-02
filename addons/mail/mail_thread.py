@@ -388,6 +388,18 @@ class mail_thread(osv.AbstractModel):
         return []
 
     #------------------------------------------------------
+    # Email specific
+    #------------------------------------------------------
+
+    def message_get_reply_to(self, cr, uid, ids, context=None):
+        if not self._inherits.get('mail.alias'):
+            return False
+        return ["%s@%s" % (record['alias_name'], record['alias_domain'])
+                    if record.get('alias_domain') and record.get('alias_name')
+                    else False
+                    for record in self.read(cr, uid, ids, ['alias_name', 'alias_domain'], context=context)]
+
+    #------------------------------------------------------
     # Mail gateway
     #------------------------------------------------------
 

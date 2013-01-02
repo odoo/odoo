@@ -160,6 +160,22 @@ class mail_mail(osv.Model):
         """
         return mail.body_html
 
+    def send_get_mail_reply_to(self, cr, uid, mail, partner=None, context=None):
+        """ Return a specific ir_email body. The main purpose of this method
+            is to be inherited by Portal, to add a link for signing in, in
+            each notification email a partner receives.
+
+            :param browse_record mail: mail.mail browse_record
+            :param browse_record partner: specific recipient partner
+        """
+        if mail.reply_to:
+            return mail.reply_to
+        if not mail.model or not mail.res_id:
+            return False
+        if not hasattr(self.pool.get(mail.model), 'message_get_reply_to'):
+            return False
+        return self.pool.get(mail.model).message_get_reply_to(cr, uid, [mail.res_id], context=context)[0]
+
     def send_get_email_dict(self, cr, uid, mail, partner=None, context=None):
         """ Return a dictionary for specific email values, depending on a
             partner, or generic to the whole recipients given by mail.email_to.
@@ -169,6 +185,7 @@ class mail_mail(osv.Model):
         """
         body = self.send_get_mail_body(cr, uid, mail, partner=partner, context=context)
         subject = self.send_get_mail_subject(cr, uid, mail, partner=partner, context=context)
+        reply_to = self.send_get_mail_reply_to(cr, uid, mail, partner=partner, context=context)
         body_alternative = tools.html2plaintext(body)
         email_to = [partner.email] if partner else tools.email_split(mail.email_to)
         return {
@@ -176,6 +193,7 @@ class mail_mail(osv.Model):
             'body_alternative': body_alternative,
             'subject': subject,
             'email_to': email_to,
+            'reply_to': reply_to,
         }
 
     def send(self, cr, uid, ids, auto_commit=False, recipient_ids=None, context=None):
@@ -219,7 +237,7 @@ class mail_mail(osv.Model):
                         body = email.get('body'),
                         body_alternative = email.get('body_alternative'),
                         email_cc = tools.email_split(mail.email_cc),
-                        reply_to = mail.reply_to,
+                        reply_to = email.get('reply_to'),
                         attachments = attachments,
                         message_id = mail.message_id,
                         references = mail.references,
