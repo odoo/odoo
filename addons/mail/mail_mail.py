@@ -78,6 +78,10 @@ class mail_mail(osv.Model):
     def create(self, cr, uid, values, context=None):
         if 'notification' not in values and values.get('mail_message_id'):
             values['notification'] = True
+        user_id = self.pool.get("res.users").browse(cr, uid, uid, context=context)
+        signature = user_id and user_id.signature or ''
+        if signature:
+            values['body_html'] = tools.append_content_to_html(values['body_html'], signature, plaintext=True, container_tag='div')
         return super(mail_mail, self).create(cr, uid, values, context=context)
 
     def unlink(self, cr, uid, ids, context=None):
