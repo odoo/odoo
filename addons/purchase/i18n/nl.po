@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2012-12-29 08:21+0000\n"
+"Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 07:30+0000\n"
+"X-Launchpad-Export-Date: 2012-12-30 05:51+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
 
 #. module: purchase
@@ -49,7 +49,7 @@ msgstr "Inkoopprijslijst"
 #. module: purchase
 #: report:purchase.order:0
 msgid "Tel :"
-msgstr ""
+msgstr "Tel :"
 
 #. module: purchase
 #: help:purchase.order,pricelist_id:0
@@ -107,7 +107,7 @@ msgstr ""
 #: code:addons/purchase/purchase.py:1024
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "Configuratiefout!"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:587
@@ -132,7 +132,7 @@ msgstr "Inkoop-kostprijs"
 #: code:addons/purchase/purchase.py:1011
 #, python-format
 msgid "No supplier defined for this product !"
-msgstr ""
+msgstr "Geen leverancier voor dit product opgegeven!"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_picking_tree4_picking_to_invoice
@@ -191,7 +191,7 @@ msgstr "Bevestig Order"
 #. module: purchase
 #: field:purchase.config.settings,module_warning:0
 msgid "Alerts by products or supplier"
-msgstr ""
+msgstr "Waarschuwingen per product of leverancier"
 
 #. module: purchase
 #: field:purchase.order,name:0
@@ -334,7 +334,7 @@ msgstr ""
 #. module: purchase
 #: view:product.product:0
 msgid "When you sell this service to a customer,"
-msgstr ""
+msgstr "Wanneer u de service verkoopt aan een klant."
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_createpackinglist0
@@ -359,7 +359,7 @@ msgstr "Wilt u de leveranciersfacturen genereren?"
 #: view:purchase.report:0
 #: field:purchase.report,quantity:0
 msgid "Quantity"
-msgstr "Aantal"
+msgstr "Hoeveelheid"
 
 #. module: purchase
 #: field:purchase.order,fiscal_position:0
@@ -369,7 +369,7 @@ msgstr "Fiscale positie"
 #. module: purchase
 #: field:purchase.config.settings,default_invoice_method:0
 msgid "Default invoicing control method"
-msgstr ""
+msgstr "Standaard factureer methode."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_picking_in
@@ -441,7 +441,7 @@ msgstr "Geplande datum"
 #. module: purchase
 #: field:purchase.order,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. module: purchase
 #: field:purchase.order,journal_id:0
@@ -478,7 +478,7 @@ msgstr "Inkomende producten"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Request for Quotation "
-msgstr ""
+msgstr "Offerte aanvraag "
 
 #. module: purchase
 #: help:purchase.order,partner_ref:0
@@ -514,7 +514,7 @@ msgstr ""
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_approved
 msgid "RFQ Approved"
-msgstr ""
+msgstr "Offerte goedgekeurd"
 
 #. module: purchase
 #: view:purchase.config.settings:0
@@ -539,7 +539,7 @@ msgstr ""
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_confirmed
 msgid "RFQ Confirmed"
-msgstr ""
+msgstr "Offerte bevestigd"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -669,7 +669,7 @@ msgstr "Het geeft aan dat het order verzamelen is uitgevoerd"
 #: code:addons/purchase/purchase.py:586
 #, python-format
 msgid "Unable to cancel this purchase order."
-msgstr ""
+msgstr "Niet mogelijk deze Inkoopporders te annuleren."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_invoice
@@ -1082,7 +1082,7 @@ msgstr "Uitgaande E-mails"
 #: code:addons/purchase/purchase.py:456
 #, python-format
 msgid "You cannot confirm a purchase order without any purchase order line."
-msgstr ""
+msgstr "Het is niet mogelijk een Inkoopporders zonder regels te bevestigen."
 
 #. module: purchase
 #: help:purchase.order,message_ids:0
@@ -1102,11 +1102,13 @@ msgid ""
 "Selected Unit of Measure does not belong to the same category as the product "
 "Unit of Measure."
 msgstr ""
+"De geselecteerde maateenheid behoort niet tot dezelfde maateenheid categorie "
+"van het producten kan zodoende niet worden gebruikt."
 
 #. module: purchase
 #: view:purchase.order.line_invoice:0
 msgid "Select an Open Sales Order"
-msgstr ""
+msgstr "Selecteer een open verkooprder"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_unit_measure_purchase
@@ -1465,7 +1467,7 @@ msgstr ""
 #. module: purchase
 #: field:purchase.config.settings,module_purchase_double_validation:0
 msgid "Force two levels of approvals"
-msgstr ""
+msgstr "Forceer twee niveaus van goedkeuring"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase_type
@@ -1489,7 +1491,7 @@ msgstr "Goedgekeurd"
 #: selection:purchase.order.line,state:0
 #: selection:purchase.report,state:0
 msgid "Done"
-msgstr "Gereed"
+msgstr "Verwerkt"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_invoicefrompackinglist0
@@ -1554,7 +1556,7 @@ msgstr "Orders samenvoegen"
 #. module: purchase
 #: field:purchase.config.settings,module_purchase_analytic_plans:0
 msgid "Use multiple analytic accounts on purchase orders"
-msgstr ""
+msgstr "Gebruik meerdere kostenplaatsen op Inkoopporders"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
@@ -1606,7 +1608,7 @@ msgstr "Bevestiging"
 #. module: purchase
 #: report:purchase.order:0
 msgid "TIN :"
-msgstr ""
+msgstr "TIN :"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_by_category_purchase_form
@@ -1696,7 +1698,7 @@ msgstr "Inkoop menu openen"
 #: code:addons/purchase/purchase.py:1028
 #, python-format
 msgid "No address defined for the supplier"
-msgstr ""
+msgstr "Geen adres gedefinieerd voor de leverancier"
 
 #. module: purchase
 #: field:purchase.order,company_id:0
@@ -1988,7 +1990,7 @@ msgstr "Lijst van bestelde proeucten."
 #. module: purchase
 #: view:purchase.order:0
 msgid "Incoming Shipments & Invoices"
-msgstr ""
+msgstr "Inkomende leveringen & facturen"
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -2090,13 +2092,13 @@ msgstr "Totaal oprders op gebruiker per maand"
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "Based on incoming shipments"
-msgstr ""
+msgstr "Gebaseerd op inkomende leveringen"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1018
 #, python-format
 msgid "No default supplier defined for this product"
-msgstr ""
+msgstr "Geen standaard leverancier gedefinieerd voor dit product"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -2135,7 +2137,7 @@ msgstr "Februari"
 #: model:ir.actions.act_window,name:purchase.action_invoice_pending
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_pending_invoice
 msgid "On Draft Invoices"
-msgstr ""
+msgstr "Op concept facturen"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
@@ -2204,7 +2206,7 @@ msgstr "Versies prijslijsten"
 #. module: purchase
 #: field:purchase.order,payment_term_id:0
 msgid "Payment Term"
-msgstr ""
+msgstr "Betalingsconditie"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -2220,7 +2222,7 @@ msgstr "Jaar"
 #. module: purchase
 #: selection:purchase.config.settings,default_invoice_method:0
 msgid "Based on purchase order lines"
-msgstr ""
+msgstr "Gebaseerd op inkooporder regels"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order

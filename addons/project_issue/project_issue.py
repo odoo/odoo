@@ -64,6 +64,15 @@ class project_issue(base_stage, osv.osv):
         },
     }
 
+    def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
+        if not context.get('default_project_id', False) and vals.get('project_id', False):
+            ctx = context.copy()
+            ctx['default_project_id'] = vals['project_id']
+            vals['stage_id'] = self._get_default_stage_id(cr, uid, context=ctx)
+        return super(project_issue, self).create(cr, uid, vals, context=context)
+
     def _get_default_project_id(self, cr, uid, context=None):
         """ Gives default project by checking if present in the context """
         return self._resolve_project_id_from_context(cr, uid, context=context)

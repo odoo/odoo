@@ -471,7 +471,7 @@ openerp.mail = function (session) {
         bind_events: function () {
             var self = this;
 
-            this.$('textarea.oe_compact').on('focus', _.bind( this.on_compose_expandable, this));
+            this.$('.oe_compact').on('click', _.bind( this.on_compose_expandable, this));
 
             // set the function called when attachments are added
             this.$('input.oe_form_binary_file').on('change', _.bind( this.on_attachment_change, this) );
@@ -479,18 +479,16 @@ openerp.mail = function (session) {
             this.$('.oe_cancel').on('click', _.bind( this.on_cancel, this) );
             this.$('.oe_post').on('click', _.bind( this.on_message_post, this) );
             this.$('.oe_full').on('click', _.bind( this.on_compose_fullmail, this, this.id ? 'reply' : 'comment') );
-        
             /* stack for don't close the compose form if the user click on a button */
             this.$('.oe_msg_left, .oe_msg_center').on('mousedown', _.bind( function () { this.stay_open = true; }, this));
             this.$('.oe_msg_left, .oe_msg_content').on('mouseup', _.bind( function () { this.$('textarea').focus(); }, this));
-
             var ev_stay = {};
             ev_stay.mouseup = ev_stay.keydown = ev_stay.focus = function () { self.stay_open = false; };
-            this.$('textarea:not(.oe_compact)').on(ev_stay);
-            this.$('textarea:not(.oe_compact)').autosize();
+            this.$('textarea').on(ev_stay);
+            this.$('textarea').autosize();
 
             // auto close
-            this.$('textarea:not(.oe_compact)').on('blur', _.bind( this.on_compose_expandable, this));
+            this.$('textarea').on('blur', _.bind( this.on_compose_expandable, this));
 
             // event: delete child attachments off the oe_msg_attachment_list box
             this.$(".oe_msg_attachment_list").on('click', '.oe_delete', this.on_attachment_delete);
