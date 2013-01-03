@@ -4,7 +4,7 @@ var _gaq = _gaq || [];  // asynchronous stack used by google analytics
 openerp.web_analytics = function(instance) {
 
     /*
-    *  The Google Analytics Module inserts the Google Analytics JS Snippet
+    *  The Web Analytics Module inserts the Google Analytics JS Snippet
     *  at the top of the page, and sends to google an url each time the
     *  openerp url is changed.
     *  The pushes of the urls is made by triggering the 'state_pushed' event in the
