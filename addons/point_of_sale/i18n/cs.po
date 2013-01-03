@@ -8,14 +8,16 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-01-01 21:01+0000\n"
+"Last-Translator: Jan Grmela <Unknown>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 07:25+0000\n"
+"X-Launchpad-Export-Date: 2013-01-02 05:25+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
+"X-Language: cs_CZ\n"
+"X-Source-Language: en\n"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,product_nb:0
@@ -25,7 +27,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree_today
 msgid "Sales by day"
-msgstr ""
+msgstr "Prodeje podle dnů"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.pos_category_action
@@ -43,67 +45,79 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klikněte pro vytvoření nové kategorie.\n"
+"              </p><p>\n"
+"                Kategorie se používají pro procházení výrobky "
+"prostřednictvím\n"
+"                dotykového rozhraní.\n"
+"              </p><p>\n"
+"                Pokud ke kategorii přidáte fotografii, automaticky se změní\n"
+"                rozložení dotykového rozhraní. Nedoporučujeme fotografie\n"
+"                přidávat ke kategoriím u malých (1024x768) obrazovek.\n"
+"              </p>\n"
+"            "
 
 #. module: point_of_sale
 #: view:pos.receipt:0
 msgid "Print the Receipt of the Sale"
-msgstr ""
+msgstr "Vytisknout účtenku"
 
 #. module: point_of_sale
 #: field:pos.session,cash_register_balance_end:0
 msgid "Computed Balance"
-msgstr ""
+msgstr "Spočtený zůstatek"
 
 #. module: point_of_sale
 #: view:pos.session:0
 #: view:report.pos.order:0
 msgid "Today"
-msgstr ""
+msgstr "Dnes"
 
 #. module: point_of_sale
 #: field:pos.config,iface_electronic_scale:0
 msgid "Electronic Scale Interface"
-msgstr ""
+msgstr "Rozhraní elektronické váhy"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.plain_water
 msgid "Plain Water"
-msgstr ""
+msgstr "Čistá voda"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.poire_conference_product_template
 msgid "Conference pears"
-msgstr ""
+msgstr "Hruška druhu Conference"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:408
 #, python-format
 msgid "&atilde;"
-msgstr ""
+msgstr "&atilde;"
 
 #. module: point_of_sale
 #: field:pos.config,journal_id:0
 #: field:pos.order,sale_journal:0
 msgid "Sale Journal"
-msgstr ""
+msgstr "Výkaz prodeje"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_2l_product_template
 msgid "Spa Reine 2L"
-msgstr ""
+msgstr "Spa Reine 2L"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_lines_detail
 #: report:pos.details:0
 #: report:pos.details_summary:0
 msgid "Details of Sales"
-msgstr ""
+msgstr "Podrobnosti prodejů"
 
 #. module: point_of_sale
 #: constraint:pos.config:0
 msgid "You cannot have two cash controls in one Point Of Sale !"
-msgstr ""
+msgstr "Nemůžete mít u jednoho prodejního místa dvě pokladny!"
 
 #. module: point_of_sale
 #: field:pos.payment.report.user,user_id:0
@@ -112,30 +126,30 @@ msgstr ""
 #: view:report.pos.order:0
 #: field:report.pos.order,user_id:0
 msgid "Salesperson"
-msgstr ""
+msgstr "Pokladník"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 #: field:report.pos.order,day:0
 msgid "Day"
-msgstr ""
+msgstr "Den"
 
 #. module: point_of_sale
 #: field:report.sales.by.margin.pos,product_name:0
 #: field:report.sales.by.margin.pos.month,product_name:0
 msgid "Product Name"
-msgstr ""
+msgstr "Název výrobku"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pamplemousse_rouge_pamplemousse_product_template
 msgid "Red grapefruit"
-msgstr ""
+msgstr "Červený grep"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:1341
 #, python-format
 msgid "Assign a Custom EAN"
-msgstr ""
+msgstr "Přiřadit vlastní EAN"
 
 #. module: point_of_sale
 #: view:pos.session.opening:0
@@ -144,6 +158,8 @@ msgid ""
 "                          being able to start selling through the "
 "touchscreen interface."
 msgstr ""
+"Budete se muset postarat o hotovost v pokladně než budete moci\n"
+"                          začít prodávat prostřednictvím dotykového rozhraní."
 
 #. module: point_of_sale
 #: report:account.statement:0
@@ -153,36 +169,36 @@ msgstr ""
 #: report:pos.user.product:0
 #: field:report.transaction.pos,amount:0
 msgid "Amount"
-msgstr ""
+msgstr "Částka"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_box_out
 #: view:pos.session:0
 msgid "Take Money Out"
-msgstr ""
+msgstr "Vyndat hotovost"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:105
 #, python-format
 msgid "not used"
-msgstr ""
+msgstr "nepoužito"
 
 #. module: point_of_sale
 #: field:pos.config,iface_vkeyboard:0
 msgid "Virtual KeyBoard Interface"
-msgstr ""
+msgstr "Rozhraní virtuální klávesnice"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:90
 #, python-format
 msgid "+/-"
-msgstr ""
+msgstr "+/-"
 
 #. module: point_of_sale
 #: field:pos.ean_wizard,ean13_pattern:0
 msgid "Reference"
-msgstr ""
+msgstr "Číslo"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:1038
@@ -191,94 +207,94 @@ msgstr ""
 #: report:pos.lines:0
 #, python-format
 msgid "Tax"
-msgstr ""
+msgstr "Daň"
 
 #. module: point_of_sale
 #: report:pos.user.product:0
 msgid "Starting Date"
-msgstr ""
+msgstr "Datum počátku"
 
 #. module: point_of_sale
 #: constraint:pos.session:0
 msgid "You cannot create two active sessions with the same responsible!"
-msgstr ""
+msgstr "Nemůžete vytvořit dvě aktivní sezení se stejnou odpovědnou osobou!"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:479
 #, python-format
 msgid "Weighting"
-msgstr ""
+msgstr "Vážení"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fenouil_fenouil_product_template
 msgid "Fennel"
-msgstr ""
+msgstr "Fenykl"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:478
 #, python-format
 msgid "Help needed"
-msgstr ""
+msgstr "Nutná pomoc"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:739
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "Chyba nastavení!"
 
 #. module: point_of_sale
 #: report:account.statement:0
 #: model:ir.model,name:point_of_sale.model_res_partner
 #: field:report.pos.order,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "Closing Cash Control"
-msgstr ""
+msgstr "Tržba při uzavření pokladny"
 
 #. module: point_of_sale
 #: report:pos.details:0
 #: report:pos.details_summary:0
 msgid "Total of the day"
-msgstr ""
+msgstr "Celkem za den"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 #: field:report.pos.order,average_price:0
 msgid "Average Price"
-msgstr ""
+msgstr "Průměrná cena"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Accounting Information"
-msgstr ""
+msgstr "Účetní informace"
 
 #. module: point_of_sale
 #: field:pos.session.opening,show_config:0
 msgid "Show Config"
-msgstr ""
+msgstr "Zobrazit nastavení"
 
 #. module: point_of_sale
 #: report:pos.lines:0
 msgid "Disc. (%)"
-msgstr ""
+msgstr "Sleva (%)"
 
 #. module: point_of_sale
 #: report:pos.details:0
 #: report:pos.details_summary:0
 msgid "Total discount"
-msgstr ""
+msgstr "Celková sleva"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:447
 #, python-format
 msgid "Debug Window"
-msgstr ""
+msgstr "Okno ladění"
 
 #. module: point_of_sale
 #. openerp-web
@@ -286,51 +302,51 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:616
 #, python-format
 msgid "Change:"
-msgstr ""
+msgstr "Vráceno:"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_regular_2l_product_template
 msgid "Coca-Cola Regular 2L"
-msgstr ""
+msgstr "Běžná Coca-Cola 2L"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree_month
 msgid "Sales by month"
-msgstr ""
+msgstr "Prodeje podle měsíců"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.soda_orange
 msgid "Orange"
-msgstr ""
+msgstr "Pomeranč"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_sales_by_user_pos_today
 #: view:report.sales.by.user.pos:0
 #: view:report.sales.by.user.pos.month:0
 msgid "Sales by User"
-msgstr ""
+msgstr "Prodeje podle uživatele"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Disc.(%)"
-msgstr ""
+msgstr "Sleva (%)"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:1003
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
-msgstr ""
+msgstr "Prosím nastavte příjmový účet tohoto výrobku: \"%s\" (id: %d)."
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 #: field:report.pos.order,price_total:0
 msgid "Total Price"
-msgstr ""
+msgstr "Celková cena"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.leffe_brune_33cl_product_template
 msgid "Leffe Brune 33cl"
-msgstr ""
+msgstr "Leffe Brune 33cl"
 
 #. module: point_of_sale
 #: help:pos.config,iface_self_checkout:0
@@ -338,102 +354,105 @@ msgid ""
 "Check this if this point of sale should open by default in a self checkout "
 "mode. If unchecked, OpenERP uses the normal cashier mode by default."
 msgstr ""
+"Zaškrtněte pole pokud má být toto prodejní místo otevřeno v režimu "
+"samoobslužné pokladny. Pokud není pole zaškrtnuté, OpenERP použije běžný "
+"pokladní režim."
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_sales_user
 #: report:pos.sales.user:0
 msgid "Sales Report"
-msgstr ""
+msgstr "Výkaz prodejů"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.beverage
 msgid "Beverages"
-msgstr ""
+msgstr "Nápoje"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_session_opening
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_session_opening
 msgid "Your Session"
-msgstr ""
+msgstr "Vaše sezení"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.stella_50cl_product_template
 msgid "Stella Artois 50cl"
-msgstr ""
+msgstr "Stella Artois 50cl"
 
 #. module: point_of_sale
 #: view:pos.details:0
 msgid "Dates"
-msgstr ""
+msgstr "Data"
 
 #. module: point_of_sale
 #: field:pos.category,parent_id:0
 msgid "Parent Category"
-msgstr ""
+msgstr "Nadřízená kategorie"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:488
 #, python-format
 msgid "Open Cashbox"
-msgstr ""
+msgstr "Otevřít pokladnu"
 
 #. module: point_of_sale
 #: view:pos.session.opening:0
 msgid "Select your Point of Sale"
-msgstr ""
+msgstr "Zvolte vaše prodejní místo"
 
 #. module: point_of_sale
 #: field:report.sales.by.margin.pos,total:0
 #: field:report.sales.by.margin.pos.month,total:0
 msgid "Margin"
-msgstr ""
+msgstr "Marže"
 
 #. module: point_of_sale
 #: field:pos.discount,discount:0
 #: field:pos.order.line,discount:0
 msgid "Discount (%)"
-msgstr ""
+msgstr "Sleva (%)"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_speciale_product_template
 msgid "Dr. Oetker Ristorante Speciale"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Speciale"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:486
 #, python-format
 msgid "Payment Request"
-msgstr ""
+msgstr "Platební požadavek"
 
 #. module: point_of_sale
 #: field:product.product,to_weight:0
 msgid "To Weight"
-msgstr ""
+msgstr "Ke zvážení"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:482
 #, python-format
 msgid "Hardware Events"
-msgstr ""
+msgstr "Události hardwaru"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:301
 #, python-format
 msgid "You should assign a Point of Sale to your session."
-msgstr ""
+msgstr "Měli byste ke svému sezení přiřadit prodejní místo."
 
 #. module: point_of_sale
 #: view:pos.order.line:0
 msgid "Total qty"
-msgstr ""
+msgstr "Celkový počet"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_orange_33cl_product_template
 msgid "Fanta Orange 33cl"
-msgstr ""
+msgstr "Fanta pomeranč 33cl"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:420
@@ -444,18 +463,22 @@ msgid ""
 "close this session, you can update the 'Closing Cash Control' to avoid any "
 "difference."
 msgstr ""
+"Prosím nastavte u způsobu platby '%s' účty zisku a ztrát. Nastavení umožní "
+"OpenERP přidat rozdíl %.2f k vašemu konečnému zůstatku. Pro uzavření tohoto "
+"sezení můžete aktualizovat 'Tržbu při uzavření pokladny' abyste se vyhnuli "
+"rozdílům."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:315
 #: code:addons/point_of_sale/point_of_sale.py:512
 #, python-format
 msgid "error!"
-msgstr ""
+msgstr "chyba!"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_sales_by_user_pos_month
 msgid "Sales by User Monthly"
-msgstr ""
+msgstr "Měsíční prodeje podle uživatele"
 
 #. module: point_of_sale
 #: help:pos.session,cash_register_difference:0
@@ -463,21 +486,23 @@ msgid ""
 "Difference between the counted cash control at the closing and the computed "
 "balance."
 msgstr ""
+"Rozdíl mezi skutečným zůstatkem v pokladně při jejím uzavření a vypočteným "
+"zůstatkem."
 
 #. module: point_of_sale
 #: view:pos.session.opening:0
 msgid ") is \""
-msgstr ""
+msgstr ") je \""
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.Onions_product_template
 msgid "Onions"
-msgstr ""
+msgstr "Cibule"
 
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "Validate & Open Session"
-msgstr ""
+msgstr "Zkontrolovat a otevřít sezení"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:99
@@ -485,18 +510,18 @@ msgstr ""
 #: selection:pos.session.opening,pos_state:0
 #, python-format
 msgid "In Progress"
-msgstr ""
+msgstr "Probíhá"
 
 #. module: point_of_sale
 #: view:pos.session:0
 #: field:pos.session,opening_details_ids:0
 msgid "Opening Cash Control"
-msgstr ""
+msgstr "Tržba při otevření pokladny"
 
 #. module: point_of_sale
 #: help:res.users,ean13:0
 msgid "BarCode"
-msgstr ""
+msgstr "Čárový kód"
 
 #. module: point_of_sale
 #: help:pos.category,image_medium:0
@@ -505,33 +530,36 @@ msgid ""
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
 msgstr ""
+"Střední obrázek kategorie. Je automaticky škálován na rozměr 128x128 pixelů "
+"se zachováním poměru stran. Použijte toto pole v zobrazeních formuláře nebo "
+"některých pohledech kanban."
 
 #. module: point_of_sale
 #: view:pos.session.opening:0
 msgid "Open Session"
-msgstr ""
+msgstr "Otevřít sezení"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale
 msgid "Daily Operations"
-msgstr ""
+msgstr "Denní oprace"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:42
 #, python-format
 msgid "Google Chrome"
-msgstr ""
+msgstr "Google Chrome"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.sparkling_water
 msgid "Sparkling Water"
-msgstr ""
+msgstr "Perlivá voda"
 
 #. module: point_of_sale
 #: view:account.bank.statement:0
 msgid "Search Cash Statements"
-msgstr ""
+msgstr "Vyhledat výpisy hotovosti"
 
 #. module: point_of_sale
 #: view:account.bank.statement:0
@@ -544,22 +572,22 @@ msgstr ""
 #: field:pos.session.opening,pos_state_str:0
 #: field:report.pos.order,state:0
 msgid "Status"
-msgstr ""
+msgstr "Stav"
 
 #. module: point_of_sale
 #: selection:report.pos.order,month:0
 msgid "August"
-msgstr ""
+msgstr "Srpen"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pepsi_max_lemon_33cl_product_template
 msgid "Pepsi Max Cool Lemon 33cl"
-msgstr ""
+msgstr "Pepsi Max Cool Lemon 33cl"
 
 #. module: point_of_sale
 #: selection:report.pos.order,month:0
 msgid "June"
-msgstr ""
+msgstr "Červen"
 
 #. module: point_of_sale
 #: view:pos.order.line:0
@@ -569,24 +597,24 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.config:0
 msgid "Point of Sale Configuration"
-msgstr ""
+msgstr "Nastavení prodejního místa"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:369
 #, python-format
 msgid "Your order has to be validated by a cashier."
-msgstr ""
+msgstr "Vaše objednávka musí být ověřena pokladní(m)."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_orange_50cl_product_template
 msgid "Fanta Orange 50cl"
-msgstr ""
+msgstr "Fanta Pomeranč 50cl"
 
 #. module: point_of_sale
 #: field:pos.category,child_id:0
 msgid "Children Categories"
-msgstr ""
+msgstr "Podřízené kategorie"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_pos_session
@@ -608,12 +636,23 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klikněte pro spuštění nového sezení..\n"
+"              </p><p>\n"
+"                Sezení je časové období, obvykle jeden den, během kterého\n"
+"                prodáváte zboží na prodejním místě. Uživatel musí zadat\n"
+"                zůstatek v pokladně na začátku a konci každého sezení.\n"
+"              </p><p>\n"
+"                Měli byste spíše využít menu <i>Vaše sezení</i> pro rychlé\n"
+"                otevření nového sezení.\n"
+"              </p>\n"
+"            "
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:868
 #, python-format
 msgid "Customer Invoice"
-msgstr ""
+msgstr "Vydaná faktura"
 
 #. module: point_of_sale
 #: view:pos.session.opening:0
@@ -621,13 +660,15 @@ msgid ""
 "You can continue sales from the touchscreen interface by clicking on \"Start "
 "Selling\" or close the cash register session."
 msgstr ""
+"V prodeji přes dotykové rozhraní můžete pokračovat po kliknutí na \"Začít "
+"prodávat\" nebo ukončením sezení pokladny."
 
 #. module: point_of_sale
 #: report:account.statement:0
 #: report:all.closed.cashbox.of.the.day:0
 #: field:pos.session,stop_at:0
 msgid "Closing Date"
-msgstr ""
+msgstr "Datum uzavření"
 
 #. module: point_of_sale
 #: view:pos.session:0
@@ -637,28 +678,28 @@ msgstr ""
 #. module: point_of_sale
 #: selection:report.pos.order,month:0
 msgid "October"
-msgstr ""
+msgstr "Říjen"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_1l_product_template
 msgid "Coca-Cola Light 1L"
-msgstr ""
+msgstr "Coca-Cola Light 1L"
 
 #. module: point_of_sale
 #: report:pos.details:0
 #: report:pos.details_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Souhrn"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_naturel_45g_product_template
 msgid "Lays Natural 45g"
-msgstr ""
+msgstr "Lays Přírodní 45g"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chaudfontaine_50cl_product_template
 msgid "Chaudfontaine 50cl"
-msgstr ""
+msgstr "Chaudfontaine 50cl"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -667,7 +708,7 @@ msgstr ""
 #: field:report.sales.by.user.pos,qty:0
 #: field:report.sales.by.user.pos.month,qty:0
 msgid "Quantity"
-msgstr ""
+msgstr "Množství"
 
 #. module: point_of_sale
 #: field:pos.order.line,name:0
@@ -679,44 +720,44 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:459
 #, python-format
 msgid "Set Weight"
-msgstr ""
+msgstr "Nastavit hmotnost"
 
 #. module: point_of_sale
 #: view:account.bank.statement:0
 msgid "Period"
-msgstr ""
+msgstr "Období"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Net Total:"
-msgstr ""
+msgstr "Celkem:"
 
 #. module: point_of_sale
 #: model:ir.actions.client,name:point_of_sale.action_client_pos_menu
 msgid "Open POS Menu"
-msgstr ""
+msgstr "Otevřít menu prod. místa"
 
 #. module: point_of_sale
 #: report:pos.details_summary:0
 msgid "Mode of Payment"
-msgstr ""
+msgstr "Způsob platby"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_confirm
 msgid "Post POS Journal Entries"
-msgstr ""
+msgstr "Zadat položky deníku prodejního místa"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:463
 #, python-format
 msgid "Barcode Scanner"
-msgstr ""
+msgstr "Čtečka čárových kódů"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pomme_granny_smith_product_template
 msgid "Granny Smith apples"
-msgstr ""
+msgstr "Jablka Granny Smith"
 
 #. module: point_of_sale
 #: help:product.product,expense_pdt:0
@@ -724,12 +765,15 @@ msgid ""
 "Check if, this is a product you can use to take cash from a statement for "
 "the point of sale backend, example: money lost, transfer to bank, etc."
 msgstr ""
+"Zaškrtněte pokud je toto výrobek, který můžete použít pro odebrání z výpisu "
+"pro backend prodejního místa. Příklady: ztráta hotovosti, převod do banky, "
+"atd."
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 #: field:report.pos.order,total_discount:0
 msgid "Total Discount"
-msgstr ""
+msgstr "Celková sleva"
 
 #. module: point_of_sale
 #. openerp-web
@@ -740,11 +784,13 @@ msgid ""
 "use\n"
 "                        a modern browser like"
 msgstr ""
+"Prodejní místo nepodporuje Microsoft Internet Explorer. Prosím použijte\n"
+"                        moderní prohlížeč jako je"
 
 #. module: point_of_sale
 #: view:pos.session.opening:0
 msgid "Click to start a session."
-msgstr ""
+msgstr "Klikněte pro otevření sezení."
 
 #. module: point_of_sale
 #: view:pos.details:0
@@ -752,49 +798,49 @@ msgstr ""
 #: view:pos.payment.report.user:0
 #: view:pos.sale.user:0
 msgid "Print Report"
-msgstr ""
+msgstr "Tisk výkazu"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_bolognese_product_template
 msgid "Dr. Oetker Ristorante Bolognese"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Bolognese"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pizza
 msgid "Pizza"
-msgstr ""
+msgstr "Pizza"
 
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "= Theoretical Balance"
-msgstr ""
+msgstr "= teoretický zůstatek"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_return.py:85
 #: code:addons/point_of_sale/wizard/pos_return.py:240
 #, python-format
 msgid "Add Product"
-msgstr ""
+msgstr "Přidat výrobek"
 
 #. module: point_of_sale
 #: field:pos.config,name:0
 msgid "Point of Sale Name"
-msgstr ""
+msgstr "Název prodejního místa"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,invoice_am:0
 msgid "Invoice Amount"
-msgstr ""
+msgstr "Fakturovaná částka"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.coke
 msgid "Coke"
-msgstr ""
+msgstr "Kola"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Tel. :"
-msgstr ""
+msgstr "Tel. :"
 
 #. module: point_of_sale
 #. openerp-web
@@ -802,31 +848,31 @@ msgstr ""
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_receipt
 #, python-format
 msgid "Receipt"
-msgstr ""
+msgstr "Účtenka"
 
 #. module: point_of_sale
 #: field:report.sales.by.margin.pos,net_margin_per_qty:0
 #: field:report.sales.by.margin.pos.month,net_margin_per_qty:0
 msgid "Net margin per Qty"
-msgstr ""
+msgstr "Množstevní čistá marže"
 
 #. module: point_of_sale
 #: view:pos.confirm:0
 msgid "Post All Orders"
-msgstr ""
+msgstr "Zadat všechny objednávky"
 
 #. module: point_of_sale
 #: report:account.statement:0
 #: report:all.closed.cashbox.of.the.day:0
 #: field:pos.session,cash_register_balance_end_real:0
 msgid "Ending Balance"
-msgstr ""
+msgstr "Konečný zůstatek"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_box_out.py:89
 #, python-format
 msgid "please check that account is set to %s."
-msgstr ""
+msgstr "prosím zkontrolujte, že je účet nastaven na %s."
 
 #. module: point_of_sale
 #: help:pos.category,image:0
@@ -834,16 +880,17 @@ msgid ""
 "This field holds the image used as image for the cateogry, limited to "
 "1024x1024px."
 msgstr ""
+"V tomto poli je obrázek kategorie o maximálních rozměrech 1024x1024px."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pepsi_max_50cl_product_template
 msgid "Pepsi Max 50cl"
-msgstr ""
+msgstr "Pepsi Max 50cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.san_pellegrino_1l_product_template
 msgid "San Pellegrino 1L"
-msgstr ""
+msgstr "San Pellegrino 1L"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:49
@@ -855,50 +902,56 @@ msgid ""
 "Method\" from the \"Point of Sale\" tab. You can also create new payment "
 "methods directly from menu \"PoS Backend / Configuration / Payment Methods\"."
 msgstr ""
+"Musíte určit, která platební metoda bude dostupná na prodejním místě "
+"znovupoužitím banky a hotovosti prostřednictvím \"Účetnictví / Nastavení / "
+"Deníky / Deníky\". Zvolte deník a zaškrtněte pole \"Způsob platby prodejního "
+"místa\" na záložce \"Prodejní místo\". Můžete též vytvořit nové platební "
+"metody přímo z menu \"Backend prodejního místa / Nastavení / Způsoby "
+"platby\"."
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.rouges_noyau_fruits
 msgid "Berries"
-msgstr ""
+msgstr "Maliny"
 
 #. module: point_of_sale
 #: view:pos.ean_wizard:0
 msgid "Ean13 Generator"
-msgstr ""
+msgstr "Generátor EAN13"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_1l_product_template
 msgid "Spa Reine 1L"
-msgstr ""
+msgstr "Spa Reine 1L"
 
 #. module: point_of_sale
 #: constraint:res.partner:0
 #: constraint:res.users:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Chyba: Neplatný kód EAN"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.legumes_racine
 msgid "Root vegetables"
-msgstr ""
+msgstr "Kořenová zelenina"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.act_pos_open_statement
 #: model:ir.model,name:point_of_sale.model_pos_open_statement
 #: view:pos.open.statement:0
 msgid "Open Statements"
-msgstr ""
+msgstr "Otevřít výpisy"
 
 #. module: point_of_sale
 #: field:pos.details,date_end:0
 #: field:pos.sale.user,date_end:0
 msgid "Date End"
-msgstr ""
+msgstr "Konečné datum"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pomme_jonagold_product_template
 msgid "Jonagold apples"
-msgstr ""
+msgstr "Jablka Jonagold"
 
 #. module: point_of_sale
 #: view:account.bank.statement:0
@@ -907,17 +960,17 @@ msgstr ""
 #: model:ir.model,name:point_of_sale.model_account_journal
 #: field:report.pos.order,journal_id:0
 msgid "Journal"
-msgstr ""
+msgstr "Deník"
 
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "Statements"
-msgstr ""
+msgstr "Výpisy"
 
 #. module: point_of_sale
 #: report:pos.details:0
 msgid "Sales total(Revenue)"
-msgstr ""
+msgstr "Celem prodeje (tržba)"
 
 #. module: point_of_sale
 #: help:pos.config,group_by:0
@@ -925,59 +978,61 @@ msgid ""
 "Check this if you want to group the Journal Items by Product while closing a "
 "Session"
 msgstr ""
+"Zaškrtněte pokud chcete seskupit položky deníky podle výrobků při uzavírání "
+"sezení"
 
 #. module: point_of_sale
 #: report:pos.details:0
 #: report:pos.details_summary:0
 msgid "Total paid"
-msgstr ""
+msgstr "Celkem zaplaceno"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_session_opening
 msgid "pos.session.opening"
-msgstr ""
+msgstr "pos.session.opening"
 
 #. module: point_of_sale
 #: view:res.users:0
 msgid "Edit EAN"
-msgstr ""
+msgstr "Upravit EAN"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:80
 #, python-format
 msgid "List of Cash Registers"
-msgstr ""
+msgstr "Seznam pokladen"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.maes_50cl_product_template
 msgid "Maes 50cl"
-msgstr ""
+msgstr "Maes 50cl"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "Not Invoiced"
-msgstr ""
+msgstr "Nefakturováno"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_pickles_250g_product_template
 msgid "250g Lays Pickels"
-msgstr ""
+msgstr "250g Lays Pickels"
 
 #. module: point_of_sale
 #: field:pos.session.opening,pos_session_id:0
 msgid "PoS Session"
-msgstr ""
+msgstr "Sezení prod. místa"
 
 #. module: point_of_sale
 #: selection:report.pos.order,month:0
 msgid "March"
-msgstr ""
+msgstr "Březen"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_users_product_re
 #: report:pos.user.product:0
 msgid "User's Product"
-msgstr ""
+msgstr "Výrobky uživatele"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:1140
@@ -986,47 +1041,49 @@ msgid ""
 "You have to select a pricelist in the sale form !\n"
 "Please set one before choosing a product."
 msgstr ""
+"Musíte ve formuláři prodeje zvolit ceník!\n"
+"Prosím zvolte nějaký před výběrem výrobku."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_orange_2l_product_template
 msgid "Fanta Orange 2L"
-msgstr ""
+msgstr "Fanta Pomeranč 2L"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.perrier_1l_product_template
 msgid "Perrier 1L"
-msgstr ""
+msgstr "Perrier 1L"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_33cl_product_template
 msgid "Spa Reine 33cl"
-msgstr ""
+msgstr "Spa Reine 33cl"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_discount
 msgid "Add a Global Discount"
-msgstr ""
+msgstr "Přidat globální slevu"
 
 #. module: point_of_sale
 #: view:pos.config:0
 msgid "Journals"
-msgstr ""
+msgstr "Deníky"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_prosciutto_product_template
 msgid "Dr. Oetker Ristorante Prosciutto"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Prosciutto"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_light_paprika_170g_product_template
 #: model:product.template,name:point_of_sale.lays_paprika_170g_product_template
 msgid "Lays Light Paprika 170g"
-msgstr ""
+msgstr "Lays Light Paprika 170g"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_lemon_50cl_product_template
 msgid "Coca-Cola Light Lemon 50cl"
-msgstr ""
+msgstr "Coca-Cola Light Citron 50cl"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1040,73 +1097,73 @@ msgstr ""
 #. module: point_of_sale
 #: view:product.product:0
 msgid "Set a Custom EAN"
-msgstr ""
+msgstr "Nastavit vlastní EAN"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:237
 #, python-format
 msgid "Remaining:"
-msgstr ""
+msgstr "Zbývá:"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.legumes
 msgid "Fresh vegetables"
-msgstr ""
+msgstr "Čerstvá zelenina"
 
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "tab of the"
-msgstr ""
+msgstr "záložka"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:484
 #, python-format
 msgid "Scan Item Success"
-msgstr ""
+msgstr "Skenování položky úspěšné"
 
 #. module: point_of_sale
 #: report:account.statement:0
 #: report:all.closed.cashbox.of.the.day:0
 #: field:pos.session,cash_register_balance_start:0
 msgid "Starting Balance"
-msgstr ""
+msgstr "Počáteční zůstatek"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_naturel_oven_150g_product_template
 msgid "Oven Baked Lays Natural 150g"
-msgstr ""
+msgstr "Oven Baked Lays Natural 150g"
 
 #. module: point_of_sale
 #: sql_constraint:pos.session:0
 msgid "The name of this POS Session must be unique !"
-msgstr ""
+msgstr "Název sezení tohoto prodejního místa musí být unikátní!"
 
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "Opening Subtotal"
-msgstr ""
+msgstr "Mezisoučet při otevření"
 
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "payment method."
-msgstr ""
+msgstr "způsob platby."
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Re-Print"
-msgstr ""
+msgstr "Tisk znovu"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chimay_bleu_75cl_product_template
 msgid "Chimay Bleu 75cl"
-msgstr ""
+msgstr "Chimay Bleu 75cl"
 
 #. module: point_of_sale
 #: report:pos.payment.report.user:0
 msgid "Payment By User"
-msgstr ""
+msgstr "Platba podle uživatele"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1118,13 +1175,13 @@ msgstr ""
 #: view:pos.order:0
 #, python-format
 msgid "Payment"
-msgstr ""
+msgstr "Platba"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 #: field:report.pos.order,nbr:0
 msgid "# of Lines"
-msgstr ""
+msgstr "poč. řádků"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1136,23 +1193,23 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "(update)"
-msgstr ""
+msgstr "(aktualizovat)"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.ijsboerke_vanille_2,5l_product_template
 msgid "IJsboerke Vanilla 2.5L"
-msgstr ""
+msgstr "IJsboerke Vanilla 2.5L"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_details
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_details
 msgid "Sale Details"
-msgstr ""
+msgstr "Podrobnosti prodeje"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.evian_2l_product_template
 msgid "2L Evian"
-msgstr ""
+msgstr "2L Evian"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:373
@@ -1160,12 +1217,12 @@ msgstr ""
 #: code:addons/point_of_sale/wizard/pos_session_opening.py:34
 #, python-format
 msgid "Start Point Of Sale"
-msgstr ""
+msgstr "Spustit prodejní místo"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pils
 msgid "Pils"
-msgstr ""
+msgstr "Plzeňské"
 
 #. module: point_of_sale
 #: help:pos.session,cash_register_balance_end_real:0
@@ -1180,19 +1237,19 @@ msgstr ""
 #. module: point_of_sale
 #: report:pos.details_summary:0
 msgid "Sales total"
-msgstr ""
+msgstr "Celkem prodej"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:744
 #, python-format
 msgid "ABC"
-msgstr ""
+msgstr "ABC"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.ijsboerke_dame_blanche_2,5l_product_template
 msgid "IJsboerke 2.5L White Lady"
-msgstr ""
+msgstr "IJsboerke 2.5L White Lady"
 
 #. module: point_of_sale
 #: field:pos.order,lines:0
@@ -1202,36 +1259,36 @@ msgstr ""
 #. module: point_of_sale
 #: view:report.transaction.pos:0
 msgid "Total Transaction"
-msgstr ""
+msgstr "Celkem transakce"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chaudfontaine_petillante_50cl_product_template
 msgid "Chaudfontaine Petillante 50cl"
-msgstr ""
+msgstr "Chaudfontaine Petillante 50cl"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:491
 #, python-format
 msgid "Read Weighting Scale"
-msgstr ""
+msgstr "Přečíst z váhy"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:435
 #, python-format
 msgid "0.00 €"
-msgstr ""
+msgstr "0.00 €"
 
 #. module: point_of_sale
 #: field:pos.order.line,create_date:0
 msgid "Creation Date"
-msgstr ""
+msgstr "Datum vytvoření"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_sales_user_today
 msgid "Today's Sales"
-msgstr ""
+msgstr "Dnešní prodeje"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1239,7 +1296,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:334
 #, python-format
 msgid "Welcome"
-msgstr ""
+msgstr "Vítejte"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_box_entries.py:46
@@ -1248,6 +1305,8 @@ msgid ""
 "You do not have any open cash register. You must create a payment method or "
 "open a cash register."
 msgstr ""
+"Nemáte otevřenou pokladnu. Musíte vytvořit platební metodu nebo otevřít "
+"pokladnu."
 
 #. module: point_of_sale
 #: view:report.sales.by.margin.pos:0
@@ -1256,23 +1315,23 @@ msgstr ""
 #: view:report.sales.by.user.pos.month:0
 #: view:report.transaction.pos:0
 msgid "POS "
-msgstr ""
+msgstr "Prod. místo "
 
 #. module: point_of_sale
 #: report:account.statement:0
 #: report:pos.user.product:0
 msgid "Total :"
-msgstr ""
+msgstr "Celkem:"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "My Sales"
-msgstr ""
+msgstr "Moje prodeje"
 
 #. module: point_of_sale
 #: view:pos.config:0
 msgid "Set to Deprecated"
-msgstr ""
+msgstr "Označit za překonaný"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.limon_product_template
@@ -1282,25 +1341,25 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.order,pricelist_id:0
 msgid "Pricelist"
-msgstr ""
+msgstr "Ceník"
 
 #. module: point_of_sale
 #: report:pos.details:0
 #: report:pos.details_summary:0
 msgid "Total invoiced"
-msgstr ""
+msgstr "Celkem fakturováno"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_category
 #: field:product.product,pos_categ_id:0
 msgid "Point of Sale Category"
-msgstr ""
+msgstr "Kategorie prodejního místa"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 #: field:report.pos.order,product_qty:0
 msgid "# of Qty"
-msgstr ""
+msgstr "množství"
 
 #. module: point_of_sale
 #: help:pos.config,sequence_id:0
@@ -1308,23 +1367,25 @@ msgid ""
 "This sequence is automatically created by OpenERP but you can change it to "
 "customize the reference numbers of your orders."
 msgstr ""
+"Tato posloupnost je automaticky vytvářena OpenERP, můžete ji však upravit "
+"pro změnu čísel vašich objednávek."
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:334
 #, python-format
 msgid "Choose your type of receipt:"
-msgstr ""
+msgstr "Zvolte druh účtenky:"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_sales_by_margin_pos_month
 msgid "Sales by margin monthly"
-msgstr ""
+msgstr "Měsíční prodeje podle marže"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.poivron_jaunes_product_template
 msgid "Yellow Peppers"
-msgstr ""
+msgstr "Žluté papriky"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -1334,68 +1395,68 @@ msgstr ""
 #: field:report.sales.by.user.pos,date_order:0
 #: field:report.sales.by.user.pos.month,date_order:0
 msgid "Order Date"
-msgstr ""
+msgstr "Datum objednávky"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.stella_33cl_product_template
 msgid "Stella Artois 33cl"
-msgstr ""
+msgstr "Stella Artois 33cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_naturel_300g_product_template
 msgid "Lays Natural XXL 300g"
-msgstr ""
+msgstr "Lays Natural XXL 300g"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:485
 #, python-format
 msgid "Scan Item Unrecognized"
-msgstr ""
+msgstr "Naskenovaná položka nebyla rozpoznána"
 
 #. module: point_of_sale
 #: report:all.closed.cashbox.of.the.day:0
 msgid "Today's Closed Cashbox"
-msgstr ""
+msgstr "Dnešní uzavřená pokladna"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:898
 #, python-format
 msgid "Selected orders do not have the same session!"
-msgstr ""
+msgstr "Vybrané objednávky nejsou ze stejného sezení!"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Draft Invoice"
-msgstr ""
+msgstr "Koncept faktury"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_paprika_oven_150g_product_template
 msgid "Oven Baked Lays Paprika 150g"
-msgstr ""
+msgstr "Oven Baked Lays Paprika 150g"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Fiscal Position Remark :"
-msgstr ""
+msgstr "Poznámka fiskální pozice:"
 
 #. module: point_of_sale
 #: selection:report.pos.order,month:0
 msgid "September"
-msgstr ""
+msgstr "Září"
 
 #. module: point_of_sale
 #: report:account.statement:0
 #: report:all.closed.cashbox.of.the.day:0
 #: field:pos.session,start_at:0
 msgid "Opening Date"
-msgstr ""
+msgstr "Datum otevření"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_session
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_session_all
 msgid "All Sessions"
-msgstr ""
+msgstr "Všechna sezení"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1407,35 +1468,35 @@ msgstr ""
 #. module: point_of_sale
 #: report:pos.lines:0
 msgid "Taxes :"
-msgstr ""
+msgstr "Daně:"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:281
 #, python-format
 msgid "Thank you for shopping with us."
-msgstr ""
+msgstr "Děkujeme za Váš nákup."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_2l_product_template
 msgid "Coca-Cola Light 2L"
-msgstr ""
+msgstr "Coca-Cola Light 2L"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_funghi_product_template
 msgid "Dr. Oetker Ristorante Funghi"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Funghi"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.pos_category_action
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_category
 msgid "Product Categories"
-msgstr ""
+msgstr "Kategorie produktů"
 
 #. module: point_of_sale
 #: help:pos.config,journal_id:0
 msgid "Accounting journal used to post sales entries."
-msgstr ""
+msgstr "Účetní deník pro zapisování položek prodeje."
 
 #. module: point_of_sale
 #: field:report.transaction.pos,disc:0
@@ -1447,34 +1508,34 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:473
 #, python-format
 msgid "Invalid Ean"
-msgstr ""
+msgstr "Neplatný EAN"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lindemans_kriek_37,5cl_product_template
 msgid "Lindemans Kriek 37.5cl"
-msgstr ""
+msgstr "Lindemans Kriek 37.5cl"
 
 #. module: point_of_sale
 #: view:pos.config:0
 msgid "Point of Sale Config"
-msgstr ""
+msgstr "Nastavení prodejního místa"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_zero_33cl_product_template
 msgid "Coca-Cola Zero 33cl"
-msgstr ""
+msgstr "Coca-Cola Zero 33cl"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:415
 #, python-format
 msgid "&auml;"
-msgstr ""
+msgstr "&auml;"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "VAT :"
-msgstr ""
+msgstr "DPH:"
 
 #. module: point_of_sale
 #: view:pos.order.line:0
@@ -1484,7 +1545,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.receipt:0
 msgid "Receipt :"
-msgstr ""
+msgstr "Účtenka:"
 
 #. module: point_of_sale
 #: field:account.bank.statement,pos_session_id:0
@@ -1493,30 +1554,30 @@ msgstr ""
 #: field:pos.session.opening,pos_session_name:0
 #: field:pos.session.opening,pos_session_username:0
 msgid "unknown"
-msgstr ""
+msgstr "neznámý"
 
 #. module: point_of_sale
 #: field:product.product,income_pdt:0
 msgid "Point of Sale Cash In"
-msgstr ""
+msgstr "Příjem pokladny"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:593
 #, python-format
 msgid "Tax:"
-msgstr ""
+msgstr "Daň:"
 
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "+ Transactions"
-msgstr ""
+msgstr "+ transakce"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_discount
 #: view:pos.discount:0
 msgid "Apply Discount"
-msgstr ""
+msgstr "Aplikovat slevu"
 
 #. module: point_of_sale
 #: report:account.statement:0
@@ -1533,62 +1594,62 @@ msgstr ""
 #: field:report.transaction.pos,user_id:0
 #: model:res.groups,name:point_of_sale.group_pos_user
 msgid "User"
-msgstr ""
+msgstr "Uživatel"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:188
 #, python-format
 msgid "Kg"
-msgstr ""
+msgstr "Kg"
 
 #. module: point_of_sale
 #: field:product.product,available_in_pos:0
 msgid "Available in the Point of Sale"
-msgstr ""
+msgstr "Dostupný na prodejním místě"
 
 #. module: point_of_sale
 #: selection:pos.config,state:0
 msgid "Deprecated"
-msgstr ""
+msgstr "Překonané"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_decaf_33cl_product_template
 msgid "Coca-Cola Light 33cl Decaf"
-msgstr ""
+msgstr "Coca-Cola Light 33cl bez kofeinu"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:348
 #, python-format
 msgid "The scanned product was not recognized"
-msgstr ""
+msgstr "Naskenovaný výrobek nebyl rozpoznán"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_transaction_pos
 msgid "transaction for the pos"
-msgstr ""
+msgstr "transakce prodejního místa"
 
 #. module: point_of_sale
 #: report:pos.details:0
 #: field:report.transaction.pos,date_create:0
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_box_entries
 msgid "Pos Box Entries"
-msgstr ""
+msgstr "Položky pokladny"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.boon_framboise_37,5cl_product_template
 msgid "Boon Framboise 37.5cl"
-msgstr ""
+msgstr "Boon Framboise 37.5cl"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_config
 msgid "pos.config"
-msgstr ""
+msgstr "pos.config"
 
 #. module: point_of_sale
 #: view:pos.ean_wizard:0
@@ -1596,33 +1657,35 @@ msgid ""
 "Enter a reference, it will be converted\n"
 "                        automatically to a valid EAN number."
 msgstr ""
+"Prosím zadejte číslo, bude automaticky\n"
+"                        převedeno na platný kód EAN."
 
 #. module: point_of_sale
 #: field:product.product,expense_pdt:0
 msgid "Point of Sale Cash Out"
-msgstr ""
+msgstr "Výdaje pokladny"
 
 #. module: point_of_sale
 #: selection:report.pos.order,month:0
 msgid "November"
-msgstr ""
+msgstr "Listopad"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:277
 #, python-format
 msgid "Please scan an item or your member card"
-msgstr ""
+msgstr "Prosím naskenujte položku nebo vaši členskou kartu"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.poivron_verts_product_template
 msgid "Green Peppers"
-msgstr ""
+msgstr "Zelená paprika"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.timmermans_faro_37,5cl_product_template
 msgid "Timmermans Faro 37.5cl"
-msgstr ""
+msgstr "Timmermans Faro 37.5cl"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:410
@@ -1631,16 +1694,18 @@ msgid ""
 "Your ending balance is too different from the theorical cash closing (%.2f), "
 "the maximum allowed is: %.2f. You can contact your manager to force it."
 msgstr ""
+"Váš konečný zůstatek se příliš liší od teoretické uzávěrky pokladny (%.2f), "
+"povolené maximum je: %.2f. Spojte se prosím s vedoucím."
 
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "Validate Closing & Post Entries"
-msgstr ""
+msgstr "Zkontrolovat uzávěrku a uložit položky"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,no_trans:0
 msgid "Number of Transaction"
-msgstr ""
+msgstr "Počet transakcí"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:738
@@ -1649,12 +1714,14 @@ msgid ""
 "There is no receivable account defined to make payment for the partner: "
 "\"%s\" (id:%d)."
 msgstr ""
+"Není definován žádny účet, na němž lze přijmout platbu od tohoto partnera: "
+"\"%s\" (id: %d)."
 
 #. module: point_of_sale
 #: view:pos.config:0
 #: selection:pos.config,state:0
 msgid "Inactive"
-msgstr ""
+msgstr "Neaktivní"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1671,34 +1738,34 @@ msgstr ""
 #: view:pos.sale.user:0
 #, python-format
 msgid "Cancel"
-msgstr ""
+msgstr "Storno"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:306
 #, python-format
 msgid "Please put your product on the scale"
-msgstr ""
+msgstr "Prosím umístěte výrobek na váhu"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_details_summary
 msgid "Sales (summary)"
-msgstr ""
+msgstr "Prodeje (shrnutí)"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.nectarine_product_template
 msgid "Peach"
-msgstr ""
+msgstr "Broskve"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.timmermans_kriek_37,5cl_product_template
 msgid "Timmermans Kriek 37.5cl"
-msgstr ""
+msgstr "Timmermans Kriek 37.5cl"
 
 #. module: point_of_sale
 #: field:pos.config,sequence_id:0
 msgid "Order IDs Sequence"
-msgstr ""
+msgstr "Posloupnost ID objednávky"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -1706,14 +1773,14 @@ msgstr ""
 #: field:pos.order.line,price_unit:0
 #: report:pos.payment.report.user:0
 msgid "Unit Price"
-msgstr ""
+msgstr "Jednotková cena"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:184
 #, python-format
 msgid "Product Weighting"
-msgstr ""
+msgstr "Vážení výrobku"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1721,12 +1788,12 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:749
 #, python-format
 msgid "close"
-msgstr ""
+msgstr "zavřít"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.report_user_label
 msgid "User Labels"
-msgstr ""
+msgstr "Uživatelské štítky"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_order_line
@@ -1737,40 +1804,40 @@ msgstr ""
 #: view:pos.order:0
 #: view:report.transaction.pos:0
 msgid "Amount total"
-msgstr ""
+msgstr "Celková částka"
 
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "End of Session"
-msgstr ""
+msgstr "Konec sezení"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_new_bank_statement_all_tree
 #: view:pos.session:0
 msgid "Cash Registers"
-msgstr ""
+msgstr "Pokladny"
 
 #. module: point_of_sale
 #: help:pos.session,cash_register_balance_end:0
 msgid "Computed with the initial cash control and the sum of all payments."
-msgstr ""
+msgstr "Spočítáno na základě počátečního zůstatku a sumy všech plateb."
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:480
 #, python-format
 msgid "In Transaction"
-msgstr ""
+msgstr "V transakci"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.food
 msgid "Food"
-msgstr ""
+msgstr "Jídlo"
 
 #. module: point_of_sale
 #: field:pos.box.entries,ref:0
 msgid "Ref"
-msgstr ""
+msgstr "Číslo"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1780,12 +1847,12 @@ msgstr ""
 #: report:pos.lines:0
 #, python-format
 msgid "Price"
-msgstr ""
+msgstr "Cena"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_33cl_product_template
 msgid "Coca-Cola Light 33cl"
-msgstr ""
+msgstr "Coca-Cola Light 33cl"
 
 #. module: point_of_sale
 #: view:report.sales.by.margin.pos:0
@@ -1794,41 +1861,41 @@ msgstr ""
 #: view:report.sales.by.user.pos.month:0
 #: view:report.transaction.pos:0
 msgid "POS"
-msgstr ""
+msgstr "Prod. místo"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_regular_33cl_product_template
 msgid "Coca-Cola Regular 33cl"
-msgstr ""
+msgstr "Běžná Coca-Cola 33cl"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:335
 #, python-format
 msgid "Ticket"
-msgstr ""
+msgstr "Lístek"
 
 #. module: point_of_sale
 #: field:pos.session,cash_register_difference:0
 msgid "Difference"
-msgstr ""
+msgstr "Rozdíl"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:529
 #, python-format
 msgid "Unable to Delete !"
-msgstr ""
+msgstr "Nelze smazat!"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.autres_agrumes
 msgid "Other Citrus"
-msgstr ""
+msgstr "Jiný citrus"
 
 #. module: point_of_sale
 #: report:pos.details:0
 #: report:pos.details_summary:0
 msgid "Start Period"
-msgstr ""
+msgstr "Počáteční období"
 
 #. module: point_of_sale
 #: report:account.statement:0
@@ -1837,12 +1904,12 @@ msgstr ""
 #: report:pos.sales.user:0
 #: report:pos.sales.user.today:0
 msgid "Name"
-msgstr ""
+msgstr "Název"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_gazeuse_33cl_product_template
 msgid "Spa Barisart 33cl"
-msgstr ""
+msgstr "Spa Barisart 33cl"
 
 #. module: point_of_sale
 #: view:pos.confirm:0
@@ -1850,6 +1917,8 @@ msgid ""
 "Generate all sale journal entries for non invoiced orders linked to a closed "
 "cash register or statement."
 msgstr ""
+"Vytvořit všechny položky deníku prodejů pro nefakturované objednávky spojené "
+"s pokladnou nebo výpisem."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.unreferenced_product_product_template
@@ -1859,7 +1928,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.ean_wizard:0
 msgid "Apply"
-msgstr ""
+msgstr "Použít"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1870,6 +1939,8 @@ msgid ""
 "complete\n"
 "            your purchase"
 msgstr ""
+"Prosím vložte vaši kartu do čtečky a následujte pokyny pro dokončení\n"
+"            vašeho nákupu"
 
 #. module: point_of_sale
 #: help:product.product,income_pdt:0
@@ -1877,29 +1948,31 @@ msgid ""
 "Check if, this is a product you can use to put cash into a statement for the "
 "point of sale backend."
 msgstr ""
+"Zaškrtněte toto pole, pokud jde o výrobek, který můžete přidat do výpisu "
+"hotovosti backendu prodejního místa."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.ijsboerke_moka_2,5l_product_template
 msgid "IJsboerke Mocha 2.5L"
-msgstr ""
+msgstr "IJsboerke Mocha 2.5L"
 
 #. module: point_of_sale
 #: field:pos.session,cash_control:0
 msgid "Has Cash Control"
-msgstr ""
+msgstr "Má pokladnu"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_order_all
 #: model:ir.ui.menu,name:point_of_sale.menu_report_pos_order_all
 msgid "Orders Analysis"
-msgstr ""
+msgstr "Analýza objednávek"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:569
 #, python-format
 msgid "User:"
-msgstr ""
+msgstr "Uživatel:"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:316
@@ -1908,16 +1981,17 @@ msgid ""
 "Unable to open the session. You have to assign a sale journal to your point "
 "of sale."
 msgstr ""
+"Nemohu otevřít sezení. Musíte přiřadit deník prodejů vašemu prodejnímu místu."
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "POS ordered created during current year"
-msgstr ""
+msgstr "Objednané přes prodejní místo během letošního roku"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.peche_product_template
 msgid "Fishing"
-msgstr ""
+msgstr "Končící"
 
 #. module: point_of_sale
 #: report:pos.details:0
@@ -1928,18 +2002,18 @@ msgstr ""
 #: report:pos.sales.user.today:0
 #: report:pos.user.product:0
 msgid "Print Date"
-msgstr ""
+msgstr "Tisk data"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.poireaux_poireaux_product_template
 msgid "Leeks"
-msgstr ""
+msgstr "Pórek"
 
 #. module: point_of_sale
 #: help:pos.category,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of product categories."
-msgstr ""
+msgstr "Určuje pořadí posloupnosti při zobrazení seznamu kategorií výrobků."
 
 #. module: point_of_sale
 #: view:account.bank.statement:0
@@ -1947,34 +2021,34 @@ msgstr ""
 #: view:pos.session:0
 #: view:report.pos.order:0
 msgid "Group By..."
-msgstr ""
+msgstr "Seskupit podle..."
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:570
 #, python-format
 msgid "Shop:"
-msgstr ""
+msgstr "Obchod:"
 
 #. module: point_of_sale
 #: field:account.journal,self_checkout_payment_method:0
 msgid "Self Checkout Payment Method"
-msgstr ""
+msgstr "Samoobslužná platební metoda"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "POS Orders"
-msgstr ""
+msgstr "Objednávky prod. místa"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.all_closed_cashbox_of_the_day
 msgid "All Closed CashBox"
-msgstr ""
+msgstr "Všechny uzavřené pokladny"
 
 #. module: point_of_sale
 #: field:pos.details,user_ids:0
 msgid "Salespeople"
-msgstr ""
+msgstr "Pokladníci"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:756
@@ -1982,30 +2056,30 @@ msgstr ""
 #: code:addons/point_of_sale/wizard/pos_box_out.py:91
 #, python-format
 msgid "You have to open at least one cashbox."
-msgstr ""
+msgstr "Musíte otevřít nejméně jednu pokladnu."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:1139
 #, python-format
 msgid "No Pricelist !"
-msgstr ""
+msgstr "Žádný ceník!"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.poivron_rouges_product_template
 msgid "Red Pepper"
-msgstr ""
+msgstr "Červená paprika"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:680
 #, python-format
 msgid "caps lock"
-msgstr ""
+msgstr "caps lock"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.grisette_cerise_25cl_product_template
 msgid "Grisette Cherry 25cl"
-msgstr ""
+msgstr "Grisette Cherry 25cl"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -2018,23 +2092,23 @@ msgstr "Báze"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:745
 #, python-format
 msgid "&nbsp;"
-msgstr ""
+msgstr "&nbsp;"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.categ_others
 msgid "Others"
-msgstr ""
+msgstr "Ostatní"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.autres_legumes_frais
 msgid "Other fresh vegetables"
-msgstr ""
+msgstr "Jiná čerstvá zelenina"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:49
 #, python-format
 msgid "No Cash Register Defined !"
-msgstr ""
+msgstr "Nejsou definovány žádné pokladny!"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:513
@@ -2042,16 +2116,18 @@ msgstr ""
 msgid ""
 "No cash statement found for this session. Unable to record returned cash."
 msgstr ""
+"Nebyly nalezeny žádné hotovostní výpisy pro toto sezení. Nelze zaznamenat "
+"vrácenou hotovost."
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.oignons_ail_echalotes
 msgid "Onions / Garlic / Shallots"
-msgstr ""
+msgstr "Cibule / česnek / šalotka"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.evian_50cl_product_template
 msgid "Evian 50cl"
-msgstr ""
+msgstr "Evian 50cl"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -2061,14 +2137,14 @@ msgstr "Poznámky"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_lemon_2l_product_template
 msgid "Coca-Cola Light Lemon 2L"
-msgstr ""
+msgstr "Coca-Cola Light Citron 2L"
 
 #. module: point_of_sale
 #: report:pos.details:0
 #: report:pos.invoice:0
 #: field:pos.order,amount_tax:0
 msgid "Taxes"
-msgstr ""
+msgstr "Daně"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line
@@ -2082,7 +2158,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:744
 #, python-format
 msgid "123"
-msgstr ""
+msgstr "123"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_normal_action
@@ -2090,27 +2166,27 @@ msgstr ""
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_products
 #: view:pos.order:0
 msgid "Products"
-msgstr ""
+msgstr "Výrobky"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_4formaggi_product_template
 msgid "Dr. Oetker Ristorante Quattro Formaggi"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Quattro Formaggi"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.croky_naturel_45g_product_template
 msgid "Croky Natural 45g"
-msgstr ""
+msgstr "Croky Natural 45g"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.tomate_en_grappe_product_template
 msgid "In Cluster Tomatoes"
-msgstr ""
+msgstr "Keříková rajčata"
 
 #. module: point_of_sale
 #: model:ir.actions.client,name:point_of_sale.action_pos_pos
 msgid "Start Point of Sale"
-msgstr ""
+msgstr "Spustit prodejní místo"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2122,36 +2198,36 @@ msgstr ""
 #: field:report.sales.by.margin.pos.month,qty:0
 #, python-format
 msgid "Qty"
-msgstr ""
+msgstr "Množ."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_zero_1l_product_template
 msgid "Coca-Cola Zero 1L"
-msgstr ""
+msgstr "Coca-Cola Zero 1L"
 
 #. module: point_of_sale
 #: report:pos.sales.user:0
 #: report:pos.sales.user.today:0
 #: field:report.pos.order,date:0
 msgid "Date Order"
-msgstr ""
+msgstr "Datum objednávky"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Point of Sale Orders"
-msgstr ""
+msgstr "Objednávky prod. místa"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_et_fruit_50cl_product_template
 msgid "Spa Fruit and Orange 50cl"
-msgstr ""
+msgstr "Spa Fruit and Orange 50cl"
 
 #. module: point_of_sale
 #: view:pos.config:0
 #: field:pos.config,journal_ids:0
 #: field:pos.session,journal_ids:0
 msgid "Available Payment Methods"
-msgstr ""
+msgstr "Dostupné způsoby platby"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_normal_action
@@ -2171,55 +2247,68 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klikněte pro přidání nového výrobku.\n"
+"              </p><p>\n"
+"                Musíte nadefinovat výrobek pro vše, co prodáte\n"
+"                prostřednictvím rozhraní prodejního místa.\n"
+"              </p><p>\n"
+"                Nezapomeňte nastavit cenu a kategorii prodejního\n"
+"                místa, ve které se výrobek má zobrazovat. Pokud nemá\n"
+"                výrobek žádnou kategorii prodejního místa, nelze jej na\n"
+"                prodejním místě prodávat.\n"
+"                interface.\n"
+"              </p>\n"
+"            "
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Extra Info"
-msgstr ""
+msgstr "Další informace"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Fax :"
-msgstr ""
+msgstr "Fax:"
 
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "Point of Sale Session"
-msgstr ""
+msgstr "Sezení prodejního místa"
 
 #. module: point_of_sale
 #: report:account.statement:0
 #: model:ir.actions.report.xml,name:point_of_sale.account_statement
 msgid "Statement"
-msgstr ""
+msgstr "Výpis"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Source"
-msgstr ""
+msgstr "Zdroj"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:467
 #, python-format
 msgid "Admin Badge"
-msgstr ""
+msgstr "Visačka administrátora"
 
 #. module: point_of_sale
 #: field:pos.make.payment,journal_id:0
 msgid "Payment Mode"
-msgstr ""
+msgstr "Způsob platby"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_paprika_45g_product_template
 msgid "Lays Paprika 45g"
-msgstr ""
+msgstr "Lays Paprika 45g"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement
 #: field:pos.session,statement_ids:0
 msgid "Bank Statement"
-msgstr ""
+msgstr "Výpis z bankovního účtu"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:101
@@ -2227,59 +2316,59 @@ msgstr ""
 #: selection:pos.session.opening,pos_state:0
 #, python-format
 msgid "Closed & Posted"
-msgstr ""
+msgstr "Uzavřená a zadáno"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_sale_user
 #: model:ir.model,name:point_of_sale.model_pos_sale_user
 #: view:pos.payment.report.user:0
 msgid "Sale by User"
-msgstr ""
+msgstr "Prodeje podle uživatele"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:568
 #, python-format
 msgid "Phone:"
-msgstr ""
+msgstr "Telefon:"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.evian_1l_product_template
 msgid "Evian 1L"
-msgstr ""
+msgstr "Evian 1L"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.water
 msgid "Water"
-msgstr ""
+msgstr "Voda"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_ean_wizard
 msgid "pos.ean_wizard"
-msgstr ""
+msgstr "pos.ean_wizard"
 
 #. module: point_of_sale
 #: selection:report.pos.order,month:0
 msgid "July"
-msgstr ""
+msgstr "Červenec"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_pos
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_config_pos
 #: view:pos.session:0
 msgid "Point of Sales"
-msgstr ""
+msgstr "Prodejní misto"
 
 #. module: point_of_sale
 #: report:pos.details:0
 #: report:pos.details_summary:0
 msgid "Qty of product"
-msgstr ""
+msgstr "Množ. výrobku"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pomme_golden_perlim_product_template
 msgid "Golden Apples Perlim"
-msgstr ""
+msgstr "Golden Apples Perlim"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:100
@@ -2287,90 +2376,90 @@ msgstr ""
 #: selection:pos.session.opening,pos_state:0
 #, python-format
 msgid "Closing Control"
-msgstr ""
+msgstr "Uzavření"
 
 #. module: point_of_sale
 #: field:report.pos.order,delay_validation:0
 msgid "Delay Validation"
-msgstr ""
+msgstr "Ověření zpoždění"
 
 #. module: point_of_sale
 #: field:pos.order,nb_print:0
 msgid "Number of Print"
-msgstr ""
+msgstr "Počet výtisků"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
 msgid "Point of Sale Payment"
-msgstr ""
+msgstr "Platba na prodejním místě"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_50cl_product_template
 msgid "Coca-Cola Light 50cl"
-msgstr ""
+msgstr "Coca-Cola Light 50cl"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:472
 #, python-format
 msgid "Unknown Product"
-msgstr ""
+msgstr "Neznámý výrobek"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:36
 #, python-format
 msgid "<![endif]-->"
-msgstr ""
+msgstr "<![endif]-->"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.jupiler_50cl_product_template
 msgid "Jupiler 50cl"
-msgstr ""
+msgstr "Jupiler 50cl"
 
 #. module: point_of_sale
 #: report:pos.details:0
 #: report:pos.details_summary:0
 msgid "End Period"
-msgstr ""
+msgstr "Konečné období"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_lemon_33cl_product_template
 msgid "Coca-Cola Light Lemon 33cl"
-msgstr ""
+msgstr "Coca-Cola Light Citron 33cl"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:33
 #, python-format
 msgid "<!--[if IE]>"
-msgstr ""
+msgstr "<!--[if IE]>"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_ketchup_250g_product_template
 msgid "Lays Ketchup 250g"
-msgstr ""
+msgstr "Lays Kečup 250g"
 
 #. module: point_of_sale
 #: selection:report.pos.order,state:0
 msgid "Synchronized"
-msgstr ""
+msgstr "Synchronizované"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chimay_rouge_33cl_product_template
 msgid "Chimay Red 33cl"
-msgstr ""
+msgstr "Chimay Red 33cl"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 #: field:report.pos.order,month:0
 msgid "Month"
-msgstr ""
+msgstr "Měsíc"
 
 #. module: point_of_sale
 #: field:pos.category,image_medium:0
 msgid "Medium-sized image"
-msgstr ""
+msgstr "Střední obrázek"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.papillon_orange_product_template
@@ -2380,7 +2469,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "Year of order date"
-msgstr ""
+msgstr "Rok data objednávky"
 
 #. module: point_of_sale
 #: help:product.product,to_weight:0
@@ -2388,81 +2477,83 @@ msgid ""
 "Check if the product should be weighted (mainly used with self check-out "
 "interface)."
 msgstr ""
+"Zaškrtněte, pokud se má výrobek vážit (použito hlavně se samoobslužným "
+"rozhraním)."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_new_bank_statement_tree
 #: field:pos.box.entries,journal_id:0
 #: field:pos.session,cash_register_id:0
 msgid "Cash Register"
-msgstr ""
+msgstr "Pokladny"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:453
 #, python-format
 msgid "Accept Payment"
-msgstr ""
+msgstr "Přijmout platbu"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_receipt
 msgid "Point of sale receipt"
-msgstr ""
+msgstr "Účtenka prodejního místa"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_sales_by_margin_pos_today
 msgid "Sales by User Daily margin"
-msgstr ""
+msgstr "Denní prodeje podle marže uživatelů"
 
 #. module: point_of_sale
 #: view:pos.open.statement:0
 msgid "Open Registers"
-msgstr ""
+msgstr "Otevřít pokladny"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.poire
 msgid "Pears"
-msgstr ""
+msgstr "Hrušky"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,journal_id:0
 msgid "Sales Journal"
-msgstr ""
+msgstr "Deník prodejů"
 
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "Opening Balance"
-msgstr ""
+msgstr "Počáteční zůstatek"
 
 #. module: point_of_sale
 #: view:account.bank.statement:0
 #: selection:report.pos.order,state:0
 msgid "Closed"
-msgstr ""
+msgstr "Uzavřena"
 
 #. module: point_of_sale
 #: field:pos.config,iface_cashdrawer:0
 msgid "Cashdrawer Interface"
-msgstr ""
+msgstr "Rozhraní pokladní zásuvky"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.tomates
 msgid "Tomatos"
-msgstr ""
+msgstr "Rajčata"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "POS ordered created by today"
-msgstr ""
+msgstr "Objednávek z prodejního místa vytvořených do dnešního dne"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_zero_2l_product_template
 msgid "Coca-Cola Zero 2L"
-msgstr ""
+msgstr "Coca-Cola Zero 2L"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.oranges
 msgid "Oranges"
-msgstr ""
+msgstr "Pomeranče"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_all_sales_lines
@@ -2472,40 +2563,40 @@ msgstr ""
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.beers
 msgid "Beers"
-msgstr ""
+msgstr "Pivo"
 
 #. module: point_of_sale
 #: help:pos.config,name:0
 msgid "An internal identification of the point of sale"
-msgstr ""
+msgstr "Vnitřní označení prodejního místa"
 
 #. module: point_of_sale
 #: view:pos.config:0
 #: selection:pos.config,state:0
 msgid "Active"
-msgstr ""
+msgstr "Aktivní"
 
 #. module: point_of_sale
 #: field:pos.session,name:0
 msgid "Session ID"
-msgstr ""
+msgstr "ID sezení"
 
 #. module: point_of_sale
 #: view:pos.make.payment:0
 msgid "Pay Order"
-msgstr ""
+msgstr "Zaplatit objednávku"
 
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "Summary by Payment Methods"
-msgstr ""
+msgstr "Sourn podle způsobů platby"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:476
 #, python-format
 msgid "Hardware Status"
-msgstr ""
+msgstr "Stav hardwaru"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2518,12 +2609,12 @@ msgstr ""
 #: report:pos.payment.report.user:0
 #, python-format
 msgid "Total:"
-msgstr ""
+msgstr "Celkem:"
 
 #. module: point_of_sale
 #: field:res.users,ean13:0
 msgid "EAN13"
-msgstr ""
+msgstr "EAN13"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2535,34 +2626,34 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_sales_by_margin_pos
 msgid "Sales by margin"
-msgstr ""
+msgstr "Prodeje podle marže"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Statement lines"
-msgstr ""
+msgstr "Řádky výpisu"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.croky_paprika_45g_product_template
 msgid "Croky Paprika 45g"
-msgstr ""
+msgstr "Croky Paprika 45g"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Reprint"
-msgstr ""
+msgstr "Tisk znovu"
 
 #. module: point_of_sale
 #: field:pos.config,iface_payment_terminal:0
 msgid "Payment Terminal Interface"
-msgstr ""
+msgstr "Rozhraní platebního terminálu"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:135
 #, python-format
 msgid "Search Products"
-msgstr ""
+msgstr "Vyhledat výrobky"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,invoice_id:0
@@ -2577,7 +2668,7 @@ msgstr "Mezisoučet"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.carotte_product_template
 msgid "Carrots"
-msgstr ""
+msgstr "Mrkev"
 
 #. module: point_of_sale
 #: view:pos.open.statement:0
@@ -2586,11 +2677,14 @@ msgid ""
 "payments. We suggest you to control the opening balance of each register, "
 "using their CashBox tab."
 msgstr ""
+"Systém otevře všechny pokladny takže můžete začít zaznamenávat platby. "
+"Doporučujeme zkontrolovat počáteční zůstatek každé pokladny  na záložce "
+"Pokladna."
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Done"
-msgstr ""
+msgstr "Hotovo"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2601,7 +2695,7 @@ msgstr ""
 #: field:pos.order,invoice_id:0
 #, python-format
 msgid "Invoice"
-msgstr ""
+msgstr "Faktura"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2609,24 +2703,24 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:704
 #, python-format
 msgid "shift"
-msgstr ""
+msgstr "shift"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.rochefort_8_33cl_product_template
 msgid "Rochefort \"8\" 33cl"
-msgstr ""
+msgstr "Rochefort \"8\" 33cl"
 
 #. module: point_of_sale
 #: view:account.bank.statement:0
 #: view:pos.session:0
 msgid "Open"
-msgstr ""
+msgstr "Otevřít"
 
 #. module: point_of_sale
 #: field:pos.order,name:0
 #: field:pos.order.line,order_id:0
 msgid "Order Ref"
-msgstr ""
+msgstr "Čís. objednávky"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2634,64 +2728,64 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:578
 #, python-format
 msgid "With a"
-msgstr ""
+msgstr "S"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.courgette_product_template
 msgid "Zucchini"
-msgstr ""
+msgstr "Cuketa"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.timmermans_geuze_37,5cl_product_template
 msgid "Timmermans Geuze 37.5cl"
-msgstr ""
+msgstr "Timmermans Geuze 37.5cl"
 
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "Continue Selling"
-msgstr ""
+msgstr "Pokračovat v prodeji"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:450
 #, python-format
 msgid "Payment Terminal"
-msgstr ""
+msgstr "Platební terminál"
 
 #. module: point_of_sale
 #: view:account.bank.statement:0
 #: field:pos.session,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "Odpovědná osoba"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.croky_bolognaise_250g_product_template
 msgid "Croky Bolognese 250g"
-msgstr ""
+msgstr "Croky Bolognese 250g"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:466
 #, python-format
 msgid "Custom Ean13"
-msgstr ""
+msgstr "Vlastní EAN13"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:471
 #, python-format
 msgid "1.54€ Lemon"
-msgstr ""
+msgstr "Citron za 1.54€"
 
 #. module: point_of_sale
 #: field:pos.make.payment,payment_name:0
 msgid "Payment Reference"
-msgstr ""
+msgstr "Číslo platby"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_sales_by_user_pos_month
 msgid "Sales by user monthly"
-msgstr ""
+msgstr "Měsíční prodeje podle uživatele"
 
 #. module: point_of_sale
 #: view:pos.session:0
@@ -2701,28 +2795,28 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_payment_report_user
 msgid "Today's Payment By User"
-msgstr ""
+msgstr "Dnešní platby podle uživatele"
 
 #. module: point_of_sale
 #: view:report.sales.by.margin.pos:0
 #: view:report.sales.by.margin.pos.month:0
 msgid "Sales by User Margin"
-msgstr ""
+msgstr "Platby podle marže uživatele"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Taxes:"
-msgstr ""
+msgstr "Daně:"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pepsi_max_33cl_product_template
 msgid "Pepsi Max 33cl"
-msgstr ""
+msgstr "Pepsi Max 33cl"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_pos_order
 msgid "Point of Sale Orders Statistics"
-msgstr ""
+msgstr "Statistiky objednávek prodejního místa"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_product
@@ -2733,23 +2827,23 @@ msgstr ""
 #: view:report.pos.order:0
 #: field:report.pos.order,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Výrobek"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_pollo_product_template
 msgid "Dr. Oetker Ristorante Pollo"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Pollo"
 
 #. module: point_of_sale
 #: constraint:pos.session:0
 msgid ""
 "You cannot create two active sessions related to the same point of sale!"
-msgstr ""
+msgstr "Nemůžete vytvořit dvě aktivní sezení na stejném prodejním místě!"
 
 #. module: point_of_sale
 #: field:pos.category,image_small:0
 msgid "Smal-sized image"
-msgstr ""
+msgstr "Malý obrázek"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_lines_report
@@ -2760,14 +2854,14 @@ msgstr ""
 #: code:addons/point_of_sale/point_of_sale.py:413
 #, python-format
 msgid "Point of Sale Profit"
-msgstr ""
+msgstr "ZIsk prodejního místa"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:348
 #, python-format
 msgid "Please wait, a cashier is on the way"
-msgstr ""
+msgstr "Prosím čekejte, pokladní je na cestě"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_session_opening.py:68
@@ -2776,51 +2870,51 @@ msgstr ""
 #: field:pos.order,session_id:0
 #, python-format
 msgid "Session"
-msgstr ""
+msgstr "Sezení"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chaudfontaine_33cl_product_template
 msgid "Chaudfontaine 33cl"
-msgstr ""
+msgstr "Chaudfontaine 33cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_margherita_product_template
 msgid "Dr. Oetker La Margherita"
-msgstr ""
+msgstr "Dr. Oetker La Margherita"
 
 #. module: point_of_sale
 #: view:pos.order:0
 #: selection:pos.order,state:0
 msgid "Posted"
-msgstr ""
+msgstr "Vloženo"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:227
 #, python-format
 msgid "Paid:"
-msgstr ""
+msgstr "Zaplaceno:"
 
 #. module: point_of_sale
 #: report:account.statement:0
 msgid "Statement Name"
-msgstr ""
+msgstr "Název výpisu"
 
 #. module: point_of_sale
 #: field:pos.session,cash_register_total_entry_encoding:0
 msgid "Total Cash Transaction"
-msgstr ""
+msgstr "Hotovostní operace celkem"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pommes_de_terre
 #: model:product.template,name:point_of_sale.pomme_de_terre_product_template
 msgid "Potatoes"
-msgstr ""
+msgstr "Brambory"
 
 #. module: point_of_sale
 #: view:pos.session.opening:0
 msgid "\"."
-msgstr ""
+msgstr "\"."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_payment_report_user
@@ -2833,66 +2927,66 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:487
 #, python-format
 msgid "Payment Status"
-msgstr ""
+msgstr "Stav platby"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pepsi_2l_product_template
 msgid "Pepsi 2L"
-msgstr ""
+msgstr "Pepsi 2L"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pomme
 msgid "Apples"
-msgstr ""
+msgstr "Jablka"
 
 #. module: point_of_sale
 #: report:pos.details:0
 msgid "Order"
-msgstr ""
+msgstr "Objednávky"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_users
 #: report:pos.details:0
 msgid "Users"
-msgstr ""
+msgstr "Uživatelé"
 
 #. module: point_of_sale
 #: view:pos.details:0
 msgid "POS Details"
-msgstr ""
+msgstr "Podrobnosti prodejního místa"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:468
 #, python-format
 msgid "Client Badge"
-msgstr ""
+msgstr "Visačka zákazníka"
 
 #. module: point_of_sale
 #: report:pos.lines:0
 msgid "Net Total :"
-msgstr ""
+msgstr "Celkem:"
 
 #. module: point_of_sale
 #: field:pos.session,cash_journal_id:0
 msgid "Cash Journal"
-msgstr ""
+msgstr "Deník hotovosti"
 
 #. module: point_of_sale
 #: model:res.groups,name:point_of_sale.group_pos_manager
 msgid "Manager"
-msgstr ""
+msgstr "Vedoucí"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_poivre_sel_oven_150g_product_template
 msgid "Lays Salt and Pepper Oven Baked 150g"
-msgstr ""
+msgstr "Lays Salt and Pepper Oven Baked 150g"
 
 #. module: point_of_sale
 #: field:pos.details,date_start:0
 #: field:pos.sale.user,date_start:0
 msgid "Date Start"
-msgstr ""
+msgstr "Počáteční datum"
 
 #. module: point_of_sale
 #: field:pos.order,amount_total:0
@@ -2901,17 +2995,17 @@ msgstr ""
 #: field:report.sales.by.user.pos,amount:0
 #: field:report.sales.by.user.pos.month,amount:0
 msgid "Total"
-msgstr ""
+msgstr "Celkem"
 
 #. module: point_of_sale
 #: view:pos.sale.user:0
 msgid "Sale By User"
-msgstr ""
+msgstr "Prodeje podle uživatele"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_open_statement
 msgid "Open Cash Register"
-msgstr ""
+msgstr "Otevřít pokladnu"
 
 #. module: point_of_sale
 #: field:account.journal,amount_authorized_diff:0
@@ -2923,37 +3017,37 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:321
 #, python-format
 msgid "Please be patient, help is on the way"
-msgstr ""
+msgstr "Prosíme o trpělivost, pomoc je na cestě"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_session
 msgid "pos.session"
-msgstr ""
+msgstr "pos.session"
 
 #. module: point_of_sale
 #: help:pos.session,config_id:0
 msgid "The physical point of sale you will use."
-msgstr ""
+msgstr "Fyzické prodejní místo, které budete používat."
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Search Sales Order"
-msgstr ""
+msgstr "Vyhledat potvzení objednávky"
 
 #. module: point_of_sale
 #: field:pos.config,iface_self_checkout:0
 msgid "Self Checkout Mode"
-msgstr ""
+msgstr "Samoobslužný režim"
 
 #. module: point_of_sale
 #: field:account.journal,journal_user:0
 msgid "PoS Payment Method"
-msgstr ""
+msgstr "Způsob platby prodejního místa"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pepsi_33cl_product_template
 msgid "Pepsi 33cl"
-msgstr ""
+msgstr "Pepsi 33cl"
 
 #. module: point_of_sale
 #: help:pos.order,user_id:0
@@ -2961,28 +3055,29 @@ msgid ""
 "Person who uses the the cash register. It can be a reliever, a student or an "
 "interim employee."
 msgstr ""
+"Osoba, která používá pokladnu. Může jít o výpomoc, studenta nebo brigádníka."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_zero_decaf_33cl_product_template
 msgid "Coca-Cola Zero Decaf 33cl"
-msgstr ""
+msgstr "Coca-Cola Zero bez kofeinu 33cl"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_payment_report
 #: model:ir.model,name:point_of_sale.model_pos_payment_report
 #: view:pos.payment.report:0
 msgid "Payment Report"
-msgstr ""
+msgstr "Výkaz platby"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_orange_25cl_product_template
 msgid "Fanta Orange 25cl"
-msgstr ""
+msgstr "Fanta Pomeranč 25cl"
 
 #. module: point_of_sale
 #: view:pos.confirm:0
 msgid "Generate Journal Entries"
-msgstr ""
+msgstr "Vytvořit položky deníku"
 
 #. module: point_of_sale
 #: report:account.statement:0
@@ -3003,50 +3098,50 @@ msgstr "Společnost"
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Invoice Date"
-msgstr ""
+msgstr "Datum faktury"
 
 #. module: point_of_sale
 #: field:pos.box.entries,name:0
 msgid "Reason"
-msgstr ""
+msgstr "Důvod"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.orangina_33cl_product_template
 msgid "Orangina 33cl"
-msgstr ""
+msgstr "Orangina 33cl"
 
 #. module: point_of_sale
 #: view:pos.config:0
 msgid "Set to Inactive"
-msgstr ""
+msgstr "Deaktivovat"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chimay_bleu_33cl_product_template
 msgid "Chimay Bleu 33cl"
-msgstr ""
+msgstr "Chimay Bleu 33cl"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_account_journal_form
 #: model:ir.ui.menu,name:point_of_sale.menu_action_account_journal_form_open
 msgid "Payment Methods"
-msgstr ""
+msgstr "Způsoby platby"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.chips
 msgid "Chips"
-msgstr ""
+msgstr "Chipsy"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_spinaci_product_template
 msgid "Dr. Oetker Ristorante Spinaci"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Spinaci"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:460
 #, python-format
 msgid "Reset"
-msgstr ""
+msgstr "Resetovat"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3060,23 +3155,23 @@ msgstr "OK"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:288
 #, python-format
 msgid "Please scan an item"
-msgstr ""
+msgstr "Prosím, naskenujte položku"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_box_in
 #: view:pos.session:0
 msgid "Put Money In"
-msgstr ""
+msgstr "Vlože hotovost"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_zero_orange_1,5l_product_template
 msgid "Fanta Orange Zero 1.5L"
-msgstr ""
+msgstr "Fanta Pomeranč Zero 1.5L"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.boni_orange_product_template
 msgid "Boni Oranges"
-msgstr ""
+msgstr "Pomeranče Boni"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:300
@@ -3097,23 +3192,23 @@ msgstr ""
 #: code:addons/point_of_sale/wizard/pos_box_out.py:91
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Chyba!"
 
 #. module: point_of_sale
 #: report:pos.lines:0
 msgid "No. Of Articles"
-msgstr ""
+msgstr "Poč. položek"
 
 #. module: point_of_sale
 #: selection:pos.order,state:0
 #: selection:report.pos.order,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Zrušeno"
 
 #. module: point_of_sale
 #: report:pos.user.product:0
 msgid "Ending Date"
-msgstr ""
+msgstr "Datum konce"
 
 #. module: point_of_sale
 #: help:product.product,pos_categ_id:0
@@ -3121,66 +3216,69 @@ msgid ""
 "The Point of Sale Category this products belongs to. Those categories are "
 "used to group similar products and are specific to the Point of Sale."
 msgstr ""
+"Kategorie prodejního místa, do které výrobek patří. Tyto kategorie se "
+"používají pro seskupení podobných výrobků a jsou specifické pro dané "
+"prodejní místo."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.orangina_1,5l_product_template
 msgid "Orangina 1.5L"
-msgstr ""
+msgstr "Orangina 1.5L"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "Point of Sale Analysis"
-msgstr ""
+msgstr "Analýza prodejního místa"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.ice_cream
 msgid "Ice Cream"
-msgstr ""
+msgstr "Zmrzlina"
 
 #. module: point_of_sale
 #: field:pos.config,shop_id:0
 #: field:pos.order,shop_id:0
 #: field:report.pos.order,shop_id:0
 msgid "Shop"
-msgstr ""
+msgstr "Obchod"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_box_entries.py:123
 #, python-format
 msgid "Please check that income account is set to %s."
-msgstr ""
+msgstr "Prosím zkontrolujte, že je příjmový účet nastaven na %s."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr ""
+msgstr "Řádek bankovního výpisu"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.belle_vue_kriek_25cl_product_template
 msgid "Belle-Vue Kriek 25cl"
-msgstr ""
+msgstr "Belle-Vue Kriek 25cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chaudfontaine_petillante_1,5l_product_template
 msgid "Chaudfontaine Petillante 1.5l"
-msgstr ""
+msgstr "Chaudfontaine Petillante 1.5l"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.ijsboerke_stracciatella_2,5l_product_template
 msgid "IJsboerke Stracciatella 2.5L"
-msgstr ""
+msgstr "IJsboerke Stracciatella 2.5L"
 
 #. module: point_of_sale
 #: view:report.sales.by.user.pos:0
 #: view:report.sales.by.user.pos.month:0
 #: view:report.transaction.pos:0
 msgid "POS Report"
-msgstr ""
+msgstr "Výkaz prodejního místa"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chaudfontaine_1,5l_product_template
 msgid "Chaudfontaine 1.5l"
-msgstr ""
+msgstr "Chaudfontaine 1.5l"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:1066
@@ -3192,7 +3290,7 @@ msgstr ""
 #: code:addons/point_of_sale/point_of_sale.py:529
 #, python-format
 msgid "In order to delete a sale, it must be new or cancelled."
-msgstr ""
+msgstr "Prodej musí být nový nebo stornovaný aby bylo možné jej smazat."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3202,57 +3300,59 @@ msgid ""
 "There are pending operations that could not be saved into the database, are "
 "you sure you want to exit?"
 msgstr ""
+"Probíhající operace se nepodařilo uložit do databáze, jste si jisti, že "
+"chcete skončit?"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_regular_50cl_product_template
 msgid "Coca-Cola Regular 50cl"
-msgstr ""
+msgstr "Běžná Coca-Cola 50cl"
 
 #. module: point_of_sale
 #: view:pos.confirm:0
 msgid "Generate Entries"
-msgstr ""
+msgstr "Vytvořit položky"
 
 #. module: point_of_sale
 #: field:pos.box.entries,product_id:0
 msgid "Operation"
-msgstr ""
+msgstr "Úkon"
 
 #. module: point_of_sale
 #: field:pos.order,account_move:0
 msgid "Journal Entry"
-msgstr ""
+msgstr "Položka deníku"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:736
 #, python-format
 msgid "There is no receivable account defined to make payment."
-msgstr ""
+msgstr "Není definován žádný příjmový účet pro provedení platby."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.citron_product_template
 msgid "Lemon"
-msgstr ""
+msgstr "Citron"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Cancelled Invoice"
-msgstr ""
+msgstr "Stornovaná faktura"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_zero_50cl_product_template
 msgid "Coca-Cola Zero 50cl"
-msgstr ""
+msgstr "Coca-Cola Zero 50cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_tonno_product_template
 msgid "Dr. Oetker Ristorante Tonno"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Tonno"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Supplier Invoice"
-msgstr ""
+msgstr "Přijatá faktura"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:458
@@ -3261,55 +3361,58 @@ msgid ""
 "You cannot confirm all orders of this session, because they have not the "
 "'paid' status"
 msgstr ""
+"Nemůžete potvrdit všechny objednávky tohoto sezení protože nejsou ve stavu "
+"'zaplaceno'"
 
 #. module: point_of_sale
 #: view:pos.order:0
 #: selection:pos.order,state:0
 #: selection:report.pos.order,state:0
 msgid "New"
-msgstr ""
+msgstr "Nový"
 
 #. module: point_of_sale
 #: view:pos.open.statement:0
 msgid "Do you want to open cash registers?"
-msgstr ""
+msgstr "Chcete otevřít pokladny?"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.perrier_50cl_product_template
 msgid "50cl Perrier"
-msgstr ""
+msgstr "50cl Perrier"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_cash_box_out
 msgid "cash.box.out"
-msgstr ""
+msgstr "cash.box.out"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_zero_orange_33cl_product_template
 msgid "Fanta Zero Orange 33cl"
-msgstr ""
+msgstr "Fanta Zero Pomeranč 33cl"
 
 #. module: point_of_sale
 #: help:product.product,available_in_pos:0
 msgid "Check if you want this product to appear in the Point of Sale"
 msgstr ""
+"Zaškrtněte toto pole, pokud chcete aby se výrobek objevil na prodejním místě"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "Day of order date"
-msgstr ""
+msgstr "Den data objednávky"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.maes_33cl_product_template
 msgid "Maes 33cl"
-msgstr ""
+msgstr "Maes 33cl"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:454
 #, python-format
 msgid "Reject Payment"
-msgstr ""
+msgstr "Odmítnout platbu"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_config_product
@@ -3319,89 +3422,89 @@ msgstr "Konfigurace"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.orval_33cl_product_template
 msgid "Orval 33cl"
-msgstr ""
+msgstr "Orval 33cl"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:521
 #, python-format
 msgid "discount"
-msgstr ""
+msgstr "sleva"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_regular_1l_product_template
 msgid "Coca-Cola Regular 1L"
-msgstr ""
+msgstr "Běžná Coca-Cola 1L"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:712
 #, python-format
 msgid "Unable to cancel the picking."
-msgstr ""
+msgstr "Nemohu zrušit naskladnění."
 
 #. module: point_of_sale
 #: view:pos.config:0
 msgid "Material Interfaces"
-msgstr ""
+msgstr "Rozhraní materiálu"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.fruits
 msgid "Fresh Fruits"
-msgstr ""
+msgstr "Čerstvé ovoce"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lindemans_pecheresse_37,,5cl_product_template
 msgid "Lindemans sinful 37.5cl"
-msgstr ""
+msgstr "Lindemans sinful 37.5cl"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_invoice
 msgid "Invoices"
-msgstr ""
+msgstr "Faktury"
 
 #. module: point_of_sale
 #: selection:report.pos.order,month:0
 msgid "December"
-msgstr ""
+msgstr "Prosinec"
 
 #. module: point_of_sale
 #: field:pos.category,image:0
 msgid "Image"
-msgstr ""
+msgstr "Obrázek"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_gazeuse_1,5l_product_template
 msgid "Spa Barisart 1.5l"
-msgstr ""
+msgstr "Spa Barisart 1.5l"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:789
 #: view:pos.order:0
 #, python-format
 msgid "Return Products"
-msgstr ""
+msgstr "Vrátit výrobky"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.jupiler_33cl_product_template
 msgid "Jupiler 33cl"
-msgstr ""
+msgstr "Jupiler 33cl"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:490
 #, python-format
 msgid "Print Invoice"
-msgstr ""
+msgstr "Vytisknout fakturu"
 
 #. module: point_of_sale
 #: field:pos.order,pos_reference:0
 msgid "Receipt Ref"
-msgstr ""
+msgstr "Č. účtenky"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_details
 msgid "Sales Details"
-msgstr ""
+msgstr "Podrobnosti prodeje"
 
 #. module: point_of_sale
 #: view:account.journal:0
@@ -3414,13 +3517,13 @@ msgstr ""
 #: view:res.partner:0
 #: view:res.users:0
 msgid "Point of Sale"
-msgstr ""
+msgstr "Prodejní misto"
 
 #. module: point_of_sale
 #: view:pos.order:0
 #: field:pos.order,user_id:0
 msgid "Salesman"
-msgstr ""
+msgstr "Pokladník"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3437,7 +3540,7 @@ msgstr ""
 #: view:pos.sale.user:0
 #, python-format
 msgid "or"
-msgstr ""
+msgstr "nebo"
 
 #. module: point_of_sale
 #: report:pos.details:0
@@ -3446,17 +3549,17 @@ msgstr ""
 #: view:report.pos.order:0
 #: selection:report.pos.order,state:0
 msgid "Invoiced"
-msgstr ""
+msgstr "Fakturováno"
 
 #. module: point_of_sale
 #: view:pos.session.opening:0
 msgid "New Session"
-msgstr ""
+msgstr "Nové sezení"
 
 #. module: point_of_sale
 #: field:pos.config,group_by:0
 msgid "Group Journal Items"
-msgstr ""
+msgstr "Seskupit položky deníku"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_pos_pos_form
@@ -3472,111 +3575,120 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klikněte pro vytvoření nové objednávky.\n"
+"              </p><p>\n"
+"                Použijte toto menu pro procházení předchozími objednávkami.\n"
+"                Pro vložení nové objednávky je lepší použít menu 'Vaše "
+"sezení'\n"
+"                pro dotykové rozhraní.\n"
+"              </p>\n"
+"            "
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:456
 #, python-format
 msgid "Electronic Scale"
-msgstr ""
+msgstr "Elektronická váha"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_gazeuse_50cl_product_template
 msgid "Spa Barisart 50cl"
-msgstr ""
+msgstr "Spa Barisart 50cl"
 
 #. module: point_of_sale
 #: field:res.users,pos_config:0
 msgid "Default Point of Sale"
-msgstr ""
+msgstr "Výchozí prodejní místo"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_box.py:24
 #, python-format
 msgid "There is no cash register for this PoS Session"
-msgstr ""
+msgstr "K tomu sezení není přiřazena žádná pokladna"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.special_beers
 msgid "Special Beers"
-msgstr ""
+msgstr "Speciální piva"
 
 #. module: point_of_sale
 #: field:pos.order.line,notice:0
 msgid "Discount Notice"
-msgstr ""
+msgstr "Poznámka slevy"
 
 #. module: point_of_sale
 #: view:account.bank.statement:0
 msgid "Cash Statement"
-msgstr ""
+msgstr "Výpis hotovosti"
 
 #. module: point_of_sale
 #: report:pos.details_summary:0
 msgid "Mode of Taxes"
-msgstr ""
+msgstr "Režim daní"
 
 #. module: point_of_sale
 #: field:pos.order,amount_paid:0
 #: selection:pos.order,state:0
 msgid "Paid"
-msgstr ""
+msgstr "Zaplaceno"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:470
 #, python-format
 msgid "3.141Kg Oranges"
-msgstr ""
+msgstr "3.141Kg pomerančů"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "PRO-FORMA"
-msgstr ""
+msgstr "PROFORMA"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:818
 #, python-format
 msgid "Please provide a partner for the sale."
-msgstr ""
+msgstr "Prosím zadejte partnera pro prodej."
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.fruity_beers
 msgid "Fruity Beers"
-msgstr ""
+msgstr "Ovocná piva"
 
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "You can define another list of available currencies on the"
-msgstr ""
+msgstr "Můžete nadefinovat další seznam dostupných měn v"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:469
 #, python-format
 msgid "Soda 33cl"
-msgstr ""
+msgstr "Soda 33cl"
 
 #. module: point_of_sale
 #: help:pos.session,cash_register_balance_start:0
 msgid "Computed using the cash control at the opening."
-msgstr ""
+msgstr "Spočítáno na základě počátečního zůstatku pokladny."
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.raisins
 msgid "Grapes"
-msgstr ""
+msgstr "Hrozny"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree
 #: model:ir.model,name:point_of_sale.model_report_sales_by_user_pos
 msgid "Sales by user"
-msgstr ""
+msgstr "Prodeje podle uživatele"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_hawaii_product_template
 msgid "Dr. Oetker Ristorante Hawaii"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Hawaii"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3584,23 +3696,23 @@ msgstr ""
 #: view:pos.receipt:0
 #, python-format
 msgid "Print Receipt"
-msgstr ""
+msgstr "Tisk účtenky"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:417
 #, python-format
 msgid "Point of Sale Loss"
-msgstr ""
+msgstr "Ztráta prodejního místa"
 
 #. module: point_of_sale
 #: field:pos.make.payment,payment_date:0
 msgid "Payment Date"
-msgstr ""
+msgstr "Datum platby"
 
 #. module: point_of_sale
 #: selection:report.pos.order,month:0
 msgid "January"
-msgstr ""
+msgstr "Leden"
 
 #. module: point_of_sale
 #: view:pos.order.line:0
@@ -3610,81 +3722,81 @@ msgstr ""
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chaudfontaine_petillante_33cl_product_template
 msgid "Chaudfontaine Petillante 33cl"
-msgstr ""
+msgstr "Chaudfontaine Petillante 33cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pepsi_max_2l_product_template
 msgid "Pepsi Max 2L"
-msgstr ""
+msgstr "Pepsi Max 2L"
 
 #. module: point_of_sale
 #: field:pos.session,details_ids:0
 msgid "Cash Control"
-msgstr ""
+msgstr "Pokladna"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_vegetale_product_template
 msgid "Dr. Oetker Ristorante Vegetable"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Vegetable"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.soda
 msgid "Soda"
-msgstr ""
+msgstr "Soda"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_paprika_300g_product_template
 msgid "Lays Paprika XXL 300g"
-msgstr ""
+msgstr "Lays Paprika XXL 300g"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Refund"
-msgstr ""
+msgstr "Vrátit peníze"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:427
 #, python-format
 msgid "Your shopping cart is empty"
-msgstr ""
+msgstr "Váš nákupní košík je prázdný"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/report/pos_invoice.py:46
 #, python-format
 msgid "Please create an invoice for this sale."
-msgstr ""
+msgstr "Prosím vytvořte k tomuto prodeji fakturu."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_mozzarella_product_template
 msgid "Dr. Oetker Ristorante Mozzarella"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Mozzarella"
 
 #. module: point_of_sale
 #: report:pos.details:0
 #: report:pos.payment.report.user:0
 msgid "Disc(%)"
-msgstr ""
+msgstr "Sleva(%)"
 
 #. module: point_of_sale
 #: view:pos.session.opening:0
 msgid "The session"
-msgstr ""
+msgstr "Sezení"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "General Information"
-msgstr ""
+msgstr "Všeobecné informace"
 
 #. module: point_of_sale
 #: view:pos.order.line:0
 msgid "Sum of subtotals"
-msgstr ""
+msgstr "Suma mezisoučtů"
 
 #. module: point_of_sale
 #: view:pos.session.opening:0
 msgid "Close Session"
-msgstr ""
+msgstr "Uzavřít sezení"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -3694,12 +3806,12 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.session.opening:0
 msgid "PoS Session Opening"
-msgstr ""
+msgstr "Otevření sezení prodejního místa"
 
 #. module: point_of_sale
 #: field:pos.order.line,price_subtotal:0
 msgid "Subtotal w/o Tax"
-msgstr ""
+msgstr "Mezisoučet bez daně"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3707,75 +3819,75 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:742
 #, python-format
 msgid "delete"
-msgstr ""
+msgstr "smazat"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_50cl_product_template
 msgid "Spa Reine 50cl"
-msgstr ""
+msgstr "Spa Reine 50cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chicon_flandria_extra_product_template
 msgid "Extra Flandria chicory"
-msgstr ""
+msgstr "Extra Flandria chicory"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_light_naturel_170g_product_template
 #: model:product.template,name:point_of_sale.lays_naturel_170g_product_template
 msgid "Lays Natural Light 170g"
-msgstr ""
+msgstr "Lays Natural Light 170g"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.leffe_blonde_33cl_product_template
 msgid "Leffe Blonde 33cl"
-msgstr ""
+msgstr "Leffe Blonde 33cl"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_payment
 msgid "Pyament Report"
-msgstr ""
+msgstr "Výkaz platby"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,jl_id:0
 msgid "Cash Journals"
-msgstr ""
+msgstr "Deník hotovosti"
 
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "Session:"
-msgstr ""
+msgstr "Sezení:"
 
 #. module: point_of_sale
 #: field:pos.config,iface_print_via_proxy:0
 msgid "Print via Proxy"
-msgstr ""
+msgstr "Tisk přes proxy"
 
 #. module: point_of_sale
 #: report:pos.sales.user.today:0
 msgid "Today's Sales By User"
-msgstr ""
+msgstr "Dnešní prodeje podle uživatele"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Customer Code"
-msgstr ""
+msgstr "Kód zákazníka"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 #: report:pos.lines:0
 msgid "Description"
-msgstr ""
+msgstr "Popis"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.act_pos_config_sessions
 #: field:pos.config,session_ids:0
 msgid "Sessions"
-msgstr ""
+msgstr "Sezení"
 
 #. module: point_of_sale
 #: selection:report.pos.order,month:0
 msgid "May"
-msgstr ""
+msgstr "Květen"
 
 #. module: point_of_sale
 #: report:pos.lines:0
@@ -3785,12 +3897,12 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.order,note:0
 msgid "Internal Notes"
-msgstr ""
+msgstr "Vnitřní poznámky"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.ijsboerke_chocolat_2,5l_product_template
 msgid "IJsboerke Chocolat 2.5L"
-msgstr ""
+msgstr "IJsboerke Chocolat 2.5L"
 
 #. module: point_of_sale
 #: help:pos.category,image_small:0
@@ -3799,16 +3911,18 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is "
 "required."
 msgstr ""
+"Malý obrázek kategorie. Je automaticky zmenšen na rozměr 64x64 pixelů se "
+"zachováním poměru stran. Použijte toto pole kdekoli je potřeba malý obrázek."
 
 #. module: point_of_sale
 #: field:pos.session.opening,pos_state:0
 msgid "Session Status"
-msgstr ""
+msgstr "Stav sezení"
 
 #. module: point_of_sale
 #: field:pos.order,picking_id:0
 msgid "Picking"
-msgstr ""
+msgstr "Naskladnění"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_account_journal_form
@@ -3826,76 +3940,87 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klikněte pro přidání způsobu platby.\n"
+"              </p><p>\n"
+"                Způsoby platby jsou definované účetními knihami se "
+"zaškrtnutým\n"
+"                polem <i>Způsob platby prodejního místa</i>field. Aby je šlo "
+"použít\n"
+"                z dotykového rozhraní, musíte je vybrat v nastavení\n"
+"                <i>Prodejního místa</i>\n"
+"              </p>\n"
+"            "
 
 #. module: point_of_sale
 #: view:pos.order:0
 #: field:pos.order,partner_id:0
 #: view:report.pos.order:0
 msgid "Customer"
-msgstr ""
+msgstr "Zákazník"
 
 #. module: point_of_sale
 #: selection:report.pos.order,month:0
 msgid "February"
-msgstr ""
+msgstr "Únor"
 
 #. module: point_of_sale
 #: view:res.partner:0
 msgid "Edit"
-msgstr ""
+msgstr "Upravit"
 
 #. module: point_of_sale
 #: view:pos.session.opening:0
 msgid "Click to continue the session."
-msgstr ""
+msgstr "Klikněte pro pokračování v sezení."
 
 #. module: point_of_sale
 #: view:pos.config:0
 msgid "Set to Active"
-msgstr ""
+msgstr "Aktivovat"
 
 #. module: point_of_sale
 #: view:pos.category:0
 msgid "Product PoS Categories"
-msgstr ""
+msgstr "Kategorie výrobků prodejního místa"
 
 #. module: point_of_sale
 #: view:pos.session.opening:0
 msgid "Start Selling"
-msgstr ""
+msgstr "Začít prodávat"
 
 #. module: point_of_sale
 #: selection:report.pos.order,month:0
 msgid "April"
-msgstr ""
+msgstr "Duben"
 
 #. module: point_of_sale
 #: view:pos.order:0
 #: field:pos.order,statement_ids:0
 msgid "Payments"
-msgstr ""
+msgstr "Platby"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Supplier Refund"
-msgstr ""
+msgstr "Vrácení peněz dodavatelem"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:596
 #, python-format
 msgid "Discount:"
-msgstr ""
+msgstr "Sleva:"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_sales_by_margin_pos_month
 msgid "Sales by User Monthly margin"
-msgstr ""
+msgstr "Prodeje podle měsíční marže uživatele"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.leffe_9_33cl_product_template
 msgid "Leffe Brune \"9\" 33cl"
-msgstr ""
+msgstr "Leffe Brune \"9\" 33cl"
 
 #. module: point_of_sale
 #: help:account.journal,journal_user:0
@@ -3903,47 +4028,49 @@ msgid ""
 "Check this box if this journal define a payment method that can be used in "
 "point of sales."
 msgstr ""
+"Zaškrtněte toto pole, pokud tento deník určuje způsob platby, který lze "
+"použít na prodejním místě."
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:41
 #, python-format
 msgid "Mozilla Firefox"
-msgstr ""
+msgstr "Mozilla Firefox"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.raisins_noir_product_template
 msgid "Black Grapes"
-msgstr ""
+msgstr "Modré hrozny"
 
 #. module: point_of_sale
 #: field:pos.category,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Posloupnost"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_return.py:316
 #: view:pos.make.payment:0
 #, python-format
 msgid "Make Payment"
-msgstr ""
+msgstr "Zaplatit"
 
 #. module: point_of_sale
 #: constraint:pos.category:0
 msgid "Error ! You cannot create recursive categories."
-msgstr ""
+msgstr "Chyba! Nelze vytvářet rekursivní kategorie."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_sales_user_today
 msgid "Sales User Today"
-msgstr ""
+msgstr "Dnešní prodeje podle uživatele"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:361
 #, python-format
 msgid "Sorry, we could not create a session for this user."
-msgstr ""
+msgstr "Omlouváme se, nepodařilo se vytvořit sezení tohoto uživatele."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:98
@@ -3951,30 +4078,30 @@ msgstr ""
 #: selection:pos.session.opening,pos_state:0
 #, python-format
 msgid "Opening Control"
-msgstr ""
+msgstr "Otevření"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "Month of order date"
-msgstr ""
+msgstr "Měsíc data objednávky"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 #: field:report.pos.order,year:0
 msgid "Year"
-msgstr ""
+msgstr "Rok"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:511
 #, python-format
 msgid "at"
-msgstr ""
+msgstr "v"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_cash_box_in
 msgid "cash.box.in"
-msgstr ""
+msgstr "cash.box.in"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.act_pos_session_orders
@@ -3982,4 +4109,4 @@ msgstr ""
 #: model:ir.ui.menu,name:point_of_sale.menu_point_ofsale
 #: field:pos.session,order_ids:0
 msgid "Orders"
-msgstr ""
+msgstr "Objednávky"

@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2012-12-30 18:42+0000\n"
+"Last-Translator: Michał Węgrzynek <michal.wegrzynek@malloc.com.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 06:58+0000\n"
+"X-Launchpad-Export-Date: 2012-12-31 05:16+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
 
 #. module: account
@@ -248,7 +248,7 @@ msgstr "Raporty belgijskie"
 #. module: account
 #: model:mail.message.subtype,name:account.mt_invoice_validated
 msgid "Validated"
-msgstr ""
+msgstr "Zatwierdzone"
 
 #. module: account
 #: model:account.account.type,name:account.account_type_income_view1
@@ -451,7 +451,7 @@ msgstr ""
 #. module: account
 #: help:account.bank.statement.line,name:0
 msgid "Originator to Beneficiary Information"
-msgstr ""
+msgstr "odnośnik dla informacji beneficjenta"
 
 #. module: account
 #. openerp-web
@@ -472,6 +472,8 @@ msgstr "Szablon planu kont"
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Modify: create refund, reconcile and create a new draft invoice"
 msgstr ""
+"Modyfikacja: utworzy korektę do zera, uzgodni ją i utworzy projekt faktury "
+"jako kopię poprzedniej."
 
 #. module: account
 #: help:account.config.settings,tax_calculation_rounding_method:0
@@ -485,6 +487,14 @@ msgid ""
 "should choose 'Round per line' because you certainly want the sum of your "
 "tax-included line subtotals to be equal to the total amount with taxes."
 msgstr ""
+"Jeśli wybierzesz 'Zaokrąglaj pozycje', to dla każdego podatku, każda wartość "
+"będzie obliczona i zaokrąglona w każdej pozycji zamówienia sprzedaży, "
+"zamówienia zakupu lub faktury i dopiero zaokrąglone wartości będą zsumowane. "
+"Jeśli wybierzesz 'Zaokrąglaj globalnie', to podatki i pozycje zostaną "
+"najpierw zsumowane i dopiero ewentualnie zaokrąglone. Jeśli stosujesz "
+"sprzedaż z podatkami wliczonymi w cenę, to powinieneś wybrać 'Zaokrąglaj "
+"pozycje' ponieważ zapewne chcesz, aby suma wartości z podatkami była równa "
+"sumie wartości brutto."
 
 #. module: account
 #: model:ir.model,name:account.model_wizard_multi_charts_accounts
@@ -747,6 +757,9 @@ msgid ""
 "lines for refunds. Leave empty if you don't want to use an analytic account "
 "on the invoice tax lines by default."
 msgstr ""
+"Ustaw konto analityczne, które będzie domyślnie stosowane na pozycjach "
+"podatków w korektach. Pozostaw puste, jeśli nie chcesz stosować domyślnych "
+"kont analitycznych na pozycjach podatkowych w fakturach."
 
 #. module: account
 #: view:account.account:0
@@ -767,7 +780,7 @@ msgstr "Konfiguruj konta bankowe dla firmy"
 #. module: account
 #: view:account.invoice.refund:0
 msgid "Create Refund"
-msgstr ""
+msgstr "Utwórz korektę"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -797,7 +810,7 @@ msgstr "Jesteś pewna, że chcesz utworzyć zapisy?"
 #: code:addons/account/account_invoice.py:1329
 #, python-format
 msgid "Invoice partially paid: %s%s of %s%s (%s%s remaining)."
-msgstr ""
+msgstr "Faktura częściowo zapłacona: %s%s of %s%s (pozostało %s%s)."
 
 #. module: account
 #: view:account.invoice:0
@@ -1017,7 +1030,7 @@ msgstr "Dziennik zakupów"
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_paid
 msgid "Invoice paid"
-msgstr ""
+msgstr "Faktua zapłacona"
 
 #. module: account
 #: view:validate.account.move:0
@@ -1884,7 +1897,7 @@ msgstr "Sprzedaż wg typów kont"
 #: model:account.payment.term,name:account.account_payment_term_15days
 #: model:account.payment.term,note:account.account_payment_term_15days
 msgid "15 Days"
-msgstr ""
+msgstr "15 Dni"
 
 #. module: account
 #: model:ir.ui.menu,name:account.periodical_processing_invoicing
@@ -2028,7 +2041,7 @@ msgstr "Projekt wyciągu"
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_validated
 msgid "Invoice validated"
-msgstr ""
+msgstr "Faktua zatwierdzona"
 
 #. module: account
 #: field:account.config.settings,module_account_check_writing:0
@@ -2197,7 +2210,8 @@ msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Kliknij, aby zarejestrować wyciąg bankowy.\n"
 "              </p><p>\n"
-"                Wyciąg jest listę transakcji banko dla konkretnego konta\n"
+"                Wyciąg jest listę transakcji bankowych dla konkretnego "
+"konta\n"
 "                w określonym czasie.\n"
 "              </p><p>\n"
 "                OpenERP pozwala uzgadniać pozycje wyciągu bezpośrednio\n"
@@ -2738,7 +2752,7 @@ msgstr "Właściwości konta"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Create a draft refund"
-msgstr ""
+msgstr "Utwórz projekt korekty"
 
 #. module: account
 #: view:account.partner.reconcile.process:0
@@ -3271,7 +3285,7 @@ msgstr ""
 #: view:account.unreconcile:0
 #: view:account.unreconcile.reconcile:0
 msgid "Unreconcile Transactions"
-msgstr ""
+msgstr "Skasuj uzgodnienie transakcji"
 
 #. module: account
 #: field:wizard.multi.charts.accounts,only_one_chart_template:0
@@ -3467,7 +3481,7 @@ msgstr "Liczba cyfr stosowana do numeru konta"
 #. module: account
 #: field:res.partner,property_supplier_payment_term:0
 msgid "Supplier Payment Term"
-msgstr ""
+msgstr "Warunki płatności dostawcy"
 
 #. module: account
 #: view:account.fiscalyear:0
@@ -3540,7 +3554,7 @@ msgstr "Plik"
 #. module: account
 #: field:account.move.line,reconcile:0
 msgid "Reconcile Ref"
-msgstr ""
+msgstr "Odnośnik korekty"
 
 #. module: account
 #: field:account.config.settings,has_chart_of_accounts:0
@@ -4597,6 +4611,8 @@ msgid ""
 "This payment term will be used instead of the default one for sale orders "
 "and customer invoices"
 msgstr ""
+"Te warunki płatności będą stosowane zamiast domyślnych do zamówień sprzedaży "
+"i faktur dla klientów."
 
 #. module: account
 #: view:account.config.settings:0
@@ -4622,7 +4638,7 @@ msgstr "Zapisy zaksięgowane"
 #. module: account
 #: field:account.move.line,blocked:0
 msgid "No Follow-up"
-msgstr ""
+msgstr "Bez windykacji"
 
 #. module: account
 #: view:account.tax.template:0
@@ -4774,7 +4790,7 @@ msgstr "Typ konta"
 #. module: account
 #: selection:account.journal,type:0
 msgid "Bank and Checks"
-msgstr ""
+msgstr "Banki i Czeki"
 
 #. module: account
 #: field:account.account.template,note:0
@@ -4896,7 +4912,7 @@ msgstr "Plan kont"
 #. module: account
 #: field:account.invoice,reference_type:0
 msgid "Payment Reference"
-msgstr ""
+msgstr "Odnośnik płatności"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -4970,7 +4986,7 @@ msgstr "Pozycje zapisów do uzgodnienia"
 #. module: account
 #: model:ir.model,name:account.model_account_tax_template
 msgid "Templates for Taxes"
-msgstr ""
+msgstr "Szablony podatków"
 
 #. module: account
 #: sql_constraint:account.period:0
@@ -4990,7 +5006,7 @@ msgstr "Obliczenie podatku"
 #. module: account
 #: view:wizard.multi.charts.accounts:0
 msgid "res_config_contents"
-msgstr ""
+msgstr "res_config_contents"
 
 #. module: account
 #: help:account.chart.template,visible:0
@@ -5047,7 +5063,7 @@ msgstr "Bazując na"
 #: code:addons/account/account.py:3156
 #, python-format
 msgid "ECNJ"
-msgstr "FZK"
+msgstr "FZKZ"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_cost_ledger_journal_report
@@ -6094,6 +6110,8 @@ msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and supplier invoices"
 msgstr ""
+"Te warunki płatności będą stosowane zamiast domyślnych w zamówieniach zakupu "
+"i fakturach od dostawców."
 
 #. module: account
 #: help:account.automatic.reconcile,power:0
@@ -6663,6 +6681,9 @@ msgid ""
 "choice assumes that the set of tax defined for the chosen template is "
 "complete"
 msgstr ""
+"To pole pozwala wybrać, czy użytkownik może wpisać podatki ręcznie, czy musi "
+"skorzystać z relacji do uprzednio skonfigurowanych podatków. Druga możliwość "
+"zakłada, że odpowiednie podatki sa wprowadzone do systemu."
 
 #. module: account
 #: report:account.vat.declaration:0
@@ -6682,7 +6703,7 @@ msgstr "Faktury otwarte lub zapłacone"
 #. module: account
 #: selection:account.financial.report,display_detail:0
 msgid "Display children flat"
-msgstr ""
+msgstr "Wyświetl podrzędne płasko"
 
 #. module: account
 #: view:account.config.settings:0
@@ -6703,7 +6724,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_intracom
 msgid "IntraCom"
-msgstr ""
+msgstr "IntraCom"
 
 #. module: account
 #: view:account.move.line.reconcile.writeoff:0
@@ -6906,6 +6927,12 @@ msgid ""
 "due date, make sure that the payment term is not set on the invoice. If you "
 "keep the payment term and the due date empty, it means direct payment."
 msgstr ""
+"Jeśli stosujesz warunki zapłaty, to termin płatności zostanie obliczony "
+"automatycznie w trakcie generowania zapisów księgowych (przy zatwierdzaniu "
+"faktury). Warunki płatności mogą zawierać kilka terminów (np. 50% teraz i "
+"50% w ciągu 30dni), ale jeśli chcesz wymusić termin płatności, to upewnij "
+"się, że warunki płatności nie są ustawione na fakturze. Jeśli nie ma ani "
+"warunków płatności, ani terminu zapłaty, to oznacza płatność natychmiastową."
 
 #. module: account
 #: code:addons/account/account.py:414
@@ -6964,7 +6991,7 @@ msgstr "Zapisy analityczne"
 #. module: account
 #: field:account.config.settings,has_default_company:0
 msgid "Has default company"
-msgstr ""
+msgstr "Ma domyślną firmę"
 
 #. module: account
 #: view:account.fiscalyear.close:0
@@ -7146,6 +7173,8 @@ msgid ""
 "If you unreconcile transactions, you must also verify all the actions that "
 "are linked to those transactions because they will not be disabled"
 msgstr ""
+"Jeśli kasujesz uzgodnienia, to musisz również zweryfikować akcje zależne od "
+"tych transakcji, bo one mogą być ciągle aktywne."
 
 #. module: account
 #: view:account.account.template:0
@@ -7179,7 +7208,7 @@ msgstr "Waluta dziennika"
 msgid ""
 "You cannot provide a secondary currency if it is the same than the company "
 "one."
-msgstr ""
+msgstr "Nie możesz podać drugie waluty takiej samej jak pierwotna w firmie."
 
 #. module: account
 #: selection:account.tax.template,applicable_type:0
@@ -7317,7 +7346,7 @@ msgstr "Ręcznie"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Cancel: create refund and reconcile"
-msgstr ""
+msgstr "Anuluj: Utwórz korektę do zera i uzgodnij"
 
 #. module: account
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:58
@@ -7658,7 +7687,7 @@ msgstr "Dla podatków typu procentowego wpisz współczynnik od 0 do 1."
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_report_tree_hierarchy
 msgid "Financial Reports Hierarchy"
-msgstr ""
+msgstr "Hierarchia raportów finansowych"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_invoice_partner_relation
@@ -7695,7 +7724,7 @@ msgstr "Jesteś pewna(wien), że chcesz otworzyć tę fakturę ?"
 #. module: account
 #: field:account.chart.template,property_account_expense_opening:0
 msgid "Opening Entries Expense Account"
-msgstr ""
+msgstr "Konto dla sald początkowych wydatków"
 
 #. module: account
 #: view:account.invoice:0
@@ -7909,6 +7938,11 @@ msgid ""
 "                                    with the invoice. You will not be able "
 "to modify the credit note."
 msgstr ""
+"Stosuj tę opcję, jeśli chcesz anulować obciążenie siebie lub klienta.\n"
+"                                    Zostanie utworzona faktura korygująca, "
+"która będzie uzgodniona\n"
+"                                    z faktura pierwotną. Nie będzie można "
+"modyfikować korekty."
 
 #. module: account
 #: help:account.partner.reconcile.process,next_partner_id:0
@@ -8092,7 +8126,7 @@ msgstr "Brak ilości !"
 #: view:account.financial.report:0
 #: model:ir.ui.menu,name:account.menu_account_report_tree_hierarchy
 msgid "Account Reports Hierarchy"
-msgstr ""
+msgstr "Hierarchia raportów księgowych"
 
 #. module: account
 #: help:account.account.template,chart_template_id:0
@@ -8203,7 +8237,7 @@ msgstr ""
 #. module: account
 #: field:account.move.line,amount_residual_currency:0
 msgid "Residual Amount in Currency"
-msgstr ""
+msgstr "Wartośc pozostała w walucie"
 
 #. module: account
 #: field:account.config.settings,sale_refund_sequence_prefix:0
@@ -8822,7 +8856,7 @@ msgstr "Saldo końcowe"
 #. module: account
 #: field:account.journal,centralisation:0
 msgid "Centralized Counterpart"
-msgstr ""
+msgstr "Centralizacja strony przeciwnej"
 
 #. module: account
 #: help:account.move.line,blocked:0
@@ -8857,6 +8891,14 @@ msgid ""
 "invoice will be created \n"
 "                                    so that you can edit it."
 msgstr ""
+"Stosuj tę opcję, aby anulować należności i utworzyć nową\n"
+"                                    fakturę. Korekta do zera zostanie "
+"utworzona i zatwierdzona.\n"
+"                                    oraz uzgodniona z pierwotnymi "
+"należnościami. Poz czym \n"
+"                                    zostanie utworzony projekt nowej faktury "
+"na podstawie\n"
+"                                    pierwotnej."
 
 #. module: account
 #: model:process.transition,name:account.process_transition_filestatement0
@@ -9552,7 +9594,7 @@ msgstr "Wyświetl szczegóły"
 #: code:addons/account/account.py:3155
 #, python-format
 msgid "SCNJ"
-msgstr "FZK"
+msgstr "FZKS"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_analyticinvoice0
@@ -9582,6 +9624,17 @@ msgid ""
 "related journal entries may or may not be reconciled.             \n"
 "* The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+" * Stan 'Projekt' jest ustawiany w po utworzeniu faktury i w trakcie jej "
+"wprowadzania.             \n"
+"* Stan 'Pro-forma' jest ustawiany, kiedy użytkownik chce wysłać fakturę bez "
+"numeru.             \n"
+"* Stan 'Otwarte' jest ustawiany po zatwierdzeniu faktury (nadaniu jej "
+"numeru) i oczekiwaniu na zapłatę.             \n"
+"* Stan 'Zapłacone' jest ustawiany automatycznie kiedy nadejdzie płatność. "
+"Następuje to po uzgodnieniu pozycji zapisów faktury z pozycjami zapisów "
+"płatności..             \n"
+"* Stan 'Anulowano' jest nadawany po rezygnacji użytkownika z wprowadzania "
+"faktury."
 
 #. module: account
 #: field:account.period,date_stop:0
@@ -9891,6 +9944,8 @@ msgid ""
 "This field contains the information related to the numbering of the journal "
 "entries of this journal."
 msgstr ""
+"To pole zawiera informacje związane z numeracją zapisów księgowych danego "
+"dziennika."
 
 #. module: account
 #: field:account.invoice,sent:0
@@ -9922,7 +9977,7 @@ msgstr "Nie można tworzyć pozycji z różnych firm."
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_periodical_processing
 msgid "Periodic Processing"
-msgstr ""
+msgstr "Operacje okresowe"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -10002,7 +10057,7 @@ msgstr "Termin płatności"
 #: model:account.payment.term,name:account.account_payment_term_immediate
 #: model:account.payment.term,note:account.account_payment_term_immediate
 msgid "Immediate Payment"
-msgstr ""
+msgstr "Płatność natychmiastowa"
 
 #. module: account
 #: code:addons/account/account.py:1464
@@ -10694,6 +10749,8 @@ msgid ""
 "If you unreconcile transactions, you must also verify all the actions that "
 "are linked to those transactions because they will not be disable"
 msgstr ""
+"Jeśli kasujesz uzgodnienia, to musisz również zweryfikować akcje zależne od "
+"tych transakcji, bo one mogą być ciągle aktywne."
 
 #. module: account
 #: code:addons/account/account_move_line.py:1059
@@ -10728,6 +10785,9 @@ msgid ""
 "customer. The tool search can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
+"Z tego raportu możesz dowiedzieć się o kwotach zafakturowanych klientom. "
+"Narzędzie do wyszukiwania może być stosowane do dostosowania tej analizy do "
+"konkretnych twoich potrzeb."
 
 #. module: account
 #: view:account.partner.reconcile.process:0
@@ -11247,7 +11307,7 @@ msgstr "Konto wydatków dla szablonu produktu"
 #. module: account
 #: field:res.partner,property_payment_term:0
 msgid "Customer Payment Term"
-msgstr ""
+msgstr "Warunki płatności dla klienta"
 
 #. module: account
 #: help:accounting.report,label_filter:0
