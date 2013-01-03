@@ -24,6 +24,7 @@ from urlparse import urljoin
 
 from openerp import SUPERUSER_ID
 from openerp.osv import osv
+from openerp.osv.orm import except_orm
 from openerp.tools import append_content_to_html
 from openerp.tools.translate import _
 
@@ -57,8 +58,8 @@ class mail_mail(osv.Model):
                         'id': mail.res_id,
                     }
                     url = urljoin(base_url, "?#%s" % (urlencode(url_params)))
-                    text = _("""<p>Read this document <a href="%s">directly in OpenERP</a></p>""") % url
-                except:  # TODO: catch good exception
+                    text = _("""<p>Access this document <a href="%s">directly in OpenERP</a></p>""") % url
+                except except_orm, e:
                     text = _("""<p>Access your messages through <a href="%s">our Customer Portal</a></p>""") % partner.signup_url
             # partner not user
             else:
