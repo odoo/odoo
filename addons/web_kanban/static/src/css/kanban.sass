@@ -53,6 +53,7 @@
     height: inherit
     &.oe_kanban_grouped .oe_kanban_dummy_cell
         background: url(/web/static/src/img/form_sheetbg.png)
+        width: 100%
     .ui-sortable-placeholder
         border: 1px solid rgba(0,0,0,0.1)
         visibility: visible !important
@@ -112,6 +113,14 @@
         > span
             margin-right: 4px
             display: inline-block
+
+    &.oe_kanban_grouped
+        .oe_kanban_column, .oe_kanban_group_header
+            width: 200px
+            min-width: 200px
+            &.oe_kanban_group_folded
+                width: auto
+                min-width: 30px
 
     .oe_kanban_column, .oe_kanban_group_header
         vertical-align: top
@@ -233,7 +242,6 @@
     &.oe_kanban_grouped
         .oe_kanban_record
             margin-bottom: 4px
-            width: 200px
     .oe_kanban_avatar_smallbox
         height: 40px
         width: 40px
