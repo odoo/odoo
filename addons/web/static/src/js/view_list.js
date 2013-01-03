@@ -348,6 +348,14 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             this.sidebar.add_toolbar(this.fields_view.toolbar);
             this.sidebar.$el.hide();
         }
+        //Sort
+        if(this.dataset._sort.length){
+            if(this.dataset._sort[0].indexOf('-') == -1){
+                this.$el.find('th[data-id=' + this.dataset._sort[0] + ']').addClass("sortdown");
+            }else {
+                this.$el.find('th[data-id=' + this.dataset._sort[0].split('-')[1] + ']').addClass("sortup");
+            }
+        }
         this.trigger('list_view_loaded', data, this.grouped);
     },
     sort_by_column: function (e) {
