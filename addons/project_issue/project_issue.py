@@ -67,10 +67,12 @@ class project_issue(base_stage, osv.osv):
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
-        if not context.get('default_project_id', False) and vals.get('project_id', False):
+        if not vals.get('stage_id') and vals.get('project_id'):
             ctx = context.copy()
             ctx['default_project_id'] = vals['project_id']
             vals['stage_id'] = self._get_default_stage_id(cr, uid, context=ctx)
+        elif not vals.get('stage_id') and context.get('default_project_id'):
+            vals['stage_id'] = self._get_default_stage_id(cr, uid, context=context)
         return super(project_issue, self).create(cr, uid, vals, context=context)
 
     def _get_default_project_id(self, cr, uid, context=None):

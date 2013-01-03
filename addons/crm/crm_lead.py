@@ -87,15 +87,17 @@ class crm_lead(base_stage, format_address, osv.osv):
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
-        if not context.get('default_section_id', False) and vals.get('section_id', False):
+        if not vals.get('stage_id') and vals.get('section_id'):
             ctx = context.copy()
             ctx['default_section_id'] = vals['section_id']
             vals['stage_id'] = self._get_default_stage_id(cr, uid, context=ctx)
+        elif not vals.get('stage_id') and context.get('default_section_id'):
+            vals['stage_id'] = self._get_default_stage_id(cr, uid, context=context)
         return super(crm_lead, self).create(cr, uid, vals, context=context)
 
     def _get_default_section_id(self, cr, uid, context=None):
         """ Gives default section by checking if present in the context """
-        return (self._resolve_section_id_from_context(cr, uid, context=context) or False)
+        return self._resolve_section_id_from_context(cr, uid, context=context) or False
 
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
