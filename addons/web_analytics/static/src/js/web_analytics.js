@@ -26,13 +26,15 @@ openerp.web_analytics = function(instance) {
         *  This method initializes the tracker
         */
         init: function() {
+            var self = this;
             _gaq.push(['_setAccount', 'UA-35793871-1']);
             // _gaq.push(['_setAccount', 'UA-7333765-1']);
             //_gaq.push(['_setAccount', 'UA-36797757-1']);     // Debug code
             _gaq.push(['_setDomainName', 'none']);  // Change for the real domain
-            this.initialize_custom();
-            instance.client.on('state_pushed', this, this.on_state_pushed);
-            this.include_tracker();
+            this.initialize_custom().then(function() {
+                instance.client.on('state_pushed', self, self.on_state_pushed);
+                self.include_tracker();
+            });
         },
         /*
         * This method contains the initialization of all user-related custom variables
@@ -42,27 +44,31 @@ openerp.web_analytics = function(instance) {
             // Track User Access Level, Custom Variable 4 in GA with visitor level scope
             // Values: 'Admin User', 'Normal User', 'Portal User', 'Anonymous User'
             if (instance.session.uid === 1) {
-                _gaq.push(['_setCustomVar', 4, 'User Type', 'Admin User', 1]);
+                _gaq.push(['_setCustomVar', 4, 'User Access Level', 'Admin User', 1]);
             // Make the difference between portal users and anonymous users
             } else if (instance.session.username.indexOf('@') !== -1) {
                 if (instance.session.username.indexOf('anonymous') === -1) {
-                    _gaq.push(['_setCustomVar', 4, 'User Type', 'Portal User', 1]);
+                    _gaq.push(['_setCustomVar', 4, 'User Access Level', 'Portal User', 1]);
                 } else {
-                    _gaq.push(['_setCustomVar', 4, 'User Type', 'Anonymous User', 1]);
+                    _gaq.push(['_setCustomVar', 4, 'User Access Level', 'Anonymous User', 1]);
                 }
             } else if (instance.session.username.indexOf('anonymous') !== -1) {
-                _gaq.push(['_setCustomVar', 4, 'User Type', 'Anonymous User', 1]);
+                _gaq.push(['_setCustomVar', 4, 'User Access Level', 'Anonymous User', 1]);
             } else {
-                _gaq.push(['_setCustomVar', 4, 'User Type', 'Normal User', 1]);
+                _gaq.push(['_setCustomVar', 4, 'User Access Level', 'Normal User', 1]);
             }
+            return instance.session.rpc("/web/webclient/version_info", {})
+                .done(function(res) {
+                    _gaq.push(['_setCustomVar', 5, 'Version', res.server_version, 3]);
+                });
         },
         /*
         *  This method contains the initialization of the object and view type
         *  custom variables stored in GA. Setting here the CV will work if web_analytics
-        *  module is auto-install, because the first view of a fresh DB is the modules
-        *  kanban view (also in trial), otherwise the responsibility of the first
-        *  initialization relies on instance.web.ActionManager#ir_actions_client
-        *  method
+        *  module is auto-install and not anonymous user, because the first view
+        *  of a fresh DB is the modules kanban view (also in trial), otherwise the
+        *  responsibility of the first initialization relies on
+        *  instance.web.ActionManager#ir_actions_client method
         */
         on_state_pushed: function(state) {
             // Track only pages corresponding to a 'normal' view of OpenERP, views
@@ -99,16 +105,22 @@ openerp.web_analytics = function(instance) {
                 }
             });
 
-            // Track client actions, also if not in a fresh DB it initializes the
-            // CV related to objects and view types
+            // Track client actions, also if not in a fresh DB or anonymous user,
+            // it initializes the CV related to objects and view types
             instance.web.ActionManager.include({
                 ir_actions_client: function (action, options) {
+                    // Try to set the correct model, else it will be 'ir.actions.client'
                     if (action.res_model) {
                         _gaq.push(['_setCustomVar', 2, 'Object', action.res_model, 3]);
                     } else {
                         _gaq.push(['_setCustomVar', 2, 'Object', action.type, 3]);
                     }
-                    _gaq.push(['_setCustomVar', 2, 'View Type', action.name, 3]);
+                    // Try to set a view type as accurate as possible
+                    if (action.name) {
+                        _gaq.push(['_setCustomVar', 3, 'View Type', action.name, 3]);
+                    } else {
+                        _gaq.push(['_setCustomVar', 3, 'View Type', action.tag, 3]);
+                    }
                     var url = instance.web_analytics.generateUrl({'action': action.tag});
                     _gaq.push(['_trackPageview', url]);
                     return this._super.apply(this, arguments);
@@ -118,7 +130,6 @@ openerp.web_analytics = function(instance) {
             // Track button events
             instance.web.View.include({
                 do_execute_action: function(action_data, dataset, record_id, on_closed) {
-                    console.log(action_data);
                     var category = this.model || dataset.model || '';
                     var action;
                     if (action_data.name && _.isNaN(action_data.name-0)) {
