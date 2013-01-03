@@ -62,8 +62,8 @@ class invite_wizard(osv.osv_memory):
             # send an email
             if wizard.message:
                 #add signature
-                user_id = self.pool.get("res.users").browse(cr, uid, uid, context=context)
-                signature = user_id and user_id.signature or ''
+                user_id = self.pool.get("res.users").read(cr, uid, [uid], fields=["signature"], context=context)[0]
+                signature = user_id and user_id["signature"] or ''
                 if signature:
                     wizard.message = tools.append_content_to_html(wizard.message, signature, plaintext=True, container_tag='div')
                 # send mail to new followers
