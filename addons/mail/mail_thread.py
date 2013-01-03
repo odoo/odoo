@@ -497,7 +497,7 @@ class mail_thread(osv.AbstractModel):
                         # Note: recognized partners will be added as followers anyway
                         # user_id = self._message_find_user_id(cr, uid, message, context=context)
                         user_id = uid
-                        _logger.debug('Routing mail with Message-Id %s: direct alias match: %r', message_id, routes)
+                        _logger.debug('No matching user_id for the alias %s', alias.alias_name)
                     routes.append((alias.alias_model_id.model, alias.alias_force_thread_id, \
                                    eval(alias.alias_defaults), user_id))
                 _logger.debug('Routing mail with Message-Id %s: direct alias match: %r', message_id, routes)
