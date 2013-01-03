@@ -48,7 +48,7 @@
         </record>
 
         <record id="account_asset_asset_cab0" model="account.asset.asset">
-            <field name="method_end">2014-08-11</field>
+            <field name="method_end" eval="(DateTime.now().replace(month=8, day=11) + timedelta(days=3*365)).strftime('%Y-%m-%d')"/>
             <field eval="0.0" name="salvage_value"/>
             <field name="method_time">end</field>
             <field name="name">V6 Engine and 10 inches tires</field>
@@ -63,7 +63,7 @@
             <field name="state">open</field>
             <field eval="12" name="method_period"/>
             <field eval="20" name="method_number"/>
-            <field name="purchase_date">2012-01-01</field>
+            <field name="purchase_date" eval="time.strftime('%Y-01-01')"/>
             <field name="name">Office</field>
             <field eval="500000.0" name="purchase_value"/>
             <field name="category_id" ref="account_asset_category_fixedassets0"/>

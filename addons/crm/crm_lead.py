@@ -682,9 +682,9 @@ class crm_lead(base_stage, format_address, osv.osv):
             section_id = lead.section_id and lead.section_id.id or False
 
         if section_id:
-            stage_ids = crm_stage.search(cr, uid, [('sequence','>=',1), ('section_ids','=', section_id)])
+            stage_ids = crm_stage.search(cr, uid, [('sequence', '>=', 1), ('section_ids', '=', section_id), ('probability', '>', 0)])
         else:
-            stage_ids = crm_stage.search(cr, uid, [('sequence','>=',1)])
+            stage_ids = crm_stage.search(cr, uid, [('sequence', '>=', 1), ('probability', '>', 0)])
         stage_id = stage_ids and stage_ids[0] or False
 
         return {
