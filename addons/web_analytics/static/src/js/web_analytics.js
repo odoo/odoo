@@ -27,10 +27,17 @@ openerp.web_analytics = function(instance) {
         */
         init: function() {
             var self = this;
+
+            /* Comment this lines when going on production, only used for testing on localhost */
             _gaq.push(['_setAccount', 'UA-35793871-1']);
-            // _gaq.push(['_setAccount', 'UA-7333765-1']);
-            //_gaq.push(['_setAccount', 'UA-36797757-1']);     // Debug code
-            _gaq.push(['_setDomainName', 'none']);  // Change for the real domain
+            _gaq.push(['_setDomainName', 'none']);
+            /**/
+
+            /* Uncomment this lines when going on production
+            _gaq.push(['_setAccount', 'UA-7333765-1']);
+            _gaq.push(['_setDomainName', '.openerp.com']);  // Allow multi-domain
+            */
+
             this.initialize_custom().then(function() {
                 instance.client.on('state_pushed', self, self.on_state_pushed);
                 self.include_tracker();
