@@ -966,6 +966,11 @@ class crm_lead(base_stage, format_address, osv.osv):
     # Mail Gateway
     # ----------------------------------------
 
+    def message_get_reply_to(self, cr, uid, ids, context=None):
+        """ Override to get the reply_to of the parent project. """
+        return [lead.section_id.message_get_reply_to()[0] if lead.section_id else False
+                    for lead in self.browse(cr, uid, ids, context=context)]
+
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """ Overrides mail_thread message_new that is called by the mailgateway
             through message_process.
