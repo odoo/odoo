@@ -83,6 +83,39 @@
             </field>
         </record>
 
+        <!--view for cashmove-->
+        <record model="ir.ui.view" id="casmove_tree_view">
+            <field name="name">cashmove tree</field>
+            <field name="model">lunch.cashmove</field>
+            <field name="arch" type="xml">
+                <tree string="cashmove tree">
+                    <field name="date"/>
+                    <field name="user_id"/>
+                    <field name="description"/>
+                    <field name="amount" sum="Total"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="casmove_form_view">
+            <field name="name">cashmove form</field>
+            <field name="model">lunch.cashmove</field>
+            <field name="arch" type="xml">
+                <form string="cashmove form" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="date"/>
+                            <field name="amount"/>
+                        </group>
+                        <label for='description'/>
+                        <field name="description"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
         <!--Action for Your Orders-->
         <record model="ir.actions.act_window" id="action_lunch_order_form">
             <field name="name">New Order</field>
@@ -401,38 +434,7 @@
             </field>
         </record>
 
-        <!--view for cashmove-->
-        <record model="ir.ui.view" id="casmove_tree_view">
-            <field name="name">cashmove tree</field>
-            <field name="model">lunch.cashmove</field>
-            <field name="arch" type="xml">
-                <tree string="cashmove tree">
-                    <field name="date"/>
-                    <field name="user_id"/>
-                    <field name="description"/>
-                    <field name="amount" sum="Total"/>
-                </tree>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="casmove_form_view">
-            <field name="name">cashmove form</field>
-            <field name="model">lunch.cashmove</field>
-            <field name="arch" type="xml">
-                <form string="cashmove form" version="7.0">
-                    <sheet>
-                        <group>
-                            <field name="user_id"/>
-                            <field name="date"/>
-                            <field name="amount"/>
-                        </group>
-                        <label for='description'/>
-                        <field name="description"/>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
+        
         <!--view for alerts-->
         <record model="ir.ui.view" id="alert_tree_view">
             <field name="name">alert tree</field>
