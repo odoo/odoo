@@ -122,7 +122,7 @@ class res_users(osv.Model):
             context['thread_model'] = 'res.partner'
         if isinstance(thread_id, (list, tuple)):
             thread_id = thread_id[0]
-        return self.browse(cr, uid, thread_id).partner_id.id
+        return self.browse(cr, SUPERUSER_ID, thread_id).partner_id.id
 
     def message_post_user_api(self, cr, uid, thread_id, context=None, **kwargs):
         """ Redirect the posting of message on res.users to the related partner.
@@ -139,9 +139,16 @@ class res_users(osv.Model):
         return self.pool.get('res.partner').message_post(cr, uid, partner_id, context=context, **kwargs)
 
     def message_update(self, cr, uid, ids, msg_dict, update_vals=None, context=None):
-        partner_id = self.browse(cr, uid, ids)[0].partner_id.id
-        return self.pool.get('res.partner').message_update(cr, uid, [partner_id], msg_dict,
-            update_vals=update_vals, context=context)
+        for id in ids:
+            partner_id = self.browse(cr, SUPERUSER_ID, id).partner_id.id
+            self.pool.get('res.partner').message_update(cr, uid, [partner_id], msg_dict, update_vals=update_vals, context=context)
+        return True
+
+    def message_subscribe(self, cr, uid, ids, partner_ids, subtype_ids=None, context=None):
+        for id in ids:
+            partner_id = self.browse(cr, SUPERUSER_ID, id).partner_id.id
+            self.pool.get('res.partner').message_subscribe(cr, uid, [partner_id], partner_ids, subtype_ids=subtype_ids, context=context)
+        return True
 
 
 class res_users_mail_group(osv.Model):
