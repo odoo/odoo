@@ -361,7 +361,14 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
     sort_by_column: function (e) {
         e.stopPropagation();
         var $column = $(e.currentTarget);
-        this.dataset.sort($column.data('id'));
+        var col_name = $column.data('id')
+        var field = this.fields_view.fields[col_name];
+        // test if the field is a function field with store=false, since it's impossible
+        // for the server to sort those fields we desactivate the feature
+        if (field && field.store === false) {
+            return false;
+        }
+        this.dataset.sort(col_name);
         if($column.hasClass("sortdown") || $column.hasClass("sortup"))  {
             $column.toggleClass("sortup sortdown");
         } else {
