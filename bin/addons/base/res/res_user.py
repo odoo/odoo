@@ -205,6 +205,9 @@ class users(osv.osv):
             # will face unexpected 'Access Denied' exceptions.
             raise osv.except_osv(_('Operation Canceled'), _('Please use the change password wizard (in User Preferences or User menu) to change your own password.'))
         self.write(cr, uid, id, {'password': value})
+    
+    def _get_password(self, cr, uid, ids, arg, karg, context=None):
+        return dict.fromkeys(ids, '')
 
     _columns = {
         'name': fields.char('User Name', size=64, required=True, select=True,
@@ -213,7 +216,7 @@ class users(osv.osv):
         'login': fields.char('Login', size=64, required=True,
                              help="Used to log into the system"),
         'password': fields.char('Password', size=64, invisible=True, help="Keep empty if you don't want the user to be able to connect on the system."),
-        'new_password': fields.function(lambda *a:'', method=True, type='char', size=64,
+        'new_password': fields.function(_get_password, method=True, type='char', size=64,
                                 fnct_inv=_set_new_password,
                                 string='Change password', help="Only specify a value if you want to change the user password. "
                                 "This user will have to logout and login again!"),
