@@ -35,6 +35,16 @@ class lunch_order(osv.Model):
     _description = 'Lunch Order'
     _order = 'date desc'
 
+    def name_get(self, cr, uid, ids, context=None):
+        if not ids:
+            return []
+        res = []
+        for elmt in self.browse(cr, uid, ids, context=context):
+            name = _("Lunch Order")
+            name = name + ' ' + str(elmt.id)
+            res.append((elmt.id, name))
+        return res
+        
     def _price_get(self, cr, uid, ids, name, arg, context=None):
         """ 
         get and sum the order lines' price
