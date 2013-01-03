@@ -51,7 +51,7 @@ class mail_mail(osv.Model):
             elif partner.user_ids and self.check_access_rights(cr, partner.user_ids[0].id, 'read', raise_exception=False):
                 related_user = partner.user_ids[0]
                 try:
-                    self.check_access_rule(cr, related_user.id, [mail.res_id], 'read', context=context)
+                    self.pool.get(mail.model).check_access_rule(cr, related_user.id, [mail.res_id], 'read', context=context)
                     base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
                     url_params = {
                         'model': mail.model,
