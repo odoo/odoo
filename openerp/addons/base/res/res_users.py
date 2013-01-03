@@ -54,6 +54,18 @@ class groups(osv.osv):
                 res[g.id] = g.name
         return res
 
+    def _search_group(self, cr, uid, obj, name, args, context=None):
+        operand = args[0][2]
+        operator = args[0][1]
+        values = operand.split('/')
+        group_name = values[0]
+        where = [('name', operator, group_name)]
+        if len(values) > 1:
+            application_name = values[0]
+            group_name = values[1]
+            where = ['|',('category_id.name', operator, application_name)] + where
+        return where
+
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
         'users': fields.many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', 'Users'),
@@ -63,24 +75,12 @@ class groups(osv.osv):
         'menu_access': fields.many2many('ir.ui.menu', 'ir_ui_menu_group_rel', 'gid', 'menu_id', 'Access Menu'),
         'comment' : fields.text('Comment', size=250, translate=True),
         'category_id': fields.many2one('ir.module.category', 'Application', select=True),
-        'full_name': fields.function(_get_full_name, type='char', string='Group Name'),
+        'full_name': fields.function(_get_full_name, type='char', string='Group Name', fnct_search=_search_group),
     }
 
     _sql_constraints = [
         ('name_uniq', 'unique (category_id, name)', 'The name of the group must be unique !')
     ]
-
-    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
-        if not args:
-            args = []
-        if context is None:
-            context = {}
-        ids = []
-        if name:
-            ids = self.search(cr, user, [('name','=',name)] + args, limit=limit, context=context)
-        if not ids:
-            ids = self.search(cr, user, [('name',operator,name)] + args, limit=limit, context=context)
-        return self.name_get(cr, user, ids, context)
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         # add explicit ordering if search is sorted on full_name
