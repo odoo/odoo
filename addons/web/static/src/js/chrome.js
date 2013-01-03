@@ -1033,13 +1033,8 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                 if(res.company_id[0] > 1)
                     topbar_name = _.str.sprintf("%s (%s)", topbar_name, res.company_id[1]);
                 self.$el.find('.oe_topbar_name').text(topbar_name);
-                if(!instance.session.debug) {
-                    self.rpc("/web/database/get_list", {}).done( function(result) {
-                       if (result.length > 1) {
-                            topbar_name = _.str.sprintf("%s (%s)", topbar_name, instance.session.db);
-                       }
-                        self.$el.find('.oe_topbar_name').text(topbar_name);
-                    });
+                if (!instance.session.debug) {
+                    topbar_name = _.str.sprintf("%s (%s)", topbar_name, instance.session.db);
                 }
                 var avatar_src = self.session.url('/web/binary/image', {model:'res.users', field: 'image_small', id: self.session.uid});
                 $avatar.attr('src', avatar_src);
