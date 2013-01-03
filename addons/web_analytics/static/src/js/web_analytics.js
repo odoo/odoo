@@ -64,6 +64,7 @@ openerp.web_analytics = function(instance) {
             } else {
                 _gaq.push(['_setCustomVar', 4, 'User Access Level', 'Normal User', 1]);
             }
+            // Fetch OpenERP's version of the instance
             return instance.session.rpc("/web/webclient/version_info", {})
                 .done(function(res) {
                     _gaq.push(['_setCustomVar', 5, 'Version', res.server_version, 3]);
