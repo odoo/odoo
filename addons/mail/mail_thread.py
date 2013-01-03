@@ -491,7 +491,13 @@ class mail_thread(osv.AbstractModel):
                 for alias in mail_alias.browse(cr, uid, alias_ids, context=context):
                     user_id = alias.alias_user_id.id
                     if not user_id:
-                        user_id = self._message_find_user_id(cr, uid, message, context=context)
+                        # TDE note: this could cause crashes, because no clue that the user
+                        # that send the email has the right to create or modify a new document
+                        # Fallback on user_id = uid
+                        # Note: recognized partners will be added as followers anyway
+                        # user_id = self._message_find_user_id(cr, uid, message, context=context)
+                        user_id = uid
+                        _logger.debug('Routing mail with Message-Id %s: direct alias match: %r', message_id, routes)
                     routes.append((alias.alias_model_id.model, alias.alias_force_thread_id, \
                                    eval(alias.alias_defaults), user_id))
                 _logger.debug('Routing mail with Message-Id %s: direct alias match: %r', message_id, routes)
