@@ -109,6 +109,19 @@
             </field>
         </record>
         <menuitem name="Previous Orders" parent="menu_lunch_title" id="menu_lunch_order_tree" action="action_lunch_order_tree" sequence="2"/>
+		
+		<record model="ir.ui.view" id="casmove_tree">
+            <field name="name">cashmove tree</field>
+            <field name="model">lunch.cashmove</field>
+            <field name="arch" type="xml">
+                <tree string="cashmove tree" version="7.0" create='false'>
+                    <field name="date"/>
+                    <field name="user_id"/>
+                    <field name="description"/>
+                    <field name="amount" sum="Total"/>
+                </tree>
+            </field>
+        </record>
 
         <!--Action for Lunch cashmoves-->
         <record model="ir.actions.act_window" id="action_lunch_cashmove_form">
@@ -117,6 +130,7 @@
             <field name="view_mode">tree</field>
             <field name="search_view_id" ref="view_lunch_employee_payment_filter"/>
             <field name="context">{"search_default_is_mine":1}</field>
+			<field name="view_id" ref="casmove_tree"/>
             <field name="help" type="html">
               <p>
                 Here you can see your cash moves.<br/>A cash moves can be either an expense or a payment.
@@ -173,6 +187,7 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_lunch_cashmove_filter"/>
             <field name="context">{"search_default_group_by_user":1}</field>
+			<field name="view_id" ref="casmove_tree_view"/>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                 Click to create a new payment. 
@@ -194,6 +209,7 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_lunch_employee_payment_filter"/>
             <field name="context">{"search_default_is_payment":1}</field>
+			<field name="view_id" ref="casmove_tree_view"/>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                 Click to create a payment. 
