@@ -253,7 +253,14 @@ openerp.mail = function (session) {
             } else {
                 this.avatar = mail.ChatterUtils.get_image(this.session, 'res.users', 'image_small', this.session.uid);
             }
-
+            if (this.author_id) {
+                var email = this.author_id[1].match(/(.*)<(.*@.*)>/);
+                if (!email) {
+                    this.author_id.push(_.str.escapeHTML(this.author_id[1]), '', this.author_id[1]);
+                } else {
+                    this.author_id.push(_.str.escapeHTML(email[0]), _.str.trim(email[1]), email[2]);
+                }
+            }
         },
 
 
@@ -505,8 +512,7 @@ openerp.mail = function (session) {
             }
 
             // create list of new partners
-            var extra_email = _.map(_.filter(this.emails_from, function (f) {return f[1]}), function (f) {return f[0]});
-            this.check_recipient_partners(extra_email).done(function () {
+            this.check_recipient_partners().done(function () {
                 var context = {
                     'default_model': default_composition_mode == 'reply' ? undefined : self.context.default_model,
                     'default_res_id': default_composition_mode == 'reply' ? undefined : self.context.default_res_id,
@@ -561,22 +567,31 @@ openerp.mail = function (session) {
             }
         },
 
-        check_recipient_partners: function (emails) {
+        check_recipient_partners: function () {
             var self = this;
-            self.partners_from = [];
+            var emails = [];
+            _.each(this.emails_from, function (email_from) {
+                if (email_from[1]) {
+                    if (!_.find(emails, function (email) {return email[4] == email_from[0][4];})) {
+                        emails.push(email_from[0]);
+                    }
+                }
+            });
             var deferreds = [];
             var ds_partner = new session.web.DataSetSearch(this, 'res.partner');
+            this.partners_from = [];
             _.each(emails, function (email) {
                 var deferred = $.Deferred();
                 deferreds.push(deferred);   
-                ds_partner.call('search', [[['email', 'like', email]]]).then(function (partner_ids) {
+                ds_partner.call('search', [[['email', 'like', email[4]]]]).then(function (partner_ids) {
                     if (!partner_ids.length) {
                         var pop = new session.web.form.FormOpenPopup(this);
                         pop.show_element(
                             'res.partner',
                             0,
                             {
-                                'default_email': email,
+                                'default_email': email[4],
+                                'default_name': email[3],
                                 'force_email': true,
                                 'ref': "compound_context",
                             },
@@ -606,8 +621,7 @@ openerp.mail = function (session) {
             var self = this;
             if (this.do_check_attachment_upload() && (this.attachment_ids.length || this.$('textarea').val().match(/\S+/))) {
                 // create list of new partners
-                var extra_email = _.map(_.filter(this.emails_from, function (f) {return f[1]}), function (f) {return f[0]});
-                this.check_recipient_partners(extra_email).done(function () {
+                this.check_recipient_partners().done(function () {
                     self.do_send_message_post();
                 });
             }
@@ -621,7 +635,7 @@ openerp.mail = function (session) {
                 'subject': false,
                 'parent_id': this.context.default_parent_id,
                 'attachment_ids': _.map(this.attachment_ids, function (file) {return file.id;}),
-                'extra_emails': _.map(_.filter(this.emails_from, function (f) {return f[1]}), function (f) {return f[0]}),
+                'extra_emails': _.map(_.filter(this.emails_from, function (f) {return f[1]}), function (f) {return f[0][4]}),
                 'context': this.parent_thread.context,
             }).done(function (message_id) {
                 var thread = self.parent_thread;
@@ -683,19 +697,18 @@ openerp.mail = function (session) {
             
             _.each(messages, function (thread) {
                 if (thread.author_id && !thread.author_id[0] &&
-                    !_.find(self.emails_from, function (from) {return from[0] == thread.author_id[1];})) {
-
-                    self.emails_from.push([thread.author_id[1], true]);
-
+                    !_.find(self.emails_from, function (from) {return from[0][4] == thread.author_id[4];})) {
+                    self.emails_from.push([thread.author_id, true]);
                 }
             });
+            return self.emails_from;
         },
 
         on_checked_email_from: function (event) {
             var $input = $(event.target);
             var email = $input.attr("data");
             _.each(this.emails_from, function (email_from) {
-                if (email_from[0] == email) {
+                if (email_from[0][4] == email) {
                     email_from[1] = $input.is(":checked");
                 }
             });

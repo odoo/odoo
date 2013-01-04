@@ -914,7 +914,7 @@ class mail_thread(osv.AbstractModel):
         for email in extra_emails:
             partner_id = partner_obj.find_or_create(cr, uid, email, context=context)
             # link mail with this from mail to the new partner id
-            partner_msg_ids = mail_message_obj.search(cr, SUPERUSER_ID, [('email_from', '=', email), ('author_id', '=', False)], context=context)
+            partner_msg_ids = mail_message_obj.search(cr, SUPERUSER_ID, ['|', ('email_from', '=', email), ('email_from', 'ilike', '<%s>' % email), ('author_id', '=', False)], context=context)
             if partner_id and partner_msg_ids:
                 mail_message_obj.write(cr, SUPERUSER_ID, partner_msg_ids, {'email_from': None, 'author_id': partner_id}, context=context)
             partner_ids.add((4, partner_id))
