@@ -177,7 +177,6 @@
                             <field name="fax"/>
                             <field name="email" widget="email"/>
                             <field name="title" domain="[('domain', '=', 'contact')]"
-                                groups="base.group_no_one"
                                 options='{"no_open": True}' attrs="{'invisible': [('is_company','=', True)]}" />
                         </group>
                     </group>
