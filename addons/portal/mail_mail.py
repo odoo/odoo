@@ -19,9 +19,6 @@
 #
 ##############################################################################
 
-from urllib import urlencode
-from urlparse import urljoin
-
 from openerp import SUPERUSER_ID
 from openerp.osv import osv
 from openerp.osv.orm import except_orm
@@ -39,30 +36,21 @@ class mail_mail(osv.Model):
             :param partner: browse_record of the specific recipient partner
             :return: the resulting body_html
         """
+        partner_obj = self.pool.get('res.partner')
         body = super(mail_mail, self).send_get_mail_body(cr, uid, mail, partner, context=context)
         if partner:
-            context = dict(context or {}, signup_valid=True)
-            partner = self.pool.get('res.partner').browse(cr, SUPERUSER_ID, partner.id, context=context)
-            text = ''
-            # private message
-            if not mail.model or not mail.res_id:
-                text = _("""<p>Access your messages through <a href="%s">our Customer Portal</a></p>""") % partner.signup_url
-            # partner is also an user: add a link if read access to the document
-            elif partner.user_ids and self.check_access_rights(cr, partner.user_ids[0].id, 'read', raise_exception=False):
+            contex_signup = dict(context or {}, signup_valid=True)
+            partner = partner_obj.browse(cr, SUPERUSER_ID, partner.id, context=contex_signup)
+            text = _("""<p>Access your messages and personal documents through <a href="%s">our Customer Portal</a></p>""") % partner.signup_url
+            # partner is an user: add a link to the document if read access
+            if partner.user_ids and mail.model and mail.res_id \
+                    and self.check_access_rights(cr, partner.user_ids[0].id, 'read', raise_exception=False):
                 related_user = partner.user_ids[0]
                 try:
                     self.pool.get(mail.model).check_access_rule(cr, related_user.id, [mail.res_id], 'read', context=context)
-                    base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-                    url_params = {
-                        'model': mail.model,
-                        'id': mail.res_id,
-                    }
-                    url = urljoin(base_url, "?#%s" % (urlencode(url_params)))
+                    url = partner_obj._get_signup_url_for_action(cr, related_user.id, [partner.id], action='', res_id=mail.res_id, model=mail.model, context=context)[partner.id]
                     text = _("""<p>Access this document <a href="%s">directly in OpenERP</a></p>""") % url
                 except except_orm, e:
-                    text = _("""<p>Access your messages through <a href="%s">our Customer Portal</a></p>""") % partner.signup_url
-            # partner not user
-            else:
-                text = _("""<p>Access your messages through <a href="%s">our Customer Portal</a></p>""") % partner.signup_url
+                    pass
             body = append_content_to_html(body, ("<div><p>%s</p></div>" % text), plaintext=False)
         return body
