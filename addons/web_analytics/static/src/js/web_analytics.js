@@ -26,8 +26,6 @@ openerp.web_analytics = function(instance) {
         *  This method initializes the tracker
         */
         init: function() {
-            var self = this;
-
             /* Comment this lines when going on production, only used for testing on localhost */
             _gaq.push(['_setAccount', 'UA-35793871-1']);
             _gaq.push(['_setDomainName', 'none']);
@@ -37,11 +35,29 @@ openerp.web_analytics = function(instance) {
             _gaq.push(['_setAccount', 'UA-7333765-1']);
             _gaq.push(['_setDomainName', '.openerp.com']);  // Allow multi-domain
             */
-
-            this.initialize_custom().then(function() {
-                instance.client.on('state_pushed', self, self.on_state_pushed);
-                self.include_tracker();
-            });
+        },
+        /*
+        * This method MUST be overriden by saas_demo and saas_trial in order to
+        * set the correct user type. By default, the user connected is local to the DB.
+        */
+        _get_user_type: function() {
+            return 'Local User';
+        },
+        _set_user_access_level: function() {
+            if (instance.session.uid === 1) {
+                return 'Admin User';
+            // Make the difference between portal users and anonymous users
+            } else if (instance.session.username.indexOf('@') !== -1) {
+                if (instance.session.username.indexOf('anonymous') === -1) {
+                    return 'Portal User';
+                } else {
+                    return 'Anonymous User';
+                }
+            } else if (instance.session.username.indexOf('anonymous') !== -1) {
+                return 'Anonymous User';
+            } else {
+                return 'Normal User';
+            }
         },
         /*
         * This method contains the initialization of all user-related custom variables
@@ -50,24 +66,16 @@ openerp.web_analytics = function(instance) {
         initialize_custom: function() {
             // Track User Access Level, Custom Variable 4 in GA with visitor level scope
             // Values: 'Admin User', 'Normal User', 'Portal User', 'Anonymous User'
-            if (instance.session.uid === 1) {
-                _gaq.push(['_setCustomVar', 4, 'User Access Level', 'Admin User', 1]);
-            // Make the difference between portal users and anonymous users
-            } else if (instance.session.username.indexOf('@') !== -1) {
-                if (instance.session.username.indexOf('anonymous') === -1) {
-                    _gaq.push(['_setCustomVar', 4, 'User Access Level', 'Portal User', 1]);
-                } else {
-                    _gaq.push(['_setCustomVar', 4, 'User Access Level', 'Anonymous User', 1]);
-                }
-            } else if (instance.session.username.indexOf('anonymous') !== -1) {
-                _gaq.push(['_setCustomVar', 4, 'User Access Level', 'Anonymous User', 1]);
-            } else {
-                _gaq.push(['_setCustomVar', 4, 'User Access Level', 'Normal User', 1]);
-            }
-            // Fetch OpenERP's version of the instance
+            _gaq.push(['_setCustomVar', 4, 'User Access Level', this.user_access_level, 1]);
+
+            // Track User Type Conversion, Custom Variable 3 in GA with session level scope
+            // Values: 'Visitor', 'Demo', 'Online Trial', 'Online Paying', 'Local User'
+            _gaq.push(['_setCustomVar', 1, 'User Type Conversion', this._get_user_type(), 2]);
+
             return instance.session.rpc("/web/webclient/version_info", {})
                 .done(function(res) {
                     _gaq.push(['_setCustomVar', 5, 'Version', res.server_version, 3]);
+                    return;
                 });
         },
         /*
@@ -180,10 +188,21 @@ openerp.web_analytics = function(instance) {
     } else if (!instance.client) {
         // client does not already exists, we are in monodb mode
         instance.web.WebClient.include({
-            init: function() {
+            start: function() {
                 var d = this._super.apply(this, arguments);
                 this.tracker = new instance.web_analytics.Tracker();
                 return d;
+            },
+            show_application: function() {
+                var self = this;
+                $.when(this.tracker._set_user_access_level()).then(function(r) {
+                    self.tracker.user_access_level = r;
+                    self.tracker.initialize_custom().then(function() {
+                        instance.webclient.on('state_pushed', self, self.tracker.on_state_pushed);
+                        self.tracker.include_tracker();
+                    });
+                    self._super();
+                });
             },
         });
     }
