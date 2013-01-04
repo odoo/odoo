@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-11-23 10:35+0000\n"
-"Last-Translator: Juhász Krisztián <Unknown>\n"
+"PO-Revision-Date: 2012-12-27 22:48+0000\n"
+"Last-Translator: Balint (eSolve) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 05:31+0000\n"
+"X-Launchpad-Export-Date: 2012-12-28 05:11+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
 
 #. module: account
@@ -367,7 +367,7 @@ msgstr ""
 #: view:account.invoice.report:0
 #: field:account.invoice.report,user_id:0
 msgid "Salesperson"
-msgstr ""
+msgstr "Értékesítő"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -661,6 +661,8 @@ msgstr ""
 #, python-format
 msgid "No period found or more than one period found for the given date."
 msgstr ""
+"Nem található időszak vagy több mint egy időszak található a megadott "
+"dátumhoz."
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_type_sales
@@ -748,6 +750,8 @@ msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
 msgstr ""
+"A tétel dátuma nem esik a megadott időszakba! Meg kell változtatnia a "
+"dátumot vagy vegye ki ezt az ellenőrzést a napló beállításnál."
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_general_ledger
@@ -809,12 +813,12 @@ msgstr "Soronkénti gyűjtőkód tételek"
 #. module: account
 #: field:account.invoice.refund,filter_refund:0
 msgid "Refund Method"
-msgstr ""
+msgstr "Jóváírás módja"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_report
 msgid "Financial Report"
-msgstr ""
+msgstr "Pénzügyi jelentés"
 
 #. module: account
 #: view:account.analytic.journal:0
@@ -839,6 +843,8 @@ msgid ""
 "Taxes are missing!\n"
 "Click on compute button."
 msgstr ""
+"Hiányzó adósor!\n"
+"Kattintson a \"(Frissítés)\"-re az adó újraszámításához."
 
 #. module: account
 #: model:ir.model,name:account.model_account_subscription_line
@@ -876,7 +882,7 @@ msgstr "Gyűjtőnapló"
 #. module: account
 #: view:account.invoice:0
 msgid "Send by Email"
-msgstr ""
+msgstr "Küldés Email-ben"
 
 #. module: account
 #: help:account.central.journal,amount_currency:0
@@ -2755,7 +2761,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,purchase_sequence_next:0
 msgid "Next supplier invoice number"
-msgstr ""
+msgstr "Következő szállítói számlaszám"
 
 #. module: account
 #: view:account.analytic.cost.ledger.journal.report:0
@@ -3048,7 +3054,7 @@ msgstr ""
 #. module: account
 #: view:account.invoice:0
 msgid "Accounting Period"
-msgstr ""
+msgstr "Könyvelési időszak"
 
 #. module: account
 #: field:account.config.settings,sale_journal_id:0
@@ -3228,6 +3234,8 @@ msgid ""
 "Tax base different!\n"
 "Click on compute to update the tax base."
 msgstr ""
+"Adóalap eltérés!\n"
+"Kattintson a \"(Frissítés)\"-re az adó újraszámításához."
 
 #. module: account
 #: field:account.partner.ledger,page_split:0
@@ -4724,7 +4732,7 @@ msgstr "Számlatükör"
 #. module: account
 #: field:account.invoice,reference_type:0
 msgid "Payment Reference"
-msgstr ""
+msgstr "Átutalási hivatkozás"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -5641,7 +5649,7 @@ msgstr "Adóalap tartalmazza az adót"
 #. module: account
 #: field:account.invoice,supplier_invoice_number:0
 msgid "Supplier Invoice Number"
-msgstr ""
+msgstr "Szállítói számlaszám"
 
 #. module: account
 #: help:account.payment.term.line,days:0
@@ -6157,7 +6165,7 @@ msgstr "Sorok száma"
 #. module: account
 #: view:account.invoice:0
 msgid "(update)"
-msgstr ""
+msgstr "(Frissítés)"
 
 #. module: account
 #: field:account.aged.trial.balance,filter:0
@@ -7477,7 +7485,7 @@ msgstr ""
 #. module: account
 #: view:account.invoice:0
 msgid "Customer Reference"
-msgstr ""
+msgstr "Vevői hivatkozás"
 
 #. module: account
 #: field:account.account.template,parent_id:0
@@ -7945,6 +7953,7 @@ msgstr "Május"
 #, python-format
 msgid "Global taxes defined, but they are not in invoice lines !"
 msgstr ""
+"Az összesítésben szereplő adók nem egyeznek meg a számla sorok adóival."
 
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template

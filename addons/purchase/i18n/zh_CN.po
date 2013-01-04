@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-11-28 11:54+0000\n"
-"Last-Translator: ccdos <ccdos@163.com>\n"
+"PO-Revision-Date: 2012-12-28 14:29+0000\n"
+"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 05:20+0000\n"
+"X-Launchpad-Export-Date: 2012-12-29 05:01+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
 
 #. module: purchase
@@ -103,7 +103,7 @@ msgstr "保留复杂的摘要(消息数量,……等)。为了插入到看板视
 #: code:addons/purchase/purchase.py:1024
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "设置错误!"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:587
@@ -126,7 +126,7 @@ msgstr "采购 - 标准单价"
 #: code:addons/purchase/purchase.py:1011
 #, python-format
 msgid "No supplier defined for this product !"
-msgstr ""
+msgstr "尚未定义这个产品的供应商！"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_picking_tree4_picking_to_invoice
@@ -333,7 +333,7 @@ msgstr "10月"
 msgid ""
 "The product \"%s\" has been defined with your company as reseller which "
 "seems to be a configuration error!"
-msgstr ""
+msgstr "产品 \"%s\" 中，你公司被被定义经销商，这看起来是个配置错误！"
 
 #. module: purchase
 #: view:product.product:0
@@ -454,7 +454,7 @@ msgstr "计划日期"
 #. module: purchase
 #: field:purchase.order,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "币种"
 
 #. module: purchase
 #: field:purchase.order,journal_id:0
@@ -491,7 +491,7 @@ msgstr "入库产品"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Request for Quotation "
-msgstr ""
+msgstr "询价单 "
 
 #. module: purchase
 #: help:purchase.order,partner_ref:0
@@ -500,6 +500,7 @@ msgid ""
 "used to do the matching when you receive the products as this reference is "
 "usually written on the delivery order sent by your supplier."
 msgstr ""
+"你的供应商发给你的销售订单或询价单的参考单号。主要用于当您收到货物时，供应商有可能会把这个参考号写在他们的发货清单上，此时你可以用它来进行单号对照。"
 
 #. module: purchase
 #: view:purchase.config.settings:0
@@ -524,7 +525,7 @@ msgstr "如果采购订单的发票控制是“来自订单”发票是自动生
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_approved
 msgid "RFQ Approved"
-msgstr ""
+msgstr "询价单批准"
 
 #. module: purchase
 #: view:purchase.config.settings:0
@@ -546,7 +547,7 @@ msgstr "询价单(RFQ) 必须先得到采购经理审批后才能发给供应商
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_confirmed
 msgid "RFQ Confirmed"
-msgstr ""
+msgstr "询价单确认"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -650,7 +651,7 @@ msgstr "发票和入库单"
 msgid ""
 "A Pick list generates an invoice. Depending on the Invoicing control of the "
 "sales order, the invoice is based on delivered or on ordered quantities."
-msgstr ""
+msgstr "一个发货单产生一张发票。这取决于销售订单的发票控制方式：发票可以根据发货数量或订购数量来生成。"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -786,7 +787,7 @@ msgstr "税金"
 #. module: purchase
 #: field:purchase.order,shipped_rate:0
 msgid "Received Ratio"
-msgstr ""
+msgstr "已接收比例"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -1051,6 +1052,81 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: serif,宋体; font-size: 12px; color: rgb(34, 34, 34); "
+"background-color: #FFF; \">\n"
+"\n"
+"    <p>您好，$ ${object.partner_id.name}：</p>\n"
+"    \n"
+"    <p>这是一份${object.state in ('draft', 'sent') and '询价请求' or "
+"'采购确认'}，来自于${object.company_id.name}：</p>\n"
+"    \n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>参考信息</strong><br />\n"
+"       &nbsp;&nbsp;订单号：<strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;订单总价：<strong>${object.amount_total} "
+"${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;订单日期：${object.date_order}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;订单号：${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.partner_ref:\n"
+"       &nbsp;&nbsp;您的参考号：${object.partner_ref}<br />\n"
+"       % endif\n"
+"       % if object.validator:\n"
+"       &nbsp;&nbsp;您的联系人：<a href=\"mailto:${object.validator.email or "
+"''}?subject=订单%20${object.name}\">${object.validator.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    <br/>\n"
+"    <p>如果您有任何问题，请立即联系我们。</p>\n"
+"    <p>非常感谢！</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"            <strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % "
+"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
+"or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                电话：${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                网址：<a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
 
 #. module: purchase
 #: view:purchase.report:0
@@ -1116,7 +1192,7 @@ msgstr "选择的计量单位不属于产品的计量单位相同的分类。"
 #. module: purchase
 #: view:purchase.order.line_invoice:0
 msgid "Select an Open Sales Order"
-msgstr ""
+msgstr "选择一个待支付的销售单"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_unit_measure_purchase
@@ -1188,7 +1264,7 @@ msgstr "设为草稿"
 msgid ""
 "Reference of the document that generated this purchase order request; a "
 "sales order or an internal procurement request."
-msgstr ""
+msgstr "请求创建此采购单的来源单据参考号；一个销售单或内部物料需求请求。"
 
 #. module: purchase
 #: view:purchase.order.line:0
@@ -1424,7 +1500,7 @@ msgstr "PO: %s"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Send by EMail"
-msgstr ""
+msgstr "通过email 发送"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:515
@@ -1725,7 +1801,7 @@ msgstr "打开采购菜单"
 #: code:addons/purchase/purchase.py:1028
 #, python-format
 msgid "No address defined for the supplier"
-msgstr ""
+msgstr "供应商地址未定义"
 
 #. module: purchase
 #: field:purchase.order,company_id:0
@@ -1841,7 +1917,7 @@ msgstr "采购订单号"
 #. module: purchase
 #: model:ir.model,name:purchase.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr ""
+msgstr "电子邮件撰写向导"
 
 #. module: purchase
 #: report:purchase.quotation:0
@@ -2130,7 +2206,7 @@ msgstr "基于收货量"
 #: code:addons/purchase/purchase.py:1018
 #, python-format
 msgid "No default supplier defined for this product"
-msgstr ""
+msgstr "产品没定义默认供应商"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -2234,7 +2310,7 @@ msgstr "价格表版本"
 #. module: purchase
 #: field:purchase.order,payment_term_id:0
 msgid "Payment Term"
-msgstr ""
+msgstr "支付条款"
 
 #. module: purchase
 #: view:purchase.order:0
