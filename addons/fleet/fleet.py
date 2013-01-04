@@ -483,15 +483,18 @@ class fleet_vehicle_log_fuel(osv.Model):
         #make any difference between 3.0 and 3). This cause a problem if you encode, for example, 2 liters at 1.5 per
         #liter => total is computed as 3.0, then trigger an onchange that recomputes price_per_liter as 3/2=1 (instead
         #of 3.0/2=1.5)
+        #If there is no change in the result, we return an empty dict to prevent an infinite loop due to the 3 intertwine
+        #onchange. And in order to verify that there is no change in the result, we have to limit the precision of the 
+        #computation to 2 decimal
         liter = float(liter)
         price_per_liter = float(price_per_liter)
         amount = float(amount)
-        if liter > 0 and price_per_liter > 0:
-            return {'value' : {'amount' : liter * price_per_liter,}}
-        elif liter > 0 and amount > 0:
-            return {'value' : {'price_per_liter' : amount / liter,}}
-        elif price_per_liter > 0 and amount > 0:
-            return {'value' : {'liter' : amount / price_per_liter,}}
+        if liter > 0 and price_per_liter > 0 and round(liter*price_per_liter,2) != amount:
+            return {'value' : {'amount' : round(liter * price_per_liter,2),}}
+        elif amount > 0 and liter > 0 and round(amount/liter,2) != price_per_liter:
+            return {'value' : {'price_per_liter' : round(amount / liter,2),}}
+        elif amount > 0 and price_per_liter > 0 and round(amount/price_per_liter,2) != liter:
+            return {'value' : {'liter' : round(amount / price_per_liter,2),}}
         else :
             return {}
 
@@ -500,15 +503,18 @@ class fleet_vehicle_log_fuel(osv.Model):
         #make any difference between 3.0 and 3). This cause a problem if you encode, for example, 2 liters at 1.5 per
         #liter => total is computed as 3.0, then trigger an onchange that recomputes price_per_liter as 3/2=1 (instead
         #of 3.0/2=1.5)
+        #If there is no change in the result, we return an empty dict to prevent an infinite loop due to the 3 intertwine
+        #onchange. And in order to verify that there is no change in the result, we have to limit the precision of the 
+        #computation to 2 decimal
         liter = float(liter)
         price_per_liter = float(price_per_liter)
         amount = float(amount)
-        if price_per_liter > 0 and liter > 0:
-            return {'value' : {'amount' : liter * price_per_liter,}}
-        elif price_per_liter > 0 and amount > 0:
-            return {'value' : {'liter' : amount / price_per_liter,}}
-        elif liter > 0 and amount > 0:
-            return {'value' : {'price_per_liter' : amount / liter,}}
+        if liter > 0 and price_per_liter > 0 and round(liter*price_per_liter,2) != amount:
+            return {'value' : {'amount' : round(liter * price_per_liter,2),}}
+        elif amount > 0 and price_per_liter > 0 and round(amount/price_per_liter,2) != liter:
+            return {'value' : {'liter' : round(amount / price_per_liter,2),}}
+        elif amount > 0 and liter > 0 and round(amount/liter,2) != price_per_liter:
+            return {'value' : {'price_per_liter' : round(amount / liter,2),}}
         else :
             return {}
 
@@ -517,16 +523,20 @@ class fleet_vehicle_log_fuel(osv.Model):
         #make any difference between 3.0 and 3). This cause a problem if you encode, for example, 2 liters at 1.5 per
         #liter => total is computed as 3.0, then trigger an onchange that recomputes price_per_liter as 3/2=1 (instead
         #of 3.0/2=1.5)
+        #If there is no change in the result, we return an empty dict to prevent an infinite loop due to the 3 intertwine
+        #onchange. And in order to verify that there is no change in the result, we have to limit the precision of the 
+        #computation to 2 decimal
         liter = float(liter)
         price_per_liter = float(price_per_liter)
         amount = float(amount)
-        if amount > 0 and liter > 0:
-            return {'value': {'price_per_liter': amount / liter,}}
-        elif amount > 0 and price_per_liter > 0:
-            return {'value': {'liter': amount / price_per_liter,}}
-        elif liter > 0 and price_per_liter > 0:
-            return {'value': {'amount': liter * price_per_liter,}}
-        return {}
+        if amount > 0 and liter > 0 and round(amount/liter,2) != price_per_liter:
+            return {'value': {'price_per_liter': round(amount / liter,2),}}
+        elif amount > 0 and price_per_liter > 0 and round(amount/price_per_liter,2) != liter:
+            return {'value': {'liter': round(amount / price_per_liter,2),}}
+        elif liter > 0 and price_per_liter > 0 and round(liter*price_per_liter,2) != amount:
+            return {'value': {'amount': round(liter * price_per_liter,2),}}
+        else :
+            return {}
 
     def _get_default_service_type(self, cr, uid, context):
         try:
