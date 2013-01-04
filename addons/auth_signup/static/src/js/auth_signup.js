@@ -144,7 +144,6 @@ openerp.auth_signup = function(instance) {
                             self.show_error(result.error);
                         } else {
                             super_.apply(self, [ev]);
-                            window.location = "/#action=login";
                         }
                     });
             } else {
