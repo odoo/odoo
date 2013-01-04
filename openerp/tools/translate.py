@@ -850,7 +850,7 @@ def trans_generate(lang, modules, cr):
             for fname in fnmatch.filter(files, '*.py'):
                 babel_extract_terms(fname, path, root)
             for fname in fnmatch.filter(files, '*.mako'):
-                babel_extract_terms(fname, path, root, trans_type='report')
+                babel_extract_terms(fname, path, root, 'mako', trans_type='report')
             # Javascript source files in the static/src/js directory, rest is ignored (libs)
             if fnmatch.fnmatch(root, '*/static/src/js*'):
                 for fname in fnmatch.filter(files, '*.js'):
