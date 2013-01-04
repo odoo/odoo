@@ -185,6 +185,13 @@ openerp.web_analytics = function(instance) {
     // Set correctly the tracker in the current instance
     if (instance.client instanceof instance.web.WebClient) {        // not for embedded clients
         instance.webclient.tracker = new instance.web_analytics.Tracker();
+        $.when(instance.webclient.tracker._set_user_access_level()).then(function(r) {
+            instance.webclient.tracker.user_access_level = r;
+            instance.webclient.tracker.initialize_custom().then(function() {
+                instance.webclient.on('state_pushed', self, instance.webclient.tracker.on_state_pushed);
+                instance.webclient.tracker.include_tracker();
+            });
+        });
     } else if (!instance.client) {
         // client does not already exists, we are in monodb mode
         instance.web.WebClient.include({
