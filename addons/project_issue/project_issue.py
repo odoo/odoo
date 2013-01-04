@@ -481,6 +481,11 @@ class project_issue(base_stage, osv.osv):
     # Mail gateway
     # -------------------------------------------------------
 
+    def message_get_reply_to(self, cr, uid, ids, context=None):
+        """ Override to get the reply_to of the parent project. """
+        return [issue.project_id.message_get_reply_to()[0] if issue.project_id else False
+                    for issue in self.browse(cr, uid, ids, context=context)]
+
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """ Overrides mail_thread message_new that is called by the mailgateway
             through message_process.
