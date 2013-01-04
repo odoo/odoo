@@ -37,7 +37,7 @@ class mail_mail(osv.Model):
             :return: the resulting body_html
         """
         partner_obj = self.pool.get('res.partner')
-        body = super(mail_mail, self).send_get_mail_body(cr, uid, mail, partner, context=context)
+        body = mail.body_html
         if partner:
             contex_signup = dict(context or {}, signup_valid=True)
             partner = partner_obj.browse(cr, SUPERUSER_ID, partner.id, context=contex_signup)

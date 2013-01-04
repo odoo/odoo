@@ -21,10 +21,13 @@
 
 import base64
 import logging
-from openerp import tools
+from urllib import urlencode
+from urlparse import urljoin
 
+from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
+from openerp.osv.orm import except_orm
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -158,7 +161,27 @@ class mail_mail(osv.Model):
             :param browse_record mail: mail.mail browse_record
             :param browse_record partner: specific recipient partner
         """
-        return mail.body_html
+        body = mail.body_html
+        # partner is a user, link to a related document (incentive to install portal)
+        if partner and partner.user_ids and mail.model and mail.res_id \
+                and self.check_access_rights(cr, partner.user_ids[0].id, 'read', raise_exception=False):
+            related_user = partner.user_ids[0]
+            try:
+                self.pool.get(mail.model).check_access_rule(cr, related_user.id, [mail.res_id], 'read', context=context)
+                base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+                # the parameters to encode for the query and fragment part of url
+                query = {'db': cr.dbname}
+                fragment = {
+                    'login': related_user.login,
+                    'model': mail.model,
+                    'id': mail.res_id,
+                }
+                url = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
+                text = _("""<p>Access this document <a href="%s">directly in OpenERP</a></p>""") % url
+                body = tools.append_content_to_html(body, ("<div><p>%s</p></div>" % text), plaintext=False)
+            except except_orm, e:
+                pass
+        return body
 
     def send_get_mail_reply_to(self, cr, uid, mail, partner=None, context=None):
         """ Return a specific ir_email body. The main purpose of this method
