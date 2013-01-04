@@ -51,9 +51,9 @@ class res_partner_mail(osv.Model):
         """
         if isinstance(thread_id, (list, tuple)):
             thread_id = thread_id[0]
-        if type == 'email':
+        if kwargs.get('type') == 'email':
             partner_ids = kwargs.get('partner_ids', [])
-            if thread_id not in partner_ids:
+            if thread_id not in [command[1] for command in partner_ids]:
                 partner_ids.append((4, thread_id))
             kwargs['partner_ids'] = partner_ids
             thread_id = False

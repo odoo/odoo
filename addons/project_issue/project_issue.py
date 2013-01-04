@@ -64,6 +64,17 @@ class project_issue(base_stage, osv.osv):
         },
     }
 
+    def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
+        if not vals.get('stage_id') and vals.get('project_id'):
+            ctx = context.copy()
+            ctx['default_project_id'] = vals['project_id']
+            vals['stage_id'] = self._get_default_stage_id(cr, uid, context=ctx)
+        elif not vals.get('stage_id') and context.get('default_project_id'):
+            vals['stage_id'] = self._get_default_stage_id(cr, uid, context=context)
+        return super(project_issue, self).create(cr, uid, vals, context=context)
+
     def _get_default_project_id(self, cr, uid, context=None):
         """ Gives default project by checking if present in the context """
         return self._resolve_project_id_from_context(cr, uid, context=context)
@@ -514,7 +525,7 @@ class project_issue(base_stage, osv.osv):
         }
         for line in msg.get('body', '').split('\n'):
             line = line.strip()
-            res = tools.misc.command_re.match(line)
+            res = tools.command_re.match(line)
             if res and maps.get(res.group(1).lower(), False):
                 key = maps.get(res.group(1).lower())
                 update_vals[key] = res.group(2).lower()
