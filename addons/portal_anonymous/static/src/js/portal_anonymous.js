@@ -90,14 +90,6 @@ openerp.portal_anonymous = function(instance) {
             }
             return false;
         },
-        // Avoid browser preloading
-        show_application: function() {
-            var params = $.deparam($.param.fragment());
-            if (!!params.token || !!params.login) {
-                return this.show_login();
-            }
-            return this._super();
-        },
     });
 
 };

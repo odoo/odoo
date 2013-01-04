@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp import tools
 from openerp.osv import osv
 from openerp.osv import fields
 from openerp.tools.translate import _
@@ -60,6 +61,12 @@ class invite_wizard(osv.osv_memory):
 
             # send an email
             if wizard.message:
+                # add signature
+                user_id = self.pool.get("res.users").read(cr, uid, [uid], fields=["signature"], context=context)[0]
+                signature = user_id and user_id["signature"] or ''
+                if signature:
+                    wizard.message = tools.append_content_to_html(wizard.message, signature, plaintext=True, container_tag='div')
+                # send mail to new followers
                 for follower_id in new_follower_ids:
                     mail_mail = self.pool.get('mail.mail')
                     # the invite wizard should create a private message not related to any object -> no model, no res_id
