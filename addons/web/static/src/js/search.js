@@ -640,7 +640,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             .then(this.proxy('setup_default_query'));
 
         return $.when(drawer_started, defaults_fetched)
-            .done(function () { 
+            .then(function () { 
                 self.trigger("search_view_loaded", data);
                 self.ready.resolve();
             });

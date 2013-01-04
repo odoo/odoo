@@ -14,10 +14,13 @@ Contents:
     module
     widget
 
+
     async
     rpc
     qweb
     client_action
+
+    guidelines
 
     testing
 

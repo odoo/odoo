@@ -95,6 +95,7 @@ $sheet-padding: 16px
     background: -moz-linear-gradient(135deg, $endColor, $startColor)
     background: -o-linear-gradient(135deg, $startColor, $endColor)
     background: -webkit-gradient(linear, left top, right bottom, from($startColor), to($endColor))
+    background: -ms-linear-gradient(top, $startColor, $endColor) /* IE10 */
 
 @mixin transform($transform)
     -webkit-transform: $transform
@@ -157,6 +158,9 @@ $sheet-padding: 16px
         color: $tag-border !important
         font-style: italic !important
     \::-webkit-input-placeholder
+        color: $tag-border !important
+        font-style: italic !important
+    \:-ms-input-placeholder
         color: $tag-border !important
         font-style: italic !important
     //}}}
@@ -435,7 +439,7 @@ $sheet-padding: 16px
     .oe_button.oe_link
         @include reset()
         img
-            display: none
+            display: inline-block
         span
             @include reset()
             color: $link-color
@@ -530,6 +534,8 @@ $sheet-padding: 16px
         float: left
     .oe_notebook > li > a
         display: block
+        color: #808080
+    .oe_notebook > li.ui-tabs-active > a
         color: #4c4c4c
     .oe_notebook
         border-color: #ddd
@@ -598,6 +604,9 @@ $sheet-padding: 16px
                 display: block
                 color: #4c4c4c
                 text-decoration: none
+                width: 200px
+                text-overflow: ellipsis
+                overflow: hidden
                 &:hover
                     text-decoration: none
     .oe_dropdown_arrow:after
@@ -686,6 +695,15 @@ $sheet-padding: 16px
         span
             margin-top: 1px
             background-color: #f6cf3b
+    // }}}
+    // CrashManager {{{
+    .oe_dialog_warning
+        width: 100%
+        p
+            text-align: center
+    .oe_dialog_icon
+        padding: 5px
+        width: 32px
     // }}}
     // Login {{{
     .oe_login
@@ -818,6 +836,24 @@ $sheet-padding: 16px
         height: 32px
         background-color: #414141
         @include vertical-gradient(#646060, #262626)
+        .oe_topbar_anonymous_login
+            background-color: #dc5f59
+            color: #eeeeee
+            @include vertical-gradient(#FC8787, #800000)
+            a
+                display: block
+                padding: 5px 10px 7px
+                line-height: 20px
+                height: 20px
+                text-decoration: none
+                color: white
+                background: transparent
+                @include transition(all 0.2s ease-out)
+            a:hover
+                background: rgba(0,0,0,0.1)
+                color: white
+                text-shadow: 0px 0px 3px rgba(0,0,0,0.2)
+                @include box-shadow(0 1px 2px rgba(0,0,0,0.2) inset)
         .oe_topbar_item
             display: block
             padding: 5px 10px 7px
@@ -861,6 +897,13 @@ $sheet-padding: 16px
                 &:hover
                     @include vertical-gradient(#292929, #191919)
                     @include box-shadow(none)
+        .oe_topbar_name
+            max-width: 150px
+            overflow: hidden
+            display: inline-block
+            max-height: 100%
+            text-overflow: ellipsis
+            white-space: nowrap
 
     // oe menu is the list of the buttons on the left side of the bar.
     // So why aren't the buttons oe_topbar_items ? This sad state of affairs
@@ -924,16 +967,26 @@ $sheet-padding: 16px
         text-shadow: 0 1px 1px white
         padding-bottom: 16px
     a.oe_logo
+        position: relative
         width: 220px
         display: block
         text-align: center
-        height: 70px
-        line-height: 70px
         img
-            height: 40px
-            width: 157px
             margin: 14px 0
             border: 0
+        .oe_logo_edit
+            margin: 14px 0
+            position: absolute
+            top: 1px
+            padding: 4px
+            width: 100%
+            display: none
+            text-align: center
+            color: #eee
+            background: rgba(37,37,37,0.9)
+            @include box-sizing(border)
+        &:hover .oe_logo_edit_admin
+            display: block
     .oe_footer
         position: fixed
         bottom: 0
@@ -942,13 +995,10 @@ $sheet-padding: 16px
         width: 220px
         text-align: center
         a
-            font-weight: 800
-            font-family: serif
-            font-size: 16px
+            font-weight: bold
             color: black
             span
                 color: #c81010
-                font-style: italic
     // }}}
     // Webclient.leftbar items {{{
 
@@ -1062,6 +1112,7 @@ $sheet-padding: 16px
     // ActionManager {{{
     .oe_application
         width: 100%
+        height: 100%
         a
             color: $link-color
             &:hover
@@ -1069,11 +1120,12 @@ $sheet-padding: 16px
         > div
             height: 100%
         .oe_breadcrumb_item:not(:last-child)
-            display: inline-block
             max-width: 7em
             white-space: nowrap
-            overflow: hidden
             text-overflow: ellipsis
+        .oe_breadcrumb_title > *
+            display: inline-block
+            overflow: hidden
     // }}}
     // ViewManager common {{{
     .oe_view_manager
@@ -1083,6 +1135,7 @@ $sheet-padding: 16px
             height: inherit
 
         table.oe_view_manager_header
+            border-collapse: separate
             width: 100%
             table-layout: fixed
             .oe_header_row
@@ -1606,6 +1659,10 @@ $sheet-padding: 16px
         > header
             margin: -16px -16px 0 -16px
             padding: 0
+    .oe_form_nosheet.oe_form_nomargin
+        margin: 0
+        > header
+            margin: 0
     .oe_form_sheetbg
         padding: 16px 0
     .oe_form_sheet_width
@@ -1616,6 +1673,8 @@ $sheet-padding: 16px
         background: white
         min-height: 330px
         padding: 16px
+        .oe_list
+            overflow-x: auto
     // Sheet inline mode
     .oe_application
         .oe_form_sheetbg
@@ -1653,7 +1712,7 @@ $sheet-padding: 16px
                 width: 400px
                 padding-bottom: 0
         div.oe_chatter
-            box-sizing: border-box 
+            box-sizing: border-box
             min-width: $sheet-min-width + 2* $sheet-padding
             max-width: $sheet-max-width + 2* $sheet-padding
             margin: 0 auto
@@ -1925,7 +1984,7 @@ $sheet-padding: 16px
                 overflow: hidden
                 width: 24px
                 overflow: hidden
-                background: transparent 
+                background: transparent
                 color: #7C7BAD
                 box-shadow: none
                 border: none
@@ -2223,6 +2282,8 @@ $sheet-padding: 16px
         th.sortup div:after
             visibility: visible
             @include opacity(0.6)
+        .oe_list_header_many2many_tags
+            min-width: 70px
         th.sortdown div:after
             border-bottom: none
             border-left: 4px solid transparent
@@ -2409,6 +2470,109 @@ div.ui-widget-overlay
     @include radius(3px)
 // }}}
 
+// Internet Explorer 9+ specifics {{{
+.openerp_ie
+    .oe_form_field_boolean input
+        background: #fff
+    input[type='checkbox']
+        border: none
+        background: none
+        box-shadow: none
+    .oe_logo
+        img
+            border: none
+    .oe_header_row
+        button.oe_highlight
+            padding-top: 0
+            padding-bottom: 0
+    .oe_view_manager_buttons
+        button.oe_write_full
+            padding-top: 0
+            padding-bottom: 0
+        button.oe_highlight
+            padding-top: 0
+            padding-bottom: 0
+        button .oe_form_button_edit
+            padding-top: 0
+            padding-bottom: 0
+        button .oe_form_button_create
+            padding-top: 0
+            padding-bottom: 0
+    .oe_kanban_image
+        border: none
+    .oe_msg_icon
+        border: none
+    .oe_form
+        header
+            ul
+                height: 29px
+    .oe_attach
+        filter: none
+    .oe_link
+        filter: none
+    .oe_kanban_show_more
+        clear: both
+        text-align: center
+    &.oe_kanban_grouped .oe_kanban_show_more .oe_button
+        width: 100%
+        padding: 3px 12px
+
+    .oe_form_buttons button
+        padding-top: 0
+        padding-bottom: 0
+    .oe_sidebar button
+        padding-top: 0
+        padding-bottom: 0
+    img
+        border: none
+    //buttons.
+    .oe_dropdown_arrow
+        line-height: 1.7em
+    .oe_form_buttons, .oe_view_manager_buttons
+        button
+            line-height: 1.7em
+        .oe_highlight
+            line-height: 1.7em
+    .oe_topbar
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#646060', endColorstr='#262626')
+    .oe_popup_form
+        width: 99% !important
+    .oe_form_label
+        white-space: normal !important
+    ul.oe_form_status, ul.oe_form_status_clickable
+        li
+            display: inline-block
+            clear: both
+            &:last-child
+                overflow: hidden
+                border-right: 1px solid #cacaca
+                .label
+                    padding-right: 14px
+                    border-right: none
+                .arrow
+                    display: inline-block
+                    opacity: 0
+                    filter: alpha(opacity = 0)
+                    border: none
+                    width: 0
+                    border-right: none 
+        .label
+            border-bottom: 1px solid #cacaca
+            background: transparent
+        .arrow
+            span
+                background-color: #fefefe !important
+        li.oe_active
+            .label
+                border-bottom: 1px solid #729fcf
+            .arrow span
+                background-color: #729fcf !important
+
+    // jquery ui for ie
+    .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#EFEFEF', endColorstr='#D8D8D8')
+// }}}
+
 // @media print {{{
 @media print
     .openerp
@@ -2432,6 +2596,8 @@ div.ui-widget-overlay
             .oe_form_sheet, .oe_form_sheetbg
                 border: 0px !important
                 box-shadow: 0px 0px 0px
+                .oe_list
+                    overflow-x: visible
         .oe_view_manager_current > .oe_view_manager_header
             border: 0px !important
             box-shadow: 0px 0px 0px
@@ -2441,6 +2607,10 @@ div.ui-widget-overlay
         .openerp div.oe_mail_wall
             overflow: hidden !important
 // }}}
+
+.blockUI.blockOverlay
+    background-color: black
+    opacity: 0.6000000238418579
 
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
 // vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:

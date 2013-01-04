@@ -30,6 +30,12 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
      * Setup a sessionm
      */
     session_bind: function(origin) {
+        if (!_.isUndefined(this.origin)) {
+            if (this.origin === origin) {
+                return $.when();
+            }
+            throw new Error('Session already bound to ' + this.origin);
+        }
         var self = this;
         this.setup(origin);
         instance.web.qweb.default_dict['_s'] = this.origin;
@@ -119,9 +125,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
     },
     session_logout: function() {
         this.set_cookie('session_id', '');
-        var url = "#";
-        $.bbq.pushState(url);
-        window.location.search = "";
+        $.bbq.removeState();
         return this.rpc("/web/session/destroy", {});
     },
     get_cookie: function (name) {
@@ -471,6 +475,11 @@ $.fn.openerpClass = function(additionalClass) {
     }
     return this.each(function() {
         $(this).addClass('openerp ' + additionalClass);
+    });
+};
+$.fn.openerpBounce = function() {
+    return this.each(function() {
+        $(this).css('box-sizing', 'content-box').effect('bounce', {distance: 18, times: 5}, 250);
     });
 };
 
