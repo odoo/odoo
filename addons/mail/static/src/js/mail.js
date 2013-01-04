@@ -514,14 +514,17 @@ openerp.mail = function (session) {
             // create list of new partners
             this.check_recipient_partners().done(function () {
                 var context = {
-                    'default_model': default_composition_mode == 'reply' ? undefined : self.context.default_model,
-                    'default_res_id': default_composition_mode == 'reply' ? undefined : self.context.default_res_id,
                     'default_composition_mode': default_composition_mode,
                     'default_parent_id': self.id,
                     'default_body': mail.ChatterUtils.get_text2html(self.$el ? (self.$el.find('textarea:not(.oe_compact)').val() || '') : ''),
                     'default_attachment_ids': self.attachment_ids,
                     'default_partner_ids': _.map(_.filter(self.partners_from, function (f) {return f[1]}), function (f) {return f[0]}),
                 };
+                if (default_composition_mode != 'reply' && self.context.default_model && self.context.default_res_id) {
+                    context.default_model = self.context.default_model;
+                    context.default_res_id = self.context.default_res_id;
+                }
+
                 var action = {
                     type: 'ir.actions.act_window',
                     res_model: 'mail.compose.message',
@@ -570,19 +573,19 @@ openerp.mail = function (session) {
         check_recipient_partners: function () {
             var self = this;
             var emails = [];
+            var deferreds = [];
             _.each(this.emails_from, function (email_from) {
                 if (email_from[1]) {
                     if (!_.find(emails, function (email) {return email[4] == email_from[0][4];})) {
                         emails.push(email_from[0]);
+                        deferreds.push($.Deferred());
                     }
                 }
             });
-            var deferreds = [];
-            var ds_partner = new session.web.DataSetSearch(this, 'res.partner');
             this.partners_from = [];
-            _.each(emails, function (email) {
-                var deferred = $.Deferred();
-                deferreds.push(deferred);   
+            var ds_partner = new session.web.DataSetSearch(this, 'res.partner');
+            _.each(emails, function (email, key) {
+                var deferred = deferreds[key];
                 ds_partner.call('search', [[['email', 'like', email[4]]]]).then(function (partner_ids) {
                     if (!partner_ids.length) {
                         var pop = new session.web.form.FormOpenPopup(this);
@@ -611,7 +614,6 @@ openerp.mail = function (session) {
                         self.partners_from.push([partner_ids[0], true]);
                         deferred.resolve();
                     }
-                    return deferred;
                 });
             });
             return $.when.apply( $, deferreds );
