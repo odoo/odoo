@@ -67,10 +67,12 @@ class project_issue(base_stage, osv.osv):
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
-        if not context.get('default_project_id', False) and vals.get('project_id', False):
+        if not vals.get('stage_id') and vals.get('project_id'):
             ctx = context.copy()
             ctx['default_project_id'] = vals['project_id']
             vals['stage_id'] = self._get_default_stage_id(cr, uid, context=ctx)
+        elif not vals.get('stage_id') and context.get('default_project_id'):
+            vals['stage_id'] = self._get_default_stage_id(cr, uid, context=context)
         return super(project_issue, self).create(cr, uid, vals, context=context)
 
     def _get_default_project_id(self, cr, uid, context=None):
@@ -478,6 +480,11 @@ class project_issue(base_stage, osv.osv):
     # -------------------------------------------------------
     # Mail gateway
     # -------------------------------------------------------
+
+    def message_get_reply_to(self, cr, uid, ids, context=None):
+        """ Override to get the reply_to of the parent project. """
+        return [issue.project_id.message_get_reply_to()[0] if issue.project_id else False
+                    for issue in self.browse(cr, uid, ids, context=context)]
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """ Overrides mail_thread message_new that is called by the mailgateway
