@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-01-05 01:47+0000\n"
+"Last-Translator: Balint (eSolve) <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 07:21+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-01-05 05:40+0000\n"
+"X-Generator: Launchpad (build 16393)\n"
 
 #. module: mail
 #: view:mail.followers:0
@@ -123,7 +123,7 @@ msgstr "Email varázsló"
 #: code:addons/mail/static/src/xml/mail_followers.xml:23
 #, python-format
 msgid "Add others"
-msgstr ""
+msgstr "Mások hozzáadása"
 
 #. module: mail
 #: field:mail.message.subtype,parent_id:0
@@ -174,7 +174,7 @@ msgstr "Csoportok keresése"
 #: code:addons/mail/static/src/js/mail_followers.js:156
 #, python-format
 msgid "followers"
-msgstr "Követők"
+msgstr "követők"
 
 #. module: mail
 #: code:addons/mail/mail_message.py:726
@@ -309,7 +309,7 @@ msgstr "Válaszcím"
 #: code:addons/mail/wizard/invite.py:36
 #, python-format
 msgid "<div>You have been invited to follow %s.</div>"
-msgstr ""
+msgstr "<div>Önt meghívták, hogy kövesse: %s</div>"
 
 #. module: mail
 #: help:mail.group,message_unread:0
@@ -327,7 +327,7 @@ msgstr ""
 #: model:ir.actions.client,name:mail.action_mail_to_me_feeds
 #: model:ir.ui.menu,name:mail.mail_tomefeeds
 msgid "To: me"
-msgstr ""
+msgstr "Címzett: én"
 
 #. module: mail
 #: field:mail.message.subtype,name:0
@@ -345,7 +345,7 @@ msgstr "Automatikus törlés"
 #: view:mail.group:0
 #, python-format
 msgid "Unfollow"
-msgstr "Követés leállításA"
+msgstr "Követés leállítása"
 
 #. module: mail
 #. openerp-web
@@ -464,7 +464,7 @@ msgstr "Küldés"
 #: code:addons/mail/static/src/js/mail_followers.js:152
 #, python-format
 msgid "No followers"
-msgstr ""
+msgstr "Nincs követő"
 
 #. module: mail
 #: view:mail.mail:0
@@ -482,7 +482,7 @@ msgstr "Sikertelen"
 #: field:res.partner,message_follower_ids:0
 #, python-format
 msgid "Followers"
-msgstr ""
+msgstr "Követők"
 
 #. module: mail
 #: model:ir.actions.client,name:mail.action_mail_archives_feeds
@@ -511,7 +511,7 @@ msgstr "Válasz"
 #: code:addons/mail/static/src/js/mail_followers.js:154
 #, python-format
 msgid "One follower"
-msgstr ""
+msgstr "Egy követő"
 
 #. module: mail
 #: field:mail.compose.message,type:0
@@ -573,7 +573,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/mail.xml:43
 #, python-format
 msgid "Write to the followers of this document..."
-msgstr ""
+msgstr "Bejegyzés írás a dokumentum követőinek..."
 
 #. module: mail
 #: field:mail.group,group_public_id:0
@@ -583,7 +583,7 @@ msgstr ""
 #. module: mail
 #: view:mail.group:0
 msgid "Join Group"
-msgstr ""
+msgstr "Csatlakozás a csoporthoz"
 
 #. module: mail
 #: help:mail.mail,email_from:0
@@ -594,7 +594,7 @@ msgstr ""
 #: code:addons/mail/wizard/invite.py:39
 #, python-format
 msgid "<div>You have been invited to follow a new document.</div>"
-msgstr ""
+msgstr "<div>Önt meghívták, hogy kövessen egy új dokumentumot.</div>"
 
 #. module: mail
 #: field:mail.compose.message,parent_id:0
@@ -695,7 +695,7 @@ msgstr "Mégsem"
 #: code:addons/mail/static/src/xml/mail.xml:44
 #, python-format
 msgid "Share with my followers..."
-msgstr ""
+msgstr "Üzenet a követőimnek..."
 
 #. module: mail
 #: field:mail.notification,partner_id:0
@@ -772,6 +772,16 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    <b>Szép munka!</b> Az ön postafiókja üres.\n"
+"                </p><p>\n"
+"                    A \"Beérkezett üzenetek\" az önnek küldött privát "
+"üzeneteket vagy email-eket,\n"
+"                    továbbá az ön által követett dokumentumokhoz vagy "
+"emberekhez kapcsolódó\n"
+"                    információkat tartalmaz.\n"
+"                </p>\n"
+"            "
 
 #. module: mail
 #: field:mail.mail,notification:0
@@ -783,7 +793,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/mail.xml:170
 #, python-format
 msgid "Compose a new message"
-msgstr ""
+msgstr "Új üzenet küldés"
 
 #. module: mail
 #: view:mail.mail:0
@@ -928,12 +938,12 @@ msgstr ""
 #. module: mail
 #: view:mail.wizard.invite:0
 msgid "Add Followers"
-msgstr ""
+msgstr "Követők hozzáadása"
 
 #. module: mail
 #: view:mail.compose.message:0
 msgid "Followers of selected items and"
-msgstr ""
+msgstr "A kijelölt elemek követői és"
 
 #. module: mail
 #: field:mail.alias,alias_force_thread_id:0
@@ -943,7 +953,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_group_root
 msgid "My Groups"
-msgstr ""
+msgstr "Saját csoportok"
 
 #. module: mail
 #: model:ir.actions.client,help:mail.action_mail_archives_feeds
@@ -1076,14 +1086,14 @@ msgstr "Kiterjesztett szűrők…"
 #: code:addons/mail/static/src/xml/mail.xml:107
 #, python-format
 msgid "To:"
-msgstr ""
+msgstr "Címzett:"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:175
 #, python-format
 msgid "Write to my followers"
-msgstr ""
+msgstr "Bejegyzés írás a követőimnek"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_groups
@@ -1170,7 +1180,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/mail_followers.xml:13
 #, python-format
 msgid "Following"
-msgstr ""
+msgstr "Követés"
 
 #. module: mail
 #: sql_constraint:mail.alias:0
@@ -1265,7 +1275,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/mail_followers.xml:11
 #, python-format
 msgid "Follow"
-msgstr ""
+msgstr "Követ"
 
 #. module: mail
 #: field:mail.group,name:0
@@ -1414,7 +1424,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:mail.action_view_groups
 #: model:ir.ui.menu,name:mail.mail_allgroups
 msgid "Join a group"
-msgstr ""
+msgstr "Csoporthoz csatlakozás"
 
 #. module: mail
 #: model:ir.actions.client,help:mail.action_mail_group_feeds
@@ -1493,7 +1503,7 @@ msgstr ""
 #: model:ir.actions.client,name:mail.action_mail_star_feeds
 #: model:ir.ui.menu,name:mail.mail_starfeeds
 msgid "To-do"
-msgstr ""
+msgstr "Feladat"
 
 #. module: mail
 #: view:mail.alias:0

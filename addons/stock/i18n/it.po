@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-28 16:54+0000\n"
+"PO-Revision-Date: 2013-01-04 21:39+0000\n"
 "Last-Translator: Davide Corio - agilebg.com <davide.corio@agilebg.com>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-29 05:36+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-01-05 05:40+0000\n"
+"X-Generator: Launchpad (build 16393)\n"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -706,7 +706,7 @@ msgstr "Confezionamento"
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_picking_list_in
 msgid "Receipt Slip"
-msgstr ""
+msgstr "DDT in Ingresso"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_move.py:214
@@ -1449,7 +1449,7 @@ msgstr "Ora programmata"
 #: model:ir.actions.act_window,name:stock.move_consume
 #: view:stock.move.consume:0
 msgid "Consume Move"
-msgstr ""
+msgstr "Utilizzo Prodotti"
 
 #. module: stock
 #: report:stock.picking.list:0
@@ -1520,6 +1520,9 @@ msgid ""
 "Technical field used to record the product cost set by the user during a "
 "picking confirmation (when average price costing method is used)"
 msgstr ""
+"Campo tecnico usato per registrare il costo del prodotto impostato "
+"dall'utente durante la conferma del prelievo (quando viene usato il costo "
+"medio)"
 
 #. module: stock
 #: code:addons/stock/stock.py:1890
@@ -1554,6 +1557,7 @@ msgstr "Puoi cancellare solo i movimenti in bozza"
 #, python-format
 msgid "You cannot move product %s to a location of type view %s."
 msgstr ""
+"Impossibile spostare il prodotto %s verso un punto di stoccaggio di tipo %s."
 
 #. module: stock
 #: view:stock.inventory:0
@@ -1590,7 +1594,7 @@ msgstr "Informazioni aggiuntive"
 #: code:addons/stock/stock.py:2648
 #, python-format
 msgid "Missing partial picking data for move #%s."
-msgstr ""
+msgstr "Dati prelievo parziale mancanti per il movimento #%s."
 
 #. module: stock
 #: field:stock.location.product,from_date:0
@@ -1644,7 +1648,7 @@ msgstr "Dividi"
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_picking_list_out
 msgid "Delivery Slip"
-msgstr ""
+msgstr "DDT in Uscita"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.open_board_warehouse
@@ -1677,6 +1681,11 @@ msgid ""
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
+"Usato per la valorizzazione dell'inventario real-time. Quando impostato su "
+"un punto di stoccaggio virtuale (non di tipo interno), questo conto verrà "
+"usato per impostare il valore dei prodotti movimentati da questo punto di "
+"stoccaggio in uno interno, invece del Conto Merce in Uscita generico "
+"impostato sul prodotto. Non ha effetto sui punti di stoccaggio interni."
 
 #. module: stock
 #: field:stock.inventory,date:0
@@ -1718,6 +1727,7 @@ msgstr "Anteprima inventario punto di stoccaggio"
 #: view:report.stock.inventory:0
 msgid "Analysis including future moves (similar to virtual stock)"
 msgstr ""
+"Analisi che include i movimenti futuri (simile alla giacenza virtuale)"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action3
@@ -1789,6 +1799,8 @@ msgstr "Punto di Stoccaggio Superiore"
 #, python-format
 msgid "Please define stock output account for this product: \"%s\" (id: %d)."
 msgstr ""
+"Si prega di definire il conto merce in uscita per questo prodotto: \"%s\" "
+"(id: %d)."
 
 #. module: stock
 #: help:stock.location,company_id:0
@@ -1809,18 +1821,18 @@ msgstr "Gestisce differenti unità di misura per prodotto"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_invoice_onshipping
 msgid "Stock Invoice Onshipping"
-msgstr ""
+msgstr "Fattura su spedizioni"
 
 #. module: stock
 #: code:addons/stock/stock.py:2475
 #, python-format
 msgid "Please provide a positive quantity to scrap."
-msgstr ""
+msgstr "Si prega di fornire una quantità positiva per lo smaltimento."
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_shop1
 msgid "Your Company, Birmingham shop"
-msgstr ""
+msgstr "La tua azienda, Punto vendita di Birmingham"
 
 #. module: stock
 #: view:product.product:0
@@ -1943,7 +1955,7 @@ msgstr ""
 #. module: stock
 #: help:stock.move,date_expected:0
 msgid "Scheduled date for the processing of this move"
-msgstr ""
+msgstr "Data pianificato per l'elaborazione di questo movimento"
 
 #. module: stock
 #: field:stock.inventory,move_ids:0
@@ -1971,7 +1983,7 @@ msgstr "Impossibile rimuovere una riga lotto."
 #: help:stock.location,posy:0
 #: help:stock.location,posz:0
 msgid "Optional localization details, for information purpose only"
-msgstr ""
+msgstr "Dettagli localizzazione opzionali, puramente a scopo informativo"
 
 #. module: stock
 #: view:product.product:0
@@ -2073,7 +2085,7 @@ msgstr "Punto di Stoccaggio"
 #: code:addons/stock/wizard/stock_partial_picking.py:97
 #, python-format
 msgid "_Deliver"
-msgstr ""
+msgstr "_Consegna"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_inventory_merge.py:64
@@ -2167,7 +2179,7 @@ msgstr "Ritorna picking"
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking_in
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking_out
 msgid "Return Shipment"
-msgstr ""
+msgstr "Ritorno merce"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_merge
@@ -2383,7 +2395,7 @@ msgstr "Punto di Stoccaggio Fornitore"
 #. module: stock
 #: view:stock.location.product:0
 msgid "View Products Inventory"
-msgstr ""
+msgstr "Mostra Inventario Prodotti"
 
 #. module: stock
 #: view:stock.move:0
