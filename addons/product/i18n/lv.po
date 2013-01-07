@@ -1,21 +1,21 @@
 # Latvian translation for openobject-addons
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-05-10 17:34+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:32+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:27+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: product
 #: field:product.packaging,rows:0
@@ -31,11 +31,6 @@ msgstr ""
 #: help:product.product,seller_qty:0
 msgid "This is minimum quantity to purchase from Main Supplier."
 msgstr "Minimālais iepirkuma daudzums no Pamatpiegādātāja"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_day
-msgid "Day"
-msgstr "Diena"
 
 #. module: product
 #: model:product.template,name:product.product_product_34_product_template
@@ -110,8 +105,8 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:177
-#: code:addons/product/product.py:206
+#: code:addons/product/pricelist.py:179
+#: code:addons/product/product.py:208
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -122,16 +117,11 @@ msgid "Small-sized image"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:174
+#: code:addons/product/product.py:176
 #, python-format
 msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
 "both belong to different Category!."
-msgstr ""
-
-#. module: product
-#: model:product.uom,name:product.product_uom_dozen
-msgid "Dozen"
 msgstr ""
 
 #. module: product
@@ -190,7 +180,7 @@ msgid "Product Type"
 msgstr "Produkta tips"
 
 #. module: product
-#: code:addons/product/product.py:410
+#: code:addons/product/product.py:412
 #, python-format
 msgid "Products: "
 msgstr "Preces: "
@@ -277,11 +267,6 @@ msgstr ""
 #: field:product.uom,category_id:0
 msgid "Category"
 msgstr "Kategorija"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_litre
-msgid "Litre"
-msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_25_product_template
@@ -508,6 +493,11 @@ msgid "Headset standard"
 msgstr ""
 
 #. module: product
+#: model:product.uom,name:product.product_uom_day
+msgid "Day(s)"
+msgstr ""
+
+#. module: product
 #: help:product.product,incoming_qty:0
 msgid ""
 "Quantity of products that are planned to arrive.\n"
@@ -566,13 +556,9 @@ msgid "PC Assemble + Custom (PC on Demand)"
 msgstr ""
 
 #. module: product
-#: model:process.transition,note:product.process_transition_supplierofproduct0
-msgid ""
-"1 or several supplier(s) can be linked to a product. All information stands "
-"in the product form."
+#: model:product.template,description:product.product_product_27_product_template
+msgid "Custom Laptop based on customer's requirement."
 msgstr ""
-"Iespējams piesaistīt produktam vienu vai vairākus piegādātājus. Informācija "
-"atrodas produkta skatījuma formā."
 
 #. module: product
 #: help:product.packaging,width:0
@@ -580,7 +566,7 @@ msgid "The width of the package"
 msgstr "Iepakojuma platums"
 
 #. module: product
-#: code:addons/product/product.py:359
+#: code:addons/product/product.py:361
 #, python-format
 msgid "Unit of Measure categories Mismatch!"
 msgstr ""
@@ -684,6 +670,7 @@ msgstr ""
 
 #. module: product
 #: field:product.supplierinfo,name:0
+#: field:product.template,seller_ids:0
 msgid "Supplier"
 msgstr "Piegādātājs"
 
@@ -711,8 +698,8 @@ msgid "If checked new messages require your attention."
 msgstr ""
 
 #. module: product
-#: model:product.category,name:product.product_category_1
-msgid "Saleable"
+#: field:product.product,ean13:0
+msgid "EAN13 Barcode"
 msgstr ""
 
 #. module: product
@@ -787,6 +774,11 @@ msgid "End Date"
 msgstr "Beigu datums"
 
 #. module: product
+#: model:product.uom,name:product.product_uom_litre
+msgid "Liter(s)"
+msgstr ""
+
+#. module: product
 #: view:product.price_list:0
 msgid "Print"
 msgstr "Drukāt"
@@ -819,7 +811,6 @@ msgstr "Atslēga"
 #. module: product
 #: model:ir.actions.report.xml,name:product.report_product_pricelist
 #: model:ir.model,name:product.model_product_pricelist
-#: field:product.product,price:0
 #: field:product.product,pricelist_id:0
 #: view:product.supplierinfo:0
 msgid "Pricelist"
@@ -827,8 +818,8 @@ msgstr "Cenu lapa"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_hour
-msgid "Hour"
-msgstr "Stunda"
+msgid "Hour(s)"
+msgstr ""
 
 #. module: product
 #: selection:product.template,state:0
@@ -841,9 +832,13 @@ msgid "Partner"
 msgstr "Partneris"
 
 #. module: product
-#: model:product.template,description:product.product_product_27_product_template
-msgid "Custom Laptop based on customer's requirement."
+#: model:process.transition,note:product.process_transition_supplierofproduct0
+msgid ""
+"1 or several supplier(s) can be linked to a product. All information stands "
+"in the product form."
 msgstr ""
+"Iespējams piesaistīt produktam vienu vai vairākus piegādātājus. Informācija "
+"atrodas produkta skatījuma formā."
 
 #. module: product
 #: field:product.pricelist.item,price_round:0
@@ -907,11 +902,6 @@ msgstr ""
 #: field:product.packaging,weight:0
 msgid "Total Package Weight"
 msgstr "Kopējasi iepakojuma svars"
-
-#. module: product
-#: field:product.product,seller_info_id:0
-msgid "unknown"
-msgstr ""
 
 #. module: product
 #: help:product.packaging,code:0
@@ -1086,6 +1076,11 @@ msgid "Right Parent"
 msgstr ""
 
 #. module: product
+#: field:product.product,price:0
+msgid "Price"
+msgstr ""
+
+#. module: product
 #: field:product.pricelist.item,price_surcharge:0
 msgid "Price Surcharge"
 msgstr "Cenas uzcenojums"
@@ -1158,6 +1153,11 @@ msgstr ""
 msgid ""
 "Gives the sequence order when displaying a list of product categories."
 msgstr "Nosaka produktu kategoriju attēlošanas secību."
+
+#. module: product
+#: model:product.uom,name:product.product_uom_dozen
+msgid "Dozen(s)"
+msgstr ""
 
 #. module: product
 #: field:product.uom,factor:0
@@ -1234,7 +1234,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:359
+#: code:addons/product/product.py:361
 #, python-format
 msgid ""
 "New Unit of Measure '%s' must belong to same Unit of Measure category '%s' "
@@ -1289,11 +1289,6 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: field:product.template,seller_ids:0
-msgid "Partners"
-msgstr "Partneri"
-
-#. module: product
 #: help:product.pricelist.item,categ_id:0
 msgid ""
 "Specify a product category if this rule only applies to products belonging "
@@ -1306,7 +1301,12 @@ msgid "Inventory"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:736
+#: field:product.product,seller_info_id:0
+msgid "Supplier Info"
+msgstr ""
+
+#. module: product
+#: code:addons/product/product.py:729
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -1427,16 +1427,9 @@ msgstr ""
 
 #. module: product
 #: selection:product.ul,type:0
-#: model:product.uom,name:product.product_uom_unit
 #: model:product.uom.categ,name:product.product_uom_categ_unit
 msgid "Unit"
 msgstr "Vienība"
-
-#. module: product
-#: code:addons/product/product.py:588
-#, python-format
-msgid "Product has been <b>created</b>."
-msgstr ""
 
 #. module: product
 #: field:product.pricelist.version,date_start:0
@@ -1547,8 +1540,8 @@ msgid "Pricelist Name"
 msgstr "Cenu lapas nosaukums"
 
 #. module: product
-#: field:product.product,ean13:0
-msgid "EAN13 Barcode"
+#: model:product.category,name:product.product_category_1
+msgid "Saleable"
 msgstr ""
 
 #. module: product
@@ -1781,7 +1774,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:206
+#: code:addons/product/product.py:208
 #, python-format
 msgid "Cannot change the category of existing Unit of Measure '%s'."
 msgstr ""
@@ -1817,7 +1810,7 @@ msgid "Default Unit of Measure"
 msgstr "Noklusējuma mērvienība"
 
 #. module: product
-#: code:addons/product/pricelist.py:375
+#: code:addons/product/pricelist.py:377
 #, python-format
 msgid "Partner section of the product form"
 msgstr "Produkta formas Partnera sadaļa"
@@ -1843,7 +1836,12 @@ msgid "Messages"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:174
+#: model:product.uom,name:product.product_uom_unit
+msgid "Unit(s)"
+msgstr ""
+
+#. module: product
+#: code:addons/product/product.py:176
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -2158,7 +2156,7 @@ msgid "Normal"
 msgstr "Normāls"
 
 #. module: product
-#: code:addons/product/pricelist.py:177
+#: code:addons/product/pricelist.py:179
 #, python-format
 msgid ""
 "At least one pricelist has no active version !\n"
@@ -2211,12 +2209,6 @@ msgstr ""
 #: selection:product.template,mes_type:0
 msgid "Variable"
 msgstr "Mainīgais"
-
-#. module: product
-#: field:product.product,message_comment_ids:0
-#: help:product.product,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
 
 #. module: product
 #: field:product.template,rental:0
@@ -2374,7 +2366,7 @@ msgid "15” LCD Monitor"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:374
+#: code:addons/product/pricelist.py:376
 #: field:product.pricelist.item,base_pricelist_id:0
 #, python-format
 msgid "Other Pricelist"
@@ -2505,683 +2497,3 @@ msgstr "Tilpums m3"
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
 msgstr "Cenas atlaide"
-
-#~ msgid "Products Categories"
-#~ msgstr "Preču kategorijas"
-
-#~ msgid "UoM"
-#~ msgstr "Mērvienība"
-
-#~ msgid "Sellable"
-#~ msgstr "Pārdodams"
-
-#~ msgid "Mainboard ASUStek A7V8X-X"
-#~ msgstr "Mainboard ASUStek A7V8X-X"
-
-#~ msgid "DDR 512MB PC400"
-#~ msgstr "DDR 512MB PC400"
-
-#~ msgid "Basic+ PC (assembly on order)"
-#~ msgstr "Basic+ PC (assembly on order)"
-
-#~ msgid "Error ! You can not create recursive categories."
-#~ msgstr "Kļūda! Jūs nevarat veidot rekursīvas kategorijas."
-
-#~ msgid "Units of Measure Categories"
-#~ msgstr "Mērvienību kategorijas"
-
-#~ msgid "Keyboard"
-#~ msgstr "Keyboard"
-
-#~ msgid "Processor AMD Athlon XP 1800+"
-#~ msgstr "Processor AMD Athlon XP 1800+"
-
-#~ msgid "UOM"
-#~ msgstr "Mērvienība"
-
-#~ msgid "Miscelleanous"
-#~ msgstr "Dažādi"
-
-#~ msgid "PCE"
-#~ msgstr "Gab."
-
-#~ msgid "Worker"
-#~ msgstr "Worker"
-
-#~ msgid "HDD on demand"
-#~ msgstr "HDD on demand"
-
-#~ msgid "EAN13"
-#~ msgstr "EAN13"
-
-#~ msgid "HDD Seagate 7200.8 160GB"
-#~ msgstr "HDD Seagate 7200.8 160GB"
-
-#~ msgid "Wood 2mm"
-#~ msgstr "Wood 2mm"
-
-#~ msgid "IT components"
-#~ msgstr "IT components"
-
-#~ msgid "Medium PC"
-#~ msgstr "Medium PC"
-
-#~ msgid "Storage Localisation"
-#~ msgstr "Glabāšanas lokalizācija"
-
-#~ msgid "Metal Cleats"
-#~ msgstr "Metal Cleats"
-
-#~ msgid "Codes"
-#~ msgstr "Kodi"
-
-#~ msgid "Restaurant Expenses"
-#~ msgstr "Restaurant Expenses"
-
-#~ msgid "Virtual Stock"
-#~ msgstr "Virtuāla noliktava"
-
-#~ msgid "High speed processor config"
-#~ msgstr "High speed processor config"
-
-#~ msgid "Can be Purchased"
-#~ msgstr "Tiek iepirkts"
-
-#~ msgid "KIT Shelf of 100cm"
-#~ msgstr "KIT Shelf of 100cm"
-
-#~ msgid "Silent fan"
-#~ msgstr "Silent fan"
-
-#~ msgid "Processor AMD Athlon XP 2200+"
-#~ msgstr "Processor AMD Athlon XP 2200+"
-
-#~ msgid "Mainboard ASUStek A7N8X"
-#~ msgstr "Mainboard ASUStek A7N8X"
-
-#~ msgid "Kit Keyboard + Mouse"
-#~ msgstr "Kit Keyboard + Mouse"
-
-#~ msgid "Side Panel"
-#~ msgstr "Side Panel"
-
-#~ msgid "To Purchase"
-#~ msgstr "Iepērkams"
-
-#~ msgid "Shelf of 200cm"
-#~ msgstr "Shelf of 200cm"
-
-#~ msgid "Kitchen Design Project"
-#~ msgstr "Kitchen Design Project"
-
-#~ msgid "Miscellaneous"
-#~ msgstr "Dažādi"
-
-#~ msgid "g"
-#~ msgstr "g"
-
-#~ msgid "IT components kits"
-#~ msgstr "IT components kits"
-
-#~ msgid "DDR 256MB PC400"
-#~ msgstr "DDR 256MB PC400"
-
-#~ msgid "Extended Filters..."
-#~ msgstr "Paplašinātie filtri..."
-
-#~ msgid "Regular case fan 80mm"
-#~ msgstr "Regular case fan 80mm"
-
-#~ msgid "Calculate Product Price per unit base on pricelist version."
-#~ msgstr "Pārrēķinat cenu lapas cenas pēc produkta bāzes."
-
-#~ msgid "Seq"
-#~ msgstr "Nr"
-
-#~ msgid "To Sell"
-#~ msgstr "Pārdot"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "Uzmanību!"
-
-#~ msgid "Products & Pricelists"
-#~ msgstr "Produkti & Cenu lapas"
-
-#~ msgid "Marketable Services"
-#~ msgstr "Tirgojami pakalpojumi"
-
-#~ msgid "Stockable"
-#~ msgstr "Noliktavas"
-
-#~ msgid "m"
-#~ msgstr "m"
-
-#~ msgid "Wood Lintel 4m"
-#~ msgstr "Wood Lintel 4m"
-
-#~ msgid "Net weight"
-#~ msgstr "Neto svars"
-
-#~ msgid "Procurement Method"
-#~ msgstr "Sagādes metode"
-
-#~ msgid "Second UoM"
-#~ msgstr "Otra mērvienība"
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "Kļūda!"
-
-#~ msgid "PC"
-#~ msgstr "PC"
-
-#~ msgid "Rack"
-#~ msgstr "Plaukts"
-
-#~ msgid "Make to Stock"
-#~ msgstr "Uz noliktavu"
-
-#~ msgid "UoM Category"
-#~ msgstr "Mērv. kategorija"
-
-#~ msgid "Supply method"
-#~ msgstr "Piegādes metode"
-
-#~ msgid "Basic PC"
-#~ msgstr "Basic PC"
-
-#~ msgid "Regular processor config"
-#~ msgstr "Regular processor config"
-
-#~ msgid "Rack 200cm"
-#~ msgstr "Rack 200cm"
-
-#~ msgid "Real Stock"
-#~ msgstr "Reāli noliktavā"
-
-#~ msgid "Unit of Measure Properties"
-#~ msgstr "Mērvienības īpašības"
-
-#~ msgid "Buy"
-#~ msgstr "Pirkt"
-
-#~ msgid "Pricelists Types"
-#~ msgstr "Cenu lapu tipi"
-
-#~ msgid "Misc"
-#~ msgstr "Dažādi"
-
-#~ msgid "Default UOM"
-#~ msgstr "Noklusējuma mērv."
-
-#~ msgid "Customizable PC"
-#~ msgstr "Customizable PC"
-
-#~ msgid "Onsite Intervention"
-#~ msgstr "Onsite Intervention"
-
-#~ msgid "Make to Order"
-#~ msgstr "Uz pasūtījumu"
-
-#~ msgid "Warranty (months)"
-#~ msgstr "Garantija (mēnešos)"
-
-#~ msgid "Produce"
-#~ msgstr "Ražot"
-
-#~ msgid "ATX Mid-size Tower"
-#~ msgstr "ATX Mid-size Tower"
-
-#~ msgid "Default Unit Of Measure"
-#~ msgstr "Noklusējuma mērvienība"
-
-#~ msgid "Prices Types"
-#~ msgstr "Cenu tipi"
-
-#~ msgid "Supplier UoM"
-#~ msgstr "Piegādātāja mērv."
-
-#~ msgid "Shelf of 100cm"
-#~ msgstr "Shelf of 100cm"
-
-#~ msgid "Employee"
-#~ msgstr "Darbinieks"
-
-#~ msgid "Rear Panel SHE200"
-#~ msgstr "Rear Panel SHE200"
-
-#~ msgid "HDD Seagate 7200.8 80GB"
-#~ msgstr "HDD Seagate 7200.8 80GB"
-
-#~ msgid "Processor on demand"
-#~ msgstr "Processor on demand"
-
-#~ msgid "Dello Computer"
-#~ msgstr "Dello Computer"
-
-#~ msgid "UoM Type"
-#~ msgstr "Mērv. tips"
-
-#~ msgid "Rear Panel SHE100"
-#~ msgstr "Rear Panel SHE100"
-
-#~ msgid "Mouse"
-#~ msgstr "Pele"
-
-#~ msgid "Row"
-#~ msgstr "Rinda"
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Kļūda! Nevar izveidot rekursīvus asociētos dalībniekus."
-
-#~ msgid "Complete PC With Peripherals"
-#~ msgstr "Complete PC With Peripherals"
-
-#~ msgid "Weigths"
-#~ msgstr "Svari"
-
-#~ msgid "Hotel Expenses"
-#~ msgstr "Hotel Expenses"
-
-#~ msgid "Rack 100cm"
-#~ msgstr "Rack 100cm"
-
-#~ msgid "Close"
-#~ msgstr "Aizvērt"
-
-#~ msgid "Phone Help"
-#~ msgstr "Phone Help"
-
-#~ msgid "Computer Stuff"
-#~ msgstr "Computer Stuff"
-
-#~ msgid "Assembly Section"
-#~ msgstr "Montāžas sekcija"
-
-#~ msgid "Product Description"
-#~ msgstr "Produkta apraksta"
-
-#~ msgid "Sales Properties"
-#~ msgstr "Pārdošanas īpašības"
-
-#~ msgid "tonne"
-#~ msgstr "tonna"
-
-#~ msgid "RAM on demand"
-#~ msgstr "RAM on demand"
-
-#~ msgid "Private"
-#~ msgstr "Privāts"
-
-#~ msgid ""
-#~ "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
-#~ "Item!"
-#~ msgstr ""
-#~ "Kļūda! Nevar pievienot Galveno Cenrādi, kā Citu Cenrādi cenrāža "
-#~ "apakšpostenim!"
-
-#~ msgid "Tells the user if he can use the product or not."
-#~ msgstr ""
-#~ "Informē lietotāju, vai tam ir pieejas tiesības attiecīgajam produktam."
-
-#~ msgid ""
-#~ "Choose here the Unit of Measure in which the prices and quantities are "
-#~ "expressed below."
-#~ msgstr "Izvēlēties šeit mērvienību, kurā tiks attēlotas cenas un daudzums."
-
-#~ msgid ""
-#~ "A price list contains rules to be evaluated in order to compute the purchase "
-#~ "or sales price for all the partners assigned to a price list. Price lists "
-#~ "have several versions (2010, 2011, Promotion of February 2010, etc.) and "
-#~ "each version has several rules. Example: the customer price of a product "
-#~ "category will be based on the supplier price multiplied by 1.80."
-#~ msgstr ""
-#~ "Cenrādis satur nosacījumus, kas tiek izpildīti noteiktā kārtībā iepirkuma "
-#~ "vai pārdošanas cenas aprēķināšanai visiem partneriem, uz kuriem attiecas "
-#~ "minētais cenrādis. Cenrāžiem iespējams definēt vairākas versijas (2010, "
-#~ "2011, Februāra 2010 akcija utt.), katru ar saviem nosacījumiem. Piemērs: "
-#~ "noteiktai preču kategorijai tiks piemērots uzcenojuma koeficients 1.80 "
-#~ "piegādātāja cenai."
-
-#~ msgid ""
-#~ "Products can be purchased and/or sold. They can be raw materials, stockable "
-#~ "products, consumables or services. The Product form contains detailed "
-#~ "information about your products related to procurement logistics, sales "
-#~ "price, product category, suppliers and so on."
-#~ msgstr ""
-#~ "Produktus iespējams pirkt un/vai pārdot. Tie var būt izejvielas, noliktavas "
-#~ "preces, patēriņa preces vai pakalpojumi. Produkta forma satur detalizētu "
-#~ "informāciju- tā var būt loģistikas informācija, pārdošanas cena, produkta "
-#~ "kategorija, piegādātāja informācija u.c."
-
-#~ msgid "  e.g: 1 * (this unit) = ratio * (reference unit)"
-#~ msgstr "  attiecīgi: 1 * (esošā vienība) = attiecība * (atsauces vienība)"
-
-#~ msgid "Reference UoM for this category"
-#~ msgstr "Atsauces mērvienība šai kategorijai"
-
-#~ msgid ""
-#~ "The rule only applies if the partner buys/sells more than this quantity."
-#~ msgstr ""
-#~ "Noteikums tiek izpildīts tikai, ja partneris pērk/pārdod vairāk, kā šo "
-#~ "noteikto daudzumu."
-
-#~ msgid "Ending date for this pricelist version to be valid."
-#~ msgstr "Beigu datums līdz kuram cenrādis ir derīgs."
-
-#~ msgid ""
-#~ "Quantity conversions may happen automatically between Units of Measure in "
-#~ "the same category, according to their respective ratios."
-#~ msgstr ""
-#~ "Mērvienību konversijas var notikt automātiski, ja tās atrodas vienā "
-#~ "kategorijā, izmantojot definētās attiecības."
-
-#~ msgid "Rules Test Match"
-#~ msgstr "Nosacījumu pārbaude"
-
-#, python-format
-#~ msgid ""
-#~ "No active version for the selected pricelist !\n"
-#~ "Please create or activate one."
-#~ msgstr ""
-#~ "Izvēlētajam cenrādim nav aktīva neviena versija!\n"
-#~ "Lūdzu veidojiet jaunu, vai aktivizējiet kādu no esošajām."
-
-#~ msgid ""
-#~ "If the active field is set to False, it will allow you to hide the product "
-#~ "without removing it."
-#~ msgstr ""
-#~ "Atzīmējot lauku kā \"False\", iespējams izņemt produktu no saraksta, tajā "
-#~ "pašā laikā to nedzēšot no sistēmas."
-
-#~ msgid ""
-#~ "The minimal quantity to purchase to this supplier, expressed in the supplier "
-#~ "Product UoM if not empty, in the default unit of measure of the product "
-#~ "otherwise."
-#~ msgstr ""
-#~ "Minimālais iepirkuma daudzums no attiecīgā piegādātāja, noteikts "
-#~ "piegādātājam definētajās mērvienībās, ja tās ir definētas. Ja mērvienības "
-#~ "piegādātājam nav definētas, tiek izmantotas produktam definētās mērvienības."
-
-#~ msgid "Ratio & Precision"
-#~ msgstr "Attiecība un Precizitāte"
-
-#~ msgid ""
-#~ "Set a product if this rule only apply to one product. Keep empty for all "
-#~ "products"
-#~ msgstr ""
-#~ "Tiek norādīts produkts, ja nosacījums atbilst tikai vienam produktam. "
-#~ "Neaizpildīt, ja paredzēts visiem produktiem."
-
-#~ msgid "Customer Lead Time"
-#~ msgstr "Pasūtījuma Apstrādes laiks"
-
-#~ msgid ""
-#~ "Set a template if this rule only apply to a template of product. Keep empty "
-#~ "for all products"
-#~ msgstr ""
-#~ "Norādīt kā veidne, ja nosacījums paredzēts produktu veidnēm. Neaizpildīt, ja "
-#~ "visiem produktiem."
-
-#~ msgid ""
-#~ "Error: The default UOM and the Supplier Product UOM must be in the same "
-#~ "category."
-#~ msgstr ""
-#~ "Kļūda: mērvienībai pēc noklusējuma un piegādātāja produkta mērvienībai ir "
-#~ "jāatrodas vienā kategorijā."
-
-#~ msgid ""
-#~ "Quantities of products that are planned to leave in selected locations or "
-#~ "all internal if none have been selected."
-#~ msgstr ""
-#~ "Produktu daudzums, ko plānots atstāt izvēlētajās vietās. Atstājot tukšu visi "
-#~ "produkti tiek uzskatīti par \"iekšējiem\"."
-
-#~ msgid ""
-#~ "You must define a Product for everything you buy or sell. Products can be "
-#~ "raw materials, stockable products, consumables or services. The Product form "
-#~ "contains detailed information about your products related to procurement "
-#~ "logistics, sales price, product category, suppliers and so on."
-#~ msgstr ""
-#~ "Jādefinē Produkts visam, kas tiek pārdots vai pirkts. Produkti var būt "
-#~ "izejvielas, noliktavas preces, patēriņa preces vai pakalpojumi. Produkta "
-#~ "forma satur informāciju par pasūtījuma loģistiku, pārdošanas cenu, "
-#~ "kategoriju, piegādātāju utt."
-
-#~ msgid "Bigger than the reference UoM"
-#~ msgstr "Lielāks par atsauces mērvienību"
-
-#~ msgid "If Other Pricelist"
-#~ msgstr "Ja izvēlēta cita Cenuzīme"
-
-#, python-format
-#~ msgid " (copy)"
-#~ msgstr " (kopija)"
-
-#~ msgid ""
-#~ "This is the average delay in days between the confirmation of the customer "
-#~ "order and the delivery of the finished products. It's the time you promise "
-#~ "to your customers."
-#~ msgstr ""
-#~ "Vidējais apstrādes laiks no pasūtījuma brīža, līdz sagatavoto produktu "
-#~ "piegādei. Tas ir laiks, kurš tiek norādīts pasūtītājam kā \"Piegādes laiks\"."
-
-#~ msgid "The mode for computing the price for this rule."
-#~ msgstr "Cenas aprēķina režīms Nosacījumam"
-
-#~ msgid ""
-#~ "Here is a list of all your products classified by category. You can click a "
-#~ "category to get the list of all products linked to this category or to a "
-#~ "child of this category."
-#~ msgstr ""
-#~ "Visu produktu saraksts sakārtots pēc kategorijas. Iespējams atlasīt "
-#~ "produktus pēc attiecīgās kategorijas vai apakškategorijas,"
-
-#~ msgid ""
-#~ "If the active field is set to False, it will allow you to hide the pricelist "
-#~ "without removing it."
-#~ msgstr ""
-#~ "Lauku ir atzīmējot kā \"False\", iespējams noslēpt cenuzīmi to nedzēšot no "
-#~ "sistēmas."
-
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr ""
-#~ "Kļūda: noklusējuma un iepirkuma mērvienībām jāatrodas vienā kategorijā."
-
-#, python-format
-#~ msgid ""
-#~ "Conversion from Product UoM m to Default UoM PCE is not possible as they "
-#~ "both belong to different Category!."
-#~ msgstr ""
-#~ "Produkta mērvienības konversācija uz noklusēto mērvienību nav iespējama, jo "
-#~ "tās atrodas dažādās kategorijās."
-
-#~ msgid ""
-#~ "Current quantities of products in selected locations or all internal if none "
-#~ "have been selected."
-#~ msgstr ""
-#~ "Produktu daudzums attiecīgajās produktu atrašanās vietās, vai visu produktu "
-#~ "kopējais daudzums, ja vieta nav norādīta."
-
-#~ msgid "Smaller than the reference UoM"
-#~ msgstr "Mazāks kā atsauces mērvienība"
-
-#~ msgid ""
-#~ "Average delay in days to produce this product. This is only for the "
-#~ "production order and, if it is a multi-level bill of material, it's only for "
-#~ "the level of this product. Different lead times will be summed for all "
-#~ "levels and purchase orders."
-#~ msgstr ""
-#~ "Vidējais laiks, kurā tiek saražots produkts. Tas izmantojams tikai ražošanas "
-#~ "pasūtījumiem, un, ja tas ir multi-līmeņu komplektācijas saraksts, tad "
-#~ "attiecas tikai uz izvēlētā produkta līmeni. Katram līmenim tiek aprēķināts "
-#~ "savs apstrādes laiks un vēlāk summēts."
-
-#~ msgid ""
-#~ "Set a category of product if this rule only apply to products of a category "
-#~ "and his children. Keep empty for all products"
-#~ msgstr ""
-#~ "Norādīt produkta kategoriju, ja nosacījums attiecas tikai uz minēto "
-#~ "kategoriju vai tās apakškategorijām. Atstāt tukšu visiem produktiem."
-
-#~ msgid "Marketable Products"
-#~ msgstr "Tirgojami Produkti"
-
-#~ msgid ""
-#~ "How many times this UoM is smaller than the reference UoM in this category:\n"
-#~ "1 * (reference unit) = ratio * (this unit)"
-#~ msgstr ""
-#~ "Norāda par cik attiecīgā mērvienība ir mazāka kā atsauces mērvienība šajā "
-#~ "kategorijā:\n"
-#~ "1 ( atsauces mērv. ) = attiecība * ( šī mērvienība)"
-
-#~ msgid "UOM -> UOS Coeff"
-#~ msgstr "Mērv. -> Pārdošanas mērv. koef."
-
-#~ msgid "Starting date for this pricelist version to be valid."
-#~ msgstr "Sākuma datums, no kura cenuzīme ir derīga·"
-
-#~ msgid "Onsite Senior Intervention"
-#~ msgstr "Vecākais atbalsta Tehniķis"
-
-#~ msgid "Characteristics"
-#~ msgstr "Īpašības"
-
-#~ msgid "HDD Seagate 7200.8 120GB"
-#~ msgstr "HDD Seagate 7200.8 120GB"
-
-#~ msgid ""
-#~ "Create and manage your packaging dimensions and types you want to be "
-#~ "maintained in your system."
-#~ msgstr "Izveido un pārrauga iepakojumu izmērus un tipus sistēmā."
-
-#~ msgid ""
-#~ "Future stock for this product according to the selected locations or all "
-#~ "internal if none have been selected. Computed as: Real Stock - Outgoing + "
-#~ "Incoming."
-#~ msgstr ""
-#~ "Paredzamais produktu daudzums noliktavā izvēlētajām preču atrašanās vietām, "
-#~ "vai visu \"iekšējo\" produktu daudzums, ja preču atrašanās vietas nav "
-#~ "norādītas. Tiek aprēķināts kā: Preces uz vietas - Izejošās + Ienākošās."
-
-#~ msgid "This is a quantity which is converted into Default Uom."
-#~ msgstr "Daudzums kurš tiek konvertēts Noklusējuma Mērvienībā."
-
-#~ msgid "This is use as task responsible"
-#~ msgstr "Tiek noteikts atbildīgais."
-
-#~ msgid ""
-#~ "The computed quantity will be a multiple of this value. Use 1.0 for a UoM "
-#~ "that cannot be further split, such as a piece."
-#~ msgstr ""
-#~ "Aprēķinātais daudzums būs šīs vērtības reizinājums. Lietot 1.0 mērvienībai, "
-#~ "ko nevar tālāk sadalīt daļās."
-
-#~ msgid ""
-#~ "How many times this UoM is bigger than the reference UoM in this category:\n"
-#~ "1 * (this unit) = ratio * (reference unit)"
-#~ msgstr ""
-#~ "Nosaka cik reizes lielāka ir mērvienība par atsauces mērvienību šajā "
-#~ "kategorijā:\n"
-#~ "1 * (mērvienība) = attiecība * (atsauces mērvienība)"
-
-#~ msgid ""
-#~ "Quantities of products that are planned to arrive in selected locations or "
-#~ "all internal if none have been selected."
-#~ msgstr ""
-#~ "Plānotais ienākošo produktu daudzums izvēlētajās preču atrašanās vietās, vai "
-#~ "visās, ja tās nav norādītas."
-
-#~ msgid "Shelves"
-#~ msgstr "Plaukti"
-
-#~ msgid "Case"
-#~ msgstr "Reģistrs"
-
-#~ msgid ""
-#~ "Produce will generate production order or tasks, according to the product "
-#~ "type. Purchase will trigger purchase orders when requested."
-#~ msgstr ""
-#~ "Komanda Izpildīt ģenerēs pasūtījumu vai darba uzdevumu atkarībā no produkta "
-#~ "tipa. Iepirkums ģenerēs iepirkuma pasūtījumu."
-
-#~ msgid ""
-#~ "The minimal quantity to trigger this rule, expressed in the supplier UoM if "
-#~ "any or in the default UoM of the product otherrwise."
-#~ msgstr ""
-#~ "Minimālais dauzums, lai nosacījums nostrādātu, izteikts piegādātāja "
-#~ "mērvienībā, ja tā definēta, vai produkta noklusējuma mērvienībā."
-
-#~ msgid ""
-#~ "There can be more than one version of a pricelist. Here you can create and "
-#~ "manage new versions of a price list. Some examples of versions: 2010, 2011, "
-#~ "Summer Promotion, etc."
-#~ msgstr ""
-#~ "Iespējamas vairākas cenuzīmes versijas. Izveido un labo cenuzīmju versijas. "
-#~ "Daži versiju piemēri: 2010, 2011, Vasaras Atlaides utt."
-
-#~ msgid "  e.g: 1 * (reference unit) = ratio * (this unit)"
-#~ msgstr "  e.g: 1 * (atsauces vienība) = attiecība * (vienība)"
-
-#~ msgid ""
-#~ "Base price for computing the customer price. Sometimes called the catalog "
-#~ "price."
-#~ msgstr ""
-#~ "Pamatcena pārdošanas cenas aprēķināsanai. Dažreiz tiek saukta par kataloga "
-#~ "cenu."
-
-#, python-format
-#~ msgid ""
-#~ "Could not resolve product category, you have defined cyclic categories of "
-#~ "products!"
-#~ msgstr ""
-#~ "Nav iespējams noteikt produkta kategoriju, jo definētas cikliskas produkta "
-#~ "kategorijas!"
-
-#~ msgid ""
-#~ "Coefficient to convert UOM to UOS\n"
-#~ " uos = uom * coeff"
-#~ msgstr ""
-#~ "Koeficients Mērv. konvertācijai uz Pārdošanas mērv.\n"
-#~ " pārd. mērv. = mērv. * koef."
-
-#~ msgid ""
-#~ "This price will be considered as a price for the supplier UoM if any or the "
-#~ "default Unit of Measure of the product otherwise"
-#~ msgstr ""
-#~ "Šī cena tiek noteikta piegādātājam definētajā mērvienībā. Ja tāda nav "
-#~ "noteikta, tiek izmantota produktam definētā mērvienība."
-
-#~ msgid ""
-#~ "Determines if the product can be visible in the list of product within a "
-#~ "selection from a sale order line."
-#~ msgstr ""
-#~ "Nosaka, vai izvēloties tirdzniecības pasūtījuma rindu, attiecīgais produkts "
-#~ "būs redzams produktu sarakstā."
-
-#~ msgid ""
-#~ "Used by companies that manage two units of measure: invoicing and inventory "
-#~ "management. For example, in food industries, you will manage a stock of ham "
-#~ "but invoice in Kg. Keep empty to use the default UOM."
-#~ msgstr ""
-#~ "Lieto uzņēmumi, kur tiek izmantotas divas mērvienības: rēķinu piestādīšanai "
-#~ "un inventrizācijai. Piemēram, pārtikas rūpniecībā gaļas produkti tiek "
-#~ "skaitīti gabalos, bet tirgoti kilogramos. Atstāt tukšu noklusējuma "
-#~ "mērvienībai."
-
-#~ msgid ""
-#~ "'Make to Stock': When needed, take from the stock or wait until re-"
-#~ "supplying. 'Make to Order': When needed, purchase or produce for the "
-#~ "procurement request."
-#~ msgstr ""
-#~ "'Produkts Noliktavā': produkts atrodas noliktavā vai gaida tā piegādi. 'Ražo "
-#~ "pēc Pieprasījuma': produkts tiek iepirkts/saražots pēc pasūtījuma "
-#~ "pieprasījuma."
-
-#~ msgid "Gross weight"
-#~ msgstr "Bruto svars"
-
-#~ msgid "Reference"
-#~ msgstr "Artikuls (Kods)"

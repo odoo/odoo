@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-06-08 02:32+0000\n"
-"Last-Translator: Akira Hiyama <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:50+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:07+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_related:0
@@ -66,12 +66,6 @@ msgstr "定期ミーティング"
 #. module: base_calendar
 #: model:crm.meeting.type,name:base_calendar.categ_meet5
 msgid "Feedback Meeting"
-msgstr ""
-
-#. module: base_calendar
-#: code:addons/base_calendar/crm_meeting.py:117
-#, python-format
-msgid "Meeting <b>completed</b>."
 msgstr ""
 
 #. module: base_calendar
@@ -255,7 +249,7 @@ msgid "To"
 msgstr "終了"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1225
+#: code:addons/base_calendar/base_calendar.py:1255
 #, python-format
 msgid "Error!"
 msgstr "エラー"
@@ -274,6 +268,13 @@ msgstr ""
 #: selection:calendar.alarm,action:0
 msgid "Procedure"
 msgstr "手続き"
+
+#. module: base_calendar
+#: field:calendar.event,recurrent_id:0
+#: field:calendar.todo,recurrent_id:0
+#: field:crm.meeting,recurrent_id:0
+msgid "Recurrent ID"
+msgstr "定期ID"
 
 #. module: base_calendar
 #: selection:calendar.event,state:0
@@ -334,14 +335,9 @@ msgid "Meetings"
 msgstr ""
 
 #. module: base_calendar
-#: selection:calendar.attendee,cutype:0
-msgid "Room"
-msgstr "部屋"
-
-#. module: base_calendar
-#: field:calendar.event,recurrent_id:0
-#: field:calendar.todo,recurrent_id:0
-#: field:crm.meeting,recurrent_id:0
+#: field:calendar.event,recurrent_id_date:0
+#: field:calendar.todo,recurrent_id_date:0
+#: field:crm.meeting,recurrent_id_date:0
 msgid "Recurrent ID date"
 msgstr "定期ID日付"
 
@@ -364,11 +360,11 @@ msgid ""
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:388
-#: code:addons/base_calendar/base_calendar.py:417
-#: code:addons/base_calendar/base_calendar.py:980
-#: code:addons/base_calendar/base_calendar.py:982
-#: code:addons/base_calendar/base_calendar.py:1430
+#: code:addons/base_calendar/base_calendar.py:399
+#: code:addons/base_calendar/base_calendar.py:444
+#: code:addons/base_calendar/base_calendar.py:1008
+#: code:addons/base_calendar/base_calendar.py:1010
+#: code:addons/base_calendar/base_calendar.py:1455
 #, python-format
 msgid "Warning!"
 msgstr "警告"
@@ -512,9 +508,9 @@ msgid "Email"
 msgstr "Eメール"
 
 #. module: base_calendar
-#: model:ir.actions.server,name:base_calendar.actions_server_crm_meeting_unread
-msgid "CRM Meeting: Mark unread"
-msgstr ""
+#: selection:calendar.attendee,cutype:0
+msgid "Room"
+msgstr "部屋"
 
 #. module: base_calendar
 #: selection:calendar.alarm,state:0
@@ -527,7 +523,7 @@ msgid "Event alarm information"
 msgstr "イベントアラーム情報"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:982
+#: code:addons/base_calendar/base_calendar.py:1010
 #, python-format
 msgid "Count cannot be negative or 0."
 msgstr ""
@@ -538,11 +534,9 @@ msgid "Creation Date"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/crm_meeting.py:111
 #: view:crm.meeting:0
 #: model:ir.model,name:base_calendar.model_crm_meeting
 #: model:res.request.link,name:base_calendar.request_link_meeting
-#, python-format
 msgid "Meeting"
 msgstr ""
 
@@ -571,11 +565,9 @@ msgid "Caldav URL"
 msgstr "CalDAVのURL"
 
 #. module: base_calendar
-#: field:calendar.event,recurrent_uid:0
-#: field:calendar.todo,recurrent_uid:0
-#: field:crm.meeting,recurrent_uid:0
-msgid "Recurrent ID"
-msgstr "定期ID"
+#: model:ir.model,name:base_calendar.model_mail_wizard_invite
+msgid "Invite wizard"
+msgstr ""
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
@@ -607,7 +599,7 @@ msgid "Delegrated To"
 msgstr "委任先"
 
 #. module: base_calendar
-#: code:addons/base_calendar/crm_meeting.py:94
+#: code:addons/base_calendar/crm_meeting.py:102
 #, python-format
 msgid "The following contacts have no email address :"
 msgstr ""
@@ -716,12 +708,6 @@ msgid "Individual"
 msgstr "個人"
 
 #. module: base_calendar
-#: code:addons/base_calendar/crm_meeting.py:114
-#, python-format
-msgid "Meeting <b>confirmed</b>."
-msgstr ""
-
-#. module: base_calendar
 #: help:calendar.event,count:0
 #: help:calendar.todo,count:0
 #: help:crm.meeting,count:0
@@ -756,7 +742,7 @@ msgid "Declined"
 msgstr "拒否済"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1430
+#: code:addons/base_calendar/base_calendar.py:1455
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr ""
@@ -791,13 +777,6 @@ msgstr "プライバシー"
 #: model:ir.model,name:base_calendar.model_res_alarm
 msgid "Basic Alarm Information"
 msgstr "基本アラーム情報"
-
-#. module: base_calendar
-#: field:calendar.event,mo:0
-#: field:calendar.todo,mo:0
-#: field:crm.meeting,mo:0
-msgid "Mon"
-msgstr "月"
 
 #. module: base_calendar
 #: field:calendar.event,fr:0
@@ -998,10 +977,11 @@ msgid "Indicate the groups that the attendee belongs to"
 msgstr "出席者が属すグループを示して下さい。"
 
 #. module: base_calendar
-#: field:crm.meeting,message_comment_ids:0
-#: help:crm.meeting,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
+#: field:calendar.event,mo:0
+#: field:calendar.todo,mo:0
+#: field:crm.meeting,mo:0
+msgid "Mon"
+msgstr "月"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
@@ -1052,11 +1032,6 @@ msgid "Interval"
 msgstr "間隔"
 
 #. module: base_calendar
-#: model:ir.actions.server,name:base_calendar.actions_server_crm_meeting_read
-msgid "CRM Meeting: Mark read"
-msgstr ""
-
-#. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
 #: selection:crm.meeting,week_list:0
@@ -1080,7 +1055,7 @@ msgid "Active"
 msgstr "アクティブ"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:388
+#: code:addons/base_calendar/base_calendar.py:399
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
 msgstr "カレンダーの出席者は重複できません。"
@@ -1226,7 +1201,7 @@ msgid "Select Weekdays"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1489
+#: code:addons/base_calendar/base_calendar.py:1514
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #: selection:calendar.todo,show_as:0
@@ -1353,6 +1328,11 @@ msgid "Search Meetings"
 msgstr ""
 
 #. module: base_calendar
+#: model:ir.model,name:base_calendar.model_ir_attachment
+msgid "ir.attachment"
+msgstr ""
+
+#. module: base_calendar
 #: model:ir.model,name:base_calendar.model_crm_meeting_type
 msgid "Meeting Type"
 msgstr ""
@@ -1433,6 +1413,11 @@ msgid ""
 msgstr "Eメールのメッセージの件名として使用されるテキスト、あるいは表示に使用するためのテキストが含まれています。"
 
 #. module: base_calendar
+#: model:ir.model,name:base_calendar.model_mail_message
+msgid "Message"
+msgstr ""
+
+#. module: base_calendar
 #: field:calendar.event,base_calendar_alarm_id:0
 #: field:calendar.todo,base_calendar_alarm_id:0
 #: field:crm.meeting,base_calendar_alarm_id:0
@@ -1452,7 +1437,7 @@ msgid "April"
 msgstr "4月"
 
 #. module: base_calendar
-#: code:addons/base_calendar/crm_meeting.py:98
+#: code:addons/base_calendar/crm_meeting.py:106
 #, python-format
 msgid "Email addresses not found"
 msgstr ""
@@ -1470,7 +1455,7 @@ msgid "Weekday"
 msgstr "平日"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:980
+#: code:addons/base_calendar/base_calendar.py:1008
 #, python-format
 msgid "Interval cannot be negative."
 msgstr ""
@@ -1483,7 +1468,7 @@ msgid "By day"
 msgstr "日別"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:417
+#: code:addons/base_calendar/base_calendar.py:444
 #, python-format
 msgid "First you have to specify the date of the invitation."
 msgstr ""
@@ -1621,187 +1606,3 @@ msgstr ""
 #: selection:crm.meeting,byday:0
 msgid "Fifth"
 msgstr "第５"
-
-#~ msgid "The chosen company is not in the allowed companies for this user"
-#~ msgstr "選択した会社は、このユーザに許された会社ではありません。"
-
-#~ msgid "Declined Invitations"
-#~ msgstr "拒否済招待"
-
-#~ msgid "Invitation Type"
-#~ msgstr "招待タイプ"
-
-#~ msgid "Invited User"
-#~ msgstr "招待ユーザ"
-
-#~ msgid "Monthly"
-#~ msgstr "月次"
-
-#~ msgid "Invitation"
-#~ msgstr "招待"
-
-#, python-format
-#~ msgid "Count cannot be negative"
-#~ msgstr "負になる計算はできません。"
-
-#~ msgid " "
-#~ msgstr " "
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "警告"
-
-#~ msgid "Accepted Invitations"
-#~ msgstr "招待の受諾"
-
-#~ msgid "Yearly"
-#~ msgstr "年次"
-
-#~ msgid "Invitations To Review"
-#~ msgstr "レビューのための招待"
-
-#~ msgid "Delegated Invitations"
-#~ msgstr "委任された招待"
-
-#~ msgid "Invitation To"
-#~ msgstr "招待先"
-
-#~ msgid "Event Invitations"
-#~ msgstr "イベントの招待"
-
-#~ msgid "Search Invitations"
-#~ msgstr "招待の検索"
-
-#, python-format
-#~ msgid "%s must have an email  address to send mail"
-#~ msgstr "%sはメール送信用のEメールアドレスを持つべきです。"
-
-#, python-format
-#~ msgid "Interval cannot be negative"
-#~ msgstr "間隔は負の値を持てません。"
-
-#~ msgid "Partner"
-#~ msgstr "パートナ"
-
-#~ msgid "Provide external email address who will receive this invitation."
-#~ msgstr "この招待状を受け取る外部のEメールアドレスを提供して下さい。"
-
-#~ msgid "Invitation type"
-#~ msgstr "招待タイプ"
-
-#~ msgid "Invitation From"
-#~ msgstr "招待フォーム"
-
-#~ msgid "Send mail?"
-#~ msgstr "メール送信しますか？"
-
-#~ msgid "Event Detail"
-#~ msgstr "イベント詳細"
-
-#~ msgid "Daily"
-#~ msgstr "日次"
-
-#~ msgid "Each model must be unique!"
-#~ msgstr "各モジュールは固有でなければなりません。"
-
-#~ msgid "Mark as"
-#~ msgstr "マーク"
-
-#~ msgid "Required Reply"
-#~ msgstr "返信要求"
-
-#~ msgid "Partner Contacts"
-#~ msgstr "パートナ連絡先"
-
-#~ msgid "Delegate"
-#~ msgstr "委任"
-
-#~ msgid "Check this if you want to send an Email to Invited Person"
-#~ msgstr "招待者にEメールを送信したい場合は、ここをチェックして下さい。"
-
-#~ msgid "Delegation Info"
-#~ msgstr "委任情報"
-
-#~ msgid "My Role"
-#~ msgstr "私の役割"
-
-#~ msgid "Contacts"
-#~ msgstr "コンタクト"
-
-#~ msgid "Partner related to contact"
-#~ msgstr "コンタクトと関係あるパートナ"
-
-#~ msgid "Invite Attendees"
-#~ msgstr "出席者の招待"
-
-#~ msgid "Recurrence termination"
-#~ msgstr "定期の終了"
-
-#~ msgid "Data"
-#~ msgstr "データ"
-
-#~ msgid "Required to Join"
-#~ msgstr "参加要請"
-
-#~ msgid "To Review"
-#~ msgstr "レビュー"
-
-#~ msgid "Weekly"
-#~ msgstr "週次"
-
-#~ msgid "State"
-#~ msgstr "状態"
-
-#~ msgid "You can not have two users with the same login !"
-#~ msgstr "同じログインでは２つのユーザを持てません。"
-
-#~ msgid "Repeat every"
-#~ msgstr "反復（間隔）"
-
-#~ msgid "Tentative"
-#~ msgstr "暫定"
-
-#~ msgid "Type"
-#~ msgstr "タイプ"
-
-#~ msgid "Internal User"
-#~ msgstr "内部ユーザ"
-
-#~ msgid "Invite"
-#~ msgstr "招待"
-
-#, python-format
-#~ msgid "Couldn't Invite because date is not specified!"
-#~ msgstr "日付が定義されていないため招待できません。"
-
-#~ msgid "External Email"
-#~ msgstr "外部Eメール"
-
-#, python-format
-#~ msgid "Group by date not supported, use the calendar view instead"
-#~ msgstr "日付のグループ化はサポートされませんが、代りにカレンダービューを使います。"
-
-#~ msgid ""
-#~ "Create specific calendar alarms that may be assigned to calendar events or "
-#~ "meetings."
-#~ msgstr "カレンダーイベントまたはミーティングを割り当てられる特定のカレンダーアラームを作成します。"
-
-#~ msgid "Select whom you want to Invite"
-#~ msgstr "招待したい人を選択します。"
-
-#~ msgid "Deadline"
-#~ msgstr "締切"
-
-#~ msgid "Show as"
-#~ msgstr "表示"
-
-#~ msgid ""
-#~ "Defines a rule or repeating pattern for recurring events\n"
-#~ "e.g.: Every other month on the last Sunday of the month for 10 occurrences:  "
-#~ "      FREQ=MONTHLY;INTERVAL=2;COUNT=10;BYDAY=-1SU"
-#~ msgstr ""
-#~ "定期的なイベントのルールや繰り返しパターンを定義します。\n"
-#~ "例：隔月の月の最終日曜日を10回発生させる：FREQ=MONTHLY;INTERVAL=2;COUNT=10;BYDAY=-1SU"
-
-#~ msgid "Invite People"
-#~ msgstr "人を招待"

@@ -1,20 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* hr
+# Slovenian translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2010-08-03 04:58+0000\n"
-"Last-Translator: Mantavya Gajjar (Open ERP) <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2013-01-01 14:34+0000\n"
+"Last-Translator: Dusan Laznik (Mentis) <laznik@mentis.si>\n"
+"Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:39+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2013-01-02 05:25+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -68,7 +69,7 @@ msgstr ""
 #: view:hr.employee:0
 #: view:hr.job:0
 msgid "Group By..."
-msgstr ""
+msgstr "Združeno po..."
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.view_department_form_installer
@@ -91,6 +92,7 @@ msgstr ""
 #: field:hr.employee,department_id:0
 #: view:hr.job:0
 #: field:hr.job,department_id:0
+#: model:ir.model,name:hr.model_hr_department
 msgid "Department"
 msgstr "Oddelek"
 
@@ -114,7 +116,7 @@ msgstr ""
 #. module: hr
 #: view:hr.job:0
 msgid "Jobs"
-msgstr ""
+msgstr "Zaposlitve"
 
 #. module: hr
 #: view:hr.job:0
@@ -124,7 +126,7 @@ msgstr ""
 #. module: hr
 #: field:hr.job,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Neprebrana sporočila"
 
 #. module: hr
 #: field:hr.department,company_id:0
@@ -188,12 +190,12 @@ msgstr ""
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Married"
-msgstr ""
+msgstr "Poročen"
 
 #. module: hr
 #: field:hr.job,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Sporočila"
 
 #. module: hr
 #: view:hr.config.settings:0
@@ -218,7 +220,7 @@ msgstr ""
 #. module: hr
 #: help:hr.job,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Če je izbrano, zahtevajo nova sporočila vašo pozornost."
 
 #. module: hr
 #: field:hr.employee,color:0
@@ -250,7 +252,7 @@ msgstr "Ženska"
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
 msgid "Attendance"
-msgstr ""
+msgstr "Prisotnost"
 
 #. module: hr
 #: field:hr.employee,work_phone:0
@@ -266,7 +268,7 @@ msgstr "Kategorije otrok"
 #: field:hr.job,description:0
 #: model:ir.model,name:hr.model_hr_job
 msgid "Job Description"
-msgstr ""
+msgstr "Opis dela"
 
 #. module: hr
 #: field:hr.employee,work_location:0
@@ -276,7 +278,7 @@ msgstr ""
 #. module: hr
 #: field:hr.job,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Sledilci"
 
 #. module: hr
 #: view:hr.employee:0
@@ -301,7 +303,7 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,birthday:0
 msgid "Date of Birth"
-msgstr ""
+msgstr "Datum rojstva"
 
 #. module: hr
 #: help:hr.job,no_of_recruitment:0
@@ -318,7 +320,7 @@ msgstr ""
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "Povzetek (število sporočil,..)"
 
 #. module: hr
 #: help:hr.config.settings,module_account_analytic_analysis:0
@@ -330,7 +332,7 @@ msgstr ""
 #. module: hr
 #: view:board.board:0
 msgid "Human Resources Dashboard"
-msgstr ""
+msgstr "Nadzorna plošča človeških virov"
 
 #. module: hr
 #: view:hr.employee:0
@@ -362,12 +364,6 @@ msgstr ""
 #. module: hr
 #: field:hr.config.settings,module_hr_expense:0
 msgid "Manage employees expenses"
-msgstr ""
-
-#. module: hr
-#: help:hr.job,expected_employees:0
-msgid ""
-"Expected number of employees for this job position after new recruitment."
 msgstr ""
 
 #. module: hr
@@ -461,7 +457,7 @@ msgstr "Kategorija zaposlenega"
 #. module: hr
 #: field:hr.employee,category_ids:0
 msgid "Tags"
-msgstr ""
+msgstr "Ključne besede"
 
 #. module: hr
 #: help:hr.config.settings,module_hr_contract:0
@@ -476,7 +472,7 @@ msgstr "Povezani uporabnik"
 #. module: hr
 #: view:hr.config.settings:0
 msgid "or"
-msgstr ""
+msgstr "ali"
 
 #. module: hr
 #: field:hr.employee.category,name:0
@@ -543,12 +539,12 @@ msgstr ""
 #. module: hr
 #: view:hr.config.settings:0
 msgid "Contracts"
-msgstr ""
+msgstr "Pogodbe"
 
 #. module: hr
 #: help:hr.job,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Sporočila in zgodovina sporočil"
 
 #. module: hr
 #: field:hr.employee,ssnid:0
@@ -558,7 +554,7 @@ msgstr ""
 #. module: hr
 #: field:hr.job,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Je sledilec"
 
 #. module: hr
 #: field:hr.config.settings,module_hr_recruitment:0
@@ -593,7 +589,7 @@ msgstr "Podjetja"
 #. module: hr
 #: field:hr.job,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Povzetek"
 
 #. module: hr
 #: model:process.transition,note:hr.process_transition_contactofemployee0
@@ -650,7 +646,7 @@ msgstr "Zakonski stan"
 #. module: hr
 #: model:ir.model,name:hr.model_ir_actions_act_window
 msgid "ir.actions.act_window"
-msgstr ""
+msgstr "ir.actions.act_window"
 
 #. module: hr
 #: field:hr.employee,last_login:0
@@ -660,12 +656,12 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,image:0
 msgid "Photo"
-msgstr ""
+msgstr "Slika"
 
 #. module: hr
 #: view:hr.config.settings:0
 msgid "Cancel"
-msgstr ""
+msgstr "Prekliči"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
@@ -687,9 +683,9 @@ msgid "This installs the module hr_timesheet."
 msgstr ""
 
 #. module: hr
-#: field:hr.job,message_comment_ids:0
-#: help:hr.job,message_comment_ids:0
-msgid "Comments and emails"
+#: help:hr.job,expected_employees:0
+msgid ""
+"Expected number of employees for this job position after new recruitment."
 msgstr ""
 
 #. module: hr
@@ -714,7 +710,7 @@ msgstr "Osebni podatki"
 #. module: hr
 #: field:hr.employee,city:0
 msgid "City"
-msgstr ""
+msgstr "Kraj"
 
 #. module: hr
 #: field:hr.employee,passport_id:0
@@ -724,7 +720,7 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,mobile_phone:0
 msgid "Work Mobile"
-msgstr ""
+msgstr "Službeni mobilni tel."
 
 #. module: hr
 #: selection:hr.job,state:0
@@ -743,11 +739,6 @@ msgid "Employees Categories"
 msgstr "Kategorije zaposlenih"
 
 #. module: hr
-#: model:ir.model,name:hr.model_hr_department
-msgid "hr.department"
-msgstr "hr.department"
-
-#. module: hr
 #: field:hr.employee,address_home_id:0
 msgid "Home Address"
 msgstr "Domači naslov"
@@ -760,7 +751,7 @@ msgstr ""
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_payroll_modules
 msgid "Payroll"
-msgstr ""
+msgstr "Plače"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -815,7 +806,7 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,resource_id:0
 msgid "Resource"
-msgstr ""
+msgstr "Vir"
 
 #. module: hr
 #: field:hr.department,complete_name:0
@@ -853,7 +844,7 @@ msgstr "Ime oddelka"
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting_timesheet
 msgid "Reports"
-msgstr ""
+msgstr "Poročila"
 
 #. module: hr
 #: field:hr.config.settings,module_hr_payroll:0
@@ -874,7 +865,7 @@ msgstr ""
 #. module: hr
 #: help:hr.employee,ssnid:0
 msgid "Social Security Number"
-msgstr ""
+msgstr "Številka zdravstvenega zavarovanja"
 
 #. module: hr
 #: model:process.node,note:hr.process_node_openerpuser0
@@ -884,7 +875,7 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,login:0
 msgid "Login"
-msgstr ""
+msgstr "Prijava"
 
 #. module: hr
 #: field:hr.job,expected_employees:0
@@ -901,7 +892,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
 msgid "Users"
-msgstr ""
+msgstr "Uporabniki"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
@@ -947,7 +938,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model,name:hr.model_hr_config_settings
 msgid "hr.config.settings"
-msgstr ""
+msgstr "hr.config.settings"
 
 #. module: hr
 #: field:hr.department,manager_id:0
@@ -959,7 +950,7 @@ msgstr "Upravitelj"
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Widower"
-msgstr ""
+msgstr "Vdovec"
 
 #. module: hr
 #: field:hr.employee,child_ids:0
@@ -969,120 +960,4 @@ msgstr "Podrejeni"
 #. module: hr
 #: view:hr.config.settings:0
 msgid "Apply"
-msgstr ""
-
-#~ msgid "Sunday"
-#~ msgstr "nedelja"
-
-#~ msgid "Group name"
-#~ msgstr "Ime skupine"
-
-#~ msgid "Friday"
-#~ msgstr "petek"
-
-#~ msgid "Unmaried"
-#~ msgstr "Neporočen"
-
-#~ msgid "Reporting"
-#~ msgstr "Poročanje"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Neveljaven XML za arhitekturo pogleda."
-
-#~ msgid "Maried"
-#~ msgstr "Poročen"
-
-#~ msgid "Tuesday"
-#~ msgstr "torek"
-
-#~ msgid "Monday"
-#~ msgstr "ponedeljek"
-
-#~ msgid "Day of week"
-#~ msgstr "Dan v tednu"
-
-#~ msgid "Wednesday"
-#~ msgstr "sreda"
-
-#~ msgid "Categories of Employee"
-#~ msgstr "Kategorije zaposlenega"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Naziv objekta se mora začeti z 'x_' in ne sme vsebovati posebnih znakov."
-
-#~ msgid "Thursday"
-#~ msgstr "četrtek"
-
-#~ msgid "Other"
-#~ msgstr "Drugo"
-
-#~ msgid "Saturday"
-#~ msgstr "sobota"
-
-#~ msgid "New Employee"
-#~ msgstr "Nov zaposleni"
-
-#~ msgid "Working Time Categories"
-#~ msgstr "Kategorije delovnega časa"
-
-#~ msgid "Error! You can not create recursive departments."
-#~ msgstr "Napaka! Ne morete definirati rekurzivnih oddelkov."
-
-#~ msgid "Working Time Category"
-#~ msgstr "Kategorija delovnega časa"
-
-#~ msgid "Parents"
-#~ msgstr "Starši"
-
-#~ msgid "Birthday"
-#~ msgstr "Rojstni dan"
-
-#~ msgid "All Employees"
-#~ msgstr "Vsi zaposleni"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Napačno ime modela v definiciji dejanja."
-
-#~ msgid "Work from"
-#~ msgstr "Dela od"
-
-#~ msgid "Parent Users"
-#~ msgstr "Nadrejeni uporabniki"
-
-#~ msgid "Working Time"
-#~ msgstr "Delovni čas"
-
-#~ msgid "Work to"
-#~ msgstr "Dela do"
-
-#~ msgid "Starting date"
-#~ msgstr "Datum začetka"
-
-#~ msgid "Fill up employee's contact information"
-#~ msgstr "Izpolnite zaposlnčeve kontaktne podatke"
-
-#~ msgid "Job Information"
-#~ msgstr "informacije o poslu"
-
-#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
-#~ msgstr "Napaka! Ne morete izdelati rekurzivne hierarhije zaposlencev."
-
-#~ msgid "Create OpenERP User"
-#~ msgstr "Ustvari uporabnika OpenERP"
-
-#~ msgid "Timesheet Line"
-#~ msgstr "Postavka časovnice"
-
-#~ msgid "Create openerp user"
-#~ msgstr "Ustvari uporabnika OpenERP"
-
-#~ msgid "Other ID"
-#~ msgstr "Druga oznaka (identifikator)"
-
-#~ msgid "Contact  of employee"
-#~ msgstr "Stik za zaposlenega"
-
-#~ msgid "Simplifies the management of employee's attendances."
-#~ msgstr "Pooenostavi upravljanje prisotnosti zaposlenih"
+msgstr "Uporabi"

@@ -1,21 +1,21 @@
 # Serbian translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-05-10 17:56+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:12+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:31+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
@@ -61,11 +61,6 @@ msgstr ""
 "izračunava nabavnu cenu za odabrane proizvode i količinu."
 
 #. module: purchase
-#: model:ir.actions.server,name:purchase.actions_server_purchase_order_read
-msgid "Purchase: Mark read"
-msgstr ""
-
-#. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,day:0
 msgid "Day"
@@ -106,16 +101,13 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:973
-#: code:addons/purchase/purchase.py:988
-#: code:addons/purchase/purchase.py:991
-#: code:addons/purchase/wizard/purchase_order_group.py:47
+#: code:addons/purchase/purchase.py:1024
 #, python-format
-msgid "Warning!"
+msgid "Configuration Error!"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:573
+#: code:addons/purchase/purchase.py:587
 #, python-format
 msgid "You must first cancel all receptions related to this purchase order."
 msgstr ""
@@ -132,10 +124,10 @@ msgid "Purchase-Standard Price"
 msgstr ""
 
 #. module: purchase
-#: report:purchase.order:0
-#: field:purchase.report,validator:0
-msgid "Validated By"
-msgstr "Potvrđeno od"
+#: code:addons/purchase/purchase.py:1011
+#, python-format
+msgid "No supplier defined for this product !"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_picking_tree4_picking_to_invoice
@@ -155,12 +147,6 @@ msgstr ""
 #: view:purchase.report:0
 #: field:purchase.report,price_average:0
 msgid "Average Price"
-msgstr ""
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:830
-#, python-format
-msgid "Invoice <b>paid</b>."
 msgstr ""
 
 #. module: purchase
@@ -235,7 +221,7 @@ msgstr ""
 "svim nabavnim nalozima."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:255
+#: code:addons/purchase/purchase.py:260
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
 msgstr ""
@@ -261,26 +247,9 @@ msgid "Total Untaxed amount"
 msgstr ""
 
 #. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
-msgid "Unit of Measure Categories"
-msgstr ""
-
-#. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,category_id:0
 msgid "Category"
-msgstr ""
-
-#. module: purchase
-#: view:purchase.order:0
-msgid "Quotation "
-msgstr ""
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:810
-#, python-format
-msgid ""
-"Quotation for <em>%s</em> <b>converted</b> to a Purchase Order of %s %s."
 msgstr ""
 
 #. module: purchase
@@ -348,14 +317,16 @@ msgid "October"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:837
+#: code:addons/purchase/purchase.py:1024
 #, python-format
-msgid "Purchase Order for <em>%s</em> <b>cancelled</b>."
+msgid ""
+"The product \"%s\" has been defined with your company as reseller which "
+"seems to be a configuration error!"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order,message_summary:0
-msgid "Summary"
+#: view:product.product:0
+msgid "When you sell this service to a customer,"
 msgstr ""
 
 #. module: purchase
@@ -382,12 +353,6 @@ msgstr ""
 #: field:purchase.report,quantity:0
 msgid "Quantity"
 msgstr "Količina"
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:819
-#, python-format
-msgid "Shipment <em>%s</em> <b>scheduled</b> for %s."
-msgstr ""
 
 #. module: purchase
 #: field:purchase.order,fiscal_position:0
@@ -447,12 +412,6 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:824
-#, python-format
-msgid "Draft Invoice of %s %s is <b>waiting for validation</b>."
-msgstr ""
-
-#. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_line_form_action2
 msgid ""
 "<p>\n"
@@ -470,6 +429,11 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order.line,date_planned:0
 msgid "Scheduled Date"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,currency_id:0
+msgid "Currency"
 msgstr ""
 
 #. module: purchase
@@ -505,6 +469,19 @@ msgid "Incoming  Products"
 msgstr ""
 
 #. module: purchase
+#: view:purchase.order:0
+msgid "Request for Quotation "
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,partner_ref:0
+msgid ""
+"Reference of the sales order or quotation sent by your supplier. It's mainly "
+"used to do the matching when you receive the products as this reference is "
+"usually written on the delivery order sent by your supplier."
+msgstr ""
+
+#. module: purchase
 #: view:purchase.config.settings:0
 #: view:purchase.order.group:0
 #: view:purchase.order.line_invoice:0
@@ -525,6 +502,11 @@ msgid ""
 msgstr ""
 
 #. module: purchase
+#: model:mail.message.subtype,name:purchase.mt_rfq_approved
+msgid "RFQ Approved"
+msgstr ""
+
+#. module: purchase
 #: view:purchase.config.settings:0
 msgid "Apply"
 msgstr ""
@@ -539,6 +521,11 @@ msgstr "Neoporezovan iznos"
 msgid ""
 "The buyer has to approve the RFQ before being sent to the supplier. The RFQ "
 "becomes a confirmed Purchase Order."
+msgstr ""
+
+#. module: purchase
+#: model:mail.message.subtype,name:purchase.mt_rfq_confirmed
+msgid "RFQ Confirmed"
 msgstr ""
 
 #. module: purchase
@@ -566,7 +553,7 @@ msgid "Supplier"
 msgstr "Dobavljač"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:508
+#: code:addons/purchase/purchase.py:525
 #, python-format
 msgid "Define expense account for this company: \"%s\" (id:%d)."
 msgstr ""
@@ -590,7 +577,6 @@ msgstr "Subtotal"
 
 #. module: purchase
 #: field:purchase.order,shipped:0
-#: field:purchase.order,shipped_rate:0
 msgid "Received"
 msgstr "Primljeno"
 
@@ -632,13 +618,20 @@ msgid "Invoices and Receptions"
 msgstr ""
 
 #. module: purchase
+#: model:process.transition,note:purchase.process_transition_packinginvoice0
+msgid ""
+"A Pick list generates an invoice. Depending on the Invoicing control of the "
+"sales order, the invoice is based on delivered or on ordered quantities."
+msgstr ""
+
+#. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,nbr:0
 msgid "# of Lines"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/wizard/purchase_line_invoice.py:110
+#: code:addons/purchase/wizard/purchase_line_invoice.py:106
 #, python-format
 msgid "Define expense account for this product: \"%s\" (id:%d)."
 msgstr ""
@@ -659,8 +652,8 @@ msgid "It indicates that a picking has been done"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:565
-#: code:addons/purchase/purchase.py:572
+#: code:addons/purchase/purchase.py:579
+#: code:addons/purchase/purchase.py:586
 #, python-format
 msgid "Unable to cancel this purchase order."
 msgstr ""
@@ -723,6 +716,15 @@ msgid "Draft PO"
 msgstr ""
 
 #. module: purchase
+#: code:addons/purchase/purchase.py:941
+#: code:addons/purchase/purchase.py:956
+#: code:addons/purchase/purchase.py:960
+#: code:addons/purchase/wizard/purchase_order_group.py:47
+#, python-format
+msgid "Warning!"
+msgstr ""
+
+#. module: purchase
 #: model:process.node,name:purchase.process_node_draftpurchaseorder0
 #: model:process.node,name:purchase.process_node_draftpurchaseorder1
 msgid "RFQ"
@@ -751,6 +753,11 @@ msgstr "Račun u 'Pripremi'"
 #. module: purchase
 #: help:purchase.order,amount_tax:0
 msgid "The tax amount"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,shipped_rate:0
+msgid "Received Ratio"
 msgstr ""
 
 #. module: purchase
@@ -785,7 +792,7 @@ msgid "Stock Moves"
 msgstr "Kretanje zaliha"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1158
+#: code:addons/purchase/purchase.py:1156
 #, python-format
 msgid "Draft Purchase Order created"
 msgstr ""
@@ -803,11 +810,6 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order,notes:0
 msgid "Terms and Conditions"
-msgstr ""
-
-#. module: purchase
-#: field:purchase.order,currency_id:0
-msgid "unknown"
 msgstr ""
 
 #. module: purchase
@@ -904,12 +906,6 @@ msgid "Cancel"
 msgstr "Odustani"
 
 #. module: purchase
-#: field:purchase.order,message_comment_ids:0
-#: help:purchase.order,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
-
-#. module: purchase
 #: sql_constraint:purchase.order:0
 msgid "Order Reference must be unique per Company!"
 msgstr ""
@@ -943,14 +939,89 @@ msgid "Date Approved"
 msgstr "Datum odobrenja"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:806
-#, python-format
-msgid "Request for quotation <b>created</b>."
+#: view:product.product:0
+msgid "a draft purchase order"
 msgstr ""
 
 #. module: purchase
-#: view:product.product:0
-msgid "a draft purchase order"
+#: model:email.template,body_html:purchase.email_template_edi_purchase
+msgid ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>Hello$ ${object.partner_id.name},</p>\n"
+"    \n"
+"    <p>Here is a ${object.state in ('draft', 'sent') and 'request for "
+"quotation' or 'purchase order confirmation'} from ${object.company_id.name}: "
+"</p>\n"
+"    \n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
+"       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} "
+"${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.partner_ref:\n"
+"       &nbsp;&nbsp;Your reference: ${object.partner_ref}<br />\n"
+"       % endif\n"
+"       % if object.validator:\n"
+"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.validator.email "
+"or ''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    <br/>\n"
+"    <p>If you have any question, do not hesitate to contact us.</p>\n"
+"    <p>Thank you!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"            <strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % "
+"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
+"or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                Phone:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
 msgstr ""
 
 #. module: purchase
@@ -990,14 +1061,9 @@ msgid "Outgoing Mails"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:437
+#: code:addons/purchase/purchase.py:456
 #, python-format
 msgid "You cannot confirm a purchase order without any purchase order line."
-msgstr ""
-
-#. module: purchase
-#: model:ir.actions.server,name:purchase.actions_server_purchase_order_unread
-msgid "Purchase: Mark unread"
 msgstr ""
 
 #. module: purchase
@@ -1012,11 +1078,16 @@ msgid "Destination Warehouse"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:973
+#: code:addons/purchase/purchase.py:941
 #, python-format
 msgid ""
 "Selected Unit of Measure does not belong to the same category as the product "
 "Unit of Measure."
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order.line_invoice:0
+msgid "Select an Open Sales Order"
 msgstr ""
 
 #. module: purchase
@@ -1031,18 +1102,12 @@ msgid "Manage pricelist per supplier"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:833
-#, python-format
-msgid "Purchase Order has been set to <b>draft</b>."
-msgstr ""
-
-#. module: purchase
 #: view:board.board:0
 msgid "Purchase Dashboard"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:566
+#: code:addons/purchase/purchase.py:580
 #, python-format
 msgid "First cancel all receptions related to this purchase order."
 msgstr ""
@@ -1081,14 +1146,21 @@ msgid "Unread Messages"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.order.line_invoice:0
-msgid "Select an Open Sale Order"
+#: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
+msgid "Unit of Measure Categories"
 msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Set to Draft"
 msgstr "Postavi u 'Pripremu'"
+
+#. module: purchase
+#: help:purchase.order,origin:0
+msgid ""
+"Reference of the document that generated this purchase order request; a "
+"sales order or an internal procurement request."
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order.line:0
@@ -1120,7 +1192,7 @@ msgid "Stock Move"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:255
+#: code:addons/purchase/purchase.py:260
 #, python-format
 msgid "Invalid Action!"
 msgstr ""
@@ -1219,7 +1291,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:310
+#: code:addons/purchase/purchase.py:320
 #, python-format
 msgid "Please create Invoices."
 msgstr ""
@@ -1309,7 +1381,7 @@ msgid "Purchase Order Line Make Invoice"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1133
+#: code:addons/purchase/purchase.py:1141
 #, python-format
 msgid "PO: %s"
 msgstr ""
@@ -1320,7 +1392,7 @@ msgid "Send by EMail"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:498
+#: code:addons/purchase/purchase.py:515
 #, python-format
 msgid "Define purchase journal for this company: \"%s\" (id:%d)."
 msgstr ""
@@ -1331,8 +1403,8 @@ msgid "Purchase Order "
 msgstr ""
 
 #. module: purchase
-#: view:purchase.order.line:0
-msgid "Manual Invoices"
+#: help:purchase.config.settings,group_costing_method:0
+msgid "Allows you to compute product cost price based on average cost."
 msgstr ""
 
 #. module: purchase
@@ -1487,8 +1559,8 @@ msgid "Compute product cost price based on average cost"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:340
-#: code:addons/purchase/wizard/purchase_line_invoice.py:141
+#: code:addons/purchase/purchase.py:350
+#: code:addons/purchase/wizard/purchase_line_invoice.py:137
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
 #: view:res.partner:0
 #, python-format
@@ -1600,8 +1672,9 @@ msgid "Open Purchase Menu"
 msgstr ""
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_mail_compose_message
-msgid "Email composition wizard"
+#: code:addons/purchase/purchase.py:1028
+#, python-format
+msgid "No address defined for the supplier"
 msgstr ""
 
 #. module: purchase
@@ -1674,11 +1747,11 @@ msgid "Purchase Order"
 msgstr "Nabavni nalog"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:310
-#: code:addons/purchase/purchase.py:437
-#: code:addons/purchase/purchase.py:497
-#: code:addons/purchase/purchase.py:508
-#: code:addons/purchase/wizard/purchase_line_invoice.py:109
+#: code:addons/purchase/purchase.py:320
+#: code:addons/purchase/purchase.py:456
+#: code:addons/purchase/purchase.py:514
+#: code:addons/purchase/purchase.py:525
+#: code:addons/purchase/wizard/purchase_line_invoice.py:105
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -1700,13 +1773,6 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: model:process.transition,note:purchase.process_transition_packinginvoice0
-msgid ""
-"A Pick list generates an invoice. Depending on the Invoicing control of the "
-"sale order, the invoice is based on delivered or on ordered quantities."
-msgstr ""
-
-#. module: purchase
 #: selection:purchase.order,state:0
 #: selection:purchase.order.line,state:0
 #: selection:purchase.report,state:0
@@ -1719,9 +1785,8 @@ msgid "# of Purchase Order"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:827
-#, python-format
-msgid "Shipment <b>received</b>."
+#: model:ir.model,name:purchase.model_mail_compose_message
+msgid "Email composition wizard"
 msgstr ""
 
 #. module: purchase
@@ -1805,7 +1870,7 @@ msgid "RFQ_${(object.name or '').replace('/','_')}"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:988
+#: code:addons/purchase/purchase.py:956
 #, python-format
 msgid "The selected supplier only sells this product by %s"
 msgstr ""
@@ -1849,6 +1914,12 @@ msgstr ""
 #: model:process.node,note:purchase.process_node_packinginvoice0
 msgid "Outgoing products to invoice"
 msgstr ""
+
+#. module: purchase
+#: report:purchase.order:0
+#: field:purchase.report,validator:0
+msgid "Validated By"
+msgstr "Potvrđeno od"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -1940,8 +2011,8 @@ msgid "November"
 msgstr ""
 
 #. module: purchase
-#: help:purchase.config.settings,group_costing_method:0
-msgid "Allows you to compute product cost price based on average cost."
+#: view:purchase.order.line:0
+msgid "Manual Invoices"
 msgstr ""
 
 #. module: purchase
@@ -1965,13 +2036,6 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: help:purchase.order,origin:0
-msgid ""
-"Reference of the document that generated this purchase order request; a sale "
-"order or an internal procurement request."
-msgstr ""
-
-#. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_partner_categories_in_form
 msgid "Partner Categories"
 msgstr ""
@@ -1992,89 +2056,6 @@ msgid "Invoicing Settings"
 msgstr ""
 
 #. module: purchase
-#: model:email.template,body_html:purchase.email_template_edi_purchase
-msgid ""
-"\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
-"\n"
-"    <p>Hello${object.partner_id.name and ' ' or ''}${object.partner_id.name "
-"or ''},</p>\n"
-"    \n"
-"    <p>Here is a ${object.state in ('draft', 'sent') and 'request for "
-"quotation' or 'purchase order confirmation'} from ${object.company_id.name}: "
-"</p>\n"
-"    \n"
-"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
-"       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
-"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} "
-"${object.pricelist_id.currency_id.name}</strong><br />\n"
-"       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
-"       % if object.origin:\n"
-"       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
-"       % endif\n"
-"       % if object.partner_ref:\n"
-"       &nbsp;&nbsp;Your reference: ${object.partner_ref}<br />\n"
-"       % endif\n"
-"       % if object.validator:\n"
-"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.validator.email "
-"or ''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n"
-"       % endif\n"
-"    </p>\n"
-"\n"
-"    <br/>\n"
-"    <p>If you have any question, do not hesitate to contact us.</p>\n"
-"    <p>Thank you!</p>\n"
-"    <br/>\n"
-"    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
-"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
-"background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
-"#FFF;\">\n"
-"            <strong style=\"text-"
-"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
-"    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
-"16px; background-color: #F2F2F2;\">\n"
-"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"        % if object.company_id.street:\n"
-"            ${object.company_id.street}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.street2:\n"
-"            ${object.company_id.street2}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.city or object.company_id.zip:\n"
-"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % "
-"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
-"or ''}<br/>\n"
-"        % endif\n"
-"        </span>\n"
-"        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
-"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
-"0px; padding-left: 0px; \">\n"
-"                Phone:&nbsp; ${object.company_id.phone}\n"
-"            </div>\n"
-"        % endif\n"
-"        % if object.company_id.website:\n"
-"            <div>\n"
-"                Web :&nbsp;<a "
-"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
-"            </div>\n"
-"        %endif\n"
-"        <p></p>\n"
-"    </div>\n"
-"</div>\n"
-"            "
-msgstr ""
-
-#. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_by_user_all
 msgid "Total Orders by User per month"
 msgstr ""
@@ -2085,21 +2066,19 @@ msgid "Based on incoming shipments"
 msgstr ""
 
 #. module: purchase
+#: code:addons/purchase/purchase.py:1018
+#, python-format
+msgid "No default supplier defined for this product"
+msgstr ""
+
+#. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,warehouse_id:0
 msgid "Warehouse"
 msgstr "Skladište"
 
 #. module: purchase
-#: help:purchase.order,partner_ref:0
-msgid ""
-"Reference of the sale order or quotation sent by your supplier. It's mainly "
-"used to do the matching when you receive the products as this reference is "
-"usually written on the delivery order sent by your supplier."
-msgstr ""
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:991
+#: code:addons/purchase/purchase.py:960
 #, python-format
 msgid ""
 "The selected supplier has a minimal quantity set to %s %s, you should not "
@@ -2172,14 +2151,19 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: view:product.product:0
-msgid "When you sell this service to a customer,"
+#: field:purchase.order,message_summary:0
+msgid "Summary"
 msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_pricelist_version_action
 #: model:ir.ui.menu,name:purchase.menu_purchase_pricelist_version_action
 msgid "Pricelist Versions"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,payment_term_id:0
+msgid "Payment Term"
 msgstr ""
 
 #. module: purchase
@@ -2218,290 +2202,3 @@ msgstr ""
 #: view:purchase.report:0
 msgid "Orders"
 msgstr ""
-
-#~ msgid "Invoiced & Paid"
-#~ msgstr "Račun izdat&Plaćeno"
-
-#~ msgid "Supplier Invoice pre-generated on receptions for control"
-#~ msgstr "Račun dobavljača pregenirisan prilikom prijema zbog kontrole"
-
-#~ msgid "From Picking"
-#~ msgstr "IZ Izbora"
-
-#~ msgid "Delivery"
-#~ msgstr "Isporuka"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Neispravan naziv modela u definiciji zadatka."
-
-#~ msgid "From Order"
-#~ msgstr "Iz naloga"
-
-#~ msgid "Purchase Process"
-#~ msgstr "Proces nabavke"
-
-#~ msgid "Invoice from Packing list"
-#~ msgstr "Račun kreiran iz liste paketa"
-
-#~ msgid "Confirmed Purchase"
-#~ msgstr "Potvrđena nabavka"
-
-#~ msgid "Create invoice from product recept"
-#~ msgstr "Kreiraj račun na osnovu primke robe"
-
-#~ msgid "Purchase Orders in Progress"
-#~ msgstr "Nabavni nalozi u progresu"
-
-#~ msgid "Approve Purchase"
-#~ msgstr "Odobri nabavku"
-
-#~ msgid "TVA :"
-#~ msgstr "PDV :"
-
-#~ msgid "Purchase Order lines"
-#~ msgstr "Redovi nabavnog naloga"
-
-#~ msgid "Origin"
-#~ msgstr "Poreklo"
-
-#~ msgid ""
-#~ "The state of the purchase order or the quotation request. A quotation is a "
-#~ "purchase order in a 'Draft' state. Then the order has to be confirmed by the "
-#~ "user, the state switch to 'Confirmed'. Then the supplier must confirm the "
-#~ "order to change the state to 'Approved'. When the purchase order is paid and "
-#~ "received, the state becomes 'Done'. If a cancel action occurs in the invoice "
-#~ "or in the reception of goods, the state becomes in exception."
-#~ msgstr ""
-#~ "Stanje nabavnog naloga ili zaheva za ponudu. Zahtjev za ponudu je nabavni "
-#~ "nalog u formi 'Priprema'. Zatim nalog mora biti odobren od strane korisnika, "
-#~ "čime se status prebacuje u 'Potvrđeno'. Zatim dobavljač mora potvrditi "
-#~ "nabavni nalog i time možemo promeniti status nabavnog naloga u 'Odobreno'. "
-#~ "Kada je je roba primljena i račun placen status se menja u 'Završeno'. "
-#~ "Ukoliko se u jednoj od faza desi otkazivanje računa ili primke robe, status "
-#~ "se menja u 'Izuzetak'."
-
-#~ msgid ""
-#~ "From Order: a draft invoice will be pre-generated based on the purchase "
-#~ "order. The accountant will just have to validate this invoice for control.\n"
-#~ "From Picking: a draft invoice will be pre-genearted based on validated "
-#~ "receptions.\n"
-#~ "Manual: no invoice will be pre-generated. The accountant will have to encode "
-#~ "manually."
-#~ msgstr ""
-#~ "Iz naloga: račun iz 'Pripreme' će biti pregenerisan na osnovu nabavnog "
-#~ "naloga. Odgovorna osoba samo mora validirati račun radi kontrole.\n"
-#~ "Iz Izbora:  račun iz 'Pripreme' će biti pregenerisan na osnovu overenog "
-#~ "prijema.\n"
-#~ "Rucno:Ni jedan racun nece biti promenjen. Odgovorna osoba ce to morati da "
-#~ "obavi rucno,"
-
-#~ msgid "Order Line"
-#~ msgstr "Red naloga"
-
-#~ msgid "Product Receipt"
-#~ msgstr "Primka proizvoda"
-
-#~ msgid "Invoice based on deliveries"
-#~ msgstr "Račun baziran na isporukama"
-
-#~ msgid "Confirm Purchase order from Request for quotation without origin"
-#~ msgstr "Potvrdi nabavni nalog iz zahteva za ponudu bez porekla"
-
-#~ msgid "Waiting"
-#~ msgstr "Čekanje"
-
-#~ msgid "Untaxed amount"
-#~ msgstr "Neoporezovan iznos"
-
-#~ msgid "Packing"
-#~ msgstr "Pakovanje"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Neodgovarajući XML za arhitekturu prikaza!"
-
-#~ msgid "When controlling invoice from orders"
-#~ msgstr "Kada se kontroliše račun iz naloga"
-
-#~ msgid "Approved by Supplier"
-#~ msgstr "Odobreno od strane dobavljača"
-
-#~ msgid "Merge purchases"
-#~ msgstr "Ujedini nabavku"
-
-#~ msgid "Planned Date"
-#~ msgstr "Planirani datum"
-
-#~ msgid "Manual"
-#~ msgstr "Ručno"
-
-#~ msgid "Purchase orders"
-#~ msgstr "Nabavni nalozi"
-
-#~ msgid "Confirming Purchase"
-#~ msgstr "Potvrđivanje nabavke"
-
-#~ msgid "Encoded manually by the user."
-#~ msgstr "Uredjeno ručno od strane korisnika"
-
-#~ msgid "Pre-generated supplier invoice to control based on order"
-#~ msgstr "Predracun dobavljaca na prijemu za kontrolu"
-
-#~ msgid "Packing is created for the products reception control."
-#~ msgstr "Proces pakovanja je kreiran zbog kontrole prijema proizvoda."
-
-#~ msgid "Invoice from Purchase"
-#~ msgstr "Račun generiran iz nabavke"
-
-#~ msgid "Approve Purchase order after Confirming"
-#~ msgstr "Odobri nabavni nalog nakon potvrde"
-
-#~ msgid "Purchase Management"
-#~ msgstr "Upravljanje nabavkom"
-
-#~ msgid "Destination Address"
-#~ msgstr "Adresa odredišta"
-
-#~ msgid "Partner Ref."
-#~ msgstr "Ref. partnera"
-
-#~ msgid ""
-#~ "This is the list of picking list that have been generated for this purchase"
-#~ msgstr "Ovo je lista pakovanja koja je generisana za ovu kupovinu."
-
-#~ msgid "Confirm Purchase Order"
-#~ msgstr "Potvrdi nabavni nalog"
-
-#~ msgid ""
-#~ "Put an address if you want to deliver directly from the supplier to the "
-#~ "customer.In this case, it will remove the warehouse link and set the "
-#~ "customer location."
-#~ msgstr ""
-#~ "Postavi adresu ukoliko želite direktnu isporuku od dobavljača kupcu. U ovom "
-#~ "slučaju, to će ukloniti link ka skladišta i postaviti lokaciju ka kupcu."
-
-#~ msgid "Confirm Purchase order from Request for quotation"
-#~ msgstr "Potvrdi nabavni nalog iz zahtjeva za nabavku"
-
-#~ msgid "Purchase order"
-#~ msgstr "Nabavni nalog"
-
-#~ msgid "Request for quotation is proposed by the system."
-#~ msgstr "Zahtev za nabavku je uslovljen iz sistema"
-
-#~ msgid "Creates invoice from packin list"
-#~ msgstr "Kreiraj račun na osnovu liste pakovanja."
-
-#~ msgid "Purchase order is approved by supplier."
-#~ msgstr "Nabavni nalog odobren od strane dobavljača"
-
-#~ msgid "Packing Invoice"
-#~ msgstr "Račun pakiranja"
-
-#~ msgid "Compute"
-#~ msgstr "Izračunaj"
-
-#~ msgid "You cannot have 2 pricelist versions that overlap!"
-#~ msgstr "Nije moguće imati dve verzije cenovnika koje se preklapaju!"
-
-#~ msgid "Delivery & Invoices"
-#~ msgstr "Isporuke & Fakture"
-
-#~ msgid "Scheduled date"
-#~ msgstr "Zakazani datum"
-
-#~ msgid "After Purchase order , Create invoice."
-#~ msgstr "Nakon nabavnog naloga kreirajte račun"
-
-#~ msgid "Tél. :"
-#~ msgstr "Tel. :"
-
-#~ msgid "Reference of the document that generated this purchase order request."
-#~ msgstr "Referenca dokumenta koji generira ovaj zahtev za narudžbenicu."
-
-#~ msgid "Date"
-#~ msgstr "Datum"
-
-#~ msgid "Create Packing list"
-#~ msgstr "Kreiraj listu pakovanja"
-
-#~ msgid "Cancel Purchase Order"
-#~ msgstr "Otkaži nabavni nalog"
-
-#~ msgid "History"
-#~ msgstr "Istorija"
-
-#~ msgid "When purchase order is approved , it creates its packing list."
-#~ msgstr "Kada je nabavni nalog odobren, on kreira svoju listu pakovanja."
-
-#~ msgid "Order Ref"
-#~ msgstr "Ref. naloga"
-
-#~ msgid "New Purchase Order"
-#~ msgstr "Novi nabavni nalog"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Naziv objekta mora počinjati sa x_ i ne sme sadržavati specijalne znakove!"
-
-#~ msgid "Purchases Properties"
-#~ msgstr "Postavke Nabavke"
-
-#~ msgid ""
-#~ "Module for purchase management\n"
-#~ "    Request for quotation, Create Supplier Invoice, Print Order..."
-#~ msgstr ""
-#~ "Modul za upravljanje nabavkom \n"
-#~ "    Zahtjev za ponudu, kreiranje računa dobavljača, printanje naloga..."
-
-#~ msgid "Out Packing"
-#~ msgstr "Bez pakovanja"
-
-#~ msgid "Control invoices on receptions"
-#~ msgstr "Kontrolisati račun prilikom primke"
-
-#~ msgid "Product recept invoice"
-#~ msgstr "Primka proizvoda na osnovu računa"
-
-#~ msgid "Purchase order is confirmed by the user."
-#~ msgstr "Nabavni nalog je potvrđen od strane korisnika."
-
-#~ msgid "Product UOM"
-#~ msgstr "Proizvod UOM"
-
-#~ msgid "Confirming Purchase Order"
-#~ msgstr "Potvrdjivanje nabavnog naloga"
-
-#~ msgid "Purchase Order Waiting Approval"
-#~ msgstr "Nabavni nalog ceka odobrenje"
-
-#~ msgid "Date Ordered"
-#~ msgstr "Datum narudzbe"
-
-#~ msgid "Purchase Invoice"
-#~ msgstr "Faktura nabavke"
-
-#~ msgid "Are you sure you want to merge these orders ?"
-#~ msgstr "Da li ste sigurni da želite ujediniti ove narudzbe?"
-
-#~ msgid "From Packing list, Create invoice."
-#~ msgstr "Iz liste pakovanja kreiraj račun"
-
-#~ msgid "After approved purchase order , it comes into the supplier invoice"
-#~ msgstr "Nakon što je nabavni nalog odobren, on prelazi u račun dobavljača."
-
-#~ msgid "Approving Purchase Order"
-#~ msgstr "Odobravanje nabavnog naloga"
-
-#~ msgid "Approved Purchase"
-#~ msgstr "Odobrena nabavka"
-
-#~ msgid "Request For Quotations"
-#~ msgstr "Zahtevi za ponudu"
-
-#~ msgid "Purchase Control"
-#~ msgstr "Kontrola nabavke"
-
-#, python-format
-#~ msgid "Cannot delete Purchase Order(s) which are in %s State!"
-#~ msgstr "Ne mogu da izbrisem nabavne nalog(e) koji su u %s Stanju !"

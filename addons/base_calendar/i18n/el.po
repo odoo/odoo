@@ -1,21 +1,21 @@
 # Greek translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-05-10 18:12+0000\n"
-"Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:50+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:07+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_related:0
@@ -68,12 +68,6 @@ msgstr ""
 #. module: base_calendar
 #: model:crm.meeting.type,name:base_calendar.categ_meet5
 msgid "Feedback Meeting"
-msgstr ""
-
-#. module: base_calendar
-#: code:addons/base_calendar/crm_meeting.py:117
-#, python-format
-msgid "Meeting <b>completed</b>."
 msgstr ""
 
 #. module: base_calendar
@@ -257,7 +251,7 @@ msgid "To"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1225
+#: code:addons/base_calendar/base_calendar.py:1255
 #, python-format
 msgid "Error!"
 msgstr "Λάθος!"
@@ -276,6 +270,13 @@ msgstr ""
 #: selection:calendar.alarm,action:0
 msgid "Procedure"
 msgstr "Διαδικασία"
+
+#. module: base_calendar
+#: field:calendar.event,recurrent_id:0
+#: field:calendar.todo,recurrent_id:0
+#: field:crm.meeting,recurrent_id:0
+msgid "Recurrent ID"
+msgstr "Περιοδικό ID"
 
 #. module: base_calendar
 #: selection:calendar.event,state:0
@@ -336,14 +337,9 @@ msgid "Meetings"
 msgstr ""
 
 #. module: base_calendar
-#: selection:calendar.attendee,cutype:0
-msgid "Room"
-msgstr "Δωμάτιο"
-
-#. module: base_calendar
-#: field:calendar.event,recurrent_id:0
-#: field:calendar.todo,recurrent_id:0
-#: field:crm.meeting,recurrent_id:0
+#: field:calendar.event,recurrent_id_date:0
+#: field:calendar.todo,recurrent_id_date:0
+#: field:crm.meeting,recurrent_id_date:0
 msgid "Recurrent ID date"
 msgstr ""
 
@@ -366,11 +362,11 @@ msgid ""
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:388
-#: code:addons/base_calendar/base_calendar.py:417
-#: code:addons/base_calendar/base_calendar.py:980
-#: code:addons/base_calendar/base_calendar.py:982
-#: code:addons/base_calendar/base_calendar.py:1430
+#: code:addons/base_calendar/base_calendar.py:399
+#: code:addons/base_calendar/base_calendar.py:444
+#: code:addons/base_calendar/base_calendar.py:1008
+#: code:addons/base_calendar/base_calendar.py:1010
+#: code:addons/base_calendar/base_calendar.py:1455
 #, python-format
 msgid "Warning!"
 msgstr "Προειδοποίηση"
@@ -514,9 +510,9 @@ msgid "Email"
 msgstr "Email"
 
 #. module: base_calendar
-#: model:ir.actions.server,name:base_calendar.actions_server_crm_meeting_unread
-msgid "CRM Meeting: Mark unread"
-msgstr ""
+#: selection:calendar.attendee,cutype:0
+msgid "Room"
+msgstr "Δωμάτιο"
 
 #. module: base_calendar
 #: selection:calendar.alarm,state:0
@@ -529,7 +525,7 @@ msgid "Event alarm information"
 msgstr "Πληροφορίες Υπενθύμισης Γεγονότος"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:982
+#: code:addons/base_calendar/base_calendar.py:1010
 #, python-format
 msgid "Count cannot be negative or 0."
 msgstr ""
@@ -540,11 +536,9 @@ msgid "Creation Date"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/crm_meeting.py:111
 #: view:crm.meeting:0
 #: model:ir.model,name:base_calendar.model_crm_meeting
 #: model:res.request.link,name:base_calendar.request_link_meeting
-#, python-format
 msgid "Meeting"
 msgstr ""
 
@@ -573,11 +567,9 @@ msgid "Caldav URL"
 msgstr "Caldav URL"
 
 #. module: base_calendar
-#: field:calendar.event,recurrent_uid:0
-#: field:calendar.todo,recurrent_uid:0
-#: field:crm.meeting,recurrent_uid:0
-msgid "Recurrent ID"
-msgstr "Περιοδικό ID"
+#: model:ir.model,name:base_calendar.model_mail_wizard_invite
+msgid "Invite wizard"
+msgstr ""
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
@@ -609,7 +601,7 @@ msgid "Delegrated To"
 msgstr "Εξουσιοδότηση σε"
 
 #. module: base_calendar
-#: code:addons/base_calendar/crm_meeting.py:94
+#: code:addons/base_calendar/crm_meeting.py:102
 #, python-format
 msgid "The following contacts have no email address :"
 msgstr ""
@@ -718,12 +710,6 @@ msgid "Individual"
 msgstr "Μεμονωμένα"
 
 #. module: base_calendar
-#: code:addons/base_calendar/crm_meeting.py:114
-#, python-format
-msgid "Meeting <b>confirmed</b>."
-msgstr ""
-
-#. module: base_calendar
 #: help:calendar.event,count:0
 #: help:calendar.todo,count:0
 #: help:crm.meeting,count:0
@@ -759,7 +745,7 @@ msgid "Declined"
 msgstr "Απορρίφθηκε"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1430
+#: code:addons/base_calendar/base_calendar.py:1455
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr ""
@@ -794,13 +780,6 @@ msgstr "Απόρρητο"
 #: model:ir.model,name:base_calendar.model_res_alarm
 msgid "Basic Alarm Information"
 msgstr "Βασικές Πληροφορίες Υπενθύμισης"
-
-#. module: base_calendar
-#: field:calendar.event,mo:0
-#: field:calendar.todo,mo:0
-#: field:crm.meeting,mo:0
-msgid "Mon"
-msgstr "Δευ"
 
 #. module: base_calendar
 #: field:calendar.event,fr:0
@@ -1001,10 +980,11 @@ msgid "Indicate the groups that the attendee belongs to"
 msgstr "Δηλώνει τις ομάδες που ο προσκεκλημένος ανήκει"
 
 #. module: base_calendar
-#: field:crm.meeting,message_comment_ids:0
-#: help:crm.meeting,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
+#: field:calendar.event,mo:0
+#: field:calendar.todo,mo:0
+#: field:crm.meeting,mo:0
+msgid "Mon"
+msgstr "Δευ"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
@@ -1055,11 +1035,6 @@ msgid "Interval"
 msgstr "Διάστημα"
 
 #. module: base_calendar
-#: model:ir.actions.server,name:base_calendar.actions_server_crm_meeting_read
-msgid "CRM Meeting: Mark read"
-msgstr ""
-
-#. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
 #: selection:crm.meeting,week_list:0
@@ -1083,7 +1058,7 @@ msgid "Active"
 msgstr "Ενεργό"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:388
+#: code:addons/base_calendar/base_calendar.py:399
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
 msgstr ""
@@ -1231,7 +1206,7 @@ msgid "Select Weekdays"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1489
+#: code:addons/base_calendar/base_calendar.py:1514
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #: selection:calendar.todo,show_as:0
@@ -1358,6 +1333,11 @@ msgid "Search Meetings"
 msgstr ""
 
 #. module: base_calendar
+#: model:ir.model,name:base_calendar.model_ir_attachment
+msgid "ir.attachment"
+msgstr "ir.attachment"
+
+#. module: base_calendar
 #: model:ir.model,name:base_calendar.model_crm_meeting_type
 msgid "Meeting Type"
 msgstr ""
@@ -1440,6 +1420,11 @@ msgstr ""
 "περιλαμβάνει το κείμενο για προβολή"
 
 #. module: base_calendar
+#: model:ir.model,name:base_calendar.model_mail_message
+msgid "Message"
+msgstr ""
+
+#. module: base_calendar
 #: field:calendar.event,base_calendar_alarm_id:0
 #: field:calendar.todo,base_calendar_alarm_id:0
 #: field:crm.meeting,base_calendar_alarm_id:0
@@ -1459,7 +1444,7 @@ msgid "April"
 msgstr "Απρίλιος"
 
 #. module: base_calendar
-#: code:addons/base_calendar/crm_meeting.py:98
+#: code:addons/base_calendar/crm_meeting.py:106
 #, python-format
 msgid "Email addresses not found"
 msgstr ""
@@ -1477,7 +1462,7 @@ msgid "Weekday"
 msgstr "Καθημερινή"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:980
+#: code:addons/base_calendar/base_calendar.py:1008
 #, python-format
 msgid "Interval cannot be negative."
 msgstr ""
@@ -1490,7 +1475,7 @@ msgid "By day"
 msgstr "Κατά ημέρα"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:417
+#: code:addons/base_calendar/base_calendar.py:444
 #, python-format
 msgid "First you have to specify the date of the invitation."
 msgstr ""
@@ -1625,201 +1610,3 @@ msgstr ""
 #: selection:crm.meeting,byday:0
 msgid "Fifth"
 msgstr "Πέμπτος"
-
-#~ msgid "Hourly"
-#~ msgstr "Ωριαίο"
-
-#~ msgid "Invited User"
-#~ msgstr "Προσκαλούμενος Χρήστης"
-
-#~ msgid "Monthly"
-#~ msgstr "Μηνιαία"
-
-#~ msgid "Title"
-#~ msgstr "Τίτλος"
-
-#~ msgid "Required to Join"
-#~ msgstr "Απαιτήται εισαγωγή"
-
-#~ msgid "Show as"
-#~ msgstr "Εμφάνιση ως"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "Προειδοποίηση!"
-
-#~ msgid "No Repeat"
-#~ msgstr "Χωρίς Επανάληψη"
-
-#~ msgid "Yearly"
-#~ msgstr "Ετήσια"
-
-#~ msgid "Show time as"
-#~ msgstr "Εμφάνιση χρόνου ως"
-
-#~ msgid "Invitation type"
-#~ msgstr "Τύπος πρόσκλησης"
-
-#~ msgid "Edit all Occurrences"
-#~ msgstr "Επεξεργασία όλων των επαναλήψεων"
-
-#~ msgid "Deadline"
-#~ msgstr "Προσθεσμία"
-
-#~ msgid "Provide external email address who will receive this invitation."
-#~ msgstr ""
-#~ "Πρόσθεςσε τις εξωτερικές διευθύνσεις email αυτών που θα λάβουνε αυτήν την "
-#~ "πρόσκληση."
-
-#~ msgid "Years"
-#~ msgstr "Έτη"
-
-#~ msgid "Partner related to contact"
-#~ msgstr "Συνεργάτης συνδεδεμένος με επαφή"
-
-#~ msgid "_Cancel"
-#~ msgstr "_Άκυρο"
-
-#~ msgid "Basic Calendar Functionality"
-#~ msgstr "Βασική Λειτουργία Ημερολογίου"
-
-#~ msgid "Edit all events"
-#~ msgstr "Επεξεργασία όλων των γεγονότων"
-
-#~ msgid "Send mail?"
-#~ msgstr "Αποστολή mail;"
-
-#~ msgid "Event Detail"
-#~ msgstr "Λεπτομέρειες γεγονότος"
-
-#~ msgid "Confidential"
-#~ msgstr "Εμπιστευτικό"
-
-#~ msgid "Required Reply"
-#~ msgstr "Απαιτούμενη Απάντηση"
-
-#~ msgid "Partner"
-#~ msgstr "Συνεργάτης"
-
-#~ msgid "Daily"
-#~ msgstr "Ημερήσια"
-
-#~ msgid "My Role"
-#~ msgstr "Ο ρόλος μου"
-
-#~ msgid "Edit All"
-#~ msgstr "Επεξεργασία όλων"
-
-#~ msgid "Contacts"
-#~ msgstr "Επαφές"
-
-#~ msgid "Weeks"
-#~ msgstr "Εβδομάδες"
-
-#~ msgid "Invitation From"
-#~ msgstr "Πρόσκληση Από"
-
-#~ msgid "Delegate"
-#~ msgstr "Ανάθεση"
-
-#~ msgid "Mark as"
-#~ msgstr "Μαρκάρισμα ως"
-
-#~ msgid "Partner Contacts"
-#~ msgstr "Στοιχεία Συνεργάτη"
-
-#~ msgid "_Ok"
-#~ msgstr "_Εντάξει"
-
-#~ msgid "_Save"
-#~ msgstr "_Αποθήκευση"
-
-#~ msgid "Count"
-#~ msgstr "Υπολόγισε"
-
-#~ msgid "Data"
-#~ msgstr "δεδομένα"
-
-#~ msgid "Select whom you want to Invite"
-#~ msgstr "Επέλεξε ποιόν θέλεις να προσκαλέσεις"
-
-#~ msgid "Invitation"
-#~ msgstr "Πρόσκληση"
-
-#~ msgid "The chosen company is not in the allowed companies for this user"
-#~ msgstr ""
-#~ "Η επιλεγμένη εταιρία δεν είναι στις επιτρεπόμενες εταιρίες γι' αυτόν τον "
-#~ "χρήστη"
-
-#~ msgid "ir.attachment"
-#~ msgstr "ir.attachment"
-
-#~ msgid "Weekly"
-#~ msgstr "Εβδομαδιαία"
-
-#~ msgid "Calendar Edit all event"
-#~ msgstr "Επεξεργασία όλων των συμβάντων του Ημερολογίου"
-
-#~ msgid "of"
-#~ msgstr "από"
-
-#~ msgid "To Review"
-#~ msgstr "Για Επισκόπηση"
-
-#~ msgid "Frequency"
-#~ msgstr "Συχνότητα"
-
-#~ msgid "State"
-#~ msgstr "Κατάσταση"
-
-#~ msgid "You can not have two users with the same login !"
-#~ msgstr "Δεν μπορεί να υπάρχουν δύο χρήστες με το ίδιο όνομα!"
-
-#~ msgid "External Email"
-#~ msgstr "Εξωτερικό Email"
-
-#~ msgid "Invite People"
-#~ msgstr "Κάλεσε Κόσμο"
-
-#~ msgid "Type"
-#~ msgstr "Τύπος"
-
-#~ msgid "Search Invitations"
-#~ msgstr "Αναζήτηση Προσκλήσεων"
-
-#~ msgid "Objects"
-#~ msgstr "Αντικείμενα"
-
-#~ msgid "Event Invitations"
-#~ msgstr "Προσκλήσεις Γεγονότος"
-
-#~ msgid "res.users"
-#~ msgstr "res.users"
-
-#~ msgid "Minutely"
-#~ msgstr "Κάθε λεπτό"
-
-#~ msgid "Months"
-#~ msgstr "Μήνες"
-
-#~ msgid "Invite"
-#~ msgstr "Προσκαλέστε"
-
-#~ msgid "Internal User"
-#~ msgstr "Εσωτερικός Χρήστης"
-
-#~ msgid "Select range to Exclude"
-#~ msgstr "Επιλογή εύρους για Εξαίρεση"
-
-#~ msgid "Invite Attendees"
-#~ msgstr "Πρόσληση Συμμετοχόντων"
-
-#~ msgid "Invitation To"
-#~ msgstr "Πρόσκληση Σε"
-
-#~ msgid "Check this if you want to send an Email to Invited Person"
-#~ msgstr "Τσέκαρε αυτό εάν θέλετε να στείλετε Email στον Προσκεκλημένο"
-
-#, python-format
-#~ msgid "Can not Duplicate"
-#~ msgstr "Δεν μπορεί να Διπλοκαταχωρηθεί"

@@ -1,22 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* hr_holidays
+# Czech translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2011-10-17 08:27+0000\n"
-"Last-Translator: Chronos <Unknown>\n"
-"Language-Team: openerp-i18n-czech  <openerp-i18n-czech@lists.launchpad.net "
-">\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:38+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
-"X-Poedit-Language: Czech\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:15+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -34,7 +33,7 @@ msgid "Waiting Second Approval"
 msgstr "Čekající na druhé schválení"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:283
+#: code:addons/hr_holidays/hr_holidays.py:291
 #, python-format
 msgid ""
 "You cannot modify a leave request that has been approved. Contact a human "
@@ -111,6 +110,11 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays
+#: model:mail.message.subtype,description:hr_holidays.mt_holidays_refused
+msgid "Request refused"
+msgstr ""
+
+#. module: hr_holidays
 #: field:hr.holidays,number_of_days_temp:0
 msgid "Allocation"
 msgstr ""
@@ -150,6 +154,7 @@ msgstr ""
 #: selection:hr.holidays,state:0
 #: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
+#: model:mail.message.subtype,name:hr_holidays.mt_holidays_approved
 msgid "Approved"
 msgstr "Scháleno"
 
@@ -164,13 +169,7 @@ msgid "Refuse"
 msgstr "Odmítnout"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:434
-#, python-format
-msgid "Request <b>submitted</b>, waiting for validation by the manager."
-msgstr ""
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:439
+#: code:addons/hr_holidays/hr_holidays.py:433
 #, python-format
 msgid "Request <b>approved</b>, waiting second validation."
 msgstr ""
@@ -215,12 +214,6 @@ msgstr "Uvolnění podle oddělení"
 #: selection:hr.holidays,state:0
 msgid "Second Approval"
 msgstr "Druhé schválení"
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:448
-#, python-format
-msgid "The request has been <b>approved</b>."
-msgstr ""
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
@@ -278,12 +271,12 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:230
-#: code:addons/hr_holidays/hr_holidays.py:241
-#: code:addons/hr_holidays/hr_holidays.py:266
-#: code:addons/hr_holidays/hr_holidays.py:283
-#: code:addons/hr_holidays/hr_holidays.py:409
-#: code:addons/hr_holidays/hr_holidays.py:485
+#: code:addons/hr_holidays/hr_holidays.py:238
+#: code:addons/hr_holidays/hr_holidays.py:249
+#: code:addons/hr_holidays/hr_holidays.py:274
+#: code:addons/hr_holidays/hr_holidays.py:291
+#: code:addons/hr_holidays/hr_holidays.py:414
+#: code:addons/hr_holidays/hr_holidays.py:464
 #, python-format
 msgid "Warning!"
 msgstr "Varování!"
@@ -321,7 +314,7 @@ msgid "Sick Leaves"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:492
+#: code:addons/hr_holidays/hr_holidays.py:471
 #, python-format
 msgid "Leave Request for %s"
 msgstr ""
@@ -382,9 +375,9 @@ msgid "Leaves by Type"
 msgstr "Uvolnění podle typu"
 
 #. module: hr_holidays
-#: model:ir.actions.server,name:hr_holidays.actions_server_holidays_unread
-msgid "Holidays: Mark unread"
-msgstr ""
+#: selection:hr.holidays.status,color_name:0
+msgid "Light Salmon"
+msgstr "Světle lososová"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -392,7 +385,7 @@ msgid "Wheat"
 msgstr "Pšeničná"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:490
+#: code:addons/hr_holidays/hr_holidays.py:469
 #, python-format
 msgid "Allocation for %s"
 msgstr ""
@@ -416,7 +409,7 @@ msgid "Number of Days"
 msgstr "Počet dní"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:485
+#: code:addons/hr_holidays/hr_holidays.py:464
 #, python-format
 msgid ""
 "The feature behind the field 'Remaining Legal Leaves' can only be used when "
@@ -434,11 +427,6 @@ msgid "Search Leave Type"
 msgstr "Hledat typ uvolnění"
 
 #. module: hr_holidays
-#: model:ir.actions.server,name:hr_holidays.actions_server_holidays_read
-msgid "Holidays: Mark read"
-msgstr ""
-
-#. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
 msgid "Waiting Approval"
 msgstr "Čekající na schválení"
@@ -447,11 +435,6 @@ msgstr "Čekající na schválení"
 #: field:hr.holidays,category_id:0
 msgid "Employee Tag"
 msgstr ""
-
-#. module: hr_holidays
-#: field:hr.holidays.status,max_leaves:0
-msgid "Maximum Allowed"
-msgstr "Nejvíce povolených"
 
 #. module: hr_holidays
 #: field:hr.holidays.summary.employee,emp:0
@@ -481,6 +464,12 @@ msgstr ""
 msgid ""
 "Once a leave is validated, OpenERP will create a corresponding meeting of "
 "this type in the calendar."
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:44
+#, python-format
+msgid "You have to select at least one Department. And try again."
 msgstr ""
 
 #. module: hr_holidays
@@ -522,7 +511,7 @@ msgid "Start Date"
 msgstr "Počáteční datum"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:409
+#: code:addons/hr_holidays/hr_holidays.py:414
 #, python-format
 msgid ""
 "There are not enough %s allocated for employee %s; please create an "
@@ -666,12 +655,6 @@ msgid "Active"
 msgstr "Aktivní"
 
 #. module: hr_holidays
-#: field:hr.holidays,message_comment_ids:0
-#: help:hr.holidays,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
-
-#. module: hr_holidays
 #: view:hr.employee:0
 #: field:hr.employee,remaining_leaves:0
 msgid "Remaining Legal Leaves"
@@ -724,9 +707,8 @@ msgid "My Department Leaves"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:428
-#, python-format
-msgid "Request <b>created</b>, waiting confirmation."
+#: model:mail.message.subtype,description:hr_holidays.mt_holidays_confirmed
+msgid "Request confirmed, waiting confirmation"
 msgstr ""
 
 #. module: hr_holidays
@@ -781,7 +763,7 @@ msgid "Validated"
 msgstr "Ověřeno"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:230
+#: code:addons/hr_holidays/hr_holidays.py:238
 #, python-format
 msgid "You cannot delete a leave which is in %s state."
 msgstr ""
@@ -845,7 +827,7 @@ msgid "To Submit"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:328
+#: code:addons/hr_holidays/hr_holidays.py:336
 #: view:hr.holidays:0
 #: selection:hr.holidays,type:0
 #: field:resource.calendar.leaves,holiday_id:0
@@ -854,6 +836,7 @@ msgid "Leave Request"
 msgstr "Požavek na uvolnění"
 
 #. module: hr_holidays
+#: view:hr.holidays:0
 #: field:hr.holidays,name:0
 msgid "Description"
 msgstr "Popis"
@@ -866,6 +849,7 @@ msgstr ""
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
 #: selection:hr.holidays,state:0
+#: model:mail.message.subtype,name:hr_holidays.mt_holidays_refused
 msgid "Refused"
 msgstr "Odmítnuto"
 
@@ -908,9 +892,9 @@ msgid "Violet"
 msgstr "Fialová"
 
 #. module: hr_holidays
-#: selection:hr.holidays.status,color_name:0
-msgid "Light Salmon"
-msgstr "Světle lososová"
+#: field:hr.holidays.status,max_leaves:0
+msgid "Maximum Allowed"
+msgstr "Nejvíce povolených"
 
 #. module: hr_holidays
 #: help:hr.holidays,manager_id2:0
@@ -943,8 +927,8 @@ msgid "Messages and communication history"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:241
-#: code:addons/hr_holidays/hr_holidays.py:266
+#: code:addons/hr_holidays/hr_holidays.py:249
+#: code:addons/hr_holidays/hr_holidays.py:274
 #: sql_constraint:hr.holidays:0
 #, python-format
 msgid "The start date must be anterior to the end date."
@@ -954,12 +938,6 @@ msgstr ""
 #: model:ir.model,name:hr_holidays.model_hr_holidays
 msgid "Leave"
 msgstr "Uvolnění"
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:453
-#, python-format
-msgid "Request <b>refused</b>"
-msgstr ""
 
 #. module: hr_holidays
 #: help:hr.holidays.status,double_validation:0
@@ -1021,13 +999,13 @@ msgstr ""
 #. module: hr_holidays
 #: view:hr.holidays:0
 #: selection:hr.holidays,state:0
+#: model:mail.message.subtype,name:hr_holidays.mt_holidays_confirmed
 msgid "To Approve"
 msgstr "Ke schválení"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:44
-#, python-format
-msgid "You have to select at least one Department. And try again."
+#: model:mail.message.subtype,description:hr_holidays.mt_holidays_approved
+msgid "Request approved"
 msgstr ""
 
 #. module: hr_holidays
@@ -1039,246 +1017,3 @@ msgstr "Důvody"
 #: field:hr.holidays.summary.employee,holiday_type:0
 msgid "Select Leave Type"
 msgstr ""
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:445
-#, python-format
-msgid "Request <b>validated</b>."
-msgstr ""
-
-#~ msgid "Allocation Type"
-#~ msgstr "Typ přidělení"
-
-#~ msgid "Sick Leave"
-#~ msgstr "Uvolnění pro nemoc"
-
-#~ msgid ""
-#~ "Leave Manager can let this field empty if this leave request/allocation is "
-#~ "for every employee"
-#~ msgstr ""
-#~ "Správce uvolnění vám umožnít nechat toto pole prázdné, pokud "
-#~ "požadavek/přidělení tohoto uvolnění je pro každého zaměstnance"
-
-#~ msgid "Set to Draft"
-#~ msgstr "Nastavit na koncept"
-
-#~ msgid "Holidays"
-#~ msgstr "Dovolené"
-
-#~ msgid ""
-#~ "Leave requests can be recorded by employees and validated by their managers. "
-#~ "Once a leave request is validated, it appears automatically in the agenda of "
-#~ "the employee. You can define several allowance types (paid holidays, "
-#~ "sickness, etc.) and manage allowances per type."
-#~ msgstr ""
-#~ "Požadavky na uvolnění mohou být zaznamenány zaměstnanci a ověřeny jejich "
-#~ "správci. Jakmile je požadavek na uvolnění ověřen, automaticky se objeví v "
-#~ "agendě zaměstnance. Můžete zadat několik typů povolení (placená dovolená, "
-#~ "nemoc, aj.) a spravovat povolení podle typu."
-
-#~ msgid "Summary Of Leaves"
-#~ msgstr "Souhrn uvolnění"
-
-#, python-format
-#~ msgid ""
-#~ "You cannot validate leaves for employee %s: too few remaining days (%s)."
-#~ msgstr ""
-#~ "Nemůžete ověřit uvolnění pro zaměstnance %s: příliš málo zbývajících dnů "
-#~ "(%s)."
-
-#~ msgid "HR Holidays Summary Report By Employee"
-#~ msgstr "Výkaz souhrnu dovolných HR podle zaměstnance"
-
-#~ msgid "Draft"
-#~ msgstr "Koncept"
-
-#~ msgid ""
-#~ "When the holiday request is created the state is 'Draft'.\n"
-#~ " It is confirmed by the user and request is sent to admin, the state is "
-#~ "'Waiting Approval'.            If the admin accepts it, the state is "
-#~ "'Approved'. If it is refused, the state is 'Refused'."
-#~ msgstr ""
-#~ "Když je požadavek na dovolenou vytvořen, stav je nastaven na 'Koncept'.\n"
-#~ " Je potvrzen uživatelem a požadavek je odeslán správci, stav je nastaven na "
-#~ "'Čekající na schválení'.            Pokud jej správce přijme, stav je "
-#~ "'Schválený'. Pokud je odmítnut, stav je  'Zamitnutý'."
-
-#, python-format
-#~ msgid "You have to select at least 1 Department. And try again"
-#~ msgstr "Musíte vybrat nejméně jedno oddělení. A zkuste znova"
-
-#~ msgid "Confirm"
-#~ msgstr "Potvrdit"
-
-#~ msgid "The start date must be before the end date !"
-#~ msgstr "Počáteční datum musí být před datem ukončení !"
-
-#~ msgid ""
-#~ "Human Resources: Holidays tracking and workflow\n"
-#~ "\n"
-#~ "    This module allows you to manage leaves and leaves' requests.\n"
-#~ "    Implements a dashboard for human resource management that includes.\n"
-#~ "        * My Leaves\n"
-#~ "        * My Expenses\n"
-#~ "    Note that:\n"
-#~ "    - A synchronisation with an internal agenda (use of the CRM module) is "
-#~ "possible: in order to automatically create a case when an holiday request is "
-#~ "accepted, you have to link the holidays status to a case section. You can "
-#~ "set up this info and your colour preferences in\n"
-#~ "                HR / Configuration / Holidays Status\n"
-#~ "    - An employee can make an ask for more off-days by making a new "
-#~ "Allocation It will increase his total of that leave type available (if the "
-#~ "request is accepted).\n"
-#~ "    - There are two ways to print the employee's holidays:\n"
-#~ "        * The first will allow to choose employees by department and is used "
-#~ "by clicking the menu item located in\n"
-#~ "                HR / Holidays Request / Print Summary of Holidays\n"
-#~ "        * The second will allow you to choose the holidays report for "
-#~ "specific employees. Go on the list\n"
-#~ "                HR / Employees / Employees\n"
-#~ "            then select the ones you want to choose, click on the print icon "
-#~ "and select the option\n"
-#~ "                'Print Summary of Employee's Holidays'\n"
-#~ "    - The wizard allows you to choose if you want to print either the "
-#~ "Confirmed & Validated holidays or only the Validated ones. These states must "
-#~ "be set up by a user from the group 'HR'. You can define these features in "
-#~ "the security tab from the user data in\n"
-#~ "                Administration / Users / Users\n"
-#~ "            for example, you maybe will do it for the user 'admin'\n"
-#~ "            .\n"
-#~ msgstr ""
-#~ "Lidské zdroje: Sledování dovolených a toku práce\n"
-#~ "\n"
-#~ "    Tento modul vám umožní spravovat uvolnění a požadavky na uvolnění.\n"
-#~ "    Realizuje nástěnku pro správu lidských zdrojů, která zahrnuje.\n"
-#~ "        * Moje uvolnění\n"
-#~ "        * Moje útraty\n"
-#~ "    Poznamenejme, že:\n"
-#~ "    - Synchronizace s vnitřní agendou (použití modulu CRM) je možná: k "
-#~ "automatickému vytvoření případu, když je přijat požadavek na dovolenou, "
-#~ "musíte propojit stav dovolené na sekci případů. Můžete nastavit tuto "
-#~ "informaci a předvolby barev v\n"
-#~ "                HR / Nastavení / Stavy dovolené\n"
-#~ "    - Zaměstnanec může požádat pro více volných dnů vytvořením nového "
-#~ "přidělení. To zvýší jeho celkem dostupných tohoto typu uvolnění (pokud je "
-#~ "požadavek přijat).\n"
-#~ "    - Jsou dva způsoby jak vytisknout dovolené zaměstnance:\n"
-#~ "        * První vám umožní vybrat zaměstnance podle oddělené a je vyvoláno z "
-#~ "menu umístěného v\n"
-#~ "                HR / Požadavky dovolených / Tisk souhrnu dovolených\n"
-#~ "        * Druhá vám umožní vybrat výkaz dovolených určitého zaměstnance. "
-#~ "Jděte na seznam\n"
-#~ "                HR / Zaměstnanci / Zaměstnanci\n"
-#~ "            pak vyberte ty, které chcete vybrat, klikněte na ikonu tisku a "
-#~ "vyberte volbu\n"
-#~ "                'Tisknout souhrn dovolených zaměstnanců'\n"
-#~ "    - Průvodce vám umožní vybrat, zda chcete tisknout buď Potvrzené & "
-#~ "Ověřené dovolené nebo pouze Ověřené. Tyto stavy musí být nastaveny "
-#~ "uživatelem ze skupiny 'HR'. Můžete definovat tyto funkce v záložce "
-#~ "zabezpečení z uživatelských dat v\n"
-#~ "                Správa / Uživatelé / Uživatelé\n"
-#~ "            na příklad, můžete chtít toto udělat pro uživatele 'admin'\n"
-#~ "            .\n"
-
-#~ msgid "State"
-#~ msgstr "Stav"
-
-#~ msgid "Error! leave start-date must be lower then leave end-date."
-#~ msgstr ""
-#~ "Chyba! počáteční datum uvolnění musí být menší než konečné datum uvolnění."
-
-#~ msgid "You have to select an employee or a category"
-#~ msgstr "Musíte vybrat zaměstnance nebo kategorii"
-
-#~ msgid ""
-#~ "If its True then its Allocation/Request have to be validated by second "
-#~ "validator"
-#~ msgstr ""
-#~ "Pokud je pravdivé, pak Přidělení/Požadavek musí být ověřen druhým "
-#~ "ověřovatelem"
-
-#~ msgid ""
-#~ "If you set a meeting type, OpenERP will create a meeting in the calendar "
-#~ "once a leave is validated."
-#~ msgstr ""
-#~ "Pokud nastavíte typ setkání, OpenERP vytvoří setkání jakmile bude uvolnění "
-#~ "ověřeno."
-
-#~ msgid "Employee's Holidays"
-#~ msgstr "Dovolené zaměstnanců"
-
-#~ msgid "All Employee Leaves"
-#~ msgstr "Uvolnění všech zaměstnanců"
-
-#~ msgid "Holidays by Department"
-#~ msgstr "Dovolené podle oddělení"
-
-#~ msgid "Holiday"
-#~ msgstr "Dovolená"
-
-#~ msgid "Both Validated and Confirmed"
-#~ msgstr "Oba ověřeno i potvrzeno"
-
-#~ msgid "Leaves To Validate"
-#~ msgstr "Uvolnění k ověření"
-
-#~ msgid "Extended Filters..."
-#~ msgstr "Rozšířené filtry..."
-
-#~ msgid "The number of days must be greater than 0 !"
-#~ msgstr "Počet dnů musí být větší než 0 !"
-
-#~ msgid "Casual Leave"
-#~ msgstr "Nahodilé uvolnění"
-
-#, python-format
-#~ msgid "Error"
-#~ msgstr "Chyba"
-
-#~ msgid "General"
-#~ msgstr "Obecné"
-
-#~ msgid ""
-#~ "This color will be used in the leaves summary located in Reporting\\Leaves "
-#~ "by Departement"
-#~ msgstr ""
-#~ "Barva bude použita v přehledu uvolnění umístěném v Vykazování\\Uvolnění "
-#~ "podle oddělení"
-
-#~ msgid "By Employee Category"
-#~ msgstr "Podle kategorie zaměstnance"
-
-#~ msgid ""
-#~ "By Employee: Allocation/Request for individual Employee, By Employee "
-#~ "Category: Allocation/Request for group of employees in category"
-#~ msgstr ""
-#~ "Podle zaměstnance: Přidělení/Požadavek pro jednotlivé zaměstnance, Podle "
-#~ "kategorie zaměstnance: Přidělení/Požadavek pro skupinu zaměstnanců v "
-#~ "kategorii"
-
-#, python-format
-#~ msgid "You cannot delete a leave which is not in draft state !"
-#~ msgstr "Nemůžete odstranit uvolnění, které není v návrhovém stavu !"
-
-#~ msgid "Select Holiday Type"
-#~ msgstr "Vybrat typ dovolené"
-
-#~ msgid "This Month"
-#~ msgstr "Tento měsíc"
-
-#~ msgid ""
-#~ "If you tick this checkbox, the system will allow, for this section, the "
-#~ "employees to take more leaves than the available ones."
-#~ msgstr ""
-#~ "Pokud zaškrtnete toto políčko, systém vám pro tuto sekci umožní, aby "
-#~ "zaměstnanci mohli vzít více uvolnění než mají dostupných."
-
-#~ msgid "Human Resources: Holidays management"
-#~ msgstr "Lidské zdroje: Správa dovolených"
-
-#~ msgid "HR Holidays Summary Report By Department"
-#~ msgstr "Výkaz souhrnu dovolených HR podle oddělení"
-
-#~ msgid "This area is automaticly filled by the user who validate the leave"
-#~ msgstr ""
-#~ "Tato oblast je automaticky vyplněna uživatelem, který ověřuje uvolnění"

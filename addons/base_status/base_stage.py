@@ -150,7 +150,6 @@ class base_stage(object):
         if hasattr(self, 'onchange_stage_id'):
             value = self.onchange_stage_id(cr, uid, ids, stage_id, context=context)['value']
         value['stage_id'] = stage_id
-        self.stage_set_send_note(cr, uid, ids, stage_id, context=context)
         return self.write(cr, uid, ids, value, context=context)
 
     def stage_change(self, cr, uid, ids, op, order, context=None):
@@ -210,7 +209,6 @@ class base_stage(object):
             else:
                 raise osv.except_osv(_('Error!'), _("You are already at the top level of your sales-team category.\nTherefore you cannot escalate furthermore."))
             self.write(cr, uid, [case.id], data, context=context)
-            case.case_escalate_send_note(case.section_id.parent_id, context=context)
         return True
 
     def case_open(self, cr, uid, ids, context=None):
@@ -221,32 +219,23 @@ class base_stage(object):
             if not case.user_id:
                 data['user_id'] = uid
             self.case_set(cr, uid, [case.id], 'open', data, context=context)
-            self.case_open_send_note(cr, uid, [case.id], context=context)
         return True
 
     def case_close(self, cr, uid, ids, context=None):
         """ Closes case """
-        self.case_set(cr, uid, ids, 'done', {'active': True, 'date_closed': fields.datetime.now()}, context=context)
-        self.case_close_send_note(cr, uid, ids, context=context)
-        return True
+        return self.case_set(cr, uid, ids, 'done', {'active': True, 'date_closed': fields.datetime.now()}, context=context)
 
     def case_cancel(self, cr, uid, ids, context=None):
         """ Cancels case """
-        self.case_set(cr, uid, ids, 'cancel', {'active': True}, context=context)
-        self.case_cancel_send_note(cr, uid, ids, context=context)
-        return True
+        return self.case_set(cr, uid, ids, 'cancel', {'active': True}, context=context)
 
     def case_pending(self, cr, uid, ids, context=None):
         """ Set case as pending """
-        self.case_set(cr, uid, ids, 'pending', {'active': True}, context=context)
-        self.case_pending_send_note(cr, uid, ids, context=context)
-        return True
+        return self.case_set(cr, uid, ids, 'pending', {'active': True}, context=context)
 
     def case_reset(self, cr, uid, ids, context=None):
         """ Resets case as draft """
-        self.case_set(cr, uid, ids, 'draft', {'active': True}, context=context)
-        self.case_reset_send_note(cr, uid, ids, context=context)
-        return True
+        return self.case_set(cr, uid, ids, 'draft', {'active': True}, context=context)
 
     def case_set(self, cr, uid, ids, new_state_name=None, values_to_update=None, new_stage_id=None, context=None):
         """ Generic method for setting case. This methods wraps the update
@@ -272,90 +261,4 @@ class base_stage(object):
         # 2. update values
         if values_to_update:
             self.write(cr, uid, ids, values_to_update, context=context)
-        return True
-    
-    def write(self, cr, uid, ids, vals, context=None):
-        res = super(base_stage,self).write(cr, uid, ids, vals, context)
-        if vals.get('stage_id'):
-            for case in self.browse(cr, uid, ids, context=context):
-                self._action(cr, uid, case, case.stage_id.state, context=context)
-        return res
-
-    def _action(self, cr, uid, cases, state_to, scrit=None, context=None):
-        if context is None:
-            context = {}
-        context['state_to'] = state_to
-        rule_obj = self.pool.get('base.action.rule')
-        if not rule_obj:
-            return True
-        model_obj = self.pool.get('ir.model')
-        model_ids = model_obj.search(cr, uid, [('model','=',self._name)], context=context)
-        rule_ids = rule_obj.search(cr, uid, [('model_id','=',model_ids[0])], context=context)
-        return rule_obj._action(cr, uid, rule_ids, cases, scrit=scrit, context=context)
-
-    
-    def _check(self, cr, uid, ids=False, context=None):
-        """ Function called by the scheduler to process cases for date actions.
-            Must be overriden by inheriting classes.
-        """
-        return True
-
-    # ******************************
-    # Notifications
-    # ******************************
-
-    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
-        """ Default prefix for notifications. For example: "%s has been
-            <b>closed</b>.". As several models will inherit from base_stage,
-            this method returns a void string. Class using base_stage
-            will have to override this method to define the prefix they
-            want to display.
-        """
-        return ''
-
-    def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
-        """ Send a notification when the stage changes. This method has
-            to be overriden, because each document will have its particular
-            behavior and/or stage model (such as project.task.type or
-            crm.case.stage).
-        """
-        return True
-
-    def case_open_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            msg = _('%s has been <b>opened</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_post(cr, uid, [id], body=msg, context=context)
-        return True
-
-    def case_close_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            msg = _('%s has been <b>closed</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_post(cr, uid, [id], body=msg, context=context)
-        return True
-
-    def case_cancel_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            msg = _('%s has been <b>cancelled</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_post(cr, uid, [id], body=msg, context=context)
-        return True
-
-    def case_pending_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            msg = _('%s is now <b>pending</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_post(cr, uid, [id], body=msg, context=context)
-        return True
-
-    def case_reset_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            msg = _('%s has been <b>renewed</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_post(cr, uid, [id], body=msg, context=context)
-        return True
-
-    def case_escalate_send_note(self, cr, uid, ids, new_section=None, context=None):
-        for id in ids:
-            if new_section:
-                msg = '%s has been <b>escalated</b> to <b>%s</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context), new_section.name)
-            else:
-                msg = '%s has been <b>escalated</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_post(cr, uid, [id], body=msg, context=context)
         return True

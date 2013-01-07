@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-07-21 12:33+0000\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:10+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:23+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -159,13 +159,6 @@ msgstr ""
 "ийг үүсгэнэ."
 
 #. module: mrp
-#: help:mrp.config.settings,group_mrp_properties:0
-msgid ""
-"The selection of the right Bill of Material to use will depend on the  "
-"properties specified on the sale order and the Bill of Material."
-msgstr ""
-
-#. module: mrp
 #: view:mrp.production:0
 msgid "Products to Finish"
 msgstr "Гүйцэтгэх Бараанууд"
@@ -205,12 +198,17 @@ msgid "For purchased material"
 msgstr "Худалдан авсан материалын хувьд"
 
 #. module: mrp
+#: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
+msgid "Order Planning"
+msgstr ""
+
+#. module: mrp
 #: field:mrp.config.settings,module_mrp_operations:0
 msgid "Allow detailed planning of work order"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:648
+#: code:addons/mrp/mrp.py:633
 #, python-format
 msgid "Cannot cancel manufacturing order!"
 msgstr ""
@@ -275,6 +273,21 @@ msgstr "Мастер Өгөгдөл"
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_byproduct:0
 msgid "Produce several products from one manufacturing order"
+msgstr ""
+
+#. module: mrp
+#: help:mrp.config.settings,group_mrp_properties:0
+msgid ""
+"The selection of the right Bill of Material to use will depend on the "
+"properties specified on the sales order and the Bill of Material."
+msgstr ""
+
+#. module: mrp
+#: view:mrp.bom:0
+msgid ""
+"When processing a sales order for this product, the delivery order\n"
+"                                will contain the raw materials, instead of "
+"the finished product."
 msgstr ""
 
 #. module: mrp
@@ -444,6 +457,27 @@ msgid "Weekly Stock Value Variation"
 msgstr "Долооног тутамын Нөөцийн Үнийн Хазайлт"
 
 #. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_property_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new property.\n"
+"              </p><p>\n"
+"                The Properties in OpenERP are used to select the right bill "
+"of\n"
+"                materials for manufacturing a product when you have "
+"different\n"
+"                ways of building the same product.  You can assign several\n"
+"                properties to each bill of materials.  When a salesperson\n"
+"                creates a sales order, they can relate it to several "
+"properties\n"
+"                and OpenERP will automatically select the BoM to use "
+"according\n"
+"                the needs.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: mrp
 #: view:mrp.production:0
 #: field:mrp.production,date_planned:0
 #: report:mrp.production.order:0
@@ -451,7 +485,7 @@ msgid "Scheduled Date"
 msgstr "Товлогдсон огноо"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:113
+#: code:addons/mrp/procurement.py:124
 #, python-format
 msgid "Manufacturing Order <em>%s</em> created."
 msgstr ""
@@ -461,14 +495,6 @@ msgstr ""
 #: report:mrp.production.order:0
 msgid "Bill Of Material"
 msgstr "Жор"
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:1068
-#, python-format
-msgid ""
-"Manufacturing order has been <b>confirmed</b> and is <b>scheduled</b> for "
-"the <em>%s</em>."
-msgstr ""
 
 #. module: mrp
 #: help:mrp.routing,location_id:0
@@ -490,12 +516,6 @@ msgstr "Нөөцийн Үнийн Хазайлт"
 #: model:ir.actions.act_window,name:mrp.action2
 msgid "Bill of Materials Structure"
 msgstr "Жорын Бүтэц"
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:1043
-#, python-format
-msgid "Manufacturing order has been <b>canceled</b>."
-msgstr ""
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_serviceproduct0
@@ -631,12 +651,6 @@ msgstr ""
 "нуудаг."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:386
-#, python-format
-msgid "Bill of Material has been <b>created</b> for <em>%s</em> product."
-msgstr ""
-
-#. module: mrp
 #: model:process.transition,name:mrp.process_transition_billofmaterialrouting0
 msgid "Material Routing"
 msgstr "Материалын Машрут"
@@ -656,7 +670,7 @@ msgid "Work Center Load"
 msgstr "Дамжлагын Ачаалал"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:44
+#: code:addons/mrp/procurement.py:50
 #, python-format
 msgid "No BoM defined for this product !"
 msgstr "Энэ бараанд жор тодорхойлогдоогүй байна !"
@@ -730,12 +744,6 @@ msgid "Master Bill of Materials"
 msgstr "Мастер жор"
 
 #. module: mrp
-#: view:mrp.production:0
-#: report:mrp.production.order:0
-msgid "Work Orders"
-msgstr "Ажлын Захиалгууд"
-
-#. module: mrp
 #: help:mrp.config.settings,module_product_manufacturer:0
 msgid ""
 "This allows you to define the following for a product:\n"
@@ -757,30 +765,6 @@ msgstr "Хэвлэх"
 #: view:mrp.workcenter:0
 msgid "Type"
 msgstr "Төрөл"
-
-#. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_property_group_action
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a group of properties.\n"
-"              </p><p>\n"
-"                Define specific property groups that can be assigned to "
-"your\n"
-"                bill of materials and sales orders. Properties allows "
-"OpenERP\n"
-"                to automatically select the right bill of materials "
-"according\n"
-"                to properties selected in the sale order by salesperson.\n"
-"              </p><p>\n"
-"                For instance, in the property group \"Warranty\", you an "
-"have\n"
-"                two properties: 1 year warranty, 3 years warranty. "
-"Depending\n"
-"                on the propoerties selected in the sale order, OpenERP will\n"
-"                schedule a production using the matching bill of materials.\n"
-"              </p>\n"
-"            "
-msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
@@ -826,8 +810,8 @@ msgstr ""
 "Коэффициент 0.9 гэдэг нь үйлдвэрлэлийн явц дахь алдагдал 10% гэсэн үг юм."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:756
-#: code:addons/mrp/mrp.py:784
+#: code:addons/mrp/mrp.py:737
+#: code:addons/mrp/mrp.py:765
 #, python-format
 msgid "Warning!"
 msgstr "Анхааруулга!"
@@ -893,7 +877,7 @@ msgid "Manufacturing Orders which are waiting for raw materials."
 msgstr "Түүхий эд хүлээж байгаа үйлдвэрлэлийн захиалгууд"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:284
+#: code:addons/mrp/mrp.py:285
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -904,6 +888,7 @@ msgstr ""
 #: model:ir.model,name:mrp.model_mrp_production
 #: view:mrp.config.settings:0
 #: view:mrp.production:0
+#: field:mrp.production.workcenter.line,production_id:0
 #: field:procurement.order,production_id:0
 msgid "Manufacturing Order"
 msgstr "Үйлдвэрлэлийн Захиалга"
@@ -969,7 +954,7 @@ msgid "BoM Type"
 msgstr "Жорын төрөл"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:46
+#: code:addons/mrp/procurement.py:52
 #, python-format
 msgid ""
 "Procurement '%s' has an exception: 'No BoM defined for this product !'"
@@ -992,7 +977,7 @@ msgid "Companies"
 msgstr "Компаниуд"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:649
+#: code:addons/mrp/mrp.py:634
 #, python-format
 msgid ""
 "You must first cancel related internal picking attached to this "
@@ -1322,7 +1307,7 @@ msgstr ""
 "хавтас автоматаар бөглөгддөг."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:521
+#: code:addons/mrp/mrp.py:505
 #, python-format
 msgid "Invalid Action!"
 msgstr ""
@@ -1367,7 +1352,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:374
+#: code:addons/mrp/mrp.py:375
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -1408,27 +1393,6 @@ msgid ""
 msgstr ""
 "Барааны нийлүүлэх арга нь худалдан авах байвал систем нь худалдан авах "
 "захиалгыг үүсгэдэг."
-
-#. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_property_action
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a new property.\n"
-"              </p><p>\n"
-"                The Properties in OpenERP are used to select the right bill "
-"of\n"
-"                materials for manufacturing a product when you have "
-"different\n"
-"                ways of building the same product.  You can assign several\n"
-"                properties to each bill of materials.  When a salesperson\n"
-"                creates a sale order, they can relate it to several "
-"properties\n"
-"                and OpenERP will automatically select the BoM to use "
-"according\n"
-"                the needs.\n"
-"              </p>\n"
-"            "
-msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_order
@@ -1500,12 +1464,6 @@ msgid "Pending"
 msgstr "Хүлээгдэж буй"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:1053
-#, python-format
-msgid "Manufacturing order is <b>in production</b>."
-msgstr ""
-
-#. module: mrp
 #: field:mrp.bom,active:0
 #: field:mrp.routing,active:0
 msgid "Active"
@@ -1543,12 +1501,6 @@ msgid ""
 msgstr "Энэ үйлдвэрлэлийн захиалгын хүсэлтийг үүсгэсэн баримтын код"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:1058
-#, python-format
-msgid "Manufacturing order has been <b>done</b>."
-msgstr ""
-
-#. module: mrp
 #: model:process.transition,name:mrp.process_transition_minimumstockprocure0
 msgid "'Minimum stock rule' material"
 msgstr "'Хамгийн бага нөөцийн дүрэм' материал"
@@ -1569,12 +1521,6 @@ msgid "Drives the procurement orders for raw material."
 msgstr "Түүхийн эдийн татан авах захиалгуудыг хөтлөнө."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:1048
-#, python-format
-msgid "Manufacturing order is <b>ready to produce</b>."
-msgstr ""
-
-#. module: mrp
 #: field:mrp.production.product.line,product_uos_qty:0
 msgid "Product UOS Quantity"
 msgstr ""
@@ -1590,7 +1536,7 @@ msgid "SO Number"
 msgstr "БЗ Дугаар"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:521
+#: code:addons/mrp/mrp.py:505
 #, python-format
 msgid "Cannot delete a manufacturing order in state '%s'."
 msgstr ""
@@ -1636,6 +1582,31 @@ msgstr "Эхлүүлэх Үйлдвэрлэлийн Захиалгууд"
 #: field:report.workcenter.load,workcenter_id:0
 msgid "Work Center"
 msgstr "Дамжлага"
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_property_group_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a group of properties.\n"
+"              </p><p>\n"
+"                Define specific property groups that can be assigned to "
+"your\n"
+"                bill of materials and sales orders. Properties allows "
+"OpenERP\n"
+"                to automatically select the right bill of materials "
+"according\n"
+"                to properties selected in the sales order by salesperson.\n"
+"              </p><p>\n"
+"                For instance, in the property group \"Warranty\", you an "
+"have\n"
+"                two properties: 1 year warranty, 3 years warranty. "
+"Depending\n"
+"                on the propoerties selected in the sales order, OpenERP "
+"will\n"
+"                schedule a production using the matching bill of materials.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: mrp
 #: field:mrp.workcenter,capacity_per_cycle:0
@@ -1778,20 +1749,6 @@ msgid "Manager"
 msgstr "Менежер"
 
 #. module: mrp
-#: view:mrp.bom:0
-msgid ""
-"When processing a sale order for this product, the delivery order\n"
-"                                will contain the raw materials, instead of "
-"the finished product."
-msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:1039
-#, python-format
-msgid "Manufacturing order has been <b>created</b>."
-msgstr ""
-
-#. module: mrp
 #: help:mrp.product.produce,mode:0
 msgid ""
 "'Consume only' mode will only consume the products with the quantity "
@@ -1806,9 +1763,10 @@ msgstr ""
 "үйлдвэрлэлийн захиалгыг дуусгана."
 
 #. module: mrp
-#: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
-msgid "Orders Planning"
-msgstr ""
+#: view:mrp.production:0
+#: report:mrp.production.order:0
+msgid "Work Orders"
+msgstr "Ажлын Захиалгууд"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle:0
@@ -1840,7 +1798,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:756
+#: code:addons/mrp/mrp.py:737
 #, python-format
 msgid ""
 "You are going to consume total %s quantities of \"%s\".\n"
@@ -1881,7 +1839,6 @@ msgstr "1 циклийн хугацаа (цагаар)"
 #. module: mrp
 #: model:ir.actions.report.xml,name:mrp.report_mrp_production_report
 #: field:mrp.production.product.line,production_id:0
-#: field:mrp.production.workcenter.line,production_id:0
 #: model:process.node,name:mrp.process_node_production0
 #: model:process.node,name:mrp.process_node_productionorder0
 msgid "Production Order"
@@ -1905,7 +1862,7 @@ msgid "Compute Data"
 msgstr "Өгөгдлийг Тооцоолох"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:625
+#: code:addons/mrp/mrp.py:610
 #: code:addons/mrp/wizard/change_production_qty.py:83
 #: code:addons/mrp/wizard/change_production_qty.py:88
 #, python-format
@@ -1951,7 +1908,7 @@ msgid "Manufacturing Lead Time"
 msgstr "Үйлдвэрлэлийн урьтал хугацаа"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:284
+#: code:addons/mrp/mrp.py:285
 #, python-format
 msgid "Warning"
 msgstr ""
@@ -2194,17 +2151,7 @@ msgid "BOM Ref"
 msgstr "Жорын код"
 
 #. module: mrp
-#: field:mrp.bom,message_comment_ids:0
-#: help:mrp.bom,message_comment_ids:0
-#: field:mrp.production,message_comment_ids:0
-#: help:mrp.production,message_comment_ids:0
-#: field:mrp.production.workcenter.line,message_comment_ids:0
-#: help:mrp.production.workcenter.line,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:784
+#: code:addons/mrp/mrp.py:765
 #, python-format
 msgid ""
 "You are going to produce total %s quantities of \"%s\".\n"
@@ -2244,7 +2191,7 @@ msgid "Bill of Materials"
 msgstr "Жорууд"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:625
+#: code:addons/mrp/mrp.py:610
 #, python-format
 msgid "Cannot find a bill of material for this product."
 msgstr ""
@@ -2487,378 +2434,3 @@ msgstr ""
 #: report:mrp.production.order:0
 msgid "Products to Consume"
 msgstr "Хангах Бараанууд"
-
-#~ msgid "Fluid"
-#~ msgstr "Шингэн"
-
-#, python-format
-#~ msgid "Cost Price per Uom"
-#~ msgstr "Хэмжих нэгжээрх өртөг үнэ"
-
-#~ msgid "Orange"
-#~ msgstr "Жүрж"
-
-#~ msgid "State"
-#~ msgstr "Төлөв"
-
-#~ msgid "Revision"
-#~ msgstr "Хувилбар"
-
-#~ msgid "Reporting"
-#~ msgstr "Тайлагнах"
-
-#~ msgid ""
-#~ "Fill this product to track easily your production costs in the analytic "
-#~ "accounting."
-#~ msgstr ""
-#~ "Энэ барааг бөглөснөөр үйлдвэрлэлийн өртөгийг шинжилгээний санхүүд "
-#~ "хялбархнаар хөтлөж болно."
-
-#~ msgid "UOM"
-#~ msgstr "Х.нэгж"
-
-#~ msgid "["
-#~ msgstr "["
-
-#~ msgid ""
-#~ "Create a product form for everything you buy or sell. Specify a supplier if "
-#~ "the product can be purchased."
-#~ msgstr ""
-#~ "Худалдаж авдаг, зардаг бүх л төрлийн бараа үүсгэх форм. Хэрэв бараа нь "
-#~ "худалдаж авч болдог бол нийлүүлэгчийг зааж өгнө үү."
-
-#~ msgid "Cloth"
-#~ msgstr "Хувцас"
-
-#~ msgid "Default UOM"
-#~ msgstr "Анхны нь хэм.нэгж"
-
-#~ msgid "Nbr of hours"
-#~ msgstr "Цагийн тоо"
-
-#~ msgid "You try to assign a lot which is not from the same product"
-#~ msgstr "Ижил биш барааны цувралыг олгох гэж байна"
-
-#~ msgid ""
-#~ "Manufacturing Orders are usually proposed automatically by OpenERP based on "
-#~ "the bill of materials and the procurement rules, but you can also create "
-#~ "manufacturing orders manually. OpenERP will handle the consumption of the "
-#~ "raw materials (stock decrease) and the production of the finished products "
-#~ "(stock increase) when the order is processed."
-#~ msgstr ""
-#~ "OpenERP нь ихэвчлэн татан авалтын дүрэм болон жор дээр үндэслэн "
-#~ "Үйлдвэрлэлийн захиалгыг автоматаар санал болгодог, гэхдээ гараараа "
-#~ "үйлдвэрлэлийн захиалгыг мөн үүсгэх боломжтой.  Систем үйлдвэрлэхэд "
-#~ "шаардагдах түүхий эд материалын зарлага (нөөц хорогдох) бүртгэж "
-#~ "үйлдвэрлэлийн захиалга дуусах үед бэлэн болсон барааны орлого (нөөц "
-#~ "нэмэгдэх) бүртгэдэг."
-
-#~ msgid "Component Product"
-#~ msgstr "Бүрэлдхүүн Бараа"
-
-#~ msgid ""
-#~ "The Properties in OpenERP are used to select the right bill of materials for "
-#~ "manufacturing a product when you have different ways of building the same "
-#~ "product. You can assign several properties to each Bill of Materials. When a "
-#~ "sales person creates a sales order, he can relate it to several properties "
-#~ "and OpenERP will automatically select the BoM to use according the needs."
-#~ msgstr ""
-#~ "Ижил барааг ялгаатай аргуудаар үйлдвэрлэгдэх гэж байгаа бол OpenERP-д "
-#~ "үзүүлэлтийг ашиглан зөв жорыг сонгоход ашигладаг. Жоруудад хэд хэдэн "
-#~ "үзүүлэлтийг оноож болно. Борлуулалтын ажилтан борлуулалтын захиалга үүсгэхэд "
-#~ "хэд хэдэн үзүүлэлттэй холбож болох бөгөөд OpenERP автоматаар шаардлагын "
-#~ "дагуух жоруудыг сонгоно."
-
-#~ msgid "The company name must be unique !"
-#~ msgstr "Компаний нэр үл давхцах байх ёстой !"
-
-#~ msgid "Configure your work centers"
-#~ msgstr "Дамжлагыг тохируулах"
-
-#~ msgid "Nbr of cycles"
-#~ msgstr "Циклийн тоо"
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "Алдаа: EAN код буруу"
-
-#~ msgid "Modification Date"
-#~ msgstr "Зассан огноо"
-
-#~ msgid ""
-#~ "Define specific property groups that can be assigned to the properties of "
-#~ "your bill of materials."
-#~ msgstr ""
-#~ "Тусгайлсан үзүүлэлтийн бүлэгүүдийг үүсгэх бөгөөд эдгээр нь жоруудын "
-#~ "үзүүлэлтэд оноогдож болно."
-
-#~ msgid ""
-#~ "Complete this only if you want automatic analytic accounting entries on "
-#~ "production orders."
-#~ msgstr ""
-#~ "Үйлдвэрлэлийн захиалга дээр шинжилгээний санхүүгийн автомат бичилтүүдийг "
-#~ "хийлгэмээр байвал үүнийг бөглөнө үү."
-
-#, python-format
-#~ msgid "Supplier Price per Uom"
-#~ msgstr "Хэм.Нэгжээрх нийлүүлэгчийн үнэ"
-
-#~ msgid "Author"
-#~ msgstr "Зохиогч"
-
-#~ msgid "You can not move products from or to a location of the type view."
-#~ msgstr "Харагдац төрөлтэй байрлалаас/байрлалруу шилжүүлж болохгүй."
-
-#~ msgid "Change Qty"
-#~ msgstr "Тоо хэмжээг өөрчлөх"
-
-#~ msgid "Product UOM"
-#~ msgstr "Барааны Х.Нэгж"
-
-#~ msgid "Shirt Buttons"
-#~ msgstr "Цамц Даруулууд"
-
-#, python-format
-#~ msgid "Couldn't find bill of material for product"
-#~ msgstr "Барааны жорыг олж чадсангүй"
-
-#, python-format
-#~ msgid "Invalid action !"
-#~ msgstr "Буруу үйлдэл !"
-
-#~ msgid ""
-#~ "Work Centers allow you to create and manage manufacturing units.  They "
-#~ "consist of workers and/or machines, which are considered as units for "
-#~ "capacity and planning forecast.  Keep in mind that the working time and "
-#~ "resource leave are not taken into account in the time computation of the "
-#~ "work center."
-#~ msgstr ""
-#~ "Үйлдвэрлэлийн нэгжүүдийг үүсгэх болон менеж хийх боломжийг дамжлагууд нь "
-#~ "олгодог. Ажилтан/машинаас тогтдог бөгөөд чадавхи болон төлөвлөлтийг "
-#~ "урьдчилан гаргах нэгж болж өгдөг. Гэхдээ ажлын цаг болон амралт, чөлөө зэрэг "
-#~ "нь дамжлагын тооцооллыг хийхэд тооцогддоггүй болохыг санаж байх хэрэгтэй."
-
-#~ msgid "Modification name"
-#~ msgstr "Өөрчлөлтийн нэр"
-
-#~ msgid "Nbr of cycle"
-#~ msgstr "Циклийн тоо"
-
-#, python-format
-#~ msgid "Could not cancel manufacturing order !"
-#~ msgstr "Үйлдвэрлэлийн захиалгыг цуцлах боломжгүй !"
-
-#~ msgid "Dashboard"
-#~ msgstr "Хянах самбар"
-
-#, python-format
-#~ msgid "Cannot delete a manufacturing order in state '%s'"
-#~ msgstr "'%s' төлөлтэй үйлдвэрлэлийн захиалгыг устгах боломжгүй"
-
-#~ msgid "Move product"
-#~ msgstr "Барааг шилжүүлэх"
-
-#, python-format
-#~ msgid "Active Id is not found"
-#~ msgstr "Идэвэхтэй ID олдсонгүй"
-
-#~ msgid "Qty"
-#~ msgstr "Тоо хэмжээ"
-
-#~ msgid "Source Loc."
-#~ msgstr "Эх байрлал."
-
-#~ msgid "]"
-#~ msgstr "]"
-
-#~ msgid "Start Production"
-#~ msgstr "Үйлдвэрлэл эхлэх"
-
-#~ msgid "Production Dashboard"
-#~ msgstr "Үйлдвэрлэлийн Хянах Самбар"
-
-#~ msgid ""
-#~ "Manufacturing Orders describe the operations that need to be carried out and "
-#~ "the raw materials usage for each production stage. You use specifications "
-#~ "(bills of materials or BoM) to work out the raw material requirements and "
-#~ "the manufacturing orders needed for the finished products. Once the bills of "
-#~ "materials have been defined, OpenERP is capable of automatically deciding on "
-#~ "the manufacturing route depending on the needs of the company."
-#~ msgstr ""
-#~ "Үйлдвэрлэлийн захиалга нь хийгдэх үйлдлүүд болон үйлдвэрлэлийн үе бүр дэх "
-#~ "хэрэглэгдэх түүхий эдийн хэрэглээ зэрэгийг илэрхийлж харуулдаг. Түүхийн "
-#~ "эдийн шаардлагыг жороор нарийвчлан тодорхойлсон байдагийг хэрэглэх "
-#~ "боломжтой. Жорууд тодорхойлогдсон бол OpenERP нь автоматаар үйлдвэрлэлийн "
-#~ "маршрутыг шийдэж сонгодог."
-
-#~ msgid "MRP Management"
-#~ msgstr "Үйлдвэрлэлийн Менежмент"
-
-#~ msgid ""
-#~ "Routings allow you to create and manage the manufacturing operations that "
-#~ "should be followed within your work centers in order to produce a product. "
-#~ "They are attached to bills of materials that will define the required raw "
-#~ "materials."
-#~ msgstr ""
-#~ "Маршрут нь барааг үйлдвэрлэхэд дамжлагуудын хийх үйлдлүүдийг тодорхойлох "
-#~ "менеж хийхэд хэрэглэгддэг. Эдгээр нь жоруудад холбогдсон байх бөгөөд жор нь "
-#~ "шаардагдах түүхий эдийг тодорхойлдог."
-
-#~ msgid "Nbr of hour"
-#~ msgstr "Цагийн тоо"
-
-#~ msgid "Create or Import Products"
-#~ msgstr "Бараануудыг үүсгэх буюу импортлох"
-
-#~ msgid "Shirt"
-#~ msgstr "Цамц"
-
-#~ msgid "Revisions"
-#~ msgstr "Хувилбарууд"
-
-#, python-format
-#~ msgid "Manufacturing order '%s' is scheduled for the %s."
-#~ msgstr "Үйлдвэрлэлийн захиалга '%s'-н товлолт нь %s."
-
-#, python-format
-#~ msgid "Manufacturing order '%s' is ready to produce."
-#~ msgstr "Үйлдвэрлэлийн захиалга '%s' нь үйлдвэрлэхэд бэлэн."
-
-#~ msgid "Water"
-#~ msgstr "Ус"
-
-#~ msgid "Component Name"
-#~ msgstr "Бүрэлдхүүний Нэр"
-
-#~ msgid ""
-#~ "Master Bills of Materials allow you to create and manage the list of "
-#~ "necessary raw materials used to make a finished product. OpenERP will use "
-#~ "these BoMs to automatically propose manufacturing orders according to "
-#~ "product needs. You can either create a bill of materials to define specific "
-#~ "production steps or define a single multi-level bill of materials."
-#~ msgstr ""
-#~ "Мастер Жорууд нь барааг үйлдвэрлэхэд шаардлагатай түүхий эдийг үүсгэх менеж "
-#~ "хийх боломж олгодог. Жор дээр үндэслэн OpenERP нь автоматаар үйлдвэрлэлийн "
-#~ "захиалгыг санал болгодог. Үйлдвэрлэлийн тодорхой алхамуудыг тодохойлох "
-#~ "жоруудыг үүсгэх боломжтой. Түүнчлэн нэг болон олон түвшинтэй жоруудыг "
-#~ "тодорхойлох боломжтой."
-
-#~ msgid "Split in production lots"
-#~ msgstr "Барааны цувралаар салгах"
-
-#, python-format
-#~ msgid "Couldn't find a bill of material for this product."
-#~ msgstr "Энэ барааны жорыг олсонгүй."
-
-#~ msgid "Bill of Material Revision"
-#~ msgstr "Жорын Шинэчилсэн хувилбар"
-
-#~ msgid ""
-#~ "All product quantities must be greater than 0.\n"
-#~ "You should install the mrp_subproduct module if you want to manage extra "
-#~ "products on BoMs !"
-#~ msgstr ""
-#~ "Бүх барааны тоо хэмжээ нь 0-с их байх ёстой.\n"
-#~ "Жорд нэмэлт барааг менеж хийхийг хүсвэл mrp_subproduct модулийн суулгана."
-
-#, python-format
-#~ msgid "Copy"
-#~ msgstr "Хуулах"
-
-#~ msgid "Production Products"
-#~ msgstr "Бараануудын Үйлдвэрлэл"
-
-#~ msgid "Production Products Consommation"
-#~ msgstr "Үйлдвэрлэлийн Бараануудын Хангамж"
-
-#~ msgid ""
-#~ "UoM (Unit of Measure) is the unit of measurement for the inventory control"
-#~ msgstr ""
-#~ "Хэмжих нэгж гэдэг нь бараа материалын хяналтад хэрэглэгддэг хэмжих нэгж юм"
-
-#~ msgid "Product UoS Qty"
-#~ msgstr "Барааны Борлуулах нэгжээрх тоо"
-
-#~ msgid ""
-#~ "If a sub-product is used in several products, it can be useful to create its "
-#~ "own BoM. Though if you don't want separated production orders for this sub-"
-#~ "product, select Set/Phantom as BoM type. If a Phantom BoM is used for a root "
-#~ "product, it will be sold and shipped as a set of components, instead of "
-#~ "being produced."
-#~ msgstr ""
-#~ "Хэрэв дэд бараан нь хэд хэдэн бараанд хэрэглэгдэж байгаа бол үүнд зориулсан "
-#~ "өөрийн нь жорыг үүсгэх хэрэгтэй байдаг. Түүнчлэн тусдаа үйлдвэрлэлийн "
-#~ "захиалга үүсгэхийг хүсэхгүй байвал жорын төрөлийг Цогц/Дагалдах гэж сонгоно. "
-#~ "Хэрэв Дагалдах жор нь язгуур бараанд  хэрэглэгдэж байгаа бол энэ нь "
-#~ "үйлдвэрлэгдэхийн оронд язгуур бараатай хамт зарагдаж, хамт хүргэгддэг."
-
-#~ msgid ""
-#~ "When the production order is created the state is set to 'Draft'.\n"
-#~ " If the order is confirmed the state is set to 'Waiting Goods'.\n"
-#~ " If any exceptions are there, the state is set to 'Picking Exception'.       "
-#~ "                             \n"
-#~ "If the stock is available then the state is set to 'Ready to Produce'.\n"
-#~ " When the production gets started then the state is set to 'In Production'.\n"
-#~ " When the production is over, the state is set to 'Done'."
-#~ msgstr ""
-#~ "Үйлдвэрлэлийн захиалга үүсгэгдсэн дараагаараа 'Ноорог' төлөтэй байдаг.\n"
-#~ " Батлагдсан дараагаараа 'Бараа хүлээж буй' төлөвтэй болдог.\n"
-#~ " Ямар нэг сондгойрол үүссэн бол 'Бэлтгэх Сондгойрол' төлөвтэй болдог.\n"
-#~ "Хэрэв нөөц бэлэн байвал 'Үйлдвэрлэхэд Бэлэн' төлөвтэй болдог.\n"
-#~ " Үйлдвэрлэлийг эхлүүлсэн дараа 'Хийгдэж буй' төлөвтэй болно.\n"
-#~ " Үйлдвэрлэгдэж дуусахад 'Хийгдсэн' төлөвтэй болдог."
-
-#~ msgid "Waiting Goods"
-#~ msgstr "Бараанууд Хүлээж буй"
-
-#~ msgid "Orange Juice"
-#~ msgstr "Жүржийн Шүүс"
-
-#~ msgid "BoM Revisions"
-#~ msgstr "Жорын өөрчлөлтүүд"
-
-#~ msgid "last indice"
-#~ msgstr "сүүлийн индекс"
-
-#~ msgid "Litre"
-#~ msgstr "Литр"
-
-#, python-format
-#~ msgid "Error"
-#~ msgstr "Алдаа"
-
-#~ msgid ""
-#~ "Bills of materials components are components and sub-products used to create "
-#~ "master bills of materials. Use this menu to search in which BoM a specific "
-#~ "component is used."
-#~ msgstr ""
-#~ "Жорын бүрэрлдэхүүнүүд нь мастер жоруудыг тодорхойлоход хэрэглэгддэг дэд "
-#~ "бараа болон бүрэлдэхүүнүүд байдаг. Энэ менюг ашиглан  аль жоронд тодорхой "
-#~ "бүрэлдэхүүн хэрэглэгдэж байгааг хайдаг."
-
-#~ msgid "You must assign a production lot for this product"
-#~ msgstr "Бараанд цувралыг оноох ёстой."
-
-#~ msgid "Scheduled date"
-#~ msgstr "Товлосон огноо"
-
-#~ msgid "Next Production Orders"
-#~ msgstr "Дараагийн үйлдвэрлэлийн захиалгууд"
-
-#~ msgid "Scheduled End Date"
-#~ msgstr "Товлосон дуусгах огноо"
-
-#~ msgid "Split in Production lots"
-#~ msgstr "Үйлдвэрлэлийн цувралаар Салгах"
-
-#, python-format
-#~ msgid "PROD: %s"
-#~ msgstr "ҮЙЛД: %s"
-
-#~ msgid "Sugar"
-#~ msgstr "Элсэн чихэр"
-
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "Алдаа! Тойрог хамааралтай компани үүсгэж болохгүй."
-
-#~ msgid "Picking list"
-#~ msgstr "Бэлтгэх баримт"

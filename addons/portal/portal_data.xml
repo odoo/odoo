@@ -14,14 +14,14 @@
 
         <!-- Mail group for the company's news -->
         <record id="company_news_feed" model="mail.group">
-            <field name="name">Company's news</field>
+            <field name="name">Company News</field>
             <field name="public">public</field>
         </record>
 
         <record id="action_news" model="ir.actions.client">
             <field name="name">News</field>
             <field name="tag">mail.wall</field>
-            <field name="model">mail.group</field>
+            <field name="res_model">mail.group</field>
             <field name="params" eval="{
                 'domain': [
                     ('model', '=', 'mail.group'),
@@ -46,15 +46,14 @@
 
         <!-- Mail group for the company's jobs -->
         <record id="company_jobs" model="mail.group">
-            <field name="name">Company's jobs</field>
+            <field name="name">Company Jobs</field>
             <field name="public">public</field>
         </record>
 
         <record id="action_jobs" model="ir.actions.client">
             <field name="name">Jobs</field>
             <field name="tag">mail.wall</field>
-            <field name="res_model">mail.message</field>
-            <field name="res_id" ref="company_jobs"/>
+            <field name="res_model">mail.group</field>
             <field name="params" eval="{
                 'domain':[
                     ('model', '=', 'mail.group'),

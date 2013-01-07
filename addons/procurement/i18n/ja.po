@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-06-08 03:00+0000\n"
-"Last-Translator: Akira Hiyama <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:48+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:27+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_sched
@@ -48,12 +48,6 @@ msgid "Draft procurement of the product and location of that orderpoint"
 msgstr "ドラフトの製品の調達とその発注点の場所"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:290
-#, python-format
-msgid "No supplier defined for this product !"
-msgstr "この製品には仕入先が定義されていません。"
-
-#. module: procurement
 #: view:product.product:0
 msgid ""
 "required quantities are always\n"
@@ -81,10 +75,9 @@ msgid "Manufacture"
 msgstr ""
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:307
-#, python-format
-msgid "No address defined for the supplier"
-msgstr "仕入先の住所が定義されていません。"
+#: model:process.process,name:procurement.process_process_serviceproductprocess0
+msgid "Service"
+msgstr "サービス"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.action_procurement_compute
@@ -109,7 +102,6 @@ msgstr "販売単位の数量"
 
 #. module: procurement
 #: view:procurement.order:0
-#: field:procurement.order,name:0
 msgid "Reason"
 msgstr "理由"
 
@@ -137,11 +129,6 @@ msgstr "情報目的のみであるため、計算には使用されません。
 #: field:stock.warehouse.orderpoint,procurement_id:0
 msgid "Latest procurement"
 msgstr "最新の調達"
-
-#. module: procurement
-#: view:procurement.order:0
-msgid "Notes"
-msgstr "注記"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.action_orderpoint_form
@@ -178,6 +165,11 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: procurement
+#: view:procurement.order:0
+msgid "Permanent Procurement Exceptions"
+msgstr "継続する調達の例外"
+
+#. module: procurement
 #: help:procurement.order,message_unread:0
 msgid "If checked new messages require your attention."
 msgstr ""
@@ -193,9 +185,9 @@ msgid "Stock Move"
 msgstr "在庫移動"
 
 #. module: procurement
-#: model:ir.model,name:procurement.model_procurement_order_compute_all
-msgid "Compute all schedulers"
-msgstr "全スケジュールを計算"
+#: view:product.product:0
+msgid "Stockable products"
+msgstr ""
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:137
@@ -239,11 +231,6 @@ msgid ""
 msgstr ""
 
 #. module: procurement
-#: view:product.product:0
-msgid "Stockable products"
-msgstr ""
-
-#. module: procurement
 #: selection:procurement.order,state:0
 msgid "Confirmed"
 msgstr "確認済"
@@ -252,12 +239,6 @@ msgstr "確認済"
 #: view:procurement.order:0
 msgid "Retry"
 msgstr "再試行"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:498
-#, python-format
-msgid "Procurement <b>confirmed</b>."
-msgstr ""
 
 #. module: procurement
 #: view:procurement.order.compute:0
@@ -295,7 +276,7 @@ msgid "Minimum Inventory Rule"
 msgstr "最小在庫ルール"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:395
+#: code:addons/procurement/procurement.py:369
 #, python-format
 msgid "Procurement '%s' is in exception: "
 msgstr "調達 %s は例外です： "
@@ -311,9 +292,9 @@ msgid "Reordering Rules Search"
 msgstr ""
 
 #. module: procurement
-#: field:procurement.order,message_summary:0
-msgid "Summary"
-msgstr ""
+#: selection:procurement.order,state:0
+msgid "Waiting"
+msgstr "待機中"
 
 #. module: procurement
 #: field:procurement.order,message_follower_ids:0
@@ -382,7 +363,7 @@ msgid "Quantity"
 msgstr "数量"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:390
+#: code:addons/procurement/procurement.py:364
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
 msgstr "十分な在庫がなく、かつ最小発注点ルールが定義されていません。"
@@ -397,12 +378,6 @@ msgstr "単位"
 #: selection:procurement.order,procure_method:0
 #: selection:product.template,procure_method:0
 msgid "Make to Stock"
-msgstr ""
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:501
-#, python-format
-msgid "Procurement <b>cancelled</b>."
 msgstr ""
 
 #. module: procurement
@@ -487,11 +462,6 @@ msgstr "調達要求"
 #: view:procurement.orderpoint.compute:0
 msgid "Compute Stock"
 msgstr "在庫計算"
-
-#. module: procurement
-#: model:process.process,name:procurement.process_process_serviceproductprocess0
-msgid "Service"
-msgstr "サービス"
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,procurement_draft_ids:0
@@ -638,7 +608,7 @@ msgid "Is a Follower"
 msgstr ""
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:392
+#: code:addons/procurement/procurement.py:366
 #, python-format
 msgid "Not enough stock."
 msgstr "十分な在庫ではありません。"
@@ -654,17 +624,11 @@ msgid "Procure Products"
 msgstr "調達製品"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:336
+#: code:addons/procurement/procurement.py:311
 #, python-format
 msgid ""
 "Please check the quantity in procurement order(s) for the product \"%s\", it "
 "should not be 0 or less!"
-msgstr ""
-
-#. module: procurement
-#: field:procurement.order,message_comment_ids:0
-#: help:procurement.order,message_comment_ids:0
-msgid "Comments and emails"
 msgstr ""
 
 #. module: procurement
@@ -716,15 +680,9 @@ msgid "Extra Information"
 msgstr "追加情報"
 
 #. module: procurement
-#: help:procurement.order,name:0
-msgid "Procurement name."
-msgstr "調達名"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:297
-#, python-format
-msgid "No default supplier defined for this product"
-msgstr "この製品には仕入先が定義されていません。"
+#: field:procurement.order,message_summary:0
+msgid "Summary"
+msgstr ""
 
 #. module: procurement
 #: sql_constraint:stock.warehouse.orderpoint:0
@@ -760,7 +718,7 @@ msgid "Properties composition"
 msgstr "属性の構成"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:335
+#: code:addons/procurement/procurement.py:310
 #, python-format
 msgid "Data Insufficient !"
 msgstr "データが不足しています。"
@@ -776,12 +734,6 @@ msgstr "属性グループ"
 #: view:stock.warehouse.orderpoint:0
 msgid "Misc"
 msgstr "その他"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:504
-#, python-format
-msgid "Procurement <b>done</b>."
-msgstr ""
 
 #. module: procurement
 #: field:stock.move,procurements:0
@@ -823,13 +775,10 @@ msgid "Not urgent"
 msgstr "緊急外"
 
 #. module: procurement
-#: model:ir.actions.act_window,name:procurement.procurement_action5
-#: model:ir.actions.act_window,name:procurement.procurement_action_board
-#: model:ir.actions.act_window,name:procurement.procurement_exceptions
-#: model:ir.ui.menu,name:procurement.menu_stock_procurement_action
-#: view:procurement.order:0
-msgid "Procurement Exceptions"
-msgstr "調達の例外"
+#: model:ir.actions.act_window,name:procurement.product_open_orderpoint
+#: view:product.product:0
+msgid "Orderpoints"
+msgstr ""
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,product_max_qty:0
@@ -840,9 +789,9 @@ msgid ""
 msgstr ""
 
 #. module: procurement
-#: view:procurement.order:0
-msgid "Permanent Procurement Exceptions"
-msgstr "継続する調達の例外"
+#: model:ir.model,name:procurement.model_procurement_order_compute_all
+msgid "Compute all schedulers"
+msgstr "全スケジュールを計算"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -855,10 +804,13 @@ msgid "Procurements in Exception"
 msgstr "調達の例外"
 
 #. module: procurement
-#: model:ir.actions.act_window,name:procurement.product_open_orderpoint
-#: view:product.product:0
-msgid "Orderpoints"
-msgstr ""
+#: model:ir.actions.act_window,name:procurement.procurement_action5
+#: model:ir.actions.act_window,name:procurement.procurement_action_board
+#: model:ir.actions.act_window,name:procurement.procurement_exceptions
+#: model:ir.ui.menu,name:procurement.menu_stock_procurement_action
+#: view:procurement.order:0
+msgid "Procurement Exceptions"
+msgstr "調達の例外"
 
 #. module: procurement
 #: field:product.product,orderpoint_ids:0
@@ -903,6 +855,7 @@ msgstr "一時的"
 #. module: procurement
 #: field:mrp.property,description:0
 #: field:mrp.property.group,description:0
+#: field:procurement.order,name:0
 msgid "Description"
 msgstr "説明"
 
@@ -922,11 +875,6 @@ msgstr "実行中"
 #: selection:product.template,procure_method:0
 msgid "Make to Order"
 msgstr "オーダーの作成"
-
-#. module: procurement
-#: selection:procurement.order,state:0
-msgid "Waiting"
-msgstr "待機中"
 
 #. module: procurement
 #: field:product.template,supply_method:0
@@ -1020,11 +968,6 @@ msgid "Automatic Orderpoint"
 msgstr "自動発注点"
 
 #. module: procurement
-#: view:procurement.order:0
-msgid "Procurement Details"
-msgstr "調達の詳細"
-
-#. module: procurement
 #: help:procurement.order,message_ids:0
 msgid "Messages and communication history"
 msgstr ""
@@ -1033,12 +976,6 @@ msgstr ""
 #: view:procurement.order:0
 msgid "Procurement started late"
 msgstr "遅れて開始された調達"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:495
-#, python-format
-msgid "Procurement <b>created</b>."
-msgstr ""
 
 #. module: procurement
 #: selection:mrp.property,composition:0
@@ -1071,211 +1008,7 @@ msgid "PROC %d: on order - %3.2f %-5s - %s"
 msgstr "調達 %d：オーダー中 - %3.2f %-5s - %s"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:364
+#: code:addons/procurement/procurement.py:338
 #, python-format
 msgid "Products reserved from stock."
 msgstr ""
-
-#~ msgid "Minimum Stock Rules Search"
-#~ msgstr "最小在庫ルールの検索"
-
-#~ msgid ""
-#~ "When a procurement is created the state is set to 'Draft'.\n"
-#~ " If the procurement is confirmed, the state is set to 'Confirmed'.           "
-#~ " \n"
-#~ "After confirming the state is set to 'Running'.\n"
-#~ " If any exception arises in the order then the state is set to 'Exception'.\n"
-#~ " Once the exception is removed the state becomes 'Ready'.\n"
-#~ " It is in 'Waiting'. state when the procurement is waiting for another one "
-#~ "to finish."
-#~ msgstr ""
-#~ "調達が生成されると、状態はドラフトにセットされます。\n"
-#~ "　調達が確認されると、状態は確認済にセットされます。\n"
-#~ "確認の後に状態は実行中にセットされます。            \n"
-#~ "　オーダーで何らかの例外が発生すると、状態は例外にセットされます。\n"
-#~ "　例外が取り除かれると、状態は準備完了になります。\n"
-#~ "　調達が他の調達の完了を待っている時は、待機中の状態になります。"
-
-#~ msgid "Planification"
-#~ msgstr "計画化"
-
-#~ msgid ""
-#~ "When the virtual stock goes below the Min Quantity, OpenERP generates a "
-#~ "procurement to bring the virtual stock to the Quantity specified as Max "
-#~ "Quantity."
-#~ msgstr "実質上の在庫が最小数量を下回った時に、OpenERPは最大数量として定義された数量まで実質上の在庫を持ってくるために調達を生成します。"
-
-#~ msgid ""
-#~ "When the virtual stock goes below the Min Quantity specified for this field, "
-#~ "OpenERP generates a procurement to bring the virtual stock to the Max "
-#~ "Quantity."
-#~ msgstr ""
-#~ "実質上の在庫がこの項目のために定義された最小数量を下回った時に、OpenERPは最大数量まで実質上の在庫を持ってくるために調達を生成します。"
-
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "エラー。再帰的な関係となる会社を作ることはできません。"
-
-#, python-format
-#~ msgid ""
-#~ "Here is the procurement scheduling report.\n"
-#~ "\n"
-#~ "        Start Time: %s \n"
-#~ "        End Time: %s \n"
-#~ "        Total Procurements processed: %d \n"
-#~ "        Procurements with exceptions: %d \n"
-#~ "        Skipped Procurements (scheduled date outside of scheduler range) %d "
-#~ "\n"
-#~ "\n"
-#~ "        Exceptions:\n"
-#~ msgstr ""
-#~ "これは調達スケジュールレポートです。\n"
-#~ "\n"
-#~ "        開始時間：%s \n"
-#~ "        終了時間：%s \n"
-#~ "        合計調達処理：%d \n"
-#~ "        調達の例外：%d \n"
-#~ "        スキップした調達（スケジューラーの範囲外の予定日）：%d \n"
-#~ "\n"
-#~ "        例外：\n"
-
-#~ msgid "State"
-#~ msgstr "状態"
-
-#~ msgid "Product & Location"
-#~ msgstr "製品と場所"
-
-#~ msgid "on order"
-#~ msgstr "オーダー中"
-
-#~ msgid "References"
-#~ msgstr "参照"
-
-#, python-format
-#~ msgid "Invalid action !"
-#~ msgstr "無効なアクションです。"
-
-#~ msgid "Minimum Stock Rule"
-#~ msgstr "最小在庫ルール"
-
-#~ msgid "Max Quantity"
-#~ msgstr "最大数量"
-
-#~ msgid "Configuration"
-#~ msgstr "設定"
-
-#, python-format
-#~ msgid ""
-#~ "Please check the quantity in procurement order(s), it should not be 0 or "
-#~ "less!"
-#~ msgstr "調達オーダーの数量をチェックして下さい。0やそれ以下であってはなりません。"
-
-#~ msgid "Min Quantity"
-#~ msgstr "最小数量"
-
-#~ msgid "You can not move products from or to a location of the type view."
-#~ msgstr "タイプビューの場所から、あるいは場所へは製品を動かすことはできません。"
-
-#, python-format
-#~ msgid "No minimum orderpoint rule defined."
-#~ msgstr "最小発注点ルールが定義されていません。"
-
-#~ msgid "You try to assign a lot which is not from the same product"
-#~ msgstr "違う製品のロットを割り当てることはできません。"
-
-#~ msgid "Procurement Reason"
-#~ msgstr "調達理由"
-
-#~ msgid "Reference must be unique per Company!"
-#~ msgstr "参照は会社ごとに固有でなければいけません。"
-
-#~ msgid "Locations"
-#~ msgstr "場所"
-
-#~ msgid "from stock"
-#~ msgstr "在庫から"
-
-#~ msgid "General Information"
-#~ msgstr "一般情報"
-
-#~ msgid "Details"
-#~ msgstr "詳細"
-
-#~ msgid "Quantity Rules"
-#~ msgstr "数量のルール"
-
-#~ msgid "Product UOM"
-#~ msgstr "製品単位"
-
-#~ msgid "UOM"
-#~ msgstr "単位"
-
-#~ msgid "MRP & Logistics Scheduler"
-#~ msgstr "MRPと物流のスケジューラ"
-
-#, python-format
-#~ msgid "Cannot delete Procurement Order(s) which are in %s state!"
-#~ msgstr "%s 状態であるため調達オーダーは削除できません。"
-
-#~ msgid "The company name must be unique !"
-#~ msgstr "会社名は固有でなければいけません。"
-
-#~ msgid "Product UoM"
-#~ msgstr "製品単位"
-
-#~ msgid "Compute Schedulers"
-#~ msgstr "スケジューラを計算"
-
-#, python-format
-#~ msgid "from stock: products assigned."
-#~ msgstr "在庫から：製品は割当済"
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "エラー：無効な商品識別番号です。"
-
-#~ msgid ""
-#~ "This wizard will plan the procurement for this product. This procurement may "
-#~ "generate task, production orders or purchase orders."
-#~ msgstr "このウィザードはこの製品のための調達を計画します。この調達は製造オーダーまたは発注オーダーのタスクを生成します。"
-
-#~ msgid ""
-#~ "Procurement Orders represent the need for a certain quantity of products, at "
-#~ "a given time, in a given location. Sales Orders are one typical source of "
-#~ "Procurement Orders (but these are distinct documents). Depending on the "
-#~ "procurement parameters and the product configuration, the procurement engine "
-#~ "will attempt to satisfy the need by reserving products from stock, ordering "
-#~ "products from a supplier, or passing a manufacturing order, etc. A "
-#~ "Procurement Exception occurs when the system cannot find a way to fulfill a "
-#~ "procurement. Some exceptions will resolve themselves automatically, but "
-#~ "others require manual intervention (those are identified by a specific error "
-#~ "message)."
-#~ msgstr ""
-#~ "調達オーダーは与えられた時間と場所において製品の確かな数量のためのニーズを表しています。受注オーダーは調達オーダーのひとつの典型的な元（しかし、これらは別"
-#~ "個のドキュメントです）となっています。調達パラメータ、製品の設定に依存して、調達エンジンは在庫から製品を予約する、仕入先に製品をオーダーする、製造オーダー"
-#~ "を出すなどによりニーズを満たそうとします。システムが調達を満たす方法を見つけることができない場合、調達の例外が発生します。幾つかの例外は自動的に自分自身で"
-#~ "解決します。しかし、他は手動による介入を要求します（それらは特定のエラーメッセージにより識別されます）。"
-
-#~ msgid ""
-#~ "A procurement order is used to record a need for a specific product at a "
-#~ "specific location. A procurement order is usually created automatically from "
-#~ "sales orders, a Pull Logistics rule or Minimum Stock Rules. When the "
-#~ "procurement order is confirmed, it automatically creates the necessary "
-#~ "operations to fullfil the need: purchase order proposition, manufacturing "
-#~ "order, etc."
-#~ msgstr ""
-#~ "調達オーダーは特定の場所で特定の製品のためのニーズを記録するために使われます。調達オーダーは通常、受注オーダー、プル型物流ルールまたは最小在庫ルールから自"
-#~ "動的に作成されます。調達オーダーが確認された時、ニーズを埋めるために必要な操作を自動的に作成します：発注オーダーの提案、製造オーダーなど。"
-
-#~ msgid ""
-#~ "This wizard allows you to run all procurement, production and/or purchase "
-#~ "orders that should be processed based on their configuration. By default, "
-#~ "the scheduler is launched automatically every night by OpenERP. You can use "
-#~ "this menu to force it to be launched now. Note that it runs in the "
-#~ "background, you may have to wait for a few minutes until it has finished "
-#~ "computing."
-#~ msgstr ""
-#~ "このウィザードはそれらの設定に基づき実行されるべき全ての調達、製造や発注オーダーを実行することができます。デフォルトでは、スケジューラはOpenERPによ"
-#~ "って毎夜自動的に起動されます。このメニューを使えば、強制的に今、起動することができます。ただ、それはバックグラウンドで実行されるので、計算が終わるまで数分"
-#~ "待たされるかもしれません。"
-
-#~ msgid "You must assign a production lot for this product"
-#~ msgstr "この製品に製造ロットを割り当てる必要があります。"

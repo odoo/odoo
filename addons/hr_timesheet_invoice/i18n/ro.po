@@ -1,20 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* hr_timesheet_invoice
+# Romanian translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2010-11-27 08:30+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:36+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:17+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -96,21 +97,12 @@ msgid "March"
 msgstr "Martie"
 
 #. module: hr_timesheet_invoice
-#: help:account.analytic.account,to_invoice:0
-msgid ""
-"You usually invoice 100% of the timesheets. But if you mix fixed price and "
-"timesheet invoicing, you may use another ratio. For instance, if you do a "
-"20% advance invoice (fixed price, based on a sale order), you should invoice "
-"the rest on timesheet with a 80% ratio."
-msgstr ""
-
-#. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
 msgid "Profit"
 msgstr "Profit"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:165
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:144
 #, python-format
 msgid "You cannot modify an invoiced analytic line!"
 msgstr "Nu puteti modifica o linie analitica a facturii!"
@@ -124,11 +116,6 @@ msgstr "Rata factura"
 #: help:hr.timesheet.invoice.create.final,time:0
 msgid "Display time in the history of works"
 msgstr "Afisajeaza perioada in istoricul activitatilor"
-
-#. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.profit:0
-msgid "Journals"
-msgstr "Jurnale"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -176,7 +163,7 @@ msgid "Invoiced Amount"
 msgstr "Suma facturata"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:209
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:188
 #, python-format
 msgid "Analytic Account incomplete !"
 msgstr ""
@@ -187,10 +174,8 @@ msgid "Project"
 msgstr "Proiect"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:164
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:254
-#, python-format
-msgid "Error!"
+#: view:account.analytic.account:0
+msgid "Invoice on Timesheets Options"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -202,12 +187,6 @@ msgstr "Suma"
 #: help:hr.timesheet.invoice.create,name:0
 msgid "The detail of each work done will be displayed on the invoice"
 msgstr "Detaliile fiecarei activitati prestate vor aparea pe factura"
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:116
-#, python-format
-msgid "Contract has been set as <b>pending</b>."
-msgstr ""
 
 #. module: hr_timesheet_invoice
 #: field:account.analytic.account,pricelist_id:0
@@ -228,6 +207,15 @@ msgstr "Perioada pana la data de sfarsit"
 #: model:ir.model,name:hr_timesheet_invoice.model_report_analytic_account_close
 msgid "Analytic account to close"
 msgstr "Cont analitic de inchis"
+
+#. module: hr_timesheet_invoice
+#: help:account.analytic.account,to_invoice:0
+msgid ""
+"You usually invoice 100% of the timesheets. But if you mix fixed price and "
+"timesheet invoicing, you may use another ratio. For instance, if you do a "
+"20% advance invoice (fixed price, based on a sales order), you should "
+"invoice the rest on timesheet with a 80% ratio."
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
@@ -254,7 +242,7 @@ msgid "Deadline"
 msgstr "Termen limita"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:267
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:246
 #, python-format
 msgid "Configuration Error!"
 msgstr ""
@@ -291,7 +279,7 @@ msgid "Costs to invoice"
 msgstr "Costuri de facturat"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:267
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:246
 #, python-format
 msgid "Please define income account for product '%s'."
 msgstr ""
@@ -337,12 +325,6 @@ msgstr "Fisa de pontaj dupa Utilizator"
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice
 msgid "To Invoice"
 msgstr "De facturat"
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:98
-#, python-format
-msgid "Contract has been <b>closed</b>."
-msgstr ""
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.analytic.profit:0
@@ -464,11 +446,6 @@ msgstr "Luna"
 #: report:account.analytic.profit:0
 msgid "Currency"
 msgstr "Moneda"
-
-#. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.profit:0
-msgid "Users"
-msgstr "Utilizatori"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -623,11 +600,6 @@ msgid "Date"
 msgstr "Data"
 
 #. module: hr_timesheet_invoice
-#: model:mail.message.subtype,name:hr_timesheet_invoice.mt_account_closed
-msgid "finished"
-msgstr ""
-
-#. module: hr_timesheet_invoice
 #: field:report.timesheet.line,quantity:0
 #: field:report_timesheet.account,quantity:0
 #: field:report_timesheet.account.date,quantity:0
@@ -658,9 +630,9 @@ msgid "General Account"
 msgstr "Cont General"
 
 #. module: hr_timesheet_invoice
-#: view:account.analytic.account:0
-msgid "Invoice on Timesheets Options"
-msgstr ""
+#: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_analytic_profit
+msgid "Print Timesheet Profit"
+msgstr "Imprimati Profitul Fisei de pontaj"
 
 #. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
@@ -668,9 +640,10 @@ msgid "Totals:"
 msgstr "Total:"
 
 #. module: hr_timesheet_invoice
-#: model:mail.message.subtype,name:hr_timesheet_invoice.mt_account_canceled
-msgid "canceled"
-msgstr ""
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_account_analytic_line_to_invoice
+#: view:report.account.analytic.line.to.invoice:0
+msgid "Analytic Lines to Invoice"
+msgstr "Linii Analitice de Facturat"
 
 #. module: hr_timesheet_invoice
 #: help:account.analytic.line,to_invoice:0
@@ -769,13 +742,7 @@ msgid "Timesheets to invoice"
 msgstr "Fise de pontaj de facturat"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:104
-#, python-format
-msgid "Contract has been <b>canceled</b>."
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:210
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:189
 #, python-format
 msgid ""
 "Contract incomplete. Please fill in the Customer and Pricelist fields."
@@ -822,12 +789,6 @@ msgstr "Jurnal"
 #: help:hr.timesheet.invoice.create.final,product:0
 msgid "The product that will be used to invoice the remaining amount"
 msgstr "Produsul care va fi folosit pentru a factura suma ramasa"
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:110
-#, python-format
-msgid "Contract has been <b>opened</b>."
-msgstr ""
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create.final,time:0
@@ -885,11 +846,6 @@ msgid "Sale price"
 msgstr "Pret de vanzare"
 
 #. module: hr_timesheet_invoice
-#: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_analytic_profit
-msgid "Print Timesheet Profit"
-msgstr "Imprimati Profitul Fisei de pontaj"
-
-#. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timesheet_user
 msgid "Timesheets per day"
 msgstr "Fise de pontaj pe zi"
@@ -904,7 +860,7 @@ msgid "April"
 msgstr "Aprilie"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:254
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:233
 #, python-format
 msgid ""
 "There is no product defined. Please select one or force the product through "
@@ -934,10 +890,11 @@ msgid "Units"
 msgstr "Unitati"
 
 #. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_account_analytic_line_to_invoice
-#: view:report.account.analytic.line.to.invoice:0
-msgid "Analytic Lines to Invoice"
-msgstr "Linii Analitice de Facturat"
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:143
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:233
+#, python-format
+msgid "Error!"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor4
@@ -980,376 +937,3 @@ msgstr "An"
 #: view:hr.timesheet.analytic.profit:0
 msgid "Duration"
 msgstr ""
-
-#~ msgid "Visible name"
-#~ msgstr "Nume vizibil"
-
-#~ msgid "Start of period"
-#~ msgstr "Inceputul perioadei"
-
-#, python-format
-#~ msgid "Analytic account incomplete"
-#~ msgstr "Cont analitic incomplet"
-
-#~ msgid "    7 Days    "
-#~ msgstr "    7 zile    "
-
-#~ msgid "This Year"
-#~ msgstr "Anul acesta"
-
-#~ msgid "UoM"
-#~ msgstr "UdeM"
-
-#~ msgid "Uninvoiced line with billing rate"
-#~ msgstr "Linie nefacturata cu rata facturarii"
-
-#~ msgid "Sale Pricelist"
-#~ msgstr "Lista cu preturile de vanzare"
-
-#~ msgid "Reactivate Account"
-#~ msgstr "Reactivare cont"
-
-#~ msgid "Uninvoice Lines With Billing Rate"
-#~ msgstr "Linii nefactuate cu rata facturarii"
-
-#~ msgid "Final invoice for analytic account"
-#~ msgstr "Factura finala pentru contul analitic"
-
-#~ msgid "Accounts to invoice"
-#~ msgstr "Conturi de facturat"
-
-#~ msgid "Error! You can not create recursive analytic accounts."
-#~ msgstr "Eroare! Nu puteti crea conturi analitice recursive."
-
-#~ msgid "Balance product"
-#~ msgstr "Sold produs"
-
-#~ msgid "Final Invoice"
-#~ msgstr "Factura finala"
-
-#~ msgid "Do you want details for each line of the invoices ?"
-#~ msgstr "Doriti detaliile pentru fiecare linie a facturilor ?"
-
-#~ msgid "State"
-#~ msgstr "Stare"
-
-#, python-format
-#~ msgid "Data Insufficient!"
-#~ msgstr "Date insuficiente!"
-
-#~ msgid "Debit"
-#~ msgstr "Debit"
-
-#~ msgid "Employee"
-#~ msgstr "Angajat"
-
-#~ msgid "Lines to Invoice"
-#~ msgstr "Linii de facturat"
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "Eroare !"
-
-#~ msgid "Gratis"
-#~ msgstr "Gratuit"
-
-#~ msgid ""
-#~ "\n"
-#~ "Module to generate invoices based on costs (human resources, expenses, "
-#~ "...).\n"
-#~ "You can define price lists in analytic account, make some theoretical "
-#~ "revenue\n"
-#~ "reports, eso."
-#~ msgstr ""
-#~ "\n"
-#~ "Modul pentru generarea facturilor bazate pe costuri (resurse umane, "
-#~ "cheltuieli, ...).\n"
-#~ "Puteti defini liste de preturi in contul analitic, si sa faceti unele "
-#~ "venituri teoretice\n"
-#~ "rapoarte, etc."
-
-#, python-format
-#~ msgid "Partner incomplete"
-#~ msgstr "Partener incomplet"
-
-#~ msgid "Printing date"
-#~ msgstr "Data imprimarii"
-
-#, python-format
-#~ msgid "You can not modify an invoiced analytic line!"
-#~ msgstr "Nu puteti modifica o linie analitica facturata"
-
-#~ msgid "Employee or Journal Name"
-#~ msgstr "Nume angajat sau jurnal"
-
-#~ msgid "Invoice Balance amount"
-#~ msgstr "Sold factura"
-
-#~ msgid "Cost Ledger"
-#~ msgstr "Registru costuri"
-
-#~ msgid "Invoice analytic lines"
-#~ msgstr "Linii analitice factura"
-
-#~ msgid "Total:"
-#~ msgstr "Total:"
-
-#~ msgid "Credit"
-#~ msgstr "Credit"
-
-#, python-format
-#~ msgid ""
-#~ "Please fill in the partner and pricelist field in the analytic account:\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Va rugam completati campul partenerului si campul listei de preturi in "
-#~ "contul analitic:\n"
-#~ "%s"
-
-#~ msgid ""
-#~ "Error! The currency has to be the same as the currency of the selected "
-#~ "company"
-#~ msgstr "Eroare! Valuta trebuie sa fie la fel cu cea a companiei selectate"
-
-#, python-format
-#~ msgid "Error"
-#~ msgstr "Eroare"
-
-#~ msgid "End of period"
-#~ msgstr "Sfarsitul perioadei"
-
-#~ msgid "Date/Code"
-#~ msgstr "Data/Cod"
-
-#~ msgid "Reinvoice Costs"
-#~ msgstr "Refacturare costuri"
-
-#~ msgid "Do you want to show details of work in invoice ?"
-#~ msgstr "Doriti sa afisati detaliile activitatii in factura ?"
-
-#~ msgid "Period from"
-#~ msgstr "Perioada de la"
-
-#, python-format
-#~ msgid "Balance product needed"
-#~ msgstr "Este nevoie de soldul produsului"
-
-#, python-format
-#~ msgid ""
-#~ "Please fill in the Partner or Customer and Sale Pricelist fields in the "
-#~ "Analytic Account:\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Va rugam sa completati campurile Partener sau Client si Lista cu preturi de "
-#~ "vanzare din contul analitic:\n"
-#~ "%s"
-
-#, python-format
-#~ msgid "At least one line has no product !"
-#~ msgstr "Cel putin o linie nu are nici un produs !"
-
-#~ msgid "Uninvoice lines with billing rate"
-#~ msgstr "Nefacturare linii cu rata facturarii"
-
-#~ msgid "%"
-#~ msgstr "%"
-
-#~ msgid "Internal name"
-#~ msgstr "Nume intern"
-
-#~ msgid ""
-#~ "This list shows you every task you can invoice to the customer. Select the "
-#~ "lines and click the Action button to generate the invoices automatically."
-#~ msgstr ""
-#~ "Aceasta lista va arata fiecare sarcina pe care o puteti factura clientului. "
-#~ "Selectati liniile si faceti click pe butonul Actiune pentru a genera facturi "
-#~ "automat."
-
-#~ msgid "This Month"
-#~ msgstr "Luna aceasta"
-
-#~ msgid "Select Period"
-#~ msgstr "Selectati perioada"
-
-#~ msgid "Invoice on analytic lines"
-#~ msgstr "Factura in liniile analitice"
-
-#~ msgid "Type of Invoicing"
-#~ msgstr "Tip de facturare"
-
-#, python-format
-#~ msgid "Please fill a Balance product in the wizard"
-#~ msgstr "Va rugam completati un sold pentru produs in wizard"
-
-#~ msgid "Draft Analytic Accounts"
-#~ msgstr "Ciorna Conturi analitice"
-
-#~ msgid ""
-#~ "The cost of each work done will be displayed on the invoice. You probably "
-#~ "don't want to check this."
-#~ msgstr ""
-#~ "Costul fiecărei activităti efectuate va fi tipărit pe factura. Probabil că "
-#~ "nu doriti să bifati această optiune."
-
-#~ msgid "Timesheet lines in this year"
-#~ msgstr "Linii fise de pontaj din acest an"
-
-#~ msgid "Daily Timesheets for this year"
-#~ msgstr "Fise de pontaj zilnice pentru anul acesta"
-
-#~ msgid ""
-#~ "The product to invoice is defined on the employee form, the price will be "
-#~ "deduced by this pricelist on the product."
-#~ msgstr ""
-#~ "Produsul de facturat este definit in formularul angajatului, pretul va fi "
-#~ "dedus din aceasta lista de preturi pentru produs."
-
-#~ msgid "Name of entry"
-#~ msgstr "Numele inregistrarii"
-
-#~ msgid "Wrong credit or debit value in accounting entry !"
-#~ msgstr ""
-#~ "Valoare gresita a creditului sau debitului in inregistrarea contabila !"
-
-#~ msgid "Invoice Number must be unique per Company!"
-#~ msgstr "Numarul Facturii trebuie sa fie unic per Companie!"
-
-#, python-format
-#~ msgid "Analytic Account incomplete"
-#~ msgstr "Cont Analitic incomplet"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "Avertizare !"
-
-#~ msgid "Invalid BBA Structured Communication !"
-#~ msgstr "Comunicare Structurata BBA Nevalida !"
-
-#~ msgid "hr.timesheet.analytic.cost.ledger"
-#~ msgstr "ru.registru.fisa de pontaj.cost.analitic"
-
-#~ msgid "Timesheets"
-#~ msgstr "Fise de pontaj"
-
-#~ msgid "It allows to set the discount while making invoice"
-#~ msgstr "Va permite setarea reducerii in timp ce faceti factura"
-
-#~ msgid "Timesheet by user in this month"
-#~ msgstr "Fisa de pontaj dupa utilizator in aceasta luna"
-
-#~ msgid ""
-#~ "Fill this field if you plan to automatically generate invoices based on the "
-#~ "costs in this analytic account: timesheets, expenses, ...You can configure "
-#~ "an automatic invoice rate on analytic accounts."
-#~ msgstr ""
-#~ "Completati acest camp daca planuiti sa generati automat facturi bazate pe "
-#~ "costurile din acest cont analitic: fise de pontaj, cheltuieli,... Puteti "
-#~ "configura o rata automata a facturii in conturile analitice."
-
-#~ msgid "Bill Tasks Works"
-#~ msgstr "Facturati Activitati Sarcini"
-
-#, python-format
-#~ msgid "Configuration Error"
-#~ msgstr "Eroare de configurare"
-
-#~ msgid "Invoice on Timesheet & Costs"
-#~ msgstr "Facturi pe Fisele de pontaj & Costuri"
-
-#~ msgid ""
-#~ "Complete this field only if you want to force to use a specific product. "
-#~ "Keep empty to use the real product that comes from the cost."
-#~ msgstr ""
-#~ "Completati acest camp doar daca doriti sa impuneti folosirea unui anumit "
-#~ "produs. Lasati necompletat pentru a folosi produsul real care reiese din "
-#~ "cost."
-
-#~ msgid ""
-#~ "The selected account of your Journal Entry forces to provide a secondary "
-#~ "currency. You should remove the secondary currency on the account or select "
-#~ "a multi-currency view on the journal."
-#~ msgstr ""
-#~ "Contul selectat din Inregistrarea in Jurnal solicita furnizarea unei monede "
-#~ "secundare. Ar trebui sa stergeti moneda secundara din cont sau sa selectati "
-#~ "o vizualizare multi-moneda in jurnal."
-
-#~ msgid ""
-#~ "The date of your Journal Entry is not in the defined period! You should "
-#~ "change the date or remove this constraint from the journal."
-#~ msgstr ""
-#~ "Data Inregistrarii in Jurnal nu se afla in perioada definita! Ar trebui sa "
-#~ "schimbati data sau sa eliminati aceasta restrictie din jurnal."
-
-#~ msgid "Period to"
-#~ msgstr "Perioada pana la"
-
-#, python-format
-#~ msgid "No income account defined for product '%s'"
-#~ msgstr "Nu exista nici un cont de venituri definit pentru acest produs '%s'"
-
-#~ msgid "You can not create journal items on closed account."
-#~ msgstr "Nu puteti crea elemente ale jurnalului intr-un cont inchis."
-
-#, python-format
-#~ msgid "Please fill in the Address field in the Partner: %s."
-#~ msgstr "Va rugam completati campul Adresa in formularul Partenerului: %s."
-
-#~ msgid "J.C. /Move name"
-#~ msgstr "J.C. /Nume mutare"
-
-#~ msgid "You can not create journal items on an account of type view."
-#~ msgstr ""
-#~ "Nu puteti crea elemente ale jurnalului intr-un cont de tipul vizualizare."
-
-#~ msgid "Do you want to display work details on the invoice ?"
-#~ msgstr "Doriti sa afisati detaliile activitatii in factura ?"
-
-#~ msgid "You can not create analytic line on view account."
-#~ msgstr "Nu puteti crea o linie analitica in vizualizarea contului."
-
-#~ msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
-#~ msgstr ""
-#~ "Nu puteti modifica o inregistrare dintr-o fisa de pontaj "
-#~ "Confirmata/Efectuata !."
-
-#~ msgid "Close"
-#~ msgstr "Inchideti"
-
-#~ msgid "Company must be the same for its related account and period."
-#~ msgstr "Compania trebuie sa fie aceeasi pentru contul si perioada asociata."
-
-#~ msgid ""
-#~ "OpenERP allows you to create default invoicing types. You might have to "
-#~ "regularly assign discounts because of a specific contract or agreement with "
-#~ "a customer. From this menu, you can create additional types of invoicing to "
-#~ "speed up your invoicing."
-#~ msgstr ""
-#~ "OpenERP va permite sa creati tipuri predefinite de facturare. S-ar putea ca "
-#~ "dumneavoastra sa trebuiasca sa atribuiti frecvent reduceri datorita unui "
-#~ "contract specific sau a unui acord cu un client. Din acest meniu, puteti "
-#~ "crea tipuri suplimentare de facturare pentru a grabi facturarea."
-
-#~ msgid "Customer Pricelist"
-#~ msgstr "Lista de preturi Client"
-
-#~ msgid "Daily Timesheets of this month"
-#~ msgstr "Fise de pontaj Zilnice din luna aceasta"
-
-#, python-format
-#~ msgid "No Records Found for Report!"
-#~ msgstr "Nu au fost gasite Inregistrari pentru Raport!"
-
-#~ msgid "Invoicing Data"
-#~ msgstr "Date pentru facturare"
-
-#~ msgid "Timesheet by user in this year"
-#~ msgstr "Fise de pontaj dupa utilizator in acest an"
-
-#~ msgid "Timesheet lines in this month"
-#~ msgstr "Linii Fise de pontaj in luna aceasta"
-
-#~ msgid "Invoicing Statistics"
-#~ msgstr "Statistica Facturare"
-
-#~ msgid "Timesheet lines during last 7 days"
-#~ msgstr "Linii fise de pontaj in ultimele 7 zile"

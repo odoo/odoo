@@ -1,25 +1,27 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* project_issue
+# German translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-16 18:54+0000\n"
-"Last-Translator: Felix Schubert <Unknown>\n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2013-01-06 23:29+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-17 04:47+0000\n"
-"X-Generator: Launchpad (build 16372)\n"
+"X-Launchpad-Export-Date: 2013-01-07 05:44+0000\n"
+"X-Generator: Launchpad (build 16402)\n"
 
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_03
 msgid "Deadly bug"
-msgstr ""
+msgstr "Bedrohlicher Fehler"
 
 #. module: project_issue
 #: help:project.config.settings,fetchmail_issue:0
@@ -44,7 +46,12 @@ msgstr "Gruppierung..."
 #. module: project_issue
 #: field:project.issue,working_hours_open:0
 msgid "Working Hours to Open the Issue"
-msgstr "Arbeitszeit für Eröffnung"
+msgstr "Dauer b. Eröffn. d. Falls"
+
+#. module: project_issue
+#: model:mail.message.subtype,description:project_issue.mt_issue_started
+msgid "Issue started"
+msgstr "Fallbearbeitung gestartet"
 
 #. module: project_issue
 #: field:project.issue,date_open:0
@@ -70,18 +77,14 @@ msgstr "Fortschritt (%)"
 #: view:project.issue:0
 #: field:project.issue,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Ungelesene Nachrichten"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:560
-#, python-format
-msgid "<b>escalated</b>."
-msgstr ""
-
-#. module: project_issue
-#: model:ir.actions.server,name:project_issue.actions_server_project_issue_unread
-msgid "Issue: Mark unread"
-msgstr ""
+#: field:project.issue,company_id:0
+#: view:project.issue.report:0
+#: field:project.issue.report,company_id:0
+msgid "Company"
+msgstr "Unternehmen"
 
 #. module: project_issue
 #: field:project.issue,email_cc:0
@@ -89,14 +92,31 @@ msgid "Watchers Emails"
 msgstr "E-Mails des Beobachters"
 
 #. module: project_issue
+#: help:project.issue,kanban_state:0
+msgid ""
+"A Issue's kanban state indicates special situations affecting it:\n"
+" * Normal is the default situation\n"
+" * Blocked indicates something is preventing the progress of this issue\n"
+" * Ready for next stage indicates the issue is ready to be pulled to the "
+"next stage"
+msgstr ""
+"Eine Fall Status auf einem Kanban spezifiziert folgendes:\n"
+"* Normal ist der Standard Status\n"
+"* Blockiert zeigt an, dass es ein Hindernis für die weitere Bearbeitung "
+"gibt, dass geklärt werden sollte.\n"
+"* Bereit für die nächste Stufe, um Kanban zur nächsten Stufe zu bewegen."
+
+#. module: project_issue
 #: help:project.issue,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Wenn aktiviert, erfordern neue Nachrichten Ihr Handeln"
 
 #. module: project_issue
 #: help:account.analytic.account,use_issues:0
 msgid "Check this field if this project manages issues"
 msgstr ""
+"Aktivieren Sie diese Option, wenn in Ihren Projekten Vorfälle verwaltet "
+"werden sollen."
 
 #. module: project_issue
 #: field:project.issue,day_open:0
@@ -104,7 +124,7 @@ msgid "Days to Open"
 msgstr "Tage bis Eröffnung"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:472
+#: code:addons/project_issue/project_issue.py:465
 #, python-format
 msgid ""
 "You cannot escalate this issue.\n"
@@ -149,6 +169,11 @@ msgid "Task"
 msgstr "Aufgabe"
 
 #. module: project_issue
+#: model:mail.message.subtype,name:project_issue.mt_project_issue_stage
+msgid "Issue Stage Changed"
+msgstr "Fall Status wurde geändert"
+
+#. module: project_issue
 #: field:project.issue,message_ids:0
 msgid "Messages"
 msgstr "Nachrichten"
@@ -180,6 +205,15 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Klicken Sie zur Erstellung eines neuen Falls.\n"
+"          </p><p>\n"
+"            OpenERP unterstützt mit der Fall Verfolgung das effiziente "
+"Management der\n"
+"            Bearbeitung und Verfolgung von Bugs, Entwicklungsanfragen, "
+"Konfigurationsanfragen etc.\n"
+"          </p>\n"
+"        "
 
 #. module: project_issue
 #: selection:project.issue,state:0
@@ -190,7 +224,7 @@ msgstr "Abgebrochen"
 #. module: project_issue
 #: field:project.issue,description:0
 msgid "Private Note"
-msgstr ""
+msgstr "Private Notiz"
 
 #. module: project_issue
 #: field:project.issue.report,date_closed:0
@@ -208,11 +242,6 @@ msgid "Color Index"
 msgstr "Farb Index"
 
 #. module: project_issue
-#: help:project.issue,progress:0
-msgid "Computed as: Time Spent / Total Time."
-msgstr "Berechnet als:  Gearbeitete Zeit / Gesamtzeit"
-
-#. module: project_issue
 #: field:project.issue.report,working_hours_open:0
 msgid "Avg. Working Hours to Open"
 msgstr "Durch. Zeit. f. Eröffn."
@@ -220,7 +249,7 @@ msgstr "Durch. Zeit. f. Eröffn."
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_account_analytic_account
 msgid "Analytic Account"
-msgstr ""
+msgstr "Kostenstelle"
 
 #. module: project_issue
 #: help:project.issue,message_summary:0
@@ -228,6 +257,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Hier finden Sie die Nachrichtenübersicht (Anzahl Nachrichten etc., ...) im "
+"html Format, um Sie später in einer Kanban Ansicht einfügen zu können."
 
 #. module: project_issue
 #: help:project.project,project_escalation_id:0
@@ -260,7 +291,7 @@ msgstr ""
 #. module: project_issue
 #: view:project.issue:0
 msgid "Edit..."
-msgstr ""
+msgstr "Bearbeiten..."
 
 #. module: project_issue
 #: view:project.issue:0
@@ -273,15 +304,15 @@ msgid "Statistics"
 msgstr "Statistik"
 
 #. module: project_issue
-#: model:crm.case.categ,name:project_issue.bug_categ
-msgid "Maintenance"
-msgstr "Wartung"
+#: field:project.issue,kanban_state:0
+msgid "Kanban State"
+msgstr "Kanban Status"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:547
+#: code:addons/project_issue/project_issue.py:360
 #, python-format
 msgid "Project issue <b>converted</b> to task."
-msgstr ""
+msgstr "Projekt Fall wurde <b>umgewandelt</b> in Aufgabe."
 
 #. module: project_issue
 #: view:project.issue:0
@@ -302,7 +333,7 @@ msgstr "Version"
 #. module: project_issue
 #: field:project.issue,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Follower"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -334,7 +365,7 @@ msgid "Lowest"
 msgstr "Niedrig"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:358
+#: code:addons/project_issue/project_issue.py:382
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -405,10 +436,10 @@ msgid "Issues Analysis"
 msgstr "Statistik Fälle"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:493
+#: code:addons/project_issue/project_issue.py:485
 #, python-format
 msgid "No Subject"
-msgstr ""
+msgstr "Kein Betreff"
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.action_view_my_project_issue_tree
@@ -424,18 +455,12 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:551
-#, python-format
-msgid "Project issue <b>created</b>."
-msgstr ""
-
-#. module: project_issue
 #: view:project.issue:0
 msgid "Delete"
-msgstr ""
+msgstr "Löschen"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:341
+#: code:addons/project_issue/project_issue.py:365
 #, python-format
 msgid "Tasks"
 msgstr "Aufgaben"
@@ -446,9 +471,9 @@ msgid "# of Issues"
 msgstr "# Fälle"
 
 #. module: project_issue
-#: model:ir.actions.server,name:project_issue.actions_server_project_issue_read
-msgid "Issue: Mark read"
-msgstr ""
+#: selection:project.issue.report,month:0
+msgid "September"
+msgstr "September"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -458,7 +483,7 @@ msgstr "Dezember"
 #. module: project_issue
 #: field:project.issue,categ_ids:0
 msgid "Tags"
-msgstr ""
+msgstr "Schlagwörter"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -468,12 +493,12 @@ msgstr "Fälle Listenansicht"
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_01
 msgid "Little problem"
-msgstr ""
+msgstr "Kleines Problem"
 
 #. module: project_issue
 #: view:project.project:0
 msgid "creates"
-msgstr ""
+msgstr "erstellt"
 
 #. module: project_issue
 #: model:crm.case.categ,name:project_issue.feature_request_categ
@@ -488,7 +513,7 @@ msgstr "Aktualisiere Datum"
 #. module: project_issue
 #: view:project.issue:0
 msgid "Project:"
-msgstr ""
+msgstr "Projekt:"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -501,16 +526,10 @@ msgid "Next Action"
 msgstr "Nächste Aktion"
 
 #. module: project_issue
-#: field:project.issue,company_id:0
-#: view:project.issue.report:0
-#: field:project.issue.report,company_id:0
-msgid "Company"
-msgstr "Unternehmen"
-
-#. module: project_issue
 #: view:project.issue:0
-msgid "Category"
-msgstr "Kategorie"
+#: selection:project.issue,kanban_state:0
+msgid "Blocked"
+msgstr "Blockiert"
 
 #. module: project_issue
 #: field:project.issue,user_email:0
@@ -520,7 +539,7 @@ msgstr "Benutzer E-Mail"
 #. module: project_issue
 #: view:project.issue.report:0
 msgid "#Number of Project Issues"
-msgstr "# Anz. Probl."
+msgstr "Anzahl Projektfälle"
 
 #. module: project_issue
 #: help:project.issue,channel_id:0
@@ -537,6 +556,11 @@ msgstr ""
 "Diese E-Mail Adressen werden automatisch dem CC-Feld aller ein- und "
 "ausgehenden Mails hinzugefügt. Trennen Sie mehrere E-Mail Adressen mit "
 "Kommas."
+
+#. module: project_issue
+#: model:crm.case.categ,name:project_issue.bug_categ
+msgid "Maintenance"
+msgstr "Wartung"
 
 #. module: project_issue
 #: selection:project.issue.report,state:0
@@ -585,6 +609,7 @@ msgid "August"
 msgstr "August"
 
 #. module: project_issue
+#: selection:project.issue,kanban_state:0
 #: selection:project.issue,priority:0
 #: selection:project.issue.report,priority:0
 msgid "Normal"
@@ -593,12 +618,12 @@ msgstr "Normal"
 #. module: project_issue
 #: field:project.project,issue_count:0
 msgid "unknown"
-msgstr ""
+msgstr "unbekannt"
 
 #. module: project_issue
 #: view:project.issue:0
 msgid "Category:"
-msgstr ""
+msgstr "Kategorie:"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -608,7 +633,7 @@ msgstr "Juni"
 #. module: project_issue
 #: help:project.issue,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Nachrichten und Kommunikations-Historie"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -623,7 +648,7 @@ msgstr "Tage b. Beend."
 #. module: project_issue
 #: field:project.issue,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Ist bereits Follower"
 
 #. module: project_issue
 #: help:project.issue,state:0
@@ -634,6 +659,11 @@ msgid ""
 "the case needs to be reviewed then the status is                       set "
 "to 'Pending'."
 msgstr ""
+"Der Status wird auf 'Entwurf' geändert, wenn der Fall gespeichert wurde. "
+"Durch die Vorgangsbearbeitung ändert sich der Status auf 'In Bearbeitung'. "
+"Durch Abschluss wird der Status auf 'Erledigt' geändert. Wenn der Vorfall "
+"eine weitere Bearbeitung zu einem späteren Zeitpunkt erfordert, ändert man "
+"den Status am Besten auf 'Wiedervorlage'."
 
 #. module: project_issue
 #: field:project.issue,active:0
@@ -647,16 +677,10 @@ msgid "November"
 msgstr "November"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:472
+#: code:addons/project_issue/project_issue.py:465
 #, python-format
 msgid "Warning!"
-msgstr ""
-
-#. module: project_issue
-#: field:project.issue,message_comment_ids:0
-#: help:project.issue,message_comment_ids:0
-msgid "Comments and emails"
-msgstr "Kommentare und E-Mails"
+msgstr "Warnung !"
 
 #. module: project_issue
 #: view:project.issue.report:0
@@ -691,7 +715,7 @@ msgstr "Diese Personen erhalten E-Mails"
 #. module: project_issue
 #: field:project.issue,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Zusammenfassung"
 
 #. module: project_issue
 #: field:project.issue,date:0
@@ -708,17 +732,17 @@ msgstr "Zugewiesen an"
 #. module: project_issue
 #: view:project.config.settings:0
 msgid "Configure"
-msgstr ""
+msgstr "Konfigurieren"
+
+#. module: project_issue
+#: model:mail.message.subtype,description:project_issue.mt_issue_closed
+msgid "Issue closed"
+msgstr "Fall wurde beendet"
 
 #. module: project_issue
 #: view:project.issue:0
 msgid "Current Features"
 msgstr "aktuelle Merkmale"
-
-#. module: project_issue
-#: selection:project.issue.report,month:0
-msgid "September"
-msgstr "September"
 
 #. module: project_issue
 #: view:project.issue.version:0
@@ -752,6 +776,7 @@ msgid "Issues"
 msgstr "Fälle"
 
 #. module: project_issue
+#: view:project.issue:0
 #: selection:project.issue,state:0
 msgid "In Progress"
 msgstr "In Bearbeitung"
@@ -774,10 +799,15 @@ msgid "Creation Month"
 msgstr "Monat Erstellung"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:557
-#, python-format
-msgid "<b>escalated</b> to <em>'%s'</em>."
-msgstr ""
+#: help:project.issue,progress:0
+msgid "Computed as: Time Spent / Total Time."
+msgstr "Berechnet als:  Gearbeitete Zeit / Gesamtzeit"
+
+#. module: project_issue
+#: view:project.issue:0
+#: selection:project.issue,kanban_state:0
+msgid "Ready for next stage"
+msgstr "Bereit für nächste Stufe"
 
 #. module: project_issue
 #: view:project.issue.report:0
@@ -798,12 +828,6 @@ msgstr "Monat"
 #: view:project.project:0
 msgid "Issue"
 msgstr "Problem"
-
-#. module: project_issue
-#: code:addons/project_issue/project_issue.py:540
-#, python-format
-msgid "Stage changed to <b>%s</b>."
-msgstr ""
 
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_02
@@ -836,15 +860,39 @@ msgid "project.config.settings"
 msgstr ""
 
 #. module: project_issue
+#: model:mail.message.subtype,name:project_issue.mt_issue_closed
+#: model:mail.message.subtype,name:project_issue.mt_project_issue_closed
+msgid "Issue Closed"
+msgstr "Fall wurde beendet"
+
+#. module: project_issue
 #: view:project.issue.report:0
 #: field:project.issue.report,email:0
 msgid "# Emails"
 msgstr "E-Mails"
 
 #. module: project_issue
+#: model:mail.message.subtype,name:project_issue.mt_issue_new
+#: model:mail.message.subtype,name:project_issue.mt_project_issue_new
+msgid "Issue Created"
+msgstr "Fall wurde erstellt"
+
+#. module: project_issue
+#: model:mail.message.subtype,name:project_issue.mt_issue_blocked
+#: model:mail.message.subtype,name:project_issue.mt_project_issue_blocked
+msgid "Issue Blocked"
+msgstr "Fall wurde blockiert"
+
+#. module: project_issue
 #: selection:project.issue.report,month:0
 msgid "February"
 msgstr "Februar"
+
+#. module: project_issue
+#: model:mail.message.subtype,description:project_issue.mt_issue_stage
+#: model:mail.message.subtype,description:project_issue.mt_project_issue_stage
+msgid "Stage changed"
+msgstr "Stufe geändert"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -868,6 +916,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"p class=\"oe_view_nocontent_create\">\n"
+"                Klicken Sie zur Erstellung einer neuen Version.\n"
+"              </p><p>\n"
+"                Definieren Sie hier die Versionen, die Ihr Produkt "
+"kennzeichnen.\n"
+"              </p>\n"
+"            "
 
 #. module: project_issue
 #: help:project.issue,section_id:0
@@ -886,7 +941,7 @@ msgstr "Meine Fälle"
 #. module: project_issue
 #: help:project.issue.report,delay_open:0
 msgid "Number of Days to open the project issue."
-msgstr ""
+msgstr "Anzahl Tage zur Fall Eröffnung"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -896,12 +951,17 @@ msgstr "April"
 #. module: project_issue
 #: view:project.issue:0
 msgid "⇒ Escalate"
-msgstr ""
+msgstr "=> Eskalation"
 
 #. module: project_issue
 #: view:project.issue:0
 msgid "References"
 msgstr "Referenzen"
+
+#. module: project_issue
+#: model:mail.message.subtype,description:project_issue.mt_issue_new
+msgid "Issue created"
+msgstr "Fall wurde erstellt"
 
 #. module: project_issue
 #: field:project.issue,working_hours_close:0
@@ -912,6 +972,11 @@ msgstr "Arbeitszeit f. Beendigung"
 #: field:project.issue,id:0
 msgid "ID"
 msgstr "ID"
+
+#. module: project_issue
+#: model:mail.message.subtype,description:project_issue.mt_issue_blocked
+msgid "Issue blocked"
+msgstr "Fall wurde blockiert"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_issue_report
@@ -927,6 +992,11 @@ msgstr "Anzahl Tage für Beendigung"
 #: field:project.issue.report,working_hours_close:0
 msgid "Avg. Working Hours to Close"
 msgstr "Durch. Zeit b. Beendigung"
+
+#. module: project_issue
+#: model:mail.message.subtype,name:project_issue.mt_issue_stage
+msgid "Stage Changed"
+msgstr "Stufe wurde geändert"
 
 #. module: project_issue
 #: selection:project.issue,priority:0
@@ -955,258 +1025,8 @@ msgstr "Jahr"
 msgid "Duration"
 msgstr "Dauer"
 
-#~ msgid "Close Working hours"
-#~ msgstr "Arbeitszeit für Beendigung"
-
-#~ msgid "Date Closed"
-#~ msgstr "Datum Beendet"
-
-#~ msgid "Mobile"
-#~ msgstr "Mobile"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "Warnung !"
-
-#~ msgid "Partner"
-#~ msgstr "Partner"
-
-#~ msgid "Convert To Task"
-#~ msgstr "Erzeuge Aufgabe"
-
-#~ msgid "Send New Email"
-#~ msgstr "Sende Email"
-
-#~ msgid "Issue Management in Project Management"
-#~ msgstr "Problem Management in Projekten"
-
-#~ msgid "Open Working Hours"
-#~ msgstr "Offene Arbeitsstunden"
-
-#~ msgid "Phone"
-#~ msgstr "Telefon"
-
-#~ msgid "Reset to Draft"
-#~ msgstr "Zurücksetzen"
-
-#~ msgid "History Information"
-#~ msgstr "Information Historie"
-
-#~ msgid "My Board"
-#~ msgstr "Meine Pinnwand"
-
-#~ msgid "Communication"
-#~ msgstr "Kommunikation"
-
-#~ msgid ""
-#~ "The channels represent the different communication modes available with the "
-#~ "customer. With each commercial opportunity, you can indicate the canall "
-#~ "which is this opportunity source."
-#~ msgstr ""
-#~ "Der Kanal repräsentiert unterschiedliche Kommunikationswege mit dem Kunden. "
-#~ "Bei der Definition von Verkaufschancen, können Sie diesen Kanal explizit "
-#~ "zuweisen."
-
-#~ msgid "This is the current user to whom the related task have been assigned"
-#~ msgstr "Dieses ist der Benutzer, dem die zugehörige Aufgabe zugewiesen wurde"
-
-#~ msgid "Escalate"
-#~ msgstr "Eskalation"
-
-#~ msgid ""
-#~ "\n"
-#~ "        This module provide Issues/Bugs Management in Project\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "        Dieses Modul managt Probleme, Fehler- oder Anfragen mit "
-#~ "Projektbezug\n"
-#~ "    "
-
-#~ msgid "Global CC"
-#~ msgstr "Allg. EMail (CC)"
-
-#~ msgid "Extended Filters..."
-#~ msgstr "Erweiterter Filter..."
-
-#~ msgid "Partner Contact"
-#~ msgstr "Partner Kontakt"
-
-#~ msgid "Resolution"
-#~ msgstr "Lösung"
-
-#~ msgid "History"
-#~ msgstr "Historie"
-
-#~ msgid "Reply-To Email Address"
-#~ msgstr "Antwort Email an"
-
-#~ msgid "Attachments"
-#~ msgstr "Anhänge"
-
-#~ msgid "Issue Tracker Form"
-#~ msgstr "Problem Erfassung"
-
-#~ msgid "State"
-#~ msgstr "Status"
-
-#~ msgid "General"
-#~ msgstr "Allgemein"
-
-#~ msgid "Current"
-#~ msgstr "Aktuell"
-
-#~ msgid "Details"
-#~ msgstr "Details"
-
-#~ msgid "Reply"
-#~ msgstr "Antwort"
-
-#~ msgid "Employee's Name"
-#~ msgstr "Mitarbeiter Name"
-
-#~ msgid ""
-#~ "The state is set to 'Draft', when a case is created.                         "
-#~ "         \n"
-#~ "If the case is in progress the state is set to 'Open'.                       "
-#~ "           \n"
-#~ "When the case is over, the state is set to 'Done'.                           "
-#~ "       \n"
-#~ "If the case needs to be reviewed then the state is set to 'Pending'."
-#~ msgstr ""
-#~ "Durch die Erstellung eines neues Vorgangs ist der Status 'Entwurf'           "
-#~ "           \n"
-#~ "Wenn der Fall in Bearbeitung ist, wechselt der Status zu 'Offen'.            "
-#~ "              \n"
-#~ "Wenn der Fall abgeschlossen ist, wechselt der Status auf 'Beendet'.          "
-#~ "          \n"
-#~ "Wenn der Vorgang vor Weiterbearbeitung geprüft werden soll ist der Status "
-#~ "'Unerledigt' ."
-
-#~ msgid "Today"
-#~ msgstr "Heute"
-
-#~ msgid "Add Internal Note"
-#~ msgstr "Hinzufügen Anmerkung"
-
-#, python-format
-#~ msgid " (copy)"
-#~ msgstr " (Kopie)"
-
-#~ msgid "Previous"
-#~ msgstr "Vorheriges"
-
-#~ msgid "Next"
-#~ msgstr "Nächstes"
-
-#~ msgid "Close"
-#~ msgstr "Beenden"
-
-#~ msgid "Sale Team    "
-#~ msgstr "Verkauf Team    "
-
-#~ msgid "Month-1"
-#~ msgstr "Monat -1"
-
-#~ msgid "Error! project start-date must be lower then project end-date."
-#~ msgstr "Fehler ! Projekt Beginn muss vor dem Ende Datum liegen."
-
-#, python-format
-#~ msgid "No Title"
-#~ msgstr "Kein Titel"
-
-#~ msgid ""
-#~ "Issues such as system bugs, customer complaints, and material breakdowns are "
-#~ "collected here. You can define the stages assigned when solving the project "
-#~ "issue (analysis, development, done). With the mailgateway module, issues can "
-#~ "be integrated through an email address (example: support@mycompany.com)"
-#~ msgstr ""
-#~ "Probleme wie Softwarefehler, Beschwerden von Kunden, Materialfehler können "
-#~ "hier zentral gesammelt werden. Sie können Bearbeitungsschritte für die "
-#~ "Bearbeitung der Vorgänge zuweisen (Problemanalyse, Entwicklung, Abschluss "
-#~ "des Vorgangs). Über das Mailgateway, können Sie Probleme fest mit einer "
-#~ "Emailadresse verbinden (z.B. support@mycompany.com)."
-
-#~ msgid "Communication & History"
-#~ msgstr "Kommunikation & Historie"
-
-#~ msgid "Change Color"
-#~ msgstr "Farbe ändern"
-
-#~ msgid "Today's features"
-#~ msgstr "Heutige Merkmale"
-
-#~ msgid "Previous Month"
-#~ msgstr "Vorheriger Monat"
-
-#~ msgid "Change to Next Stage"
-#~ msgstr "Wechsle zu nächstem Stadium"
-
-#~ msgid "Reset to New"
-#~ msgstr "Zurück auf Neu"
-
-#~ msgid "Change to Previous Stage"
-#~ msgstr "Zum Vorherigen Status wechseln"
-
-#~ msgid "Contact Information"
-#~ msgstr "Kontakt Information"
-
-#~ msgid "Issues Dashboard"
-#~ msgstr "Pinwand Fälle"
-
-#~ msgid "Stages"
-#~ msgstr "Stufen"
-
-#~ msgid "Edit"
-#~ msgstr "Bearbeiten"
-
-#~ msgid "Current Year"
-#~ msgstr "Aktuelles Jahr"
-
-#~ msgid "Project issues"
-#~ msgstr "Projekt Fälle"
-
-#~ msgid ""
-#~ "You can use the issues tracker in OpenERP to handle bugs in the software "
-#~ "development project, to handle claims in after-sales services, etc. Define "
-#~ "here the different versions of your products on which you can work on issues."
-#~ msgstr ""
-#~ "Sie können die Fälleverfolgung auch in Projekten gut einsetzen, um Fälle bei "
-#~ "der Entwicklung oder Kundenanfragen sowie Beschwerden nach dem Verkauf zu "
-#~ "bearbeiten. Definieren Sie hier auch unterschiedliche Versionsstände Ihres "
-#~ "Produkts, um die Ursache für das Problem nach Versionen darzustellen."
-
-#~ msgid "My Open Project Issue"
-#~ msgstr "Meine offenen Projektfälle"
-
-#~ msgid "My Open Project issues"
-#~ msgstr "Meine offenen Fälle"
-
-#~ msgid "Project Issue Dashboard"
-#~ msgstr "Pinnwand Fälle"
-
-#~ msgid "Issues By Stage"
-#~ msgstr "Fälle nach Stufe"
-
-#~ msgid "My Open Issues by Creation Date"
-#~ msgstr "Meine offenen Fälle nach Erstelldatum"
-
-#~ msgid "Pending Issues"
-#~ msgstr "Unerledigte Fälle"
-
-#~ msgid "Issues By State"
-#~ msgstr "Fälle nach Stufe"
-
-#~ msgid "Issue / Partner"
-#~ msgstr "Fall / Partner"
-
-#~ msgid "Current Issues"
-#~ msgstr "Aktuelle Fälle"
-
-#, python-format
-#~ msgid "Issue '%s' has been opened."
-#~ msgstr "Fall '%s' wurde eröffnet"
-
-#, python-format
-#~ msgid "Issue '%s' has been closed."
-#~ msgstr "Fall '%s' wurde beendet"
+#. module: project_issue
+#: model:mail.message.subtype,name:project_issue.mt_issue_started
+#: model:mail.message.subtype,name:project_issue.mt_project_issue_started
+msgid "Issue Started"
+msgstr "Fall wurde gestartet"

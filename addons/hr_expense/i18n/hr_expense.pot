@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-03 16:02+0000\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-21 17:04+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -29,6 +29,11 @@ msgstr ""
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_reimbursement0
 msgid "The accoutant reimburse the expenses"
+msgstr ""
+
+#. module: hr_expense
+#: model:mail.message.subtype,description:hr_expense.mt_expense_approved
+msgid "Expense approved"
 msgstr ""
 
 #. module: hr_expense
@@ -100,6 +105,12 @@ msgid "To Pay"
 msgstr ""
 
 #. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:172
+#, python-format
+msgid "No expense journal found. Please make sure you have a journal with type 'purchase' configured."
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_report
 msgid "Expenses Statistics"
 msgstr ""
@@ -131,10 +142,16 @@ msgid "Messages"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:179
-#: code:addons/hr_expense/hr_expense.py:195
+#: code:addons/hr_expense/hr_expense.py:172
+#: code:addons/hr_expense/hr_expense.py:181
+#: code:addons/hr_expense/hr_expense.py:197
 #, python-format
 msgid "Error!"
+msgstr ""
+
+#. module: hr_expense
+#: model:mail.message.subtype,description:hr_expense.mt_expense_refused
+msgid "Expense refused"
 msgstr ""
 
 #. module: hr_expense
@@ -208,7 +225,7 @@ msgid "Holds the Chatter summary (number of messages, ...). This summary is dire
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:300
+#: code:addons/hr_expense/hr_expense.py:302
 #, python-format
 msgid "Warning"
 msgstr ""
@@ -315,7 +332,7 @@ msgid "Some costs may be reinvoices to the customer"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:195
+#: code:addons/hr_expense/hr_expense.py:197
 #, python-format
 msgid "The employee must have a home address."
 msgstr ""
@@ -370,7 +387,7 @@ msgid "After creating invoice, reimburse expenses"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:106
+#: code:addons/hr_expense/hr_expense.py:116
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -387,7 +404,7 @@ msgid "Validation Date"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:225
+#: code:addons/hr_expense/hr_expense.py:227
 #, python-format
 msgid "Expense Receipt"
 msgstr ""
@@ -443,11 +460,6 @@ msgid "Currency"
 msgstr ""
 
 #. module: hr_expense
-#: field:hr.expense.expense,user_id:0
-msgid "User"
-msgstr ""
-
-#. module: hr_expense
 #: field:hr.expense.expense,voucher_id:0
 msgid "Employee's Receipt"
 msgstr ""
@@ -463,7 +475,7 @@ msgid "Employee encode all his expenses"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:300
+#: code:addons/hr_expense/hr_expense.py:302
 #, python-format
 msgid "Selected Unit of Measure does not belong to the same category as the product Unit of Measure"
 msgstr ""
@@ -489,7 +501,7 @@ msgid "Draft"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:179
+#: code:addons/hr_expense/hr_expense.py:181
 #, python-format
 msgid "Please configure Default Expense account for Product purchase: `property_account_expense_categ`."
 msgstr ""
@@ -552,9 +564,13 @@ msgid "Extended Filters..."
 msgstr ""
 
 #. module: hr_expense
-#: field:hr.expense.expense,message_comment_ids:0
-#: help:hr.expense.expense,message_comment_ids:0
-msgid "Comments and emails"
+#: field:hr.expense.expense,user_id:0
+msgid "User"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.menu,name:hr_expense.menu_hr_product
+msgid "Expense Categories"
 msgstr ""
 
 #. module: hr_expense
@@ -719,6 +735,7 @@ msgstr ""
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
 #: view:hr.expense.report:0
+#: model:mail.message.subtype,name:hr_expense.mt_expense_approved
 #: model:process.node,name:hr_expense.process_node_approved0
 msgid "Approved"
 msgstr ""
@@ -761,6 +778,7 @@ msgstr ""
 
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
+#: model:mail.message.subtype,name:hr_expense.mt_expense_refused
 #: model:process.node,name:hr_expense.process_node_refused0
 msgid "Refused"
 msgstr ""
@@ -768,6 +786,11 @@ msgstr ""
 #. module: hr_expense
 #: field:product.product,hr_expense_ok:0
 msgid "Can be Expensed"
+msgstr ""
+
+#. module: hr_expense
+#: model:mail.message.subtype,description:hr_expense.mt_expense_confirmed
+msgid "Expense confirmed, waiting confirmation"
 msgstr ""
 
 #. module: hr_expense
@@ -802,7 +825,7 @@ msgid "Name"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:106
+#: code:addons/hr_expense/hr_expense.py:116
 #, python-format
 msgid "You can only delete draft expenses!"
 msgstr ""
@@ -848,11 +871,6 @@ msgid "Sequence"
 msgstr ""
 
 #. module: hr_expense
-#: model:ir.ui.menu,name:hr_expense.menu_hr_product
-msgid "Types of Expenses"
-msgstr ""
-
-#. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_confirmexpense0
 msgid "Expense is confirmed."
 msgstr ""
@@ -878,6 +896,7 @@ msgstr ""
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
+#: model:mail.message.subtype,name:hr_expense.mt_expense_confirmed
 msgid "To Approve"
 msgstr ""
 

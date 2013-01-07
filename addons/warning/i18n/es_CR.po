@@ -1,21 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-# 	* warning
+# Spanish (Costa Rica) translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-03 16:04+0000\n"
-"PO-Revision-Date: 2012-02-20 01:14+0000\n"
-"Last-Translator: Freddy Gonzalez <freddy.gonzalez.contreras@gmail.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Spanish (Costa Rica) <es_CR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:43+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
-"Language: \n"
+"X-Launchpad-Export-Date: 2012-12-22 07:37+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order_line
@@ -29,11 +29,6 @@ msgid "Incoming Shipments"
 msgstr ""
 
 #. module: warning
-#: field:product.product,sale_line_warn_msg:0
-msgid "Message for Sale Order Line"
-msgstr "Mensaje para la línea del pedido de venta"
-
-#. module: warning
 #: field:product.product,purchase_line_warn_msg:0
 msgid "Message for Purchase Order Line"
 msgstr "Mensaje para la línea del pedido de compra"
@@ -42,11 +37,6 @@ msgstr "Mensaje para la línea del pedido de compra"
 #: model:ir.model,name:warning.model_stock_picking
 msgid "Picking List"
 msgstr "Albarán"
-
-#. module: warning
-#: field:product.product,sale_line_warn:0
-msgid "Sale Order Line"
-msgstr "Línea pedido de venta"
 
 #. module: warning
 #: view:product.product:0
@@ -101,11 +91,6 @@ msgid "Warning when Selling this Product"
 msgstr "Aviso cuando vende este producto"
 
 #. module: warning
-#: field:res.partner,sale_warn:0
-msgid "Sale Order"
-msgstr "Pedido de venta"
-
-#. module: warning
 #: field:res.partner,picking_warn:0
 msgid "Stock Picking"
 msgstr "Albarán de stock"
@@ -115,11 +100,6 @@ msgstr "Albarán de stock"
 #: field:res.partner,purchase_warn:0
 msgid "Purchase Order"
 msgstr "Pedido de compra"
-
-#. module: warning
-#: field:res.partner,sale_warn_msg:0
-msgid "Message for Sale Order"
-msgstr "Mensaje para el pedido de venta"
 
 #. module: warning
 #: field:res.partner,purchase_warn_msg:0
@@ -149,19 +129,29 @@ msgstr ""
 #: code:addons/warning/warning.py:67
 #: code:addons/warning/warning.py:96
 #: code:addons/warning/warning.py:130
-#: code:addons/warning/warning.py:161
-#: code:addons/warning/warning.py:191
-#: code:addons/warning/warning.py:217
-#: code:addons/warning/warning.py:265
-#: code:addons/warning/warning.py:298
+#: code:addons/warning/warning.py:162
+#: code:addons/warning/warning.py:192
+#: code:addons/warning/warning.py:218
+#: code:addons/warning/warning.py:266
+#: code:addons/warning/warning.py:299
 #, python-format
 msgid "Alert for %s !"
 msgstr "¡Alerta para %s!"
 
 #. module: warning
+#: view:res.partner:0
+msgid "Warning on the Sales Order"
+msgstr ""
+
+#. module: warning
 #: field:res.partner,invoice_warn_msg:0
 msgid "Message for Invoice"
 msgstr "Mensaje para factura"
+
+#. module: warning
+#: field:res.partner,sale_warn_msg:0
+msgid "Message for Sales Order"
+msgstr ""
 
 #. module: warning
 #: view:res.partner:0
@@ -177,19 +167,19 @@ msgstr "Aviso en el pedido de compra"
 #: code:addons/warning/warning.py:68
 #: code:addons/warning/warning.py:97
 #: code:addons/warning/warning.py:132
-#: code:addons/warning/warning.py:162
-#: code:addons/warning/warning.py:192
-#: code:addons/warning/warning.py:218
-#: code:addons/warning/warning.py:266
-#: code:addons/warning/warning.py:299
+#: code:addons/warning/warning.py:163
+#: code:addons/warning/warning.py:193
+#: code:addons/warning/warning.py:219
+#: code:addons/warning/warning.py:267
+#: code:addons/warning/warning.py:300
 #, python-format
 msgid "Warning for %s"
 msgstr "Aviso para %s"
 
 #. module: warning
-#: view:res.partner:0
-msgid "Warning on the Sale Order"
-msgstr "Aviso en el pedido de venta"
+#: field:product.product,sale_line_warn_msg:0
+msgid "Message for Sales Order Line"
+msgstr ""
 
 #. module: warning
 #: selection:product.product,purchase_line_warn:0
@@ -213,6 +203,7 @@ msgstr "Empresa"
 
 #. module: warning
 #: model:ir.model,name:warning.model_sale_order
+#: field:res.partner,sale_warn:0
 msgid "Sales Order"
 msgstr "Pedido de venta"
 
@@ -223,40 +214,6 @@ msgstr ""
 
 #. module: warning
 #: model:ir.model,name:warning.model_sale_order_line
+#: field:product.product,sale_line_warn:0
 msgid "Sales Order Line"
 msgstr "Línea pedido de venta"
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "Error: Código EAN no válido"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "¡XML inválido para la definición de la vista!"
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "¡Error! No puede crear miembros asociados recursivos."
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "¡La referencia del pedido debe ser única!"
-
-#~ msgid "Module for Warnings form onchange Event"
-#~ msgstr ""
-#~ "Módulo para la configuración de avisos en eventos (cambios en los "
-#~ "formularios)"
-
-#~ msgid "Module for Warnings form onchange Event."
-#~ msgstr "Módulo para configuración de avisos en eventos."
-
-#~ msgid "Reference must be unique per Company!"
-#~ msgstr "¡La referencia debe ser única por compañía!"
-
-#~ msgid "Order Reference must be unique per Company!"
-#~ msgstr "¡La referencia de la compra debe ser única por compañía!"
-
-#~ msgid "Invalid BBA Structured Communication !"
-#~ msgstr "¡Estructura de comunicación BBA no válida!"
-
-#~ msgid "Invoice Number must be unique per Company!"
-#~ msgstr "¡El número de factura debe ser único por compañía!"
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "¡Error! No puede crear miembros asociados recursivamente."

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-04-18 19:08+0000\n"
-"Last-Translator: Masaki Yamaya <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:36+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:17+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr_timesheet_sheet
 #: field:hr.analytic.timesheet,sheet_id:0
@@ -142,8 +142,8 @@ msgid "Based on the timesheet"
 msgstr "勤務表に基づく"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:313
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:384
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:326
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:397
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet."
 msgstr ""
@@ -198,8 +198,8 @@ msgid "Please create an employee and associate it with this user."
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:388
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:408
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:401
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:421
 #, python-format
 msgid ""
 "You cannot enter an attendance date outside the current timesheet dates."
@@ -248,9 +248,9 @@ msgstr ""
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:80
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:82
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:84
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:313
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:384
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:415
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:326
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:397
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:428
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:38
 #, python-format
 msgid "Error!"
@@ -492,11 +492,6 @@ msgid "hr.timesheet.current.open"
 msgstr "hr.timesheet.current.open"
 
 #. module: hr_timesheet_sheet
-#: model:process.node,name:hr_timesheet_sheet.process_node_validatedtimesheet0
-msgid "Validated"
-msgstr "承諾済み"
-
-#. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:71
 #, python-format
 msgid ""
@@ -714,10 +709,9 @@ msgid "Timesheet range"
 msgstr "勤務表の範囲"
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,message_comment_ids:0
-#: help:hr_timesheet_sheet.sheet,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
+#: view:board.board:0
+msgid "My Total Attendance By Week"
+msgstr "週ごとの私の全ての出勤"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
@@ -799,7 +793,7 @@ msgid "Search Account"
 msgstr "アカウントを検索"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:415
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:428
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet"
 msgstr ""
@@ -859,9 +853,9 @@ msgid "Cancel"
 msgstr "キャンセル"
 
 #. module: hr_timesheet_sheet
-#: view:board.board:0
-msgid "My Total Attendance By Week"
-msgstr "週ごとの私の全ての出勤"
+#: model:process.node,name:hr_timesheet_sheet.process_node_validatedtimesheet0
+msgid "Validated"
+msgstr "承諾済み"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_invoiceonwork0
@@ -968,9 +962,9 @@ msgid "May"
 msgstr "5月"
 
 #. module: hr_timesheet_sheet
-#: field:hr.timesheet.report,journal_id:0
-msgid "Journal"
-msgstr "仕訳帳"
+#: model:process.node,note:hr_timesheet_sheet.process_node_workontask0
+msgid "Defines the work summary of task"
+msgstr "仕事の作業要約を定義します。"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -1068,8 +1062,8 @@ msgid "Invoice rate"
 msgstr "請求率"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:388
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:408
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:401
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:421
 #, python-format
 msgid "User Error!"
 msgstr ""
@@ -1150,205 +1144,11 @@ msgid "Total"
 msgstr "合計"
 
 #. module: hr_timesheet_sheet
-#: model:process.node,note:hr_timesheet_sheet.process_node_workontask0
-msgid "Defines the work summary of task"
-msgstr "仕事の作業要約を定義します。"
+#: field:hr.timesheet.report,journal_id:0
+msgid "Journal"
+msgstr "仕訳帳"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_day
 msgid "Timesheet by Day"
 msgstr "日ごとの勤務表"
-
-#, python-format
-#~ msgid "No employee defined for your user !"
-#~ msgstr "このユーザには従業員が定義されていません。"
-
-#~ msgid "Timesheet in current year"
-#~ msgstr "今年度の勤務表"
-
-#~ msgid "Today"
-#~ msgstr "今日"
-
-#~ msgid "Timesheet of last month"
-#~ msgstr "先月の勤務表"
-
-#, python-format
-#~ msgid "You cannot modify an entry in a confirmed timesheet!"
-#~ msgstr "確認済みの勤務表の記入項を変更することはできません。"
-
-#, python-format
-#~ msgid ""
-#~ "In order to create a timesheet for this employee, you must assign the "
-#~ "employee to an analytic journal!"
-#~ msgstr "この従業員の勤務表を作成するには、分析仕訳に従業員を割り当てる必要があります。"
-
-#, python-format
-#~ msgid ""
-#~ "You cannot enter an attendance date outside the current timesheet dates!"
-#~ msgstr "勤務表の日付の枠外に出勤日を指定することはできません。"
-
-#~ msgid " Month-1 "
-#~ msgstr " 月次-1 "
-
-#~ msgid "My Departments Timesheet"
-#~ msgstr "私の部門の勤務表"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "警告"
-
-#~ msgid " Month "
-#~ msgstr " 月 "
-
-#~ msgid "State"
-#~ msgstr "状態"
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "エラー"
-
-#~ msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-#~ msgstr "エラー：サインイン（サインアウト）はサインアウト（サインイン）の後でなければいけません。"
-
-#, python-format
-#~ msgid "Invalid action !"
-#~ msgstr "無効なアクションです。"
-
-#~ msgid "Timesheet Lines"
-#~ msgstr "勤務表の行"
-
-#~ msgid "Configuration"
-#~ msgstr "設定"
-
-#~ msgid "Daily"
-#~ msgstr "日次"
-
-#~ msgid "Go to:"
-#~ msgstr "次へ進む："
-
-#, python-format
-#~ msgid ""
-#~ "In order to create a timesheet for this employee, you must link the employee "
-#~ "to a product, like 'Consultant'!"
-#~ msgstr "この従業員の勤務表を作成するには、従業員を製品（例えば、コンサルタント）に関連付ける必要があります。"
-
-#, python-format
-#~ msgid "You cannot duplicate a timesheet!"
-#~ msgstr "勤務表を重複して作ることはできません。"
-
-#, python-format
-#~ msgid ""
-#~ "In order to create a timesheet for this employee, you must link the employee "
-#~ "to a product!"
-#~ msgstr "この従業員の勤務表を作成するには、従業員を製品に関連付ける必要があります。"
-
-#~ msgid "You must select a Current date which is in the timesheet dates !"
-#~ msgstr "勤務表の日付である現在の日付を選ばなくてはいけません。"
-
-#~ msgid ""
-#~ "This report performs analysis on timesheets created by your human resources "
-#~ "in the system. It allows you to have a full overview of  entries done by "
-#~ "your employees. You can group them by specific selection criteria thanks to "
-#~ "the search tool."
-#~ msgstr ""
-#~ "この報告書は、システムの人材担当者が作成した勤務表について分析するものです。あなたの従業員が記録した記入項目の全体を見ることができます。さらに検索ツールを"
-#~ "使って、特定の基準でグループ化することができます。"
-
-#, python-format
-#~ msgid "You cannot modify an entry in a confirmed timesheet !"
-#~ msgstr "確認済みの勤務表の記入項目を変更することはできません。"
-
-#, python-format
-#~ msgid "You can not modify an entry in a confirmed timesheet !"
-#~ msgstr "確認済みの勤務表の記入項目を変更することはできません。"
-
-#, python-format
-#~ msgid ""
-#~ "You cannot have 2 timesheets that overlaps!\n"
-#~ "You should use the menu 'My Timesheet' to avoid this problem."
-#~ msgstr ""
-#~ "重複する２つの勤務表を作ることはできません。\n"
-#~ "メニュー「私の勤務表」を使って下さい。"
-
-#~ msgid ""
-#~ "Check your timesheets for a specific period. You can also encode time spent "
-#~ "on a project (i.e. an analytic account) thus generating costs in the "
-#~ "analytic account concerned."
-#~ msgstr ""
-#~ "指定した期間について勤務表をチェックして下さい。プロジェクトに費やした時間を記録できます。分析アカウントであれば、経費を計上するもができます。"
-
-#, python-format
-#~ msgid ""
-#~ "The timesheet cannot be validated as it does not contain an equal number of "
-#~ "sign ins and sign outs!"
-#~ msgstr "サインインとサインアウトの回数が同じでないと、勤務表を検証することはできません。"
-
-#, python-format
-#~ msgid "You cannot delete a timesheet which have attendance entries!"
-#~ msgstr "勤務の記入項目を持った勤務表を削除することはできません。"
-
-#, python-format
-#~ msgid "You cannot delete a timesheet which is already confirmed!"
-#~ msgstr "既に確認した勤務表を削除することはできません。"
-
-#~ msgid "Quantity"
-#~ msgstr "数量"
-
-#~ msgid ""
-#~ "You cannot have 2 timesheets that overlaps !\n"
-#~ "Please use the menu 'My Current Timesheet' to avoid this problem."
-#~ msgstr ""
-#~ "重複する２つの勤務表を作ることはできません。\n"
-#~ "メニュー「私の現在の勤務表」を使ってください。"
-
-#~ msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
-#~ msgstr "確認済み/完了した勤務表の記入項目を変更することはできません。"
-
-#~ msgid "Timesheet in current month"
-#~ msgstr "今月の勤務表"
-
-#~ msgid ""
-#~ " * The 'Draft' state is used when a user is encoding a new and unconfirmed "
-#~ "timesheet.                 \n"
-#~ "* The 'Confirmed' state is used for to confirm the timesheet by user.        "
-#~ "         \n"
-#~ "* The 'Done' state is used when users timesheet is accepted by his/her "
-#~ "senior."
-#~ msgstr ""
-#~ " ・「草案」状態とは、ユーザが新しい勤務表を記録中であり未確認であることを示します。\n"
-#~ "・「確認済み」状態とは、ユーザ自身が確認した勤務表であることを示します。\n"
-#~ "・「完了」状態とは、上司が承認した勤務表であることを示します。"
-
-#~ msgid "The company name must be unique !"
-#~ msgstr "会社名は固有でなければいけません。"
-
-#, python-format
-#~ msgid "UserError"
-#~ msgstr "ユーザエラー"
-
-#, python-format
-#~ msgid ""
-#~ "In order to create a timesheet for this employee, you must assign it to a "
-#~ "user!"
-#~ msgstr "この従業員の勤務表を作成するには、それをユーザに割り当てなければいけません。"
-
-#~ msgid "Submited to Manager"
-#~ msgstr "マネジャに提出済み"
-
-#, python-format
-#~ msgid "You cannot sign in/sign out from an other date than today"
-#~ msgstr "今日とは別の日付でサインイン / サインアウトすることはできません。"
-
-#, python-format
-#~ msgid ""
-#~ "In order to create a timesheet for this employee, you must assign the "
-#~ "employee to an analytic journal, like 'Timesheet'!"
-#~ msgstr "この従業員の勤務表を作成するには、従業員に分析項目（例えば、勤務表）を割り当ててください。"
-
-#, python-format
-#~ msgid ""
-#~ "Please verify that the total difference of the sheet is lower than %.2f !"
-#~ msgstr "表の差分は %.2f よりも小さいことを確認してください。"
-
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "エラー：再帰的な会社を作ることはできません。"

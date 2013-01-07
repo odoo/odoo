@@ -459,7 +459,7 @@ class account_analytic_account(osv.osv):
             context = {}
         sale_ids = self.pool.get('sale.order').search(cr,uid,[('project_id','=',context.get('search_default_project_id',False)),('partner_id','in',context.get('search_default_partner_id',False))])
         names = [record.name for record in self.browse(cr, uid, ids, context=context)]
-        name = _('Sale Order Lines of %s') % ','.join(names)
+        name = _('Sales Order Lines of %s') % ','.join(names)
         return {
             'type': 'ir.actions.act_window',
             'name': name,

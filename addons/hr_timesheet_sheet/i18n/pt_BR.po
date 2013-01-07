@@ -1,21 +1,21 @@
-# translation of pt_BR.po to
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* hr_timesheet_sheet
+# Brazilian Portuguese translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: pt_BR\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-10 14:56+0000\n"
-"Last-Translator: Projetaty Soluções OpenSource <Unknown>\n"
-"Language-Team: <pt@li.org>\n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-11 04:48+0000\n"
-"X-Generator: Launchpad (build 16356)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:17+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr_timesheet_sheet
 #: field:hr.analytic.timesheet,sheet_id:0
@@ -142,8 +142,8 @@ msgid "Based on the timesheet"
 msgstr "Baseado na planilha de apontamento"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:313
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:384
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:326
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:397
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet."
 msgstr ""
@@ -198,8 +198,8 @@ msgid "Please create an employee and associate it with this user."
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:388
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:408
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:401
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:421
 #, python-format
 msgid ""
 "You cannot enter an attendance date outside the current timesheet dates."
@@ -252,9 +252,9 @@ msgstr ""
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:80
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:82
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:84
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:313
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:384
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:415
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:326
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:397
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:428
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:38
 #, python-format
 msgid "Error!"
@@ -496,11 +496,6 @@ msgid "hr.timesheet.current.open"
 msgstr "hr.timesheet.current.open"
 
 #. module: hr_timesheet_sheet
-#: model:process.node,name:hr_timesheet_sheet.process_node_validatedtimesheet0
-msgid "Validated"
-msgstr "Validado"
-
-#. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:71
 #, python-format
 msgid ""
@@ -720,10 +715,9 @@ msgid "Timesheet range"
 msgstr "Faixa da Folha de Horas"
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,message_comment_ids:0
-#: help:hr_timesheet_sheet.sheet,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
+#: view:board.board:0
+msgid "My Total Attendance By Week"
+msgstr "Minha Presença por Semana"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
@@ -805,7 +799,7 @@ msgid "Search Account"
 msgstr "Buscar Conta"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:415
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:428
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet"
 msgstr ""
@@ -868,9 +862,9 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #. module: hr_timesheet_sheet
-#: view:board.board:0
-msgid "My Total Attendance By Week"
-msgstr "Minha Presença por Semana"
+#: model:process.node,name:hr_timesheet_sheet.process_node_validatedtimesheet0
+msgid "Validated"
+msgstr "Validado"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_invoiceonwork0
@@ -977,9 +971,9 @@ msgid "May"
 msgstr "Maio"
 
 #. module: hr_timesheet_sheet
-#: field:hr.timesheet.report,journal_id:0
-msgid "Journal"
-msgstr "Diário"
+#: model:process.node,note:hr_timesheet_sheet.process_node_workontask0
+msgid "Defines the work summary of task"
+msgstr "Define o resumo de trabalho da tarefa"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -1077,8 +1071,8 @@ msgid "Invoice rate"
 msgstr "Taxa da Fatura"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:388
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:408
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:401
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:421
 #, python-format
 msgid "User Error!"
 msgstr ""
@@ -1159,272 +1153,11 @@ msgid "Total"
 msgstr "Total"
 
 #. module: hr_timesheet_sheet
-#: model:process.node,note:hr_timesheet_sheet.process_node_workontask0
-msgid "Defines the work summary of task"
-msgstr "Define o resumo de trabalho da tarefa"
+#: field:hr.timesheet.report,journal_id:0
+msgid "Journal"
+msgstr "Diário"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_day
 msgid "Timesheet by Day"
 msgstr "Planilha de Horas por Dia"
-
-#~ msgid "Configuration"
-#~ msgstr "Configuração"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Invalido XML para Arquitetura da View"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "O nome do objeto precisa iniciar com x_ e não conter nenhum caracter "
-#~ "especial!"
-
-#~ msgid "Today"
-#~ msgstr "Hoje"
-
-#~ msgid "Daily View"
-#~ msgstr "Visão Diária"
-
-#~ msgid "By Day"
-#~ msgstr "Por Dia"
-
-#~ msgid "hr_timesheet_sheet.sheet"
-#~ msgstr "hr_timesheet_sheet.sheet"
-
-#, python-format
-#~ msgid "No employee defined for your user !"
-#~ msgstr "Não há funcionário definido para seu usuário!"
-
-#, python-format
-#~ msgid ""
-#~ "Please verify that the total difference of the sheet is lower than %.2f !"
-#~ msgstr ""
-#~ "Por favor, verifique que a diferença total da planilha é menor que %2f !"
-
-#, python-format
-#~ msgid ""
-#~ "You can not have 2 timesheets that overlaps !\n"
-#~ "Please use the menu 'My Current Timesheet' to avoid this problem."
-#~ msgstr ""
-#~ "Não pode ter duas planilhas de apontamento que se sobreponham!\n"
-#~ "Favor usar o menu 'Minha Planilha de Apontamento Atual' para evitar este "
-#~ "problema."
-
-#, python-format
-#~ msgid "UserError"
-#~ msgstr "Erro de Usuário"
-
-#, python-format
-#~ msgid "You can not sign in from an other date than today"
-#~ msgstr "Você não pode efetuar entrada em uma data diferente de hoje"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "Atenção!"
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "Erro!"
-
-#, python-format
-#~ msgid "Invalid action !"
-#~ msgstr "Ação inválida!"
-
-#~ msgid "No employee defined"
-#~ msgstr "Nenhum funcionário definido"
-
-#, python-format
-#~ msgid "You cannot modify an entry in a confirmed timesheet !"
-#~ msgstr ""
-#~ "Não se pode modificar um lançamento em uma planilha de horas confirmada!"
-
-#~ msgid "Go to:"
-#~ msgstr "Ir para:"
-
-#~ msgid "Timesheet Lines"
-#~ msgstr "Linhas do Apontamento de Horas"
-
-#, python-format
-#~ msgid "You can not modify an entry in a confirmed timesheet !"
-#~ msgstr ""
-#~ "Não se pode modificar um lançamento de apontamento de horas confirmado!"
-
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "Erro! Você não pode criar empresas recursivas."
-
-#~ msgid " Month "
-#~ msgstr " Mês "
-
-#~ msgid " Month-1 "
-#~ msgstr " Mês-1 "
-
-#~ msgid "State"
-#~ msgstr "Status"
-
-#~ msgid " Year "
-#~ msgstr " Ano "
-
-#~ msgid "Quantity"
-#~ msgstr "Quantidade"
-
-#~ msgid "Timesheet in current year"
-#~ msgstr "Folha de Tempo neste ano"
-
-#, python-format
-#~ msgid "You cannot modify an entry in a confirmed timesheet!"
-#~ msgstr ""
-#~ "Você não pode modificar uma entrada em uma folha de tempo confirmada!"
-
-#~ msgid "Timesheet of last month"
-#~ msgstr "Folha de Tempo do mês passado"
-
-#, python-format
-#~ msgid ""
-#~ "In order to create a timesheet for this employee, you must assign the "
-#~ "employee to an analytic journal!"
-#~ msgstr ""
-#~ "Para criar uma folha de tempo para este funcionário, você precisa associar o "
-#~ "funcionário a um diário analítico!"
-
-#, python-format
-#~ msgid ""
-#~ "You cannot enter an attendance date outside the current timesheet dates!"
-#~ msgstr ""
-#~ "Você não pode definir uma data de entrada de um atendimento fora das datas "
-#~ "dessa folha!"
-
-#~ msgid "My Departments Timesheet"
-#~ msgstr "Folha de Horas do Meu Departamento"
-
-#~ msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-#~ msgstr ""
-#~ "Erro: Registro de Entrada (resp Saída) deve seguir Registro de Saída (resp. "
-#~ "Entrada)"
-
-#, python-format
-#~ msgid ""
-#~ "In order to create a timesheet for this employee, you must link the employee "
-#~ "to a product, like 'Consultant'!"
-#~ msgstr ""
-#~ "A fim de criar uma folha de horas para este funcionário, você deve ligar o "
-#~ "funcionário a um produto, como 'consultor'!"
-
-#~ msgid "Daily"
-#~ msgstr "Diariamente"
-
-#, python-format
-#~ msgid "You cannot duplicate a timesheet!"
-#~ msgstr "Você não pode duplicar uma folha de horas"
-
-#, python-format
-#~ msgid ""
-#~ "In order to create a timesheet for this employee, you must link the employee "
-#~ "to a product!"
-#~ msgstr ""
-#~ "A fim de criar uma folha de horas para este funcionário, você deve ligar o "
-#~ "empregado a um produto!"
-
-#~ msgid "You must select a Current date which is in the timesheet dates !"
-#~ msgstr ""
-#~ "Você deve selecionar uma data atual que dentro  das datas da folha de horas!"
-
-#~ msgid ""
-#~ "This report performs analysis on timesheets created by your human resources "
-#~ "in the system. It allows you to have a full overview of  entries done by "
-#~ "your employees. You can group them by specific selection criteria thanks to "
-#~ "the search tool."
-#~ msgstr ""
-#~ "Este relatório faz análise em planilhas criadas por seus recursos humanos no "
-#~ "sistema. Ele permite que você tenha uma visão completa de entradas feitas "
-#~ "por seus empregados. Você pode agrupá-los por critérios de selecção "
-#~ "específicos graças à ferramenta de busca."
-
-#~ msgid ""
-#~ "Check your timesheets for a specific period. You can also encode time spent "
-#~ "on a project (i.e. an analytic account) thus generating costs in the "
-#~ "analytic account concerned."
-#~ msgstr ""
-#~ "Verifique seus horários por um período específico. Você também pode "
-#~ "registrar o tempo gasto em um projeto (ou seja, uma conta analítica) gerando "
-#~ "custos na conta analítica em questão."
-
-#, python-format
-#~ msgid "You cannot delete a timesheet which is already confirmed!"
-#~ msgstr "Você não pode excluir uma Folha de Horas que já está confirmada!"
-
-#, python-format
-#~ msgid ""
-#~ "You cannot have 2 timesheets that overlaps!\n"
-#~ "You should use the menu 'My Timesheet' to avoid this problem."
-#~ msgstr ""
-#~ "Você não pode ter 2 quadros de horários que se sobrepõe!\n"
-#~ "Você deve usar 'Meu quadro de horários \"no menu para evitar este problema."
-
-#, python-format
-#~ msgid ""
-#~ "The timesheet cannot be validated as it does not contain an equal number of "
-#~ "sign ins and sign outs!"
-#~ msgstr ""
-#~ "A Folha de Horas não pode ser validada pois não contém um número igual de "
-#~ "entradas e saídas!"
-
-#~ msgid ""
-#~ "You cannot have 2 timesheets that overlaps !\n"
-#~ "Please use the menu 'My Current Timesheet' to avoid this problem."
-#~ msgstr ""
-#~ "Você não pode ter 2 quadros de horários que se sobrepõe!\n"
-#~ "Por favor, use o menu \"Minha Folha de Horas Atual\" no menu para evitar "
-#~ "este problema."
-
-#, python-format
-#~ msgid "You cannot delete a timesheet which have attendance entries!"
-#~ msgstr ""
-#~ "Você não pode excluir uma Folha de Horas que tem linhas de atendimento!"
-
-#~ msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
-#~ msgstr ""
-#~ "Você não pode modificar uma entrada que está como Confirmada/Concluída"
-
-#~ msgid "Timesheet in current month"
-#~ msgstr "Folhas de Horas no mês atual."
-
-#~ msgid "The company name must be unique !"
-#~ msgstr "O nome da empresa deve ser exclusivo!"
-
-#~ msgid "Submited to Manager"
-#~ msgstr "Enviar ao Gerente"
-
-#, python-format
-#~ msgid "You cannot sign in/sign out from an other date than today"
-#~ msgstr "Você não pode entrar/sair a partir de outra data que não hoje"
-
-#, python-format
-#~ msgid ""
-#~ "In order to create a timesheet for this employee, you must assign the "
-#~ "employee to an analytic journal, like 'Timesheet'!"
-#~ msgstr ""
-#~ "A fim de criar um quadro de horários para este funcionário, você deve "
-#~ "atribuir o empregado a um jornal analítico, como o \"quadro de horários\"!"
-
-#, python-format
-#~ msgid ""
-#~ "In order to create a timesheet for this employee, you must assign it to a "
-#~ "user!"
-#~ msgstr ""
-#~ "Para criar uma folha de horas para este funcionário, você precisa associar a "
-#~ "um usuário!"
-
-#~ msgid ""
-#~ " * The 'Draft' state is used when a user is encoding a new and unconfirmed "
-#~ "timesheet.                 \n"
-#~ "* The 'Confirmed' state is used for to confirm the timesheet by user.        "
-#~ "         \n"
-#~ "* The 'Done' state is used when users timesheet is accepted by his/her "
-#~ "senior."
-#~ msgstr ""
-#~ " * 'Provisório' é usado quando um usuário está cadastrando uma folha de "
-#~ "horas nova e sem confirmação\n"
-#~ "* 'Confirmado' é usado para confirmar a folha de horas por usuário.\n"
-#~ "* 'Concluído' é usado quando a folha de horas do usuário é aceita por seu "
-#~ "superior."

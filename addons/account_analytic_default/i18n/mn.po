@@ -1,21 +1,21 @@
 # Mongolian translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2010-08-12 06:37+0000\n"
-"Last-Translator: ub121 <ubs121@gmail.com>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:37+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:02+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
@@ -35,6 +35,14 @@ msgid "Default end date for this Analytic Account."
 msgstr ""
 
 #. module: account_analytic_default
+#: help:account.analytic.default,product_id:0
+msgid ""
+"Select a product which will use analytic account specified in analytic "
+"default (e.g. create new customer invoice or Sales order if we select this "
+"product, it will automatically take this as an analytic account)"
+msgstr ""
+
+#. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_stock_picking
 msgid "Picking List"
 msgstr "Бэлтгэх жагсаалт"
@@ -45,23 +53,18 @@ msgid "Conditions"
 msgstr "Нөхцөлүүд"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,partner_id:0
-msgid ""
-"Select a partner which will use analytic account specified in analytic "
-"default (e.g. create new customer invoice or Sale order if we select this "
-"partner, it will automatically take this as an analytic account)"
-msgstr ""
-
-#. module: account_analytic_default
 #: view:account.analytic.default:0
 #: field:account.analytic.default,product_id:0
 msgid "Product"
 msgstr "Бараа"
 
 #. module: account_analytic_default
-#: model:ir.model,name:account_analytic_default.model_account_analytic_default
-msgid "Analytic Distribution"
-msgstr "Шинжилгээт тархалт"
+#: help:account.analytic.default,partner_id:0
+msgid ""
+"Select a partner which will use analytic account specified in analytic "
+"default (e.g. create new customer invoice or Sales order if we select this "
+"partner, it will automatically take this as an analytic account)"
+msgstr ""
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -81,14 +84,6 @@ msgid "Entries"
 msgstr "Бичлэгүүд"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,product_id:0
-msgid ""
-"Select a product which will use analytic account specified in analytic "
-"default (e.g. create new customer invoice or Sale order if we select this "
-"product, it will automatically take this as an analytic account)"
-msgstr ""
-
-#. module: account_analytic_default
 #: field:account.analytic.default,date_stop:0
 msgid "End Date"
 msgstr "Дуусах огноо"
@@ -106,14 +101,6 @@ msgid "Sequence"
 msgstr "Дугаарлалт"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,company_id:0
-msgid ""
-"Select a company which will use analytic account specified in analytic "
-"default (e.g. create new customer invoice or Sale order if we select this "
-"company, it will automatically take this as an analytic account)"
-msgstr ""
-
-#. module: account_analytic_default
 #: help:account.analytic.default,user_id:0
 msgid ""
 "Select a user which will use analytic account specified in analytic default."
@@ -125,10 +112,23 @@ msgid "Invoice Line"
 msgstr "Нэхэмжлэлийн мөр"
 
 #. module: account_analytic_default
+#: help:account.analytic.default,company_id:0
+msgid ""
+"Select a company which will use analytic account specified in analytic "
+"default (e.g. create new customer invoice or Sales order if we select this "
+"company, it will automatically take this as an analytic account)"
+msgstr ""
+
+#. module: account_analytic_default
 #: view:account.analytic.default:0
 #: field:account.analytic.default,analytic_id:0
 msgid "Analytic Account"
 msgstr "Аналитик данс"
+
+#. module: account_analytic_default
+#: model:ir.model,name:account_analytic_default.model_account_analytic_default
+msgid "Analytic Distribution"
+msgstr "Шинжилгээт тархалт"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,date_start:0
@@ -162,78 +162,3 @@ msgstr ""
 #: model:ir.model,name:account_analytic_default.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "Борлуулалтын Захиалгын Мөр"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
-#~ "болохгүй!"
-
-#~ msgid "Seq"
-#~ msgstr "Д/д"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Дэлгэцийн XML алдаатай!"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр заасан байна."
-
-#~ msgid "Analytic Distributions"
-#~ msgstr "Аналитик тархалт"
-
-#~ msgid "Account Analytic Default"
-#~ msgstr "Дансны аналитик үндсэн утга"
-
-#~ msgid "Default start date for this Analytical Account"
-#~ msgstr "Энэ Шинжилгээний Дансын эхлэх огнооны анхны утга"
-
-#~ msgid ""
-#~ "select a partner which will use analytical account specified in analytic "
-#~ "default (eg. create new cutomer invoice or Sale order if we select this "
-#~ "partner, it will automatically take this as an analytical account)"
-#~ msgstr ""
-#~ "шинжилгээний анхны утгыг хэрэглэх харилцагчийг сонго (тухайлбал: "
-#~ "захиалагчийн шинэ нэхэмжлэх үүсгэх эсвэл борлуулалтын захиалга үүсгэхэд энэ "
-#~ "харилцагчийг сонгосон бол автоматаар энэ шинжилгээний дансыг авах болно)"
-
-#~ msgid "Current"
-#~ msgstr "Идэвхтэй"
-
-#~ msgid "Analytical Account"
-#~ msgstr "Шинжилгээний Данс"
-
-#~ msgid "Default end date for this Analytical Account"
-#~ msgstr "Энэ шинжилгээний дансны дуусах хугацааны анхны утга"
-
-#~ msgid ""
-#~ "select a company which will use analytical account specified in analytic "
-#~ "default (eg. create new cutomer invoice or Sale order if we select this "
-#~ "company, it will automatically take this as an analytical account)"
-#~ msgstr ""
-#~ "шинжилгээний анхны утгыг хэрэглэх компанийг сонго (тухайлбал: захиалагчийн "
-#~ "шинэ нэхэмжлэх үүсгэх эсвэл борлуулалтын захиалга үүсгэхэд энэ компанийг "
-#~ "сонгосон бол автоматаар энэ шинжилгээний дансыг авах болно)"
-
-#~ msgid ""
-#~ "select a user which will use analytical account specified in analytic default"
-#~ msgstr ""
-#~ "энэ дансыг шинжилгээний анхны утга болгож хэрэглэх хэрэглэгчийг сонго"
-
-#~ msgid "Reference must be unique per Company!"
-#~ msgstr "Код компаний хэмжээнд үл давхцах байх ёстой!"
-
-#~ msgid "Analytical defaults whose end date is greater than today or None"
-#~ msgstr ""
-#~ "Шинжилгээний дуусах хугацааны анхны утга нь өнөөдрөөс их юм уу хоосон байх"
-
-#~ msgid ""
-#~ "select a product which will use analytical account specified in analytic "
-#~ "default (eg. create new cutomer invoice or Sale order if we select this "
-#~ "product, it will automatically take this as an analytical account)"
-#~ msgstr ""
-#~ "шинжилгээний дансыг анхны утга болгож ашиглах барааг сонго (тухайлбал. "
-#~ "захиалагчийн шинэ нэхэмжлэх эсвэл борлуулалтын захиалга үүсгэхэд автоматаар "
-#~ "энэ шинжилгээний дансыг авна) \r\n"
-#~ "select a product which will use analytical account specified in analytic "
-#~ "default (eg. create new cutomer invoice or Sale order if we select this "
-#~ "product, it will automatically take this as an analytical account)"

@@ -1,21 +1,21 @@
 # Latvian translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-05-10 17:54+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:50+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:07+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_related:0
@@ -68,12 +68,6 @@ msgstr ""
 #. module: base_calendar
 #: model:crm.meeting.type,name:base_calendar.categ_meet5
 msgid "Feedback Meeting"
-msgstr ""
-
-#. module: base_calendar
-#: code:addons/base_calendar/crm_meeting.py:117
-#, python-format
-msgid "Meeting <b>completed</b>."
 msgstr ""
 
 #. module: base_calendar
@@ -257,7 +251,7 @@ msgid "To"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1225
+#: code:addons/base_calendar/base_calendar.py:1255
 #, python-format
 msgid "Error!"
 msgstr "Kļūda!"
@@ -276,6 +270,13 @@ msgstr ""
 #: selection:calendar.alarm,action:0
 msgid "Procedure"
 msgstr ""
+
+#. module: base_calendar
+#: field:calendar.event,recurrent_id:0
+#: field:calendar.todo,recurrent_id:0
+#: field:crm.meeting,recurrent_id:0
+msgid "Recurrent ID"
+msgstr "Atkārtošanās ID"
 
 #. module: base_calendar
 #: selection:calendar.event,state:0
@@ -336,14 +337,9 @@ msgid "Meetings"
 msgstr ""
 
 #. module: base_calendar
-#: selection:calendar.attendee,cutype:0
-msgid "Room"
-msgstr "Istaba"
-
-#. module: base_calendar
-#: field:calendar.event,recurrent_id:0
-#: field:calendar.todo,recurrent_id:0
-#: field:crm.meeting,recurrent_id:0
+#: field:calendar.event,recurrent_id_date:0
+#: field:calendar.todo,recurrent_id_date:0
+#: field:crm.meeting,recurrent_id_date:0
 msgid "Recurrent ID date"
 msgstr "Atkārtošanās ID datums"
 
@@ -366,11 +362,11 @@ msgid ""
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:388
-#: code:addons/base_calendar/base_calendar.py:417
-#: code:addons/base_calendar/base_calendar.py:980
-#: code:addons/base_calendar/base_calendar.py:982
-#: code:addons/base_calendar/base_calendar.py:1430
+#: code:addons/base_calendar/base_calendar.py:399
+#: code:addons/base_calendar/base_calendar.py:444
+#: code:addons/base_calendar/base_calendar.py:1008
+#: code:addons/base_calendar/base_calendar.py:1010
+#: code:addons/base_calendar/base_calendar.py:1455
 #, python-format
 msgid "Warning!"
 msgstr "Uzmanību!"
@@ -514,9 +510,9 @@ msgid "Email"
 msgstr "E-pasts"
 
 #. module: base_calendar
-#: model:ir.actions.server,name:base_calendar.actions_server_crm_meeting_unread
-msgid "CRM Meeting: Mark unread"
-msgstr ""
+#: selection:calendar.attendee,cutype:0
+msgid "Room"
+msgstr "Istaba"
 
 #. module: base_calendar
 #: selection:calendar.alarm,state:0
@@ -529,7 +525,7 @@ msgid "Event alarm information"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:982
+#: code:addons/base_calendar/base_calendar.py:1010
 #, python-format
 msgid "Count cannot be negative or 0."
 msgstr ""
@@ -540,11 +536,9 @@ msgid "Creation Date"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/crm_meeting.py:111
 #: view:crm.meeting:0
 #: model:ir.model,name:base_calendar.model_crm_meeting
 #: model:res.request.link,name:base_calendar.request_link_meeting
-#, python-format
 msgid "Meeting"
 msgstr ""
 
@@ -573,11 +567,9 @@ msgid "Caldav URL"
 msgstr "Caldav URL"
 
 #. module: base_calendar
-#: field:calendar.event,recurrent_uid:0
-#: field:calendar.todo,recurrent_uid:0
-#: field:crm.meeting,recurrent_uid:0
-msgid "Recurrent ID"
-msgstr "Atkārtošanās ID"
+#: model:ir.model,name:base_calendar.model_mail_wizard_invite
+msgid "Invite wizard"
+msgstr ""
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
@@ -609,7 +601,7 @@ msgid "Delegrated To"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/crm_meeting.py:94
+#: code:addons/base_calendar/crm_meeting.py:102
 #, python-format
 msgid "The following contacts have no email address :"
 msgstr ""
@@ -718,12 +710,6 @@ msgid "Individual"
 msgstr "Individuāli"
 
 #. module: base_calendar
-#: code:addons/base_calendar/crm_meeting.py:114
-#, python-format
-msgid "Meeting <b>confirmed</b>."
-msgstr ""
-
-#. module: base_calendar
 #: help:calendar.event,count:0
 #: help:calendar.todo,count:0
 #: help:crm.meeting,count:0
@@ -758,7 +744,7 @@ msgid "Declined"
 msgstr "Noraidīts"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1430
+#: code:addons/base_calendar/base_calendar.py:1455
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr ""
@@ -793,13 +779,6 @@ msgstr "Privātums"
 #: model:ir.model,name:base_calendar.model_res_alarm
 msgid "Basic Alarm Information"
 msgstr ""
-
-#. module: base_calendar
-#: field:calendar.event,mo:0
-#: field:calendar.todo,mo:0
-#: field:crm.meeting,mo:0
-msgid "Mon"
-msgstr "Pi"
 
 #. module: base_calendar
 #: field:calendar.event,fr:0
@@ -1000,10 +979,11 @@ msgid "Indicate the groups that the attendee belongs to"
 msgstr ""
 
 #. module: base_calendar
-#: field:crm.meeting,message_comment_ids:0
-#: help:crm.meeting,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
+#: field:calendar.event,mo:0
+#: field:calendar.todo,mo:0
+#: field:crm.meeting,mo:0
+msgid "Mon"
+msgstr "Pi"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
@@ -1054,11 +1034,6 @@ msgid "Interval"
 msgstr "Intervāls"
 
 #. module: base_calendar
-#: model:ir.actions.server,name:base_calendar.actions_server_crm_meeting_read
-msgid "CRM Meeting: Mark read"
-msgstr ""
-
-#. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
 #: selection:crm.meeting,week_list:0
@@ -1082,7 +1057,7 @@ msgid "Active"
 msgstr "Aktīvs"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:388
+#: code:addons/base_calendar/base_calendar.py:399
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
 msgstr ""
@@ -1228,7 +1203,7 @@ msgid "Select Weekdays"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1489
+#: code:addons/base_calendar/base_calendar.py:1514
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #: selection:calendar.todo,show_as:0
@@ -1357,6 +1332,11 @@ msgid "Search Meetings"
 msgstr ""
 
 #. module: base_calendar
+#: model:ir.model,name:base_calendar.model_ir_attachment
+msgid "ir.attachment"
+msgstr "ir.attachment"
+
+#. module: base_calendar
 #: model:ir.model,name:base_calendar.model_crm_meeting_type
 msgid "Meeting Type"
 msgstr ""
@@ -1437,6 +1417,11 @@ msgid ""
 msgstr ""
 
 #. module: base_calendar
+#: model:ir.model,name:base_calendar.model_mail_message
+msgid "Message"
+msgstr ""
+
+#. module: base_calendar
 #: field:calendar.event,base_calendar_alarm_id:0
 #: field:calendar.todo,base_calendar_alarm_id:0
 #: field:crm.meeting,base_calendar_alarm_id:0
@@ -1456,7 +1441,7 @@ msgid "April"
 msgstr "Aprīlis"
 
 #. module: base_calendar
-#: code:addons/base_calendar/crm_meeting.py:98
+#: code:addons/base_calendar/crm_meeting.py:106
 #, python-format
 msgid "Email addresses not found"
 msgstr ""
@@ -1474,7 +1459,7 @@ msgid "Weekday"
 msgstr "Nedēļas diena"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:980
+#: code:addons/base_calendar/base_calendar.py:1008
 #, python-format
 msgid "Interval cannot be negative."
 msgstr ""
@@ -1487,7 +1472,7 @@ msgid "By day"
 msgstr "Pēc dienas"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:417
+#: code:addons/base_calendar/base_calendar.py:444
 #, python-format
 msgid "First you have to specify the date of the invitation."
 msgstr ""
@@ -1622,142 +1607,3 @@ msgstr ""
 #: selection:crm.meeting,byday:0
 msgid "Fifth"
 msgstr ""
-
-#~ msgid "The chosen company is not in the allowed companies for this user"
-#~ msgstr "Izvēlēta kompānija nav atļauto kompāniju sarakstā šim lietotājam"
-
-#~ msgid "Hourly"
-#~ msgstr "Ik stundu"
-
-#~ msgid "Invited User"
-#~ msgstr "Ielūgts lietotājs"
-
-#~ msgid "Monthly"
-#~ msgstr "Ik mēnesi"
-
-#~ msgid "Title"
-#~ msgstr "Virsraksts"
-
-#~ msgid "Required to Join"
-#~ msgstr "Nepieciešams, lai pievienotos"
-
-#~ msgid "Select range to Exclude"
-#~ msgstr "Izvēlēties intervālu izslēgšanai"
-
-#~ msgid "Show as"
-#~ msgstr "Rādīt kā"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "Uzmanību!"
-
-#~ msgid "ir.attachment"
-#~ msgstr "ir.attachment"
-
-#~ msgid "Yearly"
-#~ msgstr "Ik gadu"
-
-#~ msgid "Show time as"
-#~ msgstr "Rādīt laiku kā"
-
-#~ msgid "Years"
-#~ msgstr "Gadi"
-
-#~ msgid "Deadline"
-#~ msgstr "Termiņš"
-
-#~ msgid "_Cancel"
-#~ msgstr "_Atcelt"
-
-#~ msgid "Confidential"
-#~ msgstr "Konfidenciāls"
-
-#~ msgid "Mark as"
-#~ msgstr "Atzīmēt kā"
-
-#~ msgid "Daily"
-#~ msgstr "Ik dienu"
-
-#~ msgid "Partner Contacts"
-#~ msgstr "Partnera Kontakti"
-
-#~ msgid "_Ok"
-#~ msgstr "_Labi"
-
-#~ msgid "Partner"
-#~ msgstr "Partneris"
-
-#~ msgid "Delegate"
-#~ msgstr "Deleģēt"
-
-#~ msgid "_Save"
-#~ msgstr "_Saglabāt"
-
-#~ msgid "Edit All"
-#~ msgstr "Labot visus"
-
-#~ msgid "Contacts"
-#~ msgstr "Kontakti"
-
-#~ msgid "Weeks"
-#~ msgstr "Nedēļas"
-
-#~ msgid "My Role"
-#~ msgstr "Mana loma"
-
-#~ msgid "Invite Attendees"
-#~ msgstr "Ielūgt dalībniekus"
-
-#~ msgid "No Repeat"
-#~ msgstr "Neatkārtot"
-
-#~ msgid "Data"
-#~ msgstr "Dati"
-
-#~ msgid "Count"
-#~ msgstr "Skaits"
-
-#~ msgid "Invitation"
-#~ msgstr "Ielūgums"
-
-#~ msgid "You can not have two users with the same login !"
-#~ msgstr "Nevar būt divi lietotāji ar vienādu pieteikuma vārdu!"
-
-#~ msgid "Frequency"
-#~ msgstr "Biežums"
-
-#~ msgid "Weekly"
-#~ msgstr "Ik nedēļu"
-
-#~ msgid "State"
-#~ msgstr "Stāvoklis"
-
-#~ msgid "of"
-#~ msgstr "no"
-
-#~ msgid "res.users"
-#~ msgstr "res.users"
-
-#~ msgid "Tentative"
-#~ msgstr "Pagaidu"
-
-#~ msgid "Type"
-#~ msgstr "Tips"
-
-#~ msgid "Minutely"
-#~ msgstr "Pa minūtēm"
-
-#~ msgid "Invite People"
-#~ msgstr "Uzaicināt cilvēkus"
-
-#~ msgid "Objects"
-#~ msgstr "Objekti"
-
-#~ msgid "Months"
-#~ msgstr "Mēneši"
-
-#~ msgid "Invite"
-#~ msgstr "Ielūgt"
-
-#~ msgid " "
-#~ msgstr " "

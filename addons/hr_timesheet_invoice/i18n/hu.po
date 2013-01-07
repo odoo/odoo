@@ -1,20 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#    * hr_timesheet_invoice
+# Hungarian translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2011-03-03 15:08+0000\n"
-"Last-Translator: Krisztian Eyssen <krisz@eyssen.hu>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:35+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:17+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -96,21 +97,12 @@ msgid "March"
 msgstr "Március"
 
 #. module: hr_timesheet_invoice
-#: help:account.analytic.account,to_invoice:0
-msgid ""
-"You usually invoice 100% of the timesheets. But if you mix fixed price and "
-"timesheet invoicing, you may use another ratio. For instance, if you do a "
-"20% advance invoice (fixed price, based on a sale order), you should invoice "
-"the rest on timesheet with a 80% ratio."
-msgstr ""
-
-#. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
 msgid "Profit"
 msgstr "Nyereség"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:165
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:144
 #, python-format
 msgid "You cannot modify an invoiced analytic line!"
 msgstr ""
@@ -124,11 +116,6 @@ msgstr "Számlázási ráta"
 #: help:hr.timesheet.invoice.create.final,time:0
 msgid "Display time in the history of works"
 msgstr "Az elvégzett munkára fordított időtartam megjelenítése"
-
-#. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.profit:0
-msgid "Journals"
-msgstr "Naplók"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -176,7 +163,7 @@ msgid "Invoiced Amount"
 msgstr "Kiszámlázott összeg"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:209
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:188
 #, python-format
 msgid "Analytic Account incomplete !"
 msgstr ""
@@ -187,10 +174,8 @@ msgid "Project"
 msgstr "Projekt"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:164
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:254
-#, python-format
-msgid "Error!"
+#: view:account.analytic.account:0
+msgid "Invoice on Timesheets Options"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -202,12 +187,6 @@ msgstr "Összeg"
 #: help:hr.timesheet.invoice.create,name:0
 msgid "The detail of each work done will be displayed on the invoice"
 msgstr "Minden elvégzett munka részletezése megjelenik a számlában"
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:116
-#, python-format
-msgid "Contract has been set as <b>pending</b>."
-msgstr ""
 
 #. module: hr_timesheet_invoice
 #: field:account.analytic.account,pricelist_id:0
@@ -228,6 +207,15 @@ msgstr "Időszak a záró dátumig"
 #: model:ir.model,name:hr_timesheet_invoice.model_report_analytic_account_close
 msgid "Analytic account to close"
 msgstr "Lezárandó gyűjtőkód"
+
+#. module: hr_timesheet_invoice
+#: help:account.analytic.account,to_invoice:0
+msgid ""
+"You usually invoice 100% of the timesheets. But if you mix fixed price and "
+"timesheet invoicing, you may use another ratio. For instance, if you do a "
+"20% advance invoice (fixed price, based on a sales order), you should "
+"invoice the rest on timesheet with a 80% ratio."
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
@@ -254,7 +242,7 @@ msgid "Deadline"
 msgstr "Határidő"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:267
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:246
 #, python-format
 msgid "Configuration Error!"
 msgstr ""
@@ -291,7 +279,7 @@ msgid "Costs to invoice"
 msgstr "Kiszámlázandó költségek"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:267
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:246
 #, python-format
 msgid "Please define income account for product '%s'."
 msgstr ""
@@ -337,12 +325,6 @@ msgstr "Felhasználó szerinti munkaidő-kimutatás"
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice
 msgid "To Invoice"
 msgstr "Számlázandó"
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:98
-#, python-format
-msgid "Contract has been <b>closed</b>."
-msgstr ""
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.analytic.profit:0
@@ -464,11 +446,6 @@ msgstr "Hónap"
 #: report:account.analytic.profit:0
 msgid "Currency"
 msgstr "Pénznem"
-
-#. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.profit:0
-msgid "Users"
-msgstr ""
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -623,11 +600,6 @@ msgid "Date"
 msgstr "Dátum"
 
 #. module: hr_timesheet_invoice
-#: model:mail.message.subtype,name:hr_timesheet_invoice.mt_account_closed
-msgid "finished"
-msgstr ""
-
-#. module: hr_timesheet_invoice
 #: field:report.timesheet.line,quantity:0
 #: field:report_timesheet.account,quantity:0
 #: field:report_timesheet.account.date,quantity:0
@@ -658,9 +630,9 @@ msgid "General Account"
 msgstr "Főkönyvi számla"
 
 #. module: hr_timesheet_invoice
-#: view:account.analytic.account:0
-msgid "Invoice on Timesheets Options"
-msgstr ""
+#: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_analytic_profit
+msgid "Print Timesheet Profit"
+msgstr "Munkaidő-kimutatás eredménylevezetésének nyomtatása"
 
 #. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
@@ -668,9 +640,10 @@ msgid "Totals:"
 msgstr "Összesen:"
 
 #. module: hr_timesheet_invoice
-#: model:mail.message.subtype,name:hr_timesheet_invoice.mt_account_canceled
-msgid "canceled"
-msgstr ""
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_account_analytic_line_to_invoice
+#: view:report.account.analytic.line.to.invoice:0
+msgid "Analytic Lines to Invoice"
+msgstr "Kiszámlázandó gyűjtőkód tételek"
 
 #. module: hr_timesheet_invoice
 #: help:account.analytic.line,to_invoice:0
@@ -769,13 +742,7 @@ msgid "Timesheets to invoice"
 msgstr "Kiszámlázandó munkaidő-kimutatások"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:104
-#, python-format
-msgid "Contract has been <b>canceled</b>."
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:210
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:189
 #, python-format
 msgid ""
 "Contract incomplete. Please fill in the Customer and Pricelist fields."
@@ -822,12 +789,6 @@ msgstr "Napló"
 #: help:hr.timesheet.invoice.create.final,product:0
 msgid "The product that will be used to invoice the remaining amount"
 msgstr "Termék, amelynek a jogcímén a maradványösszeg kiszámlázásra kerül"
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:110
-#, python-format
-msgid "Contract has been <b>opened</b>."
-msgstr ""
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create.final,time:0
@@ -884,11 +845,6 @@ msgid "Sale price"
 msgstr "Eladási ár"
 
 #. module: hr_timesheet_invoice
-#: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_analytic_profit
-msgid "Print Timesheet Profit"
-msgstr "Munkaidő-kimutatás eredménylevezetésének nyomtatása"
-
-#. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timesheet_user
 msgid "Timesheets per day"
 msgstr "Munkaidő-kimutatások naponta"
@@ -903,7 +859,7 @@ msgid "April"
 msgstr "Április"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:254
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:233
 #, python-format
 msgid ""
 "There is no product defined. Please select one or force the product through "
@@ -933,10 +889,11 @@ msgid "Units"
 msgstr "Egységek"
 
 #. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_account_analytic_line_to_invoice
-#: view:report.account.analytic.line.to.invoice:0
-msgid "Analytic Lines to Invoice"
-msgstr "Kiszámlázandó gyűjtőkód tételek"
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:143
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:233
+#, python-format
+msgid "Error!"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor4
@@ -979,274 +936,3 @@ msgstr "Év"
 #: view:hr.timesheet.analytic.profit:0
 msgid "Duration"
 msgstr ""
-
-#~ msgid "    7 Days    "
-#~ msgstr "    Hetente    "
-
-#~ msgid "Name of entry"
-#~ msgstr "Tétel megnevezése"
-
-#~ msgid "This Year"
-#~ msgstr "Tárgyév"
-
-#~ msgid "UoM"
-#~ msgstr "ME"
-
-#~ msgid "Sale Pricelist"
-#~ msgstr "Eladási árlista"
-
-#~ msgid "Final invoice for analytic account"
-#~ msgstr "Gyűjtőkód végszámlája"
-
-#~ msgid "Balance product"
-#~ msgstr "Maradványtermék"
-
-#~ msgid "Timesheets"
-#~ msgstr "Munkaidő-kimutatások"
-
-#~ msgid "Final Invoice"
-#~ msgstr "Végszámla"
-
-#~ msgid "Do you want details for each line of the invoices ?"
-#~ msgstr "A számla minden sorához szeretne részletezést?"
-
-#~ msgid "State"
-#~ msgstr "Állapot"
-
-#~ msgid "Debit"
-#~ msgstr "Tartozik"
-
-#~ msgid "Employee"
-#~ msgstr "Alkalmazott"
-
-#~ msgid "It allows to set the discount while making invoice"
-#~ msgstr "Beállítja a számlázásnál alkalmazott engedményt."
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "Hiba !"
-
-#~ msgid "Printing date"
-#~ msgstr "Nyomtatás dátuma"
-
-#~ msgid "Bill Tasks Works"
-#~ msgstr "Feladatmunkák kiszámlázása"
-
-#, python-format
-#~ msgid "You can not modify an invoiced analytic line!"
-#~ msgstr "Nem módosíthat egy kiszámlázott gyűjtőkód tételt!"
-
-#~ msgid ""
-#~ "Complete this field only if you want to force to use a specific product. "
-#~ "Keep empty to use the real product that comes from the cost."
-#~ msgstr ""
-#~ "Csak akkor töltse ki ezt a mezőt, ha speciális terméket akar kiszámlázni. Ha "
-#~ "üresen hagyja, a valós termék kerül számlázásra, amelyre a költségek "
-#~ "felmerültek."
-
-#~ msgid "Invoice Balance amount"
-#~ msgstr "Maradványösszeg számlázása"
-
-#~ msgid "Period to"
-#~ msgstr "Záró időszak"
-
-#~ msgid "Invoice analytic lines"
-#~ msgstr "Gyűjtőkód tételek kiszámlázása"
-
-#~ msgid "J.C. /Move name"
-#~ msgstr "Naplókód/Megnevezés"
-
-#~ msgid "Total:"
-#~ msgstr "Összesen:"
-
-#~ msgid "Credit"
-#~ msgstr "Követel"
-
-#, python-format
-#~ msgid "Error"
-#~ msgstr "Hiba"
-
-#~ msgid "End of period"
-#~ msgstr "Időszak vége"
-
-#~ msgid "Date/Code"
-#~ msgstr "Dátum/kód"
-
-#~ msgid "Reinvoice Costs"
-#~ msgstr "Költségek automatikus számlázása"
-
-#~ msgid "Do you want to show details of work in invoice ?"
-#~ msgstr "Meg akarja jeleníteni a számlában az elvégzett munka részleteit?"
-
-#~ msgid "Period from"
-#~ msgstr "Kezdő időszak"
-
-#, python-format
-#~ msgid "Balance product needed"
-#~ msgstr "Maradványtermék szükséges"
-
-#~ msgid "Start of period"
-#~ msgstr "Időszak kezdete"
-
-#~ msgid "Internal name"
-#~ msgstr "Belső név"
-
-#~ msgid "This Month"
-#~ msgstr "Tárgyhó"
-
-#~ msgid "Select Period"
-#~ msgstr "Időszak kiválasztása"
-
-#~ msgid "Invoice on analytic lines"
-#~ msgstr "Számla gyűjtőkód tételek alapján"
-
-#~ msgid "Invoicing Data"
-#~ msgstr "Számlázási adatok"
-
-#~ msgid "Gratis"
-#~ msgstr "Ingyen"
-
-#~ msgid "hr.timesheet.analytic.cost.ledger"
-#~ msgstr "hr.timesheet.analytic.cost.ledger"
-
-#~ msgid ""
-#~ "Error! The currency has to be the same as the currency of the selected "
-#~ "company"
-#~ msgstr ""
-#~ "Hiba! A pénznemnek meg kell egyeznie a kiválasztott vállalat pénznemével."
-
-#~ msgid "%"
-#~ msgstr "%"
-
-#~ msgid ""
-#~ "The product to invoice is defined on the employee form, the price will be "
-#~ "deduced by this pricelist on the product."
-#~ msgstr ""
-#~ "A kiszámlázandó termék az alkalmazott törzsben került meghatározásra, az "
-#~ "árat a termékhez tartozó árlistából veszi a rendszer."
-
-#~ msgid "Reactivate Account"
-#~ msgstr "Gyűjtőkód újraaktíválása"
-
-#~ msgid "Uninvoiced line with billing rate"
-#~ msgstr "Nem számlázott sor számlázási rátával"
-
-#~ msgid "Accounts to invoice"
-#~ msgstr "Számlázandó gyűjtőkódok"
-
-#~ msgid "Lines to Invoice"
-#~ msgstr "Kiszámlázandó sorok"
-
-#~ msgid ""
-#~ "Fill this field if you plan to automatically generate invoices based on the "
-#~ "costs in this analytic account: timesheets, expenses, ...You can configure "
-#~ "an automatic invoice rate on analytic accounts."
-#~ msgstr ""
-#~ "Jelölje be ezt a mezőt, ha a gyűjtőkódok költségei alapján automatikusan "
-#~ "akar számlákat készíteni. A gyűjtőkódokra beállíthat egy automatikus "
-#~ "számlázási rátát."
-
-#~ msgid ""
-#~ "\n"
-#~ "Module to generate invoices based on costs (human resources, expenses, "
-#~ "...).\n"
-#~ "You can define price lists in analytic account, make some theoretical "
-#~ "revenue\n"
-#~ "reports, eso."
-#~ msgstr ""
-#~ "\n"
-#~ "Költségeken alapuló számlák készítésére szolgáló modul.\n"
-#~ "Ön a modul segítségével árlistákat állíthat be a gyűjtőkódokhoz, elméleti "
-#~ "bevétel\n"
-#~ "kimutatásokat készíthet, stb."
-
-#~ msgid "Employee or Journal Name"
-#~ msgstr "Alkalmazott vagy napló neve"
-
-#~ msgid "Cost Ledger"
-#~ msgstr "Gyűjtőkód karton"
-
-#~ msgid ""
-#~ "OpenERP allows you to create default invoicing types. You might have to "
-#~ "regularly assign discounts because of a specific contract or agreement with "
-#~ "a customer. From this menu, you can create additional types of invoicing to "
-#~ "speed up your invoicing."
-#~ msgstr ""
-#~ "A rendszer lehetővé teszi alapértelmezett számlázási típusok meghatározását. "
-#~ "Előfordulhat, hogy a vevőkkel kötött szerződések vagy megállapodások alapján "
-#~ "rendszeresen kell engedményt tartalmazó számlákat készíteni. Ebből a "
-#~ "menüpontból Ön további alapértelmezett számlázási típusokat hozhat létre, "
-#~ "amelyek felgyorsítják a számlázást."
-
-#~ msgid "Close"
-#~ msgstr "Zárás"
-
-#, python-format
-#~ msgid "At least one line has no product !"
-#~ msgstr "Legalább egy sor nem tartalmaz terméket!"
-
-#, python-format
-#~ msgid "No Records Found for Report!"
-#~ msgstr "Nincs megjeleníthető tétel!"
-
-#, python-format
-#~ msgid "Please fill a Balance product in the wizard"
-#~ msgstr "Kérem, adjon meg egy maradványterméket a varázslóban!"
-
-#~ msgid "Type of Invoicing"
-#~ msgstr "Számlázási típus"
-
-#, python-format
-#~ msgid "Partner incomplete"
-#~ msgstr "Nem adott meg partnert!"
-
-#, python-format
-#~ msgid "Analytic Account incomplete"
-#~ msgstr "Nem adott meg gyűjtőkódot!"
-
-#, python-format
-#~ msgid "Analytic account incomplete"
-#~ msgstr "Nem adott meg gyűjtőkódot!"
-
-#, python-format
-#~ msgid "Please fill in the Address field in the Partner: %s."
-#~ msgstr "Kérem, töltse ki a cím mezőt a %s partner törzsben!"
-
-#~ msgid "Uninvoice lines with billing rate"
-#~ msgstr "Nem számlázott sorok számlázási rátával"
-
-#~ msgid "Uninvoice Lines With Billing Rate"
-#~ msgstr "Nem számlázott sorok számlázási rátával"
-
-#, python-format
-#~ msgid "Data Insufficient!"
-#~ msgstr "Elégtelen adatok!"
-
-#~ msgid ""
-#~ "This list shows you every task you can invoice to the customer. Select the "
-#~ "lines and click the Action button to generate the invoices automatically."
-#~ msgstr ""
-#~ "Ez a lista a vevőknek kiszámlázható összes feladatot mutatja. Az automatikus "
-#~ "számlakészítéshez válassza ki a sorokat és nyomja meg a Művelet gombot."
-
-#~ msgid "Error! You can not create recursive analytic accounts."
-#~ msgstr "Hiba! Nem hozhat létre rekurzív gyűjtőkódokat."
-
-#, python-format
-#~ msgid ""
-#~ "Please fill in the partner and pricelist field in the analytic account:\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Kérem, töltse ki a partner és az árlista mezőt az alábbi gyűjtőkód "
-#~ "űrlapján:\n"
-#~ "%s"
-
-#, python-format
-#~ msgid ""
-#~ "Please fill in the Partner or Customer and Sale Pricelist fields in the "
-#~ "Analytic Account:\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Kérem, töltse ki a partner vagy vevő és az eladási árlista mezőt az alábbi "
-#~ "gyűjtőkód űrlapján:\n"
-#~ "%s"

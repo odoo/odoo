@@ -7,20 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-08-05 14:35+0000\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:54+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:03+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: account_bank_statement_extensions
-#: view:account.bank.statement.line:0
-msgid "Search Bank Transactions"
-msgstr "Banka İşlemi Ara"
+#: help:account.bank.statement.line.global,name:0
+msgid "Originator to Beneficiary Information"
+msgstr ""
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -203,6 +203,11 @@ msgid "Name"
 msgstr "Adı"
 
 #. module: account_bank_statement_extensions
+#: field:account.bank.statement.line.global,name:0
+msgid "OBI"
+msgstr ""
+
+#. module: account_bank_statement_extensions
 #: selection:account.bank.statement.line.global,type:0
 msgid "ISO 20022"
 msgstr "ISO 20022"
@@ -253,6 +258,11 @@ msgid "Child Codes"
 msgstr "Alt Kodlar"
 
 #. module: account_bank_statement_extensions
+#: view:account.bank.statement.line:0
+msgid "Search Bank Transactions"
+msgstr "Banka İşlemi Ara"
+
+#. module: account_bank_statement_extensions
 #: view:confirm.statement.line:0
 msgid "Are you sure you want to confirm the selected Bank Statement lines ?"
 msgstr ""
@@ -290,11 +300,6 @@ msgstr "Kod"
 #: field:account.bank.statement.line,counterparty_name:0
 msgid "Counterparty Name"
 msgstr "Karşı Taraf Adı"
-
-#. module: account_bank_statement_extensions
-#: field:account.bank.statement.line.global,name:0
-msgid "Communication"
-msgstr "İletişim"
 
 #. module: account_bank_statement_extensions
 #: model:ir.model,name:account_bank_statement_extensions.model_res_partner_bank
@@ -353,44 +358,3 @@ msgstr "Toplam Tutar"
 #: field:account.bank.statement.line,globalisation_id:0
 msgid "Globalisation ID"
 msgstr "Küreselleşme ID"
-
-#~ msgid "The RIB and/or IBAN is not valid"
-#~ msgstr "RIB ve/veya IBAN geçerli değil"
-
-#~ msgid "State"
-#~ msgstr "Durum"
-
-#, python-format
-#~ msgid ""
-#~ "Delete operation not allowed !             Please go to the associated bank "
-#~ "statement in order to delete and/or modify this bank statement line"
-#~ msgstr ""
-#~ "İşlemin silinmesine izin verilmedi! Bu banka hesap özeti satırını silmek/ ya "
-#~ "da değiştirmek için bağlantılı banka hesap özetine gidin"
-
-#, python-format
-#~ msgid "Warning"
-#~ msgstr "Uyarı"
-
-#~ msgid "Valuta Date"
-#~ msgstr "Efektif Tarih"
-
-#~ msgid "Confirm selected statement lines."
-#~ msgstr "Seçili hesap özeti satırlarını onayla."
-
-#~ msgid ""
-#~ "\n"
-#~ "Please define BIC/Swift code on bank for bank type IBAN Account to make "
-#~ "valid payments"
-#~ msgstr ""
-#~ "\n"
-#~ "IBAN hesap tipli bankalara geçerli ödeme yapabilmek için lütfen bankanın "
-#~ "BIC/SWIFT kodunu tanımlayın"
-
-#~ msgid ""
-#~ "The amount of the voucher must be the same amount as the one on the "
-#~ "statement line"
-#~ msgstr "Fiş tutarı banka hesap özetindekiyle aynı tutarda olmalı"
-
-#~ msgid "The journal and period chosen have to belong to the same company."
-#~ msgstr "Seçilen günlük ve dönem aynı firmaya ait olmalıdır."

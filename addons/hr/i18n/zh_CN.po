@@ -1,25 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* hr
+# Chinese (Simplified) translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-06 03:12+0000\n"
-"Last-Translator: ccdos <ccdos@163.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-07 04:36+0000\n"
-"X-Generator: Launchpad (build 16341)\n"
-
-#. module: hr
-#: constraint:hr.employee:0
-msgid "Error! You cannot create recursive hierarchy of Employee(s)."
-msgstr "错误！，你不能创建循环的员工等级"
+"X-Launchpad-Export-Date: 2012-12-22 07:14+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -96,6 +92,7 @@ msgstr "组织员工定期评估"
 #: field:hr.employee,department_id:0
 #: view:hr.job:0
 #: field:hr.job,department_id:0
+#: model:ir.model,name:hr.model_hr_department
 msgid "Department"
 msgstr "部门"
 
@@ -370,12 +367,6 @@ msgid "Manage employees expenses"
 msgstr "管理员工的费用"
 
 #. module: hr
-#: help:hr.job,expected_employees:0
-msgid ""
-"Expected number of employees for this job position after new recruitment."
-msgstr "新的招聘后这个工作岗位上期望的员工人数"
-
-#. module: hr
 #: view:hr.employee:0
 msgid "Tel:"
 msgstr "电话:"
@@ -452,6 +443,11 @@ msgstr ""
 #: help:hr.config.settings,module_hr_evaluation:0
 msgid "This installs the module hr_evaluation."
 msgstr "为此要安装模块 hr_evaluation."
+
+#. module: hr
+#: constraint:hr.employee:0
+msgid "Error! You cannot create recursive hierarchy of Employee(s)."
+msgstr "错误！，你不能创建递归的员工层次"
 
 #. module: hr
 #: help:hr.config.settings,module_hr_attendance:0
@@ -714,10 +710,10 @@ msgid "This installs the module hr_timesheet."
 msgstr "为此要安装模块hr_timesheet."
 
 #. module: hr
-#: field:hr.job,message_comment_ids:0
-#: help:hr.job,message_comment_ids:0
-msgid "Comments and emails"
-msgstr "评论和电子邮件"
+#: help:hr.job,expected_employees:0
+msgid ""
+"Expected number of employees for this job position after new recruitment."
+msgstr "新的招聘后这个工作岗位上期望的员工人数"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.view_department_form_installer
@@ -776,11 +772,6 @@ msgstr "允许基于计工单开票（销售应用模块将被安装）"
 #: view:hr.employee.category:0
 msgid "Employees Categories"
 msgstr "员工分类"
-
-#. module: hr
-#: model:ir.model,name:hr.model_hr_department
-msgid "hr.department"
-msgstr "hr.department"
 
 #. module: hr
 #: field:hr.employee,address_home_id:0
@@ -1017,400 +1008,3 @@ msgstr "下属"
 #: view:hr.config.settings:0
 msgid "Apply"
 msgstr "接受"
-
-#~ msgid "Group name"
-#~ msgstr "组名"
-
-#~ msgid "Working Time Categories"
-#~ msgstr "工作时间分类"
-
-#~ msgid "Unmaried"
-#~ msgstr "未婚"
-
-#~ msgid "Employee Hierarchy"
-#~ msgstr "员工等级"
-
-#~ msgid "Working Time Category"
-#~ msgstr "工作时间分类"
-
-#~ msgid "Fill up contact information"
-#~ msgstr "填写联系信息"
-
-#~ msgid "Maried"
-#~ msgstr "已婚"
-
-#~ msgid "Create openerp user"
-#~ msgstr "创建系统用户"
-
-#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
-#~ msgstr "错误！您不能创建循环的员工等级。"
-
-#~ msgid "Categories of Employee"
-#~ msgstr "员工分类"
-
-#~ msgid "Create OpenERP User"
-#~ msgstr "创建系统用户"
-
-#~ msgid "Working Time"
-#~ msgstr "工作时间"
-
-#~ msgid "Other"
-#~ msgstr "其它"
-
-#~ msgid "Job Information"
-#~ msgstr "工作信息"
-
-#~ msgid "Work from"
-#~ msgstr "工作从"
-
-#~ msgid "Employee's timesheet group"
-#~ msgstr "员工工作时间表"
-
-#~ msgid "Categories structure"
-#~ msgstr "分类结构"
-
-#~ msgid "Starting date"
-#~ msgstr "开始日期"
-
-#~ msgid "Parent Users"
-#~ msgstr "上级用户"
-
-#~ msgid "Parents"
-#~ msgstr "上级"
-
-#~ msgid "Day of week"
-#~ msgstr "星期几"
-
-#~ msgid "Timesheet Line"
-#~ msgstr "工作时间表明细"
-
-#~ msgid "New Employee"
-#~ msgstr "新员工"
-
-#~ msgid "Error! You can not create recursive departments."
-#~ msgstr "错误:你不能建立递归部门"
-
-#~ msgid "Sunday"
-#~ msgstr "日"
-
-#~ msgid "Contact  of employee"
-#~ msgstr "员工分类"
-
-#~ msgid "Friday"
-#~ msgstr "五"
-
-#~ msgid "Workgroup manager"
-#~ msgstr "工作组主管"
-
-#~ msgid "Tuesday"
-#~ msgstr "二"
-
-#~ msgid "Monday"
-#~ msgstr "一"
-
-#~ msgid "Birthday"
-#~ msgstr "出生日期"
-
-#~ msgid "Employee Contract Process"
-#~ msgstr "员工合同处理"
-
-#~ msgid "Employee Complete Form"
-#~ msgstr "完整员工信息"
-
-#~ msgid "Wednesday"
-#~ msgstr "三"
-
-#~ msgid "Thursday"
-#~ msgstr "四"
-
-#~ msgid "Work to"
-#~ msgstr "工作到"
-
-#~ msgid "Other ID"
-#~ msgstr "其它ID"
-
-#~ msgid "Fill up employee's contact information"
-#~ msgstr "填写员工联系信息"
-
-#~ msgid "All Employees"
-#~ msgstr "所有员工"
-
-#~ msgid "Saturday"
-#~ msgstr "六"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "在动作定义中使用了无效的模快名。"
-
-#~ msgid "Social IDs"
-#~ msgstr "社保ID"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "无效的视图结构xml文件!"
-
-#~ msgid "Work E-mail"
-#~ msgstr "工作电邮"
-
-#~ msgid "Holidays"
-#~ msgstr "假期"
-
-#~ msgid "Employee Marital Status"
-#~ msgstr "员工婚姻状况"
-
-#~ msgid "Categories"
-#~ msgstr "分类"
-
-#~ msgid "Recruitment Process"
-#~ msgstr "招聘流程"
-
-#~ msgid "Image"
-#~ msgstr "图片"
-
-#~ msgid "My Board"
-#~ msgstr "我的面板"
-
-#~ msgid "unknown"
-#~ msgstr "未知的"
-
-#~ msgid "Holidays / Leaves Management"
-#~ msgstr "假期与请假管理"
-
-#~ msgid "You can not have two users with the same login !"
-#~ msgstr "两个用户不能使用相同的用户名！"
-
-#~ msgid "Status Description"
-#~ msgstr "状态说明"
-
-#~ msgid "Current Activity"
-#~ msgstr "当前活动"
-
-#~ msgid "Current"
-#~ msgstr "当前的"
-
-#~ msgid "Generic Payroll system."
-#~ msgstr "通用工资表系统"
-
-#~ msgid "The chosen company is not in the allowed companies for this user"
-#~ msgstr "选择的公司不属于此用户允许访问的公司。"
-
-#~ msgid "Description"
-#~ msgstr "说明"
-
-#~ msgid "Payroll Accounting"
-#~ msgstr "工资表记账"
-
-#~ msgid "res.users"
-#~ msgstr "res.users"
-
-#~ msgid "hr.installer"
-#~ msgstr "hr.installer"
-
-#~ msgid "Tracks employee leaves, allocation requests and planning."
-#~ msgstr "跟踪员工离职、调配申请与计划。"
-
-#~ msgid "In Recruitement"
-#~ msgstr "招聘中"
-
-#~ msgid "It is linked with manager of Department"
-#~ msgstr "此处链接到部门经理信息"
-
-#~ msgid "State"
-#~ msgstr "状态"
-
-#~ msgid "Extends employee profiles to help manage their contracts."
-#~ msgstr "扩展员工档案帮助您管理员工的联系信息。"
-
-#~ msgid "Mobile"
-#~ msgstr "手机"
-
-#~ msgid "Employee's Contracts"
-#~ msgstr "员工合同"
-
-#~ msgid "Employee Passport Information"
-#~ msgstr "员工护照信息"
-
-#~ msgid ""
-#~ "Error ! You cannot select a department for which the employee is the manager."
-#~ msgstr "错误！您不能选择一部门因为该员工是经理。"
-
-#~ msgid ""
-#~ "Partner that is related to the current employee. Accounting transaction will "
-#~ "be written on this partner belongs to employee."
-#~ msgstr "跟当前员工关联的业务伙伴信息，跟当前员工相关的财务事务将写到此业务伙伴上。"
-
-#~ msgid "My Departments Employee"
-#~ msgstr "我的部门员工"
-
-#~ msgid "Expected Employees"
-#~ msgstr "预期员工数"
-
-#~ msgid ""
-#~ "You can enhance the base HR Application by installing few HR-related "
-#~ "functionalities."
-#~ msgstr "您可以安装一些和人力资源相关的模块来增强人力资源的应用。"
-
-#~ msgid "Error ! You cannot create recursive Categories."
-#~ msgstr "错误！您不能创建递归分类。"
-
-#~ msgid "Configure"
-#~ msgstr "设置"
-
-#~ msgid "Helps you manage and streamline your recruitment process."
-#~ msgstr "帮助您管理并精简您的招聘流程。"
-
-#~ msgid ""
-#~ "Tracks and manages employee expenses, and can automatically re-invoice "
-#~ "clients if the expenses are project-related."
-#~ msgstr "跟踪与管理员工开支，如果相关会计项目许可自动重新开发票给客户"
-
-#~ msgid "Simplifies the management of employee's attendances."
-#~ msgstr "简化的员工考勤管理"
-
-#~ msgid ""
-#~ "Job Positions are used to define jobs and their requirements. You can keep "
-#~ "track of the number of employees you have per job position and how many you "
-#~ "expect in the future. You can also attach a survey to a job position that "
-#~ "will be used in the recruitment process to evaluate the applicants for this "
-#~ "job position."
-#~ msgstr "职务用于定义工作以及工作的要求。 您可以跟踪每个职务的当前员工数量以及在未来所期望的员工数量。您还可以附加在申请人招聘时考评的问卷。"
-
-#~ msgid "title"
-#~ msgstr "标题"
-
-#~ msgid "Periodic Evaluations"
-#~ msgstr "考评周期"
-
-#~ msgid "Timesheets"
-#~ msgstr "计工单"
-
-#~ msgid "Number of employee with that job."
-#~ msgstr "该职位的员工数"
-
-#~ msgid "Configuration Progress"
-#~ msgstr "设置进度"
-
-#~ msgid ""
-#~ "Lets you create and manage the periodic evaluation and performance review of "
-#~ "employees."
-#~ msgstr "允许您创建和管理考评周期和执行员工的审查。"
-
-#~ msgid "Attendances"
-#~ msgstr "考勤"
-
-#~ msgid "Human Resources Application Configuration"
-#~ msgstr "人力资源应用设置"
-
-#~ msgid "Expenses"
-#~ msgstr "费用"
-
-#~ msgid "Configure Your Human Resources Application"
-#~ msgstr "设置您的人力资源管理应用"
-
-#~ msgid "Generic Payroll system Integrated with Accountings."
-#~ msgstr "整合财务的通用薪酬系统"
-
-#~ msgid "No of Employee"
-#~ msgstr "员工人数"
-
-#~ msgid "Reporting"
-#~ msgstr "报告"
-
-#~ msgid ""
-#~ "Here you can manage your work force by creating employees and assigning them "
-#~ "specific properties in the system. Maintain all employee related information "
-#~ "and keep track of anything that needs to be recorded for them. The personal "
-#~ "information tab will help you maintain their identity data. The Categories "
-#~ "tab gives you the opportunity to assign them related employee categories "
-#~ "depending on their position and activities within the company. A category "
-#~ "can be a seniority level within the company or a department. The Timesheets "
-#~ "tab allows to assign them a specific timesheet and analytic journal where "
-#~ "they will be able to enter time through the system. In the note tab, you can "
-#~ "enter text data that should be recorded for a specific employee."
-#~ msgstr ""
-#~ "在这您能管理您创建的员工指定工作和在系统中设定的具体属性。维护所有员工信息并保留需要的任何跟踪的记录。\r\n"
-#~ "  个人信息标签将帮助您维护他们的身份数据。\r\n"
-#~ "  分类标签让您有可以根据员工的职务和在公司中的工作指定相关的员工的类别，它能确认员工在公司或部门中的年资水平。\r\n"
-#~ "  计工单标签将指定一个具体的工作时间表和辅助核算账，在那它们将能输入时间。\r\n"
-#~ "  备注标签，您可以为特定的员工录入文字记录。"
-
-#~ msgid ""
-#~ "Your Company's Department Structure is used to manage all documents related "
-#~ "to employees by departments: expenses and timesheet validation, leaves "
-#~ "management, recruitments, etc."
-#~ msgstr "您公司的部门结构用于管理所有需要按部门分类的员工相关单据：报销单、计工单、请假管理、招聘等等"
-
-#~ msgid ""
-#~ "Tracks and helps employees encode and validate timesheets and attendances."
-#~ msgstr "跟踪和帮助员工制定、审核计工单和考勤。"
-
-#~ msgid ""
-#~ "\n"
-#~ "    Module for human resource management. You can manage:\n"
-#~ "    * Employees and hierarchies : You can define your employee with User and "
-#~ "display hierarchies\n"
-#~ "    * HR Departments\n"
-#~ "    * HR Jobs\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    人力资源管理模块，您可以管理: \n"
-#~ "    * 员工与员工等级：您可以设置您的员工的用户和等级。\n"
-#~ "    * 部门信息 \n"
-#~ "    * 职务信息\n"
-#~ "    "
-
-#~ msgid "Required number of Employees in total for that job."
-#~ msgstr "该职务需要的员工数。"
-
-#~ msgid "Create your Employees"
-#~ msgstr "创建您的员工信息"
-
-#~ msgid "Number of employees with that job."
-#~ msgstr "该职位员工数"
-
-#~ msgid "Required number of employees in total for that job."
-#~ msgstr "该职位所需的总员工数"
-
-#~ msgid "HR Management"
-#~ msgstr "人力资源管理"
-
-#~ msgid "Number of Employees"
-#~ msgstr "员工数"
-
-#~ msgid "Dashboard"
-#~ msgstr "仪表盘"
-
-#~ msgid "My Departments Jobs"
-#~ msgstr "我的部门职位"
-
-#~ msgid ""
-#~ "Your departments structure is used to manage all documents related to "
-#~ "employees by departments: expenses and timesheet validation, leaves "
-#~ "management, recruitments, etc."
-#~ msgstr "部门结构用于按部门管理所有与员工相关的单据：费用报销、计工单审核、请假管理、招聘等。"
-
-#~ msgid "Subordonate Hierarchy"
-#~ msgstr "隶属结构"
-
-#~ msgid ""
-#~ "Create employees form and link them to an OpenERP user if you want them to "
-#~ "access this instance. Categories can be set on employees to perform massive "
-#~ "operations on all the employees of the same category, i.e. allocating "
-#~ "holidays."
-#~ msgstr ""
-#~ "新建员工，并把他们与OpenERP用户匹配，使得他们可以登录系统。可以对员工进行分类，这样对每一个分类的员工可以进行批量操作，如规定假期。"
-
-#~ msgid "HR Manager Dashboard"
-#~ msgstr "人力资源经理仪表盘"
-
-#~ msgid "HR Manager Board"
-#~ msgstr "人力资源经理面板"
-
-#~ msgid "Old"
-#~ msgstr "取消"
-
-#~ msgid "Mark as Old"
-#~ msgstr "取消"

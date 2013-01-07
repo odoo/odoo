@@ -1,21 +1,21 @@
 # Dutch translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-11-25 20:57+0000\n"
-"Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:51+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:10+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,delay_close:0
@@ -66,6 +66,11 @@ msgstr "Doorsturen"
 #: view:res.partner:0
 msgid "Geo Localize"
 msgstr "Geo lokaliseren"
+
+#. module: crm_partner_assign
+#: field:crm.lead.forward.to.partner,starred:0
+msgid "Starred"
+msgstr ""
 
 #. module: crm_partner_assign
 #: view:crm.lead.forward.to.partner:0
@@ -144,11 +149,6 @@ msgstr "Bericht unieke identifier"
 #: field:res.partner,date_review_next:0
 msgid "Next Partner Review"
 msgstr "Volgende relatie beoordeling"
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,favorite_user_ids:0
-msgid "Favorite"
-msgstr "Favoriet"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.forward.to.partner,history_mode:0
@@ -260,20 +260,6 @@ msgstr "Volgende"
 #: field:crm.lead.report.assign,priority:0
 msgid "Priority"
 msgstr "Prioriteit"
-
-#. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,author_id:0
-msgid ""
-"Author of the message. If not set, email_from may hold an email address that "
-"did not match any partner."
-msgstr ""
-"Schrijver van het bericht. Als deze niet ingesteld is, kan email_from een e-"
-"mailadres bevatten wat niet overeenkomt met een relatie."
-
-#. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,favorite_user_ids:0
-msgid "Users that set this message in their favorites"
-msgstr "Gebruikers die dit bericht aan hun favorieten heeft toegevoegd"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,delay_expected:0
@@ -519,6 +505,11 @@ msgstr "Stemmen"
 #: view:crm.lead.report.assign:0
 msgid "#Opportunities"
 msgstr "#Prospects"
+
+#. module: crm_partner_assign
+#: help:crm.lead.forward.to.partner,starred:0
+msgid "Current user has a starred notification linked to this message"
+msgstr ""
 
 #. module: crm_partner_assign
 #: field:crm.partner.report.assign,date_partnership:0
@@ -807,6 +798,11 @@ msgid "Partner Level"
 msgstr "Relatie nivo"
 
 #. module: crm_partner_assign
+#: help:crm.lead.forward.to.partner,to_read:0
+msgid "Current user has an unread notification linked to this message"
+msgstr ""
+
+#. module: crm_partner_assign
 #: selection:crm.lead.report.assign,type:0
 msgid "Opportunity"
 msgstr "Prospect"
@@ -902,10 +898,13 @@ msgid "Case Information"
 msgstr "Dossier informatie"
 
 #. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,to_read:0
-msgid "Functional field to search for messages the current user has to read"
+#: help:crm.lead.forward.to.partner,author_id:0
+msgid ""
+"Author of the message. If not set, email_from may hold an email address that "
+"did not match any partner."
 msgstr ""
-"Functioneel veld om te zoeken naar een bericht welke de gebruiker moet lezen"
+"Schrijver van het bericht. Als deze niet ingesteld is, kan email_from een e-"
+"mailadres bevatten wat niet overeenkomt met een relatie."
 
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_partner_report_assign
@@ -945,204 +944,3 @@ msgstr "Filters"
 #: model:ir.model,name:crm_partner_assign.model_res_partner
 msgid "Partner"
 msgstr "Relatie"
-
-#~ msgid "Send to"
-#~ msgstr "Versturen naar"
-
-#~ msgid "Reply-to of the Sales team defined on this case"
-#~ msgstr "Beantwoordt-aan van het voor dit dosseir gedefinieerde verkoopteam"
-
-#~ msgid ""
-#~ "These addresses will receive a copy of this email. To modify the permanent "
-#~ "CC list, edit the global CC field of this case"
-#~ msgstr ""
-#~ "Deze adressen krijgen een kopie van deze email. Wijzig het globale CC veld "
-#~ "van dit dossier om de permanente CC lijst te wijzigen"
-
-#~ msgid "HTML formatting?"
-#~ msgstr "HTML formaat?"
-
-#~ msgid "State"
-#~ msgstr "Status"
-
-#~ msgid "7 Days"
-#~ msgstr "7 Dagen"
-
-#~ msgid "Select this if you want to send email with HTML formatting."
-#~ msgstr "Selecteer als u email wilt versturen in HTML formaat."
-
-#~ msgid "Contact"
-#~ msgstr "Contactpersoon"
-
-#~ msgid "Reply To"
-#~ msgstr "Antwoord naar"
-
-#~ msgid "Salesman"
-#~ msgstr "Verkoper"
-
-#~ msgid "Category"
-#~ msgstr "Categorie"
-
-#~ msgid "Partner Geo-Localisation"
-#~ msgstr "Relatie Geo-lokalisatie"
-
-#~ msgid "unknown"
-#~ msgstr "onbekend"
-
-#~ msgid "CC"
-#~ msgstr "CC"
-
-#~ msgid "Unchanged"
-#~ msgstr "Onveranderd"
-
-#~ msgid "Last 30 Days"
-#~ msgstr "Laatste 30 Dagen"
-
-#~ msgid "Send new email"
-#~ msgstr "Nieuwe email sturen"
-
-#~ msgid "To"
-#~ msgstr "Aan"
-
-#~ msgid "Address"
-#~ msgstr "Adres"
-
-#~ msgid "Email Address"
-#~ msgstr "Emailadres"
-
-#~ msgid "crm.lead"
-#~ msgstr "crm.lead"
-
-#~ msgid "Message Body"
-#~ msgstr "Berichttekst"
-
-#~ msgid "Set New State To"
-#~ msgstr "Nieuwe status gezet op"
-
-#~ msgid ""
-#~ "\n"
-#~ "This is the module used by OpenERP SA to redirect customers to his "
-#~ "partners,\n"
-#~ "based on geolocalization.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Dit is de door OpenERP SA gebruikte module die klanten doorverwijst naar "
-#~ "haar partners,\n"
-#~ "gebaseerd op geolocalisatie.\n"
-#~ "    "
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Fout ! U kunt geen recursieve aangesloten leden maken."
-
-#~ msgid ""
-#~ "Add here all attachments of the current document you want to include in the "
-#~ "Email."
-#~ msgstr ""
-#~ "Voeg hier alle bijlagen aan het huidige document toe die u bij de email wilt "
-#~ "bijvoegen."
-
-#~ msgid "Permanently delete emails after sending"
-#~ msgstr "Verwijder e-mails definitief na verzending"
-
-#~ msgid "Message type"
-#~ msgstr "Bericht type"
-
-#~ msgid "Message recipients"
-#~ msgstr "Ontvangers van het bericht"
-
-#~ msgid "#Partner"
-#~ msgstr "#Partner"
-
-#~ msgid "Text contents"
-#~ msgstr "Tekst inhoud"
-
-#~ msgid "Use Template"
-#~ msgstr "Gebruik sjabloon"
-
-#~ msgid "Rich-text/HTML version of the message"
-#~ msgstr "Rich-tekst/HTML versie van het bericht"
-
-#~ msgid "Auto Delete"
-#~ msgstr "Auto-verwijder"
-
-#~ msgid "Blind carbon copy message recipients"
-#~ msgstr "Blind carbon copy ontvangers van het bericht"
-
-#~ msgid "Referred Partner"
-#~ msgstr "Voorkeur partner"
-
-#~ msgid "Cc"
-#~ msgstr "Cc"
-
-#~ msgid "References"
-#~ msgstr "Referenties"
-
-#~ msgid "Rich-text contents"
-#~ msgstr "Rich-tekst inhoud"
-
-#~ msgid "Message headers"
-#~ msgstr "Bericht kop"
-
-#~ msgid "Bcc"
-#~ msgstr "Bcc"
-
-#~ msgid "Carbon copy message recipients"
-#~ msgstr "Carbon copy ontvangers van het bericht"
-
-#~ msgid "Preferred response address for the message"
-#~ msgstr "Voorkeur antwoordadres voor het bericht"
-
-#~ msgid "# of Partner"
-#~ msgstr "# Partners"
-
-#~ msgid "Partner name"
-#~ msgstr "Relatienaam"
-
-#~ msgid "Related Document model"
-#~ msgstr "Gerelateerde Document model"
-
-#~ msgid ""
-#~ "Type of message, usually 'html' or 'plain', used to select plaintext or rich "
-#~ "text contents accordingly"
-#~ msgstr ""
-#~ "Soort bericht, normaliter 'html' of 'tekst', wordt gebruikt om te kiezen "
-#~ "voor platte tekst of tekst met opmaak."
-
-#~ msgid "E-mail composition wizard"
-#~ msgstr "E-mail opmaak wizard"
-
-#~ msgid "Message references, such as identifiers of previous messages"
-#~ msgstr "Bericht referenties, zoals identifiers van vorige berichten"
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr ""
-#~ "Fout! Het is niet mogelijk om recursieve geassocieerde leden te maken"
-
-#~ msgid ""
-#~ "Full message headers, e.g. SMTP session headers (usually available on "
-#~ "inbound messages only)"
-#~ msgstr ""
-#~ "Volledige bericht koppen, bijvoorbeeld SMTP sessie koppen (normaliter alleen "
-#~ "beschikbaar bij inkomende berichten)"
-
-#~ msgid ""
-#~ "Message sender, taken from user preferences. If empty, this is not a mail "
-#~ "but a message."
-#~ msgstr ""
-#~ "Bericht verzender, zoals ingevuld bij de voorkeuren van de gebruiker. Indien "
-#~ "leeg is dit geen mail maar een bericht."
-
-#~ msgid "Plain-text version of the message"
-#~ msgstr "Platte tekst versie van het bericht"
-
-#~ msgid "Reply-To"
-#~ msgstr "Antwoord aan"
-
-#, python-format
-#~ msgid ""
-#~ "Could not contact geolocation servers, please make sure you have a working "
-#~ "internet connection (%s)"
-#~ msgstr ""
-#~ "Kreeg geen contact met geolocatie servers, zorg aub voor een werkende "
-#~ "internet verbinding (%s)"

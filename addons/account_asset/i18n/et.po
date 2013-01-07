@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-06-08 18:43+0000\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Estonian <et@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:53+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:03+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -32,7 +32,7 @@ msgstr "Lõppkuupäev"
 #. module: account_asset
 #: field:account.asset.asset,value_residual:0
 msgid "Residual Value"
-msgstr "Jääkväärtus"
+msgstr "Hetkeväärtus"
 
 #. module: account_asset
 #: field:account.asset.category,account_expense_depreciation_id:0
@@ -92,12 +92,12 @@ msgstr "Muuda"
 #: view:asset.asset.report:0
 #: selection:asset.asset.report,state:0
 msgid "Running"
-msgstr "Käivitatud"
+msgstr "Käigus"
 
 #. module: account_asset
-#: field:account.asset.depreciation.line,amount:0
-msgid "Depreciation Amount"
-msgstr ""
+#: view:account.asset.asset:0
+msgid "Set to Draft"
+msgstr "Sea mustandiks"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -122,7 +122,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_list_normal
 #: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_list_normal
 msgid "Asset Categories"
-msgstr ""
+msgstr "Varade kategooriad"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -141,6 +141,11 @@ msgstr ""
 #. module: account_asset
 #: help:account.asset.asset,salvage_value:0
 msgid "It is the amount you plan to have that you cannot depreciate."
+msgstr ""
+
+#. module: account_asset
+#: help:account.asset.asset,method_period:0
+msgid "The amount of time between two depreciations, in months"
 msgstr ""
 
 #. module: account_asset
@@ -198,7 +203,7 @@ msgstr ""
 #. module: account_asset
 #: field:account.asset.asset,method_period:0
 msgid "Number of Months in a Period"
-msgstr ""
+msgstr "Kuude arv perioodis"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -234,7 +239,7 @@ msgstr ""
 #: field:account.asset.history,method_period:0
 #: field:asset.modify,method_period:0
 msgid "Period Length"
-msgstr ""
+msgstr "Perioodi pikkus"
 
 #. module: account_asset
 #: selection:account.asset.asset,state:0
@@ -249,18 +254,15 @@ msgid "Date of asset purchase"
 msgstr "Soetuskuupäev"
 
 #. module: account_asset
-#: help:account.asset.asset,method_number:0
-msgid "Calculates Depreciation within specified interval"
+#: view:account.asset.asset:0
+msgid "Change Duration"
 msgstr ""
 
 #. module: account_asset
-#: field:account.asset.asset,active:0
-msgid "Active"
-msgstr "Aktiivne"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-msgid "Change Duration"
+#: help:account.asset.asset,method_number:0
+#: help:account.asset.category,method_number:0
+#: help:account.asset.history,method_number:0
+msgid "The number of depreciations needed to depreciate your asset"
 msgstr ""
 
 #. module: account_asset
@@ -280,11 +282,6 @@ msgid "Computation Method"
 msgstr "Arvestusmeetod"
 
 #. module: account_asset
-#: help:account.asset.asset,method_period:0
-msgid "State here the time during 2 depreciations, in months"
-msgstr ""
-
-#. module: account_asset
 #: constraint:account.asset.asset:0
 msgid ""
 "Prorata temporis can be applied only for time method \"number of "
@@ -292,13 +289,8 @@ msgid ""
 msgstr ""
 
 #. module: account_asset
-#: help:account.asset.history,method_time:0
-msgid ""
-"The method to use to compute the dates and number of depreciation lines.\n"
-"Number of Depreciations: Fix the number of depreciation lines and the time "
-"between 2 depreciations.\n"
-"Ending Date: Choose the time between 2 depreciations and the date the "
-"depreciations won't go beyond."
+#: field:account.asset.depreciation.line,remaining_value:0
+msgid "Next Period Depreciation"
 msgstr ""
 
 #. module: account_asset
@@ -316,7 +308,7 @@ msgstr "Muuda"
 #. module: account_asset
 #: field:account.asset.asset,salvage_value:0
 msgid "Salvage Value"
-msgstr ""
+msgstr "Jääkväärtus"
 
 #. module: account_asset
 #: field:account.asset.asset,category_id:0
@@ -324,7 +316,7 @@ msgstr ""
 #: field:account.invoice.line,asset_category_id:0
 #: view:asset.asset.report:0
 msgid "Asset Category"
-msgstr "Kategooria"
+msgstr "Vara kategooria"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -334,7 +326,7 @@ msgstr "Suletud põhivarad"
 #. module: account_asset
 #: field:account.asset.asset,parent_id:0
 msgid "Parent Asset"
-msgstr ""
+msgstr "Ülem"
 
 #. module: account_asset
 #: view:account.asset.history:0
@@ -348,6 +340,11 @@ msgid "Search Asset Category"
 msgstr ""
 
 #. module: account_asset
+#: view:asset.modify:0
+msgid "months"
+msgstr ""
+
+#. module: account_asset
 #: model:ir.model,name:account_asset.model_account_invoice_line
 msgid "Invoice Line"
 msgstr "Arve rida"
@@ -355,11 +352,6 @@ msgstr "Arve rida"
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Depreciation Board"
-msgstr ""
-
-#. module: account_asset
-#: model:ir.model,name:account_asset.model_account_move_line
-msgid "Journal Items"
 msgstr ""
 
 #. module: account_asset
@@ -372,7 +364,7 @@ msgstr ""
 #: field:account.asset.category,method_time:0
 #: field:account.asset.history,method_time:0
 msgid "Time Method"
-msgstr ""
+msgstr "Aja meetod"
 
 #. module: account_asset
 #: view:asset.depreciation.confirmation.wizard:0
@@ -388,12 +380,13 @@ msgid "Note"
 msgstr "Märkus"
 
 #. module: account_asset
-#: help:account.asset.asset,method:0
-#: help:account.asset.category,method:0
+#: help:account.asset.history,method_time:0
 msgid ""
-"Choose the method to use to compute the amount of depreciation lines.\n"
-"  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
-"  * Degressive: Calculated on basis of: Remaining Value * Degressive Factor"
+"The method to use to compute the dates and number of depreciation lines.\n"
+"Number of Depreciations: Fix the number of depreciation lines and the time "
+"between 2 depreciations.\n"
+"Ending Date: Choose the time between 2 depreciations and the date the "
+"depreciations won't go beyond."
 msgstr ""
 
 #. module: account_asset
@@ -432,7 +425,7 @@ msgstr ""
 #: field:account.asset.asset,state:0
 #: field:asset.asset.report,state:0
 msgid "Status"
-msgstr ""
+msgstr "Olek"
 
 #. module: account_asset
 #: field:account.asset.asset,partner_id:0
@@ -461,9 +454,9 @@ msgid "User"
 msgstr "Kasutaja"
 
 #. module: account_asset
-#: field:account.asset.history,date:0
-msgid "Date"
-msgstr "Kuupäev"
+#: field:account.asset.category,account_asset_id:0
+msgid "Asset Account"
+msgstr ""
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -482,19 +475,14 @@ msgid "Asset History"
 msgstr ""
 
 #. module: account_asset
-#: field:asset.asset.report,name:0
-msgid "Year"
-msgstr "Aasta"
-
-#. module: account_asset
 #: model:ir.model,name:account_asset.model_asset_depreciation_confirmation_wizard
 msgid "asset.depreciation.confirmation.wizard"
 msgstr ""
 
 #. module: account_asset
-#: field:account.asset.category,account_asset_id:0
-msgid "Asset Account"
-msgstr ""
+#: field:account.asset.asset,active:0
+msgid "Active"
+msgstr "Aktiivne"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,parent_state:0
@@ -556,9 +544,9 @@ msgid "Close"
 msgstr "Sulge"
 
 #. module: account_asset
-#: view:account.asset.category:0
-msgid "Depreciation Method"
-msgstr "Amortisatsioonimeetod"
+#: model:ir.model,name:account_asset.model_account_move_line
+msgid "Journal Items"
+msgstr ""
 
 #. module: account_asset
 #: view:asset.modify:0
@@ -591,14 +579,19 @@ msgid "Current"
 msgstr "Praegune"
 
 #. module: account_asset
-#: field:account.asset.depreciation.line,remaining_value:0
-msgid "Amount to Depreciate"
+#: view:account.asset.category:0
+msgid "Depreciation Method"
+msgstr "Amortisatsioonimeetod"
+
+#. module: account_asset
+#: field:account.asset.depreciation.line,amount:0
+msgid "Current Depreciation"
 msgstr ""
 
 #. module: account_asset
 #: field:account.asset.asset,name:0
 msgid "Asset Name"
-msgstr ""
+msgstr "Vara nimi"
 
 #. module: account_asset
 #: field:account.asset.category,open_asset:0
@@ -631,6 +624,15 @@ msgid "Amount Already Depreciated"
 msgstr ""
 
 #. module: account_asset
+#: help:account.asset.asset,method:0
+#: help:account.asset.category,method:0
+msgid ""
+"Choose the method to use to compute the amount of depreciation lines.\n"
+"  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
+"  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
+msgstr ""
+
+#. module: account_asset
 #: field:account.asset.depreciation.line,move_check:0
 #: view:asset.asset.report:0
 #: field:asset.asset.report,move_check:0
@@ -653,7 +655,7 @@ msgstr ""
 #. module: account_asset
 #: field:account.asset.asset,purchase_value:0
 msgid "Gross Value"
-msgstr ""
+msgstr "Koguväärtus"
 
 #. module: account_asset
 #: field:account.asset.category,name:0
@@ -668,9 +670,9 @@ msgid ""
 msgstr ""
 
 #. module: account_asset
-#: view:account.asset.asset:0
-msgid "Set to Draft"
-msgstr "Sea mustandiks"
+#: field:asset.asset.report,name:0
+msgid "Year"
+msgstr "Aasta"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_depreciation_line
@@ -707,6 +709,11 @@ msgid "State here the time between 2 depreciations, in months"
 msgstr ""
 
 #. module: account_asset
+#: field:account.asset.history,date:0
+msgid "Date"
+msgstr "Kuupäev"
+
+#. module: account_asset
 #: field:account.asset.asset,method_number:0
 #: selection:account.asset.asset,method_time:0
 #: field:account.asset.category,method_number:0
@@ -715,7 +722,7 @@ msgstr ""
 #: selection:account.asset.history,method_time:0
 #: field:asset.modify,method_number:0
 msgid "Number of Depreciations"
-msgstr ""
+msgstr "Mitu amortisatsiooni"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -725,28 +732,10 @@ msgstr ""
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Confirm Asset"
-msgstr ""
+msgstr "Kinnita vara"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_tree
 #: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_tree
 msgid "Asset Hierarchy"
-msgstr ""
-
-#~ msgid "Other Information"
-#~ msgstr "Muu info"
-
-#~ msgid "Modify asset"
-#~ msgstr "Muuda"
-
-#~ msgid "Compute assets"
-#~ msgstr "Arvesta"
-
-#~ msgid "Month"
-#~ msgstr "Kuu"
-
-#~ msgid "State"
-#~ msgstr "Olek"
-
-#~ msgid "Close asset"
-#~ msgstr "Sulge"
+msgstr "Varade hierarhia"

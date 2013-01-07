@@ -6,15 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:04+0000\n"
-"PO-Revision-Date: 2012-12-18 06:03+0000\n"
-"Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2013-01-06 23:55+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-19 05:17+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-01-07 05:45+0000\n"
+"X-Generator: Launchpad (build 16402)\n"
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order_line
@@ -28,11 +29,6 @@ msgid "Incoming Shipments"
 msgstr "Wareneingang"
 
 #. module: warning
-#: field:product.product,sale_line_warn_msg:0
-msgid "Message for Sale Order Line"
-msgstr "Nachricht bei Auftragszeile"
-
-#. module: warning
 #: field:product.product,purchase_line_warn_msg:0
 msgid "Message for Purchase Order Line"
 msgstr "Bachricht bei Beschaffungsauftragsposition"
@@ -41,11 +37,6 @@ msgstr "Bachricht bei Beschaffungsauftragsposition"
 #: model:ir.model,name:warning.model_stock_picking
 msgid "Picking List"
 msgstr "Lieferschein"
-
-#. module: warning
-#: field:product.product,sale_line_warn:0
-msgid "Sale Order Line"
-msgstr "Verkaufsauftragsposition"
 
 #. module: warning
 #: view:product.product:0
@@ -100,11 +91,6 @@ msgid "Warning when Selling this Product"
 msgstr "Warnung beim Verkauf des Produktes"
 
 #. module: warning
-#: field:res.partner,sale_warn:0
-msgid "Sale Order"
-msgstr "Verkaufsauftrag"
-
-#. module: warning
 #: field:res.partner,picking_warn:0
 msgid "Stock Picking"
 msgstr "Lagerpackauftrag"
@@ -114,11 +100,6 @@ msgstr "Lagerpackauftrag"
 #: field:res.partner,purchase_warn:0
 msgid "Purchase Order"
 msgstr "Beschaffungsauftrag"
-
-#. module: warning
-#: field:res.partner,sale_warn_msg:0
-msgid "Message for Sale Order"
-msgstr "Nachricht bei Verkauf"
 
 #. module: warning
 #: field:res.partner,purchase_warn_msg:0
@@ -149,19 +130,29 @@ msgstr ""
 #: code:addons/warning/warning.py:67
 #: code:addons/warning/warning.py:96
 #: code:addons/warning/warning.py:130
-#: code:addons/warning/warning.py:161
-#: code:addons/warning/warning.py:191
-#: code:addons/warning/warning.py:217
-#: code:addons/warning/warning.py:265
-#: code:addons/warning/warning.py:298
+#: code:addons/warning/warning.py:162
+#: code:addons/warning/warning.py:192
+#: code:addons/warning/warning.py:218
+#: code:addons/warning/warning.py:266
+#: code:addons/warning/warning.py:299
 #, python-format
 msgid "Alert for %s !"
 msgstr "Warnhinweis an %s"
 
 #. module: warning
+#: view:res.partner:0
+msgid "Warning on the Sales Order"
+msgstr "Alarmierung bei Auftrag"
+
+#. module: warning
 #: field:res.partner,invoice_warn_msg:0
 msgid "Message for Invoice"
 msgstr "Nachricht zu Rechnung"
+
+#. module: warning
+#: field:res.partner,sale_warn_msg:0
+msgid "Message for Sales Order"
+msgstr "Mitteilung für Auftrag"
 
 #. module: warning
 #: view:res.partner:0
@@ -177,19 +168,19 @@ msgstr "Warnung beim Einkaufsauftrag"
 #: code:addons/warning/warning.py:68
 #: code:addons/warning/warning.py:97
 #: code:addons/warning/warning.py:132
-#: code:addons/warning/warning.py:162
-#: code:addons/warning/warning.py:192
-#: code:addons/warning/warning.py:218
-#: code:addons/warning/warning.py:266
-#: code:addons/warning/warning.py:299
+#: code:addons/warning/warning.py:163
+#: code:addons/warning/warning.py:193
+#: code:addons/warning/warning.py:219
+#: code:addons/warning/warning.py:267
+#: code:addons/warning/warning.py:300
 #, python-format
 msgid "Warning for %s"
 msgstr "Warnung für %s"
 
 #. module: warning
-#: view:res.partner:0
-msgid "Warning on the Sale Order"
-msgstr "Warnung beim Verkaufsauftrag"
+#: field:product.product,sale_line_warn_msg:0
+msgid "Message for Sales Order Line"
+msgstr "Mitteilung für Auftragszeile"
 
 #. module: warning
 #: selection:product.product,purchase_line_warn:0
@@ -213,6 +204,7 @@ msgstr "Partner"
 
 #. module: warning
 #: model:ir.model,name:warning.model_sale_order
+#: field:res.partner,sale_warn:0
 msgid "Sales Order"
 msgstr "Verkaufsauftrag"
 
@@ -223,38 +215,6 @@ msgstr "Warenauslieferung"
 
 #. module: warning
 #: model:ir.model,name:warning.model_sale_order_line
+#: field:product.product,sale_line_warn:0
 msgid "Sales Order Line"
 msgstr "Auftragsposition"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Fehlerhafter xml Code für diese Ansicht!"
-
-#~ msgid "Module for Warnings form onchange Event"
-#~ msgstr "Module für Warnungen für on_change Event"
-
-#~ msgid "Module for Warnings form onchange Event."
-#~ msgstr "Modul für Warnungen bei Statusänderungen"
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "Fehler: Falscher EAN code"
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Fehler! Sie können keine rekursiven Elemente anlegen"
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "Die Referenz muss eindeutig sein!"
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "Error! Sie können keine rekursive assoziierte Mitglieder anlegen."
-
-#~ msgid "Reference must be unique per Company!"
-#~ msgstr "Die Referenz muss je Firma eindeutig sein"
-
-#~ msgid "Order Reference must be unique per Company!"
-#~ msgstr "Die Bestellreferenz muss je Firma eindeutig sein"
-
-#~ msgid "Invoice Number must be unique per Company!"
-#~ msgstr "Die Rechnungsnummer muss je Firma eindeutig sein"
-
-#~ msgid "Invalid BBA Structured Communication !"
-#~ msgstr "ungültige BBA Kommunikations Stuktur"

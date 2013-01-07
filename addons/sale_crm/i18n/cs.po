@@ -1,21 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-# * sale_crm
+# Czech translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:04+0000\n"
-"PO-Revision-Date: 2012-04-06 05:16+0000\n"
-"Last-Translator: Jiří Hajda <robie@centrum.cz>\n"
-"Language-Team: \n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:19+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
-"X-Poedit-Language: Czech\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:33+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: sale_crm
 #: code:addons/sale_crm/wizard/crm_make_sale.py:90
@@ -57,10 +57,13 @@ msgstr ""
 #. module: sale_crm
 #: help:crm.make.sale,close:0
 msgid ""
-"Check this to close the opportunity after having created the sale order."
+"Check this to close the opportunity after having created the sales order."
 msgstr ""
-"Zaškrtněte toto k uzavření příležitosti po té, když bude mít vytvořenu "
-"prodejní objednávku."
+
+#. module: sale_crm
+#: model:mail.message.subtype,name:sale_crm.mt_salesteam_order_sent
+msgid "Quotation Send"
+msgstr ""
 
 #. module: sale_crm
 #: field:sale.order,categ_ids:0
@@ -118,6 +121,11 @@ msgid "No addresse(s) defined for this customer."
 msgstr ""
 
 #. module: sale_crm
+#: model:mail.message.subtype,name:sale_crm.mt_salesteam_order_confirmed
+msgid "Sales Order Confirmed"
+msgstr ""
+
+#. module: sale_crm
 #: view:account.invoice:0
 #: field:account.invoice,section_id:0
 #: field:account.invoice.report,section_id:0
@@ -150,67 +158,3 @@ msgstr "Prodejní objednávka"
 #: view:crm.make.sale:0
 msgid "or"
 msgstr ""
-
-#, python-format
-#~ msgid "is converted to Quotation."
-#~ msgstr "je převedeno na cenovou nabídku"
-
-#, python-format
-#~ msgid "Data Insufficient!"
-#~ msgstr "Nedostatečná data !"
-
-#, python-format
-#~ msgid "Customer has no addresses defined!"
-#~ msgstr "Zákazník nemá definovánu adresu!"
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "Odkaz objednávky musí být jedinečný !"
-
-#~ msgid "Convert to Quote"
-#~ msgstr "Převést na ocenění"
-
-#~ msgid "Monthly Turnover"
-#~ msgstr "Měsíční obrat"
-
-#, python-format
-#~ msgid "Converted to Sales Quotation(id: %s)."
-#~ msgstr "Převedeno na prodejní ocenění(id: %s)."
-
-#, python-format
-#~ msgid "Opportunity "
-#~ msgstr "Příležitost "
-
-#~ msgid "Creates Sales order from Opportunity"
-#~ msgstr "Vytvořit prodejní objednávky z příležitosti"
-
-#~ msgid "Quotations"
-#~ msgstr "Cenové nabídky"
-
-#~ msgid "Opportunities by Stage"
-#~ msgstr "Příležitosti podle fáze"
-
-#~ msgid "My Quotations"
-#~ msgstr "Moje cenové nabídky"
-
-#~ msgid "Close Opportunity"
-#~ msgstr "Užavřít příležitost"
-
-#, python-format
-#~ msgid "Opportunity  '%s' is converted to Quotation."
-#~ msgstr "Příležitost '%s' je převedena na Ocenění."
-
-#, python-format
-#~ msgid "Converted to Sales Quotation(%s)."
-#~ msgstr "Převedeno na prodejní ocenění(%s)."
-
-#~ msgid "Order Reference must be unique per Company!"
-#~ msgstr "Odkaz obědnávky musí být jedinečný na společnost!"
-
-#~ msgid "Category"
-#~ msgstr "Kategorie"
-
-#~ msgid "My Opportunities"
-#~ msgstr "Moje příležitosti"
-
-#~ msgid "My Planned Revenues by Stage"
-#~ msgstr "Moje plánované výnosy podle fáze"

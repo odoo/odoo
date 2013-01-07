@@ -1,20 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-# 	* hr_timesheet_invoice
+# Catalan translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2011-08-17 20:44+0000\n"
-"Last-Translator: mgaja (GrupoIsep.com) <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Catalan <ca@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:35+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:17+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -96,21 +97,12 @@ msgid "March"
 msgstr "Març"
 
 #. module: hr_timesheet_invoice
-#: help:account.analytic.account,to_invoice:0
-msgid ""
-"You usually invoice 100% of the timesheets. But if you mix fixed price and "
-"timesheet invoicing, you may use another ratio. For instance, if you do a "
-"20% advance invoice (fixed price, based on a sale order), you should invoice "
-"the rest on timesheet with a 80% ratio."
-msgstr ""
-
-#. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
 msgid "Profit"
 msgstr "Benefici"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:165
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:144
 #, python-format
 msgid "You cannot modify an invoiced analytic line!"
 msgstr ""
@@ -124,11 +116,6 @@ msgstr "Impost de facturació"
 #: help:hr.timesheet.invoice.create.final,time:0
 msgid "Display time in the history of works"
 msgstr "Mostra temps en l'historial de treballs"
-
-#. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.profit:0
-msgid "Journals"
-msgstr "Diaris"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -176,7 +163,7 @@ msgid "Invoiced Amount"
 msgstr "Import facturat"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:209
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:188
 #, python-format
 msgid "Analytic Account incomplete !"
 msgstr ""
@@ -187,10 +174,8 @@ msgid "Project"
 msgstr "Projecte"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:164
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:254
-#, python-format
-msgid "Error!"
+#: view:account.analytic.account:0
+msgid "Invoice on Timesheets Options"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -202,12 +187,6 @@ msgstr "Import"
 #: help:hr.timesheet.invoice.create,name:0
 msgid "The detail of each work done will be displayed on the invoice"
 msgstr "El detall de cada treball realitzat es mostrarà en la factura"
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:116
-#, python-format
-msgid "Contract has been set as <b>pending</b>."
-msgstr ""
 
 #. module: hr_timesheet_invoice
 #: field:account.analytic.account,pricelist_id:0
@@ -228,6 +207,15 @@ msgstr "Període fins data final"
 #: model:ir.model,name:hr_timesheet_invoice.model_report_analytic_account_close
 msgid "Analytic account to close"
 msgstr "Compte analític a tancar"
+
+#. module: hr_timesheet_invoice
+#: help:account.analytic.account,to_invoice:0
+msgid ""
+"You usually invoice 100% of the timesheets. But if you mix fixed price and "
+"timesheet invoicing, you may use another ratio. For instance, if you do a "
+"20% advance invoice (fixed price, based on a sales order), you should "
+"invoice the rest on timesheet with a 80% ratio."
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
@@ -254,7 +242,7 @@ msgid "Deadline"
 msgstr "Data límit"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:267
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:246
 #, python-format
 msgid "Configuration Error!"
 msgstr ""
@@ -291,7 +279,7 @@ msgid "Costs to invoice"
 msgstr "Costos a facturar"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:267
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:246
 #, python-format
 msgid "Please define income account for product '%s'."
 msgstr ""
@@ -337,12 +325,6 @@ msgstr "Full de serveis per usuari"
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice
 msgid "To Invoice"
 msgstr "A facturar"
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:98
-#, python-format
-msgid "Contract has been <b>closed</b>."
-msgstr ""
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.analytic.profit:0
@@ -464,11 +446,6 @@ msgstr "Mes"
 #: report:account.analytic.profit:0
 msgid "Currency"
 msgstr "Moneda"
-
-#. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.profit:0
-msgid "Users"
-msgstr "Usuaris"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -623,11 +600,6 @@ msgid "Date"
 msgstr "Data"
 
 #. module: hr_timesheet_invoice
-#: model:mail.message.subtype,name:hr_timesheet_invoice.mt_account_closed
-msgid "finished"
-msgstr ""
-
-#. module: hr_timesheet_invoice
 #: field:report.timesheet.line,quantity:0
 #: field:report_timesheet.account,quantity:0
 #: field:report_timesheet.account.date,quantity:0
@@ -658,9 +630,9 @@ msgid "General Account"
 msgstr "Compte general"
 
 #. module: hr_timesheet_invoice
-#: view:account.analytic.account:0
-msgid "Invoice on Timesheets Options"
-msgstr ""
+#: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_analytic_profit
+msgid "Print Timesheet Profit"
+msgstr "Imprimeix benefici del full de serveis"
 
 #. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
@@ -668,9 +640,10 @@ msgid "Totals:"
 msgstr "Totals:"
 
 #. module: hr_timesheet_invoice
-#: model:mail.message.subtype,name:hr_timesheet_invoice.mt_account_canceled
-msgid "canceled"
-msgstr ""
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_account_analytic_line_to_invoice
+#: view:report.account.analytic.line.to.invoice:0
+msgid "Analytic Lines to Invoice"
+msgstr "Línies analítiques a facturar"
 
 #. module: hr_timesheet_invoice
 #: help:account.analytic.line,to_invoice:0
@@ -769,13 +742,7 @@ msgid "Timesheets to invoice"
 msgstr "Fulls de serveis a facturar"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:104
-#, python-format
-msgid "Contract has been <b>canceled</b>."
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:210
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:189
 #, python-format
 msgid ""
 "Contract incomplete. Please fill in the Customer and Pricelist fields."
@@ -822,12 +789,6 @@ msgstr "Diari"
 #: help:hr.timesheet.invoice.create.final,product:0
 msgid "The product that will be used to invoice the remaining amount"
 msgstr "El producte que s'utilitzarà per facturar l'import restant."
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:110
-#, python-format
-msgid "Contract has been <b>opened</b>."
-msgstr ""
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create.final,time:0
@@ -884,11 +845,6 @@ msgid "Sale price"
 msgstr "Preu venda"
 
 #. module: hr_timesheet_invoice
-#: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_analytic_profit
-msgid "Print Timesheet Profit"
-msgstr "Imprimeix benefici del full de serveis"
-
-#. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timesheet_user
 msgid "Timesheets per day"
 msgstr "Fulls de serveis per dia"
@@ -903,7 +859,7 @@ msgid "April"
 msgstr "Abril"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:254
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:233
 #, python-format
 msgid ""
 "There is no product defined. Please select one or force the product through "
@@ -933,10 +889,11 @@ msgid "Units"
 msgstr "Unitats"
 
 #. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_account_analytic_line_to_invoice
-#: view:report.account.analytic.line.to.invoice:0
-msgid "Analytic Lines to Invoice"
-msgstr "Línies analítiques a facturar"
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:143
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:233
+#, python-format
+msgid "Error!"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor4
@@ -979,367 +936,3 @@ msgstr "Any"
 #: view:hr.timesheet.analytic.profit:0
 msgid "Duration"
 msgstr ""
-
-#~ msgid "%"
-#~ msgstr "%"
-
-#, python-format
-#~ msgid "Analytic account incomplete"
-#~ msgstr "Compte analític incomplet"
-
-#~ msgid "Visible name"
-#~ msgstr "Nom visible"
-
-#~ msgid "Start of period"
-#~ msgstr "Inici del període"
-
-#~ msgid ""
-#~ "The cost of each work done will be displayed on the invoice. You probably "
-#~ "don't want to check this."
-#~ msgstr ""
-#~ "El cost de cada treball realitzat es mostrarà en la factura. Probablement no "
-#~ "voleu marcar aquesta opció."
-
-#~ msgid "Draft Analytic Accounts"
-#~ msgstr "Comptes analítics esborrany"
-
-#~ msgid ""
-#~ "Check this field if you plan to automatically generate invoices based on the "
-#~ "costs in this analytic account: timesheets, expenses, ...You can configure "
-#~ "an automatic invoice rate on analytic accounts."
-#~ msgstr ""
-#~ "Marqueu aquest camp si voleu generar automàticament factures basades en els "
-#~ "costos en aquest compte analític: fulls de serveis, despeses, ... Podeu "
-#~ "configurar una taxa de factura automàtica sobre comptes analítics."
-
-#, python-format
-#~ msgid "Partner incomplete"
-#~ msgstr "Empresa incompleta"
-
-#~ msgid "Select period"
-#~ msgstr "Selecciona període"
-
-#~ msgid "Balance product"
-#~ msgstr "Balanç de producte"
-
-#~ msgid "Final Invoice"
-#~ msgstr "Factura final"
-
-#~ msgid "Do you want details for each line of the invoices ?"
-#~ msgstr "Vol detalls per cada línia de les factures?"
-
-#~ msgid "Choose"
-#~ msgstr "Selecciona"
-
-#~ msgid "Debit"
-#~ msgstr "Deure"
-
-#~ msgid "Open Analytic Accounts"
-#~ msgstr "Comptes analítics oberts"
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "Error!"
-
-#~ msgid "Filter on Accounts"
-#~ msgstr "Filtra en comptes"
-
-#~ msgid "Sale Pricelist"
-#~ msgstr "Llista de preus de venda"
-
-#~ msgid "Printing date"
-#~ msgstr "Data impressió"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "﻿XML invàlid per a la definició de la vista!"
-
-#~ msgid "My Uninvoiced Entries"
-#~ msgstr "Les meves entrades no facturades"
-
-#, python-format
-#~ msgid "You can not modify an invoiced analytic line!"
-#~ msgstr "No podeu modificar una línia analítica facturada!"
-
-#~ msgid "Name of entry"
-#~ msgstr "Nom de l'entrada"
-
-#~ msgid "Employee or Journal Name"
-#~ msgstr "Empleat o nom de diari"
-
-#~ msgid ""
-#~ "Complete this field only if you want to force to use a specific product. "
-#~ "Keep empty to use the real product that comes from the cost."
-#~ msgstr ""
-#~ "Completeu aquest camp només si voleu obligar a utilitzar un producte "
-#~ "específic. Deixeu-lo buit per utilitzar el producte real que ve del cost."
-
-#~ msgid "Uninvoiced Entries"
-#~ msgstr "Entrades no facturades"
-
-#~ msgid "Create invoices"
-#~ msgstr "Crea factures"
-
-#~ msgid "Invoice Balance amount"
-#~ msgstr "Saldo pendent de factura"
-
-#~ msgid "Period to"
-#~ msgstr "Període fins"
-
-#~ msgid "The product that will be used to invoice the remaining amount."
-#~ msgstr "El producte que s'utilitzarà per facturar l'import restant."
-
-#~ msgid "Cost Ledger"
-#~ msgstr "Cost comptable"
-
-#~ msgid "Analytic Accounts"
-#~ msgstr "Comptes analítics"
-
-#~ msgid "Credit"
-#~ msgstr "Haver"
-
-#, python-format
-#~ msgid "Error"
-#~ msgstr "Error"
-
-#~ msgid "End of period"
-#~ msgstr "Fi del període"
-
-#~ msgid "Reinvoice Costs"
-#~ msgstr "Refactura costos"
-
-#~ msgid "Do you want to show details of work in invoice ?"
-#~ msgstr "﻿Vol mostrar detalls del trebll en la factura?"
-
-#~ msgid "Period from"
-#~ msgstr "Període des de"
-
-#~ msgid "Entries to invoice"
-#~ msgstr "Entrades a facturar"
-
-#, python-format
-#~ msgid "Balance product needed"
-#~ msgstr "Producte de balanç necesari"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter "
-#~ "especial!"
-
-#~ msgid "Employee"
-#~ msgstr "Empleat"
-
-#~ msgid "Choose accounts you want to invoice"
-#~ msgstr "Selecciona comptes que vol facturar"
-
-#~ msgid "Internal name"
-#~ msgstr "Nom intern"
-
-#~ msgid "Pending Analytic Accounts"
-#~ msgstr "Comptes analítics pendents"
-
-#~ msgid "Invoicing Data"
-#~ msgstr "Dades facturació"
-
-#~ msgid "Invoice rate"
-#~ msgstr "Taxa factura"
-
-#~ msgid "Unclosed Invoiceable Accounts"
-#~ msgstr "Comptes facturables no tancats"
-
-#, python-format
-#~ msgid "Please fill a Balance product in the wizard"
-#~ msgstr "Indiqueu un producte de balanç en l'assistent"
-
-#~ msgid "Date or Code"
-#~ msgstr "Data o codi"
-
-#, python-format
-#~ msgid "Data Insufficient!"
-#~ msgstr "Dades insuficients!"
-
-#, python-format
-#~ msgid "Analytic Account incomplete"
-#~ msgstr "Compte analítica incompleta"
-
-#, python-format
-#~ msgid ""
-#~ "Please fill in the Associate Partner and Sale Pricelist fields in the "
-#~ "Analytic Account:\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Si us plau, ompliu els camps empresa associada i tarifa de venda en el "
-#~ "compte analític:\n"
-#~ "%s"
-
-#, python-format
-#~ msgid "No Records Found for Report!"
-#~ msgstr "No s'han trobat registres per a l'informe!"
-
-#, python-format
-#~ msgid "Please fill in the Address field in the Partner: %s."
-#~ msgstr "Si us plau, ompliu el camp direcció de l'empresa: %s."
-
-#~ msgid "J.C. or Move name"
-#~ msgstr "Codi diari o assentament"
-
-#, python-format
-#~ msgid "At least one line has no product !"
-#~ msgstr "Com a mínim una línia no té producte!"
-
-#~ msgid "Total:"
-#~ msgstr "Total:"
-
-#~ msgid "Invoice on analytic lines"
-#~ msgstr "Facturació basada en línies analítiques"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nom de model no vàlid en la definició de l'acció."
-
-#~ msgid "Invoice analytic lines"
-#~ msgstr "Factura les línies analítiques"
-
-#~ msgid "State"
-#~ msgstr "Estat"
-
-#~ msgid "Lines to Invoice"
-#~ msgstr "Línies a facturar"
-
-#~ msgid "UoM"
-#~ msgstr "UdM"
-
-#~ msgid "Timesheets"
-#~ msgstr "Fulls de treball"
-
-#~ msgid "This Month"
-#~ msgstr "Aquest mes"
-
-#~ msgid "    7 Days    "
-#~ msgstr "    7 Dies    "
-
-#~ msgid "This Year"
-#~ msgstr "Aquest any"
-
-#~ msgid ""
-#~ "The product to invoice is defined on the employee form, the price will be "
-#~ "deduced by this pricelist on the product."
-#~ msgstr ""
-#~ "El producte a facturar es defineix en el formulari del treballador, el preu "
-#~ "es deduirà del producte mitjançant aquesta llista de preus."
-
-#~ msgid "Reactivate Account"
-#~ msgstr "Reactiva compte"
-
-#~ msgid "It allows to set the discount while making invoice"
-#~ msgstr "Permet establir el descompte en facturar"
-
-#~ msgid "hr.timesheet.analytic.cost.ledger"
-#~ msgstr "rrhh.partd'hores.analítica.cost.llibre"
-
-#~ msgid ""
-#~ "Fill this field if you plan to automatically generate invoices based on the "
-#~ "costs in this analytic account: timesheets, expenses, ...You can configure "
-#~ "an automatic invoice rate on analytic accounts."
-#~ msgstr ""
-#~ "Empleneu aquest camp si aneu a generar automàticament les factures basades "
-#~ "en els costos d'aquest compte analític: fulls de serveis, despeses, ... Es "
-#~ "pot configurar un percentatge de facturació automàtica en els comptes "
-#~ "analítics."
-
-#~ msgid "Gratis"
-#~ msgstr "Gratis"
-
-#~ msgid "Bill Tasks Works"
-#~ msgstr "Factura els treballs de les tasques"
-
-#~ msgid ""
-#~ "\n"
-#~ "Module to generate invoices based on costs (human resources, expenses, "
-#~ "...).\n"
-#~ "You can define price lists in analytic account, make some theoretical "
-#~ "revenue\n"
-#~ "reports, eso."
-#~ msgstr ""
-#~ "\n"
-#~ "Mòdul per generar factures basades en els costos (recursos humans, despeses, "
-#~ "...).\n"
-#~ "Podeu definir tarifes en el compte analític, fer alguns informes sobre "
-#~ "ingressos\n"
-#~ "teòrics, ..."
-
-#~ msgid "J.C. /Move name"
-#~ msgstr "Cod. diari/Nom mov."
-
-#, python-format
-#~ msgid ""
-#~ "Please fill in the partner and pricelist field in the analytic account:\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Empleneu els camps empresa i tarifa del compte analític:\n"
-#~ "%s"
-
-#~ msgid "Close"
-#~ msgstr "Tanca"
-
-#, python-format
-#~ msgid ""
-#~ "Please fill in the Partner or Customer and Sale Pricelist fields in the "
-#~ "Analytic Account:\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Empleneu els camps empresa o client i la tarifa de venda del compte "
-#~ "analític:\n"
-#~ "%s"
-
-#~ msgid "Date/Code"
-#~ msgstr "Data/Codi"
-
-#~ msgid "Uninvoice lines with billing rate"
-#~ msgstr "No factura línies amb cost"
-
-#~ msgid "Type of Invoicing"
-#~ msgstr "Tipus de facturació"
-
-#~ msgid "Accounts to invoice"
-#~ msgstr "Comptes a facturar"
-
-#~ msgid "Final invoice for analytic account"
-#~ msgstr "Factura final del compte analítica"
-
-#~ msgid "Uninvoiced line with billing rate"
-#~ msgstr "Línia no facturada amb impost de facturació"
-
-#~ msgid "Uninvoice Lines With Billing Rate"
-#~ msgstr "No facturar línies amb cost"
-
-#~ msgid ""
-#~ "Error! The currency has to be the same as the currency of the selected "
-#~ "company"
-#~ msgstr ""
-#~ "Error! La moneda ha de ser la mateixa que la moneda de la companyia "
-#~ "seleccionada."
-
-#~ msgid ""
-#~ "OpenERP allows you to create default invoicing types. You might have to "
-#~ "regularly assign discounts because of a specific contract or agreement with "
-#~ "a customer. From this menu, you can create additional types of invoicing to "
-#~ "speed up your invoicing."
-#~ msgstr ""
-#~ "OpenERP li permet crear tipus de facturació per defecte. Pot ser que tingueu "
-#~ "d'assignar regularment descomptes a causa d'un contracte o un acord "
-#~ "específic amb un client. Des d'aquest menú, podeu crear altres tipus de "
-#~ "facturació addicionals per accelerar la seva facturació."
-
-#~ msgid ""
-#~ "This list shows you every task you can invoice to the customer. Select the "
-#~ "lines and click the Action button to generate the invoices automatically."
-#~ msgstr ""
-#~ "Aquesta llista mostra totes les tasques que podeu facturar al client. "
-#~ "Seleccioneu les línies i feu clic en el botó d'acció per generar les "
-#~ "factures automàticament."
-
-#~ msgid "Select Period"
-#~ msgstr "Selecciona un període"
-
-#~ msgid "Error! You can not create recursive analytic accounts."
-#~ msgstr "Error! No podeu crear comptes analítics recursius."

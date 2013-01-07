@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:04+0000\n"
-"PO-Revision-Date: 2012-05-10 17:31+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:51+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:30+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: project_long_term
 #: help:project.phase,constraint_date_end:0
@@ -34,6 +34,14 @@ msgstr "In curs de desfasurare"
 #: view:project.project:0
 msgid "Phases"
 msgstr "Etape"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
+#: model:ir.ui.menu,name:project_long_term.menu_resouce_allocation
+#: view:project.phase:0
+#: view:project.user.allocation:0
+msgid "Team Planning"
+msgstr ""
 
 #. module: project_long_term
 #: field:project.phase,user_ids:0
@@ -144,7 +152,7 @@ msgid "In Progress Phases"
 msgstr "Etape in desfasurare"
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:141
+#: code:addons/project_long_term/project_long_term.py:140
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -154,12 +162,6 @@ msgstr ""
 #, python-format
 msgid "Please specify a project to schedule."
 msgstr "Va rugam sa specificati un proiect de programat."
-
-#. module: project_long_term
-#: view:project.compute.phases:0
-#: view:project.compute.tasks:0
-msgid "or"
-msgstr ""
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -198,11 +200,6 @@ msgstr "Secventa"
 #: help:account.analytic.account,use_phases:0
 msgid "Check this field if you plan to use phase-based scheduling"
 msgstr ""
-
-#. module: project_long_term
-#: help:project.user.allocation,date_start:0
-msgid "Starting Date"
-msgstr "Data de inceput"
 
 #. module: project_long_term
 #: help:project.phase,state:0
@@ -252,10 +249,9 @@ msgid "Pending Phases"
 msgstr "Etape in asteptare"
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:126
-#, python-format
-msgid "Day"
-msgstr "Zi"
+#: help:project.user.allocation,date_start:0
+msgid "Starting Date"
+msgstr "Data de inceput"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -515,184 +511,7 @@ msgid "Name"
 msgstr "Nume"
 
 #. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
-#: model:ir.ui.menu,name:project_long_term.menu_resouce_allocation
-#: view:project.phase:0
-#: view:project.user.allocation:0
-msgid "Planning of Users"
-msgstr "Planificarea Utilizatorilor"
-
-#~ msgid "Resources Allocation"
-#~ msgstr "Alocare resurse"
-
-#~ msgid "Long Term Project Management"
-#~ msgstr "Managementul Proiectului pe Termen lung"
-
-#~ msgid "Compute Scheduling of Phases"
-#~ msgstr "Calculează Programarea Etapelor"
-
-#~ msgid "Error ! You cannot create recursive tasks."
-#~ msgstr "Eroare ! Nu puteti crea sarcini recursive."
-
-#~ msgid "Resource Allocations"
-#~ msgstr "Alocare Resurse"
-
-#~ msgid "Planning"
-#~ msgstr "Planificare"
-
-#~ msgid "Compute Phase Scheduling"
-#~ msgstr "Calculează Programarea Etapei"
-
-#, python-format
-#~ msgid " (copy)"
-#~ msgstr " (copie)"
-
-#~ msgid "Compute Scheduling of phases for all or specified project"
-#~ msgstr ""
-#~ "Calculează Programarea etapelor pentru toate proiectele sau pentru cele "
-#~ "specificate"
-
-#~ msgid "Availability"
-#~ msgstr "Disponibilitate"
-
-#~ msgid "Compute Scheduling of Task"
-#~ msgstr "Calculează Programarea Sarcinii"
-
-#~ msgid "State"
-#~ msgstr "Stare"
-
-#~ msgid "Compute Task Scheduling"
-#~ msgstr "Calculează Programarea Sarcinii"
-
-#~ msgid "Project Resource Allocation"
-#~ msgstr "Alocare Resurse Proiect"
-
-#~ msgid ""
-#~ "To schedule phases of all or a specified project. It then open a gantt "
-#~ "view.\n"
-#~ "\t           "
-#~ msgstr ""
-#~ "Pentru a programa etapele tuturor proiectelor sau ale proiectului "
-#~ "specificat. Apoi deschide o vizualizare Gantt.\n"
-#~ "\t           "
-
-#~ msgid ""
-#~ "Availability of this resource for this project phase in percentage (=50%)"
-#~ msgstr ""
-#~ "Disponibilitatea acestei resurse pentru această etapă a proiectului in "
-#~ "procente (=50%)"
-
-#~ msgid "_Ok"
-#~ msgstr "_Ok"
-
-#~ msgid "Project Resources"
-#~ msgstr "Resursele Proiectului"
-
-#~ msgid "Dates"
-#~ msgstr "Date"
-
-#~ msgid "project.schedule.tasks"
-#~ msgstr "project.schedule.tasks (programează.sarcini.proiect)"
-
-#~ msgid "Resource Allocation"
-#~ msgstr "Alocarea resurselor"
-
-#~ msgid "Schedule and Display info"
-#~ msgstr "Programează si Afisează Informatiile"
-
-#~ msgid ""
-#~ "A project can be split into the different phases. For each phase, you can "
-#~ "define your resources allocation, describe different tasks and link your "
-#~ "phase to previous and next phases, add date constraints for the automated "
-#~ "scheduling. Use the long term planning in order to planify your available "
-#~ "human resources, convert your phases into a series of tasks when you start "
-#~ "working on the project."
-#~ msgstr ""
-#~ "Un proiect poate fi impărtit in diferite etape. Pentru fiecare etapă, puteti "
-#~ "să definiti alocarea resursei, să descrieti diferite sarcini si să conectati "
-#~ "etapa respectivă a etapele precedente sau viitoare, să adăugati limitări ale "
-#~ "datei pentru programarea automată. Folositi planificarea pe termen lung "
-#~ "pentru a vă planifica resursele umane disponibile si a vă transforma etapele "
-#~ "intr-o serie de sarcini atunci cand incepeti să lucrati la proiect."
-
-#~ msgid "unknown"
-#~ msgstr "necunoscut(ă)"
-
-#~ msgid "Timetable working hours to adjust the gantt diagram report"
-#~ msgstr "Programul orelor lucrate pentru a regla raportul diagramei Gantt"
-
-#~ msgid "Task Detail"
-#~ msgstr "Detalii sarcină"
-
-#~ msgid "Current"
-#~ msgstr "Curent"
-
-#, python-format
-#~ msgid "Please Specify Project to be schedule"
-#~ msgstr "Vă rugăm să specificati Proiectul care urmează a fi programat"
-
-#~ msgid "Responsible"
-#~ msgstr "Responsabil"
-
-#~ msgid "Resource Detail"
-#~ msgstr "Detaliu resursă"
-
-#~ msgid "Compute Scheduling of Task for specified project."
-#~ msgstr "Calculează Programarea sarcinii pentru proiectul specificat."
-
-#~ msgid "Resource"
-#~ msgstr "Resursă"
-
-#~ msgid "Task Scheduling completed successfully."
-#~ msgstr "Programarea sarcinii s-a incheiat cu succes."
-
-#~ msgid "Message"
-#~ msgstr "Mesaj"
-
-#~ msgid "Compute All Projects"
-#~ msgstr "Calculează toate proiectele"
-
-#~ msgid "Displaying settings"
-#~ msgstr "Afisare setari"
-
-#~ msgid "Schedule"
-#~ msgstr "Programati"
-
-#~ msgid "Error! project start-date must be lower then project end-date."
-#~ msgstr ""
-#~ "Eroare! data de inceput a proiectului trebuie sa fie mai mica decat data de "
-#~ "sfarsit a proiectului."
-
-#~ msgid "UoM (Unit of Measure) is the unit of measurement for Duration"
-#~ msgstr "UdM (Unitatea de Masura) este unitatea de masurare a Duratei"
-
-#~ msgid "Error! You cannot assign escalation to the same project!"
-#~ msgstr "Eroare! Nu puteti atribui o avansare aceluiasi proiect!"
-
-#~ msgid "_Cancel"
-#~ msgstr "_Anulati"
-
-#~ msgid "Duration UoM"
-#~ msgstr "UdM durata"
-
-#~ msgid ""
-#~ "The ressources on the project can be computed automatically by the scheduler"
-#~ msgstr "Resursele din proiect pot fi calculate automat de catre programator"
-
-#~ msgid "Error ! Task end-date must be greater then task start-date"
-#~ msgstr ""
-#~ "Eroare ! Data de sfarsit a sarcinii trebuie sa fie mai mare decat data de "
-#~ "inceput"
-
-#~ msgid ""
-#~ "If the phase is created the state 'Draft'.\n"
-#~ " If the phase is started, the state becomes 'In Progress'.\n"
-#~ " If review is needed the phase is in 'Pending' state.                        "
-#~ "          \n"
-#~ " If the phase is over, the states is set to 'Done'."
-#~ msgstr ""
-#~ "Daca etapa este creata, starea este 'Ciorna'.\n"
-#~ " Daca etapa a inceput, starea devine 'In desfasurare'.\n"
-#~ " Daca este necesara verificarea, starea este 'In asteptare'.                 "
-#~ "                   \n"
-#~ " Daca etapa este incheiata, starea este setata pe'Efectuat'."
+#: view:project.compute.phases:0
+#: view:project.compute.tasks:0
+msgid "or"
+msgstr ""

@@ -1,21 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* membership
+# Brazilian Portuguese translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-07-28 19:37+0000\n"
-"Last-Translator: Fábio Martinelli - http://zupy.com.br "
-"<webmaster@guaru.net>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:14+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:22+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetoassociate0
@@ -32,7 +32,7 @@ msgstr "Processo de Adesão"
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Paid Member"
-msgstr "Estado pago"
+msgstr "Membro Pagante"
 
 #. module: membership
 #: view:report.membership:0
@@ -96,26 +96,27 @@ msgid "Ending Date Of Membership"
 msgstr "Data Final de Composição"
 
 #. module: membership
-#: field:product.product,membership_date_to:0
-msgid "Date to"
-msgstr "Data até"
+#: help:report.membership,date_to:0
+msgid "End membership date"
+msgstr "Data de término da Associação"
 
 #. module: membership
+#: field:product.product,membership_date_to:0
 #: field:res.partner,membership_stop:0
 msgid "Membership End Date"
-msgstr ""
+msgstr "Data Final da Associação"
 
 #. module: membership
 #: view:report.membership:0
 #: field:report.membership,user_id:0
 #: view:res.partner:0
 msgid "Salesperson"
-msgstr ""
+msgstr "Vendedor"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_waitingtoinvoice0
 msgid "Waiting to invoice"
-msgstr "Esperando pela fatura"
+msgstr "Esperando para faturar"
 
 #. module: membership
 #: view:report.membership:0
@@ -137,7 +138,7 @@ msgstr "Não Membros"
 #. module: membership
 #: view:product.product:0
 msgid "Taxes"
-msgstr ""
+msgstr "Impostos"
 
 #. module: membership
 #: view:res.partner:0
@@ -149,7 +150,7 @@ msgstr "Todos Membros"
 #: code:addons/membership/membership.py:413
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Erro!"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_producttomember0
@@ -196,11 +197,6 @@ msgstr "Análise dos Membros"
 #: view:res.partner:0
 msgid "End Membership Date"
 msgstr "Finalizar Data do Grupo"
-
-#. module: membership
-#: field:product.product,membership_date_from:0
-msgid "Date from"
-msgstr "Data de"
 
 #. module: membership
 #: code:addons/membership/membership.py:414
@@ -252,7 +248,7 @@ msgstr "Data de início da associação"
 #. module: membership
 #: field:res.partner,membership_cancel:0
 msgid "Cancel Membership Date"
-msgstr ""
+msgstr "Data de Cancelamento da Associação"
 
 #. module: membership
 #: model:process.node,name:membership.process_node_paidmember0
@@ -332,7 +328,7 @@ msgstr "Produtos de adesão"
 #. module: membership
 #: field:res.partner,membership_state:0
 msgid "Current Membership Status"
-msgstr ""
+msgstr "Situação Atual da Associação"
 
 #. module: membership
 #: field:membership.membership_line,date:0
@@ -389,12 +385,12 @@ msgstr "Agrupar por..."
 #: code:addons/membership/membership.py:411
 #, python-format
 msgid "Partner is a free Member."
-msgstr "Parceiro é um membro livre."
+msgstr "O Parceiro é um membro gratuíto"
 
 #. module: membership
 #: view:res.partner:0
 msgid "Buy Membership"
-msgstr ""
+msgstr "Comprar Associação"
 
 #. module: membership
 #: field:report.membership,associate_member_id:0
@@ -433,7 +429,7 @@ msgstr "Categoria"
 #. module: membership
 #: view:res.partner:0
 msgid "Contacts"
-msgstr ""
+msgstr "Contatos"
 
 #. module: membership
 #: view:report.membership:0
@@ -463,12 +459,7 @@ msgstr "Data na qual o membro entrou para a associação"
 #. module: membership
 #: field:membership.membership_line,state:0
 msgid "Membership Status"
-msgstr ""
-
-#. module: membership
-#: help:report.membership,date_to:0
-msgid "End membership date"
-msgstr "Data de término da Associação"
+msgstr "Situação da Associação"
 
 #. module: membership
 #: view:res.partner:0
@@ -478,7 +469,7 @@ msgstr "Clientes"
 #. module: membership
 #: view:membership.invoice:0
 msgid "or"
-msgstr ""
+msgstr "ou"
 
 #. module: membership
 #: selection:report.membership,month:0
@@ -495,7 +486,7 @@ msgstr "Produtos de Adesão"
 #. module: membership
 #: sql_constraint:product.product:0
 msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
+msgstr "Erro! A Data de Término não pode começar antes da Data de Início."
 
 #. module: membership
 #: selection:report.membership,month:0
@@ -505,7 +496,7 @@ msgstr "Junho"
 #. module: membership
 #: help:product.product,membership:0
 msgid "Check if the product is eligible for membership."
-msgstr ""
+msgstr "Verifique se o produto está disponível para associação."
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -569,6 +560,17 @@ msgid ""
 "created.\n"
 "                    -Paying member: A member who has paid the membership fee."
 msgstr ""
+"Ele indica o estado de filiação.\n"
+"                     -Não Sócio: Um parceiro que não tiver aplicado para "
+"qualquer sociedade.\n"
+"                     -Membro-Cancelado: Um membro que cancelou sua "
+"participação.\n"
+"                     -Membro-Antigo: Um membro cuja data filiação expirou.\n"
+"                     -Membro-Aguardando: Um membro que solicitou a adesão e "
+"cuja fatura vai ser criada.\n"
+"                     -Membro-Faturado: Um membro cuja fatura foi criado.\n"
+"                     -Membro-Pagante: Um membro que tenha pago a taxa de "
+"adesão."
 
 #. module: membership
 #: selection:report.membership,month:0
@@ -594,7 +596,7 @@ msgstr "O preço negociado pelo Parceiro"
 #. module: membership
 #: model:product.template,name:membership.membership_2_product_template
 msgid "Basic Membership"
-msgstr "Composição Básica"
+msgstr "Associação Básica"
 
 #. module: membership
 #: view:res.partner:0
@@ -636,6 +638,17 @@ msgid ""
 "                        -Paid Member: A member who has paid the membership "
 "amount."
 msgstr ""
+"Ele indica o estado de filiação.\n"
+"                     -Não Sócio: Um parceiro que não tiver aplicado para "
+"qualquer sociedade.\n"
+"                     -Membro-Cancelado: Um membro que cancelou sua "
+"participação.\n"
+"                     -Membro-Antigo: Um membro cuja data filiação expirou.\n"
+"                     -Membro-Aguardando: Um membro que solicitou a adesão e "
+"cuja fatura vai ser criada.\n"
+"                     -Membro-Faturado: Um membro cuja fatura foi criado.\n"
+"                     -Membro-Pagante: Um membro que tenha pago a taxa de "
+"adesão."
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_waitingtoinvoice0
@@ -664,11 +677,6 @@ msgid "All non Members"
 msgstr "Todos não Membros"
 
 #. module: membership
-#: view:product.product:0
-msgid "Information"
-msgstr "Informação"
-
-#. module: membership
 #: field:membership.membership_line,account_invoice_line:0
 msgid "Account Invoice line"
 msgstr "Linha da conta na fatura"
@@ -686,7 +694,7 @@ msgstr "Preço para membro"
 #. module: membership
 #: view:product.product:0
 msgid "Membership Duration"
-msgstr ""
+msgstr "Duração da Associação"
 
 #. module: membership
 #: model:ir.model,name:membership.model_product_product
@@ -699,19 +707,20 @@ msgid "May"
 msgstr "Maio"
 
 #. module: membership
+#: field:product.product,membership_date_from:0
 #: field:res.partner,membership_start:0
 msgid "Membership Start Date"
-msgstr ""
+msgstr "Data de Início da Associação"
 
 #. module: membership
 #: help:res.partner,free_member:0
 msgid "Select if you want to give free membership."
-msgstr ""
+msgstr "Escolha se você deseja oferecer associações gratuítas."
 
 #. module: membership
 #: field:res.partner,membership_amount:0
 msgid "Membership Amount"
-msgstr ""
+msgstr "Valor da Associação"
 
 #. module: membership
 #: field:report.membership,date_to:0
@@ -773,7 +782,7 @@ msgstr "Quantia para a Associação."
 #. module: membership
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr "Erro! Você não pode criar recursivamente a membros associados."
+msgstr "Erro! Você não pode criar membros associados recursivamente."
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -789,273 +798,11 @@ msgid "Year"
 msgstr "Ano"
 
 #. module: membership
+#: view:product.product:0
+msgid "Accounting"
+msgstr "Contabilidade"
+
+#. module: membership
 #: view:report.membership:0
 msgid "Revenue Done"
 msgstr "Receita Concluída"
-
-#~ msgid "Partners"
-#~ msgstr "Parceiros"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Invalido XML para Arquitetura da View"
-
-#~ msgid "Reporting"
-#~ msgstr "Relatórios"
-
-#~ msgid "Configuration"
-#~ msgstr "Configuração"
-
-#~ msgid "Error: UOS must be in a different category than the UOM"
-#~ msgstr ""
-#~ "Erro: Unidade de venda precisa ser de categoria diferente da unidade de "
-#~ "medida"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "O nome do objeto precisa iniciar com x_ e não conter nenhum caracter "
-#~ "especial!"
-
-#~ msgid "Currency"
-#~ msgstr "Moeda"
-
-#~ msgid "Associate member"
-#~ msgstr "Membro associado"
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "Erro !"
-
-#~ msgid "Canceled"
-#~ msgstr "Cancelado"
-
-#~ msgid "Membership Product - 1"
-#~ msgstr "Adesão de Produto - 1"
-
-#~ msgid "Invoiced"
-#~ msgstr "Faturado"
-
-#~ msgid "The price negociated by the partner"
-#~ msgstr "O preço negociado pelo parceiro"
-
-#~ msgid "Choose invoice details"
-#~ msgstr "Escolha os detalhes da fatura"
-
-#~ msgid "Paid"
-#~ msgstr "Pago"
-
-#~ msgid "Free members"
-#~ msgstr "Membros gratuitos"
-
-#~ msgid "Invoiced members"
-#~ msgstr "Membros faturados"
-
-#~ msgid "Error: Invalid Bvr Number (wrong checksum)."
-#~ msgstr "Erro: Número BVR Inválido (erro dígito verificador)."
-
-#~ msgid "Specify if this product is a membership product"
-#~ msgstr "Especifique se este é um produto de associação"
-
-#~ msgid "Paid members"
-#~ msgstr "Membros pagantes"
-
-#~ msgid "Future members"
-#~ msgstr "Membros futuros"
-
-#~ msgid "Old members"
-#~ msgstr "Membros antigos"
-
-#~ msgid "Associated members"
-#~ msgstr "Membros associados"
-
-#~ msgid "Canceled Member"
-#~ msgstr "Membro cancelado"
-
-#~ msgid "Current members"
-#~ msgstr "Membros atuais"
-
-#, python-format
-#~ msgid "No Address defined for this partner"
-#~ msgstr "Sem endereço definido para esse parceiro"
-
-#~ msgid "Free member"
-#~ msgstr "Membro gratuito"
-
-#~ msgid "Stop membership date"
-#~ msgstr "Data de encerramento da associação"
-
-#~ msgid "Current membership state"
-#~ msgstr "Status atual da associação"
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "Erro: Código EAN inválido"
-
-#~ msgid "Membership amount"
-#~ msgstr "Quantidade de adesões"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nome do modelo Inválido na definição da ação"
-
-#~ msgid "State"
-#~ msgstr "Situação"
-
-#~ msgid "Future members (invoice not confirmed)"
-#~ msgstr "Futuros membros (fatura não confirmada)"
-
-#~ msgid "Membership Product - 2"
-#~ msgstr "Filiação do Produto - 2 ou Associação do Produto - 2"
-
-#~ msgid "Confirm"
-#~ msgstr "Confirme"
-
-#~ msgid "Membership by Years"
-#~ msgstr "Filiação por anos ou Associação por anos"
-
-#~ msgid "Error ! You can not create recursive accounts."
-#~ msgstr "Erro! Você não pode criar contas recursivas"
-
-#~ msgid "Error: BVR reference is required."
-#~ msgstr "Erro: a referência BVR é necessária"
-
-#~ msgid "Join Membership"
-#~ msgstr "Inscrever-se como membro"
-
-#~ msgid "   Month   "
-#~ msgstr "   Mês   "
-
-#~ msgid "Invalid BBA Structured Communication !"
-#~ msgstr "Comunicação estruturada BBA inválida !"
-
-#~ msgid "    Month-1    "
-#~ msgstr "    Mês-1    "
-
-#~ msgid ""
-#~ "It indicates the membership state.\n"
-#~ "                    -Non Member: A member who has not applied for any "
-#~ "membership.\n"
-#~ "                    -Cancelled Member: A member who has cancelled his "
-#~ "membership.\n"
-#~ "                    -Old Member: A member whose membership date has "
-#~ "expired.\n"
-#~ "                    -Waiting Member: A member who has applied for the "
-#~ "membership and whose invoice is going to be created.\n"
-#~ "                    -Invoiced Member: A member whose invoice has been "
-#~ "created.\n"
-#~ "                    -Paid Member: A member who has paid the membership "
-#~ "amount."
-#~ msgstr ""
-#~ "Isto indica o estado do grupo.\n"
-#~ "                    -Não Membro: Um membro que não foi vinculado a nenhum "
-#~ "grupo.\n"
-#~ "                    -Membro Cancelado: Um membro que foi cancelado de seu "
-#~ "grupo.\n"
-#~ "                    -Membro Antigo: Um membro cujo data do grupo foi "
-#~ "expirada.\n"
-#~ "                    -Membro em Espera: Um membro que foi vinculado a um "
-#~ "grupo e cuja fatura está sendo criada.\n"
-#~ "                    -Membro Faturado: Um membro cujo fatura já foi criada.\n"
-#~ "                    -Membro Pago: Um membro que tenha pago uma quantia de "
-#~ "associação."
-
-#~ msgid "Events created in current year"
-#~ msgstr "Eventos criados no ano atual"
-
-#~ msgid "Events created in last month"
-#~ msgstr "Eventos criados no ultimo mês"
-
-#~ msgid "Cancel membership date"
-#~ msgstr "Cancelar data do grupo de mebros."
-
-#~ msgid "Select if you want to give membership free of cost."
-#~ msgstr "Selecione se você quiser deixar o grupo de membros livre de custo."
-
-#~ msgid "Join"
-#~ msgstr "Entrar"
-
-#~ msgid "Product Template"
-#~ msgstr "Modelo de Produto"
-
-#~ msgid "Events created in current month"
-#~ msgstr "Eventos criados no mês atual."
-
-#~ msgid "Member Sale Pricelist"
-#~ msgstr "Lista de preço de venda do membro"
-
-#~ msgid ""
-#~ "It indicates the membership state.\n"
-#~ "                        -Non Member: A member who has not applied for any "
-#~ "membership.\n"
-#~ "                        -Cancelled Member: A member who has cancelled his "
-#~ "membership.\n"
-#~ "                        -Old Member: A member whose membership date has "
-#~ "expired.\n"
-#~ "                        -Waiting Member: A member who has applied for the "
-#~ "membership and whose invoice is going to be created.\n"
-#~ "                        -Invoiced Member: A member whose invoice has been "
-#~ "created.\n"
-#~ "                        -Paid Member: A member who has paid the membership "
-#~ "amount."
-#~ msgstr ""
-#~ "Isto indica o estado do grupo.\n"
-#~ "                    -Não Membro: Um membro que não foi vinculado a nenhum "
-#~ "grupo.\n"
-#~ "                    -Membro Cancelado: Um membro que foi cancelado de seu "
-#~ "grupo.\n"
-#~ "                    -Membro Antigo: Um membro cujo data do grupo foi "
-#~ "expirada.\n"
-#~ "                    -Membro em Espera: Um membro que foi vinculado a um "
-#~ "grupo e cuja fatura está sendo criada.\n"
-#~ "                    -Membro Faturado: Um membro cujo fatura já foi criada.\n"
-#~ "                    -Membro Pago: Um membro que tenha pago uma quantia de "
-#~ "associação."
-
-#~ msgid "Member Sale Pricelist Version"
-#~ msgstr "Versão da lista de preço do membro."
-
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr ""
-#~ "Erro: A Unidade de Medida Padrão e a Unidade de Medida de compra precisam "
-#~ "estar na mesma categoria."
-
-#~ msgid "Salesman"
-#~ msgstr "Vendedor"
-
-#~ msgid "Accounting Info"
-#~ msgstr "Informações da Conta"
-
-#~ msgid "Select if a product is a membership product."
-#~ msgstr "Selecionar se um produto é um produto da associação."
-
-#~ msgid "Membership State"
-#~ msgstr "Estado da Associação"
-
-#~ msgid "Invoice Number must be unique per Company!"
-#~ msgstr "O número da fatura deve ser único por Empresa!"
-
-#~ msgid "Sale Description"
-#~ msgstr "Descrição da venda"
-
-#~ msgid "Close"
-#~ msgstr "Fechar"
-
-#~ msgid "Categorization"
-#~ msgstr "Categorização"
-
-#~ msgid "Description"
-#~ msgstr "Descrição"
-
-#~ msgid "Purchase Description"
-#~ msgstr "Descrição da compra"
-
-#~ msgid "General"
-#~ msgstr "Geral:"
-
-#~ msgid "Sale Taxes"
-#~ msgstr "Impostos na Venda"
-
-#~ msgid "Waiting"
-#~ msgstr "Aguardando"
-
-#~ msgid "New Membership by Years"
-#~ msgstr "Novos associados, por Anos"

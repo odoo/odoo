@@ -1,32 +1,32 @@
 # Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-11-28 16:50+0000\n"
-"Last-Translator: Joshua Jan(SHINEIT) <popkar77@gmail.com>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:50+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:07+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_related:0
 #: selection:res.alarm,trigger_related:0
 msgid "The event starts"
-msgstr "活动开始"
+msgstr "事件开始时"
 
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "My Events"
-msgstr "我的活动"
+msgstr "我的事件"
 
 #. module: base_calendar
 #: help:calendar.event,exdate:0
@@ -67,12 +67,6 @@ msgstr "定期会议"
 #: model:crm.meeting.type,name:base_calendar.categ_meet5
 msgid "Feedback Meeting"
 msgstr "会议反馈"
-
-#. module: base_calendar
-#: code:addons/base_calendar/crm_meeting.py:117
-#, python-format
-msgid "Meeting <b>completed</b>."
-msgstr "会议<b>完成</b>."
 
 #. module: base_calendar
 #: model:ir.actions.act_window,name:base_calendar.action_res_alarm_view
@@ -255,7 +249,7 @@ msgid "To"
 msgstr "到"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1225
+#: code:addons/base_calendar/base_calendar.py:1255
 #, python-format
 msgid "Error!"
 msgstr "错误！"
@@ -274,6 +268,13 @@ msgstr "我的会议"
 #: selection:calendar.alarm,action:0
 msgid "Procedure"
 msgstr "程序"
+
+#. module: base_calendar
+#: field:calendar.event,recurrent_id:0
+#: field:calendar.todo,recurrent_id:0
+#: field:crm.meeting,recurrent_id:0
+msgid "Recurrent ID"
+msgstr "循环ID"
 
 #. module: base_calendar
 #: selection:calendar.event,state:0
@@ -334,14 +335,9 @@ msgid "Meetings"
 msgstr "会议"
 
 #. module: base_calendar
-#: selection:calendar.attendee,cutype:0
-msgid "Room"
-msgstr "室"
-
-#. module: base_calendar
-#: field:calendar.event,recurrent_id:0
-#: field:calendar.todo,recurrent_id:0
-#: field:crm.meeting,recurrent_id:0
+#: field:calendar.event,recurrent_id_date:0
+#: field:calendar.todo,recurrent_id_date:0
+#: field:crm.meeting,recurrent_id_date:0
 msgid "Recurrent ID date"
 msgstr "循环日期"
 
@@ -364,11 +360,11 @@ msgid ""
 msgstr "保存复杂的摘要(消息数量,……等)。为了插入到看板视图，这一摘要直接是是HTML格式。"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:388
-#: code:addons/base_calendar/base_calendar.py:417
-#: code:addons/base_calendar/base_calendar.py:980
-#: code:addons/base_calendar/base_calendar.py:982
-#: code:addons/base_calendar/base_calendar.py:1430
+#: code:addons/base_calendar/base_calendar.py:399
+#: code:addons/base_calendar/base_calendar.py:444
+#: code:addons/base_calendar/base_calendar.py:1008
+#: code:addons/base_calendar/base_calendar.py:1010
+#: code:addons/base_calendar/base_calendar.py:1455
 #, python-format
 msgid "Warning!"
 msgstr "警告！"
@@ -512,9 +508,9 @@ msgid "Email"
 msgstr "电子邮箱"
 
 #. module: base_calendar
-#: model:ir.actions.server,name:base_calendar.actions_server_crm_meeting_unread
-msgid "CRM Meeting: Mark unread"
-msgstr ""
+#: selection:calendar.attendee,cutype:0
+msgid "Room"
+msgstr "室"
 
 #. module: base_calendar
 #: selection:calendar.alarm,state:0
@@ -527,7 +523,7 @@ msgid "Event alarm information"
 msgstr "事件提醒信息"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:982
+#: code:addons/base_calendar/base_calendar.py:1010
 #, python-format
 msgid "Count cannot be negative or 0."
 msgstr ""
@@ -538,11 +534,9 @@ msgid "Creation Date"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/crm_meeting.py:111
 #: view:crm.meeting:0
 #: model:ir.model,name:base_calendar.model_crm_meeting
 #: model:res.request.link,name:base_calendar.request_link_meeting
-#, python-format
 msgid "Meeting"
 msgstr ""
 
@@ -571,11 +565,9 @@ msgid "Caldav URL"
 msgstr "Caldav 服务的URL"
 
 #. module: base_calendar
-#: field:calendar.event,recurrent_uid:0
-#: field:calendar.todo,recurrent_uid:0
-#: field:crm.meeting,recurrent_uid:0
-msgid "Recurrent ID"
-msgstr "循环ID"
+#: model:ir.model,name:base_calendar.model_mail_wizard_invite
+msgid "Invite wizard"
+msgstr ""
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
@@ -607,7 +599,7 @@ msgid "Delegrated To"
 msgstr "代表人"
 
 #. module: base_calendar
-#: code:addons/base_calendar/crm_meeting.py:94
+#: code:addons/base_calendar/crm_meeting.py:102
 #, python-format
 msgid "The following contacts have no email address :"
 msgstr ""
@@ -716,12 +708,6 @@ msgid "Individual"
 msgstr "个人"
 
 #. module: base_calendar
-#: code:addons/base_calendar/crm_meeting.py:114
-#, python-format
-msgid "Meeting <b>confirmed</b>."
-msgstr ""
-
-#. module: base_calendar
 #: help:calendar.event,count:0
 #: help:calendar.todo,count:0
 #: help:crm.meeting,count:0
@@ -756,7 +742,7 @@ msgid "Declined"
 msgstr "已拒绝"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1430
+#: code:addons/base_calendar/base_calendar.py:1455
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr ""
@@ -791,13 +777,6 @@ msgstr "隐私的"
 #: model:ir.model,name:base_calendar.model_res_alarm
 msgid "Basic Alarm Information"
 msgstr "基本提醒信息"
-
-#. module: base_calendar
-#: field:calendar.event,mo:0
-#: field:calendar.todo,mo:0
-#: field:crm.meeting,mo:0
-msgid "Mon"
-msgstr "周一"
 
 #. module: base_calendar
 #: field:calendar.event,fr:0
@@ -998,10 +977,11 @@ msgid "Indicate the groups that the attendee belongs to"
 msgstr "与会者属于指定的组"
 
 #. module: base_calendar
-#: field:crm.meeting,message_comment_ids:0
-#: help:crm.meeting,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
+#: field:calendar.event,mo:0
+#: field:calendar.todo,mo:0
+#: field:crm.meeting,mo:0
+msgid "Mon"
+msgstr "周一"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
@@ -1052,11 +1032,6 @@ msgid "Interval"
 msgstr "间隔"
 
 #. module: base_calendar
-#: model:ir.actions.server,name:base_calendar.actions_server_crm_meeting_read
-msgid "CRM Meeting: Mark read"
-msgstr ""
-
-#. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
 #: selection:crm.meeting,week_list:0
@@ -1080,7 +1055,7 @@ msgid "Active"
 msgstr "生效"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:388
+#: code:addons/base_calendar/base_calendar.py:399
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
 msgstr "你不能复制日程参与者"
@@ -1226,7 +1201,7 @@ msgid "Select Weekdays"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1489
+#: code:addons/base_calendar/base_calendar.py:1514
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #: selection:calendar.todo,show_as:0
@@ -1353,6 +1328,11 @@ msgid "Search Meetings"
 msgstr ""
 
 #. module: base_calendar
+#: model:ir.model,name:base_calendar.model_ir_attachment
+msgid "ir.attachment"
+msgstr "ir.attachment"
+
+#. module: base_calendar
 #: model:ir.model,name:base_calendar.model_crm_meeting_type
 msgid "Meeting Type"
 msgstr ""
@@ -1433,6 +1413,11 @@ msgid ""
 msgstr "包含电子邮件主题中使用的文本或包含了用于显示的文本"
 
 #. module: base_calendar
+#: model:ir.model,name:base_calendar.model_mail_message
+msgid "Message"
+msgstr ""
+
+#. module: base_calendar
 #: field:calendar.event,base_calendar_alarm_id:0
 #: field:calendar.todo,base_calendar_alarm_id:0
 #: field:crm.meeting,base_calendar_alarm_id:0
@@ -1452,7 +1437,7 @@ msgid "April"
 msgstr "4月"
 
 #. module: base_calendar
-#: code:addons/base_calendar/crm_meeting.py:98
+#: code:addons/base_calendar/crm_meeting.py:106
 #, python-format
 msgid "Email addresses not found"
 msgstr ""
@@ -1470,7 +1455,7 @@ msgid "Weekday"
 msgstr "工作日"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:980
+#: code:addons/base_calendar/base_calendar.py:1008
 #, python-format
 msgid "Interval cannot be negative."
 msgstr ""
@@ -1483,7 +1468,7 @@ msgid "By day"
 msgstr "按天"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:417
+#: code:addons/base_calendar/base_calendar.py:444
 #, python-format
 msgid "First you have to specify the date of the invitation."
 msgstr ""
@@ -1621,312 +1606,3 @@ msgstr ""
 #: selection:crm.meeting,byday:0
 msgid "Fifth"
 msgstr "第五个"
-
-#~ msgid "Hourly"
-#~ msgstr "每小时"
-
-#~ msgid "Invited User"
-#~ msgstr "受邀用户"
-
-#~ msgid "Monthly"
-#~ msgstr "每月"
-
-#~ msgid "Title"
-#~ msgstr "事件摘要"
-
-#~ msgid "Invitation"
-#~ msgstr "邀请"
-
-#~ msgid "ir.attachment"
-#~ msgstr "ir.attachment"
-
-#~ msgid "Yearly"
-#~ msgstr "每年"
-
-#~ msgid "Invitation type"
-#~ msgstr "邀请类型"
-
-#~ msgid "Required to Join"
-#~ msgstr "应加入"
-
-#~ msgid "Show as"
-#~ msgstr "显示为"
-
-#~ msgid " "
-#~ msgstr "base_calendar "
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "警告！"
-
-#~ msgid "Show time as"
-#~ msgstr "显示时间为"
-
-#~ msgid "Secondly"
-#~ msgstr "第二"
-
-#~ msgid ""
-#~ "Full featured calendar system that supports:\n"
-#~ "    - Calendar of events\n"
-#~ "    - Alerts (create requests)\n"
-#~ "    - Recurring events\n"
-#~ "    - Invitations to people"
-#~ msgstr ""
-#~ "完整功能的日历系统，支持：\n"
-#~ "    - 日历事件\n"
-#~ "    - 提醒（创建请求）\n"
-#~ "    - 周期性事件\n"
-#~ "    - 邀请人"
-
-#~ msgid "Deadline"
-#~ msgstr "截止日期"
-
-#~ msgid "Basic Calendar Functionality"
-#~ msgstr "Basic Calendar Functionality"
-
-#~ msgid "Provide external email address who will receive this invitation."
-#~ msgstr "提供外部的电子邮件地址将得到这个邀请。"
-
-#~ msgid "Years"
-#~ msgstr "年"
-
-#~ msgid "Event Detail"
-#~ msgstr "事件详情"
-
-#~ msgid "Partner related to contact"
-#~ msgstr "业务伙伴联系关系"
-
-#~ msgid "Send mail?"
-#~ msgstr "发邮件？"
-
-#~ msgid "Forever"
-#~ msgstr "永远"
-
-#~ msgid "Select range to Exclude"
-#~ msgstr "选择范围以排除"
-
-#~ msgid "Required Reply"
-#~ msgstr "要求回复"
-
-#~ msgid "_Cancel"
-#~ msgstr "取消(_C)"
-
-#~ msgid "Set Exclude range"
-#~ msgstr "设置排除范围"
-
-#, python-format
-#~ msgid "Can not Duplicate"
-#~ msgstr "不能复制"
-
-#~ msgid "Mark as"
-#~ msgstr "标记为"
-
-#~ msgid "Daily"
-#~ msgstr "每天"
-
-#~ msgid "_Ok"
-#~ msgstr "确定(_O)"
-
-#~ msgid "Partner"
-#~ msgstr "业务伙伴"
-
-#~ msgid "Delegate"
-#~ msgstr "委派"
-
-#~ msgid "Partner Contacts"
-#~ msgstr "业务伙伴联系人"
-
-#~ msgid "_Save"
-#~ msgstr "保存(_S)"
-
-#~ msgid "Check this if you want to send an Email to Invited Person"
-#~ msgstr "如果你向邀请的人发送电子邮件勾选这"
-
-#~ msgid "My Role"
-#~ msgstr "我的角色"
-
-#~ msgid "Edit All"
-#~ msgstr "编辑所有"
-
-#~ msgid "Contacts"
-#~ msgstr "联系人"
-
-#, python-format
-#~ msgid "Count can not be Negative"
-#~ msgstr "次数不能是负数"
-
-#~ msgid "End of recurrency"
-#~ msgstr "结束循环"
-
-#~ msgid "Invitation From"
-#~ msgstr "邀请函"
-
-#~ msgid "Set Exrule"
-#~ msgstr "设置例外规则"
-
-#~ msgid "Invite Attendees"
-#~ msgstr "邀请与会者"
-
-#~ msgid "Confidential"
-#~ msgstr "机密"
-
-#~ msgid "Count"
-#~ msgstr "次数"
-
-#~ msgid "No Repeat"
-#~ msgstr "不重复"
-
-#, python-format
-#~ msgid "Interval can not be Negative"
-#~ msgstr "间隔不能负数的"
-
-#~ msgid "Select whom you want to Invite"
-#~ msgstr "选择你想邀请的人"
-
-#~ msgid "To Review"
-#~ msgstr "待审查"
-
-#~ msgid "Frequency"
-#~ msgstr "重复频率"
-
-#~ msgid "Weekly"
-#~ msgstr "每周"
-
-#~ msgid "State"
-#~ msgstr "状态"
-
-#~ msgid "You can not have two users with the same login !"
-#~ msgstr "你不能同时登录两个用户！"
-
-#~ msgid "of"
-#~ msgstr "属于"
-
-#~ msgid "res.users"
-#~ msgstr "res.users"
-
-#~ msgid "Tentative"
-#~ msgstr "暂定"
-
-#~ msgid "Repeat every"
-#~ msgstr "重复周期"
-
-#~ msgid "Fix amout of times"
-#~ msgstr "修改次数"
-
-#~ msgid "Invite People"
-#~ msgstr "邀请他人"
-
-#~ msgid ""
-#~ "Defines a rule or repeating pattern for recurring events\n"
-#~ "e.g.: Every other month on the last Sunday of the month for 10 occurrences:  "
-#~ "      FREQ=MONTHLY;INTERVAL=2;COUNT=10;BYDAY=-1SU"
-#~ msgstr ""
-#~ "为循环事件定义一个规则或重复模式。\n"
-#~ "如：在每隔一个月在这个月的最后一个星期天出现10次； FREQ=MONTHLY;INTERVAL=2;COUNT=10;BYDAY=-1SU"
-
-#~ msgid "Type"
-#~ msgstr "类型"
-
-#~ msgid "Search Invitations"
-#~ msgstr "搜索邀请"
-
-#~ msgid "Minutely"
-#~ msgstr "每分钟"
-
-#~ msgid "Objects"
-#~ msgstr "对象"
-
-#~ msgid "Months"
-#~ msgstr "月份"
-
-#, python-format
-#~ msgid "Please Apply Recurrency before applying Exception Rule."
-#~ msgstr "请在确认重复前确认里外规则"
-
-#, python-format
-#~ msgid "Couldn't Invite because date is not specified!"
-#~ msgstr "无法邀请，因为没有指定日期！"
-
-#~ msgid "Invite"
-#~ msgstr "邀请"
-
-#~ msgid "Invitation To"
-#~ msgstr "邀请"
-
-#~ msgid "Internal User"
-#~ msgstr "内部用户"
-
-#~ msgid "Way to end reccurency"
-#~ msgstr "结束循环的方式"
-
-#~ msgid "External Email"
-#~ msgstr "外部电子邮件"
-
-#~ msgid ""
-#~ "Create specific calendar alarms that may be assigned to calendar events or "
-#~ "meetings."
-#~ msgstr "创建特殊日历提醒分配到日历事件或者会议"
-
-#~ msgid "Event Invitations"
-#~ msgstr "事件邀请"
-
-#~ msgid "Calendar Edit all event"
-#~ msgstr "编辑所有的日历事件"
-
-#~ msgid "Edit all Occurrences"
-#~ msgstr "编辑所有事件"
-
-#~ msgid "Edit all Occurrences  of recurrent Meeting."
-#~ msgstr "编辑定期会议事件"
-
-#~ msgid "Edit all events"
-#~ msgstr "编辑所有事件"
-
-#~ msgid "Delegation Info"
-#~ msgstr "委派信息"
-
-#~ msgid "Weeks"
-#~ msgstr "周"
-
-#~ msgid "Data"
-#~ msgstr "資料"
-
-#~ msgid "Invitation Type"
-#~ msgstr "邀请类型"
-
-#, python-format
-#~ msgid "Group by date not supported, use the calendar view instead"
-#~ msgstr "不支持按日期分组，请使用日程表视图"
-
-#, python-format
-#~ msgid "%s must have an email  address to send mail"
-#~ msgstr "%s 必须有个发送邮件的电子邮件地址"
-
-#, python-format
-#~ msgid "Interval cannot be negative"
-#~ msgstr "间隔不能为负"
-
-#~ msgid "Accepted Invitations"
-#~ msgstr "已接受的邀请"
-
-#, python-format
-#~ msgid "Count cannot be negative"
-#~ msgstr "数量不能为负"
-
-#~ msgid "Declined Invitations"
-#~ msgstr "将结束的邀请"
-
-#~ msgid "Recurrence termination"
-#~ msgstr "反复终止"
-
-#~ msgid "Each model must be unique!"
-#~ msgstr "每个模型都必须唯一！"
-
-#~ msgid "Invitations To Review"
-#~ msgstr "邀请复核"
-
-#~ msgid "Delegated Invitations"
-#~ msgstr "委派邀请"
-
-#~ msgid "The chosen company is not in the allowed companies for this user"
-#~ msgstr "选择的公司不属于此用户允许访问的公司。"

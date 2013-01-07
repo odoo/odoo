@@ -1,21 +1,21 @@
 # Korean translation for openobject-addons
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-05-10 17:47+0000\n"
-"Last-Translator: ekodaq <ceo@ekosdaq.com>\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:32+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:27+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: product
 #: field:product.packaging,rows:0
@@ -30,11 +30,6 @@ msgstr ""
 #. module: product
 #: help:product.product,seller_qty:0
 msgid "This is minimum quantity to purchase from Main Supplier."
-msgstr ""
-
-#. module: product
-#: model:product.uom,name:product.product_uom_day
-msgid "Day"
 msgstr ""
 
 #. module: product
@@ -108,8 +103,8 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:177
-#: code:addons/product/product.py:206
+#: code:addons/product/pricelist.py:179
+#: code:addons/product/product.py:208
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -120,16 +115,11 @@ msgid "Small-sized image"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:174
+#: code:addons/product/product.py:176
 #, python-format
 msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
 "both belong to different Category!."
-msgstr ""
-
-#. module: product
-#: model:product.uom,name:product.product_uom_dozen
-msgid "Dozen"
 msgstr ""
 
 #. module: product
@@ -190,7 +180,7 @@ msgid "Product Type"
 msgstr "상품 유형"
 
 #. module: product
-#: code:addons/product/product.py:410
+#: code:addons/product/product.py:412
 #, python-format
 msgid "Products: "
 msgstr "상품 "
@@ -277,11 +267,6 @@ msgstr ""
 #: field:product.uom,category_id:0
 msgid "Category"
 msgstr "카테고리"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_litre
-msgid "Litre"
-msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_25_product_template
@@ -508,6 +493,11 @@ msgid "Headset standard"
 msgstr ""
 
 #. module: product
+#: model:product.uom,name:product.product_uom_day
+msgid "Day(s)"
+msgstr ""
+
+#. module: product
 #: help:product.product,incoming_qty:0
 msgid ""
 "Quantity of products that are planned to arrive.\n"
@@ -566,10 +556,8 @@ msgid "PC Assemble + Custom (PC on Demand)"
 msgstr ""
 
 #. module: product
-#: model:process.transition,note:product.process_transition_supplierofproduct0
-msgid ""
-"1 or several supplier(s) can be linked to a product. All information stands "
-"in the product form."
+#: model:product.template,description:product.product_product_27_product_template
+msgid "Custom Laptop based on customer's requirement."
 msgstr ""
 
 #. module: product
@@ -578,7 +566,7 @@ msgid "The width of the package"
 msgstr "패키지 폭"
 
 #. module: product
-#: code:addons/product/product.py:359
+#: code:addons/product/product.py:361
 #, python-format
 msgid "Unit of Measure categories Mismatch!"
 msgstr ""
@@ -680,6 +668,7 @@ msgstr ""
 
 #. module: product
 #: field:product.supplierinfo,name:0
+#: field:product.template,seller_ids:0
 msgid "Supplier"
 msgstr ""
 
@@ -707,8 +696,8 @@ msgid "If checked new messages require your attention."
 msgstr ""
 
 #. module: product
-#: model:product.category,name:product.product_category_1
-msgid "Saleable"
+#: field:product.product,ean13:0
+msgid "EAN13 Barcode"
 msgstr ""
 
 #. module: product
@@ -783,6 +772,11 @@ msgid "End Date"
 msgstr "마감 날짜"
 
 #. module: product
+#: model:product.uom,name:product.product_uom_litre
+msgid "Liter(s)"
+msgstr ""
+
+#. module: product
 #: view:product.price_list:0
 msgid "Print"
 msgstr "프린트"
@@ -815,7 +809,6 @@ msgstr "키"
 #. module: product
 #: model:ir.actions.report.xml,name:product.report_product_pricelist
 #: model:ir.model,name:product.model_product_pricelist
-#: field:product.product,price:0
 #: field:product.product,pricelist_id:0
 #: view:product.supplierinfo:0
 msgid "Pricelist"
@@ -823,7 +816,7 @@ msgstr "가격리스트"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_hour
-msgid "Hour"
+msgid "Hour(s)"
 msgstr ""
 
 #. module: product
@@ -837,8 +830,10 @@ msgid "Partner"
 msgstr "파트너"
 
 #. module: product
-#: model:product.template,description:product.product_product_27_product_template
-msgid "Custom Laptop based on customer's requirement."
+#: model:process.transition,note:product.process_transition_supplierofproduct0
+msgid ""
+"1 or several supplier(s) can be linked to a product. All information stands "
+"in the product form."
 msgstr ""
 
 #. module: product
@@ -903,11 +898,6 @@ msgstr ""
 #: field:product.packaging,weight:0
 msgid "Total Package Weight"
 msgstr "총 패키지 중량"
-
-#. module: product
-#: field:product.product,seller_info_id:0
-msgid "unknown"
-msgstr ""
 
 #. module: product
 #: help:product.packaging,code:0
@@ -1080,6 +1070,11 @@ msgid "Right Parent"
 msgstr ""
 
 #. module: product
+#: field:product.product,price:0
+msgid "Price"
+msgstr ""
+
+#. module: product
 #: field:product.pricelist.item,price_surcharge:0
 msgid "Price Surcharge"
 msgstr "가격 할증"
@@ -1151,6 +1146,11 @@ msgstr ""
 #: help:product.category,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of product categories."
+msgstr ""
+
+#. module: product
+#: model:product.uom,name:product.product_uom_dozen
+msgid "Dozen(s)"
 msgstr ""
 
 #. module: product
@@ -1228,7 +1228,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:359
+#: code:addons/product/product.py:361
 #, python-format
 msgid ""
 "New Unit of Measure '%s' must belong to same Unit of Measure category '%s' "
@@ -1283,11 +1283,6 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: field:product.template,seller_ids:0
-msgid "Partners"
-msgstr "파트너"
-
-#. module: product
 #: help:product.pricelist.item,categ_id:0
 msgid ""
 "Specify a product category if this rule only applies to products belonging "
@@ -1300,7 +1295,12 @@ msgid "Inventory"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:736
+#: field:product.product,seller_info_id:0
+msgid "Supplier Info"
+msgstr "공급자 정보"
+
+#. module: product
+#: code:addons/product/product.py:729
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -1419,16 +1419,9 @@ msgstr ""
 
 #. module: product
 #: selection:product.ul,type:0
-#: model:product.uom,name:product.product_uom_unit
 #: model:product.uom.categ,name:product.product_uom_categ_unit
 msgid "Unit"
 msgstr "유닛"
-
-#. module: product
-#: code:addons/product/product.py:588
-#, python-format
-msgid "Product has been <b>created</b>."
-msgstr ""
 
 #. module: product
 #: field:product.pricelist.version,date_start:0
@@ -1537,8 +1530,8 @@ msgid "Pricelist Name"
 msgstr "가격리스트 이름"
 
 #. module: product
-#: field:product.product,ean13:0
-msgid "EAN13 Barcode"
+#: model:product.category,name:product.product_category_1
+msgid "Saleable"
 msgstr ""
 
 #. module: product
@@ -1769,7 +1762,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:206
+#: code:addons/product/product.py:208
 #, python-format
 msgid "Cannot change the category of existing Unit of Measure '%s'."
 msgstr ""
@@ -1805,7 +1798,7 @@ msgid "Default Unit of Measure"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:375
+#: code:addons/product/pricelist.py:377
 #, python-format
 msgid "Partner section of the product form"
 msgstr "상품 양식의 파트너 섹션"
@@ -1831,7 +1824,12 @@ msgid "Messages"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:174
+#: model:product.uom,name:product.product_uom_unit
+msgid "Unit(s)"
+msgstr ""
+
+#. module: product
+#: code:addons/product/product.py:176
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -2143,7 +2141,7 @@ msgid "Normal"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:177
+#: code:addons/product/pricelist.py:179
 #, python-format
 msgid ""
 "At least one pricelist has no active version !\n"
@@ -2194,12 +2192,6 @@ msgstr ""
 #: selection:product.template,mes_type:0
 msgid "Variable"
 msgstr "변수"
-
-#. module: product
-#: field:product.product,message_comment_ids:0
-#: help:product.product,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
 
 #. module: product
 #: field:product.template,rental:0
@@ -2357,7 +2349,7 @@ msgid "15” LCD Monitor"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:374
+#: code:addons/product/pricelist.py:376
 #: field:product.pricelist.item,base_pricelist_id:0
 #, python-format
 msgid "Other Pricelist"
@@ -2485,443 +2477,3 @@ msgstr "m3에 있는 체적"
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
 msgstr "가격 할인"
-
-#~ msgid ""
-#~ "The minimal quantity to purchase for this supplier, expressed in the default "
-#~ "unit of measure."
-#~ msgstr "이 공급자로부터의 최소 구매 수량으로 디폴트 측정 단위로 표현됨"
-
-#~ msgid "Net weight"
-#~ msgstr "순 중량"
-
-#~ msgid "Onsite Senior Intervention"
-#~ msgstr "Onsite Senior Intervention"
-
-#~ msgid ""
-#~ "Determine if the product is visible in the list of products within a "
-#~ "selection from a purchase order line."
-#~ msgstr "상품이 구매 주문 라인으로부터의 선택물 내 상품 리스트에서 보여지는 지 여부를 결정합니다."
-
-#~ msgid "DDR 512MB PC400"
-#~ msgstr "DDR 512MB PC400"
-
-#~ msgid ""
-#~ "Futur stock for this product according to the selected location or all "
-#~ "internal if none have been selected. Computed as: Real Stock - Outgoing + "
-#~ "Incoming."
-#~ msgstr ""
-#~ "선택된 지역 또는, 아무것도 선택되지 않은 경우에는, 모든 내부 위치에 따른 이 상품의 미래 스톡. 계산 방식: 실제 스톡 - 내보내기 "
-#~ "+ 들여오기"
-
-#~ msgid ""
-#~ "Set a template if this rule only apply to a template of product. Keep empty "
-#~ "for all products"
-#~ msgstr "이 규칙이 상품 템플릿에만 적용될 경우에 템플릿을 설정. 모든 제품의 경우는 비워 두십시오."
-
-#~ msgid ""
-#~ "Quantities of products that are planned to arrive in selected locations or "
-#~ "all internal if none have been selected."
-#~ msgstr "선택된 지역 또는, 아무것도 선택되지 않은 경우에는, 모든 내부 위치에 도착하기로 예정된 상품 수량"
-
-#~ msgid "Product Process"
-#~ msgstr "상품 프로세스"
-
-#~ msgid "Procure Method"
-#~ msgstr "조달 방법"
-
-#~ msgid "Prices Types"
-#~ msgstr "가격 유형"
-
-#~ msgid "List Price"
-#~ msgstr "리스트 가격"
-
-#~ msgid "Customer Price"
-#~ msgstr "고객 가격"
-
-#~ msgid "Produce"
-#~ msgstr "생산"
-
-#~ msgid "Kit Keyboard + Mouse"
-#~ msgstr "키트 키보드 + 마우스"
-
-#~ msgid "Sellable"
-#~ msgstr "판매 가능"
-
-#~ msgid "Processor AMD Athlon XP 2200+"
-#~ msgstr "Processor AMD Athlon XP 2200+"
-
-#~ msgid ""
-#~ "Base price for computing the customer price. Sometimes called the catalog "
-#~ "price."
-#~ msgstr "고객 가격 계산을 위한 베이스 가격. 흔히 카타로그 가격이라 불립니다."
-
-#~ msgid "Make to Stock"
-#~ msgstr "재고 생산"
-
-#~ msgid "The number of layer on a palet or box"
-#~ msgstr "파레트 또는 박스 상의 레이어 숫자"
-
-#~ msgid ""
-#~ "Produce will generate production order or tasks, according to the product "
-#~ "type. Purchase will trigger purchase orders when requested."
-#~ msgstr "생산 명령은 상품 유형에 따라, 생산 주문 또는 과제를 생성합니다. 구매는 요청될 때 구매 주문을 트리거합니다."
-
-#~ msgid "If Other Pricelist"
-#~ msgstr "만약 다른 가격리스트"
-
-#~ msgid "Silent fan"
-#~ msgstr "Silent fan"
-
-#~ msgid "Units of Measure Categories"
-#~ msgstr "측정 단위 카테고리"
-
-#~ msgid "Prices Computations"
-#~ msgstr "가격 계산"
-
-#~ msgid "Virtual Stock"
-#~ msgstr "가상 스톡"
-
-#~ msgid "Configuration"
-#~ msgstr "구성"
-
-#~ msgid "Error ! You can not create recursive categories."
-#~ msgstr "에러! 재귀적 카테고리는 생성할 수 없습니다."
-
-#~ msgid "Customer Lead Time"
-#~ msgstr "고객 리드타임"
-
-#~ msgid "Number of Layer"
-#~ msgstr "레이어 숫자"
-
-#~ msgid "Default UoM"
-#~ msgstr "디폴트 UoM"
-
-#~ msgid "Keyboard"
-#~ msgstr "키보드"
-
-#~ msgid ""
-#~ "Standard Price: the cost price is fixed and recomputed periodically (usually "
-#~ "at the end of the year), Average Price: the cost price is recomputed at each "
-#~ "reception of products."
-#~ msgstr ""
-#~ "표준 가격: 원가 가격은 고정되어 있으며, 주기적으로 재 계산됩니다 (보통 연말). 평균 가격: 원가 가격이 상품 수령 때 마다 재 "
-#~ "계산됩니다."
-
-#~ msgid "Create new Product"
-#~ msgstr "새 상품 만들기"
-
-#~ msgid "Mouse"
-#~ msgstr "마우스"
-
-#~ msgid ""
-#~ "Set a product if this rule only apply to one product. Keep empty for all "
-#~ "products"
-#~ msgstr "이 규칙이 하나의 상품에만 적용될 경우에 상품을 설정. 모든 상품의 경우는 비워 두세요."
-
-#~ msgid "In Production"
-#~ msgstr "생산 중"
-
-#~ msgid "Priority"
-#~ msgstr "우선순위"
-
-#~ msgid "Factor"
-#~ msgstr "팩터"
-
-#~ msgid "HDD on demand"
-#~ msgstr "HDD on demand"
-
-#~ msgid "Processor AMD Athlon XP 1800+"
-#~ msgstr "Processor AMD Athlon XP 1800+"
-
-#~ msgid "UOM"
-#~ msgstr "UOM"
-
-#~ msgid "Miscelleanous"
-#~ msgstr "돌발 상황"
-
-#~ msgid "PCE"
-#~ msgstr "PCE"
-
-#~ msgid "Partner Product Name"
-#~ msgstr "파트너 상품 이름"
-
-#~ msgid "PC"
-#~ msgstr "PC"
-
-#~ msgid ""
-#~ "This pricelist will be used, instead of the default one,                     "
-#~ "for sales to the current partner"
-#~ msgstr "이 가격리스트는 현재 파트너에 대한 판매에서 디폴트 값 대신에 사용됩니다."
-
-#~ msgid "Rules Test Match"
-#~ msgstr "규칙 테스트 일치"
-
-#~ msgid "Error: UOS must be in a different category than the UOM"
-#~ msgstr "에러: UOS는 UOM과 다른 카테고리에 있어야 합니다."
-
-#~ msgid ""
-#~ "Determine if the product can be visible in the list of product within a "
-#~ "selection from a sale order line."
-#~ msgstr "해당 상품을 판매 주문 라인으로부터 선택 내에 있는 상품 리스트 속에서 볼 수 있는 지 여부를 결정."
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "유효하지 않은 뷰 아키텍처의 XML"
-
-#~ msgid ""
-#~ "Quantities of products that are planned to leave in selected locations or "
-#~ "all internal if none have been selected."
-#~ msgstr "선택된 위치, 또는 특정한 선택이 없는 경우에는 모든 내부 위치에서 배송될 상폼 수량"
-
-#~ msgid "Rack"
-#~ msgstr "랙"
-
-#~ msgid "UoM Category"
-#~ msgstr "UoM 카테고리"
-
-#~ msgid "HDD Seagate 7200.8 160GB"
-#~ msgstr "HDD Seagate 7200.8 160GB"
-
-#~ msgid "HDD Seagate 7200.8 80GB"
-#~ msgstr "HDD Seagate 7200.8 80GB"
-
-#~ msgid "Processor on demand"
-#~ msgstr "Processor on demand"
-
-#~ msgid "Supply method"
-#~ msgstr "공급 방법"
-
-#~ msgid "EAN13"
-#~ msgstr "EAN13"
-
-#~ msgid "IT components kits"
-#~ msgstr "IT 컴포넌트 키트"
-
-#~ msgid ""
-#~ "Name of the product for this partner, will be used when printing a request "
-#~ "for quotation. Keep empty to use the internal one."
-#~ msgstr "이 파트너의 상품 이름으로 견적 요청을 인쇄할 때 이용됩니다. 내부 용도로 사용될 경우에는 비워 두십시오."
-
-#~ msgid ""
-#~ "Current quantities of products in selected locations or all internal if none "
-#~ "have been selected."
-#~ msgstr "선택된 위치 또는 특정한 선택이 없을 경우 모든 내부 위치에 있는 현재 상품 수량"
-
-#~ msgid "Sales Properties"
-#~ msgstr "판매 속성"
-
-#~ msgid "Basic PC"
-#~ msgstr "기본 PC"
-
-#~ msgid "Regular processor config"
-#~ msgstr "Regular processor config"
-
-#~ msgid "Mainboard ASUStek A7V8X-X"
-#~ msgstr "메인보드 ASUStek A7V8X-X"
-
-#~ msgid "Complete PC With Peripherals"
-#~ msgstr "주변기기를 갖춘 완전한 PC 세트"
-
-#~ msgid "Can be sold"
-#~ msgstr "판매 가능"
-
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr "에러: 디폴트 UOM과 구매 UOM은 동일한 카테고리 속에 있어야 합니다."
-
-#~ msgid "Real Stock"
-#~ msgstr "실제 스톡"
-
-#~ msgid "DDR 256MB PC400"
-#~ msgstr "DDR 256MB PC400"
-
-#~ msgid "Row"
-#~ msgstr "열"
-
-#~ msgid ""
-#~ "Used by companies that manages two unit of measure: invoicing and stock "
-#~ "management. For example, in food industries, you will manage a stock of ham "
-#~ "but invoice in Kg. Keep empty to use the default UOM."
-#~ msgstr ""
-#~ "두 UoM을 관리하는 조직들에 의해 사용됩니다: 인보이스와 스톡 관리. 가령, 식품산업에서, 김치를 포기로 관리하지만, kg 단위로 "
-#~ "판매하는 경우 등입니다. 디폴트 UOM을 사용하려면 비워 두십시오."
-
-#~ msgid "Rate"
-#~ msgstr "요율"
-
-#~ msgid "IT components"
-#~ msgstr "IT 컴포넌트"
-
-#~ msgid "The weight of the empty UL"
-#~ msgstr "빈 UL 중량"
-
-#~ msgid "Weigths"
-#~ msgstr "중량"
-
-#~ msgid "Buy"
-#~ msgstr "구매"
-
-#~ msgid "Purchase UoM"
-#~ msgstr "구매 UoM"
-
-#~ msgid "Price list"
-#~ msgstr "가격 리스트"
-
-#~ msgid "Regular case fan 80mm"
-#~ msgstr "일반 케이스 팬 80mm"
-
-#~ msgid "Medium PC"
-#~ msgstr "중간급 PC"
-
-#~ msgid "Gross weight"
-#~ msgstr "총중량"
-
-#~ msgid "Second UoM"
-#~ msgstr "두번 째 UoM"
-
-#~ msgid "Dello Computer"
-#~ msgstr "링크 컴퓨터"
-
-#~ msgid ""
-#~ "Gives the different ways to package the same product. This has no impact on "
-#~ "the packing order and is mainly used if you use the EDI module."
-#~ msgstr "동일한 상품을 포장하는 상이한 방식. 포장 주문에는 영향이 없으며, EDI 모듈을 이용할 경우에 주로 사용됩니다."
-
-#~ msgid "Storage Localisation"
-#~ msgstr "저장 현지화"
-
-#~ msgid "Seq"
-#~ msgstr "시퀀스"
-
-#~ msgid "Pricelists Types"
-#~ msgstr "가격리스트 유형"
-
-#~ msgid "Tells the user if he can use the product or not."
-#~ msgstr "상품을 사용할 수 있는 지 여부를 사용자에게 알려줍니다."
-
-#~ msgid "Phone Help"
-#~ msgstr "전화 도움"
-
-#~ msgid "Computer Stuff"
-#~ msgstr "컴퓨터"
-
-#~ msgid "Partner Product Code"
-#~ msgstr "파트너 상품 코드"
-
-#~ msgid "Customizable PC"
-#~ msgstr "주문제작 PC"
-
-#~ msgid "Onsite Intervention"
-#~ msgstr "현장 개입"
-
-#~ msgid "HDD Seagate 7200.8 120GB"
-#~ msgstr "HDD Seagate 7200.8 120GB"
-
-#~ msgid "The total number of products you can put by palet or box."
-#~ msgstr "파레트 또는 박스로 적재된 총 상품 수량"
-
-#~ msgid "RAM on demand"
-#~ msgstr "RAM 선택"
-
-#~ msgid ""
-#~ "Code of the product for this partner, will be used when printing a request "
-#~ "for quotation. Keep empty to use the internal one."
-#~ msgstr "이 파트너의 상품 코드로 견정 요청을 인쇄할 때 사용됩니다. 내부 용도의 경우 비워 두십시오."
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr "오브젝트 이름은 x_로 시작해야 하며, 특수 문자를 포함하면 안됩니다 !"
-
-#~ msgid "Warranty (months)"
-#~ msgstr "보증 (월)"
-
-#~ msgid "Product Description"
-#~ msgstr "상품 설명"
-
-#~ msgid "Price type"
-#~ msgstr "가격 유형"
-
-#~ msgid "Supplier Info"
-#~ msgstr "공급자 정보"
-
-#~ msgid "Product suppliers, with their product name, price, etc."
-#~ msgstr "공급자 이름, 상품 이름, 가격 등"
-
-#~ msgid "Make to Order"
-#~ msgstr "주문 생산"
-
-#~ msgid "Mainboard ASUStek A7N8X"
-#~ msgstr "메인보드 ASUStek A7N8X"
-
-#~ msgid ""
-#~ "Coefficient to convert UOM to UOS\n"
-#~ " uom = uos * coeff"
-#~ msgstr ""
-#~ "UOM을 UOS로 변환할 상관계수\n"
-#~ "uom = uos * coeff"
-
-#~ msgid "Can be Purchased"
-#~ msgstr "구매 가능"
-
-#~ msgid "Products Categories"
-#~ msgstr "상품 카테고리"
-
-#~ msgid "Case"
-#~ msgstr "케이스"
-
-#~ msgid "Basic+ PC (assembly on order)"
-#~ msgstr "기본 + PC (주문 조립)"
-
-#~ msgid "The weight of a full of products palet or box."
-#~ msgstr "상품 파레트 또는 박스의 총중량"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "경고 !"
-
-#~ msgid "UOM -> UOS Coeff"
-#~ msgstr "UOM -> UOS Coeff"
-
-#~ msgid "High speed processor config"
-#~ msgstr "고속 프로세서 구성"
-
-#~ msgid "Prices & Suppliers"
-#~ msgstr "가격 & 공급자"
-
-#~ msgid "ATX Mid-size Tower"
-#~ msgstr "ATX Mid-size Tower"
-
-#~ msgid "Delivery Delay"
-#~ msgstr "배송 지연"
-
-#~ msgid ""
-#~ "Average time to produce this product. This is only for the production order "
-#~ "and, if it is a multi-level bill of material, it's only for the level of "
-#~ "this product. Different delays will be summed for all levels and purchase "
-#~ "orders."
-#~ msgstr ""
-#~ "이 상품의 평균 생산 시간. 생산 주만에만 해당되거나, 다중 레벨 BoM의 경우, 이 상품의 레벨에만 적용됩니다. 상이한 지연들이 모든 "
-#~ "레벨과 구매 주문을 위해 합계됩니다."
-
-#~ msgid ""
-#~ "Set a category of product if this rule only apply to products of a category "
-#~ "and his childs. Keep empty for all products"
-#~ msgstr ""
-#~ "이 규칙이 어느 한 카테고리와 그 차일드 카테고리들의 상품에만 적용될 경우, 상품 카테고리를 설정합니다. 모든 상품의 경우는 비워 "
-#~ "두십시오."
-
-#~ msgid ""
-#~ "Delay in days between the confirmation of the purchase order and the "
-#~ "reception of the products in your warehouse. Used by the scheduler for "
-#~ "automatic computation of the purchase order planning."
-#~ msgstr "구매 주문의 확정과 창고내 제품 입고 간의 지연 일수. 스케줄러가 구매 주문 계획에 이용합니다."
-
-#~ msgid ""
-#~ "Default Unit of Measure used for purchase orders. It must in the same "
-#~ "category than the default unit of measure."
-#~ msgstr "구매 주문에 사용되는 디폴트 UoM. 디폴트 UoM과 동일한 카테고리 속에 있어야 합니다."
-
-#~ msgid "Private"
-#~ msgstr "사적"
-
-#~ msgid "KGM"
-#~ msgstr "KGM"

@@ -1,20 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* account_analytic_plans
+# French translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-05 09:24+0000\n"
-"Last-Translator: WANTELLET Sylvain <Swantellet@tetra-info.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-06 04:40+0000\n"
-"X-Generator: Launchpad (build 16341)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:03+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account4_ids:0
@@ -133,7 +134,7 @@ msgstr "Ne pas afficher les lignes vides"
 #: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:61
 #, python-format
 msgid "There are no analytic lines related to account %s."
-msgstr ""
+msgstr "Il n'y a pas de lignes analytiques relatives au compte %s."
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account3_ids:0
@@ -349,7 +350,7 @@ msgstr "Journal"
 #: code:addons/account_analytic_plans/account_analytic_plans.py:486
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal."
-msgstr ""
+msgstr "Vous devez définir un journal analytique pour le journal '%s'."
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:342
@@ -451,306 +452,3 @@ msgstr "Ligne de bon de commande"
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "From Date"
 msgstr "Depuis la date"
-
-#~ msgid "Currency:"
-#~ msgstr "Devise"
-
-#~ msgid "Select Information"
-#~ msgstr "Sélectionner l'information"
-
-#~ msgid "Analytic Account Ref."
-#~ msgstr "Réf. du Compte Analytique"
-
-#~ msgid "Create Model"
-#~ msgstr "Créer un modèle"
-
-#~ msgid "to"
-#~ msgstr "à"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "XML non valide pour l'architecture de la vue"
-
-#~ msgid "OK"
-#~ msgstr "Ok"
-
-#~ msgid "Period from"
-#~ msgstr "Période du"
-
-#~ msgid "Printing date:"
-#~ msgstr "Date d'impression :"
-
-#~ msgid "Analytic Distribution's models"
-#~ msgstr "Modèles de la Distribution Analytique"
-
-#~ msgid ""
-#~ "This distribution model has been saved. You will be able to reuse it later."
-#~ msgstr ""
-#~ "Ce modèle de distribution a été sauvegardé. Vous pourrez le réutiliser plus "
-#~ "tard."
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nom du Modèle non valide dans la définition de l'action."
-
-#, python-format
-#~ msgid "The Total Should be Between %s and %s"
-#~ msgstr "Le total doit se situer entre %s et %s"
-
-#, python-format
-#~ msgid "Error"
-#~ msgstr "Erreur"
-
-#~ msgid ""
-#~ "This module allows to use several analytic plans, according to the general "
-#~ "journal,\n"
-#~ "so that multiple analytic lines are created when the invoice or the entries\n"
-#~ "are confirmed.\n"
-#~ "\n"
-#~ "For example, you can define the following analytic structure:\n"
-#~ "  Projects\n"
-#~ "      Project 1\n"
-#~ "          SubProj 1.1\n"
-#~ "          SubProj 1.2\n"
-#~ "      Project 2\n"
-#~ "  Salesman\n"
-#~ "      Eric\n"
-#~ "      Fabien\n"
-#~ "\n"
-#~ "Here, we have two plans: Projects and Salesman. An invoice line must\n"
-#~ "be able to write analytic entries in the 2 plans: SubProj 1.1 and\n"
-#~ "Fabien. The amount can also be split. The following example is for\n"
-#~ "an invoice that touches the two subproject and assigned to one salesman:\n"
-#~ "\n"
-#~ "Plan1:\n"
-#~ "    SubProject 1.1 : 50%\n"
-#~ "    SubProject 1.2 : 50%\n"
-#~ "Plan2:\n"
-#~ "    Eric: 100%\n"
-#~ "\n"
-#~ "So when this line of invoice will be confirmed, it will generate 3 analytic "
-#~ "lines,\n"
-#~ "for one account entry.\n"
-#~ "        "
-#~ msgstr ""
-#~ "Ce module permet d'utiliser plusieurs plans analytiques, d'après le journal "
-#~ "général,\n"
-#~ "de sorte que plusieurs lignes analytiques soient créées lorsque la facture "
-#~ "ou les entrées\n"
-#~ "sont confirmées.\n"
-#~ "\n"
-#~ "Par exemple, vous pouvez définir la structure analytique suivante:\n"
-#~ "\n"
-#~ "  Projets\n"
-#~ "      Projet 1\n"
-#~ "          Sous-Projet 1.1\n"
-#~ "          Sous-Projet 1.2\n"
-#~ "      Projet 2\n"
-#~ "  Vendeurs\n"
-#~ "      Eric\n"
-#~ "      Fabien\n"
-#~ "\n"
-#~ "Ici, nous avons deux plans: Projets et Vendeurs. Une ligne de facture doit\n"
-#~ "être capable d'écrire des entrées analytiques dans les 2 plans: Sous-Projet "
-#~ "1.1 et\n"
-#~ "Fabien. Le montant peut, également, être séparé. L'exemple suivant est pour "
-#~ "une\n"
-#~ "facture qui touche les deux sous-projets et assignée à un vendeur:\n"
-#~ "\n"
-#~ "Plan1:\n"
-#~ "    Sous-Projet 1.1 : 50%\n"
-#~ "    Sous-Projet 1.2 : 50%\n"
-#~ "Plan2:\n"
-#~ "    Eric: 100%\n"
-#~ "\n"
-#~ "Ainsi, lorsque cette ligne sera confirmée, elle générera 3 lignes "
-#~ "analytiques\n"
-#~ "pour une entrée de compte.\n"
-#~ "        "
-
-#~ msgid "Multiple-plans management in Analytic Accounting"
-#~ msgstr "Gestion de plans multiples dans la comptabilité analytique"
-
-#, python-format
-#~ msgid "You have to define an analytic journal on the '%s' journal!"
-#~ msgstr "Vous devez définir un journal analytique sur le journal '%s' !"
-
-#, python-format
-#~ msgid "A model having this name and code already exists !"
-#~ msgstr "Un modèle avec ce nom et ce code existe déjà !"
-
-#, python-format
-#~ msgid "No analytic plan defined !"
-#~ msgstr "Aucun plan analytique défini !"
-
-#, python-format
-#~ msgid "User Error"
-#~ msgstr "Erreur utilisateur"
-
-#, python-format
-#~ msgid "Please put a name and a code before saving the model !"
-#~ msgstr "Veuillez inscrire un nom et un code avant de sauvegarder le modèle !"
-
-#, python-format
-#~ msgid "Value Error"
-#~ msgstr "Erreur de valeur"
-
-#~ msgid "The name of the journal must be unique per company !"
-#~ msgstr "Le nom du journal doit être unique dans chaque société !"
-
-#~ msgid "You can not create move line on closed account."
-#~ msgstr "Impossible de créer une ligne de transfert sur un compte clos"
-
-#~ msgid "Wrong credit or debit value in accounting entry !"
-#~ msgstr "Valeur erronée au crédit ou au débit de l'écriture comptable !"
-
-#~ msgid "The code of the journal must be unique per company !"
-#~ msgstr "Le code du journal doit être unique dans chaque société !"
-
-#~ msgid "Company must be same for its related account and period."
-#~ msgstr "La société doit être la même pour les comptes et périodes liées."
-
-#~ msgid "You can not create move line on view account."
-#~ msgstr ""
-#~ "Vous ne pouvez pas créer de ligne d'écriture sur un compte de type \"Vue\"."
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Le nom de l'objet doit commencer avec x_ et ne doit pas contenir de "
-#~ "caractère spécial !"
-
-#~ msgid "%"
-#~ msgstr "%"
-
-#~ msgid ""
-#~ "This module allows to use several analytic plans, according to the general "
-#~ "journal,\n"
-#~ "so that multiple analytic lines are created when the invoice or the entries\n"
-#~ "are confirmed.\n"
-#~ "\n"
-#~ "For example, you can define the following analytic structure:\n"
-#~ "  Projects\n"
-#~ "      Project 1\n"
-#~ "          SubProj 1.1\n"
-#~ "          SubProj 1.2\n"
-#~ "      Project 2\n"
-#~ "  Salesman\n"
-#~ "      Eric\n"
-#~ "      Fabien\n"
-#~ "\n"
-#~ "Here, we have two plans: Projects and Salesman. An invoice line must\n"
-#~ "be able to write analytic entries in the 2 plans: SubProj 1.1 and\n"
-#~ "Fabien. The amount can also be split. The following example is for\n"
-#~ "an invoice that touches the two subproject and assigned to one salesman:\n"
-#~ "\n"
-#~ "Plan1:\n"
-#~ "    SubProject 1.1 : 50%\n"
-#~ "    SubProject 1.2 : 50%\n"
-#~ "Plan2:\n"
-#~ "    Eric: 100%\n"
-#~ "\n"
-#~ "So when this line of invoice will be confirmed, it will generate 3 analytic "
-#~ "lines,\n"
-#~ "for one account entry.\n"
-#~ "The analytic plan validates the minimum and maximum percentage at the time "
-#~ "of creation\n"
-#~ "of distribution models.\n"
-#~ "        "
-#~ msgstr ""
-#~ "Ce module permet d'utiliser plusieurs plans analytiques, en fonction du "
-#~ "journal général,\n"
-#~ "de telle sorte que plusieurs lignes analytiques soient créées lorsque la "
-#~ "facturation ou la réception\n"
-#~ "sont confirmées.\n"
-#~ "\n"
-#~ "Par exemple, vous pouvez définir la structure analytique suivante:\n"
-#~ "  Projets\n"
-#~ "       Projet 1\n"
-#~ "            Sous-projet 1.1\n"
-#~ "            Sous-projet 1.2\n"
-#~ "       Projet 2\n"
-#~ "  Représentant commercial\n"
-#~ "       Eric\n"
-#~ "       Fabien\n"
-#~ "\n"
-#~ "Ici, nous avons deux plans : par projet / par commercial. Une ligne de "
-#~ "facturation doit\n"
-#~ "pouvoir écrire une entrée analytique dans chaque plan : Sous-projet 1.1 et "
-#~ "Fabien. \n"
-#~ "Le montant peut aussi être divisé. L'exemple suivant est pour une facture "
-#~ "qui concerne\n"
-#~ "les deux sous-projets et affectée à un représentant commercial :\n"
-#~ "\n"
-#~ "Plan1:\n"
-#~ "    Sous-projet 1.1 : 50%\n"
-#~ "    Sous-projet 1.2 : 50%\n"
-#~ "Plan 2:\n"
-#~ "    Eric : 100%\n"
-#~ "\n"
-#~ "Dans ce cas, quand la ligne de facturation sera confirmée, elle générera\n"
-#~ "3 lignes analytiques pour une seule pièce comptable.\n"
-#~ "Le plan analytique valide le pourcentage minimum et maximum au moment de \n"
-#~ "la création des modèles de distribution.\n"
-#~ "        "
-
-#~ msgid "Define your Analytic Plans"
-#~ msgstr "Définissez votre plan analytique"
-
-#~ msgid "Invoice Number must be unique per Company!"
-#~ msgstr "Le numéro de facture doit être unique par société !"
-
-#~ msgid ""
-#~ "Configuration error! The currency chosen should be shared by the default "
-#~ "accounts too."
-#~ msgstr ""
-#~ "Problème de configuration ! la devise choisie devrait être aussi celle des "
-#~ "comptes par défaut."
-
-#~ msgid "The journal and period chosen have to belong to the same company."
-#~ msgstr "Le journal et la période doivent appartenir à la même société."
-
-#~ msgid "Invalid BBA Structured Communication !"
-#~ msgstr "Structure de communication BBA incorrecte !"
-
-#~ msgid ""
-#~ "The amount of the voucher must be the same amount as the one on the "
-#~ "statement line"
-#~ msgstr ""
-#~ "Le montant du justificatif doit être égal à celui de la ligne le concernant "
-#~ "sur le relevé"
-
-#~ msgid ""
-#~ "The selected account of your Journal Entry forces to provide a secondary "
-#~ "currency. You should remove the secondary currency on the account or select "
-#~ "a multi-currency view on the journal."
-#~ msgstr ""
-#~ "Le compte sélectionné dans votre ligne d'écriture requiert une deuxième "
-#~ "devise. Vous devez soit supprimer la deuxième devise sur le compte, soit "
-#~ "sélectionner une vue multi-devise sur le journal."
-
-#~ msgid "You can not create journal items on an account of type view."
-#~ msgstr "Vous ne pouvez pas passer d'écriture sur un compte de type 'vue'"
-
-#~ msgid "Company must be the same for its related account and period."
-#~ msgstr "La société doit être la même pour son compte et la période liée."
-
-#~ msgid "You can not create analytic line on view account."
-#~ msgstr "Vous ne pouvez pas créer des lignes analytiques sur des comptes vues"
-
-#~ msgid "You can not create journal items on closed account."
-#~ msgstr "Vous ne pouvez pas passer d'écritures sur un compte clôturé."
-
-#~ msgid ""
-#~ "To setup a multiple analytic plans environment, you must define the root "
-#~ "analytic accounts for each plan set. Then, you must attach a plan set to "
-#~ "your account journals."
-#~ msgstr ""
-#~ "Pour configurer un environnement de plusieurs plans analytiques, vous devez "
-#~ "définir le compte analytique racine pour chaque ensemble de plans. Ensuite, "
-#~ "vous devez joindre un ensemble plan à vos journaux."
-
-#~ msgid ""
-#~ "The date of your Journal Entry is not in the defined period! You should "
-#~ "change the date or remove this constraint from the journal."
-#~ msgstr ""
-#~ "La date de votre écriture ne correspond pas à la période définie! Vous devez "
-#~ "modifier la date ou supprimer la contrainte de date du journal."

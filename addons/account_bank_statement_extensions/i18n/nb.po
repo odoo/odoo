@@ -7,20 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-11 14:34+0000\n"
-"Last-Translator: Kaare Pettersen <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-12 04:41+0000\n"
-"X-Generator: Launchpad (build 16361)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:03+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: account_bank_statement_extensions
-#: view:account.bank.statement.line:0
-msgid "Search Bank Transactions"
-msgstr "Søk Bank Transaksjon"
+#: help:account.bank.statement.line.global,name:0
+msgid "Originator to Beneficiary Information"
+msgstr ""
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -204,6 +204,11 @@ msgid "Name"
 msgstr "Navn"
 
 #. module: account_bank_statement_extensions
+#: field:account.bank.statement.line.global,name:0
+msgid "OBI"
+msgstr ""
+
+#. module: account_bank_statement_extensions
 #: selection:account.bank.statement.line.global,type:0
 msgid "ISO 20022"
 msgstr "ISO 20022"
@@ -254,6 +259,11 @@ msgid "Child Codes"
 msgstr "Underordnet kode"
 
 #. module: account_bank_statement_extensions
+#: view:account.bank.statement.line:0
+msgid "Search Bank Transactions"
+msgstr "Søk Bank Transaksjon"
+
+#. module: account_bank_statement_extensions
 #: view:confirm.statement.line:0
 msgid "Are you sure you want to confirm the selected Bank Statement lines ?"
 msgstr "Er du sikker på at du vil bekrefte de valgte kontoutskrift linjer?"
@@ -291,11 +301,6 @@ msgstr "Kode"
 #: field:account.bank.statement.line,counterparty_name:0
 msgid "Counterparty Name"
 msgstr "Motpartens navn"
-
-#. module: account_bank_statement_extensions
-#: field:account.bank.statement.line.global,name:0
-msgid "Communication"
-msgstr "Kommunikasjon"
 
 #. module: account_bank_statement_extensions
 #: model:ir.model,name:account_bank_statement_extensions.model_res_partner_bank
@@ -354,45 +359,3 @@ msgstr "Totalt beløp"
 #: field:account.bank.statement.line,globalisation_id:0
 msgid "Globalisation ID"
 msgstr "Globalisering ID"
-
-#~ msgid "The RIB and/or IBAN is not valid"
-#~ msgstr "RIB og / eller IBAN er ikke gyldig"
-
-#~ msgid "State"
-#~ msgstr "Stat"
-
-#, python-format
-#~ msgid ""
-#~ "Delete operation not allowed !             Please go to the associated bank "
-#~ "statement in order to delete and/or modify this bank statement line"
-#~ msgstr ""
-#~ "Slett operasjonen ikke tillatt! Vennligst gå til den tilknyttede "
-#~ "kontoutskrift for å slette og / eller endre denne kontoutskrift linjen."
-
-#, python-format
-#~ msgid "Warning"
-#~ msgstr "Advarsel"
-
-#~ msgid "Valuta Date"
-#~ msgstr "Valuta dato"
-
-#~ msgid "Confirm selected statement lines."
-#~ msgstr "Bekreft utvalgte uttalelse linjer"
-
-#~ msgid ""
-#~ "\n"
-#~ "Please define BIC/Swift code on bank for bank type IBAN Account to make "
-#~ "valid payments"
-#~ msgstr ""
-#~ "\n"
-#~ "Vennligst definere BIC / Swift-kode på bank for bank typen IBAN-konto for å "
-#~ "fatte gyldige betalinger"
-
-#~ msgid "The journal and period chosen have to belong to the same company."
-#~ msgstr "Tidsskriftet og perioden valgt å tilhøre samme selskap."
-
-#~ msgid ""
-#~ "The amount of the voucher must be the same amount as the one on the "
-#~ "statement line"
-#~ msgstr ""
-#~ "Mengden av bilaget må være det samme beløp som den på setningen linje"

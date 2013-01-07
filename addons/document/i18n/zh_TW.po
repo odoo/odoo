@@ -1,20 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* document
+# Chinese (Traditional) translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-08-30 11:51+0000\n"
-"Last-Translator: Bonnie Duan <bonnie.duan@cenoq.com>\n"
-"Language-Team: Cenoq Corp.\n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:17+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:12+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -22,25 +23,10 @@ msgid "Parent Directory"
 msgstr "上層目錄"
 
 #. module: document
-#: code:addons/document/document_directory.py:273
+#: code:addons/document/document.py:336
 #, python-format
 msgid "Directory name contains special characters!"
 msgstr "目錄名稱有特殊字元！"
-
-#. module: document
-#: view:board.board:0
-msgid "Document board"
-msgstr "文件佈告欄"
-
-#. module: document
-#: model:ir.model,name:document.model_process_node
-msgid "Process Node"
-msgstr "處理節點"
-
-#. module: document
-#: sql_constraint:document.directory:0
-msgid "Directory must have a parent or a storage."
-msgstr ""
 
 #. module: document
 #: view:document.directory:0
@@ -56,14 +42,13 @@ msgstr "用作資源目錄名稱之欄位。如留空，會用該「名稱」。
 
 #. module: document
 #: view:document.directory:0
-#: view:document.storage:0
 msgid "Group By..."
 msgstr "分類方式..."
 
 #. module: document
-#: model:ir.model,name:document.model_document_directory_content_type
-msgid "Directory Content Type"
-msgstr "目錄內容類型"
+#: view:ir.attachment:0
+msgid "Modification"
+msgstr ""
 
 #. module: document
 #: view:document.directory:0
@@ -103,9 +88,9 @@ msgid "Directory Content"
 msgstr "目錄內容"
 
 #. module: document
-#: view:document.directory:0
-msgid "Dynamic context"
-msgstr "動態背景"
+#: view:ir.attachment:0
+msgid "My Document(s)"
+msgstr ""
 
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document_management_configuration
@@ -124,13 +109,13 @@ msgstr ""
 "to the current record, in dynamic folders"
 
 #. module: document
-#: field:document.storage,path:0
-msgid "Path"
-msgstr "路徑"
+#: help:document.directory.dctx,field:0
+msgid "The name of the field."
+msgstr ""
 
 #. module: document
-#: code:addons/document/document_directory.py:263
-#: code:addons/document/document_directory.py:268
+#: code:addons/document/document.py:326
+#: code:addons/document/document.py:331
 #, python-format
 msgid "Directory name must be unique!"
 msgstr "目錄名不能重覆！"
@@ -155,7 +140,6 @@ msgstr "如果正確，所有符合資源的附件會被發現。如果錯誤，
 
 #. module: document
 #: view:document.directory:0
-#: field:document.storage,dir_ids:0
 #: model:ir.actions.act_window,name:document.action_document_directory_form
 #: model:ir.ui.menu,name:document.menu_document_directories
 msgid "Directories"
@@ -165,13 +149,6 @@ msgstr "目錄"
 #: model:ir.model,name:document.model_report_document_user
 msgid "Files details by Users"
 msgstr "各使用者檔案詳情"
-
-#. module: document
-#: code:addons/document/document_storage.py:569
-#: code:addons/document/document_storage.py:597
-#, python-format
-msgid "Error!"
-msgstr "錯誤！"
 
 #. module: document
 #: field:document.directory,resource_find_all:0
@@ -224,14 +201,9 @@ msgid ""
 msgstr ""
 
 #. module: document
-#: field:process.node,directory_id:0
-msgid "Document directory"
-msgstr "文件目錄"
-
-#. module: document
-#: code:addons/document/document_directory.py:263
-#: code:addons/document/document_directory.py:268
-#: code:addons/document/document_directory.py:273
+#: code:addons/document/document.py:326
+#: code:addons/document/document.py:331
+#: code:addons/document/document.py:336
 #, python-format
 msgid "ValidateError"
 msgstr "檢驗錯誤"
@@ -249,18 +221,11 @@ msgid "Documents"
 msgstr "文件"
 
 #. module: document
-#: view:document.directory:0
-#: field:document.directory,storage_id:0
-msgid "Storage"
-msgstr "存儲器"
-
-#. module: document
 #: field:document.directory,ressource_type_id:0
 msgid "Resource model"
 msgstr "資源模型"
 
 #. module: document
-#: field:ir.attachment,file_size:0
 #: field:report.document.file,file_size:0
 #: field:report.document.user,file_size:0
 msgid "File Size"
@@ -273,21 +238,19 @@ msgid "Content Type"
 msgstr "內容類型"
 
 #. module: document
-#: view:ir.attachment:0
-msgid "Modification"
-msgstr ""
-
-#. module: document
 #: view:document.directory:0
 #: field:document.directory,type:0
-#: view:document.storage:0
-#: field:document.storage,type:0
 msgid "Type"
 msgstr "類型"
 
 #. module: document
-#: code:addons/document/document.py:194
-#: code:addons/document/document_directory.py:234
+#: sql_constraint:ir.attachment:0
+msgid "The filename must be unique in a directory !"
+msgstr ""
+
+#. module: document
+#: code:addons/document/document.py:110
+#: code:addons/document/document.py:296
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -321,11 +284,6 @@ msgid "Context fields"
 msgstr "內文欄位"
 
 #. module: document
-#: field:ir.attachment,store_fname:0
-msgid "Stored Filename"
-msgstr "儲存名稱"
-
-#. module: document
 #: view:document.directory:0
 #: field:report.document.user,type:0
 msgid "Directory Type"
@@ -352,7 +310,7 @@ msgid "Virtual Files"
 msgstr "虛擬檔案"
 
 #. module: document
-#: code:addons/document/document_storage.py:635
+#: code:addons/document/document.py:562
 #, python-format
 msgid "Error at doc write!"
 msgstr "文件書寫錯誤!"
@@ -387,7 +345,6 @@ msgstr "安全"
 
 #. module: document
 #: field:document.directory,write_uid:0
-#: field:document.storage,write_uid:0
 #: field:ir.attachment,write_uid:0
 msgid "Last Modification User"
 msgstr "最後修改使用者"
@@ -410,7 +367,6 @@ msgstr "領域"
 
 #. module: document
 #: field:document.directory,write_date:0
-#: field:document.storage,write_date:0
 #: field:ir.attachment,write_date:0
 msgid "Date Modified"
 msgstr "修改日期"
@@ -453,10 +409,9 @@ msgid "Define words in the context, for all child directories and files"
 msgstr "在內文中定義所有的子目錄及檔案"
 
 #. module: document
-#: help:document.storage,online:0
-msgid ""
-"If not checked, media is currently offline and its contents not available"
-msgstr "如果未檢查，媒體已離線且其內容也無法使用。"
+#: view:document.directory:0
+msgid "Static"
+msgstr "靜態"
 
 #. module: document
 #: field:report.document.user,user:0
@@ -466,7 +421,6 @@ msgstr ""
 #. module: document
 #: view:document.directory:0
 #: field:document.directory,user_id:0
-#: field:document.storage,user_id:0
 #: view:ir.attachment:0
 #: field:ir.attachment,user_id:0
 #: field:report.document.user,user_id:0
@@ -485,15 +439,9 @@ msgstr "內容"
 
 #. module: document
 #: field:document.directory,create_date:0
-#: field:document.storage,create_date:0
 #: field:report.document.user,create_date:0
 msgid "Date Created"
 msgstr "產生的日期"
-
-#. module: document
-#: field:document.directory,ressource_id:0
-msgid "Resource ID"
-msgstr "資源ID"
 
 #. module: document
 #: help:document.directory.content,include_name:0
@@ -504,17 +452,6 @@ msgid ""
 msgstr ""
 "如果您要檔案名稱包含記錄名稱，請檢查這個欄位。\n"
 "如果設定, 這個目錄將會是第一個資源"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.open_board_document_manager
-#: model:ir.ui.menu,name:document.menu_reports_document
-msgid "Knowledge"
-msgstr ""
-
-#. module: document
-#: view:document.storage:0
-msgid "Document Storage"
-msgstr ""
 
 #. module: document
 #: view:document.configuration:0
@@ -531,11 +468,6 @@ msgstr "包含紀錄名稱"
 #: field:ir.actions.report.xml,model_id:0
 msgid "Model Id"
 msgstr "模型 Id"
-
-#. module: document
-#: field:document.storage,online:0
-msgid "Online"
-msgstr "在線上"
 
 #. module: document
 #: help:document.directory,ressource_tree:0
@@ -564,9 +496,9 @@ msgid "August"
 msgstr "八月"
 
 #. module: document
-#: view:ir.attachment:0
-msgid "My Document(s)"
-msgstr ""
+#: view:document.directory:0
+msgid "Dynamic context"
+msgstr "動態背景"
 
 #. module: document
 #: sql_constraint:document.directory:0
@@ -580,7 +512,6 @@ msgstr "六月"
 
 #. module: document
 #: field:document.directory,group_ids:0
-#: field:document.storage,group_ids:0
 msgid "Groups"
 msgstr "群組"
 
@@ -593,11 +524,6 @@ msgstr "啟用"
 #: selection:report.document.user,month:0
 msgid "November"
 msgstr "十一月"
-
-#. module: document
-#: field:ir.attachment,db_datas:0
-msgid "Data"
-msgstr "資料"
 
 #. module: document
 #: help:document.directory,ressource_parent_type_id:0
@@ -626,9 +552,9 @@ msgid "Seq."
 msgstr "Seq."
 
 #. module: document
-#: selection:document.storage,type:0
-msgid "Database"
-msgstr "資料庫"
+#: model:ir.actions.act_window,name:document.action_view_all_document_tree1
+msgid "All Users files"
+msgstr "所有使用者檔案"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -636,13 +562,7 @@ msgid "January"
 msgstr "一月"
 
 #. module: document
-#: field:document.storage,readonly:0
-msgid "Read Only"
-msgstr "唯讀"
-
-#. module: document
 #: view:document.directory:0
-#: view:process.node:0
 msgid "Document Directory"
 msgstr "文件目錄"
 
@@ -658,7 +578,6 @@ msgstr ""
 
 #. module: document
 #: field:document.directory,create_uid:0
-#: field:document.storage,create_uid:0
 msgid "Creator"
 msgstr "建置者"
 
@@ -674,7 +593,6 @@ msgstr ""
 "文件管理系統支援虛擬檔案夾與文件配對。文件的虛擬檔案夾可以用來管理文件的附件，或列印及下載任何報表。這個工具會根據安裝的模組自動產生目錄。"
 
 #. module: document
-#: view:board.board:0
 #: model:ir.actions.act_window,name:document.action_view_files_by_month_graph
 #: view:report.document.user:0
 msgid "Files by Month"
@@ -696,19 +614,9 @@ msgid "Children"
 msgstr "子目錄"
 
 #. module: document
-#: view:board.board:0
-msgid "Files by user"
-msgstr ""
-
-#. module: document
-#: selection:document.storage,type:0
-msgid "External file storage"
-msgstr "外部檔案儲存"
-
-#. module: document
-#: help:document.storage,path:0
-msgid "For file storage, the root path of the storage"
-msgstr "關於檔案儲存，儲存的根路徑"
+#: field:document.directory,ressource_id:0
+msgid "Resource ID"
+msgstr "資源ID"
 
 #. module: document
 #: field:document.directory.dctx,field:0
@@ -726,26 +634,16 @@ msgid "Parent Model"
 msgstr "母模型"
 
 #. module: document
-#: help:document.directory.dctx,field:0
+#: view:document.directory:0
 msgid ""
-"The name of the field. Note that the prefix \"dctx_\" will be prepended to "
-"what is typed here."
-msgstr "這個欄位名稱的字首包含\"dctx_\" 將會根據這裡的輸入預先決定。"
-
-#. module: document
-#: field:document.directory,ressource_tree:0
-msgid "Tree Structure"
-msgstr "樹狀結構"
+"These groups, however, do NOT apply to children directories, which must "
+"define their own groups."
+msgstr "雖然這些模組沒有子目錄，但是還是要定義它們自己的群組。"
 
 #. module: document
 #: selection:report.document.user,month:0
 msgid "May"
 msgstr "五月"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.action_view_all_document_tree1
-msgid "All Users files"
-msgstr "所有使用者檔案"
 
 #. module: document
 #: view:document.directory:0
@@ -761,18 +659,6 @@ msgstr "ir.attachment"
 #: view:report.document.user:0
 msgid "Users File"
 msgstr ""
-
-#. module: document
-#: view:document.directory:0
-msgid "Static"
-msgstr "靜態"
-
-#. module: document
-#: view:document.directory:0
-msgid ""
-"These groups, however, do NOT apply to children directories, which must "
-"define their own groups."
-msgstr "雖然這些模組沒有子目錄，但是還是要定義它們自己的群組。"
 
 #. module: document
 #: model:ir.model,name:document.model_document_configuration
@@ -798,24 +684,13 @@ msgstr "二月"
 
 #. module: document
 #: field:document.directory,name:0
-#: field:document.storage,name:0
 msgid "Name"
 msgstr "名稱"
-
-#. module: document
-#: sql_constraint:document.storage:0
-msgid "The storage path must be unique!"
-msgstr "儲存路徑不能重複!"
 
 #. module: document
 #: view:document.directory:0
 msgid "Fields"
 msgstr "欄位"
-
-#. module: document
-#: help:document.storage,readonly:0
-msgid "If set, media is for reading only"
-msgstr "如果設定，媒體只能唯讀。"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -829,9 +704,9 @@ msgid "# of Files"
 msgstr "檔案數"
 
 #. module: document
-#: view:document.storage:0
-msgid "Search Document Storage"
-msgstr ""
+#: model:ir.model,name:document.model_document_directory_content_type
+msgid "Directory Content Type"
+msgstr "目錄內容類型"
 
 #. module: document
 #: view:document.directory:0
@@ -863,9 +738,9 @@ msgid "File Name"
 msgstr "檔案名稱"
 
 #. module: document
-#: selection:document.storage,type:0
-msgid "Internal File storage"
-msgstr "內部文件儲存"
+#: field:document.directory,ressource_tree:0
+msgid "Tree Structure"
+msgstr "樹狀結構"
 
 #. module: document
 #: view:document.configuration:0
@@ -884,10 +759,7 @@ msgid "Year"
 msgstr "年份"
 
 #. module: document
-#: view:document.storage:0
-#: model:ir.actions.act_window,name:document.action_document_storage_form
 #: model:ir.model,name:document.model_document_storage
-#: model:ir.ui.menu,name:document.menu_document_storage_media
 msgid "Storage Media"
 msgstr "儲存媒體"
 
@@ -895,148 +767,3 @@ msgstr "儲存媒體"
 #: field:document.directory.content,extension:0
 msgid "Document Type"
 msgstr "文件類型"
-
-#~ msgid "Auto Directory Configuration"
-#~ msgstr "自動目錄配置"
-
-#~ msgid "Sale Order"
-#~ msgstr "銷售訂單"
-
-#~ msgid "Project"
-#~ msgstr "專案"
-
-#~ msgid "Configure Resource Directory"
-#~ msgstr "配置資源目錄"
-
-#~ msgid "Files by Partner"
-#~ msgstr "各伙伴檔案"
-
-#~ msgid "Configuration Progress"
-#~ msgstr "配置進度"
-
-#~ msgid "Image"
-#~ msgstr "圖片"
-
-#~ msgid "Attachment"
-#~ msgstr "附件"
-
-#~ msgid "Auto Configure Directory"
-#~ msgstr "自動配置目錄"
-
-#~ msgid "Related to"
-#~ msgstr "關係到"
-
-#~ msgid "Auto directory configuration for Projects."
-#~ msgstr "自動為專案配置目錄"
-
-#~ msgid "Integrated Document Management System"
-#~ msgstr "複合文件管理系統"
-
-#~ msgid "Last Posted Time"
-#~ msgstr "最後發佈時間"
-
-#~ msgid "Files details by Partners"
-#~ msgstr "各伙伴檔案詳情"
-
-#~ msgid "Product"
-#~ msgstr "產品"
-
-#~ msgid "Files By Partner"
-#~ msgstr "各伙伴檔案"
-
-#~ msgid "This Month"
-#~ msgstr "本月"
-
-#~ msgid "New Files"
-#~ msgstr "新檔案"
-
-#, python-format
-#~ msgid "File name must be unique!"
-#~ msgstr "檔案名不能重覆！"
-
-#~ msgid "Files by Resource Type"
-#~ msgstr "各資源類型檔案"
-
-#~ msgid "Search Document storage"
-#~ msgstr "搜尋文件儲存"
-
-#~ msgid "Files per Month"
-#~ msgstr "當月文件"
-
-#~ msgid "title"
-#~ msgstr "抬頭"
-
-#~ msgid "This Year"
-#~ msgstr "今年"
-
-#~ msgid "Knowledge Management"
-#~ msgstr "知識管理"
-
-#~ msgid "Files by Users"
-#~ msgstr "使用者檔案"
-
-#~ msgid "Error! You can not create recursive Directories."
-#~ msgstr "錯誤! 您不可以建立循環目錄。"
-
-#~ msgid "Files Per Partner"
-#~ msgstr "夥伴文件"
-
-#~ msgid "Document Dashboard"
-#~ msgstr "文件控制台"
-
-#~ msgid "Created"
-#~ msgstr "已建立"
-
-#~ msgid "Modified"
-#~ msgstr "已修改"
-
-#~ msgid "User"
-#~ msgstr "使用者"
-
-#~ msgid "Attached To"
-#~ msgstr "附屬於"
-
-#~ msgid "Dashboard"
-#~ msgstr "控制台"
-
-#~ msgid "Files By Users"
-#~ msgstr "各使用者檔案"
-
-#~ msgid "Wall of Shame"
-#~ msgstr "排行榜"
-
-#~ msgid "Files by users"
-#~ msgstr "各使用者檔案"
-
-#~ msgid "This Months Files"
-#~ msgstr "當月檔案"
-
-#~ msgid "Reporting"
-#~ msgstr "報表"
-
-#~ msgid "Users that did not inserted documents since one month"
-#~ msgstr "使用者已經一個月未插入文件"
-
-#~ msgid ""
-#~ "The Documents repository gives you access to all attachments, such as mails, "
-#~ "project documents, invoices etc."
-#~ msgstr "文件儲存室讓您可以存取所有附件，如電郵、專案文件、商業發票等"
-
-#~ msgid "Indexed Content - experimental"
-#~ msgstr "已索引內容 - 實驗性質"
-
-#~ msgid "Notes"
-#~ msgstr "備註"
-
-#~ msgid "Statistics by User"
-#~ msgstr "各使用者統計"
-
-#, python-format
-#~ msgid "(copy)"
-#~ msgstr "(copy)"
-
-#~ msgid "All Months Files"
-#~ msgstr "所有月份文件"
-
-#~ msgid "Directory must have a parent or a storage"
-#~ msgstr "目錄必須要有母目錄或儲存"

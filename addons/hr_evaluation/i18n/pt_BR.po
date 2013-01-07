@@ -1,21 +1,21 @@
 # Brazilian Portuguese translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-10-17 00:10+0000\n"
-"Last-Translator: Syllas F. de O. Neto <syllasneto@gmail.com>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:44+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:14+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,send_anonymous_manager:0
@@ -176,7 +176,7 @@ msgid "Send to Employees"
 msgstr "Enviar para Funcionários"
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:83
+#: code:addons/hr_evaluation/hr_evaluation.py:84
 #, python-format
 msgid ""
 "\n"
@@ -236,8 +236,8 @@ msgid "Deadline"
 msgstr "Prazo final"
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:250
-#: code:addons/hr_evaluation/hr_evaluation.py:326
+#: code:addons/hr_evaluation/hr_evaluation.py:235
+#: code:addons/hr_evaluation/hr_evaluation.py:320
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -263,7 +263,7 @@ msgid "Interviews"
 msgstr ""
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:82
+#: code:addons/hr_evaluation/hr_evaluation.py:83
 #, python-format
 msgid "Regarding "
 msgstr "A respeito de "
@@ -587,14 +587,6 @@ msgid "Extended Filters..."
 msgstr "Filtros Extendidos..."
 
 #. module: hr_evaluation
-#: field:hr.evaluation.interview,message_comment_ids:0
-#: help:hr.evaluation.interview,message_comment_ids:0
-#: field:hr_evaluation.evaluation,message_comment_ids:0
-#: help:hr_evaluation.evaluation,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
-
-#. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,send_anonymous_employee:0
 msgid "Send an anonymous summary to the employee"
 msgstr "Enviar um resumo anônimo para o funcionário"
@@ -629,22 +621,6 @@ msgstr "Data"
 #: view:hr.evaluation.interview:0
 msgid "Survey"
 msgstr "Avaliação"
-
-#. module: hr_evaluation
-#: model:ir.actions.act_window,help:hr_evaluation.action_hr_evaluation_interview_tree
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a new interview request related to a "
-"personnal evaluation. \n"
-"              </p><p>\n"
-"                Interview requests are usually generated automatically by\n"
-"                OpenERP according to an employee's appraisal plan. Each "
-"user\n"
-"                receives automatic emails and requests to evaluate their\n"
-"                colleagues periodically.\n"
-"              </p>\n"
-"            "
-msgstr ""
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,action:0
@@ -866,7 +842,7 @@ msgid "Is Appraisal?"
 msgstr "É uma Avaliação?"
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:326
+#: code:addons/hr_evaluation/hr_evaluation.py:320
 #, python-format
 msgid "You cannot start evaluation without Appraisal."
 msgstr "Você não pode iniciar um teste sem avaliação."
@@ -877,7 +853,7 @@ msgid "Employee to Interview"
 msgstr "Funcionários a Entrevistar"
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:250
+#: code:addons/hr_evaluation/hr_evaluation.py:235
 #, python-format
 msgid ""
 "You cannot change state, because some appraisal(s) are in waiting answer or "
@@ -893,6 +869,22 @@ msgstr "Abril"
 #: view:hr_evaluation.plan.phase:0
 msgid "Appraisal Plan Phases"
 msgstr "Fases do Plano de Avaliação"
+
+#. module: hr_evaluation
+#: model:ir.actions.act_window,help:hr_evaluation.action_hr_evaluation_interview_tree
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new interview request related to a "
+"personal evaluation. \n"
+"              </p><p>\n"
+"                Interview requests are usually generated automatically by\n"
+"                OpenERP according to an employee's appraisal plan. Each "
+"user\n"
+"                receives automatic emails and requests to evaluate their\n"
+"                colleagues periodically.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: hr_evaluation
 #: help:hr.evaluation.interview,message_ids:0
@@ -944,150 +936,3 @@ msgstr "Resumo da Avaliação"
 #: field:hr.employee,evaluation_date:0
 msgid "Next Appraisal Date"
 msgstr "Data da Próxima Avaliação"
-
-#~ msgid "Progress"
-#~ msgstr "Progresso"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "Aviso!"
-
-#~ msgid "Notes"
-#~ msgstr "Notas"
-
-#~ msgid "Evaluation Form"
-#~ msgstr "Formulário de Avaliação"
-
-#~ msgid ""
-#~ "Error ! You cannot select a department for which the employee is the manager."
-#~ msgstr ""
-#~ "Erro! Você não pode selecionar um departamento do qual o funcionário é o "
-#~ "gerente."
-
-#~ msgid "Periodic Evaluations"
-#~ msgstr "Avaliações Periódicas"
-
-#~ msgid " Month "
-#~ msgstr " Mês "
-
-#~ msgid "State"
-#~ msgstr "Status"
-
-#~ msgid "    Month-1    "
-#~ msgstr "    Mês-1    "
-
-#~ msgid "Evaluation"
-#~ msgstr "Avaliação"
-
-#~ msgid " Year "
-#~ msgstr " Ano "
-
-#~ msgid "7 Days"
-#~ msgstr "7 Dias"
-
-#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
-#~ msgstr "Erro! Você não pode criar uma Hierarquia de Funcionários recursiva."
-
-#~ msgid "Send Mail"
-#~ msgstr "Enviar Email"
-
-#~ msgid "Late"
-#~ msgstr "Atrasado"
-
-#~ msgid "Interview"
-#~ msgstr "Entrevista"
-
-#~ msgid "Current"
-#~ msgstr "Atual"
-
-#~ msgid "(months)"
-#~ msgstr "(meses)"
-
-#~ msgid "Ending Summary"
-#~ msgstr "Final do resumo"
-
-#~ msgid "Interview Question"
-#~ msgstr "Questão da Entrevista"
-
-#~ msgid "Appraisal that overpassed the deadline"
-#~ msgstr "Avaliações que ultrapassaram o prazo"
-
-#~ msgid ""
-#~ "Each employee may be assigned an Appraisal Plan. Such a plan defines the "
-#~ "frequency and the way you manage your periodic personnel evaluation. You "
-#~ "will be able to define steps and attach interviews to each step. OpenERP "
-#~ "manages all kind of evaluations: bottom-up, top-down, self-evaluation and "
-#~ "final evaluation by the manager."
-#~ msgstr ""
-#~ "Cada funcionário pode ser atribuído a um Plano de Avaliação. Esse plano "
-#~ "define a freqüência e a maneira como você gerencia a sua avaliação pessoal "
-#~ "periodicamente. Você será capaz de definir etapas e anexar entrevistas para "
-#~ "cada etapa. O OpenERP gerencia todos os tipos de avaliações: bottom-up, top-"
-#~ "down, auto-avaliação e avaliação final pelo gerente."
-
-#~ msgid "E-mail composition wizard"
-#~ msgstr "Assistente de composição de E-mail."
-
-#~ msgid "Evaluation done in last month"
-#~ msgstr "Avaliações feitas no mês passado"
-
-#~ msgid ""
-#~ "Interview Requests are generated automatically by OpenERP according to an "
-#~ "employee's Appraisal Plan. Each user receives automatic emails and requests "
-#~ "to evaluate their colleagues periodically."
-#~ msgstr ""
-#~ "Pedidos de entrevista são gerados automaticamente pelo OpenERP de acordo com "
-#~ "o Plano de Avaliação do funcionário. Cada usuário recebe e-mails automáticos "
-#~ "e pedidos para avaliar os seus colegas periodicamente."
-
-#~ msgid "Appraisal to close within the next 7 days"
-#~ msgstr "Avaliações a serem fechadas nos próximos 7 dias"
-
-#~ msgid "Evaluation done in current year"
-#~ msgstr "Avaliações feitas este ano"
-
-#~ msgid ""
-#~ "You can define appraisal plans (ex: first interview after 6 months, then "
-#~ "every year). Then, each employee can be linked to an appraisal plan so that "
-#~ "OpenERP can automatically generate interview requests to managers and/or "
-#~ "subordinates."
-#~ msgstr ""
-#~ "Você pode definir planos de avaliação (ex: primeira entrevista após 6 meses, "
-#~ "então a cada ano). Então, cada funcionário pode ser ligado a um plano de "
-#~ "avaliação para que o OpenERP possa gerar automaticamente pedidos de "
-#~ "entrevistas aos gestores e / ou subordinados."
-
-#, python-format
-#~ msgid ""
-#~ "Hello %s, \n"
-#~ "\n"
-#~ " Kindly post your response for '%s' survey interview. \n"
-#~ "\n"
-#~ " Thanks,"
-#~ msgstr ""
-#~ "Olá %s,\n"
-#~ "\n"
-#~ " Por favor preencha sua resposta para a entrevista de '%s' \n"
-#~ "\n"
-#~ " Obrigado,"
-
-#~ msgid "This is the appreciation on that summarize the evaluation"
-#~ msgstr "Esta é a apreciação em que resumem a avaliação"
-
-#~ msgid "Appraisal Data"
-#~ msgstr "Dados da Avaliação"
-
-#, python-format
-#~ msgid "Reminder to fill up Survey"
-#~ msgstr "Lembrete para preencher a pesquisa"
-
-#, python-format
-#~ msgid ""
-#~ "You cannot change state, because some appraisal in waiting answer or draft "
-#~ "state"
-#~ msgstr ""
-#~ "Você não pode mudar a situação, porque algumas avaliações estão aguardando "
-#~ "resposta ou estado provisório"
-
-#~ msgid "Evaluation done in current month"
-#~ msgstr "Avaliações feitas este mês."

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-12-18 22:24+0000\n"
-"Last-Translator: Nicolas JEUDY <njeudy@tuxservices.com>\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2013-01-05 16:04+0000\n"
+"Last-Translator: Numérigraphe <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-19 05:17+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-01-06 05:30+0000\n"
+"X-Generator: Launchpad (build 16393)\n"
 
 #. module: fleet
 #: selection:fleet.vehicle,fuel_type:0
@@ -30,7 +30,7 @@ msgstr "Compacte"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_1
 msgid "A/C Compressor Replacement"
-msgstr ""
+msgstr "Remplacement du compresseur de l'air climatisé"
 
 #. module: fleet
 #: help:fleet.vehicle,vin_sn:0
@@ -79,10 +79,11 @@ msgstr "Plaque d'immatriculation: du %s au %s"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_38
 msgid "Resurface Rotors"
-msgstr ""
+msgstr "Machiner les rotors"
 
 #. module: fleet
 #: view:fleet.vehicle.cost:0
+#: view:fleet.vehicle.model:0
 msgid "Group By..."
 msgstr "Grouper par..."
 
@@ -109,7 +110,7 @@ msgstr ""
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_2
 msgid "Depreciation and Interests"
-msgstr ""
+msgstr "Dépréciation et intérêts"
 
 #. module: fleet
 #: field:fleet.vehicle.log.contract,insurer_id:0
@@ -121,7 +122,7 @@ msgstr "Fournisseur"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_35
 msgid "Power Steering Hose Replacement"
-msgstr ""
+msgstr "Remplacement du tuyau de direction assistée"
 
 #. module: fleet
 #: view:fleet.vehicle.log.contract:0
@@ -139,9 +140,8 @@ msgid "Liter"
 msgstr "Litre"
 
 #. module: fleet
-#: view:fleet.vehicle.cost:0
-#: field:fleet.vehicle.cost,parent_id:0
-msgid "Parent"
+#: model:ir.actions.client,name:fleet.action_fleet_menu
+msgid "Open Fleet Menu"
 msgstr ""
 
 #. module: fleet
@@ -170,7 +170,7 @@ msgid "Refueling Details"
 msgstr ""
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:655
+#: code:addons/fleet/fleet.py:659
 #, python-format
 msgid "%s contract(s) need(s) to be renewed and/or closed!"
 msgstr "%s contrat(s) à renouveler et/ou à clôturer!"
@@ -294,6 +294,11 @@ msgid "Messages"
 msgstr "Messages"
 
 #. module: fleet
+#: model:res.groups,name:fleet.group_fleet_user
+msgid "User"
+msgstr ""
+
+#. module: fleet
 #: help:fleet.vehicle.cost,vehicle_id:0
 msgid "Vehicle concerned by this log"
 msgstr "Véhicule concerné par cet enregistrement"
@@ -382,7 +387,7 @@ msgid "Transmission Used by the vehicle"
 msgstr "Transmission de ce véhicule"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:726
+#: code:addons/fleet/fleet.py:730
 #: view:fleet.vehicle.log.contract:0
 #: model:ir.actions.act_window,name:fleet.act_renew_contract
 #, python-format
@@ -527,6 +532,11 @@ msgid "License Plate"
 msgstr "Plaque d'immatriculatin"
 
 #. module: fleet
+#: selection:fleet.vehicle.log.contract,state:0
+msgid "To Close"
+msgstr "à clôturer"
+
+#. module: fleet
 #: field:fleet.vehicle.log.contract,cost_frequency:0
 msgid "Recurring Cost Frequency"
 msgstr "Fréquence de récurrence du coût"
@@ -563,7 +573,7 @@ msgid "Total of contracts due or overdue minus one"
 msgstr ""
 
 #. module: fleet
-#: field:fleet.vehicle.cost,cost_subtype:0
+#: field:fleet.vehicle.cost,cost_subtype_id:0
 msgid "Type"
 msgstr "Type"
 
@@ -588,7 +598,7 @@ msgid "Car Wash"
 msgstr "Lavage de voiture"
 
 #. module: fleet
-#: help:fleet.vehicle,driver:0
+#: help:fleet.vehicle,driver_id:0
 msgid "Driver of the vehicle"
 msgstr "Conducteur du véhicule"
 
@@ -714,7 +724,7 @@ msgid "Brake Inspection"
 msgstr "Inspection des freins"
 
 #. module: fleet
-#: help:fleet.vehicle,state:0
+#: help:fleet.vehicle,state_id:0
 msgid "Current state of the vehicle"
 msgstr "Status actuel du véhicule"
 
@@ -729,7 +739,7 @@ msgid "Wheel Bearing Replacement"
 msgstr ""
 
 #. module: fleet
-#: help:fleet.vehicle.cost,cost_subtype:0
+#: help:fleet.vehicle.cost,cost_subtype_id:0
 msgid "Cost type purchased with this cost"
 msgstr "Type de dépense"
 
@@ -782,12 +792,8 @@ msgid "Date when the cost has been executed"
 msgstr "Date de réalisation de la dépense"
 
 #. module: fleet
-#: field:fleet.vehicle.state,sequence:0
-msgid "Order"
-msgstr "Commande"
-
-#. module: fleet
 #: view:fleet.vehicle.cost:0
+#: view:fleet.vehicle.model:0
 msgid "Vehicles costs"
 msgstr "Coûts des véhicules"
 
@@ -832,18 +838,13 @@ msgid "Other Maintenance"
 msgstr "Autre maintenance"
 
 #. module: fleet
-#: field:fleet.vehicle.model,brand:0
-#: view:fleet.vehicle.model.brand:0
-msgid "Model Brand"
-msgstr "Modèle de voiture"
+#: view:fleet.vehicle.cost:0
+#: field:fleet.vehicle.cost,parent_id:0
+msgid "Parent"
+msgstr ""
 
 #. module: fleet
-#: field:fleet.vehicle.model.brand,image_small:0
-msgid "Smal-sized photo"
-msgstr "Photo (petite taille)"
-
-#. module: fleet
-#: field:fleet.vehicle,state:0
+#: field:fleet.vehicle,state_id:0
 #: view:fleet.vehicle.state:0
 msgid "State"
 msgstr "État"
@@ -967,10 +968,9 @@ msgid "Services Logs"
 msgstr ""
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:47
-#, python-format
-msgid "Emptying the odometer value of a vehicle is not allowed."
-msgstr "La remise à zéro du kilométrage du véhicule est interdite."
+#: view:fleet.vehicle.model:0
+msgid "Brand"
+msgstr ""
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_43
@@ -1053,6 +1053,12 @@ msgid "Fuel Injector Replacement"
 msgstr ""
 
 #. module: fleet
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_state_act
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_state_menu
+msgid "Vehicle Status"
+msgstr ""
+
+#. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_50
 msgid "Water Pump Replacement"
 msgstr "Remplacement de la pompe à eau"
@@ -1070,15 +1076,15 @@ msgstr ""
 #. module: fleet
 #: field:fleet.vehicle.log.contract,state:0
 msgid "Status"
-msgstr "Status"
+msgstr "Statut"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_40
 msgid "Rotor Replacement"
-msgstr ""
+msgstr "Rotor de rechange"
 
 #. module: fleet
-#: help:fleet.vehicle.model,brand:0
+#: help:fleet.vehicle.model,brand_id:0
 msgid "Brand of the vehicle"
 msgstr "Marque du véhicule"
 
@@ -1115,7 +1121,7 @@ msgid "Odometer Details"
 msgstr "Détail kilométrique"
 
 #. module: fleet
-#: field:fleet.vehicle,driver:0
+#: field:fleet.vehicle,driver_id:0
 msgid "Driver"
 msgstr "Conducteur"
 
@@ -1196,10 +1202,23 @@ msgid "Odometer Values Per Month"
 msgstr "Kilomètrage par mois"
 
 #. module: fleet
-#: field:fleet.vehicle,message_comment_ids:0
-#: help:fleet.vehicle,message_comment_ids:0
-msgid "Comments and emails"
-msgstr "Commentaires et emails"
+#: model:ir.actions.act_window,help:fleet.fleet_vehicle_model_act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new model.\n"
+"              </p><p>\n"
+"                You can define several models (e.g. A3, A4) for each brand "
+"(Audi).\n"
+"              </p>\n"
+"            "
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"               Cliquer ici pour ajouter un nouveau modèle.\n"
+"              </p><p>\n"
+"               Vous pouvez ajouter différentes modèles (e.g. A3, A4) pour "
+"chaque marque (Audi).\n"
+"              </p>\n"
+"            "
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_act
@@ -1347,6 +1366,11 @@ msgid "Emissions"
 msgstr ""
 
 #. module: fleet
+#: model:ir.model,name:fleet.model_fleet_vehicle_model
+msgid "Model of a vehicle"
+msgstr "Modèle d'un véhicule"
+
+#. module: fleet
 #: model:ir.actions.act_window,help:fleet.action_fleet_reporting_costs
 #: model:ir.actions.act_window,help:fleet.action_fleet_reporting_costs_non_effective
 msgid ""
@@ -1381,6 +1405,7 @@ msgstr "Valeur de la voiture"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.open_board_fleet
+#: model:ir.module.category,name:fleet.module_fleet_category
 #: model:ir.ui.menu,name:fleet.menu_fleet_dashboard
 #: model:ir.ui.menu,name:fleet.menu_fleet_reporting
 #: model:ir.ui.menu,name:fleet.menu_root
@@ -1483,9 +1508,9 @@ msgid "Oil Change"
 msgstr "Vidange"
 
 #. module: fleet
-#: selection:fleet.vehicle.log.contract,state:0
-msgid "To Close"
-msgstr "à clôturer"
+#: field:fleet.vehicle.model.brand,image_small:0
+msgid "Smal-sized photo"
+msgstr "Photo (petite taille)"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_model_brand
@@ -1523,23 +1548,10 @@ msgstr ""
 "            "
 
 #. module: fleet
-#: model:ir.actions.act_window,help:fleet.fleet_vehicle_model_act
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a new model.\n"
-"              </p><p>\n"
-"                You can define several models (e.g. A3, A4) for each brand "
-"(Audi).\n"
-"              </p>\n"
-"            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"               Cliquer ici pour ajouter un nouveau modèle.\n"
-"              </p><p>\n"
-"               Vous pouvez ajouter différentes modèles (e.g. A3, A4) pour "
-"chaque marque (Audi).\n"
-"              </p>\n"
-"            "
+#: field:fleet.vehicle.model,brand_id:0
+#: view:fleet.vehicle.model.brand:0
+msgid "Model Brand"
+msgstr "Modèle de voiture"
 
 #. module: fleet
 #: view:fleet.vehicle:0
@@ -1570,12 +1582,6 @@ msgstr "En cours"
 #: selection:fleet.vehicle.log.contract,cost_frequency:0
 msgid "Yearly"
 msgstr "Annuel"
-
-#. module: fleet
-#: model:ir.actions.act_window,name:fleet.fleet_vehicle_state_act
-#: model:ir.ui.menu,name:fleet.fleet_vehicle_state_menu
-msgid "States of Vehicle"
-msgstr "Etats du véhicule"
 
 #. module: fleet
 #: field:fleet.vehicle.model,modelname:0
@@ -1728,6 +1734,12 @@ msgstr "Le véhicule %s à été ajouter à la flotte"
 #: view:fleet.vehicle.log.services:0
 msgid "Price"
 msgstr "Prix"
+
+#. module: fleet
+#: field:fleet.vehicle.cost,odometer:0
+#: field:fleet.vehicle.odometer,value:0
+msgid "Odometer Value"
+msgstr "Kilomètrage"
 
 #. module: fleet
 #: view:fleet.vehicle:0
@@ -1902,7 +1914,7 @@ msgstr ""
 #. module: fleet
 #: help:fleet.vehicle,message_ids:0
 msgid "Messages and communication history"
-msgstr "Messages et historique des communications"
+msgstr "Historique des messages et communications"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle
@@ -1924,6 +1936,11 @@ msgstr ""
 #: field:fleet.vehicle.log.contract,generated_cost_ids:0
 msgid "Generated Costs"
 msgstr "Coût"
+
+#. module: fleet
+#: field:fleet.vehicle.state,sequence:0
+msgid "Sequence"
+msgstr ""
 
 #. module: fleet
 #: field:fleet.vehicle,color:0
@@ -1955,9 +1972,10 @@ msgid "Services Costs"
 msgstr "Coût des interventions"
 
 #. module: fleet
-#: model:ir.model,name:fleet.model_fleet_vehicle_model
-msgid "Model of a vehicle"
-msgstr "Modèle d'un véhicule"
+#: code:addons/fleet/fleet.py:47
+#, python-format
+msgid "Emptying the odometer value of a vehicle is not allowed."
+msgstr "La remise à zéro du kilométrage du véhicule est interdite."
 
 #. module: fleet
 #: help:fleet.vehicle,seats:0
@@ -1965,10 +1983,9 @@ msgid "Number of seats of the vehicle"
 msgstr "Numbre de places dans le véhicule"
 
 #. module: fleet
-#: field:fleet.vehicle.cost,odometer:0
-#: field:fleet.vehicle.odometer,value:0
-msgid "Odometer Value"
-msgstr "Kilomètrage"
+#: model:res.groups,name:fleet.group_fleet_manager
+msgid "Manager"
+msgstr ""
 
 #. module: fleet
 #: view:fleet.vehicle.log.services:0

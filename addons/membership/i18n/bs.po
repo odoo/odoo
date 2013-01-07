@@ -1,20 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* membership
+# Bosnian translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2010-10-30 13:59+0000\n"
-"Last-Translator: adnan <adnankraljic@yahoo.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Bosnian <bs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:13+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:22+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetoassociate0
@@ -95,11 +96,12 @@ msgid "Ending Date Of Membership"
 msgstr ""
 
 #. module: membership
-#: field:product.product,membership_date_to:0
-msgid "Date to"
-msgstr "Do datuma:"
+#: help:report.membership,date_to:0
+msgid "End membership date"
+msgstr ""
 
 #. module: membership
+#: field:product.product,membership_date_to:0
 #: field:res.partner,membership_stop:0
 msgid "Membership End Date"
 msgstr ""
@@ -195,11 +197,6 @@ msgstr ""
 #: view:res.partner:0
 msgid "End Membership Date"
 msgstr ""
-
-#. module: membership
-#: field:product.product,membership_date_from:0
-msgid "Date from"
-msgstr "Od datuma:"
 
 #. module: membership
 #: code:addons/membership/membership.py:414
@@ -463,11 +460,6 @@ msgid "Membership Status"
 msgstr ""
 
 #. module: membership
-#: help:report.membership,date_to:0
-msgid "End membership date"
-msgstr ""
-
-#. module: membership
 #: view:res.partner:0
 msgid "Customers"
 msgstr ""
@@ -661,11 +653,6 @@ msgid "All non Members"
 msgstr ""
 
 #. module: membership
-#: view:product.product:0
-msgid "Information"
-msgstr "Informacije"
-
-#. module: membership
 #: field:membership.membership_line,account_invoice_line:0
 msgid "Account Invoice line"
 msgstr "Stavka računa"
@@ -696,6 +683,7 @@ msgid "May"
 msgstr ""
 
 #. module: membership
+#: field:product.product,membership_date_from:0
 #: field:res.partner,membership_start:0
 msgid "Membership Start Date"
 msgstr ""
@@ -786,146 +774,11 @@ msgid "Year"
 msgstr "Godina"
 
 #. module: membership
+#: view:product.product:0
+msgid "Accounting"
+msgstr ""
+
+#. module: membership
 #: view:report.membership:0
 msgid "Revenue Done"
 msgstr ""
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Neodgovarajući XML za arhitekturu prikaza!"
-
-#~ msgid "Currency"
-#~ msgstr "Valuta"
-
-#~ msgid "Free members"
-#~ msgstr "Slobodni članovi"
-
-#~ msgid "Associate member"
-#~ msgstr "Udruženi član"
-
-#~ msgid "Partners"
-#~ msgstr "Partneri"
-
-#~ msgid "State"
-#~ msgstr "Stanje"
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "Greška !"
-
-#~ msgid "Confirm"
-#~ msgstr "Potvrdi"
-
-#~ msgid "Reporting"
-#~ msgstr "Izvještavanje"
-
-#~ msgid "Canceled"
-#~ msgstr "Poništeno"
-
-#~ msgid "Invoiced"
-#~ msgstr "Fakturisano"
-
-#~ msgid "Paid"
-#~ msgstr "Plaćeno"
-
-#~ msgid "Waiting"
-#~ msgstr "Čekanje"
-
-#~ msgid "Invoiced members"
-#~ msgstr "Fakturisani članovi"
-
-#~ msgid "Old members"
-#~ msgstr "Stari članovi"
-
-#~ msgid "Membership amount"
-#~ msgstr "Iznos članarine"
-
-#~ msgid "Paid members"
-#~ msgstr "Plaćeni članovi"
-
-#~ msgid "Future members"
-#~ msgstr "Budući članovi"
-
-#~ msgid "Associated members"
-#~ msgstr "Udruženi članovi"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Naziv Objekta mora počinjati sa x_ i ne smije sadržavati specijalne znakove!"
-
-#~ msgid "Current members"
-#~ msgstr "Aktivni članovi"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Neispravan naziv modela u definiciji zadatka."
-
-#~ msgid "Future members (invoice not confirmed)"
-#~ msgstr "Budući članovi (račun nije potvrđen)"
-
-#~ msgid "Membership by Years"
-#~ msgstr "Članstvo po godinama"
-
-#~ msgid "Cancel membership date"
-#~ msgstr "Otkaži datum članstva"
-
-#~ msgid "Member Sale Pricelist"
-#~ msgstr "Članski cjenovnik"
-
-#~ msgid "The price negociated by the partner"
-#~ msgstr "Cijena ugovorena sa partnerom"
-
-#~ msgid "You cannot have 2 pricelist versions that overlap!"
-#~ msgstr "Nije moguće imati dva cjenovnika koja se preklapaju!"
-
-#~ msgid "Choose invoice details"
-#~ msgstr "Odaberite detalje računa"
-
-#~ msgid "Canceled Member"
-#~ msgstr "Otkazani član"
-
-#~ msgid "Free member"
-#~ msgstr "Besplatni član"
-
-#~ msgid "New Membership by Years"
-#~ msgstr "Novo članstvo po godinama"
-
-#~ msgid "Stop membership date"
-#~ msgstr "Datum prestanka članstva"
-
-#~ msgid "Current membership state"
-#~ msgstr "Trenutno stanje članstva"
-
-#~ msgid "Error ! You can not create recursive accounts."
-#~ msgstr "Greška: ne mogu se praviti rekurzivni nalozi."
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "Greška: nevažeći EAN kod"
-
-#~ msgid "Configuration"
-#~ msgstr "Podešavanje"
-
-#~ msgid "Membership Product - 1"
-#~ msgstr "Članski proizvod - 1"
-
-#~ msgid "Membership Product - 2"
-#~ msgstr "Članski proizvod - 2"
-
-#~ msgid "Specify if this product is a membership product"
-#~ msgstr "Naznačite da li je ovaj proizvod članski proizvod"
-
-#~ msgid "Member Sale Pricelist Version"
-#~ msgstr "Verzija cijenovnika za članove"
-
-#~ msgid "Error: UOS must be in a different category than the UOM"
-#~ msgstr "Greaška : UOS mora biti u drugoj kategoriji od UOM"
-
-#~ msgid "Error: Invalid Bvr Number (wrong checksum)."
-#~ msgstr "Greška : Pogrešan Bvr broj"
-
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr ""
-#~ "Greška: Standardna JM i nabavna JM moraju pripadati istoj kategoriji."
-
-#~ msgid "Error: BVR reference is required."
-#~ msgstr "Greška : BVR referenca je potrebna."

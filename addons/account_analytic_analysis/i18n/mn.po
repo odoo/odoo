@@ -1,20 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* account_analytic_analysis
+# Mongolian translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2010-12-20 23:20+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2013-01-04 04:04+0000\n"
+"Last-Translator: erdenebold <erdenebold10@gmail.com>\n"
+"Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:34+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2013-01-05 05:39+0000\n"
+"X-Generator: Launchpad (build 16393)\n"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -29,7 +30,7 @@ msgstr "Бүлэглэх..."
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "To Invoice"
-msgstr ""
+msgstr "Үнийн нэхэмжлэл"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -86,7 +87,7 @@ msgstr "Эцсийн өртөгийг нэхэмжилсэн огноо"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,fix_price_to_invoice:0
 msgid "Sum of quotations for this contract."
-msgstr ""
+msgstr "Энэ гэрээний ханшийн нийлбэр."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
@@ -99,14 +100,23 @@ msgid "Sum of timesheet lines invoiced for this contract."
 msgstr ""
 
 #. module: account_analytic_analysis
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:462
+#, python-format
+msgid "Sales Order Lines of %s"
+msgstr ""
+
+#. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
 msgid "Computed using the formula: Invoiced Amount / Total Time"
 msgstr "Тооцоололт хийсэн томъёо: Нэхэмжилсэн дүн / Нийт Дүн"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Contracts not assigned"
-msgstr ""
+#: field:account_analytic_analysis.summary.month,account_id:0
+#: field:account_analytic_analysis.summary.user,account_id:0
+#: model:ir.model,name:account_analytic_analysis.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "Аналитик данс"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -143,13 +153,9 @@ msgid "End Date"
 msgstr "Дуусах огноо"
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,hours_qtt_non_invoiced:0
-msgid ""
-"Number of time (hours/days) (from journal of type 'general') that can be "
-"invoiced if you invoice based on analytic account."
+#: view:account.analytic.account:0
+msgid "Account Manager"
 msgstr ""
-"Хэрэв шинжилгээний данс дээр суурилж байгаа бол нэхэмжлэж болох хугацаа "
-"(цаг/өдөр) ('ерөнхий' төрөлтэй журналаас)."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours_to_invoice:0
@@ -163,11 +169,8 @@ msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-#: field:account_analytic_analysis.summary.month,account_id:0
-#: field:account_analytic_analysis.summary.user,account_id:0
-#: model:ir.model,name:account_analytic_analysis.model_account_analytic_account
-msgid "Analytic Account"
-msgstr "Аналитик данс"
+msgid "Contracts not assigned"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
@@ -177,7 +180,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_invoiced:0
 msgid "Invoiced Time"
-msgstr "Нэхэмжилсэн Цаг"
+msgstr "Нэхэмжилсэн хугацаа"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,fix_price_to_invoice:0
@@ -219,12 +222,6 @@ msgid "Nothing to invoice, create"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.template_of_contract_action
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_template_of_contract_action
-msgid "Template of Contract"
-msgstr ""
-
-#. module: account_analytic_analysis
 #: model:res.groups,name:account_analytic_analysis.group_template_required
 msgid "Mandatory use of templates in contracts"
 msgstr ""
@@ -232,7 +229,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_quantity:0
 msgid "Total Worked Time"
-msgstr ""
+msgstr "Нийт ажилласан хугацаа"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin:0
@@ -242,7 +239,7 @@ msgstr "Бодит зөрүү"
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_month
 msgid "Hours summary by month"
-msgstr "Hours summary by month"
+msgstr "Сарын цагийн хураангуй"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin_rate:0
@@ -253,6 +250,11 @@ msgstr "Томъёг ашиглан тооцоолох: (Бодит зөрүү/ 
 #: view:account.analytic.account:0
 msgid "or view"
 msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Customer Contracts"
+msgstr "Захиалагчийн гэрээнүүд"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -269,7 +271,7 @@ msgstr "Сар"
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_all
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_hr_tree_invoiced_all
 msgid "Time & Materials to Invoice"
-msgstr ""
+msgstr "Хугацаа & Нэхэмжлэлийн материал"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue_all
@@ -307,10 +309,13 @@ msgid "Timesheets"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:461
-#, python-format
-msgid "Sale Order Lines of %s"
+#: help:account.analytic.account,hours_qtt_non_invoiced:0
+msgid ""
+"Number of time (hours/days) (from journal of type 'general') that can be "
+"invoiced if you invoice based on analytic account."
 msgstr ""
+"Хэрэв шинжилгээний данс дээр суурилж байгаа бол нэхэмжлэж болох хугацаа "
+"(цаг/өдөр) ('ерөнхий' төрөлтэй журналаас)."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -433,12 +438,12 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.account,toinvoice_total:0
 msgid "Total to Invoice"
-msgstr ""
+msgstr "Нийт нэхэмжлэл"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Sale Orders"
-msgstr ""
+msgstr "Борлуулалтын захиалга"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -448,7 +453,7 @@ msgstr "Нээх"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,invoiced_total:0
 msgid "Total Invoiced"
-msgstr ""
+msgstr "Нийт нэхэмжлэл"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
@@ -457,14 +462,14 @@ msgstr ""
 "Томъёг ашиглан тооцоолох:  Нэхэмжлэх үнийн дээд хэмжээ - Нэхэмжилсэн хэмжээ"
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Responsible"
-msgstr ""
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
 msgid "Last Invoice Date"
 msgstr "Сүүлийн нэхэмжлэлийн огноо"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Units Remaining"
+msgstr "Нэгжийн үлдэгдэл"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_hr_tree_invoiced_all
@@ -493,7 +498,7 @@ msgstr "Нэхэмжлэх"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,total_cost:0
 msgid "Total Costs"
-msgstr "Нийт өртөг"
+msgstr "Нийт зардал"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_total:0
@@ -522,7 +527,7 @@ msgstr "Онолын Хязгаар"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_total:0
 msgid "Total Remaining"
-msgstr ""
+msgstr "Нийт үлдэгдэл"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin:0
@@ -537,7 +542,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.account,fix_price_invoices:0
 msgid "Fixed Price"
-msgstr ""
+msgstr "Тогтмол үнэ"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_date:0
@@ -555,8 +560,14 @@ msgid "Mandatory use of templates."
 msgstr ""
 
 #. module: account_analytic_analysis
+#: model:ir.actions.act_window,name:account_analytic_analysis.template_of_contract_action
+#: model:ir.ui.menu,name:account_analytic_analysis.menu_template_of_contract_action
+msgid "Contract Template"
+msgstr "Гэрээний загвар"
+
+#. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Contracts Having a Partner"
+msgid "Units Done"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -608,185 +619,3 @@ msgstr ""
 #: view:account.analytic.account:0
 msgid "Total"
 msgstr ""
-
-#~ msgid ""
-#~ "Number of hours that can be invoiced plus those that already have been "
-#~ "invoiced."
-#~ msgstr ""
-#~ "Number of hours that can be invoiced plus those that already have been "
-#~ "invoiced."
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "The Object name must start with x_ and not contain any special character !"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Энэ үйлдэлийн зарлалтанд тохирхогүй моделийн нэр."
-
-#~ msgid "Computed using the formula: Maximum Quantity - Hours Tot."
-#~ msgstr "Томъёг ашиглан тооцоолох:  Дээд хэмжээ - Нийт цаг"
-
-#~ msgid "Theorical Revenue"
-#~ msgstr "Хийсвэр орлого"
-
-#~ msgid "Date of the last invoice created for this analytic account."
-#~ msgstr "Энэ аналитик дансыг үүсэгсэн сүүлийн нэхэмжлэлийн огноо"
-
-#~ msgid ""
-#~ "\n"
-#~ "This module is for modifying account analytic view to show\n"
-#~ "important data to project manager of services companies.\n"
-#~ "Adds menu to show relevant information to each manager..\n"
-#~ "\n"
-#~ "You can also view the report of account analytic summary\n"
-#~ "user-wise as well as month wise.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "important data to project manager of services companies.\n"
-#~ "Adds menu to show relevant information to each manager..\n"
-#~ "\n"
-#~ "You can also view the report of account analytic summary\n"
-#~ "user-wise as well as month wise.\n"
-
-#~ msgid "Computed using the formula: Theorial Revenue - Total Costs"
-#~ msgstr "Томъёг ашиглан тооцоолох:  Хийсвэр орлого - Нийт өртөг"
-
-#~ msgid "Theorical Margin"
-#~ msgstr "Хийсвэр зөрүү"
-
-#~ msgid "Billing"
-#~ msgstr "Тооцоо"
-
-#~ msgid ""
-#~ "Number of hours you spent on the analytic account (from timesheet). It "
-#~ "computes on all journal of type 'general'."
-#~ msgstr ""
-#~ "Number of hours you spent on the analytic account (from timesheet). It "
-#~ "computes on all journal of type 'general'."
-
-#~ msgid "Remaining Hours"
-#~ msgstr "Үлдсэн хугацаа"
-
-#~ msgid "Uninvoiced Hours"
-#~ msgstr "Үл нэхэмжлэгдсэн цаг"
-
-#~ msgid "report_account_analytic"
-#~ msgstr "Аналитик дансны тайлан"
-
-#~ msgid "Invoiced Hours"
-#~ msgstr "Нэхэмжилсэн цаг"
-
-#~ msgid ""
-#~ "Number of hours (from journal of type 'general') that can be invoiced if you "
-#~ "invoice based on analytic account."
-#~ msgstr ""
-#~ "Number of hours (from journal of type 'general') that can be invoiced if you "
-#~ "invoice based on analytic account."
-
-#~ msgid "Analytic accounts"
-#~ msgstr "Аналитик данс"
-
-#~ msgid "Computed using the formula: Invoiced Amount / Hours Tot."
-#~ msgstr "Томъёг ашиглан тооцоолох:  Нэхэмжилсэн хэмжээ / Нийт цаг"
-
-#~ msgid "Revenue per Hours (real)"
-#~ msgstr "Цаг тутмын орлого (бодит)"
-
-#~ msgid "Overpassed Accounts"
-#~ msgstr "Overpassed Accounts"
-
-#~ msgid "All Uninvoiced Entries"
-#~ msgstr "Бүх нэхэмжлэгдээгүй гүйлгээнүүд"
-
-#~ msgid "Hours Tot"
-#~ msgstr "Нийт цаг"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Дэлгэцийн XML алдаатай!"
-
-#~ msgid "My Current Accounts"
-#~ msgstr "Миний одоогийн дансдууд"
-
-#~ msgid "New Analytic Account"
-#~ msgstr "Шинэ аналитик данс"
-
-#~ msgid "My Uninvoiced Entries"
-#~ msgstr "Нэхэмжлээгүй бичлэгүүд"
-
-#~ msgid "Hours summary by user"
-#~ msgstr "Хэрэглэгч бүрээрхи цагийн товчоо"
-
-#~ msgid "My Accounts"
-#~ msgstr "Миний дансдууд"
-
-#~ msgid "All Analytic Accounts"
-#~ msgstr "Бүх аналитик дансууд"
-
-#~ msgid "Financial Project Management"
-#~ msgstr "Санхүүгийн төслийн удирдлага"
-
-#~ msgid "Pending Analytic Accounts"
-#~ msgstr "Хүлээгдэж буй аналитик дансууд"
-
-#~ msgid "Analytic Accounts"
-#~ msgstr "Аналитик дансууд"
-
-#~ msgid "My Pending Accounts"
-#~ msgstr "Миний хүлээгдэж буй дансууд"
-
-#~ msgid ""
-#~ "Modify account analytic view to show\n"
-#~ "important data for project manager of services companies.\n"
-#~ "Add menu to show relevant information for each manager."
-#~ msgstr ""
-#~ "Төслийн менежерт зориулан аналитик \n"
-#~ "шинжилгээний дансдын харагдах байдлыг өөрчлөнө.\n"
-#~ "Менежер бүрт зориулсан мэдээллийг харуулах цэс нэмнэ."
-
-#~ msgid "Current Analytic Accounts"
-#~ msgstr "Одоогийн аналитик дансууд"
-
-#~ msgid "Error! You can not create recursive analytic accounts."
-#~ msgstr "Алдаа! Та цикл хэлбэрийн аналитик данс үүсгэх боломжгүй."
-
-#, python-format
-#~ msgid "You try to bypass an access rule (Document type: %s)."
-#~ msgstr "Хандалтын журмыг алгасах гэж оролдож байна (Баримтын төрөл: %s)"
-
-#, python-format
-#~ msgid "AccessError"
-#~ msgstr "ХандалтынАлдаа"
-
-#~ msgid "Create Invoice"
-#~ msgstr "Нэхэмжлэл үүсгэх"
-
-#~ msgid "Manager"
-#~ msgstr "Менежер"
-
-#~ msgid "Analytic Accounts with a past deadline in one month."
-#~ msgstr "Дуусах хугацаа нь сараар хэтэрсэн шинжилгээний данс"
-
-#~ msgid ""
-#~ "You will find here the contracts to be renewed because the deadline is "
-#~ "passed or the working hours are higher than the allocated hours. OpenERP "
-#~ "automatically sets these analytic accounts to the pending state, in order to "
-#~ "raise a warning during the timesheets recording. Salesmen should review all "
-#~ "pending accounts and reopen or close the according to the negotiation with "
-#~ "the customer."
-#~ msgstr ""
-#~ "Дуусах хугацаа хэтэрсэн болон хуваарилсан хугацаанаасаа давсан шалтгааны "
-#~ "улмаас шинэчлэх шаардлагатай болсон гэрээнүүдийг эндээс олно. OpenERP нь ийм "
-#~ "төрлийн дансдыг автоматаар хүлээгдэж байгаа төлөвтэй болгодог бөгөөд "
-#~ "ингэснээр цагийн хуваарийн гүйцэтгэл бичих үед анхааруулга өгдөг. "
-#~ "Борлуулалтын ажилтан эдгээр хүлээгдэж байгаа төлөвтэй дансдыг хянаж "
-#~ "захиалагчтай тохиролцоо хийсний үндсэн дээр хаах юм дахин нээж байх хэрэгтэй."
-
-#~ msgid "Associated Partner"
-#~ msgstr "Холбогдох харилцагч"
-
-#~ msgid " +1 Month"
-#~ msgstr " +1 Сар"
-
-#~ msgid "Computed using the formula: Maximum Time - Total Time"
-#~ msgstr "Тооцоололт хийсэн томъёо: Максимум Хугацаа - Бүх Хугацаа"

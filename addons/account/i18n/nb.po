@@ -1,21 +1,21 @@
 # Norwegian Bokmal translation for openobject-addons
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-11-28 13:31+0000\n"
-"Last-Translator: Kaare Pettersen <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:24+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 06:57+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -26,11 +26,6 @@ msgstr "Systembetaling"
 #: sql_constraint:account.fiscal.position.account:0
 msgid ""
 "An account fiscal position could be defined only once time on same accounts."
-msgstr ""
-
-#. module: account
-#: view:account.unreconcile:0
-msgid "Unreconciliate Transactions"
 msgstr ""
 
 #. module: account
@@ -81,9 +76,9 @@ msgid "Import from invoice or payment"
 msgstr "Importer fra fakturaer eller betalinger"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1048
-#: code:addons/account/account_move_line.py:1131
-#: code:addons/account/account_move_line.py:1198
+#: code:addons/account/account_move_line.py:1061
+#: code:addons/account/account_move_line.py:1144
+#: code:addons/account/account_move_line.py:1211
 #, python-format
 msgid "Bad Account!"
 msgstr "Dårlig konto!"
@@ -93,15 +88,6 @@ msgstr "Dårlig konto!"
 #: view:account.move.line:0
 msgid "Total Debit"
 msgstr "Total debet"
-
-#. module: account
-#: view:account.unreconcile:0
-msgid ""
-"If you unreconciliate transactions, you must also verify all the actions "
-"that are linked to those transactions because they will not be disabled"
-msgstr ""
-"Hvis du omgjør avstemte transaksjoner må du også kontrollere samtlige "
-"handlinger som er koblet til transaksjonene fordi de ikke vil bli deaktivert"
 
 #. module: account
 #: constraint:account.account.template:0
@@ -115,7 +101,6 @@ msgstr ""
 #. module: account
 #. openerp-web
 #: view:account.automatic.reconcile:0
-#: field:account.move.line,reconcile:0
 #: field:account.move.line,reconcile_id:0
 #: view:account.move.line.reconcile:0
 #: view:account.move.line.reconcile.writeoff:0
@@ -146,19 +131,19 @@ msgstr ""
 "betalingsbetingelsene uten å fjerne dem."
 
 #. module: account
-#: code:addons/account/account.py:640
-#: code:addons/account/account.py:685
-#: code:addons/account/account.py:780
-#: code:addons/account/account.py:1043
-#: code:addons/account/account_invoice.py:776
-#: code:addons/account/account_invoice.py:779
-#: code:addons/account/account_invoice.py:782
-#: code:addons/account/account_invoice.py:1519
+#: code:addons/account/account.py:641
+#: code:addons/account/account.py:686
+#: code:addons/account/account.py:781
+#: code:addons/account/account.py:1049
+#: code:addons/account/account_invoice.py:792
+#: code:addons/account/account_invoice.py:795
+#: code:addons/account/account_invoice.py:798
+#: code:addons/account/account_invoice.py:1509
 #: code:addons/account/account_move_line.py:98
-#: code:addons/account/account_move_line.py:767
-#: code:addons/account/account_move_line.py:776
-#: code:addons/account/account_move_line.py:820
-#: code:addons/account/account_move_line.py:855
+#: code:addons/account/account_move_line.py:774
+#: code:addons/account/account_move_line.py:783
+#: code:addons/account/account_move_line.py:827
+#: code:addons/account/account_move_line.py:867
 #: code:addons/account/wizard/account_fiscalyear_close.py:62
 #: code:addons/account/wizard/account_invoice_state.py:44
 #: code:addons/account/wizard/account_invoice_state.py:68
@@ -170,7 +155,7 @@ msgid "Warning!"
 msgstr "Advarsel!"
 
 #. module: account
-#: code:addons/account/account.py:3139
+#: code:addons/account/account.py:3149
 #, python-format
 msgid "Miscellaneous Journal"
 msgstr "Diverse journal"
@@ -243,11 +228,6 @@ msgid "Tax Templates"
 msgstr "Avgiftsmaler"
 
 #. module: account
-#: model:ir.model,name:account.model_account_tax
-msgid "account.tax"
-msgstr "account.tax"
-
-#. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile_select
 msgid "Move line reconcile select"
 msgstr "Flytt linje velg for avstemming"
@@ -261,6 +241,11 @@ msgstr "Regnskaps oppføringer er en input fra avstemmingen."
 #: model:ir.ui.menu,name:account.menu_finance_management_belgian_reports
 msgid "Belgian Reports"
 msgstr "Belgiske rapporter"
+
+#. module: account
+#: model:mail.message.subtype,name:account.mt_invoice_validated
+msgid "Validated"
+msgstr ""
 
 #. module: account
 #: model:account.account.type,name:account.account_type_income_view1
@@ -397,11 +382,6 @@ msgid "Salesperson"
 msgstr "Salgsman."
 
 #. module: account
-#: model:ir.model,name:account.model_account_tax_template
-msgid "account.tax.template"
-msgstr "account.tax.template"
-
-#. module: account
 #: view:account.bank.statement:0
 #: view:account.invoice:0
 msgid "Responsible"
@@ -456,6 +436,11 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: help:account.bank.statement.line,name:0
+msgid "Originator to Beneficiary Information"
+msgstr ""
+
+#. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_move_line_quickadd.xml:8
 #, python-format
@@ -469,6 +454,11 @@ msgstr ""
 #: field:wizard.multi.charts.accounts,chart_template_id:0
 msgid "Chart Template"
 msgstr "Kontoplanmal"
+
+#. module: account
+#: selection:account.invoice.refund,filter_refund:0
+msgid "Modify: create refund, reconcile and create a new draft invoice"
+msgstr ""
 
 #. module: account
 #: help:account.config.settings,tax_calculation_rounding_method:0
@@ -632,15 +622,6 @@ msgid "3 Monthly"
 msgstr "3 månedlig"
 
 #. module: account
-#: view:account.unreconcile.reconcile:0
-msgid ""
-"If you unreconciliate transactions, you must also verify all the actions "
-"that are linked to those transactions because they will not be disable"
-msgstr ""
-"Hvis du omgjør avstemmte transaksjoner må du også kontrollere samtlige "
-"handlinger som er koblet til transaksjonene fordi de ikke er deaktivert"
-
-#. module: account
 #: field:ir.sequence,fiscal_ids:0
 msgid "Sequences"
 msgstr "Sekvenser"
@@ -688,7 +669,7 @@ msgid "Profit Account"
 msgstr "Fortjeneste konto."
 
 #. module: account
-#: code:addons/account/account_move_line.py:1144
+#: code:addons/account/account_move_line.py:1157
 #, python-format
 msgid "No period found or more than one period found for the given date."
 msgstr ""
@@ -700,13 +681,13 @@ msgid "Report of the Sales by Account Type"
 msgstr "Salgsrapport etter kontotype"
 
 #. module: account
-#: code:addons/account/account.py:3143
+#: code:addons/account/account.py:3153
 #, python-format
 msgid "SAJ"
 msgstr "SAJ"
 
 #. module: account
-#: code:addons/account/account.py:1546
+#: code:addons/account/account.py:1551
 #, python-format
 msgid "Cannot create move with currency different from .."
 msgstr "Kan ikke opprette trekk med annen valuta enn .."
@@ -770,6 +751,11 @@ msgid "Configure your company bank accounts"
 msgstr "Konfigurer bedriftens bankkonto."
 
 #. module: account
+#: view:account.invoice.refund:0
+msgid "Create Refund"
+msgstr ""
+
+#. module: account
 #: constraint:account.move.line:0
 msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
@@ -794,6 +780,12 @@ msgid "Are you sure you want to create entries?"
 msgstr "Er du sikker på du ønsker å opprette posteringer?"
 
 #. module: account
+#: code:addons/account/account_invoice.py:1329
+#, python-format
+msgid "Invoice partially paid: %s%s of %s%s (%s%s remaining)."
+msgstr ""
+
+#. module: account
 #: view:account.invoice:0
 msgid "Print Invoice"
 msgstr "Skriv ut faktura"
@@ -813,6 +805,7 @@ msgstr "Vis underliggende med hierarki"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
+#: selection:account.tax.template,type:0
 msgid "Percent"
 msgstr "Prosent"
 
@@ -855,7 +848,7 @@ msgid "Type"
 msgstr "Type"
 
 #. module: account
-#: code:addons/account/account_invoice.py:782
+#: code:addons/account/account_invoice.py:798
 #, python-format
 msgid ""
 "Taxes are missing!\n"
@@ -880,23 +873,17 @@ msgid "Supplier Invoices And Refunds"
 msgstr "Leverandørfakturaer og kreditnotaer"
 
 #. module: account
-#: code:addons/account/account_move_line.py:847
+#: code:addons/account/account_move_line.py:854
 #, python-format
 msgid "Entry is already reconciled."
 msgstr ""
 
 #. module: account
 #: view:account.move.line.unreconcile.select:0
-#: view:account.unreconcile:0
 #: view:account.unreconcile.reconcile:0
 #: model:ir.model,name:account.model_account_move_line_unreconcile_select
 msgid "Unreconciliation"
 msgstr "Tilbakestill avstemte posteringer"
-
-#. module: account
-#: view:account.payment.term.line:0
-msgid "At 14 net days 2 percent, remaining amount at 30 days end of month."
-msgstr "Pr. 14 dager netto 2 prosent, resterende beløp innen 30 dager."
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_journal_report
@@ -927,11 +914,6 @@ msgstr "J.C./Move name"
 #: view:account.account:0
 msgid "Account Code and Name"
 msgstr "Konto kode og navn."
-
-#. module: account
-#: model:mail.message.subtype,name:account.mt_invoice_new
-msgid "created"
-msgstr "Opprettet."
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -967,7 +949,7 @@ msgstr ""
 "            "
 
 #. module: account
-#: code:addons/account/account.py:1632
+#: code:addons/account/account.py:1637
 #, python-format
 msgid ""
 "You cannot unreconcile journal items if they has been generated by the       "
@@ -982,6 +964,7 @@ msgstr "Nytt abonnement"
 
 #. module: account
 #: view:account.payment.term:0
+#: field:account.payment.term.line,value:0
 msgid "Computation"
 msgstr "Beregning"
 
@@ -1013,11 +996,8 @@ msgid "Purchase journal"
 msgstr "Kjøp journal."
 
 #. module: account
-#: code:addons/account/account.py:1316
-#, python-format
-msgid ""
-"You cannot validate this journal entry because account \"%s\" does not "
-"belong to chart of accounts \"%s\"."
+#: model:mail.message.subtype,description:account.mt_invoice_paid
+msgid "Invoice paid"
 msgstr ""
 
 #. module: account
@@ -1053,7 +1033,7 @@ msgid "Liability"
 msgstr "Gjeld"
 
 #. module: account
-#: code:addons/account/account_invoice.py:855
+#: code:addons/account/account_invoice.py:871
 #, python-format
 msgid "Please define sequence on the journal related to this invoice."
 msgstr ""
@@ -1129,10 +1109,10 @@ msgid "Features"
 msgstr "Funksjoner."
 
 #. module: account
-#: code:addons/account/account.py:2293
+#: code:addons/account/account.py:2298
 #: code:addons/account/account_bank_statement.py:423
 #: code:addons/account/account_invoice.py:73
-#: code:addons/account/account_invoice.py:732
+#: code:addons/account/account_invoice.py:748
 #: code:addons/account/account_move_line.py:195
 #, python-format
 msgid "No Analytic Journal !"
@@ -1210,8 +1190,9 @@ msgid "Refund "
 msgstr "Tilbakebetaling. "
 
 #. module: account
-#: help:account.config.settings,company_footer:0
-msgid "Bank accounts as printed in the footer of each printed document"
+#: code:addons/account/account_analytic_line.py:90
+#, python-format
+msgid "There is no expense account defined for this product: \"%s\" (id:%d)."
 msgstr ""
 
 #. module: account
@@ -1257,7 +1238,7 @@ msgstr ""
 #. module: account
 #: model:account.account.type,name:account.data_account_type_bank
 #: selection:account.bank.accounts.wizard,account_type:0
-#: code:addons/account/account.py:3034
+#: code:addons/account/account.py:3044
 #, python-format
 msgid "Bank"
 msgstr "Bank"
@@ -1555,9 +1536,9 @@ msgid "Account Receivable"
 msgstr "Debitorposter"
 
 #. module: account
-#: code:addons/account/account.py:611
-#: code:addons/account/account.py:766
+#: code:addons/account/account.py:612
 #: code:addons/account/account.py:767
+#: code:addons/account/account.py:768
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -1571,7 +1552,7 @@ msgid "With balance is not equal to 0"
 msgstr "Hvor saldo ikke er lik 0"
 
 #. module: account
-#: code:addons/account/account.py:1440
+#: code:addons/account/account.py:1445
 #, python-format
 msgid ""
 "There is no default debit account defined \n"
@@ -1626,7 +1607,7 @@ msgstr "Dropp 'Utkast' status for manuelle posteringer"
 
 #. module: account
 #: code:addons/account/report/common_report_header.py:92
-#: code:addons/account/wizard/account_report_common.py:159
+#: code:addons/account/wizard/account_report_common.py:164
 #, python-format
 msgid "Not implemented."
 msgstr ""
@@ -1672,6 +1653,12 @@ msgid "Supplier Refunds"
 msgstr "Leverandør kreditnota"
 
 #. module: account
+#: field:account.tax.code,code:0
+#: field:account.tax.code.template,code:0
+msgid "Case Code"
+msgstr "Kontantkode"
+
+#. module: account
 #: field:account.config.settings,company_footer:0
 msgid "Bank accounts footer preview"
 msgstr ""
@@ -1708,7 +1695,6 @@ msgid "Groups"
 msgstr "Grupper"
 
 #. module: account
-#: field:account.invoice,amount_untaxed:0
 #: field:report.invoice.created,amount_untaxed:0
 msgid "Untaxed"
 msgstr "Uten avg."
@@ -1842,6 +1828,12 @@ msgid "Sales by Account Type"
 msgstr "Salg pr kontotype"
 
 #. module: account
+#: model:account.payment.term,name:account.account_payment_term_15days
+#: model:account.payment.term,note:account.account_payment_term_15days
+msgid "15 Days"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.menu,name:account.periodical_processing_invoicing
 msgid "Invoicing"
 msgstr "Fakturering"
@@ -1861,113 +1853,9 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:850
+#: code:addons/account/account_move_line.py:857
 #, python-format
 msgid "Some entries are already reconciled."
-msgstr ""
-
-#. module: account
-#: model:email.template,body_html:account.email_template_edi_invoice
-msgid ""
-"\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
-"\n"
-"    <p>Hello${object.partner_id.name and ' ' or ''}${object.partner_id.name "
-"or ''},</p>\n"
-"\n"
-"    <p>A new invoice is available for you: </p>\n"
-"    \n"
-"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
-"       &nbsp;&nbsp;Invoice number: <strong>${object.number}</strong><br />\n"
-"       &nbsp;&nbsp;Invoice total: <strong>${object.amount_total} "
-"${object.currency_id.name}</strong><br />\n"
-"       &nbsp;&nbsp;Invoice date: ${object.date_invoice}<br />\n"
-"       % if object.origin:\n"
-"       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
-"       % endif\n"
-"       % if object.user_id:\n"
-"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or "
-"''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n"
-"       % endif\n"
-"    </p>  \n"
-"    \n"
-"    % if object.company_id.paypal_account and object.type in ('out_invoice', "
-"'in_refund'):\n"
-"    <% \n"
-"    comp_name = quote(object.company_id.name)\n"
-"    inv_number = quote(object.number)\n"
-"    paypal_account = quote(object.company_id.paypal_account)\n"
-"    inv_amount = quote(str(object.residual))\n"
-"    cur_name = quote(object.currency_id.name)\n"
-"    paypal_url = \"https://www.paypal.com/cgi-"
-"bin/webscr?cmd=_xclick&amp;business=%s&amp;item_name=%s%%20Invoice%%20%s&amp;"
-"\" \\\n"
-"                 "
-"\"invoice=%s&amp;amount=%s&amp;currency_code=%s&amp;button_subtype=services&a"
-"mp;no_note=1&amp;bn=OpenERP_Invoice_PayNow_%s\" % \\\n"
-"                 "
-"(paypal_account,comp_name,inv_number,inv_number,inv_amount,cur_name,cur_name)"
-"\n"
-"    %>\n"
-"    <br/>\n"
-"    <p>It is also possible to directly pay with Paypal:</p>\n"
-"        <a style=\"margin-left: 120px;\" href=\"${paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" "
-"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
-"        </a>\n"
-"    % endif\n"
-"    \n"
-"    <br/>\n"
-"    <p>If you have any question, do not hesitate to contact us.</p>\n"
-"    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
-"    <br/>\n"
-"    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
-"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
-"background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
-"#FFF;\">\n"
-"            <strong style=\"text-"
-"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
-"    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
-"16px; background-color: #F2F2F2;\">\n"
-"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"        % if object.company_id.street:\n"
-"            ${object.company_id.street}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.street2:\n"
-"            ${object.company_id.street2}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.city or object.company_id.zip:\n"
-"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % "
-"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
-"or ''}<br/>\n"
-"        % endif\n"
-"        </span>\n"
-"        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
-"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
-"0px; padding-left: 0px; \">\n"
-"                Phone:&nbsp; ${object.company_id.phone}\n"
-"            </div>\n"
-"        % endif\n"
-"        % if object.company_id.website:\n"
-"            <div>\n"
-"                Web :&nbsp;<a "
-"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
-"            </div>\n"
-"        %endif\n"
-"        <p></p>\n"
-"    </div>\n"
-"</div>\n"
-"            "
 msgstr ""
 
 #. module: account
@@ -2081,6 +1969,11 @@ msgid "Draft statement"
 msgstr "Utkast kontoutdrag"
 
 #. module: account
+#: model:mail.message.subtype,description:account.mt_invoice_validated
+msgid "Invoice validated"
+msgstr ""
+
+#. module: account
 #: field:account.config.settings,module_account_check_writing:0
 msgid "Pay your suppliers by check"
 msgstr "Betal dine leverandører med sjekk."
@@ -2108,26 +2001,25 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:408
-#: code:addons/account/account.py:413
-#: code:addons/account/account.py:430
-#: code:addons/account/account.py:633
-#: code:addons/account/account.py:635
-#: code:addons/account/account.py:929
-#: code:addons/account/account.py:1018
-#: code:addons/account/account.py:1056
-#: code:addons/account/account.py:1058
-#: code:addons/account/account.py:1097
-#: code:addons/account/account.py:1278
-#: code:addons/account/account.py:1292
-#: code:addons/account/account.py:1315
-#: code:addons/account/account.py:1322
-#: code:addons/account/account.py:1542
-#: code:addons/account/account.py:1546
-#: code:addons/account/account.py:1632
-#: code:addons/account/account.py:2305
-#: code:addons/account/account.py:2620
-#: code:addons/account/account.py:3392
+#: code:addons/account/account.py:409
+#: code:addons/account/account.py:414
+#: code:addons/account/account.py:431
+#: code:addons/account/account.py:634
+#: code:addons/account/account.py:636
+#: code:addons/account/account.py:930
+#: code:addons/account/account.py:1062
+#: code:addons/account/account.py:1064
+#: code:addons/account/account.py:1103
+#: code:addons/account/account.py:1283
+#: code:addons/account/account.py:1297
+#: code:addons/account/account.py:1320
+#: code:addons/account/account.py:1327
+#: code:addons/account/account.py:1547
+#: code:addons/account/account.py:1551
+#: code:addons/account/account.py:1637
+#: code:addons/account/account.py:2310
+#: code:addons/account/account.py:2630
+#: code:addons/account/account.py:3417
 #: code:addons/account/account_analytic_line.py:89
 #: code:addons/account/account_analytic_line.py:98
 #: code:addons/account/account_bank_statement.py:367
@@ -2135,16 +2027,16 @@ msgstr ""
 #: code:addons/account/account_bank_statement.py:418
 #: code:addons/account/account_cash_statement.py:256
 #: code:addons/account/account_cash_statement.py:300
-#: code:addons/account/account_invoice.py:855
-#: code:addons/account/account_invoice.py:889
-#: code:addons/account/account_invoice.py:1090
+#: code:addons/account/account_invoice.py:871
+#: code:addons/account/account_invoice.py:905
+#: code:addons/account/account_invoice.py:1095
 #: code:addons/account/account_move_line.py:578
-#: code:addons/account/account_move_line.py:824
-#: code:addons/account/account_move_line.py:847
-#: code:addons/account/account_move_line.py:850
-#: code:addons/account/account_move_line.py:1109
-#: code:addons/account/account_move_line.py:1111
-#: code:addons/account/account_move_line.py:1144
+#: code:addons/account/account_move_line.py:831
+#: code:addons/account/account_move_line.py:854
+#: code:addons/account/account_move_line.py:857
+#: code:addons/account/account_move_line.py:1122
+#: code:addons/account/account_move_line.py:1124
+#: code:addons/account/account_move_line.py:1157
 #: code:addons/account/report/common_report_header.py:92
 #: code:addons/account/wizard/account_change_currency.py:38
 #: code:addons/account/wizard/account_change_currency.py:59
@@ -2155,8 +2047,8 @@ msgstr ""
 #: code:addons/account/wizard/account_invoice_refund.py:111
 #: code:addons/account/wizard/account_move_bank_reconcile.py:49
 #: code:addons/account/wizard/account_open_closed_fiscalyear.py:39
-#: code:addons/account/wizard/account_report_common.py:153
-#: code:addons/account/wizard/account_report_common.py:159
+#: code:addons/account/wizard/account_report_common.py:158
+#: code:addons/account/wizard/account_report_common.py:164
 #: code:addons/account/wizard/account_use_model.py:44
 #: code:addons/account/wizard/pos_box.py:32
 #: code:addons/account/wizard/pos_box.py:36
@@ -2201,7 +2093,7 @@ msgid "period close"
 msgstr "Periode til"
 
 #. module: account
-#: code:addons/account/account.py:1043
+#: code:addons/account/account.py:1049
 #, python-format
 msgid ""
 "This journal already contains items for this period, therefore you cannot "
@@ -2301,7 +2193,7 @@ msgid "Product Category"
 msgstr "Produktkategori"
 
 #. module: account
-#: code:addons/account/account.py:655
+#: code:addons/account/account.py:656
 #, python-format
 msgid ""
 "You cannot change the type of account to '%s' type as it contains journal "
@@ -2672,7 +2564,7 @@ msgid "Keep empty for all open fiscal year"
 msgstr "La felt være blankt for å vise alle åpne regnskapsår"
 
 #. module: account
-#: code:addons/account/account.py:652
+#: code:addons/account/account.py:653
 #, python-format
 msgid ""
 "You cannot change the type of account from 'Closed' to any other type as it "
@@ -2690,7 +2582,7 @@ msgid "Create an Account Based on this Template"
 msgstr "Opprett en konto basert på denne malen"
 
 #. module: account
-#: code:addons/account/account_invoice.py:889
+#: code:addons/account/account_invoice.py:905
 #, python-format
 msgid ""
 "Cannot create the invoice.\n"
@@ -2711,7 +2603,7 @@ msgid "Main Sequence"
 msgstr "Hovedsekvens"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:476
+#: code:addons/account/account_bank_statement.py:477
 #, python-format
 msgid ""
 "In order to delete a bank statement, you must first cancel it to delete "
@@ -2721,14 +2613,12 @@ msgstr ""
 "tidsskriftet elementer."
 
 #. module: account
-#: field:account.invoice,payment_term:0
 #: field:account.invoice.report,payment_term:0
 #: view:account.payment.term:0
 #: field:account.payment.term,name:0
 #: view:account.payment.term.line:0
 #: field:account.payment.term.line,payment_id:0
 #: model:ir.model,name:account.model_account_payment_term
-#: field:res.partner,property_payment_term:0
 msgid "Payment Term"
 msgstr "Betalingsbetingelser"
 
@@ -2755,18 +2645,6 @@ msgid "Filters"
 msgstr "Filtere"
 
 #. module: account
-#: view:account.bank.statement:0
-#: selection:account.bank.statement,state:0
-#: view:account.fiscalyear:0
-#: selection:account.fiscalyear,state:0
-#: selection:account.invoice,state:0
-#: selection:account.invoice.report,state:0
-#: selection:account.period,state:0
-#: selection:report.invoice.created,state:0
-msgid "Open"
-msgstr "Åpne"
-
-#. module: account
 #: model:process.node,note:account.process_node_draftinvoices0
 #: model:process.node,note:account.process_node_supplierdraftinvoices0
 msgid "Draft state of an invoice"
@@ -2776,6 +2654,11 @@ msgstr "Kunde fakturakladd"
 #: view:product.category:0
 msgid "Account Properties"
 msgstr "Konto egenskaper."
+
+#. module: account
+#: selection:account.invoice.refund,filter_refund:0
+msgid "Create a draft refund"
+msgstr ""
 
 #. module: account
 #: view:account.partner.reconcile.process:0
@@ -2854,15 +2737,10 @@ msgid "Account Model Entries"
 msgstr "Konto Modell oppføringer"
 
 #. module: account
-#: code:addons/account/account.py:3144
+#: code:addons/account/account.py:3154
 #, python-format
 msgid "EXJ"
 msgstr "EXJ"
-
-#. module: account
-#: view:account.invoice.refund:0
-msgid "Create Credit Note"
-msgstr "Opprett kredit notat."
 
 #. module: account
 #: field:product.template,supplier_taxes_id:0
@@ -2870,9 +2748,9 @@ msgid "Supplier Taxes"
 msgstr "Leverandøravgifter"
 
 #. module: account
-#: view:account.entries.report:0
-msgid "entries"
-msgstr "oppføringer"
+#: view:res.partner:0
+msgid "Bank Details"
+msgstr "Detaljer om bankforbindelse"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_move_journal_line
@@ -2895,7 +2773,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: help:account.invoice,date_due:0
 #: help:account.invoice,payment_term:0
 msgid ""
 "If you use payment terms, the due date will be computed automatically at the "
@@ -2909,9 +2786,8 @@ msgstr ""
 "kan beregne flere forfallsdatoer, for eksempel 50 % np og 50 % om en måned."
 
 #. module: account
-#: code:addons/account/wizard/account_state_open.py:37
-#, python-format
-msgid "Invoice is already reconciled."
+#: field:account.config.settings,purchase_sequence_next:0
+msgid "Next supplier invoice number"
 msgstr ""
 
 #. module: account
@@ -2941,6 +2817,7 @@ msgstr "Konto trekk linje forsonet (writeoff)"
 #: report:account.journal.period.print.sale.purchase:0
 #: field:account.move.line,account_tax_id:0
 #: view:account.tax:0
+#: model:ir.model,name:account.model_account_tax
 msgid "Tax"
 msgstr "Avgift"
 
@@ -2976,14 +2853,14 @@ msgid "Accounts"
 msgstr "Konto"
 
 #. module: account
-#: code:addons/account/account.py:3468
+#: code:addons/account/account.py:3493
 #: code:addons/account/account_bank_statement.py:404
-#: code:addons/account/account_invoice.py:367
-#: code:addons/account/account_invoice.py:473
-#: code:addons/account/account_invoice.py:570
-#: code:addons/account/account_invoice.py:585
-#: code:addons/account/account_invoice.py:593
-#: code:addons/account/account_invoice.py:615
+#: code:addons/account/account_invoice.py:386
+#: code:addons/account/account_invoice.py:488
+#: code:addons/account/account_invoice.py:586
+#: code:addons/account/account_invoice.py:601
+#: code:addons/account/account_invoice.py:609
+#: code:addons/account/account_invoice.py:631
 #: code:addons/account/account_move_line.py:535
 #, python-format
 msgid "Configuration Error!"
@@ -3081,6 +2958,12 @@ msgid "Refund Base Code"
 msgstr "Tilbakebetaling Base kode."
 
 #. module: account
+#: model:ir.actions.act_window,name:account.action_bank_statement_tree
+#: model:ir.ui.menu,name:account.menu_bank_statement_tree
+msgid "Bank Statements"
+msgstr "Bankbekreftelse"
+
+#. module: account
 #: model:ir.actions.act_window,help:account.action_account_fiscalyear
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
@@ -3133,11 +3016,6 @@ msgid "Accounting entries"
 msgstr "Regnskapsregistreringer"
 
 #. module: account
-#: field:account.invoice,reference_type:0
-msgid "Communication Type"
-msgstr "Kommuniksjonstype"
-
-#. module: account
 #: constraint:account.move.line:0
 msgid "Account and Period must belong to the same company."
 msgstr "Konto og periode må tilhøre samme selskap."
@@ -3184,7 +3062,7 @@ msgstr ""
 "forma 'tilstand."
 
 #. module: account
-#: code:addons/account/account.py:1056
+#: code:addons/account/account.py:1062
 #, python-format
 msgid "You should choose the periods that belong to the same company."
 msgstr "Du bør velge de periodene som tilhører samme selskap."
@@ -3197,7 +3075,7 @@ msgid "Sales by Account"
 msgstr "Salg pr. konto"
 
 #. module: account
-#: code:addons/account/account.py:1406
+#: code:addons/account/account.py:1411
 #, python-format
 msgid "You cannot delete a posted journal entry \"%s\"."
 msgstr "Du kan ikke slette en publisert bilagsregistrering \"% s\"."
@@ -3213,15 +3091,15 @@ msgid "Sale journal"
 msgstr "Salgs journal."
 
 #. module: account
-#: code:addons/account/account.py:2293
-#: code:addons/account/account_invoice.py:732
+#: code:addons/account/account.py:2298
+#: code:addons/account/account_invoice.py:748
 #: code:addons/account/account_move_line.py:195
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
 msgstr "Du må definere en analytisk journal på '% s' dagbok!"
 
 #. module: account
-#: code:addons/account/account.py:780
+#: code:addons/account/account.py:781
 #, python-format
 msgid ""
 "This journal already contains items, therefore you cannot modify its company "
@@ -3229,7 +3107,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:408
+#: code:addons/account/account.py:409
 #, python-format
 msgid ""
 "You need an Opening journal with centralisation checked to set the initial "
@@ -3294,9 +3172,10 @@ msgstr ""
 "rapporter."
 
 #. module: account
-#: view:account.payment.term.line:0
-msgid "Line 2:"
-msgstr "Linje 2:"
+#: view:account.unreconcile:0
+#: view:account.unreconcile.reconcile:0
+msgid "Unreconcile Transactions"
+msgstr ""
 
 #. module: account
 #: field:wizard.multi.charts.accounts,only_one_chart_template:0
@@ -3344,12 +3223,6 @@ msgid "Default Sale Tax"
 msgstr "Standard salgsavgift"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1072
-#, python-format
-msgid "Invoice  '%s' is validated."
-msgstr "Faktura '%s' er godkjent."
-
-#. module: account
 #: help:account.model.line,date_maturity:0
 msgid ""
 "The maturity date of the generated entries for this model. You can choose "
@@ -3385,7 +3258,7 @@ msgid "Fiscal Position"
 msgstr "Regnskapsstatus"
 
 #. module: account
-#: code:addons/account/account_invoice.py:779
+#: code:addons/account/account_invoice.py:795
 #, python-format
 msgid ""
 "Tax base different!\n"
@@ -3414,7 +3287,7 @@ msgid "Trial Balance"
 msgstr "Råbalanse"
 
 #. module: account
-#: code:addons/account/account.py:430
+#: code:addons/account/account.py:431
 #, python-format
 msgid "Unable to adapt the initial balance (negative value)."
 msgstr ""
@@ -3485,7 +3358,7 @@ msgstr ""
 "bruker alltid dagens valutakurs."
 
 #. module: account
-#: code:addons/account/account.py:2620
+#: code:addons/account/account.py:2630
 #, python-format
 msgid "There is no parent code for the template account."
 msgstr "Det er ingen overordnede kode for denne malen kontoen."
@@ -3497,9 +3370,9 @@ msgid "No. of Digits to use for account code"
 msgstr "Ant. siffer til bruk for kontokode"
 
 #. module: account
-#: field:account.payment.term.line,name:0
-msgid "Line Name"
-msgstr "Linjenavn"
+#: field:res.partner,property_supplier_payment_term:0
+msgid "Supplier Payment Term"
+msgstr ""
 
 #. module: account
 #: view:account.fiscalyear:0
@@ -3548,7 +3421,7 @@ msgid "View"
 msgstr "Vis"
 
 #. module: account
-#: code:addons/account/account.py:3387
+#: code:addons/account/account.py:3412
 #: code:addons/account/account_bank.py:95
 #, python-format
 msgid "BNK"
@@ -3570,14 +3443,19 @@ msgid "Electronic File"
 msgstr "Elektonisk fil"
 
 #. module: account
+#: field:account.move.line,reconcile:0
+msgid "Reconcile Ref"
+msgstr ""
+
+#. module: account
 #: field:account.config.settings,has_chart_of_accounts:0
 msgid "Company has a chart of accounts"
 msgstr "Selskapet har en konto plan."
 
 #. module: account
-#: view:account.payment.term.line:0
-msgid "  Day of the Month: 0"
-msgstr "  Dagen i måneden: 0"
+#: model:ir.model,name:account.model_account_tax_code_template
+msgid "Tax Code Template"
+msgstr "Avgiftskodemal"
 
 #. module: account
 #: model:ir.model,name:account.model_account_partner_ledger
@@ -3585,10 +3463,89 @@ msgid "Account Partner Ledger"
 msgstr "Konto Partner ledger"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1330
-#, python-format
-msgid "%s <b>created</b>."
-msgstr "%s <b>Opprettet</b>."
+#: model:email.template,body_html:account.email_template_edi_invoice
+msgid ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>Hello ${object.partner_id.name},</p>\n"
+"\n"
+"    <p>A new invoice is available for you: </p>\n"
+"    \n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
+"       &nbsp;&nbsp;Invoice number: <strong>${object.number}</strong><br />\n"
+"       &nbsp;&nbsp;Invoice total: <strong>${object.amount_total} "
+"${object.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Invoice date: ${object.date_invoice}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.user_id:\n"
+"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or "
+"''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n"
+"       % endif\n"
+"    </p>  \n"
+"    \n"
+"    % if object.paypal_url:\n"
+"    <br/>\n"
+"    <p>It is also possible to directly pay with Paypal:</p>\n"
+"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
+"            <img class=\"oe_edi_paypal_button\" "
+"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"        </a>\n"
+"    % endif\n"
+"    \n"
+"    <br/>\n"
+"    <p>If you have any question, do not hesitate to contact us.</p>\n"
+"    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"            <strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % "
+"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
+"or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                Phone:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
+msgstr ""
 
 #. module: account
 #: view:account.period:0
@@ -3716,12 +3673,15 @@ msgid "Account Tax Declaration"
 msgstr ""
 
 #. module: account
-#: view:account.payment.term.line:0
-msgid "  Value amount: 0.02"
-msgstr "  Verdi beløp: 0.02"
+#: help:account.bank.statement,name:0
+msgid ""
+"if you give the Name other then /, its created Accounting Entries Move will "
+"be with same name as statement name. This allows the statement entries to "
+"have the same references than the statement itself"
+msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:976
+#: code:addons/account/account_invoice.py:988
 #, python-format
 msgid ""
 "You cannot create an invoice on a centralized journal. Uncheck the "
@@ -3736,7 +3696,7 @@ msgid "Starting Balance"
 msgstr "Inngående saldo"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1433
+#: code:addons/account/account_invoice.py:1428
 #, python-format
 msgid "No Partner Defined !"
 msgstr "Ingen partner er definert!"
@@ -3944,7 +3904,7 @@ msgid "Period Length (days)"
 msgstr "Periodelengde (dager)"
 
 #. module: account
-#: code:addons/account/account.py:1322
+#: code:addons/account/account.py:1327
 #, python-format
 msgid ""
 "You cannot modify a posted entry of this journal.\n"
@@ -3968,7 +3928,7 @@ msgid "Category of Product"
 msgstr "Produktkategori"
 
 #. module: account
-#: code:addons/account/account.py:929
+#: code:addons/account/account.py:930
 #, python-format
 msgid ""
 "There is no fiscal year defined for this date.\n"
@@ -4104,7 +4064,7 @@ msgid "Chart of Accounts Template"
 msgstr "Kontoplanmal"
 
 #. module: account
-#: code:addons/account/account.py:2305
+#: code:addons/account/account.py:2310
 #, python-format
 msgid ""
 "Maturity date of entry line generated by model line '%s' of model '%s' is "
@@ -4194,9 +4154,12 @@ msgid "Qty"
 msgstr "Ant"
 
 #. module: account
-#: field:account.move.line,blocked:0
-msgid "Litigation"
-msgstr "Rettstvist"
+#: help:account.tax.code,sign:0
+msgid ""
+"You can specify here the coefficient that will be used when consolidating "
+"the amount of this case into its parent. For example, set 1/-1 if you want "
+"to add/substract it."
+msgstr ""
 
 #. module: account
 #: view:account.analytic.line:0
@@ -4282,11 +4245,6 @@ msgid "Expects a Chart of Accounts"
 msgstr ""
 
 #. module: account
-#: model:mail.message.subtype,name:account.mt_invoice_paid
-msgid "paid"
-msgstr "Betalt."
-
-#. module: account
 #: field:account.move.line,date:0
 msgid "Effective date"
 msgstr "Effektiv dato"
@@ -4302,11 +4260,6 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_action_bank_tree
 msgid "Setup your Bank Accounts"
 msgstr "Sett opp dine bankkonti"
-
-#. module: account
-#: selection:account.invoice.refund,filter_refund:0
-msgid "Modify: create credit note, reconcile and create a new draft invoice"
-msgstr ""
 
 #. module: account
 #: xsl:account.transfer:0
@@ -4354,8 +4307,8 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:1048
-#: code:addons/account/account_move_line.py:1131
+#: code:addons/account/account_move_line.py:1061
+#: code:addons/account/account_move_line.py:1144
 #, python-format
 msgid "You cannot use an inactive account."
 msgstr "Du kan ikke bruke en inaktiv konto."
@@ -4385,7 +4338,7 @@ msgid "Consolidated Children"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:538
+#: code:addons/account/account_invoice.py:554
 #: code:addons/account/wizard/account_invoice_refund.py:146
 #, python-format
 msgid "Insufficient Data!"
@@ -4422,11 +4375,6 @@ msgstr ""
 #: view:account.installer:0
 msgid "title"
 msgstr "tittel"
-
-#. module: account
-#: selection:account.invoice.refund,filter_refund:0
-msgid "Create a draft credit note"
-msgstr "Opprett en kladd kredit notat."
 
 #. module: account
 #: view:account.invoice:0
@@ -4518,6 +4466,13 @@ msgid "Analytic Balance"
 msgstr "Analytisk saldo"
 
 #. module: account
+#: help:res.partner,property_payment_term:0
+msgid ""
+"This payment term will be used instead of the default one for sale orders "
+"and customer invoices"
+msgstr ""
+
+#. module: account
 #: view:account.config.settings:0
 msgid ""
 "If you put \"%(year)s\" in the prefix, it will be replaced by the current "
@@ -4539,6 +4494,11 @@ msgid "Posted Journal Items"
 msgstr "Posterte journaloppføringer"
 
 #. module: account
+#: field:account.move.line,blocked:0
+msgid "No Follow-up"
+msgstr ""
+
+#. module: account
 #: view:account.tax.template:0
 msgid "Search Tax Templates"
 msgstr "Søk avgiftsmaler"
@@ -4549,22 +4509,12 @@ msgid "Draft Entries"
 msgstr "utkastene"
 
 #. module: account
-#: view:account.payment.term.line:0
-msgid "  Day of the Month= -1"
-msgstr "  Dag i måneden=-1"
-
-#. module: account
 #: help:account.config.settings,decimal_precision:0
 msgid ""
 "As an example, a decimal precision of 2 will allow journal entries  like: "
 "9.99 EUR, whereas a decimal precision of 4 will allow journal  entries like: "
 "0.0231 EUR."
 msgstr ""
-
-#. module: account
-#: view:account.payment.term.line:0
-msgid "  Number of Days: 30"
-msgstr "  Antall dager: 30"
 
 #. module: account
 #: field:account.account,shortcut:0
@@ -4589,20 +4539,9 @@ msgid "Account Type"
 msgstr "Kontotype"
 
 #. module: account
-#: model:ir.actions.act_window,help:account.action_bank_tree
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Click to setup a new bank account. \n"
-"          </p><p>\n"
-"            Configure your company's bank account and select those that "
-"must\n"
-"            appear on the report footer.\n"
-"          </p><p>\n"
-"            If you use the accounting application of OpenERP, journals and\n"
-"            accounts will be created automatically based on these data.\n"
-"          </p>\n"
-"        "
-msgstr ""
+#: view:account.bank.statement:0
+msgid "Close CashBox"
+msgstr "Lukk Cash Box"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_cancel
@@ -4625,9 +4564,20 @@ msgstr ""
 "analytiske kontoer. Disse genererer utkast leverandørfakturaer."
 
 #. module: account
-#: view:account.bank.statement:0
-msgid "Close CashBox"
-msgstr "Lukk Cash Box"
+#: model:ir.actions.act_window,help:account.action_bank_tree
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to setup a new bank account. \n"
+"          </p><p>\n"
+"            Configure your company's bank account and select those that "
+"must\n"
+"            appear on the report footer.\n"
+"          </p><p>\n"
+"            If you use the accounting application of OpenERP, journals and\n"
+"            accounts will be created automatically based on these data.\n"
+"          </p>\n"
+"        "
+msgstr ""
 
 #. module: account
 #: constraint:account.tax.code.template:0
@@ -4659,7 +4609,7 @@ msgid "Month"
 msgstr "Måned"
 
 #. module: account
-#: code:addons/account/account.py:667
+#: code:addons/account/account.py:668
 #, python-format
 msgid "You cannot change the code of account which contains journal items!"
 msgstr ""
@@ -4670,8 +4620,8 @@ msgid "Supplier invoice sequence"
 msgstr "Leverandør faktura sekvens."
 
 #. module: account
-#: code:addons/account/account_invoice.py:571
-#: code:addons/account/account_invoice.py:586
+#: code:addons/account/account_invoice.py:587
+#: code:addons/account/account_invoice.py:602
 #, python-format
 msgid ""
 "Cannot find a chart of account, you should create one from Settings\\"
@@ -4696,6 +4646,11 @@ msgid "Acc.Type"
 msgstr "Kto.type"
 
 #. module: account
+#: selection:account.journal,type:0
+msgid "Bank and Checks"
+msgstr ""
+
+#. module: account
 #: field:account.account.template,note:0
 msgid "Note"
 msgstr "Notat"
@@ -4707,7 +4662,7 @@ msgstr "Omvendt balanse tegn"
 
 #. module: account
 #: selection:account.account.type,report_type:0
-#: code:addons/account/account.py:190
+#: code:addons/account/account.py:191
 #, python-format
 msgid "Balance Sheet (Liability account)"
 msgstr "Balanse (Ansvar konto)"
@@ -4729,7 +4684,7 @@ msgid "Account Base Code"
 msgstr "Konto Base kode"
 
 #. module: account
-#: code:addons/account/account_move_line.py:855
+#: code:addons/account/account_move_line.py:867
 #, python-format
 msgid ""
 "You have to provide an account for the write off/exchange difference entry."
@@ -4786,11 +4741,6 @@ msgid "Last Reconciliation:"
 msgstr ""
 
 #. module: account
-#: model:ir.ui.menu,name:account.menu_finance_periodical_processing
-msgid "Periodical Processing"
-msgstr "Periodevis kjøring"
-
-#. module: account
 #: selection:account.move.line,state:0
 msgid "Balanced"
 msgstr "Balansert."
@@ -4819,10 +4769,9 @@ msgid "Account chart"
 msgstr "Kontoplan"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1322
-#, python-format
-msgid "Supplier invoice"
-msgstr "Leverandøfaktura"
+#: field:account.invoice,reference_type:0
+msgid "Payment Reference"
+msgstr ""
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -4890,8 +4839,12 @@ msgstr "Kreditnotaer"
 #. module: account
 #: view:account.move.line:0
 #: model:ir.actions.act_window,name:account.action_account_manual_reconcile
-#: model:ir.ui.menu,name:account.menu_manual_reconcile_bank
 msgid "Journal Items to Reconcile"
+msgstr ""
+
+#. module: account
+#: model:ir.model,name:account.model_account_tax_template
+msgid "Templates for Taxes"
 msgstr ""
 
 #. module: account
@@ -4947,7 +4900,7 @@ msgstr ""
 "Du kan ikke opprette en konto som har overordnede hensyn til ulike selskap."
 
 #. module: account
-#: code:addons/account/account_invoice.py:615
+#: code:addons/account/account_invoice.py:631
 #, python-format
 msgid ""
 "Cannot find any account journal of %s type for this company.\n"
@@ -4962,7 +4915,7 @@ msgid "Based On"
 msgstr "Basert på"
 
 #. module: account
-#: code:addons/account/account.py:3146
+#: code:addons/account/account.py:3156
 #, python-format
 msgid "ECNJ"
 msgstr "ECNJ"
@@ -4988,11 +4941,6 @@ msgid "Change"
 msgstr "Endre"
 
 #. module: account
-#: selection:account.journal,type:0
-msgid "Bank and Cheques"
-msgstr "Bank og sjekker"
-
-#. module: account
 #: field:account.journal,type_control_ids:0
 msgid "Type Controls"
 msgstr "Type kontroll"
@@ -5015,11 +4963,6 @@ msgid "Cancelled"
 msgstr "Kansellert"
 
 #. module: account
-#: view:account.payment.term.line:0
-msgid "Example"
-msgstr "Eksempel"
-
-#. module: account
 #: help:account.config.settings,group_proforma_invoices:0
 msgid "Allows you to put invoices in pro-forma state."
 msgstr ""
@@ -5030,11 +4973,6 @@ msgid "Unit Of Currency Definition"
 msgstr ""
 
 #. module: account
-#: view:account.tax.template:0
-msgid "Keep empty to use the income account"
-msgstr "Beholdes blankt til bruk for inntektskonto"
-
-#. module: account
 #: help:account.partner.ledger,amount_currency:0
 #: help:account.report.general.ledger,amount_currency:0
 msgid ""
@@ -5043,7 +4981,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:3336
+#: code:addons/account/account.py:3346
 #, python-format
 msgid "Purchase Tax %.2f%%"
 msgstr ""
@@ -5117,15 +5055,10 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:3147
+#: code:addons/account/account.py:3157
 #, python-format
 msgid "MISC"
 msgstr "DIV"
-
-#. module: account
-#: model:email.template,subject:account.email_template_edi_invoice
-msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a' })"
-msgstr "${objekt.firma_id.navn} faktura(Ref ${objekt.nummer or 'n/a' })"
 
 #. module: account
 #: field:account.fiscalyear.close,fy2_id:0
@@ -5240,6 +5173,7 @@ msgstr "Legg til"
 #. module: account
 #: selection:account.invoice,state:0
 #: report:account.overdue:0
+#: model:mail.message.subtype,name:account.mt_invoice_paid
 msgid "Paid"
 msgstr "Betalt"
 
@@ -5266,7 +5200,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:889
+#: code:addons/account/account.py:890
 #, python-format
 msgid "Opening Period"
 msgstr "åpningsperioden"
@@ -5282,14 +5216,6 @@ msgid "Round Globally"
 msgstr ""
 
 #. module: account
-#: field:account.bank.statement,message_comment_ids:0
-#: help:account.bank.statement,message_comment_ids:0
-#: field:account.invoice,message_comment_ids:0
-#: help:account.invoice,message_comment_ids:0
-msgid "Comments and emails"
-msgstr "Kommentarer og E-poster."
-
-#. module: account
 #: view:account.bank.statement:0
 #: view:account.subscription:0
 msgid "Compute"
@@ -5301,7 +5227,7 @@ msgid "Tax Application"
 msgstr "Tax Application"
 
 #. module: account
-#: code:addons/account/account_invoice.py:878
+#: code:addons/account/account_invoice.py:894
 #, python-format
 msgid ""
 "Please verify the price of the invoice !\n"
@@ -5334,9 +5260,9 @@ msgid "End of period"
 msgstr "Periodeslutt"
 
 #. module: account
-#: view:res.partner:0
-msgid "Bank Details"
-msgstr "Detaljer om bankforbindelse"
+#: model:process.node,note:account.process_node_supplierpaymentorder0
+msgid "Payment of invoices"
+msgstr "Betaling av fakturaer"
 
 #. module: account
 #: sql_constraint:account.invoice:0
@@ -5432,16 +5358,6 @@ msgid "Child Tax Accounts"
 msgstr "Underordnede avgiftskonti"
 
 #. module: account
-#: code:addons/account/account.py:1018
-#, python-format
-msgid ""
-"There is no period defined for this date: %s.\n"
-"Please create one."
-msgstr ""
-"Det er ingen periode definert for denne datoen:% s.\n"
-"Vennligst opprette en."
-
-#. module: account
 #: help:account.tax,price_include:0
 #: help:account.tax.template,price_include:0
 msgid ""
@@ -5485,7 +5401,7 @@ msgid "Target Moves"
 msgstr "målet beveger seg"
 
 #. module: account
-#: code:addons/account/account.py:1411
+#: code:addons/account/account.py:1416
 #, python-format
 msgid ""
 "Move cannot be deleted if linked to an invoice. (Invoice: %s - Move ID:%s)"
@@ -5521,6 +5437,7 @@ msgid "Python Code (reverse)"
 msgstr "Python Code (reverse)"
 
 #. module: account
+#: field:account.invoice,payment_term:0
 #: model:ir.actions.act_window,name:account.action_payment_term_form
 #: model:ir.ui.menu,name:account.menu_action_payment_term_form
 msgid "Payment Terms"
@@ -5536,12 +5453,6 @@ msgstr ""
 "Dette boolean hjelper deg å velge om du ønsker å foreslå for brukeren å kode "
 "salg og kjøp priser eller velge fra listen over skatter. Denne siste valg "
 "forutsetter at mengden av skatt er definert på denne malen er ferdig"
-
-#. module: account
-#: code:addons/account/account_invoice.py:1335
-#, python-format
-msgid "%s <b>paid</b>."
-msgstr "%s <b>Betalt</b>."
 
 #. module: account
 #: view:account.financial.report:0
@@ -5569,17 +5480,12 @@ msgid "It indicates that the invoice has been sent."
 msgstr ""
 
 #. module: account
-#: view:account.payment.term.line:0
-msgid "Line 1:"
-msgstr "Linje 1:"
-
-#. module: account
 #: field:account.tax.template,description:0
 msgid "Internal Name"
 msgstr "Internt navn"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1173
+#: code:addons/account/account_move_line.py:1186
 #, python-format
 msgid ""
 "Cannot create an automatic sequence for this piece.\n"
@@ -5618,7 +5524,7 @@ msgstr "Balanse"
 
 #. module: account
 #: selection:account.account.type,report_type:0
-#: code:addons/account/account.py:187
+#: code:addons/account/account.py:188
 #, python-format
 msgid "Profit & Loss (Income account)"
 msgstr "Gevinst og tap (Inntektsregnskap)"
@@ -5651,7 +5557,7 @@ msgid "Compute Code (if type=code)"
 msgstr "Beregningskode (dersom type=kode)"
 
 #. module: account
-#: code:addons/account/account_invoice.py:474
+#: code:addons/account/account_invoice.py:489
 #, python-format
 msgid ""
 "Cannot find a chart of accounts for this company, you should create one."
@@ -5678,6 +5584,7 @@ msgstr "Automatisk avstemming"
 #: view:account.analytic.line:0
 #: field:account.bank.statement.line,amount:0
 #: report:account.invoice:0
+#: field:account.invoice.line,price_subtotal:0
 #: field:account.invoice.tax,amount:0
 #: view:account.move:0
 #: field:account.move,amount:0
@@ -5778,7 +5685,7 @@ msgid "Recompute taxes and total"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1097
+#: code:addons/account/account.py:1103
 #, python-format
 msgid "You cannot modify/delete a journal with entries for this period."
 msgstr ""
@@ -5808,7 +5715,7 @@ msgid "Amount Computation"
 msgstr "Beregning"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1095
+#: code:addons/account/account_move_line.py:1108
 #, python-format
 msgid "You can not add/modify entries in a closed period %s of journal %s."
 msgstr ""
@@ -5846,10 +5753,16 @@ msgid "Account Common Account Report"
 msgstr "Felles konto Rapporter"
 
 #. module: account
-#: field:account.bank.statement.line,name:0
-#: field:account.invoice,reference:0
-msgid "Communication"
-msgstr "Kommunikasjon"
+#: view:account.bank.statement:0
+#: selection:account.bank.statement,state:0
+#: view:account.fiscalyear:0
+#: selection:account.fiscalyear,state:0
+#: selection:account.invoice,state:0
+#: selection:account.invoice.report,state:0
+#: selection:account.period,state:0
+#: selection:report.invoice.created,state:0
+msgid "Open"
+msgstr "Åpne"
 
 #. module: account
 #: view:account.config.settings:0
@@ -5879,9 +5792,7 @@ msgstr "Avgiftskoder"
 #. module: account
 #: selection:account.invoice,type:0
 #: selection:account.invoice.report,type:0
-#: code:addons/account/account_invoice.py:1323
 #: selection:report.invoice.created,type:0
-#, python-format
 msgid "Customer Refund"
 msgstr "Kreditnota"
 
@@ -5899,11 +5810,6 @@ msgid "Report of Invoices Created within Last 15 days"
 msgstr "Rapport på fakturaer laget de siste 15 dagene"
 
 #. module: account
-#: view:account.payment.term.line:0
-msgid "  Number of Days: 14"
-msgstr "  Antall dager: 14"
-
-#. module: account
 #: field:account.fiscalyear,end_journal_period_id:0
 msgid "End of Year Entries Journal"
 msgstr "Årsavslutningsjournal"
@@ -5919,6 +5825,7 @@ msgid "Fill in this form if you put money in the cash register:"
 msgstr "Fyll ut dette skjemaet hvis du setter penger i kasse apparatet:"
 
 #. module: account
+#: view:account.payment.term.line:0
 #: field:account.payment.term.line,value_amount:0
 msgid "Amount To Pay"
 msgstr "Beløp å betale"
@@ -6010,8 +5917,6 @@ msgstr "Runde per. linje."
 #: field:account.invoice.line,quantity:0
 #: field:account.model.line,quantity:0
 #: field:account.move.line,quantity:0
-#: selection:account.tax,type:0
-#: selection:account.tax.template,type:0
 #: view:analytic.entries.report:0
 #: field:analytic.entries.report,unit_amount:0
 #: field:report.account.sales,quantity:0
@@ -6035,6 +5940,13 @@ msgid "Payment entries are the second input of the reconciliation."
 msgstr "Betaling oppføringer er den andre inngangen på forsoning."
 
 #. module: account
+#: help:res.partner,property_supplier_payment_term:0
+msgid ""
+"This payment term will be used instead of the default one for purchase "
+"orders and supplier invoices"
+msgstr ""
+
+#. module: account
 #: help:account.automatic.reconcile,power:0
 msgid ""
 "Number of partial amounts that can be combined to find a balance point can "
@@ -6042,15 +5954,6 @@ msgid ""
 msgstr ""
 "Antall delvise beløp som kan kombineres for å finne en balanse punkt kan "
 "velges som kraften i den automatiske forsoning"
-
-#. module: account
-#: help:account.payment.term.line,sequence:0
-msgid ""
-"The sequence field is used to order the payment term lines from the lowest "
-"sequences to the higher ones"
-msgstr ""
-"Sekvensfeltet benyttes til å sortere linjene fra den laveste til den høyeste "
-"seksvensen"
 
 #. module: account
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:56
@@ -6109,12 +6012,11 @@ msgstr "Du kan ikke opprette journal elementer på en konto av typen visning."
 #. module: account
 #: selection:account.payment.term.line,value:0
 #: selection:account.tax,type:0
-#: selection:account.tax.template,type:0
 msgid "Fixed Amount"
 msgstr "Fast beløp"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1046
+#: code:addons/account/account_move_line.py:1059
 #, python-format
 msgid "You cannot change the tax, you should remove and recreate lines."
 msgstr ""
@@ -6138,7 +6040,6 @@ msgstr "Opprett inngående registreringer"
 
 #. module: account
 #: help:account.tax,type:0
-#: help:account.tax.template,type:0
 msgid "The computation method for the tax amount."
 msgstr "Beregningsmetode for avgiftsbeløpet"
 
@@ -6166,17 +6067,22 @@ msgid "Child Accounts"
 msgstr "Underordnede konti"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1107
+#: code:addons/account/account_move_line.py:1120
 #, python-format
 msgid "Move name (id): %s (%s)"
 msgstr "Flytt navn (id): %s (%s)"
 
 #. module: account
 #: view:account.move.line.reconcile:0
-#: code:addons/account/account_move_line.py:870
+#: code:addons/account/account_move_line.py:882
 #, python-format
 msgid "Write-Off"
 msgstr "Nedskrivning"
+
+#. module: account
+#: view:account.entries.report:0
+msgid "entries"
+msgstr "oppføringer"
 
 #. module: account
 #: field:res.partner,debit:0
@@ -6194,7 +6100,7 @@ msgstr "Inntekt"
 #: view:account.config.settings:0
 #: view:account.invoice:0
 #: view:account.invoice.report:0
-#: code:addons/account/account_invoice.py:341
+#: code:addons/account/account_invoice.py:363
 #, python-format
 msgid "Supplier"
 msgstr "Leverandør"
@@ -6214,15 +6120,10 @@ msgid "Account n°"
 msgstr "Kontonr."
 
 #. module: account
-#: code:addons/account/account_invoice.py:88
+#: code:addons/account/account_invoice.py:91
 #, python-format
 msgid "Free Reference"
 msgstr "Fri referanse"
-
-#. module: account
-#: field:account.payment.term.line,value:0
-msgid "Valuation"
-msgstr "Vurdering"
 
 #. module: account
 #: selection:account.aged.trial.balance,result_selection:0
@@ -6338,7 +6239,7 @@ msgid "Filter by"
 msgstr "Filtrer etter"
 
 #. module: account
-#: code:addons/account/account.py:2281
+#: code:addons/account/account.py:2286
 #, python-format
 msgid "You have a wrong expression \"%(...)s\" in your model !"
 msgstr ""
@@ -6386,6 +6287,14 @@ msgstr ""
 #: field:account.payment.term.line,days:0
 msgid "Number of Days"
 msgstr "Antall dager"
+
+#. module: account
+#: code:addons/account/account.py:1321
+#, python-format
+msgid ""
+"You cannot validate this journal entry because account \"%s\" does not "
+"belong to chart of accounts \"%s\"."
+msgstr ""
 
 #. module: account
 #: view:account.financial.report:0
@@ -6530,7 +6439,7 @@ msgid "Models"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:1090
+#: code:addons/account/account_invoice.py:1095
 #, python-format
 msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
@@ -6708,7 +6617,7 @@ msgid "You cannot create journal items on closed account."
 msgstr "Du kan ikke opprette journal enmer i en lukker konto."
 
 #. module: account
-#: code:addons/account/account_invoice.py:594
+#: code:addons/account/account_invoice.py:610
 #, python-format
 msgid "Invoice line account's company and invoice's compnay does not match."
 msgstr ""
@@ -6740,12 +6649,6 @@ msgid "Current"
 msgstr "Nåværende"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1305
-#, python-format
-msgid "Invoice '%s' is paid partially: %s%s of %s%s (%s%s remaining)."
-msgstr ""
-
-#. module: account
 #: field:account.journal,cashbox_line_ids:0
 msgid "CashBox"
 msgstr "Kontantbeholdning"
@@ -6769,7 +6672,6 @@ msgstr ""
 
 #. module: account
 #: selection:account.tax,type:0
-#: selection:account.tax.template,type:0
 msgid "Percentage"
 msgstr "Prosentdel"
 
@@ -6789,7 +6691,7 @@ msgid "Power"
 msgstr "Styrke"
 
 #. module: account
-#: code:addons/account/account.py:3392
+#: code:addons/account/account.py:3417
 #, python-format
 msgid "Cannot generate an unused journal code."
 msgstr "Kan ikke lage en ubenyttet journalkode"
@@ -6836,12 +6738,17 @@ msgid "Applicable Type"
 msgstr "Gjeldende type"
 
 #. module: account
-#: field:account.invoice.line,invoice_id:0
-msgid "Invoice Reference"
-msgstr "Fakturareferanse"
+#: help:account.invoice,date_due:0
+msgid ""
+"If you use payment terms, the due date will be computed automatically at the "
+"generation of accounting entries. The payment term may compute several due "
+"dates, for example 50% now and 50% in one month, but if you want to force a "
+"due date, make sure that the payment term is not set on the invoice. If you "
+"keep the payment term and the due date empty, it means direct payment."
+msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:413
+#: code:addons/account/account.py:414
 #, python-format
 msgid ""
 "There is no opening/closing period defined, please create one to set the "
@@ -6860,12 +6767,12 @@ msgstr ""
 "avgifter. I slike tilfeller er vurderingsrekkefølge viktig."
 
 #. module: account
-#: code:addons/account/account.py:1405
 #: code:addons/account/account.py:1410
-#: code:addons/account/account.py:1439
-#: code:addons/account/account.py:1446
-#: code:addons/account/account_invoice.py:975
-#: code:addons/account/account_move_line.py:995
+#: code:addons/account/account.py:1415
+#: code:addons/account/account.py:1444
+#: code:addons/account/account.py:1451
+#: code:addons/account/account_invoice.py:987
+#: code:addons/account/account_move_line.py:1008
 #: code:addons/account/wizard/account_automatic_reconcile.py:148
 #: code:addons/account/wizard/account_fiscalyear_close.py:88
 #: code:addons/account/wizard/account_fiscalyear_close.py:99
@@ -6940,7 +6847,7 @@ msgid "Optional create"
 msgstr "Opprett valgfritt"
 
 #. module: account
-#: code:addons/account/account.py:685
+#: code:addons/account/account.py:686
 #, python-format
 msgid ""
 "You cannot change the owner company of an account that already contains "
@@ -6953,9 +6860,7 @@ msgstr ""
 #: report:account.invoice:0
 #: selection:account.invoice,type:0
 #: selection:account.invoice.report,type:0
-#: code:addons/account/account_invoice.py:1324
 #: selection:report.invoice.created,type:0
-#, python-format
 msgid "Supplier Refund"
 msgstr "Kreditnota"
 
@@ -6993,9 +6898,14 @@ msgid "Group By..."
 msgstr "Grupper etter..."
 
 #. module: account
-#: view:account.payment.term.line:0
-msgid "  Valuation: Balance"
-msgstr "  Validiering: Balanse"
+#: code:addons/account/account.py:1024
+#, python-format
+msgid ""
+"There is no period defined for this date: %s.\n"
+"Please create one."
+msgstr ""
+"Det er ingen periode definert for denne datoen:% s.\n"
+"Vennligst opprette en."
 
 #. module: account
 #: field:account.analytic.line,product_uom_id:0
@@ -7074,6 +6984,13 @@ msgid "Cash Transactions"
 msgstr "Kontant transaksjoner"
 
 #. module: account
+#: view:account.unreconcile:0
+msgid ""
+"If you unreconcile transactions, you must also verify all the actions that "
+"are linked to those transactions because they will not be disabled"
+msgstr ""
+
+#. module: account
 #: view:account.account.template:0
 #: view:account.bank.statement:0
 #: field:account.bank.statement.line,note:0
@@ -7090,7 +7007,7 @@ msgstr "Analytisk Innlegg Statistikk"
 
 #. module: account
 #: code:addons/account/account_analytic_line.py:142
-#: code:addons/account/account_move_line.py:946
+#: code:addons/account/account_move_line.py:958
 #, python-format
 msgid "Entries: "
 msgstr "Regsitreringer: "
@@ -7108,14 +7025,13 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:1321
-#, python-format
-msgid "Customer invoice"
-msgstr ""
+#: selection:account.tax.template,applicable_type:0
+msgid "True"
+msgstr "Sann"
 
 #. module: account
 #: selection:account.account.type,report_type:0
-#: code:addons/account/account.py:189
+#: code:addons/account/account.py:190
 #, python-format
 msgid "Balance Sheet (Asset account)"
 msgstr ""
@@ -7131,10 +7047,9 @@ msgid "Total debit"
 msgstr "Total debet"
 
 #. module: account
-#: code:addons/account/account_move_line.py:825
-#, python-format
-msgid "Entry \"%s\" is not valid !"
-msgstr "Registrering \"%s\" er ikke gyldig"
+#: view:account.move.line:0
+msgid "Next Partner Entries to reconcile"
+msgstr "Neste partner innlegg til å avstemme."
 
 #. module: account
 #: report:account.invoice:0
@@ -7183,7 +7098,7 @@ msgstr "Opprett postering"
 
 #. module: account
 #: selection:account.account.type,report_type:0
-#: code:addons/account/account.py:188
+#: code:addons/account/account.py:189
 #, python-format
 msgid "Profit & Loss (Expense account)"
 msgstr "Resultatregnskap (kostnadskonti)"
@@ -7194,13 +7109,14 @@ msgid "Total Transactions"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:635
+#: code:addons/account/account.py:636
 #, python-format
 msgid "You cannot remove an account that contains journal items."
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:1095
+#: code:addons/account/account.py:1024
+#: code:addons/account/account_move_line.py:1108
 #, python-format
 msgid "Error !"
 msgstr "Feil!"
@@ -7236,6 +7152,11 @@ msgstr "Prosjektlinje"
 #: field:account.invoice.tax,manual:0
 msgid "Manual"
 msgstr "Manuell"
+
+#. module: account
+#: selection:account.invoice.refund,filter_refund:0
+msgid "Cancel: create refund and reconcile"
+msgstr ""
 
 #. module: account
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:58
@@ -7338,8 +7259,8 @@ msgstr "Velg journal"
 
 #. module: account
 #: view:account.bank.statement:0
-#: code:addons/account/account.py:421
-#: code:addons/account/account.py:433
+#: code:addons/account/account.py:422
+#: code:addons/account/account.py:434
 #, python-format
 msgid "Opening Balance"
 msgstr "Åpningsbalanse"
@@ -7419,7 +7340,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:2251
+#: code:addons/account/account.py:2256
 #, python-format
 msgid ""
 "You can specify year, month and date in the name of the model using the "
@@ -7430,6 +7351,11 @@ msgid ""
 "%(date)s: Current Date\n"
 "\n"
 "e.g. My model on %(date)s"
+msgstr ""
+
+#. module: account
+#: field:account.invoice,paypal_url:0
+msgid "Paypal Url"
 msgstr ""
 
 #. module: account
@@ -7485,7 +7411,7 @@ msgid "Done"
 msgstr "Fullført"
 
 #. module: account
-#: code:addons/account/account.py:1278
+#: code:addons/account/account.py:1283
 #, python-format
 msgid ""
 "You cannot validate a non-balanced entry.\n"
@@ -7517,9 +7443,8 @@ msgid "Source Document"
 msgstr "Kildedokument"
 
 #. module: account
-#: code:addons/account/account_analytic_line.py:90
-#, python-format
-msgid "There is no expense account defined for this product: \"%s\" (id:%d)."
+#: help:account.config.settings,company_footer:0
+msgid "Bank accounts as printed in the footer of each printed document"
 msgstr ""
 
 #. module: account
@@ -7546,7 +7471,7 @@ msgid "Taxes:"
 msgstr "Avgifter:"
 
 #. module: account
-#: code:addons/account/account_invoice.py:440
+#: code:addons/account/account_invoice.py:458
 #, python-format
 msgid ""
 "You can not delete an invoice which is not cancelled. You should refund it "
@@ -7741,6 +7666,12 @@ msgstr ""
 "utviklere å opprette spesifikke avgifter innenfor et spesielt område"
 
 #. module: account
+#: field:account.invoice,reference:0
+#: field:account.invoice.line,invoice_id:0
+msgid "Invoice Reference"
+msgstr "Fakturareferanse"
+
+#. module: account
 #: field:account.fiscalyear.close,report_name:0
 msgid "Name of new entries"
 msgstr "Navn på nye posteringer"
@@ -7832,7 +7763,7 @@ msgid "Use model"
 msgstr "Bruk modell"
 
 #. module: account
-#: code:addons/account/account.py:1447
+#: code:addons/account/account.py:1452
 #, python-format
 msgid ""
 "There is no default credit account defined \n"
@@ -7883,7 +7814,7 @@ msgid "Root/View"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:3148
+#: code:addons/account/account.py:3158
 #, python-format
 msgid "OPEJ"
 msgstr "OPEJ"
@@ -7952,7 +7883,7 @@ msgid "Maturity Date"
 msgstr "Forfallsdato"
 
 #. module: account
-#: code:addons/account/account.py:3135
+#: code:addons/account/account.py:3145
 #, python-format
 msgid "Sales Journal"
 msgstr "Salgsjournal"
@@ -7963,7 +7894,7 @@ msgid "Invoice Tax"
 msgstr "Faktura avgift"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1173
+#: code:addons/account/account_move_line.py:1186
 #, python-format
 msgid "No piece number !"
 msgstr "Ikke noe antallsnummer!"
@@ -8002,7 +7933,7 @@ msgid "Sales Properties"
 msgstr "Instillinger for Salg"
 
 #. module: account
-#: code:addons/account/account.py:3468
+#: code:addons/account/account.py:3493
 #, python-format
 msgid ""
 "You have to set a code for the bank account defined on the selected chart of "
@@ -8027,7 +7958,7 @@ msgstr "Til"
 
 #. module: account
 #: selection:account.move.line,centralisation:0
-#: code:addons/account/account.py:1497
+#: code:addons/account/account.py:1502
 #, python-format
 msgid "Currency Adjustment"
 msgstr "Valutajustering"
@@ -8060,7 +7991,7 @@ msgid "May"
 msgstr "Mai"
 
 #. module: account
-#: code:addons/account/account_invoice.py:776
+#: code:addons/account/account_invoice.py:792
 #, python-format
 msgid "Global taxes defined, but they are not in invoice lines !"
 msgstr "Global skatter definert, men de er ikke i fakturalinjer!"
@@ -8080,10 +8011,9 @@ msgstr ""
 "høyere."
 
 #. module: account
-#: field:account.tax.code,code:0
-#: field:account.tax.code.template,code:0
-msgid "Case Code"
-msgstr "Kontantkode"
+#: field:account.move.line,amount_residual_currency:0
+msgid "Residual Amount in Currency"
+msgstr ""
 
 #. module: account
 #: field:account.config.settings,sale_refund_sequence_prefix:0
@@ -8100,16 +8030,11 @@ msgid "Post Journal Entries"
 msgstr "Total journalregistreringer"
 
 #. module: account
-#: field:account.journal,centralisation:0
-msgid "Centralised Counterpart"
-msgstr ""
-
-#. module: account
 #: selection:account.bank.statement.line,type:0
 #: view:account.config.settings:0
 #: view:account.invoice:0
 #: view:account.invoice.report:0
-#: code:addons/account/account_invoice.py:339
+#: code:addons/account/account_invoice.py:361
 #, python-format
 msgid "Customer"
 msgstr "Kunde"
@@ -8125,7 +8050,7 @@ msgstr "Rapportnavn"
 #: selection:account.bank.accounts.wizard,account_type:0
 #: selection:account.entries.report,type:0
 #: selection:account.journal,type:0
-#: code:addons/account/account.py:3034
+#: code:addons/account/account.py:3044
 #, python-format
 msgid "Cash"
 msgstr "Kontant"
@@ -8137,9 +8062,11 @@ msgid "Account Destination"
 msgstr "Account Destination"
 
 #. module: account
-#: model:process.node,note:account.process_node_supplierpaymentorder0
-msgid "Payment of invoices"
-msgstr "Betaling av fakturaer"
+#: help:account.invoice.refund,filter_refund:0
+msgid ""
+"Refund base on this type. You can not Modify and Cancel if the invoice is "
+"already reconciled"
+msgstr ""
 
 #. module: account
 #: field:account.bank.statement.line,sequence:0
@@ -8147,7 +8074,6 @@ msgstr "Betaling av fakturaer"
 #: field:account.invoice.line,sequence:0
 #: field:account.invoice.tax,sequence:0
 #: field:account.model.line,sequence:0
-#: field:account.payment.term.line,sequence:0
 #: field:account.sequence.fiscalyear,sequence_id:0
 #: field:account.tax,sequence:0
 #: field:account.tax.code,sequence:0
@@ -8285,15 +8211,14 @@ msgid "Partner Ledger"
 msgstr "Partner Ledger"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1340
-#, python-format
-msgid "%s <b>cancelled</b>."
-msgstr ""
+#: selection:account.tax.template,type:0
+msgid "Fixed"
+msgstr "Fast"
 
 #. module: account
-#: code:addons/account/account.py:652
-#: code:addons/account/account.py:655
-#: code:addons/account/account.py:667
+#: code:addons/account/account.py:653
+#: code:addons/account/account.py:656
+#: code:addons/account/account.py:668
 #, python-format
 msgid "Warning !"
 msgstr "Advarsel !"
@@ -8361,7 +8286,7 @@ msgid "Select a currency to apply on the invoice"
 msgstr "Velg en valuta for fakturaen"
 
 #. module: account
-#: code:addons/account/account_invoice.py:857
+#: code:addons/account/account_invoice.py:873
 #, python-format
 msgid "No Invoice Lines !"
 msgstr "Ingen fakturalinjer!"
@@ -8438,7 +8363,7 @@ msgid "Associated Partner"
 msgstr "Samarbeidspartner"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1433
+#: code:addons/account/account_invoice.py:1428
 #, python-format
 msgid "You must first select a partner !"
 msgstr "Du må først velge en partner!"
@@ -8520,13 +8445,13 @@ msgstr ""
 "neste skattene."
 
 #. module: account
-#: code:addons/account/account.py:3138
+#: code:addons/account/account.py:3148
 #, python-format
 msgid "Purchase Refund Journal"
 msgstr "Leverandør kreditnota-journal"
 
 #. module: account
-#: code:addons/account/account.py:1292
+#: code:addons/account/account.py:1297
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr ""
@@ -8597,7 +8522,7 @@ msgid "Net Total:"
 msgstr "Netto total:"
 
 #. module: account
-#: code:addons/account/wizard/account_report_common.py:153
+#: code:addons/account/wizard/account_report_common.py:158
 #, python-format
 msgid "Select a starting and an ending period."
 msgstr ""
@@ -8616,15 +8541,6 @@ msgstr "Generiske rapporter"
 #: field:account.move.line.reconcile.writeoff,journal_id:0
 msgid "Write-Off Journal"
 msgstr "Nedskrivningsjournal"
-
-#. module: account
-#: help:res.partner,property_payment_term:0
-msgid ""
-"This payment term will be used instead of the default one for the current "
-"partner"
-msgstr ""
-"Denne betalingen begrepet vil bli brukt i stedet for en standard for "
-"nåværende partner."
 
 #. module: account
 #: field:account.chart.template,property_account_income_categ:0
@@ -8651,11 +8567,6 @@ msgstr "Int. type"
 #: field:account.move.line,tax_amount:0
 msgid "Tax/Base Amount"
 msgstr "Avgift/basisbeløp"
-
-#. module: account
-#: view:account.payment.term.line:0
-msgid "  Valuation: Percent"
-msgstr "  Validering: Prosent"
 
 #. module: account
 #: view:account.open.closed.fiscalyear:0
@@ -8711,6 +8622,11 @@ msgid "Ending Balance"
 msgstr "Sluttbalanse"
 
 #. module: account
+#: field:account.journal,centralisation:0
+msgid "Centralized Counterpart"
+msgstr ""
+
+#. module: account
 #: help:account.move.line,blocked:0
 msgid ""
 "You can check this box to mark this journal item as a litigation with the "
@@ -8752,7 +8668,7 @@ msgid "Automatic import of the bank sta"
 msgstr "Autom.import av bankustkrift"
 
 #. module: account
-#: code:addons/account/account_invoice.py:370
+#: code:addons/account/account_invoice.py:389
 #, python-format
 msgid "Unknown Error!"
 msgstr ""
@@ -8775,7 +8691,12 @@ msgid "Account Types"
 msgstr "Kontotyper"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1198
+#: model:email.template,subject:account.email_template_edi_invoice
+msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
+msgstr ""
+
+#. module: account
+#: code:addons/account/account_move_line.py:1211
 #, python-format
 msgid ""
 "You cannot use this general account in this journal, check the tab 'Entry "
@@ -8783,9 +8704,9 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: view:account.payment.term.line:0
-msgid "  Value amount: n.a"
-msgstr "  Verdi beløp: n.a"
+#: field:account.account.type,report_type:0
+msgid "P&L / BS Category"
+msgstr "P&L / BS Kategorier."
 
 #. module: account
 #: view:account.automatic.reconcile:0
@@ -8802,10 +8723,9 @@ msgid "Reconciliation"
 msgstr "Nyavstemming"
 
 #. module: account
-#: view:account.chart.template:0
-#: field:account.chart.template,property_account_receivable:0
-msgid "Receivable Account"
-msgstr "Fordring konto."
+#: view:account.tax.template:0
+msgid "Keep empty to use the income account"
+msgstr "Beholdes blankt til bruk for inntektskonto"
 
 #. module: account
 #: view:account.invoice:0
@@ -8878,7 +8798,7 @@ msgid "The partner account used for this invoice."
 msgstr "Partnerkonto benyttet for denne faktura."
 
 #. module: account
-#: code:addons/account/account.py:3333
+#: code:addons/account/account.py:3343
 #, python-format
 msgid "Tax %.2f%%"
 msgstr "Skatt %.2f%%"
@@ -8896,13 +8816,13 @@ msgid "Payment Term Line"
 msgstr "Betalingsbet.linje"
 
 #. module: account
-#: code:addons/account/account.py:3136
+#: code:addons/account/account.py:3146
 #, python-format
 msgid "Purchase Journal"
 msgstr "Innkjøpsjournal"
 
 #. module: account
-#: field:account.invoice.line,price_subtotal:0
+#: field:account.invoice,amount_untaxed:0
 msgid "Subtotal"
 msgstr "Subtotal"
 
@@ -8930,11 +8850,6 @@ msgstr "Forfallsdato"
 #: model:ir.ui.menu,name:account.menu_finance_payables
 msgid "Suppliers"
 msgstr "Leverandører"
-
-#. module: account
-#: selection:account.tax.template,applicable_type:0
-msgid "True"
-msgstr "Sann"
 
 #. module: account
 #: view:account.journal:0
@@ -9072,9 +8987,10 @@ msgid "Journal Name"
 msgstr "Journalnavn"
 
 #. module: account
-#: view:account.move.line:0
-msgid "Next Partner Entries to reconcile"
-msgstr "Neste partner innlegg til å avstemme."
+#: code:addons/account/account_move_line.py:832
+#, python-format
+msgid "Entry \"%s\" is not valid !"
+msgstr "Registrering \"%s\" er ikke gyldig"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -9122,7 +9038,7 @@ msgstr ""
 "flervaluta."
 
 #. module: account
-#: code:addons/account/account_move_line.py:996
+#: code:addons/account/account_move_line.py:1009
 #, python-format
 msgid "The account move (%s) for centralisation has been confirmed."
 msgstr ""
@@ -9183,7 +9099,7 @@ msgid "Reconciled entries"
 msgstr "Avstemte posteringer"
 
 #. module: account
-#: code:addons/account/account.py:2281
+#: code:addons/account/account.py:2286
 #, python-format
 msgid "Wrong model !"
 msgstr "Feil modell!"
@@ -9205,7 +9121,7 @@ msgid "Print Account Partner Balance"
 msgstr "Skriv ut konto partner balanse."
 
 #. module: account
-#: code:addons/account/account_move_line.py:1111
+#: code:addons/account/account_move_line.py:1124
 #, python-format
 msgid ""
 "You cannot do this modification on a reconciled entry. You can just change "
@@ -9239,7 +9155,7 @@ msgstr "unknown"
 
 #. module: account
 #: field:account.fiscalyear.close,journal_id:0
-#: code:addons/account/account.py:3140
+#: code:addons/account/account.py:3150
 #, python-format
 msgid "Opening Entries Journal"
 msgstr ""
@@ -9284,7 +9200,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:633
+#: code:addons/account/account.py:634
 #, python-format
 msgid "You cannot deactivate an account that contains journal items."
 msgstr ""
@@ -9300,17 +9216,8 @@ msgid "Journal Code"
 msgstr "Journalkode"
 
 #. module: account
-#: help:account.tax.code,sign:0
-msgid ""
-"You can specify here the coefficient that will be used when consolidating "
-"the amount of this case into its parent. For example, set 1/-1 if you want "
-"to add/substract it."
-msgstr ""
-
-#. module: account
 #: view:account.invoice:0
 #: field:account.move.line,amount_residual:0
-#: field:account.move.line,amount_residual_currency:0
 msgid "Residual Amount"
 msgstr "Gjenværende beløp"
 
@@ -9343,7 +9250,7 @@ msgid "Unit of Currency"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:3137
+#: code:addons/account/account.py:3147
 #, python-format
 msgid "Sales Refund Journal"
 msgstr "Refusjonsjournal"
@@ -9409,7 +9316,7 @@ msgid "Purchase Tax(%)"
 msgstr "Innkjøpsavgift(%)"
 
 #. module: account
-#: code:addons/account/account_invoice.py:857
+#: code:addons/account/account_invoice.py:873
 #, python-format
 msgid "Please create some invoice lines."
 msgstr "Vennligst opprett fakturalinje(er)"
@@ -9428,7 +9335,7 @@ msgid "Display Detail"
 msgstr "Vis Detalj."
 
 #. module: account
-#: code:addons/account/account.py:3145
+#: code:addons/account/account.py:3155
 #, python-format
 msgid "SCNJ"
 msgstr "SCNJ"
@@ -9544,19 +9451,9 @@ msgid "Number of Periods"
 msgstr "Antall perioder"
 
 #. module: account
-#: model:ir.model,name:account.model_account_tax_code_template
-msgid "Tax Code Template"
-msgstr "Avgiftskodemal"
-
-#. module: account
 #: report:account.overdue:0
 msgid "Document: Customer account statement"
 msgstr "Dokument: Kunde kontoutskrift."
-
-#. module: account
-#: field:account.account.type,report_type:0
-msgid "P&L / BS Category"
-msgstr "P&L / BS Kategorier."
 
 #. module: account
 #: view:account.account.template:0
@@ -9569,8 +9466,9 @@ msgid "Supplier credit note sequence"
 msgstr ""
 
 #. module: account
-#: field:account.config.settings,purchase_sequence_next:0
-msgid "Next supplier invoice number"
+#: code:addons/account/wizard/account_state_open.py:37
+#, python-format
+msgid "Invoice is already reconciled."
 msgstr ""
 
 #. module: account
@@ -9590,14 +9488,14 @@ msgid "Document"
 msgstr "Dokument"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_bank_statement_tree
-#: model:ir.ui.menu,name:account.menu_bank_statement_tree
-msgid "Bank Statements"
-msgstr "Bankbekreftelse"
+#: view:account.chart.template:0
+#: field:account.chart.template,property_account_receivable:0
+msgid "Receivable Account"
+msgstr "Fordring konto."
 
 #. module: account
-#: code:addons/account/account_move_line.py:767
-#: code:addons/account/account_move_line.py:820
+#: code:addons/account/account_move_line.py:774
+#: code:addons/account/account_move_line.py:827
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries."
 msgstr ""
@@ -9698,8 +9596,8 @@ msgid "Move"
 msgstr "Bevegelse"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:476
-#: code:addons/account/account_invoice.py:440
+#: code:addons/account/account_bank_statement.py:477
+#: code:addons/account/account_invoice.py:458
 #: code:addons/account/wizard/account_period_close.py:51
 #, python-format
 msgid "Invalid Action!"
@@ -9780,11 +9678,6 @@ msgid "Sent"
 msgstr ""
 
 #. module: account
-#: view:account.unreconcile.reconcile:0
-msgid "Unreconciliation Transactions"
-msgstr "Ikke-avstemte transaksjoner"
-
-#. module: account
 #: model:ir.actions.act_window,name:account.action_account_common_menu
 msgid "Common Report"
 msgstr "Normal rapport"
@@ -9801,9 +9694,14 @@ msgid "Balance :"
 msgstr "Saldo :"
 
 #. module: account
-#: code:addons/account/account.py:1542
+#: code:addons/account/account.py:1547
 #, python-format
 msgid "Cannot create moves for different companies."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.menu,name:account.menu_finance_periodical_processing
+msgid "Periodic Processing"
 msgstr ""
 
 #. module: account
@@ -9841,13 +9739,6 @@ msgstr "Abonnement"
 #: model:ir.model,name:account.model_account_analytic_balance
 msgid "Account Analytic Balance"
 msgstr "Analytisk saldo"
-
-#. module: account
-#: help:account.invoice.refund,filter_refund:0
-msgid ""
-"Credit note base on this type. You can not Modify and Cancel if the invoice "
-"is already reconciled"
-msgstr ""
 
 #. module: account
 #: report:account.account.balance:0
@@ -9888,7 +9779,13 @@ msgid "Due date"
 msgstr "Forfallsdato"
 
 #. module: account
-#: code:addons/account/account.py:1459
+#: model:account.payment.term,name:account.account_payment_term_immediate
+#: model:account.payment.term,note:account.account_payment_term_immediate
+msgid "Immediate Payment"
+msgstr ""
+
+#. module: account
+#: code:addons/account/account.py:1464
 #, python-format
 msgid " Centralisation"
 msgstr ""
@@ -9977,7 +9874,7 @@ msgid "Unreconciled"
 msgstr "Ikke avstemt"
 
 #. module: account
-#: code:addons/account/account_invoice.py:878
+#: code:addons/account/account_invoice.py:894
 #, python-format
 msgid "Bad total !"
 msgstr "Feil sum !"
@@ -10060,7 +9957,7 @@ msgid "Comparison"
 msgstr "Sammenligning"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1109
+#: code:addons/account/account_move_line.py:1122
 #, python-format
 msgid ""
 "You cannot do this modification on a confirmed entry. You can just change "
@@ -10076,6 +9973,11 @@ msgid ""
 "                the project managers can set the planned amount on each "
 "analytic account.\n"
 "                This installs the module account_budget."
+msgstr ""
+
+#. module: account
+#: field:account.bank.statement.line,name:0
+msgid "OBI"
 msgstr ""
 
 #. module: account
@@ -10134,11 +10036,6 @@ msgid "Draft Invoice "
 msgstr ""
 
 #. module: account
-#: selection:account.invoice.refund,filter_refund:0
-msgid "Cancel: create credit note and reconcile"
-msgstr ""
-
-#. module: account
 #: model:ir.ui.menu,name:account.menu_account_general_journal
 msgid "General Journals"
 msgstr "Generell journal"
@@ -10149,7 +10046,7 @@ msgid "Journal Entry Model"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1058
+#: code:addons/account/account.py:1064
 #, python-format
 msgid "Start period should precede then end period."
 msgstr ""
@@ -10234,7 +10131,7 @@ msgid "Profit (Loss) to report"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:368
+#: code:addons/account/account_invoice.py:387
 #, python-format
 msgid "There is no Sale/Purchase Journal(s) defined."
 msgstr ""
@@ -10557,7 +10454,14 @@ msgid "Empty Accounts ? "
 msgstr "Tomme konti? "
 
 #. module: account
-#: code:addons/account/account_move_line.py:1046
+#: view:account.unreconcile.reconcile:0
+msgid ""
+"If you unreconcile transactions, you must also verify all the actions that "
+"are linked to those transactions because they will not be disable"
+msgstr ""
+
+#. module: account
+#: code:addons/account/account_move_line.py:1059
 #, python-format
 msgid "Unable to change tax!"
 msgstr ""
@@ -10682,7 +10586,7 @@ msgid "Receivable accounts"
 msgstr "Debitor konti"
 
 #. module: account
-#: code:addons/account/account_move_line.py:776
+#: code:addons/account/account_move_line.py:783
 #, python-format
 msgid "Already reconciled."
 msgstr ""
@@ -10809,7 +10713,7 @@ msgid "Entries Sorted by"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:1520
+#: code:addons/account/account_invoice.py:1510
 #, python-format
 msgid ""
 "The selected unit of measure is not compatible with the unit of measure of "
@@ -10915,7 +10819,7 @@ msgid "Accounting Documents"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:640
+#: code:addons/account/account.py:641
 #, python-format
 msgid ""
 "You cannot remove/deactivate an account which is set on a customer or "
@@ -10960,7 +10864,7 @@ msgid "Manual Invoice Taxes"
 msgstr "Manuell fakturaavgift"
 
 #. module: account
-#: code:addons/account/account_invoice.py:538
+#: code:addons/account/account_invoice.py:554
 #, python-format
 msgid "The payment term of supplier does not have a payment term line."
 msgstr ""
@@ -11040,14 +10944,6 @@ msgid "February"
 msgstr "Februar"
 
 #. module: account
-#: help:account.bank.statement,name:0
-msgid ""
-"if you give the Name other then /, its created Accounting Entries Move will "
-"be with same name as statement name. This allows the statement entries to "
-"have the same references than the statement itself"
-msgstr ""
-
-#. module: account
 #: view:account.bank.statement:0
 #: help:account.cashbox.line,number_closing:0
 msgid "Closing Unit Numbers"
@@ -11106,6 +11002,11 @@ msgid "Expense Account on Product Template"
 msgstr ""
 
 #. module: account
+#: field:res.partner,property_payment_term:0
+msgid "Customer Payment Term"
+msgstr ""
+
+#. module: account
 #: help:accounting.report,label_filter:0
 msgid ""
 "This label will be displayed on report to show the balance computed for the "
@@ -11123,2330 +11024,3 @@ msgid ""
 "The residual amount on a receivable or payable of a journal entry expressed "
 "in its currency (maybe different of the company currency)."
 msgstr ""
-
-#~ msgid "Select Message"
-#~ msgstr "Velg melding"
-
-#~ msgid "Error ! The duration of the Period(s) is/are invalid. "
-#~ msgstr "Feil ! Varigheten på perioden(e) er ugyldige. "
-
-#, python-format
-#~ msgid "Please define sequence on invoice journal"
-#~ msgstr "Venligst definer sekvensen på fakturajournalen"
-
-#~ msgid ""
-#~ "The Profit and Loss report gives you an overview of your company profit and "
-#~ "loss in a single document"
-#~ msgstr ""
-#~ "Resultatregnskapsrapporten gir en oversikt over ditt firmas resultatregnskap "
-#~ "i et enkelt dokument"
-
-#~ msgid "Origin"
-#~ msgstr "Opprinnelse"
-
-#~ msgid "Negative"
-#~ msgstr "Negativ"
-
-#, python-format
-#~ msgid "Journal: %s"
-#~ msgstr "Journal: %s"
-
-#, python-format
-#~ msgid ""
-#~ "No period defined for this date: %s !\n"
-#~ "Please create a fiscal year."
-#~ msgstr ""
-#~ "Ingen periode er definert for denne datoen: %s !\n"
-#~ "Vennligst opprett et regnskapsår."
-
-#, python-format
-#~ msgid "Invoice '%s' is paid partially: %s%s of %s%s (%s%s remaining)"
-#~ msgstr "Faktura '%s' er delbetalt:%s%s av %s%s (%s%s gjenstår)"
-
-#~ msgid ""
-#~ "Check this box if you don't want any VAT related to this Tax Code to appear "
-#~ "on invoices"
-#~ msgstr ""
-#~ "Merk av denne boksen dersom du ikke ønsker at noen MVA relatert til denne "
-#~ "Skattekoden skal vises på fakturaer"
-
-#~ msgid "Configure"
-#~ msgstr "Konfigurer"
-
-#, python-format
-#~ msgid ""
-#~ "Can't find any account journal of %s type for this company.\n"
-#~ "\n"
-#~ "You can create one in the menu: \n"
-#~ "Configuration/Financial Accounting/Accounts/Journals."
-#~ msgstr ""
-#~ "Kan ikke finne noen kontojournal av typen %s for dette firmaet.\n"
-#~ "\n"
-#~ "Du kan opprette en i menyen: \n"
-#~ "Konfigurasjon/Regnskap/Kontoer/Journaler."
-
-#~ msgid "Field Name"
-#~ msgstr "Feltnavn"
-
-#, python-format
-#~ msgid "Invoice line account company does not match with invoice company."
-#~ msgstr "Fakturalinje konto firma stemmer ikke med faktura firma."
-
-#~ msgid ""
-#~ "This view is used by accountants in order to record entries massively in "
-#~ "OpenERP. Journal items are created by OpenERP if you use Bank Statements, "
-#~ "Cash Registers, or Customer/Supplier payments."
-#~ msgstr ""
-#~ "Denne visningen er brukt av regnskapsførere for å masseregistrere "
-#~ "oppføringer i OpenERP. Journal elementer er opprettet av OpenERP dersom du "
-#~ "bruker kontoutskrifter, Kasseapparater, eller Kunde/Leverandør betalinger."
-
-#~ msgid ""
-#~ "This field contains the informatin related to the numbering of the journal "
-#~ "entries of this journal."
-#~ msgstr ""
-#~ "Dette feltet inneholder informasjon relatert til nummereringen av "
-#~ "journaloppføringene i denne journalen."
-
-#~ msgid "Positive"
-#~ msgstr "Positiv"
-
-#, python-format
-#~ msgid "CashBox Balance is not matching with Calculated Balance !"
-#~ msgstr "Kontantkassenbalansen stemmer ikke med kalkulert balanse !"
-
-#, python-format
-#~ msgid "To reconcile the entries company should be the same for all entries"
-#~ msgstr ""
-#~ "For å avstemme oppføringene bør firma være det samme for alle oppføringer"
-
-#, python-format
-#~ msgid "You can only change currency for Draft Invoice !"
-#~ msgstr "Dukan bare endre valuta for fakturakladder !"
-
-#~ msgid "Next Partner to reconcile"
-#~ msgstr "Neste Partner å Avstemme"
-
-#~ msgid "Avg. Delay To Pay"
-#~ msgstr "Gj.snittlig Forsinkelse til betaling"
-
-#~ msgid "Customer Invoices to Approve"
-#~ msgstr "Kundefaktura til godkjenning"
-
-#~ msgid "Reserve and Profit/Loss Account"
-#~ msgstr "Reserver og resultat Konto"
-
-#~ msgid "Manager"
-#~ msgstr "Leder"
-
-#~ msgid "-"
-#~ msgstr "-"
-
-#~ msgid "Bank Information"
-#~ msgstr "Bankinformasjon"
-
-#~ msgid "Columns"
-#~ msgstr "Kolonner"
-
-#~ msgid "."
-#~ msgstr "."
-
-#, python-format
-#~ msgid "You can not modify/delete a journal with entries for this period !"
-#~ msgstr ""
-#~ "Du kan ikke endre eller slette en journal med posteringer for angitt periode!"
-
-#~ msgid "Other Configuration"
-#~ msgstr "Annen konfigurasjon"
-
-#, python-format
-#~ msgid "No End of year journal defined for the fiscal year"
-#~ msgstr ""
-#~ "Det er ikke opprettet en journal for årsavslutning for angitt regnskapsår"
-
-#, python-format
-#~ msgid ""
-#~ "You cannot remove/deactivate an account which is set as a property to any "
-#~ "Partner."
-#~ msgstr "Du kan ikke slette/ deaktivere en konto som er knyttet til partner!"
-
-#~ msgid "Voucher Management"
-#~ msgstr "Bilagsadministrasjon"
-
-#~ msgid "Account currency"
-#~ msgstr "Kontovaluta"
-
-#~ msgid "Include Reconciled Entries"
-#~ msgstr "Inkluder avstemte posteringer"
-
-#~ msgid "Accounting Entries-"
-#~ msgstr "Konteringsregistreringer"
-
-#, python-format
-#~ msgid "You can not delete posted movement: \"%s\"!"
-#~ msgstr "Du kan ikke slette registrerte bevegelser: \"%s\"!"
-
-#~ msgid "Choose Fiscal Year "
-#~ msgstr "Velg regnskapsår "
-
-#~ msgid "All Analytic Entries"
-#~ msgstr "Alle analytiske registreringer"
-
-#, python-format
-#~ msgid "You can not add/modify entries in a closed journal."
-#~ msgstr "Du kan ikke legge til/endre registreringer i en lukket journal"
-
-#~ msgid "Calculated Balance"
-#~ msgstr "Kalkulert balanse"
-
-#~ msgid "Close Fiscalyear"
-#~ msgstr "Lukk regnskapsår"
-
-#~ msgid "St."
-#~ msgstr "St."
-
-#~ msgid "Fiscal Year to Open"
-#~ msgstr "Regnskapsår som skal åpnes"
-
-#~ msgid "Purchase Taxes"
-#~ msgstr "Innkjøpsavgift"
-
-#~ msgid "Invoice Address Name"
-#~ msgstr "Navn fakturaadresse"
-
-#~ msgid "   30 Days   "
-#~ msgstr "   30 dager   "
-
-#~ msgid "Due date Computation"
-#~ msgstr "Forfallsdato beregning"
-
-#, python-format
-#~ msgid ""
-#~ "You can not do this modification on a confirmed entry ! Please note that you "
-#~ "can just change some non important fields !"
-#~ msgstr ""
-#~ "Du kan ikke utføre endringer på bekreftet postering! Legg merke til at du "
-#~ "bare kan endre enkelte felt!"
-
-#~ msgid "Total With Tax"
-#~ msgstr "Total med avgift"
-
-#~ msgid "Profit & Loss (Expense Accounts)"
-#~ msgstr "Taps- og vinningskonto( kostnadskonto)"
-
-#~ msgid "Generate Entries before:"
-#~ msgstr "Opprett registreringer før:"
-
-#~ msgid "Unreconciliation transactions"
-#~ msgstr "Ikke-avstemte transaksjoner"
-
-#~ msgid "Your Reference"
-#~ msgstr "Din referanse"
-
-#~ msgid "Bank account owner"
-#~ msgstr "Bankkontoeier"
-
-#, python-format
-#~ msgid "You can not use this general account in this journal !"
-#~ msgstr "Du kan ikke benytte angitt konto i aktuell journal!"
-
-#~ msgid "Compute Taxes"
-#~ msgstr "Beregn avgift"
-
-#~ msgid ""
-#~ "Example: at 14 net days 2 percents, remaining amount at 30 days end of month."
-#~ msgstr "Eksempel: pr 14 dager 2 prosent, resterende beløp innen 30 dager"
-
-#~ msgid "Anglo-Saxon Accounting"
-#~ msgstr "Anglo-Saxon bokføring"
-
-#~ msgid "Tax Code Test"
-#~ msgstr "Avgiftskode test"
-
-#~ msgid "and Journals"
-#~ msgstr "og journaler"
-
-#~ msgid "Go to next partner"
-#~ msgstr "Gå til neste partner"
-
-#~ msgid "Separated Journal Sequences"
-#~ msgstr "Separate journalsekvenser"
-
-#~ msgid "Include initial balances"
-#~ msgstr "Include initial balances"
-
-#, python-format
-#~ msgid "The account is not defined to be reconciled !"
-#~ msgstr "Kontoen er ikke satt opp til å bli avstemt!"
-
-#~ msgid "Supplier Debit"
-#~ msgstr "Leverandørgjeld"
-
-#, python-format
-#~ msgid "You have to provide an account for the write off entry !"
-#~ msgstr "Du må angi en konto for nedskrivningsregistrering!"
-
-#, python-format
-#~ msgid "User %s does not have rights to access %s journal !"
-#~ msgstr "Bruker %s har ikke rettigheter til %s journal !"
-
-#~ msgid "Tax Declaration: Credit Notes"
-#~ msgstr "Avgiftsoppgjør: Kreditnotaer"
-
-#, python-format
-#~ msgid "You cannot deactivate an account that contains account moves."
-#~ msgstr "Du kan ikke deaktivere en konto som inneholder kontobevegelser."
-
-#~ msgid "Configure Fiscal Year"
-#~ msgstr "Konfigurer regnskapsår"
-
-#~ msgid "A/c Code"
-#~ msgstr "Kontokode"
-
-#~ msgid "Sub Total"
-#~ msgstr "Subtotal"
-
-#~ msgid "/"
-#~ msgstr "/"
-
-#~ msgid "Account Profit And Loss"
-#~ msgstr "Resultatkonti"
-
-#~ msgid "Validations"
-#~ msgstr "Valideringer"
-
-#, python-format
-#~ msgid " Journal"
-#~ msgstr " Journal"
-
-#, python-format
-#~ msgid "There is no Accounting Journal of type Sale/Purchase defined!"
-#~ msgstr "Det er ikke opprettet regnskapsjournal av type salg eller innkjøp!"
-
-#~ msgid "Accounting Properties"
-#~ msgstr "Instillinger for regnskap"
-
-#~ msgid ""
-#~ "Check this if the user is allowed to reconcile entries in this account."
-#~ msgstr "Kryss av hvis bruker skal kunne avstemme posteringer på denne konto."
-
-#, python-format
-#~ msgid "No sequence defined on the journal !"
-#~ msgstr "Ingen sekvens angitt i journal !"
-
-#, python-format
-#~ msgid ""
-#~ "The expected balance (%.2f) is different than the computed one. (%.2f)"
-#~ msgstr "Forventet balanse (%.2f) avviker fra beregnet balanse. (%.2f)"
-
-#~ msgid "Reference Number"
-#~ msgstr "Referansenummer"
-
-#~ msgid "Required"
-#~ msgstr "Obligatorisk"
-
-#~ msgid "Cash Transaction"
-#~ msgstr "Kontanttransaksjon"
-
-#~ msgid "Bank account"
-#~ msgstr "Bankkonto"
-
-#~ msgid "Customer Credit"
-#~ msgstr "Kundekreditt"
-
-#~ msgid "Starts on"
-#~ msgstr "Starter på"
-
-#~ msgid "Generate Chart of Accounts from a Chart Template"
-#~ msgstr "Opprett kontoplan fra mal"
-
-#~ msgid "Accounting Dashboard"
-#~ msgstr "Regnskapskonsoll"
-
-#~ msgid "Accounting Chart Configuration"
-#~ msgstr "Kontokonfigurasjon"
-
-#, python-format
-#~ msgid "Cannot delete invoice(s) that are already opened or paid !"
-#~ msgstr "Kan ikke slette faktura(er) som allerede er åpnet eller betalt!"
-
-#~ msgid "Total :"
-#~ msgstr "Total:"
-
-#~ msgid "Your bank and cash accounts"
-#~ msgstr "Dine bank og kontantkonti"
-
-#, python-format
-#~ msgid ""
-#~ "You cannot change the type of account from '%s' to '%s' type as it contains "
-#~ "account entries!"
-#~ msgstr ""
-#~ "Du kan ikke endre kontotype fra '%s' til '%s' type når den inneholder "
-#~ "posteringer!"
-
-#~ msgid "Invoicing Data"
-#~ msgstr "Fakturadata"
-
-#~ msgid "Invoice State"
-#~ msgstr "Fakturastatus"
-
-#~ msgid "Narration"
-#~ msgstr "Informasjon"
-
-#~ msgid "Your Bank and Cash Accounts"
-#~ msgstr "Dine kontant og bankkonti"
-
-#~ msgid "Centralised counterpart"
-#~ msgstr "Centralised counterpart"
-
-#~ msgid "2"
-#~ msgstr "2"
-
-#, python-format
-#~ msgid "The journal must have default credit and debit account"
-#~ msgstr "Journalen må have default kredit og debit konto"
-
-#, python-format
-#~ msgid "Some entries are already reconciled !"
-#~ msgstr "Noen regsitreringer er allerede avstemt!"
-
-#~ msgid "Contact Address Name"
-#~ msgstr "Kontaktadresse"
-
-#~ msgid "Account balance"
-#~ msgstr "Kontosaldo"
-
-#, python-format
-#~ msgid "Unable to change tax !"
-#~ msgstr "Ikke mulig å endre avgift!"
-
-#~ msgid "Mapping"
-#~ msgstr "Avgiftskartlegging"
-
-#~ msgid "Net Loss"
-#~ msgstr "Netto tap"
-
-#~ msgid ""
-#~ "This account will be used to value outgoing stock for the current product "
-#~ "category using sale price"
-#~ msgstr ""
-#~ "Denne konto vil bli benyttet for å fastsette utgående lagerverdi for aktuell "
-#~ "produktkategori ved bruk av salgspris"
-
-#~ msgid "3"
-#~ msgstr "3"
-
-#~ msgid "Avg. Due Delay"
-#~ msgstr "Gj.snitt forsinkelse"
-
-#, python-format
-#~ msgid "Global taxes defined, but are not in invoice lines !"
-#~ msgstr "Global taxes defined, but are not in invoice lines !"
-
-#~ msgid "Reference UoM"
-#~ msgstr "Referanse måleenhet"
-
-#, python-format
-#~ msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
-#~ msgstr ""
-#~ "Det er ikke definert noen kostnadskonto for dette produktet: \"%s\" (id:%d)"
-
-#~ msgid "Customer Accounting Properties"
-#~ msgstr "Innstillinger for kundekontering"
-
-#~ msgid "Error! The duration of the Fiscal Year is invalid. "
-#~ msgstr "Feil! Varigheten på regnskapsåret er ugyldig. "
-
-#~ msgid "Default taxes"
-#~ msgstr "Standard avgifter"
-
-#~ msgid "Display Mode"
-#~ msgstr "Vis modus"
-
-#~ msgid "  day of the month: 0"
-#~ msgstr "  dag i måneden: 0"
-
-#~ msgid "Accounts by type"
-#~ msgstr "Kontoer pr. type"
-
-#, python-format
-#~ msgid "Not implemented"
-#~ msgstr "Ikke implementert"
-
-#, python-format
-#~ msgid "Unable to find a valid period !"
-#~ msgstr "Ikke mulig å finne en gyldig periode!"
-
-#~ msgid "Voucher No"
-#~ msgstr "Bilag nr."
-
-#~ msgid "Analytic Account Statistics"
-#~ msgstr "Analytisk kontostatistikk"
-
-#~ msgid ""
-#~ "This will automatically configure your chart of accounts, bank accounts, "
-#~ "taxes and journals according to the selected template"
-#~ msgstr ""
-#~ "Dette vil automatisk konfiguerer kontoplanen din, bankkontoe, avgifter og "
-#~ "journaler i henhold til den valgte malen"
-
-#~ msgid "4"
-#~ msgstr "4"
-
-#, python-format
-#~ msgid "UserError"
-#~ msgstr "Brukerfeil"
-
-#~ msgid "Closing balance based on cashBox"
-#~ msgstr "Utgående balanse basert på kontantbeholdning"
-
-#~ msgid "Error ! You can not create recursive accounts."
-#~ msgstr "Feil!Du kan ikke lage repeterende konti."
-
-#~ msgid "Operation date"
-#~ msgstr "Operasjonsdato"
-
-#~ msgid "Account Balance -"
-#~ msgstr "Kontosaldo -"
-
-#~ msgid "Starting Date"
-#~ msgstr "Startdato"
-
-#~ msgid "Salesman"
-#~ msgstr "Selger"
-
-#~ msgid "No"
-#~ msgstr "Nei"
-
-#~ msgid "Are you sure ?"
-#~ msgstr "Er du sikker ?"
-
-#~ msgid "Balance Sheet (Assets Accounts)"
-#~ msgstr "Balanse (Aktivakonti)"
-
-#~ msgid "Third Party (Country)"
-#~ msgstr "Tredjepart (land)"
-
-#, python-format
-#~ msgid "Error"
-#~ msgstr "Feil"
-
-#, python-format
-#~ msgid "Taxes missing !"
-#~ msgstr "Mangler avgift!"
-
-#~ msgid "Check Date not in the Period"
-#~ msgstr "Sjekk dato - ikke i perioden"
-
-#, python-format
-#~ msgid "Start period should be smaller then End period"
-#~ msgstr "Startperiode skal være før sluttperiode"
-
-#~ msgid "5"
-#~ msgstr "5"
-
-#~ msgid "Column Name"
-#~ msgstr "Kolonnenavn"
-
-#~ msgid "Opening Cashbox"
-#~ msgstr "Inngående kontantbeholdning"
-
-#, python-format
-#~ msgid "Integrity Error !"
-#~ msgstr "Integritetsfeil!"
-
-#, python-format
-#~ msgid "Journal Item \"%s\" is not valid"
-#~ msgstr "Registrering \"%s\" er ikke gyldig"
-
-#~ msgid "Description on invoices"
-#~ msgstr "Beskrivelse av fakturaer"
-
-#~ msgid "UoM"
-#~ msgstr "UoM"
-
-#, python-format
-#~ msgid "No Period found on Invoice!"
-#~ msgstr "Ingen periode funnet for faktura!"
-
-#, python-format
-#~ msgid "No period found !"
-#~ msgstr "Ingen periode funnet !"
-
-#~ msgid "Transaction"
-#~ msgstr "Transaksjon"
-
-#~ msgid "Use this code for the VAT declaration."
-#~ msgstr "Bruk denne koden for mva rapportering"
-
-#~ msgid "Debit/Credit"
-#~ msgstr "Debet/kredit"
-
-#, python-format
-#~ msgid "Bank Journal "
-#~ msgstr "Bankjournal "
-
-#, python-format
-#~ msgid ""
-#~ "You can not do this modification on a reconciled entry ! Please note that "
-#~ "you can just change some non important fields !"
-#~ msgstr ""
-#~ "Du kan ikke gjøre denne endringen på en avstemt registrering! Merk at du "
-#~ "bare kan endre noen ikke viktige felter!"
-
-#, python-format
-#~ msgid "Configuration Error !"
-#~ msgstr "Konfigurasjonsfeil!"
-
-#~ msgid "6"
-#~ msgstr "6"
-
-#~ msgid "Sort By"
-#~ msgstr "Sorter etter"
-
-#~ msgid "Valid Up to"
-#~ msgstr "Gyldig inntil"
-
-#~ msgid "Aged Receivables"
-#~ msgstr "Aldersfordelte fordringer"
-
-#, python-format
-#~ msgid "Already Reconciled!"
-#~ msgstr "Allerede avstemt!"
-
-#~ msgid "Invoice Address"
-#~ msgstr "Faktura addresse"
-
-#, python-format
-#~ msgid "New currency is not confirured properly !"
-#~ msgstr "Ny valuta er ikke definert korrekt!"
-
-#, python-format
-#~ msgid "You can not use an inactive account!"
-#~ msgstr "Du kan ikke bruke en inaktiv konto!"
-
-#, python-format
-#~ msgid "Entries are not of the same account or already reconciled ! "
-#~ msgstr "Posteringer tilhører ikke samme konto eller er allerede avstemt! "
-
-#, python-format
-#~ msgid "No Filter"
-#~ msgstr "Ingen filter"
-
-#~ msgid "7"
-#~ msgstr "7"
-
-#, python-format
-#~ msgid "Invalid action !"
-#~ msgstr "Ugyldig aksjon!"
-
-#, python-format
-#~ msgid "Period: %s"
-#~ msgstr "Periode: %s"
-
-#~ msgid "  365 Days  "
-#~ msgstr "  365 dager  "
-
-#, python-format
-#~ msgid "not implemented"
-#~ msgstr "ikke implementert"
-
-#~ msgid "Value Amount"
-#~ msgstr "Gyldig beløp"
-
-#~ msgid "(keep empty to use the current period)"
-#~ msgstr "(la stå blank for å benytte inneværende periode)"
-
-#~ msgid "Create an Account based on this template"
-#~ msgstr "Opprett en konto basert på denne malen"
-
-#~ msgid "Acc. Type Name"
-#~ msgstr "Kto.typenavn"
-
-#~ msgid "  number of days: 30"
-#~ msgstr "  antall dager: 30"
-
-#~ msgid "Refund Type"
-#~ msgstr "Kredittype"
-
-#, python-format
-#~ msgid "Enter a Start date !"
-#~ msgstr "Legg inn en startdato !"
-
-#~ msgid "Dashboard"
-#~ msgstr "Konsoll"
-
-#~ msgid "Generate Your Accounting Chart from a Chart Template"
-#~ msgstr "Opprett kontoplanen din fra en kontoplanmal"
-
-#~ msgid "Readonly"
-#~ msgstr "Skrivebeskyttet"
-
-#~ msgid "Account Profit And Loss Report"
-#~ msgstr "Resultatrapport"
-
-#~ msgid ""
-#~ "Percentages for Payment Term Line must be between 0 and 1, Example: 0.02 for "
-#~ "2% "
-#~ msgstr ""
-#~ "Prosenter for betalingsbetingelse pr. linje må være mellom 0 og 1, f.eks. "
-#~ "0,02 for 2 % "
-
-#, python-format
-#~ msgid "Invoice is already reconciled"
-#~ msgstr "Faktura er allerede avstemt"
-
-#~ msgid "Create manual recurring entries in a chosen journal."
-#~ msgstr "Lag manuelle periodiske registrering i valgt journal."
-
-#, python-format
-#~ msgid "Couldn't create move between different companies"
-#~ msgstr "Kunne ikke lage bevegelse mellom ulike firmaer"
-
-#~ msgid "Income Accounts"
-#~ msgstr "Inntektskonto"
-
-#, python-format
-#~ msgid "Data Insufficient !"
-#~ msgstr "Ikke tilstrekkelig data !"
-
-#~ msgid "Journal Column"
-#~ msgstr "Journalkolonne"
-
-#~ msgid "Statements Reconciliation"
-#~ msgstr "Oppgave for avstemming"
-
-#~ msgid "Product UOM"
-#~ msgstr "Måleenhet for produkt"
-
-#~ msgid "9"
-#~ msgstr "9"
-
-#~ msgid "Period length (days)"
-#~ msgstr "Periodelengde (dager)"
-
-#, python-format
-#~ msgid "Accounting Entries"
-#~ msgstr "Regnskapsregistreringer"
-
-#~ msgid "Ending Date"
-#~ msgstr "Sluttdato"
-
-#~ msgid "Display accounts"
-#~ msgstr "Vis kontoer"
-
-#~ msgid "  day of the month= -1"
-#~ msgstr "  dag i måneden=-1"
-
-#~ msgid ":"
-#~ msgstr ":"
-
-#, python-format
-#~ msgid "Bad account !"
-#~ msgstr "Feil konto!"
-
-#, python-format
-#~ msgid "Open Journal Items !"
-#~ msgstr "Åpne journalregistreringer!"
-
-#~ msgid "Sale Taxes"
-#~ msgstr "Omsetningsavgift"
-
-#~ msgid "Account Balance Sheet Report"
-#~ msgstr "Kontosaldo rapport"
-
-#~ msgid "Sales by Account type"
-#~ msgstr "Salg pr kontotype"
-
-#~ msgid "  number of days: 14"
-#~ msgstr "  antall dager: 14"
-
-#~ msgid "    7 Days    "
-#~ msgstr "    7 dager    "
-
-#~ msgid "Year :"
-#~ msgstr "År :"
-
-#~ msgid "Fixed"
-#~ msgstr "Fast"
-
-#, python-format
-#~ msgid "Can not %s draft/proforma/cancel invoice."
-#~ msgstr "Kan ikke %s utkast/proforma/kansellere faktura"
-
-#~ msgid "State"
-#~ msgstr "Bekreft"
-
-#, python-format
-#~ msgid "Invoice '%s' is paid."
-#~ msgstr "Faktura '%s' er betalt."
-
-#~ msgid "Line"
-#~ msgstr "Linje"
-
-#~ msgid "Open for bank reconciliation"
-#~ msgstr "Åpen for bankavstemming"
-
-#~ msgid "Bank and Cash Accounts"
-#~ msgstr "Bank og kontantkonti"
-
-#~ msgid "8"
-#~ msgstr "8"
-
-#~ msgid "Accounting and Financial Management"
-#~ msgstr "Regnskap og finans"
-
-#~ msgid "Compute Code for Taxes included prices"
-#~ msgstr "Beregningskode for avgifter inkludert i prisene"
-
-#~ msgid "Journal Views"
-#~ msgstr "Journalvisning"
-
-#~ msgid "CashBox Balance"
-#~ msgstr "KontanBalanse"
-
-#~ msgid "Supplier Accounting Properties"
-#~ msgstr "Innstillinger for leverandørkontering"
-
-#~ msgid "Treasury"
-#~ msgstr "Skatt"
-
-#, python-format
-#~ msgid "Bad account!"
-#~ msgstr "Feil konto!"
-
-#~ msgid "Contact Address"
-#~ msgstr "Kontaktadresse"
-
-#~ msgid "Reference Type"
-#~ msgstr "Referansetype"
-
-#~ msgid "Cost Ledger for period"
-#~ msgstr "Hovedbok for periode"
-
-#~ msgid "Followups Management"
-#~ msgstr "Økonomistyring"
-
-#~ msgid "Journal View"
-#~ msgstr "Journalvisning"
-
-#, python-format
-#~ msgid ""
-#~ "You cannot cancel the Invoice which is Partially Paid! You need to "
-#~ "unreconcile concerned payment entries!"
-#~ msgstr ""
-#~ "Du kan ikke annulere faktura som er delvis betalt! Du må omgjøre aktuelle "
-#~ "avstemte betalingslinjer!"
-
-#~ msgid "Best regards."
-#~ msgstr "Med vennlig hilsen,"
-
-#~ msgid "You can not create move line on view account."
-#~ msgstr "Du kan ikke foreta bevegelse på en displaykonto!"
-
-#~ msgid "Profit & Loss (Income Accounts)"
-#~ msgstr "Resultat (Inntektskonti)"
-
-#~ msgid "("
-#~ msgstr "("
-
-#~ msgid "Modify"
-#~ msgstr "Endre"
-
-#~ msgid "Closing Method"
-#~ msgstr "Lukk periode"
-
-#~ msgid "This Year"
-#~ msgstr "Dette år"
-
-#, python-format
-#~ msgid "Cannot delete bank statement(s) which are already confirmed !"
-#~ msgstr "Kan ikke slette bankavstemming(er) som allerede er bekreftet !"
-
-#, python-format
-#~ msgid "You must select accounts to reconcile"
-#~ msgstr "Du må velge konti for avstemming"
-
-#~ msgid "Chart of account"
-#~ msgstr "Kontoplan"
-
-#, python-format
-#~ msgid "Unknown Error"
-#~ msgstr "Ukjent feil"
-
-#~ msgid "For Value percent enter % ratio between 0-1."
-#~ msgstr "For prosentverdi registrer % mellom 0-1"
-
-#~ msgid "Sale Tax(%)"
-#~ msgstr "Omsetningsavgift"
-
-#~ msgid ")"
-#~ msgstr ")"
-
-#~ msgid "This Month"
-#~ msgstr "Denne måned"
-
-#~ msgid "Net Profit"
-#~ msgstr "Netto resultat"
-
-#~ msgid "JNRL"
-#~ msgstr "JNRL"
-
-#, python-format
-#~ msgid "Journal: All"
-#~ msgstr "Journal: Alle"
-
-#, python-format
-#~ msgid "Entry is already reconciled"
-#~ msgstr "Postering er allerede avstemt"
-
-#~ msgid "Account Data"
-#~ msgstr "Kontodata"
-
-#~ msgid "Print Analytic Journals"
-#~ msgstr "Skriv ut analytiske journaler"
-
-#~ msgid "Fin.Account"
-#~ msgstr "Konto"
-
-#, python-format
-#~ msgid "This period is already closed !"
-#~ msgstr "Denne perioden er allerede lukket !"
-
-#~ msgid "Statistic Reports"
-#~ msgstr "Statistikkrapporter"
-
-#~ msgid "Configuration Progress"
-#~ msgstr "Konfigurasjonsprosess"
-
-#, python-format
-#~ msgid "Invoice '%s' is waiting for validation."
-#~ msgstr "Faktura '%s' avventer validering."
-
-#~ msgid "account.installer.modules"
-#~ msgstr "account.installer.modules"
-
-#~ msgid "Amount currency"
-#~ msgstr "Valutabeløp"
-
-#, python-format
-#~ msgid "You must enter a period length that cannot be 0 or below !"
-#~ msgstr "Du må legge inn et periode intervall større enn 0!"
-
-#, python-format
-#~ msgid "You cannot remove an account which has account entries!. "
-#~ msgstr "Du kan ikke endre på en konto med eksisterende posteringer "
-
-#~ msgid "Unpaid Supplier Invoices"
-#~ msgstr "Ubetalte leverandørfakturaer"
-
-#~ msgid "Entries Encoding"
-#~ msgstr "Entries Encoding"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Ugyldig modellnavn i handlingsdefinisjonen"
-
-#~ msgid ""
-#~ "This account will be used to value incoming stock for the current product "
-#~ "category"
-#~ msgstr ""
-#~ "Denne konto vil bli benyttet for å fastsette inngående lagerverdi for "
-#~ "aktuell produktkategori"
-
-#~ msgid "Taxed Amount"
-#~ msgstr "Avgi.ber. beløp"
-
-#~ msgid "Unreconcile entries"
-#~ msgstr "Ikke-avstemte posteringer"
-
-#~ msgid "Entry label"
-#~ msgstr "Posteringsbetegnelse"
-
-#~ msgid "Account Num."
-#~ msgstr "Konto nr."
-
-#~ msgid "Delta Debit"
-#~ msgstr "Delta debet"
-
-#~ msgid "Debit Trans."
-#~ msgstr "Debet trans."
-
-#~ msgid "OK"
-#~ msgstr "OK"
-
-#~ msgid "Mvt"
-#~ msgstr "Mvt"
-
-#~ msgid "Fiscal Position Accounts Mapping"
-#~ msgstr "Regnskapsstatus kontooversikt"
-
-#~ msgid "Printing Date"
-#~ msgstr "Utskriftsato"
-
-#~ msgid "Tax Group"
-#~ msgstr "Avgiftsgruppe"
-
-#~ msgid "Keep empty if the fiscal year belongs to several companies."
-#~ msgstr "Hold blankt dersom regnskapsåret tilhører flere selskaper"
-
-#~ msgid "Voucher Nb"
-#~ msgstr "Voucher Nr"
-
-#~ msgid "Partial Payment"
-#~ msgstr "Delbetaling"
-
-#~ msgid "<drawRightString x=\"19.8cm\" y=\"28cm\">"
-#~ msgstr "<drawRightString x=\"19.8cm\" y=\"28cm\">"
-
-#~ msgid "Partner account"
-#~ msgstr "Partnerkonto"
-
-#~ msgid "(Keep empty for all open fiscal years)"
-#~ msgstr "(La stå blank for alle åpne regnskapsår)"
-
-#, python-format
-#~ msgid "The opening journal must not have any entry in the new fiscal year !"
-#~ msgstr ""
-#~ "Åpningsjournalen må ikke ha noen registreringer i det nye regnskapsåret!"
-
-#~ msgid "Print Journal"
-#~ msgstr "Skriv journal"
-
-#, python-format
-#~ msgid "No Data Available"
-#~ msgstr "Ingen informasjon tilgjengelig"
-
-#~ msgid "Printing Date :"
-#~ msgstr "Utskriftsdato:"
-
-#~ msgid "analytic Invoice"
-#~ msgstr "analytisk faktura"
-
-#~ msgid "Grand total"
-#~ msgstr "Grand total"
-
-#~ msgid "Header"
-#~ msgstr "Overskrift"
-
-#~ msgid "</drawRightString>"
-#~ msgstr "</drawRightString>"
-
-#~ msgid "Fiscal Position Taxes Mapping"
-#~ msgstr "Regnskapsstatus Avgiftsoversikt"
-
-#~ msgid "New Supplier Invoice"
-#~ msgstr "Ny leverandørfaktura"
-
-#~ msgid "New Analytic Account"
-#~ msgstr "Ny analytisk konto"
-
-#~ msgid "Period from :"
-#~ msgstr "Periode fra :"
-
-#~ msgid "Are you sure you want to close the fiscal year ?"
-#~ msgstr "Er du sikker på at du vil lukke regnskapsåret?"
-
-#~ msgid "Bank Receipt"
-#~ msgstr "Bankkvittering"
-
-#~ msgid "Invoice import"
-#~ msgstr "Fakturaimport"
-
-#~ msgid "Standard entry"
-#~ msgstr "Standardpostering"
-
-#~ msgid "Analytic Credit"
-#~ msgstr "Kredittdimensjon"
-
-#~ msgid "Create subscription entries"
-#~ msgstr "Opprett abonnementposteringer"
-
-#~ msgid "Message"
-#~ msgstr "Melding"
-
-#~ msgid "Select invoices you want to pay and manages advances"
-#~ msgstr "Velg faktura(er) som skal betales og behandle delbetalinger"
-
-#~ msgid "Compute Entry Dates"
-#~ msgstr "Beregn registreringsdatoer"
-
-#~ msgid "        Start date"
-#~ msgstr "        Start dato"
-
-#~ msgid "wizard.company.setup"
-#~ msgstr "wizard.company.setup"
-
-#, python-format
-#~ msgid "No analytic journal !"
-#~ msgstr "Analytisk journal finnes ikke!"
-
-#~ msgid ""
-#~ "Example: 14 days 2%, 30 days net\n"
-#~ "1. Line 1: percent 0.02 14 days\n"
-#~ "2. Line 2: balance 30 days"
-#~ msgstr ""
-#~ "Eksempel: 14 dager 2 %, 30 dager netto\n"
-#~ "1.linje: prosent 0,02 14 dager\n"
-#~ "2.linje: saldo 30 dager"
-
-#~ msgid "Legal Statements"
-#~ msgstr "Rapporter til myndighet"
-
-#~ msgid "TITLE COMPANY"
-#~ msgstr "TITLE COMPANY"
-
-#~ msgid "VAT"
-#~ msgstr "MVA"
-
-#~ msgid "Partner Ref."
-#~ msgstr "Partner ref."
-
-#~ msgid "Third party"
-#~ msgstr "Tredjepart"
-
-#~ msgid "Costs & Revenues"
-#~ msgstr "Kostnader og inntekter"
-
-#~ msgid "Account Number"
-#~ msgstr "Kontonummer"
-
-#~ msgid "Skip"
-#~ msgstr "Hopp over"
-
-#~ msgid "Valid Entries"
-#~ msgstr "Gyldige registreringer"
-
-#~ msgid "New Statement"
-#~ msgstr "Ny bekreftelse"
-
-#~ msgid "Reconciliation of entries from invoice(s) and payment(s)"
-#~ msgstr "Avstemming av posteringer fra faktura(er) og innbetaling(er)"
-
-#~ msgid "Next"
-#~ msgstr "Neste"
-
-#~ msgid "to :"
-#~ msgstr "til :"
-
-#~ msgid "logo"
-#~ msgstr "logo"
-
-#~ msgid "To Be Verified"
-#~ msgstr "For verfisering"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Ugyldig XML for visning av arkitektur!"
-
-#~ msgid "          Start date"
-#~ msgstr "          Start dato"
-
-#~ msgid "Draft Supplier Invoices"
-#~ msgstr "Leverandørfaktura-kladd"
-
-#~ msgid "Create a Fiscal Year"
-#~ msgstr "Opprett et regnskapsår"
-
-#~ msgid "Date Invoiced"
-#~ msgstr "Fakturadato"
-
-#~ msgid "All periods if empty"
-#~ msgstr "Alle periodene er tomme"
-
-#, python-format
-#~ msgid "Your journal must have a default credit and debit account."
-#~ msgstr "Din journal må ha en default kredit og debit konto"
-
-#~ msgid "Statement Entries"
-#~ msgstr "Oppgaveposteringer"
-
-#~ msgid "Import Invoice"
-#~ msgstr "Import faktura"
-
-#~ msgid "Print Taxes Report"
-#~ msgstr "Skriv ut avgiftsrapport"
-
-#~ msgid "COL 2"
-#~ msgstr "KOL 2"
-
-#~ msgid "COL 1"
-#~ msgstr "KOL 1"
-
-#~ msgid "<drawString x=\"4.6cm\" y=\"28.7cm\">"
-#~ msgstr "<drawString x=\"4.6cm\" y=\"28.7cm\">"
-
-#~ msgid "Date End"
-#~ msgstr "Sluttdato"
-
-#~ msgid "asgfas"
-#~ msgstr "asgfas"
-
-#~ msgid "Analytic Chart of Accounts"
-#~ msgstr "Analytisk kontoplan"
-
-#~ msgid "O_k"
-#~ msgstr "O_k"
-
-#~ msgid "_Go"
-#~ msgstr "_Go"
-
-#~ msgid "New Customer Invoice"
-#~ msgstr "Ny kundefaktura"
-
-#~ msgid "Analytic account costs and revenues"
-#~ msgstr "Analytic account costs and revenues"
-
-#, python-format
-#~ msgid "No records found for your selection!"
-#~ msgstr "Ingen rader funnet med angitt utvalg!"
-
-#~ msgid "Full Account Name"
-#~ msgstr "Fullt kontonavn"
-
-#~ msgid "1cm 27.7cm 20cm 27.7cm"
-#~ msgstr "1cm 27.7cm 20cm 27.7cm"
-
-#, python-format
-#~ msgid "Unable to reconcile entry \"%s\": %.2f"
-#~ msgstr "Kan ikke avstemme postering \"%s\": %.2f"
-
-#, python-format
-#~ msgid "Date to must be set between %s and %s"
-#~ msgstr "Datoen må være mellom %s og %s"
-
-#~ msgid "Reconcilate the entries from payment"
-#~ msgstr "Avstem posteringer fra betalinger"
-
-#~ msgid "By Date and Period"
-#~ msgstr "Per dato og periode"
-
-#~ msgid "Additionnal Information"
-#~ msgstr "Tilleggsinformasjon"
-
-#~ msgid "Balance Brought Forward"
-#~ msgstr "Balance Brought Forward"
-
-#~ msgid "<stroke color=\"darkblue\"/>"
-#~ msgstr "<stroke color=\"darkblue\"/>"
-
-#~ msgid "Third Party Ledger"
-#~ msgstr "Third Party Ledger"
-
-#~ msgid "New Supplier Refund"
-#~ msgstr "Ny leverandørrefusjon"
-
-#~ msgid "Journal code"
-#~ msgstr "Journalkode"
-
-#~ msgid "Entry Name"
-#~ msgstr "Posteringsnavn"
-
-#~ msgid "Invoice Movement"
-#~ msgstr "Fakturabevegelse"
-
-#~ msgid "Define Fiscal Years and Select Charts of Account"
-#~ msgstr "Definer regnskapsår og velg kontoplan"
-
-#~ msgid ""
-#~ "Check this box if you want to print all entries when printing the General "
-#~ "Ledger, otherwise it will only print its balance."
-#~ msgstr ""
-#~ "Kryss av hvis du ønsker alle posteringer fra hovedbok ved utskrift. I "
-#~ "motsatt fall vil utskrift bare inneholde balansen."
-
-#~ msgid "By date"
-#~ msgstr "Innen dato"
-
-#~ msgid "Account Configure Wizard "
-#~ msgstr "Kontokonfigurasjon veiviser "
-
-#~ msgid "Select Chart"
-#~ msgstr "Velg plan"
-
-#~ msgid "Fiscal Position Template Tax Mapping"
-#~ msgstr "Regnskapsstatus Mal for avgiftsoversikt"
-
-#~ msgid ""
-#~ "Financial and accounting module that covers:\n"
-#~ "    General accounting\n"
-#~ "    Cost / Analytic accounting\n"
-#~ "    Third party accounting\n"
-#~ "    Taxes management\n"
-#~ "    Budgets\n"
-#~ "    Customer and Supplier Invoices\n"
-#~ "    Bank statements\n"
-#~ "    "
-#~ msgstr ""
-#~ "Financial and accounting module that covers:\n"
-#~ "    General accounting\n"
-#~ "    Cost / Analytic accounting\n"
-#~ "    Third party accounting\n"
-#~ "    Taxes management\n"
-#~ "    Budgets\n"
-#~ "    Customer and Supplier Invoices\n"
-#~ "    Bank statements\n"
-#~ "    "
-
-#~ msgid ""
-#~ "If no account is specified, the reconciliation will be made using every "
-#~ "accounts that can be reconcilied"
-#~ msgstr "Hvis ingen konto er angitt vil samtlige kontoer bli avstemmt"
-
-#~ msgid "Overdue Payment Report Message"
-#~ msgstr "Rapport forfalte betalinger"
-
-#~ msgid "Movement"
-#~ msgstr "Bevegelse"
-
-#~ msgid ""
-#~ "This account will be used instead of the default one to value outgoing stock "
-#~ "for the current product"
-#~ msgstr ""
-#~ "Denne kontoen vil bli benyttet i stedet for standard for utgående lager for "
-#~ "dette produktet"
-
-#~ msgid "Financial Journals"
-#~ msgstr "Finansjournaler"
-
-#~ msgid "By Period"
-#~ msgstr "Innen periode"
-
-#~ msgid "Maximum Quantity"
-#~ msgstr "Maksimalt antall"
-
-#~ msgid "Select entries"
-#~ msgstr "Velg registreringer"
-
-#~ msgid "Cash Payment"
-#~ msgstr "Kontant betaling"
-
-#~ msgid "Account Move"
-#~ msgstr "Kontobevegelse"
-
-#~ msgid "Subtotal w/o tax"
-#~ msgstr "Subtotal uten avg."
-
-#~ msgid "Date/Period Filter"
-#~ msgstr "Dato/periodefilter"
-
-#~ msgid "Credit Trans."
-#~ msgstr "Kredit trans."
-
-#~ msgid "The currency of the journal"
-#~ msgstr "Valuta benyttet for journal"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr "Objektnavnet må starte med x_ og ikke inneholde noen spesialtegn!"
-
-#~ msgid "Name of the fiscal year as displayed in reports."
-#~ msgstr "Navn på regnskapsåret som blir vist i rapporter."
-
-#~ msgid "Unpaid Customer Invoices"
-#~ msgstr "Ubetalte kundefakturaer"
-
-#~ msgid "Import file from your bank statement"
-#~ msgstr "Importer fil fra bankoppgaven"
-
-#~ msgid "Bank Payment"
-#~ msgstr "Bankbetaling"
-
-#~ msgid "Manually statement"
-#~ msgstr "Manuell oppgave"
-
-#~ msgid "End of Year Treatments"
-#~ msgstr "Årsavslutningsbehandling"
-
-#~ msgid "File statement"
-#~ msgstr "File statement"
-
-#~ msgid "Partner Other Ledger"
-#~ msgstr "Partner Other Ledger"
-
-#~ msgid "Quantities"
-#~ msgstr "Antall"
-
-#~ msgid "Date Start"
-#~ msgstr "Startdato"
-
-#~ msgid "Number of entries are generated"
-#~ msgstr "Antall registreringer er generert"
-
-#, python-format
-#~ msgid "Can not pay draft/proforma/cancel invoice."
-#~ msgstr "Kan ikke betale utkast/proforma/kansellert faktura"
-
-#~ msgid "By Date"
-#~ msgstr "Per dato"
-
-#~ msgid "The date of the generated entries"
-#~ msgstr "Dato for posteringer opprettet"
-
-#~ msgid "Entries Encoding by Move"
-#~ msgstr "Entries Encoding by Move"
-
-#~ msgid "Filter on Partners"
-#~ msgstr "Filtrer på partnere"
-
-#~ msgid "Valid entries from invoice"
-#~ msgstr "Gyldige registreringer fra faktura"
-
-#~ msgid "Crebit"
-#~ msgstr "Kredit"
-
-#~ msgid "Import invoice from statement"
-#~ msgstr "Importer faktura fra bekreftelse"
-
-#~ msgid "General Credit"
-#~ msgstr "Generell kredit"
-
-#~ msgid "Account cost and revenue by journal (This Month)"
-#~ msgstr "Kontokostnad og omsetning fra journal (denne måned)"
-
-#~ msgid "<fill color=\"darkblue\"/>"
-#~ msgstr "<fill color=\"darkblue\"/>"
-
-#~ msgid "Control Invoice"
-#~ msgstr "Kontroller faktura"
-
-#, python-format
-#~ msgid "Date not in a defined fiscal year"
-#~ msgstr "Dato ikke innenfor definert regnskapsår"
-
-#~ msgid "Analytic Check"
-#~ msgstr "Analytisk sjekk"
-
-#~ msgid "account.analytic.journal"
-#~ msgstr "account.analytic.journal"
-
-#~ msgid "Select parent account"
-#~ msgstr "Velg hovedkonto"
-
-#~ msgid "Payment amount"
-#~ msgstr "Betalbart beløp"
-
-#~ msgid "All Months"
-#~ msgstr "Alle måneder"
-
-#~ msgid "Analytic Check -"
-#~ msgstr "Analytisk sjekk -"
-
-#~ msgid "_Cancel"
-#~ msgstr "_Avbryt"
-
-#~ msgid "Select Date-Period"
-#~ msgstr "Velg dato-periode"
-
-#~ msgid "Import invoices"
-#~ msgstr "Importer fakturaer"
-
-#~ msgid "Maintains Invoice sequences with Fiscal Year"
-#~ msgstr "Vedlikehold fakturasekvenser med regnskapsår"
-
-#~ msgid "Subscription Periods"
-#~ msgstr "Abonnementsperiode"
-
-#~ msgid "Write-Off journal"
-#~ msgstr "Avskrivningsjournal"
-
-#~ msgid "Full Payment"
-#~ msgstr "Full betaling"
-
-#~ msgid "Journal Purchase"
-#~ msgstr "Innkjøpsjournal"
-
-#~ msgid "Account Entry Lines"
-#~ msgstr "Kontoposteringslinje"
-
-#~ msgid "Choose Journal and Payment Date"
-#~ msgstr "Velg journal og betalingsdato"
-
-#~ msgid "Unpaid Customer Refunds"
-#~ msgstr "Ubetalte kundetilbakebetalinger"
-
-#~ msgid "Supplier Invoice Process"
-#~ msgstr "Leverandørfakturaprosess"
-
-#~ msgid "Receivable and Payable"
-#~ msgstr "Fordringer og gjeld"
-
-#~ msgid "Amount reconciled"
-#~ msgstr "Avstemt beløp"
-
-#~ msgid "Subscription Entries"
-#~ msgstr "Abonnementsregistreringer"
-
-#, python-format
-#~ msgid "Closing of fiscal year cancelled, please check the box !"
-#~ msgstr "Regnskapsavslutning avbrutt, kryss av i felt!"
-
-#~ msgid "PRO-FORMA Customer Invoices"
-#~ msgstr "PRO-FORMA kundefakturaer"
-
-#~ msgid "Analytic Journal Definition"
-#~ msgstr "Analytisk journaldefinisjon"
-
-#~ msgid "The sequence used for invoice numbers in this journal."
-#~ msgstr "Sekvensen som er benyttet for fakturanumre i denne journalen"
-
-#~ msgid ""
-#~ "This field allow you to choose the accounting journals you want for "
-#~ "filtering the invoices. If you left this field empty, it will search on all "
-#~ "sale, purchase and cash journals."
-#~ msgstr ""
-#~ "Her kan du gjøre utvalg på bilag for søk på faktura. Hvis feltet er blakt "
-#~ "vil søket omfatte salg, innkjøp og kassadagbok"
-
-#~ msgid "List of Accounts"
-#~ msgstr "Kontoliste"
-
-#~ msgid "Validate Account Entries"
-#~ msgstr "Kontroller kontoposteringer"
-
-#~ msgid "Print VAT Decl."
-#~ msgstr "Utskrift av merverdioppgave"
-
-#~ msgid "Financial Accounts"
-#~ msgstr "Finanskontoer"
-
-#~ msgid "</drawString>"
-#~ msgstr "</drawString>"
-
-#~ msgid "Print Journal -"
-#~ msgstr "Skriv journal"
-
-#~ msgid "Paid invoice when reconciled."
-#~ msgstr "Paid invoice when reconciled."
-
-#~ msgid "General Debit"
-#~ msgstr "Generell debet"
-
-#~ msgid "Name of the fiscal year as displayed on screens."
-#~ msgstr "Navn på regnskapsår som vist på skjerm"
-
-#~ msgid "last month"
-#~ msgstr "forrige måned"
-
-#~ msgid "The company name must be unique !"
-#~ msgstr "Firmanavn må være unikt !"
-
-#~ msgid "Sale journal in this year"
-#~ msgstr "Salgsjournal i dette året"
-
-#~ msgid "All Months Sales by type"
-#~ msgstr "Alle måneder salg pr. type"
-
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "Feil ! Du kan ikke lage rekursive firmaer."
-
-#~ msgid "Cancel: refund invoice and reconcile"
-#~ msgstr "Kanseller: krediter faktura og avstem"
-
-#~ msgid "Tax Declaration: Invoices"
-#~ msgstr "Avgiftsoppgave: Fakturaer"
-
-#~ msgid "Image"
-#~ msgstr "Bilde"
-
-#~ msgid "VAT Declaration"
-#~ msgstr "Avgiftsoppgave"
-
-#, python-format
-#~ msgid "New currency is not configured properly !"
-#~ msgstr "Ny valuta er ikke konfigurert!"
-
-#, python-format
-#~ msgid ""
-#~ "You can not delete an invoice which is open or paid. We suggest you to "
-#~ "refund it instead."
-#~ msgstr ""
-#~ "Du kan ikke slette en faktura som er åpen eller betalt. Vi foreslår at du i "
-#~ "stedet krediterer."
-
-#, python-format
-#~ msgid ""
-#~ "You selected an Unit of Measure which is not compatible with the product."
-#~ msgstr "Du valgte en enhetstype som ikke er gjeldende for produktet."
-
-#~ msgid "Configure Your Chart of Accounts"
-#~ msgstr "Konfigurer din kontoplan"
-
-#~ msgid "Month-1"
-#~ msgstr "Måned-1"
-
-#~ msgid "Quantity :"
-#~ msgstr "Kvantum :"
-
-#~ msgid "The currency code must be unique per company!"
-#~ msgstr "Valutakode må være unik pr. firma!"
-
-#~ msgid "Create a draft Refund"
-#~ msgstr "Lag utkast til kreditnota"
-
-#~ msgid "Bank Account Owner"
-#~ msgstr "Bankkontoeier"
-
-#~ msgid "Compute Code"
-#~ msgstr "Beregningskode"
-
-#, python-format
-#~ msgid "Encoding error"
-#~ msgstr "Kodefeil"
-
-#, python-format
-#~ msgid "You can not create journal items on a closed account %s %s"
-#~ msgstr "Du kan ikke lage journaloppføringer på en lukket konto %s %s"
-
-#, python-format
-#~ msgid ""
-#~ "You have to provide an account for the write off/exchange difference entry !"
-#~ msgstr ""
-#~ "Du må opprette en konto for postering av  nedskriving/kursdifferanse!"
-
-#~ msgid "Sale journal in this month"
-#~ msgstr "Salgsjournal denne måned"
-
-#~ msgid "Reconciliation result"
-#~ msgstr "Resultat av avstemminger"
-
-#~ msgid "This action will erase taxes"
-#~ msgstr "Denne handlingen vil slett avgifter"
-
-#~ msgid "Analytic Entries during last 7 days"
-#~ msgstr "Analytiske føringer de siste 7 dager"
-
-#~ msgid "Lines to reconcile"
-#~ msgstr "Linjer til avstemming"
-
-#, python-format
-#~ msgid "You can not remove an account containing journal items."
-#~ msgstr "Du kan ikke fjerne en konto som har journalføringer"
-
-#, python-format
-#~ msgid "Error :"
-#~ msgstr "Feil :"
-
-#~ msgid "Install your Chart of Accounts"
-#~ msgstr "Installer din kontoplan"
-
-#, python-format
-#~ msgid "You should have chosen periods that belongs to the same company"
-#~ msgstr "Du skulle valgt perioder son tilhører samme firma"
-
-#~ msgid "Review your Payment Terms"
-#~ msgstr "Sjekk din betalingsbetingelser"
-
-#, python-format
-#~ msgid ""
-#~ "Can not find a chart of accounts for this company, you should create one."
-#~ msgstr "Kan ikke finne kontoplan for dette firmaet, du må lagen en."
-
-#~ msgid "This Months Sales by type"
-#~ msgstr "Månedens salg etter type"
-
-#, python-format
-#~ msgid ""
-#~ "No period defined for this date: %s !\n"
-#~ "Please create one."
-#~ msgstr ""
-#~ "Ingen periode er definert for denne datoen: %s!\n"
-#~ "Vennligst opprett en."
-
-#~ msgid "Contacts"
-#~ msgstr "Kontakter"
-
-#~ msgid "Draft Customer Invoices"
-#~ msgstr "Utkast til kundefaktura"
-
-#~ msgid "You can not create journal items on an account of type view."
-#~ msgstr "Du kan ikke lage journalregistreringer på konto av typen vis"
-
-#~ msgid "Children Definition"
-#~ msgstr "barne Definisjon"
-
-#~ msgid ""
-#~ "Configuration error! The currency chosen should be shared by the default "
-#~ "accounts too."
-#~ msgstr ""
-#~ "Konfigurasjon feil! Den valgte valutaen bør deles av standard kontoer også."
-
-#~ msgid ""
-#~ "When journal period is created. The state is 'Draft'. If a report is printed "
-#~ "it comes to 'Printed' state. When all transactions are done, it comes in "
-#~ "'Done' state."
-#~ msgstr ""
-#~ "Når tidsskriftet periode er opprettet. Staten er \"Kladd\". Hvis en rapport "
-#~ "skrives det kommer til \"Trykt \"tilstand. Når alle transaksjoner er gjort, "
-#~ "kommer det i Ferdig tilstand"
-
-#~ msgid "Open For Unreconciliation"
-#~ msgstr "Åpen for Unreconciliation"
-
-#, python-format
-#~ msgid "I can not locate a parent code for the template account!"
-#~ msgstr "Jeg kan ikke finne en forelder kode for mal konto!"
-
-#, python-format
-#~ msgid ""
-#~ "You cannot change the type of account from '%s' to '%s' type as it contains "
-#~ "journal items!"
-#~ msgstr ""
-#~ "Du kan ikke endre kontotype fra '% s' til '% s' type som inneholder "
-#~ "tidsskrift vare!"
-
-#, python-format
-#~ msgid ""
-#~ "You cannot validate this journal entry because account \"%s\" does not "
-#~ "belong to chart of accounts \"%s\"!"
-#~ msgstr ""
-#~ "Du kan ikke validere dette bilagsregistrering fordi kontoen \"% s\" ikke "
-#~ "hører til kontoplan \"% s\"!"
-
-#~ msgid ""
-#~ "A bank statement is a summary of all financial transactions occurring over a "
-#~ "given period of time on a deposit account, a credit card or any other type "
-#~ "of financial account. The starting balance will be proposed automatically "
-#~ "and the closing balance is to be found on your statement. When you are in "
-#~ "the Payment column of a line, you can press F1 to open the reconciliation "
-#~ "form."
-#~ msgstr ""
-#~ "En kontoutskrift er en oppsummering av alle finansielle transaksjoner det "
-#~ "skjer over en gitt tidsperiode på en innskuddskonto, kredittkort eller en "
-#~ "annen type økonomisk konto. Utgangspunktet balansen vil bli foreslått "
-#~ "automatisk og utgående balanse er å finne på kontoutskriften din. Når du er "
-#~ "i Betaling kolonne på en linje, kan du trykke F1 for å åpne forsoning "
-#~ "skjemaet."
-
-#, python-format
-#~ msgid ""
-#~ "You can not use this general account in this journal, check the tab 'Entry "
-#~ "Controls' on the related journal !"
-#~ msgstr ""
-#~ "Du kan ikke bruke denne generelle konto i dette tidsskriftet, sjekk fanen "
-#~ "'Entry Controls' på den relaterte tidsskriftet!"
-
-#~ msgid ""
-#~ "With Supplier Invoices you can enter and manage invoices issued by your "
-#~ "suppliers. OpenERP can also generate draft invoices automatically from "
-#~ "purchase orders or receipts. This way, you can control the invoice from your "
-#~ "supplier according to what you purchased or received."
-#~ msgstr ""
-#~ "Med leverandørfakturaer kan du gå inn og administrere fakturaer utstedt av "
-#~ "dine leverandører. OpenERP kan også generere utkast fakturaer automatisk fra "
-#~ "innkjøpsordrer eller kvitteringer. På denne måten kan du kontrollere at "
-#~ "fakturaen fra leverandøren i henhold til hva du har kjøpt eller mottatt."
-
-#~ msgid ""
-#~ "Display your company chart of accounts per fiscal year and filter by period. "
-#~ "Have a complete tree view of all journal items per account code by clicking "
-#~ "on an account."
-#~ msgstr ""
-#~ "Vis din bedrift kontoplan per regnskapsår og filtrere etter periode. Ha en "
-#~ "komplett trevisning av alle journaler pr kontokode ved å klikke på en konto."
-
-#~ msgid ""
-#~ "Cancel Invoice: Creates the refund invoice, validate and reconcile it to "
-#~ "cancel the current invoice."
-#~ msgstr ""
-#~ "Avbryt Faktura: Oppretter tilbakebetalingen faktura, validere og forsone det "
-#~ "å avbryte den aktuelle fakturaen."
-
-#~ msgid ""
-#~ "This account is used for transferring Profit/Loss (If It is Profit: Amount "
-#~ "will be added, Loss : Amount will be deducted.), as calculated in Profit & "
-#~ "Loss Report"
-#~ msgstr ""
-#~ "Denne kontoen brukes for overføring Gevinst / tap (Vis det er Gevinst: "
-#~ "Beløpe vil bli lagt til, tap: Beløpet blir trukket.) Som beregnes i "
-#~ "Resultatregnskap Report"
-
-#~ msgid ""
-#~ "Check this box if you want to use a different sequence for each created "
-#~ "journal. Otherwise, all will use the same sequence."
-#~ msgstr ""
-#~ "Sjekk denne boksen hvis du ønsker å bruke en annen sekvens for hver "
-#~ "opprettet journal. Ellers vil alle bruke samme sekvens."
-
-#~ msgid "Makes a generic system to draw financial reports easily."
-#~ msgstr "Gjør et generisk system for å tegne finansielle rapporter enkelt."
-
-#~ msgid ""
-#~ "Invalid period ! Some periods overlap or the date period is not in the scope "
-#~ "of the fiscal year. "
-#~ msgstr ""
-#~ "Ugyldig periode! Enkelte perioder overlapper eller dato perioden er ikke i "
-#~ "omfanget av regnskapsåret. "
-
-#, python-format
-#~ msgid ""
-#~ "There is no default default debit account defined \n"
-#~ "on journal \"%s\""
-#~ msgstr ""
-#~ "Det er ingen standard. \n"
-#~ "Standard belastningskonto definert\n"
-#~ "på tidsskriftet \"% s\""
-
-#~ msgid ""
-#~ "The default Chart of Accounts is matching your country selection. If no "
-#~ "certified Chart of Accounts exists for your specified country, a generic one "
-#~ "can be installed and will be selected by default."
-#~ msgstr ""
-#~ "Standardinnstillingen Kontoplan er tilsvarende ditt valg av land. Hvis ingen "
-#~ "sertifisert Kontoplan finnes for ditt angitte landet, kan en generisk bli "
-#~ "installert og vil bli valgt som standard."
-
-#~ msgid ""
-#~ "Setup your accounting journals. For bank accounts, it's better to use the "
-#~ "'Setup Your Bank Accounts' tool that will automatically create the accounts "
-#~ "and journals for you."
-#~ msgstr ""
-#~ "Sett opp ditt regnskap tidsskrifter. For bankkonti, er det bedre å bruke "
-#~ "\"Setup bankkontoer Verktøyet som vil automatisk opprette kontoer og "
-#~ "tidsskrifter for deg."
-
-#, python-format
-#~ msgid ""
-#~ "Can not create an automatic sequence for this piece!\n"
-#~ "Put a sequence in the journal definition for automatic numbering or create a "
-#~ "sequence manually for this piece."
-#~ msgstr ""
-#~ "Kan ikke opprette en automatisk sekvens for dette stykket!\n"
-#~ "Sett en sekvens i tidsskriftet definisjonen for automatisk nummerering eller "
-#~ "opprette en sekvens manuelt for dette stykket."
-
-#, python-format
-#~ msgid ""
-#~ "You can not modify the company of this journal as its related record exist "
-#~ "in journal items"
-#~ msgstr ""
-#~ "Du kan ikke endre selskapet av magasinet som dens tilhørende rekord finnes i "
-#~ "tidsskriftet varer"
-
-#, python-format
-#~ msgid ""
-#~ "There is no default default credit account defined \n"
-#~ "on journal \"%s\""
-#~ msgstr ""
-#~ "Det er ingen standard.\n"
-#~ "Standard kreditt konto definert på tidsskriftet \"% s\""
-
-#~ msgid ""
-#~ "The fiscal position will determine taxes and the accounts used for the "
-#~ "partner."
-#~ msgstr ""
-#~ "Den finanspolitiske stillingen vil bestemme skatter og regnskapet brukes for "
-#~ "partneren."
-
-#, python-format
-#~ msgid ""
-#~ "Can't find any account journal of %s type for this company.\n"
-#~ "\n"
-#~ "You can create one in the menu: \n"
-#~ "Configuration\\Financial Accounting\\Accounts\\Journals."
-#~ msgstr ""
-#~ "Kan ikke finne noen konto journal av% s for denne bedriften.\n"
-#~ "Du kan opprette en i menyen:\n"
-#~ "Configuration \\ Financial Accounting \\ regnskap \\ Journals."
-
-#~ msgid ""
-#~ "This report gives you an overview of the situation of a specific journal"
-#~ msgstr ""
-#~ "Denne rapporten gir deg en oversikt over situasjonen til en bestemt "
-#~ "tidsskrift"
-
-#~ msgid ""
-#~ "This menu prints a VAT declaration based on invoices or payments. Select one "
-#~ "or several periods of the fiscal year. The information required for a tax "
-#~ "declaration is automatically generated by OpenERP from invoices (or "
-#~ "payments, in some countries). This data is updated in real time. That’s very "
-#~ "useful because it enables you to preview at any time the tax that you owe at "
-#~ "the start and end of the month or quarter."
-#~ msgstr ""
-#~ "Denne menyen skriver en merverdiavgift erklæring basert på fakturaer eller "
-#~ "betalinger. Velg en eller flere perioder av regnskapsåret. Informasjonen som "
-#~ "kreves for en selvangivelse blir automatisk generert av OpenERP fra "
-#~ "fakturaer (eller utbetalinger, i noen land). Disse dataene blir oppdatert i "
-#~ "sanntid. Det er veldig nyttig fordi det lar deg forhåndsvise til enhver tid "
-#~ "den skatten som du skylder på begynnelsen og slutten av måneden eller "
-#~ "kvartalet."
-
-#~ msgid "This wizard will create recurring accounting entries"
-#~ msgstr "Denne veiviseren vil skape gjentakende regnskapspostene."
-
-#~ msgid "New Company Financial Setting"
-#~ msgstr "Ny selskap finansiell innstilling"
-
-#~ msgid ""
-#~ "Automatically generate entries based on what has been entered in the  system "
-#~ "before a specific date."
-#~ msgstr ""
-#~ "Automatisk genererer oppføringer basert på hva som har blitt lagt inn i "
-#~ "systemet før en bestemt dato."
-
-#, python-format
-#~ msgid ""
-#~ "You need an Opening journal with centralisation checked to set the initial "
-#~ "balance!"
-#~ msgstr ""
-#~ "Du trenger en åpning tidsskrift med sentralisering sjekket for å sette den "
-#~ "innledende balanse!"
-
-#~ msgid "This months' Sales by type"
-#~ msgstr "Denne måneds Salgssentral etter type"
-
-#~ msgid "Gives the sequence order to journal column."
-#~ msgstr "Gir sekvensen for å merke kolonne."
-
-#~ msgid ""
-#~ "A journal entry consists of several journal items, each of which is either a "
-#~ "debit or a credit transaction. OpenERP automatically creates one journal "
-#~ "entry per accounting document: invoice, refund, supplier payment, bank "
-#~ "statements, etc."
-#~ msgstr ""
-#~ "En bilagsregistrering består av flere journaler elementer, som hver er enten "
-#~ "en debet eller kreditt transaksjon. OpenERP oppretter automatisk en "
-#~ "bilagsregistrering per regnskap dokumentet: faktura, tilbakebetaling, "
-#~ "leverandør betaling, kontoutskrifter, etc."
-
-#, python-format
-#~ msgid ""
-#~ "Can not %s invoice which is already reconciled, invoice should be "
-#~ "unreconciled first. You can only Refund this invoice"
-#~ msgstr ""
-#~ "Kan ikke% s faktura som allerede er forsonet, bør fakturaen ikke avstemte "
-#~ "først. Du kan bare tilbakebetale denne fakturaen."
-
-#~ msgid ""
-#~ "It adds the currency column if the currency is different then the company "
-#~ "currency"
-#~ msgstr ""
-#~ "Det legger valutaen kolonne hvis valutaen er forskjellig enn selskapet "
-#~ "valutaen"
-
-#, python-format
-#~ msgid "The closing balance should be the same than the computed balance!"
-#~ msgstr "Den utgående balanse bør være den samme enn den beregnede balanse!"
-
-#, python-format
-#~ msgid ""
-#~ "Selected Invoice(s) cannot be cancelled as they are already in 'Cancelled' "
-#~ "or 'Done' state!"
-#~ msgstr ""
-#~ "Valgte fakturaer) kan ikke kanselleres som de er allerede i \"Avlyst\" eller "
-#~ "\"ferdig\" stat!"
-
-#, python-format
-#~ msgid ""
-#~ "Can not create the invoice !\n"
-#~ "The related payment term is probably misconfigured as it gives a computed "
-#~ "amount greater than the total invoiced amount. The latest line of your "
-#~ "payment term must be of type 'balance' to avoid rounding issues."
-#~ msgstr ""
-#~ "Kan ikke opprette fakturaen!\n"
-#~ "Den tilhørende innbetaling sikt er trolig feilkonfigurert som det gir en "
-#~ "beregnet beløp større enn det totale fakturerte beløpet. Den siste linjen "
-#~ "din betalingsfrist må være av typen \"balanse\" for å unngå avrunding "
-#~ "problemer."
-
-#, python-format
-#~ msgid "You can not create journal items on a \"view\" account %s %s"
-#~ msgstr "Du kan ikke opprette journal elementer på en \"vis\"-kontoen% s% s"
-
-#, python-format
-#~ msgid ""
-#~ "You cannot create an invoice on a centralised journal. Uncheck the "
-#~ "centralised counterpart box in the related journal from the configuration "
-#~ "menu."
-#~ msgstr ""
-#~ "Du kan ikke opprette en faktura på en sentralisert journal. Fjern merkingen "
-#~ "den sentraliserte motpart boksen i den aktuelle tidsskriftet fra "
-#~ "konfigurasjonsmenyen."
-
-#~ msgid "Error! The start date of the fiscal year must be before his end date."
-#~ msgstr "Feil! Startdatoen for regnskapsåret må være før han sluttdato."
-
-#~ msgid ""
-#~ "Print Report with the currency column if the currency is different then the "
-#~ "company currency"
-#~ msgstr ""
-#~ "Skriv rapport med valutaen kolonne hvis valutaen er forskjellig enn "
-#~ "selskapet valutaen"
-
-#, python-format
-#~ msgid ""
-#~ "You haven't supplied enough argument to compute the initial balance, please "
-#~ "select a period and journal in the context."
-#~ msgstr ""
-#~ "Du har ikke levert nok argument til å beregne utgangsposisjonen balanse, "
-#~ "vennligst velg en periode og tidsskrift i sammenheng."
-
-#, python-format
-#~ msgid ""
-#~ "You can not do this modification on a confirmed entry! You can just change "
-#~ "some non legal fields or you must unconfirm the journal entry first! \n"
-#~ "%s"
-#~ msgstr ""
-#~ "Du kan ikke gjøre denne endringen på en bekreftet oppføring! Du kan bare "
-#~ "endre noen ikke juridiske felt, eller du må bekrefte bilagsregistreringen "
-#~ "først!\n"
-#~ "% s"
-
-#~ msgid "Overdue Account"
-#~ msgstr "forfalt konto"
-
-#~ msgid ""
-#~ "When new move line is created the state will be 'Draft'.\n"
-#~ "* When all the payments are done it will be in 'Valid' state."
-#~ msgstr ""
-#~ "Når den nye trekk linjen opprettes staten vil være \"kladd\".\n"
-#~ "* Når alle betalingene er gjort vil det være i \"Gyldig\" tilstand."
-
-#~ msgid "You can not create analytic line on view account."
-#~ msgstr "Du kan ikke opprette analytisk linje på visning konto."
-
-#, python-format
-#~ msgid "Statement %s is confirmed, journal items are created."
-#~ msgstr "Uttalelse% s er bekreftet, er tidsskriftet elementer opprettet."
-
-#~ msgid "Aged Trial Balance"
-#~ msgstr "Eldre Prøve Balanse"
-
-#~ msgid ""
-#~ "Chart of Taxes is a tree view reflecting the structure of the Tax Cases (or "
-#~ "tax codes) and shows the current tax situation. The tax chart represents the "
-#~ "amount of each area of the tax declaration for your country. It’s presented "
-#~ "in a hierarchical structure, which can be modified to fit your needs."
-#~ msgstr ""
-#~ "Figur av Skattedirektoratet er en trevisning reflekterer strukturen i "
-#~ "skattesaker (eller avgiftskoder) og viser gjeldende skattemessige situasjon. "
-#~ "Skattesystemet diagram representerer mengden av hvert område av "
-#~ "selvangivelsen for landet ditt. Det er presentert i en hierarkisk struktur, "
-#~ "som kan bli endret for å passe dine behov."
-
-#~ msgid ""
-#~ "When doing multi-currency transactions, you may loose or gain some amount "
-#~ "due to changes of exchange rate. This menu gives you a forecast of the Gain "
-#~ "or Loss you'd realized if those transactions were ended today. Only for "
-#~ "accounts having a secondary currency set."
-#~ msgstr ""
-#~ "Når du gjør multi-valuta transaksjoner, kan du miste eller få noen mengde på "
-#~ "grunn av endringer i valutakursen. Denne menyen gir deg en prognose av "
-#~ "gevinsten eller tapet du hadde innsett hvis disse transaksjonene ble "
-#~ "avsluttet i dag. Bare for kontoer som har en sekundær valuta sett."
-
-#, python-format
-#~ msgid ""
-#~ "You can not modify company of this period as some journal items exists."
-#~ msgstr ""
-#~ "Du kan ikke endre selskap av denne perioden som noen journal elementer "
-#~ "eksisterer."
-
-#, python-format
-#~ msgid ""
-#~ "Please verify the price of the invoice !\n"
-#~ "The real total does not match the computed total."
-#~ msgstr ""
-#~ "Vennligst bekreft prisen på fakturaen!\n"
-#~ "Den virkelige totale stemmer ikke beregnet total."
-
-#, python-format
-#~ msgid ""
-#~ "Couldn't create move with currency different from the secondary currency of "
-#~ "the account \"%s - %s\". Clear the secondary currency field of the account "
-#~ "definition if you want to accept all currencies."
-#~ msgstr ""
-#~ "Kunne ikke opprette farten med annen valuta enn den sekundære valuta kontoen "
-#~ "«% s -% s\". Fjerne den sekundære valutafelt av kontoen definisjonen hvis du "
-#~ "vil godta alle valutaer."
-
-#~ msgid ""
-#~ "All draft account entries in this journal and period will be validated. It "
-#~ "means you won't be able to modify their accounting fields anymore."
-#~ msgstr ""
-#~ "Alle utkast konto oppføringer i dette tidsskriftet og perioden vil bli "
-#~ "validert. Det betyr at du ikke vil være i stand til å endre sine regnskap "
-#~ "felt lenger."
-
-#~ msgid ""
-#~ "Date on which the partner accounting entries were reconciled last time"
-#~ msgstr "Dato for når partner regnskapspostene ble forlikt siste gang"
-
-#~ msgid ""
-#~ "This report is analysis by partner. It is a PDF report containing one line "
-#~ "per partner representing the cumulative credit balance."
-#~ msgstr ""
-#~ "Denne rapporten er analyse av partner. Det er en PDF rapport som inneholder "
-#~ "en linje per partner som representerer den kumulative tilgodehavende."
-
-#~ msgid ""
-#~ "Configuration Error!\n"
-#~ "You can not define children to an account with internal type different of "
-#~ "\"View\"! "
-#~ msgstr ""
-#~ "Konfigurasjon Feil!\n"
-#~ "Du kan ikke definere barn på en konto med typen intern forskjellige av "
-#~ "\"View\"! "
-
-#~ msgid "My invoices"
-#~ msgstr "Mine fakturaer."
-
-#~ msgid "Reverse Compute Code"
-#~ msgstr "Reversere Beregn kode"
-
-#, python-format
-#~ msgid ""
-#~ "You can not modify a posted entry of this journal !\n"
-#~ "You should set the journal to allow cancelling entries if you want to do "
-#~ "that."
-#~ msgstr ""
-#~ "Du kan ikke endre en publisert oppføring av dette tidsskriftet!\n"
-#~ "Du bør sette tidsskriftet å tillate kansellering oppføringer hvis du ønsker "
-#~ "å gjøre det."
-
-#~ msgid ""
-#~ "This report gives you an overview of the situation of your general journals"
-#~ msgstr ""
-#~ "Denne rapporten gir en oversikt over situasjonen i de generelle tidsskriftene"
-
-#~ msgid ""
-#~ "To print an analytics (or costs) journal for a given period. The report give "
-#~ "code, move name, account number, general amount and analytic amount."
-#~ msgstr ""
-#~ "Slik skriver du ut en Analytisk(eller kostnadene) journal for en gitt "
-#~ "periode. Rapporten gir kode, flytte navn, kontonummer, generelle beløpet og "
-#~ "analytisk beløp."
-
-#, python-format
-#~ msgid ""
-#~ "Specified Journal does not have any account move entries in draft state for "
-#~ "this period"
-#~ msgstr ""
-#~ "Spesifisert Journal har ikke noen konto flytte oppføringer i utkast for "
-#~ "denne perioden"
-
-#~ msgid ""
-#~ "You can not create more than one move per period on centralized journal"
-#~ msgstr ""
-#~ "Du kan ikke opprette mer enn ett trekk per periode på sentralisert journal"
-
-#~ msgid "Analytic Accounts with a past deadline."
-#~ msgstr "Analytisk kontoer med  fortid tidsfrist."
-
-#~ msgid "Analytic Entries Stats"
-#~ msgstr "Analytisk innlegg Statistikk"
-
-#~ msgid "Move journal"
-#~ msgstr "Flytt journal"
-
-#~ msgid ""
-#~ "The tax code definition depends on the tax declaration of your country. "
-#~ "OpenERP allows you to define the tax structure and manage it from this menu. "
-#~ "You can define both numeric and alphanumeric tax codes."
-#~ msgstr ""
-#~ "Skatte-kodens definisjon avhenger av selvangivelsen i ditt land. OpenERP lar "
-#~ "deg definere skatt struktur og administrere den fra denne menyen. Du kan "
-#~ "definere både numeriske og alfanumeriske skatt koder."
-
-#~ msgid ""
-#~ "If no additional entries should be recorded on a fiscal year, you can close "
-#~ "it from here. It will close all opened periods in this year that will make "
-#~ "impossible any new entry record. Close a fiscal year when you need to "
-#~ "finalize your end of year results definitive "
-#~ msgstr ""
-#~ "Hvis ingen flere oppføringer bør registreres i et regnskapsår, kan du lukke "
-#~ "det herfra. Det vil lukke alle åpne perioder i dette året som vil gjøre "
-#~ "umulig noen nye oppføringen posten. Lukk et regnskapsår når du trenger for å "
-#~ "fullføre slutten av året resultater definitive "
-
-#, python-format
-#~ msgid ""
-#~ "No fiscal year defined for this date !\n"
-#~ "Please create one from the configuration of the accounting menu."
-#~ msgstr ""
-#~ "Ingen regnskapsåret definert for denne datoen!\n"
-#~ "Kan du opprette en fra konfigurasjonen av regnskap menyen."
-
-#~ msgid ""
-#~ "Select here the kind of valuation related to this payment term line. Note "
-#~ "that you should have your last line with the type 'Balance' to ensure that "
-#~ "the whole amount will be threated."
-#~ msgstr ""
-#~ "Velg her hva slags verdivurdering knyttet til denne betalingsfrist linjen. "
-#~ "Vær oppmerksom på at du bør ha din siste linje med typen 'Balance' for å "
-#~ "sikre at hele beløpet vil bli threated."
-
-#~ msgid "Refund Invoice Options"
-#~ msgstr "Tilbakebetaling  alternativer for faktura"
-
-#, python-format
-#~ msgid ""
-#~ "Selected Invoice(s) cannot be confirmed as they are not in 'Draft' or 'Pro-"
-#~ "Forma' state!"
-#~ msgstr ""
-#~ "Valgt Faktura (e) kan ikke bekreftes som de ikke er i \"Kladd\" eller \"pro-"
-#~ "forma\" state!"
-
-#, python-format
-#~ msgid "Current currency is not configured properly !"
-#~ msgstr "Dagens valuta er ikke riktig konfigurert!"
-
-#~ msgid "Review your Financial Journals"
-#~ msgstr "Gjennomgå finansielle tidsskrifter"
-
-#~ msgid ""
-#~ "Configuration Error! \n"
-#~ "You can not define children to an account with internal type different of "
-#~ "\"View\"! "
-#~ msgstr ""
-#~ "Konfigurasjon Feil!\n"
-#~ "Du kan ikke definere barn på en konto med typen intern forskjellige av "
-#~ "\"View\"! "
-
-#~ msgid ""
-#~ "This view can be used by accountants in order to quickly record entries in "
-#~ "OpenERP. If you want to record a supplier invoice, start by recording the "
-#~ "line of the expense account. OpenERP will propose to you automatically the "
-#~ "Tax related to this account and the counterpart \"Account Payable\"."
-#~ msgstr ""
-#~ "Dette synet kan brukes av regnskapsførere for å raskt registrere oppføringer "
-#~ "i OpenERP. Hvis du ønsker å spille inn en leverandørfaktura, start ved å ta "
-#~ "opp linjen i regning. OpenERP vil foreslå for deg automatisk Skatt knyttet "
-#~ "til denne kontoen, og motstykket \"utbetaling\"."
-
-#, python-format
-#~ msgid ""
-#~ "You can not remove/desactivate an account which is set on a customer or "
-#~ "supplier."
-#~ msgstr ""
-#~ "Du kan ikke fjerne / deaktivere en konto som er satt på en kunde eller "
-#~ "leverandør."
-
-#~ msgid "Company must be the same for its related account and period."
-#~ msgstr "Selskapet må være den samme for tilhørende konto og periode"
-
-#, python-format
-#~ msgid "You can not desactivate an account that contains some journal items."
-#~ msgstr ""
-#~ "Du kan ikke deaktivere en konto som inneholder noen journal elementer."
-
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr ""
-#~ "Feil: Standard målenheter og kjøp målenheter må være i samme kategori."
-
-#, python-format
-#~ msgid "You can not delete a posted journal entry \"%s\"!"
-#~ msgstr "Du kan ikke slette en lagt ut bilagsregistrering \"% s\"!"
-
-#, python-format
-#~ msgid ""
-#~ "Can not find a chart of account, you should create one from the "
-#~ "configuration of the accounting menu."
-#~ msgstr ""
-#~ "Kan ikke finne et diagram av kontoen, du bør lage en fra konfigurasjonen av "
-#~ "regnskap menyen."
-
-#~ msgid "Information About the Bank"
-#~ msgstr "Informasjon om bank."
-
-#~ msgid "Error ! You cannot create recursive categories."
-#~ msgstr "Feil! Du kan ikke lage uendelig struktur med uendelige kategorier."
-
-#~ msgid "Post Journal Entries of a Journal"
-#~ msgstr "Post bilagsregistrering av en Journal."
-
-#~ msgid "Error ! You can not create recursive Tax Codes."
-#~ msgstr "Feil ! Du kan ikke opprette rekursive skatte koder."
-
-#, python-format
-#~ msgid ""
-#~ "The bank account defined on the selected chart of accounts hasn't a code."
-#~ msgstr "Bankkontoen er definert på den valgte kontoplan har ikke en kode."
-
-#~ msgid "current month"
-#~ msgstr "Nåværende måned."
-
-#~ msgid "Dear Sir/Madam,"
-#~ msgstr "Kjære herr / fru,"
-
-#~ msgid "Closing Cashbox"
-#~ msgstr "Lukke Cashbox"
-
-#~ msgid ""
-#~ "Modify Invoice: Cancels the current invoice and creates a new copy of it "
-#~ "ready for editing."
-#~ msgstr ""
-#~ "Endre Faktura: Avbryter gjeldende faktura og skap en ny kopi av den som er "
-#~ "klar for redigering."
-
-#, python-format
-#~ msgid "The payment term of supplier does not have a payment term line!"
-#~ msgstr "Betalingen sikt av leverandør har ikke en betalingsfrist linje!"
-
-#~ msgid "Refund Invoice: Creates the refund invoice, ready for editing."
-#~ msgstr ""
-#~ "Tilbakebetaling Faktura: Oppretter tilbakebetaling faktura, klar for "
-#~ "redigering."
-
-#~ msgid "Review your Financial Accounts"
-#~ msgstr "Gjennomgå Finans Kontoer."
-
-#~ msgid "This year's Sales by type"
-#~ msgstr "Årets salg av type."
-
-#~ msgid "Contract Data"
-#~ msgstr "Kontrakt data."
-
-#, python-format
-#~ msgid "You can not change the tax, you should remove and recreate lines !"
-#~ msgstr "Du kan ikke endre skatten, du bør fjerne og gjenskape linjer!"
-
-#~ msgid "Standard entries"
-#~ msgstr "Standard oppføringer."
-
-#~ msgid ""
-#~ "This report is an analysis done by a partner. It is a PDF report containing "
-#~ "one line per partner representing the cumulative credit balance"
-#~ msgstr ""
-#~ "Denne rapporten er en analyse gjort av en partner. Det er en PDF rapport som "
-#~ "inneholder en linje per partner som representerer den samlede kreditt "
-#~ "balanse."
-
-#, python-format
-#~ msgid "Unable to adapt the initial balance (negative value)!"
-#~ msgstr "Klarer å tilpasse den første balanse (negativ verdi)!"
-
-#~ msgid ""
-#~ "This date will be used as the invoice date for Refund Invoice and Period "
-#~ "will be chosen accordingly!"
-#~ msgstr ""
-#~ "Denne datoen vil bli brukt som fakturadato for tilbakebetaling Faktura og "
-#~ "periode vil bli valgt tilsvarende!"
-
-#~ msgid ""
-#~ "When monthly periods are created. The state is 'Draft'. At the end of "
-#~ "monthly period it is in 'Done' state."
-#~ msgstr ""
-#~ "Når månedlige perioder er opprettet. Staten er \"Kladd\". På slutten av "
-#~ "månedlige perioden er det i 'Ferdig' tilstand."
-
-#, python-format
-#~ msgid ""
-#~ "You can not validate a non-balanced entry !\n"
-#~ "Make sure you have configured payment terms properly !\n"
-#~ "The latest payment term line should be of the type \"Balance\" !"
-#~ msgstr ""
-#~ "Du kan ikke validere en ikke-balansert oppføringen!\n"
-#~ "Kontroller at du har konfigurert betalingsbetingelser riktig!\n"
-#~ "Den siste betalingsfrist linje skal være av typen \"Balanse\"!"
-
-#~ msgid "Analytic Entries of last 365 days"
-#~ msgstr "Analytisk oppføringer av siste 365 dager."
-
-#~ msgid ""
-#~ "You can select here the journal to use for the refund invoice that will be "
-#~ "created. If you leave that field empty, it will use the same journal as the "
-#~ "current invoice."
-#~ msgstr ""
-#~ "Du kan velge her tidsskriftet skal brukes for refusjon faktura som vil bli "
-#~ "opprettet. Hvis du lar det feltet tomt, vil den bruke samme tidsskrift som "
-#~ "gjeldende faktura."

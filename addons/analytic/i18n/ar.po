@@ -1,21 +1,21 @@
 # Arabic translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-01-23 14:39+0000\n"
-"Last-Translator: kifcaliph <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:46+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:05+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
@@ -28,8 +28,9 @@ msgid "In Progress"
 msgstr ""
 
 #. module: analytic
-#: model:mail.message.subtype,name:analytic.mt_account_status
-msgid "Status Change"
+#: code:addons/analytic/analytic.py:229
+#, python-format
+msgid "Contract: "
 msgstr ""
 
 #. module: analytic
@@ -48,6 +49,24 @@ msgid "Specifies the amount of quantity to count."
 msgstr "تحديد مجموع الكمية لعدّها"
 
 #. module: analytic
+#: field:account.analytic.account,debit:0
+msgid "Debit"
+msgstr "مدين"
+
+#. module: analytic
+#: help:account.analytic.account,type:0
+msgid ""
+"If you select the View Type, it means you won't allow to create journal "
+"entries using that account.\n"
+"The type 'Analytic account' stands for usual accounts that you only want to "
+"use in accounting.\n"
+"If you select Contract or Project, it offers you the possibility to manage "
+"the validity and the invoicing options for this account.\n"
+"The special type 'Template of Contract' allows you to define a template with "
+"default data that you can reuse easily."
+msgstr ""
+
+#. module: analytic
 #: view:account.analytic.account:0
 msgid ""
 "Once the end date of the contract is\n"
@@ -62,9 +81,13 @@ msgid ""
 msgstr ""
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:222
-#, python-format
-msgid "Contract: "
+#: selection:account.analytic.account,type:0
+msgid "Contract or Project"
+msgstr ""
+
+#. module: analytic
+#: field:account.analytic.account,name:0
+msgid "Account/Contract Name"
 msgstr ""
 
 #. module: analytic
@@ -78,20 +101,14 @@ msgid "Followers"
 msgstr ""
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:319
-#, python-format
-msgid "Contract <b>created</b>."
-msgstr ""
-
-#. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Closed"
 msgstr "مغلق"
 
 #. module: analytic
-#: field:account.analytic.account,debit:0
-msgid "Debit"
-msgstr "مدين"
+#: model:mail.message.subtype,name:analytic.mt_account_pending
+msgid "Contract to Renew"
+msgstr ""
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -109,7 +126,7 @@ msgid "Status"
 msgstr ""
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:261
+#: code:addons/analytic/analytic.py:268
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -124,11 +141,6 @@ msgstr "خط بياني"
 #: field:account.analytic.line,name:0
 msgid "Description"
 msgstr "وصف"
-
-#. module: analytic
-#: field:account.analytic.account,name:0
-msgid "Account/Contract Name"
-msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,message_unread:0
@@ -157,6 +169,11 @@ msgid "Messages and communication history"
 msgstr ""
 
 #. module: analytic
+#: model:mail.message.subtype,description:analytic.mt_account_opened
+msgid "Stage <b>opened</b>"
+msgstr ""
+
+#. module: analytic
 #: help:account.analytic.account,quantity_max:0
 msgid ""
 "Sets the higher limit of time to work on the contract, based on the "
@@ -164,7 +181,7 @@ msgid ""
 msgstr ""
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:153
+#: code:addons/analytic/analytic.py:160
 #, python-format
 msgid ""
 "If you set a company, the currency selected has to be the same as it's "
@@ -190,9 +207,9 @@ msgid "User"
 msgstr "مستخدِم"
 
 #. module: analytic
-#: field:account.analytic.account,parent_id:0
-msgid "Parent Analytic Account"
-msgstr "الحساب التحليلي الرئيسي"
+#: model:mail.message.subtype,description:analytic.mt_account_pending
+msgid "Contract <b>pending</b>"
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.line,date:0
@@ -200,23 +217,23 @@ msgid "Date"
 msgstr "تاريخ"
 
 #. module: analytic
-#: help:account.analytic.account,type:0
-msgid ""
-"If you select the View Type, it means you won't allow to create journal "
-"entries using that account.\n"
-"The type 'Analytic account' stands for usual accounts that you only want to "
-"use in accounting.\n"
-"If you select Contract or Project, it offers you the possibility to manage "
-"the validity and the invoicing options for this account.\n"
-"The special type 'Template of Contract' allows you to define a template with "
-"default data that you can reuse easily."
+#: model:mail.message.subtype,name:analytic.mt_account_closed
+msgid "Contract Finished"
 msgstr ""
 
 #. module: analytic
-#: field:account.analytic.account,message_comment_ids:0
-#: help:account.analytic.account,message_comment_ids:0
-msgid "Comments and emails"
+#: view:account.analytic.account:0
+msgid "Terms and Conditions"
 msgstr ""
+
+#. module: analytic
+#: help:account.analytic.line,amount:0
+msgid ""
+"Calculated by multiplying the quantity and the price given in the Product's "
+"cost price. Always expressed in the company main currency."
+msgstr ""
+"محسوبة بواسطة ضرب الكمية و السعر المعطى في  سعر تكلفة المنتج. و يعبر عنه "
+"دائما بالعملة الرئيسية للشركة."
 
 #. module: analytic
 #: field:account.analytic.account,partner_id:0
@@ -234,9 +251,9 @@ msgid "Messages"
 msgstr ""
 
 #. module: analytic
-#: constraint:account.analytic.line:0
-msgid "You cannot create analytic line on view account."
-msgstr ""
+#: field:account.analytic.account,parent_id:0
+msgid "Parent Analytic Account"
+msgstr "الحساب التحليلي الرئيسي"
 
 #. module: analytic
 #: view:account.analytic.account:0
@@ -265,19 +282,13 @@ msgid "Credit"
 msgstr "دائن"
 
 #. module: analytic
-#: field:account.analytic.line,amount:0
-msgid "Amount"
-msgstr "المقدار"
-
-#. module: analytic
-#: code:addons/analytic/analytic.py:321
-#, python-format
-msgid "Contract for <em>%s</em> has been <b>created</b>."
+#: model:mail.message.subtype,name:analytic.mt_account_opened
+msgid "Contract Opened"
 msgstr ""
 
 #. module: analytic
-#: view:account.analytic.account:0
-msgid "Terms and Conditions"
+#: model:mail.message.subtype,description:analytic.mt_account_closed
+msgid "Contract <b>closed</b>"
 msgstr ""
 
 #. module: analytic
@@ -322,7 +333,7 @@ msgid "Reference"
 msgstr ""
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:153
+#: code:addons/analytic/analytic.py:160
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -333,9 +344,9 @@ msgid "Analytic Accounting"
 msgstr "محاسبة تحليلية"
 
 #. module: analytic
-#: selection:account.analytic.account,type:0
-msgid "Contract or Project"
-msgstr ""
+#: field:account.analytic.line,amount:0
+msgid "Amount"
+msgstr "المقدار"
 
 #. module: analytic
 #: field:account.analytic.account,complete_name:0
@@ -373,124 +384,11 @@ msgid "Start Date"
 msgstr ""
 
 #. module: analytic
-#: help:account.analytic.line,amount:0
-msgid ""
-"Calculated by multiplying the quantity and the price given in the Product's "
-"cost price. Always expressed in the company main currency."
+#: constraint:account.analytic.line:0
+msgid "You cannot create analytic line on view account."
 msgstr ""
-"محسوبة بواسطة ضرب الكمية و السعر المعطى في  سعر تكلفة المنتج. و يعبر عنه "
-"دائما بالعملة الرئيسية للشركة."
 
 #. module: analytic
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
 msgstr "قيود تحليلية"
-
-#~ msgid "State"
-#~ msgstr "المحافظة / الولاية"
-
-#~ msgid ""
-#~ "Module for defining analytic accounting object.\n"
-#~ "    "
-#~ msgstr ""
-#~ "وحدة لتعريف كائن تحليل المحاسبة.\n"
-#~ "    "
-
-#~ msgid "Draft"
-#~ msgstr "مسودة"
-
-#~ msgid "Maximum Quantity"
-#~ msgstr "الكمية القصوى"
-
-#~ msgid "Normal"
-#~ msgstr "عادي"
-
-#~ msgid "Account Type"
-#~ msgstr "نوع الحساب"
-
-#~ msgid "Pending"
-#~ msgstr "إنتظار"
-
-#~ msgid "Contact"
-#~ msgstr "جهة الإتصال"
-
-#~ msgid "Sets the higher limit of quantity of hours."
-#~ msgstr "تحديد الحد الأعلى للمقدار بالساعات"
-
-#~ msgid "Account currency"
-#~ msgstr "عملة الحساب"
-
-#~ msgid "View"
-#~ msgstr "عرض"
-
-#~ msgid "Error! You can not create recursive analytic accounts."
-#~ msgstr "خطأ! لا يمكنك إنشاء حسابات بيانية متكررة"
-
-#~ msgid "Account Code"
-#~ msgstr "رمز الحساب"
-
-#~ msgid "Open"
-#~ msgstr "فتح"
-
-#~ msgid "Date Start"
-#~ msgstr "تاريخ البدء"
-
-#~ msgid "Partner"
-#~ msgstr "شريك"
-
-#~ msgid "Account Name"
-#~ msgstr "اسم الحساب"
-
-#~ msgid ""
-#~ "Error! The currency has to be the same as the currency of the selected "
-#~ "company"
-#~ msgstr "خطأ! العملة لابد و أن تكون مثل العملة للشركة المختارة"
-
-#~ msgid ""
-#~ "If you select the View Type, it means you won't allow to create journal "
-#~ "entries using that account."
-#~ msgstr ""
-#~ "اذا اخترت نوع العرض، فذلك يعني انك لن تسمح بإنشاء قيود اليومية بإستخدام ذلك "
-#~ "الحساب."
-
-#~ msgid ""
-#~ "* When an account is created its in 'Draft' state.                           "
-#~ "       \n"
-#~ "* If any associated partner is there, it can be in 'Open' state.             "
-#~ "                     \n"
-#~ "* If any pending balance is there it can be in 'Pending'.                    "
-#~ "               \n"
-#~ "* And finally when all the transactions are over, it can be in 'Close' "
-#~ "state.                                   \n"
-#~ "* The project can be in either if the states 'Template' and 'Running'.\n"
-#~ " If it is template then we can make projects based on the template projects. "
-#~ "If its in 'Running' state it is a normal project.                            "
-#~ "     \n"
-#~ " If it is to be reviewed then the state is 'Pending'.\n"
-#~ " When the project is completed the state is set to 'Done'."
-#~ msgstr ""
-#~ "* وعندما يتم إنشاء حساب لها في الدولة \"مشروع\".\n"
-#~ "* إذا كان أي شريك المرتبطة هناك، يمكن أن يكون في حالة 'فتح'.\n"
-#~ "* إذا كان أي رصيد في انتظار أن هناك يمكن أن يكون في \"انتظار\".\n"
-#~ "* وأخيرا عندما تكون جميع المعاملات قد ولت، يمكن أن يكون في حالة \"إغلاق\".\n"
-#~ "* يمكن أن يكون المشروع في أي حال 'قالب' الدول و \"الجري\".\n"
-#~ "إذا كان قالب ثم يمكننا أن نجعل المشاريع القائمة على مشاريع قالب. إذا في حالة "
-#~ "\"تشغيل\" وهو مشروع طبيعي.\n"
-#~ "إذا أريد له أن يعاد النظر بعد ذلك للحالة  هو \"معلق\".\n"
-#~ "عندما يتم الانتهاء من المشروع تم تعيين الحالة ل\"تم\"."
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "خطأ !"
-
-#~ msgid "Code/Reference"
-#~ msgstr "رمز/مرجع"
-
-#~ msgid "Maximum Time"
-#~ msgstr "الوقت الأقصي"
-
-#~ msgid "Sets the higher limit of time to work on the contract."
-#~ msgstr "يحدد الحد الأقصي من الوقت للعمل على عقد."
-
-#~ msgid "You can not create analytic line on view account."
-#~ msgstr "لا يمكنك إنشاء سطر تحليلي في حساب للعرض."

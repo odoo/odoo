@@ -1,21 +1,21 @@
 # Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-11-30 14:35+0000\n"
-"Last-Translator: ccdos <ccdos@163.com>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:44+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:14+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,send_anonymous_manager:0
@@ -172,7 +172,7 @@ msgid "Send to Employees"
 msgstr "发送给员工"
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:83
+#: code:addons/hr_evaluation/hr_evaluation.py:84
 #, python-format
 msgid ""
 "\n"
@@ -228,8 +228,8 @@ msgid "Deadline"
 msgstr "截止日期"
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:250
-#: code:addons/hr_evaluation/hr_evaluation.py:326
+#: code:addons/hr_evaluation/hr_evaluation.py:235
+#: code:addons/hr_evaluation/hr_evaluation.py:320
 #, python-format
 msgid "Warning!"
 msgstr "警告！"
@@ -255,7 +255,7 @@ msgid "Interviews"
 msgstr "面试"
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:82
+#: code:addons/hr_evaluation/hr_evaluation.py:83
 #, python-format
 msgid "Regarding "
 msgstr "关于 "
@@ -583,14 +583,6 @@ msgid "Extended Filters..."
 msgstr "增加筛选条件"
 
 #. module: hr_evaluation
-#: field:hr.evaluation.interview,message_comment_ids:0
-#: help:hr.evaluation.interview,message_comment_ids:0
-#: field:hr_evaluation.evaluation,message_comment_ids:0
-#: help:hr_evaluation.evaluation,message_comment_ids:0
-msgid "Comments and emails"
-msgstr "评论和电子邮件"
-
-#. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,send_anonymous_employee:0
 msgid "Send an anonymous summary to the employee"
 msgstr "给员工发一个匿名摘要"
@@ -625,29 +617,6 @@ msgstr "日期"
 #: view:hr.evaluation.interview:0
 msgid "Survey"
 msgstr "问卷"
-
-#. module: hr_evaluation
-#: model:ir.actions.act_window,help:hr_evaluation.action_hr_evaluation_interview_tree
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a new interview request related to a "
-"personnal evaluation. \n"
-"              </p><p>\n"
-"                Interview requests are usually generated automatically by\n"
-"                OpenERP according to an employee's appraisal plan. Each "
-"user\n"
-"                receives automatic emails and requests to evaluate their\n"
-"                colleagues periodically.\n"
-"              </p>\n"
-"            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"               单击创建一个新的跟个人评估关联的面谈要求。\n"
-"              </p><p>\n"
-"                 面谈要求通常是根据员工的评估计划自动生成的。\n"
-"                 每个用户会自动定期收到要求评估他们的同事的Email。\n"
-"              </p>\n"
-"            "
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,action:0
@@ -874,7 +843,7 @@ msgid "Is Appraisal?"
 msgstr "是否评估？"
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:326
+#: code:addons/hr_evaluation/hr_evaluation.py:320
 #, python-format
 msgid "You cannot start evaluation without Appraisal."
 msgstr "没有评估计划无法开始评估"
@@ -885,7 +854,7 @@ msgid "Employee to Interview"
 msgstr "面谈员工"
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:250
+#: code:addons/hr_evaluation/hr_evaluation.py:235
 #, python-format
 msgid ""
 "You cannot change state, because some appraisal(s) are in waiting answer or "
@@ -901,6 +870,22 @@ msgstr "4月"
 #: view:hr_evaluation.plan.phase:0
 msgid "Appraisal Plan Phases"
 msgstr "评估计划阶段"
+
+#. module: hr_evaluation
+#: model:ir.actions.act_window,help:hr_evaluation.action_hr_evaluation_interview_tree
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new interview request related to a "
+"personal evaluation. \n"
+"              </p><p>\n"
+"                Interview requests are usually generated automatically by\n"
+"                OpenERP according to an employee's appraisal plan. Each "
+"user\n"
+"                receives automatic emails and requests to evaluate their\n"
+"                colleagues periodically.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: hr_evaluation
 #: help:hr.evaluation.interview,message_ids:0
@@ -952,375 +937,3 @@ msgstr "评估结果"
 #: field:hr.employee,evaluation_date:0
 msgid "Next Appraisal Date"
 msgstr "下一个评估日期"
-
-#~ msgid "Score"
-#~ msgstr "评分"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
-
-#~ msgid "Information"
-#~ msgstr "信息"
-
-#~ msgid "Bad Points"
-#~ msgstr "缺点"
-
-#~ msgid "Values"
-#~ msgstr "值"
-
-#~ msgid "Good Points"
-#~ msgstr "优点"
-
-#~ msgid "State"
-#~ msgstr "状态"
-
-#~ msgid "Evaluation Type"
-#~ msgstr "考核类型"
-
-#~ msgid "Ability to create employees evaluation."
-#~ msgstr "建立员工能力考核"
-
-#~ msgid "Apply to categories"
-#~ msgstr "适用的分类"
-
-#~ msgid "Quote"
-#~ msgstr "引用"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "在动作定义中使用了无效的模快名。"
-
-#~ msgid "Choices Results"
-#~ msgstr "选择结果"
-
-#~ msgid "Evaluation User"
-#~ msgstr "用户考核"
-
-#~ msgid "Appliable Role"
-#~ msgstr "可申请的角色"
-
-#~ msgid "Configuration"
-#~ msgstr "设置"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "无效的视图结构xml文件!"
-
-#~ msgid "Evaluation Criterions"
-#~ msgstr "考核标准"
-
-#~ msgid "Value"
-#~ msgstr "值"
-
-#~ msgid "Next Employee Evaluation"
-#~ msgstr "下一员工考核"
-
-#~ msgid "Quotations"
-#~ msgstr "引用"
-
-#~ msgid "Type"
-#~ msgstr "类型"
-
-#~ msgid "Notes"
-#~ msgstr "备注"
-
-#~ msgid "Employee Evaluation Type"
-#~ msgstr "员工考核类型"
-
-#~ msgid "HR Responsible"
-#~ msgstr "人力资源责任"
-
-#~ msgid "Evalution Quote"
-#~ msgstr "考核引用"
-
-#~ msgid "My Next Evaluations"
-#~ msgstr "我的下一考核"
-
-#~ msgid "Evaluation Criterion"
-#~ msgstr "考核标准"
-
-#~ msgid "Employee Response"
-#~ msgstr "员工回答"
-
-#~ msgid "Evaluation Type Value"
-#~ msgstr "考核类型值"
-
-#~ msgid "Employee Evaluation Quote"
-#~ msgstr "员工考核引用"
-
-#~ msgid "Quotes"
-#~ msgstr "引号"
-
-#~ msgid "Next Evaluations"
-#~ msgstr "下一考核"
-
-#~ msgid "My Preceeding Evaluations"
-#~ msgstr "我准备的考核"
-
-#~ msgid "Informal Data"
-#~ msgstr "信息数据"
-
-#~ msgid "To Improve"
-#~ msgstr "变好"
-
-#~ msgid "Schedule next evaluation"
-#~ msgstr "安排下一考核"
-
-#~ msgid "My Next Evaluation"
-#~ msgstr "我的下一考核"
-
-#~ msgid "Progress"
-#~ msgstr "进度"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "警告！"
-
-#~ msgid " Month "
-#~ msgstr " 月份 "
-
-#~ msgid "    Month-1    "
-#~ msgstr "    上月    "
-
-#~ msgid "Ending Summary"
-#~ msgstr "结束总结"
-
-#~ msgid "7 Days"
-#~ msgstr "7天"
-
-#~ msgid " Year "
-#~ msgstr " 年 "
-
-#~ msgid "Send Mail"
-#~ msgstr "发送邮件"
-
-#~ msgid "Late"
-#~ msgstr "最近"
-
-#~ msgid "Interview"
-#~ msgstr "面谈"
-
-#~ msgid "Current"
-#~ msgstr "当前的"
-
-#~ msgid "(months)"
-#~ msgstr "（月份）"
-
-#~ msgid "My Evaluation Remaining"
-#~ msgstr "我的考评还有"
-
-#, python-format
-#~ msgid "You cannot start evaluation without Evaluation."
-#~ msgstr "您不能开启在考评范围外的考评"
-
-#~ msgid "Evaluation Interviews"
-#~ msgstr "考评面谈"
-
-#~ msgid "Evaluation Form"
-#~ msgstr "考评表"
-
-#~ msgid ""
-#~ "Error ! You cannot select a department for which the employee is the manager."
-#~ msgstr "错误！您不用为他选择一部门因为他是总经理(CEO)。"
-
-#~ msgid "Evaluations Analysis"
-#~ msgstr "考评分析"
-
-#~ msgid "Sends Reminders to employess to fill the evaluations"
-#~ msgstr "给员工发送提醒去完成考评"
-
-#~ msgid "Periodicity of Evaluations (months)"
-#~ msgstr "考评周期（月）"
-
-#~ msgid "Periodic Evaluations"
-#~ msgstr "考评周期"
-
-#~ msgid "Send evaluation reminder"
-#~ msgstr "发送考评提醒"
-
-#~ msgid "First Evaluation in (months)"
-#~ msgstr "首次考评在(月)"
-
-#~ msgid "Evaluation Plan Phase"
-#~ msgstr "考评计划阶段"
-
-#~ msgid "Evaluation Deadline"
-#~ msgstr "考评截止日期"
-
-#~ msgid ""
-#~ "Each employee may be assigned an evaluation plan. Such a plan defines the "
-#~ "frequency and the way you manage your periodic personnel evaluation. You "
-#~ "will be able to define steps and attach interviews to each step. OpenERP "
-#~ "manages all kind of evaluations: bottom-up, top-down, self-evaluation and "
-#~ "final evaluation by the manager."
-#~ msgstr ""
-#~ "每个员工可以指派一个考评计划。在计划里可以定义您管理的周期性考评的方式和次数。您可以定义每个阶段的步骤和附加的面谈。系统管理所有考评的类型： "
-#~ "自上而下，自下而上，自我考评和经理最后考评。"
-
-#~ msgid "Evaluations"
-#~ msgstr "考评"
-
-#~ msgid "(eval_name)s:Evaluation Name"
-#~ msgstr "(eval_name)s: 考评名称"
-
-#~ msgid "Evaluation Data"
-#~ msgstr "考评日期"
-
-#~ msgid "Is Evaluation?"
-#~ msgstr "进行考评？"
-
-#~ msgid "Interview Question"
-#~ msgstr "面谈问题"
-
-#~ msgid "Human Resources Evaluation"
-#~ msgstr "人力资源考评"
-
-#~ msgid "Evaluation"
-#~ msgstr "考评"
-
-#~ msgid "Start Evaluation"
-#~ msgstr "开始考评"
-
-#~ msgid "Evaluation Summary"
-#~ msgstr "考评总结"
-
-#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
-#~ msgstr "错误！您不能创建循环的员工等级。"
-
-#~ msgid "Interview Evaluation"
-#~ msgstr "考评面谈"
-
-#~ msgid "Evaluation Plans"
-#~ msgstr "考评计划"
-
-#~ msgid "Next Evaluation Date"
-#~ msgstr "下一个考评日期"
-
-#~ msgid "Evaluation Phases"
-#~ msgstr "考评阶段"
-
-#~ msgid "Evaluation Interview"
-#~ msgstr "考评面谈"
-
-#~ msgid "Evaluation Plan Phases"
-#~ msgstr "考评计划阶段"
-
-#~ msgid "Evaluation Reminders"
-#~ msgstr "考评提醒"
-
-#~ msgid ""
-#~ "Interview Requests are generated automatically by OpenERP according to an "
-#~ "employee's evaluation plan. Each user receives automatic emails and requests "
-#~ "to evaluate their colleagues periodically."
-#~ msgstr "根据员工的考评计划系统自动产生面谈要求。用户和考评要求到的同事自动接收邮件。"
-
-#~ msgid "Evaluation Plan"
-#~ msgstr "考评计划"
-
-#~ msgid "Validate Evaluation"
-#~ msgstr "确认考评"
-
-#~ msgid "Search Evaluation"
-#~ msgstr "搜索考评"
-
-#~ msgid "Search Evaluation Plan"
-#~ msgstr "搜索考评计划"
-
-#~ msgid "Employee Evaluation"
-#~ msgstr "员工考评"
-
-#~ msgid ""
-#~ "The date of the next evaluation is computed by the evaluation plan's dates "
-#~ "(first evaluation + periodicity)."
-#~ msgstr "考评计划的下一个考评日期的计算方式（首个考评 + 周期）"
-
-#~ msgid ""
-#~ "\n"
-#~ "          Ability to create employees evaluation.\n"
-#~ "          An evaluation can be created by employee for subordinates,\n"
-#~ "          juniors as well as his manager.The evaluation is done under a "
-#~ "plan\n"
-#~ "          in which various surveys can be created and it can be defined "
-#~ "which\n"
-#~ "          level of employee hierarchy fills what and final review and "
-#~ "evaluation\n"
-#~ "          is done by the manager.Every evaluation filled by the employees "
-#~ "can be viewed\n"
-#~ "          in the form of.Implements a dashboard for My Current Evaluations\n"
-#~ "         "
-#~ msgstr ""
-#~ "\n"
-#~ "          能创建员工的考评。\n"
-#~ "    可以对经理下的下属员工进行考评。\n"
-#~ "    考评可以在计划创建不同的问卷并且它能定义不同级别的员工填写，最后由经理做审核。\n"
-#~ "    在我当前的考评中里可以看到员工填写的每一个考评。\n"
-#~ "         "
-
-#~ msgid "Evaluation Send Mail"
-#~ msgstr "发送邮件"
-
-#~ msgid "Appraisal that overpassed the deadline"
-#~ msgstr "已超过截止日期的评估"
-
-#~ msgid ""
-#~ "Each employee may be assigned an Appraisal Plan. Such a plan defines the "
-#~ "frequency and the way you manage your periodic personnel evaluation. You "
-#~ "will be able to define steps and attach interviews to each step. OpenERP "
-#~ "manages all kind of evaluations: bottom-up, top-down, self-evaluation and "
-#~ "final evaluation by the manager."
-#~ msgstr ""
-#~ "每个员工都可以分配一个评估计划。计划设置你定期个人评估的周期和方式。你可以定义步骤并在每个步骤上附加面谈。OpenERP能管理各种类型的评估：自下而上、自"
-#~ "上而下、自评和经理终评。"
-
-#~ msgid ""
-#~ "Interview Requests are generated automatically by OpenERP according to an "
-#~ "employee's Appraisal Plan. Each user receives automatic emails and requests "
-#~ "to evaluate their colleagues periodically."
-#~ msgstr "面谈申请是OpenERP按员工的评估计划自动生成的。每个用户受到自动发送的邮件和短消息来定期评估他的同事。"
-
-#~ msgid "Appraisal to close within the next 7 days"
-#~ msgstr "要在7天内关闭的评估"
-
-#~ msgid "E-mail composition wizard"
-#~ msgstr "邮件合并向导"
-
-#~ msgid "Evaluation done in last month"
-#~ msgstr "上个月完成的评估"
-
-#~ msgid "Evaluation done in current year"
-#~ msgstr "本年完成的评估"
-
-#, python-format
-#~ msgid ""
-#~ "Hello %s, \n"
-#~ "\n"
-#~ " Kindly post your response for '%s' survey interview. \n"
-#~ "\n"
-#~ " Thanks,"
-#~ msgstr ""
-#~ "您好 %s，\n"
-#~ "  请填写 %s 的评估问卷。\n"
-#~ "  谢谢，"
-
-#~ msgid "Appraisal Data"
-#~ msgstr "评估数据"
-
-#~ msgid ""
-#~ "You can define appraisal plans (ex: first interview after 6 months, then "
-#~ "every year). Then, each employee can be linked to an appraisal plan so that "
-#~ "OpenERP can automatically generate interview requests to managers and/or "
-#~ "subordinates."
-#~ msgstr ""
-#~ "你可以定义评估计划（例如：半年后第一次评估，然后每年一次）。然后，每个员工可以分配一个评估计划这样OpenERP可以自动生成评估请求给经理或下属。"
-
-#, python-format
-#~ msgid "Reminder to fill up Survey"
-#~ msgstr "提醒填写问卷"
-
-#~ msgid "Evaluation done in current month"
-#~ msgstr "本月完成的评估"
-
-#, python-format
-#~ msgid ""
-#~ "You cannot change state, because some appraisal in waiting answer or draft "
-#~ "state"
-#~ msgstr "您不能修改状态，因为有一些考评表处于等待答复或草稿状态。"

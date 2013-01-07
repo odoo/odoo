@@ -1,21 +1,21 @@
 # Russian translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-10-24 05:01+0000\n"
-"Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:49+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:10+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: crm_claim
 #: help:crm.claim.stage,fold:0
@@ -101,15 +101,6 @@ msgstr "# претензий"
 #: field:crm.claim.stage,name:0
 msgid "Stage Name"
 msgstr ""
-
-#. module: crm_claim
-#: model:ir.actions.act_window,help:crm_claim.action_report_crm_claim
-msgid ""
-"Have a general overview of all claims processed in the system by sorting "
-"them with specific criteria."
-msgstr ""
-"Иметь общее представление о всех претензиях обработанных в системе при "
-"помощи их сортировки по определенным критериям."
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -220,11 +211,6 @@ msgid "Preventive Action"
 msgstr "Предупредительное действие"
 
 #. module: crm_claim
-#: field:crm.claim.report,delay_expected:0
-msgid "Overpassed Deadline"
-msgstr "Просрочено"
-
-#. module: crm_claim
 #: field:crm.claim.report,section_id:0
 msgid "Section"
 msgstr "Раздел"
@@ -312,10 +298,13 @@ msgid "Next Action Date"
 msgstr "Дата следующего действия"
 
 #. module: crm_claim
-#: code:addons/crm_claim/crm_claim.py:243
-#, python-format
-msgid "Claim has been <b>created</b>."
+#: model:ir.actions.act_window,help:crm_claim.action_report_crm_claim
+msgid ""
+"Have a general overview of all claims processed in the system by sorting "
+"them with specific criteria."
 msgstr ""
+"Иметь общее представление о всех претензиях обработанных в системе при "
+"помощи их сортировки по определенным критериям."
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -352,7 +341,7 @@ msgid "Destination email for email gateway."
 msgstr ""
 
 #. module: crm_claim
-#: code:addons/crm_claim/crm_claim.py:199
+#: code:addons/crm_claim/crm_claim.py:194
 #, python-format
 msgid "No Subject"
 msgstr ""
@@ -609,12 +598,6 @@ msgid "Extended Filters..."
 msgstr "Расширенные фильтры..."
 
 #. module: crm_claim
-#: field:crm.claim,message_comment_ids:0
-#: help:crm.claim,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
-
-#. module: crm_claim
 #: view:crm.claim:0
 msgid "Closure"
 msgstr "Закрытие"
@@ -747,10 +730,9 @@ msgid "Unassigned Claims"
 msgstr "Не назначенные претензии"
 
 #. module: crm_claim
-#: code:addons/crm_claim/crm_claim.py:247
-#, python-format
-msgid "Claim has been <b>refused</b>."
-msgstr ""
+#: field:crm.claim.report,delay_expected:0
+msgid "Overpassed Deadline"
+msgstr "Просрочено"
 
 #. module: crm_claim
 #: field:crm.claim,cause:0
@@ -811,12 +793,6 @@ msgstr ""
 #: field:crm.claim.report,email:0
 msgid "# Emails"
 msgstr "# эл. писем"
-
-#. module: crm_claim
-#: code:addons/crm_claim/crm_claim.py:253
-#, python-format
-msgid "Stage changed to <b>%s</b>."
-msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -912,161 +888,3 @@ msgstr ""
 #: help:crm.claim.stage,case_refused:0
 msgid "Refused stages are specific stages for done."
 msgstr ""
-
-#~ msgid "Probability"
-#~ msgstr "Вероятность"
-
-#~ msgid "Add Internal Note"
-#~ msgstr "Добавить внутреннею заметку"
-
-#~ msgid "Partner Contact"
-#~ msgstr "Контакт контрагента"
-
-#~ msgid "Reset to Draft"
-#~ msgstr "Вернуть в черновики"
-
-#~ msgid "   Month   "
-#~ msgstr "   Месяц   "
-
-#~ msgid "Send New Email"
-#~ msgstr "Отправить новое эл. письмо"
-
-#~ msgid "History Information"
-#~ msgstr "История"
-
-#~ msgid "    Month-1    "
-#~ msgstr "    Месяц-1    "
-
-#~ msgid "Contact"
-#~ msgstr "Контакт"
-
-#~ msgid "Accepted as Claim"
-#~ msgstr "Принято как претензия"
-
-#~ msgid "Salesman"
-#~ msgstr "Менеджер продаж"
-
-#~ msgid "  Year  "
-#~ msgstr "  Год  "
-
-#~ msgid "Customer & Supplier Relationship Management"
-#~ msgstr "Управление взаимодействием с заказчиками и поставщиками"
-
-#~ msgid "Global CC"
-#~ msgstr "Глобальная копия"
-
-#~ msgid "Communication & History"
-#~ msgstr "Общение & история"
-
-#~ msgid "These people will receive email."
-#~ msgstr "Эти люди получат эл. письма."
-
-#~ msgid "History"
-#~ msgstr "История"
-
-#~ msgid "Attachments"
-#~ msgstr "Вложения"
-
-#~ msgid "State"
-#~ msgstr "Состояние"
-
-#~ msgid "Reply"
-#~ msgstr "Ответ"
-
-#~ msgid "Details"
-#~ msgstr "Подробности"
-
-#~ msgid "Current"
-#~ msgstr "Текущий"
-
-#~ msgid "Close"
-#~ msgstr "Закрыть"
-
-#~ msgid "Report a Claim"
-#~ msgstr "Сообщить о претензии"
-
-#~ msgid ""
-#~ "Create claim categories to better manage and classify your claims. Some "
-#~ "example of claims can be: preventive action, corrective action."
-#~ msgstr ""
-#~ "Создание категорий претензий, чтобы лучше управлять и классифицировать "
-#~ "претензии. Например: предупредительное действие, исправляющее действие."
-
-#~ msgid "Won't fix"
-#~ msgstr "Не будет исправлено"
-
-#~ msgid ""
-#~ "The state is set to 'Draft', when a case is created.                         "
-#~ "         \n"
-#~ "If the case is in progress the state is set to 'Open'.                       "
-#~ "           \n"
-#~ "When the case is over, the state is set to 'Done'.                           "
-#~ "       \n"
-#~ "If the case needs to be reviewed then the state is set to 'Pending'."
-#~ msgstr ""
-#~ "Состояние  установлено в 'Черновик', при создании дела.       \n"
-#~ "Если дело в работе, состояние  установлено в 'Открыто'.            \n"
-#~ "Когда дело  завершено, состояние  установлено в 'Сделано'.              \n"
-#~ "Если дело нуждается в рассмотрении, то состояние 'В ожидании'."
-
-#~ msgid "Stage of case"
-#~ msgstr "Этап дела"
-
-#~ msgid ""
-#~ "Sales team to which Case belongs to.Define Responsible user and Email "
-#~ "account for mail gateway."
-#~ msgstr ""
-#~ "Отдел продаж, которому принадлежит это дело. Определите ответственного "
-#~ "пользователя и учетную запись эл. почты для почтового шлюза."
-
-#~ msgid ""
-#~ "You can create claim stages to categorize the status of every claim entered "
-#~ "in the system. The stages define all the steps required for the resolution "
-#~ "of a claim."
-#~ msgstr ""
-#~ "Вы можете создавать этапы претензий для категоризации любой введенной в "
-#~ "систему претензии. Этапы определяют все шаги, необходимые для разрешения "
-#~ "претензий."
-
-#~ msgid ""
-#~ "\n"
-#~ "This modules allows you to track your customers/suppliers claims and "
-#~ "flames.\n"
-#~ "It is fully integrated with the email gateway so that you can create\n"
-#~ "automatically new claims based on incoming emails.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Эти модули позволяют Вам отслеживать претензии ваших "
-#~ "поставщиков/заказчиков.\n"
-#~ "Они полностью интегрированы с шлюзами эл. почты, таким образом, что вы\n"
-#~ "можете автоматически создавать претензии из входящих эл. писем.\n"
-#~ "    "
-
-#~ msgid "Actions Defined"
-#~ msgstr "Определенные действия"
-
-#~ msgid "Actions Done"
-#~ msgstr "Выполненные действия"
-
-#~ msgid "All pending Claims"
-#~ msgstr "Все ожидающие претензии"
-
-#~ msgid "Month-1"
-#~ msgstr "Месяц-1"
-
-#, python-format
-#~ msgid "The claim '%s' has been opened."
-#~ msgstr "Претензия  '%s' была открыта"
-
-#~ msgid "Claims created in current month"
-#~ msgstr "Претензии созданные в текущем месяце"
-
-#~ msgid "Claims created in current year"
-#~ msgstr "Претензии созданные в текущем году"
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "Ошибка! Вы не можете создавать рекурсивные ссылки на участников."
-
-#~ msgid "Claims created in last month"
-#~ msgstr "Претензии созданные в прошлом месяце"

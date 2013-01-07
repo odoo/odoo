@@ -1,23 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-# 	* mrp
+# Greek translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2011-12-06 11:08+0000\n"
-"Last-Translator: qdp (OpenERP) <qdp-launchpad@tinyerp.com>\n"
-"Language-Team: l10n_chart_gr <l10n_chart_gr>\n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:09+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
-"X-Poedit-Country: GREECE\n"
-"X-Poedit-Language: Greek\n"
-"X-Poedit-SourceCharset: utf-8\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:22+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -155,13 +153,6 @@ msgid "The system launches automatically a RFQ to the preferred supplier."
 msgstr ""
 
 #. module: mrp
-#: help:mrp.config.settings,group_mrp_properties:0
-msgid ""
-"The selection of the right Bill of Material to use will depend on the  "
-"properties specified on the sale order and the Bill of Material."
-msgstr ""
-
-#. module: mrp
 #: view:mrp.production:0
 msgid "Products to Finish"
 msgstr ""
@@ -199,12 +190,17 @@ msgid "For purchased material"
 msgstr ""
 
 #. module: mrp
+#: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
+msgid "Order Planning"
+msgstr ""
+
+#. module: mrp
 #: field:mrp.config.settings,module_mrp_operations:0
 msgid "Allow detailed planning of work order"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:648
+#: code:addons/mrp/mrp.py:633
 #, python-format
 msgid "Cannot cancel manufacturing order!"
 msgstr ""
@@ -269,6 +265,21 @@ msgstr ""
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_byproduct:0
 msgid "Produce several products from one manufacturing order"
+msgstr ""
+
+#. module: mrp
+#: help:mrp.config.settings,group_mrp_properties:0
+msgid ""
+"The selection of the right Bill of Material to use will depend on the "
+"properties specified on the sales order and the Bill of Material."
+msgstr ""
+
+#. module: mrp
+#: view:mrp.bom:0
+msgid ""
+"When processing a sales order for this product, the delivery order\n"
+"                                will contain the raw materials, instead of "
+"the finished product."
 msgstr ""
 
 #. module: mrp
@@ -432,6 +443,27 @@ msgid "Weekly Stock Value Variation"
 msgstr "Εβδομαδιαία απόκλιση αξίας αποθέματος"
 
 #. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_property_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new property.\n"
+"              </p><p>\n"
+"                The Properties in OpenERP are used to select the right bill "
+"of\n"
+"                materials for manufacturing a product when you have "
+"different\n"
+"                ways of building the same product.  You can assign several\n"
+"                properties to each bill of materials.  When a salesperson\n"
+"                creates a sales order, they can relate it to several "
+"properties\n"
+"                and OpenERP will automatically select the BoM to use "
+"according\n"
+"                the needs.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: mrp
 #: view:mrp.production:0
 #: field:mrp.production,date_planned:0
 #: report:mrp.production.order:0
@@ -439,7 +471,7 @@ msgid "Scheduled Date"
 msgstr "Προγραμματισμένη Ημερομηνία"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:113
+#: code:addons/mrp/procurement.py:124
 #, python-format
 msgid "Manufacturing Order <em>%s</em> created."
 msgstr ""
@@ -449,14 +481,6 @@ msgstr ""
 #: report:mrp.production.order:0
 msgid "Bill Of Material"
 msgstr "Kατάσταση Υλικών"
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:1068
-#, python-format
-msgid ""
-"Manufacturing order has been <b>confirmed</b> and is <b>scheduled</b> for "
-"the <em>%s</em>."
-msgstr ""
 
 #. module: mrp
 #: help:mrp.routing,location_id:0
@@ -479,12 +503,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.action2
 msgid "Bill of Materials Structure"
 msgstr "Δομή Κατάστασης Υλικών"
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:1043
-#, python-format
-msgid "Manufacturing order has been <b>canceled</b>."
-msgstr ""
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_serviceproduct0
@@ -618,12 +636,6 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:386
-#, python-format
-msgid "Bill of Material has been <b>created</b> for <em>%s</em> product."
-msgstr ""
-
-#. module: mrp
 #: model:process.transition,name:mrp.process_transition_billofmaterialrouting0
 msgid "Material Routing"
 msgstr ""
@@ -643,7 +655,7 @@ msgid "Work Center Load"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:44
+#: code:addons/mrp/procurement.py:50
 #, python-format
 msgid "No BoM defined for this product !"
 msgstr "Δεν έχει οριστεί Κ.Υ. για το Προϊόν!"
@@ -714,12 +726,6 @@ msgid "Master Bill of Materials"
 msgstr ""
 
 #. module: mrp
-#: view:mrp.production:0
-#: report:mrp.production.order:0
-msgid "Work Orders"
-msgstr "Εντολές Εργασίας"
-
-#. module: mrp
 #: help:mrp.config.settings,module_product_manufacturer:0
 msgid ""
 "This allows you to define the following for a product:\n"
@@ -741,30 +747,6 @@ msgstr "Εκτύπωση"
 #: view:mrp.workcenter:0
 msgid "Type"
 msgstr "Τύπος"
-
-#. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_property_group_action
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a group of properties.\n"
-"              </p><p>\n"
-"                Define specific property groups that can be assigned to "
-"your\n"
-"                bill of materials and sales orders. Properties allows "
-"OpenERP\n"
-"                to automatically select the right bill of materials "
-"according\n"
-"                to properties selected in the sale order by salesperson.\n"
-"              </p><p>\n"
-"                For instance, in the property group \"Warranty\", you an "
-"have\n"
-"                two properties: 1 year warranty, 3 years warranty. "
-"Depending\n"
-"                on the propoerties selected in the sale order, OpenERP will\n"
-"                schedule a production using the matching bill of materials.\n"
-"              </p>\n"
-"            "
-msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
@@ -809,8 +791,8 @@ msgid "A factor of 0.9 means a loss of 10% within the production process."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:756
-#: code:addons/mrp/mrp.py:784
+#: code:addons/mrp/mrp.py:737
+#: code:addons/mrp/mrp.py:765
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -873,7 +855,7 @@ msgid "Manufacturing Orders which are waiting for raw materials."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:284
+#: code:addons/mrp/mrp.py:285
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -884,6 +866,7 @@ msgstr ""
 #: model:ir.model,name:mrp.model_mrp_production
 #: view:mrp.config.settings:0
 #: view:mrp.production:0
+#: field:mrp.production.workcenter.line,production_id:0
 #: field:procurement.order,production_id:0
 msgid "Manufacturing Order"
 msgstr ""
@@ -949,7 +932,7 @@ msgid "BoM Type"
 msgstr "Τύπος Κ.Υ."
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:46
+#: code:addons/mrp/procurement.py:52
 #, python-format
 msgid ""
 "Procurement '%s' has an exception: 'No BoM defined for this product !'"
@@ -971,7 +954,7 @@ msgid "Companies"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:649
+#: code:addons/mrp/mrp.py:634
 #, python-format
 msgid ""
 "You must first cancel related internal picking attached to this "
@@ -1289,7 +1272,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:521
+#: code:addons/mrp/mrp.py:505
 #, python-format
 msgid "Invalid Action!"
 msgstr ""
@@ -1332,7 +1315,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:374
+#: code:addons/mrp/mrp.py:375
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -1370,27 +1353,6 @@ msgstr ""
 msgid ""
 "In case the Supply method of the product is Buy, the system creates a "
 "purchase order."
-msgstr ""
-
-#. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_property_action
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a new property.\n"
-"              </p><p>\n"
-"                The Properties in OpenERP are used to select the right bill "
-"of\n"
-"                materials for manufacturing a product when you have "
-"different\n"
-"                ways of building the same product.  You can assign several\n"
-"                properties to each bill of materials.  When a salesperson\n"
-"                creates a sale order, they can relate it to several "
-"properties\n"
-"                and OpenERP will automatically select the BoM to use "
-"according\n"
-"                the needs.\n"
-"              </p>\n"
-"            "
 msgstr ""
 
 #. module: mrp
@@ -1463,12 +1425,6 @@ msgid "Pending"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:1053
-#, python-format
-msgid "Manufacturing order is <b>in production</b>."
-msgstr ""
-
-#. module: mrp
 #: field:mrp.bom,active:0
 #: field:mrp.routing,active:0
 msgid "Active"
@@ -1506,12 +1462,6 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:1058
-#, python-format
-msgid "Manufacturing order has been <b>done</b>."
-msgstr ""
-
-#. module: mrp
 #: model:process.transition,name:mrp.process_transition_minimumstockprocure0
 msgid "'Minimum stock rule' material"
 msgstr ""
@@ -1532,12 +1482,6 @@ msgid "Drives the procurement orders for raw material."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:1048
-#, python-format
-msgid "Manufacturing order is <b>ready to produce</b>."
-msgstr ""
-
-#. module: mrp
 #: field:mrp.production.product.line,product_uos_qty:0
 msgid "Product UOS Quantity"
 msgstr ""
@@ -1553,7 +1497,7 @@ msgid "SO Number"
 msgstr "Αριθμός ΠΠ"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:521
+#: code:addons/mrp/mrp.py:505
 #, python-format
 msgid "Cannot delete a manufacturing order in state '%s'."
 msgstr ""
@@ -1598,6 +1542,31 @@ msgstr ""
 #: view:mrp.workcenter:0
 #: field:report.workcenter.load,workcenter_id:0
 msgid "Work Center"
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_property_group_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a group of properties.\n"
+"              </p><p>\n"
+"                Define specific property groups that can be assigned to "
+"your\n"
+"                bill of materials and sales orders. Properties allows "
+"OpenERP\n"
+"                to automatically select the right bill of materials "
+"according\n"
+"                to properties selected in the sales order by salesperson.\n"
+"              </p><p>\n"
+"                For instance, in the property group \"Warranty\", you an "
+"have\n"
+"                two properties: 1 year warranty, 3 years warranty. "
+"Depending\n"
+"                on the propoerties selected in the sales order, OpenERP "
+"will\n"
+"                schedule a production using the matching bill of materials.\n"
+"              </p>\n"
+"            "
 msgstr ""
 
 #. module: mrp
@@ -1737,20 +1706,6 @@ msgid "Manager"
 msgstr ""
 
 #. module: mrp
-#: view:mrp.bom:0
-msgid ""
-"When processing a sale order for this product, the delivery order\n"
-"                                will contain the raw materials, instead of "
-"the finished product."
-msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:1039
-#, python-format
-msgid "Manufacturing order has been <b>created</b>."
-msgstr ""
-
-#. module: mrp
 #: help:mrp.product.produce,mode:0
 msgid ""
 "'Consume only' mode will only consume the products with the quantity "
@@ -1761,9 +1716,10 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
-msgid "Orders Planning"
-msgstr ""
+#: view:mrp.production:0
+#: report:mrp.production.order:0
+msgid "Work Orders"
+msgstr "Εντολές Εργασίας"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle:0
@@ -1795,7 +1751,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:756
+#: code:addons/mrp/mrp.py:737
 #, python-format
 msgid ""
 "You are going to consume total %s quantities of \"%s\".\n"
@@ -1832,7 +1788,6 @@ msgstr "Χρόνος ενός κύκλου (ώρα)"
 #. module: mrp
 #: model:ir.actions.report.xml,name:mrp.report_mrp_production_report
 #: field:mrp.production.product.line,production_id:0
-#: field:mrp.production.workcenter.line,production_id:0
 #: model:process.node,name:mrp.process_node_production0
 #: model:process.node,name:mrp.process_node_productionorder0
 msgid "Production Order"
@@ -1856,7 +1811,7 @@ msgid "Compute Data"
 msgstr "Υπολογισμός Δεδομένων"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:625
+#: code:addons/mrp/mrp.py:610
 #: code:addons/mrp/wizard/change_production_qty.py:83
 #: code:addons/mrp/wizard/change_production_qty.py:88
 #, python-format
@@ -1902,7 +1857,7 @@ msgid "Manufacturing Lead Time"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:284
+#: code:addons/mrp/mrp.py:285
 #, python-format
 msgid "Warning"
 msgstr ""
@@ -2142,17 +2097,7 @@ msgid "BOM Ref"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.bom,message_comment_ids:0
-#: help:mrp.bom,message_comment_ids:0
-#: field:mrp.production,message_comment_ids:0
-#: help:mrp.production,message_comment_ids:0
-#: field:mrp.production.workcenter.line,message_comment_ids:0
-#: help:mrp.production.workcenter.line,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:784
+#: code:addons/mrp/mrp.py:765
 #, python-format
 msgid ""
 "You are going to produce total %s quantities of \"%s\".\n"
@@ -2190,7 +2135,7 @@ msgid "Bill of Materials"
 msgstr "Κατάσταση Υλικών"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:625
+#: code:addons/mrp/mrp.py:610
 #, python-format
 msgid "Cannot find a bill of material for this product."
 msgstr ""
@@ -2421,841 +2366,3 @@ msgstr ""
 #: report:mrp.production.order:0
 msgid "Products to Consume"
 msgstr ""
-
-#~ msgid "Compute Stock Minimum Rules Only"
-#~ msgstr "Υπολογισμός Κανόνων Ελάχιστου Αποθέματος Μόνο"
-
-#~ msgid "Exceptions Procurements"
-#~ msgstr "Εξαιρέσεις Προμηθειών"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "Προειδοποίηση!"
-
-#~ msgid "Origin"
-#~ msgstr "Προέλευση"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Άκυρο XML για Αρχιτεκτονική Όψης!"
-
-#~ msgid "Product & Location"
-#~ msgstr "Προϊόν & Τοποθεσία"
-
-#~ msgid "Packing Exception"
-#~ msgstr "Εξαίρεση Συσκευασίας"
-
-#~ msgid "Production Orders"
-#~ msgstr "Εντολές Παραγωγής"
-
-#~ msgid "Procurements"
-#~ msgstr "Προμήθειες"
-
-#~ msgid "Details"
-#~ msgstr "Λεπτομέρειες"
-
-#~ msgid "Reservation"
-#~ msgstr "Κράτηση"
-
-#~ msgid "Make Procurement"
-#~ msgstr "Δημιουργία Προμήθειας"
-
-#~ msgid "Production Orders Planning"
-#~ msgstr "Σχεδιασμός Εντολών Παραγωγής"
-
-#~ msgid "indice type"
-#~ msgstr "indice type"
-
-#, python-format
-#~ msgid "Hours Cost"
-#~ msgstr "Κόστος Ωρών"
-
-#, python-format
-#~ msgid "Couldn't find bill of material for product"
-#~ msgstr "Αδύνατη η εύρεση συνταγολόγιου για αυτό το προϊόν"
-
-#~ msgid "Security Days"
-#~ msgstr "Ημέρες Ασφαλείας"
-
-#~ msgid "Modification name"
-#~ msgstr "Όνομα τροποποίησης"
-
-#~ msgid "From minimum stock rules, it goes for procure product."
-#~ msgstr "From minimum stock rules, it goes for procure product."
-
-#~ msgid "Exception"
-#~ msgstr "Εξαίρεση"
-
-#~ msgid "-"
-#~ msgstr "-"
-
-#~ msgid "Human Resource"
-#~ msgstr "Ανθρώπινος Πόρος"
-
-#, python-format
-#~ msgid ""
-#~ "The production is in \"%s\" state. You can not change the production "
-#~ "quantity anymore"
-#~ msgstr ""
-#~ "Η παραγωγή είναι σε κατάσταση \"%s\". Δεν μπορείτε να αλλάξετε την ποσότητα "
-#~ "παραγωγής άλλο"
-
-#~ msgid "Moves Created"
-#~ msgstr "Δημιουργημένες Κινήσεις"
-
-#~ msgid ""
-#~ "Triggers an automatic procurement for all products that have a virtual stock "
-#~ "under 0. You should probably not use this option, we suggest using a MTO "
-#~ "configuration on products."
-#~ msgstr ""
-#~ "Προκαλεί την αυτόματη προμήθεια όλων των ειδών που έχουν αρνητικό εικονικό "
-#~ "απόθεμα. Μάλλον δε θα έπρεπε να χρησιμοποιήσετε αυτή την επιλογή. Σας "
-#~ "συνιστούμε τη χρήση της ρύθμισης ΜΤΟ στα προϊόντα"
-
-#~ msgid "Manufacturing Resource Planning"
-#~ msgstr "Σχεδίαση Πηγών Βιομηχανικής Παραγωγής (MRP)"
-
-#~ msgid "Revision"
-#~ msgstr "Αναθεώρηση"
-
-#~ msgid "Routing Workcenters"
-#~ msgstr "Κέντρα Εργασίας Γραμμής Παραγωγής"
-
-#~ msgid "Not used in computations, for information purpose only."
-#~ msgstr "Μόνο για πληροφόρηση, δε χρησιμοποιείται στον υπολογισμό."
-
-#~ msgid "Packing list"
-#~ msgstr "Λίστα Συσκευασίας"
-
-#~ msgid "Stockable Stock"
-#~ msgstr "Αποθηκεύσιμο Απόθεμα"
-
-#~ msgid "Automatic orderpoint"
-#~ msgstr "Αυτόματο σημείο παραγγελίας"
-
-#, python-format
-#~ msgid "No supplier defined for this product !"
-#~ msgstr "Δεν ορίστηκε προμηθευτής για το προϊόν!"
-
-#, python-format
-#~ msgid "Product name"
-#~ msgstr "Όνομα προϊόντος"
-
-#~ msgid ""
-#~ "This is the days added to what you promise to customers for security purpose"
-#~ msgstr ""
-#~ "Εδώ φαίνονται οι ημέρες που προστίθενται για λόγους ασφαλείας σε αυτό που "
-#~ "υπόσχεστε στους πελάτες."
-
-#~ msgid "Best price (not yet active!)"
-#~ msgstr "Best price (not yet active!)"
-
-#~ msgid "MRP & Logistic Scheduler"
-#~ msgstr "MRP & Προγραμματισμός Προμηθειών"
-
-#~ msgid ""
-#~ "Number of operation this workcenter can do in parallel. If this workcenter "
-#~ "represent a team of 5 workers, the capacity per cycle is 5."
-#~ msgstr ""
-#~ "Αριθμός λειτουργιών που αυτό το κέντρο εργασίας μπορεί να επιτελέσει "
-#~ "παράλληλα. Αν το κέντρο αντιπροσωπεύει μια ομάδα 5 εργαζομένων, η ισχύς του "
-#~ "είναι 5 ανά κύκλο."
-
-#~ msgid "Ask New Products"
-#~ msgstr "Αίτηση για Νέα Προϊόντα"
-
-#~ msgid "Automatic Procurements"
-#~ msgstr "Αυτόματη Τροφοδοσία"
-
-#~ msgid "Products Consummed"
-#~ msgstr "Αναλωθέντα Προϊόντα"
-
-#~ msgid "A purchase order is created for a sub-contracting demand."
-#~ msgstr "Μια παραγγελία αγοράς δημιουργείται για κάθε ζήτηση υπεργολαβίας."
-
-#~ msgid "Analytic Accounting"
-#~ msgstr "Αναλυτικός Λογαριασμός"
-
-#~ msgid "Do nothing"
-#~ msgstr "Καμμιά πράξη"
-
-#, python-format
-#~ msgid "products"
-#~ msgstr "products"
-
-#~ msgid "If the stock of a product is under 0, it will act like an orderpoint"
-#~ msgstr ""
-#~ "Αν το απόθεμα ενός Προϊόντος είναι αρνητικό θα συμπεριφερθεί σαν σημείο "
-#~ "παραγγελίας."
-
-#~ msgid "you can see the minimum stock rules from product"
-#~ msgstr "you can see the minimum stock rules from product"
-
-#~ msgid "This wizard will schedule procurements."
-#~ msgstr "Αυτός ο αυτόματος οδηγός θα προγραμματίσει τις προμήθειες."
-
-#~ msgid "Internal Ref."
-#~ msgstr "Εσωτερικές Παρ."
-
-#~ msgid "Stockable Production Order"
-#~ msgstr "Εντολή Αποθηκεύσιμης Παραγωγής"
-
-#~ msgid "Stockable Request"
-#~ msgstr "Αίτηση Αποθηκεύσιμου"
-
-#, python-format
-#~ msgid "Workcenter name"
-#~ msgstr "Όνομα κέντρου εργασίας"
-
-#~ msgid "Service on Order"
-#~ msgstr "Υπηρεσία κατά Παραγγελία"
-
-#~ msgid ""
-#~ "When the virtual stock goes belong the Min Quantity, Open ERP generates a "
-#~ "procurement to bring the virtual stock to the Max Quantity."
-#~ msgstr ""
-#~ "Όταν το εικονικό απόθεμα πέσει κάτω από την Ελάχ. Ποσότητα, το Open ERP "
-#~ "δημιουργεί μια προμήθεια για να το επαναφέρει στη Μέγ. Ποσότητα."
-
-#~ msgid "Stockable Make to Stock"
-#~ msgstr "Αποθηκεύσιμο Προς Αποθήκευση"
-
-#~ msgid "Procure Service Product"
-#~ msgstr "Προμήθευση Υπηρεσίας"
-
-#~ msgid "Production scheduled products"
-#~ msgstr "Προγραμματισμένες παραγωγές προϊόντων"
-
-#~ msgid "Procurement Process"
-#~ msgstr "Δαιδικασία Τροφοδοσίας"
-
-#, python-format
-#~ msgid "Product Standard Price"
-#~ msgstr "Καθορισμένη Τιμή Προϊόντος"
-
-#~ msgid ""
-#~ "Rounding applied on the product quantity. For integer only values, put 1.0"
-#~ msgstr ""
-#~ "Στρογγυλοποίηση των ποσοτήτων προϊόντων. Συμπληρώστε 1.0 μόνο για ακέραιες "
-#~ "ποσότητες."
-
-#~ msgid "product"
-#~ msgstr "product"
-
-#~ msgid "max"
-#~ msgstr "το πολύ"
-
-#~ msgid "Product to stock rules"
-#~ msgstr "Κανόνες προϊόντων προς αποθήκευση"
-
-#, python-format
-#~ msgid "from stock: products assigned."
-#~ msgstr "from stock: products assigned."
-
-#~ msgid "Print product price"
-#~ msgstr "Εκτύπωση τιμής Προϊόντος"
-
-#~ msgid "Modification Date"
-#~ msgstr "Ημερ/νία Τροποποίησης"
-
-#~ msgid ""
-#~ "Complete this only if you want automatic analytic accounting entries on "
-#~ "production orders."
-#~ msgstr ""
-#~ "Συμπληρώστε αυτό μόνο αν επιθυμείτε αυτόματες καταχωρήσεις στους αναλυτικούς "
-#~ "λογαριασμούς από τις Εντολές Παραγωγής."
-
-#~ msgid "If Procure method is Make to order and supply method is produce"
-#~ msgstr "If Procure method is Make to order and supply method is produce"
-
-#~ msgid "Purchase Lead Time"
-#~ msgstr "Χρόνος Παράδοσης Παραγγελίας"
-
-#~ msgid "Change Qty"
-#~ msgstr "Αλλαγή Ποσ."
-
-#~ msgid "Author"
-#~ msgstr "Δημιουργός"
-
-#~ msgid "Stockable Product Stock"
-#~ msgstr "Απόθεμα Αποθηκεύσιμου Προϊόντος"
-
-#~ msgid "Production Procure Products"
-#~ msgstr "Προϊόντα Προμήθειας Παραγωγής"
-
-#~ msgid "Service Product Process"
-#~ msgstr "Διαδικασία Παραγωγής Υπηρεσιών"
-
-#~ msgid "Procurement convert into the draft purchase order."
-#~ msgstr "Μεταβολή Προμήθειας σε πρόχειρη Παραγγελία Αγοράς"
-
-#~ msgid "Latest error"
-#~ msgstr "Latest error"
-
-#, python-format
-#~ msgid "from stock and no minimum orderpoint rule defined"
-#~ msgstr "from stock and no minimum orderpoint rule defined"
-
-#~ msgid "Routing workcenter usage"
-#~ msgstr "Χρήση Κέντρων Εργασίας Γραμμής Παραγωγής"
-
-#~ msgid "Error ! You can not create recursive BoM."
-#~ msgstr "Σφάλμα! Υπάρχει ήδη Κ.Υ. με την ίδια περιγαρφή"
-
-#~ msgid "If Product type is Stockable and procure method is make to stock"
-#~ msgstr "If Product type is Stockable and procure method is make to stock"
-
-#~ msgid "Manufacturity Lead Time"
-#~ msgstr "Χρόνος Περαίωσης Παραγωγής"
-
-#~ msgid "Exceptions Procurements to Fix"
-#~ msgstr "Εξαιρέσεις Προμηθειών για Διόρθωση"
-
-#~ msgid "Workcenter Operations"
-#~ msgstr "Λειτουργίες Κέντρου Εργασίας"
-
-#~ msgid "Factor that multiplies all times expressed in the workcenter."
-#~ msgstr ""
-#~ "Παράγοντας που πολλαπλασιάζει όλους τους χρόνους ενός κέντρου εργασίας."
-
-#~ msgid ""
-#~ "This is the internal picking list take bring the raw materials to the "
-#~ "production plan."
-#~ msgstr ""
-#~ "Αυτή είναι η εσωτερική λίστα επιλογής που φέρνει τις α' ύλες στο πλάνο "
-#~ "παραγωγής."
-
-#~ msgid "Qty Multiple"
-#~ msgstr "Πολλαπλάσιο Ποσ."
-
-#~ msgid "Waiting"
-#~ msgstr "Σε Αναμονή"
-
-#~ msgid "For stockable and consumable"
-#~ msgstr "Για αποθηκεύσιμα και αναλώσιμα"
-
-#~ msgid "UoS Quantity"
-#~ msgstr "ΜοΠ Ποσ."
-
-#, python-format
-#~ msgid "Invalid action !"
-#~ msgstr "Άκυρη ενέργεια!"
-
-#~ msgid "Production orders are created for the product manufacturing."
-#~ msgstr "Οι Εντολές Παραγωγής δημιουργούνται για την παρασκευή προϊόντων"
-
-#~ msgid "Min Quantity"
-#~ msgstr "Ελάχ. Ποσότητα"
-
-#~ msgid "Production orders"
-#~ msgstr "Εντολές Παραγωγής"
-
-#~ msgid "BoM Hyerarchy"
-#~ msgstr "Ιεραρχία Κ.Υ."
-
-#~ msgid "Procurement Lines"
-#~ msgstr "Γραμμές Τροφοδοσίας"
-
-#~ msgid "If Product type is service and procure method is Make to stock"
-#~ msgstr "If Product type is service and procure method is Make to stock"
-
-#~ msgid "If Product type is service"
-#~ msgstr "Αν ο τύπος Προϊόντος είναι Υπηρεσία"
-
-#, python-format
-#~ msgid "SUBTOTAL"
-#~ msgstr "Υποσύνολο"
-
-#~ msgid ""
-#~ "This wizard will planify the procurement for this product. This procurement "
-#~ "may generate task, production orders or purchase orders."
-#~ msgstr ""
-#~ "Αυτός ο Αυτόματος Οδηγός θα σχεδιάσει την τροφοδοσία για το προϊόν. Αυτή η "
-#~ "προμήθεια μπορεί να δημιουργήσει αναθέσεις, Εντολές Παραγωγής ή παραγγελίες "
-#~ "αγοράς."
-
-#~ msgid "The system waits for requested products in stock."
-#~ msgstr "Το σύστημα περιμένει τα ζητούμενα προϊόντα στο απόθεμα."
-
-#~ msgid "Serivce Stockable Order"
-#~ msgstr "Παραγγελία Αποθηκεύσιμης Υπηρεσίας"
-
-#~ msgid "Production done"
-#~ msgstr "Παραγωγή ολοκληρώθηκε"
-
-#, python-format
-#~ msgid "Unit Product Price"
-#~ msgstr "Τιμή Τεμαχίου Προϊόντος"
-
-#~ msgid "Qty"
-#~ msgstr "Ποσ."
-
-#~ msgid "References"
-#~ msgstr "Παραπομπές"
-
-#~ msgid "Move product"
-#~ msgstr "Μετακίνηση Προϊόντος"
-
-#~ msgid "Machine"
-#~ msgstr "Μηχάνημα"
-
-#~ msgid "Workcenter Name"
-#~ msgstr "Όνομα Κέντρου Εργασίας"
-
-#~ msgid "Start Production"
-#~ msgstr "Εκκίνηση Παραγωγής"
-
-#~ msgid "min"
-#~ msgstr "τουλάχιστον"
-
-#~ msgid ""
-#~ "Description of the workcenter. Explain here what's a cycle according to this "
-#~ "workcenter."
-#~ msgstr ""
-#~ "Περιγραφή κέντρου εργασίας. Εξηγείστε εδώ τι αποτελεί κύκλο για το κέντρο "
-#~ "αυτό."
-
-#~ msgid "Workcenters"
-#~ msgstr "Κέντρα Εργασίας"
-
-#~ msgid "UOM"
-#~ msgstr "ΜοΜ"
-
-#~ msgid "on order"
-#~ msgstr "on order"
-
-#~ msgid "Compute All Schedulers"
-#~ msgstr "Υπολογισμός Χρονοδιαγράμματος"
-
-#~ msgid "Nbr of cycle"
-#~ msgstr "Αρ. Κύκλου"
-
-#~ msgid "Create Procurement"
-#~ msgstr "Δημιουργία Προμηθειών"
-
-#, python-format
-#~ msgid "Product uom"
-#~ msgstr "ΜοΜ Προϊόντος"
-
-#~ msgid "Number of Cycle"
-#~ msgstr "Αριθμός Κύκλου"
-
-#~ msgid "Run procurement"
-#~ msgstr "Εκτέλεση τροφοδοσίας"
-
-#~ msgid ""
-#~ "This is the time frame analysed by the scheduler when computing "
-#~ "procurements. All procurement that are not between today and today+range are "
-#~ "skipped for futur computation."
-#~ msgstr ""
-#~ "Αυτό είναι το χρονικό διάστημα που αναλύεται από το Χρονοδιάγραμμα όταν "
-#~ "υπολογίζει τις προμήθειες. Όσες προμήθειες δεν εμπίπτουν στο διάστημα από "
-#~ "σήμερα έως σήμερα + διάστημα δε θα υπολογιστούν τώρα."
-
-#~ msgid "Time Efficiency"
-#~ msgstr "Αποτελεσματικότητα Χρόνου"
-
-#~ msgid "Scheduler Parameters"
-#~ msgstr "Παράμετροι Χρονοδιαγράμματος"
-
-#~ msgid "A cycle is defined in the workcenter definition."
-#~ msgstr "Ο κύκλος ορίζεται στον ορισμό των κέντρων εργασίας."
-
-#~ msgid "Procurement Method"
-#~ msgstr "Μέθοδος Προμήθειας"
-
-#~ msgid "Compute Procurements"
-#~ msgstr "Υπολογισμός Προμηθειών"
-
-#~ msgid "Wait for available products for reservation"
-#~ msgstr "Σε αναμονή διαθέσιμων προϊόντων για κράτηση"
-
-#~ msgid "Validate"
-#~ msgstr "Επικύρωση"
-
-#~ msgid "Procurement Purchase"
-#~ msgstr "Αγορά Προμηθειών"
-
-#~ msgid "Nbr of hour"
-#~ msgstr "Αρ. ωρών"
-
-#~ msgid "Number of products to produce"
-#~ msgstr "Αριθμός προϊόντων για παραγωγή"
-
-#~ msgid "Material routing"
-#~ msgstr "Δρομολόγηση υλικών"
-
-#~ msgid "Minimum stock rule"
-#~ msgstr "Κανόνας ελάχιστου αποθέματος"
-
-#~ msgid "Revisions"
-#~ msgstr "Αναθεωρήσεις"
-
-#~ msgid "Product Efficiency"
-#~ msgstr "Αποτελεσματικότητα Προϊόντων"
-
-#~ msgid "Orderpoint minimum rule"
-#~ msgstr "Κανόνας ελάχιστου σημείου παραγγελίας"
-
-#~ msgid "Service Make to Stock"
-#~ msgstr "Υπηρεσία προς αποθήκευση"
-
-#~ msgid "Sale Ref"
-#~ msgstr "Παρ. Πώλησης"
-
-#~ msgid "Location"
-#~ msgstr "Τοποθεσία"
-
-#~ msgid "New Procurement"
-#~ msgstr "Νέα Προμήθεια"
-
-#~ msgid "Tool"
-#~ msgstr "Εργαλείο"
-
-#~ msgid ""
-#~ "Location where the system will look for products used in raw materials."
-#~ msgstr "Τοποθεσία όπου το σύστημα θα αναζητά πρώτες ύλες."
-
-#~ msgid "Planned Date"
-#~ msgstr "Προγραμματισμένη Ημερ/νία"
-
-#~ msgid "Procurement orders"
-#~ msgstr "Παραγγελίες προμηθειών"
-
-#~ msgid "Scheduler Range"
-#~ msgstr "Εμβέλεια Χρονοδιαγράμματος"
-
-#~ msgid "Max Quantity"
-#~ msgstr "Μέγ. Ποσότητα"
-
-#~ msgid "Minimum Stock Procure"
-#~ msgstr "Προμήθευση Ελάχιστου Αποθέματος"
-
-#~ msgid "This is the leads/security time for each purchase order."
-#~ msgstr ""
-#~ "Αυτός είναι ο προκαθορισμένος χρόνος (ή χρόνος ασφαλείας) για κάθε "
-#~ "παραγγελία αγοράς."
-
-#~ msgid "alphabetical indices"
-#~ msgstr "alphabetical indices"
-
-#~ msgid "Procurement for raw materials."
-#~ msgstr "Προμήθεια για α' ύλες."
-
-#~ msgid "Note"
-#~ msgstr "Σημείωση"
-
-#~ msgid "Procure Stockable Product"
-#~ msgstr "Προμήθεια Αποθηκεύσιμου Προϊόντος"
-
-#~ msgid "Paid ?"
-#~ msgstr "Πληρώθηκε;"
-
-#~ msgid "Define a routing to describe the manufacturing steps."
-#~ msgstr "Ορίστε μια γραμμή παραγωγής για να περιγράψετε τις φάσεις παραγωγής."
-
-#~ msgid "Scheduled date"
-#~ msgstr "Προγραμματισμένη Ημερ/νία"
-
-#~ msgid "Define the product structure, with sub-products and/or components."
-#~ msgstr "Ορίστε τη δομή του προϊόντος με υπόπροϊόντα ή/και συστατικά."
-
-#~ msgid ""
-#~ "Procurement is created if the product quantity is lower than the minimum "
-#~ "limit."
-#~ msgstr ""
-#~ "Αν η ποσότητα του Προϊόντος είναι μικρότερη από το ελάχιστο, δημιουργείται "
-#~ "προμήθεια."
-
-#~ msgid "Date Closed"
-#~ msgstr "Ημερ/νία Κλεισίματος"
-
-#~ msgid "Properties composition"
-#~ msgstr "Σύνθεση χαρακτηριστικών"
-
-#~ msgid "Production Orders Waiting Products"
-#~ msgstr "Εντολές Παραγωγής σε Αναμονή Προϊόντων"
-
-#~ msgid "Change Product Qty."
-#~ msgstr "Αλλαγή Ποσ. Προϊόντος"
-
-#~ msgid "The procurement quantity will by rounded up to this multiple."
-#~ msgstr "Η ποσότητα προμήθειας θα στρογγυλοποιηθεί ως αυτό το πολλαπλάσιο."
-
-#~ msgid "Reordering Mode"
-#~ msgstr "Mode Συμπληρωματικής Παραγγελίας"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Το όνομα πρέπει να ξεκινάει με x_ και να μην περιέχει ειδικούς χαρακτήρες!"
-
-#~ msgid "Central document to procure products"
-#~ msgstr "Κεντρικό έγγραφο για προμήθεια Προϊόντων"
-
-#~ msgid "Production Orders in Progress"
-#~ msgstr "Εντολές Παραγωγής σε Εξέλιξη"
-
-#~ msgid "Minimum Stock Rules"
-#~ msgstr "Κανόνες Ελάχιστου Αποθέματος"
-
-#~ msgid "Product UOM"
-#~ msgstr "ΜοΜ Προϊόντος"
-
-#~ msgid ""
-#~ "Reference of the document that created this procurement.\n"
-#~ "This is automatically completed by Open ERP."
-#~ msgstr ""
-#~ "Παραποπή στο έγγραφο που δημιούργησε αυτή την προμήθεια.\n"
-#~ "Συμπληρώνεται αυτόματα."
-
-#~ msgid "Production Products"
-#~ msgstr "Παραγόμενα Προϊόντα"
-
-#~ msgid "Product UoM"
-#~ msgstr "ΜοΜ Προϊόντος"
-
-#~ msgid "Workcenter"
-#~ msgstr "Κέντρο Εργασίας"
-
-#~ msgid "Purchase Order"
-#~ msgstr "Παραγγελία Αγοράς"
-
-#~ msgid "Production Workcenters"
-#~ msgstr "Κέντρα Παραγωγής"
-
-#~ msgid ""
-#~ "If you encode manually a procurement, you probably want to use a make to "
-#~ "order method."
-#~ msgstr ""
-#~ "Αν κωδικοποιείτε τις προμήθειες χειροκίνητα, πιθανόν να σας χρησιμεύει "
-#~ "περισσότερο η μέθοδος \"Κατά Παραγγελία\"."
-
-#~ msgid "Stockable Order Request"
-#~ msgstr "Αίτηση Παραγγελίας Αποθηκεύσιμων"
-
-#~ msgid "Production Products Consommation"
-#~ msgstr "Ανάλωση Παραγομένων Προϊόντων"
-
-#~ msgid "numeric indices"
-#~ msgstr "numeric indices"
-
-#~ msgid "Bill of material revisions"
-#~ msgstr "Αναθεωρήσεις Κατάστασεων Υλικών"
-
-#~ msgid "Planification"
-#~ msgstr "Σχεδιασμός"
-
-#~ msgid "BOM"
-#~ msgstr "Κ.Υ."
-
-#~ msgid ""
-#~ "Use a phantom bill of material in raw materials lines that have to be "
-#~ "automatically computed in on eproduction order and not one per level.If you "
-#~ "put \"Phantom/Set\" at the root level of a bill of material it is considered "
-#~ "as a set or pack: the products are replaced by the components between the "
-#~ "sale order to the picking without going through the production order.The "
-#~ "normal BoM will generate one production order per BoM level."
-#~ msgstr ""
-#~ "Χρησιμοποιήστε μια πλασματική Κ.Υ. στις γραμμές α' υλών που πρέπει να "
-#~ "υπολογιστούν σε μια εντολή παραγωγής, αντί για μία ανά επίπεδο. Αν ορίσετε "
-#~ "μια ΚΥ ως 'Πλασματική/Σετ' στο αρχικό της επίπεδο, θα θεωρηθεί σαν σετ ή "
-#~ "πακέτο: τα προϊόντα θα αντικατασταθούν από τα συστατικά τους ανάμεσα στην "
-#~ "παραγγελία πώλησης και την συλλογή τους, χωρίς να περάσουν από την εντολή "
-#~ "παραγωγής. Η κανονική ΚΥ θα δημιουργήσει μία εντολή παραγωγής ανά επίεπεδο "
-#~ "ΚΥ."
-
-#, python-format
-#~ msgid "No address defined for the supplier"
-#~ msgstr "Δεν έχει οριστεί διεύθυνση συνεργάτη"
-
-#~ msgid "Your procurement request has been sent !"
-#~ msgstr "Η αίτηση προμήθειάς σας εστάλει!"
-
-#~ msgid "Internal Procurement Request"
-#~ msgstr "Εσωτερική Αίτηση Προμήθειας"
-
-#~ msgid "Property Categories"
-#~ msgstr "Κατηγορίες Χαρακτηριστικών"
-
-#~ msgid "Compute Procurements Only"
-#~ msgstr "Υπολογισμός Προμηθειών Μόνο"
-
-#~ msgid "Temporary Procurement Exceptions"
-#~ msgstr "Προσωρινές Εξαιρέσεις Προμηθειών"
-
-#~ msgid "Confirmed"
-#~ msgstr "Επιβεβαιώθηκε"
-
-#~ msgid "Parameters"
-#~ msgstr "Παράμετροι"
-
-#~ msgid "Production workcenters used"
-#~ msgstr "Κέντρα παραγωγής που χρησιμοποιήθηκαν"
-
-#~ msgid "Workcenters Utilisation"
-#~ msgstr "Εκμετάλλευση Κέντρων Εργασίας"
-
-#~ msgid ""
-#~ "Efficiency on the production. A factor of 0.9 means a loss of 10% in the "
-#~ "production."
-#~ msgstr ""
-#~ "Αποτελεσματικότητα κατά την παραγωγή. Παράγοντας ίσος με 0,9 σημαίνει "
-#~ "απώλειες 10% κατά την παραγωγή."
-
-#~ msgid "If procurement is make to order"
-#~ msgstr "If procurement is make to order"
-
-#~ msgid "Minimum Stock Rule"
-#~ msgstr "Κανόνας Ελάχιστου Αποθέματος"
-
-#~ msgid "New Bill of Materials"
-#~ msgstr "Νέα Κατάσταση Υλικών"
-
-#, python-format
-#~ msgid "Product quantity"
-#~ msgstr "Ποσ. προϊόντος"
-
-#~ msgid "Property"
-#~ msgstr "Χαρακτηριστικό"
-
-#~ msgid "Canceled"
-#~ msgstr "Ακυρώθηκε"
-
-#~ msgid "plus"
-#~ msgstr "plus"
-
-#~ msgid ""
-#~ "The list of operations (list of workcenters) to produce the finished "
-#~ "product. The routing is mainly used to compute workcenter costs during "
-#~ "operations and to plan futur loads on workcenters based on production "
-#~ "plannification."
-#~ msgstr ""
-#~ "Η λίστα των λειτουργιών (λίστα κέντρων εργασίας) ποαραγωγής του "
-#~ "ολοκληρωμένου προϊόντος. Η γραμμή παραγωγής χρησιμοποιείται κυρίως για τον "
-#~ "υπολογισμό του κόστους κατά τις λειτουργίες και τον σχεδιασμό μελλοντικού "
-#~ "φόρτου των κέντρων, με βάση το σχεδιασμό παραγωγής."
-
-#~ msgid "Stockable Product Process"
-#~ msgstr "Διαδικασία Αποθηκεύσιμων Προϊόντων"
-
-#~ msgid "New Production Order"
-#~ msgstr "Νεα Εντολή Παραγωγής"
-
-#~ msgid "A Request for Quotation is created and sent to the supplier."
-#~ msgstr "Η Αίτηση για Προσφορά δημιουργήθηκε και εστάλει στον προμηθευτή."
-
-#~ msgid "last indice"
-#~ msgstr "last indice"
-
-#~ msgid "BoM Revisions"
-#~ msgstr "Αναθεωρήσεις ΚΥ"
-
-#~ msgid "Retry"
-#~ msgstr "Νέα προσπάθεια"
-
-#~ msgid "Draft"
-#~ msgstr "Πρόχειρη"
-
-#~ msgid "When any procuere products, it comes into the prpcurement orders"
-#~ msgstr "When any procuere products, it comes into the prpcurement orders"
-
-#~ msgid "Production Orders To Start"
-#~ msgstr "Εντολές Παραγωγής για Εκκίνηση"
-
-#~ msgid "Procurement Reason"
-#~ msgstr "Αιτία Προμήθειας"
-
-#~ msgid "An entry is being made from billing material to routing."
-#~ msgstr ""
-#~ "Δημιουργείται κατχώρηση από την κατάσταση υλικών στη γραμμή παραγωγής"
-
-#~ msgid "The normal working time of the workcenter."
-#~ msgstr "Οι κανονικές ώρες εργασίας του κέντρου."
-
-#~ msgid "Order to Max"
-#~ msgstr "Παραγγελία στο Μέγ."
-
-#~ msgid "from stock"
-#~ msgstr "από απόθεμα"
-
-#~ msgid "Close"
-#~ msgstr "Κλείσιμο"
-
-#, python-format
-#~ msgid "TOTAL"
-#~ msgstr "ΣΥΝΟΛΟ"
-
-#~ msgid "Sale Name"
-#~ msgstr "Όνομα Πώλησης"
-
-#, python-format
-#~ msgid "Product supplier"
-#~ msgstr "Ππομηθευτής προϊόντος"
-
-#~ msgid "Create minimum stock rules"
-#~ msgstr "Δημιουργία κανόνων ελάχιστου αποθέματος"
-
-#~ msgid "Warehouse"
-#~ msgstr "Αποθήκη"
-
-#~ msgid "Service Product"
-#~ msgstr "Προϊόν Υπηρεσίας"
-
-#~ msgid "Close Move at end"
-#~ msgstr "Close Move at end"
-
-#~ msgid "Running"
-#~ msgstr "Σε εξέλιξη"
-
-#~ msgid "Unscheduled procurements"
-#~ msgstr "Μη προγραμματισένες προμήθειες"
-
-#~ msgid "Bill of Material Structure"
-#~ msgstr "Δομή Κατάστασης Υλικών"
-
-#~ msgid "Workcenter load"
-#~ msgstr "Φόρτος κέντρου εργασίας"
-
-#~ msgid "Procurement Details"
-#~ msgstr "Λεπτομέρειες Προμήθειας"
-
-#~ msgid "You can see its bill of material which are used to make product"
-#~ msgstr ""
-#~ "Μπορείτε να δείτε την Κατάσταση Υλικών που χρησιμοποιούνται για την "
-#~ "παρασκευή προϊόντων."
-
-#~ msgid "Bill of Materials Components"
-#~ msgstr "Περιεχόμενα Κατάστασης Υλικών"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Λανθασμένο όνομα μοντέλου στην δήλωση ενέργειας"
-
-#~ msgid "Product type is Stockable and procure method is make to stock"
-#~ msgstr ""
-#~ "Ο τύπος του είδους είναι αποθηκεύσιμο και η μέθοδος προμήθειας είναι Προς "
-#~ "Αποθήκευση"
-
-#~ msgid "If product type is service and procure method is Make to order"
-#~ msgstr ""
-#~ "Αν ο τύπος του είδους είναι Υπηρεσία και μέθοδος προμήθειας είναι Προς "
-#~ "Παραγγελία"
-
-#~ msgid "Waiting Goods"
-#~ msgstr "Σε αναμονή υλικών"
-
-#~ msgid "In procurement order, if product type is service"
-#~ msgstr "Σε εντολή προμήθειας, αν ο τύπος του είδους είναι υπηρεσία"
-
-#~ msgid "if Product type is Stockable in procurement order"
-#~ msgstr "Αν ο τύπος προϊόντος είναι Αποθηκεύσιμο σε εντολή προμήθειας"
-
-#~ msgid "Product UoS Qty"
-#~ msgstr "Πόσοτητα σε ΜοΠ του Προϊόντος"
-
-#~ msgid "If Procure method is Make to order and supply method is buy"
-#~ msgstr ""
-#~ "Aν η μέθοδος προμήθειας είναι Προς Παραγγελία και η μέθοδος απόκτησης είναι "
-#~ "Αγορά"
-
-#~ msgid "Reporting"
-#~ msgstr "Αναφορές"

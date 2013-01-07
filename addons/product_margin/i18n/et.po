@@ -1,20 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* product_margin
+# Estonian translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:04+0000\n"
-"PO-Revision-Date: 2009-11-09 19:13+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Estonian <et@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:42+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:28+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: product_margin
 #: view:product.product:0
@@ -44,19 +45,14 @@ msgid "To"
 msgstr "Kuni"
 
 #. module: product_margin
-#: field:product.product,date_to:0
-msgid "To Date"
-msgstr "Kuupäevani"
-
-#. module: product_margin
 #: help:product.product,total_margin:0
 msgid "Turnover - Standard price"
 msgstr ""
 
 #. module: product_margin
-#: field:product.product,date_from:0
-msgid "From Date"
-msgstr "Kuupäevast"
+#: field:product.product,total_margin_rate:0
+msgid "Total Margin Rate(%)"
+msgstr ""
 
 #. module: product_margin
 #: selection:product.margin,invoice_state:0
@@ -65,14 +61,23 @@ msgid "Draft, Open and Paid"
 msgstr "Mustand, lahtine ja makstud"
 
 #. module: product_margin
+#: code:addons/product_margin/wizard/product_margin.py:73
+#: model:ir.actions.act_window,name:product_margin.product_margin_act_window
+#: model:ir.ui.menu,name:product_margin.menu_action_product_margin
+#: view:product.product:0
+#, python-format
+msgid "Product Margins"
+msgstr "Toote marginaalid"
+
+#. module: product_margin
 #: field:product.product,purchase_avg_price:0
 #: field:product.product,sale_avg_price:0
 msgid "Avg. Unit Price"
 msgstr "Keskmine ühiku hind"
 
 #. module: product_margin
-#: model:ir.model,name:product_margin.model_product_product
-msgid "Product"
+#: field:product.product,sale_num_invoiced:0
+msgid "# Invoiced in Sale"
 msgstr ""
 
 #. module: product_margin
@@ -85,6 +90,12 @@ msgstr "Hinnakirja hind"
 #: selection:product.product,invoice_state:0
 msgid "Paid"
 msgstr "Tasutud"
+
+#. module: product_margin
+#: view:product.product:0
+#: field:product.product,sales_gap:0
+msgid "Sales Gap"
+msgstr "Müükide vahe"
 
 #. module: product_margin
 #: help:product.product,sales_gap:0
@@ -107,15 +118,14 @@ msgid "Sum of Quantity in Supplier Invoices"
 msgstr "Koguste summa ostuarvetes"
 
 #. module: product_margin
-#: help:product.product,expected_margin:0
-msgid "Expected Sale - Normal Cost"
+#: field:product.product,date_to:0
+msgid "Margin Date To"
 msgstr ""
 
 #. module: product_margin
-#: field:product.product,purchase_num_invoiced:0
-#: field:product.product,sale_num_invoiced:0
-msgid "# Invoiced"
-msgstr "Arveldatud"
+#: view:product.product:0
+msgid "Analysis Criteria"
+msgstr "Analüüsi kriteeriumid"
 
 #. module: product_margin
 #: view:product.product:0
@@ -149,10 +159,9 @@ msgid "Avg. Price in Customer Invoices."
 msgstr ""
 
 #. module: product_margin
-#: help:product.product,sale_expected:0
-msgid ""
-"Sum of Multiplication of Sale Catalog price and quantity of Customer Invoices"
-msgstr ""
+#: help:product.product,purchase_avg_price:0
+msgid "Avg. Price in Supplier Invoices "
+msgstr "Keskmine hind ostuarvetes "
 
 #. module: product_margin
 #: field:product.margin,invoice_state:0
@@ -166,15 +175,20 @@ msgid "Normal Cost - Total Cost"
 msgstr "Tavamaksumus - Üldmaksumus"
 
 #. module: product_margin
+#: help:product.product,sale_expected:0
+msgid ""
+"Sum of Multiplication of Sale Catalog price and quantity of Customer Invoices"
+msgstr ""
+
+#. module: product_margin
 #: field:product.product,total_margin:0
 msgid "Total Margin"
 msgstr "Kogu marginaal"
 
 #. module: product_margin
-#: view:product.product:0
-#: field:product.product,sales_gap:0
-msgid "Sales Gap"
-msgstr "Müükide vahe"
+#: field:product.product,date_from:0
+msgid "Margin Date From"
+msgstr ""
 
 #. module: product_margin
 #: help:product.product,turnover:0
@@ -193,9 +207,14 @@ msgid "Purchases"
 msgstr "Ostud"
 
 #. module: product_margin
-#: help:product.product,purchase_avg_price:0
-msgid "Avg. Price in Supplier Invoices "
-msgstr "Keskmine hind ostuarvetes "
+#: field:product.product,purchase_num_invoiced:0
+msgid "# Invoiced in Purchase"
+msgstr ""
+
+#. module: product_margin
+#: help:product.product,expected_margin:0
+msgid "Expected Sale - Normal Cost"
+msgstr ""
 
 #. module: product_margin
 #: view:product.margin:0
@@ -208,9 +227,9 @@ msgid "Total margin * 100 / Turnover"
 msgstr "Üldmarginaal * 100 / Käive"
 
 #. module: product_margin
-#: view:product.product:0
-msgid "Analysis Criteria"
-msgstr "Analüüsi kriteeriumid"
+#: view:product.margin:0
+msgid "Open Margins"
+msgstr "Ava marginaalid"
 
 #. module: product_margin
 #: selection:product.margin,invoice_state:0
@@ -224,13 +243,9 @@ msgid "Sales"
 msgstr "Müügid"
 
 #. module: product_margin
-#: code:addons/product_margin/wizard/product_margin.py:73
-#: model:ir.actions.act_window,name:product_margin.product_margin_act_window
-#: model:ir.ui.menu,name:product_margin.menu_action_product_margin
-#: view:product.product:0
-#, python-format
-msgid "Product Margins"
-msgstr "Toote marginaalid"
+#: model:ir.model,name:product_margin.model_product_product
+msgid "Product"
+msgstr ""
 
 #. module: product_margin
 #: view:product.margin:0
@@ -241,16 +256,6 @@ msgstr ""
 #: field:product.product,purchase_gap:0
 msgid "Purchase Gap"
 msgstr "Ostude vahe"
-
-#. module: product_margin
-#: field:product.product,total_margin_rate:0
-msgid "Total Margin (%)"
-msgstr "Kogu marginaal (%)"
-
-#. module: product_margin
-#: view:product.margin:0
-msgid "Open Margins"
-msgstr "Ava marginaalid"
 
 #. module: product_margin
 #: view:product.margin:0
@@ -276,45 +281,3 @@ msgstr ""
 #: model:ir.model,name:product_margin.model_product_margin
 msgid "Product Margin"
 msgstr ""
-
-#~ msgid "Reporting"
-#~ msgstr "Aruandlus"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Vigane XML vaate arhitektuurile!"
-
-#~ msgid "Margins in Product"
-#~ msgstr "Marginaalid tootes"
-
-#~ msgid ""
-#~ "Sum of Multification of Sale Catalog price and quantity of Customer Invoices"
-#~ msgstr "Hinnakirja hinna ja koguse korrutise summa müügiarvetel"
-
-#~ msgid ""
-#~ "Sum of Multification of Invoice price and quantity of Supplier Invoices "
-#~ msgstr "Arveldatud hinna ja koguse korrutise summa ostuarvetel "
-
-#~ msgid "Sum of Multification of Cost price and quantity of Supplier Invoices"
-#~ msgstr "Omahinna ja koguse korrutise summa ostuarvetel"
-
-#~ msgid "Excepted Sale - Turn Over"
-#~ msgstr "Oodatav müük - Käive"
-
-#~ msgid "Excepted Sale - Normal Cost"
-#~ msgstr "Oodatav müük - Tavamaksumus"
-
-#~ msgid "Select "
-#~ msgstr "Valige "
-
-#~ msgid "Avg. Price in Customer Invoices)"
-#~ msgstr "Keskmine hind müügiarvetes"
-
-#~ msgid ""
-#~ "Sum of Multification of Invoice price and quantity of Customer Invoices"
-#~ msgstr "Arveldatud hinna ja koguse korrutise summa müügiarvetel"
-
-#~ msgid "Turnorder - Total Cost"
-#~ msgstr "Käive - Üldmaksumus"
-
-#~ msgid "View Stock of Products"
-#~ msgstr "Vaata toodete laoseisu"

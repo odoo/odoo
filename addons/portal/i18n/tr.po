@@ -1,21 +1,21 @@
 # Turkish translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-05-10 17:58+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:53+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:26+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -39,14 +39,13 @@ msgid ""
 msgstr ""
 
 #. module: portal
-#: code:addons/portal/wizard/share_wizard.py:54
-#, python-format
-msgid "Please select at least one group to share with"
-msgstr "Lütfen paylaşılacak en az bir grup seçin"
+#: model:mail.group,name:portal.company_jobs
+msgid "Company Jobs"
+msgstr ""
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.company_news_feed_ir_ui_menu
-msgid "Company's news"
+#: view:portal.payment.acquirer:0
+msgid "amount: the total amount to pay, as a float"
 msgstr ""
 
 #. module: portal
@@ -74,6 +73,12 @@ msgstr ""
 #: view:res.groups:0
 msgid "Non-Portal Groups"
 msgstr ""
+
+#. module: portal
+#: code:addons/portal/wizard/share_wizard.py:54
+#, python-format
+msgid "Please select at least one group to share with"
+msgstr "Lütfen paylaşılacak en az bir grup seçin"
 
 #. module: portal
 #: view:share.wizard:0
@@ -117,9 +122,13 @@ msgid ""
 msgstr ""
 
 #. module: portal
-#: view:portal.wizard:0
-msgid "or"
+#: code:addons/portal/wizard/portal_wizard.py:194
+#, python-format
+msgid ""
+"You must have an email address in your User Preferences to send emails."
 msgstr ""
+"E-posta gönderebilmek için kullanıcı seçeneklerinde e-posta adresiniz "
+"tanımlı olmalı."
 
 #. module: portal
 #: model:ir.actions.client,name:portal.action_jobs
@@ -133,9 +142,15 @@ msgid "Users"
 msgstr "Kullanıcılar"
 
 #. module: portal
-#: code:addons/portal/acquirer.py:74
+#: code:addons/portal/acquirer.py:82
 #, python-format
 msgid "Pay safely online"
+msgstr ""
+
+#. module: portal
+#: code:addons/portal/acquirer.py:77
+#, python-format
+msgid "No online payment acquirers configured"
 msgstr ""
 
 #. module: portal
@@ -166,8 +181,10 @@ msgid ""
 msgstr ""
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.company_jobs_ir_ui_menu
-msgid "Company's jobs"
+#: view:portal.payment.acquirer:0
+msgid ""
+", so it may use Mako expressions.\n"
+"                                The Mako evaluation context provides:"
 msgstr ""
 
 #. module: portal
@@ -185,8 +202,8 @@ msgid "Your OpenERP account at %(company)s"
 msgstr "%(company)s şirketindeki OpenERP hesabınız"
 
 #. module: portal
-#: view:portal.payment.acquirer:0
-msgid "cr: the current database cursor"
+#: model:res.groups,name:portal.group_anonymous
+msgid "Anonymous"
 msgstr ""
 
 #. module: portal
@@ -242,13 +259,6 @@ msgid "Wizard"
 msgstr "Sihirbaz"
 
 #. module: portal
-#: view:portal.payment.acquirer:0
-msgid ""
-", so it may use Mako expressions.\n"
-"                                The Mako evaluation context provides:"
-msgstr ""
-
-#. module: portal
 #: field:portal.payment.acquirer,name:0
 msgid "Name"
 msgstr ""
@@ -268,11 +278,6 @@ msgstr ""
 msgid ""
 "quote(): a method to quote special string character to make them suitable "
 "for inclusion in a URL"
-msgstr ""
-
-#. module: portal
-#: view:portal.payment.acquirer:0
-msgid "amount: the total amount to pay, as a float"
 msgstr ""
 
 #. module: portal
@@ -296,7 +301,7 @@ msgid "Outgoing Mails"
 msgstr ""
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:194
+#: code:addons/portal/wizard/portal_wizard.py:193
 #, python-format
 msgid "Email required"
 msgstr "E-posta Gerekli"
@@ -307,13 +312,12 @@ msgid "Messaging"
 msgstr ""
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:195
-#, python-format
+#: model:res.groups,comment:portal.group_anonymous
 msgid ""
-"You must have an email address in your User Preferences to send emails."
+"Anonymous users have specific access rights (such as record rules and "
+"restricted menus).\n"
+"                They usually do not belong to the usual OpenERP groups."
 msgstr ""
-"E-posta gönderebilmek için kullanıcı seçeneklerinde e-posta adresiniz "
-"tanımlı olmalı."
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_payment_acquirer
@@ -321,10 +325,20 @@ msgid "Online Payment Acquirer"
 msgstr ""
 
 #. module: portal
-#: view:portal.payment.acquirer:0
+#: model:mail.group,name:portal.company_news_feed
+msgid "Company News"
+msgstr ""
+
+#. module: portal
+#: code:addons/portal/acquirer.py:76
+#, python-format
 msgid ""
-"object: the document on which the payment form is rendered (usually an "
-"invoice or sale order record)"
+"You can finish the configuration in the <a href=\"%s\">Bank&Cash settings</a>"
+msgstr ""
+
+#. module: portal
+#: view:portal.payment.acquirer:0
+msgid "cr: the current database cursor"
 msgstr ""
 
 #. module: portal
@@ -340,6 +354,13 @@ msgid ""
 "                    follow.\n"
 "                </p>\n"
 "            "
+msgstr ""
+
+#. module: portal
+#: view:portal.payment.acquirer:0
+msgid ""
+"object: the document on which the payment form is rendered (usually an "
+"invoice or sales order record)"
 msgstr ""
 
 #. module: portal
@@ -384,6 +405,11 @@ msgid ""
 "--\n"
 "OpenERP - Open Source Business Applications\n"
 "http://www.openerp.com\n"
+msgstr ""
+
+#. module: portal
+#: view:portal.wizard:0
+msgid "or"
 msgstr ""
 
 #. module: portal
@@ -454,7 +480,7 @@ msgid ""
 msgstr ""
 
 #. module: portal
-#: code:addons/portal/mail_mail.py:40
+#: code:addons/portal/mail_mail.py:42
 #, python-format
 msgid ""
 "Access your personal documents through <a href=\"%s\">our Customer Portal</a>"
@@ -471,213 +497,3 @@ msgstr ""
 #: view:portal.wizard:0
 msgid "Portal Access Management"
 msgstr ""
-
-#~ msgid "Portal User"
-#~ msgstr "Portal Kullanıcısı"
-
-#~ msgid "Enable this option to override the Menu Action of portal users"
-#~ msgstr ""
-#~ "Bu opsiyonu portal kullanıcılarının menü eylemlerini değiştirmek için "
-#~ "kullanın"
-
-#~ msgid "Group"
-#~ msgstr "Grup"
-
-#~ msgid "The chosen company is not in the allowed companies for this user"
-#~ msgstr "Bu kullanıcının seçilen şirkete erişim hakkı yok"
-
-#~ msgid "E-mail"
-#~ msgstr "E-posta"
-
-#~ msgid ""
-#~ "Portal managers have access to the portal definitions, and can easily "
-#~ "configure the users, access rights and menus of portal users."
-#~ msgstr ""
-#~ "Portal yöneticileri portal tanımlarına erişebilir, kullanıcılar, erişim "
-#~ "hakları ve menüleri kolayca yapılandırabilirler."
-
-#~ msgid "Language"
-#~ msgstr "Dil"
-
-#~ msgid "Portal Users"
-#~ msgstr "Portal Kullanıcıları"
-
-#~ msgid "Portal Name"
-#~ msgstr "Portal Adı"
-
-#~ msgid "If set, replaces the standard menu for the portal's users"
-#~ msgstr ""
-#~ "Eğer seçilirse portal kullanıcıları için olan standart menüyü değiştirir"
-
-#~ msgid "Send Invitations"
-#~ msgstr "Davetleri Gönder"
-
-#~ msgid "Widgets assigned to Users"
-#~ msgstr "Kullanıcıya atanmış parçalar"
-
-#~ msgid "Widgets"
-#~ msgstr "Parçalar"
-
-#~ msgid "The url where portal users can connect to the server"
-#~ msgstr "Portal kullanıcılarının sunucuya bağlanacağı adres"
-
-#~ msgid "Portal officers can create new portal users with the portal wizard."
-#~ msgstr ""
-#~ "Portal yetkilileri portal sihirbazını kullanarak yeni portal kullanıcıları "
-#~ "oluşturabilirler."
-
-#~ msgid "Override Menu Action of Users"
-#~ msgstr "Kullanıcıların menü eylemlerini değiştir"
-
-#~ msgid "Menu Action"
-#~ msgstr "Menü Eylemi"
-
-#~ msgid "User Name"
-#~ msgstr "Kullanıcı Adı"
-
-#~ msgid "Portal Widgets"
-#~ msgstr "Portal Parçaları"
-
-#, python-format
-#~ msgid "%s Menu"
-#~ msgstr "%s Menü"
-
-#~ msgid "Widgets assigned to portal users"
-#~ msgstr "Portal kullanıcılarına atanmış parçacıklar"
-
-#~ msgid "The portal in which new users must be added"
-#~ msgstr "Yeni kullanıcıların eklenmesi gereken portal"
-
-#~ msgid "Portal Wizard"
-#~ msgstr "Portal Sihirbazı"
-
-#~ msgid "Parent Menu"
-#~ msgstr "Üst Menü"
-
-#~ msgid ""
-#~ "Will be used as user login.  Also necessary to send the account information "
-#~ "to new users"
-#~ msgstr ""
-#~ "Kullanıcı adı olarak kullanılacak. Ayrıca yeni hesap bilgileri yeni "
-#~ "kullanıcıya gönderilmeli"
-
-#, python-format
-#~ msgid "(missing url)"
-#~ msgstr "(kayıp url)"
-
-#~ msgid "URL"
-#~ msgstr "URL"
-
-#~ msgid "Website"
-#~ msgstr "Web sitesi"
-
-#~ msgid "Widget"
-#~ msgstr "Parçacık"
-
-#~ msgid "The language for the user's user interface"
-#~ msgstr "Kullanıcının kullanıcı arayüzü dili"
-
-#~ msgid "res.users"
-#~ msgstr "res.users"
-
-#~ msgid "ir.ui.menu"
-#~ msgstr "ir.ui.menu"
-
-#~ msgid ""
-#~ "The following text will be included in the welcome email sent to users."
-#~ msgstr "Aşağıdaki yazı kullanıcıya gönderilen hoşgeldin mesajına eklenecek"
-
-#~ msgid "Invalid email address"
-#~ msgstr "Geçersiz e-posta adresi"
-
-#~ msgid "Portals"
-#~ msgstr "Portallar"
-
-#~ msgid "Create Parent Menu"
-#~ msgstr "Üst Menü Oluştur"
-
-#~ msgid "The menu action opens the submenus of this menu item"
-#~ msgstr "Menü eylemi bu menü kaleminde alt menüler açar"
-
-#~ msgid "Add Portal Access"
-#~ msgstr "Portal erişimi ekle"
-
-#~ msgid "Sequence"
-#~ msgstr "Sıra"
-
-#~ msgid "Related Partner"
-#~ msgstr "İlgili Cari"
-
-#~ msgid "Portal Menu"
-#~ msgstr "Portal Menüsü"
-
-#~ msgid "You can not have two users with the same login !"
-#~ msgstr "Aynı kullanıcı adı ile iki kullanıcı oluşturamazsınız !"
-
-#~ msgid "Invitation message"
-#~ msgstr "Davet mesajı"
-
-#, python-format
-#~ msgid ""
-#~ "Dear %(name)s,\n"
-#~ "\n"
-#~ "You have been created an OpenERP account at %(url)s.\n"
-#~ "\n"
-#~ "Your login account data is:\n"
-#~ "Database: %(db)s\n"
-#~ "User:     %(login)s\n"
-#~ "Password: %(password)s\n"
-#~ "\n"
-#~ "%(message)s\n"
-#~ "\n"
-#~ "--\n"
-#~ "OpenERP - Open Source Business Applications\n"
-#~ "http://www.openerp.com\n"
-#~ msgstr ""
-#~ "Sayın %(name)s,\n"
-#~ "\n"
-#~ "Size %(url)s adresinde bir OpenERP hesabı açıldı.\n"
-#~ "\n"
-#~ "Giriş bilgileriniz:\n"
-#~ "Veritabanı: %(db)s\n"
-#~ "Kullanıcı adı:     %(login)s\n"
-#~ "Şifre: %(password)s\n"
-#~ "\n"
-#~ "%(message)s\n"
-#~ "\n"
-#~ "--\n"
-#~ "OpenERP - Open Source Business Applications\n"
-#~ "http://www.openerp.com\n"
-
-#~ msgid "The user's real name"
-#~ msgstr "Kullanıcının Gerçek Adı"
-
-#~ msgid "Manager"
-#~ msgstr "Yönetici"
-
-#~ msgid "Partner"
-#~ msgstr "Cari"
-
-#~ msgid "Officer"
-#~ msgstr "Yetkili"
-
-#~ msgid "This text is included in the welcome email sent to the users"
-#~ msgstr "Bu yazı kullanıcıya gönderilen hoşgeldin e-posta mesajına eklenecek"
-
-#~ msgid ""
-#~ "\n"
-#~ "A portal helps defining specific views and rules for a group of users (the\n"
-#~ "portal group).  A portal menu, widgets and specific groups may be assigned "
-#~ "to\n"
-#~ "the portal's users.\n"
-#~ "            "
-#~ msgstr ""
-#~ "\n"
-#~ "Portal bir kullanıcı grubuna belirli ekranlar ve kurallar tanımlanmasına "
-#~ "olanak verir.\n"
-#~ " Portal kullanıcılarına bir portal menüsü, parçacıklar, ve özel gruplar "
-#~ "atanabilir.\n"
-#~ "            "
-
-#~ msgid "The group corresponding to this portal"
-#~ msgstr "Bu portala uygun grup"

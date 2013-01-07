@@ -1,21 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-# 	* hr_attendance
+# Spanish (Costa Rica) translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-02-15 22:21+0000\n"
-"Last-Translator: Freddy Gonzalez <freddy.gonzalez.contreras@gmail.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Spanish (Costa Rica) <es_CR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:42+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
-"Language: \n"
+"X-Launchpad-Export-Date: 2012-12-22 07:14+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_month
@@ -70,7 +70,7 @@ msgid "Print Attendance Report Monthly"
 msgstr "Imprimir informe de asistencia mensualmente"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/report/timesheet.py:122
+#: code:addons/hr_attendance/report/timesheet.py:120
 #, python-format
 msgid "Attendances by Week"
 msgstr ""
@@ -94,6 +94,11 @@ msgstr "Agrupar por..."
 #: selection:hr.attendance.month,month:0
 msgid "October"
 msgstr "Octubre"
+
+#. module: hr_attendance
+#: field:hr.employee,attendance_access:0
+msgid "Attendance Access"
+msgstr ""
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/hr_attendance.py:154
@@ -176,11 +181,6 @@ msgid "Allocates attendance group to all users."
 msgstr ""
 
 #. module: hr_attendance
-#: field:hr.employee,attendance_access:0
-msgid "unknown"
-msgstr ""
-
-#. module: hr_attendance
 #: view:hr.attendance:0
 msgid "My Attendance"
 msgstr "Mi Asistencia"
@@ -191,7 +191,7 @@ msgid "June"
 msgstr "Junio"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/report/attendance_by_month.py:193
+#: code:addons/hr_attendance/report/attendance_by_month.py:190
 #, python-format
 msgid "Attendances by Month"
 msgstr ""
@@ -473,247 +473,3 @@ msgstr ""
 msgid ""
 "Specifies the reason for Signing In/Signing Out in case of extra hours."
 msgstr "Especifique la razón de entrada y salida en el caso de horas extras."
-
-#~ msgid ""
-#~ "You did not sign out the last time. Please enter the date and time you "
-#~ "signed out."
-#~ msgstr ""
-#~ "No ha registrado la salida la última vez. Por favor, introduzca la fecha y "
-#~ "hora de la salida."
-
-#, python-format
-#~ msgid "The sign-out date must be in the past"
-#~ msgstr "La fecha del registro de salida debe ser en el pasado"
-
-#~ msgid "Ask for Sign In Out"
-#~ msgstr "Preguntar para registrar entrada / salida"
-
-#~ msgid "Ok"
-#~ msgstr "Aceptar"
-
-#~ msgid "Employees name"
-#~ msgstr "Nombre empleado"
-
-#, python-format
-#~ msgid "UserError"
-#~ msgstr "Error de usuario"
-
-#, python-format
-#~ msgid "The Sign-in date must be in the past"
-#~ msgstr "La fecha del registro de entrada debe ser en el pasado"
-
-#, python-format
-#~ msgid "A sign-in must be right after a sign-out !"
-#~ msgstr "¡Un registro de entrada debe estar después de un registro de salida!"
-
-#~ msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-#~ msgstr ""
-#~ "Error: Registro de entrada (resp. Registro de salida) debe seguir al "
-#~ "Registro de salida (resp. Registro de entrada)"
-
-#, python-format
-#~ msgid "No Data Available"
-#~ msgstr "No hay datos disponibles"
-
-#~ msgid "Sign In Sign Out"
-#~ msgstr "Entrada Salida"
-
-#, python-format
-#~ msgid "Sign in / Sign out"
-#~ msgstr "Registrar entrada/salida"
-
-#~ msgid "hr.sign.out.ask"
-#~ msgstr "hr.sign.out.ask"
-
-#, python-format
-#~ msgid "A sign-out must be right after a sign-in !"
-#~ msgstr "¡Un registro de salida debe estar después de un registro de entrada!"
-
-#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
-#~ msgstr "¡Error! No puede crear una jerarquía recursiva de empleados."
-
-#~ msgid "Sign-Out Entry must follow Sign-In."
-#~ msgstr "El registro de entrada debe seguir al registro de salida."
-
-#~ msgid ""
-#~ "If you need your staff to sign in when they arrive at work and sign out "
-#~ "again at the end of the day, OpenERP allows you to manage this with this "
-#~ "tool. If each employee has been linked to a system user, then they can "
-#~ "encode their time with this action button."
-#~ msgstr ""
-#~ "Si necesita que su personal fiche al inicio y al final de la jornada "
-#~ "laboral, esta herramienta de OpenERP le permite efectuar esta gestión. Si "
-#~ "cada empleado se ha vinculado a un usuario del sistema, se puede controlar "
-#~ "su jornada con este botón de acción."
-
-#~ msgid "Empoyee ID"
-#~ msgstr "ID empleado"
-
-#, python-format
-#~ msgid ""
-#~ "You tried to %s with a date anterior to another event !\n"
-#~ "Try to contact the administrator to correct attendances."
-#~ msgstr ""
-#~ "Ha intentado %s con una fecha anterior a otro evento!\n"
-#~ "Trata de ponerte en contacto con el administrador para corregir las "
-#~ "asistencias."
-
-#~ msgid "Your last sign out"
-#~ msgstr "Su último registro salida"
-
-#~ msgid "Your last sign in"
-#~ msgstr "Su último registro entrada"
-
-#~ msgid ""
-#~ "Sign in / Sign out. In some companies, staff have to sign in when they "
-#~ "arrive at work and sign out again at the end of the day. If each employee "
-#~ "has been linked to a system user, then they can encode their time with this "
-#~ "action button."
-#~ msgstr ""
-#~ "Entrada/Salida. En algunas empresas, el personal tiene que fichar cuando "
-#~ "llegan al trabajo y al finalizar la jornada. Si cada empleado se ha "
-#~ "vinculado a un usuario del sistema, se puede controlar su jornada con este "
-#~ "botón de acción."
-
-#~ msgid "Employee's Name"
-#~ msgstr "Nombre del empleado"
-
-#~ msgid "Current state"
-#~ msgstr "Estado actual"
-
-#, python-format
-#~ msgid "No records found for your selection!"
-#~ msgstr "¡No se han encontrado registros en su selección!"
-
-#~ msgid ""
-#~ "You did not sign in the last time. Please enter the date and time you signed "
-#~ "in."
-#~ msgstr ""
-#~ "No ha registrado la entrada la última vez. Por favor, introduzca la fecha y "
-#~ "hora de la entrada."
-
-#~ msgid "hr.sign.in.out.ask"
-#~ msgstr "hr.sign.in.out.ask"
-
-#, python-format
-#~ msgid ""
-#~ "You tried to sign with a date anterior to another event !\n"
-#~ "Try to contact the administrator to correct attendances."
-#~ msgstr ""
-#~ "﻿¡Ha intentado registrar con una fecha anterior a otro acontecimiento!\n"
-#~ "Póngase en contacto con el administrador para corregir las asistencias."
-
-#, python-format
-#~ msgid ""
-#~ "You tried to sign out with a date anterior to another event !\n"
-#~ "Try to contact the administrator to correct attendances."
-#~ msgstr ""
-#~ "﻿¡Ha intentado registrar una salida con una fecha anterior a otro "
-#~ "acontecimiento!\n"
-#~ "Póngase en contacto con el administrador para corregir las asistencias."
-
-#, python-format
-#~ msgid ""
-#~ "You tried to sign in with a date anterior to another event !\n"
-#~ "Try to contact the administrator to correct attendances."
-#~ msgstr ""
-#~ "﻿¡Ha intentado registrar una entrada con una fecha anterior a otro "
-#~ "acontecimiento!\n"
-#~ "Póngase en contacto con el administrador para corregir las asistencias."
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-#~ "especial!"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "¡XML inválido para la definición de la vista!"
-
-#~ msgid "You are now ready to sign in or out of the attendance follow up"
-#~ msgstr ""
-#~ "Está listo para registrar las entradas y salidas en el control de asistencia"
-
-#~ msgid "Employee's name"
-#~ msgstr "Nombre empleado"
-
-#~ msgid "Print Attendance Error Report"
-#~ msgstr "Imprimir informe errores de asistencia"
-
-#~ msgid "Action reason"
-#~ msgstr "Motivo acción"
-
-#~ msgid "Attendances Of Employees"
-#~ msgstr "Asistencia de empleados"
-
-#~ msgid ""
-#~ "You did not signed out the last time. Please enter the date and time you "
-#~ "signed out."
-#~ msgstr ""
-#~ "No registró la salida la última vez. Por favor, introduzca la fecha y hora "
-#~ "que salió."
-
-#~ msgid "Action's type"
-#~ msgstr "Tipo de acción"
-
-#~ msgid ""
-#~ "You did not signed in the last time. Please enter the date and time you "
-#~ "signed in."
-#~ msgstr ""
-#~ "No registró la entrada la última vez. Por favor, introduzca la fecha y hora "
-#~ "que entró."
-
-#~ msgid "Employee attendance"
-#~ msgstr "Asistencia empleado"
-
-#~ msgid "This module aims to manage employee's attendances."
-#~ msgstr "Este módulo sirve para gestionar la asistencia de los empleados"
-
-#~ msgid "Select a time span"
-#~ msgstr "Seleccione un intervalo de tiempo"
-
-#~ msgid "Print Timesheet by month"
-#~ msgstr "Imprimir hoja de asistencia por mes"
-
-#~ msgid "Print Timesheet"
-#~ msgstr "Imprimir hoja de asistencia"
-
-#~ msgid "Print Timesheet by week"
-#~ msgstr "Imprimir hoja de asistencia por semana"
-
-#~ msgid "Select a starting and a end date"
-#~ msgstr "Seleccione una fecha inicial y final"
-
-#~ msgid "Print Attendance Report"
-#~ msgstr "Imprimir informe de asistencia"
-
-#~ msgid "Select a month"
-#~ msgstr "Seleccione un mes"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nombre de modelo no válido en la definición de acción."
-
-#~ msgid ""
-#~ "Error ! You cannot select a department for which the employee is the manager."
-#~ msgstr ""
-#~ "¡Error! No puede seleccionar un departamento que tenga el empleado como "
-#~ "responsable."
-
-#~ msgid "My Attendances"
-#~ msgstr "Mis presencias"
-
-#~ msgid ""
-#~ "\n"
-#~ "    This module aims to manage employee's attendances.\n"
-#~ "    Keeps account of the attendances of the employees on the basis of the\n"
-#~ "    actions(Sign in/Sign out) performed by them.\n"
-#~ "       "
-#~ msgstr ""
-#~ "\n"
-#~ "    Este módulo sirve para gestionar la asistencia de los empleados.\n"
-#~ "    Controla la asistencia de los empleados mediante las acciones\n"
-#~ "    (Registrar entrada/Registrar salida) realizadas por ellos.\n"
-#~ "       "
-
-#~ msgid "Employee ID"
-#~ msgstr "ID empleado"

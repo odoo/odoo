@@ -1,21 +1,21 @@
 # Serbian Latin translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2011-11-10 16:33+0000\n"
-"Last-Translator: Milan Milosevic <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Serbian Latin <sr@latin@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:54+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:03+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -95,8 +95,8 @@ msgid "Running"
 msgstr ""
 
 #. module: account_asset
-#: field:account.asset.depreciation.line,amount:0
-msgid "Depreciation Amount"
+#: view:account.asset.asset:0
+msgid "Set to Draft"
 msgstr ""
 
 #. module: account_asset
@@ -141,6 +141,11 @@ msgstr ""
 #. module: account_asset
 #: help:account.asset.asset,salvage_value:0
 msgid "It is the amount you plan to have that you cannot depreciate."
+msgstr ""
+
+#. module: account_asset
+#: help:account.asset.asset,method_period:0
+msgid "The amount of time between two depreciations, in months"
 msgstr ""
 
 #. module: account_asset
@@ -249,18 +254,15 @@ msgid "Date of asset purchase"
 msgstr ""
 
 #. module: account_asset
-#: help:account.asset.asset,method_number:0
-msgid "Calculates Depreciation within specified interval"
+#: view:account.asset.asset:0
+msgid "Change Duration"
 msgstr ""
 
 #. module: account_asset
-#: field:account.asset.asset,active:0
-msgid "Active"
-msgstr "Aktivno"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-msgid "Change Duration"
+#: help:account.asset.asset,method_number:0
+#: help:account.asset.category,method_number:0
+#: help:account.asset.history,method_number:0
+msgid "The number of depreciations needed to depreciate your asset"
 msgstr ""
 
 #. module: account_asset
@@ -280,11 +282,6 @@ msgid "Computation Method"
 msgstr ""
 
 #. module: account_asset
-#: help:account.asset.asset,method_period:0
-msgid "State here the time during 2 depreciations, in months"
-msgstr ""
-
-#. module: account_asset
 #: constraint:account.asset.asset:0
 msgid ""
 "Prorata temporis can be applied only for time method \"number of "
@@ -292,13 +289,8 @@ msgid ""
 msgstr ""
 
 #. module: account_asset
-#: help:account.asset.history,method_time:0
-msgid ""
-"The method to use to compute the dates and number of depreciation lines.\n"
-"Number of Depreciations: Fix the number of depreciation lines and the time "
-"between 2 depreciations.\n"
-"Ending Date: Choose the time between 2 depreciations and the date the "
-"depreciations won't go beyond."
+#: field:account.asset.depreciation.line,remaining_value:0
+msgid "Next Period Depreciation"
 msgstr ""
 
 #. module: account_asset
@@ -348,6 +340,11 @@ msgid "Search Asset Category"
 msgstr ""
 
 #. module: account_asset
+#: view:asset.modify:0
+msgid "months"
+msgstr ""
+
+#. module: account_asset
 #: model:ir.model,name:account_asset.model_account_invoice_line
 msgid "Invoice Line"
 msgstr ""
@@ -355,11 +352,6 @@ msgstr ""
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Depreciation Board"
-msgstr ""
-
-#. module: account_asset
-#: model:ir.model,name:account_asset.model_account_move_line
-msgid "Journal Items"
 msgstr ""
 
 #. module: account_asset
@@ -388,12 +380,13 @@ msgid "Note"
 msgstr "Napomena"
 
 #. module: account_asset
-#: help:account.asset.asset,method:0
-#: help:account.asset.category,method:0
+#: help:account.asset.history,method_time:0
 msgid ""
-"Choose the method to use to compute the amount of depreciation lines.\n"
-"  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
-"  * Degressive: Calculated on basis of: Remaining Value * Degressive Factor"
+"The method to use to compute the dates and number of depreciation lines.\n"
+"Number of Depreciations: Fix the number of depreciation lines and the time "
+"between 2 depreciations.\n"
+"Ending Date: Choose the time between 2 depreciations and the date the "
+"depreciations won't go beyond."
 msgstr ""
 
 #. module: account_asset
@@ -461,9 +454,9 @@ msgid "User"
 msgstr "Korisnik"
 
 #. module: account_asset
-#: field:account.asset.history,date:0
-msgid "Date"
-msgstr "Datum"
+#: field:account.asset.category,account_asset_id:0
+msgid "Asset Account"
+msgstr ""
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -482,19 +475,14 @@ msgid "Asset History"
 msgstr ""
 
 #. module: account_asset
-#: field:asset.asset.report,name:0
-msgid "Year"
-msgstr ""
-
-#. module: account_asset
 #: model:ir.model,name:account_asset.model_asset_depreciation_confirmation_wizard
 msgid "asset.depreciation.confirmation.wizard"
 msgstr ""
 
 #. module: account_asset
-#: field:account.asset.category,account_asset_id:0
-msgid "Asset Account"
-msgstr ""
+#: field:account.asset.asset,active:0
+msgid "Active"
+msgstr "Aktivno"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,parent_state:0
@@ -556,8 +544,8 @@ msgid "Close"
 msgstr "Zatvori"
 
 #. module: account_asset
-#: view:account.asset.category:0
-msgid "Depreciation Method"
+#: model:ir.model,name:account_asset.model_account_move_line
+msgid "Journal Items"
 msgstr ""
 
 #. module: account_asset
@@ -591,8 +579,13 @@ msgid "Current"
 msgstr ""
 
 #. module: account_asset
-#: field:account.asset.depreciation.line,remaining_value:0
-msgid "Amount to Depreciate"
+#: view:account.asset.category:0
+msgid "Depreciation Method"
+msgstr ""
+
+#. module: account_asset
+#: field:account.asset.depreciation.line,amount:0
+msgid "Current Depreciation"
 msgstr ""
 
 #. module: account_asset
@@ -628,6 +621,15 @@ msgstr "Naziv istorijata"
 #. module: account_asset
 #: field:account.asset.depreciation.line,depreciated_value:0
 msgid "Amount Already Depreciated"
+msgstr ""
+
+#. module: account_asset
+#: help:account.asset.asset,method:0
+#: help:account.asset.category,method:0
+msgid ""
+"Choose the method to use to compute the amount of depreciation lines.\n"
+"  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
+"  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
 msgstr ""
 
 #. module: account_asset
@@ -668,8 +670,8 @@ msgid ""
 msgstr ""
 
 #. module: account_asset
-#: view:account.asset.asset:0
-msgid "Set to Draft"
+#: field:asset.asset.report,name:0
+msgid "Year"
 msgstr ""
 
 #. module: account_asset
@@ -707,6 +709,11 @@ msgid "State here the time between 2 depreciations, in months"
 msgstr ""
 
 #. module: account_asset
+#: field:account.asset.history,date:0
+msgid "Date"
+msgstr "Datum"
+
+#. module: account_asset
 #: field:account.asset.asset,method_number:0
 #: selection:account.asset.asset,method_time:0
 #: field:account.asset.category,method_number:0
@@ -732,215 +739,3 @@ msgstr ""
 #: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_tree
 msgid "Asset Hierarchy"
 msgstr "Hijerarhija sredstava"
-
-#~ msgid "Child assets"
-#~ msgstr "Dečja sredstva"
-
-#~ msgid "Change duration"
-#~ msgstr "Izmeni trajanje"
-
-#~ msgid "Asset Value"
-#~ msgstr "Vrednost sredstva"
-
-#~ msgid "Depreciation board"
-#~ msgstr "Odbor za amortizaciju"
-
-#~ msgid "Open Assets"
-#~ msgstr "Slobodna sredstva"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Pogrešno ime modela u definiciji akcije."
-
-#~ msgid "Change history"
-#~ msgstr "Izmeni istoriju"
-
-#~ msgid "Draft Assets"
-#~ msgstr "Sredstva kao zabeleške"
-
-#~ msgid "Depreciation entries"
-#~ msgstr "Stavke amortizacije"
-
-#~ msgid "Generated entries"
-#~ msgstr "Generisane stavke"
-
-#~ msgid "Number of interval"
-#~ msgstr "Broj intervalâ"
-
-#~ msgid "Open entries"
-#~ msgstr "Otvorene stavke"
-
-#~ msgid "Progressive"
-#~ msgstr "Progresivno"
-
-#~ msgid "Asset properties to modify"
-#~ msgstr "Osobine sredstava za izmenu"
-
-#~ msgid "Methods"
-#~ msgstr "Metode"
-
-#~ msgid "Depreciation duration"
-#~ msgstr "Trajanje amortizacije"
-
-#~ msgid "Period per interval"
-#~ msgstr "Period po intervalu"
-
-#~ msgid "State"
-#~ msgstr "Stanje"
-
-#~ msgid "Other information"
-#~ msgstr "Ostale Informacije"
-
-#~ msgid "Depreciation methods"
-#~ msgstr "Metodi amortizacije"
-
-#~ msgid "Cumul. value"
-#~ msgstr "Kumul. vrednost"
-
-#~ msgid "Gross value"
-#~ msgstr "Bruto vrednost"
-
-#~ msgid "Confirm asset"
-#~ msgstr "Potvrdi sredstvo"
-
-#~ msgid "Date created"
-#~ msgstr "Datum pravljenja"
-
-#~ msgid "Assets methods"
-#~ msgstr "Metodi sredstava"
-
-#~ msgid "Asset property"
-#~ msgstr "Osobina sredstva"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Nepravilan XML format za pregled ''Architecture''!"
-
-#~ msgid "Modify asset"
-#~ msgstr "Izmeni sredstvo"
-
-#~ msgid "Compute assets"
-#~ msgstr "Izračunaj sredstva"
-
-#~ msgid ""
-#~ "Financial and accounting asset management.\n"
-#~ "    Allows to define\n"
-#~ "    * Asset category. \n"
-#~ "    * Assets.\n"
-#~ "    *Asset usage period and property.\n"
-#~ "    "
-#~ msgstr ""
-#~ "Uređivanje finansijskih i obračunskih sredstava.\n"
-#~ "    Omogućava definisanje\n"
-#~ "    *Kategorije sredstva. \n"
-#~ "    *Sredstva.\n"
-#~ "    *Osobinu i trajanje upotrebe sredstva.\n"
-#~ "    "
-
-#~ msgid "Ending period"
-#~ msgstr "Datum završetka"
-
-#~ msgid "Asset name"
-#~ msgstr "Naziv sredstva"
-
-#~ msgid "Accounts information"
-#~ msgstr "Informacije o računu"
-
-#~ msgid "Normal"
-#~ msgstr "Normalno"
-
-#~ msgid "Method"
-#~ msgstr "Metod"
-
-#~ msgid "Asset account"
-#~ msgstr "Račun sredstva"
-
-#~ msgid "Depr. method type"
-#~ msgstr "Tip metode amort."
-
-#~ msgid "Progressif factor"
-#~ msgstr "Progresivni faktor"
-
-#~ msgid "Net value"
-#~ msgstr "Neto vrednost"
-
-#~ msgid "Close asset"
-#~ msgstr "Zatvoreno sredstvo"
-
-#~ msgid "Asset method name"
-#~ msgstr "Naziv metoda sredstva"
-
-#~ msgid "Time method"
-#~ msgstr "Metod vremena"
-
-#~ msgid "Computation method"
-#~ msgstr "Metod obračuna"
-
-#~ msgid "Localisation"
-#~ msgstr "Lokalizacija"
-
-#~ msgid "Global state"
-#~ msgstr "Globalno stanje"
-
-#~ msgid "Depreciation account"
-#~ msgstr "Račun za amortizaciju"
-
-#~ msgid "Asset management"
-#~ msgstr "Uređivanje sredstava"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Ime stavke mora da počne sa x_ i ne sme da sadrži specijalne karaktere !"
-
-#~ msgid "Open"
-#~ msgstr "Otvori"
-
-#~ msgid "Asset board"
-#~ msgstr "Odbor za sredstva"
-
-#~ msgid "Close method"
-#~ msgstr "Zatvorena metoda"
-
-#~ msgid "Asset Entries"
-#~ msgstr "Stavke sredstava"
-
-#~ msgid "Depreciation"
-#~ msgstr "Amortizacija"
-
-#~ msgid "Method name"
-#~ msgstr "Naziv metode"
-
-#~ msgid "Delay"
-#~ msgstr "Kašnjenje"
-
-#~ msgid "Analytic journal"
-#~ msgstr "Analitički dnevnik"
-
-#~ msgid "General information"
-#~ msgstr "Opšti podaci"
-
-#~ msgid "End of asset"
-#~ msgstr "Kraj sredstva"
-
-#~ msgid "General info"
-#~ msgstr "Opšti podaci"
-
-#~ msgid "Asset code"
-#~ msgstr "Kod sredstva"
-
-#~ msgid "Total value"
-#~ msgstr "Ukupna vrednost"
-
-#~ msgid "View"
-#~ msgstr "Pregled"
-
-#~ msgid "Parent asset"
-#~ msgstr "Glavno sredstvo"
-
-#~ msgid "Indirect"
-#~ msgstr "Indirektno"
-
-#~ msgid "Direct"
-#~ msgstr "Direktno"
-
-#~ msgid "Residual value"
-#~ msgstr "Rezidualna vrednost"

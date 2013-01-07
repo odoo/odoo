@@ -1,21 +1,21 @@
 # Korean translation for openobject-addons
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2009-11-05 14:55+0000\n"
-"Last-Translator: ekodaq <ceo@ekosdaq.com>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:13+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:12+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: event
 #: view:event.event:0
@@ -59,19 +59,8 @@ msgid ""
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:305
-#, python-format
-msgid "Event has been <b>cancelled</b>."
-msgstr ""
-
-#. module: event
 #: field:event.registration,date_open:0
 msgid "Registration Date"
-msgstr ""
-
-#. module: event
-#: help:event.registration,origin:0
-msgid "Name of the sale order which create the registration"
 msgstr ""
 
 #. module: event
@@ -121,9 +110,8 @@ msgid "Default Maximum Registration"
 msgstr ""
 
 #. module: event
-#: help:event.event,message_unread:0
-#: help:event.registration,message_unread:0
-msgid "If checked new messages require your attention."
+#: view:report.event.registration:0
+msgid "Display"
 msgstr ""
 
 #. module: event
@@ -198,9 +186,9 @@ msgid "Registrations"
 msgstr "등록"
 
 #. module: event
-#: code:addons/event/event.py:95
-#: code:addons/event/event.py:108
-#: code:addons/event/event.py:400
+#: code:addons/event/event.py:89
+#: code:addons/event/event.py:100
+#: code:addons/event/event.py:355
 #, python-format
 msgid "Error!"
 msgstr "에러!"
@@ -235,8 +223,9 @@ msgid "Opera of Verdi"
 msgstr ""
 
 #. module: event
-#: view:report.event.registration:0
-msgid "Display"
+#: help:event.event,message_unread:0
+#: help:event.registration,message_unread:0
+msgid "If checked new messages require your attention."
 msgstr ""
 
 #. module: event
@@ -256,11 +245,6 @@ msgid "False"
 msgstr ""
 
 #. module: event
-#: model:mail.message.subtype,name:event.mt_event_registration
-msgid "New Registrations"
-msgstr ""
-
-#. module: event
 #: field:event.registration,event_end_date:0
 msgid "Event End Date"
 msgstr ""
@@ -274,18 +258,13 @@ msgid ""
 msgstr ""
 
 #. module: event
-#: selection:report.event.registration,month:0
-msgid "May"
-msgstr ""
-
-#. module: event
 #: view:report.event.registration:0
 msgid "Registrations in confirmed or done state"
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:114
-#: code:addons/event/event.py:116
+#: code:addons/event/event.py:106
+#: code:addons/event/event.py:108
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -304,8 +283,8 @@ msgid "Partner"
 msgstr ""
 
 #. module: event
-#: model:ir.actions.server,name:event.actions_server_event_event_read
-msgid "Event: Mark read"
+#: help:event.type,default_registration_min:0
+msgid "It will select this default minimum value when you choose this event"
 msgstr ""
 
 #. module: event
@@ -402,7 +381,7 @@ msgid "Email"
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:367
+#: code:addons/event/event.py:329
 #, python-format
 msgid "New registration confirmed: %s."
 msgstr ""
@@ -471,26 +450,9 @@ msgid "Speaker who will be giving speech at the event."
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:457
-#, python-format
-msgid "Registration has been <b>created</b>."
-msgstr ""
-
-#. module: event
 #: view:event.event:0
 msgid "Cancel Event"
 msgstr "이벤트 취소"
-
-#. module: event
-#: code:addons/event/event.py:398
-#, python-format
-msgid "State set to Done"
-msgstr ""
-
-#. module: event
-#: model:ir.actions.server,name:event.actions_server_event_registration_read
-msgid "Event registration : Mark read"
-msgstr ""
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_reg
@@ -537,6 +499,11 @@ msgstr ""
 #. module: event
 #: selection:report.event.registration,month:0
 msgid "December"
+msgstr ""
+
+#. module: event
+#: help:event.registration,origin:0
+msgid "Reference of the sales order which created the registration"
 msgstr ""
 
 #. module: event
@@ -587,18 +554,12 @@ msgid "or"
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:315
-#, python-format
-msgid "Event has been <b>done</b>."
-msgstr ""
-
-#. module: event
 #: help:res.partner,speaker:0
 msgid "Check this box if this contact is a speaker."
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:116
+#: code:addons/event/event.py:108
 #, python-format
 msgid "No Tickets Available!"
 msgstr ""
@@ -636,13 +597,12 @@ msgid ""
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:462
-#, python-format
-msgid "Registration has been set as <b>draft</b>."
+#: field:event.event,user_id:0
+msgid "Responsible User"
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:108
+#: code:addons/event/event.py:100
 #, python-format
 msgid ""
 "The total of confirmed registration for the event '%s' does not meet the "
@@ -676,12 +636,6 @@ msgstr ""
 #. module: event
 #: view:report.event.registration:0
 msgid "Events which are in New state"
-msgstr ""
-
-#. module: event
-#: code:addons/event/event.py:404
-#, python-format
-msgid "State set to Cancel"
 msgstr ""
 
 #. module: event
@@ -799,9 +753,8 @@ msgid "My Registrations"
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:310
-#, python-format
-msgid "Event has been set to <b>draft</b>."
+#: selection:report.event.registration,month:0
+msgid "November"
 msgstr ""
 
 #. module: event
@@ -810,21 +763,13 @@ msgid "Extended Filters..."
 msgstr ""
 
 #. module: event
-#: field:event.event,message_comment_ids:0
-#: help:event.event,message_comment_ids:0
-#: field:event.registration,message_comment_ids:0
-#: help:event.registration,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
-
-#. module: event
 #: selection:report.event.registration,month:0
 msgid "October"
 msgstr ""
 
 #. module: event
-#: model:ir.actions.server,name:event.actions_server_event_registration_unread
-msgid "Event registration : Mark unread"
+#: selection:report.event.registration,month:0
+msgid "January"
 msgstr ""
 
 #. module: event
@@ -834,12 +779,13 @@ msgstr "드래프트로 설정"
 
 #. module: event
 #: view:event.event:0
+#: view:event.registration:0
 #: view:res.partner:0
 msgid "Confirm Registration"
 msgstr "등록 확정"
 
 #. module: event
-#: code:addons/event/event.py:95
+#: code:addons/event/event.py:89
 #, python-format
 msgid ""
 "You have already set a registration for this event as 'Attended'. Please "
@@ -862,12 +808,6 @@ msgid "Default Minimum Registration"
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:368
-#, python-format
-msgid "Registration confirmed."
-msgstr ""
-
-#. module: event
 #: field:event.event,address_id:0
 msgid "Location Address"
 msgstr ""
@@ -887,6 +827,7 @@ msgstr ""
 
 #. module: event
 #: view:event.event:0
+#: view:event.registration:0
 msgid "Attended the Event"
 msgstr ""
 
@@ -896,14 +837,9 @@ msgid "Error ! Closing Date cannot be set before Beginning Date."
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:400
+#: code:addons/event/event.py:355
 #, python-format
 msgid "You must wait for the starting day of the event to do this action."
-msgstr ""
-
-#. module: event
-#: field:event.event,user_id:0
-msgid "Responsible User"
 msgstr ""
 
 #. module: event
@@ -928,7 +864,7 @@ msgid "Reply-to Email"
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:114
+#: code:addons/event/event.py:106
 #, python-format
 msgid "Only %d Seats are Available!"
 msgstr ""
@@ -979,18 +915,13 @@ msgid "Upcoming events from today"
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:300
-#, python-format
-msgid "Event has been <b>created</b>."
-msgstr ""
-
-#. module: event
 #: model:event.event,name:event.event_2
 msgid "Conference on ERP Business"
 msgstr ""
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_view_registration
+#: model:mail.message.subtype,name:event.mt_event_registration
 msgid "New Registration"
 msgstr ""
 
@@ -1010,9 +941,8 @@ msgid "Participant / Contact Name"
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:320
-#, python-format
-msgid "Event has been <b>confirmed</b>."
+#: selection:report.event.registration,month:0
+msgid "May"
 msgstr ""
 
 #. module: event
@@ -1023,16 +953,6 @@ msgstr ""
 #. module: event
 #: view:event.event:0
 msgid "No ticket available."
-msgstr ""
-
-#. module: event
-#: help:event.type,default_registration_min:0
-msgid "It will select this default minimum value when you choose this event"
-msgstr ""
-
-#. module: event
-#: selection:report.event.registration,month:0
-msgid "January"
 msgstr ""
 
 #. module: event
@@ -1073,11 +993,6 @@ msgstr "이름"
 #. module: event
 #: field:event.event,country_id:0
 msgid "Country"
-msgstr ""
-
-#. module: event
-#: selection:report.event.registration,month:0
-msgid "November"
 msgstr ""
 
 #. module: event
@@ -1134,12 +1049,6 @@ msgstr ""
 
 #. module: event
 #: view:event.event:0
-#: model:ir.actions.act_window,name:event.act_register_event_partner
-msgid "Subscribe"
-msgstr ""
-
-#. module: event
-#: view:event.event:0
 msgid "available."
 msgstr ""
 
@@ -1183,8 +1092,9 @@ msgid ""
 msgstr ""
 
 #. module: event
-#: model:ir.actions.server,name:event.actions_server_event_event_unread
-msgid "Event: Mark unread"
+#: view:event.event:0
+#: model:ir.actions.act_window,name:event.act_register_event_partner
+msgid "Subscribe"
 msgstr ""
 
 #. module: event
@@ -1214,253 +1124,3 @@ msgstr ""
 #: field:event.event,speaker_confirmed:0
 msgid "Speaker Confirmed"
 msgstr ""
-
-#~ msgid "Confirmation Email"
-#~ msgstr "확인 이메일"
-
-#~ msgid "Registration Email"
-#~ msgstr "등록 이메일"
-
-#~ msgid "Ending date"
-#~ msgstr "종료 날짜"
-
-#~ msgid "Make Invoice"
-#~ msgstr "인보이스 만들기"
-
-#~ msgid "Draft Registrations"
-#~ msgstr "드래프트 등록"
-
-#~ msgid "Ok"
-#~ msgstr "OK"
-
-#~ msgid "Extra Info"
-#~ msgstr "기타 정보"
-
-#~ msgid "Create Invoices"
-#~ msgstr "인보이스 생성"
-
-#~ msgid "Draft Registration"
-#~ msgstr "드래프트 등록"
-
-#~ msgid "Ticket for Opera"
-#~ msgstr "오페라 티켓"
-
-#~ msgid "Mail Auto Confirm"
-#~ msgstr "메일 자동 확인"
-
-#~ msgid "Event type"
-#~ msgstr "이벤트 타입"
-
-#~ msgid "Badge"
-#~ msgstr "뱃지"
-
-#~ msgid "All Events"
-#~ msgstr "모든 이벤트"
-
-#~ msgid "Mail Auto Register"
-#~ msgstr "메일 자동 등록"
-
-#~ msgid "Case section"
-#~ msgstr "케이스 섹션"
-
-#~ msgid "Registration Confirmation"
-#~ msgstr "등록 확정"
-
-#~ msgid "To be Invoiced"
-#~ msgstr "인보이스 예정"
-
-#~ msgid "Events by Categories"
-#~ msgstr "카테고리별 이벤트"
-
-#~ msgid "Confirm Registrations"
-#~ msgstr "등록 확정"
-
-#~ msgid "References"
-#~ msgstr "참조"
-
-#~ msgid "Registration By Event Types"
-#~ msgstr "이벤트 타입 별 등록"
-
-#~ msgid "Configuration"
-#~ msgstr "구성"
-
-#~ msgid "Dates"
-#~ msgstr "날짜"
-
-#~ msgid "Reporting"
-#~ msgstr "리포팅"
-
-#~ msgid "The event limit is reached. What do you want to do?"
-#~ msgstr "이벤트 한계에 도달했습니다. 어떤 작업을 할까요?"
-
-#, python-format
-#~ msgid ""
-#~ "You must define a reply-to address in order to mail the participant. You can "
-#~ "do this in the Mailing tab of your event. Note that this is also the place "
-#~ "where you can configure your event to not send emails automaticly while "
-#~ "registering"
-#~ msgstr ""
-#~ "참가자에게 메일을 보내려면 답장 주소를 정의해야 합니다. 귀하의 이벤트의 메일링 탭에서 수행할 수 있으며, 또한 여기서는 등록 중에 "
-#~ "자동으로 이메일을 보내지 않도록 이벤트를 구성할 수도 있습니다."
-
-#~ msgid "Registration Invoiced"
-#~ msgstr "인보이스된 등록"
-
-#~ msgid "Ticket for Concert"
-#~ msgstr "콘서트 티켓"
-
-#~ msgid "Mailing"
-#~ msgstr "메일링"
-
-#~ msgid "Error Messages"
-#~ msgstr "에러 메시지"
-
-#~ msgid "Parent Category"
-#~ msgstr "페어런트 카테고리"
-
-#~ msgid "Invoice Created"
-#~ msgstr "이벤트가 생성됨"
-
-#~ msgid "Event Done"
-#~ msgstr "이벤트 완료"
-
-#~ msgid "Badge Name"
-#~ msgstr "뱃지 이름"
-
-#~ msgid "Canceled"
-#~ msgstr "취소됨"
-
-#~ msgid "Events On Registrations"
-#~ msgstr "등록 이벤트"
-
-#~ msgid "Statistics"
-#~ msgstr "통계"
-
-#~ msgid "Communication history"
-#~ msgstr "커뮤니케이션 히스토리"
-
-#~ msgid "Partner Invoiced"
-#~ msgstr "인보이스된 파트너"
-
-#~ msgid "Event description"
-#~ msgstr "이벤트 설명"
-
-#~ msgid "Event type on registration"
-#~ msgstr "등록된 이벤트 타입"
-
-#~ msgid "Event Related"
-#~ msgstr "관련 이벤트"
-
-#~ msgid "Number of Registration"
-#~ msgstr "등록 수"
-
-#~ msgid "All Registrations"
-#~ msgstr "모든 등록"
-
-#~ msgid "Events by section"
-#~ msgstr "섹션 별 이벤트"
-
-#~ msgid ""
-#~ "Check this box if you want to use the automatic mailing for new registration"
-#~ msgstr "새로운 등록자에게 자동으로 메일을 보내려면 여기를 체크하십시오."
-
-#~ msgid "Beginning date"
-#~ msgstr "시작 날짜"
-
-#~ msgid "History"
-#~ msgstr "히스토리"
-
-#~ msgid "General"
-#~ msgstr "일반"
-
-#~ msgid "Send Reminder"
-#~ msgstr "상기서신 전송"
-
-#~ msgid "Auto Confirmation Email"
-#~ msgstr "자동 확정 이메일"
-
-#~ msgid "Partner Contact"
-#~ msgstr "파트너 연락처"
-
-#~ msgid "Badge Partner"
-#~ msgstr "뱃지 파트너"
-
-#~ msgid "Confirmed Events"
-#~ msgstr "확정된 이벤트"
-
-#~ msgid "Conference on ERP Buisness"
-#~ msgstr "ERP 비즈니스 컨퍼런스"
-
-#~ msgid "Unit Price"
-#~ msgstr "유닛 가격"
-
-#, python-format
-#~ msgid "Open"
-#~ msgstr "열기"
-
-#~ msgid "Events on registrations"
-#~ msgstr "등록 이벤트"
-
-#~ msgid "Invoice"
-#~ msgstr "인보이스"
-
-#~ msgid "New event"
-#~ msgstr "새 이벤트"
-
-#~ msgid "Badge Title"
-#~ msgstr "뱃지 제목"
-
-#~ msgid "Case"
-#~ msgstr "케이스"
-
-#~ msgid "Ticket for Conference"
-#~ msgstr "컨퍼런스 티켓"
-
-#~ msgid "Product"
-#~ msgstr "상품"
-
-#~ msgid "Label Invoice"
-#~ msgstr "인보이스 라벨"
-
-#~ msgid ""
-#~ "This email will be sent when the event gets confimed or when someone "
-#~ "subscribes to a confirmed event. This is also the email sent to remind "
-#~ "someone about the event."
-#~ msgstr ""
-#~ "이벤트가 확정되거나, 누군가가 확정된 이벤트에 등록하면 이 이메일이 전송됩니다. 이것은 또한 이벤트에 관해 누군가에게 상기서신을 보낼 "
-#~ "때도 이용됩니다."
-
-#~ msgid "This email will be sent when someone subscribes to the event."
-#~ msgstr "이 이메일은 이 이벤트에 등록된 누군가에게 전송됩니다."
-
-#~ msgid ""
-#~ "Check this box if you want ot use the automatic confirmation emailing or the "
-#~ "reminder"
-#~ msgstr "자동 확정 이메일이나 상기 서신을 보내려면 여기를 체크하십시오."
-
-#~ msgid "Type"
-#~ msgstr "타입"
-
-#~ msgid "Invoice Rejected"
-#~ msgstr "거절된 인보이스"
-
-#~ msgid "Events Organisation"
-#~ msgstr "이벤트 조직"
-
-#~ msgid "List Register Partners"
-#~ msgstr "등록 파트너 리스트"
-
-#~ msgid "Actions"
-#~ msgstr "액션"
-
-#~ msgid "Payments"
-#~ msgstr "결제"
-
-#~ msgid "Draft Events"
-#~ msgstr "드래프트 인보이스"
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "에러! 유효하지 않은 EAN 코드"
-
-#~ msgid "Auto Registration Email"
-#~ msgstr "자동 등록 이메일"

@@ -1,21 +1,21 @@
 # Serbian translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 10:25+0000\n"
-"PO-Revision-Date: 2012-05-10 18:28+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:43+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:24+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,move_id:0
@@ -33,7 +33,7 @@ msgid "Recreate Invoice"
 msgstr "Osvežavanje računa"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:376
+#: code:addons/mrp_repair/mrp_repair.py:371
 #, python-format
 msgid "You have to select a Partner Invoice Address in the repair form !"
 msgstr "TRebas izabrati Partnerovu adresu fakture u formi za popravku!"
@@ -71,7 +71,7 @@ msgid "Unread Messages"
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:440
+#: code:addons/mrp_repair/mrp_repair.py:435
 #, python-format
 msgid "No product defined on Fees!"
 msgstr "Nema proizvoda definisanih za Naknadne intervencije"
@@ -146,9 +146,9 @@ msgid "Taxes"
 msgstr "Porezi"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:390
-#: code:addons/mrp_repair/mrp_repair.py:418
-#: code:addons/mrp_repair/mrp_repair.py:447
+#: code:addons/mrp_repair/mrp_repair.py:385
+#: code:addons/mrp_repair/mrp_repair.py:413
+#: code:addons/mrp_repair/mrp_repair.py:442
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -213,9 +213,8 @@ msgid "Move"
 msgstr "Pomeri"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:579
-#, python-format
-msgid "Repair Order for <em>%s</em> has been <b>started</b>."
+#: report:repair.order:0
+msgid "Tax"
 msgstr ""
 
 #. module: mrp_repair
@@ -243,8 +242,8 @@ msgstr "Dodatne Informacije"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:336
-#: code:addons/mrp_repair/mrp_repair.py:350
-#: code:addons/mrp_repair/mrp_repair.py:440
+#: code:addons/mrp_repair/mrp_repair.py:349
+#: code:addons/mrp_repair/mrp_repair.py:435
 #: code:addons/mrp_repair/wizard/cancel_repair.py:49
 #, python-format
 msgid "Warning!"
@@ -262,7 +261,7 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:390
+#: code:addons/mrp_repair/mrp_repair.py:385
 #, python-format
 msgid "No account defined for partner \"%s\"."
 msgstr "NIjedan nalog nije definisan kao partner \"%s\" ."
@@ -293,11 +292,6 @@ msgstr ""
 #: view:mrp.repair:0
 msgid "Repairs order"
 msgstr "Nalozi Popravke"
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "Tax"
-msgstr ""
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:336
@@ -395,12 +389,6 @@ msgid "Repair Line"
 msgstr "Linija Popravke"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:596
-#, python-format
-msgid "Repair has been <b>cancelled</b>."
-msgstr ""
-
-#. module: mrp_repair
 #: report:repair.order:0
 msgid "N° :"
 msgstr "Br.:"
@@ -438,9 +426,9 @@ msgid "Yes"
 msgstr "Da"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:573
-#, python-format
-msgid "Repair Order for <em>%s</em> has been <b>created</b>."
+#: view:mrp.repair.cancel:0
+#: view:mrp.repair.make_invoice:0
+msgid "or"
 msgstr ""
 
 #. module: mrp_repair
@@ -522,12 +510,6 @@ msgid "Pricelist of the selected partner."
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:606
-#, python-format
-msgid "Repair Order is <b>closed</b>."
-msgstr ""
-
-#. module: mrp_repair
 #: report:repair.order:0
 msgid "Guarantee Limit"
 msgstr "Garancija traje do"
@@ -560,12 +542,6 @@ msgid "Is a Follower"
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:591
-#, python-format
-msgid "Repair Order for <em>%s</em> has been <b>accepted</b>."
-msgstr ""
-
-#. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Date"
 msgstr "Datum"
@@ -576,16 +552,14 @@ msgid "Repair Fees Line"
 msgstr "Linije naknadnih popravki"
 
 #. module: mrp_repair
-#: field:mrp.repair,message_comment_ids:0
-#: help:mrp.repair,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
+#: selection:mrp.repair,state:0
+msgid "Quotation"
+msgstr "Najava"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:585
-#, python-format
-msgid "Draft Invoice of %s %s <b>waiting for validation</b>."
-msgstr ""
+#: view:mrp.repair:0
+msgid "Confirm Repair"
+msgstr "Potvrdi Popravku"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -603,8 +577,8 @@ msgid "End Repair"
 msgstr "Kraj Popravke"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:418
-#: code:addons/mrp_repair/mrp_repair.py:447
+#: code:addons/mrp_repair/mrp_repair.py:413
+#: code:addons/mrp_repair/mrp_repair.py:442
 #, python-format
 msgid "No account defined for product \"%s\"."
 msgstr "Ni jedan nalog nije kreiran za proizvod \"%s\" ."
@@ -666,11 +640,6 @@ msgstr "Porezi"
 #: view:mrp.repair.make_invoice:0
 msgid "Cancel"
 msgstr "Otkaži"
-
-#. module: mrp_repair
-#: selection:mrp.repair,state:0
-msgid "Quotation"
-msgstr "Najava"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,location_dest_id:0
@@ -764,15 +733,10 @@ msgid "Do you really want to create the invoice(s)?"
 msgstr "Zelis li da stvarno kreiras ovu fakturu(e)"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:350
+#: code:addons/mrp_repair/mrp_repair.py:349
 #, python-format
 msgid "Repair order is already invoiced."
 msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Confirm Repair"
-msgstr "Potvrdi Popravku"
 
 #. module: mrp_repair
 #: field:mrp.repair,picking_id:0
@@ -807,12 +771,6 @@ msgid "Remove"
 msgstr "Уклони"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:601
-#, python-format
-msgid "Repair Order is now <b>ready</b> to repair."
-msgstr ""
-
-#. module: mrp_repair
 #: field:mrp.repair,partner_invoice_id:0
 msgid "Invoicing Address"
 msgstr "Adresa Fakturisanja"
@@ -844,12 +802,6 @@ msgid "No Invoice"
 msgstr "Ne Fakturisi"
 
 #. module: mrp_repair
-#: view:mrp.repair.cancel:0
-#: view:mrp.repair.make_invoice:0
-msgid "or"
-msgstr ""
-
-#. module: mrp_repair
 #: field:mrp.repair,amount_total:0
 msgid "Total"
 msgstr "Ukupno"
@@ -860,243 +812,7 @@ msgid "Ready to Repair"
 msgstr "Spremno za Popravku"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:376
+#: code:addons/mrp_repair/mrp_repair.py:371
 #, python-format
 msgid "No partner !"
 msgstr "Nema partnera !"
-
-#~ msgid "Fees Line"
-#~ msgstr "Dodatne Linije"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Pogrešno ime modela u definiciji akcije."
-
-#~ msgid "Repair State"
-#~ msgstr "Stanje Popravke"
-
-#~ msgid "Repair Order Ref"
-#~ msgstr "Ref.Nalog za Popravku"
-
-#~ msgid "VAT"
-#~ msgstr "PDV"
-
-#~ msgid "Quantity (UoM)"
-#~ msgstr "Količina (UoM)"
-
-#~ msgid "Repair Fees line"
-#~ msgstr "Dodatne Linije Popravke"
-
-#~ msgid "Repairs"
-#~ msgstr "Popravke"
-
-#~ msgid "Repairs in progress"
-#~ msgstr "Popravka u Toku"
-
-#~ msgid "Gives the state of the Repair Order"
-#~ msgstr "Dato Stanje Naloga Popravke"
-
-#~ msgid ""
-#~ "The garantee limit is computed as: last move date + warranty defined on "
-#~ "selected product. If the current date is below the garantee limit, each "
-#~ "operation and fee you will add will be set as 'not to invoiced' by default. "
-#~ "Note that you can change manually afterwards."
-#~ msgstr ""
-#~ "Garancija je izracunata kao: Datum odlaska + garancija definisana za dati "
-#~ "proizvod. Ako je dati datum manji od garanciskog limita, svaka radnja i "
-#~ "dopune bice poostavljene kao \"za ne fakturisati' kao osnovna postavka. "
-#~ "Trebate znati da ovo mozete kasnije rucno promeniri."
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Nevažeći XML za pregled arhitekture"
-
-#~ msgid "Packing"
-#~ msgstr "Pakovanje"
-
-#~ msgid "Canceled"
-#~ msgstr "Отказано"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Ime objekta mora da počinje sa x_ i ne sme da sadrži specijalne karaktere !"
-
-#~ msgid "No"
-#~ msgstr "Ne"
-
-#~ msgid "New Repair"
-#~ msgstr "Nova Popravka"
-
-#~ msgid ""
-#~ "This operation  will  cancel the  Repair process, but  will not cancel it's "
-#~ "Invoice. Do you want to continue?"
-#~ msgstr ""
-#~ "Ova operacija ce otkazati proces popravke, ali nece ponistiti i fakturu "
-#~ "iste. Zelis li da nastavim"
-
-#~ msgid "Repairs Ready to Start"
-#~ msgstr "Popravke spremne za start"
-
-#~ msgid "Compute"
-#~ msgstr "Izracunaj"
-
-#~ msgid "Repairs Order"
-#~ msgstr "Nalog Popravki"
-
-#~ msgid "The pricelist comes from the selected partner, by default."
-#~ msgstr "Cenovnik stize od selektovanog partnera, po postavci"
-
-#~ msgid "Repair Operations Lines"
-#~ msgstr "Operacione Linije Popravke"
-
-#~ msgid "Repairs to be invoiced"
-#~ msgstr "Popravke za fakturisanje"
-
-#~ msgid "Qty"
-#~ msgstr "Kol."
-
-#~ msgid "Products Repairs Module"
-#~ msgstr "Modul Popravki Proizvoda"
-
-#~ msgid "Do you really want to create the invoices ?"
-#~ msgstr "Da li zaista želite da kreirate račun?"
-
-#~ msgid ""
-#~ "Check this box if you want to manage the delivery once the product is "
-#~ "repaired. If cheked, it will create a packing with selected product. Note "
-#~ "that you can select the locations in the Info tab, if you have the extended "
-#~ "view."
-#~ msgstr ""
-#~ "Cekiraj ovu kucicu ako zelis da upravljas sa isporukama, onda kada je "
-#~ "proizvod popravljen. ako je cekirano, kreirace pakovanje za selektovani "
-#~ "proizvod. Treba napomenuti da mozes selektovati lokaciju u Info tabu, ako si "
-#~ "omogucio prosireni prozor,"
-
-#~ msgid ""
-#~ "This field allow you to change the workflow of the repair order. If value "
-#~ "selected is different from 'No Invoice', it also allow you to select the "
-#~ "pricelist and invoicing address."
-#~ msgstr ""
-#~ "Ovo ti polje omogucava da promenis radni prozor u nalogu popravki. Ako je "
-#~ "selektovana vrednost drugacija od onog gde pise ( nema Faktura), on ti "
-#~ "takodje omogucava da selektujes cenovnik i adresu afkturisanja."
-
-#~ msgid "Repair Ref"
-#~ msgstr "Ref Popravke"
-
-#~ msgid "Product UoM"
-#~ msgstr "JM Proizvoda"
-
-#~ msgid "Cancel Repair...??"
-#~ msgstr "Otkazujes Popravku ??"
-
-#~ msgid "UoM"
-#~ msgstr "JM"
-
-#~ msgid "Make invoices"
-#~ msgstr "Kreiranje računa"
-
-#~ msgid ""
-#~ "This field allow you to choose the parner that will be invoiced and delivered"
-#~ msgstr ""
-#~ "Ovo polje ti omogucava da izaberes partnera kojem ce biti isporuceno i "
-#~ "fakturisano"
-
-#~ msgid "States"
-#~ msgstr "Stanja"
-
-#~ msgid "Quality"
-#~ msgstr "Kvalitet"
-
-#~ msgid "Repairs in quotation"
-#~ msgstr "Popravke u Najavi"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "Upozorenje!"
-
-#~ msgid ""
-#~ " * The 'Draft' state is used when a user is encoding a new and unconfirmed "
-#~ "repair order.             \n"
-#~ "* The 'Confirmed' state is used when a user confirms the repair order.       "
-#~ "      \n"
-#~ "* The 'Ready to Repair' state is used to start to repairing, user can start "
-#~ "repairing only after repair order is confirmed.             \n"
-#~ "* The 'To be Invoiced' state is used to generate the invoice before or after "
-#~ "repairing done.             \n"
-#~ "* The 'Done' state is set when repairing is completed.            \n"
-#~ "* The 'Cancelled' state is used when user cancel repair order."
-#~ msgstr ""
-#~ " *Stanje 'U Pripremi se koristi kada  korisnik dobije novi ili nepodtvrdjeni "
-#~ "zahtev za popravku.                                              \n"
-#~ "* Potvrdjeno' stanje se koristi kada je korisnik podtvrdio zahtev za "
-#~ "popravku.                                 \n"
-#~ "*'Spremno za Popravku' stanje se koristi na pocetku popravke, korisnik moze "
-#~ "poceti sa popravkom, ali samo je zahtev za popravku potvrdjen.               "
-#~ "           \n"
-#~ "*'Za Fakturisanje' stanje se koristi za generisanje fakture pre ili nakon "
-#~ "zavrsetka popravke.                                 \n"
-#~ "*'Zavrseno' stanje se koristi kada je popravka zavrsena.                     "
-#~ "             \n"
-#~ "*'Otkazano' stanje se koristi ukoliko korisnik otkaze zahtev za popravku."
-
-#~ msgid ""
-#~ "Check this box if you want to manage the delivery once the product is "
-#~ "repaired. If cheked, it will create a picking with selected product. Note "
-#~ "that you can select the locations in the Info tab, if you have the extended "
-#~ "view."
-#~ msgstr ""
-#~ "cekiraj ovu kucicu ukoliko zelis da upravljas sa isporukom popravljenog "
-#~ "proizvoda. Ukoliko je cekirano, kreirace se izbor za dati proizvod. Upamtite "
-#~ "da mozete selektovati lokaciju dostave iz info Tab-a, ukoliko imate "
-#~ "prosireni pregled."
-
-#~ msgid "Do you really want to create the invoice(s) ?"
-#~ msgstr "Zelis li da stvarno kreiras ovu fakturu(e)"
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "Greska !"
-
-#~ msgid "Products Repairs Module - Manage All products Repairs"
-#~ msgstr "Modul Popravke Proizvoda - Upravlja sa SVIIM popravkama proizvoda"
-
-#~ msgid ""
-#~ "The guarantee limit is computed as: last move date + warranty defined on "
-#~ "selected product. If the current date is below the guarantee limit, each "
-#~ "operation and fee you will add will be set as 'not to invoiced' by default. "
-#~ "Note that you can change manually afterwards."
-#~ msgstr ""
-#~ "Garantovani limit je izracunat kao: datum poslednje intervencije + garancija "
-#~ "definisana za dati proizvod. Ako je trenutni datum nizi od garancijskog, "
-#~ "svaka se operacija kao i naknadne intervencije stavljaju kao \" NE "
-#~ "FAKTURISATI\" kao podrazumevano. Upamtite da ovo mozete kasnije promeniti "
-#~ "rucno."
-
-#~ msgid "State"
-#~ msgstr "Stanje"
-
-#~ msgid "invoiced"
-#~ msgstr "Fakturisano"
-
-#, python-format
-#~ msgid "Active ID is not Found"
-#~ msgstr "Aktivni ID nije pronadjen"
-
-#~ msgid ""
-#~ " * The 'Draft' state is set automatically as draft when repair order in "
-#~ "draft state.                         \n"
-#~ "* The 'Confirmed' state is set automatically as confirm when repair order in "
-#~ "confirm state.                         \n"
-#~ "* The 'Done' state is set automatically when repair order is completed.      "
-#~ "                  \n"
-#~ "* The 'Cancelled' state is set automatically when user cancel repair order."
-#~ msgstr ""
-#~ " *'U Pripremi' stanje se postavlja automatski na pripremu kada je i zahtev "
-#~ "za popravku 'U Pripremi' .                                                   "
-#~ "   \n"
-#~ "*'Potvrdjeno' stanje se postavlja automatski na potvrdjeno kada je zahtev za "
-#~ "popravku ' Potvrdjeno'.                                                  \n"
-#~ "*'Zavrseno' stanje se postavlja automatski kada je zahtev za popravku "
-#~ "zavrsen.                                                   \n"
-#~ "*'Otkazano; stanje se postavlja automatski kada korisnik otkaze zahtev za "
-#~ "popravku."

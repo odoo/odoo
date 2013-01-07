@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-07-09 05:11+0000\n"
-"Last-Translator: Akira Hiyama <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:49+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:29+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_03
@@ -46,6 +46,11 @@ msgid "Working Hours to Open the Issue"
 msgstr "問題を開くための作業時間数"
 
 #. module: project_issue
+#: model:mail.message.subtype,description:project_issue.mt_issue_started
+msgid "Issue started"
+msgstr ""
+
+#. module: project_issue
 #: field:project.issue,date_open:0
 msgid "Opened"
 msgstr "開始済"
@@ -72,20 +77,26 @@ msgid "Unread Messages"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:560
-#, python-format
-msgid "<b>escalated</b>."
-msgstr ""
-
-#. module: project_issue
-#: model:ir.actions.server,name:project_issue.actions_server_project_issue_unread
-msgid "Issue: Mark unread"
-msgstr ""
+#: field:project.issue,company_id:0
+#: view:project.issue.report:0
+#: field:project.issue.report,company_id:0
+msgid "Company"
+msgstr "会社"
 
 #. module: project_issue
 #: field:project.issue,email_cc:0
 msgid "Watchers Emails"
 msgstr "傍観者のEメール"
+
+#. module: project_issue
+#: help:project.issue,kanban_state:0
+msgid ""
+"A Issue's kanban state indicates special situations affecting it:\n"
+" * Normal is the default situation\n"
+" * Blocked indicates something is preventing the progress of this issue\n"
+" * Ready for next stage indicates the issue is ready to be pulled to the "
+"next stage"
+msgstr ""
 
 #. module: project_issue
 #: help:project.issue,message_unread:0
@@ -103,7 +114,7 @@ msgid "Days to Open"
 msgstr "開始日"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:472
+#: code:addons/project_issue/project_issue.py:465
 #, python-format
 msgid ""
 "You cannot escalate this issue.\n"
@@ -145,6 +156,11 @@ msgstr "作成日からの日数"
 #: field:project.issue.report,task_id:0
 msgid "Task"
 msgstr "タスク"
+
+#. module: project_issue
+#: model:mail.message.subtype,name:project_issue.mt_project_issue_stage
+msgid "Issue Stage Changed"
+msgstr ""
 
 #. module: project_issue
 #: field:project.issue,message_ids:0
@@ -206,11 +222,6 @@ msgid "Color Index"
 msgstr "カラーインデックス"
 
 #. module: project_issue
-#: help:project.issue,progress:0
-msgid "Computed as: Time Spent / Total Time."
-msgstr "計算式：消費時間 / 合計時間"
-
-#. module: project_issue
 #: field:project.issue.report,working_hours_open:0
 msgid "Avg. Working Hours to Open"
 msgstr "開くための平均作業時間数"
@@ -266,12 +277,12 @@ msgid "Statistics"
 msgstr "統計"
 
 #. module: project_issue
-#: model:crm.case.categ,name:project_issue.bug_categ
-msgid "Maintenance"
-msgstr "メンテナンス"
+#: field:project.issue,kanban_state:0
+msgid "Kanban State"
+msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:547
+#: code:addons/project_issue/project_issue.py:360
 #, python-format
 msgid "Project issue <b>converted</b> to task."
 msgstr ""
@@ -327,7 +338,7 @@ msgid "Lowest"
 msgstr "最低"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:358
+#: code:addons/project_issue/project_issue.py:382
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -398,7 +409,7 @@ msgid "Issues Analysis"
 msgstr "問題分析"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:493
+#: code:addons/project_issue/project_issue.py:485
 #, python-format
 msgid "No Subject"
 msgstr ""
@@ -417,18 +428,12 @@ msgid "Contact"
 msgstr "連絡先"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:551
-#, python-format
-msgid "Project issue <b>created</b>."
-msgstr ""
-
-#. module: project_issue
 #: view:project.issue:0
 msgid "Delete"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:341
+#: code:addons/project_issue/project_issue.py:365
 #, python-format
 msgid "Tasks"
 msgstr "タスク"
@@ -439,9 +444,9 @@ msgid "# of Issues"
 msgstr "問題の数"
 
 #. module: project_issue
-#: model:ir.actions.server,name:project_issue.actions_server_project_issue_read
-msgid "Issue: Mark read"
-msgstr ""
+#: selection:project.issue.report,month:0
+msgid "September"
+msgstr "9月"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -494,16 +499,10 @@ msgid "Next Action"
 msgstr "次のアクション"
 
 #. module: project_issue
-#: field:project.issue,company_id:0
-#: view:project.issue.report:0
-#: field:project.issue.report,company_id:0
-msgid "Company"
-msgstr "会社"
-
-#. module: project_issue
 #: view:project.issue:0
-msgid "Category"
-msgstr "分類"
+#: selection:project.issue,kanban_state:0
+msgid "Blocked"
+msgstr ""
 
 #. module: project_issue
 #: field:project.issue,user_email:0
@@ -527,6 +526,11 @@ msgid ""
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
 msgstr "これらのEメールアドレスは送受信するEメールの CC 欄に追加されます。複数のEメールアドレスの間をコンマで区切って下さい。"
+
+#. module: project_issue
+#: model:crm.case.categ,name:project_issue.bug_categ
+msgid "Maintenance"
+msgstr "メンテナンス"
 
 #. module: project_issue
 #: selection:project.issue.report,state:0
@@ -575,6 +579,7 @@ msgid "August"
 msgstr "8月"
 
 #. module: project_issue
+#: selection:project.issue,kanban_state:0
 #: selection:project.issue,priority:0
 #: selection:project.issue.report,priority:0
 msgid "Normal"
@@ -637,15 +642,9 @@ msgid "November"
 msgstr "11月"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:472
+#: code:addons/project_issue/project_issue.py:465
 #, python-format
 msgid "Warning!"
-msgstr ""
-
-#. module: project_issue
-#: field:project.issue,message_comment_ids:0
-#: help:project.issue,message_comment_ids:0
-msgid "Comments and emails"
 msgstr ""
 
 #. module: project_issue
@@ -701,14 +700,14 @@ msgid "Configure"
 msgstr ""
 
 #. module: project_issue
+#: model:mail.message.subtype,description:project_issue.mt_issue_closed
+msgid "Issue closed"
+msgstr ""
+
+#. module: project_issue
 #: view:project.issue:0
 msgid "Current Features"
 msgstr "現在の機能"
-
-#. module: project_issue
-#: selection:project.issue.report,month:0
-msgid "September"
-msgstr "9月"
 
 #. module: project_issue
 #: view:project.issue.version:0
@@ -742,6 +741,7 @@ msgid "Issues"
 msgstr "問題"
 
 #. module: project_issue
+#: view:project.issue:0
 #: selection:project.issue,state:0
 msgid "In Progress"
 msgstr "進行中"
@@ -764,9 +764,14 @@ msgid "Creation Month"
 msgstr "作成月"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:557
-#, python-format
-msgid "<b>escalated</b> to <em>'%s'</em>."
+#: help:project.issue,progress:0
+msgid "Computed as: Time Spent / Total Time."
+msgstr "計算式：消費時間 / 合計時間"
+
+#. module: project_issue
+#: view:project.issue:0
+#: selection:project.issue,kanban_state:0
+msgid "Ready for next stage"
 msgstr ""
 
 #. module: project_issue
@@ -788,12 +793,6 @@ msgstr "月"
 #: view:project.project:0
 msgid "Issue"
 msgstr "問題"
-
-#. module: project_issue
-#: code:addons/project_issue/project_issue.py:540
-#, python-format
-msgid "Stage changed to <b>%s</b>."
-msgstr ""
 
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_02
@@ -826,15 +825,39 @@ msgid "project.config.settings"
 msgstr ""
 
 #. module: project_issue
+#: model:mail.message.subtype,name:project_issue.mt_issue_closed
+#: model:mail.message.subtype,name:project_issue.mt_project_issue_closed
+msgid "Issue Closed"
+msgstr ""
+
+#. module: project_issue
 #: view:project.issue.report:0
 #: field:project.issue.report,email:0
 msgid "# Emails"
 msgstr "Eメールの数"
 
 #. module: project_issue
+#: model:mail.message.subtype,name:project_issue.mt_issue_new
+#: model:mail.message.subtype,name:project_issue.mt_project_issue_new
+msgid "Issue Created"
+msgstr ""
+
+#. module: project_issue
+#: model:mail.message.subtype,name:project_issue.mt_issue_blocked
+#: model:mail.message.subtype,name:project_issue.mt_project_issue_blocked
+msgid "Issue Blocked"
+msgstr ""
+
+#. module: project_issue
 #: selection:project.issue.report,month:0
 msgid "February"
 msgstr "2月"
+
+#. module: project_issue
+#: model:mail.message.subtype,description:project_issue.mt_issue_stage
+#: model:mail.message.subtype,description:project_issue.mt_project_issue_stage
+msgid "Stage changed"
+msgstr ""
 
 #. module: project_issue
 #: view:project.issue:0
@@ -892,6 +915,11 @@ msgid "References"
 msgstr "参照"
 
 #. module: project_issue
+#: model:mail.message.subtype,description:project_issue.mt_issue_new
+msgid "Issue created"
+msgstr ""
+
+#. module: project_issue
 #: field:project.issue,working_hours_close:0
 msgid "Working Hours to Close the Issue"
 msgstr "問題を閉じるための作業時間数"
@@ -899,6 +927,11 @@ msgstr "問題を閉じるための作業時間数"
 #. module: project_issue
 #: field:project.issue,id:0
 msgid "ID"
+msgstr ""
+
+#. module: project_issue
+#: model:mail.message.subtype,description:project_issue.mt_issue_blocked
+msgid "Issue blocked"
 msgstr ""
 
 #. module: project_issue
@@ -915,6 +948,11 @@ msgstr "プロジェクトの問題を閉じるための日数"
 #: field:project.issue.report,working_hours_close:0
 msgid "Avg. Working Hours to Close"
 msgstr "閉じるための平均作業時間数"
+
+#. module: project_issue
+#: model:mail.message.subtype,name:project_issue.mt_issue_stage
+msgid "Stage Changed"
+msgstr ""
 
 #. module: project_issue
 #: selection:project.issue,priority:0
@@ -943,182 +981,8 @@ msgstr "年"
 msgid "Duration"
 msgstr "期間"
 
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "警告"
-
-#~ msgid "Previous Month"
-#~ msgstr "前月"
-
-#~ msgid "Error! project start-date must be lower then project end-date."
-#~ msgstr "エラー。プロジェクトの開始日はプロジェクトの終了日より前である必要があります。"
-
-#~ msgid "Change to Next Stage"
-#~ msgstr "次の工程へ変更"
-
-#~ msgid "Add Internal Note"
-#~ msgstr "内部注記を追加"
-
-#~ msgid "My Open Project issues"
-#~ msgstr "私の開いているプロジェクト問題"
-
-#~ msgid "Change Color"
-#~ msgstr "色の変更"
-
-#~ msgid "Issue / Partner"
-#~ msgstr "問題 / パートナ"
-
-#, python-format
-#~ msgid " (copy)"
-#~ msgstr " （コピー）"
-
-#~ msgid "Next"
-#~ msgstr "次へ"
-
-#~ msgid "Convert To Task"
-#~ msgstr "タスクに変換"
-
-#~ msgid "Send New Email"
-#~ msgstr "新規Eメール送信"
-
-#~ msgid "Reset to Draft"
-#~ msgstr "ドラフトに再設定"
-
-#~ msgid "History Information"
-#~ msgstr "履歴情報"
-
-#~ msgid "Project Issue Dashboard"
-#~ msgstr "プロジェクトの問題ダッシュボード"
-
-#~ msgid "Today"
-#~ msgstr "本日"
-
-#~ msgid "Project issues"
-#~ msgstr "プロジェクトの問題"
-
-#~ msgid "Change to Previous Stage"
-#~ msgstr "前工程へ変更"
-
-#~ msgid "My Open Project Issue"
-#~ msgstr "私の開いているプロジェクトの問題"
-
-#~ msgid ""
-#~ "You can use the issues tracker in OpenERP to handle bugs in the software "
-#~ "development project, to handle claims in after-sales services, etc. Define "
-#~ "here the different versions of your products on which you can work on issues."
-#~ msgstr ""
-#~ "ソフトウェア開発プロジェクトの中でバグを処理するため、アフターサービス二おけるクレーム処理などにOpenERPの問題トラッカーを使用することができます。あ"
-#~ "なたが問題に取り組む製品の異なるバージョンをここで定義します。"
-
-#~ msgid "Partner"
-#~ msgstr "パートナ"
-
-#~ msgid "Previous"
-#~ msgstr "前へ"
-
-#~ msgid "Escalate"
-#~ msgstr "拡大"
-
-#~ msgid "Reset to New"
-#~ msgstr "新規に再設定"
-
-#~ msgid "Reply"
-#~ msgstr "返信"
-
-#~ msgid "Contact Information"
-#~ msgstr "連絡先情報"
-
-#~ msgid "Global CC"
-#~ msgstr "グローバルCC"
-
-#~ msgid "Current Issues"
-#~ msgstr "現在の問題"
-
-#~ msgid "Stages"
-#~ msgstr "工程"
-
-#~ msgid "Issues Dashboard"
-#~ msgstr "問題ダッシュボード"
-
-#~ msgid "State"
-#~ msgstr "状態"
-
-#~ msgid "General"
-#~ msgstr "一般"
-
-#~ msgid "Issue Tracker Form"
-#~ msgstr "問題トラッカーフォーム"
-
-#~ msgid "Reply-To Email Address"
-#~ msgstr "返信先Eメールアドレス"
-
-#~ msgid "History"
-#~ msgstr "履歴"
-
-#~ msgid "Partner Contact"
-#~ msgstr "パートナ連絡先"
-
-#~ msgid "Issues By State"
-#~ msgstr "工程別問題"
-
-#~ msgid "Close"
-#~ msgstr "閉じる"
-
-#~ msgid "Pending Issues"
-#~ msgstr "保留中の問題"
-
-#~ msgid ""
-#~ "Issues such as system bugs, customer complaints, and material breakdowns are "
-#~ "collected here. You can define the stages assigned when solving the project "
-#~ "issue (analysis, development, done). With the mailgateway module, issues can "
-#~ "be integrated through an email address (example: support@mycompany.com)"
-#~ msgstr ""
-#~ "システムのバグ、顧客の苦情、製品の破損といった問題はここで集められます。プロジェクトの問題が解決される時、割り当てられた工程を定義できます（分析、開発、完"
-#~ "了）。メールゲートウェイモジュールを用いて、問題はEメールアドレスを通して統合することができます（例：support@mycompany.com）。"
-
-#~ msgid "Today's features"
-#~ msgstr "本日の機能"
-
-#, python-format
-#~ msgid "Issue '%s' has been closed."
-#~ msgstr "問題 %s は閉じられました。"
-
-#~ msgid "Month-1"
-#~ msgstr "月-1"
-
-#, python-format
-#~ msgid "Issue '%s' has been opened."
-#~ msgstr "問題 %s は既に開かれています。"
-
-#~ msgid "Edit"
-#~ msgstr "編集"
-
-#~ msgid "Current Year"
-#~ msgstr "今年"
-
-#, python-format
-#~ msgid "No Title"
-#~ msgstr "タイトルなし"
-
-#~ msgid "Issues By Stage"
-#~ msgstr "工程別問題"
-
-#~ msgid "My Open Issues by Creation Date"
-#~ msgstr "作成日別の私の開いている問題"
-
-#~ msgid "Communication & History"
-#~ msgstr "通信と履歴"
-
-#~ msgid ""
-#~ "The state is set to 'Draft', when a case is created.                         "
-#~ "         \n"
-#~ "If the case is in progress the state is set to 'Open'.                       "
-#~ "           \n"
-#~ "When the case is over, the state is set to 'Done'.                           "
-#~ "       \n"
-#~ "If the case needs to be reviewed then the state is set to 'Pending'."
-#~ msgstr ""
-#~ "案件が作成されると、状態はドラフトにセットされます。\n"
-#~ "案件が進行中になると、状態は開くにセットされます。\n"
-#~ "案件が終了すると、状態は完了にセットされます。\n"
-#~ "案件のレビューが必要な場合、状態は保留中にセットされます。"
+#. module: project_issue
+#: model:mail.message.subtype,name:project_issue.mt_issue_started
+#: model:mail.message.subtype,name:project_issue.mt_project_issue_started
+msgid "Issue Started"
+msgstr ""

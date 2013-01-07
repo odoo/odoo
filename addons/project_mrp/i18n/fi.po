@@ -1,21 +1,21 @@
 # Finnish translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:04+0000\n"
-"PO-Revision-Date: 2011-06-22 09:30+0000\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:36+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:30+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_procuretasktask0
@@ -28,9 +28,14 @@ msgid "Product type is service, then its creates the task."
 msgstr "Tuotteen tyyppi on palvelu, luodaan tehtävä."
 
 #. module: project_mrp
-#: code:addons/project_mrp/project_procurement.py:93
+#: code:addons/project_mrp/project_procurement.py:92
 #, python-format
 msgid "Task created"
+msgstr ""
+
+#. module: project_mrp
+#: model:process.node,note:project_mrp.process_node_saleordertask0
+msgid "In case you sell services on sales order"
 msgstr ""
 
 #. module: project_mrp
@@ -39,14 +44,14 @@ msgid "A task is created to provide the service."
 msgstr "Tehtävä on luotu tuottamaan palvelu"
 
 #. module: project_mrp
-#: field:project.task,sale_line_id:0
-msgid "Sale Order Line"
-msgstr "Myyntitilausrivi"
-
-#. module: project_mrp
 #: model:ir.model,name:project_mrp.model_product_product
 msgid "Product"
 msgstr "Tuote"
+
+#. module: project_mrp
+#: model:process.node,name:project_mrp.process_node_saleordertask0
+msgid "Sales Order Task"
+msgstr ""
 
 #. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_procuretask0
@@ -64,12 +69,27 @@ msgid "Procurement Task"
 msgstr "Hankintatehtävä"
 
 #. module: project_mrp
+#: field:procurement.order,sale_line_id:0
+msgid "Sales order line"
+msgstr ""
+
+#. module: project_mrp
 #: model:ir.model,name:project_mrp.model_project_task
 #: model:process.node,name:project_mrp.process_node_mrptask0
 #: model:process.node,name:project_mrp.process_node_procuretasktask0
 #: field:procurement.order,task_id:0
 msgid "Task"
 msgstr "Tehtävä"
+
+#. module: project_mrp
+#: view:product.product:0
+msgid ""
+"will be \n"
+"                        created to follow up the job to do. This task will "
+"appear\n"
+"                        in the project related to the contract of the sales "
+"order."
+msgstr ""
 
 #. module: project_mrp
 #: view:product.product:0
@@ -88,27 +108,12 @@ msgid "Procurement"
 msgstr "Hankinta"
 
 #. module: project_mrp
-#: field:procurement.order,sale_line_id:0
-msgid "Sale order line"
-msgstr "Myyntitilausrivi"
-
-#. module: project_mrp
 #: view:product.product:0
 msgid "False"
 msgstr ""
 
 #. module: project_mrp
-#: view:product.product:0
-msgid ""
-"will be \n"
-"                        created to follow up the job to do. This task will "
-"appear\n"
-"                        in the project related to the contract of the sale "
-"order."
-msgstr ""
-
-#. module: project_mrp
-#: code:addons/project_mrp/project_procurement.py:87
+#: code:addons/project_mrp/project_procurement.py:86
 #, python-format
 msgid "Task created."
 msgstr ""
@@ -119,9 +124,9 @@ msgid "If procurement method is Make to order and supply method is produce"
 msgstr "Jos hankintametodi on tee tilaukseen ja toimitusmetodi on tuota"
 
 #. module: project_mrp
-#: model:process.node,name:project_mrp.process_node_saleordertask0
-msgid "Sale Order Task"
-msgstr "Myyntitilaustehtävä"
+#: field:project.task,sale_line_id:0
+msgid "Sales Order Line"
+msgstr ""
 
 #. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_createtask0
@@ -139,27 +144,6 @@ msgid "Order Line"
 msgstr ""
 
 #. module: project_mrp
-#: model:process.node,note:project_mrp.process_node_saleordertask0
-msgid "In case you sell services on sale order"
-msgstr "tapauksessa jossa myyt palveluja myyntitilauksella"
-
-#. module: project_mrp
 #: view:product.product:0
 msgid "a task"
 msgstr ""
-
-#~ msgid "Error ! Task end-date must be greater then task start-date"
-#~ msgstr ""
-#~ "Virhe! Tehtävän lopetuspäivän tulee olla myöhäisempi kuin aloituspäivä"
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "Virhe: Väärä EAN-koodi"
-
-#~ msgid "Procurement and Project Management integration"
-#~ msgstr "Hankinnan ja projektinhallinnan integraatio"
-
-#~ msgid "Error ! You cannot create recursive tasks."
-#~ msgstr "Virhe ! Et voi luoda rekursiivisiä tehtäviä."
-
-#~ msgid "Order Reference must be unique per Company!"
-#~ msgstr "Tilausviitteen tulee olla uniikki yrityskohtaisesti!"

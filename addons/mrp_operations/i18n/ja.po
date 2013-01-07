@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-06-08 02:54+0000\n"
-"Last-Translator: Akira Hiyama <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:40+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:23+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
@@ -26,7 +26,7 @@ msgid "Work Orders"
 msgstr "作業オーダー"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:527
+#: code:addons/mrp_operations/mrp_operations.py:484
 #, python-format
 msgid "Operation is already finished!"
 msgstr "操作は既に終了しています。"
@@ -39,13 +39,6 @@ msgstr "操作のキャンセル"
 #. module: mrp_operations
 #: model:ir.model,name:mrp_operations.model_mrp_operations_operation_code
 msgid "mrp_operations.operation.code"
-msgstr ""
-
-#. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:246
-#, python-format
-msgid ""
-"Work order has been <b>cancelled</b> for production order <em>%s</em>."
 msgstr ""
 
 #. module: mrp_operations
@@ -97,12 +90,6 @@ msgid "Set to Draft"
 msgstr "ドラフトに設定"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:238
-#, python-format
-msgid "Work order is <b>pending</b> for production order <em>%s</em>."
-msgstr ""
-
-#. module: mrp_operations
 #: field:mrp.production,allow_reorder:0
 msgid "Free Serialisation"
 msgstr "自由な直列化"
@@ -149,11 +136,11 @@ msgid "The work orders are created on the basis of the production order."
 msgstr "作業オーダーは製造オーダーを元にして作成されます。"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:122
-#: code:addons/mrp_operations/mrp_operations.py:508
-#: code:addons/mrp_operations/mrp_operations.py:512
-#: code:addons/mrp_operations/mrp_operations.py:524
-#: code:addons/mrp_operations/mrp_operations.py:527
+#: code:addons/mrp_operations/mrp_operations.py:134
+#: code:addons/mrp_operations/mrp_operations.py:465
+#: code:addons/mrp_operations/mrp_operations.py:469
+#: code:addons/mrp_operations/mrp_operations.py:481
+#: code:addons/mrp_operations/mrp_operations.py:484
 #, python-format
 msgid "Error!"
 msgstr "エラー"
@@ -166,7 +153,7 @@ msgid "Cancelled"
 msgstr "キャンセル済"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:520
+#: code:addons/mrp_operations/mrp_operations.py:477
 #, python-format
 msgid "Operation is Already Cancelled!"
 msgstr "操作は既にキャンセル済です。"
@@ -183,13 +170,13 @@ msgid "Stock Move"
 msgstr "在庫移動"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:524
+#: code:addons/mrp_operations/mrp_operations.py:481
 #, python-format
 msgid "No operation to cancel."
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:517
+#: code:addons/mrp_operations/mrp_operations.py:474
 #, python-format
 msgid ""
 "In order to Finish the operation, it must be in the Start or Resume state!"
@@ -207,6 +194,11 @@ msgstr "行数"
 #: selection:mrp.workorder,state:0
 msgid "Draft"
 msgstr "ドラフト"
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:0
+msgid "Actual Production Date"
+msgstr ""
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -260,7 +252,7 @@ msgid "Product Qty"
 msgstr "製品数量"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:122
+#: code:addons/mrp_operations/mrp_operations.py:134
 #, python-format
 msgid "Manufacturing order cannot start in state \"%s\"!"
 msgstr "製造オーダーは %s 状態であるため開始できません。"
@@ -347,12 +339,6 @@ msgid "December"
 msgstr "12月"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:230
-#, python-format
-msgid "Work order has been <b>done</b> for production order <em>%s</em>."
-msgstr ""
-
-#. module: mrp_operations
 #: view:mrp.workorder:0
 #: field:mrp.workorder,month:0
 msgid "Month"
@@ -403,14 +389,14 @@ msgid "In Progress"
 msgstr "進行中"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:508
+#: code:addons/mrp_operations/mrp_operations.py:465
 #, python-format
 msgid ""
 "In order to Pause the operation, it must be in the Start or Resume state!"
 msgstr "操作を一時停止するには、開始または再開状態でなければなりません。"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:512
+#: code:addons/mrp_operations/mrp_operations.py:469
 #, python-format
 msgid "In order to Resume the operation, it must be in the Pause state!"
 msgstr "操作を再開するには、一時停止状態でなければなりません。"
@@ -453,7 +439,7 @@ msgid "Production Operation Code"
 msgstr "製造操作コード"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:504
+#: code:addons/mrp_operations/mrp_operations.py:461
 #, python-format
 msgid ""
 "Operation has already started! You can either Pause/Finish/Cancel the "
@@ -543,7 +529,7 @@ msgid "Finish the operation."
 msgstr "操作の終了"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:497
+#: code:addons/mrp_operations/mrp_operations.py:454
 #, python-format
 msgid "Operation is not started yet !"
 msgstr "操作はまだ開始されていません。"
@@ -554,10 +540,10 @@ msgid "Information from the production order."
 msgstr "製造オーダーからの情報"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:497
-#: code:addons/mrp_operations/mrp_operations.py:504
-#: code:addons/mrp_operations/mrp_operations.py:517
-#: code:addons/mrp_operations/mrp_operations.py:520
+#: code:addons/mrp_operations/mrp_operations.py:454
+#: code:addons/mrp_operations/mrp_operations.py:461
+#: code:addons/mrp_operations/mrp_operations.py:474
+#: code:addons/mrp_operations/mrp_operations.py:477
 #, python-format
 msgid "Sorry!"
 msgstr "残念です。"
@@ -625,12 +611,6 @@ msgid ""
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:214
-#, python-format
-msgid "Work order has been <b>created</b> for production order <em>%s</em>."
-msgstr ""
-
-#. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_startoperation0
 msgid "Start Operation"
 msgstr "操作を開始"
@@ -693,11 +673,6 @@ msgstr "作業オーダーの検索"
 #: model:process.node,name:mrp_operations.process_node_workorder0
 msgid "Work Center"
 msgstr "作業センタ"
-
-#. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-msgid "Real"
-msgstr "実物"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_planned:0
@@ -783,12 +758,6 @@ msgid "#Line Orders"
 msgstr "オーダー行数"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:222
-#, python-format
-msgid "Work order has been <b>started</b> for production order <em>%s</em>."
-msgstr ""
-
-#. module: mrp_operations
 #: view:mrp.production:0
 msgid "Start Working"
 msgstr "作業開始"
@@ -815,90 +784,3 @@ msgstr "年"
 #: view:mrp.production.workcenter.line:0
 msgid "Duration"
 msgstr "期間"
-
-#~ msgid "("
-#~ msgstr "（"
-
-#, python-format
-#~ msgid "There is no Operation to be cancelled!"
-#~ msgstr "キャンセルされる操作がありません。"
-
-#~ msgid ""
-#~ "* When a work order is created it is set in 'Draft' state.\n"
-#~ "* When user sets work order in start mode that time it will be set in 'In "
-#~ "Progress' state.\n"
-#~ "* When work order is in running mode, during that time if user wants to stop "
-#~ "or to make changes in order then can set in 'Pending' state.\n"
-#~ "* When the user cancels the work order it will be set in 'Canceled' state.\n"
-#~ "* When order is completely processed that time it is set in 'Finished' state."
-#~ msgstr ""
-#~ "・ 作業オーダーが作成されると、それはドラフト状態に設定されます。\n"
-#~ "・ ユーザが作業オーダーに開始モードを設定すると、それは進行中に設定されます。\n"
-#~ "・ 作業オーダーが実行中モードになった時にユーザが停止やオーダーを変更した場合、保留中状態に設定されます。\n"
-#~ "・ ユーザが作業オーダーをキャンセルすると、キャンセル済状態に設定されます。\n"
-#~ "・ オーダーが完全に処理されると、完了状態に設定されます。"
-
-#~ msgid "Month -1"
-#~ msgstr "月 -1"
-
-#~ msgid "State"
-#~ msgstr "状態"
-
-#~ msgid "UOM"
-#~ msgstr "単位"
-
-#~ msgid ""
-#~ "To manufacture or assemble products, and use raw materials and finished "
-#~ "products you must also handle manufacturing operations. Manufacturing "
-#~ "operations are often called Work Orders. The various operations will have "
-#~ "different impacts on the costs of manufacturing and planning depending on "
-#~ "the available workload."
-#~ msgstr ""
-#~ "製品を製造または組み立て、原材料を使って製品を完成させるために、製造操作を処理しなくてはなりません。製造操作はよく、作業オーダーと呼ばれます。多種な操作は"
-#~ "製造と使用可能な作業負荷に応じた計画のコストに異なる影響を持ちます。"
-
-#~ msgid "You can not move products from or to a location of the type view."
-#~ msgstr "タイプビューの場所から、あるいは場所へは製品を動かすことはできません。"
-
-#~ msgid "Work orders during last month"
-#~ msgstr "先月の作業オーダー"
-
-#~ msgid "Order quantity cannot be negative or zero!"
-#~ msgstr "オーダー数量は負または0にはできません。"
-
-#, python-format
-#~ msgid ""
-#~ "Operation has already started !Youcan either Pause/Finish/Cancel the "
-#~ "operation"
-#~ msgstr "操作は既に開始されました。一時停止 / 完了 / キャンセル操作ができます。"
-
-#~ msgid ")"
-#~ msgstr "）"
-
-#~ msgid "You try to assign a lot which is not from the same product"
-#~ msgstr "違う製品のロットを割り当てることはできません。"
-
-#~ msgid "Reference must be unique per Company!"
-#~ msgstr "参照は会社ごとに固有でなければいけません。"
-
-#~ msgid "Work orders made during current year"
-#~ msgstr "現在年中になされた作業オーダー"
-
-#~ msgid "Work orders made during current month"
-#~ msgstr "現在月中になされた作業オーダー"
-
-#~ msgid "Production State"
-#~ msgstr "製造状態"
-
-#~ msgid ""
-#~ "Work Orders is the list of operations to be performed for each manufacturing "
-#~ "order. Once you start the first work order of a manufacturing order, the "
-#~ "manufacturing order is automatically marked as started. Once you finish the "
-#~ "latest operation of a manufacturing order, the MO is automatically done and "
-#~ "the related products are produced."
-#~ msgstr ""
-#~ "作業オーダーは各製造オーダーを実行するための操作のリストです。製造オーダーの最初の作業オーダーを開始すると、製造オーダーは自動的に開始したとマークされます"
-#~ "。製造オーダーの最後の操作が終わると、製造オーダーは自動的に完了となり関連製品は製造されます。"
-
-#~ msgid "You must assign a production lot for this product"
-#~ msgstr "この製品に製造ロットを割り当てる必要があります。"

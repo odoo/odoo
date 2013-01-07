@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:04+0000\n"
-"PO-Revision-Date: 2012-06-20 14:50+0000\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:51+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:30+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: project_long_term
 #: help:project.phase,constraint_date_end:0
@@ -34,6 +34,14 @@ msgstr "Pågående"
 #: view:project.project:0
 msgid "Phases"
 msgstr "Faser"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
+#: model:ir.ui.menu,name:project_long_term.menu_resouce_allocation
+#: view:project.phase:0
+#: view:project.user.allocation:0
+msgid "Team Planning"
+msgstr ""
 
 #. module: project_long_term
 #: field:project.phase,user_ids:0
@@ -144,7 +152,7 @@ msgid "In Progress Phases"
 msgstr "I aktiva faser"
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:141
+#: code:addons/project_long_term/project_long_term.py:140
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -154,12 +162,6 @@ msgstr ""
 #, python-format
 msgid "Please specify a project to schedule."
 msgstr "Vänlgen ange ett projekt att schemalägga."
-
-#. module: project_long_term
-#: view:project.compute.phases:0
-#: view:project.compute.tasks:0
-msgid "or"
-msgstr ""
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -198,11 +200,6 @@ msgstr "Sekvens"
 #: help:account.analytic.account,use_phases:0
 msgid "Check this field if you plan to use phase-based scheduling"
 msgstr ""
-
-#. module: project_long_term
-#: help:project.user.allocation,date_start:0
-msgid "Starting Date"
-msgstr "Startdatum"
 
 #. module: project_long_term
 #: help:project.phase,state:0
@@ -252,10 +249,9 @@ msgid "Pending Phases"
 msgstr "Vilande faser"
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:126
-#, python-format
-msgid "Day"
-msgstr "Dag"
+#: help:project.user.allocation,date_start:0
+msgid "Starting Date"
+msgstr "Startdatum"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -513,59 +509,7 @@ msgid "Name"
 msgstr "Namn"
 
 #. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
-#: model:ir.ui.menu,name:project_long_term.menu_resouce_allocation
-#: view:project.phase:0
-#: view:project.user.allocation:0
-msgid "Planning of Users"
-msgstr "Personalplanering"
-
-#~ msgid "Schedule"
-#~ msgstr "Schemalägg"
-
-#~ msgid "Error! project start-date must be lower then project end-date."
-#~ msgstr "Fel! projektets startdatum måste föregå projekets slutdatum."
-
-#~ msgid "Error ! You cannot create recursive tasks."
-#~ msgstr "Fel ! Du kan inte skapa rekursiva aktiviteter"
-
-#~ msgid "UoM (Unit of Measure) is the unit of measurement for Duration"
-#~ msgstr "Enhet (mätenhet) är enheter för att beskriva varaktigheten"
-
-#~ msgid "Error! You cannot assign escalation to the same project!"
-#~ msgstr "Fel! Du kan inte eskalera till samma projekt"
-
-#, python-format
-#~ msgid " (copy)"
-#~ msgstr " (kopia)"
-
-#~ msgid "_Cancel"
-#~ msgstr "A_vbryt"
-
-#~ msgid "State"
-#~ msgstr "Status"
-
-#~ msgid "Duration UoM"
-#~ msgstr "Varaktighetsenhet"
-
-#~ msgid ""
-#~ "The ressources on the project can be computed automatically by the scheduler"
-#~ msgstr "Projektresurserna kan automatiskt beräknas av schemaläggaren"
-
-#~ msgid "Error ! Task end-date must be greater then task start-date"
-#~ msgstr "Fel ! Aktivitetens slutdatum måste komma efter startdatumet"
-
-#~ msgid ""
-#~ "If the phase is created the state 'Draft'.\n"
-#~ " If the phase is started, the state becomes 'In Progress'.\n"
-#~ " If review is needed the phase is in 'Pending' state.                        "
-#~ "          \n"
-#~ " If the phase is over, the states is set to 'Done'."
-#~ msgstr ""
-#~ "Om fasen är ny är status 'Preliminär'.\n"
-#~ " Om fasen är startad övergår status till 'Pågående'.\n"
-#~ " Om granskning är nödvändig är status 'vilande'.\n"
-#~ " Om fasen är genomförd, sätts status till 'Klar'"
-
-#~ msgid "Displaying settings"
-#~ msgstr "Vyinställningar"
+#: view:project.compute.phases:0
+#: view:project.compute.tasks:0
+msgid "or"
+msgstr ""

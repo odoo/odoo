@@ -1,22 +1,21 @@
-# Spanish translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Spanish (Costa Rica) translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-02-15 19:37+0000\n"
-"Last-Translator: Freddy Gonzalez <freddy.gonzalez.contreras@gmail.com>\n"
-"Language-Team: Spanish <es@li.org>\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Spanish (Costa Rica) <es_CR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:49+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
-"Language: es\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:10+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: crm_claim
 #: help:crm.claim.stage,fold:0
@@ -102,15 +101,6 @@ msgstr "Nº reclamación"
 #: field:crm.claim.stage,name:0
 msgid "Stage Name"
 msgstr ""
-
-#. module: crm_claim
-#: model:ir.actions.act_window,help:crm_claim.action_report_crm_claim
-msgid ""
-"Have a general overview of all claims processed in the system by sorting "
-"them with specific criteria."
-msgstr ""
-"Obtenga una visión global de todas las reclamaciones procesadas en el "
-"sistema ordenándolas con criterios específicos."
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -221,11 +211,6 @@ msgid "Preventive Action"
 msgstr "Acción preventiva"
 
 #. module: crm_claim
-#: field:crm.claim.report,delay_expected:0
-msgid "Overpassed Deadline"
-msgstr "Fecha límite excedida"
-
-#. module: crm_claim
 #: field:crm.claim.report,section_id:0
 msgid "Section"
 msgstr "Sección"
@@ -313,10 +298,13 @@ msgid "Next Action Date"
 msgstr "Fecha  de la próxima acción"
 
 #. module: crm_claim
-#: code:addons/crm_claim/crm_claim.py:243
-#, python-format
-msgid "Claim has been <b>created</b>."
+#: model:ir.actions.act_window,help:crm_claim.action_report_crm_claim
+msgid ""
+"Have a general overview of all claims processed in the system by sorting "
+"them with specific criteria."
 msgstr ""
+"Obtenga una visión global de todas las reclamaciones procesadas en el "
+"sistema ordenándolas con criterios específicos."
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -353,7 +341,7 @@ msgid "Destination email for email gateway."
 msgstr ""
 
 #. module: crm_claim
-#: code:addons/crm_claim/crm_claim.py:199
+#: code:addons/crm_claim/crm_claim.py:194
 #, python-format
 msgid "No Subject"
 msgstr ""
@@ -611,12 +599,6 @@ msgid "Extended Filters..."
 msgstr "Filtros extendidos..."
 
 #. module: crm_claim
-#: field:crm.claim,message_comment_ids:0
-#: help:crm.claim,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
-
-#. module: crm_claim
 #: view:crm.claim:0
 msgid "Closure"
 msgstr "Cierre"
@@ -749,10 +731,9 @@ msgid "Unassigned Claims"
 msgstr "Reclamos no asignados"
 
 #. module: crm_claim
-#: code:addons/crm_claim/crm_claim.py:247
-#, python-format
-msgid "Claim has been <b>refused</b>."
-msgstr ""
+#: field:crm.claim.report,delay_expected:0
+msgid "Overpassed Deadline"
+msgstr "Fecha límite excedida"
 
 #. module: crm_claim
 #: field:crm.claim,cause:0
@@ -814,12 +795,6 @@ msgstr ""
 #: field:crm.claim.report,email:0
 msgid "# Emails"
 msgstr "Nº de emails"
-
-#. module: crm_claim
-#: code:addons/crm_claim/crm_claim.py:253
-#, python-format
-msgid "Stage changed to <b>%s</b>."
-msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -915,168 +890,3 @@ msgstr ""
 #: help:crm.claim.stage,case_refused:0
 msgid "Refused stages are specific stages for done."
 msgstr ""
-
-#~ msgid ""
-#~ "You can create claim stages to categorize the status of every claim entered "
-#~ "in the system. The stages define all the steps required for the resolution "
-#~ "of a claim."
-#~ msgstr ""
-#~ "Puede crear etapas para categorizar los estados de cada reclamación "
-#~ "introducida en el sistema. Las etapas definen todos los pasos necesarios "
-#~ "para la resolución de una reclamación."
-
-#~ msgid "Add Internal Note"
-#~ msgstr "Añadir nota interna"
-
-#~ msgid ""
-#~ "Sales team to which Case belongs to.Define Responsible user and Email "
-#~ "account for mail gateway."
-#~ msgstr ""
-#~ "Equipo de ventas al cual pertenece el caso. Define el usuario responsable y "
-#~ "la cuenta de email para la pasarela de correo."
-
-#~ msgid "Reset to Draft"
-#~ msgstr "Cambiar a borrador"
-
-#~ msgid "Send New Email"
-#~ msgstr "Enviar nuevo email"
-
-#~ msgid "Won't fix"
-#~ msgstr "No se corregirá"
-
-#~ msgid "History Information"
-#~ msgstr "Histórico información"
-
-#~ msgid "Contact"
-#~ msgstr "Contacto"
-
-#~ msgid "Accepted as Claim"
-#~ msgstr "Aceptado como reclamación"
-
-#~ msgid "Salesman"
-#~ msgstr "Comercial"
-
-#~ msgid "Reply"
-#~ msgstr "Responder"
-
-#~ msgid "Communication & History"
-#~ msgstr "Comunicación e Historial"
-
-#~ msgid "Global CC"
-#~ msgstr "CC global"
-
-#~ msgid "These people will receive email."
-#~ msgstr "Estas personas recibirán un email."
-
-#~ msgid "History"
-#~ msgstr "Historial"
-
-#~ msgid "Partner Contact"
-#~ msgstr "Contacto empresa"
-
-#~ msgid "State"
-#~ msgstr "Estado"
-
-#~ msgid "Close"
-#~ msgstr "Cerrar"
-
-#~ msgid "Actions Done"
-#~ msgstr "Acciones realizadas"
-
-#~ msgid "Actions Defined"
-#~ msgstr "Acciones definidas"
-
-#~ msgid ""
-#~ "The state is set to 'Draft', when a case is created.                         "
-#~ "         \n"
-#~ "If the case is in progress the state is set to 'Open'.                       "
-#~ "           \n"
-#~ "When the case is over, the state is set to 'Done'.                           "
-#~ "       \n"
-#~ "If the case needs to be reviewed then the state is set to 'Pending'."
-#~ msgstr ""
-#~ "El estado se establece a 'Borrador', cuando se crea un caso.                 "
-#~ "                 \n"
-#~ "Si el caso está en progreso el estado se establece a 'Abierto'.              "
-#~ "                    \n"
-#~ "Cuando el caso se cierra, el estado se establece a 'Realizado'.              "
-#~ "                    \n"
-#~ "Si el caso necesita ser revisado entonces el estado se establece a "
-#~ "'Pendiente'."
-
-#~ msgid ""
-#~ "Create claim categories to better manage and classify your claims. Some "
-#~ "example of claims can be: preventive action, corrective action."
-#~ msgstr ""
-#~ "Cree categorías de reclamaciones para gestionar y clasificar mejor sus "
-#~ "reclamaciones. Algunos ejemplos de reclamaciones son: acción preventiva, "
-#~ "acción correctiva."
-
-#~ msgid "   Month   "
-#~ msgstr "   Mes   "
-
-#~ msgid "  Year  "
-#~ msgstr "  Año  "
-
-#~ msgid "Details"
-#~ msgstr "Detalles"
-
-#~ msgid "Report a Claim"
-#~ msgstr "Introducir reclamación"
-
-#~ msgid "Current"
-#~ msgstr "Actual"
-
-#~ msgid "    Month-1    "
-#~ msgstr "    Mes-1    "
-
-#~ msgid "Customer & Supplier Relationship Management"
-#~ msgstr "Gestión de las relaciones con los clientes y proveedores"
-
-#~ msgid "Attachments"
-#~ msgstr "Documentos adjuntos"
-
-#~ msgid ""
-#~ "\n"
-#~ "This modules allows you to track your customers/suppliers claims and "
-#~ "flames.\n"
-#~ "It is fully integrated with the email gateway so that you can create\n"
-#~ "automatically new claims based on incoming emails.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Este módulo le permite realizar un seguimiento de las reclamaciones y "
-#~ "urgencias de sus clientes/proveedores.\n"
-#~ "Está totalmente integrado con la pasarela de correo electrónico para que "
-#~ "pueda crear\n"
-#~ "automáticamente las nuevas reclamaciones a partir de los correos "
-#~ "electrónicos entrantes.\n"
-#~ "    "
-
-#~ msgid "Stage of case"
-#~ msgstr "Etapa del caso"
-
-#~ msgid "Probability"
-#~ msgstr "Probabilidad"
-
-#, python-format
-#~ msgid "The claim '%s' has been opened."
-#~ msgstr "La afirmación de '%s' se ha abierto."
-
-#~ msgid "All pending Claims"
-#~ msgstr "Todos los reclamos pendientes"
-
-#~ msgid "Month-1"
-#~ msgstr "Mes-1"
-
-#~ msgid "Claims created in current year"
-#~ msgstr "Reclamaciones creado en el año en curso"
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "¡Error! No puede crear miembros asociados recursivamente."
-
-#~ msgid "Claims created in current month"
-#~ msgstr "Reclamos creados en el mes actual"
-
-#~ msgid "Claims created in last month"
-#~ msgstr "Reclamos creados en el último mes"
