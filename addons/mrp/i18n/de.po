@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-01-07 00:43+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 07:22+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-01-07 05:44+0000\n"
+"X-Generator: Launchpad (build 16402)\n"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -112,7 +113,7 @@ msgstr "Für Lager- und Verbrauchsprodukte"
 #: help:mrp.production,message_unread:0
 #: help:mrp.production.workcenter.line,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Als zu erledigen markieren"
 
 #. module: mrp
 #: help:mrp.routing.workcenter,cycle_nbr:0
@@ -211,7 +212,7 @@ msgstr "Für eingekauftes Material"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
 msgid "Order Planning"
-msgstr ""
+msgstr "Auftragsplanung"
 
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_operations:0
@@ -304,6 +305,8 @@ msgid ""
 "The selection of the right Bill of Material to use will depend on the "
 "properties specified on the sales order and the Bill of Material."
 msgstr ""
+"Die Auswahl der korrekten Stückliste hängt ab von den Merkmalen, die beim "
+"Verkaufsauftrag spezifiziert werden."
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -312,6 +315,9 @@ msgid ""
 "                                will contain the raw materials, instead of "
 "the finished product."
 msgstr ""
+"Bei der Auftragsverarbeitung für dieses Produkt, enthält der Lieferauftrag\n"
+"                            die Produktkomponenten, anstelle des fertigen "
+"Produkts."
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -525,6 +531,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klicken Sie zur Erstellung eines neuen Merkmals.\n"
+"              </p><p>\n"
+"                Die Merkmale werden in OpenERP genutzt, um die richtige "
+"Stückliste auszuwählen,\n"
+"                wenn es verschiedene Möglichkeiten für die Fertigung eines "
+"Produkts gibt. Sie können\n"
+"                durch Merkmale verschiedene Stücklisten für ein einziges "
+"Produkt haben. Wenn ein Verkäufer\n"
+"                einen Auftrag erfasst, kann Bezug auf die Merkmale genommen "
+"werden, wodurch die korrekte\n"
+"                Stückliste referenziert wird. \n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: view:mrp.production:0
@@ -581,7 +601,7 @@ msgstr "Kosten des Arbeitsplatzes je Zyklus"
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_bom0
 msgid "Manufacturing decomposition"
-msgstr "Fertigungsreste"
+msgstr "Stücklisten Auflösung"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_serviceproduct1
@@ -943,7 +963,7 @@ msgstr "Markieren als gestartet"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Partial"
-msgstr "Teilweise"
+msgstr "Teillieferung"
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -1469,7 +1489,7 @@ msgstr "Priorität"
 #: model:ir.model,name:mrp.model_stock_picking
 #: field:mrp.production,picking_id:0
 msgid "Picking List"
-msgstr "Lieferauftrag"
+msgstr "Pickliste"
 
 #. module: mrp
 #: help:mrp.production,bom_id:0
@@ -1666,7 +1686,7 @@ msgstr "Sachkonto"
 #. module: mrp
 #: report:mrp.production.order:0
 msgid "SO Number"
-msgstr "Verkaufsauftrag"
+msgstr "Auftrag Nummer"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:505
@@ -1740,6 +1760,24 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klicken Sie zur Erstellung einer Merkmalsgruppe.\n"
+"              </p><p>\n"
+"                Definieren Sie spezifische Merkmalsgruppen, die zu "
+"Stücklisten und Aufträgen\n"
+"                zugewiesen werden können. Die Merkmale ermöglichen die "
+"Verwendung der korrekten\n"
+"                Stückliste aufgrund der Auswahl bei der Auftragseingabe.\n"
+"              </p><p>\n"
+"                Zum Beispiel haben Sie ein Gruppe \"Garantie\", mit "
+"verschiedenen Merkmale:\n"
+"                1 Jahr Garantie, 3 Jahre Garantie. Abhängig von der "
+"Merkmalsauswahl beim\n"
+"                Verkaufsauftrag plant OpenERP die Fertigungsdurchführung auf "
+"Basis der passenden\n"
+"                Stückliste.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: field:mrp.workcenter,capacity_per_cycle:0

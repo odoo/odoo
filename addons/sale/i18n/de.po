@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-01-06 23:47+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 07:32+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-01-07 05:44+0000\n"
+"X-Generator: Launchpad (build 16402)\n"
 
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
@@ -30,7 +31,7 @@ msgstr "Bestätige Angebot"
 #. module: sale
 #: view:board.board:0
 msgid "Sales Dashboard"
-msgstr "Pinnwand Verkauf"
+msgstr "Anzeigetafel Verkauf"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:92
@@ -54,7 +55,7 @@ msgstr "Bestätigung am"
 #: view:sale.order.line:0
 #: view:sale.report:0
 msgid "Group By..."
-msgstr "Gruppierung..."
+msgstr "Gruppierung ..."
 
 #. module: sale
 #: field:sale.order.line,address_allotment_id:0
@@ -165,7 +166,7 @@ msgstr "Abzurechnende Auslieferungen"
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
 msgid "Quotation confirmed"
-msgstr ""
+msgstr "Auftrag bestätigt"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -252,12 +253,12 @@ msgstr "Der Wert einer Anzahlung muss positiv sein"
 #. module: sale
 #: help:sale.config.settings,group_discount_per_so_line:0
 msgid "Allows you to apply some discount per sales order line."
-msgstr ""
+msgstr "Ermöglicht die Vergabe von Rabatt je Auftragsposition"
 
 #. module: sale
 #: view:sale.order.line:0
 msgid "Sales Order Lines that are in 'done' state"
-msgstr ""
+msgstr "Auftragspositionen im Status 'Erledigt'"
 
 #. module: sale
 #: selection:sale.order.line,type:0
@@ -411,6 +412,13 @@ msgid ""
 "                Use Some Order Lines to invoice a selection of the sales "
 "order lines."
 msgstr ""
+"Wählen Sie Auftrag komplett abrechnen für die Schlussrechnung.\n"
+"                Wählen Sie Prozentsatz, um einen Anteil vom Gesamtbetrag "
+"abzurechnen.\n"
+"                Wählen Sie Festpreis, um einen bestimmten festen Betrag im "
+"voraus abzurechnen.\n"
+"                Wählen Sie einige Auftragspositionen, um gezielte Positionen "
+"abzurechnen."
 
 #. module: sale
 #: view:sale.make.invoice:0
@@ -492,6 +500,8 @@ msgstr "Fax:"
 msgid ""
 "In order to delete a confirmed sales order, you must cancel it before !"
 msgstr ""
+"Damit Sie einen bestätigten Auftrag löschen können, müssen Sie diesen vorab "
+"stornieren."
 
 #. module: sale
 #: view:sale.order:0
@@ -527,7 +537,7 @@ msgstr "Verkaufsauftrag"
 #. module: sale
 #: model:res.groups,name:sale.group_invoice_so_lines
 msgid "Enable Invoicing Sales order lines"
-msgstr ""
+msgstr "Ermöglichen Sie die Abrechnung einzelner Auftragspositionen"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
@@ -542,7 +552,7 @@ msgstr "Anzahlung"
 #. module: sale
 #: help:sale.order,invoice_exists:0
 msgid "It indicates that sales order has at least one invoice."
-msgstr ""
+msgstr "Dieser Auftrag hat bereits mindestens eine zugewiesene Rechnung"
 
 #. module: sale
 #: help:sale.config.settings,group_sale_pricelist:0
@@ -563,7 +573,7 @@ msgstr "Ein Mitarbeiter hatte mehrere Rollen  in veschiedenen Verträgen"
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoice the whole sales order"
-msgstr ""
+msgstr "Auftrag komplett abrechnen"
 
 #. module: sale
 #: field:sale.shop,payment_default_id:0
@@ -578,13 +588,14 @@ msgstr "Bestätigen"
 #. module: sale
 #: field:sale.config.settings,timesheet:0
 msgid "Prepare invoices based on timesheets"
-msgstr ""
+msgstr "Rechnungen auf Basis von Stundenzetteln ermöglichen"
 
 #. module: sale
 #: code:addons/sale/sale.py:812
 #, python-format
 msgid "You cannot cancel a sales order line that has already been invoiced."
 msgstr ""
+"Sie können keine Auftragsposition abbrechen, die bereits abgerechnet wurde."
 
 #. module: sale
 #: view:account.invoice.report:0
@@ -612,7 +623,7 @@ msgstr "Erlaubt die Verwendung verschiedener Mengeneinheiten"
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
 msgid "Sales Order Confirmed"
-msgstr ""
+msgstr "Auftragsbestätigung"
 
 #. module: sale
 #: view:sale.order:0
@@ -660,7 +671,7 @@ msgstr "Gesamtumsatz"
 #. module: sale
 #: help:account.config.settings,group_analytic_account_for_sales:0
 msgid "Allows you to specify an analytic account on sales orders."
-msgstr ""
+msgstr "Angabe einer Kostenstelle bei der Auftragseingabe."
 
 #. module: sale
 #: help:sale.config.settings,module_sale_journal:0
@@ -745,7 +756,7 @@ msgstr "Jahr des Verkaufsauftrages"
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
 msgid "Addresses in Sales Orders"
-msgstr ""
+msgstr "Adressen in Aufträgen"
 
 #. module: sale
 #: field:sale.advance.payment.inv,qtty:0
@@ -762,7 +773,7 @@ msgstr "Summe:"
 #. module: sale
 #: view:sale.order.line:0
 msgid "Sales Order Lines ready to be invoiced"
-msgstr ""
+msgstr "Abzurechnende Auftragsposition"
 
 #. module: sale
 #: view:sale.report:0
@@ -916,7 +927,7 @@ msgstr "Erzeuge und zeige Rechnung an"
 #. module: sale
 #: view:sale.order.line:0
 msgid "Sales order lines done"
-msgstr ""
+msgstr "Erledigte Auftragspositionen"
 
 #. module: sale
 #: field:sale.make.invoice,grouped:0
@@ -998,7 +1009,7 @@ msgstr "Monat"
 #. module: sale
 #: field:sale.order,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "Währung"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1036,7 +1047,7 @@ msgstr "Bezeichnung Shop"
 #. module: sale
 #: view:sale.order:0
 msgid "My Sales Orders"
-msgstr ""
+msgstr "Eigene Aufträge"
 
 #. module: sale
 #: report:sale.order:0
@@ -1061,6 +1072,8 @@ msgid ""
 "To allow your salesman to make invoices for sales order lines using the menu "
 "'Lines to Invoice'."
 msgstr ""
+"Ermöglichen Sie einem Verkäufer das Menü 'Abzurechnende Positionen' "
+"anzuwenden"
 
 #. module: sale
 #: model:ir.actions.client,name:sale.action_client_sale_menu
@@ -1072,6 +1085,7 @@ msgstr "Öffne Menü Verkauf"
 #, python-format
 msgid "You cannot confirm a sales order which has no line."
 msgstr ""
+"Sie können einen Auftrag ohne eine einzige Position nicht bestätigen."
 
 #. module: sale
 #: selection:sale.report,state:0
@@ -1087,7 +1101,7 @@ msgstr "Kein Kunde definiert !"
 #. module: sale
 #: field:sale.config.settings,module_sale_stock:0
 msgid "Trigger delivery orders automatically from sales orders"
-msgstr ""
+msgstr "Automatische Erstellung von Ausgangslieferungen durch Aufträge"
 
 #. module: sale
 #: view:sale.make.invoice:0
@@ -1157,7 +1171,7 @@ msgstr "Steuerbetrag"
 #. module: sale
 #: field:sale.order,invoiced_rate:0
 msgid "Invoiced Ratio"
-msgstr ""
+msgstr "Abgerechneter Anteil"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -1197,6 +1211,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klicken Sie zur Erstellung eines Vertriebsshops.\n"
+"              </p><p>\n"
+"                Jedes Angebot oder Auftrag muss einen zugeordneten "
+"Vertriebsshop haben.\n"
+"                Der Shop bestimmt wiederum das Lager, welches die "
+"Auslieferung für den\n"
+"                Auftrag aus dem Verkauf, ausführt. \n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1221,6 +1245,8 @@ msgid ""
 "Sales Order Lines that are confirmed, done or in exception state and haven't "
 "yet been invoiced"
 msgstr ""
+"Bestätigte, erledigte oder fehlerhafte Auftragspositionen, die noch nicht "
+"abgerechnet wurden."
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
@@ -1321,7 +1347,7 @@ msgstr "Januar"
 #. module: sale
 #: field:sale.config.settings,group_discount_per_so_line:0
 msgid "Allow setting a discount on the sales order lines"
-msgstr ""
+msgstr "Ermöglicht die Eingabe von Rabatt für einzelne Auftragspositionen"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_in_progress
@@ -1336,6 +1362,9 @@ msgid ""
 "                    or a fixed price (for advances) directly from the sales "
 "order form if you prefer."
 msgstr ""
+"Alle Positionen dieses Auftrags werden komplett abgerechnet. Sie können "
+"alternativ auch einen Prozentsatz oder einen festen Teilbetrag (z.B. für "
+"Anzahlungen) abrechnen."
 
 #. module: sale
 #: help:sale.config.settings,module_warning:0
@@ -1356,7 +1385,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,paypal_url:0
 msgid "Paypal Url"
-msgstr ""
+msgstr "PayPal URL"
 
 #. module: sale
 #: help:sale.order,project_id:0
@@ -1597,13 +1626,13 @@ msgstr "Keine Preisliste! "
 #. module: sale
 #: view:sale.order:0
 msgid "Sales Order "
-msgstr ""
+msgstr "Auftrag "
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_order_sent
 msgid "Quotation send"
-msgstr ""
+msgstr "Angebot gesendet"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1663,7 +1692,7 @@ msgstr ""
 #. module: sale
 #: view:sale.advance.payment.inv:0
 msgid "Invoice Sales Order"
-msgstr ""
+msgstr "Erzeuge Rechnung"
 
 #. module: sale
 #: help:sale.order,invoice_quantity:0
@@ -1672,6 +1701,9 @@ msgid ""
 "invoice).                                              You have to choose  "
 "if you want your invoice based on ordered "
 msgstr ""
+"Der Auftrag generiert automatisch einen Rechnungsvorschlag (Rechnung im "
+"Entwurf). Sie müssen für die Rechnung auswählen, ob Sie auf Basis der "
+"Bestellmenge "
 
 #. module: sale
 #: field:sale.config.settings,module_account_analytic_analysis:0
@@ -1823,6 +1855,92 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>Hallo ${object.partner_id.name},</p>\n"
+"    \n"
+"    <p>hier ist für Sie ein  ${object.state in ('draft', 'sent') and "
+"'quotation' or 'order confirmation'} von ${object.company_id.name}: </p>\n"
+"\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERENZ</strong><br />\n"
+"       &nbsp;&nbsp;Nummer: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;Betrag: <strong>${object.amount_total} "
+"${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Datum: ${object.date_order}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;Referenz Bestellung: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.client_order_ref:\n"
+"       &nbsp;&nbsp;Ihre Referenz: ${object.client_order_ref}<br />\n"
+"       % endif\n"
+"       % if object.user_id:\n"
+"       &nbsp;&nbsp;Ihr Ansprechpartner: <a "
+"href=\"mailto:${object.user_id.email or "
+"''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    % if object.paypal_url:\n"
+"    <br/>\n"
+"    <p>Sie können auch direkt mit Paypal bezahlen:</p>\n"
+"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
+"            <img class=\"oe_edi_paypal_button\" "
+"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"        </a>\n"
+"    % endif\n"
+"\n"
+"    <br/>\n"
+"    <p>Bei Rückfragen, kontaktieren Sie uns gerne.</p>\n"
+"    <p>Vielen Dank für Ihren Einkauf bei ${object.company_id.name or "
+"'us'}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"            <strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % "
+"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
+"or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                Telefon:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1933,6 +2051,25 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klicken Sie hier, um durch ein neues Angebot die Abwicklung "
+"eines Verkauf zu starten .\n"
+"              </p><p>\n"
+"                OpenERP hilft Ihnen bei der effizienten Angebotserstellung "
+"und Auftragsabwicklung:\n"
+"                Vom Angebot zum Auftrag, über die Auslieferung zur "
+"Abrechnung bis\n"
+"                hin zur Eingabe der Bezahlung wird dieser Prozess "
+"vollständig unterstützt.\n"
+"              </p><p>\n"
+"                Mit Hilfe der Anwendung 'Soziales Netzwerk' können Sie "
+"außerdem direkt\n"
+"                mit Mitarbeitern und/oder Kunden kommunizieren und dabei "
+"sämtliche \n"
+"                organisatorischen Fragen zu diesem Auftrag diskutieren und "
+"kommentieren.\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: view:res.partner:0
@@ -1957,7 +2094,7 @@ msgstr "Vom Rechnungswesen zu überprüfen"
 #. module: sale
 #: model:res.groups,name:sale.group_mrp_properties
 msgid "Properties on lines"
-msgstr "Eigentschaften von Zeilen"
+msgstr "Eigenschaften von Zeilen"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -2000,6 +2137,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klicken Sie zur Erstellung eines neuen Angebots, welches in "
+"der Folge dann einfach in einen Auftrag\n"
+"                umgewandelt werden kann.  \n"
+"                order.\n"
+"              </p><p>\n"
+"                OpenERP hilft Ihnen bei der kompletten Auftragsabwicklung:\n"
+"                Vom Angebot zum Auftrag, über die Auslieferung zur "
+"Abrechnung bis\n"
+"                hin zur Eingabe der Bezahlung.\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: field:sale.order,invoice_quantity:0
@@ -2088,6 +2237,23 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klicken Sie zur Erstellung eines Angebots oder eines "
+"Auftrags für diesen Kunden..\n"
+"              </p><p>\n"
+"                OpenERP hilft Ihnen bei der kompletten Auftragsabwicklung:\n"
+"                Vom Angebot zum Auftrag, über die Auslieferung zur "
+"Abrechnung bis\n"
+"                hin zur Eingabe der Bezahlung.\n"
+"              </p><p>\n"
+"                Mit Hilfe der Anwendung 'Soziales Netzwerk' können Sie "
+"außerdem direkt\n"
+"                mit Mitarbeitern und/oder Kunden kommunizieren und dabei "
+"sämtliche \n"
+"                organisatorischen Fragen zu diesem Auftrag diskutieren und "
+"kommentieren.\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: field:sale.order,message_summary:0
@@ -2137,7 +2303,7 @@ msgstr "Durch einen Verkaufsauftrag"
 #. module: sale
 #: view:sale.order.line:0
 msgid "Confirmed sales order lines, not yet delivered"
-msgstr ""
+msgstr "Bestätigte, noch nicht gelieferte Auftragspositionen"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleinvoice0
@@ -2183,7 +2349,7 @@ msgstr "Fakturierbare Verkaufsaufträge"
 #. module: sale
 #: field:sale.config.settings,group_invoice_so_lines:0
 msgid "Generate invoices based on the sales order lines"
-msgstr ""
+msgstr "Erstelle Abrechnung auf Basis der Auftragspositionen"
 
 #. module: sale
 #: view:sale.advance.payment.inv:0

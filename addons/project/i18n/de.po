@@ -7,15 +7,15 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-22 07:19+0000\n"
+"PO-Revision-Date: 2013-01-06 23:17+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-23 05:08+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-01-07 05:44+0000\n"
+"X-Generator: Launchpad (build 16402)\n"
 
 #. module: project
 #: view:project.project:0
@@ -232,7 +232,7 @@ msgstr "Zugewiesen an"
 #: model:mail.message.subtype,name:project.mt_project_task_closed
 #: model:mail.message.subtype,name:project.mt_task_closed
 msgid "Task Done"
-msgstr ""
+msgstr "Aufgabe erledigt"
 
 #. module: project
 #: view:project.project:0
@@ -273,12 +273,12 @@ msgstr "Delegation Projektaufgabe"
 #: model:mail.message.subtype,name:project.mt_project_task_started
 #: model:mail.message.subtype,name:project.mt_task_started
 msgid "Task Started"
-msgstr ""
+msgstr "Aufgabe begonnen"
 
 #. module: project
 #: view:project.task:0
 msgid "Very Important"
-msgstr ""
+msgstr "Sehr wichtig"
 
 #. module: project
 #: view:project.config.settings:0
@@ -450,7 +450,7 @@ msgstr "Integrierte Zusammenarbeit für Aufgaben"
 #: model:mail.message.subtype,name:project.mt_project_task_blocked
 #: model:mail.message.subtype,name:project.mt_task_blocked
 msgid "Task Blocked"
-msgstr ""
+msgstr "Aufgabe wurde blockiert"
 
 #. module: project
 #: model:process.node,note:project.process_node_opentask0
@@ -470,12 +470,12 @@ msgstr ""
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_blocked
 msgid "Task blocked"
-msgstr ""
+msgstr "Aufgabe wurde blockiert"
 
 #. module: project
 #: view:project.task:0
 msgid "Delegation"
-msgstr ""
+msgstr "Delegation"
 
 #. module: project
 #: field:project.task,create_date:0
@@ -775,7 +775,7 @@ msgstr "Entwurf offener Aufgabe"
 #. module: project
 #: field:project.project,alias_model:0
 msgid "Alias Model"
-msgstr ""
+msgstr "Alias Modell"
 
 #. module: project
 #: help:report.project.task.user,closing_days:0
@@ -905,7 +905,7 @@ msgstr "Unternehmen"
 #. module: project
 #: field:project.task.type,fold:0
 msgid "Folded by Default"
-msgstr ""
+msgstr "Im Standard zugeklappt"
 
 #. module: project
 #: field:project.task.history,date:0
@@ -933,6 +933,12 @@ msgid ""
 " * Ready for next stage indicates the task is ready to be pulled to the next "
 "stage"
 msgstr ""
+"Der Aufgaben Status auf dem Kanban zeigt folgendes:\n"
+"  * Normal ist der Standard Zustand\n"
+"  * Blockiert zeigt, dass ein Hindernis für den weiteren Fortschritt dieser "
+"Aufgabe geräumt werden sollte\n"
+"  * Bereit für nächste Stufe zeigt, dass diese Aufgabe bereit ist, in die "
+"nächste Phase gezogen zu werden"
 
 #. module: project
 #: view:project.task:0
@@ -991,6 +997,8 @@ msgid ""
 "Follow this project to automatically track the events associated to tasks "
 "and issues of this project."
 msgstr ""
+"Folgen Sie diesem Projekt, um automatisch sämtlichen Fortschritt dieser "
+"Aufgabe zu verfolgen."
 
 #. module: project
 #: view:project.task:0
@@ -1238,6 +1246,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klicken Sie zur Erstellung einer Stufe zur Verfolgung des "
+"Aufgabenfortschritts.\n"
+"              </p><p>\n"
+"                Definieren Sie die Stufen, die in diesem Projekt verfolgt "
+"werden sollen.\n"
+"                Von der Erstellung, bis zum Abschluss der Aufgabe oder "
+"Falls.\n"
+"                Sie werden Stufen verwenden, um Fortschritte bei der Lösung "
+"\n"
+"                einer Aufgabe oder eines Problems zu verfolgen.\n"
+"              </p>\n"
+"            "
 
 #. module: project
 #: help:project.task,total_hours:0
@@ -1255,7 +1276,7 @@ msgstr "%s (Kopie)"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_stage
 msgid "Task Stage Changed"
-msgstr ""
+msgstr "geänderte Aufgaben Stufe"
 
 #. module: project
 #: view:project.task:0
@@ -1456,7 +1477,7 @@ msgstr ""
 #: code:addons/project/project.py:220
 #, python-format
 msgid "Attachments"
-msgstr ""
+msgstr "Anhänge"
 
 #. module: project
 #: view:project.task:0
@@ -1491,7 +1512,7 @@ msgstr "Offen"
 #. module: project
 #: field:project.project,privacy_visibility:0
 msgid "Privacy / Visibility"
-msgstr ""
+msgstr "Privat / Öffentlich"
 
 #. module: project
 #: view:project.task:0
@@ -1505,7 +1526,7 @@ msgstr "Verbleibende Stunden"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
 msgid "Stage changed"
-msgstr ""
+msgstr "Stufe geändert"
 
 #. module: project
 #: constraint:project.task:0
@@ -1574,6 +1595,10 @@ msgid ""
 "                (by default, http://ietherpad.com/).\n"
 "                This installs the module pad."
 msgstr ""
+"Ermöglicht die Spezifikation, welche Pad Installation für die neuen Pads "
+"genutzt werden soll.\n"
+"                  (als Standard: http://ietherpad.com/).\n"
+"                  Es wird das Modul pad installiert."
 
 #. module: project
 #: field:project.task,id:0
@@ -1603,12 +1628,12 @@ msgstr "Zuordnen zu"
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
 msgid "Time Estimation on Tasks"
-msgstr ""
+msgstr "Erwartete Bearbeitungszeit für Aufgaben"
 
 #. module: project
 #: field:project.task,total_hours:0
 msgid "Total"
-msgstr ""
+msgstr "Gesamt"
 
 #. module: project
 #: model:process.node,note:project.process_node_taskbydelegate0
@@ -1618,7 +1643,7 @@ msgstr "Delegiere Aufgaben an anderen Benutzer"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_started
 msgid "Task started"
-msgstr ""
+msgstr "Aufgabe wurde begonnen"
 
 #. module: project
 #: help:project.task.reevaluate,remaining_hours:0
@@ -1633,6 +1658,8 @@ msgid ""
 "This stage is not visible, for example in status bar or kanban view, when "
 "there are no records in that stage to display."
 msgstr ""
+"Die Stufe ist unsichtbar, z.B. in der Fortschrittsanzeige oder Kanban "
+"Ansicht, wenn es keine Datensätze in dieser Stufe gibt."
 
 #. module: project
 #: view:project.task:0
@@ -1662,7 +1689,7 @@ msgstr "Projekte in Wartestellung"
 #. module: project
 #: view:project.task:0
 msgid "Remaining"
-msgstr ""
+msgstr "Verbleibend"
 
 #. module: project
 #: field:project.task,progress:0
@@ -1687,21 +1714,25 @@ msgid ""
 "                editing and deleting either ways.\n"
 "                This installs the module project_timesheet."
 msgstr ""
+"Hierdurch wird es möglich, die Einträge für geleistete Zeiten zu Aufgaben "
+"aus dem Projektmanagement zu einem bestimmten Datum auch in den  "
+"Stundenzettel eines bestimmten Mitarbeiters zu übernehmen. Sie installieren "
+"das Modul project_timeesheet."
 
 #. module: project
 #: field:project.config.settings,module_project_issue:0
 msgid "Track issues and bugs"
-msgstr ""
+msgstr "Verfolge Vorfälle und Fehler"
 
 #. module: project
 #: field:project.config.settings,module_project_mrp:0
 msgid "Generate tasks from sale orders"
-msgstr ""
+msgstr "Erstelle Aufgaben vom Auftrag"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_task_types_view
 msgid "Task Stages"
-msgstr ""
+msgstr "Aufgaben Stufen"
 
 #. module: project
 #: model:process.node,note:project.process_node_drafttask0
@@ -1712,7 +1743,7 @@ msgstr "Definiere Anforderungen sowie Eintrag der geplanten Stunden."
 #: field:project.project,message_ids:0
 #: field:project.task,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Nachrichten"
 
 #. module: project
 #: field:project.project,color:0
@@ -1780,17 +1811,17 @@ msgstr "Ende Datum"
 #. module: project
 #: field:project.task.type,state:0
 msgid "Related Status"
-msgstr ""
+msgstr "Verbundener Status"
 
 #. module: project
 #: view:project.project:0
 msgid "Documents"
-msgstr ""
+msgstr "Dokumente"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_new
 msgid "Task created"
-msgstr ""
+msgstr "Aufgabe angelegt"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -1802,7 +1833,7 @@ msgstr "# Tage"
 #: field:project.project,message_follower_ids:0
 #: field:project.task,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Follower"
 
 #. module: project
 #: selection:project.project,state:0
@@ -1840,7 +1871,7 @@ msgstr "Validierung Aufgabe"
 #. module: project
 #: field:project.config.settings,module_project_long_term:0
 msgid "Manage resources planning on gantt view"
-msgstr ""
+msgstr "Verwalte die Ressourcen Planung in der Gantt Ansicht"
 
 #. module: project
 #: view:project.task:0
@@ -1899,7 +1930,7 @@ msgstr "Projekte"
 #. module: project
 #: model:res.groups,name:project.group_tasks_work_on_tasks
 msgid "Task's Work on Tasks"
-msgstr ""
+msgstr "Arbeitsaufträge zu Aufgaben"
 
 #. module: project
 #: help:project.task.delegate,name:0
@@ -1942,7 +1973,7 @@ msgstr "Dezember"
 #: view:project.task.delegate:0
 #: view:project.task.reevaluate:0
 msgid "or"
-msgstr ""
+msgstr "oder"
 
 #. module: project
 #: help:project.config.settings,module_project_mrp:0
@@ -1973,7 +2004,7 @@ msgstr ""
 #. module: project
 #: model:project.category,name:project.project_category_03
 msgid "Experiment"
-msgstr ""
+msgstr "Experiment"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_opendrafttask0
@@ -1991,7 +2022,7 @@ msgstr "Kanban Status"
 #. module: project
 #: field:project.config.settings,module_project_timesheet:0
 msgid "Record timesheet lines per tasks"
-msgstr ""
+msgstr "Stundenzettel Eingaben durch Aufgaben"
 
 #. module: project
 #: model:ir.model,name:project.model_report_project_task_user
@@ -2069,7 +2100,7 @@ msgstr ""
 #: model:mail.message.subtype,name:project.mt_project_task_new
 #: model:mail.message.subtype,name:project.mt_task_new
 msgid "Task Created"
-msgstr ""
+msgstr "Erstellte Aufgaben"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -2087,12 +2118,12 @@ msgstr "Projekte, die ich verantworte"
 #: selection:project.task.history,kanban_state:0
 #: selection:project.task.history.cumulative,kanban_state:0
 msgid "Ready for next stage"
-msgstr ""
+msgstr "Bereit für nächste Stufe"
 
 #. module: project
 #: field:project.task.type,case_default:0
 msgid "Default for New Projects"
-msgstr ""
+msgstr "Standard für neue Projekte"
 
 #. module: project
 #: view:project.task:0
@@ -2138,7 +2169,7 @@ msgstr ""
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_closed
 msgid "Task closed"
-msgstr ""
+msgstr "Aufgabe beendet"
 
 #. module: project
 #: selection:report.project.task.user,month:0
@@ -2173,13 +2204,13 @@ msgstr ""
 #. module: project
 #: selection:project.project,privacy_visibility:0
 msgid "Followers Only"
-msgstr ""
+msgstr "Nur Follower"
 
 #. module: project
 #: view:board.board:0
 #: field:project.project,task_count:0
 msgid "Open Tasks"
-msgstr ""
+msgstr "Eröffne Aufgabe"
 
 #. module: project
 #: field:project.project,priority:0
