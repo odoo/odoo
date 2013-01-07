@@ -235,7 +235,6 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             self.$el.toggleClass('oe_kanban_grouped_by_m2o', self.grouped_by_m2o);
             var grouping = new instance.web.Model(self.dataset.model, context, domain).query().group_by(self.group_by);
             $.when(grouping).done(function(groups) {
-                self.do_clear_groups();
                 if (groups) {
                     self.do_process_groups(groups);
                 } else {
@@ -248,6 +247,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         var self = this;
         this.$el.removeClass('oe_kanban_ungrouped').addClass('oe_kanban_grouped');
         this.add_group_mutex.exec(function() {
+            self.do_clear_groups();
             self.dataset.ids = [];
             if (!groups.length) {
                 self.no_result();
@@ -275,6 +275,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.$el.removeClass('oe_kanban_grouped').addClass('oe_kanban_ungrouped');
         this.add_group_mutex.exec(function() {
             var def = $.Deferred();
+            self.do_clear_groups();
             self.dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit }).done(function(records) {
                 var kgroup = new instance.web_kanban.KanbanGroup(self, records, null, self.dataset);
                 self.do_add_groups([kgroup]).done(function() {
