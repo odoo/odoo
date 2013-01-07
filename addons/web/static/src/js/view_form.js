@@ -4944,7 +4944,7 @@ instance.web.form.FieldBinaryFile = instance.web.form.FieldBinary.extend({
             }
             this.$el.find('input').eq(0).val(show_value);
         } else {
-            this.$el.find('a').show(!!this.get('value'));
+            this.$el.find('a').toggle(!!this.get('value'));
             if (this.get('value')) {
                 var show_value = _t("Download")
                 if (this.view)
