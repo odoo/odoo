@@ -39,7 +39,7 @@ _logger = logging.getLogger(__name__)
 
 
 def decode_header(message, header, separator=' '):
-    return separator.join(map(decode, message.get_all(header, [])))
+    return separator.join(map(decode, filter(None, message.get_all(header, []))))
 
 
 class mail_thread(osv.AbstractModel):
