@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2013-01-04 11:28+0000\n"
-"Last-Translator: Rudolf Schnapka <rs@techno-flex.de>\n"
+"PO-Revision-Date: 2013-01-06 22:36+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-05 05:40+0000\n"
-"X-Generator: Launchpad (build 16393)\n"
+"X-Launchpad-Export-Date: 2013-01-07 05:44+0000\n"
+"X-Generator: Launchpad (build 16402)\n"
 
 #. module: product
 #: field:product.packaging,rows:0
@@ -1676,7 +1677,7 @@ msgstr "Preisliste Bezeichnung"
 #. module: product
 #: model:product.category,name:product.product_category_1
 msgid "Saleable"
-msgstr ""
+msgstr "kann verkauft werden"
 
 #. module: product
 #: sql_constraint:product.uom:0
@@ -2000,7 +2001,7 @@ msgstr "Nachrichten"
 #. module: product
 #: model:product.uom,name:product.product_uom_unit
 msgid "Unit(s)"
-msgstr ""
+msgstr "Einheit(en)"
 
 #. module: product
 #: code:addons/product/product.py:176
@@ -2042,7 +2043,7 @@ msgstr "Farb Index"
 #. module: product
 #: help:product.template,sale_ok:0
 msgid "Specify if the product can be selected in a sales order line."
-msgstr ""
+msgstr "Spezifizieren Sie hier, ob dieses Produkt verkauft werden darf."
 
 #. module: product
 #: view:product.product:0
@@ -2163,7 +2164,7 @@ msgstr "Bezeichnung Preisliste"
 #. module: product
 #: view:product.product:0
 msgid "Description for Suppliers"
-msgstr ""
+msgstr "Beschreibung für Lieferanten"
 
 #. module: product
 #: field:product.supplierinfo,delay:0
@@ -2173,7 +2174,7 @@ msgstr "Lieferzeit"
 #. module: product
 #: view:product.product:0
 msgid "months"
-msgstr ""
+msgstr "Monate"
 
 #. module: product
 #: help:product.uom,active:0
@@ -2221,6 +2222,12 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
+"Aktuelle Menge des Produktes. In Zusammenhang von\n"
+"* EINEM Lagerort: Mengen diese Lagers und aller untergeordneten Läger \n"
+"* EINEM Lager: Mengen diese Lagerorts und aller untergeordneten Läger \n"
+"* EINEM Shop: Mengen diese Lager dieses Geschäftes und aller untergeordneten "
+"Läger\n"
+"In allen anderen Fällen: Die Menge auf internen Lägern"
 
 #. module: product
 #: help:product.template,type:0
@@ -2278,6 +2285,8 @@ msgid ""
 "A category of the view type is a virtual category that can be used as the "
 "parent of another category to create a hierarchical structure."
 msgstr ""
+"Der Kategorie Typ Ansicht kann als übergeordnete virtuelle Kategorie zum "
+"Aufbau einer hierachischen Struktur der Produkte genutzt werden."
 
 #. module: product
 #: selection:product.ul,type:0
@@ -2299,6 +2308,8 @@ msgid ""
 "This type of service include assistance for security questions, system "
 "configuration requirements, implementation or special needs."
 msgstr ""
+"Die Produktart Dienstleistungen beinhaltet z.B. Assistenzaufgaben bei "
+"Systemkonfiguration, Development oder Softwareimplementierung."
 
 #. module: product
 #: field:product.product,image:0
@@ -2711,6 +2722,9 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
+"Eine Umrechnung zwischen Mengeneinheit ist nur möglich, wenn beide Einheiten "
+"einer Kategorie angehören. Die Umrechnung erfolgt dann auf der Basis der "
+"definierten Relationen."
 
 #. module: product
 #: constraint:product.category:0
@@ -2731,12 +2745,14 @@ msgstr ""
 #. module: product
 #: view:product.uom:0
 msgid "e.g: 1 * (reference unit) = ratio * (this unit)"
-msgstr ""
+msgstr "z.B: 1 * (Grundeinheit) = Umrechnungsfaktor * (diese Mengeneinheit)"
 
 #. module: product
 #: help:product.supplierinfo,qty:0
 msgid "This is a quantity which is converted into Default Unit of Measure."
 msgstr ""
+"Dies ist eine Mengeneinheit, die in die Standard-Mengeneinheit umgewandelt "
+"wird."
 
 #. module: product
 #: help:product.template,volume:0
