@@ -80,23 +80,15 @@ openerp.web_analytics = function(instance) {
         },
         /*
         *  This method contains the initialization of the object and view type
-        *  custom variables stored in GA. Setting here the CV will work if web_analytics
-        *  module is auto-install and not anonymous user, because the first view
-        *  of a fresh DB is the modules kanban view (also in trial), otherwise the
-        *  responsibility of the first initialization relies on
-        *  instance.web.ActionManager#ir_actions_client method
+        *  as an event in GA.
         */
         on_state_pushed: function(state) {
             // Track only pages corresponding to a 'normal' view of OpenERP, views
             // related to client actions are tracked by the action manager
             if (state.model && state.view_type) {
-                // Track object usage
-                _gaq.push(['_setCustomVar', 2, 'Object', state.model, 3]);
-                // Tack view usage
-                _gaq.push(['_setCustomVar', 3, 'View Type', state.view_type, 3]);
                 // Track the page
-                var url = instance.web_analytics.generateUrl({'model': state.model, 'view_type': state.view_type});
-                _gaq.push(['_trackPageview', url]);
+                var label = instance.web_analytics.generateUrl({'model': state.model, 'view_type': state.view_type});
+                _gaq.push(['_trackEvent', state.model, state.view_type, label]);
             }
         },
         /*
@@ -106,7 +98,7 @@ openerp.web_analytics = function(instance) {
         include_tracker: function() {
             // Track the events related with the creation and the  modification of records,
             // the view type is always form
-            instance.web.FormView = instance.web.FormView.extend({
+            instance.web.FormView.include({
                 init: function(parent, dataset, view_id, options) {
                     this._super.apply(this, arguments);
                     var self = this;
@@ -121,24 +113,13 @@ openerp.web_analytics = function(instance) {
                 }
             });
 
-            // Track client actions, also if not in a fresh DB or anonymous user,
-            // it initializes the CV related to objects and view types
+            // Track client actions
             instance.web.ActionManager.include({
                 ir_actions_client: function (action, options) {
-                    // Try to set the correct model, else it will be 'ir.actions.client'
-                    if (action.res_model) {
-                        _gaq.push(['_setCustomVar', 2, 'Object', action.res_model, 3]);
-                    } else {
-                        _gaq.push(['_setCustomVar', 2, 'Object', action.type, 3]);
-                    }
-                    // Try to set a view type as accurate as possible
-                    if (action.name) {
-                        _gaq.push(['_setCustomVar', 3, 'View Type', action.name, 3]);
-                    } else {
-                        _gaq.push(['_setCustomVar', 3, 'View Type', action.tag, 3]);
-                    }
-                    var url = instance.web_analytics.generateUrl({'action': action.tag});
-                    _gaq.push(['_trackPageview', url]);
+                    var label = instance.web_analytics.generateUrl({'action': action.tag});
+                    var category = action.res_model || action.type;
+                    var ga_action = action.name || action.tag;
+                    _gaq.push(['_trackEvent', category, ga_action, label]);
                     return this._super.apply(this, arguments);
                 },
             });
@@ -182,38 +163,6 @@ openerp.web_analytics = function(instance) {
         },
     });
 
-    // Set correctly the tracker in the current instance
-    if (instance.client instanceof instance.web.WebClient) {        // not for embedded clients
-        instance.webclient.tracker = new instance.web_analytics.Tracker();
-        $.when(instance.webclient.tracker._set_user_access_level()).then(function(r) {
-            instance.webclient.tracker.user_access_level = r;
-            instance.webclient.tracker.initialize_custom().then(function() {
-                instance.webclient.on('state_pushed', self, instance.webclient.tracker.on_state_pushed);
-                instance.webclient.tracker.include_tracker();
-            });
-        });
-    } else if (!instance.client) {
-        // client does not already exists, we are in monodb mode
-        instance.web.WebClient.include({
-            start: function() {
-                var d = this._super.apply(this, arguments);
-                this.tracker = new instance.web_analytics.Tracker();
-                return d;
-            },
-            show_application: function() {
-                var self = this;
-                $.when(this.tracker._set_user_access_level()).then(function(r) {
-                    self.tracker.user_access_level = r;
-                    self.tracker.initialize_custom().then(function() {
-                        instance.webclient.on('state_pushed', self, self.tracker.on_state_pushed);
-                        self.tracker.include_tracker();
-                    });
-                    self._super();
-                });
-            },
-        });
-    }
-
     // ----------------------------------------------------------------
     // utility functions
     // ----------------------------------------------------------------
@@ -225,5 +174,37 @@ openerp.web_analytics = function(instance) {
         });
         return url;
     };
+
+    instance.web_analytics.setupTracker = function(wc) {
+        var t = wc.tracker;
+        return $.when(t._set_user_access_level()).then(function(r) {
+            t.user_access_level = r;
+            t.initialize_custom().then(function() {
+                wc.on('state_pushed', wc, t.on_state_pushed);
+                t.include_tracker();
+            });
+        });
+    };
+
+    // Set correctly the tracker in the current instance
+    if (instance.client instanceof instance.web.WebClient) {        // not for embedded clients
+        instance.webclient.tracker = new instance.web_analytics.Tracker();
+        instance.web_analytics.setupTracker(instance.webclient);
+    } else if (!instance.client) {
+        // client does not already exists, we are in monodb mode
+        instance.web.WebClient.include({
+            start: function() {
+                var d = this._super.apply(this, arguments);
+                this.tracker = new instance.web_analytics.Tracker();
+                return d;
+            },
+            show_application: function() {
+                var self = this;
+                instance.web_analytics.setupTracker(self).then(function() {
+                    self._super();
+                });
+            },
+        });
+    }
 
 };
