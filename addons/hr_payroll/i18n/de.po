@@ -6,15 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-02-08 09:21+0000\n"
-"Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-10 17:42+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:45+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:55+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,condition_select:0
@@ -124,7 +125,7 @@ msgstr "hr.salary.rule"
 #: view:hr.payslip:0
 #: view:hr.payslip.run:0
 msgid "to"
-msgstr ""
+msgstr "an"
 
 #. module: hr_payroll
 #: field:hr.payslip,payslip_run_id:0
@@ -208,7 +209,7 @@ msgstr "Bemerkungen"
 #: code:addons/hr_payroll/hr_payroll.py:900
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Fehler !"
 
 #. module: hr_payroll
 #: report:contribution.register.lines:0
@@ -234,7 +235,7 @@ msgstr "Weitere Informationen"
 #. module: hr_payroll
 #: field:hr.config.settings,module_hr_payroll_account:0
 msgid "Link your payroll to accounting system"
-msgstr ""
+msgstr "Verbinden Sie Ihre Personalabrechnung mit der Fibu"
 
 #. module: hr_payroll
 #: help:hr.payslip.line,amount_select:0
@@ -303,7 +304,7 @@ msgstr "Struktur"
 #. module: hr_payroll
 #: field:hr.contribution.register,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
@@ -349,6 +350,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klicken Sie zur Hinterlegung einer neuen Sozialabgabe.\n"
+"              </p><p>\n"
+"                Durch Sozialabgaben sind Dritte mit in die Abrechnung von "
+"Gehalt und sonstigen Bezügen\n"
+"                einzubeziehen. Es kann sich um eine Rentenversicherung, "
+"Krankenversicherung, öffentliche Einrichtung\n"
+"                oder Kirche sein, die entsprechende finanzielle Abgaben in "
+"die Gehaltsabrechnungen mit einbeziehen \n"
+"                möchte. \n"
+"              </p>\n"
+"            "
 
 #. module: hr_payroll
 #: help:hr.payslip.line,condition_range_max:0
@@ -436,12 +449,12 @@ msgstr "Prozent basierend auf"
 #: code:addons/hr_payroll/hr_payroll.py:85
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (Kopie)"
 
 #. module: hr_payroll
 #: help:hr.config.settings,module_hr_payroll_account:0
 msgid "Create journal entries from payslips"
-msgstr ""
+msgstr "Erstelle Buchungen durch Gehaltsabrechnung"
 
 #. module: hr_payroll
 #: field:hr.payslip,paid:0
@@ -464,7 +477,7 @@ msgstr "Lohnkonto Zeilen"
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Verschiedenes"
 
 #. module: hr_payroll
 #: selection:hr.payslip,state:0
@@ -516,7 +529,7 @@ msgstr "Fester Betrag"
 #: code:addons/hr_payroll/hr_payroll.py:365
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Warnung !"
 
 #. module: hr_payroll
 #: help:hr.payslip.line,active:0
@@ -532,7 +545,7 @@ msgstr ""
 #: field:hr.payslip,state:0
 #: field:hr.payslip.run,state:0
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
@@ -625,7 +638,7 @@ msgstr "Lohnkonto Berechnung Details"
 #: help:hr.payslip.line,appears_on_payslip:0
 #: help:hr.salary.rule,appears_on_payslip:0
 msgid "Used to display the salary rule on payslip."
-msgstr ""
+msgstr "Abrechnungsregel soll bei Gehaltsabrechnung mit angezeigt werden."
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_input
@@ -654,7 +667,7 @@ msgstr "Berechnung"
 #: code:addons/hr_payroll/hr_payroll.py:894
 #, python-format
 msgid "Wrong range condition defined for salary rule %s (%s)."
-msgstr ""
+msgstr "Falsche Bedingungen für die Bandbreiten der Abrechnungsregel %s (%s)"
 
 #. module: hr_payroll
 #: help:hr.payslip.input,amount:0
@@ -698,6 +711,8 @@ msgstr "Wenn markiert, dann sind alle hier erzeugten Lohnkonten Vergütungen."
 #, python-format
 msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
 msgstr ""
+"Falsche prozentuale Kalkulationsgrundlage oder Menge die für "
+"Gehaltsabrechnungsregel %s (%s) angewendet wird."
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_list_form
@@ -755,7 +770,7 @@ msgstr "Prozent (%)"
 #: code:addons/hr_payroll/hr_payroll.py:866
 #, python-format
 msgid "Wrong quantity defined for salary rule %s (%s)."
-msgstr ""
+msgstr "Falsche Menge wurde definiert für diese Abrechnungsregel %s (%s)."
 
 #. module: hr_payroll
 #: view:hr.payslip:0
@@ -841,6 +856,7 @@ msgstr "Arbeitsvertrag"
 #, python-format
 msgid "You must select employee(s) to generate payslip(s)."
 msgstr ""
+"Sie müssen Mitarbeiter für die zu erstellende Gehaltsabrechnung wählen"
 
 #. module: hr_payroll
 #: report:paylip.details:0
@@ -919,12 +935,12 @@ msgstr "Reihenfolge"
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Period"
-msgstr ""
+msgstr "Periode"
 
 #. module: hr_payroll
 #: view:hr.payslip.run:0
 msgid "Period from"
-msgstr ""
+msgstr "Abrechnungsperiode"
 
 #. module: hr_payroll
 #: view:hr.salary.rule:0
@@ -1093,6 +1109,8 @@ msgstr "Lohnkontozeilen je Beitragskonto"
 #, python-format
 msgid "You cannot delete a payslip which is not draft or cancelled!"
 msgstr ""
+"Sie können keine Personalabrechnung stornieren, die nicht mehr im Entwurf "
+"ist oder bereits abgebrochen wurde."
 
 #. module: hr_payroll
 #: report:paylip.details:0
@@ -1191,7 +1209,7 @@ msgstr "Lohnkonto Eingaben"
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Other Inputs"
-msgstr ""
+msgstr "Andere Eingaben"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category_tree_view
@@ -1266,7 +1284,7 @@ msgstr "Lohnkonto Bezeichnung"
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Accounting"
-msgstr ""
+msgstr "Finanzbuchhaltung"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,condition_range:0

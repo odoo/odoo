@@ -26,9 +26,6 @@
         <menuitem id="base.next_id_64" name="Sales"
             parent="base.menu_reporting" sequence="1"/>
 
-        <menuitem id="base.menu_sales_configuration_misc" name="Miscellaneous" parent="base.menu_base_config" sequence="81"/>
-
-
         <!-- crm.case.channel -->
         <record id="crm_case_channel_view_tree" model="ir.ui.view">
             <field name="name">crm.case.channel.tree</field>
@@ -131,7 +128,7 @@
                         </page>
                     </notebook>
                     <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers" help="Followers of this salesteam follow automatically all opportunities related to this salesteam."/>
+                        <field name="message_follower_ids" widget="mail_followers" help="Follow this salesteam to automatically track the events associated to users of this team."/>
                         <field name="message_ids" widget="mail_thread"/>
                     </div>
                 </form>
@@ -173,7 +170,7 @@
 
         <menuitem action="crm_case_section_act"
             id="menu_crm_case_section_act" sequence="15"
-            parent="base.menu_sales_configuration_misc" groups="base.group_no_one"/>
+            parent="base.menu_base_config" groups="base.group_sale_manager"/>
 
 
         <!-- CRM Stage Tree View -->
@@ -183,7 +180,7 @@
             <field name="model">crm.case.stage</field>
             <field name="arch" type="xml">
                 <tree string="Stages">
-                    <field name="sequence"/>
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="probability"/>
                     <field name="state"/>
@@ -293,7 +290,7 @@
             <field name="view_id" ref="crm_case_resource_type_tree"/>
         </record>
 
-         <menuitem action="crm_case_resource_type_act"
+        <menuitem action="crm_case_resource_type_act"
             id="menu_crm_case_resource_type_act" sequence="4"
             groups="base.group_no_one"
             parent="base.menu_crm_config_lead"/>

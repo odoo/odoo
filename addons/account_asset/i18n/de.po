@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-05-10 17:36+0000\n"
-"Last-Translator: Ferdinand-camptocamp <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-17 22:26+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:53+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 06:05+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -42,12 +43,12 @@ msgstr "Abschreibung Aufwandskonto"
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Group By..."
-msgstr "Gruppiere nach..."
+msgstr "Gruppierung..."
 
 #. module: account_asset
 #: field:asset.asset.report,gross_value:0
 msgid "Gross Amount"
-msgstr "Brutto-Betrag"
+msgstr "Brutto Betrag"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -97,9 +98,9 @@ msgid "Running"
 msgstr "In Betrieb"
 
 #. module: account_asset
-#: field:account.asset.depreciation.line,amount:0
-msgid "Depreciation Amount"
-msgstr "Abschreibung Betrag"
+#: view:account.asset.asset:0
+msgid "Set to Draft"
+msgstr "Setze auf Entwurf"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -147,6 +148,11 @@ msgstr ""
 "Das ist der geplante Erinnerungswert, der nicht abgeschrieben werden kann."
 
 #. module: account_asset
+#: help:account.asset.asset,method_period:0
+msgid "The amount of time between two depreciations, in months"
+msgstr ""
+
+#. module: account_asset
 #: field:account.asset.depreciation.line,depreciation_date:0
 #: view:asset.asset.report:0
 #: field:asset.asset.report,depreciation_date:0
@@ -156,7 +162,7 @@ msgstr "Abschreibungs Datum"
 #. module: account_asset
 #: constraint:account.asset.asset:0
 msgid "Error ! You cannot create recursive assets."
-msgstr ""
+msgstr "Fehler ! Sie können keine rekursiven Anlagengegenstände definieren."
 
 #. module: account_asset
 #: field:asset.asset.report,posted_value:0
@@ -201,7 +207,7 @@ msgstr "# der Abschreibungsbuchungen"
 #. module: account_asset
 #: field:account.asset.asset,method_period:0
 msgid "Number of Months in a Period"
-msgstr ""
+msgstr "Anzahl Monate in Perioden"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -252,19 +258,16 @@ msgid "Date of asset purchase"
 msgstr "Kaufdatum der Anlage"
 
 #. module: account_asset
-#: help:account.asset.asset,method_number:0
-msgid "Calculates Depreciation within specified interval"
-msgstr "Berechnet die Abschreibungen in einem definierten Intervall"
-
-#. module: account_asset
-#: field:account.asset.asset,active:0
-msgid "Active"
-msgstr "Aktiv"
-
-#. module: account_asset
 #: view:account.asset.asset:0
 msgid "Change Duration"
 msgstr "Verändere Lebensdauer"
+
+#. module: account_asset
+#: help:account.asset.asset,method_number:0
+#: help:account.asset.category,method_number:0
+#: help:account.asset.history,method_number:0
+msgid "The number of depreciations needed to depreciate your asset"
+msgstr ""
 
 #. module: account_asset
 #: view:account.asset.category:0
@@ -274,18 +277,13 @@ msgstr "Analytische Information"
 #. module: account_asset
 #: field:account.asset.category,account_analytic_id:0
 msgid "Analytic account"
-msgstr "Analytisches Konto"
+msgstr "Kostenstelle"
 
 #. module: account_asset
 #: field:account.asset.asset,method:0
 #: field:account.asset.category,method:0
 msgid "Computation Method"
 msgstr "Berechnungsmethode"
-
-#. module: account_asset
-#: help:account.asset.asset,method_period:0
-msgid "State here the time during 2 depreciations, in months"
-msgstr "Definieren Sie die Zeit in Monaten zwischen 2 Abschreibungen"
 
 #. module: account_asset
 #: constraint:account.asset.asset:0
@@ -297,20 +295,9 @@ msgstr ""
 "Abschreibung\" verwendet werden"
 
 #. module: account_asset
-#: help:account.asset.history,method_time:0
-msgid ""
-"The method to use to compute the dates and number of depreciation lines.\n"
-"Number of Depreciations: Fix the number of depreciation lines and the time "
-"between 2 depreciations.\n"
-"Ending Date: Choose the time between 2 depreciations and the date the "
-"depreciations won't go beyond."
+#: field:account.asset.depreciation.line,remaining_value:0
+msgid "Next Period Depreciation"
 msgstr ""
-"Die Methode, die verwendet wird, um das Datum und Anzahl der "
-"Abschreibungesbuchungen zu berechnen.\n"
-"Anzahl der Abschreibungen: Anzahl der Abschreibungsbuchungen und Zeit "
-"zwischen 2 Abschreibungen.\n"
-"Ende Datum: Wählen Sie die Zeit zwischen 2 Abschreibungen und das Datum nach "
-"dem keine Abschreibungen mehr berechnet werden."
 
 #. module: account_asset
 #: help:account.asset.history,method_period:0
@@ -359,6 +346,11 @@ msgid "Search Asset Category"
 msgstr "Suche Anlagen Kategorie"
 
 #. module: account_asset
+#: view:asset.modify:0
+msgid "months"
+msgstr ""
+
+#. module: account_asset
 #: model:ir.model,name:account_asset.model_account_invoice_line
 msgid "Invoice Line"
 msgstr "Rechnungsposition"
@@ -367,11 +359,6 @@ msgstr "Rechnungsposition"
 #: view:account.asset.asset:0
 msgid "Depreciation Board"
 msgstr "Abschreibungsspiegel"
-
-#. module: account_asset
-#: model:ir.model,name:account_asset.model_account_move_line
-msgid "Journal Items"
-msgstr "Journaleinträge"
 
 #. module: account_asset
 #: field:asset.asset.report,unposted_value:0
@@ -389,7 +376,7 @@ msgstr "Zeit Methode"
 #: view:asset.depreciation.confirmation.wizard:0
 #: view:asset.modify:0
 msgid "or"
-msgstr ""
+msgstr "oder"
 
 #. module: account_asset
 #: field:account.asset.asset,note:0
@@ -399,16 +386,20 @@ msgid "Note"
 msgstr "Notiz"
 
 #. module: account_asset
-#: help:account.asset.asset,method:0
-#: help:account.asset.category,method:0
+#: help:account.asset.history,method_time:0
 msgid ""
-"Choose the method to use to compute the amount of depreciation lines.\n"
-"  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
-"  * Degressive: Calculated on basis of: Remaining Value * Degressive Factor"
+"The method to use to compute the dates and number of depreciation lines.\n"
+"Number of Depreciations: Fix the number of depreciation lines and the time "
+"between 2 depreciations.\n"
+"Ending Date: Choose the time between 2 depreciations and the date the "
+"depreciations won't go beyond."
 msgstr ""
-"Wählen Sie die Methode der Berechnung der Abschreibungsbeträge.\n"
-"  * Linear: Berechnung: Brutto Wert / Anzahl der Abschreibungen\n"
-"  * Degressive: Berechnung : Restbuchwert * Degressiven Faktor"
+"Die Methode, die verwendet wird, um das Datum und Anzahl der "
+"Abschreibungesbuchungen zu berechnen.\n"
+"Anzahl der Abschreibungen: Anzahl der Abschreibungsbuchungen und Zeit "
+"zwischen 2 Abschreibungen.\n"
+"Ende Datum: Wählen Sie die Zeit zwischen 2 Abschreibungen und das Datum nach "
+"dem keine Abschreibungen mehr berechnet werden."
 
 #. module: account_asset
 #: help:account.asset.asset,method_time:0
@@ -446,12 +437,17 @@ msgid ""
 "You can manually close an asset when the depreciation is over. If the last "
 "line of depreciation is posted, the asset automatically goes in that status."
 msgstr ""
+"Wenn eine Anlage angelegt wird, ist der Status \"Entwurf\". Nach Bestätigung "
+"der Anlage wird diese aktiv und Abschreibungen können verbucht werden. Sie "
+"können die Anlage automatisch schließen, wenn die Abschreibungen vorbei "
+"sind. Nach Verbuchung der letzen Abschreibung wird die Anlage automatisch "
+"geschlossen."
 
 #. module: account_asset
 #: field:account.asset.asset,state:0
 #: field:asset.asset.report,state:0
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: account_asset
 #: field:account.asset.asset,partner_id:0
@@ -462,7 +458,7 @@ msgstr "Partner"
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Posted depreciation lines"
-msgstr "verbuchte Abschreibungen"
+msgstr "Verbuchte Abschreibungen"
 
 #. module: account_asset
 #: field:account.asset.asset,child_ids:0
@@ -480,9 +476,9 @@ msgid "User"
 msgstr "Benutzer"
 
 #. module: account_asset
-#: field:account.asset.history,date:0
-msgid "Date"
-msgstr "Datum"
+#: field:account.asset.category,account_asset_id:0
+msgid "Asset Account"
+msgstr "Anlagen Konto"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -498,12 +494,7 @@ msgstr "Berechnen"
 #. module: account_asset
 #: view:account.asset.history:0
 msgid "Asset History"
-msgstr ""
-
-#. module: account_asset
-#: field:asset.asset.report,name:0
-msgid "Year"
-msgstr "Jahr"
+msgstr "Historie Anlagegegüter"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_asset_depreciation_confirmation_wizard
@@ -511,9 +502,9 @@ msgid "asset.depreciation.confirmation.wizard"
 msgstr "asset.depreciation.confirmation.wizard"
 
 #. module: account_asset
-#: field:account.asset.category,account_asset_id:0
-msgid "Asset Account"
-msgstr "Anlagen Konto"
+#: field:account.asset.asset,active:0
+msgid "Active"
+msgstr "Aktiv"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,parent_state:0
@@ -575,9 +566,9 @@ msgid "Close"
 msgstr "Schließen"
 
 #. module: account_asset
-#: view:account.asset.category:0
-msgid "Depreciation Method"
-msgstr "Abschreibungsmethode"
+#: model:ir.model,name:account_asset.model_account_move_line
+msgid "Journal Items"
+msgstr "Journaleinträge"
 
 #. module: account_asset
 #: view:asset.modify:0
@@ -612,14 +603,19 @@ msgid "Current"
 msgstr "Aktuell"
 
 #. module: account_asset
-#: field:account.asset.depreciation.line,remaining_value:0
-msgid "Amount to Depreciate"
-msgstr "Abzuschreibender Betrag"
+#: view:account.asset.category:0
+msgid "Depreciation Method"
+msgstr "Abschreibungsmethode"
+
+#. module: account_asset
+#: field:account.asset.depreciation.line,amount:0
+msgid "Current Depreciation"
+msgstr ""
 
 #. module: account_asset
 #: field:account.asset.asset,name:0
 msgid "Asset Name"
-msgstr ""
+msgstr "Anlagegut Bezeichnung"
 
 #. module: account_asset
 #: field:account.asset.category,open_asset:0
@@ -652,6 +648,15 @@ msgid "Amount Already Depreciated"
 msgstr "Bereits abgeschriebener Betrag"
 
 #. module: account_asset
+#: help:account.asset.asset,method:0
+#: help:account.asset.category,method:0
+msgid ""
+"Choose the method to use to compute the amount of depreciation lines.\n"
+"  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
+"  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
+msgstr ""
+
+#. module: account_asset
 #: field:account.asset.depreciation.line,move_check:0
 #: view:asset.asset.report:0
 #: field:asset.asset.report,move_check:0
@@ -670,11 +675,16 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"Über diesen Report erhalten Sie einen Überblick über alle Abschreibungen. "
+"Die Suche kann auch zur \n"
+"individuellen und persönlichen Auswertung über das Anlagevermögen benutzt "
+"werden.\n"
+"        "
 
 #. module: account_asset
 #: field:account.asset.asset,purchase_value:0
 msgid "Gross Value"
-msgstr ""
+msgstr "Brutto Erlös"
 
 #. module: account_asset
 #: field:account.asset.category,name:0
@@ -691,9 +701,9 @@ msgstr ""
 "der Rechnung bestätigt werden soll."
 
 #. module: account_asset
-#: view:account.asset.asset:0
-msgid "Set to Draft"
-msgstr "Setze auf Entwurf"
+#: field:asset.asset.report,name:0
+msgid "Year"
+msgstr "Jahr"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_depreciation_line
@@ -728,6 +738,11 @@ msgstr "Sequenz"
 #: help:account.asset.category,method_period:0
 msgid "State here the time between 2 depreciations, in months"
 msgstr "Definieren Sie hier die Monate zwischen 2 Abschreibungen"
+
+#. module: account_asset
+#: field:account.asset.history,date:0
+msgid "Date"
+msgstr "Datum"
 
 #. module: account_asset
 #: field:account.asset.asset,method_number:0
@@ -954,6 +969,9 @@ msgstr "Anlangenhierarchie"
 #~ msgid "Indirect"
 #~ msgstr "Indirekt"
 
+#~ msgid "Depreciation Amount"
+#~ msgstr "Abschreibung Betrag"
+
 #~ msgid ""
 #~ "This wizard will post the depreciation lines of running assets that belong "
 #~ "to the selected period."
@@ -969,6 +987,12 @@ msgstr "Anlangenhierarchie"
 
 #~ msgid "Sequence of the depreciation"
 #~ msgstr "Sequenz der Abschreibung"
+
+#~ msgid "Calculates Depreciation within specified interval"
+#~ msgstr "Berechnet die Abschreibungen in einem definierten Intervall"
+
+#~ msgid "State here the time during 2 depreciations, in months"
+#~ msgstr "Definieren Sie die Zeit in Monaten zwischen 2 Abschreibungen"
 
 #~ msgid "Other Information"
 #~ msgstr "Weitere Informationen"
@@ -996,6 +1020,9 @@ msgstr "Anlangenhierarchie"
 
 #~ msgid "Invoice Number must be unique per Company!"
 #~ msgstr "Die Rechnungsnummer muss je Firma eindeutig sein"
+
+#~ msgid "Amount to Depreciate"
+#~ msgstr "Abzuschreibender Betrag"
 
 #~ msgid "Accounting information"
 #~ msgstr "Buchhaltung Information"
@@ -1034,6 +1061,15 @@ msgstr "Anlangenhierarchie"
 
 #~ msgid "Assets purchased in last month"
 #~ msgstr "Anlagen im letzen Monat gekauft"
+
+#~ msgid ""
+#~ "Choose the method to use to compute the amount of depreciation lines.\n"
+#~ "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
+#~ "  * Degressive: Calculated on basis of: Remaining Value * Degressive Factor"
+#~ msgstr ""
+#~ "Wählen Sie die Methode der Berechnung der Abschreibungsbeträge.\n"
+#~ "  * Linear: Berechnung: Brutto Wert / Anzahl der Abschreibungen\n"
+#~ "  * Degressive: Berechnung : Restbuchwert * Degressiven Faktor"
 
 #~ msgid "You can not create journal items on an account of type view."
 #~ msgstr "You can not create journal items on an account of type view."

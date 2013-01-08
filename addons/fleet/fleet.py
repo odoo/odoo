@@ -19,12 +19,12 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 import time
 import datetime
-import tools
-from osv.orm import except_orm
-from tools.translate import _
+from openerp import tools
+from openerp.osv.orm import except_orm
+from openerp.tools.translate import _
 from dateutil.relativedelta import relativedelta
 
 def str_to_datetime(strdate):
@@ -66,8 +66,8 @@ class fleet_vehicle_cost(osv.Model):
         res = {}
         for record in self.browse(cr, uid, ids, context=context):
             name = record.vehicle_id.name
-            if record.cost_subtype.name:
-                name += ' / '+ record.cost_subtype.name
+            if record.cost_subtype_id.name:
+                name += ' / '+ record.cost_subtype_id.name
             if record.date:
                 name += ' / '+ record.date
             res[record.id] = name
@@ -76,7 +76,7 @@ class fleet_vehicle_cost(osv.Model):
     _columns = {
         'name': fields.function(_cost_name_get_fnc, type="char", string='Name', store=True),
         'vehicle_id': fields.many2one('fleet.vehicle', 'Vehicle', required=True, help='Vehicle concerned by this log'),
-        'cost_subtype': fields.many2one('fleet.service.type', 'Type', help='Cost type purchased with this cost'),
+        'cost_subtype_id': fields.many2one('fleet.service.type', 'Type', help='Cost type purchased with this cost'),
         'amount': fields.float('Total Price'),
         'cost_type': fields.selection([('contract', 'Contract'), ('services','Services'), ('fuel','Fuel'), ('other','Other')], 'Category of the cost', help='For internal purpose only', required=True),
         'parent_id': fields.many2one('fleet.vehicle.cost', 'Parent', help='Parent cost to this current cost'),
@@ -104,7 +104,7 @@ class fleet_vehicle_cost(osv.Model):
         if 'contract_id' in data and data['contract_id']:
             contract = self.pool.get('fleet.vehicle.log.contract').browse(cr, uid, data['contract_id'], context=context)
             data['vehicle_id'] = contract.vehicle_id.id
-            data['cost_subtype'] = contract.cost_subtype.id
+            data['cost_subtype_id'] = contract.cost_subtype_id.id
             data['cost_type'] = contract.cost_type
         if 'odometer' in data and not data['odometer']:
             #if received value for odometer is 0, then remove it from the data as it would result to the creation of a
@@ -124,7 +124,7 @@ class fleet_vehicle_state(osv.Model):
     _order = 'sequence asc'
     _columns = {
         'name': fields.char('Name', required=True),
-        'sequence': fields.integer('Order', help="Used to order the note stages")
+        'sequence': fields.integer('Sequence', help="Used to order the note stages")
     }
     _sql_constraints = [('fleet_state_name_unique','unique(name)', 'State name already exists')]
 
@@ -135,8 +135,8 @@ class fleet_vehicle_model(osv.Model):
         res = {}
         for record in self.browse(cr, uid, ids, context=context):
             name = record.modelname
-            if record.brand.name:
-                name = record.brand.name + ' / ' + name
+            if record.brand_id.name:
+                name = record.brand_id.name + ' / ' + name
             res[record.id] = name
         return res
 
@@ -157,11 +157,11 @@ class fleet_vehicle_model(osv.Model):
     _columns = {
         'name': fields.function(_model_name_get_fnc, type="char", string='Name', store=True),
         'modelname': fields.char('Model name', size=32, required=True), 
-        'brand': fields.many2one('fleet.vehicle.model.brand', 'Model Brand', required=True, help='Brand of the vehicle'),
+        'brand_id': fields.many2one('fleet.vehicle.model.brand', 'Model Brand', required=True, help='Brand of the vehicle'),
         'vendors': fields.many2many('res.partner', 'fleet_vehicle_model_vendors', 'model_id', 'partner_id', string='Vendors'),
-        'image': fields.related('brand', 'image', type="binary", string="Logo"),
-        'image_medium': fields.related('brand', 'image_medium', type="binary", string="Logo"),
-        'image_small': fields.related('brand', 'image_small', type="binary", string="Logo"),
+        'image': fields.related('brand_id', 'image', type="binary", string="Logo"),
+        'image_medium': fields.related('brand_id', 'image_medium', type="binary", string="Logo"),
+        'image_small': fields.related('brand_id', 'image_small', type="binary", string="Logo"),
     }
 
 
@@ -210,7 +210,7 @@ class fleet_vehicle(osv.Model):
     def _vehicle_name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
         res = {}
         for record in self.browse(cr, uid, ids, context=context):
-            res[record.id] = record.model_id.brand.name + '/' + record.model_id.modelname + ' / ' + record.license_plate
+            res[record.id] = record.model_id.brand_id.name + '/' + record.model_id.modelname + ' / ' + record.license_plate
         return res
 
     def return_action_to_open(self, cr, uid, ids, context=None):
@@ -308,7 +308,7 @@ class fleet_vehicle(osv.Model):
                         ids = self.pool.get('fleet.vehicle.log.contract').search(cr,uid,[('vehicle_id', '=', record.id), ('state', 'in', ('open', 'toclose'))], limit=1, order='expiration_date asc')
                         if len(ids) > 0:
                             #we display only the name of the oldest overdue/due soon contract
-                            name=(self.pool.get('fleet.vehicle.log.contract').browse(cr, uid, ids[0], context=context).cost_subtype.name)
+                            name=(self.pool.get('fleet.vehicle.log.contract').browse(cr, uid, ids[0], context=context).cost_subtype_id.name)
 
             res[record.id] = {
                 'contract_renewal_overdue': overdue,
@@ -333,14 +333,14 @@ class fleet_vehicle(osv.Model):
         'company_id': fields.many2one('res.company', 'Company'),
         'license_plate': fields.char('License Plate', size=32, required=True, help='License plate number of the vehicle (ie: plate number for a car)'),
         'vin_sn': fields.char('Chassis Number', size=32, help='Unique number written on the vehicle motor (VIN/SN number)'),
-        'driver': fields.many2one('res.partner', 'Driver', help='Driver of the vehicle'),
+        'driver_id': fields.many2one('res.partner', 'Driver', help='Driver of the vehicle'),
         'model_id': fields.many2one('fleet.vehicle.model', 'Model', required=True, help='Model of the vehicle'),
         'log_fuel': fields.one2many('fleet.vehicle.log.fuel', 'vehicle_id', 'Fuel Logs'),
         'log_services': fields.one2many('fleet.vehicle.log.services', 'vehicle_id', 'Services Logs'),
         'log_contracts': fields.one2many('fleet.vehicle.log.contract', 'vehicle_id', 'Contracts'),
         'acquisition_date': fields.date('Acquisition Date', required=False, help='Date when the vehicle has been bought'),
         'color': fields.char('Color', size=32, help='Color of the vehicle'),
-        'state': fields.many2one('fleet.vehicle.state', 'State', help='Current state of the vehicle', ondelete="set null"),
+        'state_id': fields.many2one('fleet.vehicle.state', 'State', help='Current state of the vehicle', ondelete="set null"),
         'location': fields.char('Location', size=128, help='Location of the vehicle (garage, ...)'),
         'seats': fields.integer('Seats Number', help='Number of seats of the vehicle'),
         'doors': fields.integer('Doors Number', help='Number of doors of the vehicle'),
@@ -366,7 +366,7 @@ class fleet_vehicle(osv.Model):
     _defaults = {
         'doors': 5,
         'odometer_unit': 'kilometers',
-        'state': _get_default_state,
+        'state_id': _get_default_state,
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -408,13 +408,13 @@ class fleet_vehicle(osv.Model):
                 value = self.pool.get('fleet.vehicle.model').browse(cr,uid,vals['model_id'],context=context).name
                 oldmodel = vehicle.model_id.name or _('None')
                 changes.append(_("Model: from '%s' to '%s'") %(oldmodel, value))
-            if 'driver' in vals and vehicle.driver.id != vals['driver']:
-                value = self.pool.get('res.partner').browse(cr,uid,vals['driver'],context=context).name
-                olddriver = (vehicle.driver.name) or _('None')
+            if 'driver_id' in vals and vehicle.driver_id.id != vals['driver_id']:
+                value = self.pool.get('res.partner').browse(cr,uid,vals['driver_id'],context=context).name
+                olddriver = (vehicle.driver_id.name) or _('None')
                 changes.append(_("Driver: from '%s' to '%s'") %(olddriver, value))
-            if 'state' in vals and vehicle.state.id != vals['state']:
-                value = self.pool.get('fleet.vehicle.state').browse(cr,uid,vals['state'],context=context).name
-                oldstate = vehicle.state.name or _('None')
+            if 'state_id' in vals and vehicle.state_id.id != vals['state_id']:
+                value = self.pool.get('fleet.vehicle.state').browse(cr,uid,vals['state_id'],context=context).name
+                oldstate = vehicle.state_id.name or _('None')
                 changes.append(_("State: from '%s' to '%s'") %(oldstate, value))
             if 'license_plate' in vals and vehicle.license_plate != vals['license_plate']:
                 old_license_plate = vehicle.license_plate or _('None')
@@ -468,10 +468,13 @@ class fleet_vehicle_log_fuel(osv.Model):
     def on_change_vehicle(self, cr, uid, ids, vehicle_id, context=None):
         if not vehicle_id:
             return {}
-        odometer_unit = self.pool.get('fleet.vehicle').browse(cr, uid, vehicle_id, context=context).odometer_unit
+        vehicle = self.pool.get('fleet.vehicle').browse(cr, uid, vehicle_id, context=context)
+        odometer_unit = vehicle.odometer_unit
+        driver = vehicle.driver_id.id
         return {
             'value': {
                 'odometer_unit': odometer_unit,
+                'purchaser_id': driver,
             }
         }
 
@@ -546,9 +549,8 @@ class fleet_vehicle_log_fuel(osv.Model):
         'cost_amount': fields.related('cost_id', 'amount', string='Amount', type='float', store=True), #we need to keep this field as a related with store=True because the graph view doesn't support (1) to address fields from inherited table and (2) fields that aren't stored in database
     }
     _defaults = {
-        'purchaser_id': lambda self, cr, uid, ctx: uid,
         'date': fields.date.context_today,
-        'cost_subtype': _get_default_service_type,
+        'cost_subtype_id': _get_default_service_type,
         'cost_type': 'fuel',
     }
 
@@ -558,10 +560,13 @@ class fleet_vehicle_log_services(osv.Model):
     def on_change_vehicle(self, cr, uid, ids, vehicle_id, context=None):
         if not vehicle_id:
             return {}
-        odometer_unit = self.pool.get('fleet.vehicle').browse(cr, uid, vehicle_id, context=context).odometer_unit
+        vehicle = self.pool.get('fleet.vehicle').browse(cr, uid, vehicle_id, context=context)
+        odometer_unit = vehicle.odometer_unit
+        driver = vehicle.driver_id.id
         return {
             'value': {
                 'odometer_unit': odometer_unit,
+                'purchaser_id': driver,
             }
         }
 
@@ -583,9 +588,8 @@ class fleet_vehicle_log_services(osv.Model):
         'notes': fields.text('Notes'),
     }
     _defaults = {
-        'purchaser_id': lambda self, cr, uid, ctx: uid,
         'date': fields.date.context_today,
-        'cost_subtype': _get_default_service_type,
+        'cost_subtype_id': _get_default_service_type,
         'cost_type': 'services'
     }
 
@@ -630,7 +634,7 @@ class fleet_vehicle_log_contract(osv.Model):
                     'amount': contract.cost_generated,
                     'date': startdate.strftime(tools.DEFAULT_SERVER_DATE_FORMAT),
                     'vehicle_id': contract.vehicle_id.id,
-                    'cost_subtype': contract.cost_subtype.id,
+                    'cost_subtype_id': contract.cost_subtype_id.id,
                     'contract_id': contract.id,
                     'auto_generated': True
                 }
@@ -664,8 +668,8 @@ class fleet_vehicle_log_contract(osv.Model):
         res = {}
         for record in self.browse(cr, uid, ids, context=context):
             name = record.vehicle_id.name
-            if record.cost_subtype.name:
-                name += ' / '+ record.cost_subtype.name
+            if record.cost_subtype_id.name:
+                name += ' / '+ record.cost_subtype_id.name
             if record.date:
                 name += ' / '+ record.date
             res[record.id] = name
@@ -783,13 +787,13 @@ class fleet_vehicle_log_contract(osv.Model):
         'cost_amount': fields.related('cost_id', 'amount', string='Amount', type='float', store=True), #we need to keep this field as a related with store=True because the graph view doesn't support (1) to address fields from inherited table and (2) fields that aren't stored in database
     }
     _defaults = {
-        'purchaser_id': lambda self, cr, uid, ctx: uid,
+        'purchaser_id': lambda self, cr, uid, ctx: self.pool.get('res.users').browse(cr, uid, uid, context=ctx).partner_id.id or False,
         'date': fields.date.context_today,
         'start_date': fields.date.context_today,
         'state':'open',
         'expiration_date': lambda self, cr, uid, ctx: self.compute_next_year_date(fields.date.context_today(self, cr, uid, context=ctx)),
         'cost_frequency': 'no',
-        'cost_subtype': _get_default_contract_type,
+        'cost_subtype_id': _get_default_contract_type,
         'cost_type': 'contract',
     }
 

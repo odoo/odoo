@@ -22,7 +22,7 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 
 class sale_order_dates(osv.osv):
     _inherit = 'sale.order'

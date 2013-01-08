@@ -21,15 +21,16 @@
 #
 ##############################################################################
 
-import datetime, time
+import datetime
+import time
 from itertools import groupby
 from operator import itemgetter
 
 import math
-import netsvc
-import tools
-from osv import fields, osv
-from tools.translate import _
+from openerp import netsvc
+from openerp import tools
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 
 class hr_holidays_status(osv.osv):
@@ -102,13 +103,19 @@ class hr_holidays_status(osv.osv):
             res.append((record.id, name))
         return res
 
-hr_holidays_status()
 
 class hr_holidays(osv.osv):
     _name = "hr.holidays"
     _description = "Leave"
     _order = "type desc, date_from asc"
-    _inherit = [ 'mail.thread','ir.needaction_mixin']
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _track = {
+        'state': {
+            'hr_holidays.mt_holidays_approved': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'validate',
+            'hr_holidays.mt_holidays_refused': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'refuse',
+            'hr_holidays.mt_holidays_confirmed': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'confirm',
+        },
+    }
 
     def _employee_get(self, cr, uid, context=None):
         ids = self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context)
@@ -135,7 +142,8 @@ class hr_holidays(osv.osv):
     _columns = {
         'name': fields.char('Description', size=64),
         'state': fields.selection([('draft', 'To Submit'), ('cancel', 'Cancelled'),('confirm', 'To Approve'), ('refuse', 'Refused'), ('validate1', 'Second Approval'), ('validate', 'Approved')],
-            'Status', readonly=True, help='The status is set to \'To Submit\', when a holiday request is created.\
+            'Status', readonly=True, track_visibility='onchange',
+            help='The status is set to \'To Submit\', when a holiday request is created.\
             \nThe status is \'To Approve\', when holiday request is confirmed by user.\
             \nThe status is \'Refused\', when holiday request is refused by manager.\
             \nThe status is \'Approved\', when holiday request is approved by manager.'),
@@ -360,7 +368,6 @@ class hr_holidays(osv.osv):
                     wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'confirm', cr)
                     wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'validate', cr)
                     wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'second_validate', cr)
-        self.holidays_validate_notificate(cr, uid, ids, context=context)
         return True
 
     def holidays_confirm(self, cr, uid, ids, context=None):
@@ -368,8 +375,7 @@ class hr_holidays(osv.osv):
         for record in self.browse(cr, uid, ids, context=context):
             if record.employee_id and record.employee_id.parent_id and record.employee_id.parent_id.user_id:
                 self.message_subscribe_users(cr, uid, [record.id], user_ids=[record.employee_id.parent_id.user_id.id], context=context)
-        self.holidays_confirm_notificate(cr, uid, ids, context=context)
-        return self.write(cr, uid, ids, {'state':'confirm'})
+        return self.write(cr, uid, ids, {'state': 'confirm'})
 
     def holidays_refuse(self, cr, uid, ids, context=None):
         obj_emp = self.pool.get('hr.employee')
@@ -380,7 +386,6 @@ class hr_holidays(osv.osv):
                 self.write(cr, uid, [holiday.id], {'state': 'refuse', 'manager_id': manager})
             else:
                 self.write(cr, uid, [holiday.id], {'state': 'refuse', 'manager_id2': manager})
-        self.holidays_refuse_notificate(cr, uid, ids, context=context)
         self.holidays_cancel(cr, uid, ids, context=context)
         return True
 
@@ -413,7 +418,7 @@ class hr_holidays(osv.osv):
     # OpenChatter and notifications
     # -----------------------------
 
-    def needaction_domain_get(self, cr, uid, ids, context=None):
+    def _needaction_domain_get(self, cr, uid, context=None):
         emp_obj = self.pool.get('hr.employee')
         empids = emp_obj.search(cr, uid, [('parent_id.user_id', '=', uid)], context=context)
         dom = ['&', ('state', '=', 'confirm'), ('employee_id', 'in', empids)]
@@ -422,36 +427,10 @@ class hr_holidays(osv.osv):
             dom = ['|'] + dom + [('state', '=', 'validate1')]
         return dom
 
-    def create_notificate(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, ids,
-                _("Request <b>created</b>, waiting confirmation."), context=context)
-        return True
-
-    def holidays_confirm_notificate(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids):
-            self.message_post(cr, uid, [obj.id],
-                _("Request <b>submitted</b>, waiting for validation by the manager."), context=context)
-
     def holidays_first_validate_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_post(cr, uid, [obj.id],
                 _("Request <b>approved</b>, waiting second validation."), context=context)
-
-    def holidays_validate_notificate(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids):
-            if obj.double_validation:
-                self.message_post(cr, uid, [obj.id],
-                    _("Request <b>validated</b>."), context=context)
-            else:
-                self.message_post(cr, uid, [obj.id],
-                    _("The request has been <b>approved</b>."), context=context)
-
-    def holidays_refuse_notificate(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids):
-            self.message_post(cr, uid, [obj.id],
-                _("Request <b>refused</b>"), context=context)
-
 
 class resource_calendar_leaves(osv.osv):
     _inherit = "resource.calendar.leaves"

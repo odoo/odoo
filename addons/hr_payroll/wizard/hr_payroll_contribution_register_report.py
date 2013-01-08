@@ -23,7 +23,7 @@ import time
 from datetime import datetime
 from dateutil import relativedelta
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 
 class payslip_lines_contribution_register(osv.osv_memory):
     _name = 'payslip.lines.contribution.register'

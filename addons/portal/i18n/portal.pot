@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-12-03 16:03+0000\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 17:05+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -34,14 +34,13 @@ msgid "Select which contacts should belong to the portal in the list below.\n"
 msgstr ""
 
 #. module: portal
-#: code:addons/portal/wizard/share_wizard.py:54
-#, python-format
-msgid "Please select at least one group to share with"
+#: model:mail.group,name:portal.company_jobs
+msgid "Company Jobs"
 msgstr ""
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.company_news_feed_ir_ui_menu
-msgid "Company's news"
+#: view:portal.payment.acquirer:0
+msgid "amount: the total amount to pay, as a float"
 msgstr ""
 
 #. module: portal
@@ -68,6 +67,12 @@ msgstr ""
 #. module: portal
 #: view:res.groups:0
 msgid "Non-Portal Groups"
+msgstr ""
+
+#. module: portal
+#: code:addons/portal/wizard/share_wizard.py:54
+#, python-format
+msgid "Please select at least one group to share with"
 msgstr ""
 
 #. module: portal
@@ -109,8 +114,9 @@ msgid "<p>\n"
 msgstr ""
 
 #. module: portal
-#: view:portal.wizard:0
-msgid "or"
+#: code:addons/portal/wizard/portal_wizard.py:194
+#, python-format
+msgid "You must have an email address in your User Preferences to send emails."
 msgstr ""
 
 #. module: portal
@@ -125,9 +131,15 @@ msgid "Users"
 msgstr ""
 
 #. module: portal
-#: code:addons/portal/acquirer.py:74
+#: code:addons/portal/acquirer.py:82
 #, python-format
 msgid "Pay safely online"
+msgstr ""
+
+#. module: portal
+#: code:addons/portal/acquirer.py:77
+#, python-format
+msgid "No online payment acquirers configured"
 msgstr ""
 
 #. module: portal
@@ -155,8 +167,9 @@ msgid "<p>\n"
 msgstr ""
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.company_jobs_ir_ui_menu
-msgid "Company's jobs"
+#: view:portal.payment.acquirer:0
+msgid ", so it may use Mako expressions.\n"
+"                                The Mako evaluation context provides:"
 msgstr ""
 
 #. module: portal
@@ -174,8 +187,8 @@ msgid "Your OpenERP account at %(company)s"
 msgstr ""
 
 #. module: portal
-#: view:portal.payment.acquirer:0
-msgid "cr: the current database cursor"
+#: model:res.groups,name:portal.group_anonymous
+msgid "Anonymous"
 msgstr ""
 
 #. module: portal
@@ -229,12 +242,6 @@ msgid "Wizard"
 msgstr ""
 
 #. module: portal
-#: view:portal.payment.acquirer:0
-msgid ", so it may use Mako expressions.\n"
-"                                The Mako evaluation context provides:"
-msgstr ""
-
-#. module: portal
 #: field:portal.payment.acquirer,name:0
 msgid "Name"
 msgstr ""
@@ -252,11 +259,6 @@ msgstr ""
 #. module: portal
 #: view:portal.payment.acquirer:0
 msgid "quote(): a method to quote special string character to make them suitable for inclusion in a URL"
-msgstr ""
-
-#. module: portal
-#: view:portal.payment.acquirer:0
-msgid "amount: the total amount to pay, as a float"
 msgstr ""
 
 #. module: portal
@@ -280,7 +282,7 @@ msgid "Outgoing Mails"
 msgstr ""
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:194
+#: code:addons/portal/wizard/portal_wizard.py:193
 #, python-format
 msgid "Email required"
 msgstr ""
@@ -291,9 +293,9 @@ msgid "Messaging"
 msgstr ""
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:195
-#, python-format
-msgid "You must have an email address in your User Preferences to send emails."
+#: model:res.groups,comment:portal.group_anonymous
+msgid "Anonymous users have specific access rights (such as record rules and restricted menus).\n"
+"                They usually do not belong to the usual OpenERP groups."
 msgstr ""
 
 #. module: portal
@@ -302,8 +304,19 @@ msgid "Online Payment Acquirer"
 msgstr ""
 
 #. module: portal
+#: model:mail.group,name:portal.company_news_feed
+msgid "Company News"
+msgstr ""
+
+#. module: portal
+#: code:addons/portal/acquirer.py:76
+#, python-format
+msgid "You can finish the configuration in the <a href=\"%s\">Bank&Cash settings</a>"
+msgstr ""
+
+#. module: portal
 #: view:portal.payment.acquirer:0
-msgid "object: the document on which the payment form is rendered (usually an invoice or sale order record)"
+msgid "cr: the current database cursor"
 msgstr ""
 
 #. module: portal
@@ -316,6 +329,11 @@ msgid "<p>\n"
 "                    follow.\n"
 "                </p>\n"
 "            "
+msgstr ""
+
+#. module: portal
+#: view:portal.payment.acquirer:0
+msgid "object: the document on which the payment form is rendered (usually an invoice or sales order record)"
 msgstr ""
 
 #. module: portal
@@ -358,6 +376,11 @@ msgid "Dear %(name)s,\n"
 "OpenERP - Open Source Business Applications\n"
 "http://www.openerp.com\n"
 ""
+msgstr ""
+
+#. module: portal
+#: view:portal.wizard:0
+msgid "or"
 msgstr ""
 
 #. module: portal
@@ -419,7 +442,7 @@ msgid "This is an HTML form template to submit a payment through this acquirer.\
 msgstr ""
 
 #. module: portal
-#: code:addons/portal/mail_mail.py:40
+#: code:addons/portal/mail_mail.py:42
 #, python-format
 msgid "Access your personal documents through <a href=\"%s\">our Customer Portal</a>"
 msgstr ""

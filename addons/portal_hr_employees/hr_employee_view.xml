@@ -32,10 +32,21 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="portal_hr_kanban_view_employees">
+            <field name="name">HR - Employess Kanban</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.hr_kanban_view_employees"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@class='oe_employee_details']" position="inside">
+                    <t t-if="record.public_info.raw_value"><field name="public_info"/></t>
+                </xpath>
+            </field>
+        </record>
+
         <record id="action_team" model="ir.actions.act_window">
-            <field name="name">Meet the team</field>
+            <field name="name">Our Team</field>
             <field name="res_model">hr.employee</field>
-            <field name="view_id" ref="hr.hr_kanban_view_employees"/>
+            <field name="view_id" ref="portal_hr_kanban_view_employees"/>
             <field name="view_mode">kanban</field>
             <field name="view_type">form</field>
             <field name="domain">[('visibility','!=','private')]</field>
@@ -49,7 +60,7 @@
             <field name="inherit_id" ref="portal_crm.contact_form_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@class='oe_portal_crm_team']" position="inside">
-                    <a href="#action=portal_hr_employees.action_team">Meet the team</a>
+                    <a href="#action=portal_hr_employees.action_team">Our Team</a>
                 </xpath>
             </field>
         </record>

@@ -2,14 +2,14 @@
 <openerp>
     <data noupdate="1">
 
-        <!-- The portal group -->
-        <record id="group_portal" model="res.groups">
-            <field name="name">Portal</field>
-            <field name="comment">Portal members have specific access rights (such as record rules and restricted menus).
-                They usually do not belong to the usual OpenERP groups.</field>
-            <field name="is_portal" eval="True"/>
-            <!-- Insert the template user from auth_signup in the portal members group -->
-            <field name="users" eval="[(4,ref('auth_signup.default_template_user'))]"/>
+        <record id="portal_read_own_res_partner" model="ir.rule">
+            <field name="name">res_partner: read access on my partner</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="domain_force">[('user_ids', 'in', user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_portal')), (4, ref('group_anonymous'))]"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="perm_write" eval="False"/>
         </record>
 
     </data>

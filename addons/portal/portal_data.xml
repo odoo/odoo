@@ -2,16 +2,26 @@
 <openerp>
     <data noupdate="1">
 
+        <!-- The portal group -->
+        <record id="group_portal" model="res.groups">
+            <field name="name">Portal</field>
+            <field name="comment">Portal members have specific access rights (such as record rules and restricted menus).
+                They usually do not belong to the usual OpenERP groups.</field>
+            <field name="is_portal" eval="True"/>
+            <!-- Insert the template user from auth_signup in the portal members group -->
+            <field name="users" eval="[(4,ref('auth_signup.default_template_user'))]"/>
+        </record>
+
         <!-- Mail group for the company's news -->
         <record id="company_news_feed" model="mail.group">
-            <field name="name">Company's news</field>
+            <field name="name">Company News</field>
             <field name="public">public</field>
         </record>
 
         <record id="action_news" model="ir.actions.client">
             <field name="name">News</field>
             <field name="tag">mail.wall</field>
-            <field name="model">mail.group</field>
+            <field name="res_model">mail.group</field>
             <field name="params" eval="{
                 'domain': [
                     ('model', '=', 'mail.group'),
@@ -22,7 +32,8 @@
                     'default_model': 'mail.group',
                     'default_res_id': ref('company_news_feed'),
                 },
-                'show_link_partner': False,
+                'readonly': True,
+                'show_link': False,
                 'res_model': 'mail.message',
                 'thread_level': 1,
             }"/>
@@ -35,15 +46,14 @@
 
         <!-- Mail group for the company's jobs -->
         <record id="company_jobs" model="mail.group">
-            <field name="name">Company's jobs</field>
+            <field name="name">Company Jobs</field>
             <field name="public">public</field>
         </record>
 
         <record id="action_jobs" model="ir.actions.client">
             <field name="name">Jobs</field>
             <field name="tag">mail.wall</field>
-            <field name="res_model">mail.message</field>
-            <field name="res_id" ref="company_jobs"/>
+            <field name="res_model">mail.group</field>
             <field name="params" eval="{
                 'domain':[
                     ('model', '=', 'mail.group'),
@@ -54,7 +64,8 @@
                     'default_model': 'mail.group',
                     'default_res_id': ref('company_jobs'),
                 },
-                'show_link_partner': False,
+                'readonly': True,
+                'show_link': False,
                 'res_model': 'mail.message',
                 'thread_level': 1,
             }"/>
@@ -64,7 +75,16 @@
                 </p>
             </field>
         </record>
-        
+
+        <!--
+            A group dedicated to the anonymous user only, making groups
+            restrictions more convenient.
+        -->
+        <record id="group_anonymous" model="res.groups">
+            <field name="name">Anonymous</field>
+            <field name="comment">Anonymous users have specific access rights (such as record rules and restricted menus).
+                They usually do not belong to the usual OpenERP groups.</field>
+        </record>
 
         <record id="paypal_acquirer" model="portal.payment.acquirer">
             <field name="name">Paypal</field>

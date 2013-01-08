@@ -19,8 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields
-from osv import osv
+from openerp.osv import fields, osv
 
 class account_analytic_journal(osv.osv):
     _name = 'account.analytic.journal'

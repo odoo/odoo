@@ -20,23 +20,28 @@
 #
 ##############################################################################
 
+import logging
+
+_logger = logging.getLogger(__name__)
 import xml.dom.minidom
 domimpl = xml.dom.minidom.getDOMImplementation()
 from xml.dom.minicompat import StringTypes
 
 import urlparse
 import urllib
-from osv import osv
-from tools.translate import _
+from openerp.osv import osv
+from openerp.tools.translate import _
 
 try:
+    from pywebdav.lib import utils
+    from pywebdav.lib.propfind import PROPFIND
+    from pywebdav.lib.report import REPORT
+except ImportError:
     from DAV import utils
     from DAV.propfind import PROPFIND
     from DAV.report import REPORT
-except ImportError:
-    raise osv.except_osv(_('PyWebDAV Import Error!'), _('Please install PyWebDAV from http://code.google.com/p/pywebdav/downloads/detail?name=PyWebDAV-0.9.4.tar.gz&can=2&q=/'))
 
-import tools
+from openerp import tools
 
 class Text2(xml.dom.minidom.Text):
     def writexml(self, writer, indent="", addindent="", newl=""):

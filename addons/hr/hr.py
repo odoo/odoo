@@ -19,10 +19,10 @@
 #
 ##############################################################################
 
-import addons
+from openerp import addons
 import logging
-from osv import fields, osv
-import tools
+from openerp.osv import fields, osv
+from openerp import tools
 _logger = logging.getLogger(__name__)
 
 class hr_employee_category(osv.osv):
@@ -116,7 +116,6 @@ class hr_job(osv.osv):
             help="By default 'In position', set it to 'In Recruitment' if recruitment process is going on for this job position."),
     }
     _defaults = {
-        'expected_employees': 1,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr.job', context=c),
         'state': 'open',
     }

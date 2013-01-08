@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv import osv, fields
 
 class pos_payment_report_user(osv.osv_memory):
     _name = 'pos.payment.report.user'

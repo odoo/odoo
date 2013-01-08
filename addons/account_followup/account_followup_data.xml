@@ -3,11 +3,11 @@
     <!-- Mail template is done in a NOUPDATE block
          so users can freely customize/delete them -->
     <data noupdate="1">
-<!--Mail template level 0-->
-		 <record id="email_template_account_followup_level0" model="email.template">
-            <field name="name">Follow-up of overdue invoices level 0</field>
+        <!--Mail template level 0-->
+        <record id="email_template_account_followup_level0" model="email.template">
+            <field name="name">First polite payment follow-up reminder email</field>
             <field name="email_from">${user.email or ''}</field>
-            <field name="subject">${user.company_id.name} Payment Follow-up</field>
+            <field name="subject">${user.company_id.name} Payment Reminder</field>
             <field name="email_to">${object.email}</field>
             <field name="lang">${object.lang}</field>
             <field name="model_id" ref="base.model_res_partner"/>
@@ -21,53 +21,20 @@
 appropriate measures in order to carry out this payment in the next 8 days.
 
 Would your payment have been carried out after this mail was sent, please ignore this message. Do not hesitate to
-contact our accounting department at (+32).10.68.94.39.
+contact our accounting department.  
 
     </p>
 <br/>
 Best Regards,
-
+<br/>
    <br/>
 ${user.name}
 
 <br/>
 <br/>
-<%
-    from openerp.addons.account_followup.report import account_followup_print
-    rml_parse = account_followup_print.report_rappel(object._cr, user.id, "followup_rml_parser")
-    final_res = rml_parse._lines_get_with_partner(object, user.company_id.id)
-    followup_table = ''
-    for currency_dict in final_res:
-        currency_symbol = currency_dict.get('line', [{'currency_id': user.company_id.currency_id}])[0]['currency_id'].symbol
-        followup_table += '''
-        <table border="2" width=100%%>
-        <tr>
-            <td>Invoice date</td>
-            <td>Reference</td>
-            <td>Due date</td>
-            <td>Amount (%s)</td>
-            <td>Lit.</td>
-        </tr>
-        ''' % (currency_symbol)
-        total = 0
-        for aml in currency_dict['line']:
-            block = aml['blocked'] and 'X' or ' '
-            total += aml['balance']
-            strbegin = "<TD> "
-            strend = "</TD> "
-            date = aml['date_maturity'] or aml['date']
-            if date <= ctx['current_date'] and aml['balance'] > 0:
-                strbegin = "<TD><B>"
-                strend = "</B></TD>"
-            followup_table +="<TR>" + strbegin + str(aml['date']) + strend + strbegin + aml['ref'] + strend + strbegin + str(date) + strend + strbegin + str(aml['balance']) + strend + strbegin + block + strend + "</TR>"
-        total = rml_parse.formatLang(total, dp='Account', currency_obj=object.company_id.currency_id)
-        followup_table += '''<tr> </tr>
-                        </table>
-                        <center>Amount due: %s </center>''' % (total)
 
-%>
 
-${followup_table}
+${object.get_followup_table_html() | safe}
 
     <br/>
 
@@ -75,13 +42,11 @@ ${followup_table}
             ]]></field>
         </record>
 
-
-
-		<!--Mail template level 1 -->
-		 <record id="email_template_account_followup_level1" model="email.template">
-            <field name="name">Follow-up of overdue invoices level 1</field>
+        <!--Mail template level 1 -->
+        <record id="email_template_account_followup_level1" model="email.template">
+            <field name="name">A bit urging second payment follow-up reminder email</field>
             <field name="email_from">${user.email or ''}</field>
-            <field name="subject">${user.company_id.name} Payment Follow-up</field>
+            <field name="subject">${user.company_id.name} Payment Reminder</field>
             <field name="email_to">${object.email}</field>
             <field name="lang">${object.lang}</field>
             <field name="model_id" ref="base.model_res_partner"/>
@@ -91,71 +56,37 @@ ${followup_table}
     
     <p>Dear ${object.name},</p>
    <p>
-   	We are disappointed to see that despite sending a reminder, that your account is now seriously overdue.
+    We are disappointed to see that despite sending a reminder, that your account is now seriously overdue.
 It is essential that immediate payment is made, otherwise we will have to consider placing a stop on your account
 which means that we will no longer be able to supply your company with (goods/services).
 Please, take appropriate measures in order to carry out this payment in the next 8 days.
 If there is a problem with paying invoice that we are not aware of, do not hesitate to contact our accounting
-department at (+32).10.68.94.39. so that we can resolve the matter quickly.
+department. so that we can resolve the matter quickly.
 Details of due payments is printed below.
  </p>
 <br/>
 Best Regards,
     
 <br/>
+<br/>
 ${user.name}
     
 <br/>
 <br/>
 
-   
-<%
-    from openerp.addons.account_followup.report import account_followup_print
-    rml_parse = account_followup_print.report_rappel(object._cr, user.id, "followup_rml_parser")
-    final_res = rml_parse._lines_get_with_partner(object, user.company_id.id)
-    followup_table = ''
-    for currency_dict in final_res:
-        currency_symbol = currency_dict.get('line', [{'currency_id': user.company_id.currency_id}])[0]['currency_id'].symbol
-        followup_table += '''
-        <table border="2" width=100%%>
-        <tr>
-            <td>Invoice date</td>
-            <td>Reference</td>
-            <td>Due date</td>
-            <td>Amount (%s)</td>
-            <td>Lit.</td>
-        </tr>
-        ''' % (currency_symbol)
-        total = 0
-        for aml in currency_dict['line']:
-            block = aml['blocked'] and 'X' or ' '
-            total += aml['balance']
-            strbegin = "<TD> "
-            strend = "</TD> "
-            date = aml['date_maturity'] or aml['date']
-            if date <= ctx['current_date'] and aml['balance'] > 0:
-                strbegin = "<TD><B>"
-                strend = "</B></TD>"
-            followup_table +="<TR>" + strbegin + str(aml['date']) + strend + strbegin + aml['ref'] + strend + strbegin + str(date) + strend + strbegin + str(aml['balance']) + strend + strbegin + block + strend + "</TR>"
-        total = rml_parse.formatLang(total, dp='Account', currency_obj=object.company_id.currency_id)
-        followup_table += '''<tr> </tr>
-                        </table>
-                        <center>Amount due: %s </center>''' % (total)
-
-%>
-
-${followup_table}
+${object.get_followup_table_html() | safe}
 
     <br/>
 
 </div>
             ]]></field>
         </record>
-        <!--Email template -->
+
+        <!--Mail template level 2 -->
         <record id="email_template_account_followup_level2" model="email.template">
-            <field name="name">Follow-up of overdue invoices level 2</field>
+            <field name="name">Urging payment follow-up reminder email</field>
             <field name="email_from">${user.email or ''}</field>
-            <field name="subject">${user.company_id.name} Payment Follow-up</field>
+            <field name="subject">${user.company_id.name} Payment Reminder</field>
             <field name="email_to">${object.email}</field>
             <field name="lang">${object.lang}</field>
             <field name="model_id" ref="base.model_res_partner"/>
@@ -169,55 +100,18 @@ ${followup_table}
 Unless full payment is made in next 8 days, legal action for the recovery of the debt will be taken without
 further notice.
 I trust that this action will prove unnecessary and details of due payments is printed below.
-In case of any queries concerning this matter, do not hesitate to contact our accounting department at (+32).10.68.94.39.
+In case of any queries concerning this matter, do not hesitate to contact our accounting department.
 </p>
 <br/>
 Best Regards,
-    
+<br/>
 <br/>
 ${user.name}
-    
 <br/>
 <br/>
 
-    
 
-<%
-    from openerp.addons.account_followup.report import account_followup_print
-    rml_parse = account_followup_print.report_rappel(object._cr, user.id, "followup_rml_parser")
-    final_res = rml_parse._lines_get_with_partner(object, user.company_id.id)
-    followup_table = ''
-    for currency_dict in final_res:
-        currency_symbol = currency_dict.get('line', [{'currency_id': user.company_id.currency_id}])[0]['currency_id'].symbol
-        followup_table += '''
-        <table border="2" width=100%%>
-        <tr>
-            <td>Invoice date</td>
-            <td>Reference</td>
-            <td>Due date</td>
-            <td>Amount (%s)</td>
-            <td>Lit.</td>
-        </tr>
-        ''' % (currency_symbol)
-        total = 0
-        for aml in currency_dict['line']:
-            block = aml['blocked'] and 'X' or ' '
-            total += aml['balance']
-            strbegin = "<TD> "
-            strend = "</TD> "
-            date = aml['date_maturity'] or aml['date']
-            if date <= ctx['current_date'] and aml['balance'] > 0:
-                strbegin = "<TD><B>"
-                strend = "</B></TD>"
-            followup_table +="<TR>" + strbegin + str(aml['date']) + strend + strbegin + aml['ref'] + strend + strbegin + str(date) + strend + strbegin + str(aml['balance']) + strend + strbegin + block + strend + "</TR>"
-        total = rml_parse.formatLang(total, dp='Account', currency_obj=object.company_id.currency_id)
-        followup_table += '''<tr> </tr>
-                        </table>
-                        <center>Amount due: %s </center>''' % (total)
-
-%>
-
-${followup_table}
+${object.get_followup_table_html() | safe}
 
     <br/>
 
@@ -226,11 +120,10 @@ ${followup_table}
         </record>
         
         <!-- Default follow up message -->
-        
-		 <record id="email_template_account_followup_default" model="email.template">
-            <field name="name">Default follow-up of overdue invoices</field>
+        <record id="email_template_account_followup_default" model="email.template">
+            <field name="name">Default payment follow-up reminder e-mail</field>
             <field name="email_from">${user.email or ''}</field>
-            <field name="subject">${user.company_id.name} Payment Follow-up</field>
+            <field name="subject">${user.company_id.name} Payment Reminder</field>
             <field name="email_to">${object.email}</field>
             <field name="lang">${object.lang}</field>
             <field name="model_id" ref="base.model_res_partner"/>
@@ -243,72 +136,28 @@ ${followup_table}
     Exception made if there was a mistake of ours, it seems that the following amount stays unpaid. Please, take
 appropriate measures in order to carry out this payment in the next 8 days.
 Would your payment have been carried out after this mail was sent, please ignore this message. Do not hesitate to
-contact our accounting department at (+32).10.68.94.39.
+contact our accounting department.
     </p>
 <br/>
 Best Regards,
-</br>
-</br>
+<br/>
 <br/>
 ${user.name}
-    
 <br/>
 <br/>
 
-   
+${object.get_followup_table_html() | safe}
 
-<%
-    from openerp.addons.account_followup.report import account_followup_print
-    rml_parse = account_followup_print.report_rappel(object._cr, user.id, "followup_rml_parser")
-    final_res = rml_parse._lines_get_with_partner(object, user.company_id.id)
-    followup_table = ''
-    for currency_dict in final_res:
-        currency_symbol = currency_dict.get('line', [{'currency_id': user.company_id.currency_id}])[0]['currency_id'].symbol
-        followup_table += '''
-        <table border="2" width=100%%>
-        <tr>
-            <td>Invoice date</td>
-            <td>Reference</td>
-            <td>Due date</td>
-            <td>Amount (%s)</td>
-            <td>Lit.</td>
-        </tr>
-        ''' % (currency_symbol)
-        total = 0
-        for aml in currency_dict['line']:
-            block = aml['blocked'] and 'X' or ' '
-            total += aml['balance']
-            strbegin = "<TD> "
-            strend = "</TD> "
-            date = aml['date_maturity'] or aml['date']
-            if date <= ctx['current_date'] and aml['balance'] > 0:
-                strbegin = "<TD><B>"
-                strend = "</B></TD>"
-            followup_table +="<TR>" + strbegin + str(aml['date']) + strend + strbegin + aml['ref'] + strend + strbegin + str(date) + strend + strbegin + str(aml['balance']) + strend + strbegin + block + strend + "</TR>"
-        total = rml_parse.formatLang(total, dp='Account', currency_obj=object.company_id.currency_id)
-        followup_table += '''<tr> </tr>
-                        </table>
-                        <center>Amount due: %s </center>''' % (total)
-
-%>
-
-${followup_table}
-
-    <br/>
-
+<br/>
 </div>
             ]]></field>
         </record>
-        
-        
-        
-          
 
-        <record id="demo_followup1" model="account_followup.followup">
+        <record id="demo_followup1" model="account_followup.followup" forcecreate="False">
             <field name="company_id" ref="base.main_company"/>
         </record>
 
-        <record id="demo_followup_line1" model="account_followup.followup.line">
+        <record id="demo_followup_line1" model="account_followup.followup.line" forcecreate="False">
             <field name="name">Send first reminder email</field>
             <field name="sequence">0</field>
             <field name="delay">15</field>
@@ -319,14 +168,14 @@ Dear %(partner_name)s,
 
 Exception made if there was a mistake of ours, it seems that the following amount stays unpaid. Please, take appropriate measures in order to carry out this payment in the next 8 days.
 
-Would your payment have been carried out after this mail was sent, please ignore this message. Do not hesitate to contact our accounting department at (+32).10.68.94.39.
+Would your payment have been carried out after this mail was sent, please ignore this message. Do not hesitate to contact our accounting department.  
 
 Best Regards,
 </field>
-        <field name="email_template_id" ref="email_template_account_followup_level0"/>
+            <field name="email_template_id" ref="email_template_account_followup_level0"/>
         </record>
 
-        <record id="demo_followup_line2" model="account_followup.followup.line">
+        <record id="demo_followup_line2" model="account_followup.followup.line" forcecreate="False">
             <field name="name">Send reminder letter and email</field>
             <field name="sequence">1</field>
             <field name="delay">30</field>
@@ -342,16 +191,15 @@ We are disappointed to see that despite sending a reminder, that your account is
 It is essential that immediate payment is made, otherwise we will have to consider placing a stop on your account which means that we will no longer be able to supply your company with (goods/services).
 Please, take appropriate measures in order to carry out this payment in the next 8 days.
 
-If there is a problem with paying invoice that we are not aware of, do not hesitate to contact our accounting department at (+32).10.68.94.39. so that we can resolve the matter quickly.
+If there is a problem with paying invoice that we are not aware of, do not hesitate to contact our accounting department, so that we can resolve the matter quickly.
 
 Details of due payments is printed below.
 
 Best Regards,
-        </field>
+</field>
         </record>
-        
-        
-        <record id="demo_followup_line3" model="account_followup.followup.line">
+
+        <record id="demo_followup_line3" model="account_followup.followup.line" forcecreate="False">
             <field name="name">Call the customer on the phone</field>
             <field name="sequence">3</field>
             <field name="delay">40</field>
@@ -369,10 +217,10 @@ Unless full payment is made in next 8 days, then legal action for the recovery o
 
 I trust that this action will prove unnecessary and details of due payments is printed below.
 
-In case of any queries concerning this matter, do not hesitate to contact our accounting department at (+32).10.68.94.39.
+In case of any queries concerning this matter, do not hesitate to contact our accounting department.
 
 Best Regards,
-        </field>
+</field>
         </record>
     </data>
 </openerp>

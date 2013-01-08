@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-05-10 18:31+0000\n"
-"Last-Translator: Ferdinand-camptocamp <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-16 10:57+0000\n"
+"Last-Translator: Felix Schubert <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:47+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:57+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: email_template
 #: field:email.template,email_from:0
@@ -42,7 +42,7 @@ msgstr "abmelden"
 #: field:email.template,email_to:0
 #: field:email_template.preview,email_to:0
 msgid "To (Emails)"
-msgstr ""
+msgstr "An (E-Mails)"
 
 #. module: email_template
 #: field:email.template,mail_server_id:0
@@ -75,7 +75,7 @@ msgstr "Absenderadresse (Platzhalter können verwendet werden)"
 #. module: email_template
 #: view:email.template:0
 msgid "Remove context action"
-msgstr ""
+msgstr "Entferne Kontext Aktion"
 
 #. module: email_template
 #: help:email.template,mail_server_id:0
@@ -84,8 +84,8 @@ msgid ""
 "Optional preferred server for outgoing mails. If not set, the highest "
 "priority one will be used."
 msgstr ""
-"Optional bevorzugten Server für ausgehende Emails. Wenn nicht gesetzt, wird "
-"die höchste Priorität eins verwendet."
+"Optional bevorzugter Server für ausgehende E-Mails. Wenn nicht gesetzt, wird "
+"der Server mit der höchten Priorität verwendet."
 
 #. module: email_template
 #: field:email.template,report_name:0
@@ -96,7 +96,7 @@ msgstr "Report Dateiname"
 #. module: email_template
 #: view:email.template:0
 msgid "Preview"
-msgstr ""
+msgstr "Vorschau"
 
 #. module: email_template
 #: field:email.template,reply_to:0
@@ -107,7 +107,7 @@ msgstr "Antwort an"
 #. module: email_template
 #: view:mail.compose.message:0
 msgid "Use template"
-msgstr ""
+msgstr "Benutze Vorlage"
 
 #. module: email_template
 #: field:email.template,body_html:0
@@ -116,10 +116,10 @@ msgid "Body"
 msgstr "Hauptteil"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:218
+#: code:addons/email_template/email_template.py:244
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (copy)"
 
 #. module: email_template
 #: help:email.template,user_signature:0
@@ -139,7 +139,7 @@ msgstr "Postausgang-Server (SMTP)"
 #. module: email_template
 #: view:mail.compose.message:0
 msgid "Save as new template"
-msgstr ""
+msgstr "Speichern als neue Vorlage"
 
 #. module: email_template
 #: help:email.template,sub_object:0
@@ -154,7 +154,7 @@ msgstr ""
 #. module: email_template
 #: model:ir.model,name:email_template.model_email_template
 msgid "Email Templates"
-msgstr "EMail Vorlagen f. Modelle"
+msgstr "E-Mail Vorlagen"
 
 #. module: email_template
 #: help:email.template,report_name:0
@@ -181,8 +181,8 @@ msgid ""
 "a placeholder expression that provides the appropriate language code, e.g. "
 "${object.partner_id.lang.code}."
 msgstr ""
-"Optionaler ISO Sprachcode für ausgehende EMails. Standard ist englisch. "
-"Üblicherweise wird das ein Platzhalter sein zB. "
+"Optionaler ISO Sprachcode für ausgehende E-Mails. Standard ist englisch. "
+"Üblicherweise wird das ein Platzhalter sein z.B. "
 "${object.partner_id.lang.code}."
 
 #. module: email_template
@@ -205,12 +205,12 @@ msgstr ""
 #. module: email_template
 #: view:email.template:0
 msgid "Dynamic Value Builder"
-msgstr ""
+msgstr "Dynamischer Werte Builder"
 
 #. module: email_template
 #: model:ir.actions.act_window,name:email_template.wizard_email_template_preview
 msgid "Template Preview"
-msgstr "EMail Vorschau"
+msgstr "Vorlagen Vorschau"
 
 #. module: email_template
 #: view:mail.compose.message:0
@@ -222,7 +222,7 @@ msgstr "Speichere als neue Vorlage"
 msgid ""
 "Display an option on related documents to open a composition wizard with "
 "this template"
-msgstr ""
+msgstr "Anzeige einer Option, einen Assistenten zu finden."
 
 #. module: email_template
 #: help:email.template,email_cc:0
@@ -245,12 +245,12 @@ msgstr "Weiterführend"
 #. module: email_template
 #: view:email_template.preview:0
 msgid "Preview of"
-msgstr ""
+msgstr "Vorschau von"
 
 #. module: email_template
 #: view:email_template.preview:0
 msgid "Using sample document"
-msgstr ""
+msgstr "Benutzen Sie Beispiel"
 
 #. module: email_template
 #: view:email.template:0
@@ -274,24 +274,26 @@ msgstr "Sprache"
 #. module: email_template
 #: model:ir.model,name:email_template.model_email_template_preview
 msgid "Email Template Preview"
-msgstr "Email Vorlage Vorschau"
+msgstr "E-Mail Vorlagen Vorschau"
 
 #. module: email_template
 #: view:email_template.preview:0
 msgid "Email Preview"
-msgstr "EMail Vorschau"
+msgstr "E-Mail Vorschau"
 
 #. module: email_template
 #: view:email.template:0
 msgid ""
 "Remove the contextual action to use this template on related documents"
 msgstr ""
+"Entfernen Sie die Aktion, um diese Vorlage für bestimmte Dokumente zu "
+"verwenden"
 
 #. module: email_template
 #: field:email.template,copyvalue:0
 #: field:email_template.preview,copyvalue:0
 msgid "Placeholder Expression"
-msgstr ""
+msgstr "Platzhalter Ausdruck"
 
 #. module: email_template
 #: field:email.template,sub_object:0
@@ -337,24 +339,24 @@ msgstr "Modul"
 #. module: email_template
 #: model:ir.model,name:email_template.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr ""
+msgstr "E-Mail Assistent"
 
 #. module: email_template
 #: view:email.template:0
 msgid "Add context action"
-msgstr ""
+msgstr "Hinzufügen Kontext"
 
 #. module: email_template
 #: help:email.template,model_id:0
 #: help:email_template.preview,model_id:0
 msgid "The kind of document with with this template can be used"
-msgstr ""
+msgstr "Dokument, dass mit diesem Template genutzt werden kann"
 
 #. module: email_template
 #: field:email.template,email_recipients:0
 #: field:email_template.preview,email_recipients:0
 msgid "To (Partners)"
-msgstr ""
+msgstr "An (Partner)"
 
 #. module: email_template
 #: field:email.template,auto_delete:0
@@ -381,7 +383,7 @@ msgstr "zugehöriges Dokumenten-Modell"
 #. module: email_template
 #: view:email.template:0
 msgid "Addressing"
-msgstr ""
+msgstr "Anschrift"
 
 #. module: email_template
 #: help:email.template,email_recipients:0
@@ -389,6 +391,8 @@ msgstr ""
 msgid ""
 "Comma-separated ids of recipient partners (placeholders may be used here)"
 msgstr ""
+"Komma getrennte Liste mit ids der verbundenen Partner (Platzhalter müssen "
+"eingesetzt werden)."
 
 #. module: email_template
 #: field:email.template,attachment_ids:0
@@ -397,7 +401,7 @@ msgid "Attachments"
 msgstr "Anhänge"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:205
+#: code:addons/email_template/email_template.py:231
 #, python-format
 msgid "Deletion of the action record failed."
 msgstr "Das Löschen des Datensatzes schlug fehl."
@@ -412,7 +416,7 @@ msgstr "CC"
 #: field:email.template,model_id:0
 #: field:email_template.preview,model_id:0
 msgid "Applies to"
-msgstr ""
+msgstr "Gilt für"
 
 #. module: email_template
 #: field:email.template,sub_model_object_field:0
@@ -423,10 +427,10 @@ msgstr "Untergeordnetes Feld"
 #. module: email_template
 #: view:email.template:0
 msgid "Email Details"
-msgstr "EMail Details"
+msgstr "E-mail Details"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:170
+#: code:addons/email_template/email_template.py:196
 #, python-format
 msgid "Send Mail (%s)"
 msgstr "Versende Mail (%s)"
@@ -438,7 +442,7 @@ msgid ""
 "such as the availability of invoices."
 msgstr ""
 "Wenn aktiviert, wird erhält dieser Partner keine automatische Email-"
-"Benachrichtigung, über die Verfügbarkeit von Rechnungen."
+"Benachrichtigung, wie z.B. die Verfügbarkeit von Rechnungen."
 
 #. module: email_template
 #: help:email.template,auto_delete:0
@@ -463,7 +467,7 @@ msgstr ""
 "Zielfeld der Relation auswählen (sub-model)"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:205
+#: code:addons/email_template/email_template.py:231
 #, python-format
 msgid "Warning"
 msgstr "Warnung"
@@ -483,7 +487,7 @@ msgstr "Partner"
 #: field:email.template,null_value:0
 #: field:email_template.preview,null_value:0
 msgid "Default Value"
-msgstr ""
+msgstr "Standardwert"
 
 #. module: email_template
 #: help:email.template,attachment_ids:0
@@ -492,8 +496,8 @@ msgid ""
 "You may attach files to this template, to be added to all emails created "
 "from this template"
 msgstr ""
-"Sie können Anhänge zu dieser Vorlage hinzufügen, die mit allen EMails "
-"basierend auf dieser Vorlage versandt werden."
+"Sie können Anhänge zu dieser Vorlage hinzufügen, die mit allen E-Mails, "
+"basierend auf dieser Vorlage, versandt werden."
 
 #. module: email_template
 #: help:email.template,body_html:0
@@ -505,7 +509,7 @@ msgstr ""
 #. module: email_template
 #: view:email.template:0
 msgid "Contents"
-msgstr ""
+msgstr "Inhalte"
 
 #. module: email_template
 #: field:email.template,subject:0

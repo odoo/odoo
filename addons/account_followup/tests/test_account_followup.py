@@ -2,10 +2,10 @@
 
 import datetime
 
-import tools
+from openerp import tools
 from openerp.tests.common import TransactionCase
 
-import netsvc
+from openerp import netsvc
 
 class TestAccountFollowup(TransactionCase):
     def setUp(self):
@@ -108,7 +108,7 @@ class TestAccountFollowup(TransactionCase):
     def test_03_filter_on_credit(self):
         """ Check the partners can be filtered on having credits """
         cr, uid = self.cr, self.uid
-        ids = self.partner.search(cr, uid, [('credit', '>=', 0.0)])
+        ids = self.partner.search(cr, uid, [('payment_amount_due', '>=', 0.0)])
         self.assertIn(self.partner_id, ids)
         
     def test_04_action_done(self):
@@ -153,7 +153,6 @@ class TestAccountFollowup(TransactionCase):
                                                       }, context={"followup_id": self.followup_id})
         self.wizard.do_process(cr, uid, [self.wizard_id], context={"followup_id": self.followup_id})
         partner_ref = self.partner.browse(cr, uid, self.partner_id)
-        print partner_ref.credit, partner_ref.payment_next_action_date, partner_ref.payment_responsible_id
-        self.assertEqual(0, self.partner.browse(cr, uid, self.partner_id).credit, "Credit != 0")
+        self.assertEqual(0, self.partner.browse(cr, uid, self.partner_id).payment_amount_due, "Amount Due != 0")
         self.assertFalse(self.partner.browse(cr, uid, self.partner_id).payment_next_action_date, "Next action date not cleared")
         

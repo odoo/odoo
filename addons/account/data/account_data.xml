@@ -10,17 +10,33 @@
         <!--
         Payment term
         -->
-        <record id="account_payment_term" model="account.payment.term">
-            <field name="name">30 Days End of Month</field>
-            <field name="note">30 Days End of Month</field>
+        <record id="account_payment_term_immediate" model="account.payment.term">
+            <field name="name">Immediate Payment</field>
+            <field name="note">Immediate Payment</field>
         </record>
-        <record id="account_payment_term_line" model="account.payment.term.line">
-            <field name="name">30 Days End of Month</field>
+
+        <record id="account_payment_term_line_immediate" model="account.payment.term.line">
+            <field name="name">Immediate Payment</field>
             <field name="value">balance</field>
-            <field eval="30" name="days"/>
-            <field eval="-1" name="days2"/>
-            <field eval="account_payment_term" name="payment_id"/>
+            <field eval="0" name="days"/>
+            <field eval="0" name="days2"/>
+            <field eval="account_payment_term_immediate" name="payment_id"/>
         </record>
+
+
+        <record id="account_payment_term_15days" model="account.payment.term">
+            <field name="name">15 Days</field>
+            <field name="note">15 Days</field>
+        </record>
+
+        <record id="account_payment_term_line_15days" model="account.payment.term.line">
+            <field name="name">15 Days</field>
+            <field name="value">balance</field>
+            <field eval="15" name="days"/>
+            <field eval="0" name="days2"/>
+            <field eval="account_payment_term_15days" name="payment_id"/>
+        </record>
+
         <record forcecreate="True" id="decimal_payment" model="decimal.precision">
             <field name="name">Payment Term</field>
             <field name="digits">6</field>
@@ -30,6 +46,7 @@
             <field name="name">30 Net Days</field>
             <field name="note">30 Net Days</field>
         </record>
+
         <record id="account_payment_term_line_net" model="account.payment.term.line">
             <field name="name">30 Net Days</field>
             <field name="value">balance</field>
@@ -37,28 +54,7 @@
             <field eval="0" name="days2"/>
             <field eval="account_payment_term_net" name="payment_id"/>
         </record>
-
-        <record id="account_payment_term_advance" model="account.payment.term">
-            <field name="name">30% Advance End 30 Days</field>
-            <field name="note">30% Advance End 30 Days</field>
-        </record>
-        <record id="account_payment_term_line_advance1" model="account.payment.term.line">
-            <field name="name">30% Advance</field>
-            <field name="value">procent</field>
-            <field eval="3" name="sequence"/>
-            <field eval="0.300000" name="value_amount"/>
-            <field eval="0" name="days"/>
-            <field eval="0" name="days2"/>
-            <field eval="account_payment_term_advance" name="payment_id"/>
-        </record>
-        <record id="account_payment_term_line_advance2" model="account.payment.term.line">
-            <field name="name">Remaining Balance</field>
-            <field name="value">balance</field>
-            <field eval="30" name="days"/>
-            <field eval="-1" name="days2"/>
-            <field eval="account_payment_term_advance" name="payment_id"/>
-        </record>
-
+        
         <!--
         Account Journal Sequences
         -->
@@ -155,14 +151,16 @@
             <field name="object">account.invoice</field>
         </record>
 
-        <!-- mail: subtypes -->
-        <record id="mt_invoice_new" model="mail.message.subtype">
-            <field name="name">created</field>
+        <!-- Account-related subtypes for messaging / Chatter -->
+        <record id="mt_invoice_validated" model="mail.message.subtype">
+            <field name="name">Validated</field>
             <field name="res_model">account.invoice</field>
+            <field name="description">Invoice validated</field>
         </record>
         <record id="mt_invoice_paid" model="mail.message.subtype">
-            <field name="name">paid</field>
+            <field name="name">Paid</field>
             <field name="res_model">account.invoice</field>
+            <field name="description">Invoice paid</field>
         </record>
     </data>
 </openerp>

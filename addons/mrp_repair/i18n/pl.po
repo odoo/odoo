@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 10:25+0000\n"
-"PO-Revision-Date: 2010-08-03 08:04+0000\n"
-"Last-Translator: Mantavya Gajjar (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-14 12:47+0000\n"
+"Last-Translator: Grzegorz Grzelak (OpenGLOBE.pl) <grzegorz@openglobe.pl>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:43+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:53+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,move_id:0
@@ -32,7 +32,7 @@ msgid "Recreate Invoice"
 msgstr "Utwórz fakturę od nowa"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:376
+#: code:addons/mrp_repair/mrp_repair.py:371
 #, python-format
 msgid "You have to select a Partner Invoice Address in the repair form !"
 msgstr "Musisz wybrać adres fakturowy w formularzu zamówienia naprawy!"
@@ -52,7 +52,7 @@ msgstr "Do zafakturowania"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Jednostka Miary"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -67,10 +67,10 @@ msgstr "Grupuj wg adresów partnera do faktur"
 #. module: mrp_repair
 #: field:mrp.repair,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Nieprzeczytane wiadomości"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:440
+#: code:addons/mrp_repair/mrp_repair.py:435
 #, python-format
 msgid "No product defined on Fees!"
 msgstr "Nie zdefiniowano produktu dla opłaty!"
@@ -94,7 +94,7 @@ msgstr "Wyjątek faktury"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Serial Number"
-msgstr ""
+msgstr "Numer seryjny"
 
 #. module: mrp_repair
 #: field:mrp.repair,address_id:0
@@ -121,6 +121,8 @@ msgstr "Adres do faktury :"
 #: help:mrp.repair,partner_id:0
 msgid "Choose partner for whom the order will be invoiced and delivered."
 msgstr ""
+"Wybierz partnera, dla którego ta naprawa jest przeznaczona i będzie "
+"zafakturowana."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -135,7 +137,7 @@ msgstr "Notatki"
 #. module: mrp_repair
 #: field:mrp.repair,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Wiadomości"
 
 #. module: mrp_repair
 #: field:mrp.repair,amount_tax:0
@@ -145,12 +147,12 @@ msgid "Taxes"
 msgstr "Podatki"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:390
-#: code:addons/mrp_repair/mrp_repair.py:418
-#: code:addons/mrp_repair/mrp_repair.py:447
+#: code:addons/mrp_repair/mrp_repair.py:385
+#: code:addons/mrp_repair/mrp_repair.py:413
+#: code:addons/mrp_repair/mrp_repair.py:442
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Błąd!"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -161,12 +163,12 @@ msgstr "Suma netto :"
 #: selection:mrp.repair,state:0
 #: selection:mrp.repair.line,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Anulowano"
 
 #. module: mrp_repair
 #: help:mrp.repair,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Jeśli zaznaczone, to wiadomość wymaga twojej uwagi"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -212,10 +214,9 @@ msgid "Move"
 msgstr "Przesunięcie"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:579
-#, python-format
-msgid "Repair Order for <em>%s</em> has been <b>started</b>."
-msgstr ""
+#: report:repair.order:0
+msgid "Tax"
+msgstr "Podatek"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
@@ -242,8 +243,8 @@ msgstr "Dodatkowe informacje"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:336
-#: code:addons/mrp_repair/mrp_repair.py:350
-#: code:addons/mrp_repair/mrp_repair.py:440
+#: code:addons/mrp_repair/mrp_repair.py:349
+#: code:addons/mrp_repair/mrp_repair.py:435
 #: code:addons/mrp_repair/wizard/cancel_repair.py:49
 #, python-format
 msgid "Warning!"
@@ -261,7 +262,7 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:390
+#: code:addons/mrp_repair/mrp_repair.py:385
 #, python-format
 msgid "No account defined for partner \"%s\"."
 msgstr "Nie zdefiniowano konta dla partnera \"%s\"."
@@ -294,15 +295,10 @@ msgid "Repairs order"
 msgstr "Zamówienie napraw"
 
 #. module: mrp_repair
-#: report:repair.order:0
-msgid "Tax"
-msgstr ""
-
-#. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:336
 #, python-format
 msgid "Serial number is required for operation line with product '%s'"
-msgstr ""
+msgstr "Dla operacji z produktem '%s' jest wymagany numer seryjny."
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -394,12 +390,6 @@ msgid "Repair Line"
 msgstr "Pozycja naprawy"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:596
-#, python-format
-msgid "Repair has been <b>cancelled</b>."
-msgstr ""
-
-#. module: mrp_repair
 #: report:repair.order:0
 msgid "N° :"
 msgstr "Nr :"
@@ -437,9 +427,9 @@ msgid "Yes"
 msgstr "Tak"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:573
-#, python-format
-msgid "Repair Order for <em>%s</em> has been <b>created</b>."
+#: view:mrp.repair.cancel:0
+#: view:mrp.repair.make_invoice:0
+msgid "or"
 msgstr ""
 
 #. module: mrp_repair
@@ -454,7 +444,7 @@ msgstr "Zafakturowano"
 #: field:mrp.repair.fee,product_uom:0
 #: field:mrp.repair.line,product_uom:0
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Jednostka miary produktu"
 
 #. module: mrp_repair
 #: view:mrp.repair.make_invoice:0
@@ -513,18 +503,12 @@ msgstr ""
 #. module: mrp_repair
 #: field:mrp.repair,guarantee_limit:0
 msgid "Warranty Expiration"
-msgstr ""
+msgstr "Koniec gwarancji"
 
 #. module: mrp_repair
 #: help:mrp.repair,pricelist_id:0
 msgid "Pricelist of the selected partner."
-msgstr ""
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:606
-#, python-format
-msgid "Repair Order is <b>closed</b>."
-msgstr ""
+msgstr "Cennik dla partnera"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -559,12 +543,6 @@ msgid "Is a Follower"
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:591
-#, python-format
-msgid "Repair Order for <em>%s</em> has been <b>accepted</b>."
-msgstr ""
-
-#. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Date"
 msgstr "Data"
@@ -575,16 +553,14 @@ msgid "Repair Fees Line"
 msgstr "Pozycja opłaty za naprawę"
 
 #. module: mrp_repair
-#: field:mrp.repair,message_comment_ids:0
-#: help:mrp.repair,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
+#: selection:mrp.repair,state:0
+msgid "Quotation"
+msgstr "Oferta"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:585
-#, python-format
-msgid "Draft Invoice of %s %s <b>waiting for validation</b>."
-msgstr ""
+#: view:mrp.repair:0
+msgid "Confirm Repair"
+msgstr "Potwierdź naprawę"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -594,7 +570,7 @@ msgstr "Oferta naprawy"
 #. module: mrp_repair
 #: field:mrp.repair,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Podsumowanie"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -602,8 +578,8 @@ msgid "End Repair"
 msgstr "Koniec naprawy"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:418
-#: code:addons/mrp_repair/mrp_repair.py:447
+#: code:addons/mrp_repair/mrp_repair.py:413
+#: code:addons/mrp_repair/mrp_repair.py:442
 #, python-format
 msgid "No account defined for product \"%s\"."
 msgstr "Produkt \"%s\" nie ma zdefinowanego konta."
@@ -624,7 +600,7 @@ msgstr "Ilość"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Product Information"
-msgstr ""
+msgstr "Informacja o produkcie"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
@@ -667,11 +643,6 @@ msgid "Cancel"
 msgstr "Anuluj"
 
 #. module: mrp_repair
-#: selection:mrp.repair,state:0
-msgid "Quotation"
-msgstr "Oferta"
-
-#. module: mrp_repair
 #: field:mrp.repair.line,location_dest_id:0
 msgid "Dest. Location"
 msgstr "Strefa docelowa"
@@ -711,7 +682,7 @@ msgstr "Utwórz fakturę"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Reair Orders"
-msgstr ""
+msgstr "Zamówienia naprawy"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,name:0
@@ -760,18 +731,13 @@ msgstr "Podatki:"
 #. module: mrp_repair
 #: view:mrp.repair.make_invoice:0
 msgid "Do you really want to create the invoice(s)?"
-msgstr ""
+msgstr "Czy chcesz utworzyć fakturę(y) ?"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:350
+#: code:addons/mrp_repair/mrp_repair.py:349
 #, python-format
 msgid "Repair order is already invoiced."
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Confirm Repair"
-msgstr "Potwierdź naprawę"
+msgstr "Zamówienia naprawy jest już zafakturowane."
 
 #. module: mrp_repair
 #: field:mrp.repair,picking_id:0
@@ -806,12 +772,6 @@ msgid "Remove"
 msgstr "Demontaż"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:601
-#, python-format
-msgid "Repair Order is now <b>ready</b> to repair."
-msgstr ""
-
-#. module: mrp_repair
 #: field:mrp.repair,partner_invoice_id:0
 msgid "Invoicing Address"
 msgstr "Adres do faktury"
@@ -819,7 +779,7 @@ msgstr "Adres do faktury"
 #. module: mrp_repair
 #: help:mrp.repair,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Wiadomości i historia komunikacji"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -843,12 +803,6 @@ msgid "No Invoice"
 msgstr "Brak faktur"
 
 #. module: mrp_repair
-#: view:mrp.repair.cancel:0
-#: view:mrp.repair.make_invoice:0
-msgid "or"
-msgstr ""
-
-#. module: mrp_repair
 #: field:mrp.repair,amount_total:0
 msgid "Total"
 msgstr "Suma"
@@ -859,7 +813,7 @@ msgid "Ready to Repair"
 msgstr "Gotowe do naprawy"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:376
+#: code:addons/mrp_repair/mrp_repair.py:371
 #, python-format
 msgid "No partner !"
 msgstr "Brak partnera !"

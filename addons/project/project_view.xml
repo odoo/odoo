@@ -19,43 +19,6 @@
             <field name="context">{'search_default_project_id': [active_id], 'default_project_id': active_id}</field>
         </record>
 
-        <!-- Project Read/Unread actions -->
-        <record id="actions_server_project_unread" model="ir.actions.server">
-            <field name="name">Project: Mark unread</field>
-            <field name="condition">True</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="model_project_project"/>
-            <field name="state">code</field>
-            <field name="code">self.message_mark_as_unread(cr, uid, context.get('active_ids'), context=context)</field>
-        </record>
-        <record id="action_project_unread" model="ir.values">
-            <field name="name">action_project_unread</field>
-            <field name="action_id" ref="actions_server_project_unread"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_project_unread'))"/>
-            <field name="key">action</field>
-            <field name="model_id" ref="model_project_project"/>
-            <field name="model">project.project</field>
-            <field name="key2">client_action_multi</field>
-        </record>
-
-        <record id="actions_server_project_read" model="ir.actions.server">
-            <field name="name">Project: Mark read</field>
-            <field name="condition">True</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="model_project_project"/>
-            <field name="state">code</field>
-            <field name="code">self.message_mark_as_read(cr, uid, context.get('active_ids'), context=context)</field>
-        </record>
-        <record id="action_project_read" model="ir.values">
-            <field name="name">action_project_read</field>
-            <field name="action_id" ref="actions_server_project_read"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_project_read'))"/>
-            <field name="key">action</field>
-            <field name="model_id" ref="model_project_project"/>
-            <field name="model">project.project</field>
-            <field name="key2">client_action_multi</field>
-        </record>
-
         <!-- Project -->
         <record id="edit_project" model="ir.ui.view">
             <field name="name">project.project.form</field>
@@ -152,7 +115,7 @@
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers" help="Follow this project to automatically follow all related tasks and issues." groups="base.group_user"/>
+                    <field name="message_follower_ids" widget="mail_followers" help="Follow this project to automatically track the events associated to tasks and issues of this project." groups="base.group_user"/>
                     <field name="message_ids" widget="mail_thread"/>
                 </div>
                 </form>
@@ -191,7 +154,7 @@
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <tree fonts="bold:message_unread==True" colors="red:date and (date&lt;current_date) and (state == 'open');blue:state in ('draft','pending');grey: state in ('close','cancelled')" string="Projects">
-                    <field name="sequence" invisible="1"/>
+                    <field name="sequence" widget="handle"/>
                     <field name="message_unread" invisible="1"/>
                     <field name="date" invisible="1"/>
                     <field name="name" string="Project Name"/>
@@ -258,7 +221,7 @@
                                         </span>
                                     </div>
                                     <div class="oe_kanban_project_avatars">
-                                        <t t-foreach="record.members.raw_value" t-as="member">
+                                        <t t-foreach="record.members.raw_value.slice(0,11)" t-as="member">
                                             <img t-att-src="kanban_image('res.users', 'image_small', member)" t-att-data-member_id="member"/>
                                         </t>
                                     </div>
@@ -287,7 +250,7 @@
             <field name="view_mode">kanban,tree,form,gantt</field>
             <field name="view_id" ref="view_project_kanban"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
-            <field name="context">{}</field>
+            <field name="context">{'search_default_Current': 1}</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                   Click to start a new project.
@@ -342,43 +305,6 @@
 
         <!-- Task -->
 
-        <!-- Task Read/Unread actions -->
-        <record id="actions_server_project_task_unread" model="ir.actions.server">
-            <field name="name">Task: Mark unread</field>
-            <field name="condition">True</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="model_project_task"/>
-            <field name="state">code</field>
-            <field name="code">self.message_mark_as_unread(cr, uid, context.get('active_ids'), context=context)</field>
-        </record>
-        <record id="action_project_task_unread" model="ir.values">
-            <field name="name">action_project_task_unread</field>
-            <field name="action_id" ref="actions_server_project_task_unread"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_project_task_unread'))"/>
-            <field name="key">action</field>
-            <field name="model_id" ref="model_project_task"/>
-            <field name="model">project.task</field>
-            <field name="key2">client_action_multi</field>
-        </record>
-
-        <record id="actions_server_project_task_read" model="ir.actions.server">
-            <field name="name">Task: Mark read</field>
-            <field name="condition">True</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="model_project_task"/>
-            <field name="state">code</field>
-            <field name="code">self.message_mark_as_read(cr, uid, context.get('active_ids'), context=context)</field>
-        </record>
-        <record id="action_project_task_read" model="ir.values">
-            <field name="name">action_project_task_read</field>
-            <field name="action_id" ref="actions_server_project_task_read"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_project_task_read'))"/>
-            <field name="key">action</field>
-            <field name="model_id" ref="model_project_task"/>
-            <field name="model">project.task</field>
-            <field name="key2">client_action_multi</field>
-        </record>
-
         <record id="view_task_form2" model="ir.ui.view">
             <field name="name">project.task.form</field>
             <field name="model">project.task</field>
@@ -401,9 +327,8 @@
                         <field name="stage_id" widget="statusbar" clickable="True"/>
                     </header>
                     <sheet string="Task">
-                    <label for="name" class="oe_edit_only"/>
                     <h1>
-                        <field name="name"/>
+                        <field name="name" placeholder="Task summary..."/>
                     </h1>
                     <group>
                         <group>
@@ -526,19 +451,18 @@
                                 <div><b><field name="name"/></b></div>
                                 <div>
                                     <field name="project_id"/><br/>
-                                    <t t-esc="kanban_text_ellipsis(record.description.value, 160)"/><br t-if="record.description.value"/>
+                                    <div class="oe_ellipsis"><t t-raw="record.description.value"/></div>
                                     <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
                                     <span t-attf-class="#{red || ''}"><i><field name="date_deadline"/></i></span>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
-                                    <div groups="base.group_user">
+                                    <t groups="base.group_user">
                                         <a t-if="record.kanban_state.raw_value === 'normal'" type="object" string="In Progress" name="set_kanban_state_done" class="oe_kanban_status"> </a>
                                         <a t-if="record.kanban_state.raw_value === 'done'" type="object" string="Ready for next stage" name="set_kanban_state_blocked" class="oe_kanban_status oe_kanban_status_green"> </a>
                                         <a t-if="record.kanban_state.raw_value === 'blocked'" type="object" string="Blocked" name="set_kanban_state_normal" class="oe_kanban_status oe_kanban_status_red"> </a>
-                                        <a t-if="record.priority.raw_value == 2" type="object" string="Important" name="set_very_high_priority" class="oe_e oe_star_on">7</a>
-                                        <a t-if="record.priority.raw_value == 1 or record.priority.raw_value == 3 or record.priority.raw_value == 4" type="object" string="Normal" name="set_normal_priority" class="oe_e oe_star_off">7</a>
-                                        <a t-if="record.priority.raw_value == 0" type="object" string="Very Important" name="set_high_priority" class="oe_e oe_star_very_high_priority">7</a>
-                                    </div>
+                                        <a t-if="record.priority.raw_value > 0" type="object" string="Normal" name="set_high_priority" class="oe_e oe_star_off">7</a>
+                                        <a t-if="record.priority.raw_value == 0" type="object" string="Very Important" name="set_normal_priority" class="oe_e oe_star_on">7</a>
+                                    </t>
                                     <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
                                 </div>
                                 <div class="oe_kanban_footer_left">
@@ -625,6 +549,8 @@
             <field name="arch" type="xml">
                <search string="Tasks">
                     <field name="name" string="Tasks"/>
+                    <field name="categ_ids"/>
+                    <separator/>
                     <filter icon="terp-mail-message-new" string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
                     <filter name="draft" string="New" domain="[('state','=','draft')]" help="New Tasks" icon="terp-check"/>

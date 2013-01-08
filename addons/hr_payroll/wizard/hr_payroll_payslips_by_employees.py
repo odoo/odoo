@@ -23,8 +23,8 @@ import time
 from datetime import datetime
 from dateutil import relativedelta
 
-from osv import fields, osv
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class hr_payslip_employees(osv.osv_memory):
 

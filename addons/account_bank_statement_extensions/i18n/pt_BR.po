@@ -7,20 +7,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-09-11 18:35+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:09+0000\n"
+"Last-Translator: Fábio Martinelli - http://zupy.com.br "
+"<webmaster@guaru.net>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:54+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 06:06+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: account_bank_statement_extensions
-#: view:account.bank.statement.line:0
-msgid "Search Bank Transactions"
-msgstr "Procurar Transações Bancárias"
+#: help:account.bank.statement.line.global,name:0
+msgid "Originator to Beneficiary Information"
+msgstr "Informação de Origem para Beneficiário"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -59,7 +60,7 @@ msgstr "Cancelar linhas de instrução selecionadas"
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line,val_date:0
 msgid "Value Date"
-msgstr ""
+msgstr "Data do Valor"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -104,7 +105,7 @@ msgstr "Informações de Pagamento em Lote"
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line,state:0
 msgid "Status"
-msgstr ""
+msgstr "Situação"
 
 #. module: account_bank_statement_extensions
 #: code:addons/account_bank_statement_extensions/account_bank_statement.py:129
@@ -113,11 +114,13 @@ msgid ""
 "Delete operation not allowed.             Please go to the associated bank "
 "statement in order to delete and/or modify bank statement line."
 msgstr ""
+"Operação Excluir não permitida. Por favor acesse o demonstrativo bancário "
+"relacionado para excluir e ou modificar uma linha do lançamento bancário."
 
 #. module: account_bank_statement_extensions
 #: view:confirm.statement.line:0
 msgid "or"
-msgstr ""
+msgstr "ou"
 
 #. module: account_bank_statement_extensions
 #: view:confirm.statement.line:0
@@ -204,6 +207,11 @@ msgid "Name"
 msgstr "Nome"
 
 #. module: account_bank_statement_extensions
+#: field:account.bank.statement.line.global,name:0
+msgid "OBI"
+msgstr ""
+
+#. module: account_bank_statement_extensions
 #: selection:account.bank.statement.line.global,type:0
 msgid "ISO 20022"
 msgstr "ISO 20022"
@@ -221,7 +229,7 @@ msgstr "Manual"
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
 msgid "Bank Transaction"
-msgstr ""
+msgstr "Transação Bancária"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -252,6 +260,11 @@ msgstr "BIC da Contrapartida"
 #: field:account.bank.statement.line.global,child_ids:0
 msgid "Child Codes"
 msgstr "Códigos derivados (sub-contas)"
+
+#. module: account_bank_statement_extensions
+#: view:account.bank.statement.line:0
+msgid "Search Bank Transactions"
+msgstr "Procurar Transações Bancárias"
 
 #. module: account_bank_statement_extensions
 #: view:confirm.statement.line:0
@@ -294,11 +307,6 @@ msgid "Counterparty Name"
 msgstr "Nome da Contrapartida"
 
 #. module: account_bank_statement_extensions
-#: field:account.bank.statement.line.global,name:0
-msgid "Communication"
-msgstr "Comunicação"
-
-#. module: account_bank_statement_extensions
 #: model:ir.model,name:account_bank_statement_extensions.model_res_partner_bank
 msgid "Bank Accounts"
 msgstr "Contas Bancárias"
@@ -329,7 +337,7 @@ msgstr "Linhas do Demonstrativo Bancário"
 #: code:addons/account_bank_statement_extensions/account_bank_statement.py:129
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Aviso!"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line.global:0
@@ -394,6 +402,9 @@ msgstr "ID Globalização"
 
 #~ msgid "The journal and period chosen have to belong to the same company."
 #~ msgstr "O diário e o período escolhido tem que pertencer à mesma empresa."
+
+#~ msgid "Communication"
+#~ msgstr "Comunicação"
 
 #~ msgid "Valuta Date"
 #~ msgstr "Data do Crédito"

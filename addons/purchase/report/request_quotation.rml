@@ -32,7 +32,6 @@
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,-1" stop="0,-1"/>
     </blockTableStyle>
     <initialize>
       <paraStyle name="all" alignment="justify"/>
@@ -134,7 +133,7 @@
     </blockTable>
     <section>
       <para style="terp_default_9">[[ repeatIn(order.order_line,'order_line') ]]</para>
-      <blockTable colWidths="370.0,100.0,39.0,20.0" style="Table_Product_Line">
+      <blockTable colWidths="371.0,98.0,61.0" style="Table_Product_Line">
         <tr>
           <td>
             <para style="terp_default_9">[[ order_line.name ]]</para>
@@ -143,10 +142,10 @@
             <para style="terp_default_Centre_9">[[ formatLang(order_line.date_planned, date = True) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(order_line.product_qty )]]</para>
-          </td>
-          <td>
-            <para style="terp_default_Right_9">[[ (order_line.product_uom and order_line.product_uom.name) or '' ]]</para>
+            <para style="terp_default_Right_9">
+                [[ formatLang(order_line.product_qty )]]
+                <i>[[ (order_line.product_uom and order_line.product_uom.name) or '' ]]</i>
+            </para>
           </td>
         </tr>
       </blockTable>

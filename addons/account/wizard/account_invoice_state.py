@@ -19,10 +19,10 @@
 #
 ##############################################################################
 
-from osv import osv
-from tools.translate import _
-import netsvc
-import pooler
+from openerp.osv import osv
+from openerp.tools.translate import _
+from openerp import netsvc
+from openerp import pooler
 
 class account_invoice_confirm(osv.osv_memory):
     """

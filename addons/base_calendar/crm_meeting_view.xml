@@ -2,43 +2,6 @@
 <openerp>
     <data>
 
-    <!-- Read/Unread actions -->
-
-    <record id="actions_server_crm_meeting_read" model="ir.actions.server">
-        <field name="name">CRM Meeting: Mark read</field>
-        <field name="condition">True</field>
-        <field name="type">ir.actions.server</field>
-        <field name="model_id" ref="model_crm_meeting"/>
-        <field name="state">code</field>
-        <field name="code">self.message_mark_as_read(cr, uid, context.get('active_ids'), context=context)</field>
-    </record>
-    <record id="action_crm_meeting_read" model="ir.values">
-        <field name="name">action_crm_meeting_read</field>
-        <field name="action_id" ref="actions_server_crm_meeting_read"/>
-        <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_crm_meeting_read'))"/>
-        <field name="key">action</field>
-        <field name="model_id" ref="model_crm_meeting"/>
-        <field name="model">crm.meeting</field>
-        <field name="key2">client_action_multi</field>
-    </record>
-
-    <record id="actions_server_crm_meeting_unread" model="ir.actions.server">
-        <field name="name">CRM Meeting: Mark unread</field>
-        <field name="condition">True</field>
-        <field name="type">ir.actions.server</field>
-        <field name="model_id" ref="model_crm_meeting"/>
-        <field name="state">code</field>
-        <field name="code">self.message_mark_as_unread(cr, uid, context.get('active_ids'), context=context)</field>
-    </record>
-    <record id="action_crm_meeting_unread" model="ir.values">
-        <field name="name">action_crm_meeting_unread</field>
-        <field name="action_id" ref="actions_server_crm_meeting_unread"/>
-        <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_crm_meeting_unread'))"/>
-        <field name="key">action</field>
-        <field name="model_id" ref="model_crm_meeting"/>
-        <field name="model">crm.meeting</field>
-        <field name="key2">client_action_multi</field>
-    </record>
 
     <!-- CRM Meetings Types Form View -->
 
@@ -119,8 +82,7 @@
                         <group>
                             <group col="1">
                                 <group>
-                                    <field name="recurrency"
-                                        attrs="{'readonly': [('recurrent_uid','!=',False)]}"/>
+                                    <field name="recurrency"/>
                                 </group>
                                 <group attrs="{'invisible': [('recurrency','=',False)]}">
                                     <label for="interval"/>
@@ -166,8 +128,8 @@
                                 <field name="class"/>
                                 <field name="show_as"/>
                                 <field name="rrule" invisible="1" readonly="1"/>
+                                <field name="recurrent_id_date" invisible="1"/>
                                 <field name="recurrent_id" invisible="1"/>
-                                <field name="recurrent_uid" invisible="1"/>
                             </group>
                         </group>
                     </page>

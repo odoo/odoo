@@ -28,7 +28,7 @@
     'summary': 'Leads, Opportunities, Phone Calls',
     'description': """
 The generic OpenERP Customer Relationship Management
-=====================================================
+====================================================
 
 This application enables a group of people to intelligently and efficiently manage leads, opportunities, meetings and phone calls.
 
@@ -67,21 +67,16 @@ Dashboard for CRM will include:
         'security/crm_security.xml',
         'security/ir.model.access.csv',
 
-        'wizard/crm_lead_to_partner_view.xml',
         'wizard/crm_lead_to_opportunity_view.xml',
 
         'wizard/crm_phonecall_to_phonecall_view.xml',
-        'wizard/crm_phonecall_to_partner_view.xml',
-        'wizard/crm_phonecall_to_opportunity_view.xml',
 
         'wizard/crm_opportunity_to_phonecall_view.xml',
-        'wizard/crm_partner_to_opportunity_view.xml',
 
         'wizard/crm_merge_opportunities_view.xml',
 
         'crm_view.xml',
 
-        'crm_action_rule_view.xml',
         'crm_lead_view.xml',
         'crm_lead_menu.xml',
 
@@ -109,9 +104,9 @@ Dashboard for CRM will include:
     'test': [
         'test/process/communication_with_customer.yml',
         'test/process/lead2opportunity2win.yml',
+        'test/process/lead2opportunity_assign_salesmen.yml',
         'test/process/merge_opportunity.yml',
         'test/process/cancel_lead.yml',
-        'test/process/action_rule.yml',
         'test/process/segmentation.yml',
         'test/process/phonecalls.yml',
         'test/ui/crm_demo.yml',

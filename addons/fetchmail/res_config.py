@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 
 class fetchmail_config_settings(osv.osv_memory):
     """ This wizard can be inherited in conjunction with 'res.config.settings', in order to

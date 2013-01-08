@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-05-31 15:05+0000\n"
-"Last-Translator: Marcelo Almeida <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-12 16:23+0000\n"
+"Last-Translator: Rui Franco (multibase.pt) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:34+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:42+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -29,12 +29,12 @@ msgstr "Grupo por..."
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "To Invoice"
-msgstr ""
+msgstr "Para faturar"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Remaining"
-msgstr ""
+msgstr "Restante"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -101,19 +101,28 @@ msgid "Sum of timesheet lines invoiced for this contract."
 msgstr ""
 
 #. module: account_analytic_analysis
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:462
+#, python-format
+msgid "Sales Order Lines of %s"
+msgstr ""
+
+#. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
 msgid "Computed using the formula: Invoiced Amount / Total Time"
 msgstr "Calculado através da fórmula: Valor faturado / Tempo Total"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Contracts not assigned"
-msgstr ""
+#: field:account_analytic_analysis.summary.month,account_id:0
+#: field:account_analytic_analysis.summary.user,account_id:0
+#: model:ir.model,name:account_analytic_analysis.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "Conta Analítica"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Partner"
-msgstr ""
+msgstr "Parceiro"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -145,13 +154,9 @@ msgid "End Date"
 msgstr "Data final"
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,hours_qtt_non_invoiced:0
-msgid ""
-"Number of time (hours/days) (from journal of type 'general') that can be "
-"invoiced if you invoice based on analytic account."
+#: view:account.analytic.account:0
+msgid "Account Manager"
 msgstr ""
-"Número de tempo (horas ou dias) (de Diário do  tipo 'geral') que podem ser "
-"faturados, se fatura com base na conta analítica"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours_to_invoice:0
@@ -161,15 +166,12 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Expected"
-msgstr ""
+msgstr "Esperado"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-#: field:account_analytic_analysis.summary.month,account_id:0
-#: field:account_analytic_analysis.summary.user,account_id:0
-#: model:ir.model,name:account_analytic_analysis.model_account_analytic_account
-msgid "Analytic Account"
-msgstr "Conta Analítica"
+msgid "Contracts not assigned"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
@@ -221,20 +223,14 @@ msgid "Nothing to invoice, create"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.template_of_contract_action
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_template_of_contract_action
-msgid "Template of Contract"
-msgstr ""
-
-#. module: account_analytic_analysis
 #: model:res.groups,name:account_analytic_analysis.group_template_required
 msgid "Mandatory use of templates in contracts"
-msgstr ""
+msgstr "Uso obrigatório de modelos nos contratos"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_quantity:0
 msgid "Total Worked Time"
-msgstr ""
+msgstr "Tempo total de trabalho"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin:0
@@ -259,6 +255,11 @@ msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
+msgid "Customer Contracts"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
 msgid "Parent"
 msgstr "Ascendente"
 
@@ -272,7 +273,7 @@ msgstr "Mês"
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_all
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_hr_tree_invoiced_all
 msgid "Time & Materials to Invoice"
-msgstr ""
+msgstr "Tempo e materiais a faturar"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue_all
@@ -283,12 +284,12 @@ msgstr "Contractos"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Start Date"
-msgstr ""
+msgstr "Data de início"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Invoiced"
-msgstr ""
+msgstr "Faturado"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -307,13 +308,16 @@ msgstr "Contratos pendentes de renovação com o seu cliente"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Timesheets"
-msgstr ""
+msgstr "Folhas de horas"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:461
-#, python-format
-msgid "Sale Order Lines of %s"
+#: help:account.analytic.account,hours_qtt_non_invoiced:0
+msgid ""
+"Number of time (hours/days) (from journal of type 'general') that can be "
+"invoiced if you invoice based on analytic account."
 msgstr ""
+"Número de tempo (horas ou dias) (de Diário do  tipo 'geral') que podem ser "
+"faturados, se fatura com base na conta analítica"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -351,7 +355,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_sales_order
 msgid "Sales Orders"
-msgstr ""
+msgstr "Ordens de venda"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_invoice_date:0
@@ -439,12 +443,12 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.account,toinvoice_total:0
 msgid "Total to Invoice"
-msgstr ""
+msgstr "Total a faturar"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Sale Orders"
-msgstr ""
+msgstr "Ordens de venda"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -454,7 +458,7 @@ msgstr "Abrir"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,invoiced_total:0
 msgid "Total Invoiced"
-msgstr ""
+msgstr "Total faturado"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
@@ -463,14 +467,14 @@ msgstr ""
 "Calculado utilizando a fórmula: Valor Máximo da Fatura - Valor da Fatura"
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Responsible"
-msgstr ""
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
 msgid "Last Invoice Date"
 msgstr "Data da última fatura"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Units Remaining"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_hr_tree_invoiced_all
@@ -543,7 +547,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.account,fix_price_invoices:0
 msgid "Fixed Price"
-msgstr ""
+msgstr "Preço fixo"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_date:0
@@ -553,16 +557,22 @@ msgstr "Data do último trabalho feito nesta conta"
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_sale_config_settings
 msgid "sale.config.settings"
-msgstr ""
+msgstr "sale.config.settings"
 
 #. module: account_analytic_analysis
 #: field:sale.config.settings,group_template_required:0
 msgid "Mandatory use of templates."
+msgstr "Uso obrigatório de modelos"
+
+#. module: account_analytic_analysis
+#: model:ir.actions.act_window,name:account_analytic_analysis.template_of_contract_action
+#: model:ir.ui.menu,name:account_analytic_analysis.menu_template_of_contract_action
+msgid "Contract Template"
 msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Contracts Having a Partner"
+msgid "Units Done"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -613,7 +623,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #~ msgid "Hours summary by user"
 #~ msgstr "Resumo de horas por utilizador"

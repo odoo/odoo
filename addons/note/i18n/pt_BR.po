@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-11-14 04:29+0000\n"
-"Last-Translator: Guilherme R. Santos <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-20 23:55+0000\n"
+"Last-Translator: Fábio Martinelli - http://zupy.com.br "
+"<webmaster@guaru.net>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:54+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 06:06+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: note
 #: field:note.note,memo:0
@@ -31,7 +32,7 @@ msgstr "Estágio das Notas"
 #: model:note.stage,name:note.demo_note_stage_04
 #: model:note.stage,name:note.note_stage_02
 msgid "This Week"
-msgstr ""
+msgstr "Esta Semana"
 
 #. module: note
 #: model:ir.model,name:note.model_base_config_settings
@@ -41,12 +42,12 @@ msgstr "base.config.settings"
 #. module: note
 #: model:ir.model,name:note.model_note_tag
 msgid "Note Tag"
-msgstr "Tag da Nota"
+msgstr "Marcador da Nota"
 
 #. module: note
 #: model:res.groups,name:note.group_note_fancy
 msgid "Notes / Fancy mode"
-msgstr "Notas / Modo fantasia"
+msgstr "Notas / Modo extravagante"
 
 #. module: note
 #: model:ir.model,name:note.model_note_note
@@ -123,7 +124,7 @@ msgstr "Estágios das Notas"
 #. module: note
 #: field:note.note,message_unread:0
 msgid "Unread Messages"
-msgstr "Mensagens não lidas"
+msgstr "Mensagens Não Lidas"
 
 #. module: note
 #: field:note.note,current_partner_id:0
@@ -133,7 +134,7 @@ msgstr "desconhecido"
 #. module: note
 #: view:note.note:0
 msgid "By sticky note Category"
-msgstr ""
+msgstr "Por Categoria de lembrete"
 
 #. module: note
 #: help:note.note,message_unread:0
@@ -148,7 +149,7 @@ msgstr "Nome do Estágio"
 #. module: note
 #: field:note.note,message_is_follower:0
 msgid "Is a Follower"
-msgstr "É um seguidor"
+msgstr "É um Seguidor"
 
 #. module: note
 #: model:note.stage,name:note.demo_note_stage_02
@@ -172,15 +173,15 @@ msgid "Categories"
 msgstr "Categorias"
 
 #. module: note
-#: field:note.note,message_comment_ids:0
-#: help:note.note,message_comment_ids:0
-msgid "Comments and emails"
-msgstr "Comentários e emails"
+#: view:note.note:0
+#: field:note.note,stage_id:0
+msgid "Stage"
+msgstr "Estágio"
 
 #. module: note
 #: field:note.tag,name:0
 msgid "Tag Name"
-msgstr "Nome da Tag"
+msgstr "Nome do Marcador"
 
 #. module: note
 #: field:note.note,message_ids:0
@@ -211,11 +212,6 @@ msgstr "Estágio da Nota"
 #: field:note.note,message_summary:0
 msgid "Summary"
 msgstr "Resumo"
-
-#. module: note
-#: help:note.stage,sequence:0
-msgid "Used to order the note stages"
-msgstr "Usado para ordenar os estágios das notas"
 
 #. module: note
 #: field:note.note,stage_ids:0
@@ -252,12 +248,12 @@ msgstr "Índice de Cores"
 #: field:note.note,sequence:0
 #: field:note.stage,sequence:0
 msgid "Sequence"
-msgstr "Sequencia"
+msgstr "Sequência"
 
 #. module: note
 #: field:note.note,tag_ids:0
 msgid "Tags"
-msgstr "Tags"
+msgstr "Marcadores"
 
 #. module: note
 #: view:note.note:0
@@ -275,11 +271,14 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Contém o resumo da conversação (número de mensagens, ...). Este resumo é "
+"gerado diretamente em formato HTML para que possa ser inserido nas visões "
+"kanban."
 
 #. module: note
 #: field:base.config.settings,group_note_fancy:0
 msgid "Use fancy layouts for notes"
-msgstr "Usar leiautes fantasia para notas"
+msgstr "Usar layouts extravagantes para notas"
 
 #. module: note
 #: field:note.stage,user_id:0
@@ -287,10 +286,9 @@ msgid "Owner"
 msgstr "Proprietário"
 
 #. module: note
-#: view:note.note:0
-#: field:note.note,stage_id:0
-msgid "Stage"
-msgstr "Estágio"
+#: help:note.stage,sequence:0
+msgid "Used to order the note stages"
+msgstr "Usado para ordenar os estágios das notas"
 
 #. module: note
 #: field:note.note,date_done:0

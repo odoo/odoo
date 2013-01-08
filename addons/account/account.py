@@ -19,19 +19,19 @@
 #
 ##############################################################################
 
-import time
+import logging
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
+import time
 
-import logging
-import pooler
-from osv import fields, osv
-import decimal_precision as dp
-from tools.translate import _
-from tools.float_utils import float_round
 from openerp import SUPERUSER_ID
-import tools
+from openerp import pooler, tools
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+from openerp.tools.float_utils import float_round
+
+import openerp.addons.decimal_precision as dp
 
 _logger = logging.getLogger(__name__)
 
@@ -75,8 +75,8 @@ class account_payment_term(osv.osv):
         amount = value
         result = []
         obj_precision = self.pool.get('decimal.precision')
+        prec = obj_precision.precision_get(cr, uid, 'Account')
         for line in pt.line_ids:
-            prec = obj_precision.precision_get(cr, uid, 'Account')
             if line.value == 'fixed':
                 amt = round(line.value_amount, prec)
             elif line.value == 'procent':
@@ -92,19 +92,20 @@ class account_payment_term(osv.osv):
                     next_date += relativedelta(day=line.days2, months=1)
                 result.append( (next_date.strftime('%Y-%m-%d'), amt) )
                 amount -= amt
-        return result
 
-account_payment_term()
+        amount = reduce(lambda x,y: x+y[1], result, 0.0)
+        dist = round(value-amount, prec)
+        if dist:
+            result.append( (time.strftime('%Y-%m-%d'), dist) )
+        return result
 
 class account_payment_term_line(osv.osv):
     _name = "account.payment.term.line"
     _description = "Payment Term Line"
     _columns = {
-        'name': fields.char('Line Name', size=32, required=True),
-        'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the payment term lines from the lowest sequences to the higher ones"),
         'value': fields.selection([('procent', 'Percent'),
                                    ('balance', 'Balance'),
-                                   ('fixed', 'Fixed Amount')], 'Valuation',
+                                   ('fixed', 'Fixed Amount')], 'Computation',
                                    required=True, help="""Select here the kind of valuation related to this payment term line. Note that you should have your last line with the type 'Balance' to ensure that the whole amount will be treated."""),
 
         'value_amount': fields.float('Amount To Pay', digits_compute=dp.get_precision('Payment Term'), help="For percent enter a ratio between 0-1."),
@@ -115,10 +116,10 @@ class account_payment_term_line(osv.osv):
     }
     _defaults = {
         'value': 'balance',
-        'sequence': 5,
+        'days': 30,
         'days2': 0,
     }
-    _order = "sequence"
+    _order = "value desc,days"
 
     def _check_percent(self, cr, uid, ids, context=None):
         obj = self.browse(cr, uid, ids[0], context=context)
@@ -704,7 +705,7 @@ class account_journal(osv.osv):
         'with_last_closing_balance' : fields.boolean('Opening With Last Closing Balance'),
         'name': fields.char('Journal Name', size=64, required=True),
         'code': fields.char('Code', size=5, required=True, help="The code will be displayed on reports."),
-        'type': fields.selection([('sale', 'Sale'),('sale_refund','Sale Refund'), ('purchase', 'Purchase'), ('purchase_refund','Purchase Refund'), ('cash', 'Cash'), ('bank', 'Bank and Cheques'), ('general', 'General'), ('situation', 'Opening/Closing Situation')], 'Type', size=32, required=True,
+        'type': fields.selection([('sale', 'Sale'),('sale_refund','Sale Refund'), ('purchase', 'Purchase'), ('purchase_refund','Purchase Refund'), ('cash', 'Cash'), ('bank', 'Bank and Checks'), ('general', 'General'), ('situation', 'Opening/Closing Situation')], 'Type', size=32, required=True,
                                  help="Select 'Sale' for customer invoices journals."\
                                  " Select 'Purchase' for supplier invoices journals."\
                                  " Select 'Cash' or 'Bank' for journals that are used in customer or supplier payments."\
@@ -714,7 +715,7 @@ class account_journal(osv.osv):
         'account_control_ids': fields.many2many('account.account', 'account_account_type_rel', 'journal_id','account_id', 'Account', domain=[('type','<>','view'), ('type', '<>', 'closed')]),
         'default_credit_account_id': fields.many2one('account.account', 'Default Credit Account', domain="[('type','!=','view')]", help="It acts as a default account for credit amount"),
         'default_debit_account_id': fields.many2one('account.account', 'Default Debit Account', domain="[('type','!=','view')]", help="It acts as a default account for debit amount"),
-        'centralisation': fields.boolean('Centralised Counterpart', help="Check this box to determine that each entry of this journal won't create a new counterpart but will share the same counterpart. This is used in fiscal year closing."),
+        'centralisation': fields.boolean('Centralized Counterpart', help="Check this box to determine that each entry of this journal won't create a new counterpart but will share the same counterpart. This is used in fiscal year closing."),
         'update_posted': fields.boolean('Allow Cancelling Entries', help="Check this box if you want to allow the cancellation the entries related to this journal or of the invoice related to this journal"),
         'group_invoice_lines': fields.boolean('Group Invoice Lines', help="If this box is checked, the system will try to group the accounting lines when generating them from invoices."),
         'sequence_id': fields.many2one('ir.sequence', 'Entry Sequence', help="This field contains the information related to the numbering of the journal entries of this journal.", required=True),
@@ -1013,10 +1014,15 @@ class account_period(osv.osv):
         else:
             company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
             args.append(('company_id', '=', company_id))
-        ids = self.search(cr, uid, args, context=context)
-        if not ids:
-            raise osv.except_osv(_('Error!'), _('There is no period defined for this date: %s.\nPlease create one.')%dt)
-        return ids
+        result = []
+        if context.get('account_period_prefer_normal'):
+            # look for non-special periods first, and fallback to all if no result is found
+            result = self.search(cr, uid, args + [('special', '=', False)], context=context)
+        if not result:
+            result = self.search(cr, uid, args, context=context)
+        if not result:
+            raise osv.except_osv(_('Error !'), _('There is no period defined for this date: %s.\nPlease create one.')%dt)
+        return result
 
     def action_draft(self, cr, uid, ids, *args):
         mode = 'draft'
@@ -1082,7 +1088,7 @@ class account_journal_period(osv.osv):
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, ondelete="cascade"),
         'period_id': fields.many2one('account.period', 'Period', required=True, ondelete="cascade"),
         'icon': fields.function(_icon_get, string='Icon', type='char', size=32),
-        'active': fields.boolean('Active', required=True, help="If the active field is set to False, it will allow you to hide the journal period without removing it."),
+        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the journal period without removing it."),
         'state': fields.selection([('draft','Draft'), ('printed','Printed'), ('done','Done')], 'Status', required=True, readonly=True,
                                   help='When journal period is created. The status is \'Draft\'. If a report is printed it comes to \'Printed\' status. When all transactions are done, it comes in \'Done\' status.'),
         'fiscalyear_id': fields.related('period_id', 'fiscalyear_id', string='Fiscal Year', type='many2one', relation='account.fiscalyear'),
@@ -1190,10 +1196,9 @@ class account_move(osv.osv):
         return res
 
     def _get_period(self, cr, uid, context=None):
-        periods = self.pool.get('account.period').find(cr, uid)
-        if periods:
-            return periods[0]
-        return False
+        ctx = dict(context or {}, account_period_prefer_normal=True)
+        period_ids = self.pool.get('account.period').find(cr, uid, context=ctx)
+        return period_ids[0]
 
     def _amount_compute(self, cr, uid, ids, name, args, context, where =''):
         if not ids: return {}
@@ -3347,10 +3352,25 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         all the provided information to create the accounts, the banks, the journals, the taxes, the tax codes, the
         accounting properties... accordingly for the chosen company.
         '''
+        obj_data = self.pool.get('ir.model.data')
         ir_values_obj = self.pool.get('ir.values')
         obj_wizard = self.browse(cr, uid, ids[0])
         company_id = obj_wizard.company_id.id
+
         self.pool.get('res.company').write(cr, uid, [company_id], {'currency_id': obj_wizard.currency_id.id})
+
+        # When we install the CoA of first company, set the currency to price types and pricelists
+        if company_id==1:
+            for ref in (('product','list_price'),('product','standard_price'),('product','list0'),('purchase','list0')):
+                try:
+                    tmp2 = obj_data.get_object_reference(cr, uid, *ref)
+                    if tmp2: 
+                        self.pool.get(tmp2[0]).write(cr, uid, tmp2[1], {
+                            'currency_id': obj_wizard.currency_id.id
+                        })
+                except ValueError, e:
+                    pass
+
         # If the floats for sale/purchase rates have been filled, create templates from them
         self._create_tax_templates_from_rates(cr, uid, obj_wizard, company_id, context=context)
 

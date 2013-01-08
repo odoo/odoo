@@ -6,35 +6,36 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-02-08 08:41+0000\n"
-"Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-20 15:02+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:34+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:42+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "No order to invoice, create"
-msgstr ""
+msgstr "Kein Auftrag abzurechnen, erstelle"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Group By..."
-msgstr "Gruppiere nach..."
+msgstr "Gruppierung ..."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "To Invoice"
-msgstr ""
+msgstr "Abrechnen"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Remaining"
-msgstr ""
+msgstr "Verbleibend"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -46,19 +47,17 @@ msgstr "Verträge in Bearbeitung"
 msgid ""
 "If invoice from the costs, this is the date of the latest work or cost that "
 "have been invoiced."
-msgstr ""
-"Falls eine Berechnung auf Basis der Produktionskosten erfolgt, ist dieses "
-"das Datum der letzten Weiter - Berechnung."
+msgstr "Datum der letzten Weiterberechnung von Kosten"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_date:0
 msgid "Date of Last Cost/Work"
-msgstr "vorheriger Arbeitstag"
+msgstr "Letzte Aufwandserfassung"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_to_invoice:0
 msgid "Uninvoiced Amount"
-msgstr "Nicht berechnete Beträge"
+msgstr "Abrechenbarer Betrag"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -69,56 +68,67 @@ msgid ""
 "to\n"
 "                            define the customer invoice price rate."
 msgstr ""
+"Die abzurechnenden Arbeitsstunden werden gemäß der Preisliste des Vertrags "
+"für das beim Mitarbeiter hinterlegte Produkt berechnet."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "⇒ Invoice"
-msgstr ""
+msgstr "=> Rechnung"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_invoiced:0
 msgid "Invoiced Amount"
-msgstr "Rechnungsbetrag"
+msgstr "Abgerechnet"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_invoiced_date:0
 msgid "Date of Last Invoiced Cost"
-msgstr "Datum letzte Berechnung"
+msgstr "Datum der letzten Abrechnung"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,fix_price_to_invoice:0
 msgid "Sum of quotations for this contract."
-msgstr ""
+msgstr "Summe abzurechnende Beträge"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
 msgid "Total customer invoiced amount for this account."
-msgstr "Gesamtbetrag Kundenrechnungen für dieses Konto"
+msgstr "Bereits abgerechnete Beträge"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,timesheet_ca_invoiced:0
 msgid "Sum of timesheet lines invoiced for this contract."
+msgstr "Summe abgerechneter Arbeitszeiten"
+
+#. module: account_analytic_analysis
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:462
+#, python-format
+msgid "Sales Order Lines of %s"
 msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
 msgid "Computed using the formula: Invoiced Amount / Total Time"
-msgstr "Berechnet als: Verrechneter Betrag / Gesamt Zeit"
+msgstr "Berechnungsformel:  Abgerechnete Beträge / Abgerechnete Stunden"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Contracts not assigned"
-msgstr ""
+#: field:account_analytic_analysis.summary.month,account_id:0
+#: field:account_analytic_analysis.summary.user,account_id:0
+#: model:ir.model,name:account_analytic_analysis.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "Kostenstelle"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Partner"
-msgstr ""
+msgstr "Kunde"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contracts that are not assigned to an account manager."
-msgstr "Verträge, die keinem Account Manager zugeordnet sind."
+msgstr "Verträge ohne verantwortlichen Mitarbeiter"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue
@@ -138,48 +148,55 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klicken Sie um neuen Vertrag anzulegen.\n"
+"              </p><p>\n"
+"                Sie finden hier die zu verlängernden Verträge, bei denen "
+"entweder das terminierte Vertragsende\n"
+"                bereits überschritten wurde oder die geleistete Arbeitszeit "
+"nicht mehr durch die vertraglich vereinbarte   abrechenbare Arbeitszeit "
+"abgedeckt wird.\n"
+"              </p><p>\n"
+"                OpenERP versetzt automatisch die zu erneuernden Verträge in "
+"den Status Wiedervorlage. Nach der Erneuerung einer Vereinbarung sollte der "
+"Verkäufer den alten Vertrag entweder abschließen oder erneuern. \n"
+"              </p>\n"
+"            "
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "End Date"
-msgstr "Enddatum"
+msgstr "Ende Datum"
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,hours_qtt_non_invoiced:0
-msgid ""
-"Number of time (hours/days) (from journal of type 'general') that can be "
-"invoiced if you invoice based on analytic account."
+#: view:account.analytic.account:0
+msgid "Account Manager"
 msgstr ""
-"verrechenbare Zeiten (Stunden/Tage) vom Journal 'General', wenn die "
-"Verrechnung auf Analyse Konten beruht"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours_to_invoice:0
 msgid "Computed using the formula: Maximum Time - Total Invoiced Time"
-msgstr ""
+msgstr "Berechnungsformel: Maximale Zeit - Abgerechnete Zeit"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Expected"
-msgstr ""
+msgstr "Erwartet"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-#: field:account_analytic_analysis.summary.month,account_id:0
-#: field:account_analytic_analysis.summary.user,account_id:0
-#: model:ir.model,name:account_analytic_analysis.model_account_analytic_account
-msgid "Analytic Account"
-msgstr "Analytisches Konto"
+msgid "Contracts not assigned"
+msgstr "Nicht unterzeichnete Verträge"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
 msgid "Computed using the formula: Theoretical Revenue - Total Costs"
-msgstr ""
+msgstr "Berechnungsformel: Geplanter Umsatz - Gesamte Kosten"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_invoiced:0
 msgid "Invoiced Time"
-msgstr "Verrechnete Zeit"
+msgstr "Abgerechnete Zeit"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,fix_price_to_invoice:0
@@ -195,6 +212,8 @@ msgid ""
 "{'required': [('type','=','contract')], 'invisible': [('type','in',['view', "
 "'normal','template'])]}"
 msgstr ""
+"{'required': [('type','=','contract')], 'invisible': [('type','in',['view', "
+"'normal','template'])]}"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin_rate:0
@@ -204,7 +223,7 @@ msgstr "Marge (%)"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours:0
 msgid "Computed using the formula: Maximum Time - Total Worked Time"
-msgstr ""
+msgstr "Berechnungsformel: Maximale Zeit - Geleistete Zeit"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_quantity:0
@@ -212,29 +231,23 @@ msgid ""
 "Number of time you spent on the analytic account (from timesheet). It "
 "computes quantities on all journal of type 'general'."
 msgstr ""
-"Anzahl der Zeiten, die auf dieses Analyse Konto gebucht wurden. Es werden "
-"alle Summen der Journale 'general' gebildet"
+"Arbeitszeiten, die auf diese Kostenstelle gebucht wurden. Es werden nur "
+"Journale vom Typ 'sonstige' zur Berechnung herangezogen."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Nothing to invoice, create"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.template_of_contract_action
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_template_of_contract_action
-msgid "Template of Contract"
-msgstr ""
+msgstr "Nichts abzurechnen, erstelle"
 
 #. module: account_analytic_analysis
 #: model:res.groups,name:account_analytic_analysis.group_template_required
 msgid "Mandatory use of templates in contracts"
-msgstr ""
+msgstr "Vertragsvorlage ist verbindlich"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_quantity:0
 msgid "Total Worked Time"
-msgstr ""
+msgstr "Gesamte Arbeitszeit"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin:0
@@ -244,23 +257,27 @@ msgstr "Realisierte Marge"
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_month
 msgid "Hours summary by month"
-msgstr "Stundenanzahl pro Monat"
+msgstr "Stunden pro Monat"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin_rate:0
 msgid "Computes using the formula: (Real Margin / Total Costs) * 100."
-msgstr ""
-"Berechnung nutzt diese Formel: (absolute Gewinnspanne / Gesamtkosten) * 100"
+msgstr "Berechnungsformel: (Marge / Gesamte Kosten) * 100"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "or view"
+msgstr "oder Ansicht"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Customer Contracts"
 msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Parent"
-msgstr "Elternteil"
+msgstr "Hauptprojekt"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,month_ids:0
@@ -272,7 +289,7 @@ msgstr "Monat"
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_all
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_hr_tree_invoiced_all
 msgid "Time & Materials to Invoice"
-msgstr ""
+msgstr "Abrechenbare Zeiten &  Sachaufwendungen"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue_all
@@ -283,12 +300,12 @@ msgstr "Verträge"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Start Date"
-msgstr ""
+msgstr "Start Datum"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Invoiced"
-msgstr ""
+msgstr "Abgerechnet"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -296,8 +313,8 @@ msgid ""
 "The contracts to be renewed because the deadline is passed or the working "
 "hours are higher than the allocated hours"
 msgstr ""
-"Der Vertrag muss erneuert werden, das die Frist abgelaufen ist oder die "
-"geplanten Stunden überschritten sind"
+"Zu erneuernde Verträge, aufgrund Laufzeitende oder Überschreitung der "
+"vereinbarten Stunden"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -307,18 +324,21 @@ msgstr "Verträge, die zu erneuern sind"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Timesheets"
-msgstr ""
+msgstr "Stundenzettel"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:461
-#, python-format
-msgid "Sale Order Lines of %s"
+#: help:account.analytic.account,hours_qtt_non_invoiced:0
+msgid ""
+"Number of time (hours/days) (from journal of type 'general') that can be "
+"invoiced if you invoice based on analytic account."
 msgstr ""
+"Abrechenbare Zeit (Stunden/Tage) vom Journaltyp 'Sonstige', wenn Abrechnung "
+"über die Kostenstelle erfolgt."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Pending"
-msgstr "Unerledigt"
+msgstr "Wiedervorlage"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,is_overdue_quantity:0
@@ -328,7 +348,7 @@ msgstr "Überfällige Mengen"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_theorical:0
@@ -344,18 +364,17 @@ msgstr "Zu Erneuern"
 #: view:account.analytic.account:0
 msgid ""
 "A contract in OpenERP is an analytic account having a partner set on it."
-msgstr "Ein Vertrag ist ein Analyse Konto mit Partner"
+msgstr "Ein Vertrag ist ein Kundenprojekt mit Kostenstelle"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_sales_order
 msgid "Sales Orders"
-msgstr ""
+msgstr "Aufträge"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_invoice_date:0
 msgid "If invoice from the costs, this is the date of the latest invoiced."
-msgstr ""
-"Wenn Kosten verrechnet werden, dann ist dies das Datum der letzten Rechnung."
+msgstr "Letztmaliges Datum der Kostenabrechnung"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_theorical:0
@@ -364,9 +383,8 @@ msgid ""
 "if all these costs have been invoiced at the normal sale price provided by "
 "the pricelist."
 msgstr ""
-"Ausgehend von den entstandenen Projektkosten. Welcher Erlös wäre erzielt "
-"worden, wenn diese Kosten auf der Basis der normalen Preisliste des Verkaufs "
-"abgerechnet worden wären."
+"Theoretischer Erlös, wenn alle Kosten auf Basis der \"Allgemeinen "
+"Preisliste\" abgerechnet worden wären."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,user_ids:0
@@ -387,6 +405,16 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    Klicken Sie zur Erstellung einer Vertragsvorlage.\n"
+"                </p><p>\n"
+"                    Vorlagen sind vordefinierte Verträge für Projekte, aus "
+"denen zur schnellen\n"
+"und einfachen Erstellung neuer Vereinbarungen, die zugrundeliegenden "
+"Einstellungen und Konditionen\n"
+"übernommen werden.\n"
+"                </p>\n"
+"            "
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
@@ -404,6 +432,8 @@ msgid ""
 "Allows you to set the template field as required when creating an analytic "
 "account or a contract."
 msgstr ""
+"Bei Erstellung eines Vertrags oder Projekt ist die Verwendung einer Vorlage "
+"verpflichtend."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_invoiced:0
@@ -411,13 +441,13 @@ msgid ""
 "Number of time (hours/days) that can be invoiced plus those that already "
 "have been invoiced."
 msgstr ""
-"Anzahl von Stunden oder Tagen, die verrechnet werden können, inklusiver der "
-"bereits verrechneten"
+"Anzahl von Stunden oder Tagen, die zur Abrechnung anstehen inklusive bereits "
+"abgerechneter Stunden"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,revenue_per_hour:0
 msgid "Revenue per Time (real)"
-msgstr "Erträge je Zeiteinheit (real)"
+msgstr "Umsatz pro Stunde"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue_all
@@ -434,16 +464,28 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    Klicken Sie zur Erstellung eines Vertrags.\n"
+"                </p><p>\n"
+"                    Setzen Sie Verträge ein, um hierüber Aufgaben, Vorfälle, "
+"Stundenzettel oder Abrechnungen \n"
+"                    geleisteter Arbeitszeiten, Personalspesen und/oder "
+"Verkaufsaufträge zu verfolgen. OpenERP\n"
+"                    überwacht dabei automatisch, ob Verträge erneuert werden "
+"müssen und benachrichtigt den\n"
+"                    zugewiesenen Verkäufer.\n"
+"                </p>\n"
+"            "
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,toinvoice_total:0
 msgid "Total to Invoice"
-msgstr ""
+msgstr "Gesamt Abrechnungsbetrag"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Sale Orders"
-msgstr ""
+msgstr "Verkaufsaufträge"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -453,23 +495,23 @@ msgstr "Offen"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,invoiced_total:0
 msgid "Total Invoiced"
-msgstr ""
+msgstr "Abgerechneter Betrag"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
 msgid "Computed using the formula: Max Invoice Price - Invoiced Amount."
 msgstr ""
-"Berechnet auf Basis der Formel: Max. Einkaufspreis - Abgerechneter Betrag"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Responsible"
-msgstr ""
+"Berechnungsformel: Geplanter Abrechnungsbetrag - Abgerechneter Betrag"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
 msgid "Last Invoice Date"
 msgstr "Letztes Rechnungsdatum"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Units Remaining"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_hr_tree_invoiced_all
@@ -484,16 +526,25 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                Sie finden hier die aufgezeichneten Stundenzettel und "
+"eingekauften Sachmittel, \n"
+"                die für diesen Vertrag abgerechnet werden können. Für neue "
+"abzurechnende\n"
+"                Arbeitszeiten sollten Sie das Menü für die Stundenzettel "
+"benutzen.\n"
+"              </p>\n"
+"            "
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_non_invoiced:0
 msgid "Uninvoiced Time"
-msgstr "nicht verrechnete Zeit"
+msgstr "Nicht abgerechnete Zeit"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Invoicing"
-msgstr "Eingangsrechnung"
+msgstr "Abrechnung"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,total_cost:0
@@ -507,6 +558,10 @@ msgid ""
 "remaining subtotals which, in turn, are computed as the maximum between "
 "'(Estimation - Invoiced)' and 'To Invoice' amounts"
 msgstr ""
+"Insgesamt verbleibender Abrechnungsbetrag für diesen Vertrag. Der Betrag "
+"errechnet sich aus der Summe der Einzelpositionen, sowie im Umkehrschluss "
+"aus dem Maximalbetrag der Differenz 'Geplant - Abgerechnet' und "
+"'Abzurechnen'."
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue
@@ -517,7 +572,7 @@ msgstr "Zu erneuernde Verträge"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,toinvoice_total:0
 msgid " Sum of everything that could be invoiced for this contract."
-msgstr ""
+msgstr " Summe abzurechnender Beträge für diesen Vertrag"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,theorical_margin:0
@@ -527,22 +582,22 @@ msgstr "Theoretische Marge"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_total:0
 msgid "Total Remaining"
-msgstr ""
+msgstr "Summe verbleibende Abrechnung"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin:0
 msgid "Computed using the formula: Invoiced Amount - Total Costs."
-msgstr "Berechnet durch die Formel: Rechnungsbetrag - Gesamt Kosten."
+msgstr "Berechnungsformel: Rechnungsbetrag - Gesamt Kosten."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_est:0
 msgid "Estimation of Hours to Invoice"
-msgstr ""
+msgstr "Geplante abzurechnende Stunden"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,fix_price_invoices:0
 msgid "Fixed Price"
-msgstr ""
+msgstr "Festpreis"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_date:0
@@ -552,16 +607,22 @@ msgstr "Datum der letzten Erfassung auf diesem Konto."
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_sale_config_settings
 msgid "sale.config.settings"
-msgstr ""
+msgstr "sale.config.settings"
 
 #. module: account_analytic_analysis
 #: field:sale.config.settings,group_template_required:0
 msgid "Mandatory use of templates."
+msgstr "Zwingende Nutzung von Vorlagen"
+
+#. module: account_analytic_analysis
+#: model:ir.actions.act_window,name:account_analytic_analysis.template_of_contract_action
+#: model:ir.ui.menu,name:account_analytic_analysis.menu_template_of_contract_action
+msgid "Contract Template"
 msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Contracts Having a Partner"
+msgid "Units Done"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -577,7 +638,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.account,est_total:0
 msgid "Total Estimation"
-msgstr ""
+msgstr "Erwartete Gesamtabrechnung"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_ca:0
@@ -590,7 +651,7 @@ msgid ""
 "If invoice from analytic account, the remaining amount you can invoice to "
 "the customer based on the total costs."
 msgstr ""
-"Falls eine Rechnung aus einem analytischen Konto generiert wird, basiert der "
+"Falls eine Rechnung über Kostenstellen generiert wird, basiert der "
 "verbleibende Betrag der an den Kunden weiter berechnet werden kann, auf den "
 "gesamten Kosten."
 
@@ -605,16 +666,18 @@ msgstr "Gesamtzeit"
 msgid ""
 "the field template of the analytic accounts and contracts will be required."
 msgstr ""
+"ein Auswahl für die Projekt  Vorlage und Vertragseinstellungen sind "
+"erforderlich"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,invoice_on_timesheets:0
 msgid "On Timesheets"
-msgstr ""
+msgstr "auf Stundenzettel"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Total"
-msgstr ""
+msgstr "Gesamt"
 
 #~ msgid ""
 #~ "Number of hours that can be invoiced plus those that already have been "

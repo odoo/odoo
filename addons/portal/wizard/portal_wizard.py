@@ -22,9 +22,9 @@
 import logging
 import random
 
-from osv import osv, fields
-from tools.translate import _
-from tools import email_re
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+from openerp.tools import email_re
 from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
@@ -131,7 +131,6 @@ class wizard_user(osv.osv_memory):
         return id
 
     def action_apply(self, cr, uid, ids, context=None):
-        res_users = self.pool.get('res.users')
         for wizard_user in self.browse(cr, SUPERUSER_ID, ids, context):
             portal = wizard_user.wizard_id.portal_id
             user = self._retrieve_user(cr, SUPERUSER_ID, wizard_user, context)
@@ -213,6 +212,7 @@ class wizard_user(osv.osv_memory):
             'subject': _(WELCOME_EMAIL_SUBJECT) % data,
             'body_html': '<pre>%s</pre>' % (_(WELCOME_EMAIL_BODY) % data),
             'state': 'outgoing',
+            'type': 'email',
         }
         mail_id = mail_mail.create(cr, uid, mail_values, context=this_context)
         return mail_mail.send(cr, uid, [mail_id], context=this_context)

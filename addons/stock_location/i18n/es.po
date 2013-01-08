@@ -6,21 +6,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:04+0000\n"
-"PO-Revision-Date: 2010-12-28 08:51+0000\n"
-"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
-"<jesteve@zikzakmedia.com>\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2012-12-22 11:34+0000\n"
+"Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:43+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-23 04:41+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: stock_location
 #: help:product.pulled.flow,company_id:0
 msgid "Is used to know to which company the pickings and moves belong."
 msgstr ""
+"Se usa para saber a qué compañía pertenecen los albaranes y movimientos."
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -193,7 +193,7 @@ msgstr "Obtener para stock"
 #: code:addons/stock_location/procurement_pull.py:118
 #, python-format
 msgid "Pulled from another location."
-msgstr ""
+msgstr "Extraído de otra ubicación."
 
 #. module: stock_location
 #: field:product.pulled.flow,partner_address_id:0
@@ -313,6 +313,16 @@ msgid ""
 msgstr ""
 "Movimiento para abastecimiento arrastrado proveniente de la ubicación "
 "original %s, regla de arrastre %s, vía abastecimiento original %s (#%d)"
+
+#. module: stock_location
+#: view:product.product:0
+msgid "Push Flow"
+msgstr "Flujo \"push\" (optimización local)"
+
+#. module: stock_location
+#: view:product.product:0
+msgid "Pull Flow"
+msgstr "Flujo \"pull\" (optimización global)"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_procurement_order

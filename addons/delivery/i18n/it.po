@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2011-05-17 16:39+0000\n"
-"Last-Translator: simone.sandri <lexluxsox@hotmail.it>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-18 23:16+0000\n"
+"Last-Translator: lollo_Ge <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:11+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:18+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -45,6 +45,12 @@ msgstr "Peso Netto"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
 msgid "Delivery Grid Line"
+msgstr ""
+
+#. module: delivery
+#: field:stock.move,weight_uom_id:0
+#: field:stock.picking,weight_uom_id:0
+msgid "Unit of Measure"
 msgstr ""
 
 #. module: delivery
@@ -80,26 +86,6 @@ msgstr ""
 #: model:ir.actions.report.xml,name:delivery.report_shipping
 msgid "Delivery order"
 msgstr "Ordine di Consegna"
-
-#. module: delivery
-#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to define a new deliver method. \n"
-"              </p><p>\n"
-"                Each carrier (e.g. UPS) can have several delivery methods "
-"(e.g.\n"
-"                UPS Express, UPS Standard) with a set of pricing rules "
-"attached\n"
-"                to each method.\n"
-"              </p><p>\n"
-"                These methods allows to automaticaly compute the delivery "
-"price\n"
-"                according to your settings; on the sale order (based on the\n"
-"                quotation) or the invoice (based on the delivery orders).\n"
-"              </p>\n"
-"            "
-msgstr ""
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:221
@@ -214,7 +200,7 @@ msgid "Grid definition"
 msgstr "Definizione Griglia"
 
 #. module: delivery
-#: code:addons/delivery/stock.py:89
+#: code:addons/delivery/stock.py:90
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -332,13 +318,15 @@ msgstr "Nome Griglia"
 #: field:stock.picking,number_of_packages:0
 #: field:stock.picking.out,number_of_packages:0
 msgid "Number of Packages"
-msgstr "Numero di Pacchetti"
+msgstr "Numero di Colli"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 #: report:sale.shipping:0
+#: view:stock.move:0
 #: field:stock.move,weight:0
+#: view:stock.picking:0
 #: field:stock.picking,weight:0
 #: field:stock.picking.in,weight:0
 #: field:stock.picking.out,weight:0
@@ -359,7 +347,7 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/sale.py:55
+#: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid available !"
 msgstr ""
@@ -370,7 +358,7 @@ msgid ">="
 msgstr ">="
 
 #. module: delivery
-#: code:addons/delivery/sale.py:58
+#: code:addons/delivery/sale.py:57
 #, python-format
 msgid "Order not in draft state !"
 msgstr "L'ordine non è in stato di bozza!"
@@ -416,6 +404,28 @@ msgstr "Variabile"
 #: help:res.partner,property_delivery_carrier:0
 msgid "This delivery method will be used when invoicing from picking."
 msgstr ""
+"Questo metodo di consegna sarà utilizzato quando si fattura da picking."
+
+#. module: delivery
+#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to define a new deliver method. \n"
+"              </p><p>\n"
+"                Each carrier (e.g. UPS) can have several delivery methods "
+"(e.g.\n"
+"                UPS Express, UPS Standard) with a set of pricing rules "
+"attached\n"
+"                to each method.\n"
+"              </p><p>\n"
+"                These methods allows to automaticaly compute the delivery "
+"price\n"
+"                according to your settings; on the sales order (based on "
+"the\n"
+"                quotation) or the invoice (based on the delivery orders).\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
@@ -455,6 +465,11 @@ msgid "<="
 msgstr "<="
 
 #. module: delivery
+#: help:stock.picking,weight_uom_id:0
+msgid "Unit of measurement for Weight"
+msgstr ""
+
+#. module: delivery
 #: report:sale.shipping:0
 msgid "Description"
 msgstr "Descrizione"
@@ -480,10 +495,10 @@ msgid "Price"
 msgstr "Prezzo"
 
 #. module: delivery
-#: code:addons/delivery/sale.py:55
+#: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid matching for this carrier !"
-msgstr ""
+msgstr "Non ci sono risultati nella ricerca per questo trasportatore !"
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
@@ -497,10 +512,10 @@ msgid "Weight * Volume"
 msgstr "Peso * Volume"
 
 #. module: delivery
-#: code:addons/delivery/stock.py:90
+#: code:addons/delivery/stock.py:91
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
-msgstr ""
+msgstr "Il trasportatore %s (id: %d) non ha una griglia di consegne !"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -529,15 +544,12 @@ msgid "Delivery Methods"
 msgstr ""
 
 #. module: delivery
-#: field:sale.order,id:0
-msgid "ID"
-msgstr "ID"
-
-#. module: delivery
-#: code:addons/delivery/sale.py:58
+#: code:addons/delivery/sale.py:57
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr ""
+"Lo stato dell'ordine deve essere in stato bozza per aggiungere linee di "
+"consegna."
 
 #. module: delivery
 #: field:delivery.carrier,grids_id:0
@@ -566,6 +578,12 @@ msgid "States"
 msgstr "Stati"
 
 #. module: delivery
+#: help:stock.move,weight_uom_id:0
+msgid ""
+"Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
+msgstr ""
+
+#. module: delivery
 #: field:delivery.grid.line,price_type:0
 msgid "Price Type"
 msgstr "Tipo Prezzo"
@@ -576,6 +594,9 @@ msgstr "Tipo Prezzo"
 #, python-format
 #~ msgid "Warning"
 #~ msgstr "Attenzione"
+
+#~ msgid "ID"
+#~ msgstr "ID"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"

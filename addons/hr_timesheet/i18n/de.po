@@ -6,15 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-11-18 00:40+0000\n"
-"Last-Translator: Felix Schubert <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-21 01:30+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:33+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:41+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_analytic_cost_revenue
@@ -41,6 +42,27 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                Es gibt bis jetzt keine Aktivitäten bezüglich dieses "
+"Vertrags.\n"
+"              </p><p>\n"
+"                In OpenERP werden Verträge und Projekte über Kostenstellen "
+"abgebildet. \n"
+"                Dadurch können Sie einfach Ihre Kostenund Erträge "
+"überwachen.\n"
+"              </p><p>\n"
+"                Kosten werden automatisch zugewiesen, wenn Sie Lieferanten\n"
+"                Rechnungen, Ausgaben oder Zeiterfassungen zuordnen.\n"
+"              </p><p>\n"
+"                Erträge werden automatisch zugewiesen, wenn Sie "
+"Ausgangsrechnungen\n"
+"                zuweisen. Ausgangsrechnungen können auf Basis von Aufträgen\n"
+"                (Pauschalangebote), Zeiterfassungen (basierend auf der "
+"geleisteten Arbeit) oder\n"
+"                Ausgaben (z.B. Weiterberechnung von Reisespesen) erzeugt "
+"werden.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:44
@@ -52,12 +74,12 @@ msgstr "Mi"
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
 msgid "(Keep empty for current_time)"
-msgstr "(frei lassen um aktuelle Zeiteinstellung zu verwenden)"
+msgstr "(frei lassen um die aktuelle Zeiteinstellung zu verwenden)"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Group By..."
-msgstr "Gruppieren nach"
+msgstr "Gruppierung ..."
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.action_hr_timesheet_sign_in
@@ -67,21 +89,21 @@ msgid ""
 "analytic account. This feature allows to record at the same time the "
 "attendance and the timesheet."
 msgstr ""
-"Mitarbeiter können Zeiten erfassen, die für spezifizische Projekte benötigt "
-"wurden. Ein Projekt entspricht einem Analytischen Konto, wodurch automatisch "
-"eine erfasste Zeit zu Kosten für das Projekt führt. Diese Funktion "
-"ermöglicht eine zeitgleiche Bearbeitung von Anwesenheitszeiten und Zeiten "
-"mit Projektbezug."
+"Mitarbeiter können Zeiten erfassen, die für verschiedene Projekte "
+"aufgewendet wurden. Ein Projekt ist einer Kostenstelle zugeordnet, wodurch "
+"automatisch die erfasste Zeit als Aufwand für das Projekt verbucht werden. "
+"Diese Funktion ermöglicht eine zeitgleiche Bearbeitung von "
+"Anwesenheitszeiten und Projektzeiten."
 
 #. module: hr_timesheet
 #: field:hr.employee,uom_id:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Mengeneinheit"
 
 #. module: hr_timesheet
 #: field:hr.employee,journal_id:0
 msgid "Analytic Journal"
-msgstr "Analytisches Journal"
+msgstr "Kostenstellen Journal"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
@@ -104,7 +126,7 @@ msgstr "Zeiterfassung"
 #: code:addons/hr_timesheet/wizard/hr_timesheet_print_employee.py:43
 #, python-format
 msgid "Please define employee for this user!"
-msgstr ""
+msgstr "Bitte ordnen Sie diesem User einen Mitarbeiter zu!"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:44
@@ -130,12 +152,12 @@ msgstr "Fr"
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_all_form
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_working_hours
 msgid "Timesheet Activities"
-msgstr ""
+msgstr "Zeiterfassungsaktivitäten"
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,analytic_amount:0
 msgid "Minimum Analytic Amount"
-msgstr "Mindestwert für Analysebuchung"
+msgstr "Mindestwert für  Kosten"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
@@ -151,12 +173,12 @@ msgstr "kürzlich erledigte Arbeit"
 #: field:hr.sign.in.project,name:0
 #: field:hr.sign.out.project,name:0
 msgid "Employees name"
-msgstr "Mitarbeiter"
+msgstr "Mitarbeitername"
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,account_id:0
 msgid "Project / Analytic Account"
-msgstr "Projekt / Analyse Konto"
+msgstr "Projekt / Kostenstelle"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytical_timesheet_users
@@ -167,12 +189,12 @@ msgstr "Drucke Zeiterfassung"
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:132
 #, python-format
 msgid "Please define employee for your user."
-msgstr ""
+msgstr "Bitte ordnen Sie diesem User einen Mitarbeiter zu."
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_analytic_cost_revenue
 msgid "Costs & Revenues"
-msgstr ""
+msgstr "Kosten & Erlöse"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:44
@@ -184,22 +206,22 @@ msgstr "Di"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_account_analytic_account
 msgid "Analytic Account"
-msgstr "Analytisches Konto"
+msgstr "Kostenstelle"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
 msgid "Costs and Revenues"
-msgstr ""
+msgstr "Kosten und Erlöse"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:141
-#: code:addons/hr_timesheet/hr_timesheet.py:146
-#: code:addons/hr_timesheet/hr_timesheet.py:177
-#: code:addons/hr_timesheet/hr_timesheet.py:179
+#: code:addons/hr_timesheet/hr_timesheet.py:144
+#: code:addons/hr_timesheet/hr_timesheet.py:149
+#: code:addons/hr_timesheet/hr_timesheet.py:180
+#: code:addons/hr_timesheet/hr_timesheet.py:182
 #: code:addons/hr_timesheet/wizard/hr_timesheet_print_employee.py:43
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Warnung!"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,partner_id:0
@@ -228,7 +250,7 @@ msgstr "Summe"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Analytic account"
-msgstr "Analytisches Konto"
+msgstr "Kostenstelle"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_evry1_all_form
@@ -245,17 +267,29 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klicken Sie hier um Ihre Aufgaben zu erfassen.\n"
+"              </p><p>\n"
+"                Sie können Ihre Arbeitsstunden auf Tagesbasis erfassen und "
+"auswerten. \n"
+"                Alle Zeiten die für ein Projekt aufgewendet wurden, werden "
+"als Kosten\n"
+"                auf der zugehörigen Kostenstelle verbucht und können ggf. "
+"dem\n"
+"                Kunden in Rechnung gestellt werden.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
 #: view:hr.analytical.timesheet.users:0
 msgid "Print"
-msgstr "Druck"
+msgstr "Drucken"
 
 #. module: hr_timesheet
 #: help:account.analytic.account,use_timesheets:0
 msgid "Check this field if this project manages timesheets"
-msgstr ""
+msgstr "Werden für das Projekt Zeiten erfasst?"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0
@@ -281,7 +315,7 @@ msgstr "Start Datum"
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:77
 #, python-format
 msgid "Please define cost unit for this employee."
-msgstr ""
+msgstr "Bitte definieren Sie die Zeiteinheit für diesen Mitarbeiter."
 
 #. module: hr_timesheet
 #: help:hr.employee,product_id:0
@@ -291,12 +325,15 @@ msgstr ""
 "für den Mitarbeiter"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:179
+#: code:addons/hr_timesheet/hr_timesheet.py:182
 #, python-format
 msgid ""
 "No analytic account is defined on the project.\n"
 "Please set one or we cannot automatically fill the timesheet."
 msgstr ""
+"Diesem Projekt wurde keine Kostenstelle zugewiesen.\n"
+"Bitte weisen Sie eine Kostenstelle zu, da sonst keine automatische Zuordnung "
+"erfolgen kann."
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -304,12 +341,15 @@ msgid "Total cost"
 msgstr "Gesamtkosten"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:177
+#: code:addons/hr_timesheet/hr_timesheet.py:180
 #, python-format
 msgid ""
 "No 'Analytic Journal' is defined for employee %s \n"
 "Define an employee for the selected user and assign an 'Analytic Journal'!"
 msgstr ""
+"Es wurde kein 'Kostenstelle Journal' für den Mitarbeiter %s zugeordnet\n"
+"Weisen Sie einem Mitarbeiter den ausgewählten Benutzer zu und ordnen Sie das "
+"'Kostenstellen Journal' zu!"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
@@ -351,12 +391,12 @@ msgstr "Aufgabenbeschreibung"
 #: view:hr.sign.in.project:0
 #: view:hr.sign.out.project:0
 msgid "or"
-msgstr ""
+msgstr "oder"
 
 #. module: hr_timesheet
 #: xsl:hr.analytical.timesheet:0
 msgid "Timesheet by Employee"
-msgstr "Zeitnachweise je Mitarbeiter"
+msgstr "Zeiterfassung nach Mitarbeiter"
 
 #. module: hr_timesheet
 #: model:ir.actions.report.xml,name:hr_timesheet.report_user_timesheet
@@ -372,10 +412,12 @@ msgstr "Anmelden / Abmelden bei Projekt"
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.action_define_analytic_structure
 msgid "Define your Analytic Structure"
-msgstr "Definiere die Struktur der Analytischen Konten"
+msgstr "Definieren Sie die Struktur derKostenstellen"
 
 #. module: hr_timesheet
+#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:146
 #: view:hr.sign.in.project:0
+#, python-format
 msgid "Sign in / Sign out"
 msgstr "Anmelden / Abmelden"
 
@@ -388,7 +430,7 @@ msgstr "(Frei lassen für den aktuellen Zeitpunkt)"
 #: field:account.analytic.account,use_timesheets:0
 #: view:hr.employee:0
 msgid "Timesheets"
-msgstr "Zeiterfassung"
+msgstr "Stundenzettel"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.action_define_analytic_structure
@@ -397,14 +439,14 @@ msgid ""
 "analyse costs and revenues. In OpenERP, analytic accounts are also used to "
 "track customer contracts."
 msgstr ""
-"Um Erlöse und Kosten zu analysieren, sollten Sie einen strukturierte "
-"analytischen Kontenplan erstellen. In OpenERP können damit auch "
-"Kundenverträge verfolgt werden."
+"Um Erlöse und Kosten zu analysieren, sollten Sie einen strukturierten "
+"Kostenstellenplan erstellen. In OpenERP können damit auch Kundenverträge "
+"verfolgt werden."
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,line_id:0
 msgid "Analytic Line"
-msgstr "Analytische Buchungszeile"
+msgstr "Kostenstellen Buchung"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
@@ -416,12 +458,14 @@ msgid "August"
 msgstr "August"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:146
+#: code:addons/hr_timesheet/hr_timesheet.py:149
 #, python-format
 msgid ""
 "No analytic journal defined for '%s'.\n"
 "You should assign an analytic journal on the employee form."
 msgstr ""
+"Es ist kein Kostenstellen Journal für '%s' zugeordnet.\n"
+"Sie können das Kostenstellen Journal im Datensatz des Mitarbeiters zuordnen."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
@@ -436,7 +480,7 @@ msgstr "Juni"
 #: field:hr.sign.in.project,state:0
 #: field:hr.sign.out.project,state:0
 msgid "Current Status"
-msgstr ""
+msgstr "Aktueller Status"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -491,7 +535,7 @@ msgstr "Anmelden / Abmelden bei Projekt"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytical_timesheet_employee
 msgid "Print Employee Timesheet & Print My Timesheet"
-msgstr "Drucke Alle Arbeitszeiten & Meine Arbeitszeiten"
+msgstr "Alle Mitarbeiter Zeiterfassungen und meine Zeiterfassung drucken"
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,emp_id:0
@@ -502,7 +546,7 @@ msgstr "Mitarbeiter Nr."
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0
 msgid "Period"
-msgstr ""
+msgstr "Periode"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
@@ -523,7 +567,7 @@ msgstr "Abbrechen"
 #: model:ir.actions.report.xml,name:hr_timesheet.report_users_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_users
 msgid "Employees Timesheet"
-msgstr "Personal Arbeitszeiten"
+msgstr "Mitarbeiter Zeiterfassung"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -544,11 +588,11 @@ msgid ""
 "project generates costs on the analytic account. This feature allows to "
 "record at the same time the attendance and the timesheet."
 msgstr ""
-"Mitarbeiter können Zeiten erfassen, die für spezifizische Projekte benötigt "
-"wurden. Ein Projekt entspricht einem Analytischen Konto, wodurch automatisch "
-"eine erfasste Zeit zu Kosten für das Projekt führt. Diese Funktion "
-"ermöglicht eine zeitgleiche Bearbeitung von Anwesenheitszeiten und Zeiten "
-"mit Projektbezug."
+"Mitarbeiter können Zeiten erfassen, die für verschieden Projekte aufgewendet "
+"wurden. Ein Projekt ist einer Kostenstelle zugeordnet, wodurch automatisch "
+"die erfasste Zeit als Kosten für das Projekt verbucht werden. Diese Funktion "
+"ermöglicht eine zeitgleiche Bearbeitung von Anwesenheitszeiten und "
+"Projektzeiten."
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,server_date:0
@@ -608,15 +652,17 @@ msgstr "Februar"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_sign_out_project
 msgid "Sign Out By Project"
-msgstr "Anmelden / Abmelden Projekt"
+msgstr "Abmeldung von Projekt"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:141
+#: code:addons/hr_timesheet/hr_timesheet.py:144
 #, python-format
 msgid ""
 "Please create an employee for this user, using the menu: Human Resources > "
 "Employees."
 msgstr ""
+"Bitte legen Sie einen Mitarbeiter für diesen Benutzer an, Sie finden den "
+"Eintrag unter Personal -> Mitarbeiter."
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0
@@ -646,7 +692,7 @@ msgstr "April"
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:132
 #, python-format
 msgid "User Error!"
-msgstr ""
+msgstr "Benutzerfehler!"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
@@ -662,7 +708,7 @@ msgstr "Jahr"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Duration"
-msgstr ""
+msgstr "Dauer"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -673,7 +719,7 @@ msgstr "Finanzbuchhaltung"
 #: xsl:hr.analytical.timesheet:0
 #: xsl:hr.analytical.timesheet_users:0
 msgid "Total"
-msgstr "Betrag gesamt"
+msgstr "Summe"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0

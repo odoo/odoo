@@ -133,7 +133,9 @@ for a particular financial year and for preparation of vouchers there is a modul
         "static/src/xml/account_move_reconciliation.xml",
         "static/src/xml/account_move_line_quickadd.xml",
     ],
-    'css':['static/src/css/account_move_reconciliation.css'
+    'css':[
+        'static/src/css/account_move_reconciliation.css',
+        'static/src/css/account_move_line_quickadd.css'
     ],
     'demo': [
         'demo/account_demo.xml',
@@ -141,7 +143,7 @@ for a particular financial year and for preparation of vouchers there is a modul
         'project/analytic_account_demo.xml',
         'demo/account_minimal.xml',
         'demo/account_invoice_demo.xml',
-#        'account_unit_test.xml',
+        'account_unit_test.xml',
     ],
     'test': [
         'test/account_customer_invoice.yml',

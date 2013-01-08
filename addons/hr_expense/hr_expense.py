@@ -21,10 +21,11 @@
 
 import time
 
-from osv import fields, osv
-from tools.translate import _
-import decimal_precision as dp
-import netsvc
+from openerp import netsvc
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+
+import openerp.addons.decimal_precision as dp
 
 def _employee_get(obj, cr, uid, context=None):
     if context is None:
@@ -63,6 +64,14 @@ class hr_expense_expense(osv.osv):
     _inherit = ['mail.thread']
     _description = "Expense"
     _order = "id desc"
+    _track = {
+        'state': {
+            'hr_expense.mt_expense_approved': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'accepted',
+            'hr_expense.mt_expense_refused': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'cancelled',
+            'hr_expense.mt_expense_confirmed': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'confirm',
+        },
+    }
+
     _columns = {
         'name': fields.char('Description', size=128, required=True, readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'id': fields.integer('Sheet ID', readonly=True),
@@ -76,7 +85,7 @@ class hr_expense_expense(osv.osv):
         'account_move_id': fields.many2one('account.move', 'Ledger Posting'),
         'line_ids': fields.one2many('hr.expense.line', 'expense_id', 'Expense Lines', readonly=True, states={'draft':[('readonly',False)]} ),
         'note': fields.text('Note'),
-        'amount': fields.function(_amount, string='Total Amount', digits_compute= dp.get_precision('Account')),
+        'amount': fields.function(_amount, string='Total Amount', digits_compute=dp.get_precision('Account')),
         'voucher_id': fields.many2one('account.voucher', "Employee's Receipt"),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'department_id':fields.many2one('hr.department','Department', readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
@@ -88,7 +97,8 @@ class hr_expense_expense(osv.osv):
             ('accepted', 'Approved'),
             ('done', 'Done'),
             ],
-            'Status', readonly=True, help='When the expense request is created the status is \'Draft\'.\n It is confirmed by the user and request is sent to admin, the status is \'Waiting Confirmation\'.\
+            'Status', readonly=True, track_visibility='onchange',
+            help='When the expense request is created the status is \'Draft\'.\n It is confirmed by the user and request is sent to admin, the status is \'Waiting Confirmation\'.\
             \nIf the admin accepts it, the status is \'Accepted\'.\n If a receipt is made for the expense request, the status is \'Done\'.'),
     }
     _defaults = {
@@ -123,27 +133,17 @@ class hr_expense_expense(osv.osv):
             company_id = employee.company_id.id
         return {'value': {'department_id': department_id, 'company_id': company_id}}
 
-    def expense_confirm(self, cr, uid, ids, *args):
+    def expense_confirm(self, cr, uid, ids, context=None):
         for expense in self.browse(cr, uid, ids):
             if expense.employee_id and expense.employee_id.parent_id.user_id:
                 self.message_subscribe_users(cr, uid, [expense.id], user_ids=[expense.employee_id.parent_id.user_id.id])
-        self.write(cr, uid, ids, {
-            'state':'confirm',
-            'date_confirm': time.strftime('%Y-%m-%d')
-        })
-        return True
+        return self.write(cr, uid, ids, {'state': 'confirm', 'date_confirm': time.strftime('%Y-%m-%d')}, context=context)
 
-    def expense_accept(self, cr, uid, ids, *args):
-        self.write(cr, uid, ids, {
-            'state':'accepted',
-            'date_valid':time.strftime('%Y-%m-%d'),
-            'user_valid': uid,
-            })
-        return True
+    def expense_accept(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state': 'accepted', 'date_valid': time.strftime('%Y-%m-%d'), 'user_valid': uid}, context=context)
 
-    def expense_canceled(self, cr, uid, ids, *args):
-        self.write(cr, uid, ids, {'state':'cancelled'})
-        return True
+    def expense_canceled(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state': 'cancelled'}, context=context)
 
     def action_receipt_create(self, cr, uid, ids, context=None):
         property_obj = self.pool.get('ir.property')
@@ -168,9 +168,11 @@ class hr_expense_expense(osv.osv):
                 journal_id = voucher_obj._get_journal(cr, uid, context={'type': 'purchase', 'company_id': company_id})
                 if journal_id:
                     journal = account_journal.browse(cr, uid, journal_id, context=context)
+            if not journal:
+               raise osv.except_osv(_('Error!'), _("No expense journal found. Please make sure you have a journal with type 'purchase' configured."))
             for line in exp.line_ids:
                 if line.product_id:
-                    acc = line.product_id.product_tmpl_id.property_account_expense
+                    acc = line.product_id.property_account_expense
                     if not acc:
                         acc = line.product_id.categ_id.property_account_expense_categ
                 else:

@@ -5,7 +5,7 @@
             <field name="name">Invoice Order</field>
             <field name="model">sale.advance.payment.inv</field>
             <field name="arch" type="xml">
-                <form string="Invoice Sale Order" version="7.0">
+                <form string="Invoice Sales Order" version="7.0">
                     <p class="oe_grey">
                         Select how you want to invoice this order. This
                         will create a draft invoice that can be modified
@@ -22,9 +22,9 @@
                         <label for="amount" attrs="{'invisible': [('advance_payment_method', 'not in', ('fixed','percentage'))]}"/>
                         <div attrs="{'invisible': [('advance_payment_method', 'not in', ('fixed','percentage'))]}">
                             <field name="amount"
-                                attrs="{'required': [('advance_payment_method', 'in', ('fixed','percentage'))]}"/>
+                                attrs="{'required': [('advance_payment_method', 'in', ('fixed','percentage'))]}" class="oe_inline"/>
                             <label string="%%"
-                                attrs="{'invisible': [('advance_payment_method', '!=', 'percentage')]}"/>
+                                attrs="{'invisible': [('advance_payment_method', '!=', 'percentage')]}" class="oe_inline"/>
                         </div>
                     </group>
                     <div>

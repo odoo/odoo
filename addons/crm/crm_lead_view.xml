@@ -2,42 +2,6 @@
 <openerp>
     <data>
 
-        <!-- Read/Unread actions -->
-        <record id="actions_server_crm_lead_unread" model="ir.actions.server">
-            <field name="name">CRM Lead: Mark unread</field>
-            <field name="condition">True</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="model_crm_lead"/>
-            <field name="state">code</field>
-            <field name="code">self.message_mark_as_unread(cr, uid, context.get('active_ids'), context=context)</field>
-        </record>
-        <record id="action_crm_lead_unread" model="ir.values">
-            <field name="name">action_crm_lead_unread</field>
-            <field name="action_id" ref="actions_server_crm_lead_unread"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_crm_lead_unread'))"/>
-            <field name="key">action</field>
-            <field name="model_id" ref="model_crm_lead"/>
-            <field name="model">crm.lead</field>
-            <field name="key2">client_action_multi</field>
-        </record>
-
-        <record id="actions_server_crm_lead_read" model="ir.actions.server">
-            <field name="name">CRM Lead: Mark read</field>
-            <field name="condition">True</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="model_crm_lead"/>
-            <field name="state">code</field>
-            <field name="code">self.message_mark_as_read(cr, uid, context.get('active_ids'), context=context)</field>
-        </record>
-        <record id="action_crm_lead_read" model="ir.values">
-            <field name="name">action_crm_lead_read</field>
-            <field name="action_id" ref="actions_server_crm_lead_read"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_crm_lead_read'))"/>
-            <field name="key">action</field>
-            <field name="model_id" ref="model_crm_lead"/>
-            <field name="model">crm.lead</field>
-            <field name="key2">client_action_multi</field>
-        </record>
 
         <!--
             CRM CASE STAGE
@@ -136,7 +100,7 @@
                             states="cancel"/>
                     <button name="case_cancel" string="Cancel" type="object"
                             states="draft,open,pending"/>
-                    <field name="stage_id" widget="statusbar"
+                    <field name="stage_id" widget="statusbar" clickable="True"
                             on_change="onchange_stage_id(stage_id)"/>
                 </header>
                 <sheet>
@@ -152,8 +116,11 @@
                     <group>
                         <group>
                             <field name="partner_name" string="Company Name"/>
+                            <!-- Preload all the partner's information -->
                             <field name="partner_id" string="Customer"
-                                on_change="on_change_partner(partner_id)" options='{"create_name_field": "name"}'/>
+                                on_change="on_change_partner(partner_id)"
+                                options='{"create_name_field": "name"}'
+                                context="{'default_name': contact_name, 'default_street': street, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_function': function, 'default_phone': phone, 'default_mobile': mobile, 'default_fax': fax, 'default_email': email_from, 'default_user_id': user_id, 'default_section_id': section_id}"/>
                             <label for="street" string="Address"/>
                             <div>
                                 <field name="street" placeholder="Street..."/>
@@ -169,7 +136,7 @@
                         <group>
                             <label for="contact_name"/>
                             <div>
-                                <field name="contact_name" class="oe_inline"/>,
+                                <field name="contact_name" class="oe_inline"/><span attrs="{'invisible': [('title', '=', '')]}">, </span>
                                 <field name="title" placeholder="Title" domain="[('domain', '=', 'contact')]" class="oe_inline" options='{"no_open": True}'/>
                             </div>
                             <field name="email_from" widget="email"/>
@@ -206,17 +173,18 @@
                     </page>
                     <page string="Extra Info">
                         <group>
-                            <group string="Categorization">
+                            <group string="Categorization" groups="base.group_multi_company,base.group_no_one" name="categorization">
                                 <field name="company_id"
                                     groups="base.group_multi_company"
                                     widget="selection" colspan="2"/>
-                                <field name="type_id"/>
-                                <field name="channel_id" widget="selection"/>
-                                <field name="referred"/>
                                 <field name="state" groups="base.group_no_one"/>
                             </group>
                             <group string="Mailings">
                                 <field name="opt_out"/>
+                            </group>
+                            <group string="Misc">
+                                <field name="active"/>
+                                <field name="referred"/>
                             </group>
                         </group>
                     </page>
@@ -241,7 +209,6 @@
                 </graph>
             </field>
         </record>
-
 
         <!-- CRM Lead Tree View -->
         <record model="ir.ui.view" id="crm_case_tree_view_leads">
@@ -308,7 +275,7 @@
                                         <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit...</a></li></t>
                                         <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
                                         <li><a name="%(mail.action_email_compose_message_wizard)d" type="action">Send Email</a></li>
-                                        <li><a name="%(opportunity2phonecall_act)d" type="action">Log Call</a></li>
+                                        <li><a name="%(opportunity2phonecall_act)d" type="action">Schedule/Log Call</a></li>
                                         <li><a name="action_makeMeeting" type="object">Schedule Meeting</a></li>
                                         <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                     </ul>
@@ -333,7 +300,7 @@
                                     <div class="oe_kanban_bottom_right">
                                         <a t-if="record.priority.raw_value == 1" type="object" name="set_normal_priority" class="oe_e oe_star_on">7</a>
                                         <a t-if="record.priority.raw_value != 1" type="object" name="set_high_priority" class="oe_e oe_star_off">7</a>
-                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar" t-if="record.user_id.value"/>
                                     </div>
                                     <div class="oe_kanban_footer_left">
                                         <t t-raw="record.message_summary.raw_value"/>
@@ -404,6 +371,7 @@
                                 states="draft,open,pending" class="oe_highlight"/>
                         <button name="case_mark_lost" string="Mark Lost" type="object"
                                 states="draft,open" class="oe_highlight"/>
+                        <button name="new_mail_send" string="Send Mail" type="object" states="draft,open,pending"/>
                         <field name="stage_id" widget="statusbar" clickable="True"/>
                     </header>
                     <sheet>
@@ -460,6 +428,7 @@
                             <group>
                                 <field name="categ_ids"
                                     string="Categories" widget="many2many_tags"
+                                    context = "{'object_name': 'crm.lead'}"
                                     domain="[('object_id.model', '=', 'crm.lead')]"/>
 
                             </group>
@@ -496,12 +465,7 @@
                                     <field name="mobile"/>
                                     <field name="fax"/>
                                 </group>
-
-                                <group string="Categorization">
-                                    <field name="type_id" />
-                                    <field name="channel_id" widget="selection"/>
-                                </group>
-                                <group string="Mailings">
+                                <group string="Mailings" name="mailings">
                                     <field name="opt_out"/>
                                 </group>
                                 <group string="Misc">
@@ -568,7 +532,7 @@
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
                 <search string="Search Opportunities">
-                    <field name="name" string="Opportunity / Customer"
+                    <field name="name" string="Opportunity"
                         filter_domain="['|','|','|',('partner_id','ilike',self),('partner_name','ilike',self),('email_from','ilike',self),('name', 'ilike', self)]"/>
                     <field name="categ_ids" string="Category" filter_domain="[('categ_ids','ilike', self)]"/>
                     <filter icon="terp-mail-message-new" string="Unread Messages" help="Unread messages" name="message_unread" domain="[('message_unread','=',True)]"/>
@@ -596,7 +560,7 @@
                         <filter string="Exp.Closing" icon="terp-go-month" help="Expected Closing" domain="[]" context="{'group_by':'date_deadline'}"/>
                     </group>
                     <group string="Display">
-                        <filter string="Show Sales Team" icon="terp-personal+" context="{'invisible_section': False}" domain="[]" help="Show Sales Team"/>
+                        <filter string="Show Sales Team" context="{'invisible_section': False}" domain="[]" help="Show Sales Team"/>
                     </group>
                 </search>
             </field>

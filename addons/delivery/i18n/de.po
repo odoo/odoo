@@ -6,15 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-02-08 09:10+0000\n"
-"Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-09 21:56+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:11+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:18+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -48,6 +49,12 @@ msgid "Delivery Grid Line"
 msgstr "Liefertarifposition"
 
 #. module: delivery
+#: field:stock.move,weight_uom_id:0
+#: field:stock.picking,weight_uom_id:0
+msgid "Unit of Measure"
+msgstr ""
+
+#. module: delivery
 #: view:delivery.carrier:0
 #: view:delivery.grid:0
 msgid "Delivery grids"
@@ -64,7 +71,7 @@ msgstr "Volumen"
 #. module: delivery
 #: view:delivery.carrier:0
 msgid "Zip"
-msgstr ""
+msgstr "PLZ"
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
@@ -82,30 +89,12 @@ msgid "Delivery order"
 msgstr "Lieferauftrag"
 
 #. module: delivery
-#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to define a new deliver method. \n"
-"              </p><p>\n"
-"                Each carrier (e.g. UPS) can have several delivery methods "
-"(e.g.\n"
-"                UPS Express, UPS Standard) with a set of pricing rules "
-"attached\n"
-"                to each method.\n"
-"              </p><p>\n"
-"                These methods allows to automaticaly compute the delivery "
-"price\n"
-"                according to your settings; on the sale order (based on the\n"
-"                quotation) or the invoice (based on the delivery orders).\n"
-"              </p>\n"
-"            "
-msgstr ""
-
-#. module: delivery
 #: code:addons/delivery/delivery.py:221
 #, python-format
 msgid "No line matched this product or order in the chosen delivery grid."
 msgstr ""
+"Keine Zeile entspricht dem Produkt oder dem Auftrag mit dieser ausgewählten "
+"Liefertabelle."
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
@@ -145,6 +134,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"p class=\"oe_view_nocontent_create\">\n"
+"\n"
+"Klicken Sie um eine Preisliste für spezifische Regionen zu definieren.\n"
+"              </p><p>\n"
+"                Der Preis für Auslieferungen ermöglicht die Berechnung von "
+"Kosten\n"
+"und Verkaufspreisen auf der Basis von Gewichten und weiterer Kriterien bei "
+"der \n"
+"Auslieferung. Sie können verschiedene  Preislisten für Liefermethoden "
+"anlegen: \n"
+"Pro Land oder Region in einem spezifischen Land durch einen bestimmten \n"
+"Bereich der PLZ.\n"
+"</p>\n"
+"            "
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -164,7 +167,7 @@ msgstr "Betrag"
 #. module: delivery
 #: view:sale.order:0
 msgid "Add in Quote"
-msgstr ""
+msgstr "Erweitern um Angebot"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -214,10 +217,10 @@ msgid "Grid definition"
 msgstr "Definition Auslieferungstarif"
 
 #. module: delivery
-#: code:addons/delivery/stock.py:89
+#: code:addons/delivery/stock.py:90
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Warnung !"
 
 #. module: delivery
 #: field:delivery.grid.line,operator:0
@@ -237,7 +240,7 @@ msgstr "Verkaufsauftrag"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking_out
 msgid "Delivery Orders"
-msgstr ""
+msgstr "Auslieferung Aufträge"
 
 #. module: delivery
 #: view:sale.order:0
@@ -341,7 +344,9 @@ msgstr "Anzahl der Pakete"
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 #: report:sale.shipping:0
+#: view:stock.move:0
 #: field:stock.move,weight:0
+#: view:stock.picking:0
 #: field:stock.picking,weight:0
 #: field:stock.picking.in,weight:0
 #: field:stock.picking.out,weight:0
@@ -366,7 +371,7 @@ msgstr ""
 "abhängt"
 
 #. module: delivery
-#: code:addons/delivery/sale.py:55
+#: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid available !"
 msgstr "Kein Tarif definiert!"
@@ -377,7 +382,7 @@ msgid ">="
 msgstr ">="
 
 #. module: delivery
-#: code:addons/delivery/sale.py:58
+#: code:addons/delivery/sale.py:57
 #, python-format
 msgid "Order not in draft state !"
 msgstr "Auftrag nicht im Entwurf Stadium!"
@@ -427,6 +432,27 @@ msgstr ""
 "Rechnung erstellt wird."
 
 #. module: delivery
+#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to define a new deliver method. \n"
+"              </p><p>\n"
+"                Each carrier (e.g. UPS) can have several delivery methods "
+"(e.g.\n"
+"                UPS Express, UPS Standard) with a set of pricing rules "
+"attached\n"
+"                to each method.\n"
+"              </p><p>\n"
+"                These methods allows to automaticaly compute the delivery "
+"price\n"
+"                according to your settings; on the sales order (based on "
+"the\n"
+"                quotation) or the invoice (based on the delivery orders).\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: delivery
 #: field:delivery.grid.line,max_value:0
 msgid "Maximum Value"
 msgstr "Max. Wert"
@@ -466,6 +492,11 @@ msgid "<="
 msgstr "<="
 
 #. module: delivery
+#: help:stock.picking,weight_uom_id:0
+msgid "Unit of measurement for Weight"
+msgstr ""
+
+#. module: delivery
 #: report:sale.shipping:0
 msgid "Description"
 msgstr "Beschreibung"
@@ -492,7 +523,7 @@ msgid "Price"
 msgstr "Preis"
 
 #. module: delivery
-#: code:addons/delivery/sale.py:55
+#: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid matching for this carrier !"
 msgstr "Kein Tarif für diesen Frachtführer definiert!"
@@ -509,7 +540,7 @@ msgid "Weight * Volume"
 msgstr "Gewicht * Volumen"
 
 #. module: delivery
-#: code:addons/delivery/stock.py:90
+#: code:addons/delivery/stock.py:91
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
 msgstr "Der Frachtführer %s (id: %d) hat kein passendes Tarifmodell!"
@@ -541,12 +572,7 @@ msgid "Delivery Methods"
 msgstr ""
 
 #. module: delivery
-#: field:sale.order,id:0
-msgid "ID"
-msgstr "ID"
-
-#. module: delivery
-#: code:addons/delivery/sale.py:58
+#: code:addons/delivery/sale.py:57
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr ""
@@ -579,9 +605,18 @@ msgid "States"
 msgstr "Staaten"
 
 #. module: delivery
+#: help:stock.move,weight_uom_id:0
+msgid ""
+"Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
+msgstr ""
+
+#. module: delivery
 #: field:delivery.grid.line,price_type:0
 msgid "Price Type"
 msgstr "Preistyp"
+
+#~ msgid "ID"
+#~ msgstr "ID"
 
 #~ msgid "Add Delivery Costs"
 #~ msgstr "Lieferkosten Hinzufügen"

@@ -17,10 +17,15 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import logging
 from datetime import datetime
-from tools import DEFAULT_SERVER_DATETIME_FORMAT
-from osv import osv, fields
-from tools.translate import _
+
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+
+_logger = logging.getLogger(__name__)
+
 try:
     import gdata.docs.data
     import gdata.docs.client
@@ -29,8 +34,6 @@ try:
     import gdata.auth
     from gdata.docs.data import Resource
 except ImportError:
-    import logging
-    _logger = logging.getLogger(__name__)
     _logger.warning("Please install latest gdata-python-client from http://code.google.com/p/gdata-python-client/downloads/list")
 
 class google_docs_ir_attachment(osv.osv):

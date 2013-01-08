@@ -20,13 +20,13 @@
 ##############################################################################
 
 import time
-import tools
+from openerp import tools
 
-from base_status.base_stage import base_stage
+from openerp.addons.base_status.base_stage import base_stage
 from datetime import datetime
-from osv import fields, osv
-from tools.translate import _
-from tools import html2plaintext
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+from openerp.tools import html2plaintext
 
 AVAILABLE_STATES = [
     ('draft', 'New'),
@@ -92,6 +92,15 @@ class hr_applicant(base_stage, osv.Model):
     _description = "Applicant"
     _order = "id desc"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _track = {
+        'state': {
+            'hr_recruitment.mt_applicant_hired': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'done',
+            'hr_recruitment.mt_applicant_refused': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'cancel',
+        },
+        'stage_id': {
+            'hr_recruitment.mt_stage_changed': lambda self, cr, uid, obj, ctx=None: obj['state'] not in ['done', 'cancel'],
+        },
+    }
 
     def _get_default_department_id(self, cr, uid, context=None):
         """ Gives default department by checking if present in the context """
@@ -186,7 +195,7 @@ class hr_applicant(base_stage, osv.Model):
         'partner_id': fields.many2one('res.partner', 'Contact'),
         'create_date': fields.datetime('Creation Date', readonly=True, select=True),
         'write_date': fields.datetime('Update Date', readonly=True),
-        'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage',
+        'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage', track_visibility='onchange',
                         domain="['&', ('fold', '=', False), '|', ('department_id', '=', department_id), ('department_id', '=', False)]"),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
                 selection=AVAILABLE_STATES, string="Status", readonly=True,
@@ -197,7 +206,7 @@ class hr_applicant(base_stage, osv.Model):
                       set to \'Pending\'.'),
         'categ_ids': fields.many2many('hr.applicant_category', string='Tags'),
         'company_id': fields.many2one('res.company', 'Company'),
-        'user_id': fields.many2one('res.users', 'Responsible'),
+        'user_id': fields.many2one('res.users', 'Responsible', track_visibility='onchange'),
         # Applicant Columns
         'date_closed': fields.datetime('Closed', readonly=True, select=True),
         'date_open': fields.datetime('Opened', readonly=True, select=True),
@@ -383,7 +392,9 @@ class hr_applicant(base_stage, osv.Model):
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(hr_applicant, self).create(cr, uid, vals, context=context)
-        self.create_send_note(cr, uid, [obj_id], context=context)
+        applicant = self.browse(cr, uid, obj_id, context=context)
+        if applicant.job_id:
+            self.pool.get('hr.job').message_post(cr, uid, [applicant.job_id.id], body=_('Applicant <b>created</b>'), subtype="hr_recruitment.mt_job_new_applicant", context=context)
         return obj_id
 
     def case_open(self, cr, uid, ids, context=None):
@@ -465,51 +476,6 @@ class hr_applicant(base_stage, osv.Model):
         """
         return self.set_priority(cr, uid, ids, '3')
 
-    # -------------------------------------------------------
-    # OpenChatter methods and notifications
-    # -------------------------------------------------------
-
-    def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
-        """ Override of the (void) default notification method. """
-        if not stage_id: return True
-        stage_name = self.pool.get('hr.recruitment.stage').name_get(cr, uid, [stage_id], context=context)[0][1]
-        return self.message_post(cr, uid, ids, body=_("Stage changed to <b>%s</b>.") % (stage_name), context=context)
-
-    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
-        return 'Applicant'
-
-    def case_open_send_note(self, cr, uid, ids, context=None):
-        message = _("Applicant has been set <b>in progress</b>.")
-        return self.message_post(cr, uid, ids, body=message, context=context)
-
-    def case_close_send_note(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        for applicant in self.browse(cr, uid, ids, context=context):
-            if applicant.job_id:
-                self.pool.get('hr.job').message_post(cr, uid, [applicant.job_id.id], body=_('New employee joined the company %s.')%(applicant.name,), subtype="hr_recruitment.mt_hired", context=context)
-            if applicant.emp_id:
-                message = _("Applicant has been <b>hired</b> and created as an employee.")
-                self.message_post(cr, uid, [applicant.id], body=message, context=context)
-            else:
-                message = _("Applicant has been <b>hired</b>.")
-                self.message_post(cr, uid, [applicant.id], body=message, context=context)
-        return True
-
-    def case_cancel_send_note(self, cr, uid, ids, context=None):
-        msg = 'Applicant <b>refused</b>.'
-        return self.message_post(cr, uid, ids, body=msg, context=context)
-
-    def case_reset_send_note(self,  cr, uid, ids, context=None):
-        message =_("Applicant has been set as <b>new</b>.")
-        return self.message_post(cr, uid, ids, body=message, context=context)
-
-    def create_send_note(self, cr, uid, ids, context=None):
-        message = _("Applicant has been <b>created</b>.")
-        for applicant in self.browse(cr, uid, ids, context=context):
-            if applicant.job_id:
-                self.pool.get('hr.job').message_post(cr, uid, [applicant.job_id.id], body=message, subtype="hr_recruitment.mt_applicant_new", context=context)
-        return self.message_post(cr, uid, ids, body=message, context=context)
 
 class hr_job(osv.osv):
     _inherit = "hr.job"

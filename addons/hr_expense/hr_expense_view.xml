@@ -58,15 +58,16 @@
         <record id="view_expenses_form" model="ir.ui.view">
             <field name="name">hr.expense.form</field>
             <field name="model">hr.expense.expense</field>
+            <field eval="25" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Expenses Sheet" version="7.0">
                 <header>
                     <button name="confirm" states="draft" string="Submit to Manager" type="workflow" class="oe_highlight"/>
                     <button name="validate" states="confirm" string="Approve" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
+                    <button name="refuse" states="confirm,accepted" string="Refuse" type="workflow" groups="base.group_hr_user" />
                     <button name="draft" states="confirm,cancelled" string="Set to Draft" type="workflow" groups="base.group_hr_user" />
                     <button name="done" states="accepted" string="Generate Accounting Entries" type="workflow" groups="account.group_account_invoice" class="oe_highlight"/>
                     <button name="action_view_receipt" states="done" string="Open Receipt" type="object"/>
-                    <button name="refuse" states="confirm,accepted" string="Refuse" type="workflow" groups="base.group_hr_user" />
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,accepted,done" statusbar_colors='{"confirm":"blue","cancelled":"red"}'/>
                 </header>
                 <sheet>
@@ -211,7 +212,7 @@
             <field name="search_view_id" ref="product.product_search_form_view"/>
         </record>
 
-        <menuitem id="menu_hr_product" name="Types of Expenses" parent="hr.menu_hr_configuration" action="hr_expense_product"/>
+        <menuitem id="menu_hr_product" name="Expense Categories" parent="hr.menu_hr_configuration" action="hr_expense_product"/>
         <menuitem id="next_id_49" name="Expenses" sequence="15" parent="hr.menu_hr_root"/>
         <menuitem action="expense_all" id="menu_expense_all" name="Expenses" parent="next_id_49"/>
 

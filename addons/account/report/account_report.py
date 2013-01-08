@@ -23,9 +23,9 @@ import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-import pooler
-import tools
-from osv import fields,osv
+from openerp import pooler
+from openerp import tools
+from openerp.osv import fields,osv
 
 def _code_get(self, cr, uid, context=None):
     acc_type_obj = self.pool.get('account.account.type')
@@ -48,6 +48,7 @@ class report_account_receivable(osv.osv):
     _order = 'name desc'
 
     def init(self, cr):
+        tools.drop_view_if_exists(cr, 'report_account_receivable')
         cr.execute("""
             create or replace view report_account_receivable as (
                 select
@@ -183,6 +184,7 @@ class report_invoice_created(osv.osv):
     _order = 'create_date'
 
     def init(self, cr):
+        tools.drop_view_if_exists(cr, 'report_invoice_created')
         cr.execute("""create or replace view report_invoice_created as (
             select
                inv.id as id, inv.name as name, inv.type as type,

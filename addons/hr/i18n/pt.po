@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-05-10 17:59+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-13 17:21+0000\n"
+"Last-Translator: Alien Group Lda <aires.silvestre@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:39+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:48+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -24,7 +24,7 @@ msgstr "Utilizador OpenERP"
 #. module: hr
 #: field:hr.config.settings,module_hr_timesheet_sheet:0
 msgid "Allow timesheets validation by managers"
-msgstr ""
+msgstr "Permite a validação de registos de horas por gestores"
 
 #. module: hr
 #: field:hr.job,requirements:0
@@ -62,7 +62,7 @@ msgstr ""
 #. module: hr
 #: view:hr.config.settings:0
 msgid "Time Tracking"
-msgstr ""
+msgstr "Registo de Tempo"
 
 #. module: hr
 #: view:hr.employee:0
@@ -78,12 +78,12 @@ msgstr "Crie  os Seus Departamentos"
 #. module: hr
 #: help:hr.job,no_of_employee:0
 msgid "Number of employees currently occupying this job position."
-msgstr ""
+msgstr "Número de empregados ocupando este cargo."
 
 #. module: hr
 #: field:hr.config.settings,module_hr_evaluation:0
 msgid "Organize employees periodic evaluation"
-msgstr ""
+msgstr "Organizar avaliação periódica de empregados"
 
 #. module: hr
 #: view:hr.department:0
@@ -91,6 +91,7 @@ msgstr ""
 #: field:hr.employee,department_id:0
 #: view:hr.job:0
 #: field:hr.job,department_id:0
+#: model:ir.model,name:hr.model_hr_department
 msgid "Department"
 msgstr "Departamento"
 
@@ -105,6 +106,8 @@ msgid ""
 "This field holds the image used as photo for the employee, limited to "
 "1024x1024px."
 msgstr ""
+"Este campo guarda a imagem usada como fotografia do funcionário, limitada a "
+"1024x1024 pixéis."
 
 #. module: hr
 #: help:hr.config.settings,module_hr_holidays:0
@@ -124,7 +127,7 @@ msgstr "Em recrutamento"
 #. module: hr
 #: field:hr.job,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Mensagens por ler"
 
 #. module: hr
 #: field:hr.department,company_id:0
@@ -142,12 +145,12 @@ msgstr "Esperado em Recrutamento"
 #. module: hr
 #: field:res.users,employee_ids:0
 msgid "Related employees"
-msgstr ""
+msgstr "Empregados relacionados"
 
 #. module: hr
 #: constraint:hr.employee.category:0
 msgid "Error! You cannot create recursive Categories."
-msgstr ""
+msgstr "Erro! Não pode criar categorias de forma recursiva."
 
 #. module: hr
 #: help:hr.config.settings,module_hr_recruitment:0
@@ -157,18 +160,18 @@ msgstr ""
 #. module: hr
 #: view:hr.employee:0
 msgid "Birth"
-msgstr ""
+msgstr "Data de nascimento"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
 #: model:ir.ui.menu,name:hr.menu_view_employee_category_form
 msgid "Employee Tags"
-msgstr ""
+msgstr "Etiquetas de empregados"
 
 #. module: hr
 #: view:hr.job:0
 msgid "Launch Recruitement"
-msgstr ""
+msgstr "Iniciar recrutamento"
 
 #. module: hr
 #: model:process.transition,name:hr.process_transition_employeeuser0
@@ -193,12 +196,12 @@ msgstr "Casado"
 #. module: hr
 #: field:hr.job,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Mensagens"
 
 #. module: hr
 #: view:hr.config.settings:0
 msgid "Talent Management"
-msgstr ""
+msgstr "Gestão de talento"
 
 #. module: hr
 #: help:hr.config.settings,module_hr_timesheet_sheet:0
@@ -208,7 +211,7 @@ msgstr ""
 #. module: hr
 #: view:hr.employee:0
 msgid "Mobile:"
-msgstr ""
+msgstr "Telemóvel:"
 
 #. module: hr
 #: view:hr.employee:0
@@ -218,7 +221,7 @@ msgstr "Posto"
 #. module: hr
 #: help:hr.job,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Se marcado, as novas mensagens requerem a sua atenção."
 
 #. module: hr
 #: field:hr.employee,color:0
@@ -237,7 +240,7 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,image_medium:0
 msgid "Medium-sized photo"
-msgstr ""
+msgstr "Foto de tamanho médio"
 
 #. module: hr
 #: field:hr.employee,identification_id:0
@@ -278,7 +281,7 @@ msgstr "Localização do Escritório"
 #. module: hr
 #: field:hr.job,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Seguidores"
 
 #. module: hr
 #: view:hr.employee:0
@@ -299,6 +302,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is "
 "required."
 msgstr ""
+"Foto de tamanho pequeno do empregado. É automaticamente redimensionada para "
+"uma imagem de 64x64 pixéis, com o rácio preservado. Use este campo onde uma "
+"imagem pequena for necessária."
 
 #. module: hr
 #: field:hr.employee,birthday:0
@@ -344,7 +350,7 @@ msgstr "Cargo"
 #. module: hr
 #: field:hr.job,no_of_employee:0
 msgid "Current Number of Employees"
-msgstr ""
+msgstr "Número atual de empregados"
 
 #. module: hr
 #: field:hr.department,member_ids:0
@@ -364,18 +370,12 @@ msgstr "Formulário e estrutura do funcionário"
 #. module: hr
 #: field:hr.config.settings,module_hr_expense:0
 msgid "Manage employees expenses"
-msgstr ""
-
-#. module: hr
-#: help:hr.job,expected_employees:0
-msgid ""
-"Expected number of employees for this job position after new recruitment."
-msgstr ""
+msgstr "Gerir despesas de empregados"
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Tel:"
-msgstr ""
+msgstr "Tel:"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -442,7 +442,7 @@ msgstr ""
 #. module: hr
 #: constraint:hr.employee:0
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
-msgstr ""
+msgstr "Erro! Não pode criar hierarquias de funcionários de forma recursiva."
 
 #. module: hr
 #: help:hr.config.settings,module_hr_attendance:0
@@ -452,7 +452,7 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,image_small:0
 msgid "Smal-sized photo"
-msgstr ""
+msgstr "Foto de tamanho pequeno"
 
 #. module: hr
 #: view:hr.employee.category:0
@@ -478,7 +478,7 @@ msgstr "Utilizador Relacionado"
 #. module: hr
 #: view:hr.config.settings:0
 msgid "or"
-msgstr ""
+msgstr "ou"
 
 #. module: hr
 #: field:hr.employee.category,name:0
@@ -488,7 +488,7 @@ msgstr "Categoria"
 #. module: hr
 #: view:hr.job:0
 msgid "Stop Recruitment"
-msgstr ""
+msgstr "Terminar o recrutamento"
 
 #. module: hr
 #: field:hr.config.settings,module_hr_attendance:0
@@ -545,12 +545,12 @@ msgstr "Contrato do funcionário"
 #. module: hr
 #: view:hr.config.settings:0
 msgid "Contracts"
-msgstr ""
+msgstr "Contratos"
 
 #. module: hr
 #: help:hr.job,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Histórico de mensagens e comunicação"
 
 #. module: hr
 #: field:hr.employee,ssnid:0
@@ -560,12 +560,12 @@ msgstr "Nº Segurança Social"
 #. module: hr
 #: field:hr.job,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "É um seguidor"
 
 #. module: hr
 #: field:hr.config.settings,module_hr_recruitment:0
 msgid "Manage the recruitment process"
-msgstr ""
+msgstr "Gerir processo de recrutamento"
 
 #. module: hr
 #: view:hr.employee:0
@@ -575,7 +575,7 @@ msgstr "Ativo"
 #. module: hr
 #: view:hr.config.settings:0
 msgid "Human Resources Management"
-msgstr ""
+msgstr "Gestão de recursos humanos"
 
 #. module: hr
 #: view:hr.config.settings:0
@@ -595,7 +595,7 @@ msgstr "Empresas"
 #. module: hr
 #: field:hr.job,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Resumo"
 
 #. module: hr
 #: model:process.transition,note:hr.process_transition_contactofemployee0
@@ -634,7 +634,7 @@ msgstr ""
 #. module: hr
 #: constraint:hr.department:0
 msgid "Error! You cannot create recursive departments."
-msgstr ""
+msgstr "Erro! Não pode criar departamentos de forma recursiva."
 
 #. module: hr
 #: field:hr.employee,address_id:0
@@ -644,7 +644,7 @@ msgstr "Endereço de Trabalho"
 #. module: hr
 #: view:hr.employee:0
 msgid "Public Information"
-msgstr ""
+msgstr "Informação pública"
 
 #. module: hr
 #: field:hr.employee,marital:0
@@ -659,7 +659,7 @@ msgstr "ir.actions.act_window"
 #. module: hr
 #: field:hr.employee,last_login:0
 msgid "Latest Connection"
-msgstr ""
+msgstr "Ligação mais recente"
 
 #. module: hr
 #: field:hr.employee,image:0
@@ -669,7 +669,7 @@ msgstr "Fotografia"
 #. module: hr
 #: view:hr.config.settings:0
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
@@ -691,10 +691,10 @@ msgid "This installs the module hr_timesheet."
 msgstr ""
 
 #. module: hr
-#: field:hr.job,message_comment_ids:0
-#: help:hr.job,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
+#: help:hr.job,expected_employees:0
+msgid ""
+"Expected number of employees for this job position after new recruitment."
+msgstr "Número de empregados neste cargo após novo recrutamento."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.view_department_form_installer
@@ -733,23 +733,20 @@ msgstr "Telémovel do Emprego"
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Recruitement in Progress"
-msgstr ""
+msgstr "Recrutamento em progresso"
 
 #. module: hr
 #: field:hr.config.settings,module_account_analytic_analysis:0
 msgid ""
 "Allow invoicing based on timesheets (the sale application will be installed)"
 msgstr ""
+"Permite faturação baseada em registo de horas (a aplicação de vendas será "
+"instalada)"
 
 #. module: hr
 #: view:hr.employee.category:0
 msgid "Employees Categories"
 msgstr "Categorias de funcionários"
-
-#. module: hr
-#: model:ir.model,name:hr.model_hr_department
-msgid "hr.department"
-msgstr "hr.department"
 
 #. module: hr
 #: field:hr.employee,address_home_id:0
@@ -759,7 +756,7 @@ msgstr "Endereço de Residência"
 #. module: hr
 #: field:hr.config.settings,module_hr_timesheet:0
 msgid "Manage timesheets"
-msgstr ""
+msgstr "Gerir registo de horas"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_payroll_modules
@@ -804,7 +801,7 @@ msgstr "Nacionalidade"
 #. module: hr
 #: view:hr.config.settings:0
 msgid "Additional Features"
-msgstr ""
+msgstr "Funcionalidades adicionais"
 
 #. module: hr
 #: field:hr.employee,notes:0
@@ -857,23 +854,23 @@ msgstr "Nome do departamento"
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting_timesheet
 msgid "Reports"
-msgstr ""
+msgstr "Relatórios"
 
 #. module: hr
 #: field:hr.config.settings,module_hr_payroll:0
 msgid "Manage payroll"
-msgstr ""
+msgstr "Gerir folha de salário"
 
 #. module: hr
 #: view:hr.config.settings:0
 #: model:ir.actions.act_window,name:hr.action_human_resources_configuration
 msgid "Configure Human Resources"
-msgstr ""
+msgstr "Configurar recursos humanos"
 
 #. module: hr
 #: selection:hr.job,state:0
 msgid "No Recruitment"
-msgstr ""
+msgstr "Sem recrutamento"
 
 #. module: hr
 #: help:hr.employee,ssnid:0
@@ -893,7 +890,7 @@ msgstr "LogIn"
 #. module: hr
 #: field:hr.job,expected_employees:0
 msgid "Total Forecasted Employees"
-msgstr ""
+msgstr "Total de empregados previsto"
 
 #. module: hr
 #: help:hr.job,state:0
@@ -905,7 +902,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
 msgid "Users"
-msgstr ""
+msgstr "Utilizadores"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
@@ -951,7 +948,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model,name:hr.model_hr_config_settings
 msgid "hr.config.settings"
-msgstr ""
+msgstr "hr.config.settings"
 
 #. module: hr
 #: field:hr.department,manager_id:0
@@ -973,7 +970,7 @@ msgstr "Subordinados"
 #. module: hr
 #: view:hr.config.settings:0
 msgid "Apply"
-msgstr ""
+msgstr "Aplicar"
 
 #~ msgid "Sunday"
 #~ msgstr "Domingo"
@@ -1148,6 +1145,9 @@ msgstr ""
 
 #~ msgid "Employee's timesheet group"
 #~ msgstr "Grupo de horários dos Funcionários"
+
+#~ msgid "hr.department"
+#~ msgstr "hr.department"
 
 #~ msgid "Birthday"
 #~ msgstr "Data de Nascimento"

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
 "PO-Revision-Date: 2012-11-27 09:28+0000\n"
 "Last-Translator: ccdos <ccdos@163.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:33+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:41+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: product
 #: field:product.packaging,rows:0
@@ -30,11 +30,6 @@ msgstr "计算的基准价格"
 #: help:product.product,seller_qty:0
 msgid "This is minimum quantity to purchase from Main Supplier."
 msgstr "供应商的最低订购量"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_day
-msgid "Day"
-msgstr "日"
 
 #. module: product
 #: model:product.template,name:product.product_product_34_product_template
@@ -107,8 +102,8 @@ msgid ""
 msgstr "保留复杂的摘要(消息数量,……等)。为了插入到看板视图，这一摘要直接是是HTML格式。"
 
 #. module: product
-#: code:addons/product/pricelist.py:177
-#: code:addons/product/product.py:206
+#: code:addons/product/pricelist.py:179
+#: code:addons/product/product.py:208
 #, python-format
 msgid "Warning!"
 msgstr "警告！"
@@ -119,17 +114,12 @@ msgid "Small-sized image"
 msgstr "小尺寸图片"
 
 #. module: product
-#: code:addons/product/product.py:174
+#: code:addons/product/product.py:176
 #, python-format
 msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
 "both belong to different Category!."
 msgstr "产品单位 %s 与默认单位 %s 无法转换，二者属于不同的类别！"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_dozen
-msgid "Dozen"
-msgstr "打"
 
 #. module: product
 #: selection:product.template,cost_method:0
@@ -189,7 +179,7 @@ msgid "Product Type"
 msgstr "产品类型"
 
 #. module: product
-#: code:addons/product/product.py:410
+#: code:addons/product/product.py:412
 #, python-format
 msgid "Products: "
 msgstr "产品： "
@@ -281,11 +271,6 @@ msgstr "如果不选中，允许你隐藏这个产品而无需删除。"
 #: field:product.uom,category_id:0
 msgid "Category"
 msgstr "类别"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_litre
-msgid "Litre"
-msgstr "升"
 
 #. module: product
 #: model:product.template,name:product.product_product_25_product_template
@@ -526,6 +511,11 @@ msgid "Headset standard"
 msgstr "标准耳机"
 
 #. module: product
+#: model:product.uom,name:product.product_uom_day
+msgid "Day(s)"
+msgstr ""
+
+#. module: product
 #: help:product.product,incoming_qty:0
 msgid ""
 "Quantity of products that are planned to arrive.\n"
@@ -590,11 +580,9 @@ msgid "PC Assemble + Custom (PC on Demand)"
 msgstr "pc组装和定制（PC需求）"
 
 #. module: product
-#: model:process.transition,note:product.process_transition_supplierofproduct0
-msgid ""
-"1 or several supplier(s) can be linked to a product. All information stands "
-"in the product form."
-msgstr "1个或多个供应商能关联到一个产品,所有信息委员产品的表单内."
+#: model:product.template,description:product.product_product_27_product_template
+msgid "Custom Laptop based on customer's requirement."
+msgstr "基于客户要求定制便携式计算机。"
 
 #. module: product
 #: help:product.packaging,width:0
@@ -602,7 +590,7 @@ msgid "The width of the package"
 msgstr "包装宽度"
 
 #. module: product
-#: code:addons/product/product.py:359
+#: code:addons/product/product.py:361
 #, python-format
 msgid "Unit of Measure categories Mismatch!"
 msgstr "计量单位类别不一致"
@@ -704,6 +692,7 @@ msgstr "硬盘 SH-1"
 
 #. module: product
 #: field:product.supplierinfo,name:0
+#: field:product.template,seller_ids:0
 msgid "Supplier"
 msgstr "供应商"
 
@@ -733,9 +722,9 @@ msgid "If checked new messages require your attention."
 msgstr "如果要求你关注新消息，勾选此项"
 
 #. module: product
-#: model:product.category,name:product.product_category_1
-msgid "Saleable"
-msgstr "可销售"
+#: field:product.product,ean13:0
+msgid "EAN13 Barcode"
+msgstr "EAN13 条码"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_product_price_list
@@ -809,6 +798,11 @@ msgid "End Date"
 msgstr "结束日期"
 
 #. module: product
+#: model:product.uom,name:product.product_uom_litre
+msgid "Liter(s)"
+msgstr ""
+
+#. module: product
 #: view:product.price_list:0
 msgid "Print"
 msgstr "打印"
@@ -841,7 +835,6 @@ msgstr "关键字"
 #. module: product
 #: model:ir.actions.report.xml,name:product.report_product_pricelist
 #: model:ir.model,name:product.model_product_pricelist
-#: field:product.product,price:0
 #: field:product.product,pricelist_id:0
 #: view:product.supplierinfo:0
 msgid "Pricelist"
@@ -849,8 +842,8 @@ msgstr "价格表"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_hour
-msgid "Hour"
-msgstr "时"
+msgid "Hour(s)"
+msgstr ""
 
 #. module: product
 #: selection:product.template,state:0
@@ -863,9 +856,11 @@ msgid "Partner"
 msgstr "业务伙伴"
 
 #. module: product
-#: model:product.template,description:product.product_product_27_product_template
-msgid "Custom Laptop based on customer's requirement."
-msgstr "基于客户要求定制便携式计算机。"
+#: model:process.transition,note:product.process_transition_supplierofproduct0
+msgid ""
+"1 or several supplier(s) can be linked to a product. All information stands "
+"in the product form."
+msgstr "1个或多个供应商能关联到一个产品,所有信息委员产品的表单内."
 
 #. module: product
 #: field:product.pricelist.item,price_round:0
@@ -931,11 +926,6 @@ msgstr "主板 I9P57"
 #: field:product.packaging,weight:0
 msgid "Total Package Weight"
 msgstr "包装总重量"
-
-#. module: product
-#: field:product.product,seller_info_id:0
-msgid "unknown"
-msgstr "未知"
 
 #. module: product
 #: help:product.packaging,code:0
@@ -1122,6 +1112,11 @@ msgid "Right Parent"
 msgstr "右父项"
 
 #. module: product
+#: field:product.product,price:0
+msgid "Price"
+msgstr ""
+
+#. module: product
 #: field:product.pricelist.item,price_surcharge:0
 msgid "Price Surcharge"
 msgstr "价格额外费用"
@@ -1194,6 +1189,11 @@ msgstr "成本"
 msgid ""
 "Gives the sequence order when displaying a list of product categories."
 msgstr "显示产品列表的顺序号"
+
+#. module: product
+#: model:product.uom,name:product.product_uom_dozen
+msgid "Dozen(s)"
+msgstr ""
 
 #. module: product
 #: field:product.uom,factor:0
@@ -1274,7 +1274,7 @@ msgstr ""
 "            "
 
 #. module: product
-#: code:addons/product/product.py:359
+#: code:addons/product/product.py:361
 #, python-format
 msgid ""
 "New Unit of Measure '%s' must belong to same Unit of Measure category '%s' "
@@ -1330,11 +1330,6 @@ msgid ""
 msgstr "该字段保存产品的图片，限制到  1024x1024px."
 
 #. module: product
-#: field:product.template,seller_ids:0
-msgid "Partners"
-msgstr "业务伙伴列表"
-
-#. module: product
 #: help:product.pricelist.item,categ_id:0
 msgid ""
 "Specify a product category if this rule only applies to products belonging "
@@ -1347,7 +1342,12 @@ msgid "Inventory"
 msgstr "盘点"
 
 #. module: product
-#: code:addons/product/product.py:736
+#: field:product.product,seller_info_id:0
+msgid "Supplier Info"
+msgstr "供应商信息"
+
+#. module: product
+#: code:addons/product/product.py:729
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (副本)"
@@ -1466,16 +1466,9 @@ msgstr "中等尺寸图片"
 
 #. module: product
 #: selection:product.ul,type:0
-#: model:product.uom,name:product.product_uom_unit
 #: model:product.uom.categ,name:product.product_uom_categ_unit
 msgid "Unit"
 msgstr "单件"
-
-#. module: product
-#: code:addons/product/product.py:588
-#, python-format
-msgid "Product has been <b>created</b>."
-msgstr "产品<b>被创建 </b>"
 
 #. module: product
 #: field:product.pricelist.version,date_start:0
@@ -1596,9 +1589,9 @@ msgid "Pricelist Name"
 msgstr "价格表名称"
 
 #. module: product
-#: field:product.product,ean13:0
-msgid "EAN13 Barcode"
-msgstr "EAN13 条码"
+#: model:product.category,name:product.product_category_1
+msgid "Saleable"
+msgstr "可销售"
 
 #. module: product
 #: sql_constraint:product.uom:0
@@ -1835,7 +1828,7 @@ msgid ""
 msgstr "如果制作发票的单位跟库存不一致，指定一个计量单位，留空使用默认单位。"
 
 #. module: product
-#: code:addons/product/product.py:206
+#: code:addons/product/product.py:208
 #, python-format
 msgid "Cannot change the category of existing Unit of Measure '%s'."
 msgstr "不能改变已有的计量单位'%s'的类别"
@@ -1871,7 +1864,7 @@ msgid "Default Unit of Measure"
 msgstr "默认计量单位"
 
 #. module: product
-#: code:addons/product/pricelist.py:375
+#: code:addons/product/pricelist.py:377
 #, python-format
 msgid "Partner section of the product form"
 msgstr "供应产品的业务伙伴"
@@ -1897,7 +1890,12 @@ msgid "Messages"
 msgstr "消息"
 
 #. module: product
-#: code:addons/product/product.py:174
+#: model:product.uom,name:product.product_uom_unit
+msgid "Unit(s)"
+msgstr ""
+
+#. module: product
+#: code:addons/product/product.py:176
 #, python-format
 msgid "Error!"
 msgstr "错误!"
@@ -2234,7 +2232,7 @@ msgid "Normal"
 msgstr "常规"
 
 #. module: product
-#: code:addons/product/pricelist.py:177
+#: code:addons/product/pricelist.py:179
 #, python-format
 msgid ""
 "At least one pricelist has no active version !\n"
@@ -2287,12 +2285,6 @@ msgstr ""
 #: selection:product.template,mes_type:0
 msgid "Variable"
 msgstr "可变的"
-
-#. module: product
-#: field:product.product,message_comment_ids:0
-#: help:product.product,message_comment_ids:0
-msgid "Comments and emails"
-msgstr "评论和电子邮件"
 
 #. module: product
 #: field:product.template,rental:0
@@ -2454,7 +2446,7 @@ msgid "15” LCD Monitor"
 msgstr "15” LCD 显示器"
 
 #. module: product
-#: code:addons/product/pricelist.py:374
+#: code:addons/product/pricelist.py:376
 #: field:product.pricelist.item,base_pricelist_id:0
 #, python-format
 msgid "Other Pricelist"
@@ -2669,9 +2661,6 @@ msgstr "价格折扣"
 #~ msgid "Product Description"
 #~ msgstr "产品说明"
 
-#~ msgid "Supplier Info"
-#~ msgstr "供应商信息"
-
 #, python-format
 #~ msgid "Warning !"
 #~ msgstr "警告！"
@@ -2869,6 +2858,9 @@ msgstr "价格折扣"
 
 #~ msgid "The number of layer on a palet or box"
 #~ msgstr "箱子数或垫板的层数"
+
+#~ msgid "Partners"
+#~ msgstr "业务伙伴列表"
 
 #~ msgid "The mode for computing the price for this rule."
 #~ msgstr "计算价格公式"
@@ -3135,8 +3127,14 @@ msgstr "价格折扣"
 #~ msgid "Basic+ PC (assembly on order)"
 #~ msgstr "基本配置 PC 组装订单"
 
+#~ msgid "Day"
+#~ msgstr "日"
+
 #~ msgid "UoM"
 #~ msgstr "计量单位"
+
+#~ msgid "Hour"
+#~ msgstr "时"
 
 #~ msgid "Bigger than the reference UoM"
 #~ msgstr "大于引用的计量单位"
@@ -3450,8 +3448,14 @@ msgstr "价格折扣"
 #~ msgid "Service on Timesheet"
 #~ msgstr "计工单服务"
 
+#~ msgid "Dozen"
+#~ msgstr "打"
+
 #~ msgid "Product UoS View"
 #~ msgstr "产品销售单位视图"
+
+#~ msgid "unknown"
+#~ msgstr "未知"
 
 #~ msgid "Assembly Service"
 #~ msgstr "组装服务"
