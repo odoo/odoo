@@ -26,15 +26,15 @@ openerp.web_analytics = function(instance) {
         *  This method initializes the tracker
         */
         init: function() {
-            /* Comment this lines when going on production, only used for testing on localhost */
+            /* Comment this lines when going on production, only used for testing on localhost
             _gaq.push(['_setAccount', 'UA-35793871-1']);
             _gaq.push(['_setDomainName', 'none']);
-            /**/
+            */
 
-            /* Uncomment this lines when going on production
+            /* Uncomment this lines when going on production */
             _gaq.push(['_setAccount', 'UA-7333765-1']);
             _gaq.push(['_setDomainName', '.openerp.com']);  // Allow multi-domain
-            */
+            /**/
         },
         /*
         * This method MUST be overriden by saas_demo and saas_trial in order to
