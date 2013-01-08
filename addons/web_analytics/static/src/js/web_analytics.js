@@ -87,8 +87,12 @@ openerp.web_analytics = function(instance) {
             // related to client actions are tracked by the action manager
             if (state.model && state.view_type) {
                 // Track the page
-                var label = instance.web_analytics.generateUrl({'model': state.model, 'view_type': state.view_type});
-                _gaq.push(['_trackEvent', state.model, state.view_type, label]);
+                var url = instance.web_analytics.generateUrl({'model': state.model, 'view_type': state.view_type});
+                this._push_event({
+                    'category': state.model,
+                    'action': state.view_type,
+                    'label': url,
+                });
             }
         },
         /*
@@ -96,6 +100,7 @@ openerp.web_analytics = function(instance) {
         * by other modules in order to extend tracking functionalities
         */
         include_tracker: function() {
+            var t = this;
             // Track the events related with the creation and the  modification of records,
             // the view type is always form
             instance.web.FormView.include({
@@ -103,12 +108,20 @@ openerp.web_analytics = function(instance) {
                     this._super.apply(this, arguments);
                     var self = this;
                     this.on('record_created', self, function(r) {
-                        var url = instance.web_analytics.generateUrl({'model': this.model, 'view_type': 'form'});
-                        _gaq.push(['_trackEvent', this.model, 'on_button_create_save', url]);
+                        var url = instance.web_analytics.generateUrl({'model': r.model, 'view_type': 'form'});
+                        t._push_event({
+                            'category': r.model,
+                            'action': 'form',
+                            'label': url,
+                        });
                     });
                     this.on('record_saved', self, function(r) {
-                        var url = instance.web_analytics.generateUrl({'model': this.model, 'view_type': 'form'});
-                        _gaq.push(['_trackEvent', this.model, 'on_button_edit_save', url]);
+                        var url = instance.web_analytics.generateUrl({'model': r.model, 'view_type': 'form'});
+                        t._push_event({
+                            'category': r.model,
+                            'action': 'form',
+                            'label': url,
+                        });
                     });
                 }
             });
@@ -116,10 +129,13 @@ openerp.web_analytics = function(instance) {
             // Track client actions
             instance.web.ActionManager.include({
                 ir_actions_client: function (action, options) {
-                    var label = instance.web_analytics.generateUrl({'action': action.tag});
+                    var url = instance.web_analytics.generateUrl({'action': action.tag});
                     var category = action.res_model || action.type;
-                    var ga_action = action.name || action.tag;
-                    _gaq.push(['_trackEvent', category, ga_action, label]);
+                    t._push_event({
+                        'category': action.res_model || action.type,
+                        'action': action.name || action.tag,
+                        'label': url,
+                    });
                     return this._super.apply(this, arguments);
                 },
             });
@@ -134,8 +150,12 @@ openerp.web_analytics = function(instance) {
                     } else {
                         action = action_data.string || action_data.special || '';
                     }
-                    var label = instance.web_analytics.generateUrl({'model': category, 'view_type': this.view_type});
-                    _gaq.push(['_trackEvent', category, action, label]);
+                    var url = instance.web_analytics.generateUrl({'model': category, 'view_type': this.view_type});
+                    t._push_event({
+                        'category': category,
+                        'action': action,
+                        'label': url,
+                    });
                     return this._super.apply(this, arguments);
                 },
             });
@@ -151,26 +171,47 @@ openerp.web_analytics = function(instance) {
                     } else {
                         options = {'action': params.action};
                     }
-                    var label = instance.web_analytics.generateUrl(options);
+                    var url = instance.web_analytics.generateUrl(options);
                     if (error.code) {
-                        _gaq.push(['_trackEvent', error.message, error.data.fault_code, label, ,true]);
+                        t._push_event({
+                            'category': error.message,
+                            'action': error.data.fault_code,
+                            'label': url,
+                            'value': undefined,
+                            'noninteraction': true,
+                        });
                     } else {
-                        _gaq.push(['_trackEvent', error.type, error.data.debug, label, ,true]);
+                        t._push_event({
+                            'category': error.type,
+                            'action': error.data.debug,
+                            'label': url,
+                            'value': undefined,
+                            'noninteraction': true,
+                        });
                     }
                     this._super.apply(this, arguments);
                 },
             });
         },
+        _push_event: function(options) {
+            _gaq.push(['_trackEvent',
+                options.category,
+                options.action,
+                options.label,
+                options.value,
+                options.noninteraction
+            ]);
+        },
         _push_ecommerce: function(trans_data, item_list) {
             _gaq.push(['_addTrans',
-                    trans_data.order_id,
-                    trans_data.store_name,
-                    trans_data.total,
-                    trans_data.tax,
-                    trans_data.shipping,
-                    trans_data.city,
-                    trans_data.state
-                    trans_data.country,
+                trans_data.order_id,
+                trans_data.store_name,
+                trans_data.total,
+                trans_data.tax,
+                trans_data.shipping,
+                trans_data.city,
+                trans_data.state
+                trans_data.country,
             ]);
             _.each(item_list, function(item) {
                 _gaq.push(['_addItem',
