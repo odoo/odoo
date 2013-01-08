@@ -623,13 +623,12 @@ openerp.mail = function (session) {
         /*do post a message and fetch the message*/
         do_send_message_post: function (partner_ids) {
             var self = this;
-            console.log(partner_ids);
             this.parent_thread.ds_thread._model.call('message_post_user_api', [this.context.default_res_id], {
                 'body': this.$('textarea').val(),
                 'subject': false,
                 'parent_id': this.context.default_parent_id,
                 'attachment_ids': _.map(this.attachment_ids, function (file) {return file.id;}),
-                'partner_ids': partner_ids,
+                'partner_ids': _.map(partner_ids, function (val){return [4, val];}),
                 'context': this.parent_thread.context,
             }).done(function (message_id) {
                 var thread = self.parent_thread;
@@ -1748,7 +1747,6 @@ openerp.mail = function (session) {
             this.searchview = new session.web.SearchView(this, ds_msg, false, defaults || {}, false);
             this.searchview.appendTo(this.$('.oe_view_manager_view_search'))
                 .then(function () { self.searchview.on('search_data', self, self.do_searchview_search); });
-            console.log(this.searchview);
             if (this.searchview.has_defaults) {
                 this.searchview.ready.then(this.searchview.do_search);
             }
