@@ -43,6 +43,9 @@ openerp.web_analytics = function(instance) {
         _get_user_type: function() {
             return 'Local User';
         },
+        /*
+        * This method gets the user access level, to be used as CV in GA
+        */
         _get_user_access_level: function() {
             if (instance.session.uid === 1) {
                 return 'Admin User';
@@ -96,7 +99,7 @@ openerp.web_analytics = function(instance) {
             }
         },
         /*
-        * This method includes the tracker into view and managers. It can be overriden
+        * This method includes the tracker into views and managers. It can be overriden
         * by other modules in order to extend tracking functionalities
         */
         include_tracker: function() {
@@ -191,6 +194,9 @@ openerp.web_analytics = function(instance) {
                 },
             });
         },
+        /*
+        * Method called in order to send _trackEvent to GA
+        */
         _push_event: function(options) {
             _gaq.push(['_trackEvent',
                 options.category,
@@ -200,6 +206,9 @@ openerp.web_analytics = function(instance) {
                 options.noninteraction
             ]);
         },
+        /*
+        * Method called in order to send ecommerce transactions to GA
+        */
         _push_ecommerce: function(trans_data, item_list) {
             _gaq.push(['_addTrans',
                 trans_data.order_id,
