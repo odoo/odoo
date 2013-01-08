@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-01-05 22:33+0000\n"
+"PO-Revision-Date: 2013-01-07 23:55+0000\n"
 "Last-Translator: Sergio Corato <Unknown>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-06 05:30+0000\n"
-"X-Generator: Launchpad (build 16393)\n"
+"X-Launchpad-Export-Date: 2013-01-08 06:05+0000\n"
+"X-Generator: Launchpad (build 16402)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -886,7 +886,7 @@ msgstr "Voci analitiche per linea"
 #. module: account
 #: field:account.invoice.refund,filter_refund:0
 msgid "Refund Method"
-msgstr "Metodo di rimborso"
+msgstr "Metodo di storno"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_report
@@ -1757,7 +1757,7 @@ msgstr "Una tavola temporanea utilizzata per la Dashboard"
 #: model:ir.actions.act_window,name:account.action_invoice_tree4
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree4
 msgid "Supplier Refunds"
-msgstr "Note di Credito"
+msgstr "Note di Credito Fornitori"
 
 #. module: account
 #: field:account.tax.code,code:0
@@ -6299,6 +6299,8 @@ msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and supplier invoices"
 msgstr ""
+"Questa condizione di pagamento sarà usata al posto di quella di default per "
+"gli ordini di acquisto e le fatture dei fornitori."
 
 #. module: account
 #: help:account.automatic.reconcile,power:0
@@ -6518,7 +6520,7 @@ msgstr "Quant. massima:"
 #: view:account.invoice:0
 #: model:ir.actions.act_window,name:account.action_account_invoice_refund
 msgid "Refund Invoice"
-msgstr "Fattura di resi"
+msgstr "Nota di Credito"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_entries_report_all
@@ -7141,6 +7143,13 @@ msgid ""
 "due date, make sure that the payment term is not set on the invoice. If you "
 "keep the payment term and the due date empty, it means direct payment."
 msgstr ""
+"Se vengono utilizzate le condizioni di pagamento, la data di scadenza sarà "
+"calcolata automaticamento alla creazione delle registrazioni contabili. La "
+"condizione di pagamento può calcolare diverse date di scadenza, per esempio "
+"50% subito e 50% a 30 giorni, ma se è necessario forzare un data di "
+"scadenza, assicurarsi che la condizione di pagamento non sia impostata in "
+"fattura. Se sia la condizione di pagamento che la data di scadenza vengono "
+"lasciate vuote, ciò implica il pagamento immediato."
 
 #. module: account
 #: code:addons/account/account.py:414
@@ -7260,7 +7269,7 @@ msgstr ""
 #: selection:account.invoice.report,type:0
 #: selection:report.invoice.created,type:0
 msgid "Supplier Refund"
-msgstr "Note di Credito"
+msgstr "Note di Credito Fornitori"
 
 #. module: account
 #: field:account.bank.statement,move_line_ids:0
@@ -8557,8 +8566,8 @@ msgid ""
 "Refund base on this type. You can not Modify and Cancel if the invoice is "
 "already reconciled"
 msgstr ""
-"Nota di credito basata su questo tipo. Non è possibile modifica o annullare "
-"se la fattura è già stata riconciliata"
+"Nota di credito basata su questo tipo. Non è possibile modificare o "
+"annullare se la fattura è già stata riconciliata"
 
 #. module: account
 #: field:account.bank.statement.line,sequence:0
@@ -9869,7 +9878,7 @@ msgstr "Chiudi lo stato dell'anno Fiscale e dei periodi"
 #. module: account
 #: field:account.config.settings,purchase_refund_journal_id:0
 msgid "Purchase refund journal"
-msgstr "Sezionale Note di Debito"
+msgstr "Sezionale Note di Credito fornitori"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -11110,6 +11119,9 @@ msgid ""
 "If you unreconcile transactions, you must also verify all the actions that "
 "are linked to those transactions because they will not be disable"
 msgstr ""
+"Se viene annullata la riconciliazione delle registrazioni, è necessario "
+"verificare anche tutte le azioni collegate a queste registrazioni perchè non "
+"saranno annullate"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1059
