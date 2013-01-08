@@ -25,10 +25,10 @@ import dateutil
 import email
 import logging
 import pytz
+import re
 import time
 import xmlrpclib
 from email.message import Message
-import re
 
 from openerp import tools
 from openerp import SUPERUSER_ID
@@ -820,6 +820,41 @@ class mail_thread(osv.AbstractModel):
                         "now deprecated res.log.")
         self.message_post(cr, uid, [id], message, context=context)
 
+    def message_get_partners_from_emails(self, cr, uid, emails, context=None):
+        """ Convert a list of emails into a list partner_ids and a list
+            new_partner_ids. The return value is non conventional because
+            it is meant to be used by the mail widget.
+
+            :return dict: partner_ids and new_partner_ids
+        """
+        partner_obj = self.pool.get('res.partner')
+        mail_message_obj = self.pool.get('mail.message')
+
+        partner_ids = []
+        new_partner_ids = []
+        for email in emails:
+            m = re.search(r"((.+?)\s*<)?([^<>]+@[^<>]+)>?", email, re.IGNORECASE | re.DOTALL)
+            name = m.group(2) or m.group(0)
+            email = m.group(3)
+            ids = partner_obj.search(cr, SUPERUSER_ID, [('email', '=', email)], context=context)
+            if ids:
+                partner_ids.append(ids[0])
+            else:
+                partner_id = partner_obj.create(cr, uid, {
+                        'name': name or email,
+                        'email': email,
+                    }, context=context)
+                new_partner_ids.append(partner_id)
+
+            # link mail with this from mail to the new partner id
+            message_ids = mail_message_obj.search(cr, SUPERUSER_ID, ['|', ('email_from', '=', email), ('email_from', 'ilike', '<%s>' % email), ('author_id', '=', False)], context=context)
+            if message_ids:
+                mail_message_obj.write(cr, SUPERUSER_ID, message_ids, {'email_from': None, 'author_id': partner_id}, context=context)
+        return {
+            'partner_ids': partner_ids,
+            'new_partner_ids': new_partner_ids,
+        }
+
     def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification',
                         subtype=None, parent_id=False, attachments=None, context=None, **kwargs):
         """ Post a new message in an existing thread, returning the new
@@ -907,39 +942,6 @@ class mail_thread(osv.AbstractModel):
 
         return mail_message.create(cr, uid, values, context=context)
 
-    def new_email_partner(self, cr, uid, emails, context=None):
-        """ Convert a list of emails into a list partner_ids and a list new_partner_ids
-        """
-        partner_obj = self.pool.get('res.partner')
-        mail_message_obj = self.pool.get('mail.message')
-
-        partner_ids = []
-        new_partner_ids = []
-        for email in emails:
-            m = re.search(r"((.+?)\s*<)?([^<>]+@[^<>]+)>?", email, re.IGNORECASE | re.DOTALL)
-            name = m.group(2) or m.group(0)
-            email = m.group(3)
-            ids = partner_obj.search(cr, SUPERUSER_ID, [('email', '=', email)], context=context)
-            if ids:
-                partner_id = ids[0]
-                partner_ids.append(partner_id)
-            else:
-                partner_id = partner_obj.create(cr, uid, {
-                        'name': name or email,
-                        'email': email,
-                    }, context=context)
-                new_partner_ids.append(partner_id)
-
-            # link mail with this from mail to the new partner id
-            message_ids = mail_message_obj.search(cr, SUPERUSER_ID, ['|', ('email_from', '=', email), ('email_from', 'ilike', '<%s>' % email), ('author_id', '=', False)], context=context)
-            if message_ids:
-                mail_message_obj.write(cr, SUPERUSER_ID, message_ids, {'email_from': None, 'author_id': partner_id}, context=context)
-        return {
-            'partner_ids': partner_ids,
-            'new_partner_ids': new_partner_ids,
-        }
-
-
     def message_post_user_api(self, cr, uid, thread_id, body='', parent_id=False,
                                 attachment_ids=None, content_subtype='plaintext',
                                 context=None, **kwargs):
@@ -979,7 +981,8 @@ class mail_thread(osv.AbstractModel):
                 param_partner_ids.add(item)
         partner_ids |= param_partner_ids
 
-        # 1.A.3: add recipients as follower
+        # 1.A.3: add parameters recipients as follower
+        # TDE FIXME in 7.1: should check whether this comes from email_list or partner_ids
         if param_partner_ids:
             self.message_subscribe(cr, uid, [thread_id], [pid[1] for pid in param_partner_ids], context=context)
 

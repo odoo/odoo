@@ -580,7 +580,7 @@ openerp.mail = function (session) {
                 }
             });
             var deferred_check = $.Deferred();
-            self.parent_thread.ds_thread._model.call('new_email_partner', [emails]).then(function (partners) {
+            self.parent_thread.ds_thread._model.call('message_get_partners_from_emails', [emails]).then(function (partners) {
                 partners_from = _.clone(partners.partner_ids);
                 var deferreds = [];
                 _.each(partners.new_partner_ids, function (id) {
@@ -1741,7 +1741,6 @@ openerp.mail = function (session) {
          * @param {Object} defaults ??
          */
         load_searchview: function (defaults) {
-            
             var self = this;
             var ds_msg = new session.web.DataSetSearch(this, 'mail.message');
             this.searchview = new session.web.SearchView(this, ds_msg, false, defaults || {}, false);
