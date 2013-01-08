@@ -820,7 +820,7 @@ class mail_thread(osv.AbstractModel):
                         "now deprecated res.log.")
         self.message_post(cr, uid, [id], message, context=context)
 
-    def message_get_partners_from_emails(self, cr, uid, emails, context=None):
+    def message_create_partners_from_emails(self, cr, uid, emails, context=None):
         """ Convert a list of emails into a list partner_ids and a list
             new_partner_ids. The return value is non conventional because
             it is meant to be used by the mail widget.
@@ -956,7 +956,6 @@ class mail_thread(osv.AbstractModel):
             - type and subtype: comment and mail.mt_comment by default
             - attachment_ids: supposed not attached to any document; attach them
                 to the related document. Should only be set by Chatter.
-            - extra_email: [ 'Fabien <fpi@openerp.com>', 'al@openerp.com' ]
         """
         mail_message_obj = self.pool.get('mail.message')
         ir_attachment = self.pool.get('ir.attachment')
