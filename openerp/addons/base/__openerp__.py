@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2012 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -80,12 +80,12 @@ The kernel of OpenERP, needed for all installation.
         'res/res_bank_view.xml',
         'res/res_country_view.xml',
         'res/res_currency_view.xml',
+        'res/wizard/change_password_wizard_view.xml',
         'res/res_users_view.xml',
         'res/res_partner_data.xml',
         'res/ir_property_view.xml',
         'security/base_security.xml',
         'security/ir.model.access.csv',
-        'security/ir.model.access-1.csv', # res.partner.address is deprecated; it is still there for backward compability only and will be removed in next version
     ],
     'demo': [
         'base_demo.xml',
@@ -94,19 +94,17 @@ The kernel of OpenERP, needed for all installation.
         'res/res_partner_image_demo.xml',
     ],
     'test': [
-        'test/base_test.xml',
         'test/base_test.yml',
         'test/test_context.xml',
         'test/bug_lp541545.xml',
         'test/test_osv_expression.yml',
         'test/test_ir_rule.yml', # <-- These tests modify/add/delete ir_rules.
-        # Commented because this takes some time.
-        # This must be (un)commented with the corresponding import statement
-        # in test/__init__.py.
-        # 'test/test_ir_cron.yml', # <-- These tests perform a roolback.
     ],
     'installable': True,
     'auto_install': True,
     'css': ['static/src/css/modules.css'],
+    'js': [
+        'static/src/js/apps.js',
+    ],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

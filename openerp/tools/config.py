@@ -147,8 +147,9 @@ class configmanager(object):
                          help="specify the TCP IP address for the NETRPC protocol")
         group.add_option("--netrpc-port", dest="netrpc_port", my_default=8070,
                          help="specify the TCP port for the NETRPC protocol", type="int")
-        group.add_option("--no-netrpc", dest="netrpc", action="store_false", my_default=True,
-                         help="disable the NETRPC protocol")
+        # Needed a few day for runbot and saas
+        group.add_option("--no-netrpc", dest="netrpc", action="store_false", my_default=False, help="disable the NETRPC protocol")
+        group.add_option("--netrpc", dest="netrpc", action="store_true", my_default=False, help="enable the NETRPC protocol")
         parser.add_option_group(group)
 
         # WEB
@@ -270,8 +271,8 @@ class configmanager(object):
                               "osv_memory tables. This is a decimal value expressed in hours, "
                               "and the default is 1 hour.",
                          type="float")
-        group.add_option("--max-cron-threads", dest="max_cron_threads", my_default=4,
-                         help="Maximum number of threads processing concurrently cron jobs.",
+        group.add_option("--max-cron-threads", dest="max_cron_threads", my_default=2,
+                         help="Maximum number of threads processing concurrently cron jobs (default 2).",
                          type="int")
         group.add_option("--unaccent", dest="unaccent", my_default=False, action="store_true",
                          help="Use the unaccent function provided by the database when available.")
@@ -283,19 +284,19 @@ class configmanager(object):
                          help="Specify the number of workers, 0 disable prefork mode.",
                          type="int")
         group.add_option("--limit-memory-soft", dest="limit_memory_soft", my_default=640 * 1024 * 1024,
-                         help="Maximum allowed virtual memory per worker, when reached the worker be reset after the current request.",
+                         help="Maximum allowed virtual memory per worker, when reached the worker be reset after the current request (default 640M).",
                          type="int")
         group.add_option("--limit-memory-hard", dest="limit_memory_hard", my_default=768 * 1024 * 1024,
-                         help="Maximum allowed virtual memory per worker, when reached, any memory allocation will fail.",
+                         help="Maximum allowed virtual memory per worker, when reached, any memory allocation will fail (default 768M).",
                          type="int")
         group.add_option("--limit-time-cpu", dest="limit_time_cpu", my_default=60,
-                         help="Maximum allowed CPU time per request.",
+                         help="Maximum allowed CPU time per request (default 60).",
                          type="int")
-        group.add_option("--limit-time-real", dest="limit_time_real", my_default=60,
-                         help="Maximum allowed Real time per request. ",
+        group.add_option("--limit-time-real", dest="limit_time_real", my_default=120,
+                         help="Maximum allowed Real time per request (default 120).",
                          type="int")
         group.add_option("--limit-request", dest="limit_request", my_default=8192,
-                         help="Maximum number of request to be processed per worker.",
+                         help="Maximum number of request to be processed per worker (default 8192).",
                          type="int")
         parser.add_option_group(group)
 
@@ -352,7 +353,7 @@ class configmanager(object):
         # Check if the config file exists (-c used, but not -s)
         die(not opt.save and opt.config and not os.path.exists(opt.config),
             "The config file '%s' selected with -c/--config doesn't exist, "\
-            "use -s/--save if you want to generate it"%(opt.config))
+            "use -s/--save if you want to generate it"% opt.config)
 
         # place/search the config file on Win32 near the server installation
         # (../etc from the server)
@@ -480,13 +481,11 @@ class configmanager(object):
         if opt.save:
             self.save()
 
-        openerp.conf.max_cron_threads = self.options['max_cron_threads']
-
         openerp.conf.addons_paths = self.options['addons_path'].split(',')
         if opt.server_wide_modules:
             openerp.conf.server_wide_modules = map(lambda m: m.strip(), opt.server_wide_modules.split(','))
         else:
-            openerp.conf.server_wide_modules = ['web']
+            openerp.conf.server_wide_modules = ['web','web_kanban']
         if complete:
             openerp.modules.module.initialize_sys_path()
             openerp.modules.loading.open_openerp_namespace()

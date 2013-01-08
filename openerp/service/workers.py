@@ -16,6 +16,10 @@ import sys
 import time
 
 import werkzeug.serving
+try:
+    from setproctitle import setproctitle
+except ImportError:
+    setproctitle = lambda x: None
 
 import openerp
 import openerp.tools.config as config
@@ -134,7 +138,7 @@ class Multicorn(object):
     def process_spawn(self):
         while len(self.workers_http) < self.population:
             self.worker_spawn(WorkerHTTP, self.workers_http)
-        while len(self.workers_cron) < 1: # config option ?
+        while len(self.workers_cron) < config['max_cron_threads']:
             self.worker_spawn(WorkerCron, self.workers_cron)
 
     def sleep(self):
@@ -189,8 +193,7 @@ class Multicorn(object):
         for pid in self.workers.keys():
             self.worker_kill(pid, signal.SIGTERM)
         self.socket.close()
-        import __main__
-        __main__.quit_signals_received = 1
+        openerp.cli.server.quit_signals_received = 1
 
     def run(self):
         self.start()
@@ -252,7 +255,7 @@ class Worker(object):
         # Reset the worker if it consumes too much memory (e.g. caused by a memory leak).
         rss, vms = psutil.Process(os.getpid()).get_memory_info()
         if vms > config['limit_memory_soft']:
-            _logger.info('Virtual memory consumption too high, rebooting the worker.')
+            _logger.info('Worker (%d) virtual memory limit (%s) reached.', self.pid, vms)
             self.alive = False # Commit suicide after the request.
 
         # VMS and RLIMIT_AS are the same thing: virtual memory, a.k.a. address space
@@ -263,7 +266,8 @@ class Worker(object):
         r = resource.getrusage(resource.RUSAGE_SELF)
         cpu_time = r.ru_utime + r.ru_stime
         def time_expired(n, stack):
-            _logger.info('CPU time limit exceeded.')
+            _logger.info('Worker (%d) CPU time limit (%s) reached.', config['limit_time_cpu'])
+            # We dont suicide in such case
             raise Exception('CPU time limit exceeded.')
         signal.signal(signal.SIGXCPU, time_expired)
         soft, hard = resource.getrlimit(resource.RLIMIT_CPU)
@@ -274,6 +278,7 @@ class Worker(object):
 
     def start(self):
         self.pid = os.getpid()
+        setproctitle('openerp: %s %s' % (self.__class__.__name__, self.pid))
         _logger.info("Worker %s (%s) alive", self.__class__.__name__, self.pid)
         # Reseed the random number generator
         random.seed()
@@ -297,10 +302,10 @@ class Worker(object):
                 self.multi.pipe_ping(self.watchdog_pipe)
                 self.sleep()
                 self.process_work()
-            _logger.info("Worker (%s) exiting...",self.pid)
+            _logger.info("Worker (%s) exiting. request_count: %s.", self.pid, self.request_count)
             self.stop()
         except Exception,e:
-            _logger.exception("Worker (%s) Exception occured, exiting..."%self.pid)
+            _logger.exception("Worker (%s) Exception occured, exiting..." % self.pid)
             # should we use 3 to abort everything ?
             sys.exit(1)
 
@@ -346,19 +351,27 @@ class WorkerBaseWSGIServer(werkzeug.serving.BaseWSGIServer):
 class WorkerCron(Worker):
     """ Cron workers """
     def sleep(self):
-        time.sleep(60)
+        interval = 60 + self.pid % 10 # chorus effect
+        time.sleep(interval)
 
     def process_work(self):
+        _logger.debug("WorkerCron (%s) polling for jobs", self.pid)
         if config['db_name']:
             db_names = config['db_name'].split(',')
         else:
             db_names = openerp.netsvc.ExportService._services['db'].exp_list(True)
         for db_name in db_names:
             while True:
-                # TODO Each job should be considered as one request in multiprocessing
-                acquired = openerp.addons.base.ir.ir_cron.ir_cron._acquire_job(db_name)
+                # acquired = openerp.addons.base.ir.ir_cron.ir_cron._acquire_job(db_name)
+                # TODO why isnt openerp.addons.base defined ?
+                import base
+                acquired = base.ir.ir_cron.ir_cron._acquire_job(db_name)
                 if not acquired:
                     break
+            # dont keep cursors in multi database mode
+            if len(db_names) > 1:
+                openerp.sql_db.close_db(db_name)
+        # TODO Each job should be considered as one request instead of each db
         self.request_count += 1
 
     def start(self):

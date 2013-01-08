@@ -24,7 +24,6 @@
 # cr.execute('delete from wkf_triggers where model=%s and res_id=%s', (res_type,res_id))
 #
 
-import openerp.netsvc as netsvc
 import instance
 
 import wkf_expr
@@ -126,7 +125,7 @@ def _execute(cr, workitem, activity, ident, stack):
             _state_set(cr, workitem, activity, 'running', ident)
             if activity.get('action', False):
                 id_new = wkf_expr.execute(cr, ident, workitem, activity)
-                if not (id_new):
+                if not id_new:
                     cr.execute('delete from wkf_workitem where id=%s', (workitem['id'],))
                     return False
                 assert type(id_new)==type(1) or type(id_new)==type(1L), 'Wrong return value: '+str(id_new)+' '+str(type(id_new))

@@ -31,8 +31,7 @@ import re
 import smtplib
 import threading
 
-from osv import osv
-from osv import fields
+from openerp.osv import osv, fields
 from openerp.tools.translate import _
 from openerp.tools import html2text
 import openerp.tools as tools
@@ -183,10 +182,12 @@ class ir_mail_server(osv.osv):
                                                        "(this is very verbose and may include confidential info!)"),
         'sequence': fields.integer('Priority', help="When no specific mail server is requested for a mail, the highest priority one "
                                                     "is used. Default priority is 10 (smaller number = higher priority)"),
+        'active': fields.boolean('Active')
     }
 
     _defaults = {
          'smtp_port': 25,
+         'active': True,
          'sequence': 10,
          'smtp_encryption': 'none',
      }
@@ -228,7 +229,7 @@ class ir_mail_server(osv.osv):
            :param int port: SMTP port to connect to
            :param user: optional username to authenticate with
            :param password: optional password to authenticate with
-           :param string encryption: optional: ``'ssl'`` | ``'starttls'``
+           :param string encryption: optional, ``'ssl'`` | ``'starttls'``
            :param bool smtp_debug: toggle debugging of SMTP sessions (all i/o
                               will be output in logs)
         """

@@ -21,18 +21,24 @@
 ##############################################################################
 
 import logging
+import os
+import signal
+import subprocess
+import sys
 import threading
 import time
 
+import cron
 import netrpc_server
 import web_services
+import web_services
+import wsgi_server
 
-import openerp.cron
 import openerp.modules
 import openerp.netsvc
 import openerp.osv
+from openerp.release import nt_service_name
 import openerp.tools
-import openerp.service.wsgi_server
 
 #.apidoc title: RPC Services
 
@@ -68,60 +74,88 @@ def start_internal():
         return
     openerp.netsvc.init_logger()
     openerp.modules.loading.open_openerp_namespace()
+
     # Instantiate local services (this is a legacy design).
     openerp.osv.osv.start_object_proxy()
     # Export (for RPC) services.
-    web_services.start_web_services()
+    web_services.start_service()
+
     load_server_wide_modules()
     start_internal_done = True
 
 def start_services():
     """ Start all services including http, netrpc and cron """
     start_internal()
-
-    # Initialize the HTTP stack.
-    netrpc_server.init_servers()
-
-    if not openerp.tools.config.options["gevent"]:
-        if openerp.conf.max_cron_threads:
-            openerp.cron.start_master_thread()
-
-    # Start the top-level servers threads (normally HTTP, HTTPS, and NETRPC).
-    openerp.netsvc.Server.startAll()
-
+    # Initialize the NETRPC server.
+    netrpc_server.start_service()
     # Start the WSGI server.
-    openerp.service.wsgi_server.start_server()
+    wsgi_server.start_service()
+    # Start the main cron thread.
+    if not openerp.tools.config.options["gevent"]:
+        cron.start_service()
 
 def stop_services():
     """ Stop all services. """
-    # stop scheduling new jobs; we will have to wait for the jobs to complete below
-    openerp.cron.cancel_all()
+    # stop services
+    if not openerp.tools.config.options["gevent"]:
+        cron.stop_service()
+    netrpc_server.stop_service()
+    wsgi_server.stop_service()
 
-    openerp.netsvc.Server.quitAll()
-    openerp.service.wsgi_server.stop_server()
     _logger.info("Initiating shutdown")
     _logger.info("Hit CTRL-C again or send a second signal to force the shutdown.")
-    logging.shutdown()
 
     # Manually join() all threads before calling sys.exit() to allow a second signal
     # to trigger _force_quit() in case some non-daemon threads won't exit cleanly.
     # threading.Thread.join() should not mask signals (at least in python 2.5).
     me = threading.currentThread()
+    _logger.debug('current thread: %r', me)
     for thread in threading.enumerate():
+        _logger.debug('process %r (%r)', thread, thread.isDaemon())
         if thread != me and not thread.isDaemon() and thread.ident != main_thread_id:
             while thread.isAlive():
+                _logger.debug('join and sleep')
                 # Need a busyloop here as thread.join() masks signals
                 # and would prevent the forced shutdown.
                 thread.join(0.05)
                 time.sleep(0.05)
 
+    _logger.debug('--')
     openerp.modules.registry.RegistryManager.delete_all()
+    logging.shutdown()
 
 def start_services_workers():
     import openerp.service.workers
     openerp.multi_process = True
-
     openerp.service.workers.Multicorn(openerp.service.wsgi_server.application).run()
 
+def _reexec():
+    """reexecute openerp-server process with (nearly) the same arguments"""
+    if openerp.tools.osutil.is_running_as_nt_service():
+        subprocess.call('sc stop {0} && sc start {0}'.format(nt_service_name), shell=True)
+    exe = os.path.basename(sys.executable)
+    strip_args = ['-d', '-u']
+    a = sys.argv[:]
+    args = [x for i, x in enumerate(a) if x not in strip_args and a[max(i - 1, 0)] not in strip_args]
+    if not args or args[0] != exe:
+        args.insert(0, exe)
+    os.execv(sys.executable, args)
+
+def restart_server():
+    if openerp.multi_process:
+        raise NotImplementedError("Multicorn is not supported (but gunicorn was)")
+        pid = openerp.wsgi.core.arbiter_pid
+        os.kill(pid, signal.SIGHUP)
+    else:
+        if os.name == 'nt':
+            def reborn():
+                stop_services()
+                _reexec()
+
+            # run in a thread to let the current thread return response to the caller.
+            threading.Thread(target=reborn).start()
+        else:
+            openerp.phoenix = True
+            os.kill(os.getpid(), signal.SIGINT)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -94,10 +94,8 @@ def setup_pid_file():
 def preload_registry(dbname):
     """ Preload a registry, and start the cron."""
     try:
-        db, registry = openerp.pooler.get_db_and_pool(dbname, update_module=openerp.tools.config['init'] or openerp.tools.config['update'], pooljobs=False)
-
-        # jobs will start to be processed later, when openerp.cron.start_master_thread() is called by openerp.service.start_services()
-        registry.schedule_cron_jobs()
+        update_module = True if openerp.tools.config['init'] or openerp.tools.config['update'] else False
+        db, registry = openerp.pooler.get_db_and_pool(dbname,update_module=update_module)
     except Exception:
         _logger.exception('Failed to initialize database `%s`.', dbname)
 
@@ -105,7 +103,7 @@ def run_test_file(dbname, test_file):
     """ Preload a registry, possibly run a test file, and start the cron."""
     try:
         config = openerp.tools.config
-        db, registry = openerp.pooler.get_db_and_pool(dbname, update_module=config['init'] or config['update'], pooljobs=False)
+        db, registry = openerp.pooler.get_db_and_pool(dbname, update_module=config['init'] or config['update'])
         cr = db.cursor()
         _logger.info('loading test file %s', test_file)
         openerp.tools.convert_yaml_import(cr, 'base', file(test_file), 'test', {}, 'test', True)
@@ -209,10 +207,15 @@ def quit_on_signals():
         pass
 
     config = openerp.tools.config
+    openerp.service.stop_services()
+
+    if getattr(openerp, 'phoenix', False):
+        # like the phoenix, reborn from ashes...
+        openerp.service._reexec()
+        return
+
     if config['pidfile']:
         os.unlink(config['pidfile'])
-
-    openerp.service.stop_services()
     sys.exit(0)
 
 def configure_babel_localedata_path():

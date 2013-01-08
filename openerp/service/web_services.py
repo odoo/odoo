@@ -54,7 +54,12 @@ from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 
-RPC_VERSION_1 = {'server_version': '6.1', 'protocol_version': 1}
+RPC_VERSION_1 = {
+        'server_version': release.version,
+        'server_version_info': release.version_info,
+        'server_serie': release.serie,
+        'protocol_version': 1,
+}
 
 # This should be moved to openerp.modules.db, along side initialize().
 def _initialize_db(serv, id, db_name, demo, lang, user_password):
@@ -77,11 +82,11 @@ def _initialize_db(serv, id, db_name, demo, lang, user_password):
             mids = modobj.search(cr, SUPERUSER_ID, [('state', '=', 'installed')])
             modobj.update_translations(cr, SUPERUSER_ID, mids, lang)
 
-        cr.execute('UPDATE res_users SET password=%s, lang=%s, active=True WHERE login=%s', (
-            user_password, lang, 'admin'))
-        cr.execute('SELECT login, password ' \
-                   ' FROM res_users ' \
-                   ' ORDER BY login')
+        # update admin's password and lang
+        values = {'password': user_password, 'lang': lang}
+        pool.get('res.users').write(cr, SUPERUSER_ID, [SUPERUSER_ID], values)
+
+        cr.execute('SELECT login, password FROM res_users ORDER BY login')
         serv.actions[id].update(users=cr.dictfetchall(), clean=True)
         cr.commit()
         cr.close()
@@ -120,6 +125,12 @@ class db(netsvc.ExportService):
         db = sql_db.db_connect('postgres')
         cr = db.cursor()
         chosen_template = tools.config['db_template']
+        cr.execute("""SELECT datname 
+                              FROM pg_database
+                              WHERE datname = %s """,
+                           (name,))
+        if cr.fetchall():
+            raise openerp.exceptions.Warning(" %s database already exists!" % name )
         try:
             cr.autocommit(True) # avoid transaction block
             cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "%s" """ % (name, chosen_template))
@@ -159,6 +170,7 @@ class db(netsvc.ExportService):
 
     def exp_duplicate_database(self, db_original_name, db_name):
         _logger.info('Duplicate database `%s` to `%s`.', db_original_name, db_name)
+        sql_db.close_db(db_original_name)
         db = sql_db.db_connect('postgres')
         cr = db.cursor()
         try:
@@ -171,13 +183,13 @@ class db(netsvc.ExportService):
     def exp_get_progress(self, id):
         if self.actions[id]['thread'].isAlive():
 #           return openerp.modules.init_progress[db_name]
-            return (min(self.actions[id].get('progress', 0),0.95), [])
+            return min(self.actions[id].get('progress', 0),0.95), []
         else:
             clean = self.actions[id]['clean']
             if clean:
                 users = self.actions[id]['users']
                 self.actions.pop(id)
-                return (1.0, users)
+                return 1.0, users
             else:
                 e = self.actions[id]['exception'] # TODO this seems wrong: actions[id]['traceback'] is set, but not 'exception'.
                 self.actions.pop(id)
@@ -542,7 +554,7 @@ GNU Public Licence.
         if os.name == 'posix':
             if platform.system() == 'Linux':
                 lsbinfo = os.popen('lsb_release -a').read()
-                environment += '%s'%(lsbinfo)
+                environment += '%s'% lsbinfo
             else:
                 environment += 'Your System is not lsb compliant\n'
         environment += 'Operating System Release : %s\n' \
@@ -597,67 +609,12 @@ class objects_proxy(netsvc.ExportService):
             raise NameError("Method not available %s" % method)
         security.check(db,uid,passwd)
         assert openerp.osv.osv.service, "The object_proxy class must be started with start_object_proxy."
+        openerp.modules.registry.RegistryManager.check_registry_signaling(db)
         fn = getattr(openerp.osv.osv.service, method)
         res = fn(db, uid, *params)
+        openerp.modules.registry.RegistryManager.signal_caches_change(db)
         return res
 
-
-#
-# Wizard ID: 1
-#    - None = end of wizard
-#
-# Wizard Type: 'form'
-#    - form
-#    - print
-#
-# Wizard datas: {}
-# TODO: change local request to OSE request/reply pattern
-#
-class wizard(netsvc.ExportService):
-    def __init__(self, name='wizard'):
-        netsvc.ExportService.__init__(self,name)
-        self.id = 0
-        self.wiz_datas = {}
-        self.wiz_name = {}
-        self.wiz_uid = {}
-
-    def dispatch(self, method, params):
-        (db, uid, passwd ) = params[0:3]
-        threading.current_thread().uid = uid
-        params = params[3:]
-        if method not in ['execute','create']:
-            raise KeyError("Method not supported %s" % method)
-        security.check(db,uid,passwd)
-        fn = getattr(self, 'exp_'+method)
-        res = fn(db, uid, *params)
-        return res
-
-    def _execute(self, db, uid, wiz_id, datas, action, context):
-        self.wiz_datas[wiz_id].update(datas)
-        wiz = netsvc.LocalService('wizard.'+self.wiz_name[wiz_id])
-        return wiz.execute(db, uid, self.wiz_datas[wiz_id], action, context)
-
-    def exp_create(self, db, uid, wiz_name, datas=None):
-        if not datas:
-            datas={}
-#FIXME: this is not thread-safe
-        self.id += 1
-        self.wiz_datas[self.id] = {}
-        self.wiz_name[self.id] = wiz_name
-        self.wiz_uid[self.id] = uid
-        return self.id
-
-    def exp_execute(self, db, uid, wiz_id, datas, action='init', context=None):
-        if not context:
-            context={}
-
-        if wiz_id in self.wiz_uid:
-            if self.wiz_uid[wiz_id] == uid:
-                return self._execute(db, uid, wiz_id, datas, action, context)
-            else:
-                raise openerp.exceptions.AccessDenied()
-        else:
-            raise openerp.exceptions.Warning('Wizard not found.')
 
 #
 # TODO: set a maximum report number per user to avoid DOS attacks
@@ -680,8 +637,10 @@ class report_spool(netsvc.ExportService):
         if method not in ['report', 'report_get', 'render_report']:
             raise KeyError("Method not supported %s" % method)
         security.check(db,uid,passwd)
+        openerp.modules.registry.RegistryManager.check_registry_signaling(db)
         fn = getattr(self, 'exp_' + method)
         res = fn(db, uid, *params)
+        openerp.modules.registry.RegistryManager.signal_caches_change(db)
         return res
 
     def exp_render_report(self, db, uid, object, ids, datas=None, context=None):
@@ -793,13 +752,11 @@ class report_spool(netsvc.ExportService):
             raise Exception, 'ReportNotFound'
 
 
-def start_web_services():
+def start_service():
     db()
     common()
     objects_proxy()
-    wizard()
     report_spool()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

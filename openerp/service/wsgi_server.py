@@ -432,19 +432,20 @@ def serve():
     _logger.info('HTTP service (werkzeug) running on %s:%s', interface, port)
     httpd.serve_forever()
 
-def start_server():
+def start_service():
     """ Call serve() in its own thread.
 
     The WSGI server can be shutdown with stop_server() below.
     """
     threading.Thread(target=serve).start()
 
-def stop_server():
+def stop_service():
     """ Initiate the shutdown of the WSGI server.
 
     The server is supposed to have been started by start_server() above.
     """
     if httpd:
         httpd.shutdown()
+        openerp.netsvc.close_socket(httpd.socket)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -22,11 +22,12 @@
 Store database-specific configuration parameters
 """
 
-from osv import osv,fields
 import uuid
 import datetime
-from tools import misc, config
+
 from openerp import SUPERUSER_ID
+from openerp.osv import osv, fields
+from openerp.tools import misc, config
 
 """
 A dictionary holding some configuration parameters to be initialized when the database is created.

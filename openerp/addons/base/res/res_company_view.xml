@@ -21,16 +21,21 @@
                 <form string="Company" version="7.0">
                   <sheet>
                     <div>
-                        <field name="logo" nolabel="1" widget="image"  class="oe_avatar oe_left"/>
+                        <field name="logo" widget="image"  class="oe_avatar oe_left"/>
                     </div>
                     <div class="oe_right oe_button_box" name="button_box">
-                                <button name="%(preview_report)d" string="Preview Header/Footer" type="action" icon="gtk-print" class="oe_inline oe_right"/>
+                        <button name="%(preview_report)d" string="Preview Header/Footer" type="action"/>
                     </div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1>
                             <field name="name" class="oe_inline"/>
                         </h1>
+                    </div>
+                    <div attrs="{'invisible' : [('logo','!=',False)]}" class="oe_view_nocontent oe_clear">
+                        <p class="oe_view_nocontent_create">
+                            Click to set your company logo.
+                        </p>
                     </div>
                     <group col="4">
                         <field name="parent_id"  groups="base.group_multi_company"/>

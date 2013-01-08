@@ -21,31 +21,29 @@
 ##############################################################################
 
 import glob, os, re, setuptools, sys
-from os.path import join, isfile
+from os.path import join
 
 # List all data files
 def data():
-    files = []
+    r = {}
     for root, dirnames, filenames in os.walk('openerp'):
         for filename in filenames:
-            if not re.match(r'.*(\.pyc|\.pyo|\~)$',filename):
-                files.append(os.path.join(root, filename))
-    d = {}
-    for v in files:
-        k=os.path.dirname(v)
-        if k in d:
-            d[k].append(v)
-        else:
-            d[k]=[v]
-    r = d.items()
+            if not re.match(r'.*(\.pyc|\.pyo|\~)$', filename):
+                r.setdefault(root, []).append(os.path.join(root, filename))
+
     if os.name == 'nt':
-        r.append(("Microsoft.VC90.CRT", glob.glob('C:\Microsoft.VC90.CRT\*.*')))
+        r["Microsoft.VC90.CRT"] = glob.glob('C:\Microsoft.VC90.CRT\*.*')
 
-    import babel
-    r.append(("localedata",
-              glob.glob(os.path.join(os.path.dirname(babel.__file__), "localedata" , '*'))))
+        import babel
+        r["localedata"] = glob.glob(os.path.join(os.path.dirname(babel.__file__), "localedata", '*'))
 
-    return r
+        import pytz
+        tzdir = os.path.dirname(pytz.__file__)
+        for root, _, filenames in os.walk(os.path.join(tzdir, "zoneinfo")):
+            base = os.path.join('pytz', root[len(tzdir) + 1:])
+            r[base] = [os.path.join(root, f) for f in filenames]
+
+    return r.items()
 
 def gen_manifest():
     file_list="\n".join(data())
@@ -64,7 +62,7 @@ def py2exe_options():
                     "skip_archive": 1,
                     "optimize": 2,
                     "dist_dir": 'dist',
-                    "packages": [ "DAV", "HTMLParser", "PIL", "asynchat", "asyncore", "commands", "dateutil", "decimal", "docutils", "email", "encodings", "imaplib", "lxml", "lxml._elementpath", "lxml.builder", "lxml.etree", "lxml.objectify", "mako", "openerp", "poplib", "pychart", "pydot", "pyparsing", "reportlab", "select", "simplejson", "smtplib", "uuid", "vatnumber", "vobject", "xml", "xml.dom", "yaml", ],
+                    "packages": [ "DAV", "HTMLParser", "PIL", "asynchat", "asyncore", "commands", "dateutil", "decimal", "docutils", "email", "encodings", "imaplib", "jinja2", "lxml", "lxml._elementpath", "lxml.builder", "lxml.etree", "lxml.objectify", "mako", "openerp", "poplib", "pychart", "pydot", "pyparsing", "pytz", "reportlab", "select", "simplejson", "smtplib", "uuid", "vatnumber", "vobject", "xml", "xml.dom", "yaml", ],
                     "excludes" : ["Tkconstants","Tkinter","tcl"],
                 }
             }
@@ -108,8 +106,10 @@ setuptools.setup(
           'docutils',
           'feedparser',
           'gdata',
-          'lxml < 3', # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
+          'Jinja2',
+          'lxml', # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
           'mako',
+          'mock',
           'PIL', # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
           'psutil', # windows binary code.google.com/p/psutil/downloads/list
           'psycopg2',
@@ -122,6 +122,7 @@ setuptools.setup(
           'pyyaml',
           'reportlab', # windows binary pypi.python.org/pypi/reportlab
           'simplejson',
+          'unittest2',
           'vatnumber',
           'vobject',
           'werkzeug',

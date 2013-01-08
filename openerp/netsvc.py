@@ -20,6 +20,9 @@
 #
 ##############################################################################
 
+#.apidoc title: Common Services: netsvc
+#.apidoc module-mods: member-order: bysource
+
 import errno
 import logging
 import logging.handlers
@@ -40,6 +43,7 @@ import openerp
 
 _logger = logging.getLogger(__name__)
 
+
 def close_socket(sock):
     """ Closes a socket instance cleanly
 
@@ -58,18 +62,14 @@ def close_socket(sock):
             raise
     sock.close()
 
-
-#.apidoc title: Common Services: netsvc
-#.apidoc module-mods: member-order: bysource
-
 def abort_response(dummy_1, description, dummy_2, details):
     # TODO Replace except_{osv,orm} with these directly.
     raise openerp.osv.osv.except_osv(description, details)
 
 class Service(object):
-    """ Base class for *Local* services
-
-        Functionality here is trusted, no authentication.
+    """ Base class for Local services
+    Functionality here is trusted, no authentication.
+    Workflow engine and reports subclass this.
     """
     _services = {}
     def __init__(self, name):
@@ -144,7 +144,6 @@ class ColoredFormatter(DBFormatter):
         fg_color, bg_color = LEVEL_COLOR_MAPPING[record.levelno]
         record.levelname = COLOR_PATTERN % (30 + fg_color, 40 + bg_color, record.levelname)
         return DBFormatter.format(self, record)
-
 
 def init_logger():
     from tools.translate import resetlocale
@@ -245,85 +244,6 @@ def init_alternative_logger():
     logger = logging.getLogger('openerp')
     logger.addHandler(handler)
     logger.setLevel(logging.ERROR)
-
-class Server:
-    """ Generic interface for all servers with an event loop etc.
-        Override this to impement http, net-rpc etc. servers.
-
-        Servers here must have threaded behaviour. start() must not block,
-        there is no run().
-    """
-    __is_started = False
-    __servers = []
-    __starter_threads = []
-
-    # we don't want blocking server calls (think select()) to
-    # wait forever and possibly prevent exiting the process,
-    # but instead we want a form of polling/busy_wait pattern, where
-    # _server_timeout should be used as the default timeout for
-    # all I/O blocking operations
-    _busywait_timeout = 0.5
-
-    def __init__(self):
-        Server.__servers.append(self)
-        if Server.__is_started:
-            # raise Exception('All instances of servers must be inited before the startAll()')
-            # Since the startAll() won't be called again, allow this server to
-            # init and then start it after 1sec (hopefully). Register that
-            # timer thread in a list, so that we can abort the start if quitAll
-            # is called in the meantime
-            t = threading.Timer(1.0, self._late_start)
-            t.name = 'Late start timer for %s' % str(self.__class__)
-            Server.__starter_threads.append(t)
-            t.start()
-
-    def start(self):
-        _logger.debug("called stub Server.start")
-
-    def _late_start(self):
-        self.start()
-        for thr in Server.__starter_threads:
-            if thr.finished.is_set():
-                Server.__starter_threads.remove(thr)
-
-    def stop(self):
-        _logger.debug("called stub Server.stop")
-
-    def stats(self):
-        """ This function should return statistics about the server """
-        return "%s: No statistics" % str(self.__class__)
-
-    @classmethod
-    def startAll(cls):
-        if cls.__is_started:
-            return
-        _logger.info("Starting %d services" % len(cls.__servers))
-        for srv in cls.__servers:
-            srv.start()
-        cls.__is_started = True
-
-    @classmethod
-    def quitAll(cls):
-        if not cls.__is_started:
-            return
-        _logger.info("Stopping %d services" % len(cls.__servers))
-        for thr in cls.__starter_threads:
-            if not thr.finished.is_set():
-                thr.cancel()
-            cls.__starter_threads.remove(thr)
-
-        for srv in cls.__servers:
-            srv.stop()
-        cls.__is_started = False
-
-    @classmethod
-    def allStats(cls):
-        res = ["Servers %s" % ('stopped', 'started')[cls.__is_started]]
-        res.extend(srv.stats() for srv in cls.__servers)
-        return '\n'.join(res)
-
-    def _close_socket(self):
-        close_socket(self.socket)
 
 def replace_request_password(args):
     # password is always 3rd argument in a request, we replace it in RPC logs

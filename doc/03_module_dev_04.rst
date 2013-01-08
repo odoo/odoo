@@ -135,6 +135,9 @@ The view describes how the edition form or the data tree/list appear on screen. 
 
 A form can be called by an action opening in 'Tree' mode. The form view is generally opened from the list mode (like if the user pushes on 'switch view').
 
+.. _domain:
+.. _domains:
+
 The domain
 ----------
 
