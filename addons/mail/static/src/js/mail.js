@@ -512,13 +512,13 @@ openerp.mail = function (session) {
             }
 
             // create list of new partners
-            this.check_recipient_partners().done(function () {
+            this.check_recipient_partners().done(function (partner_ids) {
                 var context = {
                     'default_composition_mode': default_composition_mode,
                     'default_parent_id': self.id,
                     'default_body': mail.ChatterUtils.get_text2html(self.$el ? (self.$el.find('textarea:not(.oe_compact)').val() || '') : ''),
                     'default_attachment_ids': self.attachment_ids,
-                    'default_partner_ids': _.map(_.filter(self.partners_from, function (f) {return f[1]}), function (f) {return f[0]}),
+                    'default_partner_ids': partner_ids,
                 };
                 if (default_composition_mode != 'reply' && self.context.default_model && self.context.default_res_id) {
                     context.default_model = self.context.default_model;
@@ -572,72 +572,64 @@ openerp.mail = function (session) {
 
         check_recipient_partners: function () {
             var self = this;
+            var partners_from = [];
             var emails = [];
-            var deferreds = [];
             _.each(this.emails_from, function (email_from) {
-                if (email_from[1]) {
-                    if (!_.find(emails, function (email) {return email[4] == email_from[0][4];})) {
-                        emails.push(email_from[0]);
-                        deferreds.push($.Deferred());
-                    }
+                if (email_from[1] && !_.find(emails, function (email) {return email == email_from[0][4];})) {
+                    emails.push(email_from[0][1]);
                 }
             });
-            this.partners_from = [];
-            var ds_partner = new session.web.DataSetSearch(this, 'res.partner');
-            _.each(emails, function (email, key) {
-                var deferred = deferreds[key];
-                ds_partner.call('search', [[['email', 'like', email[4]]]]).then(function (partner_ids) {
-                    if (!partner_ids.length) {
-                        var pop = new session.web.form.FormOpenPopup(this);
-                        pop.show_element(
-                            'res.partner',
-                            0,
-                            {
-                                'default_email': email[4],
-                                'default_name': email[3],
-                                'force_email': true,
-                                'ref': "compound_context",
-                            },
-                            {
-                                title: _t("Please complete partner's informations"),
-                            }
-                        );
-                        pop.on('closed', self, function () {
-                            deferred.resolve();
-                        });
-                        pop.on('saved', self, function (id) {
-                            self.partners_from.push([id, true]);
-                            deferred.resolve();
-                        });
-                    }
-                    else {
-                        self.partners_from.push([partner_ids[0], true]);
+            var deferred_check = $.Deferred();
+            self.parent_thread.ds_thread._model.call('new_email_partner', [emails]).then(function (partners) {
+                partners_from = _.clone(partners.partner_ids);
+                var deferreds = [];
+                _.each(partners.new_partner_ids, function (id) {
+                    var deferred = $.Deferred()
+                    deferreds.push(deferred);
+                    var pop = new session.web.form.FormOpenPopup(this);
+                    pop.show_element(
+                        'res.partner',
+                        id,
+                        {
+                            'force_email': true,
+                            'ref': "compound_context",
+                        },
+                        {
+                            title: _t("Please complete partner's informations"),
+                        }
+                    );
+                    pop.on('closed', self, function () {
                         deferred.resolve();
-                    }
+                    });
+                    partners_from.push(id);
+                });
+                $.when.apply( $, deferreds ).then(function () {
+                    deferred_check.resolve(partners_from);
                 });
             });
-            return $.when.apply( $, deferreds );
+            return deferred_check;
         },
 
         on_message_post: function (event) {
             var self = this;
             if (this.do_check_attachment_upload() && (this.attachment_ids.length || this.$('textarea').val().match(/\S+/))) {
                 // create list of new partners
-                this.check_recipient_partners().done(function () {
-                    self.do_send_message_post();
+                this.check_recipient_partners().done(function (partner_ids) {
+                    self.do_send_message_post(partner_ids);
                 });
             }
         },
 
         /*do post a message and fetch the message*/
-        do_send_message_post: function () {
+        do_send_message_post: function (partner_ids) {
             var self = this;
+            console.log(partner_ids);
             this.parent_thread.ds_thread._model.call('message_post_user_api', [this.context.default_res_id], {
                 'body': this.$('textarea').val(),
                 'subject': false,
                 'parent_id': this.context.default_parent_id,
                 'attachment_ids': _.map(this.attachment_ids, function (file) {return file.id;}),
-                'extra_emails': _.map(_.filter(this.emails_from, function (f) {return f[1]}), function (f) {return f[0][4]}),
+                'partner_ids': partner_ids,
                 'context': this.parent_thread.context,
             }).done(function (message_id) {
                 var thread = self.parent_thread;
@@ -1707,7 +1699,6 @@ openerp.mail = function (session) {
                     this.defaults[key.replace(/^search_default_/, '')] = this.context[key];
                 }
             }
-
             this.action.params = _.extend({
                 'display_indented_thread': 1,
                 'show_reply_button': true,
@@ -1751,11 +1742,13 @@ openerp.mail = function (session) {
          * @param {Object} defaults ??
          */
         load_searchview: function (defaults) {
+            
             var self = this;
             var ds_msg = new session.web.DataSetSearch(this, 'mail.message');
             this.searchview = new session.web.SearchView(this, ds_msg, false, defaults || {}, false);
             this.searchview.appendTo(this.$('.oe_view_manager_view_search'))
                 .then(function () { self.searchview.on('search_data', self, self.do_searchview_search); });
+            console.log(this.searchview);
             if (this.searchview.has_defaults) {
                 this.searchview.ready.then(this.searchview.do_search);
             }

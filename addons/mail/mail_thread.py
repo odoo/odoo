@@ -28,6 +28,7 @@ import pytz
 import time
 import xmlrpclib
 from email.message import Message
+import re
 
 from openerp import tools
 from openerp import SUPERUSER_ID
@@ -906,8 +907,41 @@ class mail_thread(osv.AbstractModel):
 
         return mail_message.create(cr, uid, values, context=context)
 
+    def new_email_partner(self, cr, uid, emails, context=None):
+        """ Convert a list of emails into a list partner_ids and a list new_partner_ids
+        """
+        partner_obj = self.pool.get('res.partner')
+        mail_message_obj = self.pool.get('mail.message')
+
+        partner_ids = []
+        new_partner_ids = []
+        for email in emails:
+            m = re.search(r"((.+?)\s*<)?([^<>]+@[^<>]+)>?", email, re.IGNORECASE | re.DOTALL)
+            name = m.group(2) or m.group(0)
+            email = m.group(3)
+            ids = partner_obj.search(cr, SUPERUSER_ID, [('email', '=', email)], context=context)
+            if ids:
+                partner_ids += ids
+            else:
+
+                partner_id = partner_obj.create(cr, uid, {
+                        'name': name or email,
+                        'email': email,
+                    }, context=context)
+                new_partner_ids.append(partner_id)
+
+                # link mail with this from mail to the new partner id
+                message_ids = mail_message_obj.search(cr, SUPERUSER_ID, ['|', ('email_from', '=', email), ('email_from', 'ilike', '<%s>' % email), ('author_id', '=', False)], context=context)
+                if message_ids:
+                    mail_message_obj.write(cr, SUPERUSER_ID, message_ids, {'email_from': None, 'author_id': partner_id}, context=context)
+        return {
+            'partner_ids': partner_ids,
+            'new_partner_ids': new_partner_ids,
+        }
+
+
     def message_post_user_api(self, cr, uid, thread_id, body='', parent_id=False,
-                                attachment_ids=None, extra_emails=None, content_subtype='plaintext',
+                                attachment_ids=None, content_subtype='plaintext',
                                 context=None, **kwargs):
         """ Wrapper on message_post, used for user input :
             - mail gateway
@@ -922,22 +956,8 @@ class mail_thread(osv.AbstractModel):
                 to the related document. Should only be set by Chatter.
             - extra_email: [ 'Fabien <fpi@openerp.com>', 'al@openerp.com' ]
         """
-        partner_obj = self.pool.get('res.partner')
         mail_message_obj = self.pool.get('mail.message')
         ir_attachment = self.pool.get('ir.attachment')
-        extra_emails = extra_emails or []
-
-        # 1.A.1: pre-process partners and incoming extra_emails
-        partner_ids = set([])
-        for email in extra_emails:
-            partner_id = partner_obj.find_or_create(cr, uid, email, context=context)
-            # link mail with this from mail to the new partner id
-            partner_msg_ids = mail_message_obj.search(cr, SUPERUSER_ID, ['|', ('email_from', '=', email), ('email_from', 'ilike', '<%s>' % email), ('author_id', '=', False)], context=context)
-            if partner_id and partner_msg_ids:
-                mail_message_obj.write(cr, SUPERUSER_ID, partner_msg_ids, {'email_from': None, 'author_id': partner_id}, context=context)
-            partner_ids.add((4, partner_id))
-        if partner_ids:
-            self.message_subscribe(cr, uid, [thread_id], [item[1] for item in partner_ids], context=context)
 
         # 1.A.2: add recipients of parent message
         if parent_id:
@@ -948,7 +968,9 @@ class mail_thread(osv.AbstractModel):
                 partner_ids.add((4, parent_message.author_id.id))
 
         # 1.A.3: add specified recipients
-        partner_ids |= set(kwargs.pop('partner_ids', []))
+        partner_ids = set(kwargs.pop('partner_ids', []))
+        if partner_ids:
+            self.message_subscribe(cr, uid, [thread_id], [id for id in partner_ids], context=context)
 
         # 1.B: handle body, message_type and message_subtype
         if content_subtype == 'plaintext':
