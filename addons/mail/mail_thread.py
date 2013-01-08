@@ -948,7 +948,15 @@ class mail_thread(osv.AbstractModel):
                 partner_ids.add((4, parent_message.author_id.id))
 
         # 1.A.3: add specified recipients
-        partner_ids |= set(kwargs.pop('partner_ids', []))
+        param_partner_ids = set()
+        for item in kwargs.pop('partner_ids', []):
+            if isinstance(item, (list)):
+                param_partner_ids.add((item[0], item[1]))
+            elif isinstance(item, (int, long)):
+                param_partner_ids.add((4, item))
+            else:
+                param_partner_ids.add(item)
+        partner_ids |= param_partner_ids
 
         # 1.B: handle body, message_type and message_subtype
         if content_subtype == 'plaintext':
