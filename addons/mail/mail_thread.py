@@ -647,14 +647,14 @@ class mail_thread(osv.AbstractModel):
         """
         if context is None:
             context = {}
+        data = {}
+        if isinstance(custom_values, dict):
+            data = custom_values.copy()
         model = context.get('thread_model') or self._name
         model_pool = self.pool.get(model)
         fields = model_pool.fields_get(cr, uid, context=context)
-        data = model_pool.default_get(cr, uid, fields, context=context)
         if 'name' in fields and not data.get('name'):
             data['name'] = msg_dict.get('subject', '')
-        if custom_values and isinstance(custom_values, dict):
-            data.update(custom_values)
         res_id = model_pool.create(cr, uid, data, context=context)
         return res_id
 
