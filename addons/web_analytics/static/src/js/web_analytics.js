@@ -271,7 +271,7 @@ openerp.web_analytics = function(instance) {
             },
             show_application: function() {
                 var self = this;
-                instance.web_analytics.setupTracker(self).then(function() {
+                instance.web_analytics.setupTracker(self).always(function() {
                     self._super();
                 });
             },
