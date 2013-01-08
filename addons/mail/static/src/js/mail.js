@@ -628,7 +628,7 @@ openerp.mail = function (session) {
                 'subject': false,
                 'parent_id': this.context.default_parent_id,
                 'attachment_ids': _.map(this.attachment_ids, function (file) {return file.id;}),
-                'partner_ids': _.map(partner_ids, function (val){return [4, val];}),
+                'partner_ids': partner_ids,
                 'context': this.parent_thread.context,
             }).done(function (message_id) {
                 var thread = self.parent_thread;

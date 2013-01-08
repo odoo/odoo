@@ -1484,11 +1484,10 @@ class account_invoice_line(osv.osv):
             new_price = res_final['value']['price_unit'] * currency.rate
             res_final['value']['price_unit'] = new_price
 
-        if result['uos_id'] != res.uom_id.id:
-            selected_uom = self.pool.get('product.uom_id').browse(cr, uid, result['uos_id'], context=context)
-            if res.uom_id.category_id.id == selected_uom.category_id.id:
-                new_price = res_final['value']['price_unit'] * uom_id.factor_inv
-                res_final['value']['price_unit'] = new_price
+        if result['uos_id'] and result['uos_id'] != res.uom_id.id:
+            selected_uom = self.pool.get('product.uom').browse(cr, uid, result['uos_id'], context=context)
+            new_price = self.pool.get('product.uom')._compute_price(cr, uid, res.uom_id.id, res_final['value']['price_unit'], result['uos_id'])
+            res_final['value']['price_unit'] = new_price
         return res_final
 
     def uos_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, currency_id=False, context=None, company_id=None):

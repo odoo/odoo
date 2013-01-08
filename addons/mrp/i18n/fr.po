@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-01-03 15:24+0000\n"
-"Last-Translator: Numérigraphe <Unknown>\n"
+"PO-Revision-Date: 2013-01-07 08:58+0000\n"
+"Last-Translator: WANTELLET Sylvain <Swantellet@tetra-info.com>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-04 05:27+0000\n"
-"X-Generator: Launchpad (build 16393)\n"
+"X-Launchpad-Export-Date: 2013-01-08 06:05+0000\n"
+"X-Generator: Launchpad (build 16402)\n"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -381,6 +381,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliquez pour créer un ordre de fabrication. \n"
+"              </p><p>\n"
+"                Un ordre de fabrication, s'appuyant sur une nomenclature,\n"
+"                consommera des matières premières et fabriquera des produits "
+"finis.\n"
+"              </p><p>\n"
+"                Les ordres de fabrication sont généralement proposés "
+"automatiquement selon\n"
+"                les besoins des clients ou les règles automatiques telles "
+"que les règles de stock\n"
+"                minimum.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: sql_constraint:mrp.production:0
@@ -470,6 +484,17 @@ msgid ""
 "'In Production'.\n"
 "                When the production is over, the status is set to 'Done'."
 msgstr ""
+"Lorsque l'ordre de fabrication est créé son état est \"Brouillon\".\n"
+"                Lorsque l'ordre est confirmé l'état passe à \"Attente de "
+"marchandise\".\n"
+"                S'il se produit un incident, l'état passe à \"Incident de "
+"préparation\".\n"
+"                Si le stock est disponible, l'état passe à \"Prêt à "
+"produire\".\n"
+"                Lorsque la production commence, l'état passe à \"En "
+"production\".\n"
+"                Lorsque la production est terminée, l'état passe à "
+"\"Terminé\"."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_report_in_out_picking_tree
@@ -523,9 +548,9 @@ msgid ""
 "needed.Set a location if you produce at a fixed location. This can be a "
 "partner location if you subcontract the manufacturing operations."
 msgstr ""
-"Laissez vide si vous produisez là où les produits finis sont nécessaires. "
-"Précisez l'emplacement si vous produisez sur un endroit fixe. Cela peut être "
-"chez un partenaire si vous sous-traitez votre production."
+"Laissez vide si vous produisez à l'emplacement où les produits finis sont "
+"nécessaires. Précisez l'emplacement si vous produisez sur un endroit fixe. "
+"Cela peut être chez un partenaire si vous sous-traitez votre production."
 
 #. module: mrp
 #: view:board.board:0
@@ -649,6 +674,15 @@ msgid ""
 "assembly operation.\n"
 "                This installs the module stock_no_autopicking."
 msgstr ""
+"Ce module permet à une préparation intermédiaire d'apporter les matières "
+"premières pour les ordres de fabrication.\n"
+"                Par exemple : pour gérer une production effectuée par votre "
+"fournisseur (sous-traitance).\n"
+"                Pour cela, choisissez l'option \"Pas de préparation auto\" "
+"sur l'article assemblé qui est sous-traité\n"
+"                et ajoutez l'emplacement du fournisseur dans la gamme de "
+"l'opération d'assemblage.\n"
+"                Cela installe le module stock_no_autopicking."
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -1347,7 +1381,7 @@ msgstr "Notes"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Manufacturing Orders which are ready to start production."
-msgstr "Ordres de fabrication prêts à produire."
+msgstr "Ordres de fabrication dont la production est prête à démarrer."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom
@@ -1395,7 +1429,7 @@ msgstr ""
 #: code:addons/mrp/mrp.py:505
 #, python-format
 msgid "Invalid Action!"
-msgstr "Action invalide !"
+msgstr "Action incorrecte !"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_producttostockrules0
@@ -1567,6 +1601,11 @@ msgid ""
 "are attached to bills of materials\n"
 "                that will define the required raw materials."
 msgstr ""
+"Les gammes permettent de créer et de gérer les opérations qui doivent être "
+"suivies\n"
+"                dans les postes de charge pour produire un article. Elles "
+"sont rattachées aux nomenclatures\n"
+"                qui définissent les matières premières nécessaires."
 
 #. module: mrp
 #: view:report.workcenter.load:0
@@ -1613,7 +1652,7 @@ msgstr "Pilote la gestion des approvisionnement en matières premières."
 #. module: mrp
 #: field:mrp.production.product.line,product_uos_qty:0
 msgid "Product UOS Quantity"
-msgstr ""
+msgstr "Quantité en UdV"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_general_account_id:0
@@ -2018,7 +2057,7 @@ msgstr "Qté d'articles en UdV"
 #. module: mrp
 #: field:mrp.production,move_prod_id:0
 msgid "Product Move"
-msgstr ""
+msgstr "Mouvement de stock"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_report_in_out_picking_tree
@@ -2038,7 +2077,7 @@ msgstr "Confirmer"
 #. module: mrp
 #: field:mrp.bom,product_efficiency:0
 msgid "Manufacturing Efficiency"
-msgstr "Efficacité de production"
+msgstr "Rendement de production"
 
 #. module: mrp
 #: field:mrp.bom,message_follower_ids:0
@@ -2181,7 +2220,7 @@ msgstr "Temps en heures pour la mise en place"
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_repair:0
 msgid "Manage repairs of products "
-msgstr ""
+msgstr "Gère les réparations d'articles "
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_byproduct:0
@@ -2191,6 +2230,10 @@ msgid ""
 "                With this module: A + B + C -> D + E.\n"
 "                This installs the module mrp_byproduct."
 msgstr ""
+"Vous pouvez paramétrer des sous-produits dans les nomenclatures.\n"
+"                Sans ce module: A + B + C -> D.\n"
+"                Avec ce module: A + B + C -> D + E.\n"
+"                Cela installe le module mrp_byproduct."
 
 #. module: mrp
 #: field:procurement.order,bom_id:0
@@ -2282,7 +2325,7 @@ msgstr "Le type d'article est stockable ou consommable."
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Production Started"
-msgstr "Production démarrée"
+msgstr "La production a démarré."
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_procureproducts0
@@ -2308,7 +2351,7 @@ msgstr "Nomenclature"
 #: code:addons/mrp/mrp.py:610
 #, python-format
 msgid "Cannot find a bill of material for this product."
-msgstr ""
+msgstr "Impossible de trouver une nomenclature pour cet article."
 
 #. module: mrp
 #: view:product.product:0
@@ -2422,12 +2465,18 @@ msgid ""
 "product, it will be sold and shipped as a set of components, instead of "
 "being produced."
 msgstr ""
+"Si un sous-produit est utilisé dans plusieurs articles, il peut être utile "
+"de lui créer sa propre nomenclature. Néanmoins si vous ne souhaitez pas "
+"d'ordres de fabrication distincts pour ce sous-produit, choisissez le type "
+"de nomenclature \"Kit/Fantôme\". Si une nomenclature fantôme est utilisée "
+"pour un article racine, il sera vendu et livré comme un ensemble de "
+"composants, plutôt que d'être fabriqué."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration
 #: view:mrp.config.settings:0
 msgid "Configure Manufacturing"
-msgstr ""
+msgstr "Paramétrer la fabrication"
 
 #. module: mrp
 #: view:product.product:0
@@ -2435,11 +2484,14 @@ msgid ""
 "a manufacturing\n"
 "                        order"
 msgstr ""
+"un ordre\n"
+"                        de fabrication"
 
 #. module: mrp
 #: field:mrp.config.settings,group_mrp_properties:0
 msgid "Allow several bill of materials per products using properties"
 msgstr ""
+"Permet plusieurs nomenclatures par article en utilisant des propriétés"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_group_action
@@ -2477,7 +2529,7 @@ msgstr "Temps en heures pour le nettoyage."
 #: field:mrp.production,message_summary:0
 #: field:mrp.production.workcenter.line,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Résumé"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_purchaseprocure0
@@ -2516,7 +2568,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.bom,method:0
 msgid "On Stock"
-msgstr "Sur Stock"
+msgstr "Sur stock"
 
 #. module: mrp
 #: field:mrp.bom,sequence:0
@@ -2539,7 +2591,7 @@ msgstr "Donne l'ordre d'affichage d'une liste de nomenclatures."
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_config_settings
 msgid "mrp.config.settings"
-msgstr ""
+msgstr "mrp.config.settings"
 
 #. module: mrp
 #: view:mrp.production:0

@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-01-06 22:20+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 07:26+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-01-07 05:44+0000\n"
+"X-Generator: Launchpad (build 16402)\n"
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_sched
@@ -55,6 +56,8 @@ msgid ""
 "required quantities are always\n"
 "                           available"
 msgstr ""
+"benötigter Bedarf ist jederzeit\n"
+"                                   verfügbar."
 
 #. module: procurement
 #: view:product.product:0
@@ -64,6 +67,11 @@ msgid ""
 "inventory, you should\n"
 "                           create others rules like orderpoints."
 msgstr ""
+"falls es keinen verfügbaren Bestand gibt, wartet der Auftrag zur\n"
+"                Auslieferung auf neue verfügbare Ware. Um den Bestand wieder "
+"aufzufüllen,\n"
+"                sollten Sie Meldebestände definieren und automatische "
+"Bestellvorschläge erstellen."
 
 #. module: procurement
 #: field:procurement.order,procure_method:0
@@ -74,7 +82,7 @@ msgstr "Dispositionsverfahren"
 #. module: procurement
 #: selection:product.template,supply_method:0
 msgid "Manufacture"
-msgstr ""
+msgstr "Fertigung"
 
 #. module: procurement
 #: model:process.process,name:procurement.process_process_serviceproductprocess0
@@ -89,7 +97,7 @@ msgstr "Berechne nur die Meldebestandregel"
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Rules"
-msgstr ""
+msgstr "Regeln"
 
 #. module: procurement
 #: field:procurement.order,company_id:0
@@ -120,7 +128,7 @@ msgstr "Letzte Fehlermeldung"
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_min_qty:0
 msgid "Minimum Quantity"
-msgstr ""
+msgstr "Minimalbestand"
 
 #. module: procurement
 #: help:mrp.property,composition:0
@@ -153,7 +161,7 @@ msgstr ""
 #. module: procurement
 #: field:procurement.order,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Nachrichten"
 
 #. module: procurement
 #: help:procurement.order,message:0
@@ -163,12 +171,12 @@ msgstr "Fehler bei der Errechnung v. Beschaffungsvorschlägen"
 #. module: procurement
 #: view:product.product:0
 msgid "Products"
-msgstr ""
+msgstr "Produkte"
 
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Storniert"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -178,7 +186,7 @@ msgstr "Permanente Beschaffungs Ausnahmen"
 #. module: procurement
 #: help:procurement.order,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Als zu erledigen markieren"
 
 #. module: procurement
 #: view:procurement.order.compute.all:0
@@ -193,13 +201,13 @@ msgstr "Lagerbuchung"
 #. module: procurement
 #: view:product.product:0
 msgid "Stockable products"
-msgstr ""
+msgstr "Lagerprodukte"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:137
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "Diese Aktion ist fehlerhaft!"
 
 #. module: procurement
 #: help:procurement.order,message_summary:0
@@ -207,6 +215,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Hier finden Sie die Nachrichtenübersicht (Anzahl Nachrichten etc., ...) im "
+"html Format, um Sie später in einer Kanban Ansicht einfügen zu können."
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -305,7 +315,7 @@ msgstr "Warteliste"
 #. module: procurement
 #: field:procurement.order,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Follower"
 
 #. module: procurement
 #: field:procurement.order,location_id:0
@@ -384,7 +394,7 @@ msgstr "ME"
 #: selection:procurement.order,procure_method:0
 #: selection:product.template,procure_method:0
 msgid "Make to Stock"
-msgstr ""
+msgstr "Beschaffe an Lager"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -406,6 +416,25 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klicken Sie zur Erstellung eines neuen Beschaffungsauftrags. "
+"\n"
+"              </p><p>\n"
+"                Ein Beschaffungsauftrag berechnet automatisch "
+"Bestellvorschläge, um\n"
+"                den Bedarf an einem bestimmten Ort zu einer bestimmten Zeit "
+"abzudecken.\n"
+"                Normalerweise werden Beschaffungsaufträge durch Verkäufe, "
+"Logistikregeln\n"
+"                oder Meldebestände ausgelöst. \n"
+"              </p><p>\n"
+"                Durch die Bestätigung eines Beschaffungsauftrag, werden "
+"automatisch die\n"
+"                erforderlichen Aktionen zur Bedarfsdeckung ausgeführt: "
+"Bestellvorschläge bei\n"
+"                Lieferanten, Fertigungsaufträge oder Aufgaben.\n"
+"              </p>\n"
+"            "
 
 #. module: procurement
 #: help:procurement.order,procure_method:0
@@ -426,7 +455,7 @@ msgstr "Automatische Beschaffung"
 msgid ""
 "use the available\n"
 "                           inventory"
-msgstr ""
+msgstr "benutzen Sie den verfügbaren Lagerbestand"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order
@@ -479,7 +508,7 @@ msgstr "Bezugnehmende Beschaffungsaufträge"
 #. module: procurement
 #: field:procurement.order,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Ungelesene Nachrichten"
 
 #. module: procurement
 #: selection:mrp.property,composition:0
@@ -499,6 +528,21 @@ msgid ""
 " It is in 'Waiting'. status when the procurement is waiting for another one "
 "to finish."
 msgstr ""
+"Durch die Erstellung eines neuen Beschaffungsauftrags ist der Status "
+"'Entwurf'.\n"
+" Bei Bestätigung der Beschaffung, wird der Status zu 'Bestätigt'.            "
+"      \n"
+"Nach Bestätigung des Beschaffungsauftrags wechselt der Status auf 'In "
+"Bearbeitung'.\n"
+" Durch unvollständige Konfigurationseinstellungen können fehlerhafte "
+"Sonderfälle\n"
+"entstehen, die den Status 'Sonderfall' verursachen. Sobald diese Sonderfälle "
+"behoben\n"
+"sind, ändert sich der Status auf 'Erledigt'.                                 "
+"   \n"
+" Der 'Erwarte Lieferung' Status wird zugewiesen, wenn auf geordertes "
+"Material \n"
+"gewartet wird."
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,active:0

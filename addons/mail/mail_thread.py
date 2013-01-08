@@ -40,7 +40,7 @@ _logger = logging.getLogger(__name__)
 
 
 def decode_header(message, header, separator=' '):
-    return separator.join(map(decode, message.get_all(header, [])))
+    return separator.join(map(decode, filter(None, message.get_all(header, []))))
 
 
 class mail_thread(osv.AbstractModel):
@@ -959,7 +959,8 @@ class mail_thread(osv.AbstractModel):
         mail_message_obj = self.pool.get('mail.message')
         ir_attachment = self.pool.get('ir.attachment')
 
-        # 1.A.2: add recipients of parent message
+        # 1.A.1: add recipients of parent message
+        partner_ids = set([])
         if parent_id:
             parent_message = mail_message_obj.browse(cr, uid, parent_id, context=context)
             partner_ids |= set([(4, partner.id) for partner in parent_message.partner_ids])
@@ -967,10 +968,20 @@ class mail_thread(osv.AbstractModel):
             if self._name == 'mail.thread' and parent_message.author_id.id:
                 partner_ids.add((4, parent_message.author_id.id))
 
-        # 1.A.3: add specified recipients
-        partner_ids = set(kwargs.pop('partner_ids', []))
-        if partner_ids:
-            self.message_subscribe(cr, uid, [thread_id], [id for id in partner_ids], context=context)
+        # 1.A.2: add specified recipients
+        param_partner_ids = set()
+        for item in kwargs.pop('partner_ids', []):
+            if isinstance(item, (list)):
+                param_partner_ids.add((item[0], item[1]))
+            elif isinstance(item, (int, long)):
+                param_partner_ids.add((4, item))
+            else:
+                param_partner_ids.add(item)
+        partner_ids |= param_partner_ids
+
+        # 1.A.3: add recipients as follower
+        if param_partner_ids:
+            self.message_subscribe(cr, uid, [thread_id], [pid[1] for pid in param_partner_ids], context=context)
 
         # 1.B: handle body, message_type and message_subtype
         if content_subtype == 'plaintext':
@@ -1001,7 +1012,7 @@ class mail_thread(osv.AbstractModel):
         # 3. Post message
         return self.message_post(cr, uid, thread_id=thread_id, body=body,
                             type=msg_type, subtype=msg_subtype, parent_id=parent_id,
-                            attachment_ids=attachment_ids, partner_ids=list(partner_ids), context=context, **kwargs)
+                            attachment_ids=attachment_ids, partner_ids=partner_ids, context=context, **kwargs)
 
     #------------------------------------------------------
     # Followers API
