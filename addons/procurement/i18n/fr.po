@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-01-07 10:41+0000\n"
+"Last-Translator: Florian Hatat <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 07:26+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-01-08 06:05+0000\n"
+"X-Generator: Launchpad (build 16402)\n"
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_sched
@@ -65,6 +65,10 @@ msgid ""
 "inventory, you should\n"
 "                           create others rules like orderpoints."
 msgstr ""
+"Si la quantité disponible est insuffisante, le bon de livraison\n"
+"                           attendra de nouveaux produits. Pour compléter "
+"l'inventaire, vous devriez\n"
+"                           créer d'autres règles comme points de commande."
 
 #. module: procurement
 #: field:procurement.order,procure_method:0
@@ -196,7 +200,7 @@ msgstr "Mouvement de stock"
 #. module: procurement
 #: view:product.product:0
 msgid "Stockable products"
-msgstr ""
+msgstr "Articles stockables"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:137
@@ -238,6 +242,20 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                Les approvisionnements représentent le besoin d'une certaine "
+"quantité d'un article, à un moment donné, à un emplacement donné. Les ventes "
+"sont l'une des sources typiques d'ordres d'approvisionnement (bien que ce "
+"soient deux documents distincts). Selon les paramètres d’approvisionnement "
+"et le paramétrage de l'article, le système d'approvisionnement tentera de "
+"satisfaire le besoin soit en réservant des articles dans le stock, soit en "
+"passant une commande d'achat, soit en lançant une fabrication, etc.  Un "
+"incident d'approvisionnement se produit lorsque le système ne trouve aucun "
+"moyen d'accomplir l'approvisionnement. Certains incidents se résolvent d'eux-"
+"mêmes automatiquement, mais d'autres nécessitent une intervention manuelle "
+"(ceux-ci sont identifiés par un message d'erreur spécifique).\n"
+"                </p>\n"
+"            "
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -559,6 +577,8 @@ msgid ""
 "You have to select a product unit of measure in the same category than the "
 "default unit of measure of the product"
 msgstr ""
+"Vous devez choisir une unité de mesure dans la même catégorie que l'unité de "
+"mesure par défaut de l'article"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -630,6 +650,10 @@ msgid ""
 "will be generated, depending on the product type. \n"
 "Buy: When procuring the product, a purchase order will be generated."
 msgstr ""
+"Fabriquer : lors des approvisionnements pour cet article, un ordre de "
+"fabrication ou une tâche sera créé, selon le type d'article. \n"
+"Acheter : lors des approvisionnements pour cet article, une commande d'achat "
+"sera créée."
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_max_qty:0
@@ -664,6 +688,8 @@ msgid ""
 "Please check the quantity in procurement order(s) for the product \"%s\", it "
 "should not be 0 or less!"
 msgstr ""
+"Veuillez vérifier la quantité de l'ordre (ou des ordres) d'approvisionnement "
+"pour le produit \"%s\" : elle ne doit pas être 0 ni négative !"
 
 #. module: procurement
 #: field:procurement.order,date_planned:0
@@ -702,6 +728,7 @@ msgstr "Multiple Qté"
 #: help:stock.warehouse.orderpoint,qty_multiple:0
 msgid "The procurement quantity will be rounded up to this multiple."
 msgstr ""
+"La quantité de l'approvisionnement sera arrondie à ce multiple supérieur."
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_res_company
@@ -745,6 +772,10 @@ msgid ""
 "for replenishment. \n"
 "Make to Order: When needed, the product is purchased or produced."
 msgstr ""
+"Production sur stock : lorsque c'est nécessaire, l'article est soit pris du "
+"stock soit mis en attente de réapprovisionnement. \n"
+"Production à la demande : lorsque c'est nécessaire,  l'article est acheté ou "
+"fabriqué."
 
 #. module: procurement
 #: field:mrp.property,composition:0
@@ -861,6 +892,12 @@ msgid ""
 "order or\n"
 "                        a new task."
 msgstr ""
+"Remplissez ceci pour lancer une demande d'approvisionnement pour cet\n"
+"                        article. Selon le paramétrage de l'article, cela "
+"peut\n"
+"                        déclencher une commande d'achat brouillon, un ordre "
+"de fabrication ou\n"
+"                        une nouvelle tâche."
 
 #. module: procurement
 #: field:procurement.order,close_move:0
@@ -969,7 +1006,7 @@ msgstr "UdV de l'article"
 #. module: procurement
 #: model:ir.model,name:procurement.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Modèle d'article"
 
 #. module: procurement
 #: view:procurement.orderpoint.compute:0
@@ -1049,4 +1086,4 @@ msgstr "APPR %d: sur commande - %3.2f %-5s - %s"
 #: code:addons/procurement/procurement.py:338
 #, python-format
 msgid "Products reserved from stock."
-msgstr ""
+msgstr "Articles réservés dans le stock."

@@ -44,8 +44,9 @@ openerp.portal_anonymous = function(instance) {
         start: function() {
             var self = this;
             return $.when(this._super()).then(function() {
+                var params = $.deparam($.param.querystring());
                 var dblist = self.db_list || [];
-                if (!self.session.session_is_valid() && dblist.length === 1 && _.isEmpty(self.params)) {
+                if (!self.session.session_is_valid() && dblist.length === 1 && (!params.token || !params.login)) {
                     self.remember_credentials = false;
                     // XXX get login/pass from server (via a rpc call) ?
                     return self.do_login(dblist[0], 'anonymous', 'anonymous');
@@ -89,14 +90,6 @@ openerp.portal_anonymous = function(instance) {
                 return this._super.apply(this, arguments);
             }
             return false;
-        },
-        // Avoid browser preloading
-        show_application: function() {
-            var params = $.deparam($.param.fragment());
-            if (!!params.token || !!params.login) {
-                return this.show_login();
-            }
-            return this._super();
         },
     });
 

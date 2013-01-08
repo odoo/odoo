@@ -39,7 +39,7 @@ _logger = logging.getLogger(__name__)
 
 
 def decode_header(message, header, separator=' '):
-    return separator.join(map(decode, message.get_all(header, [])))
+    return separator.join(map(decode, filter(None, message.get_all(header, []))))
 
 
 class mail_thread(osv.AbstractModel):
@@ -388,6 +388,18 @@ class mail_thread(osv.AbstractModel):
         return []
 
     #------------------------------------------------------
+    # Email specific
+    #------------------------------------------------------
+
+    def message_get_reply_to(self, cr, uid, ids, context=None):
+        if not self._inherits.get('mail.alias'):
+            return [False for id in ids]
+        return ["%s@%s" % (record['alias_name'], record['alias_domain'])
+                    if record.get('alias_domain') and record.get('alias_name')
+                    else False
+                    for record in self.read(cr, uid, ids, ['alias_name', 'alias_domain'], context=context)]
+
+    #------------------------------------------------------
     # Mail gateway
     #------------------------------------------------------
 
@@ -491,7 +503,13 @@ class mail_thread(osv.AbstractModel):
                 for alias in mail_alias.browse(cr, uid, alias_ids, context=context):
                     user_id = alias.alias_user_id.id
                     if not user_id:
-                        user_id = self._message_find_user_id(cr, uid, message, context=context)
+                        # TDE note: this could cause crashes, because no clue that the user
+                        # that send the email has the right to create or modify a new document
+                        # Fallback on user_id = uid
+                        # Note: recognized partners will be added as followers anyway
+                        # user_id = self._message_find_user_id(cr, uid, message, context=context)
+                        user_id = uid
+                        _logger.debug('No matching user_id for the alias %s', alias.alias_name)
                     routes.append((alias.alias_model_id.model, alias.alias_force_thread_id, \
                                    eval(alias.alias_defaults), user_id))
                 _logger.debug('Routing mail with Message-Id %s: direct alias match: %r', message_id, routes)
@@ -961,7 +979,7 @@ class mail_thread(osv.AbstractModel):
         # 3. Post message
         return self.message_post(cr, uid, thread_id=thread_id, body=body,
                             type=msg_type, subtype=msg_subtype, parent_id=parent_id,
-                            attachment_ids=attachment_ids, partner_ids=partner_ids, context=context, **kwargs)
+                            attachment_ids=attachment_ids, partner_ids=list(partner_ids), context=context, **kwargs)
 
     #------------------------------------------------------
     # Followers API
