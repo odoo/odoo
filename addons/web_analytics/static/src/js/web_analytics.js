@@ -43,7 +43,7 @@ openerp.web_analytics = function(instance) {
         _get_user_type: function() {
             return 'Local User';
         },
-        _set_user_access_level: function() {
+        _get_user_access_level: function() {
             if (instance.session.uid === 1) {
                 return 'Admin User';
             // Make the difference between portal users and anonymous users
@@ -161,6 +161,29 @@ openerp.web_analytics = function(instance) {
                 },
             });
         },
+        _push_ecommerce: function(trans_data, item_list) {
+            _gaq.push(['_addTrans',
+                    trans_data.order_id,
+                    trans_data.store_name,
+                    trans_data.total,
+                    trans_data.tax,
+                    trans_data.shipping,
+                    trans_data.city,
+                    trans_data.state
+                    trans_data.country,
+            ]);
+            _.each(item_list, function(item) {
+                _gaq.push(['_addItem',
+                    item.order_id,
+                    item.sku,
+                    item.name,
+                    item.category,
+                    item.price,
+                    item.quantity,
+                ]);
+            });
+            _gaq.push(['_trackTrans']);
+        },
     });
 
     // ----------------------------------------------------------------
@@ -177,7 +200,7 @@ openerp.web_analytics = function(instance) {
 
     instance.web_analytics.setupTracker = function(wc) {
         var t = wc.tracker;
-        return $.when(t._set_user_access_level()).then(function(r) {
+        return $.when(t._get_user_access_level()).then(function(r) {
             t.user_access_level = r;
             t.initialize_custom().then(function() {
                 wc.on('state_pushed', wc, t.on_state_pushed);
