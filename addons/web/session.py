@@ -18,6 +18,9 @@ _logger = logging.getLogger(__name__)
 class AuthenticationError(Exception):
     pass
 
+class SessionExpiredException(Exception):
+    pass
+
 class Service(object):
     def __init__(self, session, service_name):
         self.session = session
@@ -152,6 +155,8 @@ class OpenERPSession(object):
         :type model: str
         :rtype: a model object
         """
+        if self._db == False:
+            raise SessionExpiredException("Session expired")
 
         return Model(self, model)
 
