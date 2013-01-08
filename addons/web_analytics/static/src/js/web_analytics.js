@@ -177,7 +177,6 @@ openerp.web_analytics = function(instance) {
                             'category': error.message,
                             'action': error.data.fault_code,
                             'label': url,
-                            'value': undefined,
                             'noninteraction': true,
                         });
                     } else {
@@ -185,7 +184,6 @@ openerp.web_analytics = function(instance) {
                             'category': error.type,
                             'action': error.data.debug,
                             'label': url,
-                            'value': undefined,
                             'noninteraction': true,
                         });
                     }
