@@ -8,12 +8,16 @@
     </t>
     <t t-name="Linkedin.popup">
         <div>
-            <script type="in/Login">
-            </script>
-            <h2 style="margin-top: -10px;">People</h2>
-            <div class="oe_linkedin_pop_p" style='display: table;width:100%'/>
+            <div class="oe_social_network_login">
+                <script type="in/Login">
+                    &lt;b&gt;&lt;?js= firstName ?&gt; &lt;?js= lastName ?&gt;&lt;/b&gt;, is your account on LinkedIn.
+                </script>
+                <img src="http://developer.linkedin.com/sites/default/files/js-signin.png" class="oe_error"/>
+            </div>
+            <h2>People</h2>
+            <div class="oe_linkedin_pop_p"></div>
             <h2>Companies</h2>
-            <div class="oe_linkedin_pop_c" style='display: table;width:100%'/>
+            <div class="oe_linkedin_pop_c"></div>
         </div>
     </t>
     <t t-name="Linkedin.EntityWidget">

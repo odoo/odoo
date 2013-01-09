@@ -6,6 +6,13 @@ openerp.web_linkedin = function(instance) {
     var QWeb = instance.web.qweb;
     var _t = instance.web._t;
     
+    openerp.web_linkedin.onLinkedInAuth = function () {
+      IN.API.Profile("me")
+        .result( function(me) {
+            console.log("me", me);
+        });
+    };
+
     instance.web_linkedin.LinkedinTester = instance.web.Class.extend({
         init: function() {
             this.linkedin_added = false;
@@ -15,8 +22,12 @@ openerp.web_linkedin = function(instance) {
         test_linkedin: function() {
             var self = this;
             return this.test_api_key().then(function() {
-                if (self.linkedin_added)
+                if (self.linkedin_added) {
+                    if (IN.User.isAuthorized()) {
+                        self.auth_def.resolve();
+                    }
                     return self.linkedin_def.promise();
+                }
                 var tag = document.createElement('script');
                 tag.type = 'text/javascript';
                 tag.src = "http://platform.linkedin.com/in.js";
@@ -178,6 +189,7 @@ openerp.web_linkedin = function(instance) {
     instance.web_linkedin.LinkedinPopup = instance.web.Dialog.extend({
         template: "Linkedin.popup",
         init: function(parent, text) {
+            var self = this;
             this._super(parent, {title:_t("LinkedIn search")});
             this.text = text;
             this.limit = 5;
@@ -188,6 +200,20 @@ openerp.web_linkedin = function(instance) {
             this.on("authentified", this, this.authentified);
             instance.web_linkedin.tester.test_authentication().done(function() {
                 self.trigger("authentified");
+            });
+
+            this.bind_error();
+        },
+        bind_error: function() {
+            var self = this;
+            this.error_message = window.setTimeout(function() {self.$(".oe_social_network_login .oe_error").show();}, 500);
+            this.$el.on("DOMNodeInserted", function (e) {
+                self.$el.off("DOMNodeInserted");
+                window.clearTimeout(self.error_message);
+                self.$(".oe_social_network_login .oe_error").hide();
+            });
+            this.$(".oe_social_network_login .oe_error").click(function () {
+                IN.User.authorize();
             });
         },
         authentified: function() {
