@@ -106,14 +106,24 @@
             font-weight: normal
             font-size: 13px
     .oe_kanban_group_title
+        position: relative
         font-size: 16px
         font-weight: bold
         color: #333333
         text-shadow: 0 1px 0 white
-        > span
+        margin-right: 30px
+        width: 200px
+        .oe_kanban_group_title_text
             margin-right: 4px
-            display: inline-block
-
+            white-space: nowrap
+            overflow: hidden
+            text-overflow: ellipsis
+        .oe_kanban_group_length
+          position: absolute
+          top: -1px
+          right: -14px
+          text-align: center
+          float: right
     &.oe_kanban_grouped
         .oe_kanban_column, .oe_kanban_group_header
             width: 185px
