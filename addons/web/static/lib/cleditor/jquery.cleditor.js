@@ -894,7 +894,7 @@
 
       var $toolbar = editor.$toolbar,
           $group = $toolbar.children("div:last"),
-          wid = $main.width();
+          wid = /%/.test("" + options.width) ? options.width : $main.width();
 
       // Resize the toolbar
       var hgt = $group.offset().top + $group.outerHeight() - $toolbar.offset().top + 1;
