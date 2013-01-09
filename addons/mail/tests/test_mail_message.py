@@ -365,11 +365,3 @@ class test_mail_access_rights(TestMailBase):
             {'subject': 'Subject', 'body': 'Body text'},
             {'default_composition_mode': 'reply', 'default_parent_id': pigs_msg_id})
         mail_compose.send_mail(cr, user_raoul_id, [compose_id])
-
-        # Do: Raoul writes on its own profile, ok because follower of its partner
-        self.res_users.message_post(cr, user_raoul_id, user_raoul_id, body='I love Raoul')
-        self.res_partner.message_post(cr, user_raoul_id, partner_raoul_id, body='I love Raoul')
-        compose_id = mail_compose.create(cr, user_raoul_id,
-            {'subject': 'Subject', 'body': 'Body text', 'partner_ids': []},
-            {'default_composition_mode': 'comment', 'default_model': 'res.users', 'default_res_id': self.user_raoul_id})
-        mail_compose.send_mail(cr, user_raoul_id, [compose_id])
