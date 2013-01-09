@@ -23,7 +23,7 @@ openerp.web_analytics = function(instance) {
 
     instance.web_analytics.Tracker = instance.web.Class.extend({
         /*
-        *  This method initializes the tracker
+        * This method initializes the tracker
         */
         init: function() {
             /* Comment this lines when going on production, only used for testing on localhost
@@ -80,6 +80,44 @@ openerp.web_analytics = function(instance) {
                     _gaq.push(['_setCustomVar', 5, 'Version', res.server_version, 3]);
                     return;
                 });
+        },
+        /*
+        * Method called in order to send _trackEvent to GA
+        */
+        _push_event: function(options) {
+            _gaq.push(['_trackEvent',
+                options.category,
+                options.action,
+                options.label,
+                options.value,
+                options.noninteraction
+            ]);
+        },
+        /*
+        * Method called in order to send ecommerce transactions to GA
+        */
+        _push_ecommerce: function(trans_data, item_list) {
+            _gaq.push(['_addTrans',
+                trans_data.order_id,
+                trans_data.store_name,
+                trans_data.total,
+                trans_data.tax,
+                trans_data.shipping,
+                trans_data.city,
+                trans_data.state,
+                trans_data.country,
+            ]);
+            _.each(item_list, function(item) {
+                _gaq.push(['_addItem',
+                    item.order_id,
+                    item.sku,
+                    item.name,
+                    item.category,
+                    item.price,
+                    item.quantity,
+                ]);
+            });
+            _gaq.push(['_trackTrans']);
         },
         /*
         *  This method contains the initialization of the object and view type
@@ -193,44 +231,6 @@ openerp.web_analytics = function(instance) {
                     this._super.apply(this, arguments);
                 },
             });
-        },
-        /*
-        * Method called in order to send _trackEvent to GA
-        */
-        _push_event: function(options) {
-            _gaq.push(['_trackEvent',
-                options.category,
-                options.action,
-                options.label,
-                options.value,
-                options.noninteraction
-            ]);
-        },
-        /*
-        * Method called in order to send ecommerce transactions to GA
-        */
-        _push_ecommerce: function(trans_data, item_list) {
-            _gaq.push(['_addTrans',
-                trans_data.order_id,
-                trans_data.store_name,
-                trans_data.total,
-                trans_data.tax,
-                trans_data.shipping,
-                trans_data.city,
-                trans_data.state
-                trans_data.country,
-            ]);
-            _.each(item_list, function(item) {
-                _gaq.push(['_addItem',
-                    item.order_id,
-                    item.sku,
-                    item.name,
-                    item.category,
-                    item.price,
-                    item.quantity,
-                ]);
-            });
-            _gaq.push(['_trackTrans']);
         },
     });
 
