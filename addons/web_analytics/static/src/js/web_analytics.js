@@ -251,7 +251,7 @@ openerp.web_analytics = function(instance) {
         return $.when(t._get_user_access_level()).then(function(r) {
             t.user_access_level = r;
             t.initialize_custom().then(function() {
-                wc.on('state_pushed', wc, t.on_state_pushed);
+                wc.on('state_pushed', t, t.on_state_pushed);
                 t.include_tracker();
             });
         });
