@@ -839,6 +839,7 @@ class mail_thread(osv.AbstractModel):
             ids = partner_obj.search(cr, SUPERUSER_ID, [('email', '=', email)], context=context)
             if ids:
                 partner_ids.append(ids[0])
+                partner_id = ids[0]
             else:
                 partner_id = partner_obj.create(cr, uid, {
                         'name': name or email,
