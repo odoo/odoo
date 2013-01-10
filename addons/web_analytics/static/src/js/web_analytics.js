@@ -78,6 +78,7 @@ openerp.web_analytics = function(instance) {
             return instance.session.rpc("/web/webclient/version_info", {})
                 .done(function(res) {
                     _gaq.push(['_setCustomVar', 5, 'Version', res.server_version, 3]);
+                    _gaq.push(['_trackPageview']);
                     return;
                 });
         },
@@ -271,9 +272,10 @@ openerp.web_analytics = function(instance) {
             },
             show_application: function() {
                 var self = this;
-                instance.web_analytics.setupTracker(self).always(function() {
-                    self._super();
+                $.when(this.subscribe_deferred).then(function() {
+                    instance.web_analytics.setupTracker(self);
                 });
+                this._super();
             },
         });
     }
