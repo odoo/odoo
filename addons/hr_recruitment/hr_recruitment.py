@@ -347,16 +347,17 @@ class hr_applicant(base_stage, osv.Model):
         """
         if custom_values is None: custom_values = {}
         desc = html2plaintext(msg.get('body')) if msg.get('body') else ''
-        custom_values.update({
+        defaults = {
             'name':  msg.get('subject') or _("No Subject"),
             'description': desc,
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
             'user_id': False,
-        })
+        }
         if msg.get('priority'):
-            custom_values['priority'] = msg.get('priority')
-        return super(hr_applicant,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
+            defaults['priority'] = msg.get('priority')
+        defaults.update(custom_values)
+        return super(hr_applicant,self).message_new(cr, uid, msg, custom_values=defaults, context=context)
 
     def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
         """ Override mail_thread message_update that is called by the mailgateway

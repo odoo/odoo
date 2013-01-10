@@ -497,17 +497,18 @@ class project_issue(base_stage, osv.osv):
 
         desc = html2plaintext(msg.get('body')) if msg.get('body') else ''
 
-        custom_values.update({
+        defaults = {
             'name':  msg.get('subject') or _("No Subject"),
             'description': desc,
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
             'user_id': False,
-        })
+        }
         if  msg.get('priority'):
-            custom_values['priority'] =  msg.get('priority')
+            defaults['priority'] = msg.get('priority')
 
-        res_id = super(project_issue, self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
+        defaults.update(custom_values)
+        res_id = super(project_issue, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
         return res_id
 
     def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):

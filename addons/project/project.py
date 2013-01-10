@@ -1174,11 +1174,12 @@ class task(base_stage, osv.osv):
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """ Override to updates the document according to the email. """
         if custom_values is None: custom_values = {}
-        custom_values.update({
+        defaults = {
             'name': msg.get('subject'),
             'planned_hours': 0.0,
-        })
-        return super(task,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
+        }
+        defaults.update(custom_values)
+        return super(task,self).message_new(cr, uid, msg, custom_values=defaults, context=context)
 
     def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
         """ Override to update the task according to the email. """
