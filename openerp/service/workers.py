@@ -181,6 +181,12 @@ class Multicorn(object):
         self.socket.setblocking(0)
         self.socket.bind(self.address)
         self.socket.listen(8)
+        # long polling socket
+        self.long_polling_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.long_polling_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.long_polling_socket.setblocking(0)
+        self.long_polling_socket.bind(('0.0.0.0', 8072))
+        self.long_polling_socket.listen(8)
 
     def stop(self, graceful=True):
         if graceful:
@@ -349,8 +355,8 @@ class WorkerLongPolling(Worker):
 
         Worker.start(self)
         from gevent.wsgi import WSGIServer
-        httpd = WSGIServer(('0.0.0.0', 8072), self.multi.app)
-        httpd.serve_forever()
+        self.server = WSGIServer(self.multi.long_polling_socket, self.multi.app)
+        self.server.serve_forever()
 
 class WorkerBaseWSGIServer(werkzeug.serving.BaseWSGIServer):
     """ werkzeug WSGI Server patched to allow using an external listen socket
