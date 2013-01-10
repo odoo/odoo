@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-11 05:10+0000\n"
-"X-Generator: Launchpad (build 16356)\n"
+"X-Launchpad-Export-Date: 2013-01-10 05:01+0000\n"
+"X-Generator: Launchpad (build 16412)\n"
 
 #. module: base
 #: field:ir.filters,domain:0
@@ -28,20 +28,20 @@ msgstr "Ограничение"
 #. module: base
 #: model:res.country,name:base.sh
 msgid "Saint Helena"
-msgstr "Остров Святой Елены"
+msgstr "Остров Св. Елены"
 
 #. module: base
 #: view:ir.actions.report.xml:0
 msgid "Other Configuration"
-msgstr "Другие настройки"
+msgstr "Прочие настройки"
 
 #. module: base
 #: selection:ir.property,type:0
 msgid "DateTime"
-msgstr "DateTime"
+msgstr "Дата и время"
 
 #. module: base
-#: code:addons/fields.py:637
+#: code:addons/fields.py:643
 #, python-format
 msgid ""
 "The second argument of the many2many field %s must be a SQL table !You used "
@@ -137,7 +137,7 @@ msgstr ""
 #. module: base
 #: field:res.partner,ref:0
 msgid "Reference"
-msgstr "Ссылка"
+msgstr "Обозначение"
 
 #. module: base
 #: field:ir.actions.act_window,target:0
@@ -145,15 +145,15 @@ msgid "Target Window"
 msgstr "Окно назначения"
 
 #. module: base
-#: code:addons/base/ir/ir_sequence.py:105
-#: code:addons/base/ir/ir_sequence.py:131
-#: code:addons/base/res/res_users.py:470
+#: code:addons/base/ir/ir_sequence.py:104
+#: code:addons/base/ir/ir_sequence.py:130
+#: code:addons/base/res/res_users.py:467
 #, python-format
 msgid "Warning!"
-msgstr "Предупреждение!"
+msgstr "Внимание!"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:397
+#: code:addons/base/ir/ir_model.py:399
 #, python-format
 msgid ""
 "Properties of base fields cannot be altered in this manner! Please modify "
@@ -163,7 +163,7 @@ msgstr ""
 "Измените их в коде Python, желательно при помощи стороннего дополнения!"
 
 #. module: base
-#: code:addons/osv.py:130
+#: code:addons/osv.py:132
 #, python-format
 msgid "Constraint Error"
 msgstr "Ошибка ограничения целостности"
@@ -179,7 +179,7 @@ msgid "Swaziland"
 msgstr "Свазиленд"
 
 #. module: base
-#: code:addons/orm.py:4453
+#: code:addons/orm.py:4485
 #, python-format
 msgid "created."
 msgstr "создан."
@@ -304,6 +304,7 @@ msgstr "Дата изменения"
 
 #. module: base
 #: view:ir.attachment:0
+#: field:ir.attachment,create_uid:0
 msgid "Owner"
 msgstr "Владелец"
 
@@ -375,7 +376,7 @@ msgid "Netherlands Antilles"
 msgstr "Нидерландские Антиллы"
 
 #. module: base
-#: code:addons/base/res/res_users.py:311
+#: code:addons/base/res/res_users.py:307
 #, python-format
 msgid ""
 "You can not remove the admin user as it is used internally for resources "
@@ -497,7 +498,7 @@ msgid "Miscellaneous Suppliers"
 msgstr "Прочие поставщики"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:337
+#: code:addons/base/ir/ir_model.py:339
 #, python-format
 msgid "Custom fields must have a name that starts with 'x_' !"
 msgstr "Названия пользовательских полей должны начинаться с 'x_'  !"
@@ -712,7 +713,6 @@ msgstr "Испанский (UY) / Español (UY)"
 
 #. module: base
 #: field:res.partner,mobile:0
-#: field:res.partner.address,mobile:0
 msgid "Mobile"
 msgstr "Моб. тел."
 
@@ -819,7 +819,7 @@ msgid "Type"
 msgstr "Тип"
 
 #. module: base
-#: code:addons/orm.py:407
+#: code:addons/orm.py:406
 #, python-format
 msgid ""
 "Language with code \"%s\" is not defined in your system !\n"
@@ -839,7 +839,7 @@ msgid "Human Resources Dashboard"
 msgstr "Инф. панель отдела кадров"
 
 #. module: base
-#: code:addons/base/res/res_users.py:470
+#: code:addons/base/res/res_users.py:467
 #, python-format
 msgid "Setting empty passwords is not allowed for security reasons!"
 msgstr ""
@@ -874,7 +874,7 @@ msgid "Transitions"
 msgstr "Переходы состояний"
 
 #. module: base
-#: code:addons/orm.py:4859
+#: code:addons/orm.py:4917
 #, python-format
 msgid "Record #%d of %s not found, cannot copy!"
 msgstr "Запись №%d из %s не найдена, нельзя скопировать !"
@@ -954,7 +954,7 @@ msgstr ""
 "понедельником года входят в неделю номер 0."
 
 #. module: base
-#: code:addons/base/res/res_company.py:150
+#: code:addons/base/res/res_company.py:164
 #: field:ir.module.module,website:0
 #: field:res.company,website:0
 #: field:res.partner,website:0
@@ -984,7 +984,7 @@ msgid "Marshall Islands"
 msgstr "Маршалловы Острова"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:421
+#: code:addons/base/ir/ir_model.py:423
 #, python-format
 msgid "Changing the model of a field is forbidden!"
 msgstr "Изменение модели поля запрещено!"
@@ -1001,7 +1001,7 @@ msgid "Search"
 msgstr "Найти"
 
 #. module: base
-#: code:addons/osv.py:133
+#: code:addons/osv.py:135
 #, python-format
 msgid ""
 "The operation cannot be completed, probably due to the following:\n"
@@ -1022,7 +1022,7 @@ msgstr ""
 "2. Правила для группы связаны друг с другом оператором  логического И (AND)"
 
 #. module: base
-#: code:addons/base/res/res_users.py:135
+#: code:addons/base/res/res_users.py:131
 #, python-format
 msgid "Operation Canceled"
 msgstr "Операция отменена"
@@ -1075,7 +1075,7 @@ msgid "ir.exports"
 msgstr "ir.exports"
 
 #. module: base
-#: code:addons/base/module/wizard/base_update_translations.py:38
+#: code:addons/base/module/wizard/base_update_translations.py:39
 #, python-format
 msgid "No language with code \"%s\" exists"
 msgstr "Нет языка с кодом \"%s\""
@@ -1181,7 +1181,7 @@ msgid "On Create"
 msgstr "При создании"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:905
+#: code:addons/base/ir/ir_model.py:906
 #, python-format
 msgid ""
 "'%s' contains too many dots. XML ids should not contain dots ! These are "
@@ -1410,7 +1410,7 @@ msgid "Formula"
 msgstr "Формула"
 
 #. module: base
-#: code:addons/base/res/res_users.py:311
+#: code:addons/base/res/res_users.py:307
 #, python-format
 msgid "Can not remove root user!"
 msgstr "Невозможно удалить суперпользователя!"
@@ -1421,18 +1421,17 @@ msgid "Malawi"
 msgstr "Малави"
 
 #. module: base
-#: code:addons/base/ir/ir_filters.py:39
-#: code:addons/base/res/res_partner.py:312
-#: code:addons/base/res/res_users.py:96
-#: code:addons/base/res/res_users.py:335
-#: code:addons/base/res/res_users.py:337
+#: code:addons/base/ir/ir_filters.py:36
+#: code:addons/base/res/res_partner.py:314
+#: code:addons/base/res/res_users.py:92
+#: code:addons/base/res/res_users.py:331
+#: code:addons/base/res/res_users.py:333
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (копия)"
 
 #. module: base
 #: field:res.partner,type:0
-#: field:res.partner.address,type:0
 msgid "Address Type"
 msgstr "Тип адреса"
 
@@ -1678,7 +1677,7 @@ msgstr ""
 "«форма», «дерево», «календарь» и т.д. (По умолчанию: дерево, форма)"
 
 #. module: base
-#: code:addons/orm.py:3811
+#: code:addons/orm.py:3842
 #, python-format
 msgid "A document was modified since you last viewed it (%s:%d)"
 msgstr "Документ был изменен с момента вашего последнего просмотра (%s:%d)"
@@ -1740,7 +1739,6 @@ msgstr "Сан-Томе и Принсипи"
 
 #. module: base
 #: selection:res.partner,type:0
-#: selection:res.partner.address,type:0
 msgid "Invoice"
 msgstr "Счет"
 
@@ -1945,8 +1943,8 @@ msgid "Pakistan"
 msgstr "Пакистан"
 
 #. module: base
-#: code:addons/orm.py:2021
-#: code:addons/orm.py:2032
+#: code:addons/orm.py:2020
+#: code:addons/orm.py:2031
 #, python-format
 msgid "Invalid Object Architecture!"
 msgstr "Неверная архитектура объекта"
@@ -1957,15 +1955,15 @@ msgid "Messages"
 msgstr "Сообщения"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:364
 #: code:addons/base/ir/ir_model.py:366
-#: code:addons/base/ir/ir_model.py:396
-#: code:addons/base/ir/ir_model.py:410
+#: code:addons/base/ir/ir_model.py:368
+#: code:addons/base/ir/ir_model.py:398
 #: code:addons/base/ir/ir_model.py:412
 #: code:addons/base/ir/ir_model.py:414
-#: code:addons/base/ir/ir_model.py:421
-#: code:addons/base/ir/ir_model.py:424
-#: code:addons/base/module/wizard/base_update_translations.py:38
+#: code:addons/base/ir/ir_model.py:416
+#: code:addons/base/ir/ir_model.py:423
+#: code:addons/base/ir/ir_model.py:426
+#: code:addons/base/module/wizard/base_update_translations.py:39
 #, python-format
 msgid "Error!"
 msgstr "Ошибка !"
@@ -1996,7 +1994,7 @@ msgid "New Zealand"
 msgstr "Новая Зеландия"
 
 #. module: base
-#: code:addons/orm.py:4120
+#: code:addons/orm.py:4152
 #, python-format
 msgid ""
 "One of the records you are trying to modify has already been deleted "
@@ -2063,7 +2061,7 @@ msgid "XSL"
 msgstr "XSL"
 
 #. module: base
-#: code:addons/base/module/module.py:499
+#: code:addons/base/module/module.py:526
 #, python-format
 msgid "Can not upgrade module '%s'. It is not installed."
 msgstr "Невозможно обновить модуль '%s'. Он не установлен."
@@ -2173,7 +2171,7 @@ msgid "HR sector"
 msgstr "Отдел кадров"
 
 #. module: base
-#: code:addons/orm.py:4652
+#: code:addons/orm.py:4684
 #, python-format
 msgid ""
 "Invalid \"order\" specified. A valid \"order\" specification is a comma-"
@@ -2253,7 +2251,6 @@ msgstr ""
 
 #. module: base
 #: field:res.partner,birthdate:0
-#: field:res.partner.address,birthdate:0
 msgid "Birthdate"
 msgstr "Дата рождения"
 
@@ -2343,7 +2340,7 @@ msgid "Sir"
 msgstr "Г-н"
 
 #. module: base
-#: code:addons/orm.py:2247
+#: code:addons/orm.py:2246
 #, python-format
 msgid "There is no view of type '%s' defined for the structure!"
 msgstr "Представление типа '%s' не определено для этой структуры!"
@@ -2444,7 +2441,7 @@ msgid "Mayotte"
 msgstr "Майотта"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:607
+#: code:addons/base/ir/ir_actions.py:606
 #, python-format
 msgid "Please specify an action to launch !"
 msgstr "Пожалуйста, укажите действие для запуска!"
@@ -2482,7 +2479,6 @@ msgstr "Запланированные действия"
 
 #. module: base
 #: field:res.partner,title:0
-#: field:res.partner.address,title:0
 #: field:res.partner.title,name:0
 msgid "Title"
 msgstr "Название"
@@ -2495,13 +2491,13 @@ msgstr ""
 "ресурсов"
 
 #. module: base
-#: code:addons/orm.py:4213
+#: code:addons/orm.py:4245
 #, python-format
 msgid "Recursivity Detected."
 msgstr "Обнаружена рекурсия."
 
 #. module: base
-#: code:addons/base/module/module.py:345
+#: code:addons/base/module/module.py:366
 #, python-format
 msgid "Recursion error in modules dependencies !"
 msgstr "Ошибка рекурсии в зависимостях модулей!"
@@ -2624,7 +2620,7 @@ msgid "M."
 msgstr "Г-н"
 
 #. module: base
-#: code:addons/base/module/module.py:609
+#: code:addons/base/module/module.py:645
 #, python-format
 msgid ""
 "Can not create the module file:\n"
@@ -2728,7 +2724,7 @@ msgid "EAN13"
 msgstr "Штрих-код 13"
 
 #. module: base
-#: code:addons/orm.py:2247
+#: code:addons/orm.py:2246
 #, python-format
 msgid "Invalid Architecture!"
 msgstr "Неверная Архитектура!"
@@ -2860,6 +2856,7 @@ msgid "SXW content"
 msgstr "содержимое SXW"
 
 #. module: base
+#: field:change.password.user,wizard_id:0
 #: view:ir.actions.wizard:0
 msgid "Wizard"
 msgstr "Мастер"
@@ -2886,7 +2883,6 @@ msgstr "Ограничение"
 #. module: base
 #: selection:ir.values,key:0
 #: selection:res.partner,type:0
-#: selection:res.partner.address,type:0
 msgid "Default"
 msgstr "По умолчанию"
 
@@ -3078,7 +3074,6 @@ msgstr "Импорт модулей"
 #: field:res.bank,zip:0
 #: field:res.company,zip:0
 #: field:res.partner,zip:0
-#: field:res.partner.address,zip:0
 #: field:res.partner.bank,zip:0
 msgid "Zip"
 msgstr "Индекс"
@@ -3100,7 +3095,7 @@ msgid "%c - Appropriate date and time representation."
 msgstr "%c - Подходящий формат даты и времени."
 
 #. module: base
-#: code:addons/base/res/res_config.py:388
+#: code:addons/base/res/res_config.py:387
 #, python-format
 msgid ""
 "Your database is now fully configured.\n"
@@ -3141,6 +3136,8 @@ msgstr "Направление"
 #: field:ir.module.module,views_by_module:0
 #: model:ir.ui.menu,name:base.menu_action_ui_view
 #: view:ir.ui.view:0
+#: view:res.groups:0
+#: field:res.groups,view_access:0
 msgid "Views"
 msgstr "Виды"
 
@@ -3151,7 +3148,7 @@ msgid "Rules"
 msgstr "Правила"
 
 #. module: base
-#: code:addons/base/module/module.py:299
+#: code:addons/base/module/module.py:320
 #, python-format
 msgid "You try to remove a module that is installed or will be installed"
 msgstr "Вы пытаетесь удалить модуль, который установлен или будет установлен"
@@ -3254,7 +3251,7 @@ msgid "System Configuration Done"
 msgstr "Настройка системы выполнена"
 
 #. module: base
-#: code:addons/orm.py:1540
+#: code:addons/orm.py:1539
 #, python-format
 msgid "Error occurred while validating the field(s) %s: %s"
 msgstr "Произошла ошибка при проверке поля(ей)  %s: %s"
@@ -3490,7 +3487,7 @@ msgid "Apply For Delete"
 msgstr "Применить для удаления"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:412
+#: code:addons/base/ir/ir_model.py:414
 #, python-format
 msgid "Cannot rename column to %s, because that column already exists!"
 msgstr "Нельзя переименовать столбец в %s, потому что он уже существует !"
@@ -3720,7 +3717,7 @@ msgid "Montserrat"
 msgstr "Монсеррат"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:273
+#: code:addons/base/ir/ir_model.py:275
 #, python-format
 msgid ""
 "The Selection Options expression is not a valid Pythonic expression.Please "
@@ -3902,7 +3899,7 @@ msgid "Bank Type"
 msgstr "Тип банка"
 
 #. module: base
-#: code:addons/base/res/res_users.py:103
+#: code:addons/base/res/res_users.py:99
 #, python-format
 msgid "The name of the group can not start with \"-\""
 msgstr "Название группы не может начинаться с \"-\""
@@ -3923,7 +3920,7 @@ msgid "Gujarati / ગુજરાતી"
 msgstr "Гуджарати / ગુજરાતી"
 
 #. module: base
-#: code:addons/base/module/module.py:340
+#: code:addons/base/module/module.py:361
 #, python-format
 msgid ""
 "Unable to process module \"%s\" because an external dependency is not met: %s"
@@ -4255,10 +4252,10 @@ msgstr "Отчет xml"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_module_open_categ
+#: model:ir.actions.act_window,name:base.open_module_tree
 #: field:ir.module.category,module_ids:0
 #: view:ir.module.module:0
 #: model:ir.ui.menu,name:base.menu_management
-#: model:ir.ui.menu,name:base.menu_module_tree
 msgid "Modules"
 msgstr "Модули"
 
@@ -4376,7 +4373,7 @@ msgid "ir.attachment"
 msgstr "ir.attachment"
 
 #. module: base
-#: code:addons/orm.py:4315
+#: code:addons/orm.py:4347
 #, python-format
 msgid ""
 "You cannot perform this operation. New Record Creation is not allowed for "
@@ -4503,7 +4500,6 @@ msgstr "Доступ на создание"
 #. module: base
 #: field:res.bank,state:0
 #: field:res.company,state_id:0
-#: field:res.partner.address,state_id:0
 #: field:res.partner.bank,state_id:0
 msgid "Fed. State"
 msgstr "Область"
@@ -4613,7 +4609,7 @@ msgid "False means for every user"
 msgstr "Ложь - для любого пользователя"
 
 #. module: base
-#: code:addons/base/module/module.py:284
+#: code:addons/base/module/module.py:306
 #, python-format
 msgid "The name of the module must be unique !"
 msgstr "Название модуля должно быть уникальным !"
@@ -4652,7 +4648,7 @@ msgid "Contacts"
 msgstr "Контакты"
 
 #. module: base
-#: code:addons/orm.py:3929
+#: code:addons/orm.py:3960
 #, python-format
 msgid ""
 "Unable to delete this document because it is used as a default property"
@@ -4697,7 +4693,7 @@ msgstr ""
 "запустить некоторые мастера заново из этого меню."
 
 #. module: base
-#: code:addons/base/res/res_users.py:135
+#: code:addons/base/res/res_users.py:131
 #, python-format
 msgid ""
 "Please use the change password wizard (in User Preferences or User menu) to "
@@ -4707,7 +4703,7 @@ msgstr ""
 "или в меню пользователя), чтобы изменить свой пароль."
 
 #. module: base
-#: code:addons/orm.py:2021
+#: code:addons/orm.py:2020
 #, python-format
 msgid "Insufficient fields for Calendar View!"
 msgstr "Недостаточно полей для режима Календаря!"
@@ -4944,7 +4940,6 @@ msgstr "Китайский (упрощённый) / 简体中文"
 #: field:res.bank,street:0
 #: field:res.company,street:0
 #: field:res.partner,street:0
-#: field:res.partner.address,street:0
 #: field:res.partner.bank,street:0
 msgid "Street"
 msgstr "Улица"
@@ -4975,7 +4970,7 @@ msgid "Change My Preferences"
 msgstr "Изменить мои предпочтения"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:172
+#: code:addons/base/ir/ir_actions.py:171
 #, python-format
 msgid "Invalid model name in the action definition."
 msgstr "Недопустимое имя модели в определении действия"
@@ -5038,7 +5033,7 @@ msgid "Dutch / Nederlands"
 msgstr "Голландский / Nederlands"
 
 #. module: base
-#: code:addons/base/res/res_config.py:350
+#: code:addons/base/res/res_config.py:349
 #, python-format
 msgid ""
 "\n"
@@ -5126,7 +5121,7 @@ msgid "The exists method is not implemented on this object !"
 msgstr "Метод exists не реализован для данного объекта!"
 
 #. module: base
-#: code:addons/base/module/module.py:513
+#: code:addons/base/module/module.py:540
 #, python-format
 msgid ""
 "You try to upgrade a module that depends on the module: %s.\n"
@@ -5163,7 +5158,6 @@ msgstr "Целочисленный Большой"
 #. module: base
 #: view:res.partner:0
 #: selection:res.partner,type:0
-#: selection:res.partner.address,type:0
 #: selection:res.partner.title,domain:0
 #: view:res.users:0
 msgid "Contact"
@@ -5237,7 +5231,7 @@ msgid "Nigeria"
 msgstr "Нигерия"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:332
+#: code:addons/base/ir/ir_model.py:334
 #, python-format
 msgid "For selection fields, the Selection Options must be given!"
 msgstr "Для полей выбора должны быть предоставлены варианты выбора!"
@@ -5425,7 +5419,7 @@ msgid "Update Modules List"
 msgstr "Обновить список модулей"
 
 #. module: base
-#: code:addons/base/module/module.py:338
+#: code:addons/base/module/module.py:359
 #, python-format
 msgid ""
 "Unable to upgrade module \"%s\" because an external dependency is not met: %s"
@@ -5434,7 +5428,7 @@ msgstr ""
 "удовлетворена: %s"
 
 #. module: base
-#: code:addons/base/res/res_users.py:175
+#: code:addons/base/res/res_users.py:171
 #, python-format
 msgid ""
 "Please keep in mind that documents currently displayed may not be relevant "
@@ -5512,7 +5506,6 @@ msgstr "%b - Краткое название месяца."
 
 #. module: base
 #: field:res.partner,supplier:0
-#: field:res.partner.address,is_supplier_add:0
 #: model:res.partner.category,name:base.res_partner_category_1
 msgid "Supplier"
 msgstr "Поставщик"
@@ -5593,8 +5586,8 @@ msgid "Iteration"
 msgstr "Повтор"
 
 #. module: base
-#: code:addons/orm.py:4213
-#: code:addons/orm.py:4314
+#: code:addons/orm.py:4245
+#: code:addons/orm.py:4346
 #, python-format
 msgid "UserError"
 msgstr "UserError"
@@ -5615,7 +5608,7 @@ msgid "Reunion (French)"
 msgstr "Реюньон (заморский регион Франции)"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:414
+#: code:addons/base/ir/ir_model.py:416
 #, python-format
 msgid ""
 "New column name must still start with x_ , because it is a custom field!"
@@ -5641,8 +5634,8 @@ msgid "Solomon Islands"
 msgstr "Соломоновы Острова"
 
 #. module: base
-#: code:addons/orm.py:4119
-#: code:addons/orm.py:4652
+#: code:addons/orm.py:4151
+#: code:addons/orm.py:4684
 #, python-format
 msgid "AccessError"
 msgstr "Ошибка доступа"
@@ -5862,7 +5855,7 @@ msgid "res.widget"
 msgstr "res.widget"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:340
+#: code:addons/base/ir/ir_model.py:342
 #, python-format
 msgid "Model %s does not exist!"
 msgstr "Модель %s не существует !"
@@ -5906,6 +5899,7 @@ msgstr "Ядро OpenERP, необходимо для всех профилей.
 #: view:base.module.update:0
 #: view:base.module.upgrade:0
 #: view:base.update.translations:0
+#: view:change.password.wizard:0
 #: view:ir.actions.configuration.wizard:0
 #: view:res.config:0
 #: view:res.users:0
@@ -5944,6 +5938,8 @@ msgid "Components Supplier"
 msgstr "Поставщик компонентов"
 
 #. module: base
+#: view:change.password.user:0
+#: field:change.password.wizard,user_ids:0
 #: model:ir.actions.act_window,name:base.action_res_users
 #: field:ir.default,uid:0
 #: model:ir.model,name:base.model_res_users
@@ -6017,7 +6013,7 @@ msgstr ""
 "«form» для остальных представлений"
 
 #. module: base
-#: code:addons/base/res/res_config.py:387
+#: code:addons/base/res/res_config.py:386
 #, python-format
 msgid "Click 'Continue' to configure the next addon..."
 msgstr "Нажмите 'Продолжить' для настройки следующего модуля..."
@@ -6301,17 +6297,16 @@ msgid "Kind"
 msgstr "Тип"
 
 #. module: base
-#: code:addons/orm.py:4614
+#: code:addons/orm.py:4646
 #, python-format
 msgid "This method does not exist anymore"
 msgstr "Данный метод более не существует"
 
 #. module: base
-#: code:addons/base/res/res_company.py:148
+#: code:addons/base/res/res_company.py:162
 #: field:res.bank,fax:0
 #: field:res.company,fax:0
 #: field:res.partner,fax:0
-#: field:res.partner.address,fax:0
 #, python-format
 msgid "Fax"
 msgstr "Факс"
@@ -6509,7 +6504,6 @@ msgstr "%m - номер месяца [01,12]."
 #: field:res.bank,city:0
 #: field:res.company,city:0
 #: field:res.partner,city:0
-#: field:res.partner.address,city:0
 #: field:res.partner.bank,city:0
 msgid "City"
 msgstr "Город"
@@ -6807,8 +6801,8 @@ msgid "Problem in configuration `Record Id` in Server Action!"
 msgstr "Проблемы в конфигурации `Record Id` в серверном действии!"
 
 #. module: base
-#: code:addons/orm.py:2810
-#: code:addons/orm.py:2820
+#: code:addons/orm.py:2806
+#: code:addons/orm.py:2816
 #, python-format
 msgid "ValidateError"
 msgstr "ValidateError"
@@ -6849,13 +6843,12 @@ msgid "Laos"
 msgstr "Лаос"
 
 #. module: base
-#: code:addons/base/res/res_company.py:149
+#: code:addons/base/res/res_company.py:163
 #: selection:ir.actions.server,state:0
 #: model:ir.ui.menu,name:base.menu_email
 #: field:res.bank,email:0
 #: field:res.company,email:0
 #: field:res.partner,email:0
-#: field:res.partner.address,email:0
 #, python-format
 msgid "Email"
 msgstr "Эл. почта"
@@ -6866,7 +6859,7 @@ msgid "Home Action"
 msgstr "Действие со стороны пользователя"
 
 #. module: base
-#: code:addons/custom.py:550
+#: code:addons/custom.py:555
 #, python-format
 msgid ""
 "The sum of the data (2nd field) is null.\n"
@@ -7010,7 +7003,7 @@ msgid "HR Manager Dashboard"
 msgstr "Инф. панель менеджера отдела кадров"
 
 #. module: base
-#: code:addons/base/module/module.py:336
+#: code:addons/base/module/module.py:357
 #, python-format
 msgid ""
 "Unable to install module \"%s\" because an external dependency is not met: %s"
@@ -7058,7 +7051,6 @@ msgstr "Нормальный"
 #: field:res.bank,street2:0
 #: field:res.company,street2:0
 #: field:res.partner,street2:0
-#: field:res.partner.address,street2:0
 msgid "Street2"
 msgstr "Улица (2-я строка)"
 
@@ -7074,6 +7066,7 @@ msgid "Following modules are not installed or unknown: %s"
 msgstr "Следующие модули не установлены или не известны: %s"
 
 #. module: base
+#: field:change.password.user,user_id:0
 #: view:ir.cron:0
 #: field:ir.cron,user_id:0
 #: field:ir.filters,user_id:0
@@ -7146,8 +7139,8 @@ msgid "The new user's real name, used for searching and most listings"
 msgstr "Настоящее имя пользователя, используется для поиска и в списках"
 
 #. module: base
-#: code:addons/osv.py:151
 #: code:addons/osv.py:153
+#: code:addons/osv.py:155
 #, python-format
 msgid "Integrity Error"
 msgstr "Ошибка целостности"
@@ -7158,7 +7151,7 @@ msgid "ir.wizard.screen"
 msgstr "ir.wizard.screen"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:291
+#: code:addons/base/ir/ir_model.py:293
 #, python-format
 msgid "Size of the field can never be less than 1 !"
 msgstr "Размер поля никогда не может быть меньше 1 !"
@@ -7229,7 +7222,6 @@ msgstr "Значение \"%s\" в поле \"%s\" не входит в выбр
 
 #. module: base
 #: field:res.partner,customer:0
-#: field:res.partner.address,is_customer_add:0
 msgid "Customer"
 msgstr "Заказчик"
 
@@ -7388,7 +7380,7 @@ msgid "Object"
 msgstr "Объект"
 
 #. module: base
-#: code:addons/osv.py:148
+#: code:addons/osv.py:150
 #, python-format
 msgid ""
 "\n"
@@ -7431,7 +7423,7 @@ msgstr ""
 "отрицательное значение - не ограничено"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:424
+#: code:addons/base/ir/ir_model.py:426
 #, python-format
 msgid ""
 "Changing the type of a column is not yet supported. Please drop it and "
@@ -7498,8 +7490,6 @@ msgstr "Золотой партнер"
 #. module: base
 #: model:ir.model,name:base.model_res_partner
 #: field:res.company,partner_id:0
-#: view:res.partner:0
-#: field:res.partner.address,partner_id:0
 #: model:res.partner.category,name:base.res_partner_category_0
 #: selection:res.partner.title,domain:0
 #: model:res.request.link,name:base.req_link_partner
@@ -7644,7 +7634,7 @@ msgid "Action Type"
 msgstr "Тип действия"
 
 #. module: base
-#: code:addons/base/module/module.py:351
+#: code:addons/base/module/module.py:372
 #, python-format
 msgid ""
 "You try to install module '%s' that depends on module '%s'.\n"
@@ -7742,7 +7732,7 @@ msgid "workflow.instance"
 msgstr "workflow.instance"
 
 #. module: base
-#: code:addons/orm.py:480
+#: code:addons/orm.py:479
 #, python-format
 msgid "Unknown attribute %s in %s "
 msgstr "Неизвестный атрибут %s в %s "
@@ -7753,7 +7743,7 @@ msgid "10. %S              ==> 20"
 msgstr "10. %S              ==> 20"
 
 #. module: base
-#: code:addons/fields.py:126
+#: code:addons/fields.py:130
 #, python-format
 msgid "undefined get method !"
 msgstr "не определен метод 'get'!"
@@ -8108,7 +8098,7 @@ msgstr ""
 "запустится."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:287
+#: code:addons/base/ir/ir_model.py:289
 #, python-format
 msgid ""
 "The Selection Options expression is must be in the [('key','Label'), ...] "
@@ -8119,7 +8109,6 @@ msgstr ""
 
 #. module: base
 #: view:ir.actions.report.xml:0
-#: model:ir.ui.menu,name:base.menu_sales_configuration_misc
 #: view:res.currency:0
 msgid "Miscellaneous"
 msgstr "Прочее"
@@ -8268,6 +8257,7 @@ msgstr "Словенский / Slovenský jazyk"
 #. module: base
 #: field:base.language.export,state:0
 #: field:ir.ui.menu,icon_pict:0
+#: field:res.partner,has_image:0
 #: field:res.users,user_email:0
 msgid "unknown"
 msgstr "неизвестен"
@@ -8387,6 +8377,7 @@ msgid "Zaire"
 msgstr "Заир"
 
 #. module: base
+#: field:ir.attachment,res_id:0
 #: field:workflow.instance,res_id:0
 #: field:workflow.triggers,res_id:0
 msgid "Resource ID"
@@ -8409,10 +8400,9 @@ msgid "Update Module List"
 msgstr "Обновить список модулей"
 
 #. module: base
-#: code:addons/base/res/res_users.py:682
-#: code:addons/base/res/res_users.py:822
+#: code:addons/base/res/res_users.py:679
+#: code:addons/base/res/res_users.py:819
 #: selection:res.partner,type:0
-#: selection:res.partner.address,type:0
 #: view:res.users:0
 #, python-format
 msgid "Other"
@@ -8508,30 +8498,30 @@ msgid "Turkmenistan"
 msgstr "Туркменистан"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:607
+#: code:addons/base/ir/ir_actions.py:606
 #: code:addons/base/ir/ir_actions.py:702
 #: code:addons/base/ir/ir_actions.py:705
-#: code:addons/base/ir/ir_model.py:163
-#: code:addons/base/ir/ir_model.py:272
-#: code:addons/base/ir/ir_model.py:286
-#: code:addons/base/ir/ir_model.py:316
-#: code:addons/base/ir/ir_model.py:332
-#: code:addons/base/ir/ir_model.py:337
-#: code:addons/base/ir/ir_model.py:340
+#: code:addons/base/ir/ir_model.py:164
+#: code:addons/base/ir/ir_model.py:274
+#: code:addons/base/ir/ir_model.py:288
+#: code:addons/base/ir/ir_model.py:318
+#: code:addons/base/ir/ir_model.py:334
+#: code:addons/base/ir/ir_model.py:339
+#: code:addons/base/ir/ir_model.py:342
 #: code:addons/base/ir/ir_translation.py:341
-#: code:addons/base/module/module.py:298
-#: code:addons/base/module/module.py:341
-#: code:addons/base/module/module.py:345
-#: code:addons/base/module/module.py:351
-#: code:addons/base/module/module.py:472
-#: code:addons/base/module/module.py:498
-#: code:addons/base/module/module.py:513
-#: code:addons/base/module/module.py:609
+#: code:addons/base/module/module.py:320
+#: code:addons/base/module/module.py:362
+#: code:addons/base/module/module.py:366
+#: code:addons/base/module/module.py:372
+#: code:addons/base/module/module.py:500
+#: code:addons/base/module/module.py:526
+#: code:addons/base/module/module.py:540
+#: code:addons/base/module/module.py:645
 #: code:addons/base/res/res_currency.py:193
-#: code:addons/base/res/res_users.py:102
-#: code:addons/custom.py:550
-#: code:addons/orm.py:789
-#: code:addons/orm.py:3929
+#: code:addons/base/res/res_users.py:98
+#: code:addons/custom.py:555
+#: code:addons/orm.py:785
+#: code:addons/orm.py:3960
 #, python-format
 msgid "Error"
 msgstr "Ошибка"
@@ -8790,7 +8780,7 @@ msgstr ""
 "действие."
 
 #. module: base
-#: code:addons/base/ir/ir_ui_menu.py:317
+#: code:addons/base/ir/ir_ui_menu.py:354
 #, python-format
 msgid "Error ! You can not create recursive Menu."
 msgstr "Ошибка ! Нельзя создать зацикленные меню."
@@ -8825,11 +8815,10 @@ msgid "El Salvador"
 msgstr "Эль Сальвадор"
 
 #. module: base
-#: code:addons/base/res/res_company.py:147
+#: code:addons/base/res/res_company.py:161
 #: field:res.bank,phone:0
 #: field:res.company,phone:0
 #: field:res.partner,phone:0
-#: field:res.partner.address,phone:0
 #, python-format
 msgid "Phone"
 msgstr "Телефон"
@@ -8843,7 +8832,6 @@ msgstr "Телефон"
 #: field:res.currency,active:0
 #: field:res.lang,active:0
 #: field:res.partner,active:0
-#: field:res.partner.address,active:0
 #: field:res.partner.category,active:0
 #: field:res.request,active:0
 #: field:res.users,active:0
@@ -9086,8 +9074,6 @@ msgstr "Сегментация"
 #: field:res.currency,company_id:0
 #: view:res.partner:0
 #: field:res.partner,company_id:0
-#: field:res.partner.address,company_id:0
-#: field:res.partner.address,parent_id:0
 #: field:res.partner.bank,company_id:0
 #: view:res.users:0
 #: field:res.users,company_id:0
@@ -9153,8 +9139,8 @@ msgid "Azerbaijan"
 msgstr "Азербайджан"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:477
-#: code:addons/base/res/res_partner.py:436
+#: code:addons/base/ir/ir_mail_server.py:476
+#: code:addons/base/res/res_partner.py:439
 #, python-format
 msgid "Warning"
 msgstr "Внимание"
@@ -9257,7 +9243,6 @@ msgstr ""
 #: field:res.country.state,country_id:0
 #: field:res.partner,country:0
 #: field:res.partner,country_id:0
-#: field:res.partner.address,country_id:0
 #: field:res.partner.bank,country_id:0
 msgid "Country"
 msgstr "Страна"
@@ -9325,7 +9310,7 @@ msgid "Portrait"
 msgstr "Книжная"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:410
+#: code:addons/base/ir/ir_model.py:412
 #, python-format
 msgid "Can only rename one column at a time!"
 msgstr "Можно переименовать только одну колонку за один раз !"
@@ -9475,7 +9460,7 @@ msgid "Seychelles"
 msgstr "Сейшельские острова"
 
 #. module: base
-#: code:addons/base/res/res_company.py:159
+#: code:addons/base/res/res_company.py:173
 #: model:ir.actions.act_window,name:base.action_res_partner_bank_account_form
 #: model:ir.model,name:base.model_res_partner_bank
 #: model:ir.ui.menu,name:base.menu_action_res_partner_bank_form
@@ -9507,7 +9492,7 @@ msgid "Account Owner"
 msgstr "Владелец счёта"
 
 #. module: base
-#: code:addons/base/res/res_users.py:174
+#: code:addons/base/res/res_users.py:170
 #, python-format
 msgid "Company Switch Warning"
 msgstr "Предупреждение о смене компании"
@@ -9530,7 +9515,6 @@ msgid "The next number of the sequence will be incremented by this number"
 msgstr "Следующее число в нумерации будет увеличено на это число"
 
 #. module: base
-#: field:res.partner.address,function:0
 #: selection:workflow.activity,kind:0
 msgid "Function"
 msgstr "Функция"
@@ -9567,7 +9551,7 @@ msgid "Workflow Instances"
 msgstr "Последовательности действий"
 
 #. module: base
-#: code:addons/base/res/res_partner.py:524
+#: code:addons/base/res/res_partner.py:532
 #, python-format
 msgid "Partners: "
 msgstr "Контрагенты: "
@@ -9609,7 +9593,6 @@ msgstr "Имя для экспорта"
 
 #. module: base
 #: help:res.partner,type:0
-#: help:res.partner.address,type:0
 msgid ""
 "Used to select automatically the right address according to the context in "
 "sales and purchases documents."
