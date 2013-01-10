@@ -8,11 +8,7 @@
     </t>
     <t t-name="Linkedin.popup">
         <div>
-            <div class="oe_social_network_login">
-                <script type="in/Login"></script>
-                <img src="http://developer.linkedin.com/sites/default/files/js-signin.png" class="oe_error"/>
-            </div>
-            <h2>People</h2>
+            <h2 style="margin-top:-10px;">People</h2>
             <div class="oe_linkedin_pop_p"></div>
             <h2>Companies</h2>
             <div class="oe_linkedin_pop_c"></div>
@@ -36,6 +32,6 @@
         </div>
     </t>
     <t t-name="LinkedIn.loginInformation">
-        <span class="oe_linkedin_login">If "<b><t t-raw="firstName"/> <t t-raw="lastName"/></b>" is not your account on Linkedin, <a class="oe_linkedin_logout">please click here to logout this account on LinkedIn</a>.</span>
+        <div class="oe_linkedin_authentified">If "<b><t t-raw="firstName"/> <t t-raw="lastName"/></b>" is not your account on LinkedIn, <a class="oe_linkedin_logout">please click here to logout LinkedIn</a>.</div>
     </t>
 </templates>

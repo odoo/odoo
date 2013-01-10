@@ -49,3 +49,8 @@ class web_linkedin_settings(osv.osv_memory):
         key = self.browse(cr, uid, ids[0], context)["api_key"] or ""
         self.pool.get("ir.config_parameter").set_param(cr, uid, "web.linkedin.apikey", key)
 
+class web_linkedin_fields(osv.osv_memory):
+    _inherit = 'res.partner'
+    _columns = {
+        'linkedin_id': fields.char(string="LinkedIn ID", size=50),
+    }
