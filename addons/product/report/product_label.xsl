@@ -67,7 +67,7 @@
                         <para style="nospace"><xsl:value-of select="code"/></para>
                     </td>
                     <td>
-                        <para style="nospace" t="1"><xsl:value-of select="price"/> <xsl:value-of select="currency"/></para>
+                        <para style="nospace" t="1"><xsl:value-of select="price"/><xsl:text>  </xsl:text><xsl:value-of select="currency"/></para>
                     </td>
                 </tr>
                 <tr>
