@@ -45,6 +45,7 @@ class Multicorn(object):
         self.socket = None
         self.workers_http = {}
         self.workers_cron = {}
+        self.workers_longpolling = {}
         self.workers = {}
         self.generation = 0
         self.queue = []
@@ -140,6 +141,8 @@ class Multicorn(object):
             self.worker_spawn(WorkerHTTP, self.workers_http)
         while len(self.workers_cron) < config['max_cron_threads']:
             self.worker_spawn(WorkerCron, self.workers_cron)
+        while len(self.workers_longpolling) < 1:
+            self.worker_spawn(WorkerLongPolling, self.workers_longpolling)
 
     def sleep(self):
         try:
@@ -333,6 +336,21 @@ class WorkerHTTP(Worker):
     def start(self):
         Worker.start(self)
         self.server = WorkerBaseWSGIServer(self.multi.app)
+
+class WorkerLongPolling(Worker):
+    """ Long polling workers """
+    def start(self):
+        config.options["gevent"] = True
+        _logger.info('Using gevent mode')
+        import gevent.monkey
+        gevent.monkey.patch_all()
+        import gevent_psycopg2
+        gevent_psycopg2.monkey_patch()
+
+        Worker.start(self)
+        from gevent.wsgi import WSGIServer
+        httpd = WSGIServer(('0.0.0.0', 8072), self.multi.app)
+        httpd.serve_forever()
 
 class WorkerBaseWSGIServer(werkzeug.serving.BaseWSGIServer):
     """ werkzeug WSGI Server patched to allow using an external listen socket
