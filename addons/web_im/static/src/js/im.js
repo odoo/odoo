@@ -72,7 +72,7 @@ openerp.web_im = function(instance) {
                 var me = self.users_cache[instance.session.uid];
                 delete self.users_cache[instance.session.uid];
                 self.c_manager.set_me(me);
-                return new instance.web.Model("im.message").call("activated", [], {context: new instance.web.CompoundContext()}).then(function(activated) {
+                self.rpc("/im/activated", {}).then(function(activated) {
                     if (activated) {
                         self.activated = true;
                         self.poll();

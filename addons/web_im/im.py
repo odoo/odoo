@@ -138,6 +138,10 @@ class ImportController(openerp.addons.web.http.Controller):
             num += 1
             Watcher.get_watcher(res["dbname"]).stop(req.session._uid, users_watch or [], POLL_TIMER)
 
+    @openerp.addons.web.http.jsonrequest
+    def activated(self, req):
+        return not not openerp.tools.config.options["gevent"]
+
 
 class im_message(osv.osv):
     _name = 'im.message'
@@ -182,9 +186,6 @@ class im_message(osv.osv):
         cr.execute("notify im_channel, %s", [json.dumps({'type': 'message', 'receiver': to_user_id})])
         cr.commit()
         return False
-
-    def activated(self, cr, uid, context=None):
-        return not not openerp.tools.config.options["gevent"]
 
 class im_user(osv.osv):
     _name = "im.user"
