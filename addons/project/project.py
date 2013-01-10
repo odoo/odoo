@@ -1166,6 +1166,11 @@ class task(base_stage, osv.osv):
     # Mail gateway
     # ---------------------------------------------------
 
+    def message_get_reply_to(self, cr, uid, ids, context=None):
+        """ Override to get the reply_to of the parent project. """
+        return [task.project_id.message_get_reply_to()[0] if task.project_id else False
+                    for task in self.browse(cr, uid, ids, context=context)]
+
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """ Override to updates the document according to the email. """
         if custom_values is None: custom_values = {}
@@ -1198,7 +1203,7 @@ class task(base_stage, osv.osv):
                     act = 'do_%s' % res.group(2).lower()
         if act:
             getattr(self,act)(cr, uid, ids, context=context)
-        return super(task,self).message_update(cr, uid, msg, update_vals=update_vals, context=context)
+        return super(task,self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
 
     def project_task_reevaluate(self, cr, uid, ids, context=None):
         if self.pool.get('res.users').has_group(cr, uid, 'project.group_time_work_estimation_tasks'):

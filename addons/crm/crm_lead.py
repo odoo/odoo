@@ -397,7 +397,8 @@ class crm_lead(base_stage, format_address, osv.osv):
             search_domain += [('|')] * len(section_ids)
             for section_id in section_ids:
                 search_domain.append(('section_ids', '=', section_id))
-        search_domain.append(('case_default', '=', True))
+        else:
+            search_domain.append(('case_default', '=', True))
         # AND with cases types
         search_domain.append(('type', 'in', types))
         # AND with the domain in parameter
@@ -423,15 +424,15 @@ class crm_lead(base_stage, format_address, osv.osv):
     def case_mark_lost(self, cr, uid, ids, context=None):
         """ Mark the case as lost: state=cancel and probability=0 """
         for lead in self.browse(cr, uid, ids):
-            stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, [('probability', '=', 0.0)], context=context)
+            stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, [('probability', '=', 0.0),('on_change','=',True)], context=context)
             if stage_id:
                 self.case_set(cr, uid, [lead.id], values_to_update={'probability': 0.0}, new_stage_id=stage_id, context=context)
         return True
 
     def case_mark_won(self, cr, uid, ids, context=None):
-        """ Mark the case as lost: state=done and probability=100 """
+        """ Mark the case as won: state=done and probability=100 """
         for lead in self.browse(cr, uid, ids):
-            stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, [('probability', '=', 100.0)], context=context)
+            stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, [('probability', '=', 100.0),('on_change','=',True)], context=context)
             if stage_id:
                 self.case_set(cr, uid, [lead.id], values_to_update={'probability': 100.0}, new_stage_id=stage_id, context=context)
         return True
@@ -677,29 +678,23 @@ class crm_lead(base_stage, format_address, osv.osv):
         contact_id = False
         if customer:
             contact_id = self.pool.get('res.partner').address_get(cr, uid, [customer.id])['default']
-
         if not section_id:
             section_id = lead.section_id and lead.section_id.id or False
-
-        if section_id:
-            stage_ids = crm_stage.search(cr, uid, [('sequence', '>=', 1), ('section_ids', '=', section_id), ('probability', '>', 0)])
-        else:
-            stage_ids = crm_stage.search(cr, uid, [('sequence', '>=', 1), ('probability', '>', 0)])
-        stage_id = stage_ids and stage_ids[0] or False
-
-        return {
+        val = {
             'planned_revenue': lead.planned_revenue,
             'probability': lead.probability,
             'name': lead.name,
             'partner_id': customer and customer.id or False,
             'user_id': (lead.user_id and lead.user_id.id),
             'type': 'opportunity',
-            'stage_id': stage_id or False,
             'date_action': fields.datetime.now(),
             'date_open': fields.datetime.now(),
             'email_from': customer and customer.email or lead.email_from,
             'phone': customer and customer.phone or lead.phone,
         }
+        if not lead.stage_id or lead.stage_id.type=='lead':
+            val['stage_id'] = self.stage_find(cr, uid, [lead], section_id, [('state', '=', 'draft'),('type', 'in', ('opportunity','both'))], context=context)
+        return val
 
     def convert_opportunity(self, cr, uid, ids, partner_id, user_ids=False, section_id=False, context=None):
         customer = False
@@ -965,6 +960,11 @@ class crm_lead(base_stage, format_address, osv.osv):
     # ----------------------------------------
     # Mail Gateway
     # ----------------------------------------
+
+    def message_get_reply_to(self, cr, uid, ids, context=None):
+        """ Override to get the reply_to of the parent project. """
+        return [lead.section_id.message_get_reply_to()[0] if lead.section_id else False
+                    for lead in self.browse(cr, uid, ids, context=context)]
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """ Overrides mail_thread message_new that is called by the mailgateway
