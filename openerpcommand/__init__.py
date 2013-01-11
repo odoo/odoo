@@ -17,9 +17,10 @@ from . import run_tests
 from . import scaffold
 from . import uninstall
 from . import update
+from . import web
 
 command_list_server = (conf, drop, initialize, model, module, read, run_tests,
-                       scaffold, uninstall, update, )
+                       scaffold, uninstall, update, web, )
 
 command_list_client = (Call, Open, Show, ConsumeNothing, ConsumeMemory,
                        LeakMemory, ConsumeCPU, Bench, BenchRead,
