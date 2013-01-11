@@ -257,6 +257,31 @@ openerp.web_im = function(instance) {
             this.conversations = [];
             this.users = {};
             this.on("change:right_offset", this, this.calc_positions);
+            this.set("window_focus", true);
+            this.set("waiting_messages", 0);
+            this.focus_hdl = _.bind(function() {
+                this.set("window_focus", true);
+            }, this);
+            $(window).bind("focus", this.focus_hdl);
+            this.blur_hdl = _.bind(function() {
+                this.set("window_focus", false);
+            }, this);
+            $(window).bind("blur", this.blur_hdl);
+            this.on("change:window_focus", this, this.window_focus_change);
+            this.window_focus_change();
+            this.on("change:waiting_messages", this, this.messages_change);
+            this.messages_change();
+        },
+        window_focus_change: function() {
+            if (this.get("window_focus")) {
+                this.set("waiting_messages", 0);
+            }
+        },
+        messages_change: function() {
+            if (! instance.webclient.set_title_part)
+                return;
+            instance.webclient.set_title_part("im_messages", this.get("waiting_messages") === 0 ? undefined :
+                _.str.sprintf(_t("%d Messages"), this.get("waiting_messages")));
         },
         set_me: function(me) {
             this.me = me;
@@ -278,6 +303,9 @@ openerp.web_im = function(instance) {
             return conv;
         },
         received_message: function(message, user) {
+            if (! this.get("window_focus")) {
+                this.set("waiting_messages", this.get("waiting_messages") + 1);
+            }
             var conv = this.activate_user(user);
             conv.received_message(message);
         },
@@ -287,6 +315,11 @@ openerp.web_im = function(instance) {
                 this.conversations[i].set("right_position", current);
                 current += this.conversations[i].$el.outerWidth(true);
             }, this);
+        },
+        destroy: function() {
+            $(window).unbind("blur", this.blur_hdl);
+            $(window).unbind("focus", this.focus_hdl);
+            this._super();
         },
     });
 
