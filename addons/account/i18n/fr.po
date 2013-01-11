@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-01-09 16:58+0000\n"
+"PO-Revision-Date: 2013-01-10 10:18+0000\n"
 "Last-Translator: Numérigraphe <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-10 05:35+0000\n"
+"X-Launchpad-Export-Date: 2013-01-11 05:21+0000\n"
 "X-Generator: Launchpad (build 16412)\n"
 
 #. module: account
@@ -2502,7 +2502,7 @@ msgstr ""
 "dans OpenERP : \"vue\" ne peut pas avoir d'écritures, \"consolidation\" sont "
 "des comptes qui peuvent avoir des comptes enfants pour les consolidations "
 "multi-sociétés, \"à payer/à recevoir\" sont des comptes de partenaires (pour "
-"les calculs de débit / crédit), \"fermé\" pour les comptes dépréciés."
+"les calculs de débit / crédit), \"fermé\" pour les comptes obsolètes."
 
 #. module: account
 #: view:account.chart.template:0
@@ -4041,6 +4041,8 @@ msgid ""
 "There is no fiscal year defined for this date.\n"
 "Please create one from the configuration of the accounting menu."
 msgstr ""
+"Aucun exercice défini à cette date.\n"
+"Veuillez en créer un dans le menu \"Paramétrage de la comptabilité\""
 
 #. module: account
 #: view:account.addtmpl.wizard:0
@@ -8485,8 +8487,8 @@ msgid ""
 "Select Fiscal Year which you want to remove entries for its End of year "
 "entries journal"
 msgstr ""
-"Sélectionnez l'exercice comptable pour lequel vous voulez effacer des "
-"écritures"
+"Sélectionnez l'exercice pour lequel vous voulez effacer les écritures de fin "
+"d'exercice"
 
 #. module: account
 #: field:account.tax.template,type_tax_use:0
@@ -8535,6 +8537,7 @@ msgstr "Balance analytique inversée -"
 msgid ""
 "Is this reconciliation produced by the opening of a new fiscal year ?."
 msgstr ""
+"Ce rapprochement est-il produit par l'ouverture d'un nouvel exercice ?"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -8608,7 +8611,7 @@ msgstr "Livre de coûts"
 #. module: account
 #: view:account.config.settings:0
 msgid "No Fiscal Year Defined for This Company"
-msgstr ""
+msgstr "Aucun exercice défini pour cette société"
 
 #. module: account
 #: view:account.invoice:0
@@ -9395,7 +9398,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,has_fiscal_year:0
 msgid "Company has a fiscal year"
-msgstr ""
+msgstr "La société a un exercice"
 
 #. module: account
 #: help:account.tax,child_depend:0
