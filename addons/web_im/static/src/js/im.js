@@ -271,8 +271,14 @@ openerp.web_im = function(instance) {
             this.window_focus_change();
             this.on("change:waiting_messages", this, this.messages_change);
             this.messages_change();
-            this.$ting = $(QWeb.render("Conversation.ting"));
-            this.$ting.appendTo($("body"));
+            this.create_ting();
+        },
+        create_ting: function() {
+            if (new Audio().canPlayType("audio/ogg; codecs=vorbis")) {
+                this.ting = new Audio(instance.webclient.session.origin + "/web_im/static/src/audio/Ting.ogg");
+            } else {
+                this.ting = new Audio(instance.webclient.session.origin + "/web_im/static/src/audio/Ting.mp3");
+            }
         },
         window_focus_change: function() {
             if (this.get("window_focus")) {
@@ -307,7 +313,8 @@ openerp.web_im = function(instance) {
         received_message: function(message, user) {
             if (! this.get("window_focus")) {
                 this.set("waiting_messages", this.get("waiting_messages") + 1);
-                this.$ting[0].play();
+                this.ting.play();
+                this.create_ting();
             }
             var conv = this.activate_user(user);
             conv.received_message(message);
@@ -320,7 +327,6 @@ openerp.web_im = function(instance) {
             }, this);
         },
         destroy: function() {
-            this.$ting.remove();
             $(window).unbind("blur", this.blur_hdl);
             $(window).unbind("focus", this.focus_hdl);
             this._super();
