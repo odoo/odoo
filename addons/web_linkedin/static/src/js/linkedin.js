@@ -23,9 +23,6 @@ openerp.web_linkedin = function(instance) {
             var self = this;
             return this.test_api_key().then(function() {
                 if (self.linkedin_added) {
-                    if (IN.User.isAuthorized()) {
-                        self.auth_def.resolve();
-                    }
                     return self.linkedin_def.resolve();
                 }
 
@@ -40,7 +37,7 @@ openerp.web_linkedin = function(instance) {
                 var tag = document.createElement('script');
                 tag.type = 'text/javascript';
                 tag.src = "http://platform.linkedin.com/in.js";
-                tag.innerHTML = 'api_key : ' + self.api_key + '\nauthorize : true\nscope: r_network r_contactinfo r_fullprofile r_emailaddress';
+                tag.innerHTML = 'api_key : ' + self.api_key + '\nauthorize : true\nscope: r_network r_basicprofile'; // r_contactinfo r_fullprofile r_emailaddress';
                 document.getElementsByTagName('head')[0].appendChild(tag);
                 self.linkedin_added = true;
                 $(tag).load(function() {
@@ -49,7 +46,7 @@ openerp.web_linkedin = function(instance) {
                     });
                     IN.Event.on(IN, "logout", function() {
                         self.auth_def.reject();
-                        //self.auth_def = $.Deferred();
+                        self.auth_def = $.Deferred();
                     });
                 });
                 return self.linkedin_def.promise();
@@ -70,8 +67,13 @@ openerp.web_linkedin = function(instance) {
             });
         },
         test_authentication: function() {
+            var self = this;
            this.linkedin_def.done(function () {
-                IN.User.authorize();
+                if (IN.User.isAuthorized()) {
+                    self.auth_def.resolve();
+                } else {
+                    IN.User.authorize();
+                }
             });
             return this.auth_def.promise();
         },
@@ -91,23 +93,18 @@ openerp.web_linkedin = function(instance) {
             this.$(".oe_linkedin_input").append($in);
             this.$(".oe_linkedin_img").click(_.bind(this.search_linkedin, this));
             this._super();
-
         },
         search_linkedin: function() {
             var self = this;
             this.display_dm.add(instance.web_linkedin.tester.test_linkedin()).done(function() {
                 var text = (self.get("value") || "").replace(/^\s+|\s+$/g, "").replace(/\s+/g, " ");
-                if (text !== "") {
-                    instance.web_linkedin.tester.test_authentication().done(function() {
-                        var pop = new instance.web_linkedin.LinkedinPopup(self, self.get("value"));
-                        pop.open();
-                        pop.on("selected", this, function(entity) {
-                            self.selected_entity(entity);
-                        });
+                instance.web_linkedin.tester.test_authentication().done(function() {
+                    var pop = new instance.web_linkedin.LinkedinSearchPopup(self, text);
+                    pop.open();
+                    pop.on("selected", this, function(entity) {
+                        self.selected_entity(entity);
                     });
-                } else {
-                    self.focus();
-                }
+                });
             }).fail(_.bind(this.linkedin_disabled, this));
         },
         linkedin_disabled: function() {
@@ -200,16 +197,9 @@ openerp.web_linkedin = function(instance) {
                     }
                 }
 
-                to_change.linkedinUrl = entity.publicProfileUrl;
-                to_change.linkedinId = entity.id;
-                to_change.linkedinId = entity.id;
-                var country_code = (entity.location && entity.location.country && entity.location.country.code) || false;
-                if (country_code) {
-                    defs.push(new instance.web.DataSetSearch(this, 'res.country').call("search", [[["code", "=", country_code.toUpperCase()]]]).then(function (data) {
-                        to_change.country_id = data[0] || false;
-                    }));
-                }
-                to_change.comment = entity.summary;
+                to_change.linkedinUrl = entity.publicProfileUrl || false;
+                to_change.linkedinId = entity.id || false;
+                to_change.comment = entity.summary || false;
                 
             }
             return $.when.apply($, defs).then(function() {
@@ -222,31 +212,49 @@ openerp.web_linkedin = function(instance) {
     
     var commonPeopleFields = ["id", "picture-url", "public-profile-url",
                             "formatted-name", "location", "phone-numbers", "im-accounts",
-                            "main-address", "headline", "positions", "summary", "specialties",
-                            "email-address",
-                            "languages", "skills", "certifications", "educations", "three-current-positions", "three-past-positions",
-                            "date-of-birth", "twitter-accounts"];
+                            "main-address", "headline", "positions", "summary", "specialties"];
     
-    instance.web_linkedin.LinkedinPopup = instance.web.Dialog.extend({
+    instance.web_linkedin.LinkedinSearchPopup = instance.web.Dialog.extend({
         template: "Linkedin.popup",
         init: function(parent, text) {
             var self = this;
             if (!IN.User.isAuthorized()) {
+                this.$buttons = $("<div/>");
                 this.destroy();
             }
-            this._super(parent, { 'title':_t("LinkedIn search")});
+            this._super(parent, { 'title':_t("LinkedIn search") + '<div class="oe_linkedin_advanced_search">'+_t("Search by LinkedIn by url or keywords") +' : <input name="url"/> <button>'+_t("Search") +'</button></div>'});
             this.text = text;
             this.limit = 5;
         },
         start: function() {
             this._super();
+            this.bind_event();
+            this.display_linkedin_account();
+            this.do_search();
+        },
+        bind_event: function() {
             var self = this;
-            self.$el.parent().on("click", ".oe_linkedin_logout", function () {
+            this.$el.parent().on("click", ".oe_linkedin_logout", function () {
                 IN.User.logout();
                 self.destroy();
             });
-            this.display_linkedin_account();
-            this.do_search();
+            this.$search = this.$el.parent().find(".oe_linkedin_advanced_search" );
+            this.$url = this.$search.find("input[name='url']" );
+            this.$button = this.$search.find("button");
+
+            this.$button.on("click", function (e) {
+                e.stopPropagation();
+                self.do_search(self.$url.val() || '');
+            });
+            this.$url
+                .on("click mousedown mouseup", function (e) {
+                    e.stopPropagation();
+                }).on("keydown", function (e) {
+                    if(e.keyCode == 13) {
+                        $(e.target).blur();
+                        self.$button.click();
+                    }
+                });
         },
         display_linkedin_account: function() {
             var self = this;
@@ -256,47 +264,77 @@ openerp.web_linkedin = function(instance) {
                     $(QWeb.render('LinkedIn.loginInformation', result.values[0])).appendTo(self.$el.parent().find(".ui-dialog-buttonpane"));   
             })
         },
-        do_search: function() {
+        do_search: function(url) {
+            if (!IN.User || !IN.User.isAuthorized()) {
+                this.destroy();
+            }
             var self = this;
             var deferrers = [];
-            var deferrer = $.Deferred();
-            deferrers.push(deferrer);
+            this.$(".oe_linkedin_pop_c, .oe_linkedin_pop_p").empty();
+
+            if (url && url.length) {
+                var deferrer_c = $.Deferred();
+                var deferrer_p = $.Deferred();
+                deferrers.push(deferrer_c, deferrer_p);
+
+                var url = url.replace(/\/+$/, '');
+                var uid = url.replace(/(.*linkedin\.com\/[a-z]+\/)|(^.*\/company\/)|(\&.*$)/gi, '');
+
+                IN.API.Raw(_.str.sprintf(
+                        "companies/universal-name=%s:(id,name,logo-url,description,industry,website-url,locations)",
+                        encodeURIComponent(uid.toLowerCase()))).result(function (result) {
+                    self.do_result_companies({'companies': {'values': [result]}});
+                    deferrer_c.resolve();
+                }).error(function (error) {
+                    self.do_result_companies({});
+                    deferrer_c.resolve();
+                });
+
+                var url_public = "http://www.linkedin.com/pub/"+uid;
+                IN.API.Profile("url="+ encodeURI(url_public).replace(/%2F/g, '/'))
+                    .fields(commonPeopleFields)
+                    .result(function(result) {
+                       console.log("public", result);
+                        self.do_result_people({'people': result});
+                        deferrer_p.resolve();
+                }).error(function (error) {
+                    self.do_warn( _t("LinkedIn error"), _t("LinkedIn is temporary down for the searches by url."));
+                    self.do_result_people({});
+                    deferrer_p.resolve();
+                });
+
+                this.text = url;
+            }
+
+            var deferrer_c_k = $.Deferred();
+            var deferrer_p_k = $.Deferred();
+            deferrers.push(deferrer_c_k, deferrer_p_k);
             IN.API.Raw(_.str.sprintf(
                     "company-search:(companies:" +
                     "(id,name,logo-url,description,industry,website-url,locations))?keywords=%s&count=%d",
                     encodeURI(this.text), this.limit)).result(function (result) {
                 self.do_result_companies(result);
-                deferrer.resolve();
+                deferrer_c_k.resolve();
             });
-            var deferrer = $.Deferred();
-            deferrers.push(deferrer);
-            IN.API.PeopleSearch().fields(commonPeopleFields).
-                params({"keywords": this.text, "facet": ["network,F,S,A,O"], "count": this.limit}).result(function(result) {
+            IN.API.PeopleSearch().fields(commonPeopleFields).params({"keywords": this.text, "count": this.limit}).result(function(result) {
                 self.do_result_people(result);
-                deferrer.resolve();
+                deferrer_p_k.resolve();
             });
-            // new search for pass the restriction on LinkedIn (2012: search only on first and second level if it's not the last-name and first-name search)
-            var deferrer = $.Deferred();
-            deferrers.push(deferrer);
-            IN.API.PeopleSearch().fields(commonPeopleFields).
-                params({"first-name": this.text.split(' ')[0], "last-name": this.text.split(' ').slice(1).join(' '), "facet": ["network,F,S,A,O"], "count": this.limit}).result(function(result) {
-                self.do_result_people(result);
-                deferrer.resolve();
-            });
+
             return $.when.apply($, deferrers);
         },
         do_result_companies: function(companies) {
-            var lst = companies.companies.values || [];
+            var lst = (companies.companies || {}).values || [];
             lst = _.first(lst, this.limit);
             lst = _.map(lst, function(el) {
                 el.__type = "company";
                 return el;
             });
-            console.debug("Linkedin companies found:", companies.companies._total, '=>', lst.length, lst);
+            console.debug("Linkedin companies found:", (companies.companies || {})._total, '=>', lst.length, lst);
             return this.display_result(lst, this.$(".oe_linkedin_pop_c"));
         },
         do_result_people: function(people) {
-            var plst = people.people.values || [];
+            var plst = (people.people || {}).values || [];
             plst = _.first(plst, this.limit);
             plst = _.map(plst, function(el) {
                 el.__type = "people";
@@ -344,6 +382,7 @@ openerp.web_linkedin = function(instance) {
             if (this.data.__type === "company") {
                 this.$("h3").text(this.data.name);
                 self.$("img").attr("src", this.data.logoUrl);
+                self.$(".oe_linkedin_entity_headline").text(this.data.industry);
             } else { // people
                 this.$("h3").text(this.data.formattedName);
                 self.$("img").attr("src", this.data.pictureUrl);
