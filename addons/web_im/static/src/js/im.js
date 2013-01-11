@@ -274,11 +274,9 @@ openerp.web_im = function(instance) {
             this.create_ting();
         },
         create_ting: function() {
-            if (new Audio().canPlayType("audio/ogg; codecs=vorbis")) {
-                this.ting = new Audio(instance.webclient.session.origin + "/web_im/static/src/audio/Ting.ogg");
-            } else {
-                this.ting = new Audio(instance.webclient.session.origin + "/web_im/static/src/audio/Ting.mp3");
-            }
+            var kitten = jQuery.param !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined;
+            this.ting = new Audio(instance.webclient.session.origin + "/web_im/static/src/audio/" + (kitten ? "purr" : "Ting") +
+                (new Audio().canPlayType("audio/ogg; codecs=vorbis") ? ".ogg" : ".mp3"));
         },
         window_focus_change: function() {
             if (this.get("window_focus")) {
