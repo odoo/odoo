@@ -37,7 +37,17 @@ def run(args):
         threading.Thread(target=target, args=arg).start()
         openerp.cli.server.quit_on_signals()
     else:
-        print "The --gevent option is not yet implemented."
+        config.options["gevent"] = True
+        import gevent.monkey
+        import gevent.wsgi
+        import gevent_psycopg2
+        gevent.monkey.patch_all()
+        gevent_psycopg2.monkey_patch()
+
+        app = openerp.service.wsgi_server.application
+        server = gevent.wsgi.WSGIServer((args.interface, int(args.port)), app)
+        server.serve_forever()
+        # TODO quit_on_signals
 
 def add_parser(subparsers):
     parser = subparsers.add_parser('web',
