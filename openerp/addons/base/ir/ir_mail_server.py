@@ -422,12 +422,6 @@ class ir_mail_server(osv.osv):
             mail_server_ids = self.search(cr, uid, [], order='sequence', limit=1)
             if mail_server_ids:
                 mail_server = self.browse(cr, uid, mail_server_ids[0])
-        else:
-            # we were passed an explicit smtp_server or nothing at all
-            smtp_server = smtp_server or tools.config.get('smtp_server')
-            smtp_port = tools.config.get('smtp_port', 25) if smtp_port is None else smtp_port
-            smtp_user = smtp_user or tools.config.get('smtp_user')
-            smtp_password = smtp_password or tools.config.get('smtp_password')
 
         if mail_server:
             smtp_server = mail_server.smtp_host
@@ -436,6 +430,13 @@ class ir_mail_server(osv.osv):
             smtp_port = mail_server.smtp_port
             smtp_encryption = mail_server.smtp_encryption
             smtp_debug = smtp_debug or mail_server.smtp_debug
+        else:
+            # we were passed an explicit smtp_server or nothing at all
+            smtp_server = smtp_server or tools.config.get('smtp_server')
+            smtp_port = tools.config.get('smtp_port', 25) if smtp_port is None else smtp_port
+            smtp_user = smtp_user or tools.config.get('smtp_user')
+            smtp_password = smtp_password or tools.config.get('smtp_password')
+
 
         if not smtp_server:
             raise osv.except_osv(
