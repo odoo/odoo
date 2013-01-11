@@ -335,6 +335,7 @@ openerp.web_im = function(instance) {
         },
         received_message: function(message) {
             this._add_bubble(this.user, message.message, message.date);
+            this.$("audio")[0].play();
         },
         send_message: function(e) {
             if(e && e.which !== 13) {

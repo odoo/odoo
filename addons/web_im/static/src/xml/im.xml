@@ -43,6 +43,10 @@
             <div class="oe_im_chatview_footer">
                 <input class="oe_im_chatview_input" t-att-placeholder="_t('Say something...')" />
             </div>
+            <audio>
+                <source t-att-src="_s + '/web_im/static/src/audio/Ting.ogg'" />
+                <source t-att-src="_s + '/web_im/static/src/audio/Ting.mp3'" />
+            </audio>
         </div>
     </t>
     <t t-name="Conversation.bubble">
