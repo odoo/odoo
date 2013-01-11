@@ -125,7 +125,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     return self.fetch('res.partner', ['name','ean13'], [['ean13', '!=', false]]);
                 }).then(function(partners){
                     self.set('partner_list',partners);
-                    console.log('Loaded partners:',partners);
 
                     return self.fetch('account.tax', ['amount', 'price_include', 'type']);
                 }).then(function(taxes){
@@ -242,7 +241,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
         // saves the order locally and try to send it to the backend. 'record' is a bizzarely defined JSON version of the Order
         push_order: function(record) {
-            console.log('PUSHING NEW ORDER:',record);
             this.db.add_order(record);
             this.flush();
         },
@@ -259,7 +257,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         // it has been confirmed that they have been sent correctly.
         flush: function() {
             //TODO make the mutex work 
-            console.log('FLUSH');
             //this makes sure only one _int_flush is called at the same time
             /*
             return this.flush_mutex.exec(_.bind(function() {
@@ -275,7 +272,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             var self = this;
             var orders = this.db.get_orders();
             self.set('nbr_pending_operations',orders.length);
-            console.log('TRYING TO FLUSH ORDER:',index,'Of',orders.length);
 
             var order  = orders[index];
             if(!order){
@@ -291,7 +287,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 })
                 .done(function(){
                     //remove from db if success
-                    console.log('Order successfully sent');
                     self.db.remove_order(order.id);
                     self._flush(index);
                 });
