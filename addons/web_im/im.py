@@ -122,7 +122,7 @@ if openerp.tools.config.options["gevent"]:
 
 
 class ImportController(openerp.addons.web.http.Controller):
-    _cp_path = '/im'
+    _cp_path = '/longpolling/im'
 
     @openerp.addons.web.http.jsonrequest
     def poll(self, req, last=None, users_watch=None):

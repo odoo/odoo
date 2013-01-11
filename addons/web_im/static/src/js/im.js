@@ -72,7 +72,7 @@ openerp.web_im = function(instance) {
                 var me = self.users_cache[instance.session.uid];
                 delete self.users_cache[instance.session.uid];
                 self.c_manager.set_me(me);
-                self.rpc("/im/activated", {}).then(function(activated) {
+                self.rpc("/longpolling/im/activated", {}).then(function(activated) {
                     if (activated) {
                         self.activated = true;
                         self.poll();
@@ -174,7 +174,7 @@ openerp.web_im = function(instance) {
             var user_ids = _.map(this.users_cache, function(el) {
                 return el.get("id");
             });
-            this.rpc("/im/poll", {
+            this.rpc("/longpolling/im/poll", {
                 last: this.last,
                 users_watch: user_ids,
                 context: instance.web.pyeval.eval('context', {}),
