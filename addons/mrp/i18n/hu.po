@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-31 01:16+0000\n"
+"PO-Revision-Date: 2013-01-05 22:54+0000\n"
 "Last-Translator: krnkris <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-01 04:46+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-01-07 04:43+0000\n"
+"X-Generator: Launchpad (build 16402)\n"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -56,7 +56,7 @@ msgstr "Munkaállomások használata"
 #. module: mrp
 #: view:mrp.routing.workcenter:0
 msgid "Routing Work Centers"
-msgstr "Eljárás munkaállomásai"
+msgstr "Munkaállomások irányítása"
 
 #. module: mrp
 #: field:mrp.production.workcenter.line,cycle:0
@@ -111,7 +111,7 @@ msgstr "Raktározható és felhasználható termékekhez"
 #: help:mrp.production,message_unread:0
 #: help:mrp.production.workcenter.line,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "Ha be van jelölve akkor az új üzenetek felhívják a figyelmedet"
+msgstr "Ha be van jelölve akkor figyelje az új üzeneteket"
 
 #. module: mrp
 #: help:mrp.routing.workcenter,cycle_nbr:0
@@ -209,7 +209,7 @@ msgstr "Vásárolt termékhez"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
 msgid "Order Planning"
-msgstr ""
+msgstr "Megrendelés tervezése"
 
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_operations:0
@@ -301,6 +301,8 @@ msgid ""
 "The selection of the right Bill of Material to use will depend on the "
 "properties specified on the sales order and the Bill of Material."
 msgstr ""
+"A megfelelő darabjegyzék kiválasztása függ a vevői megrendelésekben és a "
+"darabjegyzékben megadott tulajdonságoktól."
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -309,6 +311,9 @@ msgid ""
 "                                will contain the raw materials, instead of "
 "the finished product."
 msgstr ""
+"Ha ehhez a termékhez vevői megrendelést dolgoz fel, a szállítási megbízás\n"
+"                                az alapanyagokat fogja tartalmazni, az "
+"elkészült végtermék helyett."
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -383,6 +388,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kattintson gyártási rendelés létrehozáshoz. \n"
+"              </p><p>\n"
+"                Egy gyártási rendelés, a darabjegyzékek alapján, "
+"alapanyagokat\n"
+"                fog felhasználni és végtermékeket fog létrehozni.\n"
+"              </p><p>\n"
+"                Gyártási megrendelések általában automatikusan lesznek "
+"felajánlva\n"
+"                a vevői igények vagy automatikus szabályok, mint a minimum "
+"raktárkészlet \n"
+"                szabály alapján.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: sql_constraint:mrp.production:0
@@ -510,6 +529,23 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kattintson új tulajdonság létrehozásához.\n"
+"              </p><p>\n"
+"                Az OpenERP-ben a tulajdonságok lehetővé teszik a termék "
+"gyártáshoz a \n"
+"                megfelelő darabjegyzék kiválasztását a ha ugyanazt a "
+"terméket \n"
+"                különböző módon is le lehet gyártani.  Mindegyik "
+"darabjegyzékhez\n"
+"                hozzárendelhet különböző tulajdonságokat.  Ha egy kereskedő\n"
+"                létrehoz egy vevői megrendelést, akkor ahhoz hozzárendelhet "
+"több\n"
+"                tulajdonságot és OpenERP automatikusan ki fogja választani "
+"az \n"
+"                igényeknek megfelelő darabjegyzékeket.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: view:mrp.production:0
@@ -637,6 +673,8 @@ msgstr "Gyártás keresése"
 msgid ""
 "Gives the sequence order when displaying a list of routing Work Centers."
 msgstr ""
+"Megrendelés sorrendet ad, ha a munkaállomások irányításainak listáját "
+"mutatja."
 
 #. module: mrp
 #: field:mrp.bom,child_complete_ids:0
@@ -773,6 +811,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kattintson darabjegyzék összetevők hozzáadásához.\n"
+"              </p><p>\n"
+"                A darabjegyzék összetevők lehetnek összetevők és mellék-"
+"termékek\n"
+"                a mester darabjegyzékek létrehozásának használatához.  "
+"Használja ezt a menüt,\n"
+"                hogy melyik darabjegyzékben található egy konkrét "
+"részegység.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: constraint:mrp.bom:0
@@ -800,6 +849,12 @@ msgid ""
 "                    * Product Attributes.\n"
 "                This installs the module product_manufacturer."
 msgstr ""
+"Ez lehetővé teszi egy termékre a következők meghatározását:\n"
+"                    * Gyártó\n"
+"                    * Gyártói termék név\n"
+"                    * Gyártói termék kód\n"
+"                    * Termék tulajdonságok.\n"
+"                Ez a product_manufacturer modult telepíti."
 
 #. module: mrp
 #: view:mrp.product_price:0
@@ -827,6 +882,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kattintson munka állomás hozzáadásához.\n"
+"              </p><p>\n"
+"                Munka állomás lehetővé teszi a gyártási egységek "
+"létrehozását és\n"
+"                szervezését. Ezek munkavállalókat és/vagy gépeket "
+"tartalmaznak, melyek\n"
+"                mint feladathoz hozzárendelt egységek szerepelnek, valamint "
+"mint \n"
+"                kapacitás és tervezett előrejelzés.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_minimumstockrule0
@@ -861,7 +928,7 @@ msgstr "A 0,9-es érték 10%-os veszteséget jelent a gyártási folyamatban."
 #: code:addons/mrp/mrp.py:765
 #, python-format
 msgid "Warning!"
-msgstr "Vigyázat!"
+msgstr "Figyelem!"
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -1069,7 +1136,7 @@ msgstr "Teljes költség %s %s"
 #: model:process.node,name:mrp.process_node_stockproduct1
 #: model:process.process,name:mrp.process_process_stockableproductprocess0
 msgid "Stockable Product"
-msgstr "Raktározható termék"
+msgstr "Készletezhető termék"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:130
@@ -1555,6 +1622,11 @@ msgid ""
 "are attached to bills of materials\n"
 "                that will define the required raw materials."
 msgstr ""
+"Az irányítás lehetővé teszi a gyártás végrehajtás létrehozását és "
+"vezérlését, melyet nyomon kell követni\n"
+"                a munkaállomásokon keresztül, ha egy terméket szeretnénk "
+"létrehozni. Egy olyan darabjegyzékhez lesz kapcsolva,\n"
+"               mely meghatározza az alapanyag igényeket."
 
 #. module: mrp
 #: view:report.workcenter.load:0
@@ -1600,7 +1672,7 @@ msgstr "Kezeli az alapanyagok beszerzési rendeléseit."
 #. module: mrp
 #: field:mrp.production.product.line,product_uos_qty:0
 msgid "Product UOS Quantity"
-msgstr ""
+msgstr "Termék UOS mennyiség"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_general_account_id:0
@@ -1684,6 +1756,24 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kattintson a tulajdonság csoportok létrehozásához.\n"
+"              </p><p>\n"
+"                Meghatároz specifikus tulajdonság csoportokat, melyeket "
+"hozzárendelheti az\n"
+"                darabjegyzékekhez és vevői megrendelésekhez. A tulajdonságok "
+"lehetővé teszik az \n"
+"                OpenERP részére a megfelelő darabjegyzék automatikus "
+"kiválasztását\n"
+"                a kereskedő által a vevői megrendelésen kiválasztott "
+"tulajdonság alapján.\n"
+"              </p><p>\n"
+"                Például, a \"Garancia\" csoportban, két tulajdonság\n"
+"                van: 1 év garancia, 3 év garancia. A vevői megrendelésen\n"
+"                kiválasztott tulajdonságtól függően, OpenERP ütemezni\n"
+"                fogja a termelést a megfelelő darabjegyzékeket használva.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: field:mrp.workcenter,capacity_per_cycle:0
@@ -1971,7 +2061,7 @@ msgstr "Anyagjegyzék struktúra"
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_jit:0
 msgid "Generate procurement in real time"
-msgstr ""
+msgstr "Valós idejű beszerzés létrehozása"
 
 #. module: mrp
 #: field:mrp.bom,date_stop:0
@@ -2141,6 +2231,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kattintson darabjegyzék létrehozásához. \n"
+"              </p><p>\n"
+"                Darabjegyzék lehetővé teszi a végtermék nyers alapanyag "
+"lista \n"
+"                igény meghatározását; egy gyártási megrendelésen vagy\n"
+"                termékek összeállításán keresztül.\n"
+"              </p><p>\n"
+"                OpenERP a darabjegyzékeket (BoM) automatikus gyártási "
+"megrendelés javaslatkészítésre\n"
+"                használja a beszerzési igények alapján.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: field:mrp.routing.workcenter,routing_id:0
@@ -2155,7 +2258,7 @@ msgstr "A beállításhoz szükséges idő órákban megadva."
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_repair:0
 msgid "Manage repairs of products "
-msgstr ""
+msgstr "Termékek javításának szervezése "
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_byproduct:0
@@ -2165,6 +2268,10 @@ msgid ""
 "                With this module: A + B + C -> D + E.\n"
 "                This installs the module mrp_byproduct."
 msgstr ""
+"Ki tudja alakítani a mellék-terméket a darabjegyzéken.\n"
+"                Ennek a modulnak a hiányában: A + B + C -> D.\n"
+"                Ezzel a modullal: A + B + C -> D + E.\n"
+"                Ez a mrp_byproduct modult telepíti."
 
 #. module: mrp
 #: field:procurement.order,bom_id:0
@@ -2187,7 +2294,7 @@ msgstr "Ellátás raktárból"
 #: code:addons/mrp/report/price.py:139
 #, python-format
 msgid "Cost Price per Unit of Measure"
-msgstr ""
+msgstr "Mértékegységenkénti költség ár"
 
 #. module: mrp
 #: field:report.mrp.inout,date:0
@@ -2204,7 +2311,7 @@ msgstr "Normál"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Production started late"
-msgstr ""
+msgstr "A termelés késve indított"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_routing0
@@ -2221,7 +2328,7 @@ msgstr "Költségszerkezet"
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_user
 msgid "User"
-msgstr ""
+msgstr "Felhasználó"
 
 #. module: mrp
 #: selection:mrp.product.produce,mode:0
@@ -2245,6 +2352,8 @@ msgid ""
 "You are going to produce total %s quantities of \"%s\".\n"
 "But you can only produce up to total %s quantities."
 msgstr ""
+"Elfogja készíteni a teljes %s mennyiséget ebből \"%s\".\n"
+"De csak ekkora %s teljes mennyiséget tud termelni."
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_stockproduct0
@@ -2254,7 +2363,7 @@ msgstr "A termék típusa raktározható vagy felhasználható."
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Production Started"
-msgstr ""
+msgstr "Termelés elindítva"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_procureproducts0
@@ -2280,7 +2389,7 @@ msgstr "Anyagjegyzékek"
 #: code:addons/mrp/mrp.py:610
 #, python-format
 msgid "Cannot find a bill of material for this product."
-msgstr ""
+msgstr "Nem található darabjegyzék ehhez a termékhez."
 
 #. module: mrp
 #: view:product.product:0
@@ -2289,6 +2398,9 @@ msgid ""
 "                        The delivery order will be ready once the production "
 "is done."
 msgstr ""
+"ehhez a termékhez hozzárendelt darabjegyzéket használ.\n"
+"                        A szállítási rendelés akkor lesz elérhető, ha a "
+"termék elkészült."
 
 #. module: mrp
 #: field:mrp.config.settings,module_stock_no_autopicking:0
@@ -2310,7 +2422,7 @@ msgstr "Gyártások"
 #: model:ir.model,name:mrp.model_stock_move_split
 #: view:mrp.production:0
 msgid "Split in Serial Numbers"
-msgstr ""
+msgstr "Széria számok közti szétosztás"
 
 #. module: mrp
 #: help:mrp.bom,product_uos:0
@@ -2370,7 +2482,7 @@ msgstr "Gyártás áttekintő"
 #: code:addons/mrp/wizard/change_production_qty.py:68
 #, python-format
 msgid "Active Id not found"
-msgstr ""
+msgstr "Aktív azonosító (ID) nem található"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_procureproducts0
@@ -2420,6 +2532,7 @@ msgstr ""
 #: field:mrp.config.settings,group_mrp_properties:0
 msgid "Allow several bill of materials per products using properties"
 msgstr ""
+"A tulajdonságok használatával termékenként több darabjegyzék engedélyezése"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_group_action
@@ -2457,7 +2570,7 @@ msgstr "A tisztítás ideje (órákban)."
 #: field:mrp.production,message_summary:0
 #: field:mrp.production.workcenter.line,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Összegzés"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_purchaseprocure0
@@ -2519,7 +2632,7 @@ msgstr "Megadja a sorrendet, amikor az anyagjegyzékek listáját kiállítjuk."
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_config_settings
 msgid "mrp.config.settings"
-msgstr ""
+msgstr "mrp.config.settings"
 
 #. module: mrp
 #: view:mrp.production:0
