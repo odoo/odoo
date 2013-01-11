@@ -1138,9 +1138,12 @@ instance.web.WebClient = instance.web.Client.extend({
         this._current_state = null;
         this.menu_dm = new instance.web.DropMisordered();
         this.action_mutex = new $.Mutex();
+        this.set('title_part', {"zopenerp": "OpenERP"});
     },
     start: function() {
         var self = this;
+        this.on("change:title_part", this, this._title_changed);
+        this._title_changed();
         return $.when(this._super()).then(function() {
             if (jQuery.param !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined) {
                 $("body").addClass("kitten-mode-activated");
@@ -1155,10 +1158,32 @@ instance.web.WebClient = instance.web.Client.extend({
             }
         });
     },
+    /**
+        Sets the first part of the title of the window, dedicated to the current action.
+    */
     set_title: function(title) {
-        title = _.str.clean(title);
-        var sep = _.isEmpty(title) ? '' : ' - ';
-        document.title = title + sep + 'OpenERP';
+        this.set_title_part("action", title);
+    },
+    /**
+        Sets an arbitrary part of the title of the window. Title parts are identified by strings. Each time
+        a title part is changed, all parts are gathered, ordered by alphabetical order and displayed in the
+        title of the window separated by '-'.
+    */
+    set_title_part: function(part, title) {
+        var tmp = _.clone(this.get("title_part"));
+        tmp[part] = title;
+        this.set("title_part", tmp);
+    },
+    _title_changed: function() {
+        var parts = _.sortBy(_.keys(this.get("title_part")), function(x) { return x; });
+        var tmp = "";
+        _.each(parts, function(part) {
+            var str = this.get("title_part")[part];
+            if (str) {
+                tmp = tmp ? tmp + " - " + str : str;
+            }
+        }, this);
+        document.title = tmp;
     },
     show_common: function() {
         var self = this;
