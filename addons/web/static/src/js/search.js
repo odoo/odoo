@@ -310,6 +310,13 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
      * @param {Boolean} [options.disable_custom_filters=false] do not load custom filters from ir.filters
      */
     init: function(parent, dataset, view_id, defaults, options) {
+        // Backward compatibility - Can be removed when forward porting
+        if (Object(options) !== options) {
+            options = {
+                hidden: !!options
+            };
+        }
+        // End of Backward compatibility
         this.options = _.defaults(options || {}, {
             hidden: false,
             disable_custom_filters: false,
