@@ -235,7 +235,6 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             self.$el.toggleClass('oe_kanban_grouped_by_m2o', self.grouped_by_m2o);
             var grouping = new instance.web.Model(self.dataset.model, context, domain).query().group_by(self.group_by);
             $.when(grouping).done(function(groups) {
-                self.do_clear_groups();
                 if (groups) {
                     self.do_process_groups(groups);
                 } else {
@@ -248,6 +247,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         var self = this;
         this.$el.removeClass('oe_kanban_ungrouped').addClass('oe_kanban_grouped');
         this.add_group_mutex.exec(function() {
+            self.do_clear_groups();
             self.dataset.ids = [];
             if (!groups.length) {
                 self.no_result();
@@ -275,6 +275,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.$el.removeClass('oe_kanban_grouped').addClass('oe_kanban_ungrouped');
         this.add_group_mutex.exec(function() {
             var def = $.Deferred();
+            self.do_clear_groups();
             self.dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit }).done(function(records) {
                 var kgroup = new instance.web_kanban.KanbanGroup(self, records, null, self.dataset);
                 self.do_add_groups([kgroup]).done(function() {
@@ -322,7 +323,6 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     on_groups_started: function() {
         var self = this;
-        this.compute_groups_width();
         if (this.group_by) {
             // Kanban cards drag'n'drop
             var $columns = this.$el.find('.oe_kanban_column .oe_kanban_column_cards');
@@ -419,27 +419,6 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 self.do_reload(); // TODO: use draggable + sortable in order to cancel the dragging when the rcp fails
             });
         }
-    },
-    compute_groups_width: function() {
-        var unfolded = 0;
-        var self = this;
-        _.each(this.groups, function(group) {
-            unfolded += group.state.folded ? 0 : 1;
-            group.$el.children(':first').css('width', '');
-        });
-        _.each(this.groups, function(group) {
-            if (!group.state.folded) {
-                if (182*unfolded>=self.$el.width()) {
-                    group.$el.children(':first').css('width', "170px");
-                } else if (262*unfolded<self.$el.width()) {
-                    group.$el.children(':first').css('width', "250px");
-                } else {
-            // -12 because of padding 6 between cards
-            // -1 because of the border of the latest dummy column
-                    group.$el.children(':first').css('width', Math.floor((self.$el.width()-1)/unfolded)-12 + 'px');
-                }
-            }
-        });
     },
 
     do_show: function() {
@@ -695,7 +674,6 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
     },
     do_action_toggle_fold: function() {
         this.do_toggle_fold();
-        this.view.compute_groups_width();
     },
     do_action_edit: function() {
         var self = this;

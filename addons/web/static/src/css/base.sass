@@ -42,7 +42,7 @@ $sheet-padding: 16px
     @include box-shadow(none)
 
 @mixin vertical-gradient($startColor: #555, $endColor: #333)
-    background-color: $startColor
+    background-color: mix($startColor, $endColor)
     background-image: -webkit-gradient(linear, left top, left bottom, from($startColor), to($endColor)) /* Saf4+, Chrome */
     background-image: -webkit-linear-gradient(top, $startColor, $endColor) /* Chrome 10+, Saf5.1+, iOS 5+ */
     background-image:    -moz-linear-gradient(top, $startColor, $endColor) /* FF3.6 */
@@ -1009,7 +1009,7 @@ $sheet-padding: 16px
     .oe_secondary_submenu
         padding: 2px 0 8px 0
         margin: 0
-        width: 100%
+        width: 220px
         display: inline-block
         li
             position: relative
@@ -1033,6 +1033,12 @@ $sheet-padding: 16px
                 text-shadow: 0 1px 1px rgba(0,0,0,0.2)
                 @include radius(4px)
                 @include box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0.2))
+        .oe_menu_text
+            white-space: nowrap
+            overflow: hidden
+            display: inline-block
+            text-overflow: ellipsis
+            max-width: 85%
         .oe_menu_counter
             float: right
             text-shadow: 0 1px 1px rgba(0,0,0,0.2)
@@ -1080,6 +1086,10 @@ $sheet-padding: 16px
             border-left: 4px solid transparent
             border-right: 4px solid transparent
             border-top: 4px solid #4c4c4c
+        .oe_secondary_submenu
+            margin-left: -20px
+        .oe_secondary_submenu li
+            margin-left: 20px
 
     // }}}
     // About openerp {{{
@@ -2271,8 +2281,8 @@ $sheet-padding: 16px
         th.oe_sortable div
             position: relative
         th.oe_sortable div:after
-            position: absolute
-            right: 6px
+            float: right
+            margin-right: 6px
             content: ""
             margin-top: 7px
             border-width: 0 4px 4px
@@ -2474,6 +2484,8 @@ div.ui-widget-overlay
 .openerp_ie
     .oe_form_field_boolean input
         background: #fff
+    .db_option_table .oe_form_field_selection
+        width: auto
     input[type='checkbox']
         border: none
         background: none
@@ -2535,6 +2547,8 @@ div.ui-widget-overlay
             line-height: 1.7em
     .oe_topbar
         filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#646060', endColorstr='#262626')
+    .ui-state-error, .ui-widget-content .ui-state-error, .ui-widget-header .ui-state-error
+        filter: progid:DXImageTransform.Microsoft.gradient(enabled=false)
     .oe_popup_form
         width: 99% !important
     .oe_form_label

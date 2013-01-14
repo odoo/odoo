@@ -42,6 +42,16 @@ instance.web.Notification =  instance.web.Widget.extend({
     }
 });
 
+instance.web.action_notify = function(element, action) {
+    element.do_notify(action.params.title, action.params.text, action.params.sticky);
+};
+instance.web.client_actions.add("action_notify", "instance.web.action_notify");
+
+instance.web.action_warn = function(element, action) {
+    element.do_warn(action.params.title, action.params.text, action.params.sticky);
+};
+instance.web.client_actions.add("action_warn", "instance.web.action_warn");
+
 /**
  * The very minimal function everything should call to create a dialog
  * in OpenERP Web Client.
@@ -235,6 +245,11 @@ instance.web.CrashManager = instance.web.Class.extend({
 
     rpc_error: function(error) {
         if (!this.active) {
+            return;
+        }
+        // yes, exception handling is shitty
+        if (error.code === 300 && error.data && error.data.type == "client_exception" && error.data.debug.match("SessionExpiredException")) {
+            this.show_warning({type: "Session Expired", data: { fault_code: "Your OpenERP session expired. Please refresh the current web page." }});
             return;
         }
         if (error.data.fault_code) {
@@ -606,6 +621,9 @@ instance.web.Login =  instance.web.Widget.extend({
         var d = $.when();
         if ($.deparam.querystring().db) {
             self.params.db = $.deparam.querystring().db;
+        }
+        if ($.param.fragment().token) {
+            self.params.token = $.param.fragment().token;
         }
         // used by dbmanager.do_create via internal client action
         if (self.params.db && self.params.login && self.params.password) {
@@ -1020,13 +1038,8 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                 if(res.company_id[0] > 1)
                     topbar_name = _.str.sprintf("%s (%s)", topbar_name, res.company_id[1]);
                 self.$el.find('.oe_topbar_name').text(topbar_name);
-                if(!instance.session.debug) {
-                    self.rpc("/web/database/get_list", {}).done( function(result) {
-                       if (result.length > 1) {
-                            topbar_name = _.str.sprintf("%s (%s)", topbar_name, instance.session.db);
-                       }
-                        self.$el.find('.oe_topbar_name').text(topbar_name);
-                    });
+                if (!instance.session.debug) {
+                    topbar_name = _.str.sprintf("%s (%s)", topbar_name, instance.session.db);
                 }
                 var avatar_src = self.session.url('/web/binary/image', {model:'res.users', field: 'image_small', id: self.session.uid});
                 $avatar.attr('src', avatar_src);

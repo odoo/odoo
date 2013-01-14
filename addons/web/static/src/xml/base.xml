@@ -385,7 +385,9 @@
         t-att-data-menu="menu.id"
         t-att-data-action-model="menu.action ? menu.action.split(',')[0] : ''"
         t-att-data-action-id="menu.action ? menu.action.split(',')[1] : ''">
-        <t t-esc="menu.name"/>
+        <span class="oe_menu_text">
+            <t t-esc="menu.name"/>
+        </span>
     </a>
 </t>
 

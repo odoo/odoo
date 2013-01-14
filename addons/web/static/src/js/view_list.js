@@ -348,12 +348,27 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             this.sidebar.add_toolbar(this.fields_view.toolbar);
             this.sidebar.$el.hide();
         }
+        //Sort
+        if(this.dataset._sort.length){
+            if(this.dataset._sort[0].indexOf('-') == -1){
+                this.$el.find('th[data-id=' + this.dataset._sort[0] + ']').addClass("sortdown");
+            }else {
+                this.$el.find('th[data-id=' + this.dataset._sort[0].split('-')[1] + ']').addClass("sortup");
+            }
+        }
         this.trigger('list_view_loaded', data, this.grouped);
     },
     sort_by_column: function (e) {
         e.stopPropagation();
         var $column = $(e.currentTarget);
-        this.dataset.sort($column.data('id'));
+        var col_name = $column.data('id')
+        var field = this.fields_view.fields[col_name];
+        // test if the field is a function field with store=false, since it's impossible
+        // for the server to sort those fields we desactivate the feature
+        if (field && field.store === false) {
+            return false;
+        }
+        this.dataset.sort(col_name);
         if($column.hasClass("sortdown") || $column.hasClass("sortup"))  {
             $column.toggleClass("sortup sortdown");
         } else {

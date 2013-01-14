@@ -136,7 +136,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
                     });
                     return group;
                 } else {
-                    var group = new GanttTaskInfo(_.uniqueId("gantt_project_task_"), group_name, task_start, duration, 100);
+                    var group = new GanttTaskInfo(_.uniqueId("gantt_project_task_"), group_name, task_start, duration || 1, 100);
                     _.each(task_infos, function(el) {
                         group.addChildTask(el.task_info);
                     });
@@ -161,7 +161,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
                 }
                 var duration = (task_stop.getTime() - task_start.getTime()) / (1000 * 60 * 60);
                 var id = _.uniqueId("gantt_task_");
-                var task_info = new GanttTaskInfo(id, task_name, task_start, ((duration / 24) * 8), 100);
+                var task_info = new GanttTaskInfo(id, task_name, task_start, ((duration / 24) * 8) || 1, 100);
                 task_info.internal_task = task;
                 task_ids[id] = task_info;
                 return {task_info: task_info, task_start: task_start, task_stop: task_stop};
@@ -195,6 +195,8 @@ instance.web_gantt.GanttView = instance.web.View.extend({
             $(rendered).prependTo(td);
             $(".oe_gantt_button_create", this.$el).click(this.on_task_create);
         }
+        // Fix for IE to display the content of gantt view.
+        this.$el.find(".oe_gantt td:first > div, .oe_gantt td:eq(1) > div > div").css("overflow", "");
     },
     on_task_changed: function(task_obj) {
         var self = this;

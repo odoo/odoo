@@ -842,11 +842,10 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                     save_deferral = self.dataset.create(values).then(function(r) {
                         return self.record_created(r, prepend_on_create);
                     }, null);
-                } else if (_.isEmpty(values) && ! self.force_dirty) {
+                } else if (_.isEmpty(values)) {
                     // Not dirty, noop save
                     save_deferral = $.Deferred().resolve({}).promise();
                 } else {
-                    self.force_dirty = false;
                     // Write save
                     save_deferral = self.dataset.write(self.datarecord.id, values, {}).then(function(r) {
                         return self.record_saved(r);
@@ -1935,7 +1934,6 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
             }
         };
         if (!this.node.attrs.special) {
-            this.view.force_dirty = true;
             return this.view.recursive_save().then(exec_action);
         } else {
             return exec_action();
@@ -2632,7 +2630,7 @@ instance.web.form.FieldTextHtml = instance.web.form.AbstractField.extend(instanc
                             "| removeformat | bullets numbering | outdent " +
                             "indent | link unlink | source",
                 bodyStyle:  // style to assign to document body contained within the editor
-                            "margin:4px; font:12px monospace; cursor:text; color:#1F1F1F"
+                            "margin:4px; color:#4c4c4c; font-size:13px; font-family:\"Lucida Grande\",Helvetica,Verdana,Arial,sans-serif; cursor:text"
             });
             this.$cleditor = this.$textarea.cleditor()[0];
             this.$cleditor.change(function() {
@@ -4946,7 +4944,7 @@ instance.web.form.FieldBinaryFile = instance.web.form.FieldBinary.extend({
             }
             this.$el.find('input').eq(0).val(show_value);
         } else {
-            this.$el.find('a').show(!!this.get('value'));
+            this.$el.find('a').toggle(!!this.get('value'));
             if (this.get('value')) {
                 var show_value = _t("Download")
                 if (this.view)

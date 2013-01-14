@@ -52,7 +52,7 @@
       docCSSFile:   // CSS file used to style the document contained within the editor
                     "", 
       bodyStyle:    // style to assign to document body contained within the editor
-                    "margin:4px; font:10pt Arial,Verdana; cursor:text"
+                    "margin:4px; color:#4c4c4c; font-size:13px; font-family:\"Lucida Grande\",Helvetica,Verdana,Arial,sans-serif; cursor:text"
     },
 
     // Define all usable toolbar buttons - the init string property is 
@@ -894,7 +894,7 @@
 
       var $toolbar = editor.$toolbar,
           $group = $toolbar.children("div:last"),
-          wid = $main.width();
+          wid = /%/.test("" + options.width) ? options.width : $main.width();
 
       // Resize the toolbar
       var hgt = $group.offset().top + $group.outerHeight() - $toolbar.offset().top + 1;
