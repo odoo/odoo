@@ -18,13 +18,21 @@ OpenERP Server
    06_misc
    09_deployment
 
+OpenERP Command
+'''''''''''''''
+
+.. toctree::
+   :maxdepth: 1
+
+   openerp-command.rst
+   adding-command.rst
+
 OpenERP Server API
 ''''''''''''''''''
 
 .. toctree::
    :maxdepth: 1
 
-   api_core.rst
    api_models.rst
 
 Concepts

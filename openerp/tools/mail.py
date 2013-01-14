@@ -23,8 +23,8 @@ from lxml import etree
 import cgi
 import logging
 import lxml.html
+import lxml.html.clean as clean
 import openerp.pooler as pooler
-import operator
 import random
 import re
 import socket
@@ -40,71 +40,32 @@ _logger = logging.getLogger(__name__)
 # HTML Sanitizer
 #----------------------------------------------------------
 
+tags_to_kill = ["script", "head", "meta", "title", "link", "style", "frame", "iframe", "base", "object", "embed"]
+tags_to_remove = ['html', 'body', 'font']
+
+
 def html_sanitize(src):
     if not src:
         return src
     src = ustr(src, errors='replace')
-    root = lxml.html.fromstring(u"<div>%s</div>" % src)
-    result = handle_element(root)
-    res = []
-    for element in children(result[0]):
-        if isinstance(element, basestring):
-            res.append(element)
-        else:
-            element.tail = ""
-            res.append(lxml.html.tostring(element))
-    return ''.join(res)
 
-# FIXME: shouldn't this be a whitelist rather than a blacklist?!
-to_remove = set(["script", "head", "meta", "title", "link", "img"])
-to_unwrap = set(["html", "body"])
-
-javascript_regex = re.compile(r"^\s*javascript\s*:.*$", re.IGNORECASE)
-
-def handle_a(el, new):
-    href = el.get("href", "#")
-    if javascript_regex.search(href):
-        href = "#"
-    new.set("href", href)
-
-special = {
-    "a": handle_a,
-}
-
-def handle_element(element):
-    if isinstance(element, basestring):
-        return [element]
-    if element.tag in to_remove:
-        return []
-    if element.tag in to_unwrap:
-        return reduce(operator.add, [handle_element(x) for x in children(element)])
-    result = lxml.html.fromstring("<%s />" % element.tag)
-    for c in children(element):
-        append_to(handle_element(c), result)
-    if element.tag in special:
-        special[element.tag](element, result)
-    return [result]
-
-def children(node):
-    res = []
-    if node.text is not None:
-        res.append(node.text)
-    for child_node in node.getchildren():
-        res.append(child_node)
-        if child_node.tail is not None:
-            res.append(child_node.tail)
-    return res
-
-def append_to(elements, dest_node):
-    for element in elements:
-        if isinstance(element, basestring):
-            children = dest_node.getchildren()
-            if len(children) == 0:
-                dest_node.text = element
-            else:
-                children[-1].tail = element
-        else:
-            dest_node.append(element)
+    # html encode email tags
+    part = re.compile(r"(<[^<>]+@[^<>]+>)", re.IGNORECASE | re.DOTALL)
+    src = part.sub(lambda m: cgi.escape(m.group(1)), src)
+    
+    # some corner cases make the parser crash (such as <SCRIPT/XSS SRC=\"http://ha.ckers.org/xss.js\"></SCRIPT> in test_mail)
+    try:
+        cleaner = clean.Cleaner(page_structure=True, style=False, safe_attrs_only=False, forms=False, kill_tags=tags_to_kill, remove_tags=tags_to_remove)
+        cleaned = cleaner.clean_html(src)
+    except TypeError, e:
+        # lxml.clean version < 2.3.1 does not have a kill_tags attribute
+        # to remove in 2014
+        cleaner = clean.Cleaner(page_structure=True, style=False, safe_attrs_only=False, forms=False, remove_tags=tags_to_kill+tags_to_remove)
+        cleaned = cleaner.clean_html(src)
+    except:
+        _logger.warning('html_sanitize failed to parse %s' % (src))
+        cleaned = '<p>Impossible to parse</p>'
+    return cleaned
 
 
 #----------------------------------------------------------
