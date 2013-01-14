@@ -305,9 +305,22 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
      * @param dataset
      * @param view_id
      * @param defaults
-     * @param hidden
+     * @param {Object} [options]
+     * @param {Boolean} [options.hidden=false] hide the search view
+     * @param {Boolean} [options.disable_custom_filters=false] do not load custom filters from ir.filters
      */
-    init: function(parent, dataset, view_id, defaults, hidden) {
+    init: function(parent, dataset, view_id, defaults, options) {
+        // Backward compatibility - Can be removed when forward porting
+        if (Object(options) !== options) {
+            options = {
+                hidden: !!options
+            };
+        }
+        // End of Backward compatibility
+        this.options = _.defaults(options || {}, {
+            hidden: false,
+            disable_custom_filters: false,
+        });
         this._super(parent);
         this.dataset = dataset;
         this.model = dataset.model;
@@ -319,8 +332,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         this.inputs = [];
         this.controls = {};
 
-        this.hidden = !!hidden;
-        this.headless = this.hidden && !this.has_defaults;
+        this.headless = this.options.hidden && !this.has_defaults;
 
         this.input_subviews = [];
 
@@ -335,7 +347,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 .on('add change reset remove', this.proxy('do_search'))
                 .on('add change reset remove', this.proxy('renderFacets'));
 
-        if (this.hidden) {
+        if (this.options.hidden) {
             this.$el.hide();
         }
         if (this.headless) {
@@ -650,7 +662,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         // CustomFilters will be ready (and CustomFilters#filters will be
         // correctly filled) by the time this method executes.
         var custom_filters = this.custom_filters.filters;
-        if (!_(custom_filters).isEmpty()) {
+        if (!this.options.disable_custom_filters && !_(custom_filters).isEmpty()) {
             // Check for any is_default custom filter
             var personal_filter = _(custom_filters).find(function (filter) {
                 return filter.user_id && filter.is_default;
