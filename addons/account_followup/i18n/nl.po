@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-01-13 12:37+0000\n"
+"Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 07:04+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-01-14 05:17+0000\n"
+"X-Generator: Launchpad (build 16420)\n"
 
 #. module: account_followup
 #: model:email.template,subject:account_followup.email_template_account_followup_default
@@ -23,7 +23,7 @@ msgstr ""
 #: model:email.template,subject:account_followup.email_template_account_followup_level1
 #: model:email.template,subject:account_followup.email_template_account_followup_level2
 msgid "${user.company_id.name} Payment Reminder"
-msgstr ""
+msgstr "${user.company_id.name} betaalherinnering"
 
 #. module: account_followup
 #: help:res.partner,latest_followup_level_id:0
@@ -126,11 +126,14 @@ msgid ""
 "This is the next action to be taken.  It will automatically be set when the "
 "partner gets a follow-up level that requires a manual action. "
 msgstr ""
+"Dit is de volgende actie welke genomen moet worden. Het zal automatisch "
+"worden ingesteld wanneer een klant een betalingsherinnering niveau bereikt, "
+"wat een handmatige actie vereist. "
 
 #. module: account_followup
 #: view:res.partner:0
 msgid "No Responsible"
-msgstr ""
+msgstr "Geen verantwoordelijke"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line2
@@ -155,6 +158,23 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Beste %(partner_name)s,\n"
+"\n"
+"Ondanks een eerdere verstuurde betalingsherinnering, zijn de vervallen "
+"posten nog steeds niet voldaan.\n"
+"\n"
+"Wij vragen u vriendelijk, doch dringend om de vervallen posten te voldoen "
+"binnen 8 dagen. Blijft betaling uit, dan zijn wij genoodzaakt verdere "
+"leveringen aan uw bedrijf te staken.\n"
+"\n"
+"Indien er een probleem is met de vervallen posten, waarvan wij niet op de "
+"hoogte zijn, wil ik u vragen om contact met ons op te nemen, zodat we deze "
+"problemen snel kunnen verhelpen.\n"
+"\n"
+"Details van de vervallen posten treft u onderstaand aan.\n"
+"\n"
+"Met vriendelijk groet,\n"
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_level0
@@ -192,6 +212,38 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
+"255, 255); \">\n"
+"\n"
+"    <p>Beste ${object.name},</p>\n"
+"    <p>\n"
+"    Volgens onze informatie is het navolgende vervallen bedrag nog niet "
+"voldaan. Kunt u de nodige maatregelen treffen en ervoor zorgen dat deze "
+"wordt voldaan, binnen 8 dagen.\n"
+"\n"
+"Indien u het vervallen bedrag reeds heeft betaald, dan kunt u deze e-mail "
+"als niet verzonden beschouwen.  Indien u vragen heeft, schroom dan niet om "
+"contact met ons op te nemen.\n"
+"\n"
+"    </p>\n"
+"<br/>\n"
+"Met vriendelijke groet,\n"
+"<br/>\n"
+"   <br/>\n"
+"${user.name}\n"
+"\n"
+"<br/>\n"
+"<br/>\n"
+"\n"
+"\n"
+"${object.get_followup_table_html() | safe}\n"
+"\n"
+"    <br/>\n"
+"\n"
+"</div>\n"
+"            "
 
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
@@ -252,6 +304,18 @@ msgid ""
 "                        same customer, the actions of the most \n"
 "                        overdue invoice will be executed."
 msgstr ""
+"Om klanten te herinneren hun facturen te betalen, kan je\n"
+"                        verschillende acties definiëren over hoe ernstig de\n"
+"                        klant te laat is met betalen. Deze acties worden "
+"gebundeld\n"
+"                        in betalingsherinnering niveaus, welke wordt "
+"aangesproken\n"
+"                        wanneer de vervaldatum van een factuur een aantal\n"
+"                        dagen is gepasseerd. Indien er meerdere vervallen "
+"facturen zijn  \n"
+"                        voor dezelfde klant, wordt de actie gebruikt voor de "
+"\n"
+"                        langst vervallen factuur gebruikt."
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -282,7 +346,7 @@ msgstr "Bij verwerken wordt een brieg gemaakt"
 #. module: account_followup
 #: field:res.partner,payment_earliest_due_date:0
 msgid "Worst Due Date"
-msgstr ""
+msgstr "Slechtste vervaldatum"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -344,6 +408,42 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
+"255, 255); \">\n"
+"    \n"
+"    <p>Beste ${object.name},</p>\n"
+"   <p>\n"
+"   Ondanks een eerdere verstuurde betalingsherinnering, zijn de vervallen "
+"posten nog steeds niet voldaan.\n"
+"\n"
+"Wij vragen u vriendelijk, doch dringend om de vervallen posten te voldoen "
+"binnen 8 dagen. Blijft betaling uit, dan zijn wij genoodzaakt verdere "
+"leveringen aan uw bedrijf te staken.\n"
+"\n"
+"Indien er een probleem is met de vervallen posten, waarvan wij niet op de "
+"hoogte zijn, wil ik u vragen om contact met ons op te nemen, zodat we deze "
+"problemen snel kunnen verhelpen.\n"
+"\n"
+"Details van de vervallen posten treft u onderstaand aan.\n"
+" </p>\n"
+"<br/>\n"
+"Met vriendelijke groet,\n"
+"    \n"
+"<br/>\n"
+"<br/>\n"
+"${user.name}\n"
+"    \n"
+"<br/>\n"
+"<br/>\n"
+"\n"
+"${object.get_followup_table_html() | safe}\n"
+"\n"
+"    <br/>\n"
+"\n"
+"</div>\n"
+"            "
 
 #. module: account_followup
 #: field:account_followup.stat,debit:0
@@ -465,7 +565,7 @@ msgstr "Afgedrukt bericht"
 #: code:addons/account_followup/wizard/account_followup_print.py:155
 #, python-format
 msgid "Anybody"
-msgstr ""
+msgstr "Iedereen"
 
 #. module: account_followup
 #: help:account_followup.followup.line,send_email:0
@@ -507,11 +607,13 @@ msgid ""
 "Optionally you can assign a user to this field, which will make him "
 "responsible for the action."
 msgstr ""
+"Optioneel kunt u een gebruiker toewijzen aan dit veld. Dit maakt hem "
+"verantwoordelijk voor de actie."
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_sending_results
 msgid "Results from the sending of the different letters and emails"
-msgstr ""
+msgstr "Resultaten van het versturen van verschillende brieven en e-mails."
 
 #. module: account_followup
 #: constraint:account_followup.followup.line:0
@@ -526,7 +628,7 @@ msgstr ""
 #: code:addons/account_followup/wizard/account_followup_print.py:172
 #, python-format
 msgid " manual action(s) assigned:"
-msgstr ""
+msgstr " handmatige actie(s) toegewezen:"
 
 #. module: account_followup
 #: view:res.partner:0
@@ -552,7 +654,7 @@ msgstr "Journaalpostregel"
 #: code:addons/account_followup/wizard/account_followup_print.py:237
 #, python-format
 msgid "Send Letters and Emails: Actions Summary"
-msgstr ""
+msgstr "Stuur brief en e-mails: Actie samenvatting"
 
 #. module: account_followup
 #: view:account_followup.print:0
@@ -565,6 +667,8 @@ msgid ""
 "If not specified by the latest follow-up level, it will send from the "
 "default email template"
 msgstr ""
+"Indien niet gespecificeerd bij het laatste herinnering niveau, dan zal het, "
+"het standaard sjabloon gebruiken."
 
 #. module: account_followup
 #: sql_constraint:account_followup.followup.line:0
@@ -589,6 +693,11 @@ msgid ""
 "action. Can be practical to set manually e.g. to see if he keeps his "
 "promises."
 msgstr ""
+"Dit is wanneer het maximale betalingsherinnering niveau nodig is. De datum "
+"wordt ingesteld op de huidige datum wanneer de klant een herinnering krijgt "
+"welke een handmatige actie vraagt. Het kan handig zijn om het op handmatig "
+"in te stellen om bijvoorbeeld te controleren of de klant zich aan de "
+"afspraken houdt."
 
 #. module: account_followup
 #: view:res.partner:0
@@ -649,6 +758,38 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
+"255, 255); \">\n"
+"    \n"
+"    <p>Dear ${object.name},</p>\n"
+"    <p>\n"
+"Ondanks herhaaldelijke verzoeken zijn uw vervallen posten nog niet voldaan.\n"
+"\n"
+"Indien betaling binnen de komende 8 dagen uitblijft, rest ons geen andere "
+"mogelijkheid dan de vordering uit handen te geven.\n"
+"\n"
+"Wij vertrouwen erop dat het niet zover zal hoeven komen. details van de "
+"vervallen posten treft u onderstaand aan.\n"
+"\n"
+"Indien u nog vragen heeft, schroom dan niet om contact met ons op te nemen.\n"
+"</p>\n"
+"<br/>\n"
+"Met vriendelijke groet,\n"
+"<br/>\n"
+"<br/>\n"
+"${user.name}\n"
+"<br/>\n"
+"<br/>\n"
+"\n"
+"\n"
+"${object.get_followup_table_html() | safe}\n"
+"\n"
+"    <br/>\n"
+"\n"
+"</div>\n"
+"            "
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -681,11 +822,26 @@ msgid ""
 "Best Regards,\n"
 "            "
 msgstr ""
+"\n"
+"Beste %(partner_name)s,\n"
+"\n"
+"Ondanks herhaaldelijke verzoeken zijn uw vervallen posten nog niet voldaan.\n"
+"\n"
+"Indien betaling binnen  de komende 8 dagen uitblijft, rest ons geen andere "
+"mogelijkheid dan de vordering uit handen te geven.\n"
+"\n"
+"Wij vertrouwen erop dat het niet zover zal hoeven komen. details van de "
+"vervallen posten treft u onderstaand aan.\n"
+"\n"
+"Indien u nog vragen heeft, schroom dan niet om contact met ons op te nemen.\n"
+"\n"
+"Met vriendelijke groet,\n"
+"            "
 
 #. module: account_followup
 #: field:res.partner,payment_amount_due:0
 msgid "Amount Due"
-msgstr ""
+msgstr "Vervallen bedrag"
 
 #. module: account_followup
 #: field:account.move.line,followup_date:0
@@ -715,6 +871,8 @@ msgid ""
 "When processing, it will set the manual action to be taken for that "
 "customer. "
 msgstr ""
+"Bij verwerking zal het de handmatige actie instellen welke moet worden "
+"uitgevoerd voor deze klant. "
 
 #. module: account_followup
 #: view:res.partner:0
@@ -724,12 +882,17 @@ msgid ""
 "                            order to exclude it from the next follow-up "
 "actions."
 msgstr ""
+"Onderstaand de historie van de transacties van deze \n"
+"                            klant. U kunt \"Geen betalingsherinnering\" "
+"aanvinken\n"
+"                            om zo de klant uit te sluiten van een volgende "
+"herinnering."
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:171
 #, python-format
 msgid " email(s) should have been sent, but "
-msgstr ""
+msgstr " e-mail(s) zouden verstuurt moeten zijn, maar "
 
 #. module: account_followup
 #: help:account_followup.print,test_print:0
@@ -773,7 +936,7 @@ msgstr "Credit"
 #. module: account_followup
 #: field:res.partner,payment_amount_overdue:0
 msgid "Amount Overdue"
-msgstr ""
+msgstr "Vervallen bedrag"
 
 #. module: account_followup
 #: help:res.partner,latest_followup_level_id_without_lit:0
@@ -781,6 +944,8 @@ msgid ""
 "The maximum follow-up level without taking into account the account move "
 "lines with litigation"
 msgstr ""
+"Het maximale betalingsherinnering niveau, zonder rekening te houden met "
+"dispuut regels."
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -819,6 +984,34 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
+"255, 255); \">\n"
+"    \n"
+"    <p>Beste ${object.name},</p>\n"
+"    <p>\n"
+"Volgens onze informatie is het navolgende vervallen bedrag nog niet voldaan. "
+"Kunt u de nodige maatregelen treffen en ervoor zorgen dat deze wordt "
+"voldaan, binnen 8 dagen.\n"
+"\n"
+"Indien u het vervallen bedrag reeds heeft betaald, dan kunt u deze e-mail "
+"als niet verzonden beschouwen. Indien u vragen heeft, schroom dan niet om "
+"contact met ons op te nemen.\n"
+"    </p>\n"
+"<br/>\n"
+"Met vriendelijke groet,\n"
+"<br/>\n"
+"<br/>\n"
+"${user.name}\n"
+"<br/>\n"
+"<br/>\n"
+"\n"
+"${object.get_followup_table_html() | safe}\n"
+"\n"
+"<br/>\n"
+"</div>\n"
+"            "
 
 #. module: account_followup
 #: field:account.move.line,result:0
@@ -859,6 +1052,18 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Beste %(partner_name)s,\n"
+"\n"
+"Volgens onze informatie is het navolgende vervallen bedrag nog niet voldaan. "
+"Kunt u de nodige maatregelen treffen en ervoor zorgen dat deze wordt "
+"voldaan, binnen 8 dagen.\n"
+"\n"
+"Indien u het vervallen bedrag reeds heeft betaald, dan kunt u deze e-mail "
+"als niet verzonden beschouwen. Indien u vragen heeft, schroom dan niet om "
+"contact met ons op te nemen.\n"
+"\n"
+"Met vriendelijke groet,\n"
 
 #. module: account_followup
 #: field:account_followup.stat,date_move_last:0
@@ -876,6 +1081,7 @@ msgstr "Periode"
 #, python-format
 msgid "%s partners have no credits and as such the action is cleared"
 msgstr ""
+"%s klanten hebben geen kredieten en als zodanig wortd de actie gewist"
 
 #. module: account_followup
 #: model:ir.actions.report.xml,name:account_followup.account_followup_followup_report
@@ -888,6 +1094,8 @@ msgid ""
 ", the latest payment follow-up\n"
 "                            was:"
 msgstr ""
+", de laatste betalingsherinnering\n"
+"                            was:"
 
 #. module: account_followup
 #: view:account_followup.print:0
@@ -924,7 +1132,7 @@ msgstr "Verantwoordelijke"
 #: model:ir.ui.menu,name:account_followup.menu_finance_followup
 #: view:res.partner:0
 msgid "Payment Follow-up"
-msgstr ""
+msgstr "Betalingsherinnering"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
@@ -938,6 +1146,10 @@ msgid ""
 "                        set the manual actions per customer, according to "
 "the follow-up levels defined."
 msgstr ""
+"Deze actie zal betalingsherinnering e-mails versturen, de brieven afdrukken "
+"en\n"
+"                        de handmatige actie per klant instellen, volgens de "
+"ingestelde betalingsherinnering niveaus."
 
 #. module: account_followup
 #: field:account_followup.followup.line,name:0
@@ -1022,6 +1234,20 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Beste %(partner_name)s,\n"
+"\n"
+"Ondanks herhaaldelijke verzoeken zijn uw vervallen posten nog niet voldaan.\n"
+"\n"
+"Indien betaling binnen de komende 8 dagen uitblijft, rest ons geen andere "
+"mogelijkheid dan de vordering uit handen te geven.\n"
+"\n"
+"Wij vertrouwen erop dat het niet zover zal hoeven komen. details van de "
+"vervallen posten treft u onderstaand aan.\n"
+"\n"
+"Indien u nog vragen heeft, schroom dan niet om contact met ons op te nemen.\n"
+"\n"
+"Met vriendelijke groet,\n"
 
 #. module: account_followup
 #: help:account_followup.print,partner_lang:0
@@ -1043,6 +1269,13 @@ msgid ""
 "installed\n"
 "                            using to top right icon."
 msgstr ""
+"Schrijf hier de instructies van de brief,\n"
+"                            volgens het herinnering niveau. U kunt\n"
+"                            de volgende trefwoorden gebruiken in de tekst. "
+"Vergeet\n"
+"                            de tekst te vertalen in alle talen welke u heeft "
+"geïnstalleerd\n"
+"                            door gebruik te maken van het icon rechtsboven."
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -1058,7 +1291,7 @@ msgstr "Naam:"
 #. module: account_followup
 #: field:res.partner,latest_followup_level_id:0
 msgid "Latest Follow-up Level"
-msgstr ""
+msgstr "Laatste betalingsherinnering niveau"
 
 #. module: account_followup
 #: field:account_followup.stat,date_move:0
@@ -1075,17 +1308,17 @@ msgstr "Betalingsherinnering analyses per relatie"
 #: code:addons/account_followup/wizard/account_followup_print.py:172
 #, python-format
 msgid " letter(s) in report"
-msgstr ""
+msgstr " brieven in rapporten"
 
 #. module: account_followup
 #: view:res.partner:0
 msgid "Partners with Overdue Credits"
-msgstr ""
+msgstr "Klanten met vervallen posten"
 
 #. module: account_followup
 #: view:res.partner:0
 msgid "Customer Followup"
-msgstr ""
+msgstr "Klant betalingsherinnering"
 
 #. module: account_followup
 #: model:ir.actions.act_window,help:account_followup.action_account_followup_definition_form
@@ -1101,17 +1334,28 @@ msgid ""
 "              </p>\n"
 "          "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik om betalingsherinnering niveaus te maken en de "
+"bijbehorende acties.\n"
+"              </p><p>\n"
+"                Voor elk niveau, specificeer het aantal dagen vertraging "
+"voor de actie. het is\n"
+"                mogelijk om afdruk en e-mail sjablonen te gebruiken om "
+"speciale berichten te \n"
+"                versturen naar klanten.\n"
+"              </p>\n"
+"          "
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:166
 #, python-format
 msgid "Follow-up letter of "
-msgstr ""
+msgstr "Betalingsherinnering brief van "
 
 #. module: account_followup
 #: view:res.partner:0
 msgid "The"
-msgstr ""
+msgstr "De"
 
 #. module: account_followup
 #: view:account_followup.print:0
@@ -1131,7 +1375,7 @@ msgstr "Volgnummer"
 #. module: account_followup
 #: view:res.partner:0
 msgid "Follow-ups To Do"
-msgstr ""
+msgstr "Betalingsherinneringen nog te doen"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -1150,11 +1394,15 @@ msgid ""
 "the reminder.  Could be negative if you want to send a polite alert "
 "beforehand."
 msgstr ""
+"Het aantal dagen na de vervaldatum van de factuur, voordat een "
+"betalingsherinnering wordt verstuurt. De waarde kan negatief zijn, indien u "
+"een beleefde herinnering op voorhad wilt geven."
 
 #. module: account_followup
 #: help:res.partner,latest_followup_date:0
 msgid "Latest date that the follow-up level of the partner was changed"
 msgstr ""
+"Laatste datum dat de betalingsherinnering niveau van de klant is gewijzigd."
 
 #. module: account_followup
 #: field:account_followup.print,test_print:0
@@ -1164,12 +1412,12 @@ msgstr "Test afdruk"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid ": User Name"
-msgstr ""
+msgstr ": Gebruikersnaam"
 
 #. module: account_followup
 #: view:res.partner:0
 msgid "Accounting"
-msgstr ""
+msgstr "Financieel"
 
 #. module: account_followup
 #: field:account_followup.stat,blocked:0
@@ -1179,4 +1427,4 @@ msgstr "Geblokkeerd"
 #. module: account_followup
 #: field:res.partner,payment_note:0
 msgid "Customer Payment Promise"
-msgstr ""
+msgstr "Klant betaal belofte"

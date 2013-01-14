@@ -1,20 +1,20 @@
-# Dutch translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Italian translation for openobject-addons
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-01-13 13:15+0000\n"
-"Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
-"Language-Team: Dutch <nl@li.org>\n"
+"PO-Revision-Date: 2013-01-12 08:17+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-14 05:17+0000\n"
+"X-Launchpad-Export-Date: 2013-01-13 05:27+0000\n"
 "X-Generator: Launchpad (build 16420)\n"
 
 #. module: account_test
@@ -47,35 +47,11 @@ msgid ""
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
 msgstr ""
-"De code dient altijd een variabele in te stellen, met de naam 'result'. deze "
-"bevat het resultaat van de test. Dit kan een lijst of een woordenboek zijn. "
-"Indien 'result' een lege lijst is, betekend het dat de test succesvol was. "
-"Anders zal het proberen het resultaat te vertalen en af te drukken.\n"
-"\n"
-"Als het resultaat van uw test een woordenboek is, kunt u een variabele met "
-"de naam 'column_order' instellen, om in te stellen in welke volgorde u de "
-"inhoud van 'result' wilt afdrukken.\n"
-"\n"
-"Indien u ze nodig heeft kunt u de volgende variabelen in uw code gebruiken:\n"
-"    * cr: cursor to the database\n"
-"    * uid: ID of the current user\n"
-"\n"
-"\n"
-"In ieder geval moet de code correcte python statements bevatten met de "
-"juiste inspringingen (indien nodig).\n"
-"Voorbeeld: \n"
-"    sql = '''SELECT id, name, ref, date\n"
-"             FROM account_move_line \n"
-"             WHERE account_id IN (SELECT id FROM account_account WHERE type "
-"= 'view')\n"
-"          '''\n"
-"    cr.execute(sql)\n"
-"    result = cr.dictfetchall()"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_02
 msgid "Test 2: Opening a fiscal year"
-msgstr "Test 2: Open een boekjaar"
+msgstr "Test 2: Aprire un anno fiscale"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
@@ -83,38 +59,32 @@ msgid ""
 "Check that reconciled invoice for Sales/Purchases has reconciled entries for "
 "Payable and Receivable Accounts"
 msgstr ""
-"Controleer of afgeletterde factuur van verkoop/inkoop een afgeletterde regel "
-"heeft op de crediteuren en debiteuren rekening."
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_03
 msgid ""
 "Check if movement lines are balanced and have the same date and period"
 msgstr ""
-"Controleer of journaalpostregels in balans zijn en dezelfde datum en periode "
-"hebben"
 
 #. module: account_test
 #: field:accounting.assert.test,name:0
 msgid "Test Name"
-msgstr "Test naam"
+msgstr "Nome del test"
 
 #. module: account_test
 #: report:account.test.assert.print:0
 msgid "Accouting tests on"
-msgstr "Financiële test op"
+msgstr "Test contabile su"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_01
 msgid "Test 1: General balance"
-msgstr "Test 1: Algemene balans"
+msgstr "Test 1: Bilancio generale"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06
 msgid "Check that paid/reconciled invoices are not in 'Open' state"
 msgstr ""
-"Controleer of betaalde/afgeletterde facturen zich niet in de 'Open' staat "
-"bevinden"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05_2
@@ -122,58 +92,54 @@ msgid ""
 "Check that reconciled account moves, that define Payable and Receivable "
 "accounts, are belonging to reconciled invoices"
 msgstr ""
-"Controleer of afgelletterde journaalpostregels op de crediteuren en "
-"debiteuren rekeningen, behoren aan afgeletterde facturen."
 
 #. module: account_test
 #: view:accounting.assert.test:0
 msgid "Tests"
-msgstr "Testen"
+msgstr "Test"
 
 #. module: account_test
 #: field:accounting.assert.test,desc:0
 msgid "Test Description"
-msgstr "Test omschrijving"
+msgstr "Descrizione test"
 
 #. module: account_test
 #: view:accounting.assert.test:0
 msgid "Description"
-msgstr "Omschrijving"
+msgstr "Descrizione"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06_1
 msgid "Check that there's no move for any account with « View » account type"
 msgstr ""
-"Controleer of er geen journaalpostregel zijn voor een rekening met "
-"« Weergave » als rekeningsoort"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_08
 msgid "Test 9 : Accounts and partners on account moves"
-msgstr "Test 9 : Rekeningen en relaties of journaalposten"
+msgstr "Test 9: Conti e partner su movimenti conto"
 
 #. module: account_test
 #: model:ir.actions.act_window,name:account_test.action_accounting_assert
 #: model:ir.actions.report.xml,name:account_test.account_assert_test_report
 #: model:ir.ui.menu,name:account_test.menu_action_license
 msgid "Accounting Tests"
-msgstr "Financiële testen"
+msgstr "Test contabili"
 
 #. module: account_test
 #: code:addons/account_test/report/account_test_report.py:74
 #, python-format
 msgid "The test was passed successfully"
-msgstr "The test is geslaagd"
+msgstr "Il test è stato passato con successo"
 
 #. module: account_test
 #: field:accounting.assert.test,active:0
 msgid "Active"
-msgstr "Actief"
+msgstr "Attivo"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_06
 msgid "Test 6 : Invoices status"
-msgstr "Test 6 : Factuur status"
+msgstr "Test 6 : Stato fatture"
 
 #. module: account_test
 #: model:ir.model,name:account_test.model_accounting_assert_test
@@ -185,12 +151,11 @@ msgstr "accounting.assert.test"
 msgid ""
 "Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
 msgstr ""
-"Test 5.1 : Crediteuren en debiteuren rekeningen van afgeletterde facturen"
 
 #. module: account_test
 #: field:accounting.assert.test,code_exec:0
 msgid "Python code"
-msgstr "Python code"
+msgstr "Codice Python"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
@@ -198,44 +163,41 @@ msgid ""
 "Check on bank statement that the Closing Balance = Starting Balance + sum of "
 "statement lines"
 msgstr ""
-"Controleer op bankafschrift dat de eindbalans gelijk is aan startbalans + "
-"sum van de afschriftregels."
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_07
 msgid "Test 8 : Closing balance on bank statements"
-msgstr "Test 8 : Eindsaldo op bankafschriften"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_03
 msgid "Test 3: Movement lines"
-msgstr "Test 3: Journaalpostregels"
+msgstr "Test 3: Linee movinenti"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05_2
 msgid "Test 5.2 : Reconcilied invoices and Payable/Receivable accounts"
 msgstr ""
-"Test 5.2 : Afgeletterde facturen en crediteuren/debiteuren rekeningen"
 
 #. module: account_test
 #: view:accounting.assert.test:0
 msgid "Expression"
-msgstr "Expressie"
+msgstr "Espressione"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_04
 msgid "Test 4: Totally reconciled mouvements"
-msgstr "Test 4: Totaal afgeletterde regels"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_04
 msgid "Check if the totally reconciled movements are balanced"
-msgstr "Controleer of het totaal aan afgeletterde regels in balans is"
+msgstr ""
 
 #. module: account_test
 #: field:accounting.assert.test,sequence:0
 msgid "Sequence"
-msgstr "Reeks"
+msgstr "Sequenza"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_02
@@ -243,13 +205,11 @@ msgid ""
 "Check if the balance of the new opened fiscal year matches with last year's "
 "balance"
 msgstr ""
-"Controleer of de start balans van het nieuw geopende boekjaar overeenkomt "
-"met de eindbalans van het vorige boekjaar"
 
 #. module: account_test
 #: view:accounting.assert.test:0
 msgid "Python Code"
-msgstr "Python Code"
+msgstr "Codice Python"
 
 #. module: account_test
 #: model:ir.actions.act_window,help:account_test.action_accounting_assert
@@ -259,29 +219,23 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klik om een financiële test aan te maken.\n"
-"              </p>\n"
-"            "
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01
 msgid "Check the balance: Debit sum = Credit sum"
-msgstr "Controleer de balans: Som van debet = Som van Credit"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_08
 msgid "Check that general accounts and partners on account moves are active"
 msgstr ""
-"Controleer of algemene rekeningen en de relaties op journaalpostregels "
-"actief zijn"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_06_1
 msgid "Test 7: « View  » account type"
-msgstr "Test 7: « Weergace  » rekeningsoort"
+msgstr ""
 
 #. module: account_test
 #: view:accounting.assert.test:0
 msgid "Code Help"
-msgstr "Code Help"
+msgstr "Aiuto codice"
