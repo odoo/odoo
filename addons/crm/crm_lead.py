@@ -980,6 +980,7 @@ class crm_lead(base_stage, format_address, osv.osv):
             'description': desc,
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
+            'partner_id': msg.get('author_id', False),
             'user_id': False,
         }
         if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
