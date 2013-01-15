@@ -570,22 +570,41 @@ class res_config_settings(osv.osv_memory):
         if action_ids:
             return act_window.read(cr, uid, action_ids[0], [], context=context)
         return {}
-    
+
     def name_get(self, cr, uid, ids, context=None):
         """ Override name_get method to return an appropriate configuration wizard
         name, and not the generated name."""
-        
+
         if not ids:
             return []
         # name_get may receive int id instead of an id list
         if isinstance(ids, (int, long)):
             ids = [ids]
-            
+
         act_window = self.pool.get('ir.actions.act_window')
         action_ids = act_window.search(cr, uid, [('res_model', '=', self._name)], context=context)
         name = self._name
         if action_ids:
             name = act_window.read(cr, uid, action_ids[0], ['name'], context=context)['name']
         return [(record.id, name) for record in self.browse(cr, uid , ids, context=context)]
+
+    def get_path(self, cr, uid, module_name, menu_xml_id=None, field_name=None, context=None):
+        """
+        Return a string representing the path to access a specific
+        configuration option through the interface.
+        """
+
+        config_path = ''
+
+        # Fetch the path
+        if (menu_xml_id):
+            dummy, menu_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, module_name, menu_xml_id)
+            config_path += self.pool.get('ir.ui.menu').browse(cr, uid, menu_id, context=context).name
+
+        # Fetch the exact config option name
+        #if (field_name):
+        #    self.pool.get('mycfgobj')._get_all_columns().strings[field_name]
+
+        return config_path
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
