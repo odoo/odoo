@@ -2,6 +2,8 @@ openerp.base = function(instance) {
 
     instance.base.apps_remote = null;
     instance.base.apps_client = null;
+    
+    var _t = instance.web._t;
 
     instance.base.Apps = instance.web.Widget.extend({
         template: 'EmptyComponent',
@@ -98,7 +100,7 @@ openerp.base = function(instance) {
                         });
                 }).
                 fail(function(client) {
-                    self.do_warn('Apps Server not reachable.', 'Showing local modules.', true);
+                    self.do_warn(_t('OpenERP Apps Unreachable'), _t('Showing locally available modules'), true);
                     self.rpc('/web/action/load', {action_id: self.failback_action_id}).done(function(action) {
                         self.do_action(action);
                         instance.webclient.menu.open_action(action.id);
