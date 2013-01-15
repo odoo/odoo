@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-01-01 18:13+0000\n"
+"PO-Revision-Date: 2013-01-13 17:55+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-02 05:25+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-01-14 05:17+0000\n"
+"X-Generator: Launchpad (build 16420)\n"
 
 #. module: anonymization
 #: model:ir.model,name:anonymization.model_ir_model_fields_anonymize_wizard
@@ -50,6 +50,10 @@ msgid ""
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to create, write or delete fields."
 msgstr ""
+"De database anonimisatie is momenteel in een onstabiele status. Sommige "
+"velden zijn  geanonimiseerd, terwijl sommige velden niet zijn "
+"geanonimiseerd. U dient dit op te lossen voordat u iets anders doet met het "
+"programma."
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization,field_name:0
@@ -84,6 +88,8 @@ msgid ""
 "Before executing the anonymization process, you should make a backup of your "
 "database."
 msgstr ""
+"Voordat u het anonimisatie proces kunt starten, is het verstandig een backup "
+"te maken van uw database."
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization.history,state:0
@@ -128,7 +134,7 @@ msgstr "onbekend"
 #: code:addons/anonymization/anonymization.py:448
 #, python-format
 msgid "Anonymized value is None. This cannot happens."
-msgstr ""
+msgstr "Geanonimiseerde waarde is leeg. Dit mag niet voorkomen."
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization.history,filepath:0
@@ -141,6 +147,8 @@ msgid ""
 "This is the file created by the anonymization process. It should have the "
 "'.pickle' extention."
 msgstr ""
+"Dit is het bestand wat is aan gemaakt door het anonimisatie proces. Het "
+"bestand heeft de extentie '.pickle'."
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization.history,date:0
@@ -164,6 +172,8 @@ msgid ""
 "Cannot anonymize fields of these types: binary, many2many, many2one, "
 "one2many, reference."
 msgstr ""
+"Het is niet mogelijk velden van het type: binary, many2many, many2one, "
+"one2many, reference, te anonimiseren."
 
 #. module: anonymization
 #: view:ir.model.fields.anonymize.wizard:0
@@ -199,6 +209,8 @@ msgid ""
 "It is not possible to reverse the anonymization process without supplying "
 "the anonymization export file."
 msgstr ""
+"Het is niet mogelijk om het anonimisatie proces terug te draaien, zonder het "
+"anonimisatie export bestand."
 
 #. module: anonymization
 #: field:ir.model.fields.anonymize.wizard,summary:0
@@ -219,6 +231,10 @@ msgid ""
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to do anything."
 msgstr ""
+"De database anonimisatie is momenteel in een onstabiele status. Sommige "
+"velden zijn  geanonimiseerd, terwijl sommige velden niet zijn "
+"geanonimiseerd. U dient dit op te lossen voordat u iets anders doet met het "
+"programma."
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymize.wizard,state:0
@@ -265,6 +281,10 @@ msgid ""
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to do anything else."
 msgstr ""
+"De database anonimisatie is momenteel in een onstabiele status. Sommige "
+"velden zijn  geanonimiseerd, terwijl sommige velden niet zijn "
+"geanonimiseerd. U dient dit op te lossen voordat u iets anders doet met het "
+"programma."
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:389
@@ -304,6 +324,7 @@ msgstr "Gestart"
 #, python-format
 msgid "The database is currently anonymized, you cannot anonymize it again."
 msgstr ""
+"De database is geanonimiseerd. Het is niet mogelijk dit nogmaals te doen."
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,state:0

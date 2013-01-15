@@ -139,6 +139,9 @@ class res_users(osv.Model):
             self.pool.get('res.partner').message_subscribe(cr, uid, [partner_id], partner_ids, subtype_ids=subtype_ids, context=context)
         return True
 
+    def message_create_partners_from_emails(self, cr, uid, emails, context=None):
+        return self.pool.get('res.partner').message_create_partners_from_emails(cr, uid, emails, context=context)
+
 
 class res_users_mail_group(osv.Model):
     """ Update of res.users class

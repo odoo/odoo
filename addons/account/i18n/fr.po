@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-01-07 10:08+0000\n"
+"PO-Revision-Date: 2013-01-11 08:36+0000\n"
 "Last-Translator: Numérigraphe <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-08 06:04+0000\n"
-"X-Generator: Launchpad (build 16402)\n"
+"X-Launchpad-Export-Date: 2013-01-12 05:40+0000\n"
+"X-Generator: Launchpad (build 16420)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -170,6 +170,9 @@ msgid ""
 "which is set after generating opening entries from 'Generate Opening "
 "Entries'."
 msgstr ""
+"Vous devez définir un \"Journal d'écritures de clôture\" pour cet exercice "
+"qui est utilisé après avoir généré les écritures d'ouverture depuis "
+"\"Générer les écritures d'ouverture\""
 
 #. module: account
 #: field:account.fiscal.position.account,account_src_id:0
@@ -274,7 +277,7 @@ msgid ""
 msgstr ""
 "Le type de compte est utilisé comme indication pour l'utilisateur, ainsi que "
 "pour créer des rapports comptables spécifiques à certains pays, et enfin "
-"pour gérer les clotûres d'exercices fiscaux (et établir les écritures "
+"pour gérer les clôtures d'exercices (et établir les écritures "
 "correspondantes)"
 
 #. module: account
@@ -338,7 +341,7 @@ msgid ""
 "Installs localized accounting charts to match as closely as possible the "
 "accounting needs of your company based on your country."
 msgstr ""
-"Installez des plans comptable localisés pour correspondre aussi étroitement "
+"Installe des plans comptables localisés pour correspondre aussi étroitement "
 "que possible aux besoins comptables de votre entreprise en fonction de votre "
 "pays."
 
@@ -639,7 +642,7 @@ msgstr "Affectation des taxes"
 #: model:ir.actions.act_window,name:account.action_account_fiscalyear_close_state
 #: model:ir.ui.menu,name:account.menu_wizard_fy_close_state
 msgid "Close a Fiscal Year"
-msgstr "Clôturer un exercice comptable"
+msgstr "Fermer un exercice"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_confirmstatementfromdraft0
@@ -1009,6 +1012,8 @@ msgid ""
 "                                                  opening/closing fiscal "
 "year process."
 msgstr ""
+"Impossible d'annuler le rapprochement d'écritures qui ont été générées par "
+"le processus d'ouverture/de fermeture d'exercice"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_subscription_form_new
@@ -1225,7 +1230,7 @@ msgstr "Mode paysage"
 #. module: account
 #: help:account.fiscalyear.close,fy_id:0
 msgid "Select a Fiscal year to close"
-msgstr "Choisissez un exercice comptable à clôturer"
+msgstr "Choisissez un exercice à fermer"
 
 #. module: account
 #: help:account.account.template,user_type:0
@@ -1545,7 +1550,7 @@ msgstr "Options du Rapport"
 #. module: account
 #: field:account.fiscalyear.close.state,fy_id:0
 msgid "Fiscal Year to Close"
-msgstr "Exercice comptable à clôturer"
+msgstr "Exercice à fermer"
 
 #. module: account
 #: field:account.config.settings,sale_sequence_prefix:0
@@ -1726,7 +1731,7 @@ msgstr ""
 #: selection:account.fiscalyear,state:0
 #: selection:account.period,state:0
 msgid "Closed"
-msgstr "Clôturé"
+msgstr "Fermé"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_recurrent_entries
@@ -1850,7 +1855,7 @@ msgstr "Coût analytique à facturer"
 #. module: account
 #: view:ir.sequence:0
 msgid "Fiscal Year Sequence"
-msgstr "Séquence pour exercice comptable"
+msgstr "Séquence pour exercice"
 
 #. module: account
 #: field:account.config.settings,group_analytic_accounting:0
@@ -2279,7 +2284,7 @@ msgstr "Balance agée"
 #. module: account
 #: view:account.fiscalyear.close.state:0
 msgid "Close Fiscal Year"
-msgstr "Clôturer l'exercice comptable"
+msgstr "Fermer l'exercice"
 
 #. module: account
 #. openerp-web
@@ -2502,7 +2507,7 @@ msgstr ""
 "dans OpenERP : \"vue\" ne peut pas avoir d'écritures, \"consolidation\" sont "
 "des comptes qui peuvent avoir des comptes enfants pour les consolidations "
 "multi-sociétés, \"à payer/à recevoir\" sont des comptes de partenaires (pour "
-"les calculs de débit / crédit), \"fermé\" pour les comptes dépréciés."
+"les calculs de débit / crédit), \"fermé\" pour les comptes obsolètes."
 
 #. module: account
 #: view:account.chart.template:0
@@ -2615,7 +2620,7 @@ msgstr "Modèle d'article"
 #: field:accounting.report,fiscalyear_id_cmp:0
 #: model:ir.model,name:account.model_account_fiscalyear
 msgid "Fiscal Year"
-msgstr "Exercice comptable"
+msgstr "Exercice"
 
 #. module: account
 #: help:account.aged.trial.balance,fiscalyear_id:0
@@ -2634,7 +2639,7 @@ msgstr "Exercice comptable"
 #: help:accounting.report,fiscalyear_id:0
 #: help:accounting.report,fiscalyear_id_cmp:0
 msgid "Keep empty for all open fiscal year"
-msgstr "Laisser vide pour tous les exercices fiscaux ouverts"
+msgstr "Laisser vide pour tous les exercices ouverts"
 
 #. module: account
 #: code:addons/account/account.py:653
@@ -2643,6 +2648,8 @@ msgid ""
 "You cannot change the type of account from 'Closed' to any other type as it "
 "contains journal items!"
 msgstr ""
+"Impossible de changer le type d'un compte de \"Fermé\" en un autre type car "
+"il contient des écritures !"
 
 #. module: account
 #: field:account.invoice.report,account_line_id:0
@@ -2705,7 +2712,7 @@ msgstr "Positions fiscales"
 #: code:addons/account/account_move_line.py:578
 #, python-format
 msgid "You cannot create journal items on a closed account %s %s."
-msgstr ""
+msgstr "Impossible de créer des écritures sur un compte fermé %s %s."
 
 #. module: account
 #: field:account.period.close,sure:0
@@ -3385,7 +3392,7 @@ msgstr "Facture client"
 #. module: account
 #: model:ir.model,name:account.model_account_open_closed_fiscalyear
 msgid "Choose Fiscal Year"
-msgstr "Choisissez l'exercice comptable"
+msgstr "Choisissez l'exercice"
 
 #. module: account
 #: view:account.config.settings:0
@@ -3801,7 +3808,7 @@ msgstr "Pas de partenaire défini !"
 #: model:ir.actions.act_window,name:account.action_account_period_tree
 #: model:ir.ui.menu,name:account.menu_action_account_period_close_tree
 msgid "Close a Period"
-msgstr "Clôturer une période"
+msgstr "Fermer une période"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -4041,6 +4048,8 @@ msgid ""
 "There is no fiscal year defined for this date.\n"
 "Please create one from the configuration of the accounting menu."
 msgstr ""
+"Aucun exercice défini à cette date.\n"
+"Veuillez en créer un dans le menu \"Paramétrage de la comptabilité\""
 
 #. module: account
 #: view:account.addtmpl.wizard:0
@@ -4114,8 +4123,8 @@ msgstr "Procédure de lettrage partenaire par partenaire"
 #: view:account.chart:0
 msgid "(If you do not select Fiscal year it will take all open fiscal years)"
 msgstr ""
-"(Si vous ne sélectionnez pas d'exercice comptable, tous les exercices "
-"comptables ouverts seront pris)"
+"(Si vous ne sélectionnez pas d'exercice, tous les exercices ouverts seront "
+"pris)"
 
 #. module: account
 #: selection:account.aged.trial.balance,filter:0
@@ -4482,9 +4491,9 @@ msgid ""
 "counterpart."
 msgstr ""
 "Les bonnes pratiques exigent qu'on utilise un journal dédié aux écritures "
-"d'ouverture. Notez que celui-ci doit avoir des comptes de crédit et de débit "
-"définis par défaut, être de type \"Situation\" et avoir une contrepartie "
-"centralisée."
+"d'ouverture des exercices. Notez que celui-ci doit avoir des comptes de "
+"crédit et de débit définis par défaut, être de type \"Situation\" et avoir "
+"une contrepartie centralisée."
 
 #. module: account
 #: view:account.installer:0
@@ -5189,7 +5198,7 @@ msgstr "OD"
 #. module: account
 #: field:account.fiscalyear.close,fy2_id:0
 msgid "New Fiscal Year"
-msgstr "Nouvel exercice comptable"
+msgstr "Nouvel exercice"
 
 #. module: account
 #: view:account.invoice:0
@@ -5734,7 +5743,7 @@ msgstr "Montant"
 #: code:addons/account/wizard/account_fiscalyear_close.py:41
 #, python-format
 msgid "End of Fiscal Year Entry"
-msgstr "Ecriture de fin d'exercice comptable"
+msgstr "Écriture de fin d'exercice"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_customerinvoice0
@@ -5856,6 +5865,8 @@ msgstr "Calcul du montant"
 #, python-format
 msgid "You can not add/modify entries in a closed period %s of journal %s."
 msgstr ""
+"Impossible d'ajouter/modifier des écritures dans une période fermée %s du "
+"journal %s."
 
 #. module: account
 #: view:account.journal:0
@@ -6672,7 +6683,7 @@ msgstr "Banque et liquidités"
 #. module: account
 #: help:account.fiscalyear.close.state,fy_id:0
 msgid "Select a fiscal year to close"
-msgstr "Choisissez un exercice à clôturer"
+msgstr "Choisissez un exercice à fermer"
 
 #. module: account
 #: help:account.chart.template,tax_template_ids:0
@@ -6693,7 +6704,7 @@ msgstr "Informations supplémentaires"
 #: field:account.chart,fiscalyear:0
 #: view:account.fiscalyear:0
 msgid "Fiscal year"
-msgstr "Exercice comptable"
+msgstr "Exercice"
 
 #. module: account
 #: view:account.move.reconcile:0
@@ -6753,7 +6764,7 @@ msgstr "Compte client"
 #. module: account
 #: constraint:account.move.line:0
 msgid "You cannot create journal items on closed account."
-msgstr "Vous ne pouvez pas créer d'écriture sur un compte clos"
+msgstr "Vous ne pouvez pas créer d'écriture sur un compte fermé."
 
 #. module: account
 #: code:addons/account/account_invoice.py:610
@@ -6954,7 +6965,7 @@ msgid ""
 "year. Note that you can run this wizard many times for the same fiscal year: "
 "it will simply replace the old opening entries with the new ones."
 msgstr ""
-"Cet assistant génère les écritures de fin d'exercice pour l'année fiscale "
+"Cet assistant génère les écritures de fin d'exercice pour l'exercice "
 "sélectionnée. Il peut être utilisé plusieurs fois pour le même exercice : il "
 " remplacera alors les anciennes écritures par les nouvelles."
 
@@ -7794,7 +7805,7 @@ msgid ""
 msgstr ""
 "Cochez cette case pour indiquer que chaque écriture de ce journal ne créera "
 "pas une nouvelle contrepartie, mais partagera la même contrepartie. Cela est "
-"utilisé dans la clôture des exercices comptables."
+"utilisé dans la clôture des exercices."
 
 #. module: account
 #: field:account.bank.statement,closing_date:0
@@ -8143,7 +8154,7 @@ msgstr "Écarts de change"
 #. module: account
 #: field:account.fiscalyear.close,fy_id:0
 msgid "Fiscal Year to close"
-msgstr "Exercice comptable à clôturer"
+msgstr "Exercice à fermer"
 
 #. module: account
 #: view:account.invoice.cancel:0
@@ -8485,8 +8496,8 @@ msgid ""
 "Select Fiscal Year which you want to remove entries for its End of year "
 "entries journal"
 msgstr ""
-"Sélectionnez l'exercice comptable pour lequel vous voulez effacer des "
-"écritures"
+"Sélectionnez l'exercice pour lequel vous voulez effacer les écritures de fin "
+"d'exercice"
 
 #. module: account
 #: field:account.tax.template,type_tax_use:0
@@ -8535,6 +8546,7 @@ msgstr "Balance analytique inversée -"
 msgid ""
 "Is this reconciliation produced by the opening of a new fiscal year ?."
 msgstr ""
+"Ce rapprochement est-il produit par l'ouverture d'un nouvel exercice ?"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -8608,7 +8620,7 @@ msgstr "Livre de coûts"
 #. module: account
 #: view:account.config.settings:0
 msgid "No Fiscal Year Defined for This Company"
-msgstr ""
+msgstr "Aucun exercice défini pour cette société"
 
 #. module: account
 #: view:account.invoice:0
@@ -8761,9 +8773,9 @@ msgid ""
 "This wizard will remove the end of year journal entries of selected fiscal "
 "year. Note that you can run this wizard many times for the same fiscal year."
 msgstr ""
-"Cet assistant va supprimer les écritures de clôture de l'exercice "
-"sélectionné. Notez que vous pouvez exécuter l'assistant à maintes reprises "
-"pour le même exercice."
+"Cet assistant va supprimer les écritures de fermeture de l'exercice "
+"sélectionné. Notez que vous pouvez exécuter l'assistant plusieurs fois "
+"reprises pour le même exercice."
 
 #. module: account
 #: report:account.invoice:0
@@ -8956,7 +8968,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_fiscalyear_close_state
 msgid "Fiscalyear Close state"
-msgstr "État fermé de l'exercice comptable"
+msgstr "Fermeture d'exercice comptable"
 
 #. module: account
 #: field:account.invoice.refund,journal_id:0
@@ -8979,7 +8991,7 @@ msgstr "Filtré par"
 msgid ""
 "In order to close a period, you must first post related journal entries."
 msgstr ""
-"Afin de pouvoir clôturer la période, vous devez préalablement valider les "
+"Afin de pouvoir fermer la période, vous devez préalablement valider les "
 "écritures de cette période."
 
 #. module: account
@@ -9084,7 +9096,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_fiscalyear_close
 msgid "Fiscalyear Close"
-msgstr "Clôture de l'exercice comptable"
+msgstr "Fermeture de l'exercice comptable"
 
 #. module: account
 #: sql_constraint:account.account:0
@@ -9224,7 +9236,7 @@ msgstr "Charges"
 #. module: account
 #: help:account.chart,fiscalyear:0
 msgid "Keep empty for all open fiscal years"
-msgstr "Conserver vide pour tous les exercices comptables ouverts"
+msgstr "Laissez vide pour tous les exercices comptables ouverts"
 
 #. module: account
 #: help:account.move.line,amount_currency:0
@@ -9395,7 +9407,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,has_fiscal_year:0
 msgid "Company has a fiscal year"
-msgstr ""
+msgstr "La société a un exercice"
 
 #. module: account
 #: help:account.tax,child_depend:0
@@ -9487,7 +9499,7 @@ msgstr "Règlement enregistré"
 #. module: account
 #: view:account.fiscalyear.close.state:0
 msgid "Close states of Fiscal year and periods"
-msgstr "Fermer les états de l'exercice comptable et des périodes"
+msgstr "Fermer des exercices et des périodes"
 
 #. module: account
 #: field:account.config.settings,purchase_refund_journal_id:0
@@ -9776,7 +9788,7 @@ msgstr ""
 #. module: account
 #: view:account.fiscalyear.close:0
 msgid "Generate Fiscal Year Opening Entries"
-msgstr "Générer les écritures d'ouvertures d'exercice comptable"
+msgstr "Générer les écritures d'ouverture d'exercice"
 
 #. module: account
 #: report:account.third_party_ledger:0
@@ -9836,7 +9848,10 @@ msgid ""
 "Error!\n"
 "The period is invalid. Either some periods are overlapping or the period's "
 "dates are not matching the scope of the fiscal year."
-msgstr "Erreur !"
+msgstr ""
+"Erreur !\n"
+"Cette période est incorrecte. Soit des périodes se chevauchent, soit les "
+"dates des périodes sont en dehors des dates de l'exercice."
 
 #. module: account
 #: report:account.overdue:0
@@ -10012,12 +10027,12 @@ msgid ""
 "journals. Select 'Opening/Closing Situation' for entries generated for new "
 "fiscal years."
 msgstr ""
-"Sélectionnez 'Vente' pour le journal de ventes. Sélectionnez 'Achats' pour "
-"le journal des achats. Sélectionnez 'Caisse' ou 'Banque' pour les journaux "
-"qui sont utilisés dans les règlements des clients ou des fournisseurs. "
-"Sélectionnez 'Général' pour les journaux d' opérations diverses. "
-"Sélectionnez 'Ouverture / Fermeture' pour les journaux qui contiendront les "
-"écritures générées lors des nouveaux exercices."
+"Sélectionnez \"Vente\" pour le journal de ventes. Sélectionnez \"Achats\" "
+"pour le journal des achats. Sélectionnez \"Caisse\" ou \"Banque\" pour les "
+"journaux qui sont utilisés dans les règlements des clients ou des "
+"fournisseurs. Sélectionnez \"Général\" pour les journaux d'opérations "
+"diverses. Sélectionnez \"Ouverture / Fermeture\" pour les journaux qui "
+"contiendront les écritures générées lors des nouveaux exercices."
 
 #. module: account
 #: view:account.subscription:0
@@ -10117,14 +10132,14 @@ msgid ""
 "want to lock this period for tax related calculation."
 msgstr ""
 "Une période est une durée pendant laquelle les écritures comptables doivent "
-"être enregistrées dans la comptabilité des activités connexes. La période "
-"mensuelle est la norme, mais en fonction de votre pays ou de besoins de "
-"l'entreprise, vous pouvez aussi avoir des périodes trimestrielles. Après la "
-"fermeture d'une période, il sera impossible d'enregistrer de nouvelles "
-"écritures comptables, toutes les nouvelles saisies doivent être faites sur "
-"la période suivante ouverte. Fermez une période si vous ne souhaitez plus "
-"enregistrer de nouvelles entrées et que vous souhaitez verrouiller cette "
-"période pour le calcul des taxes."
+"être enregistrées pour la comptabilité des activités. La période mensuelle "
+"est la norme, mais en fonction de votre pays ou des besoins de l'entreprise, "
+"vous pouvez aussi avoir des périodes trimestrielles. Après la fermeture "
+"d'une période, il sera impossible d'enregistrer de nouvelles écritures "
+"comptables : toutes les nouvelles saisies doivent être faites sur la période "
+"ouverte suivante . Fermez une période si vous ne souhaitez plus enregistrer "
+"de nouvelles écritures et que vous souhaitez verrouiller cette période pour "
+"le calcul des taxes."
 
 #. module: account
 #: view:account.analytic.account:0
@@ -10146,7 +10161,7 @@ msgstr "Depuis les comptes analytiques"
 #. module: account
 #: view:account.installer:0
 msgid "Configure your Fiscal Year"
-msgstr "Paramétrer votre année fiscale"
+msgstr "Paramétrer votre exercice"
 
 #. module: account
 #: field:account.period,name:0
@@ -10522,7 +10537,7 @@ msgstr "Base de la taxe"
 #. module: account
 #: view:ir.sequence:0
 msgid "Fiscal Year Sequences"
-msgstr "Séquences des exercices comptables"
+msgstr "Séquences des exercices"
 
 #. module: account
 #: selection:account.financial.report,display_detail:0
@@ -10860,12 +10875,12 @@ msgid ""
 "payable/receivable are for partners accounts (for debit/credit "
 "computations), closed for depreciated accounts."
 msgstr ""
-"Le 'type interne' est utilisé pour des caractéristiques disponibles sur "
+"Le \"Type interne\" est utilisé pour des caractéristiques disponibles sur "
 "différents types de comptes : la saisie d'écritures est impossible dans les "
-"comptes de 'vue',  'consolidation' doit être utilisé dans des environnements "
-"multi-sociétés nécessitant la consolidation des résultats, "
-"'clients/fournisseurs' pour les comptes de tiers, 'clôturé' pour les comptes "
-"fermés."
+"comptes \"Vue\",  \"Consolidation\" doit être utilisé dans des "
+"environnements multi-sociétés nécessitant la consolidation des résultats, "
+"\"Clients/fournisseurs\" pour les comptes de tiers, \"Fermé\" pour les "
+"comptes obsolètes."
 
 #. module: account
 #: selection:account.balance.report,display_account:0
@@ -11169,7 +11184,7 @@ msgstr "Notes internes"
 #: view:ir.sequence:0
 #: model:ir.ui.menu,name:account.menu_action_account_fiscalyear
 msgid "Fiscal Years"
-msgstr "Exercices comptables"
+msgstr "Exercices"
 
 #. module: account
 #: help:account.analytic.journal,active:0

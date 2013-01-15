@@ -580,6 +580,9 @@ openerp.mail = function (session) {
                 }
             });
             var deferred_check = $.Deferred();
+            if (emails.length == 0) {
+                return deferred_check.resolve(partners_from);
+            }
             self.parent_thread.ds_thread._model.call('message_create_partners_from_emails', [emails]).then(function (partners) {
                 partners_from = _.clone(partners.partner_ids);
                 var deferreds = [];
