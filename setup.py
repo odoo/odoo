@@ -43,6 +43,12 @@ def data():
             base = os.path.join('pytz', root[len(tzdir) + 1:])
             r[base] = [os.path.join(root, f) for f in filenames]
 
+        import docutils
+        dudir = os.path.dirname(docutils.__file__)
+        for root, _, filenames in os.walk(dudir):
+            base = os.path.join('docutils', root[len(dudir) + 1:])
+            r[base] = [os.path.join(root, f) for f in filenames if not f.endswith(('.py', '.pyc', '.pyo'))]
+
     return r.items()
 
 def gen_manifest():
