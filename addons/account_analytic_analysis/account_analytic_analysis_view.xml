@@ -22,8 +22,8 @@
                     <label for="quantity_max"/>
                     <div>
                         <field name="quantity_max"/>
-                        <div attrs="{'invisible': [('quantity','=',0)]}" class="oe_grey">
-                            <field name="quantity" class="oe_inline"/> Units Done
+                        <div attrs="{'invisible': [('hours_quantity','=',0)]}" class="oe_grey">
+                            <field name="hours_quantity" class="oe_inline"/> Units Consumed
                         </div>
                         <div attrs="{'invisible': [('quantity_max','=',0)]}" class="oe_grey">
                             <field name="remaining_hours" class="oe_inline"/> Units Remaining

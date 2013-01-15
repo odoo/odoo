@@ -98,13 +98,20 @@ Example: Product: this product is deprecated, do not purchase more than 5.
         wizard = self.browse(cr, uid, ids)[0]
 
         if wizard.time_unit:
-            product = ir_model_data.get_object(cr, uid, 'product', 'product_product_consultant')
-            product.write({'uom_id': wizard.time_unit.id, 'uom_po_id': wizard.time_unit.id})
+            product = False
+            try:
+                product = ir_model_data.get_object(cr, uid, 'product', 'product_product_consultant')
+            except:
+                #product with xml_id product_product_consultant has not been found. Don't do anything except logging the exception
+                import logging
+                _logger = logging.getLogger(__name__)
+                _logger.warning("Warning, product with xml_id 'product_product_consultant' hasn't been found")
+            if product:
+                product.write({'uom_id': wizard.time_unit.id, 'uom_po_id': wizard.time_unit.id})
 
         if wizard.module_project and wizard.time_unit:
             user = self.pool.get('res.users').browse(cr, uid, uid, context)
             user.company_id.write({'project_time_mode_id': wizard.time_unit.id})
-         
         return {}
 
     def onchange_task_work(self, cr, uid, ids, task_work, context=None):

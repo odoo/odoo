@@ -1,8 +1,34 @@
 function openerp_pos_db(instance, module){ 
 
-    /* PosLS is a LocalStorage based implementation of the point of sale database,
-       it performs better for few products, but does not scale beyond 500 products. 
-       */
+    /* The db module was intended to be used to store all the data needed to run the Point
+     * of Sale in offline mode. (Products, Categories, Orders, ...) It would also use WebSQL 
+     * or IndexedDB to make the searching and sorting products faster. It turned out not to be 
+     * a so good idea after all. 
+     * 
+     * First it is difficult to make the Point of Sale truly independant of the server. A lot
+     * of functionality cannot realistically run offline, like generating invoices. 
+     *
+     * IndexedDB turned out to be complicated and slow as hell, and loading all the data at the
+     * start made the point of sale take forever to load over small connections. 
+     *
+     * LocalStorage has a hard 5.0MB on chrome. For those kind of sizes, it is just better 
+     * to put the data in memory and it's not too big to download each time you launch the PoS.
+     *
+     * So at this point we are dropping the support for offline mode, and this module doesn't really
+     * make sense anymore. But if at some point you want to store millions of products and if at
+     * that point indexedDB has improved to the point it is usable, you can just implement this API. 
+     *
+     * You would also need to change the way the models are loaded at the start to not reload all your
+     * product data. 
+     */ 
+
+    /* PosLS is a localstorage based implementation of the point of sale database.
+     * FIXME: The Products definitions and categories are stored on the locastorage even tough they're 
+     * always reloaded at launch. This could induce a slowdown because the data needs to be reparsed from
+     * JSON before each operation. If you have a huge amount of products (around 25000) it can also 
+     * blow the 5.0MB localstorage limit. 
+     */
+
     module.PosLS = instance.web.Class.extend({
         name: 'openerp_pos_ls', //the prefix of the localstorage data
         limit: 100,  // the maximum number of results returned by a search
@@ -110,6 +136,8 @@ function openerp_pos_db(instance, module){
         },
         /* saves a record store to the database */
         save: function(store,data){
+            var str_data = JSON.stringify(data);
+            console.log('Storing '+ Math.round(str_data.length/1024.0)+' KB of data to store: '+store);
             localStorage[this.name + '_' + store] = JSON.stringify(data);
             this.cache[store] = data;
         },

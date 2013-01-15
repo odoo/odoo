@@ -38,7 +38,8 @@ openerp.web_analytics = function(instance) {
         },
         /*
         * This method MUST be overriden by saas_demo and saas_trial in order to
-        * set the correct user type. By default, the user connected is local to the DB.
+        * set the correct user type. By default, the user connected is local to
+        * the DB (like in accounts).
         */
         _get_user_type: function() {
             return 'Local User';
@@ -67,20 +68,26 @@ openerp.web_analytics = function(instance) {
         * stored in GA. Also other modules can override it to add new custom variables
         */
         initialize_custom: function() {
-            // Track User Access Level, Custom Variable 4 in GA with visitor level scope
-            // Values: 'Admin User', 'Normal User', 'Portal User', 'Anonymous User'
-            _gaq.push(['_setCustomVar', 4, 'User Access Level', this.user_access_level, 1]);
-
-            // Track User Type Conversion, Custom Variable 3 in GA with session level scope
-            // Values: 'Visitor', 'Demo', 'Online Trial', 'Online Paying', 'Local User'
-            _gaq.push(['_setCustomVar', 1, 'User Type Conversion', this._get_user_type(), 2]);
-
+            var self = this;
             return instance.session.rpc("/web/webclient/version_info", {})
                 .done(function(res) {
                     _gaq.push(['_setCustomVar', 5, 'Version', res.server_version, 3]);
+                    // Track User Access Level, Custom Variable 4 in GA with visitor level scope
+                    // Values: 'Admin User', 'Normal User', 'Portal User', 'Anonymous User'
+                    _gaq.push(['_setCustomVar', 4, 'User Access Level', self.user_access_level, 1]);
+
+                    // Track User Type Conversion, Custom Variable 3 in GA with session level scope
+                    // Values: 'Visitor', 'Demo', 'Online Trial', 'Online Paying', 'Local User'
+                    _gaq.push(['_setCustomVar', 1, 'User Type Conversion', self._get_user_type(), 2]);
                     _gaq.push(['_trackPageview']);
                     return;
                 });
+        },
+        /*
+        * Method called in order to send _trackPageview to GA
+        */
+        _push_pageview: function(url) {
+            _gaq.push(['_trackPageview', url]);
         },
         /*
         * Method called in order to send _trackEvent to GA
@@ -155,6 +162,7 @@ openerp.web_analytics = function(instance) {
                             'category': r.model,
                             'action': 'form',
                             'label': url,
+                            'noninteraction': true,
                         });
                     });
                     this.on('record_saved', self, function(r) {
@@ -163,6 +171,7 @@ openerp.web_analytics = function(instance) {
                             'category': r.model,
                             'action': 'form',
                             'label': url,
+                            'noninteraction': true,
                         });
                     });
                 }
@@ -197,6 +206,7 @@ openerp.web_analytics = function(instance) {
                         'category': category,
                         'action': action,
                         'label': url,
+                        'noninteraction': true,
                     });
                     return this._super.apply(this, arguments);
                 },
