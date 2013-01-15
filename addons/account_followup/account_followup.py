@@ -166,8 +166,8 @@ class res_partner(osv.osv):
                 action_text = partner.latest_followup_level_id_without_lit.manual_action_note or ''
 
             #Check date: put the minimum date if it existed already
-            action_date = (partner.payment_next_action_date and min(partner.payment_next_action_date, fields.date.context_today(cr, uid, context))
-                           ) or fields.date.context_today(cr, uid, context)
+            action_date = (partner.payment_next_action_date and min(partner.payment_next_action_date, fields.date.context_today(self, cr, uid, context=context))
+                           ) or fields.date.context_today(self, cr, uid, context=context)
 
             # Check responsible: if partner has not got a responsible already, take from follow-up
             responsible_id = False
@@ -218,9 +218,9 @@ class res_partner(osv.osv):
                 unknown_mails = unknown_mails + 1
                 action_text = _("Email not sent because of email address of partner not filled in")
                 if partner.payment_next_action_date:
-                    payment_action_date = min(fields.date.context_today(cr, uid, ctx), partner.payment_next_action_date)
+                    payment_action_date = min(fields.date.context_today(self, cr, uid, context=ctx), partner.payment_next_action_date)
                 else:
-                    payment_action_date = fields.date.context_today(cr, uid, ctx)
+                    payment_action_date = fields.date.context_today(self, cr, uid, context=ctx)
                 if partner.payment_next_action:
                     payment_next_action = partner.payment_next_action + " \n " + action_text
                 else:
@@ -242,7 +242,7 @@ class res_partner(osv.osv):
         followup_table = ''
         if partner.unreconciled_aml_ids:
             company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
-            current_date = fields.date.context_today(cr, uid, context)
+            current_date = fields.date.context_today(self, cr, uid, context=context)
             rml_parse = account_followup_print.report_rappel(cr, uid, "followup_rml_parser")
             final_res = rml_parse._lines_get_with_partner(partner, company.id)
 
@@ -311,7 +311,7 @@ class res_partner(osv.osv):
         '''
         res = {}
         company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
-        current_date = fields.date.context_today(cr, uid, context)
+        current_date = fields.date.context_today(self, cr, uid, context=context)
         for partner in self.browse(cr, uid, ids, context=context):
             worst_due_date = False
             amount_due = amount_overdue = 0.0
