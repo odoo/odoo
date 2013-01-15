@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-20 23:58+0000\n"
-"Last-Translator: Sergio Corato <Unknown>\n"
+"PO-Revision-Date: 2013-01-12 08:31+0000\n"
+"Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 05:31+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-01-13 04:38+0000\n"
+"X-Generator: Launchpad (build 16420)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -259,7 +259,7 @@ msgstr "Reports belgi"
 #. module: account
 #: model:mail.message.subtype,name:account.mt_invoice_validated
 msgid "Validated"
-msgstr ""
+msgstr "Confermato"
 
 #. module: account
 #: model:account.account.type,name:account.account_type_income_view1
@@ -430,7 +430,7 @@ msgstr "Data di creazione"
 #. module: account
 #: selection:account.journal,type:0
 msgid "Purchase Refund"
-msgstr "Rimborso acquisti"
+msgstr "Nota di Credito su Acquisti"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -475,7 +475,7 @@ msgstr ""
 #. module: account
 #: help:account.bank.statement.line,name:0
 msgid "Originator to Beneficiary Information"
-msgstr ""
+msgstr "Originator to Beneficiary Information"
 
 #. module: account
 #. openerp-web
@@ -496,6 +496,7 @@ msgstr "Template del piano dei conti"
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Modify: create refund, reconcile and create a new draft invoice"
 msgstr ""
+"Modifica: crea una nota di credito, riconcilia e crea una nuova fattura bozza"
 
 #. module: account
 #: help:account.config.settings,tax_calculation_rounding_method:0
@@ -615,7 +616,7 @@ msgstr "Seleziona il Piano dei Conti"
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_refund
 msgid "Invoice Refund"
-msgstr "Rimborso fattura"
+msgstr "Nota di Credito"
 
 #. module: account
 #: report:account.overdue:0
@@ -810,7 +811,7 @@ msgstr "Configura i conti bancari per la tua azienda"
 #. module: account
 #: view:account.invoice.refund:0
 msgid "Create Refund"
-msgstr ""
+msgstr "Crea nota di credito"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -840,7 +841,7 @@ msgstr "Sei sicuro di voler creare la voce?"
 #: code:addons/account/account_invoice.py:1329
 #, python-format
 msgid "Invoice partially paid: %s%s of %s%s (%s%s remaining)."
-msgstr ""
+msgstr "Fattura parzialmente pagata: %s%s di %s%s (%s%s rimanente)."
 
 #. module: account
 #: view:account.invoice:0
@@ -884,7 +885,7 @@ msgstr "Voci analitiche per linea"
 #. module: account
 #: field:account.invoice.refund,filter_refund:0
 msgid "Refund Method"
-msgstr "Metodo di rimborso"
+msgstr "Metodo di storno"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_report
@@ -1063,7 +1064,7 @@ msgstr "Sezionale Acquisti"
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_paid
 msgid "Invoice paid"
-msgstr ""
+msgstr "Fattura pagata"
 
 #. module: account
 #: view:validate.account.move:0
@@ -1117,7 +1118,7 @@ msgstr "Sezionale Centralizzato"
 #. module: account
 #: selection:account.journal,type:0
 msgid "Sale Refund"
-msgstr "Rimborso vendite"
+msgstr "Nota di Credito su Vendite"
 
 #. module: account
 #: model:process.node,note:account.process_node_accountingstatemententries0
@@ -1267,7 +1268,7 @@ msgstr ""
 #. module: account
 #: view:account.invoice:0
 msgid "Refund "
-msgstr "Rimborso "
+msgstr "Nota di Credito "
 
 #. module: account
 #: code:addons/account/account_analytic_line.py:90
@@ -1755,7 +1756,7 @@ msgstr "Una tavola temporanea utilizzata per la Dashboard"
 #: model:ir.actions.act_window,name:account.action_invoice_tree4
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree4
 msgid "Supplier Refunds"
-msgstr "Note di Credito"
+msgstr "Note di Credito Fornitori"
 
 #. module: account
 #: field:account.tax.code,code:0
@@ -1960,7 +1961,7 @@ msgstr "Vendite per tipo di conto"
 #: model:account.payment.term,name:account.account_payment_term_15days
 #: model:account.payment.term,note:account.account_payment_term_15days
 msgid "15 Days"
-msgstr ""
+msgstr "15 giorni"
 
 #. module: account
 #: model:ir.ui.menu,name:account.periodical_processing_invoicing
@@ -2105,7 +2106,7 @@ msgstr "Registrazione in 'Bozza'"
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_validated
 msgid "Invoice validated"
-msgstr ""
+msgstr "Fattura validata"
 
 #. module: account
 #: field:account.config.settings,module_account_check_writing:0
@@ -2288,8 +2289,6 @@ msgstr ""
 "bancario.\n"
 "                Dovresti riceverlo periodicamente dalla tua banca.\n"
 "              </p><p>\n"
-"                OpenERP allows you to reconcile a statement line directly "
-"with\n"
 "                OpenERP consente di riconciliare una riga dell'estratto "
 "conto direttamente con\n"
 "                le fatture di vendita o acquisto relative.\n"
@@ -2840,7 +2839,7 @@ msgstr "Proprietà dell'account"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Create a draft refund"
-msgstr ""
+msgstr "Crea una nota di credito bozza"
 
 #. module: account
 #: view:account.partner.reconcile.process:0
@@ -3087,7 +3086,7 @@ msgstr "Data:"
 #: report:account.journal.period.print:0
 #: report:account.journal.period.print.sale.purchase:0
 msgid "Label"
-msgstr "Label"
+msgstr "Descrizione"
 
 #. module: account
 #: view:res.partner.bank:0
@@ -3393,7 +3392,7 @@ msgstr ""
 #: view:account.unreconcile:0
 #: view:account.unreconcile.reconcile:0
 msgid "Unreconcile Transactions"
-msgstr ""
+msgstr "Annulla riconciliazione transazioni"
 
 #. module: account
 #: field:wizard.multi.charts.accounts,only_one_chart_template:0
@@ -3590,7 +3589,7 @@ msgstr "Quantità di cifre da usare per il codice di conto"
 #. module: account
 #: field:res.partner,property_supplier_payment_term:0
 msgid "Supplier Payment Term"
-msgstr ""
+msgstr "Termini di pagamento fornitore"
 
 #. module: account
 #: view:account.fiscalyear:0
@@ -3665,7 +3664,7 @@ msgstr "File elettronico"
 #. module: account
 #: field:account.move.line,reconcile:0
 msgid "Reconcile Ref"
-msgstr ""
+msgstr "Rif riconciliazione"
 
 #. module: account
 #: field:account.config.settings,has_chart_of_accounts:0
@@ -3766,6 +3765,85 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"<p>Ciao ${object.partner_id.name},</p>\n"
+"\n"
+"<p>Una nuova fattura è disponibile per te: </p>\n"
+"\n"
+"<p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"&nbsp;&nbsp;<strong>RIFERIMENTI</strong><br />\n"
+"&nbsp;&nbsp;Numero fattura: <strong>${object.number}</strong><br />\n"
+"&nbsp;&nbsp;Totale fattura: <strong>${object.amount_total} "
+"${object.currency_id.name}</strong><br />\n"
+"&nbsp;&nbsp;Data fattura: ${object.date_invoice}<br />\n"
+"% if object.origin:\n"
+"&nbsp;&nbsp;Riferimento ordine: ${object.origin}<br />\n"
+"% endif\n"
+"% if object.user_id:\n"
+"&nbsp;&nbsp;Vostro contatto: <a href=\"mailto:${object.user_id.email or "
+"''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n"
+"% endif\n"
+"</p>\n"
+"\n"
+"% if object.paypal_url:\n"
+"<br/>\n"
+"<p>E' possibile inoltre pagare direttamente con Paypal:</p>\n"
+"<a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
+"<img class=\"oe_edi_paypal_button\" "
+"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"</a>\n"
+"% endif\n"
+"\n"
+"<br/>\n"
+"<p>Se avete domande, non esitate a contattarci in qualunque momento.</p>\n"
+"<p>Grazie per avere scelto ${object.company_id.name or 'us'}!</p>\n"
+"<br/>\n"
+"<br/>\n"
+"<div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"<h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"<strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"</div>\n"
+"<div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"<span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"% if object.company_id.street:\n"
+"${object.company_id.street}<br/>\n"
+"% endif\n"
+"% if object.company_id.street2:\n"
+"${object.company_id.street2}<br/>\n"
+"% endif\n"
+"% if object.company_id.city or object.company_id.zip:\n"
+"${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"% endif\n"
+"% if object.company_id.country_id:\n"
+"${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) "
+"or ''} ${object.company_id.country_id.name or ''}<br/>\n"
+"% endif\n"
+"</span>\n"
+"% if object.company_id.phone:\n"
+"<div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-"
+"left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; "
+"padding-left: 0px; \">\n"
+"Telefono:&nbsp; ${object.company_id.phone}\n"
+"</div>\n"
+"% endif\n"
+"% if object.company_id.website:\n"
+"<div>\n"
+"Web :&nbsp;<a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"</div>\n"
+"%endif\n"
+"<p></p>\n"
+"</div>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: view:account.period:0
@@ -4753,6 +4831,8 @@ msgid ""
 "This payment term will be used instead of the default one for sale orders "
 "and customer invoices"
 msgstr ""
+"Questo termine di pagamento verrà usato al posto di quello di default per "
+"gli ordini di vendita e le fatture fornitore"
 
 #. module: account
 #: view:account.config.settings:0
@@ -4780,7 +4860,7 @@ msgstr "Registrazioni contabili validate"
 #. module: account
 #: field:account.move.line,blocked:0
 msgid "No Follow-up"
-msgstr ""
+msgstr "Nessun follow-up"
 
 #. module: account
 #: view:account.tax.template:0
@@ -4951,7 +5031,7 @@ msgstr "Tipo di conto"
 #. module: account
 #: selection:account.journal,type:0
 msgid "Bank and Checks"
-msgstr ""
+msgstr "Banca e assegni"
 
 #. module: account
 #: field:account.account.template,note:0
@@ -5077,7 +5157,7 @@ msgstr "Piano dei conti"
 #. module: account
 #: field:account.invoice,reference_type:0
 msgid "Payment Reference"
-msgstr ""
+msgstr "Riferimento pagamento"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -5151,7 +5231,7 @@ msgstr "Voci Sezionale da Riconciliare"
 #. module: account
 #: model:ir.model,name:account.model_account_tax_template
 msgid "Templates for Taxes"
-msgstr ""
+msgstr "Modelli per tasse"
 
 #. module: account
 #: sql_constraint:account.period:0
@@ -6169,7 +6249,7 @@ msgstr "Registrazioni di sezionale di fine anno"
 #. module: account
 #: view:account.invoice:0
 msgid "Draft Refund "
-msgstr "Bozza Rimborso "
+msgstr "Bozza Nota di Credito "
 
 #. module: account
 #: view:cash.box.in:0
@@ -6297,6 +6377,8 @@ msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and supplier invoices"
 msgstr ""
+"Questa condizione di pagamento sarà usata al posto di quella di default per "
+"gli ordini di acquisto e le fatture dei fornitori."
 
 #. module: account
 #: help:account.automatic.reconcile,power:0
@@ -6322,7 +6404,7 @@ msgstr "Modelli di \"posizioni fiscali\""
 #. module: account
 #: view:account.invoice:0
 msgid "Draft Refund"
-msgstr "Bozza Rimborso"
+msgstr "Bozza Nota di Credito"
 
 #. module: account
 #: view:account.analytic.chart:0
@@ -6516,7 +6598,7 @@ msgstr "Quant. massima:"
 #: view:account.invoice:0
 #: model:ir.actions.act_window,name:account.action_account_invoice_refund
 msgid "Refund Invoice"
-msgstr "Fattura di resi"
+msgstr "Nota di Credito"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_entries_report_all
@@ -6859,13 +6941,13 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Cliccare per registrare un rimborso ricevuto da un "
+"                Cliccare per registrare una nota di credito ricevuta da un "
 "fornitore.\n"
 "              </p><p>\n"
-"                Invece di creare manualmente un rimborso da fornitore, è "
-"possibile generare\n"
-"                rimborsi e riconciliarli direttamente dalla relativa fattura "
-"fornitore.\n"
+"                Invece di creare manualmente una nota di credito da "
+"fornitore, è possibile generare\n"
+"                note di credito e riconciliarle direttamente dalla relativa "
+"fattura fornitore.\n"
 "              </p>\n"
 "            "
 
@@ -7139,6 +7221,13 @@ msgid ""
 "due date, make sure that the payment term is not set on the invoice. If you "
 "keep the payment term and the due date empty, it means direct payment."
 msgstr ""
+"Se vengono utilizzate le condizioni di pagamento, la data di scadenza sarà "
+"calcolata automaticamento alla creazione delle registrazioni contabili. La "
+"condizione di pagamento può calcolare diverse date di scadenza, per esempio "
+"50% subito e 50% a 30 giorni, ma se è necessario forzare un data di "
+"scadenza, assicurarsi che la condizione di pagamento non sia impostata in "
+"fattura. Se sia la condizione di pagamento che la data di scadenza vengono "
+"lasciate vuote, ciò implica il pagamento immediato."
 
 #. module: account
 #: code:addons/account/account.py:414
@@ -7258,7 +7347,7 @@ msgstr ""
 #: selection:account.invoice.report,type:0
 #: selection:report.invoice.created,type:0
 msgid "Supplier Refund"
-msgstr "Note di Credito"
+msgstr "Note di Credito Fornitori"
 
 #. module: account
 #: field:account.bank.statement,move_line_ids:0
@@ -7387,6 +7476,8 @@ msgid ""
 "If you unreconcile transactions, you must also verify all the actions that "
 "are linked to those transactions because they will not be disabled"
 msgstr ""
+"Se si annulla la riconciliazione, è altrettanto necessario verificare che le "
+"azioni collegate alle transazioni siccome non verranno disabilitate"
 
 #. module: account
 #: view:account.account.template:0
@@ -7561,7 +7652,7 @@ msgstr "Manuale"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Cancel: create refund and reconcile"
-msgstr ""
+msgstr "Annulla: crea nota di credito e riconcilia"
 
 #. module: account
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:58
@@ -7781,7 +7872,7 @@ msgstr ""
 #. module: account
 #: field:account.invoice,paypal_url:0
 msgid "Paypal Url"
-msgstr ""
+msgstr "URL Paypal"
 
 #. module: account
 #: field:account.config.settings,module_account_voucher:0
@@ -8499,7 +8590,7 @@ msgstr ""
 #. module: account
 #: field:account.move.line,amount_residual_currency:0
 msgid "Residual Amount in Currency"
-msgstr ""
+msgstr "Importo residuo in valuta"
 
 #. module: account
 #: field:account.config.settings,sale_refund_sequence_prefix:0
@@ -8553,6 +8644,8 @@ msgid ""
 "Refund base on this type. You can not Modify and Cancel if the invoice is "
 "already reconciled"
 msgstr ""
+"Nota di credito basata su questo tipo. Non è possibile modificare o "
+"annullare se la fattura è già stata riconciliata"
 
 #. module: account
 #: field:account.bank.statement.line,sequence:0
@@ -8661,7 +8754,7 @@ msgstr "Transazioni di Riconciliazione"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_legal_statement
 msgid "Legal Reports"
-msgstr "Scritture legali"
+msgstr "Stampe fiscali"
 
 #. module: account
 #: field:account.tax.code,sum_period:0
@@ -9126,7 +9219,7 @@ msgstr "Bilancio finale"
 #. module: account
 #: field:account.journal,centralisation:0
 msgid "Centralized Counterpart"
-msgstr ""
+msgstr "Contropartita centralizzata"
 
 #. module: account
 #: help:account.move.line,blocked:0
@@ -9200,7 +9293,7 @@ msgstr "Tipi di conto"
 #. module: account
 #: model:email.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
-msgstr ""
+msgstr "${object.company_id.name} Fattura (Rif ${object.number or 'n/a'})"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1211
@@ -9863,7 +9956,7 @@ msgstr "Chiudi lo stato dell'anno Fiscale e dei periodi"
 #. module: account
 #: field:account.config.settings,purchase_refund_journal_id:0
 msgid "Purchase refund journal"
-msgstr "Sezionale Note di Debito"
+msgstr "Sezionale Note di Credito fornitori"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -10025,7 +10118,7 @@ msgstr "Aziende collegate al Partner"
 #. module: account
 #: view:account.invoice:0
 msgid "Ask Refund"
-msgstr "Richiesta Rimborso"
+msgstr "Richiesta Nota di Credito"
 
 #. module: account
 #: view:account.move.line:0
@@ -10195,7 +10288,7 @@ msgstr "Registrazione Manuale"
 #: view:account.move.line:0
 #: field:analytic.entries.report,move_id:0
 msgid "Move"
-msgstr "Movimento contabile"
+msgstr "Rif."
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:477
@@ -10310,7 +10403,7 @@ msgstr "Non è possibile creare movimenti per diverse aziende."
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_periodical_processing
 msgid "Periodic Processing"
-msgstr ""
+msgstr "Elaborazione periodica"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -10390,7 +10483,7 @@ msgstr "Data scadenza"
 #: model:account.payment.term,name:account.account_payment_term_immediate
 #: model:account.payment.term,note:account.account_payment_term_immediate
 msgid "Immediate Payment"
-msgstr ""
+msgstr "Pagamento immediato"
 
 #. module: account
 #: code:addons/account/account.py:1464
@@ -10614,7 +10707,7 @@ msgstr ""
 #. module: account
 #: field:account.bank.statement.line,name:0
 msgid "OBI"
-msgstr ""
+msgstr "OBI"
 
 #. module: account
 #: help:res.partner,property_account_payable:0
@@ -11104,6 +11197,9 @@ msgid ""
 "If you unreconcile transactions, you must also verify all the actions that "
 "are linked to those transactions because they will not be disable"
 msgstr ""
+"Se viene annullata la riconciliazione delle registrazioni, è necessario "
+"verificare anche tutte le azioni collegate a queste registrazioni perchè non "
+"saranno annullate"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1059
@@ -11482,7 +11578,7 @@ msgstr "Ricerca fattura"
 #: view:account.invoice:0
 #: view:account.invoice.report:0
 msgid "Refund"
-msgstr "Rimborso"
+msgstr "Nota di Credito"
 
 #. module: account
 #: model:ir.model,name:account.model_res_partner_bank
@@ -11699,7 +11795,7 @@ msgstr "Conto spese per il prodotto"
 #. module: account
 #: field:res.partner,property_payment_term:0
 msgid "Customer Payment Term"
-msgstr ""
+msgstr "Termine di pagamento cliente"
 
 #. module: account
 #: help:accounting.report,label_filter:0
