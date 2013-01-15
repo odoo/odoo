@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import itertools
 import time
 from lxml import etree
 import openerp.addons.decimal_precision as dp
@@ -1315,7 +1316,7 @@ class account_invoice(osv.osv):
                    'WHERE move_id IN %s',
                    ((move_id, invoice.move_id.id),))
         lines = line.browse(cr, uid, map(lambda x: x[0], cr.fetchall()) )
-        for l in lines+invoice.payment_ids:
+        for l in itertools.chain(lines, invoice.payment_ids):
             if l.account_id.id == src_account_id:
                 line_ids.append(l.id)
                 total += (l.debit or 0.0) - (l.credit or 0.0)
