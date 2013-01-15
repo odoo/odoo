@@ -1,6 +1,6 @@
 
 from openerp.tools import mute_logger
-from openerp.osv.orm import browse_record
+from openerp.osv.orm import browse_record, Model
 import common
 
 
@@ -36,3 +36,20 @@ class TestAPI(common.TransactionCase):
         # modify those partners, and check that partners has not changed
         self.Partner.write(self.cr, self.uid, ids, {'active': False})
         self.assertEqual(ids, map(int, partners))
+
+        # redo the query, and check that the result is now empty
+        partners2 = self.Partner.query(self.cr, self.uid, domain)
+        self.assertFalse(partners2)
+
+    @mute_logger('openerp.osv.orm')
+    def test_10_old_old(self):
+        """ Call old-fashioned methods on recordsets. """
+        domain = [('name', 'ilike', 'j')]
+        partners = self.Partner.query(self.cr, self.uid, domain)
+        self.assertTrue(partners)
+        ids = map(int, partners)
+
+        # call method write on partners itself, and check its effect
+        partners.write(self.cr, self.uid, ids, {'active': False})
+        for p in partners:
+            self.assertFalse(p.active)

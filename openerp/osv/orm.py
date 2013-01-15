@@ -658,6 +658,10 @@ class BaseModel(object):
     The system will later instantiate the class once per database (on
     which the class' module is installed).
 
+    An instance of this class is either a model, or a *recordset*, i.e., a
+    collection of records in the given model.  A recordset encapsulates transaction
+    data (cursor, user id, context) together with record data (typically record ids).
+
     To create a class that should not be instantiated, the _register class attribute
     may be set to False.
     """
@@ -1081,6 +1085,53 @@ class BaseModel(object):
         else:
             self._rec_name = 'name'
 
+    MODEL_ATTRIBUTES = [
+        '_register',
+        '_name',
+        '_columns',
+        '_log_access',
+        '_constraints',
+        '_defaults',
+        '_rec_name',
+        '_parent_name',
+        '_parent_store',
+        '_parent_order',
+        '_date_name',
+        '_order',
+        '_sequence',
+        '_description',
+        '_group_by_full',
+        '_transient',
+        '_transient_max_count',
+        '_transient_max_hours',
+        '_transient_check_time',
+        '_inherits',
+        '_inherit_fields',
+        '_all_columns',
+        '_table',
+        '_invalids',
+        '_log_create',
+        '_sql_constraints',
+        '_protected',
+        '_foreign_keys',
+        'pool',
+    ]
+
+    def _recordset(self, cr, uid, context=None, **kwargs):
+        """ Create an instance of this model for a recordset. """
+        # copy the fields determined by create_instance() and __init__()
+        obj = object.__new__(self.__class__)
+        for name in self.MODEL_ATTRIBUTES:
+            if hasattr(self, name):
+                setattr(obj, name, getattr(self, name))
+
+        # set recordset data
+        obj._cr = cr
+        obj._uid = uid
+        obj._context = {} if context is None else context
+        for key, value in kwargs.iteritems():
+            setattr(obj, '_' + key, value)
+        return obj
 
     def __export_row(self, cr, uid, row, fields, context=None):
         if context is None:
@@ -2359,6 +2410,9 @@ class BaseModel(object):
         """ Return a recordset corresponding to the search domain. """
         ids = self.search(cr, uid, args, offset=offset, limit=limit, order=order, context=context)
         return self.browse(cr, uid, ids, context=context)
+
+    def force(self):
+        assert hasattr(self, '_ids')
 
     def name_get(self, cr, user, ids, context=None):
         """Returns the preferred display value (text representation) for the records with the
@@ -4495,24 +4549,24 @@ class BaseModel(object):
         self._workflow_trigger(cr, user, [id_new], 'trg_create', context=context)
         return id_new
 
-    def browse(self, cr, uid, select, context=None, list_class=None, fields_process=None):
-        """Fetch records as objects allowing to use dot notation to browse fields and relations
+    def browse(self, cr, uid, select, context=None, fields_process=None):
+        """ Fetch records as objects allowing to use dot notation to browse fields and relations
 
-        :param cr: database cursor
-        :param uid: current user id
-        :param select: id or list of ids.
-        :param context: context arguments, like lang, time zone
-        :rtype: object or list of objects requested
-
+            :param cr: database cursor
+            :param uid: current user id
+            :param select: id or list of ids.
+            :param context: context arguments, like lang, time zone
+            :rtype: record or recordset requested
         """
-        self._list_class = list_class or browse_record_list
         cache = {}
         # need to accepts ints and longs because ids coming from a method
         # launched by button in the interface have a type long...
         if isinstance(select, (int, long)):
-            return browse_record(cr, uid, select, self, cache, context=context, list_class=self._list_class, fields_process=fields_process)
+            return browse_record(cr, uid, select, self, cache, context=context, fields_process=fields_process)
         elif isinstance(select, list):
-            return self._list_class([browse_record(cr, uid, id, self, cache, context=context, list_class=self._list_class, fields_process=fields_process) for id in select], context=context)
+            records = [browse_record(cr, uid, id, self, cache, context=context, fields_process=fields_process) for id in select]
+            return self._recordset(cr, uid, ids=select, records=records,
+                                   cache=cache, context=context)
         else:
             return browse_null()
 
@@ -5255,6 +5309,29 @@ class BaseModel(object):
     def _register_hook(self, cr):
         """ stuff to do right after the registry is built """
         pass
+
+    def __nonzero__(self):
+        """ If self is a recordset, test whether it is nonempty.
+            Otherwise return True.
+        """
+        if hasattr(self, '_ids'):
+            return bool(self._ids)
+        return True
+
+    def __iter__(self):
+        """ Return an iterator over self (must be a recordset). """
+        self.force()
+        return iter(self._records)
+
+    def __len__(self):
+        """ Return the size of self (must be a recordset). """
+        self.force()
+        return len(self._ids)
+
+    def __getitem__(self, n):
+        """ Return the nth element of self (must be a recordset). """
+        self.force()
+        return self._records[n]
 
 # keep this import here, at top it will cause dependency cycle errors
 import expression
