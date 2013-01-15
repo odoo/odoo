@@ -162,6 +162,7 @@ openerp.web_analytics = function(instance) {
                             'category': r.model,
                             'action': 'form',
                             'label': url,
+                            'noninteraction': true,
                         });
                     });
                     this.on('record_saved', self, function(r) {
@@ -170,6 +171,7 @@ openerp.web_analytics = function(instance) {
                             'category': r.model,
                             'action': 'form',
                             'label': url,
+                            'noninteraction': true,
                         });
                     });
                 }
@@ -204,6 +206,7 @@ openerp.web_analytics = function(instance) {
                         'category': category,
                         'action': action,
                         'label': url,
+                        'noninteraction': true,
                     });
                     return this._super.apply(this, arguments);
                 },
