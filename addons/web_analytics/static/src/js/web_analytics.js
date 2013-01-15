@@ -84,6 +84,12 @@ openerp.web_analytics = function(instance) {
                 });
         },
         /*
+        * Method called in order to send _trackPageview to GA
+        */
+        _push_pageview: function(url) {
+            _gaq.push(['_trackPageview', url]);
+        },
+        /*
         * Method called in order to send _trackEvent to GA
         */
         _push_event: function(options) {
