@@ -9,6 +9,7 @@ See the :ref:`test-framework` section in the :ref:`features` list.
 """
 
 import test_acl
+import test_api
 import test_basecase
 import test_db_cursor
 import test_expression
@@ -40,6 +41,7 @@ checks = [
     test_misc,
     test_osv,
     test_translate,
+    test_api,
 ]
- 
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

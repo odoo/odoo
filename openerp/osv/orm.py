@@ -2355,6 +2355,11 @@ class BaseModel(object):
         """
         return self._search(cr, user, args, offset=offset, limit=limit, order=order, context=context, count=count)
 
+    def query(self, cr, uid, args, offset=0, limit=None, order=None, context=None):
+        """ Return a recordset corresponding to the search domain. """
+        ids = self.search(cr, uid, args, offset=offset, limit=limit, order=order, context=context)
+        return self.browse(cr, uid, ids, context=context)
+
     def name_get(self, cr, user, ids, context=None):
         """Returns the preferred display value (text representation) for the records with the
            given ``ids``. By default this will be the value of the ``name`` column, unless
