@@ -1162,7 +1162,7 @@ class related(function):
         field = '.'.join(self._arg)
         return map(lambda x: (field, x[1], x[2]), domain)
 
-    def _fnct_write(self,obj,cr, uid, ids, field_name, values, args, context=None):
+    def _fnct_write(self, obj, cr, uid, ids, field_name, values, args, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
         for record in obj.browse(cr, uid, ids, context=context):
@@ -1171,8 +1171,8 @@ class related(function):
                 record = record[field] or False
                 if not record:
                     break
-                elif isinstance(record, list):
-                    # record is the result of a one2many or many2many field
+                elif isinstance(record, openerp.osv.orm.BaseModel):
+                    # record is a recordset (result of a one2many or many2many field)
                     record = record[0]
             if record:
                 # write on the last field
@@ -1183,7 +1183,7 @@ class related(function):
         for record in obj.browse(cr, SUPERUSER_ID, ids, context=context):
             value = record
             for field in self.arg:
-                if isinstance(value, list):
+                if isinstance(value, openerp.osv.orm.BaseModel):
                     value = value[0]
                 value = value[field] or False
                 if not value:

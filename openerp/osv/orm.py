@@ -1196,7 +1196,7 @@ class BaseModel(object):
                             r = check_type(self._inherit_fields[f[i]][2]._type)
                         data[fpos] = r or False
                         break
-                    if isinstance(r, (Model, list)):
+                    if isinstance(r, (BaseModel, list)):
                         first = True
                         fields2 = map(lambda x: (x[:i+1]==f[:i+1] and x[i+1:]) \
                                 or [], fields)
