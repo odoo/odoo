@@ -84,6 +84,12 @@ openerp.web_analytics = function(instance) {
                 });
         },
         /*
+        * Method called in order to send _trackPageview to GA
+        */
+        _push_pageview: function(url) {
+            _gaq.push(['_trackPageview', url]);
+        },
+        /*
         * Method called in order to send _trackEvent to GA
         */
         _push_event: function(options) {
@@ -156,6 +162,7 @@ openerp.web_analytics = function(instance) {
                             'category': r.model,
                             'action': 'form',
                             'label': url,
+                            'noninteraction': true,
                         });
                     });
                     this.on('record_saved', self, function(r) {
@@ -164,6 +171,7 @@ openerp.web_analytics = function(instance) {
                             'category': r.model,
                             'action': 'form',
                             'label': url,
+                            'noninteraction': true,
                         });
                     });
                 }
@@ -198,6 +206,7 @@ openerp.web_analytics = function(instance) {
                         'category': category,
                         'action': action,
                         'label': url,
+                        'noninteraction': true,
                     });
                     return this._super.apply(this, arguments);
                 },
