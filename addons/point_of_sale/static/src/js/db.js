@@ -232,7 +232,7 @@ function openerp_pos_db(instance, module){
         },
         get_product_by_ean13: function(ean13){
             if(this.product_by_ean13[ean13]){
-                return product_by_ean13[ean13];
+                return this.product_by_ean13[ean13];
             }
             var pack = this.packagings_by_ean13[ean13];
             if(pack){
