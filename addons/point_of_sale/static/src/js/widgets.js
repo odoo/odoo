@@ -606,20 +606,15 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             if(this.scrollbar){
                 this.scrollbar.destroy();
             }
-
-            this.pos.get('products')
-                .chain()
-                .map(function(product) {
-                    var product = new module.ProductWidget(self, {
-                            model: product,
-                            weight: self.weight,
-                            click_product_action: self.click_product_action,
-                    })
-                    self.productwidgets.push(product);
-                    return product;
-                })
-                .invoke('appendTo', this.$('.product-list'));
-
+            var products = this.pos.get('products').models || [];
+            for(var i = 0, len = products.length; i < len; i++){
+                var product = new module.ProductWidget(self, {
+                    model: products[i],
+                    click_product_action: this.click_product_action,
+                });
+                this.productwidgets.push(product);
+                product.appendTo(this.$('.product-list'));
+            }
             this.scrollbar = new module.ScrollbarWidget(this,{
                 target_widget:   this,
                 target_selector: '.product-list-scroller',
