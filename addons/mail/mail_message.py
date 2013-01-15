@@ -830,7 +830,7 @@ class mail_message(osv.Model):
             context_ids = context_ids[0:-1]
 
         context_ids.append(message.parent_id.id)
-        context_messages = self.browse(cr, uid, context_ids, context=context)
+        context_messages = list(self.browse(cr, uid, context_ids, context=context))
         header_message = context_messages.pop()
 
         try:
