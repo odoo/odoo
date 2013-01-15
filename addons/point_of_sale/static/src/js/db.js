@@ -54,7 +54,6 @@ function openerp_pos_db(instance, module){
             this.packagings_by_id = {};
             this.packagings_by_product_id = {};
             this.packagings_by_ean13 = {};
-            console.log('coucou!');
         },
         /* returns the category object from its id. If you pass a list of id as parameters, you get
          * a list of category objects. 
