@@ -62,16 +62,6 @@ class res_users(osv.Model):
         # create aliases for all users and avoid constraint errors
         self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(res_users, self)._auto_init,
             self._columns['alias_id'], 'login', alias_force_key='id', context=context)
-        # make already existing users follow themselves, using SQL to avoid using the ORM during the auto_init
-        cr.execute("""  SELECT p.id FROM res_partner p
-                        LEFT JOIN mail_followers n
-                        ON (n.partner_id = p.id AND n.res_model = 'res.partner' AND n.res_id = p.id)
-                        WHERE n.id IS NULL
-                    """)
-        params = [(res[0], res[0]) for res in cr.fetchall()]
-        cr.executemany("""  INSERT INTO mail_followers (partner_id, res_model, res_id)
-                            VALUES (%s, 'res.partner', %s)
-                        """, params)
 
     def create(self, cr, uid, data, context=None):
         # create default alias same as the login
@@ -81,12 +71,11 @@ class res_users(osv.Model):
         mail_alias = self.pool.get('mail.alias')
         alias_id = mail_alias.create_unique_alias(cr, uid, {'alias_name': data['login']}, model_name=self._name, context=context)
         data['alias_id'] = alias_id
-        data.pop('alias_name', None) # prevent errors during copy()
+        data.pop('alias_name', None)  # prevent errors during copy()
 
-        # create user that follows its related partner
+        # create user
         user_id = super(res_users, self).create(cr, uid, data, context=context)
         user = self.browse(cr, uid, user_id, context=context)
-        self.pool.get('res.partner').message_subscribe(cr, uid, [user.partner_id.id], [user.partner_id.id], context=context)
         # alias
         mail_alias.write(cr, SUPERUSER_ID, [alias_id], {"alias_force_thread_id": user_id}, context)
         # create a welcome message
