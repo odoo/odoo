@@ -131,20 +131,6 @@ _fields_process = {
     'datetime' : _dttime_format
 }
 
-#
-# Context: {'node': node.dom}
-#
-class browse_record_list(list):
-    def __init__(self, lst, context):
-        super(browse_record_list, self).__init__(lst)
-        self.context = context
-
-    def __getattr__(self, name):
-        res = browse_record_list([getattr(x,name) for x in self], self.context)
-        return res
-
-    def __str__(self):
-        return "browse_record_list("+str(len(self))+")"
 
 class rml_parse(object):
     def __init__(self, cr, uid, name, parents=rml_parents, tag=rml_tag, context=None):
@@ -398,7 +384,7 @@ class report_sxw(report_rml, preprocess.report):
 
     def getObjects(self, cr, uid, ids, context):
         table_obj = pooler.get_pool(cr.dbname).get(self.table)
-        return table_obj.browse(cr, uid, ids, list_class=browse_record_list, context=context, fields_process=_fields_process)
+        return table_obj.browse(cr, uid, ids, context=context, fields_process=_fields_process)
 
     def create(self, cr, uid, ids, data, context=None):
         if context is None:

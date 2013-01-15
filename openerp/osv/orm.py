@@ -286,23 +286,6 @@ class browse_null(object):
         return u''
 
 
-#
-# TODO: execute an object method on browse_record_list
-#
-class browse_record_list(list):
-    """ Collection of browse objects
-
-        Such an instance will be returned when doing a ``browse([ids..])``
-        and will be iterable, yielding browse() objects
-    """
-
-    def __init__(self, lst, context=None):
-        if not context:
-            context = {}
-        super(browse_record_list, self).__init__(lst)
-        self.context = context
-
-
 class browse_record(object):
     """ An object that behaves like a row of an object's table.
         It has attributes after the columns of the corresponding object.
@@ -314,8 +297,7 @@ class browse_record(object):
             name = user_rec.name
     """
 
-    def __init__(self, cr, uid, id, table, cache, context=None,
-                 list_class=browse_record_list, fields_process=None):
+    def __init__(self, cr, uid, id, table, cache, context=None, fields_process=None):
         """
         :param table: the browsed object (inherited from orm)
         :param dict cache: a dictionary of model->field->data to be shared
@@ -329,7 +311,6 @@ class browse_record(object):
             fields_process = {}
         if context is None:
             context = {}
-        self._list_class = list_class
         self._cr = cr
         self._uid = uid
         self._id = id
@@ -441,10 +422,9 @@ class browse_record(object):
                                         # respecting module dependencies, causing relationships to be connected to soon when
                                         # the target is not loaded yet.
                                         continue
-                                    new_data[field_name] = browse_record(self._cr,
-                                        self._uid, value, obj, self._cache,
+                                    new_data[field_name] = obj.browse(self._cr, self._uid, value,
                                         context=self._context,
-                                        list_class=self._list_class,
+                                        cache=self._cache,
                                         fields_process=self._fields_process)
                                 else:
                                     new_data[field_name] = value
@@ -453,7 +433,9 @@ class browse_record(object):
                         else:
                             new_data[field_name] = browse_null()
                     elif field_column._type in ('one2many', 'many2many') and len(result_line[field_name]):
-                        new_data[field_name] = self._list_class([browse_record(self._cr, self._uid, id, self._table.pool.get(field_column._obj), self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process) for id in result_line[field_name]], self._context)
+                        obj = self._table.pool.get(field_column._obj)
+                        new_data[field_name] = obj.browse(self._cr, self._uid, result_line[field_name],
+                            context=self._context, cache=self._cache, fields_process=self._fields_process)
                     elif field_column._type == 'reference':
                         if result_line[field_name]:
                             if isinstance(result_line[field_name], browse_record):
@@ -463,7 +445,8 @@ class browse_record(object):
                                 ref_id = long(ref_id)
                                 if ref_id:
                                     obj = self._table.pool.get(ref_obj)
-                                    new_data[field_name] = browse_record(self._cr, self._uid, ref_id, obj, self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process)
+                                    new_data[field_name] = obj.browse(self._cr, self._uid, ref_id,
+                                        context=self._context, cache=self._cache, fields_process=self._fields_process)
                                 else:
                                     new_data[field_name] = browse_null()
                         else:
@@ -1213,7 +1196,7 @@ class BaseModel(object):
                             r = check_type(self._inherit_fields[f[i]][2]._type)
                         data[fpos] = r or False
                         break
-                    if isinstance(r, (browse_record_list, list)):
+                    if isinstance(r, (Model, list)):
                         first = True
                         fields2 = map(lambda x: (x[:i+1]==f[:i+1] and x[i+1:]) \
                                 or [], fields)
@@ -4549,7 +4532,7 @@ class BaseModel(object):
         self._workflow_trigger(cr, user, [id_new], 'trg_create', context=context)
         return id_new
 
-    def browse(self, cr, uid, select, context=None, fields_process=None):
+    def browse(self, cr, uid, select, context=None, cache=None, fields_process=None):
         """ Fetch records as objects allowing to use dot notation to browse fields and relations
 
             :param cr: database cursor
@@ -4558,7 +4541,8 @@ class BaseModel(object):
             :param context: context arguments, like lang, time zone
             :rtype: record or recordset requested
         """
-        cache = {}
+        if cache is None:
+            cache = {}
         # need to accepts ints and longs because ids coming from a method
         # launched by button in the interface have a type long...
         if isinstance(select, (int, long)):

@@ -30,7 +30,6 @@ from interface import report_int
 import common
 from openerp.osv.osv import except_osv
 from openerp.osv.orm import browse_null
-from openerp.osv.orm import browse_record_list
 import openerp.pooler as pooler
 from pychart import *
 import misc
@@ -106,7 +105,7 @@ class report_custom(report_int):
                     key = levels.keys()
                 for l in key:
                     objs = eval('obj.'+l,{'obj': obj})
-                    if not isinstance(objs, (browse_record_list, list)):
+                    if not isinstance(objs, (Model, list)):
                         objs = [objs]
                     field_new = []
                     cond_new = []
