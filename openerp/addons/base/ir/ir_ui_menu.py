@@ -159,13 +159,13 @@ class ir_ui_menu(osv.osv):
             parent_path = ''
         return parent_path + elmt.name
 
-    def create(self, *args, **kwargs):
+    def create(self, cr, uid, values, context=None):
         self.clear_cache()
-        return super(ir_ui_menu, self).create(*args, **kwargs)
+        return super(ir_ui_menu, self).create(cr, uid, values, context=context)
 
-    def write(self, *args, **kwargs):
+    def write(self, cr, uid, ids, values, context=None):
         self.clear_cache()
-        return super(ir_ui_menu, self).write(*args, **kwargs)
+        return super(ir_ui_menu, self).write(cr, uid, ids, values, context=context)
 
     def unlink(self, cr, uid, ids, context=None):
         # Detach children and promote them to top-level, because it would be unwise to

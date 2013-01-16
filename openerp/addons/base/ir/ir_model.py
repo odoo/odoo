@@ -754,19 +754,19 @@ class ir_model_access(osv.osv):
     #
     # Check rights on actions
     #
-    def write(self, cr, uid, *args, **argv):
+    def write(self, cr, uid, ids, values, context=None):
         self.call_cache_clearing_methods(cr)
-        res = super(ir_model_access, self).write(cr, uid, *args, **argv)
+        res = super(ir_model_access, self).write(cr, uid, ids, values, context=context)
         return res
 
-    def create(self, cr, uid, *args, **argv):
+    def create(self, cr, uid, values, context=None):
         self.call_cache_clearing_methods(cr)
-        res = super(ir_model_access, self).create(cr, uid, *args, **argv)
+        res = super(ir_model_access, self).create(cr, uid, values, context=context)
         return res
 
-    def unlink(self, cr, uid, *args, **argv):
+    def unlink(self, cr, uid, ids, context=None):
         self.call_cache_clearing_methods(cr)
-        res = super(ir_model_access, self).unlink(cr, uid, *args, **argv)
+        res = super(ir_model_access, self).unlink(cr, uid, ids, context=context)
         return res
 
 class ir_model_data(osv.osv):
