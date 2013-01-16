@@ -25,6 +25,7 @@ from openerp import pooler
 from openerp.osv import osv, fields
 from openerp.tools import ustr
 from openerp.tools.translate import _
+from openerp.addons.base.ir.ir_ui_menu import MENU_ITEM_SEPARATOR
 
 _logger = logging.getLogger(__name__)
 
@@ -588,22 +589,24 @@ class res_config_settings(osv.osv_memory):
             name = act_window.read(cr, uid, action_ids[0], ['name'], context=context)['name']
         return [(record.id, name) for record in self.browse(cr, uid , ids, context=context)]
 
-    def get_path(self, cr, uid, module_name, menu_xml_id=None, field_name=None, context=None):
+    def get_config_path(self, cr, uid, module_name, menu_xml_id=None, model_name=None, field_name=None, context=None):
         """
         Return a string representing the path to access a specific
         configuration option through the interface.
+
+        :return string
         """
 
         config_path = ''
 
         # Fetch the path
-        if (menu_xml_id):
+        if (module_name and menu_xml_id):
             dummy, menu_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, module_name, menu_xml_id)
-            config_path += self.pool.get('ir.ui.menu').browse(cr, uid, menu_id, context=context).name
+            config_path += self.pool.get('ir.ui.menu').browse(cr, uid, menu_id, context=context).complete_name
 
         # Fetch the exact config option name
-        #if (field_name):
-        #    self.pool.get('mycfgobj')._get_all_columns().strings[field_name]
+        if (model_name and field_name):
+            config_path += MENU_ITEM_SEPARATOR + self.pool.get(model_name)._all_columns.get(field_name).column.string
 
         return config_path
 
