@@ -3,13 +3,13 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
     var livesupport = {};
 
     var templateEngine = new nova.TemplateEngine();
-    templateEngine.setEnvironment({"toUrl", _.bind(require.toUrl, require)});
+    templateEngine.extendEnvironment({"toUrl": _.bind(require.toUrl, require)});
     var connection;
 
     livesupport.main = function(server_url, db, login, password) {
         templateEngine.loadFile(require.toUrl("./livesupport_templates.html")).then(function() {
             connection = new oeclient.Connection(new oeclient.JsonpRPCConnector(server_url), db, login, password);
-            // don't know
+            console.log("hello");
         });
     };
 
@@ -67,7 +67,7 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
             this.ting = new Audio(new Audio().canPlayType("audio/ogg; codecs=vorbis") ?
                 require.toUrl("../audio/Ting.ogg") :
                 require.toUrl("../audio/Ting.mp3")
-            ));
+            );
         },
         window_focus_change: function() {
             if (this.get("window_focus")) {
@@ -122,7 +122,7 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
         },
     });
 
-    livesupport.Conversation = instance.web.Widget.extend({
+    livesupport.Conversation = nova.Widget.$extend({
         tagClass: "oe_im_chatview",
         events: {
             "keydown input": "send_message",
