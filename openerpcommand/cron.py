@@ -19,6 +19,7 @@ def set_addons(args):
     config['addons_path'] = ','.join(args.addons)
 
 def run(args):
+    import openerp
     import openerp.cli.server
     import openerp.tools.config
     import openerp.service.cron
@@ -29,6 +30,9 @@ def run(args):
     args.database = args.database or []
 
     config['log_handler'] = [':WARNING', 'openerp.addons.base.ir.ir_cron:DEBUG']
+
+    openerp.multi_process = True
+    common.setproctitle('openerp-cron [%s]' % ', '.join(args.database))
 
     openerp.cli.server.check_root_user()
     openerp.netsvc.init_logger()

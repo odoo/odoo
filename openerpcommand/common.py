@@ -3,6 +3,10 @@ Define a few common arguments for server-side command-line tools.
 """
 import argparse
 import os
+try:
+    from setproctitle import setproctitle
+except ImportError:
+    setproctitle = lambda x: None
 import sys
 
 def add_addons_argument(parser):
