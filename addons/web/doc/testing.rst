@@ -1,5 +1,7 @@
 .. highlight:: javascript
 
+.. _testing
+
 Testing in OpenERP Web
 ======================
 
