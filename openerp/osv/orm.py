@@ -4549,8 +4549,7 @@ class BaseModel(object):
             return Record(cr, uid, select, self, cache, context=context, fields_process=fields_process)
         elif isinstance(select, list):
             records = [Record(cr, uid, id, self, cache, context=context, fields_process=fields_process) for id in select]
-            return self._recordset(cr, uid, ids=select, records=records,
-                                   cache=cache, context=context)
+            return self._recordset(cr, uid, ids=select, records=records, context=context)
         else:
             return browse_null()
 
