@@ -1,6 +1,6 @@
 
 from openerp.tools import mute_logger
-from openerp.osv.orm import Record, Model
+from openerp.osv.orm import Record, BaseModel
 import common
 
 
@@ -22,7 +22,8 @@ class TestAPI(common.TransactionCase):
         # partners is a collection of browse records corresponding to ids
         self.assertTrue(ids)
         self.assertTrue(partners)
-        self.assertTrue(all(isinstance(p, Record) for p in partners))
+        for p in partners:
+            self.assertIsInstance(p, Record)
         self.assertEqual([p.id for p in partners], ids)
 
     @mute_logger('openerp.osv.orm')
@@ -40,6 +41,19 @@ class TestAPI(common.TransactionCase):
         # redo the query, and check that the result is now empty
         partners2 = self.Partner.query(self.cr, self.uid, domain)
         self.assertFalse(partners2)
+
+    @mute_logger('openerp.osv.orm')
+    def test_02_fields(self):
+        """ Check that relation fields return records or recordsets. """
+        partners = self.Partner.query(self.cr, self.uid, [])
+        for name, field in partners._all_columns.iteritems():
+            if field.column._type in ('many2one', 'reference'):
+                for p in partners:
+                    if p[name]:
+                        self.assertIsInstance(p[name], Record)
+            elif field.column._type in ('one2many', 'many2many'):
+                for p in partners:
+                    self.assertIsInstance(p[name], BaseModel)
 
     @mute_logger('openerp.osv.orm')
     def test_10_old_old(self):

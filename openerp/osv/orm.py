@@ -432,7 +432,7 @@ class Record(object):
                                 new_data[field_name] = browse_null()
                         else:
                             new_data[field_name] = browse_null()
-                    elif field_column._type in ('one2many', 'many2many') and len(result_line[field_name]):
+                    elif field_column._type in ('one2many', 'many2many'):
                         obj = self._table.pool.get(field_column._obj)
                         new_data[field_name] = obj.browse(self._cr, self._uid, result_line[field_name],
                             context=self._context, cache=self._cache, fields_process=self._fields_process)
