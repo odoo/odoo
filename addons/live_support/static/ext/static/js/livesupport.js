@@ -4,27 +4,21 @@ define(["nova", "jquery", "underscore"], function(nova, $, _) {
 
     livesupport.main = function(server_url, db, login, password) {
         console.log("hello");
-        var connection = new Connection(new JsonRPCConnector(server_url), db, login, password);
+        var connection = new Connection(new JsonpRPCConnector(server_url), db, login, password);
         var userModel = connection.getModel("res.users");
         userModel.call("search", [[["login", "=", "admin"]]]).then(function(result) {
             console.log(result);
         });
     };
 
-    function jsonRpc(url, fct_name, params, settings) {
+    function genericJsonRPC(fct_name, params, fct) {
         var data = {
             jsonrpc: "2.0",
             method: fct_name,
             params: params,
             id: Math.floor(Math.random()* (1000*1000*1000)),
         };
-        return $.ajax(url, _.extend({}, settings, {
-            url: url,
-            dataType: 'json',
-            type: 'POST',
-            data: JSON.stringify(data),
-            contentType: 'application/json',
-        })).pipe(function(result) {
+        return fct(data).pipe(function(result) {
             if (result.error !== undefined) {
                 console.error("Server application error", result.error);
                 return $.Deferred().reject("server", result.error);
@@ -35,6 +29,31 @@ define(["nova", "jquery", "underscore"], function(nova, $, _) {
             console.error("JsonRPC communication error", _.toArray(arguments));
             var def = $.Deferred();
             return def.reject.apply(def, ["communication"].concat(_.toArray(arguments)));
+        });
+    }
+
+    function jsonRpc(url, fct_name, params, settings) {
+        return genericJsonRPC(fct_name, params, function(data) {
+            return $.ajax(url, _.extend({}, settings, {
+                url: url,
+                dataType: 'json',
+                type: 'POST',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+            }));
+        });
+    };
+
+    function jsonpRpc(url, fct_name, params, settings) {
+        return genericJsonRPC(fct_name, params, function(data) {
+            return $.ajax(url, _.extend({}, settings, {
+                url: url,
+                dataType: 'jsonp',
+                jsonp: 'jsonp',
+                type: 'GET',
+                cache: false,
+                data: {r: JSON.stringify(data)},
+            }));
         });
     };
 
@@ -50,6 +69,12 @@ define(["nova", "jquery", "underscore"], function(nova, $, _) {
         },
         send: function(serviceName, method, args) {
             return jsonRpc(this.url, "call", {"service": serviceName, "method": method, "args": args});
+        },
+    });
+
+    var JsonpRPCConnector = JsonRPCConnector.$extend({
+        send: function(serviceName, method, args) {
+            return jsonpRpc(this.url, "call", {"service": serviceName, "method": method, "args": args});
         },
     });
 
