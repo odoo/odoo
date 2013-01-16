@@ -19,8 +19,10 @@
 #
 ##############################################################################
 
-import io
-import StringIO
+try:
+    import cStringIO as StringIO
+except ImportError:
+    import StringIO
 
 from PIL import Image
 from PIL import ImageOps
@@ -64,7 +66,7 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
         return False
     if size == (None, None):
         return base64_source
-    image_stream = io.BytesIO(base64_source.decode(encoding))
+    image_stream = StringIO.StringIO(base64_source.decode(encoding))
     image = Image.open(image_stream)
 
     asked_width, asked_height = size
@@ -78,7 +80,7 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
     if avoid_if_small and image.size[0] <= size[0] and image.size[1] <= size[1]:
         return base64_source
 
-    if image.size <> size:
+    if image.size != size:
         # If you need faster thumbnails you may use use Image.NEAREST
         image = ImageOps.fit(image, size, Image.ANTIALIAS)
 
@@ -118,7 +120,7 @@ def image_colorize(original, randomize=True, color=(255, 255, 255)):
         :param color: background-color, if not randomize
     """
     # create a new image, based on the original one
-    original = Image.open(io.BytesIO(original))
+    original = Image.open(StringIO.StringIO(original))
     image = Image.new('RGB', original.size)
     # generate the background color, past it as background
     if randomize:
