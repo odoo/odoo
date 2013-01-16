@@ -442,7 +442,7 @@ class actions_server(osv.osv):
                                        "Example: object.list_price > 5000\n"
                                        "It is a Python expression that can use the following values:\n"
                                        " - self: ORM model of the record on which the action is triggered\n"
-                                       " - object or obj: browse_record of the record on which the action is triggered\n"
+                                       " - object or obj: Record on which the action is triggered\n"
                                        " - pool: ORM model pool (i.e. self.pool)\n"
                                        " - time: Python time module\n"
                                        " - cr: database cursor\n"
@@ -495,7 +495,7 @@ class actions_server(osv.osv):
         'sequence': 5,
         'code': """# You can use the following variables:
 #  - self: ORM model of the record on which the action is triggered
-#  - object: browse_record of the record on which the action is triggered if there is one, otherwise None
+#  - object: Record on which the action is triggered if there is one, otherwise None
 #  - pool: ORM model pool (i.e. self.pool)
 #  - time: Python time module
 #  - cr: database cursor

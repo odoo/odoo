@@ -29,7 +29,7 @@ from openerp import SUPERUSER_ID
 from openerp import pooler, tools
 import openerp.exceptions
 from openerp.osv import fields,osv
-from openerp.osv.orm import browse_record
+from openerp.osv.orm import Record
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -346,7 +346,7 @@ class res_users(osv.osv):
                 context_key = False
             if context_key:
                 res = getattr(user,k) or False
-                if isinstance(res, browse_record):
+                if isinstance(res, Record):
                     res = res.id
                 result[context_key] = res or False
         return result

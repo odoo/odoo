@@ -32,7 +32,7 @@ from openerp.osv.orm import Model
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools import config
 from openerp.tools.translate import _
-from openerp.osv.orm import except_orm, browse_record
+from openerp.osv.orm import except_orm, Record
 
 _logger = logging.getLogger(__name__)
 
@@ -617,7 +617,7 @@ class ir_model_access(osv.osv):
         """ Check if a specific group has the access mode to the specified model"""
         assert mode in ['read','write','create','unlink'], 'Invalid access mode'
 
-        if isinstance(model, browse_record):
+        if isinstance(model, Record):
             assert model._table_name == 'ir.model', 'Invalid model object'
             model_name = model.name
         else:
@@ -676,7 +676,7 @@ class ir_model_access(osv.osv):
 
         assert mode in ['read','write','create','unlink'], 'Invalid access mode'
 
-        if isinstance(model, browse_record):
+        if isinstance(model, Record):
             assert model._table_name == 'ir.model', 'Invalid model object'
             model_name = model.model
         else:

@@ -1,6 +1,6 @@
 
 from openerp.tools import mute_logger
-from openerp.osv.orm import browse_record, Model
+from openerp.osv.orm import Record, Model
 import common
 
 
@@ -22,7 +22,7 @@ class TestAPI(common.TransactionCase):
         # partners is a collection of browse records corresponding to ids
         self.assertTrue(ids)
         self.assertTrue(partners)
-        self.assertTrue(all(isinstance(p, browse_record) for p in partners))
+        self.assertTrue(all(isinstance(p, Record) for p in partners))
         self.assertEqual([p.id for p in partners], ids)
 
     @mute_logger('openerp.osv.orm')

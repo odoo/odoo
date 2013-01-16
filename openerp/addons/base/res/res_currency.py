@@ -133,7 +133,7 @@ class res_currency(osv.osv):
         """Return ``amount`` rounded  according to ``currency``'s
            rounding rules.
 
-           :param browse_record currency: currency for which we are rounding
+           :param Record currency: currency for which we are rounding
            :param float amount: the amount to round
            :return: rounded float
         """
@@ -151,7 +151,7 @@ class res_currency(osv.osv):
            they respectively round to 0.01 and 0.0, even though
            0.006-0.002 = 0.004 which would be considered zero at 2 digits precision.
 
-           :param browse_record currency: currency for which we are rounding
+           :param Record currency: currency for which we are rounding
            :param float amount1: first amount to compare
            :param float amount2: second amount to compare
            :return: (resp.) -1, 0 or 1, if ``amount1`` is (resp.) lower than,
@@ -169,7 +169,7 @@ class res_currency(osv.osv):
            computing the difference, while the latter will round before, giving
            different results for e.g. 0.006 and 0.002 at 2 digits precision.
 
-           :param browse_record currency: currency for which we are rounding
+           :param Record currency: currency for which we are rounding
            :param float amount: amount to compare with currency's zero
         """
         return float_is_zero(amount, precision_rounding=currency.rounding)

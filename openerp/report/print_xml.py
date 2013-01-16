@@ -23,7 +23,7 @@ from lxml import etree
 import openerp.tools as tools
 from openerp.tools.safe_eval import safe_eval
 import print_fnc
-from openerp.osv.orm import browse_null, browse_record
+from openerp.osv.orm import browse_null, Record
 import openerp.pooler as pooler
 
 class InheritDict(dict):
@@ -90,7 +90,7 @@ class document(object):
 
     def get_value2(self, browser, field_path):
         value = self.get_value(browser, field_path)
-        if isinstance(value, browse_record):
+        if isinstance(value, Record):
             return value.id
         elif isinstance(value, browse_null):
             return False
@@ -104,7 +104,7 @@ class document(object):
 # dictionary passed to eval
 
 #FIXME: it wont work if the data hasn't been fetched yet... this could
-# happen if the eval node is the first one using this browse_record
+# happen if the eval node is the first one using this Record
 # the next line is a workaround for the problem: it causes the resource to be loaded
 #Pinky: Why not this ? eval(expr, browser) ?
 #       name = browser.name

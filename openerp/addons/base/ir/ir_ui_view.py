@@ -117,7 +117,7 @@ class view(osv.osv):
         """Verify that the given view's hierarchy is valid for rendering, along with all the changes applied by
            its inherited views, by rendering it using ``fields_view_get()``.
            
-           @param browse_record view: view to validate
+           @param Record view: view to validate
            @return: the rendered definition (arch) of the view, always utf-8 bytestring (legacy convention)
                if no error occurred, else False.  
         """

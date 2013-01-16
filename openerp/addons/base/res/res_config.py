@@ -263,10 +263,10 @@ class res_config_installer(osv.osv_memory):
     def _already_installed(self, cr, uid, context=None):
         """ For each module (boolean fields in a res.config.installer),
         check if it's already installed (either 'to install', 'to upgrade'
-        or 'installed') and if it is return the module's browse_record
+        or 'installed') and if it is return the module's record
 
         :returns: a list of all installed modules in this installer
-        :rtype: [browse_record]
+        :rtype: recordset (collection of Record)
         """
         modules = self.pool.get('ir.module.module')
 

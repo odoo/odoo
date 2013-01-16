@@ -286,15 +286,15 @@ class browse_null(object):
         return u''
 
 
-class browse_record(object):
-    """ An object that behaves like a row of an object's table.
+class Record(object):
+    """ A record in a model (corresponding to a row in the model's table.)
         It has attributes after the columns of the corresponding object.
 
         Examples::
 
-            uobj = pool.get('res.users')
-            user_rec = uobj.browse(cr, uid, 104)
-            name = user_rec.name
+            res_users = pool.get('res.users')
+            user = res_users.browse(cr, uid, 104)
+            name = user.name
     """
 
     def __init__(self, cr, uid, id, table, cache, context=None, fields_process=None):
@@ -317,17 +317,17 @@ class browse_record(object):
         self._table = table # deprecated, use _model!
         self._model = table
         self._table_name = self._table._name
-        self.__logger = logging.getLogger('openerp.osv.orm.browse_record.' + self._table_name)
+        self.__logger = logging.getLogger('openerp.osv.orm.Record.' + self._table_name)
         self._context = context
         self._fields_process = fields_process
 
         cache.setdefault(table._name, {})
         self._data = cache[table._name]
 
-#        if not (id and isinstance(id, (int, long,))):
-#            raise BrowseRecordError(_('Wrong ID for the browse record, got %r, expected an integer.') % (id,))
-#        if not table.exists(cr, uid, id, context):
-#            raise BrowseRecordError(_('Object %s does not exists') % (self,))
+        # if not (id and isinstance(id, (int, long,))):
+        #     raise BrowseRecordError(_('Wrong ID for the browse record, got %r, expected an integer.') % (id,))
+        # if not table.exists(cr, uid, id, context):
+        #     raise BrowseRecordError(_('Object %s does not exists') % (self,))
 
         if id not in self._data:
             self._data[id] = {'id': id}
@@ -414,7 +414,7 @@ class browse_record(object):
                                 #        overwrite a field of it parent. Need
                                 #        testing to be sure we got the right
                                 #        object and not the parent one.
-                                if not isinstance(value, browse_record):
+                                if not isinstance(value, Record):
                                     if obj is None:
                                         # In some cases the target model is not available yet, so we must ignore it,
                                         # which is safe in most cases, this value will just be loaded later when needed.
@@ -438,7 +438,7 @@ class browse_record(object):
                             context=self._context, cache=self._cache, fields_process=self._fields_process)
                     elif field_column._type == 'reference':
                         if result_line[field_name]:
-                            if isinstance(result_line[field_name], browse_record):
+                            if isinstance(result_line[field_name], Record):
                                 new_data[field_name] = result_line[field_name]
                             else:
                                 ref_obj, ref_id = result_line[field_name].split(',')
@@ -481,15 +481,15 @@ class browse_record(object):
         return self._id
 
     def __str__(self):
-        return "browse_record(%s, %d)" % (self._table_name, self._id)
+        return "Record(%s, %d)" % (self._table_name, self._id)
 
     def __eq__(self, other):
-        if not isinstance(other, browse_record):
+        if not isinstance(other, Record):
             return False
         return (self._table_name, self._id) == (other._table_name, other._id)
 
     def __ne__(self, other):
-        if not isinstance(other, browse_record):
+        if not isinstance(other, Record):
             return True
         return (self._table_name, self._id) != (other._table_name, other._id)
 
@@ -504,7 +504,7 @@ class browse_record(object):
     __repr__ = __str__
 
     def refresh(self):
-        """Force refreshing this browse_record's data and all the data of the
+        """Force refreshing this Record's data and all the data of the
            records that belong to the same cache, by emptying the cache completely,
            preserving only the record identifiers (for prefetching optimizations).
         """
@@ -1219,7 +1219,7 @@ class BaseModel(object):
                                     dt = ''
                                     for rr in r:
                                         name_relation = self.pool.get(rr._table_name)._rec_name
-                                        if isinstance(rr[name_relation], browse_record):
+                                        if isinstance(rr[name_relation], Record):
                                             rr = rr[name_relation]
                                         rr_name = self.pool.get(rr._table_name).name_get(cr, uid, [rr.id], context=context)
                                         rr_name = rr_name and rr_name[0] and rr_name[0][1] or ''
@@ -1233,7 +1233,7 @@ class BaseModel(object):
                         break
                     i += 1
                 if i == len(f):
-                    if isinstance(r, browse_record):
+                    if isinstance(r, Record):
                         r = self.pool.get(r._table_name).name_get(cr, uid, [r.id], context=context)
                         r = r and r[0] and r[0][1] or ''
                     data[fpos] = tools.ustr(r or '')
@@ -1626,7 +1626,7 @@ class BaseModel(object):
                 property_obj = self.pool.get('ir.property')
                 prop_value = property_obj.get(cr, uid, f, self._name, context=context)
                 if prop_value:
-                    if isinstance(prop_value, (browse_record, browse_null)):
+                    if isinstance(prop_value, (Record, browse_null)):
                         defaults[f] = prop_value.id
                     else:
                         defaults[f] = prop_value
@@ -4546,9 +4546,9 @@ class BaseModel(object):
         # need to accepts ints and longs because ids coming from a method
         # launched by button in the interface have a type long...
         if isinstance(select, (int, long)):
-            return browse_record(cr, uid, select, self, cache, context=context, fields_process=fields_process)
+            return Record(cr, uid, select, self, cache, context=context, fields_process=fields_process)
         elif isinstance(select, list):
-            records = [browse_record(cr, uid, id, self, cache, context=context, fields_process=fields_process) for id in select]
+            records = [Record(cr, uid, id, self, cache, context=context, fields_process=fields_process) for id in select]
             return self._recordset(cr, uid, ids=select, records=records,
                                    cache=cache, context=context)
         else:
@@ -5073,7 +5073,7 @@ class BaseModel(object):
     def exists(self, cr, uid, ids, context=None):
         """Checks whether the given id or ids exist in this model,
            and return the list of ids that do. This is simple to use for
-           a truth test on a browse_record::
+           a truth test on a Record::
 
                if record.exists():
                    pass
@@ -5400,4 +5400,10 @@ PGERROR_TO_OE = collections.defaultdict(
     # not_null_violation
     '23502': convert_pgerror_23502,
 })
+
+
+# extra definitions for backward compatibility
+browse_record = Record
+browse_record_list = BaseModel
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

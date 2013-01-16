@@ -1191,7 +1191,7 @@ class related(function):
             res[record.id] = value
 
         if self._type == 'many2one':
-            # res[id] is a browse_record or False; convert it to (id, name) or False.
+            # res[id] is a Record or False; convert it to (id, name) or False.
             # Perform name_get as root, as seeing the name of a related object depends on
             # access right of source document, not target, so user may not have access.
             value_ids = list(set(value.id for value in res.itervalues() if value))
@@ -1199,7 +1199,7 @@ class related(function):
             res = dict((id, value and (value.id, value_name[value.id])) for id, value in res.iteritems())
 
         elif self._type in ('one2many', 'many2many'):
-            # res[id] is a list of browse_record or False; convert it to a list of ids
+            # res[id] is a recordset; convert it to a list of ids
             res = dict((id, value and map(int, value) or []) for id, value in res.iteritems())
 
         return res
@@ -1392,7 +1392,7 @@ class property(function):
         default_val = self._get_default(obj, cr, uid, prop_name, context)
 
         property_create = False
-        if isinstance(default_val, openerp.osv.orm.browse_record):
+        if isinstance(default_val, openerp.osv.orm.Record):
             if default_val.id != id_val:
                 property_create = True
         elif default_val != id_val:

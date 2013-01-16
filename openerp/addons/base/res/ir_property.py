@@ -111,7 +111,7 @@ class ir_property(osv.osv):
             raise osv.except_osv('Error', 'Invalid type')
 
         if field == 'value_reference':
-            if isinstance(value, osv.orm.browse_record):
+            if isinstance(value, osv.orm.Record):
                 value = '%s,%d' % (value._name, value.id)
             elif isinstance(value, (int, long)):
                 field_id = values.get('fields_id')
