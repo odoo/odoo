@@ -890,7 +890,7 @@
                                     <field name="type"/>
                                     <field name="amount" class="oe_inline"
                                         attrs="{'invisible':[('type','in',('none', 'code', 'balance'))]}"/>
-                                    <label string="%%" attrs="{'invisible':[('type','&lt;&gt;','percent')]}"/>
+                                    <label string="%% Ratio" attrs="{'invisible':[('type','&lt;&gt;','percent')]}"/>
                                 </div>
                                 <field name="python_compute" attrs="{'invisible':[('type','!=','code')],'required':[('type','=','code')]}"/>
                                 <field name="python_compute_inv" attrs="{'invisible':[('type','!=','code')],'required':[('type','=','code')]}"/>
