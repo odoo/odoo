@@ -1,33 +1,32 @@
 
-    <t t-name="Conversation">
-        <div class="oe_im_chatview">
-            <div class="oe_im_chatview_header">
-                <img t-att-src="_s +'/web_im/static/src/img/green.png'" class="oe_im_chatview_online"/>
-                <t t-esc="widget.user.get('name')"/>
-                <button class="oe_im_chatview_close">×</button>
-            </div>
-            <div class="oe_im_chatview_disconnected">
-                <t t-esc='_.str.sprintf(_t("%s is offline. He/She will receive your messages on his/her next connection."), widget.user.get("name"))'/>
-            </div>
-            <div class="oe_im_chatview_content">
-                <div></div>
-            </div>
-            <div class="oe_im_chatview_footer">
-                <input class="oe_im_chatview_input" t-att-placeholder="_t('Say something...')" />
-            </div>
+<%def name="conversation">
+    <div class="oe_im_chatview_header">
+        <img src="${toUrl('../img/green.png')}" class="oe_im_chatview_online"/>
+        ${widget.user.get('name')}
+        <button class="oe_im_chatview_close">×</button>
+    </div>
+    <div class="oe_im_chatview_disconnected">
+        ${widget.user.get("name") + " is offline. He/She will receive your messages on his/her next connection."}
+    </div>
+    <div class="oe_im_chatview_content">
+        <div></div>
+    </div>
+    <div class="oe_im_chatview_footer">
+        <input class="oe_im_chatview_input" placeholder="Say something..." />
+    </div>
+</%def>
+
+<%def name="conversation_bubble">
+    <div class="oe_im_chatview_bubble">
+        <div class="oe_im_chatview_clip">
+            <img class="oe_im_chatview_avatar" src="${user.get('image_url')}"/>
         </div>
-    </t>
-    <t t-name="Conversation.bubble">
-        <div class="oe_im_chatview_bubble">
-            <div class="oe_im_chatview_clip">
-                <img class="oe_im_chatview_avatar" t-att-src='user.get("image_url")'/>
-            </div>
-            <div class="oe_im_chatview_from"><t t-esc="user.get('name')"/></div>
-            <div class="oe_im_chatview_bubble_list">
-                <t t-foreach="items" t-as="item">
-                    <div class="oe_im_chatview_bubble_item"><t t-esc="item"/></div>
-                </t>
-            </div>
-            <div class="oe_im_chatview_time"><t t-esc="time"/></div>
+        <div class="oe_im_chatview_from">${user.get('name')}</div>
+        <div class="oe_im_chatview_bubble_list">
+            % _.each(items, function(item) {
+                <div class="oe_im_chatview_bubble_item">${item}</div>
+            % });
         </div>
-    </t>
+        <div class="oe_im_chatview_time">${time}</div>
+    </div>
+</%def>

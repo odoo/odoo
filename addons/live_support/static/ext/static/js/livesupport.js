@@ -3,6 +3,7 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
     var livesupport = {};
 
     var te = new nova.TemplateEngine();
+    te.setEnvironment({"toUrl", _.bind(require.toUrl, require)});
     var connection;
 
     livesupport.main = function(server_url, db, login, password) {
