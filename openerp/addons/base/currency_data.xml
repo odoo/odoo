@@ -1017,19 +1017,6 @@
             <field name="rate">18.89</field>
         </record>
         
-        <record id="EEK" model="res.currency">
-            <field name="name">EEK</field>
-            <field name="symbol">kr</field>
-            <field name="rounding">0.01</field>
-            <field name="accuracy">4</field>
-            <field name="company_id" ref="main_company"/>
-        </record>
-        <record id="rateEEK" model="res.currency.rate">
-            <field name="currency_id" ref="EEK" />
-            <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">14.41</field>
-        </record>
-        
         <record id="ETB" model="res.currency">
             <field name="name">ETB</field>
             <field name="symbol">Br</field>
