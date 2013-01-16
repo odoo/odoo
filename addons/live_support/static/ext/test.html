@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="http://localhost:8069/live_support/static/ext/static/js/require.js"></script>
+    <script>
+        require.config({
+            context: "oelivesupport",
+            baseUrl: "http://localhost:8069/live_support/static/ext/static/js",
+            shim: {
+                underscore: {
+                    exports: "_",
+                }
+            },
+        })(["livesupport"], function(livesupport) {
+            livesupport.main("http://localhost:8069", "im", "admin", "a");
+        });
+    </script>
+</head>
+<body>
+
+</body>
+</html>
