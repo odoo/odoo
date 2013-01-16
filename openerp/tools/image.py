@@ -26,7 +26,7 @@ except ImportError:
 
 from PIL import Image
 from PIL import ImageOps
-from random import random
+from random import randint
 
 # ----------------------------------------
 # Image resizing
@@ -124,7 +124,7 @@ def image_colorize(original, randomize=True, color=(255, 255, 255)):
     image = Image.new('RGB', original.size)
     # generate the background color, past it as background
     if randomize:
-        color = (int(random() * 192 + 32), int(random() * 192 + 32), int(random() * 192 + 32))
+        color = (randint(32, 224), randint(32, 224), randint(32, 224))
     image.paste(color)
     image.paste(original, mask=original)
     # return the new image
