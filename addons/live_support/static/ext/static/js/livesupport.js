@@ -38,12 +38,15 @@ define(["nova", "jquery", "underscore"], function(nova, $, _) {
         });
     };
 
-    var JsonRPCConnector = nova.Class.$extend({
-        __init__: function(url) {
-            this.url = url + "/jsonrpc";
-        },
+    var Connector = nova.Class.$extend({
         getService: function(serviceName) {
             return new Service(this, serviceName);
+        },
+    });
+
+    var JsonRPCConnector = Connector.$extend({
+        __init__: function(url) {
+            this.url = url + "/jsonrpc";
         },
         send: function(serviceName, method, args) {
             return jsonRpc(this.url, "call", {"service": serviceName, "method": method, "args": args});
