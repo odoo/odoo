@@ -2,12 +2,12 @@
 define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $, _, oeclient, require) {
     var livesupport = {};
 
-    var te = new nova.TemplateEngine();
-    te.setEnvironment({"toUrl", _.bind(require.toUrl, require)});
+    var templateEngine = new nova.TemplateEngine();
+    templateEngine.setEnvironment({"toUrl", _.bind(require.toUrl, require)});
     var connection;
 
     livesupport.main = function(server_url, db, login, password) {
-        te.loadFile(require.toUrl("./livesupport_templates.html")).then(function() {
+        templateEngine.loadFile(require.toUrl("./livesupport_templates.html")).then(function() {
             connection = new oeclient.Connection(new oeclient.JsonpRPCConnector(server_url), db, login, password);
             // don't know
         });
@@ -138,7 +138,7 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
             this.shown = true;
         },
         render: function() {
-            this.$().append(te.conversation({widget: this}));
+            this.$().append(templateEngine.conversation({widget: this}));
             var change_status = function() {
                 this.$().toggleClass("oe_im_chatview_disconnected_status", this.user.get("im_status") === false);
                 this.$(".oe_im_chatview_online").toggle(this.user.get("im_status") === true);
@@ -199,7 +199,7 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
             this.last_items = items;
             date = "" + date; // TODO
             
-            this.last_bubble = $(te.conversation_bubble({"items": items, "user": user, "time": date}));
+            this.last_bubble = $(templateEngine.conversation_bubble({"items": items, "user": user, "time": date}));
             $(this.$(".oe_im_chatview_content").children()[0]).append(this.last_bubble);
             this._go_bottom();
         },
