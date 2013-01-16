@@ -54,6 +54,7 @@ Dashboard for CRM will include:
         'base_status',
         'process',
         'mail',
+        'email_template',
         'base_calendar',
         'resource',
         'board',
