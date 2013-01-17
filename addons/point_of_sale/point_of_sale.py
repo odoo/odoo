@@ -290,7 +290,7 @@ class pos_session(osv.osv):
 
     _constraints = [
         (_check_unicity, "You cannot create two active sessions with the same responsible!", ['user_id', 'state']),
-        (_check_pos_config, "You cannot create two active sessions related to the same point of sale!", ['config_id']),
+        (_check_pos_config, "You cannot create two active sessions related to the same point of sale! Use not used point of sale", ['config_id']),
     ]
 
     def create(self, cr, uid, values, context=None):
