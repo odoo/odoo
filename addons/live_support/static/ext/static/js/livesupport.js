@@ -7,14 +7,12 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
     var connection;
 
     livesupport.main = function(server_url, db, login, password) {
-        var def = $.Deferred();
-        var tmp = window.oe_livesupport_templates_callback;
-        window.oe_livesupport_templates_callback = _.bind(def.resolve, def);
-        setTimeout(_.bind(def.reject, def), 5000);
-        var src = $('<script src="' + require.toUrl("./livesupport_templates.js") + '"></script>').appendTo($("head"));
-        def.then(function(content) {
-            window.oe_livesupport_templates_callback = tmp;
-            src.remove();
+        $.ajax({
+            url: require.toUrl("./livesupport_templates.js"),
+            jsonpCallback: "oe_livesupport_templates_callback",
+            dataType: "jsonp",
+            cache: true,
+        }).then(function(content) {
             return templateEngine.loadFileContent(content);
         }).then(function() {
             connection = new oeclient.Connection(new oeclient.JsonpRPCConnector(server_url), db, login, password);
