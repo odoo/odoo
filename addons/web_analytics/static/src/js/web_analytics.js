@@ -142,6 +142,7 @@ openerp.web_analytics = function(instance) {
                     'action': state.view_type,
                     'label': url,
                 });
+                this._push_pageview(url);
             }
         },
         /*
@@ -187,6 +188,7 @@ openerp.web_analytics = function(instance) {
                         'action': action.name || action.tag,
                         'label': url,
                     });
+                    t._push_pageview(url);
                     return this._super.apply(this, arguments);
                 },
             });
