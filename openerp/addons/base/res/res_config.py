@@ -589,35 +589,34 @@ class res_config_settings(osv.osv_memory):
             name = act_window.read(cr, uid, action_ids[0], ['name'], context=context)['name']
         return [(record.id, name) for record in self.browse(cr, uid , ids, context=context)]
 
-    def get_path(self, cr, uid, menu_xml_id=None, field_name=None, context=None):
+    def get_path(self, cr, uid, menu_xml_id, field_name, context=None):
         """
         Return a string representing the path to access a specific
         configuration option through the interface.
 
-        :return string: may vary depending of the given params
-            - if menu_xml_id and not field_name: the string will contain the
-              path to the config option.
-              e.g.: "Settings/Configuration/Sales"
-            - if not menu_xml_id and field_name: the string will contain the
-              config option's human readable name
-              e.g.: "Create leads from incoming mails"
-            - if menu_xml_id and field_name: the string will contain the path
-              and the config option's human readable name
-              e.g.: "Settings/Configuration/Sales/Create leads from incoming mails"
+        Note that we'll prefer to find back the model's name through the
+        ui_menu and then its action than directly using self.  It will
+        make the call to this method from a helper function possible.
+
+        :return tuple t: t[0] contains the full path, t[1] contains
+        the "human readable" configuration option name
         """
 
-        config_path = ''
-
         # Fetch the path to the config option
-        if (menu_xml_id):
-            module_name, menu_xml_id = menu_xml_id.split('.')
-            dummy, menu_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, module_name, menu_xml_id)
-            config_path += self.pool.get('ir.ui.menu').browse(cr, uid, menu_id, context=context).complete_name
+        module_name, menu_xml_id = menu_xml_id.split('.')
+        dummy, menu_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, module_name, menu_xml_id)
+        ir_ui_menu = self.pool.get('ir.ui.menu').browse(cr, uid, menu_id, context=context)
+        res_name = ir_ui_menu.complete_name
 
         # Fetch the exact config option name
-        if (field_name):
-            config_path += MENU_ITEM_SEPARATOR + self._all_columns.get(field_name).column.string
+        res_path = self.pool.get(ir_ui_menu.action.res_model)._all_columns.get(field_name).column.string
 
-        return config_path
+        return (res_name, res_path)
+
+def get_config_path(cr, uid, menu_xml_id=None, field_name=None, context=None):
+    """
+    Simple helper for res_config_settings.get_path().
+    """
+    return pooler.get_pool(cr.dbname).get('res.config.settings').get_path(cr, uid, menu_xml_id, field_name, context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
