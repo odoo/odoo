@@ -46,12 +46,12 @@ class TestAPI(common.TransactionCase):
     def test_02_fields(self):
         """ Check that relation fields return records or recordsets. """
         partners = self.Partner.query(self.cr, self.uid, [])
-        for name, field in partners._all_columns.iteritems():
-            if field.column._type in ('many2one', 'reference'):
+        for name, cinfo in partners._all_columns.iteritems():
+            if cinfo.column._type in ('many2one', 'reference'):
                 for p in partners:
                     if p[name]:
                         self.assertIsInstance(p[name], Record)
-            elif field.column._type in ('one2many', 'many2many'):
+            elif cinfo.column._type in ('one2many', 'many2many'):
                 for p in partners:
                     self.assertIsInstance(p[name], BaseModel)
 
