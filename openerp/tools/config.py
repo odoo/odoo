@@ -121,6 +121,8 @@ class configmanager(object):
                          help="disable the XML-RPC protocol")
         group.add_option("--proxy-mode", dest="proxy_mode", action="store_true", my_default=False,
                          help="Enable correct behavior when behind a reverse proxy")
+        group.add_option("--longpolling-port", dest="longpolling_port", my_default=8072,
+                         help="specify the TCP port for longpolling requests", type="int")
         parser.add_option_group(group)
 
         # XML-RPC / HTTPS
@@ -378,7 +380,8 @@ class configmanager(object):
             self.options['pidfile'] = False
 
         # if defined dont take the configfile value even if the defined value is None
-        keys = ['xmlrpc_interface', 'xmlrpc_port', 'db_name', 'db_user', 'db_password', 'db_host',
+        keys = ['xmlrpc_interface', 'xmlrpc_port', 'longpolling_port',
+                'db_name', 'db_user', 'db_password', 'db_host',
                 'db_port', 'db_template', 'logfile', 'pidfile', 'smtp_port',
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password',
                 'netrpc_interface', 'netrpc_port', 'db_maxconn', 'import_partial', 'addons_path',
