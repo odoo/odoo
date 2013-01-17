@@ -24,7 +24,7 @@ class pad_common(osv.osv_memory):
 
         # make sure pad server in the form of http://hostname
         if not pad["server"]:
-            return ''
+            return pad
         if not pad["server"].startswith('http'):
             pad["server"] = 'http://' + pad["server"]
         pad["server"] = pad["server"].rstrip('/')
@@ -96,7 +96,7 @@ class pad_common(osv.osv_memory):
             field = v.column
             if hasattr(field,'pad_content_field'):
                 pad = self.pad_generate_url(cr, uid, context)
-                default[k] = pad['url']
+                default[k] = pad.get('url')
         return super(pad_common, self).copy(cr, uid, id, default, context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
