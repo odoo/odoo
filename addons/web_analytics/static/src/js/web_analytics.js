@@ -158,19 +158,19 @@ openerp.web_analytics = function(instance) {
                     this._super.apply(this, arguments);
                     var self = this;
                     this.on('record_created', self, function(r) {
-                        var url = instance.web_analytics.generateUrl({'model': r.model, 'view_type': 'form'});
+                        var url = instance.web_analytics.generateUrl({'model': self.model, 'view_type': 'form'});
                         t._push_event({
-                            'category': r.model,
-                            'action': 'form',
+                            'category': self.model,
+                            'action': 'create',
                             'label': url,
                             'noninteraction': true,
                         });
                     });
                     this.on('record_saved', self, function(r) {
-                        var url = instance.web_analytics.generateUrl({'model': r.model, 'view_type': 'form'});
+                        var url = instance.web_analytics.generateUrl({'model': self.model, 'view_type': 'form'});
                         t._push_event({
-                            'category': r.model,
-                            'action': 'form',
+                            'category': self.model,
+                            'action': 'save',
                             'label': url,
                             'noninteraction': true,
                         });
@@ -182,10 +182,9 @@ openerp.web_analytics = function(instance) {
             instance.web.ActionManager.include({
                 ir_actions_client: function (action, options) {
                     var url = instance.web_analytics.generateUrl({'action': action.tag});
-                    var category = action.res_model || action.type;
                     t._push_event({
-                        'category': action.res_model || action.type,
-                        'action': action.name || action.tag,
+                        'category': action.type,
+                        'action': action.tag,
                         'label': url,
                     });
                     t._push_pageview(url);
@@ -226,21 +225,12 @@ openerp.web_analytics = function(instance) {
                         options = {'action': params.action};
                     }
                     var url = instance.web_analytics.generateUrl(options);
-                    if (error.code) {
-                        t._push_event({
-                            'category': error.message,
-                            'action': error.data.fault_code,
-                            'label': url,
-                            'noninteraction': true,
-                        });
-                    } else {
-                        t._push_event({
-                            'category': error.type,
-                            'action': error.data.debug,
-                            'label': url,
-                            'noninteraction': true,
-                        });
-                    }
+                    t._push_event({
+                        'category': options.model || "ir.actions.client",
+                        'action': "error " + (error.code ? error.message + error.data.fault_code : error.type + error.data.debug),
+                        'label': url,
+                        'noninteraction': true,
+                    });
                     this._super.apply(this, arguments);
                 },
             });
@@ -253,8 +243,10 @@ openerp.web_analytics = function(instance) {
 
     instance.web_analytics.generateUrl = function(options) {
         var url = '';
-        _.each(options, function(value, key) {
-            url += '/' + key + '=' + value;
+        var keys = _.keys(options);
+        var keys = _.sortBy(keys, function(i) { return i;});
+        _.each(keys, function(key) {
+            url += '/' + key + '/' + options[key];
         });
         return url;
     };
