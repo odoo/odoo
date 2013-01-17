@@ -57,7 +57,7 @@ class TestAPI(common.TransactionCase):
 
     @mute_logger('openerp.osv.orm')
     def test_10_old_old(self):
-        """ Call old-fashioned methods on recordsets. """
+        """ Call old-fashioned methods in the old-fashioned way. """
         domain = [('name', 'ilike', 'j')]
         partners = self.Partner.query(self.cr, self.uid, domain)
         self.assertTrue(partners)
@@ -65,5 +65,17 @@ class TestAPI(common.TransactionCase):
 
         # call method write on partners itself, and check its effect
         partners.write(self.cr, self.uid, ids, {'active': False})
+        for p in partners:
+            self.assertFalse(p.active)
+
+    @mute_logger('openerp.osv.orm')
+    def test_20_old_new(self):
+        """ Call old-fashioned methods in the new API style. """
+        domain = [('name', 'ilike', 'j')]
+        partners = self.Partner.query(self.cr, self.uid, domain)
+        self.assertTrue(partners)
+
+        # call method write on partners itself, and check its effect
+        partners.write({'active': False})
         for p in partners:
             self.assertFalse(p.active)

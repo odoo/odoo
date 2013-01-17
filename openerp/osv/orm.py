@@ -46,6 +46,7 @@ import calendar
 import collections
 import copy
 import datetime
+from functools import wraps
 import itertools
 import logging
 import operator
@@ -61,6 +62,7 @@ from lxml import etree
 
 import fields
 import openerp
+from openerp.sql_db import Cursor
 import openerp.netsvc as netsvc
 import openerp.tools as tools
 from openerp.tools.config import config
@@ -580,6 +582,74 @@ def get_pg_type(f, type_override=None):
     return pg_type
 
 
+def _split_context_kwargs(kwargs):
+    """ extract the context out of a kwargs dictionary """
+    if 'context' in kwargs:
+        context = kwargs['context'] or {}
+        kwargs = dict(kwargs)
+        del kwargs['context']
+        return context, kwargs
+    else:
+        return {}, kwargs
+
+
+def versatile(method):
+    """ Wrap a model method to make it callable in both old and new styles.
+        Method calls are considered old style when their first parameter is
+        an instance of Cursor.
+    """
+    varnames = method.func_code.co_varnames
+    if varnames[0] != 'self':
+        return method
+
+    elif len(varnames) < 2 or varnames[1] not in ('cr', 'cursor'):
+        # new api method; define old api method with cr, uid, ids
+        new_api = method
+        def old_api(self, cr, uid, ids, *args, **kwargs):
+            context, kwargs = _split_context_kwargs(kwargs)
+            y = self.browse(cr, uid, ids, context)
+            return new_api(y, *args, **kwargs)
+
+    elif len(varnames) < 3 or varnames[2] not in ('uid', 'user'):
+        # old api method with cr only
+        old_api = method
+        def new_api(self, *args, **kwargs):
+            return old_api(self, self._cr, *args, **kwargs)
+
+    elif len(varnames) < 4 or varnames[3] != 'ids':
+        # old api method with cr, uid, and maybe context
+        old_api = method
+        if 'context' in varnames:
+            def new_api(self, *args, **kwargs):
+                kwargs = dict(kwargs, context=self._context)
+                return old_api(self, self._cr, self._uid, *args, **kwargs)
+        else:
+            def new_api(self, *args, **kwargs):
+                return old_api(self, self._cr, self._uid, *args, **kwargs)
+
+    else:
+        # old api method with cr, uid, ids, and maybe context
+        old_api = method
+        if 'context' in varnames:
+            def new_api(self, *args, **kwargs):
+                ids = map(int, self)
+                kwargs = dict(kwargs, context=self._context)
+                return old_api(self, self._cr, self._uid, ids, *args, **kwargs)
+        else:
+            def new_api(self, *args, **kwargs):
+                ids = map(int, self)
+                return old_api(self, self._cr, self._uid, ids, *args, **kwargs)
+
+    @wraps(method)
+    def wrapper(self, *args, **kwargs):
+        if args and isinstance(args[0], Cursor):
+            return old_api(self, *args, **kwargs)
+        else:
+            return new_api(self, *args, **kwargs)
+
+    return wrapper
+
+
 class MetaModel(type):
     """ Metaclass for the Model.
 
@@ -591,6 +661,13 @@ class MetaModel(type):
     """
 
     module_to_models = {}
+
+    def __new__(meta, name, bases, attrs):
+        # automatically decorate methods with 'versatile'
+        for key in attrs:
+            if not key.startswith('__') and callable(attrs[key]):
+                attrs[key] = versatile(attrs[key])
+        return type.__new__(meta, name, bases, attrs)
 
     def __init__(self, name, bases, attrs):
         if not self._register:
