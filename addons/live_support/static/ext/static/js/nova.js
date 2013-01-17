@@ -25,7 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 (function() {
 
-if (typeof(define) !== undefined) { // use requirejs
+if (typeof(define) !== "undefined") { // use requirejs
     define(["jquery", "underscore"], nova_declare);
 } else { // simply define the global variable 'nova'
     nova = nova_declare($, _);
@@ -711,26 +711,18 @@ function nova_declare($, _) {
         render: function() {}
     });
 
-    /**
-        Near-complete rewrite of underscore's templates.
+    /*
+        Nova Template Engine
     */
-    var escapes = {
-        '\\': '\\',
-        "'": "'",
-        'r': '\r',
-        'n': '\n',
-        't': '\t',
-        'u2028': '\u2028',
-        'u2029': '\u2029'
-    };
-    for (var p in escapes) escapes[escapes[p]] = p;
-    var escaper = /\\|'|\r|\n|\t|\u2028|\u2029/g;
     var escape_ = function(text) {
-        return text.replace(escaper, function(match) {
-            return '\\' + escapes[match];
-        });
+        return JSON.stringify(text);
     }
-
+    var indent_ = function(txt) {
+        var tmp = _.map(txt.split("\n"), function(x) { return "    " + x; });
+        tmp.pop();
+        tmp.push("");
+        return tmp.join("\n");
+    };
     var tparams = {
         def_begin: /<%\s*def\s+(?:name=(?:(?:"(.+?)")|(?:'(.+?)')))\s*>/g,
         def_end: /<\/%\s*def\s*>/g,
@@ -785,26 +777,19 @@ function nova_declare($, _) {
         var restart = end;
         var found;
         var functions = [];
-        var indent = options.indent ?
-            function(txt) {
-                var tmp = _.map(txt.split("\n"), function(x) { return "    " + x; });
-                tmp.pop();
-                tmp.push("");
-                return tmp.join("\n");
-            } :
-            function (txt) { return txt; };
+        var indent = options.indent ? indent_ : function (txt) { return txt; };
         while (found = allbegin.exec(text)) {
-            var to_add = escape_(text.slice(current, found.index));
-            source += to_add ? "__p+='" + to_add + "';\n" : '';
+            var to_add = text.slice(current, found.index);
+            source += to_add ? "__p+=" + escape_(to_add) + ";\n" : '';
             current = found.index;
 
             // slash escaping handling
             var slashes = found[regexes.slashes] || "";
             var nbr = slashes.length;
             var nslash = slashes.slice(0, Math.floor(nbr / 2));
-            source += nbr !== 0 ? "__p+='" + escape_(nslash) + "';\n" : "";
+            source += nbr !== 0 ? "__p+=" + escape_(nslash) + ";\n" : "";
             if (nbr % 2 !== 0) {
-                source += "__p+='" + escape_(found[regexes.match]) + "';\n";
+                source += "__p+=" + escape_(found[regexes.match]) + ";\n";
                 current = found.index + found[0].length;
                 allbegin.lastIndex = current;
                 continue;
@@ -832,7 +817,10 @@ function nova_declare($, _) {
                 var end = tparams.eval_long_end.exec(text);
                 if (!end)
                     throw new Error("<% without matching %>");
-                source += text.slice(found.index + found[0].length, end.index) + "\n";
+                var code = text.slice(found.index + found[0].length, end.index);
+                code = _(code.split("\n")).chain().map(function(x) { return x.trim() })
+                    .reject(function(x) { return !x }).value().join("\n");
+                source += code + "\n";
                 current = end.index + end[0].length;
             } else if (found[regexes.interpolate]) {
                 var braces = /{|}/g;
@@ -857,7 +845,7 @@ function nova_declare($, _) {
                 var end = tparams.eval_short_end.exec(text);
                 if (!end)
                     throw new Error("impossible state!!");
-                source += text.slice(found.index + found[0].length, end.index) + "\n";
+                source += text.slice(found.index + found[0].length, end.index).trim() + "\n";
                 current = end.index;
             } else if (found[regexes.escape]) {
                 var braces = /{|}/g;
@@ -886,11 +874,11 @@ function nova_declare($, _) {
             }
             allbegin.lastIndex = current;
         }
-        var to_add = escape_(text.slice(current, text_end));
-        source += to_add ? "__p+='" + to_add + "';\n" : "";
+        var to_add = text.slice(current, text_end);
+        source += to_add ? "__p+=" + escape_(to_add) + ";\n" : "";
 
         var header = "var __p = ''; var print = function() { __p+=Array.prototype.join.call(arguments, '') };\n" +
-          "with(context || {}){\n";
+          "with (context || {}) {\n";
         var footer = "}\nreturn __p;\n";
         source = indent(source);
 
@@ -914,16 +902,18 @@ function nova_declare($, _) {
         loadFile: function(filename) {
             var self = this;
             return $.get(filename).pipe(function(content) {
-                return self._parseFile(content);
+                return self.loadFileContent(content);
             });
         },
-        _parseFile: function(file_content) {
+        loadFileContent: function(file_content) {
             var result = compileTemplate(file_content, {indent: this.options.indent});
-            var to_append = "return {\n";
+            var to_append = "";
             _.each(result.functions, function(name) {
                 to_append += name + ": " + name + ",\n";
             }, this);
-            to_append += "};\n";
+            to_append = this.options.indent ? indent_(to_append) : to_append;
+            to_append = "return {\n" + to_append + "};\n";
+            to_append = this.options.indent ? indent_(to_append) : to_append;
             var code = result.header + result.source + to_append + result.footer;
 
             var include = _.bind(function(fct) {

@@ -7,7 +7,16 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
     var connection;
 
     livesupport.main = function(server_url, db, login, password) {
-        templateEngine.loadFile(require.toUrl("./livesupport_templates.html")).then(function() {
+        var def = $.Deferred();
+        var tmp = window.oe_livesupport_templates_callback;
+        window.oe_livesupport_templates_callback = _.bind(def.resolve, def);
+        setTimeout(_.bind(def.reject, def), 5000);
+        var src = $('<script src="' + require.toUrl("./livesupport_templates.js") + '"></script>').appendTo($("head"));
+        def.then(function(content) {
+            window.oe_livesupport_templates_callback = tmp;
+            src.remove();
+            return templateEngine.loadFileContent(content);
+        }).then(function() {
             connection = new oeclient.Connection(new oeclient.JsonpRPCConnector(server_url), db, login, password);
             console.log("hello");
         });
