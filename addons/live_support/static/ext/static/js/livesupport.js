@@ -9,6 +9,7 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
     livesupport.main = function(server_url, db, login, password) {
         $.ajax({
             url: require.toUrl("./livesupport_templates.js"),
+            jsonp: false,
             jsonpCallback: "oe_livesupport_templates_callback",
             dataType: "jsonp",
             cache: true,
