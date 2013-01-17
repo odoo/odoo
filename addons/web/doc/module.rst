@@ -1,3 +1,5 @@
+.. _module:
+
 Building an OpenERP Web module
 ==============================
 
