@@ -254,9 +254,9 @@ class module(osv.osv):
         'website': fields.char("Website", size=256, readonly=True),
 
         # attention: Incorrect field names !!
-        #   installed_version refer the latest version (the one on disk)
-        #   latest_version refer the installed version (the one in database)
-        #   published_version refer the version available on the repository
+        #   installed_version refers the latest version (the one on disk)
+        #   latest_version refers the installed version (the one in database)
+        #   published_version refers the version available on the repository
         'installed_version': fields.function(_get_latest_version, string='Latest Version', type='char'),
         'latest_version': fields.char('Installed Version', size=64, readonly=True),
         'published_version': fields.char('Published Version', size=64, readonly=True),
@@ -657,31 +657,35 @@ class module(osv.osv):
         OPENERP = 'openerp'
         tmp = tempfile.mkdtemp()
         try:
+            # 1. Download & unzip missing modules
             for module_name, url in urls.items():
                 if not url:
                     continue    # nothing to download, local version is already the last one
                 try:
+                    _logger.info('Downloading module `%s` from OpenERP Apps', module_name)
                     content = urllib2.urlopen(url).read()
-                except Exception, e:
-                    _logger.exception('ggr')
-                    raise osv.except_osv('grrr', e)
+                except Exception:
+                    _logger.exception('Failed to fetch module %s', module_name)
+                    raise osv.except_osv(_('Module not found'),
+                                         _('The `%s` module appears to be unavailable at the moment, please try again later.') % module_name)
                 else:
                     zipfile.ZipFile(StringIO(content)).extractall(tmp)
                     assert os.path.isdir(os.path.join(tmp, module_name))
 
-            for module_name in urls:
-                if module_name == OPENERP:
-                    continue    # special case. handled below
+            # 2a. Copy/Replace module source in addons path 
+            for module_name, url in urls.items():
+                if module_name == OPENERP or not url:
+                    continue    # OPENERP is special case, handled below, and no URL means local module
                 module_path = modules.get_module_path(module_name, downloaded=True, display_warning=False)
                 bck = backup(module_path, False)
                 shutil.move(os.path.join(tmp, module_name), module_path)
                 if bck:
                     shutil.rmtree(bck)
 
+            # 2b.  Copy/Replace server+base module source if downloaded
             if urls.get(OPENERP, None):
-                # special case. it containt the server and the base module.
+                # special case. it contains the server and the base module.
                 # extract path is not the same
-
                 base_path = os.path.dirname(modules.get_module_path('base'))
 
                 # copy all modules in the SERVER/openerp/addons directory to the new "openerp" module (except base itself)
