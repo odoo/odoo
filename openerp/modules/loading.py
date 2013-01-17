@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2012 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2013 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -36,14 +36,12 @@ import openerp.modules.graph
 import openerp.modules.migration
 import openerp.osv as osv
 import openerp.pooler as pooler
-import openerp.release as release
 import openerp.tools as tools
 from openerp import SUPERUSER_ID
 
-from openerp import SUPERUSER_ID
 from openerp.tools.translate import _
 from openerp.modules.module import initialize_sys_path, \
-    load_openerp_module, init_module_models
+    load_openerp_module, init_module_models, adapt_version
 
 _logger = logging.getLogger(__name__)
 
@@ -213,7 +211,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
             migrations.migrate_module(package, 'post')
 
-            ver = release.major_version + '.' + package.data['version']
+            ver = adapt_version(package.data['version'])
             # Set new modules and dependencies
             modobj.write(cr, SUPERUSER_ID, [module_id], {'state': 'installed', 'latest_version': ver})
             # Update translations for all installed languages
