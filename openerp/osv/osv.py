@@ -39,6 +39,7 @@ import openerp.exceptions
 _logger = logging.getLogger(__name__)
 
 # Deprecated.
+# Have a look at exceptions.py instead.
 class except_osv(Exception):
     def __init__(self, name, value):
         self.name = name
