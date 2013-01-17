@@ -589,24 +589,34 @@ class res_config_settings(osv.osv_memory):
             name = act_window.read(cr, uid, action_ids[0], ['name'], context=context)['name']
         return [(record.id, name) for record in self.browse(cr, uid , ids, context=context)]
 
-    def get_config_path(self, cr, uid, module_name, menu_xml_id=None, model_name=None, field_name=None, context=None):
+    def get_path(self, cr, uid, menu_xml_id=None, field_name=None, context=None):
         """
         Return a string representing the path to access a specific
         configuration option through the interface.
 
-        :return string
+        :return string: may vary depending of the given params
+            - if menu_xml_id and not field_name: the string will contain the
+              path to the config option.
+              e.g.: "Settings/Configuration/Sales"
+            - if not menu_xml_id and field_name: the string will contain the
+              config option's human readable name
+              e.g.: "Create leads from incoming mails"
+            - if menu_xml_id and field_name: the string will contain the path
+              and the config option's human readable name
+              e.g.: "Settings/Configuration/Sales/Create leads from incoming mails"
         """
 
         config_path = ''
 
-        # Fetch the path
-        if (module_name and menu_xml_id):
+        # Fetch the path to the config option
+        if (menu_xml_id):
+            module_name, menu_xml_id = menu_xml_id.split('.')
             dummy, menu_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, module_name, menu_xml_id)
             config_path += self.pool.get('ir.ui.menu').browse(cr, uid, menu_id, context=context).complete_name
 
         # Fetch the exact config option name
-        if (model_name and field_name):
-            config_path += MENU_ITEM_SEPARATOR + self.pool.get(model_name)._all_columns.get(field_name).column.string
+        if (field_name):
+            config_path += MENU_ITEM_SEPARATOR + self._all_columns.get(field_name).column.string
 
         return config_path
 
