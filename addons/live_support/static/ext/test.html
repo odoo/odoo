@@ -8,10 +8,13 @@
             baseUrl: "http://localhost:8069/live_support/static/ext/static/js",
             shim: {
                 underscore: {
-                    exports: "_",
-                }
+                    init: function() {
+                        return _.noConflict();
+                    },
+                },
             },
-        })(["livesupport"], function(livesupport) {
+        })(["livesupport", "jquery"], function(livesupport, jQuery) {
+            jQuery.noConflict();
             livesupport.main("http://localhost:8069", "im", "admin", "a");
         });
     </script>

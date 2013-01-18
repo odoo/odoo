@@ -25,9 +25,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 (function() {
 
-if (typeof(define) !== "undefined") { // use requirejs
+if (typeof(define) !== "undefined") { // requirejs
     define(["jquery", "underscore"], nova_declare);
-} else { // simply define the global variable 'nova'
+} else if (typeof(exports) !== "undefined") { // node
+    var _ = require("underscore")
+    _.extend(exports, nova_declare(null, _));
+} else { // define global variable 'nova'
     nova = nova_declare($, _);
 }
 
@@ -282,7 +285,7 @@ function nova_declare($, _) {
 
     var ErrorBase = function() {
     };
-    ErrorBase.prototype = new window.Error();
+    ErrorBase.prototype = new Error();
     ErrorBase.$extend = nova.Class.$extend;
     ErrorBase.$withData = nova.Class.$withData;
 
@@ -617,10 +620,6 @@ function nova_declare($, _) {
     
     nova.Widget = nova.Class.$extend({
         __include__ : [nova.DynamicProperties],
-        /**
-         * Tag name when creating a default $el.
-         * @type string
-         */
         tagName: 'div',
         className: '',
         attributes: {},
@@ -778,8 +777,17 @@ function nova_declare($, _) {
         var found;
         var functions = [];
         var indent = options.indent ? indent_ : function (txt) { return txt; };
+        var rmWhite = options.removeWhitespaces ? function(txt) {
+            if (! txt)
+                return txt;
+            txt = _.map(txt.split("\n"), function(x) { return x.trim() });
+            var last = txt.pop();
+            txt = _.reject(txt, function(x) { return !x });
+            txt.push(last);
+            return txt.join("\n") || "\n";
+        } : function(x) { return x };
         while (found = allbegin.exec(text)) {
-            var to_add = text.slice(current, found.index);
+            var to_add = rmWhite(text.slice(current, found.index));
             source += to_add ? "__p+=" + escape_(to_add) + ";\n" : '';
             current = found.index;
 
@@ -874,7 +882,7 @@ function nova_declare($, _) {
             }
             allbegin.lastIndex = current;
         }
-        var to_add = text.slice(current, text_end);
+        var to_add = rmWhite(text.slice(current, text_end));
         source += to_add ? "__p+=" + escape_(to_add) + ";\n" : "";
 
         var header = "var __p = ''; var print = function() { __p+=Array.prototype.join.call(arguments, '') };\n" +
@@ -895,8 +903,9 @@ function nova_declare($, _) {
         __init__: function() {
             this.resetEnvironment();
             this.options = {
-                includeInDom: true,
+                includeInDom: $ ? true : false,
                 indent: true,
+                removeWhitespaces: true,
             };
         },
         loadFile: function(filename) {
@@ -906,28 +915,12 @@ function nova_declare($, _) {
             });
         },
         loadFileContent: function(file_content) {
-            var result = compileTemplate(file_content, {indent: this.options.indent});
-            var to_append = "";
-            _.each(result.functions, function(name) {
-                to_append += name + ": " + name + ",\n";
-            }, this);
-            to_append = this.options.indent ? indent_(to_append) : to_append;
-            to_append = "return {\n" + to_append + "};\n";
-            to_append = this.options.indent ? indent_(to_append) : to_append;
-            var code = result.header + result.source + to_append + result.footer;
+            var code = this.compileFile(file_content);
 
-            var include = _.bind(function(fct) {
-                var add = _.extend({engine: this}, this._env);
-                var functions = fct(add);
-                _.each(functions, function(func, name) {
-                    if (this[name])
-                        throw new Error("The template '" + name + "' is already defined");
-                    this[name] = func;
-                }, this);
-            }, this);
             if (this.options.includeInDom) {
                 var varname = _.uniqueId("novajstemplate");
-                code = "window." + varname + " = function(context) {\n" + code + "};\n";
+                var previous = window[varname];
+                code = "window." + varname + " = " + code + ";";
                 var def = $.Deferred();
                 var script   = document.createElement("script");
                 script.type  = "text/javascript";
@@ -936,17 +929,41 @@ function nova_declare($, _) {
                 $(script).ready(function() {
                     def.resolve();
                 });
-                def.then(function() {
-                    include(window[varname]);
-                    delete window[varname];
-                });
+                def.then(_.bind(function() {
+                    var tmp = window[varname];
+                    window[varname] = previous;
+                    this.includeTemplates(tmp);
+                }, this));
                 return def;
             } else {
-                return include(new Function('context', code));
+                console.log("return (" + code + ")(context);");
+                return this.includeTemplates(new Function('context', "return (" + code + ")(context);"));
             }
         },
+        compileFile: function(file_content) {
+            var result = compileTemplate(file_content, _.extend({}, this.options));
+            var to_append = "";
+            _.each(result.functions, function(name) {
+                to_append += name + ": " + name + ",\n";
+            }, this);
+            to_append = this.options.indent ? indent_(to_append) : to_append;
+            to_append = "return {\n" + to_append + "};\n";
+            to_append = this.options.indent ? indent_(to_append) : to_append;
+            var code = "function(context) {\n" + result.header +
+                result.source + to_append + result.footer + "}\n";
+            return code;
+        },
+        includeTemplates: function(fct) {
+            var add = _.extend({engine: this}, this._env);
+            var functions = fct(add);
+            _.each(functions, function(func, name) {
+                if (this[name])
+                    throw new Error("The template '" + name + "' is already defined");
+                this[name] = func;
+            }, this);
+        },
         buildTemplate: function(text) {
-            var comp = compileTemplate(text, {indent: this.options.indent});
+            var comp = compileTemplate(text, _.extend({}, this.options));
             var result = comp.header + comp.source + comp.footer;
             var add = _.extend({engine: this}, this._env);
             var func = new Function('context', result);
