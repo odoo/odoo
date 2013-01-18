@@ -27,8 +27,16 @@ treated as a 'Server error'.
 
 """
 
+import re
+
 class Warning(Exception):
     pass
+
+class WarningConfig(Exception):
+    """ Warning bound to a misconfiguration. """
+    def __init__(self, msg):
+        # todo: treat the msg (regex)
+        super(WarningConfig, self).__init__(msg)
 
 class AccessDenied(Exception):
     """ Login/password error. No message, no traceback. """

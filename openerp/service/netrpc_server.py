@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -145,7 +145,7 @@ class TinySocketClientThread(threading.Thread):
                 break
             except Exception, e:
                 try:
-                    valid_exception = Exception(netrpc_handle_exception_legacy(e)) 
+                    valid_exception = Exception(netrpc_handle_exception_legacy(e))
                     valid_traceback = getattr(e, 'traceback', sys.exc_info())
                     formatted_traceback = "".join(traceback.format_exception(*valid_traceback))
                     _logger.debug("netrpc: communication-level exception", exc_info=True)
@@ -164,11 +164,13 @@ class TinySocketClientThread(threading.Thread):
 
     def stop(self):
         self.running = False
-        
+
 def netrpc_handle_exception_legacy(e):
     if isinstance(e, openerp.osv.osv.except_osv):
         return 'warning -- ' + e.name + '\n\n' + e.value
     if isinstance(e, openerp.exceptions.Warning):
+        return 'warning -- Warning\n\n' + str(e)
+    if isinstance(e, openerp.exceptions.WarningConfig):
         return 'warning -- Warning\n\n' + str(e)
     if isinstance(e, openerp.exceptions.AccessError):
         return 'warning -- AccessError\n\n' + str(e)

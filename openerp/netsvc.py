@@ -107,7 +107,7 @@ class ExportService(object):
     """
 
     _services = {}
-    
+
     def __init__(self, name):
         ExportService._services[name] = self
         self.__name = name
@@ -305,6 +305,8 @@ def dispatch_rpc(service_name, method, params):
     except openerp.exceptions.AccessDenied:
         raise
     except openerp.exceptions.Warning:
+        raise
+    except openerp.exceptions.WarningConfig:
         raise
     except openerp.exceptions.DeferredException, e:
         _logger.exception(tools.exception_to_unicode(e))
