@@ -675,17 +675,16 @@ class MetaModel(type):
             super(MetaModel, self).__init__(name, bases, attrs)
             return
 
-        # The (OpenERP) module name can be in the `openerp.addons` namespace
-        # or not. For instance module `sale` can be imported as
-        # `openerp.addons.sale` (the good way) or `sale` (for backward
-        # compatibility).
-        module_parts = self.__module__.split('.')
-        if len(module_parts) > 2 and module_parts[0] == 'openerp' and \
-            module_parts[1] == 'addons':
-            module_name = self.__module__.split('.')[2]
-        else:
-            module_name = self.__module__.split('.')[0]
         if not hasattr(self, '_module'):
+            # The (OpenERP) module name can be in the `openerp.addons` namespace
+            # or not.  For instance, module `sale` can be imported as
+            # `openerp.addons.sale` (the right way) or `sale` (for backward
+            # compatibility).
+            module_parts = self.__module__.split('.')
+            if len(module_parts) > 2 and module_parts[:2] == ['openerp', 'addons']:
+                module_name = self.__module__.split('.')[2]
+            else:
+                module_name = self.__module__.split('.')[0]
             self._module = module_name
 
         # Remember which models to instanciate for this module.
@@ -991,28 +990,11 @@ class BaseModel(object):
         return obj
 
     def __new__(cls):
-        """Register this model.
-
-        This doesn't create an instance but simply register the model
-        as being part of the module where it is defined.
-
-        """
-
-
-        # Set the module name (e.g. base, sale, accounting, ...) on the class.
-        module = cls.__module__.split('.')[0]
-        if not hasattr(cls, '_module'):
-            cls._module = module
-
-        # Record this class in the list of models to instantiate for this module,
-        # managed by the metaclass.
-        module_model_list = MetaModel.module_to_models.setdefault(cls._module, [])
-        if cls not in module_model_list:
-            if not cls._custom:
-                module_model_list.append(cls)
-
-        # Since we don't return an instance here, the __init__
-        # method won't be called.
+        # In the past, this method was registering the model class in the server.
+        # This job is now done entirely by the metaclass MetaModel.
+        #
+        # Do not create an instance here.  Model instances are created by method
+        # create_instance().
         return None
 
     def __init__(self, pool, cr):
