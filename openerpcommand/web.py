@@ -30,6 +30,7 @@ def run(args):
 
     target = openerp.service.wsgi_server.serve
     if not args.gevent:
+        config["gevent"] = False
         # TODO openerp.multi_process with a multi-threaded process probably
         # doesn't work very well (e.g. waiting for all threads to complete
         # before killing the process is not implemented).
@@ -37,7 +38,7 @@ def run(args):
         threading.Thread(target=target, args=arg).start()
         openerp.cli.server.quit_on_signals()
     else:
-        config.options["gevent"] = True
+        config["gevent"] = True
         import gevent.monkey
         import gevent.wsgi
         import gevent_psycopg2
