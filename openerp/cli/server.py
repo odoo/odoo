@@ -230,20 +230,10 @@ def main(args):
     check_root_user()
     openerp.tools.config.parse_config(args)
 
-    if openerp.tools.config.options["gevent"]:
-        _logger.info('Using gevent mode')
-        import gevent.monkey
-        gevent.monkey.patch_all()
-        import gevent_psycopg2
-        gevent_psycopg2.monkey_patch()
-
     check_postgres_user()
     openerp.netsvc.init_logger()
     report_configuration()
     
-    if openerp.tools.config.options["gevent"]:
-        _logger.info('Using gevent mode')
-
     config = openerp.tools.config
 
     configure_babel_localedata_path()

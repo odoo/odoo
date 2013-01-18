@@ -424,7 +424,7 @@ def serve():
     # TODO Change the xmlrpc_* options to http_*
     interface = config['xmlrpc_interface'] or '0.0.0.0'
     port = config['xmlrpc_port']
-    if not openerp.tools.config.options["gevent"]:
+    if not openerp.evented:
         httpd = werkzeug.serving.make_server(interface, port, application, threaded=True)
     else:
         from gevent.wsgi import WSGIServer

@@ -34,6 +34,7 @@ import web_services
 import web_services
 import wsgi_server
 
+import openerp
 import openerp.modules
 import openerp.netsvc
 import openerp.osv
@@ -91,13 +92,13 @@ def start_services():
     # Start the WSGI server.
     wsgi_server.start_service()
     # Start the main cron thread.
-    if not openerp.tools.config.options["gevent"]:
+    if not openerp.evented:
         cron.start_service()
 
 def stop_services():
     """ Stop all services. """
     # stop services
-    if not openerp.tools.config.options["gevent"]:
+    if not openerp.evented:
         cron.stop_service()
     netrpc_server.stop_service()
     wsgi_server.stop_service()

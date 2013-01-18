@@ -354,7 +354,7 @@ class WorkerLongPolling(Worker):
         self.watchdog_timeout = None
 
     def start(self):
-        config.options["gevent"] = True
+        openerp.evented = True
         _logger.info('Using gevent mode')
         import gevent.monkey
         gevent.monkey.patch_all()
