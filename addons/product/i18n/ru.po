@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 07:27+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-01-18 06:59+0000\n"
+"X-Generator: Launchpad (build 16430)\n"
 
 #. module: product
 #: field:product.packaging,rows:0
@@ -404,6 +404,8 @@ msgid ""
 "Specify a product if this rule only applies to one product. Keep empty "
 "otherwise."
 msgstr ""
+"Укажите товар, если это правило применимо только к одному товару. Иначе "
+"оставьте пустым."
 
 #. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_kgm
@@ -505,7 +507,7 @@ msgstr "Наушники стандартные"
 #. module: product
 #: model:product.uom,name:product.product_uom_day
 msgid "Day(s)"
-msgstr ""
+msgstr "Дней"
 
 #. module: product
 #: help:product.product,incoming_qty:0
@@ -527,6 +529,8 @@ msgid ""
 "Error: The default Unit of Measure and the purchase Unit of Measure must be "
 "in the same category."
 msgstr ""
+"Ошибка: Единицы измерения по умолчанию и единицы измерения покупки должны "
+"быть в одной категории."
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
@@ -614,6 +618,8 @@ msgid ""
 "Error! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
 "Item!"
 msgstr ""
+"Error! Нельзя определить основной прайс-лист как дополнительный прайс-лист в "
+"пункте прайс-листа!"
 
 #. module: product
 #: view:product.price_list:0
@@ -694,6 +700,9 @@ msgid ""
 "period (usually every year). \n"
 "Average Price: The cost price is recomputed at each incoming shipment."
 msgstr ""
+"Стандартная цена: себестоимость обновляется вручную в конце периода (обычно "
+"каждый год). \n"
+"Средняя цена: себестоимость пересчитывается при каждом поступлении продукта."
 
 #. module: product
 #: field:product.product,qty_available:0
@@ -775,6 +784,8 @@ msgid ""
 "Cost price of the product used for standard stock valuation in accounting "
 "and used as a base price on purchase orders."
 msgstr ""
+"Себестоимость товара используется для стандартной оценки запасов в учете и "
+"используется как базовая цена в заказах  закупки."
 
 #. module: product
 #: field:product.category,child_id:0
@@ -789,7 +800,7 @@ msgstr "Дата окончания"
 #. module: product
 #: model:product.uom,name:product.product_uom_litre
 msgid "Liter(s)"
-msgstr ""
+msgstr "Литр(ов)"
 
 #. module: product
 #: view:product.price_list:0
@@ -832,7 +843,7 @@ msgstr "Прайс-лист"
 #. module: product
 #: model:product.uom,name:product.product_uom_hour
 msgid "Hour(s)"
-msgstr ""
+msgstr "Час(ов)"
 
 #. module: product
 #: selection:product.template,state:0
@@ -966,6 +977,8 @@ msgid ""
 "Specify the minimum quantity that needs to be bought/sold for the rule to "
 "apply."
 msgstr ""
+"Укажите минимальное количество которое должно быть куплено/продано чтобы "
+"правило сработало."
 
 #. module: product
 #: help:product.pricelist.version,date_start:0
@@ -1092,7 +1105,7 @@ msgstr "Правый источник"
 #. module: product
 #: field:product.product,price:0
 msgid "Price"
-msgstr ""
+msgstr "Цена"
 
 #. module: product
 #: field:product.pricelist.item,price_surcharge:0
@@ -1232,7 +1245,7 @@ msgstr "Услуги"
 #. module: product
 #: help:product.product,ean13:0
 msgid "International Article Number used for product identification."
-msgstr ""
+msgstr "Международный  номер товара используется для идентификации товара."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_category_action
@@ -1301,6 +1314,8 @@ msgid ""
 "This field holds the image used as image for the product, limited to "
 "1024x1024px."
 msgstr ""
+"Это поле содержит изображение, используемое в качестве изображения товара, "
+"ограничивается 1024x1024px ."
 
 #. module: product
 #: help:product.pricelist.item,categ_id:0
@@ -1426,6 +1441,8 @@ msgid ""
 "This price will be considered as a price for the supplier Unit of Measure if "
 "any or the default Unit of Measure of the product otherwise"
 msgstr ""
+"Эта цена - цена за единицу измерения поставщика, если задана. Иначе цена за "
+"единицу измерения по умолчанию."
 
 #. module: product
 #: field:product.template,uom_po_id:0
@@ -1525,7 +1542,7 @@ msgstr ""
 #: model:product.template,description:product.product_product_1_product_template
 #: model:product.template,description_sale:product.product_product_1_product_template
 msgid "This type of service include basic monitoring of products."
-msgstr ""
+msgstr "Этот вид услуг включает базовый мониторинг товаров."
 
 #. module: product
 #: help:product.pricelist.version,date_end:0
@@ -1661,6 +1678,7 @@ msgstr "Код ТМЦ поставщика"
 msgid ""
 "If unchecked, it will allow you to hide the pricelist without removing it."
 msgstr ""
+"Если не отмечено, это позволит вам скрыть прайс-лист без его удаления."
 
 #. module: product
 #: selection:product.ul,type:0
@@ -1790,6 +1808,9 @@ msgid ""
 "Sepcify a unit of measure here if invoicing is made in another unit of "
 "measure than inventory. Keep empty to use the default unit of measure."
 msgstr ""
+"Укажите единицу измерения здесь, если счет выставляется в других единицах "
+"измерения, отличных от единиц измерения в которых хранятся остатки. Оставьте "
+"пустым чтобы использовать единицу измерения по умолчанию."
 
 #. module: product
 #: code:addons/product/product.py:208
@@ -1856,7 +1877,7 @@ msgstr "Сообщения"
 #. module: product
 #: model:product.uom,name:product.product_uom_unit
 msgid "Unit(s)"
-msgstr ""
+msgstr "Штук"
 
 #. module: product
 #: code:addons/product/product.py:176
@@ -2045,6 +2066,7 @@ msgid ""
 "Specify the fixed amount to add or substract(if negative) to the amount "
 "calculated with the discount."
 msgstr ""
+"Укажите сумму , чтобы добавить или вычесть к сумме вычисленной с дисконтом."
 
 #. module: product
 #: help:product.product,qty_available:0
@@ -2384,7 +2406,7 @@ msgstr "Вариант ТМЦ"
 #. module: product
 #: model:product.template,name:product.product_product_6_product_template
 msgid "15” LCD Monitor"
-msgstr ""
+msgstr "15” LCD Монитор"
 
 #. module: product
 #: code:addons/product/pricelist.py:376
@@ -2413,6 +2435,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                 Щелкните, чтобы создать прайс-лист.\n"
+"              </p><p>\n"
+"                Прайс-лист содержит правила, которые должны оцениваться для "
+"того, чтобы вычислить\n"
+"                цену продукции для продажи.\n"
+"              </p><p>\n"
+"               Прайс-листы могут иметь несколько версий (2010, 2011, \n"
+"                 Февраль 2010 года, и т.д.) и каждая версия может иметь "
+"несколько правил.\n"
+"                   (например, цена товара будет основываться на\n"
+"                цене поставщика умноженной на 1,80).\n"
+"              </p>\n"
+"            "
 
 #. module: product
 #: model:ir.model,name:product.model_product_template
@@ -2503,6 +2539,10 @@ msgid ""
 "128x128px image, with aspect ratio preserved, only when the image exceeds "
 "one of those sizes. Use this field in form views or some kanban views."
 msgstr ""
+"Средне-размерное изображение товара. Оно автоматически изменяется до "
+"128x128px, с таким же соотношением сторон, только тогда, когда изображение "
+"превышает один из размеров. Используйте это поле в форме просмотра или "
+"некоторых видах канбан."
 
 #. module: product
 #: view:product.uom:0

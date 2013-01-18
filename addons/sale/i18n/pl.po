@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 07:32+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-01-18 07:06+0000\n"
+"X-Generator: Launchpad (build 16430)\n"
 
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
@@ -64,7 +64,7 @@ msgstr "Partner współpracujący"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
 msgid "Invoice Order"
-msgstr ""
+msgstr "Zakturuj zamówienie"
 
 #. module: sale
 #: view:sale.config.settings:0
@@ -162,7 +162,7 @@ msgstr "Pozycje dostarczone i niezafakturowane"
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
 msgid "Quotation confirmed"
-msgstr ""
+msgstr "Oferta potwierdzona"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -248,12 +248,12 @@ msgstr "Wartość przedpłaty musi być dodatnia"
 #. module: sale
 #: help:sale.config.settings,group_discount_per_so_line:0
 msgid "Allows you to apply some discount per sales order line."
-msgstr ""
+msgstr "Pozwala zastosować upust do pozycji zamównienia sprzedaży."
 
 #. module: sale
 #: view:sale.order.line:0
 msgid "Sales Order Lines that are in 'done' state"
-msgstr ""
+msgstr "Pozycje zamówienia sprzedaży, które są w stanie 'wykonano'"
 
 #. module: sale
 #: selection:sale.order.line,type:0
@@ -399,6 +399,12 @@ msgid ""
 "                Use Some Order Lines to invoice a selection of the sales "
 "order lines."
 msgstr ""
+"Stosuje Wszystko do fakturowania całościowego.\n"
+"                Stosuj Procentowo do fakturowania częściowego.\n"
+"                Stosuj Ustalona cena do fakturowania konkretnej kwoty "
+"zaliczkowej.\n"
+"                Stosuj Część pozycji do fakturowania wybranych pozycji "
+"zamówienia."
 
 #. module: sale
 #: view:sale.make.invoice:0
@@ -473,6 +479,7 @@ msgstr "Faks :"
 msgid ""
 "In order to delete a confirmed sales order, you must cancel it before !"
 msgstr ""
+"Aby usunąć potwierdzone zamówienia sprzedaży, musisz najpierw je anulować."
 
 #. module: sale
 #: view:sale.order:0
@@ -508,7 +515,7 @@ msgstr "Zamówienie sprzedaży"
 #. module: sale
 #: model:res.groups,name:sale.group_invoice_so_lines
 msgid "Enable Invoicing Sales order lines"
-msgstr ""
+msgstr "Włącz fakturowanie pozycji zamówienia sprzedaży"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
@@ -523,7 +530,7 @@ msgstr "Kwota zaliczki"
 #. module: sale
 #: help:sale.order,invoice_exists:0
 msgid "It indicates that sales order has at least one invoice."
-msgstr ""
+msgstr "To oznacza, że zamówienie ma co najmniej jedną fakturę."
 
 #. module: sale
 #: help:sale.config.settings,group_sale_pricelist:0
@@ -540,7 +547,7 @@ msgstr "jeden pracownik może mieć różne role dla umowy"
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoice the whole sales order"
-msgstr ""
+msgstr "Fakturuj całe zamówienie sprzedaży"
 
 #. module: sale
 #: field:sale.shop,payment_default_id:0
@@ -562,6 +569,8 @@ msgstr "Generuj faktury na podstawie karty czasu pracy"
 #, python-format
 msgid "You cannot cancel a sales order line that has already been invoiced."
 msgstr ""
+"Nie możesz anulować pozycji zamówienia sprzedaży, która już została "
+"zafakturowana."
 
 #. module: sale
 #: view:account.invoice.report:0
@@ -589,7 +598,7 @@ msgstr "Pozwala stosowac różne jednostki miary"
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
 msgid "Sales Order Confirmed"
-msgstr ""
+msgstr "Zamówienie sprzedaży potwierdzone"
 
 #. module: sale
 #: view:sale.order:0
@@ -637,7 +646,7 @@ msgstr "Pełna cena"
 #. module: sale
 #: help:account.config.settings,group_analytic_account_for_sales:0
 msgid "Allows you to specify an analytic account on sales orders."
-msgstr ""
+msgstr "Pozwala podać konto analityczne na zamówieniu sprzedaży"
 
 #. module: sale
 #: help:sale.config.settings,module_sale_journal:0
@@ -709,7 +718,7 @@ msgstr "Rok zamówienia sprzedaży"
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
 msgid "Addresses in Sales Orders"
-msgstr ""
+msgstr "Adresy na zamówieniach sprzedaży"
 
 #. module: sale
 #: field:sale.advance.payment.inv,qtty:0
@@ -726,7 +735,7 @@ msgstr "Suma :"
 #. module: sale
 #: view:sale.order.line:0
 msgid "Sales Order Lines ready to be invoiced"
-msgstr ""
+msgstr "Pozycje zamówienia sprzedaży gotowe do fakturowania"
 
 #. module: sale
 #: view:sale.report:0
@@ -866,7 +875,7 @@ msgstr "Utwórz i pokaż fakturę"
 #. module: sale
 #: view:sale.order.line:0
 msgid "Sales order lines done"
-msgstr ""
+msgstr "Wykonane pozycje zamówienia sprzedaży"
 
 #. module: sale
 #: field:sale.make.invoice,grouped:0
@@ -948,7 +957,7 @@ msgstr "Miesiąc"
 #. module: sale
 #: field:sale.order,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "Waluta"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -985,7 +994,7 @@ msgstr "Nazwa sklepu"
 #. module: sale
 #: view:sale.order:0
 msgid "My Sales Orders"
-msgstr ""
+msgstr "Moje zamówienia sprzedaży"
 
 #. module: sale
 #: report:sale.order:0
@@ -1010,6 +1019,8 @@ msgid ""
 "To allow your salesman to make invoices for sales order lines using the menu "
 "'Lines to Invoice'."
 msgstr ""
+"Aby pozwolić sprzedawcy fakturować zamówienie po pozycjach przy pomocy menu "
+"'Pozycje do fakturowania'."
 
 #. module: sale
 #: model:ir.actions.client,name:sale.action_client_sale_menu
@@ -1020,7 +1031,7 @@ msgstr "Otwórz menu Sprzedaż"
 #: code:addons/sale/sale.py:592
 #, python-format
 msgid "You cannot confirm a sales order which has no line."
-msgstr ""
+msgstr "Nie możesz potwierdzić zamówienia sprzedaży bez pozycji."
 
 #. module: sale
 #: selection:sale.report,state:0
@@ -1036,7 +1047,7 @@ msgstr "Nie zdefiniowano żadnego klienta !"
 #. module: sale
 #: field:sale.config.settings,module_sale_stock:0
 msgid "Trigger delivery orders automatically from sales orders"
-msgstr ""
+msgstr "Uruchamia wydania automatycznie z zamówień sprzedaży."
 
 #. module: sale
 #: view:sale.make.invoice:0
@@ -1106,7 +1117,7 @@ msgstr "Kwota podatku"
 #. module: sale
 #: field:sale.order,invoiced_rate:0
 msgid "Invoiced Ratio"
-msgstr ""
+msgstr "Współczynnik zafakturowanych"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -1268,7 +1279,7 @@ msgstr "Styczeń"
 #. module: sale
 #: field:sale.config.settings,group_discount_per_so_line:0
 msgid "Allow setting a discount on the sales order lines"
-msgstr ""
+msgstr "Pozwól na upusty na pozycjach zamówienia sprzedaży"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_in_progress
@@ -1536,13 +1547,13 @@ msgstr "Brak cennika ! : "
 #. module: sale
 #: view:sale.order:0
 msgid "Sales Order "
-msgstr ""
+msgstr "Zamówienia sprzedaży "
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_order_sent
 msgid "Quotation send"
-msgstr ""
+msgstr "Oferta wysłana"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1597,7 +1608,7 @@ msgstr ""
 #. module: sale
 #: view:sale.advance.payment.inv:0
 msgid "Invoice Sales Order"
-msgstr ""
+msgstr "Fakturuj zamówienie sprzedaży"
 
 #. module: sale
 #: help:sale.order,invoice_quantity:0
@@ -2063,7 +2074,7 @@ msgstr "Z zamówienia sprzedaży"
 #. module: sale
 #: view:sale.order.line:0
 msgid "Confirmed sales order lines, not yet delivered"
-msgstr ""
+msgstr "Potwierdzone zamówienia sprzedaży, jeszcze nie wydane"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleinvoice0
@@ -2109,7 +2120,7 @@ msgstr "Zamówienia sprzedaży gotowe do fakturowania"
 #. module: sale
 #: field:sale.config.settings,group_invoice_so_lines:0
 msgid "Generate invoices based on the sales order lines"
-msgstr ""
+msgstr "Generuj faktury na podstawie pozycji zamówień sprzedaży"
 
 #. module: sale
 #: view:sale.advance.payment.inv:0

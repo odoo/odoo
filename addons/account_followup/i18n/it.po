@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-23 05:08+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-01-18 06:33+0000\n"
+"X-Generator: Launchpad (build 16430)\n"
 
 #. module: account_followup
 #: model:email.template,subject:account_followup.email_template_account_followup_default
@@ -285,7 +285,7 @@ msgstr "Se eseguito, verrà stampata una lettera"
 #. module: account_followup
 #: field:res.partner,payment_earliest_due_date:0
 msgid "Worst Due Date"
-msgstr ""
+msgstr "Scadenza peggiore"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -550,7 +550,7 @@ msgstr "Ricerca Sollecito di Pagamento"
 #. module: account_followup
 #: view:res.partner:0
 msgid "Account Move line"
-msgstr ""
+msgstr "Linea movimento conto"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:237
@@ -692,6 +692,24 @@ msgid ""
 "Best Regards,\n"
 "            "
 msgstr ""
+"\n"
+"Gentile %(partner_name)s,\n"
+"\n"
+"Nonostante diversi solleciti, la Vostra posizione contabile non è stata "
+"ancora risolta.\n"
+"\n"
+"A meno che il pagamento completo non sia realizzato nei prossimi 8 giorni, "
+"verrà intrapresa l'azione legale per il recupero del credito senza ulteriore "
+"preavviso.\n"
+"\n"
+"Confido che questa azione non si renda necessaria indichiamo, a tal scopo, i "
+"dettagli dei pagamenti da effettuare qui sotto.\n"
+"\n"
+"In caso di qualsiasi domanda in merito, non esitate a contattare il nostro "
+"ufficio contabilità.\n"
+"\n"
+"Cordiali saluti,\n"
+"            "
 
 #. module: account_followup
 #: field:res.partner,payment_amount_due:0
@@ -706,7 +724,7 @@ msgstr "Ultimo Sollecito di Pagamento"
 #. module: account_followup
 #: view:account_followup.sending.results:0
 msgid "Download Letters"
-msgstr ""
+msgstr "Scarica lettere"
 
 #. module: account_followup
 #: field:account_followup.print,company_id:0
@@ -726,6 +744,8 @@ msgid ""
 "When processing, it will set the manual action to be taken for that "
 "customer. "
 msgstr ""
+"Quando processato, verrà impostata una azione manuale da prendere per quel "
+"cliente. "
 
 #. module: account_followup
 #: view:res.partner:0
@@ -871,6 +891,18 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Gentile %(partner_name)s,\n"
+"\n"
+"Se non abbiamo commesso un errore, sembra che il seguente importo non sia "
+"ancora stato pagato. Prego prendete le appropriate misure nell'ordine di "
+"portare aveti qesto pagamento nei prossimi 8 giorni.\n"
+"\n"
+"Nel caso il pagamento sia già stato predisposto prima dell'invio della "
+"presente, prego ignorate il messaggio. Non esitate a contattare il nostro "
+"personale contabile in merito.\n"
+"\n"
+"Cordiali saluti,\n"
 
 #. module: account_followup
 #: field:account_followup.stat,date_move_last:0
@@ -1057,6 +1089,11 @@ msgid ""
 "installed\n"
 "                            using to top right icon."
 msgstr ""
+"Scrivete qui l'introduzione nella lettera,\n"
+"in accordo col livello di follow-up. E' \n"
+"possibile usare le sequenti keywords nel testo. Non \n"
+"dimenticare di tradurre in tutte le lingue installate\n"
+"utilizzando l'icona in alto a destra"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -1089,7 +1126,7 @@ msgstr "Statistiche Sollecito di Pagamento per Partner"
 #: code:addons/account_followup/wizard/account_followup_print.py:172
 #, python-format
 msgid " letter(s) in report"
-msgstr ""
+msgstr " lettera(e) nel report"
 
 #. module: account_followup
 #: view:res.partner:0
@@ -1115,6 +1152,15 @@ msgid ""
 "              </p>\n"
 "          "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Cliccare per definire i livelli follow-up e le loro azioni correlate.\n"
+"</p><p>\n"
+"Per ogni step, specificare le azioni che dovranno essere intraprese e i "
+"giorni di ritardo.\n"
+"E' possibile usare i messaggi modello, di stampa e invio mail, per inviare "
+"specifici \n"
+"messaggi al cliente. </p>\n"
+"          "
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:166
@@ -1125,7 +1171,7 @@ msgstr "Lettera di Sollecito di Pagamento di "
 #. module: account_followup
 #: view:res.partner:0
 msgid "The"
-msgstr ""
+msgstr "Il"
 
 #. module: account_followup
 #: view:account_followup.print:0
@@ -1180,12 +1226,12 @@ msgstr "Stampa di prova"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid ": User Name"
-msgstr ""
+msgstr ": Nome utente"
 
 #. module: account_followup
 #: view:res.partner:0
 msgid "Accounting"
-msgstr ""
+msgstr "Contabilità"
 
 #. module: account_followup
 #: field:account_followup.stat,blocked:0

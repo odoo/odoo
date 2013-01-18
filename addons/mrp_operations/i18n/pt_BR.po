@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 07:24+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-01-18 06:55+0000\n"
+"X-Generator: Launchpad (build 16430)\n"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
@@ -55,7 +55,7 @@ msgstr "Informação da definição de roteamento."
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,uom:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Unidade de Medida"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -173,7 +173,7 @@ msgstr "Mov. de Estoque"
 #: code:addons/mrp_operations/mrp_operations.py:481
 #, python-format
 msgid "No operation to cancel."
-msgstr ""
+msgstr "Nenhuma operação para cancelar"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:474
@@ -199,12 +199,12 @@ msgstr "Provisório"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Actual Production Date"
-msgstr ""
+msgstr "Data de Produção Atual"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Production Workcenter"
-msgstr ""
+msgstr "Centro de Trabalho de Produção"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_finished:0
@@ -241,7 +241,7 @@ msgstr "Análise da ordem de Serviço"
 #. module: mrp_operations
 #: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_action_planning
 msgid "Work Orders By Resource"
-msgstr ""
+msgstr "Ordem de Serviço por Recurso"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -315,6 +315,20 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Clique para iniciar uma nova ordem serviço. \n"
+"          </p><p>\n"
+"Ordens de Trabalho a lista de operações a serem realizadas para cada\n"
+"             ordem de produção. Uma vez que você começar a primeira "
+"encomenda de uma\n"
+"             ordem de produção, da ordem de fabricação é automaticamente\n"
+"             marcado como começou. Depois de terminar a última operação de "
+"uma\n"
+"             ordem de produção, o MO é concluída automaticamente e os "
+"respectivos\n"
+"             produtos são produzidos.\n"
+"          </p>\n"
+"        "
 
 #. module: mrp_operations
 #: help:mrp.production.workcenter.line,delay:0
@@ -377,7 +391,7 @@ msgstr "Aguardando Mercadorias"
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,production_state:0
 msgid "Production Status"
-msgstr ""
+msgstr "Situação da Produção"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,state:0
@@ -453,6 +467,7 @@ msgid ""
 "Operation has already started! You can either Pause/Finish/Cancel the "
 "operation."
 msgstr ""
+"A Operação já foi iniciada! Você pode Pausar/Finalizar/Cancelar a operação."
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -617,6 +632,15 @@ msgid ""
 "* When order is completely processed that time it is set in 'Finished' "
 "status."
 msgstr ""
+"* Quando uma ordem de serviço é criado é definido como 'Provisório'.\n"
+"* Quando o usuário define ordem de serviço no início, o modo de tempo que "
+"será definido como \"Em andamento\".\n"
+"* Quando a ordem de serviço está em execução, durante esse tempo, se o "
+"usuário quer parar ou fazer alterações em ordem, então pode definir como "
+"'pendente'\n"
+"* Quando o usuário cancela a ordem de serviço será definido como "
+"'cancelado'.\n"
+"* Quando a ordem é completamente processado é definida como 'concluído'."
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_startoperation0
@@ -644,6 +668,19 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Clique para iniciar uma nova ordem de serviço.\n"
+"          </p><p>\n"
+"            Para fabricar ou montar produtos, e usar matérias primas e \n"
+"            produtos acabados, você também precisa lidar com operações de "
+"produção.\n"
+"            Operações de produção são chamadas de Ordens de Serviço. As "
+"diversas \n"
+"            operações terão impactos diferentes nos custos de produção e "
+"planejamento\n"
+"dependendo da carga de trabalho.\n"
+"          </p>\n"
+"        "
 
 #. module: mrp_operations
 #: model:ir.actions.report.xml,name:mrp_operations.report_wc_barcode
