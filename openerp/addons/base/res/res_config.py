@@ -21,7 +21,7 @@
 import logging
 from operator import attrgetter
 
-from openerp import pooler
+from openerp import pooler, SUPERUSER_ID
 from openerp.osv import osv, fields
 from openerp.tools import ustr
 from openerp.tools.translate import _
@@ -613,10 +613,10 @@ class res_config_settings(osv.osv_memory):
 
         return (res_name, res_path)
 
-def get_config_path(cr, uid, menu_xml_id=None, field_name=None, context=None):
+def get_config_path(cr, menu_xml_id=None, field_name=None, context=None):
     """
     Simple helper for res_config_settings.get_path().
     """
-    return pooler.get_pool(cr.dbname).get('res.config.settings').get_path(cr, uid, menu_xml_id, field_name, context)
+    return pooler.get_pool(cr.dbname).get('res.config.settings').get_path(cr, SUPERUSER_ID, menu_xml_id, field_name, context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
