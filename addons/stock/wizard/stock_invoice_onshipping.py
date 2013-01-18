@@ -154,8 +154,7 @@ class stock_invoice_onshipping(osv.osv_memory):
             if len(context.get('active_ids')) == 1:
                 ids_length = True
         context.update({'ids_length' : ids_length})
-        res = super(stock_invoice_onshipping, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
-        return res
+        return super(stock_invoice_onshipping, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
 
 stock_invoice_onshipping()
 
