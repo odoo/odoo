@@ -95,7 +95,7 @@
                         <page string="Description">
                             <field name="description" placeholder="Add an internal note..." groups="base.group_user"/>
                         </page>
-                        <page string="Extra Info" groups="project.group_project_manager">
+                        <page string="Extra Info" groups="project.group_project_manager,project.group_project_user">
                             <group string="Statistics">
                                 <field name="day_open"/>
                                 <field name="day_close"/>
@@ -150,7 +150,7 @@
             <field name="model">project.issue</field>
             <field name="arch" type="xml">
                 <search string="Issue Tracker Search">
-                    <field name="name" string="Issue" filter_domain="['|', '|',('partner_id','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
+                    <field name="name" string="Issue/Contact" filter_domain="['|', '|',('partner_id','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
                     <field name="id"/>
                     <filter icon="terp-mail-message-new" string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
