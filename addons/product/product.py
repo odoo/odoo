@@ -296,9 +296,14 @@ class product_template(osv.osv):
     _columns = {
         'name': fields.char('Name', size=128, required=True, translate=True, select=True),
         'product_manager': fields.many2one('res.users','Product Manager'),
-        'description': fields.text('Description',translate=True),
-        'description_purchase': fields.text('Purchase Description',translate=True),
-        'description_sale': fields.text('Sale Description',translate=True),
+        'description': fields.text('Description',translate=True,
+            help="A precise description of the Product, used only for internal information purposes."),
+        'description_purchase': fields.text('Purchase Description',translate=True,
+            help="A description of the Product that you want to communicate to your customers. "
+                 "This description will be copied to every Sale Order, Delivery Order and Customer Invoice/Refund"),
+        'description_sale': fields.text('Sale Description',translate=True,
+            help="A description of the Product that you want to communicate to your suppliers. "
+                 "This description will be copied to every Purchase Order, Reception and Supplier Invoice/Refund."),
         'type': fields.selection([('consu', 'Consumable'),('service','Service')], 'Product Type', required=True, help="Consumable are product where you don't manage stock, a service is a non-material product provided by a company or an individual."),
         'produce_delay': fields.float('Manufacturing Lead Time', help="Average delay in days to produce this product. In the case of multi-level BOM, the manufacturing lead times of the components will be added."),
         'rental': fields.boolean('Can be Rent'),
