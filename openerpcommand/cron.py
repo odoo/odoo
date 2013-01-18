@@ -6,18 +6,6 @@ import os
 
 import common
 
-def set_addons(args):
-    import openerp.tools.config
-    config = openerp.tools.config
-
-    assert hasattr(args, 'addons')
-    if args.addons:
-        args.addons = args.addons.split(':')
-    else:
-        args.addons = []
-
-    config['addons_path'] = ','.join(args.addons)
-
 def run(args):
     import openerp
     import openerp.cli.server
@@ -26,7 +14,7 @@ def run(args):
     config = openerp.tools.config
 
     os.environ["TZ"] = "UTC"
-    set_addons(args)
+    common.set_addons(args)
     args.database = args.database or []
 
     config['log_handler'] = [':WARNING', 'openerp.addons.base.ir.ir_cron:DEBUG']
@@ -54,6 +42,6 @@ def add_parser(subparsers):
         description='Run an OpenERP cron process.')
     common.add_addons_argument(parser)
     parser.add_argument('--database', action='append',
-        help='Database for which cron jobs are processed (can be given repeated)')
+        help='Database for which cron jobs are processed (can be repeated)')
 
     parser.set_defaults(run=run)

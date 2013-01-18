@@ -16,6 +16,21 @@ def add_addons_argument(parser):
     parser.add_argument('--addons', metavar='ADDONS',
         **required_or_default('ADDONS',
                               'colon-separated list of paths to addons'))
+def set_addons(args):
+    """
+    Turn args.addons into a list instead of a column-separated strings.
+    Set openerp.toools.config accordingly.
+    """
+    import openerp.tools.config
+    config = openerp.tools.config
+
+    assert hasattr(args, 'addons')
+    if args.addons:
+        args.addons = args.addons.split(':')
+    else:
+        args.addons = []
+
+    config['addons_path'] = ','.join(args.addons)
 
 def get_addons_from_paths(paths, exclude):
     """

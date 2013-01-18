@@ -6,24 +6,21 @@ import logging
 import os
 import threading
 
-import openerp.cli.server
-import openerp.service.wsgi_server
-import openerp.tools.config
-
 import common
 
 _logger = logging.getLogger(__name__)
 
 def run(args):
-    os.environ["TZ"] = "UTC"
-
-    if args.addons:
-        args.addons = args.addons.split(':')
-    else:
-        args.addons = []
-
+    import openerp.cli.server
+    import openerp.service.wsgi_server
+    import openerp.tools.config
     config = openerp.tools.config
-    config['addons_path'] = ','.join(args.addons)
+
+    os.environ["TZ"] = "UTC"
+    common.set_addons(args)
+
+    openerp.multi_process = True
+    common.setproctitle('openerp-web')
 
     openerp.cli.server.check_root_user()
     openerp.netsvc.init_logger()
@@ -33,6 +30,9 @@ def run(args):
 
     target = openerp.service.wsgi_server.serve
     if not args.gevent:
+        # TODO openerp.multi_process with a multi-threaded process probably
+        # doesn't work very well (e.g. waiting for all threads to complete
+        # before killing the process is not implemented).
         arg = (args.interface, int(args.port), args.threaded)
         threading.Thread(target=target, args=arg).start()
         openerp.cli.server.quit_on_signals()
