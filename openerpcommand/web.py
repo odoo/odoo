@@ -11,6 +11,7 @@ import common
 _logger = logging.getLogger(__name__)
 
 def run(args):
+    import openerp
     import openerp.cli.server
     import openerp.service.wsgi_server
     import openerp.tools.config
@@ -30,7 +31,7 @@ def run(args):
 
     target = openerp.service.wsgi_server.serve
     if not args.gevent:
-        config["gevent"] = False
+        openerp.evented = False
         # TODO openerp.multi_process with a multi-threaded process probably
         # doesn't work very well (e.g. waiting for all threads to complete
         # before killing the process is not implemented).
@@ -38,7 +39,7 @@ def run(args):
         threading.Thread(target=target, args=arg).start()
         openerp.cli.server.quit_on_signals()
     else:
-        config["gevent"] = True
+        openerp.evented = True
         import gevent.monkey
         import gevent.wsgi
         import gevent_psycopg2
