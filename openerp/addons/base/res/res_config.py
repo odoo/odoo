@@ -589,14 +589,10 @@ class res_config_settings(osv.osv_memory):
             name = act_window.read(cr, uid, action_ids[0], ['name'], context=context)['name']
         return [(record.id, name) for record in self.browse(cr, uid , ids, context=context)]
 
-    def get_path(self, cr, uid, menu_xml_id, field_name, context=None):
+    def get_path(self, cr, uid, menu_xml_id=None, full_field_name=None, context=None):
         """
         Return a string representing the path to access a specific
         configuration option through the interface.
-
-        Note that we'll prefer to find back the model's name through the
-        ui_menu and then its action than directly using self.  It will
-        make the call to this method from a helper function possible.
 
         :return tuple t: t[0] contains the full path, t[1] contains
         the "human readable" configuration option name
@@ -606,12 +602,13 @@ class res_config_settings(osv.osv_memory):
         module_name, menu_xml_id = menu_xml_id.split('.')
         dummy, menu_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, module_name, menu_xml_id)
         ir_ui_menu = self.pool.get('ir.ui.menu').browse(cr, uid, menu_id, context=context)
-        res_name = ir_ui_menu.complete_name
+        res_path = ir_ui_menu.complete_name
 
         # Fetch the exact config option name
-        res_path = self.pool.get(ir_ui_menu.action.res_model)._all_columns.get(field_name).column.string
+        model_name, field_name = full_field_name.rsplit('.', 1)
+        res_name = self.pool.get(model_name)._all_columns.get(field_name).column.string
 
-        return (res_name, res_path)
+        return (res_path, res_name)
 
 def get_config_path(cr, menu_xml_id=None, field_name=None, context=None):
     """
