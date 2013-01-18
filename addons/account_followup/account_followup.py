@@ -276,14 +276,13 @@ class res_partner(osv.osv):
                                 <center>Amount due: %s </center>''' % (total)
         return followup_table
 
-    def write(self, cr, uid, ids, vals, context=None):
-        if vals.get("payment_responsible_id", False):
-            for part in self.browse(cr, uid, ids, context=context):
-                if part.payment_responsible_id <> vals["payment_responsible_id"]:
-                    pass
-                    #message_post()
-        res = super(res_partner, self).write(cr, uid, ids, vals, context=context)
-        return res
+#    def write(self, cr, uid, ids, vals, context=None):
+#        if vals.get("payment_responsible_id", False):
+#            for part in self.browse(cr, uid, ids, context=context):
+#                if part.payment_responsible_id <> vals["payment_responsible_id"]:
+#                    self.message_post(cr, uid, part.id, body = _('New responsible registered: %s'), context=context)
+#        res = super(res_partner, self).write(cr, uid, ids, vals, context=context)
+#        return res
 
     def action_done(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'payment_next_action_date': False, 'payment_next_action':'', 'payment_responsible_id': False, 'payment_no_email': False}, context=context) 

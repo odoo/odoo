@@ -127,7 +127,8 @@ class account_followup_print(osv.osv_memory):
         'email_body': fields.text('Email Body'),
         'summary': fields.text('Summary', readonly=True),
         'test_print': fields.boolean('Test Print', 
-                                     help='Check if you want to print follow-ups without changing follow-ups level.'),
+                                     help='Check if you want to print follow-ups without changing follow-up level.'),
+        'intercompany':fields.boolean('Do follow-up for own companies too')
     }
 
     def _get_followup(self, cr, uid, context=None):
@@ -301,6 +302,7 @@ class account_followup_print(osv.osv_memory):
         for partner_id, followup_line_id, date_maturity,date, id in move_lines:
             if not partner_id:
                 continue
+
             if followup_line_id not in fups:
                 continue
             stat_line_id = partner_id * 10000 + company_id
@@ -313,6 +315,16 @@ class account_followup_print(osv.osv_memory):
                 if stat_line_id not in partner_list:
                     partner_list.append(stat_line_id)
                 to_update[str(id)]= {'level': fups[followup_line_id][1], 'partner_id': stat_line_id}
+        #Remove intercompany partners if asked for in the wizard
+        if not data.intercompany:
+            comp_obj = self.pool.get("res.company")
+            comp_ids = comp_obj.search(cr, 1, [], context=context)
+            for comp in comp_obj.browse(cr, 1, comp_ids, context=context): 
+                # With user 1 because it is possible there is access to the partner
+                # that is the company and not to the company itself
+                partner_ind = comp.partner_id.id * 10000 + company_id
+                if partner_ind in partner_list:
+                    partner_list.remove(partner_ind)
         return {'partner_ids': partner_list, 'to_update': to_update}
 
 account_followup_print()
