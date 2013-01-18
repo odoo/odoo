@@ -206,7 +206,7 @@
             <field name="arch" type="xml">
                 <tree colors="red:state == 'refuse';blue:state == ' draft';black:state in ('confirm','validate','validate1')" string="Leave Requests">
                     <field name="employee_id"/>
-                    <field name="holiday_type" string="Mode" groups="base.group_hr_user"/>
+                    <field name="holiday_status_id"/>
                     <field name="name"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
@@ -214,7 +214,6 @@
                     <field name="state"/>
                     <field name="category_id" invisible="1"/>
                     <field name="department_id" invisible="not context.get('set_visible',False)"/>
-                    <field name="holiday_status_id" invisible="1"/>
                     <field name="manager_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                 </tree>
