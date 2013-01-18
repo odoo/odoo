@@ -1,109 +1,108 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>
-
+<data noupdate="True">
 
     <!-- Account types -->
 
     <record id="account_type_current_asset" model="account.account.type">
-            <field name="name">1. TÀI SẢN NGẮN HẠN</field>
-            <field name="code">current_asset</field>
-            <field name="close_method">balance</field>
-            <field name="report_type">asset</field>
+    <field name="name">1. TÀI SẢN NGẮN HẠN</field>
+    <field name="code">current_asset</field>
+    <field name="close_method">balance</field>
+    <field name="report_type">asset</field>
     </record>
 
     <record id="account_type_current_asset_rec" model="account.account.type">
-            <field name="name">1. TÀI SẢN NGẮN HẠN - REC</field>
-            <field name="code">current_asset</field>
-            <field name="close_method">unreconciled</field>
-            <field name="report_type">asset</field>
+    <field name="name">1. TÀI SẢN NGẮN HẠN - REC</field>
+    <field name="code">current_asset</field>
+    <field name="close_method">unreconciled</field>
+    <field name="report_type">asset</field>
     </record>
 
     <record id="account_type_long_term_asset" model="account.account.type">
-            <field name="name">2. TÀI SẢN DÀI HẠN</field>
-            <field name="code">long_term_asset</field>
-            <field name="close_method">balance</field>
-            <field name="report_type">asset</field>
+    <field name="name">2. TÀI SẢN DÀI HẠN</field>
+    <field name="code">long_term_asset</field>
+    <field name="close_method">balance</field>
+    <field name="report_type">asset</field>
     </record>
 
     <record id="account_type_liability" model="account.account.type">
-            <field name="name">3. NỢ PHẢI TRẢ</field>
-            <field name="code">liability</field>
-            <field name="close_method">unreconciled</field>
-          <field name="report_type">liability</field>
+    <field name="name">3. NỢ PHẢI TRẢ</field>
+    <field name="code">liability</field>
+    <field name="close_method">unreconciled</field>
+      <field name="report_type">liability</field>
     </record>
 
     <record id="account_type_cash_equity" model="account.account.type">
-            <field name="name">4. VỐN CHỦ SỞ HỮU</field>
-            <field name="code">equity</field>
-            <field name="close_method">balance</field>
-            <field name="report_type">asset</field>
+    <field name="name">4. VỐN CHỦ SỞ HỮU</field>
+    <field name="code">equity</field>
+    <field name="close_method">balance</field>
+    <field name="report_type">asset</field>
     </record>
 
     <record id="account_type_income" model="account.account.type">
-            <field name="name">5. DOANH THU</field>
-            <field name="code">income</field>
-            <field name="close_method">none</field>
-            <field name="report_type">income</field>
+    <field name="name">5. DOANH THU</field>
+    <field name="code">income</field>
+    <field name="close_method">none</field>
+    <field name="report_type">income</field>
     </record>
 
     <record id="account_type_expense" model="account.account.type">
-            <field name="name">6. CHI PHÍ SẢN XUẤT, KINH DOANH</field>
-            <field name="code">expense</field>
-            <field name="close_method">none</field>
-            <field name="report_type">expense</field>
+    <field name="name">6. CHI PHÍ SẢN XUẤT, KINH DOANH</field>
+    <field name="code">expense</field>
+    <field name="close_method">none</field>
+    <field name="report_type">expense</field>
     </record>
 
     <record id="account_type_other_income" model="account.account.type">
-            <field name="name">7. THU NHẬP KHÁC</field>
-            <field name="code">other_income</field>
-            <field name="close_method">none</field>
-            <field name="report_type">income</field>
+    <field name="name">7. THU NHẬP KHÁC</field>
+    <field name="code">other_income</field>
+    <field name="close_method">none</field>
+    <field name="report_type">income</field>
     </record>
 
     <record id="account_type_other_expense" model="account.account.type">
-            <field name="name">8. CHI PHÍ KHÁC</field>
-            <field name="code">other_expense</field>
-            <field name="close_method">none</field>
-            <field name="report_type">expense</field>
+    <field name="name">8. CHI PHÍ KHÁC</field>
+    <field name="code">other_expense</field>
+    <field name="close_method">none</field>
+    <field name="report_type">expense</field>
     </record>
 
     <record id="account_type_evaluation" model="account.account.type">
-            <field name="name">9. XÁC ĐỊNH KẾT QUẢ KINH DOANH</field>
-            <field name="code">evaluation</field>
-            <field name="close_method">none</field>
+    <field name="name">9. XÁC ĐỊNH KẾT QUẢ KINH DOANH</field>
+    <field name="code">evaluation</field>
+    <field name="close_method">none</field>
     </record>
 
     <record id="account_type_other" model="account.account.type">
-            <field name="name">X. TÀI KHOẢN NGOÀI BẢNG</field>
-            <field name="code">other</field>
-            <field name="close_method">none</field>
+    <field name="name">X. TÀI KHOẢN NGOÀI BẢNG</field>
+    <field name="code">other</field>
+    <field name="close_method">none</field>
     </record>
 
     <record id="account_type_root" model="account.account.type">
-            <field name="name">CHỈ XEM</field>
-            <field name="code">view</field>
-            <field name="close_method">none</field>
+    <field name="name">CHỈ XEM</field>
+    <field name="code">view</field>
+    <field name="close_method">none</field>
     </record>
 
     <!-- Account Templates -->
 
     <record id="chart0" model="account.account.template">
-        <field name="code">0</field>
-        <field name="name">Hệ thống tài khoản kế toán Việt Nam</field>
-        <field name="type">view</field>
-        <field name="user_type" ref="account_type_root"/>
+    <field name="code">0</field>
+    <field name="name">Hệ thống tài khoản kế toán Việt Nam</field>
+    <field name="type">view</field>
+    <field name="user_type" ref="account_type_root"/>
     </record>
 
     <!-- Loại 1 -->
     <record id="chart1" model="account.account.template">
-        <field name="code">1</field>
-        <field name="name">TÀI SẢN NGẮN HẠN</field>
-        <field name="type">view</field>
-        <field name="parent_id" ref="chart0"/>
-        <field name="user_type" ref="account_type_current_asset"/>
+    <field name="code">1</field>
+    <field name="name">TÀI SẢN NGẮN HẠN</field>
+    <field name="type">view</field>
+    <field name="parent_id" ref="chart0"/>
+    <field name="user_type" ref="account_type_current_asset"/>
     </record>
-    
+
     <record id="chart111" model="account.account.template">
     <field name="code">111</field>
     <field name="reconcile" eval="False"/>
@@ -514,13 +513,13 @@
 
     <!-- Loại 2 -->
     <record id="chart2" model="account.account.template">
-        <field name="code">2</field>
-        <field name="name">TÀI SẢN DÀI HẠN</field>
-        <field name="type">view</field>
-        <field name="parent_id" ref="chart0"/>
-        <field name="user_type" ref="account_type_long_term_asset"/>
+    <field name="code">2</field>
+    <field name="name">TÀI SẢN DÀI HẠN</field>
+    <field name="type">view</field>
+    <field name="parent_id" ref="chart0"/>
+    <field name="user_type" ref="account_type_long_term_asset"/>
     </record>
-    
+
     <record id="chart211" model="account.account.template">
     <field name="code">211</field>
     <field name="reconcile" eval="False"/>
@@ -833,13 +832,13 @@
 
     <!-- Loại 3 -->
     <record id="chart3" model="account.account.template">
-        <field name="code">3</field>
-        <field name="name">NỢ PHẢI TRẢ</field>
-        <field name="type">view</field>
-        <field name="parent_id" ref="chart0"/>
-        <field name="user_type" ref="account_type_liability"/>
+    <field name="code">3</field>
+    <field name="name">NỢ PHẢI TRẢ</field>
+    <field name="type">view</field>
+    <field name="parent_id" ref="chart0"/>
+    <field name="user_type" ref="account_type_liability"/>
     </record>
-    
+
     <record id="chart311" model="account.account.template">
     <field name="code">311</field>
     <field name="reconcile" eval="False"/>
@@ -1178,13 +1177,13 @@
 
     <!-- Loại 4 -->
     <record id="chart4" model="account.account.template">
-        <field name="code">4</field>
-        <field name="name">VỐN CHỦ SỞ HỮU</field>
-        <field name="type">view</field>
-        <field name="parent_id" ref="chart0"/>
-        <field name="user_type" ref="account_type_cash_equity"/>
+    <field name="code">4</field>
+    <field name="name">VỐN CHỦ SỞ HỮU</field>
+    <field name="type">view</field>
+    <field name="parent_id" ref="chart0"/>
+    <field name="user_type" ref="account_type_cash_equity"/>
     </record>
-    
+
     <record id="chart411" model="account.account.template">
     <field name="code">411</field>
     <field name="reconcile" eval="False"/>
@@ -1391,13 +1390,13 @@
 
     <!-- Loại 5 -->
     <record id="chart5" model="account.account.template">
-        <field name="code">5</field>
-        <field name="name">DOANH THU</field>
-        <field name="type">view</field>
-        <field name="parent_id" ref="chart0"/>
-        <field name="user_type" ref="account_type_income"/>
+    <field name="code">5</field>
+    <field name="name">DOANH THU</field>
+    <field name="type">view</field>
+    <field name="parent_id" ref="chart0"/>
+    <field name="user_type" ref="account_type_income"/>
     </record>
-    
+
     <record id="chart511" model="account.account.template">
     <field name="code">511</field>
     <field name="reconcile" eval="False"/>
@@ -1518,13 +1517,13 @@
 
     <!-- Loại 6 -->
     <record id="chart6" model="account.account.template">
-        <field name="code">6</field>
-        <field name="name">CHI PHÍ SẢN XUẤT, KINH DOANH</field>
-        <field name="type">view</field>
-        <field name="parent_id" ref="chart0"/>
-        <field name="user_type" ref="account_type_expense"/>
+    <field name="code">6</field>
+    <field name="name">CHI PHÍ SẢN XUẤT, KINH DOANH</field>
+    <field name="type">view</field>
+    <field name="parent_id" ref="chart0"/>
+    <field name="user_type" ref="account_type_expense"/>
     </record>
-    
+
     <record id="chart611" model="account.account.template">
     <field name="code">611</field>
     <field name="reconcile" eval="False"/>
@@ -1849,13 +1848,13 @@
 
     <!-- Loại 7 -->
     <record id="chart7" model="account.account.template">
-        <field name="code">7</field>
-        <field name="name">THU NHẬP KHÁC</field>
-        <field name="type">view</field>
-        <field name="parent_id" ref="chart0"/>
-        <field name="user_type" ref="account_type_other_income"/>
+    <field name="code">7</field>
+    <field name="name">THU NHẬP KHÁC</field>
+    <field name="type">view</field>
+    <field name="parent_id" ref="chart0"/>
+    <field name="user_type" ref="account_type_other_income"/>
     </record>
-    
+
     <record id="chart711" model="account.account.template">
     <field name="code">711</field>
     <field name="reconcile" eval="False"/>
@@ -1867,13 +1866,13 @@
 
     <!-- Loại 8 -->
     <record id="chart8" model="account.account.template">
-        <field name="code">8</field>
-        <field name="name">CHI PHÍ KHÁC</field>
-        <field name="type">view</field>
-        <field name="parent_id" ref="chart0"/>
-        <field name="user_type" ref="account_type_other_expense"/>
+    <field name="code">8</field>
+    <field name="name">CHI PHÍ KHÁC</field>
+    <field name="type">view</field>
+    <field name="parent_id" ref="chart0"/>
+    <field name="user_type" ref="account_type_other_expense"/>
     </record>
-    
+
     <record id="chart811" model="account.account.template">
     <field name="code">811</field>
     <field name="reconcile" eval="False"/>
@@ -1910,13 +1909,13 @@
 
     <!-- Loại 9 -->
     <record id="chart9" model="account.account.template">
-        <field name="code">9</field>
-        <field name="name">XÁC ĐỊNH KẾT QUẢ KINH DOANH</field>
-        <field name="type">view</field>
-        <field name="parent_id" ref="chart0"/>
-        <field name="user_type" ref="account_type_evaluation"/>
+    <field name="code">9</field>
+    <field name="name">XÁC ĐỊNH KẾT QUẢ KINH DOANH</field>
+    <field name="type">view</field>
+    <field name="parent_id" ref="chart0"/>
+    <field name="user_type" ref="account_type_evaluation"/>
     </record>
-    
+
     <record id="chart911" model="account.account.template">
     <field name="code">911</field>
     <field name="reconcile" eval="False"/>
@@ -1928,13 +1927,13 @@
 
     <!-- Loại 10 -->
     <record id="chart10" model="account.account.template">
-        <field name="code">X10</field>
-        <field name="name">TÀI KHOẢN NGOÀI BẢNG</field>
-        <field name="type">view</field>
-        <field name="parent_id" ref="chart0"/>
-        <field name="user_type" ref="account_type_other"/>
+    <field name="code">X10</field>
+    <field name="name">TÀI KHOẢN NGOÀI BẢNG</field>
+    <field name="type">view</field>
+    <field name="parent_id" ref="chart0"/>
+    <field name="user_type" ref="account_type_other"/>
     </record>
-    
+
     <record id="chart001" model="account.account.template">
     <field name="code">001</field>
     <field name="reconcile" eval="False"/>
@@ -2000,15 +1999,15 @@
 
     <!-- Chart template -->
     <record id="vn_template" model="account.chart.template">
-        <field name="name">VN - Chart of Accounts</field>
-        <field name="code_digits">0</field>
-        <field name="account_root_id" ref="chart0"/>
-        <field name="tax_code_root_id" ref="vat_code_tax"/>
-        <field name="bank_account_view_id" ref="chart1121"/>
-        <field name="property_account_receivable" ref="chart131"/>
-        <field name="property_account_payable" ref="chart331"/>
-        <field name="property_account_expense_categ" ref="chart1561"/>
-        <field name="property_account_income_categ" ref="chart5111"/>
+    <field name="name">VN - Chart of Accounts</field>
+    <field name="code_digits">0</field>
+    <field name="account_root_id" ref="chart0"/>
+    <field name="tax_code_root_id" ref="vat_code_tax"/>
+    <field name="bank_account_view_id" ref="chart1121"/>
+    <field name="property_account_receivable" ref="chart131"/>
+    <field name="property_account_payable" ref="chart331"/>
+    <field name="property_account_expense_categ" ref="chart1561"/>
+    <field name="property_account_income_categ" ref="chart5111"/>
 
     </record>
 
