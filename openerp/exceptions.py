@@ -35,7 +35,20 @@ class Warning(Exception):
 class WarningConfig(Exception):
     """ Warning bound to a misconfiguration. """
     def __init__(self, msg):
-        # todo: treat the msg (regex)
+        # WIP WIP WIP WIP WIP WIP WIP
+        def sub_path(g):
+            menu_xml_id = g.group(1)
+
+            return '(group to convert: '+menu_xml_id+')'
+
+        def sub_path(g):
+            menu_xml_id = g.group(1)
+
+            return '(group to convert: '+menu_xml_id+')'
+
+        # Treat the msg: find the menu_xml_id and the field_name
+        teststr = 'coucou [path:blabla_bla_bla]'
+        print ">>>>> sub: ", re.sub(r'\[path:([a-z_]*)\]', sub_path, teststr)
         super(WarningConfig, self).__init__(msg)
 
 class AccessDenied(Exception):
