@@ -582,47 +582,59 @@ def get_pg_type(f, type_override=None):
     return pg_type
 
 
-def _split_context_kwargs(kwargs):
-    """ extract the context out of a kwargs dictionary """
+def _split_context_args(nargs, args, kwargs):
+    """ extract the context argument out of args and kwargs
+        :param nargs: expected number of arguments in args
+        :param args: arguments (tuple)
+        :param kwargs: named arguments (dictionary)
+        :return: tuple (context, args, kwargs)
+                where both args and kwargs are free of context argument
+    """
     if 'context' in kwargs:
-        context = kwargs['context'] or {}
-        kwargs = dict(kwargs)
+        context = kwargs['context']
         del kwargs['context']
-        return context, kwargs
+        return context, args, kwargs
+    elif len(args) + len(kwargs) > nargs:
+        # heuristics: context is given as an extra argument in args
+        return args[-1], args[:-1], kwargs
     else:
-        return {}, kwargs
+        # context defaults to None
+        return None, args, kwargs
 
 
 def versatile(method):
-    """ Wrap a model method to make it callable in both old and new styles.
+    """ Decorate a model method to make it callable in both old and new styles.
         Method calls are considered old style when their first parameter is
         an instance of Cursor.
     """
     if hasattr(method, 'versatile'):
         return method
 
-    varnames = method.func_code.co_varnames
-    if varnames[0] != 'self':
+    # introspection on argument names to determine api style
+    argnames = method.func_code.co_varnames[:method.func_code.co_argcount]
+    if len(argnames) < 1 or argnames[0] != 'self':
         return method
 
-    elif len(varnames) < 2 or varnames[1] not in ('cr', 'cursor'):
-        # new api method; define old api method with cr, uid, ids
+    elif len(argnames) < 2 or argnames[1] not in ('cr', 'cursor'):
+        # new-style api; define old-style api with cr, uid, ids, context
         new_api = method
+        nargs = len(argnames) - 1
         def old_api(self, cr, uid, ids, *args, **kwargs):
-            context, kwargs = _split_context_kwargs(kwargs)
+            ids = ids if isinstance(ids, list) else [ids]
+            context, args, kwargs = _split_context_args(nargs, args, kwargs)
             y = self.browse(cr, uid, ids, context)
             return new_api(y, *args, **kwargs)
 
-    elif len(varnames) < 3 or varnames[2] not in ('uid', 'user'):
-        # old api method with cr only
+    elif len(argnames) < 3 or argnames[2] not in ('uid', 'user'):
+        # old-style api with cr only
         old_api = method
         def new_api(self, *args, **kwargs):
             return old_api(self, self._cr, *args, **kwargs)
 
-    elif len(varnames) < 4 or varnames[3] != 'ids':
-        # old api method with cr, uid, and maybe context
+    elif len(argnames) < 4 or argnames[3] != 'ids':
+        # old-style api with cr, uid, and maybe context
         old_api = method
-        if 'context' in varnames:
+        if 'context' in argnames:
             def new_api(self, *args, **kwargs):
                 kwargs = dict(kwargs, context=self._context)
                 return old_api(self, self._cr, self._uid, *args, **kwargs)
@@ -631,9 +643,9 @@ def versatile(method):
                 return old_api(self, self._cr, self._uid, *args, **kwargs)
 
     else:
-        # old api method with cr, uid, ids, and maybe context
+        # old-style api with cr, uid, ids, and maybe context
         old_api = method
-        if 'context' in varnames:
+        if 'context' in argnames:
             def new_api(self, *args, **kwargs):
                 ids = map(int, self)
                 kwargs = dict(kwargs, context=self._context)
