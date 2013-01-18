@@ -598,6 +598,9 @@ def versatile(method):
         Method calls are considered old style when their first parameter is
         an instance of Cursor.
     """
+    if hasattr(method, 'versatile'):
+        return method
+
     varnames = method.func_code.co_varnames
     if varnames[0] != 'self':
         return method
@@ -642,12 +645,19 @@ def versatile(method):
 
     @wraps(method)
     def wrapper(self, *args, **kwargs):
-        if args and isinstance(args[0], Cursor):
+        cr = kwargs.get('cr') or kwargs.get('cursor') or (args and args[0])
+        if isinstance(cr, Cursor):
             return old_api(self, *args, **kwargs)
         else:
             return new_api(self, *args, **kwargs)
 
+    wrapper.versatile = True
     return wrapper
+
+
+def notversatile(method):
+    method.versatile = False
+    return method
 
 
 class MetaModel(type):
