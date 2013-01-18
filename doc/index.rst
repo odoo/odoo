@@ -25,6 +25,7 @@ OpenERP Command
    :maxdepth: 1
 
    openerp-command.rst
+   commands.rst
    adding-command.rst
 
 OpenERP Server API
