@@ -389,26 +389,22 @@ class res_partner(osv.osv, format_address):
             self.update_address(cr, uid, update_ids, vals, context)
         return super(res_partner,self).create(cr, uid, vals, context=context)
 
-    def update_address(self, cr, uid, ids, vals, context=None):
+    def update_address(self, vals):
         addr_vals = dict((key, vals[key]) for key in POSTAL_ADDRESS_FIELDS if vals.get(key))
         if addr_vals:
-            return super(res_partner, self).write(cr, uid, ids, addr_vals, context)
+            return super(res_partner, self).write(addr_vals)
 
-    def name_get(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        if isinstance(ids, (int, long)):
-            ids = [ids]
+    def name_get(self):
         res = []
-        for record in self.browse(cr, uid, ids, context=context):
+        for record in self:
             name = record.name
             if record.parent_id:
                 name =  "%s (%s)" % (name, record.parent_id.name)
-            if context.get('show_address'):
-                name = name + "\n" + self._display_address(cr, uid, record, without_company=True, context=context)
+            if self._context.get('show_address'):
+                name = name + "\n" + self._display_address(record, without_company=True)
                 name = name.replace('\n\n','\n')
                 name = name.replace('\n\n','\n')
-            if context.get('show_email') and record.email:
+            if self._context.get('show_email') and record.email:
                 name = "%s <%s>" % (name, record.email)
             res.append((record.id, name))
         return res
