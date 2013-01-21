@@ -15,11 +15,7 @@ def run(args):
     import openerp
     config = openerp.tools.config
     config['log_handler'] = [':CRITICAL']
-    if args.addons:
-        args.addons = args.addons.split(':')
-    else:
-        args.addons = []
-    config['addons_path'] = ','.join(args.addons)
+    common.set_addons(args)
     openerp.netsvc.init_logger()
     registry = openerp.modules.registry.RegistryManager.get(
         args.database, update_module=False)
