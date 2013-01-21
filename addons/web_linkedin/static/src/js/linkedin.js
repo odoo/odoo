@@ -23,7 +23,7 @@ openerp.web_linkedin = function(instance) {
             var self = this;
             return this.test_api_key().then(function() {
                 if (self.linkedin_added) {
-                    return self.linkedin_def.resolve();
+                    return self.linkedin_def;
                 }
 
                 $login = $('<div class="oe_linkedin_login_hidden" style="display:none;"><script type="in/Login"></script></div>');
@@ -118,6 +118,17 @@ openerp.web_linkedin = function(instance) {
         selected_entity: function(entity) {
             var self = this;
             this.create_on_change(entity).done(function(to_change) {
+                var values = self.view.get_fields_values();
+                console.log(values, to_change);
+                _.each(to_change, function (value, key) {
+                    if (!/linkedin/.test(key) && !!values[key]) {
+                        if(_.isArray(values[key])) {
+
+                        } else {
+                            delete to_change[key];
+                        }
+                    }
+                })
                 self.view.set_values(to_change);
             });
         },
@@ -142,9 +153,9 @@ openerp.web_linkedin = function(instance) {
                 });
                 var children_def = $.Deferred();
                 IN.API.PeopleSearch().fields(commonPeopleFields).params({
-                        "company-name" : entity.name,
+                        "company-name" : entity.universalName,
                         "current-company": true,
-                        "count": 25,
+                        "count": 50,
                     }).result(function(result) {
                         children_def.resolve(result);
                     }).error(function() {
@@ -159,14 +170,16 @@ openerp.web_linkedin = function(instance) {
                         return self.create_on_change(el);
                     });
                     return $.when.apply($, defs).then(function() {
-                        var p_to_change = _.toArray(arguments);
+                        var p_to_change = _.map(_.toArray(arguments), function (val) {
+                            return val.id ? [1, val.id, val] : [0, 0, val];
+                        })
                         to_change.child_ids = p_to_change;
                     });
                 }, function() {
                     return $.when();
                 }));
 
-                to_change.linkedinUrl = _.str.sprintf("http://www.linkedin.com/company/%d", entity.id);
+                to_change.linkedin_url = _.str.sprintf("http://www.linkedin.com/company/%d", entity.id);
             } else { // people
                 to_change.is_company = false;
                 to_change.name = entity.formattedName;
@@ -196,10 +209,16 @@ openerp.web_linkedin = function(instance) {
                         }));
                     }
                 }
+                to_change.linkedin_url = to_change.linkedin_public_url = entity.publicProfileUrl || false;
+                to_change.linkedin_id = entity.id || false;
 
-                to_change.linkedinUrl = entity.publicProfileUrl || false;
-                to_change.linkedinId = entity.id || false;
-                to_change.comment = entity.summary || false;
+                // find similar partners
+                defs.push(new instance.web.DataSetSearch(this, 'res.partner').call("search", [[ 
+                        "|", ["linkedin_id", "=", entity.id], "&", ["linkedin_id", "=", false],
+                        "|", ["name", "ilike", entity.firstName +"%"+ entity.lastName], ["name", "ilike", entity.lastName +"%"+ entity.firstName] 
+                    ]]).then(function (data) {
+                    to_change.id = data[0] || false;
+                }));
                 
             }
             return $.when.apply($, defs).then(function() {
@@ -210,26 +229,26 @@ openerp.web_linkedin = function(instance) {
     
     instance.web.form.widgets.add('linkedin', 'instance.web_linkedin.Linkedin');
     
-    var commonPeopleFields = ["id", "picture-url", "public-profile-url",
+    var commonPeopleFields = ["id", "picture-url", "public-profile-url", "first-name", "last-name",
                             "formatted-name", "location", "phone-numbers", "im-accounts",
                             "main-address", "headline", "positions", "summary", "specialties"];
     
     instance.web_linkedin.LinkedinSearchPopup = instance.web.Dialog.extend({
         template: "Linkedin.popup",
-        init: function(parent, text) {
+        init: function(parent, search) {
             var self = this;
             if (!IN.User.isAuthorized()) {
                 this.$buttons = $("<div/>");
                 this.destroy();
             }
-            this._super(parent, { 'title':_t("LinkedIn search") + '<div class="oe_linkedin_advanced_search">'+_t("Search by LinkedIn by url or keywords") +' : <input name="url"/> <button>'+_t("Search") +'</button></div>'});
-            this.text = text;
+            this._super(parent, { 'title': QWeb.render('LinkedIn.AdvancedSearch', {'title': _t("LinkedIn search")}) });
+            this.search = search;
             this.limit = 5;
         },
         start: function() {
             this._super();
             this.bind_event();
-            this.display_linkedin_account();
+            this.display_account();
             this.do_search();
         },
         bind_event: function() {
@@ -238,8 +257,8 @@ openerp.web_linkedin = function(instance) {
                 IN.User.logout();
                 self.destroy();
             });
-            this.$search = this.$el.parent().find(".oe_linkedin_advanced_search" );
-            this.$url = this.$search.find("input[name='url']" );
+            this.$search = this.$el.parent().find(".oe_network_advanced_search" );
+            this.$url = this.$search.find("input[name='search']" );
             this.$button = this.$search.find("button");
 
             this.$button.on("click", function (e) {
@@ -256,7 +275,7 @@ openerp.web_linkedin = function(instance) {
                     }
                 });
         },
-        display_linkedin_account: function() {
+        display_account: function() {
             var self = this;
             IN.API.Profile("me")
                 .fields(["firstName", "lastName"])
@@ -281,7 +300,7 @@ openerp.web_linkedin = function(instance) {
                 var uid = url.replace(/(.*linkedin\.com\/[a-z]+\/)|(^.*\/company\/)|(\&.*$)/gi, '');
 
                 IN.API.Raw(_.str.sprintf(
-                        "companies/universal-name=%s:(id,name,logo-url,description,industry,website-url,locations)",
+                        "companies/universal-name=%s:(id,name,logo-url,description,industry,website-url,locations,universal-name)",
                         encodeURIComponent(uid.toLowerCase()))).result(function (result) {
                     self.do_result_companies({'companies': {'values': [result]}});
                     deferrer_c.resolve();
@@ -294,7 +313,6 @@ openerp.web_linkedin = function(instance) {
                 IN.API.Profile("url="+ encodeURI(url_public).replace(/%2F/g, '/'))
                     .fields(commonPeopleFields)
                     .result(function(result) {
-                       console.log("public", result);
                         self.do_result_people({'people': result});
                         deferrer_p.resolve();
                 }).error(function (error) {
@@ -303,7 +321,7 @@ openerp.web_linkedin = function(instance) {
                     deferrer_p.resolve();
                 });
 
-                this.text = url;
+                this.search = url;
             }
 
             var deferrer_c_k = $.Deferred();
@@ -311,12 +329,12 @@ openerp.web_linkedin = function(instance) {
             deferrers.push(deferrer_c_k, deferrer_p_k);
             IN.API.Raw(_.str.sprintf(
                     "company-search:(companies:" +
-                    "(id,name,logo-url,description,industry,website-url,locations))?keywords=%s&count=%d",
-                    encodeURI(this.text), this.limit)).result(function (result) {
+                    "(id,name,logo-url,description,industry,website-url,locations,universal-name))?keywords=%s&count=%d",
+                    encodeURI(this.search), this.limit)).result(function (result) {
                 self.do_result_companies(result);
                 deferrer_c_k.resolve();
             });
-            IN.API.PeopleSearch().fields(commonPeopleFields).params({"keywords": this.text, "count": this.limit}).result(function(result) {
+            IN.API.PeopleSearch().fields(commonPeopleFields).params({"keywords": this.search, "count": this.limit}).result(function(result) {
                 self.do_result_people(result);
                 deferrer_p_k.resolve();
             });
@@ -367,6 +385,7 @@ openerp.web_linkedin = function(instance) {
         },
         
     });
+// http://api.linkedin.com/v1/companies?email-domain=apple.com&email-domain=linkedin.com&email-domain=nhl.com
     
     instance.web_linkedin.EntityWidget = instance.web.Widget.extend({
         template: "Linkedin.EntityWidget",

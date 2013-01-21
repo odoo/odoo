@@ -32,11 +32,13 @@
         </div>
     </t>
     <t t-name="LinkedIn.loginInformation">
-        <div class="oe_linkedin_authentified">If "<b><t t-raw="firstName"/> <t t-raw="lastName"/></b>" is not your account on LinkedIn, <a class="oe_linkedin_logout">please click here to logout LinkedIn</a>.</div>
+        <div class="oe_linkedin_authentified">If "<b><t t-raw="firstName"/> <t t-raw="lastName"/></b>" is not your account, <a class="oe_linkedin_logout">please click here to logout</a>.</div>
     </t>
     <t t-name="LinkedIn.AdvancedSearch">
-        <div class="oe_linkedin_advanced_search">
-            No results found.<br/>
+        <t t-raw="title"/>
+        <div class="oe_network_advanced_search">
+            Search by url or keywords : <input name="search"/> <button>Search</button>
         </div>
     </t>
+
 </templates>

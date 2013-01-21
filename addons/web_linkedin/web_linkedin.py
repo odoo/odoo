@@ -21,6 +21,7 @@
 
 import base64
 import urllib2
+import linkedin # TODO add depensy in packaging
 
 import openerp
 from openerp.osv import fields, osv
@@ -49,8 +50,18 @@ class web_linkedin_settings(osv.osv_memory):
         key = self.browse(cr, uid, ids[0], context)["api_key"] or ""
         self.pool.get("ir.config_parameter").set_param(cr, uid, "web.linkedin.apikey", key)
 
-class web_linkedin_fields(osv.osv_memory):
+class web_linkedin_fields(osv.Model):
     _inherit = 'res.partner'
+
+    def _get_url(self, cr, uid, ids, name, arg, context=None):
+        res = dict((id, False) for id in ids)
+        for partner in self.browse(cr, uid, ids, context=context):
+            res[partner.id] = partner.linkedin_url
+        return res
+
     _columns = {
         'linkedin_id': fields.char(string="LinkedIn ID", size=50),
+        'linkedin_url': fields.char(string="LinkedIn url", size=100, store=True),
+        'linkedin_public_url': fields.function(_get_url, type='text', string="LinkedIn url", 
+            help="This url is set automatically when you join the partner with a LinkedIn account."),
     }
