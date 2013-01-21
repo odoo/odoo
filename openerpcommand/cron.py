@@ -26,7 +26,7 @@ def run(args):
     openerp.netsvc.init_logger()
     #openerp.cli.server.report_configuration()
     openerp.cli.server.configure_babel_localedata_path()
-    openerp.cli.server.setup_signal_handlers()
+    openerp.cli.server.setup_signal_handlers(openerp.cli.server.signal_handler)
     import openerp.addons.base
     if args.database:
         for db in args.database:

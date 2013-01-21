@@ -4,13 +4,36 @@ Run a normal OpenERP HTTP process.
 
 import logging
 import os
-import threading
+import signal
 
 import common
 
 _logger = logging.getLogger(__name__)
 
+def mk_signal_handler(server):
+    def signal_handler(sig, frame):
+        """
+        Specialized signal handler for the evented process.
+        """
+        print "\n\n\nStopping gevent HTTP server...\n\n\n"
+        server.stop()
+    return signal_handler
+
+def setup_signal_handlers(signal_handler):
+    SIGNALS = (signal.SIGINT, signal.SIGTERM)
+    map(lambda sig: signal.signal(sig, signal_handler), SIGNALS)
+
 def run(args):
+    # Note that gevent monkey patching must be done before importing the
+    # `threading` module, see http://stackoverflow.com/questions/8774958/.
+    if args.gevent:
+        import gevent
+        import gevent.monkey
+        import gevent.wsgi
+        import gevent_psycopg2
+        gevent.monkey.patch_all()
+        gevent_psycopg2.monkey_patch()
+    import threading
     import openerp
     import openerp.cli.server
     import openerp.service.wsgi_server
@@ -27,11 +50,11 @@ def run(args):
     openerp.netsvc.init_logger()
     #openerp.cli.server.report_configuration()
     openerp.cli.server.configure_babel_localedata_path()
-    openerp.cli.server.setup_signal_handlers()
 
     target = openerp.service.wsgi_server.serve
     if not args.gevent:
         openerp.evented = False
+        openerp.cli.server.setup_signal_handlers(openerp.cli.server.signal_handler)
         # TODO openerp.multi_process with a multi-threaded process probably
         # doesn't work very well (e.g. waiting for all threads to complete
         # before killing the process is not implemented).
@@ -40,16 +63,19 @@ def run(args):
         openerp.cli.server.quit_on_signals()
     else:
         openerp.evented = True
-        import gevent.monkey
-        import gevent.wsgi
-        import gevent_psycopg2
-        gevent.monkey.patch_all()
-        gevent_psycopg2.monkey_patch()
 
         app = openerp.service.wsgi_server.application
         server = gevent.wsgi.WSGIServer((args.interface, int(args.port)), app)
-        server.serve_forever()
-        # TODO quit_on_signals
+        setup_signal_handlers(mk_signal_handler(server))
+        try:
+            server.serve_forever()
+        except KeyboardInterrupt:
+            try:
+                server.stop()
+                gevent.shutdown()
+            except KeyboardInterrupt:
+                sys.stderr.write("Forced shutdown.\n")
+                gevent.shutdown()
 
 def add_parser(subparsers):
     parser = subparsers.add_parser('web',
