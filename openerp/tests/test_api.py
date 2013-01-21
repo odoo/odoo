@@ -132,3 +132,37 @@ class TestAPI(common.TransactionCase):
             res = p.name_get()
             self.assertEqual(len(res), 1)
             self.assertEqual(res[0][0], p.id)
+
+    @mute_logger('openerp.osv.orm')
+    def test_50_session(self):
+        """ Call session methods. """
+        domain = [('name', 'ilike', 'j')]
+        partners = self.Partner.query(self.cr, self.uid, domain)
+        self.assertTrue(partners)
+
+        # check content of partners.session
+        self.assertEqual(partners.session.cr, self.cr)
+        self.assertEqual(partners.session.uid, self.uid)
+        self.assertEqual(partners.session.user.id, self.uid)
+        self.assertFalse(partners.session.context)
+
+        # access another model from partners.session
+        users_model = partners.session.model('res.users')
+        self.assertEqual(users_model.session.cr, self.cr)
+        self.assertEqual(users_model.session.uid, self.uid)
+        self.assertFalse(users_model.session.context)
+
+        # call query from a session-aware model
+        users = users_model.query([])
+        self.assertTrue(users.is_recordset())
+        self.assertIn(partners.session.user, users)
+
+        # pick another user
+        user2 = [u for u in users if u != partners.session.user][0]
+        self.assertNotEqual(user2, partners.session.user)
+
+        # make another query as user
+        session2 = partners.session.copy(user=user2)
+        partners2 = session2.model('res.partner').query(domain)
+        self.assertTrue(partners2.is_recordset())
+        self.assertEqual(partners2.session.user, user2)

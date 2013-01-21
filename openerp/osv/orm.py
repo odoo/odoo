@@ -288,6 +288,47 @@ class browse_null(object):
         return u''
 
 
+class Session(object):
+    """ An object that stores session data (db cursor, current user, context)
+        and provides convenient accessors:
+
+         - ``session.cr`` is the current database cursor;
+         - ``session.uid`` is the current user id;
+         - ``session.user`` is the current user record;
+         - ``session.context`` is the current context dictionary;
+         - ``session.registry`` is the model registry (or pool);
+         - ``session.model(name)`` returns the given model with session data.
+    """
+    def __init__(self, registry, cr, uid, context):
+        self.registry = registry
+        self.cr = cr
+        self.uid = uid
+        self.context = context
+
+    def copy(self, cr=None, uid=None, user=None, context=None):
+        """ copy the session object, possibly modifying some of its data """
+        cr = cr if cr is not None else self.cr
+        if user is not None:
+            uid = user.id if isinstance(user, Record) else user
+        uid = uid if uid is not None else self.uid
+        context = context if context is not None else self.context
+        return Session(self.registry, cr, uid, context)
+
+    def model(self, model_name):
+        """ return a given model with session data """
+        model = self.registry.get(model_name)
+        if model is None:
+            raise Exception(_("Invalid access to model '%s'") % model_name)
+        return model._make_instance(self.cr, self.uid, self.context)
+
+    @property
+    def user(self):
+        """ return the current user (as a record) """
+        if not hasattr(self, '_user'):
+            self._user = self.model('res.users').browse(self.uid)
+        return self._user
+
+
 class Record(object):
     """ A record in a model (corresponding to a row in the model's table.)
         It has attributes after the columns of the corresponding object.
@@ -1165,21 +1206,30 @@ class BaseModel(object):
         'pool',
     ]
 
-    def _recordset(self, cr, uid, context=None, **kwargs):
-        """ Create an instance of this model for a recordset. """
+    def _make_instance(self, cr, uid, context=None):
+        """ create an instance of this model with session data """
         # copy the fields determined by create_instance() and __init__()
         obj = object.__new__(self.__class__)
         for name in self.INIT_MODEL_ATTRIBUTES:
             if hasattr(self, name):
                 setattr(obj, name, getattr(self, name))
 
-        # set recordset data
-        obj._cr = cr
-        obj._uid = uid
-        obj._context = {} if context is None else context
-        for key, value in kwargs.iteritems():
-            setattr(obj, '_' + key, value)
+        # add session data
+        context = context if context is not None else {}
+        obj.session = Session(obj.pool, cr, uid, context)
+        obj._cr = cr                    # for backward compatibility
+        obj._uid = uid                  # for backward compatibility
+        obj._context = context          # for backward compatibility
         return obj
+
+    def _make_recordset(self, cr, uid, records, context=None):
+        obj = self._make_instance(cr, uid, context)
+        obj._ids = map(int, records)
+        obj._records = records
+        return obj
+
+    def is_recordset(self):
+        return hasattr(self, '_ids')
 
     def __export_row(self, cr, uid, row, fields, context=None):
         if context is None:
@@ -4614,7 +4664,7 @@ class BaseModel(object):
             return Record(cr, uid, select, self, cache, context=context, fields_process=fields_process)
         elif isinstance(select, list):
             records = [Record(cr, uid, id, self, cache, context=context, fields_process=fields_process) for id in select]
-            return self._recordset(cr, uid, ids=select, records=records, context=context)
+            return self._make_recordset(cr, uid, records, context)
         else:
             return browse_null()
 
