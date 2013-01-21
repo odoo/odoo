@@ -181,9 +181,9 @@ def dumpstacks(sig, frame):
                 code.append("  %s" % (line.strip()))
     _logger.info("\n".join(code))
 
-def setup_signal_handlers():
-    """ Register the signal handler defined above. """
-    SIGNALS = map(lambda x: getattr(signal, "SIG%s" % x), "INT TERM".split())
+def setup_signal_handlers(signal_handler):
+    """ Register the given signal handler. """
+    SIGNALS = (signal.SIGINT, signal.SIGTERM)
     if os.name == 'posix':
         map(lambda sig: signal.signal(sig, signal_handler), SIGNALS)
         signal.signal(signal.SIGQUIT, dumpstacks)
@@ -238,7 +238,7 @@ def main(args):
 
     configure_babel_localedata_path()
 
-    setup_signal_handlers()
+    setup_signal_handlers(signal_handler)
 
     if config["test_file"]:
         run_test_file(config['db_name'], config['test_file'])
