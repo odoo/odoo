@@ -205,7 +205,6 @@ class product_product(osv.osv):
         
         location_obj = self.pool.get('stock.location')
         warehouse_obj = self.pool.get('stock.warehouse')
-        shop_obj = self.pool.get('sale.shop')
         
         states = context.get('states',[])
         what = context.get('what',())
@@ -214,11 +213,6 @@ class product_product(osv.osv):
         res = {}.fromkeys(ids, 0.0)
         if not ids:
             return res
-
-        if context.get('shop', False):
-            warehouse_id = shop_obj.read(cr, uid, int(context['shop']), ['warehouse_id'])['warehouse_id'][0]
-            if warehouse_id:
-                context['warehouse'] = warehouse_id
 
         if context.get('warehouse', False):
             lot_id = warehouse_obj.read(cr, uid, int(context['warehouse']), ['lot_stock_id'])['lot_stock_id'][0]
@@ -370,7 +364,6 @@ class product_product(osv.osv):
                  "In a context with a single Warehouse, this includes "
                  "goods stored in the Stock Location of this Warehouse, or any "
                  "of its children.\n"
-                 "In a context with a single Shop, this includes goods "
                  "stored in the Stock Location of the Warehouse of this Shop, "
                  "or any of its children.\n"
                  "Otherwise, this includes goods stored in any Stock Location "
@@ -385,7 +378,6 @@ class product_product(osv.osv):
                  "In a context with a single Warehouse, this includes "
                  "goods stored in the Stock Location of this Warehouse, or any "
                  "of its children.\n"
-                 "In a context with a single Shop, this includes goods "
                  "stored in the Stock Location of the Warehouse of this Shop, "
                  "or any of its children.\n"
                  "Otherwise, this includes goods stored in any Stock Location "
