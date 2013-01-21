@@ -29,22 +29,6 @@ from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FO
 import openerp.addons.decimal_precision as dp
 from openerp import netsvc
 
-class sale_shop(osv.osv):
-    _name = "sale.shop"
-    _description = "Sales Shop"
-    _columns = {
-        'name': fields.char('Shop Name', size=64, required=True),
-        'payment_default_id': fields.many2one('account.payment.term', 'Default Payment Term', required=True),
-        'pricelist_id': fields.many2one('product.pricelist', 'Pricelist'),
-        'project_id': fields.many2one('account.analytic.account', 'Analytic Account', domain=[('parent_id', '!=', False)]),
-        'company_id': fields.many2one('res.company', 'Company', required=False),
-    }
-    _defaults = {
-        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'sale.shop', context=c),
-    }
-
-sale_shop()
-
 class sale_order(osv.osv):
     _name = "sale.order"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
@@ -55,16 +39,6 @@ class sale_order(osv.osv):
             'sale.mt_order_sent': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['sent']
         },
     }
-
-    def onchange_shop_id(self, cr, uid, ids, shop_id, context=None):
-        v = {}
-        if shop_id:
-            shop = self.pool.get('sale.shop').browse(cr, uid, shop_id, context=context)
-            if shop.project_id.id:
-                v['project_id'] = shop.project_id.id
-            if shop.pricelist_id.id:
-                v['pricelist_id'] = shop.pricelist_id.id
-        return {'value': v}
 
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
@@ -178,17 +152,9 @@ class sale_order(osv.osv):
             result[line.order_id.id] = True
         return result.keys()
 
-    def _get_default_shop(self, cr, uid, context=None):
-        company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
-        shop_ids = self.pool.get('sale.shop').search(cr, uid, [('company_id','=',company_id)], context=context)
-        if not shop_ids:
-            raise osv.except_osv(_('Error!'), _('There is no default shop for the current user\'s company!'))
-        return shop_ids[0]
-
     _columns = {
         'name': fields.char('Order Reference', size=64, required=True,
             readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, select=True),
-        'shop_id': fields.many2one('sale.shop', 'Shop', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
         'origin': fields.char('Source Document', size=64, help="Reference of the document that generated this sales order request."),
         'client_order_ref': fields.char('Customer Reference', size=64),
         'state': fields.selection([
@@ -249,7 +215,7 @@ class sale_order(osv.osv):
         'invoice_quantity': fields.selection([('order', 'Ordered Quantities')], 'Invoice on', help="The sales order will automatically create the invoice proposition (draft invoice).", required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'payment_term': fields.many2one('account.payment.term', 'Payment Term'),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
-        'company_id': fields.related('shop_id','company_id',type='many2one',relation='res.company',string='Company',store=True,readonly=True)
+        'company_id': fields.many2one('res.company','Company')
     }
     _defaults = {
         'date_order': fields.date.context_today,
@@ -258,7 +224,6 @@ class sale_order(osv.osv):
         'user_id': lambda obj, cr, uid, context: uid,
         'name': lambda obj, cr, uid, context: '/',
         'invoice_quantity': 'order',
-        'shop_id': _get_default_shop,
         'partner_invoice_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['invoice'])['invoice'],
         'partner_shipping_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['delivery'])['delivery'],
     }

@@ -19,20 +19,6 @@
             <field name="object">sale.order</field>
         </record>
 
-        <!-- Resource: sale.shop -->
-        <record id="sale_shop_1" model="sale.shop">
-            <field name="company_id" ref="base.main_company"/>
-            <field name="payment_default_id" ref="account.account_payment_term_net"/>
-            <field name="pricelist_id" ref="product.list0"/>
-
-            <!--  Copy the name of any company. Without demo data this will yield
-                  the main company name, which is correct. With demo data it will
-                  be random, but it does not matter much -->
-            <field model="res.company" name="name" search="[]" use="name"/>
-        </record>
-
-        <function eval="('default',False,'shop_id', [('sale.order', False)], sale_shop_1, True, False, False, False, True)" id="sale_default_set" model="ir.values" name="set"/>
-
         <!-- notify all employees of module installation -->
         <record model="mail.message" id="module_install_notification">
             <field name="model">mail.group</field>

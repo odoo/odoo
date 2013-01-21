@@ -40,7 +40,6 @@ class sale_report(osv.osv):
         'product_uom_qty': fields.float('# of Qty', readonly=True),
 
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
-        'shop_id': fields.many2one('sale.shop', 'Shop', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'user_id': fields.many2one('res.users', 'Salesperson', readonly=True),
         'price_total': fields.float('Total Price', readonly=True),
@@ -79,7 +78,6 @@ class sale_report(osv.osv):
                     to_char(s.date_order, 'YYYY-MM-DD') as day,
                     s.partner_id as partner_id,
                     s.user_id as user_id,
-                    s.shop_id as shop_id,
                     s.company_id as company_id,
                     extract(epoch from avg(date_trunc('day',s.date_confirm)-date_trunc('day',s.create_date)))/(24*60*60)::decimal(16,2) as delay,
                     s.state,
@@ -104,7 +102,6 @@ class sale_report(osv.osv):
                     s.date_confirm,
                     s.partner_id,
                     s.user_id,
-                    s.shop_id,
                     s.company_id,
                     s.state,
                     s.pricelist_id,
