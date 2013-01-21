@@ -93,8 +93,6 @@ class crm_make_sale(osv.osv_memory):
                     'origin': _('Opportunity: %s') % str(case.id),
                     'section_id': case.section_id and case.section_id.id or False,
                     'categ_ids': [(6, 0, [categ_id.id for categ_id in case.categ_ids])],
-                    'shop_id': make.shop_id.id,
-                    'partner_id': partner.id,
                     'pricelist_id': pricelist,
                     'partner_invoice_id': partner_addr['invoice'],
                     'partner_shipping_id': partner_addr['delivery'],
@@ -137,18 +135,12 @@ class crm_make_sale(osv.osv_memory):
                 }
             return value
 
-    def _get_shop_id(self, cr, uid, ids, context=None):
-        cmpny_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
-        shop = self.pool.get('sale.shop').search(cr, uid, [('company_id', '=', cmpny_id)])
-        return shop and shop[0] or False
 
     _columns = {
-        'shop_id': fields.many2one('sale.shop', 'Shop', required=True),
         'partner_id': fields.many2one('res.partner', 'Customer', required=True, domain=[('customer','=',True)]),
         'close': fields.boolean('Mark Won', help='Check this to close the opportunity after having created the sales order.'),
     }
     _defaults = {
-        'shop_id': _get_shop_id,
         'close': False,
         'partner_id': _selectPartner,
     }
