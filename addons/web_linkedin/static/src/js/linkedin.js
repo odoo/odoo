@@ -155,6 +155,12 @@ openerp.web_linkedin = function(instance) {
             });
             to_change.linkedin_url = _.str.sprintf("http://www.linkedin.com/company/%d", entity.id);
 
+            _.each(to_change, function (val, key) {
+                if (self.field_manager.datarecord[key]) {
+                    to_change[key] = self.field_manager.datarecord[key];
+                }
+            });
+
             to_change.child_ids = [];
             var children_def = $.Deferred();
             defs.push(children_def);
@@ -187,7 +193,7 @@ openerp.web_linkedin = function(instance) {
                 return to_change;
             });
         },
-        create_or_modify_partner: function (entity, search_similar_partner) {
+        create_or_modify_partner: function (entity, rpc_search_similar_partner) {
             var self = this;
             var to_change = {};
             var defs = [];
@@ -225,7 +231,7 @@ openerp.web_linkedin = function(instance) {
             to_change.linkedin_id = entity.id || false;
 
             // find similar partners
-            if (search_similar_partner) {
+            if (rpc_search_similar_partner) {
                 defs.push(new instance.web.DataSetSearch(this, 'res.partner').call("search", [[ 
                         "|", ["linkedin_id", "=", to_change.linkedin_id], "&", ["linkedin_id", "=", false],
                         "|", ["name", "ilike", entity.firstName +"%"+ entity.lastName], ["name", "ilike", entity.lastName +"%"+ entity.firstName] 
@@ -255,6 +261,12 @@ openerp.web_linkedin = function(instance) {
                         }));
                     }
                 }));
+            } else {
+                _.each(to_change, function (val, key) {
+                    if (self.field_manager.datarecord[key]) {
+                        to_change[key] = self.field_manager.datarecord[key];
+                    }
+                });
             }
             
             return $.when.apply($, defs).then(function () {
@@ -293,7 +305,7 @@ openerp.web_linkedin = function(instance) {
                 IN.User.logout();
                 self.destroy();
             });
-            this.$search = this.$el.parent().find(".oe_network_advanced_search" );
+            this.$search = this.$el.parent().find(".oe_linkedin_advanced_search" );
             this.$url = this.$search.find("input[name='search']" );
             this.$button = this.$search.find("button");
 
@@ -421,7 +433,6 @@ openerp.web_linkedin = function(instance) {
         },
         
     });
-// http://api.linkedin.com/v1/companies?email-domain=apple.com&email-domain=linkedin.com&email-domain=nhl.com
     
     instance.web_linkedin.EntityWidget = instance.web.Widget.extend({
         template: "Linkedin.EntityWidget",
