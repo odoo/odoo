@@ -119,7 +119,6 @@ openerp.web_linkedin = function(instance) {
             var self = this;
             this.create_on_change(entity).done(function(to_change) {
                 var values = self.view.get_fields_values();
-                console.log(values, to_change);
                 _.each(to_change, function (value, key) {
                     if (!/linkedin/.test(key) && !!values[key]) {
                         if(_.isArray(values[key])) {
@@ -132,7 +131,7 @@ openerp.web_linkedin = function(instance) {
                 self.view.set_values(to_change);
             });
         },
-        create_on_change: function(entity) {
+        create_on_change: function(entity, search_similar_partner) {
             var self = this;
             var to_change = {};
             var defs = [];
@@ -167,11 +166,13 @@ openerp.web_linkedin = function(instance) {
                     });
                     var defs = _.map(result, function(el) {
                         el.__type = "people";
-                        return self.create_on_change(el);
+                        el.parent_id = self.field_manager.datarecord.id || false;
+                        return self.create_on_change(el, true);
                     });
                     return $.when.apply($, defs).then(function() {
-                        var p_to_change = _.map(_.toArray(arguments), function (val) {
-                            return val.id ? [1, val.id, val] : [0, 0, val];
+                        var p_to_change = _.map(_.toArray(arguments), function (data) {
+                            // [0,0,data] if it's a new partner
+                            return data.id ? [1, data.id, data] : [0, 0, data];
                         })
                         to_change.child_ids = p_to_change;
                     });
@@ -183,15 +184,12 @@ openerp.web_linkedin = function(instance) {
             } else { // people
                 to_change.is_company = false;
                 to_change.name = entity.formattedName;
-                to_change.image = false;
                 if (entity.pictureUrl) {
                     defs.push(self.rpc('/web_linkedin/binary/url2binary',
                                        {'url': entity.pictureUrl}).then(function(data){
                         to_change.image = data;
                     }));
                 }
-                to_change.mobile = false;
-                to_change.phone = false;
                 _.each((entity.phoneNumbers || {}).values || [], function(el) {
                     if (el.phoneType === "mobile") {
                         to_change.mobile = el.phoneNumber;
@@ -202,23 +200,53 @@ openerp.web_linkedin = function(instance) {
                 var positions = (entity.positions || {}).values || [];
                 if (positions.length && positions[0].isCurrent) {
                     to_change.function = positions[0].title;
-                    var company_name = positions[0].company ? positions[0].company.name : false;
-                    if (company_name) {
-                        defs.push(new instance.web.DataSetSearch(this, 'res.partner').call("search", [[["name", "=", company_name]]]).then(function (data) {
-                            to_change.parent_id = data[0] || false;
-                        }));
+                    if (!entity.parent_id) {
+                        var company_name = positions[0].company ? positions[0].company.name : false;
+                        if (company_name) {
+                            defs.push(new instance.web.DataSetSearch(this, 'res.partner').call("search", [[["name", "=", company_name]]]).then(function (data) {
+                                if(data[0]) to_change.parent_id = data[0];
+                            }));
+                        }
                     }
+                }
+                if (entity.parent_id) {
+                    to_change.parent_id = entity.parent_id;
                 }
                 to_change.linkedin_url = to_change.linkedin_public_url = entity.publicProfileUrl || false;
                 to_change.linkedin_id = entity.id || false;
 
                 // find similar partners
-                defs.push(new instance.web.DataSetSearch(this, 'res.partner').call("search", [[ 
-                        "|", ["linkedin_id", "=", entity.id], "&", ["linkedin_id", "=", false],
-                        "|", ["name", "ilike", entity.firstName +"%"+ entity.lastName], ["name", "ilike", entity.lastName +"%"+ entity.firstName] 
-                    ]]).then(function (data) {
-                    to_change.id = data[0] || false;
-                }));
+                if (search_similar_partner) {
+                    defs.push(new instance.web.DataSetSearch(this, 'res.partner').call("search", [[ 
+                            "|", ["linkedin_id", "=", to_change.linkedin_id], "&", ["linkedin_id", "=", false],
+                            "|", ["name", "ilike", entity.firstName +"%"+ entity.lastName], ["name", "ilike", entity.lastName +"%"+ entity.firstName] 
+                        ]]).then(function (data) {
+                        to_change.id = data[0] || false;
+                        if (to_change.id) {
+                            // remove data if allready set
+                            defs.push(new instance.web.DataSetSearch(this, 'res.partner').call("read", [[to_change.id], [
+                                "image",
+                                "mobile",
+                                "phone",
+                                "parent_id",
+                                "name",
+                                "email",
+                                "function",
+                                "linkedin_id",
+                            ]]).then(function (partners) {
+                                if (partners[0].linkedin_id && partners[0].linkedin_id != to_change.linkedin_id) {
+                                    delete to_change.id;
+                                } else {
+                                    _.each(partners[0], function (val, key) {
+                                        if (val) {
+                                            to_change[key] = val;
+                                        }
+                                    });
+                                }
+                            }));
+                        }
+                    }));
+                }
                 
             }
             return $.when.apply($, defs).then(function() {
