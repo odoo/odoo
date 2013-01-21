@@ -590,46 +590,39 @@ class res_config_settings(osv.osv_memory):
             name = act_window.read(cr, uid, action_ids[0], ['name'], context=context)['name']
         return [(record.id, name) for record in self.browse(cr, uid , ids, context=context)]
 
-    def get_path(self, cr, uid, menu_xml_id=None, full_field_name=None, context=None):
-        """
-        Return a string representing the path to access a specific
-        configuration option through the interface.
+    def get_option_path(self, cr, uid, menu_xml_id=None, context=None):
+        module_name, menu_xml_id = menu_xml_id.split('.')
+        dummy, menu_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, module_name, menu_xml_id)
+        ir_ui_menu = self.pool.get('ir.ui.menu').browse(cr, uid, menu_id, context=context)
 
-        :return dict d: d['path'] contains the full path, d['name'] contains
-        the "human readable" configuration option name
-        """
+        return ir_ui_menu.complete_name
 
-        res = {'path': None, 'name': None}
+    def get_option_name(self, cr, uid, full_field_name=None, context=None):
+        model_name, field_name = full_field_name.rsplit('.', 1)
 
-        # Fetch the path to the config option
-        if (menu_xml_id):
-            module_name, menu_xml_id = menu_xml_id.split('.')
-            dummy, menu_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, module_name, menu_xml_id)
-            ir_ui_menu = self.pool.get('ir.ui.menu').browse(cr, uid, menu_id, context=context)
-            res['path'] = ir_ui_menu.complete_name
-
-        # Fetch the exact config option name
-        if (full_field_name):
-            model_name, field_name = full_field_name.rsplit('.', 1)
-            res['name'] = self.pool.get(model_name)._all_columns.get(field_name).column.string
-
-        return res
+        return self.pool.get(model_name)._all_columns.get(field_name).column.string
 
 def get_warning_config(cr, msg, context=None):
     res_config_obj = pooler.get_pool(cr.dbname).get('res.config.settings')
 
-    def sub_path(g):
-        s = g.group(1)
-        return res_config_obj.get_path(cr, SUPERUSER_ID, menu_xml_id=s, full_field_name=None, context=context)['path']
+    # Treat the msg
+    # 1/ find the path and field references, put them in a list
+    references = re.findall(r'\[((?:path|field):[a-z_\.]*)\]', msg, flags=re.I)
 
-    def sub_field(g):
-        s = g.group(1)
-        return res_config_obj.get_path(cr, SUPERUSER_ID, menu_xml_id=None, full_field_name=s, context=context)['name']
+    # 2/ fetch the path and field replacement values
+    #    (full path and human readable field's name)
+    values = []
+    for item in references:
+        ref_type, ref = item.split(':')
+        if ref_type == 'path':
+            values.append(res_config_obj.get_option_path(cr, SUPERUSER_ID, ref, context))
+        elif ref_type == 'field':
+            values.append(res_config_obj.get_option_name(cr, SUPERUSER_ID, ref, context))
 
-    # Treat the msg: find the menu_xml_id and the field_name
-    msg = re.sub(r'\[path:([a-z_\.]*)\]', sub_path, msg)
-    msg = re.sub(r'\[field:([a-z_\.]*)\]', sub_field, msg)
+    # 3/ replace the text references by the %s conversion symbol
+    msg = re.sub(r'\[((?:path|field):[a-z_\.]*)\]', '%s', msg, flags=re.I)
 
-    return exceptions.WarningConfig(msg)
+    # 4/ translate all the strings, substitute and return the result
+    return exceptions.WarningConfig(_(msg) % tuple(map(_, values)))
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
