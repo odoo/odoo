@@ -306,8 +306,8 @@ class Session(object):
         self.context = context
 
     def __eq__(self, other):
-        return all(getattr(self, attr) == getattr(other, attr)
-                   for attr in ('registry', 'cr', 'uid', 'context'))
+        return (self.cr == other.cr and self.uid == other.uid and
+                self.context == other.context)
 
     def __ne__(self, other):
         return not self == other
