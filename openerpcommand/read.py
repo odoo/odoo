@@ -5,6 +5,8 @@ import os
 import sys
 import textwrap
 
+import common
+
 # TODO provide a --rpc flag to use XML-RPC (with a specific username) instead
 # of server-side library.
 def run(args):
@@ -13,6 +15,11 @@ def run(args):
     import openerp
     config = openerp.tools.config
     config['log_handler'] = [':CRITICAL']
+    if args.addons:
+        args.addons = args.addons.split(':')
+    else:
+        args.addons = []
+    config['addons_path'] = ','.join(args.addons)
     openerp.netsvc.init_logger()
     registry = openerp.modules.registry.RegistryManager.get(
         args.database, update_module=False)
@@ -44,8 +51,9 @@ def run(args):
 def add_parser(subparsers):
     parser = subparsers.add_parser('read',
         description='Display a record.')
-    parser.add_argument('-d', '--database', metavar='DATABASE', required=True,
-        help='the database to connect to')
+    parser.add_argument('-d', '--database', metavar='DATABASE',
+        **common.required_or_default('DATABASE', 'the database to connect to'))
+    common.add_addons_argument(parser)
     parser.add_argument('-m', '--model', metavar='MODEL', required=True,
         help='the model for which a record should be read')
     parser.add_argument('-i', '--id', metavar='RECORDID', required=True,
