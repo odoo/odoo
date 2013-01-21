@@ -1149,35 +1149,19 @@ class BaseModel(object):
         else:
             self._rec_name = 'name'
 
-    MODEL_ATTRIBUTES = [
-        '_register',
-        '_name',
+    # model attributes set on pool instance by method __init__
+    INIT_MODEL_ATTRIBUTES = [
+        '_all_columns',
         '_columns',
-        '_log_access',
-        '_constraints',
-        '_defaults',
-        '_rec_name',
-        '_parent_name',
-        '_parent_store',
-        '_parent_order',
-        '_date_name',
-        '_order',
-        '_sequence',
         '_description',
-        '_group_by_full',
-        '_transient',
+        '_inherit_fields',
+        '_log_access',
+        '_rec_name',
+        '_sequence',
+        '_table',
+        '_transient_check_count',
         '_transient_max_count',
         '_transient_max_hours',
-        '_transient_check_time',
-        '_inherits',
-        '_inherit_fields',
-        '_all_columns',
-        '_table',
-        '_invalids',
-        '_log_create',
-        '_sql_constraints',
-        '_protected',
-        '_foreign_keys',
         'pool',
     ]
 
@@ -1185,7 +1169,7 @@ class BaseModel(object):
         """ Create an instance of this model for a recordset. """
         # copy the fields determined by create_instance() and __init__()
         obj = object.__new__(self.__class__)
-        for name in self.MODEL_ATTRIBUTES:
+        for name in self.INIT_MODEL_ATTRIBUTES:
             if hasattr(self, name):
                 setattr(obj, name, getattr(self, name))
 
