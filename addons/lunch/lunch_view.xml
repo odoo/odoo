@@ -39,7 +39,7 @@
                     <field name="user_id"/>
                     <filter name='is_payment' string="Payment" domain="[('state','=','payment')]"/>
                     <separator/>
-                    <filter name='is_mine' string="My Account" domain="[('user_id','=',uid)]"/>
+                    <filter name='is_mine_group' string="My Account grouped" domain="[('user_id','=',uid)]" context="{'group_by':'user_id'}"/>
                 </search>
             </field>
         </record>
@@ -116,7 +116,7 @@
             <field name="res_model">lunch.cashmove</field>
             <field name="view_mode">tree</field>
             <field name="search_view_id" ref="view_lunch_employee_payment_filter"/>
-            <field name="context">{"search_default_is_mine":1}</field>
+            <field name="context">{"search_default_is_mine_group":1}</field>
             <field name="help" type="html">
               <p>
                 Here you can see your cash moves.<br/>A cash moves can be either an expense or a payment.
