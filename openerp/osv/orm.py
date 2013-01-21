@@ -2921,7 +2921,7 @@ class BaseModel(object):
             return
         _logger.info('Computing parent left and right for table %s...', self._table)
         def browse_rec(root, pos=0):
-# TODO: set order
+            # TODO: set order
             where = self._parent_name+'='+str(root)
             if not root:
                 where = self._parent_name+' IS NULL'
