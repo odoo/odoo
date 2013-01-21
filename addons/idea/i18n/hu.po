@@ -1,31 +1,25 @@
-# Hungarian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#    * idea
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Hungarian <hu@li.org>\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"PO-Revision-Date: 2012-05-10 18:08+0000\n"
+"Last-Translator: NOVOTRADE RENDSZERHÁZ ( novotrade.hu ) "
+"<openerp@novotrade.hu>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 07:18+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2012-05-11 04:57+0000\n"
+"X-Generator: Launchpad (build 15225)\n"
 
 #. module: idea
-#: view:idea.category:0
-#: view:idea.idea:0
-msgid "Category"
-msgstr "Kategória"
-
-#. module: idea
-#: view:idea.idea:0
-msgid "In Progress"
+#: help:idea.category,visibility:0
+msgid "If True creator of the idea will be visible to others"
 msgstr ""
 
 #. module: idea
@@ -34,56 +28,46 @@ msgid "By States"
 msgstr ""
 
 #. module: idea
-#: sql_constraint:idea.category:0
-msgid "The name of the category must be unique"
-msgstr "A kategória nevének egyedinek kell lennie"
+#: model:ir.actions.act_window,name:idea.action_idea_select
+msgid "Idea select"
+msgstr "Ötlet kiválasztása"
 
 #. module: idea
 #: view:idea.idea:0
-msgid "By Idea Category"
+#: view:idea.vote:0
+#: model:ir.ui.menu,name:idea.menu_idea_vote
+msgid "Votes"
+msgstr "Szavazatok"
+
+#. module: idea
+#: view:idea.idea:0
+#: field:idea.idea,comment_ids:0
+msgid "Comments"
+msgstr "Hozzászólások"
+
+#. module: idea
+#: view:idea.idea:0
+msgid "Submit Vote"
 msgstr ""
 
 #. module: idea
-#: model:ir.model,name:idea.model_idea_category
-msgid "Idea Category"
-msgstr "Ötlet kategória"
+#: model:ir.actions.act_window,name:idea.action_report_vote_all
+#: model:ir.ui.menu,name:idea.menu_report_vote_all
+msgid "Ideas Analysis"
+msgstr "Ötletek elemzése"
 
 #. module: idea
+#: view:idea.category:0
 #: view:idea.idea:0
-msgid "Open Ideas"
-msgstr "Nyitott ötletek"
-
-#. module: idea
-#: view:idea.idea:0
+#: view:idea.vote:0
+#: view:report.vote:0
 msgid "Group By..."
 msgstr "Csoportosítás..."
 
 #. module: idea
-#: field:idea.category,name:0
-msgid "Category Name"
-msgstr ""
-
-#. module: idea
-#: view:idea.idea:0
-#: selection:idea.idea,state:0
-msgid "New"
-msgstr ""
-
-#. module: idea
-#: view:idea.idea:0
-msgid "New Ideas"
-msgstr ""
-
-#. module: idea
-#: view:idea.idea:0
-#: field:idea.idea,state:0
-msgid "Status"
-msgstr ""
-
-#. module: idea
-#: sql_constraint:idea.idea:0
-msgid "The name of the idea must be unique"
-msgstr ""
+#: selection:report.vote,month:0
+msgid "March"
+msgstr "Március"
 
 #. module: idea
 #: view:idea.idea:0
@@ -91,41 +75,21 @@ msgid "Accepted Ideas"
 msgstr ""
 
 #. module: idea
-#: field:idea.idea,category_ids:0
-msgid "Tags"
+#: code:addons/idea/wizard/idea_post_vote.py:94
+#, python-format
+msgid "Idea must be in 'Open' state before vote for that idea."
 msgstr ""
 
 #. module: idea
-#: field:idea.idea,message_unread:0
-msgid "Unread Messages"
+#: view:report.vote:0
+msgid "Open Date"
 msgstr ""
 
 #. module: idea
-#: help:idea.idea,message_ids:0
-msgid "Messages and communication history"
-msgstr ""
-
-#. module: idea
-#: field:idea.idea,message_is_follower:0
-msgid "Is a Follower"
-msgstr ""
-
-#. module: idea
-#: model:ir.model,name:idea.model_idea_idea
-msgid "Email Thread"
-msgstr ""
-
-#. module: idea
-#: view:idea.idea:0
-#: selection:idea.idea,state:0
-msgid "Accepted"
-msgstr "Elfogadott"
-
-#. module: idea
-#: model:ir.actions.act_window,name:idea.action_idea_category
-#: model:ir.ui.menu,name:idea.menu_idea_category
-msgid "Categories"
-msgstr "Kategóriák"
+#: view:report.vote:0
+#: field:report.vote,day:0
+msgid "Day"
+msgstr "Nap"
 
 #. module: idea
 #: view:idea.idea:0
@@ -133,22 +97,27 @@ msgid "Refuse"
 msgstr "Elutasít"
 
 #. module: idea
-#: field:idea.idea,message_ids:0
-msgid "Messages"
-msgstr ""
+#: field:idea.idea,count_votes:0
+msgid "Count of votes"
+msgstr "Szavazatok száma"
 
 #. module: idea
-#: view:idea.idea:0
-#: model:ir.actions.act_window,name:idea.action_idea_idea
-#: model:ir.ui.menu,name:idea.menu_idea_idea
-#: model:ir.ui.menu,name:idea.menu_ideas
-msgid "Ideas"
-msgstr "Ötletek"
+#: model:ir.model,name:idea.model_report_vote
+msgid "Idea Vote Statistics"
+msgstr "Ötletre adott szavazatok statisztikája"
 
 #. module: idea
-#: field:idea.idea,name:0
-msgid "Idea Summary"
-msgstr "Ötletösszegzés"
+#: selection:idea.idea,my_vote:0
+#: selection:idea.post.vote,vote:0
+#: selection:idea.vote,score:0
+#: selection:idea.vote.stat,score:0
+msgid "Bad"
+msgstr "Rossz"
+
+#. module: idea
+#: selection:report.vote,idea_state:0
+msgid "Cancelled"
+msgstr "Törölt"
 
 #. module: idea
 #: view:idea.category:0
@@ -156,71 +125,51 @@ msgid "Category of ideas"
 msgstr "Ötletek kategóriái"
 
 #. module: idea
-#: field:idea.idea,message_summary:0
-msgid "Summary"
-msgstr "Összegzés"
-
-#. module: idea
-#: help:idea.idea,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr ""
-
-#. module: idea
-#: field:idea.idea,description:0
-msgid "Description"
-msgstr "Leírás"
-
-#. module: idea
-#: selection:idea.idea,state:0
-msgid "Refused"
-msgstr "Elutasított"
+#: code:addons/idea/idea.py:274
+#: code:addons/idea/wizard/idea_post_vote.py:91
+#: code:addons/idea/wizard/idea_post_vote.py:94
+#, python-format
+msgid "Warning !"
+msgstr "Vigyázat!"
 
 #. module: idea
 #: view:idea.idea:0
-#: field:idea.idea,create_uid:0
-msgid "Creator"
-msgstr "Létrehozó"
+msgid "Your Comment"
+msgstr "Az Ön hozzászólásai"
 
 #. module: idea
-#: view:idea.idea:0
-msgid "Open"
-msgstr "Nyitott"
+#: model:ir.model,name:idea.model_idea_vote
+msgid "Idea Vote"
+msgstr "Ötletre adott szavazat"
 
 #. module: idea
-#: view:idea.idea:0
-msgid "Idea"
-msgstr "Ötlet"
+#: field:idea.category,parent_id:0
+msgid "Parent Categories"
+msgstr "Főkategóriák"
 
 #. module: idea
-#: view:idea.idea:0
-msgid "Accept"
-msgstr "Elfogad"
+#: selection:idea.idea,my_vote:0
+#: selection:idea.post.vote,vote:0
+#: selection:idea.vote,score:0
+#: selection:idea.vote.stat,score:0
+msgid "Very Bad"
+msgstr "Nagyon rossz"
 
 #. module: idea
-#: help:idea.idea,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr ""
+#: view:idea.vote:0
+msgid "Ideas vote"
+msgstr "Ötletekre adott szavazat"
 
 #. module: idea
-#: selection:idea.idea,state:0
-msgid "Done"
-msgstr ""
+#: view:report.vote:0
+#: field:report.vote,nbr:0
+msgid "# of Lines"
+msgstr "Sorok száma"
 
 #. module: idea
-#: view:idea.idea:0
-msgid "By Creators"
-msgstr ""
-
-#. module: idea
-#: field:idea.idea,message_follower_ids:0
-msgid "Followers"
-msgstr ""
-
-#. module: idea
-#: view:idea.category:0
-msgid "Category of Ideas"
+#: code:addons/idea/wizard/idea_post_vote.py:91
+#, python-format
+msgid "You can not give Vote for this idea more than %s times"
 msgstr ""
 
 #. module: idea
@@ -232,3 +181,561 @@ msgstr "Ötlet kategóriák"
 #: help:idea.idea,description:0
 msgid "Content of the idea"
 msgstr "Az ötlet tartalma"
+
+#. module: idea
+#: model:ir.model,name:idea.model_idea_category
+msgid "Idea Category"
+msgstr "Ötlet kategória"
+
+#. module: idea
+#: view:idea.idea:0
+#: field:idea.idea,stat_vote_ids:0
+msgid "Statistics"
+msgstr "Statisztika"
+
+#. module: idea
+#: selection:idea.idea,my_vote:0
+#: selection:idea.post.vote,vote:0
+#: selection:idea.vote,score:0
+#: selection:idea.vote.stat,score:0
+msgid "Not Voted"
+msgstr "Nem szavazott"
+
+#. module: idea
+#: sql_constraint:idea.category:0
+msgid "The name of the category must be unique"
+msgstr "A kategória nevének egyedinek kell lennie"
+
+#. module: idea
+#: model:ir.model,name:idea.model_idea_select
+msgid "select idea"
+msgstr "ötlet kiválasztása"
+
+#. module: idea
+#: view:idea.stat:0
+msgid "stat"
+msgstr "statisztika"
+
+#. module: idea
+#: field:idea.category,child_ids:0
+msgid "Child Categories"
+msgstr "Alkategóriák"
+
+#. module: idea
+#: view:idea.select:0
+msgid "Next"
+msgstr "Következő"
+
+#. module: idea
+#: view:idea.idea:0
+#: field:idea.idea,state:0
+#: view:report.vote:0
+#: field:report.vote,idea_state:0
+msgid "State"
+msgstr "Állapot"
+
+#. module: idea
+#: view:idea.idea:0
+#: selection:idea.idea,state:0
+msgid "New"
+msgstr ""
+
+#. module: idea
+#: selection:idea.idea,my_vote:0
+#: selection:idea.post.vote,vote:0
+#: selection:idea.vote,score:0
+#: selection:idea.vote.stat,score:0
+msgid "Good"
+msgstr "Jó"
+
+#. module: idea
+#: help:idea.idea,open_date:0
+msgid "Date when an idea opened"
+msgstr "Időpont, amikor az ötlet nyitott"
+
+#. module: idea
+#: view:idea.idea:0
+msgid "Idea Detail"
+msgstr "Ötlet részletei"
+
+#. module: idea
+#: help:idea.idea,state:0
+msgid ""
+"When the Idea is created the state is 'Draft'.\n"
+" It is             opened by the user, the state is 'Opened'.            \n"
+"If the idea is accepted, the state is 'Accepted'."
+msgstr ""
+"Amikor az Ötletet létrehozza, akkor az állapota 'Tervezet'.\n"
+" Amikor egy felhasználó megnyitja, állapota 'Nyitott' lesz.            \n"
+"Ha az ötlet el lett fogadva, akkor az állapot 'Elfogadott'-ra változik."
+
+#. module: idea
+#: view:idea.idea:0
+msgid "New Ideas"
+msgstr ""
+
+#. module: idea
+#: view:report.vote:0
+msgid "Idea Vote created last month"
+msgstr ""
+
+#. module: idea
+#: field:idea.category,visibility:0
+#: field:idea.idea,visibility:0
+msgid "Open Idea?"
+msgstr "Nyitott ötlet?"
+
+#. module: idea
+#: view:report.vote:0
+msgid "Idea Vote created in current month"
+msgstr ""
+
+#. module: idea
+#: selection:report.vote,month:0
+msgid "July"
+msgstr "Július"
+
+#. module: idea
+#: view:idea.idea:0
+#: selection:idea.idea,state:0
+#: view:report.vote:0
+#: selection:report.vote,idea_state:0
+msgid "Accepted"
+msgstr "Elfogadott"
+
+#. module: idea
+#: model:ir.actions.act_window,name:idea.action_idea_category
+#: model:ir.ui.menu,name:idea.menu_idea_category
+msgid "Categories"
+msgstr "Kategóriák"
+
+#. module: idea
+#: view:idea.category:0
+msgid "Parent Category"
+msgstr "Főkategória"
+
+#. module: idea
+#: field:idea.idea,open_date:0
+msgid "Open date"
+msgstr "Nyitás időpontja"
+
+#. module: idea
+#: field:idea.idea,vote_ids:0
+#: model:ir.actions.act_window,name:idea.action_idea_post_vote
+msgid "Vote"
+msgstr "Szavazat"
+
+#. module: idea
+#: model:ir.actions.act_window,name:idea.action_idea_vote_stat
+#: model:ir.ui.menu,name:idea.menu_idea_vote_stat
+msgid "Vote Statistics"
+msgstr "Szavazatok statisztikája"
+
+#. module: idea
+#: field:idea.idea,vote_limit:0
+msgid "Maximum Vote per User"
+msgstr "Maximum szavazat/felhasználó"
+
+#. module: idea
+#: view:idea.vote.stat:0
+msgid "vote_stat of ideas"
+msgstr ""
+
+#. module: idea
+#: field:idea.comment,content:0
+#: view:idea.idea:0
+#: view:idea.post.vote:0
+#: field:idea.vote,comment:0
+#: model:ir.model,name:idea.model_idea_comment
+msgid "Comment"
+msgstr "Megjegyzés"
+
+#. module: idea
+#: selection:report.vote,month:0
+msgid "September"
+msgstr "Szeptember"
+
+#. module: idea
+#: selection:report.vote,month:0
+msgid "December"
+msgstr "December"
+
+#. module: idea
+#: view:report.vote:0
+#: field:report.vote,month:0
+msgid "Month"
+msgstr "Hónap"
+
+#. module: idea
+#: view:idea.idea:0
+#: model:ir.actions.act_window,name:idea.action_idea_idea_categ_open
+#: model:ir.actions.act_window,name:idea.action_idea_idea_open
+msgid "Open Ideas"
+msgstr "Nyitott ötletek"
+
+#. module: idea
+#: view:idea.category:0
+#: field:idea.category,name:0
+#: view:idea.idea:0
+#: field:idea.idea,category_id:0
+#: view:report.vote:0
+#: field:report.vote,category_id:0
+msgid "Category"
+msgstr "Kategória"
+
+#. module: idea
+#: selection:idea.idea,my_vote:0
+#: selection:idea.post.vote,vote:0
+#: selection:idea.vote,score:0
+#: selection:idea.vote.stat,score:0
+msgid "Very Good"
+msgstr "Nagyon jó"
+
+#. module: idea
+#: selection:idea.idea,state:0
+#: selection:report.vote,idea_state:0
+msgid "Opened"
+msgstr "Nyitott"
+
+#. module: idea
+#: model:ir.actions.act_window,name:idea.action_idea_vote
+msgid "Idea's Votes"
+msgstr "Ötletre adott szavazatok"
+
+#. module: idea
+#: view:idea.idea:0
+msgid "By Idea Category"
+msgstr ""
+
+#. module: idea
+#: view:idea.idea:0
+msgid "New Idea"
+msgstr "Uj ötlet"
+
+#. module: idea
+#: model:ir.actions.act_window,name:idea.action_idea_category_tree
+#: model:ir.ui.menu,name:idea.menu_idea_category_tree
+msgid "Ideas by Categories"
+msgstr "Ötletek kategóriánként"
+
+#. module: idea
+#: selection:report.vote,idea_state:0
+msgid "Draft"
+msgstr "Tervezet"
+
+#. module: idea
+#: selection:report.vote,month:0
+msgid "August"
+msgstr "Augusztus"
+
+#. module: idea
+#: selection:idea.idea,my_vote:0
+#: selection:idea.post.vote,vote:0
+#: selection:idea.vote,score:0
+#: selection:idea.vote.stat,score:0
+msgid "Normal"
+msgstr "Normál"
+
+#. module: idea
+#: selection:report.vote,month:0
+msgid "June"
+msgstr "Június"
+
+#. module: idea
+#: field:report.vote,creater_id:0
+#: field:report.vote,user_id:0
+msgid "User Name"
+msgstr "Felhasználónév"
+
+#. module: idea
+#: model:ir.model,name:idea.model_idea_vote_stat
+msgid "Idea Votes Statistics"
+msgstr "Ötletre adott szavazatok statisztikája"
+
+#. module: idea
+#: field:idea.comment,user_id:0
+#: view:idea.vote:0
+#: field:idea.vote,user_id:0
+#: view:report.vote:0
+msgid "User"
+msgstr "Felhasználó"
+
+#. module: idea
+#: field:idea.vote,date:0
+msgid "Date"
+msgstr "Dátum"
+
+#. module: idea
+#: selection:report.vote,month:0
+msgid "November"
+msgstr "November"
+
+#. module: idea
+#: field:idea.idea,my_vote:0
+msgid "My Vote"
+msgstr "Szavazatom"
+
+#. module: idea
+#: selection:report.vote,month:0
+msgid "October"
+msgstr "Október"
+
+#. module: idea
+#: field:idea.comment,create_date:0
+#: field:idea.idea,created_date:0
+msgid "Creation date"
+msgstr "Létrehozás dátuma"
+
+#. module: idea
+#: selection:report.vote,month:0
+msgid "January"
+msgstr "Január"
+
+#. module: idea
+#: model:ir.model,name:idea.model_idea_idea
+msgid "idea.idea"
+msgstr "idea.idea"
+
+#. module: idea
+#: field:idea.category,summary:0
+msgid "Summary"
+msgstr "Összegzés"
+
+#. module: idea
+#: field:idea.idea,name:0
+msgid "Idea Summary"
+msgstr "Ötletösszegzés"
+
+#. module: idea
+#: view:idea.post.vote:0
+msgid "Post"
+msgstr "Hozzászólás"
+
+#. module: idea
+#: view:idea.idea:0
+msgid "History"
+msgstr "Előzmény"
+
+#. module: idea
+#: field:report.vote,date:0
+msgid "Date Order"
+msgstr "Rendelés dátuma"
+
+#. module: idea
+#: view:idea.idea:0
+#: field:idea.idea,user_id:0
+#: view:report.vote:0
+msgid "Creator"
+msgstr "Létrehozó"
+
+#. module: idea
+#: view:idea.post.vote:0
+#: model:ir.ui.menu,name:idea.menu_give_vote
+msgid "Give Vote"
+msgstr ""
+
+#. module: idea
+#: help:idea.idea,vote_limit:0
+msgid "Set to one if  you require only one Vote per user"
+msgstr ""
+
+#. module: idea
+#: view:idea.idea:0
+msgid "By Creators"
+msgstr ""
+
+#. module: idea
+#: view:idea.post.vote:0
+msgid "Cancel"
+msgstr "Mégse"
+
+#. module: idea
+#: view:idea.select:0
+msgid "Close"
+msgstr "Zárás"
+
+#. module: idea
+#: view:idea.idea:0
+msgid "Open"
+msgstr "Nyitott"
+
+#. module: idea
+#: view:idea.idea:0
+#: view:report.vote:0
+msgid "In Progress"
+msgstr ""
+
+#. module: idea
+#: view:report.vote:0
+msgid "Idea Vote Analysis"
+msgstr "Ötletre adott szavazatok elemzése"
+
+#. module: idea
+#: view:idea.idea:0
+#: model:ir.actions.act_window,name:idea.action_idea_idea
+#: model:ir.ui.menu,name:idea.menu_idea_idea
+#: model:ir.ui.menu,name:idea.menu_ideas
+#: model:ir.ui.menu,name:idea.menu_ideas1
+msgid "Ideas"
+msgstr "Ötletek"
+
+#. module: idea
+#: model:ir.model,name:idea.model_idea_post_vote
+msgid "Post vote"
+msgstr ""
+
+#. module: idea
+#: field:idea.vote.stat,score:0
+#: field:report.vote,score:0
+msgid "Score"
+msgstr "Pontszám"
+
+#. module: idea
+#: view:idea.idea:0
+msgid "Votes Statistics"
+msgstr ""
+
+#. module: idea
+#: view:idea.vote:0
+msgid "Comments:"
+msgstr "Hozzászólások:"
+
+#. module: idea
+#: view:idea.category:0
+#: field:idea.idea,description:0
+#: field:idea.post.vote,note:0
+msgid "Description"
+msgstr "Leírás"
+
+#. module: idea
+#: selection:report.vote,month:0
+msgid "May"
+msgstr "Május"
+
+#. module: idea
+#: selection:idea.idea,state:0
+#: view:report.vote:0
+msgid "Refused"
+msgstr "Elutasított"
+
+#. module: idea
+#: view:idea.vote:0
+msgid "Vote Date"
+msgstr "Szavazat időpontja"
+
+#. module: idea
+#: selection:report.vote,month:0
+msgid "February"
+msgstr "Február"
+
+#. module: idea
+#: field:idea.category,complete_name:0
+msgid "Name"
+msgstr ""
+
+#. module: idea
+#: field:idea.vote.stat,nbr:0
+msgid "Number of Votes"
+msgstr "Szavazatok száma"
+
+#. module: idea
+#: view:report.vote:0
+msgid "Month-1"
+msgstr ""
+
+#. module: idea
+#: selection:report.vote,month:0
+msgid "April"
+msgstr "Április"
+
+#. module: idea
+#: field:idea.idea,count_comments:0
+msgid "Count of comments"
+msgstr "Hozzászólások száma"
+
+#. module: idea
+#: field:idea.vote,score:0
+msgid "Vote Status"
+msgstr "Szavazat státusza"
+
+#. module: idea
+#: view:report.vote:0
+msgid "Idea Vote created in current year"
+msgstr ""
+
+#. module: idea
+#: field:idea.idea,vote_avg:0
+msgid "Average Score"
+msgstr "Átlagpontszám"
+
+#. module: idea
+#: constraint:idea.category:0
+msgid "Error ! You cannot create recursive categories."
+msgstr ""
+
+#. module: idea
+#: field:idea.comment,idea_id:0
+#: field:idea.select,idea_id:0
+#: view:idea.vote:0
+#: field:idea.vote,idea_id:0
+#: field:idea.vote.stat,idea_id:0
+#: model:ir.ui.menu,name:idea.menu_idea_reporting
+#: view:report.vote:0
+#: field:report.vote,idea_id:0
+msgid "Idea"
+msgstr "Ötlet"
+
+#. module: idea
+#: view:idea.idea:0
+msgid "Accept"
+msgstr "Elfogad"
+
+#. module: idea
+#: field:idea.post.vote,vote:0
+msgid "Post Vote"
+msgstr ""
+
+#. module: idea
+#: view:report.vote:0
+#: field:report.vote,year:0
+msgid "Year"
+msgstr "Év"
+
+#. module: idea
+#: code:addons/idea/idea.py:274
+#, python-format
+msgid "You can not vote on a Draft/Accepted/Cancelled ideas."
+msgstr ""
+
+#. module: idea
+#: view:idea.select:0
+msgid "Select Idea for Vote"
+msgstr ""
+
+#~ msgid "Idea Manager"
+#~ msgstr "Ötletmenedzser"
+
+#~ msgid "Your comment"
+#~ msgstr "Az Ön hozzászólásai"
+
+#~ msgid "   Month   "
+#~ msgstr "   Hónap   "
+
+#~ msgid "  Year  "
+#~ msgstr "  Év  "
+
+#~ msgid "Current"
+#~ msgstr "Jelenleg"
+
+#~ msgid "Vote date"
+#~ msgstr "Szavazat időpontja"
+
+#~ msgid "    Today    "
+#~ msgstr "    Ma    "
+
+#, python-format
+#~ msgid "Draft/Accepted/Cancelled ideas Could not be voted"
+#~ msgstr "Tervezet/Elfogadott/Törölt ötletre nem tud szavazatot leadni"
+
+#~ msgid "    Month-1    "
+#~ msgstr "    Előző hónap    "

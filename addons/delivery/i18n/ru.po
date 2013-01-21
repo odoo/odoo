@@ -1,20 +1,19 @@
-# Russian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* delivery
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-26 09:16+0000\n"
-"Last-Translator: Denis Karataev <dskarataev@gmail.com>\n"
-"Language-Team: Russian <ru@li.org>\n"
+"PO-Revision-Date: 2012-12-28 12:42+0000\n"
+"Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-27 05:53+0000\n"
+"X-Launchpad-Export-Date: 2012-12-29 05:01+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
 
 #. module: delivery
@@ -481,7 +480,7 @@ msgstr "<="
 #. module: delivery
 #: help:stock.picking,weight_uom_id:0
 msgid "Unit of measurement for Weight"
-msgstr ""
+msgstr "Единица измерения веса"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -557,7 +556,7 @@ msgstr "Перевозчик"
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 msgid "Delivery Methods"
-msgstr ""
+msgstr "Способы доставки"
 
 #. module: delivery
 #: code:addons/delivery/sale.py:57
@@ -596,9 +595,242 @@ msgstr "Cостояния"
 #: help:stock.move,weight_uom_id:0
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
-msgstr ""
+msgstr "Единица измерения (единица измерения) это единица измерения веса"
 
 #. module: delivery
 #: field:delivery.grid.line,price_type:0
 msgid "Price Type"
 msgstr "Тип цены"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Название объекта должно начинаться с x_  и не должно содержать специальных "
+#~ "символов !"
+
+#~ msgid "Sales & Purchases"
+#~ msgstr "Продажи и закупки"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Неправильный XML для просмотра архитектуры!"
+
+#~ msgid "Generate Draft Invoices On Receptions"
+#~ msgstr "Генерировать черновики счетов при получении"
+
+#~ msgid "="
+#~ msgstr "="
+
+#~ msgid "Notes"
+#~ msgstr "Примечания"
+
+#~ msgid "Carrier Partner"
+#~ msgstr "Партнер по доставке"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Ошибка: Неправильный штрих-код"
+
+#~ msgid "Cancel"
+#~ msgstr "Отмена"
+
+#~ msgid "Delivery method"
+#~ msgstr "Метод доставки"
+
+#~ msgid "The VAT doesn't seem to be correct."
+#~ msgstr "НДС выглядит неправильно"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr ""
+#~ "Ошибка. Единицы продажи и единицы измерения должны принадлежать к разным "
+#~ "категориям."
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr "Ошибка! Вы не можете создать рекурсивных связанных участников."
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Недопустимое имя модели в определении действия."
+
+#~ msgid "Delivery line of grid"
+#~ msgstr "Разделяемая строка поставки"
+
+#~ msgid "Carrier and delivery grids"
+#~ msgstr "Разделение поставки и перевозчика"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Ошибка. ЕИМ по умолчанию и закупочная ЕИМ должны иметь одинаковую категорию."
+
+#~ msgid "ID"
+#~ msgstr "Идентификатор"
+
+#~ msgid "Add Delivery Costs"
+#~ msgstr "Добавить стоимость доставки"
+
+#~ msgid "Packing to be invoiced"
+#~ msgstr "Фактурирование по упаковке"
+
+#~ msgid "Carriers and deliveries"
+#~ msgstr "Перевозчики и поставки"
+
+#~ msgid ""
+#~ "Complete this field if you plan to invoice the shipping based on packing."
+#~ msgstr ""
+#~ "Заполните это поле, если вы планируете счет доставки основанный на упаковке."
+
+#~ msgid ""
+#~ "Allows you to add delivery methods in sales orders and packing. You can "
+#~ "define your own carrier and delivery grids for prices. When creating "
+#~ "invoices from picking, Open ERP is able to add and compute the shipping line."
+#~ msgstr ""
+#~ "Позволяет добавить методы доставки в заказы на продажу и упаковку. Вы можете "
+#~ "определить своего собственного перевозчика и выполнить разделение поставка "
+#~ "для определения стоимости. При создании счета-фактуры на основании упаковки, "
+#~ "Open ERP имеет возможность добавлять и вычислить строки доставки."
+
+#~ msgid "This delivery method will be used when invoicing from packing."
+#~ msgstr ""
+#~ "Этот метод доставки должен использоваться при фактурировании на основании "
+#~ "данных упаковки."
+
+#, python-format
+#~ msgid "No price available !"
+#~ msgstr "Нет каталога !"
+
+#~ msgid "_Cancel"
+#~ msgstr "_Отмена"
+
+#~ msgid "Make Delievery"
+#~ msgstr "Сделать доставку"
+
+#, python-format
+#~ msgid "Warning"
+#~ msgstr "Внимание"
+
+#~ msgid "Weights"
+#~ msgstr "Вес"
+
+#~ msgid "_Apply"
+#~ msgstr "_Применить"
+
+#~ msgid "Create Deliveries"
+#~ msgstr "Создать доставки"
+
+#~ msgid "Delivery Order"
+#~ msgstr "Заказ на доставку"
+
+#~ msgid "You must assign a production lot for this product"
+#~ msgstr "Вы должны назначить партию изделий для данной ТМЦ"
+
+#~ msgid "Order Reference must be unique !"
+#~ msgstr "Ссылка на заказ должна быть уникальной !"
+
+#~ msgid ""
+#~ "The delivery price list allows you to compute the cost and sales price of "
+#~ "the delivery according to the weight of the products and other criteria. You "
+#~ "can define several price lists for one delivery method, per country or a "
+#~ "zone in a specific country defined by a postal code range."
+#~ msgstr ""
+#~ "Прайс лист на доставку позволяет вычислить стоимость и продажную цену "
+#~ "доставки в зависимости от веса продукции и других критериев. Вы можете "
+#~ "задать несколько прайс листов на один способ доставки, по странам или зонам "
+#~ "в конкретной стране, определяемым по диапазонам почтовых индексов ."
+
+#~ msgid "Delivery Costs"
+#~ msgstr "Стоимость доставки"
+
+#~ msgid ""
+#~ "Create and manage the delivery methods you need for your sales activities. "
+#~ "Each delivery method can be assigned to a price list which computes the "
+#~ "price of the delivery according to the products sold or delivered."
+#~ msgstr ""
+#~ "Создание и управление способами доставки, необходимыми для вашей торговой "
+#~ "деятельности. Каждый способ доставки может быть отнесены к прайс-листу, "
+#~ "который вычисляет цену доставки в соответствии с реализованной или "
+#~ "доставленной продукцией."
+
+#, python-format
+#~ msgid "No line matched this order in the choosed delivery grids !"
+#~ msgstr ""
+#~ "Ни одна строка не совпала с этим порядком в выбранных доставочных сетках!"
+
+#~ msgid ""
+#~ "Allows you to add delivery methods in sale orders and picking.\n"
+#~ "     You can define your own carrier and delivery grids for prices.\n"
+#~ "     When creating invoices from picking, OpenERP is able to add and compute "
+#~ "the shipping line.\n"
+#~ "\n"
+#~ "     "
+#~ msgstr ""
+#~ "Позволяет добавить методы доставки в заказы на продажу и комплектацию.\n"
+#~ "     Можно определить собственные сетки цен доставки и перевозки.\n"
+#~ "     При создании счетов по комплектации, OpenERP может добавить и вычислить "
+#~ "строку доставки.\n"
+#~ "\n"
+#~ "     "
+
+#~ msgid "Define Delivery Methods"
+#~ msgstr "Определение способов доставки"
+
+#~ msgid "Setup Your Picking Policy"
+#~ msgstr "Настройка политики комплектования"
+
+#~ msgid "Picking Policy"
+#~ msgstr "Политика комплектования"
+
+#~ msgid "Reference must be unique per Company!"
+#~ msgstr "Ссылка должна быть уникальна для каждой компании!"
+
+#~ msgid "You can not move products from or to a location of the type view."
+#~ msgstr "Нельзя переместить ТМЦ в/из место хранения типа вид."
+
+#~ msgid "Choose Your Default Picking Policy"
+#~ msgstr "Выберите политику комплектования по умолчанию"
+
+#~ msgid "Order Reference must be unique per Company!"
+#~ msgstr "Ссылка на заказ должны быть уникальной для каждой компании!"
+
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr "Ошибка! Вы не можете создавать рекурсивные ссылки на участников."
+
+#~ msgid "Apply"
+#~ msgstr "Применить"
+
+#~ msgid "Deliveries Properties"
+#~ msgstr "Свойства доставок"
+
+#, python-format
+#~ msgid "No line matched this product or order in the choosed delivery grid."
+#~ msgstr ""
+#~ "Нет строки подходящей этому товару или заказу в выбранной доставочной сетке!"
+
+#~ msgid ""
+#~ "Define your delivery methods and their pricing. The delivery costs can be "
+#~ "added on the sale order form or in the invoice, based on the delivery orders."
+#~ msgstr ""
+#~ "Определите ваши способы доставки и их расценки. Стоимости доставки могут "
+#~ "быть добавлены в форме ввода заказа продажи или в счёте, основанном на "
+#~ "заказах доставки."
+
+#~ msgid "delivery.define.delivery.steps.wizard"
+#~ msgstr "delivery.define.delivery.steps.wizard"
+
+#~ msgid "You try to assign a lot which is not from the same product"
+#~ msgstr "Вы пытаетесь назначить партию состоящую из другой продукции"
+
+#~ msgid "Free If More Than"
+#~ msgstr "Бесплатно , если больше чем"
+
+#~ msgid ""
+#~ "Define the delivery methods you are using and their pricing in order to "
+#~ "reinvoice the delivery costs when you are doing invoicing based on delivery "
+#~ "orders"
+#~ msgstr ""
+#~ "Определите способы доставки используемые вами и их расценки в порядке "
+#~ "пересчёта затрат доставки, когда вы делаете выставление счёта основанное на "
+#~ "заказах доставки"
+
+#~ msgid "Deliver each product when available"
+#~ msgstr "Доставка каждого товара по готовности."
+
+#~ msgid "Deliver all products at once"
+#~ msgstr "Доставка всех товаров за раз"

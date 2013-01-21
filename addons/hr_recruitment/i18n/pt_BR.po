@@ -1,20 +1,21 @@
 # Brazilian Portuguese translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2012-12-24 17:10+0000\n"
+"Last-Translator: Fábio Martinelli - http://zupy.com.br "
+"<webmaster@guaru.net>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 07:16+0000\n"
+"X-Launchpad-Export-Date: 2012-12-25 04:48+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr_recruitment
@@ -35,17 +36,17 @@ msgstr "Pré-requisitos"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Application Summary"
-msgstr ""
+msgstr "Resumo da Aplicação"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Start Interview"
-msgstr ""
+msgstr "Iniciar Entrevista"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Mobile:"
-msgstr ""
+msgstr "Celular:"
 
 #. module: hr_recruitment
 #: help:hr.recruitment.stage,fold:0
@@ -53,6 +54,8 @@ msgid ""
 "This stage is not visible, for example in status bar or kanban view, when "
 "there are no records in that stage to display."
 msgstr ""
+"Este estágio não é visível, por exemplo na barra de situação ou visão "
+"kanban, quando não há registros definidos no mesmo para visualizar."
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_graduate
@@ -101,7 +104,7 @@ msgstr "Trabalhos Pendentes"
 #: view:hr.applicant:0
 #: field:hr.applicant,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Mensagens não lidas"
 
 #. module: hr_recruitment
 #: field:hr.applicant,company_id:0
@@ -154,12 +157,27 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"               Clique para adicionar um novo candidato a emprego.\n"
+"              </p><p>\n"
+"O OpenERP te ajuda no acompanhamento dos candidatos no processo de\n"
+"seleção e acompanhar todas as operações: reuniões, entrevistas, etc\n"
+"              </p><p>\n"
+"Se você configurar o servidor de e-mail, os candidatos e seus CV em anexo\n"
+"                são criados automaticamente quando um email é enviado para\n"
+"                 vagas@suaempresa.com.br. Se você instalar o módulo de "
+"gerenciamento de\n"
+"                documentos, todos os currículos são indexados "
+"automaticamente, de modo que\n"
+"                 você pode pesquisar o seu conteúdo facilmente.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.crm_case_categ0_act_job
 #: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ0_act_job
 msgid "Applications"
-msgstr ""
+msgstr "Aplicações"
 
 #. module: hr_recruitment
 #: field:hr.applicant,day_open:0
@@ -169,12 +187,12 @@ msgstr "Dias para Abrir"
 #. module: hr_recruitment
 #: field:hr.applicant,emp_id:0
 msgid "employee"
-msgstr ""
+msgstr "funcionário"
 
 #. module: hr_recruitment
 #: field:hr.config.settings,fetchmail_applicants:0
 msgid "Create applicants from an incoming email account"
-msgstr ""
+msgstr "Criar candidatos a partir de uma conta de email de entrada"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -186,7 +204,7 @@ msgstr "Dia"
 #: view:hr.recruitment.partner.create:0
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_partner_create
 msgid "Create Contact"
-msgstr ""
+msgstr "Criar contato"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -218,7 +236,7 @@ msgstr "Próximas Ações"
 #: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:56
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Erro!"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bac5
@@ -237,11 +255,13 @@ msgid ""
 "Stages of the recruitment process may be different per department. If this "
 "stage is common to all departments, keep this field empty."
 msgstr ""
+"Etapas do processo de recrutamento pode ser diferente por departamento. Se "
+"esta fase, é comum a todos os departamentos, deixe este campo em branco."
 
 #. module: hr_recruitment
 #: help:hr.applicant,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Se marcado novas mensagens solicitarão sua atenção."
 
 #. module: hr_recruitment
 #: field:hr.applicant,color:0
@@ -251,7 +271,7 @@ msgstr "Índice de cores"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.act_hr_applicant_to_meeting
 msgid "Meetings"
-msgstr ""
+msgstr "Reuniões"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -290,6 +310,9 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Contém o resumo da conversação (número de mensagens, ...). Este resumo é "
+"gerado diretamente em formato HTML para que possa ser inserido nas visões "
+"kanban."
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/hr_recruitment.py:435
@@ -344,7 +367,7 @@ msgstr "Estatísticas de Recrutamentos"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Print interview report"
-msgstr ""
+msgstr "Imprimir relatório da entrevista"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -365,7 +388,7 @@ msgstr "Origem"
 #. module: hr_recruitment
 #: field:hr.applicant,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Seguidores"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.source,name:hr_recruitment.source_monster
@@ -375,7 +398,7 @@ msgstr "Sites de Emprego"
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_hired
 msgid "Applicant Hired"
-msgstr ""
+msgstr "Candidato Contratado"
 
 #. module: hr_recruitment
 #: field:hr.applicant,email_from:0
@@ -395,6 +418,15 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Clique para adicionar uma nova etapa no processo de seleção.\n"
+"          </p><p>\n"
+"           Definir aqui as suas etapas do processo de seleção, por exemplo:\n"
+"            qualificação, primeira entrevista, segunda entrevista, "
+"recusado,\n"
+"             contratado.\n"
+"          </p>\n"
+"        "
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -412,6 +444,8 @@ msgid ""
 "Email alias for this job position. New emails will automatically create new "
 "applicants for this job position."
 msgstr ""
+"Apelido de e-mail para este cargo. Novos e-mails criarão novos candidatos "
+"para este cargo automaticamente."
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
@@ -534,6 +568,10 @@ msgid ""
 "the case needs to be reviewed then the status is                       set "
 "to 'Pending'."
 msgstr ""
+"A situação é definida como 'Provisória' quando o caso é criado. Se o caso "
+"está em progresso, a situação muda para 'Aberto'. Quando o caso termina, a "
+"situação é definida como 'Concluído'. Se o caso precisa ser revisado, a "
+"situação é definida como 'Pendente'."
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -565,12 +603,12 @@ msgstr "Em andamento"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Hire & Create Employee"
-msgstr ""
+msgstr "Contratar & Criar Funcionário"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_hired
 msgid "Applicant hired"
-msgstr ""
+msgstr "Candidato contratado"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -601,17 +639,17 @@ msgstr "Dezembro"
 #: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:39
 #, python-format
 msgid "A contact is already defined on this job request."
-msgstr ""
+msgstr "Um contato já está defnido para esta vaga de emprego."
 
 #. module: hr_recruitment
 #: field:hr.applicant,categ_ids:0
 msgid "Tags"
-msgstr ""
+msgstr "Marcadores"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant_category
 msgid "Category of applicant"
-msgstr ""
+msgstr "Categoria de candidato"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -622,7 +660,7 @@ msgstr "Mês"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Answer related job question"
-msgstr ""
+msgstr "Responda a pergunta relacionada com o trabalho"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
@@ -649,12 +687,12 @@ msgstr "Assunto"
 #: view:hired.employee:0
 #: view:hr.recruitment.partner.create:0
 msgid "or"
-msgstr ""
+msgstr "ou"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_refused
 msgid "Applicant Refused"
-msgstr ""
+msgstr "Candidato Recusado"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -758,13 +796,13 @@ msgstr "Status"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Schedule interview with this applicant"
-msgstr ""
+msgstr "Agendar entrevista com este candidato"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/hr_recruitment.py:397
 #, python-format
 msgid "Applicant <b>created</b>"
-msgstr ""
+msgstr "Candidato <b>criado</b>"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -794,7 +832,7 @@ msgstr "Dias para concluir"
 #. module: hr_recruitment
 #: field:hr.applicant,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "É um Seguidor"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.report,user_id:0
@@ -816,7 +854,7 @@ msgstr "Ativo"
 #: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,nbr:0
 msgid "# of Applications"
-msgstr ""
+msgstr "# de Candidatos"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
@@ -830,6 +868,14 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"             Clique para adicionar uma nova etapa no processo de seleção.\n"
+"           </p><p>\n"
+"             Não se esqueça de especificar o departamento se o seu processo "
+"de seleção\n"
+"             é diferente de acordo com o cargo.\n"
+"           </ p>\n"
+"        "
 
 #. module: hr_recruitment
 #: field:hr.applicant,response:0
@@ -844,7 +890,7 @@ msgstr "Outubro"
 #. module: hr_recruitment
 #: field:hr.config.settings,module_document_ftp:0
 msgid "Allow the automatic indexation of resumes"
-msgstr ""
+msgstr "Permite a indexação automática de currículos"
 
 #. module: hr_recruitment
 #: field:hr.applicant,salary_proposed_extra:0
@@ -860,7 +906,7 @@ msgstr "Janeiro"
 #: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:56
 #, python-format
 msgid "A contact is already existing with the same name."
-msgstr ""
+msgstr "Um contato com o mesmo nome já existe."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_form_installer
@@ -870,7 +916,7 @@ msgstr "Reveja os Estágios de Recrutamento"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Contact:"
-msgstr ""
+msgstr "Contato:"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -896,7 +942,7 @@ msgstr "Gostaria de criar um funcionário?"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Degree:"
-msgstr ""
+msgstr "Grau:"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -917,7 +963,7 @@ msgstr ""
 #. module: hr_recruitment
 #: view:hr.config.settings:0
 msgid "Configure"
-msgstr ""
+msgstr "Configurar"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
@@ -950,6 +996,7 @@ msgstr "Cancelar"
 #: view:hr.recruitment.partner.create:0
 msgid "Are you sure you want to create a contact based on this job request ?"
 msgstr ""
+"Tem certeza de que deseja criar um contato com base neste pedido de emprego?"
 
 #. module: hr_recruitment
 #: help:hr.config.settings,fetchmail_applicants:0
@@ -958,6 +1005,9 @@ msgid ""
 "(jobs@mycompany.com),\n"
 "                and create automatically application documents in the system."
 msgstr ""
+"Permitir que os candidatos enviem seus pedidos de emprego para um endereço "
+"de e-mail (vagas@minhaempresa.com.br),\n"
+"                 e criar automaticamente documentos de candidatos do sistema."
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -980,7 +1030,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_stage_changed
 msgid "Stage changed"
-msgstr ""
+msgstr "Estágio alterado"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -1009,7 +1059,7 @@ msgstr "LinkedIn"
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_new_applicant
 msgid "New Applicant"
-msgstr ""
+msgstr "Novo Candidato"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_stage
@@ -1044,7 +1094,7 @@ msgstr "Nome da Fonte"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Day(s)"
-msgstr ""
+msgstr "Dia(s)"
 
 #. module: hr_recruitment
 #: field:hr.applicant,description:0
@@ -1054,7 +1104,7 @@ msgstr "Descrição"
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_stage_changed
 msgid "Stage Changed"
-msgstr ""
+msgstr "Estágio Alterado"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -1074,7 +1124,7 @@ msgstr "Boca a Boca"
 #. module: hr_recruitment
 #: field:hr.recruitment.stage,fold:0
 msgid "Hide in views if empty"
-msgstr ""
+msgstr "Esconder se visão estiver vazia"
 
 #. module: hr_recruitment
 #: help:hr.config.settings,module_document_ftp:0
@@ -1084,6 +1134,11 @@ msgid ""
 "knowledge management  module in order to allow you to search using specific "
 "keywords through  the content of all documents (PDF, .DOCx...)"
 msgstr ""
+"Gerenciar seu CV e carta de motivação relacionada a todos os candidatos.\n"
+"                 Isso instala o módulo document_ftp. Isto irá instalar o "
+"módulo de gestão do conhecimento, para permitir que você pesquise usando "
+"palavras-chave específicas, através do conteúdo de todos os documentos "
+"(PDF,. DOCX ...)"
 
 #. module: hr_recruitment
 #: selection:hr.applicant,state:0
@@ -1104,12 +1159,12 @@ msgstr "Contratado"
 #. module: hr_recruitment
 #: field:hr.applicant,reference:0
 msgid "Referred By"
-msgstr ""
+msgstr "Indicado por"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Departement:"
-msgstr ""
+msgstr "Departamento:"
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
@@ -1125,7 +1180,7 @@ msgstr "Grau de Recrutamento"
 #. module: hr_recruitment
 #: field:hr.recruitment.report,salary_prop_avg:0
 msgid "Avg. Proposed Salary"
-msgstr ""
+msgstr "Média Salarial"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -1158,12 +1213,12 @@ msgstr "Novembro"
 #. module: hr_recruitment
 #: field:hr.recruitment.report,salary_exp_avg:0
 msgid "Avg. Expected Salary"
-msgstr ""
+msgstr "Média Salarial Esperada"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
 msgid "Avg Expected Salary"
-msgstr ""
+msgstr "Média Salarial Esperada"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_partner_create
@@ -1178,7 +1233,7 @@ msgstr "Essas pessoas receberão e-mail."
 #. module: hr_recruitment
 #: field:hr.job,alias_id:0
 msgid "Alias"
-msgstr ""
+msgstr "Apelido"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -1188,22 +1243,22 @@ msgstr "Recrutamento Pendente"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Contract"
-msgstr ""
+msgstr "Contrato"
 
 #. module: hr_recruitment
 #: field:hr.applicant,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Resumo"
 
 #. module: hr_recruitment
 #: help:hr.applicant,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Histórico de mensagens e comunicação"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_refused
 msgid "Applicant refused"
-msgstr ""
+msgstr "Candidato recusado"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.stage,department_id:0
@@ -1234,7 +1289,7 @@ msgstr "Recrutamentos sem assinar"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_config_settings
 msgid "hr.config.settings"
-msgstr ""
+msgstr "hr.config.settings"
 
 #. module: hr_recruitment
 #: help:hr.recruitment.stage,state:0
@@ -1244,6 +1299,10 @@ msgid ""
 "related to the status 'Close', when your document reach this stage, it will "
 "be automatically closed."
 msgstr ""
+"A situação relacionada com o estágio. O estado do documento irá mudar "
+"automaticamente de acordo com a fase selecionada. Exemplo, uma etapa está "
+"relacionada a situação \"Fechada\", quando o documento chegar a esta fase, "
+"será automaticamente fechado."
 
 #. module: hr_recruitment
 #: help:hr.applicant,salary_proposed_extra:0
@@ -1263,9 +1322,251 @@ msgstr "Aberto"
 #. module: hr_recruitment
 #: view:board.board:0
 msgid "Applications to be Processed"
-msgstr ""
+msgstr "Candidatos a serem processados"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Schedule Interview"
-msgstr ""
+msgstr "Agendar Entrevista"
+
+#~ msgid "# of Cases"
+#~ msgstr "Nº de Casos"
+
+#~ msgid "Add Internal Note"
+#~ msgstr "Adicionar Anotação Interna"
+
+#~ msgid "Create Partner"
+#~ msgstr "Criar Parceiro"
+
+#~ msgid "Goals"
+#~ msgstr "Alvos"
+
+#~ msgid "Contract Data"
+#~ msgstr "Dados de contrato"
+
+#~ msgid "Partner Contact Name"
+#~ msgstr "Nome de Contato do Parceiro"
+
+#~ msgid "Notes"
+#~ msgstr "Notas"
+
+#~ msgid "Junior Developer"
+#~ msgstr "Desenvolvedor júnior"
+
+#~ msgid "Initial Jobs Demand"
+#~ msgstr "Demanda inicial de trabalho"
+
+#~ msgid "Partner Contact"
+#~ msgstr "Contato do Parceiro"
+
+#~ msgid "Reference"
+#~ msgstr "Referência"
+
+#, python-format
+#~ msgid "Phone Call"
+#~ msgstr "Chamada Telefônica"
+
+#~ msgid "Previous"
+#~ msgstr "Anterior"
+
+#~ msgid "Availability (Days)"
+#~ msgstr "Disponibilidade(Dias)"
+
+#, python-format
+#~ msgid "A partner is already defined on this job request."
+#~ msgstr "Já está definido um parceiro para esta oferta de trabalho."
+
+#~ msgid "Send New Email"
+#~ msgstr "Enviar Novo Email"
+
+#~ msgid "Next"
+#~ msgstr "Próximo"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Erro!"
+
+#~ msgid ""
+#~ "Define here your stages of the recruitment process, for example: "
+#~ "qualification call, first interview, second interview, refused, hired."
+#~ msgstr ""
+#~ "Defina aqui seus estágios do processo de recrutamento, por exemplo: chamada "
+#~ "de qualificação, primeira entrevista, segunda entrevista, recusado, "
+#~ "contratado."
+
+#~ msgid "Planned Date"
+#~ msgstr "Data Planejada"
+
+#~ msgid "Qualification"
+#~ msgstr "Qualificação"
+
+#~ msgid "Dates"
+#~ msgstr "Datas"
+
+#~ msgid " > Bac +5"
+#~ msgstr " > Bac +5"
+
+#~ msgid "    Month-1    "
+#~ msgstr "    Mês-1    "
+
+#~ msgid "History Information"
+#~ msgstr "Informação Histórica"
+
+#~ msgid "Job Info"
+#~ msgstr "Informações do trabalho"
+
+#~ msgid "HR - Recruitement"
+#~ msgstr "RH - Recrutamento"
+
+#~ msgid "Salesman"
+#~ msgstr "Vendedor"
+
+#~ msgid "# Cases"
+#~ msgstr "Nro. de Casos"
+
+#~ msgid "Category"
+#~ msgstr "Categoria"
+
+#~ msgid "Reset to New"
+#~ msgstr "Reiniciar como Novo"
+
+#~ msgid "Answer"
+#~ msgstr "Resposta"
+
+#~ msgid "Communication & History"
+#~ msgstr "Comunicação & Histórico"
+
+#~ msgid "Global CC"
+#~ msgstr "CC Global"
+
+#~ msgid "Meeting"
+#~ msgstr "Reunião"
+
+#~ msgid "Refused by Company"
+#~ msgstr "Recusado pela empresa"
+
+#~ msgid "Licenced"
+#~ msgstr "Licenciado"
+
+#~ msgid "History"
+#~ msgstr "Histórico"
+
+#~ msgid "Are you sure you want to create a partner based on this job request ?"
+#~ msgstr ""
+#~ "Tem certeza que você quer criar um parceiro baseado nesta oferta de trabalho?"
+
+#~ msgid "Phone Call Description"
+#~ msgstr "Descrição da Chamada Telefônica"
+
+#~ msgid "Avg Salary Proposed"
+#~ msgstr "Proposta Salarial Média"
+
+#~ msgid "Schedule Phone Call"
+#~ msgstr "Agendar chamada telefônica"
+
+#, python-format
+#~ msgid "A partner is already existing with the same name."
+#~ msgstr "Já existe um parceiro com o mesmo nome."
+
+#~ msgid "Applicant Categories"
+#~ msgstr "Categorias de Candidato"
+
+#~ msgid "Attachments"
+#~ msgstr "Anexos"
+
+#~ msgid "Current"
+#~ msgstr "Atual"
+
+#~ msgid "Details"
+#~ msgstr "Detalhes"
+
+#~ msgid "Reply"
+#~ msgstr "Responder"
+
+#, python-format
+#~ msgid "Applicant '%s' is being hired."
+#~ msgstr "O Candidato '%s' está sendo contratado."
+
+#~ msgid "Refused by Employee"
+#~ msgstr "Recusado pelo empregado"
+
+#~ msgid "Avg. Delay to Open"
+#~ msgstr "Atraso Médio de Abertura"
+
+#, python-format
+#~ msgid "The job request '%s' has been set 'in progress'."
+#~ msgstr "A oferta de trabalho '%s' foi marcada como 'em andamento'."
+
+#~ msgid "Assign To"
+#~ msgstr "Atribuir para"
+
+#~ msgid "HR Department"
+#~ msgstr "Departamento de RH"
+
+#~ msgid "State"
+#~ msgstr "Status"
+
+#~ msgid "Change Color"
+#~ msgstr "Alterar Cor"
+
+#~ msgid ""
+#~ "From this menu you can track applicants in the recruitment process and "
+#~ "manage all operations: meetings, interviews, phone calls, etc. If you setup "
+#~ "the email gateway, applicants and their attached CV are created "
+#~ "automatically when an email is sent to jobs@yourcompany.com. If you install "
+#~ "the document management modules, all documents (CV and motivation letters) "
+#~ "are indexed automatically, so that you can easily search through their "
+#~ "content."
+#~ msgstr ""
+#~ "A partir desse menu, você pode rastrear os requerentes no processo de "
+#~ "recrutamento e gerenciar todas as operações: reuniões, entrevistas, chamadas "
+#~ "telefônicas, etc. Se você configurar o gateway de e-mail, os requerentes e "
+#~ "seus CV são criados automaticamentes quando um e-mail é enviado para "
+#~ "empregos@suaempresa.com.br. Se você instalar o módulo de gestão de "
+#~ "documentos, todos os documentos (currículos e cartas de apresentação) são "
+#~ "indexados automaticamente, fazendo com que você possa facilmente buscar seus "
+#~ "conteúdos."
+
+#~ msgid "Edit"
+#~ msgstr "Editar"
+
+#~ msgid "Refered By"
+#~ msgstr "Referido Por"
+
+#~ msgid "Hire"
+#~ msgstr "Contratar"
+
+#~ msgid ""
+#~ " Check if the following stages are matching your recruitment process. Don't "
+#~ "forget to specify the department if your recruitment process is different "
+#~ "according to the job position."
+#~ msgstr ""
+#~ " Verifique se as seguintes etapas estão combinando com o seu processo de "
+#~ "recrutamento. Não se esqueça de especificar o serviço se o seu processo de "
+#~ "recrutamento é diferente de acordo com o cargo."
+
+#~ msgid "Recruitment performed in current month"
+#~ msgstr "Recrutamento realizada no mês atual"
+
+#~ msgid "Recruitment performed in current year"
+#~ msgstr "Recrutamento realizados no ano corrente"
+
+#~ msgid "Recruitment during last month"
+#~ msgstr "Recrutamento durante o último mês"
+
+#~ msgid "The name of the job position must be unique per company!"
+#~ msgstr "O nome do posto de trabalho deve ser único por empresa!"
+
+#~ msgid "Job Positions"
+#~ msgstr "Posições de trabalho"
+
+#, python-format
+#~ msgid "Changed Stage to: %s"
+#~ msgstr "Mudar o Estágio para: %s"
+
+#~ msgid ""
+#~ "Stages of the recruitment process may be different per department. If this "
+#~ "stage is common to all departments, keep tempy this field."
+#~ msgstr ""
+#~ "Etapas do processo de recrutamento pode ser diferente por departamento. Se "
+#~ "nesta fase, é comum a todos os departamentos, mantenha este campo vazio."

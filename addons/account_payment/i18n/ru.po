@@ -1,20 +1,19 @@
-# Russian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* account_payment
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Russian <ru@li.org>\n"
+"PO-Revision-Date: 2013-01-01 10:35+0000\n"
+"Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 07:04+0000\n"
+"X-Launchpad-Export-Date: 2013-01-02 04:37+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
 
 #. module: account_payment
@@ -82,7 +81,7 @@ msgstr "Компания"
 #. module: account_payment
 #: model:res.groups,name:account_payment.group_account_payment
 msgid "Accounting / Payments"
-msgstr ""
+msgstr "Учет / платежи"
 
 #. module: account_payment
 #: selection:payment.line,state:0
@@ -124,13 +123,15 @@ msgid ""
 "You cannot cancel an invoice which has already been imported in a payment "
 "order. Remove it from the following payment order : %s."
 msgstr ""
+"Нельзя отменить счет который уже импортирован в платежное распоряжение. "
+"Удалите его из платежного распоряжения: %s"
 
 #. module: account_payment
 #: code:addons/account_payment/account_invoice.py:43
 #: code:addons/account_payment/account_move_line.py:110
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Ошибка!"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -220,7 +221,7 @@ msgstr "Структурировано"
 #. module: account_payment
 #: view:account.bank.statement:0
 msgid "Import Payment Lines"
-msgstr ""
+msgstr "Импорт платежей"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -262,7 +263,7 @@ msgstr ""
 #. module: account_payment
 #: field:payment.order,date_created:0
 msgid "Creation Date"
-msgstr ""
+msgstr "Дата создания"
 
 #. module: account_payment
 #: help:payment.mode,journal:0
@@ -368,7 +369,7 @@ msgstr "Заполнение платежного поручения"
 #: code:addons/account_payment/account_move_line.py:110
 #, python-format
 msgid "There is no partner defined on the entry line."
-msgstr ""
+msgstr "Нео пределен партнер в проводке."
 
 #. module: account_payment
 #: help:payment.mode,name:0
@@ -400,7 +401,7 @@ msgstr "Черновик"
 #: view:payment.order:0
 #: field:payment.order,state:0
 msgid "Status"
-msgstr ""
+msgstr "Статус"
 
 #. module: account_payment
 #: help:payment.line,communication2:0
@@ -447,7 +448,7 @@ msgstr "Искать"
 #. module: account_payment
 #: field:payment.order,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "Ответственный"
 
 #. module: account_payment
 #: field:payment.line,date:0
@@ -462,7 +463,7 @@ msgstr "Всего:"
 #. module: account_payment
 #: field:payment.order,date_done:0
 msgid "Execution Date"
-msgstr ""
+msgstr "Дата выполнения"
 
 #. module: account_payment
 #: view:account.payment.populate.statement:0
@@ -542,7 +543,7 @@ msgstr "Отменить"
 #. module: account_payment
 #: field:payment.line,bank_id:0
 msgid "Destination Bank Account"
-msgstr ""
+msgstr "Банковский счет назначения"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -580,7 +581,7 @@ msgstr "Назначение 2"
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Запланированная дата"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
@@ -675,16 +676,179 @@ msgstr "Оплатить"
 #. module: account_payment
 #: field:payment.order,date_prefered:0
 msgid "Preferred Date"
-msgstr ""
+msgstr "Предпочтительная дата"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
 #: view:account.payment.populate.statement:0
 #: view:payment.order.create:0
 msgid "or"
-msgstr ""
+msgstr "или"
 
 #. module: account_payment
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
 msgstr "Банковский счет для способа оплаты"
+
+#~ msgid "Scheduled date if fixed"
+#~ msgstr "Дата по плану, если задана"
+
+#~ msgid "Account Entry Line"
+#~ msgstr "Проводка по счету"
+
+#~ msgid "Execution date:"
+#~ msgstr "Дата исполнения:"
+
+#~ msgid "Suitable bank types"
+#~ msgstr "Пригодные типы банков"
+
+#~ msgid "State"
+#~ msgstr "Состояние"
+
+#~ msgid "Total debit"
+#~ msgstr "Всего по дебету"
+
+#~ msgid "Execution date"
+#~ msgstr "Дата исполнения"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Неправильный XML для просмотра архитектуры!"
+
+#~ msgid "_Cancel"
+#~ msgstr "Отмена"
+
+#~ msgid "Total credit"
+#~ msgstr "Всего кредит"
+
+#~ msgid "Populate payment"
+#~ msgstr "Заполнить платеж"
+
+#~ msgid "User"
+#~ msgstr "Пользователь"
+
+#~ msgid "Date"
+#~ msgstr "Дата"
+
+#~ msgid "Reference:"
+#~ msgstr "Ссылка:"
+
+#~ msgid "Creation date"
+#~ msgstr "Дата создания"
+
+#~ msgid "Maturity Date"
+#~ msgstr "Срок платежа"
+
+#~ msgid "Import payment lines"
+#~ msgstr "Импорт позиций платежа"
+
+#~ msgid "Code"
+#~ msgstr "Код"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Название объекта должно начинаться с x_  и не должно содержать специальных "
+#~ "символов !"
+
+#~ msgid "Pay"
+#~ msgstr "Заплатить"
+
+#~ msgid "_Search"
+#~ msgstr "Поиск"
+
+#~ msgid "Populate Statement with Payment lines"
+#~ msgstr "Заполнить выписку позициями платежа"
+
+#~ msgid "Payment type"
+#~ msgstr "Тип платежа"
+
+#~ msgid "_Add"
+#~ msgstr "Добавить"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Недопустимое имя модели в определении действия."
+
+#~ msgid "Preferred date"
+#~ msgstr "Предпочтительная дата"
+
+#~ msgid "Payment Management"
+#~ msgstr "Управление платежами"
+
+#~ msgid "Specify the Code for Payment Type"
+#~ msgstr "Укажите код типа платежа"
+
+#~ msgid "Draft Payment Order"
+#~ msgstr "Черновик платежного поручения"
+
+#~ msgid "Payment Orders to Validate"
+#~ msgstr "Платежные поручения для утверждения"
+
+#~ msgid "Select the Payment Type for the Payment Mode."
+#~ msgstr "Выберите вид платежа для режима платежа"
+
+#~ msgid "Cash Journal for the Payment Mode"
+#~ msgstr "Кассовая книга для режима платежа"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Ошибка !"
+
+#, python-format
+#~ msgid "Partner '+ line.partner_id.name+ ' has no bank account defined"
+#~ msgstr ""
+#~ "Партнер '+ line.partner_id.name+ ' не имеет существующего банковского счета"
+
+#~ msgid "You can not create move line on closed account."
+#~ msgstr "Нельзя сделать проводку по закрытому счету."
+
+#~ msgid "Wrong credit or debit value in accounting entry !"
+#~ msgstr "Ошибочное значение проводки по дебету или кредиту !"
+
+#~ msgid "You can not create move line on view account."
+#~ msgstr "Нельзя создать проводку по счету с типом Вид."
+
+#~ msgid "Company must be same for its related account and period."
+#~ msgstr "Для счета и периода должна быть одна компания."
+
+#~ msgid "Payment mode"
+#~ msgstr "Способ оплаты"
+
+#~ msgid ""
+#~ "A payment order is a payment request from your company to pay a supplier "
+#~ "invoice or a customer credit note. Here you can register all payment orders "
+#~ "that should be done, keep track of all payment orders and mention the "
+#~ "invoice reference and the partner the payment should be done for."
+#~ msgstr ""
+#~ "Платежное поручение это платежное требование от вашей компании на оплату "
+#~ "счета поставщика. Здесь вы заносите все платежные поручения которые должны "
+#~ "быть исполнены, отслеживаете все платежные поручения, ссылки на счета и "
+#~ "партнеров по которым должны быть сделаны платежи."
+
+#~ msgid ""
+#~ "When an order is placed the state is 'Draft'.\n"
+#~ " Once the bank is confirmed the state is set to 'Confirmed'.\n"
+#~ " Then the order is paid the state is 'Done'."
+#~ msgstr ""
+#~ "При вводе распоряжения, его состояние - \"Черновик\".\n"
+#~ " После подтверждения банком, состояние \"Подтверждено\".\n"
+#~ " После оплаты, состояние \"Готово\""
+
+#~ msgid ""
+#~ "\n"
+#~ "This module provides :\n"
+#~ "* a more efficient way to manage invoice payment.\n"
+#~ "* a basic mechanism to easily plug various automated payment.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Этот модуль обеспечивает :\n"
+#~ "* более эффективный способ управления оплатой счетов.\n"
+#~ "* простой механизм для разных автоматических платежей.\n"
+#~ "    "
+
+#, python-format
+#~ msgid "No partner defined on entry line"
+#~ msgstr "Не определен контрагент в проводке"
+
+#~ msgid "Destination Bank account"
+#~ msgstr "Р/с получателя"

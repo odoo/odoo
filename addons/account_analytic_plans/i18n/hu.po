@@ -1,20 +1,19 @@
-# Hungarian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#    * account_analytic_plans
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Hungarian <hu@li.org>\n"
+"PO-Revision-Date: 2011-02-09 11:58+0000\n"
+"Last-Translator: Krisztian Eyssen <krisz@eyssen.hu>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 07:03+0000\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:42+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
 
 #. module: account_analytic_plans
@@ -451,3 +450,136 @@ msgstr "Vevői megrendelés sor"
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "From Date"
 msgstr "Kezdő dátum"
+
+#, python-format
+#~ msgid "User Error"
+#~ msgstr "Felhasználói hiba"
+
+#~ msgid "You can not create move line on closed account."
+#~ msgstr "Nem könyvelhet lezárt számlára."
+
+#, python-format
+#~ msgid "A model having this name and code already exists !"
+#~ msgstr "Egy ugyanilyen nevű és kódú modell már létezik!"
+
+#, python-format
+#~ msgid "Error"
+#~ msgstr "Hiba"
+
+#, python-format
+#~ msgid "The Total Should be Between %s and %s"
+#~ msgstr "A végösszegnek %s és %s között kellene lennie!"
+
+#, python-format
+#~ msgid "Value Error"
+#~ msgstr "Értékhiba"
+
+#~ msgid "You can not create move line on view account."
+#~ msgstr "Nem könyvelhet gyűjtő típusú számlára."
+
+#~ msgid "%"
+#~ msgstr "%"
+
+#~ msgid ""
+#~ "The amount of the voucher must be the same amount as the one on the "
+#~ "statement line"
+#~ msgstr ""
+#~ "A nyugta összegének meg kell egyezni a kivonat sorban lévő összeggel."
+
+#~ msgid "Wrong credit or debit value in accounting entry !"
+#~ msgstr "Hibás tartozik vagy követel összeg szerepel a könyvelési tételben!"
+
+#~ msgid "The code of the journal must be unique per company !"
+#~ msgstr "A napló kódjának egyedinek kell lennie!"
+
+#, python-format
+#~ msgid "No analytic plan defined !"
+#~ msgstr "Nem határoztak meg analitikus tervet!"
+
+#~ msgid "Company must be same for its related account and period."
+#~ msgstr "A kapcsolt számla és az időszak vállalatának ugyanannak kell lennie."
+
+#, python-format
+#~ msgid "Please put a name and a code before saving the model !"
+#~ msgstr "Kérem, a modell mentése előtt adja meg a nevet és a kódot!"
+
+#~ msgid ""
+#~ "This module allows to use several analytic plans, according to the general "
+#~ "journal,\n"
+#~ "so that multiple analytic lines are created when the invoice or the entries\n"
+#~ "are confirmed.\n"
+#~ "\n"
+#~ "For example, you can define the following analytic structure:\n"
+#~ "  Projects\n"
+#~ "      Project 1\n"
+#~ "          SubProj 1.1\n"
+#~ "          SubProj 1.2\n"
+#~ "      Project 2\n"
+#~ "  Salesman\n"
+#~ "      Eric\n"
+#~ "      Fabien\n"
+#~ "\n"
+#~ "Here, we have two plans: Projects and Salesman. An invoice line must\n"
+#~ "be able to write analytic entries in the 2 plans: SubProj 1.1 and\n"
+#~ "Fabien. The amount can also be split. The following example is for\n"
+#~ "an invoice that touches the two subproject and assigned to one salesman:\n"
+#~ "\n"
+#~ "Plan1:\n"
+#~ "    SubProject 1.1 : 50%\n"
+#~ "    SubProject 1.2 : 50%\n"
+#~ "Plan2:\n"
+#~ "    Eric: 100%\n"
+#~ "\n"
+#~ "So when this line of invoice will be confirmed, it will generate 3 analytic "
+#~ "lines,\n"
+#~ "for one account entry.\n"
+#~ "The analytic plan validates the minimum and maximum percentage at the time "
+#~ "of creation\n"
+#~ "of distribution models.\n"
+#~ "        "
+#~ msgstr ""
+#~ "Ez a modul lehetővé teszi több analitikus terv használatát a főkönyvi "
+#~ "könyvelés\n"
+#~ "során, hogy több gyűjtőkód tétel készüljön, amikor a számlák vagy a tételek\n"
+#~ "könyvelésre kerülnek. \n"
+#~ "\n"
+#~ "Például meghatározhatja a következő gyűjtőkód struktúrát:\n"
+#~ "  Projektek\n"
+#~ "      1. projekt\n"
+#~ "          1.1 alprojekt\n"
+#~ "          1.2 alprojekt\n"
+#~ "      2. projekt\n"
+#~ "  Üzletkötő\n"
+#~ "      Erik\n"
+#~ "      Fábián\n"
+#~ "\n"
+#~ "Itt két tervünk van: a Projektek és az Üzletkötő. Egy számlasornak képesnek "
+#~ "kell\n"
+#~ "lennie gyűjtőkód tételeket írni mindkét tervbe: pl. az 1.1 alprojektbe és a "
+#~ "Fábiánba.\n"
+#~ "A számlasor összegét tehát szét kell osztani. Az alábbi példában legyen egy\n"
+#~ "számla, amely két alprojektet érint és egy üzletkötőhöz van rendelve:\n"
+#~ "\n"
+#~ "1. terv:\n"
+#~ "    1.1 alprojekt: 50%\n"
+#~ "    1.2 alprojekt: 50%\n"
+#~ "2. terv:\n"
+#~ "    Erik: 100%\n"
+#~ "\n"
+#~ "Így amikor a számla ezen sora jóváhagyásra kerül, a rendszer 3 gyűjtőkód "
+#~ "tételt\n"
+#~ "fog előállítani egy könyvelési tételre.\n"
+#~ "Az analitikus terv meghatározza a minimális és maximális százalékot a "
+#~ "felosztási\n"
+#~ "modellek létrehozásának időpontjában.\n"
+#~ "        "
+
+#, python-format
+#~ msgid "You have to define an analytic journal on the '%s' journal!"
+#~ msgstr "A(z) '%s' naplóhoz meg kell határoznia egy gyűjtőnaplót!"
+
+#~ msgid "The name of the journal must be unique per company !"
+#~ msgstr "A napló nevének egyedinek kell lennie!"
+
+#~ msgid "Multiple-plans management in Analytic Accounting"
+#~ msgstr "Többszörös tervek kezelése a vezetői számvitelben"

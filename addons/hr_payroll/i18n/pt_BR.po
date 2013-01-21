@@ -1,20 +1,21 @@
 # Brazilian Portuguese translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2012-12-24 16:49+0000\n"
+"Last-Translator: Fábio Martinelli - http://zupy.com.br "
+"<webmaster@guaru.net>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 07:16+0000\n"
+"X-Launchpad-Export-Date: 2012-12-25 04:48+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr_payroll
@@ -125,7 +126,7 @@ msgstr "hr.salary.rule"
 #: view:hr.payslip:0
 #: view:hr.payslip.run:0
 msgid "to"
-msgstr ""
+msgstr "até"
 
 #. module: hr_payroll
 #: field:hr.payslip,payslip_run_id:0
@@ -210,7 +211,7 @@ msgstr "Anotações"
 #: code:addons/hr_payroll/hr_payroll.py:900
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Erro!"
 
 #. module: hr_payroll
 #: report:contribution.register.lines:0
@@ -236,7 +237,7 @@ msgstr "Outra informação"
 #. module: hr_payroll
 #: field:hr.config.settings,module_hr_payroll_account:0
 msgid "Link your payroll to accounting system"
-msgstr ""
+msgstr "Associar a folha de pagamento a contabilidade"
 
 #. module: hr_payroll
 #: help:hr.payslip.line,amount_select:0
@@ -305,7 +306,7 @@ msgstr "Estrutura"
 #. module: hr_payroll
 #: field:hr.contribution.register,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Parceiro"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
@@ -351,6 +352,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Clique para adicionar um novo registo de contribuição.\n"
+"              </p><p>\n"
+"               Um registo de contribuição é um terceiro envolvido no "
+"pagamento do\n"
+"               salário dos funcionários. Ela pode ser a INSSl, o\n"
+"               Governo ou qualquer pessoa que coletar ou injetar dinheiro no "
+"holerites.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_payroll
 #: help:hr.payslip.line,condition_range_max:0
@@ -439,12 +450,12 @@ msgstr "Porcentagem baseada na"
 #: code:addons/hr_payroll/hr_payroll.py:85
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (cópia)"
 
 #. module: hr_payroll
 #: help:hr.config.settings,module_hr_payroll_account:0
 msgid "Create journal entries from payslips"
-msgstr ""
+msgstr "Criar lançamentos de diário a partir de holetires"
 
 #. module: hr_payroll
 #: field:hr.payslip,paid:0
@@ -467,7 +478,7 @@ msgstr "Linhas do Holerite"
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Diversos"
 
 #. module: hr_payroll
 #: selection:hr.payslip,state:0
@@ -519,7 +530,7 @@ msgstr "Quantidade fixa"
 #: code:addons/hr_payroll/hr_payroll.py:365
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Aviso!"
 
 #. module: hr_payroll
 #: help:hr.payslip.line,active:0
@@ -535,7 +546,7 @@ msgstr ""
 #: field:hr.payslip,state:0
 #: field:hr.payslip.run,state:0
 msgid "Status"
-msgstr ""
+msgstr "Situação"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
@@ -629,7 +640,7 @@ msgstr "Detalhes do Cálculo de Holerite"
 #: help:hr.payslip.line,appears_on_payslip:0
 #: help:hr.salary.rule,appears_on_payslip:0
 msgid "Used to display the salary rule on payslip."
-msgstr ""
+msgstr "Usado para mostrar a regra do salário no holerite."
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_input
@@ -659,6 +670,7 @@ msgstr "Calcular"
 #, python-format
 msgid "Wrong range condition defined for salary rule %s (%s)."
 msgstr ""
+"Condição de intervalo errada definido para a regra de salário %s (%s)."
 
 #. module: hr_payroll
 #: help:hr.payslip.input,amount:0
@@ -704,6 +716,7 @@ msgstr ""
 #, python-format
 msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
 msgstr ""
+"Percentual base errada ou quantidade definida para a regra salário %s (%s)."
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_list_form
@@ -761,7 +774,7 @@ msgstr "Porcentagem (%)"
 #: code:addons/hr_payroll/hr_payroll.py:866
 #, python-format
 msgid "Wrong quantity defined for salary rule %s (%s)."
-msgstr ""
+msgstr "Quantidade errada definida para a regra de salário %s (%s)."
 
 #. module: hr_payroll
 #: view:hr.payslip:0
@@ -846,7 +859,7 @@ msgstr "Contrato"
 #: code:addons/hr_payroll/wizard/hr_payroll_payslips_by_employees.py:52
 #, python-format
 msgid "You must select employee(s) to generate payslip(s)."
-msgstr ""
+msgstr "Você precisa selecionar o funcionário para gerar o holerite."
 
 #. module: hr_payroll
 #: report:paylip.details:0
@@ -925,12 +938,12 @@ msgstr "Seqüência"
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Period"
-msgstr ""
+msgstr "Período"
 
 #. module: hr_payroll
 #: view:hr.payslip.run:0
 msgid "Period from"
-msgstr ""
+msgstr "Período de"
 
 #. module: hr_payroll
 #: view:hr.salary.rule:0
@@ -1017,7 +1030,7 @@ msgstr "Holerites do Funcionário"
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_config_settings
 msgid "hr.config.settings"
-msgstr ""
+msgstr "hr.config.settings"
 
 #. module: hr_payroll
 #: view:hr.payslip.line:0
@@ -1099,6 +1112,7 @@ msgstr "Holerites por linhas de Contribuições Registrada"
 #, python-format
 msgid "You cannot delete a payslip which is not draft or cancelled!"
 msgstr ""
+"Você não pode excluir um holerite que não está como provisório ou cancelado!"
 
 #. module: hr_payroll
 #: report:paylip.details:0
@@ -1170,6 +1184,11 @@ msgid ""
 "* If the payslip is confirmed then status is set to 'Done'.            \n"
 "* When user cancel payslip the status is 'Rejected'."
 msgstr ""
+"* Quando o holerite é criado o estado é 'Provisório'.\n"
+"* Se o holerite está sob verificação, a situação 'Aguardando'.\n"
+"* Se o holerite é confirmado em seguida a situação é definida como "
+"'Concluído'.\n"
+"* Quando o usuário cancelar o holerite a situação é 'Rejeitado'."
 
 #. module: hr_payroll
 #: help:hr.payslip.line,condition_range:0
@@ -1196,7 +1215,7 @@ msgstr "Entradas de Holerites"
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Other Inputs"
-msgstr ""
+msgstr "Outras Entradas"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category_tree_view
@@ -1208,7 +1227,7 @@ msgstr "Hierarquia da Regra de Salário"
 #: code:addons/hr_payroll/hr_payroll.py:877
 #, python-format
 msgid "Wrong python code defined for salary rule %s (%s)."
-msgstr ""
+msgstr "Código Python errado definido para a regra de salário %s (%s)."
 
 #. module: hr_payroll
 #: report:contribution.register.lines:0
@@ -1239,7 +1258,7 @@ msgstr "O código que pode ser usado nas regras de salários"
 #: code:addons/hr_payroll/hr_payroll.py:900
 #, python-format
 msgid "Wrong python condition defined for salary rule %s (%s)."
-msgstr ""
+msgstr "Condição python errada definida para a regra de salário %s (%s)."
 
 #. module: hr_payroll
 #: view:hr.payslip.run:0
@@ -1271,10 +1290,341 @@ msgstr "Nome do Holerite"
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Accounting"
-msgstr ""
+msgstr "Contabilidade"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,condition_range:0
 #: field:hr.salary.rule,condition_range:0
 msgid "Range Based on"
 msgstr "Com base na Faixa de"
+
+#~ msgid "Employees Salary Details"
+#~ msgstr "Detalhes Salário do Funcionário"
+
+#~ msgid "Net Salary"
+#~ msgstr "Salário Liquido"
+
+#~ msgid "Working Days"
+#~ msgstr "Dias Trabalhados"
+
+#~ msgid "Department"
+#~ msgstr "Departamento"
+
+#~ msgid "Deductions:"
+#~ msgstr "Deduções:"
+
+#~ msgid "E-mail Address"
+#~ msgstr "Endereço de E-mail"
+
+#~ msgid "Recompute Sheet"
+#~ msgstr "Recalcular Folha"
+
+#~ msgid "Based"
+#~ msgstr "Baseado"
+
+#~ msgid "The Manager"
+#~ msgstr "O Gerente"
+
+#~ msgid ","
+#~ msgstr ","
+
+#~ msgid "Loan"
+#~ msgstr "Empréstimo"
+
+#~ msgid "Salary Payment Register"
+#~ msgstr "Registro Pagamento de Salário"
+
+#~ msgid "Paid Salary"
+#~ msgstr "Salário Pago"
+
+#~ msgid "Year Salary Report"
+#~ msgstr "Relatório Salário Anual"
+
+#~ msgid "("
+#~ msgstr "("
+
+#~ msgid "Others"
+#~ msgstr "Outros"
+
+#~ msgid "Contract Detail:"
+#~ msgstr "Detalhes Contrato:"
+
+#~ msgid "Expire"
+#~ msgstr "Expira"
+
+#~ msgid "Total Deductions"
+#~ msgstr "Deduções Totais"
+
+#~ msgid "Register"
+#~ msgstr "Registro"
+
+#~ msgid "Leaves"
+#~ msgstr "Folhas"
+
+#~ msgid "Reject"
+#~ msgstr "Rejeitar"
+
+#~ msgid "Value"
+#~ msgstr "Valor"
+
+#~ msgid ""
+#~ "Error ! You cannot select a department for which the employee is the manager."
+#~ msgstr ""
+#~ "Erro! Você não pode selecionar um departamento do qual o funcionário é o "
+#~ "gerente."
+
+#~ msgid "Un-Paid Holiday"
+#~ msgstr "Feriado Não Pago"
+
+#~ msgid "Other Deduction"
+#~ msgstr "Outra Dedução"
+
+#~ msgid "Paid Holiday"
+#~ msgstr "Feriado Pago"
+
+#~ msgid "Percentage"
+#~ msgstr "Percentual"
+
+#, python-format
+#~ msgid "Please check configuration of %s, payroll head is missing"
+#~ msgstr ""
+#~ "Por favor, verifique a configuração da %s, Cabeçalho da folha de pagamento "
+#~ "está faltando"
+
+#~ msgid "Employee Deduction"
+#~ msgstr "Dedução do Funcionário"
+
+#~ msgid "Wating for Verification"
+#~ msgstr "Aguardando Verificação"
+
+#~ msgid "Valid From"
+#~ msgstr "Válido De"
+
+#~ msgid "Based on"
+#~ msgstr "Baseado em"
+
+#~ msgid "Payment"
+#~ msgstr "Pagamento"
+
+#~ msgid "Amount (in words) :"
+#~ msgstr "Valor (por extenso) :"
+
+#~ msgid "Human Resource Payroll"
+#~ msgstr "Folha de Pagamento"
+
+#~ msgid "By Salary"
+#~ msgstr "Por Salário"
+
+#~ msgid "Date :"
+#~ msgstr "Data :"
+
+#~ msgid "Payments -"
+#~ msgstr "Pagamentos -"
+
+#~ msgid "Posted"
+#~ msgstr "Lançado"
+
+#~ msgid "Sub Total"
+#~ msgstr "Sub Total"
+
+#~ msgid "End Date"
+#~ msgstr "Data Final"
+
+#~ msgid "Authorised Signature"
+#~ msgstr "Assinatura Autorizada"
+
+#~ msgid "Notes:"
+#~ msgstr "Comentários:"
+
+#~ msgid "Function Arguments"
+#~ msgstr "Argumentos da Função"
+
+#~ msgid "#"
+#~ msgstr "Nº"
+
+#~ msgid "Type"
+#~ msgstr "Tipo"
+
+#~ msgid "Formula"
+#~ msgstr "Fórmula"
+
+#~ msgid "Company Contributions"
+#~ msgstr "Contribuições da Empresa"
+
+#~ msgid "Deductions"
+#~ msgstr "Deduções"
+
+#~ msgid "Employee Salary"
+#~ msgstr "Salário do Funcionário"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Erro!"
+
+#~ msgid "Select the Bank Address from whcih the salary is going to be paid"
+#~ msgstr "Selecione o Endereço do Banco para o qual o salário deverá ser pago"
+
+#, python-format
+#~ msgid "Variable Error: %s "
+#~ msgstr "Erro de Variável: %s "
+
+#~ msgid "Name of the Employee"
+#~ msgstr "Nome do Funcionário"
+
+#~ msgid "Calculaton Field"
+#~ msgstr "Campo de Cálculo"
+
+#~ msgid "Visa No"
+#~ msgstr "Núm. do Visto"
+
+#~ msgid "Passport Expire Date"
+#~ msgstr "Data de Expiração do Passaporte"
+
+#~ msgid "Register Lines"
+#~ msgstr "Linhas do Registro"
+
+#~ msgid "Verify Sheet"
+#~ msgstr "Planilha de Verificação"
+
+#~ msgid "Other Lines"
+#~ msgstr "Outras Linhas"
+
+#~ msgid "Country of Issue"
+#~ msgstr "País Emissor"
+
+#~ msgid "State"
+#~ msgstr "Estado"
+
+#~ msgid "Total Earnings"
+#~ msgstr "Ganhos Totais"
+
+#~ msgid "Other Payment"
+#~ msgstr "Outros Pagamentos"
+
+#~ msgid "For the month of"
+#~ msgstr "Para o mês de"
+
+#~ msgid "To"
+#~ msgstr "Para"
+
+#~ msgid "Pay Salary"
+#~ msgstr "Salário"
+
+#~ msgid "Deduction"
+#~ msgstr "Dedução"
+
+#~ msgid "Error! contract start-date must be lower then contract end-date."
+#~ msgstr ""
+#~ "Erro! A data de início do contrato precisa ser menor que a data de término "
+#~ "do contrato."
+
+#~ msgid "Salary Structure:"
+#~ msgstr "Estrutura Salarial"
+
+#~ msgid "Employee Code"
+#~ msgstr "Código do Funcionário"
+
+#~ msgid "Others:"
+#~ msgstr "Outros:"
+
+#~ msgid "Total By Company"
+#~ msgstr "Total por Empresa"
+
+#~ msgid "Basic"
+#~ msgstr "Básico"
+
+#~ msgid "Employee Name"
+#~ msgstr "Nome do Funcionário"
+
+#~ msgid "Approve Sheet"
+#~ msgstr "Aprovar Planilha"
+
+#~ msgid "Paid"
+#~ msgstr "Pago"
+
+#~ msgid "Contracts"
+#~ msgstr "Contratos"
+
+#~ msgid "Validation"
+#~ msgstr "Validação"
+
+#~ msgid "User"
+#~ msgstr "Usuário"
+
+#~ msgid "Title"
+#~ msgstr "Título"
+
+#~ msgid "Payment Lines"
+#~ msgstr "Linhas de Pagamento"
+
+#~ msgid "Paid ? "
+#~ msgstr "Pago? "
+
+#~ msgid ")"
+#~ msgstr ")"
+
+#~ msgid ""
+#~ "* When the payslip is created the state is 'Draft'.            \n"
+#~ "* If the payslip is under verification, the state is 'Waiting'.             "
+#~ "\n"
+#~ "* If the payslip is confirmed then state is set to 'Done'.            \n"
+#~ "* When user cancel payslip the state is 'Rejected'."
+#~ msgstr ""
+#~ "*Quando a folha de pagamento é criado o estado é \"Rascunho\".\n"
+#~ "*Se a folha de pagamento esta sob verificação, o estado será \"Em Espera\".\n"
+#~ "*Se a folha de pagamento é confirmado, em seguida, o estado esta definido "
+#~ "como \"Feito\".\n"
+#~ "*Quando o usuário cancelar a holerite o estado é\"Rejeitado\""
+
+#~ msgid "Payslip Info"
+#~ msgstr "Informações do Holerite"
+
+#, python-format
+#~ msgid "You must select employee(s) to generate payslip(s)"
+#~ msgstr "Você deve selecionar funcionário(s) para gerar holerite(s)"
+
+#~ msgid "Company contribution"
+#~ msgstr "Contribuição da Empresa"
+
+#~ msgid ""
+#~ "A contribution register is a third party involved in the salary payment of "
+#~ "the employees. It can be the social security, the estate or anyone that "
+#~ "collect or inject money on payslips."
+#~ msgstr ""
+#~ "A contribuição é registrar um terceiro envolvido no pagamento de salário dos "
+#~ "funcionários. Pode ser a segurança social, a propriedade ou qualquer um que "
+#~ "coletar ou injetar dinheiro em recibos."
+
+#~ msgid "Used for the display of rule on payslip"
+#~ msgstr "Usado para a exibição de regra no holerite"
+
+#, python-format
+#~ msgid "Wrong python code defined for salary rule %s (%s) "
+#~ msgstr "Código python errado definido na regra de salário %s (%s) "
+
+#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
+#~ msgstr "Erro! Você não pode criar uma Hierarquia de Funcionários recursiva."
+
+#, python-format
+#~ msgid "Wrong quantity defined for salary rule %s (%s)"
+#~ msgstr "Quantidade errada definida para a regra de salário %s (%s)"
+
+#, python-format
+#~ msgid "Wrong python condition defined for salary rule %s (%s)"
+#~ msgstr "Condição python errada definida para a regra de salário %s (%s)"
+
+#, python-format
+#~ msgid "Error"
+#~ msgstr "Erro"
+
+#, python-format
+#~ msgid "Wrong range condition defined for salary rule %s (%s)"
+#~ msgstr "Faixa errada na condição da regra do salário %s (%s)"
+
+#, python-format
+#~ msgid "Wrong percentage base or quantity defined for salary rule %s (%s)"
+#~ msgstr ""
+#~ "Porcentagem ou quantidade definidas errada, na regra de salário %s (%s)"
+
+#~ msgid "Children definition"
+#~ msgstr "Definição Subordinada"

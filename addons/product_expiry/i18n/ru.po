@@ -1,20 +1,20 @@
 # Russian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2012-12-28 13:56+0000\n"
+"Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 07:28+0000\n"
+"X-Launchpad-Export-Date: 2012-12-29 05:02+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
 
 #. module: product_expiry
@@ -38,6 +38,8 @@ msgid ""
 "This is the date on which the goods with this Serial Number should be "
 "removed from the stock."
 msgstr ""
+"Это дата, на которую товары с этим серийным номером должны быть удалены из "
+"запаса."
 
 #. module: product_expiry
 #: help:product.product,removal_time:0
@@ -45,6 +47,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods should be removed from the stock."
 msgstr ""
+"При присвоении нового серийного номера, это количество дней до того, как "
+"товары должны быть удалены из запаса."
 
 #. module: product_expiry
 #: field:product.product,use_time:0
@@ -62,6 +66,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods starts deteriorating, without being dangerous yet."
 msgstr ""
+"При присвоении нового серийного номера, это количество дней, прежде чем "
+"товар начинает ухудшаться, еще не будучи опасным."
 
 #. module: product_expiry
 #: field:product.product,removal_time:0
@@ -74,11 +80,12 @@ msgid ""
 "This is the date on which an alert should be notified about the goods with "
 "this Serial Number."
 msgstr ""
+"Это дата, на которую посылается оповещение о товаре с этим серийным номером."
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_production_lot
 msgid "Serial Number"
-msgstr ""
+msgstr "Серийный номер"
 
 #. module: product_expiry
 #: help:product.product,alert_time:0
@@ -86,6 +93,7 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before an "
 "alert should be notified."
 msgstr ""
+"При присвоении нового серийного номера, это количество дней до оповещения."
 
 #. module: product_expiry
 #: field:stock.production.lot,removal_date:0
@@ -123,6 +131,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods may become dangerous and must not be consumed."
 msgstr ""
+"При присвоении нового серийного номера, это количество дней , прежде чем "
+"товар может стать опасным и не должен потребляться."
 
 #. module: product_expiry
 #: field:stock.production.lot,alert_date:0
@@ -135,6 +145,8 @@ msgid ""
 "This is the date on which the goods with this Serial Number start "
 "deteriorating, without being dangerous yet."
 msgstr ""
+"Это дата, на которую товар с этим серийным номером начинается ухудшаться, "
+"еще не будучи опасным."
 
 #. module: product_expiry
 #: help:stock.production.lot,life_date:0
@@ -142,8 +154,60 @@ msgid ""
 "This is the date on which the goods with this Serial Number may become "
 "dangerous and must not be consumed."
 msgstr ""
+"Это дата, на которую товар с этим серийным номером может стать опасным и не "
+"должен потребляться."
 
 #. module: product_expiry
 #: field:product.product,alert_time:0
 msgid "Product Alert Time"
 msgstr "Время оповещения товара"
+
+#~ msgid "Production lot"
+#~ msgstr "Партия изделий"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Ошибка. ед. изм. по умолчанию и закупочные ед. изм. должны иметь одинаковую "
+#~ "категорию."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Неправильный XML для просмотра архитектуры!"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Ошибка: Неправильный штрих-код"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr ""
+#~ "Ошибка. Единицы продажи и единицы измерения должны принадлежать к разным "
+#~ "категориям."
+
+#~ msgid "Products date of expiry"
+#~ msgstr "Срок годности продукции"
+
+#~ msgid ""
+#~ "The number of days after which an alert should be notified about the "
+#~ "production lot."
+#~ msgstr ""
+#~ "Количество дней, после которых должно быть предупреждение об опасности "
+#~ "партии продукции."
+
+#~ msgid ""
+#~ "The date on which the lot may become dangerous and should not be consumed."
+#~ msgstr ""
+#~ "Дата, на которую партия продукции может стать опасной и не должна "
+#~ "употребляться."
+
+#~ msgid ""
+#~ "The combination of serial number and internal reference must be unique !"
+#~ msgstr ""
+#~ "Комбинация серийного номера и внутренней ссылки должна быть уникальной !"
+
+#~ msgid "The date on which the lot should be removed."
+#~ msgstr "Дата, на которую партия должна быть удалена."
+
+#~ msgid "LTR"
+#~ msgstr "Слева направо"
+
+#~ msgid "The number of days before a production lot should be removed."
+#~ msgstr "Количество дней до которого партия продукции должна быть удалена."

@@ -8,19 +8,20 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2012-12-23 11:08+0000\n"
+"Last-Translator: Fábio Martinelli - http://zupy.com.br "
+"<webmaster@guaru.net>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 07:06+0000\n"
+"X-Launchpad-Export-Date: 2012-12-24 04:40+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
 
 #. module: auth_signup
 #: field:res.partner,signup_type:0
 msgid "Signup Token Type"
-msgstr ""
+msgstr "Tipo de token para Inscrição"
 
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_uninvited:0
@@ -42,7 +43,7 @@ msgstr "Se não marcado, somente usuários convidados poderão inscrever-se"
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_base_config_settings
 msgid "base.config.settings"
-msgstr "Configurações"
+msgstr "base.config.settings"
 
 #. module: auth_signup
 #: code:addons/auth_signup/res_users.py:252
@@ -96,7 +97,7 @@ msgstr "Novo"
 #: code:addons/auth_signup/res_users.py:258
 #, python-format
 msgid "Mail sent to:"
-msgstr ""
+msgstr "Mensagem enviadas para:"
 
 #. module: auth_signup
 #: field:res.users,state:0
@@ -116,21 +117,20 @@ msgid ""
 "<p>Note: If you do not expect this, you can safely ignore this email.</p>"
 msgstr ""
 "\n"
-"<p>Uma redefinição de senha foi solicitada para a conta OpenERP associada a "
-"este e-mail.</p>\n"
+"<p>Uma redefinição de senha foi solicitada para a conta do OpenERP associada "
+"a este e-mail.</p>\n"
 "\n"
 "<p>Você pode mudar sua senha acessando <a href=\"${object.signup_url}\">este "
 "endereço</a>.</p>\n"
 "\n"
-"<p>Nota: Se esta ação não era esperada, você pode seguramente ignorar este e-"
-"mail.</p>"
+"<p>Nota: Se você não solicitou essa alteração, basta ignorar este e-mail.</p>"
 
 #. module: auth_signup
 #. openerp-web
 #: code:addons/auth_signup/static/src/js/auth_signup.js:119
 #, python-format
 msgid "Please enter a name."
-msgstr "Por favor informe um nome."
+msgstr "Por favor, informe o nome"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
@@ -161,6 +161,8 @@ msgid ""
 "Cannot send email: no outgoing email server configured.\n"
 "You can configure it under Settings/General Settings."
 msgstr ""
+"Não é possível enviar email: o servidor de saída não está configurado.\n"
+"Você pode configurar em Configurações / Configurações Gerais."
 
 #. module: auth_signup
 #. openerp-web

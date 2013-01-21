@@ -1,36 +1,36 @@
-# Czech translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* delivery
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-31 12:55+0000\n"
-"Last-Translator: Jan Grmela <Unknown>\n"
-"Language-Team: Czech <cs@li.org>\n"
+"PO-Revision-Date: 2011-11-25 14:16+0000\n"
+"Last-Translator: Jiří Hajda <robie@centrum.cz>\n"
+"Language-Team: Czech <openerp-i18n-czech@lists.launchpad.net >\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-01 05:19+0000\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:18+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
+"X-Poedit-Language: Czech\n"
 
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Order Ref."
-msgstr "Zn. objednávky"
+msgstr "Odkaz objednávky"
 
 #. module: delivery
 #: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Delivery by Poste"
-msgstr "Dodání poštou"
+msgstr "Dodání podle zaslání"
 
 #. module: delivery
 #: view:delivery.grid.line:0
 msgid " in Function of "
-msgstr " je funkce "
+msgstr ""
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -46,19 +46,19 @@ msgstr "Čistá hmotnost"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
 msgid "Delivery Grid Line"
-msgstr "Řádek cenové úrovně"
+msgstr "Řádek dodací sítě"
 
 #. module: delivery
 #: field:stock.move,weight_uom_id:0
 #: field:stock.picking,weight_uom_id:0
 msgid "Unit of Measure"
-msgstr "Měrná jednotka"
+msgstr ""
 
 #. module: delivery
 #: view:delivery.carrier:0
 #: view:delivery.grid:0
 msgid "Delivery grids"
-msgstr "Cenové úrovně"
+msgstr "Dodací sítě"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
@@ -71,46 +71,43 @@ msgstr "Objem"
 #. module: delivery
 #: view:delivery.carrier:0
 msgid "Zip"
-msgstr "PSČ"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
 msgid "Grid Line"
-msgstr "Řádek cenové úrovně"
+msgstr "Řádek sítě"
 
 #. module: delivery
 #: help:delivery.carrier,partner_id:0
 msgid "The partner that is doing the delivery service."
-msgstr "Partner, který provádí dodání."
+msgstr ""
 
 #. module: delivery
 #: model:ir.actions.report.xml,name:delivery.report_shipping
 msgid "Delivery order"
-msgstr "Příkaz dodání"
+msgstr "Objednávka doručení"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:221
 #, python-format
 msgid "No line matched this product or order in the chosen delivery grid."
 msgstr ""
-"S výrobkem nebo objednávkou se neshoduje žádný řádek ve zvolených cenových "
-"úrovních dopravy."
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
 msgid "Picking to be invoiced"
-msgstr "Dodání k fakturaci"
+msgstr "Navádění k fakturaci"
 
 #. module: delivery
 #: field:delivery.carrier,pricelist_ids:0
 msgid "Advanced Pricing"
-msgstr "Pokročilé nacenění"
+msgstr ""
 
 #. module: delivery
 #: help:delivery.grid,sequence:0
 msgid "Gives the sequence order when displaying a list of delivery grid."
-msgstr ""
-"Udává pořadí posloupnosti při zobrazení seznamu cenových úrovní dopravy."
+msgstr "Dává pořadí posloupnosti, když zobrazuje seznam dodací sítě."
 
 #. module: delivery
 #: view:delivery.grid:0
@@ -135,21 +132,11 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klikněte pro vytvoření ceníku dopravy do určité oblasti.\n"
-"              </p><p>\n"
-"                Ceník dopravy vám umožní spočítat náklady a prodejní\n"
-"                cenu dopravy v závislosti na hmotnosti výrobků\n"
-"                a dalších kritériích. Můžete nadefinovat několik ceníků\n"
-"                každý způsob dodání v určité zemi určené rozsahem\n"
-"                poštovních kódů.\n"
-"              </p>\n"
-"            "
 
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Delivery Order :"
-msgstr "Příkaz dodání:"
+msgstr "Objednávka doručení :"
 
 #. module: delivery
 #: field:delivery.grid.line,variable_factor:0
@@ -159,12 +146,12 @@ msgstr "Proměnný koeficient"
 #. module: delivery
 #: field:delivery.carrier,amount:0
 msgid "Amount"
-msgstr "Částka"
+msgstr ""
 
 #. module: delivery
 #: view:sale.order:0
 msgid "Add in Quote"
-msgstr "Přidat do nabídky"
+msgstr ""
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -182,12 +169,12 @@ msgstr "Způsob doručení"
 #: code:addons/delivery/delivery.py:221
 #, python-format
 msgid "No price available!"
-msgstr "Není dostupná žádná cena!"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
 msgid "Stock Move"
-msgstr "Pohyb zásob"
+msgstr "Přesun zásob"
 
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
@@ -205,19 +192,19 @@ msgstr "Čistá hmotnost"
 #. module: delivery
 #: view:delivery.grid.line:0
 msgid "Grid Lines"
-msgstr "Řádky cenové úrovně dopravy"
+msgstr "Řádky sítě"
 
 #. module: delivery
 #: view:delivery.carrier:0
 #: view:delivery.grid:0
 msgid "Grid definition"
-msgstr "Definice cenových úrovní dopravy"
+msgstr "Určení sítě"
 
 #. module: delivery
 #: code:addons/delivery/stock.py:90
 #, python-format
 msgid "Warning!"
-msgstr "Varování!"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid.line,operator:0
@@ -232,12 +219,12 @@ msgstr "Partner"
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order
 msgid "Sales Order"
-msgstr "Potvrzení objednávky"
+msgstr "Prodejní objednávka"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking_out
 msgid "Delivery Orders"
-msgstr "Příkaz dodání"
+msgstr ""
 
 #. module: delivery
 #: view:sale.order:0
@@ -245,18 +232,16 @@ msgid ""
 "If you don't 'Add in Quote', the exact price will be computed when invoicing "
 "based on delivery order(s)."
 msgstr ""
-"Pokud nepoužijete 'Přidat do nabídky', bude přesná cena spočítána při "
-"fakturaci na základě příkazů dodání."
 
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
 msgid "Transport Company"
-msgstr "Přepravce"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
 msgid "Delivery Grid"
-msgstr "Cenové úrovně dopravy"
+msgstr "Dodací síť"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -266,12 +251,12 @@ msgstr "Fakturováno"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
 msgid "Picking List"
-msgstr "Dodací list"
+msgstr "Naváděcí seznam"
 
 #. module: delivery
 #: field:delivery.grid.line,name:0
 msgid "Name"
-msgstr "Název"
+msgstr "Jméno"
 
 #. module: delivery
 #: help:delivery.carrier,free_if_more_than:0
@@ -279,8 +264,6 @@ msgid ""
 "If the order is more expensive than a certain amount, the customer can "
 "benefit from a free shipping"
 msgstr ""
-"Pokud je cena objednávky vyšší než určitá cena, může zákazník profitovat z "
-"dopravy zdarma"
 
 #. module: delivery
 #: help:delivery.carrier,amount:0
@@ -288,17 +271,16 @@ msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
 msgstr ""
-"Cena objednávky, nad kterou je doprava zdarma vyjádřena v měně společnosti"
 
 #. module: delivery
 #: field:delivery.carrier,free_if_more_than:0
 msgid "Free If Order Total Amount Is More Than"
-msgstr "Zdarma pokud je celková cena vyšší než"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid.line,grid_id:0
 msgid "Grid"
-msgstr "Cen. úrovně"
+msgstr "Síť"
 
 #. module: delivery
 #: help:delivery.grid,active:0
@@ -306,8 +288,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "grid without removing it."
 msgstr ""
-"Pokud je aktivní pole nastaveno na nepravdu, můžete skrýt cenové úrovně "
-"dopravy bez jejich odebrání."
+"Pokud je aktivní pole nastaveno na Nepravda, umožní vám to skrýt dodací síť "
+"bez jejího odebrání."
 
 #. module: delivery
 #: field:delivery.grid,zip_to:0
@@ -318,12 +300,12 @@ msgstr "Na PSČ"
 #: code:addons/delivery/delivery.py:147
 #, python-format
 msgid "Default price"
-msgstr "Výchozí cena"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.carrier,normal_price:0
 msgid "Normal Price"
-msgstr "Běžná cena"
+msgstr ""
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -333,7 +315,7 @@ msgstr "Datum objednání"
 #. module: delivery
 #: field:delivery.grid,name:0
 msgid "Grid Name"
-msgstr "Název cenové úrovně"
+msgstr "Jméno sítě"
 
 #. module: delivery
 #: field:stock.picking,number_of_packages:0
@@ -352,7 +334,7 @@ msgstr "Počet balíků"
 #: field:stock.picking.in,weight:0
 #: field:stock.picking.out,weight:0
 msgid "Weight"
-msgstr "Hmotnost"
+msgstr "Váha"
 
 #. module: delivery
 #: help:delivery.carrier,use_detailed_pricelist:0
@@ -360,21 +342,18 @@ msgid ""
 "Check this box if you want to manage delivery prices that depends on the "
 "destination, the weight, the total of the order, etc."
 msgstr ""
-"Zaškrtněte toto pole pokud chcete spravovat ceny dopravy v závislosti na "
-"dodací adrese, hmotnosti, celkové ceně objednávky a podobně."
 
 #. module: delivery
 #: help:delivery.carrier,normal_price:0
 msgid ""
 "Keep empty if the pricing depends on the advanced pricing per destination"
 msgstr ""
-"Ponechte prázdné pokud cena závisí na pokročilém nacenění k cílové adrese"
 
 #. module: delivery
 #: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid available !"
-msgstr "Žádné dostupné cenové úrovně"
+msgstr "Žádná dostupná síť !"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -390,7 +369,7 @@ msgstr "Objednávka není ve stavu koncept !"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Lot"
-msgstr "Šarže"
+msgstr "Dávka"
 
 #. module: delivery
 #: field:delivery.carrier,active:0
@@ -416,18 +395,18 @@ msgstr "Podmínka"
 #. module: delivery
 #: field:delivery.grid.line,standard_price:0
 msgid "Cost Price"
-msgstr "Nákladová cena"
+msgstr "Výrobní cena"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
 #: field:delivery.grid.line,type:0
 msgid "Variable"
-msgstr "Proměnná"
+msgstr "Proměnné"
 
 #. module: delivery
 #: help:res.partner,property_delivery_carrier:0
 msgid "This delivery method will be used when invoicing from picking."
-msgstr "Způsob dodání bude použit při fakturaci z naskladnění."
+msgstr "Dodací metoda bude použita při fakturaci z nasvádění."
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -449,21 +428,6 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klikněte pro přidání nového způsobu dopravy.\n"
-"              </p><p>\n"
-"                Každý dopravce (např. UPS) může mít několik způsobů dopravy\n"
-"                (např. UPS Express, UPS Standard) spolu se sadou pravidel u "
-"každého\n"
-"                způsobu.\n"
-"              </p><p>\n"
-"                Tyto způsoby vám umožňují automaticky spočítat cenu\n"
-"                dopravy v závislosti na vašich nastaveních; na potvrzení "
-"objednávky\n"
-"                (v závislosti na nabídce) nebo faktuře (v závislosti na\n"
-"                příkazu dodání).\n"
-"              </p>\n"
-"            "
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
@@ -484,19 +448,18 @@ msgstr "Počáteční PSČ"
 #: help:sale.order,carrier_id:0
 msgid ""
 "Complete this field if you plan to invoice the shipping based on picking."
-msgstr ""
-"Vyplňte toto pole pokud plánujete fakturovat dopravu na základě naskladnění."
+msgstr "Vyplňte toto pole, pokud plánujete fakturovat přepravu při navádění."
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:136
 #, python-format
 msgid "Free if more than %.2f"
-msgstr "Zdarma pokud je více než %.2f"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking_in
 msgid "Incoming Shipments"
-msgstr "Příchozí zásilky"
+msgstr ""
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -506,7 +469,7 @@ msgstr "<="
 #. module: delivery
 #: help:stock.picking,weight_uom_id:0
 msgid "Unit of measurement for Weight"
-msgstr "Měrná jednotka hmotnosti"
+msgstr ""
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -526,7 +489,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:delivery.action_delivery_grid_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_grid_form
 msgid "Delivery Pricelist"
-msgstr "Ceník dopravy"
+msgstr "Ceník dodání"
 
 #. module: delivery
 #: field:delivery.carrier,price:0
@@ -539,12 +502,12 @@ msgstr "Cena"
 #: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid matching for this carrier !"
-msgstr "Žádná cenová úroveň pro tohoto přepravce!"
+msgstr "Žádná síť odpovídající tomuto přepravci !"
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
 msgid "Delivery"
-msgstr "Dodání"
+msgstr "Dodací"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
@@ -556,17 +519,17 @@ msgstr "Hmotnost * Objem"
 #: code:addons/delivery/stock.py:91
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
-msgstr "Přepravce %s (id: %d) nemá cenové úrovně dopravy!"
+msgstr "Přepravce %s (id: %d) nemá dodací síť!"
 
 #. module: delivery
 #: view:delivery.carrier:0
 msgid "Pricing Information"
-msgstr "Informace o ceně"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.carrier,use_detailed_pricelist:0
 msgid "Advanced Pricing per Destination"
-msgstr "Pokročilé nacenění podle cílové adresy"
+msgstr ""
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -582,7 +545,7 @@ msgstr "Přepravce"
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 msgid "Delivery Methods"
-msgstr "Způsoby dodání"
+msgstr ""
 
 #. module: delivery
 #: code:addons/delivery/sale.py:57
@@ -593,7 +556,7 @@ msgstr "Stav objednávky musí být koncept pro přidání dodacích řádků."
 #. module: delivery
 #: field:delivery.carrier,grids_id:0
 msgid "Delivery Grids"
-msgstr "Cenové úrovně dopravy"
+msgstr "Dodací síť"
 
 #. module: delivery
 #: field:delivery.grid,sequence:0
@@ -608,7 +571,7 @@ msgstr "Prodejní cena"
 #. module: delivery
 #: view:stock.picking.out:0
 msgid "Print Delivery Order"
-msgstr "Vytisknout příkaz dodání"
+msgstr ""
 
 #. module: delivery
 #: view:delivery.grid:0
@@ -621,9 +584,110 @@ msgstr "Stavy"
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
 msgstr ""
-"Měrná jednotka (Měrná jednotka) je jednotka, ve které se měří hmotnost"
 
 #. module: delivery
 #: field:delivery.grid.line,price_type:0
 msgid "Price Type"
 msgstr "Typ ceny"
+
+#~ msgid "Cancel"
+#~ msgstr "Storno"
+
+#~ msgid "Delivery Order"
+#~ msgstr "Objednávka doručení"
+
+#, python-format
+#~ msgid "No price available !"
+#~ msgstr "Žádná dostupná cena !"
+
+#~ msgid "Order Reference must be unique !"
+#~ msgstr "Odkaz objednávky musí být jedinečný !"
+
+#~ msgid "Deliveries Properties"
+#~ msgstr "Vlastnosti doručení"
+
+#~ msgid ""
+#~ "The delivery price list allows you to compute the cost and sales price of "
+#~ "the delivery according to the weight of the products and other criteria. You "
+#~ "can define several price lists for one delivery method, per country or a "
+#~ "zone in a specific country defined by a postal code range."
+#~ msgstr ""
+#~ "Ceník dodání vám umožní spočítat cenu a prodejní cenu přepravy podle "
+#~ "hmotnosti výrobků a dalších kritérií. Můžete určit několik ceníků pro jednu "
+#~ "dodací metodu podle země nebo zóny ve specifické zemi určené podle rozsahu "
+#~ "počtovního kódu."
+
+#, python-format
+#~ msgid "No line matched this order in the choosed delivery grids !"
+#~ msgstr ""
+#~ "Neodpovídají žádné řádky této objednávce, pokud je vybrána dodací síť !"
+
+#~ msgid ""
+#~ "Create and manage the delivery methods you need for your sales activities. "
+#~ "Each delivery method can be assigned to a price list which computes the "
+#~ "price of the delivery according to the products sold or delivered."
+#~ msgstr ""
+#~ "Vytvořit a spravovat dodací metody, které chcete pro vaše prodejní aktivity. "
+#~ "Každá dodací metoda může být přiřazena k ceníku, který spočítá cenu přepravy "
+#~ "podle výrobků prodaných nebo dodaných."
+
+#, python-format
+#~ msgid "Warning"
+#~ msgstr "Varování"
+
+#~ msgid "_Cancel"
+#~ msgstr "_Zrušit"
+
+#~ msgid "Make Delievery"
+#~ msgstr "Provést dodání"
+
+#~ msgid ""
+#~ "Allows you to add delivery methods in sale orders and picking.\n"
+#~ "     You can define your own carrier and delivery grids for prices.\n"
+#~ "     When creating invoices from picking, OpenERP is able to add and compute "
+#~ "the shipping line.\n"
+#~ "\n"
+#~ "     "
+#~ msgstr ""
+#~ "Umožní vám přidat dodací metody v prodejním příkazu a navádění.\n"
+#~ "     Můžete určit vaše ceny přepravce and dodací sítě.\n"
+#~ "     Když vytváříte faktury z navádění, OpenERP je schopný přidat a spočítat "
+#~ "dodací řádky.\n"
+#~ "\n"
+#~ "     "
+
+#~ msgid "Weights"
+#~ msgstr "Váhy"
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr "Chyba ! Nemůžete vytvořit rekurzivní asociované členy."
+
+#~ msgid "You try to assign a lot which is not from the same product"
+#~ msgstr "Snažíte se přiřadit dávku, která není ze stejného výrobku"
+
+#~ msgid "Carrier Partner"
+#~ msgstr "Přepravní partner"
+
+#~ msgid "Sales & Purchases"
+#~ msgstr "Prodeje & Nákupy"
+
+#~ msgid "You must assign a production lot for this product"
+#~ msgstr "Pro tento výrobek musíte přiřadit výrobní dávku."
+
+#~ msgid "Create Deliveries"
+#~ msgstr "Vytvořit dodání"
+
+#~ msgid "Delivery Costs"
+#~ msgstr "Ceny dodání"
+
+#~ msgid "="
+#~ msgstr "="
+
+#~ msgid "_Apply"
+#~ msgstr "_Použít"
+
+#~ msgid "ID"
+#~ msgstr "ID"
+
+#~ msgid "Carriers and deliveries"
+#~ msgstr "Přepravci a doručení"

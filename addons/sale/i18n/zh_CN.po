@@ -1,21 +1,27 @@
-# Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# 	* sale
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-26 12:17+0000\n"
+"PO-Revision-Date: 2012-12-23 01:34+0000\n"
 "Last-Translator: 盈通 ccdos <ccdos@163.com>\n"
-"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-27 05:53+0000\n"
+"X-Launchpad-Export-Date: 2012-12-24 04:40+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
+
+#. module: sale
+#: help:sale.order,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr "保存复杂的摘要(消息数量,……等)。为了插入到看板视图，这一摘要直接是是HTML格式。"
 
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
@@ -444,13 +450,6 @@ msgid "# of Lines"
 msgstr "明细#"
 
 #. module: sale
-#: help:sale.order,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr "保留复杂的摘要(消息数量,……等)。为了插入到看板视图，这一摘要直接是是HTML格式。"
-
-#. module: sale
 #: help:sale.order.line,sequence:0
 msgid "Gives the sequence order when displaying a list of sales order lines."
 msgstr "给出订单行列表显示的排列顺序"
@@ -638,7 +637,7 @@ msgstr "总价"
 #. module: sale
 #: help:account.config.settings,group_analytic_account_for_sales:0
 msgid "Allows you to specify an analytic account on sales orders."
-msgstr "允许你在销售订单指定一个辅助核算项"
+msgstr "运行你在销售订单指定一个辅助核算项"
 
 #. module: sale
 #: help:sale.config.settings,module_sale_journal:0
@@ -1083,7 +1082,7 @@ msgstr "需要分配特定产品的业务伙伴"
 #. module: sale
 #: field:sale.order,project_id:0
 msgid "Contract / Analytic"
-msgstr "合同/辅助核算"
+msgstr "合同/分析"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -2169,3 +2168,1298 @@ msgstr "选择怎样为订单开票。这将建立一个可在核准前进行修
 #: view:sale.report:0
 msgid "Ordered date of the sales order"
 msgstr "销售订单的订购日期"
+
+#~ msgid "sale.config.picking_policy"
+#~ msgstr "sale.config.picking_policy"
+
+#~ msgid "Validate"
+#~ msgstr "审核"
+
+#~ msgid "Notes"
+#~ msgstr "备注"
+
+#~ msgid "VAT"
+#~ msgstr "增值税"
+
+#~ msgid "Force Assignation"
+#~ msgstr "强制指定"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "错误！"
+
+#~ msgid "Confirm Order"
+#~ msgstr "确认订单"
+
+#, python-format
+#~ msgid "Invalid action !"
+#~ msgstr "无效动作！"
+
+#~ msgid "All Quotations"
+#~ msgstr "所有报价单"
+
+#~ msgid "Draft Invoice"
+#~ msgstr "发票草稿"
+
+#, python-format
+#~ msgid "Could not cancel sale order !"
+#~ msgstr "不能取消销售订单！"
+
+#~ msgid "Origin"
+#~ msgstr "来源"
+
+#~ msgid "Reference"
+#~ msgstr "参考"
+
+#~ msgid "Net Price"
+#~ msgstr "净价"
+
+#~ msgid "All Sales Order"
+#~ msgstr "所有销售订单"
+
+#~ msgid "Warehouse"
+#~ msgstr "仓库"
+
+#~ msgid "Untaxed amount"
+#~ msgstr "未完税金额"
+
+#~ msgid "Configuration"
+#~ msgstr "设置"
+
+#~ msgid "Sales orders"
+#~ msgstr "销售订单"
+
+#~ msgid "Order Line"
+#~ msgstr "订单明细"
+
+#~ msgid "Canceled"
+#~ msgstr "已取消"
+
+#~ msgid "Salesman"
+#~ msgstr "业务员"
+
+#~ msgid "Order State"
+#~ msgstr "订单状态"
+
+#~ msgid "Sale Order"
+#~ msgstr "销售订单"
+
+#~ msgid "Properties"
+#~ msgstr "属性"
+
+#~ msgid "Compute"
+#~ msgstr "计算"
+
+#~ msgid "Sales order lines"
+#~ msgstr "销售订单明细"
+
+#~ msgid "UoM"
+#~ msgstr "计量单位"
+
+#~ msgid "Sale Order Lines"
+#~ msgstr "销售订单明细"
+
+#~ msgid "Do you really want to create the invoices ?"
+#~ msgstr "你确定要创建发票吗?"
+
+#~ msgid "Sales order"
+#~ msgstr "销售订单"
+
+#~ msgid "Incoterm"
+#~ msgstr "贸易术语"
+
+#~ msgid "Sales Management"
+#~ msgstr "销售管理"
+
+#~ msgid "Sale Order Line"
+#~ msgstr "销售订单明细"
+
+#~ msgid "Related invoices"
+#~ msgstr "相关发票"
+
+#~ msgid "My Sales Order"
+#~ msgstr "我的销售订单"
+
+#~ msgid "Close"
+#~ msgstr "关闭"
+
+#~ msgid "Recreate Procurement"
+#~ msgstr "重建需求单"
+
+#~ msgid "Delivery Order"
+#~ msgstr "送货单"
+
+#~ msgid "Inventory Moves"
+#~ msgstr "库存调拨"
+
+#~ msgid "Manual Designation"
+#~ msgstr "手动指定"
+
+#~ msgid "Invoice after delivery"
+#~ msgstr "送货后开发票"
+
+#~ msgid "Procure Method"
+#~ msgstr "获得方式"
+
+#~ msgid "Sale Shop"
+#~ msgstr "销售商店"
+
+#~ msgid "Manual Description"
+#~ msgstr "手动添加描述"
+
+#~ msgid "Payment Accounts"
+#~ msgstr "付款科目"
+
+#~ msgid "Payment accounts"
+#~ msgstr "付款账目"
+
+#~ msgid "Order Ref"
+#~ msgstr "订单编号"
+
+#~ msgid "Manages the delivery and invoicing progress"
+#~ msgstr "管理送货和发票进展"
+
+#~ msgid "Sales Process"
+#~ msgstr "销售过程"
+
+#~ msgid "Uninvoiced Lines"
+#~ msgstr "未开票明细"
+
+#~ msgid "Sales Configuration"
+#~ msgstr "销售设置"
+
+#~ msgid "Create Advance Invoice"
+#~ msgstr "创建预付款发票"
+
+#~ msgid "Delivery Order Only"
+#~ msgstr "只有送货单"
+
+#~ msgid "Sale Invoice"
+#~ msgstr "销售发票"
+
+#~ msgid "Cancel Assignation"
+#~ msgstr "取消分配"
+
+#~ msgid ""
+#~ "The name and address of the contact that requested the order or quotation."
+#~ msgstr "联系订单或报价单的请求者名称和地址"
+
+#~ msgid "Product UoM"
+#~ msgstr "产品计量单位"
+
+#~ msgid "Invoice Corrected"
+#~ msgstr "已更正发票"
+
+#~ msgid "Payment Terms"
+#~ msgstr "付款条件"
+
+#~ msgid "States"
+#~ msgstr "状态"
+
+#~ msgid "Stock Moves"
+#~ msgstr "库存调拨"
+
+#~ msgid "Accounting"
+#~ msgstr "会计"
+
+#~ msgid "Invoice Based on Sales Orders"
+#~ msgstr "基于销售订单开票"
+
+#~ msgid "Automatic Declaration"
+#~ msgstr "一般信息"
+
+#~ msgid "Set to Draft"
+#~ msgstr "设为报价单"
+
+#~ msgid "Partial Delivery"
+#~ msgstr "部分交付"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "在这动作定义中有无效的模块名"
+
+#~ msgid "Steps To Deliver a Sale Order"
+#~ msgstr "步骤提供销售订单"
+
+#~ msgid "You invoice has been successfully created !"
+#~ msgstr "你的发票已经成功创建!"
+
+#~ msgid ""
+#~ "This is the list of picking list that have been generated for this invoice"
+#~ msgstr "这领料/提货单已产生在此发票上."
+
+#~ msgid "Delivery, from the warehouse to the customer."
+#~ msgstr "送货,从仓库到客户"
+
+#~ msgid "Make Invoice"
+#~ msgstr "建立发票"
+
+#~ msgid ""
+#~ "Whenever confirm button is clicked, the draft state is moved to manual. that "
+#~ "is, quotation is moved to  sale order."
+#~ msgstr "当点击确认按钮草稿状态将转为手动.报价单转为销售订单."
+
+#~ msgid "Shipping Policy"
+#~ msgstr "运送方式"
+
+#~ msgid "Outgoing Products"
+#~ msgstr "发出的产品"
+
+#~ msgid "All at Once"
+#~ msgstr "所有一起"
+
+#~ msgid "Procurement is created after confirmation of sale order."
+#~ msgstr "确认销售订单后创建产品需求"
+
+#~ msgid "My sales order in progress"
+#~ msgstr "我的销售订单进展"
+
+#~ msgid ""
+#~ "The sale order will automatically create the invoice proposition (draft "
+#~ "invoice). Ordered and delivered quantities may not be the same. You have to "
+#~ "choose if you invoice based on ordered or shipped quantities. If the product "
+#~ "is a service, shipped quantities means hours spent on the associated tasks."
+#~ msgstr ""
+#~ "销售订单将自动创建发票(发票草稿).订单和送货数量可能不相同.如果你的发票基于已订购或送货数量你必须选择你必须选择.如果产品是一个服务运送数量以任务花费的"
+#~ "小时数计算."
+
+#~ msgid ""
+#~ "Packing list is created when 'Assign' is being clicked after confirming the "
+#~ "sale order. This transaction moves the sale order to packing list."
+#~ msgstr "确认销售订单点击‘指定’后创建包装单.销售订单转为包装单"
+
+#~ msgid "My sales order waiting Invoice"
+#~ msgstr "我的待开票的销售订单"
+
+#~ msgid ""
+#~ "When you select Shipping Ploicy = 'Automatic Invoice after delivery' , it "
+#~ "will automatic create after delivery."
+#~ msgstr "当你选择运送方式=‘送货后自动产生发票’.将在送货后自动创建发票."
+
+#~ msgid "Complete Delivery"
+#~ msgstr "完成送货"
+
+#~ msgid "Quantity (UoM)"
+#~ msgstr "数量(计量单位)"
+
+#~ msgid "Sale Order Procurement"
+#~ msgstr "销售单产品需求"
+
+#~ msgid "Packing"
+#~ msgstr "包装"
+
+#~ msgid "Invoice on Order After Delivery"
+#~ msgstr "按发票运送"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "无效XML视图结构!"
+
+#~ msgid "Related Packing"
+#~ msgstr "相关的包装"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "错误:销售单位必须和计量单位在不同的分类."
+
+#~ msgid "Customer Ref"
+#~ msgstr "客户参考"
+
+#~ msgid "Draft customer invoice, to be reviewed by accountant."
+#~ msgstr "会计人员审查的客户发票草稿"
+
+#~ msgid "Sales Order To Be Invoiced"
+#~ msgstr "销售订单开发票"
+
+#~ msgid "Procurement for each line"
+#~ msgstr "产品需求明细"
+
+#~ msgid "Packing Default Policy"
+#~ msgstr "包装默认方式"
+
+#~ msgid "Shipping Default Policy"
+#~ msgstr "默认运送方式"
+
+#~ msgid ""
+#~ "In sale order , procuerement for each line and it comes into the procurement "
+#~ "order"
+#~ msgstr "在销售订单产品需求的每个明细并都转为产品需求单."
+
+#~ msgid ""
+#~ "This Configuration step use to set default picking policy when make sale "
+#~ "order"
+#~ msgstr "这设置步骤用来设定建立销售订单的默认领料/提货方式"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr "错误:默认的计量单位和这货物的计量单位必须是同一类型."
+
+#~ msgid "My sales in shipping exception"
+#~ msgstr "我销售的运输异常"
+
+#~ msgid "Procurement Corrected"
+#~ msgstr "产品需求已修正"
+
+#~ msgid "Sale Procurement"
+#~ msgstr "销售产品需求"
+
+#~ msgid "Configure Sale Order Logistic"
+#~ msgstr "设置销售订单逻辑"
+
+#~ msgid "Packing Policy"
+#~ msgstr "包装方式"
+
+#~ msgid "Product sales"
+#~ msgstr "产品销售"
+
+#~ msgid "Our Salesman"
+#~ msgstr "业务员"
+
+#~ msgid "One procurement for each product."
+#~ msgstr "每个产品的产品需求"
+
+#~ msgid "Sale Pricelists"
+#~ msgstr "销售价格表"
+
+#~ msgid "Direct Delivery"
+#~ msgstr "直接送货"
+
+#~ msgid ""
+#~ "Invoice is created when 'Create Invoice' is being clicked after confirming "
+#~ "the sale order. This transaction moves the sale order to invoices."
+#~ msgstr "确认销售订单点击‘创建发票’创建发票.销售订单转为发票."
+
+#~ msgid "Assign"
+#~ msgstr "指定"
+
+#~ msgid "History"
+#~ msgstr "日志"
+
+#~ msgid "Packing OUT is created for stockable products."
+#~ msgstr "可库存物产品发出包装"
+
+#~ msgid "Other data"
+#~ msgstr "其它数据"
+
+#~ msgid ""
+#~ "Gives the state of the quotation or sale order. The exception state is "
+#~ "automatically set when a cancel operation occurs in the invoice validation "
+#~ "(Invoice Exception) or in the packing list process (Shipping Exception). The "
+#~ "'Waiting Schedule' state is set when the invoice is confirmed but waiting "
+#~ "for the scheduler to run on the date 'Date Ordered'."
+#~ msgstr ""
+#~ "给出这报价单或销售订单的状态这异常状态是在发票确认(发票异常)或在包装单处理(送货异常)自动设定时取消操作发生的.这\"等待调度表\"状态是在发票已确认但"
+#~ "在等待在\"日期排序\"内运行调度."
+
+#~ msgid "Number Packages"
+#~ msgstr "包装数"
+
+#~ msgid ""
+#~ "Confirming the packing list moves them to delivery order. This can be done "
+#~ "by clicking on 'Validate' button."
+#~ msgstr "点击‘确认’按钮.确认包装单转为送货单"
+
+#~ msgid "Advance Payment"
+#~ msgstr "预付款支付"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "对象名必须要以X_开头并且不能含有特殊字符!"
+
+#~ msgid "Confirm sale order and Create invoice."
+#~ msgstr "确认销售订单并创建发票"
+
+#~ msgid "Packing List & Delivery Order"
+#~ msgstr "包装单&送货单"
+
+#~ msgid "Invoice based on packing lists"
+#~ msgstr "发票基于包装单"
+
+#~ msgid "Set Default"
+#~ msgstr "设为草稿"
+
+#~ msgid "Quotation (A sale order in draft state)"
+#~ msgstr "报价(销售订单在草稿状态)"
+
+#~ msgid "Open Advance Invoice"
+#~ msgstr "待处理预付款发票"
+
+#~ msgid "Deliver"
+#~ msgstr "送货"
+
+#~ msgid "Invoice from the Packing"
+#~ msgstr "发票来自包装"
+
+#~ msgid "Make invoices"
+#~ msgstr "建立发票"
+
+#~ msgid "Purchase Pricelists"
+#~ msgstr "采购价格表"
+
+#~ msgid "Name"
+#~ msgstr "名称"
+
+#~ msgid "New Quotation"
+#~ msgstr "新报价单"
+
+#~ msgid "Total amount"
+#~ msgstr "金额合计"
+
+#~ msgid ""
+#~ "By default, Open ERP is able to manage complex routing and paths of products "
+#~ "in your warehouse and partner locations. This will configure the most common "
+#~ "and simple methods to deliver products to the customer in one or two "
+#~ "operations by the worker."
+#~ msgstr "默认情况下系统能管理复杂的路线和从你的仓库到业务伙伴库位的路径.这将设置最常见和最简单的方法把产品交付给客户通过一、两个操作."
+
+#~ msgid "Configure Picking Policy for Sale Order"
+#~ msgstr "销售订单设置领料/提货方式"
+
+#~ msgid "Delivery Delay"
+#~ msgstr "运送延期"
+
+#~ msgid ""
+#~ "This is the list of invoices that have been generated for this sale order. "
+#~ "The same sale order may have been invoiced in several times (by line for "
+#~ "example)."
+#~ msgstr "这是发票列表已经产生销售订单.上述销售订单可能已经开发票."
+
+#~ msgid "After confirming order, Create the invoice."
+#~ msgstr "创建这发票"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "错误:无效EAN编码"
+
+#~ msgid "Invoice Based on Deliveries"
+#~ msgstr "发票基于送货单"
+
+#~ msgid "Sale Order line"
+#~ msgstr "销售订单明细"
+
+#~ msgid "Shipping & Manual Invoice"
+#~ msgstr "发货和手工发票"
+
+#, python-format
+#~ msgid "You must first cancel all invoices attached to this sale order."
+#~ msgstr "您必须先取消所有和这个订单相关的发票。"
+
+#~ msgid "Allows you to compute delivery costs on your quotations."
+#~ msgstr "允许你计算和报价相关的运费"
+
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "警告 !"
+
+#~ msgid "Payment Before Delivery"
+#~ msgstr "款到发货"
+
+#~ msgid ""
+#~ "If you don't have enough stock available to deliver all at once, do you "
+#~ "accept partial shipments or not?"
+#~ msgstr "如果库存不够一次全部交货，你是否接受部分交货？"
+
+#~ msgid "Procurement Order"
+#~ msgstr "采购订单"
+
+#~ msgid "Sales by Salesman in last 90 days"
+#~ msgstr "销售员最近 90 天销售情况"
+
+#~ msgid "Sales by Salesman"
+#~ msgstr "销售员销售情况"
+
+#, python-format
+#~ msgid "The quotation '%s' has been converted to a sales order."
+#~ msgstr "报价单“%s”将转换为销售单。"
+
+#~ msgid "Order Reference must be unique !"
+#~ msgstr "单号必须唯一！"
+
+#~ msgid "Dates"
+#~ msgstr "日期"
+
+#~ msgid ""
+#~ "This is the days added to what you promise to customers for security purpose"
+#~ msgstr "基于安全的目的在承诺客户的时间的基础上需要增加的天数"
+
+#~ msgid "Shipping address for current sales order."
+#~ msgstr "当前销售订单的送货地址。"
+
+#~ msgid "Drives procurement orders for every sales order line."
+#~ msgstr "由销售订单明细产生的采购订单。"
+
+#~ msgid "Conditions"
+#~ msgstr "条款"
+
+#, python-format
+#~ msgid "invalid mode for test_state"
+#~ msgstr "test_state的模式无效"
+
+#, python-format
+#~ msgid ""
+#~ "There is no income category account defined in default Properties for "
+#~ "Product Category or Fiscal Position is not defined !"
+#~ msgstr "没有为产品类别定义缺省的收入类科目，或者没有定义财务结构 ！"
+
+#~ msgid "Sales Manager Dashboard"
+#~ msgstr "销售经理仪表盘"
+
+#~ msgid ""
+#~ "Number of days between the order confirmation the shipping of the products "
+#~ "to the customer"
+#~ msgstr "从订单确认到开始运送货物给客户之间的天数"
+
+#, python-format
+#~ msgid "Could not cancel this sales order !"
+#~ msgstr "不能取消此销售订单 ！"
+
+#~ msgid "Enhance your core Sales Application with additional functionalities."
+#~ msgstr "通过额外的功能增强你的核心销售应用程序。"
+
+#~ msgid ""
+#~ "For every sales order line, a procurement order is created to supply the "
+#~ "sold product."
+#~ msgstr "对每个销售订单明细，将会创建对应的采购订单来供应销售的产品。"
+
+#, python-format
+#~ msgid "(n/a)"
+#~ msgstr "(n/a)"
+
+#, python-format
+#~ msgid ""
+#~ "You cannot make an advance on a sales order                              "
+#~ "that is defined as 'Automatic Invoice after delivery'."
+#~ msgstr "你不能对一个定义为‘发货后自动开票’的销售订单提前开票。"
+
+#~ msgid ""
+#~ "Select a product of type service which is called 'Advance Product'. You may "
+#~ "have to create it and set it as a default value on this field."
+#~ msgstr "选择一个‘预付产品’的服务类产品。你可能需要创建并把它设为此字段的缺省值。"
+
+#~ msgid "Setup your sales workflow and default values."
+#~ msgstr "设置你的销售流程和默认值。"
+
+#~ msgid "Security Days"
+#~ msgstr "安全天数"
+
+#~ msgid "Do you really want to create the invoice(s) ?"
+#~ msgstr "你真的要生成发票吗 ？"
+
+#~ msgid "Create Final Invoice"
+#~ msgstr "生成最终发票"
+
+#~ msgid "Invoice On Order After Delivery"
+#~ msgstr "发货后开票"
+
+#, python-format
+#~ msgid "Could not cancel sales order line!"
+#~ msgstr "不能取消销售明细！"
+
+#~ msgid "  Year  "
+#~ msgstr "  年  "
+
+#~ msgid "Sales By Month"
+#~ msgstr "月销售情况"
+
+#~ msgid "Companies"
+#~ msgstr "公司"
+
+#~ msgid "Picking Default Policy"
+#~ msgstr "默认分拣方式"
+
+#~ msgid "Sales by Partner"
+#~ msgstr "业务伙伴的销售情况"
+
+#~ msgid "Sales Order Dates"
+#~ msgstr "销售订单日期"
+
+#~ msgid "Total Tax Excluded"
+#~ msgstr "不含税总金额"
+
+#~ msgid "Open Invoice"
+#~ msgstr "未结发票"
+
+#, python-format
+#~ msgid "You cannot cancel a sales order line that has already been invoiced !"
+#~ msgstr "你不能取消已开票的销售订单 ！"
+
+#~ msgid "Sales per Customer in last 90 days"
+#~ msgstr "最近90天每个客户的销售情况"
+
+#~ msgid "Sales by Product Category"
+#~ msgstr "按产品类别的销售情况"
+
+#~ msgid "Delivery Costs"
+#~ msgstr "交货成本"
+
+#~ msgid "title"
+#~ msgstr "标题"
+
+#~ msgid "Stock Move"
+#~ msgstr "库存调拨"
+
+#~ msgid "Document of the move to the output or to the customer."
+#~ msgstr "调拨出去或调拨给客户的单据"
+
+#~ msgid "Create Procurement Order"
+#~ msgstr "创建采购订单"
+
+#~ msgid "Order date"
+#~ msgstr "订单日期"
+
+#, python-format
+#~ msgid "Could not cancel sales order !"
+#~ msgstr "不能取消销售订单 ！"
+
+#~ msgid "Document of the move to the customer."
+#~ msgstr "转移给客户的单据"
+
+#~ msgid "Invoicing"
+#~ msgstr "开发票"
+
+#, python-format
+#~ msgid "There is no income account defined for this product: \"%s\" (id:%d)"
+#~ msgstr "没有为此产品定义收入类科目： \\\"%s\\\" (id:%d)"
+
+#~ msgid "Logistic"
+#~ msgstr "物流"
+
+#, python-format
+#~ msgid ""
+#~ "You plan to sell %.2f %s but you only have %.2f %s available !\n"
+#~ "The real stock is %.2f %s. (without reservations)"
+#~ msgstr ""
+#~ "你计划销售 %.2f %s 但是只要 %.2f %s 是有效的 ！\n"
+#~ "实际库存有 %.2f %s。 （没有预订）"
+
+#, python-format
+#~ msgid "Cannot delete a sales order line which is %s !"
+#~ msgstr "不能删除 %s的销售订单明细 ！"
+
+#~ msgid "res_config_contents"
+#~ msgstr "res_config_contents"
+
+#~ msgid ""
+#~ "Gives the margin of profitability by calculating the difference between Unit "
+#~ "Price and Cost Price."
+#~ msgstr "通过单价和成本价之间的差价设定利润率。"
+
+#~ msgid "   Month   "
+#~ msgstr "   月   "
+
+#, python-format
+#~ msgid "Warning"
+#~ msgstr "警告"
+
+#~ msgid "    Month-1    "
+#~ msgstr "    上月    "
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "错误！您不能创建递归公司."
+
+#, python-format
+#~ msgid "The sales order '%s' has been cancelled."
+#~ msgstr "销售订单'%s'已被取消。"
+
+#~ msgid "Image"
+#~ msgstr "图像"
+
+#, python-format
+#~ msgid "You must first cancel all invoices attached to this sales order."
+#~ msgstr "你必须先取消销售订单的所有发票。"
+
+#~ msgid "Ordered Date"
+#~ msgstr "订购日期"
+
+#~ msgid "You invoice has been successfully created!"
+#~ msgstr "发票创建成功！"
+
+#~ msgid "Shipped Qty"
+#~ msgstr "交货数量"
+
+#~ msgid "Sales Order Layout Improvement"
+#~ msgstr "改善销售订单样式"
+
+#, python-format
+#~ msgid "Error"
+#~ msgstr "错误"
+
+#, python-format
+#~ msgid "Not enough stock !"
+#~ msgstr "库存不足 ！"
+
+#, python-format
+#~ msgid "The sales order '%s' has been set in draft state."
+#~ msgstr "销售订单'%s'已经被设为草稿状态。"
+
+#, python-format
+#~ msgid "Cannot delete Sales Order(s) which are already confirmed !"
+#~ msgstr "不能删除已被确认的销售订单 !"
+
+#~ msgid "Layout Sequence"
+#~ msgstr "样式序列号"
+
+#~ msgid "sale.installer"
+#~ msgstr "sale.installer"
+
+#~ msgid "Steps To Deliver a Sales Order"
+#~ msgstr "销售订单发货步骤"
+
+#~ msgid "Sales Order Requisition"
+#~ msgstr "销售订单申请"
+
+#~ msgid ""
+#~ "Provides some features to improve the layout of the Sales Order reports."
+#~ msgstr "提供一些新的功能来改善销售订单报表的样式。"
+
+#~ msgid "Invoicing journals"
+#~ msgstr "开票日志"
+
+#~ msgid ""
+#~ "Incoterm which stands for 'International Commercial terms' implies its a "
+#~ "series of sales terms which are used in the commercial transaction."
+#~ msgstr "国际贸易术语包含一系列用于贸易事务的术语。"
+
+#, python-format
+#~ msgid ""
+#~ "You selected a quantity of %d Units.\n"
+#~ "But it's not compatible with the selected packaging.\n"
+#~ "Here is a proposition of quantities according to the packaging:\n"
+#~ "\n"
+#~ "EAN: %s Quantity: %s Type of ul: %s"
+#~ msgstr ""
+#~ "你选中了%d单位的数量。\n"
+#~ "但是它和选中的装箱单不一致。\n"
+#~ "根据装箱单它的数量应该是：\n"
+#~ "\n"
+#~ "EAN：%s 数量：%s ul类型：%s"
+
+#~ msgid "Adds commitment, requested and effective dates on Sales Orders."
+#~ msgstr "为销售订单添加承诺，申请和生效日期。"
+
+#~ msgid ""
+#~ "Allows you to group and invoice your delivery orders according to different "
+#~ "invoicing types: daily, weekly, etc."
+#~ msgstr "允许你对你的发货单根据不同开票类型：每天，每周等，进行分组和开票。"
+
+#, python-format
+#~ msgid "There is no sales journal defined for this company: \"%s\" (id:%d)"
+#~ msgstr "没有为此公司定义销售账簿： \\\"%s\\\" (id:%d)"
+
+#~ msgid ""
+#~ "The Shipping Policy is used to synchronise invoice and delivery operations.\n"
+#~ "  - The 'Pay Before delivery' choice will first generate the invoice and "
+#~ "then generate the picking order after the payment of this invoice.\n"
+#~ "  - The 'Shipping & Manual Invoice' will create the picking order directly "
+#~ "and wait for the user to manually click on the 'Invoice' button to generate "
+#~ "the draft invoice.\n"
+#~ "  - The 'Invoice On Order After Delivery' choice will generate the draft "
+#~ "invoice based on sales order after all picking lists have been finished.\n"
+#~ "  - The 'Invoice From The Picking' choice is used to create an invoice "
+#~ "during the picking process."
+#~ msgstr ""
+#~ "运送方式是用于同步发票和发货操作的。\n"
+#~ "  - ‘款到发货’选项是先生成发票，然后当收到发票的付款后生成装箱单。\n"
+#~ "  - ‘运送并且手工开票’是直接创建装箱单，并且等待用户手工点击‘开票’按钮生成发票草稿。\n"
+#~ "  - ‘先发货后开票’选项是在所有装箱单完成之后根据销售订单生成发票草稿。\n"
+#~ "  - ‘按装箱单开票’选项是在分拣的过程中生成发票。"
+
+#~ msgid "Margins in Sales Orders"
+#~ msgstr "销售订单利润"
+
+#~ msgid ""
+#~ "\n"
+#~ "    The base module to manage quotations and sales orders.\n"
+#~ "\n"
+#~ "    * Workflow with validation steps:\n"
+#~ "        - Quotation -> Sales order -> Invoice\n"
+#~ "    * Invoicing methods:\n"
+#~ "        - Invoice on order (before or after shipping)\n"
+#~ "        - Invoice on delivery\n"
+#~ "        - Invoice on timesheets\n"
+#~ "        - Advance invoice\n"
+#~ "    * Partners preferences (shipping, invoicing, incoterm, ...)\n"
+#~ "    * Products stocks and prices\n"
+#~ "    * Delivery methods:\n"
+#~ "        - all at once, multi-parcel\n"
+#~ "        - delivery costs\n"
+#~ "    * Dashboard for salesman that includes:\n"
+#~ "    * Your open quotations\n"
+#~ "    * Top 10 sales of the month\n"
+#~ "    * Cases statistics\n"
+#~ "    * Graph of sales by product\n"
+#~ "    * Graph of cases of the month\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    管理报价单和销售订单的基础模块。\n"
+#~ "  * 工作流和验证步骤： - 报价 -> 销售订单 -> 开票\n"
+#~ "  * 开票方式：\n"
+#~ "    - 按订单开票（运送前或后）\n"
+#~ "    - 按发货单开票 - 按工时单开票\n"
+#~ "    - 预付款发票\n"
+#~ "  * 业务伙伴首选项（运送，开票方式...）\n"
+#~ "  * 产品库存与价格\n"
+#~ "  * 送货方式:\n"
+#~ "    - 所有一起，多个包裹\n"
+#~ "    - 交货成本\n"
+#~ "\n"
+#~ "  * 业务员控制台包括:\n"
+#~ "    * 你的未关闭报价单\n"
+#~ "    * 月销售前10\n"
+#~ "    * 业务个案统计\n"
+#~ "    * 产品销售图表\n"
+#~ "    * 月业务个案图表\n"
+#~ "    "
+
+#~ msgid ""
+#~ "Gives the state of the quotation or sales order. \n"
+#~ "The exception state is automatically set when a cancel operation occurs in "
+#~ "the invoice validation (Invoice Exception) or in the picking list process "
+#~ "(Shipping Exception). \n"
+#~ "The 'Waiting Schedule' state is set when the invoice is confirmed but "
+#~ "waiting for the scheduler to run on the date 'Ordered Date'."
+#~ msgstr ""
+#~ "指定报价单或销售订单的状态\n"
+#~ "当发票验证被取消（发票异常），或取消装箱单里的产品（运输异常）的时候，会被设置为异常状态。\n"
+#~ "当发票被确认但在“订单日期”那天正等待日程安排会被设置为‘等待日程安排’状态。"
+
+#, python-format
+#~ msgid "You must first cancel all picking attached to this sales order."
+#~ msgstr "你必须先取消销售订单上的所有装箱单。"
+
+#~ msgid ""
+#~ "This is a list of picking that has been generated for this sales order."
+#~ msgstr "此销售订单的装箱单。"
+
+#~ msgid ""
+#~ "If you have more than one shop reselling your company products, you can "
+#~ "create and manage that from here. Whenever you will record a new quotation "
+#~ "or sales order, it has to be linked to a shop. The shop also defines the "
+#~ "warehouse from which the products will be delivered for each particular "
+#~ "sales."
+#~ msgstr ""
+#~ "如果有有超过一个商店转售你公司的产品，你可以在这里创建和管理它们。\r\n"
+#~ "每当生成一个报价单或者销售订单都必须和一个商店关联起来。商店也会为各自的销售订单指定产品会从那个仓库发货。"
+
+#~ msgid "Configure Your Sales Management Application"
+#~ msgstr "设置销售管理应用程序"
+
+#~ msgid ""
+#~ "The Shipping Policy is used to configure per order if you want to deliver as "
+#~ "soon as possible when one product is available or you wait that all products "
+#~ "are available.."
+#~ msgstr "运输方式是用于设置每张销售订单是否有一个产品有效时尽可能早发货，还是等所有产品都准备好了才尽可能早发货。"
+
+#~ msgid "Configure"
+#~ msgstr "设置"
+
+#~ msgid "Configuration Progress"
+#~ msgstr "设置进度"
+
+#~ msgid "Configure Sales Order Logistics"
+#~ msgstr "设置销售单物流信息"
+
+#~ msgid "Sales Application Configuration"
+#~ msgstr "销售应用程序设置"
+
+#~ msgid "Configure Picking Policy for Sales Order"
+#~ msgstr "设置销售订单的提货政策"
+
+#~ msgid ""
+#~ "By default, OpenERP is able to manage complex routing and paths of products "
+#~ "in your warehouse and partner locations. This will configure the most common "
+#~ "and simple methods to deliver products to the customer in one or two "
+#~ "operations by the worker."
+#~ msgstr ""
+#~ "默认情况下，OpenERP能够管理仓库和业务伙伴库位之间复杂的路线和路径。此设置能够配置最常用、最简单的方式来发货给各户，员工只需1或2个操作。"
+
+#, python-format
+#~ msgid "Picking Information !"
+#~ msgstr "装箱单信息 ！"
+
+#~ msgid "Picking List"
+#~ msgstr "装箱单"
+
+#~ msgid "Invoice From The Picking"
+#~ msgstr "来自装箱单的发票"
+
+#~ msgid "Picking Policy"
+#~ msgstr "装箱方式"
+
+#~ msgid "Picking List & Delivery Order"
+#~ msgstr "装箱单 & 发货单"
+
+#~ msgid "State"
+#~ msgstr "状态"
+
+#~ msgid ""
+#~ "Sale Order Lines that are confirmed, done or in exception state and haven't "
+#~ "yet been invoiced"
+#~ msgstr "已完成或在异常状态和尚未开发票的销售订单明细将被确认。"
+
+#~ msgid "Based on Timesheet"
+#~ msgstr "基于时间表"
+
+#~ msgid "Invoice based on deliveries"
+#~ msgstr "根据送货单生成发票"
+
+#, python-format
+#~ msgid ""
+#~ "In order to delete a confirmed sale order, you must cancel it before ! To "
+#~ "cancel a sale order, you must first cancel related picking or delivery "
+#~ "orders."
+#~ msgstr "在删除一个已确认的销售订单时，你必须小心！你必须要先取消其生成的装箱单或送货单。"
+
+#~ msgid "Print Quotation"
+#~ msgstr "打印报价单"
+
+#~ msgid "Main Working Time Unit"
+#~ msgstr "主要工作时间单位"
+
+#~ msgid "Based on Delivery Orders"
+#~ msgstr "基于送货单"
+
+#~ msgid "Based on Tasks' Work"
+#~ msgstr "基于指派的工作"
+
+#~ msgid "My Sale Orders"
+#~ msgstr "我的销售订单"
+
+#~ msgid ""
+#~ "The Invoice Policy is used to synchronise invoice and delivery operations.\n"
+#~ "  - The 'Pay before delivery' choice will first generate the invoice and "
+#~ "then generate the picking order after the payment of this invoice.\n"
+#~ "  - The 'Deliver & Invoice on demand' will create the picking order directly "
+#~ "and wait for the user to manually click on the 'Invoice' button to generate "
+#~ "the draft invoice based on the sale order or the sale order lines.\n"
+#~ "  - The 'Invoice on order after delivery' choice will generate the draft "
+#~ "invoice based on sales order after all picking lists have been finished.\n"
+#~ "  - The 'Invoice based on deliveries' choice is used to create an invoice "
+#~ "during the picking process."
+#~ msgstr ""
+#~ "这开票规则是用于同步发票和送货操作。\n"
+#~ "  - “送货前支付”先生成发票，再产生装箱单，然后按发票付款。\n"
+#~ "  - “送货&等待发票” 将直接生成装箱单和等待用户手动点击“发票”按钮生成基于销售订单或其明细的发票草稿。\n"
+#~ "  - “送货后生成发票”根据销售订单生成的所有装箱单都完成后才生成发票草稿。\n"
+#~ "  - “根据送货单开发票”在处理装箱期间生成发票"
+
+#, python-format
+#~ msgid "Configuration Error !"
+#~ msgstr "设置错误!"
+
+#~ msgid "You try to assign a lot which is not from the same product"
+#~ msgstr "您尝试为不同类的产品分配一个批次"
+
+#~ msgid "Reference must be unique per Company!"
+#~ msgstr "编号必须在公司内唯一！"
+
+#, python-format
+#~ msgid "You cannot cancel a sale order line that has already been invoiced!"
+#~ msgstr "你不能取消已开发票的销售订单明细！"
+
+#, python-format
+#~ msgid "You must first cancel stock moves attached to this sales order line."
+#~ msgstr "你必须先取消所有属于此销售订单明细上的库存调拨。"
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "公司名必须唯一！"
+
+#~ msgid "Month-1"
+#~ msgstr "上月"
+
+#~ msgid "You can not move products from or to a location of the type view."
+#~ msgstr "您不能将产品移动到类型为视图的库位上。"
+
+#~ msgid "Based on Sales Orders"
+#~ msgstr "根据销售订单"
+
+#~ msgid "Line Sequence"
+#~ msgstr "明细序列号"
+
+#~ msgid "Sales Open Invoice"
+#~ msgstr "未开票销售订单"
+
+#~ msgid "Miscellaneous"
+#~ msgstr "杂项"
+
+#~ msgid "Options"
+#~ msgstr "设置"
+
+#, python-format
+#~ msgid "You cannot confirm a sale order which has no line."
+#~ msgstr "你不能确认没有明细的销售订单。"
+
+#~ msgid "Shipping Address"
+#~ msgstr "送货地址"
+
+#~ msgid "Procurement of sold material"
+#~ msgstr "采购已下销售单的物料"
+
+#~ msgid "Invoice on order after delivery"
+#~ msgstr "在订单送货后生成发票"
+
+#~ msgid "References"
+#~ msgstr "关联"
+
+#~ msgid "Auto-email confirmed sale orders"
+#~ msgstr "销售订单确认的自动电子邮件"
+
+#~ msgid "Based on the shipped or on the ordered quantities."
+#~ msgstr "已运送或被已订购的数量。"
+
+#~ msgid ""
+#~ "The name and address of the contact who requested the order or quotation."
+#~ msgstr "订单或报价单联系人姓名和地址。"
+
+#, python-format
+#~ msgid "Cannot delete a sales order line which is in state '%s'!"
+#~ msgstr "不能删除'%s'状态的销售订单明细！"
+
+#~ msgid "Deliver all products at once"
+#~ msgstr "一次性交货"
+
+#~ msgid "Related Picking"
+#~ msgstr "关联的装箱单"
+
+#~ msgid "Qty(UoS)"
+#~ msgstr "数量（销售单位）"
+
+#~ msgid "Create Delivery Order"
+#~ msgstr "生成送货单"
+
+#~ msgid "Create Pick List"
+#~ msgstr "生成装箱单"
+
+#~ msgid "Pick List"
+#~ msgstr "装箱单"
+
+#~ msgid ""
+#~ "Here is a list of each sales order line to be invoiced. You can invoice "
+#~ "sales orders partially, by lines of sales order. You do not need this list "
+#~ "if you invoice from the delivery orders or if you invoice sales totally."
+#~ msgstr "要开票的销售订单明细列表。你可以按照销售订单明细分别开票。如果按送货单开票，或者按销售订单统一开票的话，你不需要这个列表。"
+
+#~ msgid ""
+#~ "Sales Orders help you manage quotations and orders from your customers. "
+#~ "OpenERP suggests that you start by creating a quotation. Once it is "
+#~ "confirmed, the quotation will be converted into a Sales Order. OpenERP can "
+#~ "handle several types of products so that a sales order may trigger tasks, "
+#~ "delivery orders, manufacturing orders, purchases and so on. Based on the "
+#~ "configuration of the sales order, a draft invoice will be generated so that "
+#~ "you just have to confirm it when you want to bill your customer."
+#~ msgstr ""
+#~ "销售订单管理能帮助你管理报价单和客户订单。\r\n"
+#~ "系统建议你先创建报价单， 一旦报价单被确认后，系统会自动把报价单转换成销售订单。\r\n"
+#~ "系统能处理多种类型产品使一个销售订单能触发任务，送货单，生产订单，采购等。\r\n"
+#~ "根据销售订单的设置，将产生一张发票草稿以便当你需要向客户开票的时候，你只需要确认一下即可。"
+
+#~ msgid ""
+#~ "The sale order will automatically create the invoice proposition (draft "
+#~ "invoice). Ordered and delivered quantities may not be the same. You have to "
+#~ "choose if you want your invoice based on ordered or shipped quantities. If "
+#~ "the product is a service, shipped quantities means hours spent on the "
+#~ "associated tasks."
+#~ msgstr ""
+#~ "销售订单会自动生成发票提议（发票草稿）。\r\n"
+#~ "销售订单和送货单的数量不一定需要一致。你需要选择发票是基于销售订单数量或送货单的数量。\r\n"
+#~ "如果产品是指服务，则交货数量是指在指定的任务上工作时数。"
+
+#~ msgid ""
+#~ "The invoice is created automatically if the shipping policy is 'Invoice from "
+#~ "pick' or 'Invoice on order after delivery'."
+#~ msgstr "如果运送方式是“发票来自装箱单” 或 “送货后开票”， 系统将会自己创建发票。"
+
+#~ msgid "Deliver each product when available"
+#~ msgstr "可以分批交货"
+
+#~ msgid "Lines to Invoice"
+#~ msgstr "待开票的销售订单明细"
+
+#~ msgid "Extra Info"
+#~ msgstr "附加信息"
+
+#~ msgid ""
+#~ "Gives the state of the quotation or sales order. \n"
+#~ "The exception state is automatically set when a cancel operation occurs in "
+#~ "the invoice validation (Invoice Exception) or in the picking list process "
+#~ "(Shipping Exception). \n"
+#~ "The 'Waiting Schedule' state is set when the invoice is confirmed but "
+#~ "waiting for the scheduler to run on the order date."
+#~ msgstr ""
+#~ "给出报价单或销售订单的状态。\n"
+#~ "在发票确认（发票异常）或在装箱单处理中（运输异常），“异常”状态会自动设置一个取消操作。\n"
+#~ "在“等待调度”状态设置发票等待在调度的日期里确认。"
+
+#~ msgid ""
+#~ "It indicates that the sales order has been delivered. This field is updated "
+#~ "only after the scheduler(s) have been launched."
+#~ msgstr "它表示销售订单已经送货。只有运行调度程序（scheduler）后这个字段才会被修改。"
+
+#~ msgid "Ordering Contact"
+#~ msgstr "联系人的订购"
+
+#~ msgid "Deliveries to Invoice"
+#~ msgstr "送货单待开票"
+
+#~ msgid "Do you charge the delivery?"
+#~ msgstr "你负责送货？"
+
+#~ msgid ""
+#~ "If 'on order', it triggers a procurement when the sale order is confirmed to "
+#~ "create a task, purchase order or manufacturing order linked to this sale "
+#~ "order line."
+#~ msgstr "如果是“来自订单”，当销售订单确认后它会触发一个需求，销售订单的明细会关联出采购订单或生产单。"
+
+#, python-format
+#~ msgid "Picking Information ! : "
+#~ msgstr "装箱信息！： "
+
+#~ msgid "Qty(UoM)"
+#~ msgstr "数量（计量单位）"
+
+#~ msgid "Procurement"
+#~ msgstr "需求"
+
+#~ msgid ""
+#~ "This tool will help you to install the right module and configure the system "
+#~ "according to the method you use to invoice your customers."
+#~ msgstr "该工具帮助你安装适合的模块并设置系统你对客户开发票的方法。"
+
+#~ msgid "Setup your Invoicing Method"
+#~ msgstr "设置你开票的方法"
+
+#~ msgid "Invoice Policy"
+#~ msgstr "开票规则"
+
+#~ msgid "Reference UoM"
+#~ msgstr "相关计量单位"
+
+#~ msgid "Confirmed sale order lines, not yet delivered"
+#~ msgstr "确认销售订单明细，尚未送货"
+
+#, python-format
+#~ msgid ""
+#~ "You selected a quantity of %d Units.\n"
+#~ "But it's not compatible with the selected packaging.\n"
+#~ "Here is a proposition of quantities according to the packaging:\n"
+#~ "EAN: %s Quantity: %s Type of ul: %s"
+#~ msgstr ""
+#~ "你选择了 %d 单位的数量。但它不兼容选定的包装。\n"
+#~ "这是对应该包装的建议数量：EAN: %s ，  数量: %s， 单位类型: %s"
+
+#~ msgid ""
+#~ "You can generate invoices based on sales orders or based on shippings."
+#~ msgstr "你可以根据销售订单或送货单生成发票。"
+
+#, python-format
+#~ msgid ""
+#~ "You have to select a customer in the sales form !\n"
+#~ "Please set one customer before choosing a product."
+#~ msgstr ""
+#~ "你必须在销售表单中选择一个客户 ！\n"
+#~ "请在选择产品之前设置客户。"
+
+#~ msgid "Pay before delivery"
+#~ msgstr "送货前付款"
+
+#~ msgid ""
+#~ "Depending on the configuration of the location Output, the move between the "
+#~ "output area and the customer is done through the Delivery Order manually or "
+#~ "automatically."
+#~ msgstr "根据出库库位的设置，出库和客户之间的库存调拨是通过送货单手工或自动完成的。"
+
+#~ msgid "Contract/Analytic Account"
+#~ msgstr "合并、分析科目"
+
+#, python-format
+#~ msgid ""
+#~ "Couldn't find a pricelist line matching this product and quantity.\n"
+#~ "You have to change either the product, the quantity or the pricelist."
+#~ msgstr ""
+#~ "找不到此产品和数量的价格表。\n"
+#~ "你必须修改产品，或价格表的数量。"
+
+#~ msgid ""
+#~ "The Pick List form is created as soon as the sales order is confirmed, in "
+#~ "the same time as the procurement order. It represents the assignment of "
+#~ "parts to the sales order. There is 1 pick list by sales order line which "
+#~ "evolves with the availability of parts."
+#~ msgstr "一旦销售订单被确认，装箱单就会和需求单一起生成。表示销售订单所产生的需求。有效的销售订单明细会相应产生一张装箱单。"
+
+#~ msgid "Sale Order Lines that are in 'done' state"
+#~ msgstr "“已完成”状态的销售订单明细"
+
+#~ msgid "Main Method Based On"
+#~ msgstr "主要方法"
+
+#~ msgid "Sales by Month"
+#~ msgstr "月度销售订单"
+
+#~ msgid "Sales by Product's Category in last 90 days"
+#~ msgstr "最近90天各产品类别的销售订单"
+
+#~ msgid "Print Order"
+#~ msgstr "打印订单"
+
+#~ msgid "Sale order lines done"
+#~ msgstr "销售订单明细已完成"
+
+#~ msgid "Sales order created in current year"
+#~ msgstr "本年创建的销售订单"
+
+#~ msgid "Delivery Lead Time"
+#~ msgstr "送货提前期"
+
+#~ msgid ""
+#~ "A procurement order is automatically created as soon as a sales order is "
+#~ "confirmed or as the invoice is paid. It drives the purchasing and the "
+#~ "production of products regarding to the rules and to the sales order's "
+#~ "parameters. "
+#~ msgstr "需求会在销售订单确认或发票付款后自动生成。它是采购和生产则根据有关的规则和售订订单参数而得出的。 "
+
+#~ msgid ""
+#~ "* The 'Draft' state is set when the related sales order in draft state.      "
+#~ "               \n"
+#~ "* The 'Confirmed' state is set when the related sales order is confirmed.    "
+#~ "                 \n"
+#~ "* The 'Exception' state is set when the related sales order is set as "
+#~ "exception.                     \n"
+#~ "* The 'Done' state is set when the sales order line has been picked.         "
+#~ "            \n"
+#~ "* The 'Cancelled' state is set when a user cancel the sales order related."
+#~ msgstr ""
+#~ "*当相关的销售订单处于草稿状态时设置为'草稿'状态。                     \n"
+#~ "*当相关的销售订单被确认时设置为'已确认'状态。                     \n"
+#~ "*当相关的销售订单为异常的时候设置为'异常'状态。                     \n"
+#~ "*当销售订单明细已经装箱时设置为'已完成'状态。                     \n"
+#~ "*当用户取消相关销售订单时设置为'已取消'状态。"
+
+#~ msgid "Sale Order Lines ready to be invoiced"
+#~ msgstr "准备开发票的销售订单明细"
+
+#~ msgid "Sales order created in last month"
+#~ msgstr "上月创建的销售订单"
+
+#~ msgid ""
+#~ "One Procurement order for each sales order line and for each of the "
+#~ "components."
+#~ msgstr "一个需求单对应一个销售订单明细里的组件"
+
+#~ msgid "Deliver & invoice on demand"
+#~ msgstr "要求的送货单和发票"
+
+#~ msgid "You must assign a production lot for this product"
+#~ msgstr "必须为此产品赋予一个生产批次"
+
+#~ msgid "Delivered"
+#~ msgstr "已送货"
+
+#, python-format
+#~ msgid "Not enough stock ! : "
+#~ msgstr "没足够的库存！： "
+
+#~ msgid "Packings"
+#~ msgstr "打包装"
+
+#~ msgid "Recreate Packing"
+#~ msgstr "重新打包装"
+
+#~ msgid "Packaging"
+#~ msgstr "打包装"

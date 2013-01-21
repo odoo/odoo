@@ -1,21 +1,20 @@
-# Hungarian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#    * resource
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Hungarian <hu@li.org>\n"
+"PO-Revision-Date: 2013-01-07 22:37+0000\n"
+"Last-Translator: krnkris <Unknown>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 07:32+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-01-08 04:52+0000\n"
+"X-Generator: Launchpad (build 16402)\n"
 
 #. module: resource
 #: help:resource.calendar.leaves,resource_id:0
@@ -95,12 +94,13 @@ msgstr "Erőforrások"
 #, python-format
 msgid "Make sure the Working time has been configured with proper week days!"
 msgstr ""
+"Győződjön meg róla, hogy a munkaidő megfelelő munka napokkal lett beállítva!"
 
 #. module: resource
 #: code:addons/resource/resource.py:307
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (másolat)"
 
 #. module: resource
 #: view:resource.calendar:0
@@ -136,7 +136,7 @@ msgstr "Péntek"
 #. module: resource
 #: view:resource.calendar.attendance:0
 msgid "Hours"
-msgstr ""
+msgstr "Órák"
 
 #. module: resource
 #: view:resource.calendar.leaves:0
@@ -162,7 +162,7 @@ msgstr "Munkaidőszaki erőforrás-szabadság keresése"
 #. module: resource
 #: field:resource.calendar.attendance,date_from:0
 msgid "Starting Date"
-msgstr ""
+msgstr "Kezdési dátum"
 
 #. module: resource
 #: field:resource.calendar,manager:0
@@ -208,7 +208,7 @@ msgstr "Munkaidő"
 #. module: resource
 #: help:resource.calendar.attendance,hour_from:0
 msgid "Start and End time of working."
-msgstr ""
+msgstr "A munka megkezdésének és befejezésének ideje."
 
 #. module: resource
 #: view:resource.calendar.leaves:0
@@ -256,6 +256,8 @@ msgid ""
 "Define working hours and time table that could be scheduled to your project "
 "members"
 msgstr ""
+"Határozzon meg munka órákat és idő táblát melyekkel ütemezi a projekt "
+"résztvevőit"
 
 #. module: resource
 #: help:resource.resource,user_id:0
@@ -272,7 +274,7 @@ msgstr "Az erőforrás ütemezésének a meghatározása."
 #. module: resource
 #: view:resource.calendar.leaves:0
 msgid "Starting Date of Leave"
-msgstr ""
+msgstr "Az eltávozás kezdési időpontja"
 
 #. module: resource
 #: field:resource.resource,code:0
@@ -307,6 +309,10 @@ msgid ""
 "show a load of 100% for this phase by default, but if we put a efficiency of "
 "200%, then his load will only be 50%."
 msgstr ""
+"Ez a mező ábrázolja a kutatás hatékonyságát a teljes feladaton. pl. egyedül "
+"végrehajtott kutatási 5 napos fázis 5 tárgyban kiosztva neki, ez a 100% "
+"terhelés erre a fázisra alap értelmezve, de ha a hatékonyságot 200% tesszük "
+"akkor ez a terhelés \"csak\" 50%."
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
@@ -341,7 +347,7 @@ msgstr "(szabadság)"
 #: code:addons/resource/resource.py:389
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "Beállítási hiba!"
 
 #. module: resource
 #: selection:resource.resource,resource_type:0
@@ -351,7 +357,7 @@ msgstr "Ember"
 #. module: resource
 #: view:resource.calendar.leaves:0
 msgid "Duration"
-msgstr ""
+msgstr "Időtartam"
 
 #. module: resource
 #: field:resource.calendar.leaves,date_from:0
@@ -362,3 +368,43 @@ msgstr "Kezdő dátum"
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Saturday"
 msgstr "Szombat"
+
+#~ msgid "Day of week"
+#~ msgstr "A hét napja"
+
+#~ msgid "Workgroup manager"
+#~ msgstr "Munkacsoport menedzser"
+
+#~ msgid "Starting date"
+#~ msgstr "Kezdő dátum"
+
+#~ msgid "Efficiency factor"
+#~ msgstr "Hatékonysági tényező"
+
+#, python-format
+#~ msgid " (copy)"
+#~ msgstr " (másolat)"
+
+#~ msgid "Working time will start from"
+#~ msgstr "A munkaidő kezdete"
+
+#~ msgid "Working time will end at"
+#~ msgstr "A munkaidő befejezése"
+
+#~ msgid ""
+#~ "This field depict the efficiency of the resource to complete tasks. e.g  "
+#~ "resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
+#~ "show a load of 100% for this phase by default, but if we put a efficency of "
+#~ "200%, then his load will only be 50%."
+#~ msgstr ""
+#~ "Ez a mező leírja az erőforrás hatékonyságát a feladatok befejezéséig. "
+#~ "Például ha egy erőforrást egyedül hozzáadunk egy 5 napos fázishoz, 5 "
+#~ "elvégzendő feladattal, akkor ez az erőforrás alapértelmezésben 100%-os "
+#~ "terheltséget fog mutatni erre a fázisra. De ha a hatékonysági fokot 200%-ra "
+#~ "állítjuk, akkor az erőforrás terheltsége csak 50%-os lesz."
+
+#~ msgid "Working time"
+#~ msgstr "Munkaidő"
+
+#~ msgid "General Information"
+#~ msgstr "Általános információ"

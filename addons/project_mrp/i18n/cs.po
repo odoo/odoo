@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-31 13:00+0000\n"
-"Last-Translator: Jan Grmela <Unknown>\n"
+"PO-Revision-Date: 2012-04-06 04:53+0000\n"
+"Last-Translator: Jiří Hajda <robie@centrum.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-01 05:19+0000\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:44+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
 "X-Poedit-Language: Czech\n"
 
@@ -31,12 +31,12 @@ msgstr "Pokud typ výrobku je služby, tak je vytvořen úkol."
 #: code:addons/project_mrp/project_procurement.py:92
 #, python-format
 msgid "Task created"
-msgstr "Úkol vytvořen"
+msgstr ""
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_saleordertask0
 msgid "In case you sell services on sales order"
-msgstr "V případě že prodáte služby v potvrzení objednávky"
+msgstr ""
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_mrptask0
@@ -51,7 +51,7 @@ msgstr "Výrobek"
 #. module: project_mrp
 #: model:process.node,name:project_mrp.process_node_saleordertask0
 msgid "Sales Order Task"
-msgstr "Úkol potvrzení objednávky"
+msgstr ""
 
 #. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_procuretask0
@@ -71,7 +71,7 @@ msgstr "Úloha zásobování"
 #. module: project_mrp
 #: field:procurement.order,sale_line_id:0
 msgid "Sales order line"
-msgstr "Řádek potvrzení objednávky"
+msgstr ""
 
 #. module: project_mrp
 #: model:ir.model,name:project_mrp.model_project_task
@@ -94,7 +94,7 @@ msgstr ""
 #. module: project_mrp
 #: view:product.product:0
 msgid "When you sell this service to a customer,"
-msgstr "Když prodáte tuto službu zákazníkovi,"
+msgstr ""
 
 #. module: project_mrp
 #: field:product.product,project_id:0
@@ -110,24 +110,24 @@ msgstr "Zásobování"
 #. module: project_mrp
 #: view:product.product:0
 msgid "False"
-msgstr "Nepravda"
+msgstr ""
 
 #. module: project_mrp
 #: code:addons/project_mrp/project_procurement.py:86
 #, python-format
 msgid "Task created."
-msgstr "Úkol vytvořen"
+msgstr ""
 
 #. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_ordertask0
 msgid "If procurement method is Make to order and supply method is produce"
 msgstr ""
-"Pokud je metoda zásobování Na objednávku a metoda naskladnění vyrobit"
+"Pokud je metoda zásobování Udělat na příkaz a metoda dodání je výroba"
 
 #. module: project_mrp
 #: field:project.task,sale_line_id:0
 msgid "Sales Order Line"
-msgstr "Řádek potvrzení objednávky"
+msgstr ""
 
 #. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_createtask0
@@ -137,14 +137,86 @@ msgstr "Vytvořit úkol"
 #. module: project_mrp
 #: model:ir.model,name:project_mrp.model_sale_order
 msgid "Sales Order"
-msgstr "Potvrzení objednávky"
+msgstr "Prodejní objednávka"
 
 #. module: project_mrp
 #: view:project.task:0
 msgid "Order Line"
-msgstr "Řádek objednávky"
+msgstr ""
 
 #. module: project_mrp
 #: view:product.product:0
 msgid "a task"
-msgstr "úkol"
+msgstr ""
+
+#~ msgid "Procurement and Project Management integration"
+#~ msgstr "Integrace zásobování a projektového řízení"
+
+#~ msgid "Error ! You cannot create recursive tasks."
+#~ msgstr "Chyba ! Nemůžete vytvořit rekurzivní úkoly."
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Chyba: Neplatný kód ean"
+
+#~ msgid "Sale Order Task"
+#~ msgstr "Úkol prodejního příkazu"
+
+#~ msgid ""
+#~ "\n"
+#~ "This module creates a link between procurement orders\n"
+#~ "containing \"service\" lines and project management tasks.\n"
+#~ "\n"
+#~ "When installed, this module will automatically create a new task\n"
+#~ "for each procurement order line, when the corresponding product\n"
+#~ "meets the following characteristics:\n"
+#~ "  * Type = Service\n"
+#~ "  * Procurement method (Order fulfillment) = MTO (make to order)\n"
+#~ "  * Supply/Procurement method = Produce\n"
+#~ "\n"
+#~ "The new task is created outside of any existing project, but\n"
+#~ "can be added to a project manually.\n"
+#~ "\n"
+#~ "When the project task is completed or cancelled, the workflow of the "
+#~ "corresponding\n"
+#~ "procurement line is updated accordingly.\n"
+#~ "\n"
+#~ "This module is useful to be able to invoice services based on tasks\n"
+#~ "automatically created via sale orders.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Tento modul vytváří spojení mezi zásobovacími příkazy\n"
+#~ "obsahujícími řádky \"služby\" a úkoly projektového řízení.\n"
+#~ "\n"
+#~ "Když je instalováno, tak tento modul automaticky vytvoří nový úkol\n"
+#~ "pro každý řádek příkazu zásobování, pokud odopvídající výrobek\n"
+#~ "splňuje následující vlastnosti:\n"
+#~ "  * Typ = Služba\n"
+#~ "  * Metoda zásobování (Splnění příkazu) = MTO (udělat na příkaz)\n"
+#~ "  * Metoda dodání/zásobování = Vyrobit\n"
+#~ "\n"
+#~ "Nový úkol je vytvořen mimo existující projekt, ale \n"
+#~ "může být do projektu přidán ručně.\n"
+#~ "\n"
+#~ "When the project task is completed or cancelled, the workflow of the "
+#~ "corresponding\n"
+#~ "procurement line is updated accordingly.\n"
+#~ "\n"
+#~ "This module is useful to be able to invoice services based on tasks\n"
+#~ "automatically created via sale orders.\n"
+#~ "\n"
+
+#~ msgid "In case you sell services on sale order"
+#~ msgstr "V případě, kdy prodáváte služby pomocí prodejního příkazu"
+
+#~ msgid "Sale order line"
+#~ msgstr "Řádek prodejní objednávky"
+
+#~ msgid "Sale Order Line"
+#~ msgstr "Řádek prodejní objednávky"
+
+#~ msgid "Error ! Task end-date must be greater then task start-date"
+#~ msgstr "Chyba ! Datum ukončení úkolu musí být větší než počáteční datum"
+
+#~ msgid "Order Reference must be unique per Company!"
+#~ msgstr "Odkaz obědnávky musí být jedinečný na společnost!"

@@ -1,20 +1,21 @@
 # Brazilian Portuguese translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2012-12-23 14:28+0000\n"
+"Last-Translator: Fábio Martinelli - http://zupy.com.br "
+"<webmaster@guaru.net>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 07:30+0000\n"
+"X-Launchpad-Export-Date: 2012-12-24 04:40+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
 
 #. module: project_long_term
@@ -41,7 +42,7 @@ msgstr "Fases"
 #: view:project.phase:0
 #: view:project.user.allocation:0
 msgid "Team Planning"
-msgstr ""
+msgstr "Planejamento de Equipe"
 
 #. module: project_long_term
 #: field:project.phase,user_ids:0
@@ -91,12 +92,12 @@ msgstr "Planejar Fases"
 #: view:project.phase:0
 #: field:project.phase,state:0
 msgid "Status"
-msgstr ""
+msgstr "Situação"
 
 #. module: project_long_term
 #: field:project.compute.phases,target_project:0
 msgid "Action"
-msgstr ""
+msgstr "Ação"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -117,7 +118,7 @@ msgstr "Provisório"
 #: view:project.compute.phases:0
 #: view:project.compute.tasks:0
 msgid "C_ompute"
-msgstr "C_alcular"
+msgstr "(o) Calcular"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -128,7 +129,7 @@ msgstr "Novo"
 #. module: project_long_term
 #: field:project.phase,product_uom:0
 msgid "Duration Unit of Measure"
-msgstr ""
+msgstr "Duração da Unidade de Medida"
 
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar_leaves
@@ -155,7 +156,7 @@ msgstr "Fases em Progresso"
 #: code:addons/project_long_term/project_long_term.py:140
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (cópia)"
 
 #. module: project_long_term
 #: code:addons/project_long_term/wizard/project_compute_phases.py:48
@@ -183,23 +184,25 @@ msgstr "Data Inicial Mínima"
 #: help:project.phase,product_uom:0
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for Duration"
-msgstr ""
+msgstr "Unidade de Medida (UdM) é a unidade de medida para Duração"
 
 #. module: project_long_term
 #: help:project.phase,user_ids:0
 msgid ""
 "The resources on the project can be computed automatically by the scheduler."
 msgstr ""
+"Os recursos sobre o projeto podem ser calculados automaticamente pelo "
+"agendador."
 
 #. module: project_long_term
 #: field:project.phase,sequence:0
 msgid "Sequence"
-msgstr "Sequência"
+msgstr "Seqüência"
 
 #. module: project_long_term
 #: help:account.analytic.account,use_phases:0
 msgid "Check this field if you plan to use phase-based scheduling"
-msgstr ""
+msgstr "Marque esta caixa se você deseja usar o agendamento baseado em fases"
 
 #. module: project_long_term
 #: help:project.phase,state:0
@@ -210,6 +213,10 @@ msgid ""
 "           \n"
 " If the phase is over, the status is set to 'Done'."
 msgstr ""
+"Quando a fase é criada a situação é 'Provisória'.\n"
+"Quando a fase é iniciada, o situação muda para 'Em andamento'.\n"
+"Se for necessário uma revisão na fase a situação fica como 'Pendente'.\n"
+"Quando a fase termina, a situação fica como 'Concluído'."
 
 #. module: project_long_term
 #: field:project.phase,progress:0
@@ -315,7 +322,7 @@ msgstr "Detalhes das Tarefas"
 #. module: project_long_term
 #: field:project.project,phase_count:0
 msgid "Open Phases"
-msgstr ""
+msgstr "Fases Abertas"
 
 #. module: project_long_term
 #: help:project.phase,date_end:0
@@ -412,7 +419,7 @@ msgstr "Dá a ordem da seqüência ao exibir uma lista de fases."
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.project_phase_task_list
 msgid "Tasks"
-msgstr ""
+msgstr "Tarefas"
 
 #. module: project_long_term
 #: help:project.user.allocation,date_end:0
@@ -457,7 +464,7 @@ msgstr "Mês"
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_account_analytic_account
 msgid "Analytic Account"
-msgstr ""
+msgstr "Conta Analítica"
 
 #. module: project_long_term
 #: field:project.phase,constraint_date_end:0
@@ -512,4 +519,153 @@ msgstr "Nome"
 #: view:project.compute.phases:0
 #: view:project.compute.tasks:0
 msgid "or"
-msgstr ""
+msgstr "ou"
+
+#~ msgid "Schedule"
+#~ msgstr "Agendar"
+
+#~ msgid "Error! project start-date must be lower then project end-date."
+#~ msgstr "Erro! A data inicial do projeto precisa ser menor que a data final."
+
+#~ msgid "Resources Allocation"
+#~ msgstr "Alocação de Recursos"
+
+#~ msgid "Compute Scheduling of Phases"
+#~ msgstr "Calcular Agendamento de Fases"
+
+#~ msgid "Error ! You cannot create recursive tasks."
+#~ msgstr "Erro! Você não pode criar tarefas recursivas."
+
+#~ msgid "UoM (Unit of Measure) is the unit of measurement for Duration"
+#~ msgstr "UdM (Unidade de Medida) é a unidade de medida para Duração"
+
+#, python-format
+#~ msgid "Day"
+#~ msgstr "Dia"
+
+#~ msgid "Error! You cannot assign escalation to the same project!"
+#~ msgstr "Erro! Você não pode atribuir escalas para o mesmo projeto!"
+
+#~ msgid "Resource Allocations"
+#~ msgstr "Alocação de Recursos"
+
+#, python-format
+#~ msgid " (copy)"
+#~ msgstr " (cópia)"
+
+#~ msgid "Availability"
+#~ msgstr "Disponibilidade"
+
+#~ msgid "Planning"
+#~ msgstr "Planejamento"
+
+#~ msgid "_Cancel"
+#~ msgstr "_Cancelar"
+
+#~ msgid "Compute Phase Scheduling"
+#~ msgstr "Calcular Agendamento da Fase"
+
+#~ msgid ""
+#~ "To schedule phases of all or a specified project. It then open a gantt "
+#~ "view.\n"
+#~ "\t           "
+#~ msgstr ""
+#~ "Para agendar as fases de todos ou um projeto específico. Em seguida, abra "
+#~ "uma vista de Gantt.\n"
+#~ "\t           "
+
+#~ msgid "State"
+#~ msgstr "Status"
+
+#~ msgid "Compute Scheduling of phases for all or specified project"
+#~ msgstr "Calcule Agendamento de fases para todos ou um projeto específico"
+
+#~ msgid "Compute Scheduling of Task"
+#~ msgstr "Calcule Agendamento de Tarefas"
+
+#~ msgid "Duration UoM"
+#~ msgstr "UdM Duração"
+
+#~ msgid "Compute Task Scheduling"
+#~ msgstr "Calcule Agendamento de Tarefas"
+
+#~ msgid ""
+#~ "Availability of this resource for this project phase in percentage (=50%)"
+#~ msgstr ""
+#~ "Disponibilidade deste recurso para esta fase do projeto em porcentagem (= "
+#~ "50%)"
+
+#~ msgid "Project Resources"
+#~ msgstr "Recursos do Projeto"
+
+#~ msgid "_Ok"
+#~ msgstr "_Ok"
+
+#~ msgid "Schedule and Display info"
+#~ msgstr "Info de Programação e Exibição"
+
+#~ msgid "Dates"
+#~ msgstr "Datas"
+
+#~ msgid "unknown"
+#~ msgstr "desconhecido"
+
+#~ msgid "Resource Allocation"
+#~ msgstr "Alocação de Recursos"
+
+#~ msgid ""
+#~ "A project can be split into the different phases. For each phase, you can "
+#~ "define your resources allocation, describe different tasks and link your "
+#~ "phase to previous and next phases, add date constraints for the automated "
+#~ "scheduling. Use the long term planning in order to planify your available "
+#~ "human resources, convert your phases into a series of tasks when you start "
+#~ "working on the project."
+#~ msgstr ""
+#~ "Um projeto pode ser dividido em diferentes fases. Para cada fase, você pode "
+#~ "definir sua alocação de recursos, descrever as diferentes tarefas e links "
+#~ "para as fases anteriores e seguintes, adicionar restrições de data para o "
+#~ "agendamento automatizado. Use o planejamento de longo prazo, a fim de "
+#~ "planificar sua disponibilidade de recursos humanos, converter suas fases em "
+#~ "uma série de tarefas quando você começar a trabalhar no do projeto."
+
+#~ msgid "Task Detail"
+#~ msgstr "Detalhes da Tarefa"
+
+#~ msgid "Current"
+#~ msgstr "Atual"
+
+#~ msgid "Responsible"
+#~ msgstr "Responsável"
+
+#~ msgid "Resource"
+#~ msgstr "Recurso"
+
+#~ msgid "Message"
+#~ msgstr "Mensagem"
+
+#~ msgid "Displaying settings"
+#~ msgstr "Mostrando configurações"
+
+#~ msgid "Planning of Users"
+#~ msgstr "Planejamento de Usuários"
+
+#~ msgid "Error ! Task end-date must be greater then task start-date"
+#~ msgstr "Erro ! A data final deve ser maior do que a data inicial"
+
+#~ msgid ""
+#~ "The ressources on the project can be computed automatically by the scheduler"
+#~ msgstr ""
+#~ "Os recursos neste projeto podem ser calculados automaticamente pelo "
+#~ "agendador."
+
+#~ msgid ""
+#~ "If the phase is created the state 'Draft'.\n"
+#~ " If the phase is started, the state becomes 'In Progress'.\n"
+#~ " If review is needed the phase is in 'Pending' state.                        "
+#~ "          \n"
+#~ " If the phase is over, the states is set to 'Done'."
+#~ msgstr ""
+#~ "Se a fase for criada com a situação 'Provisória'.\n"
+#~ " Se a fase for iniciada, a situação muda para 'Em Progresso'.\n"
+#~ " Se for necessário uma revisão a fase ficará em 'Pendente'.\n"
+#~ " Se a fase for concluída, a situação é alterada para 'Concluída'."

@@ -87,12 +87,13 @@ class crm_lead(base_stage, format_address, osv.osv):
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
-        if not vals.get('stage_id') and vals.get('section_id'):
+        if not vals.get('stage_id'):
             ctx = context.copy()
-            ctx['default_section_id'] = vals['section_id']
+            if vals.get('section_id'):
+                ctx['default_section_id'] = vals['section_id']
+            if vals.get('type'):
+                ctx['default_type'] = vals['type']
             vals['stage_id'] = self._get_default_stage_id(cr, uid, context=ctx)
-        elif not vals.get('stage_id') and context.get('default_section_id'):
-            vals['stage_id'] = self._get_default_stage_id(cr, uid, context=context)
         return super(crm_lead, self).create(cr, uid, vals, context=context)
 
     def _get_default_section_id(self, cr, uid, context=None):
@@ -974,16 +975,17 @@ class crm_lead(base_stage, format_address, osv.osv):
         if custom_values is None: custom_values = {}
 
         desc = html2plaintext(msg.get('body')) if msg.get('body') else ''
-        custom_values.update({
+        defaults = {
             'name':  msg.get('subject') or _("No Subject"),
             'description': desc,
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
             'user_id': False,
-        })
+        }
         if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
-            custom_values['priority'] = msg.get('priority')
-        return super(crm_lead, self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
+            defaults['priority'] = msg.get('priority')
+        defaults.update(custom_values)
+        return super(crm_lead, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
 
     def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
         """ Overrides mail_thread message_update that is called by the mailgateway

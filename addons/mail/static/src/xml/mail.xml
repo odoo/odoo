@@ -132,8 +132,8 @@
         <div class="oe_emails_from">
             <t t-foreach='widget.emails_from' t-as='email_from'>
                 <label title="Add them into recipients and followers">
-                    <input type="checkbox" t-att-checked="email_from[1] ? 'checked' : undefind" t-att-data="email_from[0]"/>
-                    <t t-raw="email_from[0]"/>
+                    <input type="checkbox" t-att-checked="email_from[1] ? 'checked' : undefind" t-att-data="email_from[0][4]"/>
+                    <t t-raw="email_from[0][2]"/>
                 </label>
             </t>
         </div>
@@ -243,8 +243,8 @@
                     <t t-if="widget.attachment_ids.length > 0">
                         <div class="oe_msg_attachment_list"></div>
                     </t>
-                    <a t-if="widget.author_id and widget.options.show_link and widget.author_id[0]" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}"><t t-raw="widget.author_id[1]"/></a>
-                    <span t-if="widget.author_id and (!widget.options.show_link or !widget.author_id[0])"><t t-raw="widget.author_id[1]"/></span>
+                    <a t-if="widget.author_id and widget.options.show_link and widget.author_id[0]" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}"><t t-raw="widget.author_id[2]"/></a>
+                    <span t-if="widget.author_id and (!widget.options.show_link or !widget.author_id[0])"><t t-raw="widget.author_id[2]"/></span>
                     <span class='oe_subtle'>•</span>
                     <span t-att-title="widget.date"><t t-raw="widget.timerelative"/></span>
                     <span t-if="!widget.options.readonly" class='oe_subtle'>•</span>

@@ -1091,12 +1091,11 @@ class task(base_stage, osv.osv):
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
-        if not vals.get('stage_id') and vals.get('project_id'):
+        if not vals.get('stage_id'):
             ctx = context.copy()
-            ctx['default_project_id'] = vals['project_id']
+            if  vals.get('project_id'):
+                ctx['default_project_id'] = vals['project_id']
             vals['stage_id'] = self._get_default_stage_id(cr, uid, context=ctx)
-        elif not vals.get('stage_id') and context.get('default_project_id'):
-            vals['stage_id'] = self._get_default_stage_id(cr, uid, context=context)
         task_id = super(task, self).create(cr, uid, vals, context=context)
         self._store_history(cr, uid, [task_id], context=context)
         return task_id
@@ -1174,11 +1173,12 @@ class task(base_stage, osv.osv):
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """ Override to updates the document according to the email. """
         if custom_values is None: custom_values = {}
-        custom_values.update({
+        defaults = {
             'name': msg.get('subject'),
             'planned_hours': 0.0,
-        })
-        return super(task,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
+        }
+        defaults.update(custom_values)
+        return super(task,self).message_new(cr, uid, msg, custom_values=defaults, context=context)
 
     def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
         """ Override to update the task according to the email. """

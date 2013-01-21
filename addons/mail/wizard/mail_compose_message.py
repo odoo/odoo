@@ -168,6 +168,7 @@ class mail_compose_message(osv.TransientModel):
             reply_subject = "%s %s" % (re_prefix, reply_subject)
         # get partner_ids from original message
         partner_ids = [partner.id for partner in message_data.partner_ids] if message_data.partner_ids else []
+        partner_ids += context.get('default_partner_ids', [])
 
         # update the result
         result = {

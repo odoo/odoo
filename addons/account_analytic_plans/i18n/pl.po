@@ -1,20 +1,19 @@
-# Polish translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* account_analytic_plans
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Polish <pl@li.org>\n"
+"PO-Revision-Date: 2012-12-13 20:36+0000\n"
+"Last-Translator: Grzegorz Grzelak (OpenGLOBE.pl) <grzegorz@openglobe.pl>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 07:03+0000\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:42+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
 
 #. module: account_analytic_plans
@@ -450,3 +449,215 @@ msgstr "Pozycja zamówienia sprzedaży"
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "From Date"
 msgstr "Od daty"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
+#~ "specjalnych !"
+
+#~ msgid "Currency:"
+#~ msgstr "Waluta:"
+
+#~ msgid "to"
+#~ msgstr "do"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML niewłaściwy dla tej architektury wyświetlania!"
+
+#~ msgid "OK"
+#~ msgstr "OK"
+
+#~ msgid "Printing date:"
+#~ msgstr "Data wydruku:"
+
+#~ msgid "Select Information"
+#~ msgstr "Wybierz informację"
+
+#~ msgid "Create Model"
+#~ msgstr "Utwórz model"
+
+#, python-format
+#~ msgid "Error"
+#~ msgstr "Błąd"
+
+#~ msgid ""
+#~ "This module allows to use several analytic plans, according to the general "
+#~ "journal,\n"
+#~ "so that multiple analytic lines are created when the invoice or the entries\n"
+#~ "are confirmed.\n"
+#~ "\n"
+#~ "For example, you can define the following analytic structure:\n"
+#~ "  Projects\n"
+#~ "      Project 1\n"
+#~ "          SubProj 1.1\n"
+#~ "          SubProj 1.2\n"
+#~ "      Project 2\n"
+#~ "  Salesman\n"
+#~ "      Eric\n"
+#~ "      Fabien\n"
+#~ "\n"
+#~ "Here, we have two plans: Projects and Salesman. An invoice line must\n"
+#~ "be able to write analytic entries in the 2 plans: SubProj 1.1 and\n"
+#~ "Fabien. The amount can also be split. The following example is for\n"
+#~ "an invoice that touches the two subproject and assigned to one salesman:\n"
+#~ "\n"
+#~ "Plan1:\n"
+#~ "    SubProject 1.1 : 50%\n"
+#~ "    SubProject 1.2 : 50%\n"
+#~ "Plan2:\n"
+#~ "    Eric: 100%\n"
+#~ "\n"
+#~ "So when this line of invoice will be confirmed, it will generate 3 analytic "
+#~ "lines,\n"
+#~ "for one account entry.\n"
+#~ "        "
+#~ msgstr ""
+#~ "Ten moduł pozwala stosować kilka planów analitycznych zgodnie z głównym "
+#~ "dziennikiem,\n"
+#~ "aby kilka pozycji analitycznych zostało utworzonych, kiedy faktura lub "
+#~ "zapisy zostaną\n"
+#~ "powierdzone.\n"
+#~ "\n"
+#~ "Na przykład możesz zdefiniować następującą strukturę analityczną:\n"
+#~ "  Projekty\n"
+#~ "      Projekt 1\n"
+#~ "          PodProj 1.1\n"
+#~ "          PodProj 1.2\n"
+#~ "      Projekt 2\n"
+#~ "  Sprzedawca\n"
+#~ "      Eryk\n"
+#~ "      Fabian\n"
+#~ "\n"
+#~ "Mamy więc dwa plany: Projekty and Sprzedawca. Pozycja faktury\n"
+#~ "powinna więc generować zapisy analityczne w 2. planach: PodProj 1.1 i\n"
+#~ "Fabiana. Kwota może być podzielona. Poniższy przykład jest dla faktury\n"
+#~ "dotyczącej dwóch podprojektów i związanej z jednym sprzedawcą:\n"
+#~ "\n"
+#~ "Plan1:\n"
+#~ "    PodProjekt 1.1 : 50%\n"
+#~ "    PodProjekt 1.2 : 50%\n"
+#~ "Plan2:\n"
+#~ "    Eryk: 100%\n"
+#~ "\n"
+#~ "Kiedy ta pozycja faktury zostanie potwierdzona, to zostaną wygenerowane 3 "
+#~ "pozycje analityczne,\n"
+#~ "w zapisach księgowych.\n"
+#~ "        "
+
+#~ msgid "Period from"
+#~ msgstr "Okres od"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nieprawidłowa nazwa modelu w definicji akcji."
+
+#~ msgid "Analytic Account Ref."
+#~ msgstr "Odn. konta analitycznego"
+
+#, python-format
+#~ msgid "User Error"
+#~ msgstr "Błąd użytkownika"
+
+#~ msgid "You can not create move line on closed account."
+#~ msgstr "Nie możesz tworzyć zapisów na zamkniętym koncie."
+
+#~ msgid "Wrong credit or debit value in accounting entry !"
+#~ msgstr "Niepoprawna wartość Winien lub Ma w zapisie !"
+
+#~ msgid "The code of the journal must be unique per company !"
+#~ msgstr "Kod dziennika musi być unikalny w firmie !"
+
+#~ msgid "Company must be same for its related account and period."
+#~ msgstr "Firma musi być odpowiednia do konta i okresu."
+
+#, python-format
+#~ msgid "Value Error"
+#~ msgstr "Błąd wartości"
+
+#~ msgid "The name of the journal must be unique per company !"
+#~ msgstr "Nazwa dziennika musi być unikalna w firmie !"
+
+#~ msgid "You can not create move line on view account."
+#~ msgstr "Nie możesz tworzyć zapisów na koncie widokowym."
+
+#~ msgid "Invoice Number must be unique per Company!"
+#~ msgstr "Numer faktury musi być unikalny w firmie!"
+
+#~ msgid "Define your Analytic Plans"
+#~ msgstr "Definiuj swój plan analityczny"
+
+#~ msgid ""
+#~ "Configuration error! The currency chosen should be shared by the default "
+#~ "accounts too."
+#~ msgstr ""
+#~ "Błąd konfiguracji! Wybrana waluta powinna być współdzielona również przez "
+#~ "konta domyślne."
+
+#~ msgid ""
+#~ "The date of your Journal Entry is not in the defined period! You should "
+#~ "change the date or remove this constraint from the journal."
+#~ msgstr ""
+#~ "Data jest poza okresem! Musisz zmienić datę lub zdjąć ograniczenie w "
+#~ "dzienniku."
+
+#~ msgid "The journal and period chosen have to belong to the same company."
+#~ msgstr "Dziennik i okres muszą należeć do tej samej firmy."
+
+#~ msgid "Invalid BBA Structured Communication !"
+#~ msgstr "Niedozwolona komunikacja strukturalna BBA !"
+
+#, python-format
+#~ msgid "A model having this name and code already exists !"
+#~ msgstr "Model z tą nazwą i kodem juz istnieje !"
+
+#, python-format
+#~ msgid "No analytic plan defined !"
+#~ msgstr "Brak planu analitycznego !"
+
+#~ msgid ""
+#~ "The amount of the voucher must be the same amount as the one on the "
+#~ "statement line"
+#~ msgstr "Kwota płatności musi być taka sama jak kwota pozycji wyciągu."
+
+#, python-format
+#~ msgid "You have to define an analytic journal on the '%s' journal!"
+#~ msgstr "Musisz zdefiniować dziennik analityczny dla dziennika '%s' !"
+
+#~ msgid ""
+#~ "The selected account of your Journal Entry forces to provide a secondary "
+#~ "currency. You should remove the secondary currency on the account or select "
+#~ "a multi-currency view on the journal."
+#~ msgstr ""
+#~ "Wybrane konto wymaga podania drugiej waluty. Powinieneś usunąć drugą walutę "
+#~ "z konta lub wybrać wielowalutowy widok w dzienniku."
+
+#~ msgid "You can not create journal items on an account of type view."
+#~ msgstr "Nie można tworzyć zapisów dla kont typu widok."
+
+#, python-format
+#~ msgid "Please put a name and a code before saving the model !"
+#~ msgstr "Podaj nazwę i kod przed zapisem modelu !"
+
+#~ msgid "Company must be the same for its related account and period."
+#~ msgstr "Firma musi być ta sama dla związanego konta i okresu."
+
+#~ msgid "You can not create analytic line on view account."
+#~ msgstr "Nie możesz tworzyć pozycji analitycznej na koncie widokowym"
+
+#, python-format
+#~ msgid "The Total Should be Between %s and %s"
+#~ msgstr "Suma musi być pomiędzy %s i %s"
+
+#~ msgid "You can not create journal items on closed account."
+#~ msgstr "Nie możesz księgować na zamkniętych kontach"
+
+#~ msgid ""
+#~ "To setup a multiple analytic plans environment, you must define the root "
+#~ "analytic accounts for each plan set. Then, you must attach a plan set to "
+#~ "your account journals."
+#~ msgstr ""
+#~ "Aby ustawić wiele planów analitycznych, musisz zdefiniować konto główne dla "
+#~ "każdego planu. Potem musisz powiązać plany to dzienników analitycznych."
+
+#~ msgid "%"
+#~ msgstr "%"

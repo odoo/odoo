@@ -1,20 +1,19 @@
-# Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* account_analytic_plans
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"PO-Revision-Date: 2012-11-28 07:38+0000\n"
+"Last-Translator: ccdos <ccdos@163.com>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 07:03+0000\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:42+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
 
 #. module: account_analytic_plans
@@ -450,3 +449,265 @@ msgstr "销售订单明细"
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "From Date"
 msgstr "日期从"
+
+#~ msgid "Select Information"
+#~ msgstr "选择信息"
+
+#~ msgid "Create Model"
+#~ msgstr "创建模型"
+
+#, python-format
+#~ msgid "User Error"
+#~ msgstr "用户错误"
+
+#, python-format
+#~ msgid "Error"
+#~ msgstr "错误"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "对象名必须要以X_开头并且不能含有特殊字符!"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "无效XML视图结构!"
+
+#~ msgid "Multiple-plans management in Analytic Accounting"
+#~ msgstr "辅助核算会计的多方案管理"
+
+#~ msgid "OK"
+#~ msgstr "确定"
+
+#~ msgid ""
+#~ "This distribution model has been saved. You will be able to reuse it later."
+#~ msgstr "这分配模型已经保存.你将在以后能重复使用"
+
+#~ msgid "Analytic Distribution's models"
+#~ msgstr "辅助核算分配模型"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "在行动定义中的模式名称无效"
+
+#~ msgid "Currency:"
+#~ msgstr "货币:"
+
+#~ msgid "Analytic Account Ref."
+#~ msgstr "关联的辅助核算项目"
+
+#~ msgid "to"
+#~ msgstr "到"
+
+#, python-format
+#~ msgid "The Total Should be Between %s and %s"
+#~ msgstr "合计应该在 %s 和 %s 之间"
+
+#~ msgid ""
+#~ "This module allows to use several analytic plans, according to the general "
+#~ "journal,\n"
+#~ "so that multiple analytic lines are created when the invoice or the entries\n"
+#~ "are confirmed.\n"
+#~ "\n"
+#~ "For example, you can define the following analytic structure:\n"
+#~ "  Projects\n"
+#~ "      Project 1\n"
+#~ "          SubProj 1.1\n"
+#~ "          SubProj 1.2\n"
+#~ "      Project 2\n"
+#~ "  Salesman\n"
+#~ "      Eric\n"
+#~ "      Fabien\n"
+#~ "\n"
+#~ "Here, we have two plans: Projects and Salesman. An invoice line must\n"
+#~ "be able to write analytic entries in the 2 plans: SubProj 1.1 and\n"
+#~ "Fabien. The amount can also be split. The following example is for\n"
+#~ "an invoice that touches the two subproject and assigned to one salesman:\n"
+#~ "\n"
+#~ "Plan1:\n"
+#~ "    SubProject 1.1 : 50%\n"
+#~ "    SubProject 1.2 : 50%\n"
+#~ "Plan2:\n"
+#~ "    Eric: 100%\n"
+#~ "\n"
+#~ "So when this line of invoice will be confirmed, it will generate 3 analytic "
+#~ "lines,\n"
+#~ "for one account entry.\n"
+#~ "        "
+#~ msgstr ""
+#~ "这模块允许使用几个辅助核算方案并根据业务类型生成,\n"
+#~ "所以当开发票或确认凭证时建立多个辅助核算明细.\n"
+#~ "例如,你可以定义以下辅助核算结构:\n"
+#~ "      项目\n"
+#~ "        项目1\n"
+#~ "                      子项目1.1\n"
+#~ "                      子项目1.2 \n"
+#~ "              项目2\n"
+#~ "      业务员\n"
+#~ "        小李\n"
+#~ "        小张\n"
+#~ "这里我们有两个项目和业务员,发票要能做有两个项目和业务员的辅助核算凭证：\n"
+#~ "    下面的例子: 发票涉及两个项目和一个业务员.\n"
+#~ "       方案1:\n"
+#~ "             子项目1.1 :50%\n"
+#~ "             子项目1.2 :50%\n"
+#~ "       方案2:\n"
+#~ "             小李:100%\n"
+#~ "因此当这发票的辅助核算凭证有3个辅助核算明细\n"
+#~ "        "
+
+#~ msgid "Period from"
+#~ msgstr "会计期间从"
+
+#~ msgid "Printing date:"
+#~ msgstr "打印日期:"
+
+#~ msgid "You can not create move line on closed account."
+#~ msgstr "您不能在关闭的科目上建立分录。"
+
+#~ msgid ""
+#~ "The amount of the voucher must be the same amount as the one on the "
+#~ "statement line"
+#~ msgstr "凭证金额必须和对账单明细上的金额一致"
+
+#~ msgid "%"
+#~ msgstr "%"
+
+#, python-format
+#~ msgid "Value Error"
+#~ msgstr "错误的值"
+
+#~ msgid "The name of the journal must be unique per company !"
+#~ msgstr "每个公司的账簿名称必须唯一！"
+
+#, python-format
+#~ msgid "You have to define an analytic journal on the '%s' journal!"
+#~ msgstr "您必须定义这 '%s' 的辅助核算账簿！"
+
+#~ msgid "The code of the journal must be unique per company !"
+#~ msgstr "每个公司的账簿编码必须唯一！"
+
+#~ msgid "Wrong credit or debit value in accounting entry !"
+#~ msgstr "错误的分录"
+
+#, python-format
+#~ msgid "A model having this name and code already exists !"
+#~ msgstr "该名称和代码的模块已存在！"
+
+#, python-format
+#~ msgid "No analytic plan defined !"
+#~ msgstr "没默认的辅助核算方案"
+
+#~ msgid ""
+#~ "This module allows to use several analytic plans, according to the general "
+#~ "journal,\n"
+#~ "so that multiple analytic lines are created when the invoice or the entries\n"
+#~ "are confirmed.\n"
+#~ "\n"
+#~ "For example, you can define the following analytic structure:\n"
+#~ "  Projects\n"
+#~ "      Project 1\n"
+#~ "          SubProj 1.1\n"
+#~ "          SubProj 1.2\n"
+#~ "      Project 2\n"
+#~ "  Salesman\n"
+#~ "      Eric\n"
+#~ "      Fabien\n"
+#~ "\n"
+#~ "Here, we have two plans: Projects and Salesman. An invoice line must\n"
+#~ "be able to write analytic entries in the 2 plans: SubProj 1.1 and\n"
+#~ "Fabien. The amount can also be split. The following example is for\n"
+#~ "an invoice that touches the two subproject and assigned to one salesman:\n"
+#~ "\n"
+#~ "Plan1:\n"
+#~ "    SubProject 1.1 : 50%\n"
+#~ "    SubProject 1.2 : 50%\n"
+#~ "Plan2:\n"
+#~ "    Eric: 100%\n"
+#~ "\n"
+#~ "So when this line of invoice will be confirmed, it will generate 3 analytic "
+#~ "lines,\n"
+#~ "for one account entry.\n"
+#~ "The analytic plan validates the minimum and maximum percentage at the time "
+#~ "of creation\n"
+#~ "of distribution models.\n"
+#~ "        "
+#~ msgstr ""
+#~ "此模块允许使用几个辅助核算方案生成账簿，以便在凭证或发票过账时生成多个辅助核算凭证行。\n"
+#~ "例如，你有以下辅助核算结构：\n"
+#~ "\n"
+#~ "  项目\n"
+#~ "    项目1\n"
+#~ "      子项目1.1\n"
+#~ "      子项目1.2\n"
+#~ "  项目2\n"
+#~ "  销售员\n"
+#~ "    Eric\n"
+#~ "    Fabien\n"
+#~ "\n"
+#~ "这里我们有两个方案：  项目和销售员。\n"
+#~ "一个发票行需要根据两个方案相应辅助核算项生成明细：发票金额在项目间和销售员间分摊。\n"
+#~ "\n"
+#~ "分摊模型这样定义：\n"
+#~ "方案1：\n"
+#~ "  子项目1.1：50%\n"
+#~ "  子项目1.2：50%\n"
+#~ "方案2：\n"
+#~ "  Eric：100%\n"
+#~ "\n"
+#~ "这样当这张发票过账后，会生成属于一个会计凭证行的3个辅助核算凭证行。\n"
+#~ "在创建分摊模型时可以验证最大或最小分摊百分比。\n"
+#~ "        "
+
+#~ msgid "Company must be same for its related account and period."
+#~ msgstr "公司相关的科目必须和会计期间一致。"
+
+#, python-format
+#~ msgid "Please put a name and a code before saving the model !"
+#~ msgstr "保存模式之前，请输入名称和代码！"
+
+#~ msgid "You can not create move line on view account."
+#~ msgstr "不能针对内部类型是视图的科目记账"
+
+#~ msgid ""
+#~ "Configuration error! The currency chosen should be shared by the default "
+#~ "accounts too."
+#~ msgstr "设置错误！所选币种应与默认科目共享。"
+
+#~ msgid "The journal and period chosen have to belong to the same company."
+#~ msgstr "所选的凭证簿和期间必须属于相同公司。"
+
+#~ msgid "Invoice Number must be unique per Company!"
+#~ msgstr "发票号必须在公司范围内唯一"
+
+#~ msgid "Define your Analytic Plans"
+#~ msgstr "定义成本计划"
+
+#~ msgid "Invalid BBA Structured Communication !"
+#~ msgstr "BBA传输结构有误！"
+
+#~ msgid "You can not create analytic line on view account."
+#~ msgstr "无法在视图类型的科目上创建分析凭证行"
+
+#~ msgid "Company must be the same for its related account and period."
+#~ msgstr "科目和期间必须属于同一个公司"
+
+#~ msgid "You can not create journal items on an account of type view."
+#~ msgstr "凭证上不能使用视图类型的科目"
+
+#~ msgid ""
+#~ "The selected account of your Journal Entry forces to provide a secondary "
+#~ "currency. You should remove the secondary currency on the account or select "
+#~ "a multi-currency view on the journal."
+#~ msgstr "凭证上的科目要求输入一个外币。你可以在科目设置中去掉这个外币或在凭证簿设置上选择一个支持多币种的输入界面。"
+
+#~ msgid ""
+#~ "The date of your Journal Entry is not in the defined period! You should "
+#~ "change the date or remove this constraint from the journal."
+#~ msgstr "凭证日期不在所选期间内！可以修改凭证日期或在凭证簿上去掉这个检查项。"
+
+#~ msgid ""
+#~ "To setup a multiple analytic plans environment, you must define the root "
+#~ "analytic accounts for each plan set. Then, you must attach a plan set to "
+#~ "your account journals."
+#~ msgstr "要设置一个多成本计划的环境，必须对每个计划集设置一个根成本科目。然后，把计划集附加到成本凭证簿上。"
+
+#~ msgid "You can not create journal items on closed account."
+#~ msgstr "凭证上不能使用已关闭的科目"

@@ -1,20 +1,20 @@
 # Mongolian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2012-07-14 08:04+0000\n"
+"Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 07:03+0000\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:42+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
 
 #. module: account_analytic_plans
@@ -451,3 +451,201 @@ msgstr "Худалдааны Захиалгын Мөр"
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "From Date"
 msgstr "Эхлэх Огноо"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
+#~ "\"\"болохгүй!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
+
+#, python-format
+#~ msgid "A model having this name and code already exists !"
+#~ msgstr "A model having this name and code already exists !"
+
+#~ msgid "%"
+#~ msgstr "%"
+
+#, python-format
+#~ msgid "No analytic plan defined !"
+#~ msgstr "No analytic plan defined !"
+
+#, python-format
+#~ msgid "Error"
+#~ msgstr "Алдаа"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Дэлгэцийн XML алдаатай!"
+
+#~ msgid "Multiple-plans management in Analytic Accounting"
+#~ msgstr "Multiple-plans management in Analytic Accounting"
+
+#, python-format
+#~ msgid "The Total Should be Between %s and %s"
+#~ msgstr "The Total Should be Between %s and %s"
+
+#, python-format
+#~ msgid "Please put a name and a code before saving the model !"
+#~ msgstr "Please put a name and a code before saving the model !"
+
+#~ msgid ""
+#~ "This module allows to use several analytic plans, according to the general "
+#~ "journal,\n"
+#~ "so that multiple analytic lines are created when the invoice or the entries\n"
+#~ "are confirmed.\n"
+#~ "\n"
+#~ "For example, you can define the following analytic structure:\n"
+#~ "  Projects\n"
+#~ "      Project 1\n"
+#~ "          SubProj 1.1\n"
+#~ "          SubProj 1.2\n"
+#~ "      Project 2\n"
+#~ "  Salesman\n"
+#~ "      Eric\n"
+#~ "      Fabien\n"
+#~ "\n"
+#~ "Here, we have two plans: Projects and Salesman. An invoice line must\n"
+#~ "be able to write analytic entries in the 2 plans: SubProj 1.1 and\n"
+#~ "Fabien. The amount can also be split. The following example is for\n"
+#~ "an invoice that touches the two subproject and assigned to one salesman:\n"
+#~ "\n"
+#~ "Plan1:\n"
+#~ "    SubProject 1.1 : 50%\n"
+#~ "    SubProject 1.2 : 50%\n"
+#~ "Plan2:\n"
+#~ "    Eric: 100%\n"
+#~ "\n"
+#~ "So when this line of invoice will be confirmed, it will generate 3 analytic "
+#~ "lines,\n"
+#~ "for one account entry.\n"
+#~ "The analytic plan validates the minimum and maximum percentage at the time "
+#~ "of creation\n"
+#~ "of distribution models.\n"
+#~ "        "
+#~ msgstr ""
+#~ "This module allows to use several analytic plans, according to the general "
+#~ "journal,\n"
+#~ "so that multiple analytic lines are created when the invoice or the entries\n"
+#~ "are confirmed.\n"
+#~ "\n"
+#~ "For example, you can define the following analytic structure:\n"
+#~ "  Projects\n"
+#~ "      Project 1\n"
+#~ "          SubProj 1.1\n"
+#~ "          SubProj 1.2\n"
+#~ "      Project 2\n"
+#~ "  Salesman\n"
+#~ "      Eric\n"
+#~ "      Fabien\n"
+#~ "\n"
+#~ "Here, we have two plans: Projects and Salesman. An invoice line must\n"
+#~ "be able to write analytic entries in the 2 plans: SubProj 1.1 and\n"
+#~ "Fabien. The amount can also be split. The following example is for\n"
+#~ "an invoice that touches the two subproject and assigned to one salesman:\n"
+#~ "\n"
+#~ "Plan1:\n"
+#~ "    SubProject 1.1 : 50%\n"
+#~ "    SubProject 1.2 : 50%\n"
+#~ "Plan2:\n"
+#~ "    Eric: 100%\n"
+#~ "\n"
+#~ "So when this line of invoice will be confirmed, it will generate 3 analytic "
+#~ "lines,\n"
+#~ "for one account entry.\n"
+#~ "The analytic plan validates the minimum and maximum percentage at the time "
+#~ "of creation\n"
+#~ "of distribution models.\n"
+#~ "        "
+
+#, python-format
+#~ msgid "You have to define an analytic journal on the '%s' journal!"
+#~ msgstr "You have to define an analytic journal on the '%s' journal!"
+
+#, python-format
+#~ msgid "Value Error"
+#~ msgstr "Value Error"
+
+#~ msgid "The name of the journal must be unique per company !"
+#~ msgstr "Бүртгэлийн нэр компани бүрт дахин давтагдахгүй байх ёстой."
+
+#~ msgid "You can not create move line on closed account."
+#~ msgstr "Хаагдсан дансан дээр шилжих мөр үүсгэж болохгүй."
+
+#~ msgid "Wrong credit or debit value in accounting entry !"
+#~ msgstr "Данс руу буруу кредит эсвэл дебит утга орсон байна !"
+
+#~ msgid "The code of the journal must be unique per company !"
+#~ msgstr "Бүртгэлийн код компани бүрт дахин давтагдахгүй байх ёстой !"
+
+#~ msgid "You can not create move line on view account."
+#~ msgstr "Дансны харагдац дээр шилжих мөр үүсгэж болохгүй."
+
+#~ msgid ""
+#~ "The amount of the voucher must be the same amount as the one on the "
+#~ "statement line"
+#~ msgstr ""
+#~ "Энэ ваучерийн тоо хэмжээ тайлангийн мөр дэх тоо хэмжээтэй ижил байх ёстой."
+
+#~ msgid "Company must be same for its related account and period."
+#~ msgstr "Компани өөрийн дансны болон мөчлөгтэй ижил байх ёстой."
+
+#~ msgid "You can not create journal items on an account of type view."
+#~ msgstr "Харагдац төрлийн данс дээр журналын зүйлийг үүсгэх боломжгүй."
+
+#~ msgid ""
+#~ "The date of your Journal Entry is not in the defined period! You should "
+#~ "change the date or remove this constraint from the journal."
+#~ msgstr ""
+#~ "Журналын бичилтийн огноо нь тодорхойлогдсон хугацааны мужид биш байна! Та "
+#~ "огноогоо солих юмуу журналаас энэ шаардамжийг арилгах хэрэгтэй."
+
+#~ msgid "The journal and period chosen have to belong to the same company."
+#~ msgstr ""
+#~ "Сонгосон Журнал болон Хугацааны муж нь ижил компанид харъяалагдах ёстой."
+
+#~ msgid "Invoice Number must be unique per Company!"
+#~ msgstr "Компаний хэмжээнд нэхэмжлэлийн дугаар үл давхцах ёстой!"
+
+#~ msgid "Define your Analytic Plans"
+#~ msgstr "Шинжилгээний Төлөвлөгөөгөө Тодорхойл"
+
+#~ msgid ""
+#~ "Configuration error! The currency chosen should be shared by the default "
+#~ "accounts too."
+#~ msgstr ""
+#~ "Тохиргооны алдаа! Сонгосон валют нь анхны утга болох дансдад бас хуваалцсан "
+#~ "байх хэрэгтэй"
+
+#~ msgid "You can not create analytic line on view account."
+#~ msgstr "Харагдац төрлийн данс дээр шинжилгээний мөрийг үүсгэх боломжгүй."
+
+#~ msgid ""
+#~ "To setup a multiple analytic plans environment, you must define the root "
+#~ "analytic accounts for each plan set. Then, you must attach a plan set to "
+#~ "your account journals."
+#~ msgstr ""
+#~ "Шинжилгээний олон төлөвлөгөөний орчин үүсгэхийн тулд төлөвлөгөөний олонлог "
+#~ "бүрт язгуур дансдыг тодорхойлох хэрэгтэй. Дараа нь төлөвлөгөөний "
+#~ "олонлогуудыг дансдын журналуудад холбож өгнө."
+
+#~ msgid "You can not create journal items on closed account."
+#~ msgstr "Хаагдсан данс дээр журналын зүйлийг үүсгэх боломжгүй."
+
+#~ msgid "Company must be the same for its related account and period."
+#~ msgstr ""
+#~ "Үүний холбогдох хугацааны муж болон дансанд компани нь ижил байх ёстой."
+
+#~ msgid ""
+#~ "The selected account of your Journal Entry forces to provide a secondary "
+#~ "currency. You should remove the secondary currency on the account or select "
+#~ "a multi-currency view on the journal."
+#~ msgstr ""
+#~ "Журналийн бичилтэд таны сонгосон данс нь хоёрдогч валютыг хүчээр тулгаж "
+#~ "байна. Та хоёрдогч валютийг данс дээрээсээ хасах юм уу журнал дээрээ олон "
+#~ "валютын харагдацыг сонгох хэрэгтэй."
+
+#, python-format
+#~ msgid "User Error"
+#~ msgstr "Хэрэглэгчийн алдаа"

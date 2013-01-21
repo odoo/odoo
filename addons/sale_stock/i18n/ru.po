@@ -1,21 +1,20 @@
-# Russian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* sale
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Russian <ru@li.org>\n"
+"PO-Revision-Date: 2013-01-04 16:04+0000\n"
+"Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 07:33+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-01-05 05:04+0000\n"
+"X-Generator: Launchpad (build 16393)\n"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
@@ -33,7 +32,7 @@ msgstr "Заказ на доставку"
 #: model:ir.actions.act_window,name:sale_stock.outgoing_picking_list_to_invoice
 #: model:ir.ui.menu,name:sale_stock.menu_action_picking_list_to_invoice
 msgid "Deliveries to Invoice"
-msgstr ""
+msgstr "Доставки в счета"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:544
@@ -55,6 +54,10 @@ msgid ""
 "Here is a proposition of quantities according to the packaging:\n"
 "EAN: %s Quantity: %s Type of ul: %s"
 msgstr ""
+"Вы выбрали количество из %d единиц.\n"
+"Но это не совместимо с выбранной упаковкой.\n"
+"Вот предложение количеств в соответствии с упаковкой:\n"
+"штрих-код: %s количество: %s тип ul: %s"
 
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_packinglist0
@@ -64,7 +67,7 @@ msgstr "Документ перемещения на выход или зака�
 #. module: sale_stock
 #: field:sale.config.settings,group_multiple_shops:0
 msgid "Manage multiple shops"
-msgstr ""
+msgstr "Управление несколькими магазинами"
 
 #. module: sale_stock
 #: model:process.transition.action,name:sale_stock.process_transition_action_validate0
@@ -77,6 +80,8 @@ msgstr "Утвердить"
 msgid ""
 "You must first cancel all delivery order(s) attached to this sales order."
 msgstr ""
+"Сначала вы должны отменить все заказы доставки, приложенные к этому заказу "
+"продаж."
 
 #. module: sale_stock
 #: model:process.transition,name:sale_stock.process_transition_saleprocurement0
@@ -101,7 +106,7 @@ msgstr ""
 #: code:addons/sale_stock/sale_stock.py:615
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Ошибка!"
 
 #. module: sale_stock
 #: field:sale.order,picking_policy:0
@@ -136,12 +141,12 @@ msgstr "Движение запасов"
 #: code:addons/sale_stock/sale_stock.py:161
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "Неверное действие!"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_project_timesheet:0
 msgid "Project Timesheet"
-msgstr ""
+msgstr "Табель проекта"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_sale_delivery_address:0
@@ -153,7 +158,7 @@ msgstr ""
 #: code:addons/sale_stock/sale_stock.py:597
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "Ошибка конфигурации!"
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_saleprocurement0
@@ -174,7 +179,7 @@ msgstr "Заказ на продажу"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking_out
 msgid "Delivery Orders"
-msgstr ""
+msgstr "Заказы доставки"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
@@ -220,7 +225,7 @@ msgstr "Назначить насильно"
 #. module: sale_stock
 #: field:sale.config.settings,default_order_policy:0
 msgid "The default invoicing method is"
-msgstr ""
+msgstr "Метод выставления счета по умолчанию:"
 
 #. module: sale_stock
 #: field:sale.order.line,delay:0
@@ -245,7 +250,7 @@ msgstr "Движение запасов"
 #. module: sale_stock
 #: view:sale.config.settings:0
 msgid "Default Options"
-msgstr ""
+msgstr "Параметры по умолчанию"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_project_mrp:0
@@ -309,7 +314,7 @@ msgstr ""
 #. module: sale_stock
 #: view:sale.order:0
 msgid "days"
-msgstr ""
+msgstr "дней"
 
 #. module: sale_stock
 #: field:sale.order.line,product_packaging:0
@@ -335,7 +340,7 @@ msgstr ""
 #. module: sale_stock
 #: field:sale.config.settings,default_picking_policy:0
 msgid "Deliver all at once when all products are available."
-msgstr ""
+msgstr "Доставка всего сразу, если все готово."
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_invoice_deli_orders
@@ -362,7 +367,7 @@ msgstr ""
 #: code:addons/sale_stock/sale_stock.py:206
 #, python-format
 msgid "Cannot cancel sales order!"
-msgstr ""
+msgstr "Нельзя отменить заказ продажи!"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_shop
@@ -386,7 +391,7 @@ msgstr "Свойства"
 #. module: sale_stock
 #: field:sale.config.settings,group_mrp_properties:0
 msgid "Product properties on order lines"
-msgstr ""
+msgstr "Свойства изделия в позиции заказа"
 
 #. module: sale_stock
 #: help:sale.config.settings,default_order_policy:0

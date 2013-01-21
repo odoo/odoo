@@ -1,20 +1,19 @@
-# Spanish translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* account_voucher
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Spanish <es@li.org>\n"
+"PO-Revision-Date: 2012-12-24 09:57+0000\n"
+"Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 07:05+0000\n"
+"X-Launchpad-Export-Date: 2012-12-25 04:48+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
 
 #. module: account_voucher
@@ -150,7 +149,7 @@ msgstr "Validar"
 #: model:ir.actions.act_window,name:account_voucher.action_vendor_payment
 #: model:ir.ui.menu,name:account_voucher.menu_action_vendor_payment
 msgid "Supplier Payments"
-msgstr ""
+msgstr "Pagos a proveedores"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
@@ -225,7 +224,7 @@ msgstr "Mensajes"
 #: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
 msgid "Purchase Receipts"
-msgstr ""
+msgstr "Recibos de compra"
 
 #. module: account_voucher
 #: field:account.voucher.line,move_line_id:0
@@ -368,7 +367,7 @@ msgstr "Importar facturas"
 #: code:addons/account_voucher/account_voucher.py:1098
 #, python-format
 msgid "Wrong voucher line"
-msgstr ""
+msgstr "Línea de comprobante errónea"
 
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
@@ -468,6 +467,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Pulse para crear un nuevo pago de proveedor.\n"
+"</p><p>\n"
+"OpenERP le ayuda a gestionar fácilmente los pagos que hace y los saldos "
+"pendientes que necesita pagar a sus proveedores.\n"
+"</p>\n"
+"            "
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -761,7 +767,7 @@ msgstr "Agosto"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Validate Payment"
-msgstr ""
+msgstr "Validar pago"
 
 #. module: account_voucher
 #: help:account.voucher,audit:0
@@ -803,7 +809,7 @@ msgstr "Pagado"
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
 msgid "Sales Receipts"
-msgstr ""
+msgstr "Recibo de ventas"
 
 #. module: account_voucher
 #: field:account.voucher,message_is_follower:0
@@ -862,7 +868,7 @@ msgstr "¿Pagos previos?"
 #: code:addons/account_voucher/account_voucher.py:1098
 #, python-format
 msgid "The invoice you are willing to pay is not valid anymore."
-msgstr ""
+msgstr "La factura que iba a pagar ya no es válida."
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -901,14 +907,14 @@ msgstr "Por favor defina una secuencia en el diario."
 #: model:ir.actions.act_window,name:account_voucher.action_vendor_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_vendor_receipt
 msgid "Customer Payments"
-msgstr ""
+msgstr "Pagos de cliente"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt_report_all
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt_report_all
 #: view:sale.receipt.report:0
 msgid "Sales Receipts Analysis"
-msgstr ""
+msgstr "Análisis de los recibos de venta"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -1305,7 +1311,7 @@ msgstr "Abrir balance"
 #. module: account_voucher
 #: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
 msgid "Status <b>changed</b>"
-msgstr ""
+msgstr "Estado <b>cambiado</b>"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1000
@@ -1324,3 +1330,489 @@ msgstr ""
 "Por defecto, los comprobantes de conciliación creados de extractos bancarios "
 "en borrador son establecidos como inactivos, lo que permite ocultar el pago "
 "de cliente/proveedor mientras el extracto bancario no sea confirmado."
+
+#~ msgid "On Account of :"
+#~ msgstr "En cuenta de :"
+
+#~ msgid "State :"
+#~ msgstr "Estado :"
+
+#~ msgid "Ref. :"
+#~ msgstr "Ref. :"
+
+#~ msgid "Real Entry"
+#~ msgstr "Entrada real"
+
+#~ msgid ":"
+#~ msgstr ":"
+
+#~ msgid "Dated :"
+#~ msgstr "Fechado :"
+
+#~ msgid "Create"
+#~ msgstr "Crear"
+
+#~ msgid "None"
+#~ msgstr "Ninguno"
+
+#~ msgid "State"
+#~ msgstr "Estado"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML inválido para la definición de la vista!"
+
+#~ msgid "Reference Type"
+#~ msgstr "Tipo de referencia"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
+
+#~ msgid "Other Info"
+#~ msgstr "Otra información"
+
+#~ msgid "Ref."
+#~ msgstr "Ref."
+
+#~ msgid "Name"
+#~ msgstr "Nombre:"
+
+#~ msgid "Payment Vouchers"
+#~ msgstr "Comprobantes de pago"
+
+#~ msgid "Bank Receipts"
+#~ msgstr "Recibos bancarios"
+
+#~ msgid "Other Vouchers"
+#~ msgstr "Otros comprobantes"
+
+#~ msgid "Journal Sale Voucher"
+#~ msgstr "Comprobante de diario de ventas"
+
+#~ msgid "New Cash Receipt"
+#~ msgstr "Nuevo recibo de caja"
+
+#~ msgid "Particulars"
+#~ msgstr "Particulares"
+
+#~ msgid "Receiver's Signature"
+#~ msgstr "Recibí"
+
+#~ msgid "Bank Payments"
+#~ msgstr "Pagos bancarios"
+
+#~ msgid "PRO-FORMA"
+#~ msgstr "PRO-FORMA"
+
+#~ msgid "Contra Voucher"
+#~ msgstr "Contra comprobante"
+
+#~ msgid "Cash Receipt"
+#~ msgstr "Recibo de caja"
+
+#~ msgid "Vouchers"
+#~ msgstr "Comprobantes"
+
+#~ msgid "-"
+#~ msgstr "-"
+
+#~ msgid "New Cash Payment"
+#~ msgstr "Nuevo pago de caja"
+
+#, python-format
+#~ msgid "Invalid action !"
+#~ msgstr "¡ Acción invalida !"
+
+#~ msgid "New Bank Payment"
+#~ msgstr "Nuevo pago bancario"
+
+#~ msgid "Voucher Line"
+#~ msgstr "Línea de comprobante"
+
+#~ msgid "Cash Receipts"
+#~ msgstr "Recibos de caja"
+
+#~ msgid "Narration"
+#~ msgstr "Notas"
+
+#~ msgid "New Bank Receipt"
+#~ msgstr "Nuevo recibo bancario"
+
+#~ msgid "Bank Payment Voucher"
+#~ msgstr "Comprobante de pago bancario"
+
+#~ msgid "Amount (in words) :"
+#~ msgstr "Importe (en palabras):"
+
+#~ msgid "Canceled"
+#~ msgstr "Cancelado"
+
+#~ msgid "Bank Receipt"
+#~ msgstr "Recibo bancario"
+
+#~ msgid "Journal Purchase Voucher"
+#~ msgstr "Comprobantes de diario de compras"
+
+#~ msgid "Voucher Reference"
+#~ msgstr "Referencia comprobante"
+
+#~ msgid "Cash Payment Voucher"
+#~ msgstr "Comprobante de pago en efectivo"
+
+#~ msgid "Voucher Report"
+#~ msgstr "Informe de comprobantes"
+
+#~ msgid "Closing Balance"
+#~ msgstr "Saldo de cierre"
+
+#~ msgid "No."
+#~ msgstr "Nº"
+
+#~ msgid "Opening Balance"
+#~ msgstr "Saldo de apertura"
+
+#~ msgid "Total Credit"
+#~ msgstr "Total crédito"
+
+#~ msgid "Total Debit"
+#~ msgstr "Total debe"
+
+#~ msgid "Optional Information"
+#~ msgstr "Información opcional"
+
+#~ msgid "General Information"
+#~ msgstr "Información general"
+
+#~ msgid ","
+#~ msgstr ","
+
+#~ msgid "Level"
+#~ msgstr "Nivel"
+
+#~ msgid "Account :"
+#~ msgstr "Cuenta :"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nombre de modelo no válido en la definición de acción."
+
+#~ msgid "Entry Lines"
+#~ msgstr "Líneas de asiento"
+
+#~ msgid "Periods"
+#~ msgstr "Periodos"
+
+#~ msgid "Sub Currency"
+#~ msgstr "Sub moneda"
+
+#~ msgid "Cash Payments"
+#~ msgstr "Pagos en efectivo"
+
+#~ msgid "Opening Balance Entry"
+#~ msgstr "Saldo inicial de entrada"
+
+#~ msgid "D"
+#~ msgstr "D"
+
+#~ msgid "General Entries"
+#~ msgstr "Entradas generales"
+
+#~ msgid "Voucher Type"
+#~ msgstr "Tipo de comprobante"
+
+#~ msgid "Open a Voucher Entry"
+#~ msgstr "Abrir un comprobante"
+
+#~ msgid "Open Vouchers"
+#~ msgstr "Comprobantes abiertos"
+
+#~ msgid "Open Voucher Entries"
+#~ msgstr "Abrir comprobantes"
+
+#~ msgid "Accounting Voucher Entries"
+#~ msgstr "Comprobantes contables"
+
+#~ msgid "Account Entry Line"
+#~ msgstr "Apunte"
+
+#~ msgid "Journal Voucher"
+#~ msgstr "Diario de comprobantes"
+
+#~ msgid "Receipt Vouchers"
+#~ msgstr "Comprobantes de cobro"
+
+#~ msgid "Voucher Report (Cr/Dr)"
+#~ msgstr "Informe de comprobantes (Haber/Debe)"
+
+#~ msgid "Cash Receipt Voucher"
+#~ msgstr "Comprobante de cobro en efectivo"
+
+#~ msgid "Bank Receipt Voucher"
+#~ msgstr "Comprobante de cobro bancario"
+
+#~ msgid "Through :"
+#~ msgstr "A través de :"
+
+#~ msgid "Voucher Print"
+#~ msgstr "Imprimir comprobante"
+
+#~ msgid ""
+#~ "Account Voucher module includes all the basic requirements of\n"
+#~ "    Voucher Entries for Bank, Cash, Sales, Purchase, Expanse, Contra, "
+#~ "etc...\n"
+#~ "    * Voucher Entry\n"
+#~ "    * Voucher Receipt\n"
+#~ "    * Cheque Register\n"
+#~ "    "
+#~ msgstr ""
+#~ "Módulo de comprobantes contables, incluye todos los requisitos básicos de\n"
+#~ "comprobantes para banco, caja, ventas, compras, gastos, contracomprobantes, "
+#~ "...\n"
+#~ "    * Entrada de comprobantes\n"
+#~ "    * Recibo de comprobantes\n"
+#~ "    * Registro de cheques\n"
+#~ "    "
+
+#, python-format
+#~ msgid "Cannot delete Voucher(s) which are already opened or paid !"
+#~ msgstr ""
+#~ "¡No se puede eliminar comprobante(s) que ya estén abiertos o pagados!"
+
+#~ msgid "Unreconciliation transactions"
+#~ msgstr "Transacciones no conciliadas"
+
+#~ msgid "Unreconcile entries"
+#~ msgstr "Entradas no conciliadas"
+
+#~ msgid "Account voucher unreconcile"
+#~ msgstr "Comprobante contable no conciliado"
+
+#~ msgid "Date payment"
+#~ msgstr "Fecha pago"
+
+#~ msgid "Go"
+#~ msgstr "Ir"
+
+#~ msgid "Supplier Vouchers"
+#~ msgstr "Comprobantes proveedores"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "¡Error!"
+
+#~ msgid "Date:"
+#~ msgstr "Fecha:"
+
+#~ msgid "Unreconciliation"
+#~ msgstr "Romper conciliación"
+
+#~ msgid "Sales Receipt"
+#~ msgstr "Recibo de ventas"
+
+#~ msgid "Currency:"
+#~ msgstr "Moneda:"
+
+#~ msgid "Want to remove accounting entries too ?"
+#~ msgstr "¿También desea eliminar asientos contables?"
+
+#~ msgid "Number:"
+#~ msgstr "Número:"
+
+#~ msgid "Cr/Dr"
+#~ msgstr "Haber/Debe"
+
+#~ msgid "Audit Complete ?"
+#~ msgstr "¿Auditoría completa?"
+
+#~ msgid "Compute Tax"
+#~ msgstr "Calcular impuestos"
+
+#~ msgid "Payment Terms"
+#~ msgstr "Plazos de pago"
+
+#, python-format
+#~ msgid "Please define a sequence on the journal !"
+#~ msgstr "¡Defina una secuencia en el diario!"
+
+#~ msgid "Customer Payment"
+#~ msgstr "Pago cliente"
+
+#~ msgid "Import Invoices in Statement"
+#~ msgstr "Importar facturas en extracto"
+
+#~ msgid "State:"
+#~ msgstr "Estado:"
+
+#~ msgid ""
+#~ "If you unreconciliate transactions, you must also verify all the actions "
+#~ "that are linked to those transactions because they will not be disable"
+#~ msgstr ""
+#~ "Si rompe la conciliación de las transacciones, también debe verificar todas "
+#~ "las acciones que están relacionadas con estas transacciones, ya que no se "
+#~ "desactivarán."
+
+#~ msgid "Authorised Signatory"
+#~ msgstr "Firma autorizada"
+
+#~ msgid "Are you sure to unreconcile this record ?"
+#~ msgstr "¿Seguro que desea romper la conciliación de este registro?"
+
+#~ msgid "Write-Off account"
+#~ msgstr "Cuenta de desajuste"
+
+#~ msgid "Are you sure to confirm this record ?"
+#~ msgstr "¿Desea confirmar este registro?"
+
+#~ msgid ""
+#~ "The supplier payment form allows you to track the payment you do to your "
+#~ "suppliers. When you select a supplier, the payment method and an amount for "
+#~ "the payment, OpenERP will propose to reconcile your payment with the open "
+#~ "supplier invoices or bills."
+#~ msgstr ""
+#~ "El formulario de pago de proveedor le permite gestionar los pagos que hace a "
+#~ "sus proveedores. Cuando selecciona un proveedor, el método de pago y el "
+#~ "importe a pagar, OpenERP propondrá la reconciliación de su pago con las "
+#~ "facturas de proveedor o recibos pendientes."
+
+#~ msgid ""
+#~ "Sales payment allows you to register the payments you receive from your "
+#~ "customers. In order to record a payment, you must enter the customer, the "
+#~ "payment method (=the journal) and the payment amount. OpenERP will propose "
+#~ "to you automatically the reconciliation of this payment with the open "
+#~ "invoices or sales receipts."
+#~ msgstr ""
+#~ "Los pagos de venta permiten registrar los pagos recibidos de sus clientes. "
+#~ "Para registrar un pago, debe seleccionar el cliente, el método de pago(= el "
+#~ "diario) y el importe del pago. OpenERP le propondrá automáticamente la "
+#~ "reconciliación de este pago con las facturas o recibos de ventas pendientes."
+
+#~ msgid ""
+#~ "When you sell products to a customer, you can give him a sales receipt or an "
+#~ "invoice. When the sales receipt is confirmed, it creates journal items "
+#~ "automatically and you can record the customer payment related to this sales "
+#~ "receipt."
+#~ msgstr ""
+#~ "Cuando vende productos a un cliente, puede entregarle un recibo de venta o "
+#~ "una factura. Cuando el recibo es confirmado, se crea automáticamente el "
+#~ "asiento y puede registrar pago del cliente relacionado con este recibo de "
+#~ "venta."
+
+#~ msgid "Write-Off Amount"
+#~ msgstr "Importe del desajuste"
+
+#~ msgid "Supplier Payment"
+#~ msgstr "Pago del proveedor"
+
+#~ msgid "Reconcile with Write-Off"
+#~ msgstr "Conciliar con desajuste"
+
+#~ msgid "Write-Off Comment"
+#~ msgstr "Comentario del desajuste"
+
+#~ msgid ""
+#~ " * The 'Draft' state is used when a user is encoding a new and unconfirmed "
+#~ "Voucher.                         \n"
+#~ "* The 'Pro-forma' when voucher is in Pro-forma state,voucher does not have "
+#~ "an voucher number.                         \n"
+#~ "* The 'Posted' state is used when user create voucher,a voucher number is "
+#~ "generated and voucher entries are created in account                         "
+#~ "\n"
+#~ "* The 'Cancelled' state is used when user cancel voucher."
+#~ msgstr ""
+#~ " * El estado 'Borrador' se utiliza cuando un usuario codifica un recibo "
+#~ "nuevo sin confirmar.\n"
+#~ "* El estado 'Pro-forma' cuando el recibo no tiene un número de recibo.\n"
+#~ "* El estado \"Fijado\" se utiliza cuando el usuario crea el recibo, se "
+#~ "genera un número de recibo y se crean los asientos del recibo en la "
+#~ "contabilidad.\n"
+#~ "* El estado \"Cancelado\" se utiliza cuando el usuario cancela el recibo."
+
+#~ msgid ""
+#~ "From this report, you can have an overview of the amount invoiced to your "
+#~ "customer as well as payment delays. The tool search can also be used to "
+#~ "personalise your Invoices reports and so, match this analysis to your needs."
+#~ msgstr ""
+#~ "A partir de este informe, puede tener una visión general del importe "
+#~ "facturado a sus clientes, así como los retrasos en los pagos. La herramienta "
+#~ "de búsqueda también se puede utilizar para personalizar los informes de las "
+#~ "facturas y por tanto, adaptar este análisis a sus necesidades."
+
+#~ msgid "Voucher Date"
+#~ msgstr "Fecha comprobante"
+
+#~ msgid "Salesman"
+#~ msgstr "Comercial"
+
+#~ msgid "Sales Receipt Analysis"
+#~ msgstr "Análisis cobros de ventas"
+
+#~ msgid ""
+#~ "The amount of the voucher must be the same amount as the one on the "
+#~ "statement line"
+#~ msgstr ""
+#~ "El importe del comprobante debe ser el mismo importe que el de la línea del "
+#~ "extracto"
+
+#~ msgid "Voucher State"
+#~ msgstr "Estado del comprobante"
+
+#~ msgid "last month"
+#~ msgstr "último mes"
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "¡Error! No se pueden crear compañías recursivas."
+
+#~ msgid "current month"
+#~ msgstr "Mes actual"
+
+#~ msgid "Income Currency Rate"
+#~ msgstr "Tasa de divisa entrante"
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "¡El nombre de la compañía debe ser único!"
+
+#, python-format
+#~ msgid ""
+#~ "Unable to create accounting entry for currency rate difference. You have to "
+#~ "configure the field 'Income Currency Rate' on the company! "
+#~ msgstr ""
+#~ "No se ha podido crear un asiento con la diferencia de la tasa de cambio de "
+#~ "moneda. Debe configurar el campo 'Tasa de cambio entrante' de la compañía "
+
+#, python-format
+#~ msgid "Please define default credit/debit accounts on the journal \"%s\" !"
+#~ msgstr ""
+#~ "Por favor defina las cuentas de ingresos y gastos por defecto en el diario "
+#~ "\"%s\" !"
+
+#~ msgid "Invoice Number must be unique per Company!"
+#~ msgstr "¡El número de factura debe ser único por compañía!"
+
+#~ msgid "year"
+#~ msgstr "año"
+
+#~ msgid "Invalid BBA Structured Communication !"
+#~ msgstr "¡Estructura de comunicación BBA no válida!"
+
+#~ msgid "Month-1"
+#~ msgstr "Mes-1"
+
+#~ msgid "The journal and period chosen have to belong to the same company."
+#~ msgstr ""
+#~ "El diario y periodo seleccionados tienen que pertenecer a la misma compañía."
+
+#, python-format
+#~ msgid "Warning"
+#~ msgstr "Advertencia"
+
+#~ msgid "Expense Currency Rate"
+#~ msgstr "Gastos de cambio de moneda"
+
+#, python-format
+#~ msgid ""
+#~ "Unable to create accounting entry for currency rate difference. You have to "
+#~ "configure the field 'Expense Currency Rate' on the company! "
+#~ msgstr ""
+#~ "No se ha podido crear un asiento para la diferencia en la tasa de cambio. "
+#~ "Debe configurar el campo 'Gastos de cambio de moneda' en la compañía "

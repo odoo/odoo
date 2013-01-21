@@ -1,22 +1,21 @@
-# German translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* hr_expense
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-01-06 21:00+0000\n"
+"PO-Revision-Date: 2012-12-10 16:24+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
-"Language-Team: German <de@li.org>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-07 05:44+0000\n"
-"X-Generator: Launchpad (build 16402)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:46+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -37,7 +36,7 @@ msgstr "Der Finanzbuchhalter erstattet die Spesen"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_approved
 msgid "Expense approved"
-msgstr "Spesenerstattung genehmigt"
+msgstr ""
 
 #. module: hr_expense
 #: field:hr.expense.expense,date_confirm:0
@@ -114,9 +113,6 @@ msgid ""
 "No expense journal found. Please make sure you have a journal with type "
 "'purchase' configured."
 msgstr ""
-"Es wurde kein Journal für die Personalspesen gefunden. Bitte stellen Sie "
-"deshalb sicher, daß Sie ein Journal des Typs 'Einkauf' anlegen und "
-"konfigurieren."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_report
@@ -164,7 +160,7 @@ msgstr "Fehler !"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_refused
 msgid "Expense refused"
-msgstr "Spesenerstattung abgelehnt"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_product
@@ -615,7 +611,7 @@ msgstr "Benutzer"
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_product
 msgid "Expense Categories"
-msgstr "Spesen Kategorien"
+msgstr ""
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -861,7 +857,7 @@ msgstr "Als Ausgabe verwendbar"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_confirmed
 msgid "Expense confirmed, waiting confirmation"
-msgstr "Spesen wurden eingegeben, in Erwartung genehmigt zu werden"
+msgstr ""
 
 #. module: hr_expense
 #: report:hr.expense:0
@@ -981,3 +977,273 @@ msgstr "Betrag gesamt"
 #: model:process.node,name:hr_expense.process_node_reinvoicing0
 msgid "Reinvoicing"
 msgstr "Weiterberechnung"
+
+#~ msgid "Expenses waiting validation"
+#~ msgstr "Ausgaben (zu validieren)"
+
+#~ msgid "Date Confirmed"
+#~ msgstr "Datum Bestätigung"
+
+#~ msgid "My expenses waiting validation"
+#~ msgstr "Meine Ausgaben (zu validieren)"
+
+#~ msgid "All expenses"
+#~ msgstr "Alle Ausgaben"
+
+#~ msgid "Validation"
+#~ msgstr "Validierung"
+
+#~ msgid "Print HR expenses"
+#~ msgstr "Drucke Personalausgaben"
+
+#~ msgid "State"
+#~ msgstr "Status"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Fehler !"
+
+#~ msgid "New Expenses Sheet"
+#~ msgstr "Neue Eingabe Ausgaben"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter xml Code für diese Ansicht!"
+
+#, python-format
+#~ msgid "The employee must have a contact address"
+#~ msgstr "Der Mitarbeiter benötigt eine Kontakt Adresse."
+
+#~ msgid "Invoiced"
+#~ msgstr "Abgerechnet"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
+#~ "beinhalten"
+
+#~ msgid "Accounting data"
+#~ msgstr "Persönliche Kontodaten"
+
+#~ msgid "Account Move"
+#~ msgstr "Belegnummer"
+
+#~ msgid "Expenses waiting payment"
+#~ msgstr "Ausgaben (zu bezahlen)"
+
+#~ msgid "My Draft expenses"
+#~ msgstr "Ausgaben (Entwurf)"
+
+#~ msgid "Cancel"
+#~ msgstr "Abbrechen"
+
+#~ msgid "Expense Process"
+#~ msgstr "Ausgaben Prozess"
+
+#~ msgid "Other Info"
+#~ msgstr "Weitere Info"
+
+#~ msgid "Draft expenses"
+#~ msgstr "Entwurf Ausgaben"
+
+#~ msgid "Expenses waiting invoice"
+#~ msgstr "Ausgaben (zur Spesenabrechnung)"
+
+#~ msgid "Expense Sheet"
+#~ msgstr "Ausgabekategorien"
+
+#~ msgid "Short Description"
+#~ msgstr "Kurzbeschreibung"
+
+#, python-format
+#~ msgid ""
+#~ "Please configure Default Expanse account for Product purchase, "
+#~ "`property_account_expense_categ`"
+#~ msgstr ""
+#~ "Bitte definieren Sie das Standard Aufwandskonto für Produkt Einkäufe,  "
+#~ "`property_account_expense_categ`"
+
+#~ msgid ""
+#~ "Determine if the product can be visible in the list of product within a "
+#~ "selection from an HR expense sheet line."
+#~ msgstr ""
+#~ "Legt fest, ob dieses Produkt im Bereich Personalausgaben auswählbar ist"
+
+#~ msgid "Date Validated"
+#~ msgstr "Datum Validierung"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ungültiger Modellname in der Aktionsdefinition."
+
+#~ msgid "UoM"
+#~ msgstr "ME"
+
+#~ msgid "# of Invoiced Lines"
+#~ msgstr "# Rechnungen"
+
+#~ msgid "   Month   "
+#~ msgstr "   Monat   "
+
+#~ msgid "Car Travel"
+#~ msgstr "Fahrtkosten"
+
+#~ msgid "Total Invoiced Lines"
+#~ msgstr "Gesamtbetrag"
+
+#~ msgid "    Month-1    "
+#~ msgstr "    Monat-1    "
+
+#~ msgid "  Year  "
+#~ msgstr "  Jahr  "
+
+#~ msgid "Reimbursed"
+#~ msgstr "Erstattet"
+
+#~ msgid "Customer Project"
+#~ msgstr "Kundenprojekt"
+
+#~ msgid "References"
+#~ msgstr "Referenzen"
+
+#~ msgid "This Month"
+#~ msgstr "Dieser Monat"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Fehler: Falscher EAN code"
+
+#~ msgid ""
+#~ "The OpenERP expenses management module allows you to track the full flow. "
+#~ "Every month, the employees record their expenses. At the end of the month, "
+#~ "their managers validates the expenses sheets which creates costs on "
+#~ "projects/analytic accounts. The accountant validates the proposed entries "
+#~ "and the employee can be reimbursed. You can also reinvoice the customer at "
+#~ "the end of the flow."
+#~ msgstr ""
+#~ "Das OpenERP Modul für das Management der Erstattung von Spesen und "
+#~ "Mitarbeiterausgaben erlaubt eine vollständige Bearbeitung dieses Vorgangs. "
+#~ "Für jeden Monat erfassen die Mitarbeiter die vorgestreckten Beträge, z.B. "
+#~ "für Anreisen oder Unterkunft für die jeweiligen Projekteinsätze. Hierdurch "
+#~ "werden diese Kosten unmittelbar dem Projekt bzw. dem analytischen Konto "
+#~ "zugewiesen. Der Buchhalter genehmigt diesen Antrag auf Erstattung von "
+#~ "Mitarbeiterausgaben, um dem Mitarbeiter die Beträge zu erstatten. Am Ende "
+#~ "dieses Prozesses können Sie auch noch eine Weiterberechnung an Kunden "
+#~ "vornehmen."
+
+#~ msgid "Employee's Invoice"
+#~ msgstr "Spesenabrechnung Mitarbeiter"
+
+#~ msgid "Human Resources Expenses Tracking"
+#~ msgstr "Verfolgung Personalspesen"
+
+#~ msgid "All Employee Expenses"
+#~ msgstr "Alle Personalspesen"
+
+#~ msgid "The journal used when the expense is invoiced"
+#~ msgstr "Journal bei Abrechnungsbuchung v. Personalspesen"
+
+#~ msgid "Expenses of My Department"
+#~ msgstr "Spesen meiner Abteilung"
+
+#~ msgid ""
+#~ "When the expense request is created the state is 'Draft'.\n"
+#~ " It is confirmed by the user and request is sent to admin, the state is "
+#~ "'Waiting Confirmation'.            \n"
+#~ "If the admin accepts it, the state is 'Accepted'.\n"
+#~ " If an invoice is made for the expense request, the state is 'Invoiced'.\n"
+#~ " If the expense is paid to user, the state is 'Reimbursed'."
+#~ msgstr ""
+#~ "Bei initialer Erstellung eines Formulars zur Erfassung von Personalspesen "
+#~ "ist der aktuelle Status zunächst 'Entwurf'.\n"
+#~ " Das Formular wird durch den Benutzer bestätigt und zwecks Prüfung  an den "
+#~ "Vorgesetzten gesendet , der Status wechselt hierdurch auf 'Erwarte "
+#~ "Genehmigung'.            \n"
+#~ "Wenn der Vorgesetzte die erfassten Ausgaben prüft und akzeptiert, wechselt "
+#~ "der Status auf 'Genehmigt'.\n"
+#~ " Wenn dann noch eine richtige Abrechnung erstellt wird, wechselt der Status "
+#~ "auf 'Abgerechnet'.\n"
+#~ " Nach Bezahlung bzw. Erstattung wechselt der Status auf , 'Ausgaben "
+#~ "Erstattet'."
+
+#~ msgid ""
+#~ "Determines if the product can be visible in the list of product within a "
+#~ "selection from an HR expense sheet line."
+#~ msgstr ""
+#~ "Legt fest, ob dieses Produkt im Bereich Personalspesen auswählbar ist"
+
+#~ msgid ""
+#~ "\n"
+#~ "    This module aims to manage employee's expenses.\n"
+#~ "\n"
+#~ "    The whole workflow is implemented:\n"
+#~ "    * Draft expense\n"
+#~ "    * Confirmation of the sheet by the employee\n"
+#~ "    * Validation by his manager\n"
+#~ "    * Validation by the accountant and invoice creation\n"
+#~ "    * Payment of the invoice to the employee\n"
+#~ "\n"
+#~ "    This module also uses the analytic accounting and is compatible with\n"
+#~ "    the invoice on timesheet module so that you will be able to "
+#~ "automatically\n"
+#~ "    re-invoice your customer's expenses if your work by project.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Diese Anwendung verwaltet die Spesenabrechnungen von Mitarbeitern.\n"
+#~ "\n"
+#~ "     Der gesamte Vorgang wird über folgenden Workflow umgesetzt:\n"
+#~ "     * Erstellung einer Spesenabrechnung im Entwurf\n"
+#~ "     * Bestätigung der Spesenabrechnung durch den Mitarbeiter\n"
+#~ "     * Prüfung und Freigabe durch den Vorgesetzten\n"
+#~ "     * Prüfung und Buchung durch einen Mitarbeiter der Buchhaltung\n"
+#~ "     * Auszahlung der Spesenerstattung an den Mitarbeiter\n"
+#~ "\n"
+#~ "     Diese Anwendung ist kompatibel mit der Funktionalität zur  "
+#~ "Mitarbeiterzeitabrechnung\n"
+#~ "     und nutzt somit ebenfalls die Möglichkeit analytischer Konten für eine "
+#~ "Weiterberechnung\n"
+#~ "     an Kunden, z.B. bei projektbezogener Abrechnung von Zeiten und "
+#~ "Aufwendungen.\n"
+#~ "     eine automatische Weiterberechnung an Kunden\n"
+#~ "    "
+
+#, python-format
+#~ msgid ""
+#~ "Please configure Default Expense account for Product purchase, "
+#~ "`property_account_expense_categ`"
+#~ msgstr ""
+#~ "Bitte konfigurieren Sie ein Standard Aufwandskonto für den Einkauf von "
+#~ "Produkten (property_account_expense_categ)"
+
+#, python-format
+#~ msgid "The employee's home address must have a partner linked."
+#~ msgstr ""
+#~ "Die Heimataddresse des Mitarbeiters mus mit einem Partner verbunden sein"
+
+#, python-format
+#~ msgid "The employee must have a Home address."
+#~ msgstr "Jeder MItarbeiter muss eine Heimatadresse haben"
+
+#~ msgid "Can Constitute an Expense"
+#~ msgstr "Für Personalspesen verwendbar"
+
+#~ msgid "Expenses during current month"
+#~ msgstr "Ausgaben des Monats"
+
+#~ msgid "My Department"
+#~ msgstr "Meine Abteilung"
+
+#~ msgid "Confirmed Expense"
+#~ msgstr "Bestätige Ausgaben"
+
+#~ msgid "Expenses during last month"
+#~ msgstr "Ausgaben letztes Monat"
+
+#~ msgid "Invoiced Expenses"
+#~ msgstr "Fakturierte Ausgaben"
+
+#, python-format
+#~ msgid "Supplier Invoices"
+#~ msgstr "Lieferantenrechnung"
+
+#~ msgid "Expenses during current year"
+#~ msgstr "Ausgaben des laufenden Jahres"

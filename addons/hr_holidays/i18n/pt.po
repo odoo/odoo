@@ -1,20 +1,19 @@
-# Portuguese translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* hr_holidays
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Portuguese <pt@li.org>\n"
+"PO-Revision-Date: 2012-12-13 14:42+0000\n"
+"Last-Translator: Rui Franco (multibase.pt) <Unknown>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 07:15+0000\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:47+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr_holidays
@@ -1024,3 +1023,289 @@ msgstr "Razões"
 #: field:hr.holidays.summary.employee,holiday_type:0
 msgid "Select Leave Type"
 msgstr ""
+
+#~ msgid "Confirm"
+#~ msgstr "Confirmar"
+
+#~ msgid "Holidays"
+#~ msgstr "Férias"
+
+#~ msgid "Set to Draft"
+#~ msgstr "Definir como esboço"
+
+#~ msgid "Select Holiday Type"
+#~ msgstr "Selecione o tipo de férias"
+
+#~ msgid "Both Validated and Confirmed"
+#~ msgstr "Ambos validados e confirmados"
+
+#~ msgid "General"
+#~ msgstr "Geral"
+
+#~ msgid "Sick Leave"
+#~ msgstr "Baixa por doença"
+
+#~ msgid "Draft"
+#~ msgstr "Rascunho"
+
+#~ msgid "State"
+#~ msgstr "Estado"
+
+#~ msgid "Holiday"
+#~ msgstr "Feriado"
+
+#, python-format
+#~ msgid "Error"
+#~ msgstr "Erro"
+
+#~ msgid "This Month"
+#~ msgstr "Este mês"
+
+#~ msgid "Human Resources: Holidays management"
+#~ msgstr "Recursos Humanos: Gestão de férias"
+
+#~ msgid "Extended Filters..."
+#~ msgstr "Filtros avançados..."
+
+#~ msgid "The number of days must be greater than 0 !"
+#~ msgstr "O número de dias deve ser maior que zero !"
+
+#~ msgid "Holidays by Department"
+#~ msgstr "Férias por departamento"
+
+#~ msgid "Allocation Type"
+#~ msgstr "Tipo de alocação"
+
+#~ msgid ""
+#~ "Leave requests can be recorded by employees and validated by their managers. "
+#~ "Once a leave request is validated, it appears automatically in the agenda of "
+#~ "the employee. You can define several allowance types (paid holidays, "
+#~ "sickness, etc.) and manage allowances per type."
+#~ msgstr ""
+#~ "Leave pedidos podem ser registados por funcionários e validado pelos "
+#~ "gerentes. Uma vez que um pedido de licença é validado, ele aparece "
+#~ "automaticamente na agenda do funcionário. Pode definir os tipos de abono "
+#~ "diversos (férias pagas, doença, etc) e gerir abonos por tipo."
+
+#~ msgid "HR Holidays Summary Report By Employee"
+#~ msgstr "Relatório de resumo de férias, por funcionário"
+
+#~ msgid ""
+#~ "When the holiday request is created the state is 'Draft'.\n"
+#~ " It is confirmed by the user and request is sent to admin, the state is "
+#~ "'Waiting Approval'.            If the admin accepts it, the state is "
+#~ "'Approved'. If it is refused, the state is 'Refused'."
+#~ msgstr ""
+#~ "Quando o pedido de férias é criado o estado é 'Rascunho'.\n"
+#~ "Confirma-se pelo usuário e pedido é enviado ao administrador, o Estado é "
+#~ "'Aprovação em espera'.            Se o administrador aceita, o estado é "
+#~ "'Aprovado'. Se for recusada, o estado é 'Recusado'."
+
+#~ msgid "The start date must be before the end date !"
+#~ msgstr "A data de começo deve ser anterior à data final !"
+
+#~ msgid ""
+#~ "Human Resources: Holidays tracking and workflow\n"
+#~ "\n"
+#~ "    This module allows you to manage leaves and leaves' requests.\n"
+#~ "    Implements a dashboard for human resource management that includes.\n"
+#~ "        * My Leaves\n"
+#~ "        * My Expenses\n"
+#~ "    Note that:\n"
+#~ "    - A synchronisation with an internal agenda (use of the CRM module) is "
+#~ "possible: in order to automatically create a case when an holiday request is "
+#~ "accepted, you have to link the holidays status to a case section. You can "
+#~ "set up this info and your colour preferences in\n"
+#~ "                HR / Configuration / Holidays Status\n"
+#~ "    - An employee can make an ask for more off-days by making a new "
+#~ "Allocation It will increase his total of that leave type available (if the "
+#~ "request is accepted).\n"
+#~ "    - There are two ways to print the employee's holidays:\n"
+#~ "        * The first will allow to choose employees by department and is used "
+#~ "by clicking the menu item located in\n"
+#~ "                HR / Holidays Request / Print Summary of Holidays\n"
+#~ "        * The second will allow you to choose the holidays report for "
+#~ "specific employees. Go on the list\n"
+#~ "                HR / Employees / Employees\n"
+#~ "            then select the ones you want to choose, click on the print icon "
+#~ "and select the option\n"
+#~ "                'Print Summary of Employee's Holidays'\n"
+#~ "    - The wizard allows you to choose if you want to print either the "
+#~ "Confirmed & Validated holidays or only the Validated ones. These states must "
+#~ "be set up by a user from the group 'HR'. You can define these features in "
+#~ "the security tab from the user data in\n"
+#~ "                Administration / Users / Users\n"
+#~ "            for example, you maybe will do it for the user 'admin'\n"
+#~ "            .\n"
+#~ msgstr ""
+#~ "?!?!?!?!?!?Recurso Humanos: Holidays tracking and workflow\n"
+#~ "\n"
+#~ "    This module allows you to manage leaves and leaves' requests.\n"
+#~ "    Implementa um painel para gestão de recursos humanos, que inclui.\n"
+#~ "        * My Leaves\n"
+#~ "        * Despesas\n"
+#~ "    Note that:\n"
+#~ "    - A sincronização com uma agenda interna (use módulo CRM)é possível: a "
+#~ "fim de criar automaticamente um caso quando um pedido de férias é aceite, "
+#~ "tem que ligar o status férias a uma secção de caso. Pode configurar esta "
+#~ "informação e as suas preferências de cor em\n"
+#~ "                HR / Configuration / Holidays Status\n"
+#~ "    - Um funcionário pode fazer uma peça mais off-days, fazendo uma nova "
+#~ "alocação ela vai aumentar o total desse tipo ficando disponíveis (se o "
+#~ "pedido for aceite).\n"
+#~ "    - Existem duas maneira de print the employee's holidays:\n"
+#~ "        * A primeira irá permitir que escolha os funcionários por "
+#~ "departamento e usado ao clicar no item menu localizado no\n"
+#~ "                HR / Holidays Request / Print Summary of Holidays\n"
+#~ "        * O segundo irá permitir que escolha holidays report para "
+#~ "funcionários específicos. Vá para a lista\n"
+#~ "                HR / Employees / Employees\n"
+#~ "            e escolha o que quer seleccionar, clique no print icon e "
+#~ "seleccione a opção\n"
+#~ "                'Print Summary of Employee's Holidays'\n"
+#~ "    - The wizard allows you to choose if you want to print either the "
+#~ "Confirmed & Validated holidays or only the Validated ones. These states must "
+#~ "be set up by a user from the group 'HR'. You can define these features in "
+#~ "the security tab from the user data in\n"
+#~ "                Administration / Users / Users\n"
+#~ "            for example, you maybe will do it for the user 'admin'\n"
+#~ "            .\n"
+
+#~ msgid "You have to select an employee or a category"
+#~ msgstr "Deve escolher um funcionário ou uma categoria"
+
+#~ msgid "Employee's Holidays"
+#~ msgstr "Férias do funcionário"
+
+#~ msgid "Casual Leave"
+#~ msgstr "?!?!??!Casual Leave"
+
+#~ msgid "By Employee Category"
+#~ msgstr "Por categoria de funcionário"
+
+#~ msgid "This area is automaticly filled by the user who validate the leave"
+#~ msgstr ""
+#~ "Esta área é automaticamente preenchido pelo utilizador que validar o leave"
+
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "Aviso !"
+
+#~ msgid " Month-1"
+#~ msgstr " Mês - 1"
+
+#~ msgid "Latest Connection"
+#~ msgstr "Última Conexão"
+
+#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
+#~ msgstr "Erro ! Não pode criar uma Hierarquia recursiva de Funcionários."
+
+#~ msgid "Holidays during last month"
+#~ msgstr "Férias durante o mês passado"
+
+#~ msgid ""
+#~ "Total number of legal leaves allocated to this employee, change this value "
+#~ "to create allocation/leave requests."
+#~ msgstr ""
+#~ "Número total de ausências legais alocadas a este funcionário, mude este "
+#~ "valor para criar alocação / pedido de ausência."
+
+#, python-format
+#~ msgid ""
+#~ "You cannot validate leaves for employee %s: too few remaining days (%s)."
+#~ msgstr ""
+#~ "Não pode validar ausências para o funcionário %s: poucos dias restantes(%s)."
+
+#~ msgid "Summary Of Leaves"
+#~ msgstr "Listagem de Ausências"
+
+#~ msgid "Leaves To Validate"
+#~ msgstr "Ausências por Validar"
+
+#~ msgid ""
+#~ "This color will be used in the leaves summary located in Reporting\\Leaves "
+#~ "by Departement"
+#~ msgstr ""
+#~ "Esta côr será usada na listagem das ausências alocadas em Relatórios \\ "
+#~ "Ausências por Departamento"
+
+#~ msgid "Legal Leaves"
+#~ msgstr "Ausências Válidas"
+
+#~ msgid ""
+#~ "The state is set to 'Draft', when a holiday request is created.            \n"
+#~ "The state is 'Waiting Approval', when holiday request is confirmed by user.  "
+#~ "          \n"
+#~ "The state is 'Refused', when holiday request is refused by manager.          "
+#~ "  \n"
+#~ "The state is 'Approved', when holiday request is approved by manager."
+#~ msgstr ""
+#~ "O estado é definido para 'Rascunho', quando um pedido de férias é criado.    "
+#~ "        \n"
+#~ "O estado é 'Aprovação em espera',quando o pedido de férias é confirmado pelo "
+#~ "utilizador.          \n"
+#~ "O estado é 'Recusado', quando o pedido de férias é recusado pelo gerente.    "
+#~ "        \n"
+#~ "O estado é 'Aprovado', quando o pedido de férias é aprovado pelo gerente."
+
+#, python-format
+#~ msgid "You have to select at least 1 Department. And try again"
+#~ msgstr "Deve selecionar pelo menos 1 Departamento. E volte a tentar"
+
+#~ msgid ""
+#~ "You can assign remaining Legal Leaves for each employee, OpenERP will "
+#~ "automatically create and validate allocation requests."
+#~ msgstr ""
+#~ "Pode atribuir as restantes ausências válidas de cada funcionário, o OpenERP "
+#~ "automaticamente cria e valida as solicitações de alocação."
+
+#~ msgid ""
+#~ "Leave Manager can let this field empty if this leave request/allocation is "
+#~ "for every employee"
+#~ msgstr ""
+#~ "Deixe este campo em branco se pretender que este pedido de licença se "
+#~ "aplique a todos os funcionários"
+
+#~ msgid ""
+#~ "If its True then its Allocation/Request have to be validated by second "
+#~ "validator"
+#~ msgstr ""
+#~ "Se o pedido for verdadeiro  tem que ser validado pelo segundo validador"
+
+#~ msgid ""
+#~ "If you set a meeting type, OpenERP will create a meeting in the calendar "
+#~ "once a leave is validated."
+#~ msgstr ""
+#~ "Se definir um tipo reunião, o OpenERP criará uma reunião no calendário, "
+#~ "quando uma ausência for validada."
+
+#~ msgid "Error! leave start-date must be lower then leave end-date."
+#~ msgstr "Erro! A data de inicio deve ser inferior à data de fim."
+
+#, python-format
+#~ msgid "You cannot delete a leave which is not in draft state !"
+#~ msgstr ""
+#~ "Não é possível eliminar a ausência que não esteja no estado de rascunho !"
+
+#~ msgid ""
+#~ "By Employee: Allocation/Request for individual Employee, By Employee "
+#~ "Category: Allocation/Request for group of employees in category"
+#~ msgstr ""
+#~ "Por funcionário: Pedido para funcionário individual, Pela Categoria do "
+#~ "Funcionário: Pedido para grupos de funcionários na categoria"
+
+#~ msgid "HR Holidays Summary Report By Department"
+#~ msgstr "RH Relatório Resumido de Férias Por Departamento"
+
+#~ msgid ""
+#~ "If you tick this checkbox, the system will allow, for this section, the "
+#~ "employees to take more leaves than the available ones."
+#~ msgstr ""
+#~ "Se marcar esta opção, o sistema permitirá que, para esta seção, os "
+#~ "funcionários possam tirar mais ausências do que as disponíveis."
+
+#~ msgid "All Employee Leaves"
+#~ msgstr "Ausências de Todos os Funcionários"
+
+#~ msgid "Requests Approve"
+#~ msgstr "Aprovar Pedidos"

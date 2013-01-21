@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2012-07-11 05:35+0000\n"
+"Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 07:34+0000\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:14+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
 
 #. module: stock
@@ -4808,3 +4808,772 @@ msgstr "処理準備完了"
 #: report:stock.picking.list:0
 msgid "Warehouse Address :"
 msgstr ""
+
+#~ msgid "Stock Management"
+#~ msgstr "在庫管理"
+
+#~ msgid "UoM Categories"
+#~ msgstr "単位の分類"
+
+#, python-format
+#~ msgid "Missing partial picking data for move #%s"
+#~ msgstr "移動番号 %s の一部欠けている集荷データ"
+
+#~ msgid "UoM"
+#~ msgstr "単位"
+
+#~ msgid "Current month"
+#~ msgstr "現在の月"
+
+#~ msgid ""
+#~ "This is the list of all delivery orders that have to be prepared, according "
+#~ "to your different sales orders and your logistics rules."
+#~ msgstr "これは異なる受注オーダーと物流ルールによる準備しなければならない全ての配達オーダーのリストです。"
+
+#, python-format
+#~ msgid ""
+#~ "The current move line is already assigned to a pack, please remove it first "
+#~ "if you really want to change it '             #                        'for "
+#~ "this product: \"%s\" (id: %d)"
+#~ msgstr ""
+#~ "現在の移動行は既に梱包に割り当てられています。この製品のための番号を本当に変更したい場合は、最初にそれを削除して下さい：%s（ID：%d）"
+
+#, python-format
+#~ msgid "You cannot cancel picking because stock move is in done state !"
+#~ msgstr "在庫移動が完了状態のため集荷のキャンセルはできません。"
+
+#, python-format
+#~ msgid ""
+#~ "Can not create Journal Entry, Input Account defined on this product and "
+#~ "Valuation account on category of this product are same."
+#~ msgstr "この製品に定義された入力アカウントとこの製品の分類の検証アカウントが同一であるため、仕訳帳エントリーを作成できません。"
+
+#~ msgid ""
+#~ "(Keep empty to open the current situation. Adjust HH:MM:SS to 00:00:00 to "
+#~ "filter all resources of the day for the 'From' date and 23:59:59 for the "
+#~ "'To' date)"
+#~ msgstr ""
+#~ "（現在の状況を開くには空のままとします。日による全リソースをフィルタするためには、HH:MM:SS形式でFrom日付に00:00:00を、To日付に23："
+#~ "59：59と調整して下さい。）"
+
+#~ msgid "Production lot"
+#~ msgstr "製造ロット"
+
+#~ msgid "State"
+#~ msgstr "状態"
+
+#~ msgid "UOM"
+#~ msgstr "単位"
+
+#~ msgid ""
+#~ "Create and manage your warehouses and assign them a location from here"
+#~ msgstr "ここから倉庫を作成し管理します。そしてそれらに場所を割り当てます。"
+
+#, python-format
+#~ msgid "No product in this location."
+#~ msgstr "この場所には製品がありません。"
+
+#~ msgid "["
+#~ msgstr "［"
+
+#~ msgid ""
+#~ "Current quantity of products with this Production Lot Number available in "
+#~ "company warehouses"
+#~ msgstr "会社の倉庫で利用可能なこの製品のロット番号を含む製品の現在数量"
+
+#, python-format
+#~ msgid "You can not process picking without stock moves"
+#~ msgstr "在庫移動なしでは集荷処理はできません。"
+
+#, python-format
+#~ msgid ""
+#~ "There is no stock output account defined for this product or its category: "
+#~ "\"%s\" (id: %d)"
+#~ msgstr "この製品あるいはこの分類のために定義された在庫出力アカウントがありません：%s（ID：%d）"
+
+#~ msgid ""
+#~ "You will find in this list all products you have to deliver to your "
+#~ "customers. You can process the deliveries directly from this list using the "
+#~ "buttons on the right of each line. You can filter the products to deliver by "
+#~ "customer, products or sale order (using the Origin field)."
+#~ msgstr ""
+#~ "顧客に配達せねばならない全ての製品をこのリストから見つけることができます。このリストの各行の右のボタンを使うことで、配達を直接、処理することが可能です。配"
+#~ "達する製品に対して、顧客、製品、受注（基点項目を使って）によるフィルタができます。"
+
+#, python-format
+#~ msgid ""
+#~ "There is no inventory Valuation account defined on the product category: "
+#~ "\"%s\" (id: %d)"
+#~ msgstr "製品分類で定義された在庫評価アカウントがありません：%s（ID：%d）"
+
+#~ msgid "Inventory Properties"
+#~ msgstr "在庫属性"
+
+#~ msgid ""
+#~ "For the current product, this stock location will be used, instead of the "
+#~ "default one, as the source location for stock moves generated when you do an "
+#~ "inventory"
+#~ msgstr "棚卸を行う時に、在庫移動のための元の場所が生成されるため、現在の製品のためにデフォルトの代わりにこの在庫場所が使用されます。"
+
+#, python-format
+#~ msgid "Inventory '%s' is done."
+#~ msgstr "棚卸 %s は完了しました。"
+
+#~ msgid ""
+#~ "Internal Moves display all inventory operations you have to perform in your "
+#~ "warehouse. All operations can be categorized into stock journals, so that "
+#~ "each worker has his own list of operations to perform in his own journal. "
+#~ "Most operations are prepared automatically by OpenERP according to your "
+#~ "preconfigured logistics rules, but you can also record manual stock "
+#~ "operations."
+#~ msgstr ""
+#~ "内部移動は倉庫内で実行する必要がある全ての在庫操作を表示します。各作業者は彼自身の仕訳帳の中に彼自身の実行するための操作のリストを持つので、全ての操作は在"
+#~ "庫仕訳帳の中に分類されます。ほとんどの操作は、あなたが前もって設定した物流ルールにしたがって、OpenERPにより自動的に準備されます。とはいえ、手動で在"
+#~ "庫操作を記録することもできます。"
+
+#, python-format
+#~ msgid "Stock Inventory is already Validated."
+#~ msgstr "在庫棚卸は既に検証済です。"
+
+#~ msgid ""
+#~ "This menu gives you the full traceability of inventory operations on a "
+#~ "specific product. You can filter on the product to see all the past or "
+#~ "future movements for the product."
+#~ msgstr ""
+#~ "このメニューは特定の製品の在庫操作の全ての追跡能力を提供します。製品のための全ての過去および未来の移動を見るために製品をフィルタすることができます。"
+
+#~ msgid "Production lot revisions"
+#~ msgstr "製造ロットのリビジョン"
+
+#~ msgid "Production Lot Revisions"
+#~ msgstr "製造ロットのリビジョン"
+
+#~ msgid ""
+#~ "The stock journal system allows you to assign each stock operation to a "
+#~ "specific journal according to the type of operation to perform or the "
+#~ "worker/team that should perform the operation. Examples of stock journals "
+#~ "may be: quality control, pick lists, packing, etc."
+#~ msgstr ""
+#~ "在庫仕訳帳システムは、実行のための操作のタイプ、または操作を実行しなければならない作業者 / "
+#~ "チームによる特定の仕訳帳に各在庫操作を割り当てることができます。在庫仕訳帳の例：品質管理、集荷リスト、梱包など"
+
+#~ msgid "Sales & Purchases"
+#~ msgstr "受注と発注"
+
+#~ msgid "You try to assign a lot which is not from the same product"
+#~ msgstr "違う製品のロットを割り当てることはできません。"
+
+#~ msgid ""
+#~ "The Incoming Shipments is the list of all orders you will receive from your "
+#~ "suppliers. An incoming shipment contains a list of products to be received "
+#~ "according to the original purchase order. You can validate the shipment "
+#~ "totally or partially."
+#~ msgstr ""
+#~ "内部出荷は仕入先から受領する全てのオーダーのリストです。内部出荷は元となる発注オーダーにより受領する製品のリストを含みます。合計あるいは一部の出荷の検証が"
+#~ "できます。"
+
+#~ msgid "Move Information"
+#~ msgstr "移動情報"
+
+#~ msgid "Refrigerator"
+#~ msgstr "冷蔵庫"
+
+#~ msgid "Recipient"
+#~ msgstr "受取人"
+
+#~ msgid "Production Lots"
+#~ msgstr "製造ロット"
+
+#~ msgid "Production lot is used to put a serial number on the production"
+#~ msgstr "製造ロットは製造のシリアル番号をつけるために使用されます。"
+
+#~ msgid ""
+#~ "Check this option to select existing lots in the list below, otherwise you "
+#~ "should enter new ones line by line."
+#~ msgstr "以下のリストの既存ロットを選択するためにはこのオプションをチェックします。そうでない場合、１行ずつ新しく入力する必要があります。"
+
+#~ msgid "Process Now"
+#~ msgstr "すぐに処理"
+
+#, python-format
+#~ msgid "Valuation Account is not specified for Product Category: %s"
+#~ msgstr "製品分類のための検証アカウントが定義されていません：%s"
+
+#~ msgid "Date of Order"
+#~ msgstr "オーダー日"
+
+#~ msgid "unknown"
+#~ msgstr "不明"
+
+#~ msgid "Month-1"
+#~ msgstr "月-1"
+
+#, python-format
+#~ msgid "is scheduled %s."
+#~ msgstr "%s 予定済"
+
+#~ msgid "Last month"
+#~ msgstr "先月"
+
+#~ msgid "Confirmed Pickings"
+#~ msgstr "確認済集荷"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "エラー：無効な商品識別番号です。"
+
+#, python-format
+#~ msgid "is waiting."
+#~ msgstr "待機中"
+
+#, python-format
+#~ msgid ""
+#~ "There is no stock output account defined for this product: \"%s\" (id: %d)"
+#~ msgstr "この製品のために定義された在庫出力アカウントがありません：%s（ID:%d）"
+
+#~ msgid "Address of partner"
+#~ msgstr "パートナの住所"
+
+#, python-format
+#~ msgid "Delivery Order"
+#~ msgstr "配達オーダー"
+
+#, python-format
+#~ msgid ""
+#~ "The uom rounding does not allow you to ship \"%s %s\", only roundings of "
+#~ "\"%s %s\" is accepted by the uom."
+#~ msgstr "%s %s を出荷するために単位の丸めは許されていません。%s %s の丸めのみが許されています。"
+
+#~ msgid "Lot number"
+#~ msgstr "ロット番号"
+
+#~ msgid "Date Done"
+#~ msgstr "完了日"
+
+#~ msgid "Expected Shipping Date"
+#~ msgstr "予定出荷日"
+
+#~ msgid "Import current product inventory from the following location"
+#~ msgstr "次の場所から現在の製品在庫をインポート"
+
+#~ msgid "Current year"
+#~ msgstr "今年"
+
+#~ msgid "Product UOM"
+#~ msgstr "製品単位"
+
+#~ msgid ""
+#~ "For the current product, this stock location will be used, instead of the "
+#~ "default one, as the source location for stock moves generated by production "
+#~ "orders"
+#~ msgstr "現在の製品のため、製造オーダーにより在庫移動は生成されるための元の場所として、デフォルトの代わりにこの在庫場所は使用されます。"
+
+#~ msgid "Packing List:"
+#~ msgstr "梱包リスト："
+
+#~ msgid "Expected Stock Variations"
+#~ msgstr "予想在庫変動"
+
+#~ msgid "Shop 1"
+#~ msgstr "店 1"
+
+#, python-format
+#~ msgid "is in draft state."
+#~ msgstr "ドラフト状態です。"
+
+#, python-format
+#~ msgid "Company is not specified in Location"
+#~ msgstr "会社が場所に指定されていません。"
+
+#~ msgid "Search Stock Picking"
+#~ msgstr "在庫集荷の検索"
+
+#~ msgid "Picking List:"
+#~ msgstr "集荷リスト："
+
+#~ msgid "Stock to be receive"
+#~ msgstr "受領する在庫"
+
+#~ msgid "Available Pickings"
+#~ msgstr "利用可能集荷"
+
+#~ msgid "General Informations"
+#~ msgstr "一般情報"
+
+#~ msgid "Packing"
+#~ msgstr "梱包"
+
+#~ msgid ""
+#~ "* Draft: not confirmed yet and will not be scheduled until confirmed\n"
+#~ "* Confirmed: still waiting for the availability of products\n"
+#~ "* Available: products reserved, simply waiting for confirmation.\n"
+#~ "* Waiting: waiting for another move to proceed before it becomes "
+#~ "automatically available (e.g. in Make-To-Order flows)\n"
+#~ "* Done: has been processed, can't be modified or cancelled anymore\n"
+#~ "* Cancelled: has been cancelled, can't be confirmed anymore"
+#~ msgstr ""
+#~ "・ ドラフト：まだ確認されておらず、そして確認されるまでスケジュールされません。\n"
+#~ "・ 確認済：製品が利用可能になるのを待っています。\n"
+#~ "・ 利用可能：製品が確保され、単純に確認を待っています。\n"
+#~ "・ 待機中：自動的に利用可能になる前に（例えばオーダー作成フロー）、処理のために他の移動を待っています。\n"
+#~ "・ 完了：処理されたもの。もはや変更もキャンセルもできません。\n"
+#~ "・ キャンセル済：キャンセルされたのもの。もはや確認できません。"
+
+#, python-format
+#~ msgid "No Invoices were created"
+#~ msgstr "請求書は作成されませんでした。"
+
+#, python-format
+#~ msgid "were scrapped"
+#~ msgstr "廃棄されました。"
+
+#, python-format
+#~ msgid "Please provide a positive quantity to scrap!"
+#~ msgstr "廃棄するには正の数量を与えて下さい。"
+
+#~ msgid ""
+#~ "If this picking was split this field links to the picking that contains the "
+#~ "other part that has been processed already."
+#~ msgstr "集荷が分割される場合、この項目は既に処理された他の部分を含む集荷にリンクします。"
+
+#~ msgid ""
+#~ "When the stock move is created it is in the 'Draft' state.\n"
+#~ " After that, it is set to 'Not Available' state if the scheduler did not "
+#~ "find the products.\n"
+#~ " When products are reserved it is set to 'Available'.\n"
+#~ " When the picking is done the state is 'Done'.              \n"
+#~ "The state is 'Waiting' if the move is waiting for another one."
+#~ msgstr ""
+#~ "在庫移動が作成された時にはドラフト状態です。\n"
+#~ "　その後、スケジューラが製品を持つける事ができなかった場合は利用不可にセットされます。\n"
+#~ "　製品が確保されると、利用可能にセットされます。\n"
+#~ "　集荷が完了すると、状態は完了になります。\n"
+#~ "移動が他の移動のために待ち状態になると、状態は待機中となります。"
+
+#~ msgid ""
+#~ "Forces to specify a Production Lot for all moves containing this product and "
+#~ "going to a Customer Location"
+#~ msgstr "この製品を含む全ての移動と顧客の場所に行くのための製造ロットを強制的に定義します。"
+
+#~ msgid "Production Lot Numbers"
+#~ msgstr "製造ロット番号"
+
+#~ msgid "Split in lots"
+#~ msgstr "ロットに分割"
+
+#~ msgid "Tracking lot"
+#~ msgstr "ロットの追跡"
+
+#~ msgid "Dashboard"
+#~ msgstr "ダッシュボード"
+
+#, python-format
+#~ msgid "You can not remove a lot line !"
+#~ msgstr "たくさんの行を削除できません。"
+
+#~ msgid "Warehouse Dashboard"
+#~ msgstr "倉庫ダッシュボード"
+
+#, python-format
+#~ msgid "You cannot remove the picking which is in %s state !"
+#~ msgstr "%s 状態である集荷を削除できません。"
+
+#~ msgid "Shipping Address :"
+#~ msgstr "送付先住所："
+
+#~ msgid "Split in production lots"
+#~ msgstr "製造ロットに分割"
+
+#, python-format
+#~ msgid ""
+#~ "Can not create Journal Entry, Output Account defined on this product and "
+#~ "Valuation account on category of this product are same."
+#~ msgstr "仕訳帳エントリーが作成できません。この製品に定義された出力アカウントとこの製品の分類の検証アカウントが同一です。"
+
+#~ msgid "Orders planned for today"
+#~ msgstr "本日の計画オーダー"
+
+#~ msgid "Stocks"
+#~ msgstr "在庫"
+
+#~ msgid "Stock report by tracking lots"
+#~ msgstr "ロット追跡による在庫レポート"
+
+#, python-format
+#~ msgid ""
+#~ "There is no stock input account defined for this product or its category: "
+#~ "\"%s\" (id: %d)"
+#~ msgstr "この製品またはその分類のために定義された在庫入力アカウントがありません：%s（ID：%d）"
+
+#~ msgid ""
+#~ "This field is for internal purpose. It is used to decide if the column "
+#~ "prodlot has to be shown on the move_ids field or not"
+#~ msgstr "この項目は内部目的のためのものです。製品シリアル番号列を move_ids項目上に表示するかどうかを決定するために使用されます。"
+
+#~ msgid "]"
+#~ msgstr "］"
+
+#~ msgid "Partial Delivery"
+#~ msgstr "部分配達"
+
+#~ msgid "Stock Location Analysis"
+#~ msgstr "在庫場所分析"
+
+#~ msgid "Update"
+#~ msgstr "更新"
+
+#~ msgid ""
+#~ "Forces to specify a Production Lot for all moves containing this product and "
+#~ "generated by a Manufacturing Order"
+#~ msgstr "この製品を含む全ての移動と製造オーダーによって生成のための製造ロットの指定を強制します。"
+
+#, python-format
+#~ msgid "Document"
+#~ msgstr "ドキュメント"
+
+#~ msgid "Input Picking List"
+#~ msgstr "集荷リストの入力"
+
+#, python-format
+#~ msgid "Could not find any difference between standard price and new price!"
+#~ msgstr "標準価格と新価格の間に違いが見つかりません。"
+
+#~ msgid "Products "
+#~ msgstr "製品 "
+
+#~ msgid "Stock to be delivered (Available or not)"
+#~ msgstr "配達される在庫（利用可能または不可）"
+
+#~ msgid "This operation will cancel the shipment. Do you want to continue?"
+#~ msgstr "この操作は出荷をキャンセルします。操作を継続しますか？"
+
+#~ msgid "Internal Pickings to invoice"
+#~ msgstr "請求書のための内部集荷"
+
+#, python-format
+#~ msgid "Operation forbidden"
+#~ msgstr "操作は禁じられています。"
+
+#~ msgid "Expected date for the picking to be processed"
+#~ msgstr "集荷が処理される予定日"
+
+#~ msgid "Dates"
+#~ msgstr "日付"
+
+#~ msgid ""
+#~ "The combination of serial number and internal reference must be unique !"
+#~ msgstr "シリアル番号と内部参照番号は固有である必要があります。"
+
+#~ msgid ""
+#~ "Define your locations to reflect your warehouse structure and organization. "
+#~ "OpenERP is able to manage physical locations (warehouses, shelves, bin, "
+#~ "etc), partner locations (customers, suppliers) and virtual locations which "
+#~ "are the counterpart of the stock operations like the manufacturing orders "
+#~ "consumptions, inventories, etc. Every stock operation in OpenERP moves the "
+#~ "products from one location to another one. For instance, if you receive "
+#~ "products from a supplier, OpenERP will move products from the Supplier "
+#~ "location to the Stock location. Each report can be performed on physical, "
+#~ "partner or virtual locations."
+#~ msgstr ""
+#~ "倉庫の構造と組織を反映する場所を定義します。OpenERPは物理的な場所（倉庫、棚、容器など）、パートナの場所（顧客、仕入先）、そして、製造オーダーの消費"
+#~ "、棚卸などのような在庫操作の対象物としての仮想の場所を管理できます。OpenERPの全ての在庫操作はひとつの場所から他の場所に製品を移動します。例えば、仕"
+#~ "入先から製品を受領した場合、OpenERPは仕入先の場所から在庫場所まで製品を移動します。各レポートは物理的、パートナ、または仮想の場所で実行されます。"
+
+#~ msgid ""
+#~ "Ice cream can be mass-produced and thus is widely available in developed "
+#~ "parts of the world. Ice cream can be purchased in large cartons (vats and "
+#~ "squrounds) from supermarkets and grocery stores, in smaller quantities from "
+#~ "ice cream shops, convenience stores, and milk bars, and in individual "
+#~ "servings from small carts or vans at public events."
+#~ msgstr ""
+#~ "アイスクリームは大量生産品です。そのため世界の発展した地域で広く利用可能です。アイスクリームは大きなカートン（樽状と四角円筒形状）はスーパーマーケットと食"
+#~ "料雑貨店で、小容量はアイスクリーム店、コンビニエンスストア、ミルクバーで、そして、公共のイベントでは一人前づつ小さな手押し車やバンから買うことができます。"
+
+#~ msgid "opening"
+#~ msgstr "開始"
+
+#, python-format
+#~ msgid "Product  '%s' is consumed with '%s' quantity."
+#~ msgstr "製品 %s は %s の数量で消費されます。"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "エラー"
+
+#~ msgid "Maxtor Suppliers"
+#~ msgstr "最大の仕入先"
+
+#~ msgid ""
+#~ "Periodical Inventories are used to count the number of products available "
+#~ "per location. You can use it once a year when you do the general inventory "
+#~ "or whenever you need it, to correct the current stock level of a product."
+#~ msgstr ""
+#~ "定期的な棚卸は場所ごとの利用可能な製品の数を数えるために使用されます。一般的な棚卸であれば、１年に１回それを使用します。または、製品の現在の在庫レベルを修"
+#~ "正するために必要な時はいつでも使用できます。"
+
+#~ msgid "Unique production lot, will be displayed as: PREFIX/SERIAL [INT_REF]"
+#~ msgstr "固有の製造ロットは次のように表示されます：PREFIX/SERIAL [INT_REF]"
+
+#~ msgid "You can not move products from or to a location of the type view."
+#~ msgstr "タイプビューの場所から、あるいは場所へは製品を動かすことはできません。"
+
+#~ msgid "Delivery Counter"
+#~ msgstr "配達カウンター"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr "エラー：デフォルトの単位と発注単位は同じ分類でなければいけません。"
+
+#, python-format
+#~ msgid "Can not consume a move with negative or zero quantity !"
+#~ msgstr "負またはゼロの数量を移動に使うことはできません。"
+
+#~ msgid "Production Lot Number"
+#~ msgstr "製造ロット番号"
+
+#, python-format
+#~ msgid ""
+#~ "There is no stock input account defined for this product: \"%s\" (id: %d)"
+#~ msgstr "この製品のために在庫入力アカウントが定義されていません：%s（ID：%d）"
+
+#~ msgid "Back Order"
+#~ msgstr "バックオーダー"
+
+#, python-format
+#~ msgid ""
+#~ "You are moving %.2f %s products but only %.2f %s available in this lot."
+#~ msgstr "あなたは製品 %.2f %s を移動させようとしていますが、このロットでは %.2f %s のみが利用可能です。"
+
+#, python-format
+#~ msgid "Internal picking"
+#~ msgstr "内部集荷"
+
+#~ msgid "Open Product"
+#~ msgstr "製品を開く"
+
+#~ msgid "Accounting Stock Properties"
+#~ msgstr "会計の在庫属性"
+
+#, python-format
+#~ msgid "Insufficient Stock in Lot !"
+#~ msgstr "十分な在庫がロットにありません。"
+
+#~ msgid "Address"
+#~ msgstr "住所"
+
+#, python-format
+#~ msgid "Please provide Proper Quantity !"
+#~ msgstr "適切な数量を指定して下さい。"
+
+#~ msgid " Waiting"
+#~ msgstr " 待機中"
+
+#~ msgid "Cost Price :"
+#~ msgstr "原価："
+
+#~ msgid "Order"
+#~ msgstr "オーダー"
+
+#~ msgid "Total"
+#~ msgstr "合計"
+
+#, python-format
+#~ msgid ""
+#~ "Quantities, UoMs, Products and Locations cannot be modified on stock moves "
+#~ "that have already been processed (except by the Administrator)"
+#~ msgstr "既に処理済みの在庫移動の上では数量、単位、製品、場所の変更はできません（アドミニストレータによる場合を除く）。"
+
+#~ msgid "Ice Cream"
+#~ msgstr "アイスクリーム"
+
+#~ msgid ""
+#~ "This is the list of all the production lots (serial numbers) you recorded. "
+#~ "When you select a lot, you can get the upstream or downstream traceability "
+#~ "of the products contained in lot. By default, the list is filtred on the "
+#~ "serial numbers that are available in your warehouse but you can uncheck the "
+#~ "'Available' button to get all the lots you produced, received or delivered "
+#~ "to customers."
+#~ msgstr ""
+#~ "これは記録された全ての製造ロットのリスト（シリアル番号）です。ロットを選択した時に、ロットに含まれる製品の上流または下流への追跡能力を得ることができます。"
+#~ "デフォルトでは、倉庫で利用可能なシリアル番号でのフィルタされたリストですが、あなたが製造した、受け取った、または顧客に配達した全てのロットを得るために、利"
+#~ "用可能ボタンのチェックを外す事ができます。"
+
+#~ msgid "Moves for this production lot"
+#~ msgstr "この製造ロットの移動"
+
+#~ msgid "Reason"
+#~ msgstr "理由"
+
+#, python-format
+#~ msgid "UserError"
+#~ msgstr "ユーザエラー"
+
+#, python-format
+#~ msgid "Warning"
+#~ msgstr "警告"
+
+#, python-format
+#~ msgid "is done."
+#~ msgstr "完了"
+
+#~ msgid "It specifies goods to be delivered all at once or by direct delivery"
+#~ msgstr "一度に全てを配達する、または直接配送による製品を指定します。"
+
+#~ msgid "Related Picking"
+#~ msgstr "関連する集荷"
+
+#~ msgid "Reception:"
+#~ msgstr "受付："
+
+#~ msgid "This quantity is expressed in the Default UoM of the product."
+#~ msgstr "この数量はデフォルト製品の単位を表します。"
+
+#~ msgid "Reporting"
+#~ msgstr "レポート"
+
+#, python-format
+#~ msgid " for the "
+#~ msgstr " ために "
+
+#~ msgid "Stock available to be delivered"
+#~ msgstr "配達するために利用可能な在庫"
+
+#~ msgid "Packing list"
+#~ msgstr "梱包リスト"
+
+#, python-format
+#~ msgid "is cancelled."
+#~ msgstr "キャンセル済"
+
+#~ msgid "Existing Lots"
+#~ msgstr "既存ロット"
+
+#~ msgid "Additional info"
+#~ msgstr "追加情報"
+
+#~ msgid "Waiting "
+#~ msgstr "待機中 "
+
+#~ msgid "Products Moves"
+#~ msgstr "製品移動"
+
+#~ msgid "Shop 2"
+#~ msgstr "店 2"
+
+#~ msgid ""
+#~ "For the current product, this stock location will be used, instead of the "
+#~ "default one, as the source location for stock moves generated by procurements"
+#~ msgstr "現在の製品のため、調達により生成された在庫移動のための元の場所として、デフォルトの代わりにこの在庫場所が使用されます。"
+
+#, python-format
+#~ msgid "Please specify at least one non-zero quantity!"
+#~ msgstr "少なくとも1つのゼロ以外の数量を指定して下さい。"
+
+#~ msgid "Reference of the document that produced this picking."
+#~ msgstr "この集荷を製造したドキュメントの参照"
+
+#, python-format
+#~ msgid "is ready to process."
+#~ msgstr "処理準備完了"
+
+#, python-format
+#~ msgid "There is no journal defined on the product category: \"%s\" (id: %d)"
+#~ msgstr "製品分類に仕訳帳が定義されていません：%s（ID：%d）"
+
+#~ msgid ""
+#~ "Forces to specify a Production Lot for all moves containing this product and "
+#~ "coming from a Supplier Location"
+#~ msgstr "この製品を含む仕入先場所から来る全ての移動のために製品ロットの指定が必要です。"
+
+#~ msgid "To invoice"
+#~ msgstr "請求対象"
+
+#~ msgid ""
+#~ "This is the structure of your company's warehouses and locations. You can "
+#~ "click on a location to get the list of the products and their stock level in "
+#~ "this particular location and all its children."
+#~ msgstr ""
+#~ "これは会社の倉庫と場所の構造です。製品のリストと、この特定の場所と全ての子におけるそれらの在庫レベルを取得するための場所をクリックできます。"
+
+#~ msgid "Select Quantity"
+#~ msgstr "数量選択"
+
+#, python-format
+#~ msgid ""
+#~ "Total quantity after split exceeds the quantity to split for this product: "
+#~ "\"%s\" (id: %d)"
+#~ msgstr "分割はこの製品を分割するための数量を超えた数量です：%s（ID：%d）"
+
+#~ msgid "Expected"
+#~ msgstr "予定"
+
+#~ msgid "You must assign a production lot for this product"
+#~ msgstr "この製品に製造ロットを割り当てる必要があります。"
+
+#~ msgid "Split in Production lots"
+#~ msgstr "製造ロットに分割"
+
+#, python-format
+#~ msgid "Processing Error"
+#~ msgstr "処理エラー"
+
+#, python-format
+#~ msgid ""
+#~ "There are no products to return (only lines in Done state and not fully "
+#~ "returned yet can be returned)!"
+#~ msgstr "返品する製品はありません（完了状態の行で返品が全体の返品でない時のみ）。"
+
+#~ msgid "Small Refrigerator"
+#~ msgstr "小型冷蔵庫"
+
+#~ msgid "Stock report by production lots"
+#~ msgstr "製造ロットによる在庫レポート"
+
+#~ msgid "Production Lot Identification"
+#~ msgstr "製造ロットの識別"
+
+#~ msgid "Convenient Store"
+#~ msgstr "コンビニエンスストア"
+
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "警告"
+
+#, python-format
+#~ msgid ""
+#~ "Production lot quantity %d of %s is larger than available quantity (%d) !"
+#~ msgstr "製造ロットの数量 %d %s は利用可能な数量（%d）より大きくなっています。"
+
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr "エラー。再帰的な関係となる会員を作ることはできません。"
+
+#~ msgid "Error ! You cannot create recursive categories."
+#~ msgstr "エラー：再帰カテゴリーを作成することはできません。"
+
+#~ msgid ""
+#~ "Our records indicate that the following payments are still due. If the "
+#~ "amount\n"
+#~ "has already been paid, please disregard this notice. However, if you have "
+#~ "any\n"
+#~ "queries regarding your account, please contact us.\n"
+#~ "Thank you in advance.\n"
+#~ msgstr ""
+#~ "われわれの記録によれば、次の支払がまだ行われておりません。既に金額が支払われている\n"
+#~ "場合には、どうぞ、この通知を無視して下さい。\n"
+#~ "アカウントに関して何かご質問がありましたら、どうぞ、お問い合わせ下さい。\n"
+#~ "よろしくお願いいたします。\n"
+
+#~ msgid ""
+#~ "This is the list of all your packs. When you select a Pack, you can get the "
+#~ "upstream or downstream traceability of the products contained in the pack."
+#~ msgstr "これはあなたの全ての梱包リストです。梱包を選択すると、梱包に含まれる製品の上流または下流の追跡能力を得る事ができます。"
+
+#~ msgid ""
+#~ "Here you can receive individual products, no matter what purchase order or "
+#~ "picking order they come from. You will find the list of all products you are "
+#~ "waiting for. Once you receive an order, you can filter based on the name of "
+#~ "the supplier or the purchase order reference. Then you can confirm all "
+#~ "products received using the buttons on the right of each line."
+#~ msgstr ""
+#~ "ここでは、発注オーダーや集荷オーダーから発生したものを気にせず、個々の製品の受け取りができます。あなたが待っている全ての製品のリストを見つけるでしょう。い"
+#~ "ったんオーダーを受け取った後は、仕入先の名前や受注オーダーの参照を基準としてフィルタすることができます。それから、各行の右のボタンを使って全ての製品の受け"
+#~ "取りの確認ができます。"

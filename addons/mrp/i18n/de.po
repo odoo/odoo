@@ -1,22 +1,21 @@
-# German translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# 	* mrp
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-01-07 00:43+0000\n"
+"PO-Revision-Date: 2012-12-21 02:08+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
-"Language-Team: German <de@li.org>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-08 06:05+0000\n"
-"X-Generator: Launchpad (build 16402)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:17+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -113,7 +112,7 @@ msgstr "Für Lager- und Verbrauchsprodukte"
 #: help:mrp.production,message_unread:0
 #: help:mrp.production.workcenter.line,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "Als zu erledigen markieren"
+msgstr ""
 
 #. module: mrp
 #: help:mrp.routing.workcenter,cycle_nbr:0
@@ -212,7 +211,7 @@ msgstr "Für eingekauftes Material"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
 msgid "Order Planning"
-msgstr "Auftragsplanung"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_operations:0
@@ -305,8 +304,6 @@ msgid ""
 "The selection of the right Bill of Material to use will depend on the "
 "properties specified on the sales order and the Bill of Material."
 msgstr ""
-"Die Auswahl der korrekten Stückliste hängt ab von den Merkmalen, die beim "
-"Verkaufsauftrag spezifiziert werden."
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -315,9 +312,6 @@ msgid ""
 "                                will contain the raw materials, instead of "
 "the finished product."
 msgstr ""
-"Bei der Auftragsverarbeitung für dieses Produkt, enthält der Lieferauftrag\n"
-"                            die Produktkomponenten, anstelle des fertigen "
-"Produkts."
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -531,20 +525,6 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klicken Sie zur Erstellung eines neuen Merkmals.\n"
-"              </p><p>\n"
-"                Die Merkmale werden in OpenERP genutzt, um die richtige "
-"Stückliste auszuwählen,\n"
-"                wenn es verschiedene Möglichkeiten für die Fertigung eines "
-"Produkts gibt. Sie können\n"
-"                durch Merkmale verschiedene Stücklisten für ein einziges "
-"Produkt haben. Wenn ein Verkäufer\n"
-"                einen Auftrag erfasst, kann Bezug auf die Merkmale genommen "
-"werden, wodurch die korrekte\n"
-"                Stückliste referenziert wird. \n"
-"              </p>\n"
-"            "
 
 #. module: mrp
 #: view:mrp.production:0
@@ -601,7 +581,7 @@ msgstr "Kosten des Arbeitsplatzes je Zyklus"
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_bom0
 msgid "Manufacturing decomposition"
-msgstr "Stücklisten Auflösung"
+msgstr "Fertigungsreste"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_serviceproduct1
@@ -963,7 +943,7 @@ msgstr "Markieren als gestartet"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Partial"
-msgstr "Teillieferung"
+msgstr "Teilweise"
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -1489,7 +1469,7 @@ msgstr "Priorität"
 #: model:ir.model,name:mrp.model_stock_picking
 #: field:mrp.production,picking_id:0
 msgid "Picking List"
-msgstr "Pickliste"
+msgstr "Lieferauftrag"
 
 #. module: mrp
 #: help:mrp.production,bom_id:0
@@ -1686,7 +1666,7 @@ msgstr "Sachkonto"
 #. module: mrp
 #: report:mrp.production.order:0
 msgid "SO Number"
-msgstr "Auftrag Nummer"
+msgstr "Verkaufsauftrag"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:505
@@ -1760,24 +1740,6 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klicken Sie zur Erstellung einer Merkmalsgruppe.\n"
-"              </p><p>\n"
-"                Definieren Sie spezifische Merkmalsgruppen, die zu "
-"Stücklisten und Aufträgen\n"
-"                zugewiesen werden können. Die Merkmale ermöglichen die "
-"Verwendung der korrekten\n"
-"                Stückliste aufgrund der Auswahl bei der Auftragseingabe.\n"
-"              </p><p>\n"
-"                Zum Beispiel haben Sie ein Gruppe \"Garantie\", mit "
-"verschiedenen Merkmale:\n"
-"                1 Jahr Garantie, 3 Jahre Garantie. Abhängig von der "
-"Merkmalsauswahl beim\n"
-"                Verkaufsauftrag plant OpenERP die Fertigungsdurchführung auf "
-"Basis der passenden\n"
-"                Stückliste.\n"
-"              </p>\n"
-"            "
 
 #. module: mrp
 #: field:mrp.workcenter,capacity_per_cycle:0
@@ -2637,3 +2599,1529 @@ msgstr ""
 #: report:mrp.production.order:0
 msgid "Products to Consume"
 msgstr "Benötigte Produkte"
+
+#~ msgid "-"
+#~ msgstr "-"
+
+#~ msgid "Production Workcenters"
+#~ msgstr "Fertigung Arbeitsplätze"
+
+#~ msgid "Service on Order"
+#~ msgstr "Leistung auf Bestellung"
+
+#~ msgid "Do nothing"
+#~ msgstr "Keine Aktion"
+
+#~ msgid ""
+#~ "Triggers an automatic procurement for all products that have a virtual stock "
+#~ "under 0. You should probably not use this option, we suggest using a MTO "
+#~ "configuration on products."
+#~ msgstr ""
+#~ "Triggert einen automatischen Beschaffungsvorschlag für alle Produkte mit "
+#~ "virtuellem Lager unter \"0\". Idealerweise arbeitet man allerdings mit "
+#~ "Lagerbestandsregeln."
+
+#~ msgid "Revision"
+#~ msgstr "Revision"
+
+#~ msgid "Compute Stock Minimum Rules Only"
+#~ msgstr "Regelbasierte Beschaffungsvorschläge"
+
+#~ msgid "Exceptions Procurements"
+#~ msgstr "Fehlerliste Beschaffung"
+
+#~ msgid "UoS Quantity"
+#~ msgstr "Menge (UOS)"
+
+#~ msgid "Routing Workcenters"
+#~ msgstr "Definition Arbeitsgänge"
+
+#~ msgid "Not used in computations, for information purpose only."
+#~ msgstr "Keine Verwendung in Berechnungen, nur zur Info"
+
+#~ msgid "Packing list"
+#~ msgstr "Packliste"
+
+#~ msgid "Stockable Stock"
+#~ msgstr "Bestand Lagerprodukte"
+
+#~ msgid "Origin"
+#~ msgstr "Bezug"
+
+#~ msgid "Automatic orderpoint"
+#~ msgstr "Automatischer Bestellvorschlag"
+
+#, python-format
+#~ msgid "No supplier defined for this product !"
+#~ msgstr "Kein Lieferant für Produkt definiert !"
+
+#, python-format
+#~ msgid "Product name"
+#~ msgstr "Produktbezeichnung"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter xml Code für diese Ansicht!"
+
+#~ msgid ""
+#~ "This is the days added to what you promise to customers for security purpose"
+#~ msgstr ""
+#~ "Diese Tage werden aus Sicherheitsgründen addiert zur versprochenen "
+#~ "Auslieferungszeit (an den Kunden)."
+
+#~ msgid "Best price (not yet active!)"
+#~ msgstr "Günstigster Preis (noch nicht aktiv!)"
+
+#~ msgid "Product & Location"
+#~ msgstr "Produkt & Lagerort"
+
+#~ msgid "MRP & Logistic Scheduler"
+#~ msgstr "Fertigungs- und Beschaffungsplanung"
+
+#~ msgid ""
+#~ "Number of operation this workcenter can do in parallel. If this workcenter "
+#~ "represent a team of 5 workers, the capacity per cycle is 5."
+#~ msgstr ""
+#~ "Anzahl paralleler Durchführungen dieses Arbeitsplatzes. Falls Arbeitsplatz "
+#~ "ein Team von 5 Mitarbeitern repräsentiert ist die Kapazität per Zyklus 5."
+
+#~ msgid "Ask New Products"
+#~ msgstr "Anfrage neue Produkte"
+
+#~ msgid "Automatic Procurements"
+#~ msgstr "Beschaffungsvorschlag"
+
+#~ msgid "Products Consummed"
+#~ msgstr "Produkte Verbrauchswaren"
+
+#~ msgid "Packing Exception"
+#~ msgstr "Packvorgang Fehlerliste"
+
+#~ msgid "A purchase order is created for a sub-contracting demand."
+#~ msgstr "Ein Beschaffungsauftrag wird angelegt für einen Sub-Auftragnehmer"
+
+#~ msgid "Analytic Accounting"
+#~ msgstr "Auswertungen Analysekonten"
+
+#, python-format
+#~ msgid "products"
+#~ msgstr "Produkte"
+
+#~ msgid "If the stock of a product is under 0, it will act like an orderpoint"
+#~ msgstr ""
+#~ "Falls der Lagerbestand eines Produktes unter 0 geht, wird agiert wie bei "
+#~ "einer Bestandsregel"
+
+#~ msgid "you can see the minimum stock rules from product"
+#~ msgstr "Einblick in die Regel für den Minimalbestand über die Produktseite"
+
+#~ msgid "This wizard will schedule procurements."
+#~ msgstr "Dieser Assistent berechnet die Beschaffungsvorschläge."
+
+#~ msgid "Internal Ref."
+#~ msgstr "Interne Referenz"
+
+#~ msgid "Stockable Production Order"
+#~ msgstr "Fertigungsauftrag Lagerprodukt"
+
+#~ msgid "Stockable Request"
+#~ msgstr "Lagerbestandsprüfung"
+
+#, python-format
+#~ msgid "Workcenter name"
+#~ msgstr "Arbeitsplatz"
+
+#~ msgid ""
+#~ "When the virtual stock goes belong the Min Quantity, Open ERP generates a "
+#~ "procurement to bring the virtual stock to the Max Quantity."
+#~ msgstr ""
+#~ "Wenn der virtuelle Bestand unter den Min. Bestand geht, wird ein "
+#~ "Beschaffungsauftrag erzeugt, der den virtuellen Lagerbestand auf die Max. "
+#~ "Anzahl bringt."
+
+#~ msgid "Stockable Make to Stock"
+#~ msgstr "Lagerproduktion \"vom Lager\""
+
+#~ msgid "Production Orders"
+#~ msgstr "Fertigungsaufträge"
+
+#~ msgid "Procure Service Product"
+#~ msgstr "Beschaffung Dienstleistungsprodukt"
+
+#~ msgid "Procurements"
+#~ msgstr "Beschaffungsvorgänge"
+
+#~ msgid "Production scheduled products"
+#~ msgstr "Fertigungsaufträge nach Produkten"
+
+#~ msgid "Details"
+#~ msgstr "Details"
+
+#~ msgid "Procurement Process"
+#~ msgstr "Einkaufs Prozess"
+
+#, python-format
+#~ msgid "Product Standard Price"
+#~ msgstr "Produkt Basispreis"
+
+#~ msgid ""
+#~ "Rounding applied on the product quantity. For integer only values, put 1.0"
+#~ msgstr ""
+#~ "Rundung bezieht sich auf Produktmenge. Für Zahlentyp integer trage 1.0 ein."
+
+#~ msgid "Reservation"
+#~ msgstr "Reservierung"
+
+#~ msgid "product"
+#~ msgstr "Produkt"
+
+#~ msgid "max"
+#~ msgstr "max"
+
+#~ msgid "Product to stock rules"
+#~ msgstr "Regelung Einlagerung Produkte"
+
+#, python-format
+#~ msgid "from stock: products assigned."
+#~ msgstr "vom Lager: reservierte Produkte"
+
+#~ msgid "Print product price"
+#~ msgstr "Druck Preisliste"
+
+#~ msgid "Make Procurement"
+#~ msgstr "Erzeuge Beschaffung"
+
+#~ msgid "Modification Date"
+#~ msgstr "Änderung am"
+
+#~ msgid ""
+#~ "Complete this only if you want automatic analytic accounting entries on "
+#~ "production orders."
+#~ msgstr ""
+#~ "Ergänze diese Daten nur, wenn automatisch auf analytischen Konten gebucht "
+#~ "werden soll (bei Produktionsaufträgen)."
+
+#~ msgid "If Procure method is Make to order and supply method is produce"
+#~ msgstr ""
+#~ "Falls Beschaffungsmethode 'aus Auftrag' und Einkaufsmethode 'Produktion'"
+
+#~ msgid "Purchase Lead Time"
+#~ msgstr "Beschaffungszeit (Lieferant)"
+
+#~ msgid "Stockable Product Stock"
+#~ msgstr "Bestand Lagerprodukt"
+
+#~ msgid "Production Procure Products"
+#~ msgstr "Fertigung Beschaffung Produkte"
+
+#~ msgid "Service Product Process"
+#~ msgstr "Dienstleistung Prozess"
+
+#~ msgid "Procurement convert into the draft purchase order."
+#~ msgstr ""
+#~ "Beschaffungsvorschlag erzeugt einen Beschaffungsauftrag im Stadium Entwurf."
+
+#~ msgid "Latest error"
+#~ msgstr "Letzte Fehlermeldung"
+
+#, python-format
+#~ msgid "from stock and no minimum orderpoint rule defined"
+#~ msgstr "Vom Lager und keine Meldebestandsregel"
+
+#~ msgid "Routing workcenter usage"
+#~ msgstr "Reihenfolge Arbeitsplatzbelegung"
+
+#~ msgid "If Product type is Stockable and procure method is make to stock"
+#~ msgstr ""
+#~ "Falls Produkttyp = Lagerprodukt und Beschaffungsmethode 'vom Lager' (Make to "
+#~ "Stock - MtS)"
+
+#~ msgid "Manufacturity Lead Time"
+#~ msgstr "Aufrüstzeiten"
+
+#~ msgid "Exceptions Procurements to Fix"
+#~ msgstr "Fehler Beschaffung"
+
+#~ msgid "Workcenter Operations"
+#~ msgstr "Arbeitsplatz Vorgangsliste"
+
+#~ msgid "Production Orders Planning"
+#~ msgstr "Fertigungsauftragsplanung"
+
+#~ msgid "Factor that multiplies all times expressed in the workcenter."
+#~ msgstr ""
+#~ "Faktor der alle angefallenen Zeiten dieses Arbeitsplatzes multipliziert."
+
+#~ msgid ""
+#~ "This is the internal picking list take bring the raw materials to the "
+#~ "production plan."
+#~ msgstr ""
+#~ "Diese interne Packliste liefert die Rohmaterialien zum Fertigungsort "
+#~ "(Bereitstellung)"
+
+#~ msgid "Qty Multiple"
+#~ msgstr "Menge Multiple"
+
+#~ msgid "Waiting"
+#~ msgstr "Warteliste"
+
+#~ msgid "For stockable and consumable"
+#~ msgstr "Für Lager- und Verbrauchswaren"
+
+#~ msgid "indice type"
+#~ msgstr "Index Typ"
+
+#, python-format
+#~ msgid "Hours Cost"
+#~ msgstr "Stundensatz"
+
+#~ msgid "Production orders are created for the product manufacturing."
+#~ msgstr "Fertigungsaufträge werden angelegt bei der Produktherstellung."
+
+#~ msgid "Min Quantity"
+#~ msgstr "Min. Menge"
+
+#~ msgid "Production orders"
+#~ msgstr "Fertigungsaufträge"
+
+#~ msgid "BoM Hyerarchy"
+#~ msgstr "Hierachie Stückliste"
+
+#~ msgid "Procurement Lines"
+#~ msgstr "Beschaffungsvorschlag Positionen"
+
+#~ msgid "If Product type is service and procure method is Make to stock"
+#~ msgstr "Falls Produkttyp Service und Beschaffungsmethode 'vom Lager' (MtS)"
+
+#~ msgid "If Product type is service"
+#~ msgstr "Falls Produkttyp Dienstleistungen (Service)"
+
+#, python-format
+#~ msgid "SUBTOTAL"
+#~ msgstr "ZWISCHENSUMME"
+
+#~ msgid "Security Days"
+#~ msgstr "Sicherheitspuffer (Tage)"
+
+#~ msgid "Modification name"
+#~ msgstr "Bezeichnung geändert"
+
+#~ msgid "Exception"
+#~ msgstr "Fehlerliste"
+
+#~ msgid ""
+#~ "This wizard will planify the procurement for this product. This procurement "
+#~ "may generate task, production orders or purchase orders."
+#~ msgstr ""
+#~ "Dieser Assistent wird die Beschaffungsplanung für dieses Produkt vornehmen. "
+#~ "Diese Beschaffung kann eine Aufgabe, einen Produktionsauftrag oder einen "
+#~ "Beschaffungsauftrag generieren,"
+
+#~ msgid "The system waits for requested products in stock."
+#~ msgstr "Das System warted auf Produktverfügbarkeit."
+
+#~ msgid "Serivce Stockable Order"
+#~ msgstr "Beschaffungsauftrag Dienstleistungen"
+
+#~ msgid "From minimum stock rules, it goes for procure product."
+#~ msgstr ""
+#~ "Aus der Meldebestandregel leitet sich die Berechnung des "
+#~ "Beschaffungsauftrags ab."
+
+#~ msgid "Production done"
+#~ msgstr "Beende Fertigung"
+
+#, python-format
+#~ msgid "Unit Product Price"
+#~ msgstr "Preis der Einheit"
+
+#~ msgid "References"
+#~ msgstr "Referenzen"
+
+#~ msgid "Machine"
+#~ msgstr "Maschine"
+
+#~ msgid "Workcenter Name"
+#~ msgstr "Arbeitsplatz Name"
+
+#~ msgid "Start Production"
+#~ msgstr "Starte Fertigungsauftrag"
+
+#~ msgid "min"
+#~ msgstr "min"
+
+#~ msgid "Human Resource"
+#~ msgstr "Personal"
+
+#~ msgid "Workcenters"
+#~ msgstr "Arbeitsplätze"
+
+#~ msgid "on order"
+#~ msgstr "von Auftrag"
+
+#~ msgid "Compute All Schedulers"
+#~ msgstr "Beschaffungsvorschläge"
+
+#~ msgid "Nbr of cycle"
+#~ msgstr "Anzahl Zyklen"
+
+#~ msgid "Create Procurement"
+#~ msgstr "Beschaffungsvorschlag"
+
+#, python-format
+#~ msgid "Product uom"
+#~ msgstr "Produkt UoM"
+
+#~ msgid "Number of Cycle"
+#~ msgstr "Anzahl Zyklen"
+
+#~ msgid "Run procurement"
+#~ msgstr "Starte Beschaffungsvorschlag"
+
+#~ msgid ""
+#~ "This is the time frame analysed by the scheduler when computing "
+#~ "procurements. All procurement that are not between today and today+range are "
+#~ "skipped for futur computation."
+#~ msgstr ""
+#~ "Das ermittelte Zeitfenster für die automatische Beschaffung nach "
+#~ "Durchführung der Fertigungsplanung. Alle Beschaffungsaktionen zwischen heute "
+#~ "und heute + Zeitfenster werden abgebrochen für zukünftige neue "
+#~ "Berechnungen(Beschaffungsdisposition)."
+
+#~ msgid "Time Efficiency"
+#~ msgstr "Zeiteffizienz"
+
+#~ msgid "Scheduler Parameters"
+#~ msgstr "Zeitplanung Parameter"
+
+#~ msgid "A cycle is defined in the workcenter definition."
+#~ msgstr ""
+#~ "Ein Auftragsdurchlauf (Zyklus) wird definiert bei der Definition "
+#~ "desArbeitsplatzes."
+
+#~ msgid "Procurement Method"
+#~ msgstr "Beschaffungsmethode"
+
+#~ msgid "Compute Procurements"
+#~ msgstr "Berechne Beschaffungsvorschlag"
+
+#~ msgid "Wait for available products for reservation"
+#~ msgstr "Warte auf Reservierung verfügbarer Produkte"
+
+#~ msgid "Validate"
+#~ msgstr "Validieren"
+
+#~ msgid "Procurement Purchase"
+#~ msgstr "Einkaufsauftrag"
+
+#~ msgid "Number of products to produce"
+#~ msgstr "Produktionsmenge"
+
+#~ msgid "Material routing"
+#~ msgstr "Weiterverarbeitung Material"
+
+#~ msgid "Minimum stock rule"
+#~ msgstr "Minimalbestand Regel"
+
+#~ msgid "Revisions"
+#~ msgstr "Revisionen"
+
+#~ msgid "Product Efficiency"
+#~ msgstr "Produkteffizienz"
+
+#~ msgid "Orderpoint minimum rule"
+#~ msgstr "Regel Meldebestand"
+
+#~ msgid "Service Make to Stock"
+#~ msgstr "Dienstleistung \"vom Lager\""
+
+#~ msgid "Sale Ref"
+#~ msgstr "Verkaufsauftrag Ref."
+
+#~ msgid "Location"
+#~ msgstr "Ort"
+
+#~ msgid "New Procurement"
+#~ msgstr "Neuer Beschaffungsauftrag"
+
+#~ msgid "Tool"
+#~ msgstr "Werkzeug"
+
+#~ msgid ""
+#~ "Location where the system will look for products used in raw materials."
+#~ msgstr ""
+#~ "Lagerort in dem nach weiteren Produkten gesucht wird, die in Rohmaterialien "
+#~ "eingesetzt werden."
+
+#~ msgid "Planned Date"
+#~ msgstr "Datum Planung"
+
+#~ msgid "Procurement orders"
+#~ msgstr "Beschaffungsauftrag"
+
+#~ msgid "If product type is service and procure method is Make to order"
+#~ msgstr "Produkttyp 'Service' und Beschaffungsmethode 'von Auftrag' (MtO)"
+
+#~ msgid "Scheduler Range"
+#~ msgstr "Planungsreichweite"
+
+#~ msgid "Max Quantity"
+#~ msgstr "Max. Menge"
+
+#~ msgid "Minimum Stock Procure"
+#~ msgstr "Meldebestandregel"
+
+#~ msgid "This is the leads/security time for each purchase order."
+#~ msgstr ""
+#~ "Diese ist die Abwicklungs-/Sicherheitszeit für alle Bestellungen im Einkauf."
+
+#~ msgid "alphabetical indices"
+#~ msgstr "Alphabetischer Index"
+
+#~ msgid "Procurement for raw materials."
+#~ msgstr "Beschaffung von Bauteilen / Rohstoffe"
+
+#~ msgid "Note"
+#~ msgstr "Bemerkung"
+
+#~ msgid "Procure Stockable Product"
+#~ msgstr "Beschaffe Lagerprodukt"
+
+#~ msgid "Paid ?"
+#~ msgstr "Bezahlt?"
+
+#~ msgid "Define a routing to describe the manufacturing steps."
+#~ msgstr ""
+#~ "Definiere einen Arbeitsvorgang um die Schritte der Fertigung zu "
+#~ "dokumentieren."
+
+#~ msgid "Define the product structure, with sub-products and/or components."
+#~ msgstr ""
+#~ "Definiere die Produktstruktur, mit Subprodukten und / oder Komponenten."
+
+#~ msgid ""
+#~ "Procurement is created if the product quantity is lower than the minimum "
+#~ "limit."
+#~ msgstr ""
+#~ "Beschaffungsauftrag wird erzeugt wenn der Bestand geringer ist als der "
+#~ "Meldebestand."
+
+#~ msgid "Date Closed"
+#~ msgstr "Datum Ende"
+
+#~ msgid "Properties composition"
+#~ msgstr "Zusammenstellung Eigenschaften"
+
+#~ msgid "Production Orders Waiting Products"
+#~ msgstr "Fertigungsaufträge (Warteliste)"
+
+#~ msgid "Change Product Qty."
+#~ msgstr "Ändere Menge"
+
+#~ msgid "The procurement quantity will by rounded up to this multiple."
+#~ msgstr "Die Beschaffungsmethode wird aufgerundet auf dieses Vielfache."
+
+#~ msgid "Reordering Mode"
+#~ msgstr "Wiederbeschaffungsmodus"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
+#~ "beinhalten"
+
+#~ msgid "Central document to procure products"
+#~ msgstr "Zentrales Dokument für die Beschaffung"
+
+#~ msgid "Production Orders in Progress"
+#~ msgstr "Fertigungsaufträge (in Bearbeitung)"
+
+#~ msgid "Minimum Stock Rules"
+#~ msgstr "Regel Meldebestand"
+
+#~ msgid ""
+#~ "Reference of the document that created this procurement.\n"
+#~ "This is automatically completed by Open ERP."
+#~ msgstr ""
+#~ "Referenz des Dokumentes welches diesen Beschaffungsvorgang erzeugt hat.\n"
+#~ "Diese Referenz wird automatisch generiert."
+
+#~ msgid "Product type is Stockable and procure method is make to stock"
+#~ msgstr ""
+#~ "Produkttyp ist 'Lagerprodukt' und Beschaffungsmethode ist 'vom Lager'"
+
+#~ msgid "Workcenter"
+#~ msgstr "Arbeitsplatz"
+
+#~ msgid "Purchase Order"
+#~ msgstr "Beschaffungsauftrag"
+
+#~ msgid ""
+#~ "If you encode manually a procurement, you probably want to use a make to "
+#~ "order method."
+#~ msgstr ""
+#~ "Falls Sie einen Beschaffungsauftrag manuell erfassen möchten Sie eventuell "
+#~ "Gebrauch machen von einer bestimmten Beschaffungsmethode (z.B. aus "
+#~ "Bestellung - MtO)."
+
+#~ msgid "Stockable Order Request"
+#~ msgstr "Lagerprodukt Beschaffungsanfrage"
+
+#~ msgid "numeric indices"
+#~ msgstr "Numerischer Index"
+
+#~ msgid "If Procure method is Make to order and supply method is buy"
+#~ msgstr "Falls Beschaffungsmethode 'vom Lager' und Einkaufsmethode 'Kauf'"
+
+#~ msgid "if Product type is Stockable in procurement order"
+#~ msgstr "Falls Typ Lagerprodukt in Beschaffungsauftrag"
+
+#~ msgid "Bill of material revisions"
+#~ msgstr "Stückliste Revisionen"
+
+#~ msgid "Planification"
+#~ msgstr "Planung"
+
+#~ msgid "BOM"
+#~ msgstr "Stückliste"
+
+#~ msgid ""
+#~ "Use a phantom bill of material in raw materials lines that have to be "
+#~ "automatically computed in on eproduction order and not one per level.If you "
+#~ "put \"Phantom/Set\" at the root level of a bill of material it is considered "
+#~ "as a set or pack: the products are replaced by the components between the "
+#~ "sale order to the picking without going through the production order.The "
+#~ "normal BoM will generate one production order per BoM level."
+#~ msgstr ""
+#~ "Benutze Phantom Stückliste für Zukaufpositionen die automatisch über einen "
+#~ "einzigen Fertigungsauftrag berechnet werden müssen und nicht einzeln per "
+#~ "Fertigungsstufe. Falls Sie Phantom als Grundebene einer BoM setzen wird ein "
+#~ "Set oder Paket angenommen: Die Produkte werden ersetzt durch Ihre "
+#~ "Komponenten zwischen Verkaufsauftrag und Versandverpackung ohne einen "
+#~ "Produktionsauftrag zu durchlaufen. Die normale BoM würde einen "
+#~ "Produktionsauftrag pro Fertigungsstufe erzeugen."
+
+#, python-format
+#~ msgid "No address defined for the supplier"
+#~ msgstr "Keine Adresse für diesen Lieferanten definiert"
+
+#~ msgid "Your procurement request has been sent !"
+#~ msgstr "Ihre Beschaffungsanfrage wurde versendet !"
+
+#~ msgid "Internal Procurement Request"
+#~ msgstr "Interne Beschaffungsanfrage"
+
+#~ msgid "Property Categories"
+#~ msgstr "Kategorien"
+
+#~ msgid "Compute Procurements Only"
+#~ msgstr "Auftragsbezogene Beschaffungsvorschläge"
+
+#~ msgid "Temporary Procurement Exceptions"
+#~ msgstr "Temporäre Fehlerliste"
+
+#~ msgid "Confirmed"
+#~ msgstr "Bestätigt"
+
+#~ msgid "Parameters"
+#~ msgstr "Parameter"
+
+#~ msgid "Production workcenters used"
+#~ msgstr "Belegung an Arbeitsplatz"
+
+#~ msgid "Workcenters Utilisation"
+#~ msgstr "Arbeitsplatz Auslastung"
+
+#~ msgid ""
+#~ "Efficiency on the production. A factor of 0.9 means a loss of 10% in the "
+#~ "production."
+#~ msgstr ""
+#~ "Effektivität der Produktion. Ein Faktor von 0.9 bedeutet 10% weniger "
+#~ "Leistung gegenüber der 100% Vorgabe."
+
+#~ msgid "If procurement is make to order"
+#~ msgstr "Falls Beschaffung 'von Auftrag'"
+
+#~ msgid "Minimum Stock Rule"
+#~ msgstr "Meldebestandsregelung"
+
+#~ msgid "New Bill of Materials"
+#~ msgstr "Neue Stückliste"
+
+#, python-format
+#~ msgid "Product quantity"
+#~ msgstr "menge"
+
+#~ msgid "Property"
+#~ msgstr "Eigenschaft"
+
+#~ msgid "Canceled"
+#~ msgstr "Abgebrochen"
+
+#~ msgid "plus"
+#~ msgstr "Plus"
+
+#~ msgid "Stockable Product Process"
+#~ msgstr "Lagerfähiges Produkt Prozess"
+
+#~ msgid "New Production Order"
+#~ msgstr "Neuer Fertigungsauftrag"
+
+#~ msgid "A Request for Quotation is created and sent to the supplier."
+#~ msgstr "Eine Angebotsanfrage wurde erzeugt und an den Lieferanten versendet."
+
+#~ msgid "last indice"
+#~ msgstr "Letzter Index"
+
+#~ msgid "BoM Revisions"
+#~ msgstr "Stücklisten Revision"
+
+#~ msgid "Retry"
+#~ msgstr "Wiederhole"
+
+#~ msgid "Draft"
+#~ msgstr "Entwurf"
+
+#~ msgid "When any procuere products, it comes into the prpcurement orders"
+#~ msgstr ""
+#~ "Wenn Beschaffungsvorschlag erstellt wird landet dieser in einem "
+#~ "Beschaffungsauftrag."
+
+#~ msgid "Production Orders To Start"
+#~ msgstr "Fertigungsaufträge (Startbereit)"
+
+#~ msgid "Procurement Reason"
+#~ msgstr "Begründung Beschaffung"
+
+#~ msgid "An entry is being made from billing material to routing."
+#~ msgstr "Ein Eintrag wird erzeugt durch Berechnung des eingesetzten Materials"
+
+#~ msgid "The normal working time of the workcenter."
+#~ msgstr "Normale Arbeitszeit des Arbeitsplatzes."
+
+#~ msgid "Order to Max"
+#~ msgstr "Beschaffung bis Max. Menge"
+
+#~ msgid "In procurement order, if product type is service"
+#~ msgstr "In Beschaffungsvorschlag, wenn Produkttyp \"Service\""
+
+#~ msgid "from stock"
+#~ msgstr "vom Lager"
+
+#~ msgid "Close"
+#~ msgstr "Fertig"
+
+#, python-format
+#~ msgid "TOTAL"
+#~ msgstr "TOTAL"
+
+#~ msgid "Sale Name"
+#~ msgstr "Verkauf Bezeichnung"
+
+#, python-format
+#~ msgid "Product supplier"
+#~ msgstr "Lieferant"
+
+#~ msgid "Create minimum stock rules"
+#~ msgstr "Erzeuge Minimalbestandsregel"
+
+#~ msgid "Warehouse"
+#~ msgstr "Zentrallager"
+
+#~ msgid "Service Product"
+#~ msgstr "Dienstleistungen Produkt"
+
+#~ msgid "Close Move at end"
+#~ msgstr "Beende Warenfluss (Ende)"
+
+#~ msgid "Running"
+#~ msgstr "In Weiterbearbeitung"
+
+#~ msgid "Unscheduled procurements"
+#~ msgstr "Beschaffungsauftragsliste"
+
+#~ msgid "Bill of Material Structure"
+#~ msgstr "Stückliste Struktur"
+
+#~ msgid "Workcenter load"
+#~ msgstr "Arbeitsplatz Auslastung"
+
+#~ msgid "Procurement Details"
+#~ msgstr "Beschaffungsvorschläge Details"
+
+#~ msgid "You can see its bill of material which are used to make product"
+#~ msgstr ""
+#~ "Sie können die Stückliste für die Fertigung dieses Produktes einsehen."
+
+#~ msgid "Bill of Materials Components"
+#~ msgstr "Komponenten"
+
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "Warnung!"
+
+#, python-format
+#~ msgid ""
+#~ "The production is in \"%s\" state. You can not change the production "
+#~ "quantity anymore"
+#~ msgstr ""
+#~ "Die Produktion ist in Status \"%s\". Die Menge kann jetzt nicht mehr "
+#~ "geändert werden"
+
+#~ msgid ""
+#~ "The list of operations (list of workcenters) to produce the finished "
+#~ "product. The routing is mainly used to compute workcenter costs during "
+#~ "operations and to plan futur loads on workcenters based on production "
+#~ "plannification."
+#~ msgstr ""
+#~ "Arbeitsplätze, an denen Fertigprodukte produziert werden. Das \"Routing\" "
+#~ "wird für die Berechnung der Kosten der Arbeitsplätze und für die Auslastung "
+#~ "aufgrund der Produktionsplanung verwendet."
+
+#, python-format
+#~ msgid "Error"
+#~ msgstr "Fehler"
+
+#~ msgid "Reporting"
+#~ msgstr "Berichtswesen"
+
+#~ msgid "UOM"
+#~ msgstr "ME"
+
+#~ msgid "Product UOM"
+#~ msgstr "Produkt ME"
+
+#~ msgid "Product UoM"
+#~ msgstr "Produkt ME"
+
+#~ msgid "Day"
+#~ msgstr "Tag"
+
+#~ msgid "May"
+#~ msgstr "Mai"
+
+#~ msgid "State"
+#~ msgstr "Status"
+
+#~ msgid "["
+#~ msgstr "["
+
+#~ msgid "August"
+#~ msgstr "August"
+
+#~ msgid "June"
+#~ msgstr "Juni"
+
+#~ msgid "October"
+#~ msgstr "Oktober"
+
+#~ msgid "Default UOM"
+#~ msgstr "Standard ME"
+
+#~ msgid "Repairs"
+#~ msgstr "Reparaturen"
+
+#, python-format
+#~ msgid "Supplier Price per Uom"
+#~ msgstr "Preis des Lieferanten p. ME"
+
+#~ msgid "March"
+#~ msgstr "März"
+
+#~ msgid "# of Lines"
+#~ msgstr "# Positionen"
+
+#, python-format
+#~ msgid "Invalid action !"
+#~ msgstr "Fehlerhafte Aktion !"
+
+#~ msgid "September"
+#~ msgstr "September"
+
+#~ msgid "Extended Filters..."
+#~ msgstr "Erweiterter Filter..."
+
+#~ msgid "Dashboard"
+#~ msgstr "Pinnwand"
+
+#~ msgid "Just In Time Scheduling"
+#~ msgstr "Just in Time Terminierung"
+
+#~ msgid ""
+#~ "Enables multiple product output from a single production order: without "
+#~ "this, a production order can have only one output product."
+#~ msgstr ""
+#~ "Ermöglicht die Erstellung mehrerer Endprodukte durch einen "
+#~ "Fertigungsauftrag. Nur hierdurch kann dann ein Auftrag mehr als ein "
+#~ "Endprodukt produzieren."
+
+#~ msgid "Production Dashboard"
+#~ msgstr "Pinnwand Fertigung"
+
+#~ msgid "Source Loc."
+#~ msgstr "Quelle"
+
+#~ msgid ""
+#~ "Manages product routes and paths within and between locations (e.g. "
+#~ "warehouses)."
+#~ msgstr ""
+#~ "Management des Warenfluss zwischen Lagerorten innerhalb und ausserhalb des "
+#~ "Unternehmens."
+
+#~ msgid "]"
+#~ msgstr "]"
+
+#~ msgid "Order quantity cannot be negative or zero !"
+#~ msgstr "Bestellmengen können nicht negativ oder '0' sein !"
+
+#~ msgid "Nbr of hour"
+#~ msgstr "Stunden"
+
+#~ msgid "Change Parent Price"
+#~ msgstr "Ändere Basispreis"
+
+#~ msgid "Month -1"
+#~ msgstr "Monat -1"
+
+#~ msgid "July"
+#~ msgstr "Juli"
+
+#~ msgid "Month"
+#~ msgstr "Monat"
+
+#~ msgid "Product Consumed"
+#~ msgstr "Verbrauchte Produkte"
+
+#~ msgid "Current"
+#~ msgstr "Aktuell"
+
+#~ msgid ""
+#~ "This will change the price of parent products also according to the BoM "
+#~ "structure specified for the product."
+#~ msgstr ""
+#~ "Dieses ändert den Preis der übergeodneten Produkte in Abhängigkeit von der "
+#~ "Produktstückliste des Produkts."
+
+#~ msgid ""
+#~ "UoM (Unit of Measure) is the unit of measurement for the inventory control"
+#~ msgstr "ME ist die Mengeneinheit für die Bestände im Lager."
+
+#~ msgid "Product UoS Qty"
+#~ msgstr "Produkt Verkaufseinheit"
+
+#~ msgid "December"
+#~ msgstr "Dezember"
+
+#~ msgid "Image"
+#~ msgstr "Bild"
+
+#~ msgid "Configuration Progress"
+#~ msgstr "Abfolge Konfiguration"
+
+#~ msgid "November"
+#~ msgstr "November"
+
+#~ msgid "January"
+#~ msgstr "Januar"
+
+#~ msgid "Bill of Material Revision"
+#~ msgstr "Stückliste Revision"
+
+#~ msgid "Next Production Orders"
+#~ msgstr "Anstehende Fertigungsaufträge"
+
+#~ msgid "February"
+#~ msgstr "Februar"
+
+#~ msgid "April"
+#~ msgstr "April"
+
+#~ msgid "Year"
+#~ msgstr "Jahr"
+
+#~ msgid "Manufacturing Resource Planning"
+#~ msgstr "Fertigungsplanung und -steuerung"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
+
+#~ msgid "Picking list"
+#~ msgstr "Lieferauftrag"
+
+#~ msgid ""
+#~ "Enhances production orders with readiness states as well as the start date "
+#~ "and end date of execution of the order."
+#~ msgstr ""
+#~ "Ermöglicht die Bearbeitung von Fertigungsprodukten durch eine Überwachung "
+#~ "des Bearbeitungsstatus bei Auftragsdurchführung."
+
+#~ msgid "Advanced Routes"
+#~ msgstr "Lieferketten"
+
+#~ msgid "Nbr of cycles"
+#~ msgstr "Anzahl Zyklen"
+
+#~ msgid "Change Qty"
+#~ msgstr "Ändere Menge"
+
+#~ msgid "Author"
+#~ msgstr "Mitarbeiter"
+
+#, python-format
+#~ msgid "Couldn't find bill of material for product"
+#~ msgstr "Kann keine Stückliste für dieses Produkt finden"
+
+#~ msgid "Workcenter Usage"
+#~ msgstr "Fertigungsstelle Auslastung"
+
+#~ msgid "Qty"
+#~ msgstr "Anzahl"
+
+#~ msgid "Split in production lots"
+#~ msgstr "Aufteilen in Fertigungslose"
+
+#~ msgid "Scheduled date"
+#~ msgstr "Geplantes Datum"
+
+#~ msgid "Production Analysis"
+#~ msgstr "Statistik Fertigungsaufträge"
+
+#~ msgid "Production Products Consommation"
+#~ msgstr "Fertigprodukte Verbrauch"
+
+#~ msgid ""
+#~ "Description of the workcenter. Explain here what's a cycle according to this "
+#~ "workcenter."
+#~ msgstr ""
+#~ "Beschreibung der Fertigungsstelle. Beschreibe hier den Fertigungszyklus aus "
+#~ "der Perspektive dieser Fertigungsstelle."
+
+#~ msgid ""
+#~ "When the production order is created the state is set to 'Draft'.\n"
+#~ " If the order is confirmed the state is set to 'Waiting Goods'.\n"
+#~ " If any exceptions are there, the state is set to 'Picking Exception'.       "
+#~ "                             \n"
+#~ "If the stock is available then the state is set to 'Ready to Produce'.\n"
+#~ " When the production gets started then the state is set to 'In Production'.\n"
+#~ " When the production is over, the state is set to 'Done'."
+#~ msgstr ""
+#~ "Wenn ein Fertigungsauftrag erstellt wird, befindet sich der Status zuerst im "
+#~ "Stadium 'Entwurf'.\n"
+#~ " Durch Bestätigung wechselt der Status zu 'Erwarte Warenzugang'.\n"
+#~ " Wenn Fehler bei der automatischen Auftragserstellung auftreten, wird der "
+#~ "Status ' Fehler bei  Lieferauftrag' angezeigt.\n"
+#~ " Bei vorhandenem Bestand oder Warenzugang wechselt der Status auf "
+#~ "'Startbereit'\n"
+#~ " Wenn dann der Fertigungsauftrag gestartet wird, erfolgt ein Wechsel auf  "
+#~ "'In Produktion'\n"
+#~ "Wenn der Fertigungsauftrag beendet wird, wechselt der Status automatisch auf "
+#~ "'Erledigt'."
+
+#~ msgid ""
+#~ "Routing indicates all the workcenters used, for how long and/or cycles.If "
+#~ "Routing is indicated then,the third tab of a production order (workcenters) "
+#~ "will be automatically pre-completed."
+#~ msgstr ""
+#~ "Der Fertigungsablauf wird durch die Fertigungsvorgänge an den "
+#~ "Fertigungsstellen mitsamt definierter Dauer und Zyklenanzahl repräsentiert. "
+#~ "Wenn ein Fertigungsablauf definiert wurde, wird als Konsequenz  der dritte "
+#~ "Aktenreiter eines Fertigungsauftrags mit seinen einzelnen "
+#~ "Fertigungsvorgängen aufgelistet und ermöglicht die Bearbeitung von "
+#~ "Arbeitsaufträgen als Teilaufgaben zu einem Fertigungsauftrag."
+
+#~ msgid "Manufacturing Operations"
+#~ msgstr "Fertigungsabläufe"
+
+#~ msgid "Split in Production lots"
+#~ msgstr "Teile auf in Fertigunglose"
+
+#, python-format
+#~ msgid "Manufacturing order '%s' is ready to produce."
+#~ msgstr "Fertigungsauftrag '%s' ist Startbereit."
+
+#, python-format
+#~ msgid "Total Cost of "
+#~ msgstr "Gesamtkosten von "
+
+#~ msgid ""
+#~ "Fill this product to track easily your production costs in the analytic "
+#~ "accounting."
+#~ msgstr ""
+#~ "Tragen Sie ein Produkt ein, für den Zweck der einfachen Rückverfolgung von "
+#~ "Fertigungskosten über Analytische Konten."
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Fehler: Falscher EAN code"
+
+#~ msgid "You try to assign a lot which is not from the same product"
+#~ msgstr ""
+#~ "Sie versuchen eine Losnummer ohne Bezug zu diesem Produkt zuzuweisen."
+
+#~ msgid ""
+#~ "Time in hours for this work center to achieve the operation of the specified "
+#~ "routing."
+#~ msgstr ""
+#~ "Zeit in Stunden für die Durchführung des Fertigungsvorgangs für den "
+#~ "speziellen Fertigungsablauf."
+
+#~ msgid "Configure Your Manufacturing Resource Planning Application"
+#~ msgstr "Konfigurieren Sie Ihre Fertigungsanwendung"
+
+#~ msgid ""
+#~ "Add more functionalities to the core Manufacturing Application with the "
+#~ "following addons."
+#~ msgstr ""
+#~ "Erweitern Sie die Anwendung für die Fertigung durch weitere Funktionen."
+
+#~ msgid "MRP Application Configuration"
+#~ msgstr "Konfiguration Fertigungsanwendung"
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "Fehler! Sie können keine rekursiven Unternehmen erzeugen."
+
+#, python-format
+#~ msgid "Copy"
+#~ msgstr "Duplizieren"
+
+#, python-format
+#~ msgid "Cannot delete Production Order(s) which are in %s State!"
+#~ msgstr "Fertigungsaufträge im Status %s können nicht gelöscht werden"
+
+#~ msgid ""
+#~ "This reporting allows you to analyse your manufacturing activities and "
+#~ "performance."
+#~ msgstr ""
+#~ "Diese Auswertung ermöglicht Ihnen eine Analyse der Produktivität Ihrer "
+#~ "Fertigung."
+
+#~ msgid "You must assign a production lot for this product"
+#~ msgstr "Sie müssen zwingend eine Losnummer für dieses Produkt angeben"
+
+#~ msgid "Configure"
+#~ msgstr "Konfigurieren"
+
+#, python-format
+#~ msgid "Work Cost of "
+#~ msgstr "Fertigungskosten von "
+
+#~ msgid "mrp.installer"
+#~ msgstr "mrp.installer"
+
+#~ msgid "Nbr of hours"
+#~ msgstr "Anzahl Stunden"
+
+#~ msgid ""
+#~ "Enables warranty and repair management (and their impact on stocks and "
+#~ "invoicing)."
+#~ msgstr ""
+#~ "Ermöglicht das Management von Garantiefällen und Reparaturen (insbesondere "
+#~ "die damit verbundenen Auswirkungen auf Bestände und Abrechnung)."
+
+#~ msgid ""
+#~ "Manufacturing Orders describe the operations that need to be carried out and "
+#~ "the raw materials usage for each production stage. You use specifications "
+#~ "(bills of materials or BoM) to work out the raw material requirements and "
+#~ "the manufacturing orders needed for the finished products. Once the bills of "
+#~ "materials have been defined, OpenERP is capable of automatically deciding on "
+#~ "the manufacturing route depending on the needs of the company."
+#~ msgstr ""
+#~ "Fertigungsaufträge beschreiben die Abfolge von Fertigungsvorgängen und den "
+#~ "Produktverbrauch für die Fertigung. Diese Abfolge wird  in OpenERP "
+#~ "normalerweise automatisch auf Basis von Stücklisten und Beschaffungsregeln "
+#~ "vorgeschlagen. OpenERP steuert dabei dann automatisch den Verbrauch von "
+#~ "Lagerprodukten (Bestandsminderung) sowie zur Fertigstellung von Endprodukten "
+#~ "(Bestandserhöhung) im Rahmen der Auftragsdurchführung bei. Sobald die "
+#~ "Stücklisten definiert wurden, ist OpenERP der Lage, automatisch die "
+#~ "Entscheidung über den Fertigungsvorgang je nach den Bedürfnissen des "
+#~ "Unternehmens umzusetzen."
+
+#, python-format
+#~ msgid "Components Cost of "
+#~ msgstr "Bauteile Fertigungskosten von "
+
+#~ msgid ""
+#~ "Define specific property groups that can be assigned to the properties of "
+#~ "your bill of materials."
+#~ msgstr ""
+#~ "Definition spezifischer Gruppen für Fertigungsmerkmale, die zu den "
+#~ "Eigenschaften einer Stückliste zuordenbar sind."
+
+#~ msgid ""
+#~ "Manufacturing Orders are usually proposed automatically by OpenERP based on "
+#~ "the bill of materials and the procurement rules, but you can also create "
+#~ "manufacturing orders manually. OpenERP will handle the consumption of the "
+#~ "raw materials (stock decrease) and the production of the finished products "
+#~ "(stock increase) when the order is processed."
+#~ msgstr ""
+#~ "Fertigungsaufträge werden in OpenERP normalerweise automatisch auf Basis von "
+#~ "Stücklisten und Beschaffungsregeln vorgeschlagen, können aber auch manuell "
+#~ "erstellt werden. OpenERP steuert dabei dann automatisch den Verbrauch von "
+#~ "Lagerprodukten (Bestandsminderung) sowie die Fertigstellung von Endprodukten "
+#~ "(Bestandserhöhung) im Rahmen der Auftragsdurchführung."
+
+#~ msgid "title"
+#~ msgstr "Titel"
+
+#~ msgid ""
+#~ "Master Bills of Materials allow you to create and manage the list of "
+#~ "necessary raw materials used to make a finished product. OpenERP will use "
+#~ "these BoMs to automatically propose manufacturing orders according to "
+#~ "product needs. You can either create a bill of materials to define specific "
+#~ "production steps or define a single multi-level bill of materials."
+#~ msgstr ""
+#~ "Produktstücklisten ermöglichen Ihnen die Verwaltung aller erforderlichen "
+#~ "Produktbestandteile und Mengen für die Fertigung eines Endprodukts. OpenERP "
+#~ "benutzt außerdem die Produktstücklisten zur Errechnung automatischer "
+#~ "Beschaffungsvorschläge für den Materialbedarf. Sie können entweder jeweils "
+#~ "eine Stückliste für jeden einzelnen Produktionsschritt oder eine Stückliste "
+#~ "für sämtliche Produktionsschritte eines Produktes erstellen."
+
+#~ msgid ""
+#~ "Work Centers allow you to create and manage manufacturing units consisting "
+#~ "of one or more persons and/or machines that can be considered as a unit for "
+#~ "capacity and planning forecasting."
+#~ msgstr ""
+#~ "Fertigungsstellen ermöglichen die organisatorische Zusammenfassung von "
+#~ "Mitarbeitern oder Maschinen als zentrale Ressource für die Planung der "
+#~ "Kapazität und zur Überwachung der Auslastung."
+
+#~ msgid ""
+#~ "Bills of materials components are components and sub-products used to create "
+#~ "master bills of materials. Use this menu to search in which BoM a specific "
+#~ "component is used."
+#~ msgstr ""
+#~ "Bauteilestücklisten repräsentieren die Stücklisten von Baugruppen als "
+#~ "Bestandteile von Endprodukten. Verwenden Sie diese Stücklisten zur Suche "
+#~ "nach spezifischen Baugruppen als Bestandteil in verschiedenen "
+#~ "Produktstücklisten."
+
+#~ msgid "Moves Created"
+#~ msgstr "Buchungen erzeugt"
+
+#, python-format
+#~ msgid "Cost Price per Uom"
+#~ msgstr "Kosten per Einheit"
+
+#~ msgid "Production Order Report"
+#~ msgstr "Fertigungsauftragsbericht"
+
+#~ msgid "Specify Cost of Work center per cycle."
+#~ msgstr "Geben Sie die Kosten des Arbeitsplatz pro Zyklus an"
+
+#~ msgid "Error ! You can not create recursive BoM."
+#~ msgstr "Fehler! Sie können keine rekursiven Stücklisten erstellen."
+
+#~ msgid "Specify Cost of Work center per hour."
+#~ msgstr "Geben Sie die Kosten des Arbeitsplatz pro Stunde an"
+
+#~ msgid "Work Center Future Load"
+#~ msgstr "Auslastungsvorschau Arbeitsplatz"
+
+#~ msgid ""
+#~ "Number of operations this work center can do in parallel. If this work "
+#~ "center represents a team of 5 workers, the capacity per cycle is 5."
+#~ msgstr ""
+#~ "Anzahl Aufträge, die an diesem Arbeitsplatz parallel ausgeführt werden "
+#~ "können. Wenn an diesem Arbeitsplatz 5 Mitarbeiter tätig sind, liegt die "
+#~ "Kapazität pro Zyklus bei 5."
+
+#~ msgid "Move product"
+#~ msgstr "Umlagerung"
+
+#~ msgid ""
+#~ "Gives the sequence order when displaying a list of routing work centers."
+#~ msgstr "Gibt die Sortierung innerhalb der Anzeige des Arbeitsplans an."
+
+#~ msgid ""
+#~ "Enables Just In Time computation of procurement orders.\n"
+#~ "\n"
+#~ "While it's more resource intensive than the default setup, the JIT computer "
+#~ "avoids having to wait for the procurement scheduler to run or having to run "
+#~ "the procurement scheduler manually."
+#~ msgstr ""
+#~ "Aktiviert die 'just in time' Berechnung von Beschaffungsaufträgen.\n"
+#~ "\n"
+#~ "Obwohl 'just in time' rechenintensiver als das Standardverfahren ist, "
+#~ "verhindert es die Wartezeit bis zur nächsten manuellen oder täglich "
+#~ "automatischen Ausführung des Assistenten zur automatischen Erstellung von "
+#~ "Beschaffungsaufträgen."
+
+#~ msgid ""
+#~ "This is the internal picking list that brings the finished product to the "
+#~ "production plan"
+#~ msgstr ""
+#~ "Dies ist ein interner Lieferauftrag, der die gefertigten Produkte in den "
+#~ "Fertigungsplan eintragen wird"
+
+#, python-format
+#~ msgid "Manufacturing order '%s' is scheduled for the %s."
+#~ msgstr "Fertigungsauftrag '%s' ist geplant für %s."
+
+#, python-format
+#~ msgid "Active Id is not found"
+#~ msgstr "Aktive ID wurde nicht gefunden"
+
+#~ msgid "Change Standard Price"
+#~ msgstr "Ändere Standardpreis"
+
+#~ msgid "Production Products"
+#~ msgstr "Fertigung von Produkten"
+
+#~ msgid "#Line Orders"
+#~ msgstr "Auftragspositionen"
+
+#~ msgid "Waiting Goods"
+#~ msgstr "Erwartet Material"
+
+#~ msgid ""
+#~ "Description of the work center. Explain here what's a cycle according to "
+#~ "this work center."
+#~ msgstr ""
+#~ "Beschreibung des Arbeitsplatzes. Erläutern Sie hier den Arbeitsablauf an "
+#~ "diesem Arbeitsplatz"
+
+#~ msgid ""
+#~ "The Properties in OpenERP are used to select the right bill of materials for "
+#~ "manufacturing a product when you have different ways of building the same "
+#~ "product. You can assign several properties to each Bill of Materials. When a "
+#~ "sales person creates a sales order, he can relate it to several properties "
+#~ "and OpenERP will automatically select the BoM to use according the the needs."
+#~ msgstr ""
+#~ "Die Eigenschaften in OpenERP werden genutzt, um die richtige Stückliste für "
+#~ "den Fertigungsauftrag heranzuziehen, wenn es verschiedene Verfahren für die "
+#~ "Fertigung eines Produkts gibt. Sie können mehrere Eigenschaften zu einer "
+#~ "Stückliste zuordnen. Wenn ein Verkaufsauftrag erstellt wird, kann durch den "
+#~ "Vertrieb Bezug auf definierte Eigenschaften genommen werden, OpenERP wird "
+#~ "dann automatisch die richtige Stückliste für die Fertigung wählen."
+
+#~ msgid "Scheduled End Date"
+#~ msgstr "Geplantes Endedatum"
+
+#~ msgid "MRP Applications Configuration"
+#~ msgstr "Konfiguration Fertigung"
+
+#~ msgid ""
+#~ "Work Center Loads gives you a projection of work center loads over a "
+#~ "specified period. It is expressed in number of hours and machine related "
+#~ "cycles."
+#~ msgstr ""
+#~ "Auslastung von Arbeitsplätzen zeigt die Kapazitätsauslastung über einen "
+#~ "bestimmten Zeitraum. Die Anzeige erfolgt dabei in Stunden sowie in Anzahl "
+#~ "Zyklen der jeweiligen Fertigungsvorgänge eines Arbeitsplatzes."
+
+#~ msgid "Raw Material Location"
+#~ msgstr "Komponenten Lager"
+
+#~ msgid ""
+#~ "If a sub-product is used in several products, it can be useful to create its "
+#~ "own BoM. Though if you don't want separated production orders for this sub-"
+#~ "product, select Set/Phantom as BoM type. If a Phantom BoM is used for a root "
+#~ "product, it will be sold and shipped as a set of components, instead of "
+#~ "being produced."
+#~ msgstr ""
+#~ "Wenn eine Komponente in mehreren Produkten als Bestandteil vorhanden ist, "
+#~ "kann es sinnvoll sein, für diese Komponenten eigene Stücklisten zu "
+#~ "definieren. Sollten Sie allerdings keine eigenen separaten "
+#~ "Fertigungsaufträge für eine zu produzierende Komponente haben wollen, wählen "
+#~ "Sie Set/Baukasten als Stücklistentyp. Wenn dieser Typ für ein Produkt als "
+#~ "Stückliste definiert wird, kann das Produkt als Set verkauft und versendet "
+#~ "werden."
+
+#~ msgid "MRP Subproducts"
+#~ msgstr "Fertigung Kuppelprodukte"
+
+#~ msgid ""
+#~ "\n"
+#~ "    This is the base module to manage the manufacturing process in OpenERP.\n"
+#~ "\n"
+#~ "    Features:\n"
+#~ "    * Make to Stock / Make to Order (by line)\n"
+#~ "    * Multi-level BoMs, no limit\n"
+#~ "    * Multi-level routing, no limit\n"
+#~ "    * Routing and work center integrated with analytic accounting\n"
+#~ "    * Scheduler computation periodically / Just In Time module\n"
+#~ "    * Multi-pos, multi-warehouse\n"
+#~ "    * Different reordering policies\n"
+#~ "    * Cost method by product: standard price, average price\n"
+#~ "    * Easy analysis of troubles or needs\n"
+#~ "    * Very flexible\n"
+#~ "    * Allows to browse Bill of Materials in complete structure\n"
+#~ "        that include child and phantom BoMs\n"
+#~ "    It supports complete integration and planification of stockable goods,\n"
+#~ "    consumable of services. Services are completely integrated with the "
+#~ "rest\n"
+#~ "    of the software. For instance, you can set up a sub-contracting service\n"
+#~ "    in a BoM to automatically purchase on order the assembly of your "
+#~ "production.\n"
+#~ "\n"
+#~ "    Reports provided by this module:\n"
+#~ "    * Bill of Material structure and components\n"
+#~ "    * Load forecast on workcenters\n"
+#~ "    * Print a production order\n"
+#~ "    * Stock forecasts\n"
+#~ "    Dashboard provided by this module::\n"
+#~ "    * List of next production orders\n"
+#~ "    * List of deliveries (out picking)\n"
+#~ "    * Graph of work center load\n"
+#~ "    * List of procurement in exception\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Diese OpenERP Anwendung steuert Fertigungsaufträge.\n"
+#~ "\n"
+#~ "     Folgende Funktionalitäten werden angeboten:\n"
+#~ "     * Beschaffe an Lager/ Beschaffe von Auftrag \n"
+#~ "     * Multidimensionale Stücklisten ohne Begrenzung der Dimensionen\n"
+#~ "     * Multidimensionaler Fertigungsablauf ohne Begrenzung der Dimensionen\n"
+#~ "     * Integration von Fertigungsabläufen und Fertigungsstellen mit "
+#~ "Analytische Konten (Kostenstellen)\n"
+#~ "     * Regelmässige Fertigungsterminplanung / Just In Time Fertigung\n"
+#~ "     * Multiple Point-of-Sales, Multiple Läger\n"
+#~ "     * Verschiedene Dispositionsverfahren für die Materialbeschaffung\n"
+#~ "     * Kostenermittlung durch Durchschnittspreise oder Standardpreise\n"
+#~ "     * Einfache Analyse von Engpassfaktoren bei Kapazität oder "
+#~ "Materialverfügbarkeit\n"
+#~ "     * Sehr flexible Anpassung\n"
+#~ "     * Möglichkeit der multidimensionalen Navigation in mehrstufigen "
+#~ "Stücklisten in einer Ansicht durch die Anzeige von     untergeordneten "
+#~ "Bauteile- oder Phantomstücklisten.\n"
+#~ "\n"
+#~ "     Die Anwendung unterstützt eine vollständige Integration und Planung von "
+#~ "Beständen der Lagerprodukte, Verbrauchsmaterial oder Dienstleistungen. "
+#~ "Dienstleistungen sind vollständig integriert in andere Anwendungen.\n"
+#~ "\n"
+#~ "     So können Sie zum Beispiel Dienstleistungen in Stücklisten der "
+#~ "Fertigung integrieren, wodurch dann durch einen Fertigungsauftrag entweder "
+#~ "bei einem externen Dienstleister eine Leistung beauftragt wird oder eine "
+#~ "Aufgabe für das eigene Projektauftragsmanagement entsteht.\n"
+#~ "\n"
+#~ "     Folgende Auswertungen werden angeboten:\n"
+#~ "    * Produktstruktur und Produktbestandteile einer Stückliste\n"
+#~ "    * Auslastungsvorschau von Arbeitsplätzen\n"
+#~ "    * Ausgabe eines Fertigungsauftrags\n"
+#~ "    * Vorschau von Lagerbeständen\n"
+#~ "\n"
+#~ "      Es existiert auch eine Pinnwand für die Fertigung:\n"
+#~ "      * Arbeitsliste anstehender Fertigungsaufträge\n"
+#~ "      * Arbeitsliste für den Versand / Auslieferung\n"
+#~ "      * Grafische Übersicht der Auslastung\n"
+#~ "      * Ausnahmeliste der Beschaffung\n"
+#~ "    "
+
+#, python-format
+#~ msgid "Could not cancel manufacturing order !"
+#~ msgstr "Kann Produktionsauftrag nicht stornieren!"
+
+#~ msgid "Component Product"
+#~ msgstr "Komponenten Produkt"
+
+#~ msgid "Component Name"
+#~ msgstr "Komponenten Name"
+
+#~ msgid ""
+#~ "All product quantities must be greater than 0.\n"
+#~ "You should install the mrp_subproduct module if you want to manage extra "
+#~ "products on BoMs !"
+#~ msgstr ""
+#~ "Alle Produktmengen müssen grösser als 0 sein !\n"
+#~ "Sie sollten das Modul mrp_subproduct installieren, wenn Sie Kuppelprodukte "
+#~ "über eine Stückliste definieren wollen."
+
+#~ msgid "Configure your work centers"
+#~ msgstr "Konfigurieren Sie Ihre Arbeitsplätze"
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "Der Name der Firma darf nur einmal vorkommen!"
+
+#~ msgid ""
+#~ "Create a product form for everything you buy or sell. Specify a supplier if "
+#~ "the product can be purchased."
+#~ msgstr ""
+#~ "Erzeuge ein Produkt für alles was gekauft und verkauft wird. Definieren Sie "
+#~ "Lieferanten, wenn das Produkt gekauft wird."
+
+#, python-format
+#~ msgid "Cannot delete a manufacturing order in state '%s'"
+#~ msgstr "Produktionsaufträge mit Status '%s' können nicht  gelöscht werden."
+
+#~ msgid "You can not move products from or to a location of the type view."
+#~ msgstr ""
+#~ "Sie dürfen keine Sicht als Quelle oder Ziel einer Lagerbewegung angeben"
+
+#~ msgid "MRP Management"
+#~ msgstr "Produktionsmanagement"
+
+#~ msgid "Create or Import Products"
+#~ msgstr "Erzeuge oder Importiere Produkte"
+
+#, python-format
+#~ msgid "PROD: %s"
+#~ msgstr "PROD: %s"
+
+#~ msgid ""
+#~ "The Properties in OpenERP are used to select the right bill of materials for "
+#~ "manufacturing a product when you have different ways of building the same "
+#~ "product. You can assign several properties to each Bill of Materials. When a "
+#~ "sales person creates a sales order, he can relate it to several properties "
+#~ "and OpenERP will automatically select the BoM to use according the needs."
+#~ msgstr ""
+#~ "Die \"Eigenschaften\" in OpenERP werden verwendet um die richtige Stückliste "
+#~ "für die Produktikon zu verwenden, wenn das Produkt auf verschiedene Weisen "
+#~ "erzeugt werden kann.\r\n"
+#~ "Bei der Erstellung eines Verkaufsauftrages kann dem Produkt verschiedene "
+#~ "Stücklisten zugeordnet werden. OpenERP wird dann dem Bedarf entsprechend die "
+#~ "richtige selbständig aussuchen."
+
+#~ msgid ""
+#~ "Work Centers allow you to create and manage manufacturing units.  They "
+#~ "consist of workers and/or machines, which are considered as units for "
+#~ "capacity and planning forecast.  Keep in mind that the working time and "
+#~ "resource leave are not taken into account in the time computation of the "
+#~ "work center."
+#~ msgstr ""
+#~ "Arbeitsplätze erlauben die Erzeugung und das Management von "
+#~ "Produktionseinhieten.\r\n"
+#~ "Sie bestehen aus Arbeitskräften und / oder Maschinen, die als Einheit für "
+#~ "Planungszwecke verwendet werden.\r\n"
+#~ "Bedenken Sie, dass die Arbeitszeit und Abwesenheiten nicht in die Berechnung "
+#~ "des Zeitbedarfes der Arbeitsplatzes einbezogen werden."
+
+#~ msgid "Sugar"
+#~ msgstr "Zucker"
+
+#~ msgid "Orange"
+#~ msgstr "Orange"
+
+#~ msgid "Fluid"
+#~ msgstr "Flüssigkeit"
+
+#~ msgid "Shirt Buttons"
+#~ msgstr "Hemden Knöpfe"
+
+#~ msgid "Cloth"
+#~ msgstr "Stoff"
+
+#~ msgid "Shirt"
+#~ msgstr "Hemd"
+
+#~ msgid "Water"
+#~ msgstr "Wasser"
+
+#, python-format
+#~ msgid "Couldn't find a bill of material for this product."
+#~ msgstr "Kann keine Stückliste für diese Produkt finden."
+
+#~ msgid "Orange Juice"
+#~ msgstr "Orangensaft"
+
+#~ msgid "Litre"
+#~ msgstr "Liter"
+
+#~ msgid ""
+#~ "Routings allow you to create and manage the manufacturing operations that "
+#~ "should be followed within your work centers in order to produce a product. "
+#~ "They are attached to bills of materials that will define the required raw "
+#~ "materials."
+#~ msgstr ""
+#~ "Arbeitspläne ermöglichen die Anlage und Verwaltung einzelner Arbeitsgänge, "
+#~ "nach denen an Arbeitsplätzen ein Produkt gefertigt wird. Sie werden mit "
+#~ "Stücklisten verknüpft, die das benötigte Material bestimmen."

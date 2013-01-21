@@ -1,26 +1,25 @@
-# Hungarian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#    * sale
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Hungarian <hu@li.org>\n"
+"PO-Revision-Date: 2013-01-11 08:34+0000\n"
+"Last-Translator: krnkris <Unknown>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 07:32+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-01-12 04:55+0000\n"
+"X-Generator: Launchpad (build 16420)\n"
 
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
 msgid "Analytic Accounting for Sales"
-msgstr ""
+msgstr "Analitikus/elemző könyvelés a kereskedelemhez"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_confirmquotation0
@@ -30,19 +29,19 @@ msgstr "Árajánlat megerősítése"
 #. module: sale
 #: view:board.board:0
 msgid "Sales Dashboard"
-msgstr ""
+msgstr "Értékesítési műszerfal"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:92
 #, python-format
 msgid "There is no income account defined as global property."
-msgstr ""
+msgstr "Nincs bevételi számla meghatározva a globális tulajdonságokhoz"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree2
 #: model:ir.ui.menu,name:sale.menu_invoicing_sales_order_lines
 msgid "Order Lines to Invoice"
-msgstr ""
+msgstr "Megrendelési sorok a számlához"
 
 #. module: sale
 #: field:sale.order,date_confirm:0
@@ -64,12 +63,12 @@ msgstr "Elosztási partner"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
 msgid "Invoice Order"
-msgstr ""
+msgstr "Megrendelés számla"
 
 #. module: sale
 #: view:sale.config.settings:0
 msgid "Product Features"
-msgstr ""
+msgstr "Termék tulajdonságok"
 
 #. module: sale
 #: help:sale.config.settings,module_account_analytic_analysis:0
@@ -83,6 +82,16 @@ msgid ""
 "invoice automatically.\n"
 "            It installs the account_analytic_analysis module."
 msgstr ""
+"Lehetővé teszi az ügyfél szerződések állapotainak  meghatározását: "
+"Számlázási\n"
+"            mód (fix ár, az időkimutatásokon, számla előre), a pontos "
+"árképzés\n"
+"            (650€/nap egy fejlesztőnek), az időtartam (egy éves támogatási "
+"szerződés).\n"
+"            Lehetősége lesz a szerződések folyamatainak követésére és azok "
+"automatikus\n"
+"            számlázására. \n"
+"            Ez a account_analytic_analysis modult telepíti."
 
 #. module: sale
 #: model:email.template,report_name:sale.email_template_edi_sale
@@ -90,12 +99,14 @@ msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
 msgstr ""
+"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
+"'draft' or ''}"
 
 #. module: sale
 #: view:sale.order.line:0
 #: field:sale.report,product_uom:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Mértékegység"
 
 #. module: sale
 #: field:sale.order.line,type:0
@@ -110,7 +121,7 @@ msgstr "Az értékesítési megbízás megerősítésének dátuma."
 #. module: sale
 #: field:account.config.settings,module_sale_analytic_plans:0
 msgid "Use multiple analytic accounts on sales"
-msgstr ""
+msgstr "Használjon több analitikus/elemző könyvelést az értékesítésekhez"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -121,12 +132,12 @@ msgstr "Március"
 #: code:addons/sale/sale.py:559
 #, python-format
 msgid "First cancel all invoices attached to this sales order."
-msgstr ""
+msgstr "Először törölje a megrendelés összes számla mellékletét."
 
 #. module: sale
 #: view:sale.order:0
 msgid "Quotation Number"
-msgstr ""
+msgstr "Árajánlat szám"
 
 #. module: sale
 #: view:sale.order:0
@@ -156,7 +167,7 @@ msgstr "Ki nem számlázott, de kiszállított tételek"
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
 msgid "Quotation confirmed"
-msgstr ""
+msgstr "Árajánlat visszaigazolva"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -167,29 +178,29 @@ msgstr "Számlázási hiba"
 #. module: sale
 #: view:sale.order:0
 msgid "Quotation "
-msgstr ""
+msgstr "Árajánlat "
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Draft Quotation"
-msgstr ""
+msgstr "Árajánlat sablon"
 
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
 msgid "Delivery Address"
-msgstr ""
+msgstr "Szállítási cím"
 
 #. module: sale
 #: view:sale.report:0
 #: field:sale.report,analytic_account_id:0
 #: field:sale.shop,project_id:0
 msgid "Analytic Account"
-msgstr "Analitikus számla"
+msgstr "Analitikus/elemző könyvelés"
 
 #. module: sale
 #: field:sale.config.settings,module_sale_journal:0
 msgid "Allow batch invoicing of delivery orders through journals"
-msgstr ""
+msgstr "Engedélyezi a köteg számlázást a megrendeléseken a naplók alapján"
 
 #. module: sale
 #: field:sale.order.line,price_subtotal:0
@@ -215,39 +226,39 @@ msgstr "Súly"
 #. module: sale
 #: view:sale.config.settings:0
 msgid "Warehouse Features"
-msgstr ""
+msgstr "Raktárépület tulajdonságok"
 
 #. module: sale
 #: field:sale.config.settings,time_unit:0
 msgid "The default working time unit for services is"
-msgstr ""
+msgstr "A szolgáltatások alapértelmezett munkaidő egysége"
 
 #. module: sale
 #: field:sale.order.line,product_uom:0
 msgid "Unit of Measure "
-msgstr ""
+msgstr "Mértékegység "
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:101
 #, python-format
 msgid "Incorrect Data"
-msgstr ""
+msgstr "Hibás adat"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:102
 #, python-format
 msgid "The value of Advance Amount must be positive."
-msgstr ""
+msgstr "Az előleg mennyiség értékének pozitívnak kell lennie"
 
 #. module: sale
 #: help:sale.config.settings,group_discount_per_so_line:0
 msgid "Allows you to apply some discount per sales order line."
-msgstr ""
+msgstr "Lehetővé teszi a megrendelés soraihoz árengedmény alkalmazását"
 
 #. module: sale
 #: view:sale.order.line:0
 msgid "Sales Order Lines that are in 'done' state"
-msgstr ""
+msgstr "Megrendelés sorai melyek 'elvégezve' állapotúak"
 
 #. module: sale
 #: selection:sale.order.line,type:0
@@ -262,7 +273,7 @@ msgstr "Üzenetek"
 #. module: sale
 #: field:sale.report,state:0
 msgid "Order Status"
-msgstr ""
+msgstr "Rendelés állapota"
 
 #. module: sale
 #: field:sale.order,amount_tax:0
@@ -278,7 +289,7 @@ msgstr "Nettó érték"
 #. module: sale
 #: field:sale.config.settings,module_project:0
 msgid "Project"
-msgstr ""
+msgstr "Projekt"
 
 #. module: sale
 #: code:addons/sale/sale.py:360
@@ -288,7 +299,7 @@ msgstr ""
 #: code:addons/sale/sale.py:772
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Hiba!"
 
 #. module: sale
 #: report:sale.order:0
@@ -302,6 +313,9 @@ msgid ""
 "replenishment.\n"
 "On order: When needed, the product is purchased or produced."
 msgstr ""
+"Raktárról: Ha kell, a terméket a raktárról vesszük vagy várunk az alkatrész "
+"feltöltésre.\n"
+"Megrendelve: Ha kell, a terméket megvásároljuk vagy legyártjuk."
 
 #. module: sale
 #: help:sale.config.settings,module_analytic_user_function:0
@@ -314,6 +328,14 @@ msgid ""
 "available.\n"
 "                This installs the module analytic_user_function."
 msgstr ""
+"Lehetővé teszi a megadott számlára a kiválasztott felhasználó "
+"alapértelmezett funkciójának meghatározását.\n"
+"                Ezt főként akkor használjuk ha a felhasználó az "
+"időkimutatását kódolja. Az értékek felülíródnak és a mezők automatikusan "
+"kitöltésre kerülnek.\n"
+"                Ezeknek az értékeknek a megváltoztatása azonban még mindig "
+"lehetséges.\n"
+"                Ez a analytic_user_function modult telepíti."
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -325,22 +347,22 @@ msgstr "Visszavonva"
 #. module: sale
 #: view:sale.order.line:0
 msgid "Sales Order Lines related to a Sales Order of mine"
-msgstr ""
+msgstr "Megrendelés sorok melyek összefüggenk az én megrendeléseimmel"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Quotation Sent"
-msgstr ""
+msgstr "Elküldött mennyiség"
 
 #. module: sale
 #: model:ir.model,name:sale.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr ""
+msgstr "Email varázsló"
 
 #. module: sale
 #: help:sale.order,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -379,7 +401,7 @@ msgstr "Az értékesítési megbízás létrehozásának dátuma."
 #. module: sale
 #: view:res.partner:0
 msgid "False"
-msgstr ""
+msgstr "Hamis"
 
 #. module: sale
 #: help:sale.advance.payment.inv,advance_payment_method:0
@@ -390,6 +412,13 @@ msgid ""
 "                Use Some Order Lines to invoice a selection of the sales "
 "order lines."
 msgstr ""
+"Használja mindet a végszámla elkészítéséhez.\n"
+"                Használjon százalékot a teljes mennyiség bizonyos "
+"százalékának szálázásához.\n"
+"                Használjon fix árat egy bizonyos mennyiség díjbekérőjéhez / "
+"előlegéhez.\n"
+"                Használjon egyes megrendelés sorokat a kiválasztott "
+"megrendelés sorainak számlázásáahoz."
 
 #. module: sale
 #: view:sale.make.invoice:0
@@ -400,7 +429,7 @@ msgstr "Számlák létrehozása"
 #. module: sale
 #: report:sale.order:0
 msgid "Tax"
-msgstr ""
+msgstr "ÁFA"
 
 #. module: sale
 #: code:addons/sale/sale.py:270
@@ -408,7 +437,7 @@ msgstr ""
 #: code:addons/sale/sale.py:976
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "Érvénytelen lépés!"
 
 #. module: sale
 #: help:sale.order,state:0
@@ -420,6 +449,12 @@ msgid ""
 "The 'Waiting Schedule' status is set when the invoice is confirmed           "
 "    but waiting for the scheduler to run on the order date."
 msgstr ""
+"Az árajánlatkérés vagy a megrendelés állapotát adja.              \n"
+"A kizárás állapot automatikusan beállított egy megszakítás művelet "
+"elvégzésekkor               egy számla érvényesítésekor (Számla kizárás) "
+"vagy a kiválogatási lista műveletekben (Szállítási kizárás).\n"
+"A 'Ütemezésre várakozás' állapot lesz beállítva, ha a számla visszaigazolt   "
+"            de vár egy, a megrendelés dátumára futó ütemezésre."
 
 #. module: sale
 #: field:sale.report,date_confirm:0
@@ -438,11 +473,14 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"A chettelés összegzést megállítja (üzenetek száma,...). Ez az összegzés "
+"direkt HTML formátumú ahhoz hogy beilleszthető legyen a kanban nézetekbe."
 
 #. module: sale
 #: help:sale.order.line,sequence:0
 msgid "Gives the sequence order when displaying a list of sales order lines."
 msgstr ""
+"A megrendelés sorrendet adja ha a megrendelési sorok listáját jelzi ki."
 
 #. module: sale
 #: view:sale.report:0
@@ -461,11 +499,13 @@ msgstr "Fax:"
 msgid ""
 "In order to delete a confirmed sales order, you must cancel it before !"
 msgstr ""
+"Ahhoz, hogy törölni tudjon egy visszaigazolt megrendelést, először meg kell "
+"szakítani azt !"
 
 #. module: sale
 #: view:sale.order:0
 msgid "(update)"
-msgstr ""
+msgstr "(Frissítés)"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_partner
@@ -477,7 +517,7 @@ msgstr "Partner"
 #. module: sale
 #: view:sale.config.settings:0
 msgid "Contract Features"
-msgstr ""
+msgstr "Szerződés tulajdonságai"
 
 #. module: sale
 #: code:addons/sale/sale.py:280
@@ -496,7 +536,7 @@ msgstr "Értékesítési megbízás"
 #. module: sale
 #: model:res.groups,name:sale.group_invoice_so_lines
 msgid "Enable Invoicing Sales order lines"
-msgstr ""
+msgstr "Megrendelés sorai számlázásának engedélyezése"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
@@ -506,12 +546,12 @@ msgstr "Értékesítési megbízási sor"
 #. module: sale
 #: field:sale.advance.payment.inv,amount:0
 msgid "Advance Amount"
-msgstr "Előleg"
+msgstr "Előleg összege"
 
 #. module: sale
 #: help:sale.order,invoice_exists:0
 msgid "It indicates that sales order has at least one invoice."
-msgstr ""
+msgstr "Ez mutatja, hogy a megrendelének legalább egy számlája van."
 
 #. module: sale
 #: help:sale.config.settings,group_sale_pricelist:0
@@ -519,16 +559,19 @@ msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
 "Example: 10% for retailers, promotion of 5 EUR on this product, etc."
 msgstr ""
+"Lehetővé teszi különböző ár szervezését a vevő kategóriák szabályai "
+"alapján.\n"
+"Például: 10% a kiskereskedőknek, 5 EUR promóció erre a termékre, stb."
 
 #. module: sale
 #: field:sale.config.settings,module_analytic_user_function:0
 msgid "One employee can have different roles per contract"
-msgstr ""
+msgstr "Egy munkavállalónak különböző funkciója lehet egy szerződésen belül"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoice the whole sales order"
-msgstr ""
+msgstr "Számlázza ki a teljes megrendelést"
 
 #. module: sale
 #: field:sale.shop,payment_default_id:0
@@ -543,20 +586,20 @@ msgstr "Megerősítés"
 #. module: sale
 #: field:sale.config.settings,timesheet:0
 msgid "Prepare invoices based on timesheets"
-msgstr ""
+msgstr "Az időkimutatások alapján készítsen elő számlát"
 
 #. module: sale
 #: code:addons/sale/sale.py:812
 #, python-format
 msgid "You cannot cancel a sales order line that has already been invoiced."
-msgstr ""
+msgstr "Nem tud megrendelési sor megszakítani amelyik már számlázva volt."
 
 #. module: sale
 #: view:account.invoice.report:0
 #: view:board.board:0
 #: model:ir.actions.act_window,name:sale.action_turnover_by_month
 msgid "Monthly Turnover"
-msgstr ""
+msgstr "Havi forgalom"
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
@@ -572,22 +615,22 @@ msgstr "Év"
 #. module: sale
 #: field:sale.config.settings,group_uom:0
 msgid "Allow using different units of measures"
-msgstr ""
+msgstr "Különböző mértékegységek használatának engedélyezése"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
 msgid "Sales Order Confirmed"
-msgstr ""
+msgstr "Megrendelés visszaigazolva"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Sales Order that haven't yet been confirmed"
-msgstr ""
+msgstr "Megrendelés mely még nem lett visszaigazolva"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Print"
-msgstr ""
+msgstr "Nyomtatás"
 
 #. module: sale
 #: report:sale.order:0
@@ -610,6 +653,7 @@ msgstr "Áreng. (%)"
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr ""
+"Kérem határozzon meg bevételi számlát ehhez a termékhez: \"%s\" (id:%d)."
 
 #. module: sale
 #: field:sale.order.line,invoice_lines:0
@@ -626,6 +670,8 @@ msgstr "Teljes ár"
 #: help:account.config.settings,group_analytic_account_for_sales:0
 msgid "Allows you to specify an analytic account on sales orders."
 msgstr ""
+"Lehetővé teszi az analitikus/elemző könyvelés meghatározását a "
+"megrendeléseken."
 
 #. module: sale
 #: help:sale.config.settings,module_sale_journal:0
@@ -635,6 +681,10 @@ msgid ""
 "                and perform batch operations on journals.\n"
 "                This installs the module sale_journal."
 msgstr ""
+"Lehetővé teszi az értékesítések és szállítások (kiválogatási listák) "
+"kategorizálását különböző naplók közt,\n"
+"                és kötegelt művelet elvégzését a naplókon.\n"
+"                Ez a sale_journal modult telepíti."
 
 #. module: sale
 #: help:sale.make.invoice,grouped:0
@@ -653,12 +703,12 @@ msgstr "Számlák készítése"
 #: code:addons/sale/res_config.py:89
 #, python-format
 msgid "Hour"
-msgstr ""
+msgstr "Óra"
 
 #. module: sale
 #: field:res.partner,sale_order_count:0
 msgid "# of Sales Order"
-msgstr ""
+msgstr "# megrendelésből"
 
 #. module: sale
 #: help:sale.config.settings,timesheet:0
@@ -669,6 +719,11 @@ msgid ""
 "user-wise as well as month wise.\n"
 "                This installs the module account_analytic_analysis."
 msgstr ""
+"A számla elemzés nézetének módosítása a vállalat szolgáltatás projekt "
+"szervezőjének fontos adatok hozzáféréséhez.\n"
+"                Megtekintheti a könyvvitel összegző elemzés jelentést "
+"felhasználókra lebontva vagy havi bontásban.\n"
+"                Ez a account_analytic_analysis modult telepíti."
 
 #. module: sale
 #: field:sale.order,create_date:0
@@ -689,17 +744,17 @@ msgstr "Az aktuális értékesítési megbízás számlázási címe."
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
 msgid "Ordered Quantities"
-msgstr "Rendelt mennyiségek"
+msgstr "Megrendelt mennyiségek"
 
 #. module: sale
 #: view:sale.report:0
 msgid "Ordered Year of the sales order"
-msgstr ""
+msgstr "A megrendelések megrendelés éve"
 
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
 msgid "Addresses in Sales Orders"
-msgstr ""
+msgstr "Címek a megrendeléseken"
 
 #. module: sale
 #: field:sale.advance.payment.inv,qtty:0
@@ -716,7 +771,7 @@ msgstr "Bruttó ár:"
 #. module: sale
 #: view:sale.order.line:0
 msgid "Sales Order Lines ready to be invoiced"
-msgstr ""
+msgstr "Megrendelési sorok készen állnak számlázásra"
 
 #. module: sale
 #: view:sale.report:0
@@ -752,11 +807,21 @@ msgid ""
 "             \n"
 "* The 'Cancelled' status is set when a user cancel the sales order related."
 msgstr ""
+"* A 'Terv' állapot beállított, ha az idevonatkozó megrendelés tervezet "
+"állapotú.                     \n"
+"* A 'Visszaigazolt' állapot beállított, ha az idevonatkozó megrendelés "
+"visszaigazolt.                    \n"
+"* A 'Kifogás' állapot beállított, ha az idevonatkozó megrendelés kifogásolt. "
+"                   \n"
+"* A 'Elvégzett' állapot beállított, ha az idevonatkozó megrendelés sor "
+"kiválogatott.                     \n"
+"* A 'Megszakított' állapot beállított, ha az idevonatkozó megrendelést egy "
+"felhasználó megszakította."
 
 #. module: sale
 #: view:sale.config.settings:0
 msgid "Default Options"
-msgstr ""
+msgstr "Alapértelmezett lehetőségek"
 
 #. module: sale
 #: code:addons/sale/sale.py:953
@@ -764,12 +829,12 @@ msgstr ""
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:95
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "Beállítási hiba!"
 
 #. module: sale
 #: field:account.config.settings,group_analytic_account_for_sales:0
 msgid "Analytic accounting for sales"
-msgstr ""
+msgstr "Analitikus/elemző könyvelés az értékesítésekhez"
 
 #. module: sale
 #: view:sale.order:0
@@ -786,27 +851,29 @@ msgid ""
 "After clicking 'Show Lines to Invoice', select lines to invoice and create "
 "the invoice from the 'More' dropdown menu."
 msgstr ""
+"A 'Mutasd a számlázandó sorokat' kattintás után, válasszon ki számlázandó "
+"sorokat és hozza létre a számlát a 'Tovább' legördülő menüből."
 
 #. module: sale
 #: view:sale.order:0
 msgid "Send by Email"
-msgstr ""
+msgstr "Küldés Email-ben"
 
 #. module: sale
 #: code:addons/sale/edi/sale_order.py:140
 #, python-format
 msgid "EDI Pricelist (%s)"
-msgstr ""
+msgstr "EDI (Elektromos adatcserélő rendszer) Árlista (%s)"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "On Delivery Order"
-msgstr ""
+msgstr "Kiszállítási Kiszolgáltatási jegyen"
 
 #. module: sale
 #: view:sale.config.settings:0
 msgid "Invoicing Process"
-msgstr ""
+msgstr "Számlázási folyamatok"
 
 #. module: sale
 #: view:sale.order:0
@@ -816,19 +883,20 @@ msgstr "Megrendelés dátuma"
 #. module: sale
 #: view:sale.order:0
 msgid "Sales Order done"
-msgstr ""
+msgstr "Megrendelés elvégezve"
 
 #. module: sale
 #: code:addons/sale/sale.py:361
 #, python-format
 msgid "Please define sales journal for this company: \"%s\" (id:%d)."
 msgstr ""
+"Kérem határozzon meg értékesítési naplót ehhez a vállalthoz: \"%s\" (id:%d)."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
 #: view:res.partner:0
 msgid "Quotations and Sales"
-msgstr ""
+msgstr "Árajánlatok és Értékesítések"
 
 #. module: sale
 #: field:sale.order,invoiced:0
@@ -840,21 +908,23 @@ msgstr "Fizetve"
 msgid ""
 "Allows you to select and maintain different units of measure for products."
 msgstr ""
+"Lehetővé teszi a termékek különböző mértékegységeinek kiválasztását és "
+"karbantartását."
 
 #. module: sale
 #: view:sale.report:0
 msgid "Reference Unit of Measure"
-msgstr ""
+msgstr "Referencia mértékegység"
 
 #. module: sale
 #: view:sale.advance.payment.inv:0
 msgid "Create and View Invoice"
-msgstr ""
+msgstr "Számla létrehozása és megtekintése"
 
 #. module: sale
 #: view:sale.order.line:0
 msgid "Sales order lines done"
-msgstr ""
+msgstr "Megrendelési sorok elvégezve"
 
 #. module: sale
 #: field:sale.make.invoice,grouped:0
@@ -875,7 +945,7 @@ msgstr "Számla generálása értékesítésből"
 #: code:addons/sale/sale.py:300
 #, python-format
 msgid "Pricelist Warning!"
-msgstr ""
+msgstr "Árlista figyelmeztés!"
 
 #. module: sale
 #: field:sale.order.line,discount:0
@@ -891,15 +961,15 @@ msgid ""
 "1.The state of this sales order line is either \"draft\" or \"cancel\"!\n"
 "2.The Sales Order Line is Invoiced!"
 msgstr ""
-"Nem készíthet számlát ehhez az értékesítési megbízási sorhoz, az alábbi okok "
-"egyikének következtében:\n"
-"1. Az értékesítési megbízás sorának állapota: \"Tervezet\" vagy \"Mégsem\".\n"
-"2.  Az értékesítési megbízás sor már kiszámlázásra került."
+"Nem készíthet számlát ehhez a megrendelés sorhoz, az alábbi okok egyikének "
+"következtében:\n"
+"1. A megrendelés sorának állapota: \"Tervezet\" vagy \"Mégsem\".\n"
+"2.  A megrendelési sor már kiszámlázásra került."
 
 #. module: sale
 #: view:sale.order.line.make.invoice:0
 msgid "Create & View Invoice"
-msgstr ""
+msgstr "Számla létrehozása & megtekintése"
 
 #. module: sale
 #: view:board.board:0
@@ -920,7 +990,7 @@ msgstr "December"
 #. module: sale
 #: view:sale.config.settings:0
 msgid "Contracts Management"
-msgstr ""
+msgstr "Szerződések kezelése"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -936,7 +1006,7 @@ msgstr "Hónap"
 #. module: sale
 #: field:sale.order,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -953,7 +1023,7 @@ msgstr "Termékkaterógia"
 #: code:addons/sale/sale.py:558
 #, python-format
 msgid "Cannot cancel this sales order!"
-msgstr ""
+msgstr "Nem lehet megszakítani ezt a megrendelést!"
 
 #. module: sale
 #: view:sale.order:0
@@ -963,7 +1033,7 @@ msgstr "Számla újrakészítése"
 #. module: sale
 #: field:sale.config.settings,module_warning:0
 msgid "Allow configuring alerts by customer or products"
-msgstr ""
+msgstr "Engedélyezi riasztás beállítását vevőkre vagy termékekre"
 
 #. module: sale
 #: field:sale.shop,name:0
@@ -973,7 +1043,7 @@ msgstr "Üzlet neve"
 #. module: sale
 #: view:sale.order:0
 msgid "My Sales Orders"
-msgstr ""
+msgstr "Az én megrendeléseim"
 
 #. module: sale
 #: report:sale.order:0
@@ -998,17 +1068,19 @@ msgid ""
 "To allow your salesman to make invoices for sales order lines using the menu "
 "'Lines to Invoice'."
 msgstr ""
+"Lehetővé teszi az értékesítők részére a megrendelések soraira történő "
+"számlázást a 'Számlázandó sorok' menü használatával"
 
 #. module: sale
 #: model:ir.actions.client,name:sale.action_client_sale_menu
 msgid "Open Sale Menu"
-msgstr ""
+msgstr "Értékesítési menü megnyitása"
 
 #. module: sale
 #: code:addons/sale/sale.py:592
 #, python-format
 msgid "You cannot confirm a sales order which has no line."
-msgstr ""
+msgstr "Nem tud visszaigazolni sor nélküli megrendelést"
 
 #. module: sale
 #: selection:sale.report,state:0
@@ -1025,6 +1097,7 @@ msgstr "Nincs vevő megadva!"
 #: field:sale.config.settings,module_sale_stock:0
 msgid "Trigger delivery orders automatically from sales orders"
 msgstr ""
+"Kiszállítási Kiszolgáltatási jegy automatikus létrehozása a megrendelésekből"
 
 #. module: sale
 #: view:sale.make.invoice:0
@@ -1041,7 +1114,7 @@ msgstr "Megerősítve"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:106
 #, python-format
 msgid "Advance of %s %%"
-msgstr ""
+msgstr "Ennyi előleg %s %%"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line_make_invoice
@@ -1056,17 +1129,17 @@ msgstr "Tervezet"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_email_templates
 msgid "Email Templates"
-msgstr ""
+msgstr "E-mail sablonok"
 
 #. module: sale
 #: help:sale.order.line,address_allotment_id:0
 msgid "A partner to whom the particular product needs to be allotted."
-msgstr ""
+msgstr "A partner akihez a szóban forgó terméket ki kell helyezni."
 
 #. module: sale
 #: field:sale.order,project_id:0
 msgid "Contract / Analytic"
-msgstr ""
+msgstr "Szerződés / Elemzés"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1077,7 +1150,7 @@ msgstr "Ütemezésre vár"
 #. module: sale
 #: field:sale.order,note:0
 msgid "Terms and conditions"
-msgstr ""
+msgstr "Kikötések és feltételek"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders
@@ -1094,12 +1167,12 @@ msgstr "Az adó összege"
 #. module: sale
 #: field:sale.order,invoiced_rate:0
 msgid "Invoiced Ratio"
-msgstr ""
+msgstr "Számlázási arány/árfolyam"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "On Demand"
-msgstr ""
+msgstr "Készleten"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -1134,6 +1207,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kattintson új értékesítési hely meghatározáshoz.\n"
+"              </p><p>\n"
+"                Mindegyik árajánlatot vagy megrendelést össze kell kötni egy "
+"értékesítési helyhez. Az\n"
+"                értékesítési hely meghatároz egy raktárépületet ahonnan a "
+"termék\n"
+"                szállítva lesz minden egyes ide vonatkozó értékesítéshez.\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1158,6 +1241,8 @@ msgid ""
 "Sales Order Lines that are confirmed, done or in exception state and haven't "
 "yet been invoiced"
 msgstr ""
+"Megrendelési sorok, melyek visszaigazoltak, elvégzettek vagy kifogásolt "
+"állapotú és még nincs számlázva"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
@@ -1167,7 +1252,7 @@ msgstr "Értékesítési megbízási statisztikák"
 #. module: sale
 #: field:sale.order,date_order:0
 msgid "Date"
-msgstr ""
+msgstr "Dátum"
 
 #. module: sale
 #: report:sale.order:0
@@ -1178,7 +1263,7 @@ msgstr ""
 #: view:sale.report:0
 #: field:sale.report,user_id:0
 msgid "Salesperson"
-msgstr ""
+msgstr "Értékesítő"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -1237,6 +1322,9 @@ msgid ""
 "Manage Related Stock.\n"
 "                    This installs the module sale_stock."
 msgstr ""
+"Lehetővé teszi a különböző  megrendelés stratégia szerinti Árajánlat, "
+"Megrendelés létrehozását és az ide vonatkozó raktár kezelését.\n"
+"                    Ez a sale_stock modult telepíti."
 
 #. module: sale
 #: help:sale.advance.payment.inv,product_id:0
@@ -1245,6 +1333,9 @@ msgid ""
 "                You may have to create it and set it as a default value on "
 "this field."
 msgstr ""
+"Kiválasztja az úgynevezett 'Fejlesztő termék' szolgáltatás típusú terméket.\n"
+"                Létre kell hoznia és mint a mezőhöz tartozó alapértelmezett "
+"értéket beállítania."
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -1254,7 +1345,7 @@ msgstr "Január"
 #. module: sale
 #: field:sale.config.settings,group_discount_per_so_line:0
 msgid "Allow setting a discount on the sales order lines"
-msgstr ""
+msgstr "Engedélyezi a megrendelés soraira az árengedmény beállítását"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_in_progress
@@ -1269,6 +1360,10 @@ msgid ""
 "                    or a fixed price (for advances) directly from the sales "
 "order form if you prefer."
 msgstr ""
+"Ezen a megrendelésen minden sor tétel számlázva lesz. Lehetősége van a "
+"megrendelés egy bizonyos százalékának számlázására\n"
+"                    vagy fix ár (az előlegekre) direkt a megrendelés "
+"űrlapról ha kívánja."
 
 #. module: sale
 #: help:sale.config.settings,module_warning:0
@@ -1278,31 +1373,36 @@ msgid ""
 "Example: Product: this product is deprecated, do not purchase more than 5.\n"
 "                Supplier: don't forget to ask for an express delivery."
 msgstr ""
+"Lehetővé teszi a termék értesítéseket, melyeket kapcsolhatjuk, ha egy "
+"felhasználó egy megadott terméket értékesíteni akar vagy egy vevőre.\n"
+"Például: Termék: Ezt a terméket érvénytelenítsd, nem lehet 5-nél többet "
+"vásárolni.\n"
+"                  Beszállító: Ne felejts el expressz szállításról érdeklődni."
 
 #. module: sale
 #: field:sale.order,paypal_url:0
 msgid "Paypal Url"
-msgstr ""
+msgstr "Paypal Url"
 
 #. module: sale
 #: help:sale.order,project_id:0
 msgid "The analytic account related to a sales order."
-msgstr "Az értékesítési megbízáshoz kapcsolódó analitikus számla."
+msgstr "Az értékesítési megbízáshoz kapcsolódó analitikus/elemző számla."
 
 #. module: sale
 #: view:sale.order:0
 msgid "View Invoice"
-msgstr ""
+msgstr "Számla megtekintése"
 
 #. module: sale
 #: field:sale.advance.payment.inv,advance_payment_method:0
 msgid "What do you want to invoice?"
-msgstr ""
+msgstr "Mit szeretne számlázni?"
 
 #. module: sale
 #: field:sale.config.settings,group_sale_pricelist:0
 msgid "Use pricelists to adapt your price per customers"
-msgstr ""
+msgstr "Használja az árlistát a vevőnkénti ár átdolgozására"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_confirmquotation0
@@ -1321,6 +1421,8 @@ msgid ""
 "You have to select a pricelist or a customer in the sales form !\n"
 "Please set one before choosing a product."
 msgstr ""
+"Választania kell egy árlistát vagy egy vevőt az értékesítési űrlapon !\n"
+"Kérem egyik kiválasztását mielőtt terméket választana."
 
 #. module: sale
 #: help:sale.order,origin:0
@@ -1333,14 +1435,14 @@ msgstr ""
 #: code:addons/sale/sale.py:948
 #, python-format
 msgid "No valid pricelist line found ! :"
-msgstr ""
+msgstr "Nem alálható érvényes árlista sor ! :"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:113
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:115
 #, python-format
 msgid "Advance of %s %s"
-msgstr ""
+msgstr "Ennyi előleg %s %s"
 
 #. module: sale
 #: view:sale.report:0
@@ -1359,7 +1461,7 @@ msgstr "Árajánlatok"
 #. module: sale
 #: help:account.config.settings,module_sale_analytic_plans:0
 msgid "This allows install module sale_analytic_plans."
-msgstr ""
+msgstr "Ez lehetővé teszi a sale_analytic_plans telepítését."
 
 #. module: sale
 #: view:sale.order:0
@@ -1369,12 +1471,12 @@ msgstr "Hiba figyelmen kívül hagyása"
 #. module: sale
 #: help:sale.order,partner_shipping_id:0
 msgid "Delivery address for current sales order."
-msgstr ""
+msgstr "Szállítási cím a jelenlegi megrendeléshez."
 
 #. module: sale
 #: field:sale.config.settings,module_sale_margin:0
 msgid "Display margins on sales orders"
-msgstr ""
+msgstr "A Megrendelésk árkülönbözetének megjelenítése"
 
 #. module: sale
 #: help:sale.order,invoice_ids:0
@@ -1395,7 +1497,7 @@ msgstr "Az Ön hivatkozása"
 #. module: sale
 #: view:sale.advance.payment.inv:0
 msgid "Show Lines to Invoice"
-msgstr ""
+msgstr "Mutassa a számlázandó sorokat"
 
 #. module: sale
 #: field:sale.report,date:0
@@ -1418,7 +1520,7 @@ msgstr "ÁFA:"
 #: code:addons/sale/sale.py:441
 #, python-format
 msgid "Customer Invoices"
-msgstr ""
+msgstr "Kimenő számlák"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_order0
@@ -1447,6 +1549,8 @@ msgid ""
 "If you change the pricelist of this order (and eventually the currency), "
 "prices of existing order lines will not be updated."
 msgstr ""
+"Ha ennek a megrendelésnek az árlistáját megváltoztatja (esetleg a "
+"pénznemet), a meglévő megrendelés sorai nem lesznek frissítve."
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1494,7 +1598,7 @@ msgstr "Számla"
 #. module: sale
 #: view:sale.order.line:0
 msgid "My Sales Order Lines"
-msgstr ""
+msgstr "Az én megrendeléseim sorai"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancel0
@@ -1504,7 +1608,7 @@ msgstr ""
 #: view:sale.order.line:0
 #: view:sale.order.line.make.invoice:0
 msgid "Cancel"
-msgstr "Mégsem"
+msgstr "Törlés"
 
 #. module: sale
 #: field:sale.order,message_follower_ids:0
@@ -1515,18 +1619,18 @@ msgstr "Követők"
 #: code:addons/sale/sale.py:937
 #, python-format
 msgid "No Pricelist ! : "
-msgstr ""
+msgstr "Nincs árlista ! : "
 
 #. module: sale
 #: view:sale.order:0
 msgid "Sales Order "
-msgstr ""
+msgstr "Megrendelés "
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_order_sent
 msgid "Quotation send"
-msgstr ""
+msgstr "Árajánlat küldés"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1536,12 +1640,12 @@ msgstr "Számlázatlan sorok keresése"
 #. module: sale
 #: model:ir.model,name:sale.model_account_config_settings
 msgid "account.config.settings"
-msgstr ""
+msgstr "account.config.settings"
 
 #. module: sale
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique per Company!"
-msgstr ""
+msgstr "A megrendelési referanciának egyedinek kell lenni vállalatonként!"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_line_tree2
@@ -1557,6 +1661,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                Itt van a lista a már kiszámlázott megrendelési sorokról. "
+"Tud\n"
+"                számlázni megrendelési részt, a megrendelés soraival. Nincs\n"
+"                szüksége erre a listára, ha kiszállítási Kiszolgáltatási "
+"jegyből\n"
+"                számláz vagy a teljes értékesítést egyszerre számlázza.\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: report:sale.order:0
@@ -1569,11 +1682,13 @@ msgstr "Szállítási cím:"
 msgid ""
 "You cannot group sales having different currencies for the same partner."
 msgstr ""
+"Nem csoportosíthat értékesítést, ha ugyan ahhoz a partnerhez különböző "
+"devizák vannak."
 
 #. module: sale
 #: view:sale.advance.payment.inv:0
 msgid "Invoice Sales Order"
-msgstr ""
+msgstr "Megrendelés számlázás"
 
 #. module: sale
 #: help:sale.order,invoice_quantity:0
@@ -1582,11 +1697,14 @@ msgid ""
 "invoice).                                              You have to choose  "
 "if you want your invoice based on ordered "
 msgstr ""
+"A megrendelés automatikusan létre lesz hozva a díjbekérő / előleg (Számla "
+"terv) alapján.                                              Választhatja, ha "
+"akarja a számlázást a megrendelés alapján "
 
 #. module: sale
 #: field:sale.config.settings,module_account_analytic_analysis:0
 msgid "Use contracts management"
-msgstr ""
+msgstr "Szerződés szervezés használata"
 
 #. module: sale
 #: code:addons/sale/sale.py:945
@@ -1595,6 +1713,8 @@ msgid ""
 "Cannot find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
 msgstr ""
+"Nem található ehhez a termékhez és mennyiséghez hasonló árlista sor.\n"
+"Változtassa meg vagy a terméket, a mennyiséget vagy az árlistát."
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
@@ -1619,7 +1739,7 @@ msgstr "Összeg adó nélkül."
 #. module: sale
 #: view:sale.order.line:0
 msgid "Order reference"
-msgstr ""
+msgstr "Megrendelési hivatkozás"
 
 #. module: sale
 #: help:sale.order,invoiced:0
@@ -1635,7 +1755,7 @@ msgstr "Egységár"
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Percentage"
-msgstr ""
+msgstr "Százalék"
 
 #. module: sale
 #: view:sale.order:0
@@ -1747,13 +1867,14 @@ msgstr "A végösszeg."
 #. module: sale
 #: view:sale.order:0
 msgid "Confirm Sale"
-msgstr ""
+msgstr "Értékesítés jóváhagyás"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:96
 #, python-format
 msgid "There is no income account defined for this product: \"%s\" (id:%d)."
 msgstr ""
+"Nincs bevételi számla meghatározva ehhez a termékhez: \"%s\" (id:%d)."
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -1766,6 +1887,8 @@ msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name} ${object.state in ('Terv', 'küldött') és "
+"'Árajánlatkérés' vagy 'Megrendelés'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: report:sale.order:0
@@ -1782,6 +1905,12 @@ msgid ""
 "Before delivery: A draft invoice is created from the sales order and must be "
 "paid before the products can be delivered."
 msgstr ""
+"Igényléskori: Egy terv/előleg számla hozható létre a megrendelésből, ha "
+"szükséges. \n"
+"A kézbesítési bizonylatkor: Egy terv/előleg számla hozható létre a "
+"kézbesítési bizonylatra ha az árut szállításba adták. \n"
+"Szállítás előtt: Egy terv/előleg számla hozható létre a megrendelésből és ki "
+"kell egyenlíteni mielőtt az árut kiszállítanák."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all
@@ -1833,11 +1962,26 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kettintson árajánlat létrehozásához, ez az új értékesítés "
+"első lépése.\n"
+"              </p><p>\n"
+"                OpenERP segít a hatékony értékesítési folyamat hatékony "
+"kezelésében:\n"
+"                a megrendelés visszaigazolásában, a szállításban,\n"
+"                a számlázásban és az áru ellenértékének beszedésében.\n"
+"              </p><p>\n"
+"                A társadalmi jellemzők segítenek az értékesítések "
+"megbeszélésének szervezésében,\n"
+"                és lehetővé teszik a megrendeléseken a vásárlói fejlődésének "
+"követését.\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: view:res.partner:0
 msgid "sale.group_delivery_invoice_address"
-msgstr ""
+msgstr "sale.group_delivery_invoice_address"
 
 #. module: sale
 #: code:addons/sale/sale.py:773
@@ -1846,6 +1990,8 @@ msgid ""
 "There is no Fiscal Position defined or Income category account defined for "
 "default properties of Product categories."
 msgstr ""
+"Nincs költségvetési hely meghatározva vagy bevételi számla kategória "
+"meghatározva az alapértelmezett termék kategória tulajdonságokban."
 
 #. module: sale
 #: model:process.node,note:sale.process_node_invoice0
@@ -1855,17 +2001,17 @@ msgstr "Ellenőrizendő a könyvelő által."
 #. module: sale
 #: model:res.groups,name:sale.group_mrp_properties
 msgid "Properties on lines"
-msgstr ""
+msgstr "A sorok tulajdonságai"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Sale to Invoice"
-msgstr ""
+msgstr "Számlázandó értékesítés"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Order Number"
-msgstr ""
+msgstr "Megrendelés szám"
 
 #. module: sale
 #: view:sale.order:0
@@ -1898,6 +2044,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"              Kattintson megrendelésre átalakítható árajánlat "
+"létrehozásához.\n"
+"              </p><p>\n"
+"                 OpenERP segít a hatékony értékesítési folyamat hatékony "
+"kezelésében:\n"
+"                árajánlat, megrendelés, szállítás, számlázás és "
+"kiegyenlítés.\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: field:sale.order,invoice_quantity:0
@@ -1907,12 +2063,12 @@ msgstr "Számlázás alapja"
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Fixed price (deposit)"
-msgstr ""
+msgstr "Fix ár (letétbe helyezés)"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_config_settings
 msgid "sale.config.settings"
-msgstr ""
+msgstr "sale.config.settings"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -1927,7 +2083,7 @@ msgstr "Rendelés dátuma"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Before Delivery"
-msgstr ""
+msgstr "Szállítás előtt"
 
 #. module: sale
 #: field:sale.order.line,product_uos:0
@@ -1937,7 +2093,7 @@ msgstr "Termék eladási egysége"
 #. module: sale
 #: model:process.node,note:sale.process_node_quotation0
 msgid "Draft state of sales order"
-msgstr "Az értékesítési megbízás tervezet állapota"
+msgstr "A megrendelés tervezet állapota"
 
 #. module: sale
 #: field:sale.order,origin:0
@@ -1959,7 +2115,7 @@ msgstr "Manuális vezérléssel folyamatban"
 #: code:addons/sale/wizard/sale_make_invoice.py:43
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Figyelem!"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree
@@ -1986,11 +2142,29 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kattintson ehhez a vevőhöz tartozó árajánlat vagy "
+"megrendelés létrehozásához.\n"
+"              </p><p>\n"
+"                 OpenERP segít a hatékony értékesítési folyamat hatékony "
+"kezelésében:\n"
+"                árajánlat, megrendelés, szállítás,számlázás és "
+"kiegyenlítés.\n"
+"              </p><p>\n"
+"                A társadalmi jellemzők segítenek az értékesítések "
+"megbeszélésének szervezésében,\n"
+"                és lehetővé teszik a megrendeléseken a vásárlói fejlődésének "
+"követését.\n"
+"                order, and allow your customer to keep track of the "
+"evolution\n"
+"                of the sales order.\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: field:sale.order,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Összegzés"
 
 #. module: sale
 #: help:sale.order,message_ids:0
@@ -2017,11 +2191,14 @@ msgid ""
 "with\n"
 "                        your customer."
 msgstr ""
+"Használja a szerződést, hogy  a többes számlázással tudja szervezni a\n"
+"                        szolgáltatásait, ugyanannak a vevőnek a szerződése \n"
+"                        részeként."
 
 #. module: sale
 #: view:sale.report:0
 msgid "Ordered month of the sales order"
-msgstr ""
+msgstr "A megrendelés megrendelési hónapja"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleinvoice0
@@ -2031,7 +2208,7 @@ msgstr "Értékesítési megbízásból"
 #. module: sale
 #: view:sale.order.line:0
 msgid "Confirmed sales order lines, not yet delivered"
-msgstr ""
+msgstr "Visszaigazolt megrendelési sorok, amik még nem kiszálítottak"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleinvoice0
@@ -2054,13 +2231,14 @@ msgstr "EE"
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Some order lines"
-msgstr ""
+msgstr "Néhány megrendelés sor"
 
 #. module: sale
 #: code:addons/sale/sale.py:976
 #, python-format
 msgid "Cannot delete a sales order line which is in state '%s'."
 msgstr ""
+"Nem törölhető az a megrendelési sor amelyik ebben az állapotban van '%s'."
 
 #. module: sale
 #: report:sale.order:0
@@ -2071,19 +2249,19 @@ msgstr "Fizetési feltétel"
 #. module: sale
 #: view:sale.order:0
 msgid "Sales Order ready to be invoiced"
-msgstr ""
+msgstr "Számlázásra kész megrendelés"
 
 #. module: sale
 #: field:sale.config.settings,group_invoice_so_lines:0
 msgid "Generate invoices based on the sales order lines"
-msgstr ""
+msgstr "Számla létrehozása a megrendelési sorokra"
 
 #. module: sale
 #: view:sale.advance.payment.inv:0
 #: view:sale.make.invoice:0
 #: view:sale.order.line.make.invoice:0
 msgid "or"
-msgstr ""
+msgstr "vagy"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_product_tree
@@ -2105,7 +2283,7 @@ msgstr "Árajánlat száma"
 #. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
 msgid "Discount on lines"
-msgstr ""
+msgstr "Árengedmény a sorokon"
 
 #. module: sale
 #: field:sale.order,client_order_ref:0
@@ -2125,6 +2303,10 @@ msgid ""
 "between the Unit Price and Cost Price.\n"
 "                This installs the module sale_margin."
 msgstr ""
+"Ez hozzáadja az 'Árrés' -t a megrendelésre.\n"
+"                Jövedelmezőséget ad az egységár és a költség ár "
+"különbözetéből.\n"
+"                Ez a sale_margin modult telepíti."
 
 #. module: sale
 #: code:addons/sale/sale.py:857
@@ -2133,6 +2315,8 @@ msgid ""
 "Before choosing a product,\n"
 " select a customer in the sales form."
 msgstr ""
+"Mielőtt választana egy terméket,\n"
+" válasszon egy vevőt az értékesítési űrlapon."
 
 #. module: sale
 #: view:sale.order:0
@@ -2142,7 +2326,7 @@ msgstr "Végösszeg adókkal együtt"
 #. module: sale
 #: view:sale.order:0
 msgid "New Copy of Quotation"
-msgstr ""
+msgstr "Árajánlat új másolata"
 
 #. module: sale
 #: view:sale.advance.payment.inv:0
@@ -2151,8 +2335,1258 @@ msgid ""
 "                        will create a draft invoice that can be modified\n"
 "                        before validation."
 msgstr ""
+"Válassza ki, hogy akarja számlázni ezt a megrendelést. Ez\n"
+"                        létre fogja hozni a számla tervet amit módosíthat a\n"
+"                        jóváhagyás előtt."
 
 #. module: sale
 #: view:sale.report:0
 msgid "Ordered date of the sales order"
-msgstr ""
+msgstr "A megrendelés megrendelési dátuma"
+
+#~ msgid "Reference"
+#~ msgstr "Hivatkozás"
+
+#~ msgid "VAT"
+#~ msgstr "ÁFA"
+
+#~ msgid "Extra Info"
+#~ msgstr "Extra információ"
+
+#~ msgid "Net Price"
+#~ msgstr "Nettó ár"
+
+#~ msgid "Warehouse"
+#~ msgstr "Raktár"
+
+#~ msgid "Salesman"
+#~ msgstr "Értékesítő"
+
+#~ msgid "Order Ref"
+#~ msgstr "Rendelési hiv."
+
+#~ msgid "Sales Process"
+#~ msgstr "Értékesítési folyamat"
+
+#~ msgid "Properties"
+#~ msgstr "Tulajdonságok"
+
+#, python-format
+#~ msgid "Error"
+#~ msgstr "Hiba"
+
+#~ msgid "Stock Moves"
+#~ msgstr "Készletmozgások"
+
+#~ msgid "Compute"
+#~ msgstr "Számítás"
+
+#~ msgid "Partial Delivery"
+#~ msgstr "Részleges kiszállítás"
+
+#~ msgid "UoM"
+#~ msgstr "ME"
+
+#~ msgid "Quantity (UoM)"
+#~ msgstr "Mennyiség (ME)"
+
+#~ msgid "Packaging"
+#~ msgstr "Csomagolás"
+
+#~ msgid "Procure Method"
+#~ msgstr "Ellátás módja"
+
+#~ msgid "Recreate Procurement"
+#~ msgstr "Beszerzés készítése"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Érvénytelen modell név a művelet meghatározásában."
+
+#~ msgid "Steps To Deliver a Sale Order"
+#~ msgstr "Megrendelés szállításának lépései"
+
+#~ msgid "You invoice has been successfully created !"
+#~ msgstr "Az Ön számlája sikeresen elkészült !"
+
+#~ msgid "Automatic Declaration"
+#~ msgstr "Automatikus egyeztetés"
+
+#~ msgid ""
+#~ "This is the list of picking list that have been generated for this invoice"
+#~ msgstr "Ez a kivétek listája, ami ehhez a számlához lett létrehozva"
+
+#~ msgid "Delivery, from the warehouse to the customer."
+#~ msgstr "Szállítás, a raktárból a vevőnek."
+
+#~ msgid ""
+#~ "This Configuration step use to set default picking policy when make sale "
+#~ "order"
+#~ msgstr ""
+#~ "Használja ezt a konfigurációs lépést az alapértelmezett komissiózási "
+#~ "irányelv beállításához, amikor egy megrendelést készít."
+
+#~ msgid "After confirming order, Create the invoice."
+#~ msgstr "A rendelés visszaigazolása után, Számla készítés."
+
+#~ msgid ""
+#~ "Whenever confirm button is clicked, the draft state is moved to manual. that "
+#~ "is, quotation is moved to  sale order."
+#~ msgstr ""
+#~ "Amennyiben rákattint a visszaigazolás gombra, a tervezet állapot kézire "
+#~ "vált. Azaz, az árajánlat megrendeléssé válik."
+
+#~ msgid "Manual Designation"
+#~ msgstr "Kézi kijelölés"
+
+#~ msgid "Invoice after delivery"
+#~ msgstr "Számla szállítás után"
+
+#~ msgid "Origin"
+#~ msgstr "Eredet"
+
+#~ msgid "Outgoing Products"
+#~ msgstr "Kifutó termékek"
+
+#~ msgid "Procurement is created after confirmation of sale order."
+#~ msgstr "A beszerzés a megrendelés visszaigazolása után készül el"
+
+#~ msgid "My sales order in progress"
+#~ msgstr "Megrendelésem folyamatban"
+
+#~ msgid ""
+#~ "The sale order will automatically create the invoice proposition (draft "
+#~ "invoice). Ordered and delivered quantities may not be the same. You have to "
+#~ "choose if you invoice based on ordered or shipped quantities. If the product "
+#~ "is a service, shipped quantities means hours spent on the associated tasks."
+#~ msgstr ""
+#~ "A megrendelés automatikusan létrehozza a számla javaslatot (számla "
+#~ "tervezet). Lehet, hogy a megrendelt és a szállított mennyiség nem egyezik. "
+#~ "Kiválaszthatja, hogy a számla a megrendelt vagy a szállított mennyiség "
+#~ "alapján készüljön. Ha a termék egy szolgáltatás, a szállított mennyiség azt "
+#~ "jelenti, hogy hány órát vesznek igénybe a hozzátartozó feladatok."
+
+#, python-format
+#~ msgid ""
+#~ "You cannot make an advance on a sale order that is defined as 'Automatic "
+#~ "Invoice after delivery'."
+#~ msgstr ""
+#~ "Nem tudja megelőlegezni a megrendelést, ha az 'Automatikus számla szállítás "
+#~ "után'-ként van meghatározva."
+
+#~ msgid "All Sales Order"
+#~ msgstr "Összes megrendelés"
+
+#, python-format
+#~ msgid "You must first cancel all packing attached to this sale order."
+#~ msgstr "Először törölnie kell a rendeléshez hozzáadott összes csomagolást."
+
+#~ msgid "Shipping Address"
+#~ msgstr "Szállítási cím"
+
+#, python-format
+#~ msgid ""
+#~ "You have to select a customer in the sale form !\n"
+#~ "Please set one customer before choosing a product."
+#~ msgstr ""
+#~ "Válasszon ki egy vásárlót az értékesítési űrlapon !\n"
+#~ "Kérem, állítson be egy vásárlót, mielőtt kiválasztana egy terméket."
+
+#~ msgid "Sale Shop"
+#~ msgstr "Értékesítő bolt"
+
+#~ msgid ""
+#~ "Packing list is created when 'Assign' is being clicked after confirming the "
+#~ "sale order. This transaction moves the sale order to packing list."
+#~ msgstr ""
+#~ "A csomagolási lista elkészül, amint a rendelés visszaigazolása után "
+#~ "rákattint az 'Engedélyez'-ésre. Ez a tranzakció átmozgatja a megrendelést a "
+#~ "csomagolási listába."
+
+#~ msgid "My sales order waiting Invoice"
+#~ msgstr "Számlára váró megrendeléseim"
+
+#~ msgid ""
+#~ "When you select Shipping Ploicy = 'Automatic Invoice after delivery' , it "
+#~ "will automatic create after delivery."
+#~ msgstr ""
+#~ "Ha a Szállítási irányelvnél az ='Automatikus számla szállítás után' -t "
+#~ "választotta, az automatikusan elkészül a szállítás után."
+
+#~ msgid "Manual Description"
+#~ msgstr "Kézi leírás"
+
+#, python-format
+#~ msgid "You must first cancel all invoices attached to this sale order."
+#~ msgstr ""
+#~ "Először törölnie kell a vásárlói megrendeléshez csatolt összes számlát."
+
+#~ msgid "Sale Order Procurement"
+#~ msgstr "Rendelési tétel"
+
+#~ msgid "Packing"
+#~ msgstr "Csomagolás"
+
+#~ msgid "Invoice on Order After Delivery"
+#~ msgstr "Számla a rendelésről a szállítás után"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Érvénytelen XML a nézet architektúrában!"
+
+#~ msgid "Related Packing"
+#~ msgstr "Csomagolással kapcsolatos"
+
+#~ msgid "Payment Accounts"
+#~ msgstr "Fizetési"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr ""
+#~ "Hiba: Az értékesítési mennyiségnek eltérő kategóriában kell lennie, mint a "
+#~ "mennyiségi egység"
+
+#~ msgid "Customer Ref"
+#~ msgstr "Vásárló Ref"
+
+#~ msgid "sale.config.picking_policy"
+#~ msgstr "sale.config.picking_policy"
+
+#~ msgid "Sales orders"
+#~ msgstr "Rendelések"
+
+#~ msgid "Procurement"
+#~ msgstr "Beszerzés"
+
+#~ msgid "Payment accounts"
+#~ msgstr "Fizetési"
+
+#~ msgid "Draft Invoice"
+#~ msgstr "Számla tervezet"
+
+#~ msgid "Draft customer invoice, to be reviewed by accountant."
+#~ msgstr "Vásárlói számla tervezet, amit a könyvelő felülvizsgál."
+
+#~ msgid "Sales Order To Be Invoiced"
+#~ msgstr "Vásárlói megrendelés számlázva"
+
+#~ msgid "Procurement for each line"
+#~ msgstr "Minden tétel beszerzése"
+
+#~ msgid "Packing Default Policy"
+#~ msgstr "Csomagolás alapértelmezett  eljárásmódja"
+
+#~ msgid "Manages the delivery and invoicing progress"
+#~ msgstr "A szállítási és számlázási folyamat menedzselése"
+
+#, python-format
+#~ msgid "Could not cancel sale order !"
+#~ msgstr "Nem sikerült törölni a vásárlói megrendelést !"
+
+#~ msgid "Canceled"
+#~ msgstr "Megszakítva"
+
+#~ msgid "Uninvoiced Lines"
+#~ msgstr "Nem számlázott tételek"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Hiba: Az alapértelmezett mennyiségi egységnek és a vásárlás mennyiség "
+#~ "egységének ugyanabba a kategóriába kell lennie."
+
+#~ msgid "My sales in shipping exception"
+#~ msgstr "Megrendelésem folyamatban"
+
+#~ msgid "Sales Configuration"
+#~ msgstr "Értékesítés konfigurálása"
+
+#~ msgid "Procurement Corrected"
+#~ msgstr "Beszerzés javítva"
+
+#~ msgid "Sale Procurement"
+#~ msgstr "Értékesítési beszerzés"
+
+#~ msgid "Configure Sale Order Logistic"
+#~ msgstr "Rendelés ID %s hibás frissítés !"
+
+#~ msgid "Packing Policy"
+#~ msgstr "Csomagolás Politika"
+
+#~ msgid "Our Salesman"
+#~ msgstr "A mi eladónk"
+
+#~ msgid "Create Advance Invoice"
+#~ msgstr "Előzetes számla létrehozása"
+
+#~ msgid "One procurement for each product."
+#~ msgstr "Egy beszerzés minden termékhez."
+
+#~ msgid "Sale Order"
+#~ msgstr "Rendelés"
+
+#~ msgid "Sale Pricelists"
+#~ msgstr "Akciós árlista"
+
+#~ msgid ""
+#~ "Invoice is created when 'Create Invoice' is being clicked after confirming "
+#~ "the sale order. This transaction moves the sale order to invoices."
+#~ msgstr ""
+#~ "A számla elkészül, amikor a vásárlói megrendelés megerősítése után "
+#~ "rákattintanak a 'Számla készítés'-re. Ez a tranzakció átvezeti a "
+#~ "megrendelést a számlákra."
+
+#~ msgid "Make Invoice"
+#~ msgstr "Számla készítés"
+
+#~ msgid "Sales order lines"
+#~ msgstr "Vásárlói megrendelés tételei"
+
+#~ msgid "Other data"
+#~ msgstr "Egyéb adat"
+
+#~ msgid "Number Packages"
+#~ msgstr "Csomagok száma"
+
+#~ msgid ""
+#~ "Confirming the packing list moves them to delivery order. This can be done "
+#~ "by clicking on 'Validate' button."
+#~ msgstr ""
+#~ "A csomagolási lista megerősítése átmozgatja azokat a rendelés szállításához. "
+#~ "Ezt a 'Jóváhagyás' gombra kattintva teheti meg."
+
+#~ msgid "Advance Payment"
+#~ msgstr "Előleg"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Az objektum nevének x_ -sal kell kezdődnie és nem tartalmazhat speciális "
+#~ "karaktereket"
+
+#~ msgid "Confirm sale order and Create invoice."
+#~ msgstr "Rendelés megerősítése és számla készítése."
+
+#~ msgid "Packing List & Delivery Order"
+#~ msgstr "Szállító levél és rendelés szállítása"
+
+#~ msgid "Sale Order Lines"
+#~ msgstr "Rendelési tételek"
+
+#~ msgid "Do you really want to create the invoices ?"
+#~ msgstr "Valóban létrehozza a számlá(ka)t ?"
+
+#~ msgid "Invoice based on packing lists"
+#~ msgstr "Számla a csomagolási lista alapján"
+
+#~ msgid "Set Default"
+#~ msgstr "Beállítás alapértelmezetként."
+
+#~ msgid "Sales order"
+#~ msgstr "Megrendelés"
+
+#~ msgid "Quotation (A sale order in draft state)"
+#~ msgstr "Árajánlat (Egy vásárlói megrendelés tervezet állapotban)"
+
+#~ msgid "Sale Invoice"
+#~ msgstr "Számla sztornó"
+
+#~ msgid "Incoterm"
+#~ msgstr "Nemzetközi Kereskedelmi Feltételek"
+
+#~ msgid "Open Advance Invoice"
+#~ msgstr "Előzetes számla megnyitása"
+
+#~ msgid "Sales Management"
+#~ msgstr "Értékesítési menedzsment"
+
+#~ msgid "Deliver"
+#~ msgstr "Szállítás"
+
+#, python-format
+#~ msgid "Could not cancel this sale order !"
+#~ msgstr "Ez a vásárlói megrendelés nem törölhető !"
+
+#~ msgid "Sale Order Line"
+#~ msgstr "Rendelési tétel"
+
+#~ msgid "Cancel Assignation"
+#~ msgstr "Számla sztornó"
+
+#~ msgid "Invoice from the Packing"
+#~ msgstr "Számla a csomagolási listából"
+
+#~ msgid "Make invoices"
+#~ msgstr "Számlák készítése"
+
+#~ msgid ""
+#~ "The name and address of the contact that requested the order or quotation."
+#~ msgstr ""
+#~ "A kapcsolattartó neve és címe, aki a rendelést vagy az ajánlatot kérte."
+
+#~ msgid "Purchase Pricelists"
+#~ msgstr "Beszerzési árlisták"
+
+#, python-format
+#~ msgid "Cannot delete Sale Order(s) which are already confirmed !"
+#~ msgstr ""
+#~ "Nem törölhető(k) az(ok) a megrendelés(ek), amelyik már vissza lett igazolva !"
+
+#~ msgid "Name"
+#~ msgstr "Név"
+
+#~ msgid "New Quotation"
+#~ msgstr "Új árajánlat"
+
+#~ msgid "Total amount"
+#~ msgstr "Teljes összeg"
+
+#~ msgid "Product UoM"
+#~ msgstr "Termék ME"
+
+#~ msgid ""
+#~ "By default, Open ERP is able to manage complex routing and paths of products "
+#~ "in your warehouse and partner locations. This will configure the most common "
+#~ "and simple methods to deliver products to the customer in one or two "
+#~ "operations by the worker."
+#~ msgstr ""
+#~ "Alapértelmezettként, az Open ERP lehetővé teszi a termékek komplex "
+#~ "szállítmányirányításának és útvonalainak menedzselését az Ön raktáraiba és "
+#~ "partner telephelyeire. Ez kialakítja a leggyakoribb és legegyszerűbb "
+#~ "módszereket, hogy a munkavállaló egy vagy két műveletben szállítása ki a "
+#~ "termékeket a vásárlónak."
+
+#~ msgid "Payment Terms"
+#~ msgstr "Fizetési Feltételek"
+
+#~ msgid "Invoice Corrected"
+#~ msgstr "Számla helyesbítve"
+
+#~ msgid "Delivery Delay"
+#~ msgstr "Szállítási késedelem"
+
+#~ msgid "Related invoices"
+#~ msgstr "Kapcsolódó számlák"
+
+#~ msgid "Payment Before Delivery"
+#~ msgstr "Fizetés szállítás előtt"
+
+#~ msgid ""
+#~ "This is the list of invoices that have been generated for this sale order. "
+#~ "The same sale order may have been invoiced in several times (by line for "
+#~ "example)."
+#~ msgstr ""
+#~ "Az a számlák listája, ami ehhez a vásárlói megrendeléshez lett létrehozva. "
+#~ "Lehet, hogy ugyanaz a megrendelés többször ki lett számlázva (a példa "
+#~ "szerint)."
+
+#~ msgid "States"
+#~ msgstr "Állapotok"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Hiba: Érvénytelen EAN kód"
+
+#~ msgid "Accounting"
+#~ msgstr "Könyvelés"
+
+#~ msgid "My Sales Order"
+#~ msgstr "Megrendeléseim"
+
+#~ msgid "Sale Order line"
+#~ msgstr "Rendelési sor"
+
+#~ msgid "All at Once"
+#~ msgstr "Egyszerre"
+
+#~ msgid "Inventory Moves"
+#~ msgstr "Leltármozgás"
+
+#~ msgid "Dates"
+#~ msgstr "Dátumok"
+
+#~ msgid "Conditions"
+#~ msgstr "Feltételek"
+
+#~ msgid "Notes"
+#~ msgstr "Megjegyzések"
+
+#~ msgid "Lines to Invoice"
+#~ msgstr "Számla sorai"
+
+#~ msgid "All Quotations"
+#~ msgstr "Összes árajánlat"
+
+#~ msgid "  Year  "
+#~ msgstr "  Év  "
+
+#~ msgid "Companies"
+#~ msgstr "Vállalatok"
+
+#~ msgid "References"
+#~ msgstr "Hivatkozások"
+
+#~ msgid "Open Invoice"
+#~ msgstr "Számla megnyitása"
+
+#~ msgid "Related Picking"
+#~ msgstr "Kapcsolódó kiszedések"
+
+#~ msgid "Shipping Policy"
+#~ msgstr "Szállítási szabályok"
+
+#~ msgid "Stock Move"
+#~ msgstr "Készletmozgás"
+
+#~ msgid "Picking List"
+#~ msgstr "Kiszedési lista"
+
+#~ msgid "Picking List & Delivery Order"
+#~ msgstr "Kiszedési lista és Szállítás megrendelése"
+
+#~ msgid "Invoicing"
+#~ msgstr "Számlázás"
+
+#~ msgid "Logistic"
+#~ msgstr "Logisztika"
+
+#~ msgid "   Month   "
+#~ msgstr "   Hónap   "
+
+#, python-format
+#~ msgid "Warning"
+#~ msgstr "Figyelmeztetés"
+
+#~ msgid "Complete Delivery"
+#~ msgstr "Teljes szállítás"
+
+#~ msgid "Image"
+#~ msgstr "Kép"
+
+#~ msgid "Ordered Date"
+#~ msgstr "Megrendelés dátuma"
+
+#~ msgid "Shipped Qty"
+#~ msgstr "Szállított mennyiség"
+
+#~ msgid "Shipping Default Policy"
+#~ msgstr "Alapértelmezett szállítási politika"
+
+#~ msgid "Close"
+#~ msgstr "Zárás"
+
+#~ msgid "State"
+#~ msgstr "Állapot"
+
+#~ msgid "Configure"
+#~ msgstr "Beállítás"
+
+#~ msgid "Order State"
+#~ msgstr "Megrendelés állapota"
+
+#~ msgid "Reference UoM"
+#~ msgstr "Hivatkozási ME"
+
+#~ msgid "sale.installer"
+#~ msgstr "sale.installer"
+
+#~ msgid "res_config_contents"
+#~ msgstr "res_config_contents"
+
+#~ msgid "You invoice has been successfully created!"
+#~ msgstr "A számla sikeresen elkészült!"
+
+#~ msgid "Delivered"
+#~ msgstr "Kiszállított"
+
+#~ msgid "Security Days"
+#~ msgstr "Biztonsági napok"
+
+#~ msgid "Configuration Progress"
+#~ msgstr "Beállítás előrehaladása"
+
+#~ msgid "Confirm Order"
+#~ msgstr "Megrendelés megerősítése"
+
+#~ msgid "Sales by Salesman in last 90 days"
+#~ msgstr "Az értékesítő eladásai az utolsó 90 napban"
+
+#~ msgid "Allows you to compute delivery costs on your quotations."
+#~ msgstr ""
+#~ "Lehetővé teszi a kiszállítási költségek kiszámítását az árajánlataiban."
+
+#~ msgid ""
+#~ "If you don't have enough stock available to deliver all at once, do you "
+#~ "accept partial shipments or not?"
+#~ msgstr ""
+#~ "Ha nincs elegendő áruja raktáron, hogy egyszerre leszállítson mindent, "
+#~ "elfogadja a részleges szállításokat?"
+
+#~ msgid "Shipping address for current sales order."
+#~ msgstr "Szállítási cím a jelenlegi értékesítési megbízáshoz."
+
+#~ msgid "Configure Sales Order Logistics"
+#~ msgstr "Értékesítési megbízás logisztikájának beállítása"
+
+#, python-format
+#~ msgid "The quotation '%s' has been converted to a sales order."
+#~ msgstr "A %s árajánlat értékesítési megbízássá lett alakítva."
+
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "Figyelem!"
+
+#~ msgid "Drives procurement orders for every sales order line."
+#~ msgstr "Beszerzési megbízást generál minden értékesítési megbízási sorhoz."
+
+#~ msgid ""
+#~ "Here is a list of each sales order line to be invoiced. You can invoice "
+#~ "sales orders partially, by lines of sales order. You do not need this list "
+#~ "if you invoice from the delivery orders or if you invoice sales totally."
+#~ msgstr ""
+#~ "Ez egy lista az összes számlázandó értékesítési megbízási sorról. Az "
+#~ "értékesítési megbízásokat részben is lehet számlázni, a megbízási sorok "
+#~ "alapján. Nem szükséges ez a lista, ha a kiszállítási megbízásból számláz, "
+#~ "vagy ha egyben számlázza a teljes értékesítést."
+
+#~ msgid "Procurement Order"
+#~ msgstr "Beszerzési megbízás"
+
+#~ msgid "Order Line"
+#~ msgstr "Rendelési sor"
+
+#~ msgid ""
+#~ "Sales Orders help you manage quotations and orders from your customers. "
+#~ "OpenERP suggests that you start by creating a quotation. Once it is "
+#~ "confirmed, the quotation will be converted into a Sales Order. OpenERP can "
+#~ "handle several types of products so that a sales order may trigger tasks, "
+#~ "delivery orders, manufacturing orders, purchases and so on. Based on the "
+#~ "configuration of the sales order, a draft invoice will be generated so that "
+#~ "you just have to confirm it when you want to bill your customer."
+#~ msgstr ""
+#~ "Az értékesítési megbízások segítik Önt az árajánlatok és az "
+#~ "ügyfélmegrendelések kezelésében. Azt javasoljuk, hogy kezdje a folyamatot az "
+#~ "árajánlat elkészítésével az OpenERP-ben. Ha az árajánlatot megerősítette, "
+#~ "abból létrejön egy értékesítési megbízás. Az OpenERP több terméktípust is "
+#~ "tud kezelni, úgy, hogy egy értékesítési megbízás feladatokat, kiszállítási "
+#~ "megbízásokat, gyártási rendeléseket, szállítói megrendeléseket stb. indít "
+#~ "el. Az értékesítési megbízás beállítása alapján automatikusan "
+#~ "számlapiszkozatot hoz létre, amelyet Önnek csak jóvá kell hagynia, amikor "
+#~ "számlát készít az ügyfele részére."
+
+#~ msgid ""
+#~ "The sale order will automatically create the invoice proposition (draft "
+#~ "invoice). Ordered and delivered quantities may not be the same. You have to "
+#~ "choose if you want your invoice based on ordered or shipped quantities. If "
+#~ "the product is a service, shipped quantities means hours spent on the "
+#~ "associated tasks."
+#~ msgstr ""
+#~ "AZ értékesítési megbízás automatikusan létrehozza a számlapiszkozatot. "
+#~ "Elképzelhető, hogy a megrendelési és a kiszállítási mennyiség nem ugyanaz. "
+#~ "Ilyenkor ki kell választania, hogy a számlát a megrendelési vagy a "
+#~ "kiszállítási mennyiség alapján készíti-e el. Ha a termék egy szolgáltatás, "
+#~ "akkor a kiszállítási mennyiség alatt azokat a munkaórákat kell érteni, "
+#~ "amelyeket a kapcsolódó feladatok ellátásával töltöttünk el."
+
+#~ msgid "Configure Picking Policy for Sales Order"
+#~ msgstr "Kiszedési szabály beállítása értékesítési megbízáshoz"
+
+#~ msgid "Force Assignation"
+#~ msgstr "Hozzárendelés eröltetése"
+
+#~ msgid "Sales by Salesman"
+#~ msgstr "Az értékesítő eladásai"
+
+#~ msgid ""
+#~ "The invoice is created automatically if the shipping policy is 'Invoice from "
+#~ "pick' or 'Invoice on order after delivery'."
+#~ msgstr ""
+#~ "A számla automatikusan létrejön, ha a kiszállítási szabály: számlázás "
+#~ "kiszedésből vagy számlázás kiszállítás után."
+
+#~ msgid "Recreate Packing"
+#~ msgstr "Csomagolás újrakészítése"
+
+#~ msgid ""
+#~ "This is the days added to what you promise to customers for security purpose"
+#~ msgstr "A vevőknek ígért, biztonsági okokból hozzáadott napok száma."
+
+#~ msgid "Sales Manager Dashboard"
+#~ msgstr "Értékesítői vezérlőpult"
+
+#~ msgid "Set to Draft"
+#~ msgstr "Tervezet beállítása"
+
+#~ msgid ""
+#~ "The Shipping Policy is used to synchronise invoice and delivery operations.\n"
+#~ "  - The 'Pay Before delivery' choice will first generate the invoice and "
+#~ "then generate the picking order after the payment of this invoice.\n"
+#~ "  - The 'Shipping & Manual Invoice' will create the picking order directly "
+#~ "and wait for the user to manually click on the 'Invoice' button to generate "
+#~ "the draft invoice.\n"
+#~ "  - The 'Invoice On Order After Delivery' choice will generate the draft "
+#~ "invoice based on sales order after all picking lists have been finished.\n"
+#~ "  - The 'Invoice From The Picking' choice is used to create an invoice "
+#~ "during the picking process."
+#~ msgstr ""
+#~ "A kiszállítási szabályok arra szolgálnak, hogy összhangba hozzák a "
+#~ "számlázást és a kiszállításokat.\n"
+#~ "  - A \"Fizetés szállítás előtt\"  parancs először létrehozza a számlát, "
+#~ "majd a számla kifizetését követően létrehozza a kapcsolódó kiszedési "
+#~ "megbízást. \n"
+#~ "  - A \"Szállítás és kézi számlázás\" parancs választása esetén a rendszer "
+#~ "automatikusan létrehozza a kiszedési megbízást, majd vár a felhasználóra, "
+#~ "hogy az manuálisan rákattintson a \"Számlázás\" gombra a számlapiszkozat "
+#~ "létrehozásához.\n"
+#~ "  - A \"Számlázás szállítás után\" parancs az értékesítési megbízás alapján "
+#~ "hozza létre a számlapiszkozatot, miután a kiszedési megbízások lezárásra "
+#~ "kerültek. \n"
+#~ "  - A \"Számlázás kiszedés alapján\" parancs a számlát a kiszedési eljárás "
+#~ "alatt készíti el."
+
+#, python-format
+#~ msgid ""
+#~ "There is no income category account defined in default Properties for "
+#~ "Product Category or Fiscal Position is not defined !"
+#~ msgstr ""
+#~ "Nem határozott meg bevételi számlát a termékkategória alapértelmezett "
+#~ "tulajdonságai között vagy az ÁFA pozíció nincs meghatározva!"
+
+#~ msgid "You try to assign a lot which is not from the same product"
+#~ msgstr "Termékeket próbál hozzárendelni a nem azonos termékből"
+
+#, python-format
+#~ msgid "invalid mode for test_state"
+#~ msgstr "érvénytelen mód a tesztállapotban"
+
+#, python-format
+#~ msgid "Could not cancel this sales order !"
+#~ msgstr "Nem lehet visszavonni ezt az értékesítési megbízást!"
+
+#~ msgid "Delivery Order Only"
+#~ msgstr "Csak kiszállítási megbízás"
+
+#~ msgid ""
+#~ "Number of days between the order confirmation the shipping of the products "
+#~ "to the customer"
+#~ msgstr ""
+#~ "A megrendelés megerősítése és a termékek vevőnek történő kiszállítása között "
+#~ "eltelt napok száma."
+
+#, python-format
+#~ msgid "You must first cancel stock moves attached to this sales order line."
+#~ msgstr ""
+#~ "Először érvénytelenítenie kell az ehhez az értékesítési megbízási sorhoz "
+#~ "tartozó készletmozgásokat."
+
+#, python-format
+#~ msgid "(n/a)"
+#~ msgstr "(nem alkalmazható)"
+
+#~ msgid ""
+#~ "Select a product of type service which is called 'Advance Product'. You may "
+#~ "have to create it and set it as a default value on this field."
+#~ msgstr ""
+#~ "Válasszon egy szolgáltatási típusú terméket, amelyet \"Előlegterméknek\" "
+#~ "nevezünk. Létrehozhatja és beállíthatja alapértelmezett értékként ebben a "
+#~ "mezőben."
+
+#, python-format
+#~ msgid ""
+#~ "You cannot make an advance on a sales order                              "
+#~ "that is defined as 'Automatic Invoice after delivery'."
+#~ msgstr ""
+#~ "Nem haladhat tovább egy olyan értékesítési megbízással, amelyre a következő "
+#~ "parancsot adta meg: \"Automatikus számlázás kiszállítás után\"."
+
+#~ msgid "Enhance your core Sales Application with additional functionalities."
+#~ msgstr "Egészítse ki az alap értékesítési alkalmazását további funkciókkal."
+
+#~ msgid "Delivery Order"
+#~ msgstr "Kiszállítási megbízás"
+
+#~ msgid "Order Reference must be unique !"
+#~ msgstr "A megbízási referenciának egyedinek kell lennie!"
+
+#~ msgid ""
+#~ "For every sales order line, a procurement order is created to supply the "
+#~ "sold product."
+#~ msgstr ""
+#~ "Minden értékesítési megbízási sorhoz létrejön egy beszerzési megbízás is az "
+#~ "eladott termék előteremtésére."
+
+#~ msgid ""
+#~ "Incoterm which stands for 'International Commercial terms' implies its a "
+#~ "series of sales terms which are used in the commercial transaction."
+#~ msgstr ""
+#~ "Az INCOTERMS, amely azt jelenti, hogy \"Nemzetközi Kereskedelmi "
+#~ "Feltételek\", a nemzetközi kereskedelmi tranzakciókban használatos "
+#~ "szakkifejezéseket tartalmazza."
+
+#~ msgid "Sales Open Invoice"
+#~ msgstr "Értékesítési gyűjtő számla"
+
+#~ msgid "Setup your sales workflow and default values."
+#~ msgstr ""
+#~ "Állítsa be az értékesítési munkafolyamatát és az alapértelmezett értékeket."
+
+#~ msgid "Untaxed amount"
+#~ msgstr "Nettó összeg"
+
+#, python-format
+#~ msgid "Invalid action !"
+#~ msgstr "Érvénytelen művelet!"
+
+#~ msgid "Invoice On Order After Delivery"
+#~ msgstr "Számlázás kiszállítás után"
+
+#~ msgid "Do you really want to create the invoice(s) ?"
+#~ msgstr "Biztosan létre akarja hozni a számlá(ka)t?"
+
+#~ msgid "Sales By Month"
+#~ msgstr "Havi eladások"
+
+#, python-format
+#~ msgid "Could not cancel sales order line!"
+#~ msgstr "Nem lehet visszavonni az értékesítési megbízási sort!"
+
+#~ msgid "Procurement of sold material"
+#~ msgstr "Az eladott anyagok beszerzése"
+
+#~ msgid "Create Final Invoice"
+#~ msgstr "Számla létrehozása"
+
+#~ msgid ""
+#~ "It indicates that the sales order has been delivered. This field is updated "
+#~ "only after the scheduler(s) have been launched."
+#~ msgstr ""
+#~ "Jelzi, hogy az értékesítési megbízás kiszállításra került. Ez a mező csak "
+#~ "akkor frissül, ha az ütemező(k) elindult(ak)."
+
+#~ msgid ""
+#~ "\n"
+#~ "    The base module to manage quotations and sales orders.\n"
+#~ "\n"
+#~ "    * Workflow with validation steps:\n"
+#~ "        - Quotation -> Sales order -> Invoice\n"
+#~ "    * Invoicing methods:\n"
+#~ "        - Invoice on order (before or after shipping)\n"
+#~ "        - Invoice on delivery\n"
+#~ "        - Invoice on timesheets\n"
+#~ "        - Advance invoice\n"
+#~ "    * Partners preferences (shipping, invoicing, incoterm, ...)\n"
+#~ "    * Products stocks and prices\n"
+#~ "    * Delivery methods:\n"
+#~ "        - all at once, multi-parcel\n"
+#~ "        - delivery costs\n"
+#~ "    * Dashboard for salesman that includes:\n"
+#~ "    * Your open quotations\n"
+#~ "    * Top 10 sales of the month\n"
+#~ "    * Cases statistics\n"
+#~ "    * Graph of sales by product\n"
+#~ "    * Graph of cases of the month\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Az árajánlatok és értékesítési megbízások kezeléséhez használt alapvető "
+#~ "modul. \n"
+#~ "\n"
+#~ "    * Munkafolyamat ellenőrző lépésekkel: \n"
+#~ "       - Árajánlat -> Értékesítési megbízás -> Számla \n"
+#~ "    * Számlázási módok: \n"
+#~ "       - Számlázás a megrendelés alapján (szállítás előtt vagy után) \n"
+#~ "       - Számlázás a kiszállítás alapján\n"
+#~ "       - Számlázás munkaidő alapján\n"
+#~ "       - Előlegszámla\n"
+#~ "    * Partnerek beállításai (szállítás, számlázás, Incoterms, ...) \n"
+#~ "    * Termékkészletek és árak \n"
+#~ "    * Szállítási módok: \n"
+#~ "       - egyszerre, több csomagban \n"
+#~ "       - szállítási költségek\n"
+#~ "    * Értékesítői vezérlőpult, mely tartalmazza az alábbiakat: \n"
+#~ "       - az Ön nyitott árajánlatait\n"
+#~ "       - a hónap top 10 értékesítését\n"
+#~ "       - eset statisztikákat\n"
+#~ "       - termékek szerinti diagrammot az értékesítésekről\n"
+#~ "       - havi esetek grafikonját\n"
+#~ "    "
+
+#~ msgid "History"
+#~ msgstr "Előzmények"
+
+#~ msgid "Picking Default Policy"
+#~ msgstr "Alapértelmezett kiszedési szabály"
+
+#~ msgid ""
+#~ "The name and address of the contact who requested the order or quotation."
+#~ msgstr "A megrendelést vagy árajánlatot igénylő kapcsolat neve és címe."
+
+#, python-format
+#~ msgid "You cannot cancel a sales order line that has already been invoiced !"
+#~ msgstr ""
+#~ "Nem vonhat vissza olyan értékesítési megbízási sort, amely már számlázásra "
+#~ "került!"
+
+#~ msgid "Sales Order Dates"
+#~ msgstr "Értékesítési megbízás dátumai"
+
+#~ msgid "Margins in Sales Orders"
+#~ msgstr "Értékesítési megbízás árrései"
+
+#~ msgid "Total Tax Excluded"
+#~ msgstr "Végösszeg adók nélkül"
+
+#~ msgid "Sales by Partner"
+#~ msgstr "Partnerenkénti eladások"
+
+#~ msgid "Ordering Contact"
+#~ msgstr "Megrendelési kapcsolattartó"
+
+#~ msgid "Sales Application Configuration"
+#~ msgstr "Értékesítési alkalmazás beállítása"
+
+#~ msgid "Based on the shipped or on the ordered quantities."
+#~ msgstr "A kiszálított vagy a megrendelt mennyiség alapján."
+
+#~ msgid "Sales per Customer in last 90 days"
+#~ msgstr "Vevőnkénti eladások az utolsó 90 napban"
+
+#~ msgid "Create Delivery Order"
+#~ msgstr "Kiszállítási megbízás létrehozása"
+
+#~ msgid "Delivery Costs"
+#~ msgstr "Kiszállítási költségek"
+
+#~ msgid "Create Pick List"
+#~ msgstr "Kiszedési lista létrehozása"
+
+#~ msgid "Sales by Product Category"
+#~ msgstr "Termékkategóriánkénti eladások"
+
+#~ msgid "Deliveries to Invoice"
+#~ msgstr "Számlázandó kiszállítások"
+
+#~ msgid "title"
+#~ msgstr "megszólítás"
+
+#~ msgid "Pick List"
+#~ msgstr "Kiszedési lista"
+
+#~ msgid "Order date"
+#~ msgstr "Megrendelési dátum"
+
+#~ msgid "Document of the move to the output or to the customer."
+#~ msgstr "Dokumentum a gyártásnak vagy a vevőnek irányuló árumozgásról."
+
+#~ msgid "Validate"
+#~ msgstr "Érvényesítés"
+
+#~ msgid "Create Procurement Order"
+#~ msgstr "Beszerzési megbízás létrehozása"
+
+#~ msgid "Invoice Based on Sales Orders"
+#~ msgstr "Számla az értékesítési megbízás alapján"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Hiba!"
+
+#, python-format
+#~ msgid "Could not cancel sales order !"
+#~ msgstr "Nem lehet visszavonni az értékesítési megbízást!"
+
+#~ msgid "Shipping & Manual Invoice"
+#~ msgstr "Szállítás és kézi számlázás"
+
+#, python-format
+#~ msgid "Picking Information !"
+#~ msgstr "Kiszedési információ!"
+
+#~ msgid "Invoice From The Picking"
+#~ msgstr "Számlázás kiszedés alapján"
+
+#~ msgid ""
+#~ "By default, OpenERP is able to manage complex routing and paths of products "
+#~ "in your warehouse and partner locations. This will configure the most common "
+#~ "and simple methods to deliver products to the customer in one or two "
+#~ "operations by the worker."
+#~ msgstr ""
+#~ "Alapvetően az OpenERP képes a komplex útvonalak és a termékek raktárban "
+#~ "elfoglalt helyének, valamint a partnerek helyének menedzsélésére. Beállítjuk "
+#~ "a leggyakoribb és legegyszerűbb módokat a termékek kiszállítására a vevőnek, "
+#~ "amely csak egy vagy két műveletet igényel a dolgozótól."
+
+#~ msgid ""
+#~ "You can generate invoices based on sales orders or based on shippings."
+#~ msgstr ""
+#~ "Létrehozhat számlát értékesítési megbízások vagy kiszállítások alapján."
+
+#, python-format
+#~ msgid ""
+#~ "You have to select a customer in the sales form !\n"
+#~ "Please set one customer before choosing a product."
+#~ msgstr ""
+#~ "Válasszon ki egy vevőt az értékesítési űrlapon !\n"
+#~ "Kérem válasszon ki egy vevőt, mielőtt terméket választ."
+
+#~ msgid "Picking Policy"
+#~ msgstr "Kiválasztási szabály"
+
+#~ msgid "Document of the move to the customer."
+#~ msgstr "Dokumentum a vevőnek történő mozgásról."
+
+#, python-format
+#~ msgid "You must first cancel all picking attached to this sales order."
+#~ msgstr ""
+#~ "Először vissza kell vonnia minden ehhez az értékesítési megbízáshoz csatolt "
+#~ "kiválasztást."
+
+#~ msgid ""
+#~ "Gives the state of the quotation or sales order. \n"
+#~ "The exception state is automatically set when a cancel operation occurs in "
+#~ "the invoice validation (Invoice Exception) or in the picking list process "
+#~ "(Shipping Exception). \n"
+#~ "The 'Waiting Schedule' state is set when the invoice is confirmed but "
+#~ "waiting for the scheduler to run on the date 'Ordered Date'."
+#~ msgstr ""
+#~ "Megadja az árajánlát vagy értékesítési megbízás állapotát. \n"
+#~ "A hiba állapot automatikusan beállításra kerül, ha egy visszavonási művelet "
+#~ "történik a számla jóváhagyásánál (Számla hiba) vagy a kiválasztási lista "
+#~ "folyamatában (Szállítási hiba). \n"
+#~ "Az \"Ütemezésre vár\" állapot kerül beállításra, ha a számla elfogadásra "
+#~ "került, de vár az ütemezőre, hogy lefusson a \"Rendelés dátuma\" dátumon."
+
+#, python-format
+#~ msgid "There is no income account defined for this product: \"%s\" (id:%d)"
+#~ msgstr "Nem határozott meg bevételi számlát erre a termékre: %s (id:%d)"
+
+#, python-format
+#~ msgid ""
+#~ "You plan to sell %.2f %s but you only have %.2f %s available !\n"
+#~ "The real stock is %.2f %s. (without reservations)"
+#~ msgstr ""
+#~ "El szertné adni a következő mennyiséget: %.2f %s, de csak a következő "
+#~ "mennyiség érhető el a raktáron: %.2f %s!\n"
+#~ "A valós készlet: %.2f %s. (foglalások nélkül)"
+
+#, python-format
+#~ msgid "There is no sales journal defined for this company: \"%s\" (id:%d)"
+#~ msgstr ""
+#~ "Nem határozott meg értékesítési naplót a következő vállalat számára: \"%s\" "
+#~ "(id:%d)"
+
+#~ msgid ""
+#~ "Depending on the configuration of the location Output, the move between the "
+#~ "output area and the customer is done through the Delivery Order manually or "
+#~ "automatically."
+#~ msgstr ""
+#~ "A kiadási hely beállításától függően a kiadási terület és a vevő telephelye "
+#~ "közötti árumozgás manuális vagy automatikus kiszállítási megbízással "
+#~ "kezelhető."
+
+#, python-format
+#~ msgid "Cannot delete a sales order line which is %s !"
+#~ msgstr "Nem törölheti a következő értékesítési megbízási sort: %s !"
+
+#~ msgid ""
+#~ "This is a list of picking that has been generated for this sales order."
+#~ msgstr "Ez egy kiszedési lista ehhez az értékesítési megbízáshoz."
+
+#~ msgid ""
+#~ "Gives the margin of profitability by calculating the difference between Unit "
+#~ "Price and Cost Price."
+#~ msgstr ""
+#~ "Megadja a nyereségi árrést az egységár és a bekerülési ár közötti különbség "
+#~ "kiszámításával."
+
+#~ msgid "Sales by Month"
+#~ msgstr "Havi eladások"
+
+#, python-format
+#~ msgid ""
+#~ "You selected a quantity of %d Units.\n"
+#~ "But it's not compatible with the selected packaging.\n"
+#~ "Here is a proposition of quantities according to the packaging:\n"
+#~ "\n"
+#~ "EAN: %s Quantity: %s Type of ul: %s"
+#~ msgstr ""
+#~ "A következő mennyiségét (egység) választotta ki: %d.\n"
+#~ "Azonban ez nem kompatibilis a kiválasztott csomagolással.\n"
+#~ "Alább talál egy javaslatot a mennyiségre a csomagolásnak megfelelően:\n"
+#~ "\n"
+#~ "Vonalkód: %s Mennyiség: %s Típus: %s"
+
+#~ msgid ""
+#~ "The Pick List form is created as soon as the sales order is confirmed, in "
+#~ "the same time as the procurement order. It represents the assignment of "
+#~ "parts to the sales order. There is 1 pick list by sales order line which "
+#~ "evolves with the availability of parts."
+#~ msgstr ""
+#~ "The Pick List form is created as soon as the sales order is confirmed, in "
+#~ "the same time as the procurement order. It represents the assignment of "
+#~ "parts to the sales order. There is 1 pick list by sales order line which "
+#~ "evolves with the availability of parts."
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "Hiba! Nem hozhat létre rekurzív vállalatokat."
+
+#~ msgid "Sales by Product's Category in last 90 days"
+#~ msgstr "Sales by Product's Category in last 90 days"
+
+#~ msgid "Delivery Lead Time"
+#~ msgstr "Kiszállítás átfutási idő"
+
+#~ msgid "Configuration"
+#~ msgstr "Beállítás"
+
+#~ msgid "    Month-1    "
+#~ msgstr "    Hónap - 1    "
+
+#~ msgid ""
+#~ "The Shipping Policy is used to configure per order if you want to deliver as "
+#~ "soon as possible when one product is available or you wait that all products "
+#~ "are available.."
+#~ msgstr ""
+#~ "A szállítási szabály arra szolgál, hogy megrendelésenként beállítsuk, hogy "
+#~ "azonnal szeretnénk-e szállítani, amint egy termék elkészül, vagy megvárjuk, "
+#~ "amíg az összes termék elkészül."
+
+#~ msgid ""
+#~ "A procurement order is automatically created as soon as a sales order is "
+#~ "confirmed or as the invoice is paid. It drives the purchasing and the "
+#~ "production of products regarding to the rules and to the sales order's "
+#~ "parameters. "
+#~ msgstr ""
+#~ "A rendszer automatikusan egy beszerzési megbízást hoz létre, amint "
+#~ "megerősítettük az értékesítési megbízást, vagy a számlát kifizették. A "
+#~ "rendszer az értékesítési megbízásokon keresztül irányítja a szállítói "
+#~ "megrendeléseket és a termékek gyártását is a beállított szabályoknak és az "
+#~ "értékesítési megbízás paramétereinek megfelelően. "
+
+#, python-format
+#~ msgid "The sales order '%s' has been cancelled."
+#~ msgstr "A következő értékesítési megbízás visszavonásra került: %s"
+
+#~ msgid ""
+#~ "* The 'Draft' state is set when the related sales order in draft state.      "
+#~ "               \n"
+#~ "* The 'Confirmed' state is set when the related sales order is confirmed.    "
+#~ "                 \n"
+#~ "* The 'Exception' state is set when the related sales order is set as "
+#~ "exception.                     \n"
+#~ "* The 'Done' state is set when the sales order line has been picked.         "
+#~ "            \n"
+#~ "* The 'Cancelled' state is set when a user cancel the sales order related."
+#~ msgstr ""
+#~ "* A rendszer a \"Tervezet\" állapotot állítja be, amikor a kapcsolódó "
+#~ "értékesítési megbízás tervezet állapotban van.                     \n"
+#~ "* A rendszer a \"Megerősítve\" állapotot állítja be, amikor a kapcsolódó "
+#~ "értékesítési megbízás megerősítésre került.                      \n"
+#~ "* A rendszer a \"Hiba\" állapotot állítja be, amikor a kapcsolódó "
+#~ "értékesítési megbízásban hiba van.                     \n"
+#~ "* A rendszer a \"Kész\" állapotot állítja be, amikor az értékesítési "
+#~ "megbízási sor eltűnt.                     \n"
+#~ "* A rendszer a \"Visszavonva\" állapotot állítja be, amikor a kapcsolódó "
+#~ "értékesítési megbízást a felhasználó visszavonja."
+
+#~ msgid "Packings"
+#~ msgstr "Csomagolások"
+
+#~ msgid "Product sales"
+#~ msgstr "Termékértékesítés"
+
+#~ msgid "Direct Delivery"
+#~ msgstr "Közvetlen kiszállítás"
+
+#~ msgid "Invoicing journals"
+#~ msgstr "Számlanapló"
+
+#, python-format
+#~ msgid "You must first cancel all invoices attached to this sales order."
+#~ msgstr ""
+#~ "Először sztornózza az összes számlát, amely ehhez az értékesítési "
+#~ "megbízáshoz kapcsolódik."
+
+#~ msgid "Configure Your Sales Management Application"
+#~ msgstr "Állítsa be az értékesítési menedzsment alkalmazását!"
+
+#~ msgid "Sales Order Layout Improvement"
+#~ msgstr "Értékesítési megbízás elrendezésének fejlesztése"
+
+#~ msgid ""
+#~ "One Procurement order for each sales order line and for each of the "
+#~ "components."
+#~ msgstr ""
+#~ "Egy beszerzési megbízás minden egyes értékesítési megbízási sorhoz és minden "
+#~ "egyes alkotóelemhez."
+
+#~ msgid "Assign"
+#~ msgstr "Hozzárendelés"
+
+#, python-format
+#~ msgid "Cannot delete Sales Order(s) which are already confirmed !"
+#~ msgstr ""
+#~ "Nem törölhet olyan értékesítési megbízás(ok)at, amelyeket már megerősített!"
+
+#, python-format
+#~ msgid "The sales order '%s' has been set in draft state."
+#~ msgstr ""
+#~ "A rendszer a következő értékesítési megbízást tervezet állapotba állított: %s"
+
+#, python-format
+#~ msgid "Not enough stock !"
+#~ msgstr "Nincs elég készlet!"
+
+#~ msgid "You must assign a production lot for this product"
+#~ msgstr "Rendeljen hozzá egy gyártási tételt ehhez a termékhez!"
+
+#~ msgid ""
+#~ "If you have more than one shop reselling your company products, you can "
+#~ "create and manage that from here. Whenever you will record a new quotation "
+#~ "or sales order, it has to be linked to a shop. The shop also defines the "
+#~ "warehouse from which the products will be delivered for each particular "
+#~ "sales."
+#~ msgstr ""
+#~ "Ha egynél több üzletben árulja a vállalata termékeit, akkor azokat az "
+#~ "üzleteket itt kezelheti. Amikor egy új árajánlatot vagy értékesítési "
+#~ "megbízást vesz fel, azt kapcsolnia kell az üzlethez. Az üzlethez kapcsolnia "
+#~ "kell egy raktárat is, ahonnan minden egyes üzletben történő értékesítés "
+#~ "esetén kiszállítják a termékeket."
+
+#~ msgid "Adds commitment, requested and effective dates on Sales Orders."
+#~ msgstr ""
+#~ "Ez a funkció árajánlati kötöttséget, igényelt és tényleges dátumokat ad "
+#~ "hozzá az értékesítési megbízásokhoz."
+
+#~ msgid ""
+#~ "Allows you to group and invoice your delivery orders according to different "
+#~ "invoicing types: daily, weekly, etc."
+#~ msgstr ""
+#~ "Lehetővé teszi, hogy a kiszállítási megbízásait csoportosítsa és kiszámlázza "
+#~ "a különböző számlázási szokásoknak megfelelően: napi, heti, havi stb."
+
+#~ msgid "Steps To Deliver a Sales Order"
+#~ msgstr "Lépések az értékesítési megbízás kiszállításához"
+
+#~ msgid "Sales Order Requisition"
+#~ msgstr "Értékesítési megbízás igénylés"
+
+#~ msgid ""
+#~ "Provides some features to improve the layout of the Sales Order reports."
+#~ msgstr ""
+#~ "Biztosít néhány funkciót, amelyek fejlesztik értékesítési megbízási riportok "
+#~ "elrendezését."
+
+#~ msgid "Invoice Based on Deliveries"
+#~ msgstr "Számlák kiszállítások alapján"
+
+#~ msgid "Print Order"
+#~ msgstr "Megrendelés nyomtatása"
+
+#~ msgid "Contract/Analytic Account"
+#~ msgstr "Szerződés/analitikus számla"
+
+#~ msgid "Qty(UoS)"
+#~ msgstr "Menny(EE)"
+
+#~ msgid "Qty(UoM)"
+#~ msgstr "Menny(ME)"
+
+#~ msgid "Invoice Policy"
+#~ msgstr "Számlázási szabály"
