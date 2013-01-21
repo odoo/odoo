@@ -300,6 +300,7 @@ class Session(object):
          - ``session.model(name)`` returns the given model with session data.
     """
     def __init__(self, registry, cr, uid, context):
+        assert cr.dbname == registry.db_name
         self.registry = registry
         self.cr = cr
         self.uid = uid
