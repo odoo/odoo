@@ -148,9 +148,7 @@ class TestAPI(common.TransactionCase):
 
         # access another model from partners.session
         users_model = partners.session.model('res.users')
-        self.assertEqual(users_model.session.cr, self.cr)
-        self.assertEqual(users_model.session.uid, self.uid)
-        self.assertFalse(users_model.session.context)
+        self.assertEqual(users_model.session, partners.session)
 
         # call query from a session-aware model
         users = users_model.query([])
@@ -163,6 +161,7 @@ class TestAPI(common.TransactionCase):
 
         # make another query as user
         session2 = partners.session.copy(user=user2)
+        self.assertNotEqual(session2, partners.session)
         partners2 = session2.model('res.partner').query(domain)
         self.assertTrue(partners2.is_recordset())
         self.assertEqual(partners2.session.user, user2)

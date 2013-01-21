@@ -305,6 +305,13 @@ class Session(object):
         self.uid = uid
         self.context = context
 
+    def __eq__(self, other):
+        return all(getattr(self, attr) == getattr(other, attr)
+                   for attr in ('registry', 'cr', 'uid', 'context'))
+
+    def __ne__(self, other):
+        return not self == other
+
     def copy(self, cr=None, uid=None, user=None, context=None):
         """ copy the session object, possibly modifying some of its data """
         cr = cr if cr is not None else self.cr
