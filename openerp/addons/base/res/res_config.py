@@ -20,12 +20,13 @@
 ##############################################################################
 import logging
 from operator import attrgetter
+import re
 
 from openerp import pooler, SUPERUSER_ID
 from openerp.osv import osv, fields
 from openerp.tools import ustr
 from openerp.tools.translate import _
-from openerp.addons.base.ir.ir_ui_menu import MENU_ITEM_SEPARATOR
+from openerp import exceptions
 
 _logger = logging.getLogger(__name__)
 
@@ -594,26 +595,41 @@ class res_config_settings(osv.osv_memory):
         Return a string representing the path to access a specific
         configuration option through the interface.
 
-        :return tuple t: t[0] contains the full path, t[1] contains
+        :return dict d: d['path'] contains the full path, d['name'] contains
         the "human readable" configuration option name
         """
 
+        res = {'path': None, 'name': None}
+
         # Fetch the path to the config option
-        module_name, menu_xml_id = menu_xml_id.split('.')
-        dummy, menu_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, module_name, menu_xml_id)
-        ir_ui_menu = self.pool.get('ir.ui.menu').browse(cr, uid, menu_id, context=context)
-        res_path = ir_ui_menu.complete_name
+        if (menu_xml_id):
+            module_name, menu_xml_id = menu_xml_id.split('.')
+            dummy, menu_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, module_name, menu_xml_id)
+            ir_ui_menu = self.pool.get('ir.ui.menu').browse(cr, uid, menu_id, context=context)
+            res['path'] = ir_ui_menu.complete_name
 
         # Fetch the exact config option name
-        model_name, field_name = full_field_name.rsplit('.', 1)
-        res_name = self.pool.get(model_name)._all_columns.get(field_name).column.string
+        if (full_field_name):
+            model_name, field_name = full_field_name.rsplit('.', 1)
+            res['name'] = self.pool.get(model_name)._all_columns.get(field_name).column.string
 
-        return (res_path, res_name)
+        return res
 
-def get_config_path(cr, menu_xml_id=None, field_name=None, context=None):
-    """
-    Simple helper for res_config_settings.get_path().
-    """
-    return pooler.get_pool(cr.dbname).get('res.config.settings').get_path(cr, SUPERUSER_ID, menu_xml_id, field_name, context)
+def get_warning_config(cr, msg, context=None):
+    res_config_obj = pooler.get_pool(cr.dbname).get('res.config.settings')
+
+    def sub_path(g):
+        s = g.group(1)
+        return res_config_obj.get_path(cr, SUPERUSER_ID, menu_xml_id=s, full_field_name=None, context=context)['path']
+
+    def sub_field(g):
+        s = g.group(1)
+        return res_config_obj.get_path(cr, SUPERUSER_ID, menu_xml_id=None, full_field_name=s, context=context)['name']
+
+    # Treat the msg: find the menu_xml_id and the field_name
+    msg = re.sub(r'\[path:([a-z_\.]*)\]', sub_path, msg)
+    msg = re.sub(r'\[field:([a-z_\.]*)\]', sub_field, msg)
+
+    return exceptions.WarningConfig(msg)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
