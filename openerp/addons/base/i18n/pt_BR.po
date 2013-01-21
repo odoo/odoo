@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: openobject-server\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-01-12 21:17+0000\n"
-"Last-Translator: Projetaty Soluções OpenSource <Unknown>\n"
+"PO-Revision-Date: 2013-01-20 02:21+0000\n"
+"Last-Translator: Fábio Martinelli - http://zupy.com.br "
+"<webmaster@guaru.net>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-13 05:27+0000\n"
-"X-Generator: Launchpad (build 16420)\n"
+"X-Launchpad-Export-Date: 2013-01-21 05:27+0000\n"
+"X-Generator: Launchpad (build 16430)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_check_writing
@@ -1443,6 +1444,51 @@ msgid ""
 "come with any additional paid permission for online use of 'private "
 "modules'.\n"
 msgstr ""
+"\n"
+"Módulo Base para a Localização Brasileira\n"
+"==========================================\n"
+"\n"
+"Este módulo consiste de:\n"
+"\n"
+" - Plano de Contas Genérico Brasileiro\n"
+" - Impostos Brasileiros como:\n"
+"\n"
+"        - IPI\n"
+"        - ICMS\n"
+"        - PIS\n"
+"        - COFINS\n"
+"        - ISS\n"
+"        - IR\n"
+"        - IRPJ\n"
+"        - CSLL\n"
+"\n"
+"O campo tax_discount também foi adicionado no account.tax.template e\n"
+"account.tax objects para permitir o cálculo correto de alguns impostos "
+"Brasileiros \n"
+"como o ICMS. O assistente de criação do plano de contas foi extentido para \n"
+"propagarr estes novos dados corretamente.\n"
+"\n"
+"É importante observar entretanto que ainda faltam neste módulo muitas "
+"implementações\n"
+"para usar o OpenERP adequadamente no Brasil. Estas implementações (como a NF-"
+"e Nota Fiscal Eletrônica\n"
+"que já está operacional) funciona através de mais de 15 módulos adicionais "
+"do projeto da Localização Brasileira\n"
+"no Launchpad\n"
+"https://launchpad.net/openerp.pt-br-localiz e suas dependências na branch "
+"extra addons.\n"
+"Estes módulos visam não quebrar com a notável modularidade do OpenERP, por "
+"isso são\n"
+"vários, porém pequenos. Uma das razões para manter estes módulos separados é "
+"por que \n"
+"os líderes da Localização Brasileira necessitam de permissões de escrita "
+"para agilizar \n"
+"o término da localização e financiar o restante dos requisitos legais como\n"
+"(livros fiscais, SPED Contábil, SPED Fiscal e o PAF ECF que ainda estão "
+"incompletos em Setembro de\n"
+"2011). Estes módulos também estão estritamente licenciados sob a licença "
+"AGPL V3 e hoje não estão  \n"
+"com nenhuma permissão paga adicional para o uso de 'módulos privados'.\n"
 
 #. module: base
 #: code:addons/orm.py:406
@@ -2893,7 +2939,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_oauth_signup
 msgid "Signup with OAuth2 Authentication"
-msgstr ""
+msgstr "Acessar com Autenticação OAuth2"
 
 #. module: base
 #: selection:ir.model,state:0
@@ -3492,7 +3538,7 @@ msgstr ""
 #. module: base
 #: field:res.company,rml_header1:0
 msgid "Company Tagline"
-msgstr ""
+msgstr "Slogan da Empresa"
 
 #. module: base
 #: code:addons/base/res/res_users.py:668
@@ -4557,7 +4603,7 @@ msgstr "Ltd"
 #. module: base
 #: model:ir.actions.server,name:base.action_run_ir_action_todo
 msgid "Run Remaining Action Todo"
-msgstr ""
+msgstr "Executar ações a Fazer remanescentes"
 
 #. module: base
 #: field:res.partner,ean13:0
@@ -5368,7 +5414,7 @@ msgstr "Integração com Google Docs"
 #. module: base
 #: help:ir.attachment,res_model:0
 msgid "The database object this attachment will be attached to"
-msgstr ""
+msgstr "O objeto do banco de dados que este anexo será associado"
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:327
@@ -5563,6 +5609,18 @@ msgid ""
 "            \n"
 "%(country_code)s: the code of the country"
 msgstr ""
+"Você pode definir aqui o formato para os endereços deste pais.\n"
+"\n"
+"Você pode usar um padrão python-style string com todos os campos do endereço "
+"(por exemplo, use '%(street)s' para mostrar o campo 'rua') mais\n"
+"            \n"
+"%(state_name)s: o nome do estado\n"
+"            \n"
+"%(state_code)s: o código do estado\n"
+"            \n"
+"%(country_name)s: o nome do país\n"
+"            \n"
+"%(country_code)s: o código do país"
 
 #. module: base
 #: model:res.country,name:base.mu
@@ -5577,7 +5635,7 @@ msgstr "Acesso Completo"
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pt
 msgid "Plano de contas SNC para Portugal"
-msgstr ""
+msgstr "Plano de contas SNC para Portugal"
 
 #. module: base
 #: view:ir.actions.act_window:0
@@ -5646,6 +5704,12 @@ msgid ""
 "Collects web application usage with Google Analytics.\n"
 "    "
 msgstr ""
+"\n"
+"Google Analytics.\n"
+"=================\n"
+"\n"
+"Registre o uso do aplicativo com o Google Analytics.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment
@@ -5872,12 +5936,12 @@ msgstr "Histórico"
 #. module: base
 #: model:res.country,name:base.im
 msgid "Isle of Man"
-msgstr ""
+msgstr "Ilha do Homem"
 
 #. module: base
 #: help:ir.actions.client,res_model:0
 msgid "Optional model, mostly used for needactions."
-msgstr ""
+msgstr "Modelo opcional, usado principalmente para requer ação."
 
 #. module: base
 #: code:addons/base/module/module.py:306
@@ -6385,6 +6449,10 @@ msgid ""
 "===============================================\n"
 "    "
 msgstr ""
+"\n"
+"Permite aos usuários se registrarem e alterarem suas senhas\n"
+"===============================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_usability
@@ -6577,7 +6645,7 @@ msgstr "Sem categoria"
 #. module: base
 #: view:res.partner:0
 msgid "Phone:"
-msgstr ""
+msgstr "Telefone:"
 
 #. module: base
 #: field:res.partner,is_company:0
@@ -7028,7 +7096,7 @@ msgstr "ir.cron"
 #. module: base
 #: model:res.country,name:base.cw
 msgid "Curaçao"
-msgstr ""
+msgstr "Curaçao"
 
 #. module: base
 #: view:ir.sequence:0
@@ -7213,7 +7281,7 @@ msgstr "Formato da Hora"
 #. module: base
 #: field:res.company,rml_header3:0
 msgid "RML Internal Header for Landscape Reports"
-msgstr ""
+msgstr "Cabeçalho RML Interno para Relatórios em Paisagem"
 
 #. module: base
 #: model:res.groups,name:base.group_partner_manager
@@ -7834,7 +7902,7 @@ msgstr "Ilhas Marianas do Norte"
 #. module: base
 #: field:change.password.user,user_login:0
 msgid "User Login"
-msgstr ""
+msgstr "Login de Usuário"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hn
@@ -8076,7 +8144,7 @@ msgstr "Esta janela"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_portal_anonymous
 msgid "Anonymous portal"
-msgstr ""
+msgstr "Portal Anônimo"
 
 #. module: base
 #: field:base.language.export,format:0
@@ -8211,6 +8279,10 @@ msgid ""
 "==========================================\n"
 "    "
 msgstr ""
+"\n"
+"Lista A Fazer para Prospectos e Oportunidades no CRM\n"
+"==========================================\n"
+"    "
 
 #. module: base
 #: view:ir.mail_server:0
@@ -8671,7 +8743,7 @@ msgstr "Numeração Sequencial de Lançamento"
 #. module: base
 #: view:base.language.export:0
 msgid "POEdit"
-msgstr ""
+msgstr "POEdit"
 
 #. module: base
 #: view:ir.values:0
@@ -9930,7 +10002,7 @@ msgstr "Interface de Usuário"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_byproduct
 msgid "MRP Byproducts"
-msgstr ""
+msgstr "Subprodutos MRP"
 
 #. module: base
 #: field:res.request,ref_partner_id:0
@@ -10501,7 +10573,7 @@ msgstr ""
 #. module: base
 #: field:ir.attachment,store_fname:0
 msgid "Stored Filename"
-msgstr ""
+msgstr "Nome do Arquivo Armazenado"
 
 #. module: base
 #: field:res.partner,use_parent_address:0
@@ -10558,6 +10630,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Clique para adicionar um contato em sua agenda de "
+"endereços.\n"
+"              </p><p>\n"
+"                O OpenERP auxilia a registrar todas as atividades "
+"relacionadas a \n"
+"                um fornecedor: conversas, histórico de compras,\n"
+"                documentos, etc.\n"
+"              </p>\n"
+"            "
 
 #. module: base
 #: model:res.country,name:base.lr
@@ -10727,7 +10809,7 @@ msgstr "Unidade de Intervalo"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_portal_stock
 msgid "Portal Stock"
-msgstr ""
+msgstr "Portal do Estoque"
 
 #. module: base
 #: field:workflow.activity,kind:0
@@ -10952,7 +11034,7 @@ msgstr "Nome da constraint PostgreSQL ou chave estrangeira(FK)"
 #. module: base
 #: view:res.company:0
 msgid "Click to set your company logo."
-msgstr ""
+msgstr "Clique para definir o logo da sua empresa."
 
 #. module: base
 #: view:res.lang:0
@@ -11472,7 +11554,7 @@ msgstr "Tipo de Sequências"
 #. module: base
 #: view:res.partner:0
 msgid "Mobile:"
-msgstr ""
+msgstr "Celular:"
 
 #. module: base
 #: code:addons/base/res/res_bank.py:195
@@ -11788,7 +11870,7 @@ msgstr "Nome do Estado"
 #. module: base
 #: help:ir.attachment,type:0
 msgid "Binary File or URL"
-msgstr ""
+msgstr "Arquivo Binário ou URL"
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:313
@@ -12765,7 +12847,7 @@ msgstr "Seleção"
 #: model:ir.actions.act_window,name:base.change_password_wizard_action
 #: view:res.users:0
 msgid "Change Password"
-msgstr ""
+msgstr "Alterar Senha"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es
@@ -13077,7 +13159,7 @@ msgstr "Formato de endereço"
 #. module: base
 #: model:ir.model,name:base.model_change_password_user
 msgid "Change Password Wizard User"
-msgstr ""
+msgstr "Assistente de alteração de Senha do Usuário"
 
 #. module: base
 #: model:res.groups,name:base.group_no_one
@@ -14104,7 +14186,7 @@ msgstr ""
 #. module: base
 #: view:res.partner:0
 msgid "Fax:"
-msgstr ""
+msgstr "Fax:"
 
 #. module: base
 #: selection:ir.ui.view,type:0
@@ -14292,7 +14374,7 @@ msgstr "A atividade destino."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_issue
 msgid "Issue Tracker"
-msgstr ""
+msgstr "Rastreador de Tíquetes"
 
 #. module: base
 #: view:base.module.update:0
@@ -14570,7 +14652,7 @@ msgstr "Configuração do Sistema pronta"
 #. module: base
 #: field:ir.attachment,db_datas:0
 msgid "Database Data"
-msgstr ""
+msgstr "Dados do Banco de Dados"
 
 #. module: base
 #: model:res.country,name:base.tc
@@ -14661,7 +14743,7 @@ msgstr "Erro ! Você não pode criar menu recursivo."
 #. module: base
 #: view:ir.translation:0
 msgid "Web-only translations"
-msgstr ""
+msgstr "Traduções Web"
 
 #. module: base
 #: view:ir.rule:0
@@ -14756,7 +14838,7 @@ msgstr "Tailândia"
 #. module: base
 #: model:ir.model,name:base.model_change_password_wizard
 msgid "Change Password Wizard"
-msgstr ""
+msgstr "Assistente de alteração de Senha"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_voucher
@@ -14897,12 +14979,12 @@ msgstr "Helpdesk"
 #. module: base
 #: field:ir.rule,perm_write:0
 msgid "Apply for Write"
-msgstr ""
+msgstr "Aplicar para Gravação"
 
 #. module: base
 #: field:ir.ui.menu,parent_left:0
 msgid "Parent Left"
-msgstr ""
+msgstr "Superior a esquerda"
 
 #. module: base
 #: model:ir.module.module,description:base.module_document_page
@@ -15361,7 +15443,7 @@ msgstr "Limite"
 #. module: base
 #: model:res.groups,name:base.group_hr_user
 msgid "Officer"
-msgstr ""
+msgstr "Oficial"
 
 #. module: base
 #: code:addons/orm.py:785
@@ -15714,7 +15796,7 @@ msgstr "Contabilidade - Canadense"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_co
 msgid "Colombian - Accounting"
-msgstr ""
+msgstr "Colômbia - Contabilidade"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_voucher
@@ -15791,7 +15873,7 @@ msgstr "Chile"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_view_editor
 msgid "View Editor"
-msgstr ""
+msgstr "Editor de Visão"
 
 #. module: base
 #: view:ir.cron:0
@@ -15809,7 +15891,7 @@ msgstr "Condição"
 #: model:ir.actions.client,name:base.modules_updates_act_cl
 #: model:ir.ui.menu,name:base.menu_module_updates
 msgid "Updates"
-msgstr ""
+msgstr "Atualizações"
 
 #. module: base
 #: help:res.currency,rate:0
@@ -15896,12 +15978,12 @@ msgstr "Atualização do Sistema"
 #: field:ir.actions.report.xml,report_sxw_content:0
 #: field:ir.actions.report.xml,report_sxw_content_data:0
 msgid "SXW Content"
-msgstr ""
+msgstr "Conteúdo SXW"
 
 #. module: base
 #: field:ir.attachment,file_size:0
 msgid "File Size"
-msgstr ""
+msgstr "Tamanho do Arquivo"
 
 #. module: base
 #: help:ir.sequence,prefix:0
@@ -15943,7 +16025,7 @@ msgstr "Informações Gerais"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pt
 msgid "Portugal - Chart of Accounts"
-msgstr ""
+msgstr "Portugal - Plano de Contas"
 
 #. module: base
 #: field:ir.model.data,complete_name:0
@@ -16025,7 +16107,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.menu,name:base.menu_module_tree
 msgid "Installed Modules"
-msgstr ""
+msgstr "Módulos Instalados"
 
 #. module: base
 #: code:addons/base/res/res_users.py:170
@@ -16055,7 +16137,7 @@ msgstr "Função"
 #. module: base
 #: field:ir.ui.menu,parent_right:0
 msgid "Parent Right"
-msgstr ""
+msgstr "Superior a direita"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_customer_relationship_management

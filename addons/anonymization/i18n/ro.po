@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-01-19 09:50+0000\n"
+"Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:35+0000\n"
+"X-Launchpad-Export-Date: 2013-01-20 05:17+0000\n"
 "X-Generator: Launchpad (build 16430)\n"
 
 #. module: anonymization
@@ -30,17 +30,17 @@ msgstr "Obiect"
 #. module: anonymization
 #: model:ir.model,name:anonymization.model_ir_model_fields_anonymization_migration_fix
 msgid "ir.model.fields.anonymization.migration.fix"
-msgstr ""
+msgstr "ir.model.campuri.anonimizare.migrare.repara"
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization.migration.fix,target_version:0
 msgid "Target Version"
-msgstr ""
+msgstr "Versiunea Tinta"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.migration.fix,query_type:0
 msgid "sql"
-msgstr ""
+msgstr "sql"
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:91
@@ -50,6 +50,10 @@ msgid ""
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to create, write or delete fields."
 msgstr ""
+"Anonimizarea bazaei de date este momentan intr-un stadiu instabil. Unele "
+"campuri sunt anonimizate, in timp ce altele nu sunt anonimizate. Ar trebui "
+"sa incercati sa rezolvati aceasta problema inainte de a incerca sa creati, "
+"sa scrieti sau sa stergeti campuri."
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization,field_name:0
@@ -65,7 +69,7 @@ msgstr "Camp"
 #. module: anonymization
 #: selection:ir.model.fields.anonymization,state:0
 msgid "New"
-msgstr ""
+msgstr "Nou(a)"
 
 #. module: anonymization
 #: field:ir.model.fields.anonymize.wizard,file_import:0
@@ -84,12 +88,14 @@ msgid ""
 "Before executing the anonymization process, you should make a backup of your "
 "database."
 msgstr ""
+"Inainte de a executa procesul de anonimizare, ar trebui sa faceti o copie de "
+"rezerva a bazei dumneavoastra de date."
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization.history,state:0
 #: field:ir.model.fields.anonymize.wizard,state:0
 msgid "Status"
-msgstr ""
+msgstr "Stare"
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization.history,direction:0
@@ -128,7 +134,7 @@ msgstr "necunoscut(a)"
 #: code:addons/anonymization/anonymization.py:448
 #, python-format
 msgid "Anonymized value is None. This cannot happens."
-msgstr ""
+msgstr "Valoarea anonimizarii este Niciuna. Acest lucru nu este posibil."
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization.history,filepath:0
@@ -141,6 +147,8 @@ msgid ""
 "This is the file created by the anonymization process. It should have the "
 "'.pickle' extention."
 msgstr ""
+"Acesta este fisierul creat prin procesul de anonimizare. Ar trebui sa aiba "
+"extensia '.pickle'."
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization.history,date:0
@@ -164,6 +172,8 @@ msgid ""
 "Cannot anonymize fields of these types: binary, many2many, many2one, "
 "one2many, reference."
 msgstr ""
+"Nu pot fi anonimizate campurile de tipul: binar, many2many, many2one, "
+"one2many, referinta."
 
 #. module: anonymization
 #: view:ir.model.fields.anonymize.wizard:0
@@ -178,7 +188,7 @@ msgstr "Anonimizare baza de date"
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.migration.fix,query_type:0
 msgid "python"
-msgstr ""
+msgstr "python"
 
 #. module: anonymization
 #: view:ir.model.fields.anonymization.history:0
@@ -199,6 +209,8 @@ msgid ""
 "It is not possible to reverse the anonymization process without supplying "
 "the anonymization export file."
 msgstr ""
+"Nu este posibila inversarea procesului de anonimizare fara a furniza "
+"fisierul de export anonimizare."
 
 #. module: anonymization
 #: field:ir.model.fields.anonymize.wizard,summary:0
@@ -219,6 +231,10 @@ msgid ""
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to do anything."
 msgstr ""
+"Anonimizarea bazei de date este momentan intr-un stadiu instabil. Unele "
+"campuri sunt anonimizate, in timp ce altele nu sunt anonimizate. Ar trebui "
+"sa incercati sa rezolvati aceasta problema inainte de a incerca sa faceti "
+"ceva."
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymize.wizard,state:0
@@ -250,7 +266,7 @@ msgstr "Istoric Anonimizare"
 #. module: anonymization
 #: field:ir.model.fields.anonymization.migration.fix,model_name:0
 msgid "Model"
-msgstr ""
+msgstr "Model"
 
 #. module: anonymization
 #: model:ir.model,name:anonymization.model_ir_model_fields_anonymization_history
@@ -265,13 +281,17 @@ msgid ""
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to do anything else."
 msgstr ""
+"Anonimizarea bazei de date este momentan intr-un stadiu instabil. Unele "
+"campuri sunt anonimizate, in timp ce altele nu sunt anonimizate. Ar trebui "
+"sa incercati sa rezolvati aceasta problema inainte de a incerca sa faceti "
+"orice altceva."
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:389
 #: code:addons/anonymization/anonymization.py:448
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Eroare !"
 
 #. module: anonymization
 #: model:ir.actions.act_window,name:anonymization.action_ir_model_fields_anonymize_wizard
@@ -287,7 +307,7 @@ msgstr "Nume fisier"
 #. module: anonymization
 #: field:ir.model.fields.anonymization.migration.fix,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Secventa"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,direction:0
@@ -303,7 +323,7 @@ msgstr "Inceput"
 #: code:addons/anonymization/anonymization.py:389
 #, python-format
 msgid "The database is currently anonymized, you cannot anonymize it again."
-msgstr ""
+msgstr "Baza de date este anonimizata, nu o puteti anonimiza din nou."
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,state:0
@@ -314,7 +334,7 @@ msgstr "Efectuat"
 #: field:ir.model.fields.anonymization.migration.fix,query:0
 #: field:ir.model.fields.anonymization.migration.fix,query_type:0
 msgid "Query"
-msgstr ""
+msgstr "Interogare"
 
 #. module: anonymization
 #: view:ir.model.fields.anonymization.history:0
