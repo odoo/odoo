@@ -605,7 +605,7 @@ class res_config_settings(osv.osv_memory):
 def get_warning_config(cr, msg, context=None):
     res_config_obj = pooler.get_pool(cr.dbname).get('res.config.settings')
 
-    # Treat the msg
+    # Process the msg
     # 1/ find the path and field references, put them in a list
     references = re.findall(r'\[((?:path|field):[a-z_\.]*)\]', msg, flags=re.I)
 
@@ -622,7 +622,7 @@ def get_warning_config(cr, msg, context=None):
     # 3/ replace the text references by the %s conversion symbol
     msg = re.sub(r'\[((?:path|field):[a-z_\.]*)\]', '%s', msg, flags=re.I)
 
-    # 4/ translate all the strings, substitute and return the result
-    return exceptions.WarningConfig(_(msg) % tuple(map(_, values)))
+    # 4/ substitute and return the result
+    return exceptions.WarningConfig(msg % tuple(values))
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
