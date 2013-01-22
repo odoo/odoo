@@ -4714,6 +4714,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
         if (this.view_list) {
             this.view_list.$el.hide();
         }
+        this.$el.find('.oe_popup_list_pager').hide();
         this.setup_form_view();
     },
 });
