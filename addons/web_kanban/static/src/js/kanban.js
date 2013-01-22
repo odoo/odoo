@@ -234,7 +234,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             self.$el.toggleClass('oe_kanban_grouped_by_m2o', self.grouped_by_m2o);
             var grouping = new instance.web.Model(self.dataset.model, context, domain).query().group_by(self.group_by);
             $.when(grouping).done(function(groups) {
-                self.$el.find('.oe_view_nocontent').remove();
+                self.remove_no_result();
                 if (groups) {
                     self.do_process_groups(groups);
                 } else {
@@ -318,6 +318,9 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         var $last_td = self.$el.find('.oe_kanban_groups_headers td:last');
         var groups_started = _.map(this.groups, function(group) {
             if (!group.is_started) {
+                group.on("add_record", self, function () {
+                    self.remove_no_result();
+                });
                 return group.insertBefore($last_td);
             }
         });
@@ -455,14 +458,16 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             || !this.options.action.help) {
             return;
         }
-        this.$el.find('table:first').hide();
-        this.$el.prepend(
-            $('<div class="oe_view_nocontent">').html(this.options.action.help)
-        );
+        this.$el.find('table:first').css("position", "absolute");
+        $(QWeb.render('KanbanView.nocontent', { content : this.options.action.help})).insertAfter(this.$('table:first'));
         var create_nocontent = this.$buttons;
         this.$el.find('.oe_view_nocontent').click(function() {
             create_nocontent.openerpBounce();
         });
+    },
+    remove_no_result: function() {
+        this.$el.find('table:first').css("position", false);
+        this.$el.find('.oe_view_nocontent').remove();
     },
 
     /*
@@ -726,6 +731,7 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
      */
     quick_created: function (record) {
         var id = record, self = this;
+        self.trigger("add_record");
         this.dataset.read_ids([id], this.view.fields_keys)
             .done(function (records) {
                 self.view.dataset.ids.push(id);
