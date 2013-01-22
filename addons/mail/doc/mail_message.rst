@@ -4,7 +4,7 @@ mail.message
 ============
 
 Models
-+++++++
+++++++
 
 ``mail.message`` is a class for holding the main attributes of a message object
 (notification for system message, reciving email message or sent messages). It 
@@ -19,7 +19,8 @@ should inherit from this class.
 .. versionchanged:: 7.0
 
 ClientAction (ir.actions.client)
-+++++++
+++++++++++++++++++++++++++++++++
+
      <record id="action_mail_inbox_feeds" model="ir.actions.client">
          <field name="name">Inbox</field>
          <field name="tag">mail.wall</field>
@@ -56,7 +57,7 @@ ClientAction (ir.actions.client)
       - ``readonly`` : Read only mode, hide all action buttons and composer
 
 Fields
-+++++++
+++++++
 
  - ``type`` : usually 'email', 'comment', 'notification'.
    Message type: email for external email message recieve, notification for system
