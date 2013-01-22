@@ -16,7 +16,7 @@ OpenERP Server
    04_security
    05_test_framework
    06_misc
-   09_deployment
+   deployment-gunicorn
 
 OpenERP Command
 '''''''''''''''
@@ -25,6 +25,7 @@ OpenERP Command
    :maxdepth: 1
 
    openerp-command.rst
+   commands.rst
    adding-command.rst
 
 OpenERP Server API

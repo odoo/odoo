@@ -135,6 +135,10 @@ class ir_cron(osv.osv):
                     _logger.debug('%.3fs (%s, %s)' % (end_time - start_time, model_name, method_name))
             except Exception, e:
                 self._handle_callback_exception(cr, uid, model_name, method_name, args, job_id, e)
+        else:
+            msg = "Method `%s.%s` do not exist." % (model._name, method_name) \
+                if model else "Model `%s` do not exist." % model._name
+            _logger.warning(msg)
 
     def _process_job(self, job_cr, job, cron_cr):
         """ Run a given job taking care of the repetition.

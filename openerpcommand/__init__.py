@@ -8,6 +8,7 @@ from .bench_sale_mrp import BenchSaleMrp
 from . import common
 
 from . import conf # Not really server-side (in the `for` below).
+from . import cron
 from . import drop
 from . import initialize
 from . import model
@@ -17,9 +18,10 @@ from . import run_tests
 from . import scaffold
 from . import uninstall
 from . import update
+from . import web
 
-command_list_server = (conf, drop, initialize, model, module, read, run_tests,
-                       scaffold, uninstall, update, )
+command_list_server = (conf, cron, drop, initialize, model, module, read, run_tests,
+                       scaffold, uninstall, update, web, )
 
 command_list_client = (Call, Open, Show, ConsumeNothing, ConsumeMemory,
                        LeakMemory, ConsumeCPU, Bench, BenchRead,
