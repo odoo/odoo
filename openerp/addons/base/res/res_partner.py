@@ -28,7 +28,7 @@ import re
 import openerp
 from openerp import SUPERUSER_ID
 from openerp import pooler, tools
-from openerp.osv import osv, fields
+from openerp.osv import api, osv, fields
 from openerp.tools.translate import _
 
 class format_address(object):
@@ -389,11 +389,13 @@ class res_partner(osv.osv, format_address):
             self.update_address(cr, uid, update_ids, vals, context)
         return super(res_partner,self).create(cr, uid, vals, context=context)
 
+    @api.recordset
     def update_address(self, vals):
         addr_vals = dict((key, vals[key]) for key in POSTAL_ADDRESS_FIELDS if vals.get(key))
         if addr_vals:
             return super(res_partner, self).write(addr_vals)
 
+    @api.recordset
     def name_get(self):
         res = []
         for record in self:

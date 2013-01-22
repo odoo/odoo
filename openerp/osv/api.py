@@ -241,8 +241,6 @@ def versatile(method):
                     return old_cr_uid(method)
             else:
                 return old_cr(method)
-        else:
-            return recordset(method)
 
     # no versatile wrapping by default
     method.versatile = False
