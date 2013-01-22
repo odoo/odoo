@@ -604,25 +604,23 @@ class res_config_settings(osv.osv_memory):
 
 def get_warning_config(cr, msg, context=None):
     res_config_obj = pooler.get_pool(cr.dbname).get('res.config.settings')
+    regex_path = r'%\(((?:path|field):[a-z_\.]*)\)s'
 
-    # Process the msg
-    # 1/ find the path and field references, put them in a list
-    references = re.findall(r'\[((?:path|field):[a-z_\.]*)\]', msg, flags=re.I)
+    # Process the message
+    # 1/ find the path and/or field references, put them in a list
+    references = re.findall(regex_path, msg, flags=re.I)
 
-    # 2/ fetch the path and field replacement values
+    # 2/ fetch the path and/or field replacement values
     #    (full path and human readable field's name)
-    values = []
+    values = {}
     for item in references:
         ref_type, ref = item.split(':')
         if ref_type == 'path':
-            values.append(res_config_obj.get_option_path(cr, SUPERUSER_ID, ref, context))
+            values[item] = res_config_obj.get_option_path(cr, SUPERUSER_ID, ref, context)
         elif ref_type == 'field':
-            values.append(res_config_obj.get_option_name(cr, SUPERUSER_ID, ref, context))
-
-    # 3/ replace the text references by the %s conversion symbol
-    msg = re.sub(r'\[((?:path|field):[a-z_\.]*)\]', '%s', msg, flags=re.I)
+            values[item] = res_config_obj.get_option_name(cr, SUPERUSER_ID, ref, context)
 
     # 4/ substitute and return the result
-    return exceptions.WarningConfig(msg % tuple(values))
+    return exceptions.WarningConfig(msg % values)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
