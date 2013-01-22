@@ -484,6 +484,16 @@ class account_analytic_account(osv.osv):
             res['value']['to_invoice'] = template.to_invoice.id
             res['value']['pricelist_id'] = template.pricelist_id.id
         return res
+        
+    def on_change_timesheets(self, cr, ids, uid, invoice_on_timesheets):
+        if invoice_on_timesheets == True:
+            return { 'value':{
+                'use_timesheets': True,
+                'to_invoice':1,
+            }}
+        else:
+            return { 'value':{'use_timesheets': False}}
+        
 account_analytic_account()
 
 class account_analytic_account_summary_user(osv.osv):
