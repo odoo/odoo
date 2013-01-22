@@ -1,6 +1,11 @@
 function openerp_pos_models(instance, module){ //module is instance.point_of_sale
     var QWeb = instance.web.qweb;
 
+    function round(value,decimals){
+        var mult = Math.pow(10,decimals || 0);
+        return Math.round(value*mult)/mult;
+    }
+
     
     // The PosModel contains the Point Of Sale's representation of the backend.
     // Since the PoS must work in standalone ( Without connection to the server ) 
@@ -24,8 +29,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.proxy = new module.ProxyDevice();              // used to communicate to the hardware devices via a local proxy
             this.db = new module.PosLS();                       // a database used to store the products and categories
             this.db.clear('products','categories');
-            this.debug = jQuery.deparam(jQuery.param.querystring()).debug !== undefined;    //debug mode
-
+            this.debug = jQuery.deparam(jQuery.param.querystring()).debug !== undefined;    //debug mode 
 
             // default attributes values. If null, it will be loaded below.
             this.set({
@@ -338,19 +342,37 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.order = options.order;
             this.product = options.product;
             this.price   = options.product.get('price');
+            this.priceStr = '' + this.price;
             this.quantity = 1;
+            this.quantityStr = '1';
             this.discount = 0;
+            this.discountStr = '0';
             this.type = 'unit';
             this.selected = false;
         },
         // sets a discount [0,100]%
         set_discount: function(discount){
-            this.discount = Math.max(0,Math.min(100,discount));
+            var disc = parseFloat(discount);
+            if(_.isNaN(disc)){
+                return;
+            }else if(disc < 0){
+                this.discount = 0;
+                this.discountStr = '0';
+            }else if(disc > 100){
+                this.discount = 100;
+                this.discountStr = '100';
+            }else{
+                this.discount = disc;
+                this.discountStr = discount;
+            }
             this.trigger('change');
         },
         // returns the discount [0,100]%
         get_discount: function(){
             return this.discount;
+        },
+        get_discount_str: function(){
+            return this.discountStr;
         },
         get_product_type: function(){
             return this.type;
@@ -359,13 +381,23 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         // product's unity of measure properties. Quantities greater than zero will not get 
         // rounded to zero
         set_quantity: function(quantity){
-            if(_.isNaN(quantity)){
-                this.order.removeOrderline(this);
-            }else if(quantity !== undefined){
-                this.quantity = Math.max(0,quantity);
+            var quant = parseFloat(quantity);
+            if(_.isNaN(quant)){
+                if(quantity === 'remove'){
+                    this.order.removeOrderline(this);
+                }
+                return;
+            }else{
+                if(quant < 0){
+                    quant = 0;
+                }
                 var unit = this.get_unit();
-                if(unit && this.quantity > 0 ){
-                    this.quantity = Math.max(unit.rounding, Math.round(quantity / unit.rounding) * unit.rounding);
+                if(unit){
+                    this.quantity    = Math.max(unit.rounding, Math.round(quant / unit.rounding) * unit.rounding);
+                    this.quantityStr = this.quantity.toFixed(Math.ceil(Math.log(1.0 / unit.rounding) / Math.log(10)));
+                }else{
+                    this.quantity    = quant;
+                    this.quantityStr = '' + this.quantity;
                 }
             }
             this.trigger('change');
@@ -373,6 +405,17 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         // return the quantity of product
         get_quantity: function(){
             return this.quantity;
+        },
+        get_quantity_str: function(){
+            return this.quantityStr;
+        },
+        get_quantity_str_with_unit: function(){
+            var unit = this.get_unit();
+            if(unit && unit.name !== 'Unit(s)'){
+                return this.quantityStr + ' ' + unit.name;
+            }else{
+                return this.quantityStr;
+            }
         },
         // return the unit of measure of the product
         get_unit: function(){
@@ -389,15 +432,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         // return the product of this orderline
         get_product: function(){
             return this.product;
-        },
-        // return the base price of this product (for this orderline)
-        get_price: function(){
-            return this.price;
-        },
-        // changes the base price of the product for this orderline
-        set_price: function(price){
-            this.price = price;
-            this.trigger('change');
         },
         // selects or deselects this orderline
         set_selected: function(selected){
@@ -429,7 +463,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         export_as_JSON: function() {
             return {
                 qty: this.get_quantity(),
-                price_unit: this.get_price(),
+                price_unit: this.get_unit_price(),
                 discount: this.get_discount(),
                 product_id: this.get_product().get('id'),
             };
@@ -439,15 +473,31 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             return {
                 quantity:           this.get_quantity(),
                 unit_name:          this.get_unit().name,
-                price:              this.get_price(),
+                price:              this.get_unit_price(),
                 discount:           this.get_discount(),
                 product_name:       this.get_product().get('name'),
+                price_display :     this.get_display_price(),
                 price_with_tax :    this.get_price_with_tax(),
                 price_without_tax:  this.get_price_without_tax(),
                 tax:                this.get_tax(),
                 product_description:      this.get_product().get('description'),
                 product_description_sale: this.get_product().get('description_sale'),
             };
+        },
+        // changes the base price of the product for this orderline
+        set_unit_price: function(price){
+            var pr = parseFloat(price);
+            if(_.isNaN(pr)){
+                return;
+            }
+            this.price = round(pr,2);
+            this.trigger('change');
+        },
+        get_unit_price: function(){
+            return this.price;
+        },
+        get_display_price: function(){
+            return  round(round(this.price * this.get_quantity(),2) * (1- this.get_discount()/100.0),2);
         },
         get_price_without_tax: function(){
             return this.get_all_prices().priceWithoutTax;
@@ -460,7 +510,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },
         get_all_prices: function() {
             var self = this;
-            var base = this.get_quantity() * this.price * (1 - (this.get_discount() / 100));
+            var base = round(this.get_quantity() * this.price * (1 - (this.get_discount() / 100)),2); //FIXME en fonction de la currency
             var totalTax = base;
             var totalNoTax = base;
             
@@ -474,12 +524,13 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 if (tax.price_include) {
                     var tmp;
                     if (tax.type === "percent") {
-                        tmp =  base - (base / (1 + tax.amount));
+                        tmp =  base - round(base / (1 + tax.amount),2); //FIXME en fonction de la currency 
                     } else if (tax.type === "fixed") {
-                        tmp = tax.amount * self.get_quantity();
+                        tmp = round(tax.amount * self.get_quantity(),2);
                     } else {
                         throw "This type of tax is not supported by the point of sale: " + tax.type;
                     }
+                    tmp = round(tmp,2);
                     taxtotal += tmp;
                     totalNoTax -= tmp;
                 } else {
@@ -491,6 +542,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     } else {
                         throw "This type of tax is not supported by the point of sale: " + tax.type;
                     }
+                    tmp = round(tmp,2);
                     taxtotal += tmp;
                     totalTax += tmp;
                 }
@@ -515,8 +567,16 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },
         //sets the amount of money on this payment line
         set_amount: function(value){
-            this.amount = value;
-            this.trigger('change');
+            if(typeof value === 'string'){
+                var val = parseFloat(value);
+                if(!isNaN(val)){
+                    this.amount = val;
+                    this.trigger('change');
+                }
+            }else{
+                this.amount = value;
+                this.trigger('change');
+            }
         },
         // returns the amount of money on this paymentline
         get_amount: function(){
@@ -584,7 +644,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 line.set_quantity(options.quantity);
             }
             if(options.price !== undefined){
-                line.set_price(options.price);
+                line.set_unit_price(options.price);
             }
 
             var last_orderline = this.getLastOrderline();
@@ -613,14 +673,19 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         getName: function() {
             return this.get('name');
         },
-        getTotal: function() {
+        getSubtotal : function(){
+            return (this.get('orderLines')).reduce((function(sum, orderLine){
+                return sum + orderLine.get_display_price();
+            }), 0);
+        },
+        getTotalTaxIncluded: function() {
             return (this.get('orderLines')).reduce((function(sum, orderLine) {
                 return sum + orderLine.get_price_with_tax();
             }), 0);
         },
         getDiscountTotal: function() {
             return (this.get('orderLines')).reduce((function(sum, orderLine) {
-                return sum + (orderLine.get_price() * (orderLine.get_discount()/100) * orderLine.get_quantity());
+                return sum + (orderLine.get_unit_price() * (orderLine.get_discount()/100) * orderLine.get_quantity());
             }), 0);
         },
         getTotalTaxExcluded: function() {
@@ -807,7 +872,11 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
             if(!tempNewBuffer){
                 this.set({ buffer: "0" });
-                this.killTarget();
+                if(this.get('mode') === 'quantity'){
+                    this.killTarget();
+                }else{
+                    this.updateTarget();
+                }
             }else{
                 if (isNaN(tempNewBuffer)) {
                     tempNewBuffer = "0";
@@ -836,15 +905,20 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 mode: "quantity"
             });
         },
+        resetValue: function(){
+            this.set({buffer:'0'});
+        },
         updateTarget: function() {
             var bufferContent, params;
             bufferContent = this.get('buffer');
             if (bufferContent && !isNaN(bufferContent)) {
-            	this.trigger('set_value', parseFloat(bufferContent));
+                console.log('set_value ',bufferContent);
+            	this.trigger('set_value',bufferContent);
             }
         },
         killTarget: function(){
-            this.trigger('set_value',Number.NaN);
+            console.log('set_value ','remove');
+            this.trigger('set_value','remove');
         },
     });
 }

@@ -186,7 +186,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 }else if( mode === 'discount'){
                     order.getSelectedLine().set_discount(val);
                 }else if( mode === 'price'){
-                    order.getSelectedLine().set_price(val);
+                    order.getSelectedLine().set_unit_price(val);
                 }
         	} else {
         	    this.pos.get('selectedOrder').destroy();
@@ -269,7 +269,11 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
         update_summary: function(){
             var order = this.pos.get('selectedOrder');
-            var total = order ? order.getTotal() : 0;
+            var subtotal  = order ? order.getSubtotal() : 0;
+            var total     = order ? order.getTotalTaxIncluded() : 0;
+            var taxes     = order ? total - order.getTotalTaxExcluded() : 0;
+            this.$('.summary .value.subtotal').html(this.format_currency(subtotal));
+            this.$('.summary .value.taxes').html(this.format_currency(taxes));
             this.$('.summary .value.total').html(this.format_currency(total));
         },
         set_display_mode: function(mode){
@@ -311,14 +315,23 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
         changeAmount: function(event) {
             var newAmount = event.currentTarget.value;
-            if (newAmount && !isNaN(newAmount)) {
-            	this.amount = parseFloat(newAmount);
-                this.payment_line.set_amount(this.amount);
+            console.log(event);
+            console.log('changeAmount:',newAmount);
+            if( typeof newAmmount === 'string'){
+            	var amount = parseFloat(newAmount);
+                if(!isNaN(amount)){
+                    this.amount = amount;
+                    this.payment_line.set_amount(amount);
+                }
+            }else if(!isNaN(newAmount)){
+                this.amount = newAmount;
+                this.payment_line.set_amount(newAmount);
             }
         },
         changedAmount: function() {
-        	if (this.amount !== this.payment_line.get_amount())
+        	if (this.amount !== this.payment_line.get_amount()){
         		this.renderElement();
+            }
         },
         renderElement: function() {
             var self = this;

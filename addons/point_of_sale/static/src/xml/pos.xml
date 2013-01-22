@@ -438,7 +438,15 @@
                     </ul>
                     <div class="summary">
                         <span t-attf-class="line #{widget.pos.get('selectedOrder').get('orderLines').length === 0 ? 'empty' : ''}">
-                            <span class="label total">Total:</span> <span class="value total">0.00 €</span>
+                            <span class='entry subtotal'>
+                                <span class="label subtotal">Subtotal:</span> <span class="value subtotal">0.00 €</span>
+                            </span>
+                            <span class='entry taxes'>
+                                <span class="label taxes">Taxes:</span> <span class="value taxes">0.00€</span>
+                            </span>
+                            <span class='entry total'>
+                                <span class="label total">Total:</span> <span class="value total">0.00 €</span>
+                            </span>
                         </span>
                     </div>
                 </div>
@@ -506,26 +514,26 @@
                 <t t-esc="widget.model.get_product().get('name')"/>
             </span>
             <span class="price">
-                <t t-esc="widget.format_currency(widget.model.get_price_with_tax())"/>
+                <t t-esc="widget.format_currency(widget.model.get_display_price())"/>
             </span>
             <ul class="info-list">
-                <t t-if="widget.model.get_quantity() !== 1.0">
+                <t t-if="widget.model.get_quantity_str() !== '1'">
                     <li class="info">
                         <em>
-                            <t t-esc="widget.model.get_quantity()" />
+                            <t t-esc="widget.model.get_quantity_str()" />
                         </em>
                         <t t-esc="widget.model.get_unit().name" />
                         at
-                        <t t-esc="widget.format_currency(widget.model.get_price())" />
+                        <t t-esc="widget.format_currency(widget.model.get_unit_price())" />
                         /
                         <t t-esc="widget.model.get_unit().name" />
                     </li>
                 </t>
-                <t t-if="widget.model.get_discount() > 0">
+                <t t-if="widget.model.get_discount_str() !== '0'">
                     <li class="info">
                         With a 
                         <em>
-                            <t t-esc="widget.model.get_discount()" />%
+                            <t t-esc="widget.model.get_discount_str()" />%
                         </em>
                         discount
                     </li>
@@ -577,33 +585,33 @@
             Shop: <t t-esc="widget.shop_obj.name"/><br />
             <br />
             <table>
-                <tr t-foreach="widget.currentOrderLines.toArray()" t-as="order">
+                <tr t-foreach="widget.currentOrderLines.toArray()" t-as="orderline">
                     <td>
-                        <t t-esc="order.get_product().get('name')"/>
-                         <t t-if="order.get_discount() > 0">
+                        <t t-esc="orderline.get_product().get('name')"/>
+                         <t t-if="orderline.get_discount() > 0">
                             <div class="pos-disc-font">
-                                With a <t t-esc="order.get_discount()"/>% discount
+                                With a <t t-esc="orderline.get_discount()"/>% discount
                             </div>
                         </t>
                     </td>
                     <td class="pos-right-align">
-                        <t t-esc="order.get_quantity().toFixed(0)"/>
+                        <t t-esc="orderline.get_quantity_str_with_unit()"/>
                     </td>
                     <td class="pos-right-align">
-                        <t t-esc="widget.format_currency(order.get_price() * (1 - order.get_discount()/100) * order.get_quantity().toFixed(2))"/>
+                        <t t-esc="widget.format_currency(orderline.get_display_price())"/>
                     </td>
                 </tr>
             </table>
             <br />
             <table>
                 <tr><td>Tax:</td><td class="pos-right-align">
-                    <t t-esc="widget.format_currency(widget.currentOrder.getTax().toFixed(2))"/>
+                    <t t-esc="widget.format_currency(widget.currentOrder.getTax())"/>
                     </td></tr>
                 <tr><td>Discount:</td><td class="pos-right-align">
-                    <t t-esc="widget.format_currency(widget.currentOrder.getDiscountTotal().toFixed(2))"/>
+                    <t t-esc="widget.format_currency(widget.currentOrder.getDiscountTotal())"/>
                     </td></tr>
                 <tr class="emph"><td>Total:</td><td class="pos-right-align">
-                    <t t-esc="widget.format_currency(widget.currentOrder.getTotal().toFixed(2))"/>
+                    <t t-esc="widget.format_currency(widget.currentOrder.getTotalTaxIncluded())"/>
                     </td></tr>
             </table>
             <br />
@@ -613,14 +621,14 @@
                         <t t-esc="pline.get_cashregister().get('journal_id')[1]"/>
                     </td>
                     <td class="pos-right-align">
-                        <t t-esc="widget.format_currency((pline.get_amount()).toFixed(2))"/>
+                        <t t-esc="widget.format_currency(pline.get_amount())"/>
                     </td>
                 </tr>
             </table>
             <br />
             <table>
                 <tr><td>Change:</td><td class="pos-right-align">
-                    <t t-esc="widget.format_currency((widget.currentOrder.getPaidTotal() - widget.currentOrder.getTotal()).toFixed(2))"/>
+                    <t t-esc="widget.format_currency(widget.currentOrder.getPaidTotal() - widget.currentOrder.getTotalTaxIncluded())"/>
                     </td></tr>
             </table>
         </div>

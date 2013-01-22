@@ -26,10 +26,14 @@ function openerp_pos_basewidget(instance, module){ //module is instance.point_of
             }
 
             this.format_currency = function(amount){
+                if(typeof amount === 'number'){
+                    amount = Math.round(amount*100)/100;
+                    amount = amount.toFixed(2);
+                }
                 if(this.currency.position === 'after'){
-                    return Math.round(amount*100)/100 + ' ' + this.currency.symbol;
+                    return amount + ' ' + this.currency.symbol;
                 }else{
-                    return this.currency.symbol + ' ' + Math.round(amount*100)/100;
+                    return this.currency.symbol + ' ' + amount;
                 }
             }
 

@@ -942,6 +942,9 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             l.appendTo(this.$('#paymentlines'));
             this.paymentlinewidgets.push(l);
             this.$('.paymentline-amount input:last').focus();
+            if(this.numpadState){
+                this.numpadState.resetValue();
+            }
         },
         renderElement: function() {
             this._super();
@@ -962,7 +965,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         updatePaymentSummary: function() {
             var currentOrder = this.pos.get('selectedOrder');
             var paidTotal = currentOrder.getPaidTotal();
-            var dueTotal = currentOrder.getTotal();
+            var dueTotal = currentOrder.getTotalTaxIncluded();
             var remaining = dueTotal > paidTotal ? dueTotal - paidTotal : 0;
             var change = paidTotal > dueTotal ? paidTotal - dueTotal : 0;
 
@@ -998,5 +1001,4 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         	this.currentPaymentLines.last().set_amount(val);
         },
     });
-
 }
