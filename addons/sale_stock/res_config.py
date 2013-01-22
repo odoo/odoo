@@ -51,9 +51,6 @@ class sale_configuration(osv.osv_memory):
         'group_mrp_properties': fields.boolean('Product properties on order lines',
             implied_group='sale.group_mrp_properties',
             help="Allows you to tag sales order lines with properties."),
-        'group_multiple_shops': fields.boolean("Manage multiple shops",
-            implied_group='stock.group_locations',
-            help="This allows to configure and use multiple shops."),
         'module_project_timesheet': fields.boolean("Project Timesheet"),
         'module_project_mrp': fields.boolean("Project MRP"),
     }

@@ -151,6 +151,12 @@ class sale_order(osv.osv):
         for line in self.pool.get('sale.order.line').browse(cr, uid, ids, context=context):
             result[line.order_id.id] = True
         return result.keys()
+    
+    def _get_default_company(self, cr, uid, context=None):
+        company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+        if not company_id:
+            raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
+        return company_id
 
     _columns = {
         'name': fields.char('Order Reference', size=64, required=True,
@@ -220,6 +226,7 @@ class sale_order(osv.osv):
     _defaults = {
         'date_order': fields.date.context_today,
         'order_policy': 'manual',
+        'company_id': _get_default_company,
         'state': 'draft',
         'user_id': lambda obj, cr, uid, context: uid,
         'name': lambda obj, cr, uid, context: '/',
