@@ -46,7 +46,6 @@ import calendar
 import collections
 import copy
 import datetime
-from functools import wraps
 import itertools
 import logging
 import operator
@@ -60,9 +59,9 @@ import types
 import psycopg2
 from lxml import etree
 
+import api
 import fields
 import openerp
-from openerp.sql_db import Cursor
 import openerp.netsvc as netsvc
 import openerp.tools as tools
 from openerp.tools.config import config
@@ -631,96 +630,6 @@ def get_pg_type(f, type_override=None):
     return pg_type
 
 
-def _split_context_args(nargs, args, kwargs):
-    """ extract the context argument out of args and kwargs
-        :param nargs: expected number of arguments in args
-        :param args: arguments (tuple)
-        :param kwargs: named arguments (dictionary)
-        :return: tuple (context, args, kwargs)
-                where both args and kwargs are free of context argument
-    """
-    if 'context' in kwargs:
-        context = kwargs['context']
-        del kwargs['context']
-        return context, args, kwargs
-    elif len(args) + len(kwargs) > nargs:
-        # heuristics: context is given as an extra argument in args
-        return args[-1], args[:-1], kwargs
-    else:
-        # context defaults to None
-        return None, args, kwargs
-
-
-def versatile(method):
-    """ Decorate a model method to make it callable in both old and new styles.
-        Method calls are considered old style when their first parameter is
-        an instance of Cursor.
-    """
-    if hasattr(method, 'versatile'):
-        return method
-
-    # introspection on argument names to determine api style
-    argnames = method.func_code.co_varnames[:method.func_code.co_argcount]
-    if len(argnames) < 1 or argnames[0] != 'self':
-        return method
-
-    elif len(argnames) < 2 or argnames[1] not in ('cr', 'cursor'):
-        # new-style api; define old-style api with cr, uid, ids, context
-        new_api = method
-        nargs = len(argnames) - 1
-        def old_api(self, cr, uid, ids, *args, **kwargs):
-            ids = ids if isinstance(ids, list) else [ids]
-            context, args, kwargs = _split_context_args(nargs, args, kwargs)
-            y = self.browse(cr, uid, ids, context)
-            return new_api(y, *args, **kwargs)
-
-    elif len(argnames) < 3 or argnames[2] not in ('uid', 'user'):
-        # old-style api with cr only
-        old_api = method
-        def new_api(self, *args, **kwargs):
-            return old_api(self, self._cr, *args, **kwargs)
-
-    elif len(argnames) < 4 or argnames[3] != 'ids':
-        # old-style api with cr, uid, and maybe context
-        old_api = method
-        if 'context' in argnames:
-            def new_api(self, *args, **kwargs):
-                kwargs = dict(kwargs, context=self._context)
-                return old_api(self, self._cr, self._uid, *args, **kwargs)
-        else:
-            def new_api(self, *args, **kwargs):
-                return old_api(self, self._cr, self._uid, *args, **kwargs)
-
-    else:
-        # old-style api with cr, uid, ids, and maybe context
-        old_api = method
-        if 'context' in argnames:
-            def new_api(self, *args, **kwargs):
-                ids = map(int, self)
-                kwargs = dict(kwargs, context=self._context)
-                return old_api(self, self._cr, self._uid, ids, *args, **kwargs)
-        else:
-            def new_api(self, *args, **kwargs):
-                ids = map(int, self)
-                return old_api(self, self._cr, self._uid, ids, *args, **kwargs)
-
-    @wraps(method)
-    def wrapper(self, *args, **kwargs):
-        cr = kwargs.get('cr') or kwargs.get('cursor') or (args and args[0])
-        if isinstance(cr, Cursor):
-            return old_api(self, *args, **kwargs)
-        else:
-            return new_api(self, *args, **kwargs)
-
-    wrapper.versatile = True
-    return wrapper
-
-
-def notversatile(method):
-    method.versatile = False
-    return method
-
-
 class MetaModel(type):
     """ Metaclass for the Model.
 
@@ -737,7 +646,7 @@ class MetaModel(type):
         # automatically decorate methods with 'versatile'
         for key in attrs:
             if not key.startswith('__') and callable(attrs[key]):
-                attrs[key] = versatile(attrs[key])
+                attrs[key] = api.versatile(attrs[key])
         return type.__new__(meta, name, bases, attrs)
 
     def __init__(self, name, bases, attrs):
@@ -1225,9 +1134,6 @@ class BaseModel(object):
         # add session data
         context = context if context is not None else {}
         obj.session = Session(obj.pool, cr, uid, context)
-        obj._cr = cr                    # for backward compatibility
-        obj._uid = uid                  # for backward compatibility
-        obj._context = context          # for backward compatibility
         return obj
 
     def _make_recordset(self, cr, uid, records, context=None):
