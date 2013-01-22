@@ -445,6 +445,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                             ? $('<a>').html(item.label)
                             : $('<a>').text(item.value));
                 }
+                $(ul[0]).css({'z-index': 2});
                 return $item.text(item.label)
                     .css({
                         borderTop: '1px solid #cccccc',
