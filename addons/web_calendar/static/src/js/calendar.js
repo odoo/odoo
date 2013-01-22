@@ -341,7 +341,11 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         var data = {
             name: event_obj.text
         };
-        data[this.date_start] = instance.web.datetime_to_str(event_obj.start_date);
+        if (this.fields[this.date_start].type == 'date') {
+            data[this.date_start] = instance.web.date_to_str(event_obj.start_date)
+        }else {
+            data[this.date_start] = instance.web.datetime_to_str(event_obj.start_date)
+        }
         if (this.date_stop) {
             data[this.date_stop] = instance.web.datetime_to_str(event_obj.end_date);
         }
