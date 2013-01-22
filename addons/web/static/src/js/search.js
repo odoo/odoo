@@ -1718,10 +1718,12 @@ instance.web.search.Advanced = instance.web.search.Input.extend({
             });
         return $.when(
             this._super(),
-            new instance.web.Model(this.view.model).call('fields_get').done(function(data) {
-                self.fields = _.extend({
-                    id: { string: 'ID', type: 'id' }
-                }, data);
+            new instance.web.Model(this.view.model).call('fields_get', {
+                    context: this.view.dataset.context
+                }).done(function(data) {
+                    self.fields = _.extend({
+                        id: { string: 'ID', type: 'id' }
+                    }, data);
         })).done(function () {
             self.append_proposition();
         });
