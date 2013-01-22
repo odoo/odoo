@@ -472,6 +472,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         this.registry = instance.web.views;
         this.views_history = [];
         this.view_completely_inited = $.Deferred();
+        this.uniqueid_dom = _.uniqueId('view_manager');
     },
     /**
      * @returns {jQuery.Deferred} initial view loading promise
@@ -539,7 +540,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             _.each(_.keys(self.views), function(view_name) {
                 var controller = self.views[view_name].controller;
                 if (controller) {
-                    var container = self.$el.find(".oe_view_manager_view_" + view_name + ":first");
+                    var container = self.$el.find("#" + self.uniqueid_dom + ".oe_view_manager_view_" + view_name);
                     if (view_name === view_type) {
                         container.show();
                         controller.do_show(view_options || {});
@@ -582,7 +583,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         controller.on('switch_mode', self, this.switch_mode);
         controller.on('previous_view', self, this.prev_view);
         
-        var container = this.$el.find(".oe_view_manager_view_" + view_type);
+        var container = this.$el.find("#" + this.uniqueid_dom + ".oe_view_manager_view_" + view_type);
         var view_promise = controller.appendTo(container);
         this.views[view_type].controller = controller;
         this.views[view_type].deferred.resolve(view_type);

@@ -520,7 +520,7 @@
 
         <div class="oe_view_manager_body">
             <t t-foreach="widget.views_src" t-as="view">
-                <div t-attf-class="oe_view_manager_view_#{view.view_type}"/>
+                <div t-attf-class="oe_view_manager_view_#{view.view_type}" t-att-id = "widget.uniqueid_dom"/>
             </t>
         </div>
     </div>
