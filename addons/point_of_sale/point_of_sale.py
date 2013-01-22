@@ -1121,9 +1121,10 @@ class pos_order_line(osv.osv):
         account_tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
         for line in self.browse(cr, uid, ids, context=context):
-            taxes = line.product_id.taxes_id
+            taxes_ids = filter(lambda t: t.company_id.id == line.order_id.company_id.id, line.product_id.taxes_id)
             price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-            taxes = account_tax_obj.compute_all(cr, uid, line.product_id.taxes_id, price, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
+            price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+            taxes = account_tax_obj.compute_all(cr, uid, taxes_ids, price, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
 
             cur = line.order_id.pricelist_id.currency_id
             res[line.id]['price_subtotal'] = cur_obj.round(cr, uid, cur, taxes['total'])
