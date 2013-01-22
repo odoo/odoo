@@ -872,7 +872,7 @@ class crm_lead(base_stage, format_address, osv.osv):
             'res_id': int(opportunity_id),
             'view_id': False,
             'views': [(form_view or False, 'form'),
-                      (tree_view or False, 'tree'),
+                      (tree_view or False, 'tree'),(False, 'kanban'),
                       (False, 'calendar'), (False, 'graph')],
             'type': 'ir.actions.act_window',
         }
