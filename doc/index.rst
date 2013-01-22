@@ -16,7 +16,7 @@ OpenERP Server
    04_security
    05_test_framework
    06_misc
-   09_deployment
+   deployment-gunicorn
 
 OpenERP Command
 '''''''''''''''
