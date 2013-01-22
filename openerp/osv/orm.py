@@ -307,8 +307,8 @@ class Session(object):
         self.context = context
 
     def __eq__(self, other):
-        return (self.cr == other.cr and self.uid == other.uid and
-                self.context == other.context)
+        return isinstance(other, Session) and \
+            (self.cr, self.uid, self.context) == (other.cr, other.uid, other.context)
 
     def __ne__(self, other):
         return not self == other

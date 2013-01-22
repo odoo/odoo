@@ -399,12 +399,11 @@ class res_partner(osv.osv, format_address):
         for record in self:
             name = record.name
             if record.parent_id:
-                name =  "%s (%s)" % (name, record.parent_id.name)
-            if self._context.get('show_address'):
+                name = "%s (%s)" % (name, record.parent_id.name)
+            if self.session.context.get('show_address'):
                 name = name + "\n" + self._display_address(record, without_company=True)
-                name = name.replace('\n\n','\n')
-                name = name.replace('\n\n','\n')
-            if self._context.get('show_email') and record.email:
+                name = "\n".join(filter(bool, name.splitlines()))
+            if self.session.context.get('show_email') and record.email:
                 name = "%s <%s>" % (name, record.email)
             res.append((record.id, name))
         return res
