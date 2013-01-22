@@ -65,7 +65,7 @@ Fields
  - ``subtype_id`` :
    Subtype of the notification for system message. The users can followe a document
    and choose the subtype of this document (eg: Create, Comment, Done).
-   You can defined new subtypes and choose his name, by agreement the id begin by "mt_" on the model
+   You can defined new subtypes and choose his name, by agreement the id begin by "mt\_" on the model
    "mail.message.subtype".
  - ``partner_ids`` :
    List of recipients, the recipients have this message in their personal mailboxe.
