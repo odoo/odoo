@@ -247,7 +247,14 @@ class res_users(osv.Model):
         res_partner.signup_prepare(cr, uid, partner_ids, signup_type="reset", expiration=now(days=+1), context=context)
 
         # send email to users with their signup url
-        template = self.pool.get('ir.model.data').get_object(cr, uid, 'auth_signup', 'reset_password_email')
+        template = False
+        if context.get('create_user'):
+            try:
+                template = self.pool.get('ir.model.data').get_object(cr, uid, 'auth_signup', 'set_password_email')
+            except ValueError:
+                pass
+        if not bool(template):
+            template = self.pool.get('ir.model.data').get_object(cr, uid, 'auth_signup', 'reset_password_email')
         mail_obj = self.pool.get('mail.mail')
         assert template._name == 'email.template'
         for user in self.browse(cr, uid, ids, context):
@@ -274,5 +281,6 @@ class res_users(osv.Model):
         user_id = super(res_users, self).create(cr, uid, values, context=context)
         user = self.browse(cr, uid, user_id, context=context)
         if context and context.get('reset_password') and user.email:
-            user.action_reset_password()
+            ctx = dict(context, create_user=True)
+            self.action_reset_password(cr, uid, [user.id], context=ctx)
         return user_id
