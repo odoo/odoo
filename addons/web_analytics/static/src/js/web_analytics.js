@@ -67,7 +67,7 @@ openerp.web_analytics = function(instance) {
         * This method contains the initialization of all user-related custom variables
         * stored in GA. Also other modules can override it to add new custom variables
         */
-        initialize_custom: function() {
+        initialize_custom: function(url) {
             var self = this;
             return instance.session.rpc("/web/webclient/version_info", {})
                 .done(function(res) {
@@ -79,7 +79,7 @@ openerp.web_analytics = function(instance) {
                     // Track User Type Conversion, Custom Variable 3 in GA with session level scope
                     // Values: 'Visitor', 'Demo', 'Online Trial', 'Online Paying', 'Local User'
                     _gaq.push(['_setCustomVar', 1, 'User Type Conversion', self._get_user_type(), 2]);
-                    _gaq.push(['_trackPageview']);
+                    _gaq.push(['_trackPageview', url]);
                     return;
                 });
         },
@@ -251,11 +251,11 @@ openerp.web_analytics = function(instance) {
         return url;
     };
 
-    instance.web_analytics.setupTracker = function(wc) {
+    instance.web_analytics.setupTracker = function(wc, url) {
         var t = wc.tracker;
         return $.when(t._get_user_access_level()).then(function(r) {
             t.user_access_level = r;
-            t.initialize_custom().then(function() {
+            t.initialize_custom(url).then(function() {
                 wc.on('state_pushed', t, t.on_state_pushed);
                 t.include_tracker();
             });
@@ -276,8 +276,8 @@ openerp.web_analytics = function(instance) {
             },
             show_application: function() {
                 var self = this;
-                $.when(this.subscribe_deferred).then(function() {
-                    instance.web_analytics.setupTracker(self);
+                $.when(this.subscribe_deferred).then(function(url) {
+                    instance.web_analytics.setupTracker(self, url);
                 });
                 this._super();
             },
