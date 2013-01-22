@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-01-20 19:05+0000\n"
+"PO-Revision-Date: 2013-01-21 18:49+0000\n"
 "Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-21 05:27+0000\n"
+"X-Launchpad-Export-Date: 2013-01-22 05:31+0000\n"
 "X-Generator: Launchpad (build 16430)\n"
 
 #. module: base_import
@@ -952,7 +952,7 @@ msgstr "Fisier pentru niste Cotatii"
 #: code:addons/base_import/static/src/js/import.js:72
 #, python-format
 msgid "Encoding:"
-msgstr ""
+msgstr "Codare:"
 
 #. module: base_import
 #. openerp-web
@@ -972,6 +972,19 @@ msgid ""
 "\n"
 "                        table. (like 'company_1', 'person_1' instead of '1')"
 msgstr ""
+"Pentru a gestiona relatiile dintre tabele, \n"
+"                        puteti folosi facilitatile \"Id-ului Extern\" din "
+"OpenERP. \n"
+"                        \"ID-ul Extern\" al unei inregistrari este "
+"identificatorul unic \n"
+"                        al acestei inregistrari intr-o alta aplicatie. Acest "
+"\"ID Extern\" \n"
+"                        trebuie sa fie unic peste toate inregistrarile "
+"tuturor \n"
+"                        obiectelor, astfel ca este bine sa prefixati acest \n"
+"                        \"ID Extern\" cu numele aplicatiei sau \n"
+"                        al tabelului. (cum ar fi 'compania_1', 'persoana_1' "
+"in loc de '1')"
 
 #. module: base_import
 #. openerp-web
@@ -982,6 +995,9 @@ msgid ""
 "                        \"External ID\". In PSQL, write the following "
 "command:"
 msgstr ""
+"Mai intai exportam toate companiile si \n"
+"                        \"ID-ul lor Extern\". In PSQL, scrieti urmatoarea "
+"comanda:"
 
 #. module: base_import
 #. openerp-web
@@ -991,13 +1007,15 @@ msgid ""
 "How can I import a one2many relationship (e.g. several \n"
 "                        Order Lines of a Sales Order)?"
 msgstr ""
+"Cum pot sa import o relatie one2many (de exemplu mai multe \n"
+"                        Linii de comanda ale Comenzii de Vanzari?"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import.js:373
 #, python-format
 msgid "Everything seems valid."
-msgstr ""
+msgstr "Totul pare valabil."
 
 #. module: base_import
 #. openerp-web
@@ -1010,13 +1028,18 @@ msgid ""
 "                        use make use of the external ID for this field \n"
 "                        'Category'."
 msgstr ""
+"Totusi, daca nu doriti sa schimbati \n"
+"                        configuratia categoriilor produselor, va recomandam "
+"sa \n"
+"                        folositi ID-ul extern pentru acest camp \n"
+"                        'Categorie'."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import.js:390
 #, python-format
 msgid "at row %d"
-msgstr ""
+msgstr "la randul %d"
 
 #. module: base_import
 #. openerp-web
@@ -1026,13 +1049,15 @@ msgid ""
 "How can I import a many2many relationship field \n"
 "                        (e.g. a customer that has multiple tags)?"
 msgstr ""
+"Cum pot importa un camp relatie many2many \n"
+"                        (de exemplu un client care are etichete multiple)?"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:80
 #, python-format
 msgid "XXX/ID"
-msgstr ""
+msgstr "XXX/ID"
 
 #. module: base_import
 #. openerp-web
@@ -1048,6 +1073,15 @@ msgid ""
 "                        link between each person and the company they work \n"
 "                        for)."
 msgstr ""
+"Daca trebuie sa importati date din diferite tabele, \n"
+"                        va trebui sa recreati legaturile dintre "
+"inregistrarile \n"
+"                        care apartin de tabele diferite. (de exemplu, daca "
+"importati \n"
+"                        companii sau persoane, va trebui sa recreati \n"
+"                        legatura dintre fiecare persoana si compania pentru "
+"care \n"
+"                        lucreaza)."
 
 #. module: base_import
 #. openerp-web
@@ -1060,13 +1094,18 @@ msgid ""
 "                        Here is when you should use one or the other, \n"
 "                        according to your need:"
 msgstr ""
+"In functie de nevoile dumneavoastra, ar trebui sa folositi \n"
+"                        una din aceste 3 modalitati de referinta a "
+"inregistrarilor in relatie. \n"
+"                        Iata cand ar trebui sa folositi una sau alta, \n"
+"                        in functie de nevoile dumneavoastra:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:319
 #, python-format
 msgid "person_4,Ramsy,False,company_3"
-msgstr ""
+msgstr "persoana_4,Ramsy,Fals,compania_3"
 
 #. module: base_import
 #. openerp-web
@@ -1082,13 +1121,21 @@ msgid ""
 "                        will set the EMPTY value in the field, instead of \n"
 "                        assigning the default value."
 msgstr ""
+"Daca nu configurati toate campurile in fisierul dumneavoastra CSV, \n"
+"                        OpenERP va atribui valoarea implicita pentru fiecare "
+"dintre \n"
+"                        campurile nedefinite. Dar daca\n"
+"                        setati campurile sa ramana necompletate in fisierul "
+"dumneavoastra CSV, OpenERP \n"
+"                        nu va seta nicio valoare in camp, in loc sa \n"
+"                        atribuie valoarea implicita."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:20
 #, python-format
 msgid "Cancel"
-msgstr ""
+msgstr "Anuleaza"
 
 #. module: base_import
 #. openerp-web
@@ -1098,20 +1145,22 @@ msgid ""
 "What happens if I do not provide a value for a \n"
 "                        specific field?"
 msgstr ""
+"Ce se intampla daca nu furnizez o valoare pentru un \n"
+"                        anumit camp?"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:68
 #, python-format
 msgid "Frequently Asked Questions"
-msgstr ""
+msgstr "Intrebari Frecvente"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:305
 #, python-format
 msgid "company_3,Boum,True"
-msgstr ""
+msgstr "compania_3,Boum,Adevarat"
 
 #. module: base_import
 #. openerp-web
@@ -1125,6 +1174,12 @@ msgid ""
 "spreadsheet \n"
 "                        application."
 msgstr ""
+"Aceasta caracteristica \n"
+"                        va permite sa folositi unealta Import/Export din "
+"OpenERP pentru a \n"
+"                        modifica un set de inregistrari in aplicatia "
+"dumneavoastra preferata \n"
+"                        cu tabele."
 
 #. module: base_import
 #. openerp-web
@@ -1135,6 +1190,9 @@ msgid ""
 "                        import an other record that links to the first\n"
 "                        one, use"
 msgstr ""
+"coloana in OpenERP. Atunci cand\n"
+"                        importati o alta inregistrare care are legatura cu\n"
+"                        prima, folositi"
 
 #. module: base_import
 #. openerp-web
@@ -1155,20 +1213,31 @@ msgid ""
 "                        take care of creating or modifying each record \n"
 "                        depending if it's new or not."
 msgstr ""
+"Daca importati un fisier care contine una dintre \n"
+"                        coloanele \"ID Extern\" sau \"ID Baza de date\", "
+"inregistrarile care \n"
+"                        au fost deja importate vor fi modificate in loc sa \n"
+"                        fie create. Acest lucru este foarte util deoarece va "
+"permite \n"
+"                        sa importati acelasi fisier CSV de mai multe ori, in "
+"timp ce faceti \n"
+"                        unele modificari intre doua importuri. OpenERP va \n"
+"                        crea sau va modifica fiecare inregistrare \n"
+"                        in functie daca este noua sau nu."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:169
 #, python-format
 msgid "CSV file for categories"
-msgstr ""
+msgstr "Fisier CSV pentru categorii"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import.js:309
 #, python-format
 msgid "Normal Fields"
-msgstr ""
+msgstr "Campuri Obisnuite"
 
 #. module: base_import
 #. openerp-web
@@ -1180,13 +1249,18 @@ msgid ""
 "                        identifier from the original application and\n"
 "                        map it to the"
 msgstr ""
+"Pentru a recrea relatia dintre\n"
+"                        diferite inregistrari, ar trebui sa folositi "
+"identificatorul\n"
+"                        unic din aplicatia originala si\n"
+"                        sa il trasati in"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:170
 #, python-format
 msgid "CSV file for Products"
-msgstr ""
+msgstr "Fisier CSV pentru Produse"
 
 #. module: base_import
 #. openerp-web
@@ -1206,35 +1280,45 @@ msgid ""
 "\n"
 "                        the fields relative to the order."
 msgstr ""
+"Daca doriti sa importati comenzi de vanzare care au mai multe \n"
+"                        linii de comanda; pentru fiecare linie a comenzii, "
+"trebuie sa rezervati \n"
+"                        un anumit rand in fisierul CSV. Prima linie a "
+"comenzii \n"
+"                        va fi importata in acelasi rand ca si informatiile \n"
+"                        asociate comenzii. Orice linii suplimentare vor avea "
+"nevoie de un \n"
+"                        rand suplimentar care nu are alte informatii in \n"
+"                        campurile asociate comenzii."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_related
 msgid "base_import.tests.models.m2o.related"
-msgstr ""
+msgstr "baza_impot.teste.modele.m2o.asociate"
 
 #. module: base_import
 #: field:base_import.tests.models.preview,name:0
 msgid "Name"
-msgstr ""
+msgstr "Nume"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:80
 #, python-format
 msgid "to the original unique identifier."
-msgstr ""
+msgstr "identificatorul original unic."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:318
 #, python-format
 msgid "person_3,Eric,False,company_2"
-msgstr ""
+msgstr "persoana_3,Eric,Fals,compania_2"
 
 #. module: base_import
 #: field:base_import.import,res_model:0
 msgid "Model"
-msgstr ""
+msgstr "Model"
 
 #. module: base_import
 #. openerp-web
@@ -1242,7 +1326,7 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/import.xml:82
 #, python-format
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: base_import
 #. openerp-web
@@ -1258,6 +1342,13 @@ msgid ""
 "                        to the first company). You must first import the \n"
 "                        companies and then the persons."
 msgstr ""
+"Cele doua fisiere produse sunt gata pentru a fi importate in \n"
+"                        OpenERP fara alte modificari. Dupa ce ati \n"
+"                        importat aceste doua fisiere CSV, veti avea 4 "
+"contacte \n"
+"                        si 3 companii. (primele doua contacte sunt legate \n"
+"                        de prima companie). Mai intai trebuie sa importati \n"
+"                        companiile si apoi persoanele."
 
 #. module: base_import
 #. openerp-web
@@ -1277,12 +1368,12 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import.js:73
 #, python-format
 msgid "Separator:"
-msgstr ""
+msgstr "Separator:"
 
 #. module: base_import
 #: field:base_import.import,file_name:0
 msgid "File Name"
-msgstr ""
+msgstr "Numele Fisierului"
 
 #. module: base_import
 #. openerp-web
@@ -1292,28 +1383,28 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/import.xml:82
 #, python-format
 msgid "External ID"
-msgstr ""
+msgstr "ID Extern"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:39
 #, python-format
 msgid "File Format Options…"
-msgstr ""
+msgstr "Optiuni de Format Fisier..."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import.js:392
 #, python-format
 msgid "between rows %d and %d"
-msgstr ""
+msgstr "intre randurile %d si %d"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:19
 #, python-format
 msgid "or"
-msgstr ""
+msgstr "sau"
 
 #. module: base_import
 #. openerp-web
