@@ -3504,7 +3504,6 @@ class BaseModel(object):
 
         res = {}
 
-        translation_obj = self.pool.get('ir.translation')
         for parent in self._inherits:
             res.update(self.pool.get(parent).fields_get(cr, user, allfields, context))
 
@@ -3520,6 +3519,8 @@ class BaseModel(object):
                 res[f]['states'] = {}
 
             if 'lang' in context:
+                translation_obj = self.pool.get('ir.translation')
+
                 if 'string' in res[f]:
                     res_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'field', context['lang'])
                     if res_trans:
