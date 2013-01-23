@@ -132,37 +132,21 @@ my.InputView = instance.web.Widget.extend({
     },
     getSelection: function () {
         // get Text node
-        var root = this.$el[0].childNodes[0];
+        var root = this.el.childNodes[0];
         if (!root || !root.textContent) {
             // if input does not have a child node, or the child node is an
             // empty string, then the selection can only be (0, 0)
             return {start: 0, end: 0};
         }
-        if (window.getSelection) {
-            var domRange = window.getSelection().getRangeAt(0);
-            assert(domRange.startContainer === root,
-                   "selection should be in the input view");
-            assert(domRange.endContainer === root,
-                   "selection should be in the input view");
-            return {
-                start: domRange.startOffset,
-                end: domRange.endOffset
-            }
-        } else if (document.selection) {
-            var ieRange = document.selection.createRange();
-            var rangeParent = ieRange.parentElement();
-            assert(rangeParent === root,
-                   "selection should be in the input view");
-            var offsetRange = document.body.createTextRange();
-            offsetRange = offsetRange.moveToElementText(rangeParent);
-            offsetRange.setEndPoint("EndToStart", ieRange);
-            var start = offsetRange.text.length;
-            return {
-                start: start,
-                end: start + ieRange.text.length
-            }
+        var range = window.getSelection().getRangeAt(0);
+        assert(range.startContainer === root,
+               "selection should be in the input view");
+        assert(range.endContainer === root,
+               "selection should be in the input view");
+        return {
+            start: range.startOffset,
+            end: range.endOffset
         }
-        throw new Error("Could not get caret position");
     },
     onKeydown: function (e) {
         var sel;
