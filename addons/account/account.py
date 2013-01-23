@@ -927,6 +927,9 @@ class account_period(osv.osv):
     def action_draft(self, cr, uid, ids, *args):
         mode = 'draft'
         for id in ids:
+            period = self.browse(cr, uid, id)
+            if period.fiscalyear_id.state == 'done':
+                raise osv.except_osv(_('Warning !'), _('You can not re-open a period which belongs to closed fiscal year'))
             cr.execute('update account_journal_period set state=%s where period_id=%s', (mode, id))
             cr.execute('update account_period set state=%s where id=%s', (mode, id))
         return True
