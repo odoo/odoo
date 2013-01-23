@@ -280,8 +280,15 @@ class res_partner(osv.osv):
         if vals.get("payment_responsible_id", False):
             for part in self.browse(cr, uid, ids, context=context):
                 if part.payment_responsible_id <> vals["payment_responsible_id"]:
-                    self.message_post(cr, uid, part.id, body = _('New responsible registered: %s') % (self.pool.get("res.users").browse(cr, uid, vals["payment_responsible_id"], context=context).name), 
-                                      context=context)
+                    #Find partner_id of user put as responsible
+                    responsible_partner_id = self.pool.get("res.users").browse(cr, uid, vals['payment_responsible_id'], context=context).partner_id.id
+                    self.pool.get("mail.thread").message_post(cr, uid, 0, 
+                                      body = _("You became responsible to follow up the payment of") + " <b><a href='#id=" + str(part.id) + "&view_type=form&model=res.partner'> " + part.name + " </a></b>",
+                                      type='comment',
+                                      subtype="mail.mt_comment", context=context,
+                                      model='res.partner', res_id = part.id, 
+                                      notified_partner_ids = [(6, 0, [responsible_partner_id])],
+                                      partner_ids = [(6, 0, [responsible_partner_id])])
         res = super(res_partner, self).write(cr, uid, ids, vals, context=context)
         return res
 
