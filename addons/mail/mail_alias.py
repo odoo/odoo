@@ -22,6 +22,7 @@
 import logging
 import re
 import unicodedata
+import ast
 
 from openerp.osv import fields, osv
 from openerp.tools import ustr
@@ -196,3 +197,47 @@ class mail_alias(osv.Model):
             model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', model_name)], context=context)[0]
             vals['alias_model_id'] = model_id
         return self.create(cr, uid, vals, context=context)
+
+    def get_alias(self, cr, uid, model, alias_defaults={}, context=None):
+        """Return the mail alias
+        """
+        model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', model)], context=context)[0]
+
+        result = []
+        # get the value with required attribute
+        domain = [('alias_model_id', '=', model_id)]
+        if alias_defaults:
+            for item in alias_defaults.items():
+                domain += ['|', '|', '|',
+                    ('alias_defaults', 'like', ("%%'%s': %s%%" % (item[0], item[1]))), 
+                    ('alias_defaults', 'like', ("%%'%s':%s%%" % (item[0], item[1]))), 
+                    ('alias_defaults', 'like', ("%%'%s': '%s'%%" % (item[0], item[1]))), 
+                    ('alias_defaults', 'like', ("%%'%s':'%s'%%" % (item[0], item[1])))]
+        else:
+            domain += [('alias_defaults', 'like', "{}")]
+
+        ids = self.search(cr, uid, domain, context=context)
+        if ids:
+            for record in self.browse(cr, uid, ids, context=context):
+                test = True
+                if alias_defaults:
+                    for item in ast.literal_eval(record.alias_defaults).items():
+                        if alias_defaults.get(item[0]) == None or alias_defaults.get(item[0]) != item[1]:
+                            test = False
+                            continue
+                if test:
+                    result.append( {'id': record.id, 'email': "%s@%s" % (record.alias_name, record.alias_domain), 'global': False})
+
+        # get the default value
+        if alias_defaults:
+            domain = [('alias_model_id', '=', model_id)]
+            for item in alias_defaults.items():
+                domain += [
+                    ('alias_defaults', 'not like', ("%%'%s'%%" % (item[0])))]
+
+            ids = self.search(cr, uid, domain, context=context)
+            if ids:
+                for record in self.browse(cr, uid, ids, context=context):
+                    result.append( {'id': record.id, 'email': "%s@%s" % (record.alias_name, record.alias_domain), 'global': True})
+        
+        return result        
