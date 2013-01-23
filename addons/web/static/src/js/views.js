@@ -1404,7 +1404,7 @@ instance.web.View = instance.web.Widget.extend({
         if (context && context.alias) {
             new instance.web.Model('mail.alias').call("get_alias", [], {'alias': context.alias}).then(function (alias_ids) {
                 if (alias_ids.length) {
-                    var $alias = $('<p class="oe_view_nocontent_alias"></p>');
+                    var $alias = $(QWeb.render('View.nocontent_alias'));
                     var global = false;
                     var inc = 0;
                     _.each(alias_ids, function (alias_id) {
@@ -1413,11 +1413,13 @@ instance.web.View = instance.web.Widget.extend({
                                 $alias.append('<br/>' + _t("or"));
                                 global = alias_id.global;
                             }
-                            $alias.append((inc? '<br/>': '') + '<a href="mailto:' + alias_id.email + '">' + alias_id.email + '</a>');
+                            $alias.append('<br/><a href="mailto:' + alias_id.email + '">' + alias_id.email + '</a>');
                             inc++;
                         }
                     })
-                    $dom.append($alias);
+                    if(inc) {
+                        $dom.append($alias);
+                    }
                 }
             });
         }
