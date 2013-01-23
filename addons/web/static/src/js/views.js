@@ -1401,8 +1401,11 @@ instance.web.View = instance.web.Widget.extend({
     insert_alias: function ($dom) {
         var self = this;
         var context = this.options.action.context || {};
-        if (context && context.alias) {
-            new instance.web.Model('mail.alias').call("get_alias", [], {'alias': context.alias}).then(function (alias_ids) {
+        if (context && context.help_alias) {
+            new instance.web.Model('mail.alias').call("get_alias", [], {
+                    'model': this.options.action.res_model, 
+                    'alias_defaults': context.help_alias
+                    }).then(function (alias_ids) {
                 if (alias_ids.length) {
                     var $alias = $(QWeb.render('View.nocontent_alias'));
                     var global = false;
