@@ -199,7 +199,9 @@ class mail_alias(osv.Model):
         return self.create(cr, uid, vals, context=context)
 
     def get_alias(self, cr, uid, model, alias_defaults={}, context=None):
-        """Return the mail alias
+        """Return the mail alias for a document
+        This method is used by the web client (method web.view.insert_alias)
+        Arguments: model and content of alias_defaults column
         """
         model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', model)], context=context)[0]
 
