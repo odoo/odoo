@@ -5319,16 +5319,34 @@ class BaseModel(object):
 
     @api.model
     def query(self, domain, offset=0, limit=None, order=None):
-        """ Return the recordset satisfying the given domain. """
+        """ Return the recordset satisfying the given domain.
+
+            The recordset is evaluated on demand, i.e., when iterating over its
+            records is required.  Once evaluated, it keeps its list of records,
+            and will never be evaluated again.
+        """
         obj = self._make_instance()
         obj._search_args = (domain, offset, limit, order)
         return obj
 
     def force(self):
-        """ Force the evaluation of a recordset defined by a query only. """
+        """ Force the evaluation of a recordset.
+            Does nothing if ``self`` is not defined by a query or has already
+            been evaluated.
+        """
         if not hasattr(self, '_records'):
             ids = self.search(*self._search_args)
             self._records = self.browse(ids)._records
+
+    def is_forced(self):
+        """ Test whether a recordset has been evaluated. """
+        return hasattr(self, '_records')
+
+    def get_domain(self):
+        """ Return a domain that describes exactly ``self``. """
+        if hasattr(self, '_records'):
+            return [('id', 'in', map(int, self))]
+        return expression.normalize_domain(self._search_args[0])
 
     def __nonzero__(self):
         """ If ``self`` is a recordset, test whether it is nonempty.
@@ -5339,7 +5357,9 @@ class BaseModel(object):
         return True
 
     def __iter__(self):
-        """ Return an iterator over ``self`` (must be a recordset). """
+        """ Return an iterator over ``self`` (must be a recordset).
+            It forces the evaluation of ``self``.
+        """
         self.force()
         return iter(self._records)
 
@@ -5348,6 +5368,101 @@ class BaseModel(object):
         if not hasattr(self, '_records'):
             return self.search(*self._search_args, count=True)
         return len(self._records)
+
+    def __contains__(self, record):
+        """ Test whether ``record`` belongs to ``self``.
+            It does not force evaluation of ``self``.
+        """
+        if hasattr(self, '_records'):
+            return record in self._records
+        else:
+            dom = [('id', '=', record.id)] + self.get_domain()
+            return bool(self.search(dom, count=True))
+
+    def __add__(self, other):
+        """ Return the concatenation of two recordsets as a recordset.
+            It forces the evaluation of both recordsets.
+        """
+        assert self._name == other._name, "Mixing apples and oranges: %s, %s" % (self, other)
+        return self._make_recordset(list(self) + list(other))
+
+    def __sub__(self, other):
+        """ Return a recordset made of the records in ``self`` but not in ``other``.
+            It does not force evaluation of recordsets.
+        """
+        assert self._name == other._name, "Mixing apples and oranges: %s, %s" % (self, other)
+        return self & (~other)
+
+    def __and__(self, other):
+        """ Return the conjunction of two recordsets.
+            It does not force evaluation of recordsets.
+        """
+        assert self._name == other._name, "Mixing apples and oranges: %s, %s" % (self, other)
+        if hasattr(self, '_records') and hasattr(other, '_records'):
+            return self._make_recordset(list(set(self) & set(other)))
+        dom = expression.AND([self.get_domain(), other.get_domain()])
+        uneval = self if not hasattr(self, '_records') else other
+        return self.query(dom, *uneval._search_args[1:])
+
+    def __or__(self, other):
+        """ Return the union of two recordsets.
+            It does not force evaluation of recordsets.
+        """
+        assert self._name == other._name, "Mixing apples and oranges: %s, %s" % (self, other)
+        if hasattr(self, '_records') and hasattr(other, '_records'):
+            return self._make_recordset(list(set(self) | set(other)))
+        dom = expression.OR([self.get_domain(), other.get_domain()])
+        uneval = self if not hasattr(self, '_records') else other
+        return self.query(dom, *uneval._search_args[1:])
+
+    def __xor__(self, other):
+        """ Return the disjoint union of two recordsets.
+            It does not force evaluation of recordsets.
+        """
+        return (self & ~other) | (~self & other)
+
+    def __neg__(self):
+        """ Same as ``~self``. """
+        return ~self
+
+    def __invert__(self):
+        """ Return the complement of ``self``.
+            It does not force evaluation of ``self``.
+        """
+        assert self.is_recordset(), "Expected recordset: %s" % self
+        return self.query(['!'] + self.get_domain())
+
+    def __le__(self, other):
+        """ Test whether ``self`` is included into ``other`` (set inclusion).
+            It does not force evaluation of recordsets.
+        """
+        # Beware: do not change this expression!
+        # It tests the non-existence of a record in self and not in other.
+        return not bool(self & ~other)
+
+    def __lt__(self, other):
+        return self <= other and bool(~self & other)
+
+    def __ge__(self, other):
+        return other <= self
+
+    def __gt__(self, other):
+        return other < self
+
+    def __eq__(self, other):
+        assert self.is_recordset() == other.is_recordset(), "Mixing model and recordset: %s, %s" % (self, other)
+        if self.is_recordset():
+            return self <= other and other <= self
+        return self._name == other._name
+
+    def __ne__(self, other):
+        return not self == other
+
+    def isdisjoint(self, other):
+        """ Test whether ``self`` and ``other`` are disjoint.
+            It does not force evaluation of recordsets.
+        """
+        return not bool(self & other)
 
     def __getitem__(self, key):
         """ If ``key`` is an integer, return the ``key``-th element of ``self``.
