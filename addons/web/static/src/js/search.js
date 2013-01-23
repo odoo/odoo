@@ -127,7 +127,8 @@ my.InputView = instance.web.Widget.extend({
     events: {
         focus: function () { this.trigger('focused', this); },
         blur: function () { this.$el.text(''); this.trigger('blurred', this); },
-        keydown: 'onKeydown'
+        keydown: 'onKeydown',
+        paste: 'onPaste',
     },
     getSelection: function () {
         // get Text node
@@ -199,6 +200,50 @@ my.InputView = instance.web.Widget.extend({
             }
             break;
         }
+    },
+    setCursorAtEnd: function () {
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        var range = document.createRange();
+        // in theory, range.selectNodeContents should work here. In practice,
+        // MSIE9 has issues from time to time, instead of selecting the inner
+        // text node it would select the reference node instead (e.g. in demo
+        // data, company news, copy across the "Company News" link + the title,
+        // from about half the link to half the text, paste in search box then
+        // hit the left arrow key, getSelection would blow up).
+        //
+        // Explicitly selecting only the inner text node (only child node at
+        // this point, though maybe we should assert that) avoiids the issue
+        range.selectNode(this.el.childNodes[0]);
+        range.collapse(false);
+        sel.addRange(range);
+    },
+    onPaste: function () {
+        // In MSIE and Webkit, it is possible to get various representations of
+        // the clipboard data at this point e.g.
+        // window.clipboardData.getData('Text') and
+        // event.clipboardData.getData('text/plain') to ensure we have a plain
+        // text representation of the object (and probably ensure the object is
+        // pastable as well, so nobody puts an image in the search view)
+        // (nb: since it's not possible to alter the content of the clipboard
+        // — at least in Webkit — to ensure only textual content is available,
+        // using this would require 1. getting the text data; 2. manually
+        // inserting the text data into the content; and 3. cancelling the
+        // paste event)
+        //
+        // But Firefox doesn't support the clipboard API (as of FF18)
+        // although it correctly triggers the paste event (Opera does not even
+        // do that) => implement lowest-denominator system where onPaste
+        // triggers a followup "cleanup" pass after the data has been pasted
+        setTimeout(function () {
+            // Read text content (ignore pasted HTML)
+            var data = this.$el.text();
+            // paste raw text back in
+            this.$el.empty().text(data);
+            // Set the cursor at the end of the text, so the cursor is not lost
+            // in some kind of error-spawning limbo.
+            this.setCursorAtEnd();
+        }.bind(this), 0);
     }
 });
 my.FacetView = instance.web.Widget.extend({
