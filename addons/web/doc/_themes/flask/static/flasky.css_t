@@ -164,7 +164,8 @@ div.body h6 {
 
 {% if theme_index_logo %}
 div.indexwrapper h1 {
-    text-indent: -999999px;
+    /* We don't want it, I don't know why theme_index_logo is triggered. */
+    /* text-indent: -999999px; */
     background: url({{ theme_index_logo }}) no-repeat center center;
     height: {{ theme_index_logo_height }};
 }
