@@ -27,7 +27,56 @@ class TestAPI(common.TransactionCase):
         self.assertEqual([p.id for p in partners], ids)
 
     @mute_logger('openerp.osv.orm')
-    def test_01_immutable(self):
+    def test_01_query_offset(self):
+        """ Build a recordset with offset, and check equivalence. """
+        ids = self.Partner.search(self.cr, self.uid, [], offset=10)
+        partners = self.Partner.browse(self.cr, self.uid, ids)
+        self.assertTrue(partners)
+
+        partners1 = self.Partner.query(self.cr, self.uid, [], offset=10)
+        self.assertEqual(list(partners1), list(partners))
+
+        partners2 = self.Partner.query(self.cr, self.uid, [])[10:]
+        self.assertEqual(list(partners2), list(partners))
+
+    @mute_logger('openerp.osv.orm')
+    def test_02_query_limit(self):
+        """ Build a recordset with offset, and check equivalence. """
+        ids = self.Partner.search(self.cr, self.uid, [], limit=10)
+        partners = self.Partner.browse(self.cr, self.uid, ids)
+        self.assertTrue(partners)
+
+        partners1 = self.Partner.query(self.cr, self.uid, [], limit=10)
+        self.assertEqual(list(partners1), list(partners))
+
+        partners2 = self.Partner.query(self.cr, self.uid, [])[:10]
+        self.assertEqual(list(partners2), list(partners))
+
+    @mute_logger('openerp.osv.orm')
+    def test_03_query_offset_limit(self):
+        """ Build a recordset with offset and limit, and check equivalence. """
+        ids = self.Partner.search(self.cr, self.uid, [], offset=3, limit=7)
+        partners = self.Partner.browse(self.cr, self.uid, ids)
+        self.assertTrue(partners)
+
+        partners1 = self.Partner.query(self.cr, self.uid, [], offset=3, limit=7)
+        self.assertEqual(list(partners1), list(partners))
+
+        partners2 = self.Partner.query(self.cr, self.uid, [])[3:10]
+        self.assertEqual(list(partners2), list(partners))
+
+    @mute_logger('openerp.osv.orm')
+    def test_04_query_multi_slicing(self):
+        """ Build a recordset with multiple slicings, and check equivalence. """
+        ids = self.Partner.search(self.cr, self.uid, [], offset=3, limit=7)
+        partners = self.Partner.browse(self.cr, self.uid, ids)
+        self.assertTrue(partners)
+
+        partners1 = self.Partner.query(self.cr, self.uid, [])[1:10][2:12]
+        self.assertEqual(list(partners1), list(partners))
+
+    @mute_logger('openerp.osv.orm')
+    def test_05_immutable(self):
         """ Check that a recordset remains the same, even after updates. """
         domain = [('name', 'ilike', 'j')]
         partners = self.Partner.query(self.cr, self.uid, domain)
@@ -43,7 +92,7 @@ class TestAPI(common.TransactionCase):
         self.assertFalse(partners2)
 
     @mute_logger('openerp.osv.orm')
-    def test_02_fields(self):
+    def test_06_fields(self):
         """ Check that relation fields return records or recordsets. """
         partners = self.Partner.query(self.cr, self.uid, [])
         for name, cinfo in partners._all_columns.iteritems():

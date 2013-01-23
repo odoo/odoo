@@ -1137,13 +1137,16 @@ class BaseModel(object):
         return obj
 
     def _make_recordset(self, cr, uid, records, context=None):
+        """ make a recordset from an explicit list of records """
         obj = self._make_instance(cr, uid, context)
-        obj._ids = map(int, records)
         obj._records = records
         return obj
 
     def is_recordset(self):
-        return hasattr(self, '_ids')
+        """ test whether self is a recordset """
+        # query() returns recordsets with self._search_args, and self._records
+        # when evaluated; browse() returns recordsets with self._records only
+        return hasattr(self, '_records') or hasattr(self, '_search_args')
 
     def __export_row(self, cr, uid, row, fields, context=None):
         if context is None:
@@ -2417,14 +2420,6 @@ class BaseModel(object):
 
         """
         return self._search(cr, user, args, offset=offset, limit=limit, order=order, context=context, count=count)
-
-    def query(self, cr, uid, args, offset=0, limit=None, order=None, context=None):
-        """ Return a recordset corresponding to the search domain. """
-        ids = self.search(cr, uid, args, offset=offset, limit=limit, order=order, context=context)
-        return self.browse(cr, uid, ids, context=context)
-
-    def force(self):
-        assert hasattr(self, '_ids')
 
     def name_get(self, cr, user, ids, context=None):
         """Returns the preferred display value (text representation) for the records with the
@@ -5322,28 +5317,68 @@ class BaseModel(object):
         """ stuff to do right after the registry is built """
         pass
 
+    @api.model
+    def query(self, domain, offset=0, limit=None, order=None):
+        """ Return the recordset satisfying the given domain. """
+        obj = self._make_instance()
+        obj._search_args = (domain, offset, limit, order)
+        return obj
+
+    def force(self):
+        """ Force the evaluation of a recordset defined by a query only. """
+        if not hasattr(self, '_records'):
+            ids = self.search(*self._search_args)
+            self._records = self.browse(ids)._records
+
     def __nonzero__(self):
-        """ If self is a recordset, test whether it is nonempty.
+        """ If ``self`` is a recordset, test whether it is nonempty.
             Otherwise return True.
         """
-        if hasattr(self, '_ids'):
-            return bool(self._ids)
+        if self.is_recordset():
+            return len(self) > 0
         return True
 
     def __iter__(self):
-        """ Return an iterator over self (must be a recordset). """
+        """ Return an iterator over ``self`` (must be a recordset). """
         self.force()
         return iter(self._records)
 
     def __len__(self):
-        """ Return the size of self (must be a recordset). """
-        self.force()
-        return len(self._ids)
+        """ Return the size of ``self`` (must be a recordset). """
+        if not hasattr(self, '_records'):
+            return self.search(*self._search_args, count=True)
+        return len(self._records)
 
-    def __getitem__(self, n):
-        """ Return the nth element of self (must be a recordset). """
+    def __getitem__(self, key):
+        """ If ``key`` is an integer, return the ``key``-th element of ``self``.
+            If ``key`` is a slice, return the recordset given by offset and
+            limits with respect to ``self``.
+        """
+        if isinstance(key, slice):
+            if hasattr(self, '_records'):
+                # make a recordset with the sublist of records
+                return self._make_recordset(self._records[key])
+            else:
+                # do not evaluate self; make a recordset with new offset and limit
+                assert key.start is None or key.start >= 0, "Recordset slice cannot start with %s" % key.start
+                assert key.stop is None or key.stop >= 0, "Recordset slice cannot stop with %s" % key.stop
+                domain, offset, limit, order = self._search_args
+
+                key_offset = key.start or 0
+                offset += key_offset
+                if limit is None:
+                    if key.stop is not None:
+                        limit = max(0, key.stop - key_offset)
+                else:
+                    if key.stop is not None:
+                        limit = min(limit, key.stop)
+                    limit = max(0, limit - key_offset)
+
+                return self.query(domain, offset, limit, order)
+
+        # select a single record in the list
         self.force()
-        return self._records[n]
+        return self._records[key]
 
 # keep this import here, at top it will cause dependency cycle errors
 import expression
