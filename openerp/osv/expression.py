@@ -138,7 +138,7 @@ import traceback
 
 import openerp.modules
 from openerp.osv import fields
-from openerp.osv.orm import MAGIC_COLUMNS
+from openerp.osv.orm import MAGIC_COLUMNS, BaseModel
 import openerp.tools as tools
 
 #.apidoc title: Domain Expressions
@@ -512,7 +512,7 @@ class ExtendedLeaf(object):
                     in the condition (i.e. in many2one); this link is used to
                     compute aliases
         """
-        assert model, 'Invalid leaf creation without table'
+        assert isinstance(model, BaseModel), 'Invalid leaf creation without table'
         self.join_context = join_context or []
         self.leaf = leaf
         # normalize the leaf's operator
