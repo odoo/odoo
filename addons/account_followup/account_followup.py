@@ -208,13 +208,12 @@ class res_partner(osv.osv):
         for partner in self.browse(cr, uid, partner_ids, context=ctx):
             if partner.email and partner.email.strip():
                 level = partner.latest_followup_level_id_without_lit
-                if not partner.payment_no_email:
-                    if level and level.send_email and level.email_template_id and level.email_template_id.id:
-                        mtp.send_mail(cr, uid, level.email_template_id.id, partner.id, context=ctx)
-                    else:
-                        mail_template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 
-                                                        'account_followup', 'email_template_account_followup_default')
-                        mtp.send_mail(cr, uid, mail_template_id[1], partner.id, context=ctx)
+                if level and level.send_email and level.email_template_id and level.email_template_id.id:
+                    mtp.send_mail(cr, uid, level.email_template_id.id, partner.id, context=ctx)
+                else:
+                    mail_template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 
+                                                    'account_followup', 'email_template_account_followup_default')
+                    mtp.send_mail(cr, uid, mail_template_id[1], partner.id, context=ctx)
             else:
                 unknown_mails = unknown_mails + 1
                 action_text = _("Email not sent because of email address of partner not filled in")
@@ -293,7 +292,7 @@ class res_partner(osv.osv):
         return res
 
     def action_done(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'payment_next_action_date': False, 'payment_next_action':'', 'payment_responsible_id': False, 'payment_no_email': False}, context=context) 
+        return self.write(cr, uid, ids, {'payment_next_action_date': False, 'payment_next_action':'', 'payment_responsible_id': False}, context=context) 
 
     def do_button_print(self, cr, uid, ids, context=None):
         assert(len(ids) == 1)
@@ -435,8 +434,6 @@ class res_partner(osv.osv):
                                     help="This is when the manual follow-up is needed. " \
                                     "The date will be set to the current date when the partner gets a follow-up level that requires a manual action. "\
                                     "Can be practical to set manually e.g. to see if he keeps his promises."),
-        'payment_no_email':fields.boolean('Don\'t send follow-up emails meanwhile', help='When checked, the follow-up wizard will go to the next level,'\
-                                          ' print letters and set manual actions, but mails will not be sent. Follow-up will happen by doing manual actions. '), 
         'unreconciled_aml_ids':fields.one2many('account.move.line', 'partner_id', domain=['&', ('reconcile_id', '=', False), '&', 
                             ('account_id.active','=', True), '&', ('account_id.type', '=', 'receivable'), ('state', '!=', 'draft')]), 
         'latest_followup_date':fields.function(_get_latest, method=True, type='date', string="Latest Follow-up Date", 
