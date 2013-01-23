@@ -500,6 +500,7 @@ class module(osv.osv):
             raise orm.except_orm(_('Error'), _("The `base` module cannot be uninstalled"))
         dep_ids = self.downstream_dependencies(cr, uid, ids, context=context)
         self.write(cr, uid, ids + dep_ids, {'state': 'to remove'})
+        openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
         return dict(ACTION_DICT, name=_('Uninstall'))
 
     def button_uninstall_cancel(self, cr, uid, ids, context=None):
