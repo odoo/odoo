@@ -1608,6 +1608,7 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
     append_filter: function (filter) {
         var self = this;
         var key = this.key_for(filter);
+        var warning = _t("This filter is global and will be removed for everybody if you continue.");
 
         var $filter;
         if (key in this.$filters) {
@@ -1625,6 +1626,9 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
             $('<a class="oe_searchview_custom_delete">x</a>')
                 .click(function (e) {
                     e.stopPropagation();
+                    if (!(filter.user_id || confirm(warning))) {
+                        return;
+                    }
                     self.model.call('unlink', [id]).done(function () {
                         $filter.remove();
                         delete self.$filters[key];
