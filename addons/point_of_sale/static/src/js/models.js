@@ -704,10 +704,10 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             }), 0);
         },
         getChange: function() {
-            return this.getPaidTotal() - this.getTotal();
+            return this.getPaidTotal() - this.getTotalTaxIncluded();
         },
         getDueLeft: function() {
-            return this.getTotal() - this.getPaidTotal();
+            return this.getTotalTaxIncluded() - this.getPaidTotal();
         },
         // sets the type of receipt 'receipt'(default) or 'invoice'
         set_receipt_type: function(type){
@@ -763,7 +763,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             return {
                 orderlines: orderlines,
                 paymentlines: paymentlines,
-                total_with_tax: this.getTotal(),
+                total_with_tax: this.getTotalTaxIncluded(),
                 total_without_tax: this.getTotalTaxExcluded(),
                 total_tax: this.getTax(),
                 total_paid: this.getPaidTotal(),
@@ -808,7 +808,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             return {
                 name: this.getName(),
                 amount_paid: this.getPaidTotal(),
-                amount_total: this.getTotal(),
+                amount_total: this.getTotalTaxIncluded(),
                 amount_tax: this.getTax(),
                 amount_return: this.getChange(),
                 lines: orderLines,

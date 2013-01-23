@@ -437,17 +437,13 @@
 
                     </ul>
                     <div class="summary">
-                        <span t-attf-class="line #{widget.pos.get('selectedOrder').get('orderLines').length === 0 ? 'empty' : ''}">
-                            <span class='entry subtotal'>
-                                <span class="label subtotal">Subtotal:</span> <span class="value subtotal">0.00 €</span>
-                            </span>
-                            <span class='entry taxes'>
-                                <span class="label taxes">Taxes:</span> <span class="value taxes">0.00€</span>
-                            </span>
-                            <span class='entry total'>
-                                <span class="label total">Total:</span> <span class="value total">0.00 €</span>
-                            </span>
-                        </span>
+                        <div t-attf-class="line #{widget.pos.get('selectedOrder').get('orderLines').length === 0 ? 'empty' : ''}">
+                            <div class='entry total'>
+                                <span class="label">Total: </span> <span class="value">0.00 €</span>
+                                <div class='subentry'>Taxes: <span class="value">0.00€</span></div>
+                            </div>
+                        </div>
+                        <div class='clear'></div>
                     </div>
                 </div>
             </div>

@@ -269,12 +269,10 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
         update_summary: function(){
             var order = this.pos.get('selectedOrder');
-            var subtotal  = order ? order.getSubtotal() : 0;
             var total     = order ? order.getTotalTaxIncluded() : 0;
             var taxes     = order ? total - order.getTotalTaxExcluded() : 0;
-            this.$('.summary .value.subtotal').html(this.format_currency(subtotal));
-            this.$('.summary .value.taxes').html(this.format_currency(taxes));
-            this.$('.summary .value.total').html(this.format_currency(total));
+            this.$('.summary .total > .value').html(this.format_currency(total));
+            this.$('.summary .total .subentry .value').html(this.format_currency(taxes));
         },
         set_display_mode: function(mode){
             if(this.display_mode !== mode){
