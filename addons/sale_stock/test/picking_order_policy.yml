@@ -56,8 +56,8 @@
       assert picking.note == sale_order.note,"Note is not correspond with sale order."
       assert picking.invoice_state == (sale_order.order_policy=='picking' and '2binvoiced') or 'none',"Invoice policy is not correspond with sale order."
       assert len(picking.move_lines) == len(sale_order.order_line), "Total move of delivery order are not corresposning with total sale order lines."
-      location_id = sale_order.shop_id.warehouse_id.lot_stock_id.id
-      output_id = sale_order.shop_id.warehouse_id.lot_output_id.id
+      location_id = sale_order.warehouse_id.lot_stock_id.id
+      output_id = sale_order.warehouse_id.lot_output_id.id
       for move in picking.move_lines:
          order_line = move.sale_line_id
          date_planned = datetime.strptime(sale_order.date_order, DEFAULT_SERVER_DATE_FORMAT) + relativedelta(days=order_line.delay or 0.0)
