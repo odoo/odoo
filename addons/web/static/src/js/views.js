@@ -1394,7 +1394,34 @@ instance.web.View = instance.web.Widget.extend({
     is_action_enabled: function(action) {
         var attrs = this.fields_view.arch.attrs;
         return (action in attrs) ? JSON.parse(attrs[action]) : true;
-    }
+    },
+    /**
+     * insert alias into the dom
+     */
+    insert_alias: function ($dom) {
+        var self = this;
+        var context = this.options.action.context || {};
+        if (context && context.alias) {
+            new instance.web.Model('mail.alias').call("get_alias", [], {'alias': context.alias}).then(function (alias_ids) {
+                if (alias_ids.length) {
+                    var $alias = $('<p class="oe_view_nocontent_alias"></p>');
+                    var global = false;
+                    var inc = 0;
+                    _.each(alias_ids, function (alias_id) {
+                        if (alias_id.email.match(/@.+/)) {
+                            if (inc && global != alias_id.global) {
+                                $alias.append('<br/>' + _t("or"));
+                                global = alias_id.global;
+                            }
+                            $alias.append((inc? '<br/>': '') + '<a href="mailto:' + alias_id.email + '">' + alias_id.email + '</a>');
+                            inc++;
+                        }
+                    })
+                    $dom.append($alias);
+                }
+            });
+        }
+    },
 });
 
 /**

@@ -453,6 +453,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         }
     },
     no_result: function() {
+        var self = this;
         if (this.groups.group_by
             || !this.options.action
             || !this.options.action.help) {
@@ -460,10 +461,10 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         }
         this.$el.find('table:first').css("position", "absolute");
         $(QWeb.render('KanbanView.nocontent', { content : this.options.action.help})).insertAfter(this.$('table:first'));
-        var create_nocontent = this.$buttons;
         this.$el.find('.oe_view_nocontent').click(function() {
-            create_nocontent.openerpBounce();
+            self.$buttons.openerpBounce();
         });
+        this.insert_alias(this.$el.find('.oe_view_nocontent_content'));
     },
     remove_no_result: function() {
         this.$el.find('table:first').css("position", false);

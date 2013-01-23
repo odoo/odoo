@@ -850,6 +850,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         this.$el.find('.oe_view_nocontent').click(function() {
             create_nocontent.openerpBounce();
         });
+        this.insert_alias(this.$el.find('.oe_view_nocontent'));
     }
 });
 instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.ListView.List# */{
