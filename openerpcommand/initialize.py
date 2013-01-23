@@ -70,8 +70,19 @@ def run(args):
     else:
         module_names = ['base']
 
+    if args.coverage:
+        import coverage
+        # Without the `include` kwarg, coverage generates 'memory:0xXXXXX'
+        # filenames (which do not exist) and cause it to crash. No idea why.
+        cov = coverage.coverage(branch=True, include='*.py')
+        cov.start()
     openerp.netsvc.init_logger()
     registry = install_openerp(args.database, not args.no_create, module_names, not config['without_demo'])
+    if args.coverage:
+        cov.stop()
+        cov.html_report(directory='coverage')
+        # If we wanted the report on stdout:
+        # cov.report()
 
     # The `_assertion_report` attribute was added on the registry during the
     # OpenERP 7.0 development.
@@ -99,5 +110,9 @@ def add_parser(subparsers):
         ' (use the `run-tests` command to choose specific'
         ' tests to run against an existing database).'
         ' Demo data are installed.')
+    parser.add_argument('--coverage', action='store_true',
+        help='report code coverage (particularly useful with --tests).'
+        ' The report is generated in a coverage directory and you can'
+        ' then point your browser to coverage/index.html.')
 
     parser.set_defaults(run=run)
