@@ -84,7 +84,7 @@
                         <page string="Extra Info">
                             <group string="General Information">
                                 <field name="company_id" groups="base.group_multi_company"/>
-                                <field name="shop_id" widget="selection"/>
+                                <field name="warehouse_id" widget="selection"/>
                                 <field name="user_id"/>
                                 <field name="pricelist_id" groups="product.group_sale_pricelist" domain="[('type','=','sale')]"/>
                                 <field name="picking_id" readonly="1"/>
@@ -771,7 +771,7 @@
                     <sheet>
                         <group>
                         <field name="name"/>
-                        <field name="shop_id" widget="selection" groups="stock.group_locations" />
+                        <field name="warehouse_id" widget="selection" groups="stock.group_locations" />
                         <field name="journal_id" widget="selection" />
                         <field name="sequence_id" readonly="1" groups="base.group_no_one" />
                         <field name="group_by" groups="account.group_account_user"  />
@@ -809,7 +809,7 @@
             <field name="arch" type="xml">
                 <tree string="Point of Sale Configuration" colors="grey:state == 'inactive'">
                     <field name="name" />
-                    <field name="shop_id" />
+                    <field name="warehouse_id" />
                     <field name="state" />
                 </tree>
             </field>
@@ -823,7 +823,7 @@
                     <field name="name" />
                     <filter string="Active" domain="[('state', '=', 'active')]" />
                     <filter string="Inactive" domain="[('state', '=', 'inactive')]" />
-                    <field name="shop_id" />
+                    <field name="warehouse_id" />
                 </search>
             </field>
         </record>

@@ -114,7 +114,7 @@ class pos_return(osv.osv_memory):
                 source_stock_id = property_obj.get(cr, uid, 'property_stock_customer', 'res.partner', context=context).id
                 cr.execute("SELECT s.id FROM stock_location s, stock_warehouse w "
                             "WHERE w.lot_stock_id=s.id AND w.id=%s ",
-                            (order_id.shop_id.warehouse_id.id,))
+                            (order_id.warehouse_id.id,))
                 res = cr.fetchone()
                 location_id = res and res[0] or None
                 new_picking = picking_obj.copy(cr, uid, order_id.picking_id.id, {'name':'%s (return)' % order_id.name,
@@ -209,7 +209,7 @@ class add_product(osv.osv_memory):
                 stock_dest_id = property_obj.get(cr, uid, 'property_stock_customer', 'res.partner', context=context).id
                 cr.execute("SELECT s.id FROM stock_location s, stock_warehouse w "
                             "WHERE w.lot_stock_id=s.id AND w.id=%s ",
-                            (order_id.shop_id.warehouse_id.id,))
+                            (order_id.warehouse_id.id,))
                 res=cr.fetchone()
                 location_id=res and res[0] or None
                 prod_id=prod_obj.browse(cr, uid, prod, context=context)
@@ -273,7 +273,7 @@ class add_product(osv.osv_memory):
             stock_dest_id = property_obj.get(cr, uid, 'property_stock_customer', 'res.partner', context=context).id
             cr.execute("SELECT s.id FROM stock_location s, stock_warehouse w "
                         " WHERE w.lot_stock_id=s.id AND w.id=%s ",
-                        (order_id.shop_id.warehouse_id.id,))
+                        (order_id.warehouse_id.id,))
             res=cr.fetchone()
             location_id=res and res[0] or None
 

@@ -41,7 +41,7 @@ class pos_order_report(osv.osv):
         'price_total':fields.float('Total Price', readonly=True),
         'total_discount':fields.float('Total Discount', readonly=True),
         'average_price': fields.float('Average Price', readonly=True,group_operator="avg"),
-        'shop_id':fields.many2one('sale.shop', 'Shop', readonly=True),
+        'warehouse_id':fields.many2one('stock.warehouse', 'Location', readonly=True),
         'company_id':fields.many2one('res.company', 'Company', readonly=True),
         'nbr':fields.integer('# of Lines', readonly=True),
         'product_qty':fields.integer('# of Qty', readonly=True),
@@ -69,7 +69,7 @@ class pos_order_report(osv.osv):
                     s.partner_id as partner_id,
                     s.state as state,
                     s.user_id as user_id,
-                    s.shop_id as shop_id,
+                    s.warehouse_id as warehouse_id,
                     s.company_id as company_id,
                     s.sale_journal as journal_id,
                     l.product_id as product_id
@@ -80,7 +80,7 @@ class pos_order_report(osv.osv):
                 group by
                     to_char(s.date_order, 'dd-MM-YYYY'),to_char(s.date_order, 'YYYY'),to_char(s.date_order, 'MM'),
                     to_char(s.date_order, 'YYYY-MM-DD'), s.partner_id,s.state,
-                    s.user_id,s.shop_id,s.company_id,s.sale_journal,l.product_id,s.create_date
+                    s.user_id,s.warehouse_id,s.company_id,s.sale_journal,l.product_id,s.create_date
                 having
                     sum(l.qty * u.factor) != 0)""")
 
