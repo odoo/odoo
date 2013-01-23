@@ -618,7 +618,7 @@ class res_config_settings(osv.osv_memory):
         """
         model_name, field_name = full_field_name.rsplit('.', 1)
 
-        return self.pool.get(model_name)._all_columns.get(field_name).column.string
+        return self.pool.get(model_name).fields_get(cr, uid, allfields=[field_name], context=context)[field_name]['string']
 
 def get_warning_config(cr, msg, context=None):
     """
