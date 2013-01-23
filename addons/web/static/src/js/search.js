@@ -1789,8 +1789,8 @@ instance.web.search.ExtendedSearchProposition = instance.web.Widget.extend(/** @
     init: function (parent, fields) {
         this._super(parent);
         this.fields = _(fields).chain()
-            .filter(function (field) { return !field.deprecated; })
             .map(function(val, key) { return _.extend({}, val, {'name': key}); })
+            .filter(function (field) { return !field.deprecated; })
             .sortBy(function(field) {return field.string;})
             .value();
         this.attrs = {_: _, fields: this.fields, selected: null};
