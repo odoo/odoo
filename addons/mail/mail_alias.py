@@ -199,9 +199,11 @@ class mail_alias(osv.Model):
         return self.create(cr, uid, vals, context=context)
 
     def get_alias(self, cr, uid, model, alias_defaults={}, context=None):
-        """Return the mail alias for a document
+        """Return the mail alias for a document (or the default mail alias of the model)
         This method is used by the web client (method web.view.insert_alias)
-        Arguments: model and content of alias_defaults column
+        Arguments:
+            model (model OpenERP)
+            alias_defaults (A Python dictionary to provide default values when creating new records for this alias.)
         """
         model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', model)], context=context)[0]
 
