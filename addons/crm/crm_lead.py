@@ -644,8 +644,8 @@ class crm_lead(base_stage, format_address, osv.osv):
 
         lead_ids = context.get('lead_ids', [])
 
-        ctx_opportunities = self.browse(cr, uid, lead_ids, context=context)
-        opportunities = self.browse(cr, uid, ids, context=context)
+        ctx_opportunities = list(self.browse(cr, uid, lead_ids, context=context))
+        opportunities = list(self.browse(cr, uid, ids, context=context))
         opportunities_list = list(set(opportunities) - set(ctx_opportunities))
         oldest = self._merge_find_oldest(cr, uid, ids, context=context)
         if ctx_opportunities:
