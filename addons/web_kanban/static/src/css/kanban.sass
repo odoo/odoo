@@ -51,28 +51,28 @@
     //background: url(data:image/pngbase64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAKElEQVQIHWP8DwTv379nAAFBQUEGhnfv3oHEwADEZgJLIRGMIClkLQCr3x2Htp/lLwAAAABJRU5ErkJggg==)
     background: white
     height: inherit
+    .oe_view_nocontent
+        position: relative
+        z-index: 1
+        max-width: none
+        height: 100%
+        .oe_view_nocontent_content
+            margin-left: 90px
+            margin-top: 5px
+            max-width: 700px
+        .oe_view_nocontent_bg
+            background: #eee
+            opacity: 0.7
+            position: absolute
+            top: 0
+            bottom: 0
+            left: 0
+            right: 0
+            z-index: -1
     &.oe_kanban_grouped
         .oe_kanban_dummy_cell
             background: url(/web/static/src/img/form_sheetbg.png)
             width: 100%
-        .oe_view_nocontent
-            position: relative
-            z-index: 1
-            max-width: none
-            height: 100%
-            .oe_view_nocontent_content
-                margin-left: 90px
-                margin-top: 5px
-                max-width: 700px
-            .oe_view_nocontent_bg
-                background: #eee
-                opacity: 0.7
-                position: absolute
-                top: 0
-                bottom: 0
-                left: 0
-                right: 0
-                z-index: -1
     .ui-sortable-placeholder
         border: 1px solid rgba(0,0,0,0.1)
         visibility: visible !important
