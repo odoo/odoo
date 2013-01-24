@@ -92,8 +92,6 @@ class OpenERPSession(object):
             raise xmlrpclib.Fault(code_string % (e.name, e.value), '')
         except openerp.exceptions.Warning, e:
             raise xmlrpclib.Fault(code_string % ("Warning", e), '')
-        except openerp.exceptions.WarningConfig, e:
-            raise xmlrpclib.Fault(code_string % ("Warning", e), '')
         except openerp.exceptions.AccessError, e:
             raise xmlrpclib.Fault(code_string % ("AccessError", e), '')
         except openerp.exceptions.AccessDenied, e:
