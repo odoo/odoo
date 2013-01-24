@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-01-23 20:27+0000\n"
+"Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:41+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-01-24 05:35+0000\n"
+"X-Generator: Launchpad (build 16445)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -30,7 +30,7 @@ msgstr "Livrare prin posta"
 #. module: delivery
 #: view:delivery.grid.line:0
 msgid " in Function of "
-msgstr ""
+msgstr " in Functie de "
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -52,7 +52,7 @@ msgstr "Linie grila de livrare"
 #: field:stock.move,weight_uom_id:0
 #: field:stock.picking,weight_uom_id:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Unitatea de Masura"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -71,7 +71,7 @@ msgstr "Volum"
 #. module: delivery
 #: view:delivery.carrier:0
 msgid "Zip"
-msgstr ""
+msgstr "Cod postal"
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
@@ -93,6 +93,8 @@ msgstr "Comanda de livrare"
 #, python-format
 msgid "No line matched this product or order in the chosen delivery grid."
 msgstr ""
+"Nici o linie nu se potriveste cu acest produs sau comanda in grila de "
+"livrare aleasa."
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
@@ -133,6 +135,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
+"                Faceti click pentru a crea o lista de preturi pentru o "
+"anumita regiune.\n"
+"              </p><p>\n"
+"                Lista de preturi de livrare va permite sa calculati pretul "
+"de cost si de\n"
+"                vanzare a livrarii in functie de greutatea\n"
+"                produselor si alte criterii. Puteti defini mai multe liste "
+"de preturi\n"
+"                pentru fiecare metoda de livrare: pe tara sau pe o zona "
+"dintr-o anumita\n"
+"                tara definita printr-un cod postal.\n"
+"              </p>\n"
+"            "
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -152,7 +168,7 @@ msgstr "Cantitate"
 #. module: delivery
 #: view:sale.order:0
 msgid "Add in Quote"
-msgstr ""
+msgstr "Adauga la Cotare"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -205,7 +221,7 @@ msgstr "Definitie grila"
 #: code:addons/delivery/stock.py:90
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Avertizare!"
 
 #. module: delivery
 #: field:delivery.grid.line,operator:0
@@ -225,7 +241,7 @@ msgstr "Comanda de vanzare"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking_out
 msgid "Delivery Orders"
-msgstr ""
+msgstr "Comenzi de Livrare"
 
 #. module: delivery
 #: view:sale.order:0
@@ -233,6 +249,8 @@ msgid ""
 "If you don't 'Add in Quote', the exact price will be computed when invoicing "
 "based on delivery order(s)."
 msgstr ""
+"Daca nu 'Adaugati la Cotare', pretul exact va fi calculat atunci cand "
+"facturati pe baza comenzilor de livrare."
 
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
@@ -280,7 +298,7 @@ msgstr ""
 #. module: delivery
 #: field:delivery.carrier,free_if_more_than:0
 msgid "Free If Order Total Amount Is More Than"
-msgstr ""
+msgstr "Gratuit daca Valoarea Totala a Comenzii este mai Mare decat"
 
 #. module: delivery
 #: field:delivery.grid.line,grid_id:0
@@ -437,6 +455,22 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
+"                Faceti click pentru a defini o metoda noua de livrare. \n"
+"              </p><p>\n"
+"                Fiecare companie de transport (de exemplu UPS) poate avea "
+"mai multe metode de livrare (de exemplu\n"
+"                UPS Expres, UPS Standard) cu un set de norme de stabilire a "
+"pretului atasate\n"
+"                fiecarei metode.\n"
+"              </p><p>\n"
+"                Aceste metode permit calcularea automata a pretului de "
+"livrare\n"
+"                in functie de setarile dumneavoastra; in comanda de vanzare "
+"(bazata pe\n"
+"                cotatie) sau factura (bazata pe ordinele de livrare).\n"
+"              </p>\n"
+"            "
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
@@ -469,7 +503,7 @@ msgstr "Gratuit daca e mai mult de %.2f"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking_in
 msgid "Incoming Shipments"
-msgstr ""
+msgstr "Incarcaturi primite"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -479,7 +513,7 @@ msgstr "<="
 #. module: delivery
 #: help:stock.picking,weight_uom_id:0
 msgid "Unit of measurement for Weight"
-msgstr ""
+msgstr "Unitate de masura pentru Greutate"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -555,7 +589,7 @@ msgstr "Transportator"
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 msgid "Delivery Methods"
-msgstr ""
+msgstr "Metode de Livrare"
 
 #. module: delivery
 #: code:addons/delivery/sale.py:57
@@ -582,7 +616,7 @@ msgstr "Pret de vanzare"
 #. module: delivery
 #: view:stock.picking.out:0
 msgid "Print Delivery Order"
-msgstr ""
+msgstr "Tipareste Ordinul de Livrare"
 
 #. module: delivery
 #: view:delivery.grid:0
@@ -595,6 +629,8 @@ msgstr "Stari"
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
 msgstr ""
+"Unitatea de Masura (Unitatea de Masura) este unitatea de masura pentru "
+"Greutate"
 
 #. module: delivery
 #: field:delivery.grid.line,price_type:0
