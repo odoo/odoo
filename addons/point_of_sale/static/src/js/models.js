@@ -342,7 +342,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.order = options.order;
             this.product = options.product;
             this.price   = options.product.get('price');
-            this.priceStr = '' + this.price;
             this.quantity = 1;
             this.quantityStr = '1';
             this.discount = 0;
@@ -352,19 +351,10 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },
         // sets a discount [0,100]%
         set_discount: function(discount){
-            var disc = parseFloat(discount);
-            if(_.isNaN(disc)){
-                return;
-            }else if(disc < 0){
-                this.discount = 0;
-                this.discountStr = '0';
-            }else if(disc > 100){
-                this.discount = 100;
-                this.discountStr = '100';
-            }else{
-                this.discount = disc;
-                this.discountStr = discount;
-            }
+            console.log('set_discount: ',discount);
+            var disc = Math.min(Math.max(parseFloat(discount) || 0, 0),100);
+            this.discount = disc;
+            this.discountStr = '' + disc;
             this.trigger('change');
         },
         // returns the discount [0,100]%
@@ -381,16 +371,12 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         // product's unity of measure properties. Quantities greater than zero will not get 
         // rounded to zero
         set_quantity: function(quantity){
-            var quant = parseFloat(quantity);
-            if(_.isNaN(quant)){
-                if(quantity === 'remove'){
-                    this.order.removeOrderline(this);
-                }
+            console.log('set_quantity: ',quantity);
+            if(quantity === 'remove'){
+                this.order.removeOrderline(this);
                 return;
             }else{
-                if(quant < 0){
-                    quant = 0;
-                }
+                var quant = Math.max(parseFloat(quantity) || 0, 0);
                 var unit = this.get_unit();
                 if(unit){
                     this.quantity    = Math.max(unit.rounding, Math.round(quant / unit.rounding) * unit.rounding);
@@ -486,11 +472,8 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },
         // changes the base price of the product for this orderline
         set_unit_price: function(price){
-            var pr = parseFloat(price);
-            if(_.isNaN(pr)){
-                return;
-            }
-            this.price = round(pr,2);
+            console.log('set_price: ',price);
+            this.price = round(parseFloat(price) || 0, 2);
             this.trigger('change');
         },
         get_unit_price: function(){
@@ -567,16 +550,8 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },
         //sets the amount of money on this payment line
         set_amount: function(value){
-            if(typeof value === 'string'){
-                var val = parseFloat(value);
-                if(!isNaN(val)){
-                    this.amount = val;
-                    this.trigger('change');
-                }
-            }else{
-                this.amount = value;
-                this.trigger('change');
-            }
+            this.amount = parseFloat(value) || 0;
+            this.trigger('change');
         },
         // returns the amount of money on this paymentline
         get_amount: function(){
@@ -865,24 +840,19 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     buffer: (this.get('buffer')) + newChar
                 });
             }
-            this.updateTarget();
+            this.trigger('set_value',this.get('buffer'));
         },
         deleteLastChar: function() {
-            var tempNewBuffer = this.get('buffer').slice(0, -1);
-
-            if(!tempNewBuffer){
-                this.set({ buffer: "0" });
+            if(this.get('buffer') === ""){
                 if(this.get('mode') === 'quantity'){
-                    this.killTarget();
+                    this.trigger('set_value','remove');
                 }else{
-                    this.updateTarget();
+                    this.trigger('set_value',this.get('buffer'));
                 }
             }else{
-                if (isNaN(tempNewBuffer)) {
-                    tempNewBuffer = "0";
-                }
-                this.set({ buffer: tempNewBuffer });
-                this.updateTarget();
+                var newBuffer = this.get('buffer').slice(0,-1) || "";
+                this.set({ buffer: newBuffer });
+                this.trigger('set_value',this.get('buffer'));
             }
         },
         switchSign: function() {
@@ -891,7 +861,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.set({
                 buffer: oldBuffer[0] === '-' ? oldBuffer.substr(1) : "-" + oldBuffer
             });
-            this.updateTarget();
+            this.trigger('set_value',this.get('buffer'));
         },
         changeMode: function(newMode) {
             this.set({
@@ -907,18 +877,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },
         resetValue: function(){
             this.set({buffer:'0'});
-        },
-        updateTarget: function() {
-            var bufferContent, params;
-            bufferContent = this.get('buffer');
-            if (bufferContent && !isNaN(bufferContent)) {
-                console.log('set_value ',bufferContent);
-            	this.trigger('set_value',bufferContent);
-            }
-        },
-        killTarget: function(){
-            console.log('set_value ','remove');
-            this.trigger('set_value','remove');
         },
     });
 }

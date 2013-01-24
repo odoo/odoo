@@ -368,7 +368,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
     module.ChooseReceiptPopupWidget = module.PopUpWidget.extend({
         template:'ChooseReceiptPopupWidget',
         show: function(){
-            console.log('show');
             this._super();
             this.renderElement();
             var self = this;
@@ -603,7 +602,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             // initiates the connection to the payment terminal and starts the update requests
             this.start = function(){
                 var def = new $.Deferred();
-                console.log("START");
                 self.pos.proxy.payment_request(self.pos.get('selectedOrder').getDueLeft())
                     .done(function(ack){
                         if(ack === 'ok'){
@@ -613,7 +611,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                         }else{
                             console.error('unknown payment request return value:',ack);
                         }
-                        console.log("START_END");
                         def.resolve();
                     });
                 return def;
@@ -621,10 +618,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             
             // gets updated status from the payment terminal and performs the appropriate consequences
             this.update = function(){
-                console.log("UPDATE");
                 var def = new $.Deferred();
                 if(self.canceled){
-                    console.log("UPDATE_END");
                     return def.resolve();
                 }
                 self.pos.proxy.payment_status()
@@ -656,7 +651,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                         }else{
                             console.error('unknown status value:',status.status);
                         }
-                        console.log("UPDATE_END");
                         def.resolve();
                     });
                 return def;
@@ -664,14 +658,12 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             
             // cancels a payment.
             this.cancel = function(){
-                console.log("CANCEL");
                 if(!self.paid && !self.canceled){
                     self.canceled = true;
                     self.pos.proxy.payment_cancel();
                     self.pos_widget.screen_selector.set_current_screen(self.previous_screen);
                     self.queue.clear();
                 }
-                console.log("CANCEL_END");
                 return (new $.Deferred()).resolve();
             }
             
@@ -941,7 +933,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             });
             l.appendTo(this.$('#paymentlines'));
             this.paymentlinewidgets.push(l);
-            this.$('.paymentline-amount input:last').focus();
             if(this.numpadState){
                 this.numpadState.resetValue();
             }

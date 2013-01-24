@@ -313,17 +313,10 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
         changeAmount: function(event) {
             var newAmount = event.currentTarget.value;
-            console.log(event);
-            console.log('changeAmount:',newAmount);
-            if( typeof newAmmount === 'string'){
-            	var amount = parseFloat(newAmount);
-                if(!isNaN(amount)){
-                    this.amount = amount;
-                    this.payment_line.set_amount(amount);
-                }
-            }else if(!isNaN(newAmount)){
-                this.amount = newAmount;
-                this.payment_line.set_amount(newAmount);
+            var amount = parseFloat(newAmount);
+            if(!isNaN(amount)){
+                this.amount = amount;
+                this.payment_line.set_amount(amount);
             }
         },
         changedAmount: function() {

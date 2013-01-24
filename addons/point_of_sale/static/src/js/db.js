@@ -142,7 +142,6 @@ function openerp_pos_db(instance, module){
         /* saves a record store to the database */
         save: function(store,data){
             var str_data = JSON.stringify(data);
-            console.log('Storing '+ Math.round(str_data.length/1024.0)+' KB of data to store: '+store);
             localStorage[this.name + '_' + store] = JSON.stringify(data);
             this.cache[store] = data;
         },
@@ -276,12 +275,9 @@ function openerp_pos_db(instance, module){
         },
         remove_order: function(order_id){
             var orders = this.load('orders',[]);
-            console.log('Remove order:',order_id);
-            console.log('Order count:',orders.length);
             orders = _.filter(orders, function(order){
                 return order.id !== order_id;
             });
-            console.log('Order count:',orders.length);
             this.save('orders',orders);
         },
         get_orders: function(){
