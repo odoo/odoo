@@ -632,7 +632,7 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
             'limit': self.view.limit,
             'offset': self.dataset_offset += self.view.limit
         }).then(function(records) {
-            self.view.dataset.ids = ids.concat(self.view.dataset.ids);
+            self.view.dataset.ids = ids.concat(self.dataset.ids);
             self.do_add_records(records);
             self.compute_cards_auto_height();
             return records;
