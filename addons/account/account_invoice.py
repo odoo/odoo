@@ -1440,6 +1440,7 @@ class account_invoice_line(osv.osv):
         result = {}
         res = self.pool.get('product.product').browse(cr, uid, product, context=context)
 
+        result['name'] = res.partner_ref
         if type in ('out_invoice','out_refund'):
             a = res.property_account_income.id
             if not a:
@@ -1467,7 +1468,6 @@ class account_invoice_line(osv.osv):
             result.update( {'price_unit': price_unit or res.standard_price,'invoice_line_tax_id': tax_id} )
         else:
             result.update({'price_unit': res.list_price, 'invoice_line_tax_id': tax_id})
-        result['name'] = res.partner_ref
 
         result['uos_id'] = uom_id or res.uom_id.id
 
