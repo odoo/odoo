@@ -351,7 +351,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },
         // sets a discount [0,100]%
         set_discount: function(discount){
-            console.log('set_discount: ',discount);
             var disc = Math.min(Math.max(parseFloat(discount) || 0, 0),100);
             this.discount = disc;
             this.discountStr = '' + disc;
@@ -371,7 +370,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         // product's unity of measure properties. Quantities greater than zero will not get 
         // rounded to zero
         set_quantity: function(quantity){
-            console.log('set_quantity: ',quantity);
             if(quantity === 'remove'){
                 this.order.removeOrderline(this);
                 return;
@@ -472,7 +470,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },
         // changes the base price of the product for this orderline
         set_unit_price: function(price){
-            console.log('set_price: ',price);
             this.price = round(parseFloat(price) || 0, 2);
             this.trigger('change');
         },
@@ -738,10 +735,12 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             return {
                 orderlines: orderlines,
                 paymentlines: paymentlines,
+                subtotal: this.getSubtotal(),
                 total_with_tax: this.getTotalTaxIncluded(),
                 total_without_tax: this.getTotalTaxExcluded(),
                 total_tax: this.getTax(),
                 total_paid: this.getPaidTotal(),
+                total_discount: this.getDiscountTotal(),
                 change: this.getChange(),
                 name : this.getName(),
                 client: client ? client.name : null ,

@@ -600,6 +600,9 @@
             </table>
             <br />
             <table>
+                <tr><td>Subtotal:</td><td class="pos-right-align">
+                    <t t-esc="widget.format_currency(widget.currentOrder.getSubtotal())"/>
+                    </td></tr>
                 <tr><td>Tax:</td><td class="pos-right-align">
                     <t t-esc="widget.format_currency(widget.currentOrder.getTax())"/>
                     </td></tr>
