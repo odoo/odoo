@@ -32,7 +32,7 @@ from email.message import Message
 from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.addons.mail.mail_message import decode
-from openerp.osv import fields, osv
+from openerp.osv import fields, osv, api
 from openerp.tools.safe_eval import safe_eval as eval
 
 _logger = logging.getLogger(__name__)
@@ -807,6 +807,7 @@ class mail_thread(osv.AbstractModel):
                         "now deprecated res.log.")
         self.message_post(cr, uid, [id], message, context=context)
 
+    @api.old_cr_uid_ids
     def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification',
                         subtype=None, parent_id=False, attachments=None, context=None, **kwargs):
         """ Post a new message in an existing thread, returning the new
@@ -894,6 +895,7 @@ class mail_thread(osv.AbstractModel):
 
         return mail_message.create(cr, uid, values, context=context)
 
+    @api.old_cr_uid_ids
     def message_post_user_api(self, cr, uid, thread_id, body='', parent_id=False,
                                 attachment_ids=None, extra_emails=None, content_subtype='plaintext',
                                 context=None, **kwargs):
