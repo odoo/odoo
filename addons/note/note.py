@@ -29,7 +29,7 @@ class note_stage(osv.osv):
     _columns = {
         'name': fields.char('Stage Name', translate=True, required=True),
         'sequence': fields.integer('Sequence', help="Used to order the note stages"),
-        'user_id': fields.many2one('res.users', 'Owner', help="Owner of the note stage.", required=True),
+        'user_id': fields.many2one('res.users', 'Owner', help="Owner of the note stage.", required=True, ondelete='cascade'),
         'fold': fields.boolean('Folded by Default'),
     }
     _order = 'sequence asc'
@@ -112,7 +112,7 @@ class note_note(osv.osv):
         'date_done': fields.date('Date done'),
         'color': fields.integer('Color Index'),
         'tag_ids' : fields.many2many('note.tag','note_tags_rel','note_id','tag_id','Tags'),
-        'current_partner_id' : fields.function(_get_my_current_partner),
+        'current_partner_id' : fields.function(_get_my_current_partner, type="many2one", relation='res.partner', string="Owner"),
     }
     _defaults = {
         'open' : 1,
