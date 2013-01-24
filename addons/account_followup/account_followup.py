@@ -282,7 +282,7 @@ class res_partner(osv.osv):
                     #Find partner_id of user put as responsible
                     responsible_partner_id = self.pool.get("res.users").browse(cr, uid, vals['payment_responsible_id'], context=context).partner_id.id
                     self.pool.get("mail.thread").message_post(cr, uid, 0, 
-                                      body = _("You became responsible to follow up the payment of") + " <b><a href='#id=" + str(part.id) + "&view_type=form&model=res.partner'> " + part.name + " </a></b>",
+                                      body = _("You became responsible to do the next action for the payment follow-up of") + " <b><a href='#id=" + str(part.id) + "&view_type=form&model=res.partner'> " + part.name + " </a></b>",
                                       type='comment',
                                       subtype="mail.mt_comment", context=context,
                                       model='res.partner', res_id = part.id, 
