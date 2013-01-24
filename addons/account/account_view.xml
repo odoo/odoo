@@ -347,6 +347,15 @@
             res_model="account.move.line"
             src_model="account.account"/>
 
+        <!-- Enable drill-down from Chart Of Accounts tree view -->
+        <act_window
+            id="action_account_items"
+            name="Journal Items"
+            context="{'search_default_account_id': [active_id]}"
+            res_model="account.move.line"
+            src_model="account.account"
+            key2="tree_but_open"/>
+
         <!-- Account Journal -->
         <record id="view_account_journal_tree" model="ir.ui.view">
             <field name="name">account.journal.tree</field>
@@ -840,6 +849,16 @@
             domain="[('tax_code_id','child_of',active_id),('state','&lt;&gt;','draft')]"
             res_model="account.move.line"
             src_model="account.tax.code"/>
+
+        <!-- Enable drill-down from Chart Of Taxes tree view -->
+        <act_window
+            id="action_tax_code_items"
+            name="Journal Items"
+            domain="[('tax_code_id','child_of',active_id),('state','!=','draft')]"
+            res_model="account.move.line"
+            src_model="account.tax.code"
+            key2="tree_but_open"/>
+
 
         <!-- Tax -->
         <record id="view_tax_tree" model="ir.ui.view">
