@@ -95,9 +95,6 @@ def xmlrpc_handle_exception(e):
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     elif isinstance(e, openerp.exceptions.Warning):
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, str(e))
-    elif isinstance(e, openerp.exceptions.WarningConfig):
-        fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, str(e))
-        response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     elif isinstance (e, openerp.exceptions.AccessError):
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_ACCESS_ERROR, str(e))
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)

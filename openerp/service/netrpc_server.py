@@ -170,8 +170,6 @@ def netrpc_handle_exception_legacy(e):
         return 'warning -- ' + e.name + '\n\n' + e.value
     if isinstance(e, openerp.exceptions.Warning):
         return 'warning -- Warning\n\n' + str(e)
-    if isinstance(e, openerp.exceptions.WarningConfig):
-        return 'warning -- Warning\n\n' + str(e)
     if isinstance(e, openerp.exceptions.AccessError):
         return 'warning -- AccessError\n\n' + str(e)
     if isinstance(e, openerp.exceptions.AccessDenied):

@@ -622,7 +622,7 @@ class res_config_settings(osv.osv_memory):
 
 def get_warning_config(cr, msg, context=None):
     """
-    Helper: return a WarningConfig exception with the given message where the
+    Helper: return a Warning exception with the given message where the
     %(field:)s and/or %(menu:)s are replaced by the human readable field's name
     and/or menuitem's full path.
 
@@ -658,6 +658,6 @@ def get_warning_config(cr, msg, context=None):
             values[item] = res_config_obj.get_option_name(cr, SUPERUSER_ID, ref, context)
 
     # 4/ substitute and return the result
-    return exceptions.WarningConfig(msg % values)
+    return exceptions.Warning(msg % values)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -306,8 +306,6 @@ def dispatch_rpc(service_name, method, params):
         raise
     except openerp.exceptions.Warning:
         raise
-    except openerp.exceptions.WarningConfig:
-        raise
     except openerp.exceptions.DeferredException, e:
         _logger.exception(tools.exception_to_unicode(e))
         post_mortem(e.traceback)
