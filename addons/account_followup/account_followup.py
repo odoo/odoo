@@ -251,13 +251,14 @@ class res_partner(osv.osv):
                 followup_table += '''
                 <table border="2" width=100%%>
                 <tr>
-                    <td>Invoice date</td>
-                    <td>Reference</td>
-                    <td>Due date</td>
-                    <td>Amount (%s)</td>
-                    <td>Lit.</td>
+                    <td>''' + _("Invoice date") + '''</td>
+                    <td>''' + _("Description") + '''</td>
+                    <td>''' + _("Reference") + '''</td>
+                    <td>''' + _("Due date") + '''</td>
+                    <td>''' + _("Amount") + " (%s)" % (currency.symbol) + '''</td>
+                    <td>''' + _("Lit.") + '''</td>
                 </tr>
-                ''' % (currency.symbol)
+                ''' 
                 total = 0
                 for aml in currency_dict['line']:
                     block = aml['blocked'] and 'X' or ' '
@@ -268,11 +269,11 @@ class res_partner(osv.osv):
                     if date <= current_date and aml['balance'] > 0:
                         strbegin = "<TD><B>"
                         strend = "</B></TD>"
-                    followup_table +="<TR>" + strbegin + str(aml['date']) + strend + strbegin + aml['ref'] + strend + strbegin + str(date) + strend + strbegin + str(aml['balance']) + strend + strbegin + block + strend + "</TR>"
+                    followup_table +="<TR>" + strbegin + str(aml['date']) + strend + strbegin + aml['name'] + strend + strbegin + aml['ref'] + strend + strbegin + str(date) + strend + strbegin + str(aml['balance']) + strend + strbegin + block + strend + "</TR>"
                 total = rml_parse.formatLang(total, dp='Account', currency_obj=currency)
                 followup_table += '''<tr> </tr>
                                 </table>
-                                <center>Amount due: %s </center>''' % (total)
+                                <center>''' + _("Amount due") + ''' : %s </center>''' % (total)
         return followup_table
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -282,7 +283,7 @@ class res_partner(osv.osv):
                     #Find partner_id of user put as responsible
                     responsible_partner_id = self.pool.get("res.users").browse(cr, uid, vals['payment_responsible_id'], context=context).partner_id.id
                     self.pool.get("mail.thread").message_post(cr, uid, 0, 
-                                      body = _("You became responsible to do the next action for the payment follow-up of") + " <b><a href='#id=" + str(part.id) + "&view_type=form&model=res.partner'> " + part.name + " </a></b>",
+                                      body = _("You became responsible to do the next action for the payment follow-up of" ) + " <b><a href='#id=" + str(part.id) + "&view_type=form&model=res.partner'> " + part.name + " </a></b>",
                                       type='comment',
                                       subtype="mail.mt_comment", context=context,
                                       model='res.partner', res_id = part.id, 
