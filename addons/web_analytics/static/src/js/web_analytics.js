@@ -270,6 +270,7 @@ openerp.web_analytics = function(instance) {
         // client does not already exists, we are in monodb mode
         instance.web.WebClient.include({
             start: function() {
+                this.subscribe_deferred = $.when();
                 var d = this._super.apply(this, arguments);
                 this.tracker = new instance.web_analytics.Tracker();
                 return d;
