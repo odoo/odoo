@@ -481,6 +481,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
                         self.do_action("reload");
                     },
                 },
+                _push_me: false,
             };
             self.do_action(client_action);
         });
