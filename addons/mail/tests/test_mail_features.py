@@ -84,21 +84,18 @@ Sylvie
 
 class test_mail(TestMailBase):
 
-    def _mock_send_get_mail_body(self, *args, **kwargs):
-        # def _send_get_mail_body(self, cr, uid, mail, partner=None, context=None)
-        body = append_content_to_html(args[2].body_html, kwargs.get('partner').name if kwargs.get('partner') else 'No specific partner', plaintext=False)
-        return body
-
     def setUp(self):
         super(test_mail, self).setUp()
 
         # Mock send_get_mail_body to test its functionality without other addons override
-        self._send_get_mail_body = self.registry('mail.mail').send_get_mail_body
-        self.registry('mail.mail').send_get_mail_body = self._mock_send_get_mail_body
+        def send_get_mail_body(self, cr, uid, mail, partner=None, context=None):
+            return append_content_to_html(mail.body_html, partner.name if partner else 'No specific partner', plaintext=False)
+
+        self.registry('mail.mail')._patch_method('send_get_mail_body', send_get_mail_body)
 
     def tearDown(self):
         # Remove mocks
-        self.registry('mail.mail').send_get_mail_body = self._send_get_mail_body
+        self.registry('mail.mail')._revert_method('send_get_mail_body')
         super(test_mail, self).tearDown()
 
     def test_00_message_process(self):
