@@ -22,6 +22,7 @@
 import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from operator import attrgetter
 
 from openerp.osv import fields, osv
 from openerp import netsvc
@@ -260,9 +261,7 @@ class purchase_order(osv.osv):
                 raise osv.except_osv(_('Invalid Action!'), _('In order to delete a purchase order, you must cancel it first.'))
 
         # automatically sending subflow.delete upon deletion
-        wf_service = netsvc.LocalService("workflow")
-        for id in unlink_ids:
-            wf_service.trg_validate(uid, 'purchase.order', id, 'purchase_cancel', cr)
+        self.signal_purchase_cancel(cr, uid, unlink_ids)
 
         return super(purchase_order, self).unlink(cr, uid, unlink_ids, context=context)
 
@@ -439,8 +438,7 @@ class purchase_order(osv.osv):
         This function prints the request for quotation and mark it as sent, so that we can see more easily the next step of the workflow
         '''
         assert len(ids) == 1, 'This option should only be used for a single id at a time'
-        wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_validate(uid, 'purchase.order', ids[0], 'send_rfq', cr)
+        self.signal_send_rfq(cr, uid, ids)
         datas = {
                  'model': 'purchase.order',
                  'ids': ids,
@@ -571,26 +569,24 @@ class purchase_order(osv.osv):
         return False
 
     def action_cancel(self, cr, uid, ids, context=None):
-        wf_service = netsvc.LocalService("workflow")
         for purchase in self.browse(cr, uid, ids, context=context):
             for pick in purchase.picking_ids:
                 if pick.state not in ('draft','cancel'):
                     raise osv.except_osv(
                         _('Unable to cancel this purchase order.'),
                         _('First cancel all receptions related to this purchase order.'))
-            for pick in purchase.picking_ids:
-                wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_cancel', cr)
+            self.pool.get('stock.picking') \
+                .signal_button_cancel(cr, uid, map(attrgetter('id'), purchase.picking_ids))
             for inv in purchase.invoice_ids:
                 if inv and inv.state not in ('cancel','draft'):
                     raise osv.except_osv(
                         _('Unable to cancel this purchase order.'),
                         _('You must first cancel all receptions related to this purchase order.'))
-                if inv:
-                    wf_service.trg_validate(uid, 'account.invoice', inv.id, 'invoice_cancel', cr)
+            self.pool.get('account.invoice') \
+                .signal_invoice_cancel(cr, uid, map(attrgetter('id'), purchase.invoice_ids))
         self.write(cr,uid,ids,{'state':'cancel'})
 
-        for (id, name) in self.name_get(cr, uid, ids):
-            wf_service.trg_validate(uid, 'purchase.order', id, 'purchase_cancel', cr)
+        self.signal_purchase_cancel(cr, uid, ids)
         return True
 
     def _prepare_order_picking(self, cr, uid, order, context=None):
@@ -648,11 +644,11 @@ class purchase_order(osv.osv):
                                will be added. A new picking will be created if omitted.
         :return: list of IDs of pickings used/created for the given order lines (usually just one)
         """
+        stock_picking = self.pool.get('stock.picking')
         if not picking_id:
-            picking_id = self.pool.get('stock.picking').create(cr, uid, self._prepare_order_picking(cr, uid, order, context=context))
+            picking_id = stock_picking.create(cr, uid, self._prepare_order_picking(cr, uid, order, context=context))
         todo_moves = []
         stock_move = self.pool.get('stock.move')
-        wf_service = netsvc.LocalService("workflow")
         for order_line in order_lines:
             if not order_line.product_id:
                 continue
@@ -663,7 +659,7 @@ class purchase_order(osv.osv):
                 todo_moves.append(move)
         stock_move.action_confirm(cr, uid, todo_moves)
         stock_move.force_assign(cr, uid, todo_moves)
-        wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
+        stock_picking.signal_button_confirm(cr, uid, [picking_id])
         return [picking_id]
 
     def action_picking_create(self, cr, uid, ids, context=None):
@@ -714,7 +710,6 @@ class purchase_order(osv.osv):
 
         """
         #TOFIX: merged order line should be unlink
-        wf_service = netsvc.LocalService("workflow")
         def make_key(br, fields):
             list_key = []
             for field in fields:
@@ -782,6 +777,7 @@ class purchase_order(osv.osv):
 
         allorders = []
         orders_info = {}
+        wf_service = netsvc.LocalService("workflow")
         for order_key, (order_data, old_ids) in new_orders.iteritems():
             # skip merges with only one order
             if len(old_ids) < 2:
@@ -802,7 +798,7 @@ class purchase_order(osv.osv):
             # make triggers pointing to the old orders point to the new order
             for old_id in old_ids:
                 wf_service.trg_redirect(uid, 'purchase.order', old_id, neworder_id, cr)
-                wf_service.trg_validate(uid, 'purchase.order', old_id, 'purchase_cancel', cr)
+                self.signal_purchase_cancel(cr, uid, [old_id]) # TODO Is it necessary to interleave the calls?
         return orders_info
 
 
@@ -1169,8 +1165,7 @@ class mail_mail(osv.Model):
 
     def _postprocess_sent_message(self, cr, uid, mail, context=None):
         if mail.model == 'purchase.order':
-            wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'purchase.order', mail.res_id, 'send_rfq', cr)
+            self.pool.get('purchase.order').signal_send_rfq(cr, uid, [mail.res_id])
         return super(mail_mail, self)._postprocess_sent_message(cr, uid, mail=mail, context=context)
 
 
@@ -1192,8 +1187,7 @@ class mail_compose_message(osv.Model):
         context = context or {}
         if context.get('default_model') == 'purchase.order' and context.get('default_res_id'):
             context = dict(context, mail_post_autofollow=True)
-            wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'purchase.order', context['default_res_id'], 'send_rfq', cr)
+            self.pool.get('purchase.order').signal_send_rfq(cr, uid, [context['default_res_id']])
         return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
