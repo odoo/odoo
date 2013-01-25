@@ -32,9 +32,9 @@ class Env(dict):
         self.columns = self.obj._columns.keys() + self.obj._inherit_fields.keys()
 
     def __getitem__(self, key):
-        if (key in self.columns) or (key in dir(self.obj)):
-            res = self.obj.browse(self.cr, self.uid, self.ids[0])
-            return res[key]
+        record = self.obj.browse(self.cr, self.uid, self.ids[0])
+        if hasattr(record, key):
+            return getattr(record, key)
         else:
             return super(Env, self).__getitem__(key)
 
