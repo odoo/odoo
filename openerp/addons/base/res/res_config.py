@@ -56,10 +56,6 @@ class res_config_module_installation_mixin(object):
                 'params': {'modules': to_install_missing_names},
             }
 
-        config = self.pool.get('res.config').next(cr, uid, [], context=context) or {}
-        if config.get('type') not in ('ir.actions.act_window_close',):
-            return config
-
         return None
 
 class res_config_configurable(osv.osv_memory):
@@ -576,6 +572,10 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
         action = self._install_modules(cr, uid, to_install, context=context)
         if action:
             return action
+
+        config = self.pool.get('res.config').next(cr, uid, [], context=context) or {}
+        if config.get('type') not in ('ir.actions.act_window_close',):
+            return config
 
         # force client-side reload (update user menu and current view)
         return {
