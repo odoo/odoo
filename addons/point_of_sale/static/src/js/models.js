@@ -121,7 +121,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     return self.fetch('product.packaging', null, null);
                 }).then(function(packagings){
                     self.set('product.packaging',packagings);
-
+                    
                     return self.fetch('res.users', ['name','ean13'], [['ean13', '!=', false]]);
                 }).then(function(users){
                     self.set('user_list',users);
@@ -215,7 +215,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         // logs the usefull posmodel data to the console for debug purposes
         log_loaded_data: function(){
             console.log('PosModel data has been loaded:');
-            console.log('PosModel: categories:',this.get('categories'));
             console.log('PosModel: units:',this.get('units'));
             console.log('PosModel: bank_statements:',this.get('bank_statements'));
             console.log('PosModel: journals:',this.get('journals'));
