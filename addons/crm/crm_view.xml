@@ -77,56 +77,58 @@
             <field name="model">crm.case.section</field>
             <field name="arch" type="xml">
                 <form string="Sales Team" version="7.0">
-                    <group>
+                    <sheet>
                         <group>
-                            <field name="name" colspan="2"/>
-                            <field name="parent_id"/>
-                            <field name="code"/>
-                        </group>
-
-                        <group>
-                            <field name="user_id"/>
-                            <field name="resource_calendar_id"/>
-                            <field name="active"/>
-                        </group>
-                    </group>
-                    <notebook colspan="4">
-                        <page string="Sales Team">
-                           <group>
-                                <field name="alias_id" invisible="1" required="0"/>
-                                <label for="alias_name" attrs="{'invisible': [('alias_domain', '=', False)]}"/>
-                                <div attrs="{'invisible': [('alias_domain', '=', False)]}">
-                                    <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" class="oe_inline"/>
-                                 </div>
-                                <field name="change_responsible"/>
+                            <group>
+                                <field name="name" colspan="2"/>
+                                <field name="parent_id"/>
+                                <field name="code"/>
                             </group>
-                            <separator string="Team Members"/>
-                            <field name="member_ids" widget="many2many_kanban">
-                                <kanban quick_create="false" create="true">
-                                    <field name="name"/>
-                                    <templates>
-                                        <t t-name="kanban-box">
-                                            <div style="position: relative">
-                                                <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
-                                                <div class="oe_module_vignette">
-                                                    <div class="oe_module_desc">
-                                                        <field name="name"/>
+
+                            <group>
+                                <field name="user_id"/>
+                                <field name="resource_calendar_id"/>
+                                <field name="active"/>
+                            </group>
+                        </group>
+                        <notebook colspan="4">
+                            <page string="Sales Team">
+                               <group>
+                                    <field name="alias_id" invisible="1" required="0"/>
+                                    <label for="alias_name" attrs="{'invisible': [('alias_domain', '=', False)]}"/>
+                                    <div attrs="{'invisible': [('alias_domain', '=', False)]}">
+                                        <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" class="oe_inline"/>
+                                     </div>
+                                    <field name="change_responsible"/>
+                                </group>
+                                <separator string="Team Members"/>
+                                <field name="member_ids" widget="many2many_kanban">
+                                    <kanban quick_create="false" create="true">
+                                        <field name="name"/>
+                                        <templates>
+                                            <t t-name="kanban-box">
+                                                <div style="position: relative">
+                                                    <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
+                                                    <div class="oe_module_vignette">
+                                                        <div class="oe_module_desc">
+                                                            <field name="name"/>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </t>
-                                    </templates>
-                                </kanban>
-                            </field>
-                        </page>
-                        <page string="Stages">
-                            <separator string="Select Stages for this Sales Team"/>
-                            <field name="stage_ids"/>
-                        </page>
-                        <page string="Notes">
-                            <field name="note"/>
-                        </page>
-                    </notebook>
+                                            </t>
+                                        </templates>
+                                    </kanban>
+                                </field>
+                            </page>
+                            <page string="Stages">
+                                <separator string="Select Stages for this Sales Team"/>
+                                <field name="stage_ids"/>
+                            </page>
+                            <page string="Notes">
+                                <field name="note"/>
+                            </page>
+                        </notebook>
+                    </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers" help="Follow this salesteam to automatically track the events associated to users of this team."/>
                         <field name="message_ids" widget="mail_thread"/>
