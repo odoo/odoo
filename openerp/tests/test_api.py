@@ -94,6 +94,16 @@ class TestAPI(common.TransactionCase):
     @mute_logger('openerp.osv.orm')
     def test_06_fields(self):
         """ Check that relation fields return records or recordsets. """
+        user = self.Users.browse(self.cr, self.uid, self.uid)
+        self.assertIsInstance(user, Record)
+        # Check for a programming bug: accessing 'partner_id' should read all
+        # prefetched fields in the record cache, and many2many fields should not
+        # be prefetched.  When rewriting the record access, I observed that
+        # many2many fields may be anyway read, and put in the cache as a list of
+        # ids instead of a recordset.
+        self.assertIsInstance(user.partner_id, Record)
+        self.assertIsInstance(user.groups_id, BaseModel)
+
         partners = self.Partner.query(self.cr, self.uid, [])
         for name, cinfo in partners._all_columns.iteritems():
             if cinfo.column._type in ('many2one', 'reference'):

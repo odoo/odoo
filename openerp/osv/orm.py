@@ -347,42 +347,46 @@ class Record(object):
             name = user.name
     """
 
-    def __init__(self, cr, uid, id, table, cache, context=None, fields_process=None):
+    def __init__(self, model, id, cache, fields_process=None):
         """
-        :param table: the browsed object (inherited from orm)
-        :param dict cache: a dictionary of model->field->data to be shared
-                           across browse objects, thus reducing the SQL
-                           read()s. It can speed up things a lot, but also be
-                           disastrous if not discarded after write()/unlink()
-                           operations
-        :param dict context: dictionary with an optional context
+        :param model: the record's model, with session data
+        :param id: the record's database id
+        :param cache: a dictionary used as ``cache[model_name][id][field_name]``,
+            storing record data shared across records, thus reducing the SQL
+            read()s.  It can speed up things a lot, but also be disastrous if
+            not discarded after write()/unlink() operations.
+        :param fields_process: optional dictionary indexed by field type, giving
+            processing functions for field values.  Please do not use it.
         """
         if fields_process is None:
             fields_process = {}
-        if context is None:
-            context = {}
-        self._cr = cr
-        self._uid = uid
+        self.session = model.session
+        self._cr = model.session.cr
+        self._uid = model.session.uid
+        self._context = model.session.context
         self._id = id
-        self._table = table # deprecated, use _model!
-        self._model = table
-        self._table_name = self._table._name
+        self._model = model
+        self._table = model             # deprecated; use _model instead
+        self._table_name = self._model._name
         self.__logger = logging.getLogger('openerp.osv.orm.Record.' + self._table_name)
-        self._context = context
         self._fields_process = fields_process
+        self._singleton = None
 
-        cache.setdefault(table._name, {})
-        self._data = cache[table._name]
-
-        # if not (id and isinstance(id, (int, long,))):
-        #     raise BrowseRecordError(_('Wrong ID for the browse record, got %r, expected an integer.') % (id,))
-        # if not table.exists(cr, uid, id, context):
-        #     raise BrowseRecordError(_('Object %s does not exists') % (self,))
-
+        cache.setdefault(model._name, {})
+        self._cache = cache
+        self._data = cache[model._name]
         if id not in self._data:
             self._data[id] = {'id': id}
 
-        self._cache = cache
+    @property
+    def singleton(self):
+        """ Return a recordset ``obj`` containing ``self`` only, and such that
+            ``obj.one`` is ``self``.
+        """
+        if not self._singleton:
+            self._singleton = self._model._make_recordset([self])
+            self._singleton.one = self
+        return self._singleton
 
     def __getitem__(self, name):
         if name == 'id':
@@ -392,22 +396,12 @@ class Record(object):
             # build the list of fields we will fetch
 
             # fetch the definition of the field which was asked for
-            if name in self._table._columns:
-                col = self._table._columns[name]
-            elif name in self._table._inherit_fields:
-                col = self._table._inherit_fields[name][2]
-            elif hasattr(self._table, str(name)):
-                attr = getattr(self._table, name)
-                if isinstance(attr, (types.MethodType, types.LambdaType, types.FunctionType)):
-                    def function_proxy(*args, **kwargs):
-                        if 'context' not in kwargs and self._context:
-                            kwargs.update(context=self._context)
-                        return attr(self._cr, self._uid, [self._id], *args, **kwargs)
-                    return function_proxy
-                else:
-                    return attr
+            if name in self._model._columns:
+                col = self._model._columns[name]
+            elif name in self._model._inherit_fields:
+                col = self._model._inherit_fields[name][2]
             else:
-                error_msg = "Field '%s' does not exist in object '%s'" % (name, self)
+                error_msg = "Field '%s' does not exist in record '%s'" % (name, self)
                 self.__logger.warning(error_msg)
                 if self.__logger.isEnabledFor(logging.DEBUG):
                     self.__logger.debug(''.join(traceback.format_stack()))
@@ -416,116 +410,123 @@ class Record(object):
             # if the field is a classic one or a many2one, we'll fetch all classic and many2one fields
             if col._prefetch:
                 # gen the list of "local" (ie not inherited) fields which are classic or many2one
-                fields_to_fetch = filter(lambda x: x[1]._classic_write, self._table._columns.items())
+                fields_to_fetch = filter(lambda x: x[1]._classic_write, self._model._columns.items())
                 # gen the list of inherited fields
-                inherits = map(lambda x: (x[0], x[1][2]), self._table._inherit_fields.items())
+                inherits = map(lambda x: (x[0], x[1][2]), self._model._inherit_fields.items())
                 # complete the field list with the inherited fields which are classic or many2one
                 fields_to_fetch += filter(lambda x: x[1]._classic_write, inherits)
             # otherwise we fetch only that field
             else:
                 fields_to_fetch = [(name, col)]
+
+            # read the records in the same model that don't have the field yet
             ids = filter(lambda id: name not in self._data[id], self._data.keys())
-            # read the results
             field_names = map(lambda x: x[0], fields_to_fetch)
-            field_values = self._table.read(self._cr, self._uid, ids, field_names, context=self._context, load="_classic_write")
+            result = self._model.read(self._cr, self._uid, ids, field_names,
+                                    context=self._context, load="_classic_write")
 
             # TODO: improve this, very slow for reports
             if self._fields_process:
-                lang = self._context.get('lang', 'en_US') or 'en_US'
-                lang_obj_ids = self.pool.get('res.lang').search(self._cr, self._uid, [('code', '=', lang)])
-                if not lang_obj_ids:
+                lang = self._context.get('lang') or 'en_US'
+                languages = self.session.model('res.lang').query([('code', '=', lang)])
+                languages.force()
+                if not languages:
                     raise Exception(_('Language with code "%s" is not defined in your system !\nDefine it through the Administration menu.') % (lang,))
-                lang_obj = self.pool.get('res.lang').browse(self._cr, self._uid, lang_obj_ids[0])
+                language = languages[0]
 
                 for field_name, field_column in fields_to_fetch:
                     if field_column._type in self._fields_process:
-                        for result_line in field_values:
-                            result_line[field_name] = self._fields_process[field_column._type](result_line[field_name])
-                            if result_line[field_name]:
-                                result_line[field_name].set_value(self._cr, self._uid, result_line[field_name], self, field_column, lang_obj)
+                        for data in result:
+                            data[field_name] = self._fields_process[field_column._type](data[field_name])
+                            if data[field_name]:
+                                data[field_name].set_value(self._cr, self._uid, data[field_name], self, field_column, language)
 
-            if not field_values:
-                # Where did those ids come from? Perhaps old entries in ir_model_dat?
-                _logger.warning("No field_values found for ids %s in %s", ids, self)
-                raise KeyError('Field %s not found in %s'%(name, self))
+            if not result:
+                # Where did those ids come from? Perhaps old entries in ir_model_data?
+                _logger.warning("No result found for ids %s in %s", ids, self)
+                raise KeyError('Field %s not found in %s' % (name, self))
+
             # create browse records for 'remote' objects
-            for result_line in field_values:
-                new_data = {}
+            for data in result:
+                # values is a dictionary mapping fields to fetch to their value
+                # to update the cache; we cannot use data itself because it may
+                # contain unexpected fields
+                values = {}
                 for field_name, field_column in fields_to_fetch:
+                    value = data[field_name]
                     if field_column._type == 'many2one':
-                        if result_line[field_name]:
-                            obj = self._table.pool.get(field_column._obj)
-                            if isinstance(result_line[field_name], (list, tuple)):
-                                value = result_line[field_name][0]
-                            else:
-                                value = result_line[field_name]
-                            if value:
+                        if isinstance(value, (list, tuple)):
+                            value = value[0]
+                        if value:
+                            if isinstance(value, Record):
                                 # FIXME: this happen when a _inherits object
-                                #        overwrite a field of it parent. Need
-                                #        testing to be sure we got the right
-                                #        object and not the parent one.
-                                if not isinstance(value, Record):
-                                    if obj is None:
-                                        # In some cases the target model is not available yet, so we must ignore it,
-                                        # which is safe in most cases, this value will just be loaded later when needed.
-                                        # This situation can be caused by custom fields that connect objects with m2o without
-                                        # respecting module dependencies, causing relationships to be connected to soon when
-                                        # the target is not loaded yet.
-                                        continue
-                                    new_data[field_name] = obj.browse(self._cr, self._uid, value,
-                                        context=self._context,
-                                        cache=self._cache,
-                                        fields_process=self._fields_process)
-                                else:
-                                    new_data[field_name] = value
+                                # overwrites a field of its parent. Need testing
+                                # to be sure we got the right object and not the
+                                # parent one.
+                                values[field_name] = value
                             else:
-                                new_data[field_name] = browse_null()
+                                try:
+                                    field_model = self.session.model(field_column._obj)
+                                    values[field_name] = field_model.browse(value,
+                                        cache=self._cache, fields_process=self._fields_process)
+                                except Exception:
+                                    # In some cases the target model is not available yet, so we must ignore it,
+                                    # which is safe in most cases, this value will just be loaded later when needed.
+                                    # This situation can be caused by custom fields that connect objects with m2o without
+                                    # respecting module dependencies, causing relationships to be connected to soon when
+                                    # the target is not loaded yet.
+                                    pass
                         else:
-                            new_data[field_name] = browse_null()
+                            values[field_name] = browse_null()
+
                     elif field_column._type in ('one2many', 'many2many'):
-                        obj = self._table.pool.get(field_column._obj)
-                        new_data[field_name] = obj.browse(self._cr, self._uid, result_line[field_name],
-                            context=self._context, cache=self._cache, fields_process=self._fields_process)
+                        field_model = self.session.model(field_column._obj)
+                        values[field_name] = field_model.browse(value,
+                            cache=self._cache, fields_process=self._fields_process)
+
                     elif field_column._type == 'reference':
-                        if result_line[field_name]:
-                            if isinstance(result_line[field_name], Record):
-                                new_data[field_name] = result_line[field_name]
+                        if value:
+                            if isinstance(value, Record):
+                                values[field_name] = value
                             else:
-                                ref_obj, ref_id = result_line[field_name].split(',')
+                                ref_obj, ref_id = value.split(',')
                                 ref_id = long(ref_id)
                                 if ref_id:
-                                    obj = self._table.pool.get(ref_obj)
-                                    new_data[field_name] = obj.browse(self._cr, self._uid, ref_id,
-                                        context=self._context, cache=self._cache, fields_process=self._fields_process)
+                                    field_model = self.session.model(ref_obj)
+                                    values[field_name] = field_model.browse(ref_id,
+                                        cache=self._cache, fields_process=self._fields_process)
                                 else:
-                                    new_data[field_name] = browse_null()
+                                    values[field_name] = browse_null()
                         else:
-                            new_data[field_name] = browse_null()
+                            values[field_name] = browse_null()
+
                     else:
-                        new_data[field_name] = result_line[field_name]
-                self._data[result_line['id']].update(new_data)
+                        values[field_name] = value
+
+                self._data[data['id']].update(values)
 
         if not name in self._data[self._id]:
             # How did this happen? Could be a missing model due to custom fields used too soon, see above.
-            self.__logger.error("Fields to fetch: %s, Field values: %s", field_names, field_values)
-            self.__logger.error("Cached: %s, Table: %s", self._data[self._id], self._table)
+            self.__logger.error("Fields to fetch: %s, Field values: %s", field_names, result)
+            self.__logger.error("Cached: %s, Table: %s", self._data[self._id], self._model)
             raise KeyError(_('Unknown attribute %s in %s ') % (name, self))
+
         return self._data[self._id][name]
 
     def __getattr__(self, name):
-        try:
+        if name in self:
             return self[name]
-        except KeyError, e:
-            raise AttributeError(e)
+        return getattr(self.singleton, name)
 
     def __contains__(self, name):
-        return (name in self._table._columns) or (name in self._table._inherit_fields) or hasattr(self._table, name)
+        return (name == 'id') or (name in self._model._columns) or \
+                (name in self._model._inherit_fields)
 
     def __iter__(self):
         raise NotImplementedError("Iteration is not allowed on %s" % self)
 
     def __hasattr__(self, name):
-        return name in self
+        return (name in self) or hasattr(self._model, name)
 
     def __int__(self):
         return self._id
@@ -534,14 +535,11 @@ class Record(object):
         return "Record(%s, %d)" % (self._table_name, self._id)
 
     def __eq__(self, other):
-        if not isinstance(other, Record):
-            return False
-        return (self._table_name, self._id) == (other._table_name, other._id)
+        return isinstance(other, Record) and \
+            (self._table_name, self._id) == (other._table_name, other._id)
 
     def __ne__(self, other):
-        if not isinstance(other, Record):
-            return True
-        return (self._table_name, self._id) != (other._table_name, other._id)
+        return not self == other
 
     # we need to define __unicode__ even though we've already defined __str__
     # because we have overridden __getattr__
@@ -4573,10 +4571,11 @@ class BaseModel(object):
             cache = {}
         # need to accepts ints and longs because ids coming from a method
         # launched by button in the interface have a type long...
+        model = self._make_instance(cr, uid, context)
         if isinstance(select, (int, long)):
-            return Record(cr, uid, select, self, cache, context=context, fields_process=fields_process)
+            return Record(model, select, cache, fields_process=fields_process)
         elif isinstance(select, list):
-            records = [Record(cr, uid, id, self, cache, context=context, fields_process=fields_process) for id in select]
+            records = [Record(model, id, cache, fields_process=fields_process) for id in select]
             return self._make_recordset(cr, uid, records, context)
         else:
             return browse_null()
