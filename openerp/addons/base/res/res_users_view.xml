@@ -84,51 +84,7 @@
         </record>
         <menuitem action="action_res_groups" id="menu_action_res_groups" parent="base.menu_users" groups="base.group_no_one"/>
 
-
         <!-- res.users -->
-        <record id="view_users_simple_form" model="ir.ui.view">
-            <field name="name">res.users.simplified.form</field>
-            <field name="model">res.users</field>
-            <field name="priority">1</field>
-            <field name="arch" type="xml">
-                <form string="Contact" version="7.0">
-                    <sheet>
-                    <field name="image" widget='image' class="oe_left oe_avatar" options='{"preview_image": "image_medium", "size": [90, 90]}'/>
-                    <div class="oe_title">
-                        <div class="oe_edit_only">
-                            <label for="name"/>
-                        </div>
-                        <h1>
-                            <field name="name" default_focus="1" placeholder="Name" />
-                        </h1>
-                        <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
-                    </div>
-                    <group>
-                        <group>
-                            <label for="street" string="Address"/>
-                            <div>
-                                <field name="street" placeholder="Street..."/>
-                                <field name="street2"/>
-                                <div class="address_format">
-                                    <field name="city" placeholder="City" style="width: 40%%"/>
-                                    <field name="state_id" class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": True}' on_change="onchange_state(state_id)"/>
-                                    <field name="zip" placeholder="ZIP" style="width: 20%%"/>
-                                </div>
-                                <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}'/>
-                            </div>
-                            <field name="website" widget="url" placeholder="e.g. www.openerp.com"/>
-                        </group>
-                        <group>
-                            <field name="phone" placeholder="e.g. +32.81.81.37.00"/>
-                            <field name="mobile"/>
-                            <field name="fax"/>
-                            <field name="email" widget="email"/>
-                        </group>
-                    </group>
-                </sheet>
-                </form>
-            </field>
-        </record>
         <record id="view_users_form" model="ir.ui.view">
             <field name="name">res.users.form</field>
             <field name="model">res.users</field>
@@ -155,8 +111,30 @@
                                 <field name="active"/>
                             </group>
                         </group>
-
                         <notebook colspan="4">
+                            <page string="Contact">
+                                <group col="2">
+                                    <group>
+                                        <field name="phone" placeholder="e.g. +32.81.81.37.00"/>
+                                        <field name="mobile"/>
+                                        <field name="fax"/>
+                                        <field name="email" widget="email"/>
+                                    </group>
+                                    <group>
+                                        <label for="street" string="Address"/>
+                                        <div>
+                                            <field name="street" placeholder="Street..."/>
+                                            <field name="street2"/>
+                                            <div class="address_format">
+                                                <field name="city" placeholder="City" style="width: 40%%"/>
+                                                <field name="state_id" class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": True}' on_change="onchange_state(state_id)"/>
+                                                <field name="zip" placeholder="ZIP" style="width: 20%%"/>
+                                            </div>
+                                            <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}'/>
+                                        </div>
+                                    </group>
+                                </group>
+                            </page>
                             <page string="Preferences">
                                 <group>
                                     <group name="preferences">
@@ -169,7 +147,6 @@
                                     </group>
                                 </group>
                                 <group>
-                                    <field name="email" widget="email"/>
                                     <field name="signature"/>
                                 </group>
                             </page>
