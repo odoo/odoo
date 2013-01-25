@@ -5251,6 +5251,20 @@ class BaseModel(object):
         """ stuff to do right after the registry is built """
         pass
 
+    def __getattr__(self, name):
+        if name.startswith('signal_'):
+            signal_name = name[len('signal_'):]
+            assert signal_name
+            def handle_workflow_signal(cr, uid, ids):
+                workflow_service = netsvc.LocalService("workflow")
+                res = {}
+                for id in ids:
+                    # TODO consolidate trg_validate() and the functions it calls to work on a list of IDs.
+                    res[id] = workflow_service.trg_validate(uid, self._name, id, signal_name, cr)
+                return res
+            return handle_workflow_signal
+        raise AttributeError
+
 # keep this import here, at top it will cause dependency cycle errors
 import expression
 
