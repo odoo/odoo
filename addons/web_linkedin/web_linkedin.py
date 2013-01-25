@@ -21,7 +21,6 @@
 
 import base64
 import urllib2
-import linkedin # TODO add depensy in packaging
 
 import openerp
 from openerp.osv import fields, osv
