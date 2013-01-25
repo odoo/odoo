@@ -166,16 +166,14 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     return self.fetch('pos.category', ['id','name','parent_id','child_id','image'])
                 }).then(function(categories){
                     self.db.add_categories(categories);
-                    return self.fetch('res.users',['partner_id'],[['id','=',self.session.uid]])
-                }).then(function(user){
-                    return self.fetch('res.partner',['property_product_pricelist'],[['id','=',user[0].partner_id[0]]])
+                    return new instance.web.Model("ir.model.data").call("get_object_reference", ["product", "list0"])
                 }).then(function(pricelist){
                     return self.fetch(
                         'product.product', 
                         ['name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 
                          'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type', 'description_sale', 'description','pricelist_id'],
                         [['sale_ok','=',true],['available_in_pos','=',true]],
-                        {pricelist: pricelist[0].property_product_pricelist[0]} // context for price
+                        {pricelist: pricelist[1]} // context for price
                     );
                 }).then(function(products){
                     self.db.add_products(products);
