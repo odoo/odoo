@@ -960,8 +960,12 @@ class BaseModel(object):
 
                 cls = type(name, (cls, parent_class), dict(nattr, _register=False))
         else:
-            cls._local_constraints = getattr(cls, '_constraints', [])
-            cls._local_sql_constraints = getattr(cls, '_sql_constraints', [])
+            # introduce a extra class inheritance to enable monkey-patching with
+            # _patch_method() on all instances of the model in this pool only
+            nattr = {'_register': False}
+            nattr['_local_constraints'] = cls.__dict__.get('_constraints', [])
+            nattr['_local_sql_constraints'] = cls.__dict__.get('_sql_constraints', [])
+            cls = type(cls._name, (cls,), nattr)
 
         if not getattr(cls, '_original_module', None):
             cls._original_module = cls._module
@@ -5316,6 +5320,42 @@ class BaseModel(object):
     def _register_hook(self, cr):
         """ stuff to do right after the registry is built """
         pass
+
+    def _patch_method(self, name, method):
+        """ Monkey-patch a method for all instances of this model. This replaces
+            the method called ``name`` by ``method`` in ``self``'s class.
+            The original method is then accessible via ``method.origin``, and it
+            can be restored with ``_revert_method``.
+
+            Example::
+
+                @api.recordset
+                def do_write(self, values):
+                    # do stuff, and call the original method
+                    return do_write.origin(self, values)
+
+                # patch method write of model
+                model._patch_method('write', do_write)
+
+                # this will call do_write
+                records = model.query([...])
+                records.write(...)
+
+                # restore the original method
+                model._revert_method('write')
+        """
+        origin = getattr(self.__class__, name)
+        method.origin = origin
+        method = api.versatile(method)
+        method.origin = origin
+        setattr(self.__class__, name, method)
+
+    def _revert_method(self, name):
+        """ Revert the original method of ``self`` called ``name``.
+            See ``_patch_method``.
+        """
+        method = getattr(self.__class__, name)
+        setattr(self.__class__, name, method.origin)
 
     @api.model
     def query(self, domain, offset=0, limit=None, order=None):
