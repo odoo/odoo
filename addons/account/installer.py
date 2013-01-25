@@ -47,7 +47,7 @@ class account_installer(osv.osv_memory):
 
         # try get the list on apps server
         try:
-            apps_server = self.pool.get('ir.config_parameter').get_value(cr, uid, 'apps.server', 'https://apps.openerp.com')
+            apps_server = self.pool.get('ir.config_parameter').get_param(cr, uid, 'apps.server', 'https://apps.openerp.com')
 
             up = urlparse.urlparse(apps_server)
             url = '{0.scheme}://{0.netloc}/apps/charts?serie={1}'.format(up, serie)
