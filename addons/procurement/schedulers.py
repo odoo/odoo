@@ -62,8 +62,7 @@ class procurement_order(osv.osv):
             procurement_obj = self.pool.get('procurement.order')
             if not ids:
                 ids = procurement_obj.search(cr, uid, [('state', '=', 'exception')], order="date_planned")
-            for id in ids:
-                wf_service.trg_validate(uid, 'procurement.order', id, 'button_restart', cr)
+            self.signal_button_restart(cr, uid, ids)
             if use_new_cursor:
                 cr.commit()
             company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
@@ -78,7 +77,7 @@ class procurement_order(osv.osv):
                 ids = procurement_obj.search(cr, uid, [('state', '=', 'confirmed'), ('procure_method', '=', 'make_to_order')], offset=offset, limit=500, order='priority, date_planned', context=context)
                 for proc in procurement_obj.browse(cr, uid, ids, context=context):
                     if maxdate >= proc.date_planned:
-                        wf_service.trg_validate(uid, 'procurement.order', proc.id, 'button_check', cr)
+                        self.signal_button_check(cr, uid, [proc.id])
                     else:
                         offset += 1
                         report_later += 1
@@ -100,7 +99,7 @@ class procurement_order(osv.osv):
                 ids = procurement_obj.search(cr, uid, [('state', '=', 'confirmed'), ('procure_method', '=', 'make_to_stock')], offset=offset)
                 for proc in procurement_obj.browse(cr, uid, ids):
                     if maxdate >= proc.date_planned:
-                        wf_service.trg_validate(uid, 'procurement.order', proc.id, 'button_check', cr)
+                        self.signal_button_check(cr, uid, [proc.id])
                         report_ids.append(proc.id)
                     else:
                         report_later += 1
@@ -178,8 +177,8 @@ class procurement_order(osv.osv):
                 proc_id = proc_obj.create(cr, uid,
                             self._prepare_automatic_op_procurement(cr, uid, product, warehouse, location_id, context=context),
                             context=context)
-                wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
-                wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_check', cr)
+                self.signal_button_confirm(cr, uid, [proc_id])
+                self.signal_button_check(cr, uid, [proc_id])
         return True
 
     def _get_orderpoint_date_planned(self, cr, uid, orderpoint, start_date, context=None):
@@ -254,7 +253,7 @@ class procurement_order(osv.osv):
                             to_generate = qty
                             for proc_data in procure_datas:
                                 if to_generate >= proc_data['product_qty']:
-                                    wf_service.trg_validate(uid, 'procurement.order', proc_data['id'], 'button_confirm', cr)
+                                    self.signal_button_confirm(cr, uid, [proc_data['id']])
                                     procurement_obj.write(cr, uid, [proc_data['id']],  {'origin': op.name}, context=context)
                                     to_generate -= proc_data['product_qty']
                                 if not to_generate:
@@ -265,10 +264,8 @@ class procurement_order(osv.osv):
                         proc_id = procurement_obj.create(cr, uid,
                                                          self._prepare_orderpoint_procurement(cr, uid, op, qty, context=context),
                                                          context=context)
-                        wf_service.trg_validate(uid, 'procurement.order', proc_id,
-                                'button_confirm', cr)
-                        wf_service.trg_validate(uid, 'procurement.order', proc_id,
-                                'button_check', cr)
+                        self.signal_button_confirm(cr, uid, [proc_id])
+                        self.signal_button_check(cr, uid, [proc_id])
                         orderpoint_obj.write(cr, uid, [op.id],
                                 {'procurement_id': proc_id}, context=context)
             offset += len(ids)
@@ -278,7 +275,5 @@ class procurement_order(osv.osv):
             cr.commit()
             cr.close()
         return {}
-
-procurement_order()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
