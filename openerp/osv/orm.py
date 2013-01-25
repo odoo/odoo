@@ -5263,7 +5263,7 @@ class BaseModel(object):
                     res[id] = workflow_service.trg_validate(uid, self._name, id, signal_name, cr)
                 return res
             return handle_workflow_signal
-        raise AttributeError
+        return super(BaseModel, self).__getattr__(name)
 
 # keep this import here, at top it will cause dependency cycle errors
 import expression
