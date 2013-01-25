@@ -1370,13 +1370,9 @@ instance.web.WebClient = instance.web.Client.extend({
             });
     },
     set_content_full_screen: function(fullscreen) {
-        if (fullscreen) {
-            $(".oe_webclient", this.$el).addClass("oe_content_full_screen");
-            $("body").css({'overflow-y':'hidden'});
-        } else {
-            $(".oe_webclient", this.$el).removeClass("oe_content_full_screen");
-            $("body").css({'overflow-y':'scroll'});
-        }
+        $(document.body).css('overflow-y', fullscreen ? 'hidden' : 'scroll');
+        this.$('.oe_webclient').toggleClass(
+            'oe_content_full_screen', fullscreen);
     },
     has_uncommitted_changes: function() {
         var $e = $.Event('clear_uncommitted_changes');
