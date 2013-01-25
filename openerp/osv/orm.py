@@ -5505,9 +5505,19 @@ class BaseModel(object):
         return not bool(self & other)
 
     def __getitem__(self, key):
-        """ If ``key`` is an integer, return the ``key``-th element of ``self``.
-            If ``key`` is a slice, return the recordset given by offset and
-            limits with respect to ``self``.
+        """ Return a record or a recordset from ``self``, depending on whether
+            ``key`` is an integer or a slice.  When ``key`` is a slice, if the
+            recordset is not evaluated, return another recordset with updated
+            offset and limit.
+
+            Examples::
+
+                r = records[3]              # fourth record in records
+
+                rs = model.query(dom)       # rs is a recordset
+                rs1 = rs[10:]               # same as rs with offset 10
+                rs2 = rs1[:10]              # same as rs with offset 10 and limit 10
+                assert list(rs2) == list(rs[10:20])
         """
         if isinstance(key, slice):
             if hasattr(self, '_records'):
