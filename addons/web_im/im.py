@@ -157,7 +157,7 @@ class im_message(osv.osv):
     }
 
     _defaults = {
-        'date': datetime.datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+        'date': lambda *args: datetime.datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
     }
     
     def get_messages(self, cr, uid, last=None, users_watch=None, context=None):

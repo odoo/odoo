@@ -281,7 +281,6 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
             send_it().then(_.bind(function() {
                 this._add_bubble(this.me, mes, new Date());
             }, this), function(error, e) {
-                e.preventDefault();
                 tries += 1;
                 if (tries < 3)
                     return send_it();
