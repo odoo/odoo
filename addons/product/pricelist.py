@@ -23,7 +23,7 @@ import time
 
 from _common import rounding
 
-from openerp.osv import fields, osv
+from openerp.osv import fields, osv, api
 from openerp.tools.translate import _
 
 import openerp.addons.decimal_precision as dp
@@ -126,7 +126,7 @@ class product_pricelist(osv.osv):
         "currency_id": _get_currency
     }
 
-    #def price_get_multi(self, cr, uid, product_ids, context=None):
+    @api.cr_uid_ids
     def price_get_multi(self, cr, uid, pricelist_ids, products_by_qty_by_partner, context=None):
         """multi products 'price_get'.
            @param pricelist_ids:

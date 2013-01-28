@@ -19,8 +19,7 @@
 #
 ##############################################################################
 
-from openerp.osv import fields
-from openerp.osv import osv
+from openerp.osv import osv, fields, api
 from openerp import netsvc
 
 
@@ -157,6 +156,7 @@ class StockPicking(osv.osv):
     #
     # Explode picking by replacing phantom BoMs
     #
+    @api.cr_uid_ids
     def action_explode(self, cr, uid, move_ids, *args):
         """Explodes moves by expanding kit components"""
         move_obj = self.pool.get('stock.move')

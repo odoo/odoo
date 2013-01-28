@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, osv
+from openerp.osv import fields, osv, api
 
 class ir_sequence_fiscalyear(osv.osv):
     _name = 'account.sequence.fiscalyear'
@@ -47,6 +47,7 @@ class ir_sequence(osv.osv):
             'sequence_main_id', 'Sequences')
     }
 
+    @api.cr_uid_ids
     def _next(self, cr, uid, seq_ids, context=None):
         if context is None:
             context = {}

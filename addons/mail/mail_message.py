@@ -24,7 +24,7 @@ from openerp import tools
 
 from email.header import decode_header
 from openerp import SUPERUSER_ID
-from openerp.osv import osv, orm, fields
+from openerp.osv import osv, orm, fields, api
 from openerp.tools import html_email_clean
 from openerp.tools.translate import _
 
@@ -224,6 +224,7 @@ class mail_message(osv.Model):
     # Notification API
     #------------------------------------------------------
 
+    @api.cr_uid_ids
     def set_message_read(self, cr, uid, msg_ids, read, create_missing=True, context=None):
         """ Set messages as (un)read. Technically, the notifications related
             to uid are set to (un)read. If for some msg_ids there are missing
@@ -252,6 +253,7 @@ class mail_message(osv.Model):
             notification_obj.create(cr, uid, {'partner_id': user_pid, 'read': read, 'message_id': msg_id}, context=context)
         return notification_obj.write(cr, uid, notif_ids, {'read': read}, context=context)
 
+    @api.cr_uid_ids
     def set_message_starred(self, cr, uid, msg_ids, starred, create_missing=True, context=None):
         """ Set messages as (un)starred. Technically, the notifications related
             to uid are set to (un)starred.
