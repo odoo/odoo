@@ -187,16 +187,19 @@ define(["underscore", "jquery", "nova"], function(_, $, nova) {
         if(!str) {
             return str;
         }
-        var regex = /^(\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d)(?:\.\d+)?$/;
+        var regex = /^(\d\d\d\d)-(\d\d)-(\d\d) (\d\d):(\d\d):(\d\d(?:\.\d+)?)$/;
         var res = regex.exec(str);
         if ( !res ) {
-            throw new Error(_.str.sprintf(_t("'%s' is not a valid datetime"), str));
+            throw new Error("'" + str + "' is not a valid datetime");
         }
-        var obj = Date.parseExact(res[1] + " UTC", 'yyyy-MM-dd HH:mm:ss zzz');
-        if (! obj) {
-            throw new Error(_.str.sprintf(_t("'%s' is not a valid datetime"), str));
-        }
-        return obj;
+        var tmp = new Date();
+        tmp.setUTCFullYear(parseFloat(res[1]));
+        tmp.setUTCMonth(parseFloat(res[2]) - 1);
+        tmp.setUTCDate(parseFloat(res[3]));
+        tmp.setUTCHours(parseFloat(res[4]));
+        tmp.setUTCMinutes(parseFloat(res[5]));
+        tmp.setUTCSeconds(parseFloat(res[6]));
+        return tmp;
     };
 
     /**
@@ -214,16 +217,19 @@ define(["underscore", "jquery", "nova"], function(_, $, nova) {
         if(!str) {
             return str;
         }
-        var regex = /^\d\d\d\d-\d\d-\d\d$/;
+        var regex = /^(\d\d\d\d)-(\d\d)-(\d\d)$/;
         var res = regex.exec(str);
         if ( !res ) {
-            throw new Error(_.str.sprintf(_t("'%s' is not a valid date"), str));
+            throw new Error("'" + str + "' is not a valid date");
         }
-        var obj = Date.parseExact(str, 'yyyy-MM-dd');
-        if (! obj) {
-            throw new Error(_.str.sprintf(_t("'%s' is not a valid date"), str));
-        }
-        return obj;
+        var tmp = new Date();
+        tmp.setFullYear(parseFloat(res[1]));
+        tmp.setMonth(parseFloat(res[2]) - 1);
+        tmp.setDate(parseFloat(res[3]));
+        tmp.setHours(0);
+        tmp.setMinutes(0);
+        tmp.setSeconds(0);
+        return tmp;
     };
 
     /**
@@ -241,16 +247,20 @@ define(["underscore", "jquery", "nova"], function(_, $, nova) {
         if(!str) {
             return str;
         }
-        var regex = /^(\d\d:\d\d:\d\d)(?:\.\d+)?$/;
+        var regex = /^(\d\d):(\d\d):(\d\d(?:\.\d+)?)$/;
         var res = regex.exec(str);
         if ( !res ) {
-            throw new Error(_.str.sprintf(_t("'%s' is not a valid time"), str));
+            throw new Error("'" + str + "' is not a valid time");
         }
-        var obj = Date.parseExact("1970-01-01 " + res[1], 'yyyy-MM-dd HH:mm:ss');
-        if (! obj) {
-            throw new Error(_.str.sprintf(_t("'%s' is not a valid time"), str));
-        }
-        return obj;
+        debugger;
+        var tmp = new Date();
+        tmp.setFullYear(1970);
+        tmp.setMonth(0);
+        tmp.setDate(1);
+        tmp.setHours(parseFloat(res[1]));
+        tmp.setMinutes(parseFloat(res[2]));
+        tmp.setSeconds(parseFloat(res[3]));
+        return tmp;
     };
 
     /*
