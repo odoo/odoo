@@ -22,6 +22,7 @@
     'name' : 'Fleet Management',
     'version' : '0.1',
     'author' : 'OpenERP S.A.',
+    'sequence': 110,
     'category': 'Managing vehicles and contracts',
     'website' : 'http://www.openerp.com',
     'summary' : 'Vehicle, leasing, insurances, costs',

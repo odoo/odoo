@@ -20,8 +20,8 @@
 ##############################################################################
 
 
-from osv import fields,osv
-import tools
+from openerp.osv import fields,osv
+from openerp import tools
 
 class report_document_user(osv.osv):
     _name = "report.document.user"

@@ -21,7 +21,7 @@
 
 import time
 import datetime
-from report import report_sxw
+from openerp.report import report_sxw
 
 class employees_yearly_salary_report(report_sxw.rml_parse):
 

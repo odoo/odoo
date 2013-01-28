@@ -20,8 +20,8 @@
 ##############################################################################
 
 from openerp.osv import osv
-from edi import EDIMixin
-from tools.translate import _
+from openerp.tools.translate import _
+from openerp.addons.edi import EDIMixin
 
 PURCHASE_ORDER_LINE_EDI_STRUCT = {
     'name': True,

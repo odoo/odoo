@@ -23,8 +23,8 @@ import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from osv import osv, fields
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 import pos_box_entries
 
 class pos_box_out(osv.osv_memory):

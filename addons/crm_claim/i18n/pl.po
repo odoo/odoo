@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2010-09-29 10:47+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-15 19:41+0000\n"
+"Last-Translator: Grzegorz Grzelak (OpenGLOBE.pl) <grzegorz@openglobe.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:49+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 06:00+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: crm_claim
 #: help:crm.claim.stage,fold:0
@@ -23,6 +23,8 @@ msgid ""
 "This stage is not visible, for example in status bar or kanban view, when "
 "there are no records in that stage to display."
 msgstr ""
+"Ten etap jest niewidoczny. Na przykład w pasku stanu widoku kanban, kiedy "
+"nie ma rekordów do wyświetlenia w tym etapie."
 
 #. module: crm_claim
 #: field:crm.claim.report,nbr:0
@@ -46,11 +48,13 @@ msgid ""
 "Allows you to configure your incoming mail server, and create claims from "
 "incoming emails."
 msgstr ""
+"Pozwala konfigurować serwer poczty przychodzącej i tworzyć automatycznie "
+"serwisy z maili."
 
 #. module: crm_claim
 #: model:ir.model,name:crm_claim.model_crm_claim_stage
 msgid "Claim stages"
-msgstr ""
+msgstr "Etapy serwisu"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -65,7 +69,7 @@ msgstr "Opóźnienie do zamknięcia"
 #. module: crm_claim
 #: field:crm.claim,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Nieprzeczytane wiadomości"
 
 #. module: crm_claim
 #: field:crm.claim,resolution:0
@@ -91,6 +95,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kliknij, aby utworzyć kategorię serwisu.\n"
+"              </p><p>\n"
+"                Utwórz kategorie serwisów, aby je lepiej porządkować.\n"
+"                Przykładami kategorii mogą być: akcje zapobiegawcze,\n"
+"                reklamacje, akcje korygujące.\n"
+"              </p>\n"
+"            "
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -100,19 +112,12 @@ msgstr "#Serwis"
 #. module: crm_claim
 #: field:crm.claim.stage,name:0
 msgid "Stage Name"
-msgstr ""
-
-#. module: crm_claim
-#: model:ir.actions.act_window,help:crm_claim.action_report_crm_claim
-msgid ""
-"Have a general overview of all claims processed in the system by sorting "
-"them with specific criteria."
-msgstr "Ogólny widok wykonanych serwisów  posortowanych wg kryteriów."
+msgstr "Nazwa etapu"
 
 #. module: crm_claim
 #: view:crm.claim.report:0
 msgid "Salesperson"
-msgstr ""
+msgstr "Sprzedawca"
 
 #. module: crm_claim
 #: selection:crm.claim,priority:0
@@ -139,7 +144,7 @@ msgstr "Wiadomości"
 #. module: crm_claim
 #: model:crm.case.categ,name:crm_claim.categ_claim1
 msgid "Factual Claims"
-msgstr "Reklamacja rzeczowa"
+msgstr "Reklamacje rzeczowe"
 
 #. module: crm_claim
 #: selection:crm.claim,state:0
@@ -156,7 +161,7 @@ msgstr "Działania prewencyjne"
 #. module: crm_claim
 #: help:crm.claim,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Jeśli zaznaczone, to wiadomość wymaga twojej uwagi"
 
 #. module: crm_claim
 #: field:crm.claim.report,date_closed:0
@@ -166,7 +171,7 @@ msgstr "Data zamknięcia"
 #. module: crm_claim
 #: view:res.partner:0
 msgid "False"
-msgstr ""
+msgstr "Fałsz"
 
 #. module: crm_claim
 #: field:crm.claim,ref:0
@@ -189,6 +194,9 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Zawiera podsumowanie wypowiedzi (liczbę wiadomości, ...). To podsumowanie "
+"jest bezpośrednio w formacie html, aby można je było stosować w widokach "
+"kanban."
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -218,11 +226,6 @@ msgid "Preventive Action"
 msgstr "Akcja prewencyjna"
 
 #. module: crm_claim
-#: field:crm.claim.report,delay_expected:0
-msgid "Overpassed Deadline"
-msgstr "Przekroczony termin"
-
-#. module: crm_claim
 #: field:crm.claim.report,section_id:0
 msgid "Section"
 msgstr "Sekcja"
@@ -247,12 +250,12 @@ msgstr "Priorytet"
 #. module: crm_claim
 #: field:crm.claim.stage,fold:0
 msgid "Hide in Views when Empty"
-msgstr ""
+msgstr "Ukryj w widokach kiedy puste"
 
 #. module: crm_claim
 #: field:crm.claim,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Wypowiadający się"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -266,7 +269,7 @@ msgstr "Nowy"
 #. module: crm_claim
 #: field:crm.claim.stage,section_ids:0
 msgid "Sections"
-msgstr ""
+msgstr "Sekcje"
 
 #. module: crm_claim
 #: field:crm.claim,email_from:0
@@ -302,7 +305,7 @@ msgstr "Temat serwisu"
 #. module: crm_claim
 #: model:crm.claim.stage,name:crm_claim.stage_claim3
 msgid "Rejected"
-msgstr ""
+msgstr "Odrzucony"
 
 #. module: crm_claim
 #: field:crm.claim,date_action_next:0
@@ -310,10 +313,11 @@ msgid "Next Action Date"
 msgstr "Data następnej akcji"
 
 #. module: crm_claim
-#: code:addons/crm_claim/crm_claim.py:243
-#, python-format
-msgid "Claim has been <b>created</b>."
-msgstr ""
+#: model:ir.actions.act_window,help:crm_claim.action_report_crm_claim
+msgid ""
+"Have a general overview of all claims processed in the system by sorting "
+"them with specific criteria."
+msgstr "Ogólny widok wykonanych serwisów  posortowanych wg kryteriów."
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -347,13 +351,13 @@ msgstr "Daty"
 #. module: crm_claim
 #: help:crm.claim,email_from:0
 msgid "Destination email for email gateway."
-msgstr ""
+msgstr "Mail docelowy dla bramy pocztowej"
 
 #. module: crm_claim
-#: code:addons/crm_claim/crm_claim.py:199
+#: code:addons/crm_claim/crm_claim.py:194
 #, python-format
 msgid "No Subject"
-msgstr ""
+msgstr "Brak tematu"
 
 #. module: crm_claim
 #: help:crm.claim.stage,state:0
@@ -363,11 +367,14 @@ msgid ""
 "is related to the status 'Close', when your document reaches this stage, it "
 "will be automatically have the 'closed' status."
 msgstr ""
+"Stan powiązany z etapem. Stan dokumentu może się zmieniać w zależności od "
+"etapu. Jeśli etap będzie powiązany ze stanem 'Zamknięte', to jeśli dokument "
+"dojdzie do tego etapu jednocześnie zmieni stan na 'Zamkniete'."
 
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Settle"
-msgstr ""
+msgstr "Postanów"
 
 #. module: crm_claim
 #: model:ir.ui.menu,name:crm_claim.menu_claim_stage_view
@@ -393,7 +400,7 @@ msgstr "Raport serwisu CRM"
 #. module: crm_claim
 #: view:sale.config.settings:0
 msgid "Configure"
-msgstr ""
+msgstr "Konfiguruj"
 
 #. module: crm_claim
 #: model:crm.case.resource.type,name:crm_claim.type_claim1
@@ -439,6 +446,8 @@ msgid ""
 "If you check this field, this stage will be proposed by default on each "
 "sales team. It will not assign this stage to existing teams."
 msgstr ""
+"Jeśli zaznaczysz tę opcję, to etap będzie domyślnie proponowany każdemu "
+"zespołowi sprzedaży. To nie przypisze etapu do istniejącego zespołu."
 
 #. module: crm_claim
 #: field:crm.claim,categ_id:0
@@ -494,17 +503,17 @@ msgstr "Zamknięte"
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Reject"
-msgstr ""
+msgstr "Odrzuć"
 
 #. module: crm_claim
 #: view:res.partner:0
 msgid "Partners Claim"
-msgstr "Partnerzy serwisów"
+msgstr "Serwis partnerów"
 
 #. module: crm_claim
 #: view:crm.claim.stage:0
 msgid "Claim Stage"
-msgstr ""
+msgstr "Etap serwisu"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -513,7 +522,7 @@ msgstr ""
 #: selection:crm.claim.report,state:0
 #: selection:crm.claim.stage,state:0
 msgid "Pending"
-msgstr "Oczekujące"
+msgstr "Oczekiwanie"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -522,7 +531,7 @@ msgstr "Oczekujące"
 #: field:crm.claim.report,state:0
 #: field:crm.claim.stage,state:0
 msgid "Status"
-msgstr ""
+msgstr "Stan"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -538,7 +547,7 @@ msgstr "Zwykły"
 #. module: crm_claim
 #: help:crm.claim.stage,sequence:0
 msgid "Used to order stages. Lower is better."
-msgstr ""
+msgstr "Stosowane do porządkowania etapów. Niskie są lepsze."
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -558,7 +567,7 @@ msgstr "Telefon"
 #. module: crm_claim
 #: field:crm.claim,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Jest wypowiadającym się"
 
 #. module: crm_claim
 #: field:crm.claim.report,user_id:0
@@ -580,6 +589,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kliknij, aby utworzyć nowy etap dla serwisu. \n"
+"              </p><p>\n"
+"                Etapy możesz stosować do wprowadzenia własnych stanów\n"
+"                wykonywania serwisu. Etapy powinny być krokami w procesie\n"
+"                od utworzenia zgłoszenia serwisu do jego zakończenia.\n"
+"              </p>\n"
+"            "
 
 #. module: crm_claim
 #: help:crm.claim,state:0
@@ -590,6 +607,11 @@ msgid ""
 "the case needs to be reviewed then the status is                       set "
 "to 'Pending'."
 msgstr ""
+"Kiedy sprawa jest tworzona, to stan jest \"Projekt'.                      "
+"Jeśli sprawa jest w toku, to stan jest 'Otwarte'.                      "
+"Kiedty sprawa jest zakończona, to stan jest 'Wykonano'.                      "
+"Kiedy sprawa wymaga sprawdzenia, to stan                       jest "
+"'Oczekiwanie'."
 
 #. module: crm_claim
 #: field:crm.claim,active:0
@@ -607,12 +629,6 @@ msgid "Extended Filters..."
 msgstr "Rozszerzone filtry..."
 
 #. module: crm_claim
-#: field:crm.claim,message_comment_ids:0
-#: help:crm.claim,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
-
-#. module: crm_claim
 #: view:crm.claim:0
 msgid "Closure"
 msgstr "Zamknięcie"
@@ -623,6 +639,8 @@ msgid ""
 "Responsible sales team. Define Responsible user and Email account for mail "
 "gateway."
 msgstr ""
+"Odpowiedzialny zespół sprzedaży. Definiuje odpowiedzialnego użytkownika i "
+"konto pocztowe dla bramy pocztowej."
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -643,7 +661,7 @@ msgstr "Data serwisu"
 #. module: crm_claim
 #: field:crm.claim,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Podsumowanie"
 
 #. module: crm_claim
 #: model:ir.actions.act_window,name:crm_claim.crm_claim_categ_action
@@ -653,7 +671,7 @@ msgstr "Kategorie serwisu"
 #. module: crm_claim
 #: field:crm.claim.stage,case_default:0
 msgid "Common to All Teams"
-msgstr ""
+msgstr "Wspólne dla wszystkich zespołów"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -692,7 +710,7 @@ msgstr "Serwis"
 #. module: crm_claim
 #: view:crm.claim.report:0
 msgid "My Company"
-msgstr ""
+msgstr "Moja firma"
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -745,10 +763,9 @@ msgid "Unassigned Claims"
 msgstr "Nieprzydzielone serwisy"
 
 #. module: crm_claim
-#: code:addons/crm_claim/crm_claim.py:247
-#, python-format
-msgid "Claim has been <b>refused</b>."
-msgstr ""
+#: field:crm.claim.report,delay_expected:0
+msgid "Overpassed Deadline"
+msgstr "Przekroczony termin"
 
 #. module: crm_claim
 #: field:crm.claim,cause:0
@@ -768,7 +785,7 @@ msgstr "Opis"
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Search Claims"
-msgstr "Szukaj serwisu"
+msgstr "Szukaj serwisów"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -789,7 +806,7 @@ msgstr "Czynności serwisowe"
 #. module: crm_claim
 #: field:crm.claim.stage,case_refused:0
 msgid "Refused stage"
-msgstr ""
+msgstr "Odzrzucony etap"
 
 #. module: crm_claim
 #: model:ir.actions.act_window,help:crm_claim.crm_case_categ_claim0
@@ -808,12 +825,6 @@ msgstr ""
 #: field:crm.claim.report,email:0
 msgid "# Emails"
 msgstr "# wiadomości"
-
-#. module: crm_claim
-#: code:addons/crm_claim/crm_claim.py:253
-#, python-format
-msgid "Stage changed to <b>%s</b>."
-msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -854,22 +865,22 @@ msgstr "Moje sprawy"
 #. module: crm_claim
 #: model:crm.claim.stage,name:crm_claim.stage_claim2
 msgid "Settled"
-msgstr ""
+msgstr "Zdecyduj"
 
 #. module: crm_claim
 #: help:crm.claim,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Wiadomości i historia komunikacji"
 
 #. module: crm_claim
 #: field:sale.config.settings,fetchmail_claim:0
 msgid "Create claims from incoming mails"
-msgstr ""
+msgstr "Twórz serwisy z maili"
 
 #. module: crm_claim
 #: field:crm.claim.stage,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Numeracja"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -904,11 +915,13 @@ msgid ""
 "Link between stages and sales teams. When set, this limitate the current "
 "stage to the selected sales teams."
 msgstr ""
+"Połączenie między etapami a zespołami sprzedaży. Jeśli ustawione, to "
+"ogranicza bieżący stan do wybranych zespołów."
 
 #. module: crm_claim
 #: help:crm.claim.stage,case_refused:0
 msgid "Refused stages are specific stages for done."
-msgstr ""
+msgstr "Stany odrzucenia są specyficznymi stanami wykonania."
 
 #~ msgid "Partner Contact"
 #~ msgstr "Kontakt do partnera"

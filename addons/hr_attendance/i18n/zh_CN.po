@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-12-05 16:24+0000\n"
-"Last-Translator: jerryzhang <jerry.zhangzhe@gmail.com>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-14 13:59+0000\n"
+"Last-Translator: ccdos <ccdos@163.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-06 04:40+0000\n"
-"X-Generator: Launchpad (build 16341)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:51+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_month
@@ -67,10 +67,10 @@ msgid "Print Attendance Report Monthly"
 msgstr "打印每月考勤报表"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/report/timesheet.py:122
+#: code:addons/hr_attendance/report/timesheet.py:120
 #, python-format
 msgid "Attendances by Week"
-msgstr ""
+msgstr "按周考勤"
 
 #. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
@@ -91,6 +91,11 @@ msgstr "分组..."
 #: selection:hr.attendance.month,month:0
 msgid "October"
 msgstr "10月"
+
+#. module: hr_attendance
+#: field:hr.employee,attendance_access:0
+msgid "Attendance Access"
+msgstr ""
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/hr_attendance.py:154
@@ -173,11 +178,6 @@ msgid "Allocates attendance group to all users."
 msgstr "分配出席组给全体用户"
 
 #. module: hr_attendance
-#: field:hr.employee,attendance_access:0
-msgid "unknown"
-msgstr "未知"
-
-#. module: hr_attendance
 #: view:hr.attendance:0
 msgid "My Attendance"
 msgstr "我的签到记录"
@@ -188,7 +188,7 @@ msgid "June"
 msgstr "6月"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/report/attendance_by_month.py:193
+#: code:addons/hr_attendance/report/attendance_by_month.py:190
 #, python-format
 msgid "Attendances by Month"
 msgstr "月度出勤率"
@@ -426,7 +426,7 @@ msgstr "5月"
 msgid ""
 "You tried to %s with a date anterior to another event !\n"
 "Try to contact the HR Manager to correct attendances."
-msgstr ""
+msgstr "你试图%s  前面的日期到另外的事件！尝试联系 人力资源主管纠正考勤"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0

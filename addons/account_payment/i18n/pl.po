@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2010-10-30 08:51+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-14 12:29+0000\n"
+"Last-Translator: Grzegorz Grzelak (OpenGLOBE.pl) <grzegorz@openglobe.pl>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:35+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:43+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
@@ -28,6 +28,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kliknij, aby utworzyć polecenie płatności.\n"
+"              </p><p>\n"
+"                Polecenie płatności jest poleceniem dla banku twojej\n"
+"                firmy dotyczącym przelewu za fakturę dostawcy lub\n"
+"                korektę klienta.\n"
+"              </p>\n"
+"            "
 
 #. module: account_payment
 #: field:payment.line,currency:0
@@ -69,7 +77,7 @@ msgid ""
 "minus the amount which is already in payment order"
 msgstr ""
 "Kwota, która powinna być zapłacona w bieżącym dniu\n"
-"minus kwota, która już jest w poleceniu przelewu"
+"minus kwota, która już jest w poleceniu płatności"
 
 #. module: account_payment
 #: field:payment.line,company_id:0
@@ -103,7 +111,7 @@ msgstr "Stosowane konta"
 #: field:payment.line,ml_maturity_date:0
 #: field:payment.order.create,duedate:0
 msgid "Due Date"
-msgstr "Data zapłaty"
+msgstr "Termin płatności"
 
 #. module: account_payment
 #: view:payment.order.create:0
@@ -123,6 +131,8 @@ msgid ""
 "You cannot cancel an invoice which has already been imported in a payment "
 "order. Remove it from the following payment order : %s."
 msgstr ""
+"Nie możesz anulować faktury, która już była zaimportowana do polecenia "
+"płatności. Usuń ją z następującego polecenia : %s."
 
 #. module: account_payment
 #: code:addons/account_payment/account_invoice.py:43
@@ -194,6 +204,9 @@ msgid ""
 " Once the bank is confirmed the status is set to 'Confirmed'.\n"
 " Then the order is paid the status is 'Done'."
 msgstr ""
+"Kiedy polecenie jest tworzone to ma stan 'Projekt'.\n"
+" Kiedy polecenie zostanie potwierdzone, to stan jest 'Potwierdzone'.\n"
+" I kiedy polecenie jest wypłacone to stan zmienia się na 'Wykonano'."
 
 #. module: account_payment
 #: view:payment.order:0
@@ -219,7 +232,7 @@ msgstr "Strukturalny"
 #. module: account_payment
 #: view:account.bank.statement:0
 msgid "Import Payment Lines"
-msgstr ""
+msgstr "Importuj pozycje płatności"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -235,7 +248,7 @@ msgstr "Informacja transakcji"
 #: view:payment.order:0
 #: field:payment.order,mode:0
 msgid "Payment Mode"
-msgstr "Sposób zapłaty"
+msgstr "Sposób płatności"
 
 #. module: account_payment
 #: field:payment.line,ml_date_created:0
@@ -261,7 +274,7 @@ msgstr ""
 #. module: account_payment
 #: field:payment.order,date_created:0
 msgid "Creation Date"
-msgstr ""
+msgstr "Data utworzenia"
 
 #. module: account_payment
 #: help:payment.mode,journal:0
@@ -287,7 +300,7 @@ msgstr "Konto docelowe"
 #. module: account_payment
 #: view:payment.order:0
 msgid "Search Payment Orders"
-msgstr "Szukaj poleceń zapłaty"
+msgstr "Szukaj poleceń płatności"
 
 #. module: account_payment
 #: field:payment.line,create_date:0
@@ -369,12 +382,12 @@ msgstr "Polecenie płatności"
 #: code:addons/account_payment/account_move_line.py:110
 #, python-format
 msgid "There is no partner defined on the entry line."
-msgstr ""
+msgstr "Brak partnera w pozycji zapisu"
 
 #. module: account_payment
 #: help:payment.mode,name:0
 msgid "Mode of Payment"
-msgstr "Sposób zapłaty"
+msgstr "Sposób płatności"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -401,7 +414,7 @@ msgstr "Projekt"
 #: view:payment.order:0
 #: field:payment.order,state:0
 msgid "Status"
-msgstr ""
+msgstr "Stan"
 
 #. module: account_payment
 #: help:payment.line,communication2:0
@@ -449,7 +462,7 @@ msgstr "Szukaj"
 #. module: account_payment
 #: field:payment.order,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "Odpowiedzialny"
 
 #. module: account_payment
 #: field:payment.line,date:0
@@ -464,7 +477,7 @@ msgstr "Suma:"
 #. module: account_payment
 #: field:payment.order,date_done:0
 msgid "Execution Date"
-msgstr ""
+msgstr "Data wykonania"
 
 #. module: account_payment
 #: view:account.payment.populate.statement:0
@@ -474,7 +487,7 @@ msgstr ""
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_create_payment_order
 msgid "Populate Payment"
-msgstr ""
+msgstr "Przenieś płatność"
 
 #. module: account_payment
 #: field:account.move.line,amount_to_pay:0
@@ -494,7 +507,7 @@ msgstr "Klient zamawiający"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_make_payment
 msgid "Account make payment"
-msgstr ""
+msgstr "Wykonaj płatność"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -582,7 +595,7 @@ msgstr "Komunikacja 2"
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Zaplanowana data"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
@@ -616,12 +629,12 @@ msgstr "Waluta firmy"
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Payment"
-msgstr "Płatności"
+msgstr "Płatność"
 
 #. module: account_payment
 #: report:payment.order:0
 msgid "Payment Order / Payment"
-msgstr "Polecenie zapłaty / Płatność"
+msgstr "Polecenie płatności / Płatność"
 
 #. module: account_payment
 #: field:payment.line,move_line_id:0
@@ -661,7 +674,7 @@ msgstr ""
 #. module: account_payment
 #: field:payment.line,order_id:0
 msgid "Order"
-msgstr "Kolejność"
+msgstr "Polecenie"
 
 #. module: account_payment
 #: field:payment.order,total:0
@@ -677,7 +690,7 @@ msgstr "Wykonaj płatność"
 #. module: account_payment
 #: field:payment.order,date_prefered:0
 msgid "Preferred Date"
-msgstr ""
+msgstr "Preferowana data"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
@@ -689,7 +702,7 @@ msgstr ""
 #. module: account_payment
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
-msgstr "Konto bankowe dla sposobu zapłaty"
+msgstr "Konto bankowe dla sposobu płatności"
 
 #~ msgid "State"
 #~ msgstr "Stan"

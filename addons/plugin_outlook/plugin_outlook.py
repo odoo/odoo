@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-from osv import fields
-from osv import osv
-import addons
+from openerp.osv import fields
+from openerp.osv import osv
+from openerp import addons
 import base64
 
 class outlook_installer(osv.osv_memory):

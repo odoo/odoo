@@ -54,7 +54,6 @@ Main Features
         'mail_message_view.xml',
         'mail_mail_view.xml',
         'mail_followers_view.xml',
-        'mail_favorite_view.xml',
         'mail_thread_view.xml',
         'mail_group_view.xml',
         'res_partner_view.xml',
@@ -70,7 +69,6 @@ Main Features
         'data/mail_group_demo_data.xml',
     ],
     'installable': True,
-    'auto_install': False,
     'application': True,
     'images': [
         'images/customer_history.jpeg',

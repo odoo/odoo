@@ -82,8 +82,7 @@
                         <group>
                             <group col="1">
                                 <group>
-                                    <field name="recurrency"
-                                        attrs="{'readonly': [('recurrent_uid','!=',False)]}"/>
+                                    <field name="recurrency"/>
                                 </group>
                                 <group attrs="{'invisible': [('recurrency','=',False)]}">
                                     <label for="interval"/>
@@ -129,8 +128,8 @@
                                 <field name="class"/>
                                 <field name="show_as"/>
                                 <field name="rrule" invisible="1" readonly="1"/>
+                                <field name="recurrent_id_date" invisible="1"/>
                                 <field name="recurrent_id" invisible="1"/>
-                                <field name="recurrent_uid" invisible="1"/>
                             </group>
                         </group>
                     </page>
@@ -182,10 +181,6 @@
 
                     </notebook>
                 </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers"/>
-                    <field name="message_ids" widget="mail_thread" placeholder="Share a message..."/>
-                </div>
             </form>
         </field>
     </record>

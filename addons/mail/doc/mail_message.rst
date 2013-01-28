@@ -4,7 +4,7 @@ mail.message
 ============
 
 Models
-+++++++
+++++++
 
 ``mail.message`` is a class for holding the main attributes of a message object
 (notification for system message, reciving email message or sent messages). It 
@@ -19,7 +19,8 @@ should inherit from this class.
 .. versionchanged:: 7.0
 
 ClientAction (ir.actions.client)
-+++++++
+++++++++++++++++++++++++++++++++
+
      <record id="action_mail_inbox_feeds" model="ir.actions.client">
          <field name="name">Inbox</field>
          <field name="tag">mail.wall</field>
@@ -53,9 +54,10 @@ ClientAction (ir.actions.client)
       - ``compose_placeholder`` : Message to display on the textareaboxes.
       - ``show_link`` : Display partner (authors, followers...) on link or not
       - ``compose_as_todo`` : The root composer mark automatically the message as todo
+      - ``readonly`` : Read only mode, hide all action buttons and composer
 
 Fields
-+++++++
+++++++
 
  - ``type`` : usually 'email', 'comment', 'notification'.
    Message type: email for external email message recieve, notification for system
@@ -63,7 +65,7 @@ Fields
  - ``subtype_id`` :
    Subtype of the notification for system message. The users can followe a document
    and choose the subtype of this document (eg: Create, Comment, Done).
-   You can defined new subtypes and choose his name, by agreement the id begin by "mt_" on the model
+   You can defined new subtypes and choose his name, by agreement the id begin by "mt\_" on the model
    "mail.message.subtype".
  - ``partner_ids`` :
    List of recipients, the recipients have this message in their personal mailboxe.

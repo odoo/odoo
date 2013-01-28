@@ -21,8 +21,8 @@
 
 import time
 
-from osv import fields, osv
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class product_margin(osv.osv_memory):
     _name = 'product.margin'
@@ -64,11 +64,11 @@ class product_margin(osv.osv_memory):
         #get the current product.margin object to obtain the values from it
         product_margin_obj = self.browse(cr, uid, ids, context=context)[0]
 
-        context = {'invoice_state' : product_margin_obj.invoice_state}
+        context.update(invoice_state = product_margin_obj.invoice_state)
         if product_margin_obj.from_date:
-            context.update({'date_from': product_margin_obj.from_date})
+            context.update(date_from = product_margin_obj.from_date)
         if product_margin_obj.to_date:
-            context.update({'date_to': product_margin_obj.to_date})
+            context.update(date_to = product_margin_obj.to_date)
         return {
             'name': _('Product Margins'),
             'context': context,

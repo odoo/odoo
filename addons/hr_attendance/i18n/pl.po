@@ -6,30 +6,30 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2010-08-03 05:31+0000\n"
-"Last-Translator: Mantavya Gajjar (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-14 12:31+0000\n"
+"Last-Translator: Grzegorz Grzelak (OpenGLOBE.pl) <grzegorz@openglobe.pl>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:42+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:51+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_month
 msgid "Print Monthly Attendance Report"
-msgstr ""
+msgstr "Drukuj miesięczny raport obecności"
 
 #. module: hr_attendance
 #: view:hr.attendance:0
 msgid "Hr Attendance Search"
-msgstr ""
+msgstr "Szukaj obecności"
 
 #. module: hr_attendance
 #: field:hr.employee,last_sign:0
 msgid "Last Sign"
-msgstr ""
+msgstr "Ostatnie wejście"
 
 #. module: hr_attendance
 #: view:hr.attendance:0
@@ -43,7 +43,7 @@ msgstr "Obecności"
 #: code:addons/hr_attendance/static/src/js/attendance.js:34
 #, python-format
 msgid "Last sign in: %s,<br />%s.<br />Click to sign out."
-msgstr ""
+msgstr "Ostatnie wejście: %s,<br />%s.<br />Kliknij, aby wyjść."
 
 #. module: hr_attendance
 #: constraint:hr.attendance:0
@@ -69,10 +69,10 @@ msgid "Print Attendance Report Monthly"
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/report/timesheet.py:122
+#: code:addons/hr_attendance/report/timesheet.py:120
 #, python-format
 msgid "Attendances by Week"
-msgstr ""
+msgstr "Obecności wg tygodni"
 
 #. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
@@ -87,12 +87,17 @@ msgstr "Opóźnienie"
 #. module: hr_attendance
 #: view:hr.attendance:0
 msgid "Group By..."
-msgstr ""
+msgstr "Grupuj wg..."
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
 msgid "October"
 msgstr "Październik"
+
+#. module: hr_attendance
+#: field:hr.employee,attendance_access:0
+msgid "Attendance Access"
+msgstr ""
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/hr_attendance.py:154
@@ -106,14 +111,14 @@ msgstr "Wyjście"
 #: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
 #, python-format
 msgid "No records are found for your selection!"
-msgstr ""
+msgstr "Nie znaleziono rekordów dla twoich kryteriów"
 
 #. module: hr_attendance
 #: view:hr.attendance.error:0
 #: view:hr.attendance.month:0
 #: view:hr.attendance.week:0
 msgid "Print"
-msgstr ""
+msgstr "Drukuj"
 
 #. module: hr_attendance
 #: view:hr.attendance:0
@@ -175,14 +180,9 @@ msgid "Allocates attendance group to all users."
 msgstr ""
 
 #. module: hr_attendance
-#: field:hr.employee,attendance_access:0
-msgid "unknown"
-msgstr ""
-
-#. module: hr_attendance
 #: view:hr.attendance:0
 msgid "My Attendance"
-msgstr ""
+msgstr "Moje obecności"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -190,15 +190,15 @@ msgid "June"
 msgstr "Czerwiec"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/report/attendance_by_month.py:193
+#: code:addons/hr_attendance/report/attendance_by_month.py:190
 #, python-format
 msgid "Attendances by Month"
-msgstr ""
+msgstr "Obecności w miesiącu"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_week
 msgid "Attendances By Week"
-msgstr ""
+msgstr "Obecności w tygodniu"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_error
@@ -231,12 +231,12 @@ msgstr ""
 #. module: hr_attendance
 #: view:hr.attendance:0
 msgid "Today"
-msgstr ""
+msgstr "Dziś"
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
 msgid "Date Signed"
-msgstr "Data wpisu"
+msgstr "Data wejścia"
 
 #. module: hr_attendance
 #: field:hr.attendance,name:0
@@ -263,7 +263,7 @@ msgstr "Raport błędów obecności"
 #: view:hr.attendance:0
 #: field:hr.attendance,day:0
 msgid "Day"
-msgstr ""
+msgstr "Dzień"
 
 #. module: hr_attendance
 #: selection:hr.employee,state:0
@@ -319,7 +319,7 @@ msgstr "Informacja analityczna"
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_month
 msgid "Attendances By Month"
-msgstr ""
+msgstr "Obecności w miesiącu"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -330,7 +330,7 @@ msgstr "Styczeń"
 #: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
 #, python-format
 msgid "No Data Available !"
-msgstr ""
+msgstr "Brak danych !"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -340,7 +340,7 @@ msgstr "Kwiecień"
 #. module: hr_attendance
 #: view:hr.attendance.week:0
 msgid "Print Attendance Report Weekly"
-msgstr ""
+msgstr "Drukuj tygodniowy raport obecności"
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
@@ -356,7 +356,7 @@ msgstr "Akcja"
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
 msgid "Time Tracking"
-msgstr ""
+msgstr "Rejestracja czasu pracy"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
@@ -398,7 +398,7 @@ msgstr "Powody obecności"
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_week
 msgid "Print Week Attendance Report"
-msgstr ""
+msgstr "Drukuj tygodniowy raport obecności"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_config_settings
@@ -410,12 +410,12 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/js/attendance.js:36
 #, python-format
 msgid "Click to Sign In at %s."
-msgstr ""
+msgstr "Kliknij, aby wejść o %s."
 
 #. module: hr_attendance
 #: field:hr.action.reason,action_type:0
 msgid "Action Type"
-msgstr ""
+msgstr "Typ akcji"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -464,7 +464,7 @@ msgstr ""
 #: help:hr.attendance,action_desc:0
 msgid ""
 "Specifies the reason for Signing In/Signing Out in case of extra hours."
-msgstr ""
+msgstr "Okresla powód wejścia/wyjścia w przypadku dodatkowych godzin."
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"

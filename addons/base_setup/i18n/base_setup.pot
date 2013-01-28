@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 17:05+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -47,6 +47,11 @@ msgid "OpenERP allows to automatically create leads (or others documents)\n"
 "                            using regular POP/IMAP accounts, using a direct email integration script for your\n"
 "                            email server, or by manually pushing emails to OpenERP using specific\n"
 "                            plugins for your preferred email application."
+msgstr ""
+
+#. module: base_setup
+#: field:sale.config.settings,module_sale:0
+msgid "SALE"
 msgstr ""
 
 #. module: base_setup
@@ -107,13 +112,13 @@ msgid "Manage multiple companies"
 msgstr ""
 
 #. module: base_setup
-#: help:base.config.settings,module_portal:0
-msgid "Give access your customers and suppliers to their documents."
+#: view:sale.config.settings:0
+msgid "On Mail Client"
 msgstr ""
 
 #. module: base_setup
-#: view:sale.config.settings:0
-msgid "On Mail Client"
+#: view:base.config.settings:0
+msgid "--db-filter=YOUR_DATABAE"
 msgstr ""
 
 #. module: base_setup
@@ -184,6 +189,12 @@ msgstr ""
 
 #. module: base_setup
 #: view:base.config.settings:0
+msgid "The public portal is accessible only if you are in a single database mode. You can\n"
+"                                    launch the OpenERP Server with the option"
+msgstr ""
+
+#. module: base_setup
+#: view:base.config.settings:0
 msgid "You will find more options in your company details: address for the header and footer, overdue payments texts, etc."
 msgstr ""
 
@@ -198,6 +209,15 @@ msgid "How do you call a Customer"
 msgstr ""
 
 #. module: base_setup
+#: view:base.config.settings:0
+msgid "When you send a document to a customer\n"
+"                                    (quotation, invoice), your customer will be\n"
+"                                    able to signup to get all his documents,\n"
+"                                    read your company news, check his projects,\n"
+"                                    etc."
+msgstr ""
+
+#. module: base_setup
 #: model:ir.model,name:base_setup.model_base_setup_terminology
 msgid "base.setup.terminology"
 msgstr ""
@@ -208,7 +228,7 @@ msgid "Client"
 msgstr ""
 
 #. module: base_setup
-#: help:base.config.settings,module_auth_anonymous:0
+#: help:base.config.settings,module_portal_anonymous:0
 msgid "Enable the public part of openerp, openerp becomes a public website."
 msgstr ""
 
@@ -254,7 +274,13 @@ msgstr ""
 
 #. module: base_setup
 #: field:base.config.settings,module_portal:0
-msgid "Activate the customer/supplier portal"
+msgid "Activate the customer portal"
+msgstr ""
+
+#. module: base_setup
+#: view:base.config.settings:0
+msgid "to do so.\n"
+"                                    Once activated, the login page will be replaced by the public website."
 msgstr ""
 
 #. module: base_setup
@@ -263,7 +289,12 @@ msgid "Allow documents sharing"
 msgstr ""
 
 #. module: base_setup
-#: field:base.config.settings,module_auth_anonymous:0
+#: view:base.config.settings:0
+msgid "(company news, jobs, contact form, etc.)"
+msgstr ""
+
+#. module: base_setup
+#: field:base.config.settings,module_portal_anonymous:0
 msgid "Activate the public portal"
 msgstr ""
 
@@ -275,6 +306,11 @@ msgstr ""
 #. module: base_setup
 #: view:sale.config.settings:0
 msgid "Social Network Integration"
+msgstr ""
+
+#. module: base_setup
+#: help:base.config.settings,module_portal:0
+msgid "Give your customers access to their documents."
 msgstr ""
 
 #. module: base_setup

@@ -19,13 +19,13 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 import xmlrpclib
 import string
 import time
 import random
 from random import sample
-from tools.translate import _
+from openerp.tools.translate import _
 
 class event_moodle(osv.osv):
     _name = 'event.moodle.config.wiz'

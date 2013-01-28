@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-from osv import fields,osv
-from tools.sql import drop_view_if_exists
+from openerp.osv import fields,osv
+from openerp.tools.sql import drop_view_if_exists
 
 class report_timesheet_line(osv.osv):
     _name = "report.timesheet.line"

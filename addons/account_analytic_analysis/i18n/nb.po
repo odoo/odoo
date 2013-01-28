@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-02 20:45+0000\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-10 15:24+0000\n"
 "Last-Translator: Kaare Pettersen <Unknown>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:34+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:42+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -89,7 +89,7 @@ msgstr "Dato for siste fakturerte kostnad"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,fix_price_to_invoice:0
 msgid "Sum of quotations for this contract."
-msgstr ""
+msgstr "Summen av sitater for denne kontrakten."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
@@ -102,14 +102,23 @@ msgid "Sum of timesheet lines invoiced for this contract."
 msgstr "Summen av timeliste linjer fakturert for denne kontrakten."
 
 #. module: account_analytic_analysis
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:462
+#, python-format
+msgid "Sales Order Lines of %s"
+msgstr ""
+
+#. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
 msgid "Computed using the formula: Invoiced Amount / Total Time"
 msgstr "Beregnet ved hjelp av formelen: Fakturert beløp / Total tid"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Contracts not assigned"
-msgstr "Kontrakter som ikke er tilordnet."
+#: field:account_analytic_analysis.summary.month,account_id:0
+#: field:account_analytic_analysis.summary.user,account_id:0
+#: model:ir.model,name:account_analytic_analysis.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "Analytisk konto"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -146,18 +155,14 @@ msgid "End Date"
 msgstr "Sluttdato"
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,hours_qtt_non_invoiced:0
-msgid ""
-"Number of time (hours/days) (from journal of type 'general') that can be "
-"invoiced if you invoice based on analytic account."
+#: view:account.analytic.account:0
+msgid "Account Manager"
 msgstr ""
-"Antall tid (timer / dager) (fra tidsskrift av typen generell') som kan "
-"faktureres dersom du faktura basert på analytiske konto."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours_to_invoice:0
 msgid "Computed using the formula: Maximum Time - Total Invoiced Time"
-msgstr ""
+msgstr "Beregnet ved hjelp av formelen: Maksimal tid - Totalt Fakturert tid."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -166,16 +171,14 @@ msgstr "Forventet."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-#: field:account_analytic_analysis.summary.month,account_id:0
-#: field:account_analytic_analysis.summary.user,account_id:0
-#: model:ir.model,name:account_analytic_analysis.model_account_analytic_account
-msgid "Analytic Account"
-msgstr "Analytisk konto"
+msgid "Contracts not assigned"
+msgstr "Kontrakter som ikke er tilordnet."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
 msgid "Computed using the formula: Theoretical Revenue - Total Costs"
 msgstr ""
+"Beregnet ved hjelp av formelen: Teoretiske Inntekter - Totale kostnader."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_invoiced:0
@@ -196,6 +199,8 @@ msgid ""
 "{'required': [('type','=','contract')], 'invisible': [('type','in',['view', "
 "'normal','template'])]}"
 msgstr ""
+"{'påkrevd': [('type','=','kontrakt')], 'usynelig': [('type','i',['vis', "
+"'normal','mal'])]}"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin_rate:0
@@ -205,7 +210,7 @@ msgstr "Virkelig margin (%)"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours:0
 msgid "Computed using the formula: Maximum Time - Total Worked Time"
-msgstr ""
+msgstr "Beregnet ved hjelp av formelen: Maksimal tid - Totalt Jobbet tid."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_quantity:0
@@ -222,15 +227,9 @@ msgid "Nothing to invoice, create"
 msgstr "Ikke noe å fakturere, opprett."
 
 #. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.template_of_contract_action
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_template_of_contract_action
-msgid "Template of Contract"
-msgstr "Mal av kontrakt."
-
-#. module: account_analytic_analysis
 #: model:res.groups,name:account_analytic_analysis.group_template_required
 msgid "Mandatory use of templates in contracts"
-msgstr ""
+msgstr "Obligatorisk bruk av maler i kontrakter."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_quantity:0
@@ -256,6 +255,11 @@ msgstr "Beregnet etter formelen: (Virkelig margin / Totale kostnader) * 100"
 #: view:account.analytic.account:0
 msgid "or view"
 msgstr "Eller vis."
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Customer Contracts"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -310,10 +314,13 @@ msgid "Timesheets"
 msgstr "Timelister."
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:461
-#, python-format
-msgid "Sale Order Lines of %s"
-msgstr "Salgs ordre linjer av %s."
+#: help:account.analytic.account,hours_qtt_non_invoiced:0
+msgid ""
+"Number of time (hours/days) (from journal of type 'general') that can be "
+"invoiced if you invoice based on analytic account."
+msgstr ""
+"Antall tid (timer / dager) (fra tidsskrift av typen generell') som kan "
+"faktureres dersom du faktura basert på analytiske konto."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -405,6 +412,8 @@ msgid ""
 "Allows you to set the template field as required when creating an analytic "
 "account or a contract."
 msgstr ""
+"Tillater deg sette mal feltet som kreves når du oppretter et analytisk konto "
+"eller en kontrakt."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_invoiced:0
@@ -462,14 +471,14 @@ msgid "Computed using the formula: Max Invoice Price - Invoiced Amount."
 msgstr "Beregnet med formelen: Maks. fakturapris - fakturert beløp"
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Responsible"
-msgstr "Ansvarlig."
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
 msgid "Last Invoice Date"
 msgstr "Siste fakturadato"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Units Remaining"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_hr_tree_invoiced_all
@@ -537,7 +546,7 @@ msgstr "Beregnet med formelen: Fakturert beløp - totalkostnader"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_est:0
 msgid "Estimation of Hours to Invoice"
-msgstr ""
+msgstr "Estimering av timer til faktura."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,fix_price_invoices:0
@@ -552,16 +561,22 @@ msgstr "Dato for siste reg. på denne kontoen"
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_sale_config_settings
 msgid "sale.config.settings"
-msgstr ""
+msgstr "Salg.konfigurasjon.innstilling."
 
 #. module: account_analytic_analysis
 #: field:sale.config.settings,group_template_required:0
 msgid "Mandatory use of templates."
+msgstr "Obligatorisk bruk av maler."
+
+#. module: account_analytic_analysis
+#: model:ir.actions.act_window,name:account_analytic_analysis.template_of_contract_action
+#: model:ir.ui.menu,name:account_analytic_analysis.menu_template_of_contract_action
+msgid "Contract Template"
 msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Contracts Having a Partner"
+msgid "Units Done"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -576,7 +591,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.account,est_total:0
 msgid "Total Estimation"
-msgstr ""
+msgstr "Total estimering."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_ca:0
@@ -603,16 +618,17 @@ msgstr "Totaltid"
 msgid ""
 "the field template of the analytic accounts and contracts will be required."
 msgstr ""
+"Felt mal av den analytiske regnskap og kontrakter vil være nødvendig."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,invoice_on_timesheets:0
 msgid "On Timesheets"
-msgstr ""
+msgstr "På timelister."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Total"
-msgstr ""
+msgstr "Totalt."
 
 #~ msgid "Hours summary by user"
 #~ msgstr "Timer, summert pr. bruker"

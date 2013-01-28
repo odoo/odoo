@@ -19,7 +19,5 @@
 #
 ##############################################################################
 
-import account_invoice
-import sale
 import portal_sale
 import res_config

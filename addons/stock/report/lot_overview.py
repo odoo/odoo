@@ -18,9 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import pooler
+from openerp import pooler
 import time
-from report import report_sxw
+from openerp.report import report_sxw
 
 class lot_overview(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):

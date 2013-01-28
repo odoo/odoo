@@ -112,7 +112,7 @@
         <field name="name">note.note.form</field>
         <field name="model">note.note</field>
         <field name="arch" type="xml">
-            <form string="Note" version="7.0">
+            <form string="Note" version="7.0" class="oe_form_nomargin">
                 <header>
                     <field name="tag_ids" widget="many2many_tags" class="oe_inline" placeholder="Tags"/>
                     <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" clickable="1"/>

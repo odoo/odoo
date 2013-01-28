@@ -6,17 +6,17 @@
             <field name="name">hr.analytic.timesheet.tree</field>
             <field name="model">hr.analytic.timesheet</field>
             <field name="arch" type="xml">
-                <tree editable="top" string="Timesheet Activities">
+                <tree editable="top" string="Timesheet Activities">                  
                     <field name="date" on_change="on_change_date(date)"/>
                     <field name="user_id" on_change="on_change_user_id(user_id)" required="1" options='{"no_open": True}'/>
-                    <field name="journal_id" invisible="1"/>
                     <field name="name"/>
                     <field domain="[('type','=','normal'),('use_timesheets','=',1)]" name="account_id" context="{'default_use_timesheets': 1, 'default_type': 'contract'}"/>
-                    <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" required="1" domain="[('type','=','service')]" invisible="1"/>
                     <field name="unit_amount" string="Duration" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" sum="Total time" widget="float_time"/>
                     <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" invisible="1"/>
+                    <field name="journal_id" invisible="1"/>
                     <field name="amount" sum="Total cost" invisible="1"/>
                     <field name="general_account_id" invisible="1"/>
+                    <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" required="1" domain="[('type','=','service')]" invisible="1"/>
                 </tree>
             </field>
         </record>

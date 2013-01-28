@@ -43,16 +43,17 @@ very handy when used in combination with the module 'share'.
     """,
     'website': 'http://www.openerp.com',
     'data': [
-        'security/portal_security.xml',
-        'security/ir.model.access.csv',
         'portal_data.xml',
         'portal_view.xml',
         'wizard/portal_wizard_view.xml',
         'wizard/share_wizard_view.xml',
         'acquirer_view.xml',
+        'security/ir.model.access.csv',
+        'security/portal_security.xml',
     ],
     'demo': ['portal_demo.xml'],
     'css': ['static/src/css/portal.css'],
+    'auto_install': True,
     'installable': True,
 }
 

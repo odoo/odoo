@@ -19,10 +19,11 @@
 #
 ##############################################################################
 
-import time
-from report import report_sxw
-import pooler
 import datetime
+import time
+
+from openerp import pooler
+from openerp.report import report_sxw
 
 class attendance_print(report_sxw.rml_parse):
 

@@ -44,10 +44,22 @@
                             <div>
                                 <field name="module_portal" class="oe_inline"/>
                                 <label for="module_portal"/>
+                                <p attrs="{'invisible': [('module_portal_anonymous','=',False)]}">
+                                    When you send a document to a customer
+                                    (quotation, invoice), your customer will be
+                                    able to signup to get all his documents,
+                                    read your company news, check his projects,
+                                    etc.
+                                </p>
                             </div>
                             <div>
-                                <field name="module_auth_anonymous" class="oe_inline"/>
-                                <label for="module_auth_anonymous"/>
+                                <field name="module_portal_anonymous" class="oe_inline"/>
+                                <label for="module_portal_anonymous"/> <span class="oe_grey">(company news, jobs, contact form, etc.)</span>
+                                <p attrs="{'invisible': [('module_portal_anonymous','=',False)]}">
+                                    The public portal is accessible only if you are in a single database mode. You can
+                                    launch the OpenERP Server with the option <b>--db-filter=YOUR_DATABAE</b> to do so.
+                                    Once activated, the login page will be replaced by the public website.
+                                </p>
                             </div>
                         </div>
                     </group>

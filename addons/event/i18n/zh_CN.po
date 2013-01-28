@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
 "PO-Revision-Date: 2012-11-29 11:10+0000\n"
 "Last-Translator: ccdos <ccdos@163.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:13+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:21+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: event
 #: view:event.event:0
@@ -58,20 +58,9 @@ msgid ""
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:305
-#, python-format
-msgid "Event has been <b>cancelled</b>."
-msgstr "活动 <b>已经被取消</b>."
-
-#. module: event
 #: field:event.registration,date_open:0
 msgid "Registration Date"
 msgstr "活动日期"
-
-#. module: event
-#: help:event.registration,origin:0
-msgid "Name of the sale order which create the registration"
-msgstr "源销售单摘要"
 
 #. module: event
 #: field:event.event,type:0
@@ -120,10 +109,9 @@ msgid "Default Maximum Registration"
 msgstr "默认最多的注册者"
 
 #. module: event
-#: help:event.event,message_unread:0
-#: help:event.registration,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "如果要求你关注新消息，勾选此项"
+#: view:report.event.registration:0
+msgid "Display"
+msgstr "显示"
 
 #. module: event
 #: field:event.event,register_avail:0
@@ -197,9 +185,9 @@ msgid "Registrations"
 msgstr "登记记录"
 
 #. module: event
-#: code:addons/event/event.py:95
-#: code:addons/event/event.py:108
-#: code:addons/event/event.py:400
+#: code:addons/event/event.py:89
+#: code:addons/event/event.py:100
+#: code:addons/event/event.py:355
 #, python-format
 msgid "Error!"
 msgstr "错误!"
@@ -234,9 +222,10 @@ msgid "Opera of Verdi"
 msgstr "Verdi歌剧"
 
 #. module: event
-#: view:report.event.registration:0
-msgid "Display"
-msgstr "显示"
+#: help:event.event,message_unread:0
+#: help:event.registration,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "如果要求你关注新消息，勾选此项"
 
 #. module: event
 #: view:report.event.registration:0
@@ -255,11 +244,6 @@ msgid "False"
 msgstr "False"
 
 #. module: event
-#: model:mail.message.subtype,name:event.mt_event_registration
-msgid "New Registrations"
-msgstr "新登记者"
-
-#. module: event
 #: field:event.registration,event_end_date:0
 msgid "Event End Date"
 msgstr "活动结束日期"
@@ -273,18 +257,13 @@ msgid ""
 msgstr "保存复杂的摘要(消息数量,……等)。为了插入到看板视图，这一摘要直接是是HTML格式。"
 
 #. module: event
-#: selection:report.event.registration,month:0
-msgid "May"
-msgstr "5月"
-
-#. module: event
 #: view:report.event.registration:0
 msgid "Registrations in confirmed or done state"
 msgstr "在已确认或已完成状态的报名者"
 
 #. module: event
-#: code:addons/event/event.py:114
-#: code:addons/event/event.py:116
+#: code:addons/event/event.py:106
+#: code:addons/event/event.py:108
 #, python-format
 msgid "Warning!"
 msgstr "警告！"
@@ -303,9 +282,9 @@ msgid "Partner"
 msgstr "业务伙伴"
 
 #. module: event
-#: model:ir.actions.server,name:event.actions_server_event_event_read
-msgid "Event: Mark read"
-msgstr ""
+#: help:event.type,default_registration_min:0
+msgid "It will select this default minimum value when you choose this event"
+msgstr "当你选择这个活动，将选择默认最小值"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type
@@ -401,7 +380,7 @@ msgid "Email"
 msgstr "电子邮件"
 
 #. module: event
-#: code:addons/event/event.py:367
+#: code:addons/event/event.py:329
 #, python-format
 msgid "New registration confirmed: %s."
 msgstr "已确认的登记: %s."
@@ -470,26 +449,9 @@ msgid "Speaker who will be giving speech at the event."
 msgstr "要在这次活动上发言的演讲者"
 
 #. module: event
-#: code:addons/event/event.py:457
-#, python-format
-msgid "Registration has been <b>created</b>."
-msgstr "登记被 <b>创建</b>."
-
-#. module: event
 #: view:event.event:0
 msgid "Cancel Event"
 msgstr "取消活动"
-
-#. module: event
-#: code:addons/event/event.py:398
-#, python-format
-msgid "State set to Done"
-msgstr "状态设置为完成"
-
-#. module: event
-#: model:ir.actions.server,name:event.actions_server_event_registration_read
-msgid "Event registration : Mark read"
-msgstr ""
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_reg
@@ -539,6 +501,11 @@ msgid "December"
 msgstr "12月"
 
 #. module: event
+#: help:event.registration,origin:0
+msgid "Reference of the sales order which created the registration"
+msgstr ""
+
+#. module: event
 #: field:report.event.registration,draft_state:0
 msgid " # No of Draft Registrations"
 msgstr " # 没草稿状态的登记记录"
@@ -586,18 +553,12 @@ msgid "or"
 msgstr "or"
 
 #. module: event
-#: code:addons/event/event.py:315
-#, python-format
-msgid "Event has been <b>done</b>."
-msgstr "活动已经 <b>完成</b>"
-
-#. module: event
 #: help:res.partner,speaker:0
 msgid "Check this box if this contact is a speaker."
 msgstr "如果联系人是演讲者，选中此项"
 
 #. module: event
-#: code:addons/event/event.py:116
+#: code:addons/event/event.py:108
 #, python-format
 msgid "No Tickets Available!"
 msgstr "没有可用的门票"
@@ -641,13 +602,12 @@ msgid ""
 msgstr "你能为每个活动定义最大的登记水平。如果你有太多的登记，你不能确认你的活动。（输入0忽略这个规则）"
 
 #. module: event
-#: code:addons/event/event.py:462
-#, python-format
-msgid "Registration has been set as <b>draft</b>."
-msgstr "登记 会设为“草稿”"
+#: field:event.event,user_id:0
+msgid "Responsible User"
+msgstr "责任用户"
 
 #. module: event
-#: code:addons/event/event.py:108
+#: code:addons/event/event.py:100
 #, python-format
 msgid ""
 "The total of confirmed registration for the event '%s' does not meet the "
@@ -682,12 +642,6 @@ msgstr "在新建状态的活动"
 #: view:report.event.registration:0
 msgid "Events which are in New state"
 msgstr "新建状态的活动"
-
-#. module: event
-#: code:addons/event/event.py:404
-#, python-format
-msgid "State set to Cancel"
-msgstr "状态设为取消"
 
 #. module: event
 #: view:event.event:0
@@ -804,10 +758,9 @@ msgid "My Registrations"
 msgstr "我的登记记录"
 
 #. module: event
-#: code:addons/event/event.py:310
-#, python-format
-msgid "Event has been set to <b>draft</b>."
-msgstr "活动被设置为“草稿”状态"
+#: selection:report.event.registration,month:0
+msgid "November"
+msgstr "11月"
 
 #. module: event
 #: view:report.event.registration:0
@@ -815,22 +768,14 @@ msgid "Extended Filters..."
 msgstr "增加筛选条件"
 
 #. module: event
-#: field:event.event,message_comment_ids:0
-#: help:event.event,message_comment_ids:0
-#: field:event.registration,message_comment_ids:0
-#: help:event.registration,message_comment_ids:0
-msgid "Comments and emails"
-msgstr "评论和电子邮件"
-
-#. module: event
 #: selection:report.event.registration,month:0
 msgid "October"
 msgstr "10月"
 
 #. module: event
-#: model:ir.actions.server,name:event.actions_server_event_registration_unread
-msgid "Event registration : Mark unread"
-msgstr ""
+#: selection:report.event.registration,month:0
+msgid "January"
+msgstr "1月"
 
 #. module: event
 #: view:event.event:0
@@ -839,12 +784,13 @@ msgstr "设为草稿"
 
 #. module: event
 #: view:event.event:0
+#: view:event.registration:0
 #: view:res.partner:0
 msgid "Confirm Registration"
 msgstr "确认登记记录"
 
 #. module: event
-#: code:addons/event/event.py:95
+#: code:addons/event/event.py:89
 #, python-format
 msgid ""
 "You have already set a registration for this event as 'Attended'. Please "
@@ -867,12 +813,6 @@ msgid "Default Minimum Registration"
 msgstr "默认最小登记数"
 
 #. module: event
-#: code:addons/event/event.py:368
-#, python-format
-msgid "Registration confirmed."
-msgstr "登记确认。"
-
-#. module: event
 #: field:event.event,address_id:0
 msgid "Location Address"
 msgstr "地址"
@@ -892,6 +832,7 @@ msgstr ""
 
 #. module: event
 #: view:event.event:0
+#: view:event.registration:0
 msgid "Attended the Event"
 msgstr "参加活动"
 
@@ -901,15 +842,10 @@ msgid "Error ! Closing Date cannot be set before Beginning Date."
 msgstr "错误！结束日期不能在开始日期前。"
 
 #. module: event
-#: code:addons/event/event.py:400
+#: code:addons/event/event.py:355
 #, python-format
 msgid "You must wait for the starting day of the event to do this action."
 msgstr "你必须等待活动开始才能做这些动作"
-
-#. module: event
-#: field:event.event,user_id:0
-msgid "Responsible User"
-msgstr "责任用户"
 
 #. module: event
 #: selection:event.event,state:0
@@ -933,7 +869,7 @@ msgid "Reply-to Email"
 msgstr "回复email"
 
 #. module: event
-#: code:addons/event/event.py:114
+#: code:addons/event/event.py:106
 #, python-format
 msgid "Only %d Seats are Available!"
 msgstr "只有 %d 个座位可用！"
@@ -984,18 +920,13 @@ msgid "Upcoming events from today"
 msgstr "今天将开始的活动"
 
 #. module: event
-#: code:addons/event/event.py:300
-#, python-format
-msgid "Event has been <b>created</b>."
-msgstr "活动已经被'创建'"
-
-#. module: event
 #: model:event.event,name:event.event_2
 msgid "Conference on ERP Business"
 msgstr "ERP 商务会议"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_view_registration
+#: model:mail.message.subtype,name:event.mt_event_registration
 msgid "New Registration"
 msgstr "新的登记"
 
@@ -1015,10 +946,9 @@ msgid "Participant / Contact Name"
 msgstr "参与者/联系人名字"
 
 #. module: event
-#: code:addons/event/event.py:320
-#, python-format
-msgid "Event has been <b>confirmed</b>."
-msgstr "活动已经被'确认'"
+#: selection:report.event.registration,month:0
+msgid "May"
+msgstr "5月"
 
 #. module: event
 #: view:res.partner:0
@@ -1029,16 +959,6 @@ msgstr "活动登记记录"
 #: view:event.event:0
 msgid "No ticket available."
 msgstr "没有可用的入场券"
-
-#. module: event
-#: help:event.type,default_registration_min:0
-msgid "It will select this default minimum value when you choose this event"
-msgstr "当你选择这个活动，将选择默认最小值"
-
-#. module: event
-#: selection:report.event.registration,month:0
-msgid "January"
-msgstr "1月"
 
 #. module: event
 #: field:event.event,register_max:0
@@ -1079,11 +999,6 @@ msgstr "名称"
 #: field:event.event,country_id:0
 msgid "Country"
 msgstr "国家"
-
-#. module: event
-#: selection:report.event.registration,month:0
-msgid "November"
-msgstr "11月"
 
 #. module: event
 #: view:res.partner:0
@@ -1139,12 +1054,6 @@ msgstr "默认回复给"
 
 #. module: event
 #: view:event.event:0
-#: model:ir.actions.act_window,name:event.act_register_event_partner
-msgid "Subscribe"
-msgstr "订阅"
-
-#. module: event
-#: view:event.event:0
 msgid "available."
 msgstr "可用."
 
@@ -1188,9 +1097,10 @@ msgid ""
 msgstr ""
 
 #. module: event
-#: model:ir.actions.server,name:event.actions_server_event_event_unread
-msgid "Event: Mark unread"
-msgstr ""
+#: view:event.event:0
+#: model:ir.actions.act_window,name:event.act_register_event_partner
+msgid "Subscribe"
+msgstr "订阅"
 
 #. module: event
 #: model:res.groups,name:event.group_event_manager

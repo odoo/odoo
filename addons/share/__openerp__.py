@@ -49,6 +49,7 @@ synchronization with other companies.
         'wizard/share_wizard_view.xml'
     ],
     'installable': True,
+    'auto_install': True,
     'web': True,
     'js': ['static/src/js/share.js'],
     'css': ['static/src/css/share.css'],

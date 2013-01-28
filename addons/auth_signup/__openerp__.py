@@ -30,6 +30,7 @@ Allow users to sign up and reset their password
     'category': 'Authentication',
     'website': 'http://www.openerp.com',
     'installable': True,
+    'auto_install': True,
     'depends': [
         'base_setup',
         'email_template',

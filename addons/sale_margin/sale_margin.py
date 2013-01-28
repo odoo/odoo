@@ -18,7 +18,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 
 class sale_order_line(osv.osv):
     _inherit = "sale.order.line"
@@ -70,7 +70,10 @@ class sale_order(osv.osv):
         return result
 
     def _get_order(self, cr, uid, ids, context=None):
-        return super(sale_order, self)._get_order(cr, uid, ids, context=context)
+        result = {}
+        for line in self.pool.get('sale.order.line').browse(cr, uid, ids, context=context):
+            result[line.order_id.id] = True
+        return result.keys()
 
     _columns = {
         'margin': fields.function(_product_margin, string='Margin', help="It gives profitability by calculating the difference between the Unit Price and the cost price.", store={

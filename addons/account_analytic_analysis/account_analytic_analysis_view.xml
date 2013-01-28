@@ -21,7 +21,13 @@
                 <xpath expr='//div[@name="duration"]' position="after" version="7.0">
                     <label for="quantity_max"/>
                     <div>
-                        <field name="quantity_max" class="oe_inline"/>
+                        <field name="quantity_max"/>
+                        <div attrs="{'invisible': [('hours_quantity','=',0)]}" class="oe_grey">
+                            <field name="hours_quantity" class="oe_inline"/> Units Consumed
+                        </div>
+                        <div attrs="{'invisible': [('quantity_max','=',0)]}" class="oe_grey">
+                            <field name="remaining_hours" class="oe_inline"/> Units Remaining
+                        </div>
                     </div>
                 </xpath>
                 <xpath expr='//group[@name="invoice_on_timesheets"]' position="replace">
@@ -62,11 +68,12 @@
 
                                 <span attrs="{'invisible': ['|',('fix_price_to_invoice','&lt;&gt;',0.0 ),('partner_id','=',False)]}" class="oe_grey">
                                     No order to invoice, create
+                                </span>
                                 <button name="%(action_sales_order)d" string="Sale Orders"
                                     type="action"
                                     class="oe_link"
                                     context="{'default_partner_id': [partner_id], 'search_default_partner_id': [partner_id],'search_default_project_id': [active_id],'default_project_id': [active_id]}"
-                                    /></span>
+                                    />
                             </td>
                         </tr><tr>
                             <td class="oe_timesheet_grey">
@@ -143,6 +150,7 @@
                 <field name="date" position="before">
                     <field name="last_invoice_date"/>
                     <field name="toinvoice_total"/>
+                    <field name="remaining_hours"/>
                 </field>
             </field>
         </record>
@@ -160,7 +168,7 @@
         </record>
 
         <record id="template_of_contract_action" model="ir.actions.act_window">
-            <field name="name">Template of Contract</field>
+            <field name="name">Contract Template</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.analytic.account</field>
             <field name="view_type">form</field>

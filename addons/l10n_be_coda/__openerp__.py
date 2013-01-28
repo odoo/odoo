@@ -90,15 +90,9 @@ V2.2 specifications.
 If required, you can manually adjust the descriptions via the CODA configuration menu.
 ''',
     'images'   : ['images/coda_logs.jpeg','images/import_coda_logs.jpeg'],
-    'depends': ['account_voucher','base_iban', 'l10n_be_invoice_bba', 'account_bank_statement_extensions'],
+    'depends': ['account_voucher','base_iban', 'l10n_be_invoice_bba',],
     'demo': [],
     'data': [
-        'l10n_be_coda_trans_type.xml',
-        'l10n_be_coda_trans_code.xml',
-        'l10n_be_coda_trans_category.xml',
-        'l10n_be_coda_comm_type.xml',
-        'security/ir.model.access.csv',
-        'security/account_security.xml',
         'l10n_be_coda_wizard.xml',
         'l10n_be_coda_view.xml',
     ],

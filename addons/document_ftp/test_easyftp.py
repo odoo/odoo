@@ -25,7 +25,7 @@
 """
 
 from ftplib import FTP
-from tools import config
+from openerp.tools import config
 
 def get_plain_ftp(timeout=10.0):
     ftp = FTP()

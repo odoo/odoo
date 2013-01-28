@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import  osv
+from openerp.osv import osv
 
 class hr_payslip_employees(osv.osv_memory):
 

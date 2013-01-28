@@ -19,13 +19,13 @@
 #
 ##############################################################################
 
-from osv import osv, fields
-import tools
-from tools.translate import _
+import time
 
-import base_calendar
-from base_status.base_state import base_state
-
+from openerp.osv import fields, osv
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
+from openerp.tools.translate import _
+from base_calendar import get_real_ids, base_calendar_id2real_id
+from openerp.addons.base_status.base_state import base_state
 #
 # crm.meeting is defined here so that it may be used by modules other than crm,
 # without forcing the installation of crm.
@@ -54,7 +54,7 @@ class crm_meeting(base_state, osv.Model):
             string='Attendees', states={'done': [('readonly', True)]}),
         'state': fields.selection(
                     [('draft', 'Unconfirmed'), ('open', 'Confirmed')],
-                    string='Status', size=16, readonly=True),
+                    string='Status', size=16, readonly=True, track_visibility='onchange'),
         # Meeting fields
         'name': fields.char('Meeting Subject', size=128, required=True, states={'done': [('readonly', True)]}),
         'categ_ids': fields.many2many('crm.meeting.type', 'meeting_category_rel',
@@ -65,6 +65,14 @@ class crm_meeting(base_state, osv.Model):
     _defaults = {
         'state': 'open',
     }
+
+    def message_get_subscription_data(self, cr, uid, ids, context=None):
+        res = {}
+        for virtual_id in ids:
+            real_id = base_calendar_id2real_id(virtual_id)
+            result = super(crm_meeting, self).message_get_subscription_data(cr, uid, [real_id], context=context)
+            res[virtual_id] = result[real_id]
+        return res
 
     def copy(self, cr, uid, id, default=None, context=None):
         default = default or {}
@@ -104,14 +112,61 @@ class crm_meeting(base_state, osv.Model):
     # ----------------------------------------
 
     # shows events of the day for this user
-    def needaction_domain_get(self, cr, uid, domain=[], context={}):
-        return [('date','<=',time.strftime('%Y-%M-%D 23:59:59')), ('date_deadline','>=', time.strftime('%Y-%M-%D 00:00:00')), ('user_id','=',uid)]
+    def _needaction_domain_get(self, cr, uid, context=None):
+        return [('date', '<=', time.strftime(DEFAULT_SERVER_DATE_FORMAT + ' 23:59:59')), ('date_deadline', '>=', time.strftime(DEFAULT_SERVER_DATE_FORMAT + ' 23:59:59')), ('user_id', '=', uid)]
 
-    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
-        return _('Meeting')
+    def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification',
+                        subtype=None, parent_id=False, attachments=None, context=None, **kwargs):
+        if isinstance(thread_id, str):
+            thread_id = get_real_ids(thread_id)
+        return super(crm_meeting, self).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, **kwargs)
 
-    def case_open_send_note(self, cr, uid, ids, context=None):
-        return self.message_post(cr, uid, ids, body=_("Meeting <b>confirmed</b>."), context=context)
+class mail_message(osv.osv):
+    _inherit = "mail.message"
 
-    def case_close_send_note(self, cr, uid, ids, context=None):
-        return self.message_post(cr, uid, ids, body=_("Meeting <b>completed</b>."), context=context)
+    def search(self, cr, uid, args, offset=0, limit=0, order=None, context=None, count=False):
+        '''
+        convert the search on real ids in the case it was asked on virtual ids, then call super()
+        '''
+        for index in range(len(args)):
+            if args[index][0] == "res_id" and isinstance(args[index][2], str):
+                args[index][2] = get_real_ids(args[index][2])
+        return super(mail_message, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
+
+    def _find_allowed_model_wise(self, cr, uid, doc_model, doc_dict, context=None):
+        if doc_model == 'crm.meeting':
+            for virtual_id in self.pool.get(doc_model).get_recurrent_ids(cr, uid, doc_dict.keys(), [], context=context):
+                doc_dict.setdefault(virtual_id, doc_dict[get_real_ids(virtual_id)])
+        return super(mail_message, self)._find_allowed_model_wise(cr, uid, doc_model, doc_dict, context=context)
+
+class ir_attachment(osv.osv):
+    _inherit = "ir.attachment"
+
+    def search(self, cr, uid, args, offset=0, limit=0, order=None, context=None, count=False):
+        '''
+        convert the search on real ids in the case it was asked on virtual ids, then call super()
+        '''
+        for index in range(len(args)):
+            if args[index][0] == "res_id" and isinstance(args[index][2], str):
+                args[index][2] = get_real_ids(args[index][2])
+        return super(ir_attachment, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
+
+    def write(self, cr, uid, ids, vals, context=None):
+        '''
+        when posting an attachment (new or not), convert the virtual ids in real ids.
+        '''
+        if isinstance(vals.get('res_id'), str):
+            vals['res_id'] = get_real_ids(vals.get('res_id'))
+        return super(ir_attachment, self).write(cr, uid, ids, vals, context=context)
+
+class invite_wizard(osv.osv_memory):
+    _inherit = 'mail.wizard.invite'
+
+    def default_get(self, cr, uid, fields, context=None):
+        '''
+        in case someone clicked on 'invite others' wizard in the followers widget, transform virtual ids in real ids
+        '''
+        result = super(invite_wizard, self).default_get(cr, uid, fields, context=context)
+        if 'res_id' in result:
+            result['res_id'] = get_real_ids(result['res_id'])
+        return result

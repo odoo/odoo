@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import osv
+from openerp.osv import osv
 
 #TODO:REMOVE this wizard is not used 
 class account_payment_make_payment(osv.osv_memory):

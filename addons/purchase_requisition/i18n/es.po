@@ -7,119 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:04+0000\n"
-"PO-Revision-Date: 2011-01-18 01:41+0000\n"
-"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
-"<jesteve@zikzakmedia.com>\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2012-12-14 18:41+0000\n"
+"Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:52+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 06:04+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
-msgid "Group By..."
-msgstr "Agrupar por..."
-
-#. module: purchase_requisition
-#: report:purchase.requisition:0
-#: field:purchase.requisition.partner,partner_id:0
-msgid "Supplier"
-msgstr "Proveedor"
-
-#. module: purchase_requisition
-#: report:purchase.requisition:0
-msgid "Product Detail"
-msgstr "Detalle del producto"
-
-#. module: purchase_requisition
-#: help:purchase.requisition,exclusive:0
-msgid ""
-"Purchase Requisition (exclusive):  On the confirmation of a purchase order, "
-"it cancels the remaining purchase order.\n"
-"Purchase Requisition(Multiple):  It allows to have multiple purchase "
-"orders.On confirmation of a purchase order it does not cancel the remaining "
-"orders"
-msgstr ""
-"Solicitud de compra (exclusiva): En la confirmación de un pedido de compra, "
-"cancela los restantes pedidos de compra.\n"
-"Solicitud de compra (múltiple): Permite tener varios pedidos de compra. En "
-"la confirmación de un pedido de compra no cancela el resto de pedidos."
-
-#. module: purchase_requisition
-#: field:purchase.requisition,message_unread:0
-msgid "Unread Messages"
-msgstr ""
-
-#. module: purchase_requisition
-#: field:purchase.requisition,company_id:0
-#: field:purchase.requisition.line,company_id:0
-msgid "Company"
-msgstr "Compañía"
-
-#. module: purchase_requisition
-#: help:purchase.requisition,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr ""
-
-#. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:153
-#, python-format
-msgid ""
-"You have already one %s purchase order for this partner, you must cancel "
-"this purchase order to create a new quotation."
-msgstr ""
-"Tiene ya un pedido de compra %s para esta empresa. Debe cancelar este pedido "
-"de compra para crear un nuevo presupuesto."
-
-#. module: purchase_requisition
-#: field:purchase.requisition.line,product_qty:0
-msgid "Quantity"
-msgstr "Cantidad"
-
-#. module: purchase_requisition
-#: field:purchase.requisition,message_ids:0
-msgid "Messages"
-msgstr ""
-
-#. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_purchase_order
-#: view:purchase.requisition:0
-msgid "Purchase Order"
-msgstr "Pedido de compra"
-
-#. module: purchase_requisition
-#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:41
-#, python-format
-msgid "Error!"
-msgstr "¡Error!"
-
-#. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Products"
-msgstr "Productos"
-
-#. module: purchase_requisition
-#: selection:purchase.requisition,state:0
-msgid "Cancelled"
-msgstr "Cancelado"
-
-#. module: purchase_requisition
-#: report:purchase.requisition:0
-msgid "Quotation Detail"
-msgstr "Detalle del presupuesto"
-
-#. module: purchase_requisition
-#: field:purchase.requisition,exclusive:0
-msgid "Requisition Type"
-msgstr "Tipo de solicitud"
-
-#. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Reference"
-msgstr "Referencia"
+msgid "Request a Quotation"
+msgstr "Solicitar un presupuesto"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,exclusive:0
@@ -127,15 +28,9 @@ msgid "Multiple Requisitions"
 msgstr "Solicitudes múltiples"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Reset to Draft"
-msgstr "Cambiar a borrador"
-
-#. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:153
-#, python-format
-msgid "Warning!"
-msgstr ""
+#: field:purchase.requisition.line,product_uom_id:0
+msgid "Product Unit of Measure"
+msgstr "Unidad de medida del producto"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -154,28 +49,76 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Pulse para iniciar un nuevo proceso de solicitud de compra.\n"
+"</p><p>\n"
+"Una solicitud de compra es un paso previo a una petición de oferta. En una "
+"solicitud de compra (o licitación de compra), puede registrar los productos "
+"que necesita comprar y lanzar la creación de una PdO (petición de oferta) a "
+"los proveedores. Después de la negociación, una vez que ha revisado todas "
+"las ofertas de los proveedores, puede validar algunas y cancelar otras.\n"
+"</p>\n"
+"        "
 
 #. module: purchase_requisition
-#: report:purchase.requisition:0
 #: view:purchase.requisition:0
-msgid "Source"
-msgstr ""
+#: field:purchase.requisition,user_id:0
+msgid "Responsible"
+msgstr "Responsable"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:0
+#: field:purchase.requisition,state:0
+msgid "Status"
+msgstr "Estado"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:0
+msgid "Send to Suppliers"
+msgstr "Enviar a los proveedores"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:0
+msgid "Group By..."
+msgstr "Agrupar por..."
+
+#. module: purchase_requisition
+#: view:purchase.requisition:0
+#: selection:purchase.requisition,state:0
+msgid "Purchase Done"
+msgstr "Compra realizada"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Seguidores"
 
 #. module: purchase_requisition
-#: field:purchase.requisition,warehouse_id:0
-msgid "Warehouse"
-msgstr "Almacén"
+#: view:purchase.requisition:0
+msgid "Purchase Requisition in negociation"
+msgstr "Solicitud de compra en negociación"
+
+#. module: purchase_requisition
+#: report:purchase.requisition:0
+#: field:purchase.requisition.partner,partner_id:0
+msgid "Supplier"
+msgstr "Proveedor"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 #: selection:purchase.requisition,state:0
 msgid "New"
 msgstr "Nuevo"
+
+#. module: purchase_requisition
+#: report:purchase.requisition:0
+msgid "Product Detail"
+msgstr "Detalle del producto"
+
+#. module: purchase_requisition
+#: report:purchase.requisition:0
+msgid "Qty"
+msgstr "Ctd."
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -196,17 +139,57 @@ msgid "Purchase Requisition"
 msgstr "Solicitud de compra"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-#: selection:purchase.requisition,state:0
-msgid "Sent to Suppliers"
-msgstr ""
+#: model:ir.model,name:purchase_requisition.model_purchase_requisition_line
+msgid "Purchase Requisition Line"
+msgstr "Línea solicitud de compra"
 
 #. module: purchase_requisition
-#: help:purchase.requisition,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr ""
+#: view:purchase.order:0
+msgid "Purchase Orders with requisition"
+msgstr "Pedidos de compra con solicitud"
+
+#. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_product_product
+#: field:purchase.requisition.line,product_id:0
+msgid "Product"
+msgstr "Producto"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:0
+msgid "Quotations"
+msgstr "Presupuestos"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:0
+msgid "Terms and Conditions"
+msgstr "Términos y condiciones"
+
+#. module: purchase_requisition
+#: report:purchase.requisition:0
+#: field:purchase.requisition,description:0
+msgid "Description"
+msgstr "Descripción"
+
+#. module: purchase_requisition
+#: field:purchase.requisition,message_unread:0
+msgid "Unread Messages"
+msgstr "Mensajes sin leer"
+
+#. module: purchase_requisition
+#: field:purchase.requisition,company_id:0
+#: field:purchase.requisition.line,company_id:0
+msgid "Company"
+msgstr "Compañía"
+
+#. module: purchase_requisition
+#: view:purchase.requisition.partner:0
+msgid "Create Quotation"
+msgstr "Crear presupuesto"
+
+#. module: purchase_requisition
+#: help:purchase.requisition,message_ids:0
+msgid "Messages and communication history"
+msgstr "Mensajes e historial de comunicación"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -214,86 +197,14 @@ msgid "Approved by Supplier"
 msgstr "Aprobado por proveedor"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Send to Suppliers"
-msgstr ""
-
-#. module: purchase_requisition
-#: report:purchase.requisition:0
-msgid "Order Reference"
-msgstr "Referencia pedido"
-
-#. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Order Date"
-msgstr "Fecha pedido"
-
-#. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_procurement_order
-msgid "Procurement"
-msgstr "Abastecimiento"
-
-#. module: purchase_requisition
-#: view:purchase.order:0
-msgid "Requisition"
-msgstr "Solicitud"
-
-#. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:186
-#, python-format
-msgid "Purchase Requisition has been <b>created</b>."
-msgstr ""
-
-#. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_purchase_requisition_partner
-msgid "Purchase Requisition Partner"
-msgstr "Proveedor de solicitud de compra"
-
-#. module: purchase_requisition
-#: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
-msgid "Purchase orders"
-msgstr "Pedidos de compra"
-
-#. module: purchase_requisition
-#: selection:purchase.requisition,exclusive:0
-msgid "Purchase Requisition (exclusive)"
-msgstr "Solicitud de compra (exclusiva)"
-
-#. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Confirm Purchase Order"
-msgstr "Confirmar pedido de compra"
-
-#. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Start Date"
-msgstr "Fecha inicio"
-
-#. module: purchase_requisition
 #: view:purchase.requisition.partner:0
 msgid "or"
-msgstr ""
-
-#. module: purchase_requisition
-#: field:purchase.requisition.line,product_uom_id:0
-msgid "Product Unit of Measure"
-msgstr ""
+msgstr "o"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
-#: field:purchase.requisition,state:0
-msgid "Status"
-msgstr ""
-
-#. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Terms and Conditions"
-msgstr ""
-
-#. module: purchase_requisition
-#: view:purchase.order:0
-msgid "Purchase Orders with requisition"
-msgstr "Pedidos de compra con solicitud"
+msgid "Reset to Draft"
+msgstr "Cambiar a borrador"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -306,146 +217,19 @@ msgid "User"
 msgstr "Usuario"
 
 #. module: purchase_requisition
+#: report:purchase.requisition:0
+msgid "Order Reference"
+msgstr "Referencia pedido"
+
+#. module: purchase_requisition
 #: field:purchase.requisition,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Es un seguidor"
 
 #. module: purchase_requisition
-#: field:purchase.requisition,message_comment_ids:0
-#: help:purchase.requisition,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
-
-#. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Search Purchase Requisition"
-msgstr "Buscar solicitud de compra"
-
-#. module: purchase_requisition
-#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:41
-#, python-format
-msgid "No Product in Tender."
-msgstr ""
-
-#. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Cancel Purchase Order"
-msgstr "Cancelar pedido de compra"
-
-#. module: purchase_requisition
-#: field:purchase.requisition,message_summary:0
-msgid "Summary"
-msgstr ""
-
-#. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "New Purchase Requisition"
-msgstr "Nueva solicitud de compra"
-
-#. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Quotations"
-msgstr "Presupuestos"
-
-#. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Request a Quotation"
-msgstr "Solicitar un presupuesto"
-
-#. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:103
-#, python-format
-msgid "Purchase Requisition has been <b>cancelled</b>."
-msgstr ""
-
-#. module: purchase_requisition
-#: field:procurement.order,requisition_id:0
-msgid "Latest Requisition"
-msgstr "Última solicitud"
-
-#. module: purchase_requisition
-#: report:purchase.requisition:0
-msgid "Qty"
-msgstr "Ctd."
-
-#. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:94
-#, python-format
-msgid "Draft Requisition has been <b>sent to suppliers</b>."
-msgstr ""
-
-#. module: purchase_requisition
-#: view:purchase.requisition.partner:0
-msgid "Create Quotation"
-msgstr "Crear presupuesto"
-
-#. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Unassigned"
-msgstr "No asignado"
-
-#. module: purchase_requisition
-#: view:purchase.requisition:0
-#: view:purchase.requisition.partner:0
-msgid "Cancel"
-msgstr "Cancelar"
-
-#. module: purchase_requisition
-#: help:product.product,purchase_requisition:0
-msgid ""
-"Check this box to generates purchase requisition instead of generating "
-"requests for quotation from procurement."
-msgstr ""
-
-#. module: purchase_requisition
-#: field:purchase.requisition,purchase_ids:0
-msgid "Purchase Orders"
-msgstr "Pedidos de compra"
-
-#. module: purchase_requisition
-#: field:purchase.requisition,origin:0
-msgid "Source Document"
-msgstr ""
-
-#. module: purchase_requisition
-#: view:purchase.requisition:0
-#: field:purchase.requisition,user_id:0
-msgid "Responsible"
-msgstr "Responsable"
-
-#. module: purchase_requisition
-#: view:purchase.requisition:0
-#: selection:purchase.requisition,state:0
-msgid "Purchase Done"
-msgstr ""
-
-#. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Purchase Requisition in negociation"
-msgstr "Solicitud de compra en negociación"
-
-#. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_purchase_requisition_line
-msgid "Purchase Requisition Line"
-msgstr "Línea solicitud de compra"
-
-#. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_product_product
-#: field:purchase.requisition.line,product_id:0
-msgid "Product"
-msgstr "Producto"
-
-#. module: purchase_requisition
-#: report:purchase.requisition:0
-#: field:purchase.requisition,description:0
-msgid "Description"
-msgstr "Descripción"
-
-#. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:97
-#, python-format
-msgid "Purchase Requisition has been set to <b>draft</b>."
-msgstr ""
+#: field:purchase.requisition.line,product_qty:0
+msgid "Quantity"
+msgstr "Cantidad"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -459,19 +243,24 @@ msgid "Purchase Requisitions"
 msgstr "Solicitudes de compra"
 
 #. module: purchase_requisition
+#: report:purchase.requisition:0
+msgid "Quotation Detail"
+msgstr "Detalle del presupuesto"
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/purchase_requisition.py:134
+#, python-format
+msgid ""
+"You have already one %s purchase order for this partner, you must cancel "
+"this purchase order to create a new quotation."
+msgstr ""
+"Tiene ya un pedido de compra %s para esta empresa. Debe cancelar este pedido "
+"de compra para crear un nuevo presupuesto."
+
+#. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "End Date"
 msgstr "Fecha final"
-
-#. module: purchase_requisition
-#: field:purchase.requisition,line_ids:0
-msgid "Products to Purchase"
-msgstr "Productos a comprar"
-
-#. module: purchase_requisition
-#: report:purchase.requisition:0
-msgid "Date Ordered"
-msgstr "Fecha pedido"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -480,9 +269,194 @@ msgid "Requisition Reference"
 msgstr "Referencia de solicitud"
 
 #. module: purchase_requisition
+#: field:purchase.requisition,line_ids:0
+msgid "Products to Purchase"
+msgstr "Productos a comprar"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:0
+#: selection:purchase.requisition,state:0
+msgid "Sent to Suppliers"
+msgstr "Enviar a los proveedores"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:0
+msgid "Search Purchase Requisition"
+msgstr "Buscar solicitud de compra"
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:41
+#, python-format
+msgid "No Product in Tender."
+msgstr "Ningún artículo en la licitación."
+
+#. module: purchase_requisition
+#: report:purchase.requisition:0
+msgid "Date Ordered"
+msgstr "Fecha pedido"
+
+#. module: purchase_requisition
+#: field:purchase.requisition,message_ids:0
+msgid "Messages"
+msgstr "Mensajes"
+
+#. module: purchase_requisition
+#: help:purchase.requisition,exclusive:0
+msgid ""
+"Purchase Requisition (exclusive):  On the confirmation of a purchase order, "
+"it cancels the remaining purchase order.\n"
+"Purchase Requisition(Multiple):  It allows to have multiple purchase "
+"orders.On confirmation of a purchase order it does not cancel the remaining "
+"orders"
+msgstr ""
+"Solicitud de compra (exclusiva): En la confirmación de un pedido de compra, "
+"cancela los restantes pedidos de compra.\n"
+"Solicitud de compra (múltiple): Permite tener varios pedidos de compra. En "
+"la confirmación de un pedido de compra no cancela el resto de pedidos."
+
+#. module: purchase_requisition
+#: view:purchase.requisition:0
+msgid "Cancel Purchase Order"
+msgstr "Cancelar pedido de compra"
+
+#. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_purchase_order
+#: view:purchase.requisition:0
+msgid "Purchase Order"
+msgstr "Pedido de compra"
+
+#. module: purchase_requisition
+#: field:purchase.requisition,origin:0
+msgid "Source Document"
+msgstr "Documento origen"
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:41
+#, python-format
+msgid "Error!"
+msgstr "¡Error!"
+
+#. module: purchase_requisition
+#: field:purchase.requisition,exclusive:0
+msgid "Requisition Type"
+msgstr "Tipo de solicitud"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:0
+msgid "New Purchase Requisition"
+msgstr "Nueva solicitud de compra"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:0
+msgid "Products"
+msgstr "Productos"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:0
+msgid "Order Date"
+msgstr "Fecha pedido"
+
+#. module: purchase_requisition
+#: selection:purchase.requisition,state:0
+msgid "Cancelled"
+msgstr "Cancelado"
+
+#. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_purchase_requisition_partner
+msgid "Purchase Requisition Partner"
+msgstr "Proveedor de solicitud de compra"
+
+#. module: purchase_requisition
+#: help:purchase.requisition,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Si está marcado, hay nuevos mensajes que requieren su atención"
+
+#. module: purchase_requisition
+#: report:purchase.requisition:0
+msgid "Purchase for Requisitions"
+msgstr "Compra para solicitudes"
+
+#. module: purchase_requisition
+#: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
+msgid "Purchase orders"
+msgstr "Pedidos de compra"
+
+#. module: purchase_requisition
+#: field:purchase.requisition,date_end:0
+msgid "Requisition Deadline"
+msgstr "Fecha límite de solicitud"
+
+#. module: purchase_requisition
+#: field:purchase.requisition,message_summary:0
+msgid "Summary"
+msgstr "Resumen"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:0
+msgid "Reference"
+msgstr "Referencia"
+
+#. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_procurement_order
+msgid "Procurement"
+msgstr "Abastecimiento"
+
+#. module: purchase_requisition
+#: report:purchase.requisition:0
+#: view:purchase.requisition:0
+msgid "Source"
+msgstr "Origen"
+
+#. module: purchase_requisition
+#: field:purchase.requisition,warehouse_id:0
+msgid "Warehouse"
+msgstr "Almacén"
+
+#. module: purchase_requisition
+#: field:procurement.order,requisition_id:0
+msgid "Latest Requisition"
+msgstr "Última solicitud"
+
+#. module: purchase_requisition
+#: model:res.groups,name:purchase_requisition.group_purchase_requisition_manager
+msgid "Manager"
+msgstr "Responsable"
+
+#. module: purchase_requisition
+#: selection:purchase.requisition,exclusive:0
+msgid "Purchase Requisition (exclusive)"
+msgstr "Solicitud de compra (exclusiva)"
+
+#. module: purchase_requisition
+#: help:purchase.requisition,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
+"Contiene el resumen del chatter (nº de mensajes, ...). Este resumen viene "
+"directamente en formato HTML para poder ser insertado en las vistas kanban."
+
+#. module: purchase_requisition
 #: report:purchase.requisition:0
 msgid "Product UoM"
 msgstr "UdM de producto"
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/purchase_requisition.py:134
+#, python-format
+msgid "Warning!"
+msgstr "¡Advertencia!"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:0
+msgid "Confirm Purchase Order"
+msgstr "Confirmar pedido de compra"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:0
+#: view:purchase.requisition.partner:0
+msgid "Cancel"
+msgstr "Cancelar"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -491,30 +465,33 @@ msgid "Requisition Date"
 msgstr "Fecha de solicitud"
 
 #. module: purchase_requisition
-#: help:purchase.requisition,message_ids:0
-msgid "Messages and communication history"
+#: view:purchase.requisition:0
+msgid "Start Date"
+msgstr "Fecha inicio"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:0
+msgid "Unassigned"
+msgstr "No asignado"
+
+#. module: purchase_requisition
+#: view:purchase.order:0
+msgid "Requisition"
+msgstr "Solicitud"
+
+#. module: purchase_requisition
+#: help:product.product,purchase_requisition:0
+msgid ""
+"Check this box to generates purchase requisition instead of generating "
+"requests for quotation from procurement."
 msgstr ""
+"Marque esta casilla para generar solicitudes de compra en lugar de generar "
+"peticiones de oferta para el abastecimiento."
 
 #. module: purchase_requisition
-#: report:purchase.requisition:0
-msgid "Purchase for Requisitions"
-msgstr "Compra para solicitudes"
-
-#. module: purchase_requisition
-#: field:purchase.requisition,date_end:0
-msgid "Requisition Deadline"
-msgstr "Fecha límite de solicitud"
-
-#. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:100
-#, python-format
-msgid "Purchase Requisition has been <b>done</b>."
-msgstr ""
-
-#. module: purchase_requisition
-#: model:res.groups,name:purchase_requisition.group_purchase_requisition_manager
-msgid "Manager"
-msgstr "Responsable"
+#: field:purchase.requisition,purchase_ids:0
+msgid "Purchase Orders"
+msgstr "Pedidos de compra"
 
 #~ msgid "In Progress"
 #~ msgstr "En proceso"

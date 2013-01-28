@@ -20,16 +20,14 @@
 ##############################################################################
 
 
-import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+import time
 
-import pooler
-from report.interface import report_rml
-from report.interface import toxml
-from report import report_sxw
-from tools.translate import _
-import tools
+from openerp import pooler, tools
+from openerp.report import report_sxw
+from openerp.report.interface import report_rml, toxml
+from openerp.tools.translate import _
 
 one_week = relativedelta(days=7)
 num2day = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']

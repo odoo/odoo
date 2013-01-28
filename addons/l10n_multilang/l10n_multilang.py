@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 import os
-from tools.translate import _
+from openerp.tools.translate import _
 import logging
 _logger = logging.getLogger(__name__)
 

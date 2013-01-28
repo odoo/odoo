@@ -20,8 +20,9 @@
 ##############################################################################
 
 from operator import itemgetter
-from osv import fields, osv
 import time
+
+from openerp.osv import fields, osv
 
 class account_fiscal_position(osv.osv):
     _name = 'account.fiscal.position'

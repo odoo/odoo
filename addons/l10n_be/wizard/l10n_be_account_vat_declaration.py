@@ -26,8 +26,8 @@
 ##############################################################################
 import base64
 
-from osv import osv, fields
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class l10n_be_vat_declaration(osv.osv_memory):
     """ Vat Declaration """

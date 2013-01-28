@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
 "PO-Revision-Date: 2012-04-18 19:08+0000\n"
 "Last-Translator: Masaki Yamaya <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:36+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:44+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr_timesheet_sheet
 #: field:hr.analytic.timesheet,sheet_id:0
@@ -142,8 +142,8 @@ msgid "Based on the timesheet"
 msgstr "勤務表に基づく"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:313
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:384
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:326
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:397
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet."
 msgstr ""
@@ -198,8 +198,8 @@ msgid "Please create an employee and associate it with this user."
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:388
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:408
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:401
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:421
 #, python-format
 msgid ""
 "You cannot enter an attendance date outside the current timesheet dates."
@@ -248,9 +248,9 @@ msgstr ""
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:80
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:82
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:84
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:313
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:384
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:415
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:326
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:397
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:428
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:38
 #, python-format
 msgid "Error!"
@@ -492,11 +492,6 @@ msgid "hr.timesheet.current.open"
 msgstr "hr.timesheet.current.open"
 
 #. module: hr_timesheet_sheet
-#: model:process.node,name:hr_timesheet_sheet.process_node_validatedtimesheet0
-msgid "Validated"
-msgstr "承諾済み"
-
-#. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:71
 #, python-format
 msgid ""
@@ -714,10 +709,9 @@ msgid "Timesheet range"
 msgstr "勤務表の範囲"
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,message_comment_ids:0
-#: help:hr_timesheet_sheet.sheet,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
+#: view:board.board:0
+msgid "My Total Attendance By Week"
+msgstr "週ごとの私の全ての出勤"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
@@ -799,7 +793,7 @@ msgid "Search Account"
 msgstr "アカウントを検索"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:415
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:428
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet"
 msgstr ""
@@ -859,9 +853,9 @@ msgid "Cancel"
 msgstr "キャンセル"
 
 #. module: hr_timesheet_sheet
-#: view:board.board:0
-msgid "My Total Attendance By Week"
-msgstr "週ごとの私の全ての出勤"
+#: model:process.node,name:hr_timesheet_sheet.process_node_validatedtimesheet0
+msgid "Validated"
+msgstr "承諾済み"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_invoiceonwork0
@@ -968,9 +962,9 @@ msgid "May"
 msgstr "5月"
 
 #. module: hr_timesheet_sheet
-#: field:hr.timesheet.report,journal_id:0
-msgid "Journal"
-msgstr "仕訳帳"
+#: model:process.node,note:hr_timesheet_sheet.process_node_workontask0
+msgid "Defines the work summary of task"
+msgstr "仕事の作業要約を定義します。"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -1068,8 +1062,8 @@ msgid "Invoice rate"
 msgstr "請求率"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:388
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:408
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:401
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:421
 #, python-format
 msgid "User Error!"
 msgstr ""
@@ -1150,9 +1144,9 @@ msgid "Total"
 msgstr "合計"
 
 #. module: hr_timesheet_sheet
-#: model:process.node,note:hr_timesheet_sheet.process_node_workontask0
-msgid "Defines the work summary of task"
-msgstr "仕事の作業要約を定義します。"
+#: field:hr.timesheet.report,journal_id:0
+msgid "Journal"
+msgstr "仕訳帳"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_day

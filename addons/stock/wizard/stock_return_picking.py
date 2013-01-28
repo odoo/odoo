@@ -19,12 +19,12 @@
 #
 ##############################################################################
 
-import netsvc
+from openerp import netsvc
 import time
 
-from osv import osv,fields
-from tools.translate import _
-import decimal_precision as dp
+from openerp.osv import osv,fields
+from openerp.tools.translate import _
+import openerp.addons.decimal_precision as dp
 
 class stock_return_picking_memory(osv.osv_memory):
     _name = "stock.return.picking.memory"
@@ -123,7 +123,13 @@ class stock_return_picking(osv.osv_memory):
             if m.state == 'done':
                 return_history[m.id] = 0
                 for rec in m.move_history_ids2:
-                    return_history[m.id] += (rec.product_qty * rec.product_uom.factor)
+                    # only take into account 'product return' moves, ignoring any other
+                    # kind of upstream moves, such as internal procurements, etc.
+                    # a valid return move will be the exact opposite of ours:
+                    #     (src location, dest location) <=> (dest location, src location))
+                    if rec.location_dest_id.id == m.location_id.id \
+                        and rec.location_id.id == m.location_dest_id.id:
+                        return_history[m.id] += (rec.product_qty * rec.product_uom.factor)
         return return_history
 
     def create_returns(self, cr, uid, ids, context=None):
@@ -148,7 +154,6 @@ class stock_return_picking(osv.osv_memory):
         wf_service = netsvc.LocalService("workflow")
         pick = pick_obj.browse(cr, uid, record_id, context=context)
         data = self.read(cr, uid, ids[0], context=context)
-        new_picking = None
         date_cur = time.strftime('%Y-%m-%d %H:%M:%S')
         set_invoice_state_to_none = True
         returned_lines = 0
@@ -160,8 +165,10 @@ class stock_return_picking(osv.osv_memory):
             new_type = 'out'
         else:
             new_type = 'internal'
+        seq_obj_name = 'stock.picking.' + new_type
+        new_pick_name = self.pool.get('ir.sequence').get(cr, uid, seq_obj_name)
         new_picking = pick_obj.copy(cr, uid, pick.id, {
-                                        'name': _('%s-return') % pick.name,
+                                        'name': _('%s-%s-return') % (new_pick_name, pick.name),
                                         'move_lines': [], 
                                         'state':'draft', 
                                         'type': new_type,
@@ -187,7 +194,7 @@ class stock_return_picking(osv.osv_memory):
                 new_move=move_obj.copy(cr, uid, move.id, {
                                             'product_qty': new_qty,
                                             'product_uos_qty': uom_obj._compute_qty(cr, uid, move.product_uom.id, new_qty, move.product_uos.id),
-                                            'picking_id':new_picking, 
+                                            'picking_id': new_picking, 
                                             'state': 'draft',
                                             'location_id': new_location, 
                                             'location_dest_id': move.location_id.id,

@@ -19,14 +19,13 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-import decimal_precision as dp
-from tools.translate import _
-import tools
+from openerp.osv import fields, osv
+import openerp.addons.decimal_precision as dp
+from openerp.tools.translate import _
+from openerp import tools
 
 class stock_change_product_qty(osv.osv_memory):
     _name = "stock.change.product.qty"
-    _inherit = ['mail.thread']
     _description = "Change Product Quantity"
     _columns = {
         'product_id' : fields.many2one('product.product', 'Product'),
@@ -103,18 +102,6 @@ class stock_change_product_qty(osv.osv_memory):
 
             inventry_obj.action_confirm(cr, uid, [inventory_id], context=context)
             inventry_obj.action_done(cr, uid, [inventory_id], context=context)
-            self.change_product_qty_send_note(cr, uid, [data.id], context)
         return {}
-
-    def change_product_qty_send_note(self, cr, uid, ids, context=None):
-        prod_obj = self.pool.get('product.product')
-        location_obj = self.pool.get('stock.location')
-
-        for data in self.browse(cr, uid, ids, context=context):
-            location_name = location_obj.browse(cr, uid, data.location_id.id, context=context).name
-            message = _("<b>Quantity has been changed</b> to <em>%s %s </em> for <em>%s</em> location.") % (data.new_quantity, data.product_id.uom_id.name, location_name)
-            prod_obj.message_post(cr, uid, [data.product_id.id], body=message, context=context)
-
-stock_change_product_qty()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
