@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
 "PO-Revision-Date: 2012-05-10 17:58+0000\n"
 "Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:17+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:52+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -23,25 +23,10 @@ msgid "Parent Directory"
 msgstr "親ディレクトリ"
 
 #. module: document
-#: code:addons/document/document_directory.py:273
+#: code:addons/document/document.py:336
 #, python-format
 msgid "Directory name contains special characters!"
 msgstr "ディレクトリ名に特殊文字が含まれています。"
-
-#. module: document
-#: view:board.board:0
-msgid "Document board"
-msgstr "ドキュメントボード"
-
-#. module: document
-#: model:ir.model,name:document.model_process_node
-msgid "Process Node"
-msgstr "処理ノード"
-
-#. module: document
-#: sql_constraint:document.directory:0
-msgid "Directory must have a parent or a storage."
-msgstr ""
 
 #. module: document
 #: view:document.directory:0
@@ -57,14 +42,13 @@ msgstr "リソースディレクトリの名称として使う項目。空白に
 
 #. module: document
 #: view:document.directory:0
-#: view:document.storage:0
 msgid "Group By..."
 msgstr "グループ化…"
 
 #. module: document
-#: model:ir.model,name:document.model_document_directory_content_type
-msgid "Directory Content Type"
-msgstr "内容のタイプのディレクトリ"
+#: view:ir.attachment:0
+msgid "Modification"
+msgstr ""
 
 #. module: document
 #: view:document.directory:0
@@ -104,9 +88,9 @@ msgid "Directory Content"
 msgstr "ディレクトリの内容"
 
 #. module: document
-#: view:document.directory:0
-msgid "Dynamic context"
-msgstr "ダイナミックな文脈"
+#: view:ir.attachment:0
+msgid "My Document(s)"
+msgstr ""
 
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document_management_configuration
@@ -125,13 +109,13 @@ msgstr ""
 "を使うことができます。"
 
 #. module: document
-#: field:document.storage,path:0
-msgid "Path"
-msgstr "パス"
+#: help:document.directory.dctx,field:0
+msgid "The name of the field."
+msgstr ""
 
 #. module: document
-#: code:addons/document/document_directory.py:263
-#: code:addons/document/document_directory.py:268
+#: code:addons/document/document.py:326
+#: code:addons/document/document.py:331
 #, python-format
 msgid "Directory name must be unique!"
 msgstr "ディレクトリ名は固有でなければいけません。"
@@ -156,7 +140,6 @@ msgstr "そうであれば，このリソースに合致する全ての添付を
 
 #. module: document
 #: view:document.directory:0
-#: field:document.storage,dir_ids:0
 #: model:ir.actions.act_window,name:document.action_document_directory_form
 #: model:ir.ui.menu,name:document.menu_document_directories
 msgid "Directories"
@@ -166,13 +149,6 @@ msgstr "ディレクトリ"
 #: model:ir.model,name:document.model_report_document_user
 msgid "Files details by Users"
 msgstr "ユーザごとのファイルの詳細"
-
-#. module: document
-#: code:addons/document/document_storage.py:569
-#: code:addons/document/document_storage.py:597
-#, python-format
-msgid "Error!"
-msgstr "エラー"
 
 #. module: document
 #: field:document.directory,resource_find_all:0
@@ -225,14 +201,9 @@ msgid ""
 msgstr ""
 
 #. module: document
-#: field:process.node,directory_id:0
-msgid "Document directory"
-msgstr "文書ディレクトリ"
-
-#. module: document
-#: code:addons/document/document_directory.py:263
-#: code:addons/document/document_directory.py:268
-#: code:addons/document/document_directory.py:273
+#: code:addons/document/document.py:326
+#: code:addons/document/document.py:331
+#: code:addons/document/document.py:336
 #, python-format
 msgid "ValidateError"
 msgstr "検証エラー"
@@ -250,18 +221,11 @@ msgid "Documents"
 msgstr "文書"
 
 #. module: document
-#: view:document.directory:0
-#: field:document.directory,storage_id:0
-msgid "Storage"
-msgstr "ストレージ"
-
-#. module: document
 #: field:document.directory,ressource_type_id:0
 msgid "Resource model"
 msgstr "リソースモデル"
 
 #. module: document
-#: field:ir.attachment,file_size:0
 #: field:report.document.file,file_size:0
 #: field:report.document.user,file_size:0
 msgid "File Size"
@@ -274,21 +238,19 @@ msgid "Content Type"
 msgstr "内容タイプ"
 
 #. module: document
-#: view:ir.attachment:0
-msgid "Modification"
-msgstr ""
-
-#. module: document
 #: view:document.directory:0
 #: field:document.directory,type:0
-#: view:document.storage:0
-#: field:document.storage,type:0
 msgid "Type"
 msgstr "タイプ"
 
 #. module: document
-#: code:addons/document/document.py:194
-#: code:addons/document/document_directory.py:234
+#: sql_constraint:ir.attachment:0
+msgid "The filename must be unique in a directory !"
+msgstr ""
+
+#. module: document
+#: code:addons/document/document.py:110
+#: code:addons/document/document.py:296
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -322,11 +284,6 @@ msgid "Context fields"
 msgstr "文脈項目"
 
 #. module: document
-#: field:ir.attachment,store_fname:0
-msgid "Stored Filename"
-msgstr "記憶されたファイル名"
-
-#. module: document
 #: view:document.directory:0
 #: field:report.document.user,type:0
 msgid "Directory Type"
@@ -353,7 +310,7 @@ msgid "Virtual Files"
 msgstr "仮想ファイル"
 
 #. module: document
-#: code:addons/document/document_storage.py:635
+#: code:addons/document/document.py:562
 #, python-format
 msgid "Error at doc write!"
 msgstr "文書の書込みエラー"
@@ -388,7 +345,6 @@ msgstr "セキュリティ"
 
 #. module: document
 #: field:document.directory,write_uid:0
-#: field:document.storage,write_uid:0
 #: field:ir.attachment,write_uid:0
 msgid "Last Modification User"
 msgstr "前回，修正したユーザ"
@@ -411,7 +367,6 @@ msgstr "ドメイン"
 
 #. module: document
 #: field:document.directory,write_date:0
-#: field:document.storage,write_date:0
 #: field:ir.attachment,write_date:0
 msgid "Date Modified"
 msgstr "変更日"
@@ -454,10 +409,9 @@ msgid "Define words in the context, for all child directories and files"
 msgstr "全ての子ディレクトリとファイルのために、文脈の単語を定義して下さい。"
 
 #. module: document
-#: help:document.storage,online:0
-msgid ""
-"If not checked, media is currently offline and its contents not available"
-msgstr "これをチェックしないと、メディアはオフラインになってその内容は参照できません。"
+#: view:document.directory:0
+msgid "Static"
+msgstr "静的"
 
 #. module: document
 #: field:report.document.user,user:0
@@ -467,7 +421,6 @@ msgstr ""
 #. module: document
 #: view:document.directory:0
 #: field:document.directory,user_id:0
-#: field:document.storage,user_id:0
 #: view:ir.attachment:0
 #: field:ir.attachment,user_id:0
 #: field:report.document.user,user_id:0
@@ -486,15 +439,9 @@ msgstr "内容"
 
 #. module: document
 #: field:document.directory,create_date:0
-#: field:document.storage,create_date:0
 #: field:report.document.user,create_date:0
 msgid "Date Created"
 msgstr "作成日"
-
-#. module: document
-#: field:document.directory,ressource_id:0
-msgid "Resource ID"
-msgstr "リソースID"
 
 #. module: document
 #: help:document.directory.content,include_name:0
@@ -505,17 +452,6 @@ msgid ""
 msgstr ""
 "ファイル名にレコード名を含めるのであれば、これをチェックして下さい。\n"
 "そうすると、ディレクトリはリソースディレクトリになります。"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.open_board_document_manager
-#: model:ir.ui.menu,name:document.menu_reports_document
-msgid "Knowledge"
-msgstr ""
-
-#. module: document
-#: view:document.storage:0
-msgid "Document Storage"
-msgstr ""
 
 #. module: document
 #: view:document.configuration:0
@@ -532,11 +468,6 @@ msgstr "レコード名を含める"
 #: field:ir.actions.report.xml,model_id:0
 msgid "Model Id"
 msgstr "モデルID"
-
-#. module: document
-#: field:document.storage,online:0
-msgid "Online"
-msgstr "オンライン"
 
 #. module: document
 #: help:document.directory,ressource_tree:0
@@ -565,9 +496,9 @@ msgid "August"
 msgstr "8月"
 
 #. module: document
-#: view:ir.attachment:0
-msgid "My Document(s)"
-msgstr ""
+#: view:document.directory:0
+msgid "Dynamic context"
+msgstr "ダイナミックな文脈"
 
 #. module: document
 #: sql_constraint:document.directory:0
@@ -581,7 +512,6 @@ msgstr "6月"
 
 #. module: document
 #: field:document.directory,group_ids:0
-#: field:document.storage,group_ids:0
 msgid "Groups"
 msgstr "グループ"
 
@@ -594,11 +524,6 @@ msgstr "活動中"
 #: selection:report.document.user,month:0
 msgid "November"
 msgstr "11月"
-
-#. module: document
-#: field:ir.attachment,db_datas:0
-msgid "Data"
-msgstr "データ"
 
 #. module: document
 #: help:document.directory,ressource_parent_type_id:0
@@ -627,9 +552,9 @@ msgid "Seq."
 msgstr "順序"
 
 #. module: document
-#: selection:document.storage,type:0
-msgid "Database"
-msgstr "データベース"
+#: model:ir.actions.act_window,name:document.action_view_all_document_tree1
+msgid "All Users files"
+msgstr "全てのユーザのファイル"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -637,13 +562,7 @@ msgid "January"
 msgstr "1月"
 
 #. module: document
-#: field:document.storage,readonly:0
-msgid "Read Only"
-msgstr "読取り専用"
-
-#. module: document
 #: view:document.directory:0
-#: view:process.node:0
 msgid "Document Directory"
 msgstr "文書ディレクトリ"
 
@@ -659,7 +578,6 @@ msgstr ""
 
 #. module: document
 #: field:document.directory,create_uid:0
-#: field:document.storage,create_uid:0
 msgid "Creator"
 msgstr "作成者"
 
@@ -675,7 +593,6 @@ msgstr ""
 "書を印刷したりダウンロードしたりするのに使うことができます。このツールは、インストールされたモデルによってディレクトリを自動的に作成します。"
 
 #. module: document
-#: view:board.board:0
 #: model:ir.actions.act_window,name:document.action_view_files_by_month_graph
 #: view:report.document.user:0
 msgid "Files by Month"
@@ -697,19 +614,9 @@ msgid "Children"
 msgstr "子"
 
 #. module: document
-#: view:board.board:0
-msgid "Files by user"
-msgstr ""
-
-#. module: document
-#: selection:document.storage,type:0
-msgid "External file storage"
-msgstr "外部ファイルストレージ"
-
-#. module: document
-#: help:document.storage,path:0
-msgid "For file storage, the root path of the storage"
-msgstr "ファイルストレージのルートパス"
+#: field:document.directory,ressource_id:0
+msgid "Resource ID"
+msgstr "リソースID"
 
 #. module: document
 #: field:document.directory.dctx,field:0
@@ -727,26 +634,16 @@ msgid "Parent Model"
 msgstr "親モデル"
 
 #. module: document
-#: help:document.directory.dctx,field:0
+#: view:document.directory:0
 msgid ""
-"The name of the field. Note that the prefix \"dctx_\" will be prepended to "
-"what is typed here."
-msgstr "項目名。ここで指定したものの前に接頭語\"dctx_\"が追加されます。"
-
-#. module: document
-#: field:document.directory,ressource_tree:0
-msgid "Tree Structure"
-msgstr "ツリー構造"
+"These groups, however, do NOT apply to children directories, which must "
+"define their own groups."
+msgstr "これらのグループには、子ディレクトリを適用できません。独自のグループを定義しなければいけません。"
 
 #. module: document
 #: selection:report.document.user,month:0
 msgid "May"
 msgstr "5月"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.action_view_all_document_tree1
-msgid "All Users files"
-msgstr "全てのユーザのファイル"
 
 #. module: document
 #: view:document.directory:0
@@ -762,18 +659,6 @@ msgstr "ir.attachment"
 #: view:report.document.user:0
 msgid "Users File"
 msgstr ""
-
-#. module: document
-#: view:document.directory:0
-msgid "Static"
-msgstr "静的"
-
-#. module: document
-#: view:document.directory:0
-msgid ""
-"These groups, however, do NOT apply to children directories, which must "
-"define their own groups."
-msgstr "これらのグループには、子ディレクトリを適用できません。独自のグループを定義しなければいけません。"
 
 #. module: document
 #: model:ir.model,name:document.model_document_configuration
@@ -799,24 +684,13 @@ msgstr "2月"
 
 #. module: document
 #: field:document.directory,name:0
-#: field:document.storage,name:0
 msgid "Name"
 msgstr "名前"
-
-#. module: document
-#: sql_constraint:document.storage:0
-msgid "The storage path must be unique!"
-msgstr "ストレージパスは固有でなければいけません。"
 
 #. module: document
 #: view:document.directory:0
 msgid "Fields"
 msgstr "項目"
-
-#. module: document
-#: help:document.storage,readonly:0
-msgid "If set, media is for reading only"
-msgstr "これを指定すると、メディアは読取りのみに設定されます。"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -830,9 +704,9 @@ msgid "# of Files"
 msgstr "ファイル数"
 
 #. module: document
-#: view:document.storage:0
-msgid "Search Document Storage"
-msgstr ""
+#: model:ir.model,name:document.model_document_directory_content_type
+msgid "Directory Content Type"
+msgstr "内容のタイプのディレクトリ"
 
 #. module: document
 #: view:document.directory:0
@@ -864,9 +738,9 @@ msgid "File Name"
 msgstr "ファイル名"
 
 #. module: document
-#: selection:document.storage,type:0
-msgid "Internal File storage"
-msgstr "内部ファイルストレージ"
+#: field:document.directory,ressource_tree:0
+msgid "Tree Structure"
+msgstr "ツリー構造"
 
 #. module: document
 #: view:document.configuration:0
@@ -885,10 +759,7 @@ msgid "Year"
 msgstr "年"
 
 #. module: document
-#: view:document.storage:0
-#: model:ir.actions.act_window,name:document.action_document_storage_form
 #: model:ir.model,name:document.model_document_storage
-#: model:ir.ui.menu,name:document.menu_document_storage_media
 msgid "Storage Media"
 msgstr "ストレージメディア"
 
@@ -896,6 +767,12 @@ msgstr "ストレージメディア"
 #: field:document.directory.content,extension:0
 msgid "Document Type"
 msgstr "文書タイプ"
+
+#~ msgid "Document board"
+#~ msgstr "ドキュメントボード"
+
+#~ msgid "Process Node"
+#~ msgstr "処理ノード"
 
 #~ msgid "Files per Month"
 #~ msgstr "月別のファイル"
@@ -906,17 +783,30 @@ msgstr "文書タイプ"
 #~ msgid "This Year"
 #~ msgstr "今年度"
 
+#~ msgid "Path"
+#~ msgstr "パス"
+
+#, python-format
+#~ msgid "Error!"
+#~ msgstr "エラー"
+
 #~ msgid "Knowledge Management"
 #~ msgstr "知識管理"
 
 #~ msgid "Files by Users"
 #~ msgstr "ユーザ別のファイル"
 
+#~ msgid "Document directory"
+#~ msgstr "文書ディレクトリ"
+
 #~ msgid "Files Per Partner"
 #~ msgstr "パートナ別のファイル"
 
 #~ msgid "Error! You can not create recursive Directories."
 #~ msgstr "エラー：ディレクトリを重複して作ることはできません。"
+
+#~ msgid "Storage"
+#~ msgstr "ストレージ"
 
 #~ msgid "Document Dashboard"
 #~ msgstr "文書ダッシュボード"
@@ -927,8 +817,18 @@ msgstr "文書タイプ"
 #~ msgid "Created"
 #~ msgstr "作成済み"
 
+#~ msgid "Stored Filename"
+#~ msgstr "記憶されたファイル名"
+
+#~ msgid ""
+#~ "If not checked, media is currently offline and its contents not available"
+#~ msgstr "これをチェックしないと、メディアはオフラインになってその内容は参照できません。"
+
 #~ msgid "Image"
 #~ msgstr "画像"
+
+#~ msgid "Online"
+#~ msgstr "オンライン"
 
 #~ msgid "Attachment"
 #~ msgstr "添付"
@@ -936,14 +836,23 @@ msgstr "文書タイプ"
 #~ msgid "User"
 #~ msgstr "ユーザ"
 
+#~ msgid "Data"
+#~ msgstr "データ"
+
 #~ msgid "Files By Users"
 #~ msgstr "ユーザ別のファイル"
 
 #~ msgid "Related to"
 #~ msgstr "次に関連"
 
+#~ msgid "Read Only"
+#~ msgstr "読取り専用"
+
 #~ msgid "Dashboard"
 #~ msgstr "ダッシュボード"
+
+#~ msgid "Database"
+#~ msgstr "データベース"
 
 #~ msgid "Attached To"
 #~ msgstr "次に添付"
@@ -956,6 +865,12 @@ msgstr "文書タイプ"
 
 #~ msgid "Files details by Partners"
 #~ msgstr "パートナ別のファイルの詳細"
+
+#~ msgid "For file storage, the root path of the storage"
+#~ msgstr "ファイルストレージのルートパス"
+
+#~ msgid "External file storage"
+#~ msgstr "外部ファイルストレージ"
 
 #~ msgid "Files by users"
 #~ msgstr "ユーザ別のファイル"
@@ -992,9 +907,15 @@ msgstr "文書タイプ"
 #~ msgid "Indexed Content - experimental"
 #~ msgstr "索引付き内容 - 実験"
 
+#~ msgid "If set, media is for reading only"
+#~ msgstr "これを指定すると、メディアは読取りのみに設定されます。"
+
 #, python-format
 #~ msgid "(copy)"
 #~ msgstr "(コピー)"
+
+#~ msgid "The storage path must be unique!"
+#~ msgstr "ストレージパスは固有でなければいけません。"
 
 #, python-format
 #~ msgid "File name must be unique!"
@@ -1002,6 +923,9 @@ msgstr "文書タイプ"
 
 #~ msgid "Files by Resource Type"
 #~ msgstr "リソースタイプ別ファイル"
+
+#~ msgid "Internal File storage"
+#~ msgstr "内部ファイルストレージ"
 
 #~ msgid "Directory must have a parent or a storage"
 #~ msgstr "ディレクトリは親あるいはストレージを持っていなければなりません。"
@@ -1011,3 +935,8 @@ msgstr "文書タイプ"
 
 #~ msgid "Search Document storage"
 #~ msgstr "ディレクトリストレージを検索する"
+
+#~ msgid ""
+#~ "The name of the field. Note that the prefix \"dctx_\" will be prepended to "
+#~ "what is typed here."
+#~ msgstr "項目名。ここで指定したものの前に接頭語\"dctx_\"が追加されます。"

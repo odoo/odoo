@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
 "PO-Revision-Date: 2011-05-13 10:12+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Galician <gl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:48+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:59+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_sched
@@ -50,12 +50,6 @@ msgstr ""
 "Abastecemento borrador do produto e lugar para esta regra de stock mínimo."
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:290
-#, python-format
-msgid "No supplier defined for this product !"
-msgstr "Non se definiu un provedor para este produto!"
-
-#. module: procurement
 #: view:product.product:0
 msgid ""
 "required quantities are always\n"
@@ -83,10 +77,9 @@ msgid "Manufacture"
 msgstr ""
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:307
-#, python-format
-msgid "No address defined for the supplier"
-msgstr "Non se definiu un enderezo para o provedor"
+#: model:process.process,name:procurement.process_process_serviceproductprocess0
+msgid "Service"
+msgstr "Servizo"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.action_procurement_compute
@@ -111,7 +104,6 @@ msgstr "Cantidade UdV"
 
 #. module: procurement
 #: view:procurement.order:0
-#: field:procurement.order,name:0
 msgid "Reason"
 msgstr "Razón"
 
@@ -139,11 +131,6 @@ msgstr "Non se utiliza nos cálculos, só serve como información."
 #: field:stock.warehouse.orderpoint,procurement_id:0
 msgid "Latest procurement"
 msgstr "Último abastecemento"
-
-#. module: procurement
-#: view:procurement.order:0
-msgid "Notes"
-msgstr "Notas"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.action_orderpoint_form
@@ -184,6 +171,11 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: procurement
+#: view:procurement.order:0
+msgid "Permanent Procurement Exceptions"
+msgstr ""
+
+#. module: procurement
 #: help:procurement.order,message_unread:0
 msgid "If checked new messages require your attention."
 msgstr ""
@@ -199,9 +191,9 @@ msgid "Stock Move"
 msgstr "Movemento de stock"
 
 #. module: procurement
-#: model:ir.model,name:procurement.model_procurement_order_compute_all
-msgid "Compute all schedulers"
-msgstr "Calcular tódolos planificadores"
+#: view:product.product:0
+msgid "Stockable products"
+msgstr ""
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:137
@@ -245,11 +237,6 @@ msgid ""
 msgstr ""
 
 #. module: procurement
-#: view:product.product:0
-msgid "Stockable products"
-msgstr ""
-
-#. module: procurement
 #: selection:procurement.order,state:0
 msgid "Confirmed"
 msgstr "Confirmado"
@@ -258,12 +245,6 @@ msgstr "Confirmado"
 #: view:procurement.order:0
 msgid "Retry"
 msgstr "Tentar de novo"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:498
-#, python-format
-msgid "Procurement <b>confirmed</b>."
-msgstr ""
 
 #. module: procurement
 #: view:procurement.order.compute:0
@@ -301,7 +282,7 @@ msgid "Minimum Inventory Rule"
 msgstr "Regra de inventario mínimo"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:395
+#: code:addons/procurement/procurement.py:369
 #, python-format
 msgid "Procurement '%s' is in exception: "
 msgstr ""
@@ -317,9 +298,9 @@ msgid "Reordering Rules Search"
 msgstr ""
 
 #. module: procurement
-#: field:procurement.order,message_summary:0
-msgid "Summary"
-msgstr ""
+#: selection:procurement.order,state:0
+msgid "Waiting"
+msgstr "En espera..."
 
 #. module: procurement
 #: field:procurement.order,message_follower_ids:0
@@ -388,7 +369,7 @@ msgid "Quantity"
 msgstr "Cantidade"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:390
+#: code:addons/procurement/procurement.py:364
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
 msgstr "Non hai stock dabondo e non se definiu unha regra de stock mínimo."
@@ -403,12 +384,6 @@ msgstr "Unidade de medida"
 #: selection:procurement.order,procure_method:0
 #: selection:product.template,procure_method:0
 msgid "Make to Stock"
-msgstr ""
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:501
-#, python-format
-msgid "Procurement <b>cancelled</b>."
 msgstr ""
 
 #. module: procurement
@@ -495,11 +470,6 @@ msgstr "Solicitude de abastecemento"
 #: view:procurement.orderpoint.compute:0
 msgid "Compute Stock"
 msgstr "Calcular stock"
-
-#. module: procurement
-#: model:process.process,name:procurement.process_process_serviceproductprocess0
-msgid "Service"
-msgstr "Servizo"
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,procurement_draft_ids:0
@@ -650,7 +620,7 @@ msgid "Is a Follower"
 msgstr ""
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:392
+#: code:addons/procurement/procurement.py:366
 #, python-format
 msgid "Not enough stock."
 msgstr "Stock insuficiente"
@@ -666,17 +636,11 @@ msgid "Procure Products"
 msgstr "Abastecer produtos"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:336
+#: code:addons/procurement/procurement.py:311
 #, python-format
 msgid ""
 "Please check the quantity in procurement order(s) for the product \"%s\", it "
 "should not be 0 or less!"
-msgstr ""
-
-#. module: procurement
-#: field:procurement.order,message_comment_ids:0
-#: help:procurement.order,message_comment_ids:0
-msgid "Comments and emails"
 msgstr ""
 
 #. module: procurement
@@ -728,15 +692,9 @@ msgid "Extra Information"
 msgstr "Información adicional"
 
 #. module: procurement
-#: help:procurement.order,name:0
-msgid "Procurement name."
-msgstr "Nome do abastecemento."
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:297
-#, python-format
-msgid "No default supplier defined for this product"
-msgstr "Non hai ningún provedor definido por defecto para este produto"
+#: field:procurement.order,message_summary:0
+msgid "Summary"
+msgstr ""
 
 #. module: procurement
 #: sql_constraint:stock.warehouse.orderpoint:0
@@ -772,7 +730,7 @@ msgid "Properties composition"
 msgstr "Propiedades composición"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:335
+#: code:addons/procurement/procurement.py:310
 #, python-format
 msgid "Data Insufficient !"
 msgstr "Datos insuficientes !"
@@ -788,12 +746,6 @@ msgstr "Grupo de propiedade"
 #: view:stock.warehouse.orderpoint:0
 msgid "Misc"
 msgstr "Varios"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:504
-#, python-format
-msgid "Procurement <b>done</b>."
-msgstr ""
 
 #. module: procurement
 #: field:stock.move,procurements:0
@@ -835,13 +787,10 @@ msgid "Not urgent"
 msgstr "Non urxente"
 
 #. module: procurement
-#: model:ir.actions.act_window,name:procurement.procurement_action5
-#: model:ir.actions.act_window,name:procurement.procurement_action_board
-#: model:ir.actions.act_window,name:procurement.procurement_exceptions
-#: model:ir.ui.menu,name:procurement.menu_stock_procurement_action
-#: view:procurement.order:0
-msgid "Procurement Exceptions"
-msgstr "Excepcións abastecemento"
+#: model:ir.actions.act_window,name:procurement.product_open_orderpoint
+#: view:product.product:0
+msgid "Orderpoints"
+msgstr ""
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,product_max_qty:0
@@ -852,9 +801,9 @@ msgid ""
 msgstr ""
 
 #. module: procurement
-#: view:procurement.order:0
-msgid "Permanent Procurement Exceptions"
-msgstr ""
+#: model:ir.model,name:procurement.model_procurement_order_compute_all
+msgid "Compute all schedulers"
+msgstr "Calcular tódolos planificadores"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -867,10 +816,13 @@ msgid "Procurements in Exception"
 msgstr "Abastecementos en excepción"
 
 #. module: procurement
-#: model:ir.actions.act_window,name:procurement.product_open_orderpoint
-#: view:product.product:0
-msgid "Orderpoints"
-msgstr ""
+#: model:ir.actions.act_window,name:procurement.procurement_action5
+#: model:ir.actions.act_window,name:procurement.procurement_action_board
+#: model:ir.actions.act_window,name:procurement.procurement_exceptions
+#: model:ir.ui.menu,name:procurement.menu_stock_procurement_action
+#: view:procurement.order:0
+msgid "Procurement Exceptions"
+msgstr "Excepcións abastecemento"
 
 #. module: procurement
 #: field:product.product,orderpoint_ids:0
@@ -915,6 +867,7 @@ msgstr "Temporal"
 #. module: procurement
 #: field:mrp.property,description:0
 #: field:mrp.property.group,description:0
+#: field:procurement.order,name:0
 msgid "Description"
 msgstr "Descrición"
 
@@ -934,11 +887,6 @@ msgstr "Executándose"
 #: selection:product.template,procure_method:0
 msgid "Make to Order"
 msgstr "Fabricado baixo pedido"
-
-#. module: procurement
-#: selection:procurement.order,state:0
-msgid "Waiting"
-msgstr "En espera..."
 
 #. module: procurement
 #: field:product.template,supply_method:0
@@ -1036,11 +984,6 @@ msgid "Automatic Orderpoint"
 msgstr "Regra de stock mínimo automática"
 
 #. module: procurement
-#: view:procurement.order:0
-msgid "Procurement Details"
-msgstr "Detalles de abastecemento"
-
-#. module: procurement
 #: help:procurement.order,message_ids:0
 msgid "Messages and communication history"
 msgstr ""
@@ -1048,12 +991,6 @@ msgstr ""
 #. module: procurement
 #: view:procurement.order:0
 msgid "Procurement started late"
-msgstr ""
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:495
-#, python-format
-msgid "Procurement <b>created</b>."
 msgstr ""
 
 #. module: procurement
@@ -1087,10 +1024,21 @@ msgid "PROC %d: on order - %3.2f %-5s - %s"
 msgstr ""
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:364
+#: code:addons/procurement/procurement.py:338
 #, python-format
 msgid "Products reserved from stock."
 msgstr ""
+
+#, python-format
+#~ msgid "No supplier defined for this product !"
+#~ msgstr "Non se definiu un provedor para este produto!"
+
+#, python-format
+#~ msgid "No address defined for the supplier"
+#~ msgstr "Non se definiu un enderezo para o provedor"
+
+#~ msgid "Notes"
+#~ msgstr "Notas"
 
 #~ msgid "on order"
 #~ msgstr "Baixo pedido"
@@ -1207,6 +1155,9 @@ msgstr ""
 #~ msgid "You try to assign a lot which is not from the same product"
 #~ msgstr "Tenta asignar un lote que non pertence ó mesmo produto."
 
+#~ msgid "Procurement name."
+#~ msgstr "Nome do abastecemento."
+
 #, python-format
 #~ msgid "Cannot delete Procurement Order(s) which are in %s State!"
 #~ msgstr ""
@@ -1227,6 +1178,10 @@ msgstr ""
 #~ msgid "The procurement quantity will by rounded up to this multiple."
 #~ msgstr ""
 #~ "A cantidade abastecida será redondeada cara arriba ata este múltiplo."
+
+#, python-format
+#~ msgid "No default supplier defined for this product"
+#~ msgstr "Non hai ningún provedor definido por defecto para este produto"
 
 #~ msgid "Current"
 #~ msgstr "Actual"
@@ -1285,6 +1240,9 @@ msgstr ""
 #, python-format
 #~ msgid "from stock: products assigned."
 #~ msgstr "desde stock: produtos asignados"
+
+#~ msgid "Procurement Details"
+#~ msgstr "Detalles de abastecemento"
 
 #~ msgid "Procurement Reason"
 #~ msgstr "Motivo do abastecemento"

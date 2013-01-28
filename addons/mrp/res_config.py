@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-import pooler
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp import pooler
+from openerp.tools.translate import _
 
 class mrp_config_settings(osv.osv_memory):
     _name = 'mrp.config.settings'
@@ -63,7 +63,7 @@ class mrp_config_settings(osv.osv_memory):
                 that will define the required raw materials."""),
         'group_mrp_properties': fields.boolean("Allow several bill of materials per products using properties",
             implied_group='product.group_mrp_properties',
-            help="""The selection of the right Bill of Material to use will depend on the  properties specified on the sale order and the Bill of Material."""),
+            help="""The selection of the right Bill of Material to use will depend on the properties specified on the sales order and the Bill of Material."""),
         'module_product_manufacturer': fields.boolean("Define manufacturers on products ",
             help="""This allows you to define the following for a product:
                     * Manufacturer

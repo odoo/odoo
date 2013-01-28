@@ -23,7 +23,7 @@
 {
     'name': 'Marketing',
     'version': '1.1',
-    'depends': ['base', 'base_setup'],
+    'depends': ['base', 'base_setup', 'crm'],
     'author': 'OpenERP SA',
     'category': 'Hidden/Dependency',
     'description': """

@@ -23,7 +23,7 @@ import base64
 import urllib2
 
 import openerp
-from osv import osv, fields
+from openerp.osv import fields, osv
 
 class Binary(openerp.addons.web.http.Controller):
     _cp_path = "/web_linkedin/binary"

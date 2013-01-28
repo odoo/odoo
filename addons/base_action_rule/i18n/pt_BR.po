@@ -7,29 +7,32 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-12-10 18:08+0000\n"
-"Last-Translator: Projetaty Soluções OpenSource <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-23 11:29+0000\n"
+"Last-Translator: Fábio Martinelli - http://zupy.com.br "
+"<webmaster@guaru.net>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-11 04:49+0000\n"
-"X-Generator: Launchpad (build 16356)\n"
+"X-Launchpad-Export-Date: 2012-12-24 04:40+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: base_action_rule
-#: field:base.action.rule,act_followers:0
-msgid "Set Followers"
-msgstr "Definir Seguidores"
+#: selection:base.action.rule.lead.test,state:0
+msgid "In Progress"
+msgstr "Em Andamento"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid ""
-"The rule uses the AND operator. The model must match all non-empty fields so "
-"that the rule executes the action  described in the 'Actions' tab."
+"- In this same \"Search\" view, select the menu \"Save Current Filter\", "
+"enter the name (Ex: Create the 01/01/2012) and add the option \"Share with "
+"all users\""
 msgstr ""
-"A regra usa o operador AND. O modelo deve corresponder a todos os campos não "
-"vazios de modo que a regra executa a ação descrita na aba 'Ações'."
+"- Nesta mesma \"Pesquisa\", selecione o menu \"Salvar Filtro Atual\", digite "
+"o nome (Ex: Criar o 01/01/2012) e adicione a opção \"Compartilhar com todos "
+"os usuários\""
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule
@@ -37,47 +40,60 @@ msgid "Action Rules"
 msgstr "Regras da Ação"
 
 #. module: base_action_rule
-#: field:base.action.rule,trg_user_id:0
+#: view:base.action.rule:0
+msgid "Select a filter or a timer as condition."
+msgstr "Escolha um filtro ou condição de tempo."
+
+#. module: base_action_rule
+#: field:base.action.rule.lead.test,user_id:0
 msgid "Responsible"
 msgstr "Responsável"
 
 #. module: base_action_rule
-#: model:ir.model,name:base_action_rule.model_ir_actions_server
-msgid "ir.actions.server"
-msgstr "ir.actions.server"
+#: help:base.action.rule,server_action_ids:0
+msgid "Examples: email reminders, call object service, etc."
+msgstr "Exemplos: lembretes de e-mail, serviço de objeto de chamada, etc"
 
 #. module: base_action_rule
-#: view:base.action.rule:0
-msgid "Note"
-msgstr "Nota"
+#: field:base.action.rule,act_followers:0
+msgid "Add Followers"
+msgstr "Adicionar Seguidores"
 
 #. module: base_action_rule
-#: field:base.action.rule,trg_partner_categ_id:0
-msgid "Partner Category"
-msgstr "Categoria do Parceiro"
+#: field:base.action.rule,act_user_id:0
+msgid "Set Responsible"
+msgstr "Definir Responsável"
 
 #. module: base_action_rule
-#: view:base.action.rule:0
+#: help:base.action.rule,trg_date_range:0
 msgid ""
-"Server Actions to be Triggered (eg. Email Reminder, Call Object Method, "
-"etc...)"
+"Delay after the trigger date.You can put a negative number if you need a "
+"delay before thetrigger date, like sending a reminder 15 minutes before a "
+"meeting."
 msgstr ""
-"Ações de servidor a serem disparadas(ex: Emails, chamar métodos de objetos, "
-"etc...)"
+"Atraso após a data de disparo. Você pode colocar um número negativo se você "
+"precisa de um atraso antes da data de disparo, como o envio de um lembrete "
+"15 minutos antes de uma reunião."
+
+#. module: base_action_rule
+#: model:ir.model,name:base_action_rule.model_base_action_rule_lead_test
+msgid "base.action.rule.lead.test"
+msgstr "base.action.rule.lead.test"
+
+#. module: base_action_rule
+#: selection:base.action.rule.lead.test,state:0
+msgid "Closed"
+msgstr "Fechado"
+
+#. module: base_action_rule
+#: selection:base.action.rule.lead.test,state:0
+msgid "New"
+msgstr "Novo"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_range:0
 msgid "Delay after trigger date"
-msgstr "Atraso após a data do disparador"
-
-#. module: base_action_rule
-#: help:base.action.rule,active:0
-msgid ""
-"If the active field is set to False, it will allow you to hide the rule "
-"without removing it."
-msgstr ""
-"Se o campo ativo é definido como False, ele permitirá que você esconda a "
-"regra sem removê-lo."
+msgstr "Atraso após a data de disparo"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -85,15 +101,31 @@ msgid "Conditions"
 msgstr "Condições"
 
 #. module: base_action_rule
-#: field:base.action.rule,trg_state_from:0
+#: selection:base.action.rule.lead.test,state:0
+msgid "Pending"
+msgstr "Pendente"
+
+#. module: base_action_rule
+#: field:base.action.rule.lead.test,state:0
 msgid "Status"
-msgstr "Estado"
+msgstr "Situação"
+
+#. module: base_action_rule
+#: field:base.action.rule,filter_pre_id:0
+msgid "Before Update Filter"
+msgstr "Antes de Atualizar o Filtro"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
-#: field:ir.actions.server,action_rule_id:0
 msgid "Action Rule"
 msgstr "Ações Automáticas"
+
+#. module: base_action_rule
+#: help:base.action.rule,filter_id:0
+msgid ""
+"If present, this condition must be satisfied after the update of the record."
+msgstr ""
+"Se marcado, esta condição deve ser satisfeita após a atualização do registro."
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -101,19 +133,14 @@ msgid "Fields to Change"
 msgstr "Campos para Mudar"
 
 #. module: base_action_rule
-#: field:base.action.rule,trg_state_to:0
-msgid "Button Pressed"
-msgstr "Botão Pressionado"
-
-#. module: base_action_rule
 #: view:base.action.rule:0
-msgid "Conditions on Status"
-msgstr "Condições no Estado"
+msgid "The filter must therefore be available in this page."
+msgstr "O filtro deve estar disponível nesta página."
 
 #. module: base_action_rule
-#: selection:base.action.rule,trg_date_type:0
-msgid "Last Action Date"
-msgstr "Data da Última Ação"
+#: field:base.action.rule,filter_id:0
+msgid "After Update Filter"
+msgstr "Após Atualização do Filtro"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -121,39 +148,15 @@ msgid "Hours"
 msgstr "Horas"
 
 #. module: base_action_rule
-#: field:base.action.rule,act_state:0
-msgid "Set State to"
-msgstr "Mudar Situação para"
+#: view:base.action.rule:0
+msgid "To create a new filter:"
+msgstr "Para criar um novo filtro:"
 
 #. module: base_action_rule
-#: help:base.action.rule,server_action_ids:0
-msgid ""
-"Define Server actions.\n"
-"eg:Email Reminders, Call Object Service, etc.."
-msgstr ""
-"Define ações de servidor.\n"
-"Ex: Emails, Chamar serviço de objeto, etc..."
-
-#. module: base_action_rule
-#: help:base.action.rule,trg_date_range:0
-msgid ""
-"Delay After Trigger Date,specifies you can put a negative number. If you "
-"need a delay before the trigger date, like sending a reminder 15 minutes "
-"before a meeting."
-msgstr ""
-"Atraso depois da Data de Disparo, você pode colocar um número negativo. Se "
-"você precisar de um atraso antes da data de disparo, como o envio de um "
-"lembrete 15 minutos antes de uma reunião."
-
-#. module: base_action_rule
-#: model:ir.model,name:base_action_rule.model_ir_cron
-msgid "ir.cron"
-msgstr "ir.cron"
-
-#. module: base_action_rule
-#: selection:base.action.rule,trg_date_type:0
-msgid "Date"
-msgstr "Data"
+#: field:base.action.rule,active:0
+#: field:base.action.rule.lead.test,active:0
+msgid "Active"
+msgstr "Ativa"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -161,19 +164,39 @@ msgid "Delay After Trigger Date"
 msgstr "Atraso depois da Data de Disparo"
 
 #. module: base_action_rule
-#: field:base.action.rule,act_user_id:0
-msgid "Set Responsible to"
-msgstr "Mudar Responsável para"
+#: view:base.action.rule:0
+msgid ""
+"An action rule is checked when you create or modify the \"Related Document "
+"Model\". The precondition filter is checked right before the modification "
+"while the postcondition filter is checked after the modification. A "
+"precondition filter will therefore not work during a creation."
+msgstr ""
+"Uma regra de ação é verificado quando você criar ou modificar o \"Modelo de "
+"Documentos Relacionados\". O filtro pré-condição é verificado logo antes da "
+"modificação, enquanto o filtro de pós-condição é verificado após a "
+"modificação. Um filtro de pré-condição, portanto, não funciona durante uma "
+"criação."
 
 #. module: base_action_rule
-#: selection:base.action.rule,trg_date_type:0
-msgid "None"
-msgstr "Nenhum"
+#: view:base.action.rule:0
+msgid "Filter Condition"
+msgstr "Condição do Filtro"
 
 #. module: base_action_rule
-#: selection:base.action.rule,trg_date_range_type:0
-msgid "Months"
-msgstr "Meses"
+#: view:base.action.rule:0
+msgid ""
+"- Go to your \"Related Document Model\" page and set the filter parameters "
+"in the \"Search\" view (Example of filter based on Leads/Opportunities: "
+"Creation Date \"is equal to\" 01/01/2012)"
+msgstr ""
+"- Vá para a página de \"Modelo de Documento Relacionado\" e defina os "
+"parâmetros do filtro na visão \"Procurar\" (Exemplo de filtro com base em "
+"Prospectos / Oportunidades: Data da Criação \" é igual a \" 01/01/2012)"
+
+#. module: base_action_rule
+#: field:base.action.rule,name:0
+msgid "Rule Name"
+msgstr "Nome da Regra"
 
 #. module: base_action_rule
 #: model:ir.actions.act_window,name:base_action_rule.base_action_rule_act
@@ -182,24 +205,14 @@ msgid "Automated Actions"
 msgstr "Ações Automatizadas"
 
 #. module: base_action_rule
-#: field:base.action.rule,model_id:0
-msgid "Related Document Model"
-msgstr "Modelo de Documento Relacionado"
-
-#. module: base_action_rule
 #: help:base.action.rule,sequence:0
 msgid "Gives the sequence order when displaying a list of rules."
-msgstr "Define a ordem de sequência para mostrar a lista de regras."
+msgstr "Define a sequência ao exibir a lista de regras."
 
 #. module: base_action_rule
-#: view:base.action.rule:0
-msgid "Conditions on Model Fields"
-msgstr "Condições no Campo de Modelo"
-
-#. module: base_action_rule
-#: field:base.action.rule,server_action_ids:0
-msgid "Server Action"
-msgstr "Ação de Servidor"
+#: selection:base.action.rule,trg_date_range_type:0
+msgid "Months"
+msgstr "Meses"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -207,29 +220,29 @@ msgid "Days"
 msgstr "Dias"
 
 #. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Timer"
+msgstr "Contador"
+
+#. module: base_action_rule
 #: field:base.action.rule,trg_date_range_type:0
 msgid "Delay type"
 msgstr "Tipo de atraso"
 
 #. module: base_action_rule
-#: field:base.action.rule,filter_id:0
-msgid "Filter"
-msgstr "Filtro"
+#: view:base.action.rule:0
+msgid "Server actions to run"
+msgstr "Ações do servidor a serem executadas"
 
 #. module: base_action_rule
-#: field:base.action.rule,active:0
-msgid "Active"
-msgstr "Ativo"
+#: help:base.action.rule,active:0
+msgid "When unchecked, the rule is hidden and will not be executed."
+msgstr "Quando desmarcado, esta regra é oculta e não será executada."
 
 #. module: base_action_rule
-#: field:base.action.rule,regex_name:0
-msgid "Regex on Resource Name"
-msgstr "Regex no Nome do Recurso"
-
-#. module: base_action_rule
-#: selection:base.action.rule,trg_date_type:0
-msgid "Last Modified Date"
-msgstr "Data da ultima alteração"
+#: selection:base.action.rule.lead.test,state:0
+msgid "Cancelled"
+msgstr "Cancelado"
 
 #. module: base_action_rule
 #: field:base.action.rule,model:0
@@ -247,37 +260,22 @@ msgid "Minutes"
 msgstr "Minutos"
 
 #. module: base_action_rule
-#: help:base.action.rule,regex_name:0
+#: field:base.action.rule,model_id:0
+msgid "Related Document Model"
+msgstr "Modelo de Documento Relacionado"
+
+#. module: base_action_rule
+#: help:base.action.rule,filter_pre_id:0
 msgid ""
-"Regular expression for matching name of the resource\n"
-"e.g.: 'urgent.*' will search for records having name starting with the "
-"string 'urgent'\n"
-"Note: This is case sensitive search."
+"If present, this condition must be satisfied before the update of the record."
 msgstr ""
-"Expressão normal para encontrar o nome do recurso\n"
-"Ex.: 'urgente.*' irá procurar pelos registros que tem o nome começando com "
-"'urgente'\n"
-"Obs.: Esta procura diferencia maiúsculo e minúsculo."
-
-#. module: base_action_rule
-#: view:base.action.rule:0
-msgid "Conditions on Timing"
-msgstr "Condições de Tempo"
-
-#. module: base_action_rule
-#: field:base.action.rule,name:0
-msgid "Rule Name"
-msgstr "Nome da Regra"
+"Se presente, esta condição precisa ser satisfeita antes da atualização do "
+"registro."
 
 #. module: base_action_rule
 #: field:base.action.rule,sequence:0
 msgid "Sequence"
 msgstr "Sequência"
-
-#. module: base_action_rule
-#: view:base.action.rule:0
-msgid "Conditions on Model Partner"
-msgstr "Condições no Modelo de Parceiro"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -301,23 +299,20 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Clique para configurar uma nova regra de ação automatica. \n"
+"                Clique para configurar uma nova regra de ação automatizada. "
+"\n"
 "              </p><p>\n"
-"                Use ações automáticas para automaticamente criar gatilhos de "
-"ações para\n"
-"                várias telas. Examplo: uma prospecção é criada por um dado "
-"usuário que poderá ser automáticamente \n"
-"               atribuído para a equipe de vendas, ou uma\n"
-"                oportunidade na qual continua o status de pendente após 14 "
-"dias e seja interessante disparar um e-mail\n"
-"                automático de notificação.\n"
+"                Use ações automáticas para criar disparos de ações para "
+"várias telas.\n"
+"                Exemplo: um prospecto criado por um determinado usuário "
+"poderá ser atribuído\n"
+"                automaticamente para uma equipe de vendas específica, ou "
+"uma\n"
+"                oportunidade na qual a situação continua pendente após 14 "
+"dias e seja interessante enviar um e-mail\n"
+"                automático de lembrete.\n"
 "              </p>\n"
 "            "
-
-#. module: base_action_rule
-#: selection:base.action.rule,trg_date_type:0
-msgid "Creation Date"
-msgstr "Data de Criação"
 
 #. module: base_action_rule
 #: field:base.action.rule,create_date:0
@@ -325,24 +320,33 @@ msgid "Create Date"
 msgstr "Criar Data"
 
 #. module: base_action_rule
-#: selection:base.action.rule,trg_date_type:0
-msgid "Deadline"
-msgstr "Prazo Final"
+#: field:base.action.rule.lead.test,date_action_last:0
+msgid "Last Action"
+msgstr "Última Ação"
 
 #. module: base_action_rule
-#: field:base.action.rule,trg_partner_id:0
+#: field:base.action.rule.lead.test,partner_id:0
 msgid "Partner"
 msgstr "Parceiro"
 
 #. module: base_action_rule
-#: field:base.action.rule,trg_date_type:0
+#: field:base.action.rule,trg_date_id:0
 msgid "Trigger Date"
 msgstr "Data de Disparo"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
+#: field:base.action.rule,server_action_ids:0
 msgid "Server Actions"
 msgstr "Ações no Servidor"
+
+#. module: base_action_rule
+#: field:base.action.rule.lead.test,name:0
+msgid "Subject"
+msgstr "Assunto"
+
+#~ msgid "Button Pressed"
+#~ msgstr "Botão Pressionado"
 
 #~ msgid "Email From"
 #~ msgstr "Email de"
@@ -353,6 +357,9 @@ msgstr "Ações no Servidor"
 #~ msgid "Remind Partner"
 #~ msgstr "Lembrar Parceiro"
 
+#~ msgid "Partner Category"
+#~ msgstr "Categoria do Parceiro"
+
 #, python-format
 #~ msgid "Error!"
 #~ msgstr "Erro!"
@@ -360,8 +367,26 @@ msgstr "Ações no Servidor"
 #~ msgid "Reply-To"
 #~ msgstr "Responder-Para"
 
+#~ msgid "Creation Date"
+#~ msgstr "Data de Criação"
+
+#~ msgid "Last Action Date"
+#~ msgstr "Data da Última Ação"
+
+#~ msgid "None"
+#~ msgstr "Nenhum"
+
+#~ msgid "Note"
+#~ msgstr "Nota"
+
+#~ msgid "Date"
+#~ msgstr "Data"
+
 #~ msgid "Mail body"
 #~ msgstr "Corpo da mensagem"
+
+#~ msgid "Server Action"
+#~ msgstr "Ação de Servidor"
 
 #~ msgid ""
 #~ "Check this if you want the rule to send a reminder by email to the user."
@@ -393,6 +418,9 @@ msgstr "Ações no Servidor"
 #~ msgstr ""
 #~ "Use uma expressão python para especificar o campo correto que será usado "
 #~ "para o campo 'Para' do cabeçalho"
+
+#~ msgid "Set Responsible to"
+#~ msgstr "Mudar Responsável para"
 
 #~ msgid "%(object_id)s = Object ID"
 #~ msgstr "%(object_id)s = Objeto ID"
@@ -462,6 +490,9 @@ msgstr "Ações no Servidor"
 #~ "Descreve o nome da ação.\n"
 #~ "Ex.: Em qual objeto qual ação será tomada com base em qual condição"
 
+#~ msgid "ir.cron"
+#~ msgstr "ir.cron"
+
 #~ msgid "Remind Responsible"
 #~ msgstr "Responsável pelo Lembrete"
 
@@ -497,8 +528,14 @@ msgstr "Ações no Servidor"
 #~ msgid "Mail to Watchers (CC)"
 #~ msgstr "Email para Observadores (CC)"
 
+#~ msgid "Conditions on Model Partner"
+#~ msgstr "Condições no Modelo de Parceiro"
+
 #~ msgid "Mail to these Emails"
 #~ msgstr "Enviar para estes Emails"
+
+#~ msgid "Set State to"
+#~ msgstr "Mudar Situação para"
 
 #~ msgid "Special Keywords to Be Used in The Body"
 #~ msgstr "Palavras-chave especiais a serem utilizadas no corpo"
@@ -518,6 +555,31 @@ msgstr "Ações no Servidor"
 #~ "oportunidade que ainda está pendente após 14 dias pode enviar um e-mail de "
 #~ "lembrete automáticamente."
 
+#~ msgid "Conditions on Timing"
+#~ msgstr "Condições de Tempo"
+
+#~ msgid ""
+#~ "If the active field is set to False, it will allow you to hide the rule "
+#~ "without removing it."
+#~ msgstr ""
+#~ "Se o campo ativo é definido como False, ele permitirá que você esconda a "
+#~ "regra sem removê-lo."
+
+#~ msgid "Conditions on Model Fields"
+#~ msgstr "Condições no Campo de Modelo"
+
+#~ msgid "Regex on Resource Name"
+#~ msgstr "Regex no Nome do Recurso"
+
+#~ msgid ""
+#~ "Delay After Trigger Date,specifies you can put a negative number. If you "
+#~ "need a delay before the trigger date, like sending a reminder 15 minutes "
+#~ "before a meeting."
+#~ msgstr ""
+#~ "Atraso depois da Data de Disparo, você pode colocar um número negativo. Se "
+#~ "você precisar de um atraso antes da data de disparo, como o envio de um "
+#~ "lembrete 15 minutos antes de uma reunião."
+
 #~ msgid "Conditions on States"
 #~ msgstr "Condições nas Situações"
 
@@ -530,8 +592,25 @@ msgstr "Ações no Servidor"
 #~ "Selecione aqui se quiser a regra para enviar um aviso por e-mail para o "
 #~ "parceiro."
 
+#~ msgid "Deadline"
+#~ msgstr "Prazo Final"
+
 #~ msgid "%(object_subject)s = Object subject"
 #~ msgstr "%(object_subject)s = Assunto do Objeto"
 
 #~ msgid "State"
 #~ msgstr "Situação"
+
+#~ msgid "Filter"
+#~ msgstr "Filtrar"
+
+#~ msgid ""
+#~ "Regular expression for matching name of the resource\n"
+#~ "e.g.: 'urgent.*' will search for records having name starting with the "
+#~ "string 'urgent'\n"
+#~ "Note: This is case sensitive search."
+#~ msgstr ""
+#~ "Expressão Regular para encontrar o nome do recurso\n"
+#~ "Ex.: 'urgente.*' irá procurar pelos registros que tem o nome começando com "
+#~ "'urgente'\n"
+#~ "Obs.: Esta procura diferencia maiúsculo e minúsculo."

@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:04+0000\n"
-"PO-Revision-Date: 2012-10-17 00:36+0000\n"
-"Last-Translator: Syllas F. de O. Neto <syllasneto@gmail.com>\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2012-12-23 14:28+0000\n"
+"Last-Translator: Fábio Martinelli - http://zupy.com.br "
+"<webmaster@guaru.net>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:51+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-24 04:40+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: project_long_term
 #: help:project.phase,constraint_date_end:0
@@ -34,6 +35,14 @@ msgstr "Em Andamento"
 #: view:project.project:0
 msgid "Phases"
 msgstr "Fases"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
+#: model:ir.ui.menu,name:project_long_term.menu_resouce_allocation
+#: view:project.phase:0
+#: view:project.user.allocation:0
+msgid "Team Planning"
+msgstr "Planejamento de Equipe"
 
 #. module: project_long_term
 #: field:project.phase,user_ids:0
@@ -83,12 +92,12 @@ msgstr "Planejar Fases"
 #: view:project.phase:0
 #: field:project.phase,state:0
 msgid "Status"
-msgstr ""
+msgstr "Situação"
 
 #. module: project_long_term
 #: field:project.compute.phases,target_project:0
 msgid "Action"
-msgstr ""
+msgstr "Ação"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -109,7 +118,7 @@ msgstr "Provisório"
 #: view:project.compute.phases:0
 #: view:project.compute.tasks:0
 msgid "C_ompute"
-msgstr "C_alcular"
+msgstr "(o) Calcular"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -120,7 +129,7 @@ msgstr "Novo"
 #. module: project_long_term
 #: field:project.phase,product_uom:0
 msgid "Duration Unit of Measure"
-msgstr ""
+msgstr "Duração da Unidade de Medida"
 
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar_leaves
@@ -144,22 +153,16 @@ msgid "In Progress Phases"
 msgstr "Fases em Progresso"
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:141
+#: code:addons/project_long_term/project_long_term.py:140
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (cópia)"
 
 #. module: project_long_term
 #: code:addons/project_long_term/wizard/project_compute_phases.py:48
 #, python-format
 msgid "Please specify a project to schedule."
 msgstr "Por favor especifique um projeto para agendar"
-
-#. module: project_long_term
-#: view:project.compute.phases:0
-#: view:project.compute.tasks:0
-msgid "or"
-msgstr ""
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -181,28 +184,25 @@ msgstr "Data Inicial Mínima"
 #: help:project.phase,product_uom:0
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for Duration"
-msgstr ""
+msgstr "Unidade de Medida (UdM) é a unidade de medida para Duração"
 
 #. module: project_long_term
 #: help:project.phase,user_ids:0
 msgid ""
 "The resources on the project can be computed automatically by the scheduler."
 msgstr ""
+"Os recursos sobre o projeto podem ser calculados automaticamente pelo "
+"agendador."
 
 #. module: project_long_term
 #: field:project.phase,sequence:0
 msgid "Sequence"
-msgstr "Sequência"
+msgstr "Seqüência"
 
 #. module: project_long_term
 #: help:account.analytic.account,use_phases:0
 msgid "Check this field if you plan to use phase-based scheduling"
-msgstr ""
-
-#. module: project_long_term
-#: help:project.user.allocation,date_start:0
-msgid "Starting Date"
-msgstr "Data Inicial"
+msgstr "Marque esta caixa se você deseja usar o agendamento baseado em fases"
 
 #. module: project_long_term
 #: help:project.phase,state:0
@@ -213,6 +213,10 @@ msgid ""
 "           \n"
 " If the phase is over, the status is set to 'Done'."
 msgstr ""
+"Quando a fase é criada a situação é 'Provisória'.\n"
+"Quando a fase é iniciada, o situação muda para 'Em andamento'.\n"
+"Se for necessário uma revisão na fase a situação fica como 'Pendente'.\n"
+"Quando a fase termina, a situação fica como 'Concluído'."
 
 #. module: project_long_term
 #: field:project.phase,progress:0
@@ -252,10 +256,9 @@ msgid "Pending Phases"
 msgstr "Fases Pendentes"
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:126
-#, python-format
-msgid "Day"
-msgstr "Dia"
+#: help:project.user.allocation,date_start:0
+msgid "Starting Date"
+msgstr "Data Inicial"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -319,7 +322,7 @@ msgstr "Detalhes das Tarefas"
 #. module: project_long_term
 #: field:project.project,phase_count:0
 msgid "Open Phases"
-msgstr ""
+msgstr "Fases Abertas"
 
 #. module: project_long_term
 #: help:project.phase,date_end:0
@@ -416,7 +419,7 @@ msgstr "Dá a ordem da seqüência ao exibir uma lista de fases."
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.project_phase_task_list
 msgid "Tasks"
-msgstr ""
+msgstr "Tarefas"
 
 #. module: project_long_term
 #: help:project.user.allocation,date_end:0
@@ -461,7 +464,7 @@ msgstr "Mês"
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_account_analytic_account
 msgid "Analytic Account"
-msgstr ""
+msgstr "Conta Analítica"
 
 #. module: project_long_term
 #: field:project.phase,constraint_date_end:0
@@ -513,12 +516,10 @@ msgid "Name"
 msgstr "Nome"
 
 #. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
-#: model:ir.ui.menu,name:project_long_term.menu_resouce_allocation
-#: view:project.phase:0
-#: view:project.user.allocation:0
-msgid "Planning of Users"
-msgstr "Planejamento de Usuários"
+#: view:project.compute.phases:0
+#: view:project.compute.tasks:0
+msgid "or"
+msgstr "ou"
 
 #~ msgid "Schedule"
 #~ msgstr "Agendar"
@@ -537,6 +538,10 @@ msgstr "Planejamento de Usuários"
 
 #~ msgid "UoM (Unit of Measure) is the unit of measurement for Duration"
 #~ msgstr "UdM (Unidade de Medida) é a unidade de medida para Duração"
+
+#, python-format
+#~ msgid "Day"
+#~ msgstr "Dia"
 
 #~ msgid "Error! You cannot assign escalation to the same project!"
 #~ msgstr "Erro! Você não pode atribuir escalas para o mesmo projeto!"
@@ -640,6 +645,9 @@ msgstr "Planejamento de Usuários"
 
 #~ msgid "Displaying settings"
 #~ msgstr "Mostrando configurações"
+
+#~ msgid "Planning of Users"
+#~ msgstr "Planejamento de Usuários"
 
 #~ msgid "Error ! Task end-date must be greater then task start-date"
 #~ msgstr "Erro ! A data final deve ser maior do que a data inicial"

@@ -22,7 +22,7 @@
 #
 ##############################################################################
 
-from report import report_sxw
+from openerp.report import report_sxw
 
 class fiche_paye_parser(report_sxw.rml_parse):
 

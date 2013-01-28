@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from osv import fields, osv
+from openerp.osv import fields, osv
 
 class company_pad(osv.osv):
     _inherit = 'res.company'

@@ -22,10 +22,10 @@
 
 import re
 import time
-import tools
+from openerp import tools
 
-from osv import osv, fields
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class crm_lead_forward_to_partner(osv.osv_memory):
     """ Forward info history to partners. """

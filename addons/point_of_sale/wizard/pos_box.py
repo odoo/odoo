@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
-from tools.translate import _
-from osv import osv, fields
-from account.wizard.pos_box import CashBox
+from openerp.osv import osv, fields
+from openerp.tools.translate import _
+
+from openerp.addons.account.wizard.pos_box import CashBox
 
 class PosBox(CashBox):
     _register = False

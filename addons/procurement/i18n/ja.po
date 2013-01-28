@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
 "PO-Revision-Date: 2012-06-08 03:00+0000\n"
 "Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:48+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:59+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_sched
@@ -48,12 +48,6 @@ msgid "Draft procurement of the product and location of that orderpoint"
 msgstr "ドラフトの製品の調達とその発注点の場所"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:290
-#, python-format
-msgid "No supplier defined for this product !"
-msgstr "この製品には仕入先が定義されていません。"
-
-#. module: procurement
 #: view:product.product:0
 msgid ""
 "required quantities are always\n"
@@ -81,10 +75,9 @@ msgid "Manufacture"
 msgstr ""
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:307
-#, python-format
-msgid "No address defined for the supplier"
-msgstr "仕入先の住所が定義されていません。"
+#: model:process.process,name:procurement.process_process_serviceproductprocess0
+msgid "Service"
+msgstr "サービス"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.action_procurement_compute
@@ -109,7 +102,6 @@ msgstr "販売単位の数量"
 
 #. module: procurement
 #: view:procurement.order:0
-#: field:procurement.order,name:0
 msgid "Reason"
 msgstr "理由"
 
@@ -137,11 +129,6 @@ msgstr "情報目的のみであるため、計算には使用されません。
 #: field:stock.warehouse.orderpoint,procurement_id:0
 msgid "Latest procurement"
 msgstr "最新の調達"
-
-#. module: procurement
-#: view:procurement.order:0
-msgid "Notes"
-msgstr "注記"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.action_orderpoint_form
@@ -178,6 +165,11 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: procurement
+#: view:procurement.order:0
+msgid "Permanent Procurement Exceptions"
+msgstr "継続する調達の例外"
+
+#. module: procurement
 #: help:procurement.order,message_unread:0
 msgid "If checked new messages require your attention."
 msgstr ""
@@ -193,9 +185,9 @@ msgid "Stock Move"
 msgstr "在庫移動"
 
 #. module: procurement
-#: model:ir.model,name:procurement.model_procurement_order_compute_all
-msgid "Compute all schedulers"
-msgstr "全スケジュールを計算"
+#: view:product.product:0
+msgid "Stockable products"
+msgstr ""
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:137
@@ -239,11 +231,6 @@ msgid ""
 msgstr ""
 
 #. module: procurement
-#: view:product.product:0
-msgid "Stockable products"
-msgstr ""
-
-#. module: procurement
 #: selection:procurement.order,state:0
 msgid "Confirmed"
 msgstr "確認済"
@@ -252,12 +239,6 @@ msgstr "確認済"
 #: view:procurement.order:0
 msgid "Retry"
 msgstr "再試行"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:498
-#, python-format
-msgid "Procurement <b>confirmed</b>."
-msgstr ""
 
 #. module: procurement
 #: view:procurement.order.compute:0
@@ -295,7 +276,7 @@ msgid "Minimum Inventory Rule"
 msgstr "最小在庫ルール"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:395
+#: code:addons/procurement/procurement.py:369
 #, python-format
 msgid "Procurement '%s' is in exception: "
 msgstr "調達 %s は例外です： "
@@ -311,9 +292,9 @@ msgid "Reordering Rules Search"
 msgstr ""
 
 #. module: procurement
-#: field:procurement.order,message_summary:0
-msgid "Summary"
-msgstr ""
+#: selection:procurement.order,state:0
+msgid "Waiting"
+msgstr "待機中"
 
 #. module: procurement
 #: field:procurement.order,message_follower_ids:0
@@ -382,7 +363,7 @@ msgid "Quantity"
 msgstr "数量"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:390
+#: code:addons/procurement/procurement.py:364
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
 msgstr "十分な在庫がなく、かつ最小発注点ルールが定義されていません。"
@@ -397,12 +378,6 @@ msgstr "単位"
 #: selection:procurement.order,procure_method:0
 #: selection:product.template,procure_method:0
 msgid "Make to Stock"
-msgstr ""
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:501
-#, python-format
-msgid "Procurement <b>cancelled</b>."
 msgstr ""
 
 #. module: procurement
@@ -487,11 +462,6 @@ msgstr "調達要求"
 #: view:procurement.orderpoint.compute:0
 msgid "Compute Stock"
 msgstr "在庫計算"
-
-#. module: procurement
-#: model:process.process,name:procurement.process_process_serviceproductprocess0
-msgid "Service"
-msgstr "サービス"
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,procurement_draft_ids:0
@@ -638,7 +608,7 @@ msgid "Is a Follower"
 msgstr ""
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:392
+#: code:addons/procurement/procurement.py:366
 #, python-format
 msgid "Not enough stock."
 msgstr "十分な在庫ではありません。"
@@ -654,17 +624,11 @@ msgid "Procure Products"
 msgstr "調達製品"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:336
+#: code:addons/procurement/procurement.py:311
 #, python-format
 msgid ""
 "Please check the quantity in procurement order(s) for the product \"%s\", it "
 "should not be 0 or less!"
-msgstr ""
-
-#. module: procurement
-#: field:procurement.order,message_comment_ids:0
-#: help:procurement.order,message_comment_ids:0
-msgid "Comments and emails"
 msgstr ""
 
 #. module: procurement
@@ -716,15 +680,9 @@ msgid "Extra Information"
 msgstr "追加情報"
 
 #. module: procurement
-#: help:procurement.order,name:0
-msgid "Procurement name."
-msgstr "調達名"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:297
-#, python-format
-msgid "No default supplier defined for this product"
-msgstr "この製品には仕入先が定義されていません。"
+#: field:procurement.order,message_summary:0
+msgid "Summary"
+msgstr ""
 
 #. module: procurement
 #: sql_constraint:stock.warehouse.orderpoint:0
@@ -760,7 +718,7 @@ msgid "Properties composition"
 msgstr "属性の構成"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:335
+#: code:addons/procurement/procurement.py:310
 #, python-format
 msgid "Data Insufficient !"
 msgstr "データが不足しています。"
@@ -776,12 +734,6 @@ msgstr "属性グループ"
 #: view:stock.warehouse.orderpoint:0
 msgid "Misc"
 msgstr "その他"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:504
-#, python-format
-msgid "Procurement <b>done</b>."
-msgstr ""
 
 #. module: procurement
 #: field:stock.move,procurements:0
@@ -823,13 +775,10 @@ msgid "Not urgent"
 msgstr "緊急外"
 
 #. module: procurement
-#: model:ir.actions.act_window,name:procurement.procurement_action5
-#: model:ir.actions.act_window,name:procurement.procurement_action_board
-#: model:ir.actions.act_window,name:procurement.procurement_exceptions
-#: model:ir.ui.menu,name:procurement.menu_stock_procurement_action
-#: view:procurement.order:0
-msgid "Procurement Exceptions"
-msgstr "調達の例外"
+#: model:ir.actions.act_window,name:procurement.product_open_orderpoint
+#: view:product.product:0
+msgid "Orderpoints"
+msgstr ""
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,product_max_qty:0
@@ -840,9 +789,9 @@ msgid ""
 msgstr ""
 
 #. module: procurement
-#: view:procurement.order:0
-msgid "Permanent Procurement Exceptions"
-msgstr "継続する調達の例外"
+#: model:ir.model,name:procurement.model_procurement_order_compute_all
+msgid "Compute all schedulers"
+msgstr "全スケジュールを計算"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -855,10 +804,13 @@ msgid "Procurements in Exception"
 msgstr "調達の例外"
 
 #. module: procurement
-#: model:ir.actions.act_window,name:procurement.product_open_orderpoint
-#: view:product.product:0
-msgid "Orderpoints"
-msgstr ""
+#: model:ir.actions.act_window,name:procurement.procurement_action5
+#: model:ir.actions.act_window,name:procurement.procurement_action_board
+#: model:ir.actions.act_window,name:procurement.procurement_exceptions
+#: model:ir.ui.menu,name:procurement.menu_stock_procurement_action
+#: view:procurement.order:0
+msgid "Procurement Exceptions"
+msgstr "調達の例外"
 
 #. module: procurement
 #: field:product.product,orderpoint_ids:0
@@ -903,6 +855,7 @@ msgstr "一時的"
 #. module: procurement
 #: field:mrp.property,description:0
 #: field:mrp.property.group,description:0
+#: field:procurement.order,name:0
 msgid "Description"
 msgstr "説明"
 
@@ -922,11 +875,6 @@ msgstr "実行中"
 #: selection:product.template,procure_method:0
 msgid "Make to Order"
 msgstr "オーダーの作成"
-
-#. module: procurement
-#: selection:procurement.order,state:0
-msgid "Waiting"
-msgstr "待機中"
 
 #. module: procurement
 #: field:product.template,supply_method:0
@@ -1020,11 +968,6 @@ msgid "Automatic Orderpoint"
 msgstr "自動発注点"
 
 #. module: procurement
-#: view:procurement.order:0
-msgid "Procurement Details"
-msgstr "調達の詳細"
-
-#. module: procurement
 #: help:procurement.order,message_ids:0
 msgid "Messages and communication history"
 msgstr ""
@@ -1033,12 +976,6 @@ msgstr ""
 #: view:procurement.order:0
 msgid "Procurement started late"
 msgstr "遅れて開始された調達"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:495
-#, python-format
-msgid "Procurement <b>created</b>."
-msgstr ""
 
 #. module: procurement
 #: selection:mrp.property,composition:0
@@ -1071,10 +1008,21 @@ msgid "PROC %d: on order - %3.2f %-5s - %s"
 msgstr "調達 %d：オーダー中 - %3.2f %-5s - %s"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:364
+#: code:addons/procurement/procurement.py:338
 #, python-format
 msgid "Products reserved from stock."
 msgstr ""
+
+#, python-format
+#~ msgid "No supplier defined for this product !"
+#~ msgstr "この製品には仕入先が定義されていません。"
+
+#, python-format
+#~ msgid "No address defined for the supplier"
+#~ msgstr "仕入先の住所が定義されていません。"
+
+#~ msgid "Notes"
+#~ msgstr "注記"
 
 #~ msgid "Minimum Stock Rules Search"
 #~ msgstr "最小在庫ルールの検索"
@@ -1185,6 +1133,9 @@ msgstr ""
 #~ msgid "Procurement Reason"
 #~ msgstr "調達理由"
 
+#~ msgid "Procurement name."
+#~ msgstr "調達名"
+
 #~ msgid "Reference must be unique per Company!"
 #~ msgstr "参照は会社ごとに固有でなければいけません。"
 
@@ -1199,6 +1150,10 @@ msgstr ""
 
 #~ msgid "Details"
 #~ msgstr "詳細"
+
+#, python-format
+#~ msgid "No default supplier defined for this product"
+#~ msgstr "この製品には仕入先が定義されていません。"
 
 #~ msgid "Quantity Rules"
 #~ msgstr "数量のルール"
@@ -1231,6 +1186,9 @@ msgstr ""
 
 #~ msgid "Error: Invalid ean code"
 #~ msgstr "エラー：無効な商品識別番号です。"
+
+#~ msgid "Procurement Details"
+#~ msgstr "調達の詳細"
 
 #~ msgid ""
 #~ "This wizard will plan the procurement for this product. This procurement may "

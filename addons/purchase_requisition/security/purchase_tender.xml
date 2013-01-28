@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-<data noupdate="1">
+<data noupdate="0">
 
     <record model="ir.module.category" id="module_category_purchase_requisition">
         <field name="name">Purchase Requisition</field>
@@ -19,7 +19,10 @@
         <field name="implied_ids" eval="[(4, ref('group_purchase_requisition_user'))]"/>
         <field name="users" eval="[(4, ref('base.user_root'))]"/>
     </record>
-    
+
+</data>
+<data noupdate="1">
+
     <record model="ir.rule" id="purchase_requisition_comp_rule">
         <field name="name">Purchase Requisition multi-company</field>
         <field name="model_id" ref="model_purchase_requisition"/>

@@ -2,8 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2009 Fil System (<http://www.filsystem.ro>). All Rights Reserved
-#    $Id$
+#    Copyright (C) 2012 TOTAL PC SYSTEMS (<http://www.erpsystems.ro>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -19,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import res_partner
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
+import res_partner
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

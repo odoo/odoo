@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-import netsvc
-from osv import osv, fields
+from openerp import netsvc
+from openerp.osv import fields, osv
 
 class make_invoice(osv.osv_memory):
     _name = 'mrp.repair.make_invoice'
@@ -43,6 +43,7 @@ class make_invoice(osv.osv_memory):
             context = {}
         inv = self.browse(cr, uid, ids[0], context=context)
         order_obj = self.pool.get('mrp.repair')
+        mod_obj = self.pool.get('ir.model.data')
         newinv = order_obj.action_invoice_create(cr, uid, context['active_ids'],
                                                  group=inv.group,context=context)
 
@@ -53,6 +54,11 @@ class make_invoice(osv.osv_memory):
         for repair_id in context['active_ids']:
             wf_service.trg_validate(uid, 'mrp.repair', repair_id, 'action_invoice_create', cr)
 
+        form_res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
+        form_id = form_res and form_res[1] or False
+        tree_res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_tree')
+        tree_id = tree_res and tree_res[1] or Fals
+
         return {
             'domain': [('id','in', newinv.values())],
             'name': 'Invoices',
@@ -60,6 +66,7 @@ class make_invoice(osv.osv_memory):
             'view_mode': 'tree,form',
             'res_model': 'account.invoice',
             'view_id': False,
+            'views': [(tree_id, 'tree'),(form_id, 'form')],
             'context': "{'type':'out_invoice'}",
             'type': 'ir.actions.act_window'
         }

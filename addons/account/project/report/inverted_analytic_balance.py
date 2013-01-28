@@ -19,9 +19,10 @@
 #
 ##############################################################################
 
-import pooler
 import time
-from report import report_sxw
+
+from openerp import pooler
+from openerp.report import report_sxw
 
 class account_inverted_analytic_balance(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):

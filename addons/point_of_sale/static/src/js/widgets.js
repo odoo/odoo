@@ -165,6 +165,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.set_numpad_state(options.numpadState);
             this.pos.bind('change:selectedOrder', this.change_selected_order, this);
             this.bind_orderline_events();
+            this.orderlinewidgets = [];
         },
         set_numpad_state: function(numpadState) {
         	if (this.numpadState) {
@@ -210,6 +211,16 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             var self = this;
             this._super();
 
+            // freeing subwidgets
+            
+            if(this.scrollbar){
+                this.scrollbar.destroy();
+            }
+            for(var i = 0, len = this.orderlinewidgets.length; i < len; i++){
+                this.orderlinewidgets[i].destroy();
+            }
+            this.orderlinewidgets = [];
+
             if(this.display_mode === 'maximized'){
                 $('.point-of-sale .order-container').css({'bottom':'0px'});
             }else if(this.display_mode === 'actionbar'){
@@ -227,6 +238,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             	line.on('order_line_selected', self, self.update_numpad);
                 line.on('order_line_refreshed', self, self.update_summary);
                 line.appendTo($content);
+                self.orderlinewidgets.push(line);
             }, this));
             this.update_numpad();
             this.update_summary();
@@ -581,7 +593,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             var self = this;
             this._super(parent,options);
             this.model = options.model;
-            this.product_list = [];
+            this.productwidgets = [];
             this.weight = options.weight || 0;
             this.show_scale = options.show_scale || false;
             this.next_screen = options.next_screen || false;
@@ -594,7 +606,17 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         renderElement: function() {
             var self = this;
             this._super();
-            this.product_list = []; 
+
+            // free subwidgets  memory from previous renders
+            
+            for(var i = 0, len = this.productwidgets.length; i < len; i++){
+                this.productwidgets[i].destroy();
+            }
+            this.productwidgets = []; 
+            if(this.scrollbar){
+                this.scrollbar.destroy();
+            }
+
             this.pos.get('products')
                 .chain()
                 .map(function(product) {
@@ -603,7 +625,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                             weight: self.weight,
                             click_product_action: self.click_product_action,
                     })
-                    self.product_list.push(product);
+                    self.productwidgets.push(product);
                     return product;
                 })
                 .invoke('appendTo', this.$('.product-list'));

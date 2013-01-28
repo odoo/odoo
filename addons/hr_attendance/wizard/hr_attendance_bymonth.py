@@ -21,7 +21,7 @@
 
 import time
 
-from osv import osv, fields
+from openerp.osv import osv, fields
 
 class hr_attendance_bymonth(osv.osv_memory):
     _name = 'hr.attendance.month'

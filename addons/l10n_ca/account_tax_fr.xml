@@ -118,7 +118,6 @@
         <field name="amount">0.050000</field>
         <field name="type">percent</field>
         <field name="sequence">1</field>
-        <field name="include_base_amount" eval="True"/>
         <field name="account_collected_id" ref="chart2131_fr"/>
         <field name="account_paid_id" ref="chart2131_fr"/>
         <field name="base_code_id" ref="vat_code_base_receivable_tps_fr"/>
@@ -130,10 +129,10 @@
 
     <record id="tvq_sale_fr" model="account.tax.template">
         <field name="chart_template_id" ref="ca_fr_chart_template_fr"/>
-        <field name="name">TVQ sur les ventes - 9.5%</field>
+        <field name="name">TVQ sur les ventes - 9.975%</field>
         <field name="description">TVQ</field>
         <field name="type_tax_use">sale</field>
-        <field name="amount">0.095000</field>
+        <field name="amount">0.099750</field>
         <field name="type">percent</field>
         <field name="sequence">2</field>
         <field name="account_collected_id" ref="chart2132_fr"/>
@@ -388,7 +387,6 @@
         <field name="amount">0.050000</field>
         <field name="type">percent</field>
         <field name="sequence">1</field>
-        <field name="include_base_amount" eval="True"/>
         <field name="account_collected_id" ref="chart1181_fr"/>
         <field name="account_paid_id" ref="chart1181_fr"/>
         <field name="base_code_id" ref="vat_code_base_payable_tps_fr"/>
@@ -400,10 +398,10 @@
 
     <record id="tvq_purc_fr" model="account.tax.template">
         <field name="chart_template_id" ref="ca_fr_chart_template_fr"/>
-        <field name="name">TVQ sur les achats - 9.5%</field>
+        <field name="name">TVQ sur les achats - 9.975%</field>
         <field name="description">TVQ</field>
         <field name="type_tax_use">purchase</field>
-        <field name="amount">0.095000</field>
+        <field name="amount">0.099750</field>
         <field name="type">percent</field>
         <field name="sequence">2</field>
         <field name="account_collected_id" ref="chart1182_fr"/>

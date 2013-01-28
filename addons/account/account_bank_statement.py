@@ -21,9 +21,9 @@
 
 import time
 
-from osv import fields, osv
-from tools.translate import _
-import decimal_precision as dp
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+import openerp.addons.decimal_precision as dp
 
 class account_bank_statement(osv.osv):
     def create(self, cr, uid, vals, context=None):
@@ -439,10 +439,11 @@ class account_bank_statement(osv.osv):
         for st in self.browse(cr, uid, ids, context=context):
             if st.state=='draft':
                 continue
-            ids = []
+            move_ids = []
             for line in st.line_ids:
-                ids += [x.id for x in line.move_ids]
-            account_move_obj.unlink(cr, uid, ids, context)
+                move_ids += [x.id for x in line.move_ids]
+            account_move_obj.button_cancel(cr, uid, move_ids, context=context)
+            account_move_obj.unlink(cr, uid, move_ids, context)
             done.append(st.id)
         return self.write(cr, uid, done, {'state':'draft'}, context=context)
 
@@ -546,7 +547,7 @@ class account_bank_statement_line(osv.osv):
     _name = "account.bank.statement.line"
     _description = "Bank Statement Line"
     _columns = {
-        'name': fields.char('Communication', required=True),
+        'name': fields.char('OBI', required=True, help="Originator to Beneficiary Information"),
         'date': fields.date('Date', required=True),
         'amount': fields.float('Amount', digits_compute=dp.get_precision('Account')),
         'type': fields.selection([

@@ -19,9 +19,12 @@
 #
 ##############################################################################
 
+from openerp import SUPERUSER_ID
 from openerp.osv import osv
+from openerp.osv.orm import except_orm
 from openerp.tools import append_content_to_html
 from openerp.tools.translate import _
+
 
 class mail_mail(osv.Model):
     """ Update of mail_mail class, to add the signin URL to notifications. """
@@ -33,10 +36,21 @@ class mail_mail(osv.Model):
             :param partner: browse_record of the specific recipient partner
             :return: the resulting body_html
         """
-        body = super(mail_mail, self).send_get_mail_body(cr, uid, mail, partner, context=context)
+        partner_obj = self.pool.get('res.partner')
+        body = mail.body_html
         if partner:
-            context = dict(context or {}, signup_valid=True)
-            partner = self.pool.get('res.partner').browse(cr, uid, partner.id, context)
-            text = _("""Access your personal documents through <a href="%s">our Customer Portal</a>""") % partner.signup_url
+            contex_signup = dict(context or {}, signup_valid=True)
+            partner = partner_obj.browse(cr, SUPERUSER_ID, partner.id, context=contex_signup)
+            text = _("""<p>Access your messages and personal documents through <a href="%s">our Customer Portal</a></p>""") % partner.signup_url
+            # partner is an user: add a link to the document if read access
+            if partner.user_ids and mail.model and mail.res_id \
+                    and self.check_access_rights(cr, partner.user_ids[0].id, 'read', raise_exception=False):
+                related_user = partner.user_ids[0]
+                try:
+                    self.pool.get(mail.model).check_access_rule(cr, related_user.id, [mail.res_id], 'read', context=context)
+                    url = partner_obj._get_signup_url_for_action(cr, related_user.id, [partner.id], action='', res_id=mail.res_id, model=mail.model, context=context)[partner.id]
+                    text = _("""<p>Access this document <a href="%s">directly in OpenERP</a></p>""") % url
+                except except_orm, e:
+                    pass
             body = append_content_to_html(body, ("<div><p>%s</p></div>" % text), plaintext=False)
         return body

@@ -65,20 +65,12 @@ class note_note(osv.osv):
 
         return res
 
-    #unactivate a sticky note and record the date
     def onclick_note_is_done(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, { 'open' : False, 'date_done' : fields.date.today() })
-        self.message_post(cr, uid, ids[0], body='Note is done.', subject=False, 
-            type='notification', parent_id=False, attachments=None, context=context)
-        return False
+        return self.write(cr, uid, ids, {'open': False, 'date_done': fields.date.today()}, context=context)
 
-    #activate a note
     def onclick_note_not_done(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'open' : True})
-        self.message_post(cr, uid, ids[0], body='Note has been activated.', subject=False, 
-            type='notification', parent_id=False, attachments=None, context=context)
-        return False
-	
+        return self.write(cr, uid, ids, {'open': True}, context=context)
+
     #used for undisplay the follower if it's the current user
     def _get_my_current_partner(self, cr, uid, ids, name, args, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
@@ -94,7 +86,7 @@ class note_note(osv.osv):
         note = self.browse(cr, uid, id, context=context)
         if not value: return False
         stage_ids = [value] + [stage.id for stage in note.stage_ids if stage.user_id.id != uid ]
-        return self.write(cr, uid, [id], {'stage_ids': [(6, 0, stage_ids)]}, context=context)
+        return self.write(cr, uid, [id], {'stage_ids': [(6, 0, set(stage_ids))]}, context=context)
 
     def _get_stage_per_user(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
@@ -103,7 +95,6 @@ class note_note(osv.osv):
                 if stage.user_id.id == uid:
                     result[record.id] = stage.id
         return result
-
 
     _columns = {
         'name': fields.function(_get_note_first_line, 
@@ -117,7 +108,7 @@ class note_note(osv.osv):
             type='many2one', 
             relation='note.stage'),
         'stage_ids': fields.many2many('note.stage','note_stage_rel','note_id','stage_id','Stages of Users'),
-        'open': fields.boolean('Active'),
+        'open': fields.boolean('Active', track_visibility='onchange'),
         'date_done': fields.date('Date done'),
         'color': fields.integer('Color Index'),
         'tag_ids' : fields.many2many('note.tag','note_tags_rel','note_id','tag_id','Tags'),

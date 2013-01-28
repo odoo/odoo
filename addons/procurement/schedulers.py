@@ -21,13 +21,13 @@
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-import netsvc
-import pooler
-from osv import osv
-from osv import fields
-from tools.translate import _
-from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
-import tools
+from openerp import netsvc
+from openerp import pooler
+from openerp.osv import osv
+from openerp.osv import fields
+from openerp.tools.translate import _
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from openerp import tools
 
 class procurement_order(osv.osv):
     _inherit = 'procurement.order'

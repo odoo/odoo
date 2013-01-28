@@ -22,7 +22,7 @@
 import time
 from lxml import etree
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 
 class payment_order_create(osv.osv_memory):
     """

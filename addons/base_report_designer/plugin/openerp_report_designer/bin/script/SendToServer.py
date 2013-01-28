@@ -166,7 +166,8 @@ class SendtoServer(unohelper.Base, XJobExecutor):
                                 'model': docinfo.getUserFieldValue(3),
                                 'value': 'ir.actions.report.xml,'+str(id),
                                 'key2': 'client_print_multi',
-                                'object': True
+                                'object': True,
+                                'user_id': uid
                             }
                         res = self.sock.execute(database, uid, self.password, 'ir.values' , 'create',rec )
                     else :

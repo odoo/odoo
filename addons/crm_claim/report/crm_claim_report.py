@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-from osv import fields,osv
-import tools
+from openerp.osv import fields,osv
+from openerp import tools
 
 AVAILABLE_STATES = [
     ('draft','Draft'),

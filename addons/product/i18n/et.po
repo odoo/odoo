@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-05-10 17:31+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2012-12-20 17:10+0000\n"
+"Last-Translator: Ahti Hinnov <sipelgas@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:32+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:40+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #, python-format
 #~ msgid "Warning !"
@@ -36,11 +36,6 @@ msgid "This is minimum quantity to purchase from Main Supplier."
 msgstr ""
 
 #. module: product
-#: model:product.uom,name:product.product_uom_day
-msgid "Day"
-msgstr ""
-
-#. module: product
 #: model:product.template,name:product.product_product_34_product_template
 msgid "Webcam"
 msgstr ""
@@ -48,12 +43,12 @@ msgstr ""
 #. module: product
 #: field:product.product,incoming_qty:0
 msgid "Incoming"
-msgstr "Sissetulev"
+msgstr "Sisenev"
 
 #. module: product
 #: view:product.product:0
 msgid "Product Name"
-msgstr ""
+msgstr "Toote nimi"
 
 #. module: product
 #: view:product.template:0
@@ -111,8 +106,8 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:177
-#: code:addons/product/product.py:206
+#: code:addons/product/pricelist.py:179
+#: code:addons/product/product.py:208
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -123,16 +118,11 @@ msgid "Small-sized image"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:174
+#: code:addons/product/product.py:176
 #, python-format
 msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
 "both belong to different Category!."
-msgstr ""
-
-#. module: product
-#: model:product.uom,name:product.product_uom_dozen
-msgid "Dozen"
 msgstr ""
 
 #. module: product
@@ -194,7 +184,7 @@ msgid "Product Type"
 msgstr "Toote tüüp"
 
 #. module: product
-#: code:addons/product/product.py:410
+#: code:addons/product/product.py:412
 #, python-format
 msgid "Products: "
 msgstr "Tooted: "
@@ -283,11 +273,6 @@ msgid "Category"
 msgstr "Kategooria"
 
 #. module: product
-#: model:product.uom,name:product.product_uom_litre
-msgid "Litre"
-msgstr ""
-
-#. module: product
 #: model:product.template,name:product.product_product_25_product_template
 msgid "Laptop E5023"
 msgstr ""
@@ -327,7 +312,7 @@ msgstr ""
 #. module: product
 #: field:product.product,outgoing_qty:0
 msgid "Outgoing"
-msgstr "Väljuvad"
+msgstr "Väljuv"
 
 #. module: product
 #: model:product.price.type,name:product.list_price
@@ -368,7 +353,7 @@ msgstr ""
 #. module: product
 #: field:product.supplierinfo,product_name:0
 msgid "Supplier Product Name"
-msgstr ""
+msgstr "Tarnija toote nimi"
 
 #. module: product
 #: view:product.pricelist:0
@@ -441,7 +426,7 @@ msgstr "Kõrgus"
 #. module: product
 #: view:product.product:0
 msgid "Procurements"
-msgstr ""
+msgstr "Hanked"
 
 #. module: product
 #: model:res.groups,name:product.group_mrp_properties
@@ -512,6 +497,11 @@ msgid "Headset standard"
 msgstr ""
 
 #. module: product
+#: model:product.uom,name:product.product_uom_day
+msgid "Day(s)"
+msgstr ""
+
+#. module: product
 #: help:product.product,incoming_qty:0
 msgid ""
 "Quantity of products that are planned to arrive.\n"
@@ -545,7 +535,7 @@ msgstr "Kast20x20x40"
 #. module: product
 #: field:product.template,warranty:0
 msgid "Warranty"
-msgstr ""
+msgstr "Garantii"
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -570,10 +560,8 @@ msgid "PC Assemble + Custom (PC on Demand)"
 msgstr ""
 
 #. module: product
-#: model:process.transition,note:product.process_transition_supplierofproduct0
-msgid ""
-"1 or several supplier(s) can be linked to a product. All information stands "
-"in the product form."
+#: model:product.template,description:product.product_product_27_product_template
+msgid "Custom Laptop based on customer's requirement."
 msgstr ""
 
 #. module: product
@@ -582,7 +570,7 @@ msgid "The width of the package"
 msgstr "Paki laius"
 
 #. module: product
-#: code:addons/product/product.py:359
+#: code:addons/product/product.py:361
 #, python-format
 msgid "Unit of Measure categories Mismatch!"
 msgstr ""
@@ -687,6 +675,7 @@ msgstr ""
 
 #. module: product
 #: field:product.supplierinfo,name:0
+#: field:product.template,seller_ids:0
 msgid "Supplier"
 msgstr ""
 
@@ -701,7 +690,7 @@ msgstr ""
 #. module: product
 #: field:product.product,qty_available:0
 msgid "Quantity On Hand"
-msgstr ""
+msgstr "Tegelik kogus"
 
 #. module: product
 #: field:product.price.type,name:0
@@ -714,9 +703,9 @@ msgid "If checked new messages require your attention."
 msgstr ""
 
 #. module: product
-#: model:product.category,name:product.product_category_1
-msgid "Saleable"
-msgstr ""
+#: field:product.product,ean13:0
+msgid "EAN13 Barcode"
+msgstr "EAN13 triipkood"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_product_price_list
@@ -730,7 +719,7 @@ msgstr "Hinnakiri"
 #. module: product
 #: field:product.product,virtual_available:0
 msgid "Forecasted Quantity"
-msgstr ""
+msgstr "Prognoositud kogus"
 
 #. module: product
 #: view:product.product:0
@@ -790,6 +779,11 @@ msgid "End Date"
 msgstr "Lõppkuupäev"
 
 #. module: product
+#: model:product.uom,name:product.product_uom_litre
+msgid "Liter(s)"
+msgstr ""
+
+#. module: product
 #: view:product.price_list:0
 msgid "Print"
 msgstr "Trüki"
@@ -822,7 +816,6 @@ msgstr "Võti"
 #. module: product
 #: model:ir.actions.report.xml,name:product.report_product_pricelist
 #: model:ir.model,name:product.model_product_pricelist
-#: field:product.product,price:0
 #: field:product.product,pricelist_id:0
 #: view:product.supplierinfo:0
 msgid "Pricelist"
@@ -830,7 +823,7 @@ msgstr "Hinnakiri"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_hour
-msgid "Hour"
+msgid "Hour(s)"
 msgstr ""
 
 #. module: product
@@ -844,8 +837,10 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: product
-#: model:product.template,description:product.product_product_27_product_template
-msgid "Custom Laptop based on customer's requirement."
+#: model:process.transition,note:product.process_transition_supplierofproduct0
+msgid ""
+"1 or several supplier(s) can be linked to a product. All information stands "
+"in the product form."
 msgstr ""
 
 #. module: product
@@ -861,7 +856,7 @@ msgstr ""
 #. module: product
 #: view:product.template:0
 msgid "days"
-msgstr ""
+msgstr "päeva"
 
 #. module: product
 #: model:process.node,name:product.process_node_supplier0
@@ -910,11 +905,6 @@ msgstr ""
 #: field:product.packaging,weight:0
 msgid "Total Package Weight"
 msgstr "Pakendi kogukaal"
-
-#. module: product
-#: field:product.product,seller_info_id:0
-msgid "unknown"
-msgstr ""
 
 #. module: product
 #: help:product.packaging,code:0
@@ -1087,6 +1077,11 @@ msgid "Right Parent"
 msgstr ""
 
 #. module: product
+#: field:product.product,price:0
+msgid "Price"
+msgstr ""
+
+#. module: product
 #: field:product.pricelist.item,price_surcharge:0
 msgid "Price Surcharge"
 msgstr "Hinna lisamaks"
@@ -1095,7 +1090,7 @@ msgstr "Hinna lisamaks"
 #: field:product.product,code:0
 #: field:product.product,default_code:0
 msgid "Internal Reference"
-msgstr ""
+msgstr "Sisemine viide"
 
 #. module: product
 #: model:product.template,name:product.product_product_8_product_template
@@ -1158,6 +1153,11 @@ msgstr ""
 #: help:product.category,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of product categories."
+msgstr ""
+
+#. module: product
+#: model:product.uom,name:product.product_uom_dozen
+msgid "Dozen(s)"
 msgstr ""
 
 #. module: product
@@ -1235,7 +1235,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:359
+#: code:addons/product/product.py:361
 #, python-format
 msgid ""
 "New Unit of Measure '%s' must belong to same Unit of Measure category '%s' "
@@ -1290,11 +1290,6 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: field:product.template,seller_ids:0
-msgid "Partners"
-msgstr "Partnerid"
-
-#. module: product
 #: help:product.pricelist.item,categ_id:0
 msgid ""
 "Specify a product category if this rule only applies to products belonging "
@@ -1304,10 +1299,15 @@ msgstr ""
 #. module: product
 #: view:product.product:0
 msgid "Inventory"
-msgstr ""
+msgstr "Laoseis"
 
 #. module: product
-#: code:addons/product/product.py:736
+#: field:product.product,seller_info_id:0
+msgid "Supplier Info"
+msgstr "Tarnija info"
+
+#. module: product
+#: code:addons/product/product.py:729
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -1400,7 +1400,7 @@ msgstr "Kaalud"
 #. module: product
 #: view:product.product:0
 msgid "Description for Quotations"
-msgstr ""
+msgstr "Kirjeldus pakkumistele"
 
 #. module: product
 #: help:pricelist.partnerinfo,price:0
@@ -1426,16 +1426,9 @@ msgstr ""
 
 #. module: product
 #: selection:product.ul,type:0
-#: model:product.uom,name:product.product_uom_unit
 #: model:product.uom.categ,name:product.product_uom_categ_unit
 msgid "Unit"
 msgstr "Ühik"
-
-#. module: product
-#: code:addons/product/product.py:588
-#, python-format
-msgid "Product has been <b>created</b>."
-msgstr ""
 
 #. module: product
 #: field:product.pricelist.version,date_start:0
@@ -1544,8 +1537,8 @@ msgid "Pricelist Name"
 msgstr "Hinnakirja nimi"
 
 #. module: product
-#: field:product.product,ean13:0
-msgid "EAN13 Barcode"
+#: model:product.category,name:product.product_category_1
+msgid "Saleable"
 msgstr ""
 
 #. module: product
@@ -1602,7 +1595,7 @@ msgstr "Vaikimisi mõõtühik kasutatakse kõigis laooperatsioonides."
 #. module: product
 #: view:product.product:0
 msgid "Sales"
-msgstr ""
+msgstr "Müük"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_categ_form_action
@@ -1761,7 +1754,7 @@ msgstr "Teenus"
 #. module: product
 #: view:product.template:0
 msgid "Internal Description"
-msgstr ""
+msgstr "Sisemine kirjeldus"
 
 #. module: product
 #: model:product.template,name:product.product_product_48_product_template
@@ -1776,7 +1769,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:206
+#: code:addons/product/product.py:208
 #, python-format
 msgid "Cannot change the category of existing Unit of Measure '%s'."
 msgstr ""
@@ -1812,7 +1805,7 @@ msgid "Default Unit of Measure"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:375
+#: code:addons/product/pricelist.py:377
 #, python-format
 msgid "Partner section of the product form"
 msgstr "Partneri sektsioon toote vormil"
@@ -1838,7 +1831,12 @@ msgid "Messages"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:174
+#: model:product.uom,name:product.product_uom_unit
+msgid "Unit(s)"
+msgstr ""
+
+#. module: product
+#: code:addons/product/product.py:176
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -1883,7 +1881,7 @@ msgstr ""
 #: view:product.product:0
 #: field:product.template,sale_ok:0
 msgid "Can be Sold"
-msgstr ""
+msgstr "On müüdav"
 
 #. module: product
 #: field:product.template,produce_delay:0
@@ -1966,7 +1964,7 @@ msgstr ""
 #. module: product
 #: view:product.product:0
 msgid "Sale Conditions"
-msgstr ""
+msgstr "Müügi tingimused"
 
 #. module: product
 #: view:product.packaging:0
@@ -1982,7 +1980,7 @@ msgstr ""
 #. module: product
 #: view:product.product:0
 msgid "Description for Suppliers"
-msgstr ""
+msgstr "Kirjeldus tarnijatele"
 
 #. module: product
 #: field:product.supplierinfo,delay:0
@@ -1992,7 +1990,7 @@ msgstr ""
 #. module: product
 #: view:product.product:0
 msgid "months"
-msgstr ""
+msgstr "kuud"
 
 #. module: product
 #: help:product.uom,active:0
@@ -2152,7 +2150,7 @@ msgid "Normal"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:177
+#: code:addons/product/pricelist.py:179
 #, python-format
 msgid ""
 "At least one pricelist has no active version !\n"
@@ -2203,12 +2201,6 @@ msgstr ""
 #: selection:product.template,mes_type:0
 msgid "Variable"
 msgstr "Muutuja"
-
-#. module: product
-#: field:product.product,message_comment_ids:0
-#: help:product.product,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
 
 #. module: product
 #: field:product.template,rental:0
@@ -2366,7 +2358,7 @@ msgid "15” LCD Monitor"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:374
+#: code:addons/product/pricelist.py:376
 #: field:product.pricelist.item,base_pricelist_id:0
 #, python-format
 msgid "Other Pricelist"
@@ -2731,6 +2723,9 @@ msgstr "Allahindlus"
 #~ msgid "Mouse"
 #~ msgstr "Hiir"
 
+#~ msgid "Partners"
+#~ msgstr "Partnerid"
+
 #~ msgid "Create new Product"
 #~ msgstr "Loo uus toode"
 
@@ -2748,9 +2743,6 @@ msgstr "Allahindlus"
 
 #~ msgid "Factor"
 #~ msgstr "Faktor"
-
-#~ msgid "Supplier Info"
-#~ msgstr "Tarnija info"
 
 #~ msgid "UOM"
 #~ msgstr "Mõõtühik"

@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-from osv import fields
-from osv import osv
-import netsvc
+from openerp.osv import fields
+from openerp.osv import osv
+from openerp import netsvc
 
 
 class StockMove(osv.osv):

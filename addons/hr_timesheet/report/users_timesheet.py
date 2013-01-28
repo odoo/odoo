@@ -20,13 +20,13 @@
 ##############################################################################
 
 import datetime
-from report.interface import report_rml
-from report.interface import toxml
+from openerp.report.interface import report_rml
+from openerp.report.interface import toxml
 import time
-import pooler
-from tools.translate import _
-from report import report_sxw
-from tools import ustr
+from openerp import pooler
+from openerp.tools.translate import _
+from openerp.report import report_sxw
+from openerp.tools import ustr
 
 
 def lengthmonth(year, month):
