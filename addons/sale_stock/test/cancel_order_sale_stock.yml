@@ -9,7 +9,7 @@
   !python {model: stock.picking}: |
     delivery_orders = self.search(cr, uid, [('sale_id','=',ref("sale.sale_order_8"))])
     first_picking = self.browse(cr, uid, delivery_orders[0], context=context)
-    if first_picking.force_assign(cr, uid, first_picking):
+    if first_picking.force_assign():
       first_move = first_picking.move_lines[0]
       values = {'move%s'%(first_move.id): {'product_qty': 2, 'product_uom':ref('product.product_uom_unit')}}
       first_picking.do_partial(values, context=context)
