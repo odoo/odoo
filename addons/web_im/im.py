@@ -46,7 +46,6 @@ if openerp.tools.config.options["gevent"]:
         def __init__(self, channel_name, db_name):
             self.channel_name = channel_name
             self.db_name = db_name
-            gevent.spawn(self.loop)
 
         def loop(self):
             _logger.info("Begin watching on channel "+ self.channel_name +" for database " + self.db_name)
@@ -105,12 +104,13 @@ if openerp.tools.config.options["gevent"]:
             return ImWatcher.watchers[db_name]
 
         def __init__(self, db_name):
+            super(ImWatcher, self).__init__("im_channel", db_name)
             ImWatcher.watchers[db_name] = self
             self.waiting = 0
             self.wait_id = 0
             self.users = {}
             self.users_watch = {}
-            super(ImWatcher, self).__init__("im_channel", db_name)
+            gevent.spawn(self.loop)
 
         def handle_message(self, message):
             if message["type"] == "message":
