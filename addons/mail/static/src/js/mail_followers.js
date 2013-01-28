@@ -215,21 +215,13 @@ openerp_mail_followers = function(session, mail) {
         /** Display subtypes: {'name': default, followed} */
         display_subtypes:function (data) {
             var self = this;
-            var subtype_list_ul = this.$('.oe_subtype_list');
-            subtype_list_ul.empty();
+            this.$('.oe_subtype_list').empty();
             var records = data[this.view.datarecord.id || this.view.dataset.ids[0]].message_subtype_data;
-            var nb_subtype = 0;
-            _(records).each(function (record) {nb_subtype++;});
-            if (nb_subtype > 1) {
-                this.$('hr').show();
-                _(records).each(function (record, record_name) {
-                    record.name = record_name;
-                    record.followed = record.followed || undefined;
-                    $(session.web.qweb.render('mail.followers.subtype', {'record': record})).appendTo( self.$('.oe_subtype_list') );
-                });
-            } else {
-                this.$('hr').hide();
-            }
+            _(records).each(function (record, record_name) {
+                record.name = record_name;
+                record.followed = record.followed || undefined;
+                $(session.web.qweb.render('mail.followers.subtype', {'record': record})).appendTo( self.$('.oe_subtype_list') );
+            });
         },
 
         do_follow: function () {
