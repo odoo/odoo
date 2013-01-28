@@ -337,7 +337,7 @@
     <blockTable colWidths="205.0,71.0,71.0,183.0" style="Table9">
       <tr>
         <td>
-          <para style="terp_tblheader_Details">Tax [[ o.tax_line==[] and removeParentNode('blockTable') ]]</para>
+          <para style="terp_tblheader_Details">Tax [[ not o.tax_line and removeParentNode('blockTable') ]]</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Right">Base </para>

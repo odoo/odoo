@@ -317,7 +317,7 @@
         </tr>
       </blockTable>
     </section>
-    <para style="P29">Fees Line(s) [[ (o.fees_lines ==[] and  removeParentNode('para') )  ]]</para>
+    <para style="P29">Fees Line(s) [[ not o.fees_lines and removeParentNode('para') ]]</para>
     <section>
     <para style="P30"><font color="white">[[ repeatIn(o.fees_lines,'fees') ]]</font></para>
     <para style="P29">[[ (not fees) and removeParentNode('section') ]]</para>
