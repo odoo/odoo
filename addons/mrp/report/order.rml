@@ -266,7 +266,7 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <para style="terp_default_Bold_8">Work Orders [[ o.workcenter_lines ==[] and removeParentNode('para')]]</para>
+    <para style="terp_default_Bold_8">Work Orders [[ not o.workcenter_lines and removeParentNode('para') ]]</para>
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
@@ -276,7 +276,7 @@
           <para style="terp_tblheader_General_Centre">Sequence</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Centre">Name [[ o.workcenter_lines ==[] and removeParentNode('blockTable')]]</para>
+          <para style="terp_tblheader_Details_Centre">Name [[ not o.workcenter_lines and removeParentNode('blockTable') ]]</para>
         </td>
         <td>
           <para style="terp_tblheader_General_Centre">WorkCenter</para>
@@ -338,7 +338,7 @@
       </tr>
     </blockTable>
     <section>
-      <para style="terp_default_Bold_9">Products to Consume [[ o.move_lines ==[] and removeParentNode('section')]]</para>
+      <para style="terp_default_Bold_9">Products to Consume [[ not o.move_lines and removeParentNode('section') ]]</para>
       <section>
         <para style="terp_default_2">[[ repeatIn(o.move_lines,'line') ]]</para>
         <blockTable colWidths="250.0,65.0,108.0,104.0" style="Table9">
@@ -363,7 +363,7 @@
       <para style="terp_default_Bold_9">
         <font color="white"> </font>
       </para>
-      <para style="terp_default_Bold_9">Consumed Products [[ o.move_lines2 ==[] and removeParentNode('section')]]</para>
+      <para style="terp_default_Bold_9">Consumed Products [[ not o.move_lines2 and removeParentNode('section') ]]</para>
       <section>
         <para style="terp_default_2">[[ repeatIn(o.move_lines2,'line2') ]]</para>
         <blockTable colWidths="251.0,66.0,106.0,104.0" style="Table10">
