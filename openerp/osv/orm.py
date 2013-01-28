@@ -5489,10 +5489,15 @@ class BaseModel(object):
         return other < self
 
     def __eq__(self, other):
-        assert self.is_recordset() == other.is_recordset(), "Mixing model and recordset: %s, %s" % (self, other)
+        assert isinstance(other, BaseModel), "Cannot compare model instance with %s" % (other,)
         if self.is_recordset():
+            # compare two recordsets
+            assert other.is_recordset(), "Mixing recordset and model: %s, %s" % (self, other)
             return self <= other and other <= self
-        return self._name == other._name
+        else:
+            # compare two models
+            assert not other.is_recordset(), "Mixing model and recordset: %s, %s" % (self, other)
+            return self._name == other._name
 
     def __ne__(self, other):
         return not self == other
