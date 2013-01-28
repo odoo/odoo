@@ -107,6 +107,8 @@ class ir_attachment(osv.osv):
             full_path = self._full_path(cr, uid, location, fname)
             try:
                 os.unlink(full_path)
+            except OSError:
+                _logger.error("_file_delete could not unlink %s",full_path)
             except IOError:
                 # Harmless and needed for race conditions
                 _logger.error("_file_delete could not unlink %s",full_path)

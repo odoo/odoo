@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-23 04:39+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-01-19 05:14+0000\n"
+"X-Generator: Launchpad (build 16430)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_check_writing
@@ -126,6 +126,18 @@ msgid ""
 "    * Product Attributes\n"
 "    "
 msgstr ""
+"\n"
+"Een module die leveranciers en kenmerken toevoegt aan het product "
+"formulier.\n"
+"====================================================================\n"
+"\n"
+"U kunt het volgende definiëren voor een product:\n"
+"-----------------------------------------------\n"
+"    * Leverancier\n"
+"    * Leverancier Product Naam\n"
+"    * Leverancier Product Code\n"
+"    * Product Kernmerken\n"
+"    "
 
 #. module: base
 #: field:ir.actions.client,params:0
@@ -306,6 +318,8 @@ msgid ""
 "The internal user that is in charge of communicating with this contact if "
 "any."
 msgstr ""
+"De interne gebruiker die verantwoordelijk is voor de communicatie met deze "
+"contactpersoon indien aanwezig."
 
 #. module: base
 #: view:res.partner:0
@@ -333,6 +347,8 @@ msgid ""
 "Database ID of record to open in form view, when ``view_mode`` is set to "
 "'form' only"
 msgstr ""
+"Database ID van het te openen record formulier weergave, indien "
+"``view_mode`` op alleen formulier is gezet"
 
 #. module: base
 #: help:ir.values,key2:0
@@ -405,6 +421,8 @@ msgid ""
 "There is already a shared filter set as default for %(model)s, delete or "
 "change it before setting a new default"
 msgstr ""
+"Er is al een gedeeld filter ingesteld als standaard voor %(model)s. "
+"Verwijder of wijzig deze alvorens een nieuwe in te stellen."
 
 #. module: base
 #: code:addons/orm.py:2648
@@ -598,6 +616,18 @@ msgid ""
 "* Use emails to automatically confirm and send acknowledgements for any "
 "event registration\n"
 msgstr ""
+"\n"
+"Organisatie en beheer van evenementen.\n"
+"=================================\n"
+"\n"
+"De evenementen module laat u efficient evenementen organiseren met alle "
+"bijbehorende taken: planning, registratiebeheer,\n"
+"deelnemers, etc.\n"
+"\n"
+"Belangrijkste kenmerken\n"
+"--------------------------------------\n"
+"* Beheer uw evenementen en registraties\n"
+"* Gebruik email voor automatische bevestigingen van evenement registraties\n"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -1133,6 +1163,12 @@ msgid ""
 "If Value type is selected, the value will be used directly without "
 "evaluation."
 msgstr ""
+"Expressie met een waarde specificatie. \n"
+"Wanneer Formule-type is geselecteerd, kan dit veld een Python expressie die "
+"dezelfde waarden kunnen gebruiken als voor het conditie veld op de server "
+"actie.\n"
+"Als het type waarde is geselecteerd, wordt de waarde direct gebruikt zonder "
+"evaluatie."
 
 #. module: base
 #: model:res.country,name:base.ad
@@ -1142,7 +1178,7 @@ msgstr "Andorra"
 #. module: base
 #: field:ir.rule,perm_read:0
 msgid "Apply for Read"
-msgstr ""
+msgstr "Leesrechten toepassen"
 
 #. module: base
 #: model:res.country,name:base.mn
@@ -1335,7 +1371,7 @@ msgstr "Kaaimaneilanden"
 #. module: base
 #: view:ir.rule:0
 msgid "Record Rule"
-msgstr ""
+msgstr "Record regel"
 
 #. module: base
 #: model:res.country,name:base.kr
@@ -1361,7 +1397,7 @@ msgstr "Bijdragers"
 #. module: base
 #: field:ir.rule,perm_unlink:0
 msgid "Apply for Delete"
-msgstr ""
+msgstr "Verwijderrechten toepassen"
 
 #. module: base
 #: selection:ir.property,type:0
@@ -1436,6 +1472,9 @@ msgid ""
 "                                for uploading to OpenERP's translation "
 "platform,"
 msgstr ""
+"TGZ formaat: dit is een gecomprimeerd PO bestand, welke direct geschikt is\n"
+"                                om te uploaden naar het OpenERP vertaal "
+"platform,"
 
 #. module: base
 #: view:res.lang:0
@@ -1462,7 +1501,7 @@ msgstr "Testen"
 #. module: base
 #: field:ir.actions.report.xml,attachment:0
 msgid "Save as Attachment Prefix"
-msgstr ""
+msgstr "Sla op als bijlage prefix"
 
 #. module: base
 #: field:ir.ui.view_sc,res_id:0
@@ -1499,7 +1538,7 @@ msgstr "Haïti"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_hr_payroll
 msgid "French Payroll"
-msgstr ""
+msgstr "Franse loonadministratie"
 
 #. module: base
 #: view:ir.ui.view:0
@@ -1860,6 +1899,10 @@ msgid ""
 "Launch Manually Once: after having been launched manually, it sets "
 "automatically to Done."
 msgstr ""
+"Handmatig: Handmatig gestart.\n"
+"Automatisch: Wordt gestart als het systeem is geconfigureerd.\n"
+"Start eenmalig handmatig: Na handmatig te zijn gestart, wordt het "
+"automatisch ingesteld op gereed."
 
 #. module: base
 #: field:res.partner,image_small:0
@@ -1966,6 +2009,7 @@ msgstr ""
 #, python-format
 msgid "Unknown value '%s' for boolean field '%%(field)s', assuming '%s'"
 msgstr ""
+"Onbekende waarde '%s' voor boolean veld'%%(field)s', ervan uitgaande dat '%s'"
 
 #. module: base
 #: model:res.country,name:base.nl
@@ -2006,7 +2050,7 @@ msgstr "Lezen"
 #. module: base
 #: help:ir.attachment,res_id:0
 msgid "The record id this is attached to"
-msgstr ""
+msgstr "Het record is waaraan dit is verbonden"
 
 #. module: base
 #: model:ir.module.module,description:base.module_share
@@ -2040,6 +2084,8 @@ msgid ""
 "Check this box if this contact is a supplier. If it's not checked, purchase "
 "people will not see it when encoding a purchase order."
 msgstr ""
+"Vink dit aan als dit contactpersoon een leverancier is. Indien niet "
+"aangevinkt, zullen inkopers deze niet zien bij het maken van inkooporders."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_evaluation
@@ -2209,6 +2255,26 @@ msgid ""
 "* *Before Delivery*: A Draft invoice is created and must be paid before "
 "delivery\n"
 msgstr ""
+"\n"
+"Beheer verkoop offertes en orders\n"
+"============================\n"
+"\n"
+"Deze module maakt de verbinding tussen de verkoop en voorraadbeheer "
+"applicaties.\n"
+"\n"
+"Voorkeuren\n"
+"-----------\n"
+"* Levering: Keuze uit levering ineens of deelleveringen\n"
+"* Facturatie: kies hoe facturen worden betaald\n"
+"* Incoterms: Internationale Commerciële voorwaarden\n"
+"\n"
+"U kunt flexibele facturatie methoden kiezen:\n"
+"\n"
+"* *Op aanvraag*: Facturen worden handmatig gemaakt vanuit verkooporders "
+"wanneer nodig\n"
+"* *Bij pakbon*: Facturen worden gegenereerd bij de levering\n"
+"* *Vooruitbetaling*: Een proeffactuur wordt gemaakt die betaald moet worden "
+"voorafgaand aan de levering\n"
 
 #. module: base
 #: field:ir.ui.menu,complete_name:0
@@ -2234,7 +2300,7 @@ msgstr ""
 #. module: base
 #: view:base.language.export:0
 msgid "PO(T) format: you should edit it with a PO editor such as"
-msgstr ""
+msgstr "PO(T) formaat: u kunt deze bewerken met een PO editor"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_administration
@@ -2323,7 +2389,7 @@ msgstr "Bahama's"
 #. module: base
 #: field:ir.rule,perm_create:0
 msgid "Apply for Create"
-msgstr ""
+msgstr "Aanmaakrechten toepassen"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_tools
@@ -2401,6 +2467,8 @@ msgstr ""
 msgid ""
 "No matching record found for %(field_type)s '%(value)s' in field '%%(field)s'"
 msgstr ""
+"Geen overeenkomende records gevonden voor %(field_type)s '%(value)s' in veld "
+"'%%(field)s'"
 
 #. module: base
 #: field:change.password.user,new_passwd:0
@@ -2679,7 +2747,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_oauth_signup
 msgid "Signup with OAuth2 Authentication"
-msgstr ""
+msgstr "Inloggen met OAuth2 Authenticatie"
 
 #. module: base
 #: selection:ir.model,state:0
@@ -2838,6 +2906,33 @@ msgid ""
 "* Monthly Turnover (Graph)\n"
 "    "
 msgstr ""
+"\n"
+"Beheer verkoop offertes en orders\n"
+"============================\n"
+"\n"
+"Deze applicatie laat u verkoopdoelen beheren door alle verkooporder en "
+"historie efficient te beheren.\n"
+"Het behandelt de volledige werkstroom: \n"
+"* **Offerte** -> **Verkooporder** -> **Verkoopfactuur**\n"
+"\n"
+"Voorkeuren (alleen met geïnstalleerd voorraadbeheer)\n"
+"----------------------------------------------------------------\n"
+"* Levering: Keuze uit levering ineens of deelleveringen\n"
+"* Facturatie: kies hoe facturen worden betaald\n"
+"* Incoterms: Internationale Commerciële voorwaarden\n"
+"\n"
+"U kunt flexibele facturatie methoden kiezen:\n"
+"\n"
+"* *Op aanvraag*: Facturen worden handmatig gemaakt vanuit verkooporders "
+"wanneer nodig\n"
+"* *Bij pakbon*: Facturen worden gegenereerd bij de levering\n"
+"* *Vooruitbetaling*: Een proeffactuur wordt gemaakt die betaald moet worden "
+"voorafgaand aan de levering\n"
+"\n"
+"Het dashboard voor de Sales Manager bevat:\n"
+"* Mijn Offertes \n"
+"* Maandelijkse omzet (grafiek)\n"
+"    "
 
 #. module: base
 #: field:ir.actions.act_window,res_id:0
@@ -2869,7 +2964,7 @@ msgstr ""
 #: code:addons/base/ir/ir_fields.py:333
 #, python-format
 msgid "Found multiple matches for field '%%(field)s' (%d matches)"
-msgstr ""
+msgstr "Meerdere overeenkomsten gevonden voor '%%(field)s' (%d matches)"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -2899,6 +2994,7 @@ msgstr "Server-actie"
 #: help:ir.actions.client,params:0
 msgid "Arguments sent to the client along withthe view tag"
 msgstr ""
+"Argumenten welke naar de cliënt worden verzonden, inclusief de 'view tag'"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_contacts
@@ -3065,7 +3161,7 @@ msgstr ""
 #: code:addons/base/ir/ir_fields.py:174
 #, python-format
 msgid "'%s' does not seem to be an integer for field '%%(field)s'"
-msgstr ""
+msgstr "'%s' lijkt geen geheel getal te zijn voor veld '%%(field)s'"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_report_designer
@@ -3327,7 +3423,7 @@ msgstr "Armenië"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_evaluation
 msgid "Periodical Evaluations, Appraisals, Surveys"
-msgstr ""
+msgstr "Periodieke evaluaties, beoordelingen en enquêtes,"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_property_form
@@ -3348,7 +3444,7 @@ msgstr "Zweden"
 #. module: base
 #: field:ir.actions.report.xml,report_file:0
 msgid "Report File"
-msgstr ""
+msgstr "Rapport bestand"
 
 #. module: base
 #: selection:ir.actions.act_window.view,view_mode:0
@@ -3381,7 +3477,7 @@ msgstr ""
 #: code:addons/orm.py:3870
 #, python-format
 msgid "Missing document(s)"
-msgstr ""
+msgstr "Ontbrekende documenten"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner_bank_type
@@ -3933,7 +4029,7 @@ msgstr "Togo"
 #: field:ir.actions.act_window,res_model:0
 #: field:ir.actions.client,res_model:0
 msgid "Destination Model"
-msgstr ""
+msgstr "Bestemming model"
 
 #. module: base
 #: selection:ir.sequence,implementation:0
@@ -4042,7 +4138,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.je
 msgid "Jersey"
-msgstr ""
+msgstr "Jersey"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_translation
@@ -4067,7 +4163,7 @@ msgstr "%x - Passende datum weergave"
 #. module: base
 #: view:res.partner:0
 msgid "Tag"
-msgstr ""
+msgstr "Label"
 
 #. module: base
 #: view:res.lang:0
@@ -4118,7 +4214,7 @@ msgstr "Nauru"
 #: code:addons/base/res/res_company.py:166
 #, python-format
 msgid "Reg"
-msgstr ""
+msgstr "Reg"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_property
@@ -4276,7 +4372,7 @@ msgstr "Ltd"
 #. module: base
 #: model:ir.actions.server,name:base.action_run_ir_action_todo
 msgid "Run Remaining Action Todo"
-msgstr ""
+msgstr "Start resterende acties Todo"
 
 #. module: base
 #: field:res.partner,ean13:0
@@ -4450,7 +4546,7 @@ msgstr "Standaard adres"
 #. module: base
 #: model:ir.module.module,summary:base.module_lunch
 msgid "Lunch Order, Meal, Food"
-msgstr ""
+msgstr "Lunch orders, maaltijden en voeding"
 
 #. module: base
 #: view:ir.model.fields:0
@@ -4521,12 +4617,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_sale
 msgid "Quotations, Sales Orders, Invoicing"
-msgstr ""
+msgstr "Offertes, verkooporders en facturen"
 
 #. module: base
 #: field:res.partner,parent_id:0
 msgid "Related Company"
-msgstr ""
+msgstr "Gerelateerde bedrijf"
 
 #. module: base
 #: help:ir.actions.act_url,help:0
@@ -4572,7 +4668,7 @@ msgstr "`code`moet uniek zijn."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_knowledge
 msgid "Knowledge Management System"
-msgstr ""
+msgstr "Kennis Management Systeem"
 
 #. module: base
 #: view:workflow.activity:0
@@ -5259,6 +5355,19 @@ msgid ""
 "            \n"
 "%(country_code)s: the code of the country"
 msgstr ""
+"U kunt hier de gebruikelijke formaten gebruiken voor het adres.\n"
+"\n"
+"U kunt gebruik maken van een Python-style string patroon met alle velden van "
+"het adres (Bijvoorbeeld, gebruik '%(street)s' om het veld 'straat') weer te "
+"geven, plus\n"
+"            \n"
+"%(state_name)s: de naam van de provincie/staat\n"
+"            \n"
+"%(state_code)s: de code van de provincie/staat\n"
+"            \n"
+"%(country_name)s: de naam van het land\n"
+"            \n"
+"%(country_code)s: de code van het land"
 
 #. module: base
 #: model:res.country,name:base.mu
@@ -6717,6 +6826,8 @@ msgid ""
 "An arbitrary string, interpreted by the client according to its own needs "
 "and wishes. There is no central tag repository across clients."
 msgstr ""
+"Een willekeurige tekenreeks geïnterpreteerd door de klant op basis van zijn "
+"eigen behoeften en wensen. Er is geen centrale tag repository over klanten."
 
 #. module: base
 #: sql_constraint:ir.rule:0
@@ -7985,6 +8096,9 @@ msgid ""
 "Allow you to define your own currency rate types, like 'Average' or 'Year to "
 "Date'. Leave empty if you simply want to use the normal 'spot' rate type"
 msgstr ""
+"Hiermee kunt u uw eigen wisselkoers te definiëren, zoals 'gemiddelde' of "
+"'Jaar tot datum'. Laat leeg als u gewoon wilt naar de normale contantkoers "
+"te gebruiken."
 
 #. module: base
 #: selection:ir.module.module.dependency,state:0
@@ -9923,6 +10037,9 @@ msgid ""
 "same values as for the condition field.\n"
 "Example: object.invoice_address_id.email, or 'me@example.com'"
 msgstr ""
+"Expressie dat het e-mailadres terug geeft waar naar toe moet worden "
+"verzonden. Kan worden gebaseerd op dezelfde waarden als het conditieveld. "
+"Voorbeeld: object.invoice_address_id.email of \"ik@voorbeeld.com '"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_issue_sheet
@@ -10834,6 +10951,10 @@ msgid ""
 "the bounds of global ones. The first group rules restrict further than "
 "global rules, but any additional group rule will add more permissions"
 msgstr ""
+"Global regels (niet de groep-specifieke) zijn beperkingen, en kunnen niet "
+"worden omzeild. Groep-lokale regels geven extra rechten, maar zijn beperkt "
+"binnen de grenzen van de globale regels. De eerste groep regels beperken "
+"verder dan de globale regels, maar elke extra groep voegt meer rechten toe."
 
 #. module: base
 #: field:res.currency.rate,rate:0
@@ -11186,12 +11307,25 @@ msgid ""
 " - uid: current user id\n"
 " - context: current context"
 msgstr ""
+"Conditie welke wordt getest voordat de actie wordt uitgevoerd en voorkomt "
+"starten voordat verificatie heeft plaatsgevonden.\n"
+"Voorbeeld: object.list_price > 5000\n"
+"Het is een Python expressie, welke de volgende waarden kan gebruiken:\n"
+" - self: ORM model van het record waarop de actie is getriggered\n"
+" - object or obj: browse_record van het record waarop de actie is "
+"getriggered\n"
+" - pool: ORM model pool (bijv. self.pool)\n"
+" - time: Python tijd module\n"
+" - cr: database cursor\n"
+" - uid: huidige gebruikers id\n"
+" - context: huidige context"
 
 #. module: base
 #: view:ir.rule:0
 msgid ""
 "2. Group-specific rules are combined together with a logical OR operator"
 msgstr ""
+"2. Groep specifieke regels worden gecombineerd met een logische OR operatie"
 
 #. module: base
 #: model:res.country,name:base.bl
@@ -15570,6 +15704,8 @@ msgid ""
 "Manage relations with prospects and customers using leads, opportunities, "
 "requests or issues."
 msgstr ""
+"Beheer uw relatie met prospects en klanten door gebruik te maken van leads, "
+"prospects, aanvragen en nazorg."
 
 #. module: base
 #: model:ir.module.module,description:base.module_project
@@ -18706,3 +18842,82 @@ msgstr "Aanmelden"
 #~ "Deze wizard helpt u om een nieuwe module in OpenERP te importeren. Na het "
 #~ "importeren van  een nieuwe module kan u op de \"Installeer\"knop drukken, "
 #~ "vanuit d formulierweergave."
+
+#, python-format
+#~ msgid "Please verify your publisher warranty serial number and validity."
+#~ msgstr "Controleer uw onderhoudscontract serienummer en geldigheid."
+
+#~ msgid ""
+#~ "Checked if this is an OpenERP Publisher's Warranty contract (versus older "
+#~ "contract types"
+#~ msgstr ""
+#~ "Gecontroleerd of dit een OpenERP onderhoudscontract is (in plaats van een "
+#~ "ouder contract type)"
+
+#, python-format
+#~ msgid ""
+#~ "Insufficient fields to generate a Calendar View for %s, missing a date_stop "
+#~ "or a date_delay\" % (self._name)))\n"
+#~ "\n"
+#~ "        return view\n"
+#~ "\n"
+#~ "    def _get_default_search_view(self, cr, uid, context=None):\n"
+#~ "        \"\n"
+#~ "        :param cr: database cursor\n"
+#~ "        :param int user: user id\n"
+#~ "        :param dict context: connection context\n"
+#~ "        :returns: an lxml document of the view\n"
+#~ "        :rtype: etree._Element\n"
+#~ "        \"\n"
+#~ "        form_view = self.fields_view_get(cr, uid, False, 'form', "
+#~ "context=context)\n"
+#~ "        tree_view = self.fields_view_get(cr, uid, False, 'tree', "
+#~ "context=context)\n"
+#~ "\n"
+#~ "        # TODO it seems _all_columns could be used instead of fields_get (no "
+#~ "need for translated fields info)\n"
+#~ "        fields = self.fields_get(cr, uid, context=context)\n"
+#~ "        fields_to_search = set(\n"
+#~ "            field for field, descriptor in fields.iteritems()\n"
+#~ "            if descriptor.get('select'))\n"
+#~ "\n"
+#~ "        for view in (form_view, tree_view):\n"
+#~ "            view_root = etree.fromstring(view['arch'])\n"
+#~ "            # Only care about select=1 in xpath below, because select=2 is "
+#~ "covered\n"
+#~ "            # by the custom advanced search in clients\n"
+#~ "            "
+#~ "fields_to_search.update(view_root.xpath(\"//field[@select=1]/@name"
+#~ msgstr ""
+#~ "Onvoldoende velden om een agenda weergave te genereren voor %s, er mist een  "
+#~ "date_stop of een date_delay\" % (self._name)))\n"
+#~ "\n"
+#~ "        return view\n"
+#~ "\n"
+#~ "    def _get_default_search_view(self, cr, uid, context=None):\n"
+#~ "        \"\n"
+#~ "        :param cr: database cursor\n"
+#~ "        :param int user: user id\n"
+#~ "        :param dict context: connection context\n"
+#~ "        :returns: an lxml document of the view\n"
+#~ "        :rtype: etree._Element\n"
+#~ "        \"\n"
+#~ "        form_view = self.fields_view_get(cr, uid, False, 'form', "
+#~ "context=context)\n"
+#~ "        tree_view = self.fields_view_get(cr, uid, False, 'tree', "
+#~ "context=context)\n"
+#~ "\n"
+#~ "        # TODO it seems _all_columns could be used instead of fields_get (no "
+#~ "need for translated fields info)\n"
+#~ "        fields = self.fields_get(cr, uid, context=context)\n"
+#~ "        fields_to_search = set(\n"
+#~ "            field for field, descriptor in fields.iteritems()\n"
+#~ "            if descriptor.get('select'))\n"
+#~ "\n"
+#~ "        for view in (form_view, tree_view):\n"
+#~ "            view_root = etree.fromstring(view['arch'])\n"
+#~ "            # Only care about select=1 in xpath below, because select=2 is "
+#~ "covered\n"
+#~ "            # by the custom advanced search in clients\n"
+#~ "            "
+#~ "fields_to_search.update(view_root.xpath(\"//field[@select=1]/@name"

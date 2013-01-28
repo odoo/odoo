@@ -206,7 +206,7 @@ class configmanager(object):
         group.add_option('--smtp-port', dest='smtp_port', my_default=25,
                          help='specify the SMTP port', type="int")
         group.add_option('--smtp-ssl', dest='smtp_ssl', action='store_true', my_default=False,
-                         help='specify the SMTP server support SSL or not')
+                         help='if passed, SMTP connections will be encrypted with SSL (STARTTLS)')
         group.add_option('--smtp-user', dest='smtp_user', my_default=False,
                          help='specify the SMTP username for sending email')
         group.add_option('--smtp-password', dest='smtp_password', my_default=False,
