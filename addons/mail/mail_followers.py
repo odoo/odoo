@@ -20,6 +20,8 @@
 ##############################################################################
 from openerp.osv import osv, fields
 from openerp import tools, SUPERUSER_ID
+from openerp.tools.translate import _
+from openerp.tools.mail import plaintext2html
 
 class mail_followers(osv.Model):
     """ mail_followers holds the data related to the follow mechanism inside
@@ -103,6 +105,54 @@ class mail_notification(osv.Model):
             notify_pids.append(partner.id)
         return notify_pids
 
+    def get_signature_footer(self, cr, uid, user_id, res_model=None, res_id=None, context=None):
+        footer = ""
+        user = self.pool.get("res.users").browse(cr, uid, [user_id], context=context)[0]
+        if user and user.signature:
+            signature = plaintext2html(user.signature)
+        else:
+            signature = "--<br>%s" % user.name
+        footer = tools.append_content_to_html(footer, signature, plaintext=False, container_tag='p')
+
+        company = None
+        if user.company_id:
+            company = user.company_id.website and "<a style='color:inherit' href='%s'>%s</a>" % (user.company_id.website, user.company_id.name) or user.company_id.name
+        else:
+            company = user.name
+        
+        model_name = None
+        record_name = None
+        if res_model:
+            res_model_obj = self.pool.get('ir.model')
+            res_model_ids = res_model_obj.search(cr, uid, [('model', '=', res_model)], context=context)
+            model_name = res_model_obj.browse(cr, uid, res_model_ids, context=context)[0].name
+            if res_id:
+                record_obj = self.pool.get(res_model)
+                record = record_obj.browse(cr, uid, [res_id], context=context)[0]
+                record_name = record.name
+
+        if company:
+            if model_name:
+                if record_name:
+                    signature_company = _("This message is written on the document '<b>%(record_name)s</b>' of '<b>%(model_name)s</b>' from '%(company)s'." % {
+                        'record_name': record_name, 
+                        'model_name': model_name, 
+                        'company': company
+                    })
+                else:
+                    signature_company = _("This message is written on '<b>%(model_name)s</b>' from '%(company)s'." % {
+                        'model_name': model_name, 
+                        'company': company
+                    })
+            else:
+                signature_company = _("This message is written from '%(company)s'." % {
+                    'company': company
+                })
+
+        footer = tools.append_content_to_html(footer, "<small>%s</small>" % signature_company, plaintext=False, container_tag='div')
+
+        return footer
+
     def _notify(self, cr, uid, msg_id, context=None):
         """ Send by email the notification depending on the user preferences """
         if context is None:
@@ -120,14 +170,11 @@ class mail_notification(osv.Model):
         # TDE FIXME: commented, to be improved in a future branch
         # quote_context = self.pool.get('mail.message').message_quote_context(cr, uid, msg_id, context=context)
 
-        mail_mail = self.pool.get('mail.mail')
         # add signature
         body_html = msg.body
-        # if quote_context:
-            # body_html = tools.append_content_to_html(body_html, quote_context, plaintext=False)
-        signature = msg.author_id and msg.author_id.user_ids and msg.author_id.user_ids[0].signature or ''
-        if signature:
-            body_html = tools.append_content_to_html(body_html, signature, plaintext=True, container_tag='div')
+        user = msg.author_id and msg.author_id.user_ids and msg.author_id.user_ids[0] or None
+        signature_company = self.get_signature_footer(cr, uid, user_id=user.id, res_model=msg.model, res_id=msg.res_id, context=context)
+        body_html = tools.append_content_to_html(body_html, signature_company, plaintext=False, container_tag='div')
 
         mail_values = {
             'mail_message_id': msg.id,
@@ -137,6 +184,7 @@ class mail_notification(osv.Model):
             'state': 'outgoing',
         }
         mail_values['email_to'] = ', '.join(mail_values['email_to'])
+        mail_mail = self.pool.get('mail.mail')
         email_notif_id = mail_mail.create(cr, uid, mail_values, context=context)
         try:
             return mail_mail.send(cr, uid, [email_notif_id], recipient_ids=notify_partner_ids, context=context)
