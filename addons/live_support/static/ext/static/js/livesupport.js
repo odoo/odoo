@@ -265,7 +265,7 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
             this.$().css("right", this.get("right_position"));
         },
         received_message: function(message) {
-            this._add_bubble(this.user, message.message, message.date);
+            this._add_bubble(this.user, message.message, oeclient.str_to_datetime(message.date));
         },
         send_message: function(e) {
             if(e && e.which !== 13) {
@@ -295,7 +295,11 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
             }
             this.last_user = user;
             this.last_items = items;
-            date = "" + date; // TODO
+            var zpad = function(str, size) {
+                str = "" + str;
+                return new Array(size - str.length + 1).join('0') + str;
+            };
+            date = "" + zpad(date.getHours(), 2) + ":" + zpad(date.getMinutes(), 2);
             
             this.last_bubble = $(templateEngine.conversation_bubble({"items": items, "user": user, "time": date}));
             $(this.$(".oe_im_chatview_content").children()[0]).append(this.last_bubble);
