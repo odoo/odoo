@@ -24,7 +24,7 @@
 import datetime
 import time
 from itertools import groupby
-from operator import itemgetter
+from operator import attrgetter, itemgetter
 
 import math
 from openerp import netsvc
@@ -370,11 +370,11 @@ class hr_holidays(osv.osv):
                         'employee_id': emp.id
                     }
                     leave_ids.append(self.create(cr, uid, vals, context=None))
-                wf_service = netsvc.LocalService("workflow")
                 for leave_id in leave_ids:
-                    wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'confirm', cr)
-                    wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'validate', cr)
-                    wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'second_validate', cr)
+                    # TODO is it necessary to interleave the calls?
+                    self.signal_confirm(cr, uid, [leave_id])
+                    self.signal_validate(cr, uid, [leave_id])
+                    self.signal_second_validate(cr, uid, [leave_id])
         return True
 
     def holidays_confirm(self, cr, uid, ids, context=None):
@@ -404,9 +404,7 @@ class hr_holidays(osv.osv):
                 meeting_obj.unlink(cr, uid, [record.meeting_id.id])
 
             # If a category that created several holidays, cancel all related
-            wf_service = netsvc.LocalService("workflow")
-            for request in record.linked_request_ids or []:
-                wf_service.trg_validate(uid, 'hr.holidays', request.id, 'refuse', cr)
+            self.signal_refuse(cr, uid, map(attrgetter('id'), record.linked_request_ids or []))
 
         self._remove_resource_leave(cr, uid, ids, context=context)
         return True
@@ -478,10 +476,9 @@ class hr_employee(osv.osv):
             leave_id = holiday_obj.create(cr, uid, {'name': _('Leave Request for %s') % employee.name, 'employee_id': employee.id, 'holiday_status_id': status_id, 'type': 'remove', 'holiday_type': 'employee', 'number_of_days_temp': abs(diff)}, context=context)
         else:
             return False
-        wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'confirm', cr)
-        wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'validate', cr)
-        wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'second_validate', cr)
+        holidays_obj.signal_confirm(cr, uid, [leave_id])
+        holidays_obj.signal_validate(cr, uid, [leave_id])
+        holidays_obj.signal_second_validate(cr, uid, [leave_id])
         return True
 
     def _get_remaining_days(self, cr, uid, ids, name, args, context=None):
