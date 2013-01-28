@@ -23,7 +23,7 @@ import logging
 import time
 
 import openerp
-from openerp.osv import osv
+from openerp.osv import osv, api
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -192,6 +192,7 @@ class ir_sequence(openerp.osv.osv.osv):
             'sec': time.strftime('%S', t),
         }
 
+    @api.cr_uid_ids
     def _next(self, cr, uid, seq_ids, context=None):
         if not seq_ids:
             return False
