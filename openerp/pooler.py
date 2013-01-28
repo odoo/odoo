@@ -28,17 +28,16 @@
 from openerp.modules.registry import RegistryManager
 
 
-def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False, pooljobs=True):
+def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False):
     """Create and return a database connection and a newly initialized registry."""
-    registry = RegistryManager.get(db_name, force_demo, status, update_module, pooljobs)
+    registry = RegistryManager.get(db_name, force_demo, status, update_module)
     return registry.db, registry
 
 
 def restart_pool(db_name, force_demo=False, status=None, update_module=False):
     """Delete an existing registry and return a database connection and a newly initialized registry."""
-    registry = RegistryManager.new(db_name, force_demo, status, update_module, True)
+    registry = RegistryManager.new(db_name, force_demo, status, update_module)
     return registry.db, registry
-
 
 def get_db(db_name):
     """Return a database connection. The corresponding registry is initialized."""

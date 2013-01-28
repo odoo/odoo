@@ -20,7 +20,8 @@
 ##############################################################################
 
 import time
-from report import report_sxw
+
+from openerp.report import report_sxw
 
 class ir_module_reference_print(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):

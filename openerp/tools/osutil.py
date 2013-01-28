@@ -26,17 +26,23 @@ Some functions related to the os and os.path module
 import os
 from os.path import join as opj
 
-def listdir(dir, recursive=False):
-	"""Allow to recursively get the file listing"""
-	dir = os.path.normpath(dir)
-	if not recursive:
-		return os.listdir(dir)
+if os.name == 'nt':
+    import ctypes
+    import win32service as ws
+    import win32serviceutil as wsu
 
-	res = []
-	for root, dirs, files in walksymlinks(dir):
-		root = root[len(dir)+1:]
-		res.extend([opj(root, f) for f in files])
-	return res
+
+def listdir(dir, recursive=False):
+    """Allow to recursively get the file listing"""
+    dir = os.path.normpath(dir)
+    if not recursive:
+        return os.listdir(dir)
+
+    res = []
+    for root, dirs, files in walksymlinks(dir):
+        root = root[len(dir)+1:]
+        res.extend([opj(root, f) for f in files])
+    return res
 
 def walksymlinks(top, topdown=True, onerror=None):
     """
@@ -56,9 +62,62 @@ def walksymlinks(top, topdown=True, onerror=None):
             yield dirpath, dirnames, filenames
 
 
+if os.name != 'nt':
+    getppid = os.getppid
+    is_running_as_nt_service = lambda: False
+else:
+    # based on http://mail.python.org/pipermail/python-win32/2007-June/006174.html
+    _TH32CS_SNAPPROCESS = 0x00000002
+    class _PROCESSENTRY32(ctypes.Structure):
+        _fields_ = [("dwSize", ctypes.c_ulong),
+                    ("cntUsage", ctypes.c_ulong),
+                    ("th32ProcessID", ctypes.c_ulong),
+                    ("th32DefaultHeapID", ctypes.c_ulong),
+                    ("th32ModuleID", ctypes.c_ulong),
+                    ("cntThreads", ctypes.c_ulong),
+                    ("th32ParentProcessID", ctypes.c_ulong),
+                    ("pcPriClassBase", ctypes.c_ulong),
+                    ("dwFlags", ctypes.c_ulong),
+                    ("szExeFile", ctypes.c_char * 260)]
+
+    def getppid():
+        CreateToolhelp32Snapshot = ctypes.windll.kernel32.CreateToolhelp32Snapshot
+        Process32First = ctypes.windll.kernel32.Process32First
+        Process32Next = ctypes.windll.kernel32.Process32Next
+        CloseHandle = ctypes.windll.kernel32.CloseHandle
+        hProcessSnap = CreateToolhelp32Snapshot(_TH32CS_SNAPPROCESS, 0)
+        current_pid = os.getpid()
+        try:
+            pe32 = _PROCESSENTRY32()
+            pe32.dwSize = ctypes.sizeof(_PROCESSENTRY32)
+            if not Process32First(hProcessSnap, ctypes.byref(pe32)):
+                raise OSError('Failed getting first process.')
+            while True:
+                if pe32.th32ProcessID == current_pid:
+                    return pe32.th32ParentProcessID
+                if not Process32Next(hProcessSnap, ctypes.byref(pe32)):
+                    return None
+        finally:
+            CloseHandle(hProcessSnap)
+
+    from contextlib import contextmanager
+    from openerp.release import nt_service_name
+
+    def is_running_as_nt_service():
+        @contextmanager
+        def close_srv(srv):
+            try:
+                yield srv
+            finally:
+                ws.CloseServiceHandle(srv)
+
+        with close_srv(ws.OpenSCManager(None, None, ws.SC_MANAGER_ALL_ACCESS)) as hscm:
+            with close_srv(wsu.SmartOpenService(hscm, nt_service_name, ws.SERVICE_ALL_ACCESS)) as hs:
+                info = ws.QueryServiceStatusEx(hs)
+                return info['ProcessId'] == getppid()
 
 if __name__ == '__main__':
-	from pprint import pprint as pp
-	pp(listdir('../report', True))
+    from pprint import pprint as pp
+    pp(listdir('../report', True))
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

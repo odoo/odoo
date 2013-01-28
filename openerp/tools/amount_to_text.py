@@ -57,9 +57,9 @@ def _convert_nnn_fr(val):
     if rem > 0:
         word = to_19_fr[rem] + ' Cent'
         if mod > 0:
-            word = word + ' '
+            word += ' '
     if mod > 0:
-        word = word + _convert_nn_fr(mod)
+        word += _convert_nn_fr(mod)
     return word
 
 def french_number(val):
@@ -125,9 +125,9 @@ def _convert_nnn_nl(val):
     if rem > 0:
         word = to_19_nl[rem] + ' Honderd'
         if mod > 0:
-            word = word + ' '
+            word += ' '
     if mod > 0:
-        word = word + _convert_nn_nl(mod)
+        word += _convert_nn_nl(mod)
     return word
 
 def dutch_number(val):

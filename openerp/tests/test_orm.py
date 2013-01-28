@@ -1,4 +1,3 @@
-from openerp import exceptions
 from openerp.tools import mute_logger
 import common
 
@@ -182,7 +181,7 @@ class TestO2MSerialization(common.TransactionCase):
     def test_no_command(self):
         " empty list of commands yields an empty list of records "
         results = self.partner.resolve_2many_commands(
-            self.cr, UID, 'address', [])
+            self.cr, UID, 'child_ids', [])
 
         self.assertEqual(results, [])
 
@@ -190,7 +189,7 @@ class TestO2MSerialization(common.TransactionCase):
         " returns the VALUES dict as-is "
         values = [{'foo': 'bar'}, {'foo': 'baz'}, {'foo': 'baq'}]
         results = self.partner.resolve_2many_commands(
-            self.cr, UID, 'address', map(CREATE, values))
+            self.cr, UID, 'child_ids', map(CREATE, values))
 
         self.assertEqual(results, values)
 
@@ -204,7 +203,7 @@ class TestO2MSerialization(common.TransactionCase):
         commands = map(LINK_TO, ids)
 
         results = self.partner.resolve_2many_commands(
-            self.cr, UID, 'address', commands, ['name'])
+            self.cr, UID, 'child_ids', commands, ['name'])
 
         self.assertEqual(sorted_by_id(results), sorted_by_id([
             {'id': ids[0], 'name': 'foo'},
@@ -221,7 +220,7 @@ class TestO2MSerialization(common.TransactionCase):
         ]
 
         results = self.partner.resolve_2many_commands(
-            self.cr, UID, 'address', ids, ['name'])
+            self.cr, UID, 'child_ids', ids, ['name'])
 
         self.assertEqual(sorted_by_id(results), sorted_by_id([
             {'id': ids[0], 'name': 'foo'},
@@ -236,7 +235,7 @@ class TestO2MSerialization(common.TransactionCase):
         id_baz = self.partner.create(self.cr, UID, {'name': 'baz', 'city': 'tag'})
 
         results = self.partner.resolve_2many_commands(
-            self.cr, UID, 'address', [
+            self.cr, UID, 'child_ids', [
                 LINK_TO(id_foo),
                 UPDATE(id_bar, {'name': 'qux', 'city': 'tagtag'}),
                 UPDATE(id_baz, {'name': 'quux'})
@@ -258,7 +257,7 @@ class TestO2MSerialization(common.TransactionCase):
         commands = [DELETE(ids[0]), DELETE(ids[1]), DELETE(ids[2])]
 
         results = self.partner.resolve_2many_commands(
-            self.cr, UID, 'address', commands, ['name'])
+            self.cr, UID, 'child_ids', commands, ['name'])
 
         self.assertEqual(results, [])
 
@@ -269,7 +268,7 @@ class TestO2MSerialization(common.TransactionCase):
         ]
 
         results = self.partner.resolve_2many_commands(
-            self.cr, UID, 'address', [
+            self.cr, UID, 'child_ids', [
                 CREATE({'name': 'foo'}),
                 UPDATE(ids[0], {'name': 'bar'}),
                 LINK_TO(ids[1]),
@@ -300,7 +299,7 @@ class TestO2MSerialization(common.TransactionCase):
         commands = map(lambda id: (4, id), ids)
 
         results = self.partner.resolve_2many_commands(
-            self.cr, UID, 'address', commands, ['name'])
+            self.cr, UID, 'child_ids', commands, ['name'])
 
         self.assertEqual(sorted_by_id(results), sorted_by_id([
             {'id': ids[0], 'name': 'foo'},
@@ -311,7 +310,7 @@ class TestO2MSerialization(common.TransactionCase):
     def test_singleton_commands(self):
         "DELETE_ALL can appear as a singleton"
         results = self.partner.resolve_2many_commands(
-            self.cr, UID, 'address', [DELETE_ALL()], ['name'])
+            self.cr, UID, 'child_ids', [DELETE_ALL()], ['name'])
 
         self.assertEqual(results, [])
 

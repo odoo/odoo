@@ -106,7 +106,7 @@ class FlateDecode(object):
         if predictor != 1:
             columns = decodeParms["/Columns"]
             # PNG prediction:
-            if predictor >= 10 and predictor <= 15:
+            if 10 <= predictor <= 15:
                 output = StringIO()
                 # PNG prediction can vary from row to row
                 rowlength = columns + 1
@@ -191,7 +191,7 @@ class ASCII85Decode(object):
                     break
             else:
                 c = ord(c) - 33
-                assert c >= 0 and c < 85
+                assert 0 <= c < 85
                 group += [ c ]
             if len(group) >= 5:
                 b = group[0] * (85**4) + \

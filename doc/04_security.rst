@@ -141,10 +141,6 @@ for users who do not belong to the authorized groups:
 
 .. note:: The tests related to this feature are in ``openerp/tests/test_acl.py``.
  
-.. warning:: At the time of writing the implementation of this feature is partial
-             and does not yet restrict read/write RPC access to the field.
-             The corresponding test is written already but currently disabled.
-
 Workflow transition rules
 +++++++++++++++++++++++++
 

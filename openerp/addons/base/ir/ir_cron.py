@@ -18,23 +18,18 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-import calendar
 import time
 import logging
-import threading
 import psycopg2
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-import netsvc
 import openerp
-import pooler
-import tools
-from osv import fields, osv
-from tools import DEFAULT_SERVER_DATETIME_FORMAT
-from tools.safe_eval import safe_eval as eval
-from tools.translate import _
+from openerp import netsvc
+from openerp.osv import fields, osv
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -140,13 +135,18 @@ class ir_cron(osv.osv):
                     _logger.debug('%.3fs (%s, %s)' % (end_time - start_time, model_name, method_name))
             except Exception, e:
                 self._handle_callback_exception(cr, uid, model_name, method_name, args, job_id, e)
+        else:
+            msg = "Method `%s.%s` do not exist." % (model._name, method_name) \
+                if model else "Model `%s` do not exist." % model._name
+            _logger.warning(msg)
 
-    def _process_job(self, cr, job):
+    def _process_job(self, job_cr, job, cron_cr):
         """ Run a given job taking care of the repetition.
 
-        The cursor has a lock on the job (aquired by _acquire_job()).
-
+        :param job_cr: cursor to use to execute the job, safe to commit/rollback
         :param job: job to be run (as a dictionary).
+        :param cron_cr: cursor holding lock on the cron job row, to use to update the next exec date,
+            must not be committed/rolled back!
         """
         try:
             now = datetime.now() 
@@ -158,19 +158,19 @@ class ir_cron(osv.osv):
                 if numbercall > 0:
                     numbercall -= 1
                 if not ok or job['doall']:
-                    self._callback(cr, job['user_id'], job['model'], job['function'], job['args'], job['id'])
+                    self._callback(job_cr, job['user_id'], job['model'], job['function'], job['args'], job['id'])
                 if numbercall:
                     nextcall += _intervalTypes[job['interval_type']](job['interval_number'])
                 ok = True
             addsql = ''
             if not numbercall:
                 addsql = ', active=False'
-            cr.execute("UPDATE ir_cron SET nextcall=%s, numbercall=%s"+addsql+" WHERE id=%s",
+            cron_cr.execute("UPDATE ir_cron SET nextcall=%s, numbercall=%s"+addsql+" WHERE id=%s",
                        (nextcall.strftime(DEFAULT_SERVER_DATETIME_FORMAT), numbercall, job['id']))
 
         finally:
-            cr.commit()
-            cr.close()
+            job_cr.commit()
+            cron_cr.commit()
 
     @classmethod
     def _acquire_job(cls, db_name):
@@ -186,44 +186,14 @@ class ir_cron(osv.osv):
         """
         db = openerp.sql_db.db_connect(db_name)
         cr = db.cursor()
+        jobs = []
         try:
             # Careful to compare timestamps with 'UTC' - everything is UTC as of v6.1.
             cr.execute("""SELECT * FROM ir_cron
                           WHERE numbercall != 0
                               AND active AND nextcall <= (now() at time zone 'UTC')
                           ORDER BY priority""")
-            for job in cr.dictfetchall():
-                task_cr = db.cursor()
-                try:
-                    # Try to grab an exclusive lock on the job row from within the task transaction
-                    acquired_lock = False
-                    task_cr.execute("""SELECT *
-                                       FROM ir_cron
-                                       WHERE id=%s
-                                       FOR UPDATE NOWAIT""",
-                                   (job['id'],), log_exceptions=False)
-                    acquired_lock = True
-                except psycopg2.OperationalError, e:
-                    if e.pgcode == '55P03':
-                        # Class 55: Object not in prerequisite state; 55P03: lock_not_available
-                        _logger.debug('Another process/thread is already busy executing job `%s`, skipping it.', job['name'])
-                        continue
-                    else:
-                        # Unexpected OperationalError
-                        raise
-                finally:
-                    if not acquired_lock:
-                        # we're exiting due to an exception while acquiring the lot
-                        task_cr.close()
-
-                # Got the lock on the job row, run its code
-                _logger.debug('Starting job `%s`.', job['name'])
-                openerp.modules.registry.RegistryManager.check_registry_signaling(db_name)
-                registry = openerp.pooler.get_pool(db_name)
-                registry[cls._name]._process_job(task_cr, job)
-                openerp.modules.registry.RegistryManager.signal_caches_change(db_name)
-                return True
-
+            jobs = cr.dictfetchall()
         except psycopg2.ProgrammingError, e:
             if e.pgcode == '42P01':
                 # Class 42 — Syntax Error or Access Rule Violation; 42P01: undefined_table
@@ -231,14 +201,45 @@ class ir_cron(osv.osv):
                 _logger.warning('Tried to poll an undefined table on database %s.', db_name)
             else:
                 raise
-        except Exception, ex:
+        except Exception:
             _logger.warning('Exception in cron:', exc_info=True)
-
         finally:
-            cr.commit()
             cr.close()
 
-        return False
+        for job in jobs:
+            lock_cr = db.cursor()
+            try:
+                # Try to grab an exclusive lock on the job row from within the task transaction
+                lock_cr.execute("""SELECT *
+                                   FROM ir_cron
+                                   WHERE id=%s
+                                   FOR UPDATE NOWAIT""",
+                               (job['id'],), log_exceptions=False)
+
+                # Got the lock on the job row, run its code
+                _logger.debug('Starting job `%s`.', job['name'])
+                job_cr = db.cursor()
+                try:
+                    openerp.modules.registry.RegistryManager.check_registry_signaling(db_name)
+                    registry = openerp.pooler.get_pool(db_name)
+                    registry[cls._name]._process_job(job_cr, job, lock_cr)
+                    openerp.modules.registry.RegistryManager.signal_caches_change(db_name)
+                except Exception:
+                    _logger.exception('Unexpected exception while processing cron job %r', job)
+                finally:
+                    job_cr.close()
+
+            except psycopg2.OperationalError, e:
+                if e.pgcode == '55P03':
+                    # Class 55: Object not in prerequisite state; 55P03: lock_not_available
+                    _logger.debug('Another process/thread is already busy executing job `%s`, skipping it.', job['name'])
+                    continue
+                else:
+                    # Unexpected OperationalError
+                    raise
+            finally:
+                # we're exiting due to an exception while acquiring the lock
+                lock_cr.close()
 
     def _try_lock(self, cr, uid, ids, context=None):
         """Try to grab a dummy exclusive write-lock to the rows with the given ids,

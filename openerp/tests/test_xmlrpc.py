@@ -10,7 +10,6 @@ import time
 import unittest2
 import xmlrpclib
 
-import openerp
 import common
 
 DB = None

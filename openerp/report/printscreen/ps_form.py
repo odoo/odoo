@@ -65,7 +65,7 @@ class report_printscreen_list(report_int):
         fields_order = self._parse_string(result['arch'])
         rows = model.read(cr, uid, datas['ids'], result['fields'].keys() )
         self._create_table(uid, datas['ids'], result['fields'], fields_order, rows, context, model._description)
-        return (self.obj.get(), 'pdf')
+        return self.obj.get(), 'pdf'
 
 
     def _create_table(self, uid, ids, fields, fields_order, results, context, title=''):
@@ -119,7 +119,7 @@ class report_printscreen_list(report_int):
                     precision=(('digits' in fields[f]) and fields[f]['digits'][1]) or 2
                     line[f]=round(line[f],precision)
                 col = etree.SubElement(node_line, 'col', tree='no')
-                if line[f] != None:
+                if line[f] is not None:
                     col.text = tools.ustr(line[f] or '')
                 else:
                     col.text = '/'

@@ -110,7 +110,7 @@ def get_encodings(hint_encoding='utf-8'):
 
     # some defaults (also taking care of pure ASCII)
     for charset in ['utf8','latin1']:
-        if not (hint_encoding) or (charset.lower() != hint_encoding.lower()):
+        if not hint_encoding or (charset.lower() != hint_encoding.lower()):
             yield charset
 
     from locale import getpreferredencoding
@@ -129,7 +129,7 @@ def ustr(value, hint_encoding='utf-8', errors='strict'):
     :param: value: the value to convert
     :param: hint_encoding: an optional encoding that was detecte
         upstream and should be tried first to decode ``value``.
-    :param str error: optional `errors` flag to pass to the unicode
+    :param str errors: optional `errors` flag to pass to the unicode
         built-in to indicate how illegal character values should be
         treated when converting a string: 'strict', 'ignore' or 'replace'
         (see ``unicode()`` constructor).

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # This assumes an existing but uninitialized database.
-import psycopg2
 import unittest2
 
 import openerp

@@ -21,6 +21,10 @@
 ##############################################################################
 
 import logging
+import os
+import signal
+import subprocess
+import sys
 import threading
 import time
 
@@ -33,6 +37,7 @@ import wsgi_server
 import openerp.modules
 import openerp.netsvc
 import openerp.osv
+from openerp.release import nt_service_name
 import openerp.tools
 
 #.apidoc title: RPC Services
@@ -97,27 +102,58 @@ def stop_services():
 
     _logger.info("Initiating shutdown")
     _logger.info("Hit CTRL-C again or send a second signal to force the shutdown.")
-    logging.shutdown()
 
     # Manually join() all threads before calling sys.exit() to allow a second signal
     # to trigger _force_quit() in case some non-daemon threads won't exit cleanly.
     # threading.Thread.join() should not mask signals (at least in python 2.5).
     me = threading.currentThread()
+    _logger.debug('current thread: %r', me)
     for thread in threading.enumerate():
+        _logger.debug('process %r (%r)', thread, thread.isDaemon())
         if thread != me and not thread.isDaemon() and thread.ident != main_thread_id:
             while thread.isAlive():
+                _logger.debug('join and sleep')
                 # Need a busyloop here as thread.join() masks signals
                 # and would prevent the forced shutdown.
                 thread.join(0.05)
                 time.sleep(0.05)
 
+    _logger.debug('--')
     openerp.modules.registry.RegistryManager.delete_all()
+    logging.shutdown()
 
 def start_services_workers():
     import openerp.service.workers
     openerp.multi_process = True
-
     openerp.service.workers.Multicorn(openerp.service.wsgi_server.application).run()
 
+def _reexec():
+    """reexecute openerp-server process with (nearly) the same arguments"""
+    if openerp.tools.osutil.is_running_as_nt_service():
+        subprocess.call('net stop {0} && net start {0}'.format(nt_service_name), shell=True)
+    exe = os.path.basename(sys.executable)
+    strip_args = ['-d', '-u']
+    a = sys.argv[:]
+    args = [x for i, x in enumerate(a) if x not in strip_args and a[max(i - 1, 0)] not in strip_args]
+    if not args or args[0] != exe:
+        args.insert(0, exe)
+    os.execv(sys.executable, args)
+
+def restart_server():
+    if openerp.multi_process:
+        raise NotImplementedError("Multicorn is not supported (but gunicorn was)")
+        pid = openerp.wsgi.core.arbiter_pid
+        os.kill(pid, signal.SIGHUP)
+    else:
+        if os.name == 'nt':
+            def reborn():
+                stop_services()
+                _reexec()
+
+            # run in a thread to let the current thread return response to the caller.
+            threading.Thread(target=reborn).start()
+        else:
+            openerp.phoenix = True
+            os.kill(os.getpid(), signal.SIGINT)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

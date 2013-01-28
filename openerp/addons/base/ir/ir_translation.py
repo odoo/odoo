@@ -19,12 +19,12 @@
 #
 ##############################################################################
 
-import tools
 import logging
 
+from openerp import tools
 import openerp.modules
 from openerp.osv import fields, osv
-from tools.translate import _
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -134,7 +134,7 @@ class ir_translation_import_cursor(object):
               """ % (self._parent_table, self._table_name, self._parent_table, find_expr))
 
         if self._debug:
-            cr.execute('SELECT COUNT(*) FROM ONLY %s' % (self._parent_table))
+            cr.execute('SELECT COUNT(*) FROM ONLY %s' % self._parent_table)
             c1 = cr.fetchone()[0]
             cr.execute('SELECT COUNT(*) FROM ONLY %s AS irt, %s AS ti WHERE %s' % \
                 (self._parent_table, self._table_name, find_expr))
@@ -217,11 +217,11 @@ class ir_translation(osv.osv):
     def _get_ids(self, cr, uid, name, tt, lang, ids):
         translations = dict.fromkeys(ids, False)
         if ids:
-            cr.execute('select res_id,value ' \
-                    'from ir_translation ' \
-                    'where lang=%s ' \
-                        'and type=%s ' \
-                        'and name=%s ' \
+            cr.execute('select res_id,value '
+                    'from ir_translation '
+                    'where lang=%s '
+                        'and type=%s '
+                        'and name=%s '
                         'and res_id IN %s',
                     (lang,tt,name,tuple(ids)))
             for res_id, value in cr.fetchall():
@@ -237,10 +237,10 @@ class ir_translation(osv.osv):
             self._get_ids.clear_cache(self, uid, name, tt, lang, res_id)
         self._get_source.clear_cache(self, uid, name, tt, lang)
 
-        cr.execute('delete from ir_translation ' \
-                'where lang=%s ' \
-                    'and type=%s ' \
-                    'and name=%s ' \
+        cr.execute('delete from ir_translation '
+                'where lang=%s '
+                    'and type=%s '
+                    'and name=%s '
                     'and res_id IN %s',
                 (lang,tt,name,tuple(ids),))
         for id in ids:

@@ -32,6 +32,9 @@
                         <page string="Menus">
                             <field name="menu_access"/>
                         </page>
+                        <page string="Views">
+                            <field name="view_access"/>
+                        </page>
                         <page string="Access Rights">
                             <field name="model_access">
                                 <tree string="Access Rules" editable="top">
@@ -133,6 +136,10 @@
                 <form string="Users" version="7.0">
                     <field name="id" invisible="1"/>
                     <sheet>
+                        <div class="oe_right oe_button_box">
+                            <button string="Change Password" type="action" name="%(change_password_wizard_action)d"
+                                help="Change the user password."/>
+                        </div>
                         <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_medium"}'/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -142,7 +149,6 @@
                         </div>
                         <group>
                             <group>
-                                <field name="new_password" password="True" attrs="{'required': [('id','=',False)]}"/>
                                 <field name="company_id" context="{'user_preference': 0}"/>
                             </group>
                             <group>
