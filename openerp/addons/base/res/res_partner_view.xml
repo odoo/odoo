@@ -269,7 +269,7 @@
                         <page string="Sales &amp; Purchases">
                             <group>
                                 <group>
-                                    <field name="user_id"/>
+                                    <field name="user_id" context="{'simple_mode': True, 'default_groups_ref': ['base.group_partner_manager', 'base.group_user']}"/>
                                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                                 </group>
                                 <group>
