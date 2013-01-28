@@ -57,16 +57,19 @@ define(["underscore", "jquery", "nova"], function(_, $, nova) {
 
     oeclient.JsonRPCConnector = oeclient.Connector.$extend({
         __init__: function(url) {
-            this.url = url + "/jsonrpc";
+            this.url = url;
+        },
+        call: function(sub_url, content) {
+            return oeclient.jsonRpc(this.url + sub_url, "call", content);
         },
         send: function(serviceName, method, args) {
-            return oeclient.jsonRpc(this.url, "call", {"service": serviceName, "method": method, "args": args});
+            return this.call("/jsonrpc", {"service": serviceName, "method": method, "args": args});
         },
     });
 
     oeclient.JsonpRPCConnector = oeclient.JsonRPCConnector.$extend({
-        send: function(serviceName, method, args) {
-            return oeclient.jsonpRpc(this.url, "call", {"service": serviceName, "method": method, "args": args});
+        call: function(sub_url, content) {
+            return oeclient.jsonpRpc(this.url + sub_url, "call", content);
         },
     });
 

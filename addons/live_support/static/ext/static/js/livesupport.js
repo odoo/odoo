@@ -18,20 +18,14 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
         }).then(function() {
             console.log("starting client");
             connection = new oeclient.Connection(new oeclient.JsonpRPCConnector(server_url), db, login, password);
-            connection.getModel("res.users").search_read([["login", "in", ["demo", "admin"]]]).then(function(result) {
-                var admin, demo;
-                if (result[0].login === "admin") {
-                    admin = result[0];
-                    demo = result[1];
-                } else {
-                    admin = result[1];
-                    demo = result[0];
-                }
-                admin = new livesupport.ImUser(null, admin);
-                demo = new livesupport.ImUser(null, demo);
+            connection.getModel("res.users").search_read([["login", "=", ["demo"]]]).then(function(result) {
+                demo_id = result[0].id;
                 var manager = new livesupport.ConversationManager(null);
-                manager.set_me(admin);
-                manager.activate_user(demo);
+                manager.start_polling().then(function() {
+                    manager.ensure_users([demo_id]).then(function() {
+                        manager.activate_user(manager.get_user(demo_id));
+                    });
+                });
             });
         });
     };
@@ -85,6 +79,80 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
             this.on("change:waiting_messages", this, this.messages_change);
             this.messages_change();
             this.create_ting();
+            this.activated = false;
+            this.users_cache = {};
+            this.last = null;
+        },
+        start_polling: function() {
+            var self = this;
+            return this.ensure_users([connection.userId]).then(function() {
+                var me = self.users_cache[connection.userId];
+                delete self.users_cache[connection.userId];
+                self.me = me;
+                connection.connector.call("/longpolling/im/activated", {}).then(function(activated) {
+                    if (activated) {
+                        self.activated = true;
+                        self.poll();
+                    }
+                });
+            });
+        },
+        ensure_users: function(user_ids) {
+            var no_cache = {};
+            _.each(user_ids, function(el) {
+                if (! this.users_cache[el])
+                    no_cache[el] = el;
+            }, this);
+            var self = this;
+            if (_.size(no_cache) === 0)
+                return $.when();
+            else
+                return connection.getModel("im.user").call("read_users", [_.values(no_cache), ["name"]]).then(function(users) {
+                    self.add_to_user_cache(users);
+                });
+        },
+        add_to_user_cache: function(user_recs) {
+            _.each(user_recs, function(user_rec) {
+                if (! this.users_cache[user_rec.id]) {
+                    var user = new livesupport.ImUser(this, user_rec);
+                    this.users_cache[user_rec.id] = user;
+                    user.on("destroyed", this, function() {
+                        delete this.users_cache[user_rec.id];
+                    });
+                }
+            }, this);
+        },
+        get_user: function(user_id) {
+            return this.users_cache[user_id];
+        },
+        poll: function() {
+            var self = this;
+            var user_ids = _.map(this.users_cache, function(el) {
+                return el.get("id");
+            });
+            connection.connector.call("/longpolling/im/poll", {
+                last: this.last,
+                users_watch: user_ids,
+            }).then(function(result) {
+                _.each(result.users_status, function(el) {
+                    if (self.get_user(el.id))
+                        self.get_user(el.id).set(el);
+                });
+                self.last = result.last;
+                var user_ids = _.pluck(_.pluck(result.res, "from"), 0);
+                self.ensure_users(user_ids).then(function() {
+                    _.each(result.res, function(mes) {
+                        var user = self.get_user(mes.from[0]);
+                        self.received_message(mes, user);
+                    });
+                    self.poll();
+                });
+            }, function() {
+                setTimeout(_.bind(self.poll, self), ERROR_DELAY);
+            });
+        },
+        get_activated: function() {
+            return this.activated;
         },
         create_ting: function() {
             this.ting = new Audio(new Audio().canPlayType("audio/ogg; codecs=vorbis") ?
@@ -102,9 +170,6 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
                 return;
             instance.webclient.set_title_part("im_messages", this.get("waiting_messages") === 0 ? undefined :
                 _.str.sprintf(_t("%d Messages"), this.get("waiting_messages")));*/
-        },
-        set_me: function(me) {
-            this.me = me;
         },
         activate_user: function(user) {
             if (this.users[user.get('id')]) {
