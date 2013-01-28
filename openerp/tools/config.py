@@ -205,7 +205,7 @@ class configmanager(object):
         group.add_option('--smtp-port', dest='smtp_port', my_default=25,
                          help='specify the SMTP port', type="int")
         group.add_option('--smtp-ssl', dest='smtp_ssl', action='store_true', my_default=False,
-                         help='specify the SMTP server support SSL or not')
+                         help='if passed, SMTP connections will be encrypted with SSL (STARTTLS)')
         group.add_option('--smtp-user', dest='smtp_user', my_default=False,
                          help='specify the SMTP username for sending email')
         group.add_option('--smtp-password', dest='smtp_password', my_default=False,
@@ -283,10 +283,10 @@ class configmanager(object):
                          help="Specify the number of workers, 0 disable prefork mode.",
                          type="int")
         group.add_option("--limit-memory-soft", dest="limit_memory_soft", my_default=640 * 1024 * 1024,
-                         help="Maximum allowed virtual memory per worker, when reached the worker be reset after the current request (default 640M).",
+                         help="Maximum allowed virtual memory per worker, when reached the worker be reset after the current request (default 671088640 aka 640MB).",
                          type="int")
         group.add_option("--limit-memory-hard", dest="limit_memory_hard", my_default=768 * 1024 * 1024,
-                         help="Maximum allowed virtual memory per worker, when reached, any memory allocation will fail (default 768M).",
+                         help="Maximum allowed virtual memory per worker, when reached, any memory allocation will fail (default 805306368 aka 768MB).",
                          type="int")
         group.add_option("--limit-time-cpu", dest="limit_time_cpu", my_default=60,
                          help="Maximum allowed CPU time per request (default 60).",
@@ -484,7 +484,7 @@ class configmanager(object):
         if opt.server_wide_modules:
             openerp.conf.server_wide_modules = map(lambda m: m.strip(), opt.server_wide_modules.split(','))
         else:
-            openerp.conf.server_wide_modules = ['web']
+            openerp.conf.server_wide_modules = ['web','web_kanban']
         if complete:
             openerp.modules.module.initialize_sys_path()
             openerp.modules.loading.open_openerp_namespace()

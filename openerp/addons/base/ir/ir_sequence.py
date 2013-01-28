@@ -22,10 +22,9 @@
 import logging
 import time
 
-from osv import osv, fields
-from tools.translate import _
-
 import openerp
+from openerp.osv import osv
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 

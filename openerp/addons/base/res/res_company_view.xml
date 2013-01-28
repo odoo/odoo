@@ -32,6 +32,11 @@
                             <field name="name" class="oe_inline"/>
                         </h1>
                     </div>
+                    <div attrs="{'invisible' : [('logo','!=',False)]}" class="oe_view_nocontent oe_clear">
+                        <p class="oe_view_nocontent_create">
+                            Click to set your company logo.
+                        </p>
+                    </div>
                     <group col="4">
                         <field name="parent_id"  groups="base.group_multi_company"/>
                     </group>

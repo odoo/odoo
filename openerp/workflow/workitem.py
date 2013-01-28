@@ -24,7 +24,6 @@
 # cr.execute('delete from wkf_triggers where model=%s and res_id=%s', (res_type,res_id))
 #
 
-import openerp.netsvc as netsvc
 import instance
 
 import wkf_expr

@@ -20,14 +20,11 @@
 ##############################################################################
 
 import xmlrpclib
-import ConfigParser
 import optparse
 import sys
-import thread
 import threading
 import os
 import time
-import pickle
 import base64
 import socket
 import string

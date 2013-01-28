@@ -42,6 +42,7 @@ from itertools import islice, izip
 from lxml import etree
 from which import which
 from threading import local
+
 try:
     from html2text import html2text
 except ImportError:

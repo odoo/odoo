@@ -19,23 +19,18 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-
 from functools import partial
 import logging
 from lxml import etree
 from lxml.builder import E
-import netsvc
-from openerp import SUPERUSER_ID
+
 import openerp
+from openerp import SUPERUSER_ID
+from openerp import pooler, tools
 import openerp.exceptions
-from osv import fields,osv
-from osv.orm import browse_record
-import pooler
-import random
-from service import security
-import tools
-from tools.translate import _
+from openerp.osv import fields,osv
+from openerp.osv.orm import browse_record
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -72,6 +67,7 @@ class groups(osv.osv):
         'rule_groups': fields.many2many('ir.rule', 'rule_group_rel',
             'group_id', 'rule_group_id', 'Rules', domain=[('global', '=', False)]),
         'menu_access': fields.many2many('ir.ui.menu', 'ir_ui_menu_group_rel', 'gid', 'menu_id', 'Access Menu'),
+        'view_access': fields.many2many('ir.ui.view', 'ir_ui_view_group_rel', 'group_id', 'view_id', 'Views'),
         'comment' : fields.text('Comment', size=250, translate=True),
         'category_id': fields.many2one('ir.module.category', 'Application', select=True),
         'full_name': fields.function(_get_full_name, type='char', string='Group Name', fnct_search=_search_group),
@@ -303,8 +299,7 @@ class res_users(osv.osv):
             for id in ids:
                 if id in self._uid_cache[db]:
                     del self._uid_cache[db][id]
-        self.context_get.clear_cache(self, cr)
-
+        self.context_get.clear_cache(self)
         return res
 
     def unlink(self, cr, uid, ids, context=None):

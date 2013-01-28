@@ -95,7 +95,7 @@ def preload_registry(dbname):
     """ Preload a registry, and start the cron."""
     try:
         update_module = True if openerp.tools.config['init'] or openerp.tools.config['update'] else False
-        db, registry = openerp.pooler.get_db_and_pool(dbname, update_module=update_module,  pooljobs=False)
+        db, registry = openerp.pooler.get_db_and_pool(dbname,update_module=update_module)
     except Exception:
         _logger.exception('Failed to initialize database `%s`.', dbname)
 
@@ -103,7 +103,7 @@ def run_test_file(dbname, test_file):
     """ Preload a registry, possibly run a test file, and start the cron."""
     try:
         config = openerp.tools.config
-        db, registry = openerp.pooler.get_db_and_pool(dbname, update_module=config['init'] or config['update'], pooljobs=False)
+        db, registry = openerp.pooler.get_db_and_pool(dbname, update_module=config['init'] or config['update'])
         cr = db.cursor()
         _logger.info('loading test file %s', test_file)
         openerp.tools.convert_yaml_import(cr, 'base', file(test_file), 'test', {}, 'test', True)
@@ -181,9 +181,9 @@ def dumpstacks(sig, frame):
                 code.append("  %s" % (line.strip()))
     _logger.info("\n".join(code))
 
-def setup_signal_handlers():
-    """ Register the signal handler defined above. """
-    SIGNALS = map(lambda x: getattr(signal, "SIG%s" % x), "INT TERM".split())
+def setup_signal_handlers(signal_handler):
+    """ Register the given signal handler. """
+    SIGNALS = (signal.SIGINT, signal.SIGTERM)
     if os.name == 'posix':
         map(lambda sig: signal.signal(sig, signal_handler), SIGNALS)
         signal.signal(signal.SIGQUIT, dumpstacks)
@@ -207,10 +207,15 @@ def quit_on_signals():
         pass
 
     config = openerp.tools.config
+    openerp.service.stop_services()
+
+    if getattr(openerp, 'phoenix', False):
+        # like the phoenix, reborn from ashes...
+        openerp.service._reexec()
+        return
+
     if config['pidfile']:
         os.unlink(config['pidfile'])
-
-    openerp.service.stop_services()
     sys.exit(0)
 
 def configure_babel_localedata_path():
@@ -233,7 +238,7 @@ def main(args):
 
     configure_babel_localedata_path()
 
-    setup_signal_handlers()
+    setup_signal_handlers(signal_handler)
 
     if config["test_file"]:
         run_test_file(config['db_name'], config['test_file'])

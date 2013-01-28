@@ -19,13 +19,12 @@
 #
 ##############################################################################
 import logging
-from operator import attrgetter, itemgetter
+from operator import attrgetter
 
-from osv import osv, fields
-from tools.translate import _
-import netsvc
-from tools import ustr
-import pooler
+from openerp import pooler
+from openerp.osv import osv, fields
+from openerp.tools import ustr
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -467,7 +466,8 @@ class res_config_settings(osv.osv_memory):
                 groups.append((name, ref(field_group), ref(field.implied_group)))
             elif name.startswith('module_') and isinstance(field, fields.boolean):
                 mod_ids = ir_module.search(cr, uid, [('name', '=', name[7:])])
-                modules.append((name, ir_module.browse(cr, uid, mod_ids[0], context)))
+                record = ir_module.browse(cr, uid, mod_ids[0], context) if mod_ids else None
+                modules.append((name, record))
             else:
                 others.append(name)
 
@@ -491,7 +491,7 @@ class res_config_settings(osv.osv_memory):
 
         # modules: which modules are installed/to install
         for name, module in classified['module']:
-            res[name] = module.state in ('installed', 'to install', 'to upgrade')
+            res[name] = module and module.state in ('installed', 'to install', 'to upgrade')
 
         # other fields: call all methods that start with 'get_default_'
         for method in dir(self):
@@ -502,9 +502,7 @@ class res_config_settings(osv.osv_memory):
 
     def execute(self, cr, uid, ids, context=None):
         ir_values = self.pool.get('ir.values')
-        ir_model_data = self.pool.get('ir.model.data')
         ir_module = self.pool.get('ir.module.module')
-        res_groups = self.pool.get('res.groups')
         classified = self._get_classified_fields(cr, uid, context)
 
         config = self.browse(cr, uid, ids[0], context)
@@ -527,17 +525,33 @@ class res_config_settings(osv.osv_memory):
                 getattr(self, method)(cr, uid, ids, context)
 
         # module fields: install/uninstall the selected modules
-        to_install_ids = []
+        to_install_missing_names = []
         to_uninstall_ids = []
+        to_install_ids = []
+        lm = len('module_')
         for name, module in classified['module']:
             if config[name]:
-                if module.state == 'uninstalled': to_install_ids.append(module.id)
+                if not module:
+                    # missing module, will be provided by apps.openerp.com
+                    to_install_missing_names.append(name[lm:])
+                elif module.state == 'uninstalled':
+                    # local module, to be installed
+                    to_install_ids.append(module.id)
             else:
-                if module.state in ('installed','upgrade'): to_uninstall_ids.append(module.id)
+                if module and module.state in ('installed', 'to upgrade'):
+                    to_uninstall_ids.append(module.id)
 
-        if to_install_ids or to_uninstall_ids:
-            ir_module.button_uninstall(cr, uid, to_uninstall_ids, context=context)
+        if to_uninstall_ids:
+            ir_module.button_immediate_uninstall(cr, uid, to_uninstall_ids, context=context)
+        if to_install_ids:
             ir_module.button_immediate_install(cr, uid, to_install_ids, context=context)
+
+        if to_install_missing_names:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'apps',
+                'params': {'modules': to_install_missing_names},
+            }
 
         config = self.pool.get('res.config').next(cr, uid, [], context=context) or {}
         if config.get('type') not in ('ir.actions.act_window_close',):

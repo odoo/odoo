@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import osv
+from openerp.osv import osv
 
 
 class ir_needaction_mixin(osv.AbstractModel):

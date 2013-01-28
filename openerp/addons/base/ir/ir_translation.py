@@ -19,12 +19,12 @@
 #
 ##############################################################################
 
-import tools
 import logging
 
+from openerp import tools
 import openerp.modules
 from openerp.osv import fields, osv
-from tools.translate import _
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 

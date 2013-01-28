@@ -19,9 +19,10 @@
 #
 ##############################################################################
 
-from osv import osv,fields
-from tools.misc import attrgetter
 import time
+
+from openerp.osv import osv,fields
+from openerp.tools.misc import attrgetter
 
 # -------------------------------------------------------------------------
 # Properties

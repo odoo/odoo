@@ -31,8 +31,7 @@ import re
 import smtplib
 import threading
 
-from osv import osv
-from osv import fields
+from openerp.osv import osv, fields
 from openerp.tools.translate import _
 from openerp.tools import html2text
 import openerp.tools as tools
@@ -183,10 +182,12 @@ class ir_mail_server(osv.osv):
                                                        "(this is very verbose and may include confidential info!)"),
         'sequence': fields.integer('Priority', help="When no specific mail server is requested for a mail, the highest priority one "
                                                     "is used. Default priority is 10 (smaller number = higher priority)"),
+        'active': fields.boolean('Active')
     }
 
     _defaults = {
          'smtp_port': 25,
+         'active': True,
          'sequence': 10,
          'smtp_encryption': 'none',
      }
@@ -369,7 +370,7 @@ class ir_mail_server(osv.osv):
         return msg
 
     def send_email(self, cr, uid, message, mail_server_id=None, smtp_server=None, smtp_port=None,
-                   smtp_user=None, smtp_password=None, smtp_encryption='none', smtp_debug=False,
+                   smtp_user=None, smtp_password=None, smtp_encryption=None, smtp_debug=False,
                    context=None):
         """Sends an email directly (no queuing).
 
@@ -387,7 +388,7 @@ class ir_mail_server(osv.osv):
                         extracted from the combined list of ``To``, ``CC`` and ``BCC`` headers.
         :param mail_server_id: optional id of ir.mail_server to use for sending. overrides other smtp_* arguments.
         :param smtp_server: optional hostname of SMTP server to use
-        :param smtp_encryption: one of 'none', 'starttls' or 'ssl' (see ir.mail_server fields for explanation)
+        :param smtp_encryption: optional TLS mode, one of 'none', 'starttls' or 'ssl' (see ir.mail_server fields for explanation)
         :param smtp_port: optional SMTP port, if mail_server_id is not passed
         :param smtp_user: optional SMTP user, if mail_server_id is not passed
         :param smtp_password: optional SMTP password to use, if mail_server_id is not passed
@@ -421,12 +422,6 @@ class ir_mail_server(osv.osv):
             mail_server_ids = self.search(cr, uid, [], order='sequence', limit=1)
             if mail_server_ids:
                 mail_server = self.browse(cr, uid, mail_server_ids[0])
-        else:
-            # we were passed an explicit smtp_server or nothing at all
-            smtp_server = smtp_server or tools.config.get('smtp_server')
-            smtp_port = tools.config.get('smtp_port', 25) if smtp_port is None else smtp_port
-            smtp_user = smtp_user or tools.config.get('smtp_user')
-            smtp_password = smtp_password or tools.config.get('smtp_password')
 
         if mail_server:
             smtp_server = mail_server.smtp_host
@@ -435,6 +430,14 @@ class ir_mail_server(osv.osv):
             smtp_port = mail_server.smtp_port
             smtp_encryption = mail_server.smtp_encryption
             smtp_debug = smtp_debug or mail_server.smtp_debug
+        else:
+            # we were passed an explicit smtp_server or nothing at all
+            smtp_server = smtp_server or tools.config.get('smtp_server')
+            smtp_port = tools.config.get('smtp_port', 25) if smtp_port is None else smtp_port
+            smtp_user = smtp_user or tools.config.get('smtp_user')
+            smtp_password = smtp_password or tools.config.get('smtp_password')
+            if smtp_encryption is None and tools.config.get('smtp_ssl'):
+                smtp_encryption = 'starttls' # STARTTLS is the new meaning of the smtp_ssl flag as of v7.0
 
         if not smtp_server:
             raise osv.except_osv(
@@ -453,7 +456,7 @@ class ir_mail_server(osv.osv):
                 return message_id
 
             try:
-                smtp = self.connect(smtp_server, smtp_port, smtp_user, smtp_password, smtp_encryption, smtp_debug)
+                smtp = self.connect(smtp_server, smtp_port, smtp_user, smtp_password, smtp_encryption or False, smtp_debug)
                 smtp.sendmail(smtp_from, smtp_to_list, message.as_string())
             finally:
                 try:

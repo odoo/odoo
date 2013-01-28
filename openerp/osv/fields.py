@@ -289,8 +289,8 @@ class date(_column):
            This method may be passed as value to initialize _defaults.
 
            :param Model model: model (osv) for which the date value is being
-                               computed - technical field, currently ignored,
-                               automatically passed when used in _defaults.
+                               computed - automatically passed when used in
+                                _defaults.
            :param datetime timestamp: optional datetime value to use instead of
                                       the current date and time (must be a
                                       datetime, regular dates can't be converted
@@ -303,9 +303,13 @@ class date(_column):
         today = timestamp or DT.datetime.now()
         context_today = None
         if context and context.get('tz'):
+            tz_name = context['tz']  
+        else:
+            tz_name = model.pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['tz'])['tz']
+        if tz_name:
             try:
                 utc = pytz.timezone('UTC')
-                context_tz = pytz.timezone(context['tz'])
+                context_tz = pytz.timezone(tz_name)
                 utc_today = utc.localize(today, is_dst=False) # UTC = no DST
                 context_today = utc_today.astimezone(context_tz)
             except Exception:
@@ -346,9 +350,14 @@ class datetime(_column):
         """
         assert isinstance(timestamp, DT.datetime), 'Datetime instance expected'
         if context and context.get('tz'):
+            tz_name = context['tz']  
+        else:
+            registry = openerp.modules.registry.RegistryManager.get(cr.dbname)
+            tz_name = registry.get('res.users').read(cr, SUPERUSER_ID, uid, ['tz'])['tz']
+        if tz_name:
             try:
                 utc = pytz.timezone('UTC')
-                context_tz = pytz.timezone(context['tz'])
+                context_tz = pytz.timezone(tz_name)
                 utc_timestamp = utc.localize(timestamp, is_dst=False) # UTC = no DST
                 return utc_timestamp.astimezone(context_tz)
             except Exception:

@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import collections
 import datetime
 import functools
 import operator

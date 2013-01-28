@@ -199,7 +199,7 @@ class ir_model(osv.osv):
 
     def instanciate(self, cr, user, model, context=None):
         class x_custom_model(osv.osv):
-            pass
+            _custom = True
         x_custom_model._name = model
         x_custom_model._module = False
         a = x_custom_model.create_instance(self.pool, cr)

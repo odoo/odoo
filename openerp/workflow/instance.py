@@ -18,12 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-import wkf_logs
 import workitem
-
-import openerp.netsvc as netsvc
-import openerp.pooler as pooler
 
 def create(cr, ident, wkf_id):
     (uid,res_type,res_id) = ident

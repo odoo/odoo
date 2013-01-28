@@ -20,14 +20,14 @@
 ##############################################################################
 
 import locale
+from locale import localeconv
 import logging
 import re
 
-from osv import fields, osv
-from locale import localeconv
-import tools
-from tools.safe_eval import safe_eval as eval
-from tools.translate import _
+from openerp import tools
+from openerp.osv import fields, osv
+from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 

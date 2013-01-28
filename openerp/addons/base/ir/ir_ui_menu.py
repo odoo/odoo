@@ -23,11 +23,11 @@
 import base64
 import re
 import threading
-from tools.safe_eval import safe_eval as eval
-import tools
+from openerp.tools.safe_eval import safe_eval as eval
+from openerp import tools
 import openerp.modules
-from osv import fields, osv
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
 
 def one_in(setA, setB):

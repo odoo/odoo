@@ -19,8 +19,9 @@
 #
 ##############################################################################
 
-from osv import osv, fields
 import time
+
+from openerp.osv import osv, fields
 
 def _links_get(self, cr, uid, context=None):
     obj = self.pool.get('res.request.link')

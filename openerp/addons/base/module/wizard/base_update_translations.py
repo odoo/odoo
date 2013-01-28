@@ -19,10 +19,11 @@
 #
 ##############################################################################
 
-from osv import osv, fields
-import tools
 import cStringIO
-from tools.translate import _
+
+from openerp import tools
+from openerp.osv import osv, fields
+from openerp.tools.translate import _
 
 class base_update_translations(osv.osv_memory):
     def _get_languages(self, cr, uid, context):

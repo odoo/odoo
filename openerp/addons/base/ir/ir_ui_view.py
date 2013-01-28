@@ -19,14 +19,15 @@
 #
 ##############################################################################
 
-from osv import fields,osv
-from lxml import etree
-from tools import graph
-from tools.safe_eval import safe_eval as eval
-import tools
-from tools.view_validation import valid_view
-import os
 import logging
+from lxml import etree
+import os
+
+from openerp import tools
+from openerp.osv import fields,osv
+from openerp.tools import graph
+from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools.view_validation import valid_view
 
 _logger = logging.getLogger(__name__)
 

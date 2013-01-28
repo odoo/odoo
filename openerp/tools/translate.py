@@ -886,8 +886,9 @@ def trans_generate(lang, modules, cr):
         for root, dummy, files in osutil.walksymlinks(path):
             for fname in fnmatch.filter(files, '*.py'):
                 babel_extract_terms(fname, path, root)
+            # mako provides a babel extractor: http://docs.makotemplates.org/en/latest/usage.html#babel
             for fname in fnmatch.filter(files, '*.mako'):
-                babel_extract_terms(fname, path, root, trans_type='report')
+                babel_extract_terms(fname, path, root, 'mako', trans_type='report')
             # Javascript source files in the static/src/js directory, rest is ignored (libs)
             if fnmatch.fnmatch(root, '*/static/src/js*'):
                 for fname in fnmatch.filter(files, '*.js'):
