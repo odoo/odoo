@@ -220,11 +220,7 @@
                         <span class="left-block">
                             Total:
                         </span>
-                        <span class="right-block">
-                            <t t-if="widget.currency.position == 'before'" t-esc="widget.currency.symbol"/>
-                            <span id="payment-due-total"></span>
-                            <t t-if="widget.currency.position == 'after'" t-esc="widget.currency.symbol"/>
-                        </span>
+                        <span class='right-block' id="payment-due-total"></span>
                     </div>
                     <table id="paymentlines">
                     </table>
@@ -233,31 +229,19 @@
                             <span class='left-block'>
                                 Paid:
                             </span>
-                            <span class='right-block'>
-                                <t t-if="widget.currency.position == 'before'" t-esc="widget.currency.symbol"/>
-                                <span id="payment-paid-total"></span>
-                                <t t-if="widget.currency.position == 'after'" t-esc="widget.currency.symbol"/>
-                            </span>
+                            <span class='right-block' id="payment-paid-total"></span>
                         </div>
                         <div class="infoline">
                             <span class='left-block'>
                                 Remaining:
                             </span>
-                            <span class='right-block'>
-                                <t t-if="widget.currency.position == 'before'" t-esc="widget.currency.symbol"/>
-                                <span id="payment-remaining"></span>
-                                <t t-if="widget.currency.position == 'after'" t-esc="widget.currency.symbol"/>
-                            </span>
+                            <span class='right-block' id="payment-remaining"></span>
                         </div>
                         <div class="infoline" >
                             <span class='left-block'>
                                 Change:
                             </span>
-                            <span class='right-block'>
-                                <t t-if="widget.currency.position == 'before'" t-esc="widget.currency.symbol"/>
-                                <span id="payment-change"></span>
-                                <t t-if="widget.currency.position == 'after'" t-esc="widget.currency.symbol"/>
-                            </span>
+                            <span class='right-block' id="payment-change"></span>
                         </div>
                     </div>
                 </div>

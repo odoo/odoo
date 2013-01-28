@@ -960,10 +960,10 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             var remaining = dueTotal > paidTotal ? dueTotal - paidTotal : 0;
             var change = paidTotal > dueTotal ? paidTotal - dueTotal : 0;
 
-            this.$('#payment-due-total').html(dueTotal.toFixed(2));
-            this.$('#payment-paid-total').html(paidTotal.toFixed(2));
-            this.$('#payment-remaining').html(remaining.toFixed(2));
-            this.$('#payment-change').html(change.toFixed(2));
+            this.$('#payment-due-total').html(this.format_currency(dueTotal));
+            this.$('#payment-paid-total').html(this.format_currency(paidTotal));
+            this.$('#payment-remaining').html(this.format_currency(remaining));
+            this.$('#payment-change').html(this.format_currency(change));
             if(currentOrder.selected_orderline === undefined){
                 remaining = 1;  // What is this ? 
             }

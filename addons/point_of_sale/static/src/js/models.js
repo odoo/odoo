@@ -1,10 +1,23 @@
 function openerp_pos_models(instance, module){ //module is instance.point_of_sale
     var QWeb = instance.web.qweb;
 
+    // rounds a value with a fixed number of decimals.
+    // round(3.141492,2) -> 3.14
     function round(value,decimals){
         var mult = Math.pow(10,decimals || 0);
         return Math.round(value*mult)/mult;
     }
+    window.round = round;
+
+    // rounds a value with decimal form precision
+    // round(3.141592,0.025) ->3.125
+    function round_pr(value,precision){
+        if(!precision || precision < 0){
+            throw new Error('round_pr(): needs a precision greater than zero, got '+precision+' instead');
+        }
+        return Math.round(value / precision) * precision;
+    }
+    window.round_pr = round_pr;
 
     
     // The PosModel contains the Point Of Sale's representation of the backend.
@@ -105,8 +118,9 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 }).then(function(company_partners){
                     self.get('company').contact_address = company_partners[0].contact_address;
 
-                    return self.fetch('res.currency',['symbol','position'],[['id','=',self.get('company').currency_id[0]]]);
+                    return self.fetch('res.currency',['symbol','position','rounding','accuracy'],[['id','=',self.get('company').currency_id[0]]]);
                 }).then(function(currencies){
+                    console.log('Currency:',currencies[0]);
                     self.set('currency',currencies[0]);
 
                     return self.fetch('product.uom', null, null);
@@ -377,7 +391,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 var unit = this.get_unit();
                 if(unit){
                     this.quantity    = Math.max(unit.rounding, Math.round(quant / unit.rounding) * unit.rounding);
-                    this.quantityStr = this.quantity.toFixed(Math.ceil(Math.log(1.0 / unit.rounding) / Math.log(10)));
+                    this.quantityStr = this.quantity.toFixed(Math.max(0,Math.ceil(Math.log(1.0 / unit.rounding) / Math.log(10))));
                 }else{
                     this.quantity    = quant;
                     this.quantityStr = '' + this.quantity;
@@ -473,10 +487,12 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.trigger('change');
         },
         get_unit_price: function(){
-            return this.price;
+            var rounding = this.pos.get('currency').rounding;
+            return round_pr(this.price,rounding);
         },
         get_display_price: function(){
-            return  round(round(this.price * this.get_quantity(),2) * (1- this.get_discount()/100.0),2);
+            var rounding = this.pos.get('currency').rounding;
+            return  round_pr(round_pr(this.get_unit_price() * this.get_quantity(),rounding) * (1- this.get_discount()/100.0),rounding);
         },
         get_price_without_tax: function(){
             return this.get_all_prices().priceWithoutTax;
@@ -487,9 +503,10 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         get_tax: function(){
             return this.get_all_prices().tax;
         },
-        get_all_prices: function() {
+        get_all_prices: function(){
             var self = this;
-            var base = round(this.get_quantity() * this.price * (1 - (this.get_discount() / 100)),2); //FIXME en fonction de la currency
+            var currency_rounding = this.pos.get('currency').rounding;
+            var base = round_pr(this.get_quantity() * this.get_unit_price() * (1.0 - (this.get_discount() / 100.0)), currency_rounding);
             var totalTax = base;
             var totalNoTax = base;
             
@@ -503,13 +520,13 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 if (tax.price_include) {
                     var tmp;
                     if (tax.type === "percent") {
-                        tmp =  base - round(base / (1 + tax.amount),2); //FIXME en fonction de la currency 
+                        tmp =  base - round_pr(base / (1 + tax.amount),currency_rounding); 
                     } else if (tax.type === "fixed") {
-                        tmp = round(tax.amount * self.get_quantity(),2);
+                        tmp = round_pr(tax.amount * self.get_quantity(),currency_rounding);
                     } else {
                         throw "This type of tax is not supported by the point of sale: " + tax.type;
                     }
-                    tmp = round(tmp,2);
+                    tmp = round_pr(tmp,currency_rounding);
                     taxtotal += tmp;
                     totalNoTax -= tmp;
                 } else {
@@ -521,7 +538,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     } else {
                         throw "This type of tax is not supported by the point of sale: " + tax.type;
                     }
-                    tmp = round(tmp,2);
+                    tmp = round_pr(tmp,currency_rounding);
                     taxtotal += tmp;
                     totalTax += tmp;
                 }
