@@ -146,6 +146,7 @@ class hr_employee(osv.osv):
     _name = "hr.employee"
     _description = "Employee"
     _inherits = {'resource.resource': "resource_id"}
+    _inherit = ['mail.thread']
 
     def _get_image(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
