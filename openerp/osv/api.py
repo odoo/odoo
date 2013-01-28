@@ -65,7 +65,7 @@ def _split_context_args(nargs, args, kwargs):
 def model(method):
     """ Decorate a model method with the new-style API.  Such a method::
 
-            @model
+            @api.model
             def method(self, args):
                 ...
 
@@ -87,7 +87,7 @@ def model(method):
 def recordset(method):
     """ Decorate a recordset method with the new-style API.  Such a method::
 
-            @recordset
+            @api.recordset
             def method(self, args):
                 ...
 
@@ -107,10 +107,10 @@ def recordset(method):
     return _wrapper(method, old_api, method)
 
 
-def old_cr(method):
+def cr(method):
     """ Decorate a method with the old-style API.  Such a method::
 
-            @old_cr
+            @api.cr
             def method(self, cr, args):
                 ...
 
@@ -127,10 +127,10 @@ def old_cr(method):
     return _wrapper(method, method, new_api)
 
 
-def old_cr_uid(method):
+def cr_uid(method):
     """ Decorate a method with the old-style API.  Such a method::
 
-            @old_cr_uid
+            @api.cr_uid
             def method(self, cr, uid, args, context=None):
                 ...
 
@@ -153,10 +153,10 @@ def old_cr_uid(method):
     return _wrapper(method, method, new_api)
 
 
-def old_cr_uid_id(method):
+def cr_uid_id(method):
     """ Decorate a method with the old-style API.  Such a method::
 
-            @old_cr_uid_id
+            @api.cr_uid_id
             def method(self, cr, uid, id, args, context=None):
                 ...
 
@@ -183,10 +183,10 @@ def old_cr_uid_id(method):
     return _wrapper(method, method, new_api)
 
 
-def old_cr_uid_ids(method):
+def cr_uid_ids(method):
     """ Decorate a method with the old-style API.  Such a method::
 
-            @old_cr_uid_ids
+            @api.cr_uid_ids
             def method(self, cr, uid, ids, args, context=None):
                 ...
 
@@ -234,13 +234,13 @@ def versatile(method):
         if argnames[1] in ('cr', 'cursor'):
             if argnames[2] in ('uid', 'user'):
                 if argnames[3] == 'ids':
-                    return old_cr_uid_ids(method)
+                    return cr_uid_ids(method)
                 elif argnames[3] == 'id':
-                    return old_cr_uid_id(method)
+                    return cr_uid_id(method)
                 else:
-                    return old_cr_uid(method)
+                    return cr_uid(method)
             else:
-                return old_cr(method)
+                return cr(method)
 
     # no versatile wrapping by default
     method.versatile = False
