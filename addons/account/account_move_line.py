@@ -443,9 +443,9 @@ class account_move_line(osv.osv):
         'statement_id': fields.many2one('account.bank.statement', 'Statement', help="The bank statement used for bank reconciliation", select=1),
         'reconcile_id': fields.many2one('account.move.reconcile', 'Reconcile', readonly=True, ondelete='set null', select=2),
         'reconcile_partial_id': fields.many2one('account.move.reconcile', 'Partial Reconcile', readonly=True, ondelete='set null', select=2),
-        'reconcile': fields.function(_get_reconcile, type='char', string='Reconcile'),
+        'reconcile': fields.function(_get_reconcile, type='char', string='Reconcile Ref'),
         'amount_currency': fields.float('Amount Currency', help="The amount expressed in an optional other currency if it is a multi-currency entry.", digits_compute=dp.get_precision('Account')),
-        'amount_residual_currency': fields.function(_amount_residual, string='Residual Amount', multi="residual", help="The residual amount on a receivable or payable of a journal entry expressed in its currency (maybe different of the company currency)."),
+        'amount_residual_currency': fields.function(_amount_residual, string='Residual Amount in Currency', multi="residual", help="The residual amount on a receivable or payable of a journal entry expressed in its currency (maybe different of the company currency)."),
         'amount_residual': fields.function(_amount_residual, string='Residual Amount', multi="residual", help="The residual amount on a receivable or payable of a journal entry expressed in the company currency."),
         'currency_id': fields.many2one('res.currency', 'Currency', help="The optional other currency if it is a multi-currency entry."),
         'journal_id': fields.related('move_id', 'journal_id', string='Journal', type='many2one', relation='account.journal', required=True, select=True,
@@ -456,7 +456,7 @@ class account_move_line(osv.osv):
                                 store = {
                                     'account.move': (_get_move_lines, ['period_id'], 20)
                                 }),
-        'blocked': fields.boolean('Litigation', help="You can check this box to mark this journal item as a litigation with the associated partner"),
+        'blocked': fields.boolean('No Follow-up', help="You can check this box to mark this journal item as a litigation with the associated partner"),
         'partner_id': fields.many2one('res.partner', 'Partner', select=1, ondelete='restrict'),
         'date_maturity': fields.date('Due date', select=True ,help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line."),
         'date': fields.related('move_id','date', string='Effective date', type='date', required=True, select=True,
@@ -672,17 +672,24 @@ class account_move_line(osv.osv):
             return {'value':val}
         if not date:
             date = datetime.now().strftime('%Y-%m-%d')
+        jt = False
+        if journal:
+            jt = journal_obj.browse(cr, uid, journal).type
         part = partner_obj.browse(cr, uid, partner_id)
 
-        if part.property_payment_term:
-            res = payment_term_obj.compute(cr, uid, part.property_payment_term.id, 100, date)
+        payment_term_id = False
+        if jt and jt in ('purchase', 'purchase_refund') and part.property_supplier_payment_term:
+            payment_term_id = part.property_supplier_payment_term.id
+        elif jt and part.property_payment_term:
+            payment_term_id = part.property_payment_term.id
+        if payment_term_id:
+            res = payment_term_obj.compute(cr, uid, payment_term_id, 100, date)
             if res:
                 val['date_maturity'] = res[0][0]
         if not account_id:
             id1 = part.property_account_payable.id
             id2 =  part.property_account_receivable.id
-            if journal:
-                jt = journal_obj.browse(cr, uid, journal).type
+            if jt:
                 if jt in ('sale', 'purchase_refund'):
                     val['account_id'] = fiscal_pos_obj.map_account(cr, uid, part and part.property_account_position or False, id2)
                 elif jt in ('purchase', 'sale_refund'):
@@ -849,7 +856,12 @@ class account_move_line(osv.osv):
         if r[0][1] != None:
             raise osv.except_osv(_('Error!'), _('Some entries are already reconciled.'))
 
-        if (not currency_obj.is_zero(cr, uid, account.company_id.currency_id, writeoff)) or \
+        if context.get('fy_closing'):
+            # We don't want to generate any write-off when being called from the
+            # wizard used to close a fiscal year (and it doesn't give us any
+            # writeoff_acc_id).
+            pass
+        elif (not currency_obj.is_zero(cr, uid, account.company_id.currency_id, writeoff)) or \
            (account.currency_id and (not currency_obj.is_zero(cr, uid, account.currency_id, currency))):
             if not writeoff_acc_id:
                 raise osv.except_osv(_('Warning!'), _('You have to provide an account for the write off/exchange difference entry.'))

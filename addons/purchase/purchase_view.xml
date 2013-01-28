@@ -132,43 +132,6 @@
       <menuitem name="Products" id="menu_procurement_partner_contact_form" action="product.product_normal_action_puchased"
           parent="menu_procurement_management_product"/>
 
-        <!-- Purchase order Read/Unread actions -->
-        <record id="actions_server_purchase_order_unread" model="ir.actions.server">
-            <field name="name">Purchase: Mark unread</field>
-            <field name="condition">True</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="model_purchase_order"/>
-            <field name="state">code</field>
-            <field name="code">self.message_mark_as_unread(cr, uid, context.get('active_ids'), context=context)</field>
-        </record>
-        <record id="action_purchase_order_unread" model="ir.values">
-            <field name="name">action_purchase_order_unread</field>
-            <field name="action_id" ref="actions_server_purchase_order_unread"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_purchase_order_unread'))" />
-            <field name="key">action</field>
-            <field name="model_id" ref="model_purchase_order" />
-            <field name="model">purchase.order</field>
-            <field name="key2">client_action_multi</field>
-        </record>
-
-        <record id="actions_server_purchase_order_read" model="ir.actions.server">
-            <field name="name">Purchase: Mark read</field>
-            <field name="condition">True</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="model_purchase_order"/>
-            <field name="state">code</field>
-            <field name="code">self.message_mark_as_read(cr, uid, context.get('active_ids'), context=context)</field>
-        </record>
-        <record id="action_purchase_order_read" model="ir.values">
-            <field name="name">action_purchase_order_read</field>
-            <field name="action_id" ref="actions_server_purchase_order_read"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_purchase_order_read'))" />
-            <field name="key">action</field>
-            <field name="model_id" ref="model_purchase_order" />
-            <field name="model">purchase.order</field>
-            <field name="key2">client_action_multi</field>
-        </record>
-
         <record model="ir.ui.view" id="purchase_order_calendar">
             <field name="name">purchase.order.calendar</field>
             <field name="model">purchase.order</field>
@@ -242,7 +205,7 @@
                         <page string="Purchase Order">
                             <field name="order_line">
                                 <tree string="Purchase Order Lines" editable="bottom">
-                                    <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,context)"/>
+                                    <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,0,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,context)"/>
                                     <field name="name"/>
                                     <field name="date_planned"/>
                                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
@@ -278,6 +241,7 @@
                                 <group>
                                     <field name="invoice_method"/>
                                     <field name="invoiced"/>
+                                    <field name="payment_term_id" widget="selection"/>
                                     <field name="fiscal_position"/>
                                     <!-- We do not need these fields anymore, the information is in open chatter -->
                                     <field name="validator" groups="base.group_no_one"/>
@@ -420,7 +384,7 @@
                     <sheet>
                         <group>
                             <group>
-                                <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,context)"/>
+                                <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,0,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,context)"/>
                                 <label for="product_qty"/>
                                 <div>
                                     <field name="product_qty" on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,price_unit,context)" class="oe_inline"/>

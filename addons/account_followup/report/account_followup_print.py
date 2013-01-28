@@ -25,6 +25,8 @@ import pooler
 from report import report_sxw
 
 class report_rappel(report_sxw.rml_parse):
+    _name = "account_followup.report.rappel"
+
     def __init__(self, cr, uid, name, context=None):
         super(report_rappel, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
@@ -79,7 +81,6 @@ class report_rappel(report_sxw.rml_parse):
                 final_res.append({'line': line_cur[cur]['line']})
         return final_res
 
-
     def _get_text(self, stat_line, followup_id, context=None):
         if context is None:
             context = {}
@@ -108,7 +109,6 @@ class report_rappel(report_sxw.rml_parse):
                 'company_name': stat_line.company_id.name,
                 'user_signature': pooler.get_pool(self.cr.dbname).get('res.users').browse(self.cr, self.uid, self.uid, context).signature or '',
             }
-
         return text
 
 report_sxw.report_sxw('report.account_followup.followup.print',

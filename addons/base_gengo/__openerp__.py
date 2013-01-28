@@ -24,7 +24,7 @@
     'category': 'Tools',
     'description': """
 Automated Translations through Gengo API
-----------------------------------------
+========================================
 
 This module will install passive scheduler job for automated translations 
 using the Gengo API. To activate it, you must

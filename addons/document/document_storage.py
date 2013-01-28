@@ -349,7 +349,7 @@ class document_storage(osv.osv):
         'type': fields.selection([('db', 'Database'), ('filestore', 'Internal File storage'),
                 ('realstore','External file storage'),], 'Type', required=True),
         'path': fields.char('Path', size=250, select=1, help="For file storage, the root path of the storage"),
-        'online': fields.boolean('Online', help="If not checked, media is currently offline and its contents not available", required=True),
+        'online': fields.boolean('Online', help="If not checked, media is currently offline and its contents not available"),
         'readonly': fields.boolean('Read Only', help="If set, media is for reading only"),
     }
 

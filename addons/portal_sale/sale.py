@@ -51,8 +51,13 @@ class mail_mail(osv.osv):
         if mail.model == 'sale.order':
             so_obj = self.pool.get('sale.order')
             partner = so_obj.browse(cr, uid, mail.res_id, context=context)['partner_id']
+            # Add the customer in the SO as follower
             if partner.id not in so_obj.browse(cr, uid, mail.res_id, context=context)['message_follower_ids']:
                 so_obj.message_subscribe(cr, uid, [mail.res_id], [partner.id], context=context)
+            # Add all recipients of the email as followers
+            for p in mail.partner_ids:
+                if p.id not in so_obj.browse(cr, uid, mail.res_id, context=context)['message_follower_ids']:
+                    so_obj.message_subscribe(cr, uid, [mail.res_id], [p.id], context=context)
         return super(mail_mail, self)._postprocess_sent_message(cr, uid, mail=mail, context=context)
 
 mail_mail()

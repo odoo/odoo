@@ -6,9 +6,9 @@
             <field name="model">knowledge.config.settings</field>
             <field name="inherit_id" ref="knowledge.view_knowledge_configuration"/>
             <field name="arch" type="xml">
-                <field name="module_document_ftp" position="after">
+                 <xpath expr="//div[@name='module_document_ftp']" position="after">
                     <field name="document_ftp_url" widget="url"/>
-                </field>
+                 </xpath>
             </field>
         </record>
     </data>

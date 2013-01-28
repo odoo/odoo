@@ -22,8 +22,8 @@
 {
     'name': 'Switzerland - Accounting',
     'description':  """
-Swiss localization :
-====================
+Swiss localization:
+===================
     - DTA generation for a lot of payment types
     - BVR management (number generation, report.)
     - Import account move from the bank file (like v11)

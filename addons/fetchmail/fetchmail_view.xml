@@ -93,6 +93,20 @@
             <field name="view_id" ref="view_email_server_tree"/>
             <field name="search_view_id" ref="view_email_server_search"/>
         </record>
+        
+        <record id="inherit_view_general_configuration" model="ir.ui.view">
+            <field name="name">General Settings</field>
+            <field name="model">base.config.settings</field>
+              <field name="inherit_id" ref="base_setup.view_general_configuration"/>
+              <field name="arch" type="xml">
+                  <div name="email" position="inside">
+                      <button type="action"
+                            name="%(action_email_server_tree)d"
+                            string="Configure the incoming email gateway" class="oe_link"/>
+                  </div>
+              </field>
+      </record>
+
 
         <menuitem
             parent="base.menu_email"
@@ -117,7 +131,7 @@
       <act_window
             context="{'search_default_server_id': active_id, 'default_fetchmail_server_id': active_id}"
             id="act_server_history" name="Messages" domain="[('email_from', '!=', False), ('fetchmail_server_id', '=', active_id)]"
-            res_model="mail.message" src_model="fetchmail.server"/>
+            res_model="mail.mail" src_model="fetchmail.server"/>
 
     </data>
 </openerp>

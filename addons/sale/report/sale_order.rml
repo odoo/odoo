@@ -195,8 +195,8 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <para style="terp_header">[[ o.state&lt;&gt;'draft' and removeParentNode('para') ]] Quotation N° [[ o.name ]]</para>
-    <para style="terp_header">[[ o.state=='draft' and removeParentNode('para') ]] Order N° [[ o.name ]]</para>
+    <para style="terp_header">[[ o.state not in ['draft','sent'] and removeParentNode('para') ]] Quotation N° [[ o.name ]]</para>
+    <para style="terp_header">[[ o.state in ['draft','sent'] and removeParentNode('para') ]] Order N° [[ o.name ]]</para>
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
@@ -206,8 +206,8 @@
           <para style="terp_tblheader_General_Centre">Your Reference </para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Centre">[[ o.state=='draft' and removeParentNode('para') ]] Date Ordered</para>
-          <para style="terp_tblheader_General_Centre">[[ o.state &lt;&gt; 'draft' and removeParentNode('para') ]] Quotation Date</para>
+          <para style="terp_tblheader_General_Centre">[[ o.state in ['draft','sent'] and removeParentNode('para') ]] Date Ordered</para>
+          <para style="terp_tblheader_General_Centre">[[ o.state not in ['draft','sent'] and removeParentNode('para') ]] Quotation Date</para>
         </td>
         <td>
           <para style="terp_tblheader_General_Centre">Salesperson</para>

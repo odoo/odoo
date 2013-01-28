@@ -25,8 +25,8 @@
                             <h1>
                                 <field name="name"/>
                             </h1>
-                            <label for="category_ids" class="oe_edit_only"/>
-                            <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time"/>
+                            <label for="category_ids" class="oe_edit_only" groups="base.group_hr_user"/>
+                            <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time" groups="base.group_hr_user"/>
                         </div>
                         <div class="oe_right oe_button_box" name="button_box">
                             <!-- Put here related buttons -->
@@ -112,7 +112,7 @@
                 <search string="Employees">
                     <field name="name" string="Employees"/>
                     <field name="department_id" />
-                    <field name="category_ids"/>
+                    <field name="category_ids" groups="base.group_hr_user"/>
                     <group expand="0" string="Group By...">
                         <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'parent_id'}"/>
                         <filter string="Coach" icon="terp-personal" domain="[]" context="{'group_by':'coach_id'}"/>

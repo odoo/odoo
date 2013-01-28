@@ -106,40 +106,23 @@ class hr_employee(osv.osv):
         'evaluation_plan_id': fields.many2one('hr_evaluation.plan', 'Appraisal Plan'),
         'evaluation_date': fields.date('Next Appraisal Date', help="The date of the next appraisal is computed by the appraisal plan's dates (first appraisal + periodicity)."),
     }
-
     def run_employee_evaluation(self, cr, uid, automatic=False, use_new_cursor=False, context=None):
+        now = parser.parse(datetime.now().strftime('%Y-%m-%d'))
         obj_evaluation = self.pool.get('hr_evaluation.evaluation')
-        for id in self.browse(cr, uid, self.search(cr, uid, [], context=context), context=context):
-            if id.evaluation_plan_id and id.evaluation_date:
-                if (parser.parse(id.evaluation_date) + relativedelta(months = int(id.evaluation_plan_id.month_next))).strftime('%Y-%m-%d') <= time.strftime("%Y-%m-%d"):
-                    self.write(cr, uid, id.id, {'evaluation_date': (parser.parse(id.evaluation_date) + relativedelta(months =+ int(id.evaluation_plan_id.month_next))).strftime('%Y-%m-%d')}, context=context)
-                    obj_evaluation.create(cr, uid, {'employee_id': id.id, 'plan_id': id.evaluation_plan_id}, context=context)
+        emp_ids =self.search(cr, uid, [ ('evaluation_plan_id','<>',False), ('evaluation_date','=', False)], context=context)
+        for emp in self.browse(cr, uid, emp_ids, context=context):
+            first_date = (now+ relativedelta(months=emp.evaluation_plan_id.month_first)).strftime('%Y-%m-%d')
+            self.write(cr, uid, [emp.id], {'evaluation_date': first_date}, context=context)
+
+        emp_ids =self.search(cr, uid, [
+            ('evaluation_plan_id','<>',False), ('evaluation_date','<=', time.strftime("%Y-%m-%d")),
+            ], context=context) 
+        for emp in self.browse(cr, uid, emp_ids, context=context):
+            next_date = (now + relativedelta(months=emp.evaluation_plan_id.month_next)).strftime('%Y-%m-%d')
+            self.write(cr, uid, [emp.id], {'evaluation_date': next_date}, context=context)
+            plan_id = obj_evaluation.create(cr, uid, {'employee_id': emp.id, 'plan_id': emp.evaluation_plan_id.id}, context=context)
+            obj_evaluation.button_plan_in_progress(cr, uid, [plan_id], context=context)
         return True
-
-    def onchange_evaluation_plan_id(self, cr, uid, ids, evaluation_plan_id, evaluation_date, context=None):
-        if evaluation_plan_id:
-            evaluation_plan_obj=self.pool.get('hr_evaluation.plan')
-            obj_evaluation = self.pool.get('hr_evaluation.evaluation')
-            flag = False
-            evaluation_plan =  evaluation_plan_obj.browse(cr, uid, [evaluation_plan_id], context=context)[0]
-            if not evaluation_date:
-               evaluation_date=(parser.parse(datetime.now().strftime('%Y-%m-%d'))+ relativedelta(months=+evaluation_plan.month_first)).strftime('%Y-%m-%d')
-               flag = True
-            else:
-                if (parser.parse(evaluation_date) + relativedelta(months = int(evaluation_plan.month_next))).strftime('%Y-%m-%d') <= time.strftime("%Y-%m-%d"):
-                    evaluation_date=(parser.parse(evaluation_date)+ relativedelta(months=+evaluation_plan.month_next)).strftime('%Y-%m-%d')
-                    flag = True
-            if ids and flag:
-                obj_evaluation.create(cr, uid, {'employee_id': ids[0], 'plan_id': evaluation_plan_id}, context=context)
-        return {'value': {'evaluation_date': evaluation_date}}
-
-    def create(self, cr, uid, vals, context=None):
-        id = super(hr_employee, self).create(cr, uid, vals, context=context)
-        if vals.get('evaluation_plan_id', False):
-            self.pool.get('hr_evaluation.evaluation').create(cr, uid, {'employee_id': id, 'plan_id': vals['evaluation_plan_id']}, context=context)
-        return id
-
-hr_employee()
 
 class hr_evaluation(osv.osv):
     _name = "hr_evaluation.evaluation"
@@ -187,13 +170,14 @@ class hr_evaluation(osv.osv):
         return res
 
     def onchange_employee_id(self, cr, uid, ids, employee_id, context=None):
-        evaluation_plan_id=False
+        vals = {}
+        vals['plan_id'] = False
         if employee_id:
-            employee_obj=self.pool.get('hr.employee')
+            employee_obj = self.pool.get('hr.employee')
             for employee in employee_obj.browse(cr, uid, [employee_id], context=context):
                 if employee and employee.evaluation_plan_id and employee.evaluation_plan_id.id:
-                    evaluation_plan_id=employee.evaluation_plan_id.id
-        return {'value': {'plan_id':evaluation_plan_id}}
+                    vals.update({'plan_id': employee.evaluation_plan_id.id})
+        return {'value': vals}
 
     def button_plan_in_progress(self, cr, uid, ids, context=None):
         mail_message = self.pool.get('mail.message')

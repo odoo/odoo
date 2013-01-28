@@ -1,43 +1,6 @@
 <openerp>
     <data>
 
-        <!-- Hr holidays Read/Unread actions -->
-        <record id="actions_server_holidays_unread" model="ir.actions.server">
-            <field name="name">Holidays: Mark unread</field>
-            <field name="condition">True</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="model_hr_holidays"/>
-            <field name="state">code</field>
-            <field name="code">self.message_mark_as_unread(cr, uid, context.get('active_ids'), context=context)</field>
-        </record>
-        <record id="action_holidays_unread" model="ir.values">
-            <field name="name">action_holidays_unread</field>
-            <field name="action_id" ref="actions_server_holidays_unread"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_holidays_unread'))"/>
-            <field name="key">action</field>
-            <field name="model_id" ref="model_hr_holidays"/>
-            <field name="model">hr.holidays</field>
-            <field name="key2">client_action_multi</field>
-        </record>
-
-        <record id="actions_server_holidays_read" model="ir.actions.server">
-            <field name="name">Holidays: Mark read</field>
-            <field name="condition">True</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="model_hr_holidays"/>
-            <field name="state">code</field>
-            <field name="code">self.message_mark_as_read(cr, uid, context.get('active_ids'), context=context)</field>
-        </record>
-        <record id="action_holidays_read" model="ir.values">
-            <field name="name">action_holidays_read</field>
-            <field name="action_id" ref="actions_server_holidays_read"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_holidays_read'))"/>
-            <field name="key">action</field>
-            <field name="model_id" ref="model_hr_holidays"/>
-            <field name="model">hr.holidays</field>
-            <field name="key2">client_action_multi</field>
-        </record>
-
         <record id="view_hr_holidays_filter" model="ir.ui.view">
             <field name="name">hr.holidays.filter</field>
             <field name="model">hr.holidays</field>

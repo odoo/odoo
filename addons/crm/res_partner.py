@@ -47,7 +47,7 @@ class res_partner(osv.osv):
         'phonecall_ids': fields.one2many('crm.phonecall', 'partner_id',\
             'Phonecalls'),
         'opportunity_count': fields.function(_opportunity_meeting_count, string="Opportunity", type='integer', multi='opp_meet'),
-        'meeting_count': fields.function(_opportunity_meeting_count, string="Meeting", type='integer', multi='opp_meet'),
+        'meeting_count': fields.function(_opportunity_meeting_count, string="# Meetings", type='integer', multi='opp_meet'),
     }
 
     def copy(self, cr, uid, record_id, default=None, context=None):

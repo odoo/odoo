@@ -78,13 +78,6 @@ class account_analytic_account(osv.osv):
         'pricelist_id': lambda self, cr, uid, ctx: ctx.get('pricelist_id', False),
     }
 
-    def on_change_use_timesheets(self, cr, uid, ids, use_timesheets, context=None):
-        res = {'value': {}}
-        if use_timesheets:
-            ir_model_obj = self.pool.get('ir.model.data')
-            res['value']['to_invoice'] = ir_model_obj.get_object_reference(cr, uid, 'hr_timesheet_invoice', 'timesheet_invoice_factor1')[1]
-        return res
-
     def on_change_partner_id(self, cr, uid, ids, partner_id, name, context=None):
         res = super(account_analytic_account, self).on_change_partner_id(cr, uid, ids, partner_id, name, context=context)
         part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)

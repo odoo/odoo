@@ -41,8 +41,8 @@ class account_asset_category(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'method': fields.selection([('linear','Linear'),('degressive','Degressive')], 'Computation Method', required=True, help="Choose the method to use to compute the amount of depreciation lines.\n"\
             "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n" \
-            "  * Degressive: Calculated on basis of: Remaining Value * Degressive Factor"),
-        'method_number': fields.integer('Number of Depreciations'),
+            "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"),
+        'method_number': fields.integer('Number of Depreciations', help="The number of depreciations needed to depreciate your asset"),
         'method_period': fields.integer('Period Length', help="State here the time between 2 depreciations, in months", required=True),
         'method_progress_factor': fields.float('Degressive Factor'),
         'method_time': fields.selection([('number','Number of Depreciations'),('end','Ending Date')], 'Time Method', required=True,
@@ -222,6 +222,15 @@ class account_asset_asset(osv.osv):
             else:
                 val['currency_id'] = company.currency_id.id
         return {'value': val}
+    
+    def onchange_purchase_salvage_value(self, cr, uid, ids, purchase_value, salvage_value, context=None):
+        val = {}
+        for asset in self.browse(cr, uid, ids, context=context):
+            if purchase_value:
+                val['value_residual'] = purchase_value - salvage_value
+            if salvage_value:
+                val['value_residual'] = purchase_value - salvage_value
+        return {'value': val}    
 
     _columns = {
         'account_move_line_ids': fields.one2many('account.move.line', 'asset_id', 'Entries', readonly=True, states={'draft':[('readonly',False)]}),
@@ -243,9 +252,9 @@ class account_asset_asset(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True, states={'draft':[('readonly',False)]}),
         'method': fields.selection([('linear','Linear'),('degressive','Degressive')], 'Computation Method', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="Choose the method to use to compute the amount of depreciation lines.\n"\
             "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n" \
-            "  * Degressive: Calculated on basis of: Remaining Value * Degressive Factor"),
-        'method_number': fields.integer('Number of Depreciations', readonly=True, states={'draft':[('readonly',False)]}, help="Calculates Depreciation within specified interval"),
-        'method_period': fields.integer('Number of Months in a Period', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="State here the time during 2 depreciations, in months"),
+            "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"),
+        'method_number': fields.integer('Number of Depreciations', readonly=True, states={'draft':[('readonly',False)]}, help="The number of depreciations needed to depreciate your asset"),
+        'method_period': fields.integer('Number of Months in a Period', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="The amount of time between two depreciations, in months"),
         'method_end': fields.date('Ending Date', readonly=True, states={'draft':[('readonly',False)]}),
         'method_progress_factor': fields.float('Degressive Factor', readonly=True, states={'draft':[('readonly',False)]}),
         'value_residual': fields.function(_amount_residual, method=True, digits_compute=dp.get_precision('Account'), string='Residual Value'),
@@ -359,8 +368,8 @@ class account_asset_depreciation_line(osv.osv):
         'sequence': fields.integer('Sequence', required=True),
         'asset_id': fields.many2one('account.asset.asset', 'Asset', required=True),
         'parent_state': fields.related('asset_id', 'state', type='char', string='State of Asset'),
-        'amount': fields.float('Depreciation Amount', digits_compute=dp.get_precision('Account'), required=True),
-        'remaining_value': fields.float('Amount to Depreciate', digits_compute=dp.get_precision('Account'),required=True),
+        'amount': fields.float('Current Depreciation', digits_compute=dp.get_precision('Account'), required=True),
+        'remaining_value': fields.float('Next Period Depreciation', digits_compute=dp.get_precision('Account'),required=True),
         'depreciated_value': fields.float('Amount Already Depreciated', required=True),
         'depreciation_date': fields.date('Depreciation Date', select=1),
         'move_id': fields.many2one('account.move', 'Depreciation Entry'),
@@ -460,7 +469,7 @@ class account_asset_history(osv.osv):
                                   help="The method to use to compute the dates and number of depreciation lines.\n"\
                                        "Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n" \
                                        "Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."),
-        'method_number': fields.integer('Number of Depreciations'),
+        'method_number': fields.integer('Number of Depreciations', help="The number of depreciations needed to depreciate your asset"),
         'method_period': fields.integer('Period Length', help="Time in month between two depreciations"),
         'method_end': fields.date('Ending date'),
         'note': fields.text('Note'),

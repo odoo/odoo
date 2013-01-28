@@ -924,7 +924,7 @@
                                 <group class="oe_subtotal_footer oe_right">
                                     <field name="cash_register_balance_start" readonly="1" string="Opening Balance" class="oe_subtotal_footer_separator"/>
                                     <field name="cash_register_total_entry_encoding"  attrs="{'invisible' : [('state', '=', 'opening_control')]}" string="+ Transactions"/>
-                                    <field name="cash_register_balance_end" attrs="{'invisible' : [('state', '=', 'opening_control')]}" string="= Theorical Balance"/>
+                                    <field name="cash_register_balance_end" attrs="{'invisible' : [('state', '=', 'opening_control')]}" string="= Theoretical Balance"/>
                                 </group>
                                 <div class="oe_clear"/>
                                 <div attrs="{'invisible' : ['|', ('cash_journal_id', '=', False), ('state', '!=', 'opening_control')]}" class="oe_view_nocontent" groups="point_of_sale.group_pos_manager">

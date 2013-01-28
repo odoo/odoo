@@ -28,7 +28,7 @@
     'summary': 'Touchscreen Interface for Shops',
     'description': """
 Quick and Easy sale process
-============================
+===========================
 
 This module allows you to manage your shop sales very easily with a fully web based touchscreen interface.
 It is compatible with all PC tablets and the iPad, offering multiple payment methods. 

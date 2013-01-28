@@ -135,17 +135,20 @@
     <menuitem id="menu_fleet_dashboard" 
               parent="base.menu_reporting_dashboard" 
               action="open_board_fleet" 
-              sequence="50"/>
+              sequence="50"
+              groups="group_fleet_user"/>
     
-    <menuitem name="Fleet" parent="base.menu_reporting" id="menu_fleet_reporting" sequence="50" />
+    <menuitem name="Fleet" parent="base.menu_reporting" id="menu_fleet_reporting" sequence="50" groups="group_fleet_manager"/>
 
     <menuitem id="menu_fleet_reporting_costs" 
               parent="menu_fleet_reporting" 
               action="action_fleet_reporting_costs" 
-              sequence="1"/>
+              sequence="1"
+              groups="group_fleet_manager"/>
     <menuitem id="menu_fleet_reporting_indicative_costs" 
               parent="menu_fleet_reporting" 
               action="action_fleet_reporting_costs_non_effective" 
-              sequence="2"/>
+              sequence="2"
+              groups="group_fleet_manager"/>
 </data>
 </openerp>

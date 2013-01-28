@@ -7,19 +7,19 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2010-12-16 05:34+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2012-12-08 17:09+0000\n"
+"Last-Translator: Vida Potočnik <vida.potocnik@mentis.si>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:12+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-09 04:38+0000\n"
+"X-Generator: Launchpad (build 16341)\n"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
 msgid "Analytic Accounting for Purchases"
-msgstr ""
+msgstr "Analitičen konto nabave"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_config_settings
@@ -29,7 +29,7 @@ msgstr ""
 #. module: purchase
 #: view:board.board:0
 msgid "Monthly Purchases by Category"
-msgstr ""
+msgstr "Mesečne nabave po skupini"
 
 #. module: purchase
 #: help:purchase.config.settings,module_warning:0
@@ -48,7 +48,7 @@ msgstr "Privzeti nabavni cenik"
 #. module: purchase
 #: report:purchase.order:0
 msgid "Tel :"
-msgstr ""
+msgstr "Tel  :"
 
 #. module: purchase
 #: help:purchase.order,pricelist_id:0
@@ -62,7 +62,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.actions.server,name:purchase.actions_server_purchase_order_read
 msgid "Purchase: Mark read"
-msgstr ""
+msgstr "Nabava: Označi  kot prebrano"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -73,7 +73,7 @@ msgstr "Dan"
 #. module: purchase
 #: view:purchase.report:0
 msgid "Order of Day"
-msgstr ""
+msgstr "Dnevna naročila"
 
 #. module: purchase
 #: help:purchase.order,message_unread:0
@@ -165,7 +165,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:0
 msgid "Purchase order which are in the exception state"
-msgstr ""
+msgstr "Nabavni nalogi s statusom \"izjeme\""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_view_purchase_order_group
@@ -194,7 +194,7 @@ msgstr "Naslov za odpremo:"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Confirm Order"
-msgstr ""
+msgstr "Potrdi naročilo"
 
 #. module: purchase
 #: field:purchase.config.settings,module_warning:0
@@ -236,7 +236,7 @@ msgstr ""
 #: code:addons/purchase/purchase.py:255
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
-msgstr ""
+msgstr "Če želite izbrisati nabavni nalog, ga morate najprej preklicati."
 
 #. module: purchase
 #: view:product.product:0
@@ -246,12 +246,12 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:0
 msgid "Approved purchase orders"
-msgstr ""
+msgstr "Potrjeni nabavni nalogi"
 
 #. module: purchase
 #: model:email.template,subject:purchase.email_template_edi_purchase
 msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name} Naročilo (Ref ${object.name or 'n/a' })"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -261,7 +261,7 @@ msgstr "Skupaj brez davka"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
 msgid "Unit of Measure Categories"
-msgstr ""
+msgstr "Skupine enot mere"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -279,7 +279,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Quotation for <em>%s</em> <b>converted</b> to a Purchase Order of %s %s."
-msgstr ""
+msgstr "Ponudba za <em>%s</em> <b>spremenjena</b> v nabavni nalog %s %s."
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_purchaseinvoice0
@@ -296,7 +296,7 @@ msgstr ""
 #: field:purchase.order.line,state:0
 #: view:purchase.report:0
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -322,7 +322,7 @@ msgstr "Naročila"
 #: help:account.config.settings,group_analytic_account_for_purchases:0
 #: help:purchase.config.settings,group_analytic_account_for_purchases:0
 msgid "Allows you to specify an analytic account on purchase orders."
-msgstr ""
+msgstr "Omogoča določitev analitičnega konta na nabavnem nalogu."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
@@ -349,7 +349,7 @@ msgstr "Oktober"
 #: code:addons/purchase/purchase.py:837
 #, python-format
 msgid "Purchase Order for <em>%s</em> <b>cancelled</b>."
-msgstr ""
+msgstr "Nabavni nalog za <em>%s</em> <b>preklican</b>."
 
 #. module: purchase
 #: field:purchase.order,message_summary:0
@@ -372,7 +372,7 @@ msgstr "Ponudbe"
 #. module: purchase
 #: view:purchase.order.line_invoice:0
 msgid "Do you want to generate the supplier invoices?"
-msgstr ""
+msgstr "Želite ustvariti prejete račune?"
 
 #. module: purchase
 #: field:purchase.order.line,product_qty:0
@@ -448,7 +448,7 @@ msgstr ""
 #: code:addons/purchase/purchase.py:824
 #, python-format
 msgid "Draft Invoice of %s %s is <b>waiting for validation</b>."
-msgstr ""
+msgstr "Osnutek računa %s %s čaka na potrditev</b>."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_line_form_action2
@@ -2203,7 +2203,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:0
 msgid "Purchase orders which are in draft state"
-msgstr ""
+msgstr "Osnutki naročil"
 
 #. module: purchase
 #: view:purchase.report:0

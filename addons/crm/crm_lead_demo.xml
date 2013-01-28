@@ -247,7 +247,7 @@ Andrew</field>
             <field name="contact_name">Bojing Hú</field>
             <field name="partner_name">Incom Corporation</field>
             <field name="email_from">bhu.a100@gmail.com</field>
-            <field name="partner_id" ref=""/>
+            <field name="partner_id" ref="base.res_partner_1"/>
             <field name="country_id" ref="base.cn"/>
             <field name="city">Shenzhen</field>
             <field name="type_id" ref="type_lead3"/>
@@ -545,6 +545,31 @@ Andrew</field>
             <field name="section_id" ref="crm_case_section_2"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="crm.stage_lead4"/>
+            <field eval="1" name="active"/>
+        </record>
+
+        <record id="crm_case_26" model="crm.lead">
+            <field name="type">opportunity</field>
+            <field name="name">Would appreciate more information about your products</field>
+            <field eval="11000" name="planned_revenue"/>
+            <field eval="45.0" name="probability"/>
+            <field name="partner_name">Agrolait</field>
+            <field name="email_from">info@agrolait.com</field>
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="street">69 rue de Chimay</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="city">Wavre</field>
+            <field name="zip">1300</field>
+            <field name="type_id" ref="type_lead3"/>
+            <field name="categ_ids" eval="[(6, 0, [categ_oppor2])]"/>
+            <field name="channel_id" ref="crm_case_channel_website"/>
+            <field name="priority">3</field>
+            <field eval="time.strftime('%Y-%m-23')" name="date_deadline"/>
+            <field eval="time.strftime('%Y-%m-10')" name="date_action"/>
+            <field name="title_action">Send Catalogue by Email</field>
+            <field name="section_id" ref="crm_case_section_4"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="stage_id" ref="crm.stage_lead3"/>
             <field eval="1" name="active"/>
         </record>
 

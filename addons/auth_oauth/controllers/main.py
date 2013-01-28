@@ -62,7 +62,9 @@ class OAuthController(oeweb.Controller):
                 u = registry.get('res.users')
                 credentials = u.auth_oauth(cr, SUPERUSER_ID, provider, kw, context=context)
                 cr.commit()
-                return login_and_redirect(req, *credentials)
+                action = state.get('a', None)
+                url = '/#action=' + action if action else '/'
+                return login_and_redirect(req, *credentials, redirect_url=url)
             except AttributeError:
                 # auth_signup is not installed
                 _logger.error("auth_signup not installed on database %s: oauth sign up cancelled." % (dbname,))

@@ -228,7 +228,7 @@ instance.web.ViewManager.include({
                     context: dataset.context
                     }).done(function(result) {
                         action_manager.replace(self.$el);
-                        action_manager.do_action(result.result);
+                        action_manager.do_action(result);
                     })
             });
     },

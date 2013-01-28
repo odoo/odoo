@@ -30,6 +30,7 @@ Module for the Check Writing and Check Printing.
     'website': 'http://www.openerp.com',
     'depends' : ['account_voucher'],
     'data': [
+        'wizard/account_check_batch_printing_view.xml',
         'account_check_writing_report.xml',
         'account_view.xml',
         'account_voucher_view.xml',

@@ -32,8 +32,8 @@ French Payroll Rules.
     - All main contributions rules for French payslip, for 'cadre' and 'non-cadre'
     - New payslip report
 
-TODO :
-------
+TODO:
+-----
     - Integration with holidays module for deduction and allowance
     - Integration with hr_payroll_account for the automatic account_move_line
       creation from the payslip

@@ -20,7 +20,6 @@
 #
 ##############################################################################
 import time
-import wizard
 import osv
 import pooler
 import urllib

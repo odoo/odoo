@@ -141,7 +141,7 @@ for a particular financial year and for preparation of vouchers there is a modul
         'project/analytic_account_demo.xml',
         'demo/account_minimal.xml',
         'demo/account_invoice_demo.xml',
-#        'account_unit_test.xml',
+        'account_unit_test.xml',
     ],
     'test': [
         'test/account_customer_invoice.yml',

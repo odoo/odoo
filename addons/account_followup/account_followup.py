@@ -24,7 +24,6 @@ from lxml import etree
 
 from tools.translate import _
 
-
 class followup(osv.osv):
     _name = 'account_followup.followup'
     _description = 'Account Follow-up'
@@ -74,7 +73,7 @@ class followup_line(osv.osv):
 
 Exception made if there was a mistake of ours, it seems that the following amount stays unpaid. Please, take appropriate measures in order to carry out this payment in the next 8 days.
 
-Would your payment have been carried out after this mail was sent, please ignore this message. Do not hesitate to contact our accounting department at (+32).10.68.94.39.
+Would your payment have been carried out after this mail was sent, please ignore this message. Do not hesitate to contact our accounting department.
 
 Best Regards,
 """,
@@ -118,12 +117,61 @@ class account_move_line(osv.osv):
 class email_template(osv.osv):
     _inherit = 'email.template'
 
-    # Adds current_date to the context.  That way it can be used to put
-    # the account move lines in bold that are overdue in the email
-    def render_template(self, cr, uid, template, model, res_id, context=None):
-        context['current_date'] = fields.date.context_today(cr, uid, context)
-        return super(email_template, self).render_template(cr, uid, template, model, res_id, context=context)
+    def _get_followup_table_html(self, cr, uid, res_id, context=None):
+        ''' 
+        Build the html tables to be included in emails send to partners, when reminding them their
+        overdue invoices.
 
+        :param res_id: ID of the partner for whom we are building the tables
+        :rtype: string
+        '''
+        from report import account_followup_print
+
+        partner = self.pool.get('res.partner').browse(cr, uid, res_id, context=context)
+        followup_table = ''
+        if partner.unreconciled_aml_ids: 
+            company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
+            current_date = fields.date.context_today(cr, uid, context)
+            rml_parse = account_followup_print.report_rappel(cr, uid, "followup_rml_parser")
+            final_res = rml_parse._lines_get_with_partner(partner, company.id)
+
+            for currency_dict in final_res:
+                currency = currency_dict.get('line', [{'currency_id': company.currency_id}])[0]['currency_id']
+                followup_table += '''
+                <table border="2" width=100%%>
+                <tr>
+                    <td>Invoice date</td>
+                    <td>Reference</td>
+                    <td>Due date</td>
+                    <td>Amount (%s)</td>
+                    <td>Lit.</td>
+                </tr>
+                ''' % (currency.symbol)
+                total = 0
+                for aml in currency_dict['line']:
+                    block = aml['blocked'] and 'X' or ' '
+                    total += aml['balance']
+                    strbegin = "<TD>"
+                    strend = "</TD>"
+                    date = aml['date_maturity'] or aml['date']
+                    if date <= current_date and aml['balance'] > 0:
+                        strbegin = "<TD><B>"
+                        strend = "</B></TD>"
+                    followup_table +="<TR>" + strbegin + str(aml['date']) + strend + strbegin + aml['ref'] + strend + strbegin + str(date) + strend + strbegin + str(aml['balance']) + strend + strbegin + block + strend + "</TR>"
+                total = rml_parse.formatLang(total, dp='Account', currency_obj=currency)
+                followup_table += '''<tr> </tr>
+                                </table>
+                                <center>Amount due: %s </center>''' % (total)
+        return followup_table
+
+
+    def render_template(self, cr, uid, template, model, res_id, context=None):
+        if model == 'res.partner' and context.get('followup'):
+            context['followup_table'] = self._get_followup_table_html(cr, uid, res_id, context=context)
+            # Adds current_date to the context. That way it can be used to put
+            # the account move lines in bold that are overdue in the email
+            context['current_date'] = fields.date.context_today(cr, uid, context)
+        return super(email_template, self).render_template(cr, uid, template, model, res_id, context=context)
 
 class res_partner(osv.osv):
 
@@ -209,32 +257,36 @@ class res_partner(osv.osv):
             }
 
     def do_partner_mail(self, cr, uid, partner_ids, context=None):
+        if context is None:
+            context = {}
+        ctx = context.copy()
+        ctx['followup'] = True
         #partner_ids are res.partner ids
         # If not defined by latest follow-up level, it will be the default template if it can find it
         mtp = self.pool.get('email.template')
         unknown_mails = 0
-        for partner in self.browse(cr, uid, partner_ids, context=context):
+        for partner in self.browse(cr, uid, partner_ids, context=ctx):
             if partner.email and partner.email.strip():
                 level = partner.latest_followup_level_id_without_lit
                 if level and level.send_email and level.email_template_id and level.email_template_id.id:
-                    mtp.send_mail(cr, uid, level.email_template_id.id, partner.id, context=context)
+                    mtp.send_mail(cr, uid, level.email_template_id.id, partner.id, context=ctx)
                 else:
                     mail_template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 
                                                     'account_followup', 'email_template_account_followup_default')
-                    mtp.send_mail(cr, uid, mail_template_id[1], partner.id, context=context)
+                    mtp.send_mail(cr, uid, mail_template_id[1], partner.id, context=ctx)
             else:
                 unknown_mails = unknown_mails + 1
                 action_text = _("Email not sent because of email address of partner not filled in")
                 if partner.payment_next_action_date:
-                    payment_action_date = min(fields.date.context_today(cr, uid, context), partner.payment_next_action_date)
+                    payment_action_date = min(fields.date.context_today(cr, uid, ctx), partner.payment_next_action_date)
                 else:
-                    payment_action_date = fields.date.context_today(cr, uid, context)
+                    payment_action_date = fields.date.context_today(cr, uid, ctx)
                 if partner.payment_next_action:
-                    payment_next_action = partner.payment_next_action + " + " + action_text
+                    payment_next_action = partner.payment_next_action + " \n " + action_text
                 else:
                     payment_next_action = action_text
                 self.write(cr, uid, [partner.id], {'payment_next_action_date': payment_action_date,
-                                                   'payment_next_action': payment_next_action}, context=context)
+                                                   'payment_next_action': payment_next_action}, context=ctx)
         return unknown_mails
 
     def action_done(self, cr, uid, ids, context=None):
@@ -256,21 +308,122 @@ class res_partner(osv.osv):
         }
 
 
+    def _get_amounts_and_date(self, cr, uid, ids, name, arg, context=None):
+        '''
+        Function that computes values for the followup functional fields. Note that 'payment_amount_due'
+        is similar to 'credit' field on res.partner except it filters on user's company.
+        '''
+        res = {}
+        company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
+        current_date = fields.date.context_today(cr, uid, context)
+        for partner in self.browse(cr, uid, ids, context=context):
+            worst_due_date = False
+            amount_due = amount_overdue = 0.0
+            for aml in partner.unreconciled_aml_ids:
+                if (aml.company_id == company):
+                    date_maturity = aml.date_maturity or aml.date
+                    if not worst_due_date or date_maturity < worst_due_date:
+                        worst_due_date = date_maturity
+                    amount_due += aml.result
+                    if (date_maturity <= current_date):
+                        amount_overdue += aml.result
+            res[partner.id] = {'payment_amount_due': amount_due, 
+                               'payment_amount_overdue': amount_overdue, 
+                               'payment_earliest_due_date': worst_due_date}
+        return res
+
+    def _get_followup_overdue_query(self, cr, uid, args, overdue_only=False, context=None):
+        '''
+        This function is used to build the query and arguments to use when making a search on functional fields
+            * payment_amount_due
+            * payment_amount_overdue
+        Basically, the query is exactly the same except that for overdue there is an extra clause in the WHERE.
+
+        :param args: arguments given to the search in the usual domain notation (list of tuples)
+        :param overdue_only: option to add the extra argument to filter on overdue accounting entries or not
+        :returns: a tuple with
+            * the query to execute as first element
+            * the arguments for the execution of this query
+        :rtype: (string, [])
+        '''
+        company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+        having_where_clause = ' AND '.join(map(lambda x: '(SUM(bal2) %s %%s)' % (x[1]), args))
+        having_values = [x[2] for x in args]
+        query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
+        overdue_only_str = overdue_only and 'AND date_maturity <= NOW()' or ''
+        return ('''SELECT pid AS partner_id, SUM(bal2) FROM
+                    (SELECT CASE WHEN bal IS NOT NULL THEN bal
+                    ELSE 0.0 END AS bal2, p.id as pid FROM
+                    (SELECT (debit-credit) AS bal, partner_id
+                    FROM account_move_line l
+                    WHERE account_id IN
+                            (SELECT id FROM account_account
+                            WHERE type=\'receivable\' AND active)
+                    ''' + overdue_only_str + '''
+                    AND reconcile_id IS NULL
+                    AND company_id = %s
+                    AND ''' + query + ''') AS l
+                    RIGHT JOIN res_partner p
+                    ON p.id = partner_id ) AS pl
+                    GROUP BY pid HAVING ''' + having_where_clause, [company_id] + having_values)
+
+    def _payment_overdue_search(self, cr, uid, obj, name, args, context=None):
+        if not args:
+            return []
+        query, query_args = self._get_followup_overdue_query(cr, uid, args, overdue_only=True, context=context)
+        cr.execute(query, query_args)
+        res = cr.fetchall()
+        if not res:
+            return [('id','=','0')]
+        return [('id','in', [x[0] for x in res])]
+
+    def _payment_earliest_date_search(self, cr, uid, obj, name, args, context=None):
+        if not args:
+            return []
+        company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+        having_where_clause = ' AND '.join(map(lambda x: '(MIN(l.date_maturity) %s %%s)' % (x[1]), args))
+        having_values = [x[2] for x in args]
+        query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
+        cr.execute('SELECT partner_id FROM account_move_line l '\
+                    'WHERE account_id IN '\
+                        '(SELECT id FROM account_account '\
+                        'WHERE type=\'receivable\' AND active) '\
+                    'AND l.company_id = %s '
+                    'AND reconcile_id IS NULL '\
+                    'AND '+query+' '\
+                    'AND partner_id IS NOT NULL '\
+                    'GROUP BY partner_id HAVING '+ having_where_clause,
+                     [company_id] + having_values)
+        res = cr.fetchall()
+        if not res:
+            return [('id','=','0')]
+        return [('id','in', [x[0] for x in res])]
+
+    def _payment_due_search(self, cr, uid, obj, name, args, context=None):
+        if not args:
+            return []
+        query, query_args = self._get_followup_overdue_query(cr, uid, args, overdue_only=False, context=context)
+        cr.execute(query, query_args)
+        res = cr.fetchall()
+        if not res:
+            return [('id','=','0')]
+        return [('id','in', [x[0] for x in res])]
+
     _inherit = "res.partner"
     _columns = {
         'payment_responsible_id':fields.many2one('res.users', ondelete='set null', string='Follow-up Responsible', 
-                                                 help="Responsible for making sure the action happens."), 
+                                                 help="Optionally you can assign a user to this field, which will make him responsible for the action."), 
         'payment_note':fields.text('Customer Payment Promise', help="Payment Note"),
-        'payment_next_action':fields.text('Next Action',
-                                    help="This is the next action to be taken by the user.  It will automatically be set when the action fields are empty and the partner gets a follow-up level that requires a manual action. "), 
+        'payment_next_action':fields.text('Next Action', 
+                                    help="This is the next action to be taken.  It will automatically be set when the partner gets a follow-up level that requires a manual action. "), 
         'payment_next_action_date':fields.date('Next Action Date',
-                                    help="This is when further follow-up is needed.  The date will have been set to the current date if the action fields are empty and the partner gets a follow-up level that requires a manual action. "), 
+                                    help="This is when the manual follow-up is needed. " \
+                                    "The date will be set to the current date when the partner gets a follow-up level that requires a manual action. Can be practical to set manually e.g. to see if he keeps his promises."), 
         'unreconciled_aml_ids':fields.one2many('account.move.line', 'partner_id', domain=['&', ('reconcile_id', '=', False), '&', 
                             ('account_id.active','=', True), '&', ('account_id.type', '=', 'receivable'), ('state', '!=', 'draft')]), 
         'latest_followup_date':fields.function(_get_latest, method=True, type='date', string="Latest Follow-up Date", 
                             help="Latest date that the follow-up level of the partner was changed", 
-                            store=False, 
-                            multi="latest"), 
+                            store=False, multi="latest"), 
         'latest_followup_level_id':fields.function(_get_latest, method=True, 
             type='many2one', relation='account_followup.followup.line', string="Latest Follow-up Level", 
             help="The maximum follow-up level", 
@@ -281,7 +434,19 @@ class res_partner(osv.osv):
             help="The maximum follow-up level without taking into account the account move lines with litigation", 
             store=False, 
             multi="latest"),
-        'payment_amount_due':fields.related('credit', type='float', string="Total amount due", readonly=True),
+        'payment_amount_due':fields.function(_get_amounts_and_date, 
+                                                 type='float', string="Amount Due",
+                                                 store = False, multi="followup", 
+                                                 fnct_search=_payment_due_search),
+        'payment_amount_overdue':fields.function(_get_amounts_and_date,
+                                                 type='float', string="Amount Overdue",
+                                                 store = False, multi="followup", 
+                                                 fnct_search = _payment_overdue_search),
+        'payment_earliest_due_date':fields.function(_get_amounts_and_date,
+                                                    type='date',
+                                                    string = "Worst Due Date",
+                                                    multi="followup",
+                                                    fnct_search=_payment_earliest_date_search),
         }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

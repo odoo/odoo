@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-05-10 17:36+0000\n"
-"Last-Translator: Ferdinand-camptocamp <Unknown>\n"
+"PO-Revision-Date: 2012-12-06 23:48+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:53+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-08 04:59+0000\n"
+"X-Generator: Launchpad (build 16341)\n"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -156,7 +157,7 @@ msgstr "Abschreibungs Datum"
 #. module: account_asset
 #: constraint:account.asset.asset:0
 msgid "Error ! You cannot create recursive assets."
-msgstr ""
+msgstr "Fehler ! Sie können keine rekursiven Anlagengegenstände definieren."
 
 #. module: account_asset
 #: field:asset.asset.report,posted_value:0
@@ -201,7 +202,7 @@ msgstr "# der Abschreibungsbuchungen"
 #. module: account_asset
 #: field:account.asset.asset,method_period:0
 msgid "Number of Months in a Period"
-msgstr ""
+msgstr "Anzahl Monate in Perioden"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -389,7 +390,7 @@ msgstr "Zeit Methode"
 #: view:asset.depreciation.confirmation.wizard:0
 #: view:asset.modify:0
 msgid "or"
-msgstr ""
+msgstr "oder"
 
 #. module: account_asset
 #: field:account.asset.asset,note:0
@@ -446,12 +447,17 @@ msgid ""
 "You can manually close an asset when the depreciation is over. If the last "
 "line of depreciation is posted, the asset automatically goes in that status."
 msgstr ""
+"Wenn eine Anlage angelegt wird, ist der Status \"Entwurf\". Nach Bestätigung "
+"der Anlage wird dies aktiv und Abschreibungen können verbucht werden. Sie "
+"können die Anlage automatisch schließen, wenn die Abschreibungen vorbei "
+"sind.  Nach Verbuchung der letzen Abschreibung wird die Anlage automatisch "
+"geschlossen."
 
 #. module: account_asset
 #: field:account.asset.asset,state:0
 #: field:asset.asset.report,state:0
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: account_asset
 #: field:account.asset.asset,partner_id:0
@@ -498,7 +504,7 @@ msgstr "Berechnen"
 #. module: account_asset
 #: view:account.asset.history:0
 msgid "Asset History"
-msgstr ""
+msgstr "Historie Anlagegegüter"
 
 #. module: account_asset
 #: field:asset.asset.report,name:0
@@ -619,7 +625,7 @@ msgstr "Abzuschreibender Betrag"
 #. module: account_asset
 #: field:account.asset.asset,name:0
 msgid "Asset Name"
-msgstr ""
+msgstr "Anlagegut Bezeichnung"
 
 #. module: account_asset
 #: field:account.asset.category,open_asset:0
@@ -670,11 +676,16 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"Über diesen Report erhalten Sie einen Überblick über alle Abschreibungen. "
+"Die Suche kann auch zur \n"
+"individuellen und persönlichen Auswertung über das Anlagevermögen benutzt "
+"werden.\n"
+"        "
 
 #. module: account_asset
 #: field:account.asset.asset,purchase_value:0
 msgid "Gross Value"
-msgstr ""
+msgstr "Brutto Erlös"
 
 #. module: account_asset
 #: field:account.asset.category,name:0

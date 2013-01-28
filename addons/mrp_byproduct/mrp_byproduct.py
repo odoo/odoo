@@ -39,6 +39,7 @@ class mrp_subproduct(osv.osv):
     }
     _defaults={
         'subproduct_type': 'variable',
+        'product_qty': lambda *a: 1.0,
     }
 
     def onchange_product_id(self, cr, uid, ids, product_id, context=None):

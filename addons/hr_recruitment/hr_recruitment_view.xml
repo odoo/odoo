@@ -35,43 +35,6 @@
 
 
     <!-- Jobs -->
-    <!-- Applicant Read/Unread actions -->
-    <record id="actions_server_applicant_unread" model="ir.actions.server">
-        <field name="name">HR Applicant: Mark unread</field>
-        <field name="condition">True</field>
-        <field name="type">ir.actions.server</field>
-        <field name="model_id" ref="model_hr_applicant"/>
-        <field name="state">code</field>
-        <field name="code">self.message_mark_as_unread(cr, uid, context.get('active_ids'), context=context)</field>
-    </record>
-    <record id="action_applicant_unread" model="ir.values">
-        <field name="name">action_project_unread</field>
-        <field name="action_id" ref="actions_server_applicant_unread"/>
-        <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_applicant_unread'))"/>
-        <field name="key">action</field>
-        <field name="model_id" ref="model_hr_applicant"/>
-        <field name="model">hr.applicant</field>
-        <field name="key2">client_action_multi</field>
-    </record>
-
-    <record id="actions_server_applicant_read" model="ir.actions.server">
-        <field name="name">HR Applicant: Mark read</field>
-        <field name="condition">True</field>
-        <field name="type">ir.actions.server</field>
-        <field name="model_id" ref="model_hr_applicant"/>
-        <field name="state">code</field>
-        <field name="code">self.message_mark_as_read(cr, uid, context.get('active_ids'), context=context)</field>
-    </record>
-    <record id="action_applicant_read" model="ir.values">
-        <field name="name">action_project_read</field>
-        <field name="action_id" ref="actions_server_applicant_read"/>
-        <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_applicant_read'))"/>
-        <field name="key">action</field>
-        <field name="model_id" ref="model_hr_applicant"/>
-        <field name="model">hr.applicant</field>
-        <field name="key2">client_action_multi</field>
-    </record>
-
     <record model="ir.ui.view" id="crm_case_tree_view_job">
         <field name="name">Applicants</field>
         <field name="model">hr.applicant</field>
@@ -107,10 +70,12 @@
           <form string="Jobs - Recruitment Form" version="7.0">
             <header>
                 <button name="case_close_with_emp" string="Hire &amp; Create Employee" type="object"
-                        states="draft,open,pending,done" class="oe_highlight"/>
+                        class="oe_highlight"
+                        attrs="{'invisible':['|', ('emp_id','!=',False), ('state','=','cancel')]}"/>
                 <button name="case_cancel" string="Refuse" type="object"
                         states="draft,open,pending" class="oe_highlight"/>
                 <field name="stage_id" widget="statusbar" clickable="True"/>
+                <field name="emp_id" invisible="1"/>
             </header>
             <sheet>
                 <div class="oe_right oe_button_box">
@@ -145,7 +110,7 @@
                         <field name="user_id"/>
                         <label for="title_action"/>
                         <div>
-                            <field name="date_action"/> -
+                            <field name="date_action"/>
                             <field name="title_action" class="oe_inline" placeholder="e.g. Call for interview"/>
                         </div>
                         <field name="priority"/>
@@ -166,12 +131,14 @@
                     <group string="Contract">
                         <label for="salary_expected"/>
                         <div>
-                            <field name="salary_expected" class="oe_inline"/>,
+                            <field name="salary_expected" class="oe_inline"/>
+                            <span class="oe_inline" attrs="{'invisible':[('salary_expected_extra','=',False)]}"> + </span>
                             <field name="salary_expected_extra" class="oe_inline" placeholder="Extra advantages..."/>
                         </div>
                         <label for="salary_proposed"/>
                         <div>
-                            <field name="salary_proposed" class="oe_inline"/>,
+                            <field name="salary_proposed" class="oe_inline"/>
+                            <span class="oe_inline" attrs="{'invisible':[('salary_proposed_extra','=',False)]}"> + </span>
                             <field name="salary_proposed_extra" class="oe_inline" placeholder="Extra advantages..."/>
                         </div>
                     </group>
@@ -281,7 +248,6 @@
                             <div class="oe_dropdown_toggle oe_dropdown_kanban">
                                 <span class="oe_e">i</span>
                                 <ul class="oe_dropdown_menu">
-                                    <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit...</a></li></t>
                                     <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
                                     <li><a name="action_makeMeeting" type="object">Schedule Interview</a></li>
                                     <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
@@ -431,7 +397,7 @@
             <form string="Degree" version="7.0">
                 <group>
                     <field name="name"/>
-                    <field name="sequence"/>
+                    <field name="sequence" groups="base.group_no_one"/>
                 </group>
             </form>
         </field>

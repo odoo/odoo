@@ -2,7 +2,7 @@
 <openerp>
     <data>
         <!-- Top menu item -->
-        <menuitem id='menu_lunch' name='Lunch' sequence="100"/>
+        <menuitem id='menu_lunch' name='Lunch' sequence="100" groups="group_lunch_user"/>
         <menuitem name="Lunch" parent="menu_lunch" id="menu_lunch_title" sequence="50" />
         <menuitem name="Administrate Orders" parent="menu_lunch" id="menu_lunch_admin" sequence="51" groups="group_lunch_manager"/>
         <menuitem name="Administrate Cash Moves" parent="menu_lunch" id="menu_lunch_cash" sequence="52" groups="group_lunch_manager"/>
@@ -389,7 +389,7 @@
             <field name="name">cashmove tree</field>
             <field name="model">lunch.cashmove</field>
             <field name="arch" type="xml">
-                <tree string="cashmove tree" create="false">
+                <tree string="cashmove tree">
                     <field name="date"/>
                     <field name="user_id"/>
                     <field name="description"/>

@@ -45,7 +45,7 @@ Adds menu to show relevant information to each manager.You can also view the rep
     'css': [
         'static/src/css/analytic.css'
     ],
-    'demo': [],
+    'demo': ['analytic_account_demo.xml'],
     'installable': True,
     'auto_install': False,
 }

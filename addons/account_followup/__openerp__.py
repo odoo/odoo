@@ -25,7 +25,7 @@
     'category': 'Accounting & Finance',
     'description': """
 Module to automate letters for unpaid invoices, with multi-level recalls.
-==========================================================================
+=========================================================================
 
 You can define your multiple levels of recall through the menu:
 ---------------------------------------------------------------

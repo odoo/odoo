@@ -51,7 +51,7 @@ class hr_employee(osv.osv):
     _columns = {
         'visibility': fields.selection([('public', 'Public'),('private', 'Private')],
             string='Visibility', help='Employee\'s visibility in the portal\'s contact page'),
-        'public_info': fields.text(),
+        'public_info': fields.text('Public Info'),
     }
     _defaults = {
         'visibility': 'private',

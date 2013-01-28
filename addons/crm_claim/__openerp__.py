@@ -27,7 +27,7 @@
     'description': """
 
 Manage Customer Claims.
-================================================================================
+=======================
 This application allows you to track your customers/suppliers claims and grievances.
 
 It is fully integrated with the email gateway so that you can create

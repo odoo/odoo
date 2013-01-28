@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-11-28 16:52+0000\n"
+"POT-Creation-Date: 2012-12-04 14:41+0000\n"
+"PO-Revision-Date: 2012-12-04 20:16+0000\n"
 "Last-Translator: ccdos <ccdos@163.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:55+0000\n"
+"X-Launchpad-Export-Date: 2012-12-05 05:20+0000\n"
 "X-Generator: Launchpad (build 16335)\n"
 
 #. module: auth_signup
@@ -30,14 +30,49 @@ msgid "Confirm Password"
 msgstr "确认密码"
 
 #. module: auth_signup
+#: help:base.config.settings,auth_signup_uninvited:0
+msgid "If unchecked, only invited users may sign up."
+msgstr ""
+
+#. module: auth_signup
 #: model:ir.model,name:auth_signup.model_base_config_settings
 msgid "base.config.settings"
 msgstr "base.config.settings"
 
 #. module: auth_signup
+#: code:addons/auth_signup/res_users.py:248
+#, python-format
+msgid "Cannot send email: user has no email address."
+msgstr ""
+
+#. module: auth_signup
+#. openerp-web
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:25
+#, python-format
+msgid "Reset password"
+msgstr "重设密码"
+
+#. module: auth_signup
 #: field:base.config.settings,auth_signup_template_user_id:0
 msgid "Template user for new users created through signup"
 msgstr "用作通过注册创建的新用户的模版"
+
+#. module: auth_signup
+#: model:email.template,subject:auth_signup.reset_password_email
+msgid "Password reset"
+msgstr "重置密码"
+
+#. module: auth_signup
+#. openerp-web
+#: code:addons/auth_signup/static/src/js/auth_signup.js:120
+#, python-format
+msgid "Please enter a password and confirm it."
+msgstr ""
+
+#. module: auth_signup
+#: view:res.users:0
+msgid "Send an email to the user to (re)set their password."
+msgstr ""
 
 #. module: auth_signup
 #. openerp-web
@@ -57,6 +92,26 @@ msgid "Status"
 msgstr "状态"
 
 #. module: auth_signup
+#: model:email.template,body_html:auth_signup.reset_password_email
+msgid ""
+"\n"
+"<p>A password reset was requested for the OpenERP account linked to this "
+"email.</p>\n"
+"\n"
+"<p>You may change your password by following <a "
+"href=\"${object.signup_url}\">this link</a>.</p>\n"
+"\n"
+"<p>Note: If you do not expect this, you can safely ignore this email.</p>"
+msgstr ""
+
+#. module: auth_signup
+#. openerp-web
+#: code:addons/auth_signup/static/src/js/auth_signup.js:114
+#, python-format
+msgid "Please enter a name."
+msgstr ""
+
+#. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
 msgid "Users"
 msgstr "用户"
@@ -67,14 +122,16 @@ msgid "Signup URL"
 msgstr "注册 URL"
 
 #. module: auth_signup
+#. openerp-web
+#: code:addons/auth_signup/static/src/js/auth_signup.js:117
+#, python-format
+msgid "Please enter a username."
+msgstr ""
+
+#. module: auth_signup
 #: selection:res.users,state:0
 msgid "Active"
 msgstr "启用"
-
-#. module: auth_signup
-#: help:base.config.settings,auth_signup_uninvited:0
-msgid "If unchecked, only invited users may sign up"
-msgstr "如果不选中，只有被邀请用户方可注册。"
 
 #. module: auth_signup
 #. openerp-web
@@ -92,6 +149,18 @@ msgstr "姓名"
 
 #. module: auth_signup
 #. openerp-web
+#: code:addons/auth_signup/static/src/js/auth_signup.js:160
+#, python-format
+msgid "Please enter a username or email address."
+msgstr ""
+
+#. module: auth_signup
+#: selection:res.users,state:0
+msgid "Resetting Password"
+msgstr "复位密码"
+
+#. module: auth_signup
+#. openerp-web
 #: code:addons/auth_signup/static/src/xml/auth_signup.xml:13
 #, python-format
 msgid "Username (Email)"
@@ -101,6 +170,11 @@ msgstr "用户名(Email)"
 #: field:res.partner,signup_expiration:0
 msgid "Signup Expiration"
 msgstr "注册过期"
+
+#. module: auth_signup
+#: help:base.config.settings,auth_signup_reset_password:0
+msgid "This allows users to trigger a password reset from the Login page."
+msgstr ""
 
 #. module: auth_signup
 #. openerp-web
@@ -115,9 +189,49 @@ msgid "Signup Token is Valid"
 msgstr "注册令牌（ Token  ）是有效的"
 
 #. module: auth_signup
-#: selection:res.users,state:0
-msgid "Resetting Password"
-msgstr "复位密码"
+#. openerp-web
+#: code:addons/auth_signup/static/src/js/auth_signup.js:111
+#: code:addons/auth_signup/static/src/js/auth_signup.js:114
+#: code:addons/auth_signup/static/src/js/auth_signup.js:117
+#: code:addons/auth_signup/static/src/js/auth_signup.js:120
+#: code:addons/auth_signup/static/src/js/auth_signup.js:123
+#: code:addons/auth_signup/static/src/js/auth_signup.js:157
+#: code:addons/auth_signup/static/src/js/auth_signup.js:160
+#, python-format
+msgid "Login"
+msgstr ""
+
+#. module: auth_signup
+#. openerp-web
+#: code:addons/auth_signup/static/src/js/auth_signup.js:94
+#, python-format
+msgid "Invalid signup token"
+msgstr ""
+
+#. module: auth_signup
+#. openerp-web
+#: code:addons/auth_signup/static/src/js/auth_signup.js:123
+#, python-format
+msgid "Passwords do not match; please retype them."
+msgstr ""
+
+#. module: auth_signup
+#. openerp-web
+#: code:addons/auth_signup/static/src/js/auth_signup.js:111
+#: code:addons/auth_signup/static/src/js/auth_signup.js:157
+#, python-format
+msgid "No database selected !"
+msgstr ""
+
+#. module: auth_signup
+#: view:res.users:0
+msgid "Reset Password"
+msgstr "重置密码"
+
+#. module: auth_signup
+#: field:base.config.settings,auth_signup_reset_password:0
+msgid "Enable password reset from Login page"
+msgstr ""
 
 #. module: auth_signup
 #. openerp-web

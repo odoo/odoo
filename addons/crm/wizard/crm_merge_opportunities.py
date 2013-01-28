@@ -21,33 +21,51 @@ from osv import osv, fields
 from tools.translate import _
 
 class crm_merge_opportunity(osv.osv_memory):
-    """Merge two Opportunities"""
+    """
+    Merge opportunities together.
+    If we're talking about opportunities, it's just because it makes more sense
+    to merge opps than leads, because the leads are more ephemeral objects.
+    But since opportunities are leads, it's also possible to merge leads
+    together (resulting in a new lead), or leads and opps together (resulting
+    in a new opp).
+    """
 
     _name = 'crm.merge.opportunity'
-    _description = 'Merge two Opportunities'
-
-    def action_merge(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        lead = self.pool.get('crm.lead')
-        record = self.browse(cr, uid, ids[0], context=context)
-        opportunities = record.opportunity_ids
-        #TOFIX: why need to check lead_ids here
-        lead_ids = [opportunities[0].id]
-        self.write(cr, uid, ids, {'opportunity_ids' : [(6,0, lead_ids)]}, context=context)
-        context['lead_ids'] = lead_ids
-        merge_id = lead.merge_opportunity(cr, uid, [x.id for x in opportunities], context=context)
-        return lead.redirect_opportunity_view(cr, uid, merge_id, context=context)
-
+    _description = 'Merge opportunities'
     _columns = {
         'opportunity_ids': fields.many2many('crm.lead', rel='merge_opportunity_rel', id1='merge_id', id2='opportunity_id', string='Leads/Opportunities'),
     }
 
+    def action_merge(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+
+        lead_obj = self.pool.get('crm.lead')
+        wizard = self.browse(cr, uid, ids[0], context=context)
+        opportunity2merge_ids = wizard.opportunity_ids
+
+        #TODO: why is this passed through the context ?
+        context['lead_ids'] = [opportunity2merge_ids[0].id]
+
+        merge_id = lead_obj.merge_opportunity(cr, uid, [x.id for x in opportunity2merge_ids], context=context)
+
+        # The newly created lead might be a lead or an opp: redirect toward the right view
+        merge_result = lead_obj.browse(cr, uid, merge_id, context=context)
+
+        if merge_result.type == 'opportunity':
+            return lead_obj.redirect_opportunity_view(cr, uid, merge_id, context=context)
+        else:
+            return lead_obj.redirect_lead_view(cr, uid, merge_id, context=context)
+
     def default_get(self, cr, uid, fields, context=None):
         """
-        This function gets default values
+        Use active_ids from the context to fetch the leads/opps to merge.
+        In order to get merged, these leads/opps can't be in 'Done' or
+        'Cancel' state.
         """
-        record_ids = context and context.get('active_ids', False) or False
+        if context is None:
+            context = {}
+        record_ids = context.get('active_ids', False)
         res = super(crm_merge_opportunity, self).default_get(cr, uid, fields, context=context)
 
         if record_ids:
@@ -60,7 +78,5 @@ class crm_merge_opportunity(osv.osv_memory):
                 res.update({'opportunity_ids': opp_ids})
 
         return res
-
-crm_merge_opportunity()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

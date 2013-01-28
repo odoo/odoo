@@ -185,8 +185,9 @@ class survey_question_wiz(osv.osv_memory):
                         etree.SubElement(xml_form, 'field', {'invisible':'1','name': "wizardid_" + str(wiz_id),'default':str(lambda *a: 0),'modifiers':'{"invisible":true}'})
 
                     if note:
+                        xml_group_note = etree.SubElement(xml_form, 'group', {'col': '1','colspan': '4'})
                         for que_test in note.split('\n'):
-                            etree.SubElement(xml_form, 'label', {'string': to_xml(tools.ustr(que_test)), 'align':"0.0"})
+                            etree.SubElement(xml_group_note, 'label', {'string': to_xml(tools.ustr(que_test)), 'align':"0.0"})
                     que_ids = question_ids
                     qu_no = 0
 

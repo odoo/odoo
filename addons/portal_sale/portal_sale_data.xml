@@ -74,7 +74,7 @@
     <br/>
     <br/>
     <div style="width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;">
-        <h3 style="margin: 0px; padding: 2px 14px; font-size: 12px; color: #FFF;">
+        <h3 style="margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;">
             <strong style="text-transform:uppercase;">${object.company_id.name}</strong></h3>
     </div>
     <div style="width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;">
@@ -150,7 +150,7 @@
            href="${signup_url}">View Invoice</a>
     % endif
     
-    % if object.company_id.paypal_account and object.type in ('out_invoice', 'in_refund'):
+    % if object.company_id.paypal_account and object.type in ('out_invoice'):
     <% 
     comp_name = quote(object.company_id.name)
     inv_number = quote(object.number)
@@ -174,7 +174,7 @@
     <br/>
     <br/>
     <div style="width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;">
-        <h3 style="margin: 0px; padding: 2px 14px; font-size: 12px; color: #FFF;">
+        <h3 style="margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;">
             <strong style="text-transform:uppercase;">${object.company_id.name}</strong></h3>
     </div>
     <div style="width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;">

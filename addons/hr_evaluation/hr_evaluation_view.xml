@@ -124,7 +124,7 @@
             <field name="model">hr_evaluation.plan.phase</field>
             <field name="arch" type="xml">
                 <tree string="Appraisal Plan Phases" editable="bottom" >
-                    <field name="sequence"/>
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="action"/>
                     <field name="survey_id"/>
@@ -290,7 +290,7 @@
                         <button string="Send Request" name="survey_req_waiting_answer" type="object"
                             states="draft" class="oe_highlight"/>
                         <button string="Answer Survey" name="%(survey.action_view_survey_question_message)d" type="action"
-                            states="waiting_answer"
+                            states="waiting_answer" class="oe_highlight"
                             context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response,'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}"
                             attrs="{'readonly':[('survey_id','=',False)]}"/>
                         <button string="Done" name="survey_req_done" type="object"

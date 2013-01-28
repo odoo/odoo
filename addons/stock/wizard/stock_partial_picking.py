@@ -23,6 +23,7 @@ import time
 from lxml import etree
 from osv import fields, osv
 from tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
+from tools.float_utils import float_compare
 import decimal_precision as dp
 from tools.translate import _
 
@@ -52,7 +53,7 @@ class stock_partial_picking_line(osv.TransientModel):
         'update_cost': fields.boolean('Need cost update'),
         'cost' : fields.float("Cost", help="Unit Cost for this product line"),
         'currency' : fields.many2one('res.currency', string="Currency", help="Currency in which Unit cost is expressed", ondelete='CASCADE'),
-        'tracking': fields.function(_tracking, string='Tracking', type='boolean'), 
+        'tracking': fields.function(_tracking, string='Tracking', type='boolean'),
     }
 
     def onchange_product_id(self, cr, uid, ids, product_id, context=None):
@@ -80,7 +81,7 @@ class stock_partial_picking(osv.osv_memory):
         'picking_id': fields.many2one('stock.picking', 'Picking', required=True, ondelete='CASCADE'),
         'hide_tracking': fields.function(_hide_tracking, string='Tracking', type='boolean', help='This field is for internal purpose. It is used to decide if the column production lot has to be shown on the moves or not.'),
      }
-    
+
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         #override of fields_view_get in order to change the label of the process button and the separator accordingly to the shipping type
         if context is None:
@@ -135,15 +136,15 @@ class stock_partial_picking(osv.osv_memory):
         # Currently, the cost on the product form is supposed to be expressed in the currency
         # of the company owning the product. If not set, we fall back to the picking's company,
         # which should work in simple cases.
+        product_currency_id = move.product_id.company_id.currency_id and move.product_id.company_id.currency_id.id
+        picking_currency_id = move.picking_id.company_id.currency_id and move.picking_id.company_id.currency_id.id
         return {'cost': move.product_id.standard_price,
-                'currency': move.product_id.company_id.currency_id.id \
-                                or move.picking_id.company_id.currency_id.id \
-                                or False}
+                'currency': product_currency_id or picking_currency_id or False}
 
     def _partial_move_for(self, cr, uid, move):
         partial_move = {
             'product_id' : move.product_id.id,
-            'quantity' : move.state in ('assigned','draft','confirmed') and move.product_qty or 0,
+            'quantity' : move.product_qty if move.state in ('assigned','draft','confirmed') else 0,
             'product_uom' : move.product_uom.id,
             'prodlot_id' : move.prodlot_id.id,
             'move_id' : move.id,
@@ -176,18 +177,18 @@ class stock_partial_picking(osv.osv_memory):
             qty_in_line_uom = uom_obj._compute_qty(cr, uid, line_uom.id, wizard_line.quantity, line_uom.id)
 
             if line_uom.factor and line_uom.factor <> 0:
-                if qty_in_line_uom <> wizard_line.quantity:
+                if float_compare(qty_in_line_uom, wizard_line.quantity, precision_rounding=line_uom.rounding) != 0:
                     raise osv.except_osv(_('Warning!'), _('The unit of measure rounding does not allow you to ship "%s %s", only roundings of "%s %s" is accepted by the Unit of Measure.') % (wizard_line.quantity, line_uom.name, line_uom.rounding, line_uom.name))
             if move_id:
                 #Check rounding Quantity.ex.
-                #picking: 1kg, uom kg rounding = 0.01 (rounding to 10g), 
+                #picking: 1kg, uom kg rounding = 0.01 (rounding to 10g),
                 #partial delivery: 253g
                 #=> result= refused, as the qty left on picking would be 0.747kg and only 0.75 is accepted by the uom.
                 initial_uom = wizard_line.move_id.product_uom
                 #Compute the quantity for respective wizard_line in the initial uom
                 qty_in_initial_uom = uom_obj._compute_qty(cr, uid, line_uom.id, wizard_line.quantity, initial_uom.id)
                 without_rounding_qty = (wizard_line.quantity / line_uom.factor) * initial_uom.factor
-                if qty_in_initial_uom <> without_rounding_qty:
+                if float_compare(qty_in_initial_uom, without_rounding_qty, precision_rounding=initial_uom.rounding) != 0:
                     raise osv.except_osv(_('Warning!'), _('The rounding of the initial uom does not allow you to ship "%s %s", as it would let a quantity of "%s %s" to ship and only roundings of "%s %s" is accepted by the uom.') % (wizard_line.quantity, line_uom.name, wizard_line.move_id.product_qty - without_rounding_qty, initial_uom.name, initial_uom.rounding, initial_uom.name))
             else:
                 seq_obj_name =  'stock.picking.' + picking_type

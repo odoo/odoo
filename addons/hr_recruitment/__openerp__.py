@@ -28,7 +28,7 @@
     'summary': 'Jobs, Recruitment, Applications, Job Interviews',
     'description': """
 Manage job positions and the recruitment process
-=================================================
+================================================
 
 This application allows you to easily keep track of jobs, vacancies, applications, interviews...
 

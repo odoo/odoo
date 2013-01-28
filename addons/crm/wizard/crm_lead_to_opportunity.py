@@ -27,16 +27,13 @@ import re
 class crm_lead2opportunity_partner(osv.osv_memory):
     _name = 'crm.lead2opportunity.partner'
     _description = 'Lead To Opportunity Partner'
-    _inherit = 'crm.lead2partner'
+    _inherit = 'crm.partner.binding'
 
     _columns = {
-        'action': fields.selection([('exist', 'Link to an existing customer'), \
-                                    ('create', 'Create a new customer'), \
-                                    ('nothing', 'Do not link to a customer')], \
-                                    'Related Customer', required=True),
-        'name': fields.selection([('convert', 'Convert to opportunity'), \
-                                  ('merge', 'Merge with existing opportunities')], \
-                                  'Conversion Action', required=True),
+        'name': fields.selection([
+                ('convert', 'Convert to opportunity'),
+                ('merge', 'Merge with existing opportunities')
+            ], 'Conversion Action', required=True),
         'opportunity_ids': fields.many2many('crm.lead', string='Opportunities', domain=[('type', '=', 'opportunity')]),
     }
 
@@ -157,8 +154,8 @@ class crm_lead2opportunity_mass_convert(osv.osv_memory):
     _inherit = 'crm.lead2opportunity.partner'
 
     _columns = {
-            'user_ids':  fields.many2many('res.users', string='Salesmen'),
-            'section_id': fields.many2one('crm.case.section', 'Sales Team'),
+        'user_ids':  fields.many2many('res.users', string='Salesmen'),
+        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
 
     def default_get(self, cr, uid, fields, context=None):

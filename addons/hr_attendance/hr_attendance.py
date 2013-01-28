@@ -137,7 +137,7 @@ class hr_employee(osv.osv):
     _columns = {
        'state': fields.function(_state, type='selection', selection=[('absent', 'Absent'), ('present', 'Present')], string='Attendance'),
        'last_sign': fields.function(_last_sign, type='datetime', string='Last Sign'),
-       'attendance_access': fields.function(_attendance_access, type='boolean'),
+       'attendance_access': fields.function(_attendance_access, string='Attendance Access', type='boolean'),
     }
 
     def _action_check(self, cr, uid, emp_id, dt=False, context=None):

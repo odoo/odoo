@@ -424,7 +424,7 @@ class hr_holidays(osv.osv):
 
     def create_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, ids,
+            self.message_post(cr, uid, [obj.id],
                 _("Request <b>created</b>, waiting confirmation."), context=context)
         return True
 

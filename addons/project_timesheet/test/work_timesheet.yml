@@ -18,5 +18,5 @@
     task_ids = self.browse(cr, uid, task_work, context)
     assert task_ids.user_id.id == ref("base.user_demo"), 'Error, The User in Timesheet is not Correct'
     assert task_ids.date == start, 'Error, The Date in Timesheet is not ok'
-    assert task_ids.product_uom_id.name == "Hour", 'Error, The Hour in Timesheet is not ok'
+    assert task_ids.product_uom_id.name == "Hour(s)", 'Error, The Hour in Timesheet is not ok'
 

@@ -66,43 +66,6 @@
         </record>
 
 
-        <!-- Sale order Read/Unread actions -->
-        <record id="actions_server_sale_order_unread" model="ir.actions.server">
-            <field name="name">Sale: Mark unread</field>
-            <field name="condition">True</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="model_sale_order"/>
-            <field name="state">code</field>
-            <field name="code">self.message_mark_as_unread(cr, uid, context.get('active_ids'), context=context)</field>
-        </record>
-        <record id="action_sale_order_unread" model="ir.values">
-            <field name="name">action_sale_order_unread</field>
-            <field name="action_id" ref="actions_server_sale_order_unread"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_sale_order_unread'))" />
-            <field name="key">action</field>
-            <field name="model_id" ref="model_sale_order" />
-            <field name="model">sale.order</field>
-            <field name="key2">client_action_multi</field>
-        </record>
-
-        <record id="actions_server_sale_order_read" model="ir.actions.server">
-            <field name="name">Sale: Mark read</field>
-            <field name="condition">True</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="model_sale_order"/>
-            <field name="state">code</field>
-            <field name="code">self.message_mark_as_read(cr, uid, context.get('active_ids'), context=context)</field>
-        </record>
-        <record id="action_sale_order_read" model="ir.values">
-            <field name="name">action_sale_order_read</field>
-            <field name="action_id" ref="actions_server_sale_order_read"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_sale_order_read'))" />
-            <field name="key">action</field>
-            <field name="model_id" ref="model_sale_order" />
-            <field name="model">sale.order</field>
-            <field name="key2">client_action_multi</field>
-        </record>
-
         <record id="view_sale_order_calendar" model="ir.ui.view">
             <field name="name">sale.order.calendar</field>
             <field name="model">sale.order</field>
@@ -207,7 +170,7 @@
                         <page string="Order Lines">
                             <field name="order_line">
                                 <form string="Sales Order Lines" version="7.0">
-                                    <header>
+                                    <header groups="base.group_user">
                                         <button name="%(action_view_sale_order_line_make_invoice)d" states="confirmed" string="Invoice" type="action" icon="terp-document-new"/>
                                         <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done" statusbar_colors='{"exception":"red","cancel":"red"}'/>
                                     </header>
@@ -235,7 +198,7 @@
                                             </div>
                                             <field name="price_unit"/>
                                             <label for="discount" groups="sale.group_discount_per_so_line"/>
-                                            <div groups="sale.group_discount_per_so_line">
+                                            <div name="discount" groups="sale.group_discount_per_so_line">
                                                 <field name="discount" class="oe_inline"/> %%
                                             </div>
                                         </group>
@@ -447,6 +410,7 @@
             <field name="model">sale.order.line</field>
             <field name="arch" type="xml">
                 <tree string="Sales Order Lines">
+                    <field name="product_id" invisible="1"/>
                     <field name="order_id"/>
                     <field name="order_partner_id"/>
                     <field name="name"/>

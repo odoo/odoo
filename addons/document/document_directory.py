@@ -53,7 +53,7 @@ class document_directory(osv.osv):
         'ressource_type_id': fields.many2one('ir.model', 'Resource model', change_default=True,
             help="Select an object here and there will be one folder per record of that resource."),
         'resource_field': fields.many2one('ir.model.fields', 'Name field', help='Field to be used as name on resource directories. If empty, the "name" will be used.'),
-        'resource_find_all': fields.boolean('Find all resources', required=True,
+        'resource_find_all': fields.boolean('Find all resources',
                 help="If true, all attachments that match this resource will " \
                     " be located. If false, only ones that have this as parent." ),
         'ressource_parent_type_id': fields.many2one('ir.model', 'Parent Model', change_default=True,

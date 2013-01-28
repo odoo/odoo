@@ -65,7 +65,7 @@
                         <field domain="[('usage','=','internal')]" name="location_id"/>
                         <button name="%(stock.action_view_stock_inventory_line_split)d"
                             string="Split Inventory Line" groups="stock.group_inventory_valuation"
-                            type="action" icon="terp-stock_effects-object-colorize"/>
+                            type="action" icon="gtk-justify-fill"/>
                     </group>
                 </form>
             </field>
@@ -136,7 +136,7 @@
                                 <field name="prod_lot_id" groups="stock.group_production_lot"/>
                                 <button name="%(stock.action_view_stock_inventory_line_split)d"
                                     string="Split inventory lines" groups="stock.group_inventory_valuation"
-                                    type="action" icon="terp-stock_effects-object-colorize" states="draft,confirm"/>
+                                    type="action" icon="gtk-justify-fill" states="draft,confirm"/>
                                 <field name="state" invisible="True"/>
                             </tree>
                             <form string="Products" version="7.0">
@@ -154,7 +154,7 @@
                                         <field name="prod_lot_id" groups="stock.group_production_lot"/>
                                         <button name="%(stock.action_view_stock_inventory_line_split)d"
                                         string="Split inventory lines" groups="stock.group_inventory_valuation"
-                                        type="action" icon="terp-stock_effects-object-colorize"/>
+                                        type="action" icon="gtk-justify-fill"/>
                                     </group>
                                 </group>
                             </form>
@@ -168,7 +168,7 @@
                                 <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                                 <field name="prodlot_id" groups="stock.group_production_lot"/>
                                 <button name="%(track_line)d" string="Split in serial numbers" type="action"
-                                    icon="terp-stock_effects-object-colorize"
+                                    icon="gtk-justify-fill"
                                     attrs="{'invisible': [('prodlot_id','&lt;&gt;',False)]}"
                                     states="draft,done,cancel"
                                     context="{'inventory_id':parent.id}"
@@ -176,7 +176,7 @@
                                 <field groups="stock.group_tracking_lot" name="tracking_id"/>
                                 <button name="%(split_into)d" string="Put in a new pack" type="action"
                                     groups="stock.group_tracking_lot"
-                                    icon="terp-stock_effects-object-colorize"
+                                    icon="terp-accessories-archiver+"
                                     context="{'inventory_id':parent.id}"
                                     states="draft,done,cancel"/>
                                 <field name="location_id" groups="stock.group_locations"/>
@@ -804,7 +804,7 @@
             <field name="arch" type="xml">
                 <search string="Internal Picking List">
                     <field name="name" string="Internal Picking List" filter_domain="['|',('name','ilike', self),('origin','ilike',self)]"/>
-                    <filter icon="terp-check" string="Ready" domain="[('state','=','assigned')]" help="Assigned Internal Moves"/>
+                    <filter icon="terp-check" name="available" string="Ready" domain="[('state','=','assigned')]" help="Assigned Internal Moves"/>
                     <filter icon="terp-camera_test" name="confirmed" string="Waiting" domain="[('state','=','confirmed')]" help="Confirmed Internal Moves"/>
                     <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Pickings already processed"/>
                     <field name="partner_id"/>
@@ -1130,21 +1130,21 @@
                     <field name="product_uos" groups="product.group_uos"/>
                     <button name="%(stock.move_scrap)d"
                         string="Scrap Products" type="action"
-                        icon="gtk-convert" context="{'scrap': True}"
+                        icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
                         states="draft,waiting,confirmed,assigned"/>
                     <field name="prodlot_id" groups="stock.group_production_lot"/>
                     <button name="%(track_line)d" string="Split in Serial Numbers" type="action"
-                        icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('prodlot_id','&lt;&gt;',False)]}"
+                        icon="gtk-justify-fill" attrs="{'invisible': [('prodlot_id','&lt;&gt;',False)]}"
                         states="draft,waiting,confirmed,assigned,done"
                         groups="stock.group_tracking_lot"/>
                     <field name="tracking_id" groups="stock.group_tracking_lot"/>
                     <button name="setlast_tracking" string="Put in current pack" type="object"
                         groups="product.group_stock_packaging"
-                        icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
+                        icon="terp-accessories-archiver" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
                         states="draft,assigned,confirmed,done"/>
                     <button name="%(split_into)d" string="Put in a new pack" type="action"
                         groups="product.group_stock_packaging"
-                        icon="terp-stock_effects-object-colorize"
+                        icon="terp-accessories-archiver+"
                         states="draft,assigned,confirmed,done"/>
                     <field name="location_id" groups="stock.group_locations"/>
                     <field name="location_dest_id" groups="stock.group_locations"/>
@@ -1168,7 +1168,7 @@
                     <field name="product_uos" groups="product.group_uos"/>
                     <button name="%(stock.move_scrap)d"
                        string="Scrap Products" type="action"
-                       icon="gtk-convert" context="{'scrap': True}"
+                       icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
                        states="draft,waiting,confirmed,assigned"
                        groups="base.group_user"/>
                     <field name="scrapped" invisible="1"/>
@@ -1177,17 +1177,17 @@
                        name="%(stock.track_line)d"
                        string="Split in Serial Number"
                        groups="stock.group_production_lot"
-                       type="action" icon="terp-stock_effects-object-colorize"
+                       type="action" icon="gtk-justify-fill"
                        states="draft,waiting,confirmed,assigned"/>
                      <field groups="stock.group_tracking_lot" name="tracking_id"/>
                      <button name="setlast_tracking" string="Put in current pack" type="object"
                         attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
-                        icon="terp-stock_effects-object-colorize"
+                        icon="terp-accessories-archiver"
                         groups="stock.group_tracking_lot"
                         states="draft,assigned,confirmed"/>
                      <button name="%(split_into)d" string="Put in a new pack" type="action"
                         groups="product.group_stock_packaging"
-                        icon="terp-stock_effects-object-colorize"
+                        icon="terp-accessories-archiver+"
                         states="draft,assigned,confirmed"/>
                       <field name="location_dest_id" groups="stock.group_locations"/>
                       <field name="state"/>
@@ -1221,7 +1221,7 @@
                                 <field name="product_uom" groups="product.group_uom" class="oe_inline"/>
                                 <button name="%(stock.move_scrap)d"
                                         string="Scrap" type="action"
-                                        icon="gtk-convert" context="{'scrap': True}"
+                                        icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
                                         states="draft,waiting,confirmed,assigned" colspan="1"/>
                             </div>
                             <label for="product_uos_qty" groups="product.group_uos"/>
@@ -1231,10 +1231,11 @@
                                     class="oe_inline"/>
                                 <field name="product_uos" class="oe_inline"/>
                             </div>
-                            <field name="name" string="Reason"/>
+                            <field name="name"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                         </group>
                         <group name="origin_grp" string="Origin">
+                            <field name="origin"/>
                             <field name="picking_id" domain="[('type','=',type)]"/>
                              <field name="type" on_change="onchange_move_type(type)"/>
                             <field name="location_id" groups="stock.group_locations"/>
@@ -1254,7 +1255,7 @@
                                 <field name="tracking_id" class="oe_inline"/>
                                 <button name="%(split_into)d" string="New Pack" type="action"
                                       groups="product.group_stock_packaging"
-                                      icon="terp-stock_effects-object-colorize"
+                                      icon="terp-accessories-archiver+"
                                       states="draft,assigned,confirmed"/>
                             </div>
                             <label for="prodlot_id" groups="stock.group_production_lot"/>
@@ -1265,7 +1266,7 @@
                                     on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id, product_uom)"/>
                                 <button name="%(track_line)d"
                                     states="draft,waiting,confirmed,assigned"
-                                    string="Split" type="action" icon="terp-stock_effects-object-colorize"/>
+                                    string="Split" type="action" icon="gtk-justify-fill"/>
                             </div>
                         </group>
                     </group>
@@ -1297,7 +1298,7 @@
                             <field name="product_uom" string="Unit Of Measure" groups="product.group_uom" class="oe_inline"/>
                             <button name="%(stock.move_scrap)d"
                                 string="Scrap" type="action"
-                                icon="gtk-convert" context="{'scrap': True}"
+                                icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
                                 states="draft,waiting,confirmed,assigned"
                                 groups="base.group_user"/>
                         </div>
@@ -1327,7 +1328,7 @@
                                       <button name="%(split_into)d" 
                                             string="New Pack" type="action"
                                             groups="product.group_stock_packaging"
-                                            icon="terp-stock_effects-object-colorize"
+                                            icon="terp-accessories-archiver+"
                                             states="draft,assigned,confirmed"/>
                                  </div>
 
@@ -1340,7 +1341,7 @@
                                         <button name="%(track_line)d"
                                             groups="stock.group_tracking_lot"
                                             states="draft,waiting,confirmed,assigned"
-                                            string="Split" type="action" icon="terp-stock_effects-object-colorize"/>
+                                            string="Split" type="action" icon="gtk-justify-fill"/>
                             </div>
                         </group>
                     </group>
@@ -1363,19 +1364,19 @@
                     <separator/>
                     <filter icon="terp-go-today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders processed Today or planned for Today"/>
                     <field name="product_id"/>
-                    <field name="location_id" string="Location" filter_domain="['|',('location_id','ilike',self),('location_dest_id','ilike',self)]"/>
+                    <field name="name" string="Location" filter_domain="['|',('location_id','ilike',self),('location_dest_id','ilike',self)]"/>
                     <field name="partner_id" string="Partner"  filter_domain="[('picking_id.partner_id','ilike',self)]"/>
                     <field name="prodlot_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Product" name="by_product" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'product_id'}"/>
                         <filter string="Picking" name="groupby_picking_id" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'picking_id'}"/>
-                        <filter string="Lot" name="groupby_prodlot_id" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'prodlot_id'}"/>
+                        <filter string="Serial  Number" name="groupby_prodlot_id" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'prodlot_id'}"/>
                         <filter string="Pack" name="groupby_tracking_id" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'tracking_id'}"/>
                         <filter string="Source" name="groupby_location_id" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'location_id'}"/>
                         <filter string="Destination" name="groupby_dest_location_id" icon="terp-gtk-jump-to-ltr" domain="[]" context="{'group_by':'location_dest_id'}"/>
                         <filter icon="terp-stock_effects-object-colorize" string="Status" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Creation" name="groupby_create_date" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
-                        <filter string="Expected" name="groupby_date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
+                        <filter string="Scheduled" name="groupby_date" icon="terp-go-month" domain="[]" context="{'group_by':'date_expected'}"/>
                     </group>
                 </search>
             </field>
@@ -1438,22 +1439,22 @@
                     <field name="create_date" invisible="1"/>
                     <button name="%(stock.move_scrap)d"
                         string="Scrap Products" type="action"
-                        icon="gtk-convert" context="{'scrap': True}"
+                        icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
                         states="draft,waiting,confirmed,assigned"/>
                     <field name="prodlot_id" groups="stock.group_production_lot"/>
                     <button name="%(track_line)d" string="Split in Serial Numbers" type="action"
-                        icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('prodlot_id','&lt;&gt;',False)]}"
+                        icon="gtk-justify-fill" attrs="{'invisible': [('prodlot_id','&lt;&gt;',False)]}"
                         states="draft,waiting,confirmed,assigned,done"
                         groups="stock.group_tracking_lot"/>
                     <field name="tracking_id" groups="stock.group_tracking_lot"/>
                     <button name="setlast_tracking" string="Put in current pack" type="object"
                         attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
                         groups="product.group_stock_packaging"
-                        icon="terp-stock_effects-object-colorize"
+                        icon="terp-accessories-archiver"
                         states="draft,assigned,confirmed,done"/>
                     <button name="%(split_into)d" string="Put in a new pack" type="action"
                         groups="product.group_stock_packaging"
-                        icon="terp-stock_effects-object-colorize"
+                        icon="terp-accessories-archiver+"
                         states="draft,assigned,confirmed,done"/>
                     <field name="state"/>
                     <button name="%(action_partial_move_server)d"

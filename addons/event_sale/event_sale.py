@@ -26,7 +26,7 @@ class product(osv.osv):
     _inherit = 'product.product'
     _columns = {
         'event_ok': fields.boolean('Event Subscription', help='Determine if a product needs to create automatically an event registration at the confirmation of a sale order line.'),
-        'event_type_id': fields.many2one('event.type', 'Type of Event', help='Filter the list of event on this category only, in the sale order lines'),
+        'event_type_id': fields.many2one('event.type', 'Type of Event', help='Select event types so when we use this product in Sale order line, it will filter events of this type only.'),
     }
 
     def onchange_event_ok(self, cr, uid, ids, event_ok, context=None):

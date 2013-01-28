@@ -35,7 +35,7 @@ Employee can encode their own expenses and the validation flow puts it automatic
 
 
 The whole flow is implemented as:
-----------------------------------
+---------------------------------
 * Draft expense
 * Confirmation of the sheet by the employee
 * Validation by his manager

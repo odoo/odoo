@@ -57,43 +57,6 @@
 
         <!-- Events Organisation/CONFIGURATION/EVENTS -->
 
-        <!-- Event Read/Unread actions -->
-        <record id="actions_server_event_event_unread" model="ir.actions.server">
-            <field name="name">Event: Mark unread</field>
-            <field name="condition">True</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="model_event_event"/>
-            <field name="state">code</field>
-            <field name="code">self.message_mark_as_unread(cr, uid, context.get('active_ids'), context=context)</field>
-        </record>
-        <record id="action_event_event_unread" model="ir.values">
-            <field name="name">action_event_event_unread</field>
-            <field name="action_id" ref="actions_server_event_event_unread"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_event_event_unread'))" />
-            <field name="key">action</field>
-            <field name="model_id" ref="model_event_event" />
-            <field name="model">event.event</field>
-            <field name="key2">client_action_multi</field>
-        </record>
-
-        <record id="actions_server_event_event_read" model="ir.actions.server">
-            <field name="name">Event: Mark read</field>
-            <field name="condition">True</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="model_event_event"/>
-            <field name="state">code</field>
-            <field name="code">self.message_mark_as_read(cr, uid, context.get('active_ids'), context=context)</field>
-        </record>
-        <record id="action_event_event_read" model="ir.values">
-            <field name="name">action_event_event_read</field>
-            <field name="action_id" ref="actions_server_event_event_read"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_event_event_read'))" />
-            <field name="key">action</field>
-            <field name="model_id" ref="model_event_event" />
-            <field name="model">event.event</field>
-            <field name="key2">client_action_multi</field>
-        </record>
-
         <record model="ir.ui.view" id="view_event_form">
             <field name="name">Events</field>
             <field name="model">event.event</field>
@@ -375,42 +338,6 @@
 
         <!-- EVENTS/REGISTRATIONS/EVENTS  -->
 
-        <!-- Registration Read/Unread actions -->
-        <record id="actions_server_event_registration_unread" model="ir.actions.server">
-            <field name="name">Event registration : Mark unread</field>
-            <field name="condition">True</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="model_event_registration"/>
-            <field name="state">code</field>
-            <field name="code">self.message_mark_as_unread(cr, uid, context.get('active_ids'), context=context)</field>
-        </record>
-        <record id="action_event_registration_unread" model="ir.values">
-            <field name="name">action_event_registration_unread</field>
-            <field name="action_id" ref="actions_server_event_registration_unread"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_event_registration_unread'))" />
-            <field name="key">action</field>
-            <field name="model_id" ref="model_event_registration" />
-            <field name="model">event.registration</field>
-            <field name="key2">client_action_multi</field>
-        </record>
-
-        <record id="actions_server_event_registration_read" model="ir.actions.server">
-            <field name="name">Event registration : Mark read</field>
-            <field name="condition">True</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="model_event_registration"/>
-            <field name="state">code</field>
-            <field name="code">self.message_mark_as_read(cr, uid, context.get('active_ids'), context=context)</field>
-        </record>
-        <record id="action_event_registration_read" model="ir.values">
-            <field name="name">action_event_registration_read</field>
-            <field name="action_id" ref="actions_server_event_registration_read"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_event_registration_read'))" />
-            <field name="key">action</field>
-            <field name="model_id" ref="model_event_registration" />
-            <field name="model">event.registration</field>
-            <field name="key2">client_action_multi</field>
-        </record>
 
         <record model="ir.ui.view" id="view_event_registration_tree">
             <field name="name">event.registration.tree</field>

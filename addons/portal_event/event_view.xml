@@ -9,7 +9,7 @@
             <field name="inherit_id" ref="event.view_event_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//page[last()]" position="after">
-                    <page string="Portal Settings">
+                    <page string="Portal Settings" groups="base.group_user">
                         <group>
                             <field name="visibility"/>
                         </group>

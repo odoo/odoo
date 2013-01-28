@@ -672,8 +672,11 @@ openerp.mail = function (session) {
 
             // read messages
             self.parent_thread.message_fetch(this.domain, this.context, false, function (arg, data) {
-                // insert the message on dom after this message
+                if (self.options.root_thread == self.parent_thread) {
+                    data.reverse();
+                }
                 self.id = false;
+                // insert the message on dom after this message
                 self.parent_thread.switch_new_message( data, self.$el );
                 self.animated_destroy(200);
             });
@@ -1011,8 +1014,6 @@ openerp.mail = function (session) {
                     var bottom = $(window).scrollTop()+$(window).height()+200;
                     if (bottom > pos.top) {
                         val.on_expandable();
-                        // load only one time
-                        val.loading = true;
                     }
                 }
             });

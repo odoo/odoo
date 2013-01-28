@@ -4,43 +4,6 @@
 
         <menuitem  id="menu_project_confi" name="Issues" parent="base.menu_definitions" sequence="2"/>
 
-        <!-- Project issue Read/Unread actions -->
-        <record id="actions_server_project_issue_unread" model="ir.actions.server">
-            <field name="name">Issue: Mark unread</field>
-            <field name="condition">True</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="model_project_issue"/>
-            <field name="state">code</field>
-            <field name="code">self.message_mark_as_unread(cr, uid, context.get('active_ids'), context=context)</field>
-        </record>
-        <record id="action_project_issue_unread" model="ir.values">
-            <field name="name">action_project_issue_unread</field>
-            <field name="action_id" ref="actions_server_project_issue_unread"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_project_issue_unread'))"/>
-            <field name="key">action</field>
-            <field name="model_id" ref="model_project_issue"/>
-            <field name="model">project.issue</field>
-            <field name="key2">client_action_multi</field>
-        </record>
-
-        <record id="actions_server_project_issue_read" model="ir.actions.server">
-            <field name="name">Issue: Mark read</field>
-            <field name="condition">True</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="model_project_issue"/>
-            <field name="state">code</field>
-            <field name="code">self.message_mark_as_read(cr, uid, context.get('active_ids'), context=context)</field>
-        </record>
-        <record id="action_project_issue_read" model="ir.values">
-            <field name="name">action_project_issue_read</field>
-            <field name="action_id" ref="actions_server_project_issue_read"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_project_issue_read'))"/>
-            <field name="key">action</field>
-            <field name="model_id" ref="model_project_issue"/>
-            <field name="model">project.issue</field>
-            <field name="key2">client_action_multi</field>
-        </record>
-
         <record model="ir.ui.view" id="project_issue_version_search_view">
             <field name="name">Issue Version</field>
             <field name="model">project.issue.version</field>
@@ -200,12 +163,12 @@
                     <filter string="Unassigned Issues" domain="[('user_id','=',False)]"  help="Unassigned Issues" icon="terp-personal-" />
                     <field name="user_id"/>
                     <field name="project_id"/>
+                    <field name="categ_ids"/>
                     <group expand="0" string="Group By..." >
                         <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Contact" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Project"  icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}"/>
                         <filter string="Version" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'version_id'}"/>
-                        <filter string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'categ_id'}"/>
                         <filter string="Priority" icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}"/>
                         <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
                         <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}" help="Creation Month"/>

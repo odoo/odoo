@@ -7,14 +7,15 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-02-08 09:10+0000\n"
-"Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
+"PO-Revision-Date: 2012-12-09 21:56+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:11+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-10 04:37+0000\n"
+"X-Generator: Launchpad (build 16341)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -64,7 +65,7 @@ msgstr "Volumen"
 #. module: delivery
 #: view:delivery.carrier:0
 msgid "Zip"
-msgstr ""
+msgstr "PLZ"
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
@@ -100,12 +101,31 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klicken Sie zur Erstellung einer neuen Liefermethode. \n"
+"              </p><p>\n"
+"                Jeder Paketversender (z.B. UPS) bietet unterschiedliche "
+"Liefermethoden an (z.B.\n"
+"                UPS Express, UPS Standard) mit verschiedenen Regelwerken für "
+"die Preisberechnung \n"
+"                der Methoden.   \n"
+"               </p><p>\n"
+"                 Die Methoden ermöglichen es nun, automatisch auf Basis "
+"Ihrer Einstellungen den Lieferpreis \n"
+"                 für die Auslieferung zu berechnen, und den Verkauf  "
+"(bezieht sich auf dieses  Angebot) oder die \n"
+"                 Rechnung (basierend auf den Lieferscheinen) automatisch "
+"inklusive dieser Kosten zu erstellen.\n"
+"              </p>\n"
+"            "
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:221
 #, python-format
 msgid "No line matched this product or order in the chosen delivery grid."
 msgstr ""
+"Keine Zeile entspricht dem Produkt oder dem Auftrag mit dieser ausgewählten "
+"Liefertabelle."
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
@@ -145,6 +165,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"p class=\"oe_view_nocontent_create\">\n"
+"\n"
+"Klicken Sie um eine Preisliste für spezifische Regionen zu definieren.\n"
+"              </p><p>\n"
+"                Der Preis für Auslieferungen ermöglicht die Berechnung von "
+"Kosten\n"
+"und Verkaufspreisen auf der Basis von Gewichten und weiterer Kriterien bei "
+"der \n"
+"Auslieferung. Sie können verschiedene  Preislisten für Liefermethoden "
+"anlegen: \n"
+"Pro Land oder Region in einem spezifischen Land durch einen bestimmten \n"
+"Bereich der PLZ.\n"
+"</p>\n"
+"            "
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -164,7 +198,7 @@ msgstr "Betrag"
 #. module: delivery
 #: view:sale.order:0
 msgid "Add in Quote"
-msgstr ""
+msgstr "Erweitern um Angebot"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -217,7 +251,7 @@ msgstr "Definition Auslieferungstarif"
 #: code:addons/delivery/stock.py:89
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Warnung !"
 
 #. module: delivery
 #: field:delivery.grid.line,operator:0
@@ -237,7 +271,7 @@ msgstr "Verkaufsauftrag"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking_out
 msgid "Delivery Orders"
-msgstr ""
+msgstr "Auslieferung Aufträge"
 
 #. module: delivery
 #: view:sale.order:0

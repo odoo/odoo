@@ -176,18 +176,21 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
             action = result,
             view_mode = action_attrs.view_mode;
 
-        if (action_attrs.context && action_attrs.context['dashboard_merge_domains_contexts'] === false) {
+        // evaluate action_attrs context and domain
+        action_attrs.context = instance.web.pyeval.eval(
+            'context', action_attrs.context || {});
+        action_attrs.domain = instance.web.pyeval.eval(
+            'domain', action_attrs.domain || [], action_attrs.context);
+        if (action_attrs.context['dashboard_merge_domains_contexts'] === false) {
             // TODO: replace this 6.1 workaround by attribute on <action/>
             action.context = action_attrs.context || {};
             action.domain = action_attrs.domain || [];
         } else {
-            if (action_attrs.context) {
-                action.context = _.extend((action.context || {}), action_attrs.context);
-            }
-            if (action_attrs.domain) {
-                action.domain = action.domain || [];
-                action.domain.unshift.apply(action.domain, action_attrs.domain);
-            }
+            action.context = instance.web.pyeval.eval(
+                'contexts', [action.context || {}, action_attrs.context]);
+            action.domain = instance.web.pyeval.eval(
+                'domains', [action_attrs.domain, action.domain || []],
+                action.context)
         }
 
         var action_orig = _.extend({ flags : {} }, action);

@@ -33,20 +33,4 @@
 -
   !python {model: crm.lead}: |
     lead_ids = self.search(cr, uid, [('email_from','=', 'Mr. John Right <info@customer.com>')])
-    self.convert_partner(cr, uid, lead_ids, context=context)
--
-  I convert one phonecall request to a customer and put him into regular customer list.
--
-  !python {model: crm.phonecall2partner}: |
-    context.update({'active_model': 'crm.phonecall', 'active_ids': [ref("crm.crm_phonecall_4")], 'active_id': ref("crm.crm_phonecall_4")})
-    new_id = self.create(cr, uid, {}, context=context)
-    self.make_partner(cr, uid, [new_id],  context=context)
--
-  I check converted phonecall to partner.
--
-  !python {model: res.partner}: |
-    partner_id = self.search(cr, uid, [('phonecall_ids', '=', ref('crm.crm_phonecall_4'))])
-    assert partner_id, "Customer is not found in regular customer list."
-    data = self.browse(cr, uid, partner_id, context=context)[0]
-    assert data.user_id.id == ref("base.user_root"), "User not assigned properly"
-    assert data.name == "Wanted information about pricing of laptops", "Bad partner name"
+    self.handle_partner_assignation(cr, uid, lead_ids, context=context)

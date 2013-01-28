@@ -197,8 +197,9 @@ class crm_case_categ(osv.osv):
 
     def _find_object_id(self, cr, uid, context=None):
         """Finds id for case object"""
-        object_id = context and context.get('object_id', False) or False
-        ids = self.pool.get('ir.model').search(cr, uid, [('id', '=', object_id)])
+        context = context or {}
+        object_id = context.get('object_id', False)
+        ids = self.pool.get('ir.model').search(cr, uid, ['|',('id', '=', object_id),('model', '=', context.get('object_name', False))])
         return ids and ids[0] or False
 
     _defaults = {

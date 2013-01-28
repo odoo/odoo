@@ -356,6 +356,7 @@ class project(osv.osv):
 
         context['active_test'] = False
         default['state'] = 'open'
+        default['line_ids'] = []
         default['tasks'] = []
         default.pop('alias_name', None)
         default.pop('alias_id', None)
@@ -647,16 +648,6 @@ class task(base_stage, osv.osv):
         'stage_id': _read_group_stage_ids,
         'user_id': _read_group_user_id,
     }
-
-    def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
-        obj_project = self.pool.get('project.project')
-        for domain in args:
-            if domain[0] == 'project_id' and (not isinstance(domain[2], str)):
-                id = isinstance(domain[2], list) and domain[2][0] or domain[2]
-                if id and isinstance(id, (long, int)):
-                    if obj_project.read(cr, user, id, ['state'])['state'] == 'template':
-                        args.append(('active', '=', False))
-        return super(task, self).search(cr, user, args, offset=offset, limit=limit, order=order, context=context, count=count)
 
     def _str_get(self, task, level=0, border='***', context=None):
         return border+' '+(task.user_id and task.user_id.name.upper() or '')+(level and (': L'+str(level)) or '')+(' - %.1fh / %.1fh'%(task.effective_hours or 0.0,task.planned_hours))+' '+border+'\n'+ \

@@ -25,7 +25,7 @@
     'complexity': "easy",
     'description': """
 Google Analytics.
-==============================
+=================
 
 Collects web application usage with Google Analytics.
     """,

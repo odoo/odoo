@@ -20,7 +20,6 @@
 ##############################################################################
 
 import time
-import sys
 import os
 import re
 
@@ -40,11 +39,8 @@ from tools import mod10r
 from tools.translate import _
 from tools.config import config
 
-import wizard
-import addons
+from openerp import addons
 import pooler
-
-
 
 
 class l10n_ch_report_webkit_html(report_sxw.rml_parse):
@@ -78,12 +74,12 @@ class l10n_ch_report_webkit_html(report_sxw.rml_parse):
 
     def police_absolute_path(self, inner_path):
         """Will get the ocrb police absolute path"""
-        path = addons.get_module_resource(os.path.join('l10n_ch', 'report', inner_path))
+        path = addons.get_module_resource('l10n_ch', 'report', inner_path)
         return  path
 
     def bvr_absolute_path(self) :
         """Will get the ocrb police absolute path"""
-        path = addons.get_module_resource(os.path.join('l10n_ch', 'report', 'bvr1.jpg'))
+        path = addons.get_module_resource('l10n_ch', 'report', 'bvr1.jpg')
         return  path
 
     def headheight(self):
@@ -167,7 +163,7 @@ class BVRWebKitParser(webkit_report.WebKitParser):
         """generate the PDF"""
         context = context or {}
         if report_xml.report_type != 'webkit':
-            return super(WebKitParser,self).create_single_pdf(cursor, uid, ids, data, report_xml, context=context)
+            return super(BVRWebKitParser,self).create_single_pdf(cursor, uid, ids, data, report_xml, context=context)
         self.parser_instance = self.parser(cursor,
                                             uid,
                                             self.name2,
@@ -177,7 +173,7 @@ class BVRWebKitParser(webkit_report.WebKitParser):
         self.parser_instance.set_context(objs, data, ids, report_xml.report_type)
         template =  False
         if report_xml.report_file :
-            path = addons.get_module_resource(report_xml.report_file)
+            path = addons.get_module_resource(*report_xml.report_file.split(os.path.sep))
             if os.path.exists(path) :
                 template = file(path).read()
         if not template and report_xml.report_webkit_data :
@@ -203,7 +199,7 @@ class BVRWebKitParser(webkit_report.WebKitParser):
         company = user.company_id
         body_mako_tpl = mako_template(template)
         #BVR specific
-        bvr_path = addons.get_module_resource(os.path.join('l10n_ch','report','bvr.mako'))
+        bvr_path = addons.get_module_resource('l10n_ch','report','bvr.mako')
         body_bvr_tpl = mako_template(file(bvr_path).read())
         helper = report_helper.WebKitHelper(cursor, uid, report_xml.id, context)
         ##BVR Specific

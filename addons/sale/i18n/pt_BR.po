@@ -8,20 +8,19 @@ msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-07-28 16:28+0000\n"
-"Last-Translator: Fábio Martinelli - http://zupy.com.br "
-"<webmaster@guaru.net>\n"
+"PO-Revision-Date: 2012-12-06 18:10+0000\n"
+"Last-Translator: Cristiano Korndörfer <codigo.aberto@dorfer.com.br>\n"
 "Language-Team: <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:31+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-07 04:35+0000\n"
+"X-Generator: Launchpad (build 16341)\n"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_config_settings
 msgid "account.config.settings"
-msgstr ""
+msgstr "account.config.settings"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -46,7 +45,7 @@ msgstr "UdV"
 #: view:sale.report:0
 #: field:sale.report,user_id:0
 msgid "Salesperson"
-msgstr ""
+msgstr "Vendedor"
 
 #. module: sale
 #: help:sale.order,pricelist_id:0
@@ -61,6 +60,7 @@ msgstr "Dia"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancelorder0
+#: view:sale.order:0
 msgid "Cancel Order"
 msgstr "Cancelar Pedido"
 
@@ -68,23 +68,23 @@ msgstr "Cancelar Pedido"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:101
 #, python-format
 msgid "Incorrect Data"
-msgstr ""
+msgstr "Dados Incorretos"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:102
 #, python-format
 msgid "The value of Advance Amount must be positive."
-msgstr ""
+msgstr "O valor da Soma Avançada deve ser positivo."
 
 #. module: sale
 #: help:sale.order,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Se marcado novas mensagens requerem sua atenção"
 
 #. module: sale
 #: view:res.partner:0
 msgid "False"
-msgstr ""
+msgstr "Falso"
 
 #. module: sale
 #: report:sale.order:0
@@ -101,8 +101,15 @@ msgid ""
 "The 'Waiting Schedule' status is set when the invoice is confirmed           "
 "    but waiting for the scheduler to run on the order date."
 msgstr ""
+"Informa a situação da cotação ou pedido de venda.              \n"
+"A situação excepcional é definida automaticamente quando uma operação de "
+"cancelamento ocorre                na validação da fatura (Exceção da "
+"Fatura) ou no processo de lista de separação (Exceção de Envio).\n"
+"A situação 'Aguardando Agendamento' é definida quando a fatura é confirmada  "
+"             mas aguarda pelo processamento na data de pedido."
 
 #. module: sale
+#: field:sale.order,project_id:0
 #: view:sale.report:0
 #: field:sale.report,analytic_account_id:0
 #: field:sale.shop,project_id:0
@@ -115,17 +122,20 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Contém o resumo da conversação (número de mensagens, ...). Este resumo é "
+"gerado diretamente em formato HTML para que possa ser inserido nas visões "
+"kanban."
 
 #. module: sale
 #: view:sale.report:0
 #: field:sale.report,product_uom_qty:0
 msgid "# of Qty"
-msgstr "# de Qtd"
+msgstr "Nº de Qtd"
 
 #. module: sale
 #: help:sale.config.settings,group_discount_per_so_line:0
 msgid "Allows you to apply some discount per sale order line."
-msgstr ""
+msgstr "Permite aplicar algum desconto por linha do pedido de venda."
 
 #. module: sale
 #: help:sale.config.settings,group_sale_pricelist:0
@@ -133,6 +143,9 @@ msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
 "Example: 10% for retailers, promotion of 5 EUR on this product, etc."
 msgstr ""
+"Permite gerenciar diferentes preços baseado em regras por categoria de "
+"cliente.\n"
+"Exemplo: 10% para varejistas, promoção de R$ 15 neste produto, etc."
 
 #. module: sale
 #: field:sale.shop,payment_default_id:0
@@ -143,17 +156,17 @@ msgstr "Condição de Pagamento Padrão"
 #: code:addons/sale/sale.py:662
 #, python-format
 msgid "Invoice <b>paid</b>."
-msgstr ""
+msgstr "Fatura <b>paga</b>."
 
 #. module: sale
 #: field:sale.config.settings,group_uom:0
 msgid "Allow using different units of measures"
-msgstr ""
+msgstr "Permite utilizar diferentes unidades de medida"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Percentage"
-msgstr ""
+msgstr "Porcentagem"
 
 #. module: sale
 #: report:sale.order:0
@@ -165,6 +178,7 @@ msgstr "Desc. (%)"
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr ""
+"Por favor defina conta de recebimento para este produto: \"%s\" (id:%d)."
 
 #. module: sale
 #: view:sale.report:0
@@ -301,7 +315,7 @@ msgid "Advance of %s %%"
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_orders_exception
+#: model:ir.actions.act_window,name:sale.action_order_tree2
 msgid "Sales in Exception"
 msgstr "Vendas em Exceção"
 
@@ -377,8 +391,8 @@ msgid "Advance of %s %s"
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_quotations
-#: model:ir.ui.menu,name:sale.menu_sale_quotations
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.action_quotation_for_sale
 #: view:sale.order:0
 #: view:sale.report:0
 msgid "Quotations"
@@ -387,7 +401,6 @@ msgstr "Cotações"
 #. module: sale
 #: field:sale.advance.payment.inv,qtty:0
 #: report:sale.order:0
-#: field:sale.order.line,product_uom_qty:0
 msgid "Quantity"
 msgstr "Quantidade"
 
@@ -412,6 +425,7 @@ msgid "Fiscal Position"
 msgstr "Posição Fiscal"
 
 #. module: sale
+#: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "In Progress"
 msgstr "Em Progresso"
@@ -501,7 +515,6 @@ msgid "or"
 msgstr ""
 
 #. module: sale
-#: field:sale.order,invoice_exists:0
 #: field:sale.order,invoiced_rate:0
 #: field:sale.order.line,invoiced:0
 msgid "Invoiced"
@@ -603,6 +616,7 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
+#: field:stock.move,sale_line_id:0
 msgid "Sales Order Line"
 msgstr "Linha de Pedido de Vendas"
 
@@ -622,7 +636,6 @@ msgid "Order N°"
 msgstr "Pedido N°"
 
 #. module: sale
-#: view:sale.order:0
 #: field:sale.order,order_line:0
 msgid "Order Lines"
 msgstr "Itens do Pedido"
@@ -720,6 +733,7 @@ msgstr "Data do Pedido"
 
 #. module: sale
 #: view:sale.order.line:0
+#: field:sale.report,shipped:0
 msgid "Shipped"
 msgstr "Enviado"
 
@@ -731,7 +745,6 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model:ir.model,name:sale.model_res_partner
 #: view:sale.report:0
 #: field:sale.report,partner_id:0
 msgid "Partner"
@@ -770,7 +783,7 @@ msgstr ""
 "pedido."
 
 #. module: sale
-#: code:addons/sale/sale.py:966
+#: code:addons/sale/sale.py:1124
 #, python-format
 msgid ""
 "You have to select a pricelist or a customer in the sales form !\n"
@@ -883,6 +896,7 @@ msgid "Your Reference"
 msgstr "Sua Referência"
 
 #. module: sale
+#: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Qty"
 msgstr "Qtd"
@@ -894,9 +908,10 @@ msgstr "Minhas linhas de Pedido de Venda"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancel0
+#: model:process.transition.action,name:sale.process_transition_action_cancel1
+#: model:process.transition.action,name:sale.process_transition_action_cancel2
 #: view:sale.advance.payment.inv:0
 #: view:sale.make.invoice:0
-#: view:sale.order:0
 #: view:sale.order.line:0
 #: view:sale.order.line.make.invoice:0
 msgid "Cancel"
@@ -917,10 +932,9 @@ msgstr ""
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_invoice0
+#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
 #: model:process.transition.action,name:sale.process_transition_action_createinvoice0
 #: view:sale.advance.payment.inv:0
-#: view:sale.order:0
-#: field:sale.order,order_policy:0
 #: view:sale.order.line:0
 msgid "Create Invoice"
 msgstr "Criar Nota Fiscal"
@@ -947,6 +961,7 @@ msgstr ""
 
 #. module: sale
 #: report:sale.order:0
+#: view:sale.order.line:0
 msgid "Price"
 msgstr "Preço"
 
@@ -1082,6 +1097,7 @@ msgid "Sale Order"
 msgstr "Pedido de Venda"
 
 #. module: sale
+#: view:sale.order:0
 #: field:sale.order,amount_tax:0
 #: field:sale.order.line,tax_id:0
 msgid "Taxes"
@@ -1151,6 +1167,7 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice
 #: model:ir.actions.act_window,name:sale.action_view_sale_order_line_make_invoice
+#: view:sale.order:0
 msgid "Make Invoices"
 msgstr "Gerar Nota Fiscal"
 
@@ -1255,7 +1272,7 @@ msgstr "Análise de Vendas"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_quotation0
-#: view:sale.order:0
+#: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "Quotation"
 msgstr "Cotação"
@@ -1404,10 +1421,8 @@ msgid "Customer Invoices"
 msgstr "Faturas de Clientes"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.open_board_sales
-#: model:ir.ui.menu,name:sale.menu_dashboard_sales
+#: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
 #: model:process.process,name:sale.process_process_salesprocess0
-#: view:res.partner:0
 #: view:sale.order:0
 #: view:sale.report:0
 msgid "Sales"
@@ -1429,7 +1444,6 @@ msgid "Unit Price"
 msgstr "Preço Unitário"
 
 #. module: sale
-#: view:sale.order:0
 #: selection:sale.order,state:0
 #: view:sale.order.line:0
 #: selection:sale.order.line,state:0
@@ -1438,10 +1452,8 @@ msgid "Done"
 msgstr "Concluído"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:123
 #: model:process.node,name:sale.process_node_invoice0
-#: view:sale.order:0
-#, python-format
+#: model:process.node,name:sale.process_node_invoiceafterdelivery0
 msgid "Invoice"
 msgstr "Fatura"
 
@@ -1517,6 +1529,7 @@ msgid "Product UoS"
 msgstr "UdS Produto"
 
 #. module: sale
+#: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "Manual In Progress"
 msgstr "Em Andamento Manual"
@@ -1665,7 +1678,7 @@ msgid "Invoice Exception"
 msgstr "Exceção de Faturamento"
 
 #. module: sale
-#: code:addons/sale/sale.py:888
+#: code:addons/sale/sale.py:1017
 #, python-format
 msgid "No Customer Defined !"
 msgstr "Sem Cliente definido!"
@@ -1742,6 +1755,7 @@ msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_shop_form
+#: model:ir.ui.menu,name:sale.menu_action_shop_form
 #: field:sale.order,shop_id:0
 #: view:sale.report:0
 #: field:sale.report,shop_id:0
@@ -1765,15 +1779,12 @@ msgid "Contract Features"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:273
-#: code:addons/sale/sale.py:576
 #: model:ir.model,name:sale.model_sale_order
 #: model:process.node,name:sale.process_node_order0
 #: model:process.node,name:sale.process_node_saleorder0
-#: field:res.partner,sale_order_ids:0
 #: model:res.request.link,name:sale.req_link_sale_order
 #: view:sale.order:0
-#, python-format
+#: field:stock.picking,sale_id:0
 msgid "Sales Order"
 msgstr "Pedido de Venda"
 
@@ -1808,6 +1819,7 @@ msgid "Followers"
 msgstr ""
 
 #. module: sale
+#: view:sale.order:0
 #: field:sale.order.line,invoice_lines:0
 msgid "Invoice Lines"
 msgstr "Linhas da Nota Fiscal"
@@ -1819,7 +1831,6 @@ msgid "# of Lines"
 msgstr "# de Linhas"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_line_product_tree
 #: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Sales Order Lines"
@@ -1893,7 +1904,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:109
+#: code:addons/sale/wizard/sale_line_invoice.py:111
 #, python-format
 msgid ""
 "Invoice cannot be created for this Sales Order Line due to one of the "
@@ -1917,6 +1928,8 @@ msgid "Weight"
 msgstr "Peso"
 
 #. module: sale
+#: view:sale.open.invoice:0
+#: view:sale.order:0
 #: field:sale.order,invoice_ids:0
 msgid "Invoices"
 msgstr "Notas Fiscais"
@@ -1948,7 +1961,10 @@ msgid "Untaxed Amount"
 msgstr "Total de Mercadorias"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:202
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:163
+#: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
+#: view:sale.advance.payment.inv:0
+#: view:sale.order:0
 #, python-format
 msgid "Advance Invoice"
 msgstr "Avançar Fatura"
@@ -1989,6 +2005,8 @@ msgid "Email Templates"
 msgstr "Modelos de Email"
 
 #. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_form
+#: model:ir.ui.menu,name:sale.menu_sale_order
 #: view:sale.order:0
 msgid "Sales Orders"
 msgstr "Pedidos de Venda"
@@ -2026,7 +2044,7 @@ msgid "January"
 msgstr "Janeiro"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_orders_in_progress
+#: model:ir.actions.act_window,name:sale.action_order_tree4
 msgid "Sales Order in Progress"
 msgstr "Pedido de Venda em Processamento"
 
@@ -2205,6 +2223,7 @@ msgid "Quotation N°"
 msgstr "Cotação N°"
 
 #. module: sale
+#: field:sale.order,picked_rate:0
 #: view:sale.report:0
 msgid "Picked"
 msgstr "Separado"
