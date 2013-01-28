@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 
 class crm_configuration(osv.osv_memory):
     _name = 'sale.config.settings'

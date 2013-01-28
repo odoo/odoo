@@ -22,9 +22,9 @@
 import time
 from lxml import etree
 
-from osv import fields, osv
-import tools
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp import tools
+from openerp.tools.translate import _
 
 class one2many_mod2(fields.one2many):
     def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):

@@ -14,15 +14,18 @@
                         <field name="parent_id" invisible="1"/>
                         <!-- visible wizard -->
                         <label for="partner_ids" string="Recipients"/>
-                        <div>
-                            <span attrs="{'invisible':[('model', '=', False)]}">
+                        <div groups="base.group_user">
+                            <span attrs="{'invisible':['|', ('model', '=', False), ('composition_mode', '!=', 'mass_mail')]}">
+                                Followers of selected items and
+                            </span>
+                            <span attrs="{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}">
                                 Followers of
                                 <field name="record_name" readonly="1" class="oe_inline"
                                     attrs="{'invisible':[('model', '=', False)]}"/>
                                 and 
                             </span>
                             <field name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to notify..."
-                                context="{'force_email':True}" required="1"/>
+                                context="{'force_email':True, 'show_email':True}"/>
                         </div>
                         <field name="subject" placeholder="Subject..."/>
                     </group>

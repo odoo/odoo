@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 
 class mrp_price(osv.osv_memory):
     _name = 'mrp.product_price'

@@ -20,8 +20,8 @@
 ##############################################################################
 
 import time
-from report import report_sxw
-import pooler
+from openerp.report import report_sxw
+from openerp import pooler
 
 class account_invoice_intrastat(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):

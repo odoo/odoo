@@ -18,11 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 ##############################################################################
-
-from osv import osv
-from osv import fields
-import tools
-
+from openerp.osv import osv, fields
+from openerp import tools, SUPERUSER_ID
 
 class mail_followers(osv.Model):
     """ mail_followers holds the data related to the follow mechanism inside
@@ -78,13 +75,6 @@ class mail_notification(osv.Model):
         if not cr.fetchone():
             cr.execute('CREATE INDEX mail_notification_partner_id_read_starred_message_id ON mail_notification (partner_id, read, starred, message_id)')
 
-    def create(self, cr, uid, vals, context=None):
-        """ Override of create to check that we can not create a notification
-            for a message the user can not read. """
-        if self.pool.get('mail.message').check_access_rights(cr, uid, 'read'):
-            return super(mail_notification, self).create(cr, uid, vals, context=context)
-        return False
-
     def get_partners_to_notify(self, cr, uid, message, context=None):
         """ Return the list of partners to notify, based on their preferences.
 
@@ -117,11 +107,11 @@ class mail_notification(osv.Model):
         """ Send by email the notification depending on the user preferences """
         if context is None:
             context = {}
-        # mail_noemail (do not send email) or no partner_ids: do not send, return
-        if context.get('mail_noemail'):
+        # mail_notify_noemail (do not send email) or no partner_ids: do not send, return
+        if context.get('mail_notify_noemail'):
             return True
-        msg = self.pool.get('mail.message').browse(cr, uid, msg_id, context=context)
-
+        # browse as SUPERUSER_ID because of access to res_partner not necessarily allowed
+        msg = self.pool.get('mail.message').browse(cr, SUPERUSER_ID, msg_id, context=context)
         notify_partner_ids = self.get_partners_to_notify(cr, uid, msg, context=context)
         if not notify_partner_ids:
             return True
@@ -148,4 +138,8 @@ class mail_notification(osv.Model):
         }
         mail_values['email_to'] = ', '.join(mail_values['email_to'])
         email_notif_id = mail_mail.create(cr, uid, mail_values, context=context)
-        return mail_mail.send(cr, uid, [email_notif_id], recipient_ids=notify_partner_ids, context=context)
+        try:
+            return mail_mail.send(cr, uid, [email_notif_id], recipient_ids=notify_partner_ids, context=context)
+        except Exception:
+            return False
+

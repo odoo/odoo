@@ -20,9 +20,9 @@
 import logging
 from datetime import datetime
 
-from tools import DEFAULT_SERVER_DATETIME_FORMAT
-from osv import osv, fields
-from tools.translate import _
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -94,9 +94,9 @@ class google_docs_ir_attachment(osv.osv):
         client = self._auth(cr, uid)
         # fetch and copy the original document
         try:
-            original_resource = client.get_resource_by_id(gdoc_template_id)
+            doc = client.GetDoc(gdoc_template_id)
             #copy the document you choose in the configuration
-            copy_resource = client.copy_resource(original_resource, name_gdocs)
+            copy_resource = client.copy(doc, name_gdocs)
         except:
             raise osv.except_osv(_('Google Docs Error!'), _("Your resource id is not correct. You can find the id in the google docs URL."))
         # create an ir.attachment

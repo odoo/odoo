@@ -19,12 +19,12 @@
 #
 ##############################################################################
 
-from osv import osv
-from osv import fields
+from openerp.osv import osv
+from openerp.osv import fields
 import urllib,re
 import random, time
-from tools.translate import _
-import tools
+from openerp.tools.translate import _
+from openerp import tools
 
 def geo_find(addr):
     addr = addr.encode('utf8')

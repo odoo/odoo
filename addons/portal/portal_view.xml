@@ -5,21 +5,52 @@
         <!-- Top menu item -->
         <menuitem name="Portal"
             id="portal_menu"
-            groups="base.group_no_one,portal.group_portal"
+            groups="portal.group_portal,portal.group_anonymous"
             sequence="15"/>
 
-        <menuitem name="Messaging" id="portal_messages" parent="portal_menu" sequence="10"/>
-        <menuitem name="About Us" id="portal_company" parent="portal_menu" sequence="200"/>
-        <menuitem name="News" id="portal_company_news" parent="portal_company" sequence="10" action="action_news"/>
-        <menuitem name="Jobs" id="portal_jobs" parent="portal_company" sequence="20" action="action_jobs"/>
-
+        <menuitem name="Messaging" id="portal_messages" parent="portal_menu" sequence="10" groups="portal.group_portal"/>
+        <record id="action_mail_inbox_feeds_portal" model="ir.actions.client">
+            <field name="name">Inbox</field>
+            <field name="tag">mail.wall</field>
+            <field name="res_model">mail.message</field>
+            <field name="context">{
+              'default_model': 'res.users', 
+              'default_res_id': uid,
+            }</field>
+            <field name="params" eval="&quot;{
+                'domain': [
+                  ('to_read', '=', True),
+                  ('starred', '=', False),
+                ],
+                'show_compose_message': False,
+                'show_link': False,
+                'view_mailbox': True,
+                'view_inbox': True,
+                'read_action': 'read'
+            }&quot;"/>
+            <field name="help" type="html">
+                <p>
+                    <b>Good Job!</b> Your inbox is empty.
+                </p><p>
+                    Your inbox contains private messages or emails sent to you
+                    as well as information related to documents or people you
+                    follow.
+                </p>
+            </field>
+        </record>
+        <menuitem name="Inbox" id="portal_inbox" parent="portal_messages"
+            action="action_mail_inbox_feeds_portal" sequence="10" groups="portal.group_portal"/>
         <!--
             Create menu items that we'll leave empty for now - they'll be
             filled up by other portal modules.
         -->
         <menuitem name="Quotations and Sales Orders" id="portal_orders" parent="portal_menu" sequence="20"/>
         <menuitem name="After Sale Services" id="portal_after_sales" parent="portal_menu" sequence="30"/>
-        <menuitem name="Projects" id="portal_projects" parent="portal_menu" sequence="40"/>        
+        <menuitem name="Projects" id="portal_projects" parent="portal_menu" sequence="40"/>
+
+        <menuitem name="About Us" id="portal_company" parent="portal_menu" sequence="200"/>
+        <menuitem name="News" id="portal_company_news" parent="portal_company" sequence="10" action="action_news"/>
+        <menuitem name="Jobs" id="portal_jobs" parent="portal_company" sequence="20" action="action_jobs"/>
 
         <!-- extend res.groups search view -->
         <record id="group_search_view" model="ir.ui.view">
@@ -46,39 +77,6 @@
                 </field>
             </field>
         </record>
-
-        <record id="action_mail_inbox_feeds_portal" model="ir.actions.client">
-            <field name="name">Inbox</field>
-            <field name="tag">mail.wall</field>
-            <field name="res_model">mail.message</field>
-            <field name="context">{
-              'default_model': 'res.users', 
-              'default_res_id': uid,
-            }</field>
-            <field name="params" eval="&quot;{
-                'domain': [
-                  ('to_read', '=', True),
-                  ('starred', '=', False),
-                ],
-                'show_compose_message': False,
-                'show_link_partner': False,
-                'view_mailbox': True,
-                'view_inbox': True,
-                'read_action': 'read'
-            }&quot;"/>
-            <field name="help" type="html">
-                <p>
-                    <b>Good Job!</b> Your inbox is empty.
-                </p><p>
-                    Your inbox contains private messages or emails sent to you
-                    as well as information related to documents or people you
-                    follow.
-                </p>
-            </field>
-        </record>
-
-        <menuitem name="Inbox" id="portal_inbox" parent="portal_messages"
-            action="action_mail_inbox_feeds_portal" sequence="10"/>
 
     </data>
 </openerp>

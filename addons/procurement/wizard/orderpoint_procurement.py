@@ -25,8 +25,8 @@
 #
 
 import threading
-import pooler
-from osv import fields,osv
+from openerp import pooler
+from openerp.osv import fields,osv
 
 class procurement_compute(osv.osv_memory):
     _name = 'procurement.orderpoint.compute'

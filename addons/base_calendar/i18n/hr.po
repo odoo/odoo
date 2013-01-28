@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-05-10 18:13+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-15 17:00+0000\n"
+"Last-Translator: Goran Kliska <gkliska@gmail.com>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:50+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 06:01+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_related:0
@@ -44,7 +44,7 @@ msgstr ""
 #: selection:calendar.todo,rrule_type:0
 #: selection:crm.meeting,rrule_type:0
 msgid "Week(s)"
-msgstr ""
+msgstr "Tjedan(i)"
 
 #. module: base_calendar
 #: field:calendar.event,we:0
@@ -56,24 +56,18 @@ msgstr "Sri"
 #. module: base_calendar
 #: selection:calendar.attendee,cutype:0
 msgid "Unknown"
-msgstr ""
+msgstr "Nepoznato"
 
 #. module: base_calendar
 #: help:calendar.event,recurrency:0
 #: help:calendar.todo,recurrency:0
 #: help:crm.meeting,recurrency:0
 msgid "Recurrent Meeting"
-msgstr ""
+msgstr "Ponavljajući sastanak"
 
 #. module: base_calendar
 #: model:crm.meeting.type,name:base_calendar.categ_meet5
 msgid "Feedback Meeting"
-msgstr ""
-
-#. module: base_calendar
-#: code:addons/base_calendar/crm_meeting.py:117
-#, python-format
-msgid "Meeting <b>completed</b>."
 msgstr ""
 
 #. module: base_calendar
@@ -151,7 +145,7 @@ msgstr "Odredite tip poziva"
 #: view:crm.meeting:0
 #: field:crm.meeting,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Nepročitane poruke"
 
 #. module: base_calendar
 #: selection:calendar.event,week_list:0
@@ -186,7 +180,7 @@ msgstr "Slobodan"
 #. module: base_calendar
 #: help:crm.meeting,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Ako je odabrano, nove poruke zahtijevaju Vašu pažnju."
 
 #. module: base_calendar
 #: help:calendar.attendee,rsvp:0
@@ -238,12 +232,12 @@ msgstr "Posljednji"
 #. module: base_calendar
 #: help:crm.meeting,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Poruke i povijest"
 
 #. module: base_calendar
 #: field:crm.meeting,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Poruke"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_interval:0
@@ -254,10 +248,10 @@ msgstr "Dana"
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "To"
-msgstr ""
+msgstr "Do"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1225
+#: code:addons/base_calendar/base_calendar.py:1255
 #, python-format
 msgid "Error!"
 msgstr "Greška!"
@@ -270,12 +264,19 @@ msgstr "Voditelj"
 #. module: base_calendar
 #: view:crm.meeting:0
 msgid "My Meetings"
-msgstr ""
+msgstr "Moji sastanci"
 
 #. module: base_calendar
 #: selection:calendar.alarm,action:0
 msgid "Procedure"
 msgstr "Procedura"
+
+#. module: base_calendar
+#: field:calendar.event,recurrent_id:0
+#: field:calendar.todo,recurrent_id:0
+#: field:crm.meeting,recurrent_id:0
+msgid "Recurrent ID"
+msgstr "Ponavljajući ID"
 
 #. module: base_calendar
 #: selection:calendar.event,state:0
@@ -302,17 +303,17 @@ msgstr "Status prisustvovanja sudionika"
 #. module: base_calendar
 #: view:crm.meeting:0
 msgid "Mail To"
-msgstr ""
+msgstr "Primatelj"
 
 #. module: base_calendar
 #: field:crm.meeting,name:0
 msgid "Meeting Subject"
-msgstr ""
+msgstr "Tema sastanka"
 
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "End of Recurrence"
-msgstr ""
+msgstr "Kraj ponavljanja"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -322,7 +323,7 @@ msgstr "Grupiraj prema..."
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Recurrency Option"
-msgstr ""
+msgstr "Opcija ponavljanja"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -333,17 +334,12 @@ msgstr ""
 #: view:crm.meeting:0
 #: model:ir.actions.act_window,name:base_calendar.action_crm_meeting
 msgid "Meetings"
-msgstr ""
+msgstr "Sastanci"
 
 #. module: base_calendar
-#: selection:calendar.attendee,cutype:0
-msgid "Room"
-msgstr "Soba"
-
-#. module: base_calendar
-#: field:calendar.event,recurrent_id:0
-#: field:calendar.todo,recurrent_id:0
-#: field:crm.meeting,recurrent_id:0
+#: field:calendar.event,recurrent_id_date:0
+#: field:calendar.todo,recurrent_id_date:0
+#: field:crm.meeting,recurrent_id_date:0
 msgid "Recurrent ID date"
 msgstr "Ponavljajući ID datuma"
 
@@ -364,13 +360,15 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Sadrži sažetak konverzacije (broj poruka,..). Ovaj sažetak je u html formatu "
+"da bi mogao biti ubačen u kanban pogled."
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:388
-#: code:addons/base_calendar/base_calendar.py:417
-#: code:addons/base_calendar/base_calendar.py:980
-#: code:addons/base_calendar/base_calendar.py:982
-#: code:addons/base_calendar/base_calendar.py:1430
+#: code:addons/base_calendar/base_calendar.py:399
+#: code:addons/base_calendar/base_calendar.py:444
+#: code:addons/base_calendar/base_calendar.py:1008
+#: code:addons/base_calendar/base_calendar.py:1010
+#: code:addons/base_calendar/base_calendar.py:1455
 #, python-format
 msgid "Warning!"
 msgstr "Upozorenje!"
@@ -485,7 +483,7 @@ msgstr "Dan mjeseca"
 #. module: base_calendar
 #: field:crm.meeting,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Pratitelji"
 
 #. module: base_calendar
 #: field:calendar.event,location:0
@@ -514,9 +512,9 @@ msgid "Email"
 msgstr "E-pošta"
 
 #. module: base_calendar
-#: model:ir.actions.server,name:base_calendar.actions_server_crm_meeting_unread
-msgid "CRM Meeting: Mark unread"
-msgstr ""
+#: selection:calendar.attendee,cutype:0
+msgid "Room"
+msgstr "Soba"
 
 #. module: base_calendar
 #: selection:calendar.alarm,state:0
@@ -529,31 +527,29 @@ msgid "Event alarm information"
 msgstr "Informacija alarma događaja"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:982
+#: code:addons/base_calendar/base_calendar.py:1010
 #, python-format
 msgid "Count cannot be negative or 0."
-msgstr ""
+msgstr "Broj ne smije biti negativan ili 0."
 
 #. module: base_calendar
 #: field:crm.meeting,create_date:0
 msgid "Creation Date"
-msgstr ""
+msgstr "Datum kreiranja"
 
 #. module: base_calendar
-#: code:addons/base_calendar/crm_meeting.py:111
 #: view:crm.meeting:0
 #: model:ir.model,name:base_calendar.model_crm_meeting
 #: model:res.request.link,name:base_calendar.request_link_meeting
-#, python-format
 msgid "Meeting"
-msgstr ""
+msgstr "Sastanak"
 
 #. module: base_calendar
 #: selection:calendar.event,rrule_type:0
 #: selection:calendar.todo,rrule_type:0
 #: selection:crm.meeting,rrule_type:0
 msgid "Month(s)"
-msgstr ""
+msgstr "Mjesec(i)"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -573,11 +569,9 @@ msgid "Caldav URL"
 msgstr "CalDAV URL"
 
 #. module: base_calendar
-#: field:calendar.event,recurrent_uid:0
-#: field:calendar.todo,recurrent_uid:0
-#: field:crm.meeting,recurrent_uid:0
-msgid "Recurrent ID"
-msgstr "Ponavljajući ID"
+#: model:ir.model,name:base_calendar.model_mail_wizard_invite
+msgid "Invite wizard"
+msgstr ""
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
@@ -601,7 +595,7 @@ msgstr "Čet"
 #. module: base_calendar
 #: view:crm.meeting:0
 msgid "Meeting Details"
-msgstr ""
+msgstr "Opis sastanka"
 
 #. module: base_calendar
 #: field:calendar.attendee,child_ids:0
@@ -609,24 +603,24 @@ msgid "Delegrated To"
 msgstr "Proslijeđeno"
 
 #. module: base_calendar
-#: code:addons/base_calendar/crm_meeting.py:94
+#: code:addons/base_calendar/crm_meeting.py:102
 #, python-format
 msgid "The following contacts have no email address :"
-msgstr ""
+msgstr "Za ove osobe nemamo email adresu:"
 
 #. module: base_calendar
 #: selection:calendar.event,rrule_type:0
 #: selection:calendar.todo,rrule_type:0
 #: selection:crm.meeting,rrule_type:0
 msgid "Year(s)"
-msgstr ""
+msgstr "Godina(e)"
 
 #. module: base_calendar
 #: view:crm.meeting.type:0
 #: model:ir.actions.act_window,name:base_calendar.action_crm_meeting_type
 #: model:ir.ui.menu,name:base_calendar.menu_crm_meeting_type
 msgid "Meeting Types"
-msgstr ""
+msgstr "Tipovi sastanka"
 
 #. module: base_calendar
 #: field:calendar.event,create_date:0
@@ -639,12 +633,12 @@ msgstr "Stvoreno"
 #: selection:calendar.todo,class:0
 #: selection:crm.meeting,class:0
 msgid "Public for Employees"
-msgstr ""
+msgstr "javno za zaposlene"
 
 #. module: base_calendar
 #: view:crm.meeting:0
 msgid "hours"
-msgstr ""
+msgstr "sati"
 
 #. module: base_calendar
 #: field:calendar.attendee,partner_id:0
@@ -666,7 +660,7 @@ msgstr "Ponavljaj dok"
 #. module: base_calendar
 #: view:crm.meeting:0
 msgid "Options"
-msgstr ""
+msgstr "Opcije"
 
 #. module: base_calendar
 #: selection:calendar.event,byday:0
@@ -705,7 +699,7 @@ msgstr "Utorak"
 #. module: base_calendar
 #: field:crm.meeting,categ_ids:0
 msgid "Tags"
-msgstr ""
+msgstr "Oznake"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -718,17 +712,11 @@ msgid "Individual"
 msgstr "Pojedinačno"
 
 #. module: base_calendar
-#: code:addons/base_calendar/crm_meeting.py:114
-#, python-format
-msgid "Meeting <b>confirmed</b>."
-msgstr ""
-
-#. module: base_calendar
 #: help:calendar.event,count:0
 #: help:calendar.todo,count:0
 #: help:crm.meeting,count:0
 msgid "Repeat x times"
-msgstr ""
+msgstr "Ponovi x puta"
 
 #. module: base_calendar
 #: field:calendar.alarm,user_id:0
@@ -740,12 +728,12 @@ msgstr "Vlasnik"
 #: help:calendar.todo,rrule_type:0
 #: help:crm.meeting,rrule_type:0
 msgid "Let the event automatically repeat at that interval"
-msgstr ""
+msgstr "Neka se događaj automatski ponavlja u intervalima"
 
 #. module: base_calendar
 #: model:ir.ui.menu,name:base_calendar.mail_menu_calendar
 msgid "Calendar"
-msgstr ""
+msgstr "Kalendar"
 
 #. module: base_calendar
 #: field:calendar.attendee,cn:0
@@ -758,10 +746,10 @@ msgid "Declined"
 msgstr "Odbijeno"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1430
+#: code:addons/base_calendar/base_calendar.py:1455
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
-msgstr ""
+msgstr "Grupiranje po datumu nije podržano. Koristite kalendar."
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -793,13 +781,6 @@ msgstr "Privatnost"
 #: model:ir.model,name:base_calendar.model_res_alarm
 msgid "Basic Alarm Information"
 msgstr "Osnovni podaci alarma"
-
-#. module: base_calendar
-#: field:calendar.event,mo:0
-#: field:calendar.todo,mo:0
-#: field:crm.meeting,mo:0
-msgid "Mon"
-msgstr "Pon"
 
 #. module: base_calendar
 #: field:calendar.event,fr:0
@@ -845,12 +826,12 @@ msgstr "Privitak"
 #. module: base_calendar
 #: field:crm.meeting,date_closed:0
 msgid "Closed"
-msgstr ""
+msgstr "Zatvoren"
 
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "From"
-msgstr ""
+msgstr "Od"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -865,12 +846,12 @@ msgstr "Podsjetnik"
 #: selection:calendar.todo,end_type:0
 #: selection:crm.meeting,end_type:0
 msgid "Number of repetitions"
-msgstr ""
+msgstr "Broj ponavljanja"
 
 #. module: base_calendar
 #: model:crm.meeting.type,name:base_calendar.categ_meet2
 msgid "Internal Meeting"
-msgstr ""
+msgstr "Interni sastanak"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -887,7 +868,7 @@ msgstr "Događaji"
 #: field:calendar.todo,state:0
 #: field:crm.meeting,state:0
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: base_calendar
 #: help:calendar.attendee,email:0
@@ -897,7 +878,7 @@ msgstr "E-pošta pozvane osobe"
 #. module: base_calendar
 #: model:crm.meeting.type,name:base_calendar.categ_meet1
 msgid "Customer Meeting"
-msgstr ""
+msgstr "Sastanak sa kupcem"
 
 #. module: base_calendar
 #: help:calendar.attendee,dir:0
@@ -923,12 +904,12 @@ msgstr "Ponedjeljak"
 #. module: base_calendar
 #: model:crm.meeting.type,name:base_calendar.categ_meet4
 msgid "Open Discussion"
-msgstr ""
+msgstr "Otvorena diskusija"
 
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_ir_model
 msgid "Models"
-msgstr ""
+msgstr "Modeli"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
@@ -947,18 +928,18 @@ msgstr "Datum događaja"
 #. module: base_calendar
 #: view:crm.meeting:0
 msgid "Invitations"
-msgstr ""
+msgstr "Pozivnice"
 
 #. module: base_calendar
 #: view:calendar.event:0
 #: view:crm.meeting:0
 msgid "The"
-msgstr ""
+msgstr "!"
 
 #. module: base_calendar
 #: field:crm.meeting,write_date:0
 msgid "Write Date"
-msgstr ""
+msgstr "Datum pisanja"
 
 #. module: base_calendar
 #: field:calendar.attendee,delegated_from:0
@@ -968,7 +949,7 @@ msgstr "Proslijeđeno od"
 #. module: base_calendar
 #: field:crm.meeting,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Pratitelj"
 
 #. module: base_calendar
 #: field:calendar.attendee,user_id:0
@@ -1000,10 +981,11 @@ msgid "Indicate the groups that the attendee belongs to"
 msgstr "Označite grupe kojima sudionik pripada"
 
 #. module: base_calendar
-#: field:crm.meeting,message_comment_ids:0
-#: help:crm.meeting,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
+#: field:calendar.event,mo:0
+#: field:calendar.todo,mo:0
+#: field:crm.meeting,mo:0
+msgid "Mon"
+msgstr "Pon"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
@@ -1026,7 +1008,7 @@ msgstr "Nesigurno"
 #: constraint:calendar.todo:0
 #: constraint:crm.meeting:0
 msgid "Error ! End date cannot be set before start date."
-msgstr ""
+msgstr "Greška ! Datum početka poslije dauma završetka."
 
 #. module: base_calendar
 #: field:calendar.alarm,trigger_occurs:0
@@ -1054,11 +1036,6 @@ msgid "Interval"
 msgstr "Razdoblje"
 
 #. module: base_calendar
-#: model:ir.actions.server,name:base_calendar.actions_server_crm_meeting_read
-msgid "CRM Meeting: Mark read"
-msgstr ""
-
-#. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
 #: selection:crm.meeting,week_list:0
@@ -1082,7 +1059,7 @@ msgid "Active"
 msgstr "Aktivan"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:388
+#: code:addons/base_calendar/base_calendar.py:399
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
 msgstr ""
@@ -1090,7 +1067,7 @@ msgstr ""
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Choose day in the month where repeat the meeting"
-msgstr ""
+msgstr "Odaberite dan u mjesecu kada se održava sastanak"
 
 #. module: base_calendar
 #: field:calendar.alarm,action:0
@@ -1125,14 +1102,14 @@ msgstr "Određuje akciju koja će se pokrenuti kada se okine alarm"
 #. module: base_calendar
 #: view:crm.meeting:0
 msgid "Starting at"
-msgstr ""
+msgstr "Počinje"
 
 #. module: base_calendar
 #: selection:calendar.event,end_type:0
 #: selection:calendar.todo,end_type:0
 #: selection:crm.meeting,end_type:0
 msgid "End date"
-msgstr ""
+msgstr "Završni datum"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -1154,12 +1131,12 @@ msgstr ""
 #: field:calendar.todo,end_type:0
 #: field:crm.meeting,end_type:0
 msgid "Recurrence Termination"
-msgstr ""
+msgstr "Prekid ponavljanja"
 
 #. module: base_calendar
 #: view:crm.meeting:0
 msgid "Until"
-msgstr ""
+msgstr "Do"
 
 #. module: base_calendar
 #: view:res.alarm:0
@@ -1169,12 +1146,12 @@ msgstr "Detalji podsjetnika"
 #. module: base_calendar
 #: model:crm.meeting.type,name:base_calendar.categ_meet3
 msgid "Off-site Meeting"
-msgstr ""
+msgstr "Sastanak van ureda"
 
 #. module: base_calendar
 #: view:crm.meeting:0
 msgid "Day of Month"
-msgstr ""
+msgstr "Dan u mjesecu"
 
 #. module: base_calendar
 #: selection:calendar.alarm,state:0
@@ -1186,12 +1163,12 @@ msgstr "Završeno"
 #: help:calendar.todo,interval:0
 #: help:crm.meeting,interval:0
 msgid "Repeat every (Days/Week/Month/Year)"
-msgstr ""
+msgstr "Ponavljaj svaki (Dan/Tjedan/Mjesec/Godina)"
 
 #. module: base_calendar
 #: view:crm.meeting:0
 msgid "All Day?"
-msgstr ""
+msgstr "Cijeli dan?"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -1231,10 +1208,10 @@ msgstr "Odgovorna osoba"
 #. module: base_calendar
 #: view:crm.meeting:0
 msgid "Select Weekdays"
-msgstr ""
+msgstr "Odabir dana u tjednu"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1489
+#: code:addons/base_calendar/base_calendar.py:1514
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #: selection:calendar.todo,show_as:0
@@ -1254,7 +1231,7 @@ msgstr "Kalendarski događaj"
 #: field:calendar.todo,recurrency:0
 #: field:crm.meeting,recurrency:0
 msgid "Recurrent"
-msgstr ""
+msgstr "Ponavljajući"
 
 #. module: base_calendar
 #: field:calendar.event,rrule_type:0
@@ -1311,12 +1288,12 @@ msgstr "Mjesec"
 #: selection:calendar.todo,rrule_type:0
 #: selection:crm.meeting,rrule_type:0
 msgid "Day(s)"
-msgstr ""
+msgstr "Dan(a)"
 
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Confirmed Events"
-msgstr ""
+msgstr "Potvrđeni događaji"
 
 #. module: base_calendar
 #: field:calendar.attendee,dir:0
@@ -1355,17 +1332,22 @@ msgstr "Stani"
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_ir_values
 msgid "ir.values"
-msgstr ""
+msgstr "ir.values"
 
 #. module: base_calendar
 #: view:crm.meeting:0
 msgid "Search Meetings"
-msgstr ""
+msgstr "Traži sastanke"
+
+#. module: base_calendar
+#: model:ir.model,name:base_calendar.model_ir_attachment
+msgid "ir.attachment"
+msgstr "ir.attachment"
 
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_crm_meeting_type
 msgid "Meeting Type"
-msgstr ""
+msgstr "Vrsta sastanka"
 
 #. module: base_calendar
 #: selection:calendar.attendee,state:0
@@ -1391,11 +1373,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik za postavljanje nove vrste alarma.\n"
+"              </p><p>\n"
+"                Možete definirati svoje vrste alarma kalendara koje možete\n"
+"                dodjeliti događajima i sastancima.\n"
+"              </p>\n"
+"            "
 
 #. module: base_calendar
 #: selection:crm.meeting,state:0
 msgid "Unconfirmed"
-msgstr ""
+msgstr "Nepotvrđen"
 
 #. module: base_calendar
 #: help:calendar.attendee,sent_by:0
@@ -1445,6 +1434,11 @@ msgstr ""
 "tekst koji će se koristiti za prikaz"
 
 #. module: base_calendar
+#: model:ir.model,name:base_calendar.model_mail_message
+msgid "Message"
+msgstr ""
+
+#. module: base_calendar
 #: field:calendar.event,base_calendar_alarm_id:0
 #: field:calendar.todo,base_calendar_alarm_id:0
 #: field:crm.meeting,base_calendar_alarm_id:0
@@ -1464,15 +1458,15 @@ msgid "April"
 msgstr "Travanj"
 
 #. module: base_calendar
-#: code:addons/base_calendar/crm_meeting.py:98
+#: code:addons/base_calendar/crm_meeting.py:106
 #, python-format
 msgid "Email addresses not found"
-msgstr ""
+msgstr "Email adrese koje nisu pronađene"
 
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Recurrency period"
-msgstr ""
+msgstr "Period ponavljanja"
 
 #. module: base_calendar
 #: field:calendar.event,week_list:0
@@ -1482,10 +1476,10 @@ msgid "Weekday"
 msgstr "Dan u tjednu"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:980
+#: code:addons/base_calendar/base_calendar.py:1008
 #, python-format
 msgid "Interval cannot be negative."
-msgstr ""
+msgstr "Interval ne može biti negativan"
 
 #. module: base_calendar
 #: field:calendar.event,byday:0
@@ -1495,10 +1489,10 @@ msgid "By day"
 msgstr "Po danu"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:417
+#: code:addons/base_calendar/base_calendar.py:444
 #, python-format
 msgid "First you have to specify the date of the invitation."
-msgstr ""
+msgstr "Navedite datum pozivnice"
 
 #. module: base_calendar
 #: field:calendar.alarm,model_id:0
@@ -1508,14 +1502,14 @@ msgstr "Model"
 #. module: base_calendar
 #: selection:calendar.alarm,action:0
 msgid "Audio"
-msgstr ""
+msgstr "Zvuk"
 
 #. module: base_calendar
 #: field:calendar.event,id:0
 #: field:calendar.todo,id:0
 #: field:crm.meeting,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: base_calendar
 #: selection:calendar.attendee,role:0
@@ -1561,7 +1555,7 @@ msgstr "Redoslijed"
 #: help:calendar.todo,alarm_id:0
 #: help:crm.meeting,alarm_id:0
 msgid "Set an alarm at this time, before the event occurs"
-msgstr ""
+msgstr "Postavi alarm u ovo vrijeme, prije početka događaja"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -1581,7 +1575,7 @@ msgstr "Subota"
 #: field:calendar.todo,interval:0
 #: field:crm.meeting,interval:0
 msgid "Repeat Every"
-msgstr ""
+msgstr "Ponavljaj svakih"
 
 #. module: base_calendar
 #: selection:calendar.event,byday:0
@@ -1823,9 +1817,6 @@ msgstr "Peti"
 
 #~ msgid "Partner"
 #~ msgstr "Stranka"
-
-#~ msgid "ir.attachment"
-#~ msgstr "ir.attachment"
 
 #~ msgid "res.users"
 #~ msgstr "res.users"

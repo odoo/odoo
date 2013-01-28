@@ -21,7 +21,7 @@
 
 import time
 from common_report_header import common_report_header
-from report import report_sxw
+from openerp.report import report_sxw
 
 class journal_print(report_sxw.rml_parse, common_report_header):
 

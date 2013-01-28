@@ -20,10 +20,11 @@
 ##############################################################################
 
 import time
-from report import report_sxw
-from osv import osv
-import pooler
-from tools.translate import _
+
+from openerp import pooler
+from openerp.osv import osv
+from openerp.report import report_sxw
+from openerp.tools.translate import _
 
 class product_pricelist(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
@@ -34,7 +35,7 @@ class product_pricelist(report_sxw.rml_parse):
             'time': time,
             'get_pricelist': self._get_pricelist,
             'get_currency': self._get_currency,
-            'get_currency_symbol': self._get_currency_symbol,
+            'get_currency_symbol': self._get_currency_symbol,  # TODO 7.0 - remove this - unused
             'get_categories': self._get_categories,
             'get_price': self._get_price,
             'get_titles': self._get_titles,
@@ -71,6 +72,7 @@ class product_pricelist(report_sxw.rml_parse):
         pricelist = pool.get('product.pricelist').read(self.cr, self.uid, [pricelist_id], ['currency_id'], context=self.localcontext)[0]
         return pricelist['currency_id'][1]
 
+    # TODO 7.0 - remove this method, its unused
     def _get_currency_symbol(self, pricelist_id):
         pool = pooler.get_pool(self.cr.dbname)
         pricelist = pool.get('product.pricelist').read(self.cr, self.uid, [pricelist_id], ['currency_id'], context=self.localcontext)[0]
@@ -115,12 +117,13 @@ class product_pricelist(report_sxw.rml_parse):
     def _get_price(self, pricelist_id, product_id, qty):
         sale_price_digits = self.get_digits(dp='Product Price')
         pool = pooler.get_pool(self.cr.dbname)
+        pricelist = self.pool.get('product.pricelist').browse(self.cr, self.uid, [pricelist_id], context=self.localcontext)[0]
         price_dict = pool.get('product.pricelist').price_get(self.cr, self.uid, [pricelist_id], product_id, qty, context=self.localcontext)
         if price_dict[pricelist_id]:
-            price = self.formatLang(price_dict[pricelist_id], digits=sale_price_digits)
+            price = self.formatLang(price_dict[pricelist_id], digits=sale_price_digits, currency_obj=pricelist.currency_id)
         else:
             res = pool.get('product.product').read(self.cr, self.uid, [product_id])
-            price =  self.formatLang(res[0]['list_price'], digits=sale_price_digits)
+            price =  self.formatLang(res[0]['list_price'], digits=sale_price_digits, currency_obj=pricelist.currency_id)
         return price
 
 report_sxw.report_sxw('report.product.pricelist','product.product','addons/product/report/product_pricelist.rml',parser=product_pricelist)

@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 
 class account_move_line_unreconcile_select(osv.osv_memory):
     _name = "account.move.line.unreconcile.select"

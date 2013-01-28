@@ -19,8 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields
-from osv import osv
+from openerp.osv import fields, osv
 
 class plugin_thunderbird_installer(osv.osv_memory):
     _name = 'plugin_thunderbird.installer'

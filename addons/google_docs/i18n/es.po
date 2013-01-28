@@ -7,21 +7,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-12-11 22:10+0000\n"
-"Last-Translator: Ana Juaristi Olalde <ajuaristio@gmail.com>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-12 12:51+0000\n"
+"Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-12 04:41+0000\n"
-"X-Generator: Launchpad (build 16361)\n"
+"X-Launchpad-Export-Date: 2012-12-22 06:07+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: google_docs
-#: code:addons/google_docs/google_docs.py:136
+#: code:addons/google_docs/google_docs.py:139
 #, python-format
 msgid "Key Error!"
-msgstr ""
+msgstr "¡Error de clave!"
 
 #. module: google_docs
 #: view:google.docs.config:0
@@ -30,6 +30,10 @@ msgid ""
 "`https://docs.google.com/a/openerp.com/presentation/d/123456789/edit#slide=id"
 ".p`, the ID is `presentation:123456789`"
 msgstr ""
+"para un documento de presentación (muestra de diapositivas) con una "
+"dirección como "
+"'https://docs.google.com/a/openerp.com/presentation/d/123456789/edit#slide=id"
+".p', el id. es 'presentation:123456789'"
 
 #. module: google_docs
 #: view:google.docs.config:0
@@ -38,11 +42,14 @@ msgid ""
 "`https://docs.google.com/a/openerp.com/document/d/123456789/edit`, the ID is "
 "`document:123456789`"
 msgstr ""
+"para un documento de texto con una dirección como "
+"'https://docs.google.com/a/openerp.com/document/d/123456789/edit', el id. es "
+"'document:123456789'"
 
 #. module: google_docs
 #: field:google.docs.config,gdocs_resource_id:0
 msgid "Google Resource ID to Use as Template"
-msgstr ""
+msgstr "Id. del recurso de Google a usar como plantilla"
 
 #. module: google_docs
 #: view:google.docs.config:0
@@ -51,6 +58,9 @@ msgid ""
 "`https://docs.google.com/a/openerp.com/drawings/d/123456789/edit`, the ID is "
 "`drawings:123456789`"
 msgstr ""
+"para un documento de dibujo con la dirección "
+"'https://docs.google.com/a/openerp.com/drawings/d/123456789/edit', el id. es "
+"'drawings:123456789'"
 
 #. module: google_docs
 #. openerp-web
@@ -65,6 +75,8 @@ msgid ""
 "This is the id of the template document, on google side. You can find it "
 "thanks to its URL:"
 msgstr ""
+"Éste es el id de la plantilla del documento, de la parte de Google. Puede "
+"averiguarlo gracias a su dirección:"
 
 #. module: google_docs
 #: model:ir.model,name:google_docs.model_google_docs_config
@@ -79,6 +91,8 @@ msgid ""
 "The user google credentials are not set yet. Contact your administrator for "
 "help."
 msgstr ""
+"Los credenciales del usuario de Google no están establecidos aún. Contacte "
+"con su administrador para más ayuda."
 
 #. module: google_docs
 #: view:google.docs.config:0
@@ -87,9 +101,12 @@ msgid ""
 "`https://docs.google.com/a/openerp.com/spreadsheet/ccc?key=123456789#gid=0`, "
 "the ID is `spreadsheet:123456789`"
 msgstr ""
+"para una hoja de cálculo con la dirección "
+"'https://docs.google.com/a/openerp.com/spreadsheet/ccc?key=123456789#gid=0', "
+"el id. es `spreadsheet:123456789`"
 
 #. module: google_docs
-#: code:addons/google_docs/google_docs.py:98
+#: code:addons/google_docs/google_docs.py:101
 #, python-format
 msgid ""
 "Your resource id is not correct. You can find the id in the google docs URL."
@@ -98,22 +115,22 @@ msgstr ""
 "docs."
 
 #. module: google_docs
-#: code:addons/google_docs/google_docs.py:122
+#: code:addons/google_docs/google_docs.py:125
 #, python-format
 msgid "Creating google docs may only be done by one at a time."
 msgstr ""
 "Crear un documento google solo puede ser hecho por uno al mismo tiempo."
 
 #. module: google_docs
-#: code:addons/google_docs/google_docs.py:53
-#: code:addons/google_docs/google_docs.py:98
-#: code:addons/google_docs/google_docs.py:122
+#: code:addons/google_docs/google_docs.py:56
+#: code:addons/google_docs/google_docs.py:101
+#: code:addons/google_docs/google_docs.py:125
 #, python-format
 msgid "Google Docs Error!"
 msgstr "¡Error Google Dos!"
 
 #. module: google_docs
-#: code:addons/google_docs/google_docs.py:53
+#: code:addons/google_docs/google_docs.py:56
 #, python-format
 msgid "Check your google configuration in Users/Users/Synchronization tab."
 msgstr ""
@@ -143,10 +160,12 @@ msgid "User Google credentials are not yet set."
 msgstr "Las credenciales de usuario Google aún no se han establecido."
 
 #. module: google_docs
-#: code:addons/google_docs/google_docs.py:136
+#: code:addons/google_docs/google_docs.py:139
 #, python-format
 msgid "Your Google Doc Name Pattern's key does not found in object."
 msgstr ""
+"No se ha encontrado la clave del patrón de nombre del documento de Google en "
+"el objeto."
 
 #. module: google_docs
 #: help:google.docs.config,name_template:0
@@ -154,11 +173,13 @@ msgid ""
 "Choose how the new google docs will be named, on google side. Eg. "
 "gdoc_%(field_name)s"
 msgstr ""
+"Escoja cómo serán nombrados los nuevos documentos de Google, en la parte de "
+"Google. Por ejemplo, gdoc_%(field_name)s."
 
 #. module: google_docs
 #: view:google.docs.config:0
 msgid "Google Docs Configuration"
-msgstr ""
+msgstr "Configuración de Google docs"
 
 #. module: google_docs
 #: help:google.docs.config,gdocs_resource_id:0
@@ -180,13 +201,30 @@ msgid ""
 "`drawings:123456789`\n"
 "...\n"
 msgstr ""
+"\n"
+"Éste es el id. del documento plantilla, en la parte de Google. Puede "
+"averiguarlo gracias a su dirección:\n"
+"* para un documento de texto con una dirección como "
+"'https://docs.google.com/a/openerp.com/document/d/123456789/edit', el id. es "
+"'document:123456789'\n"
+"* para una hoja de cálculo con la dirección "
+"'https://docs.google.com/a/openerp.com/spreadsheet/ccc?key=123456789#gid=0', "
+"el id. es `spreadsheet:123456789`\n"
+"* para un documento de presentación (muestra de diapositivas) con una "
+"dirección como "
+"'https://docs.google.com/a/openerp.com/presentation/d/123456789/edit#slide=id"
+".p', el id. es 'presentation:123456789'\n"
+"* para un documento de dibujo con la dirección "
+"'https://docs.google.com/a/openerp.com/drawings/d/123456789/edit', el id. es "
+"'drawings:123456789'\n"
+"...\n"
 
 #. module: google_docs
 #: model:ir.model,name:google_docs.model_ir_attachment
 msgid "ir.attachment"
-msgstr ""
+msgstr "Adjunto"
 
 #. module: google_docs
 #: field:google.docs.config,name_template:0
 msgid "Google Doc Name Pattern"
-msgstr ""
+msgstr "Patrón de nombre del documento Google"

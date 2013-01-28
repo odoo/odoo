@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-12-10 23:37+0000\n"
-"Last-Translator: Ana Juaristi Olalde <ajuaristio@gmail.com>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-23 12:06+0000\n"
+"Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-12 04:39+0000\n"
-"X-Generator: Launchpad (build 16361)\n"
+"X-Launchpad-Export-Date: 2012-12-24 04:39+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: event
 #: view:event.event:0
@@ -61,20 +61,9 @@ msgstr ""
 "ignorar esta regla)"
 
 #. module: event
-#: code:addons/event/event.py:305
-#, python-format
-msgid "Event has been <b>cancelled</b>."
-msgstr "El evento ha sido  <b>cancelado</b>."
-
-#. module: event
 #: field:event.registration,date_open:0
 msgid "Registration Date"
 msgstr "Fecha de registro"
-
-#. module: event
-#: help:event.registration,origin:0
-msgid "Name of the sale order which create the registration"
-msgstr "Nombre dle pedido de venta que creó el registro"
 
 #. module: event
 #: field:event.event,type:0
@@ -91,7 +80,7 @@ msgstr "Concierto de Bon Jovi"
 #: selection:event.registration,state:0
 #: selection:report.event.registration,registration_state:0
 msgid "Attended"
-msgstr ""
+msgstr "Asistido"
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -123,10 +112,9 @@ msgid "Default Maximum Registration"
 msgstr "Registro máximo por defecto"
 
 #. module: event
-#: help:event.event,message_unread:0
-#: help:event.registration,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "Si se marca, los nuevos mensajes requieren su atención"
+#: view:report.event.registration:0
+msgid "Display"
+msgstr "Mostrar"
 
 #. module: event
 #: field:event.event,register_avail:0
@@ -201,9 +189,9 @@ msgid "Registrations"
 msgstr "Registros"
 
 #. module: event
-#: code:addons/event/event.py:95
-#: code:addons/event/event.py:108
-#: code:addons/event/event.py:400
+#: code:addons/event/event.py:89
+#: code:addons/event/event.py:100
+#: code:addons/event/event.py:355
 #, python-format
 msgid "Error!"
 msgstr "¡Error!"
@@ -238,9 +226,10 @@ msgid "Opera of Verdi"
 msgstr "Ópera de Verdi"
 
 #. module: event
-#: view:report.event.registration:0
-msgid "Display"
-msgstr "Mostrar"
+#: help:event.event,message_unread:0
+#: help:event.registration,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Si se marca, los nuevos mensajes requieren su atención"
 
 #. module: event
 #: view:report.event.registration:0
@@ -259,11 +248,6 @@ msgid "False"
 msgstr "Falso"
 
 #. module: event
-#: model:mail.message.subtype,name:event.mt_event_registration
-msgid "New Registrations"
-msgstr "Nuevos registros"
-
-#. module: event
 #: field:event.registration,event_end_date:0
 msgid "Event End Date"
 msgstr "Fecha del final del evento"
@@ -275,11 +259,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
-
-#. module: event
-#: selection:report.event.registration,month:0
-msgid "May"
-msgstr "Mayo"
+"Contiene el resumen del chatter (nº de mensajes, ...). Este resumen viene "
+"directamente en formato HTML para poder ser insertado en las vistas kanban."
 
 #. module: event
 #: view:report.event.registration:0
@@ -287,8 +268,8 @@ msgid "Registrations in confirmed or done state"
 msgstr "Inscripciones en estado 'Confirmada' o 'Realizada'"
 
 #. module: event
-#: code:addons/event/event.py:114
-#: code:addons/event/event.py:116
+#: code:addons/event/event.py:106
+#: code:addons/event/event.py:108
 #, python-format
 msgid "Warning!"
 msgstr "¡Aviso!"
@@ -307,9 +288,9 @@ msgid "Partner"
 msgstr "Empresa"
 
 #. module: event
-#: model:ir.actions.server,name:event.actions_server_event_event_read
-msgid "Event: Mark read"
-msgstr "Eventos: marcar leido"
+#: help:event.type,default_registration_min:0
+msgid "It will select this default minimum value when you choose this event"
+msgstr "Seleccionará este valor mínimo por defecto cuando escoja este evento"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type
@@ -407,7 +388,7 @@ msgid "Email"
 msgstr "Email"
 
 #. module: event
-#: code:addons/event/event.py:367
+#: code:addons/event/event.py:329
 #, python-format
 msgid "New registration confirmed: %s."
 msgstr "Nuevo registro confirmado: %s."
@@ -443,7 +424,7 @@ msgstr "Julio"
 #. module: event
 #: field:event.event,reply_to:0
 msgid "Reply-To Email"
-msgstr "Responder al email"
+msgstr "Dirección de respuesta"
 
 #. module: event
 #: view:event.registration:0
@@ -476,26 +457,9 @@ msgid "Speaker who will be giving speech at the event."
 msgstr "Ponente que dará la charla en el evento"
 
 #. module: event
-#: code:addons/event/event.py:457
-#, python-format
-msgid "Registration has been <b>created</b>."
-msgstr "El registro ha sido  <b>creado</b>."
-
-#. module: event
 #: view:event.event:0
 msgid "Cancel Event"
 msgstr "Cancelar evento"
-
-#. module: event
-#: code:addons/event/event.py:398
-#, python-format
-msgid "State set to Done"
-msgstr "Estado establecido a Realizado"
-
-#. module: event
-#: model:ir.actions.server,name:event.actions_server_event_registration_read
-msgid "Event registration : Mark read"
-msgstr "Registro de evneto: Marcar leído"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_reg
@@ -545,6 +509,11 @@ msgid "December"
 msgstr "Diciembre"
 
 #. module: event
+#: help:event.registration,origin:0
+msgid "Reference of the sales order which created the registration"
+msgstr "Referencia del pedido de venta que creó la inscripción"
+
+#. module: event
 #: field:report.event.registration,draft_state:0
 msgid " # No of Draft Registrations"
 msgstr " Nº de registros en borrador"
@@ -564,7 +533,7 @@ msgstr "Mes"
 #. module: event
 #: field:event.registration,date_closed:0
 msgid "Attended Date"
-msgstr "Fecha asistencia"
+msgstr "Fecha de asistencia"
 
 #. module: event
 #: view:event.event:0
@@ -592,18 +561,12 @@ msgid "or"
 msgstr "o"
 
 #. module: event
-#: code:addons/event/event.py:315
-#, python-format
-msgid "Event has been <b>done</b>."
-msgstr "El evento ha sido  <b>realizado</b>."
-
-#. module: event
 #: help:res.partner,speaker:0
 msgid "Check this box if this contact is a speaker."
 msgstr "Haga click si este contacto es un interlocutor."
 
 #. module: event
-#: code:addons/event/event.py:116
+#: code:addons/event/event.py:108
 #, python-format
 msgid "No Tickets Available!"
 msgstr "No hay tickets disponibles"
@@ -616,6 +579,10 @@ msgid ""
 "status is set to 'Done'.If event is cancelled the status is set to "
 "'Cancelled'."
 msgstr ""
+"Si el evento se acaba de crear, el estado será 'Borrador'. Si el evento se "
+"confirma para alguna fecha en concreto, el estado será 'Confirmado'. Si el "
+"evento ha finalizado, el estado se establece en 'Realizado'. Si el evento se "
+"cancelado, su estado será 'Cancelado'."
 
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
@@ -631,6 +598,14 @@ msgid ""
 "             </p>\n"
 "           "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Pulse para añadir un nuevo evento.\n"
+"</p><p>\n"
+"OpenERP le ayuda a planificar y organizar eficientemente sus eventos: seguir "
+"la pista de sus suscripciones y participaciones, automatizar los correos "
+"electrónicos de confirmación, tickets de venta, etc.\n"
+"</p>\n"
+"           "
 
 #. module: event
 #: help:event.event,register_max:0
@@ -639,15 +614,16 @@ msgid ""
 "much registrations you are not able to confirm your event. (put 0 to ignore "
 "this rule )"
 msgstr ""
+"Puede definir para cada evento un nivel máximo de registro. Si tiene muchos "
+"registro, no podrá confirmar su evento. (Ponga 0 para ignorar esta regla)"
 
 #. module: event
-#: code:addons/event/event.py:462
-#, python-format
-msgid "Registration has been set as <b>draft</b>."
-msgstr "El registro ha sido establecido a  <b>borrador</b>."
+#: field:event.event,user_id:0
+msgid "Responsible User"
+msgstr "Usuario responsable"
 
 #. module: event
-#: code:addons/event/event.py:108
+#: code:addons/event/event.py:100
 #, python-format
 msgid ""
 "The total of confirmed registration for the event '%s' does not meet the "
@@ -670,7 +646,7 @@ msgstr ""
 #. module: event
 #: view:board.board:0
 msgid "Events Filling By Status"
-msgstr ""
+msgstr "Relleno de eventos por estado"
 
 #. module: event
 #: selection:report.event.registration,event_state:0
@@ -687,12 +663,6 @@ msgstr "Eventos en estado 'Nuevo'"
 #: view:report.event.registration:0
 msgid "Events which are in New state"
 msgstr "Eventos que están en estado 'Nuevo'"
-
-#. module: event
-#: code:addons/event/event.py:404
-#, python-format
-msgid "State set to Cancel"
-msgstr "Estado establecido a cancelado"
 
 #. module: event
 #: view:event.event:0
@@ -753,6 +723,10 @@ msgid ""
 "emails sent automatically at event or registrations confirmation. You can "
 "also put your email address of your mail gateway if you use one."
 msgstr ""
+"La dirección de correo electrónico del organizador que se pone en el campo "
+"'Responder a' de todos los correos enviados automáticamente con la "
+"confirmación del evento o del registro. Puede poner también la dirección de "
+"su pasarela de correo si usa una."
 
 #. module: event
 #: help:event.event,message_ids:0
@@ -778,6 +752,15 @@ msgid ""
 "        <p>Thank you for your participation!</p>\n"
 "        <p>Best regards</p>"
 msgstr ""
+"\n"
+"        <p>Hola ${object.name},</p>\n"
+"        <p>El event ${object.event_id.name} para el que se registró ha sido "
+"confirmado y se realizará desde ${object.event_id.date_begin} a "
+"${object.event_id.date_end}.\n"
+"        Para más información, contacte por favor con nuestro departamento de "
+"eventos.</p>\n"
+"        <p>¡Gracias por su participación!</p>\n"
+"        <p>Saludos cordiales.</p>"
 
 #. module: event
 #: field:event.event,message_is_follower:0
@@ -811,10 +794,9 @@ msgid "My Registrations"
 msgstr "Mis registros"
 
 #. module: event
-#: code:addons/event/event.py:310
-#, python-format
-msgid "Event has been set to <b>draft</b>."
-msgstr "El evento ha sido establecido a  <b>borrador</b>."
+#: selection:report.event.registration,month:0
+msgid "November"
+msgstr "Noviembre"
 
 #. module: event
 #: view:report.event.registration:0
@@ -822,22 +804,14 @@ msgid "Extended Filters..."
 msgstr "Filtros extendidos..."
 
 #. module: event
-#: field:event.event,message_comment_ids:0
-#: help:event.event,message_comment_ids:0
-#: field:event.registration,message_comment_ids:0
-#: help:event.registration,message_comment_ids:0
-msgid "Comments and emails"
-msgstr "Comentarios y correos"
-
-#. module: event
 #: selection:report.event.registration,month:0
 msgid "October"
 msgstr "Octubre"
 
 #. module: event
-#: model:ir.actions.server,name:event.actions_server_event_registration_unread
-msgid "Event registration : Mark unread"
-msgstr "Registro de eventos: Marcar sin leer"
+#: selection:report.event.registration,month:0
+msgid "January"
+msgstr "Enero"
 
 #. module: event
 #: view:event.event:0
@@ -846,17 +820,20 @@ msgstr "Establecer en borrador"
 
 #. module: event
 #: view:event.event:0
+#: view:event.registration:0
 #: view:res.partner:0
 msgid "Confirm Registration"
 msgstr "Confirmación registro"
 
 #. module: event
-#: code:addons/event/event.py:95
+#: code:addons/event/event.py:89
 #, python-format
 msgid ""
 "You have already set a registration for this event as 'Attended'. Please "
 "reset it to draft if you want to cancel this event."
 msgstr ""
+"Ya ha establecido su registro para este evento como 'Asistido'. Por favor, "
+"restablézcalo a borrador si quiere cancelar este evento."
 
 #. module: event
 #: view:res.partner:0
@@ -872,12 +849,6 @@ msgstr "Configuración de correo electronico"
 #: field:event.type,default_registration_min:0
 msgid "Default Minimum Registration"
 msgstr "Mínimo registros por defecto"
-
-#. module: event
-#: code:addons/event/event.py:368
-#, python-format
-msgid "Registration confirmed."
-msgstr "Registro confirmado"
 
 #. module: event
 #: field:event.event,address_id:0
@@ -901,8 +872,9 @@ msgstr ""
 
 #. module: event
 #: view:event.event:0
+#: view:event.registration:0
 msgid "Attended the Event"
-msgstr ""
+msgstr "Asistir al evento"
 
 #. module: event
 #: constraint:event.event:0
@@ -910,15 +882,10 @@ msgid "Error ! Closing Date cannot be set before Beginning Date."
 msgstr "¡Error! La fecha de cierre no puede ser anterior a la de inicio."
 
 #. module: event
-#: code:addons/event/event.py:400
+#: code:addons/event/event.py:355
 #, python-format
 msgid "You must wait for the starting day of the event to do this action."
 msgstr "Debe esperar al día de inicio del evento para realizar esta acción."
-
-#. module: event
-#: field:event.event,user_id:0
-msgid "Responsible User"
-msgstr "Usuario responsable"
 
 #. module: event
 #: selection:event.event,state:0
@@ -939,10 +906,10 @@ msgstr "Cancelar"
 #. module: event
 #: field:event.registration,reply_to:0
 msgid "Reply-to Email"
-msgstr ""
+msgstr "Dirección de respuesta"
 
 #. module: event
-#: code:addons/event/event.py:114
+#: code:addons/event/event.py:106
 #, python-format
 msgid "Only %d Seats are Available!"
 msgstr "Solo hay disponibles %d plazas"
@@ -993,18 +960,13 @@ msgid "Upcoming events from today"
 msgstr "Siguientes eventos desde hoy"
 
 #. module: event
-#: code:addons/event/event.py:300
-#, python-format
-msgid "Event has been <b>created</b>."
-msgstr "El evento ha sido   <b>creado</b>."
-
-#. module: event
 #: model:event.event,name:event.event_2
 msgid "Conference on ERP Business"
-msgstr ""
+msgstr "Conferencia sobre negocio ERP"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_view_registration
+#: model:mail.message.subtype,name:event.mt_event_registration
 msgid "New Registration"
 msgstr "Nuevo registro"
 
@@ -1024,10 +986,9 @@ msgid "Participant / Contact Name"
 msgstr "Nombre participante / contacto"
 
 #. module: event
-#: code:addons/event/event.py:320
-#, python-format
-msgid "Event has been <b>confirmed</b>."
-msgstr "El evento ha sido  <b>confirmado</b>."
+#: selection:report.event.registration,month:0
+msgid "May"
+msgstr "Mayo"
 
 #. module: event
 #: view:res.partner:0
@@ -1038,16 +999,6 @@ msgstr "Registro de eventos"
 #: view:event.event:0
 msgid "No ticket available."
 msgstr "No hay tickets disponibles"
-
-#. module: event
-#: help:event.type,default_registration_min:0
-msgid "It will select this default minimum value when you choose this event"
-msgstr "Seleccionará este valor mínimo por defecto cuando escoja este evento"
-
-#. module: event
-#: selection:report.event.registration,month:0
-msgid "January"
-msgstr "Enero"
 
 #. module: event
 #: field:event.event,register_max:0
@@ -1088,11 +1039,6 @@ msgstr "Nombre"
 #: field:event.event,country_id:0
 msgid "Country"
 msgstr "País"
-
-#. module: event
-#: selection:report.event.registration,month:0
-msgid "November"
-msgstr "Noviembre"
 
 #. module: event
 #: view:res.partner:0
@@ -1145,13 +1091,7 @@ msgstr "ID"
 #. module: event
 #: field:event.type,default_reply_to:0
 msgid "Default Reply-To"
-msgstr ""
-
-#. module: event
-#: view:event.event:0
-#: model:ir.actions.act_window,name:event.act_register_event_partner
-msgid "Subscribe"
-msgstr "Suscribir"
+msgstr "Dirección de respuesta por defecto"
 
 #. module: event
 #: view:event.event:0
@@ -1187,6 +1127,15 @@ msgid ""
 "        <p>Thank you for your participation!</p>\n"
 "        <p>Best regards</p>"
 msgstr ""
+"\n"
+"        <p>Hola ${object.name},</p>\n"
+"        <p>Le confirmamos que el registro para el evento "
+"${object.event_id.name} ha sido grabado.\n"
+"        Recibirá automáticamente un correo electrónico con más información "
+"práctica (tal como la agenda, los participantes...) tan pronto como el "
+"evento sea confirmado.</p>\n"
+"        <p>¡Gracias por su participación!</p>\n"
+"        <p>Saludo cordiales.</p>"
 
 #. module: event
 #: help:event.event,reply_to:0
@@ -1196,11 +1145,16 @@ msgid ""
 "registrations confirmation. You can also put the email address of your mail "
 "gateway if you use one."
 msgstr ""
+"La dirección de correo del organizador es la adecuada para ir aquí, con el "
+"efecto de aparecer en el campo 'Responder a' de todos los correos enviados "
+"automáticamente con la confirmación del evento o del registro. Puede poner "
+"también la dirección de su pasarela de correo si usa una."
 
 #. module: event
-#: model:ir.actions.server,name:event.actions_server_event_event_unread
-msgid "Event: Mark unread"
-msgstr "Evento: Marcar no leído"
+#: view:event.event:0
+#: model:ir.actions.act_window,name:event.act_register_event_partner
+msgid "Subscribe"
+msgstr "Suscribir"
 
 #. module: event
 #: model:res.groups,name:event.group_event_manager

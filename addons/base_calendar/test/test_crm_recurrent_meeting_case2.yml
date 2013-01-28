@@ -11,7 +11,7 @@
     duration: 1.0
     name: Test Meeting
     recurrency: true
-    recurrent_uid: 0.0
+    recurrent_id: 0.0
     rrule_type: daily
     sequence: 0.0
 -
@@ -37,7 +37,7 @@
     we: true
     name: Review code with programmer
     recurrency: true
-    recurrent_uid: 0.0
+    recurrent_id: 0.0
     rrule_type: weekly
     sequence: 0.0
 -
@@ -57,7 +57,7 @@
     duration: 1.0
     name: Sprint Review
     recurrency: true
-    recurrent_uid: 0.0
+    recurrent_id: 0.0
     rrule_type: monthly
     sequence: 0.0
 -
@@ -92,6 +92,6 @@
   I check whether the record is edited perfectly or not.
 -
   !python {model: crm.meeting}: |
-     meeting_ids = self.search(cr, uid, [('recurrent_uid', '=', ref('crm_meeting_reviewcodewithprogrammer0')), ('recurrent_id','=','2011-04-25 12:47:00')], context)
+     meeting_ids = self.search(cr, uid, [('recurrent_id', '=', ref('crm_meeting_reviewcodewithprogrammer0')), ('recurrent_id_date','=','2011-04-25 12:47:00')], context)
      assert meeting_ids, 'Meeting is not edited !'
 

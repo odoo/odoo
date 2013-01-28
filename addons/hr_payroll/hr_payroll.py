@@ -26,13 +26,13 @@ from datetime import datetime
 from datetime import timedelta
 from dateutil import relativedelta
 
-import netsvc
-from osv import fields, osv
-import tools
-from tools.translate import _
-import decimal_precision as dp
+from openerp import netsvc
+from openerp.osv import fields, osv
+from openerp import tools
+from openerp.tools.translate import _
+import openerp.addons.decimal_precision as dp
 
-from tools.safe_eval import safe_eval as eval
+from openerp.tools.safe_eval import safe_eval as eval
 
 class hr_payroll_structure(osv.osv):
     """

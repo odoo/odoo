@@ -23,9 +23,9 @@ import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-import pooler
-import tools
-from osv import fields,osv
+from openerp import pooler
+from openerp import tools
+from openerp.osv import fields,osv
 
 def _code_get(self, cr, uid, context=None):
     acc_type_obj = self.pool.get('account.account.type')

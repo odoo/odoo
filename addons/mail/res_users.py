@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 from openerp import SUPERUSER_ID
-from tools.translate import _
+from openerp.tools.translate import _
 
 class res_users(osv.Model):
     """ Update of res.users class
@@ -34,24 +34,27 @@ class res_users(osv.Model):
     _inherits = {'mail.alias': 'alias_id'}
 
     _columns = {
-        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True, 
+        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True,
             help="Email address internally associated with this user. Incoming "\
                  "emails will appear in the user's notifications."),
     }
-    
+
     _defaults = {
-        'alias_domain': False, # always hide alias during creation
+        'alias_domain': False,  # always hide alias during creation
     }
 
     def __init__(self, pool, cr):
         """ Override of __init__ to add access rights on notification_email_send
-            field. Access rights are disabled by default, but allowed on
-            fields defined in self.SELF_WRITEABLE_FIELDS.
+            and alias fields. Access rights are disabled by default, but allowed
+            on some specific fields defined in self.SELF_{READ/WRITE}ABLE_FIELDS.
         """
         init_res = super(res_users, self).__init__(pool, cr)
         # duplicate list to avoid modifying the original reference
         self.SELF_WRITEABLE_FIELDS = list(self.SELF_WRITEABLE_FIELDS)
         self.SELF_WRITEABLE_FIELDS.append('notification_email_send')
+        # duplicate list to avoid modifying the original reference
+        self.SELF_READABLE_FIELDS = list(self.SELF_READABLE_FIELDS)
+        self.SELF_READABLE_FIELDS.extend(['notification_email_send', 'alias_domain', 'alias_name'])
         return init_res
 
     def _auto_init(self, cr, context=None):
@@ -59,16 +62,6 @@ class res_users(osv.Model):
         # create aliases for all users and avoid constraint errors
         self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(res_users, self)._auto_init,
             self._columns['alias_id'], 'login', alias_force_key='id', context=context)
-        # make already existing users follow themselves, using SQL to avoid using the ORM during the auto_init
-        cr.execute("""  SELECT p.id FROM res_partner p
-                        LEFT JOIN mail_followers n
-                        ON (n.partner_id = p.id AND n.res_model = 'res.partner' AND n.res_id = p.id)
-                        WHERE n.id IS NULL
-                    """)
-        params = [(res[0], res[0]) for res in cr.fetchall()]
-        cr.executemany("""  INSERT INTO mail_followers (partner_id, res_model, res_id)
-                            VALUES (%s, 'res.partner', %s)
-                        """, params)
 
     def create(self, cr, uid, data, context=None):
         # create default alias same as the login
@@ -78,12 +71,11 @@ class res_users(osv.Model):
         mail_alias = self.pool.get('mail.alias')
         alias_id = mail_alias.create_unique_alias(cr, uid, {'alias_name': data['login']}, model_name=self._name, context=context)
         data['alias_id'] = alias_id
-        data.pop('alias_name', None) # prevent errors during copy()
+        data.pop('alias_name', None)  # prevent errors during copy()
 
-        # create user that follows its related partner
+        # create user
         user_id = super(res_users, self).create(cr, uid, data, context=context)
         user = self.browse(cr, uid, user_id, context=context)
-        self.pool.get('res.partner').message_subscribe(cr, uid, [user.partner_id.id], [user.partner_id.id], context=context)
         # alias
         mail_alias.write(cr, SUPERUSER_ID, [alias_id], {"alias_force_thread_id": user_id}, context)
         # create a welcome message
@@ -113,38 +105,42 @@ class res_users(osv.Model):
         alias_pool.unlink(cr, uid, alias_ids, context=context)
         return res
 
-    def message_post_user_api(self, cr, uid, thread_id, body='', subject=False, parent_id=False,
-                                attachment_ids=None, context=None, content_subtype='plaintext', **kwargs):
-        """ Redirect the posting of message on res.users to the related partner.
-            This is done because when giving the context of Chatter on the
-            various mailboxes, we do not have access to the current partner_id.
-            We therefore post on the user and redirect on its partner. """
+    def _message_post_get_pid(self, cr, uid, thread_id, context=None):
         assert thread_id, "res.users does not support posting global messages"
         if context and 'thread_model' in context:
             context['thread_model'] = 'res.partner'
         if isinstance(thread_id, (list, tuple)):
             thread_id = thread_id[0]
-        partner_id = self.pool.get('res.users').read(cr, uid, thread_id, ['partner_id'], context=context)['partner_id'][0]
-        return self.pool.get('res.partner').message_post_user_api(cr, uid, partner_id, body=body, subject=subject,
-            parent_id=parent_id, attachment_ids=attachment_ids, context=context, content_subtype=content_subtype, **kwargs)
+        return self.browse(cr, SUPERUSER_ID, thread_id).partner_id.id
+
+    def message_post_user_api(self, cr, uid, thread_id, context=None, **kwargs):
+        """ Redirect the posting of message on res.users to the related partner.
+            This is done because when giving the context of Chatter on the
+            various mailboxes, we do not have access to the current partner_id. """
+        partner_id = self._message_post_get_pid(cr, uid, thread_id, context=context)
+        return self.pool.get('res.partner').message_post_user_api(cr, uid, partner_id, context=context, **kwargs)
 
     def message_post(self, cr, uid, thread_id, context=None, **kwargs):
         """ Redirect the posting of message on res.users to the related partner.
             This is done because when giving the context of Chatter on the
-            various mailboxes, we do not have access to the current partner_id.
-            We therefore post on the user and redirect on its partner. """
-        assert thread_id, "res.users does not support posting global messages"
-        if context and 'thread_model' in context:
-            context['thread_model'] = 'res.partner'
-        if isinstance(thread_id, (list, tuple)):
-            thread_id = thread_id[0]
-        partner_id = self.pool.get('res.users').read(cr, uid, thread_id, ['partner_id'], context=context)['partner_id'][0]
+            various mailboxes, we do not have access to the current partner_id. """
+        partner_id = self._message_post_get_pid(cr, uid, thread_id, context=context)
         return self.pool.get('res.partner').message_post(cr, uid, partner_id, context=context, **kwargs)
 
     def message_update(self, cr, uid, ids, msg_dict, update_vals=None, context=None):
-        partner_id = self.pool.get('res.users').browse(cr, uid, ids)[0].partner_id.id
-        return self.pool.get('res.partner').message_update(cr, uid, [partner_id], msg_dict,
-            update_vals=update_vals, context=context)
+        for id in ids:
+            partner_id = self.browse(cr, SUPERUSER_ID, id).partner_id.id
+            self.pool.get('res.partner').message_update(cr, uid, [partner_id], msg_dict, update_vals=update_vals, context=context)
+        return True
+
+    def message_subscribe(self, cr, uid, ids, partner_ids, subtype_ids=None, context=None):
+        for id in ids:
+            partner_id = self.browse(cr, SUPERUSER_ID, id).partner_id.id
+            self.pool.get('res.partner').message_subscribe(cr, uid, [partner_id], partner_ids, subtype_ids=subtype_ids, context=context)
+        return True
+
+    def message_create_partners_from_emails(self, cr, uid, emails, context=None):
+        return self.pool.get('res.partner').message_create_partners_from_emails(cr, uid, emails, context=context)
 
 
 class res_users_mail_group(osv.Model):

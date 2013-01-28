@@ -35,12 +35,21 @@
 
 
 import logging
-import netsvc
+from openerp import netsvc
 from dav_fs import openerp_dav_handler
-from tools.config import config
-from DAV.WebDAVServer import DAVRequestHandler
-from service import http_server
-from service.websrv_lib import FixSendError, HttpOptions
+from openerp.tools.config import config
+try:
+    from pywebdav.lib.WebDAVServer import DAVRequestHandler
+    from pywebdav.lib.utils import IfParser, TagList
+    from pywebdav.lib.errors import DAV_Error, DAV_Forbidden, DAV_NotFound
+    from pywebdav.lib.propfind import PROPFIND
+except ImportError:
+    from DAV.WebDAVServer import DAVRequestHandler
+    from DAV.utils import IfParser, TagList
+    from DAV.errors import DAV_Error, DAV_Forbidden, DAV_NotFound
+    from DAV.propfind import PROPFIND
+from openerp.service import http_server
+from openerp.service.websrv_lib import FixSendError, HttpOptions
 from BaseHTTPServer import BaseHTTPRequestHandler
 import urlparse
 import urllib
@@ -48,9 +57,7 @@ import re
 import time
 from string import atoi
 import addons
-from DAV.utils import IfParser, TagList
-from DAV.errors import DAV_Error, DAV_Forbidden, DAV_NotFound
-from DAV.propfind import PROPFIND
+import socket
 # from DAV.constants import DAV_VERSION_1, DAV_VERSION_2
 from xml.dom import minidom
 from redirect import RedirectHTTPHandler
@@ -71,7 +78,7 @@ def OpenDAVConfig(**kw):
     return Config()
 
 
-class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
+class DAVHandler(DAVRequestHandler, HttpOptions, FixSendError):
     verbose = False
 
     protocol_version = 'HTTP/1.1'
@@ -81,6 +88,12 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
                             'DELETE', 'TRACE', 'REPORT', ]
                     }
 
+    def __init__(self, request, client_address, server):
+        self.request = request
+        self.client_address = client_address
+        self.server = server
+        self.setup()
+
     def get_userinfo(self, user, pw):
         return False
 
@@ -88,7 +101,20 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
         self._logger.debug(message)
 
     def handle(self):
-        self._init_buffer()
+        """Handle multiple requests if necessary."""
+        self.close_connection = 1
+        try:
+            self.handle_one_request()
+            while not self.close_connection:
+                self.handle_one_request()
+        except Exception as e:
+            try:
+                self.log_error("Request timed out: %r \n Trying old version of HTTPServer", e)
+                self._init_buffer()
+            except Exception as e:
+                #a read or a write timed out.  Discard this connection
+                self.log_error("Not working neither, closing connection\n %r", e)
+                self.close_connection = 1
 
     def finish(self):
         pass
@@ -102,11 +128,6 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
         self.davpath = '/'+config.get_misc('webdav','vdir','webdav')
         addr, port = self.server.server_name, self.server.server_port
         server_proto = getattr(self.server,'proto', 'http').lower()
-        try:
-            if hasattr(self.request, 'getsockname'):
-                addr, port = self.request.getsockname()
-        except Exception, e:
-            self.log_error("Cannot calculate own address: %s" , e)
         # Too early here to use self.headers
         self.baseuri = "%s://%s:%d/"% (server_proto, addr, port)
         self.IFACE_CLASS  = openerp_dav_handler(self, self.verbose)
@@ -413,7 +434,7 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
                 data['lockowner'] = owners
         return data
 
-from service.http_server import reg_http_service,OpenERPAuthProvider
+from openerp.service.http_server import reg_http_service,OpenERPAuthProvider
 
 class DAVAuthProvider(OpenERPAuthProvider):
     def authenticate(self, db, user, passwd, client_address):

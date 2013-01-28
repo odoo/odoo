@@ -20,7 +20,7 @@
 ##############################################################################
 
 import time
-from report import report_sxw
+from openerp.report import report_sxw
 
 class all_closed_cashbox_of_the_day(report_sxw.rml_parse):
     #TOFIX: sql injection problem: SQL Request must be pass from sql injection...

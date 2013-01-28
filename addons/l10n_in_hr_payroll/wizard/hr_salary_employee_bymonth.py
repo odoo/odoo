@@ -21,7 +21,7 @@
 
 import time
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 
 class hr_salary_employee_bymonth(osv.osv_memory):
 

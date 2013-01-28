@@ -23,18 +23,43 @@
 import base64
 import logging
 
-import netsvc
-from osv import osv
-from osv import fields
-import tools
-from tools.translate import _
-from urllib import quote as quote
+from openerp import netsvc
+from openerp.osv import osv, fields
+from openerp.osv import fields
+from openerp import tools
+from openerp.tools.translate import _
+from urllib import urlencode, quote as quote
+
 _logger = logging.getLogger(__name__)
 
 try:
-    from mako.template import Template as MakoTemplate
+    # We use a jinja2 sandboxed environment to render mako templates.
+    # Note that the rendering does not cover all the mako syntax, in particular
+    # arbitrary Python statements are not accepted, and not all expressions are
+    # allowed: only "public" attributes (not starting with '_') of objects may
+    # be accessed.
+    # This is done on purpose: it prevents incidental or malicious execution of
+    # Python code that may break the security of the server.
+    from jinja2.sandbox import SandboxedEnvironment
+    mako_template_env = SandboxedEnvironment(
+        block_start_string="<%",
+        block_end_string="%>",
+        variable_start_string="${",
+        variable_end_string="}",
+        comment_start_string="<%doc>",
+        comment_end_string="</%doc>",
+        line_statement_prefix="%",
+        line_comment_prefix="##",
+        trim_blocks=True,               # do not output newline after blocks
+        autoescape=True,                # XML/HTML automatic escaping
+    )
+    mako_template_env.globals.update({
+        'str': str,
+        'quote': quote,
+        'urlencode': urlencode,
+    })
 except ImportError:
-    _logger.warning("email_template: mako templates not available, templating features will not work!")
+    _logger.warning("jinja2 not available, templating features will not work!")
 
 class email_template(osv.osv):
     "Templates for sending email"
@@ -55,7 +80,8 @@ class email_template(osv.osv):
            :param str model: model name of the document record this mail is related to.
            :param int res_id: id of the document record this mail is related to.
         """
-        if not template: return u""
+        if not template:
+            return u""
         if context is None:
             context = {}
         try:
@@ -64,14 +90,14 @@ class email_template(osv.osv):
             if res_id:
                 record = self.pool.get(model).browse(cr, uid, res_id, context=context)
             user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-            result = MakoTemplate(template).render_unicode(object=record,
-                                                           user=user,
-                                                           # context kw would clash with mako internals
-                                                           ctx=context,
-                                                           quote=quote,
-                                                           format_exceptions=True)
-            if result == u'False':
-                result = u''
+            variables = {
+                'object': record,
+                'user': user,
+                'ctx': context,     # context kw would clash with mako internals
+            }
+            result = mako_template_env.from_string(template).render(variables)
+            if result == u"False":
+                result = u""
             return result
         except Exception:
             _logger.exception("failed to render mako template value %r", template)

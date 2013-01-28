@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+      <record id="base.user_demo" model="res.users">
+        <field name="groups_id" eval="[(4, ref('fleet.group_fleet_user'))]" />
+      </record>
+
       <record id="vehicle_state_inshop" model="fleet.vehicle.state">
         <field name="name">In shop</field>
         <field name="sequence">1</field>
@@ -28,7 +32,7 @@
           <field name="color">Black</field>
           <field name="location">Grand-Rosiere</field>
           <field name="doors">5</field>
-          <field name="driver_id" ref="base.user_demo" />
+          <field name="driver_id" ref="base.user_demo_res_partner" />
           <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
           <field name="state_id" ref="vehicle_state_active"/>
           <field name="odometer_unit">kilometers</field>

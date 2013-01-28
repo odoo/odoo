@@ -20,8 +20,8 @@
 ##############################################################################
 
 from openerp import SUPERUSER_ID
-from osv import osv
-from osv import fields
+from openerp.osv import osv
+from openerp.osv import fields
 
 
 class ir_ui_menu(osv.osv):
@@ -47,7 +47,8 @@ class ir_ui_menu(osv.osv):
         for menu in self.browse(cr, uid, ids, context=context):
             if menu.mail_group_id:
                 sub_ids = follower_obj.search(cr, SUPERUSER_ID, [
-                    ('partner_id', '=', partner_id), ('res_model', '=', 'mail.group'),
+                    ('partner_id', '=', partner_id),
+                    ('res_model', '=', 'mail.group'),
                     ('res_id', '=', menu.mail_group_id.id)
                     ], context=context)
                 if not sub_ids:

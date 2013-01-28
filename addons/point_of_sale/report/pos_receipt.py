@@ -20,8 +20,8 @@
 ##############################################################################
 
 import time
-from report import report_sxw
-import pooler
+from openerp.report import report_sxw
+from openerp import pooler
 
 def titlize(journal_name):
     words = journal_name.split()

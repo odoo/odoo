@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-02-17 05:59+0000\n"
-"Last-Translator: 开阖软件     Jeff Wang <jeff@osbzr.com>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-14 13:47+0000\n"
+"Last-Translator: ccdos <ccdos@163.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:49+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 06:00+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: crm_claim
 #: help:crm.claim.stage,fold:0
@@ -45,7 +45,7 @@ msgstr "责任人"
 msgid ""
 "Allows you to configure your incoming mail server, and create claims from "
 "incoming emails."
-msgstr ""
+msgstr "允许配置接收邮件服务器，并从接收的邮件里创建索赔"
 
 #. module: crm_claim
 #: model:ir.model,name:crm_claim.model_crm_claim_stage
@@ -65,7 +65,7 @@ msgstr "延迟关闭"
 #. module: crm_claim
 #: field:crm.claim,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "未读消息"
 
 #. module: crm_claim
 #: field:crm.claim,resolution:0
@@ -100,19 +100,12 @@ msgstr "#索赔"
 #. module: crm_claim
 #: field:crm.claim.stage,name:0
 msgid "Stage Name"
-msgstr ""
-
-#. module: crm_claim
-#: model:ir.actions.act_window,help:crm_claim.action_report_crm_claim
-msgid ""
-"Have a general overview of all claims processed in the system by sorting "
-"them with specific criteria."
-msgstr "为系统内所有的索赔处理指定一个排序标准"
+msgstr "阶段名称"
 
 #. module: crm_claim
 #: view:crm.claim.report:0
 msgid "Salesperson"
-msgstr ""
+msgstr "销售员"
 
 #. module: crm_claim
 #: selection:crm.claim,priority:0
@@ -156,7 +149,7 @@ msgstr "预防措施"
 #. module: crm_claim
 #: help:crm.claim,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "如果要求你关注新消息，勾选此项"
 
 #. module: crm_claim
 #: field:crm.claim.report,date_closed:0
@@ -166,7 +159,7 @@ msgstr "结束日期"
 #. module: crm_claim
 #: view:res.partner:0
 msgid "False"
-msgstr ""
+msgstr "False"
 
 #. module: crm_claim
 #: field:crm.claim,ref:0
@@ -188,7 +181,7 @@ msgstr "#邮件"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "保存复杂的摘要(消息数量,……等)。为了插入到看板视图，这一摘要直接是是HTML格式。"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -218,11 +211,6 @@ msgid "Preventive Action"
 msgstr "预防措施的动作"
 
 #. module: crm_claim
-#: field:crm.claim.report,delay_expected:0
-msgid "Overpassed Deadline"
-msgstr "超过截止日期"
-
-#. module: crm_claim
 #: field:crm.claim.report,section_id:0
 msgid "Section"
 msgstr "划分"
@@ -247,12 +235,12 @@ msgstr "优先级"
 #. module: crm_claim
 #: field:crm.claim.stage,fold:0
 msgid "Hide in Views when Empty"
-msgstr ""
+msgstr "当空的时候在视图中隐藏"
 
 #. module: crm_claim
 #: field:crm.claim,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "关注者"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -266,7 +254,7 @@ msgstr "新建"
 #. module: crm_claim
 #: field:crm.claim.stage,section_ids:0
 msgid "Sections"
-msgstr ""
+msgstr "节"
 
 #. module: crm_claim
 #: field:crm.claim,email_from:0
@@ -302,7 +290,7 @@ msgstr "索赔主题"
 #. module: crm_claim
 #: model:crm.claim.stage,name:crm_claim.stage_claim3
 msgid "Rejected"
-msgstr ""
+msgstr "已拒绝"
 
 #. module: crm_claim
 #: field:crm.claim,date_action_next:0
@@ -310,10 +298,11 @@ msgid "Next Action Date"
 msgstr "下一动作日期"
 
 #. module: crm_claim
-#: code:addons/crm_claim/crm_claim.py:243
-#, python-format
-msgid "Claim has been <b>created</b>."
-msgstr ""
+#: model:ir.actions.act_window,help:crm_claim.action_report_crm_claim
+msgid ""
+"Have a general overview of all claims processed in the system by sorting "
+"them with specific criteria."
+msgstr "为系统内所有的索赔处理指定一个排序标准"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -350,10 +339,10 @@ msgid "Destination email for email gateway."
 msgstr ""
 
 #. module: crm_claim
-#: code:addons/crm_claim/crm_claim.py:199
+#: code:addons/crm_claim/crm_claim.py:194
 #, python-format
 msgid "No Subject"
-msgstr ""
+msgstr "无主题"
 
 #. module: crm_claim
 #: help:crm.claim.stage,state:0
@@ -393,7 +382,7 @@ msgstr "客户关系管理索赔报表"
 #. module: crm_claim
 #: view:sale.config.settings:0
 msgid "Configure"
-msgstr ""
+msgstr "设置"
 
 #. module: crm_claim
 #: model:crm.case.resource.type,name:crm_claim.type_claim1
@@ -438,7 +427,7 @@ msgstr "索赔年份"
 msgid ""
 "If you check this field, this stage will be proposed by default on each "
 "sales team. It will not assign this stage to existing teams."
-msgstr ""
+msgstr "如果你勾选了这里，这个阶段会作为每个销售团队的默认阶段。对已有的销售团队无效。"
 
 #. module: crm_claim
 #: field:crm.claim,categ_id:0
@@ -492,7 +481,7 @@ msgstr "已结束"
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Reject"
-msgstr ""
+msgstr "否决"
 
 #. module: crm_claim
 #: view:res.partner:0
@@ -520,7 +509,7 @@ msgstr "待处理"
 #: field:crm.claim.report,state:0
 #: field:crm.claim.stage,state:0
 msgid "Status"
-msgstr ""
+msgstr "状态"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -556,7 +545,7 @@ msgstr "电话"
 #. module: crm_claim
 #: field:crm.claim,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "是一个关注者"
 
 #. module: crm_claim
 #: field:crm.claim.report,user_id:0
@@ -603,12 +592,6 @@ msgstr "11月"
 #: view:crm.claim.report:0
 msgid "Extended Filters..."
 msgstr "增加筛选条件"
-
-#. module: crm_claim
-#: field:crm.claim,message_comment_ids:0
-#: help:crm.claim,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -743,10 +726,9 @@ msgid "Unassigned Claims"
 msgstr "未分配的抱怨"
 
 #. module: crm_claim
-#: code:addons/crm_claim/crm_claim.py:247
-#, python-format
-msgid "Claim has been <b>refused</b>."
-msgstr ""
+#: field:crm.claim.report,delay_expected:0
+msgid "Overpassed Deadline"
+msgstr "超过截止日期"
 
 #. module: crm_claim
 #: field:crm.claim,cause:0
@@ -804,12 +786,6 @@ msgstr ""
 #: field:crm.claim.report,email:0
 msgid "# Emails"
 msgstr "电子邮件"
-
-#. module: crm_claim
-#: code:addons/crm_claim/crm_claim.py:253
-#, python-format
-msgid "Stage changed to <b>%s</b>."
-msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim.report:0

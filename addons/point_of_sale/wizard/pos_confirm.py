@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-import netsvc
-from osv import osv
+from openerp import netsvc
+from openerp.osv import osv
 
 
 class pos_confirm(osv.osv_memory):

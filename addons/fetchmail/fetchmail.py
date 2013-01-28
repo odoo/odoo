@@ -32,12 +32,12 @@ except ImportError:
 
 import zipfile
 import base64
-import addons
+from openerp import addons
 
-import netsvc
-from osv import osv, fields
-import tools
-from tools.translate import _
+from openerp import netsvc
+from openerp.osv import fields, osv
+from openerp import tools
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 

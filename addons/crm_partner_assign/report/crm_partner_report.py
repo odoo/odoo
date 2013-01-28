@@ -18,8 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from osv import fields,osv
-import tools
+from openerp.osv import fields,osv
+from openerp import tools
 
 
 class crm_partner_report_assign(osv.osv):

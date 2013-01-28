@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-11-25 13:04+0000\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 19:12+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-26 04:42+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:52+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -22,25 +22,10 @@ msgid "Parent Directory"
 msgstr "Bovenliggende folder"
 
 #. module: document
-#: code:addons/document/document_directory.py:273
+#: code:addons/document/document.py:336
 #, python-format
 msgid "Directory name contains special characters!"
 msgstr "Mapnaam bevat speciale tekens!"
-
-#. module: document
-#: view:board.board:0
-msgid "Document board"
-msgstr "Document board"
-
-#. module: document
-#: model:ir.model,name:document.model_process_node
-msgid "Process Node"
-msgstr "Proces knooppunt"
-
-#. module: document
-#: sql_constraint:document.directory:0
-msgid "Directory must have a parent or a storage."
-msgstr "Directory moet een bovenliggende map hebben of een opslag."
 
 #. module: document
 #: view:document.directory:0
@@ -58,14 +43,13 @@ msgstr ""
 
 #. module: document
 #: view:document.directory:0
-#: view:document.storage:0
 msgid "Group By..."
 msgstr "Groepeer op..."
 
 #. module: document
-#: model:ir.model,name:document.model_document_directory_content_type
-msgid "Directory Content Type"
-msgstr "Soort inhoud map"
+#: view:ir.attachment:0
+msgid "Modification"
+msgstr "Wijziging"
 
 #. module: document
 #: view:document.directory:0
@@ -105,9 +89,9 @@ msgid "Directory Content"
 msgstr "Inhoud map"
 
 #. module: document
-#: view:document.directory:0
-msgid "Dynamic context"
-msgstr "Dynamische context"
+#: view:ir.attachment:0
+msgid "My Document(s)"
+msgstr "Mijn document(en)"
 
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document_management_configuration
@@ -126,13 +110,13 @@ msgstr ""
 "referentie naar het huidige record, in dynamische mappen"
 
 #. module: document
-#: field:document.storage,path:0
-msgid "Path"
-msgstr "Pad"
+#: help:document.directory.dctx,field:0
+msgid "The name of the field."
+msgstr "De naam van het veld"
 
 #. module: document
-#: code:addons/document/document_directory.py:263
-#: code:addons/document/document_directory.py:268
+#: code:addons/document/document.py:326
+#: code:addons/document/document.py:331
 #, python-format
 msgid "Directory name must be unique!"
 msgstr "Mapnaam moet uniek zijn"
@@ -159,7 +143,6 @@ msgstr ""
 
 #. module: document
 #: view:document.directory:0
-#: field:document.storage,dir_ids:0
 #: model:ir.actions.act_window,name:document.action_document_directory_form
 #: model:ir.ui.menu,name:document.menu_document_directories
 msgid "Directories"
@@ -169,13 +152,6 @@ msgstr "Mappen"
 #: model:ir.model,name:document.model_report_document_user
 msgid "Files details by Users"
 msgstr "Bestandsdetails per gebruiker"
-
-#. module: document
-#: code:addons/document/document_storage.py:569
-#: code:addons/document/document_storage.py:597
-#, python-format
-msgid "Error!"
-msgstr "Fout!"
 
 #. module: document
 #: field:document.directory,resource_find_all:0
@@ -235,14 +211,9 @@ msgstr ""
 "        "
 
 #. module: document
-#: field:process.node,directory_id:0
-msgid "Document directory"
-msgstr "Documentenmap"
-
-#. module: document
-#: code:addons/document/document_directory.py:263
-#: code:addons/document/document_directory.py:268
-#: code:addons/document/document_directory.py:273
+#: code:addons/document/document.py:326
+#: code:addons/document/document.py:331
+#: code:addons/document/document.py:336
 #, python-format
 msgid "ValidateError"
 msgstr "Validatiefout"
@@ -260,18 +231,11 @@ msgid "Documents"
 msgstr "Documenten"
 
 #. module: document
-#: view:document.directory:0
-#: field:document.directory,storage_id:0
-msgid "Storage"
-msgstr "Opslag"
-
-#. module: document
 #: field:document.directory,ressource_type_id:0
 msgid "Resource model"
 msgstr "Resource model"
 
 #. module: document
-#: field:ir.attachment,file_size:0
 #: field:report.document.file,file_size:0
 #: field:report.document.user,file_size:0
 msgid "File Size"
@@ -284,21 +248,19 @@ msgid "Content Type"
 msgstr "Soort inhoud"
 
 #. module: document
-#: view:ir.attachment:0
-msgid "Modification"
-msgstr "Wijziging"
-
-#. module: document
 #: view:document.directory:0
 #: field:document.directory,type:0
-#: view:document.storage:0
-#: field:document.storage,type:0
 msgid "Type"
 msgstr "Soort"
 
 #. module: document
-#: code:addons/document/document.py:194
-#: code:addons/document/document_directory.py:234
+#: sql_constraint:ir.attachment:0
+msgid "The filename must be unique in a directory !"
+msgstr "De bestandsnaam moet uniek zijn per bedrijf!"
+
+#. module: document
+#: code:addons/document/document.py:110
+#: code:addons/document/document.py:296
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopie)"
@@ -335,11 +297,6 @@ msgid "Context fields"
 msgstr "Context velden"
 
 #. module: document
-#: field:ir.attachment,store_fname:0
-msgid "Stored Filename"
-msgstr "Opgeslagen bestandsnaam"
-
-#. module: document
 #: view:document.directory:0
 #: field:report.document.user,type:0
 msgid "Directory Type"
@@ -366,7 +323,7 @@ msgid "Virtual Files"
 msgstr "Virtuele bestanden"
 
 #. module: document
-#: code:addons/document/document_storage.py:635
+#: code:addons/document/document.py:562
 #, python-format
 msgid "Error at doc write!"
 msgstr "Fout bij schrijven document !"
@@ -403,7 +360,6 @@ msgstr "Beveiliging"
 
 #. module: document
 #: field:document.directory,write_uid:0
-#: field:document.storage,write_uid:0
 #: field:ir.attachment,write_uid:0
 msgid "Last Modification User"
 msgstr "Laatste wijziging door gebruiker"
@@ -426,7 +382,6 @@ msgstr "Domein"
 
 #. module: document
 #: field:document.directory,write_date:0
-#: field:document.storage,write_date:0
 #: field:ir.attachment,write_date:0
 msgid "Date Modified"
 msgstr "Wijzigingsdatum"
@@ -470,11 +425,9 @@ msgstr ""
 "Definieer woorden in de context, voor alle dochtermappen en bestanden"
 
 #. module: document
-#: help:document.storage,online:0
-msgid ""
-"If not checked, media is currently offline and its contents not available"
-msgstr ""
-"Indien niet aangevinkt, is medium offline en de inhoud niet beschikbaar"
+#: view:document.directory:0
+msgid "Static"
+msgstr "Statisch"
 
 #. module: document
 #: field:report.document.user,user:0
@@ -484,7 +437,6 @@ msgstr "onbekend"
 #. module: document
 #: view:document.directory:0
 #: field:document.directory,user_id:0
-#: field:document.storage,user_id:0
 #: view:ir.attachment:0
 #: field:ir.attachment,user_id:0
 #: field:report.document.user,user_id:0
@@ -503,15 +455,9 @@ msgstr "Inhoud"
 
 #. module: document
 #: field:document.directory,create_date:0
-#: field:document.storage,create_date:0
 #: field:report.document.user,create_date:0
 msgid "Date Created"
 msgstr "Aanmaakdatum"
-
-#. module: document
-#: field:document.directory,ressource_id:0
-msgid "Resource ID"
-msgstr "Resource ID"
 
 #. module: document
 #: help:document.directory.content,include_name:0
@@ -523,17 +469,6 @@ msgstr ""
 "Vink dit veld aan als u wilt dat de naam van het bestand de recordnaam "
 "bevat.\n"
 "In dat geval moet de map een resource zijn."
-
-#. module: document
-#: model:ir.actions.act_window,name:document.open_board_document_manager
-#: model:ir.ui.menu,name:document.menu_reports_document
-msgid "Knowledge"
-msgstr "Kennis"
-
-#. module: document
-#: view:document.storage:0
-msgid "Document Storage"
-msgstr "Document opslag"
 
 #. module: document
 #: view:document.configuration:0
@@ -550,11 +485,6 @@ msgstr "Naam record invoegen"
 #: field:ir.actions.report.xml,model_id:0
 msgid "Model Id"
 msgstr "Model ID"
-
-#. module: document
-#: field:document.storage,online:0
-msgid "Online"
-msgstr "Online"
 
 #. module: document
 #: help:document.directory,ressource_tree:0
@@ -587,9 +517,9 @@ msgid "August"
 msgstr "Augustus"
 
 #. module: document
-#: view:ir.attachment:0
-msgid "My Document(s)"
-msgstr "Mijn document(en)"
+#: view:document.directory:0
+msgid "Dynamic context"
+msgstr "Dynamische context"
 
 #. module: document
 #: sql_constraint:document.directory:0
@@ -603,7 +533,6 @@ msgstr "Juni"
 
 #. module: document
 #: field:document.directory,group_ids:0
-#: field:document.storage,group_ids:0
 msgid "Groups"
 msgstr "Groepen"
 
@@ -616,11 +545,6 @@ msgstr "Actief"
 #: selection:report.document.user,month:0
 msgid "November"
 msgstr "November"
-
-#. module: document
-#: field:ir.attachment,db_datas:0
-msgid "Data"
-msgstr "Gegevens"
 
 #. module: document
 #: help:document.directory,ressource_parent_type_id:0
@@ -651,9 +575,9 @@ msgid "Seq."
 msgstr "Volgnr."
 
 #. module: document
-#: selection:document.storage,type:0
-msgid "Database"
-msgstr "Database"
+#: model:ir.actions.act_window,name:document.action_view_all_document_tree1
+msgid "All Users files"
+msgstr "Alle gebruikersbestanden"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -661,13 +585,7 @@ msgid "January"
 msgstr "Januari"
 
 #. module: document
-#: field:document.storage,readonly:0
-msgid "Read Only"
-msgstr "Alleen lezen"
-
-#. module: document
 #: view:document.directory:0
-#: view:process.node:0
 msgid "Document Directory"
 msgstr "Document mappen"
 
@@ -683,7 +601,6 @@ msgstr "Bijlagen"
 
 #. module: document
 #: field:document.directory,create_uid:0
-#: field:document.storage,create_uid:0
 msgid "Creator"
 msgstr "Gemaakt door"
 
@@ -702,7 +619,6 @@ msgstr ""
 "geïnstalleerde modules."
 
 #. module: document
-#: view:board.board:0
 #: model:ir.actions.act_window,name:document.action_view_files_by_month_graph
 #: view:report.document.user:0
 msgid "Files by Month"
@@ -724,19 +640,9 @@ msgid "Children"
 msgstr "Dochters"
 
 #. module: document
-#: view:board.board:0
-msgid "Files by user"
-msgstr "Bestanden per gebruiker"
-
-#. module: document
-#: selection:document.storage,type:0
-msgid "External file storage"
-msgstr "Externe opslag (herkenbare bestandsnamen)"
-
-#. module: document
-#: help:document.storage,path:0
-msgid "For file storage, the root path of the storage"
-msgstr "Voor bestandsopslag, het hoofdpad van de opslag"
+#: field:document.directory,ressource_id:0
+msgid "Resource ID"
+msgstr "Resource ID"
 
 #. module: document
 #: field:document.directory.dctx,field:0
@@ -754,28 +660,18 @@ msgid "Parent Model"
 msgstr "Bovenliggend model"
 
 #. module: document
-#: help:document.directory.dctx,field:0
+#: view:document.directory:0
 msgid ""
-"The name of the field. Note that the prefix \"dctx_\" will be prepended to "
-"what is typed here."
+"These groups, however, do NOT apply to children directories, which must "
+"define their own groups."
 msgstr ""
-"De naam van het veld. Merk op dat het voorvoegsel \"dctx_\" aan het begin "
-"wordt gezet van de tekst die hier wordt ingevuld."
-
-#. module: document
-#: field:document.directory,ressource_tree:0
-msgid "Tree Structure"
-msgstr "Boomstructuur"
+"Deze groepen gelden echter NIET voor onderliggende mappen, die hun eigen "
+"groepen moeten definiëren."
 
 #. module: document
 #: selection:report.document.user,month:0
 msgid "May"
 msgstr "Mei"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.action_view_all_document_tree1
-msgid "All Users files"
-msgstr "Alle gebruikersbestanden"
 
 #. module: document
 #: view:document.directory:0
@@ -792,20 +688,6 @@ msgstr "ir.attachment"
 #: view:report.document.user:0
 msgid "Users File"
 msgstr "Gebruijers bestand"
-
-#. module: document
-#: view:document.directory:0
-msgid "Static"
-msgstr "Statisch"
-
-#. module: document
-#: view:document.directory:0
-msgid ""
-"These groups, however, do NOT apply to children directories, which must "
-"define their own groups."
-msgstr ""
-"Deze groepen gelden echter NIET voor onderliggende mappen, die hun eigen "
-"groepen moeten definiëren."
 
 #. module: document
 #: model:ir.model,name:document.model_document_configuration
@@ -834,24 +716,13 @@ msgstr "Februari"
 
 #. module: document
 #: field:document.directory,name:0
-#: field:document.storage,name:0
 msgid "Name"
 msgstr "Naam"
-
-#. module: document
-#: sql_constraint:document.storage:0
-msgid "The storage path must be unique!"
-msgstr "Het opslagpad moet uniek zijn !"
 
 #. module: document
 #: view:document.directory:0
 msgid "Fields"
 msgstr "Velden"
-
-#. module: document
-#: help:document.storage,readonly:0
-msgid "If set, media is for reading only"
-msgstr "Indien ingesteld is medium alleen lezen"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -865,9 +736,9 @@ msgid "# of Files"
 msgstr "# bestanden"
 
 #. module: document
-#: view:document.storage:0
-msgid "Search Document Storage"
-msgstr "Zoek in document opslag"
+#: model:ir.model,name:document.model_document_directory_content_type
+msgid "Directory Content Type"
+msgstr "Soort inhoud map"
 
 #. module: document
 #: view:document.directory:0
@@ -900,9 +771,9 @@ msgid "File Name"
 msgstr "Bestandsnaam"
 
 #. module: document
-#: selection:document.storage,type:0
-msgid "Internal File storage"
-msgstr "Interne opslag (willekeurige bestandsnamen)"
+#: field:document.directory,ressource_tree:0
+msgid "Tree Structure"
+msgstr "Boomstructuur"
 
 #. module: document
 #: view:document.configuration:0
@@ -921,10 +792,7 @@ msgid "Year"
 msgstr "Jaar"
 
 #. module: document
-#: view:document.storage:0
-#: model:ir.actions.act_window,name:document.action_document_storage_form
 #: model:ir.model,name:document.model_document_storage
-#: model:ir.ui.menu,name:document.menu_document_storage_media
 msgid "Storage Media"
 msgstr "Opslagmedium"
 
@@ -939,6 +807,9 @@ msgstr "Soort document"
 #~ msgid "Attachment"
 #~ msgstr "Bijlage"
 
+#~ msgid "Data"
+#~ msgstr "Gegevens"
+
 #~ msgid "Attached To"
 #~ msgstr "Gekoppeld aan"
 
@@ -947,6 +818,12 @@ msgstr "Soort document"
 
 #~ msgid "File Information"
 #~ msgstr "Bestandsinformatie"
+
+#~ msgid "Stored Filename"
+#~ msgstr "Opgeslagen bestandsnaam"
+
+#~ msgid "Database"
+#~ msgstr "Database"
 
 #~ msgid "Filesystem"
 #~ msgstr "Bestandssysteem"
@@ -965,6 +842,9 @@ msgstr "Soort document"
 
 #~ msgid "Browse Files"
 #~ msgstr "Bladeren"
+
+#~ msgid "Document directory"
+#~ msgstr "Documentenmap"
 
 #~ msgid "Others Info"
 #~ msgstr "Overige info"
@@ -1077,6 +957,10 @@ msgstr "Soort document"
 #~ msgstr "Automatisch instellen"
 
 #, python-format
+#~ msgid "Error!"
+#~ msgstr "Fout!"
+
+#, python-format
 #~ msgid "File name must be unique!"
 #~ msgstr "Bestandsnaam moet uniek zijn!"
 
@@ -1113,8 +997,17 @@ msgstr "Soort document"
 #~ msgid "Auto Directory Configuration"
 #~ msgstr "Auto map configuratie"
 
+#~ msgid "Document board"
+#~ msgstr "Document board"
+
+#~ msgid "Process Node"
+#~ msgstr "Proces knooppunt"
+
 #~ msgid "This Year"
 #~ msgstr "Dit jaar"
+
+#~ msgid "Path"
+#~ msgstr "Pad"
 
 #~ msgid "Sale Order"
 #~ msgstr "Verkooporder"
@@ -1127,6 +1020,9 @@ msgstr "Soort document"
 
 #~ msgid "Files by Users"
 #~ msgstr "Bestanden per gebruiker"
+
+#~ msgid "Storage"
+#~ msgstr "Opslag"
 
 #~ msgid "Files Per Partner"
 #~ msgstr "Bestanden per relatie"
@@ -1184,6 +1080,14 @@ msgstr "Soort document"
 #~ msgid "Image"
 #~ msgstr "Afbeelding"
 
+#~ msgid "Online"
+#~ msgstr "Online"
+
+#~ msgid ""
+#~ "If not checked, media is currently offline and its contents not available"
+#~ msgstr ""
+#~ "Indien niet aangevinkt, is medium offline en de inhoud niet beschikbaar"
+
 #~ msgid "Files By Users"
 #~ msgstr "Bestanden per gebruiker"
 
@@ -1196,6 +1100,9 @@ msgstr "Soort document"
 #~ msgid "Auto directory configuration for Projects."
 #~ msgstr "Auto map configuratie voor projecten."
 
+#~ msgid "Read Only"
+#~ msgstr "Alleen lezen"
+
 #~ msgid ""
 #~ "If you put an object here, this directory template will appear bellow all of "
 #~ "these objects. Don't put a parent directory if you select a parent model."
@@ -1203,6 +1110,9 @@ msgstr "Soort document"
 #~ "Als u hier een object plaatst, zal dit mapsjabloon onderaan al deze objecten "
 #~ "verschijnen. Plaats geen bovenliggende map als u een bovenliggend model "
 #~ "kiest."
+
+#~ msgid "For file storage, the root path of the storage"
+#~ msgstr "Voor bestandsopslag, het hoofdpad van de opslag"
 
 #~ msgid "New Files"
 #~ msgstr "Nieuwe bestanden"
@@ -1217,8 +1127,21 @@ msgstr "Soort document"
 #~ "Auto directory configuration for Sale Orders and Quotation with report."
 #~ msgstr "Auto map configuratie voor verkooporders en offerte met overzicht."
 
+#~ msgid ""
+#~ "The name of the field. Note that the prefix \"dctx_\" will be prepended to "
+#~ "what is typed here."
+#~ msgstr ""
+#~ "De naam van het veld. Merk op dat het voorvoegsel \"dctx_\" aan het begin "
+#~ "wordt gezet van de tekst die hier wordt ingevuld."
+
+#~ msgid "If set, media is for reading only"
+#~ msgstr "Indien ingesteld is medium alleen lezen"
+
 #~ msgid "Search Document storage"
 #~ msgstr "Zoek documentopslag"
+
+#~ msgid "The storage path must be unique!"
+#~ msgstr "Het opslagpad moet uniek zijn !"
 
 #~ msgid "Directory must have a parent or a storage"
 #~ msgstr "Map moet een bovenliggende map hebben of opslag zijn"
@@ -1257,3 +1180,9 @@ msgstr "Soort document"
 
 #~ msgid "Reporting"
 #~ msgstr "Rapportages"
+
+#~ msgid "External file storage"
+#~ msgstr "Externe opslag (herkenbare bestandsnamen)"
+
+#~ msgid "Internal File storage"
+#~ msgstr "Interne opslag (willekeurige bestandsnamen)"

@@ -20,9 +20,9 @@
 ##############################################################################
 
 import time
-from report import report_sxw
-from osv import osv
-import pooler
+from openerp.report import report_sxw
+from openerp.osv import osv
+from openerp import pooler
 
 class requisition(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
 "PO-Revision-Date: 2012-05-10 17:24+0000\n"
 "Last-Translator: Arif Aydogmus <arifaydogmus@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:33+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:41+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: product
 #: field:product.packaging,rows:0
@@ -30,11 +30,6 @@ msgstr ""
 #: help:product.product,seller_qty:0
 msgid "This is minimum quantity to purchase from Main Supplier."
 msgstr "Ana tedarikçiden satınalma yapılacak en düşük miktarı belirtir."
-
-#. module: product
-#: model:product.uom,name:product.product_uom_day
-msgid "Day"
-msgstr "Gün"
 
 #. module: product
 #: model:product.template,name:product.product_product_34_product_template
@@ -109,8 +104,8 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:177
-#: code:addons/product/product.py:206
+#: code:addons/product/pricelist.py:179
+#: code:addons/product/product.py:208
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -121,7 +116,7 @@ msgid "Small-sized image"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:174
+#: code:addons/product/product.py:176
 #, python-format
 msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
@@ -129,11 +124,6 @@ msgid ""
 msgstr ""
 "Ürün Ölçü Birimin %s den Varsayılan Ölçü Birimi %s e dönüştürmek, eğer her "
 "ikisi de farklı kategorilere aitse, olası değildir."
-
-#. module: product
-#: model:product.uom,name:product.product_uom_dozen
-msgid "Dozen"
-msgstr "Düzine"
 
 #. module: product
 #: selection:product.template,cost_method:0
@@ -194,7 +184,7 @@ msgid "Product Type"
 msgstr "Ürün Tipi"
 
 #. module: product
-#: code:addons/product/product.py:410
+#: code:addons/product/product.py:412
 #, python-format
 msgid "Products: "
 msgstr "Ürünler: "
@@ -281,11 +271,6 @@ msgstr ""
 #: field:product.uom,category_id:0
 msgid "Category"
 msgstr "Kategori"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_litre
-msgid "Litre"
-msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_25_product_template
@@ -512,6 +497,11 @@ msgid "Headset standard"
 msgstr ""
 
 #. module: product
+#: model:product.uom,name:product.product_uom_day
+msgid "Day(s)"
+msgstr ""
+
+#. module: product
 #: help:product.product,incoming_qty:0
 msgid ""
 "Quantity of products that are planned to arrive.\n"
@@ -570,13 +560,9 @@ msgid "PC Assemble + Custom (PC on Demand)"
 msgstr ""
 
 #. module: product
-#: model:process.transition,note:product.process_transition_supplierofproduct0
-msgid ""
-"1 or several supplier(s) can be linked to a product. All information stands "
-"in the product form."
+#: model:product.template,description:product.product_product_27_product_template
+msgid "Custom Laptop based on customer's requirement."
 msgstr ""
-"Ürün kartına bir ya da daha çok tedarikçi bağlanmış. Tüm bilgiler Ürün "
-"Kartında yer almaktadır."
 
 #. module: product
 #: help:product.packaging,width:0
@@ -584,7 +570,7 @@ msgid "The width of the package"
 msgstr "Paket genişliği"
 
 #. module: product
-#: code:addons/product/product.py:359
+#: code:addons/product/product.py:361
 #, python-format
 msgid "Unit of Measure categories Mismatch!"
 msgstr ""
@@ -689,6 +675,7 @@ msgstr ""
 
 #. module: product
 #: field:product.supplierinfo,name:0
+#: field:product.template,seller_ids:0
 msgid "Supplier"
 msgstr "Tedarikçi"
 
@@ -716,8 +703,8 @@ msgid "If checked new messages require your attention."
 msgstr ""
 
 #. module: product
-#: model:product.category,name:product.product_category_1
-msgid "Saleable"
+#: field:product.product,ean13:0
+msgid "EAN13 Barcode"
 msgstr ""
 
 #. module: product
@@ -792,6 +779,11 @@ msgid "End Date"
 msgstr "Bitiş Tarihi"
 
 #. module: product
+#: model:product.uom,name:product.product_uom_litre
+msgid "Liter(s)"
+msgstr ""
+
+#. module: product
 #: view:product.price_list:0
 msgid "Print"
 msgstr "Yazdır"
@@ -824,7 +816,6 @@ msgstr "Anahtar"
 #. module: product
 #: model:ir.actions.report.xml,name:product.report_product_pricelist
 #: model:ir.model,name:product.model_product_pricelist
-#: field:product.product,price:0
 #: field:product.product,pricelist_id:0
 #: view:product.supplierinfo:0
 msgid "Pricelist"
@@ -832,8 +823,8 @@ msgstr "Fiyat Listesi"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_hour
-msgid "Hour"
-msgstr "Saat"
+msgid "Hour(s)"
+msgstr ""
 
 #. module: product
 #: selection:product.template,state:0
@@ -846,9 +837,13 @@ msgid "Partner"
 msgstr "Cari"
 
 #. module: product
-#: model:product.template,description:product.product_product_27_product_template
-msgid "Custom Laptop based on customer's requirement."
+#: model:process.transition,note:product.process_transition_supplierofproduct0
+msgid ""
+"1 or several supplier(s) can be linked to a product. All information stands "
+"in the product form."
 msgstr ""
+"Ürün kartına bir ya da daha çok tedarikçi bağlanmış. Tüm bilgiler Ürün "
+"Kartında yer almaktadır."
 
 #. module: product
 #: field:product.pricelist.item,price_round:0
@@ -912,11 +907,6 @@ msgstr ""
 #: field:product.packaging,weight:0
 msgid "Total Package Weight"
 msgstr "Toplam Paket Ağırlığı"
-
-#. module: product
-#: field:product.product,seller_info_id:0
-msgid "unknown"
-msgstr "bilinmeyen"
 
 #. module: product
 #: help:product.packaging,code:0
@@ -1092,6 +1082,11 @@ msgid "Right Parent"
 msgstr "Sağ Üst Öğe"
 
 #. module: product
+#: field:product.product,price:0
+msgid "Price"
+msgstr ""
+
+#. module: product
 #: field:product.pricelist.item,price_surcharge:0
 msgid "Price Surcharge"
 msgstr "Fiyat artırımı"
@@ -1164,6 +1159,11 @@ msgstr ""
 msgid ""
 "Gives the sequence order when displaying a list of product categories."
 msgstr "Ürün kategorilerini gösterirken sıra numarası verir"
+
+#. module: product
+#: model:product.uom,name:product.product_uom_dozen
+msgid "Dozen(s)"
+msgstr ""
 
 #. module: product
 #: field:product.uom,factor:0
@@ -1240,7 +1240,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:359
+#: code:addons/product/product.py:361
 #, python-format
 msgid ""
 "New Unit of Measure '%s' must belong to same Unit of Measure category '%s' "
@@ -1295,11 +1295,6 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: field:product.template,seller_ids:0
-msgid "Partners"
-msgstr "Cari Kartlar"
-
-#. module: product
 #: help:product.pricelist.item,categ_id:0
 msgid ""
 "Specify a product category if this rule only applies to products belonging "
@@ -1312,7 +1307,12 @@ msgid "Inventory"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:736
+#: field:product.product,seller_info_id:0
+msgid "Supplier Info"
+msgstr "Tedarikçi Bilgisi"
+
+#. module: product
+#: code:addons/product/product.py:729
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -1435,16 +1435,9 @@ msgstr ""
 
 #. module: product
 #: selection:product.ul,type:0
-#: model:product.uom,name:product.product_uom_unit
 #: model:product.uom.categ,name:product.product_uom_categ_unit
 msgid "Unit"
 msgstr "Adet"
-
-#. module: product
-#: code:addons/product/product.py:588
-#, python-format
-msgid "Product has been <b>created</b>."
-msgstr ""
 
 #. module: product
 #: field:product.pricelist.version,date_start:0
@@ -1555,8 +1548,8 @@ msgid "Pricelist Name"
 msgstr "Fiyat Listesi Adı"
 
 #. module: product
-#: field:product.product,ean13:0
-msgid "EAN13 Barcode"
+#: model:product.category,name:product.product_category_1
+msgid "Saleable"
 msgstr ""
 
 #. module: product
@@ -1787,7 +1780,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:206
+#: code:addons/product/product.py:208
 #, python-format
 msgid "Cannot change the category of existing Unit of Measure '%s'."
 msgstr ""
@@ -1823,7 +1816,7 @@ msgid "Default Unit of Measure"
 msgstr "Varsayılan Ölçü Birimi"
 
 #. module: product
-#: code:addons/product/pricelist.py:375
+#: code:addons/product/pricelist.py:377
 #, python-format
 msgid "Partner section of the product form"
 msgstr "Ürün formunun İş ortağı bölümü"
@@ -1849,7 +1842,12 @@ msgid "Messages"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:174
+#: model:product.uom,name:product.product_uom_unit
+msgid "Unit(s)"
+msgstr ""
+
+#. module: product
+#: code:addons/product/product.py:176
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -2164,7 +2162,7 @@ msgid "Normal"
 msgstr "Normal"
 
 #. module: product
-#: code:addons/product/pricelist.py:177
+#: code:addons/product/pricelist.py:179
 #, python-format
 msgid ""
 "At least one pricelist has no active version !\n"
@@ -2219,12 +2217,6 @@ msgstr ""
 #: selection:product.template,mes_type:0
 msgid "Variable"
 msgstr "Değişken"
-
-#. module: product
-#: field:product.product,message_comment_ids:0
-#: help:product.product,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
 
 #. module: product
 #: field:product.template,rental:0
@@ -2382,7 +2374,7 @@ msgid "15” LCD Monitor"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:374
+#: code:addons/product/pricelist.py:376
 #: field:product.pricelist.item,base_pricelist_id:0
 #, python-format
 msgid "Other Pricelist"
@@ -2687,11 +2679,11 @@ msgstr "Fiyat İskontosu"
 #~ msgid "Customer Lead Time"
 #~ msgstr "Müşteri Tedarik Süresi"
 
+#~ msgid "Partners"
+#~ msgstr "Cari Kartlar"
+
 #~ msgid "Create new Product"
 #~ msgstr "Yeni Ürün Oluştur"
-
-#~ msgid "Supplier Info"
-#~ msgstr "Tedarikçi Bilgisi"
 
 #~ msgid "PCE"
 #~ msgstr "AD"
@@ -2759,6 +2751,9 @@ msgstr "Fiyat İskontosu"
 #~ msgstr ""
 #~ "Hata! Fiyat listesi öğesinde Ana Fiyat Listesini Diğer Fiyat Listesi olarak "
 #~ "atayamazsınız !"
+
+#~ msgid "Day"
+#~ msgstr "Gün"
 
 #~ msgid "UoM"
 #~ msgstr "Birim"
@@ -2844,6 +2839,9 @@ msgstr "Fiyat İskontosu"
 
 #~ msgid "To Purchase"
 #~ msgstr "Satınalınacak"
+
+#~ msgid "Hour"
+#~ msgstr "Saat"
 
 #~ msgid "Miscellaneous"
 #~ msgstr "Çeşitli"
@@ -3364,6 +3362,9 @@ msgstr "Fiyat İskontosu"
 #~ msgid "This is use as task responsible"
 #~ msgstr "Bu görev sorumlusu olarak kullanılır"
 
+#~ msgid "Dozen"
+#~ msgstr "Düzine"
+
 #~ msgid "Service on Timesheet"
 #~ msgstr "Zamançizlgesi Hizmeti"
 
@@ -3380,6 +3381,9 @@ msgstr "Fiyat İskontosu"
 #~ msgstr ""
 #~ "Satınaldığınız ya da sattığınız herşeyden bir ürün oluşturun. Satınalınır "
 #~ "bir ürünse bir tedarikçi belirleyin."
+
+#~ msgid "unknown"
+#~ msgstr "bilinmeyen"
 
 #~ msgid "Wooden Table"
 #~ msgstr "Ahşap Masa"

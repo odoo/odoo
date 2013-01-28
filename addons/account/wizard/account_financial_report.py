@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 
 class accounting_report(osv.osv_memory):
     _name = "accounting.report"

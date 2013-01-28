@@ -18,9 +18,9 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-from tools.translate import _
-import decimal_precision as dp
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+import openerp.addons.decimal_precision as dp
 
 class sale_advance_payment_inv(osv.osv_memory):
     _name = "sale.advance.payment.inv"
@@ -28,13 +28,13 @@ class sale_advance_payment_inv(osv.osv_memory):
 
     _columns = {
         'advance_payment_method':fields.selection(
-            [('all', 'Invoice the whole sale order'), ('percentage','Percentage'), ('fixed','Fixed price (deposit)'),
+            [('all', 'Invoice the whole sales order'), ('percentage','Percentage'), ('fixed','Fixed price (deposit)'),
                 ('lines', 'Some order lines')],
             'What do you want to invoice?', required=True,
             help="""Use All to create the final invoice.
                 Use Percentage to invoice a percentage of the total amount.
                 Use Fixed Price to invoice a specific amound in advance.
-                Use Some Order Lines to invoice a selection of the sale order lines."""),
+                Use Some Order Lines to invoice a selection of the sales order lines."""),
         'qtty': fields.float('Quantity', digits=(16, 2), required=True),
         'product_id': fields.many2one('product.product', 'Advance Product',
             help="""Select a product of type service which is called 'Advance Product'.
@@ -154,26 +154,26 @@ class sale_advance_payment_inv(osv.osv_memory):
         sale_obj = self.pool.get('sale.order')
         inv_id = inv_obj.create(cr, uid, inv_values, context=context)
         inv_obj.button_reset_taxes(cr, uid, [inv_id], context=context)
-        # add the invoice to the sale order's invoices
+        # add the invoice to the sales order's invoices
         sale_obj.write(cr, uid, sale_id, {'invoice_ids': [(4, inv_id)]}, context=context)
         return inv_id
 
 
     def create_invoices(self, cr, uid, ids, context=None):
-        """ create invoices for the active sale orders """
+        """ create invoices for the active sales orders """
         sale_obj = self.pool.get('sale.order')
         act_window = self.pool.get('ir.actions.act_window')
         wizard = self.browse(cr, uid, ids[0], context)
         sale_ids = context.get('active_ids', [])
         if wizard.advance_payment_method == 'all':
-            # create the final invoices of the active sale orders
+            # create the final invoices of the active sales orders
             res = sale_obj.manual_invoice(cr, uid, sale_ids, context)
             if context.get('open_invoices', False):
                 return res
             return {'type': 'ir.actions.act_window_close'}
 
         if wizard.advance_payment_method == 'lines':
-            # open the list view of sale order lines to invoice
+            # open the list view of sales order lines to invoice
             res = act_window.for_xml_id(cr, uid, 'sale', 'action_order_line_tree2', context)
             res['context'] = {
                 'search_default_uninvoiced': 1,
