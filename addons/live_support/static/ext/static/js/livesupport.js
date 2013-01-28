@@ -133,6 +133,9 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
             connection.connector.call("/longpolling/im/poll", {
                 last: this.last,
                 users_watch: user_ids,
+                db: connection.database,
+                uid: connection.userId,
+                password: connection.password,
             }).then(function(result) {
                 _.each(result.users_status, function(el) {
                     if (self.get_user(el.id))

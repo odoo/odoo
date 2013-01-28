@@ -125,9 +125,13 @@ class ImportController(openerp.addons.web.http.Controller):
     _cp_path = '/longpolling/im'
 
     @openerp.addons.web.http.jsonrequest
-    def poll(self, req, last=None, users_watch=None):
+    def poll(self, req, last=None, users_watch=None, db=None, uid=None, password=None):
         if not openerp.tools.config.options["gevent"]:
             raise Exception("Not usable in a server not running gevent")
+        if db is not None:
+            req.session._db = db
+            req.session._uid = uid
+            req.session._password = password
         req.session.model('im.user').im_connect(context=req.context)
         num = 0
         while True:
